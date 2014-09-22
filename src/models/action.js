@@ -50,7 +50,7 @@ Action.prototype = {
     */
     set: function (opts) {
 	    
-	    this.link = opts.link;
+	    this.link = this.link || opts.link;
         
         // Action parameters
         this.amp = utils.isNum(opts.amp) ? opts.amp : defaults.amp;
@@ -64,8 +64,8 @@ Action.prototype = {
         this.pointerOffset = opts.pointerOffset;
         
         // Play list
-        this.playList = opts.playList || null;
-        this.playCurrent = opts.playCurrent || 0;
+        this.playList = this.playList || opts.playList || null;
+        this.playCurrent = this.playCurrent || opts.playCurrent || 0;
         
         // Callbacks
         this.onEnd = opts.onEnd || callback;

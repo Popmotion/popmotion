@@ -146,13 +146,21 @@ ActionManager.prototype = {
 	},
 	
 	purge: function () {
-		var action,
+		var action, defined,
 			queueLength = deactivateQueue.length,
 			i = 0;
 
 		for (i; i < queueLength; i++) {
-			// check for another thing and reset if so
-			this.deactivate(deactivateQueue[i]);
+			action = this.get(i);
+			
+			if (action.link === KEY.LINK.TIME && action.playCurrent <= action.playList.length - 1) {
+				action.playCurrent++;
+				defined = this.getDefined(action.playList[action.playCurrent]);
+				this.change(i, defined.values, defined.options);
+				action.start();
+			} else {
+				this.deactivate(deactivateQueue[i]);
+			}
 		}
 
 		deactivateQueue = [];
