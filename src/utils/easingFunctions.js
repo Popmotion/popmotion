@@ -170,9 +170,9 @@ EasingFunction.prototype = {
         ease = inRange ? ease : KEY.EASING.LINEAR;
         
         if (!inRange) {
-            newProgress = newProgress + (calc.difference(newProgress, progress) * escapeAmp);
+            newProgress = newProgress + (calc.difference(newProgress, inRange) * escapeAmp);
         }
-        
+
         return calc.valueEased(newProgress, from, to, this.get(ease));
     },
         

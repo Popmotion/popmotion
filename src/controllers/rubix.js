@@ -68,9 +68,10 @@ Rubix.prototype = {
             @param [object]: Progress in timeline
         */
         easeValue: function (key, action, progress) {
-            var value = action.values[key];
+            var value = action.values[key],
+            	restrictedProgress = calc.restricted(progress, 0, 1);
             
-            return Easing.withinRange(progress, value.from, value.to, value.ease, value.escapeAmp);
+            return Easing.withinRange(restrictedProgress, value.from, value.to, value.ease);
         }
     },
     
