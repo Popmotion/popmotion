@@ -58,9 +58,15 @@ Facade.prototype = {
 	
 	
 	play: function (actions) {
-		var baseAction = ActionManager.getDefined('moveRight');
+		var actionList = utils.isArray(actions) ? actions : actions.split(" "),
+			baseAction = ActionManager.getDefined(actionList[0]),
+			props = baseAction.values,
+			opts = baseAction.options;
+			
+		opts.playList = actionList;
+		opts.playCurrent = 0;
 	
-		return redshift.ignite(this.token, KEY.LINK.TIME, baseAction.values, baseAction.options);
+		return redshift.ignite(this.token, KEY.LINK.TIME, props, opts);
 	},
 	
 

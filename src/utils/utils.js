@@ -108,6 +108,16 @@ module.exports = {
         return (this.varType(obj) === 'Function'); 
     },
     
+    /*
+        Is this var an array ? 
+        
+        @param: Variable to test
+        @return [boolean]: Returns true if this.varType === 'Array'
+    */
+    isArray: function (arr) {
+	    return (this.varType(arr) === 'Array');
+    },
+    
     isInRange: function (value, from, to) {
         return (value >= from && value <= to);
     },
