@@ -55,6 +55,14 @@ Facade.prototype = {
 	
 		return redshift.ignite(this.token, KEY.LINK.TIME, props, opts);
 	},
+	
+	
+	play: function (actions) {
+		var baseAction = ActionManager.getDefined('moveRight');
+	
+		return redshift.ignite(this.token, KEY.LINK.TIME, baseAction.values, baseAction.options);
+	},
+	
 
     /*
         Track pointer
@@ -104,8 +112,8 @@ Redshift.prototype = {
     },
     
     
-    define: function (name, props, opts) {
-	    ActionManager.define(name, props, opts);
+    define: function (actions) {
+	    ActionManager.define(actions);
 	    return this;
     },
 	

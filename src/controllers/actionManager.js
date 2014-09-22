@@ -57,15 +57,21 @@ ActionManager.prototype = {
 		
 		Can be called later with .play()
 		
-		@param [string]: Name of the action
-		@param [object]: Action options
-		@param [object]: Value properties
+		@param [object]
 	*/
-	define: function (name, props, opts) {
-		baseActions[name] = {
-			props: props,
-			opts: opts
-		};
+	define: function (actions) {
+		var key;
+
+		for (key in actions) {
+			if (actions.hasOwnProperty(key)) {
+				baseActions[key] = actions[key];
+			}
+		}
+	},
+	
+	
+	getDefined: function (key) {
+		return baseActions[key];
 	},
 	
 	
