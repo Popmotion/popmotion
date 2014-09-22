@@ -10,7 +10,8 @@ var KEY = require('../opts/keys.js'),
 	actionManager,
 	allActions = [],
 	activeTokens = [],
-	deactivateQueue = [];
+	deactivateQueue = [],
+	baseActions = {};
 
 ActionManager.prototype = {
 	
@@ -49,6 +50,22 @@ ActionManager.prototype = {
         actionOpts.values = props;
 			
 		action.set(actionOpts);
+	},
+	
+	/*
+		Define a base action
+		
+		Can be called later with .play()
+		
+		@param [string]: Name of the action
+		@param [object]: Action options
+		@param [object]: Value properties
+	*/
+	define: function (name, props, opts) {
+		baseActions[name] = {
+			props: props,
+			opts: opts
+		};
 	},
 	
 	

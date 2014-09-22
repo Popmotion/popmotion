@@ -67,11 +67,6 @@ Facade.prototype = {
 	track: function (props, opts, e) {
 		return redshift.ignite(this.token, KEY.LINK.POINTER, props, opts, e);
 	},
-	
-	
-	brakes: function () {
-    	return redshift.ignite(this.token, KEY.LINK.MOMENTUM);
-	},
     
     
     /*
@@ -106,6 +101,12 @@ Redshift.prototype = {
         var action = ActionManager.get(token) || ActionManager.create();
 
         return new Facade(action.token);
+    },
+    
+    
+    define: function (name, props, opts) {
+	    ActionManager.define(name, props, opts);
+	    return this;
     },
 	
 	animate: function (props, opts) {
