@@ -143,8 +143,10 @@ Redshift.prototype = {
 	*/
 	ignite: function (token, link, props, opts, e) {
 		var action = ActionManager.get(token);
+		
+		opts.link = link;
 
-		ActionManager.change(action.token, link, props, opts, e);
+		ActionManager.change(action.token, props, opts, e);
 
 		this.start(action.token);
 

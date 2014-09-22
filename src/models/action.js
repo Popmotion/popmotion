@@ -63,6 +63,10 @@ Action.prototype = {
         this.alternate = opts.alternate;
         this.pointerOffset = opts.pointerOffset;
         
+        // Play list
+        this.playList = opts.playList || null;
+        this.playCurrent = opts.playCurrent || 0;
+        
         // Callbacks
         this.onEnd = opts.onEnd || callback;
         this.onFrame = opts.onFrame || this.onFrame || callback;

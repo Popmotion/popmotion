@@ -33,23 +33,19 @@ ActionManager.prototype = {
 		Change action
 		
 		@param [Token]: Token for the action
-		@param [string]: Method to control this action
 		@param [object]: Value properties
 		@param [object]: Action options
 	*/
-	change: function (token, link, props, opts, e) {
-		var action = this.get(token),
-		    actionOpts = opts || {};
-
-        actionOpts.link = link;
+	change: function (token, props, opts, e) {
+		var action = this.get(token);
         
-        if (actionOpts.link === KEY.LINK.POINTER) {
-			actionOpts.pointerOffset = PointerTracker.start(e);
+        if (opts.link === KEY.LINK.POINTER) {
+			opts.pointerOffset = PointerTracker.start(e);
         }
         
-        actionOpts.values = props;
+        opts.values = props;
 			
-		action.set(actionOpts);
+		action.set(opts);
 	},
 	
 	/*
@@ -150,10 +146,12 @@ ActionManager.prototype = {
 	},
 	
 	purge: function () {
-		var queueLength = deactivateQueue.length,
+		var action,
+			queueLength = deactivateQueue.length,
 			i = 0;
 
 		for (i; i < queueLength; i++) {
+			// check for another thing and reset if so
 			this.deactivate(deactivateQueue[i]);
 		}
 

@@ -50,7 +50,7 @@ Rubix.prototype = {
             @return [boolean]: has action ended
         */
         hasEnded: function (action) {
-            return action.progress >= 1 ? true : false;
+        	return action.progress >= 1 ? true : false;
         },
         
         /*
