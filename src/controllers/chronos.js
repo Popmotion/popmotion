@@ -40,7 +40,7 @@ Chronos.prototype = {
     frame: function () {
         var self = this,
             activeActionTokens = ActionManager.getActiveTokens();
-        
+
         if (activeActionTokens.length) {
             requestAnimationFrame(function () {
                 var activeActionTokens = ActionManager.getActiveTokens(); // recheck incase stuff has been deactivated since

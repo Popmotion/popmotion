@@ -69,6 +69,7 @@ Action.prototype = {
         this.playCurrent = utils.isNum(opts.playCurrent) ? opts.playCurrent : this.playCurrent;
 
         // Callbacks
+        this.onStart = opts.onStart || callback;
         this.onEnd = opts.onEnd || callback;
         this.onFrame = opts.onFrame || this.onFrame || callback;
 
@@ -138,6 +139,7 @@ Action.prototype = {
         this.active = true;
         
         this.started = utils.currentTime() + this.delay;
+        this.firstFrame = true;
         //this.started = utils.currentTime() + this.delay - calc.value(this.progress, this.duration);
     },
     
