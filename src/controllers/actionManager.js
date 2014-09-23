@@ -202,12 +202,12 @@ ActionManager.prototype = {
     	    playlistLength = action.playlist ? action.playlist.length : 0;
     	
     	if (playlistLength && action.link === KEY.LINK.TIME) {
-        	if (action.playCurrent <= playlistLength - 1) {
+        	if (action.playCurrent < playlistLength - 1) {
             	action.playCurrent++;
             	nextInPlaylist = this.getDefined(action.playlist[action.playCurrent]);
         	}
     	}
-    	
+
     	return nextInPlaylist;
 	},
 	

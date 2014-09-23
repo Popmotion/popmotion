@@ -66,7 +66,7 @@ Action.prototype = {
         
         // Play list
         this.playlist = opts.playlist || this.playlist || [];
-        this.playCurrent = opts.playCurrent || this.playCurrent || 0;
+        this.playCurrent = utils.isNum(opts.playCurrent) ? opts.playCurrent : this.playCurrent;
 
         // Callbacks
         this.onEnd = opts.onEnd || callback;
