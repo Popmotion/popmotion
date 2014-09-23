@@ -168,7 +168,9 @@ ActionManager.prototype = {
 			nextInPlaylist = this.getNextInPlaylist(deactivateQueue[i]);
 
 			if (!nextInPlaylist) {
-    			this.deactivate(deactivateQueue[i]);
+			    if (utils.isNum(deactivateQueue[i])) {
+    			    this.deactivate(deactivateQueue[i]);
+			    }
 			} else {
     			this.change(deactivateQueue[i], nextInPlaylist.values, nextInPlaylist.options);
     			this.activate(deactivateQueue[i]);
