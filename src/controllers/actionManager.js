@@ -66,6 +66,11 @@ ActionManager.prototype = {
 	},
 	
 	
+	/*
+    	Get defined action
+    	
+    	@param [string]: The name of the predefined action
+	*/
 	getDefined: function (key) {
 		return baseActions[key];
 	},
@@ -145,31 +150,65 @@ ActionManager.prototype = {
     	}
 	},
 	
+	/*
+    	Purge deactivate queue
+    	
+    	Loops through the deactivate queue and decides whether to deactivate
+    	or swap action parameters with the next in the action's playList
+    	
+    	We use a deactivate queue rather than deactivate as soon as we process it
+    	because if we manipulate the list of activated Actions while it's being
+    	looped through, well you can only imagine the fun that causes.
+	*/
 	purge: function () {
-		var action, defined,
-			queueLength = deactivateQueue.length,
-			i = 0;
+		var nextInPlaylist,
+			queueLength = deactivateQueue.length;
 
-		for (i; i < queueLength; i++) {
-			action = this.get(i);
+		for (var i = 0; i < queueLength; i++) {
+			nextInPlaylist = this.getNextInPlaylist(i);
 			
-			if (action.link === KEY.LINK.TIME && action.playCurrent <= action.playList.length - 1) {
-				action.playCurrent++;
-				defined = this.getDefined(action.playList[action.playCurrent]);
-				this.change(i, defined.values, defined.options);
-				action.start();
+			if (!nextInPlaylist) {
+    			this.deactivate(deactivateQueue[i]);
 			} else {
-				this.deactivate(deactivateQueue[i]);
+    			this.change(i, nextInPlaylist.values, nextInPlaylist.options);
 			}
 		}
 
 		deactivateQueue = [];
 	},
 	
+	
+	/*
+    	Add token to the deactivate queue
+    	
+    	Queue gets processed at the end of every frame
+    	
+    	@param [Token]: Token of action
+	*/
 	queueDeactivate: function (token) {
 		deactivateQueue.push(token);
-	}
+	},
 	
+	
+	/*
+    	Get next item in playlist, or return false if none
+    	
+    	@param [Token]: Token of action
+	*/
+	getNextInPlaylist: function (token) {
+    	var nextInPlaylist = false,
+    	    action = this.get(token),
+    	    playlistLength = action.playlist ? action.playlist.length : 0;
+    	
+    	if (playlistLength && action.link === KEY.LINK.TIME) {
+        	if (action.playCurrent <= playlistLength - 1) {
+            	action.playCurrent++;
+            	nextInPlaylist = this.getDefined(action.playlist[action.playCurrent]);
+        	}
+    	}
+    	
+    	return nextInPlaylist;
+	}
 };
 
 actionManager = new ActionManager();

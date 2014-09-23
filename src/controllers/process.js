@@ -38,7 +38,7 @@ Process.prototype = {
     	var output = {},
     	    rubix = Rubix[action.link],
     	    hasChanged = false;
-console.log(action.link);
+
         output.pointer = rubix.updatePointer(action);
         action.progress = rubix.calcProgress(action, frameStart);
         

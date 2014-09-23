@@ -64,8 +64,8 @@ Action.prototype = {
         this.pointerOffset = opts.pointerOffset;
         
         // Play list
-        this.playList = this.playList || opts.playList || null;
-        this.playCurrent = this.playCurrent || opts.playCurrent || 0;
+        this.playlist = opts.playlist || this.playlist || [];
+        this.playCurrent = opts.playCurrent || this.playCurrent || 0;
         
         // Callbacks
         this.onEnd = opts.onEnd || callback;
