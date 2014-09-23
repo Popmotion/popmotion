@@ -59,13 +59,13 @@ Process.prototype = {
 
     	// If output has changed, fire onFrame
     	if (hasChanged) {
-        	action.onFrame(output);
+        	action.onFrame(output, action.data);
     	}
 
     	// If process is at its end, fire onEnd and deactivate action
     	if (rubix.hasEnded(action)) {
         	ActionManager.queueDeactivate(action.token);
-        	action.onEnd(output);
+        	action.onEnd(output, action.data);
     	}
 	},
 	

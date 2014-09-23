@@ -79,7 +79,7 @@ ActionManager.prototype = {
 	/*
 		Register action
 		
-		@param [Action]: Add action to sotrage array
+		@param [Action]: Add action to storage array
 	*/
 	register: function (action) {
 		allActions[action.token] = action;
@@ -165,12 +165,13 @@ ActionManager.prototype = {
 			queueLength = deactivateQueue.length;
 
 		for (var i = 0; i < queueLength; i++) {
-			nextInPlaylist = this.getNextInPlaylist(i);
-			
+			nextInPlaylist = this.getNextInPlaylist(deactivateQueue[i]);
+
 			if (!nextInPlaylist) {
     			this.deactivate(deactivateQueue[i]);
 			} else {
-    			this.change(i, nextInPlaylist.values, nextInPlaylist.options);
+    			this.change(deactivateQueue[i], nextInPlaylist.values, nextInPlaylist.options);
+    			this.activate(deactivateQueue[i]);
 			}
 		}
 
@@ -208,6 +209,23 @@ ActionManager.prototype = {
     	}
     	
     	return nextInPlaylist;
+	},
+	
+	
+	getData: function (token, key) {
+	    var action = this.get(token);
+    	
+    	return action.data ? action.data[key] : undefined;
+	},
+	
+	setData: function (token, data) {
+    	var action = this.get(token);
+    	
+    	for (var key in data) {
+        	if (data.hasOwnProperty(key)) {
+            	action.data[key] = data[key];
+        	}
+    	}
 	}
 };
 

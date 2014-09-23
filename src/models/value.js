@@ -3,7 +3,7 @@
 
 var utils = require('../utils/utils.js'),
 	calc = require('../utils/calc.js'),
-    Value = function (value, baseDuration, baseDelay, baseEase, baseAmp, baseEscape, baseMath) {
+    Value = function (value, actionData, baseDuration, baseDelay, baseEase, baseAmp, baseEscape, baseMath) {
     	
     	if (utils.isNum(value)) {
         	value = {
@@ -11,6 +11,12 @@ var utils = require('../utils/utils.js'),
         	};
     	}
     	
+    	if (utils.isFunc(value)) {
+        	value = {
+            	to: value(actionData)
+        	};
+    	}
+
     	this.from = value.from || 0;
     	this.to = value.to || 0;
     	this.current = utils.isNum(value.current) ? value.current : this.from;

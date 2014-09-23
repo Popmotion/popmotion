@@ -39,6 +39,7 @@ var KEY = require('../opts/keys.js'),
     Action = function () {
         this.created = utils.currentTime();
         this.token = token.generate();
+        this.data = {};
     };
     
 Action.prototype = {
@@ -51,7 +52,7 @@ Action.prototype = {
     set: function (opts) {
 	    
 	    this.link = this.link || opts.link;
-        
+	    
         // Action parameters
         this.amp = utils.isNum(opts.amp) ? opts.amp : defaults.amp;
         this.escapeAmp = utils.isNum(opts.escapeAmp) ? opts.escapeAmp : defaults.escapeAmp;
@@ -66,7 +67,7 @@ Action.prototype = {
         // Play list
         this.playlist = opts.playlist || this.playlist || [];
         this.playCurrent = opts.playCurrent || this.playCurrent || 0;
-        
+
         // Callbacks
         this.onEnd = opts.onEnd || callback;
         this.onFrame = opts.onFrame || this.onFrame || callback;
@@ -109,7 +110,7 @@ Action.prototype = {
 
         for (key in values) {
 	        if (values.hasOwnProperty(key)) {
-		        this.values[key] = new Value(values[key], this.duration, this.delay, this.ease, this.amp, this.escapeAmp, this.math);
+		        this.values[key] = new Value(values[key], this.data, this.duration, this.delay, this.ease, this.amp, this.escapeAmp, this.math);
 	        }
         }
     },
