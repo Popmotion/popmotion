@@ -4,19 +4,16 @@
 			ELEMENT: '_jQueryElement',
 			RS: 'redshift'
 		},
-		launch = function () {
-			var $e = arguments[1];
-			
+		launch = function (run, $e) {
 			$e.each(function () {
-				var $this = $(this),
-					rs = $this.data(KEY.RS);
+				var $this = $(this);
 					
-				if (!rs) {
-					$this.data(KEY.RS, rs);
-					rs.data(KEY.ELEMENT, $this);
+				if (!$this.redshift) {
+					$this.redshift = Redshift.get();
+					$this.redshift.data(KEY.ELEMENT, $this);
 				}
 				
-				rs[arguments[0]](arguments[2], arguments[3], arguments[4], arguments[5], arguments[6]);
+				$this.redshift[run](arguments[2], arguments[3], arguments[4], arguments[5], arguments[6]);
 			});
 		};
 	
