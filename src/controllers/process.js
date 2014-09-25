@@ -38,7 +38,12 @@ Process.prototype = {
     	var output = {},
     	    rubix = Rubix[action.link],
     	    hasChanged = false;
-console.log(action.link);
+    	    
+        if (action.firstFrame) {
+            action.onStart(output, action.data);
+            action.firstFrame = false;
+        }
+
         output.pointer = rubix.updatePointer(action);
         action.progress = rubix.calcProgress(action, frameStart);
         
@@ -59,13 +64,13 @@ console.log(action.link);
 
     	// If output has changed, fire onFrame
     	if (hasChanged) {
-        	action.onFrame(output);
+        	action.onFrame(output, action.data);
     	}
 
     	// If process is at its end, fire onEnd and deactivate action
     	if (rubix.hasEnded(action)) {
         	ActionManager.queueDeactivate(action.token);
-        	action.onEnd(output);
+        	action.onEnd(output, action.data);
     	}
 	},
 	

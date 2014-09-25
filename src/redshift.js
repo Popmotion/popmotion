@@ -57,13 +57,38 @@ Facade.prototype = {
 	},
 	
 	
+	data: function () {
+	    var returnValue = this,
+	        arg0 = arguments[0],
+	        arg0IsString = utils.isString(arg0),
+	        dataToSet = {};
+	    
+	    // If this is a get request
+	    if (arg0IsString && !arguments[1]) {
+    	    returnValue = ActionManager.getData(this.token, arg0);
+	    
+	    // Else this is a set request
+	    } else {
+	        if (arg0IsString) {
+    	        dataToSet[arg0] = arguments[1];
+	        } else {
+    	        dataToSet = arg0;
+	        }
+
+    	    ActionManager.setData(this.token, dataToSet);
+	    }
+
+	    return returnValue;
+	},
+	
+	
 	play: function (actions) {
 		var actionList = utils.isArray(actions) ? actions : actions.split(" "),
 			baseAction = ActionManager.getDefined(actionList[0]),
 			props = baseAction.values,
 			opts = baseAction.options;
 			
-		opts.playList = actionList;
+		opts.playlist = actionList;
 		opts.playCurrent = 0;
 	
 		return redshift.ignite(this.token, KEY.LINK.TIME, props, opts);

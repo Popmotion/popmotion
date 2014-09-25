@@ -26,7 +26,7 @@ Token.prototype = {
 		var token = this.get();
 		
 		this.increment();
-		
+
 		return token;
 	},
 	

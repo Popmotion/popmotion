@@ -39,6 +39,7 @@ var KEY = require('../opts/keys.js'),
     Action = function () {
         this.created = utils.currentTime();
         this.token = token.generate();
+        this.data = {};
     };
     
 Action.prototype = {
@@ -51,7 +52,7 @@ Action.prototype = {
     set: function (opts) {
 	    
 	    this.link = this.link || opts.link;
-        
+	    
         // Action parameters
         this.amp = utils.isNum(opts.amp) ? opts.amp : defaults.amp;
         this.escapeAmp = utils.isNum(opts.escapeAmp) ? opts.escapeAmp : defaults.escapeAmp;
@@ -64,10 +65,11 @@ Action.prototype = {
         this.pointerOffset = opts.pointerOffset;
         
         // Play list
-        this.playList = this.playList || opts.playList || null;
-        this.playCurrent = this.playCurrent || opts.playCurrent || 0;
-        
+        this.playlist = opts.playlist || this.playlist || [];
+        this.playCurrent = utils.isNum(opts.playCurrent) ? opts.playCurrent : this.playCurrent;
+
         // Callbacks
+        this.onStart = opts.onStart || callback;
         this.onEnd = opts.onEnd || callback;
         this.onFrame = opts.onFrame || this.onFrame || callback;
 
@@ -109,7 +111,7 @@ Action.prototype = {
 
         for (key in values) {
 	        if (values.hasOwnProperty(key)) {
-		        this.values[key] = new Value(values[key], this.duration, this.delay, this.ease, this.amp, this.escapeAmp, this.math);
+		        this.values[key] = new Value(values[key], this.data, this.duration, this.delay, this.ease, this.amp, this.escapeAmp, this.math);
 	        }
         }
     },
@@ -137,6 +139,7 @@ Action.prototype = {
         this.active = true;
         
         this.started = utils.currentTime() + this.delay;
+        this.firstFrame = true;
         //this.started = utils.currentTime() + this.delay - calc.value(this.progress, this.duration);
     },
     

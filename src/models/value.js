@@ -3,16 +3,33 @@
 
 var utils = require('../utils/utils.js'),
 	calc = require('../utils/calc.js'),
-    Value = function (value, baseDuration, baseDelay, baseEase, baseAmp, baseEscape, baseMath) {
+	parse = function (value, data) {
+    	var newValue = 0;
     	
     	if (utils.isNum(value)) {
-        	value = {
-            	to: value
-        	};
+        	newValue = value;
+    	
+    	} else if (utils.isFunc(value)) {
+        	newValue = value(data);
     	}
     	
-    	this.from = value.from || 0;
-    	this.to = value.to || 0;
+    	return newValue;
+	},
+    Value = function (value, data, baseDuration, baseDelay, baseEase, baseAmp, baseEscape, baseMath) {
+        
+        if (utils.isNum(value)) {
+            this.from = 0;
+            this.to = value;
+            
+        } else if (utils.isFunc(value)) {
+            this.from = 0;
+            this.to = value(data);
+            
+        } else if (utils.isObj(value)) {
+            this.from = parse(value.from, data);
+            this.to = parse(value.to, data);
+        }
+    	
     	this.current = utils.isNum(value.current) ? value.current : this.from;
     	this.duration = utils.isNum(value.duration) ? value.duration : baseDuration;
     	this.delay = utils.isNum(value.delay) ? value.delay : baseDelay;
