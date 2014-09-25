@@ -227,6 +227,10 @@ ActionManager.prototype = {
     	for (var key in data) {
         	if (data.hasOwnProperty(key)) {
             	action.data[key] = data[key];
+            	
+            	if (key === KEY.JQUERY_ELEMENT) {
+                	action.data = data[key];
+            	}
         	}
     	}
 	}
