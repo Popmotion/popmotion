@@ -1,3 +1,5 @@
+require('./redshift.js');
+
 (function ($) {
 
 	var KEY = {
