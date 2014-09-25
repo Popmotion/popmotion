@@ -37,10 +37,11 @@ Process.prototype = {
 	singleAction: function (action, frameStart) {
     	var output = {},
     	    rubix = Rubix[action.link],
-    	    hasChanged = false;
+    	    hasChanged = false,
+    	    data = action.data._jQueryElement || action.data;
     	    
         if (action.firstFrame) {
-            action.onStart(output, action.data);
+            action.onStart(output, data);
             action.firstFrame = false;
         }
 
@@ -64,13 +65,13 @@ Process.prototype = {
 
     	// If output has changed, fire onFrame
     	if (hasChanged) {
-        	action.onFrame(output, action.data);
+        	action.onFrame(output, data);
     	}
 
     	// If process is at its end, fire onEnd and deactivate action
     	if (rubix.hasEnded(action)) {
         	ActionManager.queueDeactivate(action.token);
-        	action.onEnd(output, action.data);
+        	action.onEnd(output, data);
     	}
 	},
 	
