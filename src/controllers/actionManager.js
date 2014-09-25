@@ -6,6 +6,7 @@
 var KEY = require('../opts/keys.js'),
 	PointerTracker = require('./pointerTracker.js'),
 	Action = require('../models/action.js'),
+	utils = require('../utils/utils.js'),
 	ActionManager = function () {},
 	actionManager,
 	allActions = [],
@@ -66,6 +67,11 @@ ActionManager.prototype = {
 	},
 	
 	
+	/*
+    	Get defined action
+    	
+    	@param [string]: The name of the predefined action
+	*/
 	getDefined: function (key) {
 		return baseActions[key];
 	},
@@ -74,7 +80,7 @@ ActionManager.prototype = {
 	/*
 		Register action
 		
-		@param [Action]: Add action to sotrage array
+		@param [Action]: Add action to storage array
 	*/
 	register: function (action) {
 		allActions[action.token] = action;
@@ -145,31 +151,85 @@ ActionManager.prototype = {
     	}
 	},
 	
+	/*
+    	Purge deactivate queue
+    	
+    	Loops through the deactivate queue and decides whether to deactivate
+    	or swap action parameters with the next in the action's playList
+    	
+    	We use a deactivate queue rather than deactivate as soon as we process it
+    	because if we manipulate the list of activated Actions while it's being
+    	looped through, well you can only imagine the fun that causes.
+	*/
 	purge: function () {
-		var action, defined,
-			queueLength = deactivateQueue.length,
-			i = 0;
+		var nextInPlaylist,
+			queueLength = deactivateQueue.length;
 
-		for (i; i < queueLength; i++) {
-			action = this.get(i);
-			
-			if (action.link === KEY.LINK.TIME && action.playCurrent <= action.playList.length - 1) {
-				action.playCurrent++;
-				defined = this.getDefined(action.playList[action.playCurrent]);
-				this.change(i, defined.values, defined.options);
-				action.start();
+		for (var i = 0; i < queueLength; i++) {
+			nextInPlaylist = this.getNextInPlaylist(deactivateQueue[i]);
+
+			if (!nextInPlaylist) {
+			    if (utils.isNum(deactivateQueue[i])) {
+    			    this.deactivate(deactivateQueue[i]);
+			    }
 			} else {
-				this.deactivate(deactivateQueue[i]);
+    			this.change(deactivateQueue[i], nextInPlaylist.values, nextInPlaylist.options);
+    			this.activate(deactivateQueue[i]);
 			}
 		}
 
 		deactivateQueue = [];
 	},
 	
+	
+	/*
+    	Add token to the deactivate queue
+    	
+    	Queue gets processed at the end of every frame
+    	
+    	@param [Token]: Token of action
+	*/
 	queueDeactivate: function (token) {
 		deactivateQueue.push(token);
-	}
+	},
 	
+	
+	/*
+    	Get next item in playlist, or return false if none
+    	
+    	@param [Token]: Token of action
+	*/
+	getNextInPlaylist: function (token) {
+    	var nextInPlaylist = false,
+    	    action = this.get(token),
+    	    playlistLength = action.playlist ? action.playlist.length : 0;
+    	
+    	if (playlistLength && action.link === KEY.LINK.TIME) {
+        	if (action.playCurrent < playlistLength - 1) {
+            	action.playCurrent++;
+            	nextInPlaylist = this.getDefined(action.playlist[action.playCurrent]);
+        	}
+    	}
+
+    	return nextInPlaylist;
+	},
+	
+	
+	getData: function (token, key) {
+	    var action = this.get(token);
+    	
+    	return action.data ? action.data[key] : undefined;
+	},
+	
+	setData: function (token, data) {
+    	var action = this.get(token);
+    	
+    	for (var key in data) {
+        	if (data.hasOwnProperty(key)) {
+            	action.data[key] = data[key];
+        	}
+    	}
+	}
 };
 
 actionManager = new ActionManager();

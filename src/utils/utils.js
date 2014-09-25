@@ -109,6 +109,16 @@ module.exports = {
     },
     
     /*
+        Is this var a string ? 
+        
+        @param: Variable to test
+        @return [boolean]: Returns true if typeof str === 'string'
+    */
+    isString: function (str) {
+        return (typeof str === 'string'); 
+    },
+    
+    /*
         Is this var an array ? 
         
         @param: Variable to test
