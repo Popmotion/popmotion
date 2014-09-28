@@ -23,7 +23,9 @@ var calc = require('../utils/calc.js'),
 	KEY = require('../opts/keys.js'),
     PointerTracker = require('./pointerTracker.js'),
     Rubix = function () {},
-    rubixController;
+    rubixController,
+    speed = 20,
+    friction = .3;
 
 Rubix.prototype = {
     Time: {
@@ -155,20 +157,64 @@ Rubix.prototype = {
         }
     },
     
-    /*
-    Momentum: {
-        
-        calcProgress: function (action, frameStart) {
-            
-        },
-        
-        hasEnded: function (action) {},
-        
-        updatePointer: function () {},
-        
-        easeValue: function () {}
+    Speed: {
+	    
+	    calcProgress: function (action, frameStart) {
+		    var speed = 10, //pps
+		    	progress = {};
+		    	
+		    for (var key in action.values) {
+			    if (action.values.hasOwnProperty(key)) {
+				    progress[key] = speed;
+			    }
+		    }
+		    
+		    return progress;
+	    },
+	    
+	    hasEnded: function () {
+		    return false;
+	    },
+	    
+	    easeValue: function (key, action, progress) {
+	     	return action.values[key].current + progress[key];
+	    },
+	    
+	    updatePointer: function () {}
+	    
     },
-    */
+    
+    Momentum: {
+	    
+	    calcProgress: function (action, frameStart) {
+		    var progress = {};
+		    
+		    speed = speed - friction;
+		    	
+		    for (var key in action.values) {
+			    if (action.values.hasOwnProperty(key)) {
+				    progress[key] = speed;
+			    }
+		    }
+		    
+		    return progress;
+	    },
+	    
+	    hasEnded: function (action) {
+	    	if (action.progress['translateX'] <= 0.1) {
+		    	return true;
+	    	}
+
+		    return false;
+	    },
+	    
+	    easeValue: function (key, action, progress) {
+	     	return action.values[key].current + progress[key];
+	    },
+	    
+	    updatePointer: function () {}
+    },
+
 };
 
 rubixController = new Rubix();

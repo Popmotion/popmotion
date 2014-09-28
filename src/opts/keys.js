@@ -21,7 +21,7 @@ module.exports = {
 	    INTERVAL: 'Interval',
 	    POINTER: 'Pointer',
 	    MOMENTUM: 'Momentum',
-	    SNAP: 'Snap'
+	    SPEED: 'Speed'
     },
     EVENT: {
 	    MOUSE: 'mouse',
