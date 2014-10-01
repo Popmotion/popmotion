@@ -7,7 +7,7 @@
     Available rubix:
         'Time'
         'Pointer'
-        'Momentum'
+        'Speed'
         
     Processing functions:
         calcProgress
@@ -23,9 +23,7 @@ var calc = require('../utils/calc.js'),
 	KEY = require('../opts/keys.js'),
     PointerTracker = require('./pointerTracker.js'),
     Rubix = function () {},
-    rubixController,
-    speed = 20,
-    friction = .3;
+    rubixController;
 
 Rubix.prototype = {
     Time: {
@@ -160,40 +158,12 @@ Rubix.prototype = {
     Speed: {
 	    
 	    calcProgress: function (action, frameStart) {
-		    var speed = 10, //pps
-		    	progress = {};
-		    	
-		    for (var key in action.values) {
-			    if (action.values.hasOwnProperty(key)) {
-				    progress[key] = speed;
-			    }
-		    }
-		    
-		    return progress;
-	    },
-	    
-	    hasEnded: function () {
-		    return false;
-	    },
-	    
-	    easeValue: function (key, action, progress) {
-	     	return action.values[key].current + progress[key];
-	    },
-	    
-	    updatePointer: function () {}
-	    
-    },
-    
-    Momentum: {
-	    
-	    calcProgress: function (action, frameStart) {
 		    var progress = {};
-		    
-		    speed = speed - friction;
 		    	
 		    for (var key in action.values) {
 			    if (action.values.hasOwnProperty(key)) {
-				    progress[key] = speed;
+					action.values[key].speed = action.values[key].speed - action.values[key].friction + action.values[key].thrust;
+				    progress[key] = action.values[key].speed;
 			    }
 		    }
 		    

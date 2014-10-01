@@ -40,6 +40,9 @@ var utils = require('../utils/utils.js'),
     	this.math = value.math || baseMath;
     	this.escapeAmp = utils.isNum(value.escapeAmp) ? value.escapeAmp : baseEscape;
         this.endSnap = value.endSnap;
+        this.speed = value.speed || 0;
+        this.friction = value.friction || 0;
+        this.thrust = value.thrust || 0;
     };
 
 module.exports = Value;

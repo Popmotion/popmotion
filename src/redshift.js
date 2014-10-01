@@ -103,15 +103,6 @@ Facade.prototype = {
 		return redshift.ignite(this.token, KEY.LINK.SPEED, props, opts);
 	},
 	
-	
-	momentum: function (action) {
-		var baseAction = ActionManager.getDefined(action),
-			props = baseAction.values,
-			opts = baseAction.options;
-
-		return redshift.ignite(this.token, KEY.LINK.MOMENTUM, props, opts);
-	},
-	
 
     /*
         Track pointer
