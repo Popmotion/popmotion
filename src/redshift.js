@@ -57,6 +57,20 @@ Facade.prototype = {
 	},
 	
 	
+	/*
+    	Read or bind data to this Redshift object
+    	
+    	Read
+    	    @param [string]: Key of data value to read
+    	    @return [any]: The data stored under that key
+    	    
+        Write syntax A
+            @param [string]: Key of data value to write
+            @param [any]: The data to store under that key
+            
+        Write syntax B
+            @param [object]: Object of key/value pairs to attach to this object
+	*/
 	data: function () {
 	    var returnValue = this,
 	        arg0 = arguments[0],
@@ -81,7 +95,11 @@ Facade.prototype = {
 	    return returnValue;
 	},
 	
-	
+	/*
+    	Play the provided actions as animations
+    	
+    	@param [string || array]: Space deliminated string or array of defined action keys in order of execution
+	*/
 	play: function (actions) {
 		var actionList = utils.isArray(actions) ? actions : actions.split(" "),
 			baseAction = ActionManager.getDefined(actionList[0]),
@@ -94,7 +112,11 @@ Facade.prototype = {
 		return redshift.ignite(this.token, KEY.LINK.TIME, props, opts);
 	},
 	
-	
+	/*
+    	Run the provided action based on property speed
+    	
+    	@param [string]: Key of the action to process
+	*/
 	speed: function (action) {
 		var baseAction = ActionManager.getDefined(action),
 			props = baseAction.values,
