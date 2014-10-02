@@ -120,8 +120,8 @@ Facade.prototype = {
 	*/
 	speed: function (action) {
 		var baseAction = ActionManager.getDefined(action),
-			props = baseAction.values,
-			opts = baseAction.options;
+			props = baseAction.values || {},
+			opts = baseAction.options || {};
 
 		return redshift.ignite(this.token, KEY.LINK.SPEED, props, opts);
 	},
@@ -233,7 +233,7 @@ Redshift.prototype = {
 	},
 	
 	stop: function (token) {
-    	Actions.deactivate(token);
+    	ActionManager.deactivate(token);
 	},
 	
     calc: calc,
@@ -250,4 +250,3 @@ Redshift.prototype = {
 redshift = new Redshift();
 
 window.Redshift = redshift;
-module.exports = redshift;
