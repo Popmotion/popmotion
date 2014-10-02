@@ -23,7 +23,10 @@
         circ
         back
         
-    System created from Gaëtan Renaudeau's original BezierEasing  
+    Easing functions from Robert Penner
+    http://www.robertpenner.com/easing/
+        
+    Bezier curve interpretor created from Gaëtan Renaudeau's original BezierEasing  
     https://github.com/gre/bezier-easing/blob/master/index.js  
     https://github.com/gre/bezier-easing/blob/master/LICENSE
 */
@@ -62,6 +65,11 @@ var calc = require('./calc.js'),
         },
         circ: function (progress) {
             return 1 - Math.sin(Math.acos(progress));
+        },
+        back: function (progress) {
+            var strength = 1.5;
+
+            return (progress * progress) * ((strength + 1) * progress - strength);
         }
 	};
 	
