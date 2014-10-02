@@ -114,6 +114,11 @@ Action.prototype = {
 		        this.values[key] = new Value(values[key], this.data, this.duration, this.delay, this.ease, this.amp, this.escapeAmp, this.math);
 	        }
         }
+        
+        if (this.values.angle) {
+            this.values.x = new Value();
+            this.values.y = new Value();
+        }
     },
     
     reverseValues: function () {
