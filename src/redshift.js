@@ -10,6 +10,7 @@ var KEY = require('./opts/keys.js'),
 	ActionManager = require('./controllers/actionManager.js'),
 	Chronos = require('./controllers/chronos.js'),
 	Easing = require('./utils/easingFunctions.js'),
+	calc = require('./utils/calc.js'),
 	utils = require('./utils/utils.js'),
 	Redshift = function () {},
     redshift,
@@ -234,6 +235,8 @@ Redshift.prototype = {
 	stop: function (token) {
     	Actions.deactivate(token);
 	},
+	
+    calc: calc,
 	
 	run: function () {
     	
