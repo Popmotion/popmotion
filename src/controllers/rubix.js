@@ -156,7 +156,15 @@ Rubix.prototype = {
     },
     
     Speed: {
-	    
+    
+    	/*
+    	    Calc new speed
+    	    
+    	    Calc the new speed based on the formula speed = (speed - friction + thrust)
+        	
+        	@param [Action]: action to measure
+        	@return [object]: Object of all speeds
+    	*/
 	    calcProgress: function (action, frameStart) {
 		    var progress = {};
 		    	
@@ -170,14 +178,22 @@ Rubix.prototype = {
 		    return progress;
 	    },
 	    
+	    /*
+    	    Has this action ended?
+    	    
+    	    @return [boolean]: False for now - TODO create better default
+	    */
 	    hasEnded: function (action) {
-	    	if (action.progress['translateX'] <= 0.1) {
-		    	return true;
-	    	}
-
-		    return false;
+	    	return false;
 	    },
 	    
+	    /*
+    	    Add the speed to the current value
+            
+            @param [string]: key of value
+            @param [Action]
+            @param [object]: Progress of pointer props
+	    */
 	    easeValue: function (key, action, progress) {
 	     	return action.values[key].current + progress[key];
 	    },
