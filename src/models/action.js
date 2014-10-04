@@ -106,7 +106,7 @@ Action.prototype = {
     
     setValues: function (values) {
         var key;
-        
+
         if (this.values) {
 	        
         } else {
@@ -124,8 +124,8 @@ Action.prototype = {
         }
         
         if (this.values.angle) {
-            this.values.x = new Value();
-            this.values.y = new Value();
+        	this.values.x = this.values.x || new Value(0, this.data, this.duration, this.delay, this.ease, this.amp, this.escapeAmp, this.math);
+            this.values.y = this.values.y || new Value(0, this.data, this.duration, this.delay, this.ease, this.amp, this.escapeAmp, this.math);
         }
     },
     

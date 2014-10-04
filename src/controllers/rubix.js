@@ -166,13 +166,20 @@ Rubix.prototype = {
         	@return [object]: Object of all speeds
     	*/
 	    calcProgress: function (action, frameStart) {
-		    var progress = {};
+		    var progress = {},
+		    	point;
 		    	
 		    for (var key in action.values) {
 			    if (action.values.hasOwnProperty(key)) {
 					action.values[key].speed = action.values[key].speed - action.values[key].friction + action.values[key].thrust;
 				    progress[key] = action.values[key].speed;
 			    }
+		    }
+		    
+		    if (action.values.angle && action.values.distance) {
+		    	point = calc.point(action.origin, action.values.angle.current, action.values.distance.current);
+			    progress.x = point.x;
+			    progress.y = point.y;
 		    }
 		    
 		    return progress;

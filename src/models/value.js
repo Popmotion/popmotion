@@ -28,14 +28,20 @@ var utils = require('../utils/utils.js'),
         } else if (utils.isObj(value)) {
             this.from = parse(value.from, data);
             this.to = parse(value.to, data);
+            
+            if (utils.isFunc(value.current)) {
+	            this.current = value.current(data);
+            } else if (utils.isNum(value.current)) {
+	            this.current = value.current;
+            }
         }
-    	
-    	this.current = utils.isNum(value.current) ? value.current : this.from;
+        
+		this.current = (utils.isNum(this.current)) ? this.current : this.from;
     	this.duration = utils.isNum(value.duration) ? value.duration : baseDuration;
     	this.delay = utils.isNum(value.delay) ? value.delay : baseDelay;
     	this.ease = value.ease || baseEase;
     	this.amp = utils.isNum(value.amp) ? value.amp : baseAmp;
-    	this.constant = utils.isNum(value.constant) ? value.constant : false;
+    	this.constant = parse(value.constant, data);
     	this.link = value.link;
     	this.math = value.math || baseMath;
     	this.escapeAmp = utils.isNum(value.escapeAmp) ? value.escapeAmp : baseEscape;
@@ -49,6 +55,7 @@ Value.prototype = {
 	
 	update: function (value, data, baseDuration, baseDelay, baseEase, baseAmp, baseEscape, baseMath) {
 		this.to = parse(value.to, data);
+    	this.constant = parse(value.constant, data);
         this.speed = value.speed || 0;
 	}
 	
