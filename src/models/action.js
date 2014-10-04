@@ -107,11 +107,19 @@ Action.prototype = {
     setValues: function (values) {
         var key;
         
-        this.values = {};
+        if (this.values) {
+	        
+        } else {
+	        this.values = {};
+        }
 
         for (key in values) {
 	        if (values.hasOwnProperty(key)) {
-		        this.values[key] = new Value(values[key], this.data, this.duration, this.delay, this.ease, this.amp, this.escapeAmp, this.math);
+	        	if (this.values[key]) {
+		        	this.values[key].update(values[key], this.data, this.duration, this.delay, this.ease, this.amp, this.escapeAmp, this.math);
+	        	} else {
+		        	this.values[key] = new Value(values[key], this.data, this.duration, this.delay, this.ease, this.amp, this.escapeAmp, this.math);	
+	        	}
 	        }
         }
         

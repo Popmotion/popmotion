@@ -44,5 +44,14 @@ var utils = require('../utils/utils.js'),
         this.friction = value.friction || 0;
         this.thrust = value.thrust || 0;
     };
+    
+Value.prototype = {
+	
+	update: function (value, data, baseDuration, baseDelay, baseEase, baseAmp, baseEscape, baseMath) {
+		this.to = parse(value.to, data);
+        this.speed = value.speed || 0;
+	}
+	
+};
 
 module.exports = Value;
