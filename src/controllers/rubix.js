@@ -7,7 +7,7 @@
     Available rubix:
         'Time'
         'Pointer'
-        'Momentum'
+        'Speed'
         
     Processing functions:
         calcProgress
@@ -155,20 +155,59 @@ Rubix.prototype = {
         }
     },
     
-    /*
-    Momentum: {
-        
-        calcProgress: function (action, frameStart) {
+    Speed: {
+    
+    	/*
+    	    Calc new speed
+    	    
+    	    Calc the new speed based on the formula speed = (speed - friction + thrust)
+        	
+        	@param [Action]: action to measure
+        	@return [object]: Object of all speeds
+    	*/
+	    calcProgress: function (action, frameStart) {
+		    var progress = {},
+		    	point;
+		    	
+		    for (var key in action.values) {
+			    if (action.values.hasOwnProperty(key)) {
+					action.values[key].speed = action.values[key].speed - action.values[key].friction + action.values[key].thrust;
+				    progress[key] = action.values[key].speed;
+			    }
+		    }
+		    
+		    if (action.values.angle && action.values.distance) {
+		    	point = calc.point(action.origin, action.values.angle.current, action.values.distance.current);
+			    progress.x = point.x;
+			    progress.y = point.y;
+		    }
+		    
+		    return progress;
+	    },
+	    
+	    /*
+    	    Has this action ended?
+    	    
+    	    @return [boolean]: False for now - TODO create better default
+	    */
+	    hasEnded: function (action) {
+	    	return false;
+	    },
+	    
+	    /*
+    	    Add the speed to the current value
             
-        },
-        
-        hasEnded: function (action) {},
-        
-        updatePointer: function () {},
-        
-        easeValue: function () {}
+            @param [string]: key of value
+            @param [Action]
+            @param [object]: Progress of pointer props
+	    */
+	    easeValue: function (key, action, progress) {
+	     	return action.values[key].current + progress[key];
+	    },
+	    
+	    updatePointer: function () {}
     },
-    */
+
 };
 
 rubixController = new Rubix();

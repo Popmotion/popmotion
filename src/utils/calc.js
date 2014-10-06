@@ -195,6 +195,15 @@ Calc.prototype = {
             
         return new Offset(angle, distance, x, y, z);
     },
+    
+    point: function (origin, angle, distance) {
+    	var point = {};
+
+    	point.x = 5 * Math.cos(angle) + origin.x;
+    	point.y = 5 * Math.sin(angle) + origin.y;
+
+	    return point;
+    },
 
     /*
         Progress within given range
@@ -216,6 +225,19 @@ Calc.prototype = {
             progress = (value - from) / range;
 
         return progress;
+    },
+    
+    /*
+	    Return random number between range
+	    
+	    @param [number] (optional): Output minimum
+	    @param [number] (optional): Output maximum
+	    @return [number]: Random number within range, or 0 and 1 if none provided
+    */
+    random: function (min, max) {
+	    min = utils.isNum(min) ? min : 0;
+	    max = utils.isNum(max) ? max : 1;
+	    return Math.random() * (max - min) + min;
     },
 
 
@@ -284,6 +306,14 @@ Calc.prototype = {
         var easedProgress = easing(progress);
         
         return this.value(easedProgress, from, to);
+    },
+    
+    degreesToRadians: function (degrees) {
+	    return degrees * Math.PI / 180;
+    },
+    
+    radiansToDegrees: function (radians) {
+	    return radians * 180 / Math.PI;
     }
 };
 
