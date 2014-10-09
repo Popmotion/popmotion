@@ -113,7 +113,7 @@ Rubix.prototype = {
             True if action.isTracking is false
         */
         hasEnded: function (action) {
-            return action.pointer ? false : true;
+            return PointerTracker.isTracking() ? false : true;
         },
         
         /*

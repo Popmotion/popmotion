@@ -120,8 +120,6 @@ ActionManager.prototype = {
 	        index = activeTokens.indexOf(token),
 	        deactivateIndex = deactivateQueue.indexOf(token);
     	
-    	action.start();
-    	
     	if (index === -1) {
             activeTokens.push(token);
         }
@@ -130,6 +128,8 @@ ActionManager.prototype = {
         if (deactivateIndex >= 0) {
             deactivateQueue.splice(deactivateIndex, 1);
         }
+    	
+    	action.start();
 	},
 	
 	

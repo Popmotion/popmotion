@@ -51,7 +51,7 @@ Action.prototype = {
     */
     set: function (opts) {
 	    
-	    this.link = this.link || opts.link;
+	    this.link = opts.link;
 	    
         // Action parameters
         this.amp = utils.isNum(opts.amp) ? opts.amp : defaults.amp;
@@ -92,11 +92,12 @@ Action.prototype = {
     	    this.velocity = this.pointer.velocity.y;
 	    }
 */
-	    this.origin = {};
+
+        this.origin = {};
         
         for (var key in this.values) {
 	        if (this.values.hasOwnProperty(key)) {
-		        this.origin[key] = this.values[key].current;
+	            this.origin[key] = this.values[key].current;
 	        }
         }
     
@@ -106,12 +107,8 @@ Action.prototype = {
     
     setValues: function (values) {
         var key;
-
-        if (this.values) {
-	        
-        } else {
-	        this.values = {};
-        }
+        
+        this.values = this.values || {};
 
         for (key in values) {
 	        if (values.hasOwnProperty(key)) {
@@ -150,7 +147,7 @@ Action.prototype = {
     */
     start: function () {
         this.active = true;
-        
+        console.log(this.link);
         this.started = utils.currentTime() + this.delay;
         this.firstFrame = true;
         //this.started = utils.currentTime() + this.delay - calc.value(this.progress, this.duration);

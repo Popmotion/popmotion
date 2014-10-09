@@ -55,13 +55,18 @@ Value.prototype = {
 		this.to = parse(value.to, data);
         this.from = parse(value.from, data);
         this.speed = value.speed || 0;
+        this.ease = value.ease || baseEase;
         
-        if (value.current && !value.from) {
+        if (this.current && !utils.isNum(value.from)) {
+            this.from = this.current;
+        }
+
+        if (value.current && !utils.isNum(value.from)) {
             this.from = value.current;
             this.current = value.current;
         }
         
-        if (value.override = true) {
+        if (value.override === true) {
             this.current = this.from;
         }
 	}

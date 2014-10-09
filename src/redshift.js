@@ -104,12 +104,12 @@ Facade.prototype = {
 	play: function (actions) {
 		var actionList = utils.isArray(actions) ? actions : actions.split(" "),
 			baseAction = ActionManager.getDefined(actionList[0]),
-			props = baseAction.values,
-			opts = baseAction.options;
+			props = baseAction.values || {},
+			opts = baseAction.options || {};
 			
 		opts.playlist = actionList;
 		opts.playCurrent = 0;
-	
+
 		return redshift.ignite(this.token, KEY.LINK.TIME, props, opts);
 	},
 	
