@@ -129,13 +129,15 @@ Facade.prototype = {
 
     /*
         Track pointer
-        
-        @param [object]: Properties to manipulate
-        @param [object]: Options for track
+    	
+    	@param [string]: Key of the action to process
         @param [event]: Initiating pointer event
-        @return [int]: ID token for action
     */
-	track: function (props, opts, e) {
+	track: function (actions, e) {
+	    var baseAction = ActionManager.getDefined(actions),
+	        props = baseAction.values || {},
+	        opts = baseAction.options || {};
+	
 		return redshift.ignite(this.token, KEY.LINK.POINTER, props, opts, e);
 	},
     

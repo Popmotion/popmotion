@@ -1,3 +1,9 @@
+/*
+    Redshift jQuery plugin
+    
+    TODO: Refactor to remove all this repeated code. Jeez it's a mess in here.
+*/
+
 require('./redshift.js');
 
 (function ($) {
@@ -38,6 +44,24 @@ require('./redshift.js');
     	    }
 
     	    thisRS.speed(actions);
+	    });
+		
+		return this;
+	};
+	
+	$.fn.track = function(actions) {
+	    
+	    this.each(function () {
+    	    var $this = $(this),
+    	        thisRS = $this.data(KEY.RS);
+    	    
+    	    if (!thisRS) {
+        	    thisRS = Redshift.get();
+        	    thisRS.data(KEY.ELEMENT, $this);
+        	    $this.data(KEY.RS, thisRS);
+    	    }
+
+    	    thisRS.track(actions);
 	    });
 		
 		return this;
