@@ -19,5 +19,6 @@ module.exports = {
         maxInactiveFrames: 2 // allow this number of frames to pass with no movement before we declare stationary pointer
     },
     tick: 0,
+    trackEase: KEY.EASING.LINEAR,
     tweenTarget: 0 // default tween target value
 };

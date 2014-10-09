@@ -49,7 +49,7 @@ require('./redshift.js');
 		return this;
 	};
 	
-	$.fn.track = function(actions) {
+	$.fn.track = function(actions, e) {
 	    
 	    this.each(function () {
     	    var $this = $(this),
@@ -61,7 +61,7 @@ require('./redshift.js');
         	    $this.data(KEY.RS, thisRS);
     	    }
 
-    	    thisRS.track(actions);
+    	    thisRS.track(actions, e);
 	    });
 		
 		return this;

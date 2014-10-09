@@ -20,6 +20,7 @@
 var calc = require('../utils/calc.js'),
 	util = require('../utils/utils.js'),
     Easing = require('../utils/easingFunctions.js'),
+	defaults = require('../opts/defaults.js'),
 	KEY = require('../opts/keys.js'),
     PointerTracker = require('./pointerTracker.js'),
     Rubix = function () {},
@@ -91,7 +92,7 @@ Rubix.prototype = {
         calcProgress: function (action, frameStart) {
             var progress = {},
                 offset = action.pointer.offset;
-                
+
             for (var key in offset) {
                 if (offset.hasOwnProperty(key)) {
                     progress[key] = {
@@ -123,10 +124,10 @@ Rubix.prototype = {
         */
         updatePointer: function (action) {
             var currentPointer = action.pointer;
-            
-            action.pointer = PointerTracker.get(action.pointerOffset);
 
-            return action.pointer || currentPointer;
+            action.pointer = PointerTracker.get(action.pointerOffset) || currentPointer;
+            
+            return action.pointer;
         },
         
         /*
@@ -142,15 +143,15 @@ Rubix.prototype = {
 
             // If we've already calculated the progress for this property
             if (progress[key]) {
-                easedValue = Easing.withinRange(progress[key].value, value.from, value.to, value.ease, value.escapeAmp);
+                easedValue = Easing.withinRange(progress[key].value, value.from, value.to, defaults.trackEase, value.escapeAmp);
             
             // If we're linking this property into a user input
             } else if (value.link) {
-                easedValue = Easing.withinRange(progress[value.link].value, value.from, value.to, value.ease, value.escapeAmp);
+                easedValue = Easing.withinRange(progress[value.link].value, value.from, value.to, defaults.trackEase, value.escapeAmp);
             }
             
-            // Handle default easing 
-            
+            // TODO: Handle default easing 
+
             return easedValue;
         }
     },
