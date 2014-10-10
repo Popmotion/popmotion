@@ -147,7 +147,6 @@ Action.prototype = {
     */
     start: function () {
         this.active = true;
-        console.log(this.link);
         this.started = utils.currentTime() + this.delay;
         this.firstFrame = true;
         //this.started = utils.currentTime() + this.delay - calc.value(this.progress, this.duration);

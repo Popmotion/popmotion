@@ -5,10 +5,9 @@ var utils = require('../utils/utils.js'),
 	calc = require('../utils/calc.js'),
 	parse = function (value, data) {
     	var newValue = 0;
-    	
+
     	if (utils.isNum(value)) {
         	newValue = value;
-    	
     	} else if (utils.isFunc(value)) {
         	newValue = value(data);
     	}
@@ -65,7 +64,7 @@ Value.prototype = {
             this.from = value.current;
             this.current = value.current;
         }
-        
+
         if (value.override === true) {
             this.current = this.from;
         }
