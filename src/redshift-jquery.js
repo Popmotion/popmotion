@@ -13,7 +13,7 @@ require('./redshift.js');
 			RS: 'redshift'
 		};
 	
-	$.fn.play = function(actions) {
+	$.fn.play = function(actions, overrides) {
 	    
 	    this.each(function () {
     	    var $this = $(this),
@@ -25,7 +25,7 @@ require('./redshift.js');
         	    $this.data(KEY.RS, thisRS);
     	    }
 
-    	    thisRS.play(actions);
+    	    thisRS.play(actions, overrides);
 	    });
 		
 		return this;

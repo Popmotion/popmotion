@@ -3,13 +3,13 @@
 
 var utils = require('../utils/utils.js'),
 	calc = require('../utils/calc.js'),
-	parse = function (value, data) {
+	parse = function (value, data, current) {
     	var newValue = 0;
 
     	if (utils.isNum(value)) {
         	newValue = value;
     	} else if (utils.isFunc(value)) {
-        	newValue = value(data);
+        	newValue = value(data, current);
     	}
     	
     	return newValue;
@@ -51,7 +51,7 @@ var utils = require('../utils/utils.js'),
 Value.prototype = {
 	
 	update: function (value, data, baseDuration, baseDelay, baseEase, baseAmp, baseEscape, baseMath) {
-		this.to = parse(value.to, data);
+		this.to = parse(value.to, data, this.current);
         this.from = parse(value.from, data);
         this.speed = value.speed || 0;
         this.ease = value.ease || baseEase;

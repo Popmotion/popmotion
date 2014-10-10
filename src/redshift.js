@@ -99,9 +99,14 @@ Facade.prototype = {
 	/*
     	Play the provided actions as animations
     	
+    	PROPOSED SYNTAX
+    	    .play(actions) // works
+    	    .play(actions, overrideProps, overrideOpts)
+    	    .play(props, opts)
+    	
     	@param [string || array]: Space deliminated string or array of defined action keys in order of execution
 	*/
-	play: function (actions) {
+	play: function (actions, overrides) {
 		var actionList = utils.isArray(actions) ? actions : actions.split(" "),
 			baseAction = ActionManager.getDefined(actionList[0]),
 			props = baseAction.values || {},
@@ -109,6 +114,15 @@ Facade.prototype = {
 			
 		opts.playlist = actionList;
 		opts.playCurrent = 0;
+		
+		// TODO: abstract override manager
+		if (utils.isObj(overrides)) {
+    		for (var key in overrides) {
+        		if (overrides.hasOwnProperty(key) && utils.isObj(props[key])) {
+            		props[key].to = overrides[key];
+        		}
+    		}
+		}
 
 		return redshift.ignite(this.token, KEY.LINK.TIME, props, opts);
 	},
