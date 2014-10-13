@@ -14,7 +14,7 @@ var utils = require('../utils/utils.js'),
     	
     	return newValue;
 	},
-    Value = function (value, data, baseDuration, baseDelay, baseEase, baseAmp, baseEscape, baseMath) {
+    Value = function (value, data, baseDuration, baseDelay, baseEase, baseAmp, baseEscape, baseMath, baseStep) {
         
         if (utils.isNum(value)) {
             this.from = 0;
@@ -38,23 +38,29 @@ var utils = require('../utils/utils.js'),
         }
         
 		this.current = (utils.isNum(this.current)) ? this.current : this.from;
+    	this.link = value.link;
+    	this.math = value.math || baseMath;
+    	this.step = value.step || baseStep;
+		
+		// Play values
     	this.duration = utils.isNum(value.duration) ? value.duration : baseDuration;
     	this.delay = utils.isNum(value.delay) ? value.delay : baseDelay;
     	this.ease = value.ease || baseEase;
     	this.amp = utils.isNum(value.amp) ? value.amp : baseAmp;
-    	this.link = value.link;
-    	this.math = value.math || baseMath;
+    	
+    	// Track values
     	this.escapeAmp = utils.isNum(value.escapeAmp) ? value.escapeAmp : baseEscape;
+    	
+    	// Move values
         this.speed = value.speed || 0;
         this.friction = value.friction || 0;
         this.thrust = value.thrust || 0;
         
-        console.log(this);
     };
     
 Value.prototype = {
 	
-	update: function (value, data, baseDuration, baseDelay, baseEase, baseAmp, baseEscape, baseMath) {
+	update: function (value, data, baseDuration, baseDelay, baseEase, baseAmp, baseEscape, baseMath, baseStep) {
 		this.to = parse(value.to, data, this.current);
         this.from = parse(value.from, data);
         this.min = parse(value.min, data);

@@ -190,8 +190,6 @@ Rubix.prototype = {
 			    	value = action.values[key];
 			    	value.speed = value.speed - this.frameSpeed(value.friction, fps) + this.frameSpeed(value.thrust, fps);
 				    progress[key] = this.frameSpeed(value.speed, fps);
-				    
-				    console.log('fps: ' + fps, 'speed:' + value.speed);
 			    }
 		    }
 		    

@@ -60,7 +60,7 @@ Action.prototype = {
         this.duration = utils.isNum(opts.duration) ? opts.duration : defaults.duration;
         this.ease = opts.ease || defaults.ease;
         this.math = opts.math;
-        this.tick = utils.isNum(opts.tick) ? opts.tick : defaults.tick;
+        this.step = utils.isNum(opts.step) ? opts.step : defaults.step;
         this.alternate = opts.alternate;
         this.pointerOffset = opts.pointerOffset;
         
