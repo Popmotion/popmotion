@@ -18,7 +18,7 @@
 "use strict";
 
 var calc = require('../utils/calc.js'),
-	util = require('../utils/utils.js'),
+	utils = require('../utils/utils.js'),
     Easing = require('../utils/easingFunctions.js'),
 	defaults = require('../opts/defaults.js'),
 	KEY = require('../opts/keys.js'),
@@ -160,6 +160,19 @@ Rubix.prototype = {
     Speed: {
     
     	/*
+	    	Convert x per second to per frame speed based on fps
+    	*/
+    	frameSpeed: function (xps, fps) {
+    		var speedPerFrame = 0;
+
+    		if (xps && utils.isNum(xps)) {
+	    		speedPerFrame = xps/fps;
+    		}
+    	
+	    	return speedPerFrame;
+    	},
+    
+    	/*
     	    Calc new speed
     	    
     	    Calc the new speed based on the formula speed = (speed - friction + thrust)
@@ -167,14 +180,16 @@ Rubix.prototype = {
         	@param [Action]: action to measure
         	@return [object]: Object of all speeds
     	*/
-	    calcProgress: function (action, frameStart) {
+	    calcProgress: function (action, frameStart, fps) {
 		    var progress = {},
-		    	point;
+		    	point,
+		    	value;
 		    	
 		    for (var key in action.values) {
 			    if (action.values.hasOwnProperty(key)) {
-					action.values[key].speed = action.values[key].speed - action.values[key].friction + action.values[key].thrust;
-				    progress[key] = action.values[key].speed;
+			    	value = action.values[key];
+			    	value.speed = value.speed - this.frameSpeed(value.friction, fps) + this.frameSpeed(value.thrust, fps);
+				    progress[key] = this.frameSpeed(value.speed, fps);
 			    }
 		    }
 		    

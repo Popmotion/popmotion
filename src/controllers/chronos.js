@@ -3,7 +3,8 @@
 */
 "use strict";
 
-var utils = require('../utils/utils.js'),
+var calc = require('../utils/calc.js'),
+	utils = require('../utils/utils.js'),
     ActionManager = require('./actionManager.js'),
     PointerTracker = require('./pointerTracker.js'),
     Process = require('./process.js'),
@@ -51,7 +52,7 @@ Chronos.prototype = {
                 if (activeActionTokens.length) {
                 	self.updateTime();
                 	PointerTracker.frame();
-                	Process.actions(activeActionTokens, currentTime);
+                	Process.actions(activeActionTokens, currentTime, fps);
                     ActionManager.purge();
                     self.frame();
                 } else {

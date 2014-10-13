@@ -19,12 +19,12 @@ Process.prototype = {
         @param [array]: Tokens of active actions at time of framestart
         @param [timestamp]: Timestamp of framestart
     */
-	actions: function (tokens, frameStart) {
+	actions: function (tokens, frameStart, fps) {
 		var i = 0,
 			active = tokens.length;
 
 		for (i; i < active; i++) {
-			this.singleAction(ActionManager.get(tokens[i]), frameStart);
+			this.singleAction(ActionManager.get(tokens[i]), frameStart, fps);
 		}
 	},
 	
@@ -35,7 +35,7 @@ Process.prototype = {
     	@param [Action]
     	@param [timestamp]
 	*/
-	singleAction: function (action, frameStart) {
+	singleAction: function (action, frameStart, fps) {
     	var output = {},
     	    rubix = Rubix[action.link],
     	    hasChanged = false;
@@ -46,7 +46,7 @@ Process.prototype = {
         }
 
         output.pointer = rubix.updatePointer(action);
-        action.progress = rubix.calcProgress(action, frameStart);
+        action.progress = rubix.calcProgress(action, frameStart, fps);
         
     	// Loop over all values 
     	for (var key in action.values) {
