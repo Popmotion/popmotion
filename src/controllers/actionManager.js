@@ -61,7 +61,11 @@ ActionManager.prototype = {
 
 		for (key in actions) {
 			if (actions.hasOwnProperty(key)) {
-				baseActions[key] = actions[key];
+				if (baseActions[key] && !actions[key].forceOverride) {
+					throw KEY.ERROR.ACTION_EXISTS;
+				} else {
+					baseActions[key] = actions[key];
+				}
 			}
 		}
 	},

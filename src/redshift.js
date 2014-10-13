@@ -19,44 +19,6 @@ var KEY = require('./opts/keys.js'),
     };
     
 Facade.prototype = {
-
-	/*
-    	Animate values
-        
-        @param [object]: Properties to manipulate
-        
-        Syntax A
-            @param [object]: Options for track
-            
-        Syntax B
-            @param [number]: Duration
-            @param [string] (optional): Easing
-            @param [function] (optional): onFrame callback
-            @param [function] (optional): onEnd callback
-        
-        @return [int]: ID token for action
-	*/
-	animate: function (props) {
-	    var opts = utils.isObj(arguments[1]) ? arguments[1] : {};
-
-        // Set duration
-        if (utils.isNum(arguments[1])) {
-            opts.duration = arguments[1];
-        }
-        
-        // Set onFrame
-        if (utils.isFunc(arguments[2])) {
-            opts.onFrame = arguments[2];
-        }
-        
-        // Set onEnd
-        if (utils.isFunc(arguments[3])) {
-            opts.onEnd = arguments[3];
-        }
-	
-		return redshift.ignite(this.token, KEY.LINK.TIME, props, opts);
-	},
-	
 	
 	/*
     	Read or bind data to this Redshift object
@@ -132,7 +94,7 @@ Facade.prototype = {
     	
     	@param [string]: Key of the action to process
 	*/
-	speed: function (action) {
+	move: function (action) {
 		var baseAction = ActionManager.getDefined(action),
 			props = baseAction.values || {},
 			opts = baseAction.options || {};
@@ -195,13 +157,6 @@ Redshift.prototype = {
 	    ActionManager.define(actions);
 	    return this;
     },
-	
-	animate: function (props, opts) {
-    	var action = ActionManager.create();
-    	
-		return redshift.ignite(action.token, KEY.LINK.TIME, props, opts);
-	},
-	
 	
 	/*
     	Ignite Redshift

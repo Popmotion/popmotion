@@ -67,32 +67,18 @@ Action.prototype = {
         // Play list
         this.playlist = opts.playlist || this.playlist || [];
         this.playCurrent = utils.isNum(opts.playCurrent) ? opts.playCurrent : this.playCurrent;
+        
+        // Looping
+        this.loop = opts.loop || false;
+        this.loopCount = 0;
 
         // Callbacks
         this.onStart = opts.onStart || callback;
         this.onEnd = opts.onEnd || callback;
         this.onFrame = opts.onFrame || this.onFrame || callback;
 
+		// Values
         this.setValues(opts.values);
-/*
-        // If this is the first init
-	    if (!this.lastModified) {
-        	this.progress = 0;
-	    	this.setValues(opts.values);
-	   
-        // If user has forced value refresh
-	    } else if (opts.refreshValues) {
-	    	this.setValues(opts.values);
-	   
-	    // If values are meant to alternate on each init
-	    } else if (this.alternate) {
-		    this.reverseValues();
-
-	    } else if (opts.link === KEY.LINK.MOMENTUM) {
-    	    this.velocity = this.pointer.velocity.y;
-	    }
-*/
-
         this.origin = {};
         
         for (var key in this.values) {

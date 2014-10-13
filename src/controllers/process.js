@@ -70,8 +70,8 @@ Process.prototype = {
 
     	// If process is at its end, fire onEnd and deactivate action
     	if (rubix.hasEnded(action)) {
-        	ActionManager.queueDeactivate(action.token);
         	action.onEnd(output, action.data);
+        	ActionManager.queueDeactivate(action.token);
     	}
 	},
 	

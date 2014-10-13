@@ -23,6 +23,9 @@ module.exports = {
 	    MOMENTUM: 'Momentum',
 	    SPEED: 'Speed'
     },
+    ERROR: {
+	    ACTION_EXISTS: "Action already defined. Use forceOverride: true to override."
+    },
     EVENT: {
 	    MOUSE: 'mouse',
         MOUSEDOWN: 'mousedown',

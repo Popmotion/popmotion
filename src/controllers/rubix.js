@@ -45,7 +45,8 @@ Rubix.prototype = {
         /*
             Has action ended
             
-            True if progress is equal to or higher than 1
+            True if progress is equal to or higher than 1. If looping is enabled
+            we restart the action
             
             @param [Action]: action to analyse
             @return [boolean]: has action ended
