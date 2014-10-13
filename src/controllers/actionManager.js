@@ -57,14 +57,32 @@ ActionManager.prototype = {
 		@param [object]
 	*/
 	define: function (actions) {
-		var key;
+		var key,
+			chain,
+			baseAction = {};
 
 		for (key in actions) {
 			if (actions.hasOwnProperty(key)) {
 				if (baseActions[key] && !actions[key].forceOverride) {
 					throw KEY.ERROR.ACTION_EXISTS;
 				} else {
-					baseActions[key] = actions[key];
+					chain = key.split('.');
+					
+					// If there's an inheritence chain, merge
+					// TODO: multilayered inheritence?
+					if (chain.length > 1) {
+						if (baseActions[chain[0]]) {
+							baseActions[key] = utils.merge(baseActions[chain[0]], actions[key]);
+							
+						// if we can't find action
+						} else {
+							throw KEY.ERROR.NO_ACTION;
+						}
+					
+					// Else directly copy
+					} else {
+						baseActions[key] = actions[key];
+					}
 				}
 			}
 		}
