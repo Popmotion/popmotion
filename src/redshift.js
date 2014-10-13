@@ -98,7 +98,7 @@ Facade.prototype = {
 		var baseAction = ActionManager.getDefined(action),
 			props = baseAction.values || {},
 			opts = baseAction.options || {};
-
+console.log(action, baseAction);
 		return redshift.ignite(this.token, KEY.LINK.SPEED, props, opts);
 	},
 	

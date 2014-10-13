@@ -190,6 +190,8 @@ Rubix.prototype = {
 			    	value = action.values[key];
 			    	value.speed = value.speed - this.frameSpeed(value.friction, fps) + this.frameSpeed(value.thrust, fps);
 				    progress[key] = this.frameSpeed(value.speed, fps);
+				    
+				    console.log('fps: ' + fps, 'speed:' + value.speed);
 			    }
 		    }
 		    
@@ -219,7 +221,18 @@ Rubix.prototype = {
             @param [object]: Progress of pointer props
 	    */
 	    easeValue: function (key, action, progress) {
-	     	return action.values[key].current + progress[key];
+	    	var value = action.values[key],
+	    		newValue = value.current + progress[key];
+
+	    	if (value.min) {
+		    	newValue = Math.max(value.min, newValue);
+	    	}
+	    	
+	    	if (value.max) {
+		    	newValue = Math.min(value.max, newValue);
+	    	}
+
+	     	return newValue;
 	    },
 	    
 	    updatePointer: function () {}

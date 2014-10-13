@@ -73,7 +73,6 @@ ActionManager.prototype = {
 					if (chain.length > 1) {
 						if (baseActions[chain[0]]) {
 							baseActions[key] = utils.merge(baseActions[chain[0]], actions[key]);
-							
 						// if we can't find action
 						} else {
 							throw KEY.ERROR.NO_ACTION;
@@ -95,7 +94,7 @@ ActionManager.prototype = {
     	@param [string]: The name of the predefined action
 	*/
 	getDefined: function (key) {
-		return baseActions[key];
+		return utils.copy(baseActions[key]);
 	},
 	
 	

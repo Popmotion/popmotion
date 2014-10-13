@@ -27,6 +27,8 @@ var utils = require('../utils/utils.js'),
         } else if (utils.isObj(value)) {
             this.from = parse(value.from, data);
             this.to = parse(value.to, data);
+            this.min = parse(value.min, data);
+            this.max = parse(value.max, data);
             
             if (utils.isFunc(value.current)) {
 	            this.current = value.current(data);
@@ -46,6 +48,8 @@ var utils = require('../utils/utils.js'),
         this.speed = value.speed || 0;
         this.friction = value.friction || 0;
         this.thrust = value.thrust || 0;
+        
+        console.log(this);
     };
     
 Value.prototype = {
@@ -53,6 +57,8 @@ Value.prototype = {
 	update: function (value, data, baseDuration, baseDelay, baseEase, baseAmp, baseEscape, baseMath) {
 		this.to = parse(value.to, data, this.current);
         this.from = parse(value.from, data);
+        this.min = parse(value.min, data);
+        this.max = parse(value.max, data);
         this.speed = value.speed || 0;
         this.ease = value.ease || baseEase;
         

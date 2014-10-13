@@ -12,7 +12,7 @@ var calc = require('../utils/calc.js'),
     chronos,
     prevFrameTime,
     currentTime,
-    fps,
+    fps = 60,
     isRunning = false; // is animation loop running? - prevents multiple rAF loops from running
     
 Chronos.prototype = {
@@ -65,9 +65,9 @@ Chronos.prototype = {
     },
     
     updateTime: function () {
-    	prevFrameTime = currentTime;
+    	//prevFrameTime = currentTime;
     	currentTime = utils.currentTime();
-    	fps = 1000 / calc.difference(prevFrameTime, currentTime);
+    	//fps = 1000 / calc.difference(prevFrameTime, currentTime);
     }
 };
 
