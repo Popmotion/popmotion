@@ -6,7 +6,7 @@
 var calc = require('../utils/calc.js'),
 	utils = require('../utils/utils.js'),
 	events = require('./events.js'),
-	pointer = require('../models/pointer.js'),
+	pointer = require('../bits/pointer.js'),
 	isTracking = false,
 	isTouch = false,
 	PointerTracker = function () {},

@@ -14,7 +14,7 @@ var utils = require('../utils/utils.js'),
     	
     	return newValue;
 	},
-    Value = function (value, data, baseDuration, baseDelay, baseEase, baseAmp, baseEscape, baseMath, baseStep) {
+    Value = function (value, data, baseDuration, baseDelay, baseEase, baseAmp, baseEscape, baseMath, baseSteps) {
         
         if (utils.isNum(value)) {
             this.from = 0;
@@ -40,7 +40,7 @@ var utils = require('../utils/utils.js'),
 		this.current = (utils.isNum(this.current)) ? this.current : this.from;
     	this.link = value.link;
     	this.math = value.math || baseMath;
-    	this.step = value.step || baseStep;
+    	this.steps = value.steps || baseSteps;
 		
 		// Play values
     	this.duration = utils.isNum(value.duration) ? value.duration : baseDuration;
@@ -60,13 +60,14 @@ var utils = require('../utils/utils.js'),
     
 Value.prototype = {
 	
-	update: function (value, data, baseDuration, baseDelay, baseEase, baseAmp, baseEscape, baseMath, baseStep) {
+	update: function (value, data, baseDuration, baseDelay, baseEase, baseAmp, baseEscape, baseMath, baseSteps) {
 		this.to = parse(value.to, data, this.current);
         this.from = parse(value.from, data);
         this.min = parse(value.min, data);
         this.max = parse(value.max, data);
         this.speed = value.speed || 0;
         this.ease = value.ease || baseEase;
+        this.steps = value.steps || baseSteps;
         
         if (this.current && !utils.isNum(value.from)) {
             this.from = this.current;

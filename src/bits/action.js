@@ -33,7 +33,7 @@ var KEY = require('../opts/keys.js'),
     calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
     Value = require('./value.js'),
-    Token = require('../controllers/token.js'),
+    Token = require('../bobs/token.js'),
     callback = function () {},
     token = new Token(),
     Action = function () {
@@ -60,9 +60,10 @@ Action.prototype = {
         this.duration = utils.isNum(opts.duration) ? opts.duration : defaults.duration;
         this.ease = opts.ease || defaults.ease;
         this.math = opts.math;
-        this.step = utils.isNum(opts.step) ? opts.step : defaults.step;
+        this.steps = utils.isNum(opts.steps) ? opts.steps : defaults.steps;
         this.alternate = opts.alternate;
         this.pointerOffset = opts.pointerOffset;
+        this.loop = opts.loop;
         
         // Play list
         this.playlist = opts.playlist || this.playlist || [];
@@ -99,16 +100,16 @@ Action.prototype = {
         for (key in values) {
 	        if (values.hasOwnProperty(key)) {
 	        	if (this.values[key]) {
-		        	this.values[key].update(values[key], this.data, this.duration, this.delay, this.ease, this.amp, this.escapeAmp, this.math);
+		        	this.values[key].update(values[key], this.data, this.duration, this.delay, this.ease, this.amp, this.escapeAmp, this.math, this.steps);
 	        	} else {
-		        	this.values[key] = new Value(values[key], this.data, this.duration, this.delay, this.ease, this.amp, this.escapeAmp, this.math);	
+		        	this.values[key] = new Value(values[key], this.data, this.duration, this.delay, this.ease, this.amp, this.escapeAmp, this.math, this.steps);	
 	        	}
 	        }
         }
         
         if (this.values.angle) {
-        	this.values.x = this.values.x || new Value(0, this.data, this.duration, this.delay, this.ease, this.amp, this.escapeAmp, this.math);
-            this.values.y = this.values.y || new Value(0, this.data, this.duration, this.delay, this.ease, this.amp, this.escapeAmp, this.math);
+        	this.values.x = this.values.x || new Value(0, this.data, this.duration, this.delay, this.ease, this.amp, this.escapeAmp, this.math, this.steps);
+            this.values.y = this.values.y || new Value(0, this.data, this.duration, this.delay, this.ease, this.amp, this.escapeAmp, this.math, this.steps);
         }
     },
     

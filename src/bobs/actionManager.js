@@ -5,7 +5,7 @@
 
 var KEY = require('../opts/keys.js'),
 	PointerTracker = require('./pointerTracker.js'),
-	Action = require('../models/action.js'),
+	Action = require('../bits/action.js'),
 	utils = require('../utils/utils.js'),
 	ActionManager = function () {},
 	actionManager,

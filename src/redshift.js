@@ -7,8 +7,8 @@
 "use strict";
 
 var KEY = require('./opts/keys.js'),
-	ActionManager = require('./controllers/actionManager.js'),
-	Chronos = require('./controllers/chronos.js'),
+	ActionManager = require('./bobs/actionManager.js'),
+	Chronos = require('./bobs/chronos.js'),
 	Easing = require('./utils/easingFunctions.js'),
 	calc = require('./utils/calc.js'),
 	utils = require('./utils/utils.js'),
