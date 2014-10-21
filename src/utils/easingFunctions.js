@@ -36,7 +36,7 @@ var calc = require('./calc.js'),
  	util = require('./utils.js'),
  	KEY = require('../opts/keys.js'),
  	defaults = require('../opts/defaults.js'),
- 	Bezier = require('../models/bezier.js'),
+ 	Bezier = require('../bits/bezier.js'),
  	EasingFunction = function () {},
 	easingFunction,
 	/*
@@ -86,6 +86,15 @@ EasingFunction.prototype = {
 	},
 	
 	
+	/*
+    	Add Bezier Curve easing
+    	
+    	@param [string]: Name of new easing
+    	@parma [number]: X of coordinate 1
+    	@parma [number]: Y of coordinate 1
+    	@parma [number]: X of coordinate 2
+    	@parma [number]: Y of coordinate 2
+	*/
 	addBezier: function (name, x1, y1, x2, y2) {
 		if (!this[name]) {
 			this[name] = new Bezier(x1, y1, x2, y2);
@@ -176,9 +185,9 @@ EasingFunction.prototype = {
             inRange = util.isInRange(progress, 0, 1);
             
         ease = inRange ? ease : KEY.EASING.LINEAR;
-        
+
         if (!inRange) {
-            newProgress = newProgress + (calc.difference(newProgress, inRange) * escapeAmp);
+            newProgress = newProgress + (calc.difference(newProgress, progress) * escapeAmp);
         }
 
         return calc.valueEased(newProgress, from, to, this.get(ease));

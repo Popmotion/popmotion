@@ -132,6 +132,38 @@ module.exports = {
         return (value >= from && value <= to);
     },
     
+    copy: function (obj) {
+	    var newObj = {};
+	    
+	    for (var key in obj) {
+		    if (obj.hasOwnProperty(key)) {
+			    if (this.isObj(obj[key])) {
+				    newObj[key] = this.copy(obj[key]);
+			    } else {
+				    newObj[key] = obj[key];
+			    }
+		    }
+	    }
+	    
+	    return newObj;
+    },
+    
+    merge: function (base, overwrite) {
+	    var newObj = this.copy(base);
+	    
+	    for (var key in overwrite) {
+		    if (overwrite.hasOwnProperty(key)) {
+			    if (this.isObj(overwrite[key])) {
+				    newObj[key] = this.merge(newObj[key], overwrite[key]);
+			    } else {
+				    newObj[key] = overwrite[key];
+			    }
+		    }
+	    }
+	    
+	    return newObj;
+    },
+
     /*
         Get var type as string
         

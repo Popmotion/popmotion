@@ -33,7 +33,7 @@ var KEY = require('../opts/keys.js'),
     calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
     Value = require('./value.js'),
-    Token = require('../controllers/token.js'),
+    Token = require('../bobs/token.js'),
     callback = function () {},
     token = new Token(),
     Action = function () {
@@ -51,7 +51,7 @@ Action.prototype = {
     */
     set: function (opts) {
 	    
-	    this.link = this.link || opts.link;
+	    this.link = opts.link;
 	    
         // Action parameters
         this.amp = utils.isNum(opts.amp) ? opts.amp : defaults.amp;
@@ -60,43 +60,31 @@ Action.prototype = {
         this.duration = utils.isNum(opts.duration) ? opts.duration : defaults.duration;
         this.ease = opts.ease || defaults.ease;
         this.math = opts.math;
-        this.tick = utils.isNum(opts.tick) ? opts.tick : defaults.tick;
+        this.steps = utils.isNum(opts.steps) ? opts.steps : defaults.steps;
         this.alternate = opts.alternate;
         this.pointerOffset = opts.pointerOffset;
+        this.loop = opts.loop;
         
         // Play list
         this.playlist = opts.playlist || this.playlist || [];
         this.playCurrent = utils.isNum(opts.playCurrent) ? opts.playCurrent : this.playCurrent;
+        
+        // Looping
+        this.loop = opts.loop || false;
+        this.loopCount = 0;
 
         // Callbacks
         this.onStart = opts.onStart || callback;
         this.onEnd = opts.onEnd || callback;
         this.onFrame = opts.onFrame || this.onFrame || callback;
 
+		// Values
         this.setValues(opts.values);
-/*
-        // If this is the first init
-	    if (!this.lastModified) {
-        	this.progress = 0;
-	    	this.setValues(opts.values);
-	   
-        // If user has forced value refresh
-	    } else if (opts.refreshValues) {
-	    	this.setValues(opts.values);
-	   
-	    // If values are meant to alternate on each init
-	    } else if (this.alternate) {
-		    this.reverseValues();
-
-	    } else if (opts.link === KEY.LINK.MOMENTUM) {
-    	    this.velocity = this.pointer.velocity.y;
-	    }
-*/
-	    this.origin = {};
+        this.origin = {};
         
         for (var key in this.values) {
 	        if (this.values.hasOwnProperty(key)) {
-		        this.origin[key] = this.values[key].current;
+	            this.origin[key] = this.values[key].current;
 	        }
         }
     
@@ -106,26 +94,22 @@ Action.prototype = {
     
     setValues: function (values) {
         var key;
-
-        if (this.values) {
-	        
-        } else {
-	        this.values = {};
-        }
+        
+        this.values = this.values || {};
 
         for (key in values) {
 	        if (values.hasOwnProperty(key)) {
 	        	if (this.values[key]) {
-		        	this.values[key].update(values[key], this.data, this.duration, this.delay, this.ease, this.amp, this.escapeAmp, this.math);
+		        	this.values[key].update(values[key], this.data, this.duration, this.delay, this.ease, this.amp, this.escapeAmp, this.math, this.steps);
 	        	} else {
-		        	this.values[key] = new Value(values[key], this.data, this.duration, this.delay, this.ease, this.amp, this.escapeAmp, this.math);	
+		        	this.values[key] = new Value(values[key], this.data, this.duration, this.delay, this.ease, this.amp, this.escapeAmp, this.math, this.steps);	
 	        	}
 	        }
         }
         
         if (this.values.angle) {
-        	this.values.x = this.values.x || new Value(0, this.data, this.duration, this.delay, this.ease, this.amp, this.escapeAmp, this.math);
-            this.values.y = this.values.y || new Value(0, this.data, this.duration, this.delay, this.ease, this.amp, this.escapeAmp, this.math);
+        	this.values.x = this.values.x || new Value(0, this.data, this.duration, this.delay, this.ease, this.amp, this.escapeAmp, this.math, this.steps);
+            this.values.y = this.values.y || new Value(0, this.data, this.duration, this.delay, this.ease, this.amp, this.escapeAmp, this.math, this.steps);
         }
     },
     
@@ -150,7 +134,6 @@ Action.prototype = {
     */
     start: function () {
         this.active = true;
-        
         this.started = utils.currentTime() + this.delay;
         this.firstFrame = true;
         //this.started = utils.currentTime() + this.delay - calc.value(this.progress, this.duration);

@@ -5,7 +5,7 @@
 
 var KEY = require('../opts/keys.js'),
 	PointerTracker = require('./pointerTracker.js'),
-	Action = require('../models/action.js'),
+	Action = require('../bits/action.js'),
 	utils = require('../utils/utils.js'),
 	ActionManager = function () {},
 	actionManager,
@@ -57,11 +57,32 @@ ActionManager.prototype = {
 		@param [object]
 	*/
 	define: function (actions) {
-		var key;
+		var key,
+			chain,
+			baseAction = {};
 
 		for (key in actions) {
 			if (actions.hasOwnProperty(key)) {
-				baseActions[key] = actions[key];
+				if (baseActions[key] && !actions[key].forceOverride) {
+					throw KEY.ERROR.ACTION_EXISTS;
+				} else {
+					chain = key.split('.');
+					
+					// If there's an inheritence chain, merge
+					// TODO: multilayered inheritence?
+					if (chain.length > 1) {
+						if (baseActions[chain[0]]) {
+							baseActions[key] = utils.merge(baseActions[chain[0]], actions[key]);
+						// if we can't find action
+						} else {
+							throw KEY.ERROR.NO_ACTION;
+						}
+					
+					// Else directly copy
+					} else {
+						baseActions[key] = actions[key];
+					}
+				}
 			}
 		}
 	},
@@ -73,7 +94,7 @@ ActionManager.prototype = {
     	@param [string]: The name of the predefined action
 	*/
 	getDefined: function (key) {
-		return baseActions[key];
+		return utils.copy(baseActions[key]);
 	},
 	
 	
@@ -120,8 +141,6 @@ ActionManager.prototype = {
 	        index = activeTokens.indexOf(token),
 	        deactivateIndex = deactivateQueue.indexOf(token);
     	
-    	action.start();
-    	
     	if (index === -1) {
             activeTokens.push(token);
         }
@@ -130,6 +149,8 @@ ActionManager.prototype = {
         if (deactivateIndex >= 0) {
             deactivateQueue.splice(deactivateIndex, 1);
         }
+    	
+    	action.start();
 	},
 	
 	

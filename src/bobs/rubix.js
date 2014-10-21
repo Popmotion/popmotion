@@ -18,8 +18,9 @@
 "use strict";
 
 var calc = require('../utils/calc.js'),
-	util = require('../utils/utils.js'),
+	utils = require('../utils/utils.js'),
     Easing = require('../utils/easingFunctions.js'),
+	defaults = require('../opts/defaults.js'),
 	KEY = require('../opts/keys.js'),
     PointerTracker = require('./pointerTracker.js'),
     Rubix = function () {},
@@ -44,7 +45,8 @@ Rubix.prototype = {
         /*
             Has action ended
             
-            True if progress is equal to or higher than 1
+            True if progress is equal to or higher than 1. If looping is enabled
+            we restart the action
             
             @param [Action]: action to analyse
             @return [boolean]: has action ended
@@ -91,7 +93,7 @@ Rubix.prototype = {
         calcProgress: function (action, frameStart) {
             var progress = {},
                 offset = action.pointer.offset;
-                
+
             for (var key in offset) {
                 if (offset.hasOwnProperty(key)) {
                     progress[key] = {
@@ -112,7 +114,7 @@ Rubix.prototype = {
             True if action.isTracking is false
         */
         hasEnded: function (action) {
-            return action.pointer ? false : true;
+            return PointerTracker.isTracking() ? false : true;
         },
         
         /*
@@ -123,10 +125,10 @@ Rubix.prototype = {
         */
         updatePointer: function (action) {
             var currentPointer = action.pointer;
-            
-            action.pointer = PointerTracker.get(action.pointerOffset);
 
-            return action.pointer || currentPointer;
+            action.pointer = PointerTracker.get(action.pointerOffset) || currentPointer;
+            
+            return action.pointer;
         },
         
         /*
@@ -142,20 +144,33 @@ Rubix.prototype = {
 
             // If we've already calculated the progress for this property
             if (progress[key]) {
-                easedValue = Easing.withinRange(progress[key].value, value.from, value.to, value.ease, value.escapeAmp);
+                easedValue = Easing.withinRange(progress[key].value, value.from, value.to, defaults.trackEase, value.escapeAmp);
             
             // If we're linking this property into a user input
             } else if (value.link) {
-                easedValue = Easing.withinRange(progress[value.link].value, value.from, value.to, value.ease, value.escapeAmp);
+                easedValue = Easing.withinRange(progress[value.link].value, value.from, value.to, defaults.trackEase, value.escapeAmp);
             }
             
-            // Handle default easing 
-            
+            // TODO: Handle default easing 
+
             return easedValue;
         }
     },
     
     Speed: {
+    
+    	/*
+	    	Convert x per second to per frame speed based on fps
+    	*/
+    	frameSpeed: function (xps, fps) {
+    		var speedPerFrame = 0;
+
+    		if (xps && utils.isNum(xps)) {
+	    		speedPerFrame = xps/fps;
+    		}
+    	
+	    	return speedPerFrame;
+    	},
     
     	/*
     	    Calc new speed
@@ -165,14 +180,16 @@ Rubix.prototype = {
         	@param [Action]: action to measure
         	@return [object]: Object of all speeds
     	*/
-	    calcProgress: function (action, frameStart) {
+	    calcProgress: function (action, frameStart, fps) {
 		    var progress = {},
-		    	point;
+		    	point,
+		    	value;
 		    	
 		    for (var key in action.values) {
 			    if (action.values.hasOwnProperty(key)) {
-					action.values[key].speed = action.values[key].speed - action.values[key].friction + action.values[key].thrust;
-				    progress[key] = action.values[key].speed;
+			    	value = action.values[key];
+			    	value.speed = value.speed - this.frameSpeed(value.friction, fps) + this.frameSpeed(value.thrust, fps);
+				    progress[key] = this.frameSpeed(value.speed, fps);
 			    }
 		    }
 		    
@@ -202,7 +219,18 @@ Rubix.prototype = {
             @param [object]: Progress of pointer props
 	    */
 	    easeValue: function (key, action, progress) {
-	     	return action.values[key].current + progress[key];
+	    	var value = action.values[key],
+	    		newValue = value.current + progress[key];
+
+	    	if (value.min) {
+		    	newValue = Math.max(value.min, newValue);
+	    	}
+	    	
+	    	if (value.max) {
+		    	newValue = Math.min(value.max, newValue);
+	    	}
+
+	     	return newValue;
 	    },
 	    
 	    updatePointer: function () {}

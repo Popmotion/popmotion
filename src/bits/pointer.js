@@ -3,7 +3,7 @@
 var calc = require('../utils/calc.js'),
     defaults = require('../opts/defaults.js'),
     util = require('../utils/utils.js'),
-    History = require('../controllers/history.js'),
+    History = require('../bobs/history.js'),
     Point = require('./point.js'),
     Offset = require('./offset.js'),
     Velocity = require('./velocity.js'),

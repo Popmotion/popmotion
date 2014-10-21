@@ -23,7 +23,7 @@
 
 "use strict";
 
-var Offset = require('../models/offset.js'),
+var Offset = require('../bits/offset.js'),
     utils = require('./utils.js'),
     Calc = function () {},
     calc;

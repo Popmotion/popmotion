@@ -18,10 +18,8 @@ module.exports = {
             if (typeof onEnd === 'function') {
                 onEnd();
             }
-
-            self.removeListeners();
         };
-        
+
 		document.documentElement.addEventListener(event.move, callbacks.onMove);
 		document.documentElement.addEventListener(event.end, callbacks.onEnd);
     },

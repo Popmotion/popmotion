@@ -3,7 +3,8 @@
 */
 "use strict";
 
-var utils = require('../utils/utils.js'),
+var calc = require('../utils/calc.js'),
+	utils = require('../utils/utils.js'),
     ActionManager = require('./actionManager.js'),
     PointerTracker = require('./pointerTracker.js'),
     Process = require('./process.js'),
@@ -11,7 +12,7 @@ var utils = require('../utils/utils.js'),
     chronos,
     prevFrameTime,
     currentTime,
-    fps,
+    fps = 60,
     isRunning = false; // is animation loop running? - prevents multiple rAF loops from running
     
 Chronos.prototype = {
@@ -51,7 +52,7 @@ Chronos.prototype = {
                 if (activeActionTokens.length) {
                 	self.updateTime();
                 	PointerTracker.frame();
-                	Process.actions(activeActionTokens, currentTime);
+                	Process.actions(activeActionTokens, currentTime, fps);
                     ActionManager.purge();
                     self.frame();
                 } else {
@@ -64,9 +65,9 @@ Chronos.prototype = {
     },
     
     updateTime: function () {
-    	prevFrameTime = currentTime;
+    	//prevFrameTime = currentTime;
     	currentTime = utils.currentTime();
-    	fps = 1000 / calc.difference(prevFrameTime, currentTime);
+    	//fps = 1000 / calc.difference(prevFrameTime, currentTime);
     }
 };
 
