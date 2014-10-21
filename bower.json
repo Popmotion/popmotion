@@ -1,0 +1,20 @@
+{
+  "name": "redshift",
+  "version": "0.0.1",
+  "homepage": "http://redshiftjs.com",
+  "authors": [
+    "Matt Perry <mattgperry@gmail.com>"
+  ],
+  "description": "Create high fidelity Javascript UX",
+  "main": "src/redshift.js",
+  "keywords": [
+    "animation",
+    "ux",
+    "ui",
+    "redshift",
+    "canvas animation",
+    "jquery animation",
+    "dom animation"
+  ],
+  "license": "MIT"
+}
