@@ -1,0 +1,26 @@
+{
+    "name": "Redshift",
+    "version": "0.0.1",
+    "description": "",
+    "author": "Matt Perry <admin@redshiftjs.com>",
+    "homepage": "http://redshiftjs.com",
+    "main": "src/redshift.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/SirHound/redshift"
+    },
+    "bugs": {
+        "url": "https://github.com/SirHound/redshift/issues"
+    },
+    "keywords": [
+        "animation",
+        "ux",
+        "ui",
+        "redshift",
+        "canvas animation",
+        "jquery animation",
+        "dom animation"
+    ],
+    "analyze": true,
+    "license": "MIT"
+}
