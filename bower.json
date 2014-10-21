@@ -16,5 +16,6 @@
     "jquery animation",
     "dom animation"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "ignore": []
 }
