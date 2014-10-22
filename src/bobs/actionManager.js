@@ -67,7 +67,7 @@ ActionManager.prototype = {
 					throw KEY.ERROR.ACTION_EXISTS;
 				} else {
 					chain = key.split('.');
-					
+
 					// If there's an inheritence chain, merge
 					// TODO: multilayered inheritence?
 					if (chain.length > 1) {
@@ -77,7 +77,6 @@ ActionManager.prototype = {
 						} else {
 							throw KEY.ERROR.NO_ACTION;
 						}
-					
 					// Else directly copy
 					} else {
 						baseActions[key] = actions[key];

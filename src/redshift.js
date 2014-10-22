@@ -85,7 +85,7 @@ Instance.prototype = {
 		if (utils.isObj(overrides)) {
     		for (var key in overrides) {
         		if (overrides.hasOwnProperty(key) && utils.isObj(props[key])) {
-            		props[key].to = overrides[key];
+            		//props[key].to = overrides[key];
         		}
     		}
 		}
