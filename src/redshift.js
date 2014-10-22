@@ -13,6 +13,7 @@ var KEY = require('./opts/keys.js'),
 	calc = require('./utils/calc.js'),
 	utils = require('./utils/utils.js'),
 	shims = require('./utils/shims.js'),
+	rQuery = require('./utils/rQuery.js'),
 	Redshift = function () {
     	this.init();
 	},
@@ -227,9 +228,11 @@ Redshift.prototype = {
 	*/
 	init: function () {
     	shims.featureCheck();
+    	rQuery.check();
 	}
 };
 
 redshift = new Redshift();
 
 window.Redshift = redshift;
+module.exports = redshift;
