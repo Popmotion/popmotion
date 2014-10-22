@@ -44,7 +44,7 @@ ActionManager.prototype = {
 			changes.pointerOffset = PointerTracker.start(e);
         }
 			
-		action.set(opts);
+		action.set(changes);
 	},
 	
 	/*
@@ -105,7 +105,7 @@ ActionManager.prototype = {
         // These are previously defined actions
         } else {
             // Comma-delimited string or single action name
-            if (util.isString(defs)) {
+            if (utils.isString(defs)) {
                 actionList = defs.split(" ");
                 
             // Array of action names

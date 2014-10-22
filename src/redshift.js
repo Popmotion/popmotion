@@ -78,7 +78,7 @@ Instance.prototype = {
     	@param [string]: Key of the action to process
     	@param [object]: Override action defaults with those defined here
 	*/
-	move: function (defs, overrides) {
+	move: function (defs, override) {
 	    return redshift.ignite(this.token, KEY.LINK.SPEED, ActionManager.createBase(defs, override));
 	},
 	
@@ -89,7 +89,7 @@ Instance.prototype = {
     	@param [string]: Key of the action to process
         @param [event]: Initiating pointer event
     */
-	track: function (defs, overrides, e) {
+	track: function (defs, override, e) {
 	    return redshift.ignite(this.token, KEY.LINK.POINTER, ActionManager.createBase(defs, override), e);
 	},
     
