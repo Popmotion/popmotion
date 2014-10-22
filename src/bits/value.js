@@ -1,4 +1,69 @@
-/**/
+"use strict";
+
+var utils = require('../utils/utils.js'),
+	calc = require('../utils/calc.js'),
+	parse = function (value, data, current) {
+		return (utils.isFunc(value)) ? value(data, current) : value;
+	},
+	Value = function (value, action) {
+		this.update(value, action, true);
+	};
+
+Value.prototype = {
+	
+	// Actual value
+	current: 0,
+	
+	// Current range for value
+	from: 0,
+	to: 1,
+	
+	// Maximum range for value (TODO)
+	min: 0,
+	max: 1,
+	
+	// Speed for .move(), in xps
+	speed: 0,
+	friction: 0,
+	thrust: 0,
+	
+	// Options
+	duration: 400,
+	delay: 0,
+	ease: 'ease-in-out',
+	link: null, // use the progress of this value
+	math: null,
+	steps: 0,
+	
+	// Amp for inside and outside range (ie value * amp)
+	amp: 0,
+	escapeAmp: 0,
+	
+	/*
+		Update the value properties
+	*/
+	update: function (value, action, isNewValue) {
+		var newValue,
+			data = (action) ? action.data : {};
+
+		for (var key in value) {
+			if (value.hasOwnProperty(key) && !this[key] !== undefined) {
+				newValue = parse(value[key], data, value.current);
+
+				if (newValue === undefined && action[key] !== undefined) {
+					newValue = action[key];
+				}
+
+				this[key] = newValue;
+			}
+		}
+	}
+	
+};
+
+module.exports = Value;
+
+/*
 "use strict";
 
 var utils = require('../utils/utils.js'),
@@ -102,4 +167,4 @@ Value.prototype = {
 	
 };
 
-module.exports = Value;
+module.exports = Value;*/
