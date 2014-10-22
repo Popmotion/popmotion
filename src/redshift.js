@@ -65,45 +65,44 @@ Instance.prototype = {
 	/*
     	Play the provided actions as animations
     	
-    	PROPOSED SYNTAX
-    	    .play(actions) // works
-    	    .play(actions, overrideProps, overrideOpts)
-    	    .play(props, opts)
-    	
     	@param [string || array]: Space deliminated string or array of defined action keys in order of execution
+    	@param [object]: Override action defaults with those defined here
 	*/
-	play: function (actions, overrides) {
-		var actionList = utils.isArray(actions) ? actions : actions.split(" "),
-			baseAction = ActionManager.getDefined(actionList[0]),
-			props = baseAction.values || {},
-			opts = baseAction.options || {};
-			
-		opts.playlist = actionList;
-		opts.playCurrent = 0;
-		
-		// TODO: abstract override manager
-		if (utils.isObj(overrides)) {
-    		for (var key in overrides) {
-        		if (overrides.hasOwnProperty(key) && utils.isObj(props[key])) {
-            		//props[key].to = overrides[key];
-        		}
-    		}
-		}
+	play: function (defs, overrides) {
+	
+	/*   MAKE THIS ActionManager.createDefinition
+	    var actionList = [],
+	        action = {};
 
-		return redshift.ignite(this.token, KEY.LINK.TIME, props, opts);
+	    if (util.isObj(defs)) {
+    	    action = defs;
+	    } else {
+    	    if (util.isString(defs)) {
+        	    actionList = actions.split(" ");
+    	    } else if (util.isArray(defs)) {
+        	    actionList = defs;
+    	    }
+    	    
+    	    action = ActionManager.getDefined(actionList[0]);
+    	    action.playlist = actionList;
+    	    action.playCurrent = 0;
+	    }
+	    
+	    if (utils.isObj(overrides)) {
+    	    action = utils.merge(action, overrides);
+	    }
+	    */
+	    return redshift.ignite(this.token, KEY.LINK.TIME, ActionManager.createDefinition(defs, overrides));
 	},
 	
 	/*
     	Run the provided action based on property speed
     	
     	@param [string]: Key of the action to process
+    	@param [object]: Override action defaults with those defined here
 	*/
-	move: function (action) {
-		var baseAction = ActionManager.getDefined(action),
-			props = baseAction.values || {},
-			opts = baseAction.options || {};
-
-		return redshift.ignite(this.token, KEY.LINK.SPEED, props, opts);
+	move: function (defs, overrides) {
+	    return redshift.ignite(this.token, KEY.LINK.SPEED, ActionManager.createDefinition(defs, overrides));
 	},
 	
 
@@ -113,12 +112,8 @@ Instance.prototype = {
     	@param [string]: Key of the action to process
         @param [event]: Initiating pointer event
     */
-	track: function (actions, e) {
-	    var baseAction = ActionManager.getDefined(actions),
-	        props = baseAction.values || {},
-	        opts = baseAction.options || {};
-	
-		return redshift.ignite(this.token, KEY.LINK.POINTER, props, opts, e);
+	track: function (defs, overrides, e) {
+	    return redshift.ignite(this.token, KEY.LINK.POINTER, ActionManager.createDefinition(defs, overrides), e);
 	},
     
     
