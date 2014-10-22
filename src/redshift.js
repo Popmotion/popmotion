@@ -13,6 +13,7 @@ var KEY = require('./opts/keys.js'),
 	calc = require('./utils/calc.js'),
 	utils = require('./utils/utils.js'),
 	shims = require('./utils/shims.js'),
+	rQuery = require('./utils/rQuery.js'),
 	Redshift = function () {
     	this.init();
 	},
@@ -64,45 +65,21 @@ Instance.prototype = {
 	/*
     	Play the provided actions as animations
     	
-    	PROPOSED SYNTAX
-    	    .play(actions) // works
-    	    .play(actions, overrideProps, overrideOpts)
-    	    .play(props, opts)
-    	
     	@param [string || array]: Space deliminated string or array of defined action keys in order of execution
+    	@param [object]: Override action defaults with those defined here
 	*/
-	play: function (actions, overrides) {
-		var actionList = utils.isArray(actions) ? actions : actions.split(" "),
-			baseAction = ActionManager.getDefined(actionList[0]),
-			props = baseAction.values || {},
-			opts = baseAction.options || {};
-			
-		opts.playlist = actionList;
-		opts.playCurrent = 0;
-		
-		// TODO: abstract override manager
-		if (utils.isObj(overrides)) {
-    		for (var key in overrides) {
-        		if (overrides.hasOwnProperty(key) && utils.isObj(props[key])) {
-            		props[key].to = overrides[key];
-        		}
-    		}
-		}
-
-		return redshift.ignite(this.token, KEY.LINK.TIME, props, opts);
+	play: function (defs, override) {
+	    return redshift.ignite(this.token, KEY.LINK.TIME, ActionManager.createBase(defs, override));
 	},
 	
 	/*
     	Run the provided action based on property speed
     	
     	@param [string]: Key of the action to process
+    	@param [object]: Override action defaults with those defined here
 	*/
-	move: function (action) {
-		var baseAction = ActionManager.getDefined(action),
-			props = baseAction.values || {},
-			opts = baseAction.options || {};
-
-		return redshift.ignite(this.token, KEY.LINK.SPEED, props, opts);
+	move: function (defs, override) {
+	    return redshift.ignite(this.token, KEY.LINK.SPEED, ActionManager.createBase(defs, override));
 	},
 	
 
@@ -112,12 +89,8 @@ Instance.prototype = {
     	@param [string]: Key of the action to process
         @param [event]: Initiating pointer event
     */
-	track: function (actions, e) {
-	    var baseAction = ActionManager.getDefined(actions),
-	        props = baseAction.values || {},
-	        opts = baseAction.options || {};
-	
-		return redshift.ignite(this.token, KEY.LINK.POINTER, props, opts, e);
+	track: function (defs, override, e) {
+	    return redshift.ignite(this.token, KEY.LINK.POINTER, ActionManager.createBase(defs, override), e);
 	},
     
     
@@ -172,16 +145,16 @@ Redshift.prototype = {
         @param [event]: Initiating pointer event
         @return [int]: ID token for action
 	*/
-	ignite: function (token, link, props, opts, e) {
+	ignite: function (token, link, changes, e) {
 		var action = ActionManager.get(token);
 		
-		opts.link = link;
+		changes.link = link;
 
-		ActionManager.change(action.token, props, opts, e);
+		ActionManager.change(token, changes, e);
 
-		this.start(action.token);
+		this.start(token);
 
-		return action.token;
+		return token;
 	},
 	
 	
@@ -227,9 +200,11 @@ Redshift.prototype = {
 	*/
 	init: function () {
     	shims.featureCheck();
+    	rQuery.check();
 	}
 };
 
 redshift = new Redshift();
 
 window.Redshift = redshift;
+module.exports = redshift;

@@ -48,6 +48,7 @@ PointerTracker.prototype = {
 			point;
 
 		if (isTracking) {
+		console.trace();
 			e.preventDefault();
 			event = utils.getActualEvent(e);
 			isTouch = utils.isTouchEvent(event);

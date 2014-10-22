@@ -37,16 +37,14 @@ ActionManager.prototype = {
 		@param [object]: Value properties
 		@param [object]: Action options
 	*/
-	change: function (token, props, opts, e) {
+	change: function (token, changes, e) {
 		var action = this.get(token);
         
-        if (opts.link === KEY.LINK.POINTER) {
-			opts.pointerOffset = PointerTracker.start(e);
+        if (changes.link === KEY.LINK.POINTER) {
+			changes.pointerOffset = PointerTracker.start(e);
         }
-        
-        opts.values = props;
 			
-		action.set(opts);
+		action.set(changes);
 	},
 	
 	/*
@@ -67,7 +65,7 @@ ActionManager.prototype = {
 					throw KEY.ERROR.ACTION_EXISTS;
 				} else {
 					chain = key.split('.');
-					
+
 					// If there's an inheritence chain, merge
 					// TODO: multilayered inheritence?
 					if (chain.length > 1) {
@@ -77,7 +75,6 @@ ActionManager.prototype = {
 						} else {
 							throw KEY.ERROR.NO_ACTION;
 						}
-					
 					// Else directly copy
 					} else {
 						baseActions[key] = actions[key];
@@ -85,6 +82,48 @@ ActionManager.prototype = {
 				}
 			}
 		}
+	},
+	
+	
+	/*
+    	Create base action
+    	
+    	@param [string || array || object]:
+    	    String: Name or space-delimited playlist of actions
+    	    Array: Playlist of actions
+    	    Object: Raw action
+        @param [object]: Action override
+	*/
+	createBase: function (defs, override) {
+    	var baseAction = {},
+    	    actionList = [];
+        
+        // If this is a straight action
+        if (utils.isObj(defs)) {
+            baseAction = defs;
+            
+        // These are previously defined actions
+        } else {
+            // Comma-delimited string or single action name
+            if (utils.isString(defs)) {
+                actionList = defs.split(" ");
+                
+            // Array of action names
+            } else {
+                actionList = defs;
+            }
+            
+            baseAction = this.getDefined(actionList[0]);
+            baseAction.playlist = actionList;
+            baseAction.playCurrent = 0;
+        }
+        
+        // Apply overrides if present
+        if (utils.isObj(override)) {
+            baseAction = utils.merge(action, overrides);
+        }
+        
+        return baseAction;
 	},
 	
 	
@@ -194,7 +233,7 @@ ActionManager.prototype = {
     			    this.deactivate(deactivateQueue[i]);
 			    }
 			} else {
-    			this.change(deactivateQueue[i], nextInPlaylist.values, nextInPlaylist.options);
+    			this.change(deactivateQueue[i], nextInPlaylist);
     			this.activate(deactivateQueue[i]);
 			}
 		}

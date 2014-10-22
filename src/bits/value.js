@@ -61,15 +61,31 @@ var utils = require('../utils/utils.js'),
 Value.prototype = {
 	
 	update: function (value, data, baseDuration, baseDelay, baseEase, baseAmp, baseEscape, baseMath, baseSteps) {
-		this.to = parse(value.to, data, this.current);
-        this.from = parse(value.from, data);
-        this.min = parse(value.min, data);
-        this.max = parse(value.max, data);
+        if (utils.isNum(value)) {
+            this.from = 0;
+            this.to = value;
+            
+        } else if (utils.isFunc(value)) {
+            this.from = 0;
+            this.to = value(data);
+            
+        } else if (utils.isObj(value)) {
+    		this.to = parse(value.to, data, this.current);
+            this.from = parse(value.from, data);
+            this.min = parse(value.min, data);
+            this.max = parse(value.max, data);
+            
+            if (utils.isFunc(value.current)) {
+	            this.current = value.current(data);
+            } else if (utils.isNum(value.current)) {
+	            this.current = value.current;
+            }
+        }
         this.speed = value.speed || 0;
         this.ease = value.ease || baseEase;
         this.steps = value.steps || baseSteps;
         
-        if (this.current && !utils.isNum(value.from)) {
+        if (this.current && !utils.isFunc(value.from)) {
             this.from = this.current;
         }
 
@@ -81,6 +97,7 @@ Value.prototype = {
         if (value.override === true) {
             this.current = this.from;
         }
+        
 	}
 	
 };
