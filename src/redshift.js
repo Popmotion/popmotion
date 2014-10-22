@@ -14,11 +14,11 @@ var KEY = require('./opts/keys.js'),
 	utils = require('./utils/utils.js'),
 	Redshift = function () {},
     redshift,
-    Facade = function (token) {
+    Instance = function (token) {
         this.token = token;
     };
     
-Facade.prototype = {
+Instance.prototype = {
 	
 	/*
     	Read or bind data to this Redshift object
@@ -98,7 +98,7 @@ Facade.prototype = {
 		var baseAction = ActionManager.getDefined(action),
 			props = baseAction.values || {},
 			opts = baseAction.options || {};
-console.log(action, baseAction);
+
 		return redshift.ignite(this.token, KEY.LINK.SPEED, props, opts);
 	},
 	
@@ -144,12 +144,12 @@ console.log(action, baseAction);
 Redshift.prototype = {
 
     /*
-        Create a facade with the specified token
+        Create a Instance with the specified token
     */
     get: function (token) {
         var action = ActionManager.get(token) || ActionManager.create();
 
-        return new Facade(action.token);
+        return new Instance(action.token);
     },
     
     
