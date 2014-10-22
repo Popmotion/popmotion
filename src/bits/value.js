@@ -69,7 +69,7 @@ Value.prototype = {
         this.ease = value.ease || baseEase;
         this.steps = value.steps || baseSteps;
         
-        if (this.current && !utils.isNum(value.from)) {
+        if (this.current && !utils.isFunc(value.from)) {
             this.from = this.current;
         }
 
@@ -81,6 +81,7 @@ Value.prototype = {
         if (value.override === true) {
             this.current = this.from;
         }
+        
 	}
 	
 };

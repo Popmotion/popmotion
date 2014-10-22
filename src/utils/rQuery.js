@@ -52,7 +52,7 @@ var KEY = require('../opts/keys.js'),
 module.exports = {
     check: function () {
         if (window.jQuery) {
-            new rQuery();
+            rQuery();
         }
     }
 };

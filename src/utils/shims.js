@@ -78,6 +78,6 @@ shim = new Shim();
 module.exports = {
     featureCheck: function () {
         shim.indexOf();
-        shim.requestAnimationFrom();
+        shim.requestAnimationFrame();
     }
 };
