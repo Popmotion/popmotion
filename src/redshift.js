@@ -68,31 +68,8 @@ Instance.prototype = {
     	@param [string || array]: Space deliminated string or array of defined action keys in order of execution
     	@param [object]: Override action defaults with those defined here
 	*/
-	play: function (defs, overrides) {
-	
-	/*   MAKE THIS ActionManager.createDefinition
-	    var actionList = [],
-	        action = {};
-
-	    if (util.isObj(defs)) {
-    	    action = defs;
-	    } else {
-    	    if (util.isString(defs)) {
-        	    actionList = actions.split(" ");
-    	    } else if (util.isArray(defs)) {
-        	    actionList = defs;
-    	    }
-    	    
-    	    action = ActionManager.getDefined(actionList[0]);
-    	    action.playlist = actionList;
-    	    action.playCurrent = 0;
-	    }
-	    
-	    if (utils.isObj(overrides)) {
-    	    action = utils.merge(action, overrides);
-	    }
-	    */
-	    return redshift.ignite(this.token, KEY.LINK.TIME, ActionManager.createDefinition(defs, overrides));
+	play: function (defs, override) {
+	    return redshift.ignite(this.token, KEY.LINK.TIME, ActionManager.createBase(defs, override));
 	},
 	
 	/*
@@ -102,7 +79,7 @@ Instance.prototype = {
     	@param [object]: Override action defaults with those defined here
 	*/
 	move: function (defs, overrides) {
-	    return redshift.ignite(this.token, KEY.LINK.SPEED, ActionManager.createDefinition(defs, overrides));
+	    return redshift.ignite(this.token, KEY.LINK.SPEED, ActionManager.createBase(defs, override));
 	},
 	
 
@@ -113,7 +90,7 @@ Instance.prototype = {
         @param [event]: Initiating pointer event
     */
 	track: function (defs, overrides, e) {
-	    return redshift.ignite(this.token, KEY.LINK.POINTER, ActionManager.createDefinition(defs, overrides), e);
+	    return redshift.ignite(this.token, KEY.LINK.POINTER, ActionManager.createBase(defs, override), e);
 	},
     
     
@@ -168,16 +145,16 @@ Redshift.prototype = {
         @param [event]: Initiating pointer event
         @return [int]: ID token for action
 	*/
-	ignite: function (token, link, props, opts, e) {
+	ignite: function (token, link, newAction, e) {
 		var action = ActionManager.get(token);
 		
-		opts.link = link;
+		newAction.link = link;
 
-		ActionManager.change(action.token, props, opts, e);
+		ActionManager.change(token, newAction, e);
 
-		this.start(action.token);
+		this.start(token);
 
-		return action.token;
+		return token;
 	},
 	
 	

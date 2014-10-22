@@ -88,6 +88,48 @@ ActionManager.prototype = {
 	
 	
 	/*
+    	Create base action
+    	
+    	@param [string || array || object]:
+    	    String: Name or space-delimited playlist of actions
+    	    Array: Playlist of actions
+    	    Object: Raw action
+        @param [object]: Action override
+	*/
+	createBase: function (defs, override) {
+    	var baseAction = {},
+    	    actionList = [];
+        
+        // If this is a straight action
+        if (utils.isObj(defs)) {
+            baseAction = defs;
+            
+        // These are previously defined actions
+        } else {
+            // Comma-delimited string or single action name
+            if (util.isString(defs)) {
+                actionList = defs.split(" ");
+                
+            // Array of action names
+            } else {
+                actionList = defs;
+            }
+            
+            baseAction = this.getDefined(actionList[0]);
+            baseAction.playlist = actionList;
+            baseAction.playCurrent = 0;
+        }
+        
+        // Apply overrides if present
+        if (utils.isObj(override)) {
+            baseAction = utils.merge(action, overrides);
+        }
+        
+        return baseAction;
+	},
+	
+	
+	/*
     	Get defined action
     	
     	@param [string]: The name of the predefined action
