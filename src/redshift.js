@@ -12,7 +12,7 @@ var KEY = require('./opts/keys.js'),
 	Easing = require('./utils/easingFunctions.js'),
 	calc = require('./utils/calc.js'),
 	utils = require('./utils/utils.js'),
-	shims - require('./utils/shims.js'),
+	shims = require('./utils/shims.js'),
 	Redshift = function () {
     	this.init();
 	},
