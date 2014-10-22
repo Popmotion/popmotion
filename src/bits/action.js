@@ -51,7 +51,7 @@ Action.prototype = {
     */
     set: function (opts) {
 	    
-	    this.link = opts.link;
+	    this.link = opts.link || this.link;
 	    
         // Action parameters
         this.amp = utils.isNum(opts.amp) ? opts.amp : defaults.amp;
