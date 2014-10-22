@@ -12,7 +12,10 @@ var KEY = require('./opts/keys.js'),
 	Easing = require('./utils/easingFunctions.js'),
 	calc = require('./utils/calc.js'),
 	utils = require('./utils/utils.js'),
-	Redshift = function () {},
+	shims - require('./utils/shims.js'),
+	Redshift = function () {
+    	this.init();
+	},
     redshift,
     Instance = function (token) {
         this.token = token;
@@ -215,6 +218,15 @@ Redshift.prototype = {
 	
 	updatePointer: function (x, y, z) {
     	
+	},
+	
+	/*
+    	Init Redshift
+    	
+    	Check if we need shims and load if necessary
+	*/
+	init: function () {
+    	shims.featureCheck();
 	}
 };
 
