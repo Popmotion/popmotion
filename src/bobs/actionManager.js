@@ -120,7 +120,7 @@ ActionManager.prototype = {
         
         // Apply overrides if present
         if (utils.isObj(override)) {
-            baseAction = utils.merge(action, overrides);
+            baseAction = utils.merge(baseAction, override);
         }
         
         return baseAction;
@@ -225,7 +225,7 @@ ActionManager.prototype = {
 		var nextInPlaylist,
 			queueLength = deactivateQueue.length;
 
-		for (var i = 0; i < queueLength; i++) {
+		for (var i = 0; i < queueLength; ++i) {
 			nextInPlaylist = this.getNextInPlaylist(deactivateQueue[i]);
 
 			if (!nextInPlaylist) {
