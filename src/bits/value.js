@@ -7,58 +7,114 @@ var utils = require('../utils/utils.js'),
 	},
 	Value = function (value, action) {
 		this.update(value, action, true);
+	},
+	defaults = {
+	    // Actual value
+    	current: 0,
+	
+    	// Current range for value
+    	from: 0,
+    	to: 1,
+	
+    	// Maximum range for value (TODO - has no current effect)
+    	min: 0,
+    	max: 1,
+    	
+    	// Speed for .move(), in xps
+    	speed: 0,
+    	friction: 0,
+    	thrust: 0,
+    	
+    	// Options
+    	duration: 400,
+    	delay: 0,
+    	ease: 'ease-in-out',
+    	link: null, // use the progress of this value
+    	math: null,
+    	steps: 0,
+    	
+    	// Amp for inside and outside range (ie value * amp)
+    	amp: 0,
+    	escapeAmp: 0
 	};
 
-Value.prototype = {
 	
-	// Actual value
-	current: 0,
+/*
+	Update the value properties
 	
-	// Current range for value
-	from: 0,
-	to: 1,
+	@param [object || number]: User-defined value
+	@param [object]: Action this value belongs to
+	@param [boolean] (optional): Is this a new value construct
+*/
+Value.prototype.update = function (value, action, isNewValue) {
+	var data = (action) ? action.data : {};
 	
-	// Maximum range for value (TODO)
-	min: 0,
-	max: 1,
+	// If value is just a number
+	if (utils.isNum(value) || utils.isFunc(value)) {
+	    this.from = (isNewValue) ? 0 : this.from;
+	    this.current = (isNewValue) ? this.from : this.current;
+		this.to = parse(value, data, this.current);
+		
+	// Or if it is an object
+	} else {
 	
-	// Speed for .move(), in xps
-	speed: 0,
-	friction: 0,
-	thrust: 0,
+	    // Deal with our priorities
+	    
 	
-	// Options
-	duration: 400,
-	delay: 0,
-	ease: 'ease-in-out',
-	link: null, // use the progress of this value
-	math: null,
-	steps: 0,
-	
-	// Amp for inside and outside range (ie value * amp)
-	amp: 0,
-	escapeAmp: 0,
-	
-	/*
-		Update the value properties
-	*/
-	update: function (value, action, isNewValue) {
-		var newValue,
-			data = (action) ? action.data : {};
+	    // Loop through permitted values
+	    for (var key in defaults) {
+		    if (defaults.hasOwnProperty(key) && (key !== 'current' && key !== 'from')) {
+    		    
+    		    // If user has submitted a property
+    		    if (value.hasOwnProperty(key)) {
+                    this[key] = parse(value[key], data, this.current);
+                    
+                // Or there's a default set on the action
+    		    } else if (action.hasOwnProperty(key)) {
+                    this[key] = parse(action[key], data, this.current);
+                    
+                // Otherwise, if this is our first time (honest judge), set as the default.
+    		    } else if (isNewValue) {
+        		    this[key] = defaults[key];
+    		    }
+    		    
+		    }
+	    }
+		
+		
+		
+		
+		/*
+		    // TODO: See if this badass if statement (emphasis on ass) can be refactored
+		    if (value.hasOwnProperty('current') && !value.hasOwnProperty('from')) {
+    		    this.current = parse(value.current, data);
+    		    this.from = this.current;
+    		    
+		    } else if (!value.hasOwnProperty('current') && value.hasOwnProperty('from')) {
+    		    this.from = isNewValue ? parse(value.from, data) : this.current;
+    		    this.current = isNewValue ? this.from : this.current;
 
-		for (var key in value) {
-			if (value.hasOwnProperty(key) && !this[key] !== undefined) {
-				newValue = parse(value[key], data, value.current);
-
-				if (newValue === undefined && action[key] !== undefined) {
-					newValue = action[key];
-				}
-
-				this[key] = newValue;
-			}
-		}
+		    } else if (value.hasOwnProperty('current') && value.hasOwnProperty('from')) {
+    		    this.current = parse(value.current, data);
+    		    this.from = isNewValue ? parse(value.from, data) : this.current;
+		    }
+		
+		    // Loop through the rest of the options
+    		for (var key in defaults) {
+    		    
+    			if (defaults.hasOwnProperty(key) && !isPriority(key)) {
+    				newValue = parse(value[key], data, this.current);
+    
+    				if (newValue === undefined && action[key] !== undefined) {
+    					newValue = action[key];
+    				}
+    
+    				this[key] = newValue;
+    			}
+    		}
+    		
+            */
 	}
-	
 };
 
 module.exports = Value;

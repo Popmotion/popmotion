@@ -72,7 +72,7 @@ Rubix.prototype = {
         easeValue: function (key, action, progress) {
             var value = action.values[key],
             	restrictedProgress = calc.restricted(progress, 0, 1);
-            
+
             return Easing.withinRange(restrictedProgress, value.from, value.to, value.ease);
         }
     },

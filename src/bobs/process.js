@@ -23,7 +23,7 @@ Process.prototype = {
 		var i = 0,
 			active = tokens.length;
 
-		for (i; i < active; i++) {
+		for (i; i < active; ++i) {
 			this.singleAction(ActionManager.get(tokens[i]), frameStart, fps);
 		}
 	},
