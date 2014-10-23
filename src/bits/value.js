@@ -3,7 +3,7 @@
 var utils = require('../utils/utils.js'),
 	calc = require('../utils/calc.js'),
 	isPriority = function (key) {
-    	var prioritys = ['current', 'from', 'to'];
+    	var prioritys = ['current', 'from', 'to', 'start'];
     	return (prioritys.indexOf(key) > -1);
 	},
 	parse = function (value, data, current) {
@@ -15,14 +15,15 @@ var utils = require('../utils/utils.js'),
 	defaults = {
 	    // Actual value
     	current: 0,
+    	start: 0,
 	
     	// Current range for value
     	from: 0,
     	to: 1,
 	
     	// Maximum range for value (TODO - has no current effect)
-    	min: 0,
-    	max: 1,
+    	min: null,
+    	max: null,
     	
     	// Speed for .move(), in xps
     	speed: 0,
@@ -64,6 +65,9 @@ Value.prototype.update = function (value, action, isNewValue) {
 	
 	    // Deal with our priorities
 	    // TODO: See if this badass if statement (emphasis on ass) can be refactored
+	    if (isNewValue && value.hasOwnProperty('speed')) {
+		    value.current = parse(value.start, data);
+	    }
 	    
 	    // If user has defined a new current, but not a from
 	    if (value.hasOwnProperty('current') && !value.hasOwnProperty('from')) {
