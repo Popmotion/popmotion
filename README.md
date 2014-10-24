@@ -23,9 +23,11 @@ We run everything through the same requestAnimationFrame loop, synchronising eve
 ###NPM###
 
 Redshift is available on NPM, so you can include it in your Browserify script like:
-  
-  var Redshift = require('redshift');
-  
+
+```javascript  
+var Redshift = require('redshift');
+```
+
 ###Old-school file include###
 
 Alternatively, you can simply download the pre-compiled file from https://github.com/SirHound/redshift and include it in a &lt;script&rt; tag, as you would any other Javascript script. You can then access the global Redshift object from other scripts loaded subsequently.
@@ -39,6 +41,7 @@ To get accustomed to Redshift, we'll first look at the jQuery interface. This is
 
 Let's animate a box, with the helpful ID of 'box', left 100px, over a duration of 300ms, with ease-out easing.
 
+```javascript
   $('#box').play({
     values: {
       left: 100
@@ -51,7 +54,8 @@ Let's animate a box, with the helpful ID of 'box', left 100px, over a duration o
   function ourCallback(output, $element) {
     $element.css('transform', 'translate3D(' + output.left + 'px, 0,0)');
   }
-  
+```  
+
 Let's break this down.
 
 **.play()** - This is the .animate() of Redshift. We animate the given values according to the provided options (for instance duration and ease).
