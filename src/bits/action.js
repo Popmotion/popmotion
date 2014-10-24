@@ -100,7 +100,7 @@ Action.prototype = {
         for (key in values) {
 	        if (values.hasOwnProperty(key)) {
 	        	if (this.values[key]) {
-		        	this.values[key].update(values[key]);
+		        	this.values[key].update(values[key], this);
 	        	} else {
 		        	this.values[key] = new Value(values[key], this);	
 	        	}

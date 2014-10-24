@@ -1,6 +1,6 @@
 {
   "name": "redshift",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "homepage": "http://redshiftjs.com",
   "authors": [
     "Matt Perry <mattgperry@gmail.com>"
@@ -17,5 +17,10 @@
     "dom animation"
   ],
   "license": "MIT",
-  "ignore": []
+  "ignore": [
+    "*.json",
+    "*.md",
+    "LICENSE",
+    "/src"
+  ]
 }
