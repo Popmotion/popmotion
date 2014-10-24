@@ -4,6 +4,7 @@
 **Javascript UX engine for DOM, canvas, or everything else**
 
 ***Summary***
+========
 
 Redshift is a Javscript engine for animation and interaction. It is output-agnostic, meaning you provide the callback while we provide the numbers. The benefits:
 
