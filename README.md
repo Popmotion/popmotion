@@ -5,7 +5,7 @@ Redshift
 
 Redshift is a Javscript engine for animation and interaction. It is output-agnostic, meaning you provide the callback while we provide the numbers. The benefits:
 
-* Use any technology you want (jQuery, canvas, WebGL, etc)
+* Use any technology you want (DOM, jQuery, canvas, WebGL, etc)
 * Animate any property you want, without us having to add explicit support for it
 * Move between technologies simply by changing your callbacks - Redshift will always pump out identical numbers
 
