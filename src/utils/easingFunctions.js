@@ -22,6 +22,7 @@
         exp
         circ
         back
+        bounce
         
     Easing functions from Robert Penner
     http://www.robertpenner.com/easing/
@@ -39,6 +40,17 @@ var calc = require('./calc.js'),
  	Bezier = require('../bits/bezier.js'),
  	EasingFunction = function () {},
 	easingFunction,
+	bounce = function (progress) {
+		if ((progress) < (1/2.75)) {
+			return (7.5625*progress*progress);
+		} else if (progress < (2/2.75)) {
+			return (7.5625*(progress-=(1.5/2.75))*progress + .75);
+		} else if (progress < (2.5/2.75)) {
+			return (7.5625*(progress-=(2.25/2.75))*progress + .9375);
+		} else {
+			return (7.5625*(progress-=(2.625/2.75))*progress + .984375);
+		}
+	},
 	/*
     	Each of these base functions is an easeIn
     	
@@ -70,6 +82,10 @@ var calc = require('./calc.js'),
             var strength = 1.5;
 
             return (progress * progress) * ((strength + 1) * progress - strength);
+        },
+        bounce: function (progress) {
+        	// Not ideal! Currently we're defining easeIns and bounce is easeOut by default, so we flip it.
+	        return easingFunction.reverseEasing(progress, bounce);
         }
 	};
 	
