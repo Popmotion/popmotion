@@ -23,6 +23,8 @@
         circ
         back
         bounce
+        swing
+        spring
         
     Easing functions from Robert Penner
     http://www.robertpenner.com/easing/
@@ -40,24 +42,13 @@ var calc = require('./calc.js'),
  	Bezier = require('../bits/bezier.js'),
  	EasingFunction = function () {},
 	easingFunction,
-	bounce = function (progress) {
-		if ((progress) < (1/2.75)) {
-			return (7.5625*progress*progress);
-		} else if (progress < (2/2.75)) {
-			return (7.5625*(progress-=(1.5/2.75))*progress + .75);
-		} else if (progress < (2.5/2.75)) {
-			return (7.5625*(progress-=(2.25/2.75))*progress + .9375);
-		} else {
-			return (7.5625*(progress-=(2.625/2.75))*progress + .984375);
-		}
-	},
 	/*
     	Each of these base functions is an easeIn
     	
     	On init, we use EasingFunction.mirror and .reverse to generate easeInOut and
     	easeOut functions respectively.
 	*/
-	baseFunctions = {
+	baseIn = {
 	    /*
     	    Quad - Qunit easing
     	    
@@ -82,11 +73,27 @@ var calc = require('./calc.js'),
             var strength = 1.5;
 
             return (progress * progress) * ((strength + 1) * progress - strength);
-        },
-        bounce: function (progress) {
-        	// Not ideal! Currently we're defining easeIns and bounce is easeOut by default, so we flip it.
-	        return easingFunction.reverseEasing(progress, bounce);
         }
+    },
+    baseOut = {
+        bounce: function (progress) {
+			if ((progress) < (1/2.75)) {
+				return (7.5625*progress*progress);
+			} else if (progress < (2/2.75)) {
+				return (7.5625*(progress-=(1.5/2.75))*progress + .75);
+			} else if (progress < (2.5/2.75)) {
+				return (7.5625*(progress-=(2.25/2.75))*progress + .9375);
+			} else {
+				return (7.5625*(progress-=(2.625/2.75))*progress + .984375);
+			}
+        },
+	    swing: function (progress) {
+		    var s = 1.70158;
+		    return (progress -= 1) * progress * ((s + 1) * progress + s) + 1;
+	    },
+	    spring: function (progress) {
+	    	return 1 - (Math.cos(progress * 4.5 * Math.PI) * Math.exp(-progress * 6));
+	    }
 	};
 	
 EasingFunction.prototype = {
@@ -98,7 +105,13 @@ EasingFunction.prototype = {
         @return [function || boolean]: Easing function or false if function undefined
     */
 	get: function (name) {
-		return this[name] || false;
+		var easing = this[name];
+		
+		if (!easing) {
+			throw name + KEY.ERROR.INVALID_EASING;
+		}
+
+		return easing;
 	},
 	
 	
@@ -163,19 +176,21 @@ EasingFunction.prototype = {
         @param [string]: Base name of the easing functions to generate
         @param [function]: Base easing function, as an easeIn, from which to generate Out and InOut
     */
-	generate: function (name, method) {
+	generate: function (name, method, isBaseIn) {
 		var self = this,
 			names = {
 				easeIn: name + KEY.EASING.IN, 
 				easeOut: name + KEY.EASING.OUT,
 				easeInOut: name + KEY.EASING.IN_OUT
-			};
+			},
+			baseName = isBaseIn ? names.easeIn : names.easeOut,
+			reverseName = isBaseIn ? names.easeOut : names.easeIn;
 
         // Create the In function
-        this[names.easeIn] = method;
+        this[baseName] = method;
 
         // Create the Out function by reversing the transition curve
-        this[names.easeOut] = function (progress) {
+        this[reverseName] = function (progress) {
             return self.reverseEasing(progress, self[names.easeIn]);
         };
         
@@ -236,9 +251,18 @@ easingFunction = new EasingFunction();
 init();
 
 function init() {
-	for (var key in baseFunctions) {
-		if (baseFunctions.hasOwnProperty(key)) {
-			easingFunction.generate(key, baseFunctions[key]);
+
+	// Generate easing with base function of easeIn
+	for (var key in baseIn) {
+		if (baseIn.hasOwnProperty(key)) {
+			easingFunction.generate(key, baseIn[key], true);
+		}
+	}
+	
+	// Generate easing with base function of easeOut
+	for (var key in baseOut) {
+		if (baseOut.hasOwnProperty(key)) {
+			easingFunction.generate(key, baseOut[key]);
 		}
 	}
 }
