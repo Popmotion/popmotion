@@ -222,12 +222,66 @@ ActionManager.prototype = {
     	looped through, well you can only imagine the fun that causes.
 	*/
 	purge: function () {
-		var nextInPlaylist,
-			queueLength = deactivateQueue.length;
+	    var queueLength = deactivateQueue.length;
+	    
+	    // Run through all queued actions and decide what to do next
+	    for (var i = 0; i < queueLength; ++i) {
+	        if (utils.isNum(deactivateQueue[i])) {
+    	        this.decideNext(deactivateQueue[i]);
+	        }
+	    }
 
-		for (var i = 0; i < queueLength; ++i) {
+        // Clear deactivateQueue
+		deactivateQueue = [];
+	},
+	
+	/*
+    	Decide what to do with an action
+    	
+    	Takes an action and decides, based on its playlist and loop properties, 
+    	what to do with it next.
+    	
+    	@param [Token]: Action token
+	*/
+	decideNext: function (token) {
+    	if (!this.loop(token) && !this.playNext(token)) {
+        	this.deactivate(token);
+    	}
+	},
+	
+	
+	/*
+    	Play next in playlist, if exists
+    	
+    	@param [Token]: Action token
+    	@return [boolean]: Success
+	*/
+	playNext: function (token) {
+    	var hasPlayedNext = false;
+    	
+    	return hasPlayedNext;
+	},
+	
+	
+	/*
+    	Loop current action, if we're that way inclined
+    	
+    	@param [Token]: Action token
+    	@return [boolean]: Success
+	*/
+	loop: function (token) {
+    	var hasLooped = false;
+    	
+    	return hasLooped;
+	},
+	
+	
+	
+	/*
+		/*
 			nextInPlaylist = this.getNextInPlaylist(deactivateQueue[i]);
 
+            // If there's nothing in the play list
 			if (!nextInPlaylist) {
 			    if (utils.isNum(deactivateQueue[i])) {
     			    this.deactivate(deactivateQueue[i]);
@@ -236,10 +290,7 @@ ActionManager.prototype = {
     			this.change(deactivateQueue[i], nextInPlaylist);
     			this.activate(deactivateQueue[i]);
 			}
-		}
-
-		deactivateQueue = [];
-	},
+		*/
 	
 	
 	/*
@@ -275,12 +326,25 @@ ActionManager.prototype = {
 	},
 	
 	
+	/*
+    	Get data from our action's data object
+    	
+    	@param [Token]: Action token
+    	@param [string]: Key of data point
+	*/
 	getData: function (token, key) {
 	    var action = this.get(token);
     	
     	return action.data ? action.data[key] : undefined;
 	},
 	
+	
+	/*
+    	Set data point to action's data object
+    	
+    	@param [Token]: Action token
+    	@param [object]: Data to save to action
+	*/
 	setData: function (token, data) {
     	var action = this.get(token);
     	
