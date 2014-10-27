@@ -63,7 +63,6 @@ Action.prototype = {
         this.steps = utils.isNum(opts.steps) ? opts.steps : defaults.steps;
         this.alternate = opts.alternate;
         this.pointerOffset = opts.pointerOffset;
-        this.loop = opts.loop;
         
         // Play list
         this.playlist = opts.playlist || this.playlist || [];

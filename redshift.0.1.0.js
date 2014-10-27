@@ -64,7 +64,6 @@ Action.prototype = {
         this.steps = utils.isNum(opts.steps) ? opts.steps : defaults.steps;
         this.alternate = opts.alternate;
         this.pointerOffset = opts.pointerOffset;
-        this.loop = opts.loop;
         
         // Play list
         this.playlist = opts.playlist || this.playlist || [];
@@ -464,7 +463,6 @@ var utils = require('../utils/utils.js'),
     	link: null, // use the progress of this value
     	math: null,
     	steps: 0,
-    	loop: false,
     	
     	// Amp for inside and outside range (ie value * amp)
     	amp: 0,
