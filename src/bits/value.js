@@ -37,6 +37,7 @@ var utils = require('../utils/utils.js'),
     	link: null, // use the progress of this value
     	math: null,
     	steps: 0,
+    	loop: false,
     	
     	// Amp for inside and outside range (ie value * amp)
     	amp: 0,
