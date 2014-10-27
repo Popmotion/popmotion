@@ -244,7 +244,18 @@ ActionManager.prototype = {
     	@param [Token]: Action token
 	*/
 	decideNext: function (token) {
-    	if (!this.loop(token) && !this.yoyo(token) && !this.playNext(token)) {
+		var nexts = ['loop', 'yoyo', 'playNext'],
+			num = nexts.length,
+			hasFuture = false;
+	
+		for (var i = 0; i < num; ++i) {
+			if (this[nexts[i]](token)) {
+				hasFuture = true;
+				break;
+			}
+		}	
+	
+    	if (!hasFuture) {
         	this.deactivate(token);
     	}
 	},
