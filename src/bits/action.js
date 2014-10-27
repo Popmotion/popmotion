@@ -127,7 +127,7 @@ Action.prototype = {
     	var key, to, from;
     	
     	this.progress = calc.difference(this.progress, 1);
-console.log(this.progress);
+
 	    for (key in this.values) {
 		    if (this.values.hasOwnProperty(key)) {
 		    	to = this.values[key].to;
