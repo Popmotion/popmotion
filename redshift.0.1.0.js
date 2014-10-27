@@ -64,11 +64,10 @@ Action.prototype = {
         this.steps = utils.isNum(opts.steps) ? opts.steps : defaults.steps;
         this.alternate = opts.alternate;
         this.pointerOffset = opts.pointerOffset;
-        this.loop = opts.loop;
         
         // Play list
         this.playlist = opts.playlist || this.playlist || [];
-        this.playCurrent = utils.isNum(opts.playCurrent) ? opts.playCurrent : this.playCurrent;
+        this.playhead = utils.isNum(opts.playhead) ? opts.playhead : this.playhead;
         
         // Looping
         this.loop = opts.loop || false;
@@ -94,11 +93,9 @@ Action.prototype = {
     },
     
     setValues: function (values) {
-        var key;
-        
         this.values = this.values || {};
 
-        for (key in values) {
+        for (var key in values) {
 	        if (values.hasOwnProperty(key)) {
 	        	if (this.values[key]) {
 		        	this.values[key].update(values[key], this);
@@ -112,6 +109,17 @@ Action.prototype = {
         	this.values.x = this.values.x || new Value(0, this);
             this.values.y = this.values.y || new Value(0, this);
         }
+    },
+    
+    /*
+        Reset values to their most recently set amounts
+    */
+    resetValues: function () {
+        for (var key in this.values) {
+            this.values[key].current = this.values[key].from;
+        }
+        
+        this.progress = 0;
     },
     
     reverseValues: function () {
@@ -685,7 +693,7 @@ ActionManager.prototype = {
             
             baseAction = this.getDefined(actionList[0]);
             baseAction.playlist = actionList;
-            baseAction.playCurrent = 0;
+            baseAction.playhead = 0;
         }
         
         // Apply overrides if present
@@ -792,23 +800,76 @@ ActionManager.prototype = {
     	looped through, well you can only imagine the fun that causes.
 	*/
 	purge: function () {
-		var nextInPlaylist,
-			queueLength = deactivateQueue.length;
+	    var queueLength = deactivateQueue.length;
+	    
+	    // Run through all queued actions and decide what to do next
+	    for (var i = 0; i < queueLength; ++i) {
+	        if (utils.isNum(deactivateQueue[i])) {
+    	        this.decideNext(deactivateQueue[i]);
+	        }
+	    }
 
-		for (var i = 0; i < queueLength; ++i) {
-			nextInPlaylist = this.getNextInPlaylist(deactivateQueue[i]);
-
-			if (!nextInPlaylist) {
-			    if (utils.isNum(deactivateQueue[i])) {
-    			    this.deactivate(deactivateQueue[i]);
-			    }
-			} else {
-    			this.change(deactivateQueue[i], nextInPlaylist);
-    			this.activate(deactivateQueue[i]);
-			}
-		}
-
+        // Clear deactivateQueue
 		deactivateQueue = [];
+	},
+	
+	/*
+    	Decide what to do with an action
+    	
+    	Takes an action and decides, based on its playlist and loop properties, 
+    	what to do with it next.
+    	
+    	@param [Token]: Action token
+	*/
+	decideNext: function (token) {
+    	if (!this.loop(token) && !this.playNext(token)) {
+        	this.deactivate(token);
+    	}
+	},
+	
+	
+	/*
+    	Play next in playlist, if exists
+    	
+    	@param [Token]: Action token
+    	@return [boolean]: Success
+	*/
+	playNext: function (token) {
+    	var hasPlayedNext = false,
+    	    action = this.get(token),
+    	    playlistLength = action.playlist ? action.playlist.length : 0;
+        
+        // Check we have a playlist and that this is an animation
+        // TODO: Maybe make a set of properties on the rubix that says allowPlaylist: true
+    	if (playlistLength && action.link === KEY.LINK.TIME) {
+    	    ++action.playhead;
+    	    this.change(token, this.getDefined(action.playlist[action.playhead]));
+    	    this.activate(token);
+    	    hasPlayedNext = true;
+    	}
+    	
+    	return hasPlayedNext;
+	},
+	
+	
+	/*
+    	Loop current action, if we're that way inclined
+    	
+    	@param [Token]: Action token
+    	@return [boolean]: Success
+	*/
+	loop: function (token) {
+    	var hasLooped = false,
+    	    action = this.get(token),
+    	    loopForever = (action.loop === true);
+    	    
+        if (action.link === KEY.LINK.TIME && (loopForever || utils.isNum(action.loop))) {
+            ++action.loopCount;
+            action.resetValues();
+            this.activate(token);
+        }
+    	
+    	return hasLooped;
 	},
 	
 	
@@ -825,32 +886,24 @@ ActionManager.prototype = {
 	
 	
 	/*
-    	Get next item in playlist, or return false if none
+    	Get data from our action's data object
     	
-    	@param [Token]: Token of action
+    	@param [Token]: Action token
+    	@param [string]: Key of data point
 	*/
-	getNextInPlaylist: function (token) {
-    	var nextInPlaylist = false,
-    	    action = this.get(token),
-    	    playlistLength = action.playlist ? action.playlist.length : 0;
-    	
-    	if (playlistLength && action.link === KEY.LINK.TIME) {
-        	if (action.playCurrent < playlistLength - 1) {
-            	action.playCurrent++;
-            	nextInPlaylist = this.getDefined(action.playlist[action.playCurrent]);
-        	}
-    	}
-
-    	return nextInPlaylist;
-	},
-	
-	
 	getData: function (token, key) {
 	    var action = this.get(token);
     	
     	return action.data ? action.data[key] : undefined;
 	},
 	
+	
+	/*
+    	Set data point to action's data object
+    	
+    	@param [Token]: Action token
+    	@param [object]: Data to save to action
+	*/
 	setData: function (token, data) {
     	var action = this.get(token);
     	
@@ -1587,7 +1640,8 @@ module.exports = {
     },
     ERROR: {
 	    ACTION_EXISTS: "Action already defined. Use forceOverride: true to override.",
-	    NO_ACTION: "No action defined to inherit from."
+	    NO_ACTION: "No action defined to inherit from.",
+	    INVALID_EASING: ": Easing not defined"
     },
     EVENT: {
 	    MOUSE: 'mouse',
@@ -2163,6 +2217,9 @@ module.exports = calc;
         exp
         circ
         back
+        bounce
+        swing
+        spring
         
     Easing functions from Robert Penner
     http://www.robertpenner.com/easing/
@@ -2186,7 +2243,7 @@ var calc = require('./calc.js'),
     	On init, we use EasingFunction.mirror and .reverse to generate easeInOut and
     	easeOut functions respectively.
 	*/
-	baseFunctions = {
+	baseIn = {
 	    /*
     	    Quad - Qunit easing
     	    
@@ -2212,6 +2269,26 @@ var calc = require('./calc.js'),
 
             return (progress * progress) * ((strength + 1) * progress - strength);
         }
+    },
+    baseOut = {
+        bounce: function (progress) {
+			if ((progress) < (1/2.75)) {
+				return (7.5625*progress*progress);
+			} else if (progress < (2/2.75)) {
+				return (7.5625*(progress-=(1.5/2.75))*progress + .75);
+			} else if (progress < (2.5/2.75)) {
+				return (7.5625*(progress-=(2.25/2.75))*progress + .9375);
+			} else {
+				return (7.5625*(progress-=(2.625/2.75))*progress + .984375);
+			}
+        },
+	    swing: function (progress) {
+		    var s = 1.70158;
+		    return (progress -= 1) * progress * ((s + 1) * progress + s) + 1;
+	    },
+	    spring: function (progress) {
+	    	return 1 - (Math.cos(progress * 4.5 * Math.PI) * Math.exp(-progress * 6));
+	    }
 	};
 	
 EasingFunction.prototype = {
@@ -2223,7 +2300,13 @@ EasingFunction.prototype = {
         @return [function || boolean]: Easing function or false if function undefined
     */
 	get: function (name) {
-		return this[name] || false;
+		var easing = this[name];
+		
+		if (!easing) {
+			throw name + KEY.ERROR.INVALID_EASING;
+		}
+
+		return easing;
 	},
 	
 	
@@ -2288,19 +2371,21 @@ EasingFunction.prototype = {
         @param [string]: Base name of the easing functions to generate
         @param [function]: Base easing function, as an easeIn, from which to generate Out and InOut
     */
-	generate: function (name, method) {
+	generate: function (name, method, isBaseIn) {
 		var self = this,
 			names = {
 				easeIn: name + KEY.EASING.IN, 
 				easeOut: name + KEY.EASING.OUT,
 				easeInOut: name + KEY.EASING.IN_OUT
-			};
+			},
+			baseName = isBaseIn ? names.easeIn : names.easeOut,
+			reverseName = isBaseIn ? names.easeOut : names.easeIn;
 
         // Create the In function
-        this[names.easeIn] = method;
+        this[baseName] = method;
 
         // Create the Out function by reversing the transition curve
-        this[names.easeOut] = function (progress) {
+        this[reverseName] = function (progress) {
             return self.reverseEasing(progress, self[names.easeIn]);
         };
         
@@ -2361,9 +2446,18 @@ easingFunction = new EasingFunction();
 init();
 
 function init() {
-	for (var key in baseFunctions) {
-		if (baseFunctions.hasOwnProperty(key)) {
-			easingFunction.generate(key, baseFunctions[key]);
+
+	// Generate easing with base function of easeIn
+	for (var key in baseIn) {
+		if (baseIn.hasOwnProperty(key)) {
+			easingFunction.generate(key, baseIn[key], true);
+		}
+	}
+	
+	// Generate easing with base function of easeOut
+	for (var key in baseOut) {
+		if (baseOut.hasOwnProperty(key)) {
+			easingFunction.generate(key, baseOut[key]);
 		}
 	}
 }

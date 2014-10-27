@@ -115,7 +115,7 @@ ActionManager.prototype = {
             
             baseAction = this.getDefined(actionList[0]);
             baseAction.playlist = actionList;
-            baseAction.playCurrent = 0;
+            baseAction.playhead = 0;
         }
         
         // Apply overrides if present
@@ -222,23 +222,108 @@ ActionManager.prototype = {
     	looped through, well you can only imagine the fun that causes.
 	*/
 	purge: function () {
-		var nextInPlaylist,
-			queueLength = deactivateQueue.length;
+	    var queueLength = deactivateQueue.length;
+	    
+	    // Run through all queued actions and decide what to do next
+	    for (var i = 0; i < queueLength; ++i) {
+	        if (utils.isNum(deactivateQueue[i])) {
+    	        this.decideNext(deactivateQueue[i]);
+	        }
+	    }
 
-		for (var i = 0; i < queueLength; ++i) {
-			nextInPlaylist = this.getNextInPlaylist(deactivateQueue[i]);
+        // Clear deactivateQueue
+		deactivateQueue = [];
+	},
+	
+	/*
+    	Decide what to do with an action
+    	
+    	Takes an action and decides, based on its playlist and loop properties, 
+    	what to do with it next.
+    	
+    	@param [Token]: Action token
+	*/
+	decideNext: function (token) {
+		var nexts = ['loop', 'yoyo', 'playNext'],
+			num = nexts.length,
+			hasFuture = false;
+	
+		for (var i = 0; i < num; ++i) {
+			if (this[nexts[i]](token)) {
+				hasFuture = true;
+				break;
+			}
+		}	
+	
+    	if (!hasFuture) {
+        	this.deactivate(token);
+    	}
+	},
+	
+	
+	/*
+    	Play next in playlist, if exists
+    	
+    	@param [Token]: Action token
+    	@return [boolean]: Success
+	*/
+	playNext: function (token) {
+    	var hasPlayedNext = false,
+    	    action = this.get(token),
+    	    playlistLength = action.playlist ? action.playlist.length : 0;
+        
+        // Check we have a playlist and that this is an animation
+        // TODO: Maybe make a set of properties on the rubix that says allowPlaylist: true
+    	if (playlistLength && action.link === KEY.LINK.TIME) {
+    	    ++action.playhead;
+    	    this.change(token, this.getDefined(action.playlist[action.playhead]));
+    	    this.activate(token);
+    	    hasPlayedNext = true;
+    	}
 
-			if (!nextInPlaylist) {
-			    if (utils.isNum(deactivateQueue[i])) {
-    			    this.deactivate(deactivateQueue[i]);
-			    }
-			} else {
-    			this.change(deactivateQueue[i], nextInPlaylist);
-    			this.activate(deactivateQueue[i]);
+    	return hasPlayedNext;
+	},
+	
+	
+	/*
+    	Loop current action, if we're that way inclined
+    	
+    	@param [Token]: Action token
+    	@return [boolean]: Success
+	*/
+	loop: function (token) {
+    	var hasLooped = false,
+    	    action = this.get(token),
+    	    loopForever = (action.loop === true);
+    	    
+        if (action.link === KEY.LINK.TIME && (loopForever || utils.isNum(action.loop))) {
+            ++action.loopCount;
+            if ((loopForever || utils.isNum(action.loop) && action.loopCount <= action.loop)) {
+	            action.resetValues();
+	            this.activate(token);
+	            hasLooped = true;
+            }
+        }
+
+    	return hasLooped;
+	},
+	
+	
+	yoyo: function (token) {
+		var hasYoyoed = false,
+			action = this.get(token),
+			yoyoForever = (action.yoyo === true);
+
+		if (action.link === KEY.LINK.TIME && (yoyoForever || utils.isNum(action.yoyo))) {
+			++action.yoyoCount;
+			if (yoyoForever || (utils.isNum(action.yoyo) && action.yoyoCount <= action.yoyo)) {
+				action.reverseValues();
+				this.activate(token);
+				hasYoyoed = true;
 			}
 		}
 
-		deactivateQueue = [];
+		return hasYoyoed;
 	},
 	
 	
@@ -255,32 +340,24 @@ ActionManager.prototype = {
 	
 	
 	/*
-    	Get next item in playlist, or return false if none
+    	Get data from our action's data object
     	
-    	@param [Token]: Token of action
+    	@param [Token]: Action token
+    	@param [string]: Key of data point
 	*/
-	getNextInPlaylist: function (token) {
-    	var nextInPlaylist = false,
-    	    action = this.get(token),
-    	    playlistLength = action.playlist ? action.playlist.length : 0;
-    	
-    	if (playlistLength && action.link === KEY.LINK.TIME) {
-        	if (action.playCurrent < playlistLength - 1) {
-            	action.playCurrent++;
-            	nextInPlaylist = this.getDefined(action.playlist[action.playCurrent]);
-        	}
-    	}
-
-    	return nextInPlaylist;
-	},
-	
-	
 	getData: function (token, key) {
 	    var action = this.get(token);
     	
     	return action.data ? action.data[key] : undefined;
 	},
 	
+	
+	/*
+    	Set data point to action's data object
+    	
+    	@param [Token]: Action token
+    	@param [object]: Data to save to action
+	*/
 	setData: function (token, data) {
     	var action = this.get(token);
     	
