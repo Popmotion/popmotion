@@ -282,7 +282,14 @@ ActionManager.prototype = {
 	*/
 	loop: function (token) {
     	var hasLooped = false,
-    	    action = this.get(token);
+    	    action = this.get(token),
+    	    loopForever = (action.loop === true);
+    	    
+        if (action.link === KEY.LINK.TIME && (loopForever || utils.isNum(action.loop))) {
+            ++action.loopCount;
+            action.resetValues();
+            this.activate(token);
+        }
     	
     	return hasLooped;
 	},

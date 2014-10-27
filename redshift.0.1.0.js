@@ -93,11 +93,9 @@ Action.prototype = {
     },
     
     setValues: function (values) {
-        var key;
-        
         this.values = this.values || {};
 
-        for (key in values) {
+        for (var key in values) {
 	        if (values.hasOwnProperty(key)) {
 	        	if (this.values[key]) {
 		        	this.values[key].update(values[key], this);
@@ -111,6 +109,17 @@ Action.prototype = {
         	this.values.x = this.values.x || new Value(0, this);
             this.values.y = this.values.y || new Value(0, this);
         }
+    },
+    
+    /*
+        Reset values to their most recently set amounts
+    */
+    resetValues: function () {
+        for (var key in this.values) {
+            this.values[key].current = this.values[key].from;
+        }
+        
+        this.progress = 0;
     },
     
     reverseValues: function () {
@@ -851,7 +860,14 @@ ActionManager.prototype = {
 	*/
 	loop: function (token) {
     	var hasLooped = false,
-    	    action = this.get(token);
+    	    action = this.get(token),
+    	    loopForever = (action.loop === true);
+    	    
+        if (action.link === KEY.LINK.TIME && (loopForever || utils.isNum(action.loop))) {
+            ++action.loopCount;
+            action.resetValues();
+            this.activate(token);
+        }
     	
     	return hasLooped;
 	},
