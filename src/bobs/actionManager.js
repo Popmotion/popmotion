@@ -244,7 +244,7 @@ ActionManager.prototype = {
     	@param [Token]: Action token
 	*/
 	decideNext: function (token) {
-    	if (!this.loop(token) && !this.playNext(token)) {
+    	if (!this.loop(token) && !this.yoyo(token) && !this.playNext(token)) {
         	this.deactivate(token);
     	}
 	},
@@ -269,7 +269,7 @@ ActionManager.prototype = {
     	    this.activate(token);
     	    hasPlayedNext = true;
     	}
-    	
+
     	return hasPlayedNext;
 	},
 	
@@ -287,11 +287,32 @@ ActionManager.prototype = {
     	    
         if (action.link === KEY.LINK.TIME && (loopForever || utils.isNum(action.loop))) {
             ++action.loopCount;
-            action.resetValues();
-            this.activate(token);
+            if ((loopForever || utils.isNum(action.loop) && action.loopCount <= action.loop)) {
+	            action.resetValues();
+	            this.activate(token);
+	            hasLooped = true;
+            }
         }
-    	
+
     	return hasLooped;
+	},
+	
+	
+	yoyo: function (token) {
+		var hasYoyoed = false,
+			action = this.get(token),
+			yoyoForever = (action.yoyo === true);
+
+		if (action.link === KEY.LINK.TIME && (yoyoForever || utils.isNum(action.yoyo))) {
+			++action.yoyoCount;
+			if (yoyoForever || (utils.isNum(action.yoyo) && action.yoyoCount <= action.yoyo)) {
+				action.reverseValues();
+				this.activate(token);
+				hasYoyoed = true;
+			}
+		}
+
+		return hasYoyoed;
 	},
 	
 	
