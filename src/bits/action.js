@@ -66,7 +66,7 @@ Action.prototype = {
         
         // Play list
         this.playlist = opts.playlist || this.playlist || [];
-        this.playCurrent = utils.isNum(opts.playCurrent) ? opts.playCurrent : this.playCurrent;
+        this.playhead = utils.isNum(opts.playhead) ? opts.playhead : this.playhead;
         
         // Looping
         this.loop = opts.loop || false;

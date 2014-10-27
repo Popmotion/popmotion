@@ -115,7 +115,7 @@ ActionManager.prototype = {
             
             baseAction = this.getDefined(actionList[0]);
             baseAction.playlist = actionList;
-            baseAction.playCurrent = 0;
+            baseAction.playhead = 0;
         }
         
         // Apply overrides if present
@@ -257,7 +257,18 @@ ActionManager.prototype = {
     	@return [boolean]: Success
 	*/
 	playNext: function (token) {
-    	var hasPlayedNext = false;
+    	var hasPlayedNext = false,
+    	    action = this.get(token),
+    	    playlistLength = action.playlist ? action.playlist.length : 0;
+        
+        // Check we have a playlist and that this is an animation
+        // TODO: Maybe make a set of properties on the rubix that says allowPlaylist: true
+    	if (playlistLength && action.link === KEY.LINK.TIME) {
+    	    ++action.playhead;
+    	    this.change(token, this.getDefined(action.playlist[action.playhead]));
+    	    this.activate(token);
+    	    hasPlayedNext = true;
+    	}
     	
     	return hasPlayedNext;
 	},
@@ -270,27 +281,11 @@ ActionManager.prototype = {
     	@return [boolean]: Success
 	*/
 	loop: function (token) {
-    	var hasLooped = false;
+    	var hasLooped = false,
+    	    action = this.get(token);
     	
     	return hasLooped;
 	},
-	
-	
-	
-	/*
-		/*
-			nextInPlaylist = this.getNextInPlaylist(deactivateQueue[i]);
-
-            // If there's nothing in the play list
-			if (!nextInPlaylist) {
-			    if (utils.isNum(deactivateQueue[i])) {
-    			    this.deactivate(deactivateQueue[i]);
-			    }
-			} else {
-    			this.change(deactivateQueue[i], nextInPlaylist);
-    			this.activate(deactivateQueue[i]);
-			}
-		*/
 	
 	
 	/*
@@ -302,27 +297,6 @@ ActionManager.prototype = {
 	*/
 	queueDeactivate: function (token) {
 		deactivateQueue.push(token);
-	},
-	
-	
-	/*
-    	Get next item in playlist, or return false if none
-    	
-    	@param [Token]: Token of action
-	*/
-	getNextInPlaylist: function (token) {
-    	var nextInPlaylist = false,
-    	    action = this.get(token),
-    	    playlistLength = action.playlist ? action.playlist.length : 0;
-    	
-    	if (playlistLength && action.link === KEY.LINK.TIME) {
-        	if (action.playCurrent < playlistLength - 1) {
-            	action.playCurrent++;
-            	nextInPlaylist = this.getDefined(action.playlist[action.playCurrent]);
-        	}
-    	}
-
-    	return nextInPlaylist;
 	},
 	
 	
