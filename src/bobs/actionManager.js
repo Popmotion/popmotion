@@ -276,9 +276,12 @@ ActionManager.prototype = {
         // TODO: Maybe make a set of properties on the rubix that says allowPlaylist: true
     	if (playlistLength && action.link === KEY.LINK.TIME) {
     	    ++action.playhead;
-    	    this.change(token, this.getDefined(action.playlist[action.playhead]));
-    	    this.activate(token);
-    	    hasPlayedNext = true;
+    	    
+    	    if (action.playhead < playlistLength) {
+        	    this.change(token, this.getDefined(action.playlist[action.playhead]));
+        	    this.activate(token);
+        	    hasPlayedNext = true;
+    	    }
     	}
 
     	return hasPlayedNext;
@@ -295,7 +298,7 @@ ActionManager.prototype = {
     	var hasLooped = false,
     	    action = this.get(token),
     	    loopForever = (action.loop === true);
-    	    
+
         if (action.link === KEY.LINK.TIME && (loopForever || utils.isNum(action.loop))) {
             ++action.loopCount;
             if ((loopForever || utils.isNum(action.loop) && action.loopCount <= action.loop)) {
