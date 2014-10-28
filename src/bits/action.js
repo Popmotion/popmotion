@@ -63,15 +63,16 @@ Action.prototype = {
         this.steps = utils.isNum(opts.steps) ? opts.steps : defaults.steps;
         this.alternate = opts.alternate;
         this.pointerOffset = opts.pointerOffset;
-        this.loop = opts.loop;
         
         // Play list
         this.playlist = opts.playlist || this.playlist || [];
-        this.playCurrent = utils.isNum(opts.playCurrent) ? opts.playCurrent : this.playCurrent;
+        this.playhead = utils.isNum(opts.playhead) ? opts.playhead : this.playhead;
         
         // Looping
         this.loop = opts.loop || false;
         this.loopCount = 0;
+        this.yoyo = opts.yoyo || false;
+        this.yoyoCount = 0;
 
         // Callbacks
         this.onStart = opts.onStart || callback;
@@ -93,11 +94,9 @@ Action.prototype = {
     },
     
     setValues: function (values) {
-        var key;
-        
         this.values = this.values || {};
 
-        for (key in values) {
+        for (var key in values) {
 	        if (values.hasOwnProperty(key)) {
 	        	if (this.values[key]) {
 		        	this.values[key].update(values[key], this);
@@ -111,6 +110,17 @@ Action.prototype = {
         	this.values.x = this.values.x || new Value(0, this);
             this.values.y = this.values.y || new Value(0, this);
         }
+    },
+    
+    /*
+        Reset values to their most recently set amounts
+    */
+    resetValues: function () {
+        for (var key in this.values) {
+            this.values[key].current = this.values[key].from;
+        }
+        
+        this.progress = 0;
     },
     
     reverseValues: function () {

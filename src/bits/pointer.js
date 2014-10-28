@@ -68,7 +68,6 @@ PointerController.prototype = {
             this.velocity = new Velocity(
                 movement.angle,
                 movement.distance,
-                //calc.distance1D(this.offset.angle, movement.angle),
                 movement.x,
                 movement.y,
                 movement.z
