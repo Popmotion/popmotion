@@ -6,7 +6,7 @@
     "Matt Perry <mattgperry@gmail.com>"
   ],
   "description": "Create high fidelity Javascript UX",
-  "main": "src/redshift.js",
+  "main": "redshift.js",
   "keywords": [
     "animation",
     "ux",

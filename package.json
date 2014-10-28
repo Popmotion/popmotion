@@ -1,10 +1,10 @@
 {
   "name": "redshift",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Create high fidelity Javascript UX",
   "author": "Matt Perry <admin@redshiftjs.com>",
   "homepage": "http://redshiftjs.com",
-  "main": "src/redshift.js",
+  "main": "redshift.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/SirHound/redshift"
