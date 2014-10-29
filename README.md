@@ -1,21 +1,22 @@
 Redshift
 ========
 
-##Javascript UX engine for DOM, canvas, or everything else##
+##Javascript UX engine for DOM, canvas, and everything else##
 
-Redshift is a Javscript engine for animation and interaction. It is output-agnostic, meaning you provide the callback while we provide the numbers. The benefits:
+Redshift is a Javscript engine for animation and interaction. It works with pure numbers and outputs directly to your custom callbacks.
 
-* Use any technology you want (DOM, jQuery, canvas, WebGL, etc)
-* Animate any property you want, without us having to add explicit support for it
-* Move between technologies simply by changing your callbacks - Redshift will always pump out identical numbers
+*Key benefits of this approach:*
 
-We never hit the DOM, leaving you in total control of performance.
+* Use your favourite technology (DOM, jQuery, canvas, WebGL, etc)
+* Animate any numerical property, without waiting for us to support it
+* Never hits the DOM, leaving you in control of performance
+* Unlock the power of easing, for any purpose
 
-We can seamlessly hand-off between user input and animation using the same set of properties, using our .play(), .track(), and .move() functions.
+*More features*
 
-We are extendable, so you can add new bezier curve easings, create custom user inputs, and design new ways of processing numbers.
-
-We run everything through the same requestAnimationFrame loop, synchronising every action you run through Redshift.
+* Seamlessly hand-off between user input and animation
+* Create custom easing bezier curves
+* Runs every process through the same requestAnimationFrame for high visual performance
 
 
 ##Use on your site##
