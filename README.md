@@ -9,14 +9,15 @@ Redshift is a Javscript engine for animation and interaction. It works with pure
 
 * Use your favourite technology (DOM, jQuery, canvas, WebGL, etc)
 * Animate any numerical property, without waiting for us to support it
-* Never hits the DOM, leaving you in control of performance
+* We never hit the DOM, leaving you in control of performance
 * Unlock the power of easing, for any purpose
+
 
 **More features:**
 
 * Seamlessly hand-off between user input and animation
 * Create custom easing bezier curves
-* Runs every process through the same requestAnimationFrame for high visual performance
+* Runs every process through the same requestAnimationFrame loop for high visual performance
 
 
 ##Use on your site##
