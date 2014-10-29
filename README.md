@@ -47,7 +47,7 @@ Alternatively, you can simply download the pre-compiled file from https://github
 
 ```javascript
   function moveBox(values, data) {
-    $('#box').css();
+    $('#box').css('transform', 'translate(' + values.x + 'px,0)');
   }
 ```
 
@@ -60,7 +60,8 @@ Alternatively, you can simply download the pre-compiled file from https://github
         x: 100
       }
       duration: 400,
-      ease: 'easeOut'
+      ease: 'easeOut',
+      onFrame: moveBox
     }
   });
 ```
