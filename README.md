@@ -40,10 +40,8 @@ Alternatively, you can simply download the pre-compiled file from https://github
 ###1: Create a Redshift instance###
 
 ```javascript
-  var example = Redshift.get();
+  var action = Redshift.get();
 ```
-
-A Redshift instance
 
 ###2: Create your output callback###
 
@@ -71,7 +69,7 @@ A Redshift instance
 ###4: Play!###
 
 ```javascript
-  example.play('box');
+  action.play('box');
 ```
 
 Or let the user move the box with their mouse/finger, simply by using track() and passing either event through like 
