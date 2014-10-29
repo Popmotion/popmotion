@@ -46,7 +46,7 @@ Alternatively, you can simply download the pre-compiled file from https://github
 ###2: Create your output callback###
 
 ```javascript
-  function moveBox(values, data) {
+  function moveBox(values) {
     $('#box').css('transform', 'translate(' + values.x + 'px,0)');
   }
 ```
