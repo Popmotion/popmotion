@@ -463,24 +463,26 @@ var utils = require('../utils/utils.js'),
     	@return [number]: New value
 	*/
 	calcRelativeValue = function (value, current) {
-    	var newValue = 0,
+    	var newValue = current,
     	    equation = value.split('='),
     	    operator = equation[0],
-    	    num = equation[1];
-    	
+    	    num = parseFloat(equation[1]);
+
     	switch (operator) {
         	case '+':
         	    newValue = current + num;
+        	    break;
             case '-':
         	    newValue = current - num;
+        	    break;
             case '*':
         	    newValue = current * num;
+        	    break;
             case '/':
         	    newValue = current / num;
-            default:
-                newValue = current;
+        	    break;
     	}
-        
+
     	return newValue;
 	},
 	
@@ -497,10 +499,6 @@ var utils = require('../utils/utils.js'),
     	@param [number]: Current value
 	*/
 	parse = function (value, data, current) {
-	    if (utils.isString(value)) {
-    	    value = calcRelativeValue(value, current);
-	    }
-
 	    return (utils.isFunc(value)) ? value(data, current) : value;
 	},
 	
@@ -614,6 +612,11 @@ Value.prototype.update = function (value, action, isNewValue) {
 		    }
 		    
 	    }
+    }
+    
+    // Finally check if to was given as a string, and figure out the relative value
+    if (utils.isString(this.to)) {
+        this.to = calcRelativeValue(this.to, this.current);
     }
 };
 
