@@ -43,7 +43,15 @@ Alternatively, you can simply download the pre-compiled file from https://github
   var example = Redshift.get();
 ```
 
-###2: Define your animation###
+###2: Create your output callback###
+
+```javascript
+  function moveBox(values, data) {
+    $('#box').css();
+  }
+```
+
+###3: Define your animation###
 
 ```javascript
   Redshift.define({
@@ -55,14 +63,6 @@ Alternatively, you can simply download the pre-compiled file from https://github
       ease: 'easeOut'
     }
   });
-```
-
-###3: Create your output callback###
-
-```javascript
-  function moveBox(values, data) {
-    $('#box').css();
-  }
 ```
 
 ###4: Play!###
