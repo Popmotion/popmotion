@@ -65,7 +65,7 @@ Value.prototype.update = function (value, action, isNewValue) {
 	
 	    // Deal with our priorities
 	    // TODO: See if this badass if statement (emphasis on ass) can be refactored
-	    if (isNewValue && value.hasOwnProperty('speed')) {
+	    if (isNewValue && value.hasOwnProperty('start')) {
 		    value.current = parse(value.start, data);
 	    }
 	    
