@@ -2,13 +2,80 @@
 
 var utils = require('../utils/utils.js'),
 	calc = require('../utils/calc.js'),
+	priorityProps = ['current', 'from', 'to', 'start'],
+	
+	/*
+        Is this key a priority property?
+        
+        Priority properties are handled seperately and before all the other props
+        
+        @param [string]: The key to look up in our priority list
+        @return [boolean]: Is this a priority?
+	*/
 	isPriority = function (key) {
-    	var prioritys = ['current', 'from', 'to', 'start'];
-    	return (prioritys.indexOf(key) > -1);
+    	return (priorityProps.indexOf(key) > -1);
 	},
+	
+	/*
+    	Calculate relative value
+    	
+    	Takes the operator and value from a string, ie "+=5", and applies
+    	to the current value to resolve a new target.
+    	
+    	@param [string]: Relative value
+    	@param [number]: Current value
+    	@return [number]: New value
+	*/
+	calcRelativeValue = function (value, current) {
+    	var newValue = 0,
+    	    equation = value.split('='),
+    	    operator = equation[0],
+    	    num = equation[1];
+    	
+    	switch (operator) {
+        	case '+':
+        	    newValue = current + num;
+            case '-':
+        	    newValue = current - num;
+            case '*':
+        	    newValue = current * num;
+            case '/':
+        	    newValue = current / num;
+            default:
+                newValue = current;
+    	}
+        
+    	return newValue;
+	},
+	
+	/*
+    	Parse value
+    	
+    	Parses the value, whether its a number, string or function.
+    	If a number, return.
+    	If a string, it's a relative assignment so calculate new target based on its contents
+    	If a function, fire it with action.data and current value as arguments
+    	
+    	@param [number/string/function]: Current value
+    	@param [object]: Data of parent action
+    	@param [number]: Current value
+	*/
 	parse = function (value, data, current) {
+	    if (utils.isString(value)) {
+    	    value = calcRelativeValue(value, current);
+	    }
+
 	    return (utils.isFunc(value)) ? value(data, current) : value;
 	},
+	
+	/*
+    	Value object
+    	
+    	On init, run update with isNewValue = true
+    	
+    	@param [number/string/function/object]: New value
+    	@param [Aciton]: Parent action
+	*/
 	Value = function (value, action) {
 		this.update(value, action, true);
 	},
