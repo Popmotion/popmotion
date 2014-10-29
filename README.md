@@ -37,16 +37,19 @@ Alternatively, you can simply download the pre-compiled file from https://github
 
 ##Quickstart##
 
-###1: Create a Redshift instance###
+###1: Create a new Action###
 
 ```javascript
   var action = Redshift.get();
 ```
 
+An action keeps track of your defined values, data you want the callbacks to have access to
+
+
 ###2: Create your output callback###
 
 ```javascript
-  function moveBox(values) {
+  function moveBox(values, data) {
     $('#box').css('transform', 'translate(' + values.x + 'px,0)');
   }
 ```
