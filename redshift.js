@@ -6,7 +6,7 @@ var KEY = require('../opts/keys.js'),
     Token = require('../bobs/token.js'),
     token = new Token(),
     Value = require('./value.js'),
-    priorityProps = ['values', 'origin'],
+    priorityProps = ['values', 'origin', 'scope'],
 	/*
         Is this key a priority property?
         
@@ -120,6 +120,8 @@ Action.prototype.set = function (options) {
             
         }
     }
+    
+    this.scope = options.scope || this;
 
     // Set the values
     this.setValues(options.values);
@@ -824,7 +826,7 @@ ActionManager.prototype = {
         
         // Apply overrides if present
         if (utils.isObj(override)) {
-            baseAction = utils.merge(baseAction, override);
+            baseAction = this.merge(baseAction, override);
         }
         
         return baseAction;
@@ -837,7 +839,40 @@ ActionManager.prototype = {
     	@param [string]: The name of the predefined action
 	*/
 	getDefined: function (key) {
-		return utils.copy(baseActions[key]);
+	    return this.copy(baseActions[key]);
+	},
+	
+	/*
+    	Copy an action
+	*/
+	copy: function (action) {
+	    var newAction = {};
+
+    	for (var key in action) {
+            if (action.hasOwnProperty(key)) {
+                if (key !== 'values') {
+                    newAction[key] = action[key];
+                } else {
+                    newAction.values = utils.copy(action.values);
+                }
+            }
+	    }
+	    
+	    return newAction;
+	},
+	
+	merge: function (action, override) {
+        for (var key in override) {
+            if (override.hasOwnProperty(key)) {
+                if (key !== 'values') {
+                    action[key] = override[key];
+                } else {
+                    action.values = utils.merge(action.values, override.values);
+                }
+            }
+        }
+        
+        return action;
 	},
 	
 	
@@ -1423,7 +1458,7 @@ Process.prototype = {
     	    hasChanged = false;
     	    
         if (action.firstFrame) {
-            action.onStart(output, action.data);
+            action.onStart.call(action.scope, output, action.data);
             action.firstFrame = false;
         }
 
@@ -1445,16 +1480,16 @@ Process.prototype = {
         	}
     	}
     	
-    	action.onFrame(output, action.data);
+    	action.onFrame.call(action.scope, output, action.data);
 
     	// If output has changed, fire onChange
     	if (hasChanged) {
-        	action.onChange(output, action.data);
+        	action.onChange.call(action.scope, output, action.data);
     	}
 
     	// If process is at its end, fire onEnd and deactivate action
     	if (rubix.hasEnded(action)) {
-        	action.onEnd(output, action.data);
+        	action.onEnd.call(action.scope, output, action.data);
         	ActionManager.queueDeactivate(action.token);
     	}
 	}
