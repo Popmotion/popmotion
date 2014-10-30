@@ -1886,6 +1886,10 @@ Instance.prototype = {
 
 Redshift.prototype = {
 
+    newAction: function () {
+        return this.get();
+    },
+
     /*
         Create a Instance with the specified token
     */
