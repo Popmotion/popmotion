@@ -5,7 +5,7 @@ var KEY = require('../opts/keys.js'),
     Token = require('../bobs/token.js'),
     token = new Token(),
     Value = require('./value.js'),
-    priorityProps = ['values', 'origin'],
+    priorityProps = ['values', 'origin', 'scope'],
 	/*
         Is this key a priority property?
         
@@ -119,6 +119,8 @@ Action.prototype.set = function (options) {
             
         }
     }
+    
+    this.scope = options.scope || this;
 
     // Set the values
     this.setValues(options.values);

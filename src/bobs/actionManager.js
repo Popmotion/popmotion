@@ -120,7 +120,7 @@ ActionManager.prototype = {
         
         // Apply overrides if present
         if (utils.isObj(override)) {
-            baseAction = utils.merge(baseAction, override);
+            baseAction = this.merge(baseAction, override);
         }
         
         return baseAction;
@@ -133,7 +133,40 @@ ActionManager.prototype = {
     	@param [string]: The name of the predefined action
 	*/
 	getDefined: function (key) {
-		return utils.copy(baseActions[key]);
+	    return this.copy(baseActions[key]);
+	},
+	
+	/*
+    	Copy an action
+	*/
+	copy: function (action) {
+	    var newAction = {};
+
+    	for (var key in action) {
+            if (action.hasOwnProperty(key)) {
+                if (key !== 'values') {
+                    newAction[key] = action[key];
+                } else {
+                    newAction.values = utils.copy(action.values);
+                }
+            }
+	    }
+	    
+	    return newAction;
+	},
+	
+	merge: function (action, override) {
+        for (var key in override) {
+            if (override.hasOwnProperty(key)) {
+                if (key !== 'values') {
+                    action[key] = override[key];
+                } else {
+                    action.values = utils.merge(action.values, override.values);
+                }
+            }
+        }
+        
+        return action;
 	},
 	
 	
