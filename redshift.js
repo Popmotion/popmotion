@@ -6,7 +6,7 @@ var KEY = require('../opts/keys.js'),
     Token = require('../bobs/token.js'),
     token = new Token(),
     Value = require('./value.js'),
-    priorityProps = ['values', 'origin', 'scope'],
+    priorityProps = ['values', 'origin', 'scope', 'data'],
 	/*
         Is this key a priority property?
         
@@ -22,6 +22,7 @@ var KEY = require('../opts/keys.js'),
     Action = function () {
         this.created = utils.currentTime();
         this.token = token.generate();
+        this.data = defaults.data;
     },
     defaults = {
     
@@ -134,7 +135,7 @@ Action.prototype.set = function (options) {
     @param [object]: User-defined values
 */   
 Action.prototype.setValues = function (values) {
-    this.values = this.values || defaults.values;
+    this.values = this.values || utils.copy(defaults.values);
 
     // Create or update Value objects for each defined value
     for (var key in values) {
@@ -1102,7 +1103,7 @@ ActionManager.prototype = {
 	*/
 	setData: function (token, data) {
     	var action = this.get(token);
-    	
+
     	for (var key in data) {
         	if (data.hasOwnProperty(key)) {
             	action.data[key] = data[key];

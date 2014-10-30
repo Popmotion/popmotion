@@ -396,7 +396,7 @@ ActionManager.prototype = {
 	*/
 	setData: function (token, data) {
     	var action = this.get(token);
-    	
+
     	for (var key in data) {
         	if (data.hasOwnProperty(key)) {
             	action.data[key] = data[key];
