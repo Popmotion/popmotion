@@ -62,10 +62,12 @@ Process.prototype = {
             	}
         	}
     	}
+    	
+    	action.onFrame(output, action.data);
 
-    	// If output has changed, fire onFrame
+    	// If output has changed, fire onChange
     	if (hasChanged) {
-        	action.onFrame(output, action.data);
+        	action.onChange(output, action.data);
     	}
 
     	// If process is at its end, fire onEnd and deactivate action
