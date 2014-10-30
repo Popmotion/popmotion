@@ -25,7 +25,7 @@ ActionManager.prototype = {
 		var action = new Action();
 
 		this.register(action);
-		
+
 		return action;
 	},
 	

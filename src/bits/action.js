@@ -5,7 +5,7 @@ var KEY = require('../opts/keys.js'),
     Token = require('../bobs/token.js'),
     token = new Token(),
     Value = require('./value.js'),
-    priorityProps = ['values', 'origin', 'scope', 'data'],
+    priorityProps = ['values', 'origin', 'scope', 'data', 'playlist'],
 	/*
         Is this key a priority property?
         
@@ -21,7 +21,7 @@ var KEY = require('../opts/keys.js'),
     Action = function () {
         this.created = utils.currentTime();
         this.token = token.generate();
-        this.data = defaults.data;
+        this.data = utils.copy(defaults.data);
     },
     defaults = {
     
@@ -104,7 +104,6 @@ var KEY = require('../opts/keys.js'),
     @param [object]: User-defined options
 */
 Action.prototype.set = function (options) {
-    
     // Loop through standard options and assign
     for (var key in defaults) {
         if (defaults.hasOwnProperty(key) && !isPriority(key)) {
@@ -117,11 +116,11 @@ Action.prototype.set = function (options) {
             } else if (!this.hasOwnProperty(key)) {
                 this[key] = defaults[key];
             }
-            
         }
     }
     
-    this.scope = options.scope || this;
+    this.playlist = options.playlist || this.playlist || [];
+    this.scope = options.scope || this.scope || this;
 
     // Set the values
     this.setValues(options.values);
