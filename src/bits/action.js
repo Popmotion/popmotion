@@ -119,7 +119,7 @@ Action.prototype.set = function (options) {
             
         }
     }
-console.log(this);
+
     // Set the values
     this.setValues(options.values);
 };
@@ -162,7 +162,9 @@ Action.prototype.setValues = function (values) {
     }
 };
 
-
+/*
+    Reset values
+*/
 Action.prototype.resetValues = function () {
     for (var key in this.values) {
         this.values[key].current = this.values[key].from;
@@ -172,7 +174,7 @@ Action.prototype.resetValues = function () {
 };
 
 /*
-    
+    Reverse values
 */
 Action.prototype.reverseValues = function () {
 	var key, to, from;
@@ -190,12 +192,18 @@ Action.prototype.reverseValues = function () {
     }
 };
 
+/*
+    Start the action
+*/
 Action.prototype.start = function () {
     this.active = true;
     this.started = utils.currentTime() + this.delay;
     this.firstFrame = true;
 };
 
+/*
+    Stop the action
+*/
 Action.prototype.stop = function () {
     this.active = false;
 };
