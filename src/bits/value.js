@@ -121,7 +121,7 @@ Value.prototype.update = function (value, action, isNewValue) {
 
 	// If value is just a number
 	if (utils.isNum(value) || utils.isFunc(value) || utils.isString(value)) {
-	    this.from = (isNewValue) ? 0 : this.from;
+	    this.from = (isNewValue) ? 0 : this.current;
 	    this.current = (isNewValue) ? this.from : this.current;
 		this.to = parse(value, data, this.current);
 
