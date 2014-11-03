@@ -1,162 +1,190 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-/*
-    Action class
-    ----------------------------------------
-    
-    Defines the action object.
-    
-    Actions describe a process, be it an animation or a pointer tracking
-    
-    Properties
-	    active: false,
-	    alternate: false,
-	    amp: 0,
-	    duration: defaults.duration,
-	    ease: defaults.ease,
-	    link: defaults.link,
-	    onEnd: function () {},
-	    onFrame: function () {},
-	    origin: {},
-	    output: {},
-	    progress: 0,
-	    tick: 0,
-	    time: {},
-	    token: 0,
-	    type: defaults.type,
-	    valueIndex: 0,
-	    values: {}
-    
-*/
 "use strict";
 
 var KEY = require('../opts/keys.js'),
-    defaults = require('../opts/defaults.js'),
-    calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
-    Value = require('./value.js'),
     Token = require('../bobs/token.js'),
-    callback = function () {},
     token = new Token(),
+    Value = require('./value.js'),
+    callback = function () {},
     Action = function () {
         this.created = utils.currentTime();
         this.token = token.generate();
         this.data = {};
-    };
-    
-Action.prototype = {
-    
-    /*
-	    Set action properties
-	    
-	    @param [object]: Properties
-    */
-    set: function (opts) {
-	    
-	    this.link = opts.link || this.link || defaults.link;
-	    
-        // Action parameters
-        this.amp = utils.isNum(opts.amp) ? opts.amp : defaults.amp;
-        this.escapeAmp = utils.isNum(opts.escapeAmp) ? opts.escapeAmp : defaults.escapeAmp;
-        this.delay = utils.isNum(opts.delay) ? opts.delay : defaults.delay;
-        this.duration = utils.isNum(opts.duration) ? opts.duration : defaults.duration;
-        this.ease = opts.ease || defaults.ease;
-        this.math = opts.math;
-        this.steps = utils.isNum(opts.steps) ? opts.steps : defaults.steps;
-        this.alternate = opts.alternate;
-        this.pointerOffset = opts.pointerOffset;
-        
-        // Play list
-        this.playlist = opts.playlist || this.playlist || [];
-        this.playhead = utils.isNum(opts.playhead) ? opts.playhead : this.playhead;
-        
-        // Looping
-        this.loop = opts.loop || false;
-        this.loopCount = 0;
-        this.yoyo = opts.yoyo || false;
-        this.yoyoCount = 0;
-
-        // Callbacks
-        this.onStart = opts.onStart || callback;
-        this.onEnd = opts.onEnd || callback;
-        this.onFrame = opts.onFrame || this.onFrame || callback;
-
-		// Values
-        this.setValues(opts.values);
+        this.values = {};
         this.origin = {};
-        
-        for (var key in this.values) {
-	        if (this.values.hasOwnProperty(key)) {
-	            this.origin[key] = this.values[key].current;
-	        }
-        }
-    
-    	// Set last modified timestamp
-	    this.lastModified = utils.currentTime();
+        this.playlist = [];
     },
+    defaults = {
     
-    setValues: function (values) {
-        this.values = this.values || {};
+        // Is this action active
+        active: false,
+        
+        // What to use to process this aciton
+        link: KEY.LINK.TIME,
+        
+        // Multiply output value by
+        amp: 1,
+        
+        // Multiply output value outside min/max by
+        escapeAmp: 0,
+        
+        // Delay this action by x ms
+        delay: 0,
+        
+        // Time of animation (if animating) in ms
+        duration: 400,
+        
+        // Ease animation
+        ease: KEY.EASING.QUAD_IN_OUT,
+        
+        // Apply this Math function to output value
+        math: undefined,
+        
+        // Divide animation into this many steps
+        steps: 0,
+        
+        playhead: 0,
+        
+        // 
+        pointerOffset: undefined,
+        
+        // Loop animation x number of times (true for ETERNALLY)
+        loop: false,
+        
+        // Number of times animation has looped
+        loopCount: 0,
+        
+        // Play animation and reverse x number of times (true for forever)
+        yoyo: false,
+        
+        // Number of times animation has yoyoed
+        yoyoCount: 0,
+        
+        // Run this callback on action start
+        onStart: callback,
+        
+        // Run this on action end
+        onEnd: callback,
+        
+        // Run this every frame
+        onFrame: callback,
+        
+        // Run this when action changes
+        onChange: callback
+    };
 
-        for (var key in values) {
-	        if (values.hasOwnProperty(key)) {
-	        	if (this.values[key]) {
-		        	this.values[key].update(values[key], this);
-	        	} else {
-		        	this.values[key] = new Value(values[key], this);	
-	        	}
-	        }
-        }
-        
-        if (this.values.angle) {
-        	this.values.x = this.values.x || new Value(0, this);
-            this.values.y = this.values.y || new Value(0, this);
-        }
-    },
+/*
+    Set Action options
     
-    /*
-        Reset values to their most recently set amounts
-    */
-    resetValues: function () {
-        for (var key in this.values) {
-            this.values[key].current = this.values[key].from;
+    @param [object]: User-defined options
+*/
+Action.prototype.set = function (options) {
+    // Loop through standard options and assign
+    for (var key in defaults) {
+        if (defaults.hasOwnProperty(key)) {
+            
+            // If user has set this option
+            if (options.hasOwnProperty(key)) {
+                this[key] = options[key];
+            
+            // Or set to default
+            } else {
+                this[key] = defaults[key];
+            }
         }
-        
-        this.progress = 0;
-    },
+    }
     
-    reverseValues: function () {
-    	var key, to, from;
-    	
-    	this.progress = calc.difference(this.progress, 1);
+    this.playlist = options.playlist || this.playlist || [];
+    this.scope = options.scope || this.scope || this;
 
-	    for (key in this.values) {
-		    if (this.values.hasOwnProperty(key)) {
-		    	to = this.values[key].to;
-		    	from = this.values[key].from;
-		    	
-		    	this.values[key].to = from;
-			    this.values[key].from = to;
-		    }
-	    }
-    },
+    // Set the values
+    this.setValues(options.values);
+};
+ 
+
+/*
+    Set Values
     
-    /*
-        Set start time and activate
-    */
-    start: function () {
-        this.active = true;
-        this.started = utils.currentTime() + this.delay;
-        this.firstFrame = true;
-        //this.started = utils.currentTime() + this.delay - calc.value(this.progress, this.duration);
-    },
+    @param [object]: User-defined values
+*/   
+Action.prototype.setValues = function (values) {
+    // Create or update Value objects for each defined value
+    for (var key in values) {
+        if (values.hasOwnProperty(key)) {
+            
+            if (this.values[key]) {
+                this.values[key].update(values[key], this);
+            } else {
+                this.values[key] = new Value(values[key], this);
+            }
+        }
+    }
     
-    stop: function () {
-        this.active = false;
+    // Handle special values
+
+    if (this.values.angle) {
+    	this.values.x = this.values.x || new Value(0, this);
+        this.values.y = this.values.y || new Value(0, this);
+    }
+
+    // Create origins
+    for (var key in this.values) {
+        if (this.values.hasOwnProperty(key)) {
+            this.origin[key] = this.values[key].current;
+        }
     }
 };
 
+/*
+    Reset values
+*/
+Action.prototype.resetValues = function () {
+    for (var key in this.values) {
+        this.values[key].current = this.values[key].from;
+    }
+    
+    this.progress = 0;
+};
+
+/*
+    Reverse values
+*/
+Action.prototype.reverseValues = function () {
+	var key, to, from;
+	
+	this.progress = calc.difference(this.progress, 1);
+
+    for (key in this.values) {
+	    if (this.values.hasOwnProperty(key)) {
+	    	to = this.values[key].to;
+	    	from = this.values[key].from;
+	    	
+	    	this.values[key].to = from;
+		    this.values[key].from = to;
+	    }
+    }
+};
+
+/*
+    Start the action
+*/
+Action.prototype.start = function () {
+    this.active = true;
+    this.started = utils.currentTime() + this.delay;
+    this.firstFrame = true;
+};
+
+/*
+    Stop the action
+*/
+Action.prototype.stop = function () {
+    this.active = false;
+};
+
+
 module.exports = Action;
-},{"../bobs/token.js":15,"../opts/defaults.js":16,"../opts/keys.js":17,"../utils/calc.js":19,"../utils/utils.js":23,"./value.js":6}],2:[function(require,module,exports){
+},{"../bobs/token.js":15,"../opts/keys.js":17,"../utils/utils.js":23,"./value.js":6}],2:[function(require,module,exports){
 (function (global){
 /*
 	Bezier function generator
@@ -556,8 +584,8 @@ Value.prototype.update = function (value, action, isNewValue) {
 	var data = (action) ? action.data : {};
 
 	// If value is just a number
-	if (utils.isNum(value) || utils.isFunc(value)) {
-	    this.from = (isNewValue) ? 0 : this.from;
+	if (utils.isNum(value) || utils.isFunc(value) || utils.isString(value)) {
+	    this.from = (isNewValue) ? 0 : this.current;
 	    this.current = (isNewValue) ? this.from : this.current;
 		this.to = parse(value, data, this.current);
 
@@ -674,7 +702,7 @@ ActionManager.prototype = {
 		var action = new Action();
 
 		this.register(action);
-		
+
 		return action;
 	},
 	
@@ -750,6 +778,7 @@ ActionManager.prototype = {
         // If this is a straight action
         if (utils.isObj(defs)) {
             baseAction = defs;
+            baseAction.playlist = [];
             
         // These are previously defined actions
         } else {
@@ -764,12 +793,11 @@ ActionManager.prototype = {
             
             baseAction = this.getDefined(actionList[0]);
             baseAction.playlist = actionList;
-            baseAction.playhead = 0;
         }
         
         // Apply overrides if present
         if (utils.isObj(override)) {
-            baseAction = utils.merge(baseAction, override);
+            baseAction = this.merge(baseAction, override);
         }
         
         return baseAction;
@@ -782,7 +810,40 @@ ActionManager.prototype = {
     	@param [string]: The name of the predefined action
 	*/
 	getDefined: function (key) {
-		return utils.copy(baseActions[key]);
+	    return this.copy(baseActions[key]);
+	},
+	
+	/*
+    	Copy an action
+	*/
+	copy: function (action) {
+	    var newAction = {};
+
+    	for (var key in action) {
+            if (action.hasOwnProperty(key)) {
+                if (key !== 'values') {
+                    newAction[key] = action[key];
+                } else {
+                    newAction.values = utils.copy(action.values);
+                }
+            }
+	    }
+	    
+	    return newAction;
+	},
+	
+	merge: function (action, override) {
+        for (var key in override) {
+            if (override.hasOwnProperty(key)) {
+                if (key !== 'values') {
+                    action[key] = override[key];
+                } else {
+                    action.values = utils.merge(action.values, override.values);
+                }
+            }
+        }
+        
+        return action;
 	},
 	
 	
@@ -919,16 +980,22 @@ ActionManager.prototype = {
 	playNext: function (token) {
     	var hasPlayedNext = false,
     	    action = this.get(token),
-    	    playlistLength = action.playlist ? action.playlist.length : 0;
-        
+    	    playlistLength = action.playlist ? action.playlist.length : 0,
+    	    playhead = action.playhead,
+    	    nextAction;
+
         // Check we have a playlist and that this is an animation
         // TODO: Maybe make a set of properties on the rubix that says allowPlaylist: true
     	if (playlistLength && action.link === KEY.LINK.TIME) {
-    	    ++action.playhead;
-    	    
-    	    if (action.playhead < playlistLength) {
-        	    this.change(token, this.getDefined(action.playlist[action.playhead]));
+    	    ++playhead;
+
+    	    if (playhead < playlistLength) {
+    	        nextAction = this.getDefined(action.playlist[playhead]);
+    	        nextAction.playhead = playhead;
+    	        
+        	    this.change(token, nextAction);
         	    this.activate(token);
+
         	    hasPlayedNext = true;
     	    }
     	}
@@ -1012,7 +1079,7 @@ ActionManager.prototype = {
 	*/
 	setData: function (token, data) {
     	var action = this.get(token);
-    	
+
     	for (var key in data) {
         	if (data.hasOwnProperty(key)) {
             	action.data[key] = data[key];
@@ -1368,7 +1435,7 @@ Process.prototype = {
     	    hasChanged = false;
     	    
         if (action.firstFrame) {
-            action.onStart(output, action.data);
+            action.onStart.call(action.scope, output, action.data);
             action.firstFrame = false;
         }
 
@@ -1389,15 +1456,17 @@ Process.prototype = {
             	}
         	}
     	}
+    	
+    	action.onFrame.call(action.scope, output, action.data);
 
-    	// If output has changed, fire onFrame
+    	// If output has changed, fire onChange
     	if (hasChanged) {
-        	action.onFrame(output, action.data);
+        	action.onChange.call(action.scope, output, action.data);
     	}
 
     	// If process is at its end, fire onEnd and deactivate action
     	if (rubix.hasEnded(action)) {
-        	action.onEnd(output, action.data);
+        	action.onEnd.call(action.scope, output, action.data);
         	ActionManager.queueDeactivate(action.token);
     	}
 	}
@@ -1703,20 +1772,12 @@ module.exports = Token;
 var KEY = require('./keys.js');
 
 module.exports = {
-    amp: 1,
-    delay: 0,
-    duration: 400,
-    ease: KEY.EASING.QUAD_IN_OUT,
-    escapeAmp: 0,
-    link: KEY.LINK.TIME,
-    friction: 5,
     pointer: {
         historySize: 2, // number of pointer events to remember
         maxInactiveFrames: 2 // allow this number of frames to pass with no movement before we declare stationary pointer
     },
-    step: 0,
     trackEase: KEY.EASING.LINEAR,
-    tweenTarget: 0 // default tween target value
+    tweenTarget: 0
 };
 },{"./keys.js":17}],17:[function(require,module,exports){
 /*
@@ -1739,9 +1800,7 @@ module.exports = {
     },
     LINK: {
 	    TIME: 'Time',
-	    INTERVAL: 'Interval',
 	    POINTER: 'Pointer',
-	    MOMENTUM: 'Momentum',
 	    SPEED: 'Speed'
     },
     ERROR: {

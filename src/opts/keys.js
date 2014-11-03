@@ -18,9 +18,7 @@ module.exports = {
     },
     LINK: {
 	    TIME: 'Time',
-	    INTERVAL: 'Interval',
 	    POINTER: 'Pointer',
-	    MOMENTUM: 'Momentum',
 	    SPEED: 'Speed'
     },
     ERROR: {

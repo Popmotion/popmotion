@@ -41,7 +41,7 @@ Process.prototype = {
     	    hasChanged = false;
     	    
         if (action.firstFrame) {
-            action.onStart(output, action.data);
+            action.onStart.call(action.scope, output, action.data);
             action.firstFrame = false;
         }
 
@@ -62,15 +62,17 @@ Process.prototype = {
             	}
         	}
     	}
+    	
+    	action.onFrame.call(action.scope, output, action.data);
 
-    	// If output has changed, fire onFrame
+    	// If output has changed, fire onChange
     	if (hasChanged) {
-        	action.onFrame(output, action.data);
+        	action.onChange.call(action.scope, output, action.data);
     	}
 
     	// If process is at its end, fire onEnd and deactivate action
     	if (rubix.hasEnded(action)) {
-        	action.onEnd(output, action.data);
+        	action.onEnd.call(action.scope, output, action.data);
         	ActionManager.queueDeactivate(action.token);
     	}
 	}
