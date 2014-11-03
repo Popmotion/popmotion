@@ -6,23 +6,14 @@ var KEY = require('../opts/keys.js'),
     Token = require('../bobs/token.js'),
     token = new Token(),
     Value = require('./value.js'),
-    priorityProps = ['values', 'origin', 'scope', 'data', 'playlist'],
-	/*
-        Is this key a priority property?
-        
-        Priority properties are handled seperately and before all the other props
-        
-        @param [string]: The key to look up in our priority list
-        @return [boolean]: Is this a priority?
-	*/
-	isPriority = function (key) {
-    	return (priorityProps.indexOf(key) > -1);
-	},
     callback = function () {},
     Action = function () {
         this.created = utils.currentTime();
         this.token = token.generate();
-        this.data = utils.copy(defaults.data);
+        this.data = {};
+        this.values = {};
+        this.origin = {};
+        this.playlist = [];
     },
     defaults = {
     
@@ -37,9 +28,6 @@ var KEY = require('../opts/keys.js'),
         
         // Multiply output value outside min/max by
         escapeAmp: 0,
-        
-        // Action data storage
-        data: {},
         
         // Delay this action by x ms
         delay: 0,
@@ -56,14 +44,10 @@ var KEY = require('../opts/keys.js'),
         // Divide animation into this many steps
         steps: 0,
         
+        playhead: 0,
+        
         // 
         pointerOffset: undefined,
-        
-        // Ordered list of animations to execute
-        playlist: [],
-        
-        // Index of currently playing animation
-        playhead: 0,
         
         // Loop animation x number of times (true for ETERNALLY)
         loop: false,
@@ -87,16 +71,7 @@ var KEY = require('../opts/keys.js'),
         onFrame: callback,
         
         // Run this when action changes
-        onChange: callback,
-        
-        // Callbacks run with this as scope
-        scope: false,
-        
-        // The values we're animating
-        values: {},
-        
-        // Values as originally set
-        origin: {}
+        onChange: callback
     };
 
 /*
@@ -107,14 +82,14 @@ var KEY = require('../opts/keys.js'),
 Action.prototype.set = function (options) {
     // Loop through standard options and assign
     for (var key in defaults) {
-        if (defaults.hasOwnProperty(key) && !isPriority(key)) {
+        if (defaults.hasOwnProperty(key)) {
             
             // If user has set this option
             if (options.hasOwnProperty(key)) {
                 this[key] = options[key];
             
-            // Or we haven't set this option before, set it as default
-            } else if (!this.hasOwnProperty(key)) {
+            // Or set to default
+            } else {
                 this[key] = defaults[key];
             }
         }
@@ -134,8 +109,6 @@ Action.prototype.set = function (options) {
     @param [object]: User-defined values
 */   
 Action.prototype.setValues = function (values) {
-    this.values = this.values || utils.copy(defaults.values);
-
     // Create or update Value objects for each defined value
     for (var key in values) {
         if (values.hasOwnProperty(key)) {
@@ -154,8 +127,6 @@ Action.prototype.setValues = function (values) {
     	this.values.x = this.values.x || new Value(0, this);
         this.values.y = this.values.y || new Value(0, this);
     }
-    
-    this.origin = {};
 
     // Create origins
     for (var key in this.values) {
@@ -807,6 +778,7 @@ ActionManager.prototype = {
         // If this is a straight action
         if (utils.isObj(defs)) {
             baseAction = defs;
+            baseAction.playlist = [];
             
         // These are previously defined actions
         } else {
@@ -821,7 +793,6 @@ ActionManager.prototype = {
             
             baseAction = this.getDefined(actionList[0]);
             baseAction.playlist = actionList;
-            baseAction.playhead = 0;
         }
         
         // Apply overrides if present
@@ -1009,16 +980,22 @@ ActionManager.prototype = {
 	playNext: function (token) {
     	var hasPlayedNext = false,
     	    action = this.get(token),
-    	    playlistLength = action.playlist ? action.playlist.length : 0;
-        
+    	    playlistLength = action.playlist ? action.playlist.length : 0,
+    	    playhead = action.playhead,
+    	    nextAction;
+
         // Check we have a playlist and that this is an animation
         // TODO: Maybe make a set of properties on the rubix that says allowPlaylist: true
     	if (playlistLength && action.link === KEY.LINK.TIME) {
-    	    ++action.playhead;
-    	    
-    	    if (action.playhead < playlistLength) {
-        	    this.change(token, this.getDefined(action.playlist[action.playhead]));
+    	    ++playhead;
+
+    	    if (playhead < playlistLength) {
+    	        nextAction = this.getDefined(action.playlist[playhead]);
+    	        nextAction.playhead = playhead;
+    	        
+        	    this.change(token, nextAction);
         	    this.activate(token);
+
         	    hasPlayedNext = true;
     	    }
     	}

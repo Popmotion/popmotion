@@ -101,6 +101,7 @@ ActionManager.prototype = {
         // If this is a straight action
         if (utils.isObj(defs)) {
             baseAction = defs;
+            baseAction.playlist = [];
             
         // These are previously defined actions
         } else {
@@ -115,7 +116,6 @@ ActionManager.prototype = {
             
             baseAction = this.getDefined(actionList[0]);
             baseAction.playlist = actionList;
-            baseAction.playhead = 0;
         }
         
         // Apply overrides if present
@@ -303,16 +303,22 @@ ActionManager.prototype = {
 	playNext: function (token) {
     	var hasPlayedNext = false,
     	    action = this.get(token),
-    	    playlistLength = action.playlist ? action.playlist.length : 0;
-        
+    	    playlistLength = action.playlist ? action.playlist.length : 0,
+    	    playhead = action.playhead,
+    	    nextAction;
+
         // Check we have a playlist and that this is an animation
         // TODO: Maybe make a set of properties on the rubix that says allowPlaylist: true
     	if (playlistLength && action.link === KEY.LINK.TIME) {
-    	    ++action.playhead;
-    	    
-    	    if (action.playhead < playlistLength) {
-        	    this.change(token, this.getDefined(action.playlist[action.playhead]));
+    	    ++playhead;
+
+    	    if (playhead < playlistLength) {
+    	        nextAction = this.getDefined(action.playlist[playhead]);
+    	        nextAction.playhead = playhead;
+    	        
+        	    this.change(token, nextAction);
         	    this.activate(token);
+
         	    hasPlayedNext = true;
     	    }
     	}
