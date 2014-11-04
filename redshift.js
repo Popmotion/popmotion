@@ -1554,7 +1554,6 @@ Rubix.prototype = {
             	
             if (value.steps) {
                 restrictedProgress = utils.stepProgress(restrictedProgress, 1, value.steps);
-                console.log(restrictedProgress);
             }
 
             easedValue = Easing.withinRange(restrictedProgress, value.from, value.to, value.ease);
@@ -2965,8 +2964,8 @@ module.exports = {
             
         for (var i = 0; i <= steps; i++) {
             stepped = i * segment;
-            
-            if ((i + 1) * segment > stepped) {
+
+            if ((i + 1) * segment > value) {
                 break;
             }
         }

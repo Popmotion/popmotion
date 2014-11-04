@@ -76,7 +76,6 @@ Rubix.prototype = {
             	
             if (value.steps) {
                 restrictedProgress = utils.stepProgress(restrictedProgress, 1, value.steps);
-                console.log(restrictedProgress);
             }
 
             easedValue = Easing.withinRange(restrictedProgress, value.from, value.to, value.ease);

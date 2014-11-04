@@ -178,8 +178,8 @@ module.exports = {
             
         for (var i = 0; i <= steps; i++) {
             stepped = i * segment;
-            
-            if ((i + 1) * segment > stepped) {
+
+            if ((i + 1) * segment > value) {
                 break;
             }
         }
