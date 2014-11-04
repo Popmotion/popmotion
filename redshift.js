@@ -1553,11 +1553,11 @@ Rubix.prototype = {
             	easedValue;
             	
             if (value.steps) {
-                restrictedProgress = utils.stepProgress(restrictedProgress, 1, steps);
+                restrictedProgress = utils.stepProgress(restrictedProgress, 1, value.steps);
                 console.log(restrictedProgress);
             }
 
-            easedValue = Easing.withinRange(restrictedProgress, value.from, value.to, value.ease, value.steps);
+            easedValue = Easing.withinRange(restrictedProgress, value.from, value.to, value.ease);
 
             return easedValue;
         }
