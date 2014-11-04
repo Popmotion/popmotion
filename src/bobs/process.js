@@ -51,7 +51,7 @@ Process.prototype = {
     	// Loop over all values 
     	for (var key in action.values) {
         	if (action.values.hasOwnProperty(key)) {
-        		output[key] = rubix.easeValue(key, action, action.progress);
+        	    output[key] = rubix.easeValue(key, action, action.progress);
         		
             	// Apply Math. function if one defined
             	output[key] = action.values[key].math ? Math[action.values[key].math](output[key]) : output[key];
