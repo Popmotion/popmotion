@@ -163,6 +163,29 @@ module.exports = {
 	    
 	    return newObj;
     },
+    
+    /*
+        Create stepped version of progress
+        
+        @param [number]: Value
+        @param [number]: Max range
+        @param [int]: Number of steps
+        @return [number]: Stepped value
+    */
+    stepProgress: function (value, max, steps) {
+        var stepped = 0,
+            segment = max / steps;
+            
+        for (var i = 0; i <= steps; i++) {
+            stepped = i * segment;
+            
+            if ((i + 1) * segment > stepped) {
+                break;
+            }
+        }
+        
+        return stepped;
+    },
 
     /*
         Get var type as string

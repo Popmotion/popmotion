@@ -1445,7 +1445,7 @@ Process.prototype = {
     	// Loop over all values 
     	for (var key in action.values) {
         	if (action.values.hasOwnProperty(key)) {
-        		output[key] = rubix.easeValue(key, action, action.progress);
+        	    output[key] = rubix.easeValue(key, action, action.progress);
         		
             	// Apply Math. function if one defined
             	output[key] = action.values[key].math ? Math[action.values[key].math](output[key]) : output[key];
@@ -1549,9 +1549,17 @@ Rubix.prototype = {
         */
         easeValue: function (key, action, progress) {
             var value = action.values[key],
-            	restrictedProgress = calc.restricted(progress, 0, 1);
+            	restrictedProgress = calc.restricted(progress, 0, 1),
+            	easedValue;
+            	
+            if (value.steps) {
+                restrictedProgress = utils.stepProgress(restrictedProgress, 1, steps);
+                console.log(restrictedProgress);
+            }
 
-            return Easing.withinRange(restrictedProgress, value.from, value.to, value.ease);
+            easedValue = Easing.withinRange(restrictedProgress, value.from, value.to, value.ease, value.steps);
+
+            return easedValue;
         }
     },
     
@@ -2941,6 +2949,29 @@ module.exports = {
 	    }
 	    
 	    return newObj;
+    },
+    
+    /*
+        Create stepped version of progress
+        
+        @param [number]: Value
+        @param [number]: Max range
+        @param [int]: Number of steps
+        @return [number]: Stepped value
+    */
+    stepProgress: function (value, max, steps) {
+        var stepped = 0,
+            segment = max / steps;
+            
+        for (var i = 0; i <= steps; i++) {
+            stepped = i * segment;
+            
+            if ((i + 1) * segment > stepped) {
+                break;
+            }
+        }
+        
+        return stepped;
     },
 
     /*
