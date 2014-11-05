@@ -30,7 +30,7 @@ var Redshift = require('redshift');
 ```
 
 
-File include
+### File include
 
 Alternatively, you can simply download the pre-compiled file from https://github.com/SirHound/redshift and include it in a script tag, as you would any other Javascript script. You can then access the global Redshift object.
 
@@ -101,7 +101,7 @@ Simply by changing 'play' to 'track', and passing through the user input (either
 Redshift supports a powerful design paradigm that allows you to define a set of properties once, and later use anywhere, on any object:
 
 ```javascript
-  Redshift,define({
+  Redshift.define({
   	'box': {
   		values: { x: 100 },
   		onChange: moveBox
@@ -110,6 +110,27 @@ Redshift supports a powerful design paradigm that allows you to define a set of 
   
   action.play('box');
 ```
+
+### Scope
+
+We can change the scope of a callback, like so:
+
+```javascript
+  Redshift.define({
+  	'box': {
+  		values: { x: 100 },
+  		onChange: moveBox,
+  		scope: $('#box')
+  	}
+  });
+  
+  function moveBox(values) {
+    this.css('transform', 'translate(' + values.x + 'px, 0)');
+  }
+```
+
+Which allows us to use the same callback for a wider variety of uses.
+
 
 ### Sequence
 
@@ -138,6 +159,32 @@ We can also inherit properties from a previously defined base action by using a 
   
   action.play('box.left box.right');
 ```
+
+### Individual value properties
+
+It's possible to override the default settings of a Action on an individual value basis. ie:
+
+```javascript
+  Redshift.define({
+  	'example': {
+  		values: {
+  		  radius: {
+  		      from: 20,
+  		      to: 50,
+  		      ease: 'backOut'
+  		  },
+  		  x: {
+  		      to: 100,
+  		      steps: 5
+  		  }
+  		},
+  		ease: 'easeOut',
+  		onChange: exampleCallback
+  	}
+  });
+```
+
+In this example, the property 'radius' would be animated smoothly with 'backOut' easing, while 'x' would animate in 5 discrete steps using 'easeOut' easing.
 
 ## jQuery plugin
 
