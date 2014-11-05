@@ -1,7 +1,6 @@
-Redshift
-========
+# Redshift
 
-##Javascript UX engine for DOM, canvas, and everything else##
+## Javascript UX engine for DOM, canvas, and everything else
 
 Redshift is a Javscript engine for animation and interaction. It works with pure numbers and outputs directly to your custom callbacks.
 
@@ -20,9 +19,9 @@ Redshift is a Javscript engine for animation and interaction. It works with pure
 * Runs every process through the same requestAnimationFrame loop for high visual performance
 
 
-##Use##
+## Use
 
-###NPM###
+### NPM
 
 Redshift is available on NPM, so you can include it in your Browserify script like:
 
@@ -30,29 +29,34 @@ Redshift is available on NPM, so you can include it in your Browserify script li
 var Redshift = require('redshift');
 ```
 
-###Old-school file include###
 
-Alternatively, you can simply download the pre-compiled file from https://github.com/SirHound/redshift and include it in a &lt;script&rt; tag, as you would any other Javascript script. You can then access the global Redshift object.
+File include
+
+Alternatively, you can simply download the pre-compiled file from https://github.com/SirHound/redshift and include it in a script tag, as you would any other Javascript script. You can then access the global Redshift object.
 
 
-##Quickstart##
+## Quickstart
 
-###1: Create a new Action###
+For our first trick, let's move a DOM element with the id of #box.
+
+### 1: Create a new Action
 
 ```javascript
-  var action = Redshift.get();
+  var action = Redshift.newAction();
 ```
 
-An action keeps track of your defined values, data you want the callbacks to have access to
+A Redshift Action is essentially a collection of values that you wish to manipulate, and options that change how Redshift goes about that.
 
 
 ###2: Create your output callback###
 
 ```javascript
   function moveBox(values, data) {
-    $('#box').css('transform', 'translate(' + values.x + 'px,0)');
+    this.css('transform', 'translate(' + values.x + 'px,0)');
   }
 ```
+
+**This is crucial:** Without callbacks, Redshift won't do anything
 
 ###3: Define your animation###
 
@@ -64,7 +68,8 @@ An action keeps track of your defined values, data you want the callbacks to hav
       }
       duration: 400,
       ease: 'easeOut',
-      onFrame: moveBox
+      onFrame: moveBox,
+      scope: $('#box')
     }
   });
 ```
