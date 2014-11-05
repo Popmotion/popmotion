@@ -41,7 +41,7 @@ Process.prototype = {
     	    hasChanged = false;
     	    
         if (action.firstFrame) {
-            action.onStart(output, action.data);
+            action.onStart.call(action.scope, output, action.data);
             action.firstFrame = false;
         }
 
@@ -51,7 +51,7 @@ Process.prototype = {
     	// Loop over all values 
     	for (var key in action.values) {
         	if (action.values.hasOwnProperty(key)) {
-        		output[key] = rubix.easeValue(key, action, action.progress);
+        	    output[key] = rubix.easeValue(key, action, action.progress);
         		
             	// Apply Math. function if one defined
             	output[key] = action.values[key].math ? Math[action.values[key].math](output[key]) : output[key];
@@ -62,15 +62,17 @@ Process.prototype = {
             	}
         	}
     	}
+    	
+    	action.onFrame.call(action.scope, output, action.data);
 
-    	// If output has changed, fire onFrame
+    	// If output has changed, fire onChange
     	if (hasChanged) {
-        	action.onFrame(output, action.data);
+        	action.onChange.call(action.scope, output, action.data);
     	}
 
     	// If process is at its end, fire onEnd and deactivate action
     	if (rubix.hasEnded(action)) {
-        	action.onEnd(output, action.data);
+        	action.onEnd.call(action.scope, output, action.data);
         	ActionManager.queueDeactivate(action.token);
     	}
 	}

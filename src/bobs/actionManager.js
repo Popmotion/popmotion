@@ -25,7 +25,7 @@ ActionManager.prototype = {
 		var action = new Action();
 
 		this.register(action);
-		
+
 		return action;
 	},
 	
@@ -101,6 +101,7 @@ ActionManager.prototype = {
         // If this is a straight action
         if (utils.isObj(defs)) {
             baseAction = defs;
+            baseAction.playlist = [];
             
         // These are previously defined actions
         } else {
@@ -115,12 +116,11 @@ ActionManager.prototype = {
             
             baseAction = this.getDefined(actionList[0]);
             baseAction.playlist = actionList;
-            baseAction.playhead = 0;
         }
         
         // Apply overrides if present
         if (utils.isObj(override)) {
-            baseAction = utils.merge(baseAction, override);
+            baseAction = this.merge(baseAction, override);
         }
         
         return baseAction;
@@ -133,7 +133,40 @@ ActionManager.prototype = {
     	@param [string]: The name of the predefined action
 	*/
 	getDefined: function (key) {
-		return utils.copy(baseActions[key]);
+	    return this.copy(baseActions[key]);
+	},
+	
+	/*
+    	Copy an action
+	*/
+	copy: function (action) {
+	    var newAction = {};
+
+    	for (var key in action) {
+            if (action.hasOwnProperty(key)) {
+                if (key !== 'values') {
+                    newAction[key] = action[key];
+                } else {
+                    newAction.values = utils.copy(action.values);
+                }
+            }
+	    }
+	    
+	    return newAction;
+	},
+	
+	merge: function (action, override) {
+        for (var key in override) {
+            if (override.hasOwnProperty(key)) {
+                if (key !== 'values') {
+                    action[key] = override[key];
+                } else {
+                    action.values = utils.merge(action.values, override.values);
+                }
+            }
+        }
+        
+        return action;
 	},
 	
 	
@@ -270,16 +303,22 @@ ActionManager.prototype = {
 	playNext: function (token) {
     	var hasPlayedNext = false,
     	    action = this.get(token),
-    	    playlistLength = action.playlist ? action.playlist.length : 0;
-        
+    	    playlistLength = action.playlist ? action.playlist.length : 0,
+    	    playhead = action.playhead,
+    	    nextAction;
+
         // Check we have a playlist and that this is an animation
         // TODO: Maybe make a set of properties on the rubix that says allowPlaylist: true
     	if (playlistLength && action.link === KEY.LINK.TIME) {
-    	    ++action.playhead;
-    	    
-    	    if (action.playhead < playlistLength) {
-        	    this.change(token, this.getDefined(action.playlist[action.playhead]));
+    	    ++playhead;
+
+    	    if (playhead < playlistLength) {
+    	        nextAction = this.getDefined(action.playlist[playhead]);
+    	        nextAction.playhead = playhead;
+    	        
+        	    this.change(token, nextAction);
         	    this.activate(token);
+
         	    hasPlayedNext = true;
     	    }
     	}
@@ -363,7 +402,7 @@ ActionManager.prototype = {
 	*/
 	setData: function (token, data) {
     	var action = this.get(token);
-    	
+
     	for (var key in data) {
         	if (data.hasOwnProperty(key)) {
             	action.data[key] = data[key];
