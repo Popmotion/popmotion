@@ -153,12 +153,14 @@ We can also inherit properties from a previously defined base action by using a 
   		values: { x: -100 }
   	},
   	'box.right' {
-  		values: { x: -100 }
+  		values: { x: 100 }
   	}
   });
   
   action.play('box.left box.right');
 ```
+
+Both box.left and box.right would use the onChange property as defined in box.
 
 ### Individual value properties
 
