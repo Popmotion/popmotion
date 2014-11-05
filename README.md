@@ -1,7 +1,6 @@
-Redshift
-========
+# Redshift
 
-##Javascript UX engine for DOM, canvas, and everything else##
+## Javascript UX engine for DOM, canvas, and everything else
 
 Redshift is a Javscript engine for animation and interaction. It works with pure numbers and outputs directly to your custom callbacks.
 
@@ -20,9 +19,9 @@ Redshift is a Javscript engine for animation and interaction. It works with pure
 * Runs every process through the same requestAnimationFrame loop for high visual performance
 
 
-##Use##
+## Use
 
-###NPM###
+### NPM
 
 Redshift is available on NPM, so you can include it in your Browserify script like:
 
@@ -30,54 +29,122 @@ Redshift is available on NPM, so you can include it in your Browserify script li
 var Redshift = require('redshift');
 ```
 
-###Old-school file include###
 
-Alternatively, you can simply download the pre-compiled file from https://github.com/SirHound/redshift and include it in a &lt;script&rt; tag, as you would any other Javascript script. You can then access the global Redshift object.
+File include
+
+Alternatively, you can simply download the pre-compiled file from https://github.com/SirHound/redshift and include it in a script tag, as you would any other Javascript script. You can then access the global Redshift object.
 
 
-##Quickstart##
+## Quickstart
 
-###1: Create a new Action###
+For our first trick, let's move a DOM element with the id of #box.
+
+### 1: Create a new Action
 
 ```javascript
-  var action = Redshift.get();
+  var action = Redshift.newAction();
 ```
 
-An action keeps track of your defined values, data you want the callbacks to have access to
+A Redshift Action is essentially a collection of values that you wish to manipulate, and options that change how Redshift goes about that.
 
 
 ###2: Create your output callback###
 
 ```javascript
   function moveBox(values, data) {
-    $('#box').css('transform', 'translate(' + values.x + 'px,0)');
+  	document.getElementById("box").style.transform = 'translate(' + values.x + 'px,0)';
   }
 ```
 
-###3: Define your animation###
+**This step is crucial:** Without callbacks, Redshift won't do anything. This is our way of future-proofing your interactions. You could, in this callback, access the DOM directly (for performance, as shown), use jQuery (for cross-browser compatibility), or use canvas or even WebGL.
+
+It also provides you with the flexibility to manipulate this value before its used, or store it, or do whatever you want with it.
+
+###3: Play!
 
 ```javascript
-  Redshift.define({
-    'box': {
-      values: {
-        x: 100
-      }
-      duration: 400,
-      ease: 'easeOut',
-      onFrame: moveBox
-    }
+  action.play({
+  	values: { x: 100 },
+  	onChange: moveBox
   });
 ```
 
-###4: Play!###
+This will animate #box from 0px to 100px. You can easily change the initial value like so: 
 
 ```javascript
+  action.play({
+  	values: {
+	  	x: {
+	  		from: -100,
+	  		to: 100
+	  	}
+  	},
+  	onChange: moveBox
+  });
+```
+
+###Also 3: ... or track user input!
+
+```javascript
+  action.track({
+  	values: { x: 100 },
+  	onChange: moveBox
+  }, event);
+```
+
+Simply by changing 'play' to 'track', and passing through the user input (either mouse or touch event) as the second parameter, we are now allowing the user to drag #box between 0 and 100 pixels.
+
+## Now you're playing with power
+
+### Define base actions
+
+Redshift supports a powerful design paradigm that allows you to define a set of properties once, and later use anywhere, on any object:
+
+```javascript
+  Redshift,define({
+  	'box': {
+  		values: { x: 100 },
+  		onChange: moveBox
+  	}
+  });
+  
   action.play('box');
 ```
 
-Or let the user move the box with their mouse/finger, simply by using track() and passing either event through like 
+### Sequence
+
+You can make a playlist of actions to play one after the other with a space-seperated list of definition names:
 
 ```javascript
-  example.track('box', e);
+  action.play('moveup moveleft');
 ```
 
+### Inheritance
+
+We can also inherit properties from a previously defined base action by using a dot:
+
+```javascript
+  Redshift,define({
+  	'box': {
+  		onChange: moveBox
+  	},
+  	'box.left' {
+  		values: { x: -100 }
+  	},
+  	'box.right' {
+  		values: { x: -100 }
+  	}
+  });
+  
+  action.play('box.left box.right');
+```
+
+## jQuery plugin
+
+If you're a jQuery user you can skip manually creating a Redshift Action and simply call .play, .track, and .move on a jQuery object. ie:
+
+```javascript
+  $('#box').play('moveleft');
+```
+
+When you use the jQuery plugins, the data variable usually passed to the onChange, onFrame, onStart and onEnd callbacks will become the jQuery object itself.
