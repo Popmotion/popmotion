@@ -39,7 +39,9 @@ Rubix.prototype = {
             @return [number]: 0 to 1 value representing how much time has passed
         */
         calcProgress: function (action, frameStart) {
-            return calc.elapsed(action.started, action.duration + action.delay, frameStart);
+        	action.elapsed += calc.difference(action.framestamp, frameStart) * action.timeDilation;
+        	
+        	return calc.progress(action.elapsed, action.duration + action.delay);
         },
         
         /*

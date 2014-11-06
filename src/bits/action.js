@@ -1,6 +1,7 @@
 "use strict";
 
 var KEY = require('../opts/keys.js'),
+    calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
     Token = require('../bobs/token.js'),
     token = new Token(),
@@ -43,10 +44,19 @@ var KEY = require('../opts/keys.js'),
         // Divide animation into this many steps
         steps: 0,
         
+        // 
+        timeDilation: 1,
+        
         playhead: 0,
         
         // 
         pointerOffset: undefined,
+        
+        // Current progress
+        progress: 0,
+        
+        // Time elapsed
+        elapsed: 0,
         
         // Loop animation x number of times (true for ETERNALLY)
         loop: false,
@@ -171,6 +181,7 @@ Action.prototype.reverseValues = function () {
 Action.prototype.start = function () {
     this.active = true;
     this.started = utils.currentTime() + this.delay;
+    this.framestamp = this.started;
     this.firstFrame = true;
 };
 

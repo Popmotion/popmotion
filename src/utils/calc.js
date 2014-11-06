@@ -81,6 +81,18 @@ Calc.prototype = {
     difference: function (a, b) {
     	return b - a;
     },
+    
+    /*
+	    Dilate
+	    
+	    @param [number]: Previous value
+	    @param [number]: Current value
+	    @param [number]: Dilate progress by x
+	    @return [number]: Previous value plus the dilated difference
+    */
+    dilate: function (previous, current, dilation) {
+	    return previous + ((current - previous) * dilation);
+    },
         
     /*
         Distance
@@ -135,28 +147,6 @@ Calc.prototype = {
             };
             
         return this.hypotenuse(point.x, point.y);
-    },
-
-
-    /*
-        Elapsed
-        
-        Returns a value, from 0-1, of how much time has elapsed from
-        the provided start time in the provided duration.
-        
-        @param [timestamp]: The time we started as UNIX timestamp
-        @param [number]: Max duration of time in ms
-        @param [timestamp] (optional): Current time
-        @return [number]: Progress of time through duration as expressed 0-1
-    */
-    elapsed: function (startTime, duration, currentTime) {
-        var timePassed,
-            progress;
-        
-        currentTime = (typeof currentTime === 'number') ? currentTime : new Date().getTime();
-        timePassed = currentTime - startTime;
-
-        return this.progress(timePassed, duration);
     },
     
         

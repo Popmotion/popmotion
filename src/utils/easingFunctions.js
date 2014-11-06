@@ -258,11 +258,11 @@ function init() {
 			easingFunction.generate(key, baseIn[key], true);
 		}
 	}
-	
+
 	// Generate easing with base function of easeOut
-	for (var key in baseOut) {
-		if (baseOut.hasOwnProperty(key)) {
-			easingFunction.generate(key, baseOut[key]);
+	for (var j in baseOut) {
+		if (baseOut.hasOwnProperty(j)) {
+			easingFunction.generate(j, baseOut[j]);
 		}
 	}
 }

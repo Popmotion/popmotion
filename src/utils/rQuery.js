@@ -20,6 +20,7 @@ var KEY = require('../opts/keys.js'),
     					thisRedshift.data(KEY.JQUERY_ELEMENT, $this);
     					$this.data(REDSHIFT, thisRedshift);
     				}
+
     				thisRedshift[action](arg1, arg2, arg3);
     			});
     		};

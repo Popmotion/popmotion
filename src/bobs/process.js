@@ -75,6 +75,8 @@ Process.prototype = {
         	action.onEnd.call(action.scope, output, action.data);
         	ActionManager.queueDeactivate(action.token);
     	}
+    	
+    	action.framestamp = frameStart;
 	}
 };
 
