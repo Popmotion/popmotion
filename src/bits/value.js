@@ -86,9 +86,9 @@ var utils = require('../utils/utils.js'),
     	from: 0,
     	to: 1,
 	
-    	// Maximum range for value (TODO - has no current effect)
-    	min: null,
-    	max: null,
+    	// Maximum range for value
+    	min: 0,
+    	max: 1,
     	
     	// Speed for .move(), in xps
     	speed: 0,
