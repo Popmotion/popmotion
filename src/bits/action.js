@@ -154,6 +154,7 @@ Action.prototype.resetValues = function () {
     }
     
     this.progress = 0;
+    this.elapsed = 0;
 };
 
 /*
@@ -163,6 +164,7 @@ Action.prototype.reverseValues = function () {
 	var key, to, from;
 	
 	this.progress = calc.difference(this.progress, 1);
+	this.elapsed = calc.difference(this.elapsed, this.duration);
 
     for (key in this.values) {
 	    if (this.values.hasOwnProperty(key)) {

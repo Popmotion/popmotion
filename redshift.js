@@ -2,6 +2,7 @@
 "use strict";
 
 var KEY = require('../opts/keys.js'),
+    calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
     Token = require('../bobs/token.js'),
     token = new Token(),
@@ -44,10 +45,19 @@ var KEY = require('../opts/keys.js'),
         // Divide animation into this many steps
         steps: 0,
         
+        // 
+        timeDilation: 1,
+        
         playhead: 0,
         
         // 
         pointerOffset: undefined,
+        
+        // Current progress
+        progress: 0,
+        
+        // Time elapsed
+        elapsed: 0,
         
         // Loop animation x number of times (true for ETERNALLY)
         loop: false,
@@ -145,6 +155,7 @@ Action.prototype.resetValues = function () {
     }
     
     this.progress = 0;
+    this.elapsed = 0;
 };
 
 /*
@@ -154,6 +165,7 @@ Action.prototype.reverseValues = function () {
 	var key, to, from;
 	
 	this.progress = calc.difference(this.progress, 1);
+	this.elapsed = calc.difference(this.elapsed, this.duration);
 
     for (key in this.values) {
 	    if (this.values.hasOwnProperty(key)) {
@@ -172,6 +184,7 @@ Action.prototype.reverseValues = function () {
 Action.prototype.start = function () {
     this.active = true;
     this.started = utils.currentTime() + this.delay;
+    this.framestamp = this.started;
     this.firstFrame = true;
 };
 
@@ -184,7 +197,7 @@ Action.prototype.stop = function () {
 
 
 module.exports = Action;
-},{"../bobs/token.js":15,"../opts/keys.js":17,"../utils/utils.js":23,"./value.js":6}],2:[function(require,module,exports){
+},{"../bobs/token.js":15,"../opts/keys.js":17,"../utils/calc.js":19,"../utils/utils.js":23,"./value.js":6}],2:[function(require,module,exports){
 (function (global){
 /*
 	Bezier function generator
@@ -1469,6 +1482,8 @@ Process.prototype = {
         	action.onEnd.call(action.scope, output, action.data);
         	ActionManager.queueDeactivate(action.token);
     	}
+    	
+    	action.framestamp = frameStart;
 	}
 };
 
@@ -1517,7 +1532,9 @@ Rubix.prototype = {
             @return [number]: 0 to 1 value representing how much time has passed
         */
         calcProgress: function (action, frameStart) {
-            return calc.elapsed(action.started, action.duration + action.delay, frameStart);
+        	action.elapsed += calc.difference(action.framestamp, frameStart) * action.timeDilation;
+        	
+        	return calc.progress(action.elapsed, action.duration + action.delay);
         },
         
         /*
@@ -2129,6 +2146,18 @@ Calc.prototype = {
     difference: function (a, b) {
     	return b - a;
     },
+    
+    /*
+	    Dilate
+	    
+	    @param [number]: Previous value
+	    @param [number]: Current value
+	    @param [number]: Dilate progress by x
+	    @return [number]: Previous value plus the dilated difference
+    */
+    dilate: function (previous, current, dilation) {
+	    return previous + ((current - previous) * dilation);
+    },
         
     /*
         Distance
@@ -2183,28 +2212,6 @@ Calc.prototype = {
             };
             
         return this.hypotenuse(point.x, point.y);
-    },
-
-
-    /*
-        Elapsed
-        
-        Returns a value, from 0-1, of how much time has elapsed from
-        the provided start time in the provided duration.
-        
-        @param [timestamp]: The time we started as UNIX timestamp
-        @param [number]: Max duration of time in ms
-        @param [timestamp] (optional): Current time
-        @return [number]: Progress of time through duration as expressed 0-1
-    */
-    elapsed: function (startTime, duration, currentTime) {
-        var timePassed,
-            progress;
-        
-        currentTime = (typeof currentTime === 'number') ? currentTime : new Date().getTime();
-        timePassed = currentTime - startTime;
-
-        return this.progress(timePassed, duration);
     },
     
         
@@ -2629,9 +2636,9 @@ function init() {
 			easingFunction.generate(key, baseIn[key], true);
 		}
 	}
-	
+
 	// Generate easing with base function of easeOut
-	for (var key in baseOut) {
+	for (key in baseOut) {
 		if (baseOut.hasOwnProperty(key)) {
 			easingFunction.generate(key, baseOut[key]);
 		}
@@ -2663,6 +2670,7 @@ var KEY = require('../opts/keys.js'),
     					thisRedshift.data(KEY.JQUERY_ELEMENT, $this);
     					$this.data(REDSHIFT, thisRedshift);
     				}
+
     				thisRedshift[action](arg1, arg2, arg3);
     			});
     		};
