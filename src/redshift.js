@@ -117,6 +117,10 @@ Instance.prototype = {
     
     getToken: function () {
         return this.token;
+    },
+    
+    isActive: function () {
+        return ActionManager.isActive(this.token);
     }
     
 };

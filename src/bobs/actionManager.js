@@ -29,7 +29,6 @@ ActionManager.prototype = {
 		return action;
 	},
 	
-	
 	/*
 		Change action
 		
@@ -155,6 +154,9 @@ ActionManager.prototype = {
 	    return newAction;
 	},
 	
+	/*
+    	Merge an action
+	*/
 	merge: function (action, override) {
         for (var key in override) {
             if (override.hasOwnProperty(key)) {
@@ -242,6 +244,13 @@ ActionManager.prototype = {
     	if (index > -1) {
     	    activeTokens.splice(index, 1);
     	}
+	},
+	
+	/*
+    	Is action active
+	*/
+	isActive: function (token) {
+    	return (activeTokens.indexOf(token) > -1);
 	},
 	
 	/*
