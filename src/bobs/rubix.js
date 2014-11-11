@@ -109,7 +109,7 @@ Rubix.prototype = {
                         direct: (!action.values[key]) ? true : false,
                         value: (!action.values[key]) ?
                             offset[key] :
-                            calc.progress(offset[key] + action.origin[key], action.values[key].from, action.values[key].to)
+                            calc.progress(offset[key] + action.origin[key], action.values[key].min, action.values[key].max)
                     };
                 }
             }
@@ -153,11 +153,11 @@ Rubix.prototype = {
 
             // If we've already calculated the progress for this property
             if (progress[key]) {
-                easedValue = Easing.withinRange(progress[key].value, value.from, value.to, defaults.trackEase, value.escapeAmp);
+                easedValue = Easing.withinRange(progress[key].value, value.min, value.max, defaults.trackEase, value.escapeAmp);
             
             // If we're linking this property into a user input
             } else if (value.link) {
-                easedValue = Easing.withinRange(progress[value.link].value, value.from, value.to, defaults.trackEase, value.escapeAmp);
+                easedValue = Easing.withinRange(progress[value.link].value, value.min, value.max, defaults.trackEase, value.escapeAmp);
             }
             
             // TODO: Handle default easing 
