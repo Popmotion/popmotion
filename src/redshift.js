@@ -89,8 +89,12 @@ Instance.prototype = {
     	@param [string]: Key of the action to process
         @param [event]: Initiating pointer event
     */
-	track: function (defs, override, e) {
-	    return redshift.ignite(this.token, KEY.LINK.POINTER, ActionManager.createBase(defs, override), e);
+	track: function (defs) {
+	    var numArgs = arguments.length,
+	        toTrack = (numArgs > 2) ? arguments[2] : arguments[1],
+	        override = (numArgs > 2) ? arguments[3] : undefined;
+	        
+	    return redshift.ignite(this.token, KEY.LINK.POINTER, ActionManager.createBase(defs, override), toTrack);
 	},
     
     
@@ -187,7 +191,7 @@ Redshift.prototype = {
     	ActionManager.deactivate(token);
 	},
 	
-    calc: calc,
+    Calc: calc,
 	
 	run: function () {
     	
