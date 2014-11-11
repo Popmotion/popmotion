@@ -104,8 +104,7 @@ Instance.prototype = {
         Activate the action and fire up Chronos animation loop
     */
     start: function () {
-        ActionManager.activate(this.token);
-        Chronos.start();
+        redshift.start(this.token);
         return this;
     },
     
@@ -114,7 +113,7 @@ Instance.prototype = {
         Stop specified action
     */
     stop: function () {
-        ActionManager.deactivate(this.token);
+        redshift.stop(this.token);
         return this;
     },
     
@@ -149,6 +148,15 @@ Redshift.prototype = {
 	    return this;
     },
 	
+	start: function (token) {
+        ActionManager.activate(token);
+        Chronos.start();
+	},
+	
+	stop: function (token) {
+    	ActionManager.deactivate(token);
+	},
+	
 	/*
     	Ignite Redshift
     	
@@ -171,6 +179,8 @@ Redshift.prototype = {
 
 		return token;
 	},
+	
+	
 	
 	
 	/*
