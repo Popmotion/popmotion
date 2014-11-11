@@ -2,7 +2,7 @@
 
 var utils = require('../utils/utils.js'),
 	calc = require('../utils/calc.js'),
-	priorityProps = ['current', 'from', 'to', 'start'],
+	priorityProps = ['current', 'to', 'from', 'start'],
 	
 	/*
         Is this key a priority property?
@@ -121,41 +121,26 @@ Value.prototype.update = function (value, action, isNewValue) {
 
 	// If value is just a number
 	if (utils.isNum(value) || utils.isFunc(value) || utils.isString(value)) {
-	    this.from = (isNewValue) ? 0 : this.current;
-	    this.current = (isNewValue) ? this.from : this.current;
+	    this.current = (isNewValue) ? 0 : this.current;
 		this.to = parse(value, data, this.current);
 
 	// Or if it is an object
 	} else {
-	
-	    // Deal with our priorities
-	    // TODO: See if this badass if statement (emphasis on ass) can be refactored
+	    
+	    // If a start value exists and this is a new Value, assign it as current
 	    if (isNewValue && value.hasOwnProperty('start')) {
-		    value.current = parse(value.start, data);
+    	    this.current = parse(value.start, data);
+	    
+	    // Or we've explicitly set current
+	    } else if (value.hasOwnProperty('current')) {
+    	    this.current = parse(value.current, data);
+	    
+	    // Or we've not defined current and this is a new value
+	    } else if (isNewValue) {
+    	    this.current = defaults.current;
 	    }
 	    
-	    // If user has defined a new current, but not a from
-	    if (value.hasOwnProperty('current') && !value.hasOwnProperty('from')) {
-    	    this.current = parse(value.current, data);
-    	    this.from = this.current;
-	    
-	    // Or if user has defined a from, but not a current
-	    } else if (!value.hasOwnProperty('current') && value.hasOwnProperty('from')) {
-    	    this.from = isNewValue ? parse(value.from, data) : this.current;
-    	    this.current = isNewValue ? this.from : this.current;
-        
-        // Or they've defined both
-	    } else if (value.hasOwnProperty('current') && value.hasOwnProperty('from')) {
-    	    this.current = parse(value.current, data);
-    	    this.from = isNewValue ? parse(value.from, data) : this.current;
-    	    
-        // Or they've defined neither
-	    } else {
-    	    this.current = isNewValue ? defaults.current : this.current;
-    	    this.from = isNewValue ? defaults.from : this.current;
-	    }
-
-		this.to = parse(value.to, data, this.current);
+	    this.to = parse(value.to, data, this.current);
 	}
 	
     // Loop through permitted values
@@ -177,6 +162,9 @@ Value.prototype.update = function (value, action, isNewValue) {
 		    
 	    }
     }
+    
+    // Assign 'from' as current
+    this.from = this.current;
     
     // Finally check if to was given as a string, and figure out the relative value
     if (utils.isString(this.to)) {
