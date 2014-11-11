@@ -90,10 +90,10 @@ Instance.prototype = {
         @param [event]: Initiating pointer event
     */
 	track: function (defs) {
-	    var numArgs = arguments.length,
-	        toTrack = (numArgs > 2) ? arguments[2] : arguments[1],
-	        override = (numArgs > 2) ? arguments[3] : {};
-	        
+	    var hasAllArgs = (arguments[2] !== undefined),
+	        toTrack = hasAllArgs ? arguments[2] : arguments[1],
+	        override = hasAllArgs ? arguments[3] : {};
+	    
 	    return redshift.ignite(this.token, KEY.LINK.POINTER, ActionManager.createBase(defs, override), toTrack);
 	},
     
