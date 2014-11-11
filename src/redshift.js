@@ -104,7 +104,9 @@ Instance.prototype = {
         Activate the action and fire up Chronos animation loop
     */
     start: function () {
-        redshift.start(this.token);
+        ActionManager.activate(this.token);
+        Chronos.start();
+        return this;
     },
     
     
@@ -112,7 +114,8 @@ Instance.prototype = {
         Stop specified action
     */
     stop: function () {
-        redshift.stop(this.token);
+        ActionManager.deactivate(this.token);
+        return this;
     },
     
     getToken: function () {
@@ -184,15 +187,6 @@ Redshift.prototype = {
 	*/
 	addBezier: function (name, x1, y1, x2, y2) {
 		Easing.addBezier(name, x1, y1, x2, y2);
-	},
-	
-	start: function (token) {
-        ActionManager.activate(token);
-        Chronos.start();
-	},
-	
-	stop: function (token) {
-    	ActionManager.deactivate(token);
 	},
 	
     Calc: calc,
