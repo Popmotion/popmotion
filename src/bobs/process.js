@@ -41,7 +41,7 @@ Process.prototype = {
     	    hasChanged = false;
     	    
         if (action.firstFrame) {
-            action.onStart.call(action.scope, output, action.data);
+            action.onStart.call(action.scope, action.data);
             action.firstFrame = false;
         }
 

@@ -6,6 +6,8 @@
     
     .redshift() method used for other Redshift functions, ie $('#element').redshift('stop')
 */
+"use strict";
+
 var KEY = require('../opts/keys.js'),
     rQuery = function () {
     	var REDSHIFT = 'redshift',
