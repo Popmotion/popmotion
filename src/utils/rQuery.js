@@ -54,7 +54,7 @@ var KEY = require('../opts/keys.js'),
     	
     	$.fn.track = function () {
     		execute(this, 'track', arguments[0], arguments[1], arguments[2]);
-    		
+
     		return this;
     	};
     	

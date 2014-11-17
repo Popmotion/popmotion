@@ -87,6 +87,8 @@ Rubix.prototype = {
     },
     
     
+    Action: {},
+    
     
     Pointer: {
     
@@ -115,18 +117,7 @@ Rubix.prototype = {
                     defaultAssigned = true;
                 }
             }
-/*
-            for (var key in offset) {
-                if (offset.hasOwnProperty(key)) {
-                    progress[key] = {
-                        direct: (!action.values[key]) ? true : false,
-                        value: (!action.values[key]) ?
-                            offset[key] :
-                            calc.progress(offset[key] + action.origin[key], action.values[key].min, action.values[key].max)
-                    };
-                }
-            }
-*/
+
             return progress;
         },
         

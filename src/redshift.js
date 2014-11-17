@@ -69,7 +69,7 @@ Instance.prototype = {
     	@param [object]: Override action defaults with those defined here
 	*/
 	play: function (defs, override) {
-	    return redshift.ignite(this.token, KEY.INPUT.TIME, ActionManager.createBase(defs, override));
+	    return redshift.ignite(this.token, KEY.RUBIX.TIME, ActionManager.createBase(defs, override));
 	},
 	
 	/*
@@ -79,7 +79,7 @@ Instance.prototype = {
     	@param [object]: Override action defaults with those defined here
 	*/
 	move: function (defs, override) {
-	    return redshift.ignite(this.token, KEY.INPUT.SPEED, ActionManager.createBase(defs, override));
+	    return redshift.ignite(this.token, KEY.RUBIX.SPEED, ActionManager.createBase(defs, override));
 	},
 	
 
@@ -92,9 +92,10 @@ Instance.prototype = {
 	track: function (defs) {
 	    var hasAllArgs = (arguments[2] !== undefined),
 	        toTrack = hasAllArgs ? arguments[2] : arguments[1],
-	        override = hasAllArgs ? arguments[3] : {};
+	        override = hasAllArgs ? arguments[3] : {},
+	        rubix = (utils.isNum(toTrack.token)) ? KEY.RUBIX.POINTER : KEY.RUBIX.ACTION;
 	    
-	    return redshift.ignite(this.token, KEY.INPUT.POINTER, ActionManager.createBase(defs, override), toTrack);
+	    return redshift.ignite(this.token, rubix, ActionManager.createBase(defs, override), toTrack);
 	},
     
     

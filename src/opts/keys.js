@@ -16,10 +16,11 @@ module.exports = {
 		OUT: 'Out',
 		LINEAR: 'linear'
     },
-    INPUT: {
-	    TIME: 'Time',
+    RUBIX: {
+    	ACTION: 'Action',
 	    POINTER: 'Pointer',
-	    SPEED: 'Speed'
+	    SPEED: 'Speed',
+	    TIME: 'Time'
     },
     ERROR: {
 	    ACTION_EXISTS: "Action already defined. Use forceOverride: true to override.",

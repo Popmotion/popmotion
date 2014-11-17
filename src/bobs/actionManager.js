@@ -36,11 +36,12 @@ ActionManager.prototype = {
 		@param [object]: Value properties
 		@param [object]: Action options
 	*/
-	change: function (token, changes, e) {
+	change: function (token, changes, input) {
 		var action = this.get(token);
         
         if (changes.input === KEY.INPUT.POINTER) {
-			changes.pointerOffset = PointerTracker.start(e);
+        	console.log(input);
+			changes.pointerOffset = PointerTracker.start(input);
         }
 			
 		action.set(changes);
