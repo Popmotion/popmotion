@@ -42,7 +42,7 @@ ActionManager.prototype = {
         if (changes.rubix === KEY.RUBIX.POINTER) {
         	changes.pointerOffset = PointerTracker.start(input);
 
-        } else if () {
+        } else if (true) {
 	        
         }
 			
