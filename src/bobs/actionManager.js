@@ -40,8 +40,7 @@ ActionManager.prototype = {
 		var action = this.get(token);
         
         if (changes.input === KEY.INPUT.POINTER) {
-        	console.log(input);
-			changes.pointerOffset = PointerTracker.start(input);
+        	changes.pointerOffset = PointerTracker.start(input);
         }
 			
 		action.set(changes);
