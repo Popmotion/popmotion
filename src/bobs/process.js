@@ -37,7 +37,7 @@ Process.prototype = {
 	*/
 	singleAction: function (action, frameStart, fps) {
     	var output = {},
-    	    rubix = Rubix[action.link],
+    	    rubix = Rubix[action.rubix],
     	    hasChanged = false;
     	    
         if (action.firstFrame) {

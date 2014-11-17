@@ -321,7 +321,7 @@ ActionManager.prototype = {
 
         // Check we have a playlist and that this is an animation
         // TODO: Maybe make a set of properties on the rubix that says allowPlaylist: true
-    	if (playlistLength && action.input === KEY.RUBIX.TIME) {
+    	if (playlistLength && action.rubix === KEY.RUBIX.TIME) {
     	    ++playhead;
 
     	    if (playhead < playlistLength) {
@@ -350,7 +350,7 @@ ActionManager.prototype = {
     	    action = this.get(token),
     	    loopForever = (action.loop === true);
 
-        if (action.input === KEY.RUBIX.TIME && (loopForever || utils.isNum(action.loop))) {
+        if (action.rubix === KEY.RUBIX.TIME && (loopForever || utils.isNum(action.loop))) {
             ++action.loopCount;
             if ((loopForever || utils.isNum(action.loop) && action.loopCount <= action.loop)) {
 	            action.resetValues();
@@ -368,7 +368,7 @@ ActionManager.prototype = {
 			action = this.get(token),
 			yoyoForever = (action.yoyo === true);
 
-		if (action.input === KEY.RUBIX.TIME && (yoyoForever || utils.isNum(action.yoyo))) {
+		if (action.rubix === KEY.RUBIX.TIME && (yoyoForever || utils.isNum(action.yoyo))) {
 			++action.yoyoCount;
 			if (yoyoForever || (utils.isNum(action.yoyo) && action.yoyoCount <= action.yoyo)) {
 				action.reverseValues();
