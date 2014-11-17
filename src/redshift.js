@@ -169,10 +169,10 @@ Redshift.prototype = {
         @param [event]: Initiating pointer event
         @return [int]: ID token for action
 	*/
-	ignite: function (token, input, changes, e) {
+	ignite: function (token, rubix, changes, e) {
 		var action = ActionManager.get(token);
 		
-		changes.input = input;
+		changes.rubix = rubix;
 
 		ActionManager.change(token, changes, e);
 

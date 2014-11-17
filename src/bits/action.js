@@ -21,7 +21,7 @@ var KEY = require('../opts/keys.js'),
         active: false,
         
         // What to use to process this aciton
-        input: KEY.INPUT.TIME,
+        input: KEY.RUBIX.TIME,
         
         // Multiply output value by
         amp: 1,
