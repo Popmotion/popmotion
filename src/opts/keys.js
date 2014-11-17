@@ -16,7 +16,7 @@ module.exports = {
 		OUT: 'Out',
 		LINEAR: 'linear'
     },
-    LINK: {
+    INPUT: {
 	    TIME: 'Time',
 	    POINTER: 'Pointer',
 	    SPEED: 'Speed'

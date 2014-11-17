@@ -69,7 +69,7 @@ Instance.prototype = {
     	@param [object]: Override action defaults with those defined here
 	*/
 	play: function (defs, override) {
-	    return redshift.ignite(this.token, KEY.LINK.TIME, ActionManager.createBase(defs, override));
+	    return redshift.ignite(this.token, KEY.INPUT.TIME, ActionManager.createBase(defs, override));
 	},
 	
 	/*
@@ -79,7 +79,7 @@ Instance.prototype = {
     	@param [object]: Override action defaults with those defined here
 	*/
 	move: function (defs, override) {
-	    return redshift.ignite(this.token, KEY.LINK.SPEED, ActionManager.createBase(defs, override));
+	    return redshift.ignite(this.token, KEY.INPUT.SPEED, ActionManager.createBase(defs, override));
 	},
 	
 
@@ -94,7 +94,7 @@ Instance.prototype = {
 	        toTrack = hasAllArgs ? arguments[2] : arguments[1],
 	        override = hasAllArgs ? arguments[3] : {};
 	    
-	    return redshift.ignite(this.token, KEY.LINK.POINTER, ActionManager.createBase(defs, override), toTrack);
+	    return redshift.ignite(this.token, KEY.INPUT.POINTER, ActionManager.createBase(defs, override), toTrack);
 	},
     
     
@@ -168,10 +168,10 @@ Redshift.prototype = {
         @param [event]: Initiating pointer event
         @return [int]: ID token for action
 	*/
-	ignite: function (token, link, changes, e) {
+	ignite: function (token, input, changes, e) {
 		var action = ActionManager.get(token);
 		
-		changes.link = link;
+		changes.input = input;
 
 		ActionManager.change(token, changes, e);
 

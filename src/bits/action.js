@@ -21,7 +21,7 @@ var KEY = require('../opts/keys.js'),
         active: false,
         
         // What to use to process this aciton
-        link: KEY.LINK.TIME,
+        input: KEY.INPUT.TIME,
         
         // Multiply output value by
         amp: 1,
