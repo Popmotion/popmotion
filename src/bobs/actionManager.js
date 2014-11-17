@@ -42,8 +42,8 @@ ActionManager.prototype = {
         if (changes.rubix === KEY.RUBIX.POINTER) {
         	changes.pointerOffset = PointerTracker.start(input);
 
-        } else if (true) {
-	        
+        } else if (changes.rubix === KEY.RUBIX.ACTION) {
+	        changes.linkedAction = input;
         }
 			
 		action.set(changes);
