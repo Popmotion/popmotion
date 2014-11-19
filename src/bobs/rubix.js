@@ -87,7 +87,31 @@ Rubix.prototype = {
     },
     
     
-    Action: {},
+    Action: {
+	    
+	    /*
+		    Calc progress
+	    */
+	    calcProgress: function (action) {
+		    var linkedAction = ActionManager.get(action.linkedAction);
+		    
+		    return linkedAction.progress;
+	    },
+	    
+	    hasEnded: function () {
+		    var linkedAction = ActionManager.get(action.linkedAction),
+		    	hasEnded = (!linkedAction.active) ? true : false;
+		    
+		    return hasEnded;
+	    },
+	    
+	    updatePointer: function () {},
+	    
+	    easeValue: function (key, action, value) {
+		    
+	    }
+	    
+    },
     
     
     Pointer: {
