@@ -22,6 +22,7 @@ var calc = require('../utils/calc.js'),
     Easing = require('../utils/easingFunctions.js'),
 	defaults = require('../opts/defaults.js'),
 	KEY = require('../opts/keys.js'),
+    ActionManager = require('./actionManager.js'),
     PointerTracker = require('./pointerTracker.js'),
     Rubix = function () {},
     rubixController;
@@ -86,19 +87,16 @@ Rubix.prototype = {
         }
     },
     
-    
+    /* TODO
     Action: {
 	    
-	    /*
-		    Calc progress
-	    */
 	    calcProgress: function (action) {
 		    var linkedAction = ActionManager.get(action.linkedAction);
-		    
+
 		    return linkedAction.progress;
 	    },
 	    
-	    hasEnded: function () {
+	    hasEnded: function (action) {
 		    var linkedAction = ActionManager.get(action.linkedAction),
 		    	hasEnded = (!linkedAction.active) ? true : false;
 		    
@@ -107,12 +105,30 @@ Rubix.prototype = {
 	    
 	    updatePointer: function () {},
 	    
-	    easeValue: function (key, action, value) {
+	    easeValue: function (key, action, progress) {
+		    var value = action.values[key],
+		    	linkedAction = ActionManager.get(action.linkedAction),
+		    	linkedValue = linkedAction.values[value.link],
+		    	easedValue = value.current,
+		    	inputProgress;
 		    
+		    if (utils.isNum(progress)) {
+			    inputProgress = progress;
+			} else if (linkedValue.link && utils.isNum(progress[linkedValue.link])) {
+				inputProgress = progress[linkedValue.link];
+			} else if (utils.isNum(progress[key])) {
+			    inputProgress = progress[key];
+		    }
+		    
+            if (inputProgress !== undefined) {
+                easedValue = Easing.withinRange(inputProgress, 0, -250, defaults.trackEase, value.escapeAmp);
+            }
+
+			return easedValue;
 	    }
 	    
     },
-    
+    */
     
     Pointer: {
     

@@ -93,8 +93,8 @@ Instance.prototype = {
 	    var hasAllArgs = (arguments[2] !== undefined),
 	        toTrack = hasAllArgs ? arguments[2] : arguments[1],
 	        override = hasAllArgs ? arguments[3] : {},
-	        rubix = (utils.isNum(toTrack.token)) ? KEY.RUBIX.POINTER : KEY.RUBIX.ACTION;
-	    
+	        rubix = (utils.isNum(toTrack.token)) ? KEY.RUBIX.ACTION : KEY.RUBIX.POINTER;
+
 	    return redshift.ignite(this.token, rubix, ActionManager.createBase(defs, override), toTrack);
 	},
     
@@ -180,10 +180,7 @@ Redshift.prototype = {
 
 		return token;
 	},
-	
-	
-	
-	
+
 	/*
     	Add bezier curve function
     	
