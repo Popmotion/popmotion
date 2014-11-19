@@ -1,6 +1,6 @@
 {
   "name": "redshift",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Create high fidelity Javascript UX",
   "author": "Matt Perry <admin@redshiftjs.com>",
   "homepage": "http://redshiftjs.com",
