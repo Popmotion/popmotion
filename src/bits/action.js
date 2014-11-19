@@ -21,7 +21,7 @@ var KEY = require('../opts/keys.js'),
         active: false,
         
         // What to use to process this aciton
-        link: KEY.LINK.TIME,
+        rubix: KEY.RUBIX.TIME,
         
         // Multiply output value by
         amp: 1,
@@ -49,8 +49,10 @@ var KEY = require('../opts/keys.js'),
         
         playhead: 0,
         
-        // 
+        // Pointer offset on tracking start
         pointerOffset: undefined,
+        
+        linkedAction: undefined,
         
         // Current progress
         progress: 0,

@@ -4,7 +4,7 @@
   "description": "Create high fidelity Javascript UX",
   "author": "Matt Perry <admin@redshiftjs.com>",
   "homepage": "http://redshiftjs.com",
-  "main": "redshift.js",
+  "main": "src/redshift.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/SirHound/redshift"

@@ -9,19 +9,34 @@
 var KEY = require('../opts/keys.js'),
     rQuery = function () {
     	var REDSHIFT = 'redshift',
+
+			/*
+				Get Redshift instance from jQuery object
+				
+				@param [jQuery element]
+			*/
+    		getInstance = function ($element) {
+    			var instance = $element.data(REDSHIFT);
+    			
+    			if (!instance) {
+	    			instance = Redshift.get();
+	    			instance.data(KEY.JQUERY_ELEMENT, $element);
+					$element.data(REDSHIFT, instance);
+    			}
+    			
+    			return instance;
+    		},
+
+			/*
+				Execute Action function
+
+				@param [jQuery element]: jQuery element to check for Redshift instance
+				@param [string]: Action function to call
+				@param [...arguments]
+			*/
     		execute = function ($element, action, arg1, arg2, arg3) {
     			$element.each(function () {
-    				var $this = $(this),
-    					thisRedshift = $this.data(REDSHIFT);
-    				
-    				// If we haven't stored a Redshift instance on this element, make one
-    				if (!thisRedshift) {
-    					thisRedshift = Redshift.get();
-    					thisRedshift.data(KEY.JQUERY_ELEMENT, $this);
-    					$this.data(REDSHIFT, thisRedshift);
-    				}
-
-    				thisRedshift[action](arg1, arg2, arg3);
+    				getInstance($(this))[action](arg1, arg2, arg3);
     			});
     		};
     		
@@ -39,14 +54,17 @@ var KEY = require('../opts/keys.js'),
     	
     	$.fn.track = function () {
     		execute(this, 'track', arguments[0], arguments[1], arguments[2]);
-    		
+
     		return this;
     	};
     	
     	$.fn.redshift = function (action) {
-    		execute(this, action, arguments[1], arguments[2]);
-    		
-    		return this;
+    		if (action) {
+    			execute(this, action, arguments[1], arguments[2]);
+				return this;
+    		} else {
+	    		return getInstance(this);
+    		}
     	};
     };
 

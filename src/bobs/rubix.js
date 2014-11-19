@@ -22,6 +22,7 @@ var calc = require('../utils/calc.js'),
     Easing = require('../utils/easingFunctions.js'),
 	defaults = require('../opts/defaults.js'),
 	KEY = require('../opts/keys.js'),
+    ActionManager = require('./actionManager.js'),
     PointerTracker = require('./pointerTracker.js'),
     Rubix = function () {},
     rubixController;
@@ -86,7 +87,48 @@ Rubix.prototype = {
         }
     },
     
-    
+    /* TODO
+    Action: {
+	    
+	    calcProgress: function (action) {
+		    var linkedAction = ActionManager.get(action.linkedAction);
+
+		    return linkedAction.progress;
+	    },
+	    
+	    hasEnded: function (action) {
+		    var linkedAction = ActionManager.get(action.linkedAction),
+		    	hasEnded = (!linkedAction.active) ? true : false;
+		    
+		    return hasEnded;
+	    },
+	    
+	    updatePointer: function () {},
+	    
+	    easeValue: function (key, action, progress) {
+		    var value = action.values[key],
+		    	linkedAction = ActionManager.get(action.linkedAction),
+		    	linkedValue = linkedAction.values[value.link],
+		    	easedValue = value.current,
+		    	inputProgress;
+		    
+		    if (utils.isNum(progress)) {
+			    inputProgress = progress;
+			} else if (linkedValue.link && utils.isNum(progress[linkedValue.link])) {
+				inputProgress = progress[linkedValue.link];
+			} else if (utils.isNum(progress[key])) {
+			    inputProgress = progress[key];
+		    }
+		    
+            if (inputProgress !== undefined) {
+                easedValue = Easing.withinRange(inputProgress, 0, -250, defaults.trackEase, value.escapeAmp);
+            }
+
+			return easedValue;
+	    }
+	    
+    },
+    */
     
     Pointer: {
     
@@ -101,16 +143,18 @@ Rubix.prototype = {
     	*/
         calcProgress: function (action, frameStart) {
             var progress = {},
-                offset = action.pointer.offset;
+                defaultAssigned,
+                input = action.pointer.offset;
 
-            for (var key in offset) {
-                if (offset.hasOwnProperty(key)) {
-                    progress[key] = {
-                        direct: (!action.values[key]) ? true : false,
-                        value: (!action.values[key]) ?
-                            offset[key] :
-                            calc.progress(offset[key] + action.origin[key], action.values[key].min, action.values[key].max)
-                    };
+            for (var key in input) {
+                // Check we're tracking this property
+                if (input.hasOwnProperty(key) && action.values.hasOwnProperty(key)) {
+                    progress[key] = calc.progress(input[key] + action.origin[key], action.values[key].min, action.values[key].max);
+                }
+                
+                if (!defaultAssigned) {
+                    progress.base = progress[key];
+                    defaultAssigned = true;
                 }
             }
 
@@ -148,19 +192,22 @@ Rubix.prototype = {
             @param [object]: Progress of pointer props
         */
         easeValue: function (key, action, progress) {
-            var easedValue = 0, 
-                value = action.values[key];
-
+            var value = action.values[key],
+                easedValue = value.current,
+                inputProgress;
+                
             // If we've already calculated the progress for this property
-            if (progress[key]) {
-                easedValue = Easing.withinRange(progress[key].value, value.min, value.max, defaults.trackEase, value.escapeAmp);
+            if (utils.isNum(progress[key])) {
+                inputProgress = progress[key];
             
-            // If we're linking this property into a user input
-            } else if (value.link) {
-                easedValue = Easing.withinRange(progress[value.link].value, value.min, value.max, defaults.trackEase, value.escapeAmp);
+            // Or we've chosen a property to link to
+            } else if (value.link && utils.isNum(progress[value.link])) {
+                inputProgress = progress[value.link];
             }
-            
-            // TODO: Handle default easing 
+
+            if (inputProgress !== undefined) {
+                easedValue = Easing.withinRange(inputProgress, value.min, value.max, defaults.trackEase, value.escapeAmp);
+            }
 
             return easedValue;
         }
