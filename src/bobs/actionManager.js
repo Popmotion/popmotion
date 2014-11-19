@@ -36,13 +36,16 @@ ActionManager.prototype = {
 		@param [object]: Value properties
 		@param [object]: Action options
 	*/
-	change: function (token, changes, e) {
+	change: function (token, changes, input) {
 		var action = this.get(token);
         
-        if (changes.link === KEY.LINK.POINTER) {
-			changes.pointerOffset = PointerTracker.start(e);
+        if (changes.rubix === KEY.RUBIX.POINTER) {
+        	changes.pointerOffset = PointerTracker.start(input);
+
+        } else if (changes.rubix === KEY.RUBIX.ACTION) {
+	        changes.linkedAction = input.token;
         }
-			
+
 		action.set(changes);
 	},
 	
@@ -318,7 +321,7 @@ ActionManager.prototype = {
 
         // Check we have a playlist and that this is an animation
         // TODO: Maybe make a set of properties on the rubix that says allowPlaylist: true
-    	if (playlistLength && action.link === KEY.LINK.TIME) {
+    	if (playlistLength && action.rubix === KEY.RUBIX.TIME) {
     	    ++playhead;
 
     	    if (playhead < playlistLength) {
@@ -347,7 +350,7 @@ ActionManager.prototype = {
     	    action = this.get(token),
     	    loopForever = (action.loop === true);
 
-        if (action.link === KEY.LINK.TIME && (loopForever || utils.isNum(action.loop))) {
+        if (action.rubix === KEY.RUBIX.TIME && (loopForever || utils.isNum(action.loop))) {
             ++action.loopCount;
             if ((loopForever || utils.isNum(action.loop) && action.loopCount <= action.loop)) {
 	            action.resetValues();
@@ -365,7 +368,7 @@ ActionManager.prototype = {
 			action = this.get(token),
 			yoyoForever = (action.yoyo === true);
 
-		if (action.link === KEY.LINK.TIME && (yoyoForever || utils.isNum(action.yoyo))) {
+		if (action.rubix === KEY.RUBIX.TIME && (yoyoForever || utils.isNum(action.yoyo))) {
 			++action.yoyoCount;
 			if (yoyoForever || (utils.isNum(action.yoyo) && action.yoyoCount <= action.yoyo)) {
 				action.reverseValues();
