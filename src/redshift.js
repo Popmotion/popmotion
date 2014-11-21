@@ -93,10 +93,9 @@ Instance.prototype = {
 	track: function (defs) {
 	    var hasAllArgs = (arguments[2] !== undefined),
 	        toTrack = hasAllArgs ? arguments[2] : arguments[1],
-	        override = hasAllArgs ? arguments[3] : {},
-	        rubix = (utils.isNum(toTrack.token)) ? KEY.RUBIX.ACTION : KEY.RUBIX.POINTER;
+	        override = hasAllArgs ? arguments[3] : {};
 
-	    return redshift.ignite(this.token, rubix, ActionManager.createBase(defs, override), toTrack);
+	    return redshift.ignite(this.token, KEY.RUBIX.INPUT, ActionManager.createBase(defs, override), toTrack);
 	},
     
     
