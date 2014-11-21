@@ -1,0 +1,64 @@
+/*
+	Custom input
+*/
+"use strict";
+
+var utils = require('../utils/utils.js'),
+	Input = function () {};
+
+Input.prototype = {
+
+	// Allow input to be inactive for this many frames before declared not moving
+	maxInactiveFrames: 2,
+	
+	// Number of frames input hasn't moved
+	inactiveFrames: 0,
+
+	/*
+		Update the input values
+		
+		Syntax
+			input.update({ prop: val });
+			input.update('prop', val);
+		
+		@param [string || object]: 
+		@param [number] (optional): If 
+	*/
+	update: function () {
+		var values = {};
+
+		if (utils.isNum(arguments[1])) {
+			values[arguments[0]] = arguments[1];
+		} else {
+			values = arguments[0];
+		}
+
+		this.history.add(utils.merge(this.current, values));
+	},
+	
+	/*
+		Check for input movement and update pointer object's properties
+	*/
+	onFrame: function () {
+		var latest = this.history.getLatest(),
+			hasMoved = util.hasMoved(this.current, latest);
+		
+		// If input has changed between frames	
+		if (hasMoved) {
+			this.velocity = new Velocity(calc.offset(this.current, latest));
+			this.current = latest;
+			this.inactiveFrames = 0;
+
+		// Or it hasn't moved and our frame limit has been reached
+		} else if (this.inactiveFrames >= this.maxInactiveFrames) {
+			this.velocity = new Velocity();
+		
+		// Or input hasn't changed
+		} else {
+			this.inactiveFrames++;
+		}
+	}
+	
+};
+
+module.exports = Input;

@@ -17,8 +17,7 @@ module.exports = {
 		LINEAR: 'linear'
     },
     RUBIX: {
-    	ACTION: 'Action',
-	    POINTER: 'Pointer',
+	    INPUT: 'Input',
 	    SPEED: 'Speed',
 	    TIME: 'Time'
     },

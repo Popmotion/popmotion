@@ -8,6 +8,7 @@
 
 var KEY = require('./opts/keys.js'),
 	ActionManager = require('./bobs/actionManager.js'),
+	InputManager = require('./bobs/inputManager.js'),
 	Chronos = require('./bobs/chronos.js'),
 	Easing = require('./utils/easingFunctions.js'),
 	calc = require('./utils/calc.js'),
@@ -132,6 +133,10 @@ Redshift.prototype = {
 
     newAction: function () {
         return this.get();
+    },
+    
+    newInput: function () {
+	    return InputManager.create();
     },
 
     /*
