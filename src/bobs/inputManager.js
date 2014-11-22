@@ -47,7 +47,7 @@ InputManager.prototype = {
 		// Check for .originalEvent and get that instead
 		input = utils.getActualEvent(input);
 		
-		pointer = new Pointer(utils.convertEventIntoPoint(event), utils.isTouchEvent(event));
+		pointer = new Pointer(utils.convertEventIntoPoint(input), utils.isTouchEvent(input));
 		
 		return pointer;
 	}

@@ -135,7 +135,7 @@ Redshift.prototype = {
     },
     
     newInput: function () {
-	    return InputManager.create();
+	    return InputManager.create(arguments[0], arguments[1]);
     },
 
     /*

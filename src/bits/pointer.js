@@ -2,17 +2,16 @@
 
 var Input = require('./input.js'),
 	Point = require('./point.js'),
+	History = require('../bobs/history.js'),
 	KEY = require('../opts/keys.js'),
 	utils = require('../utils/utils.js'),
 	Pointer = function (point, isTouch) {
-		this.history = new History();
 		this.update(new Point(point));
 		this.isTouch = isTouch;
 		this.bindEvents();
 	};
 
-// Inherit from Input
-Pointer.prototype = Input.prototype;
+Pointer.prototype = new Input();
 
 /*
 	Bind move event

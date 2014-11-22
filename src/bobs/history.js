@@ -1,6 +1,7 @@
 "use strict";
 
 var defaults = require('../opts/defaults.js'),
+	utils = require('../utils/utils.js'),
     /*
         History constructor
         

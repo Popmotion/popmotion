@@ -92,13 +92,13 @@ Rubix.prototype = {
     	/*
     	    Calc progress
     	    
-        	Calc the progress of each pointer metric, 0 to 1 if range given,
-            in direct terms if no given range
+    	    Calc the progress of each input metric. 
         	
         	@param [Action]: action to measure
         	@return [object]: Object of all progresses
     	*/
         calcProgress: function (action, frameStart) {
+        console.log(action, action.pointer);
             var progress = {},
                 defaultAssigned,
                 input = action.pointer.offset;

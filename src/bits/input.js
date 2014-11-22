@@ -4,7 +4,9 @@
 "use strict";
 
 var utils = require('../utils/utils.js'),
+	History = require('../bobs/history.js'),
 	Input = function () {
+		this.current = {};
 		this.history = new History();
 		this.update(arguments[0], arguments[1]);
 	};

@@ -49,8 +49,11 @@ var KEY = require('../opts/keys.js'),
         
         playhead: 0,
         
-        // Pointer offset on tracking start
-        pointerOffset: undefined,
+        // The object we're checking
+        input: undefined,
+        
+        // Input offset on tracking start
+        inputOffset: undefined,
         
         // Current progress
         progress: 0,
