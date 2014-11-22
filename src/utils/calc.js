@@ -23,8 +23,7 @@
 
 "use strict";
 
-var Offset = require('../bits/offset.js'),
-    utils = require('./utils.js'),
+var utils = require('./utils.js'),
     Calc = function () {},
     calc;
     
@@ -177,13 +176,21 @@ Calc.prototype = {
         @return [Offset]: Distance metrics between two points
     */
     offset: function (pointA, pointB) {
-        var angle = this.angle(pointA, pointB),
-            distance = this.distance2D(pointA, pointB),
-            x = this.distance1D(pointA.x, pointB.x),
-            y = this.distance1D(pointA.y, pointB.y),
-            z = this.distance1D(pointA.z, pointB.z);
+    	var offset = {},
+    		angle, distance;
+
+    	for (var key in pointB) {
+	    	if (pointB.hasOwnProperty(key)) {
+		    	offset[key] = this.distance1D(pointA[key], pointB[key]);
+	    	} 
+    	}
+    	
+    	if (utils.isNum(offset.x) && utils.isNum(offset.y)) {
+    		offset.angle = this.angle(pointA, pointB);
+    		offset.distance = this.distance2D(pointA, pointB);
+    	}
             
-        return new Offset(angle, distance, x, y, z);
+        return offset;
     },
     
     point: function (origin, angle, distance) {

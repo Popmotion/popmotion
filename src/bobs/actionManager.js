@@ -4,7 +4,7 @@
 "use strict";
 
 var KEY = require('../opts/keys.js'),
-	PointerTracker = require('./pointerTracker.js'),
+	InputManager = require('./inputManager.js'),
 	Action = require('../bits/action.js'),
 	utils = require('../utils/utils.js'),
 	ActionManager = function () {},
@@ -39,11 +39,9 @@ ActionManager.prototype = {
 	change: function (token, changes, input) {
 		var action = this.get(token);
         
-        if (changes.rubix === KEY.RUBIX.POINTER) {
-        	changes.pointerOffset = PointerTracker.start(input);
-
-        } else if (changes.rubix === KEY.RUBIX.ACTION) {
-	        changes.linkedAction = input.token;
+        if (input) {
+        	changes.input = InputManager.start(input);
+        	changes.inputOffset = changes.input.get();
         }
 
 		action.set(changes);

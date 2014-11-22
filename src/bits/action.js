@@ -52,8 +52,6 @@ var KEY = require('../opts/keys.js'),
         // Pointer offset on tracking start
         pointerOffset: undefined,
         
-        linkedAction: undefined,
-        
         // Current progress
         progress: 0,
         

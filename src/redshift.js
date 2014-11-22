@@ -170,15 +170,15 @@ Redshift.prototype = {
         
         @param [object]: Properties to manipulate
         @param [object]: Options for track
-        @param [event]: Initiating pointer event
+        @param [event || Input]: Initiating pointer event or Input object
         @return [int]: ID token for action
 	*/
-	ignite: function (token, rubix, changes, e) {
+	ignite: function (token, rubix, changes, input) {
 		var action = ActionManager.get(token);
 		
 		changes.rubix = rubix;
 
-		ActionManager.change(token, changes, e);
+		ActionManager.change(token, changes, input);
 
 		this.start(token);
 
@@ -204,10 +204,6 @@ Redshift.prototype = {
     Calc: calc,
 	
 	run: function () {
-    	
-	},
-	
-	updatePointer: function (x, y, z) {
     	
 	},
 	

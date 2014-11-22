@@ -4,7 +4,10 @@
 "use strict";
 
 var utils = require('../utils/utils.js'),
-	Input = function () {};
+	Input = function () {
+		this.history = new History();
+		this.update(arguments[0], arguments[1]);
+	};
 
 Input.prototype = {
 
@@ -13,6 +16,13 @@ Input.prototype = {
 	
 	// Number of frames input hasn't moved
 	inactiveFrames: 0,
+	
+	/*
+		Get latest input values
+	*/
+	get: function () {
+		return this.history.get();
+	},
 
 	/*
 		Update the input values
@@ -40,18 +50,18 @@ Input.prototype = {
 		Check for input movement and update pointer object's properties
 	*/
 	onFrame: function () {
-		var latest = this.history.getLatest(),
+		var latest = this.history.get(),
 			hasMoved = util.hasMoved(this.current, latest);
 		
 		// If input has changed between frames	
 		if (hasMoved) {
-			this.velocity = new Velocity(calc.offset(this.current, latest));
+			this.velocity = calc.offset(this.current, latest);
 			this.current = latest;
 			this.inactiveFrames = 0;
 
 		// Or it hasn't moved and our frame limit has been reached
 		} else if (this.inactiveFrames >= this.maxInactiveFrames) {
-			this.velocity = new Velocity();
+			this.velocity = calc.offset(this.current, this.current);
 		
 		// Or input hasn't changed
 		} else {
