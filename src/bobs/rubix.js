@@ -134,11 +134,11 @@ Rubix.prototype = {
             @return [boolean]: Latest pointer, or previous pointer if stopped tracking
         */
         updatePointer: function (action) {
-            var currentPointer = action.pointer;
+            //var currentPointer = action.input;
 
-            action.pointer = PointerTracker.get(action.pointerOffset) || currentPointer;
+            //action.input = PointerTracker.get(action.pointerOffset) || currentPointer;
             
-            return action.pointer;
+            return action.input;
         },
         
         /*

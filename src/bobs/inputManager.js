@@ -33,7 +33,7 @@ InputManager.prototype = {
 		@return [Input || Pointer]: Original Input or newly created Pointer
 	*/
 	start: function (input) {
-		return (input instanceof Input) ? input : this.newPointer(input);
+		return (false) ? input : this.newPointer(input);
 	},
 	
 	/*

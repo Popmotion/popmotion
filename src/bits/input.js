@@ -8,6 +8,7 @@ var utils = require('../utils/utils.js'),
 	Input = function () {
 		this.current = {};
 		this.history = new History();
+		this.offset = {};
 		this.update(arguments[0], arguments[1]);
 	};
 
