@@ -45,7 +45,7 @@ Process.prototype = {
             action.firstFrame = false;
         }
 
-        output.pointer = rubix.updatePointer(action);
+        output.input = rubix.updateInput(action);
         action.progress = rubix.calcProgress(action, frameStart, fps);
         
     	// Loop over all values 

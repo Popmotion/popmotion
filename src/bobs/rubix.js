@@ -12,7 +12,7 @@
     Processing functions:
         calcProgress
         hasEnded
-        updatePointer
+        updateInput
         easeValue
 */
 "use strict";
@@ -61,7 +61,7 @@ Rubix.prototype = {
         /*
             Update pointer
         */
-        updatePointer: function () {
+        updateInput: function () {
             return false;
         },
         
@@ -98,33 +98,40 @@ Rubix.prototype = {
         	@return [object]: Object of all progresses
     	*/
         calcProgress: function (action, frameStart) {
-        console.log(action, action.pointer);
+        	var progress = {},
+        		input = action.input;
+        		
+        	for (var key in input) {
+	        	if (input.hasOwnProperty(key)) {
+		        	progress[key] = calc.progress(val, min, max);
+	        	}
+        	}
+        	
+        	return progress;
+        
+        
+        /*
             var progress = {},
-                defaultAssigned,
-                input = action.pointer.offset;
+                input = action.input;
 
             for (var key in input) {
                 // Check we're tracking this property
                 if (input.hasOwnProperty(key) && action.values.hasOwnProperty(key)) {
                     progress[key] = calc.progress(input[key] + action.origin[key], action.values[key].min, action.values[key].max);
                 }
-                
-                if (!defaultAssigned) {
-                    progress.base = progress[key];
-                    defaultAssigned = true;
-                }
             }
 
             return progress;
+           */
         },
         
         /*
             Has function ended?
             
-            True if action.isTracking is false
+            Tracking currently needs manually ending
         */
         hasEnded: function (action) {
-            return PointerTracker.isTracking() ? false : true;
+            return false;
         },
         
         /*
@@ -133,7 +140,9 @@ Rubix.prototype = {
             @param [Action]: 
             @return [boolean]: Latest pointer, or previous pointer if stopped tracking
         */
-        updatePointer: function (action) {
+        updateInput: function (action) {
+        	action.input.onFrame();
+        
             //var currentPointer = action.input;
 
             //action.input = PointerTracker.get(action.pointerOffset) || currentPointer;
@@ -149,6 +158,9 @@ Rubix.prototype = {
             @param [object]: Progress of pointer props
         */
         easeValue: function (key, action, progress) {
+        
+        
+        /*
             var value = action.values[key],
                 easedValue = value.current,
                 inputProgress;
@@ -167,6 +179,7 @@ Rubix.prototype = {
             }
 
             return easedValue;
+            */
         }
     },
     
@@ -246,7 +259,7 @@ Rubix.prototype = {
 	     	return newValue;
 	    },
 	    
-	    updatePointer: function () {}
+	    updateInput: function () {}
     },
 
 };
