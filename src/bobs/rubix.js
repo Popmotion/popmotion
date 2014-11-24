@@ -23,7 +23,6 @@ var calc = require('../utils/calc.js'),
 	defaults = require('../opts/defaults.js'),
 	KEY = require('../opts/keys.js'),
     ActionManager = require('./actionManager.js'),
-    PointerTracker = require('./pointerTracker.js'),
     Rubix = function () {},
     rubixController;
 
@@ -103,10 +102,10 @@ Rubix.prototype = {
         		
         	for (var key in input) {
 	        	if (input.hasOwnProperty(key)) {
-		        	progress[key] = calc.progress(val, min, max);
+		        	//progress[key] = calc.progress(val, min, max);
 	        	}
         	}
-        	
+        	console.log(input);
         	return progress;
         
         

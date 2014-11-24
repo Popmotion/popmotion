@@ -3,7 +3,8 @@
 */
 "use strict";
 
-var utils = require('../utils/utils.js'),
+var calc = require('../utils/calc.js'),
+	utils = require('../utils/utils.js'),
 	History = require('../bobs/history.js'),
 	Input = function () {
 		this.current = {};
@@ -54,10 +55,10 @@ Input.prototype = {
 	*/
 	onFrame: function () {
 		var latest = this.history.get(),
-			hasMoved = util.hasMoved(this.current, latest);
-		
+			hasChanged = utils.hasChanged(this.current, latest);
+
 		// If input has changed between frames	
-		if (hasMoved) {
+		if (hasChanged) {
 			this.velocity = calc.offset(this.current, latest);
 			this.current = latest;
 			this.inactiveFrames = 0;

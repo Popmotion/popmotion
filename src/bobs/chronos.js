@@ -6,13 +6,11 @@
 var calc = require('../utils/calc.js'),
 	utils = require('../utils/utils.js'),
     ActionManager = require('./actionManager.js'),
-    PointerTracker = require('./pointerTracker.js'),
     Process = require('./process.js'),
+    Time = require('../bits/time.js'),
     Chronos = function () {},
     chronos,
-    prevFrameTime,
-    currentTime,
-    fps = 60,
+    timer,
     isRunning = false; // is animation loop running? - prevents multiple rAF loops from running
     
 Chronos.prototype = {
@@ -22,6 +20,8 @@ Chronos.prototype = {
     */
     start: function () {
         if (!isRunning) {
+        	timer = new Time();
+        	timer.updateTime(utils.currentTime());
             isRunning = true;
             this.frame();
         }
@@ -50,9 +50,8 @@ Chronos.prototype = {
                 var activeActionTokens = ActionManager.getActiveTokens(); // recheck incase stuff has been deactivated since
     
                 if (activeActionTokens.length) {
-                	self.updateTime();
-                	PointerTracker.frame();
-                	Process.actions(activeActionTokens, currentTime, fps);
+                	timer.updateTime(utils.currentTime());
+                	Process.actions(activeActionTokens, timer.current.time, timer.getFPS());
                     ActionManager.purge();
                     self.frame();
                 } else {
@@ -62,12 +61,6 @@ Chronos.prototype = {
         } else {
             self.stop();
         }
-    },
-    
-    updateTime: function () {
-    	//prevFrameTime = currentTime;
-    	currentTime = utils.currentTime();
-    	//fps = 1000 / calc.difference(prevFrameTime, currentTime);
     }
 };
 

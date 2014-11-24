@@ -167,27 +167,31 @@ Calc.prototype = {
     },
     
     /*
-        Offset between two points
+        Offset between two inputs
         
-        Calculate the angle, distance, x y and z distances between two given points
+        Calculate the difference between two different inputs
         
-        @param [Point]: First point
-        @param [Point]: Second point
+        @param [Point]: First input
+        @param [Point]: Second input
         @return [Offset]: Distance metrics between two points
     */
-    offset: function (pointA, pointB) {
+    offset: function (a, b) {
     	var offset = {},
     		angle, distance;
 
-    	for (var key in pointB) {
-	    	if (pointB.hasOwnProperty(key)) {
-		    	offset[key] = this.distance1D(pointA[key], pointB[key]);
+    	for (var key in b) {
+	    	if (b.hasOwnProperty(key)) {
+	    		if (a.hasOwnProperty(key)) {
+		    		offset[key] = this.distance1D(a[key], b[key]);
+	    		} else {
+		    		offset[key] = 0;
+	    		}
 	    	} 
     	}
     	
     	if (utils.isNum(offset.x) && utils.isNum(offset.y)) {
-    		offset.angle = this.angle(pointA, pointB);
-    		offset.distance = this.distance2D(pointA, pointB);
+    		offset.angle = this.angle(a, b);
+    		offset.distance = this.distance2D(a, b);
     	}
             
         return offset;

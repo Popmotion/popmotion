@@ -42,16 +42,28 @@ module.exports = {
     },
     
     /*
-        Has the pointer moved?
+        Has one object changed from the other
         
-        Compares the two provided pointers and returns true if they are different
+        Compares the two provided inputs and returns true if they are different
         
-        @param [object]: Pointer A
-        @param [object]: Pointer B
+        @param [object]: Input A
+        @param [object]: Input B
         @return [boolean]: True if different
     */
-    hasMoved: function (pointerA, pointerB) {
-        return (pointerA.x !== pointerB.x || pointerA.y !== pointerB.y || pointerA.z !== pointerB.z);
+    hasChanged: function (a, b) {
+    	var hasChanged = false;
+
+    	for (var key in b) {
+	    	if (a.hasOwnProperty(key) && b.hasOwnProperty(key)) {
+		    	if (a[key] !== b[key]) {
+			    	hasChanged = true;
+		    	}
+	    	} else {
+		    	hasChanged = true;
+	    	}
+    	}
+    
+        return hasChanged;
     },
     
     /*

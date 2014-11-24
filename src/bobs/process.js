@@ -22,7 +22,7 @@ Process.prototype = {
 	actions: function (tokens, frameStart, fps) {
 		var i = 0,
 			active = tokens.length;
-
+console.log(frameStart, fps);
 		for (i; i < active; ++i) {
 			this.singleAction(ActionManager.get(tokens[i]), frameStart, fps);
 		}
@@ -41,7 +41,7 @@ Process.prototype = {
     	    hasChanged = false;
     	    
         if (action.firstFrame) {
-            action.onStart.call(action.scope, output, action.data);
+            action.onStart.call(action.scope, action.data);
             action.firstFrame = false;
         }
 
@@ -53,7 +53,7 @@ Process.prototype = {
         	if (action.values.hasOwnProperty(key)) {
         	    output[key] = rubix.easeValue(key, action, action.progress);
         		
-            	// Apply Math. function if one defined
+            	// Apply Math function if one defined
             	output[key] = action.values[key].math ? Math[action.values[key].math](output[key]) : output[key];
 
             	if (action.values[key].current !== output[key]) {
