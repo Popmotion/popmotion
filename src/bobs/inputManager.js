@@ -5,6 +5,7 @@
 
 var Input = require('../bits/input.js'),
 	Pointer = require('../bits/pointer.js'),
+	KEY = require('../opts/keys.js'),
 	utils = require('../utils/utils.js'),
 	InputManager = function () {},
 	manager;
@@ -33,7 +34,11 @@ InputManager.prototype = {
 		@return [Input || Pointer]: Original Input or newly created Pointer
 	*/
 	start: function (input) {
-		return (false) ? input : this.newPointer(input);
+		if (!input) {
+			throw KEY.ERROR.NO_INPUT;
+		}
+
+		return (input.current) ? input : this.newPointer(input);
 	},
 	
 	/*

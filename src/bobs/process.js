@@ -22,7 +22,7 @@ Process.prototype = {
 	actions: function (tokens, frameStart, fps) {
 		var i = 0,
 			active = tokens.length;
-console.log(frameStart, fps);
+
 		for (i; i < active; ++i) {
 			this.singleAction(ActionManager.get(tokens[i]), frameStart, fps);
 		}

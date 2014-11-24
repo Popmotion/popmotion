@@ -24,7 +24,8 @@ module.exports = {
     ERROR: {
 	    ACTION_EXISTS: "Action already defined. Use forceOverride: true to override.",
 	    NO_ACTION: "No action defined to inherit from.",
-	    INVALID_EASING: ": Easing not defined"
+	    INVALID_EASING: ": Easing not defined",
+	    NO_INPUT: "Input needs to be mouse/touch event or Redshift Input"
     },
     EVENT: {
 	    MOUSE: 'mouse',

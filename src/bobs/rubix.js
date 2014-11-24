@@ -105,7 +105,7 @@ Rubix.prototype = {
 		        	//progress[key] = calc.progress(val, min, max);
 	        	}
         	}
-        	console.log(input);
+
         	return progress;
         
         

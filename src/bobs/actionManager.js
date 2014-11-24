@@ -39,7 +39,7 @@ ActionManager.prototype = {
 	change: function (token, changes, input) {
 		var action = this.get(token);
         
-        if (input) {
+        if (changes.rubix === KEY.RUBIX.INPUT) {
         	changes.input = InputManager.start(input);
         	changes.inputOffset = changes.input.get();
         }
