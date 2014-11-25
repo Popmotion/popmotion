@@ -60,6 +60,7 @@ Input.prototype = {
 		
 		// Check provided timestamp against lastFrame timestamp and return input has already been updated
 		if (timestamp === this.lastFrame) {
+		console.log(timestamp);
 			return;
 		}
 		

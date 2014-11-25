@@ -90,30 +90,39 @@ Rubix.prototype = {
     	*/
         calcProgress: function (action, frameStart) {
         	var progress = {},
-        		input = action.input;
-console.log(action, action.input);
-        	for (var key in input) {
-	        	if (input.hasOwnProperty(key)) {
-		        	//progress[key] = calc.progress(val, min, max);
+        		axis, value,
+        		values = action.values,
+        		offset = calc.offset(action.input.current, action.inputOffset);
+
+        	for (var key in values) {
+	        	if (values.hasOwnProperty(key)) {
+	        		value = values[key];
+
+		        	// If we're linking into a valid input
+		        	if (utils.isString(value.link) && offset.hasOwnProperty(value.link)) {
+			        	axis = offset[value.link];
+			        
+			        // Or if we're not linking but property exists in input
+		        	} else if (offset.hasOwnProperty(key)) {
+		        		axis = offset[key];
+		        	}
+		        	
+		        	// If we've got an input value (axis)
+		        	if (axis) {
+		        		if (utils.isNum(value.min) && utils.isNum(value.max)) {
+				        	// If we have a min/max defined
+				        	progress[key] = calc.progress(offset[value.link] + action.origin[key], value.min, value.max);
+		        		} else {
+			        		progress[key] = offset[key];
+		        		}
+		        	}
+		        	
+		        	// Reset axis for following pass
+		        	axis = undefined;
 	        	}
         	}
-
+ 
         	return progress;
-        
-        
-        /*
-            var progress = {},
-                input = action.input;
-
-            for (var key in input) {
-                // Check we're tracking this property
-                if (input.hasOwnProperty(key) && action.values.hasOwnProperty(key)) {
-                    progress[key] = calc.progress(input[key] + action.origin[key], action.values[key].min, action.values[key].max);
-                }
-            }
-
-            return progress;
-           */
         },
         
         /*
@@ -122,7 +131,7 @@ console.log(action, action.input);
             Tracking currently needs manually ending
         */
         hasEnded: function (action) {
-            return true;
+            return false;
         },
         
         /*
@@ -132,13 +141,11 @@ console.log(action, action.input);
             @return [boolean]: Latest pointer, or previous pointer if stopped tracking
         */
         updateInput: function (action, frameStart) {
-        	action.input.onFrame(frameStart);
-        
-            //var currentPointer = action.input;
+        	var input = action.input;
 
-            //action.input = PointerTracker.get(action.pointerOffset) || currentPointer;
-            
-            return action.input;
+        	input.onFrame(frameStart);
+        	
+			return action.input;
         },
         
         /*
@@ -149,7 +156,20 @@ console.log(action, action.input);
             @param [object]: Progress of pointer props
         */
         easeValue: function (key, action) {
-        
+        	var value = action.values[key],
+        		progress = action.progress,
+        		easedValue = value.current,
+        		inputProgress;
+        		
+        	if (utils.isNum(progress[key])) {
+	        	inputProgress = progress[key];
+        	}
+        	
+        	if (inputProgress !== undefined) {
+	        	easedValue = Easing.withinRange(inputProgress, value.min, value.max, 'linear', value.escapeAmp);
+        	}
+        	
+        	return easedValue;
         
         /*
             var value = action.values[key],

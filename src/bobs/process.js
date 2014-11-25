@@ -48,7 +48,7 @@ Process.prototype = {
 
 		// Check if this processor updates its input
 		if (rubix.updateInput) {
-        	output.input = rubix.updateInput(action);
+        	output.input = rubix.updateInput(action, frameStart);
 		}
 
         action.progress = rubix.calcProgress(action, frameStart, fps);

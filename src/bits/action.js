@@ -3,7 +3,7 @@
 var KEY = require('../opts/keys.js'),
     calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
-    Token = require('../bobs/token.js'),
+    Token = require('../bits/token.js'),
     token = new Token(),
     Value = require('./value.js'),
     callback = function () {},

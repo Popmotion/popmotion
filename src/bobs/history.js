@@ -1,6 +1,6 @@
 "use strict";
 
-var defaults = require('../opts/defaults.js'),
+var maxHistorySize = 3,
 	utils = require('../utils/utils.js'),
     /*
         History constructor
@@ -9,7 +9,7 @@ var defaults = require('../opts/defaults.js'),
         @param [int] (optional): Maximum size of history
     */
     History = function (obj, max) {
-        this.max = max || defaults.historyMaxSize;
+        this.max = max || maxHistorySize;
         this.entries = [];
         this.add(obj);
     };
