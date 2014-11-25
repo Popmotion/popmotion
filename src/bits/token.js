@@ -3,8 +3,9 @@
 */
 "use strict";
 
-var tokenCounter = 0,
-	Token = function () {};
+var Token = function () {
+		this.counter = 0;
+	};
 
 Token.prototype = {
 	
@@ -14,7 +15,7 @@ Token.prototype = {
 		@return [int]: Current token count
 	*/
 	get: function () {
-		return tokenCounter;
+		return this.counter;
 	},
 	
 	/*
@@ -34,7 +35,7 @@ Token.prototype = {
 		Increase token counter
 	*/
 	increment: function () {
-		tokenCounter ++;
+		this.counter ++;
 	}
 	
 };
