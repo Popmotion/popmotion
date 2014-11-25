@@ -28,7 +28,7 @@ Time.prototype.getFPS = function () {
 */
 Time.prototype.updateTime = function (timestamp) {
 	this.update('time', timestamp);
-	this.onFrame();
+	this.onFrame(timestamp);
 };
 
 module.exports = Time;

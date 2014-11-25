@@ -52,10 +52,19 @@ Input.prototype = {
 	
 	/*
 		Check for input movement and update pointer object's properties
+		
+		@param [number]: Timestamp of frame
 	*/
-	onFrame: function () {
-		var latest = this.history.get(),
-			hasChanged = utils.hasChanged(this.current, latest);
+	onFrame: function (timestamp) {
+		var latest, hasChanged;
+		
+		// Check provided timestamp against lastFrame timestamp and return input has already been updated
+		if (timestamp === this.lastFrame) {
+			return;
+		}
+		
+		latest = this.history.get();
+		hasChanged = utils.hasChanged(this.current, latest);
 
 		// If input has changed between frames	
 		if (hasChanged) {
@@ -71,6 +80,8 @@ Input.prototype = {
 		} else {
 			this.inactiveFrames++;
 		}
+		
+		this.lastFrame = timestamp;
 	}
 	
 };
