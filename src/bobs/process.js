@@ -39,19 +39,24 @@ Process.prototype = {
     	var output = {},
     	    rubix = Rubix[action.rubix],
     	    hasChanged = false;
-    	    
+    	
+    	// If this is the first frame of an action, fire the onStart callback
         if (action.firstFrame) {
             action.onStart.call(action.scope, action.data);
             action.firstFrame = false;
         }
 
-        output.input = rubix.updateInput(action);
+		// Check if this processor updates its input
+		if (rubix.updateInput) {
+        	output.input = rubix.updateInput(action);
+		}
+
         action.progress = rubix.calcProgress(action, frameStart, fps);
         
     	// Loop over all values 
     	for (var key in action.values) {
         	if (action.values.hasOwnProperty(key)) {
-        	    output[key] = rubix.easeValue(key, action, action.progress);
+        	    output[key] = rubix.easeValue(key, action);
         		
             	// Apply Math function if one defined
             	output[key] = action.values[key].math ? Math[action.values[key].math](output[key]) : output[key];

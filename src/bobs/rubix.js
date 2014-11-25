@@ -58,13 +58,6 @@ Rubix.prototype = {
         },
         
         /*
-            Update pointer
-        */
-        updateInput: function () {
-            return false;
-        },
-        
-        /*
             Ease value in action with provided key
             
             @param [string]: key of value
@@ -138,8 +131,8 @@ console.log(action, action.input);
             @param [Action]: 
             @return [boolean]: Latest pointer, or previous pointer if stopped tracking
         */
-        updateInput: function (action) {
-        	action.input.onFrame();
+        updateInput: function (action, frameStart) {
+        	action.input.onFrame(frameStart);
         
             //var currentPointer = action.input;
 
@@ -254,9 +247,7 @@ console.log(action, action.input);
 	    	}
 
 	     	return newValue;
-	    },
-	    
-	    updateInput: function () {}
+	    }
     },
 
 };
