@@ -11,11 +11,10 @@ var defaults = require('../opts/defaults.js'),
     History = function (obj, max) {
         this.max = max || defaults.historyMaxSize;
         this.add(obj);
+        this.entries = [];
     };
     
 History.prototype = {
-
-    entries: [],
     
     /*
         Push new var to history
