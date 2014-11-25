@@ -27,15 +27,13 @@ Chronos.prototype = {
         }
     },
     
-    
     /*
         Stop chronos
     */
     stop: function () {
         isRunning = false;
     },
-    
-    
+
     /*
         Frame
         
@@ -47,7 +45,8 @@ Chronos.prototype = {
 
         if (activeActionTokens.length) {
             requestAnimationFrame(function () {
-                var activeActionTokens = ActionManager.getActiveTokens(); // recheck incase stuff has been deactivated since
+             	// recheck incase stuff has been deactivated since
+                var activeActionTokens = ActionManager.getActiveTokens();
     
                 if (activeActionTokens.length) {
                 	timer.updateTime(utils.currentTime());

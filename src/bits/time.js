@@ -5,10 +5,7 @@ var Input = require('./input.js'),
 	utils = require('../utils/utils.js'),
 	defaultFPS = 60, // default to 60fps
 	Time = function () {
-		this.current = {};
-		this.history = new History();
-		this.offset = {};
-		this.update(arguments[0], arguments[1]);
+		Input.call(this, arguments[0], arguments[1]);
 	};
 
 Time.prototype = new Input();

@@ -93,7 +93,7 @@ Instance.prototype = {
 	track: function (defs) {
 	    var hasAllArgs = (arguments[2] !== undefined),
 	        toTrack = hasAllArgs ? arguments[2] : arguments[1],
-	        override = hasAllArgs ? arguments[3] : {};
+	        override = hasAllArgs ? arguments[1] : {};
 
 	    return redshift.ignite(this.token, KEY.RUBIX.INPUT, ActionManager.createBase(defs, override), toTrack);
 	},

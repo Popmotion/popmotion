@@ -69,11 +69,10 @@ Rubix.prototype = {
             
             @param [string]: key of value
             @param [Action]
-            @param [object]: Progress in timeline
         */
-        easeValue: function (key, action, progress) {
+        easeValue: function (key, action) {
             var value = action.values[key],
-            	restrictedProgress = calc.restricted(progress, 0, 1),
+            	restrictedProgress = calc.restricted(action.progress, 0, 1),
             	easedValue;
             	
             if (value.steps) {
@@ -99,7 +98,7 @@ Rubix.prototype = {
         calcProgress: function (action, frameStart) {
         	var progress = {},
         		input = action.input;
-        		
+console.log(action, action.input);
         	for (var key in input) {
 	        	if (input.hasOwnProperty(key)) {
 		        	//progress[key] = calc.progress(val, min, max);
@@ -130,7 +129,7 @@ Rubix.prototype = {
             Tracking currently needs manually ending
         */
         hasEnded: function (action) {
-            return false;
+            return true;
         },
         
         /*
@@ -156,7 +155,7 @@ Rubix.prototype = {
             @param [Action]
             @param [object]: Progress of pointer props
         */
-        easeValue: function (key, action, progress) {
+        easeValue: function (key, action) {
         
         
         /*
@@ -241,11 +240,10 @@ Rubix.prototype = {
             
             @param [string]: key of value
             @param [Action]
-            @param [object]: Progress of pointer props
 	    */
-	    easeValue: function (key, action, progress) {
+	    easeValue: function (key, action) {
 	    	var value = action.values[key],
-	    		newValue = value.current + progress[key];
+	    		newValue = value.current + action.progress[key];
 
 	    	if (value.min) {
 		    	newValue = Math.max(value.min, newValue);

@@ -18,9 +18,7 @@ InputManager.prototype = {
 		@return [Input]
 	*/
 	create: function () {
-		var input = new Input(arguments[0], arguments[1]);
-		
-		return input;
+		return new Input(arguments[0], arguments[1]);
 	},
 	
 	/*
