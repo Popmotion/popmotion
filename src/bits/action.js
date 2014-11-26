@@ -52,8 +52,8 @@ var KEY = require('../opts/keys.js'),
         // The object we're checking
         input: undefined,
         
-        // Input offset on tracking start
-        inputOffset: undefined,
+        // Input origin on tracking start
+        inputOrigin: undefined,
         
         // Current progress
         progress: 0,

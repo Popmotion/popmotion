@@ -41,7 +41,7 @@ ActionManager.prototype = {
         
         if (changes.rubix === KEY.RUBIX.INPUT) {
         	changes.input = InputManager.start(input);
-        	changes.inputOffset = changes.input.get();
+        	changes.inputOrigin = changes.input.get();
         }
 
 		action.set(changes);
