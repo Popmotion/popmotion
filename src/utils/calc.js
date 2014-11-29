@@ -3,22 +3,6 @@
     ----------------------------------------
     
     Simple I/O snippets
-    
-    angle
-    angleFromCenter
-    difference
-    distance
-    distance1D
-    distance2D
-    distance3D
-    elapsed
-    hypotenuse
-    offset
-    progress
-    restricted
-    timeRemaining
-    value
-    valueEased
 */
 
 "use strict";
@@ -67,6 +51,16 @@ Calc.prototype = {
 	},
     
     /*
+	    Convert degrees to radians
+	    
+	    @param [number]: Value in degrees
+	    @return [number]: Value in radians
+    */
+    degreesToRadians: function (degrees) {
+	    return degrees * Math.PI / 180;
+    },
+    
+    /*
         Difference
         
         Returns the difference between a and b by subtracting b from a.
@@ -84,13 +78,23 @@ Calc.prototype = {
     /*
 	    Dilate
 	    
+	    Change the progression between a and b according to dilation.
+	    
+	    So dilation = 0.5 would change
+	    
+	    a --------- b
+	    
+	    to
+	    
+	    a ---- b
+	    
 	    @param [number]: Previous value
 	    @param [number]: Current value
 	    @param [number]: Dilate progress by x
 	    @return [number]: Previous value plus the dilated difference
     */
-    dilate: function (previous, current, dilation) {
-	    return previous + ((current - previous) * dilation);
+    dilate: function (a, b, dilation) {
+	    return a + ((b - a) * dilation);
     },
         
     /*
@@ -197,7 +201,15 @@ Calc.prototype = {
         return offset;
     },
     
-    point: function (origin, angle, distance) {
+    /*
+	    Point from angle and distance
+	    
+	    @param [object]: 2D point of origin
+	    @param [number]: Angle from origin
+	    @param [number]: Distance from origin
+	    @return [object]: Calculated 2D point
+    */
+    pointFromAngleAndDistance: function (origin, angle, distance) {
     	var point = {};
 
     	point.x = 5 * Math.cos(angle) + origin.x;
@@ -226,6 +238,16 @@ Calc.prototype = {
             progress = (value - from) / range;
 
         return progress;
+    },
+    
+    /*
+	    Convert radians to degrees
+	    
+	    @param [number]: Value in radians
+	    @return [number]: Value in degrees
+    */
+    radiansToDegrees: function (radians) {
+	    return radians * 180 / Math.PI;
     },
     
     /*
@@ -307,14 +329,6 @@ Calc.prototype = {
         var easedProgress = easing(progress);
         
         return this.value(easedProgress, from, to);
-    },
-    
-    degreesToRadians: function (degrees) {
-	    return degrees * Math.PI / 180;
-    },
-    
-    radiansToDegrees: function (radians) {
-	    return radians * 180 / Math.PI;
     }
 };
 

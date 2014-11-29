@@ -59,7 +59,7 @@ Process.prototype = {
         	    output[key] = rubix.easeValue(key, action);
         		
             	// Apply Math function if one defined
-            	output[key] = action.values[key].math ? Math[action.values[key].math](output[key]) : output[key];
+            	output[key] = action.values[key].round ? Math.round(output[key]) : output[key];
 
             	if (action.values[key].current !== output[key]) {
                 	hasChanged = true;

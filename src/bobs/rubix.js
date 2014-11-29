@@ -231,7 +231,7 @@ Rubix.prototype = {
 		    }
 		    
 		    if (action.values.angle && action.values.distance) {
-		    	point = calc.point(action.origin, action.values.angle.current, action.values.distance.current);
+		    	point = calc.pointFromAngleAndDistance(action.origin, action.values.angle.current, action.values.distance.current);
 			    progress.x = point.x;
 			    progress.y = point.y;
 		    }

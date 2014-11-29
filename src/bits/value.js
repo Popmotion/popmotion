@@ -100,7 +100,7 @@ var utils = require('../utils/utils.js'),
     	delay: 0,
     	ease: 'ease-in-out',
     	link: null, // use the progress of this value
-    	math: null,
+    	round: false,
     	steps: 0,
     	
     	// Amp for inside and outside range (ie value * amp)
