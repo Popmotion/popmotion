@@ -38,14 +38,14 @@ var KEY = require('../opts/keys.js'),
         // Ease animation
         ease: KEY.EASING.QUAD_IN_OUT,
         
-        // Apply this Math function to output value
-        math: undefined,
+        // Round output value?
+        round: false,
         
         // Divide animation into this many steps
         steps: 0,
         
         // 
-        timeDilation: 1,
+        dilate: 1,
         
         playhead: 0,
         
@@ -60,6 +60,9 @@ var KEY = require('../opts/keys.js'),
         
         // Time elapsed
         elapsed: 0,
+        
+        // Use the progress of this property of linked input
+        link: undefined,
         
         // Loop animation x number of times (true for ETERNALLY)
         loop: false,

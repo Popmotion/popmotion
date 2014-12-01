@@ -182,7 +182,7 @@ Redshift.prototype = {
 
 		this.start(token);
 
-		return token;
+		return action;
 	},
 
 	/*
@@ -199,6 +199,8 @@ Redshift.prototype = {
 	*/
 	addBezier: function (name, x1, y1, x2, y2) {
 		Easing.addBezier(name, x1, y1, x2, y2);
+		
+		return this;
 	},
 	
     Calc: calc,

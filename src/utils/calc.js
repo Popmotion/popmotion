@@ -7,14 +7,11 @@
 
 "use strict";
 
-var utils = require('./utils.js'),
-    Calc = function () {},
-    calc;
+var utils = require('./utils.js');
     
-Calc.prototype = {
-
- 
-    /*
+module.exports = {
+	
+	/*
         Angle between points
         
         Translates the hypothetical line so that the 'from' coordinates
@@ -274,8 +271,8 @@ Calc.prototype = {
         @param [number]: Upper limit of range
         @return [number]: Value as limited within given range
     */
-    restricted: function (value, from, to) {
-        return Math.min(Math.max(value, from), to);
+    restricted: function (value, min, max) {
+        return Math.min(Math.max(value, min), max);
     },
     
 
@@ -322,7 +319,6 @@ Calc.prototype = {
         @param [number]: Lower limit of range, or upper if limit2 not provided
         @param [number]: Upper limit of range
         @param [function]: Easing to apply to value
-        @parma [number] (optional): Amp modifier
         @return [number]: Value as calculated from progress within range (not limited within range)
     */
     valueEased: function (progress, from, to, easing) {
@@ -331,7 +327,3 @@ Calc.prototype = {
         return this.value(easedProgress, from, to);
     }
 };
-
-calc = new Calc();
-
-module.exports = calc;

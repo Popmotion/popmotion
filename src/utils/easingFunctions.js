@@ -54,6 +54,9 @@ var calc = require('./calc.js'),
     	    
     	    Generates easing curve based on exponent of time
 	    */
+        ease: function (progress) {
+            return Math.pow(progress, 2);
+        },
         quad: function (progress) {
             return Math.pow(progress, 2);
         },
