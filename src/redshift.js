@@ -16,7 +16,7 @@ var KEY = require('./opts/keys.js'),
 	shims = require('./utils/shims.js'),
 	rQuery = require('./utils/rQuery.js'),
 	Redshift = function () {
-    	this.init();
+    	return this.get();
 	},
     redshift,
     Instance = function (token) {
@@ -220,7 +220,6 @@ Redshift.prototype = {
 	}
 };
 
-redshift = new Redshift();
+Redshift.init();
 
-window.Redshift = redshift;
-module.exports = redshift;
+module.exports = window.Redshift = Redshift;
