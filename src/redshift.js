@@ -219,6 +219,4 @@ Redshift.prototype = {
 };
 
 redshift = new Redshift();
-
-window.Redshift = redshift;
 module.exports = redshift;

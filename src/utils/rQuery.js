@@ -7,6 +7,7 @@
     .redshift() method used for other Redshift functions, ie $('#element').redshift('stop')
 */
 var KEY = require('../opts/keys.js'),
+	utils = require('../utils/utils.js'),
     rQuery = function () {
     	var REDSHIFT = 'redshift',
 
@@ -35,8 +36,8 @@ var KEY = require('../opts/keys.js'),
 				@param [...arguments]
 			*/
     		execute = function ($element, action, arg1, arg2, arg3) {
-    			$element.each(function () {
-    				getInstance($(this))[action](arg1, arg2, arg3);
+	    		$element.each(function () {
+	    			getInstance($(this))[action](arg1, arg2, arg3);
     			});
     		};
     		

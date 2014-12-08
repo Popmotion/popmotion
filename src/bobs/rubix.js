@@ -112,7 +112,7 @@ Rubix.prototype = {
 	        	inputOffset = calc.offset(action.input.current, action.inputOrigin);
 	        	
 			for (var key in values) {
-				if (values.hasOwnProperty(key)) {
+				if (values.hasOwnProperty(key)) {
 					
 					inputKey = this.getInputKey(key, values[key].link, inputOffset);
 					
