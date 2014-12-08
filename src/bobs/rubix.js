@@ -135,74 +135,8 @@ Rubix.prototype = {
                 	}
             	}
         	}
-        	console.log('y: ' + progress.y.value + ' test: ' + progress.test.value);
+
         	return progress;
-        
-        /*
-	        var progress = {},
-	        	inputKey, offset, value,
-	        	inputOffset = calc.offset(action.input.current, action.inputOrigin);
-	        	
-			for (var key in values) {
-				if (values.hasOwnProperty(key)) {
-					
-					inputKey = this.getInputKey(key, values[key].link, inputOffset);
-					
-					// If we have an input key, calculate progress from that input
-					if (inputKey !== false) {
-						value = values[key];
-						offset = inputOffset[inputKey];
-						
-						// If value has specified range
-						if (value.hasRange) {
-							console.log(value, offset, value.min, value.max);
-							//progress[key] = calc.progress(value + offset);
-						
-						// Otherwise calculate offset directly
-						} else {
-							//progress[key] = ;
-						}
-					}
-					
-				}
-			}
-	        
-	        return progress;
-	        
-	        /*
-        	var progress = {},
-        		axis, value,
-        		values = action.values,
-        		offset = calc.offset(action.input.current, action.inputOffset);
-
-        	for (var key in values) {
-	        	if (values.hasOwnProperty(key)) {
-	        		value = values[key];
-
-		        	// If we're linking into a valid input
-		        	if (utils.isString(value.link) && offset.hasOwnProperty(value.link)) {
-			        	axis = offset[value.link];
-			        
-			        // Or if we're not linking but property exists in input
-		        	} else if (offset.hasOwnProperty(key)) {
-		        		axis = offset[key];
-		        	}
-		        	
-		        	// If we've got an input value (axis)
-		        	if (axis) {
-		        		if (utils.isNum(value.min) && utils.isNum(value.max)) {
-				        	// If we have a min/max defined
-				        	progress[key] = calc.progress(offset[value.link] + action.origin[key], value.min, value.max);
-		        		} else {
-			        		progress[key] = offset[key];
-		        		}
-		        	}
-		        	
-		        	// Reset axis for following pass
-		        	axis = undefined;
-	        	}
-        	}
- */
         },
         
         /*
@@ -236,42 +170,23 @@ Rubix.prototype = {
             @param [object]: Progress of pointer props
         */
         easeValue: function (key, action) {
-            return 0;
-        	/**var value = action.values[key],
-        		progress = action.progress,
-        		easedValue = value.current,
-        		inputProgress;
-        		
-        	if (utils.isNum(progress[key])) {
-	        	inputProgress = progress[key];
-        	}
-        	
-        	if (inputProgress !== undefined) {
-	        	easedValue = Easing.withinRange(inputProgress, value.min, value.max, 'linear', value.escapeAmp);
-        	}
-        	
-        	return easedValue;
-        */
-        /*
             var value = action.values[key],
-                easedValue = value.current,
-                inputProgress;
+                progress = action.progress[key],
+                newValue = value.current;
                 
-            // If we've already calculated the progress for this property
-            if (utils.isNum(progress[key])) {
-                inputProgress = progress[key];
-            
-            // Or we've chosen a property to link to
-            } else if (value.link && utils.isNum(progress[value.link])) {
-                inputProgress = progress[value.link];
+            if (utils.isObj(progress)) {
+                // If this is a range progress
+                if (progress.type === KEY.PROGRESS.RANGE) {
+                    newValue = Easing.withinRange(progress, value.min, value.max, value.ease, value.escapeAmp);
+                
+                // Or is a direct progress
+                } else {
+                    newValue = progress.value;
+                }
+                
             }
 
-            if (inputProgress !== undefined) {
-                easedValue = Easing.withinRange(inputProgress, value.min, value.max, defaults.trackEase, value.escapeAmp);
-            }
-
-            return easedValue;
-            */
+            return newValue;
         }
     },
     
