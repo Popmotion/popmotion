@@ -127,7 +127,6 @@ Value.prototype.update = function (value, action, isNewValue) {
 
 	// Or if it is an object
 	} else {
-	    
 	    // If a start value exists and this is a new Value, assign it as current
 	    if (isNewValue && value.hasOwnProperty('start')) {
     	    this.current = parse(value.start, data);
@@ -166,7 +165,7 @@ Value.prototype.update = function (value, action, isNewValue) {
     
     // Assign 'from' as current
     this.from = this.current;
-    
+
     // If we have a min and max val - set hasRange to undefined
     if (this.min !== undefined && this.max !== undefined) {
 	    this.hasRange = true;

@@ -8,6 +8,7 @@ module.exports = {
     ANIMATE: 'animate',
     CALC: 'calc',
     JQUERY_ELEMENT: '_jQueryElement',
+    REDSHIFT: 'redshift',
     EASING: {
 	    QUAD_IN_OUT: 'quadInOut',
 	    QUAD_OUT: 'quadOut',

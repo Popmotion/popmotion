@@ -107,6 +107,38 @@ Rubix.prototype = {
         	@return [object]: Object of all progresses
     	*/
         calcProgress: function (action, frameStart) {
+        	var progress = {},
+        	    inputKey, value, offset,
+        	    values = action.values,
+        	    inputOffset = calc.offset(action.inputOrigin, action.input.current);
+        	
+        	for (var key in values) {
+            	if (values.hasOwnProperty(key)) {
+                    value = values[key];
+                	inputKey = this.getInputKey(key, value.link, inputOffset);
+                	
+                	// If we have an input key, calculate progress from that input
+                	if (inputKey !== false) {
+                    	offset = inputOffset[inputKey];
+                    	progress[key] = {};
+                    	
+                    	// If value has specified range
+                    	if (value.hasRange) {
+                        	progress[key].type = KEY.PROGRESS.RANGE;
+                        	progress[key].value = calc.progress(value.from + offset, value.min, value.max);
+
+                        // Or we calculate progress directly
+                    	} else {
+                        	progress[key].type = KEY.PROGRESS.DIRECT;
+                        	progress[key].value = value.from + offset;
+                    	}
+                	}
+            	}
+        	}
+        	console.log('y: ' + progress.y.value + ' test: ' + progress.test.value);
+        	return progress;
+        
+        /*
 	        var progress = {},
 	        	inputKey, offset, value,
 	        	inputOffset = calc.offset(action.input.current, action.inputOrigin);
@@ -204,7 +236,8 @@ Rubix.prototype = {
             @param [object]: Progress of pointer props
         */
         easeValue: function (key, action) {
-        	var value = action.values[key],
+            return 0;
+        	/**var value = action.values[key],
         		progress = action.progress,
         		easedValue = value.current,
         		inputProgress;
@@ -218,7 +251,7 @@ Rubix.prototype = {
         	}
         	
         	return easedValue;
-        
+        */
         /*
             var value = action.values[key],
                 easedValue = value.current,

@@ -7,17 +7,16 @@
 "use strict";
 
 var KEY = require('./opts/keys.js'),
-	ActionManager = require('./bobs/actionManager.js'),
-	InputManager = require('./bobs/inputManager.js'),
-	Chronos = require('./bobs/chronos.js'),
-	Easing = require('./utils/easingFunctions.js'),
-	calc = require('./utils/calc.js'),
-	utils = require('./utils/utils.js'),
-	shims = require('./utils/shims.js'),
-	rQuery = require('./utils/rQuery.js'),
-	Redshift = function () {
-		this.init();
-	},
+    ActionManager = require('./bobs/actionManager.js'),
+    InputManager = require('./bobs/inputManager.js'),
+    Chronos = require('./bobs/chronos.js'),
+    Easing = require('./utils/easingFunctions.js'),
+    calc = require('./utils/calc.js'),
+    utils = require('./utils/utils.js'),
+    Redshift = function () {
+        this.init();
+    },
+    redshift,
     Instance = function (token) {
         this.token = token;
     };
@@ -214,8 +213,7 @@ Redshift.prototype = {
     	Check if we need shims and load if necessary
 	*/
 	init: function () {
-    	shims.featureCheck();
-    	rQuery.check();
+        require('./utils/shims.js').featureCheck();
 	}
 };
 
