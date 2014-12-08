@@ -79,6 +79,24 @@ Rubix.prototype = {
     },
     
     Input: {
+	    
+	    /*
+		    Get input key
+	    */
+	    getInputKey: function (key, link, inputOffset) {
+		    var inputKey = false;
+		    
+		    // If value is listening to a present input
+		    if (utils.isString(link) && inputOffset.hasOwnProperty(link)) {
+			    inputKey = link;
+
+			// Of if value key actually exists in input
+		    } else if (inputOffset.hasOwnProperty(key)) {
+			    inputKey = key;
+		    }
+		    
+		    return inputKey;
+	    },
     
     	/*
     	    Calc progress
@@ -89,6 +107,37 @@ Rubix.prototype = {
         	@return [object]: Object of all progresses
     	*/
         calcProgress: function (action, frameStart) {
+	        var progress = {},
+	        	inputKey, offset, value,
+	        	inputOffset = calc.offset(action.input.current, action.inputOrigin);
+	        	
+			for (var key in values) {
+				if (values.hasOwnProperty(key)) {
+					
+					inputKey = this.getInputKey(key, values[key].link, inputOffset);
+					
+					// If we have an input key, calculate progress from that input
+					if (inputKey !== false) {
+						value = values[key];
+						offset = inputOffset[inputKey];
+						
+						// If value has specified range
+						if (value.hasRange) {
+							console.log(value, offset, value.min, value.max);
+							//progress[key] = calc.progress(value + offset);
+						
+						// Otherwise calculate offset directly
+						} else {
+							//progress[key] = ;
+						}
+					}
+					
+				}
+			}
+	        
+	        return progress;
+	        
+	        /*
         	var progress = {},
         		axis, value,
         		values = action.values,
@@ -121,8 +170,7 @@ Rubix.prototype = {
 		        	axis = undefined;
 	        	}
         	}
- 
-        	return progress;
+ */
         },
         
         /*

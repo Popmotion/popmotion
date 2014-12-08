@@ -23,9 +23,15 @@ Input.prototype = {
 	
 	/*
 		Get latest input values
+		
+		@param [string] (optional): Name of specific property to return
+		@return [object || number]: Latest input values or, if specified, single value
 	*/
-	get: function () {
-		return this.history.get();
+	get: function (prop) {
+		var latest = this.history.get(),
+			val = (prop !== undefined) ? latest[prop] : latest;
+		
+		return val;
 	},
 
 	/*
@@ -60,7 +66,6 @@ Input.prototype = {
 		
 		// Check provided timestamp against lastFrame timestamp and return input has already been updated
 		if (timestamp === this.lastFrame) {
-		console.log(timestamp);
 			return;
 		}
 		

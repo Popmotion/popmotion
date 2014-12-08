@@ -2,7 +2,7 @@
 
 var utils = require('../utils/utils.js'),
 	calc = require('../utils/calc.js'),
-	priorityProps = ['current', 'to', 'from', 'start'],
+	priorityProps = ['current', 'to', 'from', 'start', 'hasRange'],
 	
 	/*
         Is this key a priority property?
@@ -87,8 +87,9 @@ var utils = require('../utils/utils.js'),
     	to: 1,
 	
     	// Maximum range for value
-    	min: 0,
-    	max: 1,
+    	min: undefined,
+    	max: undefined,
+    	hasRange: false,
     	
     	// Speed for .move(), in xps
     	speed: 0,
@@ -165,6 +166,11 @@ Value.prototype.update = function (value, action, isNewValue) {
     
     // Assign 'from' as current
     this.from = this.current;
+    
+    // If we have a min and max val - set hasRange to undefined
+    if (this.min !== undefined && this.max !== undefined) {
+	    this.hasRange = true;
+    }
     
     // Finally check if to was given as a string, and figure out the relative value
     if (utils.isString(this.to)) {
