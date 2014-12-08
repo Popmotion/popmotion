@@ -22,5 +22,15 @@
     "dom animation"
   ],
   "analyze": true,
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+	  "watch": "watchify ./src/redshift.js -o ./redshift.js -dv",
+	  "compile": "browserify ./src/global.js -o ./redshift.global.js && browserify ./src/global.js | uglifyjs - -m -o ./redshift.global.min.js",
+	  "publish": "npm run compile && npm run publish"
+  },
+  "devDependencies": {
+    "browserify": "7.0.0",
+    "uglify-js": "2.4.15",
+    "watchify": "2.1.1"
+  }
 }
