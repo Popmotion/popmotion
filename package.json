@@ -25,7 +25,7 @@
   "license": "MIT",
   "scripts": {
 	  "watch": "watchify ./src/redshift.js -o ./redshift.js -dv",
-	  "compile": "browserify ./src/global.js -o ./redshift.global.js && browserify ./src/global.js | uglifyjs - -m -o ./redshift.global.min.js"
+	  "compile": "browserify ./src/utils/global.js -o ./redshift.global.js && browserify ./src/utils/global.js | uglifyjs - -m -o ./redshift.global.min.js"
   },
   "devDependencies": {
     "browserify": "7.0.0",
