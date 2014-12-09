@@ -209,11 +209,13 @@ Redshift.prototype = {
 	
 	/*
     	Init Redshift
-    	
-    	Check if we need shims and load if necessary
 	*/
 	init: function () {
+		// Check and load feature shims
         require('./utils/shims.js').featureCheck();
+        
+        // Check and load jQuery plugins
+        require('./utils/rQuery.js').featureCheck();
 	}
 };
 

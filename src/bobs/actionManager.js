@@ -419,6 +419,7 @@ ActionManager.prototype = {
             	
             	if (key === KEY.JQUERY_ELEMENT) {
                 	action.data = data[key];
+                	action.scope = data[key];
             	}
         	}
     	}
