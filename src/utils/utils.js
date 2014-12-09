@@ -23,7 +23,7 @@ module.exports = {
         @return [object]: x/y coordinates of event
     */
     convertEventIntoPoint: function (event, isTouchEvent) {
-    	return {
+        return {
             x: isTouchEvent ? event.changedTouches[0].clientX : event.screenX,
             y: isTouchEvent ? event.changedTouches[0].clientY : event.screenY
         };
@@ -51,17 +51,17 @@ module.exports = {
         @return [boolean]: True if different
     */
     hasChanged: function (a, b) {
-    	var hasChanged = false;
+        var hasChanged = false;
 
-    	for (var key in b) {
-	    	if (a.hasOwnProperty(key) && b.hasOwnProperty(key)) {
-		    	if (a[key] !== b[key]) {
-			    	hasChanged = true;
-		    	}
-	    	} else {
-		    	hasChanged = true;
-	    	}
-    	}
+        for (var key in b) {
+            if (a.hasOwnProperty(key) && b.hasOwnProperty(key)) {
+                if (a[key] !== b[key]) {
+                    hasChanged = true;
+                }
+            } else {
+                hasChanged = true;
+            }
+        }
     
         return hasChanged;
     },
@@ -75,7 +75,7 @@ module.exports = {
         @return [boolean]: Returns true if 'mouse' is found in string
     */
     isMouseEvent: function (eventType) {
-		return (eventType.indexOf(KEY.EVENT.MOUSE) > -1);
+        return (eventType.indexOf(KEY.EVENT.MOUSE) > -1);
     },
     
     /*
@@ -87,7 +87,7 @@ module.exports = {
         @return [boolean]: Returns true if .touches is present
     */
     isTouchEvent: function (e) {
-	    return (e.touches) ? true : false;
+        return (e.touches) ? true : false;
     },
     
     /*
@@ -137,7 +137,7 @@ module.exports = {
         @return [boolean]: Returns true if this.varType === 'Array'
     */
     isArray: function (arr) {
-	    return (this.varType(arr) === 'Array');
+        return (this.varType(arr) === 'Array');
     },
     
     isInRange: function (value, from, to) {
@@ -145,35 +145,35 @@ module.exports = {
     },
     
     copy: function (obj) {
-	    var newObj = {};
-	    
-	    for (var key in obj) {
-		    if (obj.hasOwnProperty(key)) {
-			    if (this.isObj(obj[key])) {
-				    newObj[key] = this.copy(obj[key]);
-			    } else {
-				    newObj[key] = obj[key];
-			    }
-		    }
-	    }
-	    
-	    return newObj;
+        var newObj = {};
+        
+        for (var key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                if (this.isObj(obj[key])) {
+                    newObj[key] = this.copy(obj[key]);
+                } else {
+                    newObj[key] = obj[key];
+                }
+            }
+        }
+        
+        return newObj;
     },
     
     merge: function (base, overwrite) {
-	    var newObj = this.copy(base);
-	    
-	    for (var key in overwrite) {
-		    if (overwrite.hasOwnProperty(key)) {
-			    if (this.isObj(overwrite[key])) {
-				    newObj[key] = this.merge(newObj[key], overwrite[key]);
-			    } else {
-				    newObj[key] = overwrite[key];
-			    }
-		    }
-	    }
-	    
-	    return newObj;
+        var newObj = this.copy(base);
+        
+        for (var key in overwrite) {
+            if (overwrite.hasOwnProperty(key)) {
+                if (this.isObj(overwrite[key])) {
+                    newObj[key] = this.merge(newObj[key], overwrite[key]);
+                } else {
+                    newObj[key] = overwrite[key];
+                }
+            }
+        }
+        
+        return newObj;
     },
     
     /*
@@ -206,7 +206,7 @@ module.exports = {
         @return [string]: Returns, for instance 'Object' if [object Object]
     */
     varType: function (variable) {
-	    return Object.prototype.toString.call(variable).slice(8, -1);
+        return Object.prototype.toString.call(variable).slice(8, -1);
     },
     
     /*

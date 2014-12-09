@@ -139,7 +139,7 @@ Action.prototype.setValues = function (values) {
     // Handle special values
 
     if (this.values.angle) {
-    	this.values.x = this.values.x || new Value(0, this);
+        this.values.x = this.values.x || new Value(0, this);
         this.values.y = this.values.y || new Value(0, this);
     }
 
@@ -167,19 +167,19 @@ Action.prototype.resetValues = function () {
     Reverse values
 */
 Action.prototype.reverseValues = function () {
-	var key, to, from;
-	
-	this.progress = calc.difference(this.progress, 1);
-	this.elapsed = calc.difference(this.elapsed, this.duration);
+    var key, to, from;
+    
+    this.progress = calc.difference(this.progress, 1);
+    this.elapsed = calc.difference(this.elapsed, this.duration);
 
     for (key in this.values) {
-	    if (this.values.hasOwnProperty(key)) {
-	    	to = this.values[key].to;
-	    	from = this.values[key].from;
-	    	
-	    	this.values[key].to = from;
-		    this.values[key].from = to;
-	    }
+        if (this.values.hasOwnProperty(key)) {
+            to = this.values[key].to;
+            from = this.values[key].from;
+            
+            this.values[key].to = from;
+            this.values[key].from = to;
+        }
     }
 };
 

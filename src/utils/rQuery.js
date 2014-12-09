@@ -8,72 +8,72 @@
 */
 
 loadPlugins = function () {
-	var KEY = require('../opts/keys.js'),
+    var KEY = require('../opts/keys.js'),
         utils = require('../utils/utils.js'),
         ActionManager = require('../bobs/actionManager.js'),
 
-		/*
-			Get Redshift instance from jQuery object
-			
-			@param [jQuery element]
-		*/
-		getInstance = function ($element) {
-			var instance = $element.data(KEY.REDSHIFT);
+        /*
+            Get Redshift instance from jQuery object
+            
+            @param [jQuery element]
+        */
+        getInstance = function ($element) {
+            var instance = $element.data(KEY.REDSHIFT);
 
-			if (!instance) {
-    			instance = ActionManager.create();
-    			instance.data(KEY.JQUERY_ELEMENT, $element);
-				$element.data(KEY.REDSHIFT, instance);
-			}
-			
-			return instance;
-		},
+            if (!instance) {
+                instance = ActionManager.create();
+                instance.data(KEY.JQUERY_ELEMENT, $element);
+                $element.data(KEY.REDSHIFT, instance);
+            }
+            
+            return instance;
+        },
 
-		/*
-			Execute Action function
+        /*
+            Execute Action function
 
-			@param [jQuery element]: jQuery element to check for Redshift instance
-			@param [string]: Action function to call
-			@param [...arguments]
-		*/
-		execute = function ($element, action, arg1, arg2, arg3) {
-    		$element.each(function () {
-    			getInstance($(this))[action](arg1, arg2, arg3);
-			});
-		};
-		
-	$.fn.play = function () {
-		execute(this, 'play', arguments[0], arguments[1]);
-		
-		return this;
-	};
-	
-	$.fn.move = function () {
-		execute(this, 'move', arguments[0], arguments[1]);
+            @param [jQuery element]: jQuery element to check for Redshift instance
+            @param [string]: Action function to call
+            @param [...arguments]
+        */
+        execute = function ($element, action, arg1, arg2, arg3) {
+            $element.each(function () {
+                getInstance($(this))[action](arg1, arg2, arg3);
+            });
+        };
+        
+    $.fn.play = function () {
+        execute(this, 'play', arguments[0], arguments[1]);
+        
+        return this;
+    };
+    
+    $.fn.move = function () {
+        execute(this, 'move', arguments[0], arguments[1]);
 
-		return this;
-	};
-	
-	$.fn.track = function () {
-		execute(this, 'track', arguments[0], arguments[1], arguments[2]);
+        return this;
+    };
+    
+    $.fn.track = function () {
+        execute(this, 'track', arguments[0], arguments[1], arguments[2]);
 
-		return this;
-	};
-	
-	$.fn.redshift = function (action) {
-		if (action) {
-			execute(this, action, arguments[1], arguments[2]);
-			return this;
-		} else {
-    		return getInstance(this);
-		}
-	};
+        return this;
+    };
+    
+    $.fn.redshift = function (action) {
+        if (action) {
+            execute(this, action, arguments[1], arguments[2]);
+            return this;
+        } else {
+            return getInstance(this);
+        }
+    };
 };
 
 module.exports = {
-	check: function () {
-		if (window.jQuery) {
-		    loadPlugins();
-		}
-	}
+    check: function () {
+        if (window.jQuery) {
+            loadPlugins();
+        }
+    }
 };

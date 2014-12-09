@@ -4,7 +4,7 @@
 "use strict";
 
 var calc = require('../utils/calc.js'),
-	utils = require('../utils/utils.js'),
+    utils = require('../utils/utils.js'),
     ActionManager = require('./actionManager.js'),
     Process = require('./process.js'),
     Time = require('../bits/time.js'),
@@ -20,8 +20,8 @@ Chronos.prototype = {
     */
     start: function () {
         if (!isRunning) {
-        	timer = new Time();
-        	timer.updateTime(utils.currentTime());
+            timer = new Time();
+            timer.updateTime(utils.currentTime());
             isRunning = true;
             this.frame();
         }
@@ -45,12 +45,12 @@ Chronos.prototype = {
 
         if (activeActionTokens.length) {
             requestAnimationFrame(function () {
-             	// recheck incase stuff has been deactivated since
+                // recheck incase stuff has been deactivated since
                 var activeActionTokens = ActionManager.getActiveTokens();
     
                 if (activeActionTokens.length) {
-                	timer.updateTime(utils.currentTime());
-                	Process.actions(activeActionTokens, timer.current.time, timer.getFPS());
+                    timer.updateTime(utils.currentTime());
+                    Process.actions(activeActionTokens, timer.current.time, timer.getFPS());
                     ActionManager.purge();
                     self.frame();
                 } else {
