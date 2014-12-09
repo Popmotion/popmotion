@@ -38,7 +38,6 @@
 var calc = require('./calc.js'),
     util = require('./utils.js'),
     KEY = require('../opts/keys.js'),
-    defaults = require('../opts/defaults.js'),
     Bezier = require('../bits/bezier.js'),
     EasingFunction = function () {},
     easingFunction,

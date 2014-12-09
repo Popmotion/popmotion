@@ -71,7 +71,7 @@ loadPlugins = function () {
 };
 
 module.exports = {
-    check: function () {
+    featureCheck: function () {
         if (window.jQuery) {
             loadPlugins();
         }

@@ -20,7 +20,6 @@
 var calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
     Easing = require('../utils/easingFunctions.js'),
-    defaults = require('../opts/defaults.js'),
     KEY = require('../opts/keys.js'),
     ActionManager = require('./actionManager.js'),
     Rubix = function () {},
