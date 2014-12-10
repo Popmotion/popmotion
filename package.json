@@ -7,10 +7,10 @@
   "main": "src/redshift.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/SirHound/redshift"
+    "url": "https://github.com/InventingWithMonster/redshift"
   },
   "bugs": {
-    "url": "https://github.com/SirHound/redshift/issues"
+    "url": "https://github.com/InventingWithMonster/redshift/issues"
   },
   "keywords": [
     "animation",
