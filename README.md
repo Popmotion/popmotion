@@ -23,7 +23,13 @@ Redshift is a Javscript engine for animation and interaction. It works with pure
 
 ### NPM
 
-Redshift is available on NPM, so you can include it in your Browserify script like:
+Redshift is available on NPM, so you can install it with 
+
+```  
+$ npm install redshift
+```
+
+and then use it in your Browserify script like:
 
 ```javascript  
 var Redshift = require('redshift');
