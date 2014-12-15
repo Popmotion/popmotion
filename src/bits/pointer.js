@@ -35,13 +35,10 @@ Pointer.prototype.unbindEvents = function () {
     @param [event]: Pointer move event
 */
 Pointer.prototype.onMove = function (e) {
-    var newPoint;
-
     e = utils.getActualEvent(e);
+    e.preventDefault();
     
     this.update(new Point(utils.convertEventIntoPoint(e, this.isTouch)));
-    
-    e.preventDefault();
 };
 
 Pointer.prototype.stop = function () {
