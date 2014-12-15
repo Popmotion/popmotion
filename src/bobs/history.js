@@ -1,6 +1,7 @@
 "use strict";
 
-var defaults = require('../opts/defaults.js'),
+var maxHistorySize = 3,
+    utils = require('../utils/utils.js'),
     /*
         History constructor
         
@@ -8,13 +9,12 @@ var defaults = require('../opts/defaults.js'),
         @param [int] (optional): Maximum size of history
     */
     History = function (obj, max) {
-        this.max = max || defaults.historyMaxSize;
+        this.max = max || maxHistorySize;
+        this.entries = [];
         this.add(obj);
     };
     
 History.prototype = {
-
-    entries: [],
     
     /*
         Push new var to history
@@ -40,18 +40,9 @@ History.prototype = {
         @return [var]: Var found at specified index
     */
     get: function (i) {
-        return this.entries[i];
-    },
-    
-    /*
-        Get the newest history entry
-        
-        @return [var]: Entry found at index size - 1
-    */
-    getLatest: function () {
-        var index = this.getSize() - 1;
+        i = (utils.isNum(i)) ? i : this.getSize() - 1;
 
-        return this.get(index);
+        return this.entries[i];
     },
     
     /*

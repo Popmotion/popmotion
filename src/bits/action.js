@@ -3,7 +3,7 @@
 var KEY = require('../opts/keys.js'),
     calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
-    Token = require('../bobs/token.js'),
+    Token = require('../bits/token.js'),
     token = new Token(),
     Value = require('./value.js'),
     callback = function () {},
@@ -38,27 +38,31 @@ var KEY = require('../opts/keys.js'),
         // Ease animation
         ease: KEY.EASING.QUAD_IN_OUT,
         
-        // Apply this Math function to output value
-        math: undefined,
+        // Round output value?
+        round: false,
         
         // Divide animation into this many steps
         steps: 0,
         
         // 
-        timeDilation: 1,
+        dilate: 1,
         
         playhead: 0,
         
-        // Pointer offset on tracking start
-        pointerOffset: undefined,
+        // The object we're checking
+        input: undefined,
         
-        linkedAction: undefined,
+        // Input origin on tracking start
+        inputOrigin: undefined,
         
         // Current progress
         progress: 0,
         
         // Time elapsed
         elapsed: 0,
+        
+        // Use the progress of this property of linked input
+        link: undefined,
         
         // Loop animation x number of times (true for ETERNALLY)
         loop: false,
@@ -135,7 +139,7 @@ Action.prototype.setValues = function (values) {
     // Handle special values
 
     if (this.values.angle) {
-    	this.values.x = this.values.x || new Value(0, this);
+        this.values.x = this.values.x || new Value(0, this);
         this.values.y = this.values.y || new Value(0, this);
     }
 
@@ -163,19 +167,19 @@ Action.prototype.resetValues = function () {
     Reverse values
 */
 Action.prototype.reverseValues = function () {
-	var key, to, from;
-	
-	this.progress = calc.difference(this.progress, 1);
-	this.elapsed = calc.difference(this.elapsed, this.duration);
+    var key, to, from;
+    
+    this.progress = calc.difference(this.progress, 1);
+    this.elapsed = calc.difference(this.elapsed, this.duration);
 
     for (key in this.values) {
-	    if (this.values.hasOwnProperty(key)) {
-	    	to = this.values[key].to;
-	    	from = this.values[key].from;
-	    	
-	    	this.values[key].to = from;
-		    this.values[key].from = to;
-	    }
+        if (this.values.hasOwnProperty(key)) {
+            to = this.values[key].to;
+            from = this.values[key].from;
+            
+            this.values[key].to = from;
+            this.values[key].from = to;
+        }
     }
 };
 
