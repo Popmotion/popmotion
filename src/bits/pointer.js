@@ -5,6 +5,7 @@ var Input = require('./input.js'),
     History = require('../bobs/history.js'),
     KEY = require('../opts/keys.js'),
     utils = require('../utils/utils.js'),
+    currentPointer, // Sort this crap out for multitouch
     Pointer = function (point, isTouch) {
         this.update(new Point(point));
         this.isTouch = isTouch;
@@ -18,6 +19,8 @@ Pointer.prototype = new Input();
 */
 Pointer.prototype.bindEvents = function (isTouch) {
     this.moveEvent = this.isTouch ? KEY.EVENT.TOUCHMOVE : KEY.EVENT.MOUSEMOVE;
+    
+    currentPointer = this;
     
     document.documentElement.addEventListener(this.moveEvent, this.onMove);
 };
@@ -39,7 +42,7 @@ Pointer.prototype.onMove = function (e) {
 
     e = utils.getActualEvent(e);
     
-    this.update(new Point(utils.convertEventIntoPoint(e, this.isTouch)));
+    currentPointer.update(new Point(utils.convertEventIntoPoint(e, currentPointer.isTouch)));
     
     e.preventDefault();
 };

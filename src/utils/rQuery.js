@@ -7,10 +7,9 @@
     .redshift() method used for other Redshift functions, ie $('#element').redshift('stop')
 */
 
-loadPlugins = function () {
+loadPlugins = function (redshift) {
     var KEY = require('../opts/keys.js'),
         utils = require('../utils/utils.js'),
-        ActionManager = require('../bobs/actionManager.js'),
 
         /*
             Get Redshift instance from jQuery object
@@ -21,7 +20,7 @@ loadPlugins = function () {
             var instance = $element.data(KEY.REDSHIFT);
 
             if (!instance) {
-                instance = ActionManager.create();
+                instance = redshift.get();
                 instance.data(KEY.JQUERY_ELEMENT, $element);
                 $element.data(KEY.REDSHIFT, instance);
             }
@@ -71,9 +70,9 @@ loadPlugins = function () {
 };
 
 module.exports = {
-    featureCheck: function () {
+    featureCheck: function (redshift) {
         if (window.jQuery) {
-            loadPlugins();
+            loadPlugins(redshift);
         }
     }
 };

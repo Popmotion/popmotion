@@ -125,11 +125,10 @@ Rubix.prototype = {
                         if (value.hasRange) {
                             progress[key].type = KEY.PROGRESS.RANGE;
                             progress[key].value = calc.progress(value.from + offset, value.min, value.max);
-
                         // Or we calculate progress directly
                         } else {
                             progress[key].type = KEY.PROGRESS.DIRECT;
-                            progress[key].value = value.from + offset;
+                            progress[key].value = value.from + (offset * value.amp);
                         }
                     }
                 }
@@ -176,8 +175,8 @@ Rubix.prototype = {
             if (utils.isObj(progress)) {
                 // If this is a range progress
                 if (progress.type === KEY.PROGRESS.RANGE) {
-                    newValue = Easing.withinRange(progress, value.min, value.max, value.ease, value.escapeAmp);
-                
+                //console.log(progress.value);
+                    newValue = Easing.withinRange(progress.value, value.min, value.max, 'linear', value.escapeAmp);
                 // Or is a direct progress
                 } else {
                     newValue = progress.value;

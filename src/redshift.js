@@ -215,7 +215,7 @@ Redshift.prototype = {
         require('./utils/shims.js').featureCheck();
         
         // Check and load jQuery plugins
-        require('./utils/rQuery.js').featureCheck();
+        require('./utils/rQuery.js').featureCheck(this);
     }
 };
 
