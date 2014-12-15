@@ -1,4 +1,4 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 "use strict";
 
 var KEY = require('../opts/keys.js'),
@@ -332,7 +332,7 @@ Bezier.prototype = {
 };
 
 module.exports = Bezier;
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],3:[function(require,module,exports){
 /*
     Custom input
@@ -466,6 +466,7 @@ var Input = require('./input.js'),
     History = require('../bobs/history.js'),
     KEY = require('../opts/keys.js'),
     utils = require('../utils/utils.js'),
+    currentPointer, // Sort this crap out for multitouch
     Pointer = function (point, isTouch) {
         this.update(new Point(point));
         this.isTouch = isTouch;
@@ -479,6 +480,8 @@ Pointer.prototype = new Input();
 */
 Pointer.prototype.bindEvents = function (isTouch) {
     this.moveEvent = this.isTouch ? KEY.EVENT.TOUCHMOVE : KEY.EVENT.MOUSEMOVE;
+    
+    currentPointer = this;
     
     document.documentElement.addEventListener(this.moveEvent, this.onMove);
 };
@@ -496,13 +499,10 @@ Pointer.prototype.unbindEvents = function () {
     @param [event]: Pointer move event
 */
 Pointer.prototype.onMove = function (e) {
-    var newPoint;
-
     e = utils.getActualEvent(e);
-    
-    this.update(new Point(utils.convertEventIntoPoint(e, this.isTouch)));
-    
     e.preventDefault();
+
+    currentPointer.update(new Point(utils.convertEventIntoPoint(e, currentPointer.isTouch)));
 };
 
 Pointer.prototype.stop = function () {
@@ -1623,11 +1623,10 @@ Rubix.prototype = {
                         if (value.hasRange) {
                             progress[key].type = KEY.PROGRESS.RANGE;
                             progress[key].value = calc.progress(value.from + offset, value.min, value.max);
-
                         // Or we calculate progress directly
                         } else {
                             progress[key].type = KEY.PROGRESS.DIRECT;
-                            progress[key].value = value.from + offset;
+                            progress[key].value = value.from + (offset * value.amp);
                         }
                     }
                 }
@@ -1674,8 +1673,8 @@ Rubix.prototype = {
             if (utils.isObj(progress)) {
                 // If this is a range progress
                 if (progress.type === KEY.PROGRESS.RANGE) {
-                    newValue = Easing.withinRange(progress, value.min, value.max, value.ease, value.escapeAmp);
-                
+                //console.log(progress.value);
+                    newValue = Easing.withinRange(progress.value, value.min, value.max, 'linear', value.escapeAmp);
                 // Or is a direct progress
                 } else {
                     newValue = progress.value;
@@ -2032,7 +2031,7 @@ Redshift.prototype = {
         require('./utils/shims.js').featureCheck();
         
         // Check and load jQuery plugins
-        require('./utils/rQuery.js').featureCheck();
+        require('./utils/rQuery.js').featureCheck(this);
     }
 };
 
@@ -2656,10 +2655,9 @@ window.Redshift = require('../redshift.js');
     .redshift() method used for other Redshift functions, ie $('#element').redshift('stop')
 */
 
-loadPlugins = function () {
+loadPlugins = function (redshift) {
     var KEY = require('../opts/keys.js'),
         utils = require('../utils/utils.js'),
-        ActionManager = require('../bobs/actionManager.js'),
 
         /*
             Get Redshift instance from jQuery object
@@ -2670,7 +2668,7 @@ loadPlugins = function () {
             var instance = $element.data(KEY.REDSHIFT);
 
             if (!instance) {
-                instance = ActionManager.create();
+                instance = redshift.get();
                 instance.data(KEY.JQUERY_ELEMENT, $element);
                 $element.data(KEY.REDSHIFT, instance);
             }
@@ -2720,13 +2718,13 @@ loadPlugins = function () {
 };
 
 module.exports = {
-    featureCheck: function () {
+    featureCheck: function (redshift) {
         if (window.jQuery) {
-            loadPlugins();
+            loadPlugins(redshift);
         }
     }
 };
-},{"../bobs/actionManager.js":9,"../opts/keys.js":15,"../utils/utils.js":22}],21:[function(require,module,exports){
+},{"../opts/keys.js":15,"../utils/utils.js":22}],21:[function(require,module,exports){
 var Shim = function () {};
 
 Shim.prototype = {
@@ -3032,4 +3030,4 @@ module.exports = {
     }
     
 };
-},{"../opts/keys.js":15}]},{},[19]);
+},{"../opts/keys.js":15}]},{},[19])
