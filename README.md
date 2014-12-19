@@ -38,7 +38,7 @@ var Redshift = require('redshift');
 
 ### File include
 
-Alternatively, you can simply download the pre-compiled file from https://github.com/SirHound/redshift and include it in a script tag, as you would any other Javascript script. You can then access Redshift as a global object.
+Alternatively, you can simply download the pre-compiled file from https://github.com/InventingWithMonster/redshift and include it in a script tag, as you would any other Javascript script. You can then access Redshift as a global object.
 
 
 ## Quickstart
