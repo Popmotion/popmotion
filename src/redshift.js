@@ -102,18 +102,8 @@ Instance.prototype = {
 	    @param [function]: The function to run every frame.
 	    @param [number]: Duration in ms
     */
-    run: function (callback, duration) {
-    	var hasDuration = utils.isNum(duration),
-    		link = hasDuration ? KEY.LINK.MOVE : KEY.LINK.TIME,
-    		base = {
-	    		onFrame: callback
-    		};
-    	
-    	if (hasDuration) {
-	    	base.duration = duration;
-    	}
-
-	    return redshift.ignite(this.token, link, base);
+    move: function (defs, override) {
+        return redshift.ignite(this.token, KEY.RUBIX.RUN, ActionManager.createBase(defs, override));
     },
     
     /*

@@ -137,8 +137,7 @@ Action.prototype.setValues = function (values) {
     }
     
     // Handle special values
-
-    if (this.values.angle) {
+    if (this.values && this.values.angle) {
         this.values.x = this.values.x || new Value(0, this);
         this.values.y = this.values.y || new Value(0, this);
     }

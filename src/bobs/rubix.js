@@ -26,6 +26,20 @@ var calc = require('../utils/calc.js'),
     rubixController;
 
 Rubix.prototype = {
+    Run: {
+        calcProgress: function (action, frameStart) {
+            return Rubix.Time.calcProgress(action, frameStart);
+        },
+        
+        hasEnded: function () {
+            return Rubix.Time.hasEnded(action);
+        },
+        
+        easeValue: function (key, action) {
+            return action.values[key];
+        }
+    },
+
     Time: {
     
         /*
