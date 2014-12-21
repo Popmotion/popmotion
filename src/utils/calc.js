@@ -3,34 +3,14 @@
     ----------------------------------------
     
     Simple I/O snippets
-    
-    angle
-    angleFromCenter
-    difference
-    distance
-    distance1D
-    distance2D
-    distance3D
-    elapsed
-    hypotenuse
-    offset
-    progress
-    restricted
-    timeRemaining
-    value
-    valueEased
 */
 
 "use strict";
 
-var Offset = require('../bits/offset.js'),
-    utils = require('./utils.js'),
-    Calc = function () {},
-    calc;
+var utils = require('./utils.js');
     
-Calc.prototype = {
-
- 
+module.exports = {
+    
     /*
         Angle between points
         
@@ -65,7 +45,17 @@ Calc.prototype = {
     */
     angleFromCenter: function (x, y) {
         return Math.atan2(y, x);
-	},
+    },
+    
+    /*
+        Convert degrees to radians
+        
+        @param [number]: Value in degrees
+        @return [number]: Value in radians
+    */
+    degreesToRadians: function (degrees) {
+        return degrees * Math.PI / 180;
+    },
     
     /*
         Difference
@@ -79,19 +69,29 @@ Calc.prototype = {
         @return [number]: Difference between value a and value b
     */
     difference: function (a, b) {
-    	return b - a;
+        return b - a;
     },
     
     /*
-	    Dilate
-	    
-	    @param [number]: Previous value
-	    @param [number]: Current value
-	    @param [number]: Dilate progress by x
-	    @return [number]: Previous value plus the dilated difference
+        Dilate
+        
+        Change the progression between a and b according to dilation.
+        
+        So dilation = 0.5 would change
+        
+        a --------- b
+        
+        to
+        
+        a ---- b
+        
+        @param [number]: Previous value
+        @param [number]: Current value
+        @param [number]: Dilate progress by x
+        @return [number]: Previous value plus the dilated difference
     */
-    dilate: function (previous, current, dilation) {
-	    return previous + ((current - previous) * dilation);
+    dilate: function (a, b, dilation) {
+        return a + ((b - a) * dilation);
     },
         
     /*
@@ -119,9 +119,9 @@ Calc.prototype = {
         @return [number]: The distance between the two points
     */
     distance1D: function (pointA, pointB) {
-    	var bIsNum = (typeof pointB === 'number'),
-    		from = bIsNum ? pointA : 0,
-    		to = bIsNum ? pointB : pointA;
+        var bIsNum = (typeof pointB === 'number'),
+            from = bIsNum ? pointA : 0,
+            to = bIsNum ? pointB : pointA;
 
         return this.difference(from, to);
     },
@@ -168,31 +168,51 @@ Calc.prototype = {
     },
     
     /*
-        Offset between two points
+        Offset between two inputs
         
-        Calculate the angle, distance, x y and z distances between two given points
+        Calculate the difference between two different inputs
         
-        @param [Point]: First point
-        @param [Point]: Second point
+        @param [Point]: First input
+        @param [Point]: Second input
         @return [Offset]: Distance metrics between two points
     */
-    offset: function (pointA, pointB) {
-        var angle = this.angle(pointA, pointB),
-            distance = this.distance2D(pointA, pointB),
-            x = this.distance1D(pointA.x, pointB.x),
-            y = this.distance1D(pointA.y, pointB.y),
-            z = this.distance1D(pointA.z, pointB.z);
+    offset: function (a, b) {
+        var offset = {},
+            angle, distance;
+
+        for (var key in b) {
+            if (b.hasOwnProperty(key)) {
+                if (a.hasOwnProperty(key)) {
+                    offset[key] = this.distance1D(a[key], b[key]);
+                } else {
+                    offset[key] = 0;
+                }
+            } 
+        }
+        
+        if (utils.isNum(offset.x) && utils.isNum(offset.y)) {
+            offset.angle = this.angle(a, b);
+            offset.distance = this.distance2D(a, b);
+        }
             
-        return new Offset(angle, distance, x, y, z);
+        return offset;
     },
     
-    point: function (origin, angle, distance) {
-    	var point = {};
+    /*
+        Point from angle and distance
+        
+        @param [object]: 2D point of origin
+        @param [number]: Angle from origin
+        @param [number]: Distance from origin
+        @return [object]: Calculated 2D point
+    */
+    pointFromAngleAndDistance: function (origin, angle, distance) {
+        var point = {};
 
-    	point.x = 5 * Math.cos(angle) + origin.x;
-    	point.y = 5 * Math.sin(angle) + origin.y;
+        point.x = 5 * Math.cos(angle) + origin.x;
+        point.y = 5 * Math.sin(angle) + origin.y;
 
-	    return point;
+        return point;
     },
 
     /*
@@ -208,26 +228,36 @@ Calc.prototype = {
         @return [number]: Progress of value within range as expressed 0-1
     */
     progress: function (value, limitA, limitB) {
-    	var bIsNum = (typeof limitB === 'number'),
-    		from = bIsNum ? limitA : 0,
-    		to = bIsNum ? limitB : limitA,
-    		range = this.difference(from, to),
+        var bIsNum = (typeof limitB === 'number'),
+            from = bIsNum ? limitA : 0,
+            to = bIsNum ? limitB : limitA,
+            range = this.difference(from, to),
             progress = (value - from) / range;
 
         return progress;
     },
     
     /*
-	    Return random number between range
-	    
-	    @param [number] (optional): Output minimum
-	    @param [number] (optional): Output maximum
-	    @return [number]: Random number within range, or 0 and 1 if none provided
+        Convert radians to degrees
+        
+        @param [number]: Value in radians
+        @return [number]: Value in degrees
+    */
+    radiansToDegrees: function (radians) {
+        return radians * 180 / Math.PI;
+    },
+    
+    /*
+        Return random number between range
+        
+        @param [number] (optional): Output minimum
+        @param [number] (optional): Output maximum
+        @return [number]: Random number within range, or 0 and 1 if none provided
     */
     random: function (min, max) {
-	    min = utils.isNum(min) ? min : 0;
-	    max = utils.isNum(max) ? max : 1;
-	    return Math.random() * (max - min) + min;
+        min = utils.isNum(min) ? min : 0;
+        max = utils.isNum(max) ? max : 1;
+        return Math.random() * (max - min) + min;
     },
 
 
@@ -241,8 +271,8 @@ Calc.prototype = {
         @param [number]: Upper limit of range
         @return [number]: Value as limited within given range
     */
-    restricted: function (value, from, to) {
-        return Math.min(Math.max(value, from), to);
+    restricted: function (value, min, max) {
+        return Math.min(Math.max(value, min), max);
     },
     
 
@@ -271,9 +301,9 @@ Calc.prototype = {
         @return [number]: Value as calculated from progress within range (not limited within range)
     */
     value: function (progress, limitA, limitB) {
-    	var bIsNum = (typeof limitB === 'number'),
-    		from = bIsNum ? limitA : 0,
-    		to = bIsNum ? limitB : limitA;
+        var bIsNum = (typeof limitB === 'number'),
+            from = bIsNum ? limitA : 0,
+            to = bIsNum ? limitB : limitA;
 
         return (- progress * from) + (progress * to) + from; 
     },
@@ -289,24 +319,11 @@ Calc.prototype = {
         @param [number]: Lower limit of range, or upper if limit2 not provided
         @param [number]: Upper limit of range
         @param [function]: Easing to apply to value
-        @parma [number] (optional): Amp modifier
         @return [number]: Value as calculated from progress within range (not limited within range)
     */
     valueEased: function (progress, from, to, easing) {
         var easedProgress = easing(progress);
         
         return this.value(easedProgress, from, to);
-    },
-    
-    degreesToRadians: function (degrees) {
-	    return degrees * Math.PI / 180;
-    },
-    
-    radiansToDegrees: function (radians) {
-	    return radians * 180 / Math.PI;
     }
 };
-
-calc = new Calc();
-
-module.exports = calc;

@@ -23,7 +23,13 @@ Redshift is a Javscript engine for animation and interaction. It works with pure
 
 ### NPM
 
-Redshift is available on NPM, so you can include it in your Browserify script like:
+Redshift is available on NPM, so you can install it with 
+
+```  
+$ npm install redshift
+```
+
+and then use it in your Browserify script like:
 
 ```javascript  
 var Redshift = require('redshift');
@@ -32,7 +38,7 @@ var Redshift = require('redshift');
 
 ### File include
 
-Alternatively, you can simply download the pre-compiled file from https://github.com/SirHound/redshift and include it in a script tag, as you would any other Javascript script. You can then access the global Redshift object.
+Alternatively, you can simply download the pre-compiled, minified file redshift.global.min.js from https://github.com/InventingWithMonster/redshift and include it with a script tag. You can then access Redshift as a global object.
 
 
 ## Quickstart
