@@ -188,7 +188,7 @@ Rubix.prototype = {
         }
     },
     
-    Speed: {
+    Run: {
     
         /*
             Convert x per second to per frame speed based on fps
