@@ -96,6 +96,16 @@ Instance.prototype = {
         return redshift.ignite(this.token, KEY.RUBIX.INPUT, ActionManager.createBase(defs, override), toTrack);
     },
     
+    /*
+        Run process
+        
+        @param [string]: Key of action to run
+        @param [object]: Override action defaults with those defined here
+    */
+    run: function (defs, override) {
+        return redshift.ignite(this.token, KEY.RUBIX.RUN, ActionManager.createBase(defs, override));
+    },
+    
     
     /*
         Start specified action
