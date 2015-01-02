@@ -8,7 +8,7 @@
 */
 "use strict";
 
-loadPlugins = function (redshift) {
+var loadPlugins = function (redshift) {
     var KEY = require('../opts/keys.js'),
         utils = require('../utils/utils.js'),
 
