@@ -1,1 +1,1 @@
-window.Redshift = require('../redshift.js');
+window.redshift = require('../redshift.js');
