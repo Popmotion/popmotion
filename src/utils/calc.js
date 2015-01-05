@@ -123,7 +123,7 @@ module.exports = {
             from = bIsNum ? pointA : 0,
             to = bIsNum ? pointB : pointA;
 
-        return this.difference(from, to);
+        return Math.abs(this.difference(from, to));
     },
 
   
@@ -142,8 +142,8 @@ module.exports = {
             from = bIsObj ? pointA : {x: 0, y: 0},
             to = bIsObj ? pointB : pointA,
             point = {
-                x: this.difference(from.x, to.x),
-                y: this.difference(from.y, to.y)
+                x: Math.abs(this.difference(from.x, to.x)),
+                y: Math.abs(this.difference(from.y, to.y))
             };
             
         return this.hypotenuse(point.x, point.y);
