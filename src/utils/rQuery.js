@@ -6,8 +6,9 @@
     
     .redshift() method used for other Redshift functions, ie $('#element').redshift('stop')
 */
+"use strict";
 
-loadPlugins = function (redshift) {
+var loadPlugins = function (redshift) {
     var KEY = require('../opts/keys.js'),
         utils = require('../utils/utils.js'),
 
@@ -47,8 +48,8 @@ loadPlugins = function (redshift) {
         return this;
     };
     
-    $.fn.move = function () {
-        execute(this, 'move', arguments[0], arguments[1]);
+    $.fn.run = function () {
+        execute(this, 'run', arguments[0], arguments[1]);
 
         return this;
     };

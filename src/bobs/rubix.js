@@ -38,9 +38,9 @@ Rubix.prototype = {
             @return [number]: 0 to 1 value representing how much time has passed
         */
         calcProgress: function (action, frameStart) {
-            action.elapsed += calc.difference(action.framestamp, frameStart) * action.timeDilation;
-            
-            return calc.progress(action.elapsed, action.duration + action.delay);
+            action.elapsed += calc.difference(action.framestamp, frameStart) * action.dilate;
+
+            return calc.restricted(calc.progress(action.elapsed, action.duration + action.delay), 0, 1);
         },
         
         /*
@@ -64,14 +64,14 @@ Rubix.prototype = {
         */
         easeValue: function (key, action) {
             var value = action.values[key],
-                restrictedProgress = calc.restricted(action.progress, 0, 1),
+                progress = action.progress,
                 easedValue;
-                
+
             if (value.steps) {
-                restrictedProgress = utils.stepProgress(restrictedProgress, 1, value.steps);
+                progress = utils.stepProgress(progress, 1, value.steps);
             }
 
-            easedValue = Easing.withinRange(restrictedProgress, value.from, value.to, value.ease);
+            easedValue = Easing.withinRange(progress, value.from, value.to, value.ease);
 
             return easedValue;
         }
@@ -188,7 +188,7 @@ Rubix.prototype = {
         }
     },
     
-    Speed: {
+    Run: {
     
         /*
             Convert x per second to per frame speed based on fps
