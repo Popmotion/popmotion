@@ -199,7 +199,7 @@ Redshift.prototype = {
         return this;
     },
     
-    Calc: calc,
+    calc: calc,
     
     run: function () {
         
