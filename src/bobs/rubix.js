@@ -66,7 +66,7 @@ Rubix.prototype = {
             var value = action.values[key],
                 progress = action.progress,
                 easedValue;
-//console.log(value.current, progress);
+
             if (value.steps) {
                 progress = utils.stepProgress(progress, 1, value.steps);
             }
