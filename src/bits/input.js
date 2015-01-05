@@ -54,6 +54,8 @@ Input.prototype = {
         }
 
         this.history.add(utils.merge(this.current, values));
+        
+        return this;
     },
     
     /*
