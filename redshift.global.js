@@ -701,6 +701,79 @@ Action.prototype = {
         return this;
     },
     
+    /*
+        Check for next steps and perform, stop if not
+    */
+    next: function () {
+        var nexts = [{
+                key: 'loop',
+                callback: this.reset
+            }, {
+                key: 'yoyo',
+                callback: this.reverse
+            }],
+            possibles = nexts.length,
+            hasNext = false;
+            
+        for (var i = 0; i < posssbiles; ++i) {
+            if (this.checkNextStep(nexts[i].key, nexts[i].callback)) {
+                hasNext = true;
+                break;
+            }
+        }
+        
+        if (!hasNext && !this.checkNextStep()) {
+            this.stop();
+        }
+    },
+    
+    /*
+        Check next step
+        
+        @param [string]: Name of step ('yoyo' or 'loop')
+        @param [callback]: Function to run if we take this step
+    */
+    checkNextStep: function (key, callback) {
+        var stepTaken = false,
+            step = this.props.get(key),
+            count = this.props.get(key + 'Count'),
+            forever = (yoyo === true);
+            
+        if (forever || utils.isNum(step)) {
+            ++count;
+            this.props.set(key + 'Count', count);
+            
+            if (forever || count <= step) {
+                callback();
+                stepTaken = true;
+            }
+        }
+    },
+    
+    /*
+        Next in playlist
+    */
+    playNext: function () {
+        var stepTaken = false,
+            playlist = this.props.get('playlist'),
+            platlistLength = playlist.length,
+            playhead = this.props.get('playhead'),
+            next = {};
+            
+        // Check we have a playlist
+        if (playlistLength > 1) {
+            ++playhead;
+            
+            if (playhead < playlistLength) {
+                next = presets.getDefined(playlist[playhead]);
+                next.playhead = playhead;
+                
+                this.change(KEY.RUBIX.TIME, next);
+                stepTaken = true;
+            }
+        }
+    },
+    
     setValue: function (key, value) {
         this.values.set(key, value);
     },
