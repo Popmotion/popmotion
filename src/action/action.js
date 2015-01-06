@@ -190,12 +190,12 @@ Action.prototype = {
             
         for (var i = 0; i < posssbiles; ++i) {
             if (this.checkNextStep(nexts[i].key, nexts[i].callback)) {
-                hasFuture = true;
+                hasNext = true;
                 break;
             }
         }
-
-        if (!hasNext) {
+        
+        if (!hasNext && !this.checkNextStep()) {
             this.stop();
         }
     },
@@ -225,8 +225,6 @@ Action.prototype = {
     
     /*
         Next in playlist
-        
-        
     */
     playNext: function () {
         var stepTaken = false,
