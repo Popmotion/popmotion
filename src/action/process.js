@@ -3,13 +3,41 @@
 */
 "use strict";
 
-var ActionManager = require('./actionManager.js'),
-    Rubix = require('./rubix.js'),
+var Rubix = require('../bobs/rubix.js'),
     utils = require('../utils/utils.js'),
     Process = function () {},
     process;
     
 Process.prototype = {
+    
+    /*
+        Process an action
+        
+        @param [Action]: Action to process
+        @param [number]: Timestamp of executing frame
+        @param [number]: Duration, in ms, since last frame
+    */
+    action: function (action, framestamp, frameDuration) {
+        
+        console.log(action, framestamp, frameDuration);
+        
+    },
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     /*
         Process actions
@@ -85,6 +113,4 @@ Process.prototype = {
     }
 };
 
-process = new Process();
-
-module.exports = process;
+module.exports = new Process();
