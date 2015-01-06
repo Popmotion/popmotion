@@ -1,22 +1,23 @@
 "use strict";
 
 var cycl = require('cycl'),
-    process = require('../action/process.js'),
+    process = require('./process.js'),
+    Data = require('../bits/data.js'),
 
     Action = function () {
-        this.process = cycl.newProcess(this, this.onFrame);
+        var self = this;
+
+        this.data = new Data();
+        
+        // Register process wth cycl
+        this.process = cycl.newProcess(function (framestamp, frameDuration) {
+            process.action(self, framestamp, frameDuration);
+        });
     };
 
 Action.prototype = {
     
-    // REMOVE?
-    start: function () {
-        this.process.start();
-    },
     
-    onFrame: function (framestamp, frameDuration) {
-        process.action(this, framestamp, frameDuration);
-    }
     
 };
 
