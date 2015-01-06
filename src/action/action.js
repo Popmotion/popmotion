@@ -102,8 +102,11 @@ Action.prototype = {
         @return [Action]
     */
     start: function (processType, base) {
-        this.isActive(true);
         this.change(processType, base);
+        this.isActive(true);
+        this.started = utils.currentTime() + this.props.get('delay');
+        this.framestamp = this.started;
+        this.firstFrame = true;
         
         this.process.start();
         
@@ -160,8 +163,16 @@ Action.prototype = {
         // Assign the processing rubix
         base.rubix = rubix[processType];
 
-        this.values.apply(base.values);
         this.props.apply(base);
+        this.values.apply(base.values, this.props);
+
+        this.origin = {};
+        // Create origins
+        for (var key in this.values) {
+            if (this.values.hasOwnProperty(key)) {
+                this.origin[key] = this.values[key].current;
+            }
+        }
     }
     
 };
