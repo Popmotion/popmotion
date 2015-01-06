@@ -6,7 +6,7 @@ var calc = require('../utils/calc.js'),
         this.store = {};
     };
 
-Values.prototype = function () {
+Values.prototype = {
     
     apply: function (values, inherit) {
         
@@ -62,8 +62,19 @@ Values.prototype = function () {
     */
     getAll: function () {
         return this.store;
-    }
+    },
     
+    set: function (key, value) {
+        if (this.store[key]) {
+            this.store[key].current = value;
+        } else {
+            this.store[key] = new Value(value);
+        }
+    },
+    
+    get: function (key) {
+        return this.store[key];
+    }
     
 };
 

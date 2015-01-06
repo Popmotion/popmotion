@@ -5,8 +5,10 @@ var cycl = require('cycl'),
     presets = require('./presets.js'),
     rubix = require('./rubix.js'),
     Props = require('./props.js'),
+    Values = require('./values.js'),
     Pointer = require('../input/pointer.js'),
     KEY = require('../opts/keys.js'),
+    utils = require('../utils/utils.js'),
     Data = require('../bits/data.js'),
 
     Action = function () {
@@ -164,6 +166,7 @@ Action.prototype = {
     resetProgress: function () {
         this.progress = 0;
         this.elapsed = 0;
+        this.started = utils.currentTime();
     },
     
     reverse: function () {
@@ -188,7 +191,7 @@ Action.prototype = {
             possibles = nexts.length,
             hasNext = false;
             
-        for (var i = 0; i < posssbiles; ++i) {
+        for (var i = 0; i < possibles; ++i) {
             if (this.checkNextStep(nexts[i].key, nexts[i].callback)) {
                 hasNext = true;
                 break;
@@ -210,7 +213,7 @@ Action.prototype = {
         var stepTaken = false,
             step = this.props.get(key),
             count = this.props.get(key + 'Count'),
-            forever = (yoyo === true);
+            forever = (step === true);
             
         if (forever || utils.isNum(step)) {
             ++count;

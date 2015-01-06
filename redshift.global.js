@@ -532,8 +532,10 @@ var cycl = require('cycl'),
     presets = require('./presets.js'),
     rubix = require('./rubix.js'),
     Props = require('./props.js'),
+    Values = require('./values.js'),
     Pointer = require('../input/pointer.js'),
     KEY = require('../opts/keys.js'),
+    utils = require('../utils/utils.js'),
     Data = require('../bits/data.js'),
 
     Action = function () {
@@ -691,6 +693,7 @@ Action.prototype = {
     resetProgress: function () {
         this.progress = 0;
         this.elapsed = 0;
+        this.started = utils.currentTime();
     },
     
     reverse: function () {
@@ -715,7 +718,7 @@ Action.prototype = {
             possibles = nexts.length,
             hasNext = false;
             
-        for (var i = 0; i < posssbiles; ++i) {
+        for (var i = 0; i < possibles; ++i) {
             if (this.checkNextStep(nexts[i].key, nexts[i].callback)) {
                 hasNext = true;
                 break;
@@ -737,7 +740,7 @@ Action.prototype = {
         var stepTaken = false,
             step = this.props.get(key),
             count = this.props.get(key + 'Count'),
-            forever = (yoyo === true);
+            forever = (step === true);
             
         if (forever || utils.isNum(step)) {
             ++count;
@@ -829,7 +832,7 @@ Action.prototype = {
 };
 
 module.exports = Action;
-},{"../bits/data.js":13,"../input/pointer.js":17,"../opts/keys.js":18,"./presets.js":8,"./processor.js":9,"./props.js":10,"./rubix.js":11,"cycl":1}],8:[function(require,module,exports){
+},{"../bits/data.js":14,"../input/pointer.js":19,"../opts/keys.js":20,"../utils/utils.js":25,"./presets.js":8,"./processor.js":9,"./props.js":10,"./rubix.js":11,"./values.js":12,"cycl":1}],8:[function(require,module,exports){
 "use strict";
 
 var KEY = require('../opts/keys.js'),
@@ -993,7 +996,7 @@ Presets.prototype = {
 };
 
 module.exports = new Presets();
-},{"../opts/keys.js":18,"../utils/utils.js":23}],9:[function(require,module,exports){
+},{"../opts/keys.js":20,"../utils/utils.js":25}],9:[function(require,module,exports){
 /*
     Process actions
 */
@@ -1068,7 +1071,7 @@ Process.prototype = {
         }
         
         // Update Action framestamp
-        action.framestart = framestart;
+        action.framestamp = framestamp;
     },
     
     /*
@@ -1085,7 +1088,7 @@ Process.prototype = {
 };
 
 module.exports = new Process();
-},{"../utils/utils.js":23,"./rubix.js":11}],10:[function(require,module,exports){
+},{"../utils/utils.js":25,"./rubix.js":11}],10:[function(require,module,exports){
 "use strict";
 
 var KEY = require('../opts/keys.js'),
@@ -1199,7 +1202,7 @@ Props.prototype = {
 };
 
 module.exports = Props;
-},{"../opts/keys.js":18}],11:[function(require,module,exports){
+},{"../opts/keys.js":20}],11:[function(require,module,exports){
 /*
     Rubix modules
     ----------------------------------------
@@ -1450,7 +1453,89 @@ Rubix.prototype = {
 rubixController = new Rubix();
 
 module.exports = rubixController;
-},{"../opts/keys.js":18,"../utils/calc.js":20,"../utils/easing.js":21,"../utils/utils.js":23}],12:[function(require,module,exports){
+},{"../opts/keys.js":20,"../utils/calc.js":22,"../utils/easing.js":23,"../utils/utils.js":25}],12:[function(require,module,exports){
+"use strict";
+
+var calc = require('../utils/calc.js'),
+    Value = require('../bits/value.js'),
+    Values = function () {
+        this.store = {};
+    };
+
+Values.prototype = {
+    
+    apply: function (values, inherit) {
+        
+        // Create or update Value objects for each defined value
+        for (var key in values) {
+            if (values.hasOwnProperty(key)) {
+                
+                // If this Value has been created, update
+                if (this.store[key]) {
+                    this.store[key].update(values[key], inherit);
+                
+                // Else create new Value
+                } else {
+                    this.store[key] = new Value(values[key], inherit);
+                }
+            }
+        }
+        
+        // Add x and y properties if angle is provided
+        if (values && values.angle) {
+            this.store.x = this.store.x || new Value(0, inherit);
+            this.store.y = this.store.y || new Value(0, inherit);
+        }
+    },
+    
+    /*
+        Reset values
+    */
+    reset: function () {
+        for (var key in this.store) {
+            this.values[key].current = this.values[key].from;
+        }
+    },
+    
+    /*
+        Reverse values
+    */
+    reverse: function () {
+        var to = 0,
+            from = 0;
+
+        for (var key in this.store) {
+            to = this.store[key].to;
+            from = this.store[key].from;
+            
+            this.store[key].to = from;
+            this.store[key].from = to;
+        }
+    },
+    
+    /*
+        Get all values
+    */
+    getAll: function () {
+        return this.store;
+    },
+    
+    set: function (key, value) {
+        if (this.store[key]) {
+            this.store[key].current = value;
+        } else {
+            this.store[key] = new Value(value);
+        }
+    },
+    
+    get: function (key) {
+        return this.store[key];
+    }
+    
+};
+
+module.exports = Values;
+},{"../bits/value.js":16,"../utils/calc.js":22}],13:[function(require,module,exports){
 (function (global){
 /*
     Bezier function generator
@@ -1580,7 +1665,7 @@ Bezier.prototype = {
 
 module.exports = Bezier;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 "use strict";
 
 var utils = require('../utils/utils.js'),
@@ -1650,7 +1735,7 @@ var utils = require('../utils/utils.js'),
     };
 
 module.exports = Data;
-},{"../utils/utils.js":23}],14:[function(require,module,exports){
+},{"../utils/utils.js":25}],15:[function(require,module,exports){
 /*
     Point class
     ----------------------------------------
@@ -1679,7 +1764,188 @@ Point.prototype = {
 };
 
 module.exports = Point;
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
+"use strict";
+
+var utils = require('../utils/utils.js'),
+    calc = require('../utils/calc.js'),
+    priorityProps = ['current', 'to', 'from', 'start', 'hasRange'],
+    
+    /*
+        Is this key a priority property?
+        
+        Priority properties are handled seperately and before all the other props
+        
+        @param [string]: The key to look up in our priority list
+        @return [boolean]: Is this a priority?
+    */
+    isPriority = function (key) {
+        return (priorityProps.indexOf(key) > -1);
+    },
+    
+    /*
+        Calculate relative value
+        
+        Takes the operator and value from a string, ie "+=5", and applies
+        to the current value to resolve a new target.
+        
+        @param [string]: Relative value
+        @param [number]: Current value
+        @return [number]: New value
+    */
+    calcRelativeValue = function (value, current) {
+        var newValue = current,
+            equation = value.split('='),
+            operator = equation[0],
+            num = parseFloat(equation[1]);
+
+        switch (operator) {
+            case '+':
+                newValue = current + num;
+                break;
+            case '-':
+                newValue = current - num;
+                break;
+            case '*':
+                newValue = current * num;
+                break;
+            case '/':
+                newValue = current / num;
+                break;
+        }
+
+        return newValue;
+    },
+    
+    /*
+        Parse value
+        
+        Parses the value, whether its a number, string or function.
+        If a number, return.
+        If a string, it's a relative assignment so calculate new target based on its contents
+        If a function, fire it with action.data and current value as arguments
+        
+        @param [number/string/function]: Current value
+        @param [object]: Data of parent action
+        @param [number]: Current value
+    */
+    parse = function (value, data, current) {
+        return (utils.isFunc(value)) ? value(data, current) : value;
+    },
+    
+    /*
+        Value object
+        
+        On init, run update with isNewValue = true
+        
+        @param [number/string/function/object]: New value
+        @param [Aciton]: Parent action
+    */
+    Value = function (value, action) {
+        this.update(value, action, true);
+    },
+    defaults = {
+        // Actual value
+        current: 0,
+        start: 0,
+    
+        // Current range for value
+        from: 0,
+        to: 1,
+    
+        // Maximum range for value
+        min: undefined,
+        max: undefined,
+        hasRange: false,
+        
+        // Speed for .move(), in xps
+        speed: 0,
+        friction: 0,
+        thrust: 0,
+        
+        // Options
+        duration: 400,
+        delay: 0,
+        ease: 'ease-in-out',
+        link: null, // use the progress of this value
+        round: false,
+        steps: 0,
+        
+        // Amp for inside and outside range (ie value * amp)
+        amp: 0,
+        escapeAmp: 0
+    };
+
+    
+/*
+    Update the value properties
+    
+    @param [object || number]: User-defined value
+    @param [object]: Action this value belongs to
+    @param [boolean] (optional): Is this a new value construct
+*/
+Value.prototype.update = function (value, action, isNewValue) {
+    var data = (action) ? action.data : {};
+
+    // If value is just a number
+    if (utils.isNum(value) || utils.isFunc(value) || utils.isString(value)) {
+        this.current = (isNewValue) ? 0 : this.current;
+        this.to = parse(value, data, this.current);
+
+    // Or if it is an object
+    } else {
+        // If a start value exists and this is a new Value, assign it as current
+        if (isNewValue && value.hasOwnProperty('start')) {
+            this.current = parse(value.start, data);
+        
+        // Or we've explicitly set current
+        } else if (value.hasOwnProperty('current')) {
+            this.current = parse(value.current, data);
+        
+        // Or we've not defined current and this is a new value
+        } else if (isNewValue) {
+            this.current = defaults.current;
+        }
+        
+        this.to = parse(value.to, data, this.current);
+    }
+    
+    // Loop through permitted values
+    for (var key in defaults) {
+        if (defaults.hasOwnProperty(key) && !isPriority(key)) {
+
+            // If user has submitted a property
+            if (utils.isObj(value) && value.hasOwnProperty(key)) {
+                this[key] = parse(value[key], data, this.current);
+                
+            // Or there's a default set on the action
+            } else if (utils.isObj(action) && action.hasOwnProperty(key)) {
+                this[key] = parse(action[key], data, this.current);
+                
+            // Otherwise, if this is our first time (honest judge), set as the default.
+            } else if (isNewValue) {
+                this[key] = defaults[key];
+            }
+            
+        }
+    }
+    
+    // Assign 'from' as current
+    this.from = this.current;
+
+    // If we have a min and max val - set hasRange to undefined
+    if (this.min !== undefined && this.max !== undefined) {
+        this.hasRange = true;
+    }
+    
+    // Finally check if to was given as a string, and figure out the relative value
+    if (utils.isString(this.to)) {
+        this.to = calcRelativeValue(this.to, this.current);
+    }
+};
+
+module.exports = Value;
+},{"../utils/calc.js":22,"../utils/utils.js":25}],17:[function(require,module,exports){
 "use strict";
 
 var maxHistorySize = 3,
@@ -1750,7 +2016,7 @@ History.prototype = {
 };
 
 module.exports = History;
-},{"../utils/utils.js":23}],16:[function(require,module,exports){
+},{"../utils/utils.js":25}],18:[function(require,module,exports){
 /*
     Input controller
 */
@@ -1869,7 +2135,7 @@ Input.prototype = {
 };
 
 module.exports = Input;
-},{"../bobs/history.js":15,"../utils/calc.js":20,"../utils/utils.js":23}],17:[function(require,module,exports){
+},{"../bobs/history.js":17,"../utils/calc.js":22,"../utils/utils.js":25}],19:[function(require,module,exports){
 "use strict";
 
 var Input = require('./input.js'),
@@ -1929,7 +2195,7 @@ Pointer.prototype.stop = function () {
 };
 
 module.exports = Pointer;
-},{"../bits/point.js":14,"../bobs/history.js":15,"../opts/keys.js":18,"../utils/utils.js":23,"./input.js":16}],18:[function(require,module,exports){
+},{"../bits/point.js":15,"../bobs/history.js":17,"../opts/keys.js":20,"../utils/utils.js":25,"./input.js":18}],20:[function(require,module,exports){
 /*
     String constants
     ----------------------------------------
@@ -1975,7 +2241,7 @@ module.exports = {
         RANGE: 'Range'
     }
 };
-},{}],19:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 "use strict";
 
 var Action = require('./action/action.js'),
@@ -2048,7 +2314,7 @@ Redshift.prototype = {
 };
 
 module.exports = new Redshift();
-},{"./action/action.js":7,"./action/presets.js":8,"./input/input.js":16,"./utils/calc.js":20,"./utils/easing.js":21,"cycl":1}],20:[function(require,module,exports){
+},{"./action/action.js":7,"./action/presets.js":8,"./input/input.js":18,"./utils/calc.js":22,"./utils/easing.js":23,"cycl":1}],22:[function(require,module,exports){
 /*
     Calculators
     ----------------------------------------
@@ -2378,7 +2644,7 @@ module.exports = {
         return this.value(easedProgress, from, to);
     }
 };
-},{"./utils.js":23}],21:[function(require,module,exports){
+},{"./utils.js":25}],23:[function(require,module,exports){
 /*
     Easing functions
     ----------------------------------------
@@ -2652,9 +2918,9 @@ function init() {
 
 module.exports = easingFunction;
 
-},{"../bits/bezier.js":12,"../opts/keys.js":18,"./calc.js":20,"./utils.js":23}],22:[function(require,module,exports){
+},{"../bits/bezier.js":13,"../opts/keys.js":20,"./calc.js":22,"./utils.js":25}],24:[function(require,module,exports){
 window.redshift = require('../redshift.js');
-},{"../redshift.js":19}],23:[function(require,module,exports){
+},{"../redshift.js":21}],25:[function(require,module,exports){
 /*
     Utility functions
     ----------------------------------------
@@ -2876,4 +3142,4 @@ module.exports = {
     }
     
 };
-},{"../opts/keys.js":18}]},{},[22]);
+},{"../opts/keys.js":20}]},{},[24]);

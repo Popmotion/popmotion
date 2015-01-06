@@ -72,7 +72,7 @@ Process.prototype = {
         }
         
         // Update Action framestamp
-        action.framestart = framestart;
+        action.framestamp = framestamp;
     },
     
     /*
