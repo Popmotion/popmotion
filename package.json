@@ -1,7 +1,7 @@
 {
   "name": "redshift",
-  "version": "0.5.0",
-  "description": "Create high fidelity Javascript UX",
+  "version": "1.0.0",
+  "description": "A javascript animation and interaction framework.",
   "author": "Matt Perry <admin@redshiftjs.com>",
   "homepage": "http://redshiftjs.com",
   "main": "src/redshift.js",
