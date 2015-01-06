@@ -18,70 +18,73 @@ Process.prototype = {
         @param [number]: Duration, in ms, since last frame
     */
     action: function (action, framestamp, frameDuration) {
-        
-        
-        
-    },
-    
-    
-    
-    
-    
-    
-    
-    /*
-        Process a single action
-        
-        @param [Action]
-        @param [timestamp]
-    */
-    singleAction: function (action, frameStart, fps) {
         var output = {},
-            rubix = Rubix[action.rubix],
+            props = action.props,
+            rubix = props.rubix,
+            data = action.data(),
+            values = action.values.getAll(),
             hasChanged = false;
         
-        // If this is the first frame of an action, fire the onStart callback
+        // Fire onStart if firstFrame
         if (action.firstFrame) {
-            action.onStart.call(action.scope, action.data);
+            props.onStart.call(props.scope, data);
             action.firstFrame = false;
         }
-
-        // Check if this processor updates its input
-        if (rubix.updateInput) {
-            output.input = rubix.updateInput(action, frameStart);
-        }
-
-        action.progress = rubix.calcProgress(action, frameStart, fps);
         
-        // Loop over all values 
-        for (var key in action.values) {
-            if (action.values.hasOwnProperty(key)) {
-                output[key] = rubix.easeValue(key, action);
+        // Update associated Input
+        this.updateInput(props.input, framestamp);
+        
+        // Update progress
+        action.progress = rubix.calcProgress(action, props, framestamp, frameDuration);
+        
+        // Calculate new values
+        for (var key in values) {
+            if (values.hasOwnProperty(key)) {
                 
-                // Apply Math function if one defined
-                output[key] = action.values[key].round ? Math.round(output[key]) : output[key];
-
-                if (action.values[key].current !== output[key]) {
+                // Ease value
+                output[key] = rubix.easeValue(key, values[key], action);
+                
+                // Round
+                if (values[key].round) {
+                    output[key] = Math.round(output[key]);
+                }
+                
+                // Check if has changed
+                if (values[key].current !== output[key]) {
                     hasChanged = true;
-                    action.values[key].current = output[key];
+                    values[key].current = output[key];
                 }
             }
-        }
+        } // end value calculations
         
-        action.onFrame.call(action.scope, output, action.data);
-
-        // If output has changed, fire onChange
+        // Fire onFrame callback
+        props.onFrame.call(props.scope, output, data);
+        
+        // Fire onChange callback
         if (hasChanged) {
-            action.onChange.call(action.scope, output, action.data);
-        }
-
-        // If process is at its end, fire onEnd and deactivate action
-        if (rubix.hasEnded(action)) {
-            action.onEnd.call(action.scope, output, action.data);
-            ActionManager.queueDeactivate(action.token);
+            props.onChange.call(props.scope, output, data);
         }
         
-        action.framestamp = frameStart;
+        // Fire onEnd and deactivate if at end
+        if (rubix.hasEnded(action)) {
+            props.onEnd.call(props.scope, output, data);
+            action.stop();
+        }
+        
+        // Update Action framestamp
+        action.framestart = framestart;
+    },
+    
+    /*
+        Update associated input
+        
+        @param [Input]: Bound input
+        @param [number]: Framestamp of latest frame
+    */
+    updateInput: function (input, framestamp) {
+        if (input) {
+            input.updateInput(framestamp);
+        }
     }
 };
 

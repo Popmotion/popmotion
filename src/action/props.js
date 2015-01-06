@@ -41,12 +41,6 @@ var KEY = require('../opts/keys.js'),
         // Input origin on tracking start
         inputOrigin: undefined,
         
-        // Current progress
-        progress: 0,
-        
-        // Time elapsed
-        elapsed: 0,
-        
         // Use the progress of this property of linked input
         link: undefined,
         

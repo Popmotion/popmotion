@@ -11,7 +11,7 @@ var utils = require('../utils/utils.js'),
                 @return: Data at key
             */
             getData = function (key) {
-                return store[key];
+                return (key !== undefined) ? store[key] : store;
             },
     
             /*

@@ -32,22 +32,35 @@ Values.prototype = function () {
         }
     },
     
+    /*
+        Reset values
+    */
     reset: function () {
         for (var key in this.store) {
             this.values[key].current = this.values[key].from;
         }
-        
-        this.progress = 0;
-        this.elapsed = 0;
     },
     
+    /*
+        Reverse values
+    */
     reverse: function () {
-        var key, to, from;
-        
-        this.progress = calc.difference(this.progress, 1);
+        var to = 0,
+            from = 0;
+
+        for (var key in this.store) {
+            to = this.store[key].to;
+            from = this.store[key].from;
+            
+            this.store[key].to = from;
+            this.store[key].from = to;
+        }
     },
     
-    getAllValues: function () {
+    /*
+        Get all values
+    */
+    getAll: function () {
         return this.store;
     }
     

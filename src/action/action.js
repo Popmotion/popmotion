@@ -29,6 +29,12 @@ var cycl = require('cycl'),
 
 Action.prototype = {
 
+    // [number]: Progress represented in a range of 0 - 1
+    progress: 0,
+    
+    // [number]: Time elapsed in ms
+    elapsed: 0,
+
     /*
         Play the provided actions as animations
         
@@ -102,6 +108,7 @@ Action.prototype = {
         @return [Action]
     */
     start: function (processType, base) {
+        this.resetProgress();
         this.change(processType, base);
         this.isActive(true);
         this.started = utils.currentTime() + this.props.get('delay');
@@ -113,15 +120,59 @@ Action.prototype = {
         return this;
     },
     
+    /*
+        Stop current Action process
+    */
     stop: function () {
         this.isActive(false);
-    },
-    
-    pause: function () {
+        this.process.stop();
         
+        return this;
     },
     
-    resume: function () {},
+    /*
+        Pause current Action
+    */
+    pause: function () {
+        this.stop();
+        
+        return this;
+    },
+    
+    /*
+        Resume a paused Action
+    */
+    resume: function () {
+        this.started = utils.currentTime() - this.elapsed;
+        this.framestamp = this.started;
+        
+        this.process.start();
+        
+        return this;
+    },
+    
+    /*
+        
+    */
+    reset: function () {
+        this.resetProgress();
+        this.values.reset();
+        
+        return this;
+    },
+    
+    resetProgress: function () {
+        this.progress = 0;
+        this.elapsed = 0;
+    },
+    
+    reverse: function () {
+        this.progress = calc.difference(this.progress, 1);
+        this.elapsed = calc.difference(this.elapsed, this.duration);
+        this.values.reverse();
+
+        return this;
+    },
     
     setValue: function (key, value) {
         this.values.set(key, value);

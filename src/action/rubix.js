@@ -36,10 +36,10 @@ Rubix.prototype = {
             @param [timestamp]: framestart timestamp
             @return [number]: 0 to 1 value representing how much time has passed
         */
-        calcProgress: function (action, frameStart) {
-            action.elapsed += calc.difference(action.framestamp, frameStart) * action.dilate;
+        calcProgress: function (action, props, frameStart) {
+            action.elapsed += calc.difference(action.framestamp, frameStart) * props.dilate;
 
-            return calc.restricted(calc.progress(action.elapsed, action.duration + action.delay), 0, 1);
+            return calc.restricted(calc.progress(action.elapsed, props.duration + props.delay), 0, 1);
         },
         
         /*
@@ -61,18 +61,14 @@ Rubix.prototype = {
             @param [string]: key of value
             @param [Action]
         */
-        easeValue: function (key, action) {
-            var value = action.values[key],
-                progress = action.progress,
-                easedValue;
+        easeValue: function (key, value, action) {
+            var progress = action.progress;
 
             if (value.steps) {
                 progress = utils.stepProgress(progress, 1, value.steps);
             }
 
-            easedValue = Easing.withinRange(progress, value.from, value.to, value.ease);
-
-            return easedValue;
+            return Easing.withinRange(progress, value.from, value.to, value.ease);;
         }
     },
     
@@ -104,11 +100,11 @@ Rubix.prototype = {
             @param [Action]: action to measure
             @return [object]: Object of all progresses
         */
-        calcProgress: function (action, frameStart) {
+        calcProgress: function (action, props, frameStart) {
             var progress = {},
                 inputKey, value, offset,
-                values = action.values,
-                inputOffset = calc.offset(action.inputOrigin, action.input.current);
+                values = action.values.getAll(),
+                inputOffset = calc.offset(props.inputOrigin, props.input.current);
             
             for (var key in values) {
                 if (values.hasOwnProperty(key)) {
@@ -146,29 +142,14 @@ Rubix.prototype = {
         },
         
         /*
-            Update pointer
-            
-            @param [Action]: 
-            @return [boolean]: Latest pointer, or previous pointer if stopped tracking
-        */
-        updateInput: function (action, frameStart) {
-            var input = action.input;
-
-            input.onFrame(frameStart);
-            
-            return action.input;
-        },
-        
-        /*
             Ease value in action with provided key
             
             @param [string]: key of value
             @param [Action]
             @param [object]: Progress of pointer props
         */
-        easeValue: function (key, action) {
-            var value = action.values[key],
-                progress = action.progress[key],
+        easeValue: function (key, value, action) {
+            var progress = action.progress[key],
                 newValue = value.current;
                 
             if (utils.isObj(progress)) {
@@ -247,9 +228,8 @@ Rubix.prototype = {
             @param [string]: key of value
             @param [Action]
         */
-        easeValue: function (key, action) {
-            var value = action.values[key],
-                newValue = value.current + action.progress[key];
+        easeValue: function (key, value, action) {
+            var newValue = value.current + action.progress[key];
 
             if (value.min) {
                 newValue = Math.max(value.min, newValue);
