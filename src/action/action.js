@@ -12,6 +12,9 @@ var cycl = require('cycl'),
     Action = function () {
         var self = this;
         
+        // Create value manager
+        this.values = new Values();
+        
         // Create new property manager
         this.props = new Props();
 
@@ -99,6 +102,7 @@ Action.prototype = {
         @return [Action]
     */
     start: function (processType, base) {
+        this.isActive(true);
         this.change(processType, base);
         
         this.process.start();
@@ -106,18 +110,44 @@ Action.prototype = {
         return this;
     },
     
-    stop: function () {},
+    stop: function () {
+        this.isActive(false);
+    },
     
-    pause: function () {},
+    pause: function () {
+        
+    },
     
     resume: function () {},
     
-    setValue: function () {},
+    setValue: function (key, value) {
+        this.values.set(key, value);
+    },
     
-    getValue: function () {},
+    getValue: function (key) {
+        return this.values.get(key);
+    },
     
-    isActive: function () {
+    setProp: function (key, value) {
+        this.props.set(key, value);
+    },
+    
+    getProp: function (key) {
+        return this.props.get(key);
+    },
+    
+    /*
+        Is Action active?
         
+        @param [boolean] (optional): If provided, will set action to active/inactive
+        @return [boolean]: Active status
+    */
+    isActive: function (active) {
+        if (active !== active) {
+            this.active = active;
+        }
+        
+        return this.active;
     },
     
     /*
@@ -130,6 +160,7 @@ Action.prototype = {
         // Assign the processing rubix
         base.rubix = rubix[processType];
 
+        this.values.apply(base.values);
         this.props.apply(base);
     }
     
