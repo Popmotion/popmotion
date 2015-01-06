@@ -7,6 +7,7 @@ var cycl = require('cycl'),
     Action = function () {
         var self = this;
 
+        // Create data store
         this.data = new Data();
         
         // Register process wth cycl

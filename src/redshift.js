@@ -2,8 +2,10 @@
 
 var Action = require('./action/action.js'),
     Input = require('./input/input.js'),
+    presets = require('./action/presets.js'),
     easing = require('./utils/easing.js'),
     calc = require('./utils/calc.js'),
+    utils = require('./utils/utils.js'),
     cycl = require('cycl'),
     Redshift = function () {};
 
@@ -42,7 +44,15 @@ Redshift.prototype = {
         @return [Redshift]
     */
     define: function () {
+        var props = {};
         
+        if (utils.isObj(arguments[0])) {
+            props = arguments[0];
+        } else {
+            props[arguments[0]] = arguments[1];
+        };
+        
+        presets.define(props);
         
         return this;
     },
