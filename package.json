@@ -27,6 +27,9 @@
 	  "watch": "watchify ./src/redshift.js -o ./redshift.js -dv",
 	  "compile": "browserify ./src/utils/global.js -o ./redshift.global.js && browserify ./src/utils/global.js | uglifyjs - -m -o ./redshift.global.min.js"
   },
+  "dependencies": {
+      "cycl": "0.2.0"
+  },
   "devDependencies": {
     "browserify": "7.0.0",
     "uglify-js": "2.4.15",

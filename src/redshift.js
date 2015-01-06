@@ -3,6 +3,8 @@
 var Action = require('./action/action.js'),
     Input = require('./input/input.js'),
     easing = require('./utils/easing.js'),
+    calc = require('./utils/calc.js'),
+    cycl = require('cycl'),
     Redshift = function () {};
 
 Redshift.prototype = {
@@ -22,7 +24,7 @@ Redshift.prototype = {
         @return [Input]: Newly-created Input
     */
     newInput: function () {
-        return new Input();
+        return new Input(arguments[0], arguments[1]);
     },
     
     /*
@@ -52,16 +54,17 @@ Redshift.prototype = {
         My favourite bezier curve generator is Lea Verou's excellent http://cubic-bezier.com/
         
         @param [string]: Name of the new easing function 
-        @param [number]: x coordinate of point 1
-        @param [number]: y coordinate of point 1
-        @param [number]: x coordinate of point 2
-        @param [number]: y coordinate of point 2
+        @params [number]: x/y coordinates of handles
     */
     addBezier: function (name, x1, y1, x2, y2) {
         easing.addBezier(name, x1, y1, x2, y2);
         
         return this;
-    }
+    },
+    
+    calc: calc,
+    
+    cycl: cycl
     
 };
 
