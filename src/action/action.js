@@ -4,13 +4,16 @@ var cycl = require('cycl'),
     processor = require('./processor.js'),
     presets = require('./presets.js'),
     rubix = require('./rubix.js'),
+    Props = require('./props.js'),
+    Pointer = require('../input/pointer.js'),
     KEY = require('../opts/keys.js'),
     Data = require('../bits/data.js'),
 
     Action = function () {
         var self = this;
         
-        
+        // Create new property manager
+        this.props = new Props();
 
         // Create data store
         this.data = new Data();
@@ -58,9 +61,17 @@ Action.prototype = {
     track: function (defs) {
         var hasAllArgs = (arguments[2] !== undefined),
             input = hasAllArgs ? arguments[2] : arguments[1],
-            override = hasAllArgs ? arguments[1] : {};
+            override = hasAllArgs ? arguments[1] : {},
+            base = presets.createBase(defs, override);
         
-        return this.start(KEY.RUBIX.INPUT, presets.createBase(defs, override), input);
+        // If we have an input, check if it's a custom input.
+        // Create a new pointer if it isn't
+        if (input) {
+            base.input = (input.current) ? input : new Pointer(input);
+            base.inputOrigin = base.input.get();
+        }
+        
+        return this.start(KEY.RUBIX.INPUT, base);
     },
 
     /*
@@ -87,8 +98,8 @@ Action.prototype = {
         @param [object]: Base Action properties to apply
         @return [Action]
     */
-    start: function (processType, base, input) {
-        this.change(processType, base, input);
+    start: function (processType, base) {
+        this.change(processType, base);
         
         this.process.start();
         
@@ -109,20 +120,17 @@ Action.prototype = {
         
     },
     
-    change: function (processType, base, input) {
+    /*
+        Change Action properties
         
-        // If we have an input, check if it's a custom input.
-        // Create a new pointer if it isn't
-        if (input) {
-            base.input = (input.current) ? input : new Pointer(input);
-            base.inputOrigin = base.input.get();
-        }
-        
+        @param [string]: Type of processing rubix to use
+        @param [object]: Base properties of new input
+    */
+    change: function (processType, base) {
         // Assign the processing rubix
-        this.rubix = rubix[processType];
+        base.rubix = rubix[processType];
 
-        // TODO: Migrate
-        action.set(changes);
+        this.props.apply(base);
     }
     
 };

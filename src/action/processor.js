@@ -3,7 +3,7 @@
 */
 "use strict";
 
-var Rubix = require('../bobs/rubix.js'),
+var Rubix = require('./rubix.js'),
     utils = require('../utils/utils.js'),
     Process = function () {},
     process;
@@ -19,7 +19,7 @@ Process.prototype = {
     */
     action: function (action, framestamp, frameDuration) {
         
-        console.log(action, framestamp, frameDuration);
+        
         
     },
     
@@ -27,34 +27,6 @@ Process.prototype = {
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-    /*
-        Process actions
-        
-        Loop through all active actions and process each
-        
-        @param [array]: Tokens of active actions at time of framestart
-        @param [timestamp]: Timestamp of framestart
-    */
-    actions: function (tokens, frameStart, fps) {
-        var i = 0,
-            active = tokens.length;
-
-        for (i; i < active; ++i) {
-            this.singleAction(ActionManager.get(tokens[i]), frameStart, fps);
-        }
-    },
     
     
     /*
