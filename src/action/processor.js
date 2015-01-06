@@ -68,7 +68,7 @@ Process.prototype = {
         // Fire onEnd and deactivate if at end
         if (rubix.hasEnded(action)) {
             props.onEnd.call(props.scope, output, data);
-            action.stop();
+            action.next();
         }
         
         // Update Action framestamp

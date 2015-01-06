@@ -556,6 +556,12 @@ var cycl = require('cycl'),
 
 Action.prototype = {
 
+    // [number]: Progress represented in a range of 0 - 1
+    progress: 0,
+    
+    // [number]: Time elapsed in ms
+    elapsed: 0,
+
     /*
         Play the provided actions as animations
         
@@ -629,23 +635,71 @@ Action.prototype = {
         @return [Action]
     */
     start: function (processType, base) {
-        this.isActive(true);
+        this.resetProgress();
         this.change(processType, base);
+        this.isActive(true);
+        this.started = utils.currentTime() + this.props.get('delay');
+        this.framestamp = this.started;
+        this.firstFrame = true;
         
         this.process.start();
         
         return this;
     },
     
+    /*
+        Stop current Action process
+    */
     stop: function () {
         this.isActive(false);
-    },
-    
-    pause: function () {
+        this.process.stop();
         
+        return this;
     },
     
-    resume: function () {},
+    /*
+        Pause current Action
+    */
+    pause: function () {
+        this.stop();
+        
+        return this;
+    },
+    
+    /*
+        Resume a paused Action
+    */
+    resume: function () {
+        this.started = utils.currentTime() - this.elapsed;
+        this.framestamp = this.started;
+        
+        this.process.start();
+        
+        return this;
+    },
+    
+    /*
+        
+    */
+    reset: function () {
+        this.resetProgress();
+        this.values.reset();
+        
+        return this;
+    },
+    
+    resetProgress: function () {
+        this.progress = 0;
+        this.elapsed = 0;
+    },
+    
+    reverse: function () {
+        this.progress = calc.difference(this.progress, 1);
+        this.elapsed = calc.difference(this.elapsed, this.duration);
+        this.values.reverse();
+
+        return this;
+    },
     
     setValue: function (key, value) {
         this.values.set(key, value);
@@ -687,8 +741,16 @@ Action.prototype = {
         // Assign the processing rubix
         base.rubix = rubix[processType];
 
-        this.values.apply(base.values);
         this.props.apply(base);
+        this.values.apply(base.values, this.props);
+
+        this.origin = {};
+        // Create origins
+        for (var key in this.values) {
+            if (this.values.hasOwnProperty(key)) {
+                this.origin[key] = this.values[key].current;
+            }
+        }
     }
     
 };
@@ -879,70 +941,73 @@ Process.prototype = {
         @param [number]: Duration, in ms, since last frame
     */
     action: function (action, framestamp, frameDuration) {
-        
-        
-        
-    },
-    
-    
-    
-    
-    
-    
-    
-    /*
-        Process a single action
-        
-        @param [Action]
-        @param [timestamp]
-    */
-    singleAction: function (action, frameStart, fps) {
         var output = {},
-            rubix = Rubix[action.rubix],
+            props = action.props,
+            rubix = props.rubix,
+            data = action.data(),
+            values = action.values.getAll(),
             hasChanged = false;
         
-        // If this is the first frame of an action, fire the onStart callback
+        // Fire onStart if firstFrame
         if (action.firstFrame) {
-            action.onStart.call(action.scope, action.data);
+            props.onStart.call(props.scope, data);
             action.firstFrame = false;
         }
-
-        // Check if this processor updates its input
-        if (rubix.updateInput) {
-            output.input = rubix.updateInput(action, frameStart);
-        }
-
-        action.progress = rubix.calcProgress(action, frameStart, fps);
         
-        // Loop over all values 
-        for (var key in action.values) {
-            if (action.values.hasOwnProperty(key)) {
-                output[key] = rubix.easeValue(key, action);
+        // Update associated Input
+        this.updateInput(props.input, framestamp);
+        
+        // Update progress
+        action.progress = rubix.calcProgress(action, props, framestamp, frameDuration);
+        
+        // Calculate new values
+        for (var key in values) {
+            if (values.hasOwnProperty(key)) {
                 
-                // Apply Math function if one defined
-                output[key] = action.values[key].round ? Math.round(output[key]) : output[key];
-
-                if (action.values[key].current !== output[key]) {
+                // Ease value
+                output[key] = rubix.easeValue(key, values[key], action);
+                
+                // Round
+                if (values[key].round) {
+                    output[key] = Math.round(output[key]);
+                }
+                
+                // Check if has changed
+                if (values[key].current !== output[key]) {
                     hasChanged = true;
-                    action.values[key].current = output[key];
+                    values[key].current = output[key];
                 }
             }
-        }
+        } // end value calculations
         
-        action.onFrame.call(action.scope, output, action.data);
-
-        // If output has changed, fire onChange
+        // Fire onFrame callback
+        props.onFrame.call(props.scope, output, data);
+        
+        // Fire onChange callback
         if (hasChanged) {
-            action.onChange.call(action.scope, output, action.data);
-        }
-
-        // If process is at its end, fire onEnd and deactivate action
-        if (rubix.hasEnded(action)) {
-            action.onEnd.call(action.scope, output, action.data);
-            ActionManager.queueDeactivate(action.token);
+            props.onChange.call(props.scope, output, data);
         }
         
-        action.framestamp = frameStart;
+        // Fire onEnd and deactivate if at end
+        if (rubix.hasEnded(action)) {
+            props.onEnd.call(props.scope, output, data);
+            action.next();
+        }
+        
+        // Update Action framestamp
+        action.framestart = framestart;
+    },
+    
+    /*
+        Update associated input
+        
+        @param [Input]: Bound input
+        @param [number]: Framestamp of latest frame
+    */
+    updateInput: function (input, framestamp) {
+        if (input) {
+            input.updateInput(framestamp);
+        }
     }
 };
 
@@ -990,12 +1055,6 @@ var KEY = require('../opts/keys.js'),
         
         // Input origin on tracking start
         inputOrigin: undefined,
-        
-        // Current progress
-        progress: 0,
-        
-        // Time elapsed
-        elapsed: 0,
         
         // Use the progress of this property of linked input
         link: undefined,
@@ -1106,10 +1165,10 @@ Rubix.prototype = {
             @param [timestamp]: framestart timestamp
             @return [number]: 0 to 1 value representing how much time has passed
         */
-        calcProgress: function (action, frameStart) {
-            action.elapsed += calc.difference(action.framestamp, frameStart) * action.dilate;
+        calcProgress: function (action, props, frameStart) {
+            action.elapsed += calc.difference(action.framestamp, frameStart) * props.dilate;
 
-            return calc.restricted(calc.progress(action.elapsed, action.duration + action.delay), 0, 1);
+            return calc.restricted(calc.progress(action.elapsed, props.duration + props.delay), 0, 1);
         },
         
         /*
@@ -1131,18 +1190,14 @@ Rubix.prototype = {
             @param [string]: key of value
             @param [Action]
         */
-        easeValue: function (key, action) {
-            var value = action.values[key],
-                progress = action.progress,
-                easedValue;
+        easeValue: function (key, value, action) {
+            var progress = action.progress;
 
             if (value.steps) {
                 progress = utils.stepProgress(progress, 1, value.steps);
             }
 
-            easedValue = Easing.withinRange(progress, value.from, value.to, value.ease);
-
-            return easedValue;
+            return Easing.withinRange(progress, value.from, value.to, value.ease);;
         }
     },
     
@@ -1174,11 +1229,11 @@ Rubix.prototype = {
             @param [Action]: action to measure
             @return [object]: Object of all progresses
         */
-        calcProgress: function (action, frameStart) {
+        calcProgress: function (action, props, frameStart) {
             var progress = {},
                 inputKey, value, offset,
-                values = action.values,
-                inputOffset = calc.offset(action.inputOrigin, action.input.current);
+                values = action.values.getAll(),
+                inputOffset = calc.offset(props.inputOrigin, props.input.current);
             
             for (var key in values) {
                 if (values.hasOwnProperty(key)) {
@@ -1216,29 +1271,14 @@ Rubix.prototype = {
         },
         
         /*
-            Update pointer
-            
-            @param [Action]: 
-            @return [boolean]: Latest pointer, or previous pointer if stopped tracking
-        */
-        updateInput: function (action, frameStart) {
-            var input = action.input;
-
-            input.onFrame(frameStart);
-            
-            return action.input;
-        },
-        
-        /*
             Ease value in action with provided key
             
             @param [string]: key of value
             @param [Action]
             @param [object]: Progress of pointer props
         */
-        easeValue: function (key, action) {
-            var value = action.values[key],
-                progress = action.progress[key],
+        easeValue: function (key, value, action) {
+            var progress = action.progress[key],
                 newValue = value.current;
                 
             if (utils.isObj(progress)) {
@@ -1317,9 +1357,8 @@ Rubix.prototype = {
             @param [string]: key of value
             @param [Action]
         */
-        easeValue: function (key, action) {
-            var value = action.values[key],
-                newValue = value.current + action.progress[key];
+        easeValue: function (key, value, action) {
+            var newValue = value.current + action.progress[key];
 
             if (value.min) {
                 newValue = Math.max(value.min, newValue);
@@ -1482,7 +1521,7 @@ var utils = require('../utils/utils.js'),
                 @return: Data at key
             */
             getData = function (key) {
-                return store[key];
+                return (key !== undefined) ? store[key] : store;
             },
     
             /*
