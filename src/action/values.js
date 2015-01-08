@@ -37,7 +37,7 @@ Values.prototype = {
     */
     reset: function () {
         for (var key in this.store) {
-            this.values[key].current = this.values[key].from;
+	        this.store[key].current = this.store[key].from;
         }
     },
     
