@@ -8,6 +8,7 @@ var cycl = require('cycl'),
     Values = require('./values.js'),
     Pointer = require('../input/pointer.js'),
     KEY = require('../opts/keys.js'),
+    calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
     Data = require('../bits/data.js'),
 
@@ -177,7 +178,7 @@ Action.prototype = {
     */
     reverse: function () {
         this.progress = calc.difference(this.progress, 1);
-        this.elapsed = calc.difference(this.elapsed, this.duration);
+        this.elapsed = calc.difference(this.elapsed, this.props.get('duration'));
         this.values.reverse();
 
         return this;
