@@ -154,7 +154,7 @@ Action.prototype = {
     },
     
     /*
-        
+        Reset Action progress and values
     */
     reset: function () {
         this.resetProgress();
@@ -163,12 +163,18 @@ Action.prototype = {
         return this;
     },
     
+    /*
+	    Reset Action progress
+    */
     resetProgress: function () {
         this.progress = 0;
         this.elapsed = 0;
         this.started = utils.currentTime();
     },
     
+    /*
+	    Reverse Action progress and values
+    */
     reverse: function () {
         this.progress = calc.difference(this.progress, 1);
         this.elapsed = calc.difference(this.elapsed, this.duration);
@@ -224,6 +230,8 @@ Action.prototype = {
                 stepTaken = true;
             }
         }
+        
+        return stepTaken;
     },
     
     /*
