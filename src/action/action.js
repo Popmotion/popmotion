@@ -220,7 +220,7 @@ Action.prototype = {
             this.props.set(key + 'Count', count);
             
             if (forever || count <= step) {
-                callback();
+                callback.call(this);
                 stepTaken = true;
             }
         }
