@@ -92,7 +92,7 @@ var utils = require('../utils/utils.js'),
         hasRange: false,
         
         // Speed for .move(), in xps
-        speed: 0,
+        velocity: 0,
         friction: 0,
         thrust: 0,
         

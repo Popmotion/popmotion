@@ -298,17 +298,20 @@ Action.prototype = {
         @param [object]: Base properties of new input
     */
     change: function (processType, base) {
+	    var values = {};
+
         // Assign the processing rubix
         base.rubix = rubix[processType];
 
         this.props.apply(base);
         this.values.apply(base.values, this.props);
+        values = this.values.getAll();
 
         this.origin = {};
         // Create origins
-        for (var key in this.values) {
-            if (this.values.hasOwnProperty(key)) {
-                this.origin[key] = this.values[key].current;
+        for (var key in values) {
+            if (values.hasOwnProperty(key)) {
+                this.origin[key] = values[key].current;
             }
         }
     }

@@ -36,7 +36,7 @@ Rubix.prototype = {
             @param [timestamp]: framestart timestamp
             @return [number]: 0 to 1 value representing how much time has passed
         */
-        calcProgress: function (action, props, frameStart) {
+        calcProgress: function (action, props, values, frameStart) {
             action.elapsed += calc.difference(action.framestamp, frameStart) * props.dilate;
 
             return calc.restricted(calc.progress(action.elapsed, props.duration + props.delay), 0, 1);
@@ -100,10 +100,9 @@ Rubix.prototype = {
             @param [Action]: action to measure
             @return [object]: Object of all progresses
         */
-        calcProgress: function (action, props, frameStart) {
+        calcProgress: function (action, props, values, frameStart) {
             var progress = {},
                 inputKey, value, offset,
-                values = action.values.getAll(),
                 inputOffset = calc.offset(props.inputOrigin, props.input.current);
 
             for (var key in values) {
@@ -172,41 +171,47 @@ Rubix.prototype = {
     Run: {
     
         /*
-            Convert x per second to per frame speed based on fps
+            Convert x per second to per frame velocity based on fps
+            
+            @param [number]: Unit per second
+            @param [number]: Frame duration in ms
         */
-        frameSpeed: function (xps, fps) {
-            var speedPerFrame = 0;
+        frameSpeed: function (xps, frameDuration) {
+	        var velocityPerFrame = 0;
 
-            if (xps && utils.isNum(xps)) {
-                speedPerFrame = xps/fps;
-            }
-        
-            return speedPerFrame;
+	        if (utils.isNum(xps)) {
+		        velocityPerFrame = xps / (1000 / frameDuration);
+	        }
+
+	        return velocityPerFrame;
         },
     
         /*
-            Calc new speed
+            Calc new velocity
             
-            Calc the new speed based on the formula speed = (speed - friction + thrust)
+            Calc the new velocity based on the formula velocity = (velocity - friction + thrust)
             
             @param [Action]: action to measure
-            @return [object]: Object of all speeds
+            @return [object]: Object of all velocitys
         */
-        calcProgress: function (action, frameStart, fps) {
+        calcProgress: function (action, props, values, frameStart, frameDuration) {
             var progress = {},
                 point,
                 value;
-                
-            for (var key in action.values) {
-                if (action.values.hasOwnProperty(key)) {
-                    value = action.values[key];
-                    value.speed = value.speed - this.frameSpeed(value.friction, fps) + this.frameSpeed(value.thrust, fps);
-                    progress[key] = this.frameSpeed(value.speed, fps);
+
+            for (var key in values) {
+                if (values.hasOwnProperty(key)) {
+                    value = values[key];
+                    value.velocity = value.velocity - this.frameSpeed(value.friction, frameDuration) + this.frameSpeed(value.thrust, frameDuration);
+                    progress[key] = this.frameSpeed(value.velocity, frameDuration);
                 }
             }
             
-            if (action.values.angle && action.values.distance) {
-                point = calc.pointFromAngleAndDistance(action.origin, action.values.angle.current, action.values.distance.current);
+            /*
+	            If angle and distance are defined as properties, they take priority
+            */
+            if (values.angle && values.distance) {
+	            point = calc.pointFromAngleAndDistance(action.origin, values.angle.current, values.distance.current);
                 progress.x = point.x;
                 progress.y = point.y;
             }
@@ -224,7 +229,7 @@ Rubix.prototype = {
         },
         
         /*
-            Add the speed to the current value
+            Add the velocity to the current value
             
             @param [string]: key of value
             @param [Action]

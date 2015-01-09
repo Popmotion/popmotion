@@ -37,7 +37,7 @@ Process.prototype = {
         }
         
         // Update progress
-        action.progress = rubix.calcProgress(action, props, framestamp, frameDuration);
+        action.progress = rubix.calcProgress(action, props, values, framestamp, frameDuration);
 
         // Calculate new values
         for (var key in values) {
