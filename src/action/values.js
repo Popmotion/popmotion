@@ -26,7 +26,7 @@ Values.prototype = {
         }
         
         // Add x and y properties if angle is provided
-        if (values && values.angle) {
+        if (values && values.angle && values.distance) {
             this.store.x = this.store.x || new Value(0, inherit);
             this.store.y = this.store.y || new Value(0, inherit);
         }

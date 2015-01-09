@@ -108,7 +108,7 @@ Process.prototype = {
 		    output.x = point.x;
 		    output.y = point.y;
 	    }
-	    console.log(output);
+
 	    return output;
     }
 };

@@ -314,6 +314,11 @@ Action.prototype = {
                 this.origin[key] = values[key].current;
             }
         }
+        
+        if (utils.isNum(this.origin.angle) && utils.isNum(this.origin.distance)) {
+	        this.origin.x = 0;
+	        this.origin.y = 0;
+        }
     }
     
 };

@@ -209,8 +209,8 @@ module.exports = {
     pointFromAngleAndDistance: function (origin, angle, distance) {
         var point = {};
 
-        point.x = 5 * Math.cos(angle) + origin.x;
-        point.y = 5 * Math.sin(angle) + origin.y;
+		point.x = distance * Math.cos(angle) + origin.x;
+        point.y = distance * Math.sin(angle) + origin.y;
 
         return point;
     },
