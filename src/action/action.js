@@ -204,8 +204,8 @@ Action.prototype = {
                 break;
             }
         }
-        
-        if (!hasNext && !this.checkNextStep()) {
+
+        if (!hasNext && !this.playNext()) {
             this.stop();
         }
     },
@@ -231,7 +231,7 @@ Action.prototype = {
                 stepTaken = true;
             }
         }
-        
+
         return stepTaken;
     },
     
@@ -241,10 +241,10 @@ Action.prototype = {
     playNext: function () {
         var stepTaken = false,
             playlist = this.props.get('playlist'),
-            platlistLength = playlist.length,
+            playlistLength = playlist.length,
             playhead = this.props.get('playhead'),
             next = {};
-            
+
         // Check we have a playlist
         if (playlistLength > 1) {
             ++playhead;
@@ -252,11 +252,14 @@ Action.prototype = {
             if (playhead < playlistLength) {
                 next = presets.getDefined(playlist[playhead]);
                 next.playhead = playhead;
-                
                 this.change(KEY.RUBIX.TIME, next);
+                this.reset();
                 stepTaken = true;
             }
         }
+        
+        console.log(stepTaken);
+        return stepTaken;
     },
     
     setValue: function (key, value) {
