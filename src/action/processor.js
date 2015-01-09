@@ -4,6 +4,7 @@
 "use strict";
 
 var Rubix = require('./rubix.js'),
+	calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
     Process = function () {},
     process;
@@ -59,6 +60,9 @@ Process.prototype = {
             }
         } // end value calculations
         
+        // Calculate new x and y if angle and distance present
+        output = this.angleAndDistance(action.origin, output);
+        
         // Fire onFrame callback
         props.onFrame.call(props.scope, output, data);
         
@@ -87,6 +91,25 @@ Process.prototype = {
         if (input) {
             input.updateInput(framestamp);
         }
+    },
+    
+    /*
+	    Process angle and distance
+	    
+	    @param [object]: Action origin point
+	    @param [object]: Current output
+	    @return [object]: Output with updated x and y
+    */
+    angleAndDistance: function (origin, output) {
+	    var point = {};
+
+	    if (output.angle && output.distance) {
+		    point = calc.pointFromAngleAndDistance(origin, output.angle, output.distance);
+		    output.x = point.x;
+		    output.y = point.y;
+	    }
+	    console.log(output);
+	    return output;
     }
 };
 

@@ -207,15 +207,6 @@ Rubix.prototype = {
                 }
             }
             
-            /*
-	            If angle and distance are defined as properties, they take priority
-            */
-            if (values.angle && values.distance) {
-	            point = calc.pointFromAngleAndDistance(action.origin, values.angle.current, values.distance.current);
-                progress.x = point.x;
-                progress.y = point.y;
-            }
-            
             return progress;
         },
         
