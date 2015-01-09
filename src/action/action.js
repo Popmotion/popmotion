@@ -257,8 +257,7 @@ Action.prototype = {
                 stepTaken = true;
             }
         }
-        
-        console.log(stepTaken);
+
         return stepTaken;
     },
     
