@@ -16,16 +16,16 @@ var cycl = require('cycl'),
         var self = this;
         
         // Create value manager
-        this.values = new Values();
+        self.values = new Values();
         
         // Create new property manager
-        this.props = new Props();
+        self.props = new Props();
 
         // Create data store
-        this.data = new Data();
+        self.data = new Data();
         
         // Register process wth cycl
-        this.process = cycl.newProcess(function (framestamp, frameDuration) {
+        self.process = cycl.newProcess(function (framestamp, frameDuration) {
 	        if (self.active) {
             	processor.action(self, framestamp, frameDuration);
 	        }
@@ -113,77 +113,93 @@ Action.prototype = {
         @return [Action]
     */
     start: function (processType, base) {
-        this.resetProgress();
-        this.change(processType, base);
-        this.isActive(true);
-        this.started = utils.currentTime() + this.props.get('delay');
-        this.framestamp = this.started;
-        this.firstFrame = true;
+	    var self = this;
+
+        self.resetProgress();
+        self.change(processType, base);
+        self.isActive(true);
+        self.started = utils.currentTime() + self.props.get('delay');
+        self.framestamp = self.started;
+        self.firstFrame = true;
         
-        this.process.start();
+        self.process.start();
         
-        return this;
+        return self;
     },
     
     /*
         Stop current Action process
     */
     stop: function () {
-        this.isActive(false);
-        this.process.stop();
+	    var self = this;
 
-        return this;
+        self.isActive(false);
+        self.process.stop();
+
+        return self;
     },
     
     /*
         Pause current Action
     */
     pause: function () {
-        this.stop();
+	    var self = this;
+
+        self.stop();
         
-        return this;
+        return self;
     },
     
     /*
         Resume a paused Action
     */
     resume: function () {
-        this.started = utils.currentTime() - this.elapsed;
-        this.framestamp = this.started;
+	    var self = this;
+
+        self.started = utils.currentTime() - self.elapsed;
+        self.framestamp = self.started;
         
-        this.process.start();
+        self.process.start();
         
-        return this;
+        return self;
     },
     
     /*
         Reset Action progress and values
     */
     reset: function () {
-        this.resetProgress();
-        this.values.reset();
+	    var self = this;
+
+        self.resetProgress();
+        self.values.reset();
         
-        return this;
+        return self;
     },
     
     /*
 	    Reset Action progress
     */
     resetProgress: function () {
-        this.progress = 0;
-        this.elapsed = 0;
-        this.started = utils.currentTime();
+	    var self = this;
+
+        self.progress = 0;
+        self.elapsed = 0;
+        self.started = utils.currentTime();
+        
+        return self;
     },
     
     /*
 	    Reverse Action progress and values
     */
     reverse: function () {
-        this.progress = calc.difference(this.progress, 1);
-        this.elapsed = calc.difference(this.elapsed, this.props.get('duration'));
-        this.values.reverse();
+	    var self = this;
 
-        return this;
+        self.progress = calc.difference(self.progress, 1);
+        self.elapsed = calc.difference(self.elapsed, self.props.get('duration'));
+        self.values.reverse();
+
+        return self;
     },
     
     /*
