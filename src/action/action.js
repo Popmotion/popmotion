@@ -26,7 +26,9 @@ var cycl = require('cycl'),
         
         // Register process wth cycl
         this.process = cycl.newProcess(function (framestamp, frameDuration) {
-            processor.action(self, framestamp, frameDuration);
+	        if (self.active) {
+            	processor.action(self, framestamp, frameDuration);
+	        }
         });
     };
 
@@ -129,7 +131,7 @@ Action.prototype = {
     stop: function () {
         this.isActive(false);
         this.process.stop();
-        
+
         return this;
     },
     
@@ -284,10 +286,10 @@ Action.prototype = {
         @return [boolean]: Active status
     */
     isActive: function (active) {
-        if (active !== active) {
+        if (active !== undefined) {
             this.active = active;
         }
-        
+
         return this.active;
     },
     
