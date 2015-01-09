@@ -183,7 +183,7 @@ module.exports = {
         for (var key in b) {
             if (b.hasOwnProperty(key)) {
                 if (a.hasOwnProperty(key)) {
-                    offset[key] = this.distance1D(a[key], b[key]);
+                    offset[key] = this.difference(a[key], b[key]);
                 } else {
                     offset[key] = 0;
                 }

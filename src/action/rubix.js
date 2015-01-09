@@ -105,7 +105,7 @@ Rubix.prototype = {
                 inputKey, value, offset,
                 values = action.values.getAll(),
                 inputOffset = calc.offset(props.inputOrigin, props.input.current);
-            
+
             for (var key in values) {
                 if (values.hasOwnProperty(key)) {
                     value = values[key];
@@ -120,6 +120,7 @@ Rubix.prototype = {
                         if (value.hasRange) {
                             progress[key].type = KEY.PROGRESS.RANGE;
                             progress[key].value = calc.progress(value.from + offset, value.min, value.max);
+
                         // Or we calculate progress directly
                         } else {
                             progress[key].type = KEY.PROGRESS.DIRECT;

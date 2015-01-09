@@ -32,11 +32,13 @@ Process.prototype = {
         }
         
         // Update associated Input
-        this.updateInput(props.input, framestamp);
+        if (props.input) {
+	        output.input = props.input.onFrame(framestamp);
+        }
         
         // Update progress
         action.progress = rubix.calcProgress(action, props, framestamp, frameDuration);
-        
+
         // Calculate new values
         for (var key in values) {
             if (values.hasOwnProperty(key)) {
