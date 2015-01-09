@@ -154,9 +154,10 @@ ProcessManager.prototype = {
         Fire all active processes
         
         @param [int]: Timestamp of executing frames
+        @param [int]: Time since previous frame
         @return [boolean]: True if active processes found
     */
-    fireActive: function (framestamp) {
+    fireActive: function (framestamp, elapsed) {
         var isActive = false,
             activeCount,
             activeProcesses;
@@ -170,7 +171,7 @@ ProcessManager.prototype = {
             isActive = true;
             
             for (var i = 0; i < activeCount; i++) {
-                this.getProcess(i).fire(framestamp);
+                this.getProcess(i).fire(framestamp, elapsed);
             }
         }
         
@@ -288,7 +289,6 @@ Process.prototype = {
     */
     fire: function (timestamp, elapsed) {
         // Check timers
-        
         if (this.isActive) {
             this.callback.call(this.scope, timestamp, elapsed);
         }
@@ -396,12 +396,14 @@ Process.prototype = {
         @return [this]
     */
     every: function (interval) {
+	    var self = this;
+
         this.reset();
 
         this.isInterval = true;
 
-        self.intervalTimer = setInterval(function () {
-            this.activate();
+        this.intervalTimer = setInterval(function () {
+            self.activate();
         }, interval);
     },
     
@@ -416,13 +418,6 @@ Process.prototype = {
         clearInterval(this.intervalTimer);
         
         return this;
-    },
-    
-    /*
-        Kill process
-    */
-    kill: function () {
-        
     }
 };
 
@@ -535,6 +530,7 @@ var cycl = require('cycl'),
     Values = require('./values.js'),
     Pointer = require('../input/pointer.js'),
     KEY = require('../opts/keys.js'),
+    calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
     Data = require('../bits/data.js'),
 
@@ -552,7 +548,9 @@ var cycl = require('cycl'),
         
         // Register process wth cycl
         this.process = cycl.newProcess(function (framestamp, frameDuration) {
-            processor.action(self, framestamp, frameDuration);
+	        if (self.active) {
+            	processor.action(self, framestamp, frameDuration);
+	        }
         });
     };
 
@@ -655,7 +653,7 @@ Action.prototype = {
     stop: function () {
         this.isActive(false);
         this.process.stop();
-        
+
         return this;
     },
     
@@ -681,7 +679,7 @@ Action.prototype = {
     },
     
     /*
-        
+        Reset Action progress and values
     */
     reset: function () {
         this.resetProgress();
@@ -690,15 +688,21 @@ Action.prototype = {
         return this;
     },
     
+    /*
+	    Reset Action progress
+    */
     resetProgress: function () {
         this.progress = 0;
         this.elapsed = 0;
         this.started = utils.currentTime();
     },
     
+    /*
+	    Reverse Action progress and values
+    */
     reverse: function () {
         this.progress = calc.difference(this.progress, 1);
-        this.elapsed = calc.difference(this.elapsed, this.duration);
+        this.elapsed = calc.difference(this.elapsed, this.props.get('duration'));
         this.values.reverse();
 
         return this;
@@ -724,8 +728,8 @@ Action.prototype = {
                 break;
             }
         }
-        
-        if (!hasNext && !this.checkNextStep()) {
+
+        if (!hasNext && !this.playNext()) {
             this.stop();
         }
     },
@@ -747,10 +751,12 @@ Action.prototype = {
             this.props.set(key + 'Count', count);
             
             if (forever || count <= step) {
-                callback();
+                callback.call(this);
                 stepTaken = true;
             }
         }
+
+        return stepTaken;
     },
     
     /*
@@ -759,10 +765,10 @@ Action.prototype = {
     playNext: function () {
         var stepTaken = false,
             playlist = this.props.get('playlist'),
-            platlistLength = playlist.length,
+            playlistLength = playlist.length,
             playhead = this.props.get('playhead'),
             next = {};
-            
+
         // Check we have a playlist
         if (playlistLength > 1) {
             ++playhead;
@@ -770,11 +776,13 @@ Action.prototype = {
             if (playhead < playlistLength) {
                 next = presets.getDefined(playlist[playhead]);
                 next.playhead = playhead;
-                
                 this.change(KEY.RUBIX.TIME, next);
+                this.reset();
                 stepTaken = true;
             }
         }
+
+        return stepTaken;
     },
     
     setValue: function (key, value) {
@@ -800,10 +808,10 @@ Action.prototype = {
         @return [boolean]: Active status
     */
     isActive: function (active) {
-        if (active !== active) {
+        if (active !== undefined) {
             this.active = active;
         }
-        
+
         return this.active;
     },
     
@@ -814,17 +822,20 @@ Action.prototype = {
         @param [object]: Base properties of new input
     */
     change: function (processType, base) {
+	    var values = {};
+
         // Assign the processing rubix
         base.rubix = rubix[processType];
 
         this.props.apply(base);
         this.values.apply(base.values, this.props);
+        values = this.values.getAll();
 
         this.origin = {};
         // Create origins
-        for (var key in this.values) {
-            if (this.values.hasOwnProperty(key)) {
-                this.origin[key] = this.values[key].current;
+        for (var key in values) {
+            if (values.hasOwnProperty(key)) {
+                this.origin[key] = values[key].current;
             }
         }
     }
@@ -832,7 +843,7 @@ Action.prototype = {
 };
 
 module.exports = Action;
-},{"../bits/data.js":14,"../input/pointer.js":19,"../opts/keys.js":20,"../utils/utils.js":25,"./presets.js":8,"./processor.js":9,"./props.js":10,"./rubix.js":11,"./values.js":12,"cycl":1}],8:[function(require,module,exports){
+},{"../bits/data.js":14,"../input/pointer.js":19,"../opts/keys.js":20,"../utils/calc.js":22,"../utils/utils.js":25,"./presets.js":8,"./processor.js":9,"./props.js":10,"./rubix.js":11,"./values.js":12,"cycl":1}],8:[function(require,module,exports){
 "use strict";
 
 var KEY = require('../opts/keys.js'),
@@ -1003,6 +1014,7 @@ module.exports = new Presets();
 "use strict";
 
 var Rubix = require('./rubix.js'),
+	calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
     Process = function () {},
     process;
@@ -1031,11 +1043,13 @@ Process.prototype = {
         }
         
         // Update associated Input
-        this.updateInput(props.input, framestamp);
+        if (props.input) {
+	        output.input = props.input.onFrame(framestamp);
+        }
         
         // Update progress
-        action.progress = rubix.calcProgress(action, props, framestamp, frameDuration);
-        
+        action.progress = rubix.calcProgress(action, props, values, framestamp, frameDuration);
+
         // Calculate new values
         for (var key in values) {
             if (values.hasOwnProperty(key)) {
@@ -1055,6 +1069,9 @@ Process.prototype = {
                 }
             }
         } // end value calculations
+        
+        // Calculate new x and y if angle and distance present
+        output = this.angleAndDistance(action.origin, output);
         
         // Fire onFrame callback
         props.onFrame.call(props.scope, output, data);
@@ -1084,11 +1101,30 @@ Process.prototype = {
         if (input) {
             input.updateInput(framestamp);
         }
+    },
+    
+    /*
+	    Process angle and distance
+	    
+	    @param [object]: Action origin point
+	    @param [object]: Current output
+	    @return [object]: Output with updated x and y
+    */
+    angleAndDistance: function (origin, output) {
+	    var point = {};
+
+	    if (output.angle && output.distance) {
+		    point = calc.pointFromAngleAndDistance(origin, output.angle, output.distance);
+		    output.x = point.x;
+		    output.y = point.y;
+	    }
+
+	    return output;
     }
 };
 
 module.exports = new Process();
-},{"../utils/utils.js":25,"./rubix.js":11}],10:[function(require,module,exports){
+},{"../utils/calc.js":22,"../utils/utils.js":25,"./rubix.js":11}],10:[function(require,module,exports){
 "use strict";
 
 var KEY = require('../opts/keys.js'),
@@ -1241,7 +1277,7 @@ Rubix.prototype = {
             @param [timestamp]: framestart timestamp
             @return [number]: 0 to 1 value representing how much time has passed
         */
-        calcProgress: function (action, props, frameStart) {
+        calcProgress: function (action, props, values, frameStart) {
             action.elapsed += calc.difference(action.framestamp, frameStart) * props.dilate;
 
             return calc.restricted(calc.progress(action.elapsed, props.duration + props.delay), 0, 1);
@@ -1305,12 +1341,11 @@ Rubix.prototype = {
             @param [Action]: action to measure
             @return [object]: Object of all progresses
         */
-        calcProgress: function (action, props, frameStart) {
+        calcProgress: function (action, props, values, frameStart) {
             var progress = {},
                 inputKey, value, offset,
-                values = action.values.getAll(),
                 inputOffset = calc.offset(props.inputOrigin, props.input.current);
-            
+
             for (var key in values) {
                 if (values.hasOwnProperty(key)) {
                     value = values[key];
@@ -1325,6 +1360,7 @@ Rubix.prototype = {
                         if (value.hasRange) {
                             progress[key].type = KEY.PROGRESS.RANGE;
                             progress[key].value = calc.progress(value.from + offset, value.min, value.max);
+
                         // Or we calculate progress directly
                         } else {
                             progress[key].type = KEY.PROGRESS.DIRECT;
@@ -1376,43 +1412,40 @@ Rubix.prototype = {
     Run: {
     
         /*
-            Convert x per second to per frame speed based on fps
+            Convert x per second to per frame velocity based on fps
+            
+            @param [number]: Unit per second
+            @param [number]: Frame duration in ms
         */
-        frameSpeed: function (xps, fps) {
-            var speedPerFrame = 0;
+        frameSpeed: function (xps, frameDuration) {
+	        var velocityPerFrame = 0;
 
-            if (xps && utils.isNum(xps)) {
-                speedPerFrame = xps/fps;
-            }
-        
-            return speedPerFrame;
+	        if (utils.isNum(xps)) {
+		        velocityPerFrame = xps / (1000 / frameDuration);
+	        }
+
+	        return velocityPerFrame;
         },
     
         /*
-            Calc new speed
+            Calc new velocity
             
-            Calc the new speed based on the formula speed = (speed - friction + thrust)
+            Calc the new velocity based on the formula velocity = (velocity - friction + thrust)
             
             @param [Action]: action to measure
-            @return [object]: Object of all speeds
+            @return [object]: Object of all velocitys
         */
-        calcProgress: function (action, frameStart, fps) {
+        calcProgress: function (action, props, values, frameStart, frameDuration) {
             var progress = {},
                 point,
                 value;
-                
-            for (var key in action.values) {
-                if (action.values.hasOwnProperty(key)) {
-                    value = action.values[key];
-                    value.speed = value.speed - this.frameSpeed(value.friction, fps) + this.frameSpeed(value.thrust, fps);
-                    progress[key] = this.frameSpeed(value.speed, fps);
+
+            for (var key in values) {
+                if (values.hasOwnProperty(key)) {
+                    value = values[key];
+                    value.velocity = value.velocity - this.frameSpeed(value.friction, frameDuration) + this.frameSpeed(value.thrust, frameDuration);
+                    progress[key] = this.frameSpeed(value.velocity, frameDuration);
                 }
-            }
-            
-            if (action.values.angle && action.values.distance) {
-                point = calc.pointFromAngleAndDistance(action.origin, action.values.angle.current, action.values.distance.current);
-                progress.x = point.x;
-                progress.y = point.y;
             }
             
             return progress;
@@ -1428,7 +1461,7 @@ Rubix.prototype = {
         },
         
         /*
-            Add the speed to the current value
+            Add the velocity to the current value
             
             @param [string]: key of value
             @param [Action]
@@ -1482,7 +1515,7 @@ Values.prototype = {
         }
         
         // Add x and y properties if angle is provided
-        if (values && values.angle) {
+        if (values && values.angle && values.distance) {
             this.store.x = this.store.x || new Value(0, inherit);
             this.store.y = this.store.y || new Value(0, inherit);
         }
@@ -1493,7 +1526,7 @@ Values.prototype = {
     */
     reset: function () {
         for (var key in this.store) {
-            this.values[key].current = this.values[key].from;
+	        this.store[key].current = this.store[key].from;
         }
     },
     
@@ -1859,7 +1892,7 @@ var utils = require('../utils/utils.js'),
         hasRange: false,
         
         // Speed for .move(), in xps
-        speed: 0,
+        velocity: 0,
         friction: 0,
         thrust: 0,
         
@@ -2151,7 +2184,7 @@ var Input = require('./input.js'),
     Pointer = function (e) {
         var event = utils.getActualEvent(e), // In case of jQuery event
             startPoint = utils.convertEventIntoPoint(event),
-            isTouchEvent = utils.isTouchEvent(event);
+            isTouch = utils.isTouchEvent(event);
         
         this.update(new Point(startPoint));
         this.isTouch = isTouch;
@@ -2500,7 +2533,7 @@ module.exports = {
         for (var key in b) {
             if (b.hasOwnProperty(key)) {
                 if (a.hasOwnProperty(key)) {
-                    offset[key] = this.distance1D(a[key], b[key]);
+                    offset[key] = this.difference(a[key], b[key]);
                 } else {
                     offset[key] = 0;
                 }
@@ -2526,8 +2559,8 @@ module.exports = {
     pointFromAngleAndDistance: function (origin, angle, distance) {
         var point = {};
 
-        point.x = 5 * Math.cos(angle) + origin.x;
-        point.y = 5 * Math.sin(angle) + origin.y;
+		point.x = distance * Math.cos(angle) + origin.x;
+        point.y = distance * Math.sin(angle) + origin.y;
 
         return point;
     },
