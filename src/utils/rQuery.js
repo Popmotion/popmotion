@@ -65,7 +65,7 @@ var loadPlugins = function (redshift) {
             execute(this, action, arguments[1], arguments[2]);
             return this;
         } else {
-            return getInstance(this);
+            return getInstance($(this));
         }
     };
 };
