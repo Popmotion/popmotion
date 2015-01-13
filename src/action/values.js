@@ -13,15 +13,7 @@ Values.prototype = {
         // Create or update Value objects for each defined value
         for (var key in values) {
             if (values.hasOwnProperty(key)) {
-                
-                // If this Value has been created, update
-                if (this.store[key]) {
-                    this.store[key].update(values[key], inherit);
-                
-                // Else create new Value
-                } else {
-                    this.store[key] = new Value(values[key], inherit);
-                }
+                this.set(key, values[key], inherit);
             }
         }
         
@@ -64,11 +56,14 @@ Values.prototype = {
         return this.store;
     },
     
-    set: function (key, value) {
+    set: function (key, value, inherit) {
+        // If value exists
         if (this.store[key]) {
-            this.store[key].current = value;
+            this.store[key].update(value, inherit);
+        
+        // Or create new
         } else {
-            this.store[key] = new Value(value);
+            this.store[key] = new Value(value, inherit);
         }
     },
     
