@@ -206,26 +206,29 @@ Action.prototype = {
         Check for next steps and perform, stop if not
     */
     next: function () {
-        var nexts = [{
+        var self = this,
+            nexts = [{
                 key: 'loop',
-                callback: this.reset
+                callback: self.reset
             }, {
                 key: 'yoyo',
-                callback: this.reverse
+                callback: self.reverse
             }],
             possibles = nexts.length,
             hasNext = false;
             
         for (var i = 0; i < possibles; ++i) {
-            if (this.checkNextStep(nexts[i].key, nexts[i].callback)) {
+            if (self.checkNextStep(nexts[i].key, nexts[i].callback)) {
                 hasNext = true;
                 break;
             }
         }
 
-        if (!hasNext && !this.playNext()) {
-            this.stop();
+        if (!hasNext && !self.playNext()) {
+            self.stop();
         }
+        
+        return self;
     },
     
     /*
@@ -280,7 +283,18 @@ Action.prototype = {
     },
     
     setValue: function (key, value) {
-        this.values.set(key, value);
+        var self = this;
+
+        // If this is a number, set current (as opposed to 'to')
+        if (utils.isNum(value)) {
+            self.values.set(key, { current: value });
+        
+        // Or just set normal object
+        } else {
+            self.values.set(key, value);
+        }
+        
+        return self;
     },
     
     getValue: function (key) {
@@ -289,6 +303,8 @@ Action.prototype = {
     
     setProp: function (key, value) {
         this.props.set(key, value);
+        
+        return this;
     },
     
     getProp: function (key) {
@@ -316,20 +332,21 @@ Action.prototype = {
         @param [object]: Base properties of new input
     */
     change: function (processType, base) {
-	    var values = {};
+	    var self = this,
+	        values = {};
 
         // Assign the processing rubix
         base.rubix = rubix[processType];
 
-        this.props.apply(base);
-        this.values.apply(base.values, this.props);
+        self.props.apply(base);
+        self.values.apply(base.values, self.props);
         values = this.values.getAll();
 
-        this.origin = {};
+        self.origin = {};
         // Create origins
         for (var key in values) {
             if (values.hasOwnProperty(key)) {
-                this.origin[key] = values[key].current;
+                self.origin[key] = values[key].current;
             }
         }
     }
