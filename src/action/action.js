@@ -54,7 +54,26 @@ Action.prototype = {
         @return [Action]
     */
     play: function (defs, override) {
-        return this.start(KEY.RUBIX.TIME, presets.createBase(defs, override));
+        this.set(defs, override);
+        return this.start(KEY.RUBIX.TIME);
+    },
+
+    /*
+        Run Action indefinitely
+        
+        Syntax
+            .run(preset, [override])
+                @param [string]: Name of preset
+                @param [object]: (optional) Override object
+                
+            .run(params)
+                @param [object]: Action properties
+                
+        @return [Action]
+    */
+    run: function (defs, override) {
+        this.set(defs, override);
+        return this.start(KEY.RUBIX.RUN);
     },
     
     /*
@@ -72,51 +91,40 @@ Action.prototype = {
                 
         @return [Action]
     */
-    track: function (defs) {
-        var hasAllArgs = (arguments[2] !== undefined),
-            input = hasAllArgs ? arguments[2] : arguments[1],
-            override = hasAllArgs ? arguments[1] : {},
-            base = presets.createBase(defs, override);
-        
-        // If we have an input, check if it's a custom input.
-        // Create a new pointer if it isn't
-        if (input) {
-            base.input = (input.current) ? input : new Pointer(input);
-            base.inputOrigin = base.input.get();
+    track: function () {
+        var args = arguments,
+            argsLength = args.length,
+            defs = (argsLength > 1) ? args[0] : undefined,
+            override = (argsLength === 3) ? args[1] : undefined,
+            input = args[argsLength - 1];
+            
+        if (!input.current) {
+            input = new Pointer(input);
         }
+            
+        this.set(defs, override);
         
-        return this.start(KEY.RUBIX.INPUT, base);
-    },
-
-    /*
-        Run Action indefinitely
+        this.setProp('input', input)
+            .setProp('inputOrigin', input.get());
         
-        Syntax
-            .run(preset, [override])
-                @param [string]: Name of preset
-                @param [object]: (optional) Override object
-                
-            .run(params)
-                @param [object]: Action properties
-                
-        @return [Action]
-    */
-    run: function (defs, override) {
-        return this.start(KEY.RUBIX.RUN, presets.createBase(defs, override));
+        return this.start(KEY.RUBIX.INPUT);
     },
     
     /*
         Start Action
 
         @param [string]: Name of processing type to sue
-        @param [object]: Base Action properties to apply
         @return [Action]
     */
-    start: function (processType, base) {
+    start: function (processType) {
 	    var self = this;
 
         self.resetProgress();
-        self.change(processType, base);
+        
+        if (processType) {
+            self.changeRubix(processType);
+        }
+
         self.isActive(true);
         self.started = utils.currentTime() + self.props.get('delay');
         self.framestamp = self.started;
@@ -289,6 +297,38 @@ Action.prototype = {
         return stepTaken;
     },
     
+    /*
+        Set Action values and properties
+        
+        Syntax
+            .set(preset[, override, input])
+                @param [string]: Name of preset to apply
+                @param [object] (optional): Properties to override preset
+            
+            .set(params[, input])
+                @param [object]: Action properties
+            
+        @return [Action]
+    */
+    set: function (defs, override) {
+        var self = this,
+            base = presets.createBase(defs, overrride),
+            values = {};
+        
+        self.props.apply(base);
+        self.values.apply(base.values, self);
+        
+        values = this.values.getAll();
+        
+        // Create origins
+        self.origin = {};
+        for (var key in values) {
+            if (values.hasOwnProperty(key)) {
+                self.origin[key] = values[key].current;
+            }
+        }
+    },
+    
     setValue: function (key, value) {
         var self = this;
 
@@ -338,24 +378,9 @@ Action.prototype = {
         @param [string]: Type of processing rubix to use
         @param [object]: Base properties of new input
     */
-    change: function (processType, base) {
-	    var self = this,
-	        values = {};
-
-        // Assign the processing rubix
-        base.rubix = rubix[processType];
-
-        self.props.apply(base);
-        self.values.apply(base.values, self.props);
-        values = this.values.getAll();
-
-        self.origin = {};
-        // Create origins
-        for (var key in values) {
-            if (values.hasOwnProperty(key)) {
-                self.origin[key] = values[key].current;
-            }
-        }
+    changeRubix: function (processType) {
+	    // Assign the processing rubix
+        self.props.set('rubix', rubix[processType]);
     }
     
 };
