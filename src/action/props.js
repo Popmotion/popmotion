@@ -1,13 +1,14 @@
 "use strict";
 
 var KEY = require('../opts/keys.js'),
+    rubix = require('./rubix.js'),
     callback = function () {},
     defaults = {
         // Is this action active
         active: false,
         
         // What to use to process this aciton
-        rubix: KEY.RUBIX.TIME,
+        rubix: rubix[KEY.RUBIX.TIME],
         
         // Multiply output value by
         amp: 1,
@@ -99,8 +100,6 @@ Props.prototype = {
                 
         this.playlist = props.playlist || this.playlist || [];
         this.scope = props.scope || this.scope || this;
-        
-        console.log(this.yoyo);
     },
     
     set: function (key, value) {

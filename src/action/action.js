@@ -312,21 +312,27 @@ Action.prototype = {
     */
     set: function (defs, override) {
         var self = this,
-            base = presets.createBase(defs, overrride),
+            validDefinition = (defs !== undefined),
+            base = {},
             values = {};
         
-        self.props.apply(base);
-        self.values.apply(base.values, self);
-        
-        values = this.values.getAll();
-        
-        // Create origins
-        self.origin = {};
-        for (var key in values) {
-            if (values.hasOwnProperty(key)) {
-                self.origin[key] = values[key].current;
+        if (validDefinition) {
+            base = presets.createBase(defs, override);
+            self.props.apply(base);
+            self.values.apply(base.values, self);
+            
+            values = this.values.getAll();
+            
+            // Create origins
+            self.origin = {};
+            for (var key in values) {
+                if (values.hasOwnProperty(key)) {
+                    self.origin[key] = values[key].current;
+                }
             }
         }
+        
+        return self;
     },
     
     setValue: function (key, value) {
@@ -379,8 +385,9 @@ Action.prototype = {
         @param [object]: Base properties of new input
     */
     changeRubix: function (processType) {
-	    // Assign the processing rubix
-        self.props.set('rubix', rubix[processType]);
+        this.props.set('rubix', rubix[processType]);
+
+        return this;
     }
     
 };
