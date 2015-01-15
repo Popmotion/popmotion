@@ -15,8 +15,8 @@ Redshift.prototype = {
         
         @return [Action]: Newly-created Action
     */
-    newAction: function () {
-        return new Action();
+    newAction: function (defs, override) {
+        return new Action(defs, override);
     },
     
     /*

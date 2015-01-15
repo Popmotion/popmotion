@@ -12,7 +12,7 @@ var cycl = require('cycl'),
     utils = require('../utils/utils.js'),
     Data = require('../bits/data.js'),
 
-    Action = function () {
+    Action = function (def, override) {
         var self = this;
         
         // Create value manager
@@ -30,6 +30,8 @@ var cycl = require('cycl'),
             	processor.action(self, framestamp, frameDuration);
 	        }
         });
+        
+        self.set(def, override);
     };
 
 Action.prototype = {
@@ -315,7 +317,7 @@ Action.prototype = {
             validDefinition = (defs !== undefined),
             base = {},
             values = {};
-        
+        console.trace();
         if (validDefinition) {
             base = presets.createBase(defs, override);
             self.props.apply(base);
