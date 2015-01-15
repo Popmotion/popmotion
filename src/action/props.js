@@ -99,6 +99,8 @@ Props.prototype = {
                 
         this.playlist = props.playlist || this.playlist || [];
         this.scope = props.scope || this.scope || this;
+        
+        console.log(this.yoyo);
     },
     
     set: function (key, value) {

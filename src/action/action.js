@@ -143,11 +143,10 @@ Action.prototype = {
         Pause current Action
     */
     pause: function () {
-	    var self = this;
-
-        self.stop();
-        
-        return self;
+	    this.pausedAt = utils.currentTime();
+	    this.stop();
+	    
+	    return this;
     },
     
     /*
@@ -155,9 +154,10 @@ Action.prototype = {
     */
     resume: function () {
 	    var self = this;
-
-        self.started = utils.currentTime() - self.elapsed;
+	    
+        self.started = utils.currentTime();
         self.framestamp = self.started;
+        self.isActive(true);
         
         self.process.start();
         
@@ -194,12 +194,20 @@ Action.prototype = {
     */
     reverse: function () {
 	    var self = this;
-
-        self.progress = calc.difference(self.progress, 1);
+	    
+	    self.progress = calc.difference(self.progress, 1);
         self.elapsed = calc.difference(self.elapsed, self.props.get('duration'));
         self.values.reverse();
 
         return self;
+    },
+    
+    toggle: function () {
+        if (this.isActive()) {
+            this.pause();
+        } else {
+            this.resume();
+        }
     },
     
     /*
@@ -242,11 +250,10 @@ Action.prototype = {
             step = this.props.get(key),
             count = this.props.get(key + 'Count'),
             forever = (step === true);
-            
+
         if (forever || utils.isNum(step)) {
             ++count;
             this.props.set(key + 'Count', count);
-            
             if (forever || count <= step) {
                 callback.call(this);
                 stepTaken = true;
