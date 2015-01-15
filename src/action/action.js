@@ -153,7 +153,6 @@ Action.prototype = {
         Pause current Action
     */
     pause: function () {
-	    this.pausedAt = utils.currentTime();
 	    this.stop();
 	    
 	    return this;
@@ -290,7 +289,7 @@ Action.prototype = {
             if (playhead < playlistLength) {
                 next = presets.getDefined(playlist[playhead]);
                 next.playhead = playhead;
-                this.change(KEY.RUBIX.TIME, next);
+                this.set(next);
                 this.reset();
                 stepTaken = true;
             }
@@ -317,7 +316,7 @@ Action.prototype = {
             validDefinition = (defs !== undefined),
             base = {},
             values = {};
-        console.trace();
+
         if (validDefinition) {
             base = presets.createBase(defs, override);
             self.props.apply(base);
