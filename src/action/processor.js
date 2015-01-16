@@ -19,9 +19,7 @@ Process.prototype = {
         @param [number]: Duration, in ms, since last frame
     */
     action: function (action, framestamp, frameDuration) {
-        var output = {
-                velocity: {}
-            },
+        var output = {},
             props = action.props,
             rubix = props.rubix,
             data = action.data(),
@@ -55,7 +53,6 @@ Process.prototype = {
 
                 // Add velocity
                 values[key].velocity = calc.xps(calc.difference(values[key].current, output[key]), frameDuration);
-                output.velocity[key] = values[key].velocity;
                 
                 // Check if has changed
                 if (values[key].current != output[key]) {

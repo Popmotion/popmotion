@@ -51,13 +51,13 @@ Loop.prototype = {
     */
     frame: function () {
         var self = this;
-
+        
         requestAnimationFrame(function () {
             var framestamp = self.timer.update(), // Currently just measuring in ms - will look into hi-res timestamps
                 isActive = self.callback.call(self.scope, framestamp, self.timer.getElapsed());
-            
+
             if (isActive) {
-                self.frame();
+                self.frame(true);
             } else {
                 self.stop();
             }
@@ -70,6 +70,7 @@ Loop.prototype = {
     start: function () {
         // Make sure we're not already running a loop
         if (!this.isRunning) {
+            this.isRunning = true;
             this.frame();
         }
     },
@@ -100,13 +101,18 @@ module.exports = new Loop();
 
 var theLoop = require('./loop.js'),
     ProcessManager = function () {
-        this.all = [];
+        this.all = {};
         this.active = [];
         this.deactivateQueue = [];
         theLoop.setCallback(this, this.fireActive);
     };
     
 ProcessManager.prototype = {
+    
+    /*
+        [int]: Used for process ID
+    */
+    processCounter: 0,
     
     /*
         [int]: Number of active processes
@@ -158,24 +164,29 @@ ProcessManager.prototype = {
         @return [boolean]: True if active processes found
     */
     fireActive: function (framestamp, elapsed) {
-        var isActive = false,
-            activeCount,
-            activeProcesses;
-        
+        var process,
+            activeCount = 0,
+            activeProcesses = [];
+
+        // Purge and check active count before execution
         this.purge();
-        
         activeCount = this.getActiveCount();
         activeProcesses = this.getActive();
         
-        if (activeCount) {
-            isActive = true;
+        // Loop through active processes and fire callback
+        for (var i = 0; i < activeCount; i++) {
+            process = this.getProcess(activeProcesses[i]);
             
-            for (var i = 0; i < activeCount; i++) {
-                this.getProcess(i).fire(framestamp, elapsed);
+            if (process) {
+                process.fire(framestamp, elapsed);
             }
         }
+
+        // Repurge and recheck active count after execution
+        this.purge();
+        activeCount = this.getActiveCount();
         
-        return isActive;
+        return activeCount ? true : false;
     },
     
     /*
@@ -185,9 +196,13 @@ ProcessManager.prototype = {
         @return [int]: Index of process to be used as ID
     */
     register: function (process) {
-        this.all.push(process);
+        var id = this.processCounter;
 
-        return this.all.length - 1;
+        this.all[id] = process;
+        
+        this.processCounter++;
+        
+        return id;
     },
     
     /*
@@ -240,6 +255,13 @@ ProcessManager.prototype = {
         }
         
         this.deactivateQueue = [];
+    },
+    
+    /*
+        Remove the provided id and reindex remaining processes
+    */
+    kill: function (id) {
+        delete this.all[id];
     }
     
 };
@@ -271,7 +293,7 @@ var manager = require('./manager.js'),
         this.setCallback(callback);
         this.setScope(scope);
 
-        this.id = manager.register(this);
+        this.setId(manager.register(this));
     };
     
 Process.prototype = {
@@ -280,6 +302,11 @@ Process.prototype = {
         [boolean]: Is this process currently active?
     */
     isActive: false,
+    
+    /*
+        [boolean]: Has this process been killed?
+    */
+    isKilled: false,
 
     /*
         Fire callback
@@ -323,34 +350,24 @@ Process.prototype = {
     },
     
     /*
-        Run the process
-        
-        @param [int]: Duration of process in ms, 0 if indefinite
-    */
-    run: function (duration) {
-        var self = this;
-
-        this.reset();
-        
-        self.start();
-        
-        self.stopTimer = setTimeout(function () {
-            self.stop();
-        }, duration);
-
-        return self;
-    },
-    
-    /*
         Start process
         
+        @param [int]: Duration of process in ms, 0 if indefinite
         @return [this]
     */
-    start: function () {
-        this.reset();
-        this.activate();
+    start: function (duration) {
+        var self = this;
+        
+        self.reset();
+        self.activate();
+        
+        if (duration) {
+            self.stopTimer = setTimeout(function () {
+                self.stop();
+            }, duration);
+        }
 
-        return this;
+        return self;
     },
     
     /*
@@ -371,8 +388,10 @@ Process.prototype = {
         @return [this]
     */
     activate: function () {
-        this.isActive = true;
-        manager.activate(this.id);
+        if (!this.isKilled) {
+            this.isActive = true;
+            manager.activate(this.id);
+        }
 
         return this;
     },
@@ -418,6 +437,19 @@ Process.prototype = {
         clearInterval(this.intervalTimer);
         
         return this;
+    },
+    
+    /*
+        Kill function in manager, release for garbage collection
+    */
+    kill: function () {
+        this.stop();
+        this.isKilled = true;
+        manager.kill(this.id);
+    },
+    
+    setId: function (id) {
+        this.id = id;
     }
 };
 
@@ -534,7 +566,7 @@ var cycl = require('cycl'),
     utils = require('../utils/utils.js'),
     Data = require('../bits/data.js'),
 
-    Action = function () {
+    Action = function (def, override) {
         var self = this;
         
         // Create value manager
@@ -552,6 +584,8 @@ var cycl = require('cycl'),
             	processor.action(self, framestamp, frameDuration);
 	        }
         });
+        
+        self.set(def, override);
     };
 
 Action.prototype = {
@@ -576,7 +610,26 @@ Action.prototype = {
         @return [Action]
     */
     play: function (defs, override) {
-        return this.start(KEY.RUBIX.TIME, presets.createBase(defs, override));
+        this.set(defs, override);
+        return this.start(KEY.RUBIX.TIME);
+    },
+
+    /*
+        Run Action indefinitely
+        
+        Syntax
+            .run(preset, [override])
+                @param [string]: Name of preset
+                @param [object]: (optional) Override object
+                
+            .run(params)
+                @param [object]: Action properties
+                
+        @return [Action]
+    */
+    run: function (defs, override) {
+        this.set(defs, override);
+        return this.start(KEY.RUBIX.RUN);
     },
     
     /*
@@ -594,51 +647,37 @@ Action.prototype = {
                 
         @return [Action]
     */
-    track: function (defs) {
-        var hasAllArgs = (arguments[2] !== undefined),
-            input = hasAllArgs ? arguments[2] : arguments[1],
-            override = hasAllArgs ? arguments[1] : {},
-            base = presets.createBase(defs, override);
+    track: function () {
+        var args = arguments,
+            argsLength = args.length,
+            defs = (argsLength > 1) ? args[0] : undefined,
+            override = (argsLength === 3) ? args[1] : undefined,
+            input = args[argsLength - 1];
         
-        // If we have an input, check if it's a custom input.
-        // Create a new pointer if it isn't
-        if (input) {
-            base.input = (input.current) ? input : new Pointer(input);
-            base.inputOrigin = base.input.get();
+        if (!input.current) {
+            input = new Pointer(input);
         }
-        
-        return this.start(KEY.RUBIX.INPUT, base);
-    },
 
-    /*
-        Run Action indefinitely
-        
-        Syntax
-            .run(preset, [override])
-                @param [string]: Name of preset
-                @param [object]: (optional) Override object
-                
-            .run(params)
-                @param [object]: Action properties
-                
-        @return [Action]
-    */
-    run: function (defs, override) {
-        return this.start(KEY.RUBIX.RUN, presets.createBase(defs, override));
+        this.set(defs, override, input);
+
+        return this.start(KEY.RUBIX.INPUT);
     },
     
     /*
         Start Action
 
-        @param [string]: Name of processing type to sue
-        @param [object]: Base Action properties to apply
+        @param [string]: Name of processing type to use
         @return [Action]
     */
-    start: function (processType, base) {
+    start: function (processType) {
 	    var self = this;
 
         self.resetProgress();
-        self.change(processType, base);
+        
+        if (processType) {
+            self.changeRubix(processType);
+        }
+
         self.isActive(true);
         self.started = utils.currentTime() + self.props.get('delay');
         self.framestamp = self.started;
@@ -665,11 +704,9 @@ Action.prototype = {
         Pause current Action
     */
     pause: function () {
-	    var self = this;
-
-        self.stop();
-        
-        return self;
+	    this.stop();
+	    
+	    return this;
     },
     
     /*
@@ -677,9 +714,10 @@ Action.prototype = {
     */
     resume: function () {
 	    var self = this;
-
-        self.started = utils.currentTime() - self.elapsed;
+	    
+        self.started = utils.currentTime();
         self.framestamp = self.started;
+        self.isActive(true);
         
         self.process.start();
         
@@ -716,12 +754,20 @@ Action.prototype = {
     */
     reverse: function () {
 	    var self = this;
-
-        self.progress = calc.difference(self.progress, 1);
+	    
+	    self.progress = calc.difference(self.progress, 1);
         self.elapsed = calc.difference(self.elapsed, self.props.get('duration'));
         self.values.reverse();
 
         return self;
+    },
+    
+    toggle: function () {
+        if (this.isActive()) {
+            this.pause();
+        } else {
+            this.resume();
+        }
     },
     
     /*
@@ -764,11 +810,10 @@ Action.prototype = {
             step = this.props.get(key),
             count = this.props.get(key + 'Count'),
             forever = (step === true);
-            
+
         if (forever || utils.isNum(step)) {
             ++count;
             this.props.set(key + 'Count', count);
-            
             if (forever || count <= step) {
                 callback.call(this);
                 stepTaken = true;
@@ -795,13 +840,57 @@ Action.prototype = {
             if (playhead < playlistLength) {
                 next = presets.getDefined(playlist[playhead]);
                 next.playhead = playhead;
-                this.change(KEY.RUBIX.TIME, next);
+                this.set(next);
                 this.reset();
                 stepTaken = true;
             }
         }
 
         return stepTaken;
+    },
+    
+    /*
+        Set Action values and properties
+        
+        Syntax
+            .set(preset[, override, input])
+                @param [string]: Name of preset to apply
+                @param [object] (optional): Properties to override preset
+            
+            .set(params[, input])
+                @param [object]: Action properties
+            
+        @return [Action]
+    */
+    set: function (defs, override, input) {
+        var self = this,
+            validDefinition = (defs !== undefined),
+            base = {},
+            values = {};
+console.log(defs, override, input);
+        if (validDefinition) {
+            base = presets.createBase(defs, override);
+            
+            if (input !== undefined) {
+                base.input = input;
+                base.inputOrigin = input.get();
+            }
+
+            self.props.apply(base);
+            self.values.apply(base.values, self.props);
+            
+            values = this.values.getAll();
+            
+            // Create origins
+            self.origin = {};
+            for (var key in values) {
+                if (values.hasOwnProperty(key)) {
+                    self.origin[key] = values[key].current;
+                }
+            }
+        }
+        
+        return self;
     },
     
     setValue: function (key, value) {
@@ -853,30 +942,16 @@ Action.prototype = {
         @param [string]: Type of processing rubix to use
         @param [object]: Base properties of new input
     */
-    change: function (processType, base) {
-	    var self = this,
-	        values = {};
+    changeRubix: function (processType) {
+        this.props.set('rubix', rubix[processType]);
 
-        // Assign the processing rubix
-        base.rubix = rubix[processType];
-
-        self.props.apply(base);
-        self.values.apply(base.values, self.props);
-        values = this.values.getAll();
-
-        self.origin = {};
-        // Create origins
-        for (var key in values) {
-            if (values.hasOwnProperty(key)) {
-                self.origin[key] = values[key].current;
-            }
-        }
+        return this;
     }
     
 };
 
 module.exports = Action;
-},{"../bits/data.js":14,"../input/pointer.js":19,"../opts/keys.js":20,"../utils/calc.js":22,"../utils/utils.js":25,"./presets.js":8,"./processor.js":9,"./props.js":10,"./rubix.js":11,"./values.js":12,"cycl":1}],8:[function(require,module,exports){
+},{"../bits/data.js":14,"../input/pointer.js":19,"../opts/keys.js":20,"../utils/calc.js":22,"../utils/utils.js":26,"./presets.js":8,"./processor.js":9,"./props.js":10,"./rubix.js":11,"./values.js":12,"cycl":1}],8:[function(require,module,exports){
 "use strict";
 
 var KEY = require('../opts/keys.js'),
@@ -1040,7 +1115,7 @@ Presets.prototype = {
 };
 
 module.exports = new Presets();
-},{"../opts/keys.js":20,"../utils/utils.js":25}],9:[function(require,module,exports){
+},{"../opts/keys.js":20,"../utils/utils.js":26}],9:[function(require,module,exports){
 /*
     Process actions
 */
@@ -1068,7 +1143,7 @@ Process.prototype = {
             data = action.data(),
             values = action.values.getAll(),
             hasChanged = false;
-        
+
         // Fire onStart if firstFrame
         if (action.firstFrame) {
             props.onStart.call(props.scope, data);
@@ -1086,7 +1161,6 @@ Process.prototype = {
         // Calculate new values
         for (var key in values) {
             if (values.hasOwnProperty(key)) {
-                
                 // Ease value
                 output[key] = rubix.easeValue(key, values[key], action);
                 
@@ -1094,9 +1168,12 @@ Process.prototype = {
                 if (values[key].round) {
                     output[key] = Math.round(output[key]);
                 }
+
+                // Add velocity
+                values[key].velocity = calc.xps(calc.difference(values[key].current, output[key]), frameDuration);
                 
                 // Check if has changed
-                if (values[key].current !== output[key]) {
+                if (values[key].current != output[key]) {
                     hasChanged = true;
                     values[key].current = output[key];
                 }
@@ -1108,7 +1185,7 @@ Process.prototype = {
         
         // Fire onFrame callback
         props.onFrame.call(props.scope, output, data);
-        
+
         // Fire onChange callback
         if (hasChanged) {
             props.onChange.call(props.scope, output, data);
@@ -1157,17 +1234,18 @@ Process.prototype = {
 };
 
 module.exports = new Process();
-},{"../utils/calc.js":22,"../utils/utils.js":25,"./rubix.js":11}],10:[function(require,module,exports){
+},{"../utils/calc.js":22,"../utils/utils.js":26,"./rubix.js":11}],10:[function(require,module,exports){
 "use strict";
 
 var KEY = require('../opts/keys.js'),
+    rubix = require('./rubix.js'),
     callback = function () {},
     defaults = {
         // Is this action active
         active: false,
         
         // What to use to process this aciton
-        rubix: KEY.RUBIX.TIME,
+        rubix: rubix[KEY.RUBIX.TIME],
         
         // Multiply output value by
         amp: 1,
@@ -1271,7 +1349,7 @@ Props.prototype = {
 };
 
 module.exports = Props;
-},{"../opts/keys.js":20}],11:[function(require,module,exports){
+},{"../opts/keys.js":20,"./rubix.js":11}],11:[function(require,module,exports){
 /*
     Rubix modules
     ----------------------------------------
@@ -1384,8 +1462,9 @@ Rubix.prototype = {
                     value = values[key];
                     inputKey = this.getInputKey(key, value.link, inputOffset);
                     
-                    // If we have an input key, calculate progress from that input
+                    // If we have an input key we animate this property
                     if (inputKey !== false) {
+                        
                         offset = inputOffset[inputKey];
                         progress[key] = {};
                         
@@ -1393,12 +1472,13 @@ Rubix.prototype = {
                         if (value.hasRange) {
                             progress[key].type = KEY.PROGRESS.RANGE;
                             progress[key].value = calc.progress(value.from + offset, value.min, value.max);
-
-                        // Or we calculate progress directly
+                            
+                        // Or we're calculating progress directly
                         } else {
                             progress[key].type = KEY.PROGRESS.DIRECT;
-                            progress[key].value = value.from + (offset * value.amp);
+                            progress[key].value = action.origin[key] + (offset * value.amp);                            
                         }
+                        
                     }
                 }
             }
@@ -1445,22 +1525,6 @@ Rubix.prototype = {
     Run: {
     
         /*
-            Convert x per second to per frame velocity based on fps
-            
-            @param [number]: Unit per second
-            @param [number]: Frame duration in ms
-        */
-        frameSpeed: function (xps, frameDuration) {
-	        var velocityPerFrame = 0;
-
-	        if (utils.isNum(xps)) {
-		        velocityPerFrame = xps / (1000 / frameDuration);
-	        }
-
-	        return velocityPerFrame;
-        },
-    
-        /*
             Calc new velocity
             
             Calc the new velocity based on the formula velocity = (velocity - friction + thrust)
@@ -1476,8 +1540,8 @@ Rubix.prototype = {
             for (var key in values) {
                 if (values.hasOwnProperty(key)) {
                     value = values[key];
-                    value.velocity = value.velocity - this.frameSpeed(value.friction, frameDuration) + this.frameSpeed(value.thrust, frameDuration);
-                    progress[key] = this.frameSpeed(value.velocity, frameDuration);
+                    value.velocity = value.velocity - calc.frameSpeed(value.friction, frameDuration) + calc.frameSpeed(value.thrust, frameDuration);
+                    progress[key] = calc.frameSpeed(value.velocity, frameDuration);
                 }
             }
             
@@ -1519,7 +1583,7 @@ Rubix.prototype = {
 rubixController = new Rubix();
 
 module.exports = rubixController;
-},{"../opts/keys.js":20,"../utils/calc.js":22,"../utils/easing.js":23,"../utils/utils.js":25}],12:[function(require,module,exports){
+},{"../opts/keys.js":20,"../utils/calc.js":22,"../utils/easing.js":23,"../utils/utils.js":26}],12:[function(require,module,exports){
 "use strict";
 
 var calc = require('../utils/calc.js'),
@@ -1531,6 +1595,7 @@ var calc = require('../utils/calc.js'),
 Values.prototype = {
     
     apply: function (values, inherit) {
+        var currentInput = {};
         
         // Create or update Value objects for each defined value
         for (var key in values) {
@@ -1539,7 +1604,7 @@ Values.prototype = {
             }
         }
         
-        // Add x and y properties if angle is provided
+        // Add x and y properties if angle and distance provided
         if (values && values.angle && values.distance) {
             this.store.x = this.store.x || new Value(0, inherit);
             this.store.y = this.store.y || new Value(0, inherit);
@@ -1780,6 +1845,9 @@ var utils = require('../utils/utils.js'),
             if (arg0IsString && !arguments[1]) {
                 returnValue = getData(arg0);
             
+            } else if (arg0 === undefined) {
+                returnValue = store;
+
             // Else this is a set request
             } else {
                 if (arg0IsString) {
@@ -1796,7 +1864,7 @@ var utils = require('../utils/utils.js'),
     };
 
 module.exports = Data;
-},{"../utils/utils.js":25}],15:[function(require,module,exports){
+},{"../utils/utils.js":26}],15:[function(require,module,exports){
 /*
     Point class
     ----------------------------------------
@@ -1980,7 +2048,7 @@ Value.prototype.update = function (value, action, isNewValue) {
                 this[key] = parse(value[key], data, this.current);
                 
             // Or there's a default set on the action
-            } else if (utils.isObj(action) && action.hasOwnProperty(key)) {
+            } else if (utils.isObj(action) && action[key]) {
                 this[key] = parse(action[key], data, this.current);
                 
             // Otherwise, if this is our first time (honest judge), set as the default.
@@ -2006,7 +2074,7 @@ Value.prototype.update = function (value, action, isNewValue) {
 };
 
 module.exports = Value;
-},{"../utils/calc.js":22,"../utils/utils.js":25}],17:[function(require,module,exports){
+},{"../utils/calc.js":22,"../utils/utils.js":26}],17:[function(require,module,exports){
 "use strict";
 
 var maxHistorySize = 3,
@@ -2077,7 +2145,7 @@ History.prototype = {
 };
 
 module.exports = History;
-},{"../utils/utils.js":25}],18:[function(require,module,exports){
+},{"../utils/utils.js":26}],18:[function(require,module,exports){
 /*
     Input controller
 */
@@ -2196,7 +2264,7 @@ Input.prototype = {
 };
 
 module.exports = Input;
-},{"../bobs/history.js":17,"../utils/calc.js":22,"../utils/utils.js":25}],19:[function(require,module,exports){
+},{"../bobs/history.js":17,"../utils/calc.js":22,"../utils/utils.js":26}],19:[function(require,module,exports){
 "use strict";
 
 var Input = require('./input.js'),
@@ -2256,7 +2324,7 @@ Pointer.prototype.stop = function () {
 };
 
 module.exports = Pointer;
-},{"../bits/point.js":15,"../bobs/history.js":17,"../opts/keys.js":20,"../utils/utils.js":25,"./input.js":18}],20:[function(require,module,exports){
+},{"../bits/point.js":15,"../bobs/history.js":17,"../opts/keys.js":20,"../utils/utils.js":26,"./input.js":18}],20:[function(require,module,exports){
 /*
     String constants
     ----------------------------------------
@@ -2311,6 +2379,8 @@ var Action = require('./action/action.js'),
     easing = require('./utils/easing.js'),
     calc = require('./utils/calc.js'),
     cycl = require('cycl'),
+    jQueryPlugins = require('./utils/jquery.js'),
+    redshift,
     Redshift = function () {};
 
 Redshift.prototype = {
@@ -2320,8 +2390,8 @@ Redshift.prototype = {
         
         @return [Action]: Newly-created Action
     */
-    newAction: function () {
-        return new Action();
+    newAction: function (defs, override) {
+        return new Action(defs, override);
     },
     
     /*
@@ -2374,8 +2444,12 @@ Redshift.prototype = {
     
 };
 
-module.exports = new Redshift();
-},{"./action/action.js":7,"./action/presets.js":8,"./input/input.js":18,"./utils/calc.js":22,"./utils/easing.js":23,"cycl":1}],22:[function(require,module,exports){
+redshift = new Redshift();
+
+jQueryPlugins.load(redshift);
+
+module.exports = redshift;
+},{"./action/action.js":7,"./action/presets.js":8,"./input/input.js":18,"./utils/calc.js":22,"./utils/easing.js":23,"./utils/jquery.js":25,"cycl":1}],22:[function(require,module,exports){
 /*
     Calculators
     ----------------------------------------
@@ -2526,7 +2600,22 @@ module.exports = {
             
         return this.hypotenuse(point.x, point.y);
     },
-    
+
+    /*
+        Convert x per second to per frame velocity based on fps
+        
+        @param [number]: Unit per second
+        @param [number]: Frame duration in ms
+    */
+    frameSpeed: function (xps, frameDuration) {
+        var velocityPerFrame = 0;
+
+        if (utils.isNum(xps)) {
+	        velocityPerFrame = xps / (1000 / frameDuration);
+        }
+
+        return velocityPerFrame;
+    },
         
     /*
         Hypotenuse
@@ -2703,9 +2792,19 @@ module.exports = {
         var easedProgress = easing(progress);
         
         return this.value(easedProgress, from, to);
-    }
+    },
+
+    /*
+        Convert velocity into velicity per second
+        
+        @param [number]: Unit per frame
+        @param [number]: Frame duration in ms
+    */
+    xps: function (velocity, frameDuration) {
+        return velocity * (1000 / frameDuration);
+    },
 };
-},{"./utils.js":25}],23:[function(require,module,exports){
+},{"./utils.js":26}],23:[function(require,module,exports){
 /*
     Easing functions
     ----------------------------------------
@@ -2979,9 +3078,91 @@ function init() {
 
 module.exports = easingFunction;
 
-},{"../bits/bezier.js":13,"../opts/keys.js":20,"./calc.js":22,"./utils.js":25}],24:[function(require,module,exports){
+},{"../bits/bezier.js":13,"../opts/keys.js":20,"./calc.js":22,"./utils.js":26}],24:[function(require,module,exports){
 window.redshift = require('../redshift.js');
 },{"../redshift.js":21}],25:[function(require,module,exports){
+/*
+    Redshift jQuery plugin
+    
+    Provides access to .play, .move and .track properties on an jQuery object.
+    Uses that jQuery object to store a unqiue Redshift instance.
+    
+    .redshift() method used for other Redshift functions, ie $('#element').redshift('stop')
+*/
+"use strict";
+
+var loadPlugins = function (redshift) {
+    var KEY = require('../opts/keys.js'),
+        utils = require('../utils/utils.js'),
+
+        /*
+            Get Redshift instance from jQuery object
+            
+            @param [jQuery element]
+        */
+        getInstance = function ($element) {
+            var instance = $element.data(KEY.REDSHIFT);
+
+            if (!instance) {
+                instance = redshift.get();
+                instance.data(KEY.JQUERY_ELEMENT, $element);
+                $element.data(KEY.REDSHIFT, instance);
+            }
+            
+            return instance;
+        },
+
+        /*
+            Execute Action function
+
+            @param [jQuery element]: jQuery element to check for Redshift instance
+            @param [string]: Action function to call
+            @param [...arguments]
+        */
+        execute = function ($element, action, arg1, arg2, arg3) {
+            $element.each(function () {
+                getInstance($(this))[action](arg1, arg2, arg3);
+            });
+        };
+        
+    $.fn.play = function () {
+        execute(this, 'play', arguments[0], arguments[1]);
+        
+        return this;
+    };
+    
+    $.fn.run = function () {
+        execute(this, 'run', arguments[0], arguments[1]);
+
+        return this;
+    };
+    
+    $.fn.track = function () {
+    console.log('test');
+        execute(this, 'track', arguments[0], arguments[1], arguments[2]);
+console.log(arguments);
+        return this;
+    };
+    
+    $.fn.redshift = function (action) {
+        if (action) {
+            execute(this, action, arguments[1], arguments[2]);
+            return this;
+        } else {
+            return getInstance($(this));
+        }
+    };
+};
+
+module.exports = {
+    load: function (redshift) {
+    console.log('test');
+        if (window.jQuery) {
+            loadPlugins(redshift);
+        }
+    }
+};
+},{"../opts/keys.js":20,"../utils/utils.js":26}],26:[function(require,module,exports){
 /*
     Utility functions
     ----------------------------------------

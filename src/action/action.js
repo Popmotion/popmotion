@@ -313,7 +313,7 @@ Action.prototype = {
             validDefinition = (defs !== undefined),
             base = {},
             values = {};
-
+console.log(defs, override, input);
         if (validDefinition) {
             base = presets.createBase(defs, override);
             

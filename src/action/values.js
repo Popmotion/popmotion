@@ -17,17 +17,6 @@ Values.prototype = {
                 this.set(key, values[key], inherit);
             }
         }
-
-        // If we have an input, create an value for each property
-        if (inherit.input !== undefined) {
-            currentInput = inherit.input.history.get();
-
-            for (var key in currentInput) {
-                if (currentInput.hasOwnProperty(key)) {
-                    this.store[key] = this.store[key] || new Value(0, inherit);
-                }
-            }
-        }
         
         // Add x and y properties if angle and distance provided
         if (values && values.angle && values.distance) {
