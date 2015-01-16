@@ -99,23 +99,20 @@ Action.prototype = {
             defs = (argsLength > 1) ? args[0] : undefined,
             override = (argsLength === 3) ? args[1] : undefined,
             input = args[argsLength - 1];
-            
+        
         if (!input.current) {
             input = new Pointer(input);
         }
-            
-        this.set(defs, override);
-        
-        this.setProp('input', input)
-            .setProp('inputOrigin', input.get());
-        
+
+        this.set(defs, override, input);
+
         return this.start(KEY.RUBIX.INPUT);
     },
     
     /*
         Start Action
 
-        @param [string]: Name of processing type to sue
+        @param [string]: Name of processing type to use
         @return [Action]
     */
     start: function (processType) {
@@ -311,7 +308,7 @@ Action.prototype = {
             
         @return [Action]
     */
-    set: function (defs, override) {
+    set: function (defs, override, input) {
         var self = this,
             validDefinition = (defs !== undefined),
             base = {},
@@ -319,8 +316,14 @@ Action.prototype = {
 
         if (validDefinition) {
             base = presets.createBase(defs, override);
+            
+            if (input !== undefined) {
+                base.input = input;
+                base.inputOrigin = input.get();
+            }
+
             self.props.apply(base);
-            self.values.apply(base.values, self);
+            self.values.apply(base.values, self.props);
             
             values = this.values.getAll();
             

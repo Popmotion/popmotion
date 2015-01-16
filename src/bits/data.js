@@ -51,6 +51,9 @@ var utils = require('../utils/utils.js'),
             if (arg0IsString && !arguments[1]) {
                 returnValue = getData(arg0);
             
+            } else if (arg0 === undefined) {
+                returnValue = store;
+
             // Else this is a set request
             } else {
                 if (arg0IsString) {

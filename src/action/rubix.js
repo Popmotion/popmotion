@@ -110,8 +110,9 @@ Rubix.prototype = {
                     value = values[key];
                     inputKey = this.getInputKey(key, value.link, inputOffset);
                     
-                    // If we have an input key, calculate progress from that input
+                    // If we have an input key we animate this property
                     if (inputKey !== false) {
+                        
                         offset = inputOffset[inputKey];
                         progress[key] = {};
                         
@@ -119,12 +120,13 @@ Rubix.prototype = {
                         if (value.hasRange) {
                             progress[key].type = KEY.PROGRESS.RANGE;
                             progress[key].value = calc.progress(value.from + offset, value.min, value.max);
-
-                        // Or we calculate progress directly
+                            
+                        // Or we're calculating progress directly
                         } else {
                             progress[key].type = KEY.PROGRESS.DIRECT;
-                            progress[key].value = value.from + (offset * value.amp);
+                            progress[key].value = action.origin[key] + (offset * value.amp);                            
                         }
+                        
                     }
                 }
             }
@@ -171,22 +173,6 @@ Rubix.prototype = {
     Run: {
     
         /*
-            Convert x per second to per frame velocity based on fps
-            
-            @param [number]: Unit per second
-            @param [number]: Frame duration in ms
-        */
-        frameSpeed: function (xps, frameDuration) {
-	        var velocityPerFrame = 0;
-
-	        if (utils.isNum(xps)) {
-		        velocityPerFrame = xps / (1000 / frameDuration);
-	        }
-
-	        return velocityPerFrame;
-        },
-    
-        /*
             Calc new velocity
             
             Calc the new velocity based on the formula velocity = (velocity - friction + thrust)
@@ -202,8 +188,8 @@ Rubix.prototype = {
             for (var key in values) {
                 if (values.hasOwnProperty(key)) {
                     value = values[key];
-                    value.velocity = value.velocity - this.frameSpeed(value.friction, frameDuration) + this.frameSpeed(value.thrust, frameDuration);
-                    progress[key] = this.frameSpeed(value.velocity, frameDuration);
+                    value.velocity = value.velocity - calc.frameSpeed(value.friction, frameDuration) + calc.frameSpeed(value.thrust, frameDuration);
+                    progress[key] = calc.frameSpeed(value.velocity, frameDuration);
                 }
             }
             

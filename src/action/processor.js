@@ -19,13 +19,15 @@ Process.prototype = {
         @param [number]: Duration, in ms, since last frame
     */
     action: function (action, framestamp, frameDuration) {
-        var output = {},
+        var output = {
+                velocity: {}
+            },
             props = action.props,
             rubix = props.rubix,
             data = action.data(),
             values = action.values.getAll(),
             hasChanged = false;
-        
+
         // Fire onStart if firstFrame
         if (action.firstFrame) {
             props.onStart.call(props.scope, data);
@@ -43,7 +45,6 @@ Process.prototype = {
         // Calculate new values
         for (var key in values) {
             if (values.hasOwnProperty(key)) {
-                
                 // Ease value
                 output[key] = rubix.easeValue(key, values[key], action);
                 
@@ -51,9 +52,13 @@ Process.prototype = {
                 if (values[key].round) {
                     output[key] = Math.round(output[key]);
                 }
+
+                // Add velocity
+                values[key].velocity = calc.xps(calc.difference(values[key].current, output[key]), frameDuration);
+                output.velocity[key] = values[key].velocity;
                 
                 // Check if has changed
-                if (values[key].current !== output[key]) {
+                if (values[key].current != output[key]) {
                     hasChanged = true;
                     values[key].current = output[key];
                 }
@@ -65,7 +70,7 @@ Process.prototype = {
         
         // Fire onFrame callback
         props.onFrame.call(props.scope, output, data);
-        
+
         // Fire onChange callback
         if (hasChanged) {
             props.onChange.call(props.scope, output, data);

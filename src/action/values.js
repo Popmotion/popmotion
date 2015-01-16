@@ -9,6 +9,7 @@ var calc = require('../utils/calc.js'),
 Values.prototype = {
     
     apply: function (values, inherit) {
+        var currentInput = {};
         
         // Create or update Value objects for each defined value
         for (var key in values) {
@@ -16,8 +17,19 @@ Values.prototype = {
                 this.set(key, values[key], inherit);
             }
         }
+
+        // If we have an input, create an value for each property
+        if (inherit.input !== undefined) {
+            currentInput = inherit.input.history.get();
+
+            for (var key in currentInput) {
+                if (currentInput.hasOwnProperty(key)) {
+                    this.store[key] = this.store[key] || new Value(0, inherit);
+                }
+            }
+        }
         
-        // Add x and y properties if angle is provided
+        // Add x and y properties if angle and distance provided
         if (values && values.angle && values.distance) {
             this.store.x = this.store.x || new Value(0, inherit);
             this.store.y = this.store.y || new Value(0, inherit);
