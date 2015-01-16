@@ -18,15 +18,15 @@ var loadPlugins = function (redshift) {
             @param [jQuery element]
         */
         getInstance = function ($element) {
-            var instance = $element.data(KEY.REDSHIFT);
+            var action = $element.data(KEY.REDSHIFT);
 
-            if (!instance) {
-                instance = redshift.get();
-                instance.data(KEY.JQUERY_ELEMENT, $element);
-                $element.data(KEY.REDSHIFT, instance);
+            if (!action) {
+                action = redshift.newAction();
+                action.data(KEY.JQUERY_ELEMENT, $element);
+                $element.data(KEY.REDSHIFT, action);
             }
             
-            return instance;
+            return action;
         },
 
         /*
@@ -55,9 +55,8 @@ var loadPlugins = function (redshift) {
     };
     
     $.fn.track = function () {
-    console.log('test');
         execute(this, 'track', arguments[0], arguments[1], arguments[2]);
-console.log(arguments);
+
         return this;
     };
     
@@ -73,7 +72,6 @@ console.log(arguments);
 
 module.exports = {
     load: function (redshift) {
-    console.log('test');
         if (window.jQuery) {
             loadPlugins(redshift);
         }

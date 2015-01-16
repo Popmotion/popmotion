@@ -95,11 +95,27 @@ Action.prototype = {
     */
     track: function () {
         var args = arguments,
-            argsLength = args.length,
-            defs = (argsLength > 1) ? args[0] : undefined,
-            override = (argsLength === 3) ? args[1] : undefined,
-            input = args[argsLength - 1];
+            argLength = args.length,
+            defs, override, input;
         
+        // Loop backwards over arguments
+        for (var i = argLength - 1; i >= 0; i--) {
+            if (args[i] !== undefined) {
+                // If input hasn't been defined, this is the input
+                if (input === undefined) {
+                    input = args[i];
+
+                // Or if this is the second argument, these are overrides
+                } else if (i === 1) {
+                    override = args[i];
+                    
+                // Otherwise these are the defs
+                } else if (i === 0) {
+                    defs = args[i];
+                }
+            }
+        }
+
         if (!input.current) {
             input = new Pointer(input);
         }
@@ -312,14 +328,20 @@ Action.prototype = {
         var self = this,
             validDefinition = (defs !== undefined),
             base = {},
-            values = {};
-console.log(defs, override, input);
+            values = {},
+            jQueryElement = self.data(KEY.JQUERY_ELEMENT);
+
         if (validDefinition) {
             base = presets.createBase(defs, override);
             
             if (input !== undefined) {
                 base.input = input;
                 base.inputOrigin = input.get();
+            }
+            
+            // Set scope if jQuery element
+            if (jQueryElement) {
+                base.scope = jQueryElement;
             }
 
             self.props.apply(base);
