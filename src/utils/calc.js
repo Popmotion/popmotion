@@ -156,13 +156,7 @@ module.exports = {
         @param [number]: Frame duration in ms
     */
     frameSpeed: function (xps, frameDuration) {
-        var velocityPerFrame = 0;
-
-        if (utils.isNum(xps)) {
-	        velocityPerFrame = xps / (1000 / frameDuration);
-        }
-
-        return velocityPerFrame;
+        return (utils.isNum(xps)) ? xps / (1000 / frameDuration) : 0;
     },
         
     /*

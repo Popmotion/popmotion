@@ -649,11 +649,27 @@ Action.prototype = {
     */
     track: function () {
         var args = arguments,
-            argsLength = args.length,
-            defs = (argsLength > 1) ? args[0] : undefined,
-            override = (argsLength === 3) ? args[1] : undefined,
-            input = args[argsLength - 1];
+            argLength = args.length,
+            defs, override, input;
         
+        // Loop backwards over arguments
+        for (var i = argLength - 1; i >= 0; i--) {
+            if (args[i] !== undefined) {
+                // If input hasn't been defined, this is the input
+                if (input === undefined) {
+                    input = args[i];
+
+                // Or if this is the second argument, these are overrides
+                } else if (i === 1) {
+                    override = args[i];
+                    
+                // Otherwise these are the defs
+                } else if (i === 0) {
+                    defs = args[i];
+                }
+            }
+        }
+
         if (!input.current) {
             input = new Pointer(input);
         }
@@ -662,7 +678,29 @@ Action.prototype = {
 
         return this.start(KEY.RUBIX.INPUT);
     },
-    
+ /*   
+    fire: function (progress) {
+        var rubix = this.props.get('rubix'),
+            isActive = this.process.isActive;
+
+        if (utils.isNum(progress)) {
+            this.progress = progress;
+        }
+        
+        this.changeRubix(KEY.RUBIX.FIRE);
+        this.isActive(true);
+        this.process.activate().fire();
+
+        if (isActive) {
+            this.props.set('rubix', rubix);
+        } else {
+            this.isActive(false);
+            this.process.deactivate();
+        }
+
+        return this;
+   },
+     */
     /*
         Start Action
 
@@ -866,14 +904,20 @@ Action.prototype = {
         var self = this,
             validDefinition = (defs !== undefined),
             base = {},
-            values = {};
-console.log(defs, override, input);
+            values = {},
+            jQueryElement = self.data(KEY.JQUERY_ELEMENT);
+
         if (validDefinition) {
             base = presets.createBase(defs, override);
             
             if (input !== undefined) {
                 base.input = input;
                 base.inputOrigin = input.get();
+            }
+            
+            // Set scope if jQuery element
+            if (jQueryElement) {
+                base.scope = jQueryElement;
             }
 
             self.props.apply(base);
@@ -1373,10 +1417,14 @@ var calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
     Easing = require('../utils/easing.js'),
     KEY = require('../opts/keys.js'),
-    Rubix = function () {},
+    Rubix = function () {
+        this.Progress.hasEnded = this.Time.hasEnded;
+        this.Progress.easeValue = this.Time.easeValue;
+    },
     rubixController;
 
 Rubix.prototype = {
+
     Time: {
     
         /*
@@ -1461,18 +1509,18 @@ Rubix.prototype = {
                 if (values.hasOwnProperty(key)) {
                     value = values[key];
                     inputKey = this.getInputKey(key, value.link, inputOffset);
-                    
+
                     // If we have an input key we animate this property
                     if (inputKey !== false) {
                         
                         offset = inputOffset[inputKey];
                         progress[key] = {};
-                        
+
                         // If value has specified range
                         if (value.hasRange) {
                             progress[key].type = KEY.PROGRESS.RANGE;
                             progress[key].value = calc.progress(value.from + offset, value.min, value.max);
-                            
+
                         // Or we're calculating progress directly
                         } else {
                             progress[key].type = KEY.PROGRESS.DIRECT;
@@ -1503,13 +1551,12 @@ Rubix.prototype = {
             @param [object]: Progress of pointer props
         */
         easeValue: function (key, value, action) {
-            var progress = action.progress[key],
+            var progress = value.link ? action.progress[value.link] : action.progress[key],
                 newValue = value.current;
                 
             if (utils.isObj(progress)) {
                 // If this is a range progress
                 if (progress.type === KEY.PROGRESS.RANGE) {
-                //console.log(progress.value);
                     newValue = Easing.withinRange(progress.value, value.min, value.max, 'linear', value.escapeAmp);
                 // Or is a direct progress
                 } else {
@@ -1577,7 +1624,13 @@ Rubix.prototype = {
             return newValue;
         }
     },
-
+    
+    Progress: {
+        calcProgress: function (action) {
+        console.log('test');
+            return action.progress;
+        }
+    }
 };
 
 rubixController = new Rubix();
@@ -2332,13 +2385,10 @@ module.exports = Pointer;
 "use strict";
 
 module.exports = {
-    ANIMATE: 'animate',
-    CALC: 'calc',
     JQUERY_ELEMENT: '_jQueryElement',
     REDSHIFT: 'redshift',
     EASING: {
         QUAD_IN_OUT: 'quadInOut',
-        QUAD_OUT: 'quadOut',
         IN: 'In',
         IN_OUT: 'InOut',
         OUT: 'Out',
@@ -2347,23 +2397,19 @@ module.exports = {
     RUBIX: {
         INPUT: 'Input',
         TIME: 'Time',
-        RUN: 'Run'
+        RUN: 'Run',
+        FIRE: 'Progress'
     },
     ERROR: {
         ACTION_EXISTS: "Action already defined. Use forceOverride: true to override.",
         NO_ACTION: "No action defined to inherit from.",
         INVALID_EASING: ": Easing not defined",
-        NO_INPUT: "Input needs to be mouse/touch event or Redshift Input"
     },
     EVENT: {
         MOUSE: 'mouse',
-        MOUSEDOWN: 'mousedown',
         MOUSEMOVE: 'mousemove',
-        MOUSEUP: 'mouseup',
         TOUCH: 'touch',
-        TOUCHSTART: 'touchstart',
         TOUCHMOVE: 'touchmove',
-        TOUCHEND: 'touchend'
     },
     PROGRESS: {
         DIRECT: 'Direct',
@@ -2608,13 +2654,7 @@ module.exports = {
         @param [number]: Frame duration in ms
     */
     frameSpeed: function (xps, frameDuration) {
-        var velocityPerFrame = 0;
-
-        if (utils.isNum(xps)) {
-	        velocityPerFrame = xps / (1000 / frameDuration);
-        }
-
-        return velocityPerFrame;
+        return (utils.isNum(xps)) ? xps / (1000 / frameDuration) : 0;
     },
         
     /*
@@ -3101,15 +3141,15 @@ var loadPlugins = function (redshift) {
             @param [jQuery element]
         */
         getInstance = function ($element) {
-            var instance = $element.data(KEY.REDSHIFT);
+            var action = $element.data(KEY.REDSHIFT);
 
-            if (!instance) {
-                instance = redshift.get();
-                instance.data(KEY.JQUERY_ELEMENT, $element);
-                $element.data(KEY.REDSHIFT, instance);
+            if (!action) {
+                action = redshift.newAction();
+                action.data(KEY.JQUERY_ELEMENT, $element);
+                $element.data(KEY.REDSHIFT, action);
             }
             
-            return instance;
+            return action;
         },
 
         /*
@@ -3138,9 +3178,8 @@ var loadPlugins = function (redshift) {
     };
     
     $.fn.track = function () {
-    console.log('test');
         execute(this, 'track', arguments[0], arguments[1], arguments[2]);
-console.log(arguments);
+
         return this;
     };
     
@@ -3156,7 +3195,6 @@ console.log(arguments);
 
 module.exports = {
     load: function (redshift) {
-    console.log('test');
         if (window.jQuery) {
             loadPlugins(redshift);
         }

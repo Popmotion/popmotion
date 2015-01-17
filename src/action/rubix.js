@@ -21,10 +21,14 @@ var calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
     Easing = require('../utils/easing.js'),
     KEY = require('../opts/keys.js'),
-    Rubix = function () {},
+    Rubix = function () {
+        this.Progress.hasEnded = this.Time.hasEnded;
+        this.Progress.easeValue = this.Time.easeValue;
+    },
     rubixController;
 
 Rubix.prototype = {
+
     Time: {
     
         /*
@@ -109,18 +113,18 @@ Rubix.prototype = {
                 if (values.hasOwnProperty(key)) {
                     value = values[key];
                     inputKey = this.getInputKey(key, value.link, inputOffset);
-                    
+
                     // If we have an input key we animate this property
                     if (inputKey !== false) {
                         
                         offset = inputOffset[inputKey];
                         progress[key] = {};
-                        
+
                         // If value has specified range
                         if (value.hasRange) {
                             progress[key].type = KEY.PROGRESS.RANGE;
                             progress[key].value = calc.progress(value.from + offset, value.min, value.max);
-                            
+
                         // Or we're calculating progress directly
                         } else {
                             progress[key].type = KEY.PROGRESS.DIRECT;
@@ -151,13 +155,12 @@ Rubix.prototype = {
             @param [object]: Progress of pointer props
         */
         easeValue: function (key, value, action) {
-            var progress = action.progress[key],
+            var progress = value.link ? action.progress[value.link] : action.progress[key],
                 newValue = value.current;
                 
             if (utils.isObj(progress)) {
                 // If this is a range progress
                 if (progress.type === KEY.PROGRESS.RANGE) {
-                //console.log(progress.value);
                     newValue = Easing.withinRange(progress.value, value.min, value.max, 'linear', value.escapeAmp);
                 // Or is a direct progress
                 } else {
@@ -225,7 +228,13 @@ Rubix.prototype = {
             return newValue;
         }
     },
-
+    
+    Progress: {
+        calcProgress: function (action) {
+        console.log('test');
+            return action.progress;
+        }
+    }
 };
 
 rubixController = new Rubix();
