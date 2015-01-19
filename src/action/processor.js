@@ -28,7 +28,10 @@ Process.prototype = {
 
         // Fire onStart if firstFrame
         if (action.firstFrame) {
-            props.onStart.call(props.scope, data);
+            if (props.onStart) {
+                props.onStart.call(props.scope, data);
+            }
+
             action.firstFrame = false;
         }
         
@@ -66,16 +69,21 @@ Process.prototype = {
         output = this.angleAndDistance(action.origin, output);
         
         // Fire onFrame callback
-        props.onFrame.call(props.scope, output, data);
+        if (props.onFrame) {
+            props.onFrame.call(props.scope, output, data);
+        }
 
         // Fire onChange callback
-        if (hasChanged) {
+        if (hasChanged && props.onChange) {
             props.onChange.call(props.scope, output, data);
         }
         
         // Fire onEnd and deactivate if at end
         if (rubix.hasEnded(action)) {
-            props.onEnd.call(props.scope, output, data);
+            if (props.onEnd) {
+                props.onEnd.call(props.scope, output, data);
+            }
+
             action.next();
         }
         

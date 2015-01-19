@@ -2,7 +2,6 @@
 
 var KEY = require('../opts/keys.js'),
     rubix = require('./rubix.js'),
-    callback = function () {},
     defaults = {
         // Is this action active
         active: false,
@@ -58,16 +57,16 @@ var KEY = require('../opts/keys.js'),
         yoyoCount: 0,
         
         // Run this callback on action start
-        onStart: callback,
+        onStart: undefined,
         
         // Run this on action end
-        onEnd: callback,
+        onEnd: undefined,
         
         // Run this every frame
-        onFrame: callback,
+        onFrame: undefined,
         
         // Run this when action changes
-        onChange: callback
+        onChange: undefined
     },
 
     /*
