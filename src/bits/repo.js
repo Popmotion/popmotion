@@ -6,7 +6,7 @@
 */
 "use strict";
 
-var Repo = function (defaults) {
+var Repo = function (initData, defaults) {
         this.data = {};
     };
 
