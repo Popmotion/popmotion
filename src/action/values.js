@@ -1,7 +1,7 @@
 "use strict";
 
 var calc = require('../utils/calc.js'),
-    Value = require('../bits/value.js'),
+    //Value = require('../bits/value.js'),
     Values = function () {
         this.store = {};
     };

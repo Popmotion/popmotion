@@ -1,6 +1,6 @@
 "use strict";
 
-var KEY = require('.opts/keys.js'),
+var KEY = require('./keys.js'),
     rubix = require('../action/rubix.js');
 
 module.exports = {
