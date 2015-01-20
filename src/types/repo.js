@@ -1,8 +1,18 @@
 "use strict";
 
-var utils = require('./utils/utils.js'),
+var utils = require('../utils/utils.js'),
+
+    /*
+        Repo constructor
+        
+        Creates data store and sets any initialising data
+        
+        @param [string || object]: Key or data
+        @param [var] (optional): Data to store
+    */
     Repo = function () {
         this.store = {};
+        this.set.apply(this, arguments);
     };
 
 Repo.prototype = {
@@ -33,7 +43,7 @@ Repo.prototype = {
                 }
             }
 
-        // Or add
+        // Or add specific property
         } else {
             this.store[data] = args[1];
         }

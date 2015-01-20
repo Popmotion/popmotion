@@ -4,13 +4,13 @@ var cycl = require('cycl'),
     processor = require('./processor.js'),
     presets = require('./presets.js'),
     rubix = require('./rubix.js'),
-    Props = require('./props.js'),
     Values = require('./values.js'),
     Pointer = require('../input/pointer.js'),
     KEY = require('../opts/keys.js'),
+    defaultProps = require('./props.js'),
     calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
-    Data = require('../bits/data.js'),
+    Repo = require('../types/repo.js'),
 
     Action = function (def, override) {
         var self = this;
@@ -19,10 +19,10 @@ var cycl = require('cycl'),
         self.values = new Values();
         
         // Create new property manager
-        self.props = new Props();
+        self.props = new Repo(defaultProps);
 
         // Create data store
-        self.data = new Data();
+        self.data = new Repo();
         
         // Register process wth cycl
         self.process = cycl.newProcess(function (framestamp, frameDuration) {
@@ -351,7 +351,7 @@ Action.prototype = {
             validDefinition = (defs !== undefined),
             base = {},
             values = {},
-            jQueryElement = self.data(KEY.JQUERY_ELEMENT);
+            jQueryElement = self.data.get(KEY.JQUERY_ELEMENT);
 
         if (validDefinition) {
             base = presets.createBase(defs, override);
@@ -366,8 +366,8 @@ Action.prototype = {
                 base.scope = jQueryElement;
             }
 
-            self.props.apply(base);
-            self.values.apply(base.values, self.props);
+            self.props.set(base);
+            self.values.apply(base.values, self.props.get());
             
             values = this.values.getAll();
             

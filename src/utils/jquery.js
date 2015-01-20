@@ -22,7 +22,7 @@ var loadPlugins = function (redshift) {
 
             if (!action) {
                 action = redshift.newAction();
-                action.data(KEY.JQUERY_ELEMENT, $element);
+                action.data.set(KEY.JQUERY_ELEMENT, $element);
                 $element.data(KEY.REDSHIFT, action);
             }
             
