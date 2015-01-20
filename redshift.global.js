@@ -51,13 +51,13 @@ Loop.prototype = {
     */
     frame: function () {
         var self = this;
-        
+
         requestAnimationFrame(function () {
             var framestamp = self.timer.update(), // Currently just measuring in ms - will look into hi-res timestamps
                 isActive = self.callback.call(self.scope, framestamp, self.timer.getElapsed());
-
+            
             if (isActive) {
-                self.frame(true);
+                self.frame();
             } else {
                 self.stop();
             }
@@ -70,7 +70,6 @@ Loop.prototype = {
     start: function () {
         // Make sure we're not already running a loop
         if (!this.isRunning) {
-            this.isRunning = true;
             this.frame();
         }
     },
@@ -101,18 +100,13 @@ module.exports = new Loop();
 
 var theLoop = require('./loop.js'),
     ProcessManager = function () {
-        this.all = {};
+        this.all = [];
         this.active = [];
         this.deactivateQueue = [];
         theLoop.setCallback(this, this.fireActive);
     };
     
 ProcessManager.prototype = {
-    
-    /*
-        [int]: Used for process ID
-    */
-    processCounter: 0,
     
     /*
         [int]: Number of active processes
@@ -164,29 +158,24 @@ ProcessManager.prototype = {
         @return [boolean]: True if active processes found
     */
     fireActive: function (framestamp, elapsed) {
-        var process,
-            activeCount = 0,
-            activeProcesses = [];
-
-        // Purge and check active count before execution
+        var isActive = false,
+            activeCount,
+            activeProcesses;
+        
         this.purge();
+        
         activeCount = this.getActiveCount();
         activeProcesses = this.getActive();
         
-        // Loop through active processes and fire callback
-        for (var i = 0; i < activeCount; i++) {
-            process = this.getProcess(activeProcesses[i]);
+        if (activeCount) {
+            isActive = true;
             
-            if (process) {
-                process.fire(framestamp, elapsed);
+            for (var i = 0; i < activeCount; i++) {
+                this.getProcess(i).fire(framestamp, elapsed);
             }
         }
-
-        // Repurge and recheck active count after execution
-        this.purge();
-        activeCount = this.getActiveCount();
         
-        return activeCount ? true : false;
+        return isActive;
     },
     
     /*
@@ -196,13 +185,9 @@ ProcessManager.prototype = {
         @return [int]: Index of process to be used as ID
     */
     register: function (process) {
-        var id = this.processCounter;
+        this.all.push(process);
 
-        this.all[id] = process;
-        
-        this.processCounter++;
-        
-        return id;
+        return this.all.length - 1;
     },
     
     /*
@@ -255,13 +240,6 @@ ProcessManager.prototype = {
         }
         
         this.deactivateQueue = [];
-    },
-    
-    /*
-        Remove the provided id and reindex remaining processes
-    */
-    kill: function (id) {
-        delete this.all[id];
     }
     
 };
@@ -293,7 +271,7 @@ var manager = require('./manager.js'),
         this.setCallback(callback);
         this.setScope(scope);
 
-        this.setId(manager.register(this));
+        this.id = manager.register(this);
     };
     
 Process.prototype = {
@@ -302,11 +280,6 @@ Process.prototype = {
         [boolean]: Is this process currently active?
     */
     isActive: false,
-    
-    /*
-        [boolean]: Has this process been killed?
-    */
-    isKilled: false,
 
     /*
         Fire callback
@@ -350,24 +323,34 @@ Process.prototype = {
     },
     
     /*
-        Start process
+        Run the process
         
         @param [int]: Duration of process in ms, 0 if indefinite
-        @return [this]
     */
-    start: function (duration) {
+    run: function (duration) {
         var self = this;
+
+        this.reset();
         
-        self.reset();
-        self.activate();
+        self.start();
         
-        if (duration) {
-            self.stopTimer = setTimeout(function () {
-                self.stop();
-            }, duration);
-        }
+        self.stopTimer = setTimeout(function () {
+            self.stop();
+        }, duration);
 
         return self;
+    },
+    
+    /*
+        Start process
+        
+        @return [this]
+    */
+    start: function () {
+        this.reset();
+        this.activate();
+
+        return this;
     },
     
     /*
@@ -388,10 +371,8 @@ Process.prototype = {
         @return [this]
     */
     activate: function () {
-        if (!this.isKilled) {
-            this.isActive = true;
-            manager.activate(this.id);
-        }
+        this.isActive = true;
+        manager.activate(this.id);
 
         return this;
     },
@@ -437,19 +418,6 @@ Process.prototype = {
         clearInterval(this.intervalTimer);
         
         return this;
-    },
-    
-    /*
-        Kill function in manager, release for garbage collection
-    */
-    kill: function () {
-        this.stop();
-        this.isKilled = true;
-        manager.kill(this.id);
-    },
-    
-    setId: function (id) {
-        this.id = id;
     }
 };
 
@@ -1190,7 +1158,10 @@ Process.prototype = {
 
         // Fire onStart if firstFrame
         if (action.firstFrame) {
-            props.onStart.call(props.scope, data);
+            if (props.onStart) {
+                props.onStart.call(props.scope, data);
+            }
+
             action.firstFrame = false;
         }
         
@@ -1228,16 +1199,21 @@ Process.prototype = {
         output = this.angleAndDistance(action.origin, output);
         
         // Fire onFrame callback
-        props.onFrame.call(props.scope, output, data);
+        if (props.onFrame) {
+            props.onFrame.call(props.scope, output, data);
+        }
 
         // Fire onChange callback
-        if (hasChanged) {
+        if (hasChanged && props.onChange) {
             props.onChange.call(props.scope, output, data);
         }
         
         // Fire onEnd and deactivate if at end
         if (rubix.hasEnded(action)) {
-            props.onEnd.call(props.scope, output, data);
+            if (props.onEnd) {
+                props.onEnd.call(props.scope, output, data);
+            }
+
             action.next();
         }
         
@@ -1283,7 +1259,6 @@ module.exports = new Process();
 
 var KEY = require('../opts/keys.js'),
     rubix = require('./rubix.js'),
-    callback = function () {},
     defaults = {
         // Is this action active
         active: false,
@@ -1339,16 +1314,16 @@ var KEY = require('../opts/keys.js'),
         yoyoCount: 0,
         
         // Run this callback on action start
-        onStart: callback,
+        onStart: undefined,
         
         // Run this on action end
-        onEnd: callback,
+        onEnd: undefined,
         
         // Run this every frame
-        onFrame: callback,
+        onFrame: undefined,
         
         // Run this when action changes
-        onChange: callback
+        onChange: undefined
     },
 
     /*
