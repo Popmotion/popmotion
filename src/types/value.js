@@ -4,35 +4,34 @@ var calc = require('../utils/calc.js'),
     Repo = require('./repo.js'),
 
     /*
+        Resolve a value
+        
+        Determine if the value to be set is
+            - Function returning the value
+            - String relative equation
+            - Or actual value
+    */
+    resolve = function (val, current) {
+        var resolvedVal = val;
+        
+        // If this is a function, execute
+        if (utils.isFunc(val)) {
+            resolvedVal = val(current);
+        
+        // Or if this is a relative assignment, calculate new contents
+        } else if (utils.isRelativeValue(val)) {
+            resolvedVal = calc.relativeValue(val, current);
+        }
+
+        return resolvedVal;
+    },
+
+    /*
         Value constructor
     */
     Value = function () {
         var repo = new Repo(),
-            setter = repo.set,
-            
-            
-            /*
-                Resolve a value
-                
-                Determine if the value to be set is
-                    - Function returning the value
-                    - String relative equation
-                    - Or actual value
-            */
-            resolve = function (val, current) {
-                var resolvedVal = val;
-                
-                // If this is a function, execute
-                if (utils.isFunc(val)) {
-                    resolvedVal = val(current);
-                
-                // Or if this is a relative assignment, calculate new contents
-                } else if (utils.isRelativeValue(val)) {
-                    resolvedVal = calc.relativeValue(val, current);
-                }
-
-                return resolvedVal;
-            };
+            setter = repo.set;
 
 
         /*
@@ -83,10 +82,30 @@ var calc = require('../utils/calc.js'),
             }
         };
         
-        // Apply initial values
+        
+        /*
+            Reset current to from
+        */
+        repo.reset = function () {
+            this.set('current', this.get('from'));
+        };
+        
+        
+        /*
+            Reverse current and from
+        */
+        repo.reverse = function () {
+            this.set({
+                to: this.get('from'),
+                from: this.get('to')
+            });
+        };
+        
+        
+        // Apply defaults
         repo.set.apply(repo, args);
         
-        // Check for start property
+        // Check for start property - move this to work
         if (utils.isObj(arg1) && arg1.start) {
             repo.set.apply(repo, 'start', arg1.start);
         }
