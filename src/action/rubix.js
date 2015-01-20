@@ -161,6 +161,12 @@ Rubix.prototype = {
             if (utils.isObj(progress)) {
                 // If this is a range progress
                 if (progress.type === KEY.PROGRESS.RANGE) {
+                
+                    // Step if steps - DRY it up
+                    if (value.steps) {
+                        progress.value = utils.stepProgress(progress.value, 1, value.steps);
+                    }
+                
                     newValue = Easing.withinRange(progress.value, value.min, value.max, 'linear', value.escapeAmp);
                 // Or is a direct progress
                 } else {

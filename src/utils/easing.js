@@ -12,19 +12,6 @@
         
     We can generate new functions by sending an easing function through easingFunction.extend(name, method).
     Which will make nameIn, nameOut and nameInOut functions available to use.
-    
-    Base easing
-        linear: default, no in/out/inOut variations
-        quad
-        cubic
-        quart
-        quint
-        exp
-        circ
-        back
-        bounce
-        swing
-        spring
         
     Easing functions from Robert Penner
     http://www.robertpenner.com/easing/
@@ -54,9 +41,6 @@ var calc = require('./calc.js'),
             Generates easing curve based on exponent of time
         */
         ease: function (progress) {
-            return Math.pow(progress, 2);
-        },
-        quad: function (progress) {
             return Math.pow(progress, 2);
         },
         cubic: function (progress) {
@@ -193,12 +177,12 @@ EasingFunction.prototype = {
 
         // Create the Out function by reversing the transition curve
         this[reverseName] = function (progress) {
-            return self.reverseEasing(progress, self[names.easeIn]);
+            return self.reverseEasing(progress, self[baseName]);
         };
         
         // Create the InOut function by mirroring the transition curve
         this[names.easeInOut] = function (progress) {
-            return self.mirrorEasing(progress, self[names.easeIn]);
+            return self.mirrorEasing(progress, self[baseName]);
         };
     },
     
