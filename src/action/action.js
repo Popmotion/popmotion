@@ -7,7 +7,8 @@ var cycl = require('cycl'),
     Values = require('./values.js'),
     Pointer = require('../input/pointer.js'),
     KEY = require('../opts/keys.js'),
-    defaultProps = require('./props.js'),
+    defaultProps = require('../opts/props.js'),
+    defaultValue = require('../opts/value.js'),
     calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
     Repo = require('../types/repo.js'),
@@ -16,7 +17,7 @@ var cycl = require('cycl'),
         var self = this;
         
         // Create value manager
-        self.values = new Values();
+        self.values = new Values(defaultValue);
         
         // Create new property manager
         self.props = new Repo(defaultProps);

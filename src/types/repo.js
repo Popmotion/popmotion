@@ -44,7 +44,7 @@ Repo.prototype = {
             }
 
         // Or add specific property
-        } else {
+        } else if (data !== undefined) {
             this.store[data] = args[1];
         }
 
