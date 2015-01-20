@@ -1,13 +1,21 @@
 "use strict";
 
 var Input = require('./input.js'),
-    Point = require('./point.js'),
+    Point = require('../bits/point.js'),
     History = require('../bobs/history.js'),
     KEY = require('../opts/keys.js'),
     utils = require('../utils/utils.js'),
     currentPointer, // Sort this crap out for multitouch
-    Pointer = function (point, isTouch) {
-        this.update(new Point(point));
+    
+    /*
+        Pointer constructor
+    */
+    Pointer = function (e) {
+        var event = utils.getActualEvent(e), // In case of jQuery event
+            startPoint = utils.convertEventIntoPoint(event),
+            isTouch = utils.isTouchEvent(event);
+        
+        this.update(new Point(startPoint));
         this.isTouch = isTouch;
         this.bindEvents();
     };

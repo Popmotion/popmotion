@@ -2,13 +2,13 @@
 
 ## Anything in, anywhere out
 
-Redshift is a Javascript engine for animation and interaction. It works with pure numbers and outputs directly to your custom callbacks.
+Redshift is a JavaScript engine for animation and interaction. It works with pure numbers and outputs directly to your custom callbacks.
 
 **Key benefits of this approach:**
 
-* Use your favourite technology (DOM, jQuery, canvas, WebGL, etc)
+* Use your favourite technology (DOM, jQuery, Canvas, WebGL, etc)
 * Animate any numerical property, without waiting for us to support it
-* We never hit the DOM, leaving you in control of performance
+* We never hit the DOM, leaving you in total control of performance
 * Unlock the power of easing, for any purpose
 
 
@@ -17,7 +17,7 @@ Redshift is a Javascript engine for animation and interaction. It works with pur
 * Seamlessly hand-off between user input and animation
 * Create custom easing bezier curves
 * Create custom inputs to experiment with new input devices
-* Runs every process through the same requestAnimationFrame loop for high visual performance
+* Uses our [Cycl](https://github.com/InventingWithMonster/cycl) unified requestAnimationFrame process manager for high performance
 
 
 ## Use

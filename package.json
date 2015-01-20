@@ -1,7 +1,7 @@
 {
   "name": "redshift",
-  "version": "0.5.0",
-  "description": "Create high fidelity Javascript UX",
+  "version": "0.6.0",
+  "description": "A JavaScript animation and interaction framework.",
   "author": "Matt Perry <admin@redshiftjs.com>",
   "homepage": "http://redshiftjs.com",
   "main": "src/redshift.js",
@@ -26,6 +26,9 @@
   "scripts": {
 	  "watch": "watchify ./src/redshift.js -o ./redshift.js -dv",
 	  "compile": "browserify ./src/utils/global.js -o ./redshift.global.js && browserify ./src/utils/global.js | uglifyjs - -m -o ./redshift.global.min.js"
+  },
+  "dependencies": {
+      "cycl": "1.0.0"
   },
   "devDependencies": {
     "browserify": "7.0.0",

@@ -92,7 +92,7 @@ var utils = require('../utils/utils.js'),
         hasRange: false,
         
         // Speed for .move(), in xps
-        speed: 0,
+        velocity: 0,
         friction: 0,
         thrust: 0,
         
@@ -152,7 +152,7 @@ Value.prototype.update = function (value, action, isNewValue) {
                 this[key] = parse(value[key], data, this.current);
                 
             // Or there's a default set on the action
-            } else if (utils.isObj(action) && action.hasOwnProperty(key)) {
+            } else if (utils.isObj(action) && action[key]) {
                 this[key] = parse(action[key], data, this.current);
                 
             // Otherwise, if this is our first time (honest judge), set as the default.

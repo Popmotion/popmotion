@@ -1,28 +1,1295 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+/*
+    Cycl  
+*/
+"use strict";
+
+var shim = require('./shim.js'),
+    Process = require('./process.js'),
+
+    Cycl = function () {
+        // Check if we need to shim rAF and indexOf
+        shim.featureCheck();
+    };
+    
+Cycl.prototype = {
+    
+    /*
+        Create a new process in the loop
+        
+        @param [function]: Function to run every frame
+    */
+    newProcess: function () {
+        return new Process(arguments[0], arguments[1]);
+    }
+
+};
+
+// Only allow one instance of Cyclos to prevent multiple requestAnimationFrame loops
+module.exports = new Cycl();
+},{"./process.js":4,"./shim.js":5}],2:[function(require,module,exports){
+/*
+    The loop
+*/
+"use strict";
+
+var Timer = require('./timer.js'),
+    Loop = function () {
+        this.timer = new Timer();
+    },
+    manager;
+    
+Loop.prototype = {
+    
+    /*
+        [boolean]: Current status of animation loop
+    */
+    isRunning: false,
+    
+    /*
+        Fire all active processes once per frame
+    */
+    frame: function () {
+        var self = this;
+        
+        requestAnimationFrame(function () {
+            var framestamp = self.timer.update(), // Currently just measuring in ms - will look into hi-res timestamps
+                isActive = self.callback.call(self.scope, framestamp, self.timer.getElapsed());
+
+            if (isActive) {
+                self.frame(true);
+            } else {
+                self.stop();
+            }
+        });
+    },
+    
+    /*
+        Start loop
+    */
+    start: function () {
+        // Make sure we're not already running a loop
+        if (!this.isRunning) {
+            this.isRunning = true;
+            this.frame();
+        }
+    },
+    
+    /*
+        Stop the loop
+    */
+    stop: function () {
+        this.isRunning = false;
+    },
+    
+    /*
+        Set the callback to run every frame
+        
+        @param [Object]: Execution context
+        @param [function]: Callback to fire
+    */
+    setCallback: function (scope, callback) {
+        this.scope = scope;
+        this.callback = callback;
+    }
+ 
+};
+
+module.exports = new Loop();
+},{"./timer.js":6}],3:[function(require,module,exports){
+"use strict";
+
+var theLoop = require('./loop.js'),
+    ProcessManager = function () {
+        this.all = {};
+        this.active = [];
+        this.deactivateQueue = [];
+        theLoop.setCallback(this, this.fireActive);
+    };
+    
+ProcessManager.prototype = {
+    
+    /*
+        [int]: Used for process ID
+    */
+    processCounter: 0,
+    
+    /*
+        [int]: Number of active processes
+    */
+    activeCount: 0,
+    
+    /*
+        Get the process with a given index
+        
+        @param [int]: Index of process
+        @return [Process]
+    */
+    getProcess: function (i) {
+        return this.all[i];
+    },
+    
+    /*
+        Get number of active processes
+        
+        @return [int]: Number of active processes
+    */
+    getActiveCount: function () {
+        return this.activeCount;
+    },
+    
+    /*
+        Get active tokens
+
+        @return [array]: Active tokens
+    */
+    getActive: function () {
+        return this.active;
+    },
+    
+    /*
+        Get the length of the deactivate queue
+        
+        @return [int]: Length of queue
+    */
+    getQueueLength: function () {
+        return this.deactivateQueue.length;
+    },
+    
+    /*
+        Fire all active processes
+        
+        @param [int]: Timestamp of executing frames
+        @param [int]: Time since previous frame
+        @return [boolean]: True if active processes found
+    */
+    fireActive: function (framestamp, elapsed) {
+        var process,
+            activeCount = 0,
+            activeProcesses = [];
+
+        // Purge and check active count before execution
+        this.purge();
+        activeCount = this.getActiveCount();
+        activeProcesses = this.getActive();
+        
+        // Loop through active processes and fire callback
+        for (var i = 0; i < activeCount; i++) {
+            process = this.getProcess(activeProcesses[i]);
+            
+            if (process) {
+                process.fire(framestamp, elapsed);
+            }
+        }
+
+        // Repurge and recheck active count after execution
+        this.purge();
+        activeCount = this.getActiveCount();
+        
+        return activeCount ? true : false;
+    },
+    
+    /*
+        Register a new process
+        
+        @param [Process]
+        @return [int]: Index of process to be used as ID
+    */
+    register: function (process) {
+        var id = this.processCounter;
+
+        this.all[id] = process;
+        
+        this.processCounter++;
+        
+        return id;
+    },
+    
+    /*
+        Activate a process
+        
+        @param [int]: Index of active process
+    */
+    activate: function (i) {
+        var queueIndex = this.deactivateQueue.indexOf(i),
+            isQueued = (queueIndex > -1),
+            isActive = (this.active.indexOf(i) > -1);
+        
+        // Remove from deactivateQueue if in there
+        if (isQueued) {
+            this.deactivateQueue.splice(queueIndex, 1);
+        }
+        
+        // Add to active processes array if not already in there
+        if (!isActive) {
+            this.active.push(i);
+            this.activeCount++;
+            theLoop.start(this);
+        }
+    },
+    
+    /*
+        Deactivate a process
+        
+        @param [int]: Index of process to add to deactivate queue
+    */
+    deactivate: function (i) {
+        this.deactivateQueue.push(i);
+    },
+    
+    /*
+        Purge the deactivate queue
+    */
+    purge: function () {
+        var activeIndex,
+            queueLength = this.getQueueLength();
+        
+        while (queueLength--) {
+            activeIndex = this.active.indexOf(this.deactivateQueue[queueLength]);
+            
+            // If process in active list deactivate
+            if (activeIndex > -1) {
+                this.active.splice(activeIndex, 1);
+                this.activeCount--;
+            }
+        }
+        
+        this.deactivateQueue = [];
+    },
+    
+    /*
+        Remove the provided id and reindex remaining processes
+    */
+    kill: function (id) {
+        delete this.all[id];
+    }
+    
+};
+
+module.exports = new ProcessManager();
+},{"./loop.js":2}],4:[function(require,module,exports){
+/*
+    Process
+    =======================
+    
+    
+*/
+"use strict";
+
+var manager = require('./manager.js'),
+
+    /*
+        Process constructor
+        
+        Syntax
+            var process = new Process(scope, callback);
+            var process = new Process(callback);
+    */
+    Process = function () {
+        var hasScope = (arguments[1] !== undefined),
+            callback = hasScope ? arguments[1] : arguments[0],
+            scope = hasScope ? arguments[0] : this;
+
+        this.setCallback(callback);
+        this.setScope(scope);
+
+        this.setId(manager.register(this));
+    };
+    
+Process.prototype = {
+    
+    /*
+        [boolean]: Is this process currently active?
+    */
+    isActive: false,
+    
+    /*
+        [boolean]: Has this process been killed?
+    */
+    isKilled: false,
+
+    /*
+        Fire callback
+        
+        @param [timestamp]: Timestamp of currently-executed frame
+        @param [number]: Time since last frame
+    */
+    fire: function (timestamp, elapsed) {
+        // Check timers
+        if (this.isActive) {
+            this.callback.call(this.scope, timestamp, elapsed);
+        }
+        
+        if (this.isInterval) {
+            this.deactivate();
+        }
+    },
+    
+    /*
+        Set process callback
+        
+        @param [function]: Function to fire per frame
+        @return [this]
+    */
+    setCallback: function (callback) {
+        this.callback = callback;
+        
+        return this;
+    },
+    
+    /*
+        Set callback scope
+        
+        @param [function]: Fire callback in this context
+        @return [this]
+    */
+    setScope: function (scope) {
+        this.scope = scope;
+        
+        return this;
+    },
+    
+    /*
+        Start process
+        
+        @param [int]: Duration of process in ms, 0 if indefinite
+        @return [this]
+    */
+    start: function (duration) {
+        var self = this;
+        
+        self.reset();
+        self.activate();
+        
+        if (duration) {
+            self.stopTimer = setTimeout(function () {
+                self.stop();
+            }, duration);
+        }
+
+        return self;
+    },
+    
+    /*
+        Stop process
+        
+        @return [this]
+    */
+    stop: function () {
+        this.reset();
+        this.deactivate();
+        
+        return this;
+    },
+    
+    /*
+        Activate process
+        
+        @return [this]
+    */
+    activate: function () {
+        if (!this.isKilled) {
+            this.isActive = true;
+            manager.activate(this.id);
+        }
+
+        return this;
+    },
+    
+    /*
+        Deactivate process
+        
+        @return [this]
+    */
+    deactivate: function () {
+        this.isActive = false;
+        manager.deactivate(this.id);
+        
+        return this;
+    },
+    
+    /*
+        Fire process every x ms
+        
+        @param [int]: Number of ms to wait between refiring process.
+        @return [this]
+    */
+    every: function (interval) {
+	    var self = this;
+
+        this.reset();
+
+        this.isInterval = true;
+
+        this.intervalTimer = setInterval(function () {
+            self.activate();
+        }, interval);
+    },
+    
+    /*
+        Clear all timers
+        
+        @param 
+    */
+    reset: function () {
+        this.isInterval = false;
+        clearTimeout(this.stopTimer);
+        clearInterval(this.intervalTimer);
+        
+        return this;
+    },
+    
+    /*
+        Kill function in manager, release for garbage collection
+    */
+    kill: function () {
+        this.stop();
+        this.isKilled = true;
+        manager.kill(this.id);
+    },
+    
+    setId: function (id) {
+        this.id = id;
+    }
+};
+
+module.exports = Process;
+},{"./manager.js":3}],5:[function(require,module,exports){
+"use strict";
+
+var checkRequestAnimationFrame = function () {
+        /*
+            requestAnimationFrame polyfill
+            
+            For IE8/9 Flinstones
+        
+            Taken from Paul Irish. We've stripped out cancelAnimationFrame checks because we don't fox with that
+            
+            http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+            http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
+             
+            requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
+             
+            MIT license
+        */
+        var lastTime = 0,
+            vendors = ['ms', 'moz', 'webkit', 'o'],
+            vendorsLength = vendors.length;
+        
+        // Check for prefixed implementations
+        for (var x = 0; x < vendorsLength && !window.requestAnimationFrame; x++) {
+            window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+        }
+        
+        // If there is, fo absolute shizzle, no rAF implementations, make one out of setTimeout and putty
+        if (!window.requestAnimationFrame) {
+            window.requestAnimationFrame = function (callback, element) {
+                var currTime = new Date().getTime(),
+                    timeToCall = Math.max(0, 16 - (currTime - lastTime)),
+                    id = window.setTimeout(function () {
+                            callback(currTime + timeToCall);
+                        }, timeToCall);
+                
+                lastTime = currTime + timeToCall;
+                
+                return id;
+            }
+        }
+    },
+    checkIndexOf = function () {
+        /*
+            indexOf polyfill
+            
+            For IE8 troglodites
+            
+            Taken from http://stackoverflow.com/questions/3629183/why-doesnt-indexof-work-on-an-array-ie8
+        */
+        if (!Array.prototype.indexOf) {
+            Array.prototype.indexOf = function (elt /*, from*/) {
+                var len = this.length >>> 0,
+                    from = Number(arguments[1]) || 0;
+                    
+                from = (from < 0) ? Math.ceil(from) : Math.floor(from);
+                
+                if (from < 0) {
+                    from += len;
+                }
+                
+                for (; from < len; from++) {
+                    if (from in this && this[from] === elt) {
+                        return from;
+                    }
+                }
+                
+                return -1;
+            }
+        }
+    };
+
+module.exports = {
+    featureCheck: function () {
+        checkRequestAnimationFrame();
+        checkIndexOf();
+    }
+};
+},{}],6:[function(require,module,exports){
+"use strict";
+
+var Timer = function () {
+        this.update();
+    };
+
+Timer.prototype = {
+    update: function () {
+        this.prev = this.current;
+        return this.current = new Date().getTime();
+    },
+
+    getElapsed: function (timestamp) {
+        return this.current - this.prev;
+    }
+};
+
+module.exports = Timer;
+},{}],7:[function(require,module,exports){
+"use strict";
+
+var cycl = require('cycl'),
+    processor = require('./processor.js'),
+    presets = require('./presets.js'),
+    rubix = require('./rubix.js'),
+    Props = require('./props.js'),
+    Values = require('./values.js'),
+    Pointer = require('../input/pointer.js'),
+    KEY = require('../opts/keys.js'),
+    calc = require('../utils/calc.js'),
+    utils = require('../utils/utils.js'),
+    Data = require('../bits/data.js'),
+
+    Action = function (def, override) {
+        var self = this;
+        
+        // Create value manager
+        self.values = new Values();
+        
+        // Create new property manager
+        self.props = new Props();
+
+        // Create data store
+        self.data = new Data();
+        
+        // Register process wth cycl
+        self.process = cycl.newProcess(function (framestamp, frameDuration) {
+	        if (self.active) {
+            	processor.action(self, framestamp, frameDuration);
+	        }
+        });
+        
+        self.set(def, override);
+    };
+
+Action.prototype = {
+
+    // [number]: Progress represented in a range of 0 - 1
+    progress: 0,
+    
+    // [number]: Time elapsed in ms
+    elapsed: 0,
+
+    /*
+        Play the provided actions as animations
+        
+        Syntax
+            .play(playlist, [override])
+                @param [string]: Playlist of presets
+                @param [object]: (optional) Override object
+                
+            .play(params)
+                @param [object]: Action properties
+                
+        @return [Action]
+    */
+    play: function (defs, override) {
+        this.set(defs, override);
+        return this.start(KEY.RUBIX.TIME);
+    },
+
+    /*
+        Run Action indefinitely
+        
+        Syntax
+            .run(preset, [override])
+                @param [string]: Name of preset
+                @param [object]: (optional) Override object
+                
+            .run(params)
+                @param [object]: Action properties
+                
+        @return [Action]
+    */
+    run: function (defs, override) {
+        this.set(defs, override);
+        return this.start(KEY.RUBIX.RUN);
+    },
+    
+    /*
+        Track values to mouse, touch or custom Input
+        
+        Syntax
+            .track(preset, [override], input)
+                @param [string]: Name of preset
+                @param [object]: (optional) Override object
+                @param [event || Input]: Input or event to start tracking
+                
+            .track(params, input)
+                @param [object]: Action properties
+                @param [event || Input]: Input or event to start tracking
+                
+        @return [Action]
+    */
+    track: function () {
+        var args = arguments,
+            argLength = args.length,
+            defs, override, input;
+        
+        // Loop backwards over arguments
+        for (var i = argLength - 1; i >= 0; i--) {
+            if (args[i] !== undefined) {
+                // If input hasn't been defined, this is the input
+                if (input === undefined) {
+                    input = args[i];
+
+                // Or if this is the second argument, these are overrides
+                } else if (i === 1) {
+                    override = args[i];
+                    
+                // Otherwise these are the defs
+                } else if (i === 0) {
+                    defs = args[i];
+                }
+            }
+        }
+
+        if (!input.current) {
+            input = new Pointer(input);
+        }
+
+        this.set(defs, override, input);
+
+        return this.start(KEY.RUBIX.INPUT);
+    },
+ /*   
+    fire: function (progress) {
+        var rubix = this.props.get('rubix'),
+            isActive = this.process.isActive;
+
+        if (utils.isNum(progress)) {
+            this.progress = progress;
+        }
+        
+        this.changeRubix(KEY.RUBIX.FIRE);
+        this.isActive(true);
+        this.process.activate().fire();
+
+        if (isActive) {
+            this.props.set('rubix', rubix);
+        } else {
+            this.isActive(false);
+            this.process.deactivate();
+        }
+
+        return this;
+   },
+     */
+    /*
+        Start Action
+
+        @param [string]: Name of processing type to use
+        @return [Action]
+    */
+    start: function (processType) {
+	    var self = this;
+
+        self.resetProgress();
+        
+        if (processType) {
+            self.changeRubix(processType);
+        }
+
+        self.isActive(true);
+        self.started = utils.currentTime() + self.props.get('delay');
+        self.framestamp = self.started;
+        self.firstFrame = true;
+        
+        self.process.start();
+        
+        return self;
+    },
+    
+    /*
+        Stop current Action process
+    */
+    stop: function () {
+	    var self = this;
+
+        self.isActive(false);
+        self.process.stop();
+
+        return self;
+    },
+    
+    /*
+        Pause current Action
+    */
+    pause: function () {
+	    this.stop();
+	    
+	    return this;
+    },
+    
+    /*
+        Resume a paused Action
+    */
+    resume: function () {
+	    var self = this;
+	    
+        self.started = utils.currentTime();
+        self.framestamp = self.started;
+        self.isActive(true);
+        
+        self.process.start();
+        
+        return self;
+    },
+    
+    /*
+        Reset Action progress and values
+    */
+    reset: function () {
+	    var self = this;
+
+        self.resetProgress();
+        self.values.reset();
+        
+        return self;
+    },
+    
+    /*
+	    Reset Action progress
+    */
+    resetProgress: function () {
+	    var self = this;
+
+        self.progress = 0;
+        self.elapsed = 0;
+        self.started = utils.currentTime();
+        
+        return self;
+    },
+    
+    /*
+	    Reverse Action progress and values
+    */
+    reverse: function () {
+	    var self = this;
+	    
+	    self.progress = calc.difference(self.progress, 1);
+        self.elapsed = calc.difference(self.elapsed, self.props.get('duration'));
+        self.values.reverse();
+
+        return self;
+    },
+    
+    toggle: function () {
+        if (this.isActive()) {
+            this.pause();
+        } else {
+            this.resume();
+        }
+    },
+    
+    /*
+        Check for next steps and perform, stop if not
+    */
+    next: function () {
+        var self = this,
+            nexts = [{
+                key: 'loop',
+                callback: self.reset
+            }, {
+                key: 'yoyo',
+                callback: self.reverse
+            }],
+            possibles = nexts.length,
+            hasNext = false;
+            
+        for (var i = 0; i < possibles; ++i) {
+            if (self.checkNextStep(nexts[i].key, nexts[i].callback)) {
+                hasNext = true;
+                break;
+            }
+        }
+
+        if (!hasNext && !self.playNext()) {
+            self.stop();
+        }
+        
+        return self;
+    },
+    
+    /*
+        Check next step
+        
+        @param [string]: Name of step ('yoyo' or 'loop')
+        @param [callback]: Function to run if we take this step
+    */
+    checkNextStep: function (key, callback) {
+        var stepTaken = false,
+            step = this.props.get(key),
+            count = this.props.get(key + 'Count'),
+            forever = (step === true);
+
+        if (forever || utils.isNum(step)) {
+            ++count;
+            this.props.set(key + 'Count', count);
+            if (forever || count <= step) {
+                callback.call(this);
+                stepTaken = true;
+            }
+        }
+
+        return stepTaken;
+    },
+    
+    /*
+        Next in playlist
+    */
+    playNext: function () {
+        var stepTaken = false,
+            playlist = this.props.get('playlist'),
+            playlistLength = playlist.length,
+            playhead = this.props.get('playhead'),
+            next = {};
+
+        // Check we have a playlist
+        if (playlistLength > 1) {
+            ++playhead;
+            
+            if (playhead < playlistLength) {
+                next = presets.getDefined(playlist[playhead]);
+                next.playhead = playhead;
+                this.set(next);
+                this.reset();
+                stepTaken = true;
+            }
+        }
+
+        return stepTaken;
+    },
+    
+    /*
+        Set Action values and properties
+        
+        Syntax
+            .set(preset[, override, input])
+                @param [string]: Name of preset to apply
+                @param [object] (optional): Properties to override preset
+            
+            .set(params[, input])
+                @param [object]: Action properties
+            
+        @return [Action]
+    */
+    set: function (defs, override, input) {
+        var self = this,
+            validDefinition = (defs !== undefined),
+            base = {},
+            values = {},
+            jQueryElement = self.data(KEY.JQUERY_ELEMENT);
+
+        if (validDefinition) {
+            base = presets.createBase(defs, override);
+            
+            if (input !== undefined) {
+                base.input = input;
+                base.inputOrigin = input.get();
+            }
+            
+            // Set scope if jQuery element
+            if (jQueryElement) {
+                base.scope = jQueryElement;
+            }
+
+            self.props.apply(base);
+            self.values.apply(base.values, self.props);
+            
+            values = this.values.getAll();
+            
+            // Create origins
+            self.origin = {};
+            for (var key in values) {
+                if (values.hasOwnProperty(key)) {
+                    self.origin[key] = values[key].current;
+                }
+            }
+        }
+        
+        return self;
+    },
+    
+    setValue: function (key, value) {
+        var self = this;
+
+        // If this is a number, set current (as opposed to 'to')
+        if (utils.isNum(value)) {
+            self.values.set(key, { current: value });
+        
+        // Or just set normal object
+        } else {
+            self.values.set(key, value);
+        }
+        
+        return self;
+    },
+    
+    getValue: function (key) {
+        return this.values.get(key);
+    },
+    
+    setProp: function (key, value) {
+        this.props.set(key, value);
+        
+        return this;
+    },
+    
+    getProp: function (key) {
+        return this.props.get(key);
+    },
+    
+    /*
+        Is Action active?
+        
+        @param [boolean] (optional): If provided, will set action to active/inactive
+        @return [boolean]: Active status
+    */
+    isActive: function (active) {
+        if (active !== undefined) {
+            this.active = active;
+        }
+
+        return this.active;
+    },
+    
+    /*
+        Change Action properties
+        
+        @param [string]: Type of processing rubix to use
+        @param [object]: Base properties of new input
+    */
+    changeRubix: function (processType) {
+        this.props.set('rubix', rubix[processType]);
+
+        return this;
+    }
+    
+};
+
+module.exports = Action;
+},{"../bits/data.js":14,"../input/pointer.js":19,"../opts/keys.js":20,"../utils/calc.js":22,"../utils/utils.js":26,"./presets.js":8,"./processor.js":9,"./props.js":10,"./rubix.js":11,"./values.js":12,"cycl":1}],8:[function(require,module,exports){
 "use strict";
 
 var KEY = require('../opts/keys.js'),
-    calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
-    Token = require('../bits/token.js'),
-    token = new Token(),
-    Value = require('./value.js'),
-    callback = function () {},
-    Action = function () {
-        this.created = utils.currentTime();
-        this.token = token.generate();
-        this.data = {};
-        this.values = {};
-        this.origin = {};
-        this.playlist = [];
+
+    presetStore = {},
+    Presets = function () {};
+
+Presets.prototype = {
+
+    /*
+        Define a new Action preset
+        
+        Syntax
+        
+            .define(name, preset)
+                @param [string]: Name of preset
+                @param [object]: Preset options/properties
+                
+            .define(presets)
+                @param [object]: Multiple presets as named object
+                
+        @return [Redshift]
+    */
+    define: function () {
+        var props = {},
+            key = '',
+            chain = [],
+            preset = {};
+        
+        // Check if supplied arguments are string/object or object map
+        if (arguments[1] === undefined) {
+            props = arguments[0];
+        } else {
+            props[arguments[0]] = arguments[1];
+        }
+        
+        // Iterate over props and create presets
+        for (key in props) {
+            if (props.hasOwnProperty(key)) {
+                
+                // If this preset already exists and forceOverride isn't set to true
+                if (presetStore[key] && !props[key].forceOverride) {
+                    throw KEY.ERROR.ACTION_EXISTS;
+                
+                // Otherwise create the preset
+                } else {
+                    chain = key.split('.');
+                    
+                    // If there's an inheritence chain, merge
+                    // TODO: multilayered inheritence
+                    if (chain.length > 1) {
+                        
+                        // Look for existing preset
+                        if (presetStore[chain[0]]) {
+                            presetStore[key] = utils.merge(presetStore[chain[0]], props[key]);
+                            
+                        // Otherwise throw error
+                        } else {
+                            throw KEY.ERROR.NO_ACTION;
+                        }
+                    
+                    // Otherwise directly copy
+                    } else {
+                        presetStore[key] = props[key];
+                    }
+                }
+                
+            }
+        } // end for
     },
-    defaults = {
     
+    
+    /*
+        Create base action
+        
+        @param [string || array || object]:
+            String: Name or space-delimited playlist of actions
+            Array: Playlist of actions
+            Object: Raw action
+        @param [object]: Action override
+    */
+    createBase: function (defs, override) {
+        var baseAction = {},
+            actionList = [];
+
+        // If this is a straight action
+        if (utils.isObj(defs)) {
+            baseAction = defs;
+            baseAction.playlist = [];
+            
+        // These are previously defined actions
+        } else {
+            // Comma-delimited string or single action name
+            if (utils.isString(defs)) {
+                actionList = defs.split(" ");
+                
+            // Array of action names
+            } else {
+                actionList = defs;
+            }
+            
+            baseAction = this.getDefined(actionList[0]);
+            baseAction.playlist = actionList;
+        }
+        
+        // Apply overrides if present
+        if (utils.isObj(override)) {
+            baseAction = this.merge(baseAction, override);
+        }
+        
+        return baseAction;
+    },
+    
+    
+    /*
+        Get defined action
+        
+        @param [string]: The name of the predefined action
+    */
+    getDefined: function (key) {
+        return this.copy(presetStore[key]);
+    },
+    
+    /*
+        Copy an action
+    */
+    copy: function (action) {
+        var newAction = {};
+
+        for (var key in action) {
+            if (action.hasOwnProperty(key)) {
+                if (key !== 'values') {
+                    newAction[key] = action[key];
+                } else {
+                    newAction.values = utils.copy(action.values);
+                }
+            }
+        }
+        
+        return newAction;
+    },
+    
+    /*
+        Merge an action
+    */
+    merge: function (action, override) {
+        for (var key in override) {
+            if (override.hasOwnProperty(key)) {
+                if (key !== 'values') {
+                    action[key] = override[key];
+                } else {
+                    action.values = utils.merge(action.values, override.values);
+                }
+            }
+        }
+        
+        return action;
+    }
+    
+};
+
+module.exports = new Presets();
+},{"../opts/keys.js":20,"../utils/utils.js":26}],9:[function(require,module,exports){
+/*
+    Process actions
+*/
+"use strict";
+
+var Rubix = require('./rubix.js'),
+	calc = require('../utils/calc.js'),
+    utils = require('../utils/utils.js'),
+    Process = function () {},
+    process;
+    
+Process.prototype = {
+    
+    /*
+        Process an action
+        
+        @param [Action]: Action to process
+        @param [number]: Timestamp of executing frame
+        @param [number]: Duration, in ms, since last frame
+    */
+    action: function (action, framestamp, frameDuration) {
+        var output = {},
+            props = action.props,
+            rubix = props.rubix,
+            data = action.data(),
+            values = action.values.getAll(),
+            hasChanged = false;
+
+        // Fire onStart if firstFrame
+        if (action.firstFrame) {
+            props.onStart.call(props.scope, data);
+            action.firstFrame = false;
+        }
+        
+        // Update associated Input
+        if (props.input) {
+	        output.input = props.input.onFrame(framestamp);
+        }
+        
+        // Update progress
+        action.progress = rubix.calcProgress(action, props, values, framestamp, frameDuration);
+
+        // Calculate new values
+        for (var key in values) {
+            if (values.hasOwnProperty(key)) {
+                // Ease value
+                output[key] = rubix.easeValue(key, values[key], action);
+                
+                // Round
+                if (values[key].round) {
+                    output[key] = Math.round(output[key]);
+                }
+
+                // Add velocity
+                values[key].velocity = calc.xps(calc.difference(values[key].current, output[key]), frameDuration);
+                
+                // Check if has changed
+                if (values[key].current != output[key]) {
+                    hasChanged = true;
+                    values[key].current = output[key];
+                }
+            }
+        } // end value calculations
+        
+        // Calculate new x and y if angle and distance present
+        output = this.angleAndDistance(action.origin, output);
+        
+        // Fire onFrame callback
+        props.onFrame.call(props.scope, output, data);
+
+        // Fire onChange callback
+        if (hasChanged) {
+            props.onChange.call(props.scope, output, data);
+        }
+        
+        // Fire onEnd and deactivate if at end
+        if (rubix.hasEnded(action)) {
+            props.onEnd.call(props.scope, output, data);
+            action.next();
+        }
+        
+        // Update Action framestamp
+        action.framestamp = framestamp;
+    },
+    
+    /*
+        Update associated input
+        
+        @param [Input]: Bound input
+        @param [number]: Framestamp of latest frame
+    */
+    updateInput: function (input, framestamp) {
+        if (input) {
+            input.updateInput(framestamp);
+        }
+    },
+    
+    /*
+	    Process angle and distance
+	    
+	    @param [object]: Action origin point
+	    @param [object]: Current output
+	    @return [object]: Output with updated x and y
+    */
+    angleAndDistance: function (origin, output) {
+	    var point = {};
+
+	    if (output.angle && output.distance) {
+		    point = calc.pointFromAngleAndDistance(origin, output.angle, output.distance);
+		    output.x = point.x;
+		    output.y = point.y;
+	    }
+
+	    return output;
+    }
+};
+
+module.exports = new Process();
+},{"../utils/calc.js":22,"../utils/utils.js":26,"./rubix.js":11}],10:[function(require,module,exports){
+"use strict";
+
+var KEY = require('../opts/keys.js'),
+    rubix = require('./rubix.js'),
+    callback = function () {},
+    defaults = {
         // Is this action active
         active: false,
         
         // What to use to process this aciton
-        rubix: KEY.RUBIX.TIME,
+        rubix: rubix[KEY.RUBIX.TIME],
         
         // Multiply output value by
         amp: 1,
@@ -56,12 +1323,6 @@ var KEY = require('../opts/keys.js'),
         // Input origin on tracking start
         inputOrigin: undefined,
         
-        // Current progress
-        progress: 0,
-        
-        // Time elapsed
-        elapsed: 0,
-        
         // Use the progress of this property of linked input
         link: undefined,
         
@@ -88,122 +1349,372 @@ var KEY = require('../opts/keys.js'),
         
         // Run this when action changes
         onChange: callback
+    },
+
+    /*
+        Props constructor
+    */
+    Props = function () {};
+
+Props.prototype = {
+    
+    /*
+        Apply properties
+        
+        @param [object]: User-defined options
+    */
+    apply: function (props) {
+        // Loop through defaults
+        for (var key in defaults) {
+            if (defaults.hasOwnProperty(key)) {
+                
+                // If user has set this option
+                if (props.hasOwnProperty(key)) {
+                    this.set(key, props[key]);
+                
+                // Or set to default
+                } else {
+                    this.set(key, defaults[key]);
+                }
+            }
+        }
+                
+        this.playlist = props.playlist || this.playlist || [];
+        this.scope = props.scope || this.scope || this;
+    },
+    
+    set: function (key, value) {
+        this[key] = value;
+    },
+    
+    get: function (key) {
+        return this[key];
+    }
+};
+
+module.exports = Props;
+},{"../opts/keys.js":20,"./rubix.js":11}],11:[function(require,module,exports){
+/*
+    Rubix modules
+    ----------------------------------------
+    
+    Rubix modules are used to process an action based on its .rubix property.
+    
+    Available rubix:
+        'Time'
+        'Pointer'
+        'Speed'
+        
+    Processing functions:
+        calcProgress
+        hasEnded
+        updateInput
+        easeValue
+*/
+"use strict";
+
+var calc = require('../utils/calc.js'),
+    utils = require('../utils/utils.js'),
+    Easing = require('../utils/easing.js'),
+    KEY = require('../opts/keys.js'),
+    Rubix = function () {
+        this.Progress.hasEnded = this.Time.hasEnded;
+        this.Progress.easeValue = this.Time.easeValue;
+    },
+    rubixController;
+
+Rubix.prototype = {
+
+    Time: {
+    
+        /*
+            Calc progress
+            
+            Calc action's progress through timelimit
+            
+            @param [Action]: action to measure
+            @param [timestamp]: framestart timestamp
+            @return [number]: 0 to 1 value representing how much time has passed
+        */
+        calcProgress: function (action, props, values, frameStart) {
+            action.elapsed += calc.difference(action.framestamp, frameStart) * props.dilate;
+
+            return calc.restricted(calc.progress(action.elapsed, props.duration + props.delay), 0, 1);
+        },
+        
+        /*
+            Has action ended
+            
+            True if progress is equal to or higher than 1. If looping is enabled
+            we restart the action
+            
+            @param [Action]: action to analyse
+            @return [boolean]: has action ended
+        */
+        hasEnded: function (action) {
+            return action.progress >= 1 ? true : false;
+        },
+        
+        /*
+            Ease value in action with provided key
+            
+            @param [string]: key of value
+            @param [Action]
+        */
+        easeValue: function (key, value, action) {
+            var progress = action.progress;
+
+            if (value.steps) {
+                progress = utils.stepProgress(progress, 1, value.steps);
+            }
+
+            return Easing.withinRange(progress, value.from, value.to, value.ease);;
+        }
+    },
+    
+    Input: {
+        
+        /*
+            Get input key
+        */
+        getInputKey: function (key, link, inputOffset) {
+            var inputKey = false;
+            
+            // If value is listening to a present input
+            if (utils.isString(link) && inputOffset.hasOwnProperty(link)) {
+                inputKey = link;
+
+            // Of if value key actually exists in input
+            } else if (inputOffset.hasOwnProperty(key)) {
+                inputKey = key;
+            }
+            
+            return inputKey;
+        },
+    
+        /*
+            Calc progress
+            
+            Calc the progress of each input metric. 
+            
+            @param [Action]: action to measure
+            @return [object]: Object of all progresses
+        */
+        calcProgress: function (action, props, values, frameStart) {
+            var progress = {},
+                inputKey, value, offset,
+                inputOffset = calc.offset(props.inputOrigin, props.input.current);
+
+            for (var key in values) {
+                if (values.hasOwnProperty(key)) {
+                    value = values[key];
+                    inputKey = this.getInputKey(key, value.link, inputOffset);
+
+                    // If we have an input key we animate this property
+                    if (inputKey !== false) {
+                        
+                        offset = inputOffset[inputKey];
+                        progress[key] = {};
+
+                        // If value has specified range
+                        if (value.hasRange) {
+                            progress[key].type = KEY.PROGRESS.RANGE;
+                            progress[key].value = calc.progress(value.from + offset, value.min, value.max);
+
+                        // Or we're calculating progress directly
+                        } else {
+                            progress[key].type = KEY.PROGRESS.DIRECT;
+                            progress[key].value = action.origin[key] + (offset * value.amp);                            
+                        }
+                        
+                    }
+                }
+            }
+
+            return progress;
+        },
+        
+        /*
+            Has function ended?
+            
+            Tracking currently needs manually ending
+        */
+        hasEnded: function (action) {
+            return false;
+        },
+        
+        /*
+            Ease value in action with provided key
+            
+            @param [string]: key of value
+            @param [Action]
+            @param [object]: Progress of pointer props
+        */
+        easeValue: function (key, value, action) {
+            var progress = value.link ? action.progress[value.link] : action.progress[key],
+                newValue = value.current;
+                
+            if (utils.isObj(progress)) {
+                // If this is a range progress
+                if (progress.type === KEY.PROGRESS.RANGE) {
+                    newValue = Easing.withinRange(progress.value, value.min, value.max, 'linear', value.escapeAmp);
+                // Or is a direct progress
+                } else {
+                    newValue = progress.value;
+                }
+                
+            }
+
+            return newValue;
+        }
+    },
+    
+    Run: {
+    
+        /*
+            Calc new velocity
+            
+            Calc the new velocity based on the formula velocity = (velocity - friction + thrust)
+            
+            @param [Action]: action to measure
+            @return [object]: Object of all velocitys
+        */
+        calcProgress: function (action, props, values, frameStart, frameDuration) {
+            var progress = {},
+                point,
+                value;
+
+            for (var key in values) {
+                if (values.hasOwnProperty(key)) {
+                    value = values[key];
+                    value.velocity = value.velocity - calc.frameSpeed(value.friction, frameDuration) + calc.frameSpeed(value.thrust, frameDuration);
+                    progress[key] = calc.frameSpeed(value.velocity, frameDuration);
+                }
+            }
+            
+            return progress;
+        },
+        
+        /*
+            Has this action ended?
+            
+            @return [boolean]: False for now - TODO create better default
+        */
+        hasEnded: function (action) {
+            return false;
+        },
+        
+        /*
+            Add the velocity to the current value
+            
+            @param [string]: key of value
+            @param [Action]
+        */
+        easeValue: function (key, value, action) {
+            var newValue = value.current + action.progress[key];
+
+            if (value.min) {
+                newValue = Math.max(value.min, newValue);
+            }
+            
+            if (value.max) {
+                newValue = Math.min(value.max, newValue);
+            }
+
+            return newValue;
+        }
+    },
+    
+    Progress: {
+        calcProgress: function (action) {
+        console.log('test');
+            return action.progress;
+        }
+    }
+};
+
+rubixController = new Rubix();
+
+module.exports = rubixController;
+},{"../opts/keys.js":20,"../utils/calc.js":22,"../utils/easing.js":23,"../utils/utils.js":26}],12:[function(require,module,exports){
+"use strict";
+
+var calc = require('../utils/calc.js'),
+    Value = require('../bits/value.js'),
+    Values = function () {
+        this.store = {};
     };
 
-/*
-    Set Action options
+Values.prototype = {
     
-    @param [object]: User-defined options
-*/
-Action.prototype.set = function (options) {
-    // Loop through standard options and assign
-    for (var key in defaults) {
-        if (defaults.hasOwnProperty(key)) {
-            
-            // If user has set this option
-            if (options.hasOwnProperty(key)) {
-                this[key] = options[key];
-            
-            // Or set to default
-            } else {
-                this[key] = defaults[key];
+    apply: function (values, inherit) {
+        var currentInput = {};
+        
+        // Create or update Value objects for each defined value
+        for (var key in values) {
+            if (values.hasOwnProperty(key)) {
+                this.set(key, values[key], inherit);
             }
         }
-    }
+        
+        // Add x and y properties if angle and distance provided
+        if (values && values.angle && values.distance) {
+            this.store.x = this.store.x || new Value(0, inherit);
+            this.store.y = this.store.y || new Value(0, inherit);
+        }
+    },
     
-    this.playlist = options.playlist || this.playlist || [];
-    this.scope = options.scope || this.scope || this;
-
-    // Set the values
-    this.setValues(options.values);
-};
- 
-
-/*
-    Set Values
+    /*
+        Reset values
+    */
+    reset: function () {
+        for (var key in this.store) {
+	        this.store[key].current = this.store[key].from;
+        }
+    },
     
-    @param [object]: User-defined values
-*/   
-Action.prototype.setValues = function (values) {
-    // Create or update Value objects for each defined value
-    for (var key in values) {
-        if (values.hasOwnProperty(key)) {
+    /*
+        Reverse values
+    */
+    reverse: function () {
+        var to = 0,
+            from = 0;
+
+        for (var key in this.store) {
+            to = this.store[key].to;
+            from = this.store[key].from;
             
-            if (this.values[key]) {
-                this.values[key].update(values[key], this);
-            } else {
-                this.values[key] = new Value(values[key], this);
-            }
+            this.store[key].to = from;
+            this.store[key].from = to;
         }
+    },
+    
+    /*
+        Get all values
+    */
+    getAll: function () {
+        return this.store;
+    },
+    
+    set: function (key, value, inherit) {
+        // If value exists
+        if (this.store[key]) {
+            this.store[key].update(value, inherit);
+        
+        // Or create new
+        } else {
+            this.store[key] = new Value(value, inherit);
+        }
+    },
+    
+    get: function (key) {
+        return this.store[key];
     }
     
-    // Handle special values
-
-    if (this.values.angle) {
-        this.values.x = this.values.x || new Value(0, this);
-        this.values.y = this.values.y || new Value(0, this);
-    }
-
-    // Create origins
-    for (var key in this.values) {
-        if (this.values.hasOwnProperty(key)) {
-            this.origin[key] = this.values[key].current;
-        }
-    }
 };
 
-/*
-    Reset values
-*/
-Action.prototype.resetValues = function () {
-    for (var key in this.values) {
-        this.values[key].current = this.values[key].from;
-    }
-    
-    this.progress = 0;
-    this.elapsed = 0;
-};
-
-/*
-    Reverse values
-*/
-Action.prototype.reverseValues = function () {
-    var key, to, from;
-    
-    this.progress = calc.difference(this.progress, 1);
-    this.elapsed = calc.difference(this.elapsed, this.duration);
-
-    for (key in this.values) {
-        if (this.values.hasOwnProperty(key)) {
-            to = this.values[key].to;
-            from = this.values[key].from;
-            
-            this.values[key].to = from;
-            this.values[key].from = to;
-        }
-    }
-};
-
-/*
-    Start the action
-*/
-Action.prototype.start = function () {
-    this.active = true;
-    this.started = utils.currentTime() + this.delay;
-    this.framestamp = this.started;
-    this.firstFrame = true;
-};
-
-/*
-    Stop the action
-*/
-Action.prototype.stop = function () {
-    this.active = false;
-};
-
-
-module.exports = Action;
-},{"../bits/token.js":7,"../opts/keys.js":15,"../utils/calc.js":17,"../utils/utils.js":22,"./value.js":8}],2:[function(require,module,exports){
+module.exports = Values;
+},{"../bits/value.js":16,"../utils/calc.js":22}],13:[function(require,module,exports){
 (function (global){
 /*
     Bezier function generator
@@ -332,104 +1843,81 @@ Bezier.prototype = {
 };
 
 module.exports = Bezier;
-}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],3:[function(require,module,exports){
-/*
-    Custom input
-*/
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],14:[function(require,module,exports){
 "use strict";
 
-var calc = require('../utils/calc.js'),
-    utils = require('../utils/utils.js'),
-    History = require('../bobs/history.js'),
-    Input = function () {
-        this.current = {};
-        this.history = new History();
-        this.offset = {};
-        this.update(arguments[0], arguments[1]);
+var utils = require('../utils/utils.js'),
+
+    Data = function () {
+        var store = {},
+            /*
+                Get data from object
+                
+                @param [string]: Key of data
+                @return: Data at key
+            */
+            getData = function (key) {
+                return (key !== undefined) ? store[key] : store;
+            },
+    
+            /*
+                Set data
+                
+                @param [object]: Data to bind
+            */
+            setData = function (data) {
+                for (var key in data) {
+                    if (data.hasOwnProperty(key)) {
+                        store[key] = data[key];
+                    }
+                }
+            };
+        
+        /*
+            Read or bind data to this Redshift object
+            
+            Read
+                @param [string]: Key of data value to read
+                @return [any]: The data stored under that key
+                
+            Write syntax A
+                @param [string]: Key of data value to write
+                @param [any]: The data to store under that key
+                
+            Write syntax B
+                @param [object]: Object of key/value pairs to attach to this object
+        */
+        return function () {
+            var returnValue = this,
+                arg0 = arguments[0],
+                arg0IsString = utils.isString(arg0),
+                dataToSet = {};
+            
+            // If this is a get request
+            if (arg0IsString && !arguments[1]) {
+                returnValue = getData(arg0);
+            
+            } else if (arg0 === undefined) {
+                returnValue = store;
+
+            // Else this is a set request
+            } else {
+                if (arg0IsString) {
+                    dataToSet[arg0] = arguments[1];
+                } else {
+                    dataToSet = arg0;
+                }
+                
+                setData(dataToSet);
+            }
+            
+            return returnValue;
+        }
     };
 
-Input.prototype = {
-
-    // Allow input to be inactive for this many frames before declared not moving
-    maxInactiveFrames: 2,
-    
-    // Number of frames input hasn't moved
-    inactiveFrames: 0,
-    
-    /*
-        Get latest input values
-        
-        @param [string] (optional): Name of specific property to return
-        @return [object || number]: Latest input values or, if specified, single value
-    */
-    get: function (prop) {
-        var latest = this.history.get(),
-            val = (prop !== undefined) ? latest[prop] : latest;
-        
-        return val;
-    },
-
-    /*
-        Update the input values
-        
-        Syntax
-            input.update({ prop: val });
-            input.update('prop', val);
-        
-        @param [string || object]: 
-        @param [number] (optional): If 
-    */
-    update: function () {
-        var values = {};
-
-        if (utils.isNum(arguments[1])) {
-            values[arguments[0]] = arguments[1];
-        } else {
-            values = arguments[0];
-        }
-
-        this.history.add(utils.merge(this.current, values));
-    },
-    
-    /*
-        Check for input movement and update pointer object's properties
-        
-        @param [number]: Timestamp of frame
-    */
-    onFrame: function (timestamp) {
-        var latest, hasChanged;
-        
-        // Check provided timestamp against lastFrame timestamp and return input has already been updated
-        if (timestamp === this.lastFrame) {
-            return;
-        }
-        
-        latest = this.history.get();
-        hasChanged = utils.hasChanged(this.current, latest);
-
-        // If input has changed between frames  
-        if (hasChanged) {
-            this.velocity = calc.offset(this.current, latest);
-            this.current = latest;
-            this.inactiveFrames = 0;
-
-        // Or it hasn't moved and our frame limit has been reached
-        } else if (this.inactiveFrames >= this.maxInactiveFrames) {
-            this.velocity = calc.offset(this.current, this.current);
-        
-        // Or input hasn't changed
-        } else {
-            this.inactiveFrames++;
-        }
-        
-        this.lastFrame = timestamp;
-    }
-    
-};
-
-module.exports = Input;
-},{"../bobs/history.js":11,"../utils/calc.js":17,"../utils/utils.js":22}],4:[function(require,module,exports){
+module.exports = Data;
+},{"../utils/utils.js":26}],15:[function(require,module,exports){
 /*
     Point class
     ----------------------------------------
@@ -458,138 +1946,7 @@ Point.prototype = {
 };
 
 module.exports = Point;
-},{}],5:[function(require,module,exports){
-"use strict";
-
-var Input = require('./input.js'),
-    Point = require('./point.js'),
-    History = require('../bobs/history.js'),
-    KEY = require('../opts/keys.js'),
-    utils = require('../utils/utils.js'),
-    currentPointer, // Sort this crap out for multitouch
-    Pointer = function (point, isTouch) {
-        this.update(new Point(point));
-        this.isTouch = isTouch;
-        this.bindEvents();
-    };
-
-Pointer.prototype = new Input();
-
-/*
-    Bind move event
-*/
-Pointer.prototype.bindEvents = function (isTouch) {
-    this.moveEvent = this.isTouch ? KEY.EVENT.TOUCHMOVE : KEY.EVENT.MOUSEMOVE;
-    
-    currentPointer = this;
-    
-    document.documentElement.addEventListener(this.moveEvent, this.onMove);
-};
-
-/*
-    Unbind move event
-*/
-Pointer.prototype.unbindEvents = function () {
-    document.documentElement.removeEventListener(this.moveEvent, this.onMove);
-};
-
-/*
-    Pointer onMove event handler
-    
-    @param [event]: Pointer move event
-*/
-Pointer.prototype.onMove = function (e) {
-    e = utils.getActualEvent(e);
-    e.preventDefault();
-
-    currentPointer.update(new Point(utils.convertEventIntoPoint(e, currentPointer.isTouch)));
-};
-
-Pointer.prototype.stop = function () {
-    this.unbindEvents();
-};
-
-module.exports = Pointer;
-},{"../bobs/history.js":11,"../opts/keys.js":15,"../utils/utils.js":22,"./input.js":3,"./point.js":4}],6:[function(require,module,exports){
-"use strict";
-
-var Input = require('./input.js'),
-    History = require('../bobs/history.js'),
-    utils = require('../utils/utils.js'),
-    defaultFPS = 60, // default to 60fps
-    Time = function () {
-        Input.call(this, arguments[0], arguments[1]);
-    };
-
-Time.prototype = new Input();
-
-/*
-    Calc FPS
-    
-    Divide current time velocity (in ms) by 1000 (one second)
-    
-    @return [number]: Current frames per second
-*/
-Time.prototype.getFPS = function () {
-    return (this.velocity.time) ? 1000 / this.velocity.time : defaultFPS;
-};
-
-/*
-    Update time
-    
-    @param [number]: Latest timestamp
-*/
-Time.prototype.updateTime = function (timestamp) {
-    this.update('time', timestamp);
-    this.onFrame(timestamp);
-};
-
-module.exports = Time;
-},{"../bobs/history.js":11,"../utils/utils.js":22,"./input.js":3}],7:[function(require,module,exports){
-/*
-    Token controller
-*/
-"use strict";
-
-var Token = function () {
-        this.counter = 0;
-    };
-
-Token.prototype = {
-    
-    /*
-        Get the current token count
-        
-        @return [int]: Current token count
-    */
-    get: function () {
-        return this.counter;
-    },
-    
-    /*
-        Generate a new token
-        
-        @return [int]: New token
-    */
-    generate: function () {
-        var token = this.get();
-        
-        this.increment();
-
-        return token;
-    },
-    
-    /*
-        Increase token counter
-    */
-    increment: function () {
-        this.counter ++;
-    }
-    
-};
-
-module.exports = Token;
-},{}],8:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 "use strict";
 
 var utils = require('../utils/utils.js'),
@@ -684,7 +2041,7 @@ var utils = require('../utils/utils.js'),
         hasRange: false,
         
         // Speed for .move(), in xps
-        speed: 0,
+        velocity: 0,
         friction: 0,
         thrust: 0,
         
@@ -744,7 +2101,7 @@ Value.prototype.update = function (value, action, isNewValue) {
                 this[key] = parse(value[key], data, this.current);
                 
             // Or there's a default set on the action
-            } else if (utils.isObj(action) && action.hasOwnProperty(key)) {
+            } else if (utils.isObj(action) && action[key]) {
                 this[key] = parse(action[key], data, this.current);
                 
             // Otherwise, if this is our first time (honest judge), set as the default.
@@ -770,508 +2127,7 @@ Value.prototype.update = function (value, action, isNewValue) {
 };
 
 module.exports = Value;
-},{"../utils/calc.js":17,"../utils/utils.js":22}],9:[function(require,module,exports){
-/*
-    ActionManager
-*/
-"use strict";
-
-var KEY = require('../opts/keys.js'),
-    InputManager = require('./inputManager.js'),
-    Action = require('../bits/action.js'),
-    utils = require('../utils/utils.js'),
-    ActionManager = function () {},
-    actionManager,
-    allActions = [],
-    activeTokens = [],
-    deactivateQueue = [],
-    baseActions = {};
-
-ActionManager.prototype = {
-    
-    /*
-        Create action
-        
-        @return [Action]
-    */
-    create: function () {
-        var action = new Action();
-
-        this.register(action);
-
-        return action;
-    },
-    
-    /*
-        Change action
-        
-        @param [Token]: Token for the action
-        @param [object]: Value properties
-        @param [object]: Action options
-    */
-    change: function (token, changes, input) {
-        var action = this.get(token);
-        
-        if (changes.rubix === KEY.RUBIX.INPUT) {
-            changes.input = InputManager.start(input);
-            changes.inputOrigin = changes.input.get();
-        }
-
-        action.set(changes);
-    },
-    
-    /*
-        Define a base action
-        
-        Can be called later with .play()
-        
-        @param [object]
-    */
-    define: function (actions) {
-        var key,
-            chain,
-            baseAction = {};
-
-        for (key in actions) {
-            if (actions.hasOwnProperty(key)) {
-                if (baseActions[key] && !actions[key].forceOverride) {
-                    throw KEY.ERROR.ACTION_EXISTS;
-                } else {
-                    chain = key.split('.');
-
-                    // If there's an inheritence chain, merge
-                    // TODO: multilayered inheritence?
-                    if (chain.length > 1) {
-                        if (baseActions[chain[0]]) {
-                            baseActions[key] = utils.merge(baseActions[chain[0]], actions[key]);
-                        // if we can't find action
-                        } else {
-                            throw KEY.ERROR.NO_ACTION;
-                        }
-                    // Else directly copy
-                    } else {
-                        baseActions[key] = actions[key];
-                    }
-                }
-            }
-        }
-    },
-    
-    
-    /*
-        Create base action
-        
-        @param [string || array || object]:
-            String: Name or space-delimited playlist of actions
-            Array: Playlist of actions
-            Object: Raw action
-        @param [object]: Action override
-    */
-    createBase: function (defs, override) {
-        var baseAction = {},
-            actionList = [];
-        
-        // If this is a straight action
-        if (utils.isObj(defs)) {
-            baseAction = defs;
-            baseAction.playlist = [];
-            
-        // These are previously defined actions
-        } else {
-            // Comma-delimited string or single action name
-            if (utils.isString(defs)) {
-                actionList = defs.split(" ");
-                
-            // Array of action names
-            } else {
-                actionList = defs;
-            }
-            
-            baseAction = this.getDefined(actionList[0]);
-            baseAction.playlist = actionList;
-        }
-        
-        // Apply overrides if present
-        if (utils.isObj(override)) {
-            baseAction = this.merge(baseAction, override);
-        }
-        
-        return baseAction;
-    },
-    
-    
-    /*
-        Get defined action
-        
-        @param [string]: The name of the predefined action
-    */
-    getDefined: function (key) {
-        return this.copy(baseActions[key]);
-    },
-    
-    /*
-        Copy an action
-    */
-    copy: function (action) {
-        var newAction = {};
-
-        for (var key in action) {
-            if (action.hasOwnProperty(key)) {
-                if (key !== 'values') {
-                    newAction[key] = action[key];
-                } else {
-                    newAction.values = utils.copy(action.values);
-                }
-            }
-        }
-        
-        return newAction;
-    },
-    
-    /*
-        Merge an action
-    */
-    merge: function (action, override) {
-        for (var key in override) {
-            if (override.hasOwnProperty(key)) {
-                if (key !== 'values') {
-                    action[key] = override[key];
-                } else {
-                    action.values = utils.merge(action.values, override.values);
-                }
-            }
-        }
-        
-        return action;
-    },
-    
-    
-    /*
-        Register action
-        
-        @param [Action]: Add action to storage array
-    */
-    register: function (action) {
-        allActions[action.token] = action;
-    },
-    
-    
-    /*
-        Get the specified action
-        
-        @param [Token]: Token
-        @return [Action || boolean]: Action with specified token, false if none found
-    */
-    get: function (token) {
-        return allActions[token] || false;
-    },
-    
-    
-    /*
-        Get tokens of all active actions
-        
-        @return [array]: Array of active tokens
-    */
-    getActiveTokens: function () {
-        return activeTokens;
-    },
-    
-    
-    /*
-        Activate specified action
-        
-        Activates action and adds to activeTokens array
-        
-        @param [Token]: Token
-    */
-    activate: function (token) {
-        var action = this.get(token),
-            index = activeTokens.indexOf(token),
-            deactivateIndex = deactivateQueue.indexOf(token);
-        
-        if (index === -1) {
-            activeTokens.push(token);
-        }
-
-        // Remove from deactivate queue if it's been placed there
-        if (deactivateIndex >= 0) {
-            deactivateQueue.splice(deactivateIndex, 1);
-        }
-        
-        action.start();
-    },
-    
-    
-    /*
-        Deactivate specified action
-        
-        Activates action and removes from activeTokens array
-        
-        @param [Token]: Token
-    */
-    deactivate: function (token) {
-        var action = this.get(token),
-            index = activeTokens.indexOf(token);
-
-        action.stop();
-        
-        if (index > -1) {
-            activeTokens.splice(index, 1);
-        }
-    },
-    
-    /*
-        Is action active
-    */
-    isActive: function (token) {
-        return (activeTokens.indexOf(token) > -1);
-    },
-    
-    /*
-        Purge deactivate queue
-        
-        Loops through the deactivate queue and decides whether to deactivate
-        or swap action parameters with the next in the action's playList
-        
-        We use a deactivate queue rather than deactivate as soon as we process it
-        because if we manipulate the list of activated Actions while it's being
-        looped through, well you can only imagine the fun that causes.
-    */
-    purge: function () {
-        var queueLength = deactivateQueue.length;
-        
-        // Run through all queued actions and decide what to do next
-        for (var i = 0; i < queueLength; ++i) {
-            if (utils.isNum(deactivateQueue[i])) {
-                this.decideNext(deactivateQueue[i]);
-            }
-        }
-
-        // Clear deactivateQueue
-        deactivateQueue = [];
-    },
-    
-    /*
-        Decide what to do with an action
-        
-        Takes an action and decides, based on its playlist and loop properties, 
-        what to do with it next.
-        
-        @param [Token]: Action token
-    */
-    decideNext: function (token) {
-        var nexts = ['loop', 'yoyo', 'playNext'],
-            num = nexts.length,
-            hasFuture = false;
-    
-        for (var i = 0; i < num; ++i) {
-            if (this[nexts[i]](token)) {
-                hasFuture = true;
-                break;
-            }
-        }   
-    
-        if (!hasFuture) {
-            this.deactivate(token);
-        }
-    },
-    
-    
-    /*
-        Play next in playlist, if exists
-        
-        @param [Token]: Action token
-        @return [boolean]: Success
-    */
-    playNext: function (token) {
-        var hasPlayedNext = false,
-            action = this.get(token),
-            playlistLength = action.playlist ? action.playlist.length : 0,
-            playhead = action.playhead,
-            nextAction;
-
-        // Check we have a playlist and that this is an animation
-        // TODO: Maybe make a set of properties on the rubix that says allowPlaylist: true
-        if (playlistLength && action.rubix === KEY.RUBIX.TIME) {
-            ++playhead;
-
-            if (playhead < playlistLength) {
-                nextAction = this.getDefined(action.playlist[playhead]);
-                nextAction.playhead = playhead;
-                
-                this.change(token, nextAction);
-                this.activate(token);
-
-                hasPlayedNext = true;
-            }
-        }
-
-        return hasPlayedNext;
-    },
-    
-    
-    /*
-        Loop current action, if we're that way inclined
-        
-        @param [Token]: Action token
-        @return [boolean]: Success
-    */
-    loop: function (token) {
-        var hasLooped = false,
-            action = this.get(token),
-            loopForever = (action.loop === true);
-
-        if (action.rubix === KEY.RUBIX.TIME && (loopForever || utils.isNum(action.loop))) {
-            ++action.loopCount;
-            if ((loopForever || utils.isNum(action.loop) && action.loopCount <= action.loop)) {
-                action.resetValues();
-                this.activate(token);
-                hasLooped = true;
-            }
-        }
-
-        return hasLooped;
-    },
-    
-    
-    yoyo: function (token) {
-        var hasYoyoed = false,
-            action = this.get(token),
-            yoyoForever = (action.yoyo === true);
-
-        if (action.rubix === KEY.RUBIX.TIME && (yoyoForever || utils.isNum(action.yoyo))) {
-            ++action.yoyoCount;
-            if (yoyoForever || (utils.isNum(action.yoyo) && action.yoyoCount <= action.yoyo)) {
-                action.reverseValues();
-                this.activate(token);
-                hasYoyoed = true;
-            }
-        }
-
-        return hasYoyoed;
-    },
-    
-    
-    /*
-        Add token to the deactivate queue
-        
-        Queue gets processed at the end of every frame
-        
-        @param [Token]: Token of action
-    */
-    queueDeactivate: function (token) {
-        deactivateQueue.push(token);
-    },
-    
-    
-    /*
-        Get data from our action's data object
-        
-        @param [Token]: Action token
-        @param [string]: Key of data point
-    */
-    getData: function (token, key) {
-        var action = this.get(token);
-        
-        return action.data ? action.data[key] : undefined;
-    },
-    
-    
-    /*
-        Set data point to action's data object
-        
-        @param [Token]: Action token
-        @param [object]: Data to save to action
-    */
-    setData: function (token, data) {
-        var action = this.get(token);
-
-        for (var key in data) {
-            if (data.hasOwnProperty(key)) {
-                action.data[key] = data[key];
-                
-                if (key === KEY.JQUERY_ELEMENT) {
-                    action.data = data[key];
-                    action.scope = data[key];
-                }
-            }
-        }
-    }
-};
-
-actionManager = new ActionManager();
-
-module.exports = actionManager;
-},{"../bits/action.js":1,"../opts/keys.js":15,"../utils/utils.js":22,"./inputManager.js":12}],10:[function(require,module,exports){
-/*
-    Chronos
-*/
-"use strict";
-
-var calc = require('../utils/calc.js'),
-    utils = require('../utils/utils.js'),
-    ActionManager = require('./actionManager.js'),
-    Process = require('./process.js'),
-    Time = require('../bits/time.js'),
-    Chronos = function () {},
-    chronos,
-    timer,
-    isRunning = false; // is animation loop running? - prevents multiple rAF loops from running
-    
-Chronos.prototype = {
-
-    /*
-        Start chronos if not already running
-    */
-    start: function () {
-        if (!isRunning) {
-            timer = new Time();
-            timer.updateTime(utils.currentTime());
-            isRunning = true;
-            this.frame();
-        }
-    },
-    
-    /*
-        Stop chronos
-    */
-    stop: function () {
-        isRunning = false;
-    },
-
-    /*
-        Frame
-        
-        Check if there are active actions to process, then callback
-    */
-    frame: function () {
-        var self = this,
-            activeActionTokens = ActionManager.getActiveTokens();
-
-        if (activeActionTokens.length) {
-            requestAnimationFrame(function () {
-                // recheck incase stuff has been deactivated since
-                var activeActionTokens = ActionManager.getActiveTokens();
-    
-                if (activeActionTokens.length) {
-                    timer.updateTime(utils.currentTime());
-                    Process.actions(activeActionTokens, timer.current.time, timer.getFPS());
-                    ActionManager.purge();
-                    self.frame();
-                } else {
-                    self.stop();
-                }
-            });
-        } else {
-            self.stop();
-        }
-    }
-};
-
-chronos = new Chronos();
-
-module.exports = chronos;
-},{"../bits/time.js":6,"../utils/calc.js":17,"../utils/utils.js":22,"./actionManager.js":9,"./process.js":13}],11:[function(require,module,exports){
+},{"../utils/calc.js":22,"../utils/utils.js":26}],17:[function(require,module,exports){
 "use strict";
 
 var maxHistorySize = 3,
@@ -1342,432 +2198,186 @@ History.prototype = {
 };
 
 module.exports = History;
-},{"../utils/utils.js":22}],12:[function(require,module,exports){
+},{"../utils/utils.js":26}],18:[function(require,module,exports){
 /*
-    Input manager
-*/
-"use strict";
-
-var Input = require('../bits/input.js'),
-    Pointer = require('../bits/pointer.js'),
-    KEY = require('../opts/keys.js'),
-    utils = require('../utils/utils.js'),
-    InputManager = function () {},
-    manager;
-    
-InputManager.prototype = {
-    
-    /*
-        Create a new input object
-        
-        @return [Input]
-    */
-    create: function () {
-        return new Input(arguments[0], arguments[1]);
-    },
-    
-    /*
-        Start tracking a pointer
-        
-        For custom pointers, we don't have to do anything here so we
-        return the input as given. For Pointer events, we pass them through
-        to the this.newPointer function and start tracking
-        
-        @param [Input || event]: Custom input or pointer event
-        @return [Input || Pointer]: Original Input or newly created Pointer
-    */
-    start: function (input) {
-        if (!input) {
-            throw KEY.ERROR.NO_INPUT;
-        }
-
-        return (input.current) ? input : this.newPointer(input);
-    },
-    
-    /*
-        Create new Pointer object
-        
-        @param [event]: Initiating event
-    */
-    newPointer: function (input) {
-        var pointer;
-
-        // Check for .originalEvent and get that instead
-        input = utils.getActualEvent(input);
-        
-        pointer = new Pointer(utils.convertEventIntoPoint(input), utils.isTouchEvent(input));
-        
-        return pointer;
-    }
-};
-
-manager = new InputManager();
-
-module.exports = manager;
-},{"../bits/input.js":3,"../bits/pointer.js":5,"../opts/keys.js":15,"../utils/utils.js":22}],13:[function(require,module,exports){
-/*
-    Process actions
-*/
-"use strict";
-
-var ActionManager = require('./actionManager.js'),
-    Rubix = require('./rubix.js'),
-    utils = require('../utils/utils.js'),
-    Process = function () {},
-    process;
-    
-Process.prototype = {
-
-    /*
-        Process actions
-        
-        Loop through all active actions and process each
-        
-        @param [array]: Tokens of active actions at time of framestart
-        @param [timestamp]: Timestamp of framestart
-    */
-    actions: function (tokens, frameStart, fps) {
-        var i = 0,
-            active = tokens.length;
-
-        for (i; i < active; ++i) {
-            this.singleAction(ActionManager.get(tokens[i]), frameStart, fps);
-        }
-    },
-    
-    
-    /*
-        Process a single action
-        
-        @param [Action]
-        @param [timestamp]
-    */
-    singleAction: function (action, frameStart, fps) {
-        var output = {},
-            rubix = Rubix[action.rubix],
-            hasChanged = false;
-        
-        // If this is the first frame of an action, fire the onStart callback
-        if (action.firstFrame) {
-            action.onStart.call(action.scope, action.data);
-            action.firstFrame = false;
-        }
-
-        // Check if this processor updates its input
-        if (rubix.updateInput) {
-            output.input = rubix.updateInput(action, frameStart);
-        }
-
-        action.progress = rubix.calcProgress(action, frameStart, fps);
-        
-        // Loop over all values 
-        for (var key in action.values) {
-            if (action.values.hasOwnProperty(key)) {
-                output[key] = rubix.easeValue(key, action);
-                
-                // Apply Math function if one defined
-                output[key] = action.values[key].round ? Math.round(output[key]) : output[key];
-
-                if (action.values[key].current !== output[key]) {
-                    hasChanged = true;
-                    action.values[key].current = output[key];
-                }
-            }
-        }
-        
-        action.onFrame.call(action.scope, output, action.data);
-
-        // If output has changed, fire onChange
-        if (hasChanged) {
-            action.onChange.call(action.scope, output, action.data);
-        }
-
-        // If process is at its end, fire onEnd and deactivate action
-        if (rubix.hasEnded(action)) {
-            action.onEnd.call(action.scope, output, action.data);
-            ActionManager.queueDeactivate(action.token);
-        }
-        
-        action.framestamp = frameStart;
-    }
-};
-
-process = new Process();
-
-module.exports = process;
-},{"../utils/utils.js":22,"./actionManager.js":9,"./rubix.js":14}],14:[function(require,module,exports){
-/*
-    Rubix modules
-    ----------------------------------------
-    
-    Rubix modules are used to process an action based on its .rubix property.
-    
-    Available rubix:
-        'Time'
-        'Pointer'
-        'Speed'
-        
-    Processing functions:
-        calcProgress
-        hasEnded
-        updateInput
-        easeValue
+    Input controller
 */
 "use strict";
 
 var calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
-    Easing = require('../utils/easingFunctions.js'),
-    KEY = require('../opts/keys.js'),
-    ActionManager = require('./actionManager.js'),
-    Rubix = function () {},
-    rubixController;
+    History = require('../bobs/history.js'),
 
-Rubix.prototype = {
-    Time: {
-    
-        /*
-            Calc progress
-            
-            Calc action's progress through timelimit
-            
-            @param [Action]: action to measure
-            @param [timestamp]: framestart timestamp
-            @return [number]: 0 to 1 value representing how much time has passed
-        */
-        calcProgress: function (action, frameStart) {
-            action.elapsed += calc.difference(action.framestamp, frameStart) * action.timeDilation;
-            
-            return calc.progress(action.elapsed, action.duration + action.delay);
-        },
+    /*
+        Input constructor
         
-        /*
-            Has action ended
-            
-            True if progress is equal to or higher than 1. If looping is enabled
-            we restart the action
-            
-            @param [Action]: action to analyse
-            @return [boolean]: has action ended
-        */
-        hasEnded: function (action) {
-            return action.progress >= 1 ? true : false;
-        },
-        
-        /*
-            Ease value in action with provided key
-            
-            @param [string]: key of value
-            @param [Action]
-        */
-        easeValue: function (key, action) {
-            var value = action.values[key],
-                restrictedProgress = calc.restricted(action.progress, 0, 1),
-                easedValue;
-                
-            if (value.steps) {
-                restrictedProgress = utils.stepProgress(restrictedProgress, 1, value.steps);
-            }
-
-            easedValue = Easing.withinRange(restrictedProgress, value.from, value.to, value.ease);
-
-            return easedValue;
-        }
-    },
-    
-    Input: {
-        
-        /*
-            Get input key
-        */
-        getInputKey: function (key, link, inputOffset) {
-            var inputKey = false;
-            
-            // If value is listening to a present input
-            if (utils.isString(link) && inputOffset.hasOwnProperty(link)) {
-                inputKey = link;
-
-            // Of if value key actually exists in input
-            } else if (inputOffset.hasOwnProperty(key)) {
-                inputKey = key;
-            }
-            
-            return inputKey;
-        },
-    
-        /*
-            Calc progress
-            
-            Calc the progress of each input metric. 
-            
-            @param [Action]: action to measure
-            @return [object]: Object of all progresses
-        */
-        calcProgress: function (action, frameStart) {
-            var progress = {},
-                inputKey, value, offset,
-                values = action.values,
-                inputOffset = calc.offset(action.inputOrigin, action.input.current);
-            
-            for (var key in values) {
-                if (values.hasOwnProperty(key)) {
-                    value = values[key];
-                    inputKey = this.getInputKey(key, value.link, inputOffset);
+            Syntax
+                newInput(name, value)
+                    @param [string]: Name of to track
+                    @param [number]: Initial value
                     
-                    // If we have an input key, calculate progress from that input
-                    if (inputKey !== false) {
-                        offset = inputOffset[inputKey];
-                        progress[key] = {};
-                        
-                        // If value has specified range
-                        if (value.hasRange) {
-                            progress[key].type = KEY.PROGRESS.RANGE;
-                            progress[key].value = calc.progress(value.from + offset, value.min, value.max);
-                        // Or we calculate progress directly
-                        } else {
-                            progress[key].type = KEY.PROGRESS.DIRECT;
-                            progress[key].value = value.from + (offset * value.amp);
-                        }
-                    }
-                }
-            }
+                newInput(props)
+                    @param [object]: Object of values
 
-            return progress;
-        },
-        
-        /*
-            Has function ended?
-            
-            Tracking currently needs manually ending
-        */
-        hasEnded: function (action) {
-            return false;
-        },
-        
-        /*
-            Update pointer
-            
-            @param [Action]: 
-            @return [boolean]: Latest pointer, or previous pointer if stopped tracking
-        */
-        updateInput: function (action, frameStart) {
-            var input = action.input;
+        @return [Input]
+    */
+    Input = function () {
+        this.current = {};
+        this.offset = {};
+        this.velocity = {};
+        this.history = new History();
+        this.update(arguments[0], arguments[1]);
+    };
 
-            input.onFrame(frameStart);
-            
-            return action.input;
-        },
-        
-        /*
-            Ease value in action with provided key
-            
-            @param [string]: key of value
-            @param [Action]
-            @param [object]: Progress of pointer props
-        */
-        easeValue: function (key, action) {
-            var value = action.values[key],
-                progress = action.progress[key],
-                newValue = value.current;
-                
-            if (utils.isObj(progress)) {
-                // If this is a range progress
-                if (progress.type === KEY.PROGRESS.RANGE) {
-                //console.log(progress.value);
-                    newValue = Easing.withinRange(progress.value, value.min, value.max, 'linear', value.escapeAmp);
-                // Or is a direct progress
-                } else {
-                    newValue = progress.value;
-                }
-                
-            }
-
-            return newValue;
-        }
-    },
+Input.prototype = {
     
-    Speed: {
+    // [number]: Number of frames of inactivity before velocity is turned to 0
+    maxInactiveFrames: 2,
     
-        /*
-            Convert x per second to per frame speed based on fps
-        */
-        frameSpeed: function (xps, fps) {
-            var speedPerFrame = 0;
-
-            if (xps && utils.isNum(xps)) {
-                speedPerFrame = xps/fps;
-            }
-        
-            return speedPerFrame;
-        },
+    // [number]: Number of frames input hasn't been updated
+    inactiveFrames: 0,
     
-        /*
-            Calc new speed
-            
-            Calc the new speed based on the formula speed = (speed - friction + thrust)
-            
-            @param [Action]: action to measure
-            @return [object]: Object of all speeds
-        */
-        calcProgress: function (action, frameStart, fps) {
-            var progress = {},
-                point,
-                value;
-                
-            for (var key in action.values) {
-                if (action.values.hasOwnProperty(key)) {
-                    value = action.values[key];
-                    value.speed = value.speed - this.frameSpeed(value.friction, fps) + this.frameSpeed(value.thrust, fps);
-                    progress[key] = this.frameSpeed(value.speed, fps);
-                }
-            }
-            
-            if (action.values.angle && action.values.distance) {
-                point = calc.pointFromAngleAndDistance(action.origin, action.values.angle.current, action.values.distance.current);
-                progress.x = point.x;
-                progress.y = point.y;
-            }
-            
-            return progress;
-        },
+    /*
+        Get latest input values
         
-        /*
-            Has this action ended?
-            
-            @return [boolean]: False for now - TODO create better default
-        */
-        hasEnded: function (action) {
-            return false;
-        },
+        @param [string] (optional): Name of specific property to return
+        @return [object || number]: Latest input values or, if specified, single value
+    */
+    get: function (prop) {
+        var latest = this.history.get(),
+            val = (prop !== undefined) ? latest[prop] : latest;
         
-        /*
-            Add the speed to the current value
-            
-            @param [string]: key of value
-            @param [Action]
-        */
-        easeValue: function (key, action) {
-            var value = action.values[key],
-                newValue = value.current + action.progress[key];
-
-            if (value.min) {
-                newValue = Math.max(value.min, newValue);
-            }
-            
-            if (value.max) {
-                newValue = Math.min(value.max, newValue);
-            }
-
-            return newValue;
-        }
+        return val;
     },
 
+    /*
+        Update the input values
+        
+        Syntax
+            input.update(name, value)
+                @param [string]: Name of to track
+                @param [number]: Initial value
+                
+            input.update(props)
+                @param [object]: Object of values
+                
+        @return [Input]
+    */
+    update: function () {
+        var values = {};
+
+        if (utils.isNum(arguments[1])) {
+            values[arguments[0]] = arguments[1];
+        } else {
+            values = arguments[0];
+        }
+
+        this.history.add(utils.merge(this.current, values));
+        
+        return this;
+    },
+    
+    /*
+        Check for input movement and update pointer object's properties
+        
+        @param [number]: Timestamp of frame
+        @return [Input]
+    */
+    onFrame: function (timestamp) {
+        var latest, hasChanged;
+        
+        // Check provided timestamp against lastFrame timestamp and return input has already been updated
+        if (timestamp === this.lastFrame) {
+            return;
+        }
+        
+        latest = this.history.get();
+        hasChanged = utils.hasChanged(this.current, latest);
+
+        // If input has changed between frames  
+        if (hasChanged) {
+            this.velocity = calc.offset(this.current, latest);
+            this.current = latest;
+            this.inactiveFrames = 0;
+
+        // Or it hasn't moved and our frame limit has been reached
+        } else if (this.inactiveFrames >= this.maxInactiveFrames) {
+            this.velocity = calc.offset(this.current, this.current);
+        
+        // Or input hasn't changed
+        } else {
+            this.inactiveFrames++;
+        }
+        
+        this.lastFrame = timestamp;
+        
+        return this;
+    }
+    
 };
 
-rubixController = new Rubix();
+module.exports = Input;
+},{"../bobs/history.js":17,"../utils/calc.js":22,"../utils/utils.js":26}],19:[function(require,module,exports){
+"use strict";
 
-module.exports = rubixController;
-},{"../opts/keys.js":15,"../utils/calc.js":17,"../utils/easingFunctions.js":18,"../utils/utils.js":22,"./actionManager.js":9}],15:[function(require,module,exports){
+var Input = require('./input.js'),
+    Point = require('../bits/point.js'),
+    History = require('../bobs/history.js'),
+    KEY = require('../opts/keys.js'),
+    utils = require('../utils/utils.js'),
+    currentPointer, // Sort this crap out for multitouch
+    
+    /*
+        Pointer constructor
+    */
+    Pointer = function (e) {
+        var event = utils.getActualEvent(e), // In case of jQuery event
+            startPoint = utils.convertEventIntoPoint(event),
+            isTouch = utils.isTouchEvent(event);
+        
+        this.update(new Point(startPoint));
+        this.isTouch = isTouch;
+        this.bindEvents();
+    };
+
+Pointer.prototype = new Input();
+
+/*
+    Bind move event
+*/
+Pointer.prototype.bindEvents = function (isTouch) {
+    this.moveEvent = this.isTouch ? KEY.EVENT.TOUCHMOVE : KEY.EVENT.MOUSEMOVE;
+    
+    currentPointer = this;
+    
+    document.documentElement.addEventListener(this.moveEvent, this.onMove);
+};
+
+/*
+    Unbind move event
+*/
+Pointer.prototype.unbindEvents = function () {
+    document.documentElement.removeEventListener(this.moveEvent, this.onMove);
+};
+
+/*
+    Pointer onMove event handler
+    
+    @param [event]: Pointer move event
+*/
+Pointer.prototype.onMove = function (e) {
+    e = utils.getActualEvent(e);
+    e.preventDefault();
+
+    currentPointer.update(new Point(utils.convertEventIntoPoint(e, currentPointer.isTouch)));
+};
+
+Pointer.prototype.stop = function () {
+    this.unbindEvents();
+};
+
+module.exports = Pointer;
+},{"../bits/point.js":15,"../bobs/history.js":17,"../opts/keys.js":20,"../utils/utils.js":26,"./input.js":18}],20:[function(require,module,exports){
 /*
     String constants
     ----------------------------------------
@@ -1775,13 +2385,10 @@ module.exports = rubixController;
 "use strict";
 
 module.exports = {
-    ANIMATE: 'animate',
-    CALC: 'calc',
     JQUERY_ELEMENT: '_jQueryElement',
     REDSHIFT: 'redshift',
     EASING: {
         QUAD_IN_OUT: 'quadInOut',
-        QUAD_OUT: 'quadOut',
         IN: 'In',
         IN_OUT: 'InOut',
         OUT: 'Out',
@@ -1789,214 +2396,77 @@ module.exports = {
     },
     RUBIX: {
         INPUT: 'Input',
-        SPEED: 'Speed',
-        TIME: 'Time'
+        TIME: 'Time',
+        RUN: 'Run',
+        FIRE: 'Progress'
     },
     ERROR: {
         ACTION_EXISTS: "Action already defined. Use forceOverride: true to override.",
         NO_ACTION: "No action defined to inherit from.",
         INVALID_EASING: ": Easing not defined",
-        NO_INPUT: "Input needs to be mouse/touch event or Redshift Input"
     },
     EVENT: {
         MOUSE: 'mouse',
-        MOUSEDOWN: 'mousedown',
         MOUSEMOVE: 'mousemove',
-        MOUSEUP: 'mouseup',
         TOUCH: 'touch',
-        TOUCHSTART: 'touchstart',
         TOUCHMOVE: 'touchmove',
-        TOUCHEND: 'touchend'
     },
     PROGRESS: {
         DIRECT: 'Direct',
         RANGE: 'Range'
     }
 };
-},{}],16:[function(require,module,exports){
-/*
-    R E D S H I F T
-    ----------------------------------------
-    
-    
-*/
+},{}],21:[function(require,module,exports){
 "use strict";
 
-var KEY = require('./opts/keys.js'),
-    ActionManager = require('./bobs/actionManager.js'),
-    InputManager = require('./bobs/inputManager.js'),
-    Chronos = require('./bobs/chronos.js'),
-    Easing = require('./utils/easingFunctions.js'),
+var Action = require('./action/action.js'),
+    Input = require('./input/input.js'),
+    presets = require('./action/presets.js'),
+    easing = require('./utils/easing.js'),
     calc = require('./utils/calc.js'),
-    utils = require('./utils/utils.js'),
-    Redshift = function () {
-        this.init();
-    },
+    cycl = require('cycl'),
+    jQueryPlugins = require('./utils/jquery.js'),
     redshift,
-    Instance = function (token) {
-        this.token = token;
-    };
-    
-Instance.prototype = {
-    
-    /*
-        Read or bind data to this Redshift object
-        
-        Read
-            @param [string]: Key of data value to read
-            @return [any]: The data stored under that key
-            
-        Write syntax A
-            @param [string]: Key of data value to write
-            @param [any]: The data to store under that key
-            
-        Write syntax B
-            @param [object]: Object of key/value pairs to attach to this object
-    */
-    data: function () {
-        var returnValue = this,
-            arg0 = arguments[0],
-            arg0IsString = utils.isString(arg0),
-            dataToSet = {};
-        
-        // If this is a get request
-        if (arg0IsString && !arguments[1]) {
-            returnValue = ActionManager.getData(this.token, arg0);
-        
-        // Else this is a set request
-        } else {
-            if (arg0IsString) {
-                dataToSet[arg0] = arguments[1];
-            } else {
-                dataToSet = arg0;
-            }
-
-            ActionManager.setData(this.token, dataToSet);
-        }
-
-        return returnValue;
-    },
-    
-    /*
-        Play the provided actions as animations
-        
-        @param [string || array]: Space deliminated string or array of defined action keys in order of execution
-        @param [object]: Override action defaults with those defined here
-    */
-    play: function (defs, override) {
-        return redshift.ignite(this.token, KEY.RUBIX.TIME, ActionManager.createBase(defs, override));
-    },
-    
-    /*
-        Run the provided action based on property speed
-        
-        @param [string]: Key of the action to process
-        @param [object]: Override action defaults with those defined here
-    */
-    move: function (defs, override) {
-        return redshift.ignite(this.token, KEY.RUBIX.SPEED, ActionManager.createBase(defs, override));
-    },
-    
-
-    /*
-        Track pointer
-        
-        @param [string]: Key of the action to process
-        @param [event]: Initiating pointer event
-    */
-    track: function (defs) {
-        var hasAllArgs = (arguments[2] !== undefined),
-            toTrack = hasAllArgs ? arguments[2] : arguments[1],
-            override = hasAllArgs ? arguments[1] : {};
-
-        return redshift.ignite(this.token, KEY.RUBIX.INPUT, ActionManager.createBase(defs, override), toTrack);
-    },
-    
-    
-    /*
-        Start specified action
-        
-        Activate the action and fire up Chronos animation loop
-    */
-    start: function () {
-        redshift.start(this.token);
-        return this;
-    },
-    
-    
-    /*
-        Stop specified action
-    */
-    stop: function () {
-        redshift.stop(this.token);
-        return this;
-    },
-    
-    getToken: function () {
-        return this.token;
-    },
-    
-    isActive: function () {
-        return ActionManager.isActive(this.token);
-    }
-    
-};
+    Redshift = function () {};
 
 Redshift.prototype = {
-
-    newAction: function () {
-        return this.get();
+    
+    /*
+        Create a new Action controller
+        
+        @return [Action]: Newly-created Action
+    */
+    newAction: function (defs, override) {
+        return new Action(defs, override);
     },
     
+    /*
+        Create a new Input controller
+        
+        @return [Input]: Newly-created Input
+    */
     newInput: function () {
-        return InputManager.create(arguments[0], arguments[1]);
+        return new Input(arguments[0], arguments[1]);
     },
-
+    
     /*
-        Create a Instance with the specified token
+        Define a new Action preset
+        
+        Syntax
+        
+            .define(name, preset)
+                @param [string]: Name of preset
+                @param [object]: Preset options/properties
+                
+            .define(presets)
+                @param [object]: Multiple presets as named object
+                
+        @return [Redshift]
     */
-    get: function (token) {
-        var action = ActionManager.get(token) || ActionManager.create();
-
-        return new Instance(action.token);
-    },
-    
-    
-    define: function (actions) {
-        ActionManager.define(actions);
+    define: function () {
+        presets.define(arguments[0], arguments[1]);
+        
         return this;
-    },
-    
-    start: function (token) {
-        ActionManager.activate(token);
-        Chronos.start();
-    },
-    
-    stop: function (token) {
-        ActionManager.deactivate(token);
-    },
-    
-    /*
-        Ignite Redshift
-        
-        Get the specified action (or create if none), update its properties
-        and then start
-        
-        @param [object]: Properties to manipulate
-        @param [object]: Options for track
-        @param [event || Input]: Initiating pointer event or Input object
-        @return [int]: ID token for action
-    */
-    ignite: function (token, rubix, changes, input) {
-        var action = ActionManager.get(token);
-        
-        changes.rubix = rubix;
-
-        ActionManager.change(token, changes, input);
-
-        this.start(token);
-
-        return action;
     },
 
     /*
@@ -2006,40 +2476,26 @@ Redshift.prototype = {
         My favourite bezier curve generator is Lea Verou's excellent http://cubic-bezier.com/
         
         @param [string]: Name of the new easing function 
-        @param [number]: x coordinate of point 1
-        @param [number]: y coordinate of point 1
-        @param [number]: x coordinate of point 2
-        @param [number]: y coordinate of point 2
+        @params [number]: x/y coordinates of handles
     */
     addBezier: function (name, x1, y1, x2, y2) {
-        Easing.addBezier(name, x1, y1, x2, y2);
+        easing.addBezier(name, x1, y1, x2, y2);
         
         return this;
     },
     
-    Calc: calc,
+    calc: calc,
     
-    run: function () {
-        
-    },
+    cycl: cycl
     
-    /*
-        Init Redshift
-    */
-    init: function () {
-        // Check and load feature shims
-        require('./utils/shims.js').featureCheck();
-        
-        // Check and load jQuery plugins
-        require('./utils/rQuery.js').featureCheck(this);
-    }
 };
 
 redshift = new Redshift();
 
-module.exports = redshift;
+jQueryPlugins.load(redshift);
 
-},{"./bobs/actionManager.js":9,"./bobs/chronos.js":10,"./bobs/inputManager.js":12,"./opts/keys.js":15,"./utils/calc.js":17,"./utils/easingFunctions.js":18,"./utils/rQuery.js":20,"./utils/shims.js":21,"./utils/utils.js":22}],17:[function(require,module,exports){
+module.exports = redshift;
+},{"./action/action.js":7,"./action/presets.js":8,"./input/input.js":18,"./utils/calc.js":22,"./utils/easing.js":23,"./utils/jquery.js":25,"cycl":1}],22:[function(require,module,exports){
 /*
     Calculators
     ----------------------------------------
@@ -2165,7 +2621,7 @@ module.exports = {
             from = bIsNum ? pointA : 0,
             to = bIsNum ? pointB : pointA;
 
-        return this.difference(from, to);
+        return Math.abs(this.difference(from, to));
     },
 
   
@@ -2184,13 +2640,22 @@ module.exports = {
             from = bIsObj ? pointA : {x: 0, y: 0},
             to = bIsObj ? pointB : pointA,
             point = {
-                x: this.difference(from.x, to.x),
-                y: this.difference(from.y, to.y)
+                x: Math.abs(this.difference(from.x, to.x)),
+                y: Math.abs(this.difference(from.y, to.y))
             };
             
         return this.hypotenuse(point.x, point.y);
     },
-    
+
+    /*
+        Convert x per second to per frame velocity based on fps
+        
+        @param [number]: Unit per second
+        @param [number]: Frame duration in ms
+    */
+    frameSpeed: function (xps, frameDuration) {
+        return (utils.isNum(xps)) ? xps / (1000 / frameDuration) : 0;
+    },
         
     /*
         Hypotenuse
@@ -2225,7 +2690,7 @@ module.exports = {
         for (var key in b) {
             if (b.hasOwnProperty(key)) {
                 if (a.hasOwnProperty(key)) {
-                    offset[key] = this.distance1D(a[key], b[key]);
+                    offset[key] = this.difference(a[key], b[key]);
                 } else {
                     offset[key] = 0;
                 }
@@ -2251,8 +2716,8 @@ module.exports = {
     pointFromAngleAndDistance: function (origin, angle, distance) {
         var point = {};
 
-        point.x = 5 * Math.cos(angle) + origin.x;
-        point.y = 5 * Math.sin(angle) + origin.y;
+		point.x = distance * Math.cos(angle) + origin.x;
+        point.y = distance * Math.sin(angle) + origin.y;
 
         return point;
     },
@@ -2367,9 +2832,19 @@ module.exports = {
         var easedProgress = easing(progress);
         
         return this.value(easedProgress, from, to);
-    }
+    },
+
+    /*
+        Convert velocity into velicity per second
+        
+        @param [number]: Unit per frame
+        @param [number]: Frame duration in ms
+    */
+    xps: function (velocity, frameDuration) {
+        return velocity * (1000 / frameDuration);
+    },
 };
-},{"./utils.js":22}],18:[function(require,module,exports){
+},{"./utils.js":26}],23:[function(require,module,exports){
 /*
     Easing functions
     ----------------------------------------
@@ -2643,9 +3118,9 @@ function init() {
 
 module.exports = easingFunction;
 
-},{"../bits/bezier.js":2,"../opts/keys.js":15,"./calc.js":17,"./utils.js":22}],19:[function(require,module,exports){
-window.Redshift = require('../redshift.js');
-},{"../redshift.js":16}],20:[function(require,module,exports){
+},{"../bits/bezier.js":13,"../opts/keys.js":20,"./calc.js":22,"./utils.js":26}],24:[function(require,module,exports){
+window.redshift = require('../redshift.js');
+},{"../redshift.js":21}],25:[function(require,module,exports){
 /*
     Redshift jQuery plugin
     
@@ -2654,8 +3129,9 @@ window.Redshift = require('../redshift.js');
     
     .redshift() method used for other Redshift functions, ie $('#element').redshift('stop')
 */
+"use strict";
 
-loadPlugins = function (redshift) {
+var loadPlugins = function (redshift) {
     var KEY = require('../opts/keys.js'),
         utils = require('../utils/utils.js'),
 
@@ -2665,15 +3141,15 @@ loadPlugins = function (redshift) {
             @param [jQuery element]
         */
         getInstance = function ($element) {
-            var instance = $element.data(KEY.REDSHIFT);
+            var action = $element.data(KEY.REDSHIFT);
 
-            if (!instance) {
-                instance = redshift.get();
-                instance.data(KEY.JQUERY_ELEMENT, $element);
-                $element.data(KEY.REDSHIFT, instance);
+            if (!action) {
+                action = redshift.newAction();
+                action.data(KEY.JQUERY_ELEMENT, $element);
+                $element.data(KEY.REDSHIFT, action);
             }
             
-            return instance;
+            return action;
         },
 
         /*
@@ -2695,8 +3171,8 @@ loadPlugins = function (redshift) {
         return this;
     };
     
-    $.fn.move = function () {
-        execute(this, 'move', arguments[0], arguments[1]);
+    $.fn.run = function () {
+        execute(this, 'run', arguments[0], arguments[1]);
 
         return this;
     };
@@ -2712,103 +3188,19 @@ loadPlugins = function (redshift) {
             execute(this, action, arguments[1], arguments[2]);
             return this;
         } else {
-            return getInstance(this);
+            return getInstance($(this));
         }
     };
 };
 
 module.exports = {
-    featureCheck: function (redshift) {
+    load: function (redshift) {
         if (window.jQuery) {
             loadPlugins(redshift);
         }
     }
 };
-},{"../opts/keys.js":15,"../utils/utils.js":22}],21:[function(require,module,exports){
-var Shim = function () {};
-
-Shim.prototype = {
-
-    /*
-        indexOf polyfill
-        
-        For IE8 troglodites
-        
-        Taken from http://stackoverflow.com/questions/3629183/why-doesnt-indexof-work-on-an-array-ie8
-    */
-    indexOf: function () {
-        if (!Array.prototype.indexOf) {
-            Array.prototype.indexOf = function (elt /*, from*/) {
-                var len = this.length >>> 0,
-                    from = Number(arguments[1]) || 0;
-                    
-                from = (from < 0) ? Math.ceil(from) : Math.floor(from);
-                
-                if (from < 0) {
-                    from += len;
-                }
-                
-                for (; from < len; from++) {
-                    if (from in this && this[from] === elt) {
-                        return from;
-                    }
-                }
-                
-                return -1;
-            }
-        }
-    },
-    
-    /*
-        requestAnimationFrame polyfill
-        
-        For IE8/9 Flinstones
-    
-        Taken from Paul Irish. We've stripped out cancelAnimationFrame checks because we don't fox with that
-        
-        http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-        http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
-         
-        requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
-         
-        MIT license
-    */
-    requestAnimationFrame: function () {
-        var lastTime = 0,
-            vendors = ['ms', 'moz', 'webkit', 'o'],
-            vendorsLength = vendors.length;
-        
-        // Check for prefixed implementations
-        for (var x = 0; x < vendorsLength && !window.requestAnimationFrame; x++) {
-            window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-        }
-        
-        // If there is, fo absolute shizzle, no rAF implementations, make one out of setTimeout and putty
-        if (!window.requestAnimationFrame) {
-            window.requestAnimationFrame = function (callback, element) {
-                var currTime = new Date().getTime(),
-                    timeToCall = Math.max(0, 16 - (currTime - lastTime)),
-                    id = window.setTimeout(function () {
-                            callback(currTime + timeToCall);
-                        }, timeToCall);
-                
-                lastTime = currTime + timeToCall;
-                
-                return id;
-            }
-        }
-    }
-};
-
-shim = new Shim();
-
-module.exports = {
-    featureCheck: function () {
-        shim.indexOf();
-        shim.requestAnimationFrame();
-    }
-};
-},{}],22:[function(require,module,exports){
+},{"../opts/keys.js":20,"../utils/utils.js":26}],26:[function(require,module,exports){
 /*
     Utility functions
     ----------------------------------------
@@ -3030,4 +3422,4 @@ module.exports = {
     }
     
 };
-},{"../opts/keys.js":15}]},{},[19])
+},{"../opts/keys.js":20}]},{},[24]);

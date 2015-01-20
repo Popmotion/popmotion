@@ -148,7 +148,16 @@ module.exports = {
             
         return this.hypotenuse(point.x, point.y);
     },
-    
+
+    /*
+        Convert x per second to per frame velocity based on fps
+        
+        @param [number]: Unit per second
+        @param [number]: Frame duration in ms
+    */
+    frameSpeed: function (xps, frameDuration) {
+        return (utils.isNum(xps)) ? xps / (1000 / frameDuration) : 0;
+    },
         
     /*
         Hypotenuse
@@ -183,7 +192,7 @@ module.exports = {
         for (var key in b) {
             if (b.hasOwnProperty(key)) {
                 if (a.hasOwnProperty(key)) {
-                    offset[key] = this.distance1D(a[key], b[key]);
+                    offset[key] = this.difference(a[key], b[key]);
                 } else {
                     offset[key] = 0;
                 }
@@ -209,8 +218,8 @@ module.exports = {
     pointFromAngleAndDistance: function (origin, angle, distance) {
         var point = {};
 
-        point.x = 5 * Math.cos(angle) + origin.x;
-        point.y = 5 * Math.sin(angle) + origin.y;
+		point.x = distance * Math.cos(angle) + origin.x;
+        point.y = distance * Math.sin(angle) + origin.y;
 
         return point;
     },
@@ -325,5 +334,15 @@ module.exports = {
         var easedProgress = easing(progress);
         
         return this.value(easedProgress, from, to);
-    }
+    },
+
+    /*
+        Convert velocity into velicity per second
+        
+        @param [number]: Unit per frame
+        @param [number]: Frame duration in ms
+    */
+    xps: function (velocity, frameDuration) {
+        return velocity * (1000 / frameDuration);
+    },
 };

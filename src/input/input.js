@@ -1,24 +1,39 @@
 /*
-    Custom input
+    Input controller
 */
 "use strict";
 
 var calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
     History = require('../bobs/history.js'),
+
+    /*
+        Input constructor
+        
+            Syntax
+                newInput(name, value)
+                    @param [string]: Name of to track
+                    @param [number]: Initial value
+                    
+                newInput(props)
+                    @param [object]: Object of values
+
+        @return [Input]
+    */
     Input = function () {
         this.current = {};
-        this.history = new History();
         this.offset = {};
+        this.velocity = {};
+        this.history = new History();
         this.update(arguments[0], arguments[1]);
     };
 
 Input.prototype = {
-
-    // Allow input to be inactive for this many frames before declared not moving
+    
+    // [number]: Number of frames of inactivity before velocity is turned to 0
     maxInactiveFrames: 2,
     
-    // Number of frames input hasn't moved
+    // [number]: Number of frames input hasn't been updated
     inactiveFrames: 0,
     
     /*
@@ -38,11 +53,14 @@ Input.prototype = {
         Update the input values
         
         Syntax
-            input.update({ prop: val });
-            input.update('prop', val);
-        
-        @param [string || object]: 
-        @param [number] (optional): If 
+            input.update(name, value)
+                @param [string]: Name of to track
+                @param [number]: Initial value
+                
+            input.update(props)
+                @param [object]: Object of values
+                
+        @return [Input]
     */
     update: function () {
         var values = {};
@@ -62,6 +80,7 @@ Input.prototype = {
         Check for input movement and update pointer object's properties
         
         @param [number]: Timestamp of frame
+        @return [Input]
     */
     onFrame: function (timestamp) {
         var latest, hasChanged;
@@ -90,6 +109,8 @@ Input.prototype = {
         }
         
         this.lastFrame = timestamp;
+        
+        return this;
     }
     
 };
