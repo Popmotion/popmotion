@@ -13,10 +13,13 @@ module.exports = {
     max: undefined,
     hasRange: false,
     
-    // Speed for .move(), in xps
+    // Speed for .run(), in xps
     velocity: 0,
     deceleration: 0,
     acceleration: 0,
+    
+    // Name of simulation to .run()
+    simulate: 'velocity',
     
     // Options
     duration: 400,

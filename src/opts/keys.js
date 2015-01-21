@@ -17,8 +17,7 @@ module.exports = {
     RUBIX: {
         INPUT: 'Input',
         TIME: 'Time',
-        RUN: 'Run',
-        FIRE: 'Progress'
+        RUN: 'Run'
     },
     ERROR: {
         ACTION_EXISTS: "Action already defined. Use forceOverride: true to override.",
