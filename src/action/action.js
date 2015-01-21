@@ -401,8 +401,6 @@ Action.prototype = {
             }
         }
         
-        console.log(this.getValues());
-        
         // If angle and distance exist, create an x and y
         if (this.getValue('angle') && this.getValue('distance')) {
             this.setValue('x');
@@ -410,8 +408,10 @@ Action.prototype = {
         }
     },
     
+    
     setValue: function (key, value, inherit) {
-        var existing = this.getValue(key);
+        var existing = this.getValue(key),
+            newVal;
 
         // Update if value exists
         if (existing) {
@@ -419,21 +419,27 @@ Action.prototype = {
 
         // Or create new if it doesn't
         } else {
-            this.values.set(key, new Value(value, inherit));
+            newVal = new Value(defaultValue);
+            newVal.set(value, inherit);
+            
+            this.values.set(key, newVal);
         }
 
         return this;
     },
     
+    
     getValue: function (key) {
         return this.values.get(key);
     },
+    
     
     setProp: function (key, value) {
         this.props.set(key, value);
         
         return this;
     },
+    
     
     getProp: function (key) {
         return this.props.get(key);

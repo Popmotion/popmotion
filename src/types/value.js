@@ -85,7 +85,7 @@ var calc = require('../utils/calc.js'),
             }
             
             data.from = data.current;
-            
+
             setter.apply(this, [data]);
 
             // Handle start property
@@ -101,7 +101,7 @@ var calc = require('../utils/calc.js'),
                 setter.apply(this, ['hasRange', false]);
             }
         };
-        
+
         
         /*
             Reset current to from
