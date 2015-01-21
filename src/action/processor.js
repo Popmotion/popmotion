@@ -23,8 +23,10 @@ Process.prototype = {
             props = action.props,
             rubix = props.rubix,
             data = action.data(),
-            values = action.values.getAll(),
+            values = action.values.get(),
             hasChanged = false;
+            
+        console.log(values);
 
         // Fire onStart if firstFrame
         if (action.firstFrame) {

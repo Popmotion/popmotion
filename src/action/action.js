@@ -10,6 +10,7 @@ var cycl = require('cycl'),
     defaultValue = require('../opts/value.js'),
     calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
+    Value = require('../types/value.js'),
     Repo = require('../types/repo.js'),
 
     Action = function (def, override) {
@@ -377,7 +378,7 @@ Action.prototype = {
             self.props.set(base);
             self.setValues(base.values, self.props.get());
             
-            values = self.getValues();
+            values = self.values.get();
             
             // Create origins
             self.origin = {};
@@ -392,13 +393,15 @@ Action.prototype = {
     },
     
     setValues: function (newVals, inherit) {
-        var values = this.getValues();
+        var values = this.values.get();
         
         for (var key in newVals) {
             if (newVals.hasOwnProperty(key)) {
                 this.setValue(key, newVals[key], inherit);
             }
         }
+        
+        console.log(this.getValues());
         
         // If angle and distance exist, create an x and y
         if (this.getValue('angle') && this.getValue('distance')) {

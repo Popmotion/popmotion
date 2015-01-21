@@ -1,6 +1,7 @@
 "use strict";
 
 var calc = require('../utils/calc.js'),
+    utils = require('../utils/utils.js'),
     Repo = require('./repo.js'),
 
     /*
@@ -46,7 +47,7 @@ var calc = require('../utils/calc.js'),
             setter = repo.set;
 
         // Apply defaults
-        setter.apply(repo, args);
+        setter.apply(repo, arguments);
 
         /*
             Set a value
@@ -63,7 +64,6 @@ var calc = require('../utils/calc.js'),
             var args = arguments,
                 arg1 = args[0],
                 arg2 = args[1],
-                loopOver,
                 data = {};
 
             // If we have an object, resolve every item first

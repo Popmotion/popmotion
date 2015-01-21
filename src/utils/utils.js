@@ -138,7 +138,7 @@ module.exports = {
         @return [boolean]: If this looks like a relative value assignment
     */
     isRelativeValue: function (value) {
-        return (value.indexOf('=') > 0);
+        return (value && value.indexOf && value.indexOf('=') > 0);
     },
     
     /*
