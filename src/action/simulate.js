@@ -38,7 +38,9 @@ Simulate.prototype = {
         Friction
     */
     friction: function (value, duration) {
-        return value.velocity * 1 - value.friction + 0;
+        var newVelocity = value.velocity * 1 - value.friction + 0;
+        
+        return (newVelocity > 0.2) ? newVelocity : 0;
     }
 };
 
