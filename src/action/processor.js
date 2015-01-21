@@ -69,7 +69,7 @@ Process.prototype = {
         } // end value calculations
 
         // Calculate new x and y if angle and distance present
-        output = this.angleAndDistance(action.origin, output);
+        output = this.angleAndDistance(values, output);
 
         // Fire onFrame callback
         if (props.onFrame) {
@@ -113,11 +113,11 @@ Process.prototype = {
 	    @param [object]: Current output
 	    @return [object]: Output with updated x and y
     */
-    angleAndDistance: function (origin, output) {
+    angleAndDistance: function (values, output) {
 	    var point = {};
 
-	    if (output.angle && output.distance) {
-		    point = calc.pointFromAngleAndDistance(origin, output.angle, output.distance);
+	    if (values.angle && values.distance) {
+		    point = calc.pointFromAngleAndDistance({ values.x, values.y }, output.angle, output.distance);
 		    output.x = point.x;
 		    output.y = point.y;
 	    }
