@@ -10,4 +10,6 @@ Simulate.prototype = {
     }
 };
 
+simulate = new Simulate();
+
 module.exports = simulate;

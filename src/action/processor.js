@@ -117,7 +117,7 @@ Process.prototype = {
 	    var point = {};
 
 	    if (values.angle && values.distance) {
-		    point = calc.pointFromAngleAndDistance({ values.x, values.y }, output.angle, output.distance);
+		    point = calc.pointFromAngleAndDistance({ x: values.x.get('current'), y: values.y.get('current') }, output.angle, output.distance);
 		    output.x = point.x;
 		    output.y = point.y;
 	    }
