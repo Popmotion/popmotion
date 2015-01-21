@@ -20,13 +20,11 @@ Process.prototype = {
     */
     action: function (action, framestamp, frameDuration) {
         var output = {},
-            props = action.props,
+            props = action.props.store,
+            data = action.data.store,
+            values = action.values.store,
             rubix = props.rubix,
-            data = action.data(),
-            values = action.values.get(),
             hasChanged = false;
-            
-        console.log(values);
 
         // Fire onStart if firstFrame
         if (action.firstFrame) {
@@ -50,19 +48,19 @@ Process.prototype = {
             if (values.hasOwnProperty(key)) {
                 // Ease value
                 output[key] = rubix.easeValue(key, values[key], action);
-                
+
                 // Round
                 if (values[key].round) {
                     output[key] = Math.round(output[key]);
                 }
 
                 // Add velocity
-                values[key].velocity = calc.xps(calc.difference(values[key].current, output[key]), frameDuration);
+                values[key].store.velocity = calc.xps(calc.difference(values[key].store.current, output[key]), frameDuration);
                 
                 // Check if has changed
-                if (values[key].current != output[key]) {
+                if (values[key].store.current != output[key]) {
                     hasChanged = true;
-                    values[key].current = output[key];
+                    values[key].store.current = output[key];
                 }
             }
         } // end value calculations

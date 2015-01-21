@@ -66,13 +66,14 @@ Rubix.prototype = {
             @param [Action]
         */
         easeValue: function (key, value, action) {
-            var progress = action.progress;
+            var progress = action.progress,
+                props = value.get();
 
-            if (value.steps) {
-                progress = utils.stepProgress(progress, 1, value.steps);
+            if (props.steps) {
+                progress = utils.stepProgress(progress, 1, props.steps);
             }
 
-            return Easing.withinRange(progress, value.from, value.to, value.ease);;
+            return Easing.withinRange(progress, action.origin[key], props.to, props.ease);
         }
     },
     

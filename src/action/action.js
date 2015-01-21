@@ -379,7 +379,7 @@ Action.prototype = {
             self.setValues(base.values, self.props.get());
             
             values = self.values.get();
-            
+
             // Create origins
             self.origin = {};
             for (var key in values) {
@@ -394,7 +394,7 @@ Action.prototype = {
     
     setValues: function (newVals, inherit) {
         var values = this.values.get();
-        
+
         for (var key in newVals) {
             if (newVals.hasOwnProperty(key)) {
                 this.setValue(key, newVals[key], inherit);
@@ -421,7 +421,7 @@ Action.prototype = {
         } else {
             newVal = new Value(defaultValue);
             newVal.set(value, inherit);
-            
+
             this.values.set(key, newVal);
         }
 

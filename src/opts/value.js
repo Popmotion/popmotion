@@ -5,8 +5,7 @@ module.exports = {
     current: 0,
     start: 0,
 
-    // Current range for value
-    from: 0,
+    // Current target
     to: 1,
 
     // Maximum range for value
