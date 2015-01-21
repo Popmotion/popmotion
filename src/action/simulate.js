@@ -1,6 +1,7 @@
 "use strict";
 
-var Simulate = function () {},
+var calc = require('../utils/calc.js'),
+    Simulate = function () {},
     simulate;
 
 Simulate.prototype = {

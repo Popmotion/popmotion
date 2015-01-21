@@ -87,8 +87,6 @@ var calc = require('../utils/calc.js'),
                     data.current = resolve(arg1, this.get('current'));
                 }
             }
-            
-            data.from = data.current;
 
             setter.apply(this, [data]);
 

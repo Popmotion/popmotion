@@ -21,6 +21,7 @@ var calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
     Easing = require('../utils/easing.js'),
     KEY = require('../opts/keys.js'),
+    simulate = require('./simulate.js'),
     Rubix = function () {
         this.Progress.hasEnded = this.Time.hasEnded;
         this.Progress.easeValue = this.Time.easeValue;
@@ -197,7 +198,7 @@ Rubix.prototype = {
             for (var key in values) {
                 if (values.hasOwnProperty(key)) {
                     value = values[key];
-                    value.velocity = value.velocity - calc.frameSpeed(value.deceleration, frameDuration) + calc.frameSpeed(value.acceleration, frameDuration);
+                    value.velocity = simulate[value.simulate](value, frameDuration);
                     progress[key] = calc.frameSpeed(value.velocity, frameDuration);
                 }
             }
