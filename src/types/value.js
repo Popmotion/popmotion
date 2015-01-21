@@ -25,6 +25,18 @@ var calc = require('../utils/calc.js'),
 
         return resolvedVal;
     },
+    
+    loopOver = function (data, value) {
+        for (var key in data) {
+            if (data.hasOwnProperty(key)) {
+    
+                // Resolve this property
+                data[key] = resolve(data[key], value.get(key));
+            }
+        }
+        
+        return data;
+    },
 
     /*
         Value constructor
@@ -33,6 +45,8 @@ var calc = require('../utils/calc.js'),
         var repo = new Repo(),
             setter = repo.set;
 
+        // Apply defaults
+        setter.apply(repo, args);
 
         /*
             Set a value
@@ -42,22 +56,21 @@ var calc = require('../utils/calc.js'),
             Syntax
                 .set('key', val) // Sets specific value
                 .set({ key: val }) // Sets multiple values
+                .set({ key: val }, { key: val2 }) // With inherit
                 .set(val) // Sets 'current' value
         */
         repo.set = function () {
             var args = arguments,
                 arg1 = args[0],
+                arg2 = args[1],
+                loopOver,
                 data = {};
 
             // If we have an object, resolve every item first
             if (utils.isObj(arg1)) {
-                for (var key in arg1) {
-                    if (arg1.hasOwnProperty(key)) {
-
-                        // Resolve this property
-                        data[key] = resolve(arg1[key], this.get(key));
-                    }
-                }
+                data = (arg2) ? loopOver(arg2, this) : data; // inherit
+                data = loopOver(arg1, this); // overrides
+                
             } else {
 
                 // If this is a specific setter
@@ -72,13 +85,13 @@ var calc = require('../utils/calc.js'),
             
             data.from = data.current;
             
-            setter(data);
+            setter.apply(this, data);
             
             // Check for range
             if (this.store.min !== undefined && this.store.max !== undefined) {
-                setter('hasRange', true);
+                setter.apply(this, 'hasRange', true);
             } else {
-                setter('hasRange', false);
+                setter.apply(this, 'hasRange', false);
             }
         };
         
@@ -101,9 +114,7 @@ var calc = require('../utils/calc.js'),
             });
         };
         
-        
-        // Apply defaults
-        repo.set.apply(repo, args);
+        repo.set.apply(repo, arguments);
         
         // Check for start property - move this to work
         if (utils.isObj(arg1) && arg1.start) {
