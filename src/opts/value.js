@@ -23,6 +23,7 @@ module.exports = {
     
     gravity: 0.5,
     bounce: 0,
+    friction: 0,
     
     // Options
     duration: 400,

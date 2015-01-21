@@ -974,7 +974,7 @@ Action.prototype = {
 };
 
 module.exports = Action;
-},{"../input/pointer.js":15,"../opts/action.js":16,"../opts/keys.js":17,"../opts/value.js":18,"../types/repo.js":20,"../types/value.js":21,"../utils/calc.js":22,"../utils/utils.js":26,"./presets.js":8,"./processor.js":9,"./rubix.js":10,"cycl":1}],8:[function(require,module,exports){
+},{"../input/pointer.js":16,"../opts/action.js":17,"../opts/keys.js":18,"../opts/value.js":19,"../types/repo.js":21,"../types/value.js":22,"../utils/calc.js":23,"../utils/utils.js":27,"./presets.js":8,"./processor.js":9,"./rubix.js":10,"cycl":1}],8:[function(require,module,exports){
 "use strict";
 
 var KEY = require('../opts/keys.js'),
@@ -1138,7 +1138,7 @@ Presets.prototype = {
 };
 
 module.exports = new Presets();
-},{"../opts/keys.js":17,"../utils/utils.js":26}],9:[function(require,module,exports){
+},{"../opts/keys.js":18,"../utils/utils.js":27}],9:[function(require,module,exports){
 /*
     Process actions
 */
@@ -1199,7 +1199,7 @@ Process.prototype = {
                 }
 
                 // Add velocity
-                value.velocity = calc.xps(calc.difference(value.current, output[key]), frameDuration);
+                //value.velocity = calc.xps(calc.difference(value.current, output[key]), frameDuration);
 
                 // Check if has changed
                 if (value.current != output[key]) {
@@ -1210,7 +1210,7 @@ Process.prototype = {
         } // end value calculations
 
         // Calculate new x and y if angle and distance present
-        output = this.angleAndDistance(action.origin, output);
+        output = this.angleAndDistance(values, output);
 
         // Fire onFrame callback
         if (props.onFrame) {
@@ -1254,11 +1254,11 @@ Process.prototype = {
 	    @param [object]: Current output
 	    @return [object]: Output with updated x and y
     */
-    angleAndDistance: function (origin, output) {
+    angleAndDistance: function (values, output) {
 	    var point = {};
 
-	    if (output.angle && output.distance) {
-		    point = calc.pointFromAngleAndDistance(origin, output.angle, output.distance);
+	    if (values.angle && values.distance) {
+		    point = calc.pointFromAngleAndDistance({ x: values.x.get('current'), y: values.y.get('current') }, output.angle, output.distance);
 		    output.x = point.x;
 		    output.y = point.y;
 	    }
@@ -1268,7 +1268,7 @@ Process.prototype = {
 };
 
 module.exports = new Process();
-},{"../utils/calc.js":22,"../utils/utils.js":26,"./rubix.js":10}],10:[function(require,module,exports){
+},{"../utils/calc.js":23,"../utils/utils.js":27,"./rubix.js":10}],10:[function(require,module,exports){
 /*
     Rubix modules
     ----------------------------------------
@@ -1292,6 +1292,7 @@ var calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
     Easing = require('../utils/easing.js'),
     KEY = require('../opts/keys.js'),
+    simulate = require('./simulate.js'),
     Rubix = function () {
         this.Progress.hasEnded = this.Time.hasEnded;
         this.Progress.easeValue = this.Time.easeValue;
@@ -1455,7 +1456,7 @@ Rubix.prototype = {
         /*
             Calc new velocity
             
-            Calc the new velocity based on the formula velocity = (velocity - friction + thrust)
+            Calc new velocity based on simulation output
             
             @param [Action]: action to measure
             @return [object]: Object of all velocitys
@@ -1467,8 +1468,8 @@ Rubix.prototype = {
 
             for (var key in values) {
                 if (values.hasOwnProperty(key)) {
-                    value = values[key];
-                    value.velocity = value.velocity - calc.frameSpeed(value.friction, frameDuration) + calc.frameSpeed(value.thrust, frameDuration);
+                    value = values[key].get();
+                    value.velocity = simulate[value.simulate](value, frameDuration);
                     progress[key] = calc.frameSpeed(value.velocity, frameDuration);
                 }
             }
@@ -1517,7 +1518,55 @@ Rubix.prototype = {
 rubixController = new Rubix();
 
 module.exports = rubixController;
-},{"../opts/keys.js":17,"../utils/calc.js":22,"../utils/easing.js":23,"../utils/utils.js":26}],11:[function(require,module,exports){
+},{"../opts/keys.js":18,"../utils/calc.js":23,"../utils/easing.js":24,"../utils/utils.js":27,"./simulate.js":11}],11:[function(require,module,exports){
+"use strict";
+
+var calc = require('../utils/calc.js'),
+    Simulate = function () {},
+    simulate;
+
+Simulate.prototype = {
+    
+    /*
+        Velocity
+        
+        The default .run() simulation.
+        
+        Velocity takes 
+    */
+    velocity: function (value, duration) {
+        return value.velocity - calc.frameSpeed(value.deceleration, duration) + calc.frameSpeed(value.acceleration, duration);
+    },
+
+    /*
+        Gravity
+        
+        If bounce is set, we add a bounce effect when the max value is reached
+        
+        TODO: neaten this effect (due to rounding issues) and add clause that reduces velocity to 0
+    */
+    gravity: function (value, duration) {
+        var newVelocity = value.velocity += value.gravity;
+
+        if (value.current >= value.max) {
+            newVelocity *= -value.bounce;
+        }
+        
+        return newVelocity;
+    },
+    
+    /*
+        Friction
+    */
+    friction: function (value, duration) {
+        return value.velocity * 1 - value.friction + 0;
+    }
+};
+
+simulate = new Simulate();
+
+module.exports = simulate;
+},{"../utils/calc.js":23}],12:[function(require,module,exports){
 (function (global){
 /*
     Bezier function generator
@@ -1647,7 +1696,7 @@ Bezier.prototype = {
 
 module.exports = Bezier;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 /*
     Point class
     ----------------------------------------
@@ -1676,7 +1725,7 @@ Point.prototype = {
 };
 
 module.exports = Point;
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 "use strict";
 
 var maxHistorySize = 3,
@@ -1747,7 +1796,7 @@ History.prototype = {
 };
 
 module.exports = History;
-},{"../utils/utils.js":26}],14:[function(require,module,exports){
+},{"../utils/utils.js":27}],15:[function(require,module,exports){
 /*
     Input controller
 */
@@ -1866,7 +1915,7 @@ Input.prototype = {
 };
 
 module.exports = Input;
-},{"../bobs/history.js":13,"../utils/calc.js":22,"../utils/utils.js":26}],15:[function(require,module,exports){
+},{"../bobs/history.js":14,"../utils/calc.js":23,"../utils/utils.js":27}],16:[function(require,module,exports){
 "use strict";
 
 var Input = require('./input.js'),
@@ -1926,7 +1975,7 @@ Pointer.prototype.stop = function () {
 };
 
 module.exports = Pointer;
-},{"../bits/point.js":12,"../bobs/history.js":13,"../opts/keys.js":17,"../utils/utils.js":26,"./input.js":14}],16:[function(require,module,exports){
+},{"../bits/point.js":13,"../bobs/history.js":14,"../opts/keys.js":18,"../utils/utils.js":27,"./input.js":15}],17:[function(require,module,exports){
 "use strict";
 
 var KEY = require('./keys.js'),
@@ -1998,7 +2047,7 @@ module.exports = {
     // Run this when action changes
     onChange: undefined
 };
-},{"../action/rubix.js":10,"./keys.js":17}],17:[function(require,module,exports){
+},{"../action/rubix.js":10,"./keys.js":18}],18:[function(require,module,exports){
 /*
     String constants
     ----------------------------------------
@@ -2018,8 +2067,7 @@ module.exports = {
     RUBIX: {
         INPUT: 'Input',
         TIME: 'Time',
-        RUN: 'Run',
-        FIRE: 'Progress'
+        RUN: 'Run'
     },
     ERROR: {
         ACTION_EXISTS: "Action already defined. Use forceOverride: true to override.",
@@ -2037,7 +2085,7 @@ module.exports = {
         RANGE: 'Range'
     }
 };
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 "use strict";
 
 module.exports = {
@@ -2053,10 +2101,17 @@ module.exports = {
     max: undefined,
     hasRange: false,
     
-    // Speed for .move(), in xps
+    // Speed for .run(), in xps
     velocity: 0,
+    deceleration: 0,
+    acceleration: 0,
+    
+    // Name of simulation to .run()
+    simulate: 'velocity',
+    
+    gravity: 0.5,
+    bounce: 0,
     friction: 0,
-    thrust: 0,
     
     // Options
     duration: 400,
@@ -2070,7 +2125,7 @@ module.exports = {
     amp: 0,
     escapeAmp: 0
 };
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 "use strict";
 
 var Action = require('./action/action.js'),
@@ -2149,7 +2204,7 @@ redshift = new Redshift();
 jQueryPlugins.load(redshift);
 
 module.exports = redshift;
-},{"./action/action.js":7,"./action/presets.js":8,"./input/input.js":14,"./utils/calc.js":22,"./utils/easing.js":23,"./utils/jquery.js":25,"cycl":1}],20:[function(require,module,exports){
+},{"./action/action.js":7,"./action/presets.js":8,"./input/input.js":15,"./utils/calc.js":23,"./utils/easing.js":24,"./utils/jquery.js":26,"cycl":1}],21:[function(require,module,exports){
 "use strict";
 
 var utils = require('../utils/utils.js'),
@@ -2206,7 +2261,7 @@ Repo.prototype = {
 };
 
 module.exports = Repo;
-},{"../utils/utils.js":26}],21:[function(require,module,exports){
+},{"../utils/utils.js":27}],22:[function(require,module,exports){
 "use strict";
 
 var calc = require('../utils/calc.js'),
@@ -2296,8 +2351,6 @@ var calc = require('../utils/calc.js'),
                     data.current = resolve(arg1, this.get('current'));
                 }
             }
-            
-            data.from = data.current;
 
             setter.apply(this, [data]);
 
@@ -2338,7 +2391,7 @@ var calc = require('../utils/calc.js'),
     };
 
 module.exports = Value;
-},{"../utils/calc.js":22,"../utils/utils.js":26,"./repo.js":20}],22:[function(require,module,exports){
+},{"../utils/calc.js":23,"../utils/utils.js":27,"./repo.js":21}],23:[function(require,module,exports){
 /*
     Calculators
     ----------------------------------------
@@ -2722,7 +2775,7 @@ module.exports = {
         return velocity * (1000 / frameDuration);
     },
 };
-},{"./utils.js":26}],23:[function(require,module,exports){
+},{"./utils.js":27}],24:[function(require,module,exports){
 /*
     Easing functions
     ----------------------------------------
@@ -2980,9 +3033,9 @@ function init() {
 
 module.exports = easingFunction;
 
-},{"../bits/bezier.js":11,"../opts/keys.js":17,"./calc.js":22,"./utils.js":26}],24:[function(require,module,exports){
+},{"../bits/bezier.js":12,"../opts/keys.js":18,"./calc.js":23,"./utils.js":27}],25:[function(require,module,exports){
 window.redshift = require('../redshift.js');
-},{"../redshift.js":19}],25:[function(require,module,exports){
+},{"../redshift.js":20}],26:[function(require,module,exports){
 /*
     Redshift jQuery plugin
     
@@ -3062,7 +3115,7 @@ module.exports = {
         }
     }
 };
-},{"../opts/keys.js":17,"../utils/utils.js":26}],26:[function(require,module,exports){
+},{"../opts/keys.js":18,"../utils/utils.js":27}],27:[function(require,module,exports){
 /*
     Utility functions
     ----------------------------------------
@@ -3295,4 +3348,4 @@ module.exports = {
     }
     
 };
-},{"../opts/keys.js":17}]},{},[24]);
+},{"../opts/keys.js":18}]},{},[25]);
