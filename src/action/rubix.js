@@ -72,6 +72,9 @@ Rubix.prototype = {
             if (value.steps) {
                 progress = utils.stepProgress(progress, 1, value.steps);
             }
+            
+            // Record velocity
+           // value.velocity =  = calc.xps(calc.difference(value.current, newValue), frameDuration);
 
             return Easing.withinRange(progress, value.origin, value.to, value.ease);
         }
@@ -129,7 +132,7 @@ Rubix.prototype = {
                         // Or we're calculating progress directly
                         } else {
                             progress[key].type = KEY.PROGRESS.DIRECT;
-                            progress[key].value = value.origin + (offset * value.amp);                            
+                            progress[key].value = value.origin + offset;                   
                         }
                         
                     }
@@ -155,7 +158,7 @@ Rubix.prototype = {
             @param [Action]
             @param [object]: Progress of pointer props
         */
-        easeValue: function (key, value, action) {
+        easeValue: function (key, value, action, frameDuration) {
             var progress = value.link ? action.progress[value.link] : action.progress[key],
                 newValue = value.current;
                 
@@ -175,6 +178,9 @@ Rubix.prototype = {
                 }
                 
             }
+            
+            // Record velocity
+            // value.velocity =  = calc.xps(calc.difference(value.current, newValue), frameDuration);
 
             return newValue;
         }

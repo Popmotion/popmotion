@@ -50,15 +50,12 @@ Process.prototype = {
                 value = values[key].store;
 
                 // Ease value
-                output[key] = rubix.easeValue(key, value, action);
+                output[key] = rubix.easeValue(key, value, action, frameDuration);
 
                 // Round
                 if (value.round) {
                     output[key] = Math.round(output[key]);
                 }
-
-                // Add velocity
-                //value.velocity = calc.xps(calc.difference(value.current, output[key]), frameDuration);
 
                 // Check if has changed
                 if (value.current != output[key]) {
