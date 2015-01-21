@@ -23,6 +23,7 @@ Process.prototype = {
             props = action.props.store,
             data = action.data.store,
             values = action.values.store,
+            value,
             rubix = props.rubix,
             hasChanged = false;
 
@@ -46,28 +47,30 @@ Process.prototype = {
         // Calculate new values
         for (var key in values) {
             if (values.hasOwnProperty(key)) {
+                value = values[key].store;
+
                 // Ease value
-                output[key] = rubix.easeValue(key, values[key], action);
+                output[key] = rubix.easeValue(key, value, action);
 
                 // Round
-                if (values[key].round) {
+                if (value.round) {
                     output[key] = Math.round(output[key]);
                 }
 
                 // Add velocity
-                values[key].store.velocity = calc.xps(calc.difference(values[key].store.current, output[key]), frameDuration);
-                
+                value.velocity = calc.xps(calc.difference(value.current, output[key]), frameDuration);
+                console.log(value.current);
                 // Check if has changed
-                if (values[key].store.current != output[key]) {
+                if (value.current != output[key]) {
                     hasChanged = true;
-                    values[key].store.current = output[key];
+                    value.current = output[key];
                 }
             }
         } // end value calculations
-        
+
         // Calculate new x and y if angle and distance present
         output = this.angleAndDistance(action.origin, output);
-        
+
         // Fire onFrame callback
         if (props.onFrame) {
             props.onFrame.call(props.scope, output, data);

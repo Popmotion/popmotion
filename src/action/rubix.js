@@ -66,14 +66,13 @@ Rubix.prototype = {
             @param [Action]
         */
         easeValue: function (key, value, action) {
-            var progress = action.progress,
-                props = value.get();
+            var progress = action.progress;
 
-            if (props.steps) {
-                progress = utils.stepProgress(progress, 1, props.steps);
+            if (value.steps) {
+                progress = utils.stepProgress(progress, 1, value.steps);
             }
 
-            return Easing.withinRange(progress, action.origin[key], props.to, props.ease);
+            return Easing.withinRange(progress, value.origin, value.to, value.ease);
         }
     },
     
@@ -112,7 +111,7 @@ Rubix.prototype = {
 
             for (var key in values) {
                 if (values.hasOwnProperty(key)) {
-                    value = values[key];
+                    value = values[key].get();
                     inputKey = this.getInputKey(key, value.link, inputOffset);
 
                     // If we have an input key we animate this property
@@ -124,12 +123,12 @@ Rubix.prototype = {
                         // If value has specified range
                         if (value.hasRange) {
                             progress[key].type = KEY.PROGRESS.RANGE;
-                            progress[key].value = calc.progress(value.from + offset, value.min, value.max);
+                            progress[key].value = calc.progress(value.origin + offset, value.min, value.max);
 
                         // Or we're calculating progress directly
                         } else {
                             progress[key].type = KEY.PROGRESS.DIRECT;
-                            progress[key].value = action.origin[key] + (offset * value.amp);                            
+                            progress[key].value = value.origin + (offset * value.amp);                            
                         }
                         
                     }

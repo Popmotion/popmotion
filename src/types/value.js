@@ -28,7 +28,7 @@ var calc = require('../utils/calc.js'),
     },
     
     loopOver = function (data, value) {
-        for (var key in data) {
+        for (var key in value.store) {
             if (data.hasOwnProperty(key)) {
     
                 // Resolve this property
@@ -107,7 +107,7 @@ var calc = require('../utils/calc.js'),
             Reset current to from
         */
         repo.reset = function () {
-            this.set('current', this.get('from'));
+            this.set('current', this.get('origin'));
         };
         
         
@@ -116,7 +116,7 @@ var calc = require('../utils/calc.js'),
         */
         repo.reverse = function () {
             this.set({
-                to: this.get('from'),
+                to: this.get('origin'),
                 from: this.get('to')
             });
         };

@@ -20,6 +20,7 @@ var cycl = require('cycl'),
         self.values = new Repo();
         
         // Create new property manager
+        defaultProps.scope = this;
         self.props = new Repo(defaultProps);
 
         // Create data store
@@ -125,29 +126,7 @@ Action.prototype = {
 
         return this.start(KEY.RUBIX.INPUT);
     },
- /*   
-    fire: function (progress) {
-        var rubix = this.props.get('rubix'),
-            isActive = this.process.isActive;
 
-        if (utils.isNum(progress)) {
-            this.progress = progress;
-        }
-        
-        this.changeRubix(KEY.RUBIX.FIRE);
-        this.isActive(true);
-        this.process.activate().fire();
-
-        if (isActive) {
-            this.props.set('rubix', rubix);
-        } else {
-            this.isActive(false);
-            this.process.deactivate();
-        }
-
-        return this;
-   },
-     */
     /*
         Start Action
 
@@ -377,14 +356,13 @@ Action.prototype = {
 
             self.props.set(base);
             self.setValues(base.values, self.props.get());
-            
+
             values = self.values.get();
 
             // Create origins
-            self.origin = {};
             for (var key in values) {
                 if (values.hasOwnProperty(key)) {
-                    self.origin[key] = values[key].get('current');
+                    values[key].set('origin', values[key].get('current'));
                 }
             }
         }
