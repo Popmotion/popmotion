@@ -184,7 +184,7 @@ Rubix.prototype = {
         /*
             Calc new velocity
             
-            Calc the new velocity based on the formula velocity = (velocity - friction + thrust)
+            Calc the new velocity based on the formula velocity = (velocity - deceleration + acceleration)
             
             @param [Action]: action to measure
             @return [object]: Object of all velocitys
@@ -197,7 +197,7 @@ Rubix.prototype = {
             for (var key in values) {
                 if (values.hasOwnProperty(key)) {
                     value = values[key];
-                    value.velocity = value.velocity - calc.frameSpeed(value.friction, frameDuration) + calc.frameSpeed(value.thrust, frameDuration);
+                    value.velocity = value.velocity - calc.frameSpeed(value.deceleration, frameDuration) + calc.frameSpeed(value.acceleration, frameDuration);
                     progress[key] = calc.frameSpeed(value.velocity, frameDuration);
                 }
             }
