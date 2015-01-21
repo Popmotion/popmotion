@@ -528,7 +528,7 @@ var cycl = require('cycl'),
     rubix = require('./rubix.js'),
     Pointer = require('../input/pointer.js'),
     KEY = require('../opts/keys.js'),
-    defaultProps = require('../opts/props.js'),
+    defaultProps = require('../opts/action.js'),
     defaultValue = require('../opts/value.js'),
     calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
@@ -542,6 +542,7 @@ var cycl = require('cycl'),
         self.values = new Repo();
         
         // Create new property manager
+        defaultProps.scope = this;
         self.props = new Repo(defaultProps);
 
         // Create data store
@@ -647,29 +648,7 @@ Action.prototype = {
 
         return this.start(KEY.RUBIX.INPUT);
     },
- /*   
-    fire: function (progress) {
-        var rubix = this.props.get('rubix'),
-            isActive = this.process.isActive;
 
-        if (utils.isNum(progress)) {
-            this.progress = progress;
-        }
-        
-        this.changeRubix(KEY.RUBIX.FIRE);
-        this.isActive(true);
-        this.process.activate().fire();
-
-        if (isActive) {
-            this.props.set('rubix', rubix);
-        } else {
-            this.isActive(false);
-            this.process.deactivate();
-        }
-
-        return this;
-   },
-     */
     /*
         Start Action
 
@@ -899,14 +878,13 @@ Action.prototype = {
 
             self.props.set(base);
             self.setValues(base.values, self.props.get());
-            
+
             values = self.values.get();
-            
+
             // Create origins
-            self.origin = {};
             for (var key in values) {
                 if (values.hasOwnProperty(key)) {
-                    self.origin[key] = values[key].get('current');
+                    values[key].set('origin', values[key].get('current'));
                 }
             }
         }
@@ -916,7 +894,7 @@ Action.prototype = {
     
     setValues: function (newVals, inherit) {
         var values = this.values.get();
-        
+
         for (var key in newVals) {
             if (newVals.hasOwnProperty(key)) {
                 this.setValue(key, newVals[key], inherit);
@@ -943,7 +921,7 @@ Action.prototype = {
         } else {
             newVal = new Value(defaultValue);
             newVal.set(value, inherit);
-            
+
             this.values.set(key, newVal);
         }
 
@@ -996,7 +974,7 @@ Action.prototype = {
 };
 
 module.exports = Action;
-},{"../input/pointer.js":15,"../opts/keys.js":16,"../opts/props.js":17,"../opts/value.js":18,"../types/repo.js":20,"../types/value.js":21,"../utils/calc.js":22,"../utils/utils.js":26,"./presets.js":8,"./processor.js":9,"./rubix.js":10,"cycl":1}],8:[function(require,module,exports){
+},{"../input/pointer.js":15,"../opts/action.js":16,"../opts/keys.js":17,"../opts/value.js":18,"../types/repo.js":20,"../types/value.js":21,"../utils/calc.js":22,"../utils/utils.js":26,"./presets.js":8,"./processor.js":9,"./rubix.js":10,"cycl":1}],8:[function(require,module,exports){
 "use strict";
 
 var KEY = require('../opts/keys.js'),
@@ -1160,7 +1138,7 @@ Presets.prototype = {
 };
 
 module.exports = new Presets();
-},{"../opts/keys.js":16,"../utils/utils.js":26}],9:[function(require,module,exports){
+},{"../opts/keys.js":17,"../utils/utils.js":26}],9:[function(require,module,exports){
 /*
     Process actions
 */
@@ -1183,13 +1161,12 @@ Process.prototype = {
     */
     action: function (action, framestamp, frameDuration) {
         var output = {},
-            props = action.props,
+            props = action.props.store,
+            data = action.data.store,
+            values = action.values.store,
+            value,
             rubix = props.rubix,
-            data = action.data(),
-            values = action.values.get(),
             hasChanged = false;
-            
-        console.log(values);
 
         // Fire onStart if firstFrame
         if (action.firstFrame) {
@@ -1211,28 +1188,30 @@ Process.prototype = {
         // Calculate new values
         for (var key in values) {
             if (values.hasOwnProperty(key)) {
+                value = values[key].store;
+
                 // Ease value
-                output[key] = rubix.easeValue(key, values[key], action);
-                
+                output[key] = rubix.easeValue(key, value, action);
+
                 // Round
-                if (values[key].round) {
+                if (value.round) {
                     output[key] = Math.round(output[key]);
                 }
 
                 // Add velocity
-                values[key].velocity = calc.xps(calc.difference(values[key].current, output[key]), frameDuration);
-                
+                value.velocity = calc.xps(calc.difference(value.current, output[key]), frameDuration);
+
                 // Check if has changed
-                if (values[key].current != output[key]) {
+                if (value.current != output[key]) {
                     hasChanged = true;
-                    values[key].current = output[key];
+                    value.current = output[key];
                 }
             }
         } // end value calculations
-        
+
         // Calculate new x and y if angle and distance present
         output = this.angleAndDistance(action.origin, output);
-        
+
         // Fire onFrame callback
         if (props.onFrame) {
             props.onFrame.call(props.scope, output, data);
@@ -1364,7 +1343,7 @@ Rubix.prototype = {
                 progress = utils.stepProgress(progress, 1, value.steps);
             }
 
-            return Easing.withinRange(progress, value.from, value.to, value.ease);;
+            return Easing.withinRange(progress, value.origin, value.to, value.ease);
         }
     },
     
@@ -1403,7 +1382,7 @@ Rubix.prototype = {
 
             for (var key in values) {
                 if (values.hasOwnProperty(key)) {
-                    value = values[key];
+                    value = values[key].get();
                     inputKey = this.getInputKey(key, value.link, inputOffset);
 
                     // If we have an input key we animate this property
@@ -1415,12 +1394,12 @@ Rubix.prototype = {
                         // If value has specified range
                         if (value.hasRange) {
                             progress[key].type = KEY.PROGRESS.RANGE;
-                            progress[key].value = calc.progress(value.from + offset, value.min, value.max);
+                            progress[key].value = calc.progress(value.origin + offset, value.min, value.max);
 
                         // Or we're calculating progress directly
                         } else {
                             progress[key].type = KEY.PROGRESS.DIRECT;
-                            progress[key].value = action.origin[key] + (offset * value.amp);                            
+                            progress[key].value = value.origin + (offset * value.amp);                            
                         }
                         
                     }
@@ -1538,7 +1517,7 @@ Rubix.prototype = {
 rubixController = new Rubix();
 
 module.exports = rubixController;
-},{"../opts/keys.js":16,"../utils/calc.js":22,"../utils/easing.js":23,"../utils/utils.js":26}],11:[function(require,module,exports){
+},{"../opts/keys.js":17,"../utils/calc.js":22,"../utils/easing.js":23,"../utils/utils.js":26}],11:[function(require,module,exports){
 (function (global){
 /*
     Bezier function generator
@@ -1947,46 +1926,7 @@ Pointer.prototype.stop = function () {
 };
 
 module.exports = Pointer;
-},{"../bits/point.js":12,"../bobs/history.js":13,"../opts/keys.js":16,"../utils/utils.js":26,"./input.js":14}],16:[function(require,module,exports){
-/*
-    String constants
-    ----------------------------------------
-*/
-"use strict";
-
-module.exports = {
-    JQUERY_ELEMENT: '_jQueryElement',
-    REDSHIFT: 'redshift',
-    EASING: {
-        QUAD_IN_OUT: 'quadInOut',
-        IN: 'In',
-        IN_OUT: 'InOut',
-        OUT: 'Out',
-        LINEAR: 'linear'
-    },
-    RUBIX: {
-        INPUT: 'Input',
-        TIME: 'Time',
-        RUN: 'Run',
-        FIRE: 'Progress'
-    },
-    ERROR: {
-        ACTION_EXISTS: "Action already defined. Use forceOverride: true to override.",
-        NO_ACTION: "No action defined to inherit from.",
-        INVALID_EASING: ": Easing not defined",
-    },
-    EVENT: {
-        MOUSE: 'mouse',
-        MOUSEMOVE: 'mousemove',
-        TOUCH: 'touch',
-        TOUCHMOVE: 'touchmove',
-    },
-    PROGRESS: {
-        DIRECT: 'Direct',
-        RANGE: 'Range'
-    }
-};
-},{}],17:[function(require,module,exports){
+},{"../bits/point.js":12,"../bobs/history.js":13,"../opts/keys.js":17,"../utils/utils.js":26,"./input.js":14}],16:[function(require,module,exports){
 "use strict";
 
 var KEY = require('./keys.js'),
@@ -2058,7 +1998,46 @@ module.exports = {
     // Run this when action changes
     onChange: undefined
 };
-},{"../action/rubix.js":10,"./keys.js":16}],18:[function(require,module,exports){
+},{"../action/rubix.js":10,"./keys.js":17}],17:[function(require,module,exports){
+/*
+    String constants
+    ----------------------------------------
+*/
+"use strict";
+
+module.exports = {
+    JQUERY_ELEMENT: '_jQueryElement',
+    REDSHIFT: 'redshift',
+    EASING: {
+        QUAD_IN_OUT: 'quadInOut',
+        IN: 'In',
+        IN_OUT: 'InOut',
+        OUT: 'Out',
+        LINEAR: 'linear'
+    },
+    RUBIX: {
+        INPUT: 'Input',
+        TIME: 'Time',
+        RUN: 'Run',
+        FIRE: 'Progress'
+    },
+    ERROR: {
+        ACTION_EXISTS: "Action already defined. Use forceOverride: true to override.",
+        NO_ACTION: "No action defined to inherit from.",
+        INVALID_EASING: ": Easing not defined",
+    },
+    EVENT: {
+        MOUSE: 'mouse',
+        MOUSEMOVE: 'mousemove',
+        TOUCH: 'touch',
+        TOUCHMOVE: 'touchmove',
+    },
+    PROGRESS: {
+        DIRECT: 'Direct',
+        RANGE: 'Range'
+    }
+};
+},{}],18:[function(require,module,exports){
 "use strict";
 
 module.exports = {
@@ -2066,8 +2045,7 @@ module.exports = {
     current: 0,
     start: 0,
 
-    // Current range for value
-    from: 0,
+    // Current target
     to: 1,
 
     // Maximum range for value
@@ -2258,12 +2236,17 @@ var calc = require('../utils/calc.js'),
         return resolvedVal;
     },
     
-    loopOver = function (data, value) {
-        for (var key in data) {
-            if (data.hasOwnProperty(key)) {
-    
-                // Resolve this property
-                data[key] = resolve(data[key], value.get(key));
+    loopOver = function (newData, inherit, value) {
+        var data = {};
+        
+        for (var key in value.store) {
+            // If Action has property but new data doesn't
+            if (inherit.hasOwnProperty(key) && !newData.hasOwnProperty(key)) {
+                data[key] = resolve(inherit[key], value.get(key));
+
+            // Or if new data does
+            } else if (newData.hasOwnProperty(key)) {
+                data[key] = resolve(newData[key], value.get(key));
             }
         }
         
@@ -2300,9 +2283,8 @@ var calc = require('../utils/calc.js'),
 
             // If we have an object, resolve every item first
             if (utils.isObj(arg1)) {
-                data = (arg2) ? loopOver(arg2, this) : data; // inherit
-                data = loopOver(arg1, this); // overrides
-                
+                data = loopOver(arg1, arg2, this);
+
             } else {
 
                 // If this is a specific setter
@@ -2338,7 +2320,7 @@ var calc = require('../utils/calc.js'),
             Reset current to from
         */
         repo.reset = function () {
-            this.set('current', this.get('from'));
+            this.set('current', this.get('origin'));
         };
         
         
@@ -2347,7 +2329,7 @@ var calc = require('../utils/calc.js'),
         */
         repo.reverse = function () {
             this.set({
-                to: this.get('from'),
+                to: this.get('origin'),
                 from: this.get('to')
             });
         };
@@ -2998,7 +2980,7 @@ function init() {
 
 module.exports = easingFunction;
 
-},{"../bits/bezier.js":11,"../opts/keys.js":16,"./calc.js":22,"./utils.js":26}],24:[function(require,module,exports){
+},{"../bits/bezier.js":11,"../opts/keys.js":17,"./calc.js":22,"./utils.js":26}],24:[function(require,module,exports){
 window.redshift = require('../redshift.js');
 },{"../redshift.js":19}],25:[function(require,module,exports){
 /*
@@ -3080,7 +3062,7 @@ module.exports = {
         }
     }
 };
-},{"../opts/keys.js":16,"../utils/utils.js":26}],26:[function(require,module,exports){
+},{"../opts/keys.js":17,"../utils/utils.js":26}],26:[function(require,module,exports){
 /*
     Utility functions
     ----------------------------------------
@@ -3313,4 +3295,4 @@ module.exports = {
     }
     
 };
-},{"../opts/keys.js":16}]},{},[24]);
+},{"../opts/keys.js":17}]},{},[24]);
