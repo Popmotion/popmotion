@@ -44,7 +44,8 @@ var calc = require('../utils/calc.js'),
     */
     Value = function () {
         var repo = new Repo(),
-            setter = repo.set;
+            setter = repo.set,
+            firstSet = true;
 
         // Apply defaults
         setter.apply(repo, arguments);
@@ -75,7 +76,7 @@ var calc = require('../utils/calc.js'),
 
                 // If this is a specific setter
                 if (utils.isString(arg1) && !utils.isRelativeValue(arg1)) {
-                    data[arg1] = resolve(args[1], this.get(arg1));
+                    data[arg1] = resolve(arg2, this.get(arg1));
                     
                 // Or this is a var to be resolved, assign it to current
                 } else {
@@ -85,13 +86,19 @@ var calc = require('../utils/calc.js'),
             
             data.from = data.current;
             
-            setter.apply(this, data);
+            setter.apply(this, [data]);
+
+            // Handle start property
+            if (firstSet && arg1.hasOwnProperty('start')) {
+                setter.apply(this, ['current', resolve(arg1.start)]);
+                firstSet = false;
+            }
             
             // Check for range
             if (this.store.min !== undefined && this.store.max !== undefined) {
-                setter.apply(this, 'hasRange', true);
+                setter.apply(this, ['hasRange', true]);
             } else {
-                setter.apply(this, 'hasRange', false);
+                setter.apply(this, ['hasRange', false]);
             }
         };
         
@@ -113,13 +120,6 @@ var calc = require('../utils/calc.js'),
                 from: this.get('to')
             });
         };
-        
-        repo.set.apply(repo, arguments);
-        
-        // Check for start property - move this to work
-        if (utils.isObj(arg1) && arg1.start) {
-            repo.set.apply(repo, 'start', arg1.start);
-        }
         
         return repo;
     };
