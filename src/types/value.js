@@ -32,7 +32,7 @@ var calc = require('../utils/calc.js'),
         
         for (var key in value.store) {
             // If Action has property but new data doesn't
-            if (inherit.hasOwnProperty(key) && !newData.hasOwnProperty(key)) {
+            if (inherit && inherit.hasOwnProperty(key) && !newData.hasOwnProperty(key)) {
                 data[key] = resolve(inherit[key], value.get(key));
 
             // Or if new data does
@@ -76,6 +76,12 @@ var calc = require('../utils/calc.js'),
             if (utils.isObj(arg1)) {
                 data = loopOver(arg1, arg2, this);
 
+                // Handle start property
+                if (firstSet && arg1.hasOwnProperty('start')) {
+                    setter.apply(this, ['current', resolve(arg1.start)]);
+                    firstSet = false;
+                }
+
             } else {
 
                 // If this is a specific setter
@@ -89,12 +95,6 @@ var calc = require('../utils/calc.js'),
             }
 
             setter.apply(this, [data]);
-
-            // Handle start property
-            if (firstSet && arg1.hasOwnProperty('start')) {
-                setter.apply(this, ['current', resolve(arg1.start)]);
-                firstSet = false;
-            }
             
             // Check for range
             if (this.store.min !== undefined && this.store.max !== undefined) {
@@ -102,6 +102,8 @@ var calc = require('../utils/calc.js'),
             } else {
                 setter.apply(this, ['hasRange', false]);
             }
+            
+            console.log(this);
         };
 
         
@@ -119,7 +121,7 @@ var calc = require('../utils/calc.js'),
         repo.reverse = function () {
             this.set({
                 to: this.get('origin'),
-                from: this.get('to')
+                origin: this.get('to')
             });
         };
         

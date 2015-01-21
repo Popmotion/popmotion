@@ -23,7 +23,7 @@ module.exports = {
     duration: 400,
     
     // Ease animation
-    ease: KEY.EASING.QUAD_IN_OUT,
+    ease: 'easeInOut',
     
     // Round output value?
     round: false,

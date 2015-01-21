@@ -8,7 +8,6 @@ module.exports = {
     JQUERY_ELEMENT: '_jQueryElement',
     REDSHIFT: 'redshift',
     EASING: {
-        QUAD_IN_OUT: 'quadInOut',
         IN: 'In',
         IN_OUT: 'InOut',
         OUT: 'Out',
