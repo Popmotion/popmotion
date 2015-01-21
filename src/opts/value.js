@@ -15,8 +15,8 @@ module.exports = {
     
     // Speed for .move(), in xps
     velocity: 0,
-    friction: 0,
-    thrust: 0,
+    deceleration: 0,
+    acceleration: 0,
     
     // Options
     duration: 400,
