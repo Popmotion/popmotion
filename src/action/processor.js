@@ -59,7 +59,7 @@ Process.prototype = {
 
                 // Add velocity
                 value.velocity = calc.xps(calc.difference(value.current, output[key]), frameDuration);
-                console.log(value.current);
+
                 // Check if has changed
                 if (value.current != output[key]) {
                     hasChanged = true;
