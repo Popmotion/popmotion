@@ -51,13 +51,13 @@ Loop.prototype = {
     */
     frame: function () {
         var self = this;
-        
+
         requestAnimationFrame(function () {
             var framestamp = self.timer.update(), // Currently just measuring in ms - will look into hi-res timestamps
                 isActive = self.callback.call(self.scope, framestamp, self.timer.getElapsed());
-
+            
             if (isActive) {
-                self.frame(true);
+                self.frame();
             } else {
                 self.stop();
             }
@@ -70,7 +70,6 @@ Loop.prototype = {
     start: function () {
         // Make sure we're not already running a loop
         if (!this.isRunning) {
-            this.isRunning = true;
             this.frame();
         }
     },
@@ -101,18 +100,13 @@ module.exports = new Loop();
 
 var theLoop = require('./loop.js'),
     ProcessManager = function () {
-        this.all = {};
+        this.all = [];
         this.active = [];
         this.deactivateQueue = [];
         theLoop.setCallback(this, this.fireActive);
     };
     
 ProcessManager.prototype = {
-    
-    /*
-        [int]: Used for process ID
-    */
-    processCounter: 0,
     
     /*
         [int]: Number of active processes
@@ -164,29 +158,24 @@ ProcessManager.prototype = {
         @return [boolean]: True if active processes found
     */
     fireActive: function (framestamp, elapsed) {
-        var process,
-            activeCount = 0,
-            activeProcesses = [];
-
-        // Purge and check active count before execution
+        var isActive = false,
+            activeCount,
+            activeProcesses;
+        
         this.purge();
+        
         activeCount = this.getActiveCount();
         activeProcesses = this.getActive();
         
-        // Loop through active processes and fire callback
-        for (var i = 0; i < activeCount; i++) {
-            process = this.getProcess(activeProcesses[i]);
+        if (activeCount) {
+            isActive = true;
             
-            if (process) {
-                process.fire(framestamp, elapsed);
+            for (var i = 0; i < activeCount; i++) {
+                this.getProcess(i).fire(framestamp, elapsed);
             }
         }
-
-        // Repurge and recheck active count after execution
-        this.purge();
-        activeCount = this.getActiveCount();
         
-        return activeCount ? true : false;
+        return isActive;
     },
     
     /*
@@ -196,13 +185,9 @@ ProcessManager.prototype = {
         @return [int]: Index of process to be used as ID
     */
     register: function (process) {
-        var id = this.processCounter;
+        this.all.push(process);
 
-        this.all[id] = process;
-        
-        this.processCounter++;
-        
-        return id;
+        return this.all.length - 1;
     },
     
     /*
@@ -255,13 +240,6 @@ ProcessManager.prototype = {
         }
         
         this.deactivateQueue = [];
-    },
-    
-    /*
-        Remove the provided id and reindex remaining processes
-    */
-    kill: function (id) {
-        delete this.all[id];
     }
     
 };
@@ -293,7 +271,7 @@ var manager = require('./manager.js'),
         this.setCallback(callback);
         this.setScope(scope);
 
-        this.setId(manager.register(this));
+        this.id = manager.register(this);
     };
     
 Process.prototype = {
@@ -302,11 +280,6 @@ Process.prototype = {
         [boolean]: Is this process currently active?
     */
     isActive: false,
-    
-    /*
-        [boolean]: Has this process been killed?
-    */
-    isKilled: false,
 
     /*
         Fire callback
@@ -350,24 +323,34 @@ Process.prototype = {
     },
     
     /*
-        Start process
+        Run the process
         
         @param [int]: Duration of process in ms, 0 if indefinite
-        @return [this]
     */
-    start: function (duration) {
+    run: function (duration) {
         var self = this;
+
+        this.reset();
         
-        self.reset();
-        self.activate();
+        self.start();
         
-        if (duration) {
-            self.stopTimer = setTimeout(function () {
-                self.stop();
-            }, duration);
-        }
+        self.stopTimer = setTimeout(function () {
+            self.stop();
+        }, duration);
 
         return self;
+    },
+    
+    /*
+        Start process
+        
+        @return [this]
+    */
+    start: function () {
+        this.reset();
+        this.activate();
+
+        return this;
     },
     
     /*
@@ -388,10 +371,8 @@ Process.prototype = {
         @return [this]
     */
     activate: function () {
-        if (!this.isKilled) {
-            this.isActive = true;
-            manager.activate(this.id);
-        }
+        this.isActive = true;
+        manager.activate(this.id);
 
         return this;
     },
@@ -437,19 +418,6 @@ Process.prototype = {
         clearInterval(this.intervalTimer);
         
         return this;
-    },
-    
-    /*
-        Kill function in manager, release for garbage collection
-    */
-    kill: function () {
-        this.stop();
-        this.isKilled = true;
-        manager.kill(this.id);
-    },
-    
-    setId: function (id) {
-        this.id = id;
     }
 };
 
@@ -558,20 +526,20 @@ var cycl = require('cycl'),
     processor = require('./processor.js'),
     presets = require('./presets.js'),
     rubix = require('./rubix.js'),
-    Values = require('./values.js'),
     Pointer = require('../input/pointer.js'),
     KEY = require('../opts/keys.js'),
     defaultProps = require('../opts/props.js'),
     defaultValue = require('../opts/value.js'),
     calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
+    Value = require('../types/value.js'),
     Repo = require('../types/repo.js'),
 
     Action = function (def, override) {
         var self = this;
         
         // Create value manager
-        self.values = new Values(defaultValue);
+        self.values = new Repo();
         
         // Create new property manager
         self.props = new Repo(defaultProps);
@@ -767,10 +735,14 @@ Action.prototype = {
         Reset Action progress and values
     */
     reset: function () {
-	    var self = this;
+	    var self = this,
+	        values = self.values.get();
 
         self.resetProgress();
-        self.values.reset();
+        
+        for (var key in values) {
+            values[key].reset();
+        }
         
         return self;
     },
@@ -792,11 +764,15 @@ Action.prototype = {
 	    Reverse Action progress and values
     */
     reverse: function () {
-	    var self = this;
+	    var self = this,
+	        values = self.values.get();
 	    
 	    self.progress = calc.difference(self.progress, 1);
         self.elapsed = calc.difference(self.elapsed, self.props.get('duration'));
-        self.values.reverse();
+        
+        for (var key in values) {
+            values[key].reverse();
+        }
 
         return self;
     },
@@ -922,15 +898,15 @@ Action.prototype = {
             }
 
             self.props.set(base);
-            self.values.apply(base.values, self.props.get());
+            self.setValues(base.values, self.props.get());
             
-            values = this.values.getAll();
+            values = self.values.get();
             
             // Create origins
             self.origin = {};
             for (var key in values) {
                 if (values.hasOwnProperty(key)) {
-                    self.origin[key] = values[key].current;
+                    self.origin[key] = values[key].get('current');
                 }
             }
         }
@@ -938,30 +914,54 @@ Action.prototype = {
         return self;
     },
     
-    setValue: function (key, value) {
-        var self = this;
-
-        // If this is a number, set current (as opposed to 'to')
-        if (utils.isNum(value)) {
-            self.values.set(key, { current: value });
+    setValues: function (newVals, inherit) {
+        var values = this.values.get();
         
-        // Or just set normal object
-        } else {
-            self.values.set(key, value);
+        for (var key in newVals) {
+            if (newVals.hasOwnProperty(key)) {
+                this.setValue(key, newVals[key], inherit);
+            }
         }
         
-        return self;
+        // If angle and distance exist, create an x and y
+        if (this.getValue('angle') && this.getValue('distance')) {
+            this.setValue('x');
+            this.setValue('y');
+        }
     },
+    
+    
+    setValue: function (key, value, inherit) {
+        var existing = this.getValue(key),
+            newVal;
+
+        // Update if value exists
+        if (existing) {
+            existing.set(value, inherit);
+
+        // Or create new if it doesn't
+        } else {
+            newVal = new Value(defaultValue);
+            newVal.set(value, inherit);
+            
+            this.values.set(key, newVal);
+        }
+
+        return this;
+    },
+    
     
     getValue: function (key) {
         return this.values.get(key);
     },
+    
     
     setProp: function (key, value) {
         this.props.set(key, value);
         
         return this;
     },
+    
     
     getProp: function (key) {
         return this.props.get(key);
@@ -996,7 +996,7 @@ Action.prototype = {
 };
 
 module.exports = Action;
-},{"../input/pointer.js":16,"../opts/keys.js":17,"../opts/props.js":18,"../opts/value.js":19,"../types/repo.js":21,"../utils/calc.js":22,"../utils/utils.js":26,"./presets.js":8,"./processor.js":9,"./rubix.js":10,"./values.js":11,"cycl":1}],8:[function(require,module,exports){
+},{"../input/pointer.js":15,"../opts/keys.js":16,"../opts/props.js":17,"../opts/value.js":18,"../types/repo.js":20,"../types/value.js":21,"../utils/calc.js":22,"../utils/utils.js":26,"./presets.js":8,"./processor.js":9,"./rubix.js":10,"cycl":1}],8:[function(require,module,exports){
 "use strict";
 
 var KEY = require('../opts/keys.js'),
@@ -1160,7 +1160,7 @@ Presets.prototype = {
 };
 
 module.exports = new Presets();
-},{"../opts/keys.js":17,"../utils/utils.js":26}],9:[function(require,module,exports){
+},{"../opts/keys.js":16,"../utils/utils.js":26}],9:[function(require,module,exports){
 /*
     Process actions
 */
@@ -1186,8 +1186,10 @@ Process.prototype = {
             props = action.props,
             rubix = props.rubix,
             data = action.data(),
-            values = action.values.getAll(),
+            values = action.values.get(),
             hasChanged = false;
+            
+        console.log(values);
 
         // Fire onStart if firstFrame
         if (action.firstFrame) {
@@ -1536,85 +1538,7 @@ Rubix.prototype = {
 rubixController = new Rubix();
 
 module.exports = rubixController;
-},{"../opts/keys.js":17,"../utils/calc.js":22,"../utils/easing.js":23,"../utils/utils.js":26}],11:[function(require,module,exports){
-"use strict";
-
-var calc = require('../utils/calc.js'),
-    //Value = require('../bits/value.js'),
-    Values = function () {
-        this.store = {};
-    };
-
-Values.prototype = {
-    
-    apply: function (values, inherit) {
-        var currentInput = {};
-        
-        // Create or update Value objects for each defined value
-        for (var key in values) {
-            if (values.hasOwnProperty(key)) {
-                this.set(key, values[key], inherit);
-            }
-        }
-        
-        // Add x and y properties if angle and distance provided
-        if (values && values.angle && values.distance) {
-            this.store.x = this.store.x || new Value(0, inherit);
-            this.store.y = this.store.y || new Value(0, inherit);
-        }
-    },
-    
-    /*
-        Reset values
-    */
-    reset: function () {
-        for (var key in this.store) {
-	        this.store[key].current = this.store[key].from;
-        }
-    },
-    
-    /*
-        Reverse values
-    */
-    reverse: function () {
-        var to = 0,
-            from = 0;
-
-        for (var key in this.store) {
-            to = this.store[key].to;
-            from = this.store[key].from;
-            
-            this.store[key].to = from;
-            this.store[key].from = to;
-        }
-    },
-    
-    /*
-        Get all values
-    */
-    getAll: function () {
-        return this.store;
-    },
-    
-    set: function (key, value, inherit) {
-        // If value exists
-        if (this.store[key]) {
-            this.store[key].update(value, inherit);
-        
-        // Or create new
-        } else {
-            this.store[key] = new Value(value, inherit);
-        }
-    },
-    
-    get: function (key) {
-        return this.store[key];
-    }
-    
-};
-
-module.exports = Values;
-},{"../utils/calc.js":22}],12:[function(require,module,exports){
+},{"../opts/keys.js":16,"../utils/calc.js":22,"../utils/easing.js":23,"../utils/utils.js":26}],11:[function(require,module,exports){
 (function (global){
 /*
     Bezier function generator
@@ -1744,7 +1668,7 @@ Bezier.prototype = {
 
 module.exports = Bezier;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],13:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 /*
     Point class
     ----------------------------------------
@@ -1773,7 +1697,7 @@ Point.prototype = {
 };
 
 module.exports = Point;
-},{}],14:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 "use strict";
 
 var maxHistorySize = 3,
@@ -1844,7 +1768,7 @@ History.prototype = {
 };
 
 module.exports = History;
-},{"../utils/utils.js":26}],15:[function(require,module,exports){
+},{"../utils/utils.js":26}],14:[function(require,module,exports){
 /*
     Input controller
 */
@@ -1963,7 +1887,7 @@ Input.prototype = {
 };
 
 module.exports = Input;
-},{"../bobs/history.js":14,"../utils/calc.js":22,"../utils/utils.js":26}],16:[function(require,module,exports){
+},{"../bobs/history.js":13,"../utils/calc.js":22,"../utils/utils.js":26}],15:[function(require,module,exports){
 "use strict";
 
 var Input = require('./input.js'),
@@ -2023,7 +1947,7 @@ Pointer.prototype.stop = function () {
 };
 
 module.exports = Pointer;
-},{"../bits/point.js":13,"../bobs/history.js":14,"../opts/keys.js":17,"../utils/utils.js":26,"./input.js":15}],17:[function(require,module,exports){
+},{"../bits/point.js":12,"../bobs/history.js":13,"../opts/keys.js":16,"../utils/utils.js":26,"./input.js":14}],16:[function(require,module,exports){
 /*
     String constants
     ----------------------------------------
@@ -2062,7 +1986,7 @@ module.exports = {
         RANGE: 'Range'
     }
 };
-},{}],18:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 "use strict";
 
 var KEY = require('./keys.js'),
@@ -2134,7 +2058,7 @@ module.exports = {
     // Run this when action changes
     onChange: undefined
 };
-},{"../action/rubix.js":10,"./keys.js":17}],19:[function(require,module,exports){
+},{"../action/rubix.js":10,"./keys.js":16}],18:[function(require,module,exports){
 "use strict";
 
 module.exports = {
@@ -2168,7 +2092,7 @@ module.exports = {
     amp: 0,
     escapeAmp: 0
 };
-},{}],20:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 "use strict";
 
 var Action = require('./action/action.js'),
@@ -2216,7 +2140,7 @@ Redshift.prototype = {
         @return [Redshift]
     */
     define: function () {
-        presets.define(arguments[0], arguments[1]);
+        presets.define.apply(presets, arguments);
         
         return this;
     },
@@ -2230,8 +2154,8 @@ Redshift.prototype = {
         @param [string]: Name of the new easing function 
         @params [number]: x/y coordinates of handles
     */
-    addBezier: function (name, x1, y1, x2, y2) {
-        easing.addBezier(name, x1, y1, x2, y2);
+    addBezier: function () {
+        easing.addBezier.apply(easing, arguments);
         
         return this;
     },
@@ -2247,7 +2171,7 @@ redshift = new Redshift();
 jQueryPlugins.load(redshift);
 
 module.exports = redshift;
-},{"./action/action.js":7,"./action/presets.js":8,"./input/input.js":15,"./utils/calc.js":22,"./utils/easing.js":23,"./utils/jquery.js":25,"cycl":1}],21:[function(require,module,exports){
+},{"./action/action.js":7,"./action/presets.js":8,"./input/input.js":14,"./utils/calc.js":22,"./utils/easing.js":23,"./utils/jquery.js":25,"cycl":1}],20:[function(require,module,exports){
 "use strict";
 
 var utils = require('../utils/utils.js'),
@@ -2295,7 +2219,7 @@ Repo.prototype = {
 
         // Or add specific property
         } else if (data !== undefined) {
-            this.store[data] = args[1];
+            this.store[data] = arguments[1];
         }
 
         return this;
@@ -2304,7 +2228,135 @@ Repo.prototype = {
 };
 
 module.exports = Repo;
-},{"../utils/utils.js":26}],22:[function(require,module,exports){
+},{"../utils/utils.js":26}],21:[function(require,module,exports){
+"use strict";
+
+var calc = require('../utils/calc.js'),
+    utils = require('../utils/utils.js'),
+    Repo = require('./repo.js'),
+
+    /*
+        Resolve a value
+        
+        Determine if the value to be set is
+            - Function returning the value
+            - String relative equation
+            - Or actual value
+    */
+    resolve = function (val, current) {
+        var resolvedVal = val;
+        
+        // If this is a function, execute
+        if (utils.isFunc(val)) {
+            resolvedVal = val(current);
+        
+        // Or if this is a relative assignment, calculate new contents
+        } else if (utils.isRelativeValue(val)) {
+            resolvedVal = calc.relativeValue(val, current);
+        }
+
+        return resolvedVal;
+    },
+    
+    loopOver = function (data, value) {
+        for (var key in data) {
+            if (data.hasOwnProperty(key)) {
+    
+                // Resolve this property
+                data[key] = resolve(data[key], value.get(key));
+            }
+        }
+        
+        return data;
+    },
+
+    /*
+        Value constructor
+    */
+    Value = function () {
+        var repo = new Repo(),
+            setter = repo.set,
+            firstSet = true;
+
+        // Apply defaults
+        setter.apply(repo, arguments);
+
+        /*
+            Set a value
+            
+            Data for values needs resolving before sending to the repo
+            
+            Syntax
+                .set('key', val) // Sets specific value
+                .set({ key: val }) // Sets multiple values
+                .set({ key: val }, { key: val2 }) // With inherit
+                .set(val) // Sets 'current' value
+        */
+        repo.set = function () {
+            var args = arguments,
+                arg1 = args[0],
+                arg2 = args[1],
+                data = {};
+
+            // If we have an object, resolve every item first
+            if (utils.isObj(arg1)) {
+                data = (arg2) ? loopOver(arg2, this) : data; // inherit
+                data = loopOver(arg1, this); // overrides
+                
+            } else {
+
+                // If this is a specific setter
+                if (utils.isString(arg1) && !utils.isRelativeValue(arg1)) {
+                    data[arg1] = resolve(arg2, this.get(arg1));
+                    
+                // Or this is a var to be resolved, assign it to current
+                } else {
+                    data.current = resolve(arg1, this.get('current'));
+                }
+            }
+            
+            data.from = data.current;
+
+            setter.apply(this, [data]);
+
+            // Handle start property
+            if (firstSet && arg1.hasOwnProperty('start')) {
+                setter.apply(this, ['current', resolve(arg1.start)]);
+                firstSet = false;
+            }
+            
+            // Check for range
+            if (this.store.min !== undefined && this.store.max !== undefined) {
+                setter.apply(this, ['hasRange', true]);
+            } else {
+                setter.apply(this, ['hasRange', false]);
+            }
+        };
+
+        
+        /*
+            Reset current to from
+        */
+        repo.reset = function () {
+            this.set('current', this.get('from'));
+        };
+        
+        
+        /*
+            Reverse current and from
+        */
+        repo.reverse = function () {
+            this.set({
+                to: this.get('from'),
+                from: this.get('to')
+            });
+        };
+        
+        return repo;
+    };
+
+module.exports = Value;
+},{"../utils/calc.js":22,"../utils/utils.js":26,"./repo.js":20}],22:[function(require,module,exports){
 /*
     Calculators
     ----------------------------------------
@@ -2946,9 +2998,9 @@ function init() {
 
 module.exports = easingFunction;
 
-},{"../bits/bezier.js":12,"../opts/keys.js":17,"./calc.js":22,"./utils.js":26}],24:[function(require,module,exports){
+},{"../bits/bezier.js":11,"../opts/keys.js":16,"./calc.js":22,"./utils.js":26}],24:[function(require,module,exports){
 window.redshift = require('../redshift.js');
-},{"../redshift.js":20}],25:[function(require,module,exports){
+},{"../redshift.js":19}],25:[function(require,module,exports){
 /*
     Redshift jQuery plugin
     
@@ -3028,7 +3080,7 @@ module.exports = {
         }
     }
 };
-},{"../opts/keys.js":17,"../utils/utils.js":26}],26:[function(require,module,exports){
+},{"../opts/keys.js":16,"../utils/utils.js":26}],26:[function(require,module,exports){
 /*
     Utility functions
     ----------------------------------------
@@ -3169,7 +3221,7 @@ module.exports = {
         @return [boolean]: If this looks like a relative value assignment
     */
     isRelativeValue: function (value) {
-        return (value.indexOf('=') > 0);
+        return (value && value.indexOf && value.indexOf('=') > 0);
     },
     
     /*
@@ -3261,4 +3313,4 @@ module.exports = {
     }
     
 };
-},{"../opts/keys.js":17}]},{},[24]);
+},{"../opts/keys.js":16}]},{},[24]);
