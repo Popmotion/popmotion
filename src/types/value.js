@@ -27,12 +27,17 @@ var calc = require('../utils/calc.js'),
         return resolvedVal;
     },
     
-    loopOver = function (data, value) {
+    loopOver = function (newData, inherit, value) {
+        var data = {};
+        
         for (var key in value.store) {
-            if (data.hasOwnProperty(key)) {
-    
-                // Resolve this property
-                data[key] = resolve(data[key], value.get(key));
+            // If Action has property but new data doesn't
+            if (inherit.hasOwnProperty(key) && !newData.hasOwnProperty(key)) {
+                data[key] = resolve(inherit[key], value.get(key));
+
+            // Or if new data does
+            } else if (newData.hasOwnProperty(key)) {
+                data[key] = resolve(newData[key], value.get(key));
             }
         }
         
@@ -69,9 +74,8 @@ var calc = require('../utils/calc.js'),
 
             // If we have an object, resolve every item first
             if (utils.isObj(arg1)) {
-                data = (arg2) ? loopOver(arg2, this) : data; // inherit
-                data = loopOver(arg1, this); // overrides
-                
+                data = loopOver(arg1, arg2, this);
+
             } else {
 
                 // If this is a specific setter
