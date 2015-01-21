@@ -21,6 +21,9 @@ module.exports = {
     // Name of simulation to .run()
     simulate: 'velocity',
     
+    gravity: 0.5,
+    bounce: 0,
+    
     // Options
     duration: 400,
     delay: 0,
