@@ -84,7 +84,7 @@ var calc = require('../utils/calc.js'),
 
             } else {
 
-                // If this is a specific setter
+                // If this is a specific setter, ie .set('key', val)
                 if (utils.isString(arg1) && !utils.isRelativeValue(arg1)) {
                     data[arg1] = resolve(arg2, this.get(arg1));
                     
@@ -102,8 +102,6 @@ var calc = require('../utils/calc.js'),
             } else {
                 setter.apply(this, ['hasRange', false]);
             }
-            
-            console.log(this);
         };
 
         

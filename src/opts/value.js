@@ -12,28 +12,25 @@ module.exports = {
     min: undefined,
     max: undefined,
     hasRange: false,
-    
-    // Speed for .run(), in xps
+
+    // Simulation defaults
+    simulate: 'velocity',
     velocity: 0,
     deceleration: 0,
     acceleration: 0,
-    
-    // Name of simulation to .run()
-    simulate: 'velocity',
-    
     gravity: 0.5,
     bounce: 0,
     friction: 0,
     
-    // Options
+    // Animation defaults
     duration: 400,
     delay: 0,
     ease: 'easeInOut',
-    link: null, // use the progress of this value
+
     round: false,
     steps: 0,
     
-    // Amp for inside and outside range (ie value * amp)
-    amp: 0,
-    escapeAmp: 0
+    // Tracking defaults
+    escapeAmp: 0,
+    link: null // use the progress of this value
 };
