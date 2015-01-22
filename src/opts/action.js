@@ -1,14 +1,11 @@
 "use strict";
 
-var KEY = require('./keys.js'),
-    rubix = require('../action/rubix.js');
-
 module.exports = {
     // Is this action active
     active: false,
     
     // What to use to process this aciton
-    rubix: rubix[KEY.RUBIX.TIME],
+    rubix: undefined,
     
     // Multiply output value by
     amp: 1,
