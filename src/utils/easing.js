@@ -25,7 +25,7 @@
 var calc = require('./calc.js'),
     util = require('./utils.js'),
     KEY = require('../opts/keys.js'),
-    Bezier = require('../bits/bezier.js'),
+    Bezier = require('../types/bezier.js'),
     EasingFunction = function () {},
     easingFunction,
     /*

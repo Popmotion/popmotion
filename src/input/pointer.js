@@ -1,7 +1,7 @@
 "use strict";
 
 var Input = require('./input.js'),
-    Point = require('../bits/point.js'),
+    Point = require('../types/point.js'),
     History = require('../bobs/history.js'),
     KEY = require('../opts/keys.js'),
     utils = require('../utils/utils.js'),
