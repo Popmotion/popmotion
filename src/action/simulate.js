@@ -23,24 +23,36 @@ Simulate.prototype = {
         If bounce is set, we add a bounce effect when the max value is reached
         
         TODO: neaten this effect (due to rounding issues) and add clause that reduces velocity to 0
-    */
-    gravity: function (value, duration) {
-        var newVelocity = value.velocity += value.gravity;
-
-        if (value.current >= value.max) {
-            newVelocity *= -value.bounce;
-        }
         
-        return newVelocity;
+        @param [Value]
+        @returns [number]: New velocity
+    */
+    gravity: function (value) {
+        return value.velocity += value.gravity;
     },
     
     /*
         Friction
+        
+        @param [Value]
+        @returns [number]: New velocity
     */
-    friction: function (value, duration) {
+    friction: function (value) {
         var newVelocity = value.velocity * 1 - value.friction + 0;
         
         return (newVelocity > 0.2) ? newVelocity : 0;
+    },
+    
+    /*
+        Bounce
+        
+        Invert velocity and reduce by provided fraction
+        
+        @param [Value]
+        @return [number]: New velocity
+    */
+    bounce: function (value) {
+        return value.velocity *= -value.bounce;
     }
 };
 

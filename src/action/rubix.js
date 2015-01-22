@@ -236,12 +236,20 @@ Rubix.prototype = {
         easeValue: function (key, value, action) {
             var newValue = value.current + action.progress[key];
 
-            if (value.min) {
+            if (value.min !== undefined) {
                 newValue = Math.max(value.min, newValue);
+                
+                if (value.bounce && newValue <= value.min) {
+                    value.velocity = simulate.bounce(value);
+                }
             }
             
-            if (value.max) {
+            if (value.max !== undefined) {
                 newValue = Math.min(value.max, newValue);
+                
+                if (value.bounce && newValue >= value.max) {
+                    value.velocity = simulate.bounce(value);
+                }
             }
 
             return newValue;
