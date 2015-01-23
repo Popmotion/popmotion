@@ -2,6 +2,7 @@
 
 var frictionStopLimit = .2,
     calc = require('../utils/calc.js'),
+    frameSpeed = calc.frameSpeed,
     Simulate = function () {},
     simulate;
 
@@ -12,16 +13,14 @@ Simulate.prototype = {
         
         The default .run() simulation.
         
-        Velocity takes 
+        Applies any set deceleration and acceleration to existing velocity
     */
     velocity: function (value, duration) {
-        return value.velocity - calc.frameSpeed(value.deceleration, duration) + calc.frameSpeed(value.acceleration, duration);
+        return value.velocity - frameSpeed(value.deceleration, duration) + frameSpeed(value.acceleration, duration);
     },
 
     /*
         Gravity
-        
-        If bounce is set, we add a bounce effect when the max value is reached
         
         TODO: neaten this effect (due to rounding issues) and add clause that reduces velocity to 0
         
@@ -29,7 +28,7 @@ Simulate.prototype = {
         @returns [number]: New velocity
     */
     gravity: function (value, duration) {
-        return value.velocity += value.gravity;
+        return value.velocity + frameSpeed(value.gravity, duration);
     },
     
     /*
@@ -39,8 +38,23 @@ Simulate.prototype = {
         @returns [number]: New velocity
     */
     friction: function (value, duration) {
-        var newVelocity = calc.frameSpeed(value.velocity, duration) * (1 - value.friction);
+        var newVelocity = frameSpeed(value.velocity, duration) * (1 - value.friction);
         return (newVelocity < frictionStopLimit && newVelocity > -frictionStopLimit) ? 0 : calc.xps(newVelocity, duration);
+    },
+    
+    /*
+        Spring
+        
+        @param [Value]
+        @returns [number]: New velocity
+    */
+    spring: function (value, duration) {
+        var distance = value.to - value.current,
+            springDistance = distance * frameSpeed(value.spring, duration);
+            
+        value.velocity += springDistance;
+            
+        return this.friction(value, duration);
     },
     
     /*

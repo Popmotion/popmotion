@@ -21,6 +21,7 @@ module.exports = {
     gravity: 30,
     bounce: 0,
     friction: 0,
+    spring: 0.03,
     
     // Animation defaults
     duration: 400,

@@ -51,13 +51,13 @@ Loop.prototype = {
     */
     frame: function () {
         var self = this;
-
+        
         requestAnimationFrame(function () {
             var framestamp = self.timer.update(), // Currently just measuring in ms - will look into hi-res timestamps
                 isActive = self.callback.call(self.scope, framestamp, self.timer.getElapsed());
-            
+
             if (isActive) {
-                self.frame();
+                self.frame(true);
             } else {
                 self.stop();
             }
@@ -70,6 +70,7 @@ Loop.prototype = {
     start: function () {
         // Make sure we're not already running a loop
         if (!this.isRunning) {
+            this.isRunning = true;
             this.frame();
         }
     },
@@ -100,13 +101,18 @@ module.exports = new Loop();
 
 var theLoop = require('./loop.js'),
     ProcessManager = function () {
-        this.all = [];
+        this.all = {};
         this.active = [];
         this.deactivateQueue = [];
         theLoop.setCallback(this, this.fireActive);
     };
     
 ProcessManager.prototype = {
+    
+    /*
+        [int]: Used for process ID
+    */
+    processCounter: 0,
     
     /*
         [int]: Number of active processes
@@ -158,24 +164,29 @@ ProcessManager.prototype = {
         @return [boolean]: True if active processes found
     */
     fireActive: function (framestamp, elapsed) {
-        var isActive = false,
-            activeCount,
-            activeProcesses;
-        
+        var process,
+            activeCount = 0,
+            activeProcesses = [];
+
+        // Purge and check active count before execution
         this.purge();
-        
         activeCount = this.getActiveCount();
         activeProcesses = this.getActive();
         
-        if (activeCount) {
-            isActive = true;
+        // Loop through active processes and fire callback
+        for (var i = 0; i < activeCount; i++) {
+            process = this.getProcess(activeProcesses[i]);
             
-            for (var i = 0; i < activeCount; i++) {
-                this.getProcess(i).fire(framestamp, elapsed);
+            if (process) {
+                process.fire(framestamp, elapsed);
             }
         }
+
+        // Repurge and recheck active count after execution
+        this.purge();
+        activeCount = this.getActiveCount();
         
-        return isActive;
+        return activeCount ? true : false;
     },
     
     /*
@@ -185,9 +196,13 @@ ProcessManager.prototype = {
         @return [int]: Index of process to be used as ID
     */
     register: function (process) {
-        this.all.push(process);
+        var id = this.processCounter;
 
-        return this.all.length - 1;
+        this.all[id] = process;
+        
+        this.processCounter++;
+        
+        return id;
     },
     
     /*
@@ -240,6 +255,13 @@ ProcessManager.prototype = {
         }
         
         this.deactivateQueue = [];
+    },
+    
+    /*
+        Remove the provided id and reindex remaining processes
+    */
+    kill: function (id) {
+        delete this.all[id];
     }
     
 };
@@ -271,7 +293,7 @@ var manager = require('./manager.js'),
         this.setCallback(callback);
         this.setScope(scope);
 
-        this.id = manager.register(this);
+        this.setId(manager.register(this));
     };
     
 Process.prototype = {
@@ -280,6 +302,11 @@ Process.prototype = {
         [boolean]: Is this process currently active?
     */
     isActive: false,
+    
+    /*
+        [boolean]: Has this process been killed?
+    */
+    isKilled: false,
 
     /*
         Fire callback
@@ -323,34 +350,24 @@ Process.prototype = {
     },
     
     /*
-        Run the process
-        
-        @param [int]: Duration of process in ms, 0 if indefinite
-    */
-    run: function (duration) {
-        var self = this;
-
-        this.reset();
-        
-        self.start();
-        
-        self.stopTimer = setTimeout(function () {
-            self.stop();
-        }, duration);
-
-        return self;
-    },
-    
-    /*
         Start process
         
+        @param [int]: Duration of process in ms, 0 if indefinite
         @return [this]
     */
-    start: function () {
-        this.reset();
-        this.activate();
+    start: function (duration) {
+        var self = this;
+        
+        self.reset();
+        self.activate();
+        
+        if (duration) {
+            self.stopTimer = setTimeout(function () {
+                self.stop();
+            }, duration);
+        }
 
-        return this;
+        return self;
     },
     
     /*
@@ -371,8 +388,10 @@ Process.prototype = {
         @return [this]
     */
     activate: function () {
-        this.isActive = true;
-        manager.activate(this.id);
+        if (!this.isKilled) {
+            this.isActive = true;
+            manager.activate(this.id);
+        }
 
         return this;
     },
@@ -418,6 +437,19 @@ Process.prototype = {
         clearInterval(this.intervalTimer);
         
         return this;
+    },
+    
+    /*
+        Kill function in manager, release for garbage collection
+    */
+    kill: function () {
+        this.stop();
+        this.isKilled = true;
+        manager.kill(this.id);
+    },
+    
+    setId: function (id) {
+        this.id = id;
     }
 };
 
@@ -503,7 +535,8 @@ module.exports = {
 },{}],6:[function(require,module,exports){
 "use strict";
 
-var Timer = function () {
+var maxElapsed = 30,
+    Timer = function () {
         this.update();
     };
 
@@ -513,8 +546,8 @@ Timer.prototype = {
         return this.current = new Date().getTime();
     },
 
-    getElapsed: function (timestamp) {
-        return this.current - this.prev;
+    getElapsed: function () {
+        return Math.min(this.current - this.prev, maxElapsed);
     }
 };
 
@@ -1504,12 +1537,20 @@ Rubix.prototype = {
         easeValue: function (key, value, action) {
             var newValue = value.current + action.progress[key];
 
-            if (value.min) {
+            if (value.min !== undefined) {
                 newValue = Math.max(value.min, newValue);
+                
+                if (value.bounce && newValue <= value.min) {
+                    value.velocity = simulate.bounce(value);
+                }
             }
             
-            if (value.max) {
+            if (value.max !== undefined) {
                 newValue = Math.min(value.max, newValue);
+                
+                if (value.bounce && newValue >= value.max) {
+                    value.velocity = simulate.bounce(value);
+                }
             }
 
             return newValue;
@@ -1529,7 +1570,9 @@ module.exports = rubixController;
 },{"../opts/keys.js":16,"../utils/calc.js":23,"../utils/easing.js":24,"../utils/utils.js":27,"./simulate.js":11}],11:[function(require,module,exports){
 "use strict";
 
-var calc = require('../utils/calc.js'),
+var frictionStopLimit = .2,
+    calc = require('../utils/calc.js'),
+    frameSpeed = calc.frameSpeed,
     Simulate = function () {},
     simulate;
 
@@ -1540,36 +1583,60 @@ Simulate.prototype = {
         
         The default .run() simulation.
         
-        Velocity takes 
+        Applies any set deceleration and acceleration to existing velocity
     */
     velocity: function (value, duration) {
-        return value.velocity - calc.frameSpeed(value.deceleration, duration) + calc.frameSpeed(value.acceleration, duration);
+        return value.velocity - frameSpeed(value.deceleration, duration) + frameSpeed(value.acceleration, duration);
     },
 
     /*
         Gravity
         
-        If bounce is set, we add a bounce effect when the max value is reached
-        
         TODO: neaten this effect (due to rounding issues) and add clause that reduces velocity to 0
+        
+        @param [Value]
+        @returns [number]: New velocity
     */
     gravity: function (value, duration) {
-        var newVelocity = value.velocity += value.gravity;
-
-        if (value.current >= value.max) {
-            newVelocity *= -value.bounce;
-        }
-        
-        return newVelocity;
+        return value.velocity + frameSpeed(value.gravity, duration);
     },
     
     /*
         Friction
+        
+        @param [Value]
+        @returns [number]: New velocity
     */
     friction: function (value, duration) {
-        var newVelocity = value.velocity * 1 - value.friction + 0;
+        var newVelocity = frameSpeed(value.velocity, duration) * (1 - value.friction);
+        return (newVelocity < frictionStopLimit && newVelocity > -frictionStopLimit) ? 0 : calc.xps(newVelocity, duration);
+    },
+    
+    /*
+        Spring
         
-        return (newVelocity > 0.2) ? newVelocity : 0;
+        @param [Value]
+        @returns [number]: New velocity
+    */
+    spring: function (value, duration) {
+        var distance = value.to - value.current,
+            springDistance = distance * frameSpeed(value.spring, duration);
+            
+        value.velocity += springDistance;
+            
+        return this.friction(value, duration);
+    },
+    
+    /*
+        Bounce
+        
+        Invert velocity and reduce by provided fraction
+        
+        @param [Value]
+        @return [number]: New velocity
+    */
+    bounce: function (value) {
+        return value.velocity *= -value.bounce;
     }
 };
 
@@ -1953,9 +2020,10 @@ module.exports = {
     velocity: 0,
     deceleration: 0,
     acceleration: 0,
-    gravity: 0.5,
+    gravity: 30,
     bounce: 0,
     friction: 0,
+    spring: 0.03,
     
     // Animation defaults
     duration: 400,
