@@ -18,7 +18,7 @@ module.exports = {
     velocity: 0,
     deceleration: 0,
     acceleration: 0,
-    gravity: 0.5,
+    gravity: 30,
     bounce: 0,
     friction: 0,
     

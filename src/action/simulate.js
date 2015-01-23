@@ -1,6 +1,7 @@
 "use strict";
 
-var calc = require('../utils/calc.js'),
+var frictionStopLimit = .2,
+    calc = require('../utils/calc.js'),
     Simulate = function () {},
     simulate;
 
@@ -27,7 +28,7 @@ Simulate.prototype = {
         @param [Value]
         @returns [number]: New velocity
     */
-    gravity: function (value) {
+    gravity: function (value, duration) {
         return value.velocity += value.gravity;
     },
     
@@ -37,10 +38,9 @@ Simulate.prototype = {
         @param [Value]
         @returns [number]: New velocity
     */
-    friction: function (value) {
-        var newVelocity = value.velocity * 1 - value.friction + 0;
-        
-        return (newVelocity > 0.2) ? newVelocity : 0;
+    friction: function (value, duration) {
+        var newVelocity = calc.frameSpeed(value.velocity, duration) * (1 - value.friction);
+        return (newVelocity < frictionStopLimit && newVelocity > -frictionStopLimit) ? 0 : calc.xps(newVelocity, duration);
     },
     
     /*
