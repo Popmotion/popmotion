@@ -1,6 +1,6 @@
 {
   "name": "redshift",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "A JavaScript animation and interaction framework.",
   "author": "Matt Perry <admin@redshiftjs.com>",
   "homepage": "http://redshiftjs.com",
@@ -19,7 +19,14 @@
     "redshift",
     "canvas animation",
     "jquery animation",
-    "dom animation"
+    "dom animation",
+    "pointer tracking",
+    "mouse",
+    "mouse tracking",
+    "touch",
+    "touch tracking",
+    "physics",
+    "interaction"
   ],
   "analyze": true,
   "license": "MIT",
