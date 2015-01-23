@@ -79,7 +79,7 @@ Process.prototype = {
         }
         
         // Fire onEnd and deactivate if at end
-        if (rubix.hasEnded(action)) {
+        if (rubix.hasEnded(action, hasChanged)) {
             if (props.onEnd) {
                 props.onEnd.call(props.scope, output, data);
             }
