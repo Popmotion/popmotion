@@ -269,6 +269,41 @@ module.exports = {
         return Math.random() * (max - min) + min;
     },
 
+    
+    /*
+        Calculate relative value
+        
+        Takes the operator and value from a string, ie "+=5", and applies
+        to the current value to resolve a new target.
+        
+        @param [string]: Relative value
+        @param [number]: Current value
+        @return [number]: New value
+    */
+    relativeValue: function (rel, current) {
+        var newValue = current,
+            equation = rel.split('='),
+            operator = equation[0],
+            num = parseFloat(equation[1]);
+
+        switch (operator) {
+            case '+':
+                newValue = current + num;
+                break;
+            case '-':
+                newValue = current - num;
+                break;
+            case '*':
+                newValue = current * num;
+                break;
+            case '/':
+                newValue = current / num;
+                break;
+        }
+
+        return newValue;
+    },
+
 
     /*
         Restrict value to range

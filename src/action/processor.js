@@ -20,10 +20,11 @@ Process.prototype = {
     */
     action: function (action, framestamp, frameDuration) {
         var output = {},
-            props = action.props,
+            props = action.props.store,
+            data = action.data.store,
+            values = action.values.store,
+            value,
             rubix = props.rubix,
-            data = action.data(),
-            values = action.values.getAll(),
             hasChanged = false;
 
         // Fire onStart if firstFrame
@@ -46,28 +47,27 @@ Process.prototype = {
         // Calculate new values
         for (var key in values) {
             if (values.hasOwnProperty(key)) {
+                value = values[key].store;
+
                 // Ease value
-                output[key] = rubix.easeValue(key, values[key], action);
-                
+                output[key] = rubix.easeValue(key, value, action, frameDuration);
+
                 // Round
-                if (values[key].round) {
+                if (value.round) {
                     output[key] = Math.round(output[key]);
                 }
 
-                // Add velocity
-                values[key].velocity = calc.xps(calc.difference(values[key].current, output[key]), frameDuration);
-                
                 // Check if has changed
-                if (values[key].current != output[key]) {
+                if (value.current != output[key]) {
                     hasChanged = true;
-                    values[key].current = output[key];
+                    value.current = output[key];
                 }
             }
         } // end value calculations
-        
+
         // Calculate new x and y if angle and distance present
-        output = this.angleAndDistance(action.origin, output);
-        
+        output = this.angleAndDistance(values, output);
+
         // Fire onFrame callback
         if (props.onFrame) {
             props.onFrame.call(props.scope, output, data);
@@ -79,7 +79,7 @@ Process.prototype = {
         }
         
         // Fire onEnd and deactivate if at end
-        if (rubix.hasEnded(action)) {
+        if (rubix.hasEnded(action, hasChanged)) {
             if (props.onEnd) {
                 props.onEnd.call(props.scope, output, data);
             }
@@ -110,11 +110,11 @@ Process.prototype = {
 	    @param [object]: Current output
 	    @return [object]: Output with updated x and y
     */
-    angleAndDistance: function (origin, output) {
+    angleAndDistance: function (values, output) {
 	    var point = {};
 
-	    if (output.angle && output.distance) {
-		    point = calc.pointFromAngleAndDistance(origin, output.angle, output.distance);
+	    if (values.angle && values.distance) {
+		    point = calc.pointFromAngleAndDistance({ x: values.x.get('current'), y: values.y.get('current') }, output.angle, output.distance);
 		    output.x = point.x;
 		    output.y = point.y;
 	    }

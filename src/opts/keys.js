@@ -8,7 +8,6 @@ module.exports = {
     JQUERY_ELEMENT: '_jQueryElement',
     REDSHIFT: 'redshift',
     EASING: {
-        QUAD_IN_OUT: 'quadInOut',
         IN: 'In',
         IN_OUT: 'InOut',
         OUT: 'Out',
@@ -17,8 +16,7 @@ module.exports = {
     RUBIX: {
         INPUT: 'Input',
         TIME: 'Time',
-        RUN: 'Run',
-        FIRE: 'Progress'
+        RUN: 'Run'
     },
     ERROR: {
         ACTION_EXISTS: "Action already defined. Use forceOverride: true to override.",

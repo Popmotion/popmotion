@@ -4,25 +4,27 @@ var cycl = require('cycl'),
     processor = require('./processor.js'),
     presets = require('./presets.js'),
     rubix = require('./rubix.js'),
-    Props = require('./props.js'),
-    Values = require('./values.js'),
     Pointer = require('../input/pointer.js'),
     KEY = require('../opts/keys.js'),
+    defaultProps = require('../opts/action.js'),
+    defaultValue = require('../opts/value.js'),
     calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
-    Data = require('../bits/data.js'),
+    Value = require('../types/value.js'),
+    Repo = require('../types/repo.js'),
 
     Action = function (def, override) {
         var self = this;
         
         // Create value manager
-        self.values = new Values();
+        self.values = new Repo();
         
         // Create new property manager
-        self.props = new Props();
+        defaultProps.scope = this;
+        self.props = new Repo(defaultProps);
 
         // Create data store
-        self.data = new Data();
+        self.data = new Repo();
         
         // Register process wth cycl
         self.process = cycl.newProcess(function (framestamp, frameDuration) {
@@ -124,29 +126,7 @@ Action.prototype = {
 
         return this.start(KEY.RUBIX.INPUT);
     },
- /*   
-    fire: function (progress) {
-        var rubix = this.props.get('rubix'),
-            isActive = this.process.isActive;
 
-        if (utils.isNum(progress)) {
-            this.progress = progress;
-        }
-        
-        this.changeRubix(KEY.RUBIX.FIRE);
-        this.isActive(true);
-        this.process.activate().fire();
-
-        if (isActive) {
-            this.props.set('rubix', rubix);
-        } else {
-            this.isActive(false);
-            this.process.deactivate();
-        }
-
-        return this;
-   },
-     */
     /*
         Start Action
 
@@ -212,10 +192,14 @@ Action.prototype = {
         Reset Action progress and values
     */
     reset: function () {
-	    var self = this;
+	    var self = this,
+	        values = self.values.get();
 
         self.resetProgress();
-        self.values.reset();
+        
+        for (var key in values) {
+            values[key].reset();
+        }
         
         return self;
     },
@@ -237,11 +221,15 @@ Action.prototype = {
 	    Reverse Action progress and values
     */
     reverse: function () {
-	    var self = this;
+	    var self = this,
+	        values = self.values.get();
 	    
 	    self.progress = calc.difference(self.progress, 1);
         self.elapsed = calc.difference(self.elapsed, self.props.get('duration'));
-        self.values.reverse();
+        
+        for (var key in values) {
+            values[key].reverse();
+        }
 
         return self;
     },
@@ -351,7 +339,7 @@ Action.prototype = {
             validDefinition = (defs !== undefined),
             base = {},
             values = {},
-            jQueryElement = self.data(KEY.JQUERY_ELEMENT);
+            jQueryElement = self.data.get(KEY.JQUERY_ELEMENT);
 
         if (validDefinition) {
             base = presets.createBase(defs, override);
@@ -366,16 +354,15 @@ Action.prototype = {
                 base.scope = jQueryElement;
             }
 
-            self.props.apply(base);
-            self.values.apply(base.values, self.props);
-            
-            values = this.values.getAll();
-            
+            self.props.set(base);
+            self.setValues(base.values, self.props.get());
+
+            values = self.values.get();
+
             // Create origins
-            self.origin = {};
             for (var key in values) {
                 if (values.hasOwnProperty(key)) {
-                    self.origin[key] = values[key].current;
+                    values[key].set('origin', values[key].get('current'));
                 }
             }
         }
@@ -383,30 +370,54 @@ Action.prototype = {
         return self;
     },
     
-    setValue: function (key, value) {
-        var self = this;
+    setValues: function (newVals, inherit) {
+        var values = this.values.get();
 
-        // If this is a number, set current (as opposed to 'to')
-        if (utils.isNum(value)) {
-            self.values.set(key, { current: value });
-        
-        // Or just set normal object
-        } else {
-            self.values.set(key, value);
+        for (var key in newVals) {
+            if (newVals.hasOwnProperty(key)) {
+                this.setValue(key, newVals[key], inherit);
+            }
         }
         
-        return self;
+        // If angle and distance exist, create an x and y
+        if (this.getValue('angle') && this.getValue('distance')) {
+            this.setValue('x');
+            this.setValue('y');
+        }
     },
+    
+    
+    setValue: function (key, value, inherit) {
+        var existing = this.getValue(key),
+            newVal;
+
+        // Update if value exists
+        if (existing) {
+            existing.set(value, inherit);
+
+        // Or create new if it doesn't
+        } else {
+            newVal = new Value(defaultValue);
+            newVal.set(value, inherit);
+
+            this.values.set(key, newVal);
+        }
+
+        return this;
+    },
+    
     
     getValue: function (key) {
         return this.values.get(key);
     },
+    
     
     setProp: function (key, value) {
         this.props.set(key, value);
         
         return this;
     },
+    
     
     getProp: function (key) {
         return this.props.get(key);

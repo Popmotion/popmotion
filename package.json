@@ -1,6 +1,6 @@
 {
   "name": "redshift",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "A JavaScript animation and interaction framework.",
   "author": "Matt Perry <admin@redshiftjs.com>",
   "homepage": "http://redshiftjs.com",
@@ -19,7 +19,14 @@
     "redshift",
     "canvas animation",
     "jquery animation",
-    "dom animation"
+    "dom animation",
+    "pointer tracking",
+    "mouse",
+    "mouse tracking",
+    "touch",
+    "touch tracking",
+    "physics",
+    "interaction"
   ],
   "analyze": true,
   "license": "MIT",
@@ -28,7 +35,7 @@
 	  "compile": "browserify ./src/utils/global.js -o ./redshift.global.js && browserify ./src/utils/global.js | uglifyjs - -m -o ./redshift.global.min.js"
   },
   "dependencies": {
-      "cycl": "1.0.0"
+      "cycl": "1.1.0"
   },
   "devDependencies": {
     "browserify": "7.0.0",

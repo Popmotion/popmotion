@@ -129,6 +129,17 @@ module.exports = {
     isString: function (str) {
         return (typeof str === 'string'); 
     },
+
+
+    /*
+        Is this a relative value assignment?
+        
+        @param [string]: Variable to test
+        @return [boolean]: If this looks like a relative value assignment
+    */
+    isRelativeValue: function (value) {
+        return (value && value.indexOf && value.indexOf('=') > 0);
+    },
     
     /*
         Is this var an array ? 
