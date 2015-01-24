@@ -535,8 +535,7 @@ module.exports = {
 },{}],6:[function(require,module,exports){
 "use strict";
 
-var maxElapsed = 30,
-    Timer = function () {
+var Timer = function () {
         this.update();
     };
 
@@ -546,8 +545,8 @@ Timer.prototype = {
         return this.current = new Date().getTime();
     },
 
-    getElapsed: function () {
-        return Math.min(this.current - this.prev, maxElapsed);
+    getElapsed: function (timestamp) {
+        return this.current - this.prev;
     }
 };
 
@@ -598,6 +597,9 @@ Action.prototype = {
     
     // [number]: Time elapsed in ms
     elapsed: 0,
+
+    // [number]: Number of frames action has been inactive
+    inactiveFrames: 0,
 
     /*
         Play the provided actions as animations
@@ -1253,7 +1255,7 @@ Process.prototype = {
         }
         
         // Fire onEnd and deactivate if at end
-        if (rubix.hasEnded(action)) {
+        if (rubix.hasEnded(action, hasChanged)) {
             if (props.onEnd) {
                 props.onEnd.call(props.scope, output, data);
             }
@@ -1332,9 +1334,6 @@ var calc = require('../utils/calc.js'),
 Rubix.prototype = {
 
     Time: {
-        
-        defaultVal: 'to',
-    
         /*
             Calc progress
             
@@ -1384,9 +1383,6 @@ Rubix.prototype = {
     },
     
     Input: {
-        
-        defaultVal: 'current',
-        
         /*
             Get input key
         */
@@ -1492,9 +1488,6 @@ Rubix.prototype = {
     },
     
     Run: {
-        
-        defaultVal: 'velocity',
-    
         /*
             Calc new velocity
             
@@ -1524,8 +1517,20 @@ Rubix.prototype = {
             
             @return [boolean]: False for now - TODO create better default
         */
-        hasEnded: function (action) {
-            return false;
+        hasEnded: function (action, hasChanged) {
+            var hasEnded = false;
+            
+            if (hasChanged) {
+                action.inactiveFrames = 0;
+            } else {
+                action.inactiveFrames++;
+                
+                if (action.inactiveFrames > 2) {
+                    hasEnded = true;
+                }
+            }
+            
+            return hasEnded;
         },
         
         /*
@@ -1554,12 +1559,6 @@ Rubix.prototype = {
             }
 
             return newValue;
-        }
-    },
-    
-    Progress: {
-        calcProgress: function (action) {
-            return action.progress;
         }
     }
 };

@@ -31,9 +31,6 @@ var calc = require('../utils/calc.js'),
 Rubix.prototype = {
 
     Time: {
-        
-        defaultVal: 'to',
-    
         /*
             Calc progress
             
@@ -83,9 +80,6 @@ Rubix.prototype = {
     },
     
     Input: {
-        
-        defaultVal: 'current',
-        
         /*
             Get input key
         */
@@ -191,9 +185,6 @@ Rubix.prototype = {
     },
     
     Run: {
-        
-        defaultVal: 'velocity',
-    
         /*
             Calc new velocity
             
@@ -223,8 +214,20 @@ Rubix.prototype = {
             
             @return [boolean]: False for now - TODO create better default
         */
-        hasEnded: function (action) {
-            return false;
+        hasEnded: function (action, hasChanged) {
+            var hasEnded = false;
+            
+            if (hasChanged) {
+                action.inactiveFrames = 0;
+            } else {
+                action.inactiveFrames++;
+                
+                if (action.inactiveFrames > 2) {
+                    hasEnded = true;
+                }
+            }
+            
+            return hasEnded;
         },
         
         /*
@@ -253,12 +256,6 @@ Rubix.prototype = {
             }
 
             return newValue;
-        }
-    },
-    
-    Progress: {
-        calcProgress: function (action) {
-            return action.progress;
         }
     }
 };
