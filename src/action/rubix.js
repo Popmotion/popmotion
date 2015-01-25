@@ -22,10 +22,7 @@ var calc = require('../utils/calc.js'),
     Easing = require('../utils/easing.js'),
     KEY = require('../opts/keys.js'),
     simulate = require('./simulate.js'),
-    Rubix = function () {
-        this.Progress.hasEnded = this.Time.hasEnded;
-        this.Progress.easeValue = this.Time.easeValue;
-    },
+    Rubix = function () {},
     rubixController;
 
 Rubix.prototype = {
