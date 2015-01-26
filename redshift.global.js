@@ -1007,7 +1007,7 @@ Action.prototype = {
 };
 
 module.exports = Action;
-},{"../input/pointer.js":14,"../opts/action.js":15,"../opts/keys.js":16,"../opts/value.js":17,"../types/repo.js":21,"../types/value.js":22,"../utils/calc.js":23,"../utils/utils.js":27,"./presets.js":8,"./processor.js":9,"./rubix.js":10,"cycl":1}],8:[function(require,module,exports){
+},{"../input/pointer.js":14,"../opts/action.js":15,"../opts/keys.js":16,"../opts/value.js":17,"../types/repo.js":21,"../types/value.js":22,"../utils/calc.js":23,"../utils/utils.js":26,"./presets.js":8,"./processor.js":9,"./rubix.js":10,"cycl":1}],8:[function(require,module,exports){
 "use strict";
 
 var KEY = require('../opts/keys.js'),
@@ -1171,7 +1171,7 @@ Presets.prototype = {
 };
 
 module.exports = new Presets();
-},{"../opts/keys.js":16,"../utils/utils.js":27}],9:[function(require,module,exports){
+},{"../opts/keys.js":16,"../utils/utils.js":26}],9:[function(require,module,exports){
 /*
     Process actions
 */
@@ -1253,7 +1253,7 @@ Process.prototype = {
         }
         
         // Fire onEnd and deactivate if at end
-        if (rubix.hasEnded(action)) {
+        if (rubix.hasEnded(action, hasChanged)) {
             if (props.onEnd) {
                 props.onEnd.call(props.scope, output, data);
             }
@@ -1298,7 +1298,7 @@ Process.prototype = {
 };
 
 module.exports = new Process();
-},{"../utils/calc.js":23,"../utils/utils.js":27,"./rubix.js":10}],10:[function(require,module,exports){
+},{"../utils/calc.js":23,"../utils/utils.js":26,"./rubix.js":10}],10:[function(require,module,exports){
 /*
     Rubix modules
     ----------------------------------------
@@ -1567,7 +1567,7 @@ Rubix.prototype = {
 rubixController = new Rubix();
 
 module.exports = rubixController;
-},{"../opts/keys.js":16,"../utils/calc.js":23,"../utils/easing.js":24,"../utils/utils.js":27,"./simulate.js":11}],11:[function(require,module,exports){
+},{"../opts/keys.js":16,"../utils/calc.js":23,"../utils/easing.js":24,"../utils/utils.js":26,"./simulate.js":11}],11:[function(require,module,exports){
 "use strict";
 
 var frictionStopLimit = .2,
@@ -1714,7 +1714,7 @@ History.prototype = {
 };
 
 module.exports = History;
-},{"../utils/utils.js":27}],13:[function(require,module,exports){
+},{"../utils/utils.js":26}],13:[function(require,module,exports){
 /*
     Input controller
 */
@@ -1833,7 +1833,7 @@ Input.prototype = {
 };
 
 module.exports = Input;
-},{"../bobs/history.js":12,"../utils/calc.js":23,"../utils/utils.js":27}],14:[function(require,module,exports){
+},{"../bobs/history.js":12,"../utils/calc.js":23,"../utils/utils.js":26}],14:[function(require,module,exports){
 "use strict";
 
 var Input = require('./input.js'),
@@ -1893,7 +1893,7 @@ Pointer.prototype.stop = function () {
 };
 
 module.exports = Pointer;
-},{"../bobs/history.js":12,"../opts/keys.js":16,"../types/point.js":20,"../utils/utils.js":27,"./input.js":13}],15:[function(require,module,exports){
+},{"../bobs/history.js":12,"../opts/keys.js":16,"../types/point.js":20,"../utils/utils.js":26,"./input.js":13}],15:[function(require,module,exports){
 "use strict";
 
 module.exports = {
@@ -2046,8 +2046,6 @@ var Action = require('./action/action.js'),
     easing = require('./utils/easing.js'),
     calc = require('./utils/calc.js'),
     cycl = require('cycl'),
-    jQueryPlugins = require('./utils/jquery.js'),
-    redshift,
     Redshift = function () {};
 
 Redshift.prototype = {
@@ -2111,12 +2109,8 @@ Redshift.prototype = {
     
 };
 
-redshift = new Redshift();
-
-jQueryPlugins.load(redshift);
-
-module.exports = redshift;
-},{"./action/action.js":7,"./action/presets.js":8,"./input/input.js":13,"./utils/calc.js":23,"./utils/easing.js":24,"./utils/jquery.js":26,"cycl":1}],19:[function(require,module,exports){
+module.exports = new Redshift();
+},{"./action/action.js":7,"./action/presets.js":8,"./input/input.js":13,"./utils/calc.js":23,"./utils/easing.js":24,"cycl":1}],19:[function(require,module,exports){
 (function (global){
 /*
     Bezier function generator
@@ -2332,7 +2326,7 @@ Repo.prototype = {
 };
 
 module.exports = Repo;
-},{"../utils/utils.js":27}],22:[function(require,module,exports){
+},{"../utils/utils.js":26}],22:[function(require,module,exports){
 "use strict";
 
 var calc = require('../utils/calc.js'),
@@ -2462,7 +2456,7 @@ var calc = require('../utils/calc.js'),
     };
 
 module.exports = Value;
-},{"../utils/calc.js":23,"../utils/utils.js":27,"./repo.js":21}],23:[function(require,module,exports){
+},{"../utils/calc.js":23,"../utils/utils.js":26,"./repo.js":21}],23:[function(require,module,exports){
 /*
     Calculators
     ----------------------------------------
@@ -2846,7 +2840,7 @@ module.exports = {
         return velocity * (1000 / frameDuration);
     },
 };
-},{"./utils.js":27}],24:[function(require,module,exports){
+},{"./utils.js":26}],24:[function(require,module,exports){
 /*
     Easing functions
     ----------------------------------------
@@ -3104,89 +3098,9 @@ function init() {
 
 module.exports = easingFunction;
 
-},{"../opts/keys.js":16,"../types/bezier.js":19,"./calc.js":23,"./utils.js":27}],25:[function(require,module,exports){
+},{"../opts/keys.js":16,"../types/bezier.js":19,"./calc.js":23,"./utils.js":26}],25:[function(require,module,exports){
 window.redshift = require('../redshift.js');
 },{"../redshift.js":18}],26:[function(require,module,exports){
-/*
-    Redshift jQuery plugin
-    
-    Provides access to .play, .move and .track properties on an jQuery object.
-    Uses that jQuery object to store a unqiue Redshift instance.
-    
-    .redshift() method used for other Redshift functions, ie $('#element').redshift('stop')
-*/
-"use strict";
-
-var loadPlugins = function (redshift) {
-    var KEY = require('../opts/keys.js'),
-        utils = require('../utils/utils.js'),
-
-        /*
-            Get Redshift instance from jQuery object
-            
-            @param [jQuery element]
-        */
-        getInstance = function ($element) {
-            var action = $element.data(KEY.REDSHIFT);
-
-            if (!action) {
-                action = redshift.newAction();
-                action.data.set(KEY.JQUERY_ELEMENT, $element);
-                $element.data(KEY.REDSHIFT, action);
-            }
-            
-            return action;
-        },
-
-        /*
-            Execute Action function
-
-            @param [jQuery element]: jQuery element to check for Redshift instance
-            @param [string]: Action function to call
-            @param [...arguments]
-        */
-        execute = function ($element, action, arg1, arg2, arg3) {
-            $element.each(function () {
-                getInstance($(this))[action](arg1, arg2, arg3);
-            });
-        };
-        
-    $.fn.play = function () {
-        execute(this, 'play', arguments[0], arguments[1]);
-        
-        return this;
-    };
-    
-    $.fn.run = function () {
-        execute(this, 'run', arguments[0], arguments[1]);
-
-        return this;
-    };
-    
-    $.fn.track = function () {
-        execute(this, 'track', arguments[0], arguments[1], arguments[2]);
-
-        return this;
-    };
-    
-    $.fn.redshift = function (action) {
-        if (action) {
-            execute(this, action, arguments[1], arguments[2]);
-            return this;
-        } else {
-            return getInstance($(this));
-        }
-    };
-};
-
-module.exports = {
-    load: function (redshift) {
-        if (window.jQuery) {
-            loadPlugins(redshift);
-        }
-    }
-};
-},{"../opts/keys.js":16,"../utils/utils.js":27}],27:[function(require,module,exports){
 /*
     Utility functions
     ----------------------------------------

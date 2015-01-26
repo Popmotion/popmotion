@@ -6,8 +6,6 @@ var Action = require('./action/action.js'),
     easing = require('./utils/easing.js'),
     calc = require('./utils/calc.js'),
     cycl = require('cycl'),
-    jQueryPlugins = require('./utils/jquery.js'),
-    redshift,
     Redshift = function () {};
 
 Redshift.prototype = {
@@ -71,8 +69,4 @@ Redshift.prototype = {
     
 };
 
-redshift = new Redshift();
-
-jQueryPlugins.load(redshift);
-
-module.exports = redshift;
+module.exports = new Redshift();
