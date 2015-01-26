@@ -896,8 +896,7 @@ Action.prototype = {
         var self = this,
             validDefinition = (defs !== undefined),
             base = {},
-            values = {},
-            jQueryElement = self.data.get(KEY.JQUERY_ELEMENT);
+            values = {};
 
         if (validDefinition) {
             base = presets.createBase(defs, override);
@@ -905,11 +904,6 @@ Action.prototype = {
             if (input !== undefined) {
                 base.input = input;
                 base.inputOrigin = input.get();
-            }
-            
-            // Set scope if jQuery element
-            if (jQueryElement) {
-                base.scope = jQueryElement;
             }
 
             self.props.set(base);
@@ -1969,7 +1963,6 @@ module.exports = {
 "use strict";
 
 module.exports = {
-    JQUERY_ELEMENT: '_jQueryElement',
     REDSHIFT: 'redshift',
     EASING: {
         IN: 'In',
