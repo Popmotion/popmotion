@@ -44,6 +44,9 @@ Action.prototype = {
     // [number]: Time elapsed in ms
     elapsed: 0,
 
+    // [number]: Number of frames action has been inactive
+    inactiveFrames: 0,
+
     /*
         Play the provided actions as animations
         
