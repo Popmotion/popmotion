@@ -5,7 +5,6 @@
 "use strict";
 
 module.exports = {
-    JQUERY_ELEMENT: '_jQueryElement',
     REDSHIFT: 'redshift',
     EASING: {
         IN: 'In',
