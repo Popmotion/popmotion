@@ -535,7 +535,8 @@ module.exports = {
 },{}],6:[function(require,module,exports){
 "use strict";
 
-var Timer = function () {
+var maxElapsed = 30,
+    Timer = function () {
         this.update();
     };
 
@@ -545,8 +546,8 @@ Timer.prototype = {
         return this.current = new Date().getTime();
     },
 
-    getElapsed: function (timestamp) {
-        return this.current - this.prev;
+    getElapsed: function () {
+        return Math.min(this.current - this.prev, maxElapsed);
     }
 };
 
@@ -1325,10 +1326,7 @@ var calc = require('../utils/calc.js'),
     Easing = require('../utils/easing.js'),
     KEY = require('../opts/keys.js'),
     simulate = require('./simulate.js'),
-    Rubix = function () {
-        this.Progress.hasEnded = this.Time.hasEnded;
-        this.Progress.easeValue = this.Time.easeValue;
-    },
+    Rubix = function () {},
     rubixController;
 
 Rubix.prototype = {
@@ -1895,12 +1893,14 @@ module.exports = Pointer;
 },{"../bobs/history.js":12,"../opts/keys.js":16,"../types/point.js":20,"../utils/utils.js":26,"./input.js":13}],15:[function(require,module,exports){
 "use strict";
 
+var rubix = require('../action/rubix.js');
+
 module.exports = {
     // Is this action active
     active: false,
     
     // What to use to process this aciton
-    rubix: undefined,
+    rubix: rubix['Time'],
     
     // Multiply output value by
     amp: 1,
@@ -1961,7 +1961,7 @@ module.exports = {
     // Run this when action changes
     onChange: undefined
 };
-},{}],16:[function(require,module,exports){
+},{"../action/rubix.js":10}],16:[function(require,module,exports){
 /*
     String constants
     ----------------------------------------
