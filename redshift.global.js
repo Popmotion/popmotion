@@ -1360,17 +1360,19 @@ Rubix.prototype = {
             @param [string]: key of value
             @param [Action]
         */
-        easeValue: function (key, value, action) {
-            var progress = action.progress;
+        easeValue: function (key, value, action, frameDuration) {
+            var progress = action.progress,
+                newValue = 0;
 
             if (value.steps) {
                 progress = utils.stepProgress(progress, 1, value.steps);
             }
             
-            // Record velocity
-           // value.velocity =  = calc.xps(calc.difference(value.current, newValue), frameDuration);
-
-            return Easing.withinRange(progress, value.origin, value.to, value.ease);
+            newValue = Easing.withinRange(progress, value.origin, value.to, value.ease);
+            
+            value.velocity = calc.speedPerSecond(calc.difference(value.current, newValue), frameDuration);
+            
+            return newValue;
         }
     },
     
@@ -1472,9 +1474,8 @@ Rubix.prototype = {
                 
             }
             
-            // Record velocity
-            // value.velocity =  = calc.xps(calc.difference(value.current, newValue), frameDuration);
-
+            value.velocity = calc.speedPerSecond(calc.difference(value.current, newValue), frameDuration);
+            console.log(value.velocity);
             return newValue;
         }
     },
@@ -1497,7 +1498,7 @@ Rubix.prototype = {
                 if (values.hasOwnProperty(key)) {
                     value = values[key].get();
                     value.velocity = simulate[value.simulate](value, frameDuration);
-                    progress[key] = calc.frameSpeed(value.velocity, frameDuration);
+                    progress[key] = calc.speedPerFrame(value.velocity, frameDuration);
                 }
             }
             
@@ -1555,15 +1556,13 @@ Rubix.prototype = {
     }
 };
 
-rubixController = new Rubix();
-
-module.exports = rubixController;
+module.exports = new Rubix();;
 },{"../opts/keys.js":16,"../utils/calc.js":23,"../utils/easing.js":24,"../utils/utils.js":26,"./simulate.js":11}],11:[function(require,module,exports){
 "use strict";
 
 var frictionStopLimit = .2,
     calc = require('../utils/calc.js'),
-    frameSpeed = calc.frameSpeed,
+    speedPerFrame = calc.speedPerFrame,
     Simulate = function () {},
     simulate;
 
@@ -1577,7 +1576,7 @@ Simulate.prototype = {
         Applies any set deceleration and acceleration to existing velocity
     */
     velocity: function (value, duration) {
-        return value.velocity - frameSpeed(value.deceleration, duration) + frameSpeed(value.acceleration, duration);
+        return value.velocity - speedPerFrame(value.deceleration, duration) + speedPerFrame(value.acceleration, duration);
     },
 
     /*
@@ -1589,7 +1588,7 @@ Simulate.prototype = {
         @returns [number]: New velocity
     */
     gravity: function (value, duration) {
-        return value.velocity + frameSpeed(value.gravity, duration);
+        return value.velocity + speedPerFrame(value.gravity, duration);
     },
     
     /*
@@ -1599,8 +1598,8 @@ Simulate.prototype = {
         @returns [number]: New velocity
     */
     friction: function (value, duration) {
-        var newVelocity = frameSpeed(value.velocity, duration) * (1 - value.friction);
-        return (newVelocity < frictionStopLimit && newVelocity > -frictionStopLimit) ? 0 : calc.xps(newVelocity, duration);
+        var newVelocity = speedPerFrame(value.velocity, duration) * (1 - value.friction);
+        return (newVelocity < frictionStopLimit && newVelocity > -frictionStopLimit) ? 0 : calc.speedPerSecond(newVelocity, duration);
     },
     
     /*
@@ -1611,7 +1610,7 @@ Simulate.prototype = {
     */
     spring: function (value, duration) {
         var distance = value.to - value.current,
-            springDistance = distance * frameSpeed(value.spring, duration);
+            springDistance = distance * speedPerFrame(value.spring, duration);
             
         value.velocity += springDistance;
             
@@ -2599,16 +2598,6 @@ module.exports = {
             
         return this.hypotenuse(point.x, point.y);
     },
-
-    /*
-        Convert x per second to per frame velocity based on fps
-        
-        @param [number]: Unit per second
-        @param [number]: Frame duration in ms
-    */
-    frameSpeed: function (xps, frameDuration) {
-        return (utils.isNum(xps)) ? xps / (1000 / frameDuration) : 0;
-    },
         
     /*
         Hypotenuse
@@ -2769,6 +2758,26 @@ module.exports = {
     restricted: function (value, min, max) {
         return Math.min(Math.max(value, min), max);
     },
+
+    /*
+        Convert x per second to per frame velocity based on fps
+        
+        @param [number]: Unit per second
+        @param [number]: Frame duration in ms
+    */
+    speedPerFrame: function (xps, frameDuration) {
+        return (utils.isNum(xps)) ? xps / (1000 / frameDuration) : 0;
+    },
+
+    /*
+        Convert velocity into velicity per second
+        
+        @param [number]: Unit per frame
+        @param [number]: Frame duration in ms
+    */
+    speedPerSecond: function (velocity, frameDuration) {
+        return velocity * (1000 / frameDuration);
+    },
     
 
     /*
@@ -2820,17 +2829,7 @@ module.exports = {
         var easedProgress = easing(progress);
         
         return this.value(easedProgress, from, to);
-    },
-
-    /*
-        Convert velocity into velicity per second
-        
-        @param [number]: Unit per frame
-        @param [number]: Frame duration in ms
-    */
-    xps: function (velocity, frameDuration) {
-        return velocity * (1000 / frameDuration);
-    },
+    }
 };
 },{"./utils.js":26}],24:[function(require,module,exports){
 /*
