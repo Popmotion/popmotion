@@ -70,7 +70,7 @@ Rubix.prototype = {
             }
             
             // Record velocity
-           // value.velocity =  = calc.xps(calc.difference(value.current, newValue), frameDuration);
+           // value.velocity =  = calc.speedPerSecond(calc.difference(value.current, newValue), frameDuration);
 
             return Easing.withinRange(progress, value.origin, value.to, value.ease);
         }
@@ -175,7 +175,7 @@ Rubix.prototype = {
             }
             
             // Record velocity
-            // value.velocity =  = calc.xps(calc.difference(value.current, newValue), frameDuration);
+            // value.velocity =  = calc.speedPerSecond(calc.difference(value.current, newValue), frameDuration);
 
             return newValue;
         }
@@ -199,7 +199,7 @@ Rubix.prototype = {
                 if (values.hasOwnProperty(key)) {
                     value = values[key].get();
                     value.velocity = simulate[value.simulate](value, frameDuration);
-                    progress[key] = calc.frameSpeed(value.velocity, frameDuration);
+                    progress[key] = calc.speedPerFrame(value.velocity, frameDuration);
                 }
             }
             

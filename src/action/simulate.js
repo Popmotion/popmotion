@@ -2,7 +2,7 @@
 
 var frictionStopLimit = .2,
     calc = require('../utils/calc.js'),
-    frameSpeed = calc.frameSpeed,
+    speedPerFrame = calc.speedPerFrame,
     Simulate = function () {},
     simulate;
 
@@ -16,7 +16,7 @@ Simulate.prototype = {
         Applies any set deceleration and acceleration to existing velocity
     */
     velocity: function (value, duration) {
-        return value.velocity - frameSpeed(value.deceleration, duration) + frameSpeed(value.acceleration, duration);
+        return value.velocity - speedPerFrame(value.deceleration, duration) + speedPerFrame(value.acceleration, duration);
     },
 
     /*
@@ -28,7 +28,7 @@ Simulate.prototype = {
         @returns [number]: New velocity
     */
     gravity: function (value, duration) {
-        return value.velocity + frameSpeed(value.gravity, duration);
+        return value.velocity + speedPerFrame(value.gravity, duration);
     },
     
     /*
@@ -38,8 +38,8 @@ Simulate.prototype = {
         @returns [number]: New velocity
     */
     friction: function (value, duration) {
-        var newVelocity = frameSpeed(value.velocity, duration) * (1 - value.friction);
-        return (newVelocity < frictionStopLimit && newVelocity > -frictionStopLimit) ? 0 : calc.xps(newVelocity, duration);
+        var newVelocity = speedPerFrame(value.velocity, duration) * (1 - value.friction);
+        return (newVelocity < frictionStopLimit && newVelocity > -frictionStopLimit) ? 0 : calc.speedPerSecond(newVelocity, duration);
     },
     
     /*
@@ -50,7 +50,7 @@ Simulate.prototype = {
     */
     spring: function (value, duration) {
         var distance = value.to - value.current,
-            springDistance = distance * frameSpeed(value.spring, duration);
+            springDistance = distance * speedPerFrame(value.spring, duration);
             
         value.velocity += springDistance;
             
