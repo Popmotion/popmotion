@@ -714,10 +714,15 @@ Action.prototype = {
         Stop current Action process
     */
     stop: function () {
-	    var self = this;
+	    var self = this,
+	        input = this.getProp('input');
 
         self.isActive(false);
         self.process.stop();
+
+        if (input && input.stop) {
+            input.stop();
+        }
 
         return self;
     },
@@ -1521,7 +1526,7 @@ Rubix.prototype = {
             } else {
                 action.inactiveFrames++;
                 
-                if (action.inactiveFrames > 2) {
+                if (action.inactiveFrames > 30) {
                     hasEnded = true;
                 }
             }
@@ -1877,7 +1882,6 @@ Pointer.prototype.unbindEvents = function () {
 Pointer.prototype.onMove = function (e) {
     e = utils.getActualEvent(e);
     e.preventDefault();
-
     currentPointer.update(new Point(utils.convertEventIntoPoint(e, currentPointer.isTouch)));
 };
 
