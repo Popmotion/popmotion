@@ -220,7 +220,7 @@ Rubix.prototype = {
             } else {
                 action.inactiveFrames++;
                 
-                if (action.inactiveFrames > 2) {
+                if (action.inactiveFrames > 30) {
                     hasEnded = true;
                 }
             }
