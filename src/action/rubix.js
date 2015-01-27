@@ -62,17 +62,19 @@ Rubix.prototype = {
             @param [string]: key of value
             @param [Action]
         */
-        easeValue: function (key, value, action) {
-            var progress = action.progress;
+        easeValue: function (key, value, action, frameDuration) {
+            var progress = action.progress,
+                newValue = 0;
 
             if (value.steps) {
                 progress = utils.stepProgress(progress, 1, value.steps);
             }
             
-            // Record velocity
-           // value.velocity =  = calc.speedPerSecond(calc.difference(value.current, newValue), frameDuration);
-
-            return Easing.withinRange(progress, value.origin, value.to, value.ease);
+            newValue = Easing.withinRange(progress, value.origin, value.to, value.ease);
+            
+            value.velocity = calc.speedPerSecond(calc.difference(value.current, newValue), frameDuration);
+            
+            return newValue;
         }
     },
     
@@ -174,9 +176,8 @@ Rubix.prototype = {
                 
             }
             
-            // Record velocity
-            // value.velocity =  = calc.speedPerSecond(calc.difference(value.current, newValue), frameDuration);
-
+            value.velocity = calc.speedPerSecond(calc.difference(value.current, newValue), frameDuration);
+            console.log(value.velocity);
             return newValue;
         }
     },
@@ -257,6 +258,4 @@ Rubix.prototype = {
     }
 };
 
-rubixController = new Rubix();
-
-module.exports = rubixController;
+module.exports = new Rubix();;
