@@ -345,22 +345,25 @@ Action.prototype = {
 
         if (validDefinition) {
             base = presets.createBase(defs, override);
+        }
             
-            if (input !== undefined) {
-                base.input = input;
-                base.inputOrigin = input.get();
-            }
+        if (input !== undefined) {
+            base.input = input;
+            base.inputOrigin = input.get();
+        }
+        
+        self.props.set(base);
+        
+        if (base.values) {
+        	self.setValues(base.values, self.props.get());
+        }
+        
+        values = self.values.get();
 
-            self.props.set(base);
-            self.setValues(base.values, self.props.get());
-
-            values = self.values.get();
-
-            // Create origins
-            for (var key in values) {
-                if (values.hasOwnProperty(key)) {
-                    values[key].set('origin', values[key].get('current'));
-                }
+        // Create origins
+        for (var key in values) {
+            if (values.hasOwnProperty(key)) {
+                values[key].set('origin', values[key].get('current'));
             }
         }
         

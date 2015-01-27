@@ -12,8 +12,8 @@ var Input = require('./input.js'),
     */
     Pointer = function (e) {
         var event = utils.getActualEvent(e), // In case of jQuery event
-            startPoint = utils.convertEventIntoPoint(event),
-            isTouch = utils.isTouchEvent(event);
+            isTouch = utils.isTouchEvent(event),
+            startPoint = utils.convertEventIntoPoint(event, isTouch);
         
         this.update(new Point(startPoint));
         this.isTouch = isTouch;

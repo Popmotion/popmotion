@@ -177,7 +177,7 @@ Rubix.prototype = {
             }
             
             value.velocity = calc.speedPerSecond(calc.difference(value.current, newValue), frameDuration);
-            console.log(value.velocity);
+
             return newValue;
         }
     },

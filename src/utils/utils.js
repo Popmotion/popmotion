@@ -23,7 +23,7 @@ module.exports = {
         @return [object]: x/y coordinates of event
     */
     convertEventIntoPoint: function (event, isTouchEvent) {
-        return {
+	    return {
             x: isTouchEvent ? event.changedTouches[0].clientX : event.screenX,
             y: isTouchEvent ? event.changedTouches[0].clientY : event.screenY
         };
