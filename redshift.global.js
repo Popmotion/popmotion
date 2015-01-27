@@ -900,22 +900,25 @@ Action.prototype = {
 
         if (validDefinition) {
             base = presets.createBase(defs, override);
+        }
             
-            if (input !== undefined) {
-                base.input = input;
-                base.inputOrigin = input.get();
-            }
+        if (input !== undefined) {
+            base.input = input;
+            base.inputOrigin = input.get();
+        }
+        
+        self.props.set(base);
+        
+        if (base.values) {
+        	self.setValues(base.values, self.props.get());
+        }
+        
+        values = self.values.get();
 
-            self.props.set(base);
-            self.setValues(base.values, self.props.get());
-
-            values = self.values.get();
-
-            // Create origins
-            for (var key in values) {
-                if (values.hasOwnProperty(key)) {
-                    values[key].set('origin', values[key].get('current'));
-                }
+        // Create origins
+        for (var key in values) {
+            if (values.hasOwnProperty(key)) {
+                values[key].set('origin', values[key].get('current'));
             }
         }
         
@@ -1475,7 +1478,7 @@ Rubix.prototype = {
             }
             
             value.velocity = calc.speedPerSecond(calc.difference(value.current, newValue), frameDuration);
-            console.log(value.velocity);
+
             return newValue;
         }
     },
@@ -1838,8 +1841,8 @@ var Input = require('./input.js'),
     */
     Pointer = function (e) {
         var event = utils.getActualEvent(e), // In case of jQuery event
-            startPoint = utils.convertEventIntoPoint(event),
-            isTouch = utils.isTouchEvent(event);
+            isTouch = utils.isTouchEvent(event),
+            startPoint = utils.convertEventIntoPoint(event, isTouch);
         
         this.update(new Point(startPoint));
         this.isTouch = isTouch;
@@ -3117,7 +3120,7 @@ module.exports = {
         @return [object]: x/y coordinates of event
     */
     convertEventIntoPoint: function (event, isTouchEvent) {
-        return {
+	    return {
             x: isTouchEvent ? event.changedTouches[0].clientX : event.screenX,
             y: isTouchEvent ? event.changedTouches[0].clientY : event.screenY
         };
