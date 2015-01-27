@@ -159,10 +159,15 @@ Action.prototype = {
         Stop current Action process
     */
     stop: function () {
-	    var self = this;
+	    var self = this,
+	        input = this.getProp('input');
 
         self.isActive(false);
         self.process.stop();
+
+        if (input && input.stop) {
+            input.stop();
+        }
 
         return self;
     },
