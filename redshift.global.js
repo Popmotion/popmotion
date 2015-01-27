@@ -2344,7 +2344,7 @@ var calc = require('../utils/calc.js'),
         
         // Or if this is a relative assignment, calculate new contents
         } else if (utils.isRelativeValue(val)) {
-            resolvedVal = calc.relativeValue(val, current);
+            resolvedVal = calc.relativeValue(current, val);
         }
 
         return resolvedVal;
@@ -2719,11 +2719,11 @@ module.exports = {
         Takes the operator and value from a string, ie "+=5", and applies
         to the current value to resolve a new target.
         
-        @param [string]: Relative value
         @param [number]: Current value
+        @param [string]: Relative value
         @return [number]: New value
     */
-    relativeValue: function (rel, current) {
+    relativeValue: function (current, rel) {
         var newValue = current,
             equation = rel.split('='),
             operator = equation[0],

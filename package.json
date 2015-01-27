@@ -1,6 +1,6 @@
 {
   "name": "redshift",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "A JavaScript animation and interaction framework.",
   "author": "Matt Perry <admin@redshiftjs.com>",
   "homepage": "http://redshiftjs.com",

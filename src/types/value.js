@@ -21,7 +21,7 @@ var calc = require('../utils/calc.js'),
         
         // Or if this is a relative assignment, calculate new contents
         } else if (utils.isRelativeValue(val)) {
-            resolvedVal = calc.relativeValue(val, current);
+            resolvedVal = calc.relativeValue(current, val);
         }
 
         return resolvedVal;
