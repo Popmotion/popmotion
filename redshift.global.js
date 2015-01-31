@@ -1926,6 +1926,8 @@ module.exports = {
     // 
     dilate: 1,
     
+    playlist: [],
+    
     playhead: 0,
     
     // The object we're checking
