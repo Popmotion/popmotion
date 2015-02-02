@@ -62,7 +62,13 @@ Action.prototype = {
     */
     play: function (defs, override) {
         this.set(defs, override);
-        this.props.set('playhead', 0);
+
+        this.props.set({
+            playhead: 0,
+            loopCount: 0,
+            yoyoCount: 0
+        });
+
         return this.start(KEY.RUBIX.TIME);
     },
 
