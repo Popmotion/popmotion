@@ -617,6 +617,7 @@ Action.prototype = {
     */
     play: function (defs, override) {
         this.set(defs, override);
+        this.props.set('playhead', 0);
         return this.start(KEY.RUBIX.TIME);
     },
 
@@ -957,7 +958,7 @@ Action.prototype = {
 
         // Or create new if it doesn't
         } else {
-            newVal = new Value(defaultValue);
+            newVal = new Value(defaultValue, this);
             newVal.set(value, inherit);
 
             this.values.set(key, newVal);
@@ -2341,12 +2342,12 @@ var calc = require('../utils/calc.js'),
             - String relative equation
             - Or actual value
     */
-    resolve = function (val, current) {
+    resolve = function (val, current, action) {
         var resolvedVal = val;
         
         // If this is a function, execute
         if (utils.isFunc(val)) {
-            resolvedVal = val(current);
+            resolvedVal = val.call(action, current);
         
         // Or if this is a relative assignment, calculate new contents
         } else if (utils.isRelativeValue(val)) {
@@ -2356,17 +2357,17 @@ var calc = require('../utils/calc.js'),
         return resolvedVal;
     },
     
-    loopOver = function (newData, inherit, value) {
+    loopOver = function (newData, inherit, value, action) {
         var data = {};
         
         for (var key in value.store) {
             // If Action has property but new data doesn't
             if (inherit && inherit.hasOwnProperty(key) && !newData.hasOwnProperty(key)) {
-                data[key] = resolve(inherit[key], value.get(key));
+                data[key] = resolve(inherit[key], value.store[key], action);
 
             // Or if new data does
             } else if (newData.hasOwnProperty(key)) {
-                data[key] = resolve(newData[key], value.get(key));
+                data[key] = resolve(newData[key], value.store[key], action);
             }
         }
         
@@ -2379,10 +2380,11 @@ var calc = require('../utils/calc.js'),
     Value = function () {
         var repo = new Repo(),
             setter = repo.set,
-            firstSet = true;
+            firstSet = true,
+            action = arguments[1];
 
         // Apply defaults
-        setter.apply(repo, arguments);
+        setter.call(repo, arguments[0]);
 
         /*
             Set a value
@@ -2403,23 +2405,26 @@ var calc = require('../utils/calc.js'),
 
             // If we have an object, resolve every item first
             if (utils.isObj(arg1)) {
-                data = loopOver(arg1, arg2, this);
+                data = loopOver(arg1, arg2, this, action);
 
                 // Handle start property
-                if (firstSet && arg1.hasOwnProperty('start')) {
-                    setter.apply(this, ['current', resolve(arg1.start)]);
+                if (firstSet) {
                     firstSet = false;
+                    
+                    if (arg1.hasOwnProperty('start')){
+                        setter.apply(this, ['current', resolve(arg1.start, this.get('current'), action)]);
+                    }
                 }
 
             } else {
 
                 // If this is a specific setter, ie .set('key', val)
                 if (utils.isString(arg1) && !utils.isRelativeValue(arg1)) {
-                    data[arg1] = resolve(arg2, this.get(arg1));
+                    data[arg1] = resolve(arg2, this.get('current'), action);
                     
                 // Or this is a var to be resolved, assign it to current
                 } else {
-                    data.current = resolve(arg1, this.get('current'));
+                    data.current = resolve(arg1, this.get('current'), action);
                 }
             }
 
