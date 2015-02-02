@@ -402,7 +402,7 @@ Action.prototype = {
 
         // Or create new if it doesn't
         } else {
-            newVal = new Value(defaultValue);
+            newVal = new Value(defaultValue, this);
             newVal.set(value, inherit);
 
             this.values.set(key, newVal);
