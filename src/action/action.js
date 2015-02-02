@@ -62,6 +62,7 @@ Action.prototype = {
     */
     play: function (defs, override) {
         this.set(defs, override);
+        this.props.set('playhead', 0);
         return this.start(KEY.RUBIX.TIME);
     },
 
@@ -402,7 +403,7 @@ Action.prototype = {
 
         // Or create new if it doesn't
         } else {
-            newVal = new Value(defaultValue);
+            newVal = new Value(defaultValue, this);
             newVal.set(value, inherit);
 
             this.values.set(key, newVal);
