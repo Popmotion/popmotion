@@ -27,6 +27,7 @@ module.exports = {
     duration: 400,
     delay: 0,
     ease: 'easeInOut',
+    stagger: 0,
 
     round: false,
     steps: 0,

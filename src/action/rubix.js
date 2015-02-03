@@ -38,9 +38,20 @@ Rubix.prototype = {
             @return [number]: 0 to 1 value representing how much time has passed
         */
         calcProgress: function (action, props, values, frameStart) {
-            action.elapsed += calc.difference(action.framestamp, frameStart) * props.dilate;
-
-            return calc.restricted(calc.progress(action.elapsed, props.duration + props.delay), 0, 1);
+            var isComplete = true,
+                progress = {};
+            
+            action.elapsed += (frameStart - action.framestamp) * props.dilate;
+            
+            for (var key in values) {
+                progress[key] = calc.restricted(calc.progress(action.elapsed, props.duration + props.delay) - values[key].store.stagger, 0, 1);
+                
+                isComplete = (progress[key] !== 1) ? false : isComplete;
+            }
+            
+            progress.complete = isComplete;
+            
+            return progress;
         },
         
         /*
@@ -53,7 +64,7 @@ Rubix.prototype = {
             @return [boolean]: has action ended
         */
         hasEnded: function (action) {
-            return action.progress >= 1 ? true : false;
+            return action.progress.complete;
         },
         
         /*
@@ -63,7 +74,7 @@ Rubix.prototype = {
             @param [Action]
         */
         easeValue: function (key, value, action, frameDuration) {
-            var progress = action.progress,
+            var progress = action.progress[key],
                 newValue = 0;
 
             if (value.steps) {
