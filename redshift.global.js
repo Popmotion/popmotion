@@ -2360,7 +2360,7 @@ var calc = require('../utils/calc.js'),
         
         // If this is a function, execute
         if (utils.isFunc(val)) {
-            resolvedVal = val.call(action, current);
+            resolvedVal = val.call(action.props.store.scope, current);
         
         // Or if this is a relative assignment, calculate new contents
         } else if (utils.isRelativeValue(val)) {
