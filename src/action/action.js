@@ -281,6 +281,8 @@ Action.prototype = {
 
         if (!hasNext && !self.playNext()) {
             self.stop();
+        } else {
+            self.isActive(true);
         }
         
         return self;
