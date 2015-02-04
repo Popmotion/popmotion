@@ -39,12 +39,14 @@ Rubix.prototype = {
         */
         calcProgress: function (action, props, values, frameStart) {
             var isComplete = true,
-                progress = {};
+                progress = {},
+                value = {};
             
             action.elapsed += (frameStart - action.framestamp) * props.dilate;
             
             for (var key in values) {
-                progress[key] = calc.restricted(calc.progress(action.elapsed, props.duration + props.delay) - values[key].store.stagger, 0, 1);
+                value = values[key].store;
+                progress[key] = calc.restricted(calc.progress(action.elapsed, value.duration + value.delay) - value.stagger, 0, 1);
                 
                 isComplete = (progress[key] !== 1) ? false : isComplete;
             }
