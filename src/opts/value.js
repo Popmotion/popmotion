@@ -6,7 +6,7 @@ module.exports = {
     start: 0,
 
     // Current target
-    to: 1,
+    to: undefined,
 
     // Maximum range for value
     min: undefined,
