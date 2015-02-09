@@ -1366,7 +1366,7 @@ Rubix.prototype = {
             
             for (var key in values) {
                 value = values[key].store;
-                progress[key] = calc.restricted(calc.progress(action.elapsed, value.duration + value.delay) - value.stagger, 0, 1);
+                progress[key] = calc.restricted(calc.progress(action.elapsed - value.delay, value.duration) - value.stagger, 0, 1);
                 
                 isComplete = (progress[key] !== 1) ? false : isComplete;
             }
@@ -1397,13 +1397,15 @@ Rubix.prototype = {
         */
         easeValue: function (key, value, action, frameDuration) {
             var progress = action.progress[key],
-                newValue = 0;
-
-            if (value.steps) {
-                progress = utils.stepProgress(progress, 1, value.steps);
+                newValue = value.current;
+                
+            if (value.to !== undefined) {
+                if (value.steps) {
+                    progress = utils.stepProgress(progress, 1, value.steps);
+                }
+                
+                newValue = Easing.withinRange(progress, value.origin, value.to, value.ease);
             }
-            
-            newValue = Easing.withinRange(progress, value.origin, value.to, value.ease);
             
             value.velocity = calc.speedPerSecond(calc.difference(value.current, newValue), frameDuration);
             
@@ -2035,7 +2037,7 @@ module.exports = {
     start: 0,
 
     // Current target
-    to: 1,
+    to: undefined,
 
     // Maximum range for value
     min: undefined,
