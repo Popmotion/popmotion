@@ -1263,7 +1263,7 @@ Process.prototype = {
             for (key in values) {
                 value = values[key].store;
                 if (value.link && values[value.link]) {
-                    output[key] = this.resolveMaps(values[value.link].get('current'), value.mapLink, value.mapTo);
+                    output[key] = this.resolveMaps(values[value.link].store.current, value.mapLink, value.mapTo);
                 }
             }
         }
@@ -1400,7 +1400,7 @@ Rubix.prototype = {
             
             for (var key in values) {
                 value = values[key].store;
-                progress[key] = calc.restricted(calc.progress(action.elapsed, value.duration + value.delay) - value.stagger, 0, 1);
+                progress[key] = calc.restricted(calc.progress(action.elapsed - value.delay, value.duration) - value.stagger, 0, 1);
                 
                 isComplete = (progress[key] !== 1) ? false : isComplete;
             }
@@ -2500,9 +2500,11 @@ var calc = require('../utils/calc.js'),
             Reverse current and from
         */
         repo.reverse = function () {
+            var currentTo = this.get('to');
+
             this.set({
                 to: this.get('origin'),
-                origin: this.get('to')
+                origin: (currentTo !== undefined) ? currentTo : this.get('current')
             });
         };
         
