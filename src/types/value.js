@@ -125,7 +125,7 @@ var calc = require('../utils/calc.js'),
 
             this.set({
                 to: this.get('origin'),
-                origin: utils.isNum(currentTo) ? currentTo : this.get('current')
+                origin: (currentTo !== undefined) ? currentTo : this.get('current')
             });
         };
         
