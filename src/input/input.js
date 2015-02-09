@@ -5,7 +5,7 @@
 
 var calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
-    History = require('../bobs/history.js'),
+    History = require('../utils/history.js'),
 
     /*
         Input constructor

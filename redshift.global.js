@@ -1021,7 +1021,7 @@ Action.prototype = {
 };
 
 module.exports = Action;
-},{"../input/pointer.js":14,"../opts/action.js":15,"../opts/keys.js":16,"../opts/value.js":17,"../types/repo.js":21,"../types/value.js":22,"../utils/calc.js":23,"../utils/utils.js":26,"./presets.js":8,"./processor.js":9,"./rubix.js":10,"cycl":1}],8:[function(require,module,exports){
+},{"../input/pointer.js":13,"../opts/action.js":14,"../opts/keys.js":15,"../opts/value.js":16,"../types/repo.js":20,"../types/value.js":21,"../utils/calc.js":22,"../utils/utils.js":26,"./presets.js":8,"./processor.js":9,"./rubix.js":10,"cycl":1}],8:[function(require,module,exports){
 "use strict";
 
 var KEY = require('../opts/keys.js'),
@@ -1185,7 +1185,7 @@ Presets.prototype = {
 };
 
 module.exports = new Presets();
-},{"../opts/keys.js":16,"../utils/utils.js":26}],9:[function(require,module,exports){
+},{"../opts/keys.js":15,"../utils/utils.js":26}],9:[function(require,module,exports){
 /*
     Process actions
 */
@@ -1213,6 +1213,7 @@ Process.prototype = {
             values = action.values.store,
             value,
             rubix = props.rubix,
+            hasLinked = false,
             hasChanged = false;
 
         // Fire onStart if firstFrame
@@ -1237,21 +1238,35 @@ Process.prototype = {
             if (values.hasOwnProperty(key)) {
                 value = values[key].store;
 
-                // Ease value
-                output[key] = rubix.easeValue(key, value, action, frameDuration);
-
-                // Round
-                if (value.round) {
-                    output[key] = Math.round(output[key]);
-                }
-
-                // Check if has changed
-                if (value.current != output[key]) {
-                    hasChanged = true;
-                    value.current = output[key];
+                // Calculate new value if not currently linked
+                if (!value.link) {
+                    output[key] = rubix.easeValue(key, value, action, frameDuration);
+    
+                    // Round
+                    if (value.round) {
+                        output[key] = Math.round(output[key]);
+                    }
+    
+                    // Check if has changed
+                    if (value.current != output[key]) {
+                        hasChanged = true;
+                        value.current = output[key];
+                    }
+                } else {
+                    hasLinked = true;
                 }
             }
         } // end value calculations
+        
+        // If we have values that are linking in to another
+        if (hasLinked) {
+            for (key in values) {
+                value = values[key].store;
+                if (value.link && values[value.link]) {
+                    output[key] = this.resolveMaps(values[value.link].get('current'), value.mapLink, value.mapTo);
+                }
+            }
+        }
 
         // Calculate new x and y if angle and distance present
         output = this.angleAndDistance(values, output);
@@ -1282,6 +1297,25 @@ Process.prototype = {
         
         // Update Action framestamp
         action.framestamp = framestamp;
+    },
+    
+    /*
+        Take two maps, source and target, and figure out new value
+        
+        @param [number]: Source value
+        @param [array]: Map of source values
+        @param [array]: Map of target values
+        @return [number]: 
+    */
+    resolveMaps: function (sourceValue, sourceMap, targetMap) {
+        var resolvedValue = 0,
+            mapLength = sourceMap.length;
+        
+        for (var i = 1; i < mapLength; i++) {
+            if (sourceValue <= sourceMap[i] || i === mapLength - 1) {
+                return calc.restricted(sourceValue, sourceMap[i - 1], sourceMap[i - 1]);
+            }
+        }
     },
     
     /*
@@ -1317,7 +1351,7 @@ Process.prototype = {
 };
 
 module.exports = new Process();
-},{"../utils/calc.js":23,"../utils/utils.js":26,"./rubix.js":10}],10:[function(require,module,exports){
+},{"../utils/calc.js":22,"../utils/utils.js":26,"./rubix.js":10}],10:[function(require,module,exports){
 /*
     Rubix modules
     ----------------------------------------
@@ -1397,13 +1431,15 @@ Rubix.prototype = {
         */
         easeValue: function (key, value, action, frameDuration) {
             var progress = action.progress[key],
-                newValue = 0;
-
-            if (value.steps) {
-                progress = utils.stepProgress(progress, 1, value.steps);
+                newValue = value.current;
+                
+            if (value.to !== undefined) {
+                if (value.steps) {
+                    progress = utils.stepProgress(progress, 1, value.steps);
+                }
+                
+                newValue = Easing.withinRange(progress, value.origin, value.to, value.ease);
             }
-            
-            newValue = Easing.withinRange(progress, value.origin, value.to, value.ease);
             
             value.velocity = calc.speedPerSecond(calc.difference(value.current, newValue), frameDuration);
             
@@ -1592,7 +1628,7 @@ Rubix.prototype = {
 };
 
 module.exports = new Rubix();;
-},{"../opts/keys.js":16,"../utils/calc.js":23,"../utils/easing.js":24,"../utils/utils.js":26,"./simulate.js":11}],11:[function(require,module,exports){
+},{"../opts/keys.js":15,"../utils/calc.js":22,"../utils/easing.js":23,"../utils/utils.js":26,"./simulate.js":11}],11:[function(require,module,exports){
 "use strict";
 
 var frictionStopLimit = .2,
@@ -1668,78 +1704,7 @@ Simulate.prototype = {
 simulate = new Simulate();
 
 module.exports = simulate;
-},{"../utils/calc.js":23}],12:[function(require,module,exports){
-"use strict";
-
-var maxHistorySize = 3,
-    utils = require('../utils/utils.js'),
-    /*
-        History constructor
-        
-        @param [var]: Variable to store in first history slot
-        @param [int] (optional): Maximum size of history
-    */
-    History = function (obj, max) {
-        this.max = max || maxHistorySize;
-        this.entries = [];
-        this.add(obj);
-    };
-    
-History.prototype = {
-    
-    /*
-        Push new var to history
-        
-        Shift out oldest entry if we've reached maximum capacity
-        
-        @param [var]: Variable to push into history.entries
-    */
-    add: function (obj) {
-        var currentSize = this.getSize();
-        
-        this.entries.push(obj);
-        
-        if (currentSize >= this.max) {
-            this.entries.shift();
-        }
-    },
-    
-    /*
-        Get variable at specified index
-
-        @param [int]: Index
-        @return [var]: Var found at specified index
-    */
-    get: function (i) {
-        i = (utils.isNum(i)) ? i : this.getSize() - 1;
-
-        return this.entries[i];
-    },
-    
-    /*
-        Get the second newest history entry
-        
-        @return [var]: Entry found at index size - 2
-    */
-    getPrevious: function () {
-        var index = this.getSize() - 2;
-
-        return this.get(index);
-    },
-    
-    /*
-        Get current history size
-        
-        @return [int]: Current length of entries.length
-    */
-    getSize: function () {
-        return this.entries.length;
-    }
-    
-};
-
-module.exports = History;
-},{"../utils/utils.js":26}],13:[function(require,module,exports){
+},{"../utils/calc.js":22}],12:[function(require,module,exports){
 /*
     Input controller
 */
@@ -1747,7 +1712,7 @@ module.exports = History;
 
 var calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
-    History = require('../bobs/history.js'),
+    History = require('../utils/history.js'),
 
     /*
         Input constructor
@@ -1858,15 +1823,15 @@ Input.prototype = {
 };
 
 module.exports = Input;
-},{"../bobs/history.js":12,"../utils/calc.js":23,"../utils/utils.js":26}],14:[function(require,module,exports){
+},{"../utils/calc.js":22,"../utils/history.js":25,"../utils/utils.js":26}],13:[function(require,module,exports){
 "use strict";
 
 var Input = require('./input.js'),
     Point = require('../types/point.js'),
-    History = require('../bobs/history.js'),
+    History = require('../utils/history.js'),
     KEY = require('../opts/keys.js'),
     utils = require('../utils/utils.js'),
-    currentPointer, // Sort this crap out for multitouch
+    currentPointer, // Sort this out for multitouch
     
     /*
         Pointer constructor
@@ -1917,7 +1882,7 @@ Pointer.prototype.stop = function () {
 };
 
 module.exports = Pointer;
-},{"../bobs/history.js":12,"../opts/keys.js":16,"../types/point.js":20,"../utils/utils.js":26,"./input.js":13}],15:[function(require,module,exports){
+},{"../opts/keys.js":15,"../types/point.js":19,"../utils/history.js":25,"../utils/utils.js":26,"./input.js":12}],14:[function(require,module,exports){
 "use strict";
 
 var rubix = require('../action/rubix.js');
@@ -1990,7 +1955,7 @@ module.exports = {
     // Run this when action changes
     onChange: undefined
 };
-},{"../action/rubix.js":10}],16:[function(require,module,exports){
+},{"../action/rubix.js":10}],15:[function(require,module,exports){
 /*
     String constants
     ----------------------------------------
@@ -2026,46 +1991,103 @@ module.exports = {
         RANGE: 'Range'
     }
 };
-},{}],17:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 "use strict";
 
 module.exports = {
-    // Actual value
+    // [number]: The canonical value
     current: 0,
+    
+    // [number]: The value to start from
     start: 0,
 
-    // Current target
-    to: 1,
+    // [number]: Current target value
+    to: undefined,
 
-    // Maximum range for value
+    // [number]: Maximum permitted value during .track and .run
     min: undefined,
+    
+    // [number]: Minimum permitted value during .track and .run
     max: undefined,
+    
+    // [boolean]: Set to true when both min and max detected
     hasRange: false,
 
-    // Simulation defaults
-    simulate: 'velocity',
-    velocity: 0,
-    deceleration: 0,
-    acceleration: 0,
-    gravity: 30,
-    bounce: 0,
-    friction: 0,
-    spring: 0.03,
-    
-    // Animation defaults
-    duration: 400,
-    delay: 0,
-    ease: 'easeInOut',
-    stagger: 0,
-
+    // [boolean]: Round output if true
     round: false,
+
+
+    /*
+        Link properties
+    */
+
+    // [string]: Name of value to listen to
+    link: undefined,
+    
+    // [array]: Linear range of values (eg [-100, -50, 50, 100]) of linked value to map to .mapTo
+    mapLink: [],
+    
+    // [array]: Non-linear range of values (eg [0, 1, 1, 0]) to map to .mapLink - here the linked value being 75 would result in a value of 0.5
+    mapTo: [],
+
+
+    /*
+        .run() properties
+    */
+
+    // [string]: Simulation to .run
+    simulate: 'velocity',
+    
+    // [number]: Current velocity of value, in units per second
+    velocity: 0,
+    
+    // [number]: Deceleration to apply to value, in units per second
+    deceleration: 0,
+    
+    // [number]: Acceleration to apply to value, in units per second
+    acceleration: 0,
+    
+    // [number]: Gravity acceleration to apply to value, in units per second
+    gravity: 30,
+    
+    // [number]: Factor to multiply velocity by on bounce
+    bounce: 0,
+    
+    // [number]: Friction factor to apply per frame (TODO: Figure out per second factor)
+    friction: 0,
+    
+    // [number]: Spring strength during 'string'
+    spring: 0.03,
+
+
+    /*
+        .play() properties
+    */
+
+    // [number]: Duration of animation in ms
+    duration: 400,
+    
+    // [number]: Duration of delay in ms
+    delay: 0,
+    
+    // [number]: Stagger delay as factor of duration (ie 0.2 with duration of 1000ms = 200ms)
+    stagger: 0,
+    
+    // [string]: Easing to apply
+    ease: 'easeInOut',
+    
+    // [number]: Number of steps to execute animation
     steps: 0,
     
-    // Tracking defaults
-    escapeAmp: 0,
-    link: null // use the progress of this value
+
+    /*
+        .track() properties
+    */
+
+    // [number]: Factor of movement outside of maximum range (ie 0.5 will move half as much as 1)
+    escapeAmp: 0
 };
-},{}],18:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 "use strict";
 
 var Action = require('./action/action.js'),
@@ -2138,7 +2160,7 @@ Redshift.prototype = {
 };
 
 module.exports = new Redshift();
-},{"./action/action.js":7,"./action/presets.js":8,"./input/input.js":13,"./utils/calc.js":23,"./utils/easing.js":24,"cycl":1}],19:[function(require,module,exports){
+},{"./action/action.js":7,"./action/presets.js":8,"./input/input.js":12,"./utils/calc.js":22,"./utils/easing.js":23,"cycl":1}],18:[function(require,module,exports){
 (function (global){
 /*
     Bezier function generator
@@ -2268,7 +2290,7 @@ Bezier.prototype = {
 
 module.exports = Bezier;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],20:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 /*
     Point class
     ----------------------------------------
@@ -2297,7 +2319,7 @@ Point.prototype = {
 };
 
 module.exports = Point;
-},{}],21:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 "use strict";
 
 var utils = require('../utils/utils.js'),
@@ -2354,7 +2376,7 @@ Repo.prototype = {
 };
 
 module.exports = Repo;
-},{"../utils/utils.js":26}],22:[function(require,module,exports){
+},{"../utils/utils.js":26}],21:[function(require,module,exports){
 "use strict";
 
 var calc = require('../utils/calc.js'),
@@ -2488,7 +2510,7 @@ var calc = require('../utils/calc.js'),
     };
 
 module.exports = Value;
-},{"../utils/calc.js":23,"../utils/utils.js":26,"./repo.js":21}],23:[function(require,module,exports){
+},{"../utils/calc.js":22,"../utils/utils.js":26,"./repo.js":20}],22:[function(require,module,exports){
 /*
     Calculators
     ----------------------------------------
@@ -2872,7 +2894,7 @@ module.exports = {
         return this.value(easedProgress, from, to);
     }
 };
-},{"./utils.js":26}],24:[function(require,module,exports){
+},{"./utils.js":26}],23:[function(require,module,exports){
 /*
     Easing functions
     ----------------------------------------
@@ -3130,9 +3152,80 @@ function init() {
 
 module.exports = easingFunction;
 
-},{"../opts/keys.js":16,"../types/bezier.js":19,"./calc.js":23,"./utils.js":26}],25:[function(require,module,exports){
+},{"../opts/keys.js":15,"../types/bezier.js":18,"./calc.js":22,"./utils.js":26}],24:[function(require,module,exports){
 window.redshift = require('../redshift.js');
-},{"../redshift.js":18}],26:[function(require,module,exports){
+},{"../redshift.js":17}],25:[function(require,module,exports){
+"use strict";
+
+var maxHistorySize = 3,
+    utils = require('../utils/utils.js'),
+    /*
+        History constructor
+        
+        @param [var]: Variable to store in first history slot
+        @param [int] (optional): Maximum size of history
+    */
+    History = function (obj, max) {
+        this.max = max || maxHistorySize;
+        this.entries = [];
+        this.add(obj);
+    };
+    
+History.prototype = {
+    
+    /*
+        Push new var to history
+        
+        Shift out oldest entry if we've reached maximum capacity
+        
+        @param [var]: Variable to push into history.entries
+    */
+    add: function (obj) {
+        var currentSize = this.getSize();
+        
+        this.entries.push(obj);
+        
+        if (currentSize >= this.max) {
+            this.entries.shift();
+        }
+    },
+    
+    /*
+        Get variable at specified index
+
+        @param [int]: Index
+        @return [var]: Var found at specified index
+    */
+    get: function (i) {
+        i = (utils.isNum(i)) ? i : this.getSize() - 1;
+
+        return this.entries[i];
+    },
+    
+    /*
+        Get the second newest history entry
+        
+        @return [var]: Entry found at index size - 2
+    */
+    getPrevious: function () {
+        var index = this.getSize() - 2;
+
+        return this.get(index);
+    },
+    
+    /*
+        Get current history size
+        
+        @return [int]: Current length of entries.length
+    */
+    getSize: function () {
+        return this.entries.length;
+    }
+    
+};
+
+module.exports = History;
+},{"../utils/utils.js":26}],26:[function(require,module,exports){
 /*
     Utility functions
     ----------------------------------------
@@ -3365,4 +3458,4 @@ module.exports = {
     }
     
 };
-},{"../opts/keys.js":16}]},{},[25]);
+},{"../opts/keys.js":15}]},{},[24]);
