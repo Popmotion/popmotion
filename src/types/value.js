@@ -121,9 +121,11 @@ var calc = require('../utils/calc.js'),
             Reverse current and from
         */
         repo.reverse = function () {
+            var currentTo = this.get('to');
+
             this.set({
                 to: this.get('origin'),
-                origin: this.get('to')
+                origin: (currentTo !== undefined) ? currentTo : this.get('current')
             });
         };
         
