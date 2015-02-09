@@ -77,13 +77,15 @@ Rubix.prototype = {
         */
         easeValue: function (key, value, action, frameDuration) {
             var progress = action.progress[key],
-                newValue = 0;
-
-            if (value.steps) {
-                progress = utils.stepProgress(progress, 1, value.steps);
+                newValue = value.current;
+                
+            if (value.to !== undefined) {
+                if (value.steps) {
+                    progress = utils.stepProgress(progress, 1, value.steps);
+                }
+                
+                newValue = Easing.withinRange(progress, value.origin, value.to, value.ease);
             }
-            
-            newValue = Easing.withinRange(progress, value.origin, value.to, value.ease);
             
             value.velocity = calc.speedPerSecond(calc.difference(value.current, newValue), frameDuration);
             
