@@ -2,10 +2,10 @@
 
 var Input = require('./input.js'),
     Point = require('../types/point.js'),
-    History = require('../bobs/history.js'),
+    History = require('../utils/history.js'),
     KEY = require('../opts/keys.js'),
     utils = require('../utils/utils.js'),
-    currentPointer, // Sort this crap out for multitouch
+    currentPointer, // Sort this out for multitouch
     
     /*
         Pointer constructor

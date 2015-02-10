@@ -25,6 +25,7 @@ Process.prototype = {
             values = action.values.store,
             value,
             rubix = props.rubix,
+            hasLinked = false,
             hasChanged = false;
 
         // Fire onStart if firstFrame
@@ -49,21 +50,35 @@ Process.prototype = {
             if (values.hasOwnProperty(key)) {
                 value = values[key].store;
 
-                // Ease value
-                output[key] = rubix.easeValue(key, value, action, frameDuration);
-
-                // Round
-                if (value.round) {
-                    output[key] = Math.round(output[key]);
-                }
-
-                // Check if has changed
-                if (value.current != output[key]) {
-                    hasChanged = true;
-                    value.current = output[key];
+                // Calculate new value if not currently linked
+                if (!value.link) {
+                    output[key] = rubix.easeValue(key, value, action, frameDuration);
+    
+                    // Round
+                    if (value.round) {
+                        output[key] = Math.round(output[key]);
+                    }
+    
+                    // Check if has changed
+                    if (value.current != output[key]) {
+                        hasChanged = true;
+                        value.current = output[key];
+                    }
+                } else {
+                    hasLinked = true;
                 }
             }
         } // end value calculations
+        
+        // If we have values that are linking in to another
+        if (hasLinked) {
+            for (key in values) {
+                value = values[key].store;
+                if (value.link && values[value.link]) {
+                    value.current = output[key] = this.resolveMaps(values[value.link].store.current, value.mapLink, value.mapTo);
+                }
+            }
+        }
 
         // Calculate new x and y if angle and distance present
         output = this.angleAndDistance(values, output);
@@ -94,6 +109,28 @@ Process.prototype = {
         
         // Update Action framestamp
         action.framestamp = framestamp;
+    },
+    
+    /*
+        Take two maps, source and target, and figure out new value
+        
+        @param [number]: Source value
+        @param [array]: Map of source values
+        @param [array]: Map of target values
+        @return [number]: 
+    */
+    resolveMaps: function (sourceValue, sourceMap, targetMap) {
+        var resolvedValue = 0,
+            mapLength = sourceMap.length;
+        
+        for (var i = 1; i < mapLength; i++) {
+            if (sourceValue <= sourceMap[i] || i === mapLength - 1) {
+                resolvedValue = calc.value(calc.progress(sourceValue, sourceMap[i - 1], sourceMap[i]), targetMap[i - 1], targetMap[i]);
+                break;
+            }
+        }
+
+        return resolvedValue;
     },
     
     /*
