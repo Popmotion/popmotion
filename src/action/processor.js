@@ -75,7 +75,7 @@ Process.prototype = {
             for (key in values) {
                 value = values[key].store;
                 if (value.link && values[value.link]) {
-                    output[key] = this.resolveMaps(values[value.link].store.current, value.mapLink, value.mapTo);
+                    value.current = output[key] = this.resolveMaps(values[value.link].store.current, value.mapLink, value.mapTo);
                 }
             }
         }
