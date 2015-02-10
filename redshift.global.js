@@ -1263,7 +1263,7 @@ Process.prototype = {
             for (key in values) {
                 value = values[key].store;
                 if (value.link && values[value.link]) {
-                    output[key] = this.resolveMaps(values[value.link].store.current, value.mapLink, value.mapTo);
+                    value.current = output[key] = this.resolveMaps(values[value.link].store.current, value.mapLink, value.mapTo);
                 }
             }
         }
@@ -1313,9 +1313,12 @@ Process.prototype = {
         
         for (var i = 1; i < mapLength; i++) {
             if (sourceValue <= sourceMap[i] || i === mapLength - 1) {
-                return calc.restricted(sourceValue, sourceMap[i - 1], sourceMap[i - 1]);
+                resolvedValue = calc.value(calc.progress(sourceValue, sourceMap[i - 1], sourceMap[i]), targetMap[i - 1], targetMap[i]);
+                break;
             }
         }
+
+        return resolvedValue;
     },
     
     /*
@@ -3381,42 +3384,138 @@ module.exports = {
         return (this.varType(arr) === 'Array');
     },
     
-    isInRange: function (value, from, to) {
-        return (value >= from && value <= to);
+    /*
+        Is this value within the given range?
+        
+        @param [number]: Value to test
+        @param [number]: Minimum range limit
+        @param [number]: Maximum range limit
+        @return [boolean]: True if value is within range
+    */
+    isInRange: function (value, min, max) {
+        return (value >= min && value <= max);
     },
     
-    copy: function (obj) {
-        var newObj = {};
+    /*
+        Copy object or array
         
-        for (var key in obj) {
-            if (obj.hasOwnProperty(key)) {
-                if (this.isObj(obj[key])) {
-                    newObj[key] = this.copy(obj[key]);
-                } else {
-                    newObj[key] = obj[key];
-                }
+        Checks whether base is an array or object and makes
+        appropriate copy
+        
+        @param [array || object]: Array or object to copy
+        @param [array || object]: New copy of array or object
+    */
+    copy: function (base) {
+        return (this.isArray(base)) ? this.copyArray(base) : this.copyObject(base);
+    },
+    
+    /*
+        Deep copy an object
+        
+        Iterates over an object and creates a new copy of every item,
+        deep copying if it finds any objects/arrays
+        
+        @param [object]: Object to copy
+        @param [object]: New copy of object
+    */
+    copyObject: function (base) {
+        var newObject = {};
+        
+        for (var key in base) {
+            if (base.hasOwnProperty(key)) {
+                newObject[key] = (this.isObj(base[key])) ? this.copy(base[key]) : base[key];
             }
         }
         
-        return newObj;
+        return newObject;
     },
     
+    /*
+        Deep copy an array
+        
+        Loops through an array and creates a new copy of every item,
+        deep copying if it finds any objects/arrays
+        
+        @param [array]: Array to copy
+        @param [array]: New copy of array
+    */
+    copyArray: function (base) {
+        var newArray = [],
+            length = base.length,
+            i = 0;
+        
+        for (var i = 0; i < length; i++) {
+            newArray[i] = (this.isObj(base[i])) ? this.copy(base[i]) : base[i];
+        }
+        
+        return newArray;
+    },
+    
+    /*
+        Non-destructive merge of object or array
+        
+        @param [array || object]: Array or object to use as base
+        @param [array || object]: Array or object to overwrite base with
+        @return [array || object]: New array or object
+    */
     merge: function (base, overwrite) {
-        var newObj = this.copy(base);
+        return (this.isArray(base)) ? this.mergeArray(base, overwrite) : this.mergeObject(base, overwrite);
+    },
+    
+    /*
+        Non-destructive merge of object
+        
+        @param [object]: Object to use as base
+        @param [object]: Object to overwrite base with
+        @return [object]: New object
+    */
+    mergeObject: function (base, overwrite) {
+        var newObject = this.copyObject(base);
         
         for (var key in overwrite) {
             if (overwrite.hasOwnProperty(key)) {
                 if (this.isObj(overwrite[key])) {
-                    newObj[key] = this.merge(newObj[key], overwrite[key]);
+                    if (this.isObj(newObject[key])) {
+                        newObject[key] = this.merge(newObject[key], overwrite[key]);
+                    } else {
+                        newObject[key] = this.copy(overwrite[key]);
+                    }
                 } else {
-                    newObj[key] = overwrite[key];
+                    newObject[key] = overwrite[key];
                 }
             }
         }
         
-        return newObj;
+        return newObject;
     },
     
+    /*
+        Non-destructive merge of array
+        
+        @param [array]: Array to use as base
+        @param [array]: Array to overwrite base with
+        @return [array]: New array
+    */
+    mergeArray: function (base, overwrite) {
+        var newArray = this.copyArray(base),
+            length = overwrite.length,
+            i = 0;
+        
+        for (var i = 0; i < length; i++) {
+            if (this.isObj(overwrite[i])) {
+                if (this.isObj(newArray[i])) {
+                    newArray[i] = this.merge(newArray[i], overwrite[i]);
+                } else {
+                    newArray[i] = this.copy(overwrite[i]);
+                }
+            } else {
+                newArray[i] = overwrite[i];
+            }
+        }
+        
+        return newArray;
+    },
+
     /*
         Create stepped version of progress
         
