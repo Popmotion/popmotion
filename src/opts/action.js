@@ -7,7 +7,7 @@ module.exports = {
     active: false,
     
     // What to use to process this aciton
-    rubix: rubix['Time'],
+    rubix: 'Time',
     
     // Multiply output value by
     amp: 1,

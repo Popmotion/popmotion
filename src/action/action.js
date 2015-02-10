@@ -458,7 +458,7 @@ Action.prototype = {
         @param [object]: Base properties of new input
     */
     changeRubix: function (processType) {
-        this.props.set('rubix', rubix[processType]);
+        this.props.set('rubix', processType);
 
         return this;
     }

@@ -3,14 +3,16 @@
 */
 "use strict";
 
-var calc = require('../utils/calc.js');
+var Rubix = require('./rubix.js'),
+    calc = require('../utils/calc.js');
 
 module.exports = function (action, framestamp, frameDuration) {
     var props = action.props.store,
         data = action.data.store,
         values = action.values.store,
-        rubix = props.rubix,
+        rubix = Rubix[props.rubix],
         value,
+        valueRubix,
         output,
         hasChanged = false;
         
@@ -35,10 +37,14 @@ module.exports = function (action, framestamp, frameDuration) {
 
     // Update values
     for (var i = 0; i < order; i++) {
+        // Get value
         value = values[order[i]].store;
         
+        // Load value rubix
+        valueRubix = Rubix[value.rubix];
+        
         // Calculate new value
-        output = rubix.process(key, value, values, action, frameDuration);
+        output = valueRubix.process(key, value, values, props, action, frameDuration);
         
         // Limit if range set
         output = (rubix.limit) ? rubix.limit(output, value) : output;

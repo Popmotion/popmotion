@@ -33,7 +33,7 @@ Rubix.prototype = {
             action.hasEnded = true;
         },
 
-        process: function (key, value, values, action, frameDuration) {
+        process: function (key, value, values, props, action) {
             var newValue = value.current,
                 progress = calc.restricted(calc.progress(action.elapsed - value.delay, value.duration) - value.stagger, 0, 1);
             
@@ -59,7 +59,7 @@ Rubix.prototype = {
             action.inputOffset = calc.offset(props.inputOrigin, props.input.current)
         },
     
-        process: function (key, value, values, action, frameDuration) {
+        process: function (key, value, values, props, action, frameDuration) {
             return (inputOffset.hasOwnProperty(key)) ? value.origin + action.inputOffset[key] : value.current;
         },
         
@@ -70,7 +70,7 @@ Rubix.prototype = {
     
     Run: {
     
-        process: function (key, value, values, action, frameDuration) {
+        process: function (key, value, values, props, action, frameDuration) {
             return value.current + calc.speedPerFrame(simulate[value.simulate](value, frameDuration), frameDuration);
         },
         
@@ -94,21 +94,26 @@ Rubix.prototype = {
     },
     
     Link: {
-        process: function (key, value, values, action) {
-                    var resolvedValue = 0,
-            mapLength = sourceMap.length;
-        
-        for (var i = 1; i < mapLength; i++) {
-            if (sourceValue <= sourceMap[i] || i === mapLength - 1) {
-                resolvedValue = calc.value(calc.progress(sourceValue, sourceMap[i - 1], sourceMap[i]), targetMap[i - 1], targetMap[i]);
-                break;
+        process: function (key, value, values, props, action) {
+            var mapLink = value.mapLink,
+                mapTo = value.mapTo,
+                mapLength = (mapLink !== undefined) ? mapLink.length : 0,
+                linkValue = (action.inputOffset.hasOwnProperty(value.link)) ?
+                    action.inputOffset[value.link] : values[value.link].current,
+                newValue = linkValue;
+            
+            for (var i = 1; i < mapLength; i++) {
+                if (newValue < mapLink[i] || i === mapLength - 1) {
+                    newValue = calc.value(calc.progress(newValue, mapLink[i - 1], mapLink[i]), mapTo[i - 1], mapTo[i]);
+                    break;
+                }
             }
-        }
-
-        return resolvedValue;
- 
+            
+            return newValue;
         }
     }
 };
 
-module.exports = new Rubix();
+rubixController = new Rubix();
+
+module.exports = rubixController;

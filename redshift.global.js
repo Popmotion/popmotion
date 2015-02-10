@@ -1013,7 +1013,7 @@ Action.prototype = {
         @param [object]: Base properties of new input
     */
     changeRubix: function (processType) {
-        this.props.set('rubix', rubix[processType]);
+        this.props.set('rubix', processType);
 
         return this;
     }
@@ -1191,14 +1191,16 @@ module.exports = new Presets();
 */
 "use strict";
 
-var calc = require('../utils/calc.js');
+var Rubix = require('./rubix.js'),
+    calc = require('../utils/calc.js');
 
 module.exports = function (action, framestamp, frameDuration) {
     var props = action.props.store,
         data = action.data.store,
         values = action.values.store,
-        rubix = props.rubix,
+        rubix = Rubix[props.rubix],
         value,
+        valueRubix,
         output,
         hasChanged = false;
         
@@ -1223,10 +1225,14 @@ module.exports = function (action, framestamp, frameDuration) {
 
     // Update values
     for (var i = 0; i < order; i++) {
+        // Get value
         value = values[order[i]].store;
         
+        // Load value rubix
+        valueRubix = Rubix[value.rubix];
+        
         // Calculate new value
-        output = rubix.process(key, value, values, action, frameDuration);
+        output = valueRubix.process(key, value, values, props, action, frameDuration);
         
         // Limit if range set
         output = (rubix.limit) ? rubix.limit(output, value) : output;
@@ -1267,7 +1273,7 @@ module.exports = function (action, framestamp, frameDuration) {
 
     action.framestamp = framestamp;
 };
-},{"../utils/calc.js":22}],10:[function(require,module,exports){
+},{"../utils/calc.js":22,"./rubix.js":10}],10:[function(require,module,exports){
 /*
     Rubix modules
     ----------------------------------------
@@ -1303,7 +1309,7 @@ Rubix.prototype = {
             action.hasEnded = true;
         },
 
-        process: function (key, value, values, action, frameDuration) {
+        process: function (key, value, values, props, action) {
             var newValue = value.current,
                 progress = calc.restricted(calc.progress(action.elapsed - value.delay, value.duration) - value.stagger, 0, 1);
             
@@ -1329,7 +1335,7 @@ Rubix.prototype = {
             action.inputOffset = calc.offset(props.inputOrigin, props.input.current)
         },
     
-        process: function (key, value, values, action, frameDuration) {
+        process: function (key, value, values, props, action, frameDuration) {
             return (inputOffset.hasOwnProperty(key)) ? value.origin + action.inputOffset[key] : value.current;
         },
         
@@ -1340,7 +1346,7 @@ Rubix.prototype = {
     
     Run: {
     
-        process: function (key, value, values, action, frameDuration) {
+        process: function (key, value, values, props, action, frameDuration) {
             return value.current + calc.speedPerFrame(simulate[value.simulate](value, frameDuration), frameDuration);
         },
         
@@ -1364,24 +1370,29 @@ Rubix.prototype = {
     },
     
     Link: {
-        process: function (key, value, values, action) {
-                    var resolvedValue = 0,
-            mapLength = sourceMap.length;
-        
-        for (var i = 1; i < mapLength; i++) {
-            if (sourceValue <= sourceMap[i] || i === mapLength - 1) {
-                resolvedValue = calc.value(calc.progress(sourceValue, sourceMap[i - 1], sourceMap[i]), targetMap[i - 1], targetMap[i]);
-                break;
+        process: function (key, value, values, props, action) {
+            var mapLink = value.mapLink,
+                mapTo = value.mapTo,
+                mapLength = (mapLink !== undefined) ? mapLink.length : 0,
+                linkValue = (action.inputOffset.hasOwnProperty(value.link)) ?
+                    action.inputOffset[value.link] : values[value.link].current,
+                newValue = linkValue;
+            
+            for (var i = 1; i < mapLength; i++) {
+                if (newValue < mapLink[i] || i === mapLength - 1) {
+                    newValue = calc.value(calc.progress(newValue, mapLink[i - 1], mapLink[i]), mapTo[i - 1], mapTo[i]);
+                    break;
+                }
             }
-        }
-
-        return resolvedValue;
- 
+            
+            return newValue;
         }
     }
 };
 
-module.exports = new Rubix();
+rubixController = new Rubix();
+
+module.exports = rubixController;
 },{"../opts/keys.js":15,"../utils/calc.js":22,"../utils/easing.js":23,"../utils/utils.js":26,"./simulate.js":11}],11:[function(require,module,exports){
 "use strict";
 
@@ -1646,7 +1657,7 @@ module.exports = {
     active: false,
     
     // What to use to process this aciton
-    rubix: rubix['Time'],
+    rubix: 'Time',
     
     // Multiply output value by
     amp: 1,
@@ -1773,6 +1784,8 @@ module.exports = {
     // [boolean]: Round output if true
     round: false,
 
+    // [string]: Name of rubix to process value
+    rubix: 'Time',
 
     /*
         Link properties
