@@ -1,7 +1,7 @@
 "use strict";
 
 var cycl = require('cycl'),
-    processor = require('./processor.js'),
+    process = require('./processor.js'),
     presets = require('./presets.js'),
     rubix = require('./rubix.js'),
     Pointer = require('../input/pointer.js'),
@@ -29,7 +29,7 @@ var cycl = require('cycl'),
         // Register process wth cycl
         self.process = cycl.newProcess(function (framestamp, frameDuration) {
 	        if (self.active) {
-            	processor.action(self, framestamp, frameDuration);
+            	process(self, framestamp, frameDuration);
 	        }
         });
         
