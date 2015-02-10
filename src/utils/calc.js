@@ -306,7 +306,9 @@ module.exports = {
         @return [number]: Value as limited within given range
     */
     restricted: function (value, min, max) {
-        return Math.min(Math.max(value, min), max);
+        var restricted = (min !== undefined) ? Math.max(value, min) : value;
+        restricted = (max !== undefined) ? Math.min(value, max) : restricted;
+        return restricted;
     },
 
     /*

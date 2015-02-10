@@ -1241,14 +1241,14 @@ Process.prototype = {
             // Calculate new value
             output = rubix.process(key, value, values, action, frameDuration);
             
-            // Round value
-            output = value.round ? Math.round(output) : output;
+            // Limit if range set
+            output = (rubix.limit) ? rubix.limit(output, value) : output;
             
             // Check if changed
             hasChanged = (value.current != output) ? true : hasChanged;
             
-            // Update current and output
-            value.current = action.output[key] = output;
+            // Round value and set to current
+            value.current = action.output[key] = (value.round) ? Math.round(output) : output;
             
             // Update velocity
             value.velocity = calc.speedPerSecond(calc.difference(value.current, output), frameDuration);
@@ -1501,33 +1501,15 @@ Rubix.prototype = {
             return (action.inactiveFrames > 3);
         },
         
-        /*
-            Add the velocity to the current value
+        limit: function (output, value) {
+            output = calc.restricted(output, value.min, value.max);
             
-            @param [string]: key of value
-            @param [Action]
-       
-        easeValue: function (key, value, action) {
-            var newValue = value.current + action.progress[key];
-
-            if (value.min !== undefined) {
-                newValue = Math.max(value.min, newValue);
-                
-                if (value.bounce && newValue <= value.min) {
-                    value.velocity = simulate.bounce(value);
-                }
-            }
+            // Bounce if outside of range
+            value.velocity = (value.bounce && (output <= value.min || output >= value.max))
+                ? simulate.bounce(value) : value.velocity;
             
-            if (value.max !== undefined) {
-                newValue = Math.min(value.max, newValue);
-                
-                if (value.bounce && newValue >= value.max) {
-                    value.velocity = simulate.bounce(value);
-                }
-            }
-
-            return newValue;
-        } */
+            return output;
+        }
     },
     
     Link: {
@@ -2734,7 +2716,9 @@ module.exports = {
         @return [number]: Value as limited within given range
     */
     restricted: function (value, min, max) {
-        return Math.min(Math.max(value, min), max);
+        var restricted = (min !== undefined) ? Math.max(value, min) : value;
+        restricted = (max !== undefined) ? Math.min(value, max) : restricted;
+        return restricted;
     },
 
     /*

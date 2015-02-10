@@ -53,14 +53,14 @@ Process.prototype = {
             // Calculate new value
             output = rubix.process(key, value, values, action, frameDuration);
             
-            // Round value
-            output = value.round ? Math.round(output) : output;
+            // Limit if range set
+            output = (rubix.limit) ? rubix.limit(output, value) : output;
             
             // Check if changed
             hasChanged = (value.current != output) ? true : hasChanged;
             
-            // Update current and output
-            value.current = action.output[key] = output;
+            // Round value and set to current
+            value.current = action.output[key] = (value.round) ? Math.round(output) : output;
             
             // Update velocity
             value.velocity = calc.speedPerSecond(calc.difference(value.current, output), frameDuration);

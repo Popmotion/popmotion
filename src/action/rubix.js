@@ -82,33 +82,15 @@ Rubix.prototype = {
             return (action.inactiveFrames > 3);
         },
         
-        /*
-            Add the velocity to the current value
+        limit: function (output, value) {
+            output = calc.restricted(output, value.min, value.max);
             
-            @param [string]: key of value
-            @param [Action]
-       
-        easeValue: function (key, value, action) {
-            var newValue = value.current + action.progress[key];
-
-            if (value.min !== undefined) {
-                newValue = Math.max(value.min, newValue);
-                
-                if (value.bounce && newValue <= value.min) {
-                    value.velocity = simulate.bounce(value);
-                }
-            }
+            // Bounce if outside of range
+            value.velocity = (value.bounce && (output <= value.min || output >= value.max))
+                ? simulate.bounce(value) : value.velocity;
             
-            if (value.max !== undefined) {
-                newValue = Math.min(value.max, newValue);
-                
-                if (value.bounce && newValue >= value.max) {
-                    value.velocity = simulate.bounce(value);
-                }
-            }
-
-            return newValue;
-        } */
+            return output;
+        }
     },
     
     Link: {
