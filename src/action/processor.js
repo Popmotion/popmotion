@@ -125,9 +125,12 @@ Process.prototype = {
         
         for (var i = 1; i < mapLength; i++) {
             if (sourceValue <= sourceMap[i] || i === mapLength - 1) {
-                return calc.restricted(sourceValue, sourceMap[i - 1], sourceMap[i - 1]);
+                resolvedValue = calc.value(calc.progress(sourceValue, sourceMap[i - 1], sourceMap[i]), targetMap[i - 1], targetMap[i]);
+                break;
             }
         }
+
+        return resolvedValue;
     },
     
     /*
