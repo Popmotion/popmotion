@@ -71,7 +71,8 @@ var calc = require('../utils/calc.js'),
             var args = arguments,
                 arg1 = args[0],
                 arg2 = args[1],
-                data = {};
+                data = {},
+                store;
 
             // If we have an object, resolve every item first
             if (utils.isObj(arg1)) {
@@ -100,11 +101,15 @@ var calc = require('../utils/calc.js'),
 
             setter.apply(this, [data]);
             
+            // Cache store
+            store = this.store;
+            
             // Check for range
-            if (this.store.min !== undefined && this.store.max !== undefined) {
-                setter.apply(this, ['hasRange', true]);
-            } else {
-                setter.apply(this, ['hasRange', false]);
+            setter.apply(this, ['hasRange', (utils.isNum(store.min) && utils.isNum(store.max))]);
+            
+            // Set rubix if link is set
+            if (store.link) {
+                setter.apply(this, ['rubix', 'Link']);
             }
         };
 
