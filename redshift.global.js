@@ -1265,7 +1265,7 @@ Process.prototype = {
         }
         
         // Fire onEnd callback
-        if (action.progress.hasEnded) {
+        if (rubix.hasEnded(action, hasChanged)) {
             action.isActive(false);
             
             if (props.onEnd) {
@@ -1449,6 +1449,7 @@ Rubix.prototype = {
 
         updateInput: function (action, props, framestamp) {
             action.elapsed += (framestamp - action.framestamp) * props.dilate;
+            action.hasEnded = true;
         },
 
         process: function (key, value, values, action, frameDuration) {
@@ -1464,6 +1465,10 @@ Rubix.prototype = {
             }
             
             return newValue;
+        },
+        
+        hasEnded: function (action) {
+            return action.hasEnded;
         }
     },
     
@@ -1475,41 +1480,21 @@ Rubix.prototype = {
     
         process: function (key, value, values, action, frameDuration) {
             return (inputOffset.hasOwnProperty(key)) ? value.origin + action.inputOffset[key] : value.current;
+        },
+        
+        hasEnded: function () {
+            return false;
         }
     },
     
     Run: {
     
-        
-    
-        /*
-            Calc new velocity
-            
-            Calc new velocity based on simulation output
-            
-            @param [Action]: action to measure
-            @return [object]: Object of all velocitys
-        */
-        calcProgress: function (action, props, values, frameStart, frameDuration) {
-            var progress = {},
-                point,
-                value;
-
-            for (var key in values) {
-                if (values.hasOwnProperty(key)) {
-                    value = values[key].get();
-                    value.velocity = simulate[value.simulate](value, frameDuration);
-                    progress[key] = calc.speedPerFrame(value.velocity, frameDuration);
-                }
-            }
-            
-            return progress;
+        process: function (key, value, values, action, frameDuration) {
+            return value.current + calc.speedPerFrame(simulate[value.simulate](value, frameDuration), frameDuration);
         },
         
         /*
             Has this action ended?
-            
-            @return [boolean]: False for now - TODO create better default
         */
         hasEnded: function (action, hasChanged) {
             var hasEnded = false;
@@ -1519,7 +1504,7 @@ Rubix.prototype = {
             } else {
                 action.inactiveFrames++;
                 
-                if (action.inactiveFrames > 30) {
+                if (action.inactiveFrames > 3) {
                     hasEnded = true;
                 }
             }
@@ -1532,7 +1517,7 @@ Rubix.prototype = {
             
             @param [string]: key of value
             @param [Action]
-        */
+       
         easeValue: function (key, value, action) {
             var newValue = value.current + action.progress[key];
 
@@ -1553,11 +1538,17 @@ Rubix.prototype = {
             }
 
             return newValue;
+        } */
+    },
+    
+    Link: {
+        process: function (key, value, values, action) {
+            
         }
     }
 };
 
-module.exports = new Rubix();;
+module.exports = new Rubix();
 },{"../opts/keys.js":15,"../utils/calc.js":22,"../utils/easing.js":23,"../utils/utils.js":26,"./simulate.js":11}],11:[function(require,module,exports){
 "use strict";
 

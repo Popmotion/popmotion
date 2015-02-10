@@ -77,7 +77,7 @@ Process.prototype = {
         }
         
         // Fire onEnd callback
-        if (action.progress.hasEnded) {
+        if (rubix.hasEnded(action, hasChanged)) {
             action.isActive(false);
             
             if (props.onEnd) {
