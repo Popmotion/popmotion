@@ -12,7 +12,6 @@
     Processing functions:
         calcProgress
         hasEnded
-        updateInput
         easeValue
 */
 "use strict";
