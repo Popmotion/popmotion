@@ -19,7 +19,13 @@ Process.prototype = {
         @param [number]: Duration, in ms, since last frame
     */
     action: function (action, framestamp, frameDuration) {
-        
+        var props = action.props.store,
+            data = action.data.store,
+            values = action.values.store,
+            rubix = props.rubix,
+            value,
+            output,
+            hasChanged = false;
         
         // Fire onStart if first frame
         if (action.firstFrame) {
