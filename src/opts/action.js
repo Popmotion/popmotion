@@ -68,5 +68,7 @@ module.exports = {
     onFrame: undefined,
     
     // Run this when action changes
-    onChange: undefined
+    onChange: undefined,
+    
+    output: {}
 };

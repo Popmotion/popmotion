@@ -19,6 +19,66 @@ Process.prototype = {
         @param [number]: Duration, in ms, since last frame
     */
     action: function (action, framestamp, frameDuration) {
+        
+        
+        // Fire onStart if first frame
+        if (action.firstFrame) {
+            if (props.onStart) {
+                props.onStart.call(props.scope, action.output, data);
+            }
+            
+            action.firstFrame = false;
+        }
+        
+        // Update Input if available
+        if (props.input) {
+            output.input = props.input.onFrame(framestamp);
+        }
+    
+        // Update values
+        for (var i = 0; i < order; i++) {
+            value = values[order[i]].store;
+            
+            // Calculate new value
+            output = rubix.process(key, value, values, action, frameDuration);
+            
+            // Round value
+            output = value.round ? Math.round(output) : output;
+            
+            // Check if changed
+            hasChanged = (value.current != output) ? true : hasChanged;
+            
+            // Update current and output
+            value.current = action.output[key] = output;
+        }
+    
+        // Fire onFrame callback
+        if (props.onFrame) {
+            props.onFrame.call(props.scope, action.output, data);
+        }
+    
+        // Fire onChange callback
+        if (hasChanged && props.onChange) {
+            props.onChange.call(props.scope, action.output, data);
+        }
+        
+        // Fire onEnd callback
+        if (action.progress.hasEnded) {
+            action.isActive(false);
+            
+            if (props.onEnd) {
+                props.onEnd.call(props.scope, action.output, data);
+            }
+            
+            // Find next action if still inActive
+            if (!action.isActive()) {
+                action.next();
+            }
+        }
+    
+        action.framestamp = framestamp;
+    
+    /*
         var output = {},
             props = action.props.store,
             data = action.data.store,
@@ -108,7 +168,7 @@ Process.prototype = {
         }
         
         // Update Action framestamp
-        action.framestamp = framestamp;
+        action.framestamp = framestamp;*/
     },
     
     /*
@@ -131,18 +191,6 @@ Process.prototype = {
         }
 
         return resolvedValue;
-    },
-    
-    /*
-        Update associated input
-        
-        @param [Input]: Bound input
-        @param [number]: Framestamp of latest frame
-    */
-    updateInput: function (input, framestamp) {
-        if (input) {
-            input.updateInput(framestamp);
-        }
     },
     
     /*
