@@ -1497,19 +1497,8 @@ Rubix.prototype = {
             Has this action ended?
         */
         hasEnded: function (action, hasChanged) {
-            var hasEnded = false;
-            
-            if (hasChanged) {
-                action.inactiveFrames = 0;
-            } else {
-                action.inactiveFrames++;
-                
-                if (action.inactiveFrames > 3) {
-                    hasEnded = true;
-                }
-            }
-            
-            return hasEnded;
+            action.inactiveFrames = hasChanged ? 0 : action.inactiveFrames + 1;
+            return (action.inactiveFrames > 3);
         },
         
         /*
