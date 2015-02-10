@@ -26,6 +26,11 @@ Process.prototype = {
             value,
             output,
             hasChanged = false;
+            
+        // Update elapsed
+        if (rubix.updateInput) {
+            rubix.updateInput(action, props, framestamp);
+        }
         
         // Fire onStart if first frame
         if (action.firstFrame) {
@@ -56,6 +61,9 @@ Process.prototype = {
             
             // Update current and output
             value.current = action.output[key] = output;
+            
+            // Update velocity
+            value.velocity = calc.speedPerSecond(calc.difference(value.current, output), frameDuration);
         }
     
         // Fire onFrame callback

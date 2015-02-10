@@ -33,9 +33,14 @@ module.exports = {
     // 
     dilate: 1,
     
+    // Order of values
+    order: [],
+    
     playlist: [],
     
     playhead: 0,
+    
+    progress: {},
     
     // The object we're checking
     input: undefined,
