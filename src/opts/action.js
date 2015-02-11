@@ -34,13 +34,13 @@ module.exports = {
     dilate: 1,
     
     // Order of values
-    order: [],
+    order: undefined,
     
-    playlist: [],
+    playlist: undefined,
     
     playhead: 0,
     
-    progress: {},
+    progress: undefined,
     
     // The object we're checking
     input: undefined,
@@ -75,5 +75,5 @@ module.exports = {
     // Run this when action changes
     onChange: undefined,
     
-    output: {}
+    output: undefined
 };

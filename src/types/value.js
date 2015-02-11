@@ -51,7 +51,8 @@ var calc = require('../utils/calc.js'),
         var repo = new Repo(),
             setter = repo.set,
             firstSet = true,
-            action = arguments[1];
+            action = arguments[1],
+            key = arguments[2];
 
         // Apply defaults
         setter.call(repo, arguments[0]);
@@ -72,7 +73,8 @@ var calc = require('../utils/calc.js'),
                 arg1 = args[0],
                 arg2 = args[1],
                 data = {},
-                store;
+                store,
+                moveToBack = false;
 
             // If we have an object, resolve every item first
             if (utils.isObj(arg1)) {
@@ -110,7 +112,10 @@ var calc = require('../utils/calc.js'),
             // Set rubix if link is set
             if (store.link) {
                 setter.apply(this, ['rubix', 'Link']);
+                moveToBack = true;
             }
+            
+            action.updateOrder(key, moveToBack);
         };
 
         

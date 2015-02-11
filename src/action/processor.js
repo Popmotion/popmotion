@@ -10,12 +10,14 @@ module.exports = function (action, framestamp, frameDuration) {
     var props = action.props.store,
         data = action.data.store,
         values = action.values.store,
+        order = props.order = props.order || [],
+        orderLength = order.length,
         rubix = Rubix[props.rubix],
         value,
         valueRubix,
         output,
         hasChanged = false;
-        
+
     // Update elapsed
     if (rubix.updateInput) {
         rubix.updateInput(action, props, framestamp);
@@ -34,6 +36,8 @@ module.exports = function (action, framestamp, frameDuration) {
     if (props.input) {
         output.input = props.input.onFrame(framestamp);
     }
+    
+    console.log(order);
 
     // Update values
     for (var i = 0; i < order; i++) {
@@ -57,6 +61,8 @@ module.exports = function (action, framestamp, frameDuration) {
         
         // Update velocity
         value.velocity = calc.speedPerSecond(calc.difference(value.current, output), frameDuration);
+        
+        console.log(value.current);
     }
 
     // Fire onFrame callback

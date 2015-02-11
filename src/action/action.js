@@ -3,7 +3,6 @@
 var cycl = require('cycl'),
     process = require('./processor.js'),
     presets = require('./presets.js'),
-    rubix = require('./rubix.js'),
     Pointer = require('../input/pointer.js'),
     KEY = require('../opts/keys.js'),
     defaultProps = require('../opts/action.js'),
@@ -149,7 +148,7 @@ Action.prototype = {
         self.resetProgress();
         
         if (processType) {
-            self.changeRubix(processType);
+            self.props.set('rubix', processType);
         }
 
         self.isActive(true);
@@ -411,7 +410,7 @@ Action.prototype = {
 
         // Or create new if it doesn't
         } else {
-            newVal = new Value(defaultValue, this);
+            newVal = new Value(defaultValue, this, key);
             newVal.set(value, inherit);
 
             this.values.set(key, newVal);
@@ -451,16 +450,18 @@ Action.prototype = {
         return this.active;
     },
     
-    /*
-        Change Action properties
+    updateOrder: function (key, moveToBack) {
+        var props = this.props.get(),
+            order = props.order = props.order ? props.order : [],
+            pos = order.indexOf(key);
         
-        @param [string]: Type of processing rubix to use
-        @param [object]: Base properties of new input
-    */
-    changeRubix: function (processType) {
-        this.props.set('rubix', processType);
-
-        return this;
+        if (pos === -1 || moveToBack) {
+            order.push(key);
+            
+            if (pos !== -1) {
+                order.splice(pos, 1);
+            }
+        }
     }
     
 };
