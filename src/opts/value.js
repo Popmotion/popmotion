@@ -22,9 +22,6 @@ module.exports = {
     // [boolean]: Round output if true
     round: false,
 
-    // [string]: Name of rubix to process value
-    rubix: 'Time',
-
     /*
         Link properties
     */

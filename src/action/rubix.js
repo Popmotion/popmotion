@@ -55,12 +55,12 @@ Rubix.prototype = {
     
     Input: {
     
-        updateInput: function (action, props, framestamp) {
-            action.inputOffset = calc.offset(props.inputOrigin, props.input.current)
+        updateInput: function (action, props) {
+            action.inputOffset = calc.offset(props.inputOrigin, props.input.current);
         },
     
-        process: function (key, value, values, props, action, frameDuration) {
-            return (inputOffset.hasOwnProperty(key)) ? value.origin + action.inputOffset[key] : value.current;
+        process: function (key, value, values, props, action) {
+            return (action.inputOffset.hasOwnProperty(key)) ? value.origin + action.inputOffset[key] : value.current;
         },
         
         hasEnded: function () {
@@ -98,11 +98,14 @@ Rubix.prototype = {
             var mapLink = value.mapLink,
                 mapTo = value.mapTo,
                 mapLength = (mapLink !== undefined) ? mapLink.length : 0,
-                linkValue = (action.inputOffset.hasOwnProperty(value.link)) ?
-                    action.inputOffset[value.link] : values[value.link].current,
+                linkValue = (props.rubix === 'Input' && action.inputOffset.hasOwnProperty(value.link)) ?
+                    action.inputOffset[value.link] : values[value.link].store.current,
                 newValue = linkValue;
-            
+
             for (var i = 1; i < mapLength; i++) {
+                
+                
+                
                 if (newValue < mapLink[i] || i === mapLength - 1) {
                     newValue = calc.value(calc.progress(newValue, mapLink[i - 1], mapLink[i]), mapTo[i - 1], mapTo[i]);
                     break;

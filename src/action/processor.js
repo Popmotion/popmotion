@@ -37,7 +37,7 @@ module.exports = function (action, framestamp, frameDuration) {
     
     // Update Input if available
     if (props.input) {
-        output.input = props.input.onFrame(framestamp);
+        action.output.input = props.input.onFrame(framestamp);
     }
 
     // Update values
@@ -48,22 +48,30 @@ module.exports = function (action, framestamp, frameDuration) {
         value = values[key].store;
 
         // Load value rubix
-        valueRubix = Rubix[value.rubix];
+        valueRubix = value.link ? Rubix['Link'] : rubix;
 
         // Calculate new value
         output = valueRubix.process(key, value, values, props, action, frameDuration);
 
         // Limit if range set
-        output = (rubix.limit) ? rubix.limit(output, value) : output;
+        if (rubix.limit) {
+            output = rubix.limit(output, value);
+        }
         
-        // Check if changed
-        hasChanged = (value.current != output) ? true : hasChanged;
-        
-        // Round value and set to current
-        value.current = action.output[key] = (value.round) ? Math.round(output) : output;
+        if (value.round) {
+            output = Math.round(output);
+        }
         
         // Update velocity
         value.velocity = calc.speedPerSecond(calc.difference(value.current, output), frameDuration);
+        
+        // Check if changed and update
+        if (value.current != output) {
+            hasChanged = true;
+        }
+        
+        // Round value and set to current
+        value.current = action.output[key] = output;
     }
 
     // Fire onFrame callback

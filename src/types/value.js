@@ -109,13 +109,8 @@ var calc = require('../utils/calc.js'),
             // Check for range
             setter.apply(this, ['hasRange', (utils.isNum(store.min) && utils.isNum(store.max))]);
             
-            // Set rubix if link is set
-            if (store.link) {
-                setter.apply(this, ['rubix', 'Link']);
-                moveToBack = true;
-            }
-            
-            action.updateOrder(key, moveToBack);
+            // Update order if this is linked
+            action.updateOrder(key, (utils.isString(store.link)));
         };
 
         

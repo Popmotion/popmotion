@@ -226,7 +226,7 @@ module.exports = {
         @return [array || object]: New array or object
     */
     merge: function (base, overwrite) {
-        return (this.isArray(base)) ? this.mergeArray(base, overwrite) : this.mergeObject(base, overwrite);
+        return (this.isArray(base)) ? this.copyArray(overwrite) : this.mergeObject(base, overwrite);
     },
     
     /*
@@ -254,33 +254,6 @@ module.exports = {
         }
         
         return newObject;
-    },
-    
-    /*
-        Non-destructive merge of array
-        
-        @param [array]: Array to use as base
-        @param [array]: Array to overwrite base with
-        @return [array]: New array
-    */
-    mergeArray: function (base, overwrite) {
-        var newArray = this.copyArray(base),
-            length = overwrite.length,
-            i = 0;
-        
-        for (var i = 0; i < length; i++) {
-            if (this.isObj(overwrite[i])) {
-                if (this.isObj(newArray[i])) {
-                    newArray[i] = this.merge(newArray[i], overwrite[i]);
-                } else {
-                    newArray[i] = this.copy(overwrite[i]);
-                }
-            } else {
-                newArray[i] = overwrite[i];
-            }
-        }
-        
-        return newArray;
     },
 
     /*

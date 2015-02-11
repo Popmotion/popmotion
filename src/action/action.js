@@ -450,6 +450,12 @@ Action.prototype = {
         return this.active;
     },
     
+    /*
+        Update order of value keys
+        
+        @param [string]: Key of value
+        @param [boolean]: Whether to move value to back
+    */
     updateOrder: function (key, moveToBack) {
         var props = this.props.get(),
             order = props.order = props.order ? props.order : [],
