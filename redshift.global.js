@@ -1300,18 +1300,12 @@ module.exports = function (action, framestamp, frameDuration) {
     Rubix modules
     ----------------------------------------
     
-    Rubix modules are used to process an action based on its .rubix property.
-    
-    Available rubix:
-        'Time'
-        'Pointer'
-        'Speed'
-        
-    Processing functions:
-        calcProgress
-        hasEnded
-        easeValue
+    Rubix are collections of optional processors. Which rubix to
+    use is decided programmatically. If .link is defined, Link is used.
+    Otherwise values use Time, Input and Run based on whether .play, 
+    .track or .run are running.
 */
+
 "use strict";
 
 var calc = require('../utils/calc.js'),
@@ -1326,11 +1320,30 @@ Rubix.prototype = {
 
     Time: {
 
+        /*
+            Update Action elapsed time
+            
+            @param [Action]
+            @param [object]: Action properties
+            @param [number]: Timestamp of current frame
+        */
         updateInput: function (action, props, framestamp) {
             action.elapsed += (framestamp - action.framestamp) * props.dilate;
             action.hasEnded = true;
         },
 
+        /*
+            Calculate progress of value based on time elapsed,
+            value delay/duration/stagger properties
+
+            @param [string]: Key of current value
+            @param [Value]: Current value
+            @param [object]: Collection of all Action values
+            @param [object]: Action properties
+            @param [Action]: Current Action
+            @param [number]: Duration of frame in ms
+            @return [number]: Calculated value
+        */
         process: function (key, value, values, props, action) {
             var newValue = value.current,
                 progress = calc.restricted(calc.progress(action.elapsed - value.delay, value.duration) - value.stagger, 0, 1);
@@ -1346,6 +1359,11 @@ Rubix.prototype = {
             return newValue;
         },
         
+        /*
+            Return hasEnded property
+            
+            @param [boolean]: Have all Values hit 1 progress?
+        */
         hasEnded: function (action) {
             return action.hasEnded;
         }
@@ -1353,14 +1371,35 @@ Rubix.prototype = {
     
     Input: {
     
+        /*
+            Update Input
+            
+            @param [Action]
+            @param [object]: Action properties
+        */
         updateInput: function (action, props) {
             action.inputOffset = calc.offset(props.inputOrigin, props.input.current);
         },
-    
+        
+        /*
+            Move Value relative to Input movement
+            
+            @param [string]: Key of current value
+            @param [Value]: Current value
+            @param [object]: Collection of all Action values
+            @param [object]: Action properties
+            @param [Action]: Current Action
+            @return [number]: Calculated value
+        */
         process: function (key, value, values, props, action) {
             return (action.inputOffset.hasOwnProperty(key)) ? value.origin + action.inputOffset[key] : value.current;
         },
         
+        /*
+            Has this Action ended? 
+            
+            @return [boolean]: False to make user manually finish .track()
+        */
         hasEnded: function () {
             return false;
         }
@@ -1368,18 +1407,46 @@ Rubix.prototype = {
     
     Run: {
     
+        /*
+            Simulate the Value's per-frame movement
+            
+            @param [string]: Key of current value
+            @param [Value]: Current value
+            @param [object]: Collection of all Action values
+            @param [object]: Action properties
+            @param [Action]: Current Action
+            @param [number]: Duration of frame in ms
+            @return [number]: Calculated value
+        */
         process: function (key, value, values, props, action, frameDuration) {
             return value.current + calc.speedPerFrame(simulate[value.simulate](value, frameDuration), frameDuration);
         },
         
         /*
             Has this action ended?
+            
+            Use a framecounter to see if Action has changed in the last x frames
+            and declare ended if not
+            
+            @param [Action]
+            @param [boolean]: Has Action changed?
+            @return [boolean]: Has Action ended?
         */
         hasEnded: function (action, hasChanged) {
             action.inactiveFrames = hasChanged ? 0 : action.inactiveFrames + 1;
             return (action.inactiveFrames > 3);
         },
         
+        /*
+            Limit output to value range, if any
+            
+            If velocity is at or more than range, and value has a bounce property,
+            run the bounce simulation
+            
+            @param [number]: Calculated output
+            @param [Value]: Current Value
+            @return [number]: Limit-adjusted output
+        */
         limit: function (output, value) {
             output = calc.restricted(output, value.min, value.max);
             
@@ -1391,19 +1458,58 @@ Rubix.prototype = {
         }
     },
     
+    /*
+        Link
+        ---------------------------
+        
+        Link the calculations of one value into the output of another.
+        
+        Activate by setting the link property of one value with the name
+        of another value or Input property.
+        
+        Map the linked value with mapLink and provide a corressponding mapTo
+        to translate values from one into the other. For instance:
+        
+        {
+            link: 'x'
+            mapLink: [0, 100, 200]
+            mapTo: [-100, 0, -100]
+        }
+        
+        An output value of 50 for 'x' would translate to -50
+    */
     Link: {
+        
+        /*
+            Process linked value
+            
+            First check if link exists within Action values, if not check
+            within Input (if exists)
+            
+            @param [string]: Key of current value
+            @param [Value]: Current value
+            @param [object]: Collection of all Action values
+            @param [object]: Action properties
+            @param [Action]: Current Action
+            @return [number]: Calculated value
+        */
         process: function (key, value, values, props, action) {
-            var mapLink = value.mapLink,
+            var newValue = value.current,
+                mapLink = value.mapLink,
                 mapTo = value.mapTo,
                 mapLength = (mapLink !== undefined) ? mapLink.length : 0,
-                linkValue = (props.rubix === 'Input' && action.inputOffset.hasOwnProperty(value.link)) ?
-                    action.inputOffset[value.link] : values[value.link].store.current,
-                newValue = linkValue;
+                newValue;
 
+            // First look at values in Action
+            if (values[value.link]) {
+                newValue = values[value.link].store.current;
+
+            // Then check values in Input
+            } else if (action.inputOffset && action.inputOffset.hasOwnProperty(value.link)) {
+                newValue = value.origin + action.inputOffset[key];
+            }
+            
             for (var i = 1; i < mapLength; i++) {
-                
-                
-                
                 if (newValue < mapLink[i] || i === mapLength - 1) {
                     newValue = calc.value(calc.progress(newValue, mapLink[i - 1], mapLink[i]), mapTo[i - 1], mapTo[i]);
                     break;
