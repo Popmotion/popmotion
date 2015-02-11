@@ -2903,7 +2903,7 @@ EasingFunction.prototype = {
             progressLimited = progressLimited + (calc.difference(progressLimited, progress) * escapeAmp);
         }
 
-        return calc.valueEased(restrictedProgress, from, to, this.get(ease));
+        return calc.valueEased(progressLimited, from, to, this.get(ease));
     },
         
     /*
