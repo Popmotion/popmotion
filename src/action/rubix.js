@@ -41,7 +41,7 @@ Rubix.prototype = {
             action.hasEnded = (progress !== 1) ? false : action.hasEnded;
             
             if (value.to !== undefined) {
-                progress = (value.steps) ? utils.stepProgress(progress, 1, value.steps) : true;
+                progress = (value.steps) ? utils.stepProgress(progress, 1, value.steps) : progress;
                 newValue = easing.withinRange(progress, value.origin, value.to, value.ease);
             }
             

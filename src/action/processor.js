@@ -13,10 +13,13 @@ module.exports = function (action, framestamp, frameDuration) {
         order = props.order = props.order || [],
         orderLength = order.length,
         rubix = Rubix[props.rubix],
+        key = '',
         value,
         valueRubix,
         output,
         hasChanged = false;
+        
+    action.output = {};
 
     // Update elapsed
     if (rubix.updateInput) {
@@ -36,20 +39,20 @@ module.exports = function (action, framestamp, frameDuration) {
     if (props.input) {
         output.input = props.input.onFrame(framestamp);
     }
-    
-    console.log(order);
 
     // Update values
-    for (var i = 0; i < order; i++) {
+    for (var i = 0; i < orderLength; i++) {
+        key = order[i];
+
         // Get value
-        value = values[order[i]].store;
-        
+        value = values[key].store;
+
         // Load value rubix
         valueRubix = Rubix[value.rubix];
-        
+
         // Calculate new value
         output = valueRubix.process(key, value, values, props, action, frameDuration);
-        
+
         // Limit if range set
         output = (rubix.limit) ? rubix.limit(output, value) : output;
         
@@ -61,8 +64,6 @@ module.exports = function (action, framestamp, frameDuration) {
         
         // Update velocity
         value.velocity = calc.speedPerSecond(calc.difference(value.current, output), frameDuration);
-        
-        console.log(value.current);
     }
 
     // Fire onFrame callback
