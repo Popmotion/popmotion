@@ -9,8 +9,7 @@ module.exports = {
     EASING: {
         IN: 'In',
         IN_OUT: 'InOut',
-        OUT: 'Out',
-        LINEAR: 'linear'
+        OUT: 'Out'
     },
     RUBIX: {
         INPUT: 'Input',

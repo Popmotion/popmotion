@@ -558,7 +558,6 @@ module.exports = Timer;
 var cycl = require('cycl'),
     process = require('./processor.js'),
     presets = require('./presets.js'),
-    rubix = require('./rubix.js'),
     Pointer = require('../input/pointer.js'),
     KEY = require('../opts/keys.js'),
     defaultProps = require('../opts/action.js'),
@@ -704,7 +703,7 @@ Action.prototype = {
         self.resetProgress();
         
         if (processType) {
-            self.changeRubix(processType);
+            self.props.set('rubix', processType);
         }
 
         self.isActive(true);
@@ -966,7 +965,7 @@ Action.prototype = {
 
         // Or create new if it doesn't
         } else {
-            newVal = new Value(defaultValue, this);
+            newVal = new Value(defaultValue, this, key);
             newVal.set(value, inherit);
 
             this.values.set(key, newVal);
@@ -1007,21 +1006,29 @@ Action.prototype = {
     },
     
     /*
-        Change Action properties
+        Update order of value keys
         
-        @param [string]: Type of processing rubix to use
-        @param [object]: Base properties of new input
+        @param [string]: Key of value
+        @param [boolean]: Whether to move value to back
     */
-    changeRubix: function (processType) {
-        this.props.set('rubix', processType);
-
-        return this;
+    updateOrder: function (key, moveToBack) {
+        var props = this.props.get(),
+            order = props.order = props.order ? props.order : [],
+            pos = order.indexOf(key);
+        
+        if (pos === -1 || moveToBack) {
+            order.push(key);
+            
+            if (pos !== -1) {
+                order.splice(pos, 1);
+            }
+        }
     }
     
 };
 
 module.exports = Action;
-},{"../input/pointer.js":13,"../opts/action.js":14,"../opts/keys.js":15,"../opts/value.js":16,"../types/repo.js":20,"../types/value.js":21,"../utils/calc.js":22,"../utils/utils.js":26,"./presets.js":8,"./processor.js":9,"./rubix.js":10,"cycl":1}],8:[function(require,module,exports){
+},{"../input/pointer.js":13,"../opts/action.js":14,"../opts/keys.js":15,"../opts/value.js":16,"../types/repo.js":20,"../types/value.js":21,"../utils/calc.js":22,"../utils/utils.js":26,"./presets.js":8,"./processor.js":9,"cycl":1}],8:[function(require,module,exports){
 "use strict";
 
 var KEY = require('../opts/keys.js'),
@@ -1198,12 +1205,17 @@ module.exports = function (action, framestamp, frameDuration) {
     var props = action.props.store,
         data = action.data.store,
         values = action.values.store,
+        order = props.order = props.order || [],
+        orderLength = order.length,
         rubix = Rubix[props.rubix],
+        key = '',
         value,
         valueRubix,
         output,
         hasChanged = false;
         
+    action.output = {};
+
     // Update elapsed
     if (rubix.updateInput) {
         rubix.updateInput(action, props, framestamp);
@@ -1220,31 +1232,41 @@ module.exports = function (action, framestamp, frameDuration) {
     
     // Update Input if available
     if (props.input) {
-        output.input = props.input.onFrame(framestamp);
+        action.output.input = props.input.onFrame(framestamp);
     }
 
     // Update values
-    for (var i = 0; i < order; i++) {
+    for (var i = 0; i < orderLength; i++) {
+        key = order[i];
+
         // Get value
-        value = values[order[i]].store;
-        
+        value = values[key].store;
+
         // Load value rubix
-        valueRubix = Rubix[value.rubix];
+        valueRubix = value.link ? Rubix['Link'] : rubix;
         
         // Calculate new value
         output = valueRubix.process(key, value, values, props, action, frameDuration);
-        
+
         // Limit if range set
-        output = (rubix.limit) ? rubix.limit(output, value) : output;
+        if (rubix.limit) {
+            output = rubix.limit(output, value);
+        }
         
-        // Check if changed
-        hasChanged = (value.current != output) ? true : hasChanged;
-        
-        // Round value and set to current
-        value.current = action.output[key] = (value.round) ? Math.round(output) : output;
+        if (value.round) {
+            output = Math.round(output);
+        }
         
         // Update velocity
         value.velocity = calc.speedPerSecond(calc.difference(value.current, output), frameDuration);
+        
+        // Check if changed and update
+        if (value.current != output) {
+            hasChanged = true;
+        }
+        
+        // Round value and set to current
+        value.current = action.output[key] = output;
     }
 
     // Fire onFrame callback
@@ -1317,7 +1339,7 @@ Rubix.prototype = {
             action.hasEnded = (progress !== 1) ? false : action.hasEnded;
             
             if (value.to !== undefined) {
-                progress = (value.steps) ? utils.stepProgress(progress, 1, value.steps) : true;
+                progress = (value.steps) ? utils.stepProgress(progress, 1, value.steps) : progress;
                 newValue = easing.withinRange(progress, value.origin, value.to, value.ease);
             }
             
@@ -1331,12 +1353,12 @@ Rubix.prototype = {
     
     Input: {
     
-        updateInput: function (action, props, framestamp) {
-            action.inputOffset = calc.offset(props.inputOrigin, props.input.current)
+        updateInput: function (action, props) {
+            action.inputOffset = calc.offset(props.inputOrigin, props.input.current);
         },
     
-        process: function (key, value, values, props, action, frameDuration) {
-            return (inputOffset.hasOwnProperty(key)) ? value.origin + action.inputOffset[key] : value.current;
+        process: function (key, value, values, props, action) {
+            return (action.inputOffset.hasOwnProperty(key)) ? value.origin + action.inputOffset[key] : value.current;
         },
         
         hasEnded: function () {
@@ -1374,11 +1396,14 @@ Rubix.prototype = {
             var mapLink = value.mapLink,
                 mapTo = value.mapTo,
                 mapLength = (mapLink !== undefined) ? mapLink.length : 0,
-                linkValue = (action.inputOffset.hasOwnProperty(value.link)) ?
-                    action.inputOffset[value.link] : values[value.link].current,
+                linkValue = (props.rubix === 'Input' && action.inputOffset.hasOwnProperty(value.link)) ?
+                    action.inputOffset[value.link] : values[value.link].store.current,
                 newValue = linkValue;
-            
+
             for (var i = 1; i < mapLength; i++) {
+                
+                
+                
                 if (newValue < mapLink[i] || i === mapLength - 1) {
                     newValue = calc.value(calc.progress(newValue, mapLink[i - 1], mapLink[i]), mapTo[i - 1], mapTo[i]);
                     break;
@@ -1684,13 +1709,13 @@ module.exports = {
     dilate: 1,
     
     // Order of values
-    order: [],
+    order: undefined,
     
-    playlist: [],
+    playlist: undefined,
     
     playhead: 0,
     
-    progress: {},
+    progress: undefined,
     
     // The object we're checking
     input: undefined,
@@ -1725,7 +1750,7 @@ module.exports = {
     // Run this when action changes
     onChange: undefined,
     
-    output: {}
+    output: undefined
 };
 },{"../action/rubix.js":10}],15:[function(require,module,exports){
 /*
@@ -1739,8 +1764,7 @@ module.exports = {
     EASING: {
         IN: 'In',
         IN_OUT: 'InOut',
-        OUT: 'Out',
-        LINEAR: 'linear'
+        OUT: 'Out'
     },
     RUBIX: {
         INPUT: 'Input',
@@ -1784,9 +1808,6 @@ module.exports = {
     // [boolean]: Round output if true
     round: false,
 
-    // [string]: Name of rubix to process value
-    rubix: 'Time',
-
     /*
         Link properties
     */
@@ -1795,10 +1816,10 @@ module.exports = {
     link: undefined,
     
     // [array]: Linear range of values (eg [-100, -50, 50, 100]) of linked value to map to .mapTo
-    mapLink: [],
+    mapLink: undefined,
     
     // [array]: Non-linear range of values (eg [0, 1, 1, 0]) to map to .mapLink - here the linked value being 75 would result in a value of 0.5
-    mapTo: [],
+    mapTo: undefined,
 
 
     /*
@@ -2200,7 +2221,8 @@ var calc = require('../utils/calc.js'),
         var repo = new Repo(),
             setter = repo.set,
             firstSet = true,
-            action = arguments[1];
+            action = arguments[1],
+            key = arguments[2];
 
         // Apply defaults
         setter.call(repo, arguments[0]);
@@ -2221,7 +2243,8 @@ var calc = require('../utils/calc.js'),
                 arg1 = args[0],
                 arg2 = args[1],
                 data = {},
-                store;
+                store,
+                moveToBack = false;
 
             // If we have an object, resolve every item first
             if (utils.isObj(arg1)) {
@@ -2256,10 +2279,8 @@ var calc = require('../utils/calc.js'),
             // Check for range
             setter.apply(this, ['hasRange', (utils.isNum(store.min) && utils.isNum(store.max))]);
             
-            // Set rubix if link is set
-            if (store.link) {
-                setter.apply(this, ['rubix', 'Link']);
-            }
+            // Update order if this is linked
+            action.updateOrder(key, (utils.isString(store.link)));
         };
 
         
@@ -2597,7 +2618,8 @@ module.exports = {
     */
     restricted: function (value, min, max) {
         var restricted = (min !== undefined) ? Math.max(value, min) : value;
-        restricted = (max !== undefined) ? Math.min(value, max) : restricted;
+        restricted = (max !== undefined) ? Math.min(restricted, max) : restricted;
+
         return restricted;
     },
 
@@ -2874,16 +2896,14 @@ EasingFunction.prototype = {
         @return [number]: Value of eased progress in range
     */  
     withinRange: function (progress, from, to, ease, escapeAmp) {
-        var newProgress = calc.restricted(progress, 0, 1),
-            inRange = util.isInRange(progress, 0, 1);
-            
-        ease = inRange ? ease : KEY.EASING.LINEAR;
+        var progressLimited = calc.restricted(progress, 0, 1);
 
-        if (!inRange) {
-            newProgress = newProgress + (calc.difference(newProgress, progress) * escapeAmp);
+        if (progressLimited !== progress && escapeAmp) {
+            ease = 'linear';
+            progressLimited = progressLimited + (calc.difference(progressLimited, progress) * escapeAmp);
         }
 
-        return calc.valueEased(newProgress, from, to, this.get(ease));
+        return calc.valueEased(restrictedProgress, from, to, this.get(ease));
     },
         
     /*
@@ -2895,16 +2915,9 @@ EasingFunction.prototype = {
         @param [number]: Progress, from 0-1
         @return [number]: Unadjusted progress
     */
-    'linear': function (progress) {
+    linear: function (progress) {
         return progress;
-    },
-    
-    'ease':         new Bezier(.25, .1, .25, 1.0),
-    'ease-in':      new Bezier(.42, 0, 1.00, 1.0),
-    'ease-out':     new Bezier(0, 0, .58, 1.0),
-    'ease-in-out':  new Bezier(.42, 0, .58, 1.0),
-    'back-in':      new Bezier(.48,-0.45,.99,.79),
-    'back-out':     new Bezier(.11,.7,.6,1.31)
+    }
 
 };
 
@@ -3233,7 +3246,7 @@ module.exports = {
         @return [array || object]: New array or object
     */
     merge: function (base, overwrite) {
-        return (this.isArray(base)) ? this.mergeArray(base, overwrite) : this.mergeObject(base, overwrite);
+        return (this.isArray(base)) ? this.copyArray(overwrite) : this.mergeObject(base, overwrite);
     },
     
     /*
@@ -3261,33 +3274,6 @@ module.exports = {
         }
         
         return newObject;
-    },
-    
-    /*
-        Non-destructive merge of array
-        
-        @param [array]: Array to use as base
-        @param [array]: Array to overwrite base with
-        @return [array]: New array
-    */
-    mergeArray: function (base, overwrite) {
-        var newArray = this.copyArray(base),
-            length = overwrite.length,
-            i = 0;
-        
-        for (var i = 0; i < length; i++) {
-            if (this.isObj(overwrite[i])) {
-                if (this.isObj(newArray[i])) {
-                    newArray[i] = this.merge(newArray[i], overwrite[i]);
-                } else {
-                    newArray[i] = this.copy(overwrite[i]);
-                }
-            } else {
-                newArray[i] = overwrite[i];
-            }
-        }
-        
-        return newArray;
     },
 
     /*

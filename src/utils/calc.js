@@ -307,7 +307,8 @@ module.exports = {
     */
     restricted: function (value, min, max) {
         var restricted = (min !== undefined) ? Math.max(value, min) : value;
-        restricted = (max !== undefined) ? Math.min(value, max) : restricted;
+        restricted = (max !== undefined) ? Math.min(restricted, max) : restricted;
+
         return restricted;
     },
 

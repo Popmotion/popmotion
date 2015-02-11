@@ -49,7 +49,7 @@ module.exports = function (action, framestamp, frameDuration) {
 
         // Load value rubix
         valueRubix = value.link ? Rubix['Link'] : rubix;
-
+        
         // Calculate new value
         output = valueRubix.process(key, value, values, props, action, frameDuration);
 
