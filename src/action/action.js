@@ -28,7 +28,7 @@ var cycl = require('cycl'),
         // Register process wth cycl
         self.process = cycl.newProcess(function (framestamp, frameDuration) {
 	        if (self.active) {
-            	process(self, framestamp, frameDuration);
+                process(self, framestamp, frameDuration);
 	        }
         });
         
