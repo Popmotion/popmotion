@@ -220,6 +220,36 @@ Rubix.prototype = {
             
             return newValue;
         }
+    },
+    
+    /*
+        Angle and Distance
+    */
+    AngleAndDistance: {
+        /*
+            Currently inefficient as this gets called once each for
+            radialX and radialY, which could be cut down
+            
+            @param [string]: Key of current value
+            @param [Value]: Current value
+            @param [object]: Collection of all Action values
+            @param [object]: Action properties
+            @param [Action]: Current Action
+            @return [number]: Calculated value
+        */
+        process: function (key, value, values, props, action) {
+            var origin = {
+                    x: (values.x) ? values.x.store.current : 0,
+                    y: (values.y) ? values.y.store.current : 0
+                },
+                point = calc.pointFromAngleAndDistance(origin, values.angle.store.current, values.distance.store.current),
+                newValue = {
+                    radialX: point.x,
+                    radialY: point.y
+                };
+            
+            return newValue[key];
+        }
     }
 };
 
