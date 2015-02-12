@@ -1,9 +1,8 @@
 "use strict";
 
 var cycl = require('cycl'),
-    processor = require('./processor.js'),
+    process = require('./processor.js'),
     presets = require('./presets.js'),
-    rubix = require('./rubix.js'),
     Pointer = require('../input/pointer.js'),
     KEY = require('../opts/keys.js'),
     defaultProps = require('../opts/action.js'),
@@ -29,7 +28,7 @@ var cycl = require('cycl'),
         // Register process wth cycl
         self.process = cycl.newProcess(function (framestamp, frameDuration) {
 	        if (self.active) {
-            	processor.action(self, framestamp, frameDuration);
+                process(self, framestamp, frameDuration);
 	        }
         });
         
@@ -149,7 +148,7 @@ Action.prototype = {
         self.resetProgress();
         
         if (processType) {
-            self.changeRubix(processType);
+            self.props.set('rubix', processType);
         }
 
         self.isActive(true);
@@ -411,7 +410,7 @@ Action.prototype = {
 
         // Or create new if it doesn't
         } else {
-            newVal = new Value(defaultValue, this);
+            newVal = new Value(defaultValue, this, key);
             newVal.set(value, inherit);
 
             this.values.set(key, newVal);
@@ -452,15 +451,23 @@ Action.prototype = {
     },
     
     /*
-        Change Action properties
+        Update order of value keys
         
-        @param [string]: Type of processing rubix to use
-        @param [object]: Base properties of new input
+        @param [string]: Key of value
+        @param [boolean]: Whether to move value to back
     */
-    changeRubix: function (processType) {
-        this.props.set('rubix', rubix[processType]);
-
-        return this;
+    updateOrder: function (key, moveToBack) {
+        var props = this.props.get(),
+            order = props.order = props.order ? props.order : [],
+            pos = order.indexOf(key);
+        
+        if (pos === -1 || moveToBack) {
+            order.push(key);
+            
+            if (pos !== -1) {
+                order.splice(pos, 1);
+            }
+        }
     }
     
 };

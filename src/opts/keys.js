@@ -9,8 +9,7 @@ module.exports = {
     EASING: {
         IN: 'In',
         IN_OUT: 'InOut',
-        OUT: 'Out',
-        LINEAR: 'linear'
+        OUT: 'Out'
     },
     RUBIX: {
         INPUT: 'Input',
@@ -18,18 +17,14 @@ module.exports = {
         RUN: 'Run'
     },
     ERROR: {
-        ACTION_EXISTS: "Action already defined. Use forceOverride: true to override.",
-        NO_ACTION: "No action defined to inherit from.",
-        INVALID_EASING: ": Easing not defined",
+        ACTION_EXISTS: "Action defined. Use forceOverride: true",
+        NO_ACTION: "Action not defined",
+        INVALID_EASING: ": Not defined",
     },
     EVENT: {
         MOUSE: 'mouse',
         MOUSEMOVE: 'mousemove',
         TOUCH: 'touch',
         TOUCHMOVE: 'touchmove',
-    },
-    PROGRESS: {
-        DIRECT: 'Direct',
-        RANGE: 'Range'
     }
 };

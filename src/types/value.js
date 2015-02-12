@@ -51,7 +51,8 @@ var calc = require('../utils/calc.js'),
         var repo = new Repo(),
             setter = repo.set,
             firstSet = true,
-            action = arguments[1];
+            action = arguments[1],
+            key = arguments[2];
 
         // Apply defaults
         setter.call(repo, arguments[0]);
@@ -71,7 +72,9 @@ var calc = require('../utils/calc.js'),
             var args = arguments,
                 arg1 = args[0],
                 arg2 = args[1],
-                data = {};
+                data = {},
+                store,
+                moveToBack = false;
 
             // If we have an object, resolve every item first
             if (utils.isObj(arg1)) {
@@ -100,12 +103,14 @@ var calc = require('../utils/calc.js'),
 
             setter.apply(this, [data]);
             
+            // Cache store
+            store = this.store;
+            
             // Check for range
-            if (this.store.min !== undefined && this.store.max !== undefined) {
-                setter.apply(this, ['hasRange', true]);
-            } else {
-                setter.apply(this, ['hasRange', false]);
-            }
+            setter.apply(this, ['hasRange', (utils.isNum(store.min) && utils.isNum(store.max))]);
+            
+            // Update order if this is linked
+            action.updateOrder(key, (utils.isString(store.link)));
         };
 
         

@@ -198,16 +198,14 @@ EasingFunction.prototype = {
         @return [number]: Value of eased progress in range
     */  
     withinRange: function (progress, from, to, ease, escapeAmp) {
-        var newProgress = calc.restricted(progress, 0, 1),
-            inRange = util.isInRange(progress, 0, 1);
-            
-        ease = inRange ? ease : KEY.EASING.LINEAR;
+        var progressLimited = calc.restricted(progress, 0, 1);
 
-        if (!inRange) {
-            newProgress = newProgress + (calc.difference(newProgress, progress) * escapeAmp);
+        if (progressLimited !== progress && escapeAmp) {
+            ease = 'linear';
+            progressLimited = progressLimited + (calc.difference(progressLimited, progress) * escapeAmp);
         }
 
-        return calc.valueEased(newProgress, from, to, this.get(ease));
+        return calc.valueEased(progressLimited, from, to, this.get(ease));
     },
         
     /*
@@ -219,16 +217,9 @@ EasingFunction.prototype = {
         @param [number]: Progress, from 0-1
         @return [number]: Unadjusted progress
     */
-    'linear': function (progress) {
+    linear: function (progress) {
         return progress;
-    },
-    
-    'ease':         new Bezier(.25, .1, .25, 1.0),
-    'ease-in':      new Bezier(.42, 0, 1.00, 1.0),
-    'ease-out':     new Bezier(0, 0, .58, 1.0),
-    'ease-in-out':  new Bezier(.42, 0, .58, 1.0),
-    'back-in':      new Bezier(.48,-0.45,.99,.79),
-    'back-out':     new Bezier(.11,.7,.6,1.31)
+    }
 
 };
 

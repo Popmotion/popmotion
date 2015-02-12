@@ -22,7 +22,6 @@ module.exports = {
     // [boolean]: Round output if true
     round: false,
 
-
     /*
         Link properties
     */
@@ -31,10 +30,10 @@ module.exports = {
     link: undefined,
     
     // [array]: Linear range of values (eg [-100, -50, 50, 100]) of linked value to map to .mapTo
-    mapLink: [],
+    mapLink: undefined,
     
     // [array]: Non-linear range of values (eg [0, 1, 1, 0]) to map to .mapLink - here the linked value being 75 would result in a value of 0.5
-    mapTo: [],
+    mapTo: undefined,
 
 
     /*

@@ -7,7 +7,7 @@ module.exports = {
     active: false,
     
     // What to use to process this aciton
-    rubix: rubix['Time'],
+    rubix: 'Time',
     
     // Multiply output value by
     amp: 1,
@@ -33,9 +33,14 @@ module.exports = {
     // 
     dilate: 1,
     
-    playlist: [],
+    // Order of values
+    order: undefined,
+    
+    playlist: undefined,
     
     playhead: 0,
+    
+    progress: undefined,
     
     // The object we're checking
     input: undefined,
@@ -68,5 +73,7 @@ module.exports = {
     onFrame: undefined,
     
     // Run this when action changes
-    onChange: undefined
+    onChange: undefined,
+    
+    output: undefined
 };

@@ -556,9 +556,8 @@ module.exports = Timer;
 "use strict";
 
 var cycl = require('cycl'),
-    processor = require('./processor.js'),
+    process = require('./processor.js'),
     presets = require('./presets.js'),
-    rubix = require('./rubix.js'),
     Pointer = require('../input/pointer.js'),
     KEY = require('../opts/keys.js'),
     defaultProps = require('../opts/action.js'),
@@ -584,7 +583,7 @@ var cycl = require('cycl'),
         // Register process wth cycl
         self.process = cycl.newProcess(function (framestamp, frameDuration) {
 	        if (self.active) {
-            	processor.action(self, framestamp, frameDuration);
+                process(self, framestamp, frameDuration);
 	        }
         });
         
@@ -704,7 +703,7 @@ Action.prototype = {
         self.resetProgress();
         
         if (processType) {
-            self.changeRubix(processType);
+            self.props.set('rubix', processType);
         }
 
         self.isActive(true);
@@ -966,7 +965,7 @@ Action.prototype = {
 
         // Or create new if it doesn't
         } else {
-            newVal = new Value(defaultValue, this);
+            newVal = new Value(defaultValue, this, key);
             newVal.set(value, inherit);
 
             this.values.set(key, newVal);
@@ -1007,21 +1006,29 @@ Action.prototype = {
     },
     
     /*
-        Change Action properties
+        Update order of value keys
         
-        @param [string]: Type of processing rubix to use
-        @param [object]: Base properties of new input
+        @param [string]: Key of value
+        @param [boolean]: Whether to move value to back
     */
-    changeRubix: function (processType) {
-        this.props.set('rubix', rubix[processType]);
-
-        return this;
+    updateOrder: function (key, moveToBack) {
+        var props = this.props.get(),
+            order = props.order = props.order ? props.order : [],
+            pos = order.indexOf(key);
+        
+        if (pos === -1 || moveToBack) {
+            order.push(key);
+            
+            if (pos !== -1) {
+                order.splice(pos, 1);
+            }
+        }
     }
     
 };
 
 module.exports = Action;
-},{"../input/pointer.js":13,"../opts/action.js":14,"../opts/keys.js":15,"../opts/value.js":16,"../types/repo.js":20,"../types/value.js":21,"../utils/calc.js":22,"../utils/utils.js":26,"./presets.js":8,"./processor.js":9,"./rubix.js":10,"cycl":1}],8:[function(require,module,exports){
+},{"../input/pointer.js":13,"../opts/action.js":14,"../opts/keys.js":15,"../opts/value.js":16,"../types/repo.js":20,"../types/value.js":21,"../utils/calc.js":22,"../utils/utils.js":26,"./presets.js":8,"./processor.js":9,"cycl":1}],8:[function(require,module,exports){
 "use strict";
 
 var KEY = require('../opts/keys.js'),
@@ -1192,191 +1199,118 @@ module.exports = new Presets();
 "use strict";
 
 var Rubix = require('./rubix.js'),
-	calc = require('../utils/calc.js'),
-    utils = require('../utils/utils.js'),
-    Process = function () {},
-    process;
-    
-Process.prototype = {
-    
-    /*
-        Process an action
+    calc = require('../utils/calc.js');
+
+module.exports = function (action, framestamp, frameDuration) {
+    var props = action.props.store,
+        data = action.data.store,
+        values = action.values.store,
+        order = props.order = props.order || [],
+        orderLength = order.length,
+        rubix = Rubix[props.rubix],
+        key = '',
+        value,
+        valueRubix,
+        output,
+        hasChanged = false;
         
-        @param [Action]: Action to process
-        @param [number]: Timestamp of executing frame
-        @param [number]: Duration, in ms, since last frame
-    */
-    action: function (action, framestamp, frameDuration) {
-        var output = {},
-            props = action.props.store,
-            data = action.data.store,
-            values = action.values.store,
-            value,
-            rubix = props.rubix,
-            hasLinked = false,
-            hasChanged = false;
+    action.output = {};
 
-        // Fire onStart if firstFrame
-        if (action.firstFrame) {
-            if (props.onStart) {
-                props.onStart.call(props.scope, data);
-            }
-
-            action.firstFrame = false;
-        }
-        
-        // Update associated Input
-        if (props.input) {
-	        output.input = props.input.onFrame(framestamp);
-        }
-        
-        // Update progress
-        action.progress = rubix.calcProgress(action, props, values, framestamp, frameDuration);
-
-        // Calculate new values
-        for (var key in values) {
-            if (values.hasOwnProperty(key)) {
-                value = values[key].store;
-
-                // Calculate new value if not currently linked
-                if (!value.link) {
-                    output[key] = rubix.easeValue(key, value, action, frameDuration);
-    
-                    // Round
-                    if (value.round) {
-                        output[key] = Math.round(output[key]);
-                    }
-    
-                    // Check if has changed
-                    if (value.current != output[key]) {
-                        hasChanged = true;
-                        value.current = output[key];
-                    }
-                } else {
-                    hasLinked = true;
-                }
-            }
-        } // end value calculations
-        
-        // If we have values that are linking in to another
-        if (hasLinked) {
-            for (key in values) {
-                value = values[key].store;
-                if (value.link && values[value.link]) {
-                    value.current = output[key] = this.resolveMaps(values[value.link].store.current, value.mapLink, value.mapTo);
-                }
-            }
-        }
-
-        // Calculate new x and y if angle and distance present
-        output = this.angleAndDistance(values, output);
-
-        // Fire onFrame callback
-        if (props.onFrame) {
-            props.onFrame.call(props.scope, output, data);
-        }
-
-        // Fire onChange callback
-        if (hasChanged && props.onChange) {
-            props.onChange.call(props.scope, output, data);
-        }
-        
-        // Fire onEnd and deactivate if at end
-        if (rubix.hasEnded(action, hasChanged)) {
-            action.isActive(false);
-
-            if (props.onEnd) {
-                props.onEnd.call(props.scope, output, data);
-            }
-            
-            // Check if action is still inactive before checking next action
-            if (!action.isActive()) {
-                action.next();
-            }
-        }
-        
-        // Update Action framestamp
-        action.framestamp = framestamp;
-    },
-    
-    /*
-        Take two maps, source and target, and figure out new value
-        
-        @param [number]: Source value
-        @param [array]: Map of source values
-        @param [array]: Map of target values
-        @return [number]: 
-    */
-    resolveMaps: function (sourceValue, sourceMap, targetMap) {
-        var resolvedValue = 0,
-            mapLength = sourceMap.length;
-        
-        for (var i = 1; i < mapLength; i++) {
-            if (sourceValue <= sourceMap[i] || i === mapLength - 1) {
-                resolvedValue = calc.value(calc.progress(sourceValue, sourceMap[i - 1], sourceMap[i]), targetMap[i - 1], targetMap[i]);
-                break;
-            }
-        }
-
-        return resolvedValue;
-    },
-    
-    /*
-        Update associated input
-        
-        @param [Input]: Bound input
-        @param [number]: Framestamp of latest frame
-    */
-    updateInput: function (input, framestamp) {
-        if (input) {
-            input.updateInput(framestamp);
-        }
-    },
-    
-    /*
-	    Process angle and distance
-	    
-	    @param [object]: Action origin point
-	    @param [object]: Current output
-	    @return [object]: Output with updated x and y
-    */
-    angleAndDistance: function (values, output) {
-	    var point = {};
-
-	    if (values.angle && values.distance) {
-		    point = calc.pointFromAngleAndDistance({ x: values.x.get('current'), y: values.y.get('current') }, output.angle, output.distance);
-		    output.x = point.x;
-		    output.y = point.y;
-	    }
-
-	    return output;
+    // Update elapsed
+    if (rubix.updateInput) {
+        rubix.updateInput(action, props, framestamp);
     }
-};
+    
+    // Fire onStart if first frame
+    if (action.firstFrame) {
+        if (props.onStart) {
+            props.onStart.call(props.scope, action.output, data);
+        }
+        
+        action.firstFrame = false;
+    }
+    
+    // Update Input if available
+    if (props.input) {
+        action.output.input = props.input.onFrame(framestamp);
+    }
 
-module.exports = new Process();
-},{"../utils/calc.js":22,"../utils/utils.js":26,"./rubix.js":10}],10:[function(require,module,exports){
+    // Update values
+    for (var i = 0; i < orderLength; i++) {
+        key = order[i];
+
+        // Get value
+        value = values[key].store;
+
+        // Load value rubix
+        valueRubix = value.link ? Rubix['Link'] : rubix;
+        
+        // Calculate new value
+        output = valueRubix.process(key, value, values, props, action, frameDuration);
+
+        // Limit if range set
+        if (rubix.limit) {
+            output = rubix.limit(output, value);
+        }
+        
+        if (value.round) {
+            output = Math.round(output);
+        }
+        
+        // Update velocity
+        value.velocity = calc.speedPerSecond(calc.difference(value.current, output), frameDuration);
+        
+        // Check if changed and update
+        if (value.current != output) {
+            hasChanged = true;
+        }
+        
+        // Round value and set to current
+        value.current = action.output[key] = output;
+    }
+
+    // Fire onFrame callback
+    if (props.onFrame) {
+        props.onFrame.call(props.scope, action.output, data);
+    }
+
+    // Fire onChange callback
+    if (hasChanged && props.onChange) {
+        props.onChange.call(props.scope, action.output, data);
+    }
+    
+    // Fire onEnd callback
+    if (rubix.hasEnded(action, hasChanged)) {
+        action.isActive(false);
+        
+        if (props.onEnd) {
+            props.onEnd.call(props.scope, action.output, data);
+        }
+        
+        // Find next action if still inActive
+        if (!action.isActive()) {
+            action.next();
+        }
+    }
+
+    action.framestamp = framestamp;
+};
+},{"../utils/calc.js":22,"./rubix.js":10}],10:[function(require,module,exports){
 /*
     Rubix modules
     ----------------------------------------
     
-    Rubix modules are used to process an action based on its .rubix property.
-    
-    Available rubix:
-        'Time'
-        'Pointer'
-        'Speed'
-        
-    Processing functions:
-        calcProgress
-        hasEnded
-        updateInput
-        easeValue
+    Rubix are collections of optional processors. Which rubix to
+    use is decided programmatically. If .link is defined, Link is used.
+    Otherwise values use Time, Input and Run based on whether .play, 
+    .track or .run are running.
 */
+
 "use strict";
 
 var calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
-    Easing = require('../utils/easing.js'),
+    easing = require('../utils/easing.js'),
     KEY = require('../opts/keys.js'),
     simulate = require('./simulate.js'),
     Rubix = function () {},
@@ -1385,252 +1319,211 @@ var calc = require('../utils/calc.js'),
 Rubix.prototype = {
 
     Time: {
+
         /*
-            Calc progress
+            Update Action elapsed time
             
-            Calc action's progress through timelimit
-            
-            @param [Action]: action to measure
-            @param [timestamp]: framestart timestamp
-            @return [number]: 0 to 1 value representing how much time has passed
-        */
-        calcProgress: function (action, props, values, frameStart) {
-            var isComplete = true,
-                progress = {},
-                value = {};
-            
-            action.elapsed += (frameStart - action.framestamp) * props.dilate;
-            
-            for (var key in values) {
-                value = values[key].store;
-                progress[key] = calc.restricted(calc.progress(action.elapsed - value.delay, value.duration) - value.stagger, 0, 1);
-                
-                isComplete = (progress[key] !== 1) ? false : isComplete;
-            }
-            
-            progress.complete = isComplete;
-            
-            return progress;
-        },
-        
-        /*
-            Has action ended
-            
-            True if progress is equal to or higher than 1. If looping is enabled
-            we restart the action
-            
-            @param [Action]: action to analyse
-            @return [boolean]: has action ended
-        */
-        hasEnded: function (action) {
-            return action.progress.complete;
-        },
-        
-        /*
-            Ease value in action with provided key
-            
-            @param [string]: key of value
             @param [Action]
+            @param [object]: Action properties
+            @param [number]: Timestamp of current frame
         */
-        easeValue: function (key, value, action, frameDuration) {
-            var progress = action.progress[key],
-                newValue = value.current;
-                
-            if (value.to !== undefined) {
-                if (value.steps) {
-                    progress = utils.stepProgress(progress, 1, value.steps);
-                }
-                
-                newValue = Easing.withinRange(progress, value.origin, value.to, value.ease);
-            }
+        updateInput: function (action, props, framestamp) {
+            action.elapsed += (framestamp - action.framestamp) * props.dilate;
+            action.hasEnded = true;
+        },
+
+        /*
+            Calculate progress of value based on time elapsed,
+            value delay/duration/stagger properties
+
+            @param [string]: Key of current value
+            @param [Value]: Current value
+            @param [object]: Collection of all Action values
+            @param [object]: Action properties
+            @param [Action]: Current Action
+            @param [number]: Duration of frame in ms
+            @return [number]: Calculated value
+        */
+        process: function (key, value, values, props, action) {
+            var newValue = value.current,
+                progress = calc.restricted(calc.progress(action.elapsed - value.delay, value.duration) - value.stagger, 0, 1);
             
-            value.velocity = calc.speedPerSecond(calc.difference(value.current, newValue), frameDuration);
+            // Update hasEnded
+            action.hasEnded = (progress !== 1) ? false : action.hasEnded;
+            
+            if (value.to !== undefined) {
+                progress = (value.steps) ? utils.stepProgress(progress, 1, value.steps) : progress;
+                newValue = easing.withinRange(progress, value.origin, value.to, value.ease);
+            }
             
             return newValue;
+        },
+        
+        /*
+            Return hasEnded property
+            
+            @param [boolean]: Have all Values hit 1 progress?
+        */
+        hasEnded: function (action) {
+            return action.hasEnded;
         }
     },
     
     Input: {
-        /*
-            Get input key
-        */
-        getInputKey: function (key, link, inputOffset) {
-            var inputKey = false;
-            
-            // If value is listening to a present input
-            if (utils.isString(link) && inputOffset.hasOwnProperty(link)) {
-                inputKey = link;
-
-            // Of if value key actually exists in input
-            } else if (inputOffset.hasOwnProperty(key)) {
-                inputKey = key;
-            }
-            
-            return inputKey;
-        },
     
         /*
-            Calc progress
+            Update Input
             
-            Calc the progress of each input metric. 
-            
-            @param [Action]: action to measure
-            @return [object]: Object of all progresses
-        */
-        calcProgress: function (action, props, values, frameStart) {
-            var progress = {},
-                inputKey, value, offset,
-                inputOffset = calc.offset(props.inputOrigin, props.input.current);
-
-            for (var key in values) {
-                if (values.hasOwnProperty(key)) {
-                    value = values[key].get();
-                    inputKey = this.getInputKey(key, value.link, inputOffset);
-
-                    // If we have an input key we animate this property
-                    if (inputKey !== false) {
-                        
-                        offset = inputOffset[inputKey];
-                        progress[key] = {};
-
-                        // If value has specified range
-                        if (value.hasRange) {
-                            progress[key].type = KEY.PROGRESS.RANGE;
-                            progress[key].value = calc.progress(value.origin + offset, value.min, value.max);
-
-                        // Or we're calculating progress directly
-                        } else {
-                            progress[key].type = KEY.PROGRESS.DIRECT;
-                            progress[key].value = value.origin + offset;                   
-                        }
-                        
-                    }
-                }
-            }
-
-            return progress;
-        },
-        
-        /*
-            Has function ended?
-            
-            Tracking currently needs manually ending
-        */
-        hasEnded: function (action) {
-            return false;
-        },
-        
-        /*
-            Ease value in action with provided key
-            
-            @param [string]: key of value
             @param [Action]
-            @param [object]: Progress of pointer props
+            @param [object]: Action properties
         */
-        easeValue: function (key, value, action, frameDuration) {
-            var progress = value.link ? action.progress[value.link] : action.progress[key],
-                newValue = value.current;
-                
-            if (utils.isObj(progress)) {
-                // If this is a range progress
-                if (progress.type === KEY.PROGRESS.RANGE) {
-                
-                    // Step if steps - DRY it up
-                    if (value.steps) {
-                        progress.value = utils.stepProgress(progress.value, 1, value.steps);
-                    }
-                
-                    newValue = Easing.withinRange(progress.value, value.min, value.max, 'linear', value.escapeAmp);
-                // Or is a direct progress
-                } else {
-                    newValue = progress.value;
-                }
-                
-            }
+        updateInput: function (action, props) {
+            action.inputOffset = calc.offset(props.inputOrigin, props.input.current);
+        },
+        
+        /*
+            Move Value relative to Input movement
             
-            value.velocity = calc.speedPerSecond(calc.difference(value.current, newValue), frameDuration);
-
-            return newValue;
+            @param [string]: Key of current value
+            @param [Value]: Current value
+            @param [object]: Collection of all Action values
+            @param [object]: Action properties
+            @param [Action]: Current Action
+            @return [number]: Calculated value
+        */
+        process: function (key, value, values, props, action) {
+            return (action.inputOffset.hasOwnProperty(key)) ? value.origin + action.inputOffset[key] : value.current;
+        },
+        
+        /*
+            Has this Action ended? 
+            
+            @return [boolean]: False to make user manually finish .track()
+        */
+        hasEnded: function () {
+            return false;
         }
     },
     
     Run: {
+    
         /*
-            Calc new velocity
+            Simulate the Value's per-frame movement
             
-            Calc new velocity based on simulation output
-            
-            @param [Action]: action to measure
-            @return [object]: Object of all velocitys
+            @param [string]: Key of current value
+            @param [Value]: Current value
+            @param [object]: Collection of all Action values
+            @param [object]: Action properties
+            @param [Action]: Current Action
+            @param [number]: Duration of frame in ms
+            @return [number]: Calculated value
         */
-        calcProgress: function (action, props, values, frameStart, frameDuration) {
-            var progress = {},
-                point,
-                value;
-
-            for (var key in values) {
-                if (values.hasOwnProperty(key)) {
-                    value = values[key].get();
-                    value.velocity = simulate[value.simulate](value, frameDuration);
-                    progress[key] = calc.speedPerFrame(value.velocity, frameDuration);
-                }
-            }
-            
-            return progress;
+        process: function (key, value, values, props, action, frameDuration) {
+            return value.current + calc.speedPerFrame(simulate[value.simulate](value, frameDuration), frameDuration);
         },
         
         /*
             Has this action ended?
             
-            @return [boolean]: False for now - TODO create better default
+            Use a framecounter to see if Action has changed in the last x frames
+            and declare ended if not
+            
+            @param [Action]
+            @param [boolean]: Has Action changed?
+            @return [boolean]: Has Action ended?
         */
         hasEnded: function (action, hasChanged) {
-            var hasEnded = false;
-            
-            if (hasChanged) {
-                action.inactiveFrames = 0;
-            } else {
-                action.inactiveFrames++;
-                
-                if (action.inactiveFrames > 30) {
-                    hasEnded = true;
-                }
-            }
-            
-            return hasEnded;
+            action.inactiveFrames = hasChanged ? 0 : action.inactiveFrames + 1;
+            return (action.inactiveFrames > 3);
         },
         
         /*
-            Add the velocity to the current value
+            Limit output to value range, if any
             
-            @param [string]: key of value
-            @param [Action]
+            If velocity is at or more than range, and value has a bounce property,
+            run the bounce simulation
+            
+            @param [number]: Calculated output
+            @param [Value]: Current Value
+            @return [number]: Limit-adjusted output
         */
-        easeValue: function (key, value, action) {
-            var newValue = value.current + action.progress[key];
+        limit: function (output, value) {
+            output = calc.restricted(output, value.min, value.max);
+            
+            // Bounce if outside of range
+            value.velocity = (value.bounce && (output <= value.min || output >= value.max))
+                ? simulate.bounce(value) : value.velocity;
+            
+            return output;
+        }
+    },
+    
+    /*
+        Link
+        ---------------------------
+        
+        Link the calculations of one value into the output of another.
+        
+        Activate by setting the link property of one value with the name
+        of another value or Input property.
+        
+        Map the linked value with mapLink and provide a corressponding mapTo
+        to translate values from one into the other. For instance:
+        
+        {
+            link: 'x'
+            mapLink: [0, 100, 200]
+            mapTo: [-100, 0, -100]
+        }
+        
+        An output value of 50 for 'x' would translate to -50
+    */
+    Link: {
+        
+        /*
+            Process linked value
+            
+            First check if link exists within Action values, if not check
+            within Input (if exists)
+            
+            @param [string]: Key of current value
+            @param [Value]: Current value
+            @param [object]: Collection of all Action values
+            @param [object]: Action properties
+            @param [Action]: Current Action
+            @return [number]: Calculated value
+        */
+        process: function (key, value, values, props, action) {
+            var newValue = value.current,
+                mapLink = value.mapLink,
+                mapTo = value.mapTo,
+                mapLength = (mapLink !== undefined) ? mapLink.length : 0,
+                newValue;
 
-            if (value.min !== undefined) {
-                newValue = Math.max(value.min, newValue);
-                
-                if (value.bounce && newValue <= value.min) {
-                    value.velocity = simulate.bounce(value);
+            // First look at values in Action
+            if (values[value.link]) {
+                newValue = values[value.link].store.current;
+
+            // Then check values in Input
+            } else if (action.inputOffset && action.inputOffset.hasOwnProperty(value.link)) {
+                newValue = value.origin + action.inputOffset[key];
+            }
+            
+            for (var i = 1; i < mapLength; i++) {
+                if (newValue < mapLink[i] || i === mapLength - 1) {
+                    newValue = calc.value(calc.progress(newValue, mapLink[i - 1], mapLink[i]), mapTo[i - 1], mapTo[i]);
+                    break;
                 }
             }
             
-            if (value.max !== undefined) {
-                newValue = Math.min(value.max, newValue);
-                
-                if (value.bounce && newValue >= value.max) {
-                    value.velocity = simulate.bounce(value);
-                }
-            }
-
             return newValue;
         }
     }
 };
 
-module.exports = new Rubix();;
+rubixController = new Rubix();
+
+module.exports = rubixController;
 },{"../opts/keys.js":15,"../utils/calc.js":22,"../utils/easing.js":23,"../utils/utils.js":26,"./simulate.js":11}],11:[function(require,module,exports){
 "use strict";
 
@@ -1895,7 +1788,7 @@ module.exports = {
     active: false,
     
     // What to use to process this aciton
-    rubix: rubix['Time'],
+    rubix: 'Time',
     
     // Multiply output value by
     amp: 1,
@@ -1921,9 +1814,14 @@ module.exports = {
     // 
     dilate: 1,
     
-    playlist: [],
+    // Order of values
+    order: undefined,
+    
+    playlist: undefined,
     
     playhead: 0,
+    
+    progress: undefined,
     
     // The object we're checking
     input: undefined,
@@ -1956,7 +1854,9 @@ module.exports = {
     onFrame: undefined,
     
     // Run this when action changes
-    onChange: undefined
+    onChange: undefined,
+    
+    output: undefined
 };
 },{"../action/rubix.js":10}],15:[function(require,module,exports){
 /*
@@ -1970,8 +1870,7 @@ module.exports = {
     EASING: {
         IN: 'In',
         IN_OUT: 'InOut',
-        OUT: 'Out',
-        LINEAR: 'linear'
+        OUT: 'Out'
     },
     RUBIX: {
         INPUT: 'Input',
@@ -1979,19 +1878,15 @@ module.exports = {
         RUN: 'Run'
     },
     ERROR: {
-        ACTION_EXISTS: "Action already defined. Use forceOverride: true to override.",
-        NO_ACTION: "No action defined to inherit from.",
-        INVALID_EASING: ": Easing not defined",
+        ACTION_EXISTS: "Action defined. Use forceOverride: true",
+        NO_ACTION: "Action not defined",
+        INVALID_EASING: ": Not defined",
     },
     EVENT: {
         MOUSE: 'mouse',
         MOUSEMOVE: 'mousemove',
         TOUCH: 'touch',
         TOUCHMOVE: 'touchmove',
-    },
-    PROGRESS: {
-        DIRECT: 'Direct',
-        RANGE: 'Range'
     }
 };
 },{}],16:[function(require,module,exports){
@@ -2019,7 +1914,6 @@ module.exports = {
     // [boolean]: Round output if true
     round: false,
 
-
     /*
         Link properties
     */
@@ -2028,10 +1922,10 @@ module.exports = {
     link: undefined,
     
     // [array]: Linear range of values (eg [-100, -50, 50, 100]) of linked value to map to .mapTo
-    mapLink: [],
+    mapLink: undefined,
     
     // [array]: Non-linear range of values (eg [0, 1, 1, 0]) to map to .mapLink - here the linked value being 75 would result in a value of 0.5
-    mapTo: [],
+    mapTo: undefined,
 
 
     /*
@@ -2433,7 +2327,8 @@ var calc = require('../utils/calc.js'),
         var repo = new Repo(),
             setter = repo.set,
             firstSet = true,
-            action = arguments[1];
+            action = arguments[1],
+            key = arguments[2];
 
         // Apply defaults
         setter.call(repo, arguments[0]);
@@ -2453,7 +2348,9 @@ var calc = require('../utils/calc.js'),
             var args = arguments,
                 arg1 = args[0],
                 arg2 = args[1],
-                data = {};
+                data = {},
+                store,
+                moveToBack = false;
 
             // If we have an object, resolve every item first
             if (utils.isObj(arg1)) {
@@ -2482,12 +2379,14 @@ var calc = require('../utils/calc.js'),
 
             setter.apply(this, [data]);
             
+            // Cache store
+            store = this.store;
+            
             // Check for range
-            if (this.store.min !== undefined && this.store.max !== undefined) {
-                setter.apply(this, ['hasRange', true]);
-            } else {
-                setter.apply(this, ['hasRange', false]);
-            }
+            setter.apply(this, ['hasRange', (utils.isNum(store.min) && utils.isNum(store.max))]);
+            
+            // Update order if this is linked
+            action.updateOrder(key, (utils.isString(store.link)));
         };
 
         
@@ -2824,7 +2723,10 @@ module.exports = {
         @return [number]: Value as limited within given range
     */
     restricted: function (value, min, max) {
-        return Math.min(Math.max(value, min), max);
+        var restricted = (min !== undefined) ? Math.max(value, min) : value;
+        restricted = (max !== undefined) ? Math.min(restricted, max) : restricted;
+
+        return restricted;
     },
 
     /*
@@ -3100,16 +3002,14 @@ EasingFunction.prototype = {
         @return [number]: Value of eased progress in range
     */  
     withinRange: function (progress, from, to, ease, escapeAmp) {
-        var newProgress = calc.restricted(progress, 0, 1),
-            inRange = util.isInRange(progress, 0, 1);
-            
-        ease = inRange ? ease : KEY.EASING.LINEAR;
+        var progressLimited = calc.restricted(progress, 0, 1);
 
-        if (!inRange) {
-            newProgress = newProgress + (calc.difference(newProgress, progress) * escapeAmp);
+        if (progressLimited !== progress && escapeAmp) {
+            ease = 'linear';
+            progressLimited = progressLimited + (calc.difference(progressLimited, progress) * escapeAmp);
         }
 
-        return calc.valueEased(newProgress, from, to, this.get(ease));
+        return calc.valueEased(progressLimited, from, to, this.get(ease));
     },
         
     /*
@@ -3121,16 +3021,9 @@ EasingFunction.prototype = {
         @param [number]: Progress, from 0-1
         @return [number]: Unadjusted progress
     */
-    'linear': function (progress) {
+    linear: function (progress) {
         return progress;
-    },
-    
-    'ease':         new Bezier(.25, .1, .25, 1.0),
-    'ease-in':      new Bezier(.42, 0, 1.00, 1.0),
-    'ease-out':     new Bezier(0, 0, .58, 1.0),
-    'ease-in-out':  new Bezier(.42, 0, .58, 1.0),
-    'back-in':      new Bezier(.48,-0.45,.99,.79),
-    'back-out':     new Bezier(.11,.7,.6,1.31)
+    }
 
 };
 
@@ -3459,7 +3352,7 @@ module.exports = {
         @return [array || object]: New array or object
     */
     merge: function (base, overwrite) {
-        return (this.isArray(base)) ? this.mergeArray(base, overwrite) : this.mergeObject(base, overwrite);
+        return (this.isArray(base)) ? this.copyArray(overwrite) : this.mergeObject(base, overwrite);
     },
     
     /*
@@ -3487,33 +3380,6 @@ module.exports = {
         }
         
         return newObject;
-    },
-    
-    /*
-        Non-destructive merge of array
-        
-        @param [array]: Array to use as base
-        @param [array]: Array to overwrite base with
-        @return [array]: New array
-    */
-    mergeArray: function (base, overwrite) {
-        var newArray = this.copyArray(base),
-            length = overwrite.length,
-            i = 0;
-        
-        for (var i = 0; i < length; i++) {
-            if (this.isObj(overwrite[i])) {
-                if (this.isObj(newArray[i])) {
-                    newArray[i] = this.merge(newArray[i], overwrite[i]);
-                } else {
-                    newArray[i] = this.copy(overwrite[i]);
-                }
-            } else {
-                newArray[i] = overwrite[i];
-            }
-        }
-        
-        return newArray;
     },
 
     /*
