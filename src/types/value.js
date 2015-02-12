@@ -18,9 +18,10 @@ var calc = require('../utils/calc.js'),
         // If this is a function, execute
         if (utils.isFunc(val)) {
             resolvedVal = val.call(action.props.store.scope, current);
+        }
         
-        // Or if this is a relative assignment, calculate new contents
-        } else if (utils.isRelativeValue(val)) {
+        // Check if value is relative ie '+=10'
+        if (utils.isRelativeValue(resolvedVal)) {
             resolvedVal = calc.relativeValue(current, val);
         }
 
