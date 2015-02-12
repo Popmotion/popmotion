@@ -11,9 +11,12 @@ var calc = require('../utils/calc.js'),
             - Function returning the value
             - String relative equation
             - Or actual value
+            
+        @param [number]: 
     */
-    resolve = function (val, current, action) {
-        var resolvedVal = val;
+    resolve = function (val, current, value, action) {
+        var resolvedVal = val,
+            valUnit;
         
         // If this is a function, execute
         if (utils.isFunc(val)) {
@@ -24,6 +27,13 @@ var calc = require('../utils/calc.js'),
         if (utils.isRelativeValue(resolvedVal)) {
             resolvedVal = calc.relativeValue(current, val);
         }
+        
+        // If this value is a string it might 
+        if (utils.isString(resolvedVal)) {
+            valUnit = utils.splitValUnit(resolvedVal);
+            resolvedVal = valUnit.value;
+            value.unit = valUnit.unit;
+        }
 
         return resolvedVal;
     },
@@ -31,14 +41,14 @@ var calc = require('../utils/calc.js'),
     loopOver = function (newData, inherit, value, action) {
         var data = {};
         
-        for (var key in value.store) {
+        for (var key in value) {
             // If Action has property but new data doesn't
             if (inherit && inherit.hasOwnProperty(key) && !newData.hasOwnProperty(key)) {
-                data[key] = resolve(inherit[key], value.store[key], action);
+                data[key] = resolve(inherit[key], value[key], value, action);
 
             // Or if new data does
             } else if (newData.hasOwnProperty(key)) {
-                data[key] = resolve(newData[key], value.store[key], action);
+                data[key] = resolve(newData[key], value[key], value, action);
             }
         }
         
@@ -79,14 +89,14 @@ var calc = require('../utils/calc.js'),
 
             // If we have an object, resolve every item first
             if (utils.isObj(arg1)) {
-                data = loopOver(arg1, arg2, this, action);
+                data = loopOver(arg1, arg2, this.store, action);
 
                 // Handle start property
                 if (firstSet) {
                     firstSet = false;
                     
                     if (arg1.hasOwnProperty('start')){
-                        setter.apply(this, ['current', resolve(arg1.start, this.get('current'), action)]);
+                        setter.apply(this, ['current', resolve(arg1.start, this.get('current'), this.store, action)]);
                     }
                 }
 
@@ -94,11 +104,11 @@ var calc = require('../utils/calc.js'),
 
                 // If this is a specific setter, ie .set('key', val)
                 if (utils.isString(arg1) && !utils.isRelativeValue(arg1)) {
-                    data[arg1] = resolve(arg2, this.get('current'), action);
+                    data[arg1] = resolve(arg2, this.get('current'), this.store, action);
                     
                 // Or this is a var to be resolved, assign it to current
                 } else {
-                    data.current = resolve(arg1, this.get('current'), action);
+                    data.current = resolve(arg1, this.get('current'), this.store, action);
                 }
             }
 

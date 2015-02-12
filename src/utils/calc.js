@@ -274,21 +274,25 @@ module.exports = {
         var newValue = current,
             equation = rel.split('='),
             operator = equation[0],
-            num = parseFloat(equation[1]);
+            splitVal = utils.splitValUnit(equation[1]);
 
         switch (operator) {
             case '+':
-                newValue = current + num;
+                newValue = current + splitVal.value;
                 break;
             case '-':
-                newValue = current - num;
+                newValue = current - splitVal.value;
                 break;
             case '*':
-                newValue = current * num;
+                newValue = current * splitVal.value;
                 break;
             case '/':
-                newValue = current / num;
+                newValue = current / splitVal.value;
                 break;
+        }
+        
+        if (splitVal.unit) {
+            newValue += splitVal.unit;
         }
 
         return newValue;
