@@ -278,16 +278,16 @@ module.exports = {
 
         switch (operator) {
             case '+':
-                newValue = current + splitVal.value;
+                newValue += splitVal.value;
                 break;
             case '-':
-                newValue = current - splitVal.value;
+                newValue -= splitVal.value;
                 break;
             case '*':
-                newValue = current * splitVal.value;
+                newValue *= splitVal.value;
                 break;
             case '/':
-                newValue = current / splitVal.value;
+                newValue /= splitVal.value;
                 break;
         }
         
