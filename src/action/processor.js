@@ -4,6 +4,7 @@
 "use strict";
 
 var Rubix = require('./rubix.js'),
+    KEY = require('../opts/keys.js'),
     calc = require('../utils/calc.js');
 
 module.exports = function (action, framestamp, frameDuration) {
@@ -48,10 +49,9 @@ module.exports = function (action, framestamp, frameDuration) {
         value = values[key].store;
 
         // Load value rubix
+        valueRubix = rubix;
         if (value.link) {
             valueRubix = (value.link !== KEY.ANGLE_DISTANCE) ? Rubix['Link'] : Rubix['AngleAndDistance'];
-        } else {
-            valueRubix = rubix;
         }
         
         // Calculate new value
@@ -76,11 +76,6 @@ module.exports = function (action, framestamp, frameDuration) {
         
         // Round value and set to current
         value.current = action.output[key] = output;
-    }
-    
-    // If angle and distance are set, reprocess x and y
-    if (values.angle && values.distance) {
-        Rubix.AngleAndDistance.calcXY(action, values);
     }
 
     // Fire onFrame callback

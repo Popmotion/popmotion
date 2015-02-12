@@ -239,8 +239,8 @@ Rubix.prototype = {
         */
         process: function (key, value, values, props, action) {
             var origin = {
-                    x: values.x.store.current,
-                    y: values.y.store.current
+                    x: (values.x) ? values.x.store.current : 0,
+                    y: (values.y) ? values.y.store.current : 0
                 },
                 point = calc.pointFromAngleAndDistance(origin, values.angle.store.current, values.distance.store.current),
                 newValue = {
@@ -249,6 +249,7 @@ Rubix.prototype = {
                 };
             
             return newValue[key];
+        }
     }
 };
 
