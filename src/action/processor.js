@@ -48,7 +48,11 @@ module.exports = function (action, framestamp, frameDuration) {
         value = values[key].store;
 
         // Load value rubix
-        valueRubix = value.link ? Rubix['Link'] : rubix;
+        if (value.link) {
+            valueRubix = (value.link !== KEY.ANGLE_DISTANCE) ? Rubix['Link'] : Rubix['AngleAndDistance'];
+        } else {
+            valueRubix = rubix;
+        }
         
         // Calculate new value
         output = valueRubix.process(key, value, values, props, action, frameDuration);
@@ -72,6 +76,11 @@ module.exports = function (action, framestamp, frameDuration) {
         
         // Round value and set to current
         value.current = action.output[key] = output;
+    }
+    
+    // If angle and distance are set, reprocess x and y
+    if (values.angle && values.distance) {
+        Rubix.AngleAndDistance.calcXY(action, values);
     }
 
     // Fire onFrame callback

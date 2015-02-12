@@ -6,6 +6,7 @@
 
 module.exports = {
     REDSHIFT: 'redshift',
+    ANGLE_DISTANCE: 'angle distance',
     EASING: {
         IN: 'In',
         IN_OUT: 'InOut',

@@ -394,8 +394,8 @@ Action.prototype = {
         
         // If angle and distance exist, create an x and y
         if (this.getValue('angle') && this.getValue('distance')) {
-            this.setValue('x');
-            this.setValue('y');
+            this.setValue('radialX', { link: KEY.ANGLE_DISTANCE });
+            this.setValue('radialY', { link: KEY.ANGLE_DISTANCE });
         }
     },
     
