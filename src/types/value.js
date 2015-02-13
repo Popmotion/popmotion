@@ -57,7 +57,7 @@ var calc = require('../utils/calc.js'),
                 dataPoint = newData[key];
             }
             
-            if (dataPoint) {
+            if (dataPoint !== undefined) {
                 data[key] = resolve(dataPoint, value[key], value, action);
             }
         }
