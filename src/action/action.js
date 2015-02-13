@@ -18,6 +18,9 @@ var cycl = require('cycl'),
         // Create value manager
         self.values = new Repo();
         
+        // New CSS
+        self.css = new Repo();
+        
         // Create new property manager
         defaultProps.scope = this;
         self.props = new Repo(defaultProps);
