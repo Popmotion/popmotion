@@ -37,6 +37,4 @@ var methods = ['translate', 'scale', 'skew', 'rotate', 'matrix'],
     }
 })();
     
-
-
 module.exports = templates;

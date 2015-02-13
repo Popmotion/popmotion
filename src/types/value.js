@@ -31,24 +31,34 @@ var calc = require('../utils/calc.js'),
         // If this value is a string it might 
         if (utils.isString(resolvedVal)) {
             valUnit = utils.splitValUnit(resolvedVal);
-            resolvedVal = valUnit.value;
-            value.unit = valUnit.unit;
+            
+            if (!isNaN(valUnit.value)) {
+                resolvedVal = valUnit.value;
+                value.unit = valUnit.unit;
+            }
         }
 
         return resolvedVal;
     },
     
     loopOver = function (newData, inherit, value, action) {
-        var data = {};
+        var data = {},
+            dataPoint;
         
         for (var key in value) {
+            dataPoint = undefined;
+
             // If Action has property but new data doesn't
             if (inherit && inherit.hasOwnProperty(key) && !newData.hasOwnProperty(key)) {
-                data[key] = resolve(inherit[key], value[key], value, action);
+                dataPoint = inherit[key];
 
             // Or if new data does
             } else if (newData.hasOwnProperty(key)) {
-                data[key] = resolve(newData[key], value[key], value, action);
+                dataPoint = newData[key];
+            }
+            
+            if (dataPoint) {
+                data[key] = resolve(dataPoint, value[key], value, action);
             }
         }
         

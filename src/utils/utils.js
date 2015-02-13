@@ -265,7 +265,7 @@ module.exports = {
         @return [object]: Object with value and unit props
     */
     splitValUnit: function (value) {
-        var splitVal = value.match(/(\d*\.?\d*)(.*)/);
+        var splitVal = value.match(/(-?\d*\.?\d*)(.*)/);
 
         return {
             value: parseFloat(splitVal[1]),
