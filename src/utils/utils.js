@@ -255,6 +255,23 @@ module.exports = {
         
         return newObject;
     },
+    
+    /*
+        Split a value into a value/unit object
+        
+            "200px" -> { value: 200, unit: "px" }
+            
+        @param [string]: Value to split
+        @return [object]: Object with value and unit props
+    */
+    splitValUnit: function (value) {
+        var splitVal = value.match(/(-?\d*\.?\d*)(.*)/);
+
+        return {
+            value: parseFloat(splitVal[1]),
+            unit:  splitVal[2]
+        };
+    },
 
     /*
         Create stepped version of progress

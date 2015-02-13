@@ -1257,6 +1257,7 @@ module.exports = function (action, framestamp, frameDuration) {
             output = rubix.limit(output, value);
         }
         
+        // Round value if rounding on
         if (value.round) {
             output = Math.round(output);
         }
@@ -1269,8 +1270,9 @@ module.exports = function (action, framestamp, frameDuration) {
             hasChanged = true;
         }
         
-        // Round value and set to current
-        value.current = action.output[key] = output;
+        // Set current and add unit (if any) for output
+        value.current = output;
+        action.output[key] = (value.unit) ? output + value.unit : output;
     }
 
     // Fire onFrame callback
@@ -2322,33 +2324,54 @@ var calc = require('../utils/calc.js'),
             - Function returning the value
             - String relative equation
             - Or actual value
+            
+        @param [number]: 
     */
-    resolve = function (val, current, action) {
-        var resolvedVal = val;
+    resolve = function (val, current, value, action) {
+        var resolvedVal = val,
+            valUnit;
         
         // If this is a function, execute
         if (utils.isFunc(val)) {
             resolvedVal = val.call(action.props.store.scope, current);
+        }
         
-        // Or if this is a relative assignment, calculate new contents
-        } else if (utils.isRelativeValue(val)) {
+        // Check if value is relative ie '+=10'
+        if (utils.isRelativeValue(resolvedVal)) {
             resolvedVal = calc.relativeValue(current, val);
+        }
+        
+        // If this value is a string it might 
+        if (utils.isString(resolvedVal)) {
+            valUnit = utils.splitValUnit(resolvedVal);
+            
+            if (!isNaN(valUnit.value)) {
+                resolvedVal = valUnit.value;
+                value.unit = valUnit.unit;
+            }
         }
 
         return resolvedVal;
     },
     
     loopOver = function (newData, inherit, value, action) {
-        var data = {};
+        var data = {},
+            dataPoint;
         
-        for (var key in value.store) {
+        for (var key in value) {
+            dataPoint = undefined;
+
             // If Action has property but new data doesn't
             if (inherit && inherit.hasOwnProperty(key) && !newData.hasOwnProperty(key)) {
-                data[key] = resolve(inherit[key], value.store[key], action);
+                dataPoint = inherit[key];
 
             // Or if new data does
             } else if (newData.hasOwnProperty(key)) {
-                data[key] = resolve(newData[key], value.store[key], action);
+                dataPoint = newData[key];
+            }
+            
+            if (dataPoint !== undefined) {
+                data[key] = resolve(dataPoint, value[key], value, action);
             }
         }
         
@@ -2389,14 +2412,14 @@ var calc = require('../utils/calc.js'),
 
             // If we have an object, resolve every item first
             if (utils.isObj(arg1)) {
-                data = loopOver(arg1, arg2, this, action);
+                data = loopOver(arg1, arg2, this.store, action);
 
                 // Handle start property
                 if (firstSet) {
                     firstSet = false;
                     
                     if (arg1.hasOwnProperty('start')){
-                        setter.apply(this, ['current', resolve(arg1.start, this.get('current'), action)]);
+                        setter.apply(this, ['current', resolve(arg1.start, this.get('current'), this.store, action)]);
                     }
                 }
 
@@ -2404,11 +2427,11 @@ var calc = require('../utils/calc.js'),
 
                 // If this is a specific setter, ie .set('key', val)
                 if (utils.isString(arg1) && !utils.isRelativeValue(arg1)) {
-                    data[arg1] = resolve(arg2, this.get('current'), action);
+                    data[arg1] = resolve(arg2, this.get('current'), this.store, action);
                     
                 // Or this is a var to be resolved, assign it to current
                 } else {
-                    data.current = resolve(arg1, this.get('current'), action);
+                    data.current = resolve(arg1, this.get('current'), this.store, action);
                 }
             }
 
@@ -2726,21 +2749,25 @@ module.exports = {
         var newValue = current,
             equation = rel.split('='),
             operator = equation[0],
-            num = parseFloat(equation[1]);
+            splitVal = utils.splitValUnit(equation[1]);
 
         switch (operator) {
             case '+':
-                newValue = current + num;
+                newValue += splitVal.value;
                 break;
             case '-':
-                newValue = current - num;
+                newValue -= splitVal.value;
                 break;
             case '*':
-                newValue = current * num;
+                newValue *= splitVal.value;
                 break;
             case '/':
-                newValue = current / num;
+                newValue /= splitVal.value;
                 break;
+        }
+        
+        if (splitVal.unit) {
+            newValue += splitVal.unit;
         }
 
         return newValue;
@@ -3415,6 +3442,23 @@ module.exports = {
         }
         
         return newObject;
+    },
+    
+    /*
+        Split a value into a value/unit object
+        
+            "200px" -> { value: 200, unit: "px" }
+            
+        @param [string]: Value to split
+        @return [object]: Object with value and unit props
+    */
+    splitValUnit: function (value) {
+        var splitVal = value.match(/(-?\d*\.?\d*)(.*)/);
+
+        return {
+            value: parseFloat(splitVal[1]),
+            unit:  splitVal[2]
+        };
     },
 
     /*

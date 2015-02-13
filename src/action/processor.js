@@ -62,6 +62,7 @@ module.exports = function (action, framestamp, frameDuration) {
             output = rubix.limit(output, value);
         }
         
+        // Round value if rounding on
         if (value.round) {
             output = Math.round(output);
         }
@@ -74,8 +75,9 @@ module.exports = function (action, framestamp, frameDuration) {
             hasChanged = true;
         }
         
-        // Round value and set to current
-        value.current = action.output[key] = output;
+        // Set current and add unit (if any) for output
+        value.current = output;
+        action.output[key] = (value.unit) ? output + value.unit : output;
     }
 
     // Fire onFrame callback
