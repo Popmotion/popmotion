@@ -573,9 +573,6 @@ var cycl = require('cycl'),
         // Create value manager
         self.values = new Repo();
         
-        // New CSS
-        self.css = new Repo();
-        
         // Create new property manager
         defaultProps.scope = this;
         self.props = new Repo(defaultProps);
@@ -2373,7 +2370,7 @@ var calc = require('../utils/calc.js'),
                 dataPoint = newData[key];
             }
             
-            if (dataPoint) {
+            if (dataPoint !== undefined) {
                 data[key] = resolve(dataPoint, value[key], value, action);
             }
         }
