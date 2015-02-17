@@ -213,8 +213,7 @@ Rubix.prototype = {
             
             for (var i = 1; i < mapLength; i++) {
                 if (newValue < mapLink[i] || i === mapLength - 1) {
-                    newValue = calc.value(calc.progress(newValue, mapLink[i - 1], mapLink[i]), mapTo[i - 1], mapTo[i]);
-                    newValue = calc.restricted(newValue, value.min, value.max);
+                    newValue = calc.value( calc.restricted( calc.progress(newValue, mapLink[i - 1], mapLink[i]), 0, 1), mapTo[i - 1], mapTo[i]);
                     break;
                 }
             }
