@@ -11,21 +11,29 @@ var calc = require('../utils/calc.js'),
         Input constructor
         
             Syntax
-                newInput(name, value)
+                newInput(name, value[, poll])
                     @param [string]: Name of to track
                     @param [number]: Initial value
+                    @param [function] (optional): Function to poll Input data
                     
-                newInput(props)
+                newInput(props[, poll])
                     @param [object]: Object of values
+                    @param [function] (optional): Function to poll Input data
 
         @return [Input]
     */
     Input = function () {
+        var pollPos = arguments.length - 1;
+
         this.current = {};
         this.offset = {};
         this.velocity = {};
         this.history = new History();
         this.update(arguments[0], arguments[1]);
+        
+        if (utils.isFunc(arguments[pollPos])) {
+            this.poll = arguments[pollPos];
+        }
     };
 
 Input.prototype = {
@@ -90,7 +98,7 @@ Input.prototype = {
             return;
         }
         
-        latest = this.history.get();
+        latest = (this.poll) ? this.poll() : this.history.get();
         hasChanged = utils.hasChanged(this.current, latest);
 
         // If input has changed between frames  
