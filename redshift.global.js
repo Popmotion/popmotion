@@ -1753,6 +1753,7 @@ module.exports = function (output) {
 "use strict";
 
 var COLOR = ['hex', 'rgba', 'rgb'],
+    XY = ['xy'],
     DIMENSIONS = ['dimensions'];
 
 module.exports = {
@@ -1765,7 +1766,8 @@ module.exports = {
     borderLeftColor: COLOR,
     outlineColor: COLOR,
     margin: DIMENSIONS,
-    padding: DIMENSIONS
+    padding: DIMENSIONS,
+    backgroundPosition: XY
 };
 },{}],16:[function(require,module,exports){
 "use strict";
@@ -1784,6 +1786,13 @@ var color = function (values) {
         return rgb;
     },
     
+    position = function (values) {
+        return {
+            X: values[0],
+            Y: (values[1] !== undefined) ? values[1] : values[0]
+        }
+    },
+    
     /*
         Convert array into object of Top Left Bottom Right values
 
@@ -1799,7 +1808,7 @@ var color = function (values) {
         
         for (i = 0; i < 4; i++) {
             pos[positions[i]] = values[j];
-console.log(pos[positions[i]], valLength, j);
+
             j = (j === valLength - 1) ? j - jumpBack : j + 1;
         }
         
@@ -1807,14 +1816,23 @@ console.log(pos[positions[i]], valLength, j);
     },
 
     /*
-        Split comma delimited function
+        Split comma delimited into array
         
-        Converts rgba(255, 0, 0) -> [255, 0, 0]
+        Converts 255, 0, 0 -> [255, 0, 0]
         
         @param [string]: CSS comma delimited function
     */
     splitCommaDelimited = function (value) {
-        return value.substring(value.indexOf('(') + 1, value.lastIndexOf(')')).split(/,\s*/);
+        return value.split(/,\s*/);
+    },
+    
+    /*
+        Break values out of css functional statement
+        
+        Converts rgba(255, 0, 0) -> "255, 0, 0"
+    */
+    functionBreak = function (value) {
+        return value.substring(value.indexOf('(') + 1, value.lastIndexOf(')'));
     };
 
 module.exports = {
@@ -1826,6 +1844,16 @@ module.exports = {
         
         split: function (value) {
             return dimensions(value.split(" "));
+        }
+    },
+    
+    xy: {
+        test: function () {
+            return true;
+        },
+        
+        split: function (value) {
+            return position(value.split(" "));
         }
     },
     
@@ -1871,7 +1899,7 @@ module.exports = {
         },
 
         split: function (value) {
-            return color(splitCommaDelimited(value));
+            return color(splitCommaDelimited(functionBreak(value)));
         }
     },
     
@@ -1881,7 +1909,7 @@ module.exports = {
         },
         
         split: function (value) {
-            return color(splitCommaDelimited(value));
+            return color(splitCommaDelimited(functionBreak(value)));
         }
     }
     

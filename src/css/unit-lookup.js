@@ -1,6 +1,7 @@
 "use strict";
 
 var COLOR = ['hex', 'rgba', 'rgb'],
+    XY = ['xy'],
     DIMENSIONS = ['dimensions'];
 
 module.exports = {
@@ -13,5 +14,6 @@ module.exports = {
     borderLeftColor: COLOR,
     outlineColor: COLOR,
     margin: DIMENSIONS,
-    padding: DIMENSIONS
+    padding: DIMENSIONS,
+    backgroundPosition: XY
 };
