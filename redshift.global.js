@@ -1028,7 +1028,7 @@ Action.prototype = {
 };
 
 module.exports = Action;
-},{"../input/pointer.js":13,"../opts/action.js":14,"../opts/keys.js":15,"../opts/value.js":16,"../types/repo.js":20,"../types/value.js":21,"../utils/calc.js":22,"../utils/utils.js":26,"./presets.js":8,"./processor.js":9,"cycl":1}],8:[function(require,module,exports){
+},{"../input/pointer.js":18,"../opts/action.js":19,"../opts/keys.js":20,"../opts/value.js":21,"../types/repo.js":25,"../types/value.js":26,"../utils/calc.js":27,"../utils/utils.js":32,"./presets.js":8,"./processor.js":9,"cycl":1}],8:[function(require,module,exports){
 "use strict";
 
 var KEY = require('../opts/keys.js'),
@@ -1192,7 +1192,7 @@ Presets.prototype = {
 };
 
 module.exports = new Presets();
-},{"../opts/keys.js":15,"../utils/utils.js":26}],9:[function(require,module,exports){
+},{"../opts/keys.js":20,"../utils/utils.js":32}],9:[function(require,module,exports){
 /*
     Process actions
 */
@@ -1301,7 +1301,7 @@ module.exports = function (action, framestamp, frameDuration) {
 
     action.framestamp = framestamp;
 };
-},{"../opts/keys.js":15,"../utils/calc.js":22,"./rubix.js":10}],10:[function(require,module,exports){
+},{"../opts/keys.js":20,"../utils/calc.js":27,"./rubix.js":10}],10:[function(require,module,exports){
 /*
     Rubix modules
     ----------------------------------------
@@ -1560,7 +1560,7 @@ Rubix.prototype = {
 rubixController = new Rubix();
 
 module.exports = rubixController;
-},{"../opts/keys.js":15,"../utils/calc.js":22,"../utils/easing.js":23,"../utils/utils.js":26,"./simulate.js":11}],11:[function(require,module,exports){
+},{"../opts/keys.js":20,"../utils/calc.js":27,"../utils/easing.js":28,"../utils/utils.js":32,"./simulate.js":11}],11:[function(require,module,exports){
 "use strict";
 
 var frictionStopLimit = .2,
@@ -1636,7 +1636,216 @@ Simulate.prototype = {
 simulate = new Simulate();
 
 module.exports = simulate;
-},{"../utils/calc.js":22}],12:[function(require,module,exports){
+},{"../utils/calc.js":27}],12:[function(require,module,exports){
+"use strict";
+
+var Action = require('../action/action.js'),
+    calc = require('../utils/calc.js'),
+    parse = require('../utils/parse-args.js'),
+    setProps = require('./setter.js'),
+    
+    /*
+        Constructor
+        
+        @param [object || DocumentElement]: Object describing raw UX element
+    */
+    Atom = function (element) {
+        this.element = element;
+        this.cache = {};
+        
+        this.action = new Action({
+            dom: element,
+            scope: this,
+            onChange: setProps
+        });
+    };
+    
+Atom.prototype = {
+    
+    /*
+        Animate provided properties
+        
+        @param [object]: Object of valid CSS properties to animate
+        @param [number] (optional): Duration in ms
+        @param [string] (optional): Name of easing function
+        @param [function](optional): onEnd callback
+    */
+    play: function () {
+        this.action.play(parse.playArgs.apply(parse, arguments));
+        return this;
+    }
+    
+};
+    
+module.exports = Atom;
+},{"../action/action.js":7,"../utils/calc.js":27,"../utils/parse-args.js":31,"./setter.js":14}],13:[function(require,module,exports){
+"use strict";
+
+var units = require('../css/units.js'),
+    unitLookup = require('../css/unit-lookup.js');
+
+module.exports = {
+    
+    /*
+        Test for a property and split it into Redshift-readable properties
+        
+        @param [string]: Name of property
+        @param [string || number]: Property value
+    */
+    splitProperty: function (key, value) {
+        var unit,
+            lookup = unitLookup[key],
+            lookupLength,
+            split = {};
+
+        // If we've got parsers for this property
+        if (lookup) {
+            
+            lookupLength = lookup.length;
+            
+            for (var i = 0; i < lookupLength; i++) {
+                unit = units[lookup[i]];
+                
+                if (unit.test(value)) {
+                    split = unit.split(value);
+                    break;
+                }
+            }
+        
+        // If no available lookup, assign directly
+        } else {
+            split[key] = value;
+        }
+        
+        return split;
+    },
+    
+    /*
+        Convert CSS properties to Redshift-compatible Values
+        
+        @param [object]: Object of CSS values
+    */
+    cssToValues: function (css) {
+        var values = {},
+            split = {};
+
+        for (var key in css) {
+            if (css.hasOwnProperty(key)) {
+                split = this.splitProperty(key, css[key]);
+                
+                for (var splitKey in split) {
+                    values[key + splitKey] = split[splitKey];
+                }
+            }
+        }
+        
+        return values;
+    }
+    
+};
+},{"../css/unit-lookup.js":15,"../css/units.js":16}],14:[function(require,module,exports){
+"use strict";
+
+module.exports = function (output) {
+    console.log(output);
+};
+},{}],15:[function(require,module,exports){
+"use strict";
+
+var COLOR = ['hex', 'rgba', 'rgb'];
+
+module.exports = {
+    color: COLOR,
+    backgroundColor: COLOR
+};
+},{}],16:[function(require,module,exports){
+"use strict";
+
+var color = function (values) {
+        var rgb = {
+                Red: values[0],
+                Green: values[1],
+                Blue: values[2]
+            };
+        
+        if (values.length === 4) {
+            rgb.Alpha = values[3];
+        }
+        
+        return rgb;
+    },
+
+    /*
+        Split comma delimited function
+        
+        Converts rgba(255, 0, 0) -> [255, 0, 0]
+        
+        @param [string]: CSS comma delimited function
+    */
+    splitCommaDelimited = function (value) {
+        return value.substring(value.indexOf('(') + 1, value.lastIndexOf(')')).split(/,\s*/);
+    };
+
+module.exports = {
+    
+    hex: {
+        test: function (value) {
+            return (value.indexOf('#') > -1);
+        },
+
+        /*
+            Hex to RGB conversion
+        */
+        split: function (value) {
+            var colors = [],
+                r, g, b;
+                
+            // If we have 6 chacters, ie #FF0000
+            if (value.length > 4) {
+                r = value.substr(1, 2);
+                g = value.substr(3, 2);
+                b = value.substr(5, 2);
+
+            // Or 3 characters, ie #F00
+            } else {
+                r = value.substr(1, 1);
+                g = value.substr(2, 1);
+                b = value.substr(3, 1);
+                r += r;
+                g += g;
+                b += b;
+            }
+
+            return color([
+                parseInt(r, 16),
+                parseInt(g, 16),
+                parseInt(b, 16)
+            ]);
+        }
+    },
+    
+    rgba: {
+        test: function (value) {
+            return (value.indexOf('rgba') > -1);
+        },
+
+        split: function (value) {
+            return color(splitCommaDelimited(value));
+        }
+    },
+    
+    rgb: {
+        test: function (value) {
+            return (value.indexOf('rgb') > -1);
+        },
+        
+        split: function (value) {
+            return color(splitCommaDelimited(value));
+        }
+    }
+    
+};
+},{}],17:[function(require,module,exports){
 /*
     Input controller
 */
@@ -1763,7 +1972,7 @@ Input.prototype = {
 };
 
 module.exports = Input;
-},{"../utils/calc.js":22,"../utils/history.js":25,"../utils/utils.js":26}],13:[function(require,module,exports){
+},{"../utils/calc.js":27,"../utils/history.js":30,"../utils/utils.js":32}],18:[function(require,module,exports){
 "use strict";
 
 var Input = require('./input.js'),
@@ -1822,7 +2031,7 @@ Pointer.prototype.stop = function () {
 };
 
 module.exports = Pointer;
-},{"../opts/keys.js":15,"../types/point.js":19,"../utils/history.js":25,"../utils/utils.js":26,"./input.js":12}],14:[function(require,module,exports){
+},{"../opts/keys.js":20,"../types/point.js":24,"../utils/history.js":30,"../utils/utils.js":32,"./input.js":17}],19:[function(require,module,exports){
 "use strict";
 
 var rubix = require('../action/rubix.js');
@@ -1902,7 +2111,7 @@ module.exports = {
     
     output: undefined
 };
-},{"../action/rubix.js":10}],15:[function(require,module,exports){
+},{"../action/rubix.js":10}],20:[function(require,module,exports){
 /*
     String constants
     ----------------------------------------
@@ -1934,7 +2143,7 @@ module.exports = {
         TOUCHMOVE: 'touchmove',
     }
 };
-},{}],16:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 "use strict";
 
 module.exports = {
@@ -2029,10 +2238,11 @@ module.exports = {
     // [number]: Factor of movement outside of maximum range (ie 0.5 will move half as much as 1)
     escapeAmp: 0
 };
-},{}],17:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 "use strict";
 
 var Action = require('./action/action.js'),
+    Atom = require('./atom/atom.js'),
     Input = require('./input/input.js'),
     presets = require('./action/presets.js'),
     easing = require('./utils/easing.js'),
@@ -2049,6 +2259,15 @@ Redshift.prototype = {
     */
     newAction: function (defs, override) {
         return new Action(defs, override);
+    },
+    
+    /*
+        Create a new Atom controller
+
+        @return [Atom]: Newly-created Atom
+    */
+    newAtom: function (element) {
+        return new Atom(element);
     },
     
     /*
@@ -2102,7 +2321,7 @@ Redshift.prototype = {
 };
 
 module.exports = new Redshift();
-},{"./action/action.js":7,"./action/presets.js":8,"./input/input.js":12,"./utils/calc.js":22,"./utils/easing.js":23,"cycl":1}],18:[function(require,module,exports){
+},{"./action/action.js":7,"./action/presets.js":8,"./atom/atom.js":12,"./input/input.js":17,"./utils/calc.js":27,"./utils/easing.js":28,"cycl":1}],23:[function(require,module,exports){
 (function (global){
 /*
     Bezier function generator
@@ -2232,7 +2451,7 @@ Bezier.prototype = {
 
 module.exports = Bezier;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],19:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 /*
     Point class
     ----------------------------------------
@@ -2261,7 +2480,7 @@ Point.prototype = {
 };
 
 module.exports = Point;
-},{}],20:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 "use strict";
 
 var utils = require('../utils/utils.js'),
@@ -2318,7 +2537,7 @@ Repo.prototype = {
 };
 
 module.exports = Repo;
-},{"../utils/utils.js":26}],21:[function(require,module,exports){
+},{"../utils/utils.js":32}],26:[function(require,module,exports){
 "use strict";
 
 var calc = require('../utils/calc.js'),
@@ -2480,7 +2699,7 @@ var calc = require('../utils/calc.js'),
     };
 
 module.exports = Value;
-},{"../utils/calc.js":22,"../utils/utils.js":26,"./repo.js":20}],22:[function(require,module,exports){
+},{"../utils/calc.js":27,"../utils/utils.js":32,"./repo.js":25}],27:[function(require,module,exports){
 /*
     Calculators
     ----------------------------------------
@@ -2871,7 +3090,7 @@ module.exports = {
         return this.value(easedProgress, from, to);
     }
 };
-},{"./utils.js":26}],23:[function(require,module,exports){
+},{"./utils.js":32}],28:[function(require,module,exports){
 /*
     Easing functions
     ----------------------------------------
@@ -3120,9 +3339,9 @@ function init() {
 
 module.exports = easingFunction;
 
-},{"../opts/keys.js":15,"../types/bezier.js":18,"./calc.js":22,"./utils.js":26}],24:[function(require,module,exports){
+},{"../opts/keys.js":20,"../types/bezier.js":23,"./calc.js":27,"./utils.js":32}],29:[function(require,module,exports){
 window.redshift = require('../redshift.js');
-},{"../redshift.js":17}],25:[function(require,module,exports){
+},{"../redshift.js":22}],30:[function(require,module,exports){
 "use strict";
 
 var maxHistorySize = 3,
@@ -3193,7 +3412,74 @@ History.prototype = {
 };
 
 module.exports = History;
-},{"../utils/utils.js":26}],26:[function(require,module,exports){
+},{"../utils/utils.js":32}],31:[function(require,module,exports){
+"use strict";
+
+var utils = require('./utils.js'),
+    css = require('../atom/css.js');
+
+module.exports = {
+    
+    /*
+        Parse play arguments
+        
+        @param [object]: Object of valid CSS properties to animate
+        @param [number] (optional): Duration in ms
+        @param [string] (optional): Name of easing function
+        @param [function](optional): onEnd callback
+        @returns [object]: Redshift-formatted play arguments
+    */
+    playArgs: function () {
+        var props = {},
+            arg,
+            argsLength = arguments.length;
+            
+        for (var i = 0; i < argsLength; i++) {
+            arg = arguments[i];
+
+            // If number, this is duration
+            if (!props.duration && utils.isNum(arg)) {
+                props.duration = arg;
+            
+            // If it's a string, it's an easing name
+            } else if (!props.ease && utils.isString(arg)) {
+                props.ease = arg;
+
+            // If function, onEnd
+            } else if (!props.onEnd && utils.isFunc(arg)) {
+                props.onEnd = arg;
+            
+            // Or it's our values
+            } else {
+                props.values = css.cssToValues(arg);
+            }
+        }
+        console.log(props.values);
+        return props;
+    },
+    
+    /*
+        Parse track arguments
+        
+        @param [object] (optional): Object of valid CSS properties to track
+        @param [event || Redshift Input]: Pointer event or Input to track
+        @returns [object]: Redshift-formatted play arguments
+    */
+    trackArgs: function () {
+        var params = [],
+            argsLength = arguments.length;
+        
+        if (argsLength > 1) {
+            params.push({ values: css.cssToValues(arguments[0]) });
+        }
+        
+        params.push(arguments[argsLength - 1]);
+
+        return params;
+    }
+    
+};
+},{"../atom/css.js":13,"./utils.js":32}],32:[function(require,module,exports){
 /*
     Utility functions
     ----------------------------------------
@@ -3512,4 +3798,4 @@ module.exports = {
     }
     
 };
-},{"../opts/keys.js":15}]},{},[24]);
+},{"../opts/keys.js":20}]},{},[29]);
