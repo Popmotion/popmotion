@@ -13,6 +13,28 @@ var color = function (values) {
         
         return rgb;
     },
+    
+    /*
+        Convert array into object of Top Left Bottom Right values
+
+        @param [array]: Array of dimensions
+    */
+    dimensions = function (values) {
+        var valLength = values.length,
+            positions = ['Top', 'Right', 'Bottom', 'Left'],
+            jumpBack = (valLength !== 3) ? 1 : 2,
+            i = 0,
+            j = 0,
+            pos = {};
+        
+        for (i = 0; i < 4; i++) {
+            pos[positions[i]] = values[j];
+console.log(pos[positions[i]], valLength, j);
+            j = (j === valLength - 1) ? j - jumpBack : j + 1;
+        }
+        
+        return pos;
+    },
 
     /*
         Split comma delimited function
@@ -26,6 +48,16 @@ var color = function (values) {
     };
 
 module.exports = {
+    
+    dimensions: {
+        test: function () {
+            return true;
+        },
+        
+        split: function (value) {
+            return dimensions(value.split(" "));
+        }
+    },
     
     hex: {
         test: function (value) {
