@@ -127,6 +127,8 @@ var dictionary = require('./dictionary.js'),
             for (; i < numColors; i++) {
                 rgba[terms[i]] = colors[i];
             }
+            
+            return rgba;
         },
     
         /*
@@ -189,7 +191,7 @@ var dictionary = require('./dictionary.js'),
         */
         shadow: function (prop) {
             var bits = splitSpaceDelimited(prop),
-                bitLength = bit.length,
+                bitsLength = bits.length,
                 terms = dictionary.shadow,
                 reachedColor,
                 colorProp = '',
@@ -210,10 +212,10 @@ var dictionary = require('./dictionary.js'),
                 }
             }
             
-            color = splitter.color(colorProp);
+            color = splitters.color(colorProp);
             
             for (var unit in color) {
-                props[unit] = color[unit];
+                shadowProps[unit] = color[unit];
             }
             
             return shadowProps;
