@@ -1,5 +1,6 @@
 "use strict";
 
 module.exports = function (values, current) {
-    return assignCSS(precache(props), cache);
+    console.log('test');
+    //return assignCSS(precache(props), cache);
 }

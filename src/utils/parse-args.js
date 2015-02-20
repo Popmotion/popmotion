@@ -36,7 +36,7 @@ module.exports = {
             
             // Or it's our values
             } else {
-                props.values = parse.cssToValues(arg);
+                props.values = parse.cssToValues(arg, 'to');
             }
         }
         console.log(props.values);

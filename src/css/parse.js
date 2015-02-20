@@ -1,7 +1,27 @@
 "use strict";
 
-var splitterLookup = require('./splitter-lookup.js'),
+var defaultProp = require('./default-property.js'),
+    splitterLookup = require('./splitter-lookup.js'),
     splitters = require('./splitters.js'),
+    utils = require('../utils/utils.js'),
+    
+    buildProperty = function (value, parentKey, unitKey, assignDefault, parent) {
+        var property = defaultProp[parentKey + unitKey]
+            || defaultProp[unitKey]
+            || defaultProp[parentKey]
+            || {};
+        
+        // If our value is an object
+        if (utils.isObj(value)) {
+            property = utils.merge(property, value);
+        
+        // Or assign to our default property
+        } else {
+            property[assignDefault] = value;
+        }
+        
+        return property;
+    },
 
     /*
         Split CSS and append Redshift values
@@ -10,7 +30,29 @@ var splitterLookup = require('./splitter-lookup.js'),
         @param [string]: Key of CSS property
         @param [object]: Values property as built so far
     */
-    splitAndAppendProperties = function (property, key, values) {
+    splitAndAppendProperties = function (property, key, values, assignDefault) {
+        var splitterID = splitterLookup[key],
+            split = {};
+        
+        // If we've got a splitter for this property
+        if (splitterID) {
+            
+            // TODO this works if splitter is a string, NOT if it's an object
+            split = splitters[splitterID](property);
+            
+            for (var unitKey in split) {
+                values[key + unitKey] = buildProperty(split[unitKey], key, unitKey, assignDefault, property);
+            }
+        
+        // Or this is a straight assignment
+        } else {
+            values[key] = buildProperty(property, key, null, assignDefault);
+        }
+        
+        return values;
+        
+        
+        /*
         var splitterID = splitterLookup[key],
             split = {};
         
@@ -19,15 +61,17 @@ var splitterLookup = require('./splitter-lookup.js'),
             split = splitters[splitterID](property);
             
             for (var unitKey in split) {
-                values[key + unitKey] = split[unitKey];
+                values[key + unitKey] = parseProperty(split[unitKey], key, unitKey, assignDefault, property);
             }
 
         // Else assign directly
         } else {
-            values[key] = property;
+            values[key] = parseProperty(property, key, null, assignDefault);
         }
     
         return values;
+        
+        */
     };
 
 module.exports = {
@@ -38,12 +82,14 @@ module.exports = {
         @param [object]: Collection of CSS properties
         @param [object]: Collection of valid Redshift value settings
     */
-    cssToValues: function (css) {
+    cssToValues: function (css, assignDefault) {
         var values = {};
+        
+        assignDefault = assignDefault || 'current';
         
         for (var key in css) {
             if (css.hasOwnProperty(key)) {
-                values = splitAndAppendProperties(css[key], key, values);
+                values = splitAndAppendProperties(css[key], key, values, assignDefault);
             }
         }
         
