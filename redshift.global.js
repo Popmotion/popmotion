@@ -1741,74 +1741,13 @@ Atom.prototype = {
 };
     
 module.exports = Atom;
-},{"../action/action.js":8,"../utils/calc.js":30,"../utils/parse-args.js":34,"./setter.js":16}],14:[function(require,module,exports){
-
-},{}],15:[function(require,module,exports){
+},{"../action/action.js":8,"../utils/calc.js":30,"../utils/parse-args.js":34,"./setter.js":15}],14:[function(require,module,exports){
 "use strict";
 
-var units = require('../css/units.js'),
-    unitLookup = require('../css/unit-lookup.js');
-
-module.exports = {
-    
-    /*
-        Test for a property and split it into Redshift-readable properties
-        
-        @param [string]: Name of property
-        @param [string || number]: Property value
-    */
-    splitProperty: function (key, value) {
-        var unit,
-            lookup = unitLookup[key],
-            lookupLength,
-            split = {};
-
-        // If we've got parsers for this property
-        if (lookup) {
-            
-            lookupLength = lookup.length;
-            
-            for (var i = 0; i < lookupLength; i++) {
-                unit = units[lookup[i]];
-                
-                if (unit.test(value)) {
-                    split = unit.split(value);
-                    break;
-                }
-            }
-        
-        // If no available lookup, assign directly
-        } else {
-            split[key] = value;
-        }
-        
-        return split;
-    },
-    
-    /*
-        Convert CSS properties to Redshift-compatible Values
-        
-        @param [object]: Object of CSS values
-    */
-    cssToValues: function (css) {
-        var values = {},
-            split = {};
-
-        for (var key in css) {
-            if (css.hasOwnProperty(key)) {
-                split = this.splitProperty(key, css[key]);
-                
-                for (var splitKey in split) {
-                    values[key + splitKey] = split[splitKey];
-                }
-            }
-        }
-        
-        return values;
-    }
-    
-};
-},{"../css/unit-lookup.js":18,"../css/units.js":19}],16:[function(require,module,exports){
+module.exports = function (values, current) {
+    return assignCSS(precache(props), cache);
+}
+},{}],15:[function(require,module,exports){
 "use strict";
 
 var build = require('./builder.js'),
@@ -1819,31 +1758,85 @@ module.exports = function (output, action, values, props) {
         cssState;
     
     if (dom) {
-        cssState = build(output, props.cssCache);
+        cssState = build(output, props.css);
         css(props.dom, cssState.latest);
-        props.cssCache = cssState.cache;
+        props.css = cssState.cache;
     }
 };
-},{"./builder.js":14,"css-styler":1}],17:[function(require,module,exports){
+},{"./builder.js":14,"css-styler":1}],16:[function(require,module,exports){
 "use strict";
 
 module.exports = {
-    
+    colors: ['Red', 'Green', 'Blue', 'Alpha'],
+    positions: ['X', 'Y', 'Z'],
     dimensions: ['Top', 'Right', 'Bottom', 'Left'],
-    
     shadow: ['X', 'Y', 'Radius', 'Spread', 'Color']
+};
+},{}],17:[function(require,module,exports){
+"use strict";
+
+var splitterLookup = require('./splitter-lookup.js'),
+    splitters = require('./splitters.js'),
+
+    /*
+        Split CSS and append Redshift values
+        
+        @param [object || string]: Set of values or straight value
+        @param [string]: Key of CSS property
+        @param [object]: Values property as built so far
+    */
+    splitAndAppendProperties = function (property, key, values) {
+        var splitterID = splitterLookup[key],
+            split = {};
+        
+        // If this property has a specific parser
+        if (splitterID) {
+            split = splitters[splitterID](property);
+            
+            for (var unitKey in split) {
+                values[key + unitKey] = split[unitKey];
+            }
+
+        // Else assign directly
+        } else {
+            values[key] = property;
+        }
+    
+        return values;
+    };
+
+module.exports = {
+    
+    /*
+        Convert CSS properties to Redshift-compatible Values
+        
+        @param [object]: Collection of CSS properties
+        @param [object]: Collection of valid Redshift value settings
+    */
+    cssToValues: function (css) {
+        var values = {};
+        
+        for (var key in css) {
+            if (css.hasOwnProperty(key)) {
+                values = splitAndAppendProperties(css[key], key, values);
+            }
+        }
+        
+        return values;
+    }
     
 };
-},{}],18:[function(require,module,exports){
+},{"./splitter-lookup.js":18,"./splitters.js":19}],18:[function(require,module,exports){
 "use strict";
 
-var COLOR = ['hex', 'rgba', 'rgb'],
-    XYZ = ['xyz'],
-    DIMENSIONS = ['dimensions'],
-    SHADOW = ['shadow'],
-    ARRAY = ['array'];
+var ARRAY = 'array',
+    COLOR = 'color',
+    POSITIONS = 'positions',
+    DIMENSIONS = 'dimensions',
+    SHADOW = 'shadow';
 
 module.exports = {
+    // Color properties
     color: COLOR,
     backgroundColor: COLOR,
     borderColor: COLOR,
@@ -1852,74 +1845,32 @@ module.exports = {
     borderBottomColor: COLOR,
     borderLeftColor: COLOR,
     outlineColor: COLOR,
+
+    // Dimensions
     margin: DIMENSIONS,
     padding: DIMENSIONS,
-    backgroundPosition: XYZ,
-    perspectiveOrigin: XYZ,
-    transformOrigin: XYZ,
-    skew: XYZ,
-    scale: XYZ,
-    translate: XYZ,
-    rotate: XYZ,
+
+    // Positions
+    backgroundPosition: POSITIONS,
+    perspectiveOrigin: POSITIONS,
+    transformOrigin: POSITIONS,
+    skew: POSITIONS,
+    scale: POSITIONS,
+    translate: POSITIONS,
+    rotate: POSITIONS,
+
+    // Arrays
     matrix: ARRAY,
     matrix3d: ARRAY,
+    
+    // Shadows
     textShadow: SHADOW,
     boxShadow: SHADOW
 };
 },{}],19:[function(require,module,exports){
 "use strict";
 
-var dictionary = require('./unit-dictionary.js'),
-
-    color = function (values) {
-        var rgb = {
-                Red: values[0],
-                Green: values[1],
-                Blue: values[2]
-            };
-        
-        if (values.length === 4) {
-            rgb.Alpha = values[3];
-        }
-        
-        return rgb;
-    },
-    
-    position = function (values) {
-        var valuesLength = values.length,
-            pos = {
-                X: values[0],
-                Y: (valuesLength > 1) ? values[1] : values[0]
-            };
-        
-        if (valuesLength > 2) {
-            pos.Z = values[2];
-        }
-
-        return pos;
-    },
-    
-    /*
-        Convert array into object of Top Left Bottom Right values
-
-        @param [array]: Array of dimensions
-    */
-    dimensions = function (values) {
-        var valLength = values.length,
-            positions = dictionary.dimensions,
-            jumpBack = (valLength !== 3) ? 1 : 2,
-            i = 0,
-            j = 0,
-            pos = {};
-        
-        for (i = 0; i < 4; i++) {
-            pos[positions[i]] = values[j];
-
-            j = (j === valLength - 1) ? j - jumpBack : j + 1;
-        }
-        
-        return pos;
-    },
+var dictionary = require('./dictionary.js'),
 
     /*
         Split comma delimited into array
@@ -1945,164 +1896,202 @@ var dictionary = require('./unit-dictionary.js'),
         return value.substring(value.indexOf('(') + 1, value.lastIndexOf(')'));
     },
     
-    isTrue = function () {
-        return true;
+    /*
+        Convert hex into array of RGBA values
+        
+        @param [string]: Hex string
+            "#F00" -> [255, 0, 0]
+            "#FF0000" -> [255, 0, 0]
+            
+        @return [array]: RGBA values
+    */
+    hex = function (prop) {
+        var colors = [],
+            r, g, b;
+                    
+        // If we have 6 chacters, ie #FF0000
+        if (prop.length > 4) {
+            r = prop.substr(1, 2);
+            g = prop.substr(3, 2);
+            b = prop.substr(5, 2);
+
+        // Or 3 characters, ie #F00
+        } else {
+            r = prop.substr(1, 1);
+            g = prop.substr(2, 1);
+            b = prop.substr(3, 1);
+            r += r;
+            g += g;
+            b += b;
+        }
+            
+        return [
+            parseInt(r, 16),
+            parseInt(g, 16),
+            parseInt(b, 16)
+        ];
     },
     
     /*
+        Test if string is color property
         
+        @param [string]: Color property
+        @return [boolean]: True if color property
     */
-    unitHandlers = {
+    isColor = function (prop) {
+        return (prop.indexOf('#') > -1 || prop.indexOf('rgb') > -1);
+    },
+
+    /*
+        Public splitters
         
-        dimensions: {
-            test: isTrue,
-            
-            split: function (value) {
-                return dimensions(splitSpaceDelimited(value));
-            }
-        },
+        Each splitter takes a string containing certain values and
+        splits them into an object containing key/value pairs, ie
+        color will return Red/Green/Blue/[Alpha] values
+    */
+    splitters = {
         
-        xy: {
-            test: isTrue,
+        /*
+            Split arbitarily-long array (for instance matrix property) into object
             
-            split: function (value) {
-                return position(splitSpaceDelimited(value));
+            @param [string]: Array values
+                "1, 1, 2, 4" -> {1, 1, 2, 4}
+                "1 1 2 4" -> {1, 1, 2, 4}
+                
+            @return [object]: Object with a metric for every array item,
+                named after its index
+        */
+        array: function (prop) {
+            var list = (prop.indexOf(',') > -1) ? splitCommaDelimited(prop) : splitSpaceDelimited(prop),
+                listLength = list.length,
+                i = 0,
+                arrayProps = {};
+                
+            for (; i < listLength; i++) {
+                arrayProps[i] = list[i];
             }
+            
+            return arrayProps;
         },
         
         /*
-            TODO: Is a performance hog (takes .5 ms)
+            Convert color property into R/G/B/[A] object
+            
+            @param [string]: Color value has #, rgba, rgb, // hsl, hsla
+                "#f00" -> {255, 0, 0}
+                "#ff0000" -> {255, 0, 0}
+                "rgb(255, 0, 0)" -> {255, 0, 0}
+                "rgba(255, 0, 0, 1)" -> {255, 0, 0, 1}
+                //"hsl(0, 100%, 50%)" -> {255, 0, 0}
+                //"hsla(0, 100%, 50%, 1)" -> {255, 0, 0, 1}
+                
+            @return [object]: Object with metric for each 
         */
-        shadow: {
-            test: isTrue,
+        color: function (prop) {
+            var colors = (prop.indexOf('#') > -1) ? hex(prop) : splitCommaDelimited(functionBreak(prop)),
+                numColors = colors.length,
+                terms = dictionary.colors,
+                i = 0,
+                rgba = {};
             
-            split: function (value) {
-                var bits = splitSpaceDelimited(value),
-                    bit = '',
-                    bitsLength = bits.length,
-                    props = {},
-                    terms = dictionary.shadow,
-                    reachedColor,
-                    colorString = '',
-                    color;
-                    
-                for (var i = 0; i < bitsLength; i++) {
-                    bit = bits[i];
-
-                    // If we've already reached the color, append to color string
-                    if (reachedColor || unitHandlers.color.test(bit)) {
-                        reachedColor = true;
-                        colorString += bit;
-                    
-                    // Else assign this to the var in this dictionary position
-                    } else {
-                        props[terms[i]] = bit;
-                    }
-                }
-                
-                color = unitHandlers.color.split(colorString);
-                
-                for (var unit in color) {
-                    props[unit] = color[unit];
-                }
-
-                return props;
+            for (; i < numColors; i++) {
+                rgba[terms[i]] = colors[i];
             }
         },
+    
+        /*
+            Split dimensions in format "Top Right Bottom Left"
+            
+            @param [string]: Dimension values
+                "20px 0 30px 40px" -> {20px, 0, 30px, 40px}
+                "20px 0 30px" -> {20px, 0, 30px, 0}
+                "20px 0" -> {20px, 0, 20px, 0}
+                "20px" -> {20px, 20px, 20px, 20px}
+            
+            @return [object]: Object with T/R/B/L metrics
+        */
+        dimensions: function (prop) {
+            var dimensions = splitSpaceDelimited(prop),
+                numDimensions = dimensions.length,
+                jumpBack = (numDimensions !== 3) ? 1 : 2,
+                i = 0, j = 0,
+                dimensionProps = {};
+            
+            for (; i < 4; i++) {
+                dimensionProps[dimensions[i]] = dimensions[j];
+                
+                // Jump back counter j if we've reached the end of our set values
+                j = (j === numDimensions - 1) ? j - jumpBack : j + 1;
+            }
+            
+            return dimensionProps;
+        },
         
-        hex: {
-            test: function (value) {
-                return (value.indexOf('#') > -1);
-            },
-    
-            /*
-                Hex to RGB conversion
-            */
-            split: function (value) {
-                var colors = [],
-                    r, g, b;
-                    
-                // If we have 6 chacters, ie #FF0000
-                if (value.length > 4) {
-                    r = value.substr(1, 2);
-                    g = value.substr(3, 2);
-                    b = value.substr(5, 2);
-    
-                // Or 3 characters, ie #F00
+        /*
+            Split positions in format "X Y Z"
+            
+            @param [string]: Position values
+                "20% 30% 0" -> {20%, 30%, 0}
+                "20% 30%" -> {20%, 30%}
+                "20%" -> {20%, 20%}
+        */
+        positions: function (prop) {
+            var positions = splitSpaceDelimited(prop),
+                numPositions = positions.length,
+                i = 0,
+                positionProps = {
+                    X: positions[0],
+                    Y: (numPositions > 1) ? positions[1] : positions[0]
+                };
+                
+            if (numPositions > 2) {
+                positionProps.Z = positions[2];
+            }
+            
+            return positionProps;
+        },
+        
+        /*
+            Split shadow properties "X, Y, Radius, Spread, Color"
+            
+            @param [string]: Shadow property
+            @return [object]
+        */
+        shadow: function (prop) {
+            var bits = splitSpaceDelimited(prop),
+                bitLength = bit.length,
+                terms = dictionary.shadow,
+                reachedColor,
+                colorProp = '',
+                bit, color,
+                i = 0, unit,
+                shadowProps = {};
+                
+            for (; i< bitsLength; i++) {
+                bit = bits[i];
+                
+                // If we've reached the color property, append to color string
+                if (reachedColor || isColor(bit)) {
+                    reachedColor = true;
+                    colorProp += bit;
+
                 } else {
-                    r = value.substr(1, 1);
-                    g = value.substr(2, 1);
-                    b = value.substr(3, 1);
-                    r += r;
-                    g += g;
-                    b += b;
+                    shadowProps[terms[i]] = bit;
                 }
-    
-                return color([
-                    parseInt(r, 16),
-                    parseInt(g, 16),
-                    parseInt(b, 16)
-                ]);
             }
-        },
-        
-        rgba: {
-            test: function (value) {
-                return (value.indexOf('rgba') > -1);
-            },
-    
-            split: function (value) {
-                return color(splitCommaDelimited(functionBreak(value)));
-            }
-        },
-        
-        rgb: {
-            test: function (value) {
-                return (value.indexOf('rgb') > -1);
-            },
             
-            split: function (value) {
-                return color(splitCommaDelimited(functionBreak(value)));
-            }
-        },
-        
-        color: {
-            test: function (value) {
-                return (unitHandlers.hex.test(value) || unitHandlers.rgb.test(value) || unitHandlers.rgba.test(value));
-            },
+            color = splitter.color(colorProp);
             
-            split: function (value) {
-                if (unitHandlers.hex.test(value)) {
-                    return unitHandlers.hex.split(value);
-                }
-                if (unitHandlers.rgb.test(value)) {
-                    return unitHandlers.rgb.split(value);
-                }
-                if (unitHandlers.rgba.test(value)) {
-                    return unitHandlers.rgba.split(value);
-                }
+            for (var unit in color) {
+                props[unit] = color[unit];
             }
-        },
-        
-        array: {
-            test: isTrue,
-            split: function (value) {
-                var list = splitCommaDelimited(value),
-                    listLength = list.length,
-                    props = {};
-                
-                for (var i = 0; i < listLength; i++) {
-                    props[i] = list[i];
-                }
-
-                return props;
-            }
+            
+            return shadowProps;
         }
-        
     };
 
-module.exports = unitHandlers;
-},{"./unit-dictionary.js":17}],20:[function(require,module,exports){
+module.exports = splitters;
+},{"./dictionary.js":16}],20:[function(require,module,exports){
 /*
     Input controller
 */
@@ -3673,7 +3662,7 @@ module.exports = History;
 "use strict";
 
 var utils = require('./utils.js'),
-    css = require('../atom/css.js');
+    parse = require('../css/parse.js');
 
 module.exports = {
     
@@ -3708,7 +3697,7 @@ module.exports = {
             
             // Or it's our values
             } else {
-                props.values = css.cssToValues(arg);
+                props.values = parse.cssToValues(arg);
             }
         }
         console.log(props.values);
@@ -3727,7 +3716,7 @@ module.exports = {
             argsLength = arguments.length;
         
         if (argsLength > 1) {
-            params.push({ values: css.cssToValues(arguments[0]) });
+            params.push({ values: parse.cssToValues(arguments[0]) });
         }
         
         params.push(arguments[argsLength - 1]);
@@ -3736,7 +3725,7 @@ module.exports = {
     }
     
 };
-},{"../atom/css.js":15,"./utils.js":35}],35:[function(require,module,exports){
+},{"../css/parse.js":17,"./utils.js":35}],35:[function(require,module,exports){
 /*
     Utility functions
     ----------------------------------------
