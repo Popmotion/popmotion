@@ -6,5 +6,11 @@ module.exports = {
     },
     dimension: {
         unit: 'px'
+    },
+    opacity: {
+        start: 1
+    },
+    Alpha: {
+        start: 1
     }
 };

@@ -19,6 +19,10 @@ module.exports = {
     backgroundPosition: XYZ,
     perspectiveOrigin: XYZ,
     transformOrigin: XYZ,
+    skew: XYZ,
+    scale: XYZ,
+    translate: XYZ,
+    rotate: XYZ,
     textShadow: SHADOW,
     boxShadow: SHADOW
 };

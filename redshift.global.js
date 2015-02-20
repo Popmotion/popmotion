@@ -1781,6 +1781,10 @@ module.exports = {
     backgroundPosition: XYZ,
     perspectiveOrigin: XYZ,
     transformOrigin: XYZ,
+    skew: XYZ,
+    scale: XYZ,
+    translate: XYZ,
+    rotate: XYZ,
     textShadow: SHADOW,
     boxShadow: SHADOW
 };
@@ -1867,10 +1871,6 @@ var dictionary = require('./unit-dictionary.js'),
         return true;
     },
     
-    isColor = function (value) {
-        return (unitHandlers.hex.test(value) || unitHandlers.rgb.test(value) || unitHandlers.rgba.test(value));
-    },
-    
     /*
         
     */
@@ -1892,6 +1892,9 @@ var dictionary = require('./unit-dictionary.js'),
             }
         },
         
+        /*
+            TODO: Is a performance hog (takes .5 ms)
+        */
         shadow: {
             test: isTrue,
             
@@ -1902,22 +1905,29 @@ var dictionary = require('./unit-dictionary.js'),
                     props = {},
                     terms = dictionary.shadow,
                     reachedColor,
-                    colorString = '';
+                    colorString = '',
+                    color;
                     
                 for (var i = 0; i < bitsLength; i++) {
                     bit = bits[i];
 
-                    if (!reachedColor || !isColor(bit)) {
-                        props[terms[i]] = bit;
-                    
-                    } else {
+                    // If we've already reached the color, append to color string
+                    if (reachedColor || unitHandlers.color.test(bit)) {
                         reachedColor = true;
                         colorString += bit;
+                    
+                    // Else assign this to the var in this dictionary position
+                    } else {
+                        props[terms[i]] = bit;
                     }
                 }
                 
-                console.log(colorString);
+                color = unitHandlers.color.split(colorString);
                 
+                for (var unit in color) {
+                    props[unit] = color[unit];
+                }
+
                 return props;
             }
         },
@@ -1975,6 +1985,24 @@ var dictionary = require('./unit-dictionary.js'),
             
             split: function (value) {
                 return color(splitCommaDelimited(functionBreak(value)));
+            }
+        },
+        
+        color: {
+            test: function (value) {
+                return (unitHandlers.hex.test(value) || unitHandlers.rgb.test(value) || unitHandlers.rgba.test(value));
+            },
+            
+            split: function (value) {
+                if (unitHandlers.hex.test(value)) {
+                    return unitHandlers.hex.split(value);
+                }
+                if (unitHandlers.rgb.test(value)) {
+                    return unitHandlers.rgb.split(value);
+                }
+                if (unitHandlers.rgba.test(value)) {
+                    return unitHandlers.rgba.split(value);
+                }
             }
         }
         
