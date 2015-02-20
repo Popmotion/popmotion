@@ -1028,7 +1028,7 @@ Action.prototype = {
 };
 
 module.exports = Action;
-},{"../input/pointer.js":18,"../opts/action.js":19,"../opts/keys.js":20,"../opts/value.js":21,"../types/repo.js":25,"../types/value.js":26,"../utils/calc.js":27,"../utils/utils.js":32,"./presets.js":8,"./processor.js":9,"cycl":1}],8:[function(require,module,exports){
+},{"../input/pointer.js":19,"../opts/action.js":20,"../opts/keys.js":21,"../opts/value.js":22,"../types/repo.js":26,"../types/value.js":27,"../utils/calc.js":28,"../utils/utils.js":33,"./presets.js":8,"./processor.js":9,"cycl":1}],8:[function(require,module,exports){
 "use strict";
 
 var KEY = require('../opts/keys.js'),
@@ -1192,7 +1192,7 @@ Presets.prototype = {
 };
 
 module.exports = new Presets();
-},{"../opts/keys.js":20,"../utils/utils.js":32}],9:[function(require,module,exports){
+},{"../opts/keys.js":21,"../utils/utils.js":33}],9:[function(require,module,exports){
 /*
     Process actions
 */
@@ -1301,7 +1301,7 @@ module.exports = function (action, framestamp, frameDuration) {
 
     action.framestamp = framestamp;
 };
-},{"../opts/keys.js":20,"../utils/calc.js":27,"./rubix.js":10}],10:[function(require,module,exports){
+},{"../opts/keys.js":21,"../utils/calc.js":28,"./rubix.js":10}],10:[function(require,module,exports){
 /*
     Rubix modules
     ----------------------------------------
@@ -1560,7 +1560,7 @@ Rubix.prototype = {
 rubixController = new Rubix();
 
 module.exports = rubixController;
-},{"../opts/keys.js":20,"../utils/calc.js":27,"../utils/easing.js":28,"../utils/utils.js":32,"./simulate.js":11}],11:[function(require,module,exports){
+},{"../opts/keys.js":21,"../utils/calc.js":28,"../utils/easing.js":29,"../utils/utils.js":33,"./simulate.js":11}],11:[function(require,module,exports){
 "use strict";
 
 var frictionStopLimit = .2,
@@ -1636,7 +1636,7 @@ Simulate.prototype = {
 simulate = new Simulate();
 
 module.exports = simulate;
-},{"../utils/calc.js":27}],12:[function(require,module,exports){
+},{"../utils/calc.js":28}],12:[function(require,module,exports){
 "use strict";
 
 var Action = require('../action/action.js'),
@@ -1678,7 +1678,7 @@ Atom.prototype = {
 };
     
 module.exports = Atom;
-},{"../action/action.js":7,"../utils/calc.js":27,"../utils/parse-args.js":31,"./setter.js":14}],13:[function(require,module,exports){
+},{"../action/action.js":7,"../utils/calc.js":28,"../utils/parse-args.js":32,"./setter.js":14}],13:[function(require,module,exports){
 "use strict";
 
 var units = require('../css/units.js'),
@@ -1743,7 +1743,7 @@ module.exports = {
     }
     
 };
-},{"../css/unit-lookup.js":15,"../css/units.js":16}],14:[function(require,module,exports){
+},{"../css/unit-lookup.js":16,"../css/units.js":17}],14:[function(require,module,exports){
 "use strict";
 
 module.exports = function (output) {
@@ -1752,9 +1752,20 @@ module.exports = function (output) {
 },{}],15:[function(require,module,exports){
 "use strict";
 
+module.exports = {
+    
+    dimensions: ['Top', 'Right', 'Bottom', 'Left'],
+    
+    shadow: ['X', 'Y', 'Radius', 'Spread', 'Color']
+    
+};
+},{}],16:[function(require,module,exports){
+"use strict";
+
 var COLOR = ['hex', 'rgba', 'rgb'],
-    XY = ['xy'],
-    DIMENSIONS = ['dimensions'];
+    XYZ = ['xyz'],
+    DIMENSIONS = ['dimensions'],
+    SHADOW = ['shadow'];
 
 module.exports = {
     color: COLOR,
@@ -1767,12 +1778,18 @@ module.exports = {
     outlineColor: COLOR,
     margin: DIMENSIONS,
     padding: DIMENSIONS,
-    backgroundPosition: XY
+    backgroundPosition: XYZ,
+    perspectiveOrigin: XYZ,
+    transformOrigin: XYZ,
+    textShadow: SHADOW,
+    boxShadow: SHADOW
 };
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 "use strict";
 
-var color = function (values) {
+var dictionary = require('./unit-dictionary.js'),
+
+    color = function (values) {
         var rgb = {
                 Red: values[0],
                 Green: values[1],
@@ -1787,10 +1804,17 @@ var color = function (values) {
     },
     
     position = function (values) {
-        return {
-            X: values[0],
-            Y: (values[1] !== undefined) ? values[1] : values[0]
+        var valuesLength = values.length,
+            pos = {
+                X: values[0],
+                Y: (valuesLength > 1) ? values[1] : values[0]
+            };
+        
+        if (valuesLength > 2) {
+            pos.Z = values[2];
         }
+
+        return pos;
     },
     
     /*
@@ -1800,7 +1824,7 @@ var color = function (values) {
     */
     dimensions = function (values) {
         var valLength = values.length,
-            positions = ['Top', 'Right', 'Bottom', 'Left'],
+            positions = dictionary.dimensions,
             jumpBack = (valLength !== 3) ? 1 : 2,
             i = 0,
             j = 0,
@@ -1826,6 +1850,10 @@ var color = function (values) {
         return value.split(/,\s*/);
     },
     
+    splitSpaceDelimited = function (value) {
+        return value.split(' ');
+    },
+    
     /*
         Break values out of css functional statement
         
@@ -1833,88 +1861,127 @@ var color = function (values) {
     */
     functionBreak = function (value) {
         return value.substring(value.indexOf('(') + 1, value.lastIndexOf(')'));
+    },
+    
+    isTrue = function () {
+        return true;
+    },
+    
+    isColor = function (value) {
+        return (unitHandlers.hex.test(value) || unitHandlers.rgb.test(value) || unitHandlers.rgba.test(value));
+    },
+    
+    /*
+        
+    */
+    unitHandlers = {
+        
+        dimensions: {
+            test: isTrue,
+            
+            split: function (value) {
+                return dimensions(splitSpaceDelimited(value));
+            }
+        },
+        
+        xy: {
+            test: isTrue,
+            
+            split: function (value) {
+                return position(splitSpaceDelimited(value));
+            }
+        },
+        
+        shadow: {
+            test: isTrue,
+            
+            split: function (value) {
+                var bits = splitSpaceDelimited(value),
+                    bit = '',
+                    bitsLength = bits.length,
+                    props = {},
+                    terms = dictionary.shadow,
+                    reachedColor,
+                    colorString = '';
+                    
+                for (var i = 0; i < bitsLength; i++) {
+                    bit = bits[i];
+
+                    if (!reachedColor || !isColor(bit)) {
+                        props[terms[i]] = bit;
+                    
+                    } else {
+                        reachedColor = true;
+                        colorString += bit;
+                    }
+                }
+                
+                console.log(colorString);
+                
+                return props;
+            }
+        },
+        
+        hex: {
+            test: function (value) {
+                return (value.indexOf('#') > -1);
+            },
+    
+            /*
+                Hex to RGB conversion
+            */
+            split: function (value) {
+                var colors = [],
+                    r, g, b;
+                    
+                // If we have 6 chacters, ie #FF0000
+                if (value.length > 4) {
+                    r = value.substr(1, 2);
+                    g = value.substr(3, 2);
+                    b = value.substr(5, 2);
+    
+                // Or 3 characters, ie #F00
+                } else {
+                    r = value.substr(1, 1);
+                    g = value.substr(2, 1);
+                    b = value.substr(3, 1);
+                    r += r;
+                    g += g;
+                    b += b;
+                }
+    
+                return color([
+                    parseInt(r, 16),
+                    parseInt(g, 16),
+                    parseInt(b, 16)
+                ]);
+            }
+        },
+        
+        rgba: {
+            test: function (value) {
+                return (value.indexOf('rgba') > -1);
+            },
+    
+            split: function (value) {
+                return color(splitCommaDelimited(functionBreak(value)));
+            }
+        },
+        
+        rgb: {
+            test: function (value) {
+                return (value.indexOf('rgb') > -1);
+            },
+            
+            split: function (value) {
+                return color(splitCommaDelimited(functionBreak(value)));
+            }
+        }
+        
     };
 
-module.exports = {
-    
-    dimensions: {
-        test: function () {
-            return true;
-        },
-        
-        split: function (value) {
-            return dimensions(value.split(" "));
-        }
-    },
-    
-    xy: {
-        test: function () {
-            return true;
-        },
-        
-        split: function (value) {
-            return position(value.split(" "));
-        }
-    },
-    
-    hex: {
-        test: function (value) {
-            return (value.indexOf('#') > -1);
-        },
-
-        /*
-            Hex to RGB conversion
-        */
-        split: function (value) {
-            var colors = [],
-                r, g, b;
-                
-            // If we have 6 chacters, ie #FF0000
-            if (value.length > 4) {
-                r = value.substr(1, 2);
-                g = value.substr(3, 2);
-                b = value.substr(5, 2);
-
-            // Or 3 characters, ie #F00
-            } else {
-                r = value.substr(1, 1);
-                g = value.substr(2, 1);
-                b = value.substr(3, 1);
-                r += r;
-                g += g;
-                b += b;
-            }
-
-            return color([
-                parseInt(r, 16),
-                parseInt(g, 16),
-                parseInt(b, 16)
-            ]);
-        }
-    },
-    
-    rgba: {
-        test: function (value) {
-            return (value.indexOf('rgba') > -1);
-        },
-
-        split: function (value) {
-            return color(splitCommaDelimited(functionBreak(value)));
-        }
-    },
-    
-    rgb: {
-        test: function (value) {
-            return (value.indexOf('rgb') > -1);
-        },
-        
-        split: function (value) {
-            return color(splitCommaDelimited(functionBreak(value)));
-        }
-    }
-    
-};
-},{}],17:[function(require,module,exports){
+module.exports = unitHandlers;
+},{"./unit-dictionary.js":15}],18:[function(require,module,exports){
 /*
     Input controller
 */
@@ -2041,7 +2108,7 @@ Input.prototype = {
 };
 
 module.exports = Input;
-},{"../utils/calc.js":27,"../utils/history.js":30,"../utils/utils.js":32}],18:[function(require,module,exports){
+},{"../utils/calc.js":28,"../utils/history.js":31,"../utils/utils.js":33}],19:[function(require,module,exports){
 "use strict";
 
 var Input = require('./input.js'),
@@ -2100,7 +2167,7 @@ Pointer.prototype.stop = function () {
 };
 
 module.exports = Pointer;
-},{"../opts/keys.js":20,"../types/point.js":24,"../utils/history.js":30,"../utils/utils.js":32,"./input.js":17}],19:[function(require,module,exports){
+},{"../opts/keys.js":21,"../types/point.js":25,"../utils/history.js":31,"../utils/utils.js":33,"./input.js":18}],20:[function(require,module,exports){
 "use strict";
 
 var rubix = require('../action/rubix.js');
@@ -2180,7 +2247,7 @@ module.exports = {
     
     output: undefined
 };
-},{"../action/rubix.js":10}],20:[function(require,module,exports){
+},{"../action/rubix.js":10}],21:[function(require,module,exports){
 /*
     String constants
     ----------------------------------------
@@ -2212,7 +2279,7 @@ module.exports = {
         TOUCHMOVE: 'touchmove',
     }
 };
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 "use strict";
 
 module.exports = {
@@ -2307,7 +2374,7 @@ module.exports = {
     // [number]: Factor of movement outside of maximum range (ie 0.5 will move half as much as 1)
     escapeAmp: 0
 };
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 "use strict";
 
 var Action = require('./action/action.js'),
@@ -2390,7 +2457,7 @@ Redshift.prototype = {
 };
 
 module.exports = new Redshift();
-},{"./action/action.js":7,"./action/presets.js":8,"./atom/atom.js":12,"./input/input.js":17,"./utils/calc.js":27,"./utils/easing.js":28,"cycl":1}],23:[function(require,module,exports){
+},{"./action/action.js":7,"./action/presets.js":8,"./atom/atom.js":12,"./input/input.js":18,"./utils/calc.js":28,"./utils/easing.js":29,"cycl":1}],24:[function(require,module,exports){
 (function (global){
 /*
     Bezier function generator
@@ -2520,7 +2587,7 @@ Bezier.prototype = {
 
 module.exports = Bezier;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 /*
     Point class
     ----------------------------------------
@@ -2549,7 +2616,7 @@ Point.prototype = {
 };
 
 module.exports = Point;
-},{}],25:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 "use strict";
 
 var utils = require('../utils/utils.js'),
@@ -2606,7 +2673,7 @@ Repo.prototype = {
 };
 
 module.exports = Repo;
-},{"../utils/utils.js":32}],26:[function(require,module,exports){
+},{"../utils/utils.js":33}],27:[function(require,module,exports){
 "use strict";
 
 var calc = require('../utils/calc.js'),
@@ -2768,7 +2835,7 @@ var calc = require('../utils/calc.js'),
     };
 
 module.exports = Value;
-},{"../utils/calc.js":27,"../utils/utils.js":32,"./repo.js":25}],27:[function(require,module,exports){
+},{"../utils/calc.js":28,"../utils/utils.js":33,"./repo.js":26}],28:[function(require,module,exports){
 /*
     Calculators
     ----------------------------------------
@@ -3159,7 +3226,7 @@ module.exports = {
         return this.value(easedProgress, from, to);
     }
 };
-},{"./utils.js":32}],28:[function(require,module,exports){
+},{"./utils.js":33}],29:[function(require,module,exports){
 /*
     Easing functions
     ----------------------------------------
@@ -3408,9 +3475,9 @@ function init() {
 
 module.exports = easingFunction;
 
-},{"../opts/keys.js":20,"../types/bezier.js":23,"./calc.js":27,"./utils.js":32}],29:[function(require,module,exports){
+},{"../opts/keys.js":21,"../types/bezier.js":24,"./calc.js":28,"./utils.js":33}],30:[function(require,module,exports){
 window.redshift = require('../redshift.js');
-},{"../redshift.js":22}],30:[function(require,module,exports){
+},{"../redshift.js":23}],31:[function(require,module,exports){
 "use strict";
 
 var maxHistorySize = 3,
@@ -3481,7 +3548,7 @@ History.prototype = {
 };
 
 module.exports = History;
-},{"../utils/utils.js":32}],31:[function(require,module,exports){
+},{"../utils/utils.js":33}],32:[function(require,module,exports){
 "use strict";
 
 var utils = require('./utils.js'),
@@ -3548,7 +3615,7 @@ module.exports = {
     }
     
 };
-},{"../atom/css.js":13,"./utils.js":32}],32:[function(require,module,exports){
+},{"../atom/css.js":13,"./utils.js":33}],33:[function(require,module,exports){
 /*
     Utility functions
     ----------------------------------------
@@ -3867,4 +3934,4 @@ module.exports = {
     }
     
 };
-},{"../opts/keys.js":20}]},{},[29]);
+},{"../opts/keys.js":21}]},{},[30]);

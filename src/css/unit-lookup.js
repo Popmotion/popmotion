@@ -1,8 +1,9 @@
 "use strict";
 
 var COLOR = ['hex', 'rgba', 'rgb'],
-    XY = ['xy'],
-    DIMENSIONS = ['dimensions'];
+    XYZ = ['xyz'],
+    DIMENSIONS = ['dimensions'],
+    SHADOW = ['shadow'];
 
 module.exports = {
     color: COLOR,
@@ -15,5 +16,9 @@ module.exports = {
     outlineColor: COLOR,
     margin: DIMENSIONS,
     padding: DIMENSIONS,
-    backgroundPosition: XY
+    backgroundPosition: XYZ,
+    perspectiveOrigin: XYZ,
+    transformOrigin: XYZ,
+    textShadow: SHADOW,
+    boxShadow: SHADOW
 };
