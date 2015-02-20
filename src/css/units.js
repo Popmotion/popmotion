@@ -213,6 +213,21 @@ var dictionary = require('./unit-dictionary.js'),
                     return unitHandlers.rgba.split(value);
                 }
             }
+        },
+        
+        array: {
+            test: isTrue,
+            split: function (value) {
+                var list = splitCommaDelimited(value),
+                    listLength = list.length,
+                    props = {};
+                
+                for (var i = 0; i < listLength; i++) {
+                    props[i] = list[i];
+                }
+
+                return props;
+            }
         }
         
     };

@@ -3,7 +3,8 @@
 var COLOR = ['hex', 'rgba', 'rgb'],
     XYZ = ['xyz'],
     DIMENSIONS = ['dimensions'],
-    SHADOW = ['shadow'];
+    SHADOW = ['shadow'],
+    ARRAY = ['array'];
 
 module.exports = {
     color: COLOR,
@@ -23,6 +24,8 @@ module.exports = {
     scale: XYZ,
     translate: XYZ,
     rotate: XYZ,
+    matrix: ARRAY,
+    matrix3d: ARRAY,
     textShadow: SHADOW,
     boxShadow: SHADOW
 };
