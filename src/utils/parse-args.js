@@ -1,7 +1,7 @@
 "use strict";
 
 var utils = require('./utils.js'),
-    css = require('../atom/css.js');
+    parse = require('../css/parse.js');
 
 module.exports = {
     
@@ -36,7 +36,7 @@ module.exports = {
             
             // Or it's our values
             } else {
-                props.values = css.cssToValues(arg);
+                props.values = parse.cssToValues(arg);
             }
         }
         console.log(props.values);
@@ -55,7 +55,7 @@ module.exports = {
             argsLength = arguments.length;
         
         if (argsLength > 1) {
-            params.push({ values: css.cssToValues(arguments[0]) });
+            params.push({ values: parse.cssToValues(arguments[0]) });
         }
         
         params.push(arguments[argsLength - 1]);

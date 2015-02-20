@@ -8,8 +8,8 @@ module.exports = function (output, action, values, props) {
         cssState;
     
     if (dom) {
-        cssState = build(output, props.cssCache);
+        cssState = build(output, props.css);
         css(props.dom, cssState.latest);
-        props.cssCache = cssState.cache;
+        props.css = cssState.cache;
     }
 };
