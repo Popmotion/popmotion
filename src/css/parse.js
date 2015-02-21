@@ -17,11 +17,15 @@ var defaultProp = require('./default-property.js'),
         @param [string]: If value is string or number, assign it to this property
         @param [object] (optional): Parent property
     */
-    buildProperty = function (value, parentKey, unitKey, assignDefault) {
+    buildProperty = function (value, parentKey, unitKey, assignDefault, parent) {
         var property = defaultProp[parentKey + unitKey]
             || defaultProp[unitKey]
             || defaultProp[parentKey]
             || {};
+            
+        if (parent) {
+            property = utils.merge(parent, property);
+        }
         
         // If our value is an object
         if (utils.isObj(value)) {
@@ -73,7 +77,7 @@ var defaultProp = require('./default-property.js'),
             }
                 
             for (unitKey in split) {
-                values[key + unitKey] = buildProperty(split[unitKey], key, unitKey, assignDefault);
+                values[key + unitKey] = buildProperty(split[unitKey], key, unitKey, assignDefault, property);
             }
 
         // Or this is a straight assignment
