@@ -5,6 +5,15 @@ var defaultProp = require('./default-property.js'),
     splitters = require('./splitters.js'),
     utils = require('../utils/utils.js'),
     
+    /*
+        Build a property
+        
+        @param [string || number || object]: The value as given by user
+        @param [string]: Parent property key, ie 'backgroundColor'
+        @param [string] (optional): Unit key, ie 'Red'
+        @param [string]: If value is string or number, assign it to this property
+        @param [object] (optional): Parent property
+    */
     buildProperty = function (value, parentKey, unitKey, assignDefault, parent) {
         var property = defaultProp[parentKey + unitKey]
             || defaultProp[unitKey]
@@ -37,9 +46,8 @@ var defaultProp = require('./default-property.js'),
         // If we've got a splitter for this property
         if (splitterID) {
             
-            // TODO this works if splitter is a string, NOT if it's an object
             split = splitters[splitterID](property);
-            
+            console.log(split);
             for (var unitKey in split) {
                 values[key + unitKey] = buildProperty(split[unitKey], key, unitKey, assignDefault, property);
             }
