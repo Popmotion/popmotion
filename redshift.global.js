@@ -1801,7 +1801,19 @@ var defaultProp = require('./default-property.js'),
     splitters = require('./splitters.js'),
     utils = require('../utils/utils.js'),
     
-    buildProperty = function (value, parentKey, unitKey, assignDefault, parent) {
+    valueProperties = ['to', 'start', 'current', 'min', 'max'],
+    valuePropertyCount = valueProperties.length,
+    
+    /*
+        Build a property
+        
+        @param [string || number || object]: The value as given by user
+        @param [string]: Parent property key, ie 'backgroundColor'
+        @param [string] (optional): Unit key, ie 'Red'
+        @param [string]: If value is string or number, assign it to this property
+        @param [object] (optional): Parent property
+    */
+    buildProperty = function (value, parentKey, unitKey, assignDefault) {
         var property = defaultProp[parentKey + unitKey]
             || defaultProp[unitKey]
             || defaultProp[parentKey]
@@ -1828,46 +1840,44 @@ var defaultProp = require('./default-property.js'),
     */
     splitAndAppendProperties = function (property, key, values, assignDefault) {
         var splitterID = splitterLookup[key],
-            split = {};
+            split = {},
+            splitValue = {},
+            valueKey = '',
+            unitKey = '';
         
         // If we've got a splitter for this property
         if (splitterID) {
-            
-            // TODO this works if splitter is a string, NOT if it's an object
-            split = splitters[splitterID](property);
-            
-            for (var unitKey in split) {
-                values[key + unitKey] = buildProperty(split[unitKey], key, unitKey, assignDefault, property);
-            }
         
+            // If property is an object, split all values
+            if (utils.isObj(property)) {
+                for (var i = 0; i < valuePropertyCount; i++) {
+                    valueKey = valueProperties[i];
+
+                    if (property[valueKey]) {
+                        splitValue = splitters[splitterID](property[valueKey]);
+
+                        for (unitKey in splitValue) {
+                            split[unitKey] = split[unitKey] || {};
+                            split[unitKey][valueKey] = splitValue[unitKey];
+                        }
+                    }
+                }
+            
+            // Or just split value itself
+            } else {
+                split = splitters[splitterID](property);
+            }
+                
+            for (unitKey in split) {
+                values[key + unitKey] = buildProperty(split[unitKey], key, unitKey, assignDefault);
+            }
+
         // Or this is a straight assignment
         } else {
             values[key] = buildProperty(property, key, null, assignDefault);
         }
         
         return values;
-        
-        
-        /*
-        var splitterID = splitterLookup[key],
-            split = {};
-        
-        // If this property has a specific parser
-        if (splitterID) {
-            split = splitters[splitterID](property);
-            
-            for (var unitKey in split) {
-                values[key + unitKey] = parseProperty(split[unitKey], key, unitKey, assignDefault, property);
-            }
-
-        // Else assign directly
-        } else {
-            values[key] = parseProperty(property, key, null, assignDefault);
-        }
-    
-        return values;
-        
-        */
     };
 
 module.exports = {
@@ -2082,6 +2092,26 @@ var dictionary = require('./dictionary.js'),
         dimensions: function (prop) {
             var dimensions = splitSpaceDelimited(prop),
                 numDimensions = dimensions.length,
+                terms = dictionary.dimensions,
+                jumpBack = (numDimensions !== 1) ? 2 : 1,
+                i, j = i = 0,
+                dimensionProps = {};
+            
+            for (; i < 4; i++) {
+                dimensionProps[terms[i]] = dimensions[j];
+                
+                // Jump back counter j if we've reached the end of our set values
+                j++;
+                j = (j === numDimensions) ? j - jumpBack : j;
+            }
+            
+            console.log(dimensionProps);
+            
+            return dimensionProps;
+        
+        /*
+            var dimensions = splitSpaceDelimited(prop),
+                numDimensions = dimensions.length,
                 jumpBack = (numDimensions !== 3) ? 1 : 2,
                 i = 0, j = 0,
                 dimensionProps = {};
@@ -2094,6 +2124,8 @@ var dictionary = require('./dictionary.js'),
             }
             
             return dimensionProps;
+            
+        */
         },
         
         /*

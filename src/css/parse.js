@@ -5,6 +5,9 @@ var defaultProp = require('./default-property.js'),
     splitters = require('./splitters.js'),
     utils = require('../utils/utils.js'),
     
+    valueProperties = ['to', 'start', 'current', 'min', 'max'],
+    valuePropertyCount = valueProperties.length,
+    
     /*
         Build a property
         
@@ -14,7 +17,7 @@ var defaultProp = require('./default-property.js'),
         @param [string]: If value is string or number, assign it to this property
         @param [object] (optional): Parent property
     */
-    buildProperty = function (value, parentKey, unitKey, assignDefault, parent) {
+    buildProperty = function (value, parentKey, unitKey, assignDefault) {
         var property = defaultProp[parentKey + unitKey]
             || defaultProp[unitKey]
             || defaultProp[parentKey]
@@ -41,45 +44,44 @@ var defaultProp = require('./default-property.js'),
     */
     splitAndAppendProperties = function (property, key, values, assignDefault) {
         var splitterID = splitterLookup[key],
-            split = {};
+            split = {},
+            splitValue = {},
+            valueKey = '',
+            unitKey = '';
         
         // If we've got a splitter for this property
         if (splitterID) {
-            
-            split = splitters[splitterID](property);
-            console.log(split);
-            for (var unitKey in split) {
-                values[key + unitKey] = buildProperty(split[unitKey], key, unitKey, assignDefault, property);
-            }
         
+            // If property is an object, split all values
+            if (utils.isObj(property)) {
+                for (var i = 0; i < valuePropertyCount; i++) {
+                    valueKey = valueProperties[i];
+
+                    if (property[valueKey]) {
+                        splitValue = splitters[splitterID](property[valueKey]);
+
+                        for (unitKey in splitValue) {
+                            split[unitKey] = split[unitKey] || {};
+                            split[unitKey][valueKey] = splitValue[unitKey];
+                        }
+                    }
+                }
+            
+            // Or just split value itself
+            } else {
+                split = splitters[splitterID](property);
+            }
+                
+            for (unitKey in split) {
+                values[key + unitKey] = buildProperty(split[unitKey], key, unitKey, assignDefault);
+            }
+
         // Or this is a straight assignment
         } else {
             values[key] = buildProperty(property, key, null, assignDefault);
         }
         
         return values;
-        
-        
-        /*
-        var splitterID = splitterLookup[key],
-            split = {};
-        
-        // If this property has a specific parser
-        if (splitterID) {
-            split = splitters[splitterID](property);
-            
-            for (var unitKey in split) {
-                values[key + unitKey] = parseProperty(split[unitKey], key, unitKey, assignDefault, property);
-            }
-
-        // Else assign directly
-        } else {
-            values[key] = parseProperty(property, key, null, assignDefault);
-        }
-    
-        return values;
-        
-        */
     };
 
 module.exports = {
