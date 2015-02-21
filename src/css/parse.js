@@ -36,6 +36,10 @@ var defaultProp = require('./default-property.js'),
             property[assignDefault] = value;
         }
         
+        // Set property and unit keys to value to allow for faster recombination
+        property.parent = parentKey;
+        property.unitName = unitKey;
+        
         return property;
     },
 

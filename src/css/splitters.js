@@ -161,24 +161,6 @@ var dictionary = require('./dictionary.js'),
             console.log(dimensionProps);
             
             return dimensionProps;
-        
-        /*
-            var dimensions = splitSpaceDelimited(prop),
-                numDimensions = dimensions.length,
-                jumpBack = (numDimensions !== 3) ? 1 : 2,
-                i = 0, j = 0,
-                dimensionProps = {};
-            
-            for (; i < 4; i++) {
-                dimensionProps[dimensions[i]] = dimensions[j];
-                
-                // Jump back counter j if we've reached the end of our set values
-                j = (j === numDimensions - 1) ? j - jumpBack : j + 1;
-            }
-            
-            return dimensionProps;
-            
-        */
         },
         
         /*

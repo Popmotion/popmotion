@@ -35,8 +35,7 @@
 	  "compile": "browserify ./src/utils/global.js -o ./redshift.global.js && browserify ./src/utils/global.js | uglifyjs - -m -o ./redshift.global.min.js"
   },
   "dependencies": {
-      "cycl": "1.1.0",
-      "css-styler": "1.0.x"
+      "cycl": "1.1.0"
   },
   "devDependencies": {
     "browserify": "7.0.0",
