@@ -12,7 +12,6 @@ module.exports = function (output) {
     if (dom) {
         cssState = build(output, props.css, values);
         css(props.dom, cssState.latest);
-        console.log(cssState.latest);
         props.css = cssState.cache;
     }
 };

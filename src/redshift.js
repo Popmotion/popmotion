@@ -6,11 +6,16 @@ var Action = require('./action/action.js'),
     presets = require('./action/presets.js'),
     easing = require('./utils/easing.js'),
     calc = require('./utils/calc.js'),
-    cycl = require('cycl'),
-    Redshift = function () {};
+    utils = require('./utils/utils.js'),
+    shim = require('./utils/shim.js'),
+    Process = require('./process/process.js'),
+    Redshift = function () {
+        // Check if we need to shim rAF and indexOf
+        shim.featureCheck();
+    };
 
 Redshift.prototype = {
-    
+
     /*
         Create a new Action controller
         
@@ -19,13 +24,13 @@ Redshift.prototype = {
     newAction: function (defs, override) {
         return new Action(defs, override);
     },
-    
+
     /*
-        Create a new Atom controller
+        Create a new DOM controller
 
         @return [Atom]: Newly-created Atom
     */
-    newAtom: function (element) {
+    newDom: function () {
         return new Atom(element);
     },
     
@@ -39,20 +44,29 @@ Redshift.prototype = {
     },
     
     /*
+        Create a new process
+        
+        @param [function]: Function to run every frame
+    */
+    newProcess: function () {
+        return new Process(arguments[0], arguments[1]);
+    },
+    
+    /*
         Define a new Action preset
         
         Syntax
         
-            .define(name, preset)
+            .definePreset(name, preset)
                 @param [string]: Name of preset
                 @param [object]: Preset options/properties
                 
-            .define(presets)
+            .definePreset(presets)
                 @param [object]: Multiple presets as named object
                 
         @return [Redshift]
     */
-    define: function () {
+    definePreset: function () {
         presets.define.apply(presets, arguments);
         
         return this;
@@ -67,16 +81,17 @@ Redshift.prototype = {
         @param [string]: Name of the new easing function 
         @params [number]: x/y coordinates of handles
     */
-    addBezier: function () {
+    defineBezier: function () {
         easing.addBezier.apply(easing, arguments);
         
         return this;
     },
     
+    //defineSimulation: function () {},
+    
     calc: calc,
     
-    cycl: cycl
-    
+    utils: utils
 };
 
 module.exports = new Redshift();

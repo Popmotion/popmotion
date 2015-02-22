@@ -1,561 +1,7 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-/*
-    Cycl  
-*/
 "use strict";
 
-var shim = require('./shim.js'),
-    Process = require('./process.js'),
-
-    Cycl = function () {
-        // Check if we need to shim rAF and indexOf
-        shim.featureCheck();
-    };
-    
-Cycl.prototype = {
-    
-    /*
-        Create a new process in the loop
-        
-        @param [function]: Function to run every frame
-    */
-    newProcess: function () {
-        return new Process(arguments[0], arguments[1]);
-    }
-
-};
-
-// Only allow one instance of Cyclos to prevent multiple requestAnimationFrame loops
-module.exports = new Cycl();
-},{"./process.js":4,"./shim.js":5}],2:[function(require,module,exports){
-/*
-    The loop
-*/
-"use strict";
-
-var Timer = require('./timer.js'),
-    Loop = function () {
-        this.timer = new Timer();
-    },
-    manager;
-    
-Loop.prototype = {
-    
-    /*
-        [boolean]: Current status of animation loop
-    */
-    isRunning: false,
-    
-    /*
-        Fire all active processes once per frame
-    */
-    frame: function () {
-        var self = this;
-        
-        requestAnimationFrame(function () {
-            var framestamp = self.timer.update(), // Currently just measuring in ms - will look into hi-res timestamps
-                isActive = self.callback.call(self.scope, framestamp, self.timer.getElapsed());
-
-            if (isActive) {
-                self.frame(true);
-            } else {
-                self.stop();
-            }
-        });
-    },
-    
-    /*
-        Start loop
-    */
-    start: function () {
-        // Make sure we're not already running a loop
-        if (!this.isRunning) {
-            this.isRunning = true;
-            this.frame();
-        }
-    },
-    
-    /*
-        Stop the loop
-    */
-    stop: function () {
-        this.isRunning = false;
-    },
-    
-    /*
-        Set the callback to run every frame
-        
-        @param [Object]: Execution context
-        @param [function]: Callback to fire
-    */
-    setCallback: function (scope, callback) {
-        this.scope = scope;
-        this.callback = callback;
-    }
- 
-};
-
-module.exports = new Loop();
-},{"./timer.js":6}],3:[function(require,module,exports){
-"use strict";
-
-var theLoop = require('./loop.js'),
-    ProcessManager = function () {
-        this.all = {};
-        this.active = [];
-        this.deactivateQueue = [];
-        theLoop.setCallback(this, this.fireActive);
-    };
-    
-ProcessManager.prototype = {
-    
-    /*
-        [int]: Used for process ID
-    */
-    processCounter: 0,
-    
-    /*
-        [int]: Number of active processes
-    */
-    activeCount: 0,
-    
-    /*
-        Get the process with a given index
-        
-        @param [int]: Index of process
-        @return [Process]
-    */
-    getProcess: function (i) {
-        return this.all[i];
-    },
-    
-    /*
-        Get number of active processes
-        
-        @return [int]: Number of active processes
-    */
-    getActiveCount: function () {
-        return this.activeCount;
-    },
-    
-    /*
-        Get active tokens
-
-        @return [array]: Active tokens
-    */
-    getActive: function () {
-        return this.active;
-    },
-    
-    /*
-        Get the length of the deactivate queue
-        
-        @return [int]: Length of queue
-    */
-    getQueueLength: function () {
-        return this.deactivateQueue.length;
-    },
-    
-    /*
-        Fire all active processes
-        
-        @param [int]: Timestamp of executing frames
-        @param [int]: Time since previous frame
-        @return [boolean]: True if active processes found
-    */
-    fireActive: function (framestamp, elapsed) {
-        var process,
-            activeCount = 0,
-            activeProcesses = [];
-
-        // Purge and check active count before execution
-        this.purge();
-        activeCount = this.getActiveCount();
-        activeProcesses = this.getActive();
-        
-        // Loop through active processes and fire callback
-        for (var i = 0; i < activeCount; i++) {
-            process = this.getProcess(activeProcesses[i]);
-            
-            if (process) {
-                process.fire(framestamp, elapsed);
-            }
-        }
-
-        // Repurge and recheck active count after execution
-        this.purge();
-        activeCount = this.getActiveCount();
-        
-        return activeCount ? true : false;
-    },
-    
-    /*
-        Register a new process
-        
-        @param [Process]
-        @return [int]: Index of process to be used as ID
-    */
-    register: function (process) {
-        var id = this.processCounter;
-
-        this.all[id] = process;
-        
-        this.processCounter++;
-        
-        return id;
-    },
-    
-    /*
-        Activate a process
-        
-        @param [int]: Index of active process
-    */
-    activate: function (i) {
-        var queueIndex = this.deactivateQueue.indexOf(i),
-            isQueued = (queueIndex > -1),
-            isActive = (this.active.indexOf(i) > -1);
-        
-        // Remove from deactivateQueue if in there
-        if (isQueued) {
-            this.deactivateQueue.splice(queueIndex, 1);
-        }
-        
-        // Add to active processes array if not already in there
-        if (!isActive) {
-            this.active.push(i);
-            this.activeCount++;
-            theLoop.start(this);
-        }
-    },
-    
-    /*
-        Deactivate a process
-        
-        @param [int]: Index of process to add to deactivate queue
-    */
-    deactivate: function (i) {
-        this.deactivateQueue.push(i);
-    },
-    
-    /*
-        Purge the deactivate queue
-    */
-    purge: function () {
-        var activeIndex,
-            queueLength = this.getQueueLength();
-        
-        while (queueLength--) {
-            activeIndex = this.active.indexOf(this.deactivateQueue[queueLength]);
-            
-            // If process in active list deactivate
-            if (activeIndex > -1) {
-                this.active.splice(activeIndex, 1);
-                this.activeCount--;
-            }
-        }
-        
-        this.deactivateQueue = [];
-    },
-    
-    /*
-        Remove the provided id and reindex remaining processes
-    */
-    kill: function (id) {
-        delete this.all[id];
-    }
-    
-};
-
-module.exports = new ProcessManager();
-},{"./loop.js":2}],4:[function(require,module,exports){
-/*
-    Process
-    =======================
-    
-    
-*/
-"use strict";
-
-var manager = require('./manager.js'),
-
-    /*
-        Process constructor
-        
-        Syntax
-            var process = new Process(scope, callback);
-            var process = new Process(callback);
-    */
-    Process = function () {
-        var hasScope = (arguments[1] !== undefined),
-            callback = hasScope ? arguments[1] : arguments[0],
-            scope = hasScope ? arguments[0] : this;
-
-        this.setCallback(callback);
-        this.setScope(scope);
-
-        this.setId(manager.register(this));
-    };
-    
-Process.prototype = {
-    
-    /*
-        [boolean]: Is this process currently active?
-    */
-    isActive: false,
-    
-    /*
-        [boolean]: Has this process been killed?
-    */
-    isKilled: false,
-
-    /*
-        Fire callback
-        
-        @param [timestamp]: Timestamp of currently-executed frame
-        @param [number]: Time since last frame
-    */
-    fire: function (timestamp, elapsed) {
-        // Check timers
-        if (this.isActive) {
-            this.callback.call(this.scope, timestamp, elapsed);
-        }
-        
-        if (this.isInterval) {
-            this.deactivate();
-        }
-    },
-    
-    /*
-        Set process callback
-        
-        @param [function]: Function to fire per frame
-        @return [this]
-    */
-    setCallback: function (callback) {
-        this.callback = callback;
-        
-        return this;
-    },
-    
-    /*
-        Set callback scope
-        
-        @param [function]: Fire callback in this context
-        @return [this]
-    */
-    setScope: function (scope) {
-        this.scope = scope;
-        
-        return this;
-    },
-    
-    /*
-        Start process
-        
-        @param [int]: Duration of process in ms, 0 if indefinite
-        @return [this]
-    */
-    start: function (duration) {
-        var self = this;
-        
-        self.reset();
-        self.activate();
-        
-        if (duration) {
-            self.stopTimer = setTimeout(function () {
-                self.stop();
-            }, duration);
-        }
-
-        return self;
-    },
-    
-    /*
-        Stop process
-        
-        @return [this]
-    */
-    stop: function () {
-        this.reset();
-        this.deactivate();
-        
-        return this;
-    },
-    
-    /*
-        Activate process
-        
-        @return [this]
-    */
-    activate: function () {
-        if (!this.isKilled) {
-            this.isActive = true;
-            manager.activate(this.id);
-        }
-
-        return this;
-    },
-    
-    /*
-        Deactivate process
-        
-        @return [this]
-    */
-    deactivate: function () {
-        this.isActive = false;
-        manager.deactivate(this.id);
-        
-        return this;
-    },
-    
-    /*
-        Fire process every x ms
-        
-        @param [int]: Number of ms to wait between refiring process.
-        @return [this]
-    */
-    every: function (interval) {
-	    var self = this;
-
-        this.reset();
-
-        this.isInterval = true;
-
-        this.intervalTimer = setInterval(function () {
-            self.activate();
-        }, interval);
-    },
-    
-    /*
-        Clear all timers
-        
-        @param 
-    */
-    reset: function () {
-        this.isInterval = false;
-        clearTimeout(this.stopTimer);
-        clearInterval(this.intervalTimer);
-        
-        return this;
-    },
-    
-    /*
-        Kill function in manager, release for garbage collection
-    */
-    kill: function () {
-        this.stop();
-        this.isKilled = true;
-        manager.kill(this.id);
-    },
-    
-    setId: function (id) {
-        this.id = id;
-    }
-};
-
-module.exports = Process;
-},{"./manager.js":3}],5:[function(require,module,exports){
-"use strict";
-
-var checkRequestAnimationFrame = function () {
-        /*
-            requestAnimationFrame polyfill
-            
-            For IE8/9 Flinstones
-        
-            Taken from Paul Irish. We've stripped out cancelAnimationFrame checks because we don't fox with that
-            
-            http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-            http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
-             
-            requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
-             
-            MIT license
-        */
-        var lastTime = 0,
-            vendors = ['ms', 'moz', 'webkit', 'o'],
-            vendorsLength = vendors.length;
-        
-        // Check for prefixed implementations
-        for (var x = 0; x < vendorsLength && !window.requestAnimationFrame; x++) {
-            window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-        }
-        
-        // If there is, fo absolute shizzle, no rAF implementations, make one out of setTimeout and putty
-        if (!window.requestAnimationFrame) {
-            window.requestAnimationFrame = function (callback, element) {
-                var currTime = new Date().getTime(),
-                    timeToCall = Math.max(0, 16 - (currTime - lastTime)),
-                    id = window.setTimeout(function () {
-                            callback(currTime + timeToCall);
-                        }, timeToCall);
-                
-                lastTime = currTime + timeToCall;
-                
-                return id;
-            }
-        }
-    },
-    checkIndexOf = function () {
-        /*
-            indexOf polyfill
-            
-            For IE8 troglodites
-            
-            Taken from http://stackoverflow.com/questions/3629183/why-doesnt-indexof-work-on-an-array-ie8
-        */
-        if (!Array.prototype.indexOf) {
-            Array.prototype.indexOf = function (elt /*, from*/) {
-                var len = this.length >>> 0,
-                    from = Number(arguments[1]) || 0;
-                    
-                from = (from < 0) ? Math.ceil(from) : Math.floor(from);
-                
-                if (from < 0) {
-                    from += len;
-                }
-                
-                for (; from < len; from++) {
-                    if (from in this && this[from] === elt) {
-                        return from;
-                    }
-                }
-                
-                return -1;
-            }
-        }
-    };
-
-module.exports = {
-    featureCheck: function () {
-        checkRequestAnimationFrame();
-        checkIndexOf();
-    }
-};
-},{}],6:[function(require,module,exports){
-"use strict";
-
-var maxElapsed = 30,
-    Timer = function () {
-        this.update();
-    };
-
-Timer.prototype = {
-    update: function () {
-        this.prev = this.current;
-        return this.current = new Date().getTime();
-    },
-
-    getElapsed: function () {
-        return Math.min(this.current - this.prev, maxElapsed);
-    }
-};
-
-module.exports = Timer;
-},{}],7:[function(require,module,exports){
-"use strict";
-
-var cycl = require('cycl'),
+var Process = require('../process/process.js'),
     process = require('./processor.js'),
     presets = require('./presets.js'),
     Pointer = require('../input/pointer.js'),
@@ -581,7 +27,7 @@ var cycl = require('cycl'),
         self.data = new Repo();
         
         // Register process wth cycl
-        self.process = cycl.newProcess(function (framestamp, frameDuration) {
+        self.process = new Process(function (framestamp, frameDuration) {
 	        if (self.active) {
                 process(self, framestamp, frameDuration);
 	        }
@@ -1028,7 +474,7 @@ Action.prototype = {
 };
 
 module.exports = Action;
-},{"../input/pointer.js":23,"../opts/action.js":24,"../opts/keys.js":25,"../opts/value.js":26,"../types/repo.js":30,"../types/value.js":31,"../utils/calc.js":32,"../utils/utils.js":37,"./presets.js":8,"./processor.js":9,"cycl":1}],8:[function(require,module,exports){
+},{"../input/pointer.js":17,"../opts/action.js":18,"../opts/keys.js":19,"../opts/value.js":20,"../process/process.js":23,"../types/repo.js":28,"../types/value.js":29,"../utils/calc.js":30,"../utils/utils.js":36,"./presets.js":2,"./processor.js":3}],2:[function(require,module,exports){
 "use strict";
 
 var KEY = require('../opts/keys.js'),
@@ -1192,7 +638,7 @@ Presets.prototype = {
 };
 
 module.exports = new Presets();
-},{"../opts/keys.js":25,"../utils/utils.js":37}],9:[function(require,module,exports){
+},{"../opts/keys.js":19,"../utils/utils.js":36}],3:[function(require,module,exports){
 /*
     Process actions
 */
@@ -1301,7 +747,7 @@ module.exports = function (action, framestamp, frameDuration) {
 
     action.framestamp = framestamp;
 };
-},{"../opts/keys.js":25,"../utils/calc.js":32,"./rubix.js":10}],10:[function(require,module,exports){
+},{"../opts/keys.js":19,"../utils/calc.js":30,"./rubix.js":4}],4:[function(require,module,exports){
 /*
     Rubix modules
     ----------------------------------------
@@ -1560,7 +1006,7 @@ Rubix.prototype = {
 rubixController = new Rubix();
 
 module.exports = rubixController;
-},{"../opts/keys.js":25,"../utils/calc.js":32,"../utils/easing.js":33,"../utils/utils.js":37,"./simulate.js":11}],11:[function(require,module,exports){
+},{"../opts/keys.js":19,"../utils/calc.js":30,"../utils/easing.js":31,"../utils/utils.js":36,"./simulate.js":5}],5:[function(require,module,exports){
 "use strict";
 
 var frictionStopLimit = .2,
@@ -1636,7 +1082,7 @@ Simulate.prototype = {
 simulate = new Simulate();
 
 module.exports = simulate;
-},{"../utils/calc.js":32}],12:[function(require,module,exports){
+},{"../utils/calc.js":30}],6:[function(require,module,exports){
 "use strict";
 
 var Action = require('../action/action.js'),
@@ -1678,7 +1124,7 @@ Atom.prototype = {
 };
     
 module.exports = Atom;
-},{"../action/action.js":7,"../utils/calc.js":32,"../utils/parse-args.js":36,"./setter.js":14}],13:[function(require,module,exports){
+},{"../action/action.js":1,"../utils/calc.js":30,"../utils/parse-args.js":34,"./setter.js":8}],7:[function(require,module,exports){
 "use strict";
 
 var templates = require('../css/templates.js'),
@@ -1766,7 +1212,7 @@ var templates = require('../css/templates.js'),
 module.exports = function (output, cache, values) {
     return assignCSS(precache(output, values), cache);
 }
-},{"../css/splitter-lookup.js":19,"../css/templates.js":21}],14:[function(require,module,exports){
+},{"../css/splitter-lookup.js":13,"../css/templates.js":15}],8:[function(require,module,exports){
 "use strict";
 
 var build = require('./builder.js'),
@@ -1781,11 +1227,10 @@ module.exports = function (output) {
     if (dom) {
         cssState = build(output, props.css, values);
         css(props.dom, cssState.latest);
-        console.log(cssState.latest);
         props.css = cssState.cache;
     }
 };
-},{"../css/set.js":18,"./builder.js":13}],15:[function(require,module,exports){
+},{"../css/set.js":12,"./builder.js":7}],9:[function(require,module,exports){
 "use strict";
 
 var defaults = {
@@ -1802,9 +1247,9 @@ var defaults = {
     
 defaults.Red = defaults.Green = defaults.Blue = defaults.color;
 defaults.Alpha = defaults.opacity;
-console.log(defaults);
+
 module.exports = defaults;
-},{}],16:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 "use strict";
 
 module.exports = {
@@ -1813,7 +1258,7 @@ module.exports = {
     dimensions: ['Top', 'Right', 'Bottom', 'Left'],
     shadow: ['X', 'Y', 'Radius', 'Spread', 'Color']
 };
-},{}],17:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 "use strict";
 
 var defaultProp = require('./default-property.js'),
@@ -1931,7 +1376,7 @@ module.exports = {
     }
     
 };
-},{"../utils/utils.js":37,"./default-property.js":15,"./splitter-lookup.js":19,"./splitters.js":20}],18:[function(require,module,exports){
+},{"../utils/utils.js":36,"./default-property.js":9,"./splitter-lookup.js":13,"./splitters.js":14}],12:[function(require,module,exports){
 "use strict";
 
 var cssStyler = function () {
@@ -1994,7 +1439,7 @@ var cssStyler = function () {
 };
 
 module.exports = new cssStyler();
-},{}],19:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 "use strict";
 
 var ARRAY = 'array',
@@ -2035,7 +1480,7 @@ module.exports = {
     textShadow: SHADOW,
     boxShadow: SHADOW
 };
-},{}],20:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 "use strict";
 
 var dictionary = require('./dictionary.js'),
@@ -2263,7 +1708,7 @@ var dictionary = require('./dictionary.js'),
     };
 
 module.exports = splitters;
-},{"./dictionary.js":16}],21:[function(require,module,exports){
+},{"./dictionary.js":10}],15:[function(require,module,exports){
 "use strict";
 
 var dictionary = require('./dictionary.js'),
@@ -2336,7 +1781,7 @@ var dictionary = require('./dictionary.js'),
     };
 
 module.exports = templates;
-},{"./dictionary.js":16}],22:[function(require,module,exports){
+},{"./dictionary.js":10}],16:[function(require,module,exports){
 /*
     Input controller
 */
@@ -2463,7 +1908,7 @@ Input.prototype = {
 };
 
 module.exports = Input;
-},{"../utils/calc.js":32,"../utils/history.js":35,"../utils/utils.js":37}],23:[function(require,module,exports){
+},{"../utils/calc.js":30,"../utils/history.js":33,"../utils/utils.js":36}],17:[function(require,module,exports){
 "use strict";
 
 var Input = require('./input.js'),
@@ -2522,7 +1967,7 @@ Pointer.prototype.stop = function () {
 };
 
 module.exports = Pointer;
-},{"../opts/keys.js":25,"../types/point.js":29,"../utils/history.js":35,"../utils/utils.js":37,"./input.js":22}],24:[function(require,module,exports){
+},{"../opts/keys.js":19,"../types/point.js":27,"../utils/history.js":33,"../utils/utils.js":36,"./input.js":16}],18:[function(require,module,exports){
 "use strict";
 
 var rubix = require('../action/rubix.js');
@@ -2602,7 +2047,7 @@ module.exports = {
     
     output: undefined
 };
-},{"../action/rubix.js":10}],25:[function(require,module,exports){
+},{"../action/rubix.js":4}],19:[function(require,module,exports){
 /*
     String constants
     ----------------------------------------
@@ -2634,7 +2079,7 @@ module.exports = {
         TOUCHMOVE: 'touchmove',
     }
 };
-},{}],26:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 "use strict";
 
 module.exports = {
@@ -2735,7 +2180,454 @@ module.exports = {
     // [number]: Factor of movement outside of maximum range (ie 0.5 will move half as much as 1)
     escapeAmp: 0
 };
-},{}],27:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
+/*
+    The loop
+*/
+"use strict";
+
+var Timer = require('./timer.js'),
+    Loop = function () {
+        this.timer = new Timer();
+    },
+    manager;
+    
+Loop.prototype = {
+    
+    /*
+        [boolean]: Current status of animation loop
+    */
+    isRunning: false,
+    
+    /*
+        Fire all active processes once per frame
+    */
+    frame: function () {
+        var self = this;
+        
+        requestAnimationFrame(function () {
+            var framestamp = self.timer.update(), // Currently just measuring in ms - will look into hi-res timestamps
+                isActive = self.callback.call(self.scope, framestamp, self.timer.getElapsed());
+
+            if (isActive) {
+                self.frame(true);
+            } else {
+                self.stop();
+            }
+        });
+    },
+    
+    /*
+        Start loop
+    */
+    start: function () {
+        // Make sure we're not already running a loop
+        if (!this.isRunning) {
+            this.isRunning = true;
+            this.frame();
+        }
+    },
+    
+    /*
+        Stop the loop
+    */
+    stop: function () {
+        this.isRunning = false;
+    },
+    
+    /*
+        Set the callback to run every frame
+        
+        @param [Object]: Execution context
+        @param [function]: Callback to fire
+    */
+    setCallback: function (scope, callback) {
+        this.scope = scope;
+        this.callback = callback;
+    }
+ 
+};
+
+module.exports = new Loop();
+},{"./timer.js":24}],22:[function(require,module,exports){
+"use strict";
+
+var theLoop = require('./loop.js'),
+    ProcessManager = function () {
+        this.all = {};
+        this.active = [];
+        this.deactivateQueue = [];
+        theLoop.setCallback(this, this.fireActive);
+    };
+    
+ProcessManager.prototype = {
+    
+    /*
+        [int]: Used for process ID
+    */
+    processCounter: 0,
+    
+    /*
+        [int]: Number of active processes
+    */
+    activeCount: 0,
+    
+    /*
+        Get the process with a given index
+        
+        @param [int]: Index of process
+        @return [Process]
+    */
+    getProcess: function (i) {
+        return this.all[i];
+    },
+    
+    /*
+        Get number of active processes
+        
+        @return [int]: Number of active processes
+    */
+    getActiveCount: function () {
+        return this.activeCount;
+    },
+    
+    /*
+        Get active tokens
+
+        @return [array]: Active tokens
+    */
+    getActive: function () {
+        return this.active;
+    },
+    
+    /*
+        Get the length of the deactivate queue
+        
+        @return [int]: Length of queue
+    */
+    getQueueLength: function () {
+        return this.deactivateQueue.length;
+    },
+    
+    /*
+        Fire all active processes
+        
+        @param [int]: Timestamp of executing frames
+        @param [int]: Time since previous frame
+        @return [boolean]: True if active processes found
+    */
+    fireActive: function (framestamp, elapsed) {
+        var process,
+            activeCount = 0,
+            activeProcesses = [];
+
+        // Purge and check active count before execution
+        this.purge();
+        activeCount = this.getActiveCount();
+        activeProcesses = this.getActive();
+        
+        // Loop through active processes and fire callback
+        for (var i = 0; i < activeCount; i++) {
+            process = this.getProcess(activeProcesses[i]);
+            
+            if (process) {
+                process.fire(framestamp, elapsed);
+            }
+        }
+
+        // Repurge and recheck active count after execution
+        this.purge();
+        activeCount = this.getActiveCount();
+        
+        return activeCount ? true : false;
+    },
+    
+    /*
+        Register a new process
+        
+        @param [Process]
+        @return [int]: Index of process to be used as ID
+    */
+    register: function (process) {
+        var id = this.processCounter;
+
+        this.all[id] = process;
+        
+        this.processCounter++;
+        
+        return id;
+    },
+    
+    /*
+        Activate a process
+        
+        @param [int]: Index of active process
+    */
+    activate: function (i) {
+        var queueIndex = this.deactivateQueue.indexOf(i),
+            isQueued = (queueIndex > -1),
+            isActive = (this.active.indexOf(i) > -1);
+        
+        // Remove from deactivateQueue if in there
+        if (isQueued) {
+            this.deactivateQueue.splice(queueIndex, 1);
+        }
+        
+        // Add to active processes array if not already in there
+        if (!isActive) {
+            this.active.push(i);
+            this.activeCount++;
+            theLoop.start(this);
+        }
+    },
+    
+    /*
+        Deactivate a process
+        
+        @param [int]: Index of process to add to deactivate queue
+    */
+    deactivate: function (i) {
+        this.deactivateQueue.push(i);
+    },
+    
+    /*
+        Purge the deactivate queue
+    */
+    purge: function () {
+        var activeIndex,
+            queueLength = this.getQueueLength();
+        
+        while (queueLength--) {
+            activeIndex = this.active.indexOf(this.deactivateQueue[queueLength]);
+            
+            // If process in active list deactivate
+            if (activeIndex > -1) {
+                this.active.splice(activeIndex, 1);
+                this.activeCount--;
+            }
+        }
+        
+        this.deactivateQueue = [];
+    },
+    
+    /*
+        Remove the provided id and reindex remaining processes
+    */
+    kill: function (id) {
+        delete this.all[id];
+    }
+    
+};
+
+module.exports = new ProcessManager();
+},{"./loop.js":21}],23:[function(require,module,exports){
+/*
+    Process
+    =======================
+    
+    
+*/
+"use strict";
+
+var manager = require('./manager.js'),
+
+    /*
+        Process constructor
+        
+        Syntax
+            var process = new Process(scope, callback);
+            var process = new Process(callback);
+    */
+    Process = function () {
+        var hasScope = (arguments[1] !== undefined),
+            callback = hasScope ? arguments[1] : arguments[0],
+            scope = hasScope ? arguments[0] : this;
+
+        this.setCallback(callback);
+        this.setScope(scope);
+
+        this.setId(manager.register(this));
+    };
+    
+Process.prototype = {
+    
+    /*
+        [boolean]: Is this process currently active?
+    */
+    isActive: false,
+    
+    /*
+        [boolean]: Has this process been killed?
+    */
+    isKilled: false,
+
+    /*
+        Fire callback
+        
+        @param [timestamp]: Timestamp of currently-executed frame
+        @param [number]: Time since last frame
+    */
+    fire: function (timestamp, elapsed) {
+        // Check timers
+        if (this.isActive) {
+            this.callback.call(this.scope, timestamp, elapsed);
+        }
+        
+        if (this.isInterval) {
+            this.deactivate();
+        }
+    },
+    
+    /*
+        Set process callback
+        
+        @param [function]: Function to fire per frame
+        @return [this]
+    */
+    setCallback: function (callback) {
+        this.callback = callback;
+        
+        return this;
+    },
+    
+    /*
+        Set callback scope
+        
+        @param [function]: Fire callback in this context
+        @return [this]
+    */
+    setScope: function (scope) {
+        this.scope = scope;
+        
+        return this;
+    },
+    
+    /*
+        Start process
+        
+        @param [int]: Duration of process in ms, 0 if indefinite
+        @return [this]
+    */
+    start: function (duration) {
+        var self = this;
+        
+        self.reset();
+        self.activate();
+        
+        if (duration) {
+            self.stopTimer = setTimeout(function () {
+                self.stop();
+            }, duration);
+        }
+
+        return self;
+    },
+    
+    /*
+        Stop process
+        
+        @return [this]
+    */
+    stop: function () {
+        this.reset();
+        this.deactivate();
+        
+        return this;
+    },
+    
+    /*
+        Activate process
+        
+        @return [this]
+    */
+    activate: function () {
+        if (!this.isKilled) {
+            this.isActive = true;
+            manager.activate(this.id);
+        }
+
+        return this;
+    },
+    
+    /*
+        Deactivate process
+        
+        @return [this]
+    */
+    deactivate: function () {
+        this.isActive = false;
+        manager.deactivate(this.id);
+        
+        return this;
+    },
+    
+    /*
+        Fire process every x ms
+        
+        @param [int]: Number of ms to wait between refiring process.
+        @return [this]
+    */
+    every: function (interval) {
+	    var self = this;
+
+        this.reset();
+
+        this.isInterval = true;
+
+        this.intervalTimer = setInterval(function () {
+            self.activate();
+        }, interval);
+    },
+    
+    /*
+        Clear all timers
+        
+        @param 
+    */
+    reset: function () {
+        this.isInterval = false;
+        clearTimeout(this.stopTimer);
+        clearInterval(this.intervalTimer);
+        
+        return this;
+    },
+    
+    /*
+        Kill function in manager, release for garbage collection
+    */
+    kill: function () {
+        this.stop();
+        this.isKilled = true;
+        manager.kill(this.id);
+    },
+    
+    setId: function (id) {
+        this.id = id;
+    }
+};
+
+module.exports = Process;
+},{"./manager.js":22}],24:[function(require,module,exports){
+"use strict";
+
+var maxElapsed = 30,
+    Timer = function () {
+        this.update();
+    };
+
+Timer.prototype = {
+    update: function () {
+        this.prev = this.current;
+        return this.current = new Date().getTime();
+    },
+
+    getElapsed: function () {
+        return Math.min(this.current - this.prev, maxElapsed);
+    }
+};
+
+module.exports = Timer;
+},{}],25:[function(require,module,exports){
 "use strict";
 
 var Action = require('./action/action.js'),
@@ -2744,11 +2636,16 @@ var Action = require('./action/action.js'),
     presets = require('./action/presets.js'),
     easing = require('./utils/easing.js'),
     calc = require('./utils/calc.js'),
-    cycl = require('cycl'),
-    Redshift = function () {};
+    utils = require('./utils/utils.js'),
+    shim = require('./utils/shim.js'),
+    Process = require('./process/process.js'),
+    Redshift = function () {
+        // Check if we need to shim rAF and indexOf
+        shim.featureCheck();
+    };
 
 Redshift.prototype = {
-    
+
     /*
         Create a new Action controller
         
@@ -2757,13 +2654,13 @@ Redshift.prototype = {
     newAction: function (defs, override) {
         return new Action(defs, override);
     },
-    
+
     /*
-        Create a new Atom controller
+        Create a new DOM controller
 
         @return [Atom]: Newly-created Atom
     */
-    newAtom: function (element) {
+    newDom: function () {
         return new Atom(element);
     },
     
@@ -2777,20 +2674,29 @@ Redshift.prototype = {
     },
     
     /*
+        Create a new process
+        
+        @param [function]: Function to run every frame
+    */
+    newProcess: function () {
+        return new Process(arguments[0], arguments[1]);
+    },
+    
+    /*
         Define a new Action preset
         
         Syntax
         
-            .define(name, preset)
+            .definePreset(name, preset)
                 @param [string]: Name of preset
                 @param [object]: Preset options/properties
                 
-            .define(presets)
+            .definePreset(presets)
                 @param [object]: Multiple presets as named object
                 
         @return [Redshift]
     */
-    define: function () {
+    definePreset: function () {
         presets.define.apply(presets, arguments);
         
         return this;
@@ -2805,20 +2711,21 @@ Redshift.prototype = {
         @param [string]: Name of the new easing function 
         @params [number]: x/y coordinates of handles
     */
-    addBezier: function () {
+    defineBezier: function () {
         easing.addBezier.apply(easing, arguments);
         
         return this;
     },
     
+    //defineSimulation: function () {},
+    
     calc: calc,
     
-    cycl: cycl
-    
+    utils: utils
 };
 
 module.exports = new Redshift();
-},{"./action/action.js":7,"./action/presets.js":8,"./atom/atom.js":12,"./input/input.js":22,"./utils/calc.js":32,"./utils/easing.js":33,"cycl":1}],28:[function(require,module,exports){
+},{"./action/action.js":1,"./action/presets.js":2,"./atom/atom.js":6,"./input/input.js":16,"./process/process.js":23,"./utils/calc.js":30,"./utils/easing.js":31,"./utils/shim.js":35,"./utils/utils.js":36}],26:[function(require,module,exports){
 (function (global){
 /*
     Bezier function generator
@@ -2948,7 +2855,7 @@ Bezier.prototype = {
 
 module.exports = Bezier;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],29:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 /*
     Point class
     ----------------------------------------
@@ -2977,7 +2884,7 @@ Point.prototype = {
 };
 
 module.exports = Point;
-},{}],30:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 "use strict";
 
 var utils = require('../utils/utils.js'),
@@ -3034,7 +2941,7 @@ Repo.prototype = {
 };
 
 module.exports = Repo;
-},{"../utils/utils.js":37}],31:[function(require,module,exports){
+},{"../utils/utils.js":36}],29:[function(require,module,exports){
 "use strict";
 
 var calc = require('../utils/calc.js'),
@@ -3196,7 +3103,7 @@ var calc = require('../utils/calc.js'),
     };
 
 module.exports = Value;
-},{"../utils/calc.js":32,"../utils/utils.js":37,"./repo.js":30}],32:[function(require,module,exports){
+},{"../utils/calc.js":30,"../utils/utils.js":36,"./repo.js":28}],30:[function(require,module,exports){
 /*
     Calculators
     ----------------------------------------
@@ -3587,7 +3494,7 @@ module.exports = {
         return this.value(easedProgress, from, to);
     }
 };
-},{"./utils.js":37}],33:[function(require,module,exports){
+},{"./utils.js":36}],31:[function(require,module,exports){
 /*
     Easing functions
     ----------------------------------------
@@ -3836,9 +3743,9 @@ function init() {
 
 module.exports = easingFunction;
 
-},{"../opts/keys.js":25,"../types/bezier.js":28,"./calc.js":32,"./utils.js":37}],34:[function(require,module,exports){
+},{"../opts/keys.js":19,"../types/bezier.js":26,"./calc.js":30,"./utils.js":36}],32:[function(require,module,exports){
 window.redshift = require('../redshift.js');
-},{"../redshift.js":27}],35:[function(require,module,exports){
+},{"../redshift.js":25}],33:[function(require,module,exports){
 "use strict";
 
 var maxHistorySize = 3,
@@ -3909,7 +3816,7 @@ History.prototype = {
 };
 
 module.exports = History;
-},{"../utils/utils.js":37}],36:[function(require,module,exports){
+},{"../utils/utils.js":36}],34:[function(require,module,exports){
 "use strict";
 
 var utils = require('./utils.js'),
@@ -3976,7 +3883,85 @@ module.exports = {
     }
     
 };
-},{"../css/parse.js":17,"./utils.js":37}],37:[function(require,module,exports){
+},{"../css/parse.js":11,"./utils.js":36}],35:[function(require,module,exports){
+"use strict";
+
+var checkRequestAnimationFrame = function () {
+        /*
+            requestAnimationFrame polyfill
+            
+            For IE8/9 Flinstones
+        
+            Taken from Paul Irish. We've stripped out cancelAnimationFrame checks because we don't fox with that
+            
+            http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+            http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
+             
+            requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
+             
+            MIT license
+        */
+        var lastTime = 0,
+            vendors = ['ms', 'moz', 'webkit', 'o'],
+            vendorsLength = vendors.length;
+        
+        // Check for prefixed implementations
+        for (var x = 0; x < vendorsLength && !window.requestAnimationFrame; x++) {
+            window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+        }
+        
+        // If there is, fo absolute shizzle, no rAF implementations, make one out of setTimeout and putty
+        if (!window.requestAnimationFrame) {
+            window.requestAnimationFrame = function (callback, element) {
+                var currTime = new Date().getTime(),
+                    timeToCall = Math.max(0, 16 - (currTime - lastTime)),
+                    id = window.setTimeout(function () {
+                            callback(currTime + timeToCall);
+                        }, timeToCall);
+                
+                lastTime = currTime + timeToCall;
+                
+                return id;
+            }
+        }
+    },
+    checkIndexOf = function () {
+        /*
+            indexOf polyfill
+            
+            For IE8 troglodites
+            
+            Taken from http://stackoverflow.com/questions/3629183/why-doesnt-indexof-work-on-an-array-ie8
+        */
+        if (!Array.prototype.indexOf) {
+            Array.prototype.indexOf = function (elt /*, from*/) {
+                var len = this.length >>> 0,
+                    from = Number(arguments[1]) || 0;
+                    
+                from = (from < 0) ? Math.ceil(from) : Math.floor(from);
+                
+                if (from < 0) {
+                    from += len;
+                }
+                
+                for (; from < len; from++) {
+                    if (from in this && this[from] === elt) {
+                        return from;
+                    }
+                }
+                
+                return -1;
+            }
+        }
+    };
+
+module.exports = {
+    featureCheck: function () {
+        checkRequestAnimationFrame();
+        checkIndexOf();
+    }
+};
+},{}],36:[function(require,module,exports){
 /*
     Utility functions
     ----------------------------------------
@@ -4295,4 +4280,4 @@ module.exports = {
     }
     
 };
-},{"../opts/keys.js":25}]},{},[34]);
+},{"../opts/keys.js":19}]},{},[32]);

@@ -1,6 +1,6 @@
 "use strict";
 
-var cycl = require('cycl'),
+var Process = require('../process/process.js'),
     process = require('./processor.js'),
     presets = require('./presets.js'),
     Pointer = require('../input/pointer.js'),
@@ -26,7 +26,7 @@ var cycl = require('cycl'),
         self.data = new Repo();
         
         // Register process wth cycl
-        self.process = cycl.newProcess(function (framestamp, frameDuration) {
+        self.process = new Process(function (framestamp, frameDuration) {
 	        if (self.active) {
                 process(self, framestamp, frameDuration);
 	        }
