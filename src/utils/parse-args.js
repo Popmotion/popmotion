@@ -39,7 +39,7 @@ module.exports = {
                 props.values = parse.cssToValues(arg, 'to');
             }
         }
-        console.log(props.values);
+
         return props;
     },
     

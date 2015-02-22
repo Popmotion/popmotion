@@ -158,8 +158,6 @@ var dictionary = require('./dictionary.js'),
                 j = (j === numDimensions) ? j - jumpBack : j;
             }
             
-            console.log(dimensionProps);
-            
             return dimensionProps;
         },
         

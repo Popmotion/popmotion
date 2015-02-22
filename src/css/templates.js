@@ -2,23 +2,35 @@
 
 var dictionary = require('./dictionary.js'),
 
+    defaultValues = {
+        Alpha: 1
+    },
+
     functionCreate = function (value, prefix) {
         return prefix + '(' + value + ')';
     },
 
-    createSpaceDelimited = function (array) {
-        return createDelimitedString(array, ' ');
+    createSpaceDelimited = function (object, terms) {
+        return createDelimitedString(object, terms, ' ');
     },
     
-    createCommaDelimited = function (array) {
-        return createDelimitedString(array, ', ');
+    createCommaDelimited = function (object, terms) {
+        return createDelimitedString(object, terms, ', ');
     },
     
-    createDelimitedString = function (array, delimiter) {
+    createDelimitedString = function (object, terms, delimiter) {
         var string = '',
-            arrayLength = array.length;
+            termsLength = terms.length;
         
-        for (var i = 0; i < arrayLength i++) {
+        for (var i = 0; i < termsLength; i++) {
+            if (object[terms[i]] !== undefined) {
+                string += object[terms[i]];
+            } else {
+                if (defaultValues[terms[i]] !== undefined) {
+                    string += defaultValues[terms[i]];
+                }
+            }
+            
             string += delimiter;
         }
     
@@ -38,21 +50,21 @@ var dictionary = require('./dictionary.js'),
         },
         
         color: function (values) {
-            var terms = dictionary.colors,
-                hasAlpha = (values.Alpha !== undefined),
-                rule = '(';
+            return functionCreate(createCommaDelimited(values, dictionary.colors), 'rgba');
+        },
         
-            for (var i = 0; i < 3; i++) {
-                rule += values[terms[i]] + ', ';
-            }
+        dimensions: function (values) {
+            return createSpaceDelimited(values, dictionary.dimensions);
+        },
+        
+        positions: function (values) {
+            return createSpaceDelimited(values, dictionary.positions);
+        },
+        
+        shadow: function (values) {
+            var shadowTerms = dictionary.shadow.slice(0,4);
             
-            if (hasAlpha) {
-                rule += values.Alpha;
-            } else {
-                rule = rule.slice(0, -2);
-            }
-            
-            return prefix + rule + ')';
+            return createSpaceDelimited(values, shadowTerms) + templates.color(values);
         }
         
     };

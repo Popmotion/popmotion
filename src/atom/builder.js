@@ -1,7 +1,7 @@
 "use strict";
 
 var templates = require('../css/templates.js'),
-
+    lookup = require('../css/splitter-lookup.js'),
     
     /*
         Generate a precache
@@ -33,7 +33,7 @@ var templates = require('../css/templates.js'),
                 precache[key] = props[key];
             }
         }
-        
+
         return precache;
     },
     
@@ -46,7 +46,8 @@ var templates = require('../css/templates.js'),
     */
     assignCSS = function (precache, currentCache) {
         var latest = {},
-            cache = {};
+            cache = {},
+            rule = '';
         
         // Loop through precache and generate rules
         for (var key in precache) {
@@ -68,8 +69,17 @@ var templates = require('../css/templates.js'),
         };
     },
     
-    generateRule = function (key, value) {
-        var template = templates[key];
+    generateRule = function (key, values) {
+        var template = templates[lookup[key]],
+            rule = '';
+        
+        if (template) {
+            rule = template(values);
+        } else {
+            rule = values;
+        }
+        
+        return rule;
     };
 
 module.exports = function (output, cache, values) {

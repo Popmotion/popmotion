@@ -12,6 +12,7 @@ var defaults = {
         }
     };
     
+defaults.Red = defaults.Green = defaults.Blue = defaults.color;
 defaults.Alpha = defaults.opacity;
-
+console.log(defaults);
 module.exports = defaults;
