@@ -2,46 +2,10 @@
 
 var calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
+    resolve = require('../utils/resolve.js'),
     Repo = require('./repo.js'),
 
-    /*
-        Resolve a value
-        
-        Determine if the value to be set is
-            - Function returning the value
-            - String relative equation
-            - Or actual value
-            
-        @param [number]: 
-    */
-    resolve = function (val, current, value, action) {
-        var resolvedVal = val,
-            valUnit;
-        
-        // If this is a function, execute
-        if (utils.isFunc(val)) {
-            resolvedVal = val.call(action.props.store.scope, current);
-        }
-        
-        // Check if value is relative ie '+=10'
-        if (utils.isRelativeValue(resolvedVal)) {
-            resolvedVal = calc.relativeValue(current, val);
-        }
-        
-        // If this value is a string it might 
-        if (utils.isString(resolvedVal)) {
-            valUnit = utils.splitValUnit(resolvedVal);
-            
-            if (!isNaN(valUnit.value)) {
-                resolvedVal = valUnit.value;
-                value.unit = valUnit.unit;
-            }
-        }
-
-        return resolvedVal;
-    },
-    
-    loopOver = function (newData, inherit, value, action) {
+    loopOver = function (newData, inherit, value, scope) {
         var data = {},
             dataPoint;
         
@@ -58,7 +22,7 @@ var calc = require('../utils/calc.js'),
             }
             
             if (dataPoint !== undefined) {
-                data[key] = resolve(dataPoint, value[key], value, action);
+                data[key] = resolve(dataPoint, value[key], value, scope);
             }
         }
         
@@ -94,19 +58,20 @@ var calc = require('../utils/calc.js'),
                 arg1 = args[0],
                 arg2 = args[1],
                 data = {},
-                store,
+                store = this.store,
+                scope = action.getProp('scope'),
                 moveToBack = false;
 
             // If we have an object, resolve every item first
             if (utils.isObj(arg1)) {
-                data = loopOver(arg1, arg2, this.store, action);
+                data = loopOver(arg1, arg2, store, scope);
 
                 // Handle start property
                 if (firstSet) {
                     firstSet = false;
                     
                     if (arg1.hasOwnProperty('start')){
-                        setter.apply(this, ['current', resolve(arg1.start, this.get('current'), this.store, action)]);
+                        setter.apply(this, ['current', resolve(arg1.start, this.get('current'), store, scope)]);
                     }
                 }
 
@@ -114,18 +79,15 @@ var calc = require('../utils/calc.js'),
 
                 // If this is a specific setter, ie .set('key', val)
                 if (utils.isString(arg1) && !utils.isRelativeValue(arg1)) {
-                    data[arg1] = resolve(arg2, this.get('current'), this.store, action);
+                    data[arg1] = resolve(arg2, this.get('current'), store, scope);
                     
                 // Or this is a var to be resolved, assign it to current
                 } else {
-                    data.current = resolve(arg1, this.get('current'), this.store, action);
+                    data.current = resolve(arg1, this.get('current'), store, scope);
                 }
             }
 
             setter.apply(this, [data]);
-            
-            // Cache store
-            store = this.store;
             
             // Check for range
             setter.apply(this, ['hasRange', (utils.isNum(store.min) && utils.isNum(store.max))]);
