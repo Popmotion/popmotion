@@ -474,7 +474,7 @@ Action.prototype = {
 };
 
 module.exports = Action;
-},{"../input/pointer.js":17,"../opts/action.js":18,"../opts/keys.js":19,"../opts/value.js":20,"../process/process.js":23,"../types/repo.js":28,"../types/value.js":29,"../utils/calc.js":30,"../utils/utils.js":37,"./presets.js":2,"./processor.js":3}],2:[function(require,module,exports){
+},{"../input/pointer.js":17,"../opts/action.js":18,"../opts/keys.js":19,"../opts/value.js":20,"../process/process.js":23,"../types/repo.js":27,"../types/value.js":28,"../utils/calc.js":29,"../utils/utils.js":36,"./presets.js":2,"./processor.js":3}],2:[function(require,module,exports){
 "use strict";
 
 var KEY = require('../opts/keys.js'),
@@ -638,7 +638,7 @@ Presets.prototype = {
 };
 
 module.exports = new Presets();
-},{"../opts/keys.js":19,"../utils/utils.js":37}],3:[function(require,module,exports){
+},{"../opts/keys.js":19,"../utils/utils.js":36}],3:[function(require,module,exports){
 /*
     Process actions
 */
@@ -747,7 +747,7 @@ module.exports = function (action, framestamp, frameDuration) {
 
     action.framestamp = framestamp;
 };
-},{"../opts/keys.js":19,"../utils/calc.js":30,"./rubix.js":4}],4:[function(require,module,exports){
+},{"../opts/keys.js":19,"../utils/calc.js":29,"./rubix.js":4}],4:[function(require,module,exports){
 /*
     Rubix modules
     ----------------------------------------
@@ -1006,7 +1006,7 @@ Rubix.prototype = {
 rubixController = new Rubix();
 
 module.exports = rubixController;
-},{"../opts/keys.js":19,"../utils/calc.js":30,"../utils/easing.js":31,"../utils/utils.js":37,"./simulate.js":5}],5:[function(require,module,exports){
+},{"../opts/keys.js":19,"../utils/calc.js":29,"../utils/easing.js":30,"../utils/utils.js":36,"./simulate.js":5}],5:[function(require,module,exports){
 "use strict";
 
 var frictionStopLimit = .2,
@@ -1082,7 +1082,7 @@ Simulate.prototype = {
 simulate = new Simulate();
 
 module.exports = simulate;
-},{"../utils/calc.js":30}],6:[function(require,module,exports){
+},{"../utils/calc.js":29}],6:[function(require,module,exports){
 "use strict";
 
 var templates = require('../css/templates.js'),
@@ -1318,7 +1318,7 @@ module.exports = {
     }
     
 };
-},{"../utils/resolve.js":35,"../utils/utils.js":37,"./default-property.js":7,"./splitter-lookup.js":11,"./splitters.js":12}],10:[function(require,module,exports){
+},{"../utils/resolve.js":34,"../utils/utils.js":36,"./default-property.js":7,"./splitter-lookup.js":11,"./splitters.js":12}],10:[function(require,module,exports){
 "use strict";
 
 var cssStyler = function () {
@@ -1922,7 +1922,7 @@ DomAction.prototype = {
 body = new DomAction(document.body);
     
 module.exports = DomAction;
-},{"../action/action.js":1,"../utils/calc.js":30,"../utils/parse-args.js":34,"./output.js":15}],15:[function(require,module,exports){
+},{"../action/action.js":1,"../utils/calc.js":29,"../utils/parse-args.js":33,"./output.js":15}],15:[function(require,module,exports){
 "use strict";
 
 var build = require('../css/builder.js'),
@@ -2067,13 +2067,11 @@ Input.prototype = {
 };
 
 module.exports = Input;
-},{"../utils/calc.js":30,"../utils/history.js":33,"../utils/utils.js":37}],17:[function(require,module,exports){
+},{"../utils/calc.js":29,"../utils/history.js":32,"../utils/utils.js":36}],17:[function(require,module,exports){
 "use strict";
 
 var Input = require('./input.js'),
-    Point = require('../types/point.js'),
     KEY = require('../opts/keys.js'),
-    utils = require('../utils/utils.js'),
     currentPointer, // Sort this out for multitouch
     
 
@@ -2116,7 +2114,7 @@ var Input = require('./input.js'),
             isTouch = (event.touches) ? true : false,
             startPoint = eventToPoint(event, isTouch);
         
-        this.update(new Point(startPoint));
+        this.update(startPoint);
         this.isTouch = isTouch;
         this.bindEvents();
     };
@@ -2147,9 +2145,10 @@ Pointer.prototype.unbindEvents = function () {
     @param [event]: Pointer move event
 */
 Pointer.prototype.onMove = function (e) {
+    var newPoint = eventToPoint(e, currentPointer.isTouch);
     e = getActualEvent(e);
     e.preventDefault();
-    currentPointer.update(new Point(eventToPoint(e, currentPointer.isTouch)));
+    currentPointer.update(newPoint);
 };
 
 Pointer.prototype.stop = function () {
@@ -2157,7 +2156,7 @@ Pointer.prototype.stop = function () {
 };
 
 module.exports = Pointer;
-},{"../opts/keys.js":19,"../types/point.js":27,"../utils/utils.js":37,"./input.js":16}],18:[function(require,module,exports){
+},{"../opts/keys.js":19,"./input.js":16}],18:[function(require,module,exports){
 "use strict";
 
 var rubix = require('../action/rubix.js');
@@ -2916,7 +2915,7 @@ Redshift.prototype = {
 };
 
 module.exports = new Redshift();
-},{"./action/action.js":1,"./action/presets.js":2,"./dom/dom-action.js":14,"./input/input.js":16,"./process/process.js":23,"./utils/calc.js":30,"./utils/easing.js":31,"./utils/shim.js":36,"./utils/utils.js":37}],26:[function(require,module,exports){
+},{"./action/action.js":1,"./action/presets.js":2,"./dom/dom-action.js":14,"./input/input.js":16,"./process/process.js":23,"./utils/calc.js":29,"./utils/easing.js":30,"./utils/shim.js":35,"./utils/utils.js":36}],26:[function(require,module,exports){
 (function (global){
 /*
     Bezier function generator
@@ -3075,35 +3074,6 @@ var NEWTON_ITERATIONS = 8,
 module.exports = Bezier;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],27:[function(require,module,exports){
-/*
-    Point class
-    ----------------------------------------
-    
-    Defines a 3D point in space
-    
-    @param [number || Point]: Either X axis value or Point object
-    @param [number]: Y axis
-    @param [number]: Z axis
-    @return [Point]
-*/
-"use strict";
-
-var Point = function (x, y, z) {
-        this.setPoint(x, y, z);
-    };
-
-Point.prototype = {
-    setPoint: function (x, y, z) {
-        var xIsObj = (typeof x === 'object');
-
-        this.x = xIsObj ? x.x || 0 : x || 0;
-        this.y = xIsObj ? x.y || 0 : y || 0;
-        this.z = xIsObj ? x.z || 0 : z || 0;
-    }
-};
-
-module.exports = Point;
-},{}],28:[function(require,module,exports){
 "use strict";
 
 var utils = require('../utils/utils.js'),
@@ -3160,7 +3130,7 @@ Repo.prototype = {
 };
 
 module.exports = Repo;
-},{"../utils/utils.js":37}],29:[function(require,module,exports){
+},{"../utils/utils.js":36}],28:[function(require,module,exports){
 "use strict";
 
 var calc = require('../utils/calc.js'),
@@ -3284,7 +3254,7 @@ var calc = require('../utils/calc.js'),
     };
 
 module.exports = Value;
-},{"../utils/calc.js":30,"../utils/resolve.js":35,"../utils/utils.js":37,"./repo.js":28}],30:[function(require,module,exports){
+},{"../utils/calc.js":29,"../utils/resolve.js":34,"../utils/utils.js":36,"./repo.js":27}],29:[function(require,module,exports){
 /*
     Calculators
     ----------------------------------------
@@ -3675,7 +3645,7 @@ module.exports = {
         return this.value(easedProgress, from, to);
     }
 };
-},{"./utils.js":37}],31:[function(require,module,exports){
+},{"./utils.js":36}],30:[function(require,module,exports){
 /*
     Easing functions
     ----------------------------------------
@@ -3924,9 +3894,9 @@ function init() {
 
 module.exports = easingFunction;
 
-},{"../opts/keys.js":19,"../types/bezier.js":26,"./calc.js":30,"./utils.js":37}],32:[function(require,module,exports){
+},{"../opts/keys.js":19,"../types/bezier.js":26,"./calc.js":29,"./utils.js":36}],31:[function(require,module,exports){
 window.redshift = require('../redshift.js');
-},{"../redshift.js":25}],33:[function(require,module,exports){
+},{"../redshift.js":25}],32:[function(require,module,exports){
 "use strict";
 
 var maxHistorySize = 3,
@@ -3997,7 +3967,7 @@ History.prototype = {
 };
 
 module.exports = History;
-},{"../utils/utils.js":37}],34:[function(require,module,exports){
+},{"../utils/utils.js":36}],33:[function(require,module,exports){
 "use strict";
 
 var utils = require('./utils.js'),
@@ -4064,7 +4034,7 @@ module.exports = {
     }
     
 };
-},{"../css/parse.js":9,"./utils.js":37}],35:[function(require,module,exports){
+},{"../css/parse.js":9,"./utils.js":36}],34:[function(require,module,exports){
 /*
     Property resolver
     -------------------------------------
@@ -4110,7 +4080,7 @@ module.exports = function (newValue, currentValue, parent, scope) {
     
     return newValue;
 };
-},{"./utils.js":37}],36:[function(require,module,exports){
+},{"./utils.js":36}],35:[function(require,module,exports){
 "use strict";
 
 var checkRequestAnimationFrame = function () {
@@ -4188,7 +4158,7 @@ module.exports = {
         checkIndexOf();
     }
 };
-},{}],37:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 /*
     Utility functions
 */
@@ -4449,4 +4419,4 @@ module.exports = {
     }
     
 };
-},{"../opts/keys.js":19}]},{},[32]);
+},{"../opts/keys.js":19}]},{},[31]);
