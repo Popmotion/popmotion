@@ -23,8 +23,13 @@
 "use strict";
 
 var calc = require('./calc.js'),
-    KEY = require('../opts/keys.js'),
     Bezier = require('../types/bezier.js'),
+    
+    // Constants
+    INVALID_EASING = ": Not defined",
+    EASE_IN = 'In',
+    EASE_OUT = 'Out',
+    EASE_IN_OUT = EASE_IN + EASE_OUT,
 
     /*
         Each of these base functions is an easeIn
@@ -109,7 +114,7 @@ EasingFunction.prototype = {
         var easing = this[name];
         
         if (!easing) {
-            throw name + KEY.ERROR.INVALID_EASING;
+            throw name + INVALID_EASING;
         }
 
         return easing;
@@ -179,13 +184,11 @@ EasingFunction.prototype = {
     */
     generate: function (name, method, isBaseIn) {
         var self = this,
-            names = {
-                easeIn: name + KEY.EASING.IN, 
-                easeOut: name + KEY.EASING.OUT,
-                easeInOut: name + KEY.EASING.IN_OUT
-            },
-            baseName = isBaseIn ? names.easeIn : names.easeOut,
-            reverseName = isBaseIn ? names.easeOut : names.easeIn;
+            easeIn = name + EASE_IN,
+            easeOut = name + EASE_OUT,
+            easeInOut = name + EASE_IN_OUT,
+            baseName = isBaseIn ? easeIn : easeOut,
+            reverseName = isBaseIn ? easeOut : easeIn;
 
         // Create the In function
         this[baseName] = method;
@@ -196,7 +199,7 @@ EasingFunction.prototype = {
         };
         
         // Create the InOut function by mirroring the transition curve
-        this[names.easeInOut] = function (progress) {
+        this[easeInOut] = function (progress) {
             return self.mirrorEasing(progress, self[baseName]);
         };
     },

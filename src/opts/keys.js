@@ -19,8 +19,7 @@ module.exports = {
     },
     ERROR: {
         ACTION_EXISTS: "Action defined. Use forceOverride: true",
-        NO_ACTION: "Action not defined",
-        INVALID_EASING: ": Not defined",
+        NO_ACTION: "Action not defined"
     },
     EVENT: {
         MOUSE: 'mouse',
