@@ -48,6 +48,7 @@ Redshift.prototype = {
         
         @param [function]: Function to run every frame
         @param: Scope
+        @return [Process]
     */
     newProcess: function () {
         return new Process(arguments[0], arguments[1]);
