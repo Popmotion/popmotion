@@ -2246,11 +2246,6 @@ module.exports = {
 module.exports = {
     REDSHIFT: 'redshift',
     ANGLE_DISTANCE: 'angle distance',
-    EASING: {
-        IN: 'In',
-        IN_OUT: 'InOut',
-        OUT: 'Out'
-    },
     RUBIX: {
         INPUT: 'Input',
         TIME: 'Time',
