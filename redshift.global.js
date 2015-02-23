@@ -474,7 +474,7 @@ Action.prototype = {
 };
 
 module.exports = Action;
-},{"../input/pointer.js":17,"../opts/action.js":18,"../opts/keys.js":19,"../opts/value.js":20,"../process/process.js":23,"../types/repo.js":28,"../types/value.js":29,"../utils/calc.js":30,"../utils/utils.js":36,"./presets.js":2,"./processor.js":3}],2:[function(require,module,exports){
+},{"../input/pointer.js":17,"../opts/action.js":18,"../opts/keys.js":19,"../opts/value.js":20,"../process/process.js":23,"../types/repo.js":28,"../types/value.js":29,"../utils/calc.js":30,"../utils/utils.js":37,"./presets.js":2,"./processor.js":3}],2:[function(require,module,exports){
 "use strict";
 
 var KEY = require('../opts/keys.js'),
@@ -638,7 +638,7 @@ Presets.prototype = {
 };
 
 module.exports = new Presets();
-},{"../opts/keys.js":19,"../utils/utils.js":36}],3:[function(require,module,exports){
+},{"../opts/keys.js":19,"../utils/utils.js":37}],3:[function(require,module,exports){
 /*
     Process actions
 */
@@ -1006,7 +1006,7 @@ Rubix.prototype = {
 rubixController = new Rubix();
 
 module.exports = rubixController;
-},{"../opts/keys.js":19,"../utils/calc.js":30,"../utils/easing.js":31,"../utils/utils.js":36,"./simulate.js":5}],5:[function(require,module,exports){
+},{"../opts/keys.js":19,"../utils/calc.js":30,"../utils/easing.js":31,"../utils/utils.js":37,"./simulate.js":5}],5:[function(require,module,exports){
 "use strict";
 
 var frictionStopLimit = .2,
@@ -1083,203 +1083,6 @@ simulate = new Simulate();
 
 module.exports = simulate;
 },{"../utils/calc.js":30}],6:[function(require,module,exports){
-"use strict";
-
-var Action = require('../action/action.js'),
-    calc = require('../utils/calc.js'),
-    parse = require('../utils/parse-args.js'),
-    setProps = require('./setter.js'),
-    
-    /*
-        Constructor
-        
-        @param [object || DocumentElement]: Object describing raw UX element
-    */
-    Atom = function (element) {
-        this.element = element;
-        this.cache = {};
-        
-        this.action = new Action({
-            dom: element,
-            scope: this,
-            onChange: setProps
-        });
-    };
-    
-Atom.prototype = {
-    
-    /*
-        Animate provided properties
-        
-        @param [object]: Object of valid CSS properties to animate
-        @param [number] (optional): Duration in ms
-        @param [string] (optional): Name of easing function
-        @param [function](optional): onEnd callback
-    */
-    play: function () {
-        this.action.play(parse.playArgs.apply(parse, arguments));
-        return this;
-    },
-    
-    /*
-        Track
-        
-        @param [object] (optional): Object of valid CSS properties to track
-        @param [event || Input): Originating pointer event or Input
-    */
-    track: function () {
-        this.action.track.apply(this.action, parse.trackArgs.apply(parse, arguments));
-        return this;
-    },
-    
-    /*
-        
-    */
-    run: function () {
-        this.action.run(parse.valuesToCSS(arguments[0]));
-        return this;
-    },
-    
-    /*
-        Returns element width
-        
-        @return [number]: width in px
-    */
-    width: function () {
-        return this.dom.offsetWidth;
-    },
-    
-    /*
-        Returns element height
-        
-        @return [number]: height in px
-    */
-    height: function () {
-        return this.dom.offsetHeight;
-    },
-    
-    /*
-        Returns absolute pageX
-        
-        @return [number]: pageX in px
-    */
-    x: function () {
-        return this.rect().x;
-    },
-    
-    /*
-        Returns absolute pageY
-        
-        @return [number]: pageY in px
-    */
-    y: function () {
-        return this.rect().y;
-    },
-    
-    /*
-        Returns X of element center
-        
-        @return [number]: Element center X in px
-    */
-    centerX: function () {
-        return this.rect().centerX;
-    },
-    
-    /*
-        Returns Y of element center
-        
-        @return [number]: Element center Y in px
-    */
-    centerY: function () {
-        return this.rect().centerY;
-    },
-    
-    /*
-        Radius of element (if element is circular)
-        
-        @return [number]: Radius of element
-    */
-    radius: function () {
-        return this.width() / 2;
-    },
-    
-    /*
-        Returns element position relative to viewport
-            left/right/top/bottom/width/height
-        
-        @return [object]: Element position
-    */
-    clientRect: function () {
-        return this.dom.getBoundingClientRect();
-    },
-    
-    /*
-        Returns element position relative to viewport
-        and document
-            Viewport: left/right/top/bottom/width/height
-            Document: x/y/centerX/centerY
-    */
-    rect: function () {
-        var rect = this.clientRect(),
-            bodyRect = body.clientRect();
-        
-        rect.x = rect.left - bodyRect.left;
-        rect.y = rect.top - bodyRect.top;
-        rect.centerX = rect.x + (rect.width / 2);
-        rect.centerY = rect.y + (rect.height / 2);
-        
-        return rect;
-    },
-    
-    centerDistance: function () {
-        var rect = this.rect(),
-            targetRect = target.rect();
-            
-        return redshift.calc.distance2D({
-                x: rect.centerX,
-                y: rect.centerY
-            },{
-                x: targetRect.centerX,
-                y: targetRect.centerY
-            });
-    },
-
-    /*
-        Return distance between two circular objects
-        
-        @param [Core]: Target element
-        @return [number]: Distance in px
-    */
-    radialDistance: function (target) {
-        var rect = this.rect(),
-            targetRect = target.rect(),
-            thisRadius = rect.width / 2,
-            targetRadius = targetRect.width / 2,
-            centerDistance = calc.distance2D({
-                x: rect.centerX,
-                y: rect.centerY
-            },{
-                x: targetRect.centerX,
-                y: targetRect.centerY
-            });
-            
-        return centerDistance - targetRadius - thisRadius;
-    },
-    
-    /*
-        Check for radial collision with target
-        
-        @param [Core]: Target element
-        @return [boolean]: True if collision
-    */
-    radialCollision: function (target) {
-        return (this.radialDistance(target) <= 0) ? true : false;
-    }
-    
-};
-    
-module.exports = Atom;
-},{"../action/action.js":1,"../utils/calc.js":30,"../utils/parse-args.js":34,"./setter.js":8}],7:[function(require,module,exports){
 "use strict";
 
 var templates = require('../css/templates.js'),
@@ -1367,25 +1170,7 @@ var templates = require('../css/templates.js'),
 module.exports = function (output, cache, values) {
     return assignCSS(precache(output, values), cache);
 }
-},{"../css/splitter-lookup.js":13,"../css/templates.js":15}],8:[function(require,module,exports){
-"use strict";
-
-var build = require('./builder.js'),
-    css = require('../css/set.js');
-
-module.exports = function (output) {
-    var props = this.action.props.store,
-        values = this.action.values.store,
-        dom = props.dom,
-        cssState;
-
-    if (dom) {
-        cssState = build(output, props.css, values);
-        css(props.dom, cssState.latest);
-        props.css = cssState.cache;
-    }
-};
-},{"../css/set.js":12,"./builder.js":7}],9:[function(require,module,exports){
+},{"../css/splitter-lookup.js":11,"../css/templates.js":13}],7:[function(require,module,exports){
 "use strict";
 
 var defaults = {
@@ -1404,7 +1189,7 @@ defaults.Red = defaults.Green = defaults.Blue = defaults.color;
 defaults.Alpha = defaults.opacity;
 
 module.exports = defaults;
-},{}],10:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 "use strict";
 
 module.exports = {
@@ -1413,13 +1198,14 @@ module.exports = {
     dimensions: ['Top', 'Right', 'Bottom', 'Left'],
     shadow: ['X', 'Y', 'Radius', 'Spread', 'Color']
 };
-},{}],11:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 "use strict";
 
 var defaultProp = require('./default-property.js'),
     splitterLookup = require('./splitter-lookup.js'),
     splitters = require('./splitters.js'),
     utils = require('../utils/utils.js'),
+    resolve = require('../utils/resolve.js'),
     
     valueProperties = ['to', 'start', 'current', 'min', 'max'],
     valuePropertyCount = valueProperties.length,
@@ -1482,7 +1268,7 @@ var defaultProp = require('./default-property.js'),
                     valueKey = valueProperties[i];
 
                     if (property[valueKey]) {
-                        splitValue = splitters[splitterID](property[valueKey]);
+                        splitValue = splitters[splitterID](resolve(property[valueKey]));
 
                         for (unitKey in splitValue) {
                             split[unitKey] = split[unitKey] || {};
@@ -1493,7 +1279,8 @@ var defaultProp = require('./default-property.js'),
             
             // Or just split value itself
             } else {
-                split = splitters[splitterID](property);
+                console.log(resolve(property));
+                split = splitters[splitterID](resolve(property));
             }
                 
             for (unitKey in split) {
@@ -1531,7 +1318,7 @@ module.exports = {
     }
     
 };
-},{"../utils/utils.js":36,"./default-property.js":9,"./splitter-lookup.js":13,"./splitters.js":14}],12:[function(require,module,exports){
+},{"../utils/resolve.js":35,"../utils/utils.js":37,"./default-property.js":7,"./splitter-lookup.js":11,"./splitters.js":12}],10:[function(require,module,exports){
 "use strict";
 
 var cssStyler = function () {
@@ -1594,7 +1381,7 @@ var cssStyler = function () {
 };
 
 module.exports = new cssStyler();
-},{}],13:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 "use strict";
 
 var ARRAY = 'array',
@@ -1635,7 +1422,7 @@ module.exports = {
     textShadow: SHADOW,
     boxShadow: SHADOW
 };
-},{}],14:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 "use strict";
 
 var dictionary = require('./dictionary.js'),
@@ -1863,7 +1650,7 @@ var dictionary = require('./dictionary.js'),
     };
 
 module.exports = splitters;
-},{"./dictionary.js":10}],15:[function(require,module,exports){
+},{"./dictionary.js":8}],13:[function(require,module,exports){
 "use strict";
 
 var dictionary = require('./dictionary.js'),
@@ -1936,7 +1723,224 @@ var dictionary = require('./dictionary.js'),
     };
 
 module.exports = templates;
-},{"./dictionary.js":10}],16:[function(require,module,exports){
+},{"./dictionary.js":8}],14:[function(require,module,exports){
+"use strict";
+
+var Action = require('../action/action.js'),
+    calc = require('../utils/calc.js'),
+    parse = require('../utils/parse-args.js'),
+    outputCss = require('./output.js'),
+    body,
+    
+    /*
+        Dom Action controller
+        
+        @param [DOM element]
+    */
+    DomAction = function (element) {
+        this.dom = element;
+        this.css = {};
+        
+        this.action = new Action({
+            dom: element,
+            scope: this,
+            onChange: outputCss
+        });
+    };
+    
+DomAction.prototype = {
+    /*
+        Animate provided properties
+        
+        @param [object]: Object of valid CSS properties to animate
+        @param [number] (optional): Duration in ms
+        @param [string] (optional): Name of easing function
+        @param [function](optional): onEnd callback
+    */
+    play: function () {
+        this.action.play(parse.playArgs.apply(parse, arguments));
+        return this;
+    },
+    
+    /*
+        Track
+        
+        @param [object] (optional): Object of valid CSS properties to track
+        @param [event || Input): Originating pointer event or Input
+    */
+    track: function () {
+        this.action.track.apply(this.action, parse.trackArgs.apply(parse, arguments));
+        return this;
+    },
+    
+    /*
+        
+    */
+    run: function () {
+        this.action.run(parse.valuesToCSS(arguments[0]));
+        return this;
+    },
+    
+    /*
+        Returns element width
+        
+        @return [number]: width in px
+    */
+    width: function () {
+        return this.dom.offsetWidth;
+    },
+    
+    /*
+        Returns element height
+        
+        @return [number]: height in px
+    */
+    height: function () {
+        return this.dom.offsetHeight;
+    },
+    
+    /*
+        Returns absolute pageX
+        
+        @return [number]: pageX in px
+    */
+    x: function () {
+        return this.rect().x;
+    },
+    
+    /*
+        Returns absolute pageY
+        
+        @return [number]: pageY in px
+    */
+    y: function () {
+        return this.rect().y;
+    },
+    
+    /*
+        Returns X of element center
+        
+        @return [number]: Element center X in px
+    */
+    centerX: function () {
+        return this.rect().centerX;
+    },
+    
+    /*
+        Returns Y of element center
+        
+        @return [number]: Element center Y in px
+    */
+    centerY: function () {
+        return this.rect().centerY;
+    },
+    
+    /*
+        Radius of element (if element is circular)
+        
+        @return [number]: Radius of element
+    */
+    radius: function () {
+        return this.width() / 2;
+    },
+    
+    /*
+        Returns element position relative to viewport
+            left/right/top/bottom/width/height
+        
+        @return [object]: Element position
+    */
+    clientRect: function () {
+        return this.dom.getBoundingClientRect();
+    },
+    
+    /*
+        Returns element position relative to viewport
+        and document
+            Viewport: left/right/top/bottom/width/height
+            Document: x/y/centerX/centerY
+    */
+    rect: function () {
+        var rect = this.clientRect(),
+            bodyRect = body.clientRect();
+        
+        rect.x = rect.left - bodyRect.left;
+        rect.y = rect.top - bodyRect.top;
+        rect.centerX = rect.x + (rect.width / 2);
+        rect.centerY = rect.y + (rect.height / 2);
+        
+        return rect;
+    },
+    
+    centerDistance: function () {
+        var rect = this.rect(),
+            targetRect = target.rect();
+            
+        return redshift.calc.distance2D({
+                x: rect.centerX,
+                y: rect.centerY
+            },{
+                x: targetRect.centerX,
+                y: targetRect.centerY
+            });
+    },
+
+    /*
+        Return distance between two circular objects
+        
+        @param [Core]: Target element
+        @return [number]: Distance in px
+    */
+    radialDistance: function (target) {
+        var rect = this.rect(),
+            targetRect = target.rect(),
+            thisRadius = rect.width / 2,
+            targetRadius = targetRect.width / 2,
+            centerDistance = calc.distance2D({
+                x: rect.centerX,
+                y: rect.centerY
+            },{
+                x: targetRect.centerX,
+                y: targetRect.centerY
+            });
+            
+        return centerDistance - targetRadius - thisRadius;
+    },
+    
+    /*
+        Check for radial collision with target
+        
+        @param [Core]: Target element
+        @return [boolean]: True if collision
+    */
+    radialCollision: function (target) {
+        return (this.radialDistance(target) <= 0) ? true : false;
+    }
+};
+
+// Create a single reference to the body tag
+body = new DomAction(document.body);
+    
+module.exports = DomAction;
+},{"../action/action.js":1,"../utils/calc.js":30,"../utils/parse-args.js":34,"./output.js":15}],15:[function(require,module,exports){
+"use strict";
+
+var build = require('../css/builder.js'),
+    css = require('../css/set.js');
+
+module.exports = function (output) {
+    var props = this.action.props.store,
+        values = this.action.values.store,
+        dom = props.dom,
+        cssState;
+
+    if (dom) {
+        cssState = build(output, props.css, values);
+        css(props.dom, cssState.latest);
+        props.css = cssState.cache;
+    }
+};
+},{"../css/builder.js":6,"../css/set.js":10}],16:[function(require,module,exports){
 /*
     Input controller
 */
@@ -2063,7 +2067,7 @@ Input.prototype = {
 };
 
 module.exports = Input;
-},{"../utils/calc.js":30,"../utils/history.js":33,"../utils/utils.js":36}],17:[function(require,module,exports){
+},{"../utils/calc.js":30,"../utils/history.js":33,"../utils/utils.js":37}],17:[function(require,module,exports){
 "use strict";
 
 var Input = require('./input.js'),
@@ -2122,7 +2126,7 @@ Pointer.prototype.stop = function () {
 };
 
 module.exports = Pointer;
-},{"../opts/keys.js":19,"../types/point.js":27,"../utils/history.js":33,"../utils/utils.js":36,"./input.js":16}],18:[function(require,module,exports){
+},{"../opts/keys.js":19,"../types/point.js":27,"../utils/history.js":33,"../utils/utils.js":37,"./input.js":16}],18:[function(require,module,exports){
 "use strict";
 
 var rubix = require('../action/rubix.js');
@@ -2786,7 +2790,7 @@ module.exports = Timer;
 "use strict";
 
 var Action = require('./action/action.js'),
-    Atom = require('./atom/atom.js'),
+    DomAction = require('./dom/dom-action.js'),
     Input = require('./input/input.js'),
     presets = require('./action/presets.js'),
     easing = require('./utils/easing.js'),
@@ -2815,8 +2819,8 @@ Redshift.prototype = {
 
         @return [Atom]: Newly-created Atom
     */
-    newDom: function () {
-        return new Atom(element);
+    newDomAction: function (element) {
+        return new DomAction(element);
     },
     
     /*
@@ -2881,7 +2885,7 @@ Redshift.prototype = {
 };
 
 module.exports = new Redshift();
-},{"./action/action.js":1,"./action/presets.js":2,"./atom/atom.js":6,"./input/input.js":16,"./process/process.js":23,"./utils/calc.js":30,"./utils/easing.js":31,"./utils/shim.js":35,"./utils/utils.js":36}],26:[function(require,module,exports){
+},{"./action/action.js":1,"./action/presets.js":2,"./dom/dom-action.js":14,"./input/input.js":16,"./process/process.js":23,"./utils/calc.js":30,"./utils/easing.js":31,"./utils/shim.js":36,"./utils/utils.js":37}],26:[function(require,module,exports){
 (function (global){
 /*
     Bezier function generator
@@ -3097,51 +3101,15 @@ Repo.prototype = {
 };
 
 module.exports = Repo;
-},{"../utils/utils.js":36}],29:[function(require,module,exports){
+},{"../utils/utils.js":37}],29:[function(require,module,exports){
 "use strict";
 
 var calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
+    resolve = require('../utils/resolve.js'),
     Repo = require('./repo.js'),
 
-    /*
-        Resolve a value
-        
-        Determine if the value to be set is
-            - Function returning the value
-            - String relative equation
-            - Or actual value
-            
-        @param [number]: 
-    */
-    resolve = function (val, current, value, action) {
-        var resolvedVal = val,
-            valUnit;
-        
-        // If this is a function, execute
-        if (utils.isFunc(val)) {
-            resolvedVal = val.call(action.props.store.scope, current);
-        }
-        
-        // Check if value is relative ie '+=10'
-        if (utils.isRelativeValue(resolvedVal)) {
-            resolvedVal = calc.relativeValue(current, val);
-        }
-        
-        // If this value is a string it might 
-        if (utils.isString(resolvedVal)) {
-            valUnit = utils.splitValUnit(resolvedVal);
-            
-            if (!isNaN(valUnit.value)) {
-                resolvedVal = valUnit.value;
-                value.unit = valUnit.unit;
-            }
-        }
-
-        return resolvedVal;
-    },
-    
-    loopOver = function (newData, inherit, value, action) {
+    loopOver = function (newData, inherit, value, scope) {
         var data = {},
             dataPoint;
         
@@ -3158,7 +3126,7 @@ var calc = require('../utils/calc.js'),
             }
             
             if (dataPoint !== undefined) {
-                data[key] = resolve(dataPoint, value[key], value, action);
+                data[key] = resolve(dataPoint, value[key], value, scope);
             }
         }
         
@@ -3194,19 +3162,20 @@ var calc = require('../utils/calc.js'),
                 arg1 = args[0],
                 arg2 = args[1],
                 data = {},
-                store,
+                store = this.store,
+                scope = action.getProp('scope'),
                 moveToBack = false;
 
             // If we have an object, resolve every item first
             if (utils.isObj(arg1)) {
-                data = loopOver(arg1, arg2, this.store, action);
+                data = loopOver(arg1, arg2, store, scope);
 
                 // Handle start property
                 if (firstSet) {
                     firstSet = false;
                     
                     if (arg1.hasOwnProperty('start')){
-                        setter.apply(this, ['current', resolve(arg1.start, this.get('current'), this.store, action)]);
+                        setter.apply(this, ['current', resolve(arg1.start, this.get('current'), store, scope)]);
                     }
                 }
 
@@ -3214,18 +3183,15 @@ var calc = require('../utils/calc.js'),
 
                 // If this is a specific setter, ie .set('key', val)
                 if (utils.isString(arg1) && !utils.isRelativeValue(arg1)) {
-                    data[arg1] = resolve(arg2, this.get('current'), this.store, action);
+                    data[arg1] = resolve(arg2, this.get('current'), store, scope);
                     
                 // Or this is a var to be resolved, assign it to current
                 } else {
-                    data.current = resolve(arg1, this.get('current'), this.store, action);
+                    data.current = resolve(arg1, this.get('current'), store, scope);
                 }
             }
 
             setter.apply(this, [data]);
-            
-            // Cache store
-            store = this.store;
             
             // Check for range
             setter.apply(this, ['hasRange', (utils.isNum(store.min) && utils.isNum(store.max))]);
@@ -3259,7 +3225,7 @@ var calc = require('../utils/calc.js'),
     };
 
 module.exports = Value;
-},{"../utils/calc.js":30,"../utils/utils.js":36,"./repo.js":28}],30:[function(require,module,exports){
+},{"../utils/calc.js":30,"../utils/resolve.js":35,"../utils/utils.js":37,"./repo.js":28}],30:[function(require,module,exports){
 /*
     Calculators
     ----------------------------------------
@@ -3650,7 +3616,7 @@ module.exports = {
         return this.value(easedProgress, from, to);
     }
 };
-},{"./utils.js":36}],31:[function(require,module,exports){
+},{"./utils.js":37}],31:[function(require,module,exports){
 /*
     Easing functions
     ----------------------------------------
@@ -3899,7 +3865,7 @@ function init() {
 
 module.exports = easingFunction;
 
-},{"../opts/keys.js":19,"../types/bezier.js":26,"./calc.js":30,"./utils.js":36}],32:[function(require,module,exports){
+},{"../opts/keys.js":19,"../types/bezier.js":26,"./calc.js":30,"./utils.js":37}],32:[function(require,module,exports){
 window.redshift = require('../redshift.js');
 },{"../redshift.js":25}],33:[function(require,module,exports){
 "use strict";
@@ -3972,7 +3938,7 @@ History.prototype = {
 };
 
 module.exports = History;
-},{"../utils/utils.js":36}],34:[function(require,module,exports){
+},{"../utils/utils.js":37}],34:[function(require,module,exports){
 "use strict";
 
 var utils = require('./utils.js'),
@@ -4039,7 +4005,53 @@ module.exports = {
     }
     
 };
-},{"../css/parse.js":11,"./utils.js":36}],35:[function(require,module,exports){
+},{"../css/parse.js":9,"./utils.js":37}],35:[function(require,module,exports){
+/*
+    Property resolver
+    -------------------------------------
+    
+    Checks if a property being set is
+        a) a function
+        b) a relative value
+        c) a value as a unit
+    and returns the resolved value
+        
+    @param [number || string || function]: New property value
+    @param [number || string] (optional): Current property value
+    @param [object] (optional): Parent property
+    @param [object] (optional): Scope to resolve first argument if provided
+    @returns [number || string]: Resolved value
+*/
+"use strict";
+
+var utils = require('./utils.js');
+
+module.exports = function (newValue, currentValue, parent, scope) {
+    var splitValueUnit = {};
+    
+    // Run function if this is a function
+    if (utils.isFunc(newValue)) {
+        newValue = newValue.call(scope, currentValue);
+    }
+    
+    // Check if value is relative ie '+=10' - could have been returned from function
+    if (utils.isRelativeValue(newValue)) {
+        newValue = calc.relativeValue(currentValue, newValue);
+    }
+    
+    // If value is still string it might have a unit property
+    if (utils.isString(newValue)) {
+        splitValueUnit = utils.splitValUnit(newValue);
+        
+        if (!isNaN(splitValueUnit)) {
+            newValue = splitValueUnit.value;
+            parent.unit = splitValueUnit.unit;
+        }
+    }
+    
+    return newValue;
+};
+},{"./utils.js":37}],36:[function(require,module,exports){
 "use strict";
 
 var checkRequestAnimationFrame = function () {
@@ -4117,7 +4129,7 @@ module.exports = {
         checkIndexOf();
     }
 };
-},{}],36:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 /*
     Utility functions
     ----------------------------------------
