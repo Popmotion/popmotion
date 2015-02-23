@@ -1,7 +1,7 @@
 "use strict";
 
 var Action = require('./action/action.js'),
-    Atom = require('./atom/atom.js'),
+    DomAction = require('./dom/dom-action.js'),
     Input = require('./input/input.js'),
     presets = require('./action/presets.js'),
     easing = require('./utils/easing.js'),
@@ -30,8 +30,8 @@ Redshift.prototype = {
 
         @return [Atom]: Newly-created Atom
     */
-    newDom: function () {
-        return new Atom(element);
+    newDomAction: function (element) {
+        return new DomAction(element);
     },
     
     /*

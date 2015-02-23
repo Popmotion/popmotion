@@ -4,6 +4,7 @@ var defaultProp = require('./default-property.js'),
     splitterLookup = require('./splitter-lookup.js'),
     splitters = require('./splitters.js'),
     utils = require('../utils/utils.js'),
+    resolve = require('../utils/resolve.js'),
     
     valueProperties = ['to', 'start', 'current', 'min', 'max'],
     valuePropertyCount = valueProperties.length,
@@ -66,7 +67,7 @@ var defaultProp = require('./default-property.js'),
                     valueKey = valueProperties[i];
 
                     if (property[valueKey]) {
-                        splitValue = splitters[splitterID](property[valueKey]);
+                        splitValue = splitters[splitterID](resolve(property[valueKey]));
 
                         for (unitKey in splitValue) {
                             split[unitKey] = split[unitKey] || {};
@@ -77,7 +78,8 @@ var defaultProp = require('./default-property.js'),
             
             // Or just split value itself
             } else {
-                split = splitters[splitterID](property);
+                console.log(resolve(property));
+                split = splitters[splitterID](resolve(property));
             }
                 
             for (unitKey in split) {

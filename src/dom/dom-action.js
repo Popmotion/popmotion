@@ -3,26 +3,26 @@
 var Action = require('../action/action.js'),
     calc = require('../utils/calc.js'),
     parse = require('../utils/parse-args.js'),
-    setProps = require('./setter.js'),
+    outputCss = require('./output.js'),
+    body,
     
     /*
-        Constructor
+        Dom Action controller
         
-        @param [object || DocumentElement]: Object describing raw UX element
+        @param [DOM element]
     */
-    Atom = function (element) {
-        this.element = element;
-        this.cache = {};
+    DomAction = function (element) {
+        this.dom = element;
+        this.css = {};
         
         this.action = new Action({
             dom: element,
             scope: this,
-            onChange: setProps
+            onChange: outputCss
         });
     };
     
-Atom.prototype = {
-    
+DomAction.prototype = {
     /*
         Animate provided properties
         
@@ -190,7 +190,9 @@ Atom.prototype = {
     radialCollision: function (target) {
         return (this.radialDistance(target) <= 0) ? true : false;
     }
-    
 };
+
+// Create a single reference to the body tag
+body = new DomAction(document.body);
     
-module.exports = Atom;
+module.exports = DomAction;

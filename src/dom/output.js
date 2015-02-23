@@ -1,6 +1,6 @@
 "use strict";
 
-var build = require('./builder.js'),
+var build = require('../css/builder.js'),
     css = require('../css/set.js');
 
 module.exports = function (output) {
