@@ -1,9 +1,7 @@
 "use strict";
 
 var Input = require('./input.js'),
-    Point = require('../types/point.js'),
     KEY = require('../opts/keys.js'),
-    utils = require('../utils/utils.js'),
     currentPointer, // Sort this out for multitouch
     
 
@@ -46,7 +44,7 @@ var Input = require('./input.js'),
             isTouch = (event.touches) ? true : false,
             startPoint = eventToPoint(event, isTouch);
         
-        this.update(new Point(startPoint));
+        this.update(startPoint);
         this.isTouch = isTouch;
         this.bindEvents();
     };
@@ -77,9 +75,10 @@ Pointer.prototype.unbindEvents = function () {
     @param [event]: Pointer move event
 */
 Pointer.prototype.onMove = function (e) {
+    var newPoint = eventToPoint(e, currentPointer.isTouch);
     e = getActualEvent(e);
     e.preventDefault();
-    currentPointer.update(new Point(eventToPoint(e, currentPointer.isTouch)));
+    currentPointer.update(newPoint);
 };
 
 Pointer.prototype.stop = function () {
