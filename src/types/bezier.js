@@ -1,3 +1,16 @@
+/*
+    Bezier function generator
+        
+    Gaëtan Renaudeau's BezierEasing
+    https://github.com/gre/bezier-easing/blob/master/index.js  
+    https://github.com/gre/bezier-easing/blob/master/LICENSE
+    You're a hero
+    
+    Use
+    
+        var easeOut = new Bezier(.17,.67,.83,.67),
+            x = easeOut(0.5); // returns 0.627...
+*/
 "use strict";
 
 var NEWTON_ITERATIONS = 8,
