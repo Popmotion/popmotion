@@ -1,9 +1,14 @@
 "use strict";
 
-var Process = require('../process/process.js'),
+var parseArgs = require('./parse-args.js')
+
+
+
+
+
+    Process = require('../process/process.js'),
     process = require('./processor.js'),
     presets = require('./presets.js'),
-    Pointer = require('../input/pointer.js'),
     KEY = require('../opts/keys.js'),
     defaultProps = require('../opts/action.js'),
     defaultValue = require('../opts/value.js'),
@@ -57,16 +62,16 @@ Action.prototype = {
             .play(params)
                 @param [object]: Action properties
                 
+            .play(params, [duration, easing, onEnd])
+                @param [object]: Action props
+                @param [number]: Duration in ms
+                @param [string]: Easing function to apply
+                @param [function]: Function to run on end
+                
         @return [Action]
     */
-    play: function (defs, override) {
-        this.set(defs, override);
-
-        this.props.set({
-            playhead: 0,
-            loopCount: 0,
-            yoyoCount: 0
-        });
+    play: function () {
+        this.set(parseArgs.play.apply(this, arguments));
 
         return this.start(KEY.RUBIX.TIME);
     },
@@ -105,34 +110,7 @@ Action.prototype = {
         @return [Action]
     */
     track: function () {
-        var args = arguments,
-            argLength = args.length,
-            defs, override, input;
-        
-        // Loop backwards over arguments
-        for (var i = argLength - 1; i >= 0; i--) {
-            if (args[i] !== undefined) {
-                // If input hasn't been defined, this is the input
-                if (input === undefined) {
-                    input = args[i];
-
-                // Or if this is the second argument, these are overrides
-                } else if (i === 1) {
-                    override = args[i];
-                    
-                // Otherwise these are the defs
-                } else if (i === 0) {
-                    defs = args[i];
-                }
-            }
-        }
-
-        if (!input.current) {
-            input = new Pointer(input);
-        }
-
-        this.set(defs, override, input);
-
+        this.set(parse.track.apply(parse, arguments));
         return this.start(KEY.RUBIX.INPUT);
     },
 
@@ -341,37 +319,19 @@ Action.prototype = {
         Set Action values and properties
         
         Syntax
-            .set(preset[, override, input])
-                @param [string]: Name of preset to apply
-                @param [object] (optional): Properties to override preset
-            
-            .set(params[, input])
+            .set(params)
                 @param [object]: Action properties
             
         @return [Action]
     */
-    set: function (defs, override, input) {
-        var self = this,
-            validDefinition = (defs !== undefined),
-            base = {},
-            values = {};
-
-        if (validDefinition) {
-            base = presets.createBase(defs, override);
-        }
-            
-        if (input !== undefined) {
-            base.input = input;
-            base.inputOrigin = input.get();
+    set: function (props) {
+        this.props.set(props);
+        
+        if (props.values) {
+        	this.setValues(this.values, this.props.get());
         }
         
-        self.props.set(base);
-        
-        if (base.values) {
-        	self.setValues(base.values, self.props.get());
-        }
-        
-        values = self.values.get();
+        values = this.values.get();
 
         // Create origins
         for (var key in values) {
@@ -380,7 +340,7 @@ Action.prototype = {
             }
         }
         
-        return self;
+        return this;
     },
     
     setValues: function (newVals, inherit) {

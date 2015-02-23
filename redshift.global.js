@@ -1,10 +1,104 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+// shim for using process in browser
+
+var process = module.exports = {};
+
+process.nextTick = (function () {
+    var canSetImmediate = typeof window !== 'undefined'
+    && window.setImmediate;
+    var canMutationObserver = typeof window !== 'undefined'
+    && window.MutationObserver;
+    var canPost = typeof window !== 'undefined'
+    && window.postMessage && window.addEventListener
+    ;
+
+    if (canSetImmediate) {
+        return function (f) { return window.setImmediate(f) };
+    }
+
+    var queue = [];
+
+    if (canMutationObserver) {
+        var hiddenDiv = document.createElement("div");
+        var observer = new MutationObserver(function () {
+            var queueList = queue.slice();
+            queue.length = 0;
+            queueList.forEach(function (fn) {
+                fn();
+            });
+        });
+
+        observer.observe(hiddenDiv, { attributes: true });
+
+        return function nextTick(fn) {
+            if (!queue.length) {
+                hiddenDiv.setAttribute('yes', 'no');
+            }
+            queue.push(fn);
+        };
+    }
+
+    if (canPost) {
+        window.addEventListener('message', function (ev) {
+            var source = ev.source;
+            if ((source === window || source === null) && ev.data === 'process-tick') {
+                ev.stopPropagation();
+                if (queue.length > 0) {
+                    var fn = queue.shift();
+                    fn();
+                }
+            }
+        }, true);
+
+        return function nextTick(fn) {
+            queue.push(fn);
+            window.postMessage('process-tick', '*');
+        };
+    }
+
+    return function nextTick(fn) {
+        setTimeout(fn, 0);
+    };
+})();
+
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+// TODO(shtylman)
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+
+},{}],2:[function(require,module,exports){
+(function (process){
 "use strict";
 
-var Process = require('../process/process.js'),
+var parseArgs = require('./parse-args.js')
+
+
+
+
+
+    Process = require('../process/process.js'),
     process = require('./processor.js'),
     presets = require('./presets.js'),
-    Pointer = require('../input/pointer.js'),
     KEY = require('../opts/keys.js'),
     defaultProps = require('../opts/action.js'),
     defaultValue = require('../opts/value.js'),
@@ -58,16 +152,16 @@ Action.prototype = {
             .play(params)
                 @param [object]: Action properties
                 
+            .play(params, [duration, easing, onEnd])
+                @param [object]: Action props
+                @param [number]: Duration in ms
+                @param [string]: Easing function to apply
+                @param [function]: Function to run on end
+                
         @return [Action]
     */
-    play: function (defs, override) {
-        this.set(defs, override);
-
-        this.props.set({
-            playhead: 0,
-            loopCount: 0,
-            yoyoCount: 0
-        });
+    play: function () {
+        this.set(parseArgs.play.apply(this, arguments));
 
         return this.start(KEY.RUBIX.TIME);
     },
@@ -106,34 +200,7 @@ Action.prototype = {
         @return [Action]
     */
     track: function () {
-        var args = arguments,
-            argLength = args.length,
-            defs, override, input;
-        
-        // Loop backwards over arguments
-        for (var i = argLength - 1; i >= 0; i--) {
-            if (args[i] !== undefined) {
-                // If input hasn't been defined, this is the input
-                if (input === undefined) {
-                    input = args[i];
-
-                // Or if this is the second argument, these are overrides
-                } else if (i === 1) {
-                    override = args[i];
-                    
-                // Otherwise these are the defs
-                } else if (i === 0) {
-                    defs = args[i];
-                }
-            }
-        }
-
-        if (!input.current) {
-            input = new Pointer(input);
-        }
-
-        this.set(defs, override, input);
-
+        this.set(parse.track.apply(parse, arguments));
         return this.start(KEY.RUBIX.INPUT);
     },
 
@@ -342,37 +409,19 @@ Action.prototype = {
         Set Action values and properties
         
         Syntax
-            .set(preset[, override, input])
-                @param [string]: Name of preset to apply
-                @param [object] (optional): Properties to override preset
-            
-            .set(params[, input])
+            .set(params)
                 @param [object]: Action properties
             
         @return [Action]
     */
-    set: function (defs, override, input) {
-        var self = this,
-            validDefinition = (defs !== undefined),
-            base = {},
-            values = {};
-
-        if (validDefinition) {
-            base = presets.createBase(defs, override);
-        }
-            
-        if (input !== undefined) {
-            base.input = input;
-            base.inputOrigin = input.get();
+    set: function (props) {
+        this.props.set(props);
+        
+        if (props.values) {
+        	this.setValues(this.values, this.props.get());
         }
         
-        self.props.set(base);
-        
-        if (base.values) {
-        	self.setValues(base.values, self.props.get());
-        }
-        
-        values = self.values.get();
+        values = this.values.get();
 
         // Create origins
         for (var key in values) {
@@ -381,7 +430,7 @@ Action.prototype = {
             }
         }
         
-        return self;
+        return this;
     },
     
     setValues: function (newVals, inherit) {
@@ -474,7 +523,117 @@ Action.prototype = {
 };
 
 module.exports = Action;
-},{"../input/pointer.js":17,"../opts/action.js":18,"../opts/keys.js":19,"../opts/value.js":20,"../process/process.js":23,"../types/repo.js":27,"../types/value.js":28,"../utils/calc.js":29,"../utils/utils.js":36,"./presets.js":2,"./processor.js":3}],2:[function(require,module,exports){
+}).call(this,require('_process'))
+},{"../opts/action.js":17,"../opts/keys.js":18,"../opts/value.js":19,"../process/process.js":22,"../types/repo.js":26,"../types/value.js":27,"../utils/calc.js":28,"../utils/utils.js":34,"./parse-args.js":3,"./presets.js":4,"./processor.js":5,"_process":1}],3:[function(require,module,exports){
+"use strict";
+
+var utils = require('../utils/utils.js'),
+    Pointer = require('../input/pointer.js'),
+
+    STRING = 'string',
+    NUMBER = 'number',
+    OBJECT = 'object';
+
+module.exports = {
+    
+    /*
+        TODO: 
+        
+        Add parsing over presets
+            base = presets.createBase(defs, override);
+            
+        Reimplement CSS parsing - maybe in DOM Action? 
+    */
+    
+    /*
+        Parse play arguments
+        
+        Syntax
+            .play(preset [,override, duration, easing, onEnd])
+            .play(properties [, duration, easing, onEnd])
+    */
+    play: function () {
+        var props = {
+                playhead: 0,
+                loopCount: 0,
+                yoyoCount: 0
+            },
+            arg, typeofArg = '',
+            argsLength = arguments.length;
+        
+        // Loop through arguments an assign based on type and position
+        for (var i = 0; i < argsLength; i++) {
+            arg = arguments[i],
+            typeofArg = typeof arg;
+            
+            // Load preset if this is the first index and item is a string
+            if (typeofArg === STRING) {
+                // Preset if first index
+                if (i === 0) {
+                    // load preset
+                    
+                // Otherwise easing
+                } else {
+                    props.ease = arg;
+                }
+            
+            // If object, check if function
+            } else if (typeofArg === OBJECT) {
+                // onEnd if function
+                if (utils.isFunc(arg)) {
+                    props.onEnd = arg;
+
+                } else {
+                    props = utils.merge(props, arg);
+                }
+            
+            // Duration if duration not set and argument is number
+            } else if (!props.duration && typeofArg === NUMBER) {
+                props.duration = arg;
+            }
+        }
+               // props.values = parse.cssToValues(arg, 'to');
+        
+        return props;
+    },
+    
+    /*
+        Parse track arguments
+        
+        Syntax
+            .track(preset [, override], event/Input)
+            .track(properties, event/Input)
+    */
+    track: function () {
+        var props = {},
+            argsLength = arguments.length,
+            inputIndex = argsLength - 1,
+            input = arguments[inputIndex];
+        
+        // Loop until inputIndex
+        for (var i = 0; i < inputIndex; i++) {
+            
+            // Preset if string
+            if (typeof arguments[i] === STRING) {
+                // load preset
+                
+            // Or override
+            } else {
+                props = utils.merge(props, arguments[i]);
+            }
+        }
+        
+        // Create Pointer if this isn't an Input
+        input = (!input.current) ? new Pointer(input) : input;
+        
+        // Append input
+        props.input = input;
+        props.inputOrigin = input.get();
+        
+        return props;
+    }
+};
+},{"../input/pointer.js":16,"../utils/utils.js":34}],4:[function(require,module,exports){
 "use strict";
 
 var KEY = require('../opts/keys.js'),
@@ -638,7 +797,7 @@ Presets.prototype = {
 };
 
 module.exports = new Presets();
-},{"../opts/keys.js":19,"../utils/utils.js":36}],3:[function(require,module,exports){
+},{"../opts/keys.js":18,"../utils/utils.js":34}],5:[function(require,module,exports){
 /*
     Process actions
 */
@@ -747,7 +906,7 @@ module.exports = function (action, framestamp, frameDuration) {
 
     action.framestamp = framestamp;
 };
-},{"../opts/keys.js":19,"../utils/calc.js":29,"./rubix.js":4}],4:[function(require,module,exports){
+},{"../opts/keys.js":18,"../utils/calc.js":28,"./rubix.js":6}],6:[function(require,module,exports){
 /*
     Rubix modules
     ----------------------------------------
@@ -1006,7 +1165,7 @@ Rubix.prototype = {
 rubixController = new Rubix();
 
 module.exports = rubixController;
-},{"../opts/keys.js":19,"../utils/calc.js":29,"../utils/easing.js":30,"../utils/utils.js":36,"./simulate.js":5}],5:[function(require,module,exports){
+},{"../opts/keys.js":18,"../utils/calc.js":28,"../utils/easing.js":29,"../utils/utils.js":34,"./simulate.js":7}],7:[function(require,module,exports){
 "use strict";
 
 var frictionStopLimit = .2,
@@ -1082,7 +1241,7 @@ Simulate.prototype = {
 simulate = new Simulate();
 
 module.exports = simulate;
-},{"../utils/calc.js":29}],6:[function(require,module,exports){
+},{"../utils/calc.js":28}],8:[function(require,module,exports){
 "use strict";
 
 var templates = require('../css/templates.js'),
@@ -1170,26 +1329,7 @@ var templates = require('../css/templates.js'),
 module.exports = function (output, cache, values) {
     return assignCSS(precache(output, values), cache);
 }
-},{"../css/splitter-lookup.js":11,"../css/templates.js":13}],7:[function(require,module,exports){
-"use strict";
-
-var defaults = {
-        color: {
-            min: 0,
-            max: 255,
-            round: true
-        },
-        opacity: {
-            min: 0,
-            max: 1
-        }
-    };
-    
-defaults.Red = defaults.Green = defaults.Blue = defaults.color;
-defaults.Alpha = defaults.opacity;
-
-module.exports = defaults;
-},{}],8:[function(require,module,exports){
+},{"../css/splitter-lookup.js":11,"../css/templates.js":12}],9:[function(require,module,exports){
 "use strict";
 
 module.exports = {
@@ -1198,127 +1338,7 @@ module.exports = {
     dimensions: ['Top', 'Right', 'Bottom', 'Left'],
     shadow: ['X', 'Y', 'Radius', 'Spread', 'Color']
 };
-},{}],9:[function(require,module,exports){
-"use strict";
-
-var defaultProp = require('./default-property.js'),
-    splitterLookup = require('./splitter-lookup.js'),
-    splitters = require('./splitters.js'),
-    utils = require('../utils/utils.js'),
-    resolve = require('../utils/resolve.js'),
-    
-    valueProperties = ['to', 'start', 'current', 'min', 'max'],
-    valuePropertyCount = valueProperties.length,
-    
-    /*
-        Build a property
-        
-        @param [string || number || object]: The value as given by user
-        @param [string]: Parent property key, ie 'backgroundColor'
-        @param [string] (optional): Unit key, ie 'Red'
-        @param [string]: If value is string or number, assign it to this property
-        @param [object] (optional): Parent property
-    */
-    buildProperty = function (value, parentKey, unitKey, assignDefault, parent) {
-        var property = defaultProp[parentKey + unitKey]
-            || defaultProp[unitKey]
-            || defaultProp[parentKey]
-            || {};
-            
-        if (parent) {
-            property = utils.merge(parent, property);
-        }
-        
-        // If our value is an object
-        if (utils.isObj(value)) {
-            property = utils.merge(property, value);
-        
-        // Or assign to our default property
-        } else {
-            property[assignDefault] = value;
-        }
-        
-        // Set property and unit keys to value to allow for faster recombination
-        property.parent = parentKey;
-        property.unitName = unitKey;
-        
-        return property;
-    },
-
-    /*
-        Split CSS and append Redshift values
-        
-        @param [object || string]: Set of values or straight value
-        @param [string]: Key of CSS property
-        @param [object]: Values property as built so far
-    */
-    splitAndAppendProperties = function (property, key, values, assignDefault) {
-        var splitterID = splitterLookup[key],
-            split = {},
-            splitValue = {},
-            valueKey = '',
-            unitKey = '';
-        
-        // If we've got a splitter for this property
-        if (splitterID) {
-        
-            // If property is an object, split all values
-            if (utils.isObj(property)) {
-                for (var i = 0; i < valuePropertyCount; i++) {
-                    valueKey = valueProperties[i];
-
-                    if (property[valueKey]) {
-                        splitValue = splitters[splitterID](resolve(property[valueKey]));
-
-                        for (unitKey in splitValue) {
-                            split[unitKey] = split[unitKey] || {};
-                            split[unitKey][valueKey] = splitValue[unitKey];
-                        }
-                    }
-                }
-            
-            // Or just split value itself
-            } else {
-                console.log(resolve(property));
-                split = splitters[splitterID](resolve(property));
-            }
-                
-            for (unitKey in split) {
-                values[key + unitKey] = buildProperty(split[unitKey], key, unitKey, assignDefault, property);
-            }
-
-        // Or this is a straight assignment
-        } else {
-            values[key] = buildProperty(property, key, null, assignDefault);
-        }
-        
-        return values;
-    };
-
-module.exports = {
-    
-    /*
-        Convert CSS properties to Redshift-compatible Values
-        
-        @param [object]: Collection of CSS properties
-        @param [object]: Collection of valid Redshift value settings
-    */
-    cssToValues: function (css, assignDefault) {
-        var values = {};
-        
-        assignDefault = assignDefault || 'current';
-        
-        for (var key in css) {
-            if (css.hasOwnProperty(key)) {
-                values = splitAndAppendProperties(css[key], key, values, assignDefault);
-            }
-        }
-        
-        return values;
-    }
-    
-};
-},{"../utils/resolve.js":34,"../utils/utils.js":36,"./default-property.js":7,"./splitter-lookup.js":11,"./splitters.js":12}],10:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 "use strict";
 
 var cssStyler = function () {
@@ -1427,234 +1447,6 @@ module.exports = {
 
 var dictionary = require('./dictionary.js'),
 
-    /*
-        Split comma delimited into array
-        
-        Converts 255, 0, 0 -> [255, 0, 0]
-        
-        @param [string]: CSS comma delimited function
-    */
-    splitCommaDelimited = function (value) {
-        return value.split(/,\s*/);
-    },
-    
-    splitSpaceDelimited = function (value) {
-        return value.split(' ');
-    },
-    
-    /*
-        Break values out of css functional statement
-        
-        Converts rgba(255, 0, 0) -> "255, 0, 0"
-    */
-    functionBreak = function (value) {
-        return value.substring(value.indexOf('(') + 1, value.lastIndexOf(')'));
-    },
-    
-    /*
-        Convert hex into array of RGBA values
-        
-        @param [string]: Hex string
-            "#F00" -> [255, 0, 0]
-            "#FF0000" -> [255, 0, 0]
-            
-        @return [array]: RGBA values
-    */
-    hex = function (prop) {
-        var colors = [],
-            r, g, b;
-                    
-        // If we have 6 chacters, ie #FF0000
-        if (prop.length > 4) {
-            r = prop.substr(1, 2);
-            g = prop.substr(3, 2);
-            b = prop.substr(5, 2);
-
-        // Or 3 characters, ie #F00
-        } else {
-            r = prop.substr(1, 1);
-            g = prop.substr(2, 1);
-            b = prop.substr(3, 1);
-            r += r;
-            g += g;
-            b += b;
-        }
-            
-        return [
-            parseInt(r, 16),
-            parseInt(g, 16),
-            parseInt(b, 16)
-        ];
-    },
-    
-    /*
-        Test if string is color property
-        
-        @param [string]: Color property
-        @return [boolean]: True if color property
-    */
-    isColor = function (prop) {
-        return (prop.indexOf('#') > -1 || prop.indexOf('rgb') > -1);
-    },
-
-    /*
-        Public splitters
-        
-        Each splitter takes a string containing certain values and
-        splits them into an object containing key/value pairs, ie
-        color will return Red/Green/Blue/[Alpha] values
-    */
-    splitters = {
-        
-        /*
-            Split arbitarily-long array (for instance matrix property) into object
-            
-            @param [string]: Array values
-                "1, 1, 2, 4" -> {1, 1, 2, 4}
-                "1 1 2 4" -> {1, 1, 2, 4}
-                
-            @return [object]: Object with a metric for every array item,
-                named after its index
-        */
-        array: function (prop) {
-            var list = (prop.indexOf(',') > -1) ? splitCommaDelimited(prop) : splitSpaceDelimited(prop),
-                listLength = list.length,
-                i = 0,
-                arrayProps = {};
-                
-            for (; i < listLength; i++) {
-                arrayProps[i] = list[i];
-            }
-            
-            return arrayProps;
-        },
-        
-        /*
-            Convert color property into R/G/B/[A] object
-            
-            @param [string]: Color value has #, rgba, rgb, // hsl, hsla
-                "#f00" -> {255, 0, 0}
-                "#ff0000" -> {255, 0, 0}
-                "rgb(255, 0, 0)" -> {255, 0, 0}
-                "rgba(255, 0, 0, 1)" -> {255, 0, 0, 1}
-                //"hsl(0, 100%, 50%)" -> {255, 0, 0}
-                //"hsla(0, 100%, 50%, 1)" -> {255, 0, 0, 1}
-                
-            @return [object]: Object with metric for each 
-        */
-        color: function (prop) {
-            var colors = (prop.indexOf('#') > -1) ? hex(prop) : splitCommaDelimited(functionBreak(prop)),
-                numColors = colors.length,
-                terms = dictionary.colors,
-                i = 0,
-                rgba = {};
-            
-            for (; i < numColors; i++) {
-                rgba[terms[i]] = colors[i];
-            }
-            
-            return rgba;
-        },
-    
-        /*
-            Split dimensions in format "Top Right Bottom Left"
-            
-            @param [string]: Dimension values
-                "20px 0 30px 40px" -> {20px, 0, 30px, 40px}
-                "20px 0 30px" -> {20px, 0, 30px, 0}
-                "20px 0" -> {20px, 0, 20px, 0}
-                "20px" -> {20px, 20px, 20px, 20px}
-            
-            @return [object]: Object with T/R/B/L metrics
-        */
-        dimensions: function (prop) {
-            var dimensions = splitSpaceDelimited(prop),
-                numDimensions = dimensions.length,
-                terms = dictionary.dimensions,
-                jumpBack = (numDimensions !== 1) ? 2 : 1,
-                i, j = i = 0,
-                dimensionProps = {};
-            
-            for (; i < 4; i++) {
-                dimensionProps[terms[i]] = dimensions[j];
-                
-                // Jump back counter j if we've reached the end of our set values
-                j++;
-                j = (j === numDimensions) ? j - jumpBack : j;
-            }
-            
-            return dimensionProps;
-        },
-        
-        /*
-            Split positions in format "X Y Z"
-            
-            @param [string]: Position values
-                "20% 30% 0" -> {20%, 30%, 0}
-                "20% 30%" -> {20%, 30%}
-                "20%" -> {20%, 20%}
-        */
-        positions: function (prop) {
-            var positions = splitSpaceDelimited(prop),
-                numPositions = positions.length,
-                i = 0,
-                positionProps = {
-                    X: positions[0],
-                    Y: (numPositions > 1) ? positions[1] : positions[0]
-                };
-                
-            if (numPositions > 2) {
-                positionProps.Z = positions[2];
-            }
-            
-            return positionProps;
-        },
-        
-        /*
-            Split shadow properties "X, Y, Radius, Spread, Color"
-            
-            @param [string]: Shadow property
-            @return [object]
-        */
-        shadow: function (prop) {
-            var bits = splitSpaceDelimited(prop),
-                bitsLength = bits.length,
-                terms = dictionary.shadow,
-                reachedColor,
-                colorProp = '',
-                bit, color,
-                i = 0, unit,
-                shadowProps = {};
-                
-            for (; i< bitsLength; i++) {
-                bit = bits[i];
-                
-                // If we've reached the color property, append to color string
-                if (reachedColor || isColor(bit)) {
-                    reachedColor = true;
-                    colorProp += bit;
-
-                } else {
-                    shadowProps[terms[i]] = bit;
-                }
-            }
-            
-            color = splitters.color(colorProp);
-            
-            for (var unit in color) {
-                shadowProps[unit] = color[unit];
-            }
-            
-            return shadowProps;
-        }
-    };
-
-module.exports = splitters;
-},{"./dictionary.js":8}],13:[function(require,module,exports){
-"use strict";
-
-var dictionary = require('./dictionary.js'),
-
     defaultValues = {
         Alpha: 1
     },
@@ -1723,12 +1515,12 @@ var dictionary = require('./dictionary.js'),
     };
 
 module.exports = templates;
-},{"./dictionary.js":8}],14:[function(require,module,exports){
+},{"./dictionary.js":9}],13:[function(require,module,exports){
 "use strict";
 
 var Action = require('../action/action.js'),
     calc = require('../utils/calc.js'),
-    parse = require('../utils/parse-args.js'),
+    parse = function () {},
     outputCss = require('./output.js'),
     body,
     
@@ -1922,7 +1714,7 @@ DomAction.prototype = {
 body = new DomAction(document.body);
     
 module.exports = DomAction;
-},{"../action/action.js":1,"../utils/calc.js":29,"../utils/parse-args.js":33,"./output.js":15}],15:[function(require,module,exports){
+},{"../action/action.js":2,"../utils/calc.js":28,"./output.js":14}],14:[function(require,module,exports){
 "use strict";
 
 var build = require('../css/builder.js'),
@@ -1940,7 +1732,7 @@ module.exports = function (output) {
         props.css = cssState.cache;
     }
 };
-},{"../css/builder.js":6,"../css/set.js":10}],16:[function(require,module,exports){
+},{"../css/builder.js":8,"../css/set.js":10}],15:[function(require,module,exports){
 /*
     Input controller
 */
@@ -2067,7 +1859,7 @@ Input.prototype = {
 };
 
 module.exports = Input;
-},{"../utils/calc.js":29,"../utils/history.js":32,"../utils/utils.js":36}],17:[function(require,module,exports){
+},{"../utils/calc.js":28,"../utils/history.js":31,"../utils/utils.js":34}],16:[function(require,module,exports){
 "use strict";
 
 var Input = require('./input.js'),
@@ -2156,7 +1948,7 @@ Pointer.prototype.stop = function () {
 };
 
 module.exports = Pointer;
-},{"../opts/keys.js":19,"./input.js":16}],18:[function(require,module,exports){
+},{"../opts/keys.js":18,"./input.js":15}],17:[function(require,module,exports){
 "use strict";
 
 var rubix = require('../action/rubix.js');
@@ -2237,7 +2029,7 @@ module.exports = {
         
     */
 };
-},{"../action/rubix.js":4}],19:[function(require,module,exports){
+},{"../action/rubix.js":6}],18:[function(require,module,exports){
 /*
     String constants
     ----------------------------------------
@@ -2263,7 +2055,7 @@ module.exports = {
         TOUCHMOVE: 'touchmove',
     }
 };
-},{}],20:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 "use strict";
 
 module.exports = {
@@ -2272,6 +2064,40 @@ module.exports = {
     
     // [number]: The value to start from
     start: 0,
+
+    // [number]: Current target value
+    to: undefined,
+
+    // [number]: Maximum permitted value during .track and .run
+    min: undefined,
+    
+    // [number]: Minimum permitted value during .track and .run
+    max: undefined,
+    
+    // [boolean]: Set to true when both min and max detected
+    hasRange: false,
+
+    // [boolean]: Round output if true
+    round: false,
+    
+    // [string]: Name of parent value
+    parent: undefined,
+
+    // [string]: Name of unit type
+    unitName: undefined,
+
+    /*
+        Link properties
+    */
+
+    // [string]: Name of value to listen to
+    link: undefined,
+    
+    // [array]: Linear range of values (eg [-100, -50, 50, 100]) of linked value to map to .mapTo
+    mapLink: undefined,
+    
+    // [array]: Non-linear range of values (eg [0, 1, 1, 0]) to map to .mapLink - here the linked value being 75 would result in a value of 0.5
+    mapTo: undefined,
 
 
     /*
@@ -2330,7 +2156,7 @@ module.exports = {
     // [number]: Factor of movement outside of maximum range (ie 0.5 will move half as much as 1)
     escapeAmp: 0
 };
-},{}],21:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 /*
     The loop
 */
@@ -2399,7 +2225,7 @@ Loop.prototype = {
 };
 
 module.exports = new Loop();
-},{"./timer.js":24}],22:[function(require,module,exports){
+},{"./timer.js":23}],21:[function(require,module,exports){
 "use strict";
 
 var theLoop = require('./loop.js'),
@@ -2570,7 +2396,7 @@ ProcessManager.prototype = {
 };
 
 module.exports = new ProcessManager();
-},{"./loop.js":21}],23:[function(require,module,exports){
+},{"./loop.js":20}],22:[function(require,module,exports){
 /*
     Process
     =======================
@@ -2757,7 +2583,7 @@ Process.prototype = {
 };
 
 module.exports = Process;
-},{"./manager.js":22}],24:[function(require,module,exports){
+},{"./manager.js":21}],23:[function(require,module,exports){
 "use strict";
 
 var maxElapsed = 30,
@@ -2777,7 +2603,7 @@ Timer.prototype = {
 };
 
 module.exports = Timer;
-},{}],25:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 "use strict";
 
 var Action = require('./action/action.js'),
@@ -2877,7 +2703,7 @@ Redshift.prototype = {
 };
 
 module.exports = new Redshift();
-},{"./action/action.js":1,"./action/presets.js":2,"./dom/dom-action.js":14,"./input/input.js":16,"./process/process.js":23,"./utils/calc.js":29,"./utils/easing.js":30,"./utils/shim.js":35,"./utils/utils.js":36}],26:[function(require,module,exports){
+},{"./action/action.js":2,"./action/presets.js":4,"./dom/dom-action.js":13,"./input/input.js":15,"./process/process.js":22,"./utils/calc.js":28,"./utils/easing.js":29,"./utils/shim.js":33,"./utils/utils.js":34}],25:[function(require,module,exports){
 (function (global){
 /*
     Bezier function generator
@@ -3035,7 +2861,7 @@ var NEWTON_ITERATIONS = 8,
 
 module.exports = Bezier;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],27:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 "use strict";
 
 var utils = require('../utils/utils.js'),
@@ -3092,7 +2918,7 @@ Repo.prototype = {
 };
 
 module.exports = Repo;
-},{"../utils/utils.js":36}],28:[function(require,module,exports){
+},{"../utils/utils.js":34}],27:[function(require,module,exports){
 "use strict";
 
 var calc = require('../utils/calc.js'),
@@ -3216,7 +3042,7 @@ var calc = require('../utils/calc.js'),
     };
 
 module.exports = Value;
-},{"../utils/calc.js":29,"../utils/resolve.js":34,"../utils/utils.js":36,"./repo.js":27}],29:[function(require,module,exports){
+},{"../utils/calc.js":28,"../utils/resolve.js":32,"../utils/utils.js":34,"./repo.js":26}],28:[function(require,module,exports){
 /*
     Calculators
     ----------------------------------------
@@ -3607,7 +3433,7 @@ module.exports = {
         return this.value(easedProgress, from, to);
     }
 };
-},{"./utils.js":36}],30:[function(require,module,exports){
+},{"./utils.js":34}],29:[function(require,module,exports){
 /*
     Easing functions
     ----------------------------------------
@@ -3853,9 +3679,9 @@ EasingFunction.prototype = {
 
 module.exports = new EasingFunction();
 
-},{"../types/bezier.js":26,"./calc.js":29}],31:[function(require,module,exports){
+},{"../types/bezier.js":25,"./calc.js":28}],30:[function(require,module,exports){
 window.redshift = require('../redshift.js');
-},{"../redshift.js":25}],32:[function(require,module,exports){
+},{"../redshift.js":24}],31:[function(require,module,exports){
 "use strict";
 
 var // [number]: Default max size of history
@@ -3927,76 +3753,7 @@ History.prototype = {
 };
 
 module.exports = History;
-},{}],33:[function(require,module,exports){
-"use strict";
-
-var utils = require('./utils.js'),
-    parse = require('../css/parse.js');
-
-module.exports = {
-    
-    /*
-        Parse play arguments
-        
-        @param [object]: Object of valid CSS properties to animate
-        @param [number] (optional): Duration in ms
-        @param [string] (optional): Name of easing function
-        @param [function](optional): onEnd callback
-        @returns [object]: Redshift-formatted play arguments
-    */
-    playArgs: function () {
-        var props = {},
-            arg,
-            args = arguments,
-            argsLength = args.length;
-            
-        for (var i = 0; i < argsLength; i++) {
-            arg = args[i];
-
-            // If number, this is duration
-            if (!props.duration && utils.isNum(arg)) {
-                props.duration = arg;
-            
-            // If it's a string, it's an easing name
-            } else if (!props.ease && utils.isString(arg)) {
-                props.ease = arg;
-
-            // If function, onEnd
-            } else if (!props.onEnd && utils.isFunc(arg)) {
-                props.onEnd = arg;
-            
-            // Or it's our values
-            } else {
-                props.values = parse.cssToValues(arg, 'to');
-            }
-        }
-
-        return props;
-    },
-    
-    /*
-        Parse track arguments
-        
-        @param [object] (optional): Object of valid CSS properties to track
-        @param [event || Redshift Input]: Pointer event or Input to track
-        @returns [object]: Redshift-formatted play arguments
-    */
-    trackArgs: function () {
-        var params = [],
-            args = arguments,
-            argsLength = args.length;
-        
-        if (argsLength > 1) {
-            params.push({ values: parse.cssToValues(args[0]) });
-        }
-        
-        params.push(args[argsLength - 1]);
-
-        return params;
-    }
-    
-};
-},{"../css/parse.js":9,"./utils.js":36}],34:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 /*
     Property resolver
     -------------------------------------
@@ -4042,7 +3799,7 @@ module.exports = function (newValue, currentValue, parent, scope) {
     
     return newValue;
 };
-},{"./utils.js":36}],35:[function(require,module,exports){
+},{"./utils.js":34}],33:[function(require,module,exports){
 "use strict";
 
 var checkRequestAnimationFrame = function () {
@@ -4118,7 +3875,7 @@ module.exports = function () {
     checkRequestAnimationFrame();
     checkIndexOf();
 };
-},{}],36:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 /*
     Utility functions
 */
@@ -4379,4 +4136,4 @@ module.exports = {
     }
     
 };
-},{"../opts/keys.js":19}]},{},[31]);
+},{"../opts/keys.js":18}]},{},[30]);
