@@ -1,1 +1,0 @@
-window.cycl = require('./cycl.js');
