@@ -7,40 +7,6 @@ module.exports = {
     // [number]: The value to start from
     start: 0,
 
-    // [number]: Current target value
-    to: undefined,
-
-    // [number]: Maximum permitted value during .track and .run
-    min: undefined,
-    
-    // [number]: Minimum permitted value during .track and .run
-    max: undefined,
-    
-    // [boolean]: Set to true when both min and max detected
-    hasRange: false,
-
-    // [boolean]: Round output if true
-    round: false,
-    
-    // [string]: Name of parent value
-    parent: undefined,
-
-    // [string]: Name of unit type
-    unitName: undefined,
-
-    /*
-        Link properties
-    */
-
-    // [string]: Name of value to listen to
-    link: undefined,
-    
-    // [array]: Linear range of values (eg [-100, -50, 50, 100]) of linked value to map to .mapTo
-    mapLink: undefined,
-    
-    // [array]: Non-linear range of values (eg [0, 1, 1, 0]) to map to .mapLink - here the linked value being 75 would result in a value of 0.5
-    mapTo: undefined,
-
 
     /*
         .run() properties
