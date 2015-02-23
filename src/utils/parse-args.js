@@ -17,10 +17,11 @@ module.exports = {
     playArgs: function () {
         var props = {},
             arg,
-            argsLength = arguments.length;
+            args = arguments,
+            argsLength = args.length;
             
         for (var i = 0; i < argsLength; i++) {
-            arg = arguments[i];
+            arg = args[i];
 
             // If number, this is duration
             if (!props.duration && utils.isNum(arg)) {
@@ -52,13 +53,14 @@ module.exports = {
     */
     trackArgs: function () {
         var params = [],
-            argsLength = arguments.length;
+            args = arguments,
+            argsLength = args.length;
         
         if (argsLength > 1) {
-            params.push({ values: parse.cssToValues(arguments[0]) });
+            params.push({ values: parse.cssToValues(args[0]) });
         }
         
-        params.push(arguments[argsLength - 1]);
+        params.push(args[argsLength - 1]);
 
         return params;
     }
