@@ -2830,7 +2830,7 @@ var Action = require('./action/action.js'),
     Process = require('./process/process.js'),
     Redshift = function () {
         // Check if we need to shim rAF and indexOf
-        shim.featureCheck();
+        shim();
     };
 
 Redshift.prototype = {
@@ -3671,11 +3671,9 @@ module.exports = {
 "use strict";
 
 var calc = require('./calc.js'),
-    util = require('./utils.js'),
     KEY = require('../opts/keys.js'),
     Bezier = require('../types/bezier.js'),
-    EasingFunction = function () {},
-    easingFunction,
+
     /*
         Each of these base functions is an easeIn
         
@@ -3727,6 +3725,23 @@ var calc = require('./calc.js'),
         },
         spring: function (progress) {
             return 1 - (Math.cos(progress * 4.5 * Math.PI) * Math.exp(-progress * 6));
+        }
+    },
+    
+    /*
+        Constructor
+    */
+    EasingFunction = function () {
+        for (var key in baseIn) {
+            if (baseIn.hasOwnProperty(key)) {
+                this.generate(key, baseIn[key], true);
+            }
+        }
+    
+        for (key in baseOut) {
+            if (baseOut.hasOwnProperty(key)) {
+                this.generate(key, baseOut[key]);
+            }
         }
     };
     
@@ -3871,36 +3886,16 @@ EasingFunction.prototype = {
 
 };
 
-easingFunction = new EasingFunction();
+module.exports = new EasingFunction();
 
-init();
-
-function init() {
-
-    // Generate easing with base function of easeIn
-    for (var key in baseIn) {
-        if (baseIn.hasOwnProperty(key)) {
-            easingFunction.generate(key, baseIn[key], true);
-        }
-    }
-
-    // Generate easing with base function of easeOut
-    for (key in baseOut) {
-        if (baseOut.hasOwnProperty(key)) {
-            easingFunction.generate(key, baseOut[key]);
-        }
-    }
-}
-
-module.exports = easingFunction;
-
-},{"../opts/keys.js":19,"../types/bezier.js":26,"./calc.js":29,"./utils.js":36}],31:[function(require,module,exports){
+},{"../opts/keys.js":19,"../types/bezier.js":26,"./calc.js":29}],31:[function(require,module,exports){
 window.redshift = require('../redshift.js');
 },{"../redshift.js":25}],32:[function(require,module,exports){
 "use strict";
 
-var maxHistorySize = 3,
-    utils = require('../utils/utils.js'),
+var // [number]: Default max size of history
+    maxHistorySize = 3,
+    
     /*
         History constructor
         
@@ -3939,7 +3934,7 @@ History.prototype = {
         @return [var]: Var found at specified index
     */
     get: function (i) {
-        i = (utils.isNum(i)) ? i : this.getSize() - 1;
+        i = (typeof i === 'number') ? i : this.getSize() - 1;
 
         return this.entries[i];
     },
@@ -3967,7 +3962,7 @@ History.prototype = {
 };
 
 module.exports = History;
-},{"../utils/utils.js":36}],33:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 "use strict";
 
 var utils = require('./utils.js'),
@@ -3987,10 +3982,11 @@ module.exports = {
     playArgs: function () {
         var props = {},
             arg,
-            argsLength = arguments.length;
+            args = arguments,
+            argsLength = args.length;
             
         for (var i = 0; i < argsLength; i++) {
-            arg = arguments[i];
+            arg = args[i];
 
             // If number, this is duration
             if (!props.duration && utils.isNum(arg)) {
@@ -4022,13 +4018,14 @@ module.exports = {
     */
     trackArgs: function () {
         var params = [],
-            argsLength = arguments.length;
+            args = arguments,
+            argsLength = args.length;
         
         if (argsLength > 1) {
-            params.push({ values: parse.cssToValues(arguments[0]) });
+            params.push({ values: parse.cssToValues(args[0]) });
         }
         
-        params.push(arguments[argsLength - 1]);
+        params.push(args[argsLength - 1]);
 
         return params;
     }
@@ -4152,11 +4149,9 @@ var checkRequestAnimationFrame = function () {
         }
     };
 
-module.exports = {
-    featureCheck: function () {
-        checkRequestAnimationFrame();
-        checkIndexOf();
-    }
+module.exports = function () {
+    checkRequestAnimationFrame();
+    checkIndexOf();
 };
 },{}],36:[function(require,module,exports){
 /*

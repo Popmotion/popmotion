@@ -23,11 +23,9 @@
 "use strict";
 
 var calc = require('./calc.js'),
-    util = require('./utils.js'),
     KEY = require('../opts/keys.js'),
     Bezier = require('../types/bezier.js'),
-    EasingFunction = function () {},
-    easingFunction,
+
     /*
         Each of these base functions is an easeIn
         
@@ -79,6 +77,23 @@ var calc = require('./calc.js'),
         },
         spring: function (progress) {
             return 1 - (Math.cos(progress * 4.5 * Math.PI) * Math.exp(-progress * 6));
+        }
+    },
+    
+    /*
+        Constructor
+    */
+    EasingFunction = function () {
+        for (var key in baseIn) {
+            if (baseIn.hasOwnProperty(key)) {
+                this.generate(key, baseIn[key], true);
+            }
+        }
+    
+        for (key in baseOut) {
+            if (baseOut.hasOwnProperty(key)) {
+                this.generate(key, baseOut[key]);
+            }
         }
     };
     
@@ -223,25 +238,4 @@ EasingFunction.prototype = {
 
 };
 
-easingFunction = new EasingFunction();
-
-init();
-
-function init() {
-
-    // Generate easing with base function of easeIn
-    for (var key in baseIn) {
-        if (baseIn.hasOwnProperty(key)) {
-            easingFunction.generate(key, baseIn[key], true);
-        }
-    }
-
-    // Generate easing with base function of easeOut
-    for (key in baseOut) {
-        if (baseOut.hasOwnProperty(key)) {
-            easingFunction.generate(key, baseOut[key]);
-        }
-    }
-}
-
-module.exports = easingFunction;
+module.exports = new EasingFunction();
