@@ -69,9 +69,7 @@ var checkRequestAnimationFrame = function () {
         }
     };
 
-module.exports = {
-    featureCheck: function () {
-        checkRequestAnimationFrame();
-        checkIndexOf();
-    }
+module.exports = function () {
+    checkRequestAnimationFrame();
+    checkIndexOf();
 };

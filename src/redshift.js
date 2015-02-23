@@ -11,7 +11,7 @@ var Action = require('./action/action.js'),
     Process = require('./process/process.js'),
     Redshift = function () {
         // Check if we need to shim rAF and indexOf
-        shim.featureCheck();
+        shim();
     };
 
 Redshift.prototype = {
