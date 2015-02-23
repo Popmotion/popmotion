@@ -2072,18 +2072,49 @@ module.exports = Input;
 
 var Input = require('./input.js'),
     Point = require('../types/point.js'),
-    History = require('../utils/history.js'),
     KEY = require('../opts/keys.js'),
     utils = require('../utils/utils.js'),
     currentPointer, // Sort this out for multitouch
+    
+
+    /*
+        Convert event into point
+        
+        Scrape the x/y coordinates from the provided event
+        
+        @param [event]: Original pointer event
+        @param [boolean]: True if touch event
+        @return [object]: x/y coordinates of event
+    */
+    eventToPoint = function (event, isTouchEvent) {
+        var touchChanged = isTouchEvent ? event.changedTouches[0] : false;
+        
+        return {
+            x: touchChanged ? touchChanged.clientX : event.screenX,
+            y: touchChanged ? touchChanged.clientY : event.screenY
+        }
+    },
+    
+    /*
+        Get actual event
+        
+        Checks for jQuery's .originalEvent if present
+        
+        @param [event | jQuery event]
+        @return [event]: The actual JS event  
+    */
+    getActualEvent = function (event) {
+        return event.originalEvent || event;
+    },
+
     
     /*
         Pointer constructor
     */
     Pointer = function (e) {
-        var event = utils.getActualEvent(e), // In case of jQuery event
-            isTouch = utils.isTouchEvent(event),
-            startPoint = utils.convertEventIntoPoint(event, isTouch);
+        var event = getActualEvent(e), // In case of jQuery event
+            isTouch = (event.touches) ? true : false,
+            startPoint = eventToPoint(event, isTouch);
         
         this.update(new Point(startPoint));
         this.isTouch = isTouch;
@@ -2116,9 +2147,9 @@ Pointer.prototype.unbindEvents = function () {
     @param [event]: Pointer move event
 */
 Pointer.prototype.onMove = function (e) {
-    e = utils.getActualEvent(e);
+    e = getActualEvent(e);
     e.preventDefault();
-    currentPointer.update(new Point(utils.convertEventIntoPoint(e, currentPointer.isTouch)));
+    currentPointer.update(new Point(eventToPoint(e, currentPointer.isTouch)));
 };
 
 Pointer.prototype.stop = function () {
@@ -2126,7 +2157,7 @@ Pointer.prototype.stop = function () {
 };
 
 module.exports = Pointer;
-},{"../opts/keys.js":19,"../types/point.js":27,"../utils/history.js":33,"../utils/utils.js":37,"./input.js":16}],18:[function(require,module,exports){
+},{"../opts/keys.js":19,"../types/point.js":27,"../utils/utils.js":37,"./input.js":16}],18:[function(require,module,exports){
 "use strict";
 
 var rubix = require('../action/rubix.js');
@@ -2887,6 +2918,19 @@ Redshift.prototype = {
 module.exports = new Redshift();
 },{"./action/action.js":1,"./action/presets.js":2,"./dom/dom-action.js":14,"./input/input.js":16,"./process/process.js":23,"./utils/calc.js":30,"./utils/easing.js":31,"./utils/shim.js":36,"./utils/utils.js":37}],26:[function(require,module,exports){
 (function (global){
+/*
+    Bezier function generator
+        
+    Gaëtan Renaudeau's BezierEasing
+    https://github.com/gre/bezier-easing/blob/master/index.js  
+    https://github.com/gre/bezier-easing/blob/master/LICENSE
+    You're a hero
+    
+    Use
+    
+        var easeOut = new Bezier(.17,.67,.83,.67),
+            x = easeOut(0.5); // returns 0.627...
+*/
 "use strict";
 
 var NEWTON_ITERATIONS = 8,
@@ -4147,46 +4191,12 @@ module.exports = {
 },{}],37:[function(require,module,exports){
 /*
     Utility functions
-    ----------------------------------------
-    
-    convertEventIntoPoint
-    getActualEvent
-    hasMoved
-    isMouseEvent
-    currentTime
 */
 "use strict";
 
 var KEY = require('../opts/keys.js');
 
 module.exports = {
-
-    /*
-        Convert event into point
-        
-        Scrape the x/y coordinates from the provided event
-        
-        @param [event]: Original pointer event
-        @return [object]: x/y coordinates of event
-    */
-    convertEventIntoPoint: function (event, isTouchEvent) {
-	    return {
-            x: isTouchEvent ? event.changedTouches[0].clientX : event.screenX,
-            y: isTouchEvent ? event.changedTouches[0].clientY : event.screenY
-        };
-    },
-    
-    /*
-        Get actual event
-        
-        Checks for jQuery's .originalEvent if present
-        
-        @param [event | jQuery event]
-        @return [event]: The actual JS event  
-    */
-    getActualEvent: function (event) {
-        return event.originalEvent || event;
-    },
     
     /*
         Has one object changed from the other
@@ -4211,30 +4221,6 @@ module.exports = {
         }
     
         return hasChanged;
-    },
-    
-    /*
-        Is this event a mouse event?
-        
-        Checks the provided event type for the 'mouse' string
-        
-        @param [string]: Event type
-        @return [boolean]: Returns true if 'mouse' is found in string
-    */
-    isMouseEvent: function (eventType) {
-        return (eventType.indexOf(KEY.EVENT.MOUSE) > -1);
-    },
-    
-    /*
-        Is this event a touch event?
-        
-        Checks the provided event for the .touches prop
-        
-        @param [string]: Event
-        @return [boolean]: Returns true if .touches is present
-    */
-    isTouchEvent: function (e) {
-        return (e.touches) ? true : false;
     },
     
     /*

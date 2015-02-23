@@ -1,45 +1,11 @@
 /*
     Utility functions
-    ----------------------------------------
-    
-    convertEventIntoPoint
-    getActualEvent
-    hasMoved
-    isMouseEvent
-    currentTime
 */
 "use strict";
 
 var KEY = require('../opts/keys.js');
 
 module.exports = {
-
-    /*
-        Convert event into point
-        
-        Scrape the x/y coordinates from the provided event
-        
-        @param [event]: Original pointer event
-        @return [object]: x/y coordinates of event
-    */
-    convertEventIntoPoint: function (event, isTouchEvent) {
-	    return {
-            x: isTouchEvent ? event.changedTouches[0].clientX : event.screenX,
-            y: isTouchEvent ? event.changedTouches[0].clientY : event.screenY
-        };
-    },
-    
-    /*
-        Get actual event
-        
-        Checks for jQuery's .originalEvent if present
-        
-        @param [event | jQuery event]
-        @return [event]: The actual JS event  
-    */
-    getActualEvent: function (event) {
-        return event.originalEvent || event;
-    },
     
     /*
         Has one object changed from the other
@@ -64,30 +30,6 @@ module.exports = {
         }
     
         return hasChanged;
-    },
-    
-    /*
-        Is this event a mouse event?
-        
-        Checks the provided event type for the 'mouse' string
-        
-        @param [string]: Event type
-        @return [boolean]: Returns true if 'mouse' is found in string
-    */
-    isMouseEvent: function (eventType) {
-        return (eventType.indexOf(KEY.EVENT.MOUSE) > -1);
-    },
-    
-    /*
-        Is this event a touch event?
-        
-        Checks the provided event for the .touches prop
-        
-        @param [string]: Event
-        @return [boolean]: Returns true if .touches is present
-    */
-    isTouchEvent: function (e) {
-        return (e.touches) ? true : false;
     },
     
     /*

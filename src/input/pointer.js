@@ -2,18 +2,49 @@
 
 var Input = require('./input.js'),
     Point = require('../types/point.js'),
-    History = require('../utils/history.js'),
     KEY = require('../opts/keys.js'),
     utils = require('../utils/utils.js'),
     currentPointer, // Sort this out for multitouch
+    
+
+    /*
+        Convert event into point
+        
+        Scrape the x/y coordinates from the provided event
+        
+        @param [event]: Original pointer event
+        @param [boolean]: True if touch event
+        @return [object]: x/y coordinates of event
+    */
+    eventToPoint = function (event, isTouchEvent) {
+        var touchChanged = isTouchEvent ? event.changedTouches[0] : false;
+        
+        return {
+            x: touchChanged ? touchChanged.clientX : event.screenX,
+            y: touchChanged ? touchChanged.clientY : event.screenY
+        }
+    },
+    
+    /*
+        Get actual event
+        
+        Checks for jQuery's .originalEvent if present
+        
+        @param [event | jQuery event]
+        @return [event]: The actual JS event  
+    */
+    getActualEvent = function (event) {
+        return event.originalEvent || event;
+    },
+
     
     /*
         Pointer constructor
     */
     Pointer = function (e) {
-        var event = utils.getActualEvent(e), // In case of jQuery event
-            isTouch = utils.isTouchEvent(event),
-            startPoint = utils.convertEventIntoPoint(event, isTouch);
+        var event = getActualEvent(e), // In case of jQuery event
+            isTouch = (event.touches) ? true : false,
+            startPoint = eventToPoint(event, isTouch);
         
         this.update(new Point(startPoint));
         this.isTouch = isTouch;
@@ -46,9 +77,9 @@ Pointer.prototype.unbindEvents = function () {
     @param [event]: Pointer move event
 */
 Pointer.prototype.onMove = function (e) {
-    e = utils.getActualEvent(e);
+    e = getActualEvent(e);
     e.preventDefault();
-    currentPointer.update(new Point(utils.convertEventIntoPoint(e, currentPointer.isTouch)));
+    currentPointer.update(new Point(eventToPoint(e, currentPointer.isTouch)));
 };
 
 Pointer.prototype.stop = function () {
