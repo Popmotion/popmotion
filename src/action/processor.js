@@ -19,7 +19,7 @@ module.exports = function (action, framestamp, frameDuration) {
         valueRubix,
         output,
         hasChanged = false;
-        
+    
     action.output = {};
 
     // Update elapsed
@@ -79,6 +79,8 @@ module.exports = function (action, framestamp, frameDuration) {
         value.current = output;
         action.output[key] = (value.unit) ? output + value.unit : output;
     }
+    
+    console.log(action.output);
 
     // Fire onFrame callback
     if (props.onFrame) {
