@@ -3,7 +3,13 @@
 */
 "use strict";
 
-var KEY = require('../opts/keys.js');
+var KEY = require('../opts/keys.js'),
+
+    protectedProps = ['scope',  'dom'],
+
+    isProtected = function (key) {
+        return (protectedProps.indexOf(key) === -1);
+    };
 
 module.exports = {
     
@@ -132,7 +138,7 @@ module.exports = {
         
         for (var key in base) {
             if (base.hasOwnProperty(key)) {
-                newObject[key] = (this.isObj(base[key]) && key !== 'scope' && key !== 'dom') ? this.copy(base[key]) : base[key];
+                newObject[key] = (this.isObj(base[key]) && !isProtected(key)) ? this.copy(base[key]) : base[key];
             }
         }
         
@@ -179,7 +185,28 @@ module.exports = {
         @return [object]: New object
     */
     mergeObject: function (base, overwrite) {
-        var newObject = this.copyObject(base);
+        var newObject = this.copyObject(base),
+            key = '';
+        
+        for (key in overwrite) {
+            if (overwrite.hasOwnProperty(key)) {
+                
+                // If this is a protected key, straight copy
+                if (isProtected(key)) {
+                    newObject[key] = overwrite[key];
+                    
+                // Or if this is a non-protected key and an object, recursive merge
+                } else if (this.isObj(overwrite[key])) {
+                    newObject[key] = this.merge(newObject[key], overwrite[key]);
+                
+                // Or we've dug to a value
+                } else {
+                     newObject[key] = this.copy(overwrite[key]);
+                }
+            }
+        }
+        
+        
         
         for (var key in overwrite) {
             if (overwrite.hasOwnProperty(key)) {
@@ -187,7 +214,7 @@ module.exports = {
                     if (this.isObj(newObject[key])) {
                         newObject[key] = this.merge(newObject[key], overwrite[key]);
                     } else {
-                        newObject[key] = this.copy(overwrite[key]);
+                       
                     }
                 } else {
                     newObject[key] = overwrite[key];

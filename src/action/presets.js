@@ -61,7 +61,7 @@ Presets.prototype = {
     */
     getDefined: function (key) {
         var props = {},
-            thisProp = {}
+            thisProp = {},
             keys = generateKeys(key),
             keysLength = keys.length,
             i = 0;
