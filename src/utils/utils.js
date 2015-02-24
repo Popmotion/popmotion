@@ -197,8 +197,6 @@ module.exports = {
                     } else {
                         newObject[key] = overwrite[key];
                     }
-                    
-                    //newObject[key] = (this.isObj(overwrite[key]) && !isProtected(key)) ? this.merge(base[key], overwrite[key]) : overwrite[key];
                 }
             }
         }
