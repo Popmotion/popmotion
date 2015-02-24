@@ -15,18 +15,35 @@ var utils = require('../utils/utils.js'),
         merges in next object as override
     */
     generic = function () {
-        var props = {};
+        var props = {},
+            playlist = [],
+            base = arguments[0],
+            override = arguments[1],
+            playlistLength = 0,
+            argsAsArray = [].slice.call(arguments),
+            i = 0;
 
-        if (typeof arguments[0] == STRING) {
-            props = presets.getDefined(arguments[0]);
+        if (typeof base == STRING) {
+            playlist = base.split(' ');
+            playlistLength = playlist.length;
+            props = presets.getDefined(base[0]);
             
-            if (typeof arguments[1] == OBJECT) {
-                utils.merge(props, arguments[1]);
+            // If we've had multiple presets, loop through and add each to the queue
+            if (playlistLength > 1) {
+                for (; i < playlistLength; i++) {
+                    argsAsArray.shift();
+                    argsAsArray.unshift(playlist[i]);
+                    this.queue.add.apply(this.queue, argsAsArray);
+                }
+            }
+            
+            if (typeof override == OBJECT) {
+                utils.merge(props, override);
             }
             
         // If object, assign directly
-        } else if (typeof arguments[0] == OBJECT) {
-            props = arguments[0];
+        } else if (typeof base == OBJECT) {
+            props = base;
         }
         
         return props;

@@ -28,8 +28,6 @@ module.exports = {
     // 
     dilate: 1,
     
-    playhead: 0,
-    
     // Number of times animation has looped
     loopCount: 0,
     
@@ -42,8 +40,6 @@ module.exports = {
     
         // Order of values
         order: undefined,
-        
-        playlist: undefined,
         
         progress: undefined,
         

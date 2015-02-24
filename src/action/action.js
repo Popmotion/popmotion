@@ -5,7 +5,7 @@ var parseArgs = require('./parse-args.js'),
 
 
 
-
+    Queue = require('./queue.js'),
     Process = require('../process/process.js'),
     process = require('./processor.js'),
     KEY = require('../opts/keys.js'),
@@ -35,8 +35,10 @@ var parseArgs = require('./parse-args.js'),
                 process(self, framestamp, frameDuration);
 	        }
         });
+        
+        self.queue = new Queue();
        
-        self.set(parseArgs.generic.apply(this, arguments));
+        self.set(parseArgs.generic.apply(self, arguments));
     };
 
 Action.prototype = {
@@ -70,7 +72,12 @@ Action.prototype = {
         @return [Action]
     */
     play: function () {
-        this.set(parseArgs.play.apply(this, arguments));
+        var props = parseArgs.play.apply(this, arguments);
+
+        if (!this.isActive()) {
+            this.set(props);
+        }
+
         return this.start(KEY.RUBIX.TIME);
     },
 
@@ -119,20 +126,22 @@ Action.prototype = {
         @return [Action]
     */
     start: function (processType) {
-	    this.resetProgress();
+	    var self = this;
+
+        self.resetProgress();
         
         if (processType) {
-            this.props.set('rubix', processType);
+            self.props.set('rubix', processType);
         }
 
-        this.isActive(true);
-        this.started = utils.currentTime() + this.props.get('delay');
-        this.framestamp = self.started;
-        this.firstFrame = true;
+        self.isActive(true);
+        self.started = utils.currentTime() + self.props.get('delay');
+        self.framestamp = self.started;
+        self.firstFrame = true;
         
-        this.process.start();
+        self.process.start();
         
-        return this;
+        return self;
     },
     
     /*
