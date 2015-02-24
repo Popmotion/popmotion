@@ -77,43 +77,7 @@ Presets.prototype = {
         @param [string]: The name of the predefined action
     */
     getDefined: function (key) {
-        return this.copy(presetStore[key]);
-    },
-    
-    /*
-        Copy an action
-    */
-    copy: function (action) {
-        var newAction = {};
-
-        for (var key in action) {
-            if (action.hasOwnProperty(key)) {
-                if (key !== 'values') {
-                    newAction[key] = action[key];
-                } else {
-                    newAction.values = utils.copy(action.values);
-                }
-            }
-        }
-        
-        return newAction;
-    },
-    
-    /*
-        Merge an action
-    */
-    merge: function (action, override) {
-        for (var key in override) {
-            if (override.hasOwnProperty(key)) {
-                if (key !== 'values') {
-                    action[key] = override[key];
-                } else {
-                    action.values = utils.merge(action.values, override.values);
-                }
-            }
-        }
-        
-        return action;
+        return utils.copy(presetStore[key]);
     }
     
 };

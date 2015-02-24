@@ -475,7 +475,7 @@ var utils = require('../utils/utils.js'),
             props = base;
         }
         
-        
+        console.log(props);
         
         return props;
     };
@@ -639,43 +639,7 @@ Presets.prototype = {
         @param [string]: The name of the predefined action
     */
     getDefined: function (key) {
-        return this.copy(presetStore[key]);
-    },
-    
-    /*
-        Copy an action
-    */
-    copy: function (action) {
-        var newAction = {};
-
-        for (var key in action) {
-            if (action.hasOwnProperty(key)) {
-                if (key !== 'values') {
-                    newAction[key] = action[key];
-                } else {
-                    newAction.values = utils.copy(action.values);
-                }
-            }
-        }
-        
-        return newAction;
-    },
-    
-    /*
-        Merge an action
-    */
-    merge: function (action, override) {
-        for (var key in override) {
-            if (override.hasOwnProperty(key)) {
-                if (key !== 'values') {
-                    action[key] = override[key];
-                } else {
-                    action.values = utils.merge(action.values, override.values);
-                }
-            }
-        }
-        
-        return action;
+        return utils.copy(presetStore[key]);
     }
     
 };
@@ -803,6 +767,7 @@ Queue.prototype = {
         Add a set of arguments to queue
     */
     add: function () {
+        console.log(arguments);
         this.queue.push([].slice.call(arguments));
     },
     
@@ -814,7 +779,7 @@ Queue.prototype = {
             returnVal = false;
         
         queue.shift();
-        
+        console.log(queue);
         if (queue.length) {
             returnVal = queue[0];
         } else {
@@ -2597,7 +2562,7 @@ Redshift.prototype = {
                 
         @return [Redshift]
     */
-    definePreset: function () {
+    addPreset: function () {
         presets.define.apply(presets, arguments);
         
         return this;
@@ -2612,7 +2577,7 @@ Redshift.prototype = {
         @param [string]: Name of the new easing function 
         @params [number]: x/y coordinates of handles
     */
-    defineBezier: function () {
+    addBezier: function () {
         easing.addBezier.apply(easing, arguments);
         
         return this;

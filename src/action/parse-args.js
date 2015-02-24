@@ -46,7 +46,7 @@ var utils = require('../utils/utils.js'),
             props = base;
         }
         
-        
+        console.log(props);
         
         return props;
     };

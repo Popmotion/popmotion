@@ -10,6 +10,7 @@ Queue.prototype = {
         Add a set of arguments to queue
     */
     add: function () {
+        console.log(arguments);
         this.queue.push([].slice.call(arguments));
     },
     
@@ -21,7 +22,7 @@ Queue.prototype = {
             returnVal = false;
         
         queue.shift();
-        
+        console.log(queue);
         if (queue.length) {
             returnVal = queue[0];
         } else {

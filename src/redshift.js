@@ -68,7 +68,7 @@ Redshift.prototype = {
                 
         @return [Redshift]
     */
-    definePreset: function () {
+    addPreset: function () {
         presets.define.apply(presets, arguments);
         
         return this;
@@ -83,7 +83,7 @@ Redshift.prototype = {
         @param [string]: Name of the new easing function 
         @params [number]: x/y coordinates of handles
     */
-    defineBezier: function () {
+    addBezier: function () {
         easing.addBezier.apply(easing, arguments);
         
         return this;
