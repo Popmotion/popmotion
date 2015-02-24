@@ -2,8 +2,22 @@
 
 var KEY = require('../opts/keys.js'),
     utils = require('../utils/utils.js'),
+    
+    generateKeys = function (key) {
+        var keys = key.split(DOT),
+            keysLength = keys.length,
+            lastKey = keys[0],
+            i = 1;
+        
+        for (; i < keysLength; i++) {
+            keys[i] = lastKey += DOT + keys[i];
+        }
+        
+        return keys;
+    },
 
     presetStore = {},
+    DOT = '.',
     Presets = function () {};
 
 Presets.prototype = {
@@ -23,34 +37,20 @@ Presets.prototype = {
         @return [Redshift]
     */
     define: function () {
-        var props = {},
+        var args = arguments,
             key = '',
-            chain = [],
-            preset = {};
-        
-        // Check if supplied arguments are string/object or object map
-        if (arguments[1] === undefined) {
-            props = arguments[0];
-        } else {
-            props[arguments[0]] = arguments[1];
+            propsArg1 = (args[1] === undefined),
+            props = propsArg1 ? args[0] : {};
+    
+        if (propsArg1) {
+            props[args[0]] = args[1];
         }
-        
-        // Iterate over props and create presets
+    
         for (key in props) {
             if (props.hasOwnProperty(key)) {
-                chain = key.split('.');
-                
-                // If there's an inheritence chain, merge
-                // TODO: multilayered inheritence
-                if (chain.length > 1 && presetStore[chain[0]]) {
-                    presetStore[key] = utils.merge(presetStore[chain[0]], props[key]);
-                
-                // Otherwise directly copy
-                } else {
-                    presetStore[key] = props[key];
-                }
+                presetStore[key] = props[key];
             }
-        } // end for
+        }
     },
     
     
@@ -60,7 +60,21 @@ Presets.prototype = {
         @param [string]: The name of the predefined action
     */
     getDefined: function (key) {
-        return utils.copy(presetStore[key]);
+        var props = {},
+            thisProp = {}
+            keys = generateKeys(key),
+            keysLength = keys.length,
+            i = 0;
+        
+        for (; i < keysLength; i++) {
+            thisProp = presetStore[keys[i]];
+
+            if (thisProp) {
+                props = utils.merge(props, thisProp);
+            }
+        }
+        
+        return props;
     }
     
 };

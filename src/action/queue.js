@@ -21,7 +21,7 @@ Queue.prototype = {
             returnVal = false;
         
         queue.shift();
-        console.log(queue);
+
         if (queue.length) {
             returnVal = queue[0];
         } else {
