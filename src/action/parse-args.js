@@ -1,11 +1,36 @@
 "use strict";
 
 var utils = require('../utils/utils.js'),
+    presets = require('./presets.js'),
     Pointer = require('../input/pointer.js'),
 
     STRING = 'string',
     NUMBER = 'number',
-    OBJECT = 'object';
+    OBJECT = 'object',
+    
+    /*
+        Generic argument parsing
+        
+        Checks first argument to be a string and loads preset,
+        merges in next object as override
+    */
+    generic = function () {
+        var props = {};
+
+        if (typeof arguments[0] == STRING) {
+            props = presets.getDefined(arguments[0]);
+            
+            if (typeof arguments[1] == OBJECT) {
+                utils.merge(props, arguments[1]);
+            }
+            
+        // If object, assign directly
+        } else if (typeof arguments[0] == OBJECT) {
+            props = arguments[0];
+        }
+        
+        return props;
+    };
 
 module.exports = {
     
@@ -26,46 +51,34 @@ module.exports = {
             .play(properties [, duration, easing, onEnd])
     */
     play: function () {
-        var props = {
-                playhead: 0,
-                loopCount: 0,
-                yoyoCount: 0
-            },
-            arg, typeofArg = '',
-            argsLength = arguments.length;
+        var props = generic.apply(this, arguments),
+            argsLength = arguments.length,
+            i = 0,
+            arg,
+            typeofArg = '';
         
-        // Loop through arguments an assign based on type and position
-        for (var i = 0; i < argsLength; i++) {
-            arg = arguments[i],
+        // Play specific properties
+        props.playhead = props.loopCount = props.yoyoCount = 0;
+        
+        for (; i < argsLength; i++) {
+            arg = arguments[i];
             typeofArg = typeof arg;
             
-            // Load preset if this is the first index and item is a string
-            if (typeofArg === STRING) {
-                // Preset if first index
-                if (i === 0) {
-                    // load preset
-                    
-                // Otherwise easing
-                } else {
-                    props.ease = arg;
-                }
+            // Easing if string and not first index
+            if (typeofArg == STRING && i !== 0) {
+                props.ease = arg;
             
-            // If object, check if function
-            } else if (typeofArg === OBJECT) {
-                // onEnd if function
-                if (utils.isFunc(arg)) {
-                    props.onEnd = arg;
-
-                } else {
-                    props = utils.merge(props, arg);
-                }
-            
-            // Duration if duration not set and argument is number
-            } else if (!props.duration && typeofArg === NUMBER) {
+            // Duration if number
+            } else if (typeofArg == NUMBER) {
                 props.duration = arg;
+                
+            // Callback if function
+            } else if (utils.isFunc(arg)) {
+                props.onEnd = arg;
             }
         }
-               // props.values = parse.cssToValues(arg, 'to');
+        
+        // props.values = parse.cssToValues(arg, 'to');
         
         return props;
     },
@@ -104,5 +117,7 @@ module.exports = {
         props.inputOrigin = input.get();
         
         return props;
-    }
+    },
+    
+    generic: generic
 };

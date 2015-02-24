@@ -1,6 +1,6 @@
 "use strict";
 
-var parseArgs = require('./parse-args.js')
+var parseArgs = require('./parse-args.js'),
 
 
 
@@ -8,7 +8,6 @@ var parseArgs = require('./parse-args.js')
 
     Process = require('../process/process.js'),
     process = require('./processor.js'),
-    presets = require('./presets.js'),
     KEY = require('../opts/keys.js'),
     defaultProps = require('../opts/action.js'),
     defaultValue = require('../opts/value.js'),
@@ -17,7 +16,7 @@ var parseArgs = require('./parse-args.js')
     Value = require('../types/value.js'),
     Repo = require('../types/repo.js'),
 
-    Action = function (def, override) {
+    Action = function () {
         var self = this;
         
         // Create value manager
@@ -36,8 +35,8 @@ var parseArgs = require('./parse-args.js')
                 process(self, framestamp, frameDuration);
 	        }
         });
-        
-        self.set(def, override);
+       
+        self.set(parseArgs.generic.apply(this, arguments));
     };
 
 Action.prototype = {
@@ -72,7 +71,6 @@ Action.prototype = {
     */
     play: function () {
         this.set(parseArgs.play.apply(this, arguments));
-
         return this.start(KEY.RUBIX.TIME);
     },
 
@@ -89,8 +87,8 @@ Action.prototype = {
                 
         @return [Action]
     */
-    run: function (defs, override) {
-        this.set(defs, override);
+    run: function () {
+        this.set(parseArgs.generic.apply(this, arguments));
         return this.start(KEY.RUBIX.RUN);
     },
     
@@ -110,7 +108,7 @@ Action.prototype = {
         @return [Action]
     */
     track: function () {
-        this.set(parse.track.apply(parse, arguments));
+        this.set(parseArgs.track.apply(this, arguments));
         return this.start(KEY.RUBIX.INPUT);
     },
 
@@ -325,13 +323,13 @@ Action.prototype = {
         @return [Action]
     */
     set: function (props) {
+        var values = this.values.get();
+
         this.props.set(props);
-        
+
         if (props.values) {
         	this.setValues(this.values, this.props.get());
         }
-        
-        values = this.values.get();
 
         // Create origins
         for (var key in values) {
