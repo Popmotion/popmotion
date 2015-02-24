@@ -12,10 +12,6 @@ module.exports = {
         TIME: 'Time',
         RUN: 'Run'
     },
-    ERROR: {
-        ACTION_EXISTS: "Action defined. Use forceOverride: true",
-        NO_ACTION: "Action not defined"
-    },
     EVENT: {
         MOUSE: 'mouse',
         MOUSEMOVE: 'mousemove',

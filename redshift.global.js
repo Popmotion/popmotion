@@ -594,34 +594,17 @@ Presets.prototype = {
         // Iterate over props and create presets
         for (key in props) {
             if (props.hasOwnProperty(key)) {
+                chain = key.split('.');
                 
-                // If this preset already exists and forceOverride isn't set to true
-                if (presetStore[key] && !props[key].forceOverride) {
-                    throw KEY.ERROR.ACTION_EXISTS;
+                // If there's an inheritence chain, merge
+                // TODO: multilayered inheritence
+                if (chain.length > 1 && presetStore[chain[0]]) {
+                    presetStore[key] = utils.merge(presetStore[chain[0]], props[key]);
                 
-                // Otherwise create the preset
+                // Otherwise directly copy
                 } else {
-                    chain = key.split('.');
-                    
-                    // If there's an inheritence chain, merge
-                    // TODO: multilayered inheritence
-                    if (chain.length > 1) {
-                        
-                        // Look for existing preset
-                        if (presetStore[chain[0]]) {
-                            presetStore[key] = utils.merge(presetStore[chain[0]], props[key]);
-                            
-                        // Otherwise throw error
-                        } else {
-                            throw KEY.ERROR.NO_ACTION;
-                        }
-                    
-                    // Otherwise directly copy
-                    } else {
-                        presetStore[key] = props[key];
-                    }
+                    presetStore[key] = props[key];
                 }
-                
             }
         } // end for
     },
@@ -721,8 +704,6 @@ module.exports = function (action, framestamp, frameDuration) {
         value.current = output;
         action.output[key] = (value.unit) ? output + value.unit : output;
     }
-    
-    console.log(action.output);
 
     // Fire onFrame callback
     if (props.onFrame) {
@@ -1926,10 +1907,6 @@ module.exports = {
         INPUT: 'Input',
         TIME: 'Time',
         RUN: 'Run'
-    },
-    ERROR: {
-        ACTION_EXISTS: "Action defined. Use forceOverride: true",
-        NO_ACTION: "Action not defined"
     },
     EVENT: {
         MOUSE: 'mouse',
