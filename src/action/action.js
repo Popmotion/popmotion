@@ -33,7 +33,7 @@ var parseArgs = require('./parse-args.js'),
         });
         
         self.queue = new Queue();
-       
+
         self.set(parseArgs.generic.apply(self, arguments));
     };
 

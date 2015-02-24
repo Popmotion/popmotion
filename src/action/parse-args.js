@@ -38,9 +38,8 @@ var utils = require('../utils/utils.js'),
             }
             
             if (typeof override == OBJECT) {
-                utils.merge(props, override);
+                props = utils.merge(props, override);
             }
-            
         // If object, assign directly
         } else if (typeof base == OBJECT) {
             props = base;

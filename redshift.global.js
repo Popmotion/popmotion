@@ -34,7 +34,7 @@ var parseArgs = require('./parse-args.js'),
         });
         
         self.queue = new Queue();
-       
+
         self.set(parseArgs.generic.apply(self, arguments));
     };
 
@@ -463,9 +463,8 @@ var utils = require('../utils/utils.js'),
             }
             
             if (typeof override == OBJECT) {
-                utils.merge(props, override);
+                props = utils.merge(props, override);
             }
-            
         // If object, assign directly
         } else if (typeof base == OBJECT) {
             props = base;
@@ -3944,13 +3943,7 @@ module.exports = {
         if (hasBase) {
             for (key in overwrite) {
                 if (overwrite.hasOwnProperty(key)) {
-                    if (this.isObj(overwrite[key]) && !isProtected(key)) {
-                        newObject[key] = this.merge(base[key], overwrite[key]);
-                    } else {
-                        newObject[key] = overwrite[key];
-                    }
-                    
-                    //newObject[key] = (this.isObj(overwrite[key]) && !isProtected(key)) ? this.merge(base[key], overwrite[key]) : overwrite[key];
+                    newObject[key] = (this.isObj(overwrite[key]) && !isProtected(key)) ? this.merge(base[key], overwrite[key]) : overwrite[key];
                 }
             }
         }

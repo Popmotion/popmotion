@@ -192,11 +192,7 @@ module.exports = {
         if (hasBase) {
             for (key in overwrite) {
                 if (overwrite.hasOwnProperty(key)) {
-                    if (this.isObj(overwrite[key]) && !isProtected(key)) {
-                        newObject[key] = this.merge(base[key], overwrite[key]);
-                    } else {
-                        newObject[key] = overwrite[key];
-                    }
+                    newObject[key] = (this.isObj(overwrite[key]) && !isProtected(key)) ? this.merge(base[key], overwrite[key]) : overwrite[key];
                 }
             }
         }
