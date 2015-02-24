@@ -3760,7 +3760,7 @@ var KEY = require('../opts/keys.js'),
     protectedProps = ['scope',  'dom'],
 
     isProtected = function (key) {
-        return (protectedProps.indexOf(key) === -1);
+        return (protectedProps.indexOf(key) !== -1);
     };
 
 module.exports = {
@@ -3937,43 +3937,24 @@ module.exports = {
         @return [object]: New object
     */
     mergeObject: function (base, overwrite) {
-        var newObject = this.copyObject(base),
+        var hasBase = this.isObj(base),
+            newObject = hasBase ? this.copy(base) : this.copy(overwrite),
             key = '';
-        
-        for (key in overwrite) {
-            if (overwrite.hasOwnProperty(key)) {
-                
-                // If this is a protected key, straight copy
-                if (isProtected(key)) {
-                    newObject[key] = overwrite[key];
-                    
-                // Or if this is a non-protected key and an object, recursive merge
-                } else if (this.isObj(overwrite[key])) {
-                    newObject[key] = this.merge(newObject[key], overwrite[key]);
-                
-                // Or we've dug to a value
-                } else {
-                     newObject[key] = this.copy(overwrite[key]);
-                }
-            }
-        }
-        
-        
-        
-        for (var key in overwrite) {
-            if (overwrite.hasOwnProperty(key)) {
-                if (this.isObj(overwrite[key])) {
-                    if (this.isObj(newObject[key])) {
-                        newObject[key] = this.merge(newObject[key], overwrite[key]);
+
+        if (hasBase) {
+            for (key in overwrite) {
+                if (overwrite.hasOwnProperty(key)) {
+                    if (this.isObj(overwrite[key]) && !isProtected(key)) {
+                        newObject[key] = this.merge(base[key], overwrite[key]);
                     } else {
-                       
+                        newObject[key] = overwrite[key];
                     }
-                } else {
-                    newObject[key] = overwrite[key];
+                    
+                    //newObject[key] = (this.isObj(overwrite[key]) && !isProtected(key)) ? this.merge(base[key], overwrite[key]) : overwrite[key];
                 }
             }
         }
-        
+
         return newObject;
     },
     
