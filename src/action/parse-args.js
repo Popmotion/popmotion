@@ -26,7 +26,7 @@ var utils = require('../utils/utils.js'),
         if (typeof base == STRING) {
             playlist = base.split(' ');
             playlistLength = playlist.length;
-            props = presets.getDefined(base[0]);
+            props = presets.getDefined(playlist[0]);
 
             // If we've had multiple presets, loop through and add each to the queue
             if (playlistLength > 1) {
@@ -45,8 +45,6 @@ var utils = require('../utils/utils.js'),
         } else if (typeof base == OBJECT) {
             props = base;
         }
-        
-        console.log(props);
         
         return props;
     };

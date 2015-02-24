@@ -132,7 +132,7 @@ module.exports = {
         
         for (var key in base) {
             if (base.hasOwnProperty(key)) {
-                newObject[key] = (this.isObj(base[key])) ? this.copy(base[key]) : base[key];
+                newObject[key] = (this.isObj(base[key]) && key !== 'scope' && key !== 'dom') ? this.copy(base[key]) : base[key];
             }
         }
         

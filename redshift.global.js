@@ -2,20 +2,16 @@
 "use strict";
 
 var parseArgs = require('./parse-args.js'),
-
-
-
-
+    Value = require('../types/value.js'),
+    Repo = require('../types/repo.js'),
     Queue = require('./queue.js'),
     Process = require('../process/process.js'),
-    process = require('./processor.js'),
     KEY = require('../opts/keys.js'),
+    processor = require('./processor.js'),
     defaultProps = require('../opts/action.js'),
     defaultValue = require('../opts/value.js'),
     calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
-    Value = require('../types/value.js'),
-    Repo = require('../types/repo.js'),
 
     Action = function () {
         var self = this;
@@ -33,7 +29,7 @@ var parseArgs = require('./parse-args.js'),
         // Register process wth cycl
         self.process = new Process(function (framestamp, frameDuration) {
 	        if (self.active) {
-                process(self, framestamp, frameDuration);
+                processor(self, framestamp, frameDuration);
 	        }
         });
         
@@ -119,6 +115,34 @@ Action.prototype = {
         this.set(parseArgs.track.apply(this, arguments));
         return this.start(KEY.RUBIX.INPUT);
     },
+    
+    /*
+        Set Action values and properties
+        
+        Syntax
+            .set(params)
+                @param [object]: Action properties
+            
+        @return [Action]
+    */
+    set: function (props) {
+        var values = this.values.get();
+
+        this.props.set(props);
+
+        if (props.values) {
+        	this.setValues(this.values, this.props.get());
+        }
+
+        // Create origins
+        for (var key in values) {
+            if (values.hasOwnProperty(key)) {
+                values[key].set('origin', values[key].get('current'));
+            }
+        }
+
+        return this;
+    },
 
     /*
         Start Action
@@ -141,7 +165,7 @@ Action.prototype = {
         self.firstFrame = true;
         
         self.process.start();
-        
+
         return self;
     },
     
@@ -312,34 +336,6 @@ Action.prototype = {
         return stepTaken;
     },
     
-    /*
-        Set Action values and properties
-        
-        Syntax
-            .set(params)
-                @param [object]: Action properties
-            
-        @return [Action]
-    */
-    set: function (props) {
-        var values = this.values.get();
-
-        this.props.set(props);
-
-        if (props.values) {
-        	this.setValues(this.values, this.props.get());
-        }
-
-        // Create origins
-        for (var key in values) {
-            if (values.hasOwnProperty(key)) {
-                values[key].set('origin', values[key].get('current'));
-            }
-        }
-        
-        return this;
-    },
-    
     setValues: function (newVals, inherit) {
         var values = this.values.get();
 
@@ -455,7 +451,7 @@ var utils = require('../utils/utils.js'),
         if (typeof base == STRING) {
             playlist = base.split(' ');
             playlistLength = playlist.length;
-            props = presets.getDefined(base[0]);
+            props = presets.getDefined(playlist[0]);
 
             // If we've had multiple presets, loop through and add each to the queue
             if (playlistLength > 1) {
@@ -474,8 +470,6 @@ var utils = require('../utils/utils.js'),
         } else if (typeof base == OBJECT) {
             props = base;
         }
-        
-        console.log(props);
         
         return props;
     };
@@ -767,7 +761,6 @@ Queue.prototype = {
         Add a set of arguments to queue
     */
     add: function () {
-        console.log(arguments);
         this.queue.push([].slice.call(arguments));
     },
     
@@ -3898,7 +3891,7 @@ module.exports = {
         
         for (var key in base) {
             if (base.hasOwnProperty(key)) {
-                newObject[key] = (this.isObj(base[key])) ? this.copy(base[key]) : base[key];
+                newObject[key] = (this.isObj(base[key]) && key !== 'scope' && key !== 'dom') ? this.copy(base[key]) : base[key];
             }
         }
         

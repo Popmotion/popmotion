@@ -1,20 +1,16 @@
 "use strict";
 
 var parseArgs = require('./parse-args.js'),
-
-
-
-
+    Value = require('../types/value.js'),
+    Repo = require('../types/repo.js'),
     Queue = require('./queue.js'),
     Process = require('../process/process.js'),
-    process = require('./processor.js'),
     KEY = require('../opts/keys.js'),
+    processor = require('./processor.js'),
     defaultProps = require('../opts/action.js'),
     defaultValue = require('../opts/value.js'),
     calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
-    Value = require('../types/value.js'),
-    Repo = require('../types/repo.js'),
 
     Action = function () {
         var self = this;
@@ -32,7 +28,7 @@ var parseArgs = require('./parse-args.js'),
         // Register process wth cycl
         self.process = new Process(function (framestamp, frameDuration) {
 	        if (self.active) {
-                process(self, framestamp, frameDuration);
+                processor(self, framestamp, frameDuration);
 	        }
         });
         
@@ -118,6 +114,34 @@ Action.prototype = {
         this.set(parseArgs.track.apply(this, arguments));
         return this.start(KEY.RUBIX.INPUT);
     },
+    
+    /*
+        Set Action values and properties
+        
+        Syntax
+            .set(params)
+                @param [object]: Action properties
+            
+        @return [Action]
+    */
+    set: function (props) {
+        var values = this.values.get();
+
+        this.props.set(props);
+
+        if (props.values) {
+        	this.setValues(this.values, this.props.get());
+        }
+
+        // Create origins
+        for (var key in values) {
+            if (values.hasOwnProperty(key)) {
+                values[key].set('origin', values[key].get('current'));
+            }
+        }
+
+        return this;
+    },
 
     /*
         Start Action
@@ -140,7 +164,7 @@ Action.prototype = {
         self.firstFrame = true;
         
         self.process.start();
-        
+
         return self;
     },
     
@@ -309,34 +333,6 @@ Action.prototype = {
         }
 
         return stepTaken;
-    },
-    
-    /*
-        Set Action values and properties
-        
-        Syntax
-            .set(params)
-                @param [object]: Action properties
-            
-        @return [Action]
-    */
-    set: function (props) {
-        var values = this.values.get();
-
-        this.props.set(props);
-
-        if (props.values) {
-        	this.setValues(this.values, this.props.get());
-        }
-
-        // Create origins
-        for (var key in values) {
-            if (values.hasOwnProperty(key)) {
-                values[key].set('origin', values[key].get('current'));
-            }
-        }
-        
-        return this;
     },
     
     setValues: function (newVals, inherit) {
