@@ -149,6 +149,15 @@ Action.prototype = {
         Stop current Action process
     */
     stop: function () {
+        this.queue.clear();
+        this.pause();
+        return this;
+    },
+    
+    /*
+        Pause current Action
+    */
+    pause: function () {
 	    var self = this,
 	        input = this.getProp('input');
 
@@ -160,15 +169,6 @@ Action.prototype = {
         }
 
         return self;
-    },
-    
-    /*
-        Pause current Action
-    */
-    pause: function () {
-	    this.stop();
-	    
-	    return this;
     },
     
     /*
@@ -300,22 +300,13 @@ Action.prototype = {
     */
     playNext: function () {
         var stepTaken = false,
-            playlist = this.props.get('playlist'),
-            playlistLength = playlist.length,
-            playhead = this.props.get('playhead'),
-            next = {};
-
-        // Check we have a playlist
-        if (playlistLength > 1) {
-            ++playhead;
-            
-            if (playhead < playlistLength) {
-                next = presets.getDefined(playlist[playhead]);
-                next.playhead = playhead;
-                this.set(next);
-                this.reset();
-                stepTaken = true;
-            }
+            nextInQueue = this.queue.next();
+        
+        if (nextInQueue) {
+            this.set(parseArgs.generic.apply(this, nextInQueue))
+                .reset();
+                
+            stepTaken = true;
         }
 
         return stepTaken;
@@ -861,15 +852,32 @@ var Queue = function () {
 
 Queue.prototype = {
     
+    /*
+        Add a set of arguments to queue
+    */
     add: function () {
         this.queue.push([].slice.call(arguments));
-        console.log(this.queue);
     },
     
+    /*
+        Get next set of arguments from queue
+    */
     next: function () {
-        return this.queue.shift()[0];
+        var queue = this.queue.shift(),
+            returnVal = false;
+        
+        if (queue.length) {
+            returnVal = queue[0];
+        } else {
+            this.clear();
+        }
+        
+        return returnVal;
     },
 
+    /*
+        Replace queue with empty array
+    */
     clear: function () {
         this.queue = [];
     }

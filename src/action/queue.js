@@ -6,15 +6,32 @@ var Queue = function () {
 
 Queue.prototype = {
     
+    /*
+        Add a set of arguments to queue
+    */
     add: function () {
         this.queue.push([].slice.call(arguments));
-        console.log(this.queue);
     },
     
+    /*
+        Get next set of arguments from queue
+    */
     next: function () {
-        return this.queue.shift()[0];
+        var queue = this.queue.shift(),
+            returnVal = false;
+        
+        if (queue.length) {
+            returnVal = queue[0];
+        } else {
+            this.clear();
+        }
+        
+        return returnVal;
     },
 
+    /*
+        Replace queue with empty array
+    */
     clear: function () {
         this.queue = [];
     }
