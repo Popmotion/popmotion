@@ -27,7 +27,7 @@ var utils = require('../utils/utils.js'),
             playlist = base.split(' ');
             playlistLength = playlist.length;
             props = presets.getDefined(base[0]);
-            
+
             // If we've had multiple presets, loop through and add each to the queue
             if (playlistLength > 1) {
                 for (; i < playlistLength; i++) {
@@ -46,19 +46,12 @@ var utils = require('../utils/utils.js'),
             props = base;
         }
         
+        
+        
         return props;
     };
 
 module.exports = {
-    
-    /*
-        TODO: 
-        
-        Add parsing over presets
-            base = presets.createBase(defs, override);
-            
-        Reimplement CSS parsing - maybe in DOM Action? 
-    */
     
     /*
         Parse play arguments

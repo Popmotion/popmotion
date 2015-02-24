@@ -300,11 +300,11 @@ Action.prototype = {
     playNext: function () {
         var stepTaken = false,
             nextInQueue = this.queue.next();
-        
-        if (nextInQueue) {
+
+        if (utils.isArray(nextInQueue)) {
             this.set(parseArgs.generic.apply(this, nextInQueue))
                 .reset();
-                
+
             stepTaken = true;
         }
 
@@ -399,11 +399,7 @@ Action.prototype = {
         @return [boolean]: Active status
     */
     isActive: function (active) {
-        if (active !== undefined) {
-            this.active = active;
-        }
-
-        return this.active;
+        return this.active = (active !== undefined) ? active : this.active;
     },
     
     /*

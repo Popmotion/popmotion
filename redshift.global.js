@@ -301,11 +301,11 @@ Action.prototype = {
     playNext: function () {
         var stepTaken = false,
             nextInQueue = this.queue.next();
-        
-        if (nextInQueue) {
+
+        if (utils.isArray(nextInQueue)) {
             this.set(parseArgs.generic.apply(this, nextInQueue))
                 .reset();
-                
+
             stepTaken = true;
         }
 
@@ -400,11 +400,7 @@ Action.prototype = {
         @return [boolean]: Active status
     */
     isActive: function (active) {
-        if (active !== undefined) {
-            this.active = active;
-        }
-
-        return this.active;
+        return this.active = (active !== undefined) ? active : this.active;
     },
     
     /*
@@ -460,7 +456,7 @@ var utils = require('../utils/utils.js'),
             playlist = base.split(' ');
             playlistLength = playlist.length;
             props = presets.getDefined(base[0]);
-            
+
             // If we've had multiple presets, loop through and add each to the queue
             if (playlistLength > 1) {
                 for (; i < playlistLength; i++) {
@@ -479,19 +475,12 @@ var utils = require('../utils/utils.js'),
             props = base;
         }
         
+        
+        
         return props;
     };
 
 module.exports = {
-    
-    /*
-        TODO: 
-        
-        Add parsing over presets
-            base = presets.createBase(defs, override);
-            
-        Reimplement CSS parsing - maybe in DOM Action? 
-    */
     
     /*
         Parse play arguments
@@ -641,48 +630,6 @@ Presets.prototype = {
                 
             }
         } // end for
-    },
-    
-    
-    /*
-        Create base action
-        
-        @param [string || array || object]:
-            String: Name or space-delimited playlist of actions
-            Array: Playlist of actions
-            Object: Raw action
-        @param [object]: Action override
-    */
-    createBase: function (defs, override) {
-        var baseAction = {},
-            actionList = [];
-
-        // If this is a straight action
-        if (utils.isObj(defs)) {
-            baseAction = defs;
-            baseAction.playlist = [];
-            
-        // These are previously defined actions
-        } else {
-            // Comma-delimited string or single action name
-            if (utils.isString(defs)) {
-                actionList = defs.split(" ");
-                
-            // Array of action names
-            } else {
-                actionList = defs;
-            }
-            
-            baseAction = this.getDefined(actionList[0]);
-            baseAction.playlist = actionList;
-        }
-        
-        // Apply overrides if present
-        if (utils.isObj(override)) {
-            baseAction = this.merge(baseAction, override);
-        }
-        
-        return baseAction;
     },
     
     
@@ -863,15 +810,17 @@ Queue.prototype = {
         Get next set of arguments from queue
     */
     next: function () {
-        var queue = this.queue.shift(),
+        var queue = this.queue,
             returnVal = false;
+        
+        queue.shift();
         
         if (queue.length) {
             returnVal = queue[0];
         } else {
             this.clear();
         }
-        
+
         return returnVal;
     },
 

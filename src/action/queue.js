@@ -17,15 +17,17 @@ Queue.prototype = {
         Get next set of arguments from queue
     */
     next: function () {
-        var queue = this.queue.shift(),
+        var queue = this.queue,
             returnVal = false;
+        
+        queue.shift();
         
         if (queue.length) {
             returnVal = queue[0];
         } else {
             this.clear();
         }
-        
+
         return returnVal;
     },
 
