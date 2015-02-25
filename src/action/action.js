@@ -7,6 +7,7 @@ var parseArgs = require('./parse-args.js'),
     Process = require('../process/process.js'),
     KEY = require('../opts/keys.js'),
     processor = require('./processor.js'),
+    routes = require('./routes.js'),
     defaultProps = require('../opts/action.js'),
     defaultValue = require('../opts/value.js'),
     calc = require('../utils/calc.js'),
@@ -128,10 +129,12 @@ Action.prototype = {
         var values = this.values.get();
 
         this.props.set(props);
+        
+        props.values = props.values || {};
 
-        if (props.values) {
-        	this.setValues(props.values, this.props.get());
-        }
+        routes.parse(props, props.values);
+
+    	this.setValues(props.values, this.props.get());
 
         // Create origins
         for (var key in values) {

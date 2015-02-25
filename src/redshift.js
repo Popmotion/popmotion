@@ -3,9 +3,9 @@
 var Action = require('./action/action.js'),
     Input = require('./input/input.js'),
     presets = require('./action/presets.js'),
+    route = require('./routes/manager.js'),
     easing = require('./utils/easing.js'),
     calc = require('./utils/calc.js'),
-    utils = require('./utils/utils.js'),
     shim = require('./utils/shim.js'),
     Process = require('./process/process.js'),
     Redshift = function () {
@@ -79,11 +79,38 @@ Redshift.prototype = {
         return this;
     },
     
+    /*
+        Add value route
+        
+        The default values object is .values, however any provided object
+        will be parsed into values and given a .route property that is the name of
+        its original object. For instance providing
+        
+            example: {
+                test: 20
+            }
+            
+        will be parsed into
+        
+            values: {
+                test: {
+                    current: 20,
+                    route: 'example'
+                }
+            }
+            
+        If we provide a custom route with this name, we can custom-parse values
+        on the way in, and also on the way out.
+    */
+    addRoute: function () {
+        route.add.apply(route, arguments);
+        
+        return this;
+    }
+    
     //defineSimulation: function () {},
     
-    calc: calc,
-    
-    utils: utils
+    calc: calc
 };
 
 module.exports = new Redshift();

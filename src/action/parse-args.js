@@ -107,7 +107,7 @@ module.exports = {
             
             // Preset if string
             if (typeof arguments[i] === STRING) {
-                // load preset
+                props = presets.getDefined(arguments[i]);
                 
             // Or override
             } else {

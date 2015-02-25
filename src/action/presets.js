@@ -68,7 +68,7 @@ Presets.prototype = {
 
         for (; i < keysLength; i++) {
             thisProp = presetStore[keys[i]];
-            console.log(keys[i], presetStore);
+
             if (thisProp) {
                 props = utils.merge(props, thisProp);
             }
