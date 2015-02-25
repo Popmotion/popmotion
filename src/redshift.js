@@ -1,7 +1,6 @@
 "use strict";
 
 var Action = require('./action/action.js'),
-    DomAction = require('./dom/dom-action.js'),
     Input = require('./input/input.js'),
     presets = require('./action/presets.js'),
     easing = require('./utils/easing.js'),
@@ -23,15 +22,6 @@ Redshift.prototype = {
     */
     newAction: function (defs, override) {
         return new Action(defs, override);
-    },
-
-    /*
-        Create a new DOM controller
-
-        @return [Atom]: Newly-created Atom
-    */
-    newDomAction: function (element) {
-        return new DomAction(element);
     },
     
     /*

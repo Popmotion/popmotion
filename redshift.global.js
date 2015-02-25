@@ -422,7 +422,7 @@ Action.prototype = {
 };
 
 module.exports = Action;
-},{"../opts/action.js":17,"../opts/keys.js":18,"../opts/value.js":19,"../process/process.js":22,"../types/repo.js":26,"../types/value.js":27,"../utils/calc.js":28,"../utils/utils.js":34,"./parse-args.js":2,"./processor.js":4,"./queue.js":5}],2:[function(require,module,exports){
+},{"../opts/action.js":10,"../opts/keys.js":11,"../opts/value.js":12,"../process/process.js":15,"../types/repo.js":19,"../types/value.js":20,"../utils/calc.js":21,"../utils/utils.js":27,"./parse-args.js":2,"./processor.js":4,"./queue.js":5}],2:[function(require,module,exports){
 "use strict";
 
 var utils = require('../utils/utils.js'),
@@ -552,7 +552,7 @@ module.exports = {
     
     generic: generic
 };
-},{"../input/pointer.js":16,"../utils/utils.js":34,"./presets.js":3}],3:[function(require,module,exports){
+},{"../input/pointer.js":9,"../utils/utils.js":27,"./presets.js":3}],3:[function(require,module,exports){
 "use strict";
 
 var KEY = require('../opts/keys.js'),
@@ -635,7 +635,7 @@ Presets.prototype = {
 };
 
 module.exports = new Presets();
-},{"../opts/keys.js":18,"../utils/utils.js":34}],4:[function(require,module,exports){
+},{"../opts/keys.js":11,"../utils/utils.js":27}],4:[function(require,module,exports){
 /*
     Process actions
 */
@@ -744,7 +744,7 @@ module.exports = function (action, framestamp, frameDuration) {
 
     action.framestamp = framestamp;
 };
-},{"../opts/keys.js":18,"../utils/calc.js":28,"./rubix.js":6}],5:[function(require,module,exports){
+},{"../opts/keys.js":11,"../utils/calc.js":21,"./rubix.js":6}],5:[function(require,module,exports){
 "use strict";
 
 var Queue = function () {
@@ -1046,7 +1046,7 @@ Rubix.prototype = {
 rubixController = new Rubix();
 
 module.exports = rubixController;
-},{"../opts/keys.js":18,"../utils/calc.js":28,"../utils/easing.js":29,"../utils/utils.js":34,"./simulate.js":7}],7:[function(require,module,exports){
+},{"../opts/keys.js":11,"../utils/calc.js":21,"../utils/easing.js":22,"../utils/utils.js":27,"./simulate.js":7}],7:[function(require,module,exports){
 "use strict";
 
 var frictionStopLimit = .2,
@@ -1122,498 +1122,7 @@ Simulate.prototype = {
 simulate = new Simulate();
 
 module.exports = simulate;
-},{"../utils/calc.js":28}],8:[function(require,module,exports){
-"use strict";
-
-var templates = require('../css/templates.js'),
-    lookup = require('../css/splitter-lookup.js'),
-    
-    /*
-        Generate a precache
-        
-        Loops through Redshift output and maps parentUnit variables
-        parent.unit objects
-        
-        @param [object]: Object of individual CSS output
-        @param [object]: All Action values
-        @return [object]: Precache
-    */
-    precache = function (props, values) {
-        var precache = {},
-            prop, value, parent, unit;
-
-        for (var key in props) {
-            prop = props[key];
-            value = values[key].store,
-            parent = value.parent,
-            unit = value.unitName;
-            
-            // If this property needs to be recombined
-            if (parent && unit) {
-                precache[parent] = precache[parent] || {};
-                precache[parent][unit] = props[key];
-            
-            // Or it we can assign directly
-            } else {
-                precache[key] = props[key];
-            }
-        }
-
-        return precache;
-    },
-    
-    /*
-        Assign CSS
-        
-        @param [object]: Precache of CSS properties
-        @param [object] (optional): Cache of previous CSS properties
-        @return [object]: Generated object of valid CSS properties
-    */
-    assignCSS = function (precache, currentCache) {
-        var latest = {},
-            cache = {},
-            rule = '';
-        
-        // Loop through precache and generate rules
-        for (var key in precache) {
-            rule = generateRule(key, precache[key]);
-            
-            // Only add if changed
-            if (currentCache && currentCache[key] !== rule) {
-                latest[key] = rule;
-            }
-            
-            cache[key] = rule;
-        }
-        
-        // handle transform properties
-
-        return {
-            latest: latest,
-            cache: cache
-        };
-    },
-    
-    generateRule = function (key, values) {
-        var template = templates[lookup[key]],
-            rule = '';
-        
-        if (template) {
-            rule = template(values);
-        } else {
-            rule = values;
-        }
-        
-        return rule;
-    };
-
-module.exports = function (output, cache, values) {
-    return assignCSS(precache(output, values), cache);
-}
-},{"../css/splitter-lookup.js":11,"../css/templates.js":12}],9:[function(require,module,exports){
-"use strict";
-
-module.exports = {
-    colors: ['Red', 'Green', 'Blue', 'Alpha'],
-    positions: ['X', 'Y', 'Z'],
-    dimensions: ['Top', 'Right', 'Bottom', 'Left'],
-    shadow: ['X', 'Y', 'Radius', 'Spread', 'Color']
-};
-},{}],10:[function(require,module,exports){
-"use strict";
-
-var cssStyler = function () {
-	var testElement = document.getElementsByTagName('body')[0],
-		prefixes = ['Webkit','Moz','O','ms', ''],
-		prefixesLength = prefixes.length,
-		cachedPrefix = '',
-		cache = {},
-		
-		/*
-			Test style property for prefixed version
-			
-			@param [string]: Style property
-			@return [string]: Cached property name
-		*/
-		testPrefix = function (key) {
-			cache[key] = key;
-
-			for (var i = 0; i < prefixesLength; i++) {
-				var prefixed = prefixes[i] + key.charAt(0).toUpperCase() + key.slice(1);
-
-				if (testElement.style.hasOwnProperty(prefixed)) {
-					cache[key] = prefixed;
-				}
-			}
-			
-			return cache[key];
-		};
-		
-	/*
-		Stylee function call
-		
-		Syntax
-			
-			Get property
-				style(element, 'property');
-				
-			Set property
-				style(element, {
-					foo: 'bar'
-				});
-	*/
-	return function (element, prop) {
-		// If prop is a string, we're requesting a property
-		if (typeof prop === 'string') {
-			return window.getComputedStyle(element, null)[cache[prop] || testPrefix(prop)];
-		
-		// If it's an object, we're setting
-		} else {
-			
-			for (var key in prop) {
-				if (prop.hasOwnProperty(key)) {
-					element.style[cache[key] || testPrefix(key)] = prop[key];
-				}
-			}
-			
-			return this;
-		}
-	}
-};
-
-module.exports = new cssStyler();
-},{}],11:[function(require,module,exports){
-"use strict";
-
-var ARRAY = 'array',
-    COLOR = 'color',
-    POSITIONS = 'positions',
-    DIMENSIONS = 'dimensions',
-    SHADOW = 'shadow';
-
-module.exports = {
-    // Color properties
-    color: COLOR,
-    backgroundColor: COLOR,
-    borderColor: COLOR,
-    borderTopColor: COLOR,
-    borderRightColor: COLOR,
-    borderBottomColor: COLOR,
-    borderLeftColor: COLOR,
-    outlineColor: COLOR,
-
-    // Dimensions
-    margin: DIMENSIONS,
-    padding: DIMENSIONS,
-
-    // Positions
-    backgroundPosition: POSITIONS,
-    perspectiveOrigin: POSITIONS,
-    transformOrigin: POSITIONS,
-    skew: POSITIONS,
-    scale: POSITIONS,
-    translate: POSITIONS,
-    rotate: POSITIONS,
-
-    // Arrays
-    matrix: ARRAY,
-    matrix3d: ARRAY,
-    
-    // Shadows
-    textShadow: SHADOW,
-    boxShadow: SHADOW
-};
-},{}],12:[function(require,module,exports){
-"use strict";
-
-var dictionary = require('./dictionary.js'),
-
-    defaultValues = {
-        Alpha: 1
-    },
-
-    functionCreate = function (value, prefix) {
-        return prefix + '(' + value + ')';
-    },
-
-    createSpaceDelimited = function (object, terms) {
-        return createDelimitedString(object, terms, ' ');
-    },
-    
-    createCommaDelimited = function (object, terms) {
-        return createDelimitedString(object, terms, ', ');
-    },
-    
-    createDelimitedString = function (object, terms, delimiter) {
-        var string = '',
-            termsLength = terms.length;
-        
-        for (var i = 0; i < termsLength; i++) {
-            if (object[terms[i]] !== undefined) {
-                string += object[terms[i]];
-            } else {
-                if (defaultValues[terms[i]] !== undefined) {
-                    string += defaultValues[terms[i]];
-                }
-            }
-            
-            string += delimiter;
-        }
-    
-        return string.slice(0, - delimiter.length);
-    },
-
-    templates = {
-        
-        array: function (values) {
-            var rule = '';
-
-            for (var key in values) {
-                rule += value[key] + ', ';
-            }
-            
-            return rule.slice(0, -2);
-        },
-        
-        color: function (values) {
-            return functionCreate(createCommaDelimited(values, dictionary.colors), 'rgba');
-        },
-        
-        dimensions: function (values) {
-            return createSpaceDelimited(values, dictionary.dimensions);
-        },
-        
-        positions: function (values) {
-            return createSpaceDelimited(values, dictionary.positions);
-        },
-        
-        shadow: function (values) {
-            var shadowTerms = dictionary.shadow.slice(0,4);
-            
-            return createSpaceDelimited(values, shadowTerms) + templates.color(values);
-        }
-        
-    };
-
-module.exports = templates;
-},{"./dictionary.js":9}],13:[function(require,module,exports){
-"use strict";
-
-var Action = require('../action/action.js'),
-    calc = require('../utils/calc.js'),
-    parse = function () {},
-    outputCss = require('./output.js'),
-    body,
-    
-    /*
-        Dom Action controller
-        
-        @param [DOM element]
-    */
-    DomAction = function (element) {
-        this.dom = element;
-        this.css = {};
-        
-        this.action = new Action({
-            dom: element,
-            scope: this,
-            onChange: outputCss
-        });
-    };
-    
-DomAction.prototype = {
-    /*
-        Animate provided properties
-        
-        @param [object]: Object of valid CSS properties to animate
-        @param [number] (optional): Duration in ms
-        @param [string] (optional): Name of easing function
-        @param [function](optional): onEnd callback
-    */
-    play: function () {
-        this.action.play(parse.playArgs.apply(parse, arguments));
-        return this;
-    },
-    
-    /*
-        Track
-        
-        @param [object] (optional): Object of valid CSS properties to track
-        @param [event || Input): Originating pointer event or Input
-    */
-    track: function () {
-        this.action.track.apply(this.action, parse.trackArgs.apply(parse, arguments));
-        return this;
-    },
-    
-    /*
-        
-    */
-    run: function () {
-        this.action.run(parse.valuesToCSS(arguments[0]));
-        return this;
-    },
-    
-    /*
-        Returns element width
-        
-        @return [number]: width in px
-    */
-    width: function () {
-        return this.dom.offsetWidth;
-    },
-    
-    /*
-        Returns element height
-        
-        @return [number]: height in px
-    */
-    height: function () {
-        return this.dom.offsetHeight;
-    },
-    
-    /*
-        Returns absolute pageX
-        
-        @return [number]: pageX in px
-    */
-    x: function () {
-        return this.rect().x;
-    },
-    
-    /*
-        Returns absolute pageY
-        
-        @return [number]: pageY in px
-    */
-    y: function () {
-        return this.rect().y;
-    },
-    
-    /*
-        Returns X of element center
-        
-        @return [number]: Element center X in px
-    */
-    centerX: function () {
-        return this.rect().centerX;
-    },
-    
-    /*
-        Returns Y of element center
-        
-        @return [number]: Element center Y in px
-    */
-    centerY: function () {
-        return this.rect().centerY;
-    },
-    
-    /*
-        Radius of element (if element is circular)
-        
-        @return [number]: Radius of element
-    */
-    radius: function () {
-        return this.width() / 2;
-    },
-    
-    /*
-        Returns element position relative to viewport
-            left/right/top/bottom/width/height
-        
-        @return [object]: Element position
-    */
-    clientRect: function () {
-        return this.dom.getBoundingClientRect();
-    },
-    
-    /*
-        Returns element position relative to viewport
-        and document
-            Viewport: left/right/top/bottom/width/height
-            Document: x/y/centerX/centerY
-    */
-    rect: function () {
-        var rect = this.clientRect(),
-            bodyRect = body.clientRect();
-        
-        rect.x = rect.left - bodyRect.left;
-        rect.y = rect.top - bodyRect.top;
-        rect.centerX = rect.x + (rect.width / 2);
-        rect.centerY = rect.y + (rect.height / 2);
-        
-        return rect;
-    },
-    
-    centerDistance: function () {
-        var rect = this.rect(),
-            targetRect = target.rect();
-            
-        return redshift.calc.distance2D({
-                x: rect.centerX,
-                y: rect.centerY
-            },{
-                x: targetRect.centerX,
-                y: targetRect.centerY
-            });
-    },
-
-    /*
-        Return distance between two circular objects
-        
-        @param [Core]: Target element
-        @return [number]: Distance in px
-    */
-    radialDistance: function (target) {
-        var rect = this.rect(),
-            targetRect = target.rect(),
-            thisRadius = rect.width / 2,
-            targetRadius = targetRect.width / 2,
-            centerDistance = calc.distance2D({
-                x: rect.centerX,
-                y: rect.centerY
-            },{
-                x: targetRect.centerX,
-                y: targetRect.centerY
-            });
-            
-        return centerDistance - targetRadius - thisRadius;
-    },
-    
-    /*
-        Check for radial collision with target
-        
-        @param [Core]: Target element
-        @return [boolean]: True if collision
-    */
-    radialCollision: function (target) {
-        return (this.radialDistance(target) <= 0) ? true : false;
-    }
-};
-
-// Create a single reference to the body tag
-body = new DomAction(document.body);
-    
-module.exports = DomAction;
-},{"../action/action.js":1,"../utils/calc.js":28,"./output.js":14}],14:[function(require,module,exports){
-"use strict";
-
-var build = require('../css/builder.js'),
-    css = require('../css/set.js');
-
-module.exports = function (output) {
-    var props = this.action.props.store,
-        values = this.action.values.store,
-        dom = props.dom,
-        cssState;
-
-    if (dom) {
-        cssState = build(output, props.css, values);
-        css(props.dom, cssState.latest);
-        props.css = cssState.cache;
-    }
-};
-},{"../css/builder.js":8,"../css/set.js":10}],15:[function(require,module,exports){
+},{"../utils/calc.js":21}],8:[function(require,module,exports){
 /*
     Input controller
 */
@@ -1740,7 +1249,7 @@ Input.prototype = {
 };
 
 module.exports = Input;
-},{"../utils/calc.js":28,"../utils/history.js":31,"../utils/utils.js":34}],16:[function(require,module,exports){
+},{"../utils/calc.js":21,"../utils/history.js":24,"../utils/utils.js":27}],9:[function(require,module,exports){
 "use strict";
 
 var Input = require('./input.js'),
@@ -1829,7 +1338,7 @@ Pointer.prototype.stop = function () {
 };
 
 module.exports = Pointer;
-},{"../opts/keys.js":18,"./input.js":15}],17:[function(require,module,exports){
+},{"../opts/keys.js":11,"./input.js":8}],10:[function(require,module,exports){
 "use strict";
 
 var rubix = require('../action/rubix.js');
@@ -1906,7 +1415,7 @@ module.exports = {
         
     */
 };
-},{"../action/rubix.js":6}],18:[function(require,module,exports){
+},{"../action/rubix.js":6}],11:[function(require,module,exports){
 /*
     String constants
     ----------------------------------------
@@ -1928,7 +1437,7 @@ module.exports = {
         TOUCHMOVE: 'touchmove',
     }
 };
-},{}],19:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 "use strict";
 
 module.exports = {
@@ -2029,7 +1538,7 @@ module.exports = {
     // [number]: Factor of movement outside of maximum range (ie 0.5 will move half as much as 1)
     escapeAmp: 0
 };
-},{}],20:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 /*
     The loop
 */
@@ -2098,7 +1607,7 @@ Loop.prototype = {
 };
 
 module.exports = new Loop();
-},{"./timer.js":23}],21:[function(require,module,exports){
+},{"./timer.js":16}],14:[function(require,module,exports){
 "use strict";
 
 var theLoop = require('./loop.js'),
@@ -2269,7 +1778,7 @@ ProcessManager.prototype = {
 };
 
 module.exports = new ProcessManager();
-},{"./loop.js":20}],22:[function(require,module,exports){
+},{"./loop.js":13}],15:[function(require,module,exports){
 /*
     Process
     =======================
@@ -2456,7 +1965,7 @@ Process.prototype = {
 };
 
 module.exports = Process;
-},{"./manager.js":21}],23:[function(require,module,exports){
+},{"./manager.js":14}],16:[function(require,module,exports){
 "use strict";
 
 var maxElapsed = 30,
@@ -2476,11 +1985,10 @@ Timer.prototype = {
 };
 
 module.exports = Timer;
-},{}],24:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 "use strict";
 
 var Action = require('./action/action.js'),
-    DomAction = require('./dom/dom-action.js'),
     Input = require('./input/input.js'),
     presets = require('./action/presets.js'),
     easing = require('./utils/easing.js'),
@@ -2502,15 +2010,6 @@ Redshift.prototype = {
     */
     newAction: function (defs, override) {
         return new Action(defs, override);
-    },
-
-    /*
-        Create a new DOM controller
-
-        @return [Atom]: Newly-created Atom
-    */
-    newDomAction: function (element) {
-        return new DomAction(element);
     },
     
     /*
@@ -2576,7 +2075,7 @@ Redshift.prototype = {
 };
 
 module.exports = new Redshift();
-},{"./action/action.js":1,"./action/presets.js":3,"./dom/dom-action.js":13,"./input/input.js":15,"./process/process.js":22,"./utils/calc.js":28,"./utils/easing.js":29,"./utils/shim.js":33,"./utils/utils.js":34}],25:[function(require,module,exports){
+},{"./action/action.js":1,"./action/presets.js":3,"./input/input.js":8,"./process/process.js":15,"./utils/calc.js":21,"./utils/easing.js":22,"./utils/shim.js":26,"./utils/utils.js":27}],18:[function(require,module,exports){
 (function (global){
 /*
     Bezier function generator
@@ -2734,7 +2233,7 @@ var NEWTON_ITERATIONS = 8,
 
 module.exports = Bezier;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],26:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 "use strict";
 
 var utils = require('../utils/utils.js'),
@@ -2791,7 +2290,7 @@ Repo.prototype = {
 };
 
 module.exports = Repo;
-},{"../utils/utils.js":34}],27:[function(require,module,exports){
+},{"../utils/utils.js":27}],20:[function(require,module,exports){
 "use strict";
 
 var calc = require('../utils/calc.js'),
@@ -2915,7 +2414,7 @@ var calc = require('../utils/calc.js'),
     };
 
 module.exports = Value;
-},{"../utils/calc.js":28,"../utils/resolve.js":32,"../utils/utils.js":34,"./repo.js":26}],28:[function(require,module,exports){
+},{"../utils/calc.js":21,"../utils/resolve.js":25,"../utils/utils.js":27,"./repo.js":19}],21:[function(require,module,exports){
 /*
     Calculators
     ----------------------------------------
@@ -3306,7 +2805,7 @@ module.exports = {
         return this.value(easedProgress, from, to);
     }
 };
-},{"./utils.js":34}],29:[function(require,module,exports){
+},{"./utils.js":27}],22:[function(require,module,exports){
 /*
     Easing functions
     ----------------------------------------
@@ -3552,9 +3051,9 @@ EasingFunction.prototype = {
 
 module.exports = new EasingFunction();
 
-},{"../types/bezier.js":25,"./calc.js":28}],30:[function(require,module,exports){
+},{"../types/bezier.js":18,"./calc.js":21}],23:[function(require,module,exports){
 window.redshift = require('../redshift.js');
-},{"../redshift.js":24}],31:[function(require,module,exports){
+},{"../redshift.js":17}],24:[function(require,module,exports){
 "use strict";
 
 var // [number]: Default max size of history
@@ -3626,7 +3125,7 @@ History.prototype = {
 };
 
 module.exports = History;
-},{}],32:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 /*
     Property resolver
     -------------------------------------
@@ -3672,7 +3171,7 @@ module.exports = function (newValue, currentValue, parent, scope) {
     
     return newValue;
 };
-},{"./utils.js":34}],33:[function(require,module,exports){
+},{"./utils.js":27}],26:[function(require,module,exports){
 "use strict";
 
 var checkRequestAnimationFrame = function () {
@@ -3748,7 +3247,7 @@ module.exports = function () {
     checkRequestAnimationFrame();
     checkIndexOf();
 };
-},{}],34:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 /*
     Utility functions
 */
@@ -4011,4 +3510,4 @@ module.exports = {
     }
     
 };
-},{"../opts/keys.js":18}]},{},[30]);
+},{"../opts/keys.js":11}]},{},[23]);
