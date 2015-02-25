@@ -3,20 +3,11 @@
 var utils = require('../utils/utils.js'),
     isProtected = require('../utils/protected.js'),
 
-    routes = {
-        css: {
-            
-        },
-
-        attr: {
-            
-        }
-    };
+    routes = {},
+    routeKeys = [],
+    numRoutes;
 
 module.exports = {
-    
-    // [Array]: Route tokens
-    routeKeys = ['css', 'attr'],
     
     /*
         Add route
@@ -31,6 +22,8 @@ module.exports = {
                 .onEnd
     */
     add: function (route) {
+        routeKeys.push(route.name);
+        numRoutes = routeKeys.length;
         routes[route.name] = route;
     },
     
@@ -46,16 +39,18 @@ module.exports = {
         @param [object]: Values
     */
     parse: function (source, destination) {
-        var route = '';
-        
-        for (var key in source) {
-            if (utils.isObj(source[key]) && !isProtected(key) && key !== 'values') {
-                route = (routes[key] && routes[key].parse) ? key : 'generic';
+        var routeName = '',
+            route,
+            i = 0;
 
-                routes[route].parse(source[key], destination);
+        for (; i < numRoutes; i++) {
+            routeName = routeKeys[i]
+            route = routes[routeName];
+
+            if (route && route.parse) {
+                route.parse(source[routeName], destination);
             }
         }
-        
     }
     
 }
