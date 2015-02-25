@@ -36,19 +36,19 @@ Presets.prototype = {
                 
         @return [Redshift]
     */
-    define: function () {
-        var args = arguments,
-            key = '',
-            propsArg1 = (args[1] === undefined),
-            props = propsArg1 ? args[0] : {};
-    
-        if (propsArg1) {
-            props[args[0]] = args[1];
+    define: function (name, preset) {
+        var presets = {},
+            key = '';
+
+        if (utils.isObj(name)) {
+            presets = name;
+        } else {
+            presets[name] = preset;
         }
-    
-        for (key in props) {
-            if (props.hasOwnProperty(key)) {
-                presetStore[key] = props[key];
+
+        for (key in presets) {
+            if (presets.hasOwnProperty(key)) {
+                presetStore[key] = presets[key];
             }
         }
     },
@@ -65,10 +65,10 @@ Presets.prototype = {
             keys = generateKeys(key),
             keysLength = keys.length,
             i = 0;
-        
+
         for (; i < keysLength; i++) {
             thisProp = presetStore[keys[i]];
-
+            console.log(keys[i], presetStore);
             if (thisProp) {
                 props = utils.merge(props, thisProp);
             }

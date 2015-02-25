@@ -84,7 +84,7 @@ module.exports = {
                 props.onEnd = arg;
             }
         }
-        
+
         // props.values = parse.cssToValues(arg, 'to');
         return props;
     },
