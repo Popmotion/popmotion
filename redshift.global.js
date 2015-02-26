@@ -4,7 +4,6 @@
 var parseArgs = require('./parse-args.js'),
     Value = require('../types/value.js'),
     Repo = require('../types/repo.js'),
-    //Bucket = require('../types/bucket.js'),
     Queue = require('./queue.js'),
     Process = require('../process/process.js'),
     KEY = require('../opts/keys.js'),
@@ -18,8 +17,8 @@ var parseArgs = require('./parse-args.js'),
     Action = function () {
         var self = this;
         
-        // Create value manager
-       // self.values = new Bucket();
+        // Create value repo
+        self.values = {};
         
         // Create new property manager
         defaultProps.scope = this;
@@ -135,12 +134,11 @@ Action.prototype = {
         self.props.set(props);
 
         // Loop over new values and set
-        routes.shard(function (route) {
+        routes.shard(function (route, bucket) {
             var baseValue = {
                     route: route.name
                 },
                 mergeIn = {},
-                bucket = props[route.name],
                 value;
 
             for (key in bucket) {
@@ -158,15 +156,19 @@ Action.prototype = {
         return self;
     },
     
+    /*
+        Loop through all values and create origin points
+    */
     resetOrigins: function () {
-        var values = this.values.get();
+        var values = this.values;
 
-        // Create origins
-        for (var key in values) {
-            if (values.hasOwnProperty(key)) {
-                values[key].set('origin', values[key].get('current'));
+        routes.shard(function (route, bucket) {
+            for (var key in bucket) {
+                if (bucket.hasOwnProperty(key)) {
+                    bucket[key].set('origin', bucket[key].get('current'));
+                }
             }
-        }
+        }, values);
     },
 
     /*
@@ -378,10 +380,12 @@ Action.prototype = {
     },
     
     
-    setValue: function (key, value, inherit) {
-        var existing = this.getValue(key),
+    setValue: function (key, value, inherit, route) {
+        var existing = this.getValue(key, route),
             newVal;
 
+        route = route || routes.defaultRoute;
+            
         // Update if value exists
         if (existing) {
             existing.set(value, inherit);
@@ -391,17 +395,18 @@ Action.prototype = {
             newVal = new Value(defaultValue, this, key);
             newVal.set(value, inherit);
             
-            
-
-            this.values.set(key, newVal);
+            this.values[routes.getName(route)][key] = newVal;
         }
 
         return this;
     },
     
     
-    getValue: function (key) {
-        return this.values.get(key);
+    getValue: function (key, route) {
+        route = routes.getName(route);
+        this.values[route] = this.values[route] || {};
+
+        return (this.values[route]) ? this.values[route][key] : undefined;
     },
     
     
@@ -675,18 +680,12 @@ var Rubix = require('./rubix.js'),
 module.exports = function (action, framestamp, frameDuration) {
     var props = action.props.store,
         data = action.data.store,
-        values = action.values.store,
-        order = props.order = props.order || [],
-        orderLength = order.length,
+        values = action.values,
         rubix = Rubix[props.rubix],
-        key = '',
-        value,
-        valueRubix,
-        output,
         hasChanged = false;
     
     action.output = {};
-
+    
     // Update elapsed
     if (rubix.updateInput) {
         rubix.updateInput(action, props, framestamp);
@@ -705,71 +704,86 @@ module.exports = function (action, framestamp, frameDuration) {
     if (props.input) {
         action.output.input = props.input.onFrame(framestamp);
     }
-
-    // Update values
-    for (var i = 0; i < orderLength; i++) {
-        key = order[i];
-
-        // Get value
-        value = values[key].store;
-
-        // Load value rubix
-        valueRubix = rubix;
-        if (value.link) {
-            valueRubix = (value.link !== KEY.ANGLE_DISTANCE) ? Rubix['Link'] : Rubix['AngleAndDistance'];
-        }
-        
-        // Calculate new value
-        output = valueRubix.process(key, value, values, props, action, frameDuration);
-
-        // Limit if range set
-        if (rubix.limit) {
-            output = rubix.limit(output, value);
-        }
-        
-        // Round value if rounding on
-        if (value.round) {
-            output = Math.round(output);
-        }
-        
-        // Update velocity
-        value.velocity = calc.speedPerSecond(calc.difference(value.current, output), frameDuration);
-        
-        // Check if changed and update
-        if (value.current != output) {
-            hasChanged = true;
-        }
-        
-        // Set current and add unit (if any) for output
-        value.current = output;
-        action.output[key] = (value.unit) ? output + value.unit : output;
-    }
-
-    // Fire onFrame callback
-    if (props.onFrame) {
-        props.onFrame.call(props.scope, action.output, data);
-    }
-
-    // Fire onChange callback
-    if (hasChanged && props.onChange) {
-        props.onChange.call(props.scope, action.output, data);
-        routes.onChange(props, action, values, props);
-    }
     
-    // Fire onEnd callback
+    // Generate output
+    routes.shard(function (route, bucket) {
+        var routeName = route.name,
+            i = 0,
+            key = '',
+            order = props.order[routeName] || [],
+            orderLength = order.length,
+            valueRubix,
+            output = {};
+        
+        /****
+            
+                        Make per-route order
+            *****/
+        
+        
+        for (; i < orderLength; i++) {
+            
+            key = order[i];
+            
+            // Get value
+            value = bucket[key].store;
+            
+            // Load rubix for value
+            valueRubix = rubix;
+            if (value.link) {
+                valueRubix = (value.link !== KEY.ANGLE_DISTANCE) ? Rubix['Link'] : Rubix['AngleAndDistance'];
+            }
+        
+            // Calculate new value
+            output = valueRubix.process(key, value, values, props, action, frameDuration);
+
+            // Limit if range set
+            if (rubix.limit) {
+                output = rubix.limit(output, value);
+            }
+        
+            // Round value if rounding on
+            if (value.round) {
+                output = Math.round(output);
+            }
+        
+            // Update velocity
+            value.velocity = calc.speedPerSecond(calc.difference(value.current, output), frameDuration);
+                
+            // Check if changed and update
+            if (value.current != output) {
+                hasChanged = true;
+            }
+        
+            // Set current and add unit (if any) for output
+            value.current = output;
+            output[key] = (value.unit) ? output + value.unit : output;
+        }
+        
+        action.output[routeName] = output;
+        
+        // Fire onFrame every frame
+        if (route.onFrame) {
+            route.onFrame(output, action, values, props, data);
+        }
+        
+        // Fire onChanged if values have changed
+        if (hasChanged && route.onChange) {
+            route.onChange(output, action, values, props, data);
+        }
+    }, values);
+        
+    // Fire onEnd if ended
     if (rubix.hasEnded(action, hasChanged)) {
         action.isActive(false);
+
+        routes.onEnd(action.output, action, values, props, data);
         
-        if (props.onEnd) {
-            props.onEnd.call(props.scope, action.output, data);
-        }
-        
-        // Find next action if still inActive
         if (!action.isActive()) {
             action.next();
         }
     }
-
+    
     action.framestamp = framestamp;
 };
 },{"../opts/keys.js":12,"../utils/calc.js":22,"./routes.js":6,"./rubix.js":7}],5:[function(require,module,exports){
@@ -823,10 +837,14 @@ var utils = require('../utils/utils.js'),
     routes = {},
     routeKeys = [],
     numRoutes,
-    processes = ['preprocess', 'onChange'],
+    processes = ['preprocess', 'onEnd'],
+    
+    has = function (name) {
+        return (routeKeys.indexOf(name) > -1) ? true : false;
+    },
     
     process = function (processName) {
-        return function (sourceValues, action, values, props) {
+        return function (sourceValues, action, values, props, data) {
             var routeName = '',
                 route,
                 i = 0;
@@ -836,13 +854,14 @@ var utils = require('../utils/utils.js'),
                 route = routes[routeName];
     
                 if (sourceValues[routeName] && route[processName]) {
-                    route[processName](sourceValues[routeName], action, values, props);
+                    route[processName](sourceValues[routeName], action, values, props, data);
                 }
             }
         };
     },
     
     manager = {
+        
         /*
             Add route
             
@@ -858,6 +877,11 @@ var utils = require('../utils/utils.js'),
         add: function (route) {
             routeKeys.push(route.name);
             numRoutes = routeKeys.length;
+            
+            if (route.makeDefault) {
+                this.defaultRoute = this.name;
+            }
+            
             routes[route.name] = route;
         },
         
@@ -875,9 +899,13 @@ var utils = require('../utils/utils.js'),
                 key = routeKeys[i];
 
                 if ((props && props[key]) || !props) {
-                    callback(routes[key]);
+                    callback(routes[key], props[key]);
                 }
             }
+        },
+        
+        getName: function (name) {
+            return (name !== undefined && has(name)) ? name : this.defaultRoute;
         }
     };
     
@@ -885,13 +913,12 @@ var utils = require('../utils/utils.js'),
     Add manager processes
 */
 (function () {
-    var processesLength = process.length,
+    var processesLength = processes.length,
         processName = '',
         i = 0;
         
     for (; i < processesLength; i++) {
         processName = processes[i];
-
         manager[processName] = process(processName);
     }
 })();

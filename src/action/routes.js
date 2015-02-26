@@ -5,10 +5,14 @@ var utils = require('../utils/utils.js'),
     routes = {},
     routeKeys = [],
     numRoutes,
-    processes = ['preprocess', 'onChange'],
+    processes = ['preprocess', 'onEnd'],
+    
+    has = function (name) {
+        return (routeKeys.indexOf(name) > -1) ? true : false;
+    },
     
     process = function (processName) {
-        return function (sourceValues, action, values, props) {
+        return function (sourceValues, action, values, props, data) {
             var routeName = '',
                 route,
                 i = 0;
@@ -18,13 +22,14 @@ var utils = require('../utils/utils.js'),
                 route = routes[routeName];
     
                 if (sourceValues[routeName] && route[processName]) {
-                    route[processName](sourceValues[routeName], action, values, props);
+                    route[processName](sourceValues[routeName], action, values, props, data);
                 }
             }
         };
     },
     
     manager = {
+        
         /*
             Add route
             
@@ -40,6 +45,11 @@ var utils = require('../utils/utils.js'),
         add: function (route) {
             routeKeys.push(route.name);
             numRoutes = routeKeys.length;
+            
+            if (route.makeDefault) {
+                this.defaultRoute = this.name;
+            }
+            
             routes[route.name] = route;
         },
         
@@ -57,9 +67,13 @@ var utils = require('../utils/utils.js'),
                 key = routeKeys[i];
 
                 if ((props && props[key]) || !props) {
-                    callback(routes[key]);
+                    callback(routes[key], props[key]);
                 }
             }
+        },
+        
+        getName: function (name) {
+            return (name !== undefined && has(name)) ? name : this.defaultRoute;
         }
     };
     
@@ -67,13 +81,12 @@ var utils = require('../utils/utils.js'),
     Add manager processes
 */
 (function () {
-    var processesLength = process.length,
+    var processesLength = processes.length,
         processName = '',
         i = 0;
         
     for (; i < processesLength; i++) {
         processName = processes[i];
-
         manager[processName] = process(processName);
     }
 })();
