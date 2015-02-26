@@ -3,7 +3,7 @@
 var Action = require('./action/action.js'),
     Input = require('./input/input.js'),
     presets = require('./action/presets.js'),
-    route = require('./routes/manager.js'),
+    //route = require('./routes/manager.js'),
     easing = require('./utils/easing.js'),
     calc = require('./utils/calc.js'),
     shim = require('./utils/shim.js'),
