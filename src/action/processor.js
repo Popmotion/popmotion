@@ -5,6 +5,7 @@
 
 var Rubix = require('./rubix.js'),
     KEY = require('../opts/keys.js'),
+    routes = require('./routes.js'),
     calc = require('../utils/calc.js');
 
 module.exports = function (action, framestamp, frameDuration) {
@@ -88,6 +89,7 @@ module.exports = function (action, framestamp, frameDuration) {
     // Fire onChange callback
     if (hasChanged && props.onChange) {
         props.onChange.call(props.scope, action.output, data);
+        routes.onChange(props, action, values, props);
     }
     
     // Fire onEnd callback

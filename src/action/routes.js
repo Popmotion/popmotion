@@ -1,56 +1,81 @@
 "use strict";
 
 var utils = require('../utils/utils.js'),
-    isProtected = require('../utils/protected.js'),
 
     routes = {},
     routeKeys = [],
-    numRoutes;
-
-module.exports = {
+    numRoutes,
+    processes = ['preprocess', 'onChange'],
     
-    /*
-        Add route
-        
-        @param [string]: Name of route
-        @param [object]: Object of route functions
-            Valid functions
-                .parse
-                .onStart
-                .onFrame
-                .onChange
-                .onEnd
-    */
-    add: function (route) {
-        routeKeys.push(route.name);
-        numRoutes = routeKeys.length;
-        routes[route.name] = route;
+    process = function (processName) {
+        return function (sourceValues, action, values, props) {
+            var routeName = '',
+                route,
+                i = 0;
+    
+            for (; i < numRoutes; i++) {
+                routeName = routeKeys[i];
+                route = routes[routeName];
+    
+                if (sourceValues[routeName] && route[processName]) {
+                    route[processName](sourceValues[routeName], action, values, props);
+                }
+            }
+        };
     },
     
-    /*
-        Parse properties for valid Values
+    manager = {
+        /*
+            Add route
+            
+            @param [string]: Name of route
+            @param [object]: Object of route functions
+                Valid functions
+                    .parse
+                    .onStart
+                    .onFrame
+                    .onChange
+                    .onEnd
+        */
+        add: function (route) {
+            routeKeys.push(route.name);
+            numRoutes = routeKeys.length;
+            routes[route.name] = route;
+        },
         
-        Takes two objects, source and destination.
-        
-        Looks through source and finds any non-protected objects, then sends
-        those values to the appropriate parser (default if none added)
-        
-        @param [object]: Source of values
-        @param [object]: Values
-    */
-    parse: function (source, destination) {
-        var routeName = '',
-            route,
-            i = 0;
+        /*
+            Run callback once for each route, provide route as argument
+            
+            @param [function]: Function to run for each route
+            @param [object] (optional): Root object to check if route name exists
+        */
+        shard: function (callback, props) {
+            var key = '',
+                i = 0;
 
-        for (; i < numRoutes; i++) {
-            routeName = routeKeys[i]
-            route = routes[routeName];
+            for (; i < numRoutes; i++) {
+                key = routeKeys[i];
 
-            if (route && route.parse) {
-                route.parse(source[routeName], destination);
+                if ((props && props[key]) || !props) {
+                    callback(routes[key]);
+                }
             }
         }
-    }
+    };
     
-};
+/*
+    Add manager processes
+*/
+(function () {
+    var processesLength = process.length,
+        processName = '',
+        i = 0;
+        
+    for (; i < processesLength; i++) {
+        processName = processes[i];
+
+        manager[processName] = process(processName);
+    }
+})();
+
+module.exports = manager; 

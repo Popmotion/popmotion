@@ -106,7 +106,7 @@ Redshift.prototype = {
         route.add.apply(route, arguments);
         
         return this;
-    }
+    },
     
     //defineSimulation: function () {},
     

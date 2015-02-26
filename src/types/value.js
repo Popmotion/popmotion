@@ -4,6 +4,10 @@ var calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
     resolve = require('../utils/resolve.js'),
     Repo = require('./repo.js'),
+    
+    // Cache common property names
+    CURRENT = 'current',
+    ORIGIN = 'origin',
 
     loopOver = function (newData, inherit, value, scope) {
         var data = {},
@@ -51,7 +55,7 @@ var calc = require('../utils/calc.js'),
                 .set('key', val) // Sets specific value
                 .set({ key: val }) // Sets multiple values
                 .set({ key: val }, { key: val2 }) // With inherit
-                .set(val) // Sets 'current' value
+                .set(val) // Sets CURRENT value
         */
         repo.set = function () {
             var args = arguments,
@@ -71,7 +75,7 @@ var calc = require('../utils/calc.js'),
                     firstSet = false;
                     
                     if (arg1.hasOwnProperty('start')){
-                        setter.apply(this, ['current', resolve(arg1.start, this.get('current'), store, scope)]);
+                        setter.apply(this, [CURRENT, resolve(arg1.start, this.get(CURRENT), store, scope)]);
                     }
                 }
 
@@ -79,11 +83,11 @@ var calc = require('../utils/calc.js'),
 
                 // If this is a specific setter, ie .set('key', val)
                 if (utils.isString(arg1) && !utils.isRelativeValue(arg1)) {
-                    data[arg1] = resolve(arg2, this.get('current'), store, scope);
+                    data[arg1] = resolve(arg2, this.get(CURRENT), store, scope);
                     
                 // Or this is a var to be resolved, assign it to current
                 } else {
-                    data.current = resolve(arg1, this.get('current'), store, scope);
+                    data.current = resolve(arg1, this.get(CURRENT), store, scope);
                 }
             }
 
@@ -101,7 +105,7 @@ var calc = require('../utils/calc.js'),
             Reset current to from
         */
         repo.reset = function () {
-            this.set('current', this.get('origin'));
+            this.set(CURRENT, this.get(ORIGIN));
         };
         
         
@@ -112,8 +116,8 @@ var calc = require('../utils/calc.js'),
             var currentTo = this.get('to');
 
             this.set({
-                to: this.get('origin'),
-                origin: (currentTo !== undefined) ? currentTo : this.get('current')
+                to: this.get(ORIGIN),
+                origin: (currentTo !== undefined) ? currentTo : this.get(CURRENT)
             });
         };
         

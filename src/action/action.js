@@ -3,6 +3,7 @@
 var parseArgs = require('./parse-args.js'),
     Value = require('../types/value.js'),
     Repo = require('../types/repo.js'),
+    //Bucket = require('../types/bucket.js'),
     Queue = require('./queue.js'),
     Process = require('../process/process.js'),
     KEY = require('../opts/keys.js'),
@@ -17,7 +18,7 @@ var parseArgs = require('./parse-args.js'),
         var self = this;
         
         // Create value manager
-        self.values = new Repo();
+       // self.values = new Bucket();
         
         // Create new property manager
         defaultProps.scope = this;
@@ -126,15 +127,38 @@ Action.prototype = {
         @return [Action]
     */
     set: function (props) {
-        var values = this.values.get();
+        var self = this,
+            currentProps = this.props.get(),
+            key = '';
 
-        this.props.set(props);
+        self.props.set(props);
+
+        // Loop over new values and set
+        routes.shard(function (route) {
+            var baseValue = {
+                    route: route.name
+                },
+                mergeIn = {},
+                bucket = props[route.name],
+                value;
+
+            for (key in bucket) {
+                if (bucket.hasOwnProperty(key) && route.preprocess) {
+                    value = bucket[key];
+                    
+                    mergeIn = (!utils.isObj(value)) ? { current: value } : value;
+                    route.preprocess(key, utils.merge(baseValue, mergeIn), self, currentProps);
+                }
+            }
+        }, props);
         
-        props.values = props.values || {};
+        self.resetOrigins();
 
-        routes.parse(props, props.values);
-
-    	this.setValues(props.values, this.props.get());
+        return self;
+    },
+    
+    resetOrigins: function () {
+        var values = this.values.get();
 
         // Create origins
         for (var key in values) {
@@ -142,8 +166,6 @@ Action.prototype = {
                 values[key].set('origin', values[key].get('current'));
             }
         }
-
-        return this;
     },
 
     /*
@@ -367,6 +389,8 @@ Action.prototype = {
         } else {
             newVal = new Value(defaultValue, this, key);
             newVal.set(value, inherit);
+            
+            
 
             this.values.set(key, newVal);
         }
