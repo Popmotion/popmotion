@@ -1,11 +1,18 @@
 "use strict";
 
+var split = require('./css/split.js');
+
 module.exports = {
     
     name: 'css',
     
     preprocess: function (key, value, action, props) {
-        //action.setValue(key, value, props, this.name);
+        var values = split(key, value),
+            key = '';
+        
+        for (key in values) {
+            action.setValue(key, values[key], props, this.name);
+        }
     },
     
     onChange: function (output, action, values, props) {
