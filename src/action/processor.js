@@ -41,6 +41,7 @@ module.exports = function (action, framestamp, frameDuration) {
         action.output.input = props.input.onFrame(framestamp);
     }
     
+    // Update values
     for (; i < orderLength; i++) {
         // Get value and key
         key = order[i];
@@ -78,60 +79,9 @@ module.exports = function (action, framestamp, frameDuration) {
         action.output[value.route] = action.output[value.route] || {};
         action.output[value.route][value.name] = (value.unit) ? output + value.unit : output;
     }
-    console.log(action.output);
     
-    
-    // Generate output
-    routes.shard(function (route, bucket) {
-        var routeName = route.name,
-            i = 0,
-            key = '',
-            order = props.order[routeName] || [],
-            orderLength = order.length,
-            valueRubix,
-            output = {};
-        
-        for (; i < orderLength; i++) {
-            
-            key = order[i];
-            
-            // Get value
-            value = bucket[key].store;
-            
-            // Load rubix for value
-            valueRubix = rubix;
-            if (value.link) {
-                valueRubix = (value.link !== KEY.ANGLE_DISTANCE) ? Rubix['Link'] : Rubix['AngleAndDistance'];
-            }
-        
-            // Calculate new value
-            output = valueRubix.process(key, value, values, props, action, frameDuration);
-
-            // Limit if range set
-            if (rubix.limit) {
-                output = rubix.limit(output, value);
-            }
-        
-            // Round value if rounding on
-            if (value.round) {
-                output = Math.round(output);
-            }
-        
-            // Update velocity
-            value.velocity = calc.speedPerSecond(calc.difference(value.current, output), frameDuration);
-                
-            // Check if changed and update
-            if (value.current != output) {
-                hasChanged = true;
-            }
-        
-            // Set current and add unit (if any) for output
-            value.current = output;
-            output[key] = (value.unit) ? output + value.unit : output;
-        }
-        
-        action.output[routeName] = output;
-        
+    // shard onFrame and onChange
+    routes.shard(function (route, output) {
         // Fire onFrame every frame
         if (route.onFrame) {
             route.onFrame(output, action, values, props, data);
@@ -141,8 +91,8 @@ module.exports = function (action, framestamp, frameDuration) {
         if (hasChanged && route.onChange) {
             route.onChange(output, action, values, props, data);
         }
-    }, values);
-        
+    }, action.output);
+
     // Fire onEnd if ended
     if (rubix.hasEnded(action, hasChanged)) {
         action.isActive(false);

@@ -151,6 +151,7 @@ Action.prototype = {
                             name: key
                         }
                     } else {
+                        mergeIn = value;
                         mergeIn.name = key;
                     }
 
