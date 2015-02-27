@@ -12,6 +12,7 @@ var parseArgs = require('./parse-args.js'),
     defaultValue = require('../opts/value.js'),
     calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
+    namespace = require('../utils/namespace.js'),
 
     Action = function () {
         var self = this;
@@ -144,12 +145,20 @@ Action.prototype = {
                 if (bucket.hasOwnProperty(key) && route.preprocess) {
                     value = bucket[key];
                     
-                    mergeIn = (!utils.isObj(value)) ? { current: value } : value;
+                    if (!utils.isObj(value)) {
+                        mergeIn = {
+                            current: value,
+                            name: key
+                        }
+                    } else {
+                        mergeIn.name = key;
+                    }
+
                     route.preprocess(key, utils.merge(baseValue, mergeIn), self, currentProps);
                 }
             }
         }, props);
-        
+
         self.resetOrigins();
 
         return self;
@@ -159,15 +168,14 @@ Action.prototype = {
         Loop through all values and create origin points
     */
     resetOrigins: function () {
-        var values = this.values;
+        var values = this.values,
+            key = '';
 
-        routes.shard(function (route, bucket) {
-            for (var key in bucket) {
-                if (bucket.hasOwnProperty(key)) {
-                    bucket[key].set('origin', bucket[key].get('current'));
-                }
+        for (key in values) {
+            if (values.hasOwnProperty(key)) {
+                values[key].set('origin', values[key].get('current'));
             }
-        }, values);
+        }
     },
 
     /*
@@ -363,7 +371,7 @@ Action.prototype = {
     },
     
     setValues: function (newVals, inherit) {
-        var values = this.values.get();
+        var values = this.values;
 
         for (var key in newVals) {
             if (newVals.hasOwnProperty(key)) {
@@ -379,11 +387,11 @@ Action.prototype = {
     },
     
     
-    setValue: function (key, value, inherit, route) {
-        var existing = this.getValue(key, route),
+    setValue: function (key, value, inherit, space) {
+        var existing = this.getValue(key, space),
             newVal;
 
-        route = route || routes.defaultRoute;
+        key = namespace.generate(key, space);
             
         // Update if value exists
         if (existing) {
@@ -394,18 +402,16 @@ Action.prototype = {
             newVal = new Value(defaultValue, this, key);
             newVal.set(value, inherit);
             
-            this.values[routes.getName(route)][key] = newVal;
+            this.values[key] = newVal;
         }
 
         return this;
     },
     
     
-    getValue: function (key, route) {
-        route = routes.getName(route);
-        this.values[route] = this.values[route] || {};
-
-        return (this.values[route]) ? this.values[route][key] : undefined;
+    getValue: function (key, space) {
+        key = namespace.generate(key, space);
+        return this.values[key];
     },
     
     

@@ -13,6 +13,7 @@ var parseArgs = require('./parse-args.js'),
     defaultValue = require('../opts/value.js'),
     calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
+    namespace = require('../utils/namespace.js'),
 
     Action = function () {
         var self = this;
@@ -145,12 +146,20 @@ Action.prototype = {
                 if (bucket.hasOwnProperty(key) && route.preprocess) {
                     value = bucket[key];
                     
-                    mergeIn = (!utils.isObj(value)) ? { current: value } : value;
+                    if (!utils.isObj(value)) {
+                        mergeIn = {
+                            current: value,
+                            name: key
+                        }
+                    } else {
+                        mergeIn.name = key;
+                    }
+
                     route.preprocess(key, utils.merge(baseValue, mergeIn), self, currentProps);
                 }
             }
         }, props);
-        
+
         self.resetOrigins();
 
         return self;
@@ -160,15 +169,14 @@ Action.prototype = {
         Loop through all values and create origin points
     */
     resetOrigins: function () {
-        var values = this.values;
+        var values = this.values,
+            key = '';
 
-        routes.shard(function (route, bucket) {
-            for (var key in bucket) {
-                if (bucket.hasOwnProperty(key)) {
-                    bucket[key].set('origin', bucket[key].get('current'));
-                }
+        for (key in values) {
+            if (values.hasOwnProperty(key)) {
+                values[key].set('origin', values[key].get('current'));
             }
-        }, values);
+        }
     },
 
     /*
@@ -364,7 +372,7 @@ Action.prototype = {
     },
     
     setValues: function (newVals, inherit) {
-        var values = this.values.get();
+        var values = this.values;
 
         for (var key in newVals) {
             if (newVals.hasOwnProperty(key)) {
@@ -380,11 +388,11 @@ Action.prototype = {
     },
     
     
-    setValue: function (key, value, inherit, route) {
-        var existing = this.getValue(key, route),
+    setValue: function (key, value, inherit, space) {
+        var existing = this.getValue(key, space),
             newVal;
 
-        route = route || routes.defaultRoute;
+        key = namespace.generate(key, space);
             
         // Update if value exists
         if (existing) {
@@ -395,18 +403,16 @@ Action.prototype = {
             newVal = new Value(defaultValue, this, key);
             newVal.set(value, inherit);
             
-            this.values[routes.getName(route)][key] = newVal;
+            this.values[key] = newVal;
         }
 
         return this;
     },
     
     
-    getValue: function (key, route) {
-        route = routes.getName(route);
-        this.values[route] = this.values[route] || {};
-
-        return (this.values[route]) ? this.values[route][key] : undefined;
+    getValue: function (key, space) {
+        key = namespace.generate(key, space);
+        return this.values[key];
     },
     
     
@@ -454,7 +460,7 @@ Action.prototype = {
 };
 
 module.exports = Action;
-},{"../opts/action.js":11,"../opts/keys.js":12,"../opts/value.js":13,"../process/process.js":16,"../types/repo.js":20,"../types/value.js":21,"../utils/calc.js":22,"../utils/utils.js":29,"./parse-args.js":2,"./processor.js":4,"./queue.js":5,"./routes.js":6}],2:[function(require,module,exports){
+},{"../opts/action.js":11,"../opts/keys.js":12,"../opts/value.js":13,"../process/process.js":16,"../types/repo.js":20,"../types/value.js":21,"../utils/calc.js":22,"../utils/namespace.js":26,"../utils/utils.js":30,"./parse-args.js":2,"./processor.js":4,"./queue.js":5,"./routes.js":6}],2:[function(require,module,exports){
 "use strict";
 
 var utils = require('../utils/utils.js'),
@@ -583,7 +589,7 @@ module.exports = {
     
     generic: generic
 };
-},{"../input/pointer.js":10,"../utils/utils.js":29,"./presets.js":3}],3:[function(require,module,exports){
+},{"../input/pointer.js":10,"../utils/utils.js":30,"./presets.js":3}],3:[function(require,module,exports){
 "use strict";
 
 var KEY = require('../opts/keys.js'),
@@ -666,7 +672,7 @@ Presets.prototype = {
 };
 
 module.exports = new Presets();
-},{"../opts/keys.js":12,"../utils/utils.js":29}],4:[function(require,module,exports){
+},{"../opts/keys.js":12,"../utils/utils.js":30}],4:[function(require,module,exports){
 /*
     Process actions
 */
@@ -682,7 +688,12 @@ module.exports = function (action, framestamp, frameDuration) {
         data = action.data.store,
         values = action.values,
         rubix = Rubix[props.rubix],
-        hasChanged = false;
+        valueRubix = rubix,
+        hasChanged = false,
+        i = 0,
+        order = props.order = props.order || [],
+        orderLength = order.length,
+        key = '', value, output;
     
     action.output = {};
     
@@ -705,6 +716,46 @@ module.exports = function (action, framestamp, frameDuration) {
         action.output.input = props.input.onFrame(framestamp);
     }
     
+    for (; i < orderLength; i++) {
+        // Get value and key
+        key = order[i];
+        value = values[key].store;
+        
+        // Load rubix for this value
+        valueRubix = rubix;
+        if (value.link) {
+            valueRubix = (value.link !== KEY.ANGLE_DISTANCE) ? Rubix['Link'] : Rubix['AngleAndDistance'];
+        }
+        
+        // Calculate new value
+        output = valueRubix.process(key, value, values, props, action, frameDuration);
+        
+        // Limit if range set
+        if (valueRubix.limit) {
+            output = valueRubix.limit(output, value);
+        }
+        
+        // Round value if rounding set to true
+        if (value.round) {
+            output = Math.round(output);
+        }
+        
+        // Update velocity
+        value.velocity = calc.speedPerSecond(calc.difference(value.current, output), frameDuration);
+        
+        // Check if changed and update
+        if (value.current != output) {
+            hasChanged = true;
+        }
+        
+        // Set current and add unit (if any) for output
+        value.current = output;
+        action.output[value.route] = action.output[value.route] || {};
+        action.output[value.route][value.name] = (value.unit) ? output + value.unit : output;
+    }
+    console.log(action.output);
+    
+    
     // Generate output
     routes.shard(function (route, bucket) {
         var routeName = route.name,
@@ -714,12 +765,6 @@ module.exports = function (action, framestamp, frameDuration) {
             orderLength = order.length,
             valueRubix,
             output = {};
-        
-        /****
-            
-                        Make per-route order
-            *****/
-        
         
         for (; i < orderLength; i++) {
             
@@ -924,7 +969,7 @@ var utils = require('../utils/utils.js'),
 })();
 
 module.exports = manager; 
-},{"../utils/utils.js":29}],7:[function(require,module,exports){
+},{"../utils/utils.js":30}],7:[function(require,module,exports){
 /*
     Rubix modules
     ----------------------------------------
@@ -1183,7 +1228,7 @@ Rubix.prototype = {
 rubixController = new Rubix();
 
 module.exports = rubixController;
-},{"../opts/keys.js":12,"../utils/calc.js":22,"../utils/easing.js":23,"../utils/utils.js":29,"./simulate.js":8}],8:[function(require,module,exports){
+},{"../opts/keys.js":12,"../utils/calc.js":22,"../utils/easing.js":23,"../utils/utils.js":30,"./simulate.js":8}],8:[function(require,module,exports){
 "use strict";
 
 var frictionStopLimit = .2,
@@ -1386,7 +1431,7 @@ Input.prototype = {
 };
 
 module.exports = Input;
-},{"../utils/calc.js":22,"../utils/history.js":25,"../utils/utils.js":29}],10:[function(require,module,exports){
+},{"../utils/calc.js":22,"../utils/history.js":25,"../utils/utils.js":30}],10:[function(require,module,exports){
 "use strict";
 
 var Input = require('./input.js'),
@@ -1599,11 +1644,11 @@ module.exports = {
     // [boolean]: Round output if true
     round: false,
     
-    // [string]: Name of parent value
-    parent: undefined,
-
-    // [string]: Name of unit type
-    unitName: undefined,
+    // [string]: Route
+    route: 'values',
+    
+    // [string]: Non-namespaced output value
+    name: '',
 
     /*
         Link properties
@@ -2239,7 +2284,7 @@ Redshift.prototype = {
 };
 
 module.exports = new Redshift();
-},{"./action/action.js":1,"./action/presets.js":3,"./input/input.js":9,"./process/process.js":16,"./utils/calc.js":22,"./utils/easing.js":23,"./utils/shim.js":28}],19:[function(require,module,exports){
+},{"./action/action.js":1,"./action/presets.js":3,"./input/input.js":9,"./process/process.js":16,"./utils/calc.js":22,"./utils/easing.js":23,"./utils/shim.js":29}],19:[function(require,module,exports){
 (function (global){
 /*
     Bezier function generator
@@ -2454,7 +2499,7 @@ Repo.prototype = {
 };
 
 module.exports = Repo;
-},{"../utils/utils.js":29}],21:[function(require,module,exports){
+},{"../utils/utils.js":30}],21:[function(require,module,exports){
 "use strict";
 
 var calc = require('../utils/calc.js'),
@@ -2582,7 +2627,7 @@ var calc = require('../utils/calc.js'),
     };
 
 module.exports = Value;
-},{"../utils/calc.js":22,"../utils/resolve.js":27,"../utils/utils.js":29,"./repo.js":20}],22:[function(require,module,exports){
+},{"../utils/calc.js":22,"../utils/resolve.js":28,"../utils/utils.js":30,"./repo.js":20}],22:[function(require,module,exports){
 /*
     Calculators
     ----------------------------------------
@@ -2973,7 +3018,7 @@ module.exports = {
         return this.value(easedProgress, from, to);
     }
 };
-},{"./utils.js":29}],23:[function(require,module,exports){
+},{"./utils.js":30}],23:[function(require,module,exports){
 /*
     Easing functions
     ----------------------------------------
@@ -3296,12 +3341,41 @@ module.exports = History;
 },{}],26:[function(require,module,exports){
 "use strict";
 
+var DELIMITER = '.';
+
+module.exports = {
+    /*
+        Generate namespaced key
+        
+        generate('foo') -> 'foo'
+        generate('foo', 'bar') -> 'bar.foo'
+        
+        @param [string]: Key
+        @param [string] (optional): Namespace
+    */
+    generate: function (key, namespace) {
+        return namespace ? key + DELIMITER + namespace : key;
+    },
+    
+    /*
+        Strip a namespaced key of its namespace
+        
+        strip('bar.foo') -> 'foo'
+        strip('foo') -> 'foo'
+    */
+    strip: function (key) {
+        return key.split(DELIMITER)[0];
+    }
+};
+},{}],27:[function(require,module,exports){
+"use strict";
+
 var protectedProperties = ['scope',  'dom'];
 
 module.exports = function (key) {
     return (protectedProperties.indexOf(key) !== -1);
 };
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 /*
     Property resolver
     -------------------------------------
@@ -3347,7 +3421,7 @@ module.exports = function (newValue, currentValue, parent, scope) {
     
     return newValue;
 };
-},{"./utils.js":29}],28:[function(require,module,exports){
+},{"./utils.js":30}],29:[function(require,module,exports){
 "use strict";
 
 var checkRequestAnimationFrame = function () {
@@ -3423,7 +3497,7 @@ module.exports = function () {
     checkRequestAnimationFrame();
     checkIndexOf();
 };
-},{}],29:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 /*
     Utility functions
 */
@@ -3681,4 +3755,4 @@ module.exports = {
     }
     
 };
-},{"../opts/keys.js":12,"./protected.js":26}]},{},[24]);
+},{"../opts/keys.js":12,"./protected.js":27}]},{},[24]);

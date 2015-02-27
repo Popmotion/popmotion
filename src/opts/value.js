@@ -22,11 +22,11 @@ module.exports = {
     // [boolean]: Round output if true
     round: false,
     
-    // [string]: Name of parent value
-    parent: undefined,
-
-    // [string]: Name of unit type
-    unitName: undefined,
+    // [string]: Route
+    route: 'values',
+    
+    // [string]: Non-namespaced output value
+    name: '',
 
     /*
         Link properties

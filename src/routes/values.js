@@ -7,7 +7,7 @@ module.exports = {
     name: 'values',
     
     preprocess: function (key, value, action, props) {
-        action.setValue(key, value, props, this.name);
+        action.setValue(key, value, props);
     },
     
     onStart: function () {

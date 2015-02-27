@@ -13,7 +13,12 @@ module.exports = function (action, framestamp, frameDuration) {
         data = action.data.store,
         values = action.values,
         rubix = Rubix[props.rubix],
-        hasChanged = false;
+        valueRubix = rubix,
+        hasChanged = false,
+        i = 0,
+        order = props.order = props.order || [],
+        orderLength = order.length,
+        key = '', value, output;
     
     action.output = {};
     
@@ -36,6 +41,46 @@ module.exports = function (action, framestamp, frameDuration) {
         action.output.input = props.input.onFrame(framestamp);
     }
     
+    for (; i < orderLength; i++) {
+        // Get value and key
+        key = order[i];
+        value = values[key].store;
+        
+        // Load rubix for this value
+        valueRubix = rubix;
+        if (value.link) {
+            valueRubix = (value.link !== KEY.ANGLE_DISTANCE) ? Rubix['Link'] : Rubix['AngleAndDistance'];
+        }
+        
+        // Calculate new value
+        output = valueRubix.process(key, value, values, props, action, frameDuration);
+        
+        // Limit if range set
+        if (valueRubix.limit) {
+            output = valueRubix.limit(output, value);
+        }
+        
+        // Round value if rounding set to true
+        if (value.round) {
+            output = Math.round(output);
+        }
+        
+        // Update velocity
+        value.velocity = calc.speedPerSecond(calc.difference(value.current, output), frameDuration);
+        
+        // Check if changed and update
+        if (value.current != output) {
+            hasChanged = true;
+        }
+        
+        // Set current and add unit (if any) for output
+        value.current = output;
+        action.output[value.route] = action.output[value.route] || {};
+        action.output[value.route][value.name] = (value.unit) ? output + value.unit : output;
+    }
+    console.log(action.output);
+    
+    
     // Generate output
     routes.shard(function (route, bucket) {
         var routeName = route.name,
@@ -45,12 +90,6 @@ module.exports = function (action, framestamp, frameDuration) {
             orderLength = order.length,
             valueRubix,
             output = {};
-        
-        /****
-            
-                        Make per-route order
-            *****/
-        
         
         for (; i < orderLength; i++) {
             
