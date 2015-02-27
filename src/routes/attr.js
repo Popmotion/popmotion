@@ -10,7 +10,7 @@ module.exports = {
     
     onChange: function (output, action, values, props) {
         var dom = props.dom;
-console.log(output);
+
         if (dom) {
             for (var key in output) {
                 dom.setAttribute(key, output[key]);
