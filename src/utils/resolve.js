@@ -21,6 +21,8 @@ var calc = require('./calc.js'),
 
 module.exports = function (newValue, currentValue, parent, scope) {
     var splitValueUnit = {};
+    
+    currentValue = currentValue || 0;
 
     // Run function if this is a function
     if (typeof newValue == 'function') {

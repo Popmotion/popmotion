@@ -3145,7 +3145,7 @@ module.exports = Repo;
 },{"../routes/css/dictionary.js":23,"../utils/utils.js":41}],32:[function(require,module,exports){
 "use strict";
 
-var defaults = require('../opts/value.js'),
+var defaults = require('../opts/values.js'),
     resolve = require('../utils/resolve.js'),
     utils = require('../utils/utils.js'),
 
@@ -3202,10 +3202,9 @@ Value.prototype = {
             inherit = multiVal ? arguments[1] : false,
             key = '';
         
-        for (key in newProps) {
+        for (key in defaults) {
             newProp = undefined;
 
-            // If 
             if (inherit && inherit.hasOwnProperty(key)) {
                 newProp = inherit[key];
             }
@@ -3216,6 +3215,9 @@ Value.prototype = {
             
             if (newProp !== undefined) {
                 this[key] = resolve(newProp, this[key], this, this.scope);
+    
+            } else if (this[key] === undefined) {
+                this[key] = defaults[key];
             }
         }
         
@@ -3241,7 +3243,7 @@ Value.prototype = {
 };
 
 module.exports = Value;
-},{"../opts/value.js":13,"../utils/resolve.js":39,"../utils/utils.js":41}],33:[function(require,module,exports){
+},{"../opts/values.js":13,"../utils/resolve.js":39,"../utils/utils.js":41}],33:[function(require,module,exports){
 /*
     Calculators
     ----------------------------------------
@@ -4003,6 +4005,8 @@ var calc = require('./calc.js'),
 
 module.exports = function (newValue, currentValue, parent, scope) {
     var splitValueUnit = {};
+    
+    currentValue = currentValue || 0;
 
     // Run function if this is a function
     if (typeof newValue == 'function') {

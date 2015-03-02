@@ -1,6 +1,6 @@
 "use strict";
 
-var defaults = require('../opts/value.js'),
+var defaults = require('../opts/values.js'),
     resolve = require('../utils/resolve.js'),
     utils = require('../utils/utils.js'),
 
@@ -57,10 +57,9 @@ Value.prototype = {
             inherit = multiVal ? arguments[1] : false,
             key = '';
         
-        for (key in newProps) {
+        for (key in defaults) {
             newProp = undefined;
 
-            // If 
             if (inherit && inherit.hasOwnProperty(key)) {
                 newProp = inherit[key];
             }
@@ -71,6 +70,9 @@ Value.prototype = {
             
             if (newProp !== undefined) {
                 this[key] = resolve(newProp, this[key], this, this.scope);
+    
+            } else if (this[key] === undefined) {
+                this[key] = defaults[key];
             }
         }
         
