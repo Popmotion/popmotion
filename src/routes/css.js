@@ -19,9 +19,7 @@ module.exports = {
         var dom = props.dom;
 
         if (dom) {
-            //for (var key in output) {
-            //    dom.setAttribute(key, output[key]);
-            //}
+            
         }
     }
     

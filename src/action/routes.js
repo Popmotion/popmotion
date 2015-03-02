@@ -2,6 +2,10 @@
 
 var utils = require('../utils/utils.js'),
 
+    defaultRoute = require('../routes/values.js'),
+    cssRoute = require('../routes/css.js'),
+    attrRoute = require('../routes/attr.js'),
+
     routes = {},
     routeKeys = [],
     numRoutes,
@@ -89,6 +93,10 @@ var utils = require('../utils/utils.js'),
         processName = processes[i];
         manager[processName] = process(processName);
     }
+    
+    manager.add(defaultRoute);
+    manager.add(cssRoute);
+    manager.add(attrRoute);
 })();
 
 module.exports = manager; 

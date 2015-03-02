@@ -461,7 +461,7 @@ Action.prototype = {
 };
 
 module.exports = Action;
-},{"../opts/action.js":11,"../opts/keys.js":12,"../opts/value.js":13,"../process/process.js":16,"../types/repo.js":20,"../types/value.js":21,"../utils/calc.js":22,"../utils/namespace.js":26,"../utils/utils.js":30,"./parse-args.js":2,"./processor.js":4,"./queue.js":5,"./routes.js":6}],2:[function(require,module,exports){
+},{"../opts/action.js":11,"../opts/keys.js":12,"../opts/value.js":13,"../process/process.js":16,"../types/repo.js":28,"../types/value.js":29,"../utils/calc.js":30,"../utils/namespace.js":34,"../utils/utils.js":38,"./parse-args.js":2,"./processor.js":4,"./queue.js":5,"./routes.js":6}],2:[function(require,module,exports){
 "use strict";
 
 var utils = require('../utils/utils.js'),
@@ -590,7 +590,7 @@ module.exports = {
     
     generic: generic
 };
-},{"../input/pointer.js":10,"../utils/utils.js":30,"./presets.js":3}],3:[function(require,module,exports){
+},{"../input/pointer.js":10,"../utils/utils.js":38,"./presets.js":3}],3:[function(require,module,exports){
 "use strict";
 
 var KEY = require('../opts/keys.js'),
@@ -673,7 +673,7 @@ Presets.prototype = {
 };
 
 module.exports = new Presets();
-},{"../opts/keys.js":12,"../utils/utils.js":30}],4:[function(require,module,exports){
+},{"../opts/keys.js":12,"../utils/utils.js":38}],4:[function(require,module,exports){
 /*
     Process actions
 */
@@ -782,7 +782,7 @@ module.exports = function (action, framestamp, frameDuration) {
     
     action.framestamp = framestamp;
 };
-},{"../opts/keys.js":12,"../utils/calc.js":22,"./routes.js":6,"./rubix.js":7}],5:[function(require,module,exports){
+},{"../opts/keys.js":12,"../utils/calc.js":30,"./routes.js":6,"./rubix.js":7}],5:[function(require,module,exports){
 "use strict";
 
 var Queue = function () {
@@ -829,6 +829,10 @@ module.exports = Queue;
 "use strict";
 
 var utils = require('../utils/utils.js'),
+
+    defaultRoute = require('../routes/values.js'),
+    cssRoute = require('../routes/css.js'),
+    attrRoute = require('../routes/attr.js'),
 
     routes = {},
     routeKeys = [],
@@ -917,10 +921,14 @@ var utils = require('../utils/utils.js'),
         processName = processes[i];
         manager[processName] = process(processName);
     }
+    
+    manager.add(defaultRoute);
+    manager.add(cssRoute);
+    manager.add(attrRoute);
 })();
 
 module.exports = manager; 
-},{"../utils/utils.js":30}],7:[function(require,module,exports){
+},{"../routes/attr.js":19,"../routes/css.js":20,"../routes/values.js":26,"../utils/utils.js":38}],7:[function(require,module,exports){
 /*
     Rubix modules
     ----------------------------------------
@@ -1179,7 +1187,7 @@ Rubix.prototype = {
 rubixController = new Rubix();
 
 module.exports = rubixController;
-},{"../opts/keys.js":12,"../utils/calc.js":22,"../utils/easing.js":23,"../utils/utils.js":30,"./simulate.js":8}],8:[function(require,module,exports){
+},{"../opts/keys.js":12,"../utils/calc.js":30,"../utils/easing.js":31,"../utils/utils.js":38,"./simulate.js":8}],8:[function(require,module,exports){
 "use strict";
 
 var frictionStopLimit = .2,
@@ -1255,7 +1263,7 @@ Simulate.prototype = {
 simulate = new Simulate();
 
 module.exports = simulate;
-},{"../utils/calc.js":22}],9:[function(require,module,exports){
+},{"../utils/calc.js":30}],9:[function(require,module,exports){
 /*
     Input controller
 */
@@ -1382,7 +1390,7 @@ Input.prototype = {
 };
 
 module.exports = Input;
-},{"../utils/calc.js":22,"../utils/history.js":25,"../utils/utils.js":30}],10:[function(require,module,exports){
+},{"../utils/calc.js":30,"../utils/history.js":33,"../utils/utils.js":38}],10:[function(require,module,exports){
 "use strict";
 
 var Input = require('./input.js'),
@@ -2235,7 +2243,481 @@ Redshift.prototype = {
 };
 
 module.exports = new Redshift();
-},{"./action/action.js":1,"./action/presets.js":3,"./input/input.js":9,"./process/process.js":16,"./utils/calc.js":22,"./utils/easing.js":23,"./utils/shim.js":29}],19:[function(require,module,exports){
+},{"./action/action.js":1,"./action/presets.js":3,"./input/input.js":9,"./process/process.js":16,"./utils/calc.js":30,"./utils/easing.js":31,"./utils/shim.js":37}],19:[function(require,module,exports){
+"use strict";
+
+module.exports = {
+    
+    name: 'attr',
+    
+    preprocess: function (key, value, action, props) {
+        action.setValue(key, value, props, this.name);
+    },
+    
+    onChange: function (output, action, values, props) {
+        var dom = props.dom;
+
+        if (dom) {
+            for (var key in output) {
+                dom.setAttribute(key, output[key]);
+            }
+        }
+    }
+};
+},{}],20:[function(require,module,exports){
+"use strict";
+
+var split = require('./css/split.js');
+
+module.exports = {
+    
+    name: 'css',
+    
+    preprocess: function (key, value, action, props) {
+        var values = split(key, value),
+            key = '';
+        
+        for (key in values) {
+            action.setValue(key, values[key], props, this.name);
+        }
+    },
+    
+    onChange: function (output, action, values, props) {
+        var dom = props.dom;
+
+        if (dom) {
+            
+        }
+    }
+    
+};
+},{"./css/split.js":24}],21:[function(require,module,exports){
+"use strict";
+
+var defaults = {
+        color: {
+            min: 0,
+            max: 255,
+            round: true
+        },
+        opacity: {
+            min: 0,
+            max: 1
+        }
+    };
+    
+defaults.Red = defaults.Green = defaults.Blue = defaults.color;
+defaults.Alpha = defaults.opacity;
+
+module.exports = defaults;
+},{}],22:[function(require,module,exports){
+"use strict";
+
+module.exports = {
+    colors: ['Red', 'Green', 'Blue', 'Alpha'],
+    positions: ['X', 'Y', 'Z'],
+    dimensions: ['Top', 'Right', 'Bottom', 'Left'],
+    shadow: ['X', 'Y', 'Radius', 'Spread', 'Color']
+};
+},{}],23:[function(require,module,exports){
+"use strict";
+
+var ARRAY = 'array',
+    COLOR = 'color',
+    POSITIONS = 'positions',
+    DIMENSIONS = 'dimensions',
+    SHADOW = 'shadow';
+
+module.exports = {
+    // Color properties
+    color: COLOR,
+    backgroundColor: COLOR,
+    borderColor: COLOR,
+    borderTopColor: COLOR,
+    borderRightColor: COLOR,
+    borderBottomColor: COLOR,
+    borderLeftColor: COLOR,
+    outlineColor: COLOR,
+
+    // Dimensions
+    margin: DIMENSIONS,
+    padding: DIMENSIONS,
+
+    // Positions
+    backgroundPosition: POSITIONS,
+    perspectiveOrigin: POSITIONS,
+    transformOrigin: POSITIONS,
+    skew: POSITIONS,
+    scale: POSITIONS,
+    translate: POSITIONS,
+    rotate: POSITIONS,
+
+    // Arrays
+    matrix: ARRAY,
+    matrix3d: ARRAY,
+    
+    // Shadows
+    textShadow: SHADOW,
+    boxShadow: SHADOW
+};
+},{}],24:[function(require,module,exports){
+"use strict";
+
+var defaultProperty = require('./default-property.js'),
+    splitLookup = require('./split-lookup.js'),
+    splitters = require('./splitters.js'),
+    
+    resolve = require('../../utils/resolve.js'),
+    utils = require('../../utils/utils.js'),
+    
+    valueProperties = ['current', 'to', 'start', 'min', 'max'],
+    valuePropertyCount = valueProperties.length,
+    
+    /*
+        Build a property
+    */
+    buildProperty = function (value, parentKey, unitKey, parent, assignDefault) {
+        var property = defaultProperty[parentKey + unitKey]
+            || defaultProperty[unitKey]
+            || defaultProperty[parentKey]
+            || {};
+        
+        assignDefault = assignDefault || valueProperties[0];
+         
+        if (parent) {
+            property = utils.merge(parent, property);
+        }
+        
+        if (utils.isObj(value)) {
+            property = utils.merge(property, value);
+
+        } else {
+            property[assignDefault] = value;
+        }
+        
+        property.unitName = unitKey;
+        
+        return property;
+    },
+
+    /*
+        Split value with provided splitterID
+    */
+    split = function (key, value, splitterID) {
+        var splitValue = {},
+            splitProperty = {},
+            newValue = {},
+            valueKey = '',
+            unitKey = '',
+            i = 0;
+            
+        if (utils.isObj(value)) {
+            
+            for (; i < valuePropertyCount; i++) {
+                valueKey = valueProperties[i];
+                
+                if (value.hasOwnProperty(valueKey)) {
+                    splitProperty = splitters[splitterID](resolve(value[valueKey]));
+                    
+                    for (unitKey in splitProperty) {
+                        splitValue[unitKey] = splitValue[unitKey] || {};
+                        splitValue[unitKey][valueKey] = splitProperty[unitKey];
+                    }
+                }
+            }
+        } else {
+            splitValue = splitters[splitterID](resolve(value));
+        }
+        
+        for (unitKey in splitValue) {
+            newValue[key + unitKey] = buildProperty(splitValue[unitKey], key, unitKey, value);
+        }
+        
+        return newValue;
+    };
+
+/*
+    Split CSS property into individual, tweenable values
+    
+    @param [string]: Name of CSS property
+    @param [string || number]: Value of CSS property
+*/
+module.exports = function (key, value) {
+    var splitterID = splitLookup[key],
+        values = (splitterID) ? split(key, value, splitterID) : {};
+    
+    // If we don't have a splitter, assign the property directly
+    if (!splitterID) {
+        values[key] = buildProperty(value, key);
+    }
+    
+    return values;
+};
+},{"../../utils/resolve.js":36,"../../utils/utils.js":38,"./default-property.js":21,"./split-lookup.js":23,"./splitters.js":25}],25:[function(require,module,exports){
+"use strict";
+
+var dictionary = require('./dictionary.js'),
+
+    /*
+        Split comma delimited into array
+        
+        Converts 255, 0, 0 -> [255, 0, 0]
+        
+        @param [string]: CSS comma delimited function
+    */
+    splitCommaDelimited = function (value) {
+        return value.split(/,\s*/);
+    },
+    
+    splitSpaceDelimited = function (value) {
+        return value.split(' ');
+    },
+    
+    /*
+        Break values out of css functional statement
+        
+        Converts rgba(255, 0, 0) -> "255, 0, 0"
+    */
+    functionBreak = function (value) {
+        return value.substring(value.indexOf('(') + 1, value.lastIndexOf(')'));
+    },
+    
+    /*
+        Convert hex into array of RGBA values
+        
+        @param [string]: Hex string
+            "#F00" -> [255, 0, 0]
+            "#FF0000" -> [255, 0, 0]
+            
+        @return [array]: RGBA values
+    */
+    hex = function (prop) {
+        var colors = [],
+            r, g, b;
+                    
+        // If we have 6 chacters, ie #FF0000
+        if (prop.length > 4) {
+            r = prop.substr(1, 2);
+            g = prop.substr(3, 2);
+            b = prop.substr(5, 2);
+
+        // Or 3 characters, ie #F00
+        } else {
+            r = prop.substr(1, 1);
+            g = prop.substr(2, 1);
+            b = prop.substr(3, 1);
+            r += r;
+            g += g;
+            b += b;
+        }
+            
+        return [
+            parseInt(r, 16),
+            parseInt(g, 16),
+            parseInt(b, 16)
+        ];
+    },
+    
+    /*
+        Test if string is color property
+        
+        @param [string]: Color property
+        @return [boolean]: True if color property
+    */
+    isColor = function (prop) {
+        return (prop.indexOf('#') > -1 || prop.indexOf('rgb') > -1);
+    },
+
+    /*
+        Public splitters
+        
+        Each splitter takes a string containing certain values and
+        splits them into an object containing key/value pairs, ie
+        color will return Red/Green/Blue/[Alpha] values
+    */
+    splitters = {
+        
+        /*
+            Split arbitarily-long array (for instance matrix property) into object
+            
+            @param [string]: Array values
+                "1, 1, 2, 4" -> {1, 1, 2, 4}
+                "1 1 2 4" -> {1, 1, 2, 4}
+                
+            @return [object]: Object with a metric for every array item,
+                named after its index
+        */
+        array: function (prop) {
+            var list = (prop.indexOf(',') > -1) ? splitCommaDelimited(prop) : splitSpaceDelimited(prop),
+                listLength = list.length,
+                i = 0,
+                arrayProps = {};
+                
+            for (; i < listLength; i++) {
+                arrayProps[i] = list[i];
+            }
+            
+            return arrayProps;
+        },
+        
+        /*
+            Convert color property into R/G/B/[A] object
+            
+            @param [string]: Color value has #, rgba, rgb, // hsl, hsla
+                "#f00" -> {255, 0, 0}
+                "#ff0000" -> {255, 0, 0}
+                "rgb(255, 0, 0)" -> {255, 0, 0}
+                "rgba(255, 0, 0, 1)" -> {255, 0, 0, 1}
+                //"hsl(0, 100%, 50%)" -> {255, 0, 0}
+                //"hsla(0, 100%, 50%, 1)" -> {255, 0, 0, 1}
+                
+            @return [object]: Object with metric for each 
+        */
+        color: function (prop) {
+            var colors = (prop.indexOf('#') > -1) ? hex(prop) : splitCommaDelimited(functionBreak(prop)),
+                numColors = colors.length,
+                terms = dictionary.colors,
+                i = 0,
+                rgba = {};
+            
+            for (; i < numColors; i++) {
+                rgba[terms[i]] = colors[i];
+            }
+            
+            return rgba;
+        },
+    
+        /*
+            Split dimensions in format "Top Right Bottom Left"
+            
+            @param [string]: Dimension values
+                "20px 0 30px 40px" -> {20px, 0, 30px, 40px}
+                "20px 0 30px" -> {20px, 0, 30px, 0}
+                "20px 0" -> {20px, 0, 20px, 0}
+                "20px" -> {20px, 20px, 20px, 20px}
+            
+            @return [object]: Object with T/R/B/L metrics
+        */
+        dimensions: function (prop) {
+            var dimensions = splitSpaceDelimited(prop),
+                numDimensions = dimensions.length,
+                terms = dictionary.dimensions,
+                jumpBack = (numDimensions !== 1) ? 2 : 1,
+                i, j = i = 0,
+                dimensionProps = {};
+            
+            for (; i < 4; i++) {
+                dimensionProps[terms[i]] = dimensions[j];
+                
+                // Jump back counter j if we've reached the end of our set values
+                j++;
+                j = (j === numDimensions) ? j - jumpBack : j;
+            }
+            
+            return dimensionProps;
+        },
+        
+        /*
+            Split positions in format "X Y Z"
+            
+            @param [string]: Position values
+                "20% 30% 0" -> {20%, 30%, 0}
+                "20% 30%" -> {20%, 30%}
+                "20%" -> {20%, 20%}
+        */
+        positions: function (prop) {
+            var positions = splitSpaceDelimited(prop),
+                numPositions = positions.length,
+                i = 0,
+                positionProps = {
+                    X: positions[0],
+                    Y: (numPositions > 1) ? positions[1] : positions[0]
+                };
+                
+            if (numPositions > 2) {
+                positionProps.Z = positions[2];
+            }
+            
+            return positionProps;
+        },
+        
+        /*
+            Split shadow properties "X, Y, Radius, Spread, Color"
+            
+            @param [string]: Shadow property
+            @return [object]
+        */
+        shadow: function (prop) {
+            var bits = splitSpaceDelimited(prop),
+                bitsLength = bits.length,
+                terms = dictionary.shadow,
+                reachedColor,
+                colorProp = '',
+                bit, color,
+                i = 0, unit,
+                shadowProps = {};
+                
+            for (; i< bitsLength; i++) {
+                bit = bits[i];
+                
+                // If we've reached the color property, append to color string
+                if (reachedColor || isColor(bit)) {
+                    reachedColor = true;
+                    colorProp += bit;
+
+                } else {
+                    shadowProps[terms[i]] = bit;
+                }
+            }
+            
+            color = splitters.color(colorProp);
+            
+            for (var unit in color) {
+                shadowProps[unit] = color[unit];
+            }
+            
+            return shadowProps;
+        }
+    };
+
+module.exports = splitters;
+},{"./dictionary.js":22}],26:[function(require,module,exports){
+"use strict";
+
+module.exports = {
+    
+    makeDefault: true,
+    
+    name: 'values',
+    
+    preprocess: function (key, value, action, props) {
+        action.setValue(key, value, props);
+    },
+    
+    onStart: function () {
+        
+    },
+    
+    onFrame: function (bucket, action, values, props, data) {
+        if (props.onFrame) {
+            props.onFrame.call(props.scope, bucket, data);
+        }
+    },
+    
+    onChange: function (bucket, action, values, props, data) {
+        if (props.onChange) {
+            props.onChange.call(props.scope, bucket, data);
+        }
+    },
+    
+    onEnd: function (bucket, action, values, props, data) {
+        if (props.onEnd) {
+            props.onEnd.call(props.scope, bucket, data);
+        }
+    }
+    
+};
+},{}],27:[function(require,module,exports){
 (function (global){
 /*
     Bezier function generator
@@ -2393,7 +2875,7 @@ var NEWTON_ITERATIONS = 8,
 
 module.exports = Bezier;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],20:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 "use strict";
 
 var utils = require('../utils/utils.js'),
@@ -2450,7 +2932,7 @@ Repo.prototype = {
 };
 
 module.exports = Repo;
-},{"../utils/utils.js":30}],21:[function(require,module,exports){
+},{"../utils/utils.js":38}],29:[function(require,module,exports){
 "use strict";
 
 var calc = require('../utils/calc.js'),
@@ -2578,7 +3060,7 @@ var calc = require('../utils/calc.js'),
     };
 
 module.exports = Value;
-},{"../utils/calc.js":22,"../utils/resolve.js":28,"../utils/utils.js":30,"./repo.js":20}],22:[function(require,module,exports){
+},{"../utils/calc.js":30,"../utils/resolve.js":36,"../utils/utils.js":38,"./repo.js":28}],30:[function(require,module,exports){
 /*
     Calculators
     ----------------------------------------
@@ -2969,7 +3451,7 @@ module.exports = {
         return this.value(easedProgress, from, to);
     }
 };
-},{"./utils.js":30}],23:[function(require,module,exports){
+},{"./utils.js":38}],31:[function(require,module,exports){
 /*
     Easing functions
     ----------------------------------------
@@ -3215,9 +3697,9 @@ EasingFunction.prototype = {
 
 module.exports = new EasingFunction();
 
-},{"../types/bezier.js":19,"./calc.js":22}],24:[function(require,module,exports){
+},{"../types/bezier.js":27,"./calc.js":30}],32:[function(require,module,exports){
 window.redshift = require('../redshift.js');
-},{"../redshift.js":18}],25:[function(require,module,exports){
+},{"../redshift.js":18}],33:[function(require,module,exports){
 "use strict";
 
 var // [number]: Default max size of history
@@ -3289,7 +3771,7 @@ History.prototype = {
 };
 
 module.exports = History;
-},{}],26:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 "use strict";
 
 var DELIMITER = '.';
@@ -3318,7 +3800,7 @@ module.exports = {
         return key.split(DELIMITER)[0];
     }
 };
-},{}],27:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 "use strict";
 
 var protectedProperties = ['scope',  'dom'];
@@ -3326,7 +3808,7 @@ var protectedProperties = ['scope',  'dom'];
 module.exports = function (key) {
     return (protectedProperties.indexOf(key) !== -1);
 };
-},{}],28:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 /*
     Property resolver
     -------------------------------------
@@ -3372,7 +3854,7 @@ module.exports = function (newValue, currentValue, parent, scope) {
     
     return newValue;
 };
-},{"./utils.js":30}],29:[function(require,module,exports){
+},{"./utils.js":38}],37:[function(require,module,exports){
 "use strict";
 
 var checkRequestAnimationFrame = function () {
@@ -3448,7 +3930,7 @@ module.exports = function () {
     checkRequestAnimationFrame();
     checkIndexOf();
 };
-},{}],30:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 /*
     Utility functions
 */
@@ -3706,4 +4188,4 @@ module.exports = {
     }
     
 };
-},{"../opts/keys.js":12,"./protected.js":27}]},{},[24]);
+},{"../opts/keys.js":12,"./protected.js":35}]},{},[32]);
