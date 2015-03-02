@@ -1,9 +1,41 @@
 "use strict";
 
-var splitLookup = require('./split-lookup.js'),
+var defaultProperty = require('./default-property.js'),
+    splitLookup = require('./split-lookup.js'),
+    splitters = require('./splitters.js'),
     
-    valueProperties = ['to', 'start', 'current', 'min', 'max'],
+    resolve = require('../../utils/resolve.js'),
+    utils = require('../../utils/utils.js'),
+    
+    valueProperties = ['current', 'to', 'start', 'min', 'max'],
     valuePropertyCount = valueProperties.length,
+    
+    /*
+        Build a property
+    */
+    buildProperty = function (value, parentKey, unitKey, parent, assignDefault) {
+        var property = defaultProperty[parentKey + unitKey]
+            || defaultProperty[unitKey]
+            || defaultProperty[parentKey]
+            || {};
+        
+        assignDefault = assignDefault || valueProperties[0];
+         
+        if (parent) {
+            property = utils.merge(parent, property);
+        }
+        
+        if (utils.isObj(value)) {
+            property = utils.merge(property, value);
+
+        } else {
+            property[assignDefault] = value;
+        }
+        
+        property.unitName = unitKey;
+        
+        return property;
+    },
 
     /*
         Split value with provided splitterID
@@ -11,36 +43,34 @@ var splitLookup = require('./split-lookup.js'),
     split = function (key, value, splitterID) {
         var splitValue = {},
             splitProperty = {},
+            newValue = {},
             valueKey = '',
             unitKey = '',
             i = 0;
-        
-        // If we're provided a value, split out all the values within too
+            
         if (utils.isObj(value)) {
+            
             for (; i < valuePropertyCount; i++) {
                 valueKey = valueProperties[i];
                 
-                if (value[valueKey]) {
-                    splitProperty = splitters[splitterID](resolve(value));
+                if (value.hasOwnProperty(valueKey)) {
+                    splitProperty = splitters[splitterID](resolve(value[valueKey]));
                     
-                    for (unitKey in splitValue) {
-                        splitValue[unitKey] = split[unitKey] || {};
+                    for (unitKey in splitProperty) {
+                        splitValue[unitKey] = splitValue[unitKey] || {};
                         splitValue[unitKey][valueKey] = splitProperty[unitKey];
                     }
                 }
             }
-        
-        // Or split the value itself
         } else {
             splitValue = splitters[splitterID](resolve(value));
         }
         
-        /** TODO fix this **/
         for (unitKey in splitValue) {
-            values[key + unitKey] = buildProperty(split[unitKey], key, unitKey, assignDefault, property);
+            newValue[key + unitKey] = buildProperty(splitValue[unitKey], key, unitKey, value);
         }
         
-        return splitValue;
+        return newValue;
     };
 
 /*
@@ -55,7 +85,7 @@ module.exports = function (key, value) {
     
     // If we don't have a splitter, assign the property directly
     if (!splitterID) {
-        values[key] = buildProperty();
+        values[key] = buildProperty(value, key);
     }
     
     return values;
