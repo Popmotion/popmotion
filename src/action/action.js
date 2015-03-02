@@ -127,6 +127,7 @@ Action.prototype = {
         @return [Action]
     */
     set: function (props) {
+        console.time('test');
         var self = this,
             currentProps = this.props.get(),
             key = '';
@@ -160,8 +161,14 @@ Action.prototype = {
             }
         }, props);
 
-        self.resetOrigins();
+        if (self.getValue('angle') && self.getValue('distance')) {
+            self.setValue('radialX', { link: KEY.ANGLE_DISTANCE });
+            self.setValue('radialY', { link: KEY.ANGLE_DISTANCE });
+        }
 
+        self.resetOrigins();
+console.trace();
+console.timeEnd('test');
         return self;
     },
     
@@ -370,23 +377,6 @@ Action.prototype = {
 
         return stepTaken;
     },
-    
-    setValues: function (newVals, inherit) {
-        var values = this.values;
-
-        for (var key in newVals) {
-            if (newVals.hasOwnProperty(key)) {
-                this.setValue(key, newVals[key], inherit);
-            }
-        }
-        
-        // If angle and distance exist, create an x and y
-        if (this.getValue('angle') && this.getValue('distance')) {
-            this.setValue('radialX', { link: KEY.ANGLE_DISTANCE });
-            this.setValue('radialY', { link: KEY.ANGLE_DISTANCE });
-        }
-    },
-    
     
     setValue: function (key, value, inherit, space) {
         var existing = this.getValue(key, space),
