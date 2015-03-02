@@ -16,30 +16,31 @@
 */
 "use strict";
 
-var utils = require('./utils.js');
+var calc = require('./calc.js'),
+    utils = require('./utils.js');
 
 module.exports = function (newValue, currentValue, parent, scope) {
     var splitValueUnit = {};
 
     // Run function if this is a function
-    if (utils.isFunc(newValue)) {
+    if (typeof newValue == 'function') {
         newValue = newValue.call(scope, currentValue);
     }
     
     // Check if value is relative ie '+=10' - could have been returned from function
-    if (utils.isRelativeValue(newValue)) {
+    if (newValue.indexOf && newValue.indexOf('=') > 0) {
         newValue = calc.relativeValue(currentValue, newValue);
     }
     
     // If value is still string it might have a unit property
-    if (utils.isString(newValue)) {
+    if (typeof newValue === 'string') {
         splitValueUnit = utils.splitValUnit(newValue);
         
         if (!isNaN(splitValueUnit)) {
-            newValue = splitValueUnit.value;
+            newValue = parseFloat(splitValueUnit.value);
             parent.unit = splitValueUnit.unit;
         }
     }
-    console.log(newValue);
+
     return newValue;
 };

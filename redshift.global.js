@@ -179,7 +179,7 @@ Action.prototype = {
 
         for (key in values) {
             if (values.hasOwnProperty(key)) {
-                values[key].set('origin', values[key].get('current'));
+                values[key].origin = values[key].current;
             }
         }
     },
@@ -377,8 +377,7 @@ Action.prototype = {
     },
     
     setValue: function (key, value, inherit, space) {
-        var existing = this.getValue(key, space),
-            newVal;
+        var existing = this.getValue(key, space);
 
         key = namespace.generate(key, space);
             
@@ -388,11 +387,8 @@ Action.prototype = {
 
         // Or create new if it doesn't
         } else {
-            newVal = new Value(key, value, this);
-            
-            this.values[key] = newVal;
+            this.values[key] = new Value(key, value, inherit, this);
         }
-
         return this;
     },
     
@@ -3177,7 +3173,7 @@ var defaults = require('../opts/value.js'),
     /*
         Value constructor
     */
-    Value = function (key, props, scope) {
+    Value = function (key, props, inherit, scope) {
         this.name = key;
         this.scope = scope;
         
@@ -3185,7 +3181,7 @@ var defaults = require('../opts/value.js'),
             props.current = props.start;
         }
 
-        this.set(props, defaults);
+        this.set(props, inherit);
     };
     
 Value.prototype = {
@@ -3206,7 +3202,7 @@ Value.prototype = {
             inherit = multiVal ? arguments[1] : false,
             key = '';
         
-        for (key in defaults) {
+        for (key in newProps) {
             newProp = undefined;
 
             // If 
@@ -3973,16 +3969,6 @@ module.exports = {
     */
     generate: function (key, namespace) {
         return namespace ? key + DELIMITER + namespace : key;
-    },
-    
-    /*
-        Strip a namespaced key of its namespace
-        
-        strip('bar.foo') -> 'foo'
-        strip('foo') -> 'foo'
-    */
-    strip: function (key) {
-        return key.split(DELIMITER)[0];
     }
 };
 },{}],38:[function(require,module,exports){
@@ -4012,34 +3998,35 @@ module.exports = function (key) {
 */
 "use strict";
 
-var utils = require('./utils.js');
+var calc = require('./calc.js'),
+    utils = require('./utils.js');
 
 module.exports = function (newValue, currentValue, parent, scope) {
     var splitValueUnit = {};
 
     // Run function if this is a function
-    if (utils.isFunc(newValue)) {
+    if (typeof newValue == 'function') {
         newValue = newValue.call(scope, currentValue);
     }
     
     // Check if value is relative ie '+=10' - could have been returned from function
-    if (utils.isRelativeValue(newValue)) {
+    if (newValue.indexOf && newValue.indexOf('=') > 0) {
         newValue = calc.relativeValue(currentValue, newValue);
     }
     
     // If value is still string it might have a unit property
-    if (utils.isString(newValue)) {
+    if (typeof newValue === 'string') {
         splitValueUnit = utils.splitValUnit(newValue);
         
         if (!isNaN(splitValueUnit)) {
-            newValue = splitValueUnit.value;
+            newValue = parseFloat(splitValueUnit.value);
             parent.unit = splitValueUnit.unit;
         }
     }
-    console.log(newValue);
+
     return newValue;
 };
-},{"./utils.js":41}],40:[function(require,module,exports){
+},{"./calc.js":33,"./utils.js":41}],40:[function(require,module,exports){
 "use strict";
 
 var checkRequestAnimationFrame = function () {

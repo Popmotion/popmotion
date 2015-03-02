@@ -28,7 +28,7 @@ var defaults = require('../opts/value.js'),
     /*
         Value constructor
     */
-    Value = function (key, props, scope) {
+    Value = function (key, props, inherit, scope) {
         this.name = key;
         this.scope = scope;
         
@@ -36,7 +36,7 @@ var defaults = require('../opts/value.js'),
             props.current = props.start;
         }
 
-        this.set(props, defaults);
+        this.set(props, inherit);
     };
     
 Value.prototype = {
@@ -57,7 +57,7 @@ Value.prototype = {
             inherit = multiVal ? arguments[1] : false,
             key = '';
         
-        for (key in defaults) {
+        for (key in newProps) {
             newProp = undefined;
 
             // If 

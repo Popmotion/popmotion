@@ -178,7 +178,7 @@ Action.prototype = {
 
         for (key in values) {
             if (values.hasOwnProperty(key)) {
-                values[key].set('origin', values[key].get('current'));
+                values[key].origin = values[key].current;
             }
         }
     },
@@ -376,8 +376,7 @@ Action.prototype = {
     },
     
     setValue: function (key, value, inherit, space) {
-        var existing = this.getValue(key, space),
-            newVal;
+        var existing = this.getValue(key, space);
 
         key = namespace.generate(key, space);
             
@@ -387,11 +386,8 @@ Action.prototype = {
 
         // Or create new if it doesn't
         } else {
-            newVal = new Value(key, value, this);
-            
-            this.values[key] = newVal;
+            this.values[key] = new Value(key, value, inherit, this);
         }
-
         return this;
     },
     
