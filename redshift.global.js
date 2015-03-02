@@ -684,7 +684,7 @@ module.exports = function (action, framestamp, frameDuration) {
     if (rubix.updateInput) {
         rubix.updateInput(action, props, framestamp);
     }
-    
+
     // Fire onStart if first frame
     if (action.firstFrame) {
         if (props.onStart) {
@@ -703,7 +703,7 @@ module.exports = function (action, framestamp, frameDuration) {
     for (; i < orderLength; i++) {
         // Get value and key
         key = order[i];
-        value = values[key].store;
+        value = values[key];
 
         // Load rubix for this value
         valueRubix = rubix;
@@ -3220,6 +3220,12 @@ Value.prototype = {
                 this[key] = defaults[key];
             }
         }
+        
+        // Set hasRange to true if min and max are numbers
+        this.hasRange = (utils.isNum(this.min) && utils.isNum(this.max)) ? true : false;
+        
+        // Update Action value process order
+        this.scope.updateOrder(this.name, utils.isString(this.link));
         
         return this;
     },
