@@ -461,7 +461,7 @@ Action.prototype = {
 };
 
 module.exports = Action;
-},{"../opts/action.js":11,"../opts/keys.js":12,"../opts/value.js":13,"../process/process.js":16,"../types/repo.js":28,"../types/value.js":29,"../utils/calc.js":30,"../utils/namespace.js":34,"../utils/utils.js":38,"./parse-args.js":2,"./processor.js":4,"./queue.js":5,"./routes.js":6}],2:[function(require,module,exports){
+},{"../opts/action.js":11,"../opts/keys.js":12,"../opts/value.js":13,"../process/process.js":16,"../types/repo.js":30,"../types/value.js":31,"../utils/calc.js":32,"../utils/namespace.js":36,"../utils/utils.js":40,"./parse-args.js":2,"./processor.js":4,"./queue.js":5,"./routes.js":6}],2:[function(require,module,exports){
 "use strict";
 
 var utils = require('../utils/utils.js'),
@@ -590,7 +590,7 @@ module.exports = {
     
     generic: generic
 };
-},{"../input/pointer.js":10,"../utils/utils.js":38,"./presets.js":3}],3:[function(require,module,exports){
+},{"../input/pointer.js":10,"../utils/utils.js":40,"./presets.js":3}],3:[function(require,module,exports){
 "use strict";
 
 var KEY = require('../opts/keys.js'),
@@ -673,7 +673,7 @@ Presets.prototype = {
 };
 
 module.exports = new Presets();
-},{"../opts/keys.js":12,"../utils/utils.js":38}],4:[function(require,module,exports){
+},{"../opts/keys.js":12,"../utils/utils.js":40}],4:[function(require,module,exports){
 /*
     Process actions
 */
@@ -722,7 +722,7 @@ module.exports = function (action, framestamp, frameDuration) {
         // Get value and key
         key = order[i];
         value = values[key].store;
-        
+
         // Load rubix for this value
         valueRubix = rubix;
         if (value.link) {
@@ -782,7 +782,7 @@ module.exports = function (action, framestamp, frameDuration) {
     
     action.framestamp = framestamp;
 };
-},{"../opts/keys.js":12,"../utils/calc.js":30,"./routes.js":6,"./rubix.js":7}],5:[function(require,module,exports){
+},{"../opts/keys.js":12,"../utils/calc.js":32,"./routes.js":6,"./rubix.js":7}],5:[function(require,module,exports){
 "use strict";
 
 var Queue = function () {
@@ -928,7 +928,7 @@ var utils = require('../utils/utils.js'),
 })();
 
 module.exports = manager; 
-},{"../routes/attr.js":19,"../routes/css.js":20,"../routes/values.js":26,"../utils/utils.js":38}],7:[function(require,module,exports){
+},{"../routes/attr.js":19,"../routes/css.js":20,"../routes/values.js":28,"../utils/utils.js":40}],7:[function(require,module,exports){
 /*
     Rubix modules
     ----------------------------------------
@@ -988,7 +988,7 @@ Rubix.prototype = {
                 progress = (value.steps) ? utils.stepProgress(progress, 1, value.steps) : progress;
                 newValue = easing.withinRange(progress, value.origin, value.to, value.ease);
             }
-            
+
             return newValue;
         },
         
@@ -1187,7 +1187,7 @@ Rubix.prototype = {
 rubixController = new Rubix();
 
 module.exports = rubixController;
-},{"../opts/keys.js":12,"../utils/calc.js":30,"../utils/easing.js":31,"../utils/utils.js":38,"./simulate.js":8}],8:[function(require,module,exports){
+},{"../opts/keys.js":12,"../utils/calc.js":32,"../utils/easing.js":33,"../utils/utils.js":40,"./simulate.js":8}],8:[function(require,module,exports){
 "use strict";
 
 var frictionStopLimit = .2,
@@ -1263,7 +1263,7 @@ Simulate.prototype = {
 simulate = new Simulate();
 
 module.exports = simulate;
-},{"../utils/calc.js":30}],9:[function(require,module,exports){
+},{"../utils/calc.js":32}],9:[function(require,module,exports){
 /*
     Input controller
 */
@@ -1390,7 +1390,7 @@ Input.prototype = {
 };
 
 module.exports = Input;
-},{"../utils/calc.js":30,"../utils/history.js":33,"../utils/utils.js":38}],10:[function(require,module,exports){
+},{"../utils/calc.js":32,"../utils/history.js":35,"../utils/utils.js":40}],10:[function(require,module,exports){
 "use strict";
 
 var Input = require('./input.js'),
@@ -1608,6 +1608,10 @@ module.exports = {
     
     // [string]: Non-namespaced output value
     name: '',
+    
+    parent: '',
+    
+    unitName: '',
 
     /*
         Link properties
@@ -2243,7 +2247,7 @@ Redshift.prototype = {
 };
 
 module.exports = new Redshift();
-},{"./action/action.js":1,"./action/presets.js":3,"./input/input.js":9,"./process/process.js":16,"./utils/calc.js":30,"./utils/easing.js":31,"./utils/shim.js":37}],19:[function(require,module,exports){
+},{"./action/action.js":1,"./action/presets.js":3,"./input/input.js":9,"./process/process.js":16,"./utils/calc.js":32,"./utils/easing.js":33,"./utils/shim.js":39}],19:[function(require,module,exports){
 "use strict";
 
 module.exports = {
@@ -2267,7 +2271,9 @@ module.exports = {
 },{}],20:[function(require,module,exports){
 "use strict";
 
-var split = require('./css/split.js');
+var build = require('./css/build.js'),
+    split = require('./css/split.js'),
+    styler = require('./css/styler.js');
 
 module.exports = {
     
@@ -2286,12 +2292,14 @@ module.exports = {
         var dom = props.dom;
 
         if (dom) {
-            
+            styler(props.dom, build(output, props.css));
         }
     }
     
 };
-},{"./css/split.js":24}],21:[function(require,module,exports){
+},{"./css/build.js":21,"./css/split.js":25,"./css/styler.js":27}],21:[function(require,module,exports){
+
+},{}],22:[function(require,module,exports){
 "use strict";
 
 var defaults = {
@@ -2310,16 +2318,17 @@ defaults.Red = defaults.Green = defaults.Blue = defaults.color;
 defaults.Alpha = defaults.opacity;
 
 module.exports = defaults;
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 "use strict";
 
 module.exports = {
     colors: ['Red', 'Green', 'Blue', 'Alpha'],
     positions: ['X', 'Y', 'Z'],
     dimensions: ['Top', 'Right', 'Bottom', 'Left'],
-    shadow: ['X', 'Y', 'Radius', 'Spread', 'Color']
+    shadow: ['X', 'Y', 'Radius', 'Spread', 'Color'],
+    valueProps: ['current', 'to', 'start', 'min', 'max']
 };
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 "use strict";
 
 var ARRAY = 'array',
@@ -2360,17 +2369,18 @@ module.exports = {
     textShadow: SHADOW,
     boxShadow: SHADOW
 };
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 "use strict";
 
 var defaultProperty = require('./default-property.js'),
+    dictionary = require('./dictionary.js'),
     splitLookup = require('./split-lookup.js'),
     splitters = require('./splitters.js'),
     
     resolve = require('../../utils/resolve.js'),
     utils = require('../../utils/utils.js'),
     
-    valueProperties = ['current', 'to', 'start', 'min', 'max'],
+    valueProperties = dictionary.valueProps,
     valuePropertyCount = valueProperties.length,
     
     /*
@@ -2395,7 +2405,9 @@ var defaultProperty = require('./default-property.js'),
             property[assignDefault] = value;
         }
         
+        property.parent = parentKey;
         property.unitName = unitKey;
+        property.name = parentKey + unitKey;
         
         return property;
     },
@@ -2453,7 +2465,7 @@ module.exports = function (key, value) {
     
     return values;
 };
-},{"../../utils/resolve.js":36,"../../utils/utils.js":38,"./default-property.js":21,"./split-lookup.js":23,"./splitters.js":25}],25:[function(require,module,exports){
+},{"../../utils/resolve.js":38,"../../utils/utils.js":40,"./default-property.js":22,"./dictionary.js":23,"./split-lookup.js":24,"./splitters.js":26}],26:[function(require,module,exports){
 "use strict";
 
 var dictionary = require('./dictionary.js'),
@@ -2681,7 +2693,70 @@ var dictionary = require('./dictionary.js'),
     };
 
 module.exports = splitters;
-},{"./dictionary.js":22}],26:[function(require,module,exports){
+},{"./dictionary.js":23}],27:[function(require,module,exports){
+"use strict";
+
+var cssStyler = function () {
+	var testElement = document.getElementsByTagName('body')[0],
+		prefixes = ['Webkit','Moz','O','ms', ''],
+		prefixesLength = prefixes.length,
+		cachedPrefix = '',
+		cache = {},
+		
+		/*
+			Test style property for prefixed version
+			
+			@param [string]: Style property
+			@return [string]: Cached property name
+		*/
+		testPrefix = function (key) {
+			cache[key] = key;
+
+			for (var i = 0; i < prefixesLength; i++) {
+				var prefixed = prefixes[i] + key.charAt(0).toUpperCase() + key.slice(1);
+
+				if (testElement.style.hasOwnProperty(prefixed)) {
+					cache[key] = prefixed;
+				}
+			}
+			
+			return cache[key];
+		};
+		
+	/*
+		Stylee function call
+		
+		Syntax
+			
+			Get property
+				style(element, 'property');
+				
+			Set property
+				style(element, {
+					foo: 'bar'
+				});
+	*/
+	return function (element, prop) {
+		// If prop is a string, we're requesting a property
+		if (typeof prop === 'string') {
+			return window.getComputedStyle(element, null)[cache[prop] || testPrefix(prop)];
+		
+		// If it's an object, we're setting
+		} else {
+			
+			for (var key in prop) {
+				if (prop.hasOwnProperty(key)) {
+					element.style[cache[key] || testPrefix(key)] = prop[key];
+				}
+			}
+			
+			return this;
+		}
+	}
+};
+
+module.exports = new cssStyler();
+},{}],28:[function(require,module,exports){
 "use strict";
 
 var fireCallback = function (name, bucket, action, values, props, data) {
@@ -2713,7 +2788,7 @@ module.exports = {
     }
     
 };
-},{}],27:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 (function (global){
 /*
     Bezier function generator
@@ -2871,10 +2946,12 @@ var NEWTON_ITERATIONS = 8,
 
 module.exports = Bezier;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],28:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 "use strict";
 
 var utils = require('../utils/utils.js'),
+    dictionary = require('../routes/css/dictionary.js'),
+    valueProps = dictionary.valueProps,
 
     /*
         Repo constructor
@@ -2913,13 +2990,13 @@ Repo.prototype = {
         if (utils.isObj(data)) {
             for (var key in data) {
                 if (data.hasOwnProperty(key)) {
-                    this.store[key] = data[key];
+                    this.store[key] = (valueProps.indexOf(key) > -1) ? parseFloat(data[key]) : data[key];
                 }
             }
 
         // Or add specific property
         } else if (data !== undefined) {
-            this.store[data] = arguments[1];
+            this.store[data] = (valueProps.indexOf(data) > -1) ? parseFloat(arguments[1]) : arguments[1];
         }
 
         return this;
@@ -2928,7 +3005,7 @@ Repo.prototype = {
 };
 
 module.exports = Repo;
-},{"../utils/utils.js":38}],29:[function(require,module,exports){
+},{"../routes/css/dictionary.js":23,"../utils/utils.js":40}],31:[function(require,module,exports){
 "use strict";
 
 var calc = require('../utils/calc.js'),
@@ -3056,7 +3133,7 @@ var calc = require('../utils/calc.js'),
     };
 
 module.exports = Value;
-},{"../utils/calc.js":30,"../utils/resolve.js":36,"../utils/utils.js":38,"./repo.js":28}],30:[function(require,module,exports){
+},{"../utils/calc.js":32,"../utils/resolve.js":38,"../utils/utils.js":40,"./repo.js":30}],32:[function(require,module,exports){
 /*
     Calculators
     ----------------------------------------
@@ -3447,7 +3524,7 @@ module.exports = {
         return this.value(easedProgress, from, to);
     }
 };
-},{"./utils.js":38}],31:[function(require,module,exports){
+},{"./utils.js":40}],33:[function(require,module,exports){
 /*
     Easing functions
     ----------------------------------------
@@ -3693,9 +3770,9 @@ EasingFunction.prototype = {
 
 module.exports = new EasingFunction();
 
-},{"../types/bezier.js":27,"./calc.js":30}],32:[function(require,module,exports){
+},{"../types/bezier.js":29,"./calc.js":32}],34:[function(require,module,exports){
 window.redshift = require('../redshift.js');
-},{"../redshift.js":18}],33:[function(require,module,exports){
+},{"../redshift.js":18}],35:[function(require,module,exports){
 "use strict";
 
 var // [number]: Default max size of history
@@ -3767,7 +3844,7 @@ History.prototype = {
 };
 
 module.exports = History;
-},{}],34:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 "use strict";
 
 var DELIMITER = '.';
@@ -3796,7 +3873,7 @@ module.exports = {
         return key.split(DELIMITER)[0];
     }
 };
-},{}],35:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 "use strict";
 
 var protectedProperties = ['scope',  'dom'];
@@ -3804,7 +3881,7 @@ var protectedProperties = ['scope',  'dom'];
 module.exports = function (key) {
     return (protectedProperties.indexOf(key) !== -1);
 };
-},{}],36:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 /*
     Property resolver
     -------------------------------------
@@ -3850,7 +3927,7 @@ module.exports = function (newValue, currentValue, parent, scope) {
     
     return newValue;
 };
-},{"./utils.js":38}],37:[function(require,module,exports){
+},{"./utils.js":40}],39:[function(require,module,exports){
 "use strict";
 
 var checkRequestAnimationFrame = function () {
@@ -3926,7 +4003,7 @@ module.exports = function () {
     checkRequestAnimationFrame();
     checkIndexOf();
 };
-},{}],38:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 /*
     Utility functions
 */
@@ -4184,4 +4261,4 @@ module.exports = {
     }
     
 };
-},{"../opts/keys.js":12,"./protected.js":35}]},{},[32]);
+},{"../opts/keys.js":12,"./protected.js":37}]},{},[34]);

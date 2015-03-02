@@ -46,7 +46,7 @@ module.exports = function (action, framestamp, frameDuration) {
         // Get value and key
         key = order[i];
         value = values[key].store;
-        
+
         // Load rubix for this value
         valueRubix = rubix;
         if (value.link) {

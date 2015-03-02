@@ -57,7 +57,7 @@ Rubix.prototype = {
                 progress = (value.steps) ? utils.stepProgress(progress, 1, value.steps) : progress;
                 newValue = easing.withinRange(progress, value.origin, value.to, value.ease);
             }
-            
+
             return newValue;
         },
         

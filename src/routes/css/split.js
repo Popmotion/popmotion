@@ -1,13 +1,14 @@
 "use strict";
 
 var defaultProperty = require('./default-property.js'),
+    dictionary = require('./dictionary.js'),
     splitLookup = require('./split-lookup.js'),
     splitters = require('./splitters.js'),
     
     resolve = require('../../utils/resolve.js'),
     utils = require('../../utils/utils.js'),
     
-    valueProperties = ['current', 'to', 'start', 'min', 'max'],
+    valueProperties = dictionary.valueProps,
     valuePropertyCount = valueProperties.length,
     
     /*
@@ -32,7 +33,9 @@ var defaultProperty = require('./default-property.js'),
             property[assignDefault] = value;
         }
         
+        property.parent = parentKey;
         property.unitName = unitKey;
+        property.name = parentKey + unitKey;
         
         return property;
     },

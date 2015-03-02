@@ -1,6 +1,8 @@
 "use strict";
 
 var utils = require('../utils/utils.js'),
+    dictionary = require('../routes/css/dictionary.js'),
+    valueProps = dictionary.valueProps,
 
     /*
         Repo constructor
@@ -39,13 +41,13 @@ Repo.prototype = {
         if (utils.isObj(data)) {
             for (var key in data) {
                 if (data.hasOwnProperty(key)) {
-                    this.store[key] = data[key];
+                    this.store[key] = (valueProps.indexOf(key) > -1) ? parseFloat(data[key]) : data[key];
                 }
             }
 
         // Or add specific property
         } else if (data !== undefined) {
-            this.store[data] = arguments[1];
+            this.store[data] = (valueProps.indexOf(data) > -1) ? parseFloat(arguments[1]) : arguments[1];
         }
 
         return this;

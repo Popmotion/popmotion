@@ -27,6 +27,10 @@ module.exports = {
     
     // [string]: Non-namespaced output value
     name: '',
+    
+    parent: '',
+    
+    unitName: '',
 
     /*
         Link properties

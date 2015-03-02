@@ -4,5 +4,6 @@ module.exports = {
     colors: ['Red', 'Green', 'Blue', 'Alpha'],
     positions: ['X', 'Y', 'Z'],
     dimensions: ['Top', 'Right', 'Bottom', 'Left'],
-    shadow: ['X', 'Y', 'Radius', 'Spread', 'Color']
+    shadow: ['X', 'Y', 'Radius', 'Spread', 'Color'],
+    valueProps: ['current', 'to', 'start', 'min', 'max']
 };

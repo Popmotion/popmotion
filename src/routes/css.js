@@ -1,6 +1,8 @@
 "use strict";
 
-var split = require('./css/split.js');
+var build = require('./css/build.js'),
+    split = require('./css/split.js'),
+    styler = require('./css/styler.js');
 
 module.exports = {
     
@@ -19,7 +21,7 @@ module.exports = {
         var dom = props.dom;
 
         if (dom) {
-            
+            styler(props.dom, build(output, props.css));
         }
     }
     
