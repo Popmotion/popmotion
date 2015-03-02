@@ -26,7 +26,7 @@ module.exports = function (action, framestamp, frameDuration) {
     if (rubix.updateInput) {
         rubix.updateInput(action, props, framestamp);
     }
-    
+
     // Fire onStart if first frame
     if (action.firstFrame) {
         if (props.onStart) {
@@ -45,7 +45,7 @@ module.exports = function (action, framestamp, frameDuration) {
     for (; i < orderLength; i++) {
         // Get value and key
         key = order[i];
-        value = values[key].store;
+        value = values[key];
 
         // Load rubix for this value
         valueRubix = rubix;

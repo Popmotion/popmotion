@@ -76,6 +76,12 @@ Value.prototype = {
             }
         }
         
+        // Set hasRange to true if min and max are numbers
+        this.hasRange = (utils.isNum(this.min) && utils.isNum(this.max)) ? true : false;
+        
+        // Update Action value process order
+        action.updateOrder(this.key, utils.isString(this.link));
+        
         return this;
     },
     
