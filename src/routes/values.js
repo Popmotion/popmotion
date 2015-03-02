@@ -1,5 +1,11 @@
 "use strict";
 
+var fireCallback = function (name, bucket, action, values, props, data) {
+    if (props[name]) {
+        props[name].call(props.scope, bucket, data);
+    }
+}
+
 module.exports = {
     
     makeDefault: true,
@@ -10,26 +16,16 @@ module.exports = {
         action.setValue(key, value, props);
     },
     
-    onStart: function () {
-        
-    },
-    
     onFrame: function (bucket, action, values, props, data) {
-        if (props.onFrame) {
-            props.onFrame.call(props.scope, bucket, data);
-        }
+        fireCallback('onFrame', bucket, action, values, props, data);
     },
     
     onChange: function (bucket, action, values, props, data) {
-        if (props.onChange) {
-            props.onChange.call(props.scope, bucket, data);
-        }
+        fireCallback('onChange', bucket, action, values, props, data);
     },
     
     onEnd: function (bucket, action, values, props, data) {
-        if (props.onEnd) {
-            props.onEnd.call(props.scope, bucket, data);
-        }
+        fireCallback('onEnd', bucket, action, values, props, data);
     }
     
 };
