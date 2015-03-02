@@ -19,7 +19,7 @@ var templates = require('../css/templates.js'),
 
         for (var key in props) {
             prop = props[key];
-            value = values[key + '.css'].store,
+            value = values[namespace(key, 'css')],
             parent = value.parent,
             unit = value.unitName;
             

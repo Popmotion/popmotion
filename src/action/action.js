@@ -393,7 +393,7 @@ Action.prototype = {
     
     
     getValue: function (key, space) {
-        key = namespace.generate(key, space);
+        key = namespace(key, space);
         return this.values[key];
     },
     
