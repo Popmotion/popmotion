@@ -80,7 +80,7 @@ Value.prototype = {
         this.hasRange = (utils.isNum(this.min) && utils.isNum(this.max)) ? true : false;
         
         // Update Action value process order
-        action.updateOrder(this.key, utils.isString(this.link));
+        this.scope.updateOrder(this.name, utils.isString(this.link));
         
         return this;
     },
