@@ -51,10 +51,12 @@ Value.prototype = {
             .set(value) // Set .current
     */
     set: function () {
-        var multiVal = utils.isObj(arguments[0]),
-            newProps = multiVal ? arguments[0] : parseSetArgs.apply(this, arguments),
+        var self = this,
+            args = arguments,
+            multiVal = utils.isObj(args[0]),
+            newProps = multiVal ? args[0] : parseSetArgs.apply(self, args),
             newProp,
-            inherit = multiVal ? arguments[1] : false,
+            inherit = multiVal ? args[1] : false,
             key = '';
         
         for (key in defaults) {
@@ -69,20 +71,20 @@ Value.prototype = {
             }
             
             if (newProp !== undefined) {
-                this[key] = resolve(newProp, this[key], this, this.scope);
+                self[key] = resolve(newProp, self[key], self, self.scope);
     
-            } else if (this[key] === undefined) {
-                this[key] = defaults[key];
+            } else if (self[key] === undefined) {
+                self[key] = defaults[key];
             }
         }
         
         // Set hasRange to true if min and max are numbers
-        this.hasRange = (utils.isNum(this.min) && utils.isNum(this.max)) ? true : false;
+        self.hasRange = (utils.isNum(self.min) && utils.isNum(self.max)) ? true : false;
         
         // Update Action value process order
-        this.scope.updateOrder(this.key, utils.isString(this.link));
+        self.scope.updateOrder(self.key, utils.isString(self.link));
         
-        return this;
+        return self;
     },
     
     /*
