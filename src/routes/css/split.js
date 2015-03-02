@@ -2,7 +2,7 @@
 
 var defaultProperty = require('./default-property.js'),
     dictionary = require('./dictionary.js'),
-    splitLookup = require('./split-lookup.js'),
+    splitLookup = require('./splitter-lookup.js'),
     splitters = require('./splitters.js'),
     
     resolve = require('../../utils/resolve.js'),

@@ -461,7 +461,7 @@ Action.prototype = {
 };
 
 module.exports = Action;
-},{"../opts/action.js":11,"../opts/keys.js":12,"../opts/value.js":13,"../process/process.js":16,"../types/repo.js":30,"../types/value.js":31,"../utils/calc.js":32,"../utils/namespace.js":36,"../utils/utils.js":40,"./parse-args.js":2,"./processor.js":4,"./queue.js":5,"./routes.js":6}],2:[function(require,module,exports){
+},{"../opts/action.js":11,"../opts/keys.js":12,"../opts/value.js":13,"../process/process.js":16,"../types/repo.js":31,"../types/value.js":32,"../utils/calc.js":33,"../utils/namespace.js":37,"../utils/utils.js":41,"./parse-args.js":2,"./processor.js":4,"./queue.js":5,"./routes.js":6}],2:[function(require,module,exports){
 "use strict";
 
 var utils = require('../utils/utils.js'),
@@ -590,7 +590,7 @@ module.exports = {
     
     generic: generic
 };
-},{"../input/pointer.js":10,"../utils/utils.js":40,"./presets.js":3}],3:[function(require,module,exports){
+},{"../input/pointer.js":10,"../utils/utils.js":41,"./presets.js":3}],3:[function(require,module,exports){
 "use strict";
 
 var KEY = require('../opts/keys.js'),
@@ -673,7 +673,7 @@ Presets.prototype = {
 };
 
 module.exports = new Presets();
-},{"../opts/keys.js":12,"../utils/utils.js":40}],4:[function(require,module,exports){
+},{"../opts/keys.js":12,"../utils/utils.js":41}],4:[function(require,module,exports){
 /*
     Process actions
 */
@@ -782,7 +782,7 @@ module.exports = function (action, framestamp, frameDuration) {
     
     action.framestamp = framestamp;
 };
-},{"../opts/keys.js":12,"../utils/calc.js":32,"./routes.js":6,"./rubix.js":7}],5:[function(require,module,exports){
+},{"../opts/keys.js":12,"../utils/calc.js":33,"./routes.js":6,"./rubix.js":7}],5:[function(require,module,exports){
 "use strict";
 
 var Queue = function () {
@@ -928,7 +928,7 @@ var utils = require('../utils/utils.js'),
 })();
 
 module.exports = manager; 
-},{"../routes/attr.js":19,"../routes/css.js":20,"../routes/values.js":28,"../utils/utils.js":40}],7:[function(require,module,exports){
+},{"../routes/attr.js":19,"../routes/css.js":20,"../routes/values.js":29,"../utils/utils.js":41}],7:[function(require,module,exports){
 /*
     Rubix modules
     ----------------------------------------
@@ -1187,7 +1187,7 @@ Rubix.prototype = {
 rubixController = new Rubix();
 
 module.exports = rubixController;
-},{"../opts/keys.js":12,"../utils/calc.js":32,"../utils/easing.js":33,"../utils/utils.js":40,"./simulate.js":8}],8:[function(require,module,exports){
+},{"../opts/keys.js":12,"../utils/calc.js":33,"../utils/easing.js":34,"../utils/utils.js":41,"./simulate.js":8}],8:[function(require,module,exports){
 "use strict";
 
 var frictionStopLimit = .2,
@@ -1263,7 +1263,7 @@ Simulate.prototype = {
 simulate = new Simulate();
 
 module.exports = simulate;
-},{"../utils/calc.js":32}],9:[function(require,module,exports){
+},{"../utils/calc.js":33}],9:[function(require,module,exports){
 /*
     Input controller
 */
@@ -1390,7 +1390,7 @@ Input.prototype = {
 };
 
 module.exports = Input;
-},{"../utils/calc.js":32,"../utils/history.js":35,"../utils/utils.js":40}],10:[function(require,module,exports){
+},{"../utils/calc.js":33,"../utils/history.js":36,"../utils/utils.js":41}],10:[function(require,module,exports){
 "use strict";
 
 var Input = require('./input.js'),
@@ -2247,7 +2247,7 @@ Redshift.prototype = {
 };
 
 module.exports = new Redshift();
-},{"./action/action.js":1,"./action/presets.js":3,"./input/input.js":9,"./process/process.js":16,"./utils/calc.js":32,"./utils/easing.js":33,"./utils/shim.js":39}],19:[function(require,module,exports){
+},{"./action/action.js":1,"./action/presets.js":3,"./input/input.js":9,"./process/process.js":16,"./utils/calc.js":33,"./utils/easing.js":34,"./utils/shim.js":40}],19:[function(require,module,exports){
 "use strict";
 
 module.exports = {
@@ -2297,9 +2297,95 @@ module.exports = {
     }
     
 };
-},{"./css/build.js":21,"./css/split.js":25,"./css/styler.js":27}],21:[function(require,module,exports){
+},{"./css/build.js":21,"./css/split.js":24,"./css/styler.js":27}],21:[function(require,module,exports){
+"use strict";
 
-},{}],22:[function(require,module,exports){
+var templates = require('../css/templates.js'),
+    lookup = require('../css/splitter-lookup.js'),
+    
+    /*
+        Generate a precache
+        
+        Loops through Redshift output and maps parentUnit variables
+        parent.unit objects
+        
+        @param [object]: Object of individual CSS output
+        @param [object]: All Action values
+        @return [object]: Precache
+    */
+    precache = function (props, values) {
+        var precache = {},
+            prop, value, parent, unit;
+
+        for (var key in props) {
+            prop = props[key];
+            value = values[key].store,
+            parent = value.parent,
+            unit = value.unitName;
+            
+            // If this property needs to be recombined
+            if (parent && unit) {
+                precache[parent] = precache[parent] || {};
+                precache[parent][unit] = props[key];
+            
+            // Or it we can assign directly
+            } else {
+                precache[key] = props[key];
+            }
+        }
+
+        return precache;
+    },
+    
+    /*
+        Assign CSS
+        
+        @param [object]: Precache of CSS properties
+        @param [object] (optional): Cache of previous CSS properties
+        @return [object]: Generated object of valid CSS properties
+    */
+    assignCSS = function (precache, currentCache) {
+        var latest = {},
+            cache = {},
+            rule = '';
+        
+        // Loop through precache and generate rules
+        for (var key in precache) {
+            rule = generateRule(key, precache[key]);
+            
+            // Only add if changed
+            if (currentCache && currentCache[key] !== rule) {
+                latest[key] = rule;
+            }
+            
+            cache[key] = rule;
+        }
+        
+        // handle transform properties
+
+        return {
+            latest: latest,
+            cache: cache
+        };
+    },
+    
+    generateRule = function (key, values) {
+        var template = templates[lookup[key]],
+            rule = '';
+        
+        if (template) {
+            rule = template(values);
+        } else {
+            rule = values;
+        }
+        
+        return rule;
+    };
+
+module.exports = function (output, cache, values) {
+    return assignCSS(precache(output, values), cache);
+}
+},{"../css/splitter-lookup.js":25,"../css/templates.js":28}],22:[function(require,module,exports){
 "use strict";
 
 var defaults = {
@@ -2331,50 +2417,9 @@ module.exports = {
 },{}],24:[function(require,module,exports){
 "use strict";
 
-var ARRAY = 'array',
-    COLOR = 'color',
-    POSITIONS = 'positions',
-    DIMENSIONS = 'dimensions',
-    SHADOW = 'shadow';
-
-module.exports = {
-    // Color properties
-    color: COLOR,
-    backgroundColor: COLOR,
-    borderColor: COLOR,
-    borderTopColor: COLOR,
-    borderRightColor: COLOR,
-    borderBottomColor: COLOR,
-    borderLeftColor: COLOR,
-    outlineColor: COLOR,
-
-    // Dimensions
-    margin: DIMENSIONS,
-    padding: DIMENSIONS,
-
-    // Positions
-    backgroundPosition: POSITIONS,
-    perspectiveOrigin: POSITIONS,
-    transformOrigin: POSITIONS,
-    skew: POSITIONS,
-    scale: POSITIONS,
-    translate: POSITIONS,
-    rotate: POSITIONS,
-
-    // Arrays
-    matrix: ARRAY,
-    matrix3d: ARRAY,
-    
-    // Shadows
-    textShadow: SHADOW,
-    boxShadow: SHADOW
-};
-},{}],25:[function(require,module,exports){
-"use strict";
-
 var defaultProperty = require('./default-property.js'),
     dictionary = require('./dictionary.js'),
-    splitLookup = require('./split-lookup.js'),
+    splitLookup = require('./splitter-lookup.js'),
     splitters = require('./splitters.js'),
     
     resolve = require('../../utils/resolve.js'),
@@ -2465,7 +2510,48 @@ module.exports = function (key, value) {
     
     return values;
 };
-},{"../../utils/resolve.js":38,"../../utils/utils.js":40,"./default-property.js":22,"./dictionary.js":23,"./split-lookup.js":24,"./splitters.js":26}],26:[function(require,module,exports){
+},{"../../utils/resolve.js":39,"../../utils/utils.js":41,"./default-property.js":22,"./dictionary.js":23,"./splitter-lookup.js":25,"./splitters.js":26}],25:[function(require,module,exports){
+"use strict";
+
+var ARRAY = 'array',
+    COLOR = 'color',
+    POSITIONS = 'positions',
+    DIMENSIONS = 'dimensions',
+    SHADOW = 'shadow';
+
+module.exports = {
+    // Color properties
+    color: COLOR,
+    backgroundColor: COLOR,
+    borderColor: COLOR,
+    borderTopColor: COLOR,
+    borderRightColor: COLOR,
+    borderBottomColor: COLOR,
+    borderLeftColor: COLOR,
+    outlineColor: COLOR,
+
+    // Dimensions
+    margin: DIMENSIONS,
+    padding: DIMENSIONS,
+
+    // Positions
+    backgroundPosition: POSITIONS,
+    perspectiveOrigin: POSITIONS,
+    transformOrigin: POSITIONS,
+    skew: POSITIONS,
+    scale: POSITIONS,
+    translate: POSITIONS,
+    rotate: POSITIONS,
+
+    // Arrays
+    matrix: ARRAY,
+    matrix3d: ARRAY,
+    
+    // Shadows
+    textShadow: SHADOW,
+    boxShadow: SHADOW
+};
+},{}],26:[function(require,module,exports){
 "use strict";
 
 var dictionary = require('./dictionary.js'),
@@ -2759,6 +2845,79 @@ module.exports = new cssStyler();
 },{}],28:[function(require,module,exports){
 "use strict";
 
+var dictionary = require('./dictionary.js'),
+
+    defaultValues = {
+        Alpha: 1
+    },
+
+    functionCreate = function (value, prefix) {
+        return prefix + '(' + value + ')';
+    },
+
+    createSpaceDelimited = function (object, terms) {
+        return createDelimitedString(object, terms, ' ');
+    },
+    
+    createCommaDelimited = function (object, terms) {
+        return createDelimitedString(object, terms, ', ');
+    },
+    
+    createDelimitedString = function (object, terms, delimiter) {
+        var string = '',
+            termsLength = terms.length;
+        
+        for (var i = 0; i < termsLength; i++) {
+            if (object[terms[i]] !== undefined) {
+                string += object[terms[i]];
+            } else {
+                if (defaultValues[terms[i]] !== undefined) {
+                    string += defaultValues[terms[i]];
+                }
+            }
+            
+            string += delimiter;
+        }
+    
+        return string.slice(0, - delimiter.length);
+    },
+
+    templates = {
+        
+        array: function (values) {
+            var rule = '';
+
+            for (var key in values) {
+                rule += value[key] + ', ';
+            }
+            
+            return rule.slice(0, -2);
+        },
+        
+        color: function (values) {
+            return functionCreate(createCommaDelimited(values, dictionary.colors), 'rgba');
+        },
+        
+        dimensions: function (values) {
+            return createSpaceDelimited(values, dictionary.dimensions);
+        },
+        
+        positions: function (values) {
+            return createSpaceDelimited(values, dictionary.positions);
+        },
+        
+        shadow: function (values) {
+            var shadowTerms = dictionary.shadow.slice(0,4);
+            
+            return createSpaceDelimited(values, shadowTerms) + templates.color(values);
+        }
+        
+    };
+
+module.exports = templates;
+},{"./dictionary.js":23}],29:[function(require,module,exports){
+"use strict";
+
 var fireCallback = function (name, bucket, action, values, props, data) {
     if (props[name]) {
         props[name].call(props.scope, bucket, data);
@@ -2788,7 +2947,7 @@ module.exports = {
     }
     
 };
-},{}],29:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 (function (global){
 /*
     Bezier function generator
@@ -2946,7 +3105,7 @@ var NEWTON_ITERATIONS = 8,
 
 module.exports = Bezier;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],30:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 "use strict";
 
 var utils = require('../utils/utils.js'),
@@ -3005,7 +3164,7 @@ Repo.prototype = {
 };
 
 module.exports = Repo;
-},{"../routes/css/dictionary.js":23,"../utils/utils.js":40}],31:[function(require,module,exports){
+},{"../routes/css/dictionary.js":23,"../utils/utils.js":41}],32:[function(require,module,exports){
 "use strict";
 
 var calc = require('../utils/calc.js'),
@@ -3133,7 +3292,7 @@ var calc = require('../utils/calc.js'),
     };
 
 module.exports = Value;
-},{"../utils/calc.js":32,"../utils/resolve.js":38,"../utils/utils.js":40,"./repo.js":30}],32:[function(require,module,exports){
+},{"../utils/calc.js":33,"../utils/resolve.js":39,"../utils/utils.js":41,"./repo.js":31}],33:[function(require,module,exports){
 /*
     Calculators
     ----------------------------------------
@@ -3524,7 +3683,7 @@ module.exports = {
         return this.value(easedProgress, from, to);
     }
 };
-},{"./utils.js":40}],33:[function(require,module,exports){
+},{"./utils.js":41}],34:[function(require,module,exports){
 /*
     Easing functions
     ----------------------------------------
@@ -3770,9 +3929,9 @@ EasingFunction.prototype = {
 
 module.exports = new EasingFunction();
 
-},{"../types/bezier.js":29,"./calc.js":32}],34:[function(require,module,exports){
+},{"../types/bezier.js":30,"./calc.js":33}],35:[function(require,module,exports){
 window.redshift = require('../redshift.js');
-},{"../redshift.js":18}],35:[function(require,module,exports){
+},{"../redshift.js":18}],36:[function(require,module,exports){
 "use strict";
 
 var // [number]: Default max size of history
@@ -3844,7 +4003,7 @@ History.prototype = {
 };
 
 module.exports = History;
-},{}],36:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 "use strict";
 
 var DELIMITER = '.';
@@ -3873,7 +4032,7 @@ module.exports = {
         return key.split(DELIMITER)[0];
     }
 };
-},{}],37:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 "use strict";
 
 var protectedProperties = ['scope',  'dom'];
@@ -3881,7 +4040,7 @@ var protectedProperties = ['scope',  'dom'];
 module.exports = function (key) {
     return (protectedProperties.indexOf(key) !== -1);
 };
-},{}],38:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 /*
     Property resolver
     -------------------------------------
@@ -3927,7 +4086,7 @@ module.exports = function (newValue, currentValue, parent, scope) {
     
     return newValue;
 };
-},{"./utils.js":40}],39:[function(require,module,exports){
+},{"./utils.js":41}],40:[function(require,module,exports){
 "use strict";
 
 var checkRequestAnimationFrame = function () {
@@ -4003,7 +4162,7 @@ module.exports = function () {
     checkRequestAnimationFrame();
     checkIndexOf();
 };
-},{}],40:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 /*
     Utility functions
 */
@@ -4261,4 +4420,4 @@ module.exports = {
     }
     
 };
-},{"../opts/keys.js":12,"./protected.js":37}]},{},[34]);
+},{"../opts/keys.js":12,"./protected.js":38}]},{},[35]);
