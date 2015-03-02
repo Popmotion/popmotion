@@ -379,7 +379,7 @@ Action.prototype = {
         var existing = this.getValue(key, space);
 
         key = namespace.generate(key, space);
-            
+
         // Update if value exists
         if (existing) {
             existing.set(value, inherit);

@@ -40,7 +40,7 @@ module.exports = function (action, framestamp, frameDuration) {
     if (props.input) {
         action.output.input = props.input.onFrame(framestamp);
     }
-    
+
     // Update values
     for (; i < orderLength; i++) {
         // Get value and key

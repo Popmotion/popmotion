@@ -29,9 +29,9 @@ var defaults = require('../opts/values.js'),
         Value constructor
     */
     Value = function (key, props, inherit, scope) {
-        this.name = key;
+        this.key = key;
         this.scope = scope;
-        
+
         if (props.start) {
             props.current = props.start;
         }
@@ -80,7 +80,7 @@ Value.prototype = {
         this.hasRange = (utils.isNum(this.min) && utils.isNum(this.max)) ? true : false;
         
         // Update Action value process order
-        this.scope.updateOrder(this.name, utils.isString(this.link));
+        this.scope.updateOrder(this.key, utils.isString(this.link));
         
         return this;
     },
