@@ -2282,7 +2282,7 @@ module.exports = {
     preprocess: function (key, value, action, props) {
         var values = split(key, value),
             key = '';
-        
+
         for (key in values) {
             action.setValue(key, values[key], props, this.name);
         }
@@ -2292,16 +2292,16 @@ module.exports = {
         var dom = props.dom;
 
         if (dom) {
-            styler(props.dom, build(output, props.css));
+            styler(props.dom, build(output, props.css, values));
         }
     }
     
 };
-},{"./css/build.js":21,"./css/split.js":24,"./css/styler.js":27}],21:[function(require,module,exports){
+},{"./css/build.js":21,"./css/split.js":25,"./css/styler.js":27}],21:[function(require,module,exports){
 "use strict";
 
 var templates = require('../css/templates.js'),
-    lookup = require('../css/splitter-lookup.js'),
+    lookup = require('../css/lookup.js'),
     
     /*
         Generate a precache
@@ -2319,7 +2319,7 @@ var templates = require('../css/templates.js'),
 
         for (var key in props) {
             prop = props[key];
-            value = values[key].store,
+            value = values[key + '.css'].store,
             parent = value.parent,
             unit = value.unitName;
             
@@ -2344,9 +2344,8 @@ var templates = require('../css/templates.js'),
         @param [object] (optional): Cache of previous CSS properties
         @return [object]: Generated object of valid CSS properties
     */
-    assignCSS = function (precache, currentCache) {
+    assignCSS = function (precache, cssCache) {
         var latest = {},
-            cache = {},
             rule = '';
         
         // Loop through precache and generate rules
@@ -2354,19 +2353,16 @@ var templates = require('../css/templates.js'),
             rule = generateRule(key, precache[key]);
             
             // Only add if changed
-            if (currentCache && currentCache[key] !== rule) {
+            if (cssCache && cssCache[key] !== rule) {
                 latest[key] = rule;
             }
             
-            cache[key] = rule;
+            cssCache[key] = rule;
         }
         
         // handle transform properties
 
-        return {
-            latest: latest,
-            cache: cache
-        };
+        return latest;
     },
     
     generateRule = function (key, values) {
@@ -2385,7 +2381,7 @@ var templates = require('../css/templates.js'),
 module.exports = function (output, cache, values) {
     return assignCSS(precache(output, values), cache);
 }
-},{"../css/splitter-lookup.js":25,"../css/templates.js":28}],22:[function(require,module,exports){
+},{"../css/lookup.js":24,"../css/templates.js":28}],22:[function(require,module,exports){
 "use strict";
 
 var defaults = {
@@ -2417,9 +2413,50 @@ module.exports = {
 },{}],24:[function(require,module,exports){
 "use strict";
 
+var ARRAY = 'array',
+    COLOR = 'color',
+    POSITIONS = 'positions',
+    DIMENSIONS = 'dimensions',
+    SHADOW = 'shadow';
+
+module.exports = {
+    // Color properties
+    color: COLOR,
+    backgroundColor: COLOR,
+    borderColor: COLOR,
+    borderTopColor: COLOR,
+    borderRightColor: COLOR,
+    borderBottomColor: COLOR,
+    borderLeftColor: COLOR,
+    outlineColor: COLOR,
+
+    // Dimensions
+    margin: DIMENSIONS,
+    padding: DIMENSIONS,
+
+    // Positions
+    backgroundPosition: POSITIONS,
+    perspectiveOrigin: POSITIONS,
+    transformOrigin: POSITIONS,
+    skew: POSITIONS,
+    scale: POSITIONS,
+    translate: POSITIONS,
+    rotate: POSITIONS,
+
+    // Arrays
+    matrix: ARRAY,
+    matrix3d: ARRAY,
+    
+    // Shadows
+    textShadow: SHADOW,
+    boxShadow: SHADOW
+};
+},{}],25:[function(require,module,exports){
+"use strict";
+
 var defaultProperty = require('./default-property.js'),
     dictionary = require('./dictionary.js'),
-    splitLookup = require('./splitter-lookup.js'),
+    splitLookup = require('./lookup.js'),
     splitters = require('./splitters.js'),
     
     resolve = require('../../utils/resolve.js'),
@@ -2510,48 +2547,7 @@ module.exports = function (key, value) {
     
     return values;
 };
-},{"../../utils/resolve.js":39,"../../utils/utils.js":41,"./default-property.js":22,"./dictionary.js":23,"./splitter-lookup.js":25,"./splitters.js":26}],25:[function(require,module,exports){
-"use strict";
-
-var ARRAY = 'array',
-    COLOR = 'color',
-    POSITIONS = 'positions',
-    DIMENSIONS = 'dimensions',
-    SHADOW = 'shadow';
-
-module.exports = {
-    // Color properties
-    color: COLOR,
-    backgroundColor: COLOR,
-    borderColor: COLOR,
-    borderTopColor: COLOR,
-    borderRightColor: COLOR,
-    borderBottomColor: COLOR,
-    borderLeftColor: COLOR,
-    outlineColor: COLOR,
-
-    // Dimensions
-    margin: DIMENSIONS,
-    padding: DIMENSIONS,
-
-    // Positions
-    backgroundPosition: POSITIONS,
-    perspectiveOrigin: POSITIONS,
-    transformOrigin: POSITIONS,
-    skew: POSITIONS,
-    scale: POSITIONS,
-    translate: POSITIONS,
-    rotate: POSITIONS,
-
-    // Arrays
-    matrix: ARRAY,
-    matrix3d: ARRAY,
-    
-    // Shadows
-    textShadow: SHADOW,
-    boxShadow: SHADOW
-};
-},{}],26:[function(require,module,exports){
+},{"../../utils/resolve.js":39,"../../utils/utils.js":41,"./default-property.js":22,"./dictionary.js":23,"./lookup.js":24,"./splitters.js":26}],26:[function(require,module,exports){
 "use strict";
 
 var dictionary = require('./dictionary.js'),
