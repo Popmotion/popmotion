@@ -11,7 +11,7 @@ module.exports = {
     preprocess: function (key, value, action, props) {
         var values = split(key, value),
             key = '';
-        
+
         for (key in values) {
             action.setValue(key, values[key], props, this.name);
         }
@@ -21,7 +21,7 @@ module.exports = {
         var dom = props.dom;
 
         if (dom) {
-            styler(props.dom, build(output, props.css));
+            styler(props.dom, build(output, props.css, values));
         }
     }
     

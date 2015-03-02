@@ -1,7 +1,7 @@
 "use strict";
 
 var templates = require('../css/templates.js'),
-    lookup = require('../css/splitter-lookup.js'),
+    lookup = require('../css/lookup.js'),
     
     /*
         Generate a precache
@@ -19,7 +19,7 @@ var templates = require('../css/templates.js'),
 
         for (var key in props) {
             prop = props[key];
-            value = values[key].store,
+            value = values[key + '.css'].store,
             parent = value.parent,
             unit = value.unitName;
             
@@ -44,9 +44,8 @@ var templates = require('../css/templates.js'),
         @param [object] (optional): Cache of previous CSS properties
         @return [object]: Generated object of valid CSS properties
     */
-    assignCSS = function (precache, currentCache) {
+    assignCSS = function (precache, cssCache) {
         var latest = {},
-            cache = {},
             rule = '';
         
         // Loop through precache and generate rules
@@ -54,19 +53,16 @@ var templates = require('../css/templates.js'),
             rule = generateRule(key, precache[key]);
             
             // Only add if changed
-            if (currentCache && currentCache[key] !== rule) {
+            if (cssCache && cssCache[key] !== rule) {
                 latest[key] = rule;
             }
             
-            cache[key] = rule;
+            cssCache[key] = rule;
         }
         
         // handle transform properties
 
-        return {
-            latest: latest,
-            cache: cache
-        };
+        return latest;
     },
     
     generateRule = function (key, values) {
