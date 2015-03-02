@@ -394,7 +394,7 @@ Action.prototype = {
     
     
     getValue: function (key, space) {
-        key = namespace.generate(key, space);
+        key = namespace(key, space);
         return this.values[key];
     },
     
@@ -2301,7 +2301,7 @@ var templates = require('../css/templates.js'),
 
         for (var key in props) {
             prop = props[key];
-            value = values[key + '.css'].store,
+            value = values[namespace(key, 'css')],
             parent = value.parent,
             unit = value.unitName;
             
@@ -3965,21 +3965,8 @@ module.exports = History;
 },{}],37:[function(require,module,exports){
 "use strict";
 
-var DELIMITER = '.';
-
-module.exports = {
-    /*
-        Generate namespaced key
-        
-        generate('foo') -> 'foo'
-        generate('foo', 'bar') -> 'bar.foo'
-        
-        @param [string]: Key
-        @param [string] (optional): Namespace
-    */
-    generate: function (key, namespace) {
-        return namespace ? key + DELIMITER + namespace : key;
-    }
+module.exports = function (key, namespace) {
+    return namespace ? key + '.' + namespace : key;
 };
 },{}],38:[function(require,module,exports){
 "use strict";
