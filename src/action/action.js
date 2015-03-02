@@ -9,7 +9,6 @@ var parseArgs = require('./parse-args.js'),
     processor = require('./processor.js'),
     routes = require('./routes.js'),
     defaultProps = require('../opts/action.js'),
-    defaultValue = require('../opts/value.js'),
     calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
     namespace = require('../utils/namespace.js'),
@@ -127,7 +126,6 @@ Action.prototype = {
         @return [Action]
     */
     set: function (props) {
-        console.time('test');
         var self = this,
             currentProps = this.props.get(),
             key = '';
@@ -160,15 +158,14 @@ Action.prototype = {
                 }
             }
         }, props);
-
+        
         if (self.getValue('angle') && self.getValue('distance')) {
             self.setValue('radialX', { link: KEY.ANGLE_DISTANCE });
             self.setValue('radialY', { link: KEY.ANGLE_DISTANCE });
         }
 
         self.resetOrigins();
-console.trace();
-console.timeEnd('test');
+
         return self;
     },
     
@@ -390,8 +387,7 @@ console.timeEnd('test');
 
         // Or create new if it doesn't
         } else {
-            newVal = new Value(defaultValue, this, key);
-            newVal.set(value, inherit);
+            newVal = new Value(key, value, this);
             
             this.values[key] = newVal;
         }

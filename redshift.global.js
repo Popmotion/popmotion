@@ -10,7 +10,6 @@ var parseArgs = require('./parse-args.js'),
     processor = require('./processor.js'),
     routes = require('./routes.js'),
     defaultProps = require('../opts/action.js'),
-    defaultValue = require('../opts/value.js'),
     calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
     namespace = require('../utils/namespace.js'),
@@ -128,7 +127,6 @@ Action.prototype = {
         @return [Action]
     */
     set: function (props) {
-        console.time('test');
         var self = this,
             currentProps = this.props.get(),
             key = '';
@@ -161,15 +159,14 @@ Action.prototype = {
                 }
             }
         }, props);
-
+        
         if (self.getValue('angle') && self.getValue('distance')) {
             self.setValue('radialX', { link: KEY.ANGLE_DISTANCE });
             self.setValue('radialY', { link: KEY.ANGLE_DISTANCE });
         }
 
         self.resetOrigins();
-console.trace();
-console.timeEnd('test');
+
         return self;
     },
     
@@ -391,8 +388,7 @@ console.timeEnd('test');
 
         // Or create new if it doesn't
         } else {
-            newVal = new Value(defaultValue, this, key);
-            newVal.set(value, inherit);
+            newVal = new Value(key, value, this);
             
             this.values[key] = newVal;
         }
@@ -451,7 +447,7 @@ console.timeEnd('test');
 };
 
 module.exports = Action;
-},{"../opts/action.js":11,"../opts/keys.js":12,"../opts/value.js":13,"../process/process.js":16,"../types/repo.js":31,"../types/value.js":32,"../utils/calc.js":33,"../utils/namespace.js":37,"../utils/utils.js":41,"./parse-args.js":2,"./processor.js":4,"./queue.js":5,"./routes.js":6}],2:[function(require,module,exports){
+},{"../opts/action.js":11,"../opts/keys.js":12,"../process/process.js":16,"../types/repo.js":31,"../types/value.js":32,"../utils/calc.js":33,"../utils/namespace.js":37,"../utils/utils.js":41,"./parse-args.js":2,"./processor.js":4,"./queue.js":5,"./routes.js":6}],2:[function(require,module,exports){
 "use strict";
 
 var utils = require('../utils/utils.js'),
@@ -3153,132 +3149,103 @@ module.exports = Repo;
 },{"../routes/css/dictionary.js":23,"../utils/utils.js":41}],32:[function(require,module,exports){
 "use strict";
 
-var calc = require('../utils/calc.js'),
-    utils = require('../utils/utils.js'),
+var defaults = require('../opts/value.js'),
     resolve = require('../utils/resolve.js'),
-    Repo = require('./repo.js'),
-    
-    // Cache common property names
+    utils = require('../utils/utils.js'),
+
     CURRENT = 'current',
     ORIGIN = 'origin',
+    
+    /*
+        Parse setter arguments
+    */
+    parseSetArgs = function () {
+        var newProps = {};
 
-    loopOver = function (newData, inherit, value, scope) {
-        var data = {},
-            dataPoint;
-        
-        for (var key in value) {
-            dataPoint = undefined;
-
-            // If Action has property but new data doesn't
-            if (inherit && inherit.hasOwnProperty(key) && !newData.hasOwnProperty(key)) {
-                dataPoint = inherit[key];
-
-            // Or if new data does
-            } else if (newData.hasOwnProperty(key)) {
-                dataPoint = newData[key];
-            }
+        // If we've just got a value, set default
+        if (arguments.length === 1) {
+            newProps[CURRENT] = arguments[0];
             
-            if (dataPoint !== undefined) {
-                data[key] = resolve(dataPoint, value[key], value, scope);
-            }
+        // Or we've got key/value args
+        } else {
+            newProps[arguments[0]] = arguments[1];
         }
         
-        return data;
+        return newProps;
     },
 
     /*
         Value constructor
     */
-    Value = function () {
-        var repo = new Repo(),
-            setter = repo.set,
-            firstSet = true,
-            action = arguments[1],
-            key = arguments[2];
-
-        // Apply defaults
-        setter.call(repo, arguments[0]);
-
-        /*
-            Set a value
-            
-            Data for values needs resolving before sending to the repo
-            
-            Syntax
-                .set('key', val) // Sets specific value
-                .set({ key: val }) // Sets multiple values
-                .set({ key: val }, { key: val2 }) // With inherit
-                .set(val) // Sets CURRENT value
-        */
-        repo.set = function () {
-            var args = arguments,
-                arg1 = args[0],
-                arg2 = args[1],
-                data = {},
-                store = this.store,
-                scope = action.getProp('scope'),
-                moveToBack = false;
-
-            // If we have an object, resolve every item first
-            if (utils.isObj(arg1)) {
-                data = loopOver(arg1, arg2, store, scope);
-
-                // Handle start property
-                if (firstSet) {
-                    firstSet = false;
-                    
-                    if (arg1.hasOwnProperty('start')){
-                        setter.apply(this, [CURRENT, resolve(arg1.start, this.get(CURRENT), store, scope)]);
-                    }
-                }
-
-            } else {
-
-                // If this is a specific setter, ie .set('key', val)
-                if (utils.isString(arg1) && !utils.isRelativeValue(arg1)) {
-                    data[arg1] = resolve(arg2, this.get(CURRENT), store, scope);
-                    
-                // Or this is a var to be resolved, assign it to current
-                } else {
-                    data.current = resolve(arg1, this.get(CURRENT), store, scope);
-                }
-            }
-
-            setter.apply(this, [data]);
-            
-            // Check for range
-            setter.apply(this, ['hasRange', (utils.isNum(store.min) && utils.isNum(store.max))]);
-            
-            // Update order if this is linked
-            action.updateOrder(key, (utils.isString(store.link)));
-        };
-
+    Value = function (key, props, scope) {
+        this.name = key;
+        this.scope = scope;
         
-        /*
-            Reset current to from
-        */
-        repo.reset = function () {
-            this.set(CURRENT, this.get(ORIGIN));
-        };
-        
-        
-        /*
-            Reverse current and from
-        */
-        repo.reverse = function () {
-            var currentTo = this.get('to');
+        if (props.start) {
+            props.current = props.start;
+        }
 
-            this.set({
-                to: this.get(ORIGIN),
-                origin: (currentTo !== undefined) ? currentTo : this.get(CURRENT)
-            });
-        };
-        
-        return repo;
+        this.set(props, defaults);
     };
+    
+Value.prototype = {
+    
+    /*
+        Set value properties
+        
+        Syntax
+            .set('key', value) // Set specific value
+            .set({ key: value }) // Set multiple values
+            .set({ key: value }, { key: value2 }) // Set multiple with inherit
+            .set(value) // Set .current
+    */
+    set: function () {
+        var multiVal = utils.isObj(arguments[0]),
+            newProps = multiVal ? arguments[0] : parseSetArgs.apply(this, arguments),
+            newProp,
+            inherit = multiVal ? arguments[1] : false,
+            key = '';
+        
+        for (key in defaults) {
+            newProp = undefined;
+
+            // If 
+            if (inherit && inherit.hasOwnProperty(key)) {
+                newProp = inherit[key];
+            }
+            
+            if (newProps.hasOwnProperty(key)) {
+                newProp = newProps[key];
+            }
+            
+            if (newProp !== undefined) {
+                this[key] = resolve(newProp, this[key], this, this.scope);
+            }
+        }
+        
+        return this;
+    },
+    
+    /*
+        Set current value to origin
+    */
+    reset: function () {
+        return this.set(CURRENT, this[ORIGIN]);
+    },
+    
+    /*
+        Swap current target and origin
+    */
+    reverse: function () {
+        return this.set({
+            to: this[ORIGIN],
+            origin: (this.to !== undefined) ? this.to : this[CURRENT]
+        });
+    }
+};
 
 module.exports = Value;
-},{"../utils/calc.js":33,"../utils/resolve.js":39,"../utils/utils.js":41,"./repo.js":31}],33:[function(require,module,exports){
+},{"../opts/value.js":13,"../utils/resolve.js":39,"../utils/utils.js":41}],33:[function(require,module,exports){
 /*
     Calculators
     ----------------------------------------
@@ -4049,7 +4016,7 @@ var utils = require('./utils.js');
 
 module.exports = function (newValue, currentValue, parent, scope) {
     var splitValueUnit = {};
-    
+
     // Run function if this is a function
     if (utils.isFunc(newValue)) {
         newValue = newValue.call(scope, currentValue);
@@ -4069,7 +4036,7 @@ module.exports = function (newValue, currentValue, parent, scope) {
             parent.unit = splitValueUnit.unit;
         }
     }
-    
+    console.log(newValue);
     return newValue;
 };
 },{"./utils.js":41}],40:[function(require,module,exports){
@@ -4342,7 +4309,6 @@ module.exports = {
                 }
             }
         }
-
         return newObject;
     },
     

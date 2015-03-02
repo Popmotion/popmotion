@@ -20,7 +20,7 @@ var utils = require('./utils.js');
 
 module.exports = function (newValue, currentValue, parent, scope) {
     var splitValueUnit = {};
-    
+
     // Run function if this is a function
     if (utils.isFunc(newValue)) {
         newValue = newValue.call(scope, currentValue);
@@ -40,6 +40,6 @@ module.exports = function (newValue, currentValue, parent, scope) {
             parent.unit = splitValueUnit.unit;
         }
     }
-    
+    console.log(newValue);
     return newValue;
 };

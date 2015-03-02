@@ -191,7 +191,6 @@ module.exports = {
                 }
             }
         }
-
         return newObject;
     },
     
