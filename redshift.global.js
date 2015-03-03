@@ -735,13 +735,13 @@ module.exports = function (action, framestamp, frameDuration) {
         if (value.current != output) {
             hasChanged = true;
         }
-        
+
         // Set current and add unit (if any) for output
         value.current = output;
         action.output[value.route] = action.output[value.route] || {};
         action.output[value.route][value.name] = (value.unit) ? output + value.unit : output;
     }
-    
+
     // shard onFrame and onChange
     routes.shard(function (route, output) {
         // Fire onFrame every frame
@@ -2307,16 +2307,19 @@ module.exports = function (output, order, cache) {
     var css = {},
         numRules = order.length,
         i = 0,
-        rule = '';
+        rule = '',
+        key = '';
     
     for (; i < numRules; i++) {
-        rule = generateRule(order[i], output);
+        key = order[i],
+        rule = generateRule(key, output);
         
         if (cache[key] !== rule) {
             css[key] = rule;
         }
         
         cache[key] = rule;
+        console.log(rule);
     }
     
     return css;
@@ -2426,9 +2429,7 @@ var defaultProperty = require('./default-property.js'),
         } else {
             property[assignDefault] = value;
         }
-        
-        property.parent = parentKey;
-        property.unitName = unitKey;
+
         property.name = parentKey + unitKey;
         
         return property;
@@ -2792,11 +2793,11 @@ var dictionary = require('./dictionary.js'),
     },
 
     createSpaceDelimited = function (key, object, terms) {
-        return createDelimitedString(object, terms, ' ');
+        return createDelimitedString(key, object, terms, ' ');
     },
     
     createCommaDelimited = function (key, object, terms) {
-        return createDelimitedString(object, terms, ', ');
+        return createDelimitedString(key, object, terms, ', ');
     },
     
     createDelimitedString = function (key, object, terms, delimiter) {
@@ -3113,6 +3114,7 @@ var defaults = require('../opts/values.js'),
 
     CURRENT = 'current',
     ORIGIN = 'origin',
+    FORCE_NUMBER = [CURRENT, ORIGIN, 'to', 'start'],
     
     /*
         Parse setter arguments
@@ -3179,6 +3181,10 @@ Value.prototype = {
             
             if (newProp !== undefined) {
                 self[key] = resolve(newProp, self[key], self, self.scope);
+                
+                if (FORCE_NUMBER.indexOf(key) > -1) {
+                    self[key] = parseFloat(self[key]);
+                }
     
             } else if (self[key] === undefined) {
                 self[key] = defaults[key];
@@ -3980,7 +3986,7 @@ module.exports = function (newValue, currentValue, parent, scope) {
         splitValueUnit = utils.splitValUnit(newValue);
         
         if (!isNaN(splitValueUnit)) {
-            newValue = parseFloat(splitValueUnit.value);
+            newValue = splitValueUnit.value;
             parent.unit = splitValueUnit.unit;
         }
     }
