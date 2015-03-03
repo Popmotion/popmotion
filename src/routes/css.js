@@ -2,7 +2,6 @@
 
 var build = require('./css/build.js'),
     split = require('./css/split.js'),
-    styler = require('./css/styler.js'),
     
     cssOrder = 'cssOrder';
 
@@ -21,11 +20,7 @@ module.exports = {
     },
     
     onChange: function (output, action, values, props) {
-        var dom = props.dom;
-
-        if (dom) {
-            styler(props.dom, build(output, props[cssOrder], props.css, values));
-        }
+        action.style(build(output, props[cssOrder], props.css, values));
     }
     
 };

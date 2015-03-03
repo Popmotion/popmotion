@@ -12,6 +12,7 @@ var parseArgs = require('./parse-args.js'),
     calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
     namespace = require('../utils/namespace.js'),
+    styler = require('../routes/css/styler.js'),
 
     Action = function () {
         var self = this;
@@ -441,6 +442,17 @@ Action.prototype = {
                 order.splice(pos, 1);
             }
         }
+    },
+    
+    style: function (prop) {
+        var dom = this.props.store.dom,
+            returnVal;
+        
+        if (dom) {
+            returnVal = styler(dom, prop);
+        }
+        
+        return returnVal == styler ? this : returnVal;
     }
     
 };

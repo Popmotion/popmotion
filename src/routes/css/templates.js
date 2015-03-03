@@ -15,7 +15,7 @@ var dictionary = require('./dictionary.js'),
     },
     
     createCommaDelimited = function (key, object, terms) {
-        return createDelimitedString(key, object, terms, ', ');
+        return createDelimitedString(key, object, terms, ', ').slice(0, -2);
     },
     
     createDelimitedString = function (key, object, terms, delimiter) {
@@ -25,33 +25,22 @@ var dictionary = require('./dictionary.js'),
         
         for (var i = 0; i < termsLength; i++) {
             propKey = key + terms[i];
-            
+
             if (object[propKey] !== undefined) {
                 string += object[propKey];
             } else {
-                if (defaultValues[propKey] !== undefined) {
-                    string += defaultValues[propKey];
+                if (defaultValues[terms[i]] !== undefined) {
+                    string += defaultValues[terms[i]];
                 }
             }
             
             string += delimiter;
         }
     
-        return string.slice(0, - delimiter.length);
+        return string;
     },
 
     templates = {
-        
-        array: function (key, values) {
-            var rule = '',
-                key = '';
-
-            for (key in values) {
-                rule += value[key] + ', ';
-            }
-            
-            return rule.slice(0, -2);
-        },
         
         colors: function (key, values) {
             return functionCreate(createCommaDelimited(key, values, dictionary.colors), 'rgba');
@@ -70,7 +59,6 @@ var dictionary = require('./dictionary.js'),
             
             return createSpaceDelimited(key, values, shadowTerms) + templates.colors(key, values);
         }
-        
     };
 
 module.exports = templates;

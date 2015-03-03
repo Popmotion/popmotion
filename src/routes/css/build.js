@@ -3,6 +3,11 @@
 var templates = require('./templates.js'),
     lookup = require('./lookup.js'),
     
+    buildTransform = function (css) {
+        console.log(css);
+        return css;
+    },
+    
     /*
         Generate a CSS rule with the available template
     */
@@ -28,10 +33,11 @@ module.exports = function (output, order, cache) {
         if (cache[key] !== rule) {
             css[key] = rule;
         }
-        
+
         cache[key] = rule;
-        console.log(rule);
     }
+    
+    css = buildTransform(css);
     
     return css;
 };

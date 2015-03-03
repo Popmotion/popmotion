@@ -3,8 +3,8 @@
 var utils = require('../utils/utils.js'),
 
     defaultRoute = require('../routes/values.js'),
-    cssRoute = require('../routes/css.js'),
-    attrRoute = require('../routes/attr.js'),
+    //cssRoute = require('../routes/css.js'),
+    //attrRoute = require('../routes/attr.js'),
 
     routes = {},
     routeKeys = [],
@@ -95,8 +95,8 @@ var utils = require('../utils/utils.js'),
     }
     
     manager.add(defaultRoute);
-    manager.add(cssRoute);
-    manager.add(attrRoute);
+    //manager.add(cssRoute);
+    //manager.add(attrRoute);
 })();
 
 module.exports = manager; 

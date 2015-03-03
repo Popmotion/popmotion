@@ -25,14 +25,9 @@ module.exports = {
     backgroundPosition: POSITIONS,
     perspectiveOrigin: POSITIONS,
     transformOrigin: POSITIONS,
-    skew: POSITIONS,
-    scale: POSITIONS,
-    translate: POSITIONS,
-    rotate: POSITIONS,
-
-    // Arrays
-    matrix: ARRAY,
-    matrix3d: ARRAY,
+    
+    // Transform functions
+    transformPerspective: 'perspective',
     
     // Shadows
     textShadow: SHADOW,

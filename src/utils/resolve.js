@@ -37,8 +37,8 @@ module.exports = function (newValue, currentValue, parent, scope) {
     // If value is still string it might have a unit property
     if (typeof newValue === 'string') {
         splitValueUnit = utils.splitValUnit(newValue);
-        
-        if (!isNaN(splitValueUnit)) {
+
+        if (!isNaN(splitValueUnit.value)) {
             newValue = splitValueUnit.value;
             parent.unit = splitValueUnit.unit;
         }

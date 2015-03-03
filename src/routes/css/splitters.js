@@ -1,6 +1,7 @@
 "use strict";
 
 var dictionary = require('./dictionary.js'),
+    utils = require('../../utils/utils.js'),
 
     /*
         Split comma delimited into array
@@ -10,11 +11,11 @@ var dictionary = require('./dictionary.js'),
         @param [string]: CSS comma delimited function
     */
     splitCommaDelimited = function (value) {
-        return value.split(/,\s*/);
+        return utils.isString(value) ? value.split(/,\s*/) : [value];
     },
     
     splitSpaceDelimited = function (value) {
-        return value.split(' ');
+        return utils.isString(value) ? value.split(' ') : [value];
     },
     
     /*
@@ -58,7 +59,8 @@ var dictionary = require('./dictionary.js'),
         return [
             parseInt(r, 16),
             parseInt(g, 16),
-            parseInt(b, 16)
+            parseInt(b, 16),
+            1
         ];
     },
     
@@ -123,7 +125,7 @@ var dictionary = require('./dictionary.js'),
                 terms = dictionary.colors,
                 i = 0,
                 rgba = {};
-            
+
             for (; i < numColors; i++) {
                 rgba[terms[i]] = colors[i];
             }
@@ -214,13 +216,21 @@ var dictionary = require('./dictionary.js'),
                 }
             }
             
-            color = splitters.color(colorProp);
+            color = splitters.colors(colorProp);
             
             for (var unit in color) {
                 shadowProps[unit] = color[unit];
             }
             
             return shadowProps;
+        },
+        
+        perspective: function (prop) {
+            return this.array(prop);
+        },
+        
+        translate: function (prop) {
+            return this.positions
         }
     };
 

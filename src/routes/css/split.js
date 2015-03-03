@@ -50,12 +50,11 @@ var defaultProperty = require('./default-property.js'),
             i = 0;
             
         if (utils.isObj(value)) {
-            
             for (; i < valuePropertyCount; i++) {
                 valueKey = valueProperties[i];
                 
                 if (value.hasOwnProperty(valueKey)) {
-                    splitProperty = splitters[splitterID](resolve(value[valueKey]));
+                    splitProperty = splitters[splitterID](value[valueKey]);
                     
                     for (unitKey in splitProperty) {
                         splitValue[unitKey] = splitValue[unitKey] || {};
@@ -64,7 +63,7 @@ var defaultProperty = require('./default-property.js'),
                 }
             }
         } else {
-            splitValue = splitters[splitterID](resolve(value));
+            splitValue = splitters[splitterID](value);
         }
         
         for (unitKey in splitValue) {
