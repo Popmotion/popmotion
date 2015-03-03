@@ -10,24 +10,27 @@ var dictionary = require('./dictionary.js'),
         return prefix + '(' + value + ')';
     },
 
-    createSpaceDelimited = function (object, terms) {
+    createSpaceDelimited = function (key, object, terms) {
         return createDelimitedString(object, terms, ' ');
     },
     
-    createCommaDelimited = function (object, terms) {
+    createCommaDelimited = function (key, object, terms) {
         return createDelimitedString(object, terms, ', ');
     },
     
-    createDelimitedString = function (object, terms, delimiter) {
+    createDelimitedString = function (key, object, terms, delimiter) {
         var string = '',
+            propKey = '',
             termsLength = terms.length;
         
         for (var i = 0; i < termsLength; i++) {
-            if (object[terms[i]] !== undefined) {
-                string += object[terms[i]];
+            propKey = key + terms[i];
+            
+            if (object[propKey] !== undefined) {
+                string += object[propKey];
             } else {
-                if (defaultValues[terms[i]] !== undefined) {
-                    string += defaultValues[terms[i]];
+                if (defaultValues[propKey] !== undefined) {
+                    string += defaultValues[propKey];
                 }
             }
             
@@ -39,32 +42,33 @@ var dictionary = require('./dictionary.js'),
 
     templates = {
         
-        array: function (values) {
-            var rule = '';
+        array: function (key, values) {
+            var rule = '',
+                key = '';
 
-            for (var key in values) {
+            for (key in values) {
                 rule += value[key] + ', ';
             }
             
             return rule.slice(0, -2);
         },
         
-        color: function (values) {
-            return functionCreate(createCommaDelimited(values, dictionary.colors), 'rgba');
+        colors: function (key, values) {
+            return functionCreate(createCommaDelimited(key, values, dictionary.colors), 'rgba');
         },
         
-        dimensions: function (values) {
-            return createSpaceDelimited(values, dictionary.dimensions);
+        dimensions: function (key, values) {
+            return createSpaceDelimited(key, values, dictionary.dimensions);
         },
         
-        positions: function (values) {
-            return createSpaceDelimited(values, dictionary.positions);
+        positions: function (key, values) {
+            return createSpaceDelimited(key, values, dictionary.positions);
         },
         
-        shadow: function (values) {
+        shadow: function (key, values) {
             var shadowTerms = dictionary.shadow.slice(0,4);
             
-            return createSpaceDelimited(values, shadowTerms) + templates.color(values);
+            return createSpaceDelimited(key, values, shadowTerms) + templates.colors(key, values);
         }
         
     };

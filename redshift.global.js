@@ -379,7 +379,7 @@ Action.prototype = {
     setValue: function (key, value, inherit, space) {
         var existing = this.getValue(key, space);
 
-        key = namespace.generate(key, space);
+        key = namespace(key, space);
 
         // Update if value exists
         if (existing) {
@@ -425,11 +425,15 @@ Action.prototype = {
         
         @param [string]: Key of value
         @param [boolean]: Whether to move value to back
+        @param [string] (optional): Name of order array (if not default)
     */
-    updateOrder: function (key, moveToBack) {
-        var props = this.props.get(),
-            order = props.order = props.order ? props.order : [],
-            pos = order.indexOf(key);
+    updateOrder: function (key, moveToBack, orderName) {
+        var props = this.props.store,
+            pos, order;
+        
+        orderName = orderName || 'order';
+        order = props[orderName] = props[orderName] || [];
+        pos = order.indexOf(key);
         
         if (pos === -1 || moveToBack) {
             order.push(key);
@@ -2255,15 +2259,18 @@ module.exports = {
 
 var build = require('./css/build.js'),
     split = require('./css/split.js'),
-    styler = require('./css/styler.js');
+    styler = require('./css/styler.js'),
+    
+    cssOrder = 'cssOrder';
 
 module.exports = {
     
     name: 'css',
     
     preprocess: function (key, value, action, props) {
-        var values = split(key, value),
-            key = '';
+        var values = split(key, value);
+        
+        action.updateOrder(key, false, cssOrder);
 
         for (key in values) {
             action.setValue(key, values[key], props, this.name);
@@ -2274,7 +2281,7 @@ module.exports = {
         var dom = props.dom;
 
         if (dom) {
-            styler(props.dom, build(output, props.css, values));
+            styler(props.dom, build(output, props[cssOrder], props.css, values));
         }
     }
     
@@ -2282,88 +2289,39 @@ module.exports = {
 },{"./css/build.js":21,"./css/split.js":25,"./css/styler.js":27}],21:[function(require,module,exports){
 "use strict";
 
-var templates = require('../css/templates.js'),
-    lookup = require('../css/lookup.js'),
+var templates = require('./templates.js'),
+    lookup = require('./lookup.js'),
     
     /*
-        Generate a precache
-        
-        Loops through Redshift output and maps parentUnit variables
-        parent.unit objects
-        
-        @param [object]: Object of individual CSS output
-        @param [object]: All Action values
-        @return [object]: Precache
+        Generate a CSS rule with the available template
     */
-    precache = function (props, values) {
-        var precache = {},
-            prop, value, parent, unit;
-
-        for (var key in props) {
-            prop = props[key];
-            value = values[namespace(key, 'css')],
-            parent = value.parent,
-            unit = value.unitName;
-            
-            // If this property needs to be recombined
-            if (parent && unit) {
-                precache[parent] = precache[parent] || {};
-                precache[parent][unit] = props[key];
-            
-            // Or it we can assign directly
-            } else {
-                precache[key] = props[key];
-            }
-        }
-
-        return precache;
-    },
-    
-    /*
-        Assign CSS
-        
-        @param [object]: Precache of CSS properties
-        @param [object] (optional): Cache of previous CSS properties
-        @return [object]: Generated object of valid CSS properties
-    */
-    assignCSS = function (precache, cssCache) {
-        var latest = {},
-            rule = '';
-        
-        // Loop through precache and generate rules
-        for (var key in precache) {
-            rule = generateRule(key, precache[key]);
-            
-            // Only add if changed
-            if (cssCache && cssCache[key] !== rule) {
-                latest[key] = rule;
-            }
-            
-            cssCache[key] = rule;
-        }
-        
-        // handle transform properties
-
-        return latest;
-    },
-    
-    generateRule = function (key, values) {
+    generateRule = function (key, output) {
         var template = templates[lookup[key]],
-            rule = '';
-        
-        if (template) {
-            rule = template(values);
-        } else {
-            rule = values;
-        }
+            rule = template ? template(key, output) : output[key];
         
         return rule;
     };
+    
 
-module.exports = function (output, cache, values) {
-    return assignCSS(precache(output, values), cache);
-}
-},{"../css/lookup.js":24,"../css/templates.js":28}],22:[function(require,module,exports){
+module.exports = function (output, order, cache) {
+    var css = {},
+        numRules = order.length,
+        i = 0,
+        rule = '';
+    
+    for (; i < numRules; i++) {
+        rule = generateRule(order[i], output);
+        
+        if (cache[key] !== rule) {
+            css[key] = rule;
+        }
+        
+        cache[key] = rule;
+    }
+    
+    return css;
+};
+},{"./lookup.js":24,"./templates.js":28}],22:[function(require,module,exports){
 "use strict";
 
 var defaults = {
@@ -2396,7 +2354,7 @@ module.exports = {
 "use strict";
 
 var ARRAY = 'array',
-    COLOR = 'color',
+    COLOR = 'colors',
     POSITIONS = 'positions',
     DIMENSIONS = 'dimensions',
     SHADOW = 'shadow';
@@ -2649,7 +2607,7 @@ var dictionary = require('./dictionary.js'),
                 
             @return [object]: Object with metric for each 
         */
-        color: function (prop) {
+        colors: function (prop) {
             var colors = (prop.indexOf('#') > -1) ? hex(prop) : splitCommaDelimited(functionBreak(prop)),
                 numColors = colors.length,
                 terms = dictionary.colors,
@@ -2833,24 +2791,27 @@ var dictionary = require('./dictionary.js'),
         return prefix + '(' + value + ')';
     },
 
-    createSpaceDelimited = function (object, terms) {
+    createSpaceDelimited = function (key, object, terms) {
         return createDelimitedString(object, terms, ' ');
     },
     
-    createCommaDelimited = function (object, terms) {
+    createCommaDelimited = function (key, object, terms) {
         return createDelimitedString(object, terms, ', ');
     },
     
-    createDelimitedString = function (object, terms, delimiter) {
+    createDelimitedString = function (key, object, terms, delimiter) {
         var string = '',
+            propKey = '',
             termsLength = terms.length;
         
         for (var i = 0; i < termsLength; i++) {
-            if (object[terms[i]] !== undefined) {
-                string += object[terms[i]];
+            propKey = key + terms[i];
+            
+            if (object[propKey] !== undefined) {
+                string += object[propKey];
             } else {
-                if (defaultValues[terms[i]] !== undefined) {
-                    string += defaultValues[terms[i]];
+                if (defaultValues[propKey] !== undefined) {
+                    string += defaultValues[propKey];
                 }
             }
             
@@ -2862,32 +2823,33 @@ var dictionary = require('./dictionary.js'),
 
     templates = {
         
-        array: function (values) {
-            var rule = '';
+        array: function (key, values) {
+            var rule = '',
+                key = '';
 
-            for (var key in values) {
+            for (key in values) {
                 rule += value[key] + ', ';
             }
             
             return rule.slice(0, -2);
         },
         
-        color: function (values) {
-            return functionCreate(createCommaDelimited(values, dictionary.colors), 'rgba');
+        colors: function (key, values) {
+            return functionCreate(createCommaDelimited(key, values, dictionary.colors), 'rgba');
         },
         
-        dimensions: function (values) {
-            return createSpaceDelimited(values, dictionary.dimensions);
+        dimensions: function (key, values) {
+            return createSpaceDelimited(key, values, dictionary.dimensions);
         },
         
-        positions: function (values) {
-            return createSpaceDelimited(values, dictionary.positions);
+        positions: function (key, values) {
+            return createSpaceDelimited(key, values, dictionary.positions);
         },
         
-        shadow: function (values) {
+        shadow: function (key, values) {
             var shadowTerms = dictionary.shadow.slice(0,4);
             
-            return createSpaceDelimited(values, shadowTerms) + templates.color(values);
+            return createSpaceDelimited(key, values, shadowTerms) + templates.colors(key, values);
         }
         
     };

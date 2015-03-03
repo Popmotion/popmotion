@@ -117,7 +117,7 @@ var dictionary = require('./dictionary.js'),
                 
             @return [object]: Object with metric for each 
         */
-        color: function (prop) {
+        colors: function (prop) {
             var colors = (prop.indexOf('#') > -1) ? hex(prop) : splitCommaDelimited(functionBreak(prop)),
                 numColors = colors.length,
                 terms = dictionary.colors,

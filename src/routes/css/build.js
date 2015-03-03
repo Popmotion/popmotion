@@ -1,83 +1,34 @@
 "use strict";
 
-var templates = require('../css/templates.js'),
-    lookup = require('../css/lookup.js'),
+var templates = require('./templates.js'),
+    lookup = require('./lookup.js'),
     
     /*
-        Generate a precache
-        
-        Loops through Redshift output and maps parentUnit variables
-        parent.unit objects
-        
-        @param [object]: Object of individual CSS output
-        @param [object]: All Action values
-        @return [object]: Precache
+        Generate a CSS rule with the available template
     */
-    precache = function (props, values) {
-        var precache = {},
-            prop, value, parent, unit;
-
-        for (var key in props) {
-            prop = props[key];
-            value = values[namespace(key, 'css')],
-            parent = value.parent,
-            unit = value.unitName;
-            
-            // If this property needs to be recombined
-            if (parent && unit) {
-                precache[parent] = precache[parent] || {};
-                precache[parent][unit] = props[key];
-            
-            // Or it we can assign directly
-            } else {
-                precache[key] = props[key];
-            }
-        }
-
-        return precache;
-    },
-    
-    /*
-        Assign CSS
-        
-        @param [object]: Precache of CSS properties
-        @param [object] (optional): Cache of previous CSS properties
-        @return [object]: Generated object of valid CSS properties
-    */
-    assignCSS = function (precache, cssCache) {
-        var latest = {},
-            rule = '';
-        
-        // Loop through precache and generate rules
-        for (var key in precache) {
-            rule = generateRule(key, precache[key]);
-            
-            // Only add if changed
-            if (cssCache && cssCache[key] !== rule) {
-                latest[key] = rule;
-            }
-            
-            cssCache[key] = rule;
-        }
-        
-        // handle transform properties
-
-        return latest;
-    },
-    
-    generateRule = function (key, values) {
+    generateRule = function (key, output) {
         var template = templates[lookup[key]],
-            rule = '';
-        
-        if (template) {
-            rule = template(values);
-        } else {
-            rule = values;
-        }
+            rule = template ? template(key, output) : output[key];
         
         return rule;
     };
+    
 
-module.exports = function (output, cache, values) {
-    return assignCSS(precache(output, values), cache);
-}
+module.exports = function (output, order, cache) {
+    var css = {},
+        numRules = order.length,
+        i = 0,
+        rule = '';
+    
+    for (; i < numRules; i++) {
+        rule = generateRule(order[i], output);
+        
+        if (cache[key] !== rule) {
+            css[key] = rule;
+        }
+        
+        cache[key] = rule;
+    }
+    
+    return css;
+};

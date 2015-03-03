@@ -378,7 +378,7 @@ Action.prototype = {
     setValue: function (key, value, inherit, space) {
         var existing = this.getValue(key, space);
 
-        key = namespace.generate(key, space);
+        key = namespace(key, space);
 
         // Update if value exists
         if (existing) {
@@ -424,11 +424,15 @@ Action.prototype = {
         
         @param [string]: Key of value
         @param [boolean]: Whether to move value to back
+        @param [string] (optional): Name of order array (if not default)
     */
-    updateOrder: function (key, moveToBack) {
-        var props = this.props.get(),
-            order = props.order = props.order ? props.order : [],
-            pos = order.indexOf(key);
+    updateOrder: function (key, moveToBack, orderName) {
+        var props = this.props.store,
+            pos, order;
+        
+        orderName = orderName || 'order';
+        order = props[orderName] = props[orderName] || [];
+        pos = order.indexOf(key);
         
         if (pos === -1 || moveToBack) {
             order.push(key);

@@ -1,7 +1,7 @@
 "use strict";
 
 var ARRAY = 'array',
-    COLOR = 'color',
+    COLOR = 'colors',
     POSITIONS = 'positions',
     DIMENSIONS = 'dimensions',
     SHADOW = 'shadow';
