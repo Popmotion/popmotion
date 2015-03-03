@@ -4,7 +4,8 @@ var ARRAY = 'array',
     COLOR = 'colors',
     POSITIONS = 'positions',
     DIMENSIONS = 'dimensions',
-    SHADOW = 'shadow';
+    SHADOW = 'shadow',
+    TRANSFORM = 'transform';
 
 module.exports = {
     // Color properties
@@ -27,7 +28,10 @@ module.exports = {
     transformOrigin: POSITIONS,
     
     // Transform functions
-    transformPerspective: 'perspective',
+    skew: POSITIONS,
+    transform: POSITIONS,
+    rotate: POSITIONS,
+    scale: POSITIONS,
     
     // Shadows
     textShadow: SHADOW,

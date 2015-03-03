@@ -3,10 +3,7 @@
 var templates = require('./templates.js'),
     lookup = require('./lookup.js'),
     
-    buildTransform = function (css) {
-        console.log(css);
-        return css;
-    },
+    TRANSFORM = 'transform',
     
     /*
         Generate a CSS rule with the available template
@@ -24,20 +21,25 @@ module.exports = function (output, order, cache) {
         numRules = order.length,
         i = 0,
         rule = '',
-        key = '';
+        key = '',
+        transform = '';
     
     for (; i < numRules; i++) {
         key = order[i],
         rule = generateRule(key, output);
         
-        if (cache[key] !== rule) {
-            css[key] = rule;
-        }
+        if (isTransformRule) {
+            transform += rule + ' ';
 
-        cache[key] = rule;
+        } else if (cache[key] !== rule) {
+            css[key] = rule;
+            cache[key] = rule;
+        }
     }
     
-    css = buildTransform(css);
+    if (transform != cache[TRANSFORM]) {
+        css[TRANSFORM] = cache[TRANSFORM] = transform;
+    }
     
     return css;
 };
