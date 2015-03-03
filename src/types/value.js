@@ -6,6 +6,7 @@ var defaults = require('../opts/values.js'),
 
     CURRENT = 'current',
     ORIGIN = 'origin',
+    FORCE_NUMBER = [CURRENT, ORIGIN, 'to', 'start'],
     
     /*
         Parse setter arguments
@@ -72,6 +73,10 @@ Value.prototype = {
             
             if (newProp !== undefined) {
                 self[key] = resolve(newProp, self[key], self, self.scope);
+                
+                if (FORCE_NUMBER.indexOf(key) > -1) {
+                    self[key] = parseFloat(self[key]);
+                }
     
             } else if (self[key] === undefined) {
                 self[key] = defaults[key];

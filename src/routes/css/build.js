@@ -18,16 +18,19 @@ module.exports = function (output, order, cache) {
     var css = {},
         numRules = order.length,
         i = 0,
-        rule = '';
+        rule = '',
+        key = '';
     
     for (; i < numRules; i++) {
-        rule = generateRule(order[i], output);
+        key = order[i],
+        rule = generateRule(key, output);
         
         if (cache[key] !== rule) {
             css[key] = rule;
         }
         
         cache[key] = rule;
+        console.log(rule);
     }
     
     return css;

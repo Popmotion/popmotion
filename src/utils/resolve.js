@@ -39,7 +39,7 @@ module.exports = function (newValue, currentValue, parent, scope) {
         splitValueUnit = utils.splitValUnit(newValue);
         
         if (!isNaN(splitValueUnit)) {
-            newValue = parseFloat(splitValueUnit.value);
+            newValue = splitValueUnit.value;
             parent.unit = splitValueUnit.unit;
         }
     }

@@ -11,11 +11,11 @@ var dictionary = require('./dictionary.js'),
     },
 
     createSpaceDelimited = function (key, object, terms) {
-        return createDelimitedString(object, terms, ' ');
+        return createDelimitedString(key, object, terms, ' ');
     },
     
     createCommaDelimited = function (key, object, terms) {
-        return createDelimitedString(object, terms, ', ');
+        return createDelimitedString(key, object, terms, ', ');
     },
     
     createDelimitedString = function (key, object, terms, delimiter) {

@@ -73,13 +73,13 @@ module.exports = function (action, framestamp, frameDuration) {
         if (value.current != output) {
             hasChanged = true;
         }
-        
+
         // Set current and add unit (if any) for output
         value.current = output;
         action.output[value.route] = action.output[value.route] || {};
         action.output[value.route][value.name] = (value.unit) ? output + value.unit : output;
     }
-    
+
     // shard onFrame and onChange
     routes.shard(function (route, output) {
         // Fire onFrame every frame

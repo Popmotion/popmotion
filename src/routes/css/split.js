@@ -32,9 +32,7 @@ var defaultProperty = require('./default-property.js'),
         } else {
             property[assignDefault] = value;
         }
-        
-        property.parent = parentKey;
-        property.unitName = unitKey;
+
         property.name = parentKey + unitKey;
         
         return property;
