@@ -13,7 +13,7 @@ var lookup = require('./lookup.js'),
 // Create transform terms
 var transformFuncs = terms.transform,
     numTransform = transformFuncs.length,
-    transformProps = [],
+    transformProps = {},
     thisLookup;
     
 terms.transformProps = transformProps;
@@ -25,7 +25,7 @@ for (var i = 0; i < numTransform; i++) {
     
     if (theseTerms) {
         for (var j = 0; i < theseTerms; j++) {
-            transformProps.push(transformFuncs[i] + theseTerms[i]);
+            transformProps[transformFuncs[i] + theseTerms[i]] = true;
         }
     }
     
