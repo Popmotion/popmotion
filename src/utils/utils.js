@@ -4,7 +4,12 @@
 "use strict";
 
 var KEY = require('../opts/keys.js'),
-    isProtected = require('./protected.js');
+
+    protectedProperties = ['scope',  'dom'],
+    
+    isProtected = function (key) {
+        return (protectedProperties.indexOf(key) !== -1);
+    }
 
 module.exports = {
     

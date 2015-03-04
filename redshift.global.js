@@ -475,7 +475,7 @@ console.log('checking');
 };
 
 module.exports = Action;
-},{"../opts/action.js":11,"../opts/keys.js":12,"../process/process.js":16,"../routes/css/styler.js":27,"../types/repo.js":31,"../types/value.js":32,"../utils/calc.js":33,"../utils/namespace.js":37,"../utils/utils.js":41,"./parse-args.js":2,"./processor.js":4,"./queue.js":5,"./routes.js":6}],2:[function(require,module,exports){
+},{"../opts/action.js":11,"../opts/keys.js":12,"../process/process.js":16,"../routes/css/styler.js":27,"../types/repo.js":31,"../types/value.js":32,"../utils/calc.js":33,"../utils/namespace.js":37,"../utils/utils.js":40,"./parse-args.js":2,"./processor.js":4,"./queue.js":5,"./routes.js":6}],2:[function(require,module,exports){
 "use strict";
 
 var utils = require('../utils/utils.js'),
@@ -608,7 +608,7 @@ module.exports = {
     
     generic: generic
 };
-},{"../input/pointer.js":10,"../utils/utils.js":41,"./presets.js":3}],3:[function(require,module,exports){
+},{"../input/pointer.js":10,"../utils/utils.js":40,"./presets.js":3}],3:[function(require,module,exports){
 "use strict";
 
 var KEY = require('../opts/keys.js'),
@@ -691,7 +691,7 @@ Presets.prototype = {
 };
 
 module.exports = new Presets();
-},{"../opts/keys.js":12,"../utils/utils.js":41}],4:[function(require,module,exports){
+},{"../opts/keys.js":12,"../utils/utils.js":40}],4:[function(require,module,exports){
 /*
     Process actions
 */
@@ -946,7 +946,7 @@ var utils = require('../utils/utils.js'),
 })();
 
 module.exports = manager; 
-},{"../routes/attr.js":19,"../routes/css.js":20,"../routes/values.js":29,"../utils/utils.js":41}],7:[function(require,module,exports){
+},{"../routes/attr.js":19,"../routes/css.js":20,"../routes/values.js":29,"../utils/utils.js":40}],7:[function(require,module,exports){
 /*
     Rubix modules
     ----------------------------------------
@@ -1206,7 +1206,7 @@ Rubix.prototype = {
 rubixController = new Rubix();
 
 module.exports = rubixController;
-},{"../opts/keys.js":12,"../utils/calc.js":33,"../utils/easing.js":34,"../utils/utils.js":41,"./simulate.js":8}],8:[function(require,module,exports){
+},{"../opts/keys.js":12,"../utils/calc.js":33,"../utils/easing.js":34,"../utils/utils.js":40,"./simulate.js":8}],8:[function(require,module,exports){
 "use strict";
 
 var frictionStopLimit = .2,
@@ -1409,7 +1409,7 @@ Input.prototype = {
 };
 
 module.exports = Input;
-},{"../utils/calc.js":33,"../utils/history.js":36,"../utils/utils.js":41}],10:[function(require,module,exports){
+},{"../utils/calc.js":33,"../utils/history.js":36,"../utils/utils.js":40}],10:[function(require,module,exports){
 "use strict";
 
 var Input = require('./input.js'),
@@ -2272,7 +2272,7 @@ Redshift.prototype = {
 };
 
 module.exports = new Redshift();
-},{"./action/action.js":1,"./action/presets.js":3,"./input/input.js":9,"./process/process.js":16,"./utils/calc.js":33,"./utils/easing.js":34,"./utils/shim.js":40}],19:[function(require,module,exports){
+},{"./action/action.js":1,"./action/presets.js":3,"./input/input.js":9,"./process/process.js":16,"./utils/calc.js":33,"./utils/easing.js":34,"./utils/shim.js":39}],19:[function(require,module,exports){
 "use strict";
 
 module.exports = {
@@ -2600,7 +2600,7 @@ module.exports = function (key, value) {
     
     return values;
 };
-},{"../../utils/resolve.js":39,"../../utils/utils.js":41,"./default-property.js":22,"./dictionary.js":23,"./lookup.js":24,"./splitters.js":26}],26:[function(require,module,exports){
+},{"../../utils/resolve.js":38,"../../utils/utils.js":40,"./default-property.js":22,"./dictionary.js":23,"./lookup.js":24,"./splitters.js":26}],26:[function(require,module,exports){
 "use strict";
 
 var dictionary = require('./dictionary.js'),
@@ -2838,7 +2838,7 @@ var dictionary = require('./dictionary.js'),
     };
 
 module.exports = splitters;
-},{"../../utils/utils.js":41,"./dictionary.js":23}],27:[function(require,module,exports){
+},{"../../utils/utils.js":40,"./dictionary.js":23}],27:[function(require,module,exports){
 "use strict";
 
 var cssStyler = function () {
@@ -3215,7 +3215,7 @@ Repo.prototype = {
 };
 
 module.exports = Repo;
-},{"../routes/css/dictionary.js":23,"../utils/utils.js":41}],32:[function(require,module,exports){
+},{"../routes/css/dictionary.js":23,"../utils/utils.js":40}],32:[function(require,module,exports){
 "use strict";
 
 var defaults = require('../opts/values.js'),
@@ -3332,7 +3332,7 @@ Value.prototype = {
 };
 
 module.exports = Value;
-},{"../opts/values.js":13,"../utils/resolve.js":39,"../utils/utils.js":41}],33:[function(require,module,exports){
+},{"../opts/values.js":13,"../utils/resolve.js":38,"../utils/utils.js":40}],33:[function(require,module,exports){
 /*
     Calculators
     ----------------------------------------
@@ -3723,7 +3723,7 @@ module.exports = {
         return this.value(easedProgress, from, to);
     }
 };
-},{"./utils.js":41}],34:[function(require,module,exports){
+},{"./utils.js":40}],34:[function(require,module,exports){
 /*
     Easing functions
     ----------------------------------------
@@ -4050,14 +4050,6 @@ module.exports = function (key, namespace) {
     return namespace ? key + '.' + namespace : key;
 };
 },{}],38:[function(require,module,exports){
-"use strict";
-
-var protectedProperties = ['scope',  'dom'];
-
-module.exports = function (key) {
-    return (protectedProperties.indexOf(key) !== -1);
-};
-},{}],39:[function(require,module,exports){
 /*
     Property resolver
     -------------------------------------
@@ -4106,7 +4098,7 @@ module.exports = function (newValue, currentValue, parent, scope) {
 
     return newValue;
 };
-},{"./calc.js":33,"./utils.js":41}],40:[function(require,module,exports){
+},{"./calc.js":33,"./utils.js":40}],39:[function(require,module,exports){
 "use strict";
 
 var checkRequestAnimationFrame = function () {
@@ -4182,14 +4174,19 @@ module.exports = function () {
     checkRequestAnimationFrame();
     checkIndexOf();
 };
-},{}],41:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 /*
     Utility functions
 */
 "use strict";
 
 var KEY = require('../opts/keys.js'),
-    isProtected = require('./protected.js');
+
+    protectedProperties = ['scope',  'dom'],
+    
+    isProtected = function (key) {
+        return (protectedProperties.indexOf(key) !== -1);
+    }
 
 module.exports = {
     
@@ -4439,4 +4436,4 @@ module.exports = {
     }
     
 };
-},{"../opts/keys.js":12,"./protected.js":38}]},{},[35]);
+},{"../opts/keys.js":12}]},{},[35]);
