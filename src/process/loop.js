@@ -22,7 +22,7 @@ Loop.prototype = {
     frame: function () {
         var self = this;
         
-        requestAnimationFrame(function () {
+        requestAnimationFrame(function (timestamp) {
             var framestamp = self.timer.update(), // Currently just measuring in ms - will look into hi-res timestamps
                 isActive = self.callback.call(self.scope, framestamp, self.timer.getElapsed());
 

@@ -1733,7 +1733,7 @@ Loop.prototype = {
     frame: function () {
         var self = this;
         
-        requestAnimationFrame(function () {
+        requestAnimationFrame(function (timestamp) {
             var framestamp = self.timer.update(), // Currently just measuring in ms - will look into hi-res timestamps
                 isActive = self.callback.call(self.scope, framestamp, self.timer.getElapsed());
 
@@ -2370,32 +2370,43 @@ module.exports = function (output, order, cache) {
 },{"./dictionary.js":23,"./lookup.js":24,"./templates.js":28}],22:[function(require,module,exports){
 "use strict";
 
-var defaults = {
-        color: {
-            start: 255,
-            min: 0,
-            max: 255,
-            round: true
-        },
-        opacity: {
-            start: 1,
-            min: 0,
-            max: 1
-        },
-        scale: {
-            start: 1
-        },
-        skew: {
-            unit: 'deg'
-        }
+var color = {
+        start: 255,
+        min: 0,
+        max: 255,
+        round: true
+    },
+    opacity = {
+        start: 1,
+        min: 0,
+        max: 1
+    },
+    scale = {
+        start: 1
+    },
+    skew = {
+        unit: 'deg'
+    },
+    pixel = {
+        unit: 'px'
     };
-    
-defaults.Red = defaults.Green = defaults.Blue = defaults.color;
-defaults.Alpha = defaults.opacity;
-defaults.scaleX = defaults.scaleY = defaults.scaleZ = defaults.scale;
-defaults.skewX = defaults.skewY = defaults.skew;
 
-module.exports = defaults;
+module.exports = {
+    color: color,
+    Red: color,
+    Green: color,
+    Blue: color,
+
+    Alpha: opacity,
+    
+    scaleX: scale,
+    scaleY: scale,
+    scaleZ: scale,
+    
+    skew: skew,
+    skewX: skew,
+    skewY: skew
+};
 },{}],23:[function(require,module,exports){
 "use strict";
 
