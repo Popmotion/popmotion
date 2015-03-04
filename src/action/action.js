@@ -11,8 +11,11 @@ var parseArgs = require('./parse-args.js'),
     defaultProps = require('../opts/action.js'),
     calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
-    namespace = require('../utils/namespace.js'),
     styler = require('../routes/css/styler.js'),
+
+    namespace = function (key, space) {
+        return space ? key + '.' + space : key;
+    },
 
     Action = function () {
         var self = this;
@@ -470,6 +473,9 @@ console.log('checking');
         }
     },
     
+    /*
+        Style our dom element
+    */
     style: function (prop) {
         var dom = this.props.store.dom,
             returnVal;
