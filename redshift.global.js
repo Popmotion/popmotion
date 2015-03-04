@@ -3757,6 +3757,9 @@ var utils = require('./utils.js'),
         }
     },
 
+    /*
+        Caching functions used multiple times to reduce filesize and increase performance
+    */
     isNum = utils.isNum,
     difference = calc.difference,
     absolute = Math.abs;
@@ -3829,26 +3832,6 @@ var calc = require('./calc.js'),
             return (progress * progress) * ((strength + 1) * progress - strength);
         }
     },
-    baseOut = {
-        bounce: function (progress) {
-            if ((progress) < (1/2.75)) {
-                return (7.5625*progress*progress);
-            } else if (progress < (2/2.75)) {
-                return (7.5625*(progress-=(1.5/2.75))*progress + .75);
-            } else if (progress < (2.5/2.75)) {
-                return (7.5625*(progress-=(2.25/2.75))*progress + .9375);
-            } else {
-                return (7.5625*(progress-=(2.625/2.75))*progress + .984375);
-            }
-        },
-        swing: function (progress) {
-            var s = 1.70158;
-            return (progress -= 1) * progress * ((s + 1) * progress + s) + 1;
-        },
-        spring: function (progress) {
-            return 1 - (Math.cos(progress * 4.5 * Math.PI) * Math.exp(-progress * 6));
-        }
-    },
     
     /*
         Constructor
@@ -3857,12 +3840,6 @@ var calc = require('./calc.js'),
         for (var key in baseIn) {
             if (baseIn.hasOwnProperty(key)) {
                 this.generate(key, baseIn[key], true);
-            }
-        }
-    
-        for (key in baseOut) {
-            if (baseOut.hasOwnProperty(key)) {
-                this.generate(key, baseOut[key]);
             }
         }
     };

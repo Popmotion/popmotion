@@ -387,6 +387,9 @@ var utils = require('./utils.js'),
         }
     },
 
+    /*
+        Caching functions used multiple times to reduce filesize and increase performance
+    */
     isNum = utils.isNum,
     difference = calc.difference,
     absolute = Math.abs;
