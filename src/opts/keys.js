@@ -10,7 +10,8 @@ module.exports = {
     RUBIX: {
         INPUT: 'Input',
         TIME: 'Time',
-        RUN: 'Run'
+        RUN: 'Run',
+        FIRE: 'Fire'
     },
     EVENT: {
         MOUSE: 'mouse',

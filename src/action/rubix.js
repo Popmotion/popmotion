@@ -19,6 +19,24 @@ var calc = require('../utils/calc.js'),
     rubixController;
 
 Rubix.prototype = {
+    
+    Fire: {
+        /*
+            Return set current
+        */
+        process: function (key, value) {
+            return value.current;
+        },
+        
+        /*
+            Return true to fire for just one frame
+            
+            @return [boolean]: True
+        */
+        hasEnded: function () {
+            return true;
+        }
+    },
 
     Time: {
 
