@@ -1,6 +1,8 @@
 "use strict";
 
-var color = {
+var dictionary = require('./dictionary.js'),
+
+    color = {
         start: 255,
         min: 0,
         max: 255,
@@ -14,26 +16,33 @@ var color = {
     scale = {
         start: 1
     },
-    skew = {
+    angle = {
         unit: 'deg'
     },
-    pixel = {
-        unit: 'px'
+    defaults = {
+        base: {
+            unit: 'px'
+        },
+        
+        color: color,
+        Red: color,
+        Green: color,
+        Blue: color,
+    
+        Alpha: opacity,
+        
+        scale: scale,
+        scaleX: scale,
+        scaleY: scale,
+        scaleZ: scale,
+        
+        skew: angle,
+        skewX: angle,
+        skewY: angle,
+        rotate: angle,
+        rotateX: angle,
+        rotateY: angle,
+        rotateZ: angle
     };
-
-module.exports = {
-    color: color,
-    Red: color,
-    Green: color,
-    Blue: color,
-
-    Alpha: opacity,
     
-    scaleX: scale,
-    scaleY: scale,
-    scaleZ: scale,
-    
-    skew: skew,
-    skewX: skew,
-    skewY: skew
-};
+module.exports = defaults;

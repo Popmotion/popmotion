@@ -5,14 +5,15 @@ var lookup = require('./lookup.js'),
     X = 'X',
     Y = 'Y',
     TRANSFORM_PERSPECTIVE = 'transformPerspective',
-    SKEW = 'skew',
+    SCALE = 'scale',
+    ROTATE = 'rotate',
 
     terms = {
         colors: ['Red', 'Green', 'Blue', 'Alpha'],
         positions: [X, Y, 'Z'],
         dimensions: ['Top', 'Right', 'Bottom', 'Left'],
         shadow: [X, Y, 'Radius', 'Spread', 'Color'],
-        transform: ['translate', 'scale', 'rotate', SKEW, TRANSFORM_PERSPECTIVE],
+        transform: ['translate', SCALE, ROTATE, 'skew', TRANSFORM_PERSPECTIVE],
         valueProps: ['current', 'to', 'start', 'min', 'max'],
         transformProps: {} // objects are faster at direct lookups
     };
@@ -37,7 +38,7 @@ var lookup = require('./lookup.js'),
         };
     
     // Manually add skew and transform perspective  
-    transformProps[SKEW] = transformProps[TRANSFORM_PERSPECTIVE] = true;
+    transformProps[ROTATE] = transformProps[SCALE] = transformProps[TRANSFORM_PERSPECTIVE] = true;
     
     // Loop over each function name and create function/property terms
     for (; i < numOfTransformFuncs; i++) {

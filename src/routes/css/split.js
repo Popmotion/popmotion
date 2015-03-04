@@ -18,7 +18,7 @@ var defaultProperty = require('./default-property.js'),
         var property = defaultProperty[parentKey + unitKey]
             || defaultProperty[unitKey]
             || defaultProperty[parentKey]
-            || {};
+            || defaultProperty.base;
         
         assignDefault = assignDefault || valueProperties[0];
          

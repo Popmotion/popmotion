@@ -2370,7 +2370,9 @@ module.exports = function (output, order, cache) {
 },{"./dictionary.js":23,"./lookup.js":24,"./templates.js":28}],22:[function(require,module,exports){
 "use strict";
 
-var color = {
+var dictionary = require('./dictionary.js'),
+
+    color = {
         start: 255,
         min: 0,
         max: 255,
@@ -2384,30 +2386,37 @@ var color = {
     scale = {
         start: 1
     },
-    skew = {
+    angle = {
         unit: 'deg'
     },
-    pixel = {
-        unit: 'px'
+    defaults = {
+        base: {
+            unit: 'px'
+        },
+        
+        color: color,
+        Red: color,
+        Green: color,
+        Blue: color,
+    
+        Alpha: opacity,
+        
+        scale: scale,
+        scaleX: scale,
+        scaleY: scale,
+        scaleZ: scale,
+        
+        skew: angle,
+        skewX: angle,
+        skewY: angle,
+        rotate: angle,
+        rotateX: angle,
+        rotateY: angle,
+        rotateZ: angle
     };
-
-module.exports = {
-    color: color,
-    Red: color,
-    Green: color,
-    Blue: color,
-
-    Alpha: opacity,
     
-    scaleX: scale,
-    scaleY: scale,
-    scaleZ: scale,
-    
-    skew: skew,
-    skewX: skew,
-    skewY: skew
-};
-},{}],23:[function(require,module,exports){
+module.exports = defaults;
+},{"./dictionary.js":23}],23:[function(require,module,exports){
 "use strict";
 
 var lookup = require('./lookup.js'),
@@ -2415,14 +2424,15 @@ var lookup = require('./lookup.js'),
     X = 'X',
     Y = 'Y',
     TRANSFORM_PERSPECTIVE = 'transformPerspective',
-    SKEW = 'skew',
+    SCALE = 'scale',
+    ROTATE = 'rotate',
 
     terms = {
         colors: ['Red', 'Green', 'Blue', 'Alpha'],
         positions: [X, Y, 'Z'],
         dimensions: ['Top', 'Right', 'Bottom', 'Left'],
         shadow: [X, Y, 'Radius', 'Spread', 'Color'],
-        transform: ['translate', 'scale', 'rotate', SKEW, TRANSFORM_PERSPECTIVE],
+        transform: ['translate', SCALE, ROTATE, 'skew', TRANSFORM_PERSPECTIVE],
         valueProps: ['current', 'to', 'start', 'min', 'max'],
         transformProps: {} // objects are faster at direct lookups
     };
@@ -2447,7 +2457,7 @@ var lookup = require('./lookup.js'),
         };
     
     // Manually add skew and transform perspective  
-    transformProps[SKEW] = transformProps[TRANSFORM_PERSPECTIVE] = true;
+    transformProps[ROTATE] = transformProps[SCALE] = transformProps[TRANSFORM_PERSPECTIVE] = true;
     
     // Loop over each function name and create function/property terms
     for (; i < numOfTransformFuncs; i++) {
@@ -2517,7 +2527,7 @@ var defaultProperty = require('./default-property.js'),
         var property = defaultProperty[parentKey + unitKey]
             || defaultProperty[unitKey]
             || defaultProperty[parentKey]
-            || {};
+            || defaultProperty.base;
         
         assignDefault = assignDefault || valueProperties[0];
          
