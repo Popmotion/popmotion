@@ -1,27 +1,29 @@
+/*
+    Redshift core object
+    
+    Exposes methods to create new classes and define new modules
+*/
 "use strict";
 
 var Action = require('./action/action.js'),
     Input = require('./input/input.js'),
-    presets = require('./action/presets.js'),
-    //route = require('./routes/manager.js'),
-    easing = require('./utils/easing.js'),
-    calc = require('./utils/calc.js'),
-    shim = require('./utils/shim.js'),
     Process = require('./process/process.js'),
-    Redshift = function () {
-        // Check if we need to shim rAF and indexOf
-        shim();
-    };
+    presets = require('./action/presets.js'),
+    easing = require('./utils/easing.js'),
+    calc = require('./utils/calc.js');
+    
+// Check if we need to shim indexOf and requireAnimationFrame
+require('./utils/shim.js')();   
 
-Redshift.prototype = {
+module.exports = {
 
     /*
         Create a new Action controller
         
         @return [Action]: Newly-created Action
     */
-    newAction: function (defs, override) {
-        return new Action(defs, override);
+    newAction: function () {
+        return new Action(arguments[0], arguments[1]);
     },
     
     /*
@@ -112,5 +114,3 @@ Redshift.prototype = {
     
     calc: calc
 };
-
-module.exports = new Redshift();
