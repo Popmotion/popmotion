@@ -49,6 +49,9 @@ Action.prototype = {
 
     // [number]: Number of frames action has been inactive
     inactiveFrames: 0,
+    
+    // [number]: 1 = forward, -1 = backwards
+    playDirection: 1,
 
     /*
         Play the provided actions as animations
@@ -73,7 +76,9 @@ Action.prototype = {
         var props = parseArgs.play.apply(this, arguments);
 
         if (!this.isActive()) {
-            this.set(props);
+            this.set(props, 'to');
+        } else {
+            this.queue.add.apply(this.queue, arguments);
         }
 
         return this.start(KEY.RUBIX.TIME);
@@ -126,10 +131,12 @@ Action.prototype = {
             
         @return [Action]
     */
-    set: function (props) {
+    set: function (props, defaultProp) {
         var self = this,
             currentProps = this.props.get(),
             key = '';
+            
+        defaultProp = defaultProp || 'current';
 
         self.props.set(props);
 
@@ -146,10 +153,8 @@ Action.prototype = {
                     value = bucket[key];
                     
                     if (!utils.isObj(value)) {
-                        mergeIn = {
-                            current: value,
-                            name: key
-                        }
+                        mergeIn = { name: key };
+                        mergeIn[defaultProp] = value;
                     } else {
                         mergeIn = value;
                         mergeIn.name = key;
@@ -255,7 +260,7 @@ Action.prototype = {
     */
     reset: function () {
 	    var self = this,
-	        values = self.values.get();
+	        values = self.values;
 
         self.resetProgress();
         
@@ -283,14 +288,21 @@ Action.prototype = {
 	    Reverse Action progress and values
     */
     reverse: function () {
+        this.playDirection *= -1;
+    },
+    
+    /*
+        Swap value origins and to
+    */
+    flip: function () {
 	    var self = this,
-	        values = self.values.get();
+	        values = self.values;
 	    
 	    self.progress = calc.difference(self.progress, 1);
         self.elapsed = calc.difference(self.elapsed, self.props.get('duration'));
         
         for (var key in values) {
-            values[key].reverse();
+            values[key].flip();
         }
 
         return self;
@@ -302,6 +314,8 @@ Action.prototype = {
         } else {
             this.resume();
         }
+        
+        return this;
     },
     
     /*
@@ -365,9 +379,10 @@ Action.prototype = {
     playNext: function () {
         var stepTaken = false,
             nextInQueue = this.queue.next();
-
+console.log('checking');
         if (utils.isArray(nextInQueue)) {
-            this.set(parseArgs.generic.apply(this, nextInQueue))
+            console.log('test');
+            this.set(parseArgs.generic.apply(this, nextInQueue), 'to')
                 .reset();
 
             stepTaken = true;
@@ -389,6 +404,7 @@ Action.prototype = {
         } else {
             this.values[key] = new Value(key, value, inherit, this);
         }
+
         return this;
     },
     

@@ -102,10 +102,13 @@ Value.prototype = {
     /*
         Swap current target and origin
     */
-    reverse: function () {
+    flip: function () {
+        var newTo = this[ORIGIN],
+            newOrigin = (this.to !== undefined) ? this.to : this[CURRENT];
+
         return this.set({
-            to: this[ORIGIN],
-            origin: (this.to !== undefined) ? this.to : this[CURRENT]
+            to: newTo,
+            origin: newOrigin
         });
     }
 };

@@ -16,6 +16,9 @@ module.exports = {
     // [number]: Minimum permitted value during .track and .run
     max: undefined,
     
+    // [number]: Origin
+    origin: 0,
+    
     // [boolean]: Set to true when both min and max detected
     hasRange: false,
 
@@ -27,6 +30,9 @@ module.exports = {
     
     // [string]: Non-namespaced output value
     name: '',
+    
+    // [string]: Unit string to append to value on ourput
+    unit: undefined,
     
     parent: '',
     

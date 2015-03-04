@@ -30,7 +30,7 @@ Rubix.prototype = {
             @param [number]: Timestamp of current frame
         */
         updateInput: function (action, props, framestamp) {
-            action.elapsed += (framestamp - action.framestamp) * props.dilate;
+            action.elapsed += ((framestamp - action.framestamp) * props.dilate) * action.playDirection;
             action.hasEnded = true;
         },
 
@@ -48,11 +48,12 @@ Rubix.prototype = {
         */
         process: function (key, value, values, props, action) {
             var newValue = value.current,
-                progress = calc.restricted(calc.progress(action.elapsed - value.delay, value.duration) - value.stagger, 0, 1);
-            
+                progress = calc.restricted(calc.progress(action.elapsed - value.delay, value.duration) - value.stagger, 0, 1),
+                progressTarget = (action.playDirection === 1) ? 1 : 0;
+
             // Update hasEnded
-            action.hasEnded = (progress !== 1) ? false : action.hasEnded;
-            
+            action.hasEnded = (progress !== progressTarget) ? false : action.hasEnded;
+
             if (value.to !== undefined) {
                 progress = (value.steps) ? utils.stepProgress(progress, 1, value.steps) : progress;
                 newValue = easing.withinRange(progress, value.origin, value.to, value.ease);
@@ -204,12 +205,11 @@ Rubix.prototype = {
 
             // First look at values in Action
             if (values[value.link]) {
-                console.log(values[value.link]);
                 newValue = values[value.link].current;
 
             // Then check values in Input
             } else if (action.inputOffset && action.inputOffset.hasOwnProperty(value.link)) {
-                newValue = value.origin + action.inputOffset[key];
+                newValue = value.origin + action.inputOffset[value.link];
             }
             
             for (var i = 1; i < mapLength; i++) {
