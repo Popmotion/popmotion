@@ -29,7 +29,7 @@ module.exports = {
     
     // Transform functions
     skew: POSITIONS,
-    transform: POSITIONS,
+    translate: POSITIONS,
     rotate: POSITIONS,
     scale: POSITIONS,
     

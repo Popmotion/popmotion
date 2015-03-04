@@ -1,34 +1,48 @@
 "use strict";
 
 var lookup = require('./lookup.js'),
+
+    X = 'X',
+    Y = 'Y',
+    TRANSFORM_PERSPECTIVE = 'transformPerspective',
+    SKEW = 'skew',
+
     terms = {
         colors: ['Red', 'Green', 'Blue', 'Alpha'],
-        positions: ['X', 'Y', 'Z'],
+        positions: [X, Y, 'Z'],
         dimensions: ['Top', 'Right', 'Bottom', 'Left'],
-        shadow: ['X', 'Y', 'Radius', 'Spread', 'Color'],
-        transform: ['translate', 'scale', 'rotate', 'skew', 'transformPerspective'],
-        valueProps: ['current', 'to', 'start', 'min', 'max']
+        shadow: [X, Y, 'Radius', 'Spread', 'Color'],
+        transform: ['translate', 'scale', 'rotate', SKEW, TRANSFORM_PERSPECTIVE],
+        valueProps: ['current', 'to', 'start', 'min', 'max'],
+        transformProps: {} // objects are faster at direct lookups
     };
 
 // Create transform terms
-var transformFuncs = terms.transform,
-    numTransform = transformFuncs.length,
-    transformProps = {},
-    thisLookup;
-    
-terms.transformProps = transformProps;
+(function () {
+    var transformFuncs = terms.transform,
+        transformProps = terms.transformProps,
+        numOfTransformFuncs = transformFuncs.length,
+        i = 0,
 
-for (var i = 0; i < numTransform; i++) {
+        createProps = function (funcName) {
+            var funcType = lookup[funcName],
+                typeTerms = terms[funcType],
+                j = 0;
+                
+            if (typeTerms) {
+                for (; j < typeTerms.length; j++) {
+                    transformProps[funcName + typeTerms[j]] = true;
+                }
+            }
+        };
     
-    thisLookup = lookup[transformFuncs[i]];
-    theseTerms = terms[thisLookup];
+    // Manually add skew and transform perspective  
+    transformProps[SKEW] = transformProps[TRANSFORM_PERSPECTIVE] = true;
     
-    if (theseTerms) {
-        for (var j = 0; i < theseTerms; j++) {
-            transformProps[transformFuncs[i] + theseTerms[i]] = true;
-        }
+    // Loop over each function name and create function/property terms
+    for (; i < numOfTransformFuncs; i++) {
+        createProps(transformFuncs[i]);
     }
-    
-}
+})();
 
 module.exports = terms;

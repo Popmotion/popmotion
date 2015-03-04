@@ -33,7 +33,8 @@ var defaultProperty = require('./default-property.js'),
             property[assignDefault] = value;
         }
 
-        property.name = parentKey + unitKey;
+        // If we have a unitKey, name property parentKey + unitKey
+        property.name = unitKey ? parentKey + unitKey : parentKey;
         
         return property;
     },
@@ -82,7 +83,7 @@ var defaultProperty = require('./default-property.js'),
 module.exports = function (key, value) {
     var splitterID = splitLookup[key],
         values = (splitterID) ? split(key, value, splitterID) : {};
-    
+
     // If we don't have a splitter, assign the property directly
     if (!splitterID) {
         values[key] = buildProperty(value, key);

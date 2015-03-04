@@ -1,6 +1,7 @@
 "use strict";
 
-var templates = require('./templates.js'),
+var dictionary = require('./dictionary.js'),
+    templates = require('./templates.js'),
     lookup = require('./lookup.js'),
     
     TRANSFORM = 'transform',
@@ -9,16 +10,16 @@ var templates = require('./templates.js'),
         Generate a CSS rule with the available template
     */
     generateRule = function (key, output) {
-        var template = templates[lookup[key]],
-            rule = template ? template(key, output) : output[key];
-        
-        return rule;
+        var template = templates[lookup[key]];
+
+        return template ? template(key, output) : output[key];
     };
     
 
 module.exports = function (output, order, cache) {
     var css = {},
         numRules = order.length,
+        transformProp = dictionary.transformProps,
         i = 0,
         rule = '',
         key = '',
@@ -27,9 +28,10 @@ module.exports = function (output, order, cache) {
     for (; i < numRules; i++) {
         key = order[i],
         rule = generateRule(key, output);
-        
-        if (isTransformRule) {
-            transform += rule + ' ';
+
+            console.log(transformProp);
+        if (transformProp[key]) {
+            transform += key + '(' + rule + ') ';
 
         } else if (cache[key] !== rule) {
             css[key] = rule;
@@ -40,6 +42,8 @@ module.exports = function (output, order, cache) {
     if (transform != cache[TRANSFORM]) {
         css[TRANSFORM] = cache[TRANSFORM] = transform;
     }
+    
+    console.log(transform);
     
     return css;
 };

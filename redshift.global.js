@@ -2296,7 +2296,8 @@ module.exports = {
 },{"./css/build.js":21,"./css/split.js":25}],21:[function(require,module,exports){
 "use strict";
 
-var templates = require('./templates.js'),
+var dictionary = require('./dictionary.js'),
+    templates = require('./templates.js'),
     lookup = require('./lookup.js'),
     
     TRANSFORM = 'transform',
@@ -2305,16 +2306,16 @@ var templates = require('./templates.js'),
         Generate a CSS rule with the available template
     */
     generateRule = function (key, output) {
-        var template = templates[lookup[key]],
-            rule = template ? template(key, output) : output[key];
-        
-        return rule;
+        var template = templates[lookup[key]];
+
+        return template ? template(key, output) : output[key];
     };
     
 
 module.exports = function (output, order, cache) {
     var css = {},
         numRules = order.length,
+        transformProp = dictionary.transformProps,
         i = 0,
         rule = '',
         key = '',
@@ -2323,9 +2324,10 @@ module.exports = function (output, order, cache) {
     for (; i < numRules; i++) {
         key = order[i],
         rule = generateRule(key, output);
-        
-        if (isTransformRule) {
-            transform += rule + ' ';
+
+            console.log(transformProp);
+        if (transformProp[key]) {
+            transform += key + '(' + rule + ') ';
 
         } else if (cache[key] !== rule) {
             css[key] = rule;
@@ -2337,9 +2339,11 @@ module.exports = function (output, order, cache) {
         css[TRANSFORM] = cache[TRANSFORM] = transform;
     }
     
+    console.log(transform);
+    
     return css;
 };
-},{"./lookup.js":24,"./templates.js":28}],22:[function(require,module,exports){
+},{"./dictionary.js":23,"./lookup.js":24,"./templates.js":28}],22:[function(require,module,exports){
 "use strict";
 
 var defaults = {
@@ -2368,35 +2372,49 @@ module.exports = defaults;
 "use strict";
 
 var lookup = require('./lookup.js'),
+
+    X = 'X',
+    Y = 'Y',
+    TRANSFORM_PERSPECTIVE = 'transformPerspective',
+    SKEW = 'skew',
+
     terms = {
         colors: ['Red', 'Green', 'Blue', 'Alpha'],
-        positions: ['X', 'Y', 'Z'],
+        positions: [X, Y, 'Z'],
         dimensions: ['Top', 'Right', 'Bottom', 'Left'],
-        shadow: ['X', 'Y', 'Radius', 'Spread', 'Color'],
-        transform: ['translate', 'scale', 'rotate', 'skew', 'transformPerspective'],
-        valueProps: ['current', 'to', 'start', 'min', 'max']
+        shadow: [X, Y, 'Radius', 'Spread', 'Color'],
+        transform: ['translate', 'scale', 'rotate', SKEW, TRANSFORM_PERSPECTIVE],
+        valueProps: ['current', 'to', 'start', 'min', 'max'],
+        transformProps: {} // objects are faster at direct lookups
     };
 
 // Create transform terms
-var transformFuncs = terms.transform,
-    numTransform = transformFuncs.length,
-    transformProps = [],
-    thisLookup;
-    
-terms.transformProps = transformProps;
+(function () {
+    var transformFuncs = terms.transform,
+        transformProps = terms.transformProps,
+        numOfTransformFuncs = transformFuncs.length,
+        i = 0,
 
-for (var i = 0; i < numTransform; i++) {
+        createProps = function (funcName) {
+            var funcType = lookup[funcName],
+                typeTerms = terms[funcType],
+                j = 0;
+                
+            if (typeTerms) {
+                for (; j < typeTerms.length; j++) {
+                    transformProps[funcName + typeTerms[j]] = true;
+                }
+            }
+        };
     
-    thisLookup = lookup[transformFuncs[i]];
-    theseTerms = terms[thisLookup];
+    // Manually add skew and transform perspective  
+    transformProps[SKEW] = transformProps[TRANSFORM_PERSPECTIVE] = true;
     
-    if (theseTerms) {
-        for (var j = 0; i < theseTerms; j++) {
-            transformProps.push(transformFuncs[i] + theseTerms[i]);
-        }
+    // Loop over each function name and create function/property terms
+    for (; i < numOfTransformFuncs; i++) {
+        createProps(transformFuncs[i]);
     }
-    
-}
+})();
 
 module.exports = terms;
 },{"./lookup.js":24}],24:[function(require,module,exports){
@@ -2431,7 +2449,7 @@ module.exports = {
     
     // Transform functions
     skew: POSITIONS,
-    transform: POSITIONS,
+    translate: POSITIONS,
     rotate: POSITIONS,
     scale: POSITIONS,
     
@@ -2475,7 +2493,8 @@ var defaultProperty = require('./default-property.js'),
             property[assignDefault] = value;
         }
 
-        property.name = parentKey + unitKey;
+        // If we have a unitKey, name property parentKey + unitKey
+        property.name = unitKey ? parentKey + unitKey : parentKey;
         
         return property;
     },
@@ -2524,7 +2543,7 @@ var defaultProperty = require('./default-property.js'),
 module.exports = function (key, value) {
     var splitterID = splitLookup[key],
         values = (splitterID) ? split(key, value, splitterID) : {};
-    
+
     // If we don't have a splitter, assign the property directly
     if (!splitterID) {
         values[key] = buildProperty(value, key);
