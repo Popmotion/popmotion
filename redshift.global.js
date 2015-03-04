@@ -3374,10 +3374,10 @@ module.exports = Value;
     
     Simple I/O snippets
 */
-
 "use strict";
 
-var utils = require('./utils.js');
+var utils = require('./utils.js'),
+    isNum = utils.isNum;
     
 module.exports = {
     
@@ -3559,7 +3559,7 @@ module.exports = {
             } 
         }
         
-        if (utils.isNum(offset.x) && utils.isNum(offset.y)) {
+        if (isNum(offset.x) && isNum(offset.y)) {
             offset.angle = this.angle(a, b);
             offset.distance = this.distance2D(a, b);
         }
@@ -3624,8 +3624,8 @@ module.exports = {
         @return [number]: Random number within range, or 0 and 1 if none provided
     */
     random: function (min, max) {
-        min = utils.isNum(min) ? min : 0;
-        max = utils.isNum(max) ? max : 1;
+        min = isNum(min) ? min : 0;
+        max = isNum(max) ? max : 1;
         return Math.random() * (max - min) + min;
     },
 
@@ -3693,7 +3693,7 @@ module.exports = {
         @param [number]: Frame duration in ms
     */
     speedPerFrame: function (xps, frameDuration) {
-        return (utils.isNum(xps)) ? xps / (1000 / frameDuration) : 0;
+        return (isNum(xps)) ? xps / (1000 / frameDuration) : 0;
     },
 
     /*
