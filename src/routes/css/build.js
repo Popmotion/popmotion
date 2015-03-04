@@ -29,7 +29,6 @@ module.exports = function (output, order, cache) {
         key = order[i],
         rule = generateRule(key, output);
 
-            console.log(transformProp);
         if (transformProp[key]) {
             transform += key + '(' + rule + ') ';
 
@@ -42,8 +41,6 @@ module.exports = function (output, order, cache) {
     if (transform != cache[TRANSFORM]) {
         css[TRANSFORM] = cache[TRANSFORM] = transform;
     }
-    
-    console.log(transform);
     
     return css;
 };

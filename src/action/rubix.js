@@ -204,7 +204,8 @@ Rubix.prototype = {
 
             // First look at values in Action
             if (values[value.link]) {
-                newValue = values[value.link].store.current;
+                console.log(values[value.link]);
+                newValue = values[value.link].current;
 
             // Then check values in Input
             } else if (action.inputOffset && action.inputOffset.hasOwnProperty(value.link)) {
