@@ -124,6 +124,16 @@ Action.prototype = {
     },
     
     /*
+        Activate for one frame and set values to current
+        
+        @return [Action]
+    */
+    fire: function () {
+        this.set(parseArgs.generic.apply(this, arguments));
+        return this.start(KEY.RUBIX.FIRE);
+    },
+    
+    /*
         Set Action values and properties
         
         Syntax
@@ -968,6 +978,24 @@ var calc = require('../utils/calc.js'),
     rubixController;
 
 Rubix.prototype = {
+    
+    Fire: {
+        /*
+            Return set current
+        */
+        process: function (key, value) {
+            return value.current;
+        },
+        
+        /*
+            Return true to fire for just one frame
+            
+            @return [boolean]: True
+        */
+        hasEnded: function () {
+            return true;
+        }
+    },
 
     Time: {
 
@@ -1588,7 +1616,8 @@ module.exports = {
     RUBIX: {
         INPUT: 'Input',
         TIME: 'Time',
-        RUN: 'Run'
+        RUN: 'Run',
+        FIRE: 'Fire'
     },
     EVENT: {
         MOUSE: 'mouse',

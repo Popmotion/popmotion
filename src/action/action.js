@@ -123,6 +123,16 @@ Action.prototype = {
     },
     
     /*
+        Activate for one frame and set values to current
+        
+        @return [Action]
+    */
+    fire: function () {
+        this.set(parseArgs.generic.apply(this, arguments));
+        return this.start(KEY.RUBIX.FIRE);
+    },
+    
+    /*
         Set Action values and properties
         
         Syntax
