@@ -3,11 +3,13 @@
 var build = require('./css/build.js'),
     split = require('./css/split.js'),
     
-    cssOrder = 'cssOrder';
+    css = 'css',
+    cssOrder = css + 'Order',
+    cssCache = css + 'Cache';
 
 module.exports = {
     
-    name: 'css',
+    name: css,
     
     preprocess: function (key, value, action, props) {
         var values = split(key, value);
@@ -20,7 +22,8 @@ module.exports = {
     },
     
     onChange: function (output, action, values, props) {
-        action.style(build(output, props[cssOrder], props.css, values));
+        props[cssCache] = props[cssCache] || {};
+        action.style(build(output, props[cssOrder],  props[cssCache], values));
     }
     
 };

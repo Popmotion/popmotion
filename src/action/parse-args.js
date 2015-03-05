@@ -69,7 +69,7 @@ module.exports = {
             typeofArg = '';
         
         // Play specific properties
-        props.playhead = props.loopCount = props.yoyoCount = 0;
+        props.loopCount = props.yoyoCount = props.flipCount = 0;
         
         for (; i < argsLength; i++) {
             arg = arguments[i];

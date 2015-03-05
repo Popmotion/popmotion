@@ -30,7 +30,10 @@ module.exports = {
     loopCount: 0,
     
     // Number of times animation has yoyoed
-    yoyoCount: 0
+    yoyoCount: 0,
+    
+    // Number of times animation has flipped
+    flipCount: 0
     
     /*
         

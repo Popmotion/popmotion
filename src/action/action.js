@@ -157,16 +157,16 @@ Action.prototype = {
         self.props.set(props);
 
         // Loop over new values and set
-        routes.shard(function (route, bucket) {
+        routes.shard(function (route, valuesBucket) {
             var baseValue = {
                     route: route.name
                 },
                 mergeIn = {},
                 value;
 
-            for (key in bucket) {
-                if (bucket.hasOwnProperty(key) && route.preprocess) {
-                    value = bucket[key];
+            for (key in valuesBucket) {
+                if (valuesBucket.hasOwnProperty(key) && route.preprocess) {
+                    value = valuesBucket[key];
                     
                     if (!utils.isObj(value)) {
                         mergeIn = { name: key };
@@ -295,7 +295,7 @@ Action.prototype = {
 	    var self = this;
 
         self.progress = 0;
-        self.elapsed = 0;
+        self.elapsed = (self.playDirection === 1) ? 0 : self.props.get('duration');
         self.started = utils.currentTime();
         
         return self;
@@ -346,6 +346,9 @@ Action.prototype = {
             }, {
                 key: 'yoyo',
                 callback: self.reverse
+            }, {
+                key: 'flip',
+                callback: self.flip
             }],
             possibles = nexts.length,
             hasNext = false;
@@ -373,14 +376,15 @@ Action.prototype = {
         @param [callback]: Function to run if we take this step
     */
     checkNextStep: function (key, callback) {
-        var stepTaken = false,
+        var COUNT = 'Count',
+            stepTaken = false,
             step = this.props.get(key),
-            count = this.props.get(key + 'Count'),
+            count = this.props.get(key + COUNT),
             forever = (step === true);
 
         if (forever || utils.isNum(step)) {
             ++count;
-            this.props.set(key + 'Count', count);
+            this.props.set(key + COUNT, count);
             if (forever || count <= step) {
                 callback.call(this);
                 stepTaken = true;
@@ -395,7 +399,7 @@ Action.prototype = {
     */
     playNext: function () {
         var stepTaken = false,
-            nextInQueue = this.queue.next();
+            nextInQueue = this.queue.next(this.playDirection);
 
         if (utils.isArray(nextInQueue)) {
             this.set(parseArgs.generic.apply(this, nextInQueue), 'to')
