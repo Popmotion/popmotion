@@ -694,7 +694,7 @@
 	
 	var calc = __webpack_require__(/*! ../utils/calc.js */ 7),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 16),
-	    History = __webpack_require__(/*! ../utils/history.js */ 19),
+	    History = __webpack_require__(/*! ../utils/history.js */ 18),
 	
 	    /*
 	        Input constructor
@@ -826,7 +826,7 @@
 	*/
 	"use strict";
 	
-	var manager = __webpack_require__(/*! ./manager.js */ 18),
+	var manager = __webpack_require__(/*! ./manager.js */ 19),
 	
 	    /*
 	        Process constructor
@@ -1946,8 +1946,8 @@
 
 	"use strict";
 	
-	var defaults = __webpack_require__(/*! ../opts/values.js */ 25),
-	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 26),
+	var defaults = __webpack_require__(/*! ../opts/values.js */ 26),
+	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 27),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 16),
 	
 	    CURRENT = 'current',
@@ -2071,7 +2071,7 @@
 	"use strict";
 	
 	var utils = __webpack_require__(/*! ../utils/utils.js */ 16),
-	    dictionary = __webpack_require__(/*! ../routes/css/dictionary.js */ 24),
+	    dictionary = __webpack_require__(/*! ../routes/css/dictionary.js */ 28),
 	    valueProps = dictionary.valueProps,
 	
 	    /*
@@ -2312,8 +2312,8 @@
 	"use strict";
 	
 	var defaultRoute = __webpack_require__(/*! ../routes/values.js */ 23),
-	    //cssRoute = require('../routes/css.js'),
-	    //attrRoute = require('../routes/attr.js'),
+	    cssRoute = __webpack_require__(/*! ../routes/css.js */ 24),
+	    attrRoute = __webpack_require__(/*! ../routes/attr.js */ 25),
 	
 	    routes = {},
 	    routeKeys = [],
@@ -2404,8 +2404,8 @@
 	    }
 	    
 	    manager.add(defaultRoute);
-	    //manager.add(cssRoute);
-	    //manager.add(attrRoute);
+	    manager.add(cssRoute);
+	    manager.add(attrRoute);
 	})();
 	
 	module.exports = manager; 
@@ -2945,6 +2945,83 @@
 
 /***/ },
 /* 18 */
+/*!******************************!*\
+  !*** ./src/utils/history.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var // [number]: Default max size of history
+	    maxHistorySize = 3,
+	    
+	    /*
+	        History constructor
+	        
+	        @param [var]: Variable to store in first history slot
+	        @param [int] (optional): Maximum size of history
+	    */
+	    History = function (obj, max) {
+	        this.max = max || maxHistorySize;
+	        this.entries = [];
+	        this.add(obj);
+	    };
+	    
+	History.prototype = {
+	    
+	    /*
+	        Push new var to history
+	        
+	        Shift out oldest entry if we've reached maximum capacity
+	        
+	        @param [var]: Variable to push into history.entries
+	    */
+	    add: function (obj) {
+	        var currentSize = this.getSize();
+	        
+	        this.entries.push(obj);
+	        
+	        if (currentSize >= this.max) {
+	            this.entries.shift();
+	        }
+	    },
+	    
+	    /*
+	        Get variable at specified index
+	
+	        @param [int]: Index
+	        @return [var]: Var found at specified index
+	    */
+	    get: function (i) {
+	        i = (typeof i === 'number') ? i : this.getSize() - 1;
+	
+	        return this.entries[i];
+	    },
+	    
+	    /*
+	        Get the second newest history entry
+	        
+	        @return [var]: Entry found at index size - 2
+	    */
+	    getPrevious: function () {
+	        return this.get(this.getSize() - 2);
+	    },
+	    
+	    /*
+	        Get current history size
+	        
+	        @return [int]: Current length of entries.length
+	    */
+	    getSize: function () {
+	        return this.entries.length;
+	    }
+	    
+	};
+	
+	module.exports = History;
+
+/***/ },
+/* 19 */
 /*!********************************!*\
   !*** ./src/process/manager.js ***!
   \********************************/
@@ -2952,7 +3029,7 @@
 
 	"use strict";
 	
-	var theLoop = __webpack_require__(/*! ./loop.js */ 27),
+	var theLoop = __webpack_require__(/*! ./loop.js */ 29),
 	    ProcessManager = function () {
 	        this.all = {};
 	        this.active = [];
@@ -3120,83 +3197,6 @@
 	};
 	
 	module.exports = new ProcessManager();
-
-/***/ },
-/* 19 */
-/*!******************************!*\
-  !*** ./src/utils/history.js ***!
-  \******************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var // [number]: Default max size of history
-	    maxHistorySize = 3,
-	    
-	    /*
-	        History constructor
-	        
-	        @param [var]: Variable to store in first history slot
-	        @param [int] (optional): Maximum size of history
-	    */
-	    History = function (obj, max) {
-	        this.max = max || maxHistorySize;
-	        this.entries = [];
-	        this.add(obj);
-	    };
-	    
-	History.prototype = {
-	    
-	    /*
-	        Push new var to history
-	        
-	        Shift out oldest entry if we've reached maximum capacity
-	        
-	        @param [var]: Variable to push into history.entries
-	    */
-	    add: function (obj) {
-	        var currentSize = this.getSize();
-	        
-	        this.entries.push(obj);
-	        
-	        if (currentSize >= this.max) {
-	            this.entries.shift();
-	        }
-	    },
-	    
-	    /*
-	        Get variable at specified index
-	
-	        @param [int]: Index
-	        @return [var]: Var found at specified index
-	    */
-	    get: function (i) {
-	        i = (typeof i === 'number') ? i : this.getSize() - 1;
-	
-	        return this.entries[i];
-	    },
-	    
-	    /*
-	        Get the second newest history entry
-	        
-	        @return [var]: Entry found at index size - 2
-	    */
-	    getPrevious: function () {
-	        return this.get(this.getSize() - 2);
-	    },
-	    
-	    /*
-	        Get current history size
-	        
-	        @return [int]: Current length of entries.length
-	    */
-	    getSize: function () {
-	        return this.entries.length;
-	    }
-	    
-	};
-	
-	module.exports = History;
 
 /***/ },
 /* 20 */
@@ -3388,7 +3388,7 @@
 	var calc = __webpack_require__(/*! ../utils/calc.js */ 7),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 16),
 	    easing = __webpack_require__(/*! ../utils/easing.js */ 6),
-	    simulate = __webpack_require__(/*! ./simulate.js */ 28),
+	    simulate = __webpack_require__(/*! ./simulate.js */ 30),
 	    
 	    // Commonly used properties
 	    CURRENT = 'current',
@@ -3695,63 +3695,71 @@
 
 /***/ },
 /* 24 */
-/*!**************************************!*\
-  !*** ./src/routes/css/dictionary.js ***!
-  \**************************************/
+/*!***************************!*\
+  !*** ./src/routes/css.js ***!
+  \***************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
-	var lookup = __webpack_require__(/*! ./lookup.js */ 29),
-	
-	    X = 'X',
-	    Y = 'Y',
-	    TRANSFORM_PERSPECTIVE = 'transformPerspective',
-	    SCALE = 'scale',
-	    ROTATE = 'rotate',
-	
-	    terms = {
-	        colors: ['Red', 'Green', 'Blue', 'Alpha'],
-	        positions: [X, Y, 'Z'],
-	        dimensions: ['Top', 'Right', 'Bottom', 'Left'],
-	        shadow: [X, Y, 'Radius', 'Spread', 'Color'],
-	        transform: ['translate', SCALE, ROTATE, 'skew', TRANSFORM_PERSPECTIVE],
-	        valueProps: ['current', 'to', 'start', 'min', 'max'],
-	        transformProps: {} // objects are faster at direct lookups
-	    };
-	
-	// Create transform terms
-	(function () {
-	    var transformFuncs = terms.transform,
-	        transformProps = terms.transformProps,
-	        numOfTransformFuncs = transformFuncs.length,
-	        i = 0,
-	
-	        createProps = function (funcName) {
-	            var funcType = lookup[funcName],
-	                typeTerms = terms[funcType],
-	                j = 0;
-	                
-	            if (typeTerms) {
-	                for (; j < typeTerms.length; j++) {
-	                    transformProps[funcName + typeTerms[j]] = true;
-	                }
-	            }
-	        };
+	var build = __webpack_require__(/*! ./css/build.js */ 31),
+	    split = __webpack_require__(/*! ./css/split.js */ 32),
 	    
-	    // Manually add skew and transform perspective  
-	    transformProps[ROTATE] = transformProps[SCALE] = transformProps[TRANSFORM_PERSPECTIVE] = true;
+	    css = 'css',
+	    cssOrder = css + 'Order',
+	    cssCache = css + 'Cache';
+	
+	module.exports = {
 	    
-	    // Loop over each function name and create function/property terms
-	    for (; i < numOfTransformFuncs; i++) {
-	        createProps(transformFuncs[i]);
+	    name: css,
+	    
+	    preprocess: function (key, value, action, props) {
+	        var values = split(key, value);
+	        
+	        action.updateOrder(key, false, cssOrder);
+	
+	        for (key in values) {
+	            action.setValue(key, values[key], props, this.name);
+	        }
+	    },
+	    
+	    onChange: function (output, action, values, props) {
+	        props[cssCache] = props[cssCache] || {};
+	        action.style(build(output, props[cssOrder],  props[cssCache], values));
 	    }
-	})();
-	
-	module.exports = terms;
+	    
+	};
 
 /***/ },
 /* 25 */
+/*!****************************!*\
+  !*** ./src/routes/attr.js ***!
+  \****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	module.exports = {
+	    
+	    name: 'attr',
+	    
+	    preprocess: function (key, value, action, props) {
+	        action.setValue(key, value, props, this.name);
+	    },
+	    
+	    onChange: function (output, action, values, props) {
+	        var dom = props.dom;
+	
+	        if (dom) {
+	            for (var key in output) {
+	                dom.setAttribute(key, output[key]);
+	            }
+	        }
+	    }
+	};
+
+/***/ },
+/* 26 */
 /*!****************************!*\
   !*** ./src/opts/values.js ***!
   \****************************/
@@ -3871,7 +3879,7 @@
 	};
 
 /***/ },
-/* 26 */
+/* 27 */
 /*!******************************!*\
   !*** ./src/utils/resolve.js ***!
   \******************************/
@@ -3927,7 +3935,64 @@
 	};
 
 /***/ },
-/* 27 */
+/* 28 */
+/*!**************************************!*\
+  !*** ./src/routes/css/dictionary.js ***!
+  \**************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var lookup = __webpack_require__(/*! ./lookup.js */ 33),
+	
+	    X = 'X',
+	    Y = 'Y',
+	    TRANSFORM_PERSPECTIVE = 'transformPerspective',
+	    SCALE = 'scale',
+	    ROTATE = 'rotate',
+	
+	    terms = {
+	        colors: ['Red', 'Green', 'Blue', 'Alpha'],
+	        positions: [X, Y, 'Z'],
+	        dimensions: ['Top', 'Right', 'Bottom', 'Left'],
+	        shadow: [X, Y, 'Radius', 'Spread', 'Color'],
+	        transform: ['translate', SCALE, ROTATE, 'skew', TRANSFORM_PERSPECTIVE],
+	        valueProps: ['current', 'to', 'start', 'min', 'max'],
+	        transformProps: {} // objects are faster at direct lookups
+	    };
+	
+	// Create transform terms
+	(function () {
+	    var transformFuncs = terms.transform,
+	        transformProps = terms.transformProps,
+	        numOfTransformFuncs = transformFuncs.length,
+	        i = 0,
+	
+	        createProps = function (funcName) {
+	            var funcType = lookup[funcName],
+	                typeTerms = terms[funcType],
+	                j = 0;
+	                
+	            if (typeTerms) {
+	                for (; j < typeTerms.length; j++) {
+	                    transformProps[funcName + typeTerms[j]] = true;
+	                }
+	            }
+	        };
+	    
+	    // Manually add skew and transform perspective  
+	    transformProps[ROTATE] = transformProps[SCALE] = transformProps[TRANSFORM_PERSPECTIVE] = true;
+	    
+	    // Loop over each function name and create function/property terms
+	    for (; i < numOfTransformFuncs; i++) {
+	        createProps(transformFuncs[i]);
+	    }
+	})();
+	
+	module.exports = terms;
+
+/***/ },
+/* 29 */
 /*!*****************************!*\
   !*** ./src/process/loop.js ***!
   \*****************************/
@@ -3938,7 +4003,7 @@
 	*/
 	"use strict";
 	
-	var Timer = __webpack_require__(/*! ./timer.js */ 30),
+	var Timer = __webpack_require__(/*! ./timer.js */ 34),
 	    Loop = function () {
 	        this.timer = new Timer();
 	    };
@@ -4002,7 +4067,7 @@
 	module.exports = new Loop();
 
 /***/ },
-/* 28 */
+/* 30 */
 /*!********************************!*\
   !*** ./src/action/simulate.js ***!
   \********************************/
@@ -4078,7 +4143,161 @@
 	};
 
 /***/ },
-/* 29 */
+/* 31 */
+/*!*********************************!*\
+  !*** ./src/routes/css/build.js ***!
+  \*********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 28),
+	    templates = __webpack_require__(/*! ./templates.js */ 35),
+	    lookup = __webpack_require__(/*! ./lookup.js */ 33),
+	    
+	    TRANSFORM = 'transform',
+	    
+	    /*
+	        Generate a CSS rule with the available template
+	    */
+	    generateRule = function (key, output) {
+	        var template = templates[lookup[key]];
+	
+	        return template ? template(key, output) : output[key];
+	    };
+	    
+	
+	module.exports = function (output, order, cache) {
+	    var css = {},
+	        numRules = order.length,
+	        transformProp = dictionary.transformProps,
+	        i = 0,
+	        rule = '',
+	        key = '',
+	        transform = '';
+	    
+	    for (; i < numRules; i++) {
+	        key = order[i],
+	        rule = generateRule(key, output);
+	
+	        if (transformProp[key]) {
+	            transform += key + '(' + rule + ') ';
+	
+	        } else if (cache[key] !== rule) {
+	            css[key] = rule;
+	            cache[key] = rule;
+	        }
+	    }
+	    
+	    if (transform != cache[TRANSFORM]) {
+	        css[TRANSFORM] = cache[TRANSFORM] = transform;
+	    }
+	    
+	    return css;
+	};
+
+/***/ },
+/* 32 */
+/*!*********************************!*\
+  !*** ./src/routes/css/split.js ***!
+  \*********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 36),
+	    dictionary = __webpack_require__(/*! ./dictionary.js */ 28),
+	    splitLookup = __webpack_require__(/*! ./lookup.js */ 33),
+	    splitters = __webpack_require__(/*! ./splitters.js */ 37),
+	    
+	    utils = __webpack_require__(/*! ../../utils/utils.js */ 16),
+	    
+	    valueProperties = dictionary.valueProps,
+	    valuePropertyCount = valueProperties.length,
+	    
+	    /*
+	        Build a property
+	    */
+	    buildProperty = function (value, parentKey, unitKey, parent, assignDefault) {
+	        var property = defaultProperty[parentKey + unitKey]
+	            || defaultProperty[unitKey]
+	            || defaultProperty[parentKey]
+	            || defaultProperty.base;
+	        
+	        assignDefault = assignDefault || valueProperties[0];
+	         
+	        if (parent) {
+	            property = utils.merge(parent, property);
+	        }
+	        
+	        if (utils.isObj(value)) {
+	            property = utils.merge(property, value);
+	
+	        } else {
+	            property[assignDefault] = value;
+	        }
+	
+	        // If we have a unitKey, name property parentKey + unitKey
+	        property.name = unitKey ? parentKey + unitKey : parentKey;
+	        
+	        return property;
+	    },
+	
+	    /*
+	        Split value with provided splitterID
+	    */
+	    split = function (key, value, splitterID) {
+	        var splitValue = {},
+	            splitProperty = {},
+	            newValue = {},
+	            valueKey = '',
+	            unitKey = '',
+	            i = 0;
+	            
+	        if (utils.isObj(value)) {
+	            for (; i < valuePropertyCount; i++) {
+	                valueKey = valueProperties[i];
+	                
+	                if (value.hasOwnProperty(valueKey)) {
+	                    splitProperty = splitters[splitterID](value[valueKey]);
+	                    
+	                    for (unitKey in splitProperty) {
+	                        splitValue[unitKey] = splitValue[unitKey] || {};
+	                        splitValue[unitKey][valueKey] = splitProperty[unitKey];
+	                    }
+	                }
+	            }
+	        } else {
+	            splitValue = splitters[splitterID](value);
+	        }
+	        
+	        for (unitKey in splitValue) {
+	            newValue[key + unitKey] = buildProperty(splitValue[unitKey], key, unitKey, value);
+	        }
+	        
+	        return newValue;
+	    };
+	
+	/*
+	    Split CSS property into individual, tweenable values
+	    
+	    @param [string]: Name of CSS property
+	    @param [string || number]: Value of CSS property
+	*/
+	module.exports = function (key, value) {
+	    var splitterID = splitLookup[key],
+	        values = (splitterID) ? split(key, value, splitterID) : {};
+	
+	    // If we don't have a splitter, assign the property directly
+	    if (!splitterID) {
+	        values[key] = buildProperty(value, key);
+	    }
+	    
+	    return values;
+	};
+
+/***/ },
+/* 33 */
 /*!**********************************!*\
   !*** ./src/routes/css/lookup.js ***!
   \**********************************/
@@ -4123,7 +4342,7 @@
 	};
 
 /***/ },
-/* 30 */
+/* 34 */
 /*!******************************!*\
   !*** ./src/process/timer.js ***!
   \******************************/
@@ -4148,6 +4367,375 @@
 	};
 	
 	module.exports = Timer;
+
+/***/ },
+/* 35 */
+/*!*************************************!*\
+  !*** ./src/routes/css/templates.js ***!
+  \*************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 28),
+	
+	    defaultValues = {
+	        Alpha: 1
+	    },
+	
+	    functionCreate = function (value, prefix) {
+	        return prefix + '(' + value + ')';
+	    },
+	
+	    createSpaceDelimited = function (key, object, terms) {
+	        return createDelimitedString(key, object, terms, ' ');
+	    },
+	    
+	    createCommaDelimited = function (key, object, terms) {
+	        return createDelimitedString(key, object, terms, ', ').slice(0, -2);
+	    },
+	    
+	    createDelimitedString = function (key, object, terms, delimiter) {
+	        var string = '',
+	            propKey = '',
+	            termsLength = terms.length;
+	        
+	        for (var i = 0; i < termsLength; i++) {
+	            propKey = key + terms[i];
+	
+	            if (object[propKey] !== undefined) {
+	                string += object[propKey];
+	            } else {
+	                if (defaultValues[terms[i]] !== undefined) {
+	                    string += defaultValues[terms[i]];
+	                }
+	            }
+	            
+	            string += delimiter;
+	        }
+	    
+	        return string;
+	    },
+	
+	    templates = {
+	        
+	        colors: function (key, values) {
+	            return functionCreate(createCommaDelimited(key, values, dictionary.colors), 'rgba');
+	        },
+	        
+	        dimensions: function (key, values) {
+	            return createSpaceDelimited(key, values, dictionary.dimensions);
+	        },
+	        
+	        positions: function (key, values) {
+	            return createSpaceDelimited(key, values, dictionary.positions);
+	        },
+	        
+	        shadow: function (key, values) {
+	            var shadowTerms = dictionary.shadow.slice(0,4);
+	            
+	            return createSpaceDelimited(key, values, shadowTerms) + templates.colors(key, values);
+	        }
+	    };
+	
+	module.exports = templates;
+
+/***/ },
+/* 36 */
+/*!********************************************!*\
+  !*** ./src/routes/css/default-property.js ***!
+  \********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var color = {
+	        start: 255,
+	        min: 0,
+	        max: 255,
+	        round: true
+	    },
+	    opacity = {
+	        start: 1,
+	        min: 0,
+	        max: 1
+	    },
+	    scale = {
+	        start: 1
+	    },
+	    angle = {
+	        unit: 'deg'
+	    },
+	    defaults = {
+	        base: {
+	            unit: 'px'
+	        },
+	        
+	        color: color,
+	        Red: color,
+	        Green: color,
+	        Blue: color,
+	    
+	        Alpha: opacity,
+	        
+	        scale: scale,
+	        scaleX: scale,
+	        scaleY: scale,
+	        scaleZ: scale,
+	        
+	        skew: angle,
+	        skewX: angle,
+	        skewY: angle,
+	        rotate: angle,
+	        rotateX: angle,
+	        rotateY: angle,
+	        rotateZ: angle
+	    };
+	    
+	module.exports = defaults;
+
+/***/ },
+/* 37 */
+/*!*************************************!*\
+  !*** ./src/routes/css/splitters.js ***!
+  \*************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 28),
+	    utils = __webpack_require__(/*! ../../utils/utils.js */ 16),
+	
+	    /*
+	        Split comma delimited into array
+	        
+	        Converts 255, 0, 0 -> [255, 0, 0]
+	        
+	        @param [string]: CSS comma delimited function
+	    */
+	    splitCommaDelimited = function (value) {
+	        return utils.isString(value) ? value.split(/,\s*/) : [value];
+	    },
+	    
+	    splitSpaceDelimited = function (value) {
+	        return utils.isString(value) ? value.split(' ') : [value];
+	    },
+	    
+	    /*
+	        Break values out of css functional statement
+	        
+	        Converts rgba(255, 0, 0) -> "255, 0, 0"
+	    */
+	    functionBreak = function (value) {
+	        return value.substring(value.indexOf('(') + 1, value.lastIndexOf(')'));
+	    },
+	    
+	    /*
+	        Convert hex into array of RGBA values
+	        
+	        @param [string]: Hex string
+	            "#F00" -> [255, 0, 0]
+	            "#FF0000" -> [255, 0, 0]
+	            
+	        @return [array]: RGBA values
+	    */
+	    hex = function (prop) {
+	        var r, g, b;
+	                    
+	        // If we have 6 chacters, ie #FF0000
+	        if (prop.length > 4) {
+	            r = prop.substr(1, 2);
+	            g = prop.substr(3, 2);
+	            b = prop.substr(5, 2);
+	
+	        // Or 3 characters, ie #F00
+	        } else {
+	            r = prop.substr(1, 1);
+	            g = prop.substr(2, 1);
+	            b = prop.substr(3, 1);
+	            r += r;
+	            g += g;
+	            b += b;
+	        }
+	            
+	        return [
+	            parseInt(r, 16),
+	            parseInt(g, 16),
+	            parseInt(b, 16),
+	            1
+	        ];
+	    },
+	    
+	    /*
+	        Test if string is color property
+	        
+	        @param [string]: Color property
+	        @return [boolean]: True if color property
+	    */
+	    isColor = function (prop) {
+	        return (prop.indexOf('#') > -1 || prop.indexOf('rgb') > -1);
+	    },
+	
+	    /*
+	        Public splitters
+	        
+	        Each splitter takes a string containing certain values and
+	        splits them into an object containing key/value pairs, ie
+	        color will return Red/Green/Blue/[Alpha] values
+	    */
+	    splitters = {
+	        
+	        /*
+	            Split arbitarily-long array (for instance matrix property) into object
+	            
+	            @param [string]: Array values
+	                "1, 1, 2, 4" -> {1, 1, 2, 4}
+	                "1 1 2 4" -> {1, 1, 2, 4}
+	                
+	            @return [object]: Object with a metric for every array item,
+	                named after its index
+	        */
+	        array: function (prop) {
+	            var list = (prop.indexOf(',') > -1) ? splitCommaDelimited(prop) : splitSpaceDelimited(prop),
+	                listLength = list.length,
+	                i = 0,
+	                arrayProps = {};
+	                
+	            for (; i < listLength; i++) {
+	                arrayProps[i] = list[i];
+	            }
+	            
+	            return arrayProps;
+	        },
+	        
+	        /*
+	            Convert color property into R/G/B/[A] object
+	            
+	            @param [string]: Color value has #, rgba, rgb, // hsl, hsla
+	                "#f00" -> {255, 0, 0}
+	                "#ff0000" -> {255, 0, 0}
+	                "rgb(255, 0, 0)" -> {255, 0, 0}
+	                "rgba(255, 0, 0, 1)" -> {255, 0, 0, 1}
+	                //"hsl(0, 100%, 50%)" -> {255, 0, 0}
+	                //"hsla(0, 100%, 50%, 1)" -> {255, 0, 0, 1}
+	                
+	            @return [object]: Object with metric for each 
+	        */
+	        colors: function (prop) {
+	            var colors = (prop.indexOf('#') > -1) ? hex(prop) : splitCommaDelimited(functionBreak(prop)),
+	                numColors = colors.length,
+	                terms = dictionary.colors,
+	                i = 0,
+	                rgba = {};
+	
+	            for (; i < numColors; i++) {
+	                rgba[terms[i]] = colors[i];
+	            }
+	            
+	            return rgba;
+	        },
+	    
+	        /*
+	            Split dimensions in format "Top Right Bottom Left"
+	            
+	            @param [string]: Dimension values
+	                "20px 0 30px 40px" -> {20px, 0, 30px, 40px}
+	                "20px 0 30px" -> {20px, 0, 30px, 0}
+	                "20px 0" -> {20px, 0, 20px, 0}
+	                "20px" -> {20px, 20px, 20px, 20px}
+	            
+	            @return [object]: Object with T/R/B/L metrics
+	        */
+	        dimensions: function (prop) {
+	            var dimensions = splitSpaceDelimited(prop),
+	                numDimensions = dimensions.length,
+	                terms = dictionary.dimensions,
+	                jumpBack = (numDimensions !== 1) ? 2 : 1,
+	                i, j = i = 0,
+	                dimensionProps = {};
+	            
+	            for (; i < 4; i++) {
+	                dimensionProps[terms[i]] = dimensions[j];
+	                
+	                // Jump back counter j if we've reached the end of our set values
+	                j++;
+	                j = (j === numDimensions) ? j - jumpBack : j;
+	            }
+	            
+	            return dimensionProps;
+	        },
+	        
+	        /*
+	            Split positions in format "X Y Z"
+	            
+	            @param [string]: Position values
+	                "20% 30% 0" -> {20%, 30%, 0}
+	                "20% 30%" -> {20%, 30%}
+	                "20%" -> {20%, 20%}
+	        */
+	        positions: function (prop) {
+	            var positions = splitSpaceDelimited(prop),
+	                numPositions = positions.length,
+	                positionProps = {
+	                    X: positions[0],
+	                    Y: (numPositions > 1) ? positions[1] : positions[0]
+	                };
+	                
+	            if (numPositions > 2) {
+	                positionProps.Z = positions[2];
+	            }
+	            
+	            return positionProps;
+	        },
+	        
+	        /*
+	            Split shadow properties "X, Y, Radius, Spread, Color"
+	            
+	            @param [string]: Shadow property
+	            @return [object]
+	        */
+	        shadow: function (prop) {
+	            var bits = splitSpaceDelimited(prop),
+	                bitsLength = bits.length,
+	                terms = dictionary.shadow,
+	                reachedColor,
+	                colorProp = '',
+	                bit, color,
+	                i = 0, unit,
+	                shadowProps = {};
+	                
+	            for (; i< bitsLength; i++) {
+	                bit = bits[i];
+	                
+	                // If we've reached the color property, append to color string
+	                if (reachedColor || isColor(bit)) {
+	                    reachedColor = true;
+	                    colorProp += bit;
+	
+	                } else {
+	                    shadowProps[terms[i]] = bit;
+	                }
+	            }
+	            
+	            color = splitters.colors(colorProp);
+	            
+	            for (var unit in color) {
+	                shadowProps[unit] = color[unit];
+	            }
+	            
+	            return shadowProps;
+	        },
+	        
+	        perspective: function (prop) {
+	            return this.array(prop);
+	        },
+	        
+	        translate: function () {
+	            return this.positions;
+	        }
+	    };
+	
+	module.exports = splitters;
 
 /***/ }
 /******/ ]);
