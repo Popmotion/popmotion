@@ -13,7 +13,6 @@
 var calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
     easing = require('../utils/easing.js'),
-    KEY = require('../opts/keys.js'),
     simulate = require('./simulate.js'),
     Rubix = function () {},
     rubixController;

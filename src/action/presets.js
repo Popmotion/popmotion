@@ -1,7 +1,6 @@
 "use strict";
 
-var KEY = require('../opts/keys.js'),
-    utils = require('../utils/utils.js'),
+var utils = require('../utils/utils.js'),
     
     generateKeys = function (key) {
         var keys = key.split(DOT),

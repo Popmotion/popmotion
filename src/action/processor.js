@@ -4,9 +4,10 @@
 "use strict";
 
 var Rubix = require('./rubix.js'),
-    KEY = require('../opts/keys.js'),
     routes = require('./routes.js'),
-    calc = require('../utils/calc.js');
+    calc = require('../utils/calc.js'),
+    
+    ANGLE_DISTANCE = 'AngleAndDistance';
 
 module.exports = function (action, framestamp, frameDuration) {
     var props = action.props.store,
@@ -50,7 +51,7 @@ module.exports = function (action, framestamp, frameDuration) {
         // Load rubix for this value
         valueRubix = rubix;
         if (value.link) {
-            valueRubix = (value.link !== KEY.ANGLE_DISTANCE) ? Rubix['Link'] : Rubix['AngleAndDistance'];
+            valueRubix = (value.link !== ANGLE_DISTANCE) ? Rubix['Link'] : Rubix[ANGLE_DISTANCE];
         }
         
         // Calculate new value

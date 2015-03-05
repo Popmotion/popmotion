@@ -493,7 +493,7 @@ console.log('checking');
 };
 
 module.exports = Action;
-},{"../opts/action.js":11,"../process/process.js":16,"../routes/css/styler.js":27,"../types/repo.js":31,"../types/value.js":32,"../utils/calc.js":33,"../utils/utils.js":39,"./parse-args.js":2,"./processor.js":4,"./queue.js":5,"./routes.js":6}],2:[function(require,module,exports){
+},{"../opts/action.js":11,"../process/process.js":15,"../routes/css/styler.js":26,"../types/repo.js":30,"../types/value.js":31,"../utils/calc.js":32,"../utils/utils.js":38,"./parse-args.js":2,"./processor.js":4,"./queue.js":5,"./routes.js":6}],2:[function(require,module,exports){
 "use strict";
 
 var utils = require('../utils/utils.js'),
@@ -626,11 +626,10 @@ module.exports = {
     
     generic: generic
 };
-},{"../input/pointer.js":10,"../utils/utils.js":39,"./presets.js":3}],3:[function(require,module,exports){
+},{"../input/pointer.js":10,"../utils/utils.js":38,"./presets.js":3}],3:[function(require,module,exports){
 "use strict";
 
-var KEY = require('../opts/keys.js'),
-    utils = require('../utils/utils.js'),
+var utils = require('../utils/utils.js'),
     
     generateKeys = function (key) {
         var keys = key.split(DOT),
@@ -709,16 +708,17 @@ Presets.prototype = {
 };
 
 module.exports = new Presets();
-},{"../opts/keys.js":12,"../utils/utils.js":39}],4:[function(require,module,exports){
+},{"../utils/utils.js":38}],4:[function(require,module,exports){
 /*
     Process actions
 */
 "use strict";
 
 var Rubix = require('./rubix.js'),
-    KEY = require('../opts/keys.js'),
     routes = require('./routes.js'),
-    calc = require('../utils/calc.js');
+    calc = require('../utils/calc.js'),
+    
+    ANGLE_DISTANCE = 'AngleAndDistance';
 
 module.exports = function (action, framestamp, frameDuration) {
     var props = action.props.store,
@@ -762,7 +762,7 @@ module.exports = function (action, framestamp, frameDuration) {
         // Load rubix for this value
         valueRubix = rubix;
         if (value.link) {
-            valueRubix = (value.link !== KEY.ANGLE_DISTANCE) ? Rubix['Link'] : Rubix['AngleAndDistance'];
+            valueRubix = (value.link !== ANGLE_DISTANCE) ? Rubix['Link'] : Rubix[ANGLE_DISTANCE];
         }
         
         // Calculate new value
@@ -818,7 +818,7 @@ module.exports = function (action, framestamp, frameDuration) {
     
     action.framestamp = framestamp;
 };
-},{"../opts/keys.js":12,"../utils/calc.js":33,"./routes.js":6,"./rubix.js":7}],5:[function(require,module,exports){
+},{"../utils/calc.js":32,"./routes.js":6,"./rubix.js":7}],5:[function(require,module,exports){
 "use strict";
 
 var Queue = function () {
@@ -964,7 +964,7 @@ var utils = require('../utils/utils.js'),
 })();
 
 module.exports = manager; 
-},{"../routes/attr.js":19,"../routes/css.js":20,"../routes/values.js":29,"../utils/utils.js":39}],7:[function(require,module,exports){
+},{"../routes/attr.js":18,"../routes/css.js":19,"../routes/values.js":28,"../utils/utils.js":38}],7:[function(require,module,exports){
 /*
     Rubix modules
     ----------------------------------------
@@ -980,7 +980,6 @@ module.exports = manager;
 var calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
     easing = require('../utils/easing.js'),
-    KEY = require('../opts/keys.js'),
     simulate = require('./simulate.js'),
     Rubix = function () {},
     rubixController;
@@ -1242,7 +1241,7 @@ Rubix.prototype = {
 rubixController = new Rubix();
 
 module.exports = rubixController;
-},{"../opts/keys.js":12,"../utils/calc.js":33,"../utils/easing.js":34,"../utils/utils.js":39,"./simulate.js":8}],8:[function(require,module,exports){
+},{"../utils/calc.js":32,"../utils/easing.js":33,"../utils/utils.js":38,"./simulate.js":8}],8:[function(require,module,exports){
 "use strict";
 
 var frictionStopLimit = .2,
@@ -1318,7 +1317,7 @@ Simulate.prototype = {
 simulate = new Simulate();
 
 module.exports = simulate;
-},{"../utils/calc.js":33}],9:[function(require,module,exports){
+},{"../utils/calc.js":32}],9:[function(require,module,exports){
 /*
     Input controller
 */
@@ -1445,13 +1444,14 @@ Input.prototype = {
 };
 
 module.exports = Input;
-},{"../utils/calc.js":33,"../utils/history.js":36,"../utils/utils.js":39}],10:[function(require,module,exports){
+},{"../utils/calc.js":32,"../utils/history.js":35,"../utils/utils.js":38}],10:[function(require,module,exports){
 "use strict";
 
 var Input = require('./input.js'),
-    KEY = require('../opts/keys.js'),
     currentPointer, // Sort this out for multitouch
     
+    TOUCHMOVE = 'touchmove',
+    MOUSEMOVE = 'mousemove',
 
     /*
         Convert event into point
@@ -1503,7 +1503,7 @@ Pointer.prototype = new Input();
     Bind move event
 */
 Pointer.prototype.bindEvents = function (isTouch) {
-    this.moveEvent = this.isTouch ? KEY.EVENT.TOUCHMOVE : KEY.EVENT.MOUSEMOVE;
+    this.moveEvent = this.isTouch ? TOUCHMOVE : MOUSEMOVE;
     
     currentPointer = this;
     
@@ -1534,7 +1534,7 @@ Pointer.prototype.stop = function () {
 };
 
 module.exports = Pointer;
-},{"../opts/keys.js":12,"./input.js":9}],11:[function(require,module,exports){
+},{"./input.js":9}],11:[function(require,module,exports){
 "use strict";
 
 var rubix = require('../action/rubix.js');
@@ -1612,29 +1612,6 @@ module.exports = {
     */
 };
 },{"../action/rubix.js":7}],12:[function(require,module,exports){
-/*
-    String constants
-    ----------------------------------------
-*/
-"use strict";
-
-module.exports = {
-    REDSHIFT: 'redshift',
-    ANGLE_DISTANCE: 'angle distance',
-    RUBIX: {
-        INPUT: 'Input',
-        TIME: 'Time',
-        RUN: 'Run',
-        FIRE: 'Fire'
-    },
-    EVENT: {
-        MOUSE: 'mouse',
-        MOUSEMOVE: 'mousemove',
-        TOUCH: 'touch',
-        TOUCHMOVE: 'touchmove',
-    }
-};
-},{}],13:[function(require,module,exports){
 "use strict";
 
 
@@ -1747,7 +1724,7 @@ module.exports = {
     // [number]: Factor of movement outside of maximum range (ie 0.5 will move half as much as 1)
     escapeAmp: 0
 };
-},{}],14:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 /*
     The loop
 */
@@ -1816,7 +1793,7 @@ Loop.prototype = {
 };
 
 module.exports = new Loop();
-},{"./timer.js":17}],15:[function(require,module,exports){
+},{"./timer.js":16}],14:[function(require,module,exports){
 "use strict";
 
 var theLoop = require('./loop.js'),
@@ -1987,7 +1964,7 @@ ProcessManager.prototype = {
 };
 
 module.exports = new ProcessManager();
-},{"./loop.js":14}],16:[function(require,module,exports){
+},{"./loop.js":13}],15:[function(require,module,exports){
 /*
     Process
 */
@@ -2171,7 +2148,7 @@ Process.prototype = {
 };
 
 module.exports = Process;
-},{"./manager.js":15}],17:[function(require,module,exports){
+},{"./manager.js":14}],16:[function(require,module,exports){
 "use strict";
 
 var maxElapsed = 30,
@@ -2191,7 +2168,7 @@ Timer.prototype = {
 };
 
 module.exports = Timer;
-},{}],18:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 /*
     Redshift core object
     
@@ -2308,7 +2285,7 @@ module.exports = {
     
     calc: calc
 };
-},{"./action/action.js":1,"./action/presets.js":3,"./input/input.js":9,"./process/process.js":16,"./utils/calc.js":33,"./utils/easing.js":34,"./utils/shim.js":38}],19:[function(require,module,exports){
+},{"./action/action.js":1,"./action/presets.js":3,"./input/input.js":9,"./process/process.js":15,"./utils/calc.js":32,"./utils/easing.js":33,"./utils/shim.js":37}],18:[function(require,module,exports){
 "use strict";
 
 module.exports = {
@@ -2329,7 +2306,7 @@ module.exports = {
         }
     }
 };
-},{}],20:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 "use strict";
 
 var build = require('./css/build.js'),
@@ -2356,7 +2333,7 @@ module.exports = {
     }
     
 };
-},{"./css/build.js":21,"./css/split.js":25}],21:[function(require,module,exports){
+},{"./css/build.js":20,"./css/split.js":24}],20:[function(require,module,exports){
 "use strict";
 
 var dictionary = require('./dictionary.js'),
@@ -2403,7 +2380,7 @@ module.exports = function (output, order, cache) {
     
     return css;
 };
-},{"./dictionary.js":23,"./lookup.js":24,"./templates.js":28}],22:[function(require,module,exports){
+},{"./dictionary.js":22,"./lookup.js":23,"./templates.js":27}],21:[function(require,module,exports){
 "use strict";
 
 var dictionary = require('./dictionary.js'),
@@ -2452,7 +2429,7 @@ var dictionary = require('./dictionary.js'),
     };
     
 module.exports = defaults;
-},{"./dictionary.js":23}],23:[function(require,module,exports){
+},{"./dictionary.js":22}],22:[function(require,module,exports){
 "use strict";
 
 var lookup = require('./lookup.js'),
@@ -2502,7 +2479,7 @@ var lookup = require('./lookup.js'),
 })();
 
 module.exports = terms;
-},{"./lookup.js":24}],24:[function(require,module,exports){
+},{"./lookup.js":23}],23:[function(require,module,exports){
 "use strict";
 
 var ARRAY = 'array',
@@ -2542,7 +2519,7 @@ module.exports = {
     textShadow: SHADOW,
     boxShadow: SHADOW
 };
-},{}],25:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 "use strict";
 
 var defaultProperty = require('./default-property.js'),
@@ -2636,7 +2613,7 @@ module.exports = function (key, value) {
     
     return values;
 };
-},{"../../utils/resolve.js":37,"../../utils/utils.js":39,"./default-property.js":22,"./dictionary.js":23,"./lookup.js":24,"./splitters.js":26}],26:[function(require,module,exports){
+},{"../../utils/resolve.js":36,"../../utils/utils.js":38,"./default-property.js":21,"./dictionary.js":22,"./lookup.js":23,"./splitters.js":25}],25:[function(require,module,exports){
 "use strict";
 
 var dictionary = require('./dictionary.js'),
@@ -2874,7 +2851,7 @@ var dictionary = require('./dictionary.js'),
     };
 
 module.exports = splitters;
-},{"../../utils/utils.js":39,"./dictionary.js":23}],27:[function(require,module,exports){
+},{"../../utils/utils.js":38,"./dictionary.js":22}],26:[function(require,module,exports){
 "use strict";
 
 var cssStyler = function () {
@@ -2937,7 +2914,7 @@ var cssStyler = function () {
 };
 
 module.exports = new cssStyler();
-},{}],28:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 "use strict";
 
 var dictionary = require('./dictionary.js'),
@@ -3002,7 +2979,7 @@ var dictionary = require('./dictionary.js'),
     };
 
 module.exports = templates;
-},{"./dictionary.js":23}],29:[function(require,module,exports){
+},{"./dictionary.js":22}],28:[function(require,module,exports){
 /*
     Values route (Redshift default)
     
@@ -3039,7 +3016,7 @@ module.exports = {
     }
     
 };
-},{}],30:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 (function (global){
 /*
     Bezier function generator
@@ -3197,7 +3174,7 @@ var NEWTON_ITERATIONS = 8,
 
 module.exports = Bezier;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],31:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 "use strict";
 
 var utils = require('../utils/utils.js'),
@@ -3256,7 +3233,7 @@ Repo.prototype = {
 };
 
 module.exports = Repo;
-},{"../routes/css/dictionary.js":23,"../utils/utils.js":39}],32:[function(require,module,exports){
+},{"../routes/css/dictionary.js":22,"../utils/utils.js":38}],31:[function(require,module,exports){
 "use strict";
 
 var defaults = require('../opts/values.js'),
@@ -3373,7 +3350,7 @@ Value.prototype = {
 };
 
 module.exports = Value;
-},{"../opts/values.js":13,"../utils/resolve.js":37,"../utils/utils.js":39}],33:[function(require,module,exports){
+},{"../opts/values.js":12,"../utils/resolve.js":36,"../utils/utils.js":38}],32:[function(require,module,exports){
 /*
     Calculators
     ----------------------------------------
@@ -3771,7 +3748,7 @@ var utils = require('./utils.js'),
     absolute = Math.abs;
     
 module.exports = calc;
-},{"./utils.js":39}],34:[function(require,module,exports){
+},{"./utils.js":38}],33:[function(require,module,exports){
 /*
     Easing functions
     ----------------------------------------
@@ -3980,9 +3957,9 @@ var calc = require('./calc.js'),
 
 module.exports = easing;
 
-},{"../types/bezier.js":30,"./calc.js":33}],35:[function(require,module,exports){
+},{"../types/bezier.js":29,"./calc.js":32}],34:[function(require,module,exports){
 window.redshift = require('../redshift.js');
-},{"../redshift.js":18}],36:[function(require,module,exports){
+},{"../redshift.js":17}],35:[function(require,module,exports){
 "use strict";
 
 var // [number]: Default max size of history
@@ -4052,7 +4029,7 @@ History.prototype = {
 };
 
 module.exports = History;
-},{}],37:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 /*
     Property resolver
     -------------------------------------
@@ -4101,7 +4078,7 @@ module.exports = function (newValue, currentValue, parent, scope) {
 
     return newValue;
 };
-},{"./calc.js":33,"./utils.js":39}],38:[function(require,module,exports){
+},{"./calc.js":32,"./utils.js":38}],37:[function(require,module,exports){
 "use strict";
 
 var checkRequestAnimationFrame = function () {
@@ -4177,19 +4154,17 @@ module.exports = function () {
     checkRequestAnimationFrame();
     checkIndexOf();
 };
-},{}],39:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 /*
     Utility functions
 */
 "use strict";
 
-var KEY = require('../opts/keys.js'),
-
-    protectedProperties = ['scope',  'dom'],
+var protectedProperties = ['scope',  'dom'],
     
     isProtected = function (key) {
         return (protectedProperties.indexOf(key) !== -1);
-    }
+    };
 
 module.exports = {
     
@@ -4439,4 +4414,4 @@ module.exports = {
     }
     
 };
-},{"../opts/keys.js":12}]},{},[35]);
+},{}]},{},[34]);

@@ -1,9 +1,10 @@
 "use strict";
 
 var Input = require('./input.js'),
-    KEY = require('../opts/keys.js'),
     currentPointer, // Sort this out for multitouch
     
+    TOUCHMOVE = 'touchmove',
+    MOUSEMOVE = 'mousemove',
 
     /*
         Convert event into point
@@ -55,7 +56,7 @@ Pointer.prototype = new Input();
     Bind move event
 */
 Pointer.prototype.bindEvents = function (isTouch) {
-    this.moveEvent = this.isTouch ? KEY.EVENT.TOUCHMOVE : KEY.EVENT.MOUSEMOVE;
+    this.moveEvent = this.isTouch ? TOUCHMOVE : MOUSEMOVE;
     
     currentPointer = this;
     
