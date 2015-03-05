@@ -52,9 +52,7 @@ History.prototype = {
         @return [var]: Entry found at index size - 2
     */
     getPrevious: function () {
-        var index = this.getSize() - 2;
-
-        return this.get(index);
+        return this.get(this.getSize() - 2);
     },
     
     /*

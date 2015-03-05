@@ -36,7 +36,7 @@ Repo.prototype = {
         @param [string || object]: Key or data
         @param [var] (optional): Data to store
     */
-    set: function (data) {
+    set: function (data, property) {
         // If we're being passed an object, add all
         if (utils.isObj(data)) {
             for (var key in data) {
@@ -47,7 +47,7 @@ Repo.prototype = {
 
         // Or add specific property
         } else if (data !== undefined) {
-            this.store[data] = (valueProps.indexOf(data) > -1) ? parseFloat(arguments[1]) : arguments[1];
+            this.store[data] = (valueProps.indexOf(data) > -1) ? parseFloat(property) : property;
         }
 
         return this;

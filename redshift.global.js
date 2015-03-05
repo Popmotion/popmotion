@@ -3230,7 +3230,7 @@ Repo.prototype = {
         @param [string || object]: Key or data
         @param [var] (optional): Data to store
     */
-    set: function (data) {
+    set: function (data, property) {
         // If we're being passed an object, add all
         if (utils.isObj(data)) {
             for (var key in data) {
@@ -3241,7 +3241,7 @@ Repo.prototype = {
 
         // Or add specific property
         } else if (data !== undefined) {
-            this.store[data] = (valueProps.indexOf(data) > -1) ? parseFloat(arguments[1]) : arguments[1];
+            this.store[data] = (valueProps.indexOf(data) > -1) ? parseFloat(property) : property;
         }
 
         return this;
@@ -3264,16 +3264,16 @@ var defaults = require('../opts/values.js'),
     /*
         Parse setter arguments
     */
-    parseSetArgs = function () {
+    parseSetArgs = function (arg0, arg1) {
         var newProps = {};
 
         // If we've just got a value, set default
         if (arguments.length === 1) {
-            newProps[CURRENT] = arguments[0];
+            newProps[CURRENT] = arg0;
             
         // Or we've got key/value args
         } else {
-            newProps[arguments[0]] = arguments[1];
+            newProps[arg0] = arg1;
         }
         
         return newProps;
@@ -3837,15 +3837,7 @@ var calc = require('./calc.js'),
         @returns [number]: The easing-adjusted delta
     */
     mirrorEasing = function (progress, method) {
-        var delta;
-        
-        if (progress <= 0.5) {
-            delta = method(2 * progress) / 2;
-        } else {
-            delta = (2 - method(2 * (1 - progress))) / 2;
-        }
-        
-        return delta;
+        return (progress <= 0.5) ? method(2 * progress) / 2 : (2 - method(2 * (1 - progress))) / 2;
     },
             
     /*
@@ -4039,9 +4031,7 @@ History.prototype = {
         @return [var]: Entry found at index size - 2
     */
     getPrevious: function () {
-        var index = this.getSize() - 2;
-
-        return this.get(index);
+        return this.get(this.getSize() - 2);
     },
     
     /*

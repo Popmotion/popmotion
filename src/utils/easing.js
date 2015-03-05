@@ -69,15 +69,7 @@ var calc = require('./calc.js'),
         @returns [number]: The easing-adjusted delta
     */
     mirrorEasing = function (progress, method) {
-        var delta;
-        
-        if (progress <= 0.5) {
-            delta = method(2 * progress) / 2;
-        } else {
-            delta = (2 - method(2 * (1 - progress))) / 2;
-        }
-        
-        return delta;
+        return (progress <= 0.5) ? method(2 * progress) / 2 : (2 - method(2 * (1 - progress))) / 2;
     },
             
     /*

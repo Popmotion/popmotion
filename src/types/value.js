@@ -11,16 +11,16 @@ var defaults = require('../opts/values.js'),
     /*
         Parse setter arguments
     */
-    parseSetArgs = function () {
+    parseSetArgs = function (arg0, arg1) {
         var newProps = {};
 
         // If we've just got a value, set default
         if (arguments.length === 1) {
-            newProps[CURRENT] = arguments[0];
+            newProps[CURRENT] = arg0;
             
         // Or we've got key/value args
         } else {
-            newProps[arguments[0]] = arguments[1];
+            newProps[arg0] = arg1;
         }
         
         return newProps;
