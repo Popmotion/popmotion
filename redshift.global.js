@@ -84,7 +84,7 @@ Action.prototype = {
             this.queue.add.apply(this.queue, arguments);
         }
 
-        return this.start(KEY.RUBIX.TIME);
+        return this.start('Play');
     },
 
     /*
@@ -102,7 +102,7 @@ Action.prototype = {
     */
     run: function () {
         this.set(parseArgs.generic.apply(this, arguments));
-        return this.start(KEY.RUBIX.RUN);
+        return this.start('Run');
     },
     
     /*
@@ -122,7 +122,7 @@ Action.prototype = {
     */
     track: function () {
         this.set(parseArgs.track.apply(this, arguments));
-        return this.start(KEY.RUBIX.INPUT);
+        return this.start('Track');
     },
     
     /*
@@ -132,7 +132,7 @@ Action.prototype = {
     */
     fire: function () {
         this.set(parseArgs.generic.apply(this, arguments));
-        return this.start(KEY.RUBIX.FIRE);
+        return this.start('Fire');
     },
     
     /*
@@ -1004,7 +1004,7 @@ Rubix.prototype = {
         }
     },
 
-    Time: {
+    Play: {
 
         /*
             Update Action elapsed time
@@ -1056,7 +1056,7 @@ Rubix.prototype = {
         }
     },
     
-    Input: {
+    Track: {
     
         /*
             Update Input

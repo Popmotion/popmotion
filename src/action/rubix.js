@@ -37,7 +37,7 @@ Rubix.prototype = {
         }
     },
 
-    Time: {
+    Play: {
 
         /*
             Update Action elapsed time
@@ -89,7 +89,7 @@ Rubix.prototype = {
         }
     },
     
-    Input: {
+    Track: {
     
         /*
             Update Input
