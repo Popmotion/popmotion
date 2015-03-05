@@ -16,18 +16,24 @@ Queue.prototype = {
     /*
         Get next set of arguments from queue
     */
-    next: function () {
+    next: function (direction) {
         var queue = this.queue,
-            returnVal = false;
+            returnVal = false,
+            index;
+            
+        direction = (arguments.length) ? direction : 1;
         
-        queue.shift();
-
-        if (queue.length) {
-            returnVal = queue[0];
+        index = this.index += direction;
+        
+        // If our index is between 0 and the queue length, return that item
+        if (index >= 0 && index < queue.length) {
+            returnVal = queue[index];
+        
+        // Or clear
         } else {
             this.clear();
         }
-
+        
         return returnVal;
     },
 
@@ -36,6 +42,7 @@ Queue.prototype = {
     */
     clear: function () {
         this.queue = [];
+        this.index = 0;
     }
 };
 

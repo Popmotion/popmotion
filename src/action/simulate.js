@@ -47,10 +47,9 @@ module.exports = {
         @returns [number]: New velocity
     */
     spring: function (value, duration) {
-        var distance = value.to - value.current,
-            springDistance = distance * speedPerFrame(value.spring, duration);
-            
-        value.velocity += springDistance;
+        var distance = value.to - value.current;
+
+        value.velocity += distance * speedPerFrame(value.spring, duration);
             
         return this.friction(value, duration);
     },

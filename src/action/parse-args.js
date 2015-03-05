@@ -44,7 +44,7 @@ var utils = require('../utils/utils.js'),
         } else if (typeof base == OBJECT) {
             props = base;
 
-            if (!this.isActive()) {
+            if (this.isActive()) {
                 this.queue.add.apply(this.queue, argsAsArray);
             }
         }

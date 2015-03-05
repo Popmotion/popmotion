@@ -1,6 +1,6 @@
 {
   "name": "redshift",
-  "version": "0.14.0",
+  "version": "1.0.0",
   "description": "A JavaScript animation and interaction framework.",
   "author": "Matt Perry <admin@redshiftjs.com>",
   "homepage": "http://redshiftjs.com",
@@ -32,12 +32,9 @@
   "analyze": true,
   "license": "MIT",
   "scripts": {
-	  "watch": "watchify ./src/redshift.js -o ./redshift.js -dv",
-	  "compile": "webpack src/utils/global.js redshift.global.js -d && webpack src/utils/global.js redshift.global.min.js -p"
+    "compile": "webpack src/utils/global.js redshift.global.js -d && webpack src/utils/global.js redshift.global.min.js -p"
   },
   "devDependencies": {
-    "webpack": "1.7.2",
-    "uglify-js": "2.4.15",
-    "watchify": "2.1.1"
+    "webpack": "1.7.2"
   }
 }

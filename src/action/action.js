@@ -79,13 +79,13 @@ Action.prototype = {
 
         if (!this.isActive()) {
             this.set(props, 'to');
+            this.playDirection = 1;
+            this.start('Play');
         } else {
             this.queue.add.apply(this.queue, arguments);
         }
-        
-        this.playDirection = 1;
 
-        return this.start('Play');
+        return this;
     },
 
     /*
@@ -396,9 +396,8 @@ Action.prototype = {
     playNext: function () {
         var stepTaken = false,
             nextInQueue = this.queue.next();
-console.log('checking');
+
         if (utils.isArray(nextInQueue)) {
-            console.log('test');
             this.set(parseArgs.generic.apply(this, nextInQueue), 'to')
                 .reset();
 

@@ -106,12 +106,12 @@ var calc = require('./calc.js'),
 
         // Create the Out function by reversing the transition curve
         easing[reverseName] = function (progress) {
-            return reverseEasing(progress, self[baseName]);
+            return reverseEasing(progress, easing[baseName]);
         };
         
         // Create the InOut function by mirroring the transition curve
         easing[easeInOut] = function (progress) {
-            return mirrorEasing(progress, self[baseName]);
+            return mirrorEasing(progress, easing[baseName]);
         };
     },
     
