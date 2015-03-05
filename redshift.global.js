@@ -3002,13 +3002,18 @@ var dictionary = require('./dictionary.js'),
 
 module.exports = templates;
 },{"./dictionary.js":23}],29:[function(require,module,exports){
+/*
+    Values route (Redshift default)
+    
+    Handles raw values and outputs to user-defined callbacks
+*/
 "use strict";
 
 var fireCallback = function (name, bucket, action, values, props, data) {
-    if (props[name]) {
-        props[name].call(props.scope, bucket, data);
-    }
-}
+        if (props[name]) {
+            props[name].call(props.scope, bucket, data);
+        }
+    };
 
 module.exports = {
     
