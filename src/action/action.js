@@ -5,7 +5,6 @@ var parseArgs = require('./parse-args.js'),
     Repo = require('../types/repo.js'),
     Queue = require('./queue.js'),
     Process = require('../process/process.js'),
-    KEY = require('../opts/keys.js'),
     processor = require('./processor.js'),
     routes = require('./routes.js'),
     defaultProps = require('../opts/action.js'),
@@ -147,6 +146,8 @@ Action.prototype = {
     set: function (props, defaultProp) {
         var self = this,
             currentProps = this.props.get(),
+            values = this.values,
+            linkToAngleDistance = { link: 'AngleAndDistance' },
             key = '';
             
         defaultProp = defaultProp || 'current';
@@ -178,9 +179,10 @@ Action.prototype = {
             }
         }, props);
         
-        if (self.getValue('angle') && self.getValue('distance')) {
-            self.setValue('radialX', { link: KEY.ANGLE_DISTANCE });
-            self.setValue('radialY', { link: KEY.ANGLE_DISTANCE });
+        // Create radialX and radialY if we're tracking angle and distance
+        if (values['angle'] && values['distance']) {
+            self.setValue('radialX', linkToAngleAndDistance)
+                .setValue('radialY', linkToAngleAndDistance);
         }
 
         self.resetOrigins();

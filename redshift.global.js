@@ -6,7 +6,6 @@ var parseArgs = require('./parse-args.js'),
     Repo = require('../types/repo.js'),
     Queue = require('./queue.js'),
     Process = require('../process/process.js'),
-    KEY = require('../opts/keys.js'),
     processor = require('./processor.js'),
     routes = require('./routes.js'),
     defaultProps = require('../opts/action.js'),
@@ -148,6 +147,8 @@ Action.prototype = {
     set: function (props, defaultProp) {
         var self = this,
             currentProps = this.props.get(),
+            values = this.values,
+            linkToAngleDistance = { link: 'AngleAndDistance' },
             key = '';
             
         defaultProp = defaultProp || 'current';
@@ -179,9 +180,10 @@ Action.prototype = {
             }
         }, props);
         
-        if (self.getValue('angle') && self.getValue('distance')) {
-            self.setValue('radialX', { link: KEY.ANGLE_DISTANCE });
-            self.setValue('radialY', { link: KEY.ANGLE_DISTANCE });
+        // Create radialX and radialY if we're tracking angle and distance
+        if (values['angle'] && values['distance']) {
+            self.setValue('radialX', linkToAngleAndDistance)
+                .setValue('radialY', linkToAngleAndDistance);
         }
 
         self.resetOrigins();
@@ -491,7 +493,7 @@ console.log('checking');
 };
 
 module.exports = Action;
-},{"../opts/action.js":11,"../opts/keys.js":12,"../process/process.js":16,"../routes/css/styler.js":27,"../types/repo.js":31,"../types/value.js":32,"../utils/calc.js":33,"../utils/utils.js":39,"./parse-args.js":2,"./processor.js":4,"./queue.js":5,"./routes.js":6}],2:[function(require,module,exports){
+},{"../opts/action.js":11,"../process/process.js":16,"../routes/css/styler.js":27,"../types/repo.js":31,"../types/value.js":32,"../utils/calc.js":33,"../utils/utils.js":39,"./parse-args.js":2,"./processor.js":4,"./queue.js":5,"./routes.js":6}],2:[function(require,module,exports){
 "use strict";
 
 var utils = require('../utils/utils.js'),
@@ -1635,7 +1637,7 @@ module.exports = {
 },{}],13:[function(require,module,exports){
 "use strict";
 
-var un = undefined;
+
 
 module.exports = {
     // [number]: The canonical value
@@ -1645,13 +1647,13 @@ module.exports = {
     start: 0,
 
     // [number]: Current target value
-    to: un,
+    to: undefined,
 
     // [number]: Maximum permitted value during .track and .run
-    min: un,
+    min: undefined,
     
     // [number]: Minimum permitted value during .track and .run
-    max: un,
+    max: undefined,
     
     // [number]: Origin
     origin: 0,
@@ -1669,7 +1671,7 @@ module.exports = {
     name: '',
     
     // [string]: Unit string to append to value on ourput
-    unit: un,
+    unit: undefined,
     
     parent: '',
     
@@ -1680,13 +1682,13 @@ module.exports = {
     */
 
     // [string]: Name of value to listen to
-    link: un,
+    link: undefined,
     
     // [array]: Linear range of values (eg [-100, -50, 50, 100]) of linked value to map to .mapTo
-    mapLink: un,
+    mapLink: undefined,
     
     // [array]: Non-linear range of values (eg [0, 1, 1, 0]) to map to .mapLink - here the linked value being 75 would result in a value of 0.5
-    mapTo: un,
+    mapTo: undefined,
 
 
     /*

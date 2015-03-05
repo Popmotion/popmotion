@@ -1,6 +1,6 @@
 "use strict";
 
-var un = undefined;
+
 
 module.exports = {
     // [number]: The canonical value
@@ -10,13 +10,13 @@ module.exports = {
     start: 0,
 
     // [number]: Current target value
-    to: un,
+    to: undefined,
 
     // [number]: Maximum permitted value during .track and .run
-    min: un,
+    min: undefined,
     
     // [number]: Minimum permitted value during .track and .run
-    max: un,
+    max: undefined,
     
     // [number]: Origin
     origin: 0,
@@ -34,7 +34,7 @@ module.exports = {
     name: '',
     
     // [string]: Unit string to append to value on ourput
-    unit: un,
+    unit: undefined,
     
     parent: '',
     
@@ -45,13 +45,13 @@ module.exports = {
     */
 
     // [string]: Name of value to listen to
-    link: un,
+    link: undefined,
     
     // [array]: Linear range of values (eg [-100, -50, 50, 100]) of linked value to map to .mapTo
-    mapLink: un,
+    mapLink: undefined,
     
     // [array]: Non-linear range of values (eg [0, 1, 1, 0]) to map to .mapLink - here the linked value being 75 would result in a value of 0.5
-    mapTo: un,
+    mapTo: undefined,
 
 
     /*
