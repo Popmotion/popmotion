@@ -14,11 +14,10 @@ var calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
     easing = require('../utils/easing.js'),
     simulate = require('./simulate.js'),
-    Rubix = function () {},
-    rubixController;
-
-Rubix.prototype = {
     
+    CURRENT = 'current';
+
+module.exports = {
     Fire: {
         /*
             Return set current
@@ -257,10 +256,10 @@ Rubix.prototype = {
         */
         process: function (key, value, values, props, action) {
             var origin = {
-                    x: (values.x) ? values.x.store.current : 0,
-                    y: (values.y) ? values.y.store.current : 0
+                    x: (values.x) ? values.x.get(CURRENT) : 0,
+                    y: (values.y) ? values.y.get(CURRENT) : 0
                 },
-                point = calc.pointFromAngleAndDistance(origin, values.angle.store.current, values.distance.store.current),
+                point = calc.pointFromAngleAndDistance(origin, values.angle.get(CURRENT), values.distance.get(CURRENT)),
                 newValue = {
                     radialX: point.x,
                     radialY: point.y
@@ -270,7 +269,3 @@ Rubix.prototype = {
         }
     }
 };
-
-rubixController = new Rubix();
-
-module.exports = rubixController;
