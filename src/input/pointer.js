@@ -5,6 +5,8 @@ var Input = require('./input.js'),
     
     TOUCHMOVE = 'touchmove',
     MOUSEMOVE = 'mousemove',
+    
+    doc = document.documentElement,
 
     /*
         Convert event into point
@@ -60,14 +62,14 @@ Pointer.prototype.bindEvents = function (isTouch) {
     
     currentPointer = this;
     
-    document.documentElement.addEventListener(this.moveEvent, this.onMove);
+    doc.addEventListener(this.moveEvent, this.onMove);
 };
 
 /*
     Unbind move event
 */
 Pointer.prototype.unbindEvents = function () {
-    document.documentElement.removeEventListener(this.moveEvent, this.onMove);
+    doc.removeEventListener(this.moveEvent, this.onMove);
 };
 
 /*
