@@ -82,6 +82,8 @@ Action.prototype = {
         } else {
             this.queue.add.apply(this.queue, arguments);
         }
+        
+        this.playDirection = 1;
 
         return this.start('Play');
     },
