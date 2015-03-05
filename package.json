@@ -33,10 +33,10 @@
   "license": "MIT",
   "scripts": {
 	  "watch": "watchify ./src/redshift.js -o ./redshift.js -dv",
-	  "compile": "browserify ./src/utils/global.js -o ./redshift.global.js && browserify ./src/utils/global.js | uglifyjs - -m -o ./redshift.global.min.js"
+	  "compile": "webpack src/utils/global.js redshift.global.js -d && webpack src/utils/global.js redshift.global.min.js -p"
   },
   "devDependencies": {
-    "browserify": "7.0.0",
+    "webpack": "1.7.2",
     "uglify-js": "2.4.15",
     "watchify": "2.1.1"
   }
