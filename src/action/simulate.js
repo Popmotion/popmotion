@@ -2,11 +2,9 @@
 
 var frictionStopLimit = .2,
     calc = require('../utils/calc.js'),
-    speedPerFrame = calc.speedPerFrame,
-    Simulate = function () {},
-    simulate;
+    speedPerFrame = calc.speedPerFrame;
 
-Simulate.prototype = {
+module.exports = {
     
     /*
         Velocity
@@ -69,7 +67,3 @@ Simulate.prototype = {
         return value.velocity *= -value.bounce;
     }
 };
-
-simulate = new Simulate();
-
-module.exports = simulate;

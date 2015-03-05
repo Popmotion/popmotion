@@ -1246,11 +1246,9 @@ module.exports = rubixController;
 
 var frictionStopLimit = .2,
     calc = require('../utils/calc.js'),
-    speedPerFrame = calc.speedPerFrame,
-    Simulate = function () {},
-    simulate;
+    speedPerFrame = calc.speedPerFrame;
 
-Simulate.prototype = {
+module.exports = {
     
     /*
         Velocity
@@ -1313,10 +1311,6 @@ Simulate.prototype = {
         return value.velocity *= -value.bounce;
     }
 };
-
-simulate = new Simulate();
-
-module.exports = simulate;
 },{"../utils/calc.js":32}],9:[function(require,module,exports){
 /*
     Input controller
@@ -1411,33 +1405,32 @@ Input.prototype = {
         @return [Input]
     */
     onFrame: function (timestamp) {
-        var self = this,
-            latest, hasChanged;
+        var latest, hasChanged;
         
         // Check provided timestamp against lastFrame timestamp and return input has already been updated
-        if (timestamp === self.lastFrame) {
+        if (timestamp === this.lastFrame) {
             return;
         }
         
-        latest = (self.poll) ? self.poll() : self.history.get();
-        hasChanged = utils.hasChanged(self.current, latest);
+        latest = (this.poll) ? this.poll() : this.history.get();
+        hasChanged = utils.hasChanged(this.current, latest);
 
         // If input has changed between frames  
         if (hasChanged) {
-            self.velocity = calc.offset(self.current, latest);
-            self.current = latest;
-            self.inactiveFrames = 0;
+            this.velocity = calc.offset(this.current, latest);
+            this.current = latest;
+            this.inactiveFrames = 0;
 
         // Or it hasn't moved and our frame limit has been reached
-        } else if (self.inactiveFrames >= self.maxInactiveFrames) {
-            self.velocity = calc.offset(self.current, self.current);
+        } else if (this.inactiveFrames >= this.maxInactiveFrames) {
+            this.velocity = calc.offset(this.current, this.current);
         
         // Or input hasn't changed
         } else {
-            self.inactiveFrames++;
+            this.inactiveFrames++;
         }
         
-        self.lastFrame = timestamp;
+        this.lastFrame = timestamp;
         
         return this;
     }
