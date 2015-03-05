@@ -26,7 +26,7 @@ var checkRequestAnimationFrame = function () {
         
         // If there is, fo absolute shizzle, no rAF implementations, make one out of setTimeout and putty
         if (!window.requestAnimationFrame) {
-            window.requestAnimationFrame = function (callback, element) {
+            window.requestAnimationFrame = function (callback) {
                 var currTime = new Date().getTime(),
                     timeToCall = Math.max(0, 16 - (currTime - lastTime)),
                     id = window.setTimeout(function () {

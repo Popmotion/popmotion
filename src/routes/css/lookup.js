@@ -1,11 +1,9 @@
 "use strict";
 
-var ARRAY = 'array',
-    COLOR = 'colors',
+var COLOR = 'colors',
     POSITIONS = 'positions',
     DIMENSIONS = 'dimensions',
-    SHADOW = 'shadow',
-    TRANSFORM = 'transform';
+    SHADOW = 'shadow';
 
 module.exports = {
     // Color properties

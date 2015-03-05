@@ -866,9 +866,7 @@ module.exports = Queue;
 },{}],6:[function(require,module,exports){
 "use strict";
 
-var utils = require('../utils/utils.js'),
-
-    defaultRoute = require('../routes/values.js'),
+var defaultRoute = require('../routes/values.js'),
     cssRoute = require('../routes/css.js'),
     attrRoute = require('../routes/attr.js'),
 
@@ -966,7 +964,7 @@ var utils = require('../utils/utils.js'),
 })();
 
 module.exports = manager; 
-},{"../routes/attr.js":18,"../routes/css.js":19,"../routes/values.js":28,"../utils/utils.js":38}],7:[function(require,module,exports){
+},{"../routes/attr.js":18,"../routes/css.js":19,"../routes/values.js":28}],7:[function(require,module,exports){
 /*
     Rubix modules
     ----------------------------------------
@@ -1227,7 +1225,7 @@ module.exports = {
             @param [Action]: Current Action
             @return [number]: Calculated value
         */
-        process: function (key, value, values, props, action) {
+        process: function (key, value, values) {
             var origin = {
                     x: (values.x) ? values.x.get(CURRENT) : 0,
                     y: (values.y) ? values.y.get(CURRENT) : 0
@@ -1499,7 +1497,7 @@ Pointer.prototype = new Input();
 /*
     Bind move event
 */
-Pointer.prototype.bindEvents = function (isTouch) {
+Pointer.prototype.bindEvents = function () {
     this.moveEvent = this.isTouch ? TOUCHMOVE : MOUSEMOVE;
     
     currentPointer = this;
@@ -1534,15 +1532,13 @@ module.exports = Pointer;
 },{"./input.js":9}],11:[function(require,module,exports){
 "use strict";
 
-var rubix = require('../action/rubix.js');
-
 module.exports = {
     
     // Is this action active
     active: false,
     
     // What to use to process this aciton
-    rubix: 'Time',
+    rubix: 'Play',
     
     // Multiply output value by
     amp: 1,
@@ -1608,7 +1604,7 @@ module.exports = {
         
     */
 };
-},{"../action/rubix.js":7}],12:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 "use strict";
 
 
@@ -1730,8 +1726,7 @@ module.exports = {
 var Timer = require('./timer.js'),
     Loop = function () {
         this.timer = new Timer();
-    },
-    manager;
+    };
     
 Loop.prototype = {
     
@@ -1746,7 +1741,7 @@ Loop.prototype = {
     frame: function () {
         var self = this;
         
-        requestAnimationFrame(function (timestamp) {
+        requestAnimationFrame(function () {
             var framestamp = self.timer.update(), // Currently just measuring in ms - will look into hi-res timestamps
                 isActive = self.callback.call(self.scope, framestamp, self.timer.getElapsed());
 
@@ -2380,9 +2375,7 @@ module.exports = function (output, order, cache) {
 },{"./dictionary.js":22,"./lookup.js":23,"./templates.js":27}],21:[function(require,module,exports){
 "use strict";
 
-var dictionary = require('./dictionary.js'),
-
-    color = {
+var color = {
         start: 255,
         min: 0,
         max: 255,
@@ -2426,7 +2419,7 @@ var dictionary = require('./dictionary.js'),
     };
     
 module.exports = defaults;
-},{"./dictionary.js":22}],22:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 "use strict";
 
 var lookup = require('./lookup.js'),
@@ -2479,12 +2472,10 @@ module.exports = terms;
 },{"./lookup.js":23}],23:[function(require,module,exports){
 "use strict";
 
-var ARRAY = 'array',
-    COLOR = 'colors',
+var COLOR = 'colors',
     POSITIONS = 'positions',
     DIMENSIONS = 'dimensions',
-    SHADOW = 'shadow',
-    TRANSFORM = 'transform';
+    SHADOW = 'shadow';
 
 module.exports = {
     // Color properties
@@ -2524,7 +2515,6 @@ var defaultProperty = require('./default-property.js'),
     splitLookup = require('./lookup.js'),
     splitters = require('./splitters.js'),
     
-    resolve = require('../../utils/resolve.js'),
     utils = require('../../utils/utils.js'),
     
     valueProperties = dictionary.valueProps,
@@ -2610,7 +2600,7 @@ module.exports = function (key, value) {
     
     return values;
 };
-},{"../../utils/resolve.js":36,"../../utils/utils.js":38,"./default-property.js":21,"./dictionary.js":22,"./lookup.js":23,"./splitters.js":25}],25:[function(require,module,exports){
+},{"../../utils/utils.js":38,"./default-property.js":21,"./dictionary.js":22,"./lookup.js":23,"./splitters.js":25}],25:[function(require,module,exports){
 "use strict";
 
 var dictionary = require('./dictionary.js'),
@@ -2650,8 +2640,7 @@ var dictionary = require('./dictionary.js'),
         @return [array]: RGBA values
     */
     hex = function (prop) {
-        var colors = [],
-            r, g, b;
+        var r, g, b;
                     
         // If we have 6 chacters, ie #FF0000
         if (prop.length > 4) {
@@ -2787,7 +2776,6 @@ var dictionary = require('./dictionary.js'),
         positions: function (prop) {
             var positions = splitSpaceDelimited(prop),
                 numPositions = positions.length,
-                i = 0,
                 positionProps = {
                     X: positions[0],
                     Y: (numPositions > 1) ? positions[1] : positions[0]
@@ -2842,8 +2830,8 @@ var dictionary = require('./dictionary.js'),
             return this.array(prop);
         },
         
-        translate: function (prop) {
-            return this.positions
+        translate: function () {
+            return this.positions;
         }
     };
 
@@ -2855,7 +2843,6 @@ var cssStyler = function () {
 	var testElement = document.getElementsByTagName('body')[0],
 		prefixes = ['Webkit','Moz','O','ms', ''],
 		prefixesLength = prefixes.length,
-		cachedPrefix = '',
 		cache = {},
 		
 		/*
@@ -3056,6 +3043,23 @@ var NEWTON_ITERATIONS = 8,
 
     calcBezier = function (t, a1, a2) {
         return ((A(a1, a2) * t + B(a1, a2)) * t + C(a1)) * t;
+    },
+    
+    binarySubdivide = function (aX, aA, aB) {
+        var currentX, currentT, i = 0;
+        
+        do {
+            currentT = aA + (aB - aA) / 2.0;
+            currentX = calcBezier(currentT, mX1, mX2) - aX;
+            
+            if (currentX > 0.0) {
+                aB = currentT;
+            } else {
+                aA = currentT;
+            }
+        } while (Math.abs(currentX) > SUBDIVISION_PRECISION && ++i < SUBDIVISION_MAX_ITERATIONS);
+        
+        return currentT;
     },
     
     /*
@@ -3524,8 +3528,7 @@ var utils = require('./utils.js'),
             @return [Offset]: Distance metrics between two points
         */
         offset: function (a, b) {
-            var offset = {},
-                angle, distance;
+            var offset = {};
     
             for (var key in b) {
                 if (b.hasOwnProperty(key)) {
@@ -4104,7 +4107,7 @@ var checkRequestAnimationFrame = function () {
         
         // If there is, fo absolute shizzle, no rAF implementations, make one out of setTimeout and putty
         if (!window.requestAnimationFrame) {
-            window.requestAnimationFrame = function (callback, element) {
+            window.requestAnimationFrame = function (callback) {
                 var currTime = new Date().getTime(),
                     timeToCall = Math.max(0, 16 - (currTime - lastTime)),
                     id = window.setTimeout(function () {

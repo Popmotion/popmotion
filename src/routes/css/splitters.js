@@ -37,8 +37,7 @@ var dictionary = require('./dictionary.js'),
         @return [array]: RGBA values
     */
     hex = function (prop) {
-        var colors = [],
-            r, g, b;
+        var r, g, b;
                     
         // If we have 6 chacters, ie #FF0000
         if (prop.length > 4) {
@@ -174,7 +173,6 @@ var dictionary = require('./dictionary.js'),
         positions: function (prop) {
             var positions = splitSpaceDelimited(prop),
                 numPositions = positions.length,
-                i = 0,
                 positionProps = {
                     X: positions[0],
                     Y: (numPositions > 1) ? positions[1] : positions[0]
@@ -229,8 +227,8 @@ var dictionary = require('./dictionary.js'),
             return this.array(prop);
         },
         
-        translate: function (prop) {
-            return this.positions
+        translate: function () {
+            return this.positions;
         }
     };
 

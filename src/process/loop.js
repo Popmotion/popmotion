@@ -6,8 +6,7 @@
 var Timer = require('./timer.js'),
     Loop = function () {
         this.timer = new Timer();
-    },
-    manager;
+    };
     
 Loop.prototype = {
     
@@ -22,7 +21,7 @@ Loop.prototype = {
     frame: function () {
         var self = this;
         
-        requestAnimationFrame(function (timestamp) {
+        requestAnimationFrame(function () {
             var framestamp = self.timer.update(), // Currently just measuring in ms - will look into hi-res timestamps
                 isActive = self.callback.call(self.scope, framestamp, self.timer.getElapsed());
 

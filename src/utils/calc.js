@@ -174,8 +174,7 @@ var utils = require('./utils.js'),
             @return [Offset]: Distance metrics between two points
         */
         offset: function (a, b) {
-            var offset = {},
-                angle, distance;
+            var offset = {};
     
             for (var key in b) {
                 if (b.hasOwnProperty(key)) {

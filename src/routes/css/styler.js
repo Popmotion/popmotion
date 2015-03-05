@@ -4,7 +4,6 @@ var cssStyler = function () {
 	var testElement = document.getElementsByTagName('body')[0],
 		prefixes = ['Webkit','Moz','O','ms', ''],
 		prefixesLength = prefixes.length,
-		cachedPrefix = '',
 		cache = {},
 		
 		/*

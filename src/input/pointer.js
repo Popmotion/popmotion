@@ -57,7 +57,7 @@ Pointer.prototype = new Input();
 /*
     Bind move event
 */
-Pointer.prototype.bindEvents = function (isTouch) {
+Pointer.prototype.bindEvents = function () {
     this.moveEvent = this.isTouch ? TOUCHMOVE : MOUSEMOVE;
     
     currentPointer = this;

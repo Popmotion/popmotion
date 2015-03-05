@@ -1,8 +1,6 @@
 "use strict";
 
-var dictionary = require('./dictionary.js'),
-
-    color = {
+var color = {
         start: 255,
         min: 0,
         max: 255,

@@ -258,7 +258,7 @@ module.exports = {
             @param [Action]: Current Action
             @return [number]: Calculated value
         */
-        process: function (key, value, values, props, action) {
+        process: function (key, value, values) {
             var origin = {
                     x: (values.x) ? values.x.get(CURRENT) : 0,
                     y: (values.y) ? values.y.get(CURRENT) : 0

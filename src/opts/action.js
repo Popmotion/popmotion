@@ -1,14 +1,12 @@
 "use strict";
 
-var rubix = require('../action/rubix.js');
-
 module.exports = {
     
     // Is this action active
     active: false,
     
     // What to use to process this aciton
-    rubix: 'Time',
+    rubix: 'Play',
     
     // Multiply output value by
     amp: 1,

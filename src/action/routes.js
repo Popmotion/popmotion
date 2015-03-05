@@ -1,8 +1,6 @@
 "use strict";
 
-var utils = require('../utils/utils.js'),
-
-    defaultRoute = require('../routes/values.js'),
+var defaultRoute = require('../routes/values.js'),
     cssRoute = require('../routes/css.js'),
     attrRoute = require('../routes/attr.js'),
 
