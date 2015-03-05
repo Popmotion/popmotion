@@ -157,7 +157,7 @@ module.exports = {
         */
         hasEnded: function (action, hasChanged) {
             action.inactiveFrames = hasChanged ? 0 : action.inactiveFrames + 1;
-            return (action.inactiveFrames > 3);
+            return (action.inactiveFrames > action.getProp('maxInactiveFrames'));
         },
         
         /*

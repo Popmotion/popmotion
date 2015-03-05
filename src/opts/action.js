@@ -33,7 +33,9 @@ module.exports = {
     yoyoCount: 0,
     
     // Number of times animation has flipped
-    flipCount: 0
+    flipCount: 0,
+    
+    maxInactiveFrames: 3,
     
     /*
         
