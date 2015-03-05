@@ -3798,6 +3798,15 @@ var calc = require('./calc.js'),
     EASE_IN = 'In',
     EASE_OUT = 'Out',
     EASE_IN_OUT = EASE_IN + EASE_OUT,
+    
+    // Base power ease names
+    powerEasing = ['ease', 'cubic', 'quart', 'quint'],
+    
+    generatePowerEasing = function (power) {
+        return function (progress) {
+            return Math.pow(progress, power);
+        }
+    },
 
     /*
         Each of these base functions is an easeIn
@@ -3805,24 +3814,7 @@ var calc = require('./calc.js'),
         On init, we use EasingFunction.mirror and .reverse to generate easeInOut and
         easeOut functions respectively.
     */
-    baseIn = {
-        /*
-            Quad - Qunit easing
-            
-            Generates easing curve based on exponent of time
-        */
-        ease: function (progress) {
-            return Math.pow(progress, 2);
-        },
-        cubic: function (progress) {
-            return Math.pow(progress, 3);
-        },
-        quart: function (progress) {
-            return Math.pow(progress, 4);
-        },
-        quint: function (progress) {
-            return Math.pow(progress, 5);
-        },
+    baseEasing = {
         circ: function (progress) {
             return 1 - Math.sin(Math.acos(progress));
         },
@@ -3837,9 +3829,18 @@ var calc = require('./calc.js'),
         Constructor
     */
     EasingFunction = function () {
-        for (var key in baseIn) {
-            if (baseIn.hasOwnProperty(key)) {
-                this.generate(key, baseIn[key], true);
+        var i = 0,
+            key = '';
+        
+        // Generate power easing functions
+        for (; i < 4; i++) {
+            baseEasing[powerEasing[i]] = generatePowerEasing(i + 2);
+        }
+        
+        // Generate in/out/inOut easing variations
+        for (key in baseEasing) {
+            if (baseEasing.hasOwnProperty(key)) {
+                this.generate(key, baseEasing[key], true);
             }
         }
     };
@@ -3933,15 +3934,15 @@ EasingFunction.prototype = {
             reverseName = isBaseIn ? easeOut : easeIn;
 
         // Create the In function
-        this[baseName] = method;
+        self[baseName] = method;
 
         // Create the Out function by reversing the transition curve
-        this[reverseName] = function (progress) {
+        self[reverseName] = function (progress) {
             return self.reverseEasing(progress, self[baseName]);
         };
         
         // Create the InOut function by mirroring the transition curve
-        this[easeInOut] = function (progress) {
+        self[easeInOut] = function (progress) {
             return self.mirrorEasing(progress, self[baseName]);
         };
     },
