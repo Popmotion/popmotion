@@ -183,8 +183,8 @@ Action.prototype = {
         
         // Create radialX and radialY if we're tracking angle and distance
         if (values['angle'] && values['distance']) {
-            self.setValue('radialX', linkToAngleAndDistance)
-                .setValue('radialY', linkToAngleAndDistance);
+            self.setValue('radialX', linkToAngleDistance)
+                .setValue('radialY', linkToAngleDistance);
         }
 
         self.resetOrigins();

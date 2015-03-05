@@ -2,9 +2,7 @@
 
 var frictionStopLimit = .2,
     calc = require('../utils/calc.js'),
-    speedPerFrame = calc.speedPerFrame,
-    
-    VELOCITY = 'velocity';
+    speedPerFrame = calc.speedPerFrame;
 
 module.exports = {
     
@@ -16,7 +14,7 @@ module.exports = {
         Applies any set deceleration and acceleration to existing velocity
     */
     velocity: function (value, duration) {
-        return value[VELOCITY] - speedPerFrame(value.deceleration, duration) + speedPerFrame(value.acceleration, duration);
+        return value.velocity - speedPerFrame(value.deceleration, duration) + speedPerFrame(value.acceleration, duration);
     },
 
     /*
@@ -28,7 +26,7 @@ module.exports = {
         @returns [number]: New velocity
     */
     gravity: function (value, duration) {
-        return value[VELOCITY] + speedPerFrame(value.gravity, duration);
+        return value.velocity + speedPerFrame(value.gravity, duration);
     },
     
     /*
@@ -38,7 +36,7 @@ module.exports = {
         @returns [number]: New velocity
     */
     friction: function (value, duration) {
-        var newVelocity = speedPerFrame(value[VELOCITY], duration) * (1 - value.friction);
+        var newVelocity = speedPerFrame(value.velocity, duration) * (1 - value.friction);
         return (newVelocity < frictionStopLimit && newVelocity > -frictionStopLimit) ? 0 : calc.speedPerSecond(newVelocity, duration);
     },
     
@@ -52,7 +50,7 @@ module.exports = {
         var distance = value.to - value.current,
             springDistance = distance * speedPerFrame(value.spring, duration);
             
-        value[VELOCITY] += springDistance;
+        value.velocity += springDistance;
             
         return this.friction(value, duration);
     },
@@ -66,6 +64,6 @@ module.exports = {
         @return [number]: New velocity
     */
     bounce: function (value) {
-        return value[VELOCITY] *= -value.bounce;
+        return value.velocity *= -value.bounce;
     }
 };
