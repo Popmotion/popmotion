@@ -1390,13 +1390,13 @@ Input.prototype = {
                 
         @return [Input]
     */
-    update: function () {
+    update: function (arg0, arg1) {
         var values = {};
 
-        if (utils.isNum(arguments[1])) {
-            values[arguments[0]] = arguments[1];
+        if (utils.isNum(arg1)) {
+            values[arg0] = arg1;
         } else {
-            values = arguments[0];
+            values = arg0;
         }
 
         this.history.add(utils.merge(this.current, values));
@@ -1411,32 +1411,33 @@ Input.prototype = {
         @return [Input]
     */
     onFrame: function (timestamp) {
-        var latest, hasChanged;
+        var self = this,
+            latest, hasChanged;
         
         // Check provided timestamp against lastFrame timestamp and return input has already been updated
-        if (timestamp === this.lastFrame) {
+        if (timestamp === self.lastFrame) {
             return;
         }
         
-        latest = (this.poll) ? this.poll() : this.history.get();
-        hasChanged = utils.hasChanged(this.current, latest);
+        latest = (self.poll) ? self.poll() : self.history.get();
+        hasChanged = utils.hasChanged(self.current, latest);
 
         // If input has changed between frames  
         if (hasChanged) {
-            this.velocity = calc.offset(this.current, latest);
-            this.current = latest;
-            this.inactiveFrames = 0;
+            self.velocity = calc.offset(self.current, latest);
+            self.current = latest;
+            self.inactiveFrames = 0;
 
         // Or it hasn't moved and our frame limit has been reached
-        } else if (this.inactiveFrames >= this.maxInactiveFrames) {
-            this.velocity = calc.offset(this.current, this.current);
+        } else if (self.inactiveFrames >= self.maxInactiveFrames) {
+            self.velocity = calc.offset(self.current, self.current);
         
         // Or input hasn't changed
         } else {
-            this.inactiveFrames++;
+            self.inactiveFrames++;
         }
         
-        this.lastFrame = timestamp;
+        self.lastFrame = timestamp;
         
         return this;
     }
