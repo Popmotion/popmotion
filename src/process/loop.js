@@ -39,6 +39,7 @@ Loop.prototype = {
     start: function () {
         // Make sure we're not already running a loop
         if (!this.isRunning) {
+            this.timer.clock();
             this.isRunning = true;
             this.frame();
         }

@@ -1,27 +1,31 @@
 "use strict";
 
-var maxElapsed = 30,
+var utils = require('../utils/utils.js'),
+
+    maxElapsed = 33,
     smoothing = 50,
     Timer = function () {
-        this.elapsed = 16.7;
+        this.smoothed = 16.7;
+        this.current = utils.currentTime();
         this.update();
     };
 
 Timer.prototype = {
     update: function () {
-        var prev = this.current,
-            current = new Date().getTime(),
-            elapsed += (current - prev) * (current - this.elapsed) / smoothing;
-    
-        this.current = current;
-        this.prev = prev;
-        this.elapsed = elapsed;
-    console.log(elapsed);
-        return current;
+        this.prev = this.current;
+        this.current = utils.currentTime();
+        this.elapsed = Math.min(this.current - this.prev, maxElapsed);
+        this.smoothed += (this.elapsed - this.smoothed) / (smoothing / this.elapsed);
+console.log(this.smoothed, this.elapsed);
+        return this.current;
     },
 
     getElapsed: function () {
-        return Math.min(this.framerate, maxElapsed);
+        return this.smoothed;
+    },
+    
+    clock: function () {
+        this.current = utils.currentTime();
     }
 };
 
