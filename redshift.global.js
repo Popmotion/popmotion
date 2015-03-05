@@ -1635,6 +1635,8 @@ module.exports = {
 },{}],13:[function(require,module,exports){
 "use strict";
 
+var un = undefined;
+
 module.exports = {
     // [number]: The canonical value
     current: 0,
@@ -1643,13 +1645,13 @@ module.exports = {
     start: 0,
 
     // [number]: Current target value
-    to: undefined,
+    to: un,
 
     // [number]: Maximum permitted value during .track and .run
-    min: undefined,
+    min: un,
     
     // [number]: Minimum permitted value during .track and .run
-    max: undefined,
+    max: un,
     
     // [number]: Origin
     origin: 0,
@@ -1667,7 +1669,7 @@ module.exports = {
     name: '',
     
     // [string]: Unit string to append to value on ourput
-    unit: undefined,
+    unit: un,
     
     parent: '',
     
@@ -1678,13 +1680,13 @@ module.exports = {
     */
 
     // [string]: Name of value to listen to
-    link: undefined,
+    link: un,
     
     // [array]: Linear range of values (eg [-100, -50, 50, 100]) of linked value to map to .mapTo
-    mapLink: undefined,
+    mapLink: un,
     
     // [array]: Non-linear range of values (eg [0, 1, 1, 0]) to map to .mapLink - here the linked value being 75 would result in a value of 0.5
-    mapTo: undefined,
+    mapTo: un,
 
 
     /*
@@ -1986,9 +1988,6 @@ module.exports = new ProcessManager();
 },{"./loop.js":14}],16:[function(require,module,exports){
 /*
     Process
-    =======================
-    
-    
 */
 "use strict";
 
@@ -2001,10 +2000,10 @@ var manager = require('./manager.js'),
             var process = new Process(scope, callback);
             var process = new Process(callback);
     */
-    Process = function () {
-        var hasScope = (arguments[1] !== undefined),
-            callback = hasScope ? arguments[1] : arguments[0],
-            scope = hasScope ? arguments[0] : this;
+    Process = function (arg0, arg1) {
+        var hasScope = (arg1 !== undefined),
+            callback = hasScope ? arg1 : arg0,
+            scope = hasScope ? arg0 : this;
 
         this.setCallback(callback);
         this.setScope(scope);
@@ -2133,11 +2132,11 @@ Process.prototype = {
     every: function (interval) {
 	    var self = this;
 
-        this.reset();
+        self.reset();
 
-        this.isInterval = true;
+        self.isInterval = true;
 
-        this.intervalTimer = setInterval(function () {
+        self.intervalTimer = setInterval(function () {
             self.activate();
         }, interval);
     },

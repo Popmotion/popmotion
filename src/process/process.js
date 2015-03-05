@@ -1,8 +1,5 @@
 /*
     Process
-    =======================
-    
-    
 */
 "use strict";
 
@@ -15,10 +12,10 @@ var manager = require('./manager.js'),
             var process = new Process(scope, callback);
             var process = new Process(callback);
     */
-    Process = function () {
-        var hasScope = (arguments[1] !== undefined),
-            callback = hasScope ? arguments[1] : arguments[0],
-            scope = hasScope ? arguments[0] : this;
+    Process = function (arg0, arg1) {
+        var hasScope = (arg1 !== undefined),
+            callback = hasScope ? arg1 : arg0,
+            scope = hasScope ? arg0 : this;
 
         this.setCallback(callback);
         this.setScope(scope);
@@ -147,11 +144,11 @@ Process.prototype = {
     every: function (interval) {
 	    var self = this;
 
-        this.reset();
+        self.reset();
 
-        this.isInterval = true;
+        self.isInterval = true;
 
-        this.intervalTimer = setInterval(function () {
+        self.intervalTimer = setInterval(function () {
             self.activate();
         }, interval);
     },
