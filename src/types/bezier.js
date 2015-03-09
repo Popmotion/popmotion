@@ -41,30 +41,28 @@ var NEWTON_ITERATIONS = 8,
         return ((A(a1, a2) * t + B(a1, a2)) * t + C(a1)) * t;
     },
     
-    binarySubdivide = function (aX, aA, aB, mX1, mX2) {
-        var currentX, currentT, i = 0;
-        
-        do {
-            currentT = aA + (aB - aA) / 2.0;
-            currentX = calcBezier(currentT, mX1, mX2) - aX;
-            
-            if (currentX > 0.0) {
-                aB = currentT;
-            } else {
-                aA = currentT;
-            }
-        } while (Math.abs(currentX) > SUBDIVISION_PRECISION && ++i < SUBDIVISION_MAX_ITERATIONS);
-        
-        return currentT;
-    },
-    
     /*
         Bezier constructor
     */
     Bezier = function (mX1, mY1, mX2, mY2) {
         var sampleValues = FLOAT_32_SUPPORTED ? new Float32Array(K_SPLINE_TABLE_SIZE) : new Array(K_SPLINE_TABLE_SIZE),
             _precomputed = false,
-        
+    
+            binarySubdivide = function (aX, aA, aB) {
+                var currentX, currentT, i = 0;
+
+                do {
+                    currentT = aA + (aB - aA) / 2.0;
+                    currentX = calcBezier(currentT, mX1, mX2) - aX;
+                    if (currentX > 0.0) {
+                        aB = currentT;
+                    } else {
+                        aA = currentT;
+                    }
+                } while (Math.abs(currentX) > SUBDIVISION_PRECISION && ++i < SUBDIVISION_MAX_ITERATIONS);
+
+                return currentT;
+            },
         
             newtonRaphsonIterate = function (aX, aGuessT) {
                 var i = 0,
@@ -87,9 +85,7 @@ var NEWTON_ITERATIONS = 8,
             
             
             calcSampleValues = function () {
-                var i = 0;
-                
-                for (; i < NEWTON_ITERATIONS; ++i) {
+                for (var i = 0; i < K_SPLINE_TABLE_SIZE; ++i) {
                     sampleValues[i] = calcBezier(i * K_SAMPLE_STEP_SIZE, mX1, mX2);
                 }
             },
@@ -117,14 +113,12 @@ var NEWTON_ITERATIONS = 8,
                 // If slope is greater than min
                 if (initialSlope >= NEWTON_MIN_SLOPE) {
                     return newtonRaphsonIterate(aX, guessForT);
-                
                 // Slope is equal to min
                 } else if (initialSlope === 0.0) {
                     return guessForT;
-                
                 // Slope is less than min
                 } else {
-                    return binarySubdivide(aX, intervalStart, intervalStart + K_SAMPLE_STEP_SIZE, mX1, mX2);
+                    return binarySubdivide(aX, intervalStart, intervalStart + K_SAMPLE_STEP_SIZE);
                 }
             },
             
