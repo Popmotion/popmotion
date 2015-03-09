@@ -41,7 +41,7 @@ var NEWTON_ITERATIONS = 8,
         return ((A(a1, a2) * t + B(a1, a2)) * t + C(a1)) * t;
     },
     
-    binarySubdivide = function (aX, aA, aB) {
+    binarySubdivide = function (aX, aA, aB, mX1, mX2) {
         var currentX, currentT, i = 0;
         
         do {
@@ -124,7 +124,7 @@ var NEWTON_ITERATIONS = 8,
                 
                 // Slope is less than min
                 } else {
-                    return binarySubdivide(aX, intervalStart, intervalStart + K_SAMPLE_STEP_SIZE);
+                    return binarySubdivide(aX, intervalStart, intervalStart + K_SAMPLE_STEP_SIZE, mX1, mX2);
                 }
             },
             
