@@ -38,7 +38,7 @@ module.exports = function (output, order, cache) {
         }
     }
     
-    if (transform != cache[TRANSFORM]) {
+    if (transform != '' && transform != cache[TRANSFORM]) {
         css[TRANSFORM] = cache[TRANSFORM] = transform;
     }
     
