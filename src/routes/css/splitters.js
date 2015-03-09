@@ -225,10 +225,6 @@ var dictionary = require('./dictionary.js'),
         
         perspective: function (prop) {
             return this.array(prop);
-        },
-        
-        translate: function () {
-            return this.positions;
         }
     };
 

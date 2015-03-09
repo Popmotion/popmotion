@@ -27,7 +27,6 @@ Queue.prototype = {
         
         // If our index is between 0 and the queue length, return that item
         if (index >= 0 && index < queue.length) {
-            console.log(index, queue);
             returnVal = queue[index];
         
         // Or clear

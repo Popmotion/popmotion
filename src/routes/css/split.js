@@ -41,7 +41,7 @@ var defaultProperty = require('./default-property.js'),
     /*
         Split value with provided splitterID
     */
-    split = function (key, value, splitterID) {
+    split = function (key, value, splitter) {
         var splitValue = {},
             splitProperty = {},
             newValue = {},
@@ -54,7 +54,7 @@ var defaultProperty = require('./default-property.js'),
                 valueKey = valueProperties[i];
                 
                 if (value.hasOwnProperty(valueKey)) {
-                    splitProperty = splitters[splitterID](value[valueKey]);
+                    splitProperty = splitter(value[valueKey]);
                     
                     for (unitKey in splitProperty) {
                         splitValue[unitKey] = splitValue[unitKey] || {};
@@ -63,7 +63,7 @@ var defaultProperty = require('./default-property.js'),
                 }
             }
         } else {
-            splitValue = splitters[splitterID](value);
+            splitValue = splitter(value);
         }
         
         for (unitKey in splitValue) {
@@ -81,10 +81,11 @@ var defaultProperty = require('./default-property.js'),
 */
 module.exports = function (key, value) {
     var splitterID = splitLookup[key],
-        values = (splitterID) ? split(key, value, splitterID) : {};
+        splitter = splitters[splitterID],
+        values = (splitter) ? split(key, value, splitter) : {};
 
     // If we don't have a splitter, assign the property directly
-    if (!splitterID) {
+    if (!splitter) {
         values[key] = buildProperty(value, key);
     }
     

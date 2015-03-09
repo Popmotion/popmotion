@@ -30,7 +30,7 @@ module.exports = function (output, order, cache) {
         rule = generateRule(key, output);
 
         if (transformProp[key]) {
-            transform += key + '(' + rule + ') ';
+            transform += rule + ' ';
 
         } else if (cache[key] !== rule) {
             css[key] = rule;

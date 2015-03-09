@@ -58,6 +58,10 @@ var dictionary = require('./dictionary.js'),
             var shadowTerms = dictionary.shadow.slice(0,4);
             
             return createSpaceDelimited(key, values, shadowTerms) + templates.colors(key, values);
+        },
+        
+        transform: function (key, values) {
+            return key + '(' + values[key] +')';
         }
     };
 
