@@ -3,7 +3,7 @@
     ----------------------------------------
     
     Rubix are collections of optional processors. Which rubix to
-    use is decided programmatically. If .link is defined, Link is used.
+    use is decided programmatically. If [LINK] is defined, Link is used.
     Otherwise values use Time, Input and Run based on whether .play, 
     .track or .run are running.
 */
@@ -13,14 +13,34 @@
 var calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
     easing = require('../utils/easing.js'),
-    KEY = require('../opts/keys.js'),
     simulate = require('./simulate.js'),
-    Rubix = function () {},
-    rubixController;
+    
+    // Commonly used properties
+    CURRENT = 'current',
+    HAS_ENDED = 'hasEnded',
+    INPUT_OFFSET = 'inputOffset',
+    LINK = 'link';
 
-Rubix.prototype = {
+module.exports = {
+    Fire: {
+        /*
+            Return set current
+        */
+        process: function (key, value) {
+            return value[CURRENT];
+        },
+        
+        /*
+            Return true to fire for just one frame
+            
+            @return [boolean]: True
+        */
+        hasEnded: function () {
+            return true;
+        }
+    },
 
-    Time: {
+    Play: {
 
         /*
             Update Action elapsed time
@@ -30,8 +50,8 @@ Rubix.prototype = {
             @param [number]: Timestamp of current frame
         */
         updateInput: function (action, props, framestamp) {
-            action.elapsed += (framestamp - action.framestamp) * props.dilate;
-            action.hasEnded = true;
+            action.elapsed += ((framestamp - action.framestamp) * props.dilate) * action.playDirection;
+            action[HAS_ENDED] = true;
         },
 
         /*
@@ -47,17 +67,18 @@ Rubix.prototype = {
             @return [number]: Calculated value
         */
         process: function (key, value, values, props, action) {
-            var newValue = value.current,
-                progress = calc.restricted(calc.progress(action.elapsed - value.delay, value.duration) - value.stagger, 0, 1);
-            
+            var newValue = value[CURRENT],
+                progress = calc.restricted(calc.progress(action.elapsed - value.delay, value.duration) - value.stagger, 0, 1),
+                progressTarget = (action.playDirection === 1) ? 1 : 0;
+
             // Update hasEnded
-            action.hasEnded = (progress !== 1) ? false : action.hasEnded;
-            
+            action[HAS_ENDED] = (progress !== progressTarget) ? false : action[HAS_ENDED];
+
             if (value.to !== undefined) {
                 progress = (value.steps) ? utils.stepProgress(progress, 1, value.steps) : progress;
                 newValue = easing.withinRange(progress, value.origin, value.to, value.ease);
             }
-            
+
             return newValue;
         },
         
@@ -67,11 +88,11 @@ Rubix.prototype = {
             @param [boolean]: Have all Values hit 1 progress?
         */
         hasEnded: function (action) {
-            return action.hasEnded;
+            return action[HAS_ENDED];
         }
     },
     
-    Input: {
+    Track: {
     
         /*
             Update Input
@@ -80,7 +101,7 @@ Rubix.prototype = {
             @param [object]: Action properties
         */
         updateInput: function (action, props) {
-            action.inputOffset = calc.offset(props.inputOrigin, props.input.current);
+            action[INPUT_OFFSET] = calc.offset(props.inputOrigin, props.input[CURRENT]);
         },
         
         /*
@@ -94,7 +115,7 @@ Rubix.prototype = {
             @return [number]: Calculated value
         */
         process: function (key, value, values, props, action) {
-            return (action.inputOffset.hasOwnProperty(key)) ? value.origin + action.inputOffset[key] : value.current;
+            return (action[INPUT_OFFSET].hasOwnProperty(key)) ? value.origin + action[INPUT_OFFSET][key] : value[CURRENT];
         },
         
         /*
@@ -121,7 +142,7 @@ Rubix.prototype = {
             @return [number]: Calculated value
         */
         process: function (key, value, values, props, action, frameDuration) {
-            return value.current + calc.speedPerFrame(simulate[value.simulate](value, frameDuration), frameDuration);
+            return value[CURRENT] + calc.speedPerFrame(simulate[value.simulate](value, frameDuration), frameDuration);
         },
         
         /*
@@ -136,7 +157,7 @@ Rubix.prototype = {
         */
         hasEnded: function (action, hasChanged) {
             action.inactiveFrames = hasChanged ? 0 : action.inactiveFrames + 1;
-            return (action.inactiveFrames > 3);
+            return (action.inactiveFrames > action.getProp('maxInactiveFrames'));
         },
         
         /*
@@ -196,19 +217,19 @@ Rubix.prototype = {
             @return [number]: Calculated value
         */
         process: function (key, value, values, props, action) {
-            var newValue = value.current,
+            var newValue = value[CURRENT],
                 mapLink = value.mapLink,
                 mapTo = value.mapTo,
                 mapLength = (mapLink !== undefined) ? mapLink.length : 0,
                 newValue;
 
             // First look at values in Action
-            if (values[value.link]) {
-                newValue = values[value.link].store.current;
+            if (values[value[LINK]]) {
+                newValue = values[value[LINK]][CURRENT];
 
             // Then check values in Input
-            } else if (action.inputOffset && action.inputOffset.hasOwnProperty(value.link)) {
-                newValue = value.origin + action.inputOffset[key];
+            } else if (action[INPUT_OFFSET] && action[INPUT_OFFSET].hasOwnProperty(value[LINK])) {
+                newValue = value.origin + action[INPUT_OFFSET][value[LINK]];
             }
             
             for (var i = 1; i < mapLength; i++) {
@@ -237,12 +258,12 @@ Rubix.prototype = {
             @param [Action]: Current Action
             @return [number]: Calculated value
         */
-        process: function (key, value, values, props, action) {
+        process: function (key, value, values) {
             var origin = {
-                    x: (values.x) ? values.x.store.current : 0,
-                    y: (values.y) ? values.y.store.current : 0
+                    x: (values.x) ? values.x.get(CURRENT) : 0,
+                    y: (values.y) ? values.y.get(CURRENT) : 0
                 },
-                point = calc.pointFromAngleAndDistance(origin, values.angle.store.current, values.distance.store.current),
+                point = calc.pointFromAngleAndDistance(origin, values.angle.get(CURRENT), values.distance.get(CURRENT)),
                 newValue = {
                     radialX: point.x,
                     radialY: point.y
@@ -252,7 +273,3 @@ Rubix.prototype = {
         }
     }
 };
-
-rubixController = new Rubix();
-
-module.exports = rubixController;

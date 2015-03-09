@@ -1,22 +1,26 @@
 "use strict";
 
-var cycl = require('cycl'),
-    process = require('./processor.js'),
-    presets = require('./presets.js'),
-    Pointer = require('../input/pointer.js'),
-    KEY = require('../opts/keys.js'),
-    defaultProps = require('../opts/action.js'),
-    defaultValue = require('../opts/value.js'),
-    calc = require('../utils/calc.js'),
-    utils = require('../utils/utils.js'),
+var parseArgs = require('./parse-args.js'),
     Value = require('../types/value.js'),
     Repo = require('../types/repo.js'),
+    Queue = require('./queue.js'),
+    Process = require('../process/process.js'),
+    processor = require('./processor.js'),
+    routes = require('./routes.js'),
+    defaultProps = require('../opts/action.js'),
+    calc = require('../utils/calc.js'),
+    utils = require('../utils/utils.js'),
+    styler = require('../routes/css/styler.js'),
 
-    Action = function (def, override) {
+    namespace = function (key, space) {
+        return space ? key + '.' + space : key;
+    },
+
+    Action = function () {
         var self = this;
         
-        // Create value manager
-        self.values = new Repo();
+        // Create value repo
+        self.values = {};
         
         // Create new property manager
         defaultProps.scope = this;
@@ -26,13 +30,15 @@ var cycl = require('cycl'),
         self.data = new Repo();
         
         // Register process wth cycl
-        self.process = cycl.newProcess(function (framestamp, frameDuration) {
+        self.process = new Process(function (framestamp, frameDuration) {
 	        if (self.active) {
-                process(self, framestamp, frameDuration);
+                processor(self, framestamp, frameDuration);
 	        }
         });
         
-        self.set(def, override);
+        self.queue = new Queue();
+
+        self.set(parseArgs.generic.apply(self, arguments));
     };
 
 Action.prototype = {
@@ -45,6 +51,9 @@ Action.prototype = {
 
     // [number]: Number of frames action has been inactive
     inactiveFrames: 0,
+    
+    // [number]: 1 = forward, -1 = backwards
+    playDirection: 1,
 
     /*
         Play the provided actions as animations
@@ -57,18 +66,26 @@ Action.prototype = {
             .play(params)
                 @param [object]: Action properties
                 
+            .play(params, [duration, easing, onEnd])
+                @param [object]: Action props
+                @param [number]: Duration in ms
+                @param [string]: Easing function to apply
+                @param [function]: Function to run on end
+                
         @return [Action]
     */
-    play: function (defs, override) {
-        this.set(defs, override);
+    play: function () {
+        var props = parseArgs.play.apply(this, arguments);
 
-        this.props.set({
-            playhead: 0,
-            loopCount: 0,
-            yoyoCount: 0
-        });
+        if (!this.isActive()) {
+            this.set(props, 'to');
+            this.playDirection = 1;
+            this.start('Play');
+        } else {
+            this.queue.add.apply(this.queue, arguments);
+        }
 
-        return this.start(KEY.RUBIX.TIME);
+        return this;
     },
 
     /*
@@ -84,9 +101,9 @@ Action.prototype = {
                 
         @return [Action]
     */
-    run: function (defs, override) {
-        this.set(defs, override);
-        return this.start(KEY.RUBIX.RUN);
+    run: function () {
+        this.set(parseArgs.generic.apply(this, arguments));
+        return this.start('Run');
     },
     
     /*
@@ -105,35 +122,88 @@ Action.prototype = {
         @return [Action]
     */
     track: function () {
-        var args = arguments,
-            argLength = args.length,
-            defs, override, input;
+        this.set(parseArgs.track.apply(this, arguments));
+        return this.start('Track');
+    },
+    
+    /*
+        Activate for one frame and set values to current
         
-        // Loop backwards over arguments
-        for (var i = argLength - 1; i >= 0; i--) {
-            if (args[i] !== undefined) {
-                // If input hasn't been defined, this is the input
-                if (input === undefined) {
-                    input = args[i];
+        @return [Action]
+    */
+    fire: function () {
+        this.set(parseArgs.generic.apply(this, arguments));
+        return this.start('Fire');
+    },
+    
+    /*
+        Set Action values and properties
+        
+        Syntax
+            .set(params)
+                @param [object]: Action properties
+            
+        @return [Action]
+    */
+    set: function (props, defaultProp) {
+        var self = this,
+            currentProps = this.props.get(),
+            values = this.values,
+            linkToAngleDistance = { link: 'AngleAndDistance' },
+            key = '';
+            
+        defaultProp = defaultProp || 'current';
 
-                // Or if this is the second argument, these are overrides
-                } else if (i === 1) {
-                    override = args[i];
+        self.props.set(props);
+
+        // Loop over new values and set
+        routes.shard(function (route, valuesBucket) {
+            var baseValue = {
+                    route: route.name
+                },
+                mergeIn = {},
+                value;
+
+            for (key in valuesBucket) {
+                if (valuesBucket.hasOwnProperty(key) && route.preprocess) {
+                    value = valuesBucket[key];
                     
-                // Otherwise these are the defs
-                } else if (i === 0) {
-                    defs = args[i];
+                    if (!utils.isObj(value)) {
+                        mergeIn = { name: key };
+                        mergeIn[defaultProp] = value;
+                    } else {
+                        mergeIn = value;
+                        mergeIn.name = key;
+                    }
+
+                    route.preprocess(key, utils.merge(baseValue, mergeIn), self, currentProps);
                 }
             }
+        }, props);
+        
+        // Create radialX and radialY if we're tracking angle and distance
+        if (values['angle'] && values['distance']) {
+            self.setValue('radialX', linkToAngleDistance)
+                .setValue('radialY', linkToAngleDistance);
         }
 
-        if (!input.current) {
-            input = new Pointer(input);
+        self.resetOrigins();
+
+        return self;
+    },
+    
+    /*
+        Loop through all values and create origin points
+    */
+    resetOrigins: function () {
+        var values = this.values,
+            key = '';
+
+        for (key in values) {
+            if (values.hasOwnProperty(key)) {
+                values[key].origin = values[key].current;
+            }
         }
-
-        this.set(defs, override, input);
-
-        return this.start(KEY.RUBIX.INPUT);
     },
 
     /*
@@ -157,7 +227,7 @@ Action.prototype = {
         self.firstFrame = true;
         
         self.process.start();
-        
+
         return self;
     },
     
@@ -165,6 +235,15 @@ Action.prototype = {
         Stop current Action process
     */
     stop: function () {
+        this.queue.clear();
+        this.pause();
+        return this;
+    },
+    
+    /*
+        Pause current Action
+    */
+    pause: function () {
 	    var self = this,
 	        input = this.getProp('input');
 
@@ -176,15 +255,6 @@ Action.prototype = {
         }
 
         return self;
-    },
-    
-    /*
-        Pause current Action
-    */
-    pause: function () {
-	    this.stop();
-	    
-	    return this;
     },
     
     /*
@@ -207,7 +277,7 @@ Action.prototype = {
     */
     reset: function () {
 	    var self = this,
-	        values = self.values.get();
+	        values = self.values;
 
         self.resetProgress();
         
@@ -225,7 +295,7 @@ Action.prototype = {
 	    var self = this;
 
         self.progress = 0;
-        self.elapsed = 0;
+        self.elapsed = (self.playDirection === 1) ? 0 : self.props.get('duration');
         self.started = utils.currentTime();
         
         return self;
@@ -235,14 +305,21 @@ Action.prototype = {
 	    Reverse Action progress and values
     */
     reverse: function () {
+        this.playDirection *= -1;
+    },
+    
+    /*
+        Swap value origins and to
+    */
+    flip: function () {
 	    var self = this,
-	        values = self.values.get();
+	        values = self.values;
 	    
 	    self.progress = calc.difference(self.progress, 1);
         self.elapsed = calc.difference(self.elapsed, self.props.get('duration'));
         
         for (var key in values) {
-            values[key].reverse();
+            values[key].flip();
         }
 
         return self;
@@ -254,6 +331,8 @@ Action.prototype = {
         } else {
             this.resume();
         }
+        
+        return this;
     },
     
     /*
@@ -267,6 +346,9 @@ Action.prototype = {
             }, {
                 key: 'yoyo',
                 callback: self.reverse
+            }, {
+                key: 'flip',
+                callback: self.flip
             }],
             possibles = nexts.length,
             hasNext = false;
@@ -294,14 +376,15 @@ Action.prototype = {
         @param [callback]: Function to run if we take this step
     */
     checkNextStep: function (key, callback) {
-        var stepTaken = false,
+        var COUNT = 'Count',
+            stepTaken = false,
             step = this.props.get(key),
-            count = this.props.get(key + 'Count'),
+            count = this.props.get(key + COUNT),
             forever = (step === true);
 
         if (forever || utils.isNum(step)) {
             ++count;
-            this.props.set(key + 'Count', count);
+            this.props.set(key + COUNT, count);
             if (forever || count <= step) {
                 callback.call(this);
                 stepTaken = true;
@@ -316,93 +399,22 @@ Action.prototype = {
     */
     playNext: function () {
         var stepTaken = false,
-            playlist = this.props.get('playlist'),
-            playlistLength = playlist.length,
-            playhead = this.props.get('playhead'),
-            next = {};
+            nextInQueue = this.queue.next(this.playDirection);
 
-        // Check we have a playlist
-        if (playlistLength > 1) {
-            ++playhead;
-            
-            if (playhead < playlistLength) {
-                next = presets.getDefined(playlist[playhead]);
-                next.playhead = playhead;
-                this.set(next);
-                this.reset();
-                stepTaken = true;
-            }
+        if (utils.isArray(nextInQueue)) {
+            this.set(parseArgs.generic.apply(this, nextInQueue), 'to')
+                .reset();
+
+            stepTaken = true;
         }
 
         return stepTaken;
     },
     
-    /*
-        Set Action values and properties
-        
-        Syntax
-            .set(preset[, override, input])
-                @param [string]: Name of preset to apply
-                @param [object] (optional): Properties to override preset
-            
-            .set(params[, input])
-                @param [object]: Action properties
-            
-        @return [Action]
-    */
-    set: function (defs, override, input) {
-        var self = this,
-            validDefinition = (defs !== undefined),
-            base = {},
-            values = {};
+    setValue: function (key, value, inherit, space) {
+        var existing = this.getValue(key, space);
 
-        if (validDefinition) {
-            base = presets.createBase(defs, override);
-        }
-            
-        if (input !== undefined) {
-            base.input = input;
-            base.inputOrigin = input.get();
-        }
-        
-        self.props.set(base);
-        
-        if (base.values) {
-        	self.setValues(base.values, self.props.get());
-        }
-        
-        values = self.values.get();
-
-        // Create origins
-        for (var key in values) {
-            if (values.hasOwnProperty(key)) {
-                values[key].set('origin', values[key].get('current'));
-            }
-        }
-        
-        return self;
-    },
-    
-    setValues: function (newVals, inherit) {
-        var values = this.values.get();
-
-        for (var key in newVals) {
-            if (newVals.hasOwnProperty(key)) {
-                this.setValue(key, newVals[key], inherit);
-            }
-        }
-        
-        // If angle and distance exist, create an x and y
-        if (this.getValue('angle') && this.getValue('distance')) {
-            this.setValue('radialX', { link: KEY.ANGLE_DISTANCE });
-            this.setValue('radialY', { link: KEY.ANGLE_DISTANCE });
-        }
-    },
-    
-    
-    setValue: function (key, value, inherit) {
-        var existing = this.getValue(key),
-            newVal;
+        key = namespace(key, space);
 
         // Update if value exists
         if (existing) {
@@ -410,18 +422,16 @@ Action.prototype = {
 
         // Or create new if it doesn't
         } else {
-            newVal = new Value(defaultValue, this, key);
-            newVal.set(value, inherit);
-
-            this.values.set(key, newVal);
+            this.values[key] = new Value(key, value, inherit, this);
         }
 
         return this;
     },
     
     
-    getValue: function (key) {
-        return this.values.get(key);
+    getValue: function (key, space) {
+        key = namespace(key, space);
+        return this.values[key];
     },
     
     
@@ -443,11 +453,7 @@ Action.prototype = {
         @return [boolean]: Active status
     */
     isActive: function (active) {
-        if (active !== undefined) {
-            this.active = active;
-        }
-
-        return this.active;
+        return this.active = (active !== undefined) ? active : this.active;
     },
     
     /*
@@ -455,11 +461,15 @@ Action.prototype = {
         
         @param [string]: Key of value
         @param [boolean]: Whether to move value to back
+        @param [string] (optional): Name of order array (if not default)
     */
-    updateOrder: function (key, moveToBack) {
-        var props = this.props.get(),
-            order = props.order = props.order ? props.order : [],
-            pos = order.indexOf(key);
+    updateOrder: function (key, moveToBack, orderName) {
+        var props = this.props.store,
+            pos, order;
+        
+        orderName = orderName || 'order';
+        order = props[orderName] = props[orderName] || [];
+        pos = order.indexOf(key);
         
         if (pos === -1 || moveToBack) {
             order.push(key);
@@ -468,6 +478,20 @@ Action.prototype = {
                 order.splice(pos, 1);
             }
         }
+    },
+    
+    /*
+        Style our dom element
+    */
+    style: function (prop) {
+        var dom = this.props.store.dom,
+            returnVal;
+        
+        if (dom) {
+            returnVal = styler(dom, prop);
+        }
+        
+        return returnVal == styler ? this : returnVal;
     }
     
 };

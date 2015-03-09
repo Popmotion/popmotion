@@ -2,27 +2,24 @@
 
 ## Anything in, anywhere out
 
-Redshift is a JavaScript UX framework for animation, interaction and physics. It works with pure numbers and outputs directly to your custom callbacks.
+Redshift is a JavaScript UX framework for creating animations and physics-based user interactions. It provides CSS support for ease-of-use but provides the ability to work with raw numbers and custom callbacks for total creative freedom.
 
-**Key benefits of this approach:**
+[Install](http://redshiftjs.com/docs/get-started) | [API](http://redshiftjs.com/docs) | [Tutorials](http://redshiftjs.com/tutorials) | [Twitter](http://twitter.com/redshiftjs)
 
-* Use your any technology or framework (DOM, jQuery, Canvas, WebGL, etc)
-* Animate any numerical property, without waiting for us to support it
-* We never hit the DOM, leaving you in total control of performance
-* Unlock the power of easing, for any purpose
+**Flexible**
+* Animate any property without waiting for explicit support
+* Seamless hand-off between user input, animation and physics
+* Work with your favourite technology or framework (DOM, jQuery, Canvas, Three.js etc)
+
+**Extendable**
+* Create custom Input handlers for Oculus/Leap/anything
+* Add custom easing bezier curves
+* Expand our native DOM attr and CSS support with your own custom "routes"
+
+**Performant**
+* Uses and exposes a single requestAnimationFrame thread
+* Never hits the DOM, leaving you in total control of performance
+* Over 20% smaller than Velocity.js, 72% smaller than GreenSock TweenMax
 
 
-**More features:**
-
-* Seamlessly hand-off between user input, animation and physics simulations
-* Create custom easing bezier curves
-* Create custom inputs to experiment with new input devices
-* Uses our [Cycl](https://github.com/InventingWithMonster/cycl) unified requestAnimationFrame process manager for high performance
-
-
-## Further reading
-
-- [Install](http://redshiftjs.com/docs/get-started)
-- [Documentation](http://redshiftjs.com/docs)
-- [Tutorials](http://redshiftjs.com/tutorials)
-- [Twitter](http://twitter.com/redshiftjs)
+[Get started](http://redshiftjs.com/docs/get-started)

@@ -1,22 +1,29 @@
+/*
+    Redshift core object
+    
+    Exposes methods to create new classes and define new modules
+*/
 "use strict";
 
 var Action = require('./action/action.js'),
     Input = require('./input/input.js'),
+    Process = require('./process/process.js'),
     presets = require('./action/presets.js'),
     easing = require('./utils/easing.js'),
-    calc = require('./utils/calc.js'),
-    cycl = require('cycl'),
-    Redshift = function () {};
-
-Redshift.prototype = {
+    calc = require('./utils/calc.js');
     
+// Check if we need to shim indexOf and requireAnimationFrame
+require('./utils/shim.js')();   
+
+module.exports = {
+
     /*
         Create a new Action controller
         
         @return [Action]: Newly-created Action
     */
-    newAction: function (defs, override) {
-        return new Action(defs, override);
+    newAction: function () {
+        return new Action(arguments[0], arguments[1]);
     },
     
     /*
@@ -29,20 +36,31 @@ Redshift.prototype = {
     },
     
     /*
+        Create a new process
+        
+        @param [function]: Function to run every frame
+        @param: Scope
+        @return [Process]
+    */
+    newProcess: function () {
+        return new Process(arguments[0], arguments[1]);
+    },
+    
+    /*
         Define a new Action preset
         
         Syntax
         
-            .define(name, preset)
+            .definePreset(name, preset)
                 @param [string]: Name of preset
                 @param [object]: Preset options/properties
                 
-            .define(presets)
+            .definePreset(presets)
                 @param [object]: Multiple presets as named object
                 
         @return [Redshift]
     */
-    define: function () {
+    addPreset: function () {
         presets.define.apply(presets, arguments);
         
         return this;
@@ -63,10 +81,36 @@ Redshift.prototype = {
         return this;
     },
     
-    calc: calc,
+    /*
+        Add value route
+        
+        The default values object is .values, however any provided object
+        will be parsed into values and given a .route property that is the name of
+        its original object. For instance providing
+        
+            example: {
+                test: 20
+            }
+            
+        will be parsed into
+        
+            values: {
+                test: {
+                    current: 20,
+                    route: 'example'
+                }
+            }
+            
+        If we provide a custom route with this name, we can custom-parse values
+        on the way in, and also on the way out.
+    */
+    addRoute: function () {
+        route.add.apply(route, arguments);
+        
+        return this;
+    },
     
-    cycl: cycl
+    //defineSimulation: function () {},
     
+    calc: calc
 };
-
-module.exports = new Redshift();

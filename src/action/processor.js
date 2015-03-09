@@ -4,29 +4,30 @@
 "use strict";
 
 var Rubix = require('./rubix.js'),
-    KEY = require('../opts/keys.js'),
-    calc = require('../utils/calc.js');
+    routes = require('./routes.js'),
+    calc = require('../utils/calc.js'),
+    
+    ANGLE_DISTANCE = 'AngleAndDistance';
 
 module.exports = function (action, framestamp, frameDuration) {
     var props = action.props.store,
         data = action.data.store,
-        values = action.values.store,
+        values = action.values,
+        rubix = Rubix[props.rubix],
+        valueRubix = rubix,
+        hasChanged = false,
+        i = 0,
         order = props.order = props.order || [],
         orderLength = order.length,
-        rubix = Rubix[props.rubix],
-        key = '',
-        value,
-        valueRubix,
-        output,
-        hasChanged = false;
-        
+        key = '', value, output;
+    
     action.output = {};
-
+    
     // Update elapsed
     if (rubix.updateInput) {
         rubix.updateInput(action, props, framestamp);
     }
-    
+
     // Fire onStart if first frame
     if (action.firstFrame) {
         if (props.onStart) {
@@ -42,27 +43,26 @@ module.exports = function (action, framestamp, frameDuration) {
     }
 
     // Update values
-    for (var i = 0; i < orderLength; i++) {
+    for (; i < orderLength; i++) {
+        // Get value and key
         key = order[i];
+        value = values[key];
 
-        // Get value
-        value = values[key].store;
-
-        // Load value rubix
+        // Load rubix for this value
         valueRubix = rubix;
         if (value.link) {
-            valueRubix = (value.link !== KEY.ANGLE_DISTANCE) ? Rubix['Link'] : Rubix['AngleAndDistance'];
+            valueRubix = (value.link !== ANGLE_DISTANCE) ? Rubix['Link'] : Rubix[ANGLE_DISTANCE];
         }
         
         // Calculate new value
         output = valueRubix.process(key, value, values, props, action, frameDuration);
-
+        
         // Limit if range set
-        if (rubix.limit) {
-            output = rubix.limit(output, value);
+        if (valueRubix.limit) {
+            output = valueRubix.limit(output, value);
         }
         
-        // Round value if rounding on
+        // Round value if rounding set to true
         if (value.round) {
             output = Math.round(output);
         }
@@ -74,35 +74,36 @@ module.exports = function (action, framestamp, frameDuration) {
         if (value.current != output) {
             hasChanged = true;
         }
-        
+
         // Set current and add unit (if any) for output
         value.current = output;
-        action.output[key] = (value.unit) ? output + value.unit : output;
+        action.output[value.route] = action.output[value.route] || {};
+        action.output[value.route][value.name] = (value.unit) ? output + value.unit : output;
     }
 
-    // Fire onFrame callback
-    if (props.onFrame) {
-        props.onFrame.call(props.scope, action.output, data);
-    }
-
-    // Fire onChange callback
-    if (hasChanged && props.onChange) {
-        props.onChange.call(props.scope, action.output, data);
-    }
-    
-    // Fire onEnd callback
-    if (rubix.hasEnded(action, hasChanged)) {
-        action.isActive(false);
-        
-        if (props.onEnd) {
-            props.onEnd.call(props.scope, action.output, data);
+    // shard onFrame and onChange
+    routes.shard(function (route, output) {
+        // Fire onFrame every frame
+        if (route.onFrame) {
+            route.onFrame(output, action, values, props, data);
         }
         
-        // Find next action if still inActive
-        if (!action.isActive()) {
+        // Fire onChanged if values have changed
+        if (hasChanged && route.onChange) {
+            route.onChange(output, action, values, props, data);
+        }
+    }, action.output);
+
+    // Fire onEnd if ended
+    if (rubix.hasEnded(action, hasChanged)) {
+        action.isActive(false);
+
+        routes.onEnd(action.output, action, values, props, data);
+        
+        if (!action.isActive() && props.rubix === 'Play') {
             action.next();
         }
     }
-
+    
     action.framestamp = framestamp;
 };

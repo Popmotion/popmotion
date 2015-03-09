@@ -1,0 +1,68 @@
+/*
+    The loop
+*/
+"use strict";
+
+var Timer = require('./timer.js'),
+    Loop = function () {
+        this.timer = new Timer();
+    };
+    
+Loop.prototype = {
+    
+    /*
+        [boolean]: Current status of animation loop
+    */
+    isRunning: false,
+    
+    /*
+        Fire all active processes once per frame
+    */
+    frame: function () {
+        var self = this;
+        
+        requestAnimationFrame(function () {
+            var framestamp = self.timer.update(), // Currently just measuring in ms - will look into hi-res timestamps
+                isActive = self.callback.call(self.scope, framestamp, self.timer.getElapsed());
+
+            if (isActive) {
+                self.frame(true);
+            } else {
+                self.stop();
+            }
+        });
+    },
+    
+    /*
+        Start loop
+    */
+    start: function () {
+        // Make sure we're not already running a loop
+        if (!this.isRunning) {
+            this.timer.clock();
+            this.isRunning = true;
+            this.frame();
+        }
+    },
+    
+    /*
+        Stop the loop
+    */
+    stop: function () {
+        this.isRunning = false;
+    },
+    
+    /*
+        Set the callback to run every frame
+        
+        @param [Object]: Execution context
+        @param [function]: Callback to fire
+    */
+    setCallback: function (scope, callback) {
+        this.scope = scope;
+        this.callback = callback;
+    }
+ 
+};
+
+module.exports = new Loop();

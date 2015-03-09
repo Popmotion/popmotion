@@ -1,5 +1,7 @@
 "use strict";
 
+
+
 module.exports = {
     // [number]: The canonical value
     current: 0,
@@ -16,11 +18,27 @@ module.exports = {
     // [number]: Minimum permitted value during .track and .run
     max: undefined,
     
+    // [number]: Origin
+    origin: 0,
+    
     // [boolean]: Set to true when both min and max detected
     hasRange: false,
 
     // [boolean]: Round output if true
     round: false,
+    
+    // [string]: Route
+    route: 'values',
+    
+    // [string]: Non-namespaced output value
+    name: '',
+    
+    // [string]: Unit string to append to value on ourput
+    unit: undefined,
+    
+    parent: '',
+    
+    unitName: '',
 
     /*
         Link properties

@@ -1,7 +1,8 @@
 "use strict";
 
-var maxHistorySize = 3,
-    utils = require('../utils/utils.js'),
+var // [number]: Default max size of history
+    maxHistorySize = 3,
+    
     /*
         History constructor
         
@@ -40,7 +41,7 @@ History.prototype = {
         @return [var]: Var found at specified index
     */
     get: function (i) {
-        i = (utils.isNum(i)) ? i : this.getSize() - 1;
+        i = (typeof i === 'number') ? i : this.getSize() - 1;
 
         return this.entries[i];
     },
@@ -51,9 +52,7 @@ History.prototype = {
         @return [var]: Entry found at index size - 2
     */
     getPrevious: function () {
-        var index = this.getSize() - 2;
-
-        return this.get(index);
+        return this.get(this.getSize() - 2);
     },
     
     /*

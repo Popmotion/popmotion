@@ -2,11 +2,9 @@
 
 var frictionStopLimit = .2,
     calc = require('../utils/calc.js'),
-    speedPerFrame = calc.speedPerFrame,
-    Simulate = function () {},
-    simulate;
+    speedPerFrame = calc.speedPerFrame;
 
-Simulate.prototype = {
+module.exports = {
     
     /*
         Velocity
@@ -49,10 +47,9 @@ Simulate.prototype = {
         @returns [number]: New velocity
     */
     spring: function (value, duration) {
-        var distance = value.to - value.current,
-            springDistance = distance * speedPerFrame(value.spring, duration);
-            
-        value.velocity += springDistance;
+        var distance = value.to - value.current;
+
+        value.velocity += distance * speedPerFrame(value.spring, duration);
             
         return this.friction(value, duration);
     },
@@ -69,7 +66,3 @@ Simulate.prototype = {
         return value.velocity *= -value.bounce;
     }
 };
-
-simulate = new Simulate();
-
-module.exports = simulate;

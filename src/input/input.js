@@ -70,13 +70,13 @@ Input.prototype = {
                 
         @return [Input]
     */
-    update: function () {
+    update: function (arg0, arg1) {
         var values = {};
 
-        if (utils.isNum(arguments[1])) {
-            values[arguments[0]] = arguments[1];
+        if (utils.isNum(arg1)) {
+            values[arg0] = arg1;
         } else {
-            values = arguments[0];
+            values = arg0;
         }
 
         this.history.add(utils.merge(this.current, values));

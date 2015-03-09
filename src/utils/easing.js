@@ -23,35 +23,31 @@
 "use strict";
 
 var calc = require('./calc.js'),
-    util = require('./utils.js'),
-    KEY = require('../opts/keys.js'),
     Bezier = require('../types/bezier.js'),
-    EasingFunction = function () {},
-    easingFunction,
+    
+    // Constants
+    INVALID_EASING = ": Not defined",
+    EASE_IN = 'In',
+    EASE_OUT = 'Out',
+    EASE_IN_OUT = EASE_IN + EASE_OUT,
+    
+    // Base power ease names
+    powerEasing = ['ease', 'cubic', 'quart', 'quint'],
+    
+    // Generate easing function with provided power
+    generatePowerEasing = function (power) {
+        return function (progress) {
+            return Math.pow(progress, power);
+        }
+    },
+
     /*
         Each of these base functions is an easeIn
         
         On init, we use EasingFunction.mirror and .reverse to generate easeInOut and
         easeOut functions respectively.
     */
-    baseIn = {
-        /*
-            Quad - Qunit easing
-            
-            Generates easing curve based on exponent of time
-        */
-        ease: function (progress) {
-            return Math.pow(progress, 2);
-        },
-        cubic: function (progress) {
-            return Math.pow(progress, 3);
-        },
-        quart: function (progress) {
-            return Math.pow(progress, 4);
-        },
-        quint: function (progress) {
-            return Math.pow(progress, 5);
-        },
+    baseEasing = {
         circ: function (progress) {
             return 1 - Math.sin(Math.acos(progress));
         },
@@ -61,62 +57,7 @@ var calc = require('./calc.js'),
             return (progress * progress) * ((strength + 1) * progress - strength);
         }
     },
-    baseOut = {
-        bounce: function (progress) {
-            if ((progress) < (1/2.75)) {
-                return (7.5625*progress*progress);
-            } else if (progress < (2/2.75)) {
-                return (7.5625*(progress-=(1.5/2.75))*progress + .75);
-            } else if (progress < (2.5/2.75)) {
-                return (7.5625*(progress-=(2.25/2.75))*progress + .9375);
-            } else {
-                return (7.5625*(progress-=(2.625/2.75))*progress + .984375);
-            }
-        },
-        swing: function (progress) {
-            var s = 1.70158;
-            return (progress -= 1) * progress * ((s + 1) * progress + s) + 1;
-        },
-        spring: function (progress) {
-            return 1 - (Math.cos(progress * 4.5 * Math.PI) * Math.exp(-progress * 6));
-        }
-    };
     
-EasingFunction.prototype = {
-
-    /*
-        Get the named easing function
-        
-        @param [string]: Name of the easing function to get 
-        @return [function || boolean]: Easing function or false if function undefined
-    */
-    get: function (name) {
-        var easing = this[name];
-        
-        if (!easing) {
-            throw name + KEY.ERROR.INVALID_EASING;
-        }
-
-        return easing;
-    },
-    
-    
-    /*
-        Add Bezier Curve easing
-        
-        @param [string]: Name of new easing
-        @parma [number]: X of coordinate 1
-        @parma [number]: Y of coordinate 1
-        @parma [number]: X of coordinate 2
-        @parma [number]: Y of coordinate 2
-    */
-    addBezier: function (name, x1, y1, x2, y2) {
-        if (!this[name]) {
-            this[name] = new Bezier(x1, y1, x2, y2);
-        }
-    },
-
-      
     /*
         Mirror easing
         
@@ -127,16 +68,8 @@ EasingFunction.prototype = {
         @param [function]: The easing function to mirror
         @returns [number]: The easing-adjusted delta
     */
-    mirrorEasing: function (progress, method) {
-        var delta;
-        
-        if (progress <= 0.5) {
-            delta = method(2 * progress) / 2;
-        } else {
-            delta = (2 - method(2 * (1 - progress))) / 2;
-        }
-        
-        return delta;
+    mirrorEasing = function (progress, method) {
+        return (progress <= 0.5) ? method(2 * progress) / 2 : (2 - method(2 * (1 - progress))) / 2;
     },
             
     /*
@@ -149,10 +82,9 @@ EasingFunction.prototype = {
         @param [function]: The easing function to reverse
         @returns [number]: The easing-adjusted delta
     */
-    reverseEasing: function (progress, method) {
+    reverseEasing = function (progress, method) {
         return 1 - method(1 - progress);
     },
-    
     
     /*
         Add new easing function
@@ -162,86 +94,114 @@ EasingFunction.prototype = {
         @param [string]: Base name of the easing functions to generate
         @param [function]: Base easing function, as an easeIn, from which to generate Out and InOut
     */
-    generate: function (name, method, isBaseIn) {
-        var self = this,
-            names = {
-                easeIn: name + KEY.EASING.IN, 
-                easeOut: name + KEY.EASING.OUT,
-                easeInOut: name + KEY.EASING.IN_OUT
-            },
-            baseName = isBaseIn ? names.easeIn : names.easeOut,
-            reverseName = isBaseIn ? names.easeOut : names.easeIn;
+    generateVariations = function (name, method, isBaseIn) {
+        var easeIn = name + EASE_IN,
+            easeOut = name + EASE_OUT,
+            easeInOut = name + EASE_IN_OUT,
+            baseName = isBaseIn ? easeIn : easeOut,
+            reverseName = isBaseIn ? easeOut : easeIn;
 
         // Create the In function
-        this[baseName] = method;
+        easing[baseName] = method;
 
         // Create the Out function by reversing the transition curve
-        this[reverseName] = function (progress) {
-            return self.reverseEasing(progress, self[baseName]);
+        easing[reverseName] = function (progress) {
+            return reverseEasing(progress, easing[baseName]);
         };
         
         // Create the InOut function by mirroring the transition curve
-        this[names.easeInOut] = function (progress) {
-            return self.mirrorEasing(progress, self[baseName]);
+        easing[easeInOut] = function (progress) {
+            return mirrorEasing(progress, easing[baseName]);
         };
     },
     
+    easing = {
     
-    /*
-        Ease value within ranged parameters
+        /*
+            Get the named easing function
+            
+            @param [string]: Name of the easing function to get 
+            @return [function || boolean]: Easing function or false if function undefined
+        */
+        get: function (name) {
+            var easing = this[name];
+            
+            if (!easing) {
+                throw name + INVALID_EASING;
+            }
+    
+            return easing;
+        },
         
-        @param [number]: Progress between 0 and 1
-        @param [number]: Value of 0 progress
-        @param [number]: Value of 1 progress
-        @param [string]: Easing to use
-        @param [number]: Amplify progress out of specified range
-        @return [number]: Value of eased progress in range
-    */  
-    withinRange: function (progress, from, to, ease, escapeAmp) {
-        var progressLimited = calc.restricted(progress, 0, 1);
-
-        if (progressLimited !== progress && escapeAmp) {
-            ease = 'linear';
-            progressLimited = progressLimited + (calc.difference(progressLimited, progress) * escapeAmp);
+        
+        /*
+            Add Bezier Curve easing
+            
+            @param [string]: Name of new easing
+            @parma [number]: X of coordinate 1
+            @parma [number]: Y of coordinate 1
+            @parma [number]: X of coordinate 2
+            @parma [number]: Y of coordinate 2
+        */
+        addBezier: function (name, x1, y1, x2, y2) {
+            if (!this[name]) {
+                this[name] = new Bezier(x1, y1, x2, y2);
+            }
+        },
+        
+        
+        /*
+            Ease value within ranged parameters
+            
+            @param [number]: Progress between 0 and 1
+            @param [number]: Value of 0 progress
+            @param [number]: Value of 1 progress
+            @param [string]: Easing to use
+            @param [number]: Amplify progress out of specified range
+            @return [number]: Value of eased progress in range
+        */  
+        withinRange: function (progress, from, to, ease, escapeAmp) {
+            var progressLimited = calc.restricted(progress, 0, 1);
+    
+            if (progressLimited !== progress && escapeAmp) {
+                ease = 'linear';
+                progressLimited = progressLimited + (calc.difference(progressLimited, progress) * escapeAmp);
+            }
+    
+            return calc.valueEased(progressLimited, from, to, this.get(ease));
+        },
+            
+        /*
+            Linear easing adjustment
+            
+            The default easing method, not added with .extend as it has no Out or InOut
+            variation.
+            
+            @param [number]: Progress, from 0-1
+            @return [number]: Unadjusted progress
+        */
+        linear: function (progress) {
+            return progress;
         }
+    };
 
-        return calc.valueEased(progressLimited, from, to, this.get(ease));
-    },
+
+// Initialise Easing  
+(function () {
+    var i = 0,
+        key = '';
         
-    /*
-        Linear easing adjustment
-        
-        The default easing method, not added with .extend as it has no Out or InOut
-        variation.
-        
-        @param [number]: Progress, from 0-1
-        @return [number]: Unadjusted progress
-    */
-    linear: function (progress) {
-        return progress;
+    // Generate power easing functions
+    for (; i < 4; i++) {
+        baseEasing[powerEasing[i]] = generatePowerEasing(i + 2);
     }
-
-};
-
-easingFunction = new EasingFunction();
-
-init();
-
-function init() {
-
-    // Generate easing with base function of easeIn
-    for (var key in baseIn) {
-        if (baseIn.hasOwnProperty(key)) {
-            easingFunction.generate(key, baseIn[key], true);
+    
+    // Generate in/out/inOut easing variations
+    for (key in baseEasing) {
+        if (baseEasing.hasOwnProperty(key)) {
+            generateVariations(key, baseEasing[key], true);
         }
     }
+})();
 
-    // Generate easing with base function of easeOut
-    for (key in baseOut) {
-        if (baseOut.hasOwnProperty(key)) {
-            easingFunction.generate(key, baseOut[key]);
-        }
-    }
-}
-
-module.exports = easingFunction;
+module.exports = easing;

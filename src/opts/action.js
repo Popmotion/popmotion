@@ -1,13 +1,12 @@
 "use strict";
 
-var rubix = require('../action/rubix.js');
-
 module.exports = {
+    
     // Is this action active
     active: false,
     
     // What to use to process this aciton
-    rubix: 'Time',
+    rubix: 'Play',
     
     // Multiply output value by
     amp: 1,
@@ -24,56 +23,57 @@ module.exports = {
     // Ease animation
     ease: 'easeInOut',
     
-    // Round output value?
-    round: false,
-    
-    // Divide animation into this many steps
-    steps: 0,
-    
     // 
     dilate: 1,
-    
-    // Order of values
-    order: undefined,
-    
-    playlist: undefined,
-    
-    playhead: 0,
-    
-    progress: undefined,
-    
-    // The object we're checking
-    input: undefined,
-    
-    // Input origin on tracking start
-    inputOrigin: undefined,
-    
-    // Use the progress of this property of linked input
-    link: undefined,
-    
-    // Loop animation x number of times (true for ETERNALLY)
-    loop: false,
     
     // Number of times animation has looped
     loopCount: 0,
     
-    // Play animation and reverse x number of times (true for forever)
-    yoyo: false,
-    
     // Number of times animation has yoyoed
     yoyoCount: 0,
     
-    // Run this callback on action start
-    onStart: undefined,
+    // Number of times animation has flipped
+    flipCount: 0,
     
-    // Run this on action end
-    onEnd: undefined,
+    maxInactiveFrames: 3,
     
-    // Run this every frame
-    onFrame: undefined,
+    /*
+        
+        Recognised values with either false or undefined as default
     
-    // Run this when action changes
-    onChange: undefined,
-    
-    output: undefined
+        // Order of values
+        order: undefined,
+        
+        progress: undefined,
+        
+        // The object we're checking
+        input: undefined,
+        
+        // Input origin on tracking start
+        inputOrigin: undefined,
+        
+        // Use the progress of this property of linked input
+        link: undefined,
+        
+        // Loop animation x number of times (true for ETERNALLY)
+        loop: false,
+        
+        // Play animation and reverse x number of times (true for forever)
+        yoyo: false,
+        
+        // Run this callback on action start
+        onStart: undefined,
+        
+        // Run this on action end
+        onEnd: undefined,
+        
+        // Run this every frame
+        onFrame: undefined,
+        
+        // Run this when action changes
+        onChange: undefined,
+        
+        output: undefined
+        
+    */
 };
