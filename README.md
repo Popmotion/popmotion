@@ -4,6 +4,8 @@
 
 Redshift is a JavaScript UX framework for creating animations and physics-based user interactions. It provides CSS support for ease-of-use but provides the ability to work with raw numbers and custom callbacks for total creative freedom.
 
+[Install](http://redshiftjs.com/docs/get-started) | [API](http://redshiftjs.com/docs) | [Tutorials](http://redshiftjs.com/tutorials) | [Twitter](http://twitter.com/redshiftjs)
+
 **Flexible**
 * Animate any property without waiting for explicit support
 * Seamless hand-off between user input, animation and physics
@@ -19,9 +21,5 @@ Redshift is a JavaScript UX framework for creating animations and physics-based 
 * Never hits the DOM, leaving you in total control of performance
 * Over 20% smaller than Velocity.js, 72% smaller than GreenSock TweenMax
 
-## Documentation
 
-- [Install](http://redshiftjs.com/docs/get-started)
-- [API](http://redshiftjs.com/docs)
-- [Tutorials](http://redshiftjs.com/tutorials)
-- [Twitter](http://twitter.com/redshiftjs)
+[Get started](http://redshiftjs.com/docs/get-started)
