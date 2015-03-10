@@ -43,7 +43,7 @@ module.exports = function (output, order, cache) {
     
     if (transform != '' && transform != cache[TRANSFORM]) {
         if (!hasZ) {
-            transform += ' ' + TRANSLATE_Z + '(0px)';
+            transform = TRANSLATE_Z + '(0px) ' + transform;
         }
         
         css[TRANSFORM] = cache[TRANSFORM] = transform;
