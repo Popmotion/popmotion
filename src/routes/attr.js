@@ -4,10 +4,6 @@ module.exports = {
     
     name: 'attr',
     
-    preprocess: function (key, value, action, props) {
-        action.setValue(key, value, props, this.name);
-    },
-    
     onChange: function (output, action, values, props) {
         var dom = props.dom;
 
