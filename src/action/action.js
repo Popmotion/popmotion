@@ -153,7 +153,6 @@ Action.prototype = {
         
         // Update current properties
         self.props.set(props);
-        props = self.props.get();
         
         // Set default property to current if it isn't set
         defaultProp = defaultProp || 'current';
@@ -180,7 +179,7 @@ Action.prototype = {
                     }
                     
                     valueBase = utils.merge(base, valueBase);
-                    
+
                     // If no preprocess step, assign directly
                     if (!route.preprocess) {
                         self.setValue(key, valueBase, props, route.name);
@@ -430,7 +429,9 @@ Action.prototype = {
     setValue: function (key, value, inherit, space) {
         var existing = this.getValue(key, space);
 
-        key = namespace(key, space);
+        if (space !== routes.defaultRoute) {
+            key = namespace(key, space);
+        }
 
         // Update if value exists
         if (existing) {
@@ -447,6 +448,7 @@ Action.prototype = {
     
     getValue: function (key, space) {
         key = namespace(key, space);
+
         return this.values[key];
     },
     
