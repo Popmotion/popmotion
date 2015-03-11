@@ -13,23 +13,22 @@ var lookup = require('./lookup.js'),
         positions: [X, Y, 'Z'],
         dimensions: ['Top', 'Right', 'Bottom', 'Left'],
         shadow: [X, Y, 'Radius', 'Spread', 'Color'],
-        transform: ['translate', SCALE, ROTATE, 'skew', TRANSFORM_PERSPECTIVE],
         valueProps: ['current', 'to', 'start', 'min', 'max'],
+        transformFuncs: ['translate', SCALE, ROTATE, 'skew', TRANSFORM_PERSPECTIVE],
         transformProps: {} // objects are faster at direct lookups
     };
 
 // Create transform terms
 (function () {
-    var transformFuncs = terms.transform,
+    var transformFuncs = terms.transformFuncs,
         transformProps = terms.transformProps,
         numOfTransformFuncs = transformFuncs.length,
         i = 0,
 
         createProps = function (funcName) {
-            var funcType = lookup[funcName],
-                typeTerms = terms[funcType],
+            var typeTerms = terms.positions,
                 j = 0;
-                
+
             if (typeTerms) {
                 for (; j < typeTerms.length; j++) {
                     transformProps[funcName + typeTerms[j]] = true;
