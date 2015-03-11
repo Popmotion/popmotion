@@ -11,7 +11,7 @@ module.exports = {
     
     name: css,
     
-    preprocess: function (key, value, action, props) {
+    preprocess: function (key, value, action) {
         var values = split(key, value);
         
         action.updateOrder(key, false, cssOrder);

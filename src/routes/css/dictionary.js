@@ -1,8 +1,6 @@
 "use strict";
 
-var lookup = require('./lookup.js'),
-
-    X = 'X',
+var X = 'X',
     Y = 'Y',
     TRANSFORM_PERSPECTIVE = 'transformPerspective',
     SCALE = 'scale',

@@ -3,7 +3,6 @@
 var utils = require('../utils/utils.js'),
 
     maxElapsed = 33,
-    smoothing = 50,
     Timer = function () {
         this.elapsed = 16.7;
         this.current = utils.currentTime();

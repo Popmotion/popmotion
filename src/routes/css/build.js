@@ -10,8 +10,9 @@ var dictionary = require('./dictionary.js'),
     /*
         Generate a CSS rule with the available template
     */
-    generateRule = function (key, output) {
-        var template = templates[lookup[key]];
+    generateRule = function (key, output, transformProp) {
+        var templateKey = transformProp ? TRANSFORM : lookup[key],
+            template = templates[templateKey];
 
         return template ? template(key, output) : output[key];
     };
@@ -29,7 +30,7 @@ module.exports = function (output, order, cache) {
     
     for (; i < numRules; i++) {
         key = order[i],
-        rule = generateRule(key, output);
+        rule = generateRule(key, output, transformProp[key]);
 
         if (transformProp[key]) {
             transform += rule + ' ';
@@ -43,11 +44,11 @@ module.exports = function (output, order, cache) {
     
     if (transform != '' && transform != cache[TRANSFORM]) {
         if (!hasZ) {
-            transform = TRANSLATE_Z + '(0px) ' + transform;
+            transform += ' ' + TRANSLATE_Z + '(0px)';
         }
         
         css[TRANSFORM] = cache[TRANSFORM] = transform;
     }
-    
+
     return css;
 };
