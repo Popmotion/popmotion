@@ -49,7 +49,7 @@ var defaultRoute = require('../routes/values.js'),
             numRoutes = routeKeys.length;
             
             if (route.makeDefault) {
-                this.defaultRoute = this.name;
+                this.defaultRoute = route.name;
             }
             
             routes[route.name] = route;
