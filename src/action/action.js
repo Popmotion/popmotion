@@ -11,6 +11,8 @@ var parseArgs = require('./parse-args.js'),
     calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
     styler = require('../routes/css/styler.js'),
+    
+    linkToAngleDistance = { link: 'AngleAndDistance' },
 
     namespace = function (key, space) {
         return space ? key + '.' + space : key;
@@ -147,36 +149,50 @@ Action.prototype = {
     */
     set: function (props, defaultProp) {
         var self = this,
-            currentProps = this.props.get(),
-            values = this.values,
-            linkToAngleDistance = { link: 'AngleAndDistance' },
-            key = '';
-            
-        defaultProp = defaultProp || 'current';
-
+            values = self.values;
+        
+        // Update current properties
         self.props.set(props);
-
-        // Loop over new values and set
-        routes.shard(function (route, valuesBucket) {
-            var baseValue = {
+        props = self.props.get();
+        
+        // Set default property to current if it isn't set
+        defaultProp = defaultProp || 'current';
+        
+        // Loop over values and update
+        routes.shard(function (route, routeValues) {
+            var preprocessedValues = {},
+                valueBase = {},
+                value,
+                base = {
                     route: route.name
-                },
-                mergeIn = {},
-                value;
+                };
 
-            for (key in valuesBucket) {
-                if (valuesBucket.hasOwnProperty(key) && route.preprocess) {
-                    value = valuesBucket[key];
+            for (var key in routeValues) {
+                if (routeValues.hasOwnProperty(key)) {
+                    value = routeValues[key];
                     
                     if (!utils.isObj(value)) {
-                        mergeIn = { name: key };
-                        mergeIn[defaultProp] = value;
+                        valueBase = { name: key };
+                        valueBase[defaultProp] = value;
                     } else {
-                        mergeIn = value;
-                        mergeIn.name = key;
+                        valueBase = value;
+                        valueBase.name = key;
                     }
-
-                    route.preprocess(key, utils.merge(baseValue, mergeIn), self, currentProps);
+                    
+                    valueBase = utils.merge(base, valueBase);
+                    
+                    // If no preprocess step, assign directly
+                    if (!route.preprocess) {
+                        self.setValue(key, valueBase, props, route.name);
+                        
+                    // Else preprocess and add each returned value
+                    } else {
+                        preprocessedValues = route.preprocess(key, valueBase, self, props);
+                        
+                        for (var subKey in preprocessedValues) {
+                            self.setValue(key, preprocessedValues[subKey], props, route.name);
+                        }
+                    }
                 }
             }
         }, props);
@@ -186,7 +202,7 @@ Action.prototype = {
             self.setValue('radialX', linkToAngleDistance)
                 .setValue('radialY', linkToAngleDistance);
         }
-
+        
         self.resetOrigins();
 
         return self;
