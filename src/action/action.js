@@ -15,7 +15,7 @@ var parseArgs = require('./parse-args.js'),
     linkToAngleDistance = { link: 'AngleAndDistance' },
 
     namespace = function (key, space) {
-        return space ? key + '.' + space : key;
+        return (space && space !== routes.defaultRoute) ? key + '.' + space : key;
     },
 
     Action = function () {
@@ -78,16 +78,11 @@ Action.prototype = {
     */
     play: function () {
         var props = parseArgs.play.apply(this, arguments);
+        
+        this.set(props, 'to');
+        this.playDirection = 1;
 
-        if (!this.isActive()) {
-            this.set(props, 'to');
-            this.playDirection = 1;
-            this.start('Play');
-        } else {
-            this.queue.add.apply(this.queue, arguments);
-        }
-
-        return this;
+        return this.start('Play');
     },
 
     /*
@@ -136,6 +131,14 @@ Action.prototype = {
     fire: function () {
         this.set(parseArgs.generic.apply(this, arguments));
         return this.start('Fire');
+    },
+    
+    /*
+        Add arguments to play queue
+    */
+    queue: function () {
+        this.queue.add.apply(this.queue, arguments);
+        return (!this.isActive()) ? this.start('Play') : this;
     },
     
     /*
@@ -321,6 +324,7 @@ Action.prototype = {
     */
     reverse: function () {
         this.playDirection *= -1;
+        return this;
     },
     
     /*
@@ -428,10 +432,8 @@ Action.prototype = {
     
     setValue: function (key, value, inherit, space) {
         var existing = this.getValue(key, space);
-
-        if (space !== routes.defaultRoute) {
-            key = namespace(key, space);
-        }
+        
+        key = namespace(key, space);
 
         // Update if value exists
         if (existing) {
