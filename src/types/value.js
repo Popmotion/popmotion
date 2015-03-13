@@ -82,6 +82,10 @@ Value.prototype = {
             } else if (self[key] === undefined) {
                 self[key] = defaults[key];
             }
+            
+            if (key === 'to') {
+                self.target = self.to;
+            }
         }
         
         // Set hasRange to true if min and max are numbers
@@ -97,6 +101,7 @@ Value.prototype = {
         Set current value to origin
     */
     reset: function () {
+        this.set('to', this.target);
         return this.set(CURRENT, this[ORIGIN]);
     },
     
@@ -105,12 +110,17 @@ Value.prototype = {
     */
     flip: function () {
         var newTo = this[ORIGIN],
-            newOrigin = (this.to !== undefined) ? this.to : this[CURRENT];
+            newOrigin = (this.target !== undefined) ? this.target : this[CURRENT];
 
         return this.set({
             to: newTo,
             origin: newOrigin
         });
+    },
+    
+    retarget: function (target) {
+        target = (target !== undefined) ? target : this.target;
+        return this.set('to', target);
     }
 };
 

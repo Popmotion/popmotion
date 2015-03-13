@@ -319,7 +319,16 @@ Action.prototype = {
 	    Reverse Action progress and values
     */
     reverse: function () {
+        var values = this.values;
+
         this.playDirection *= -1;
+        
+        for (var key in values) {
+            if (values.hasOwnProperty(key)) {
+                values[key].retarget();
+            }
+        }
+
         return this;
     },
     
