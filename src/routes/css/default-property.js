@@ -28,6 +28,7 @@ var color = {
         Blue: color,
     
         Alpha: opacity,
+        opacity: opacity,
         
         scale: scale,
         scaleX: scale,

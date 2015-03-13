@@ -67,18 +67,33 @@ module.exports = {
             @return [number]: Calculated value
         */
         process: function (key, value, values, props, action) {
-            var newValue = value[CURRENT],
-                progress = calc.restricted(calc.progress(action.elapsed - value.delay, value.duration) - value.stagger, 0, 1),
+            var target = value.to,
+                newValue = value[CURRENT],
+                progress, progressTarget;
+            
+            // If we have a target, process
+            if (target !== undefined) {
+
+                progress = calc.restricted(calc.progress(action.elapsed - value.delay, value.duration) - value.stagger, 0, 1);
                 progressTarget = (action.playDirection === 1) ? 1 : 0;
-
-            // Update hasEnded
-            action[HAS_ENDED] = (progress !== progressTarget) ? false : action[HAS_ENDED];
-
-            if (value.to !== undefined) {
+                
+                // Mark Action as not ended if still in progress
+                if (progress !== progressTarget) {
+                    action[HAS_ENDED] = false;
+                
+                // Or clear value target
+                } else {
+                    value.to = undefined;
+                }
+                
+                // Step progress if we're stepping
                 progress = (value.steps) ? utils.stepProgress(progress, 1, value.steps) : progress;
-                newValue = easing.withinRange(progress, value.origin, value.to, value.ease);
-            }
+                
+                // Ease value with progress
+                newValue = easing.withinRange(progress, value.origin, target, value.ease);
 
+            }
+            
             return newValue;
         },
         

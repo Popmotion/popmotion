@@ -193,9 +193,11 @@
 	    calc = __webpack_require__(/*! ../utils/calc.js */ 7),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 16),
 	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 20),
+	    
+	    linkToAngleDistance = { link: 'AngleAndDistance' },
 	
 	    namespace = function (key, space) {
-	        return space ? key + '.' + space : key;
+	        return (space && space !== routes.defaultRoute) ? key + '.' + space : key;
 	    },
 	
 	    Action = function () {
@@ -267,8 +269,7 @@
 	            this.queue.add.apply(this.queue, arguments);
 	        }
 	
-	        return this;
-	    },
+	        return this;    },
 	
 	    /*
 	        Run Action indefinitely
@@ -329,36 +330,49 @@
 	    */
 	    set: function (props, defaultProp) {
 	        var self = this,
-	            currentProps = this.props.get(),
-	            values = this.values,
-	            linkToAngleDistance = { link: 'AngleAndDistance' },
-	            key = '';
-	            
-	        defaultProp = defaultProp || 'current';
-	
+	            values = self.values;
+	        
+	        // Update current properties
 	        self.props.set(props);
-	
-	        // Loop over new values and set
-	        routes.shard(function (route, valuesBucket) {
-	            var baseValue = {
+	        
+	        // Set default property to current if it isn't set
+	        defaultProp = defaultProp || 'current';
+	        
+	        // Loop over values and update
+	        routes.shard(function (route, routeValues) {
+	            var preprocessedValues = {},
+	                valueBase = {},
+	                value,
+	                base = {
 	                    route: route.name
-	                },
-	                mergeIn = {},
-	                value;
+	                };
 	
-	            for (key in valuesBucket) {
-	                if (valuesBucket.hasOwnProperty(key) && route.preprocess) {
-	                    value = valuesBucket[key];
+	            for (var key in routeValues) {
+	                if (routeValues.hasOwnProperty(key)) {
+	                    value = routeValues[key];
 	                    
 	                    if (!utils.isObj(value)) {
-	                        mergeIn = { name: key };
-	                        mergeIn[defaultProp] = value;
+	                        valueBase = { name: key };
+	                        valueBase[defaultProp] = value;
 	                    } else {
-	                        mergeIn = value;
-	                        mergeIn.name = key;
+	                        valueBase = value;
+	                        valueBase.name = key;
 	                    }
+	                    
+	                    valueBase = utils.merge(base, valueBase);
 	
-	                    route.preprocess(key, utils.merge(baseValue, mergeIn), self, currentProps);
+	                    // If no preprocess step, assign directly
+	                    if (!route.preprocess) {
+	                        self.setValue(key, valueBase, props, route.name);
+	                        
+	                    // Else preprocess and add each returned value
+	                    } else {
+	                        preprocessedValues = route.preprocess(key, valueBase, self, props);
+	                        
+	                        for (var subKey in preprocessedValues) {
+	                            self.setValue(key, preprocessedValues[subKey], props, route.name);
+	                        }
+	                    }
 	                }
 	            }
 	        }, props);
@@ -368,7 +382,7 @@
 	            self.setValue('radialX', linkToAngleDistance)
 	                .setValue('radialY', linkToAngleDistance);
 	        }
-	
+	        
 	        self.resetOrigins();
 	
 	        return self;
@@ -488,6 +502,7 @@
 	    */
 	    reverse: function () {
 	        this.playDirection *= -1;
+	        return this;
 	    },
 	    
 	    /*
@@ -595,7 +610,7 @@
 	    
 	    setValue: function (key, value, inherit, space) {
 	        var existing = this.getValue(key, space);
-	
+	        
 	        key = namespace(key, space);
 	
 	        // Update if value exists
@@ -613,6 +628,7 @@
 	    
 	    getValue: function (key, space) {
 	        key = namespace(key, space);
+	
 	        return this.values[key];
 	    },
 	    
@@ -694,7 +710,7 @@
 	
 	var calc = __webpack_require__(/*! ../utils/calc.js */ 7),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 16),
-	    History = __webpack_require__(/*! ../utils/history.js */ 18),
+	    History = __webpack_require__(/*! ../utils/history.js */ 19),
 	
 	    /*
 	        Input constructor
@@ -826,7 +842,7 @@
 	*/
 	"use strict";
 	
-	var manager = __webpack_require__(/*! ./manager.js */ 19),
+	var manager = __webpack_require__(/*! ./manager.js */ 17),
 	
 	    /*
 	        Process constructor
@@ -1126,7 +1142,7 @@
 	"use strict";
 	
 	var calc = __webpack_require__(/*! ./calc.js */ 7),
-	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 17),
+	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 18),
 	    
 	    // Constants
 	    INVALID_EASING = ": Not defined",
@@ -1946,8 +1962,8 @@
 
 	"use strict";
 	
-	var defaults = __webpack_require__(/*! ../opts/values.js */ 26),
-	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 27),
+	var defaults = __webpack_require__(/*! ../opts/values.js */ 22),
+	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 23),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 16),
 	
 	    CURRENT = 'current',
@@ -1975,9 +1991,10 @@
 	    /*
 	        Value constructor
 	    */
-	    Value = function (key, props, inherit, scope) {
+	    Value = function (key, props, inherit, action) {
 	        this.key = key;
-	        this.scope = scope;
+	        this.action = action;
+	        this.scope = action.getProp('scope');
 	
 	        if (props.start) {
 	            props.current = props.start;
@@ -2033,7 +2050,7 @@
 	        self.hasRange = (utils.isNum(self.min) && utils.isNum(self.max)) ? true : false;
 	        
 	        // Update Action value process order
-	        self.scope.updateOrder(self.key, utils.isString(self.link));
+	        self.action.updateOrder(self.key, utils.isString(self.link));
 	        
 	        return self;
 	    },
@@ -2071,7 +2088,7 @@
 	"use strict";
 	
 	var utils = __webpack_require__(/*! ../utils/utils.js */ 16),
-	    dictionary = __webpack_require__(/*! ../routes/css/dictionary.js */ 28),
+	    dictionary = __webpack_require__(/*! ../routes/css/dictionary.js */ 24),
 	    valueProps = dictionary.valueProps,
 	
 	    /*
@@ -2155,16 +2172,14 @@
 	    next: function (direction) {
 	        var queue = this.queue,
 	            returnVal = false,
-	            index;
+	            index = this.index;
 	            
 	        direction = (arguments.length) ? direction : 1;
 	        
-	        index = this.index += direction;
-	        
 	        // If our index is between 0 and the queue length, return that item
 	        if (index >= 0 && index < queue.length) {
-	            console.log(index, queue);
 	            returnVal = queue[index];
+	            this.index = index + direction;
 	        
 	        // Or clear
 	        } else {
@@ -2197,7 +2212,7 @@
 	*/
 	"use strict";
 	
-	var Rubix = __webpack_require__(/*! ./rubix.js */ 22),
+	var Rubix = __webpack_require__(/*! ./rubix.js */ 25),
 	    routes = __webpack_require__(/*! ./routes.js */ 14),
 	    calc = __webpack_require__(/*! ../utils/calc.js */ 7),
 	    
@@ -2311,9 +2326,9 @@
 
 	"use strict";
 	
-	var defaultRoute = __webpack_require__(/*! ../routes/values.js */ 23),
-	    cssRoute = __webpack_require__(/*! ../routes/css.js */ 24),
-	    attrRoute = __webpack_require__(/*! ../routes/attr.js */ 25),
+	var defaultRoute = __webpack_require__(/*! ../routes/values.js */ 26),
+	    cssRoute = __webpack_require__(/*! ../routes/css.js */ 27),
+	    attrRoute = __webpack_require__(/*! ../routes/attr.js */ 28),
 	
 	    routes = {},
 	    routeKeys = [],
@@ -2334,7 +2349,7 @@
 	                routeName = routeKeys[i];
 	                route = routes[routeName];
 	    
-	                if (sourceValues[routeName] && route[processName]) {
+	                if (route.makeDefault || route[processName]) {
 	                    route[processName](sourceValues[routeName], action, values, props, data);
 	                }
 	            }
@@ -2360,7 +2375,7 @@
 	            numRoutes = routeKeys.length;
 	            
 	            if (route.makeDefault) {
-	                this.defaultRoute = this.name;
+	                this.defaultRoute = route.name;
 	            }
 	            
 	            routes[route.name] = route;
@@ -2452,7 +2467,9 @@
 	    yoyoCount: 0,
 	    
 	    // Number of times animation has flipped
-	    flipCount: 0
+	    flipCount: 0,
+	    
+	    maxInactiveFrames: 3,
 	    
 	    /*
 	        
@@ -2764,264 +2781,6 @@
 
 /***/ },
 /* 17 */
-/*!*****************************!*\
-  !*** ./src/types/bezier.js ***!
-  \*****************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {/*
-	    Bezier function generator
-	        
-	    Gaëtan Renaudeau's BezierEasing
-	    https://github.com/gre/bezier-easing/blob/master/index.js  
-	    https://github.com/gre/bezier-easing/blob/master/LICENSE
-	    You're a hero
-	    
-	    Use
-	    
-	        var easeOut = new Bezier(.17,.67,.83,.67),
-	            x = easeOut(0.5); // returns 0.627...
-	*/
-	"use strict";
-	
-	var NEWTON_ITERATIONS = 8,
-	    NEWTON_MIN_SLOPE = 0.001,
-	    SUBDIVISION_PRECISION = 0.0000001,
-	    SUBDIVISION_MAX_ITERATIONS = 10,
-	    K_SPLINE_TABLE_SIZE = 11,
-	    K_SAMPLE_STEP_SIZE = 1.0 / (K_SPLINE_TABLE_SIZE - 1.0),
-	    FLOAT_32_SUPPORTED = 'Float32Array' in global,
-	    
-	    A = function (a1, a2) {
-	        return 1.0 - 3.0 * a2 + 3.0 * a1;
-	    },
-	    
-	    B = function (a1, a2) {
-	        return 3.0 * a2 - 6.0 * a1;
-	    },
-	    
-	    C = function (a1) {
-	        return 3.0 * a1;
-	    },
-	
-	    getSlope = function (t, a1, a2) {
-	        return 3.0 * A(a1, a2) * t * t + 2.0 * B(a1, a2) * t + C(a1);
-	    },
-	
-	    calcBezier = function (t, a1, a2) {
-	        return ((A(a1, a2) * t + B(a1, a2)) * t + C(a1)) * t;
-	    },
-	    
-	    binarySubdivide = function (aX, aA, aB) {
-	        var currentX, currentT, i = 0;
-	        
-	        do {
-	            currentT = aA + (aB - aA) / 2.0;
-	            currentX = calcBezier(currentT, mX1, mX2) - aX;
-	            
-	            if (currentX > 0.0) {
-	                aB = currentT;
-	            } else {
-	                aA = currentT;
-	            }
-	        } while (Math.abs(currentX) > SUBDIVISION_PRECISION && ++i < SUBDIVISION_MAX_ITERATIONS);
-	        
-	        return currentT;
-	    },
-	    
-	    /*
-	        Bezier constructor
-	    */
-	    Bezier = function (mX1, mY1, mX2, mY2) {
-	        var sampleValues = FLOAT_32_SUPPORTED ? new Float32Array(K_SPLINE_TABLE_SIZE) : new Array(K_SPLINE_TABLE_SIZE),
-	            _precomputed = false,
-	        
-	        
-	            newtonRaphsonIterate = function (aX, aGuessT) {
-	                var i = 0,
-	                    currentSlope = 0.0,
-	                    currentX;
-	                
-	                for (; i < NEWTON_ITERATIONS; ++i) {
-	                    currentSlope = getSlope(aGuessT, mX1, mX2);
-	                    
-	                    if (currentSlope === 0.0) {
-	                        return aGuessT;
-	                    }
-	                    
-	                    currentX = calcBezier(aGuessT, mX1, mX2) - aX;
-	                    aGuessT -= currentX / currentSlope;
-	                }
-	                
-	                return aGuessT;
-	            },
-	            
-	            
-	            calcSampleValues = function () {
-	                var i = 0;
-	                
-	                for (; i < NEWTON_ITERATIONS; ++i) {
-	                    sampleValues[i] = calcBezier(i * K_SAMPLE_STEP_SIZE, mX1, mX2);
-	                }
-	            },
-	            
-	            
-	            getTForX = function (aX) {
-	                var intervalStart = 0.0,
-	                    currentSample = 1,
-	                    lastSample = K_SPLINE_TABLE_SIZE - 1,
-	                    dist = 0.0,
-	                    guessForT = 0.0,
-	                    initialSlope = 0.0;
-	                    
-	                for (; currentSample != lastSample && sampleValues[currentSample] <= aX; ++currentSample) {
-	                    intervalStart += K_SAMPLE_STEP_SIZE;
-	                }
-	                
-	                --currentSample;
-	                
-	                dist = (aX - sampleValues[currentSample]) / (sampleValues[currentSample+1] - sampleValues[currentSample]);
-	                guessForT = intervalStart + dist * K_SAMPLE_STEP_SIZE;
-	                
-	                initialSlope = getSlope(guessForT, mX1, mX2);
-	                
-	                // If slope is greater than min
-	                if (initialSlope >= NEWTON_MIN_SLOPE) {
-	                    return newtonRaphsonIterate(aX, guessForT);
-	                
-	                // Slope is equal to min
-	                } else if (initialSlope === 0.0) {
-	                    return guessForT;
-	                
-	                // Slope is less than min
-	                } else {
-	                    return binarySubdivide(aX, intervalStart, intervalStart + K_SAMPLE_STEP_SIZE);
-	                }
-	            },
-	            
-	            precompute = function () {
-	                _precomputed = true;
-	                if (mX1 != mY1 || mX2 != mY2) {
-	                    calcSampleValues();
-	                }
-	            },
-	            
-	            /*
-	                Generated function
-	                
-	                Returns value 0-1 based on X
-	            */
-	            f = function (aX) {
-	                var returnValue;
-	
-	                if (!_precomputed) {
-	                    precompute();
-	                }
-	                
-	                // If linear gradient, return X as T
-	                if (mX1 === mY1 && mX2 === mY2) {
-	                    returnValue = aX;
-	                    
-	                // If at start, return 0
-	                } else if (aX === 0) {
-	                    returnValue = 0;
-	                    
-	                // If at end, return 1
-	                } else if (aX === 1) {
-	                    returnValue = 1;
-	
-	                } else {
-	                    returnValue = calcBezier(getTForX(aX), mY1, mY2);
-	                }
-	                
-	                return returnValue;
-	            }
-	            
-	            return f;
-	    };
-	
-	module.exports = Bezier;
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 18 */
-/*!******************************!*\
-  !*** ./src/utils/history.js ***!
-  \******************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var // [number]: Default max size of history
-	    maxHistorySize = 3,
-	    
-	    /*
-	        History constructor
-	        
-	        @param [var]: Variable to store in first history slot
-	        @param [int] (optional): Maximum size of history
-	    */
-	    History = function (obj, max) {
-	        this.max = max || maxHistorySize;
-	        this.entries = [];
-	        this.add(obj);
-	    };
-	    
-	History.prototype = {
-	    
-	    /*
-	        Push new var to history
-	        
-	        Shift out oldest entry if we've reached maximum capacity
-	        
-	        @param [var]: Variable to push into history.entries
-	    */
-	    add: function (obj) {
-	        var currentSize = this.getSize();
-	        
-	        this.entries.push(obj);
-	        
-	        if (currentSize >= this.max) {
-	            this.entries.shift();
-	        }
-	    },
-	    
-	    /*
-	        Get variable at specified index
-	
-	        @param [int]: Index
-	        @return [var]: Var found at specified index
-	    */
-	    get: function (i) {
-	        i = (typeof i === 'number') ? i : this.getSize() - 1;
-	
-	        return this.entries[i];
-	    },
-	    
-	    /*
-	        Get the second newest history entry
-	        
-	        @return [var]: Entry found at index size - 2
-	    */
-	    getPrevious: function () {
-	        return this.get(this.getSize() - 2);
-	    },
-	    
-	    /*
-	        Get current history size
-	        
-	        @return [int]: Current length of entries.length
-	    */
-	    getSize: function () {
-	        return this.entries.length;
-	    }
-	    
-	};
-	
-	module.exports = History;
-
-/***/ },
-/* 19 */
 /*!********************************!*\
   !*** ./src/process/manager.js ***!
   \********************************/
@@ -3199,6 +2958,258 @@
 	module.exports = new ProcessManager();
 
 /***/ },
+/* 18 */
+/*!*****************************!*\
+  !*** ./src/types/bezier.js ***!
+  \*****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {/*
+	    Bezier function generator
+	        
+	    Gaëtan Renaudeau's BezierEasing
+	    https://github.com/gre/bezier-easing/blob/master/index.js  
+	    https://github.com/gre/bezier-easing/blob/master/LICENSE
+	    You're a hero
+	    
+	    Use
+	    
+	        var easeOut = new Bezier(.17,.67,.83,.67),
+	            x = easeOut(0.5); // returns 0.627...
+	*/
+	"use strict";
+	
+	var NEWTON_ITERATIONS = 8,
+	    NEWTON_MIN_SLOPE = 0.001,
+	    SUBDIVISION_PRECISION = 0.0000001,
+	    SUBDIVISION_MAX_ITERATIONS = 10,
+	    K_SPLINE_TABLE_SIZE = 11,
+	    K_SAMPLE_STEP_SIZE = 1.0 / (K_SPLINE_TABLE_SIZE - 1.0),
+	    FLOAT_32_SUPPORTED = 'Float32Array' in global,
+	    
+	    A = function (a1, a2) {
+	        return 1.0 - 3.0 * a2 + 3.0 * a1;
+	    },
+	    
+	    B = function (a1, a2) {
+	        return 3.0 * a2 - 6.0 * a1;
+	    },
+	    
+	    C = function (a1) {
+	        return 3.0 * a1;
+	    },
+	
+	    getSlope = function (t, a1, a2) {
+	        return 3.0 * A(a1, a2) * t * t + 2.0 * B(a1, a2) * t + C(a1);
+	    },
+	
+	    calcBezier = function (t, a1, a2) {
+	        return ((A(a1, a2) * t + B(a1, a2)) * t + C(a1)) * t;
+	    },
+	    
+	    /*
+	        Bezier constructor
+	    */
+	    Bezier = function (mX1, mY1, mX2, mY2) {
+	        var sampleValues = FLOAT_32_SUPPORTED ? new Float32Array(K_SPLINE_TABLE_SIZE) : new Array(K_SPLINE_TABLE_SIZE),
+	            _precomputed = false,
+	    
+	            binarySubdivide = function (aX, aA, aB) {
+	                var currentX, currentT, i = 0;
+	
+	                do {
+	                    currentT = aA + (aB - aA) / 2.0;
+	                    currentX = calcBezier(currentT, mX1, mX2) - aX;
+	                    if (currentX > 0.0) {
+	                        aB = currentT;
+	                    } else {
+	                        aA = currentT;
+	                    }
+	                } while (Math.abs(currentX) > SUBDIVISION_PRECISION && ++i < SUBDIVISION_MAX_ITERATIONS);
+	
+	                return currentT;
+	            },
+	        
+	            newtonRaphsonIterate = function (aX, aGuessT) {
+	                var i = 0,
+	                    currentSlope = 0.0,
+	                    currentX;
+	                
+	                for (; i < NEWTON_ITERATIONS; ++i) {
+	                    currentSlope = getSlope(aGuessT, mX1, mX2);
+	                    
+	                    if (currentSlope === 0.0) {
+	                        return aGuessT;
+	                    }
+	                    
+	                    currentX = calcBezier(aGuessT, mX1, mX2) - aX;
+	                    aGuessT -= currentX / currentSlope;
+	                }
+	                
+	                return aGuessT;
+	            },
+	            
+	            
+	            calcSampleValues = function () {
+	                for (var i = 0; i < K_SPLINE_TABLE_SIZE; ++i) {
+	                    sampleValues[i] = calcBezier(i * K_SAMPLE_STEP_SIZE, mX1, mX2);
+	                }
+	            },
+	            
+	            
+	            getTForX = function (aX) {
+	                var intervalStart = 0.0,
+	                    currentSample = 1,
+	                    lastSample = K_SPLINE_TABLE_SIZE - 1,
+	                    dist = 0.0,
+	                    guessForT = 0.0,
+	                    initialSlope = 0.0;
+	                    
+	                for (; currentSample != lastSample && sampleValues[currentSample] <= aX; ++currentSample) {
+	                    intervalStart += K_SAMPLE_STEP_SIZE;
+	                }
+	                
+	                --currentSample;
+	                
+	                dist = (aX - sampleValues[currentSample]) / (sampleValues[currentSample+1] - sampleValues[currentSample]);
+	                guessForT = intervalStart + dist * K_SAMPLE_STEP_SIZE;
+	                
+	                initialSlope = getSlope(guessForT, mX1, mX2);
+	                
+	                // If slope is greater than min
+	                if (initialSlope >= NEWTON_MIN_SLOPE) {
+	                    return newtonRaphsonIterate(aX, guessForT);
+	                // Slope is equal to min
+	                } else if (initialSlope === 0.0) {
+	                    return guessForT;
+	                // Slope is less than min
+	                } else {
+	                    return binarySubdivide(aX, intervalStart, intervalStart + K_SAMPLE_STEP_SIZE);
+	                }
+	            },
+	            
+	            precompute = function () {
+	                _precomputed = true;
+	                if (mX1 != mY1 || mX2 != mY2) {
+	                    calcSampleValues();
+	                }
+	            },
+	            
+	            /*
+	                Generated function
+	                
+	                Returns value 0-1 based on X
+	            */
+	            f = function (aX) {
+	                var returnValue;
+	
+	                if (!_precomputed) {
+	                    precompute();
+	                }
+	                
+	                // If linear gradient, return X as T
+	                if (mX1 === mY1 && mX2 === mY2) {
+	                    returnValue = aX;
+	                    
+	                // If at start, return 0
+	                } else if (aX === 0) {
+	                    returnValue = 0;
+	                    
+	                // If at end, return 1
+	                } else if (aX === 1) {
+	                    returnValue = 1;
+	
+	                } else {
+	                    returnValue = calcBezier(getTForX(aX), mY1, mY2);
+	                }
+	                
+	                return returnValue;
+	            }
+	            
+	            return f;
+	    };
+	
+	module.exports = Bezier;
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 19 */
+/*!******************************!*\
+  !*** ./src/utils/history.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var // [number]: Default max size of history
+	    maxHistorySize = 3,
+	    
+	    /*
+	        History constructor
+	        
+	        @param [var]: Variable to store in first history slot
+	        @param [int] (optional): Maximum size of history
+	    */
+	    History = function (obj, max) {
+	        this.max = max || maxHistorySize;
+	        this.entries = [];
+	        this.add(obj);
+	    };
+	    
+	History.prototype = {
+	    
+	    /*
+	        Push new var to history
+	        
+	        Shift out oldest entry if we've reached maximum capacity
+	        
+	        @param [var]: Variable to push into history.entries
+	    */
+	    add: function (obj) {
+	        var currentSize = this.getSize();
+	        
+	        this.entries.push(obj);
+	        
+	        if (currentSize >= this.max) {
+	            this.entries.shift();
+	        }
+	    },
+	    
+	    /*
+	        Get variable at specified index
+	
+	        @param [int]: Index
+	        @return [var]: Var found at specified index
+	    */
+	    get: function (i) {
+	        i = (typeof i === 'number') ? i : this.getSize() - 1;
+	
+	        return this.entries[i];
+	    },
+	    
+	    /*
+	        Get the second newest history entry
+	        
+	        @return [var]: Entry found at index size - 2
+	    */
+	    getPrevious: function () {
+	        return this.get(this.getSize() - 2);
+	    },
+	    
+	    /*
+	        Get current history size
+	        
+	        @return [int]: Current length of entries.length
+	    */
+	    getSize: function () {
+	        return this.entries.length;
+	    }
+	    
+	};
+	
+	module.exports = History;
+
+/***/ },
 /* 20 */
 /*!**********************************!*\
   !*** ./src/routes/css/styler.js ***!
@@ -3368,398 +3379,6 @@
 
 /***/ },
 /* 22 */
-/*!*****************************!*\
-  !*** ./src/action/rubix.js ***!
-  \*****************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    Rubix modules
-	    ----------------------------------------
-	    
-	    Rubix are collections of optional processors. Which rubix to
-	    use is decided programmatically. If [LINK] is defined, Link is used.
-	    Otherwise values use Time, Input and Run based on whether .play, 
-	    .track or .run are running.
-	*/
-	
-	"use strict";
-	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 7),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 16),
-	    easing = __webpack_require__(/*! ../utils/easing.js */ 6),
-	    simulate = __webpack_require__(/*! ./simulate.js */ 30),
-	    
-	    // Commonly used properties
-	    CURRENT = 'current',
-	    HAS_ENDED = 'hasEnded',
-	    INPUT_OFFSET = 'inputOffset',
-	    LINK = 'link';
-	
-	module.exports = {
-	    Fire: {
-	        /*
-	            Return set current
-	        */
-	        process: function (key, value) {
-	            return value[CURRENT];
-	        },
-	        
-	        /*
-	            Return true to fire for just one frame
-	            
-	            @return [boolean]: True
-	        */
-	        hasEnded: function () {
-	            return true;
-	        }
-	    },
-	
-	    Play: {
-	
-	        /*
-	            Update Action elapsed time
-	            
-	            @param [Action]
-	            @param [object]: Action properties
-	            @param [number]: Timestamp of current frame
-	        */
-	        updateInput: function (action, props, framestamp) {
-	            action.elapsed += ((framestamp - action.framestamp) * props.dilate) * action.playDirection;
-	            action[HAS_ENDED] = true;
-	        },
-	
-	        /*
-	            Calculate progress of value based on time elapsed,
-	            value delay/duration/stagger properties
-	
-	            @param [string]: Key of current value
-	            @param [Value]: Current value
-	            @param [object]: Collection of all Action values
-	            @param [object]: Action properties
-	            @param [Action]: Current Action
-	            @param [number]: Duration of frame in ms
-	            @return [number]: Calculated value
-	        */
-	        process: function (key, value, values, props, action) {
-	            var newValue = value[CURRENT],
-	                progress = calc.restricted(calc.progress(action.elapsed - value.delay, value.duration) - value.stagger, 0, 1),
-	                progressTarget = (action.playDirection === 1) ? 1 : 0;
-	
-	            // Update hasEnded
-	            action[HAS_ENDED] = (progress !== progressTarget) ? false : action[HAS_ENDED];
-	
-	            if (value.to !== undefined) {
-	                progress = (value.steps) ? utils.stepProgress(progress, 1, value.steps) : progress;
-	                newValue = easing.withinRange(progress, value.origin, value.to, value.ease);
-	            }
-	
-	            return newValue;
-	        },
-	        
-	        /*
-	            Return hasEnded property
-	            
-	            @param [boolean]: Have all Values hit 1 progress?
-	        */
-	        hasEnded: function (action) {
-	            return action[HAS_ENDED];
-	        }
-	    },
-	    
-	    Track: {
-	    
-	        /*
-	            Update Input
-	            
-	            @param [Action]
-	            @param [object]: Action properties
-	        */
-	        updateInput: function (action, props) {
-	            action[INPUT_OFFSET] = calc.offset(props.inputOrigin, props.input[CURRENT]);
-	        },
-	        
-	        /*
-	            Move Value relative to Input movement
-	            
-	            @param [string]: Key of current value
-	            @param [Value]: Current value
-	            @param [object]: Collection of all Action values
-	            @param [object]: Action properties
-	            @param [Action]: Current Action
-	            @return [number]: Calculated value
-	        */
-	        process: function (key, value, values, props, action) {
-	            return (action[INPUT_OFFSET].hasOwnProperty(key)) ? value.origin + action[INPUT_OFFSET][key] : value[CURRENT];
-	        },
-	        
-	        /*
-	            Has this Action ended? 
-	            
-	            @return [boolean]: False to make user manually finish .track()
-	        */
-	        hasEnded: function () {
-	            return false;
-	        }
-	    },
-	    
-	    Run: {
-	    
-	        /*
-	            Simulate the Value's per-frame movement
-	            
-	            @param [string]: Key of current value
-	            @param [Value]: Current value
-	            @param [object]: Collection of all Action values
-	            @param [object]: Action properties
-	            @param [Action]: Current Action
-	            @param [number]: Duration of frame in ms
-	            @return [number]: Calculated value
-	        */
-	        process: function (key, value, values, props, action, frameDuration) {
-	            return value[CURRENT] + calc.speedPerFrame(simulate[value.simulate](value, frameDuration), frameDuration);
-	        },
-	        
-	        /*
-	            Has this action ended?
-	            
-	            Use a framecounter to see if Action has changed in the last x frames
-	            and declare ended if not
-	            
-	            @param [Action]
-	            @param [boolean]: Has Action changed?
-	            @return [boolean]: Has Action ended?
-	        */
-	        hasEnded: function (action, hasChanged) {
-	            action.inactiveFrames = hasChanged ? 0 : action.inactiveFrames + 1;
-	            return (action.inactiveFrames > 3);
-	        },
-	        
-	        /*
-	            Limit output to value range, if any
-	            
-	            If velocity is at or more than range, and value has a bounce property,
-	            run the bounce simulation
-	            
-	            @param [number]: Calculated output
-	            @param [Value]: Current Value
-	            @return [number]: Limit-adjusted output
-	        */
-	        limit: function (output, value) {
-	            output = calc.restricted(output, value.min, value.max);
-	            
-	            // Bounce if outside of range
-	            value.velocity = (value.bounce && (output <= value.min || output >= value.max))
-	                ? simulate.bounce(value) : value.velocity;
-	            
-	            return output;
-	        }
-	    },
-	    
-	    /*
-	        Link
-	        ---------------------------
-	        
-	        Link the calculations of one value into the output of another.
-	        
-	        Activate by setting the link property of one value with the name
-	        of another value or Input property.
-	        
-	        Map the linked value with mapLink and provide a corressponding mapTo
-	        to translate values from one into the other. For instance:
-	        
-	        {
-	            link: 'x'
-	            mapLink: [0, 100, 200]
-	            mapTo: [-100, 0, -100]
-	        }
-	        
-	        An output value of 50 for 'x' would translate to -50
-	    */
-	    Link: {
-	        
-	        /*
-	            Process linked value
-	            
-	            First check if link exists within Action values, if not check
-	            within Input (if exists)
-	            
-	            @param [string]: Key of current value
-	            @param [Value]: Current value
-	            @param [object]: Collection of all Action values
-	            @param [object]: Action properties
-	            @param [Action]: Current Action
-	            @return [number]: Calculated value
-	        */
-	        process: function (key, value, values, props, action) {
-	            var newValue = value[CURRENT],
-	                mapLink = value.mapLink,
-	                mapTo = value.mapTo,
-	                mapLength = (mapLink !== undefined) ? mapLink.length : 0,
-	                newValue;
-	
-	            // First look at values in Action
-	            if (values[value[LINK]]) {
-	                newValue = values[value[LINK]][CURRENT];
-	
-	            // Then check values in Input
-	            } else if (action[INPUT_OFFSET] && action[INPUT_OFFSET].hasOwnProperty(value[LINK])) {
-	                newValue = value.origin + action[INPUT_OFFSET][value[LINK]];
-	            }
-	            
-	            for (var i = 1; i < mapLength; i++) {
-	                if (newValue < mapLink[i] || i === mapLength - 1) {
-	                    newValue = calc.value( calc.restricted( calc.progress(newValue, mapLink[i - 1], mapLink[i]), 0, 1), mapTo[i - 1], mapTo[i]);
-	                    break;
-	                }
-	            }
-	            
-	            return newValue;
-	        }
-	    },
-	    
-	    /*
-	        Angle and Distance
-	    */
-	    AngleAndDistance: {
-	        /*
-	            Currently inefficient as this gets called once each for
-	            radialX and radialY, which could be cut down
-	            
-	            @param [string]: Key of current value
-	            @param [Value]: Current value
-	            @param [object]: Collection of all Action values
-	            @param [object]: Action properties
-	            @param [Action]: Current Action
-	            @return [number]: Calculated value
-	        */
-	        process: function (key, value, values) {
-	            var origin = {
-	                    x: (values.x) ? values.x.get(CURRENT) : 0,
-	                    y: (values.y) ? values.y.get(CURRENT) : 0
-	                },
-	                point = calc.pointFromAngleAndDistance(origin, values.angle.get(CURRENT), values.distance.get(CURRENT)),
-	                newValue = {
-	                    radialX: point.x,
-	                    radialY: point.y
-	                };
-	            
-	            return newValue[key];
-	        }
-	    }
-	};
-
-/***/ },
-/* 23 */
-/*!******************************!*\
-  !*** ./src/routes/values.js ***!
-  \******************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    Values route (Redshift default)
-	    
-	    Handles raw values and outputs to user-defined callbacks
-	*/
-	"use strict";
-	
-	var fireCallback = function (name, bucket, action, values, props, data) {
-	        if (props[name]) {
-	            props[name].call(props.scope, bucket, data);
-	        }
-	    };
-	
-	module.exports = {
-	    
-	    makeDefault: true,
-	    
-	    name: 'values',
-	    
-	    preprocess: function (key, value, action, props) {
-	        action.setValue(key, value, props);
-	    },
-	    
-	    onFrame: function (bucket, action, values, props, data) {
-	        fireCallback('onFrame', bucket, action, values, props, data);
-	    },
-	    
-	    onChange: function (bucket, action, values, props, data) {
-	        fireCallback('onChange', bucket, action, values, props, data);
-	    },
-	    
-	    onEnd: function (bucket, action, values, props, data) {
-	        fireCallback('onEnd', bucket, action, values, props, data);
-	    }
-	    
-	};
-
-/***/ },
-/* 24 */
-/*!***************************!*\
-  !*** ./src/routes/css.js ***!
-  \***************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var build = __webpack_require__(/*! ./css/build.js */ 31),
-	    split = __webpack_require__(/*! ./css/split.js */ 32),
-	    
-	    css = 'css',
-	    cssOrder = css + 'Order',
-	    cssCache = css + 'Cache';
-	
-	module.exports = {
-	    
-	    name: css,
-	    
-	    preprocess: function (key, value, action, props) {
-	        var values = split(key, value);
-	        
-	        action.updateOrder(key, false, cssOrder);
-	
-	        for (key in values) {
-	            action.setValue(key, values[key], props, this.name);
-	        }
-	    },
-	    
-	    onChange: function (output, action, values, props) {
-	        props[cssCache] = props[cssCache] || {};
-	        action.style(build(output, props[cssOrder],  props[cssCache], values));
-	    }
-	    
-	};
-
-/***/ },
-/* 25 */
-/*!****************************!*\
-  !*** ./src/routes/attr.js ***!
-  \****************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	module.exports = {
-	    
-	    name: 'attr',
-	    
-	    preprocess: function (key, value, action, props) {
-	        action.setValue(key, value, props, this.name);
-	    },
-	    
-	    onChange: function (output, action, values, props) {
-	        var dom = props.dom;
-	
-	        if (dom) {
-	            for (var key in output) {
-	                dom.setAttribute(key, output[key]);
-	            }
-	        }
-	    }
-	};
-
-/***/ },
-/* 26 */
 /*!****************************!*\
   !*** ./src/opts/values.js ***!
   \****************************/
@@ -3879,7 +3498,7 @@
 	};
 
 /***/ },
-/* 27 */
+/* 23 */
 /*!******************************!*\
   !*** ./src/utils/resolve.js ***!
   \******************************/
@@ -3935,7 +3554,7 @@
 	};
 
 /***/ },
-/* 28 */
+/* 24 */
 /*!**************************************!*\
   !*** ./src/routes/css/dictionary.js ***!
   \**************************************/
@@ -3943,9 +3562,7 @@
 
 	"use strict";
 	
-	var lookup = __webpack_require__(/*! ./lookup.js */ 33),
-	
-	    X = 'X',
+	var X = 'X',
 	    Y = 'Y',
 	    TRANSFORM_PERSPECTIVE = 'transformPerspective',
 	    SCALE = 'scale',
@@ -3956,23 +3573,22 @@
 	        positions: [X, Y, 'Z'],
 	        dimensions: ['Top', 'Right', 'Bottom', 'Left'],
 	        shadow: [X, Y, 'Radius', 'Spread', 'Color'],
-	        transform: ['translate', SCALE, ROTATE, 'skew', TRANSFORM_PERSPECTIVE],
 	        valueProps: ['current', 'to', 'start', 'min', 'max'],
+	        transformFuncs: ['translate', SCALE, ROTATE, 'skew', TRANSFORM_PERSPECTIVE],
 	        transformProps: {} // objects are faster at direct lookups
 	    };
 	
 	// Create transform terms
 	(function () {
-	    var transformFuncs = terms.transform,
+	    var transformFuncs = terms.transformFuncs,
 	        transformProps = terms.transformProps,
 	        numOfTransformFuncs = transformFuncs.length,
 	        i = 0,
 	
 	        createProps = function (funcName) {
-	            var funcType = lookup[funcName],
-	                typeTerms = terms[funcType],
+	            var typeTerms = terms.positions,
 	                j = 0;
-	                
+	
 	            if (typeTerms) {
 	                for (; j < typeTerms.length; j++) {
 	                    transformProps[funcName + typeTerms[j]] = true;
@@ -3992,6 +3608,403 @@
 	module.exports = terms;
 
 /***/ },
+/* 25 */
+/*!*****************************!*\
+  !*** ./src/action/rubix.js ***!
+  \*****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Rubix modules
+	    ----------------------------------------
+	    
+	    Rubix are collections of optional processors. Which rubix to
+	    use is decided programmatically. If [LINK] is defined, Link is used.
+	    Otherwise values use Time, Input and Run based on whether .play, 
+	    .track or .run are running.
+	*/
+	
+	"use strict";
+	
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 7),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 16),
+	    easing = __webpack_require__(/*! ../utils/easing.js */ 6),
+	    simulate = __webpack_require__(/*! ./simulate.js */ 30),
+	    
+	    // Commonly used properties
+	    CURRENT = 'current',
+	    HAS_ENDED = 'hasEnded',
+	    INPUT_OFFSET = 'inputOffset',
+	    LINK = 'link';
+	
+	module.exports = {
+	    Fire: {
+	        /*
+	            Return set current
+	        */
+	        process: function (key, value) {
+	            return value[CURRENT];
+	        },
+	        
+	        /*
+	            Return true to fire for just one frame
+	            
+	            @return [boolean]: True
+	        */
+	        hasEnded: function () {
+	            return true;
+	        }
+	    },
+	
+	    Play: {
+	
+	        /*
+	            Update Action elapsed time
+	            
+	            @param [Action]
+	            @param [object]: Action properties
+	            @param [number]: Timestamp of current frame
+	        */
+	        updateInput: function (action, props, framestamp) {
+	            action.elapsed += ((framestamp - action.framestamp) * props.dilate) * action.playDirection;
+	            action[HAS_ENDED] = true;
+	        },
+	
+	        /*
+	            Calculate progress of value based on time elapsed,
+	            value delay/duration/stagger properties
+	
+	            @param [string]: Key of current value
+	            @param [Value]: Current value
+	            @param [object]: Collection of all Action values
+	            @param [object]: Action properties
+	            @param [Action]: Current Action
+	            @param [number]: Duration of frame in ms
+	            @return [number]: Calculated value
+	        */
+	        process: function (key, value, values, props, action) {
+	            var target = value.to,
+	                newValue = value[CURRENT],
+	                progress, progressTarget;
+	            
+	            // If we have a target, process
+	            if (target !== undefined) {
+	
+	                progress = calc.restricted(calc.progress(action.elapsed - value.delay, value.duration) - value.stagger, 0, 1);
+	                progressTarget = (action.playDirection === 1) ? 1 : 0;
+	                
+	                // Mark Action as not ended if still in progress
+	                if (progress !== progressTarget) {
+	                    action[HAS_ENDED] = false;
+	                
+	                // Or clear value target
+	                } else {
+	                    value.to = undefined;
+	                }
+	                
+	                // Step progress if we're stepping
+	                progress = (value.steps) ? utils.stepProgress(progress, 1, value.steps) : progress;
+	                
+	                // Ease value with progress
+	                newValue = easing.withinRange(progress, value.origin, target, value.ease);
+	
+	            }
+	            
+	            return newValue;
+	        },
+	        
+	        /*
+	            Return hasEnded property
+	            
+	            @param [boolean]: Have all Values hit 1 progress?
+	        */
+	        hasEnded: function (action) {
+	            return action[HAS_ENDED];
+	        }
+	    },
+	    
+	    Track: {
+	    
+	        /*
+	            Update Input
+	            
+	            @param [Action]
+	            @param [object]: Action properties
+	        */
+	        updateInput: function (action, props) {
+	            action[INPUT_OFFSET] = calc.offset(props.inputOrigin, props.input[CURRENT]);
+	        },
+	        
+	        /*
+	            Move Value relative to Input movement
+	            
+	            @param [string]: Key of current value
+	            @param [Value]: Current value
+	            @param [object]: Collection of all Action values
+	            @param [object]: Action properties
+	            @param [Action]: Current Action
+	            @return [number]: Calculated value
+	        */
+	        process: function (key, value, values, props, action) {
+	            return (action[INPUT_OFFSET].hasOwnProperty(key)) ? value.origin + action[INPUT_OFFSET][key] : value[CURRENT];
+	        },
+	        
+	        /*
+	            Has this Action ended? 
+	            
+	            @return [boolean]: False to make user manually finish .track()
+	        */
+	        hasEnded: function () {
+	            return false;
+	        }
+	    },
+	    
+	    Run: {
+	    
+	        /*
+	            Simulate the Value's per-frame movement
+	            
+	            @param [string]: Key of current value
+	            @param [Value]: Current value
+	            @param [object]: Collection of all Action values
+	            @param [object]: Action properties
+	            @param [Action]: Current Action
+	            @param [number]: Duration of frame in ms
+	            @return [number]: Calculated value
+	        */
+	        process: function (key, value, values, props, action, frameDuration) {
+	            return value[CURRENT] + calc.speedPerFrame(simulate[value.simulate](value, frameDuration), frameDuration);
+	        },
+	        
+	        /*
+	            Has this action ended?
+	            
+	            Use a framecounter to see if Action has changed in the last x frames
+	            and declare ended if not
+	            
+	            @param [Action]
+	            @param [boolean]: Has Action changed?
+	            @return [boolean]: Has Action ended?
+	        */
+	        hasEnded: function (action, hasChanged) {
+	            action.inactiveFrames = hasChanged ? 0 : action.inactiveFrames + 1;
+	            return (action.inactiveFrames > action.getProp('maxInactiveFrames'));
+	        },
+	        
+	        /*
+	            Limit output to value range, if any
+	            
+	            If velocity is at or more than range, and value has a bounce property,
+	            run the bounce simulation
+	            
+	            @param [number]: Calculated output
+	            @param [Value]: Current Value
+	            @return [number]: Limit-adjusted output
+	        */
+	        limit: function (output, value) {
+	            output = calc.restricted(output, value.min, value.max);
+	            
+	            // Bounce if outside of range
+	            value.velocity = (value.bounce && (output <= value.min || output >= value.max))
+	                ? simulate.bounce(value) : value.velocity;
+	            
+	            return output;
+	        }
+	    },
+	    
+	    /*
+	        Link
+	        ---------------------------
+	        
+	        Link the calculations of one value into the output of another.
+	        
+	        Activate by setting the link property of one value with the name
+	        of another value or Input property.
+	        
+	        Map the linked value with mapLink and provide a corressponding mapTo
+	        to translate values from one into the other. For instance:
+	        
+	        {
+	            link: 'x'
+	            mapLink: [0, 100, 200]
+	            mapTo: [-100, 0, -100]
+	        }
+	        
+	        An output value of 50 for 'x' would translate to -50
+	    */
+	    Link: {
+	        
+	        /*
+	            Process linked value
+	            
+	            First check if link exists within Action values, if not check
+	            within Input (if exists)
+	            
+	            @param [string]: Key of current value
+	            @param [Value]: Current value
+	            @param [object]: Collection of all Action values
+	            @param [object]: Action properties
+	            @param [Action]: Current Action
+	            @return [number]: Calculated value
+	        */
+	        process: function (key, value, values, props, action) {
+	            var newValue = value[CURRENT],
+	                mapLink = value.mapLink,
+	                mapTo = value.mapTo,
+	                mapLength = (mapLink !== undefined) ? mapLink.length : 0,
+	                newValue;
+	
+	            // First look at values in Action
+	            if (values[value[LINK]]) {
+	                newValue = values[value[LINK]][CURRENT];
+	
+	            // Then check values in Input
+	            } else if (action[INPUT_OFFSET] && action[INPUT_OFFSET].hasOwnProperty(value[LINK])) {
+	                newValue = value.origin + action[INPUT_OFFSET][value[LINK]];
+	            }
+	            
+	            for (var i = 1; i < mapLength; i++) {
+	                if (newValue < mapLink[i] || i === mapLength - 1) {
+	                    newValue = calc.value( calc.restricted( calc.progress(newValue, mapLink[i - 1], mapLink[i]), 0, 1), mapTo[i - 1], mapTo[i]);
+	                    break;
+	                }
+	            }
+	            
+	            return newValue;
+	        }
+	    },
+	    
+	    /*
+	        Angle and Distance
+	    */
+	    AngleAndDistance: {
+	        /*
+	            Currently inefficient as this gets called once each for
+	            radialX and radialY, which could be cut down
+	            
+	            @param [string]: Key of current value
+	            @param [Value]: Current value
+	            @param [object]: Collection of all Action values
+	            @param [object]: Action properties
+	            @param [Action]: Current Action
+	            @return [number]: Calculated value
+	        */
+	        process: function (key, value, values) {
+	            var origin = {
+	                    x: (values.x) ? values.x.get(CURRENT) : 0,
+	                    y: (values.y) ? values.y.get(CURRENT) : 0
+	                },
+	                point = calc.pointFromAngleAndDistance(origin, values.angle.get(CURRENT), values.distance.get(CURRENT)),
+	                newValue = {
+	                    radialX: point.x,
+	                    radialY: point.y
+	                };
+	            
+	            return newValue[key];
+	        }
+	    }
+	};
+
+/***/ },
+/* 26 */
+/*!******************************!*\
+  !*** ./src/routes/values.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Values route (Redshift default)
+	    
+	    Handles raw values and outputs to user-defined callbacks
+	*/
+	"use strict";
+	
+	var fireCallback = function (name, bucket, action, values, props, data) {
+	        if (props[name]) {
+	            props[name].call(props.scope, bucket, data);
+	        }
+	    };
+	
+	module.exports = {
+	    
+	    makeDefault: true,
+	    
+	    name: 'values',
+	    
+	    onFrame: function (bucket, action, values, props, data) {
+	        fireCallback('onFrame', bucket, action, values, props, data);
+	    },
+	    
+	    onChange: function (bucket, action, values, props, data) {
+	        fireCallback('onChange', bucket, action, values, props, data);
+	    },
+	    
+	    onEnd: function (bucket, action, values, props, data) {
+	        fireCallback('onEnd', bucket, action, values, props, data);
+	    }
+	    
+	};
+
+/***/ },
+/* 27 */
+/*!***************************!*\
+  !*** ./src/routes/css.js ***!
+  \***************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var build = __webpack_require__(/*! ./css/build.js */ 31),
+	    split = __webpack_require__(/*! ./css/split.js */ 32),
+	    
+	    css = 'css',
+	    cssOrder = css + 'Order',
+	    cssCache = css + 'Cache';
+	
+	module.exports = {
+	    
+	    name: css,
+	    
+	    preprocess: function (key, value, action) {
+	        var values = split(key, value);
+	        
+	        action.updateOrder(key, false, cssOrder);
+	        
+	        return values;
+	    },
+	    
+	    onChange: function (output, action, values, props) {
+	        props[cssCache] = props[cssCache] || {};
+	        action.style(build(output, props[cssOrder],  props[cssCache], values));
+	    }
+	    
+	};
+
+/***/ },
+/* 28 */
+/*!****************************!*\
+  !*** ./src/routes/attr.js ***!
+  \****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	module.exports = {
+	    
+	    name: 'attr',
+	    
+	    onChange: function (output, action, values, props) {
+	        var dom = props.dom;
+	
+	        if (dom) {
+	            for (var key in output) {
+	                dom.setAttribute(key, output[key]);
+	            }
+	        }
+	    }
+	};
+
+/***/ },
 /* 29 */
 /*!*****************************!*\
   !*** ./src/process/loop.js ***!
@@ -4003,7 +4016,7 @@
 	*/
 	"use strict";
 	
-	var Timer = __webpack_require__(/*! ./timer.js */ 34),
+	var Timer = __webpack_require__(/*! ./timer.js */ 33),
 	    Loop = function () {
 	        this.timer = new Timer();
 	    };
@@ -4039,6 +4052,7 @@
 	    start: function () {
 	        // Make sure we're not already running a loop
 	        if (!this.isRunning) {
+	            this.timer.clock();
 	            this.isRunning = true;
 	            this.frame();
 	        }
@@ -4151,17 +4165,19 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 28),
-	    templates = __webpack_require__(/*! ./templates.js */ 35),
-	    lookup = __webpack_require__(/*! ./lookup.js */ 33),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 24),
+	    templates = __webpack_require__(/*! ./templates.js */ 34),
+	    lookup = __webpack_require__(/*! ./lookup.js */ 35),
 	    
 	    TRANSFORM = 'transform',
+	    TRANSLATE_Z = 'translateZ',
 	    
 	    /*
 	        Generate a CSS rule with the available template
 	    */
-	    generateRule = function (key, output) {
-	        var template = templates[lookup[key]];
+	    generateRule = function (key, output, transformProp) {
+	        var templateKey = transformProp ? TRANSFORM : lookup[key],
+	            template = templates[templateKey];
 	
 	        return template ? template(key, output) : output[key];
 	    };
@@ -4170,6 +4186,7 @@
 	module.exports = function (output, order, cache) {
 	    var css = {},
 	        numRules = order.length,
+	        hasZ = false,
 	        transformProp = dictionary.transformProps,
 	        i = 0,
 	        rule = '',
@@ -4178,10 +4195,11 @@
 	    
 	    for (; i < numRules; i++) {
 	        key = order[i],
-	        rule = generateRule(key, output);
+	        rule = generateRule(key, output, transformProp[key]);
 	
 	        if (transformProp[key]) {
-	            transform += key + '(' + rule + ') ';
+	            transform += rule + ' ';
+	            hasZ = (key === TRANSLATE_Z) ? true : hasZ;
 	
 	        } else if (cache[key] !== rule) {
 	            css[key] = rule;
@@ -4189,10 +4207,14 @@
 	        }
 	    }
 	    
-	    if (transform != cache[TRANSFORM]) {
+	    if (transform != '' && transform != cache[TRANSFORM]) {
+	        if (!hasZ) {
+	            transform += ' ' + TRANSLATE_Z + '(0px)';
+	        }
+	        
 	        css[TRANSFORM] = cache[TRANSFORM] = transform;
 	    }
-	    
+	
 	    return css;
 	};
 
@@ -4206,8 +4228,8 @@
 	"use strict";
 	
 	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 36),
-	    dictionary = __webpack_require__(/*! ./dictionary.js */ 28),
-	    splitLookup = __webpack_require__(/*! ./lookup.js */ 33),
+	    dictionary = __webpack_require__(/*! ./dictionary.js */ 24),
+	    splitLookup = __webpack_require__(/*! ./lookup.js */ 35),
 	    splitters = __webpack_require__(/*! ./splitters.js */ 37),
 	    
 	    utils = __webpack_require__(/*! ../../utils/utils.js */ 16),
@@ -4246,7 +4268,7 @@
 	    /*
 	        Split value with provided splitterID
 	    */
-	    split = function (key, value, splitterID) {
+	    split = function (key, value, splitter) {
 	        var splitValue = {},
 	            splitProperty = {},
 	            newValue = {},
@@ -4259,7 +4281,7 @@
 	                valueKey = valueProperties[i];
 	                
 	                if (value.hasOwnProperty(valueKey)) {
-	                    splitProperty = splitters[splitterID](value[valueKey]);
+	                    splitProperty = splitter(value[valueKey]);
 	                    
 	                    for (unitKey in splitProperty) {
 	                        splitValue[unitKey] = splitValue[unitKey] || {};
@@ -4268,7 +4290,7 @@
 	                }
 	            }
 	        } else {
-	            splitValue = splitters[splitterID](value);
+	            splitValue = splitter(value);
 	        }
 	        
 	        for (unitKey in splitValue) {
@@ -4286,10 +4308,11 @@
 	*/
 	module.exports = function (key, value) {
 	    var splitterID = splitLookup[key],
-	        values = (splitterID) ? split(key, value, splitterID) : {};
+	        splitter = splitters[splitterID],
+	        values = (splitter) ? split(key, value, splitter) : {};
 	
 	    // If we don't have a splitter, assign the property directly
-	    if (!splitterID) {
+	    if (!splitter) {
 	        values[key] = buildProperty(value, key);
 	    }
 	    
@@ -4298,51 +4321,6 @@
 
 /***/ },
 /* 33 */
-/*!**********************************!*\
-  !*** ./src/routes/css/lookup.js ***!
-  \**********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var COLOR = 'colors',
-	    POSITIONS = 'positions',
-	    DIMENSIONS = 'dimensions',
-	    SHADOW = 'shadow';
-	
-	module.exports = {
-	    // Color properties
-	    color: COLOR,
-	    backgroundColor: COLOR,
-	    borderColor: COLOR,
-	    borderTopColor: COLOR,
-	    borderRightColor: COLOR,
-	    borderBottomColor: COLOR,
-	    borderLeftColor: COLOR,
-	    outlineColor: COLOR,
-	
-	    // Dimensions
-	    margin: DIMENSIONS,
-	    padding: DIMENSIONS,
-	
-	    // Positions
-	    backgroundPosition: POSITIONS,
-	    perspectiveOrigin: POSITIONS,
-	    transformOrigin: POSITIONS,
-	    
-	    // Transform functions
-	    skew: POSITIONS,
-	    translate: POSITIONS,
-	    rotate: POSITIONS,
-	    scale: POSITIONS,
-	    
-	    // Shadows
-	    textShadow: SHADOW,
-	    boxShadow: SHADOW
-	};
-
-/***/ },
-/* 34 */
 /*!******************************!*\
   !*** ./src/process/timer.js ***!
   \******************************/
@@ -4350,26 +4328,37 @@
 
 	"use strict";
 	
-	var maxElapsed = 30,
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 16),
+	
+	    maxElapsed = 33,
 	    Timer = function () {
+	        this.elapsed = 16.7;
+	        this.current = utils.currentTime();
 	        this.update();
 	    };
 	
 	Timer.prototype = {
 	    update: function () {
 	        this.prev = this.current;
-	        return this.current = new Date().getTime();
+	        this.current = utils.currentTime();
+	        this.elapsed = Math.min(this.current - this.prev, maxElapsed);
+	
+	        return this.current;
 	    },
 	
 	    getElapsed: function () {
-	        return Math.min(this.current - this.prev, maxElapsed);
+	        return this.elapsed;
+	    },
+	    
+	    clock: function () {
+	        this.current = utils.currentTime();
 	    }
 	};
 	
 	module.exports = Timer;
 
 /***/ },
-/* 35 */
+/* 34 */
 /*!*************************************!*\
   !*** ./src/routes/css/templates.js ***!
   \*************************************/
@@ -4377,7 +4366,7 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 28),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 24),
 	
 	    defaultValues = {
 	        Alpha: 1
@@ -4435,10 +4424,60 @@
 	            var shadowTerms = dictionary.shadow.slice(0,4);
 	            
 	            return createSpaceDelimited(key, values, shadowTerms) + templates.colors(key, values);
+	        },
+	        
+	        transform: function (key, values) {
+	            return key + '(' + values[key] +')';
 	        }
 	    };
 	
 	module.exports = templates;
+
+/***/ },
+/* 35 */
+/*!**********************************!*\
+  !*** ./src/routes/css/lookup.js ***!
+  \**********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var COLOR = 'colors',
+	    POSITIONS = 'positions',
+	    TRANSFORM = 'transform',
+	    DIMENSIONS = 'dimensions',
+	    SHADOW = 'shadow';
+	
+	module.exports = {
+	    // Color properties
+	    color: COLOR,
+	    backgroundColor: COLOR,
+	    borderColor: COLOR,
+	    borderTopColor: COLOR,
+	    borderRightColor: COLOR,
+	    borderBottomColor: COLOR,
+	    borderLeftColor: COLOR,
+	    outlineColor: COLOR,
+	
+	    // Dimensions
+	    margin: DIMENSIONS,
+	    padding: DIMENSIONS,
+	
+	    // Positions
+	    backgroundPosition: POSITIONS,
+	    perspectiveOrigin: POSITIONS,
+	    transformOrigin: POSITIONS,
+	    
+	    // Transform functions
+	    skew: TRANSFORM,
+	    translate: TRANSFORM,
+	    rotate: TRANSFORM,
+	    scale: TRANSFORM,
+	    
+	    // Shadows
+	    textShadow: SHADOW,
+	    boxShadow: SHADOW
+	};
 
 /***/ },
 /* 36 */
@@ -4477,6 +4516,7 @@
 	        Blue: color,
 	    
 	        Alpha: opacity,
+	        opacity: opacity,
 	        
 	        scale: scale,
 	        scaleX: scale,
@@ -4503,7 +4543,7 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 28),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 24),
 	    utils = __webpack_require__(/*! ../../utils/utils.js */ 16),
 	
 	    /*
@@ -4728,10 +4768,6 @@
 	        
 	        perspective: function (prop) {
 	            return this.array(prop);
-	        },
-	        
-	        translate: function () {
-	            return this.positions;
 	        }
 	    };
 	

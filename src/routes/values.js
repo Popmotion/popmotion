@@ -17,10 +17,6 @@ module.exports = {
     
     name: 'values',
     
-    preprocess: function (key, value, action, props) {
-        action.setValue(key, value, props);
-    },
-    
     onFrame: function (bucket, action, values, props, data) {
         fireCallback('onFrame', bucket, action, values, props, data);
     },

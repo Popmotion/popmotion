@@ -5,12 +5,14 @@ var dictionary = require('./dictionary.js'),
     lookup = require('./lookup.js'),
     
     TRANSFORM = 'transform',
+    TRANSLATE_Z = 'translateZ',
     
     /*
         Generate a CSS rule with the available template
     */
-    generateRule = function (key, output) {
-        var template = templates[lookup[key]];
+    generateRule = function (key, output, transformProp) {
+        var templateKey = transformProp ? TRANSFORM : lookup[key],
+            template = templates[templateKey];
 
         return template ? template(key, output) : output[key];
     };
@@ -19,6 +21,7 @@ var dictionary = require('./dictionary.js'),
 module.exports = function (output, order, cache) {
     var css = {},
         numRules = order.length,
+        hasZ = false,
         transformProp = dictionary.transformProps,
         i = 0,
         rule = '',
@@ -27,10 +30,11 @@ module.exports = function (output, order, cache) {
     
     for (; i < numRules; i++) {
         key = order[i],
-        rule = generateRule(key, output);
+        rule = generateRule(key, output, transformProp[key]);
 
         if (transformProp[key]) {
-            transform += key + '(' + rule + ') ';
+            transform += rule + ' ';
+            hasZ = (key === TRANSLATE_Z) ? true : hasZ;
 
         } else if (cache[key] !== rule) {
             css[key] = rule;
@@ -38,9 +42,13 @@ module.exports = function (output, order, cache) {
         }
     }
     
-    if (transform != cache[TRANSFORM]) {
+    if (transform != '' && transform != cache[TRANSFORM]) {
+        if (!hasZ) {
+            transform += ' ' + TRANSLATE_Z + '(0px)';
+        }
+        
         css[TRANSFORM] = cache[TRANSFORM] = transform;
     }
-    
+
     return css;
 };

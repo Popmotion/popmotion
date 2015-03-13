@@ -11,14 +11,12 @@ module.exports = {
     
     name: css,
     
-    preprocess: function (key, value, action, props) {
+    preprocess: function (key, value, action) {
         var values = split(key, value);
         
         action.updateOrder(key, false, cssOrder);
-
-        for (key in values) {
-            action.setValue(key, values[key], props, this.name);
-        }
+        
+        return values;
     },
     
     onChange: function (output, action, values, props) {

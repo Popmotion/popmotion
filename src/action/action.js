@@ -11,9 +11,11 @@ var parseArgs = require('./parse-args.js'),
     calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
     styler = require('../routes/css/styler.js'),
+    
+    linkToAngleDistance = { link: 'AngleAndDistance' },
 
     namespace = function (key, space) {
-        return space ? key + '.' + space : key;
+        return (space && space !== routes.defaultRoute) ? key + '.' + space : key;
     },
 
     Action = function () {
@@ -85,8 +87,7 @@ Action.prototype = {
             this.queue.add.apply(this.queue, arguments);
         }
 
-        return this;
-    },
+        return this;    },
 
     /*
         Run Action indefinitely
@@ -147,36 +148,49 @@ Action.prototype = {
     */
     set: function (props, defaultProp) {
         var self = this,
-            currentProps = this.props.get(),
-            values = this.values,
-            linkToAngleDistance = { link: 'AngleAndDistance' },
-            key = '';
-            
-        defaultProp = defaultProp || 'current';
-
+            values = self.values;
+        
+        // Update current properties
         self.props.set(props);
-
-        // Loop over new values and set
-        routes.shard(function (route, valuesBucket) {
-            var baseValue = {
+        
+        // Set default property to current if it isn't set
+        defaultProp = defaultProp || 'current';
+        
+        // Loop over values and update
+        routes.shard(function (route, routeValues) {
+            var preprocessedValues = {},
+                valueBase = {},
+                value,
+                base = {
                     route: route.name
-                },
-                mergeIn = {},
-                value;
+                };
 
-            for (key in valuesBucket) {
-                if (valuesBucket.hasOwnProperty(key) && route.preprocess) {
-                    value = valuesBucket[key];
+            for (var key in routeValues) {
+                if (routeValues.hasOwnProperty(key)) {
+                    value = routeValues[key];
                     
                     if (!utils.isObj(value)) {
-                        mergeIn = { name: key };
-                        mergeIn[defaultProp] = value;
+                        valueBase = { name: key };
+                        valueBase[defaultProp] = value;
                     } else {
-                        mergeIn = value;
-                        mergeIn.name = key;
+                        valueBase = value;
+                        valueBase.name = key;
                     }
+                    
+                    valueBase = utils.merge(base, valueBase);
 
-                    route.preprocess(key, utils.merge(baseValue, mergeIn), self, currentProps);
+                    // If no preprocess step, assign directly
+                    if (!route.preprocess) {
+                        self.setValue(key, valueBase, props, route.name);
+                        
+                    // Else preprocess and add each returned value
+                    } else {
+                        preprocessedValues = route.preprocess(key, valueBase, self, props);
+                        
+                        for (var subKey in preprocessedValues) {
+                            self.setValue(key, preprocessedValues[subKey], props, route.name);
+                        }
+                    }
                 }
             }
         }, props);
@@ -186,7 +200,7 @@ Action.prototype = {
             self.setValue('radialX', linkToAngleDistance)
                 .setValue('radialY', linkToAngleDistance);
         }
-
+        
         self.resetOrigins();
 
         return self;
@@ -306,6 +320,7 @@ Action.prototype = {
     */
     reverse: function () {
         this.playDirection *= -1;
+        return this;
     },
     
     /*
@@ -413,7 +428,7 @@ Action.prototype = {
     
     setValue: function (key, value, inherit, space) {
         var existing = this.getValue(key, space);
-
+        
         key = namespace(key, space);
 
         // Update if value exists
@@ -431,6 +446,7 @@ Action.prototype = {
     
     getValue: function (key, space) {
         key = namespace(key, space);
+
         return this.values[key];
     },
     

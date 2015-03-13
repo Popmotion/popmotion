@@ -19,16 +19,14 @@ Queue.prototype = {
     next: function (direction) {
         var queue = this.queue,
             returnVal = false,
-            index;
+            index = this.index;
             
         direction = (arguments.length) ? direction : 1;
         
-        index = this.index += direction;
-        
         // If our index is between 0 and the queue length, return that item
         if (index >= 0 && index < queue.length) {
-            console.log(index, queue);
             returnVal = queue[index];
+            this.index = index + direction;
         
         // Or clear
         } else {
