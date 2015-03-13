@@ -78,12 +78,16 @@ Action.prototype = {
     */
     play: function () {
         var props = parseArgs.play.apply(this, arguments);
-        
-        this.set(props, 'to');
-        this.playDirection = 1;
 
-        return this.start('Play');
-    },
+        if (!this.isActive()) {
+            this.set(props, 'to');
+            this.playDirection = 1;
+            this.start('Play');
+        } else {
+            this.queue.add.apply(this.queue, arguments);
+        }
+
+        return this;    },
 
     /*
         Run Action indefinitely
@@ -131,14 +135,6 @@ Action.prototype = {
     fire: function () {
         this.set(parseArgs.generic.apply(this, arguments));
         return this.start('Fire');
-    },
-    
-    /*
-        Add arguments to play queue
-    */
-    queue: function () {
-        this.queue.add.apply(this.queue, arguments);
-        return (!this.isActive()) ? this.start('Play') : this;
     },
     
     /*
