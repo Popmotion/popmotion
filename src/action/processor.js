@@ -25,7 +25,7 @@ module.exports = function (action, framestamp, frameDuration) {
     
     // Update elapsed
     if (rubix.updateInput) {
-        rubix.updateInput(action, props, framestamp);
+        rubix.updateInput(action, props, frameDuration);
     }
 
     // Fire onStart if first frame

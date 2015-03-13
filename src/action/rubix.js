@@ -49,8 +49,8 @@ module.exports = {
             @param [object]: Action properties
             @param [number]: Timestamp of current frame
         */
-        updateInput: function (action, props, framestamp) {
-            action.elapsed += ((framestamp - action.framestamp) * props.dilate) * action.playDirection;
+        updateInput: function (action, props, frameDuration) {
+            action.elapsed += (frameDuration * props.dilate) * action.playDirection;
             action[HAS_ENDED] = true;
         },
 

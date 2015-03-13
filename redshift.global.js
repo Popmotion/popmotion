@@ -192,7 +192,7 @@
 	    defaultProps = __webpack_require__(/*! ../opts/action.js */ 15),
 	    calc = __webpack_require__(/*! ../utils/calc.js */ 7),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 16),
-	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 19),
+	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 20),
 	    
 	    linkToAngleDistance = { link: 'AngleAndDistance' },
 	
@@ -1151,7 +1151,7 @@
 	"use strict";
 	
 	var calc = __webpack_require__(/*! ./calc.js */ 7),
-	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 20),
+	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 19),
 	    
 	    // Constants
 	    INVALID_EASING = ": Not defined",
@@ -1833,7 +1833,7 @@
 	
 	var utils = __webpack_require__(/*! ../utils/utils.js */ 16),
 	    presets = __webpack_require__(/*! ./presets.js */ 5),
-	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 21),
+	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 24),
 	
 	    STRING = 'string',
 	    NUMBER = 'number',
@@ -2107,7 +2107,7 @@
 	"use strict";
 	
 	var utils = __webpack_require__(/*! ../utils/utils.js */ 16),
-	    dictionary = __webpack_require__(/*! ../routes/css/dictionary.js */ 24),
+	    dictionary = __webpack_require__(/*! ../routes/css/dictionary.js */ 21),
 	    valueProps = dictionary.valueProps,
 	
 	    /*
@@ -2231,7 +2231,7 @@
 	*/
 	"use strict";
 	
-	var Rubix = __webpack_require__(/*! ./rubix.js */ 28),
+	var Rubix = __webpack_require__(/*! ./rubix.js */ 25),
 	    routes = __webpack_require__(/*! ./routes.js */ 14),
 	    calc = __webpack_require__(/*! ../utils/calc.js */ 7),
 	    
@@ -2253,7 +2253,7 @@
 	    
 	    // Update elapsed
 	    if (rubix.updateInput) {
-	        rubix.updateInput(action, props, framestamp);
+	        rubix.updateInput(action, props, frameDuration);
 	    }
 	
 	    // Fire onStart if first frame
@@ -2345,9 +2345,9 @@
 
 	"use strict";
 	
-	var defaultRoute = __webpack_require__(/*! ../routes/values.js */ 25),
-	    cssRoute = __webpack_require__(/*! ../routes/css.js */ 26),
-	    attrRoute = __webpack_require__(/*! ../routes/attr.js */ 27),
+	var defaultRoute = __webpack_require__(/*! ../routes/values.js */ 26),
+	    cssRoute = __webpack_require__(/*! ../routes/css.js */ 27),
+	    attrRoute = __webpack_require__(/*! ../routes/attr.js */ 28),
 	
 	    routes = {},
 	    routeKeys = [],
@@ -3055,75 +3055,6 @@
 
 /***/ },
 /* 19 */
-/*!**********************************!*\
-  !*** ./src/routes/css/styler.js ***!
-  \**********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var cssStyler = function () {
-		var testElement = document.getElementsByTagName('body')[0],
-			prefixes = ['Webkit','Moz','O','ms', ''],
-			prefixesLength = prefixes.length,
-			cache = {},
-			
-			/*
-				Test style property for prefixed version
-				
-				@param [string]: Style property
-				@return [string]: Cached property name
-			*/
-			testPrefix = function (key) {
-				cache[key] = key;
-	
-				for (var i = 0; i < prefixesLength; i++) {
-					var prefixed = prefixes[i] + key.charAt(0).toUpperCase() + key.slice(1);
-	
-					if (testElement.style.hasOwnProperty(prefixed)) {
-						cache[key] = prefixed;
-					}
-				}
-				
-				return cache[key];
-			};
-			
-		/*
-			Stylee function call
-			
-			Syntax
-				
-				Get property
-					style(element, 'property');
-					
-				Set property
-					style(element, {
-						foo: 'bar'
-					});
-		*/
-		return function (element, prop) {
-			// If prop is a string, we're requesting a property
-			if (typeof prop === 'string') {
-				return window.getComputedStyle(element, null)[cache[prop] || testPrefix(prop)];
-			
-			// If it's an object, we're setting
-			} else {
-				
-				for (var key in prop) {
-					if (prop.hasOwnProperty(key)) {
-						element.style[cache[key] || testPrefix(key)] = prop[key];
-					}
-				}
-				
-				return this;
-			}
-		}
-	};
-	
-	module.exports = new cssStyler();
-
-/***/ },
-/* 20 */
 /*!*****************************!*\
   !*** ./src/types/bezier.js ***!
   \*****************************/
@@ -3298,103 +3229,127 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 21 */
-/*!******************************!*\
-  !*** ./src/input/pointer.js ***!
-  \******************************/
+/* 20 */
+/*!**********************************!*\
+  !*** ./src/routes/css/styler.js ***!
+  \**********************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
-	var Input = __webpack_require__(/*! ./input.js */ 3),
-	    currentPointer, // Sort this out for multitouch
-	    
-	    TOUCHMOVE = 'touchmove',
-	    MOUSEMOVE = 'mousemove',
-	    
-	    doc = document.documentElement,
+	var cssStyler = function () {
+		var testElement = document.getElementsByTagName('body')[0],
+			prefixes = ['Webkit','Moz','O','ms', ''],
+			prefixesLength = prefixes.length,
+			cache = {},
+			
+			/*
+				Test style property for prefixed version
+				
+				@param [string]: Style property
+				@return [string]: Cached property name
+			*/
+			testPrefix = function (key) {
+				cache[key] = key;
 	
-	    /*
-	        Convert event into point
-	        
-	        Scrape the x/y coordinates from the provided event
-	        
-	        @param [event]: Original pointer event
-	        @param [boolean]: True if touch event
-	        @return [object]: x/y coordinates of event
-	    */
-	    eventToPoint = function (event, isTouchEvent) {
-	        var touchChanged = isTouchEvent ? event.changedTouches[0] : false;
-	        
-	        return {
-	            x: touchChanged ? touchChanged.clientX : event.screenX,
-	            y: touchChanged ? touchChanged.clientY : event.screenY
-	        }
-	    },
-	    
-	    /*
-	        Get actual event
-	        
-	        Checks for jQuery's .originalEvent if present
-	        
-	        @param [event | jQuery event]
-	        @return [event]: The actual JS event  
-	    */
-	    getActualEvent = function (event) {
-	        return event.originalEvent || event;
-	    },
+				for (var i = 0; i < prefixesLength; i++) {
+					var prefixed = prefixes[i] + key.charAt(0).toUpperCase() + key.slice(1);
 	
-	    
-	    /*
-	        Pointer constructor
-	    */
-	    Pointer = function (e) {
-	        var event = getActualEvent(e), // In case of jQuery event
-	            isTouch = (event.touches) ? true : false,
-	            startPoint = eventToPoint(event, isTouch);
-	        
-	        this.update(startPoint);
-	        this.isTouch = isTouch;
-	        this.bindEvents();
+					if (testElement.style.hasOwnProperty(prefixed)) {
+						cache[key] = prefixed;
+					}
+				}
+				
+				return cache[key];
+			};
+			
+		/*
+			Stylee function call
+			
+			Syntax
+				
+				Get property
+					style(element, 'property');
+					
+				Set property
+					style(element, {
+						foo: 'bar'
+					});
+		*/
+		return function (element, prop) {
+			// If prop is a string, we're requesting a property
+			if (typeof prop === 'string') {
+				return window.getComputedStyle(element, null)[cache[prop] || testPrefix(prop)];
+			
+			// If it's an object, we're setting
+			} else {
+				
+				for (var key in prop) {
+					if (prop.hasOwnProperty(key)) {
+						element.style[cache[key] || testPrefix(key)] = prop[key];
+					}
+				}
+				
+				return this;
+			}
+		}
+	};
+	
+	module.exports = new cssStyler();
+
+/***/ },
+/* 21 */
+/*!**************************************!*\
+  !*** ./src/routes/css/dictionary.js ***!
+  \**************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var X = 'X',
+	    Y = 'Y',
+	    TRANSFORM_PERSPECTIVE = 'transformPerspective',
+	    SCALE = 'scale',
+	    ROTATE = 'rotate',
+	
+	    terms = {
+	        colors: ['Red', 'Green', 'Blue', 'Alpha'],
+	        positions: [X, Y, 'Z'],
+	        dimensions: ['Top', 'Right', 'Bottom', 'Left'],
+	        shadow: [X, Y, 'Radius', 'Spread', 'Color'],
+	        valueProps: ['current', 'to', 'start', 'min', 'max'],
+	        transformFuncs: ['translate', SCALE, ROTATE, 'skew', TRANSFORM_PERSPECTIVE],
+	        transformProps: {} // objects are faster at direct lookups
 	    };
 	
-	Pointer.prototype = new Input();
+	// Create transform terms
+	(function () {
+	    var transformFuncs = terms.transformFuncs,
+	        transformProps = terms.transformProps,
+	        numOfTransformFuncs = transformFuncs.length,
+	        i = 0,
 	
-	/*
-	    Bind move event
-	*/
-	Pointer.prototype.bindEvents = function () {
-	    this.moveEvent = this.isTouch ? TOUCHMOVE : MOUSEMOVE;
+	        createProps = function (funcName) {
+	            var typeTerms = terms.positions,
+	                j = 0;
+	
+	            if (typeTerms) {
+	                for (; j < typeTerms.length; j++) {
+	                    transformProps[funcName + typeTerms[j]] = true;
+	                }
+	            }
+	        };
 	    
-	    currentPointer = this;
+	    // Manually add skew and transform perspective  
+	    transformProps[ROTATE] = transformProps[SCALE] = transformProps[TRANSFORM_PERSPECTIVE] = true;
 	    
-	    doc.addEventListener(this.moveEvent, this.onMove);
-	};
+	    // Loop over each function name and create function/property terms
+	    for (; i < numOfTransformFuncs; i++) {
+	        createProps(transformFuncs[i]);
+	    }
+	})();
 	
-	/*
-	    Unbind move event
-	*/
-	Pointer.prototype.unbindEvents = function () {
-	    doc.removeEventListener(this.moveEvent, this.onMove);
-	};
-	
-	/*
-	    Pointer onMove event handler
-	    
-	    @param [event]: Pointer move event
-	*/
-	Pointer.prototype.onMove = function (e) {
-	    var newPoint = eventToPoint(e, currentPointer.isTouch);
-	    e = getActualEvent(e);
-	    e.preventDefault();
-	    currentPointer.update(newPoint);
-	};
-	
-	Pointer.prototype.stop = function () {
-	    this.unbindEvents();
-	};
-	
-	module.exports = Pointer;
+	module.exports = terms;
 
 /***/ },
 /* 22 */
@@ -3574,159 +3529,105 @@
 
 /***/ },
 /* 24 */
-/*!**************************************!*\
-  !*** ./src/routes/css/dictionary.js ***!
-  \**************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var X = 'X',
-	    Y = 'Y',
-	    TRANSFORM_PERSPECTIVE = 'transformPerspective',
-	    SCALE = 'scale',
-	    ROTATE = 'rotate',
-	
-	    terms = {
-	        colors: ['Red', 'Green', 'Blue', 'Alpha'],
-	        positions: [X, Y, 'Z'],
-	        dimensions: ['Top', 'Right', 'Bottom', 'Left'],
-	        shadow: [X, Y, 'Radius', 'Spread', 'Color'],
-	        valueProps: ['current', 'to', 'start', 'min', 'max'],
-	        transformFuncs: ['translate', SCALE, ROTATE, 'skew', TRANSFORM_PERSPECTIVE],
-	        transformProps: {} // objects are faster at direct lookups
-	    };
-	
-	// Create transform terms
-	(function () {
-	    var transformFuncs = terms.transformFuncs,
-	        transformProps = terms.transformProps,
-	        numOfTransformFuncs = transformFuncs.length,
-	        i = 0,
-	
-	        createProps = function (funcName) {
-	            var typeTerms = terms.positions,
-	                j = 0;
-	
-	            if (typeTerms) {
-	                for (; j < typeTerms.length; j++) {
-	                    transformProps[funcName + typeTerms[j]] = true;
-	                }
-	            }
-	        };
-	    
-	    // Manually add skew and transform perspective  
-	    transformProps[ROTATE] = transformProps[SCALE] = transformProps[TRANSFORM_PERSPECTIVE] = true;
-	    
-	    // Loop over each function name and create function/property terms
-	    for (; i < numOfTransformFuncs; i++) {
-	        createProps(transformFuncs[i]);
-	    }
-	})();
-	
-	module.exports = terms;
-
-/***/ },
-/* 25 */
 /*!******************************!*\
-  !*** ./src/routes/values.js ***!
+  !*** ./src/input/pointer.js ***!
   \******************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	/*
-	    Values route (Redshift default)
-	    
-	    Handles raw values and outputs to user-defined callbacks
-	*/
 	"use strict";
 	
-	var fireCallback = function (name, bucket, action, values, props, data) {
-	        if (props[name]) {
-	            props[name].call(props.scope, bucket, data);
+	var Input = __webpack_require__(/*! ./input.js */ 3),
+	    currentPointer, // Sort this out for multitouch
+	    
+	    TOUCHMOVE = 'touchmove',
+	    MOUSEMOVE = 'mousemove',
+	    
+	    doc = document.documentElement,
+	
+	    /*
+	        Convert event into point
+	        
+	        Scrape the x/y coordinates from the provided event
+	        
+	        @param [event]: Original pointer event
+	        @param [boolean]: True if touch event
+	        @return [object]: x/y coordinates of event
+	    */
+	    eventToPoint = function (event, isTouchEvent) {
+	        var touchChanged = isTouchEvent ? event.changedTouches[0] : false;
+	        
+	        return {
+	            x: touchChanged ? touchChanged.clientX : event.screenX,
+	            y: touchChanged ? touchChanged.clientY : event.screenY
 	        }
+	    },
+	    
+	    /*
+	        Get actual event
+	        
+	        Checks for jQuery's .originalEvent if present
+	        
+	        @param [event | jQuery event]
+	        @return [event]: The actual JS event  
+	    */
+	    getActualEvent = function (event) {
+	        return event.originalEvent || event;
+	    },
+	
+	    
+	    /*
+	        Pointer constructor
+	    */
+	    Pointer = function (e) {
+	        var event = getActualEvent(e), // In case of jQuery event
+	            isTouch = (event.touches) ? true : false,
+	            startPoint = eventToPoint(event, isTouch);
+	        
+	        this.update(startPoint);
+	        this.isTouch = isTouch;
+	        this.bindEvents();
 	    };
 	
-	module.exports = {
+	Pointer.prototype = new Input();
+	
+	/*
+	    Bind move event
+	*/
+	Pointer.prototype.bindEvents = function () {
+	    this.moveEvent = this.isTouch ? TOUCHMOVE : MOUSEMOVE;
 	    
-	    makeDefault: true,
+	    currentPointer = this;
 	    
-	    name: 'values',
-	    
-	    onFrame: function (bucket, action, values, props, data) {
-	        fireCallback('onFrame', bucket, action, values, props, data);
-	    },
-	    
-	    onChange: function (bucket, action, values, props, data) {
-	        fireCallback('onChange', bucket, action, values, props, data);
-	    },
-	    
-	    onEnd: function (bucket, action, values, props, data) {
-	        fireCallback('onEnd', bucket, action, values, props, data);
-	    }
-	    
+	    doc.addEventListener(this.moveEvent, this.onMove);
 	};
+	
+	/*
+	    Unbind move event
+	*/
+	Pointer.prototype.unbindEvents = function () {
+	    doc.removeEventListener(this.moveEvent, this.onMove);
+	};
+	
+	/*
+	    Pointer onMove event handler
+	    
+	    @param [event]: Pointer move event
+	*/
+	Pointer.prototype.onMove = function (e) {
+	    var newPoint = eventToPoint(e, currentPointer.isTouch);
+	    e = getActualEvent(e);
+	    e.preventDefault();
+	    currentPointer.update(newPoint);
+	};
+	
+	Pointer.prototype.stop = function () {
+	    this.unbindEvents();
+	};
+	
+	module.exports = Pointer;
 
 /***/ },
-/* 26 */
-/*!***************************!*\
-  !*** ./src/routes/css.js ***!
-  \***************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var build = __webpack_require__(/*! ./css/build.js */ 30),
-	    split = __webpack_require__(/*! ./css/split.js */ 31),
-	    
-	    css = 'css',
-	    cssOrder = css + 'Order',
-	    cssCache = css + 'Cache';
-	
-	module.exports = {
-	    
-	    name: css,
-	    
-	    preprocess: function (key, value, action) {
-	        var values = split(key, value);
-	        
-	        action.updateOrder(key, false, cssOrder);
-	        
-	        return values;
-	    },
-	    
-	    onChange: function (output, action, values, props) {
-	        props[cssCache] = props[cssCache] || {};
-	        action.style(build(output, props[cssOrder],  props[cssCache], values));
-	    }
-	    
-	};
-
-/***/ },
-/* 27 */
-/*!****************************!*\
-  !*** ./src/routes/attr.js ***!
-  \****************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	module.exports = {
-	    
-	    name: 'attr',
-	    
-	    onChange: function (output, action, values, props) {
-	        var dom = props.dom;
-	
-	        if (dom) {
-	            for (var key in output) {
-	                dom.setAttribute(key, output[key]);
-	            }
-	        }
-	    }
-	};
-
-/***/ },
-/* 28 */
+/* 25 */
 /*!*****************************!*\
   !*** ./src/action/rubix.js ***!
   \*****************************/
@@ -3783,8 +3684,8 @@
 	            @param [object]: Action properties
 	            @param [number]: Timestamp of current frame
 	        */
-	        updateInput: function (action, props, framestamp) {
-	            action.elapsed += ((framestamp - action.framestamp) * props.dilate) * action.playDirection;
+	        updateInput: function (action, props, frameDuration) {
+	            action.elapsed += (frameDuration * props.dilate) * action.playDirection;
 	            action[HAS_ENDED] = true;
 	        },
 	
@@ -4024,6 +3925,105 @@
 	};
 
 /***/ },
+/* 26 */
+/*!******************************!*\
+  !*** ./src/routes/values.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Values route (Redshift default)
+	    
+	    Handles raw values and outputs to user-defined callbacks
+	*/
+	"use strict";
+	
+	var fireCallback = function (name, bucket, action, values, props, data) {
+	        if (props[name]) {
+	            props[name].call(props.scope, bucket, data);
+	        }
+	    };
+	
+	module.exports = {
+	    
+	    makeDefault: true,
+	    
+	    name: 'values',
+	    
+	    onFrame: function (bucket, action, values, props, data) {
+	        fireCallback('onFrame', bucket, action, values, props, data);
+	    },
+	    
+	    onChange: function (bucket, action, values, props, data) {
+	        fireCallback('onChange', bucket, action, values, props, data);
+	    },
+	    
+	    onEnd: function (bucket, action, values, props, data) {
+	        fireCallback('onEnd', bucket, action, values, props, data);
+	    }
+	    
+	};
+
+/***/ },
+/* 27 */
+/*!***************************!*\
+  !*** ./src/routes/css.js ***!
+  \***************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var build = __webpack_require__(/*! ./css/build.js */ 30),
+	    split = __webpack_require__(/*! ./css/split.js */ 31),
+	    
+	    css = 'css',
+	    cssOrder = css + 'Order',
+	    cssCache = css + 'Cache';
+	
+	module.exports = {
+	    
+	    name: css,
+	    
+	    preprocess: function (key, value, action) {
+	        var values = split(key, value);
+	        
+	        action.updateOrder(key, false, cssOrder);
+	        
+	        return values;
+	    },
+	    
+	    onChange: function (output, action, values, props) {
+	        props[cssCache] = props[cssCache] || {};
+	        action.style(build(output, props[cssOrder],  props[cssCache], values));
+	    }
+	    
+	};
+
+/***/ },
+/* 28 */
+/*!****************************!*\
+  !*** ./src/routes/attr.js ***!
+  \****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	module.exports = {
+	    
+	    name: 'attr',
+	    
+	    onChange: function (output, action, values, props) {
+	        var dom = props.dom;
+	
+	        if (dom) {
+	            for (var key in output) {
+	                dom.setAttribute(key, output[key]);
+	            }
+	        }
+	    }
+	};
+
+/***/ },
 /* 29 */
 /*!*****************************!*\
   !*** ./src/process/loop.js ***!
@@ -4108,7 +4108,7 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 24),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 21),
 	    templates = __webpack_require__(/*! ./templates.js */ 34),
 	    lookup = __webpack_require__(/*! ./lookup.js */ 35),
 	    
@@ -4171,7 +4171,7 @@
 	"use strict";
 	
 	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 36),
-	    dictionary = __webpack_require__(/*! ./dictionary.js */ 24),
+	    dictionary = __webpack_require__(/*! ./dictionary.js */ 21),
 	    splitLookup = __webpack_require__(/*! ./lookup.js */ 35),
 	    splitters = __webpack_require__(/*! ./splitters.js */ 37),
 	    
@@ -4385,7 +4385,7 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 24),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 21),
 	
 	    defaultValues = {
 	        Alpha: 1
@@ -4562,7 +4562,7 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 24),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 21),
 	    utils = __webpack_require__(/*! ../../utils/utils.js */ 16),
 	
 	    /*
