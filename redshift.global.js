@@ -182,17 +182,17 @@
 
 	"use strict";
 	
-	var parseArgs = __webpack_require__(/*! ./parse-args.js */ 10),
-	    Value = __webpack_require__(/*! ../types/value.js */ 11),
-	    Repo = __webpack_require__(/*! ../types/repo.js */ 12),
-	    Queue = __webpack_require__(/*! ./queue.js */ 13),
+	var parseArgs = __webpack_require__(/*! ./parse-args.js */ 9),
+	    Value = __webpack_require__(/*! ../types/value.js */ 10),
+	    Repo = __webpack_require__(/*! ../types/repo.js */ 11),
+	    Queue = __webpack_require__(/*! ./queue.js */ 12),
 	    Process = __webpack_require__(/*! ../process/process.js */ 4),
-	    processor = __webpack_require__(/*! ./processor.js */ 14),
-	    routes = __webpack_require__(/*! ./routes.js */ 15),
-	    defaultProps = __webpack_require__(/*! ../opts/action.js */ 16),
+	    processor = __webpack_require__(/*! ./processor.js */ 13),
+	    routes = __webpack_require__(/*! ./routes.js */ 14),
+	    defaultProps = __webpack_require__(/*! ../opts/action.js */ 15),
 	    calc = __webpack_require__(/*! ../utils/calc.js */ 7),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 17),
-	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 20),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 16),
+	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 19),
 	    
 	    linkToAngleDistance = { link: 'AngleAndDistance' },
 	
@@ -718,8 +718,8 @@
 	"use strict";
 	
 	var calc = __webpack_require__(/*! ../utils/calc.js */ 7),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 17),
-	    History = __webpack_require__(/*! ../utils/history.js */ 18),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 16),
+	    History = __webpack_require__(/*! ../utils/history.js */ 17),
 	
 	    /*
 	        Input constructor
@@ -851,7 +851,7 @@
 	*/
 	"use strict";
 	
-	var manager = __webpack_require__(/*! ./manager.js */ 9),
+	var manager = __webpack_require__(/*! ./manager.js */ 18),
 	
 	    /*
 	        Process constructor
@@ -1039,7 +1039,7 @@
 
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 17),
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 16),
 	    
 	    generateKeys = function (key) {
 	        var keys = key.split(DOT),
@@ -1151,7 +1151,7 @@
 	"use strict";
 	
 	var calc = __webpack_require__(/*! ./calc.js */ 7),
-	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 19),
+	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 20),
 	    
 	    // Constants
 	    INVALID_EASING = ": Not defined",
@@ -1350,7 +1350,7 @@
 	*/
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ./utils.js */ 17),
+	var utils = __webpack_require__(/*! ./utils.js */ 16),
 	
 	    calc = {
 	        /*
@@ -1824,184 +1824,6 @@
 
 /***/ },
 /* 9 */
-/*!********************************!*\
-  !*** ./src/process/manager.js ***!
-  \********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var theLoop = __webpack_require__(/*! ./loop.js */ 25),
-	    ProcessManager = function () {
-	        this.all = {};
-	        this.active = [];
-	        this.deactivateQueue = [];
-	        theLoop.setCallback(this, this.fireActive);
-	    };
-	    
-	ProcessManager.prototype = {
-	    
-	    /*
-	        [int]: Used for process ID
-	    */
-	    processCounter: 0,
-	    
-	    /*
-	        [int]: Number of active processes
-	    */
-	    activeCount: 0,
-	    
-	    /*
-	        Get the process with a given index
-	        
-	        @param [int]: Index of process
-	        @return [Process]
-	    */
-	    getProcess: function (i) {
-	        return this.all[i];
-	    },
-	    
-	    /*
-	        Get number of active processes
-	        
-	        @return [int]: Number of active processes
-	    */
-	    getActiveCount: function () {
-	        return this.activeCount;
-	    },
-	    
-	    /*
-	        Get active tokens
-	
-	        @return [array]: Active tokens
-	    */
-	    getActive: function () {
-	        return this.active;
-	    },
-	    
-	    /*
-	        Get the length of the deactivate queue
-	        
-	        @return [int]: Length of queue
-	    */
-	    getQueueLength: function () {
-	        return this.deactivateQueue.length;
-	    },
-	    
-	    /*
-	        Fire all active processes
-	        
-	        @param [int]: Timestamp of executing frames
-	        @param [int]: Time since previous frame
-	        @return [boolean]: True if active processes found
-	    */
-	    fireActive: function (framestamp, elapsed) {
-	        var process,
-	            activeCount = 0,
-	            activeProcesses = [];
-	
-	        // Purge and check active count before execution
-	        this.purge();
-	        activeCount = this.getActiveCount();
-	        activeProcesses = this.getActive();
-	        
-	        // Loop through active processes and fire callback
-	        for (var i = 0; i < activeCount; i++) {
-	            process = this.getProcess(activeProcesses[i]);
-	            
-	            if (process) {
-	                process.fire(framestamp, elapsed);
-	            }
-	        }
-	
-	        // Repurge and recheck active count after execution
-	        this.purge();
-	        activeCount = this.getActiveCount();
-	        
-	        return activeCount ? true : false;
-	    },
-	    
-	    /*
-	        Register a new process
-	        
-	        @param [Process]
-	        @return [int]: Index of process to be used as ID
-	    */
-	    register: function (process) {
-	        var id = this.processCounter;
-	
-	        this.all[id] = process;
-	        
-	        this.processCounter++;
-	        
-	        return id;
-	    },
-	    
-	    /*
-	        Activate a process
-	        
-	        @param [int]: Index of active process
-	    */
-	    activate: function (i) {
-	        var queueIndex = this.deactivateQueue.indexOf(i),
-	            isQueued = (queueIndex > -1),
-	            isActive = (this.active.indexOf(i) > -1);
-	        
-	        // Remove from deactivateQueue if in there
-	        if (isQueued) {
-	            this.deactivateQueue.splice(queueIndex, 1);
-	        }
-	        
-	        // Add to active processes array if not already in there
-	        if (!isActive) {
-	            this.active.push(i);
-	            this.activeCount++;
-	            theLoop.start(this);
-	        }
-	    },
-	    
-	    /*
-	        Deactivate a process
-	        
-	        @param [int]: Index of process to add to deactivate queue
-	    */
-	    deactivate: function (i) {
-	        this.deactivateQueue.push(i);
-	    },
-	    
-	    /*
-	        Purge the deactivate queue
-	    */
-	    purge: function () {
-	        var activeIndex,
-	            queueLength = this.getQueueLength();
-	        
-	        while (queueLength--) {
-	            activeIndex = this.active.indexOf(this.deactivateQueue[queueLength]);
-	            
-	            // If process in active list deactivate
-	            if (activeIndex > -1) {
-	                this.active.splice(activeIndex, 1);
-	                this.activeCount--;
-	            }
-	        }
-	        
-	        this.deactivateQueue = [];
-	    },
-	    
-	    /*
-	        Remove the provided id and reindex remaining processes
-	    */
-	    kill: function (id) {
-	        delete this.all[id];
-	    }
-	    
-	};
-	
-	module.exports = new ProcessManager();
-
-/***/ },
-/* 10 */
 /*!**********************************!*\
   !*** ./src/action/parse-args.js ***!
   \**********************************/
@@ -2009,9 +1831,9 @@
 
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 17),
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 16),
 	    presets = __webpack_require__(/*! ./presets.js */ 5),
-	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 24),
+	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 22),
 	
 	    STRING = 'string',
 	    NUMBER = 'number',
@@ -2141,7 +1963,7 @@
 	};
 
 /***/ },
-/* 11 */
+/* 10 */
 /*!****************************!*\
   !*** ./src/types/value.js ***!
   \****************************/
@@ -2149,9 +1971,9 @@
 
 	"use strict";
 	
-	var defaults = __webpack_require__(/*! ../opts/values.js */ 21),
-	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 22),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 17),
+	var defaults = __webpack_require__(/*! ../opts/values.js */ 23),
+	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 24),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 16),
 	
 	    CURRENT = 'current',
 	    ORIGIN = 'origin',
@@ -2276,7 +2098,7 @@
 	module.exports = Value;
 
 /***/ },
-/* 12 */
+/* 11 */
 /*!***************************!*\
   !*** ./src/types/repo.js ***!
   \***************************/
@@ -2284,8 +2106,8 @@
 
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 17),
-	    dictionary = __webpack_require__(/*! ../routes/css/dictionary.js */ 23),
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 16),
+	    dictionary = __webpack_require__(/*! ../routes/css/dictionary.js */ 21),
 	    valueProps = dictionary.valueProps,
 	
 	    /*
@@ -2342,7 +2164,7 @@
 	module.exports = Repo;
 
 /***/ },
-/* 13 */
+/* 12 */
 /*!*****************************!*\
   !*** ./src/action/queue.js ***!
   \*****************************/
@@ -2398,7 +2220,7 @@
 	module.exports = Queue;
 
 /***/ },
-/* 14 */
+/* 13 */
 /*!*********************************!*\
   !*** ./src/action/processor.js ***!
   \*********************************/
@@ -2409,8 +2231,8 @@
 	*/
 	"use strict";
 	
-	var Rubix = __webpack_require__(/*! ./rubix.js */ 26),
-	    routes = __webpack_require__(/*! ./routes.js */ 15),
+	var Rubix = __webpack_require__(/*! ./rubix.js */ 25),
+	    routes = __webpack_require__(/*! ./routes.js */ 14),
 	    calc = __webpack_require__(/*! ../utils/calc.js */ 7),
 	    
 	    ANGLE_DISTANCE = 'AngleAndDistance';
@@ -2517,7 +2339,7 @@
 	};
 
 /***/ },
-/* 15 */
+/* 14 */
 /*!******************************!*\
   !*** ./src/action/routes.js ***!
   \******************************/
@@ -2525,9 +2347,9 @@
 
 	"use strict";
 	
-	var defaultRoute = __webpack_require__(/*! ../routes/values.js */ 27),
-	    cssRoute = __webpack_require__(/*! ../routes/css.js */ 28),
-	    attrRoute = __webpack_require__(/*! ../routes/attr.js */ 29),
+	var defaultRoute = __webpack_require__(/*! ../routes/values.js */ 26),
+	    cssRoute = __webpack_require__(/*! ../routes/css.js */ 27),
+	    attrRoute = __webpack_require__(/*! ../routes/attr.js */ 28),
 	
 	    routes = {},
 	    routeKeys = [],
@@ -2625,7 +2447,7 @@
 	module.exports = manager; 
 
 /***/ },
-/* 16 */
+/* 15 */
 /*!****************************!*\
   !*** ./src/opts/action.js ***!
   \****************************/
@@ -2712,7 +2534,7 @@
 	};
 
 /***/ },
-/* 17 */
+/* 16 */
 /*!****************************!*\
   !*** ./src/utils/utils.js ***!
   \****************************/
@@ -2979,7 +2801,7 @@
 	};
 
 /***/ },
-/* 18 */
+/* 17 */
 /*!******************************!*\
   !*** ./src/utils/history.js ***!
   \******************************/
@@ -3056,7 +2878,254 @@
 	module.exports = History;
 
 /***/ },
+/* 18 */
+/*!********************************!*\
+  !*** ./src/process/manager.js ***!
+  \********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var theLoop = __webpack_require__(/*! ./loop.js */ 29),
+	    ProcessManager = function () {
+	        this.all = {};
+	        this.active = [];
+	        this.deactivateQueue = [];
+	        theLoop.setCallback(this, this.fireActive);
+	    };
+	    
+	ProcessManager.prototype = {
+	    
+	    /*
+	        [int]: Used for process ID
+	    */
+	    processCounter: 0,
+	    
+	    /*
+	        [int]: Number of active processes
+	    */
+	    activeCount: 0,
+	    
+	    /*
+	        Get the process with a given index
+	        
+	        @param [int]: Index of process
+	        @return [Process]
+	    */
+	    getProcess: function (i) {
+	        return this.all[i];
+	    },
+	    
+	    /*
+	        Get number of active processes
+	        
+	        @return [int]: Number of active processes
+	    */
+	    getActiveCount: function () {
+	        return this.activeCount;
+	    },
+	    
+	    /*
+	        Get active tokens
+	
+	        @return [array]: Active tokens
+	    */
+	    getActive: function () {
+	        return this.active;
+	    },
+	    
+	    /*
+	        Get the length of the deactivate queue
+	        
+	        @return [int]: Length of queue
+	    */
+	    getQueueLength: function () {
+	        return this.deactivateQueue.length;
+	    },
+	    
+	    /*
+	        Fire all active processes
+	        
+	        @param [int]: Timestamp of executing frames
+	        @param [int]: Time since previous frame
+	        @return [boolean]: True if active processes found
+	    */
+	    fireActive: function (framestamp, elapsed) {
+	        var process,
+	            activeCount = 0,
+	            activeProcesses = [];
+	
+	        // Purge and check active count before execution
+	        this.purge();
+	        activeCount = this.getActiveCount();
+	        activeProcesses = this.getActive();
+	        
+	        // Loop through active processes and fire callback
+	        for (var i = 0; i < activeCount; i++) {
+	            process = this.getProcess(activeProcesses[i]);
+	            
+	            if (process) {
+	                process.fire(framestamp, elapsed);
+	            }
+	        }
+	
+	        // Repurge and recheck active count after execution
+	        this.purge();
+	        activeCount = this.getActiveCount();
+	        
+	        return activeCount ? true : false;
+	    },
+	    
+	    /*
+	        Register a new process
+	        
+	        @param [Process]
+	        @return [int]: Index of process to be used as ID
+	    */
+	    register: function (process) {
+	        var id = this.processCounter;
+	
+	        this.all[id] = process;
+	        
+	        this.processCounter++;
+	        
+	        return id;
+	    },
+	    
+	    /*
+	        Activate a process
+	        
+	        @param [int]: Index of active process
+	    */
+	    activate: function (i) {
+	        var queueIndex = this.deactivateQueue.indexOf(i),
+	            isQueued = (queueIndex > -1),
+	            isActive = (this.active.indexOf(i) > -1);
+	        
+	        // Remove from deactivateQueue if in there
+	        if (isQueued) {
+	            this.deactivateQueue.splice(queueIndex, 1);
+	        }
+	        
+	        // Add to active processes array if not already in there
+	        if (!isActive) {
+	            this.active.push(i);
+	            this.activeCount++;
+	            theLoop.start(this);
+	        }
+	    },
+	    
+	    /*
+	        Deactivate a process
+	        
+	        @param [int]: Index of process to add to deactivate queue
+	    */
+	    deactivate: function (i) {
+	        this.deactivateQueue.push(i);
+	    },
+	    
+	    /*
+	        Purge the deactivate queue
+	    */
+	    purge: function () {
+	        var activeIndex,
+	            queueLength = this.getQueueLength();
+	        
+	        while (queueLength--) {
+	            activeIndex = this.active.indexOf(this.deactivateQueue[queueLength]);
+	            
+	            // If process in active list deactivate
+	            if (activeIndex > -1) {
+	                this.active.splice(activeIndex, 1);
+	                this.activeCount--;
+	            }
+	        }
+	        
+	        this.deactivateQueue = [];
+	    },
+	    
+	    /*
+	        Remove the provided id and reindex remaining processes
+	    */
+	    kill: function (id) {
+	        delete this.all[id];
+	    }
+	    
+	};
+	
+	module.exports = new ProcessManager();
+
+/***/ },
 /* 19 */
+/*!**********************************!*\
+  !*** ./src/routes/css/styler.js ***!
+  \**********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var cssStyler = function () {
+		var testElement = document.getElementsByTagName('body')[0],
+			prefixes = ['Webkit','Moz','O','ms', ''],
+			prefixesLength = prefixes.length,
+			cache = {},
+			
+			/*
+				Test style property for prefixed version
+				
+				@param [string]: Style property
+				@return [string]: Cached property name
+			*/
+			testPrefix = function (key) {
+				cache[key] = key;
+	
+				for (var i = 0; i < prefixesLength; i++) {
+					var prefixed = prefixes[i] + key.charAt(0).toUpperCase() + key.slice(1);
+	
+					if (testElement.style.hasOwnProperty(prefixed)) {
+						cache[key] = prefixed;
+					}
+				}
+				
+				return cache[key];
+			};
+			
+		/*
+			Stylee function call
+			
+			Syntax
+				
+				Get property
+					style(element, 'property');
+					
+				Set property
+					style(element, {
+						foo: 'bar'
+					});
+		*/
+		return function (element, prop) {
+			// If prop is a string, we're requesting a property
+			if (typeof prop === 'string') {
+				return window.getComputedStyle(element, null)[cache[prop] || testPrefix(prop)];
+			
+			// If it's an object, we're setting
+			} else {
+				
+				for (var key in prop) {
+					if (prop.hasOwnProperty(key)) {
+						element.style[cache[key] || testPrefix(key)] = prop[key];
+					}
+				}
+				
+				return this;
+			}
+		}
+	};
+	
+	module.exports = new cssStyler();
+
+/***/ },
+/* 20 */
 /*!*****************************!*\
   !*** ./src/types/bezier.js ***!
   \*****************************/
@@ -3231,76 +3300,160 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 20 */
-/*!**********************************!*\
-  !*** ./src/routes/css/styler.js ***!
-  \**********************************/
+/* 21 */
+/*!**************************************!*\
+  !*** ./src/routes/css/dictionary.js ***!
+  \**************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
-	var cssStyler = function () {
-		var testElement = document.getElementsByTagName('body')[0],
-			prefixes = ['Webkit','Moz','O','ms', ''],
-			prefixesLength = prefixes.length,
-			cache = {},
-			
-			/*
-				Test style property for prefixed version
-				
-				@param [string]: Style property
-				@return [string]: Cached property name
-			*/
-			testPrefix = function (key) {
-				cache[key] = key;
+	var X = 'X',
+	    Y = 'Y',
+	    TRANSFORM_PERSPECTIVE = 'transformPerspective',
+	    SCALE = 'scale',
+	    ROTATE = 'rotate',
 	
-				for (var i = 0; i < prefixesLength; i++) {
-					var prefixed = prefixes[i] + key.charAt(0).toUpperCase() + key.slice(1);
+	    terms = {
+	        colors: ['Red', 'Green', 'Blue', 'Alpha'],
+	        positions: [X, Y, 'Z'],
+	        dimensions: ['Top', 'Right', 'Bottom', 'Left'],
+	        shadow: [X, Y, 'Radius', 'Spread', 'Color'],
+	        valueProps: ['current', 'to', 'start', 'min', 'max'],
+	        transformFuncs: ['translate', SCALE, ROTATE, 'skew', TRANSFORM_PERSPECTIVE],
+	        transformProps: {} // objects are faster at direct lookups
+	    };
 	
-					if (testElement.style.hasOwnProperty(prefixed)) {
-						cache[key] = prefixed;
-					}
-				}
-				
-				return cache[key];
-			};
-			
-		/*
-			Stylee function call
-			
-			Syntax
-				
-				Get property
-					style(element, 'property');
-					
-				Set property
-					style(element, {
-						foo: 'bar'
-					});
-		*/
-		return function (element, prop) {
-			// If prop is a string, we're requesting a property
-			if (typeof prop === 'string') {
-				return window.getComputedStyle(element, null)[cache[prop] || testPrefix(prop)];
-			
-			// If it's an object, we're setting
-			} else {
-				
-				for (var key in prop) {
-					if (prop.hasOwnProperty(key)) {
-						element.style[cache[key] || testPrefix(key)] = prop[key];
-					}
-				}
-				
-				return this;
-			}
-		}
-	};
+	// Create transform terms
+	(function () {
+	    var transformFuncs = terms.transformFuncs,
+	        transformProps = terms.transformProps,
+	        numOfTransformFuncs = transformFuncs.length,
+	        i = 0,
 	
-	module.exports = new cssStyler();
+	        createProps = function (funcName) {
+	            var typeTerms = terms.positions,
+	                j = 0;
+	
+	            if (typeTerms) {
+	                for (; j < typeTerms.length; j++) {
+	                    transformProps[funcName + typeTerms[j]] = true;
+	                }
+	            }
+	        };
+	    
+	    // Manually add skew and transform perspective  
+	    transformProps[ROTATE] = transformProps[SCALE] = transformProps[TRANSFORM_PERSPECTIVE] = true;
+	    
+	    // Loop over each function name and create function/property terms
+	    for (; i < numOfTransformFuncs; i++) {
+	        createProps(transformFuncs[i]);
+	    }
+	})();
+	
+	module.exports = terms;
 
 /***/ },
-/* 21 */
+/* 22 */
+/*!******************************!*\
+  !*** ./src/input/pointer.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var Input = __webpack_require__(/*! ./input.js */ 3),
+	    currentPointer, // Sort this out for multitouch
+	    
+	    TOUCHMOVE = 'touchmove',
+	    MOUSEMOVE = 'mousemove',
+	    
+	    doc = document.documentElement,
+	
+	    /*
+	        Convert event into point
+	        
+	        Scrape the x/y coordinates from the provided event
+	        
+	        @param [event]: Original pointer event
+	        @param [boolean]: True if touch event
+	        @return [object]: x/y coordinates of event
+	    */
+	    eventToPoint = function (event, isTouchEvent) {
+	        var touchChanged = isTouchEvent ? event.changedTouches[0] : false;
+	        
+	        return {
+	            x: touchChanged ? touchChanged.clientX : event.screenX,
+	            y: touchChanged ? touchChanged.clientY : event.screenY
+	        }
+	    },
+	    
+	    /*
+	        Get actual event
+	        
+	        Checks for jQuery's .originalEvent if present
+	        
+	        @param [event | jQuery event]
+	        @return [event]: The actual JS event  
+	    */
+	    getActualEvent = function (event) {
+	        return event.originalEvent || event;
+	    },
+	
+	    
+	    /*
+	        Pointer constructor
+	    */
+	    Pointer = function (e) {
+	        var event = getActualEvent(e), // In case of jQuery event
+	            isTouch = (event.touches) ? true : false,
+	            startPoint = eventToPoint(event, isTouch);
+	        
+	        this.update(startPoint);
+	        this.isTouch = isTouch;
+	        this.bindEvents();
+	    };
+	
+	Pointer.prototype = new Input();
+	
+	/*
+	    Bind move event
+	*/
+	Pointer.prototype.bindEvents = function () {
+	    this.moveEvent = this.isTouch ? TOUCHMOVE : MOUSEMOVE;
+	    
+	    currentPointer = this;
+	    
+	    doc.addEventListener(this.moveEvent, this.onMove);
+	};
+	
+	/*
+	    Unbind move event
+	*/
+	Pointer.prototype.unbindEvents = function () {
+	    doc.removeEventListener(this.moveEvent, this.onMove);
+	};
+	
+	/*
+	    Pointer onMove event handler
+	    
+	    @param [event]: Pointer move event
+	*/
+	Pointer.prototype.onMove = function (e) {
+	    var newPoint = eventToPoint(e, currentPointer.isTouch);
+	    e = getActualEvent(e);
+	    e.preventDefault();
+	    currentPointer.update(newPoint);
+	};
+	
+	Pointer.prototype.stop = function () {
+	    this.unbindEvents();
+	};
+	
+	module.exports = Pointer;
+
+/***/ },
+/* 23 */
 /*!****************************!*\
   !*** ./src/opts/values.js ***!
   \****************************/
@@ -3420,7 +3573,7 @@
 	};
 
 /***/ },
-/* 22 */
+/* 24 */
 /*!******************************!*\
   !*** ./src/utils/resolve.js ***!
   \******************************/
@@ -3445,7 +3598,7 @@
 	"use strict";
 	
 	var calc = __webpack_require__(/*! ./calc.js */ 7),
-	    utils = __webpack_require__(/*! ./utils.js */ 17);
+	    utils = __webpack_require__(/*! ./utils.js */ 16);
 	
 	module.exports = function (newValue, currentValue, parent, scope) {
 	    var splitValueUnit = {};
@@ -3476,236 +3629,7 @@
 	};
 
 /***/ },
-/* 23 */
-/*!**************************************!*\
-  !*** ./src/routes/css/dictionary.js ***!
-  \**************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var X = 'X',
-	    Y = 'Y',
-	    TRANSFORM_PERSPECTIVE = 'transformPerspective',
-	    SCALE = 'scale',
-	    ROTATE = 'rotate',
-	
-	    terms = {
-	        colors: ['Red', 'Green', 'Blue', 'Alpha'],
-	        positions: [X, Y, 'Z'],
-	        dimensions: ['Top', 'Right', 'Bottom', 'Left'],
-	        shadow: [X, Y, 'Radius', 'Spread', 'Color'],
-	        valueProps: ['current', 'to', 'start', 'min', 'max'],
-	        transformFuncs: ['translate', SCALE, ROTATE, 'skew', TRANSFORM_PERSPECTIVE],
-	        transformProps: {} // objects are faster at direct lookups
-	    };
-	
-	// Create transform terms
-	(function () {
-	    var transformFuncs = terms.transformFuncs,
-	        transformProps = terms.transformProps,
-	        numOfTransformFuncs = transformFuncs.length,
-	        i = 0,
-	
-	        createProps = function (funcName) {
-	            var typeTerms = terms.positions,
-	                j = 0;
-	
-	            if (typeTerms) {
-	                for (; j < typeTerms.length; j++) {
-	                    transformProps[funcName + typeTerms[j]] = true;
-	                }
-	            }
-	        };
-	    
-	    // Manually add skew and transform perspective  
-	    transformProps[ROTATE] = transformProps[SCALE] = transformProps[TRANSFORM_PERSPECTIVE] = true;
-	    
-	    // Loop over each function name and create function/property terms
-	    for (; i < numOfTransformFuncs; i++) {
-	        createProps(transformFuncs[i]);
-	    }
-	})();
-	
-	module.exports = terms;
-
-/***/ },
-/* 24 */
-/*!******************************!*\
-  !*** ./src/input/pointer.js ***!
-  \******************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var Input = __webpack_require__(/*! ./input.js */ 3),
-	    currentPointer, // Sort this out for multitouch
-	    
-	    TOUCHMOVE = 'touchmove',
-	    MOUSEMOVE = 'mousemove',
-	    
-	    doc = document.documentElement,
-	
-	    /*
-	        Convert event into point
-	        
-	        Scrape the x/y coordinates from the provided event
-	        
-	        @param [event]: Original pointer event
-	        @param [boolean]: True if touch event
-	        @return [object]: x/y coordinates of event
-	    */
-	    eventToPoint = function (event, isTouchEvent) {
-	        var touchChanged = isTouchEvent ? event.changedTouches[0] : false;
-	        
-	        return {
-	            x: touchChanged ? touchChanged.clientX : event.screenX,
-	            y: touchChanged ? touchChanged.clientY : event.screenY
-	        }
-	    },
-	    
-	    /*
-	        Get actual event
-	        
-	        Checks for jQuery's .originalEvent if present
-	        
-	        @param [event | jQuery event]
-	        @return [event]: The actual JS event  
-	    */
-	    getActualEvent = function (event) {
-	        return event.originalEvent || event;
-	    },
-	
-	    
-	    /*
-	        Pointer constructor
-	    */
-	    Pointer = function (e) {
-	        var event = getActualEvent(e), // In case of jQuery event
-	            isTouch = (event.touches) ? true : false,
-	            startPoint = eventToPoint(event, isTouch);
-	        
-	        this.update(startPoint);
-	        this.isTouch = isTouch;
-	        this.bindEvents();
-	    };
-	
-	Pointer.prototype = new Input();
-	
-	/*
-	    Bind move event
-	*/
-	Pointer.prototype.bindEvents = function () {
-	    this.moveEvent = this.isTouch ? TOUCHMOVE : MOUSEMOVE;
-	    
-	    currentPointer = this;
-	    
-	    doc.addEventListener(this.moveEvent, this.onMove);
-	};
-	
-	/*
-	    Unbind move event
-	*/
-	Pointer.prototype.unbindEvents = function () {
-	    doc.removeEventListener(this.moveEvent, this.onMove);
-	};
-	
-	/*
-	    Pointer onMove event handler
-	    
-	    @param [event]: Pointer move event
-	*/
-	Pointer.prototype.onMove = function (e) {
-	    var newPoint = eventToPoint(e, currentPointer.isTouch);
-	    e = getActualEvent(e);
-	    e.preventDefault();
-	    currentPointer.update(newPoint);
-	};
-	
-	Pointer.prototype.stop = function () {
-	    this.unbindEvents();
-	};
-	
-	module.exports = Pointer;
-
-/***/ },
 /* 25 */
-/*!*****************************!*\
-  !*** ./src/process/loop.js ***!
-  \*****************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    The loop
-	*/
-	"use strict";
-	
-	var Timer = __webpack_require__(/*! ./timer.js */ 33),
-	    Loop = function () {
-	        this.timer = new Timer();
-	    };
-	    
-	Loop.prototype = {
-	    
-	    /*
-	        [boolean]: Current status of animation loop
-	    */
-	    isRunning: false,
-	    
-	    /*
-	        Fire all active processes once per frame
-	    */
-	    frame: function () {
-	        var self = this;
-	        
-	        requestAnimationFrame(function () {
-	            var framestamp = self.timer.update(), // Currently just measuring in ms - will look into hi-res timestamps
-	                isActive = self.callback.call(self.scope, framestamp, self.timer.getElapsed());
-	
-	            if (isActive) {
-	                self.frame(true);
-	            } else {
-	                self.stop();
-	            }
-	        });
-	    },
-	    
-	    /*
-	        Start loop
-	    */
-	    start: function () {
-	        // Make sure we're not already running a loop
-	        if (!this.isRunning) {
-	            this.timer.clock();
-	            this.isRunning = true;
-	            this.frame();
-	        }
-	    },
-	    
-	    /*
-	        Stop the loop
-	    */
-	    stop: function () {
-	        this.isRunning = false;
-	    },
-	    
-	    /*
-	        Set the callback to run every frame
-	        
-	        @param [Object]: Execution context
-	        @param [function]: Callback to fire
-	    */
-	    setCallback: function (scope, callback) {
-	        this.scope = scope;
-	        this.callback = callback;
-	    }
-	 
-	};
-	
-	module.exports = new Loop();
-
-/***/ },
-/* 26 */
 /*!*****************************!*\
   !*** ./src/action/rubix.js ***!
   \*****************************/
@@ -3724,9 +3648,9 @@
 	"use strict";
 	
 	var calc = __webpack_require__(/*! ../utils/calc.js */ 7),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 17),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 16),
 	    easing = __webpack_require__(/*! ../utils/easing.js */ 6),
-	    simulate = __webpack_require__(/*! ./simulate.js */ 30),
+	    simulate = __webpack_require__(/*! ./simulate.js */ 32),
 	    
 	    // Commonly used properties
 	    CURRENT = 'current',
@@ -4003,7 +3927,7 @@
 	};
 
 /***/ },
-/* 27 */
+/* 26 */
 /*!******************************!*\
   !*** ./src/routes/values.js ***!
   \******************************/
@@ -4043,7 +3967,7 @@
 	};
 
 /***/ },
-/* 28 */
+/* 27 */
 /*!***************************!*\
   !*** ./src/routes/css.js ***!
   \***************************/
@@ -4051,8 +3975,8 @@
 
 	"use strict";
 	
-	var build = __webpack_require__(/*! ./css/build.js */ 31),
-	    split = __webpack_require__(/*! ./css/split.js */ 32),
+	var build = __webpack_require__(/*! ./css/build.js */ 30),
+	    split = __webpack_require__(/*! ./css/split.js */ 31),
 	    
 	    css = 'css',
 	    cssOrder = css + 'Order',
@@ -4078,7 +4002,7 @@
 	};
 
 /***/ },
-/* 29 */
+/* 28 */
 /*!****************************!*\
   !*** ./src/routes/attr.js ***!
   \****************************/
@@ -4102,83 +4026,83 @@
 	};
 
 /***/ },
-/* 30 */
-/*!********************************!*\
-  !*** ./src/action/simulate.js ***!
-  \********************************/
+/* 29 */
+/*!*****************************!*\
+  !*** ./src/process/loop.js ***!
+  \*****************************/
 /***/ function(module, exports, __webpack_require__) {
 
+	/*
+	    The loop
+	*/
 	"use strict";
 	
-	var frictionStopLimit = .2,
-	    calc = __webpack_require__(/*! ../utils/calc.js */ 7),
-	    speedPerFrame = calc.speedPerFrame;
+	var Timer = __webpack_require__(/*! ./timer.js */ 33),
+	    Loop = function () {
+	        this.timer = new Timer();
+	    };
+	    
+	Loop.prototype = {
+	    
+	    /*
+	        [boolean]: Current status of animation loop
+	    */
+	    isRunning: false,
+	    
+	    /*
+	        Fire all active processes once per frame
+	    */
+	    frame: function () {
+	        var self = this;
+	        
+	        requestAnimationFrame(function () {
+	            var framestamp = self.timer.update(), // Currently just measuring in ms - will look into hi-res timestamps
+	                isActive = self.callback.call(self.scope, framestamp, self.timer.getElapsed());
 	
-	module.exports = {
-	    
-	    /*
-	        Velocity
-	        
-	        The default .run() simulation.
-	        
-	        Applies any set deceleration and acceleration to existing velocity
-	    */
-	    velocity: function (value, duration) {
-	        return value.velocity - speedPerFrame(value.deceleration, duration) + speedPerFrame(value.acceleration, duration);
-	    },
-	
-	    /*
-	        Gravity
-	        
-	        TODO: neaten this effect (due to rounding issues) and add clause that reduces velocity to 0
-	        
-	        @param [Value]
-	        @returns [number]: New velocity
-	    */
-	    gravity: function (value, duration) {
-	        return value.velocity + speedPerFrame(value.gravity, duration);
+	            if (isActive) {
+	                self.frame(true);
+	            } else {
+	                self.stop();
+	            }
+	        });
 	    },
 	    
 	    /*
-	        Friction
-	        
-	        @param [Value]
-	        @returns [number]: New velocity
+	        Start loop
 	    */
-	    friction: function (value, duration) {
-	        var newVelocity = speedPerFrame(value.velocity, duration) * (1 - value.friction);
-	        return (newVelocity < frictionStopLimit && newVelocity > -frictionStopLimit) ? 0 : calc.speedPerSecond(newVelocity, duration);
+	    start: function () {
+	        // Make sure we're not already running a loop
+	        if (!this.isRunning) {
+	            this.timer.clock();
+	            this.isRunning = true;
+	            this.frame();
+	        }
 	    },
 	    
 	    /*
-	        Spring
-	        
-	        @param [Value]
-	        @returns [number]: New velocity
+	        Stop the loop
 	    */
-	    spring: function (value, duration) {
-	        var distance = value.to - value.current;
-	
-	        value.velocity += distance * speedPerFrame(value.spring, duration);
-	            
-	        return this.friction(value, duration);
+	    stop: function () {
+	        this.isRunning = false;
 	    },
 	    
 	    /*
-	        Bounce
+	        Set the callback to run every frame
 	        
-	        Invert velocity and reduce by provided fraction
-	        
-	        @param [Value]
-	        @return [number]: New velocity
+	        @param [Object]: Execution context
+	        @param [function]: Callback to fire
 	    */
-	    bounce: function (value) {
-	        return value.velocity *= -value.bounce;
+	    setCallback: function (scope, callback) {
+	        this.scope = scope;
+	        this.callback = callback;
 	    }
+	 
 	};
+	
+	module.exports = new Loop();
 
 /***/ },
-/* 31 */
+/* 30 */
 /*!*********************************!*\
   !*** ./src/routes/css/build.js ***!
   \*********************************/
@@ -4186,8 +4110,8 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 23),
-	    templates = __webpack_require__(/*! ./templates.js */ 37),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 21),
+	    templates = __webpack_require__(/*! ./templates.js */ 34),
 	    lookup = __webpack_require__(/*! ./lookup.js */ 35),
 	    
 	    TRANSFORM = 'transform',
@@ -4240,7 +4164,7 @@
 	};
 
 /***/ },
-/* 32 */
+/* 31 */
 /*!*********************************!*\
   !*** ./src/routes/css/split.js ***!
   \*********************************/
@@ -4248,12 +4172,12 @@
 
 	"use strict";
 	
-	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 34),
-	    dictionary = __webpack_require__(/*! ./dictionary.js */ 23),
+	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 36),
+	    dictionary = __webpack_require__(/*! ./dictionary.js */ 21),
 	    splitLookup = __webpack_require__(/*! ./lookup.js */ 35),
-	    splitters = __webpack_require__(/*! ./splitters.js */ 36),
+	    splitters = __webpack_require__(/*! ./splitters.js */ 37),
 	    
-	    utils = __webpack_require__(/*! ../../utils/utils.js */ 17),
+	    utils = __webpack_require__(/*! ../../utils/utils.js */ 16),
 	    
 	    valueProperties = dictionary.valueProps,
 	    valuePropertyCount = valueProperties.length,
@@ -4341,6 +4265,82 @@
 	};
 
 /***/ },
+/* 32 */
+/*!********************************!*\
+  !*** ./src/action/simulate.js ***!
+  \********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var frictionStopLimit = .2,
+	    calc = __webpack_require__(/*! ../utils/calc.js */ 7),
+	    speedPerFrame = calc.speedPerFrame;
+	
+	module.exports = {
+	    
+	    /*
+	        Velocity
+	        
+	        The default .run() simulation.
+	        
+	        Applies any set deceleration and acceleration to existing velocity
+	    */
+	    velocity: function (value, duration) {
+	        return value.velocity - speedPerFrame(value.deceleration, duration) + speedPerFrame(value.acceleration, duration);
+	    },
+	
+	    /*
+	        Gravity
+	        
+	        TODO: neaten this effect (due to rounding issues) and add clause that reduces velocity to 0
+	        
+	        @param [Value]
+	        @returns [number]: New velocity
+	    */
+	    gravity: function (value, duration) {
+	        return value.velocity + speedPerFrame(value.gravity, duration);
+	    },
+	    
+	    /*
+	        Friction
+	        
+	        @param [Value]
+	        @returns [number]: New velocity
+	    */
+	    friction: function (value, duration) {
+	        var newVelocity = speedPerFrame(value.velocity, duration) * (1 - value.friction);
+	        return (newVelocity < frictionStopLimit && newVelocity > -frictionStopLimit) ? 0 : calc.speedPerSecond(newVelocity, duration);
+	    },
+	    
+	    /*
+	        Spring
+	        
+	        @param [Value]
+	        @returns [number]: New velocity
+	    */
+	    spring: function (value, duration) {
+	        var distance = value.to - value.current;
+	
+	        value.velocity += distance * speedPerFrame(value.spring, duration);
+	            
+	        return this.friction(value, duration);
+	    },
+	    
+	    /*
+	        Bounce
+	        
+	        Invert velocity and reduce by provided fraction
+	        
+	        @param [Value]
+	        @return [number]: New velocity
+	    */
+	    bounce: function (value) {
+	        return value.velocity *= -value.bounce;
+	    }
+	};
+
+/***/ },
 /* 33 */
 /*!******************************!*\
   !*** ./src/process/timer.js ***!
@@ -4349,7 +4349,7 @@
 
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 17),
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 16),
 	
 	    maxElapsed = 33,
 	    Timer = function () {
@@ -4380,53 +4380,79 @@
 
 /***/ },
 /* 34 */
-/*!********************************************!*\
-  !*** ./src/routes/css/default-property.js ***!
-  \********************************************/
+/*!*************************************!*\
+  !*** ./src/routes/css/templates.js ***!
+  \*************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
-	var color = {
-	        min: 0,
-	        max: 255,
-	        round: true
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 21),
+	
+	    defaultValues = {
+	        Alpha: 1
 	    },
-	    opacity = {
-	        min: 0,
-	        max: 1
+	
+	    functionCreate = function (value, prefix) {
+	        return prefix + '(' + value + ')';
 	    },
-	    angle = {
-	        unit: 'deg'
+	
+	    createSpaceDelimited = function (key, object, terms) {
+	        return createDelimitedString(key, object, terms, ' ');
 	    },
-	    defaults = {
-	        base: {
-	            unit: 'px'
+	    
+	    createCommaDelimited = function (key, object, terms) {
+	        return createDelimitedString(key, object, terms, ', ').slice(0, -2);
+	    },
+	    
+	    createDelimitedString = function (key, object, terms, delimiter) {
+	        var string = '',
+	            propKey = '',
+	            termsLength = terms.length;
+	        
+	        for (var i = 0; i < termsLength; i++) {
+	            propKey = key + terms[i];
+	
+	            if (object[propKey] !== undefined) {
+	                string += object[propKey];
+	            } else {
+	                if (defaultValues[terms[i]] !== undefined) {
+	                    string += defaultValues[terms[i]];
+	                }
+	            }
+	            
+	            string += delimiter;
+	        }
+	    
+	        return string;
+	    },
+	
+	    templates = {
+	        
+	        colors: function (key, values) {
+	            return functionCreate(createCommaDelimited(key, values, dictionary.colors), 'rgba');
 	        },
 	        
-	        color: color,
-	        Red: color,
-	        Green: color,
-	        Blue: color,
-	    
-	        Alpha: opacity,
-	        opacity: opacity,
+	        dimensions: function (key, values) {
+	            return createSpaceDelimited(key, values, dictionary.dimensions);
+	        },
 	        
-	        scale: scale,
-	        scaleX: scale,
-	        scaleY: scale,
-	        scaleZ: scale,
+	        positions: function (key, values) {
+	            return createSpaceDelimited(key, values, dictionary.positions);
+	        },
 	        
-	        skew: angle,
-	        skewX: angle,
-	        skewY: angle,
-	        rotate: angle,
-	        rotateX: angle,
-	        rotateY: angle,
-	        rotateZ: angle
+	        shadow: function (key, values) {
+	            var shadowTerms = dictionary.shadow.slice(0,4);
+	            
+	            return createSpaceDelimited(key, values, shadowTerms) + templates.colors(key, values);
+	        },
+	        
+	        transform: function (key, values) {
+	            return key + '(' + values[key] +')';
+	        }
 	    };
-	    
-	module.exports = defaults;
+	
+	module.exports = templates;
 
 /***/ },
 /* 35 */
@@ -4476,6 +4502,57 @@
 
 /***/ },
 /* 36 */
+/*!********************************************!*\
+  !*** ./src/routes/css/default-property.js ***!
+  \********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var color = {
+	        min: 0,
+	        max: 255,
+	        round: true
+	    },
+	    opacity = {
+	        min: 0,
+	        max: 1
+	    },
+	    angle = {
+	        unit: 'deg'
+	    },
+	    scale = {},
+	    defaults = {
+	        base: {
+	            unit: 'px'
+	        },
+	        
+	        color: color,
+	        Red: color,
+	        Green: color,
+	        Blue: color,
+	    
+	        Alpha: opacity,
+	        opacity: opacity,
+	        
+	        scale: scale,
+	        scaleX: scale,
+	        scaleY: scale,
+	        scaleZ: scale,
+	        
+	        skew: angle,
+	        skewX: angle,
+	        skewY: angle,
+	        rotate: angle,
+	        rotateX: angle,
+	        rotateY: angle,
+	        rotateZ: angle
+	    };
+	    
+	module.exports = defaults;
+
+/***/ },
+/* 37 */
 /*!*************************************!*\
   !*** ./src/routes/css/splitters.js ***!
   \*************************************/
@@ -4483,8 +4560,8 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 23),
-	    utils = __webpack_require__(/*! ../../utils/utils.js */ 17),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 21),
+	    utils = __webpack_require__(/*! ../../utils/utils.js */ 16),
 	
 	    /*
 	        Split comma delimited into array
@@ -4712,82 +4789,6 @@
 	    };
 	
 	module.exports = splitters;
-
-/***/ },
-/* 37 */
-/*!*************************************!*\
-  !*** ./src/routes/css/templates.js ***!
-  \*************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 23),
-	
-	    defaultValues = {
-	        Alpha: 1
-	    },
-	
-	    functionCreate = function (value, prefix) {
-	        return prefix + '(' + value + ')';
-	    },
-	
-	    createSpaceDelimited = function (key, object, terms) {
-	        return createDelimitedString(key, object, terms, ' ');
-	    },
-	    
-	    createCommaDelimited = function (key, object, terms) {
-	        return createDelimitedString(key, object, terms, ', ').slice(0, -2);
-	    },
-	    
-	    createDelimitedString = function (key, object, terms, delimiter) {
-	        var string = '',
-	            propKey = '',
-	            termsLength = terms.length;
-	        
-	        for (var i = 0; i < termsLength; i++) {
-	            propKey = key + terms[i];
-	
-	            if (object[propKey] !== undefined) {
-	                string += object[propKey];
-	            } else {
-	                if (defaultValues[terms[i]] !== undefined) {
-	                    string += defaultValues[terms[i]];
-	                }
-	            }
-	            
-	            string += delimiter;
-	        }
-	    
-	        return string;
-	    },
-	
-	    templates = {
-	        
-	        colors: function (key, values) {
-	            return functionCreate(createCommaDelimited(key, values, dictionary.colors), 'rgba');
-	        },
-	        
-	        dimensions: function (key, values) {
-	            return createSpaceDelimited(key, values, dictionary.dimensions);
-	        },
-	        
-	        positions: function (key, values) {
-	            return createSpaceDelimited(key, values, dictionary.positions);
-	        },
-	        
-	        shadow: function (key, values) {
-	            var shadowTerms = dictionary.shadow.slice(0,4);
-	            
-	            return createSpaceDelimited(key, values, shadowTerms) + templates.colors(key, values);
-	        },
-	        
-	        transform: function (key, values) {
-	            return key + '(' + values[key] +')';
-	        }
-	    };
-	
-	module.exports = templates;
 
 /***/ }
 /******/ ]);
