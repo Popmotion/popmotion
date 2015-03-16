@@ -12,6 +12,7 @@ var color = {
     angle = {
         unit: 'deg'
     },
+    scale = {},
     defaults = {
         base: {
             unit: 'px'
@@ -24,6 +25,11 @@ var color = {
     
         Alpha: opacity,
         opacity: opacity,
+        
+        scale: scale,
+        scaleX: scale,
+        scaleY: scale,
+        scaleZ: scale,
         
         skew: angle,
         skewX: angle,
