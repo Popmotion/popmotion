@@ -26,7 +26,8 @@ var parseArgs = require('./parse-args.js'),
         
         // Create new property manager
         defaultProps.scope = this;
-        self.props = new Repo(defaultProps);
+        self.props = new Repo();
+        self.props(defaultProps);
 
         // Create data store
         self.data = new Repo();
@@ -151,7 +152,7 @@ Action.prototype = {
             values = self.values;
         
         // Update current properties
-        self.props.set(props);
+        self.props(props);
         
         // Set default property to current if it isn't set
         defaultProp = defaultProp || 'current';
@@ -232,11 +233,11 @@ Action.prototype = {
         self.resetProgress();
         
         if (processType) {
-            self.props.set('rubix', processType);
+            self.props('rubix', processType);
         }
 
         self.isActive(true);
-        self.started = utils.currentTime() + self.props.get('delay');
+        self.started = utils.currentTime() + self.props('delay');
         self.framestamp = self.started;
         self.firstFrame = true;
         
@@ -309,7 +310,7 @@ Action.prototype = {
 	    var self = this;
 
         self.progress = 0;
-        self.elapsed = (self.playDirection === 1) ? 0 : self.props.get('duration');
+        self.elapsed = (self.playDirection === 1) ? 0 : self.props('duration');
         self.started = utils.currentTime();
         
         return self;
@@ -340,7 +341,7 @@ Action.prototype = {
 	        values = self.values;
 	    
 	    self.progress = calc.difference(self.progress, 1);
-        self.elapsed = calc.difference(self.elapsed, self.props.get('duration'));
+        self.elapsed = calc.difference(self.elapsed, self.props('duration'));
         
         for (var key in values) {
             values[key].flip();
@@ -402,13 +403,13 @@ Action.prototype = {
     checkNextStep: function (key, callback) {
         var COUNT = 'Count',
             stepTaken = false,
-            step = this.props.get(key),
-            count = this.props.get(key + COUNT),
+            step = this.props(key),
+            count = this.props(key + COUNT),
             forever = (step === true);
 
         if (forever || utils.isNum(step)) {
             ++count;
-            this.props.set(key + COUNT, count);
+            this.props(key + COUNT, count);
             if (forever || count <= step) {
                 callback.call(this);
                 stepTaken = true;
@@ -461,14 +462,14 @@ Action.prototype = {
     
     
     setProp: function (key, value) {
-        this.props.set(key, value);
+        this.props(key, value);
         
         return this;
     },
     
     
     getProp: function (key) {
-        return this.props.get(key);
+        return this.props(key);
     },
     
     /*
@@ -489,7 +490,7 @@ Action.prototype = {
         @param [string] (optional): Name of order array (if not default)
     */
     updateOrder: function (key, moveToBack, orderName) {
-        var props = this.props.store,
+        var props = this.props(),
             pos, order;
         
         orderName = orderName || 'order';
@@ -509,7 +510,7 @@ Action.prototype = {
         Style our dom element
     */
     style: function (prop) {
-        var dom = this.props.store.dom,
+        var dom = this.props('dom'),
             returnVal;
         
         if (dom) {

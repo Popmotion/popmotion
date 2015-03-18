@@ -10,8 +10,8 @@ var Rubix = require('./rubix.js'),
     ANGLE_DISTANCE = 'AngleAndDistance';
 
 module.exports = function (action, framestamp, frameDuration) {
-    var props = action.props.store,
-        data = action.data.store,
+    var props = action.props(),
+        data = action.data(),
         values = action.values,
         rubix = Rubix[props.rubix],
         valueRubix = rubix,
