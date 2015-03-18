@@ -33,9 +33,7 @@ module.exports = function (action, framestamp, frameDuration) {
 
     // Fire onStart if first frame
     if (action.firstFrame) {
-        if (props.onStart) {
-            props.onStart.call(props.scope, action.output, data);
-        }
+        routes.onStart(action.output, action, values, props, data);
         
         action.firstFrame = false;
     }

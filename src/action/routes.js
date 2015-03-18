@@ -7,7 +7,7 @@ var defaultRoute = require('../routes/values.js'),
     routes = {},
     routeKeys = [],
     numRoutes,
-    processes = ['preprocess', 'onEnd'],
+    processes = ['preprocess', 'onStart', 'onEnd'],
     
     has = function (name) {
         return (routeKeys.indexOf(name) > -1) ? true : false;
