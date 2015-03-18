@@ -16,6 +16,7 @@ module.exports = function (action, framestamp, frameDuration) {
         rubix = Rubix[props.rubix],
         valueRubix = rubix,
         hasChanged = false,
+        defaultRoute = routes.getName(),
         i = 0,
         order = props.order = props.order || [],
         orderLength = order.length,
@@ -80,7 +81,8 @@ module.exports = function (action, framestamp, frameDuration) {
         // Set current and add unit (if any) for output
         value.current = output;
         action.output[value.route] = action.output[value.route] || {};
-        action.output[value.route][value.name] = (value.unit) ? output + value.unit : output;
+        action.output[defaultRoute] = action.output[defaultRoute] || {};
+        action.output[defaultRoute][key] = action.output[value.route][value.name] = (value.unit) ? output + value.unit : output;
     }
 
     // shard onFrame and onChange

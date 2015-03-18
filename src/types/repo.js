@@ -1,58 +1,68 @@
 "use strict";
 
 var utils = require('../utils/utils.js'),
-    dictionary = require('../routes/css/dictionary.js'),
-    valueProps = dictionary.valueProps,
 
-    /*
-        Repo constructor
+    createRepo = function () {
+        var store = {},
         
-        Creates data store and sets any initialising data
+            /*
+                Determine whether call is getter or setter
+            */
+            repository = function () {
+                // If this is a getter, return value
+                if ((!arguments.length || utils.isString(arguments[0]))) {
+                    return this.get.apply(this, arguments);
+                
+                // Or this is a setter, return this
+                } else {
+                    return this.set.apply(this, arguments);
+                }
+            };
         
-        @param [string || object]: Key or data
-        @param [var] (optional): Data to store
-    */
-    Repo = function () {
-        this.store = {};
-        this.set.apply(this, arguments);
-    };
-
-Repo.prototype = {
     
-    /*
-        Get data or data property
-        
-        @param [string] (optional): Key
-        @returns [var || dataStore]: Data found
-    */
-    get: function () {
-        var args = arguments;
-        return (args.length) ? this.store[args[0]] : this.store;
-    },
+        /*
+            Get data with specified key
+            
+            @param [string]: Name of property to access
+            @returns [var]: Data found
+        */
+        repository.get = function (key) {
+            return store[key] ? store[key] : store;
+        };
     
-    /*
-        Set data or data property
-        
-        @param [string || object]: Key or data
-        @param [var] (optional): Data to store
-    */
-    set: function (data, property) {
-        // If we're being passed an object, add all
-        if (utils.isObj(data)) {
-            for (var key in data) {
-                if (data.hasOwnProperty(key)) {
-                    this.store[key] = (valueProps.indexOf(key) > -1) ? parseFloat(data[key]) : data[key];
+    
+        /*
+            Set data either has object or key/value pair
+            
+            Syntax
+                .set(data)
+                    @param [object]: Data to store
+                    
+                .set(key, value)
+                    @param [string]: Name of data
+                    @param [val]: Data to store
+        */
+        repository.set = function (data, prop) {
+            var multiArg = (arguments.length > 1),
+                toSet = multiArg ? {} : data,
+                key = '';
+            
+            // If this is a key/value setter, add to toSet
+            if (multiArg) {
+                toSet[data] = prop;
+            }
+            
+            // Loop over toSet and assign to our data store
+            for (key in toSet) {
+                if (toSet.hasOwnProperty(key)) {
+                    store[key] = toSet[key];
                 }
             }
+            
+            return this;
+        };
+        
+        return repository;
+    };
 
-        // Or add specific property
-        } else if (data !== undefined) {
-            this.store[data] = (valueProps.indexOf(data) > -1) ? parseFloat(property) : property;
-        }
-
-        return this;
-    }
-    
-};
-
-module.exports = Repo;
+module.exports = createRepo;

@@ -4,6 +4,10 @@ module.exports = {
     
     name: 'svgPath',
     
+    onStart: function () {
+        action.dom.getTotalLength();
+    },
+    
     onChange: function (output, action, values, props) {
         action.style({
             'stroke': output.color
@@ -14,13 +18,3 @@ module.exports = {
         });
     }
 };
-
-var myPath = redshift.newAction({
-    dom: yourSVG
-});
-
-myPath.play({
-    svgPath: {
-        width: 100
-    }
-}, 500);
