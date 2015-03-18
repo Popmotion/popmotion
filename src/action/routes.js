@@ -54,6 +54,8 @@ var defaultRoute = require('../routes/values.js'),
             }
             
             routes[route.name] = route;
+            
+            return this;
         },
         
         /*
@@ -93,10 +95,11 @@ var defaultRoute = require('../routes/values.js'),
         manager[processName] = process(processName);
     }
     
-    manager.add(defaultRoute);
-    manager.add(cssRoute);
-    manager.add(attrRoute);
-    manager.add(svgPathRoute);
+    manager
+        .add(defaultRoute)
+        .add(cssRoute)
+        .add(attrRoute)
+        .add(svgPathRoute);
 })();
 
 module.exports = manager; 
