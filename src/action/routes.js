@@ -1,6 +1,9 @@
 "use strict";
 
 var defaultRoute = require('../routes/values.js'),
+    cssRoute = require('../routes/css.js'),
+    attrRoute = require('../routes/attr.js'),
+    svgPathRoute = require('../routes/path.js'),
 
     routes = {},
     routeKeys = [],
@@ -93,7 +96,10 @@ var defaultRoute = require('../routes/values.js'),
     }
     
     manager
-        .add(defaultRoute);
+        .add(defaultRoute)
+        .add(cssRoute)
+        .add(attrRoute)
+        .add(svgPathRoute);
 })();
 
 module.exports = manager; 
