@@ -3,11 +3,12 @@
 var defaultRoute = require('../routes/values.js'),
     cssRoute = require('../routes/css.js'),
     attrRoute = require('../routes/attr.js'),
+    svgPathRoute = require('../routes/path.js'),
 
     routes = {},
     routeKeys = [],
     numRoutes,
-    processes = ['preprocess', 'onEnd'],
+    processes = ['preprocess', 'onStart', 'onEnd'],
     
     has = function (name) {
         return (routeKeys.indexOf(name) > -1) ? true : false;
@@ -53,6 +54,8 @@ var defaultRoute = require('../routes/values.js'),
             }
             
             routes[route.name] = route;
+            
+            return this;
         },
         
         /*
@@ -92,9 +95,11 @@ var defaultRoute = require('../routes/values.js'),
         manager[processName] = process(processName);
     }
     
-    manager.add(defaultRoute);
-    manager.add(cssRoute);
-    manager.add(attrRoute);
+    manager
+        .add(defaultRoute)
+        .add(cssRoute)
+        .add(attrRoute)
+        .add(svgPathRoute);
 })();
 
 module.exports = manager; 

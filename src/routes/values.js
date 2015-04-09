@@ -17,6 +17,12 @@ module.exports = {
     
     name: 'values',
     
+    onStart: function (action, values, props, data) {
+        if (props.start) {
+            props.start.call(props.scope, data);
+        }
+    },
+    
     onFrame: function (bucket, action, values, props, data) {
         fireCallback('onFrame', bucket, action, values, props, data);
     },

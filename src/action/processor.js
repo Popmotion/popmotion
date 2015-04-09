@@ -10,12 +10,13 @@ var Rubix = require('./rubix.js'),
     ANGLE_DISTANCE = 'AngleAndDistance';
 
 module.exports = function (action, framestamp, frameDuration) {
-    var props = action.props.store,
-        data = action.data.store,
+    var props = action.props(),
+        data = action.data(),
         values = action.values,
         rubix = Rubix[props.rubix],
         valueRubix = rubix,
         hasChanged = false,
+        defaultRoute = routes.getName(),
         i = 0,
         order = props.order = props.order || [],
         orderLength = order.length,
@@ -32,9 +33,7 @@ module.exports = function (action, framestamp, frameDuration) {
 
     // Fire onStart if first frame
     if (action.firstFrame) {
-        if (props.onStart) {
-            props.onStart.call(props.scope, action.output, data);
-        }
+        routes.onStart(action.output, action, values, props, data);
         
         action.firstFrame = false;
     }
@@ -80,7 +79,8 @@ module.exports = function (action, framestamp, frameDuration) {
         // Set current and add unit (if any) for output
         value.current = output;
         action.output[value.route] = action.output[value.route] || {};
-        action.output[value.route][value.name] = (value.unit) ? output + value.unit : output;
+        action.output[defaultRoute] = action.output[defaultRoute] || {};
+        action.output[defaultRoute][key] = action.output[value.route][value.name] = (value.unit) ? output + value.unit : output;
     }
 
     // shard onFrame and onChange
