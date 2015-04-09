@@ -24,7 +24,7 @@ var defaultRoute = require('../routes/values.js'),
                 routeName = routeKeys[i];
                 route = routes[routeName];
     
-                if (route.makeDefault || route[processName]) {
+                if (route.makeDefault || (route[processName] && props[processName])) {
                     route[processName](sourceValues[routeName], action, values, props, data);
                 }
             }
