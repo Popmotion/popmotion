@@ -7,5 +7,6 @@ module.exports = {
     width: STROKE + '-width',
     offset: DASH + 'offset',
     length: DASH_ARRAY,
-    spacing: DASH_ARRAY
+    spacing: DASH_ARRAY,
+    miterlimit: STROKE + '-miterlimit'
 };
