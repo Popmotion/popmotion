@@ -2245,6 +2245,7 @@
 	var Rubix = __webpack_require__(/*! ./rubix.js */ 24),
 	    routes = __webpack_require__(/*! ./routes.js */ 14),
 	    calc = __webpack_require__(/*! ../utils/calc.js */ 7),
+	    filters = __webpack_require__(/*! ../filters/filters.js */ 25),
 	    
 	    ANGLE_DISTANCE = 'AngleAndDistance';
 	
@@ -2322,7 +2323,7 @@
 	        action.output[defaultRoute][key] = action.output[value.route][value.name] = (value.unit) ? output + value.unit : output;
 	    }
 	
-	    // shard onFrame and onChange
+	    // Shard onFrame and onChange
 	    routes.shard(function (route, output) {
 	        // Fire onFrame every frame
 	        if (route.onFrame) {
@@ -2334,6 +2335,11 @@
 	            route.onChange(output, action, values, props, data);
 	        }
 	    }, action.output);
+	    
+	    // Apply filters
+	    if (props.motionBlur) {
+	        filters.apply(action, values, props);
+	    }
 	
 	    // Fire onEnd if ended
 	    if (rubix.hasEnded(action, hasChanged)) {
@@ -2358,10 +2364,10 @@
 
 	"use strict";
 	
-	var defaultRoute = __webpack_require__(/*! ../routes/values.js */ 25),
-	    cssRoute = __webpack_require__(/*! ../routes/css.js */ 26),
-	    attrRoute = __webpack_require__(/*! ../routes/attr.js */ 27),
-	    svgPathRoute = __webpack_require__(/*! ../routes/path.js */ 28),
+	var defaultRoute = __webpack_require__(/*! ../routes/values.js */ 26),
+	    cssRoute = __webpack_require__(/*! ../routes/css.js */ 27),
+	    attrRoute = __webpack_require__(/*! ../routes/attr.js */ 28),
+	    svgPathRoute = __webpack_require__(/*! ../routes/path.js */ 29),
 	
 	    routes = {},
 	    routeKeys = [],
@@ -2902,7 +2908,7 @@
 
 	"use strict";
 	
-	var theLoop = __webpack_require__(/*! ./loop.js */ 29),
+	var theLoop = __webpack_require__(/*! ./loop.js */ 30),
 	    ProcessManager = function () {
 	        this.all = {};
 	        this.active = [];
@@ -3423,8 +3429,6 @@
 
 	"use strict";
 	
-	
-	
 	module.exports = {
 	    // [number]: The canonical value
 	    current: 0,
@@ -3612,7 +3616,7 @@
 	var calc = __webpack_require__(/*! ../utils/calc.js */ 7),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 16),
 	    easing = __webpack_require__(/*! ../utils/easing.js */ 6),
-	    simulate = __webpack_require__(/*! ./simulate.js */ 30),
+	    simulate = __webpack_require__(/*! ./simulate.js */ 31),
 	    
 	    // Commonly used properties
 	    CURRENT = 'current',
@@ -3890,6 +3894,107 @@
 
 /***/ },
 /* 25 */
+/*!********************************!*\
+  !*** ./src/filters/filters.js ***!
+  \********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var svgAddress = "http://www.w3.org/2000/svg",
+	
+	    filterIdPrefix = 'redshift-filters',
+	    filterCounter = 0,
+	    filterNodes = {},
+	    filters = {},
+	    
+	    filterContainer,
+	    
+	    generateFilterContainer = function () {
+	        var svgWrapper = document.createElementNS(svgAddress, 'svg'),
+	            def = document.createElementNS(svgAddress, 'def');
+	
+	        svgWrapper.setAttribute('class', filterIdPrefix);
+	            
+	        svgWrapper.appendChild(def);
+	        
+	        document.body.insertBefore(svgWrapper, document.body.firstChild);
+	        
+	        return def;
+	    },
+	    
+	    generateFilter = function (type) {
+	        // Generate SVG and defs tags if not present
+	        if (!filterContainer) {
+	            filterContainer = generateFilterContainer();
+	        }
+	        
+	        // Generate filter tag if not defined
+	        if (!filterNodes[type]) {
+	            filterNodes[type] = generateFilterNode(type);
+	        }
+	        
+	        return filterNodes[type].cloneNode(true);
+	    },
+	    
+	    generateFilterNode = function (type) {
+	        var filter = document.createElementNS(svgAddress, 'filter'),
+	            blur = document.createElementNS(svgAddress, 'feGaussianBlur');
+	            
+	        blur.setAttribute('in', 'SourceGraphic');
+	        blur.setAttribute('stdDeviation', '10,0');
+	            
+	        filter.appendChild(blur);
+	        
+	        return filter;
+	    },
+	    
+	    /*
+	        Get new filter ID and increment counter
+	        
+	        @return [string]: New filter ID
+	    */
+	    getFilterId = function () {
+	        var filterId = filterIdPrefix + filterCounter;
+	        
+	        filterCounter++;
+	        
+	        return filterId;
+	    };
+	
+	module.exports = {
+	    
+	    /*
+	        Apply filter to DOM
+	    */
+	    apply: function (action, values, props) {
+	        var filter;
+	        
+	        // Generate a filter ID if none exists
+	        if (!props.filterId) {
+	            props.filterId = getFilterId();
+	            
+	            // Generate filter
+	            filter = generateFilter('motionBlur');
+	            
+	            filter.setAttribute('id', props.filterId);
+	            
+	            // Add filter to svg tag
+	            filterContainer.appendChild(filter);
+	
+	            // Apply filter as CSS rule
+	            action.style({
+	                filter: 'url("#' + props.filterId + '")'
+	            });
+	            
+	            filters[props.filterId] = filter;
+	        }
+	    }
+	    
+	};
+
+/***/ },
+/* 26 */
 /*!******************************!*\
   !*** ./src/routes/values.js ***!
   \******************************/
@@ -3935,7 +4040,7 @@
 	};
 
 /***/ },
-/* 26 */
+/* 27 */
 /*!***************************!*\
   !*** ./src/routes/css.js ***!
   \***************************/
@@ -3970,7 +4075,7 @@
 	};
 
 /***/ },
-/* 27 */
+/* 28 */
 /*!****************************!*\
   !*** ./src/routes/attr.js ***!
   \****************************/
@@ -3994,7 +4099,7 @@
 	};
 
 /***/ },
-/* 28 */
+/* 29 */
 /*!****************************!*\
   !*** ./src/routes/path.js ***!
   \****************************/
@@ -4020,7 +4125,7 @@
 	};
 
 /***/ },
-/* 29 */
+/* 30 */
 /*!*****************************!*\
   !*** ./src/process/loop.js ***!
   \*****************************/
@@ -4031,7 +4136,7 @@
 	*/
 	"use strict";
 	
-	var Timer = __webpack_require__(/*! ./timer.js */ 31),
+	var Timer = __webpack_require__(/*! ./timer.js */ 35),
 	    Loop = function () {
 	        this.timer = new Timer();
 	    };
@@ -4096,7 +4201,7 @@
 	module.exports = new Loop();
 
 /***/ },
-/* 30 */
+/* 31 */
 /*!********************************!*\
   !*** ./src/action/simulate.js ***!
   \********************************/
@@ -4172,44 +4277,6 @@
 	};
 
 /***/ },
-/* 31 */
-/*!******************************!*\
-  !*** ./src/process/timer.js ***!
-  \******************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 16),
-	
-	    maxElapsed = 33,
-	    Timer = function () {
-	        this.elapsed = 16.7;
-	        this.current = utils.currentTime();
-	        this.update();
-	    };
-	
-	Timer.prototype = {
-	    update: function () {
-	        this.prev = this.current;
-	        this.current = utils.currentTime();
-	        this.elapsed = Math.min(this.current - this.prev, maxElapsed);
-	
-	        return this.current;
-	    },
-	
-	    getElapsed: function () {
-	        return this.elapsed;
-	    },
-	    
-	    clock: function () {
-	        this.current = utils.currentTime();
-	    }
-	};
-	
-	module.exports = Timer;
-
-/***/ },
 /* 32 */
 /*!*********************************!*\
   !*** ./src/routes/css/build.js ***!
@@ -4218,9 +4285,9 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 35),
-	    templates = __webpack_require__(/*! ./templates.js */ 36),
-	    lookup = __webpack_require__(/*! ./lookup.js */ 37),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 36),
+	    templates = __webpack_require__(/*! ./templates.js */ 37),
+	    lookup = __webpack_require__(/*! ./lookup.js */ 38),
 	    
 	    TRANSFORM = 'transform',
 	    TRANSLATE_Z = 'translateZ',
@@ -4280,10 +4347,10 @@
 
 	"use strict";
 	
-	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 38),
-	    dictionary = __webpack_require__(/*! ./dictionary.js */ 35),
-	    splitLookup = __webpack_require__(/*! ./lookup.js */ 37),
-	    splitters = __webpack_require__(/*! ./splitters.js */ 39),
+	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 39),
+	    dictionary = __webpack_require__(/*! ./dictionary.js */ 36),
+	    splitLookup = __webpack_require__(/*! ./lookup.js */ 38),
+	    splitters = __webpack_require__(/*! ./splitters.js */ 40),
 	    
 	    utils = __webpack_require__(/*! ../../utils/utils.js */ 16),
 	    
@@ -4381,7 +4448,7 @@
 
 	"use strict";
 	
-	var lookup = __webpack_require__(/*! ./lookup.js */ 40),
+	var lookup = __webpack_require__(/*! ./lookup.js */ 41),
 	
 	    /*
 	        Convert percentage to pixels
@@ -4440,6 +4507,44 @@
 
 /***/ },
 /* 35 */
+/*!******************************!*\
+  !*** ./src/process/timer.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 16),
+	
+	    maxElapsed = 33,
+	    Timer = function () {
+	        this.elapsed = 16.7;
+	        this.current = utils.currentTime();
+	        this.update();
+	    };
+	
+	Timer.prototype = {
+	    update: function () {
+	        this.prev = this.current;
+	        this.current = utils.currentTime();
+	        this.elapsed = Math.min(this.current - this.prev, maxElapsed);
+	
+	        return this.current;
+	    },
+	
+	    getElapsed: function () {
+	        return this.elapsed;
+	    },
+	    
+	    clock: function () {
+	        this.current = utils.currentTime();
+	    }
+	};
+	
+	module.exports = Timer;
+
+/***/ },
+/* 36 */
 /*!**************************************!*\
   !*** ./src/routes/css/dictionary.js ***!
   \**************************************/
@@ -4493,7 +4598,7 @@
 	module.exports = terms;
 
 /***/ },
-/* 36 */
+/* 37 */
 /*!*************************************!*\
   !*** ./src/routes/css/templates.js ***!
   \*************************************/
@@ -4501,7 +4606,7 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 35),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 36),
 	
 	    defaultValues = {
 	        Alpha: 1
@@ -4569,7 +4674,7 @@
 	module.exports = templates;
 
 /***/ },
-/* 37 */
+/* 38 */
 /*!**********************************!*\
   !*** ./src/routes/css/lookup.js ***!
   \**********************************/
@@ -4617,7 +4722,7 @@
 	};
 
 /***/ },
-/* 38 */
+/* 39 */
 /*!********************************************!*\
   !*** ./src/routes/css/default-property.js ***!
   \********************************************/
@@ -4668,7 +4773,7 @@
 	module.exports = defaults;
 
 /***/ },
-/* 39 */
+/* 40 */
 /*!*************************************!*\
   !*** ./src/routes/css/splitters.js ***!
   \*************************************/
@@ -4676,7 +4781,7 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 35),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 36),
 	    utils = __webpack_require__(/*! ../../utils/utils.js */ 16),
 	
 	    /*
@@ -4907,7 +5012,7 @@
 	module.exports = splitters;
 
 /***/ },
-/* 40 */
+/* 41 */
 /*!***********************************!*\
   !*** ./src/routes/path/lookup.js ***!
   \***********************************/

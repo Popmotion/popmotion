@@ -6,6 +6,7 @@
 var Rubix = require('./rubix.js'),
     routes = require('./routes.js'),
     calc = require('../utils/calc.js'),
+    filters = require('../filters/filters.js'),
     
     ANGLE_DISTANCE = 'AngleAndDistance';
 
@@ -83,7 +84,7 @@ module.exports = function (action, framestamp, frameDuration) {
         action.output[defaultRoute][key] = action.output[value.route][value.name] = (value.unit) ? output + value.unit : output;
     }
 
-    // shard onFrame and onChange
+    // Shard onFrame and onChange
     routes.shard(function (route, output) {
         // Fire onFrame every frame
         if (route.onFrame) {
@@ -95,6 +96,11 @@ module.exports = function (action, framestamp, frameDuration) {
             route.onChange(output, action, values, props, data);
         }
     }, action.output);
+    
+    // Apply filters
+    if (props.motionBlur) {
+        filters.apply(action, values, props);
+    }
 
     // Fire onEnd if ended
     if (rubix.hasEnded(action, hasChanged)) {

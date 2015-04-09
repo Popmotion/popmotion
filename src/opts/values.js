@@ -1,7 +1,5 @@
 "use strict";
 
-
-
 module.exports = {
     // [number]: The canonical value
     current: 0,
