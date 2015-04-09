@@ -49,7 +49,7 @@ module.exports = function (props, pathLength) {
     }
     
     if (hasArray) {
-        pathStyles[DASH_ARRAY] = arrayStyles.length + ' ' + arrayStyles.spacing;
+        pathStyles[lookup.length] = arrayStyles.length + ' ' + arrayStyles.spacing;
     }
     
     return pathStyles;

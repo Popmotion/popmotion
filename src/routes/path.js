@@ -7,7 +7,9 @@ module.exports = {
     name: 'svgPath',
     
     onStart: function (output, action, values, props) {
-        props.pathLength = props.dom.getTotalLength();
+        if (props.dom) {
+            props.pathLength = props.dom.getTotalLength();
+        }
     },
     
     onChange: function (output, action, values, props) {
