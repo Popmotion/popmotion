@@ -24,7 +24,7 @@ module.exports = function (props, pathLength) {
         svgProperty = '',
         arrayStyles = {
             length: 0,
-            spacing: pathLength
+            spacing: pathLength + 'px'
         },
         pathStyles = {};
 
@@ -40,7 +40,7 @@ module.exports = function (props, pathLength) {
                     arrayStyles[key] = percentToPixels(props[key], pathLength);
                     break;
                 case 'offset':
-                    pathStyles[svgProperty] = percentToPixels(props[key], pathLength);
+                    pathStyles[svgProperty] = percentToPixels(-props[key], pathLength);
                     break;
                 default:
                    pathStyles[svgProperty] = props[key]; 
@@ -51,6 +51,8 @@ module.exports = function (props, pathLength) {
     if (hasArray) {
         pathStyles[lookup.length] = arrayStyles.length + ' ' + arrayStyles.spacing;
     }
+    
+    console.log(pathStyles['stroke-dashoffset']);
     
     return pathStyles;
 };
