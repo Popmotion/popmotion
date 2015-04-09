@@ -16,6 +16,8 @@ module.exports = {
     borderBottomColor: COLOR,
     borderLeftColor: COLOR,
     outlineColor: COLOR,
+    fill: COLOR,
+    stroke: COLOR,
 
     // Dimensions
     margin: DIMENSIONS,
