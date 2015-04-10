@@ -187,12 +187,13 @@
 	    Repo = __webpack_require__(/*! ../types/repo.js */ 11),
 	    Queue = __webpack_require__(/*! ./queue.js */ 12),
 	    Process = __webpack_require__(/*! ../process/process.js */ 4),
-	    processor = __webpack_require__(/*! ./processor.js */ 13),
-	    routes = __webpack_require__(/*! ./routes.js */ 14),
-	    defaultProps = __webpack_require__(/*! ../opts/action.js */ 15),
+	    filters = __webpack_require__(/*! ../filters/filters.js */ 13),
+	    processor = __webpack_require__(/*! ./processor.js */ 14),
+	    routes = __webpack_require__(/*! ./routes.js */ 15),
+	    defaultProps = __webpack_require__(/*! ../opts/action.js */ 16),
 	    calc = __webpack_require__(/*! ../utils/calc.js */ 7),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 16),
-	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 20),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 17),
+	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 21),
 	    
 	    linkToAngleDistance = { link: 'AngleAndDistance' },
 	
@@ -270,7 +271,8 @@
 	            this.queue.add.apply(this.queue, arguments);
 	        }
 	
-	        return this;    },
+	        return this;
+	    },
 	
 	    /*
 	        Run Action indefinitely
@@ -423,6 +425,11 @@
 	        self.framestamp = self.started;
 	        self.firstFrame = true;
 	        
+	        // Apply filters
+	        if (self.props('motionBlur')) {
+	            filters.apply(self);
+	        }
+	        
 	        self.process.start();
 	
 	        return self;
@@ -434,6 +441,12 @@
 	    stop: function () {
 	        this.queue.clear();
 	        this.pause();
+	
+	        // Apply filters
+	        if (props.motionBlur) {
+	            filters.remove(this);
+	        }
+	
 	        return this;
 	    },
 	    
@@ -719,8 +732,8 @@
 	"use strict";
 	
 	var calc = __webpack_require__(/*! ../utils/calc.js */ 7),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 16),
-	    History = __webpack_require__(/*! ../utils/history.js */ 17),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 17),
+	    History = __webpack_require__(/*! ../utils/history.js */ 18),
 	
 	    /*
 	        Input constructor
@@ -852,7 +865,7 @@
 	*/
 	"use strict";
 	
-	var manager = __webpack_require__(/*! ./manager.js */ 18),
+	var manager = __webpack_require__(/*! ./manager.js */ 19),
 	
 	    /*
 	        Process constructor
@@ -1040,7 +1053,7 @@
 
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 16),
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 17),
 	    
 	    generateKeys = function (key) {
 	        var keys = key.split(DOT),
@@ -1152,7 +1165,7 @@
 	"use strict";
 	
 	var calc = __webpack_require__(/*! ./calc.js */ 7),
-	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 19),
+	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 20),
 	    
 	    // Constants
 	    INVALID_EASING = ": Not defined",
@@ -1351,7 +1364,7 @@
 	*/
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ./utils.js */ 16),
+	var utils = __webpack_require__(/*! ./utils.js */ 17),
 	
 	    calc = {
 	        /*
@@ -1832,9 +1845,9 @@
 
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 16),
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 17),
 	    presets = __webpack_require__(/*! ./presets.js */ 5),
-	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 21),
+	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 22),
 	
 	    STRING = 'string',
 	    NUMBER = 'number',
@@ -1972,9 +1985,9 @@
 
 	"use strict";
 	
-	var defaults = __webpack_require__(/*! ../opts/values.js */ 22),
-	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 23),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 16),
+	var defaults = __webpack_require__(/*! ../opts/values.js */ 23),
+	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 24),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 17),
 	
 	    CURRENT = 'current',
 	    ORIGIN = 'origin',
@@ -2107,7 +2120,7 @@
 
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 16),
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 17),
 	
 	    /*
 	        Get data with specified key
@@ -2116,7 +2129,7 @@
 	        @returns [var]: Data found
 	    */
 	    get = function (key) {
-	        return this[key] ? this[key] : this;
+	        return (key !== undefined) ? this[key] : this;
 	    },
 	            
 	    /*
@@ -2232,6 +2245,138 @@
 
 /***/ },
 /* 13 */
+/*!********************************!*\
+  !*** ./src/filters/filters.js ***!
+  \********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var svgAddress = "http://www.w3.org/2000/svg",
+	    filterIdPrefix = 'redshift-filters',
+	    filterCounter = 0,
+	    filterNodes = {},
+	    filters = {},
+	    
+	    filterContainer,
+	    
+	    generateFilterContainer = function () {
+	        var svgWrapper = document.createElementNS(svgAddress, 'svg'),
+	            def = document.createElementNS(svgAddress, 'def');
+	
+	        svgWrapper.setAttribute('class', filterIdPrefix);
+	        svgWrapper.style.width = '0';
+	        svgWrapper.style.height = '0';
+	        svgWrapper.style.overflow = 'hidden';
+	            
+	        svgWrapper.appendChild(def);
+	        
+	        document.body.insertBefore(svgWrapper, document.body.firstChild);
+	        
+	        return def;
+	    },
+	    
+	    generateFilter = function (type) {
+	        // Generate SVG and defs tags if not present
+	        if (!filterContainer) {
+	            filterContainer = generateFilterContainer();
+	        }
+	        
+	        // Generate filter tag if not defined
+	        if (!filterNodes[type]) {
+	            filterNodes[type] = generateFilterNode(type);
+	        }
+	        
+	        return filterNodes[type].cloneNode(true);
+	    },
+	    
+	    generateFilterNode = function (type) {
+	        var filter = document.createElementNS(svgAddress, 'filter'),
+	            blur = document.createElementNS(svgAddress, 'feGaussianBlur');
+	            
+	        blur.setAttribute('in', 'SourceGraphic');
+	        blur.setAttribute('stdDeviation', '0,0');
+	            
+	        filter.appendChild(blur);
+	        
+	        return filter;
+	    },
+	    
+	    /*
+	        Get new filter ID and increment counter
+	        
+	        @return [string]: New filter ID
+	    */
+	    getFilterId = function () {
+	        var filterId = filterIdPrefix + filterCounter;
+	        
+	        filterCounter++;
+	        
+	        return filterId;
+	    };
+	
+	module.exports = {
+	    
+	    /*
+	        Apply filter to DOM
+	    */
+	    apply: function (action) {
+	        var filter,
+	        	props = action.props();
+	        
+	        // Generate a filter if none exists  - move this to movement start
+	        if (!props.filterId) {
+	            props.filterId = getFilterId();
+	            
+	            // Generate filter
+	            filter = generateFilter('motionBlur');
+	            
+	            filter.setAttribute('id', props.filterId);
+	            
+	            // Add filter to svg tag
+	            filterContainer.appendChild(filter);
+	
+	            // Apply filter as CSS rule
+	            action.style({
+	                filter: 'url("#' + props.filterId + '")'
+	            });
+	            
+	            filters[props.filterId] = filter;
+	        }
+	    },
+	    
+	    
+	    update: function (action) {
+	        var props = action.props(),
+	        	values = action.values,
+	        	link = props.motionBlur,
+	            velocity = values[link].velocity / 60,
+	            strength = props.motionBlurStrength || 1,
+	            filter = filters[props.filterId],
+	            isX = (props.motionBlurAxis === 'x'),
+	            amount = Math.abs(velocity * strength),
+	            blur = {
+	                x: isX ? amount : 0,
+	                y: isX ? 0 : amount
+	            };
+	
+	        filter.firstChild.setAttribute('stdDeviation', blur.x + ',' + blur.y);
+	    },
+	    
+	    remove: function (action) {
+	        var filterId = action.props('filterId'),
+	            filter = document.getElementById(filterId);
+	
+	        if (filter) {
+	            delete filters[filterId];
+	            document.body.removeChild(filter);
+	        }
+	    }
+	    
+	};
+
+/***/ },
+/* 14 */
 /*!*********************************!*\
   !*** ./src/action/processor.js ***!
   \*********************************/
@@ -2242,10 +2387,10 @@
 	*/
 	"use strict";
 	
-	var Rubix = __webpack_require__(/*! ./rubix.js */ 24),
-	    routes = __webpack_require__(/*! ./routes.js */ 14),
+	var Rubix = __webpack_require__(/*! ./rubix.js */ 25),
+	    routes = __webpack_require__(/*! ./routes.js */ 15),
 	    calc = __webpack_require__(/*! ../utils/calc.js */ 7),
-	    filters = __webpack_require__(/*! ../filters/filters.js */ 25),
+	    filters = __webpack_require__(/*! ../filters/filters.js */ 13),
 	    
 	    ANGLE_DISTANCE = 'AngleAndDistance';
 	
@@ -2261,11 +2406,6 @@
 	        order = props.order = props.order || [],
 	        orderLength = order.length,
 	        key = '', value, output;
-	    
-	    // Apply filters
-	    if (props.motionBlur) {
-	        filters.apply(action, values, props);
-	    }
 	    
 	    action.output = {
 	        values: {}
@@ -2340,6 +2480,11 @@
 	            route.onChange(output, action, values, props, data);
 	        }
 	    }, action.output);
+	    
+	    // Update filter
+	    if (props.filterId) {
+	        filters.update(action);
+	    }
 	
 	    // Fire onEnd if ended
 	    if (rubix.hasEnded(action, hasChanged)) {
@@ -2356,7 +2501,7 @@
 	};
 
 /***/ },
-/* 14 */
+/* 15 */
 /*!******************************!*\
   !*** ./src/action/routes.js ***!
   \******************************/
@@ -2469,7 +2614,7 @@
 	module.exports = manager; 
 
 /***/ },
-/* 15 */
+/* 16 */
 /*!****************************!*\
   !*** ./src/opts/action.js ***!
   \****************************/
@@ -2556,7 +2701,7 @@
 	};
 
 /***/ },
-/* 16 */
+/* 17 */
 /*!****************************!*\
   !*** ./src/utils/utils.js ***!
   \****************************/
@@ -2823,7 +2968,7 @@
 	};
 
 /***/ },
-/* 17 */
+/* 18 */
 /*!******************************!*\
   !*** ./src/utils/history.js ***!
   \******************************/
@@ -2900,7 +3045,7 @@
 	module.exports = History;
 
 /***/ },
-/* 18 */
+/* 19 */
 /*!********************************!*\
   !*** ./src/process/manager.js ***!
   \********************************/
@@ -3078,7 +3223,7 @@
 	module.exports = new ProcessManager();
 
 /***/ },
-/* 19 */
+/* 20 */
 /*!*****************************!*\
   !*** ./src/types/bezier.js ***!
   \*****************************/
@@ -3253,7 +3398,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 20 */
+/* 21 */
 /*!**********************************!*\
   !*** ./src/routes/css/styler.js ***!
   \**********************************/
@@ -3322,7 +3467,7 @@
 	module.exports = new cssStyler();
 
 /***/ },
-/* 21 */
+/* 22 */
 /*!******************************!*\
   !*** ./src/input/pointer.js ***!
   \******************************/
@@ -3421,7 +3566,7 @@
 	module.exports = Pointer;
 
 /***/ },
-/* 22 */
+/* 23 */
 /*!****************************!*\
   !*** ./src/opts/values.js ***!
   \****************************/
@@ -3539,7 +3684,7 @@
 	};
 
 /***/ },
-/* 23 */
+/* 24 */
 /*!******************************!*\
   !*** ./src/utils/resolve.js ***!
   \******************************/
@@ -3564,7 +3709,7 @@
 	"use strict";
 	
 	var calc = __webpack_require__(/*! ./calc.js */ 7),
-	    utils = __webpack_require__(/*! ./utils.js */ 16);
+	    utils = __webpack_require__(/*! ./utils.js */ 17);
 	
 	module.exports = function (newValue, currentValue, parent, scope) {
 	    var splitValueUnit = {};
@@ -3595,7 +3740,7 @@
 	};
 
 /***/ },
-/* 24 */
+/* 25 */
 /*!*****************************!*\
   !*** ./src/action/rubix.js ***!
   \*****************************/
@@ -3614,7 +3759,7 @@
 	"use strict";
 	
 	var calc = __webpack_require__(/*! ../utils/calc.js */ 7),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 16),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 17),
 	    easing = __webpack_require__(/*! ../utils/easing.js */ 6),
 	    simulate = __webpack_require__(/*! ./simulate.js */ 31),
 	    
@@ -3890,112 +4035,6 @@
 	            return newValue[key];
 	        }
 	    }
-	};
-
-/***/ },
-/* 25 */
-/*!********************************!*\
-  !*** ./src/filters/filters.js ***!
-  \********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var svgAddress = "http://www.w3.org/2000/svg",
-	
-	    filterIdPrefix = 'redshift-filters',
-	    filterCounter = 0,
-	    filterNodes = {},
-	    filters = {},
-	    
-	    filterContainer,
-	    
-	    generateFilterContainer = function () {
-	        var svgWrapper = document.createElementNS(svgAddress, 'svg'),
-	            def = document.createElementNS(svgAddress, 'def');
-	
-	        svgWrapper.setAttribute('class', filterIdPrefix);
-	        svgWrapper.style.width = '0';
-	        svgWrapper.style.height = '0';
-	        svgWrapper.style.overflow = 'hidden';
-	            
-	        svgWrapper.appendChild(def);
-	        
-	        document.body.insertBefore(svgWrapper, document.body.firstChild);
-	        
-	        return def;
-	    },
-	    
-	    generateFilter = function (type) {
-	        // Generate SVG and defs tags if not present
-	        if (!filterContainer) {
-	            filterContainer = generateFilterContainer();
-	        }
-	        
-	        // Generate filter tag if not defined
-	        if (!filterNodes[type]) {
-	            filterNodes[type] = generateFilterNode(type);
-	        }
-	        
-	        return filterNodes[type].cloneNode(true);
-	    },
-	    
-	    generateFilterNode = function (type) {
-	        var filter = document.createElementNS(svgAddress, 'filter'),
-	            blur = document.createElementNS(svgAddress, 'feGaussianBlur');
-	            
-	        blur.setAttribute('in', 'SourceGraphic');
-	        blur.setAttribute('stdDeviation', '10,0');
-	            
-	        filter.appendChild(blur);
-	        
-	        return filter;
-	    },
-	    
-	    /*
-	        Get new filter ID and increment counter
-	        
-	        @return [string]: New filter ID
-	    */
-	    getFilterId = function () {
-	        var filterId = filterIdPrefix + filterCounter;
-	        
-	        filterCounter++;
-	        
-	        return filterId;
-	    };
-	
-	module.exports = {
-	    
-	    /*
-	        Apply filter to DOM
-	    */
-	    apply: function (action, values, props) {
-	        var filter;
-	        
-	        // Generate a filter if none exists  - move this to movement start
-	        if (!props.filterId) {
-	            props.filterId = getFilterId();
-	            
-	            // Generate filter
-	            filter = generateFilter('motionBlur');
-	            
-	            filter.setAttribute('id', props.filterId);
-	            
-	            // Add filter to svg tag
-	            filterContainer.appendChild(filter);
-	
-	            // Apply filter as CSS rule
-	            action.style({
-	                filter: 'url("#' + props.filterId + '")'
-	            });
-	            
-	            filters[props.filterId] = filter;
-	        }
-	        
-	        // set filter attributes
-	    }
-	    
 	};
 
 /***/ },
@@ -4332,9 +4371,11 @@
 	        }
 	    }
 	    
+	    // check for filters and remove z
+	    
 	    if (transform != '' && transform != cache[TRANSFORM]) {
 	        if (!hasZ) {
-	            transform += ' ' + TRANSLATE_Z + '(0px)';
+	            //transform += ' ' + TRANSLATE_Z + '(0px)';
 	        }
 	        
 	        css[TRANSFORM] = cache[TRANSFORM] = transform;
@@ -4357,7 +4398,7 @@
 	    splitLookup = __webpack_require__(/*! ./lookup.js */ 38),
 	    splitters = __webpack_require__(/*! ./splitters.js */ 40),
 	    
-	    utils = __webpack_require__(/*! ../../utils/utils.js */ 16),
+	    utils = __webpack_require__(/*! ../../utils/utils.js */ 17),
 	    
 	    valueProperties = dictionary.valueProps,
 	    valuePropertyCount = valueProperties.length,
@@ -4519,7 +4560,7 @@
 
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 16),
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 17),
 	
 	    maxElapsed = 33,
 	    Timer = function () {
@@ -4787,7 +4828,7 @@
 	"use strict";
 	
 	var dictionary = __webpack_require__(/*! ./dictionary.js */ 36),
-	    utils = __webpack_require__(/*! ../../utils/utils.js */ 16),
+	    utils = __webpack_require__(/*! ../../utils/utils.js */ 17),
 	
 	    /*
 	        Split comma delimited into array

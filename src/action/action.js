@@ -89,7 +89,8 @@ Action.prototype = {
             this.queue.add.apply(this.queue, arguments);
         }
 
-        return this;    },
+        return this;
+    },
 
     /*
         Run Action indefinitely
@@ -243,7 +244,7 @@ Action.prototype = {
         self.firstFrame = true;
         
         // Apply filters
-        if (props.motionBlur) {
+        if (self.props('motionBlur')) {
             filters.apply(self);
         }
         

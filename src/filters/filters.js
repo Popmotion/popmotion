@@ -1,8 +1,6 @@
 "use strict";
 
-var blur = require('./blur.js'),
-
-    svgAddress = "http://www.w3.org/2000/svg",
+var svgAddress = "http://www.w3.org/2000/svg",
     filterIdPrefix = 'redshift-filters',
     filterCounter = 0,
     filterNodes = {},
@@ -70,8 +68,9 @@ module.exports = {
     /*
         Apply filter to DOM
     */
-    apply: function (action, values, props) {
-        var filter;
+    apply: function (action) {
+        var filter,
+        	props = action.props();
         
         // Generate a filter if none exists  - move this to movement start
         if (!props.filterId) {
@@ -95,19 +94,21 @@ module.exports = {
     },
     
     
-    update: function (action, values, props) {
-        var link = props.motionBlur,
-            velocity = values[link].velocity,
+    update: function (action) {
+        var props = action.props(),
+        	values = action.values,
+        	link = props.motionBlur,
+            velocity = values[link].velocity / 60,
             strength = props.motionBlurStrength || 1,
             filter = filters[props.filterId],
             isX = (props.motionBlurAxis === 'x'),
-            amount = velocity * strength,
+            amount = Math.abs(velocity * strength),
             blur = {
                 x: isX ? amount : 0,
                 y: isX ? 0 : amount
             };
-        
-        filter.setAttribute('stdDeviation', blur.x + ',' + blur.y);
+
+        filter.firstChild.setAttribute('stdDeviation', blur.x + ',' + blur.y);
     },
     
     remove: function (action) {
