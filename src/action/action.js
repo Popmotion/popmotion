@@ -5,6 +5,7 @@ var parseArgs = require('./parse-args.js'),
     Repo = require('../types/repo.js'),
     Queue = require('./queue.js'),
     Process = require('../process/process.js'),
+    filters = require('../filters/filters.js'),
     processor = require('./processor.js'),
     routes = require('./routes.js'),
     defaultProps = require('../opts/action.js'),
@@ -241,6 +242,11 @@ Action.prototype = {
         self.framestamp = self.started;
         self.firstFrame = true;
         
+        // Apply filters
+        if (props.motionBlur) {
+            filters.apply(self);
+        }
+        
         self.process.start();
 
         return self;
@@ -252,6 +258,12 @@ Action.prototype = {
     stop: function () {
         this.queue.clear();
         this.pause();
+
+        // Apply filters
+        if (props.motionBlur) {
+            filters.remove(this);
+        }
+
         return this;
     },
     

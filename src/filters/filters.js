@@ -1,7 +1,8 @@
 "use strict";
 
-var svgAddress = "http://www.w3.org/2000/svg",
+var blur = require('./blur.js'),
 
+    svgAddress = "http://www.w3.org/2000/svg",
     filterIdPrefix = 'redshift-filters',
     filterCounter = 0,
     filterNodes = {},
@@ -44,7 +45,7 @@ var svgAddress = "http://www.w3.org/2000/svg",
             blur = document.createElementNS(svgAddress, 'feGaussianBlur');
             
         blur.setAttribute('in', 'SourceGraphic');
-        blur.setAttribute('stdDeviation', '10,0');
+        blur.setAttribute('stdDeviation', '0,0');
             
         filter.appendChild(blur);
         
@@ -91,8 +92,32 @@ module.exports = {
             
             filters[props.filterId] = filter;
         }
+    },
+    
+    
+    update: function (action, values, props) {
+        var link = props.motionBlur,
+            velocity = values[link].velocity,
+            strength = props.motionBlurStrength || 1,
+            filter = filters[props.filterId],
+            isX = (props.motionBlurAxis === 'x'),
+            amount = velocity * strength,
+            blur = {
+                x: isX ? amount : 0,
+                y: isX ? 0 : amount
+            };
         
-        // set filter attributes
+        filter.setAttribute('stdDeviation', blur.x + ',' + blur.y);
+    },
+    
+    remove: function (action) {
+        var filterId = action.props('filterId'),
+            filter = document.getElementById(filterId);
+
+        if (filter) {
+            delete filters[filterId];
+            document.body.removeChild(filter);
+        }
     }
     
 };

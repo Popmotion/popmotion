@@ -2262,6 +2262,11 @@
 	        orderLength = order.length,
 	        key = '', value, output;
 	    
+	    // Apply filters
+	    if (props.motionBlur) {
+	        filters.apply(action, values, props);
+	    }
+	    
 	    action.output = {
 	        values: {}
 	    };
@@ -2335,11 +2340,6 @@
 	            route.onChange(output, action, values, props, data);
 	        }
 	    }, action.output);
-	    
-	    // Apply filters
-	    if (props.motionBlur) {
-	        filters.apply(action, values, props);
-	    }
 	
 	    // Fire onEnd if ended
 	    if (rubix.hasEnded(action, hasChanged)) {
@@ -3915,6 +3915,9 @@
 	            def = document.createElementNS(svgAddress, 'def');
 	
 	        svgWrapper.setAttribute('class', filterIdPrefix);
+	        svgWrapper.style.width = '0';
+	        svgWrapper.style.height = '0';
+	        svgWrapper.style.overflow = 'hidden';
 	            
 	        svgWrapper.appendChild(def);
 	        
@@ -3970,7 +3973,7 @@
 	    apply: function (action, values, props) {
 	        var filter;
 	        
-	        // Generate a filter ID if none exists
+	        // Generate a filter if none exists  - move this to movement start
 	        if (!props.filterId) {
 	            props.filterId = getFilterId();
 	            
@@ -3989,6 +3992,8 @@
 	            
 	            filters[props.filterId] = filter;
 	        }
+	        
+	        // set filter attributes
 	    }
 	    
 	};

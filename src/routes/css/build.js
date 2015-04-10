@@ -42,6 +42,8 @@ module.exports = function (output, order, cache) {
         }
     }
     
+    // check for filters and remove z
+    
     if (transform != '' && transform != cache[TRANSFORM]) {
         if (!hasZ) {
             transform += ' ' + TRANSLATE_Z + '(0px)';

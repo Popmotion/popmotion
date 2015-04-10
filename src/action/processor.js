@@ -97,9 +97,9 @@ module.exports = function (action, framestamp, frameDuration) {
         }
     }, action.output);
     
-    // Apply filters
-    if (props.motionBlur) {
-        filters.apply(action, values, props);
+    // Update filter
+    if (props.filterId) {
+        filters.update(action);
     }
 
     // Fire onEnd if ended
