@@ -9,7 +9,7 @@ var utils = require('../utils/utils.js'),
         @returns [var]: Data found
     */
     get = function (key) {
-        return this[key] ? this[key] : this;
+        return (key !== undefined) ? this[key] : this;
     },
             
     /*
