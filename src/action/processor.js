@@ -68,8 +68,14 @@ module.exports = function (action, framestamp, frameDuration) {
             output = Math.round(output);
         }
         
+        // Update change from previous frame
+        value.frameChange = calc.difference(value.current, output);
+        
         // Update velocity
-        value.velocity = calc.speedPerSecond(calc.difference(value.current, output), frameDuration);
+        value.velocity = calc.speedPerSecond(value.frameChange, frameDuration);
+        
+        // Update current speed
+        value.speed = Math.abs(value.velocity);
         
         // Check if changed and update
         if (value.current != output) {
