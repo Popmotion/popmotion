@@ -81,6 +81,12 @@ module.exports = {
     
     // [number]: Spring strength during 'string'
     spring: 0.03,
+    
+    // [number]: Current speed (absolute velocity)
+    speed: 0,
+    
+    // [number]: Change since last frame
+    frameChange: 0,
 
 
     /*

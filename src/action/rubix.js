@@ -157,7 +157,7 @@ module.exports = {
             @return [number]: Calculated value
         */
         process: function (key, value, values, props, action, frameDuration) {
-            return value[CURRENT] + calc.speedPerFrame(simulate[value.simulate](value, frameDuration), frameDuration);
+            return value[CURRENT] + calc.speedPerFrame(simulate[value.simulate](value, frameDuration, action.started), frameDuration);
         },
         
         /*

@@ -1,7 +1,9 @@
 "use strict";
 
 var frictionStopLimit = .2,
+	timeConstant = 395,
     calc = require('../utils/calc.js'),
+    utils = require('../utils/utils.js'),
     speedPerFrame = calc.speedPerFrame;
 
 module.exports = {
@@ -35,9 +37,11 @@ module.exports = {
         @param [Value]
         @returns [number]: New velocity
     */
-    friction: function (value, duration) {
-        var newVelocity = speedPerFrame(value.velocity, duration) * (1 - value.friction);
-        return (newVelocity < frictionStopLimit && newVelocity > -frictionStopLimit) ? 0 : calc.speedPerSecond(newVelocity, duration);
+    friction: function (value, duration, started) {
+	    var elapsed = utils.currentTime() - started,
+	    	newVelocity = - value.initialVelocity * Math.exp(- elapsed / timeConstant);
+	    
+	    return (newVelocity < frictionStopLimit && newVelocity > -frictionStopLimit) ? 0 : calc.speedPerSecond(newVelocity, duration);
     },
     
     /*
