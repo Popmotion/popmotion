@@ -253,7 +253,7 @@ module.exports = {
         @return [timestamp]: Current UNIX timestamp
     */
     currentTime: function () {
-        return new Date().getTime();
+	    return performance ? performance.now() : new Date().getTime();
     }
     
 };
