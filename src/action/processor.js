@@ -54,7 +54,7 @@ module.exports = function (action, framestamp, frameDuration) {
         if (value.link) {
             valueRubix = (value.link !== ANGLE_DISTANCE) ? Rubix['Link'] : Rubix[ANGLE_DISTANCE];
         }
-        
+
         // Calculate new value
         output = valueRubix.process(key, value, values, props, action, frameDuration);
         

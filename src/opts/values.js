@@ -39,6 +39,15 @@ module.exports = {
     parent: '',
     
     unitName: '',
+    
+    // [number]: Current velocity of value, in units per second
+    velocity: 0,
+    
+    // [number]: Current speed (absolute velocity)
+    speed: 0,
+    
+    // [number]: Change since last frame
+    frameChange: 0,
 
     /*
         Link properties
@@ -61,9 +70,6 @@ module.exports = {
     // [string]: Simulation to .run
     simulate: 'velocity',
     
-    // [number]: Current velocity of value, in units per second
-    velocity: 0,
-    
     // [number]: Deceleration to apply to value, in units per second
     deceleration: 0,
     
@@ -76,17 +82,14 @@ module.exports = {
     // [number]: Factor to multiply velocity by on bounce
     bounce: 0,
     
-    // [number]: Friction factor to apply per frame (TODO: Figure out per second factor)
-    friction: 0,
-    
     // [number]: Spring strength during 'string'
     spring: 0.03,
     
-    // [number]: Current speed (absolute velocity)
-    speed: 0,
+    // [number]: Timeconstant of glide
+    timeConstant: 395,
     
-    // [number]: Change since last frame
-    frameChange: 0,
+    // [number]: Stop simulation under this speed
+    stopSpeed: 0.5,
 
 
     /*

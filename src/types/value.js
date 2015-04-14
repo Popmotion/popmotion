@@ -58,21 +58,25 @@ Value.prototype = {
             multiVal = utils.isObj(args[0]),
             newProps = multiVal ? args[0] : parseSetArgs.apply(self, args),
             newProp,
+            hasInheritence,
+            isBeingSet,
             inherit = multiVal ? args[1] : false,
             key = '';
         
         for (key in defaults) {
             newProp = undefined;
+            hasInheritence = (inherit && inherit.hasOwnProperty(key));
+            isBeingSet = newProps.hasOwnProperty(key);
 
-            if (inherit && inherit.hasOwnProperty(key)) {
-                newProp = inherit[key];
-            }
-            
-            if (newProps.hasOwnProperty(key)) {
-                newProp = newProps[key];
-            }
-            
-            if (newProp !== undefined) {
+            if (hasInheritence || isBeingSet) {
+                if (hasInheritence) {
+                    newProp = inherit[key];
+                }
+                
+                if (isBeingSet) {
+                    newProp = newProps[key];
+                }
+                
                 self[key] = resolve(newProp, self[key], self, self.scope);
                 
                 if (FORCE_NUMBER.indexOf(key) > -1) {

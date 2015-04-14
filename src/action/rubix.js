@@ -144,7 +144,6 @@ module.exports = {
     },
     
     Run: {
-    
         /*
             Simulate the Value's per-frame movement
             
@@ -157,7 +156,7 @@ module.exports = {
             @return [number]: Calculated value
         */
         process: function (key, value, values, props, action, frameDuration) {
-            return value[CURRENT] + calc.speedPerFrame(simulate[value.simulate](value, frameDuration, action.started), frameDuration);
+            return value[CURRENT] + calc.speedPerFrame(simulate(value, frameDuration, action.started), frameDuration);
         },
         
         /*
