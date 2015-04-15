@@ -67,12 +67,14 @@ module.exports = function (action, framestamp, frameDuration) {
         if (value.round) {
             output = Math.round(output);
         }
-        
+
         // Update change from previous frame
         value.frameChange = calc.difference(value.current, output);
         
-        // Update velocity
-        value.velocity = calc.speedPerSecond(value.frameChange, frameDuration);
+        // Calculate velocity
+        if (!valueRubix.calculatesVelocity) {
+            value.velocity = calc.speedPerSecond(value.frameChange, frameDuration);
+        }
         
         // Update current speed
         value.speed = Math.abs(value.velocity);

@@ -41,9 +41,20 @@ var calc = require('../utils/calc.js'),
 	    glide: function (value, duration, started) {
 		    var timeUntilFinished = - utils.currentTime() - started,
 		        delta = - value.to * Math.exp(timeUntilFinished / value.timeConstant);
-		    
+
 		    return (value.to + delta) - value.current;
 	    },
+    
+        /*
+            Friction
+            
+            @param [Value]
+            @returns [number]: New velocity
+        */
+        friction: function (value, duration) {
+            var newVelocity = speedPerFrame(value.velocity, duration) * (1 - value.friction);
+            return calc.speedPerSecond(newVelocity, duration);
+        },
 	    
 	    /*
 	        Spring
@@ -53,9 +64,9 @@ var calc = require('../utils/calc.js'),
 	    */
 	    spring: function (value, duration) {
 	        var distance = value.to - value.current;
-	
+
 	        value.velocity += distance * speedPerFrame(value.spring, duration);
-	            
+	           
 	        return this.friction(value, duration);
 	    },
 	    
@@ -68,12 +79,39 @@ var calc = require('../utils/calc.js'),
 	        @return [number]: New velocity
 	    */
 	    bounce: function (value) {
-	        return value.velocity *= -value.bounce;
+    	    var distance = 0,
+    	        to = value.to,
+    	        current = value.current,
+    	        bounce = value.bounce;
+    	    
+    	    // If we're using glide simulation we have to flip our target too
+    	    if (value.simulate === 'glide') {
+        	    distance = to - current;
+        	    value.to = current - (distance * bounce);
+    	    }
+    	    
+    	    return value.velocity *= - bounce;
+	    },
+	    
+	    /*
+    	    Capture
+    	    
+    	    Convert simulation to spring and set target to limit
+    	    
+    	    @param [Value]
+    	    @param [number]: New target for value
+	    */
+	    capture: function (value, target) {
+    	    value.to = target;
+    	    value.simulate = 'spring';
+    	    value.capture = value.min = value.max = undefined;
+    	    value.spring = 90;
+    	    value.friction = 0.15;
 	    }
 	};
 
-module.exports = function (value, duration, started) {
-	var velocity = simulations[value.simulate](value, duration, started);
+module.exports = function (simulation, value, duration, started) {
+	var velocity = simulations[simulation](value, duration, started);
 	
 	return (Math.abs(velocity) >= value.stopSpeed) ? velocity : 0;
 };

@@ -90,7 +90,12 @@ module.exports = {
     
     // [number]: Stop simulation under this speed
     stopSpeed: 0.5,
-
+    
+    // [boolean]: Capture with spring physics on limit breach
+    capture: false,
+    
+    // [number]: Friction to apply per frame
+    friction: 5,
 
     /*
         .play() properties
