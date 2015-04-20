@@ -150,7 +150,7 @@ module.exports = {
         deep copying if it finds any objects/arrays
         
         @param [array]: Array to copy
-        @param [array]: New copy of array
+        @return [array]: New copy of array
     */
     copyArray: function (base) {
         var newArray = [],
