@@ -1,10 +1,10 @@
 {
   "name": "redshift",
-  "version": "0.16.2",
-  "description": "A JavaScript animation and interaction framework.",
+  "version": "1.0.0",
+  "description": "A JavaScript UX framework. Handles animation, UI physics and user input tracking.",
   "author": "Matt Perry <admin@redshiftjs.com>",
   "homepage": "http://redshiftjs.com",
-  "main": "src/redshift.js",
+  "main": "src/load.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/InventingWithMonster/redshift"

@@ -83,59 +83,12 @@ Action.prototype = {
         if (!this.isActive()) {
             this.set(props, 'to');
             this.playDirection = 1;
-            this.start('Play');
+            this.start('play');
         } else {
             this.queue.add.apply(this.queue, arguments);
         }
 
-        return this;    },
-
-    /*
-        Run Action indefinitely
-        
-        Syntax
-            .run(preset, [override])
-                @param [string]: Name of preset
-                @param [object]: (optional) Override object
-                
-            .run(params)
-                @param [object]: Action properties
-                
-        @return [Action]
-    */
-    run: function () {
-        this.set(parseArgs.generic.apply(this, arguments));
-        return this.start('Run');
-    },
-    
-    /*
-        Track values to mouse, touch or custom Input
-        
-        Syntax
-            .track(preset, [override], input)
-                @param [string]: Name of preset
-                @param [object]: (optional) Override object
-                @param [event || Input]: Input or event to start tracking
-                
-            .track(params, input)
-                @param [object]: Action properties
-                @param [event || Input]: Input or event to start tracking
-                
-        @return [Action]
-    */
-    track: function () {
-        this.set(parseArgs.track.apply(this, arguments));
-        return this.start('Track');
-    },
-    
-    /*
-        Activate for one frame and set values to current
-        
-        @return [Action]
-    */
-    fire: function () {
-        this.set(parseArgs.generic.apply(this, arguments));
-        return this.start('Fire');
+        return this;
     },
     
     /*

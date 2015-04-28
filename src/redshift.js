@@ -10,10 +10,9 @@ var Action = require('./action/action.js'),
     Process = require('./process/process.js'),
     presets = require('./action/presets.js'),
     easing = require('./utils/easing.js'),
-    calc = require('./utils/calc.js');
-    
-// Check if we need to shim indexOf and requireAnimationFrame
-require('./utils/shim.js')();   
+    calc = require('./utils/calc.js'),
+    registerRubix = require('./register/register-rubix.js'),
+    registerSimulation = require('./register/register-simulation.js');
 
 module.exports = {
 
@@ -110,7 +109,23 @@ module.exports = {
         return this;
     },
     
-    //defineSimulation: function () {},
+    /*
+        Add simulation
+    */
+    addSimulation: function () {
+        registerSimulation.apply(this, arguments);
+        
+        return this;
+    },
+    
+    /*
+        Add Rubix
+    */
+    addRubix: function () {
+        registerRubix.apply(this, arguments);
+        
+        return this;
+    },
     
     calc: calc
 };

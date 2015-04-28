@@ -3,7 +3,7 @@
 */
 "use strict";
 
-var Rubix = require('./rubix.js'),
+var Rubix = require('../core/rubix.js'),
     routes = require('./routes.js'),
     calc = require('../utils/calc.js'),
     
