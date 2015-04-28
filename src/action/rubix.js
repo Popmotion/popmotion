@@ -144,7 +144,8 @@ module.exports = {
     },
     
     Run: {
-    
+        calculatesVelocity: true,
+        
         /*
             Simulate the Value's per-frame movement
             
@@ -157,7 +158,8 @@ module.exports = {
             @return [number]: Calculated value
         */
         process: function (key, value, values, props, action, frameDuration) {
-            return value[CURRENT] + calc.speedPerFrame(simulate[value.simulate](value, frameDuration), frameDuration);
+            value.velocity = simulate(value.simulate, value, frameDuration, action.started);
+            return value[CURRENT] + calc.speedPerFrame(value.velocity, frameDuration);
         },
         
         /*
@@ -186,11 +188,20 @@ module.exports = {
             @return [number]: Limit-adjusted output
         */
         limit: function (output, value) {
-            output = calc.restricted(output, value.min, value.max);
+            var isOutsideMax = (output >= value.max),
+                isOutsideMin = (output <= value.min),
+                isOutsideRange = isOutsideMax || isOutsideMin;
             
-            // Bounce if outside of range
-            value.velocity = (value.bounce && (output <= value.min || output >= value.max))
-                ? simulate.bounce(value) : value.velocity;
+            if (isOutsideRange) {
+                output = calc.restricted(output, value.min, value.max);
+
+                if (value.bounce) {
+                    value.velocity = simulate('bounce', value);
+
+                } else if (value.capture) {
+                    simulate('capture', value, isOutsideMax ? value.max : value.min);
+                }
+            }
             
             return output;
         }
@@ -253,8 +264,12 @@ module.exports = {
                     break;
                 }
             }
-            
+
             return newValue;
+        },
+        
+        limit: function (output, value) {
+            return calc.restricted(output, value.min, value.max);
         }
     },
     

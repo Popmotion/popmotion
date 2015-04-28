@@ -50,14 +50,14 @@ var Input = require('./input.js'),
         this.update(startPoint);
         this.isTouch = isTouch;
         this.bindEvents();
-    };
-
-Pointer.prototype = new Input();
+    },
+    
+    proto = Pointer.prototype = new Input();
 
 /*
     Bind move event
 */
-Pointer.prototype.bindEvents = function () {
+proto.bindEvents = function () {
     this.moveEvent = this.isTouch ? TOUCHMOVE : MOUSEMOVE;
     
     currentPointer = this;
@@ -68,7 +68,7 @@ Pointer.prototype.bindEvents = function () {
 /*
     Unbind move event
 */
-Pointer.prototype.unbindEvents = function () {
+proto.unbindEvents = function () {
     doc.removeEventListener(this.moveEvent, this.onMove);
 };
 
@@ -77,14 +77,14 @@ Pointer.prototype.unbindEvents = function () {
     
     @param [event]: Pointer move event
 */
-Pointer.prototype.onMove = function (e) {
+proto.onMove = function (e) {
     var newPoint = eventToPoint(e, currentPointer.isTouch);
     e = getActualEvent(e);
     e.preventDefault();
     currentPointer.update(newPoint);
 };
 
-Pointer.prototype.stop = function () {
+proto.stop = function () {
     this.unbindEvents();
 };
 

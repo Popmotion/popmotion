@@ -30,7 +30,7 @@ module.exports = function (newValue, currentValue, parent, scope) {
     }
     
     // Check if value is relative ie '+=10' - could have been returned from function
-    if (newValue.indexOf && newValue.indexOf('=') > 0) {
+    if (newValue && newValue.indexOf && newValue.indexOf('=') > 0) {
         newValue = calc.relativeValue(currentValue, newValue);
     }
     

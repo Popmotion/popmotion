@@ -54,7 +54,7 @@ module.exports = function (action, framestamp, frameDuration) {
         if (value.link) {
             valueRubix = (value.link !== ANGLE_DISTANCE) ? Rubix['Link'] : Rubix[ANGLE_DISTANCE];
         }
-        
+
         // Calculate new value
         output = valueRubix.process(key, value, values, props, action, frameDuration);
         
@@ -67,9 +67,17 @@ module.exports = function (action, framestamp, frameDuration) {
         if (value.round) {
             output = Math.round(output);
         }
+
+        // Update change from previous frame
+        value.frameChange = calc.difference(value.current, output);
         
-        // Update velocity
-        value.velocity = calc.speedPerSecond(calc.difference(value.current, output), frameDuration);
+        // Calculate velocity
+        if (!valueRubix.calculatesVelocity) {
+            value.velocity = calc.speedPerSecond(value.frameChange, frameDuration);
+        }
+        
+        // Update current speed
+        value.speed = Math.abs(value.velocity);
         
         // Check if changed and update
         if (value.current != output) {

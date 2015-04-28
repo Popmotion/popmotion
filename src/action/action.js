@@ -187,7 +187,7 @@ Action.prototype = {
                     // Else preprocess and add each returned value
                     } else {
                         preprocessedValues = route.preprocess(key, valueBase, self, props);
-                        
+
                         for (var subKey in preprocessedValues) {
                             self.setValue(key, preprocessedValues[subKey], props, route.name);
                         }
