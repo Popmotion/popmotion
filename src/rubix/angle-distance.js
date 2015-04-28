@@ -3,7 +3,7 @@
 */
 "use strict";
 
-var calc = require('../utils/calc.js');
+var calc = require('../utils/calc.js'),
 
     CURRENT = 'current';
 

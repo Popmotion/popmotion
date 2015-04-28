@@ -3,7 +3,9 @@
 */
 "use strict";
 
-var CURRENT = 'current',
+var calc = require('../utils/calc.js'),
+
+    CURRENT = 'current',
     INPUT_OFFSET = 'inputOffset';
 
 module.exports = {

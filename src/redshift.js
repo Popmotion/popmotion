@@ -11,6 +11,7 @@ var Action = require('./action/action.js'),
     presets = require('./action/presets.js'),
     easing = require('./utils/easing.js'),
     calc = require('./utils/calc.js'),
+    route = require('./action/routes.js'),
     registerRubix = require('./register/register-rubix.js'),
     registerSimulation = require('./register/register-simulation.js');
 
@@ -60,7 +61,7 @@ module.exports = {
         @return [Redshift]
     */
     addPreset: function () {
-        presets.define.apply(presets, arguments);
+        presets.add.apply(presets, arguments);
         
         return this;
     },

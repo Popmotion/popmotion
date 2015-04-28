@@ -3,6 +3,9 @@
 */
 "use strict";
 
+var calc = require('../utils/calc.js'),
+    simulate = require('../action/simulate.js');
+
 module.exports = {
 
     // [boolean]: Create an Action method for this rubix?

@@ -18,4 +18,4 @@ redshift
 // Check if we need to shim requireAnimationFrame
 require('./utils/shim.js');
 
-moduele.exports = redshift;
+module.exports = redshift;

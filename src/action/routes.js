@@ -78,5 +78,16 @@ var routes = require('../core/routes.js'),
             return (name !== undefined && has(name)) ? name : this.defaultRoute;
         }
     };
+    
+(function () {
+    var processesLength = processes.length,
+        processName = '',
+        i = 0;
+
+    for (; i < processesLength; i++) {
+        processName = processes[i];
+        manager[processName] = process(processName);
+    }
+})();
 
 module.exports = manager; 

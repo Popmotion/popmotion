@@ -7,7 +7,7 @@ var Rubix = require('../core/rubix.js'),
     routes = require('./routes.js'),
     calc = require('../utils/calc.js'),
     
-    ANGLE_DISTANCE = 'AngleAndDistance';
+    ANGLE_DISTANCE = 'angleAndDistance';
 
 module.exports = function (action, framestamp, frameDuration) {
     var props = action.props(),
@@ -52,7 +52,7 @@ module.exports = function (action, framestamp, frameDuration) {
         // Load rubix for this value
         valueRubix = rubix;
         if (value.link) {
-            valueRubix = (value.link !== ANGLE_DISTANCE) ? Rubix['Link'] : Rubix[ANGLE_DISTANCE];
+            valueRubix = (value.link !== ANGLE_DISTANCE) ? Rubix['link'] : Rubix[ANGLE_DISTANCE];
         }
 
         // Calculate new value
