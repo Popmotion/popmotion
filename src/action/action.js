@@ -36,7 +36,7 @@ var parseArgs = require('./parse-args.js'),
         
         // Register process wth cycl
         self.process = new Process(function (framestamp, frameDuration) {
-	        if (self.active) {
+	        if (self.isActive()) {
                 processor(self, framestamp, frameDuration);
 	        }
         });
@@ -72,7 +72,6 @@ Action.prototype = {
 
         if (!this.isActive()) {
             this.set(props, 'to');
-            this.playDirection = 1;
             this.start('play');
         } else {
             this.queue.add.apply(this.queue, arguments);
@@ -253,22 +252,23 @@ Action.prototype = {
 	    Reset Action progress
     */
     resetProgress: function () {
-	    var self = this;
-
-        self.progress = 0;
-        self.elapsed = (self.playDirection === 1) ? 0 : self.props('duration');
-        self.started = utils.currentTime();
+        var props = this.props();
         
-        return self;
+        props.progress = 0;
+        props.elapsed = (props.playDirection === 1) ? 0 : props.duration;
+        props.started = utils.currentTime();
+        
+        return this;
     },
     
     /*
 	    Reverse Action progress and values
     */
     reverse: function () {
-        var values = this.values;
+        var values = this.values,
+            playDirection = this.props('playDirection');
 
-        this.playDirection *= -1;
+        this.props('playDirection', playDirection * -1);
         
         for (var key in values) {
             if (values.hasOwnProperty(key)) {
@@ -283,17 +283,17 @@ Action.prototype = {
         Swap value origins and to
     */
     flip: function () {
-	    var self = this,
-	        values = self.values;
-	    
-	    self.progress = calc.difference(self.progress, 1);
-        self.elapsed = calc.difference(self.elapsed, self.props('duration'));
+        var values = this.values,
+            props = this.props;
+            
+        props.progress = calc.difference(props.progress, 1);
+        props.elapsed = calc.difference(props.elapsed, props.duration);
         
         for (var key in values) {
             values[key].flip();
         }
 
-        return self;
+        return this;
     },
     
     toggle: function () {
@@ -370,7 +370,7 @@ Action.prototype = {
     */
     playNext: function () {
         var stepTaken = false,
-            nextInQueue = this.queue.next(this.playDirection);
+            nextInQueue = this.queue.next(this.props('playDirection'));
 
         if (utils.isArray(nextInQueue)) {
             this.set(parseArgs.generic.apply(this, nextInQueue), 'to')
@@ -431,7 +431,11 @@ Action.prototype = {
         @return [boolean]: Active status
     */
     isActive: function (active) {
-        return this.active = (active !== undefined) ? active : this.active;
+        var isActive = (active !== undefined) ? active : this.props('active');
+
+        this.props('active', isActive);
+
+        return isActive;
     },
     
     /*

@@ -41,8 +41,10 @@ module.exports = {
         @return [boolean]: Has Action ended?
     */
     hasEnded: function (action, hasChanged) {
-        action.inactiveFrames = hasChanged ? 0 : action.inactiveFrames + 1;
-        return (action.inactiveFrames > action.getProp('maxInactiveFrames'));
+        var props = action.props();
+
+        props.inactiveFrames = hasChanged ? 0 : props.inactiveFrames + 1;
+        return (props.inactiveFrames > props.maxInactiveFrames);
     },
     
     /*

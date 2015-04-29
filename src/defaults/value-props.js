@@ -29,15 +29,6 @@ module.exports = {
     parent: '',
     
     unitName: '',
-    
-    // [number]: Current velocity of value, in units per second
-    velocity: 0,
-    
-    // [number]: Current speed (absolute velocity)
-    speed: 0,
-    
-    // [number]: Change since last frame
-    frameChange: 0,
 
     /*
         Link properties

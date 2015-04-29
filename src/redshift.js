@@ -77,7 +77,7 @@ module.exports = {
         @params [number]: x/y coordinates of handles
     */
     addBezier: function () {
-        easing.addBezier.apply(easing, arguments);
+        easing.add.apply(easing, arguments);
         
         return this;
     },
@@ -113,6 +113,9 @@ module.exports = {
     
     /*
         Add simulation
+        
+        @param [string]: Simulation name
+        @param [function]: Method to calculate new velocity
     */
     addSimulation: function () {
         registerSimulation.apply(this, arguments);
@@ -122,6 +125,9 @@ module.exports = {
     
     /*
         Add Rubix
+        
+        @param [string]: Rubix name
+        @param [object]: Methods and properties
     */
     addRubix: function () {
         registerRubix.apply(this, arguments);
