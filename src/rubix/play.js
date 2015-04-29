@@ -5,7 +5,8 @@
 */
 "use strict";
 
-var easing = require('../utils/easing.js'),
+var calc = require('../utils/calc.js'),
+    easing = require('../utils/easing.js'),
     utils = require('../utils/utils.js'),
     
     CURRENT = 'current',
