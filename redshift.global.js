@@ -1192,6 +1192,7 @@
 	
 	        // Update if value exists
 	        if (existing) {
+	            existing.resetProps();
 	            existing.set(value, inherit);
 	
 	        // Or create new if it doesn't
@@ -1291,7 +1292,7 @@
 	
 	var calc = __webpack_require__(/*! ../utils/calc.js */ 19),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 23),
-	    History = __webpack_require__(/*! ../utils/history.js */ 38),
+	    History = __webpack_require__(/*! ../utils/history.js */ 36),
 	
 	    /*
 	        Input constructor
@@ -1423,7 +1424,7 @@
 	*/
 	"use strict";
 	
-	var manager = __webpack_require__(/*! ./manager.js */ 36),
+	var manager = __webpack_require__(/*! ./manager.js */ 37),
 	
 	    /*
 	        Process constructor
@@ -1723,7 +1724,7 @@
 	"use strict";
 	
 	var calc = __webpack_require__(/*! ./calc.js */ 19),
-	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 37),
+	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 38),
 	    
 	    // Constants
 	    INVALID_EASING = ": Not defined",
@@ -2320,7 +2321,7 @@
 
 	"use strict";
 	
-	var routes = __webpack_require__(/*! ../core/routes.js */ 40),
+	var routes = __webpack_require__(/*! ../core/routes.js */ 39),
 	    routeKeys = [],
 	    numRoutes,
 	    processes = ['preprocess', 'onStart', 'onEnd'],
@@ -2423,7 +2424,7 @@
 	
 	var actionPrototype = __webpack_require__(/*! ../action/action.js */ 14).prototype,
 	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 28),
-	    rubix = __webpack_require__(/*! ../core/rubix.js */ 39);
+	    rubix = __webpack_require__(/*! ../core/rubix.js */ 40);
 	
 	module.exports = function (name, newRubix) {
 	    var parser = parseArgs[name] || parseArgs.generic;
@@ -2980,7 +2981,7 @@
 	
 	var utils = __webpack_require__(/*! ../utils/utils.js */ 23),
 	    presets = __webpack_require__(/*! ./presets.js */ 17),
-	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 51),
+	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 48),
 	
 	    STRING = 'string',
 	    NUMBER = 'number',
@@ -3118,9 +3119,9 @@
 
 	"use strict";
 	
-	var defaultProps = __webpack_require__(/*! ../defaults/value-props.js */ 48),
-	    defaultState = __webpack_require__(/*! ../defaults/value-state.js */ 49),
-	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 50),
+	var defaultProps = __webpack_require__(/*! ../defaults/value-props.js */ 49),
+	    defaultState = __webpack_require__(/*! ../defaults/value-state.js */ 50),
+	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 51),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 23),
 	
 	    CURRENT = 'current',
@@ -3397,7 +3398,7 @@
 	*/
 	"use strict";
 	
-	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 39),
+	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 40),
 	    routes = __webpack_require__(/*! ./routes.js */ 20),
 	    calc = __webpack_require__(/*! ../utils/calc.js */ 19),
 	    
@@ -3670,6 +3671,83 @@
 
 /***/ },
 /* 36 */
+/*!******************************!*\
+  !*** ./src/utils/history.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var // [number]: Default max size of history
+	    maxHistorySize = 3,
+	    
+	    /*
+	        History constructor
+	        
+	        @param [var]: Variable to store in first history slot
+	        @param [int] (optional): Maximum size of history
+	    */
+	    History = function (obj, max) {
+	        this.max = max || maxHistorySize;
+	        this.entries = [];
+	        this.add(obj);
+	    };
+	    
+	History.prototype = {
+	    
+	    /*
+	        Push new var to history
+	        
+	        Shift out oldest entry if we've reached maximum capacity
+	        
+	        @param [var]: Variable to push into history.entries
+	    */
+	    add: function (obj) {
+	        var currentSize = this.getSize();
+	        
+	        this.entries.push(obj);
+	        
+	        if (currentSize >= this.max) {
+	            this.entries.shift();
+	        }
+	    },
+	    
+	    /*
+	        Get variable at specified index
+	
+	        @param [int]: Index
+	        @return [var]: Var found at specified index
+	    */
+	    get: function (i) {
+	        i = (typeof i === 'number') ? i : this.getSize() - 1;
+	
+	        return this.entries[i];
+	    },
+	    
+	    /*
+	        Get the second newest history entry
+	        
+	        @return [var]: Entry found at index size - 2
+	    */
+	    getPrevious: function () {
+	        return this.get(this.getSize() - 2);
+	    },
+	    
+	    /*
+	        Get current history size
+	        
+	        @return [int]: Current length of entries.length
+	    */
+	    getSize: function () {
+	        return this.entries.length;
+	    }
+	    
+	};
+	
+	module.exports = History;
+
+/***/ },
+/* 37 */
 /*!********************************!*\
   !*** ./src/process/manager.js ***!
   \********************************/
@@ -3847,7 +3925,7 @@
 	module.exports = new ProcessManager();
 
 /***/ },
-/* 37 */
+/* 38 */
 /*!*****************************!*\
   !*** ./src/types/bezier.js ***!
   \*****************************/
@@ -4022,84 +4100,16 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 38 */
-/*!******************************!*\
-  !*** ./src/utils/history.js ***!
-  \******************************/
+/* 39 */
+/*!****************************!*\
+  !*** ./src/core/routes.js ***!
+  \****************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
-	
-	var // [number]: Default max size of history
-	    maxHistorySize = 3,
-	    
-	    /*
-	        History constructor
-	        
-	        @param [var]: Variable to store in first history slot
-	        @param [int] (optional): Maximum size of history
-	    */
-	    History = function (obj, max) {
-	        this.max = max || maxHistorySize;
-	        this.entries = [];
-	        this.add(obj);
-	    };
-	    
-	History.prototype = {
-	    
-	    /*
-	        Push new var to history
-	        
-	        Shift out oldest entry if we've reached maximum capacity
-	        
-	        @param [var]: Variable to push into history.entries
-	    */
-	    add: function (obj) {
-	        var currentSize = this.getSize();
-	        
-	        this.entries.push(obj);
-	        
-	        if (currentSize >= this.max) {
-	            this.entries.shift();
-	        }
-	    },
-	    
-	    /*
-	        Get variable at specified index
-	
-	        @param [int]: Index
-	        @return [var]: Var found at specified index
-	    */
-	    get: function (i) {
-	        i = (typeof i === 'number') ? i : this.getSize() - 1;
-	
-	        return this.entries[i];
-	    },
-	    
-	    /*
-	        Get the second newest history entry
-	        
-	        @return [var]: Entry found at index size - 2
-	    */
-	    getPrevious: function () {
-	        return this.get(this.getSize() - 2);
-	    },
-	    
-	    /*
-	        Get current history size
-	        
-	        @return [int]: Current length of entries.length
-	    */
-	    getSize: function () {
-	        return this.entries.length;
-	    }
-	    
-	};
-	
-	module.exports = History;
+	module.exports = {};
 
 /***/ },
-/* 39 */
+/* 40 */
 /*!***************************!*\
   !*** ./src/core/rubix.js ***!
   \***************************/
@@ -4153,15 +4163,6 @@
 	                @param [Action]: Action being processed
 	                @param [boolean]: True if any value has changed
 	*/            
-	module.exports = {};
-
-/***/ },
-/* 40 */
-/*!****************************!*\
-  !*** ./src/core/routes.js ***!
-  \****************************/
-/***/ function(module, exports, __webpack_require__) {
-
 	module.exports = {};
 
 /***/ },
@@ -4763,6 +4764,105 @@
 
 /***/ },
 /* 48 */
+/*!******************************!*\
+  !*** ./src/input/pointer.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var Input = __webpack_require__(/*! ./input.js */ 15),
+	    currentPointer, // Sort this out for multitouch
+	    
+	    TOUCHMOVE = 'touchmove',
+	    MOUSEMOVE = 'mousemove',
+	    
+	    doc = document.documentElement,
+	
+	    /*
+	        Convert event into point
+	        
+	        Scrape the x/y coordinates from the provided event
+	        
+	        @param [event]: Original pointer event
+	        @param [boolean]: True if touch event
+	        @return [object]: x/y coordinates of event
+	    */
+	    eventToPoint = function (event, isTouchEvent) {
+	        var touchChanged = isTouchEvent ? event.changedTouches[0] : false;
+	        
+	        return {
+	            x: touchChanged ? touchChanged.clientX : event.screenX,
+	            y: touchChanged ? touchChanged.clientY : event.screenY
+	        }
+	    },
+	    
+	    /*
+	        Get actual event
+	        
+	        Checks for jQuery's .originalEvent if present
+	        
+	        @param [event | jQuery event]
+	        @return [event]: The actual JS event  
+	    */
+	    getActualEvent = function (event) {
+	        return event.originalEvent || event;
+	    },
+	
+	    
+	    /*
+	        Pointer constructor
+	    */
+	    Pointer = function (e) {
+	        var event = getActualEvent(e), // In case of jQuery event
+	            isTouch = (event.touches) ? true : false,
+	            startPoint = eventToPoint(event, isTouch);
+	        
+	        this.update(startPoint);
+	        this.isTouch = isTouch;
+	        this.bindEvents();
+	    },
+	    
+	    proto = Pointer.prototype = new Input();
+	
+	/*
+	    Bind move event
+	*/
+	proto.bindEvents = function () {
+	    this.moveEvent = this.isTouch ? TOUCHMOVE : MOUSEMOVE;
+	    
+	    currentPointer = this;
+	    
+	    doc.addEventListener(this.moveEvent, this.onMove);
+	};
+	
+	/*
+	    Unbind move event
+	*/
+	proto.unbindEvents = function () {
+	    doc.removeEventListener(this.moveEvent, this.onMove);
+	};
+	
+	/*
+	    Pointer onMove event handler
+	    
+	    @param [event]: Pointer move event
+	*/
+	proto.onMove = function (e) {
+	    var newPoint = eventToPoint(e, currentPointer.isTouch);
+	    e = getActualEvent(e);
+	    e.preventDefault();
+	    currentPointer.update(newPoint);
+	};
+	
+	proto.stop = function () {
+	    this.unbindEvents();
+	};
+	
+	module.exports = Pointer;
+
+/***/ },
+/* 49 */
 /*!*************************************!*\
   !*** ./src/defaults/value-props.js ***!
   \*************************************/
@@ -4886,7 +4986,7 @@
 	};
 
 /***/ },
-/* 49 */
+/* 50 */
 /*!*************************************!*\
   !*** ./src/defaults/value-state.js ***!
   \*************************************/
@@ -4907,7 +5007,7 @@
 	};
 
 /***/ },
-/* 50 */
+/* 51 */
 /*!******************************!*\
   !*** ./src/utils/resolve.js ***!
   \******************************/
@@ -4961,105 +5061,6 @@
 	
 	    return newValue;
 	};
-
-/***/ },
-/* 51 */
-/*!******************************!*\
-  !*** ./src/input/pointer.js ***!
-  \******************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var Input = __webpack_require__(/*! ./input.js */ 15),
-	    currentPointer, // Sort this out for multitouch
-	    
-	    TOUCHMOVE = 'touchmove',
-	    MOUSEMOVE = 'mousemove',
-	    
-	    doc = document.documentElement,
-	
-	    /*
-	        Convert event into point
-	        
-	        Scrape the x/y coordinates from the provided event
-	        
-	        @param [event]: Original pointer event
-	        @param [boolean]: True if touch event
-	        @return [object]: x/y coordinates of event
-	    */
-	    eventToPoint = function (event, isTouchEvent) {
-	        var touchChanged = isTouchEvent ? event.changedTouches[0] : false;
-	        
-	        return {
-	            x: touchChanged ? touchChanged.clientX : event.screenX,
-	            y: touchChanged ? touchChanged.clientY : event.screenY
-	        }
-	    },
-	    
-	    /*
-	        Get actual event
-	        
-	        Checks for jQuery's .originalEvent if present
-	        
-	        @param [event | jQuery event]
-	        @return [event]: The actual JS event  
-	    */
-	    getActualEvent = function (event) {
-	        return event.originalEvent || event;
-	    },
-	
-	    
-	    /*
-	        Pointer constructor
-	    */
-	    Pointer = function (e) {
-	        var event = getActualEvent(e), // In case of jQuery event
-	            isTouch = (event.touches) ? true : false,
-	            startPoint = eventToPoint(event, isTouch);
-	        
-	        this.update(startPoint);
-	        this.isTouch = isTouch;
-	        this.bindEvents();
-	    },
-	    
-	    proto = Pointer.prototype = new Input();
-	
-	/*
-	    Bind move event
-	*/
-	proto.bindEvents = function () {
-	    this.moveEvent = this.isTouch ? TOUCHMOVE : MOUSEMOVE;
-	    
-	    currentPointer = this;
-	    
-	    doc.addEventListener(this.moveEvent, this.onMove);
-	};
-	
-	/*
-	    Unbind move event
-	*/
-	proto.unbindEvents = function () {
-	    doc.removeEventListener(this.moveEvent, this.onMove);
-	};
-	
-	/*
-	    Pointer onMove event handler
-	    
-	    @param [event]: Pointer move event
-	*/
-	proto.onMove = function (e) {
-	    var newPoint = eventToPoint(e, currentPointer.isTouch);
-	    e = getActualEvent(e);
-	    e.preventDefault();
-	    currentPointer.update(newPoint);
-	};
-	
-	proto.stop = function () {
-	    this.unbindEvents();
-	};
-	
-	module.exports = Pointer;
 
 /***/ },
 /* 52 */
