@@ -48,7 +48,6 @@ module.exports = {
         
         // If we have a target, process
         if (target !== undefined) {
-
             progress = calc.restricted(calc.progress(action.elapsed - value.delay, value.duration) - value.stagger, 0, 1);
             progressTarget = (action.playDirection === 1) ? 1 : 0;
             
@@ -62,11 +61,12 @@ module.exports = {
             }
             
             // Step progress if we're stepping
-            progress = (value.steps) ? utils.stepProgress(progress, 1, value.steps) : progress;
+            if (value.steps) {
+                progress = utils.stepProgress(progress, value.steps, value.stepDirection);
+            }
             
             // Ease value with progress
             newValue = easing.withinRange(progress, value.origin, target, value.ease);
-
         }
         
         return newValue;

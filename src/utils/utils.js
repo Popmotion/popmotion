@@ -3,7 +3,9 @@
 */
 "use strict";
 
-var protectedProperties = ['scope',  'dom'],
+var defaultValueProps = require('../defaults/value-props.js'),
+
+    protectedProperties = ['scope',  'dom'],
     
     isProtected = function (key) {
         return (protectedProperties.indexOf(key) !== -1);
@@ -21,9 +23,10 @@ module.exports = {
         @return [boolean]: True if different
     */
     hasChanged: function (a, b) {
-        var hasChanged = false;
+        var hasChanged = false,
+            key = '';
 
-        for (var key in b) {
+        for (key in b) {
             if (a.hasOwnProperty(key) && b.hasOwnProperty(key)) {
                 if (a[key] !== b[key]) {
                     hasChanged = true;
@@ -215,21 +218,24 @@ module.exports = {
     },
 
     /*
-        Create stepped version of progress
+        Create stepped version of 0-1 progress
         
-        @param [number]: Value
+        @param [number]: Current value
         @param [number]: Max range
         @param [int]: Number of steps
+        @param [string]: Direction 
         @return [number]: Stepped value
     */
-    stepProgress: function (value, max, steps) {
+    stepProgress: function (value, steps, direction) {
         var stepped = 0,
-            segment = max / steps;
+            segment = 1 / steps,
+            i = 0,
+            visibility = (direction === defaultValueProps.stepDirection) ? 1 : 0;
             
-        for (var i = 0; i <= steps; i++) {
+        for (; i <= steps; i++) {
             stepped = i * segment;
-
-            if ((i + 1) * segment > value) {
+            
+            if (value < (i + visibility) * segment) {
                 break;
             }
         }

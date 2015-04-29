@@ -42,39 +42,42 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/*!*****************************!*\
-  !*** ./src/utils/global.js ***!
-  \*****************************/
+/*!****************************!*\
+  !*** ./src/load/global.js ***!
+  \****************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	window.redshift = __webpack_require__(/*! ../load.js */ 1);
+	window.redshift = __webpack_require__(/*! ./module.js */ 1);
 
 /***/ },
 /* 1 */
-/*!*********************!*\
-  !*** ./src/load.js ***!
-  \*********************/
+/*!****************************!*\
+  !*** ./src/load/module.js ***!
+  \****************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var redshift = __webpack_require__(/*! ./redshift.js */ 2);
+	"use strict";
+	
+	var redshift = __webpack_require__(/*! ../redshift.js */ 2);
 	
 	redshift
 	    // Add default Rubix processor modules
-	    .addRubix('angleAndDistance',   __webpack_require__(/*! ./rubix/angle-distance.js */ 3))
-	    .addRubix('fire',               __webpack_require__(/*! ./rubix/fire.js */ 4))
-	    .addRubix('link',               __webpack_require__(/*! ./rubix/link.js */ 5))
-	    .addRubix('play',               __webpack_require__(/*! ./rubix/play.js */ 6))
-	    .addRubix('run',                __webpack_require__(/*! ./rubix/run.js */ 7))
-	    .addRubix('track',              __webpack_require__(/*! ./rubix/track.js */ 8))
+	    .addRubix('angleAndDistance',   __webpack_require__(/*! ../rubix/angle-distance.js */ 3))
+	    .addRubix('fire',               __webpack_require__(/*! ../rubix/fire.js */ 4))
+	    .addRubix('link',               __webpack_require__(/*! ../rubix/link.js */ 5))
+	    .addRubix('play',               __webpack_require__(/*! ../rubix/play.js */ 6))
+	    .addRubix('run',                __webpack_require__(/*! ../rubix/run.js */ 7))
+	    .addRubix('track',              __webpack_require__(/*! ../rubix/track.js */ 8))
 	    
 	    // Add DOM value routes
-	    .addRoute('values', __webpack_require__(/*! ./routes/values.js */ 9))
-	    .addRoute('css',    __webpack_require__(/*! ./routes/css.js */ 10))
-	    .addRoute('attr',   __webpack_require__(/*! ./routes/attr.js */ 11))
-	    .addRoute('path',   __webpack_require__(/*! ./routes/path.js */ 12));
+	    .addRoute('values', __webpack_require__(/*! ../routes/values.js */ 9))
+	    .addRoute('css',    __webpack_require__(/*! ../routes/css.js */ 10))
+	    .addRoute('attr',   __webpack_require__(/*! ../routes/attr.js */ 11))
+	    .addRoute('path',   __webpack_require__(/*! ../routes/path.js */ 12));
 	
-	// Check if we need to shim requireAnimationFrame
-	__webpack_require__(/*! ./utils/shim.js */ 13);
+	// Check if we need to shim requireAnimationFrame - TODO replace this with
+	// a more general environment check, for instance node or react native
+	__webpack_require__(/*! ../utils/shim.js */ 13);
 	
 	module.exports = redshift;
 
@@ -98,9 +101,10 @@
 	    presets = __webpack_require__(/*! ./action/presets.js */ 17),
 	    easing = __webpack_require__(/*! ./utils/easing.js */ 18),
 	    calc = __webpack_require__(/*! ./utils/calc.js */ 19),
-	    route = __webpack_require__(/*! ./action/routes.js */ 20),
-	    registerRubix = __webpack_require__(/*! ./register/register-rubix.js */ 21),
-	    registerSimulation = __webpack_require__(/*! ./register/register-simulation.js */ 22);
+	    utils = __webpack_require__(/*! ./utils/utils.js */ 20),
+	    route = __webpack_require__(/*! ./action/routes.js */ 21),
+	    registerRubix = __webpack_require__(/*! ./register/register-rubix.js */ 22),
+	    registerSimulation = __webpack_require__(/*! ./register/register-simulation.js */ 23);
 	
 	module.exports = {
 	
@@ -215,7 +219,9 @@
 	        return this;
 	    },
 	    
-	    calc: calc
+	    // Expose calc and utils modules
+	    calc: calc,
+	    utils: utils
 	};
 
 /***/ },
@@ -401,7 +407,7 @@
 	
 	var calc = __webpack_require__(/*! ../utils/calc.js */ 19),
 	    easing = __webpack_require__(/*! ../utils/easing.js */ 18),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 23),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
 	    
 	    CURRENT = 'current',
 	    HAS_ENDED = 'hasEnded';
@@ -442,7 +448,6 @@
 	        
 	        // If we have a target, process
 	        if (target !== undefined) {
-	
 	            progress = calc.restricted(calc.progress(action.elapsed - value.delay, value.duration) - value.stagger, 0, 1);
 	            progressTarget = (action.playDirection === 1) ? 1 : 0;
 	            
@@ -456,11 +461,12 @@
 	            }
 	            
 	            // Step progress if we're stepping
-	            progress = (value.steps) ? utils.stepProgress(progress, 1, value.steps) : progress;
+	            if (value.steps) {
+	                progress = utils.stepProgress(progress, value.steps, value.stepDirection);
+	            }
 	            
 	            // Ease value with progress
 	            newValue = easing.withinRange(progress, value.origin, target, value.ease);
-	
 	        }
 	        
 	        return newValue;
@@ -672,8 +678,8 @@
 
 	"use strict";
 	
-	var build = __webpack_require__(/*! ./css/build.js */ 25),
-	    split = __webpack_require__(/*! ./css/split.js */ 26),
+	var build = __webpack_require__(/*! ./css/build.js */ 26),
+	    split = __webpack_require__(/*! ./css/split.js */ 27),
 	    
 	    css = 'css',
 	    cssOrder = css + 'Order',
@@ -731,7 +737,7 @@
 
 	"use strict";
 	
-	var createStyles = __webpack_require__(/*! ./path/builder.js */ 27);
+	var createStyles = __webpack_require__(/*! ./path/builder.js */ 25);
 	
 	module.exports = {
 	    
@@ -803,18 +809,18 @@
 
 	"use strict";
 	
-	var parseArgs = __webpack_require__(/*! ./parse-args.js */ 28),
-	    Value = __webpack_require__(/*! ../types/value.js */ 29),
-	    Repo = __webpack_require__(/*! ../types/repo.js */ 30),
-	    Queue = __webpack_require__(/*! ./queue.js */ 31),
+	var parseArgs = __webpack_require__(/*! ./parse-args.js */ 29),
+	    Value = __webpack_require__(/*! ../types/value.js */ 30),
+	    Repo = __webpack_require__(/*! ../types/repo.js */ 31),
+	    Queue = __webpack_require__(/*! ./queue.js */ 32),
 	    Process = __webpack_require__(/*! ../process/process.js */ 16),
-	    processor = __webpack_require__(/*! ./processor.js */ 32),
-	    routes = __webpack_require__(/*! ./routes.js */ 20),
-	    defaultProps = __webpack_require__(/*! ../defaults/action-props.js */ 33),
-	    defaultState = __webpack_require__(/*! ../defaults/action-state.js */ 34),
+	    processor = __webpack_require__(/*! ./processor.js */ 33),
+	    routes = __webpack_require__(/*! ./routes.js */ 21),
+	    defaultProps = __webpack_require__(/*! ../defaults/action-props.js */ 34),
+	    defaultState = __webpack_require__(/*! ../defaults/action-state.js */ 35),
 	    calc = __webpack_require__(/*! ../utils/calc.js */ 19),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 23),
-	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 35),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
+	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 36),
 	    
 	    linkToAngleDistance = { link: 'AngleAndDistance' },
 	
@@ -1192,6 +1198,7 @@
 	
 	        // Update if value exists
 	        if (existing) {
+	            // Overwrite with defaults
 	            existing.resetProps();
 	            existing.set(value, inherit);
 	
@@ -1291,8 +1298,8 @@
 	"use strict";
 	
 	var calc = __webpack_require__(/*! ../utils/calc.js */ 19),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 23),
-	    History = __webpack_require__(/*! ../utils/history.js */ 36),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
+	    History = __webpack_require__(/*! ../utils/history.js */ 37),
 	
 	    /*
 	        Input constructor
@@ -1424,7 +1431,7 @@
 	*/
 	"use strict";
 	
-	var manager = __webpack_require__(/*! ./manager.js */ 37),
+	var manager = __webpack_require__(/*! ./manager.js */ 28),
 	
 	    /*
 	        Process constructor
@@ -1612,7 +1619,7 @@
 
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 23),
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 20),
 	    
 	    generateKeys = function (key) {
 	        var keys = key.split(DOT),
@@ -1724,7 +1731,7 @@
 	"use strict";
 	
 	var calc = __webpack_require__(/*! ./calc.js */ 19),
-	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 38),
+	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 39),
 	    
 	    // Constants
 	    INVALID_EASING = ": Not defined",
@@ -1923,7 +1930,7 @@
 	*/
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ./utils.js */ 23),
+	var utils = __webpack_require__(/*! ./utils.js */ 20),
 	
 	    calc = {
 	        /*
@@ -2314,151 +2321,6 @@
 
 /***/ },
 /* 20 */
-/*!******************************!*\
-  !*** ./src/action/routes.js ***!
-  \******************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var routes = __webpack_require__(/*! ../core/routes.js */ 39),
-	    routeKeys = [],
-	    numRoutes,
-	    processes = ['preprocess', 'onStart', 'onEnd'],
-	    
-	    has = function (name) {
-	        return (routeKeys.indexOf(name) > -1) ? true : false;
-	    },
-	    
-	    process = function (processName) {
-	        return function (sourceValues, action, values, props, data) {
-	            var routeName = '',
-	                route,
-	                i = 0;
-	    
-	            for (; i < numRoutes; i++) {
-	                routeName = routeKeys[i];
-	                route = routes[routeName];
-	    
-	                if (route.makeDefault || (route[processName] && props[processName])) {
-	                    route[processName](sourceValues[routeName], action, values, props, data);
-	                }
-	            }
-	        };
-	    },
-	    
-	    manager = {
-	        
-	        /*
-	            Add route
-	            
-	            @param [object]: Object of route functions
-	                Valid properties
-	                    .name [string] (required)
-	
-	                Valid methods
-	                    .preprocess
-	                    .onStart
-	                    .onFrame
-	                    .onChange
-	                    .onEnd
-	        */
-	        add: function (name, route) {
-	            routeKeys.push(name);
-	            numRoutes = routeKeys.length;
-	            
-	            if (route.makeDefault) {
-	                this.defaultRoute = name;
-	            }
-	            
-	            routes[name] = route;
-	            
-	            return this;
-	        },
-	        
-	        /*
-	            Run callback once for each route, provide route as argument
-	            
-	            @param [function]: Function to run for each route
-	            @param [object] (optional): Root object to check if route name exists
-	        */
-	        shard: function (callback, props) {
-	            var key = '',
-	                i = 0;
-	
-	            for (; i < numRoutes; i++) {
-	                key = routeKeys[i];
-	
-	                if ((props && props[key]) || !props) {
-	                    callback(routes[key], props[key]);
-	                }
-	            }
-	        },
-	        
-	        getName: function (name) {
-	            return (name !== undefined && has(name)) ? name : this.defaultRoute;
-	        }
-	    };
-	    
-	(function () {
-	    var processesLength = processes.length,
-	        processName = '',
-	        i = 0;
-	
-	    for (; i < processesLength; i++) {
-	        processName = processes[i];
-	        manager[processName] = process(processName);
-	    }
-	})();
-	
-	module.exports = manager; 
-
-/***/ },
-/* 21 */
-/*!****************************************!*\
-  !*** ./src/register/register-rubix.js ***!
-  \****************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var actionPrototype = __webpack_require__(/*! ../action/action.js */ 14).prototype,
-	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 28),
-	    rubix = __webpack_require__(/*! ../core/rubix.js */ 40);
-	
-	module.exports = function (name, newRubix) {
-	    var parser = parseArgs[name] || parseArgs.generic;
-	
-	    if (newRubix.createMethod && !actionPrototype[name]) {
-	        actionPrototype[name] = function () {
-	            this.set(parser.apply(this, arguments));
-	            return this.start(name);
-	        };
-	    }
-	    
-	    rubix[name] = newRubix;
-	}
-
-/***/ },
-/* 22 */
-/*!*********************************************!*\
-  !*** ./src/register/register-simulation.js ***!
-  \*********************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    Register new simulation
-	*/
-	"use strict";
-	
-	var simulations = __webpack_require__(/*! ../core/simulations.js */ 41);
-	
-	module.exports = function (name, simulation) {
-	    simulations[name] = simulation;
-	}
-
-/***/ },
-/* 23 */
 /*!****************************!*\
   !*** ./src/utils/utils.js ***!
   \****************************/
@@ -2469,7 +2331,9 @@
 	*/
 	"use strict";
 	
-	var protectedProperties = ['scope',  'dom'],
+	var defaultValueProps = __webpack_require__(/*! ../defaults/value-props.js */ 38),
+	
+	    protectedProperties = ['scope',  'dom'],
 	    
 	    isProtected = function (key) {
 	        return (protectedProperties.indexOf(key) !== -1);
@@ -2487,9 +2351,10 @@
 	        @return [boolean]: True if different
 	    */
 	    hasChanged: function (a, b) {
-	        var hasChanged = false;
+	        var hasChanged = false,
+	            key = '';
 	
-	        for (var key in b) {
+	        for (key in b) {
 	            if (a.hasOwnProperty(key) && b.hasOwnProperty(key)) {
 	                if (a[key] !== b[key]) {
 	                    hasChanged = true;
@@ -2681,21 +2546,24 @@
 	    },
 	
 	    /*
-	        Create stepped version of progress
+	        Create stepped version of 0-1 progress
 	        
-	        @param [number]: Value
+	        @param [number]: Current value
 	        @param [number]: Max range
 	        @param [int]: Number of steps
+	        @param [string]: Direction 
 	        @return [number]: Stepped value
 	    */
-	    stepProgress: function (value, max, steps) {
+	    stepProgress: function (value, steps, direction) {
 	        var stepped = 0,
-	            segment = max / steps;
+	            segment = 1 / steps,
+	            i = 0,
+	            visibility = (direction === defaultValueProps.stepDirection) ? 1 : 0;
 	            
-	        for (var i = 0; i <= steps; i++) {
+	        for (; i <= steps; i++) {
 	            stepped = i * segment;
-	
-	            if ((i + 1) * segment > value) {
+	            
+	            if (value < (i + visibility) * segment) {
 	                break;
 	            }
 	        }
@@ -2725,6 +2593,151 @@
 	};
 
 /***/ },
+/* 21 */
+/*!******************************!*\
+  !*** ./src/action/routes.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var routes = __webpack_require__(/*! ../core/routes.js */ 40),
+	    routeKeys = [],
+	    numRoutes,
+	    processes = ['preprocess', 'onStart', 'onEnd'],
+	    
+	    has = function (name) {
+	        return (routeKeys.indexOf(name) > -1) ? true : false;
+	    },
+	    
+	    process = function (processName) {
+	        return function (sourceValues, action, values, props, data) {
+	            var routeName = '',
+	                route,
+	                i = 0;
+	    
+	            for (; i < numRoutes; i++) {
+	                routeName = routeKeys[i];
+	                route = routes[routeName];
+	    
+	                if (route.makeDefault || (route[processName] && props[processName])) {
+	                    route[processName](sourceValues[routeName], action, values, props, data);
+	                }
+	            }
+	        };
+	    },
+	    
+	    manager = {
+	        
+	        /*
+	            Add route
+	            
+	            @param [object]: Object of route functions
+	                Valid properties
+	                    .name [string] (required)
+	
+	                Valid methods
+	                    .preprocess
+	                    .onStart
+	                    .onFrame
+	                    .onChange
+	                    .onEnd
+	        */
+	        add: function (name, route) {
+	            routeKeys.push(name);
+	            numRoutes = routeKeys.length;
+	            
+	            if (route.makeDefault) {
+	                this.defaultRoute = name;
+	            }
+	            
+	            routes[name] = route;
+	            
+	            return this;
+	        },
+	        
+	        /*
+	            Run callback once for each route, provide route as argument
+	            
+	            @param [function]: Function to run for each route
+	            @param [object] (optional): Root object to check if route name exists
+	        */
+	        shard: function (callback, props) {
+	            var key = '',
+	                i = 0;
+	
+	            for (; i < numRoutes; i++) {
+	                key = routeKeys[i];
+	
+	                if ((props && props[key]) || !props) {
+	                    callback(routes[key], props[key]);
+	                }
+	            }
+	        },
+	        
+	        getName: function (name) {
+	            return (name !== undefined && has(name)) ? name : this.defaultRoute;
+	        }
+	    };
+	    
+	(function () {
+	    var processesLength = processes.length,
+	        processName = '',
+	        i = 0;
+	
+	    for (; i < processesLength; i++) {
+	        processName = processes[i];
+	        manager[processName] = process(processName);
+	    }
+	})();
+	
+	module.exports = manager; 
+
+/***/ },
+/* 22 */
+/*!****************************************!*\
+  !*** ./src/register/register-rubix.js ***!
+  \****************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var actionPrototype = __webpack_require__(/*! ../action/action.js */ 14).prototype,
+	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 29),
+	    rubix = __webpack_require__(/*! ../core/rubix.js */ 43);
+	
+	module.exports = function (name, newRubix) {
+	    var parser = parseArgs[name] || parseArgs.generic;
+	
+	    if (newRubix.createMethod && !actionPrototype[name]) {
+	        actionPrototype[name] = function () {
+	            this.set(parser.apply(this, arguments));
+	            return this.start(name);
+	        };
+	    }
+	    
+	    rubix[name] = newRubix;
+	}
+
+/***/ },
+/* 23 */
+/*!*********************************************!*\
+  !*** ./src/register/register-simulation.js ***!
+  \*********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Register new simulation
+	*/
+	"use strict";
+	
+	var simulations = __webpack_require__(/*! ../core/simulations.js */ 41);
+	
+	module.exports = function (name, simulation) {
+	    simulations[name] = simulation;
+	}
+
+/***/ },
 /* 24 */
 /*!********************************!*\
   !*** ./src/action/simulate.js ***!
@@ -2743,6 +2756,72 @@
 
 /***/ },
 /* 25 */
+/*!************************************!*\
+  !*** ./src/routes/path/builder.js ***!
+  \************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var lookup = __webpack_require__(/*! ./lookup.js */ 42),
+	
+	    /*
+	        Convert percentage to pixels
+	        
+	        @param [number]: Percentage of total length
+	        @param [number]: Total length
+	    */
+	    percentToPixels = function (percentage, length) {
+	        return (parseFloat(percentage) / 100) * length + 'px';
+	    };
+	
+	/*
+	    Create styles
+	    
+	    @param [object]: SVG Path properties
+	    @param [object]: Length of path
+	    @returns [object]: Key/value pairs of valid CSS properties
+	*/
+	module.exports = function (props, pathLength) {
+	    var hasArray = false,
+	        svgProperty = '',
+	        arrayStyles = {
+	            length: 0,
+	            spacing: pathLength + 'px'
+	        },
+	        pathStyles = {};
+	
+	    // Loop over each property and create related css property
+	    for (var key in props) {
+	        if (props.hasOwnProperty(key)) {
+	            svgProperty = lookup[key];
+	            
+	            switch (key) {
+	                case 'length':
+	                case 'spacing':
+	                    hasArray = true;
+	                    arrayStyles[key] = percentToPixels(props[key], pathLength);
+	                    break;
+	                case 'offset':
+	                    pathStyles[svgProperty] = percentToPixels(-props[key], pathLength);
+	                    break;
+	                default:
+	                   pathStyles[svgProperty] = props[key]; 
+	            }
+	        }
+	    }
+	    
+	    if (hasArray) {
+	        pathStyles[lookup.length] = arrayStyles.length + ' ' + arrayStyles.spacing;
+	    }
+	    
+	    console.log(pathStyles['stroke-dashoffset']);
+	    
+	    return pathStyles;
+	};
+
+/***/ },
+/* 26 */
 /*!*********************************!*\
   !*** ./src/routes/css/build.js ***!
   \*********************************/
@@ -2750,9 +2829,9 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 42),
-	    templates = __webpack_require__(/*! ./templates.js */ 43),
-	    lookup = __webpack_require__(/*! ./lookup.js */ 44),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 45),
+	    templates = __webpack_require__(/*! ./templates.js */ 48),
+	    lookup = __webpack_require__(/*! ./lookup.js */ 46),
 	    
 	    TRANSFORM = 'transform',
 	    TRANSLATE_Z = 'translateZ',
@@ -2804,7 +2883,7 @@
 	};
 
 /***/ },
-/* 26 */
+/* 27 */
 /*!*********************************!*\
   !*** ./src/routes/css/split.js ***!
   \*********************************/
@@ -2812,12 +2891,12 @@
 
 	"use strict";
 	
-	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 45),
-	    dictionary = __webpack_require__(/*! ./dictionary.js */ 42),
-	    splitLookup = __webpack_require__(/*! ./lookup.js */ 44),
-	    splitters = __webpack_require__(/*! ./splitters.js */ 46),
+	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 44),
+	    dictionary = __webpack_require__(/*! ./dictionary.js */ 45),
+	    splitLookup = __webpack_require__(/*! ./lookup.js */ 46),
+	    splitters = __webpack_require__(/*! ./splitters.js */ 47),
 	    
-	    utils = __webpack_require__(/*! ../../utils/utils.js */ 23),
+	    utils = __webpack_require__(/*! ../../utils/utils.js */ 20),
 	    
 	    valueProperties = dictionary.valueProps,
 	    valuePropertyCount = valueProperties.length,
@@ -2905,849 +2984,7 @@
 	};
 
 /***/ },
-/* 27 */
-/*!************************************!*\
-  !*** ./src/routes/path/builder.js ***!
-  \************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var lookup = __webpack_require__(/*! ./lookup.js */ 47),
-	
-	    /*
-	        Convert percentage to pixels
-	        
-	        @param [number]: Percentage of total length
-	        @param [number]: Total length
-	    */
-	    percentToPixels = function (percentage, length) {
-	        return (parseFloat(percentage) / 100) * length + 'px';
-	    };
-	
-	/*
-	    Create styles
-	    
-	    @param [object]: SVG Path properties
-	    @param [object]: Length of path
-	    @returns [object]: Key/value pairs of valid CSS properties
-	*/
-	module.exports = function (props, pathLength) {
-	    var hasArray = false,
-	        svgProperty = '',
-	        arrayStyles = {
-	            length: 0,
-	            spacing: pathLength + 'px'
-	        },
-	        pathStyles = {};
-	
-	    // Loop over each property and create related css property
-	    for (var key in props) {
-	        if (props.hasOwnProperty(key)) {
-	            svgProperty = lookup[key];
-	            
-	            switch (key) {
-	                case 'length':
-	                case 'spacing':
-	                    hasArray = true;
-	                    arrayStyles[key] = percentToPixels(props[key], pathLength);
-	                    break;
-	                case 'offset':
-	                    pathStyles[svgProperty] = percentToPixels(-props[key], pathLength);
-	                    break;
-	                default:
-	                   pathStyles[svgProperty] = props[key]; 
-	            }
-	        }
-	    }
-	    
-	    if (hasArray) {
-	        pathStyles[lookup.length] = arrayStyles.length + ' ' + arrayStyles.spacing;
-	    }
-	    
-	    console.log(pathStyles['stroke-dashoffset']);
-	    
-	    return pathStyles;
-	};
-
-/***/ },
 /* 28 */
-/*!**********************************!*\
-  !*** ./src/action/parse-args.js ***!
-  \**********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 23),
-	    presets = __webpack_require__(/*! ./presets.js */ 17),
-	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 48),
-	
-	    STRING = 'string',
-	    NUMBER = 'number',
-	    OBJECT = 'object',
-	    
-	    /*
-	        Generic argument parsing
-	        
-	        Checks first argument to be a string and loads preset,
-	        merges in next object as override
-	    */
-	    generic = function () {
-	        var props = {},
-	            playlist = [],
-	            base = arguments[0],
-	            override = arguments[1],
-	            playlistLength = 0,
-	            argsAsArray = [].slice.call(arguments),
-	            i = 0;
-	
-	        if (typeof base == STRING) {
-	            playlist = base.split(' ');
-	            playlistLength = playlist.length;
-	            props = presets.getDefined(playlist[0]);
-	
-	            // If we've had multiple presets, loop through and add each to the queue
-	            if (playlistLength > 1) {
-	                for (; i < playlistLength; i++) {
-	                    argsAsArray.shift();
-	                    argsAsArray.unshift(playlist[i]);
-	                    this.queue.add.apply(this.queue, argsAsArray);
-	                }
-	            }
-	            
-	            if (typeof override == OBJECT) {
-	                props = utils.merge(props, override);
-	            }
-	        // If object, assign directly
-	        } else if (typeof base == OBJECT) {
-	            props = base;
-	
-	            if (this.isActive()) {
-	                this.queue.add.apply(this.queue, argsAsArray);
-	            }
-	        }
-	        
-	        return props;
-	    };
-	
-	module.exports = {
-	    
-	    /*
-	        Parse play arguments
-	        
-	        Syntax
-	            .play(preset [,override, duration, easing, onEnd])
-	            .play(properties [, duration, easing, onEnd])
-	    */
-	    play: function () {
-	        var props = generic.apply(this, arguments),
-	            argsLength = arguments.length,
-	            i = 0,
-	            arg,
-	            typeofArg = '';
-	        
-	        // Play specific properties
-	        props.loopCount = props.yoyoCount = props.flipCount = 0;
-	        
-	        for (; i < argsLength; i++) {
-	            arg = arguments[i];
-	            typeofArg = typeof arg;
-	            
-	            // Easing if string and not first index
-	            if (typeofArg == STRING && i !== 0) {
-	                props.ease = arg;
-	            
-	            // Duration if number
-	            } else if (typeofArg == NUMBER) {
-	                props.duration = arg;
-	                
-	            // Callback if function
-	            } else if (utils.isFunc(arg)) {
-	                props.onEnd = arg;
-	            }
-	        }
-	
-	        return props;
-	    },
-	    
-	    /*
-	        Parse track arguments
-	        
-	        Syntax
-	            .track(preset [, override], event/Input)
-	            .track(properties, event/Input)
-	    */
-	    track: function () {
-	        var props = {},
-	            argsLength = arguments.length,
-	            inputIndex = argsLength - 1,
-	            input = arguments[inputIndex];
-	        
-	        // Loop until inputIndex
-	        for (var i = 0; i < inputIndex; i++) {
-	            
-	            // Preset if string
-	            if (typeof arguments[i] === STRING) {
-	                props = presets.getDefined(arguments[i]);
-	                
-	            // Or override
-	            } else {
-	                props = utils.merge(props, arguments[i]);
-	            }
-	        }
-	        
-	        // Create Pointer if this isn't an Input
-	        input = (!input.current) ? new Pointer(input) : input;
-	        
-	        // Append input
-	        props.input = input;
-	        props.inputOrigin = input.get();
-	        
-	        return props;
-	    },
-	    
-	    generic: generic
-	};
-
-/***/ },
-/* 29 */
-/*!****************************!*\
-  !*** ./src/types/value.js ***!
-  \****************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var defaultProps = __webpack_require__(/*! ../defaults/value-props.js */ 49),
-	    defaultState = __webpack_require__(/*! ../defaults/value-state.js */ 50),
-	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 51),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 23),
-	
-	    CURRENT = 'current',
-	    ORIGIN = 'origin',
-	    FORCE_NUMBER = [CURRENT, ORIGIN, 'to', 'start'],
-	    
-	    /*
-	        Parse setter arguments
-	    */
-	    parseSetArgs = function (arg0, arg1) {
-	        var newProps = {};
-	
-	        // If we've just got a value, set default
-	        if (arguments.length === 1) {
-	            newProps[CURRENT] = arg0;
-	            
-	        // Or we've got key/value args
-	        } else {
-	            newProps[arg0] = arg1;
-	        }
-	        
-	        return newProps;
-	    },
-	
-	    /*
-	        Value constructor
-	    */
-	    Value = function (key, props, inherit, action) {
-	        this.key = key;
-	        this.action = action;
-	        this.scope = action.getProp('scope');
-	
-	        if (props.start) {
-	            props.current = props.start;
-	        }
-	
-	        this.set(defaultProps);
-	        this.set(defaultState);
-	        this.set(props, inherit);
-	    };
-	    
-	Value.prototype = {
-	
-	    /*
-	        Set value properties
-	        
-	        Syntax
-	            .set('key', value) // Set specific value
-	            .set({ key: value }) // Set multiple values
-	            .set({ key: value }, { key: value2 }) // Set multiple with inherit
-	            .set(value) // Set .current
-	    */
-	    set: function () {
-	        var multiVal = utils.isObj(arguments[0]),
-	            newProps = multiVal ? arguments[0] : parseSetArgs.apply(self, arguments),
-	            inherit = multiVal ? arguments[1] : false,
-	            toSet = {},
-	            key = '';
-	        
-	        // Deal with inherited values first
-	        if (inherit) {
-	            for (key in inherit) {
-	                // Check this is a Value, not Action property
-	                if (defaultProps.hasOwnProperty(key)) {
-	                    toSet[key] = inherit[key];
-	                }
-	            }
-	        }
-	        
-	        // Loop through all properties and set
-	        for (key in newProps) {
-	            toSet[key] = newProps[key];
-	        }
-	        
-	        // Loop through collected values and set
-	        for (key in toSet) {
-	            this[key] = resolve(toSet[key], this[key], this, this.scope);
-	                
-	            if (FORCE_NUMBER.indexOf(key) > -1) {
-	                this[key] = parseFloat(this[key]);
-	            }
-	            
-	            if (key === 'to') {
-	                this.target = this.to;
-	            }
-	        }
-	        
-	        // Set hasRange to true if min and max are numbers
-	        this.hasRange = (utils.isNum(this.min) && utils.isNum(this.max)) ? true : false;
-	        
-	        // Update Action value process order
-	        this.action.updateOrder(this.key, utils.isString(this.link));
-	        
-	        return this;
-	    },
-	    
-	    /*
-	        Set current value to origin
-	    */
-	    reset: function () {
-	        this.set('to', this.target);
-	        return this.set(CURRENT, this[ORIGIN]);
-	    },
-	    
-	    /*
-	        Reset properties to defaults
-	    */
-	    resetProps: function () {
-	        this.set(defaultProps);
-	    },
-	    
-	    /*
-	        Swap current target and origin
-	    */
-	    flip: function () {
-	        var newTo = this[ORIGIN],
-	            newOrigin = (this.target !== undefined) ? this.target : this[CURRENT];
-	
-	        return this.set({
-	            to: newTo,
-	            origin: newOrigin
-	        });
-	    },
-	    
-	    retarget: function (target) {
-	        target = (target !== undefined) ? target : this.target;
-	        return this.set('to', target);
-	    }
-	};
-	
-	module.exports = Value;
-
-/***/ },
-/* 30 */
-/*!***************************!*\
-  !*** ./src/types/repo.js ***!
-  \***************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 23),
-	
-	    /*
-	        Get data with specified key
-	        
-	        @param [string]: Name of property to access
-	        @returns [var]: Data found
-	    */
-	    get = function (key) {
-	        return (key !== undefined) ? this[key] : this;
-	    },
-	            
-	    /*
-	        Set data either has object or key/value pair
-	        
-	        Syntax
-	            .set(data)
-	                @param [object]: Data to store
-	                
-	            .set(key, value)
-	                @param [string]: Name of data
-	                @param [val]: Data to store
-	    */
-	    set = function (data, prop) {
-	        var multiArg = (arguments.length > 1),
-	            toSet = multiArg ? {} : data,
-	            key = '';
-	        
-	        // If this is a key/value setter, add to toSet
-	        if (multiArg) {
-	            toSet[data] = prop;
-	        }
-	        
-	        // Loop over toSet and assign to our data store
-	        for (key in toSet) {
-	            if (toSet.hasOwnProperty(key)) {
-	                this[key] = toSet[key];
-	            }
-	        }
-	    },
-	
-	    /*
-	        Repo class
-	    */
-	    Repo = function (context) {
-	        var store = {};
-	
-	        /*
-	            Determine whether call is getter or setter
-	        */
-	        return function () {
-	            var argsLength = arguments.length;
-	
-	            // If this is a getter, return value
-	            if ((!argsLength || (argsLength === 1 && utils.isString(arguments[0])))) {
-	                return get.apply(store, arguments);
-	
-	            // Or this is a setter, return this
-	            } else {
-	                set.apply(store, arguments);
-	                return context;
-	            }
-	        };
-	    };
-	
-	module.exports = Repo;
-
-/***/ },
-/* 31 */
-/*!*****************************!*\
-  !*** ./src/action/queue.js ***!
-  \*****************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var Queue = function () {
-	        this.clear();
-	    };
-	
-	Queue.prototype = {
-	    
-	    /*
-	        Add a set of arguments to queue
-	    */
-	    add: function () {
-	        this.queue.push([].slice.call(arguments));
-	    },
-	    
-	    /*
-	        Get next set of arguments from queue
-	    */
-	    next: function (direction) {
-	        var queue = this.queue,
-	            returnVal = false,
-	            index = this.index;
-	            
-	        direction = (arguments.length) ? direction : 1;
-	        
-	        // If our index is between 0 and the queue length, return that item
-	        if (index >= 0 && index < queue.length) {
-	            returnVal = queue[index];
-	            this.index = index + direction;
-	        
-	        // Or clear
-	        } else {
-	            this.clear();
-	        }
-	        
-	        return returnVal;
-	    },
-	
-	    /*
-	        Replace queue with empty array
-	    */
-	    clear: function () {
-	        this.queue = [];
-	        this.index = 0;
-	    }
-	};
-	
-	module.exports = Queue;
-
-/***/ },
-/* 32 */
-/*!*********************************!*\
-  !*** ./src/action/processor.js ***!
-  \*********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    Process actions
-	*/
-	"use strict";
-	
-	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 40),
-	    routes = __webpack_require__(/*! ./routes.js */ 20),
-	    calc = __webpack_require__(/*! ../utils/calc.js */ 19),
-	    
-	    ANGLE_DISTANCE = 'angleAndDistance';
-	
-	module.exports = function (action, framestamp, frameDuration) {
-	    var props = action.props(),
-	        data = action.data(),
-	        values = action.values,
-	        rubix = Rubix[props.rubix],
-	        valueRubix = rubix,
-	        hasChanged = false,
-	        defaultRoute = routes.getName(),
-	        i = 0,
-	        order = props.order = props.order || [],
-	        orderLength = order.length,
-	        key = '', value, output;
-	    
-	    action.output = {
-	        values: {}
-	    };
-	    
-	    // Update elapsed
-	    if (rubix.updateInput) {
-	        rubix.updateInput(action, props, frameDuration);
-	    }
-	
-	    // Fire onStart if first frame
-	    if (action.firstFrame) {
-	        routes.onStart(action.output, action, values, props, data);
-	        
-	        action.firstFrame = false;
-	    }
-	    
-	    // Update Input if available
-	    if (props.input) {
-	        action.output.input = props.input.onFrame(framestamp);
-	    }
-	
-	    // Update values
-	    for (; i < orderLength; i++) {
-	        // Get value and key
-	        key = order[i];
-	        value = values[key];
-	
-	        // Load rubix for this value
-	        valueRubix = rubix;
-	        if (value.link) {
-	            valueRubix = (value.link !== ANGLE_DISTANCE) ? Rubix['link'] : Rubix[ANGLE_DISTANCE];
-	        }
-	
-	        // Calculate new value
-	        output = valueRubix.process(key, value, values, props, action, frameDuration);
-	        
-	        // Limit if range set
-	        if (valueRubix.limit) {
-	            output = valueRubix.limit(output, value);
-	        }
-	        
-	        // Round value if rounding set to true
-	        if (value.round) {
-	            output = Math.round(output);
-	        }
-	
-	        // Update change from previous frame
-	        value.frameChange = calc.difference(value.current, output);
-	        
-	        // Calculate velocity
-	        if (!valueRubix.calculatesVelocity) {
-	            value.velocity = calc.speedPerSecond(value.frameChange, frameDuration);
-	        }
-	        
-	        // Update current speed
-	        value.speed = Math.abs(value.velocity);
-	        
-	        // Check if changed and update
-	        if (value.current != output) {
-	            hasChanged = true;
-	        }
-	
-	        // Set current and add unit (if any) for output
-	        value.current = output;
-	        action.output[value.route] = action.output[value.route] || {};
-	        action.output[defaultRoute] = action.output[defaultRoute] || {};
-	        action.output[defaultRoute][key] = action.output[value.route][value.name] = (value.unit) ? output + value.unit : output;
-	    }
-	
-	    // shard onFrame and onChange
-	    routes.shard(function (route, output) {
-	        // Fire onFrame every frame
-	        if (route.onFrame) {
-	            route.onFrame(output, action, values, props, data);
-	        }
-	        
-	        // Fire onChanged if values have changed
-	        if (hasChanged && route.onChange) {
-	            route.onChange(output, action, values, props, data);
-	        }
-	    }, action.output);
-	
-	    // Fire onEnd if ended
-	    if (rubix.hasEnded(action, hasChanged)) {
-	        action.isActive(false);
-	
-	        routes.onEnd(action.output, action, values, props, data);
-	        
-	        if (!action.isActive() && props.rubix === 'Play') {
-	            action.next();
-	        }
-	    }
-	    
-	    action.framestamp = framestamp;
-	};
-
-/***/ },
-/* 33 */
-/*!**************************************!*\
-  !*** ./src/defaults/action-props.js ***!
-  \**************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	    // [string]: What to use to process this aciton
-	    rubix: 'play',
-	    
-	    // [number]: Multiply output value by
-	    amp: 1,
-	    
-	    // [number]: Multiply output value outside min/max by
-	    escapeAmp: 0,
-	    
-	    // [number]: Delay this action by x ms
-	    delay: 0,
-	    
-	    // [number]: Time of animation (if animating) in ms
-	    duration: 400,
-	    
-	    // [string]: Ease animation
-	    ease: 'easeInOut',
-	    
-	    // [number]: Multiply progress by this (.5 is half speed)
-	    dilate: 1,
-	    
-	    // [number]: Number of frames of no change before Action is declared inactive
-	    maxInactiveFrames: 3,
-	    
-	    // [boolean || number]: Number of times to loop values, true for indefinite
-	    loop: false,
-	    
-	    // [boolean || number]: Number of times to yoyo values, true for indefinite
-	    yoyo: false,
-	    
-	    // [boolean || number]: Number of times to flip values, true for indefinite
-	    flip: false,
-	    
-	    // [function]: Callback when Action process starts
-	    onStart: undefined,
-	    
-	    // [function]: Callback when any value changes
-	    onChange: undefined,
-	    
-	    // [function]: Callback every frame
-	    onFrame: undefined,
-	    
-	    // [function]: Callback when Action process ends
-	    onEnd: undefined
-	};
-
-/***/ },
-/* 34 */
-/*!**************************************!*\
-  !*** ./src/defaults/action-state.js ***!
-  \**************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	    // [boolean]: True if Action is current active
-	    active: false,
-	    
-	    // [number]: Progress represented in a range of 0 - 1
-	    progress: 0,
-	    
-	    // [int]: Time elapsed in milliseconds
-	    elapsed: 0,
-	    
-	    // [int]: Number of frames Action has been inactive
-	    inactiveFrames: 0,
-	    
-	    // [int]: 1 = forward, -1 = backwards
-	    playDirection: 1,
-	    
-	    // [int]: Number of times values have been flipped
-	    flipCount: 0,
-	    
-	    // [int]: Number of times values have been looped
-	    loopCount: 0,
-	    
-	    // [int]: Number of times values have been yoyoed
-	    yoyoCount: 0
-	};
-
-/***/ },
-/* 35 */
-/*!**********************************!*\
-  !*** ./src/routes/css/styler.js ***!
-  \**********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var cssStyler = function () {
-		var testElement = document.getElementsByTagName('body')[0],
-			prefixes = ['Webkit','Moz','O','ms', ''],
-			prefixesLength = prefixes.length,
-			cache = {},
-			
-			/*
-				Test style property for prefixed version
-				
-				@param [string]: Style property
-				@return [string]: Cached property name
-			*/
-			testPrefix = function (key) {
-				cache[key] = key;
-	
-				for (var i = 0; i < prefixesLength; i++) {
-					var prefixed = prefixes[i] + key.charAt(0).toUpperCase() + key.slice(1);
-	
-					if (testElement.style.hasOwnProperty(prefixed)) {
-						cache[key] = prefixed;
-					}
-				}
-				
-				return cache[key];
-			};
-			
-		/*
-			Stylee function call
-			
-			Syntax
-				
-				Get property
-					style(element, 'property');
-					
-				Set property
-					style(element, {
-						foo: 'bar'
-					});
-		*/
-		return function (element, prop) {
-			// If prop is a string, we're requesting a property
-			if (typeof prop === 'string') {
-				return window.getComputedStyle(element, null)[cache[prop] || testPrefix(prop)];
-			
-			// If it's an object, we're setting
-			} else {
-				
-				for (var key in prop) {
-					if (prop.hasOwnProperty(key)) {
-						element.style[cache[key] || testPrefix(key)] = prop[key];
-					}
-				}
-				
-				return this;
-			}
-		}
-	};
-	
-	module.exports = new cssStyler();
-
-/***/ },
-/* 36 */
-/*!******************************!*\
-  !*** ./src/utils/history.js ***!
-  \******************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var // [number]: Default max size of history
-	    maxHistorySize = 3,
-	    
-	    /*
-	        History constructor
-	        
-	        @param [var]: Variable to store in first history slot
-	        @param [int] (optional): Maximum size of history
-	    */
-	    History = function (obj, max) {
-	        this.max = max || maxHistorySize;
-	        this.entries = [];
-	        this.add(obj);
-	    };
-	    
-	History.prototype = {
-	    
-	    /*
-	        Push new var to history
-	        
-	        Shift out oldest entry if we've reached maximum capacity
-	        
-	        @param [var]: Variable to push into history.entries
-	    */
-	    add: function (obj) {
-	        var currentSize = this.getSize();
-	        
-	        this.entries.push(obj);
-	        
-	        if (currentSize >= this.max) {
-	            this.entries.shift();
-	        }
-	    },
-	    
-	    /*
-	        Get variable at specified index
-	
-	        @param [int]: Index
-	        @return [var]: Var found at specified index
-	    */
-	    get: function (i) {
-	        i = (typeof i === 'number') ? i : this.getSize() - 1;
-	
-	        return this.entries[i];
-	    },
-	    
-	    /*
-	        Get the second newest history entry
-	        
-	        @return [var]: Entry found at index size - 2
-	    */
-	    getPrevious: function () {
-	        return this.get(this.getSize() - 2);
-	    },
-	    
-	    /*
-	        Get current history size
-	        
-	        @return [int]: Current length of entries.length
-	    */
-	    getSize: function () {
-	        return this.entries.length;
-	    }
-	    
-	};
-	
-	module.exports = History;
-
-/***/ },
-/* 37 */
 /*!********************************!*\
   !*** ./src/process/manager.js ***!
   \********************************/
@@ -3755,7 +2992,7 @@
 
 	"use strict";
 	
-	var theLoop = __webpack_require__(/*! ./loop.js */ 52),
+	var theLoop = __webpack_require__(/*! ./loop.js */ 49),
 	    ProcessManager = function () {
 	        this.all = {};
 	        this.active = [];
@@ -3925,7 +3162,909 @@
 	module.exports = new ProcessManager();
 
 /***/ },
+/* 29 */
+/*!**********************************!*\
+  !*** ./src/action/parse-args.js ***!
+  \**********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 20),
+	    presets = __webpack_require__(/*! ./presets.js */ 17),
+	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 50),
+	
+	    STRING = 'string',
+	    NUMBER = 'number',
+	    OBJECT = 'object',
+	    
+	    /*
+	        Generic argument parsing
+	        
+	        Checks first argument to be a string and loads preset,
+	        merges in next object as override
+	    */
+	    generic = function () {
+	        var props = {},
+	            playlist = [],
+	            base = arguments[0],
+	            override = arguments[1],
+	            playlistLength = 0,
+	            argsAsArray = [].slice.call(arguments),
+	            i = 0;
+	
+	        if (typeof base == STRING) {
+	            playlist = base.split(' ');
+	            playlistLength = playlist.length;
+	            props = presets.getDefined(playlist[0]);
+	
+	            // If we've had multiple presets, loop through and add each to the queue
+	            if (playlistLength > 1) {
+	                for (; i < playlistLength; i++) {
+	                    argsAsArray.shift();
+	                    argsAsArray.unshift(playlist[i]);
+	                    this.queue.add.apply(this.queue, argsAsArray);
+	                }
+	            }
+	            
+	            if (typeof override == OBJECT) {
+	                props = utils.merge(props, override);
+	            }
+	        // If object, assign directly
+	        } else if (typeof base == OBJECT) {
+	            props = base;
+	
+	            if (this.isActive()) {
+	                this.queue.add.apply(this.queue, argsAsArray);
+	            }
+	        }
+	        
+	        return props;
+	    };
+	
+	module.exports = {
+	    
+	    /*
+	        Parse play arguments
+	        
+	        Syntax
+	            .play(preset [,override, duration, easing, onEnd])
+	            .play(properties [, duration, easing, onEnd])
+	    */
+	    play: function () {
+	        var props = generic.apply(this, arguments),
+	            argsLength = arguments.length,
+	            i = 0,
+	            arg,
+	            typeofArg = '';
+	        
+	        // Play specific properties
+	        props.loopCount = props.yoyoCount = props.flipCount = 0;
+	        
+	        for (; i < argsLength; i++) {
+	            arg = arguments[i];
+	            typeofArg = typeof arg;
+	            
+	            // Easing if string and not first index
+	            if (typeofArg == STRING && i !== 0) {
+	                props.ease = arg;
+	            
+	            // Duration if number
+	            } else if (typeofArg == NUMBER) {
+	                props.duration = arg;
+	                
+	            // Callback if function
+	            } else if (utils.isFunc(arg)) {
+	                props.onEnd = arg;
+	            }
+	        }
+	
+	        return props;
+	    },
+	    
+	    /*
+	        Parse track arguments
+	        
+	        Syntax
+	            .track(preset [, override], event/Input)
+	            .track(properties, event/Input)
+	    */
+	    track: function () {
+	        var props = {},
+	            argsLength = arguments.length,
+	            inputIndex = argsLength - 1,
+	            input = arguments[inputIndex];
+	        
+	        // Loop until inputIndex
+	        for (var i = 0; i < inputIndex; i++) {
+	            
+	            // Preset if string
+	            if (typeof arguments[i] === STRING) {
+	                props = presets.getDefined(arguments[i]);
+	                
+	            // Or override
+	            } else {
+	                props = utils.merge(props, arguments[i]);
+	            }
+	        }
+	        
+	        // Create Pointer if this isn't an Input
+	        input = (!input.current) ? new Pointer(input) : input;
+	        
+	        // Append input
+	        props.input = input;
+	        props.inputOrigin = input.get();
+	        
+	        return props;
+	    },
+	    
+	    generic: generic
+	};
+
+/***/ },
+/* 30 */
+/*!****************************!*\
+  !*** ./src/types/value.js ***!
+  \****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var defaultProps = __webpack_require__(/*! ../defaults/value-props.js */ 38),
+	    defaultState = __webpack_require__(/*! ../defaults/value-state.js */ 51),
+	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 52),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
+	
+	    CURRENT = 'current',
+	    ORIGIN = 'origin',
+	    FORCE_NUMBER = [CURRENT, ORIGIN, 'to', 'start'],
+	    
+	    /*
+	        Parse setter arguments
+	    */
+	    parseSetArgs = function (arg0, arg1) {
+	        var newProps = {};
+	
+	        // If we've just got a value, set default
+	        if (arguments.length === 1) {
+	            newProps[CURRENT] = arg0;
+	            
+	        // Or we've got key/value args
+	        } else {
+	            newProps[arg0] = arg1;
+	        }
+	        
+	        return newProps;
+	    },
+	
+	    /*
+	        Value constructor
+	    */
+	    Value = function (key, props, inherit, action) {
+	        this.key = key;
+	        this.action = action;
+	        this.scope = action.getProp('scope');
+	
+	        if (props.start) {
+	            props.current = props.start;
+	        }
+	
+	        this.set(defaultProps);
+	        this.set(defaultState);
+	        this.set(props, inherit);
+	    };
+	    
+	Value.prototype = {
+	
+	    /*
+	        Set value properties
+	        
+	        Syntax
+	            .set('key', value) // Set specific value
+	            .set({ key: value }) // Set multiple values
+	            .set({ key: value }, { key: value2 }) // Set multiple with inherit
+	            .set(value) // Set .current
+	    */
+	    set: function () {
+	        var multiVal = utils.isObj(arguments[0]),
+	            newProps = multiVal ? arguments[0] : parseSetArgs.apply(self, arguments),
+	            inherit = multiVal ? arguments[1] : false,
+	            toSet = {},
+	            key = '';
+	        
+	        // Deal with inherited values first
+	        if (inherit) {
+	            for (key in inherit) {
+	                // Check this is a Value, not Action property
+	                if (defaultProps.hasOwnProperty(key)) {
+	                    toSet[key] = inherit[key];
+	                }
+	            }
+	        }
+	        
+	        // Loop through all properties and set
+	        for (key in newProps) {
+	            toSet[key] = newProps[key];
+	        }
+	        
+	        // Loop through collected values and set
+	        for (key in toSet) {
+	            this[key] = resolve(toSet[key], this[key], this, this.scope);
+	                
+	            if (FORCE_NUMBER.indexOf(key) > -1) {
+	                this[key] = parseFloat(this[key]);
+	            }
+	            
+	            if (key === 'to') {
+	                this.target = this.to;
+	            }
+	        }
+	        
+	        // Set hasRange to true if min and max are numbers
+	        this.hasRange = (utils.isNum(this.min) && utils.isNum(this.max)) ? true : false;
+	        
+	        // Update Action value process order
+	        this.action.updateOrder(this.key, utils.isString(this.link));
+	        
+	        return this;
+	    },
+	    
+	    /*
+	        Set current value to origin
+	    */
+	    reset: function () {
+	        this.set('to', this.target);
+	        return this.set(CURRENT, this[ORIGIN]);
+	    },
+	    
+	    /*
+	        Reset properties to defaults
+	    */
+	    resetProps: function () {
+	        this.set(defaultProps);
+	    },
+	    
+	    /*
+	        Swap current target and origin
+	    */
+	    flip: function () {
+	        var newTo = this[ORIGIN],
+	            newOrigin = (this.target !== undefined) ? this.target : this[CURRENT];
+	
+	        return this.set({
+	            to: newTo,
+	            origin: newOrigin
+	        });
+	    },
+	    
+	    retarget: function (target) {
+	        target = (target !== undefined) ? target : this.target;
+	        return this.set('to', target);
+	    }
+	};
+	
+	module.exports = Value;
+
+/***/ },
+/* 31 */
+/*!***************************!*\
+  !*** ./src/types/repo.js ***!
+  \***************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 20),
+	
+	    /*
+	        Get data with specified key
+	        
+	        @param [string]: Name of property to access
+	        @returns [var]: Data found
+	    */
+	    get = function (key) {
+	        return (key !== undefined) ? this[key] : this;
+	    },
+	            
+	    /*
+	        Set data either has object or key/value pair
+	        
+	        Syntax
+	            .set(data)
+	                @param [object]: Data to store
+	                
+	            .set(key, value)
+	                @param [string]: Name of data
+	                @param [val]: Data to store
+	    */
+	    set = function (data, prop) {
+	        var multiArg = (arguments.length > 1),
+	            toSet = multiArg ? {} : data,
+	            key = '';
+	        
+	        // If this is a key/value setter, add to toSet
+	        if (multiArg) {
+	            toSet[data] = prop;
+	        }
+	        
+	        // Loop over toSet and assign to our data store
+	        for (key in toSet) {
+	            if (toSet.hasOwnProperty(key)) {
+	                this[key] = toSet[key];
+	            }
+	        }
+	    },
+	
+	    /*
+	        Repo class
+	    */
+	    Repo = function (context) {
+	        var store = {};
+	
+	        /*
+	            Determine whether call is getter or setter
+	        */
+	        return function () {
+	            var argsLength = arguments.length;
+	
+	            // If this is a getter, return value
+	            if ((!argsLength || (argsLength === 1 && utils.isString(arguments[0])))) {
+	                return get.apply(store, arguments);
+	
+	            // Or this is a setter, return this
+	            } else {
+	                set.apply(store, arguments);
+	                return context;
+	            }
+	        };
+	    };
+	
+	module.exports = Repo;
+
+/***/ },
+/* 32 */
+/*!*****************************!*\
+  !*** ./src/action/queue.js ***!
+  \*****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var Queue = function () {
+	        this.clear();
+	    };
+	
+	Queue.prototype = {
+	    
+	    /*
+	        Add a set of arguments to queue
+	    */
+	    add: function () {
+	        this.queue.push([].slice.call(arguments));
+	    },
+	    
+	    /*
+	        Get next set of arguments from queue
+	    */
+	    next: function (direction) {
+	        var queue = this.queue,
+	            returnVal = false,
+	            index = this.index;
+	            
+	        direction = (arguments.length) ? direction : 1;
+	        
+	        // If our index is between 0 and the queue length, return that item
+	        if (index >= 0 && index < queue.length) {
+	            returnVal = queue[index];
+	            this.index = index + direction;
+	        
+	        // Or clear
+	        } else {
+	            this.clear();
+	        }
+	        
+	        return returnVal;
+	    },
+	
+	    /*
+	        Replace queue with empty array
+	    */
+	    clear: function () {
+	        this.queue = [];
+	        this.index = 0;
+	    }
+	};
+	
+	module.exports = Queue;
+
+/***/ },
+/* 33 */
+/*!*********************************!*\
+  !*** ./src/action/processor.js ***!
+  \*********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Process actions
+	*/
+	"use strict";
+	
+	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 43),
+	    routes = __webpack_require__(/*! ./routes.js */ 21),
+	    calc = __webpack_require__(/*! ../utils/calc.js */ 19),
+	    
+	    ANGLE_DISTANCE = 'angleAndDistance';
+	
+	module.exports = function (action, framestamp, frameDuration) {
+	    var props = action.props(),
+	        data = action.data(),
+	        values = action.values,
+	        rubix = Rubix[props.rubix],
+	        valueRubix = rubix,
+	        hasChanged = false,
+	        defaultRoute = routes.getName(),
+	        i = 0,
+	        order = props.order = props.order || [],
+	        orderLength = order.length,
+	        key = '', value, output;
+	    
+	    action.output = {
+	        values: {}
+	    };
+	    
+	    // Update elapsed
+	    if (rubix.updateInput) {
+	        rubix.updateInput(action, props, frameDuration);
+	    }
+	
+	    // Fire onStart if first frame
+	    if (action.firstFrame) {
+	        routes.onStart(action.output, action, values, props, data);
+	        
+	        action.firstFrame = false;
+	    }
+	    
+	    // Update Input if available
+	    if (props.input) {
+	        action.output.input = props.input.onFrame(framestamp);
+	    }
+	
+	    // Update values
+	    for (; i < orderLength; i++) {
+	        // Get value and key
+	        key = order[i];
+	        value = values[key];
+	
+	        // Load rubix for this value
+	        valueRubix = rubix;
+	        if (value.link) {
+	            valueRubix = (value.link !== ANGLE_DISTANCE) ? Rubix['link'] : Rubix[ANGLE_DISTANCE];
+	        }
+	
+	        // Calculate new value
+	        output = valueRubix.process(key, value, values, props, action, frameDuration);
+	        
+	        // Limit if range set
+	        if (valueRubix.limit) {
+	            output = valueRubix.limit(output, value);
+	        }
+	        
+	        // Round value if rounding set to true
+	        if (value.round) {
+	            output = Math.round(output);
+	        }
+	
+	        // Update change from previous frame
+	        value.frameChange = calc.difference(value.current, output);
+	        
+	        // Calculate velocity
+	        if (!valueRubix.calculatesVelocity) {
+	            value.velocity = calc.speedPerSecond(value.frameChange, frameDuration);
+	        }
+	        
+	        // Update current speed
+	        value.speed = Math.abs(value.velocity);
+	        
+	        // Check if changed and update
+	        if (value.current != output) {
+	            hasChanged = true;
+	        }
+	
+	        // Set current and add unit (if any) for output
+	        value.current = output;
+	        action.output[value.route] = action.output[value.route] || {};
+	        action.output[defaultRoute] = action.output[defaultRoute] || {};
+	        action.output[defaultRoute][key] = action.output[value.route][value.name] = (value.unit) ? output + value.unit : output;
+	    }
+	
+	    // shard onFrame and onChange
+	    routes.shard(function (route, output) {
+	        // Fire onFrame every frame
+	        if (route.onFrame) {
+	            route.onFrame(output, action, values, props, data);
+	        }
+	        
+	        // Fire onChanged if values have changed
+	        if (hasChanged && route.onChange) {
+	            route.onChange(output, action, values, props, data);
+	        }
+	    }, action.output);
+	
+	    // Fire onEnd if ended
+	    if (rubix.hasEnded(action, hasChanged)) {
+	        action.isActive(false);
+	
+	        routes.onEnd(action.output, action, values, props, data);
+	        
+	        if (!action.isActive() && props.rubix === 'Play') {
+	            action.next();
+	        }
+	    }
+	    
+	    action.framestamp = framestamp;
+	};
+
+/***/ },
+/* 34 */
+/*!**************************************!*\
+  !*** ./src/defaults/action-props.js ***!
+  \**************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	    // [string]: What to use to process this aciton
+	    rubix: 'play',
+	    
+	    // [number]: Multiply output value by
+	    amp: 1,
+	    
+	    // [number]: Multiply output value outside min/max by
+	    escapeAmp: 0,
+	    
+	    // [number]: Delay this action by x ms
+	    delay: 0,
+	    
+	    // [number]: Time of animation (if animating) in ms
+	    duration: 400,
+	    
+	    // [string]: Ease animation
+	    ease: 'easeInOut',
+	    
+	    // [number]: Multiply progress by this (.5 is half speed)
+	    dilate: 1,
+	    
+	    // [number]: Number of frames of no change before Action is declared inactive
+	    maxInactiveFrames: 3,
+	    
+	    // [boolean || number]: Number of times to loop values, true for indefinite
+	    loop: false,
+	    
+	    // [boolean || number]: Number of times to yoyo values, true for indefinite
+	    yoyo: false,
+	    
+	    // [boolean || number]: Number of times to flip values, true for indefinite
+	    flip: false,
+	    
+	    // [function]: Callback when Action process starts
+	    onStart: undefined,
+	    
+	    // [function]: Callback when any value changes
+	    onChange: undefined,
+	    
+	    // [function]: Callback every frame
+	    onFrame: undefined,
+	    
+	    // [function]: Callback when Action process ends
+	    onEnd: undefined
+	};
+
+/***/ },
+/* 35 */
+/*!**************************************!*\
+  !*** ./src/defaults/action-state.js ***!
+  \**************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	    // [boolean]: True if Action is current active
+	    active: false,
+	    
+	    // [number]: Progress represented in a range of 0 - 1
+	    progress: 0,
+	    
+	    // [int]: Time elapsed in milliseconds
+	    elapsed: 0,
+	    
+	    // [int]: Number of frames Action has been inactive
+	    inactiveFrames: 0,
+	    
+	    // [int]: 1 = forward, -1 = backwards
+	    playDirection: 1,
+	    
+	    // [int]: Number of times values have been flipped
+	    flipCount: 0,
+	    
+	    // [int]: Number of times values have been looped
+	    loopCount: 0,
+	    
+	    // [int]: Number of times values have been yoyoed
+	    yoyoCount: 0
+	};
+
+/***/ },
+/* 36 */
+/*!**********************************!*\
+  !*** ./src/routes/css/styler.js ***!
+  \**********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var cssStyler = function () {
+		var testElement = document.getElementsByTagName('body')[0],
+			prefixes = ['Webkit','Moz','O','ms', ''],
+			prefixesLength = prefixes.length,
+			cache = {},
+			
+			/*
+				Test style property for prefixed version
+				
+				@param [string]: Style property
+				@return [string]: Cached property name
+			*/
+			testPrefix = function (key) {
+				cache[key] = key;
+	
+				for (var i = 0; i < prefixesLength; i++) {
+					var prefixed = prefixes[i] + key.charAt(0).toUpperCase() + key.slice(1);
+	
+					if (testElement.style.hasOwnProperty(prefixed)) {
+						cache[key] = prefixed;
+					}
+				}
+				
+				return cache[key];
+			};
+			
+		/*
+			Stylee function call
+			
+			Syntax
+				
+				Get property
+					style(element, 'property');
+					
+				Set property
+					style(element, {
+						foo: 'bar'
+					});
+		*/
+		return function (element, prop) {
+			// If prop is a string, we're requesting a property
+			if (typeof prop === 'string') {
+				return window.getComputedStyle(element, null)[cache[prop] || testPrefix(prop)];
+			
+			// If it's an object, we're setting
+			} else {
+				
+				for (var key in prop) {
+					if (prop.hasOwnProperty(key)) {
+						element.style[cache[key] || testPrefix(key)] = prop[key];
+					}
+				}
+				
+				return this;
+			}
+		}
+	};
+	
+	module.exports = new cssStyler();
+
+/***/ },
+/* 37 */
+/*!******************************!*\
+  !*** ./src/utils/history.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var // [number]: Default max size of history
+	    maxHistorySize = 3,
+	    
+	    /*
+	        History constructor
+	        
+	        @param [var]: Variable to store in first history slot
+	        @param [int] (optional): Maximum size of history
+	    */
+	    History = function (obj, max) {
+	        this.max = max || maxHistorySize;
+	        this.entries = [];
+	        this.add(obj);
+	    };
+	    
+	History.prototype = {
+	    
+	    /*
+	        Push new var to history
+	        
+	        Shift out oldest entry if we've reached maximum capacity
+	        
+	        @param [var]: Variable to push into history.entries
+	    */
+	    add: function (obj) {
+	        var currentSize = this.getSize();
+	        
+	        this.entries.push(obj);
+	        
+	        if (currentSize >= this.max) {
+	            this.entries.shift();
+	        }
+	    },
+	    
+	    /*
+	        Get variable at specified index
+	
+	        @param [int]: Index
+	        @return [var]: Var found at specified index
+	    */
+	    get: function (i) {
+	        i = (typeof i === 'number') ? i : this.getSize() - 1;
+	
+	        return this.entries[i];
+	    },
+	    
+	    /*
+	        Get the second newest history entry
+	        
+	        @return [var]: Entry found at index size - 2
+	    */
+	    getPrevious: function () {
+	        return this.get(this.getSize() - 2);
+	    },
+	    
+	    /*
+	        Get current history size
+	        
+	        @return [int]: Current length of entries.length
+	    */
+	    getSize: function () {
+	        return this.entries.length;
+	    }
+	    
+	};
+	
+	module.exports = History;
+
+/***/ },
 /* 38 */
+/*!*************************************!*\
+  !*** ./src/defaults/value-props.js ***!
+  \*************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	    // [number]: Current target value
+	    to: undefined,
+	
+	    // [number]: Maximum permitted value during .track and .run
+	    min: undefined,
+	    
+	    // [number]: Minimum permitted value during .track and .run
+	    max: undefined,
+	    
+	    // [number]: Origin
+	    origin: 0,
+	    
+	    // [boolean]: Set to true when both min and max detected
+	    hasRange: false,
+	
+	    // [boolean]: Round output if true
+	    round: false,
+	    
+	    // [string]: Route
+	    route: 'values',
+	    
+	    // [string]: Non-namespaced output value
+	    name: '',
+	    
+	    // [string]: Unit string to append to value on ourput
+	    unit: undefined,
+	    
+	    parent: '',
+	    
+	    unitName: '',
+	    
+	    // [number]: Current velocity of value, in units per second
+	    velocity: 0,
+	    
+	    // [number]: Current speed (absolute velocity)
+	    speed: 0,
+	    
+	    // [number]: Change since last frame
+	    frameChange: 0,
+	
+	    /*
+	        Link properties
+	    */
+	
+	    // [string]: Name of value to listen to
+	    link: undefined,
+	    
+	    // [array]: Linear range of values (eg [-100, -50, 50, 100]) of linked value to map to .mapTo
+	    mapLink: undefined,
+	    
+	    // [array]: Non-linear range of values (eg [0, 1, 1, 0]) to map to .mapLink - here the linked value being 75 would result in a value of 0.5
+	    mapTo: undefined,
+	
+	
+	    /*
+	        .run() properties
+	    */
+	
+	    // [string]: Simulation to .run
+	    simulate: 'velocity',
+	    
+	    // [number]: Deceleration to apply to value, in units per second
+	    deceleration: 0,
+	    
+	    // [number]: Acceleration to apply to value, in units per second
+	    acceleration: 0,
+	    
+	    // [number]: Gravity acceleration to apply to value, in units per second
+	    gravity: 30,
+	    
+	    // [number]: Factor to multiply velocity by on bounce
+	    bounce: 0,
+	    
+	    // [number]: Spring strength during 'string'
+	    spring: 0.03,
+	    
+	    // [number]: Timeconstant of glide
+	    timeConstant: 395,
+	    
+	    // [number]: Stop simulation under this speed
+	    stopSpeed: 0.5,
+	    
+	    // [boolean]: Capture with spring physics on limit breach
+	    capture: false,
+	    
+	    // [number]: Friction to apply per frame
+	    friction: 5,
+	
+	    /*
+	        .play() properties
+	    */
+	
+	    // [number]: Duration of animation in ms
+	    duration: 400,
+	    
+	    // [number]: Duration of delay in ms
+	    delay: 0,
+	    
+	    // [number]: Stagger delay as factor of duration (ie 0.2 with duration of 1000ms = 200ms)
+	    stagger: 0,
+	    
+	    // [string]: Easing to apply
+	    ease: 'easeInOut',
+	    
+	    // [number]: Number of steps to execute animation
+	    steps: 0,
+	    
+	    // [string]: Tells Redshift when to step, at the start or end of a step. Other option is 'start' as per CSS spec
+	    stepDirection: 'end',
+	
+	    /*
+	        .track() properties
+	    */
+	
+	    // [number]: Factor of movement outside of maximum range (ie 0.5 will move half as much as 1)
+	    escapeAmp: 0
+	};
+
+/***/ },
+/* 39 */
 /*!*****************************!*\
   !*** ./src/types/bezier.js ***!
   \*****************************/
@@ -4100,69 +4239,12 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 39 */
+/* 40 */
 /*!****************************!*\
   !*** ./src/core/routes.js ***!
   \****************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = {};
-
-/***/ },
-/* 40 */
-/*!***************************!*\
-  !*** ./src/core/rubix.js ***!
-  \***************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    Anatomy of a Rubix:
-	    
-	        Props
-	            createMethod [boolean]:
-	                If true, will create Action shorthand method 
-	                with the name of the rubix, ie .play()
-	
-	            calculatesVelocity [boolean]:
-	                Set to true if your Rubix will calculate
-	                the new Value velocity (otherwise Redshift may override it)
-	                
-	        Methods
-	            updateInput
-	                Run once per frame, before Values are processed. .play uses this
-	                to update the timer, .track uses it to check the input device.
-	
-	                @param [Action]: The Action being processed
-	                @param [object]: Action properties
-	                @param [int]: Duration since the last frame in milliseconds
-	            
-	            process (required)
-	                Run once for every Action value, this method returns the latest value
-	
-	                @param [string]: Name of value being processed
-	                @param [Value]: Value being processed
-	                @param [object]: Action values
-	                @param [object]: Action properties
-	                @param [Action]: Action
-	                @param [int]: Duration since the last frame in milliseconds
-	                @return [int]: Latest value
-	                
-	            limit
-	                Run once for every Action value, this can be used to limit the value
-	                within any parameters
-	                
-	                @param [int]: Value returned from process method
-	                @param [Value]: Value being processed
-	                @return [int]: Latest value
-	                
-	            hasEnded (required)
-	                Returns true if this current Action has ended. Redshift will
-	                then check the Action's queue or yoyo/loop properties to decide
-	                what action to take next
-	                
-	                @param [Action]: Action being processed
-	                @param [boolean]: True if any value has changed
-	*/            
 	module.exports = {};
 
 /***/ },
@@ -4183,7 +4265,7 @@
 	"use strict";
 	
 	var calc = __webpack_require__(/*! ../utils/calc.js */ 19),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 23),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
 	    speedPerFrame = calc.speedPerFrame;
 	
 	module.exports = {
@@ -4276,6 +4358,134 @@
 
 /***/ },
 /* 42 */
+/*!***********************************!*\
+  !*** ./src/routes/path/lookup.js ***!
+  \***********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	var STROKE = 'stroke',
+	    DASH = STROKE + '-dash', // stoke-width
+	    DASH_ARRAY = DASH + 'array'
+	
+	module.exports = {
+	    opacity: STROKE + '-opacity',
+	    width: STROKE + '-width',
+	    offset: DASH + 'offset',
+	    length: DASH_ARRAY,
+	    spacing: DASH_ARRAY,
+	    miterlimit: STROKE + '-miterlimit'
+	};
+
+/***/ },
+/* 43 */
+/*!***************************!*\
+  !*** ./src/core/rubix.js ***!
+  \***************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Anatomy of a Rubix:
+	    
+	        Props
+	            createMethod [boolean]:
+	                If true, will create Action shorthand method 
+	                with the name of the rubix, ie .play()
+	
+	            calculatesVelocity [boolean]:
+	                Set to true if your Rubix will calculate
+	                the new Value velocity (otherwise Redshift may override it)
+	                
+	        Methods
+	            updateInput
+	                Run once per frame, before Values are processed. .play uses this
+	                to update the timer, .track uses it to check the input device.
+	
+	                @param [Action]: The Action being processed
+	                @param [object]: Action properties
+	                @param [int]: Duration since the last frame in milliseconds
+	            
+	            process (required)
+	                Run once for every Action value, this method returns the latest value
+	
+	                @param [string]: Name of value being processed
+	                @param [Value]: Value being processed
+	                @param [object]: Action values
+	                @param [object]: Action properties
+	                @param [Action]: Action
+	                @param [int]: Duration since the last frame in milliseconds
+	                @return [int]: Latest value
+	                
+	            limit
+	                Run once for every Action value, this can be used to limit the value
+	                within any parameters
+	                
+	                @param [int]: Value returned from process method
+	                @param [Value]: Value being processed
+	                @return [int]: Latest value
+	                
+	            hasEnded (required)
+	                Returns true if this current Action has ended. Redshift will
+	                then check the Action's queue or yoyo/loop properties to decide
+	                what action to take next
+	                
+	                @param [Action]: Action being processed
+	                @param [boolean]: True if any value has changed
+	*/            
+	module.exports = {};
+
+/***/ },
+/* 44 */
+/*!********************************************!*\
+  !*** ./src/routes/css/default-property.js ***!
+  \********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var color = {
+	        min: 0,
+	        max: 255,
+	        round: true
+	    },
+	    opacity = {
+	        min: 0,
+	        max: 1
+	    },
+	    angle = {
+	        unit: 'deg'
+	    },
+	    scale = {},
+	    defaults = {
+	        base: {
+	            unit: 'px'
+	        },
+	        
+	        color: color,
+	        Red: color,
+	        Green: color,
+	        Blue: color,
+	    
+	        Alpha: opacity,
+	        opacity: opacity,
+	        
+	        scale: scale,
+	        scaleX: scale,
+	        scaleY: scale,
+	        scaleZ: scale,
+	        
+	        skew: angle,
+	        skewX: angle,
+	        skewY: angle,
+	        rotate: angle,
+	        rotateX: angle,
+	        rotateY: angle,
+	        rotateZ: angle
+	    };
+	    
+	module.exports = defaults;
+
+/***/ },
+/* 45 */
 /*!**************************************!*\
   !*** ./src/routes/css/dictionary.js ***!
   \**************************************/
@@ -4329,83 +4539,7 @@
 	module.exports = terms;
 
 /***/ },
-/* 43 */
-/*!*************************************!*\
-  !*** ./src/routes/css/templates.js ***!
-  \*************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 42),
-	
-	    defaultValues = {
-	        Alpha: 1
-	    },
-	
-	    functionCreate = function (value, prefix) {
-	        return prefix + '(' + value + ')';
-	    },
-	
-	    createSpaceDelimited = function (key, object, terms) {
-	        return createDelimitedString(key, object, terms, ' ');
-	    },
-	    
-	    createCommaDelimited = function (key, object, terms) {
-	        return createDelimitedString(key, object, terms, ', ').slice(0, -2);
-	    },
-	    
-	    createDelimitedString = function (key, object, terms, delimiter) {
-	        var string = '',
-	            propKey = '',
-	            termsLength = terms.length;
-	        
-	        for (var i = 0; i < termsLength; i++) {
-	            propKey = key + terms[i];
-	
-	            if (object[propKey] !== undefined) {
-	                string += object[propKey];
-	            } else {
-	                if (defaultValues[terms[i]] !== undefined) {
-	                    string += defaultValues[terms[i]];
-	                }
-	            }
-	            
-	            string += delimiter;
-	        }
-	    
-	        return string;
-	    },
-	
-	    templates = {
-	        
-	        colors: function (key, values) {
-	            return functionCreate(createCommaDelimited(key, values, dictionary.colors), 'rgba');
-	        },
-	        
-	        dimensions: function (key, values) {
-	            return createSpaceDelimited(key, values, dictionary.dimensions);
-	        },
-	        
-	        positions: function (key, values) {
-	            return createSpaceDelimited(key, values, dictionary.positions);
-	        },
-	        
-	        shadow: function (key, values) {
-	            var shadowTerms = dictionary.shadow.slice(0,4);
-	            
-	            return createSpaceDelimited(key, values, shadowTerms) + templates.colors(key, values);
-	        },
-	        
-	        transform: function (key, values) {
-	            return key + '(' + values[key] +')';
-	        }
-	    };
-	
-	module.exports = templates;
-
-/***/ },
-/* 44 */
+/* 46 */
 /*!**********************************!*\
   !*** ./src/routes/css/lookup.js ***!
   \**********************************/
@@ -4453,58 +4587,7 @@
 	};
 
 /***/ },
-/* 45 */
-/*!********************************************!*\
-  !*** ./src/routes/css/default-property.js ***!
-  \********************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var color = {
-	        min: 0,
-	        max: 255,
-	        round: true
-	    },
-	    opacity = {
-	        min: 0,
-	        max: 1
-	    },
-	    angle = {
-	        unit: 'deg'
-	    },
-	    scale = {},
-	    defaults = {
-	        base: {
-	            unit: 'px'
-	        },
-	        
-	        color: color,
-	        Red: color,
-	        Green: color,
-	        Blue: color,
-	    
-	        Alpha: opacity,
-	        opacity: opacity,
-	        
-	        scale: scale,
-	        scaleX: scale,
-	        scaleY: scale,
-	        scaleZ: scale,
-	        
-	        skew: angle,
-	        skewX: angle,
-	        skewY: angle,
-	        rotate: angle,
-	        rotateX: angle,
-	        rotateY: angle,
-	        rotateZ: angle
-	    };
-	    
-	module.exports = defaults;
-
-/***/ },
-/* 46 */
+/* 47 */
 /*!*************************************!*\
   !*** ./src/routes/css/splitters.js ***!
   \*************************************/
@@ -4512,8 +4595,8 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 42),
-	    utils = __webpack_require__(/*! ../../utils/utils.js */ 23),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 45),
+	    utils = __webpack_require__(/*! ../../utils/utils.js */ 20),
 	
 	    /*
 	        Split comma delimited into array
@@ -4743,27 +4826,159 @@
 	module.exports = splitters;
 
 /***/ },
-/* 47 */
-/*!***********************************!*\
-  !*** ./src/routes/path/lookup.js ***!
-  \***********************************/
+/* 48 */
+/*!*************************************!*\
+  !*** ./src/routes/css/templates.js ***!
+  \*************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var STROKE = 'stroke',
-	    DASH = STROKE + '-dash', // stoke-width
-	    DASH_ARRAY = DASH + 'array'
+	"use strict";
 	
-	module.exports = {
-	    opacity: STROKE + '-opacity',
-	    width: STROKE + '-width',
-	    offset: DASH + 'offset',
-	    length: DASH_ARRAY,
-	    spacing: DASH_ARRAY,
-	    miterlimit: STROKE + '-miterlimit'
-	};
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 45),
+	
+	    defaultValues = {
+	        Alpha: 1
+	    },
+	
+	    functionCreate = function (value, prefix) {
+	        return prefix + '(' + value + ')';
+	    },
+	
+	    createSpaceDelimited = function (key, object, terms) {
+	        return createDelimitedString(key, object, terms, ' ');
+	    },
+	    
+	    createCommaDelimited = function (key, object, terms) {
+	        return createDelimitedString(key, object, terms, ', ').slice(0, -2);
+	    },
+	    
+	    createDelimitedString = function (key, object, terms, delimiter) {
+	        var string = '',
+	            propKey = '',
+	            termsLength = terms.length;
+	        
+	        for (var i = 0; i < termsLength; i++) {
+	            propKey = key + terms[i];
+	
+	            if (object[propKey] !== undefined) {
+	                string += object[propKey];
+	            } else {
+	                if (defaultValues[terms[i]] !== undefined) {
+	                    string += defaultValues[terms[i]];
+	                }
+	            }
+	            
+	            string += delimiter;
+	        }
+	    
+	        return string;
+	    },
+	
+	    templates = {
+	        
+	        colors: function (key, values) {
+	            return functionCreate(createCommaDelimited(key, values, dictionary.colors), 'rgba');
+	        },
+	        
+	        dimensions: function (key, values) {
+	            return createSpaceDelimited(key, values, dictionary.dimensions);
+	        },
+	        
+	        positions: function (key, values) {
+	            return createSpaceDelimited(key, values, dictionary.positions);
+	        },
+	        
+	        shadow: function (key, values) {
+	            var shadowTerms = dictionary.shadow.slice(0,4);
+	            
+	            return createSpaceDelimited(key, values, shadowTerms) + templates.colors(key, values);
+	        },
+	        
+	        transform: function (key, values) {
+	            return key + '(' + values[key] +')';
+	        }
+	    };
+	
+	module.exports = templates;
 
 /***/ },
-/* 48 */
+/* 49 */
+/*!*****************************!*\
+  !*** ./src/process/loop.js ***!
+  \*****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    The loop
+	*/
+	"use strict";
+	
+	var Timer = __webpack_require__(/*! ./timer.js */ 53),
+	    Loop = function () {
+	        this.timer = new Timer();
+	    };
+	    
+	Loop.prototype = {
+	    
+	    /*
+	        [boolean]: Current status of animation loop
+	    */
+	    isRunning: false,
+	    
+	    /*
+	        Fire all active processes once per frame
+	    */
+	    frame: function () {
+	        var self = this;
+	        
+	        requestAnimationFrame(function () {
+	            var framestamp = self.timer.update(), // Currently just measuring in ms - will look into hi-res timestamps
+	                isActive = self.callback.call(self.scope, framestamp, self.timer.getElapsed());
+	
+	            if (isActive) {
+	                self.frame(true);
+	            } else {
+	                self.stop();
+	            }
+	        });
+	    },
+	    
+	    /*
+	        Start loop
+	    */
+	    start: function () {
+	        // Make sure we're not already running a loop
+	        if (!this.isRunning) {
+	            this.timer.clock();
+	            this.isRunning = true;
+	            this.frame();
+	        }
+	    },
+	    
+	    /*
+	        Stop the loop
+	    */
+	    stop: function () {
+	        this.isRunning = false;
+	    },
+	    
+	    /*
+	        Set the callback to run every frame
+	        
+	        @param [Object]: Execution context
+	        @param [function]: Callback to fire
+	    */
+	    setCallback: function (scope, callback) {
+	        this.scope = scope;
+	        this.callback = callback;
+	    }
+	 
+	};
+	
+	module.exports = new Loop();
+
+/***/ },
+/* 50 */
 /*!******************************!*\
   !*** ./src/input/pointer.js ***!
   \******************************/
@@ -4862,131 +5077,7 @@
 	module.exports = Pointer;
 
 /***/ },
-/* 49 */
-/*!*************************************!*\
-  !*** ./src/defaults/value-props.js ***!
-  \*************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	    // [number]: Current target value
-	    to: undefined,
-	
-	    // [number]: Maximum permitted value during .track and .run
-	    min: undefined,
-	    
-	    // [number]: Minimum permitted value during .track and .run
-	    max: undefined,
-	    
-	    // [number]: Origin
-	    origin: 0,
-	    
-	    // [boolean]: Set to true when both min and max detected
-	    hasRange: false,
-	
-	    // [boolean]: Round output if true
-	    round: false,
-	    
-	    // [string]: Route
-	    route: 'values',
-	    
-	    // [string]: Non-namespaced output value
-	    name: '',
-	    
-	    // [string]: Unit string to append to value on ourput
-	    unit: undefined,
-	    
-	    parent: '',
-	    
-	    unitName: '',
-	    
-	    // [number]: Current velocity of value, in units per second
-	    velocity: 0,
-	    
-	    // [number]: Current speed (absolute velocity)
-	    speed: 0,
-	    
-	    // [number]: Change since last frame
-	    frameChange: 0,
-	
-	    /*
-	        Link properties
-	    */
-	
-	    // [string]: Name of value to listen to
-	    link: undefined,
-	    
-	    // [array]: Linear range of values (eg [-100, -50, 50, 100]) of linked value to map to .mapTo
-	    mapLink: undefined,
-	    
-	    // [array]: Non-linear range of values (eg [0, 1, 1, 0]) to map to .mapLink - here the linked value being 75 would result in a value of 0.5
-	    mapTo: undefined,
-	
-	
-	    /*
-	        .run() properties
-	    */
-	
-	    // [string]: Simulation to .run
-	    simulate: 'velocity',
-	    
-	    // [number]: Deceleration to apply to value, in units per second
-	    deceleration: 0,
-	    
-	    // [number]: Acceleration to apply to value, in units per second
-	    acceleration: 0,
-	    
-	    // [number]: Gravity acceleration to apply to value, in units per second
-	    gravity: 30,
-	    
-	    // [number]: Factor to multiply velocity by on bounce
-	    bounce: 0,
-	    
-	    // [number]: Spring strength during 'string'
-	    spring: 0.03,
-	    
-	    // [number]: Timeconstant of glide
-	    timeConstant: 395,
-	    
-	    // [number]: Stop simulation under this speed
-	    stopSpeed: 0.5,
-	    
-	    // [boolean]: Capture with spring physics on limit breach
-	    capture: false,
-	    
-	    // [number]: Friction to apply per frame
-	    friction: 5,
-	
-	    /*
-	        .play() properties
-	    */
-	
-	    // [number]: Duration of animation in ms
-	    duration: 400,
-	    
-	    // [number]: Duration of delay in ms
-	    delay: 0,
-	    
-	    // [number]: Stagger delay as factor of duration (ie 0.2 with duration of 1000ms = 200ms)
-	    stagger: 0,
-	    
-	    // [string]: Easing to apply
-	    ease: 'easeInOut',
-	    
-	    // [number]: Number of steps to execute animation
-	    steps: 0,
-	    
-	
-	    /*
-	        .track() properties
-	    */
-	
-	    // [number]: Factor of movement outside of maximum range (ie 0.5 will move half as much as 1)
-	    escapeAmp: 0
-	};
-
-/***/ },
-/* 50 */
+/* 51 */
 /*!*************************************!*\
   !*** ./src/defaults/value-state.js ***!
   \*************************************/
@@ -5007,7 +5098,7 @@
 	};
 
 /***/ },
-/* 51 */
+/* 52 */
 /*!******************************!*\
   !*** ./src/utils/resolve.js ***!
   \******************************/
@@ -5032,7 +5123,7 @@
 	"use strict";
 	
 	var calc = __webpack_require__(/*! ./calc.js */ 19),
-	    utils = __webpack_require__(/*! ./utils.js */ 23);
+	    utils = __webpack_require__(/*! ./utils.js */ 20);
 	
 	module.exports = function (newValue, currentValue, parent, scope) {
 	    var splitValueUnit = {};
@@ -5063,82 +5154,6 @@
 	};
 
 /***/ },
-/* 52 */
-/*!*****************************!*\
-  !*** ./src/process/loop.js ***!
-  \*****************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    The loop
-	*/
-	"use strict";
-	
-	var Timer = __webpack_require__(/*! ./timer.js */ 53),
-	    Loop = function () {
-	        this.timer = new Timer();
-	    };
-	    
-	Loop.prototype = {
-	    
-	    /*
-	        [boolean]: Current status of animation loop
-	    */
-	    isRunning: false,
-	    
-	    /*
-	        Fire all active processes once per frame
-	    */
-	    frame: function () {
-	        var self = this;
-	        
-	        requestAnimationFrame(function () {
-	            var framestamp = self.timer.update(), // Currently just measuring in ms - will look into hi-res timestamps
-	                isActive = self.callback.call(self.scope, framestamp, self.timer.getElapsed());
-	
-	            if (isActive) {
-	                self.frame(true);
-	            } else {
-	                self.stop();
-	            }
-	        });
-	    },
-	    
-	    /*
-	        Start loop
-	    */
-	    start: function () {
-	        // Make sure we're not already running a loop
-	        if (!this.isRunning) {
-	            this.timer.clock();
-	            this.isRunning = true;
-	            this.frame();
-	        }
-	    },
-	    
-	    /*
-	        Stop the loop
-	    */
-	    stop: function () {
-	        this.isRunning = false;
-	    },
-	    
-	    /*
-	        Set the callback to run every frame
-	        
-	        @param [Object]: Execution context
-	        @param [function]: Callback to fire
-	    */
-	    setCallback: function (scope, callback) {
-	        this.scope = scope;
-	        this.callback = callback;
-	    }
-	 
-	};
-	
-	module.exports = new Loop();
-
-/***/ },
 /* 53 */
 /*!******************************!*\
   !*** ./src/process/timer.js ***!
@@ -5147,7 +5162,7 @@
 
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 23),
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 20),
 	
 	    maxElapsed = 33,
 	    Timer = function () {

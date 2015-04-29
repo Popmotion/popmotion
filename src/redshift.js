@@ -11,6 +11,7 @@ var Action = require('./action/action.js'),
     presets = require('./action/presets.js'),
     easing = require('./utils/easing.js'),
     calc = require('./utils/calc.js'),
+    utils = require('./utils/utils.js'),
     route = require('./action/routes.js'),
     registerRubix = require('./register/register-rubix.js'),
     registerSimulation = require('./register/register-simulation.js');
@@ -128,5 +129,7 @@ module.exports = {
         return this;
     },
     
-    calc: calc
+    // Expose calc and utils modules
+    calc: calc,
+    utils: utils
 };

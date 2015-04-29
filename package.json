@@ -4,7 +4,7 @@
   "description": "A JavaScript UX framework. Handles animation, UI physics and user input tracking.",
   "author": "Matt Perry <admin@redshiftjs.com>",
   "homepage": "http://redshiftjs.com",
-  "main": "src/load.js",
+  "main": "src/load/module.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/InventingWithMonster/redshift"
@@ -33,8 +33,8 @@
   "analyze": true,
   "license": "MIT",
   "scripts": {
-    "compile": "webpack src/utils/global.js redshift.global.js -d && webpack src/utils/global.js redshift.global.min.js -p",
-    "watch": "webpack src/utils/global.js redshift.global.js -d --watch"
+    "compile": "webpack src/load/global.js redshift.global.js -d && webpack src/load/global.js redshift.global.min.js -p",
+    "watch": "webpack src/load/global.js redshift.global.js -d --watch"
   },
   "devDependencies": {
     "webpack": "1.7.2"

@@ -106,6 +106,8 @@ module.exports = {
     // [number]: Number of steps to execute animation
     steps: 0,
     
+    // [string]: Tells Redshift when to step, at the start or end of a step. Other option is 'start' as per CSS spec
+    stepDirection: 'end',
 
     /*
         .track() properties
