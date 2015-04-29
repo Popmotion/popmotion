@@ -389,6 +389,7 @@ Action.prototype = {
 
         // Update if value exists
         if (existing) {
+            // Overwrite with defaults
             existing.resetProps();
             existing.set(value, inherit);
 
