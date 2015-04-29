@@ -1,6 +1,7 @@
 "use strict";
 
-var defaults = require('../opts/values.js'),
+var defaultProps = require('../defaults/value-props.js'),
+    defaultState = require('../defaults/value-state.js'),
     resolve = require('../utils/resolve.js'),
     utils = require('../utils/utils.js'),
 
@@ -38,11 +39,13 @@ var defaults = require('../opts/values.js'),
             props.current = props.start;
         }
 
+        this.set(defaultProps);
+        this.set(defaultState);
         this.set(props, inherit);
     };
     
 Value.prototype = {
-    
+
     /*
         Set value properties
         
@@ -53,52 +56,47 @@ Value.prototype = {
             .set(value) // Set .current
     */
     set: function () {
-        var self = this,
-            args = arguments,
-            multiVal = utils.isObj(args[0]),
-            newProps = multiVal ? args[0] : parseSetArgs.apply(self, args),
-            newProp,
-            hasInheritence,
-            isBeingSet,
-            inherit = multiVal ? args[1] : false,
+        var multiVal = utils.isObj(arguments[0]),
+            newProps = multiVal ? arguments[0] : parseSetArgs.apply(self, arguments),
+            inherit = multiVal ? arguments[1] : false,
+            toSet = {},
             key = '';
         
-        for (key in defaults) {
-            newProp = undefined;
-            hasInheritence = (inherit && inherit.hasOwnProperty(key));
-            isBeingSet = newProps.hasOwnProperty(key);
-
-            if (hasInheritence || isBeingSet) {
-                if (hasInheritence) {
-                    newProp = inherit[key];
+        // Deal with inherited values first
+        if (inherit) {
+            for (key in inherit) {
+                // Check this is a Value, not Action property
+                if (defaultProps.hasOwnProperty(key)) {
+                    toSet[key] = inherit[key];
                 }
+            }
+        }
+        
+        // Loop through all properties and set
+        for (key in newProps) {
+            toSet[key] = newProps[key];
+        }
+        
+        // Loop through collected values and set
+        for (key in toSet) {
+            this[key] = resolve(toSet[key], this[key], this, this.scope);
                 
-                if (isBeingSet) {
-                    newProp = newProps[key];
-                }
-                
-                self[key] = resolve(newProp, self[key], self, self.scope);
-                
-                if (FORCE_NUMBER.indexOf(key) > -1) {
-                    self[key] = parseFloat(self[key]);
-                }
-    
-            } else if (self[key] === undefined) {
-                self[key] = defaults[key];
+            if (FORCE_NUMBER.indexOf(key) > -1) {
+                this[key] = parseFloat(this[key]);
             }
             
             if (key === 'to') {
-                self.target = self.to;
+                this.target = this.to;
             }
         }
         
         // Set hasRange to true if min and max are numbers
-        self.hasRange = (utils.isNum(self.min) && utils.isNum(self.max)) ? true : false;
+        this.hasRange = (utils.isNum(this.min) && utils.isNum(this.max)) ? true : false;
         
         // Update Action value process order
-        self.action.updateOrder(self.key, utils.isString(self.link));
+        this.action.updateOrder(this.key, utils.isString(this.link));
         
-        return self;
+        return this;
     },
     
     /*
@@ -107,6 +105,13 @@ Value.prototype = {
     reset: function () {
         this.set('to', this.target);
         return this.set(CURRENT, this[ORIGIN]);
+    },
+    
+    /*
+        Reset properties to defaults
+    */
+    resetProps: function () {
+        this.set(defaultProps);
     },
     
     /*

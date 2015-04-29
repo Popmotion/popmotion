@@ -7,7 +7,8 @@ var parseArgs = require('./parse-args.js'),
     Process = require('../process/process.js'),
     processor = require('./processor.js'),
     routes = require('./routes.js'),
-    defaultProps = require('../opts/action.js'),
+    defaultProps = require('../defaults/action-props.js'),
+    defaultState = require('../defaults/action-state.js'),
     calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
     styler = require('../routes/css/styler.js'),
@@ -27,7 +28,8 @@ var parseArgs = require('./parse-args.js'),
         // Create new property manager
         defaultProps.scope = this;
         self.props = new Repo();
-        self.props(defaultProps);
+        self.props(defaultState);
+        self.resetProps();
 
         // Create data store
         self.data = new Repo();
@@ -45,18 +47,6 @@ var parseArgs = require('./parse-args.js'),
     };
 
 Action.prototype = {
-
-    // [number]: Progress represented in a range of 0 - 1
-    progress: 0,
-    
-    // [number]: Time elapsed in ms
-    elapsed: 0,
-
-    // [number]: Number of frames action has been inactive
-    inactiveFrames: 0,
-    
-    // [number]: 1 = forward, -1 = backwards
-    playDirection: 1,
 
     /*
         Play the provided actions as animations
@@ -104,6 +94,9 @@ Action.prototype = {
         var self = this,
             values = self.values;
         
+        // Reset properties to defaults
+        this.resetProps();
+
         // Update current properties
         self.props(props);
         
@@ -416,13 +409,17 @@ Action.prototype = {
     
     setProp: function (key, value) {
         this.props(key, value);
-        
         return this;
     },
     
     
     getProp: function (key) {
         return this.props(key);
+    },
+    
+    resetProps: function () {
+        this.props(defaultProps);
+        return this;
     },
     
     /*

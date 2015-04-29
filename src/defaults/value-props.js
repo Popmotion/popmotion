@@ -1,14 +1,4 @@
-"use strict";
-
-
-
 module.exports = {
-    // [number]: The canonical value
-    current: 0,
-    
-    // [number]: The value to start from
-    start: 0,
-
     // [number]: Current target value
     to: undefined,
 

@@ -489,7 +489,7 @@
 	"use strict";
 	
 	var calc = __webpack_require__(/*! ../utils/calc.js */ 19),
-	    simulate = __webpack_require__(/*! ../action/simulate.js */ 51);
+	    simulate = __webpack_require__(/*! ../action/simulate.js */ 24);
 	
 	module.exports = {
 	
@@ -671,8 +671,8 @@
 
 	"use strict";
 	
-	var build = __webpack_require__(/*! ./css/build.js */ 24),
-	    split = __webpack_require__(/*! ./css/split.js */ 25),
+	var build = __webpack_require__(/*! ./css/build.js */ 25),
+	    split = __webpack_require__(/*! ./css/split.js */ 26),
 	    
 	    css = 'css',
 	    cssOrder = css + 'Order',
@@ -730,7 +730,7 @@
 
 	"use strict";
 	
-	var createStyles = __webpack_require__(/*! ./path/builder.js */ 26);
+	var createStyles = __webpack_require__(/*! ./path/builder.js */ 27);
 	
 	module.exports = {
 	    
@@ -802,17 +802,18 @@
 
 	"use strict";
 	
-	var parseArgs = __webpack_require__(/*! ./parse-args.js */ 27),
-	    Value = __webpack_require__(/*! ../types/value.js */ 28),
-	    Repo = __webpack_require__(/*! ../types/repo.js */ 29),
-	    Queue = __webpack_require__(/*! ./queue.js */ 30),
+	var parseArgs = __webpack_require__(/*! ./parse-args.js */ 28),
+	    Value = __webpack_require__(/*! ../types/value.js */ 29),
+	    Repo = __webpack_require__(/*! ../types/repo.js */ 30),
+	    Queue = __webpack_require__(/*! ./queue.js */ 31),
 	    Process = __webpack_require__(/*! ../process/process.js */ 16),
-	    processor = __webpack_require__(/*! ./processor.js */ 31),
+	    processor = __webpack_require__(/*! ./processor.js */ 32),
 	    routes = __webpack_require__(/*! ./routes.js */ 20),
-	    defaultProps = __webpack_require__(/*! ../opts/action.js */ 32),
+	    defaultProps = __webpack_require__(/*! ../defaults/action-props.js */ 33),
+	    defaultState = __webpack_require__(/*! ../defaults/action-state.js */ 34),
 	    calc = __webpack_require__(/*! ../utils/calc.js */ 19),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 23),
-	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 33),
+	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 35),
 	    
 	    linkToAngleDistance = { link: 'AngleAndDistance' },
 	
@@ -829,7 +830,8 @@
 	        // Create new property manager
 	        defaultProps.scope = this;
 	        self.props = new Repo();
-	        self.props(defaultProps);
+	        self.props(defaultState);
+	        self.resetProps();
 	
 	        // Create data store
 	        self.data = new Repo();
@@ -847,18 +849,6 @@
 	    };
 	
 	Action.prototype = {
-	
-	    // [number]: Progress represented in a range of 0 - 1
-	    progress: 0,
-	    
-	    // [number]: Time elapsed in ms
-	    elapsed: 0,
-	
-	    // [number]: Number of frames action has been inactive
-	    inactiveFrames: 0,
-	    
-	    // [number]: 1 = forward, -1 = backwards
-	    playDirection: 1,
 	
 	    /*
 	        Play the provided actions as animations
@@ -906,6 +896,9 @@
 	        var self = this,
 	            values = self.values;
 	        
+	        // Reset properties to defaults
+	        this.resetProps();
+	
 	        // Update current properties
 	        self.props(props);
 	        
@@ -1218,13 +1211,17 @@
 	    
 	    setProp: function (key, value) {
 	        this.props(key, value);
-	        
 	        return this;
 	    },
 	    
 	    
 	    getProp: function (key) {
 	        return this.props(key);
+	    },
+	    
+	    resetProps: function () {
+	        this.props(defaultProps);
+	        return this;
 	    },
 	    
 	    /*
@@ -1293,7 +1290,7 @@
 	
 	var calc = __webpack_require__(/*! ../utils/calc.js */ 19),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 23),
-	    History = __webpack_require__(/*! ../utils/history.js */ 34),
+	    History = __webpack_require__(/*! ../utils/history.js */ 36),
 	
 	    /*
 	        Input constructor
@@ -1425,7 +1422,7 @@
 	*/
 	"use strict";
 	
-	var manager = __webpack_require__(/*! ./manager.js */ 35),
+	var manager = __webpack_require__(/*! ./manager.js */ 37),
 	
 	    /*
 	        Process constructor
@@ -1725,7 +1722,7 @@
 	"use strict";
 	
 	var calc = __webpack_require__(/*! ./calc.js */ 19),
-	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 36),
+	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 38),
 	    
 	    // Constants
 	    INVALID_EASING = ": Not defined",
@@ -2322,7 +2319,7 @@
 
 	"use strict";
 	
-	var routes = __webpack_require__(/*! ../core/routes.js */ 37),
+	var routes = __webpack_require__(/*! ../core/routes.js */ 39),
 	    routeKeys = [],
 	    numRoutes,
 	    processes = ['preprocess', 'onStart', 'onEnd'],
@@ -2424,8 +2421,8 @@
 	"use strict";
 	
 	var actionPrototype = __webpack_require__(/*! ../action/action.js */ 14).prototype,
-	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 27),
-	    rubix = __webpack_require__(/*! ../core/rubix.js */ 38);
+	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 28),
+	    rubix = __webpack_require__(/*! ../core/rubix.js */ 40);
 	
 	module.exports = function (name, newRubix) {
 	    var parser = parseArgs[name] || parseArgs.generic;
@@ -2452,7 +2449,7 @@
 	*/
 	"use strict";
 	
-	var simulations = __webpack_require__(/*! ../core/simulations.js */ 39);
+	var simulations = __webpack_require__(/*! ../core/simulations.js */ 41);
 	
 	module.exports = function (name, simulation) {
 	    simulations[name] = simulation;
@@ -2727,6 +2724,23 @@
 
 /***/ },
 /* 24 */
+/*!********************************!*\
+  !*** ./src/action/simulate.js ***!
+  \********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var simulations = __webpack_require__(/*! ../core/simulations.js */ 41);
+	
+	module.exports = function (simulation, value, duration, started) {
+	    var velocity = simulations[simulation](value, duration, started);
+	    
+	    return (Math.abs(velocity) >= value.stopSpeed) ? velocity : 0;
+	};
+
+/***/ },
+/* 25 */
 /*!*********************************!*\
   !*** ./src/routes/css/build.js ***!
   \*********************************/
@@ -2734,9 +2748,9 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 40),
-	    templates = __webpack_require__(/*! ./templates.js */ 41),
-	    lookup = __webpack_require__(/*! ./lookup.js */ 42),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 42),
+	    templates = __webpack_require__(/*! ./templates.js */ 43),
+	    lookup = __webpack_require__(/*! ./lookup.js */ 44),
 	    
 	    TRANSFORM = 'transform',
 	    TRANSLATE_Z = 'translateZ',
@@ -2788,7 +2802,7 @@
 	};
 
 /***/ },
-/* 25 */
+/* 26 */
 /*!*********************************!*\
   !*** ./src/routes/css/split.js ***!
   \*********************************/
@@ -2796,10 +2810,10 @@
 
 	"use strict";
 	
-	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 43),
-	    dictionary = __webpack_require__(/*! ./dictionary.js */ 40),
-	    splitLookup = __webpack_require__(/*! ./lookup.js */ 42),
-	    splitters = __webpack_require__(/*! ./splitters.js */ 44),
+	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 45),
+	    dictionary = __webpack_require__(/*! ./dictionary.js */ 42),
+	    splitLookup = __webpack_require__(/*! ./lookup.js */ 44),
+	    splitters = __webpack_require__(/*! ./splitters.js */ 46),
 	    
 	    utils = __webpack_require__(/*! ../../utils/utils.js */ 23),
 	    
@@ -2889,7 +2903,7 @@
 	};
 
 /***/ },
-/* 26 */
+/* 27 */
 /*!************************************!*\
   !*** ./src/routes/path/builder.js ***!
   \************************************/
@@ -2897,7 +2911,7 @@
 
 	"use strict";
 	
-	var lookup = __webpack_require__(/*! ./lookup.js */ 45),
+	var lookup = __webpack_require__(/*! ./lookup.js */ 47),
 	
 	    /*
 	        Convert percentage to pixels
@@ -2955,7 +2969,7 @@
 	};
 
 /***/ },
-/* 27 */
+/* 28 */
 /*!**********************************!*\
   !*** ./src/action/parse-args.js ***!
   \**********************************/
@@ -2965,7 +2979,7 @@
 	
 	var utils = __webpack_require__(/*! ../utils/utils.js */ 23),
 	    presets = __webpack_require__(/*! ./presets.js */ 17),
-	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 46),
+	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 48),
 	
 	    STRING = 'string',
 	    NUMBER = 'number',
@@ -3095,7 +3109,7 @@
 	};
 
 /***/ },
-/* 28 */
+/* 29 */
 /*!****************************!*\
   !*** ./src/types/value.js ***!
   \****************************/
@@ -3103,8 +3117,9 @@
 
 	"use strict";
 	
-	var defaults = __webpack_require__(/*! ../opts/values.js */ 47),
-	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 48),
+	var defaultProps = __webpack_require__(/*! ../defaults/value-props.js */ 49),
+	    defaultState = __webpack_require__(/*! ../defaults/value-state.js */ 50),
+	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 51),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 23),
 	
 	    CURRENT = 'current',
@@ -3141,11 +3156,13 @@
 	            props.current = props.start;
 	        }
 	
+	        this.set(defaultProps);
+	        this.set(defaultState);
 	        this.set(props, inherit);
 	    };
 	    
 	Value.prototype = {
-	    
+	
 	    /*
 	        Set value properties
 	        
@@ -3156,52 +3173,47 @@
 	            .set(value) // Set .current
 	    */
 	    set: function () {
-	        var self = this,
-	            args = arguments,
-	            multiVal = utils.isObj(args[0]),
-	            newProps = multiVal ? args[0] : parseSetArgs.apply(self, args),
-	            newProp,
-	            hasInheritence,
-	            isBeingSet,
-	            inherit = multiVal ? args[1] : false,
+	        var multiVal = utils.isObj(arguments[0]),
+	            newProps = multiVal ? arguments[0] : parseSetArgs.apply(self, arguments),
+	            inherit = multiVal ? arguments[1] : false,
+	            toSet = {},
 	            key = '';
 	        
-	        for (key in defaults) {
-	            newProp = undefined;
-	            hasInheritence = (inherit && inherit.hasOwnProperty(key));
-	            isBeingSet = newProps.hasOwnProperty(key);
-	
-	            if (hasInheritence || isBeingSet) {
-	                if (hasInheritence) {
-	                    newProp = inherit[key];
+	        // Deal with inherited values first
+	        if (inherit) {
+	            for (key in inherit) {
+	                // Check this is a Value, not Action property
+	                if (defaultProps.hasOwnProperty(key)) {
+	                    toSet[key] = inherit[key];
 	                }
+	            }
+	        }
+	        
+	        // Loop through all properties and set
+	        for (key in newProps) {
+	            toSet[key] = newProps[key];
+	        }
+	        
+	        // Loop through collected values and set
+	        for (key in toSet) {
+	            this[key] = resolve(toSet[key], this[key], this, this.scope);
 	                
-	                if (isBeingSet) {
-	                    newProp = newProps[key];
-	                }
-	                
-	                self[key] = resolve(newProp, self[key], self, self.scope);
-	                
-	                if (FORCE_NUMBER.indexOf(key) > -1) {
-	                    self[key] = parseFloat(self[key]);
-	                }
-	    
-	            } else if (self[key] === undefined) {
-	                self[key] = defaults[key];
+	            if (FORCE_NUMBER.indexOf(key) > -1) {
+	                this[key] = parseFloat(this[key]);
 	            }
 	            
 	            if (key === 'to') {
-	                self.target = self.to;
+	                this.target = this.to;
 	            }
 	        }
 	        
 	        // Set hasRange to true if min and max are numbers
-	        self.hasRange = (utils.isNum(self.min) && utils.isNum(self.max)) ? true : false;
+	        this.hasRange = (utils.isNum(this.min) && utils.isNum(this.max)) ? true : false;
 	        
 	        // Update Action value process order
-	        self.action.updateOrder(self.key, utils.isString(self.link));
+	        this.action.updateOrder(this.key, utils.isString(this.link));
 	        
-	        return self;
+	        return this;
 	    },
 	    
 	    /*
@@ -3210,6 +3222,13 @@
 	    reset: function () {
 	        this.set('to', this.target);
 	        return this.set(CURRENT, this[ORIGIN]);
+	    },
+	    
+	    /*
+	        Reset properties to defaults
+	    */
+	    resetProps: function () {
+	        this.set(defaultProps);
 	    },
 	    
 	    /*
@@ -3234,7 +3253,7 @@
 	module.exports = Value;
 
 /***/ },
-/* 29 */
+/* 30 */
 /*!***************************!*\
   !*** ./src/types/repo.js ***!
   \***************************/
@@ -3310,7 +3329,7 @@
 	module.exports = Repo;
 
 /***/ },
-/* 30 */
+/* 31 */
 /*!*****************************!*\
   !*** ./src/action/queue.js ***!
   \*****************************/
@@ -3366,7 +3385,7 @@
 	module.exports = Queue;
 
 /***/ },
-/* 31 */
+/* 32 */
 /*!*********************************!*\
   !*** ./src/action/processor.js ***!
   \*********************************/
@@ -3377,7 +3396,7 @@
 	*/
 	"use strict";
 	
-	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 38),
+	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 40),
 	    routes = __webpack_require__(/*! ./routes.js */ 20),
 	    calc = __webpack_require__(/*! ../utils/calc.js */ 19),
 	    
@@ -3493,94 +3512,94 @@
 	};
 
 /***/ },
-/* 32 */
-/*!****************************!*\
-  !*** ./src/opts/action.js ***!
-  \****************************/
+/* 33 */
+/*!**************************************!*\
+  !*** ./src/defaults/action-props.js ***!
+  \**************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
-	
 	module.exports = {
+	    // [string]: What to use to process this aciton
+	    rubix: 'play',
 	    
-	    // Is this action active
-	    active: false,
-	    
-	    // What to use to process this aciton
-	    rubix: 'Play',
-	    
-	    // Multiply output value by
+	    // [number]: Multiply output value by
 	    amp: 1,
 	    
-	    // Multiply output value outside min/max by
+	    // [number]: Multiply output value outside min/max by
 	    escapeAmp: 0,
 	    
-	    // Delay this action by x ms
+	    // [number]: Delay this action by x ms
 	    delay: 0,
 	    
-	    // Time of animation (if animating) in ms
+	    // [number]: Time of animation (if animating) in ms
 	    duration: 400,
 	    
-	    // Ease animation
+	    // [string]: Ease animation
 	    ease: 'easeInOut',
 	    
-	    // 
+	    // [number]: Multiply progress by this (.5 is half speed)
 	    dilate: 1,
 	    
-	    // Number of times animation has looped
-	    loopCount: 0,
-	    
-	    // Number of times animation has yoyoed
-	    yoyoCount: 0,
-	    
-	    // Number of times animation has flipped
-	    flipCount: 0,
-	    
+	    // [number]: Number of frames of no change before Action is declared inactive
 	    maxInactiveFrames: 3,
 	    
-	    /*
-	        
-	        Recognised values with either false or undefined as default
+	    // [boolean || number]: Number of times to loop values, true for indefinite
+	    loop: false,
 	    
-	        // Order of values
-	        order: undefined,
-	        
-	        progress: undefined,
-	        
-	        // The object we're checking
-	        input: undefined,
-	        
-	        // Input origin on tracking start
-	        inputOrigin: undefined,
-	        
-	        // Use the progress of this property of linked input
-	        link: undefined,
-	        
-	        // Loop animation x number of times (true for ETERNALLY)
-	        loop: false,
-	        
-	        // Play animation and reverse x number of times (true for forever)
-	        yoyo: false,
-	        
-	        // Run this callback on action start
-	        onStart: undefined,
-	        
-	        // Run this on action end
-	        onEnd: undefined,
-	        
-	        // Run this every frame
-	        onFrame: undefined,
-	        
-	        // Run this when action changes
-	        onChange: undefined,
-	        
-	        output: undefined
-	        
-	    */
+	    // [boolean || number]: Number of times to yoyo values, true for indefinite
+	    yoyo: false,
+	    
+	    // [boolean || number]: Number of times to flip values, true for indefinite
+	    flip: false,
+	    
+	    // [function]: Callback when Action process starts
+	    onStart: undefined,
+	    
+	    // [function]: Callback when any value changes
+	    onChange: undefined,
+	    
+	    // [function]: Callback every frame
+	    onFrame: undefined,
+	    
+	    // [function]: Callback when Action process ends
+	    onEnd: undefined
 	};
 
 /***/ },
-/* 33 */
+/* 34 */
+/*!**************************************!*\
+  !*** ./src/defaults/action-state.js ***!
+  \**************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	    // [boolean]: True if Action is current active
+	    active: false,
+	    
+	    // [number]: Progress represented in a range of 0 - 1
+	    progress: 0,
+	    
+	    // [int]: Time elapsed in milliseconds
+	    elapsed: 0,
+	    
+	    // [int]: Number of frames Action has been inactive
+	    inactiveFrames: 0,
+	    
+	    // [int]: 1 = forward, -1 = backwards
+	    playDirection: 1,
+	    
+	    // [int]: Number of times values have been flipped
+	    flipCount: 0,
+	    
+	    // [int]: Number of times values have been looped
+	    loopCount: 0,
+	    
+	    // [int]: Number of times values have been yoyoed
+	    yoyoCount: 0
+	};
+
+/***/ },
+/* 35 */
 /*!**********************************!*\
   !*** ./src/routes/css/styler.js ***!
   \**********************************/
@@ -3649,7 +3668,7 @@
 	module.exports = new cssStyler();
 
 /***/ },
-/* 34 */
+/* 36 */
 /*!******************************!*\
   !*** ./src/utils/history.js ***!
   \******************************/
@@ -3726,7 +3745,7 @@
 	module.exports = History;
 
 /***/ },
-/* 35 */
+/* 37 */
 /*!********************************!*\
   !*** ./src/process/manager.js ***!
   \********************************/
@@ -3734,7 +3753,7 @@
 
 	"use strict";
 	
-	var theLoop = __webpack_require__(/*! ./loop.js */ 49),
+	var theLoop = __webpack_require__(/*! ./loop.js */ 52),
 	    ProcessManager = function () {
 	        this.all = {};
 	        this.active = [];
@@ -3904,7 +3923,7 @@
 	module.exports = new ProcessManager();
 
 /***/ },
-/* 36 */
+/* 38 */
 /*!*****************************!*\
   !*** ./src/types/bezier.js ***!
   \*****************************/
@@ -4079,7 +4098,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 37 */
+/* 39 */
 /*!****************************!*\
   !*** ./src/core/routes.js ***!
   \****************************/
@@ -4088,7 +4107,7 @@
 	module.exports = {};
 
 /***/ },
-/* 38 */
+/* 40 */
 /*!***************************!*\
   !*** ./src/core/rubix.js ***!
   \***************************/
@@ -4145,7 +4164,7 @@
 	module.exports = {};
 
 /***/ },
-/* 39 */
+/* 41 */
 /*!*********************************!*\
   !*** ./src/core/simulations.js ***!
   \*********************************/
@@ -4254,7 +4273,7 @@
 	};
 
 /***/ },
-/* 40 */
+/* 42 */
 /*!**************************************!*\
   !*** ./src/routes/css/dictionary.js ***!
   \**************************************/
@@ -4308,7 +4327,7 @@
 	module.exports = terms;
 
 /***/ },
-/* 41 */
+/* 43 */
 /*!*************************************!*\
   !*** ./src/routes/css/templates.js ***!
   \*************************************/
@@ -4316,7 +4335,7 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 40),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 42),
 	
 	    defaultValues = {
 	        Alpha: 1
@@ -4384,7 +4403,7 @@
 	module.exports = templates;
 
 /***/ },
-/* 42 */
+/* 44 */
 /*!**********************************!*\
   !*** ./src/routes/css/lookup.js ***!
   \**********************************/
@@ -4432,7 +4451,7 @@
 	};
 
 /***/ },
-/* 43 */
+/* 45 */
 /*!********************************************!*\
   !*** ./src/routes/css/default-property.js ***!
   \********************************************/
@@ -4483,7 +4502,7 @@
 	module.exports = defaults;
 
 /***/ },
-/* 44 */
+/* 46 */
 /*!*************************************!*\
   !*** ./src/routes/css/splitters.js ***!
   \*************************************/
@@ -4491,7 +4510,7 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 40),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 42),
 	    utils = __webpack_require__(/*! ../../utils/utils.js */ 23),
 	
 	    /*
@@ -4722,7 +4741,7 @@
 	module.exports = splitters;
 
 /***/ },
-/* 45 */
+/* 47 */
 /*!***********************************!*\
   !*** ./src/routes/path/lookup.js ***!
   \***********************************/
@@ -4742,7 +4761,7 @@
 	};
 
 /***/ },
-/* 46 */
+/* 48 */
 /*!******************************!*\
   !*** ./src/input/pointer.js ***!
   \******************************/
@@ -4841,23 +4860,13 @@
 	module.exports = Pointer;
 
 /***/ },
-/* 47 */
-/*!****************************!*\
-  !*** ./src/opts/values.js ***!
-  \****************************/
+/* 49 */
+/*!*************************************!*\
+  !*** ./src/defaults/value-props.js ***!
+  \*************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
-	
-	
-	
 	module.exports = {
-	    // [number]: The canonical value
-	    current: 0,
-	    
-	    // [number]: The value to start from
-	    start: 0,
-	
 	    // [number]: Current target value
 	    to: undefined,
 	
@@ -4975,7 +4984,28 @@
 	};
 
 /***/ },
-/* 48 */
+/* 50 */
+/*!*************************************!*\
+  !*** ./src/defaults/value-state.js ***!
+  \*************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	    // [number]: Current value
+	    current: 0,
+	    
+	    // [number]: Change per second
+	    speed: 0,
+	    
+	    // [number]: Change per second plus direction (ie can be negative)
+	    velocity: 0,
+	    
+	    // [number]: Amount value has changed in the most recent frame
+	    frameChange: 0
+	};
+
+/***/ },
+/* 51 */
 /*!******************************!*\
   !*** ./src/utils/resolve.js ***!
   \******************************/
@@ -5031,7 +5061,7 @@
 	};
 
 /***/ },
-/* 49 */
+/* 52 */
 /*!*****************************!*\
   !*** ./src/process/loop.js ***!
   \*****************************/
@@ -5042,7 +5072,7 @@
 	*/
 	"use strict";
 	
-	var Timer = __webpack_require__(/*! ./timer.js */ 50),
+	var Timer = __webpack_require__(/*! ./timer.js */ 53),
 	    Loop = function () {
 	        this.timer = new Timer();
 	    };
@@ -5107,7 +5137,7 @@
 	module.exports = new Loop();
 
 /***/ },
-/* 50 */
+/* 53 */
 /*!******************************!*\
   !*** ./src/process/timer.js ***!
   \******************************/
@@ -5143,23 +5173,6 @@
 	};
 	
 	module.exports = Timer;
-
-/***/ },
-/* 51 */
-/*!********************************!*\
-  !*** ./src/action/simulate.js ***!
-  \********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var simulations = __webpack_require__(/*! ../core/simulations.js */ 39);
-	
-	module.exports = function (simulation, value, duration, started) {
-	    var velocity = simulations[simulation](value, duration, started);
-	    
-	    return (Math.abs(velocity) >= value.stopSpeed) ? velocity : 0;
-	};
 
 /***/ }
 /******/ ]);
