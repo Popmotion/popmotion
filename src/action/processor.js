@@ -110,7 +110,7 @@ module.exports = function (action, framestamp, frameDuration) {
 
         routes.onEnd(action.output, action, values, props, data);
         
-        if (!action.isActive() && props.rubix === 'Play') {
+        if (!action.isActive() && props.rubix === 'play') {
             action.next();
         }
     }

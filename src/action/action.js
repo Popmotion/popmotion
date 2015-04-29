@@ -284,7 +284,7 @@ Action.prototype = {
     */
     flip: function () {
         var values = this.values,
-            props = this.props;
+            props = this.props();
             
         props.progress = calc.difference(props.progress, 1);
         props.elapsed = calc.difference(props.elapsed, props.duration);
