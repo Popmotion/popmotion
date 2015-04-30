@@ -95,6 +95,9 @@ Action.prototype = {
         
         // Reset properties to defaults
         this.resetProps();
+        
+        // Reset order
+        this.emptyOrder();
 
         // Update current properties
         self.props(props);
@@ -447,14 +450,12 @@ Action.prototype = {
         
         @param [string]: Key of value
         @param [boolean]: Whether to move value to back
-        @param [string] (optional): Name of order array (if not default)
     */
-    updateOrder: function (key, moveToBack, orderName) {
+    updateOrder: function (key, moveToBack) {
         var props = this.props(),
             pos, order;
-        
-        orderName = orderName || 'order';
-        order = props[orderName] = props[orderName] || [];
+
+        order = props['order'] = props['order'] || [];
         pos = order.indexOf(key);
         
         if (pos === -1 || moveToBack) {
@@ -464,6 +465,10 @@ Action.prototype = {
                 order.splice(pos, 1);
             }
         }
+    },
+    
+    emptyOrder: function () {
+        this.setProp('order', []);
     },
     
     /*
