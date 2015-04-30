@@ -11,6 +11,7 @@ Queue.prototype = {
     */
     add: function () {
         this.queue.push([].slice.call(arguments));
+        console.log(this.queue);
     },
     
     /*

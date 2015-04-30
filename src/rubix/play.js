@@ -50,7 +50,7 @@ module.exports = {
         if (target !== undefined) {
             progress = calc.restricted(calc.progress(props.elapsed - value.delay, value.duration) - value.stagger, 0, 1);
             progressTarget = (props.playDirection === 1) ? 1 : 0;
-            
+
             // Mark Action as not ended if still in progress
             if (progress !== progressTarget) {
                 action[HAS_ENDED] = false;

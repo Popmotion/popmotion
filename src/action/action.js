@@ -12,7 +12,6 @@ var parseArgs = require('./parse-args.js'),
     calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
     styler = require('../routes/css/styler.js'),
-    
     linkToAngleDistance = { link: 'AngleAndDistance' },
 
     namespace = function (key, space) {
@@ -73,8 +72,6 @@ Action.prototype = {
         if (!this.isActive()) {
             this.set(props, 'to');
             this.start('play');
-        } else {
-            this.queue.add.apply(this.queue, arguments);
         }
 
         return this;
@@ -95,9 +92,6 @@ Action.prototype = {
         
         // Reset properties to defaults
         this.resetProps();
-        
-        // Reset order
-        this.emptyOrder();
 
         // Update current properties
         self.props(props);
@@ -337,7 +331,7 @@ Action.prototype = {
                 break;
             }
         }
-
+        
         if (!hasNext && !self.playNext()) {
             self.stop();
         } else {
@@ -450,12 +444,14 @@ Action.prototype = {
         
         @param [string]: Key of value
         @param [boolean]: Whether to move value to back
+        @param [string] (optional): Name of order array (if not default)
     */
-    updateOrder: function (key, moveToBack) {
+    updateOrder: function (key, moveToBack, orderName) {
         var props = this.props(),
             pos, order;
-
-        order = props['order'] = props['order'] || [];
+        
+        orderName = orderName || 'order';
+        order = props[orderName] = props[orderName] || [];
         pos = order.indexOf(key);
         
         if (pos === -1 || moveToBack) {
@@ -465,10 +461,6 @@ Action.prototype = {
                 order.splice(pos, 1);
             }
         }
-    },
-    
-    emptyOrder: function () {
-        this.setProp('order', []);
     },
     
     /*
