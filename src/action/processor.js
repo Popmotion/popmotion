@@ -44,7 +44,6 @@ module.exports = function (action, framestamp, frameDuration) {
     }
 
     // Update values
-    console.log(order);
     for (; i < orderLength; i++) {
         // Get value and key
         key = order[i];
