@@ -1,11 +1,6 @@
 "use strict";
 
-var defaultRoute = require('../routes/values.js'),
-    cssRoute = require('../routes/css.js'),
-    attrRoute = require('../routes/attr.js'),
-    svgPathRoute = require('../routes/path.js'),
-
-    routes = {},
+var routes = require('../core/routes.js'),
     routeKeys = [],
     numRoutes,
     processes = ['preprocess', 'onStart', 'onEnd'],
@@ -36,24 +31,26 @@ var defaultRoute = require('../routes/values.js'),
         /*
             Add route
             
-            @param [string]: Name of route
             @param [object]: Object of route functions
-                Valid functions
-                    .parse
+                Valid properties
+                    .name [string] (required)
+
+                Valid methods
+                    .preprocess
                     .onStart
                     .onFrame
                     .onChange
                     .onEnd
         */
-        add: function (route) {
-            routeKeys.push(route.name);
+        add: function (name, route) {
+            routeKeys.push(name);
             numRoutes = routeKeys.length;
             
             if (route.makeDefault) {
-                this.defaultRoute = route.name;
+                this.defaultRoute = name;
             }
             
-            routes[route.name] = route;
+            routes[name] = route;
             
             return this;
         },
@@ -82,24 +79,15 @@ var defaultRoute = require('../routes/values.js'),
         }
     };
     
-/*
-    Add manager processes
-*/
 (function () {
     var processesLength = processes.length,
         processName = '',
         i = 0;
-        
+
     for (; i < processesLength; i++) {
         processName = processes[i];
         manager[processName] = process(processName);
     }
-    
-    manager
-        .add(defaultRoute)
-        .add(cssRoute)
-        .add(attrRoute)
-        .add(svgPathRoute);
 })();
 
 module.exports = manager; 

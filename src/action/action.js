@@ -7,7 +7,8 @@ var parseArgs = require('./parse-args.js'),
     Process = require('../process/process.js'),
     processor = require('./processor.js'),
     routes = require('./routes.js'),
-    defaultProps = require('../opts/action.js'),
+    defaultProps = require('../defaults/action-props.js'),
+    defaultState = require('../defaults/action-state.js'),
     calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
     styler = require('../routes/css/styler.js'),
@@ -27,14 +28,15 @@ var parseArgs = require('./parse-args.js'),
         // Create new property manager
         defaultProps.scope = this;
         self.props = new Repo();
-        self.props(defaultProps);
+        self.props(defaultState);
+        self.resetProps();
 
         // Create data store
         self.data = new Repo();
         
         // Register process wth cycl
         self.process = new Process(function (framestamp, frameDuration) {
-	        if (self.active) {
+	        if (self.isActive()) {
                 processor(self, framestamp, frameDuration);
 	        }
         });
@@ -45,18 +47,6 @@ var parseArgs = require('./parse-args.js'),
     };
 
 Action.prototype = {
-
-    // [number]: Progress represented in a range of 0 - 1
-    progress: 0,
-    
-    // [number]: Time elapsed in ms
-    elapsed: 0,
-
-    // [number]: Number of frames action has been inactive
-    inactiveFrames: 0,
-    
-    // [number]: 1 = forward, -1 = backwards
-    playDirection: 1,
 
     /*
         Play the provided actions as animations
@@ -82,60 +72,12 @@ Action.prototype = {
 
         if (!this.isActive()) {
             this.set(props, 'to');
-            this.playDirection = 1;
-            this.start('Play');
+            this.start('play');
         } else {
             this.queue.add.apply(this.queue, arguments);
         }
 
-        return this;    },
-
-    /*
-        Run Action indefinitely
-        
-        Syntax
-            .run(preset, [override])
-                @param [string]: Name of preset
-                @param [object]: (optional) Override object
-                
-            .run(params)
-                @param [object]: Action properties
-                
-        @return [Action]
-    */
-    run: function () {
-        this.set(parseArgs.generic.apply(this, arguments));
-        return this.start('Run');
-    },
-    
-    /*
-        Track values to mouse, touch or custom Input
-        
-        Syntax
-            .track(preset, [override], input)
-                @param [string]: Name of preset
-                @param [object]: (optional) Override object
-                @param [event || Input]: Input or event to start tracking
-                
-            .track(params, input)
-                @param [object]: Action properties
-                @param [event || Input]: Input or event to start tracking
-                
-        @return [Action]
-    */
-    track: function () {
-        this.set(parseArgs.track.apply(this, arguments));
-        return this.start('Track');
-    },
-    
-    /*
-        Activate for one frame and set values to current
-        
-        @return [Action]
-    */
-    fire: function () {
-        this.set(parseArgs.generic.apply(this, arguments));
-        return this.start('Fire');
+        return this;
     },
     
     /*
@@ -151,6 +93,9 @@ Action.prototype = {
         var self = this,
             values = self.values;
         
+        // Reset properties to defaults
+        this.resetProps();
+
         // Update current properties
         self.props(props);
         
@@ -307,22 +252,23 @@ Action.prototype = {
 	    Reset Action progress
     */
     resetProgress: function () {
-	    var self = this;
-
-        self.progress = 0;
-        self.elapsed = (self.playDirection === 1) ? 0 : self.props('duration');
-        self.started = utils.currentTime();
+        var props = this.props();
         
-        return self;
+        props.progress = 0;
+        props.elapsed = (props.playDirection === 1) ? 0 : props.duration;
+        props.started = utils.currentTime();
+        
+        return this;
     },
     
     /*
 	    Reverse Action progress and values
     */
     reverse: function () {
-        var values = this.values;
+        var values = this.values,
+            playDirection = this.props('playDirection');
 
-        this.playDirection *= -1;
+        this.props('playDirection', playDirection * -1);
         
         for (var key in values) {
             if (values.hasOwnProperty(key)) {
@@ -337,17 +283,17 @@ Action.prototype = {
         Swap value origins and to
     */
     flip: function () {
-	    var self = this,
-	        values = self.values;
-	    
-	    self.progress = calc.difference(self.progress, 1);
-        self.elapsed = calc.difference(self.elapsed, self.props('duration'));
+        var values = this.values,
+            props = this.props();
+            
+        props.progress = calc.difference(props.progress, 1);
+        props.elapsed = calc.difference(props.elapsed, props.duration);
         
         for (var key in values) {
             values[key].flip();
         }
 
-        return self;
+        return this;
     },
     
     toggle: function () {
@@ -424,7 +370,7 @@ Action.prototype = {
     */
     playNext: function () {
         var stepTaken = false,
-            nextInQueue = this.queue.next(this.playDirection);
+            nextInQueue = this.queue.next(this.props('playDirection'));
 
         if (utils.isArray(nextInQueue)) {
             this.set(parseArgs.generic.apply(this, nextInQueue), 'to')
@@ -443,6 +389,8 @@ Action.prototype = {
 
         // Update if value exists
         if (existing) {
+            // Overwrite with defaults
+            existing.resetProps();
             existing.set(value, inherit);
 
         // Or create new if it doesn't
@@ -463,13 +411,17 @@ Action.prototype = {
     
     setProp: function (key, value) {
         this.props(key, value);
-        
         return this;
     },
     
     
     getProp: function (key) {
         return this.props(key);
+    },
+    
+    resetProps: function () {
+        this.props(defaultProps);
+        return this;
     },
     
     /*
@@ -479,7 +431,11 @@ Action.prototype = {
         @return [boolean]: Active status
     */
     isActive: function (active) {
-        return this.active = (active !== undefined) ? active : this.active;
+        var isActive = (active !== undefined) ? active : this.props('active');
+
+        this.props('active', isActive);
+
+        return isActive;
     },
     
     /*

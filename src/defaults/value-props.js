@@ -1,14 +1,4 @@
-"use strict";
-
-
-
 module.exports = {
-    // [number]: The canonical value
-    current: 0,
-    
-    // [number]: The value to start from
-    start: 0,
-
     // [number]: Current target value
     to: undefined,
 
@@ -39,15 +29,6 @@ module.exports = {
     parent: '',
     
     unitName: '',
-    
-    // [number]: Current velocity of value, in units per second
-    velocity: 0,
-    
-    // [number]: Current speed (absolute velocity)
-    speed: 0,
-    
-    // [number]: Change since last frame
-    frameChange: 0,
 
     /*
         Link properties
@@ -116,6 +97,8 @@ module.exports = {
     // [number]: Number of steps to execute animation
     steps: 0,
     
+    // [string]: Tells Redshift when to step, at the start or end of a step. Other option is 'start' as per CSS spec
+    stepDirection: 'end',
 
     /*
         .track() properties

@@ -143,7 +143,7 @@ var calc = require('./calc.js'),
             @parma [number]: X of coordinate 2
             @parma [number]: Y of coordinate 2
         */
-        addBezier: function (name, x1, y1, x2, y2) {
+        add: function (name, x1, y1, x2, y2) {
             if (!this[name]) {
                 this[name] = new Bezier(x1, y1, x2, y2);
             }

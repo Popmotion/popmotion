@@ -49,6 +49,8 @@ var utils = require('../utils/utils.js'),
             }
         }
         
+        props.playDirection = 1;
+        
         return props;
     };
 

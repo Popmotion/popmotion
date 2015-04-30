@@ -10,10 +10,11 @@ var Action = require('./action/action.js'),
     Process = require('./process/process.js'),
     presets = require('./action/presets.js'),
     easing = require('./utils/easing.js'),
-    calc = require('./utils/calc.js');
-    
-// Check if we need to shim indexOf and requireAnimationFrame
-require('./utils/shim.js')();   
+    calc = require('./utils/calc.js'),
+    utils = require('./utils/utils.js'),
+    route = require('./action/routes.js'),
+    registerRubix = require('./register/register-rubix.js'),
+    registerSimulation = require('./register/register-simulation.js');
 
 module.exports = {
 
@@ -61,7 +62,7 @@ module.exports = {
         @return [Redshift]
     */
     addPreset: function () {
-        presets.define.apply(presets, arguments);
+        presets.add.apply(presets, arguments);
         
         return this;
     },
@@ -76,7 +77,7 @@ module.exports = {
         @params [number]: x/y coordinates of handles
     */
     addBezier: function () {
-        easing.addBezier.apply(easing, arguments);
+        easing.add.apply(easing, arguments);
         
         return this;
     },
@@ -110,7 +111,31 @@ module.exports = {
         return this;
     },
     
-    //defineSimulation: function () {},
+    /*
+        Add simulation
+        
+        @param [string]: Simulation name
+        @param [function]: Method to calculate new velocity
+    */
+    addSimulation: function () {
+        registerSimulation.apply(this, arguments);
+        
+        return this;
+    },
     
-    calc: calc
+    /*
+        Add Rubix
+        
+        @param [string]: Rubix name
+        @param [object]: Methods and properties
+    */
+    addRubix: function () {
+        registerRubix.apply(this, arguments);
+        
+        return this;
+    },
+    
+    // Expose calc and utils modules
+    calc: calc,
+    utils: utils
 };
