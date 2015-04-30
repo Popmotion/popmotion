@@ -5,8 +5,6 @@ var Input = require('./input.js'),
     
     TOUCHMOVE = 'touchmove',
     MOUSEMOVE = 'mousemove',
-    
-    doc = document.documentElement,
 
     /*
         Convert event into point
@@ -62,14 +60,14 @@ proto.bindEvents = function () {
     
     currentPointer = this;
     
-    doc.addEventListener(this.moveEvent, this.onMove);
+    document.documentElement.addEventListener(this.moveEvent, this.onMove);
 };
 
 /*
     Unbind move event
 */
 proto.unbindEvents = function () {
-    doc.removeEventListener(this.moveEvent, this.onMove);
+    document.documentElement.removeEventListener(this.moveEvent, this.onMove);
 };
 
 /*

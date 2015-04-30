@@ -173,20 +173,24 @@ Action.prototype = {
         @return [Action]
     */
     start: function (processType) {
-	    var self = this;
+	    var input = this.getProp('input');
 
-        self.resetProgress();
+        this.resetProgress();
         
         if (processType) {
-            self.props('rubix', processType);
+            this.props('rubix', processType);
+        }
+        
+        if (processType !== 'track' && input && input.stop) {
+            input.stop();
         }
 
-        self.isActive(true);
-        self.started = utils.currentTime() + self.props('delay');
-        self.framestamp = self.started;
-        self.firstFrame = true;
+        this.isActive(true);
+        this.started = utils.currentTime() + this.props('delay');
+        this.framestamp = this.started;
+        this.firstFrame = true;
         
-        self.process.start();
+        this.process.start();
 
         return self;
     },
