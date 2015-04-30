@@ -64,7 +64,7 @@ module.exports = {
     bounce: 0,
     
     // [number]: Spring strength during 'string'
-    spring: 0.03,
+    spring: 80,
     
     // [number]: Timeconstant of glide
     timeConstant: 395,
@@ -76,7 +76,7 @@ module.exports = {
     capture: false,
     
     // [number]: Friction to apply per frame
-    friction: 5,
+    friction: 0.05,
 
     /*
         .play() properties
