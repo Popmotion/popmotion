@@ -35,7 +35,7 @@ Presets.prototype = {
                 
         @return [Redshift]
     */
-    define: function (name, preset) {
+    add: function (name, preset) {
         var presets = {},
             key = '';
 
