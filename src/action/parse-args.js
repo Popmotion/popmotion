@@ -21,7 +21,7 @@ var utils = require('../utils/utils.js'),
             override = arguments[1],
             playlistLength = 0,
             argsAsArray = [].slice.call(arguments),
-            i = 0;
+            i = 1;
 
         if (typeof base == STRING) {
             playlist = base.split(' ');

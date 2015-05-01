@@ -22,10 +22,6 @@ module.exports = function (action, framestamp, frameDuration) {
         orderLength = order.length,
         key = '', value, output;
     
-    action.output = {
-        values: {}
-    };
-    
     // Update elapsed
     if (rubix.updateInput) {
         rubix.updateInput(action, props, frameDuration);

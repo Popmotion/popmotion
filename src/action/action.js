@@ -41,6 +41,7 @@ var parseArgs = require('./parse-args.js'),
         });
         
         self.queue = new Queue();
+        self.output = {};
 
         self.set(parseArgs.generic.apply(self, arguments));
     };
@@ -93,6 +94,9 @@ Action.prototype = {
         // Reset properties to defaults
         this.resetProps();
 
+        // Remove current values from order list
+        this.clearOrder();
+
         // Update current properties
         self.props(props);
         
@@ -111,7 +115,7 @@ Action.prototype = {
             for (var key in routeValues) {
                 if (routeValues.hasOwnProperty(key)) {
                     value = routeValues[key];
-                    
+
                     if (!utils.isObj(value)) {
                         valueBase = { name: key };
                         valueBase[defaultProp] = value;
@@ -131,7 +135,7 @@ Action.prototype = {
                         preprocessedValues = route.preprocess(key, valueBase, self, props);
 
                         for (var subKey in preprocessedValues) {
-                            self.setValue(key, preprocessedValues[subKey], props, route.name);
+                            self.setValue(subKey, preprocessedValues[subKey], props, route.name);
                         }
                     }
                 }
@@ -331,7 +335,7 @@ Action.prototype = {
                 break;
             }
         }
-        
+
         if (!hasNext && !self.playNext()) {
             self.stop();
         } else {
@@ -449,7 +453,7 @@ Action.prototype = {
     updateOrder: function (key, moveToBack, orderName) {
         var props = this.props(),
             pos, order;
-        
+
         orderName = orderName || 'order';
         order = props[orderName] = props[orderName] || [];
         pos = order.indexOf(key);
@@ -461,6 +465,10 @@ Action.prototype = {
                 order.splice(pos, 1);
             }
         }
+    },
+    
+    clearOrder: function () {
+        this.props('order', []);
     },
     
     /*

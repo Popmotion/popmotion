@@ -39,8 +39,8 @@ var defaultProps = require('../defaults/value-props.js'),
             props.current = props.start;
         }
 
-        this.set(defaultProps);
-        this.set(defaultState);
+        this._set(defaultProps);
+        this._set(defaultState);
         this.set(props, inherit);
     };
     
@@ -56,6 +56,18 @@ Value.prototype = {
             .set(value) // Set .current
     */
     set: function () {
+        this._set.apply(this, arguments);
+        
+        // Update Action value process order
+        this.action.updateOrder(this.key, utils.isString(this.link));
+        
+        return this;
+    },
+    
+    /*
+        Internal setter, doesn't update order
+    */
+    _set: function () {
         var multiVal = utils.isObj(arguments[0]),
             newProps = multiVal ? arguments[0] : parseSetArgs.apply(self, arguments),
             inherit = multiVal ? arguments[1] : false,
@@ -93,9 +105,6 @@ Value.prototype = {
         // Set hasRange to true if min and max are numbers
         this.hasRange = (utils.isNum(this.min) && utils.isNum(this.max)) ? true : false;
         
-        // Update Action value process order
-        this.action.updateOrder(this.key, utils.isString(this.link));
-        
         return this;
     },
     
@@ -103,8 +112,8 @@ Value.prototype = {
         Set current value to origin
     */
     reset: function () {
-        this.set('to', this.target);
-        return this.set(CURRENT, this[ORIGIN]);
+        this._set('to', this.target);
+        return this._set(CURRENT, this[ORIGIN]);
     },
     
     /*

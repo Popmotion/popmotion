@@ -52,7 +52,5 @@ module.exports = function (props, pathLength) {
         pathStyles[lookup.length] = arrayStyles.length + ' ' + arrayStyles.spacing;
     }
     
-    console.log(pathStyles['stroke-dashoffset']);
-    
     return pathStyles;
 };
