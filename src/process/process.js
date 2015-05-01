@@ -50,6 +50,8 @@ Process.prototype = {
         if (this.isInterval) {
             this.deactivate();
         }
+        
+        return this;
     },
     
     /*
@@ -151,6 +153,8 @@ Process.prototype = {
         self.intervalTimer = setInterval(function () {
             self.activate();
         }, interval);
+        
+        return this;
     },
     
     /*
@@ -177,6 +181,7 @@ Process.prototype = {
     
     setId: function (id) {
         this.id = id;
+        return this;
     }
 };
 
