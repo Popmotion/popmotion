@@ -71,9 +71,9 @@
 	    
 	    // Add DOM value routes
 	    .addRoute('values', __webpack_require__(/*! ../routes/values.js */ 9))
-	    .addRoute('css',    __webpack_require__(/*! ../routes/css.js */ 10))
-	    .addRoute('attr',   __webpack_require__(/*! ../routes/attr.js */ 11))
-	    .addRoute('path',   __webpack_require__(/*! ../routes/path.js */ 12));
+	    .addRoute('css',    __webpack_require__(/*! ../routes/css.js */ 12))
+	    .addRoute('attr',   __webpack_require__(/*! ../routes/attr.js */ 10))
+	    .addRoute('path',   __webpack_require__(/*! ../routes/path.js */ 11));
 	
 	// Check if we need to shim requireAnimationFrame - TODO replace this with
 	// a more general environment check, for instance node or react native
@@ -456,7 +456,7 @@
 	        if (target !== undefined) {
 	            progress = calc.restricted(calc.progress(props.elapsed - value.delay, value.duration) - value.stagger, 0, 1);
 	            progressTarget = (props.playDirection === 1) ? 1 : 0;
-	            
+	
 	            // Mark Action as not ended if still in progress
 	            if (progress !== progressTarget) {
 	                action[HAS_ENDED] = false;
@@ -679,41 +679,6 @@
 
 /***/ },
 /* 10 */
-/*!***************************!*\
-  !*** ./src/routes/css.js ***!
-  \***************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var build = __webpack_require__(/*! ./css/build.js */ 25),
-	    split = __webpack_require__(/*! ./css/split.js */ 26),
-	    
-	    css = 'css',
-	    cssOrder = css + 'Order',
-	    cssCache = css + 'Cache';
-	
-	module.exports = {
-	    
-	    name: css,
-	    
-	    preprocess: function (key, value, action) {
-	        var values = split(key, value);
-	        
-	        action.updateOrder(key, false, cssOrder);
-	        
-	        return values;
-	    },
-	    
-	    onChange: function (output, action, values, props) {
-	        props[cssCache] = props[cssCache] || {};
-	        action.style(build(output, props[cssOrder],  props[cssCache], values));
-	    }
-	    
-	};
-
-/***/ },
-/* 11 */
 /*!****************************!*\
   !*** ./src/routes/attr.js ***!
   \****************************/
@@ -737,7 +702,7 @@
 	};
 
 /***/ },
-/* 12 */
+/* 11 */
 /*!****************************!*\
   !*** ./src/routes/path.js ***!
   \****************************/
@@ -745,7 +710,7 @@
 
 	"use strict";
 	
-	var createStyles = __webpack_require__(/*! ./path/builder.js */ 27);
+	var createStyles = __webpack_require__(/*! ./path/builder.js */ 25);
 	
 	module.exports = {
 	    
@@ -760,6 +725,41 @@
 	    onChange: function (output, action, values, props) {
 	        action.style(createStyles(output, props.pathLength));
 	    }
+	};
+
+/***/ },
+/* 12 */
+/*!***************************!*\
+  !*** ./src/routes/css.js ***!
+  \***************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var build = __webpack_require__(/*! ./css/build.js */ 26),
+	    split = __webpack_require__(/*! ./css/split.js */ 27),
+	    
+	    css = 'css',
+	    cssOrder = css + 'Order',
+	    cssCache = css + 'Cache';
+	
+	module.exports = {
+	    
+	    name: css,
+	    
+	    preprocess: function (key, value, action) {
+	        var values = split(key, value);
+	        
+	        action.updateOrder(key, false, cssOrder);
+	        
+	        return values;
+	    },
+	    
+	    onChange: function (output, action, values, props) {
+	        props[cssCache] = props[cssCache] || {};
+	        action.style(build(output, props[cssOrder],  props[cssCache], values));
+	    }
+	    
 	};
 
 /***/ },
@@ -1221,19 +1221,18 @@
 
 	"use strict";
 	
-	var parseArgs = __webpack_require__(/*! ./parse-args.js */ 28),
-	    Value = __webpack_require__(/*! ../types/value.js */ 29),
-	    Repo = __webpack_require__(/*! ../types/repo.js */ 30),
-	    Queue = __webpack_require__(/*! ./queue.js */ 31),
+	var parseArgs = __webpack_require__(/*! ./parse-args.js */ 30),
+	    Value = __webpack_require__(/*! ../types/value.js */ 31),
+	    Repo = __webpack_require__(/*! ../types/repo.js */ 32),
+	    Queue = __webpack_require__(/*! ./queue.js */ 33),
 	    Process = __webpack_require__(/*! ../process/process.js */ 17),
-	    processor = __webpack_require__(/*! ./processor.js */ 32),
+	    processor = __webpack_require__(/*! ./processor.js */ 34),
 	    routes = __webpack_require__(/*! ./routes.js */ 21),
-	    defaultProps = __webpack_require__(/*! ../defaults/action-props.js */ 33),
-	    defaultState = __webpack_require__(/*! ../defaults/action-state.js */ 34),
+	    defaultProps = __webpack_require__(/*! ../defaults/action-props.js */ 35),
+	    defaultState = __webpack_require__(/*! ../defaults/action-state.js */ 36),
 	    calc = __webpack_require__(/*! ../utils/calc.js */ 14),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
-	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 35),
-	    
+	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 37),
 	    linkToAngleDistance = { link: 'AngleAndDistance' },
 	
 	    namespace = function (key, space) {
@@ -1263,6 +1262,7 @@
 	        });
 	        
 	        self.queue = new Queue();
+	        self.output = {};
 	
 	        self.set(parseArgs.generic.apply(self, arguments));
 	    };
@@ -1294,8 +1294,6 @@
 	        if (!this.isActive()) {
 	            this.set(props, 'to');
 	            this.start('play');
-	        } else {
-	            this.queue.add.apply(this.queue, arguments);
 	        }
 	
 	        return this;
@@ -1317,6 +1315,9 @@
 	        // Reset properties to defaults
 	        this.resetProps();
 	
+	        // Remove current values from order list
+	        this.clearOrder();
+	
 	        // Update current properties
 	        self.props(props);
 	        
@@ -1335,7 +1336,7 @@
 	            for (var key in routeValues) {
 	                if (routeValues.hasOwnProperty(key)) {
 	                    value = routeValues[key];
-	                    
+	
 	                    if (!utils.isObj(value)) {
 	                        valueBase = { name: key };
 	                        valueBase[defaultProp] = value;
@@ -1355,7 +1356,7 @@
 	                        preprocessedValues = route.preprocess(key, valueBase, self, props);
 	
 	                        for (var subKey in preprocessedValues) {
-	                            self.setValue(key, preprocessedValues[subKey], props, route.name);
+	                            self.setValue(subKey, preprocessedValues[subKey], props, route.name);
 	                        }
 	                    }
 	                }
@@ -1394,20 +1395,24 @@
 	        @return [Action]
 	    */
 	    start: function (processType) {
-		    var self = this;
+		    var input = this.getProp('input');
 	
-	        self.resetProgress();
+	        this.resetProgress();
 	        
 	        if (processType) {
-	            self.props('rubix', processType);
+	            this.props('rubix', processType);
+	        }
+	        
+	        if (processType !== 'track' && input && input.stop) {
+	            input.stop();
 	        }
 	
-	        self.isActive(true);
-	        self.started = utils.currentTime() + self.props('delay');
-	        self.framestamp = self.started;
-	        self.firstFrame = true;
+	        this.isActive(true);
+	        this.started = utils.currentTime() + this.props('delay');
+	        this.framestamp = this.started;
+	        this.firstFrame = true;
 	        
-	        self.process.start();
+	        this.process.start();
 	
 	        return self;
 	    },
@@ -1669,7 +1674,7 @@
 	    updateOrder: function (key, moveToBack, orderName) {
 	        var props = this.props(),
 	            pos, order;
-	        
+	
 	        orderName = orderName || 'order';
 	        order = props[orderName] = props[orderName] || [];
 	        pos = order.indexOf(key);
@@ -1681,6 +1686,10 @@
 	                order.splice(pos, 1);
 	            }
 	        }
+	    },
+	    
+	    clearOrder: function () {
+	        this.props('order', []);
 	    },
 	    
 	    /*
@@ -1715,7 +1724,7 @@
 	
 	var calc = __webpack_require__(/*! ../utils/calc.js */ 14),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
-	    History = __webpack_require__(/*! ../utils/history.js */ 36),
+	    History = __webpack_require__(/*! ../utils/history.js */ 28),
 	
 	    /*
 	        Input constructor
@@ -1847,7 +1856,7 @@
 	*/
 	"use strict";
 	
-	var manager = __webpack_require__(/*! ./manager.js */ 37),
+	var manager = __webpack_require__(/*! ./manager.js */ 29),
 	
 	    /*
 	        Process constructor
@@ -1894,6 +1903,8 @@
 	        if (this.isInterval) {
 	            this.deactivate();
 	        }
+	        
+	        return this;
 	    },
 	    
 	    /*
@@ -1995,6 +2006,8 @@
 	        self.intervalTimer = setInterval(function () {
 	            self.activate();
 	        }, interval);
+	        
+	        return this;
 	    },
 	    
 	    /*
@@ -2021,6 +2034,7 @@
 	    
 	    setId: function (id) {
 	        this.id = id;
+	        return this;
 	    }
 	};
 	
@@ -2070,7 +2084,7 @@
 	                
 	        @return [Redshift]
 	    */
-	    define: function (name, preset) {
+	    add: function (name, preset) {
 	        var presets = {},
 	            key = '';
 	
@@ -2343,7 +2357,7 @@
 	*/
 	"use strict";
 	
-	var defaultValueProps = __webpack_require__(/*! ../defaults/value-props.js */ 39),
+	var defaultValueProps = __webpack_require__(/*! ../defaults/value-props.js */ 40),
 	
 	    protectedProperties = ['scope',  'dom'],
 	    
@@ -2599,7 +2613,7 @@
 	        @return [timestamp]: Current UNIX timestamp
 	    */
 	    currentTime: function () {
-		    return performance ? performance.now() : new Date().getTime();
+		    return (typeof performance !== "undefined") ? performance.now() : new Date().getTime();
 	    }
 	    
 	};
@@ -2613,7 +2627,7 @@
 
 	"use strict";
 	
-	var routes = __webpack_require__(/*! ../core/routes.js */ 40),
+	var routes = __webpack_require__(/*! ../core/routes.js */ 39),
 	    routeKeys = [],
 	    numRoutes,
 	    processes = ['preprocess', 'onStart', 'onEnd'],
@@ -2715,8 +2729,8 @@
 	"use strict";
 	
 	var actionPrototype = __webpack_require__(/*! ../action/action.js */ 15).prototype,
-	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 28),
-	    rubix = __webpack_require__(/*! ../core/rubix.js */ 41);
+	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 30),
+	    rubix = __webpack_require__(/*! ../core/rubix.js */ 42);
 	
 	module.exports = function (name, newRubix) {
 	    var parser = parseArgs[name] || parseArgs.generic;
@@ -2743,7 +2757,7 @@
 	*/
 	"use strict";
 	
-	var simulations = __webpack_require__(/*! ../core/simulations.js */ 42);
+	var simulations = __webpack_require__(/*! ../core/simulations.js */ 41);
 	
 	module.exports = function (name, simulation) {
 	    simulations[name] = simulation;
@@ -2758,7 +2772,7 @@
 
 	"use strict";
 	
-	var simulations = __webpack_require__(/*! ../core/simulations.js */ 42);
+	var simulations = __webpack_require__(/*! ../core/simulations.js */ 41);
 	
 	module.exports = function (simulation, value, duration, started) {
 	    var velocity = simulations[simulation](value, duration, started);
@@ -2768,6 +2782,70 @@
 
 /***/ },
 /* 25 */
+/*!************************************!*\
+  !*** ./src/routes/path/builder.js ***!
+  \************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var lookup = __webpack_require__(/*! ./lookup.js */ 43),
+	
+	    /*
+	        Convert percentage to pixels
+	        
+	        @param [number]: Percentage of total length
+	        @param [number]: Total length
+	    */
+	    percentToPixels = function (percentage, length) {
+	        return (parseFloat(percentage) / 100) * length + 'px';
+	    };
+	
+	/*
+	    Create styles
+	    
+	    @param [object]: SVG Path properties
+	    @param [object]: Length of path
+	    @returns [object]: Key/value pairs of valid CSS properties
+	*/
+	module.exports = function (props, pathLength) {
+	    var hasArray = false,
+	        svgProperty = '',
+	        arrayStyles = {
+	            length: 0,
+	            spacing: pathLength + 'px'
+	        },
+	        pathStyles = {};
+	
+	    // Loop over each property and create related css property
+	    for (var key in props) {
+	        if (props.hasOwnProperty(key)) {
+	            svgProperty = lookup[key];
+	            
+	            switch (key) {
+	                case 'length':
+	                case 'spacing':
+	                    hasArray = true;
+	                    arrayStyles[key] = percentToPixels(props[key], pathLength);
+	                    break;
+	                case 'offset':
+	                    pathStyles[svgProperty] = percentToPixels(-props[key], pathLength);
+	                    break;
+	                default:
+	                   pathStyles[svgProperty] = props[key]; 
+	            }
+	        }
+	    }
+	    
+	    if (hasArray) {
+	        pathStyles[lookup.length] = arrayStyles.length + ' ' + arrayStyles.spacing;
+	    }
+	    
+	    return pathStyles;
+	};
+
+/***/ },
+/* 26 */
 /*!*********************************!*\
   !*** ./src/routes/css/build.js ***!
   \*********************************/
@@ -2775,9 +2853,9 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 43),
-	    templates = __webpack_require__(/*! ./templates.js */ 44),
-	    lookup = __webpack_require__(/*! ./lookup.js */ 45),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 44),
+	    templates = __webpack_require__(/*! ./templates.js */ 45),
+	    lookup = __webpack_require__(/*! ./lookup.js */ 46),
 	    
 	    TRANSFORM = 'transform',
 	    TRANSLATE_Z = 'translateZ',
@@ -2829,7 +2907,7 @@
 	};
 
 /***/ },
-/* 26 */
+/* 27 */
 /*!*********************************!*\
   !*** ./src/routes/css/split.js ***!
   \*********************************/
@@ -2837,10 +2915,10 @@
 
 	"use strict";
 	
-	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 46),
-	    dictionary = __webpack_require__(/*! ./dictionary.js */ 43),
-	    splitLookup = __webpack_require__(/*! ./lookup.js */ 45),
-	    splitters = __webpack_require__(/*! ./splitters.js */ 47),
+	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 47),
+	    dictionary = __webpack_require__(/*! ./dictionary.js */ 44),
+	    splitLookup = __webpack_require__(/*! ./lookup.js */ 46),
+	    splitters = __webpack_require__(/*! ./splitters.js */ 48),
 	    
 	    utils = __webpack_require__(/*! ../../utils/utils.js */ 20),
 	    
@@ -2930,774 +3008,7 @@
 	};
 
 /***/ },
-/* 27 */
-/*!************************************!*\
-  !*** ./src/routes/path/builder.js ***!
-  \************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var lookup = __webpack_require__(/*! ./lookup.js */ 48),
-	
-	    /*
-	        Convert percentage to pixels
-	        
-	        @param [number]: Percentage of total length
-	        @param [number]: Total length
-	    */
-	    percentToPixels = function (percentage, length) {
-	        return (parseFloat(percentage) / 100) * length + 'px';
-	    };
-	
-	/*
-	    Create styles
-	    
-	    @param [object]: SVG Path properties
-	    @param [object]: Length of path
-	    @returns [object]: Key/value pairs of valid CSS properties
-	*/
-	module.exports = function (props, pathLength) {
-	    var hasArray = false,
-	        svgProperty = '',
-	        arrayStyles = {
-	            length: 0,
-	            spacing: pathLength + 'px'
-	        },
-	        pathStyles = {};
-	
-	    // Loop over each property and create related css property
-	    for (var key in props) {
-	        if (props.hasOwnProperty(key)) {
-	            svgProperty = lookup[key];
-	            
-	            switch (key) {
-	                case 'length':
-	                case 'spacing':
-	                    hasArray = true;
-	                    arrayStyles[key] = percentToPixels(props[key], pathLength);
-	                    break;
-	                case 'offset':
-	                    pathStyles[svgProperty] = percentToPixels(-props[key], pathLength);
-	                    break;
-	                default:
-	                   pathStyles[svgProperty] = props[key]; 
-	            }
-	        }
-	    }
-	    
-	    if (hasArray) {
-	        pathStyles[lookup.length] = arrayStyles.length + ' ' + arrayStyles.spacing;
-	    }
-	    
-	    console.log(pathStyles['stroke-dashoffset']);
-	    
-	    return pathStyles;
-	};
-
-/***/ },
 /* 28 */
-/*!**********************************!*\
-  !*** ./src/action/parse-args.js ***!
-  \**********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 20),
-	    presets = __webpack_require__(/*! ./presets.js */ 18),
-	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 49),
-	
-	    STRING = 'string',
-	    NUMBER = 'number',
-	    OBJECT = 'object',
-	    
-	    /*
-	        Generic argument parsing
-	        
-	        Checks first argument to be a string and loads preset,
-	        merges in next object as override
-	    */
-	    generic = function () {
-	        var props = {},
-	            playlist = [],
-	            base = arguments[0],
-	            override = arguments[1],
-	            playlistLength = 0,
-	            argsAsArray = [].slice.call(arguments),
-	            i = 0;
-	
-	        if (typeof base == STRING) {
-	            playlist = base.split(' ');
-	            playlistLength = playlist.length;
-	            props = presets.getDefined(playlist[0]);
-	
-	            // If we've had multiple presets, loop through and add each to the queue
-	            if (playlistLength > 1) {
-	                for (; i < playlistLength; i++) {
-	                    argsAsArray.shift();
-	                    argsAsArray.unshift(playlist[i]);
-	                    this.queue.add.apply(this.queue, argsAsArray);
-	                }
-	            }
-	            
-	            if (typeof override == OBJECT) {
-	                props = utils.merge(props, override);
-	            }
-	        // If object, assign directly
-	        } else if (typeof base == OBJECT) {
-	            props = base;
-	
-	            if (this.isActive()) {
-	                this.queue.add.apply(this.queue, argsAsArray);
-	            }
-	        }
-	        
-	        props.playDirection = 1;
-	        
-	        return props;
-	    };
-	
-	module.exports = {
-	    
-	    /*
-	        Parse play arguments
-	        
-	        Syntax
-	            .play(preset [,override, duration, easing, onEnd])
-	            .play(properties [, duration, easing, onEnd])
-	    */
-	    play: function () {
-	        var props = generic.apply(this, arguments),
-	            argsLength = arguments.length,
-	            i = 0,
-	            arg,
-	            typeofArg = '';
-	        
-	        // Play specific properties
-	        props.loopCount = props.yoyoCount = props.flipCount = 0;
-	        
-	        for (; i < argsLength; i++) {
-	            arg = arguments[i];
-	            typeofArg = typeof arg;
-	            
-	            // Easing if string and not first index
-	            if (typeofArg == STRING && i !== 0) {
-	                props.ease = arg;
-	            
-	            // Duration if number
-	            } else if (typeofArg == NUMBER) {
-	                props.duration = arg;
-	                
-	            // Callback if function
-	            } else if (utils.isFunc(arg)) {
-	                props.onEnd = arg;
-	            }
-	        }
-	
-	        return props;
-	    },
-	    
-	    /*
-	        Parse track arguments
-	        
-	        Syntax
-	            .track(preset [, override], event/Input)
-	            .track(properties, event/Input)
-	    */
-	    track: function () {
-	        var props = {},
-	            argsLength = arguments.length,
-	            inputIndex = argsLength - 1,
-	            input = arguments[inputIndex];
-	        
-	        // Loop until inputIndex
-	        for (var i = 0; i < inputIndex; i++) {
-	            
-	            // Preset if string
-	            if (typeof arguments[i] === STRING) {
-	                props = presets.getDefined(arguments[i]);
-	                
-	            // Or override
-	            } else {
-	                props = utils.merge(props, arguments[i]);
-	            }
-	        }
-	        
-	        // Create Pointer if this isn't an Input
-	        input = (!input.current) ? new Pointer(input) : input;
-	        
-	        // Append input
-	        props.input = input;
-	        props.inputOrigin = input.get();
-	        
-	        return props;
-	    },
-	    
-	    generic: generic
-	};
-
-/***/ },
-/* 29 */
-/*!****************************!*\
-  !*** ./src/types/value.js ***!
-  \****************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var defaultProps = __webpack_require__(/*! ../defaults/value-props.js */ 39),
-	    defaultState = __webpack_require__(/*! ../defaults/value-state.js */ 50),
-	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 51),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
-	
-	    CURRENT = 'current',
-	    ORIGIN = 'origin',
-	    FORCE_NUMBER = [CURRENT, ORIGIN, 'to', 'start'],
-	    
-	    /*
-	        Parse setter arguments
-	    */
-	    parseSetArgs = function (arg0, arg1) {
-	        var newProps = {};
-	
-	        // If we've just got a value, set default
-	        if (arguments.length === 1) {
-	            newProps[CURRENT] = arg0;
-	            
-	        // Or we've got key/value args
-	        } else {
-	            newProps[arg0] = arg1;
-	        }
-	        
-	        return newProps;
-	    },
-	
-	    /*
-	        Value constructor
-	    */
-	    Value = function (key, props, inherit, action) {
-	        this.key = key;
-	        this.action = action;
-	        this.scope = action.getProp('scope');
-	
-	        if (props.start) {
-	            props.current = props.start;
-	        }
-	
-	        this.set(defaultProps);
-	        this.set(defaultState);
-	        this.set(props, inherit);
-	    };
-	    
-	Value.prototype = {
-	
-	    /*
-	        Set value properties
-	        
-	        Syntax
-	            .set('key', value) // Set specific value
-	            .set({ key: value }) // Set multiple values
-	            .set({ key: value }, { key: value2 }) // Set multiple with inherit
-	            .set(value) // Set .current
-	    */
-	    set: function () {
-	        var multiVal = utils.isObj(arguments[0]),
-	            newProps = multiVal ? arguments[0] : parseSetArgs.apply(self, arguments),
-	            inherit = multiVal ? arguments[1] : false,
-	            toSet = {},
-	            key = '';
-	        
-	        // Deal with inherited values first
-	        if (inherit) {
-	            for (key in inherit) {
-	                // Check this is a Value, not Action property
-	                if (defaultProps.hasOwnProperty(key)) {
-	                    toSet[key] = inherit[key];
-	                }
-	            }
-	        }
-	        
-	        // Loop through all properties and set
-	        for (key in newProps) {
-	            toSet[key] = newProps[key];
-	        }
-	        
-	        // Loop through collected values and set
-	        for (key in toSet) {
-	            this[key] = resolve(toSet[key], this[key], this, this.scope);
-	                
-	            if (FORCE_NUMBER.indexOf(key) > -1) {
-	                this[key] = parseFloat(this[key]);
-	            }
-	            
-	            if (key === 'to') {
-	                this.target = this.to;
-	            }
-	        }
-	        
-	        // Set hasRange to true if min and max are numbers
-	        this.hasRange = (utils.isNum(this.min) && utils.isNum(this.max)) ? true : false;
-	        
-	        // Update Action value process order
-	        this.action.updateOrder(this.key, utils.isString(this.link));
-	        
-	        return this;
-	    },
-	    
-	    /*
-	        Set current value to origin
-	    */
-	    reset: function () {
-	        this.set('to', this.target);
-	        return this.set(CURRENT, this[ORIGIN]);
-	    },
-	    
-	    /*
-	        Reset properties to defaults
-	    */
-	    resetProps: function () {
-	        this.set(defaultProps);
-	    },
-	    
-	    /*
-	        Swap current target and origin
-	    */
-	    flip: function () {
-	        var newTo = this[ORIGIN],
-	            newOrigin = (this.target !== undefined) ? this.target : this[CURRENT];
-	
-	        return this.set({
-	            to: newTo,
-	            origin: newOrigin
-	        });
-	    },
-	    
-	    retarget: function (target) {
-	        target = (target !== undefined) ? target : this.target;
-	        return this.set('to', target);
-	    }
-	};
-	
-	module.exports = Value;
-
-/***/ },
-/* 30 */
-/*!***************************!*\
-  !*** ./src/types/repo.js ***!
-  \***************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 20),
-	
-	    /*
-	        Get data with specified key
-	        
-	        @param [string]: Name of property to access
-	        @returns [var]: Data found
-	    */
-	    get = function (key) {
-	        return (key !== undefined) ? this[key] : this;
-	    },
-	            
-	    /*
-	        Set data either has object or key/value pair
-	        
-	        Syntax
-	            .set(data)
-	                @param [object]: Data to store
-	                
-	            .set(key, value)
-	                @param [string]: Name of data
-	                @param [val]: Data to store
-	    */
-	    set = function (data, prop) {
-	        var multiArg = (arguments.length > 1),
-	            toSet = multiArg ? {} : data,
-	            key = '';
-	        
-	        // If this is a key/value setter, add to toSet
-	        if (multiArg) {
-	            toSet[data] = prop;
-	        }
-	        
-	        // Loop over toSet and assign to our data store
-	        for (key in toSet) {
-	            if (toSet.hasOwnProperty(key)) {
-	                this[key] = toSet[key];
-	            }
-	        }
-	    },
-	
-	    /*
-	        Repo class
-	    */
-	    Repo = function (context) {
-	        var store = {};
-	
-	        /*
-	            Determine whether call is getter or setter
-	        */
-	        return function () {
-	            var argsLength = arguments.length;
-	
-	            // If this is a getter, return value
-	            if ((!argsLength || (argsLength === 1 && utils.isString(arguments[0])))) {
-	                return get.apply(store, arguments);
-	
-	            // Or this is a setter, return this
-	            } else {
-	                set.apply(store, arguments);
-	                return context;
-	            }
-	        };
-	    };
-	
-	module.exports = Repo;
-
-/***/ },
-/* 31 */
-/*!*****************************!*\
-  !*** ./src/action/queue.js ***!
-  \*****************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var Queue = function () {
-	        this.clear();
-	    };
-	
-	Queue.prototype = {
-	    
-	    /*
-	        Add a set of arguments to queue
-	    */
-	    add: function () {
-	        this.queue.push([].slice.call(arguments));
-	    },
-	    
-	    /*
-	        Get next set of arguments from queue
-	    */
-	    next: function (direction) {
-	        var queue = this.queue,
-	            returnVal = false,
-	            index = this.index;
-	            
-	        direction = (arguments.length) ? direction : 1;
-	        
-	        // If our index is between 0 and the queue length, return that item
-	        if (index >= 0 && index < queue.length) {
-	            returnVal = queue[index];
-	            this.index = index + direction;
-	        
-	        // Or clear
-	        } else {
-	            this.clear();
-	        }
-	        
-	        return returnVal;
-	    },
-	
-	    /*
-	        Replace queue with empty array
-	    */
-	    clear: function () {
-	        this.queue = [];
-	        this.index = 0;
-	    }
-	};
-	
-	module.exports = Queue;
-
-/***/ },
-/* 32 */
-/*!*********************************!*\
-  !*** ./src/action/processor.js ***!
-  \*********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    Process actions
-	*/
-	"use strict";
-	
-	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 41),
-	    routes = __webpack_require__(/*! ./routes.js */ 21),
-	    calc = __webpack_require__(/*! ../utils/calc.js */ 14),
-	    
-	    ANGLE_DISTANCE = 'angleAndDistance';
-	
-	module.exports = function (action, framestamp, frameDuration) {
-	    var props = action.props(),
-	        data = action.data(),
-	        values = action.values,
-	        rubix = Rubix[props.rubix],
-	        valueRubix = rubix,
-	        hasChanged = false,
-	        defaultRoute = routes.getName(),
-	        i = 0,
-	        order = props.order = props.order || [],
-	        orderLength = order.length,
-	        key = '', value, output;
-	    
-	    action.output = {
-	        values: {}
-	    };
-	    
-	    // Update elapsed
-	    if (rubix.updateInput) {
-	        rubix.updateInput(action, props, frameDuration);
-	    }
-	
-	    // Fire onStart if first frame
-	    if (action.firstFrame) {
-	        routes.onStart(action.output, action, values, props, data);
-	        
-	        action.firstFrame = false;
-	    }
-	    
-	    // Update Input if available
-	    if (props.input) {
-	        action.output.input = props.input.onFrame(framestamp);
-	    }
-	
-	    // Update values
-	    for (; i < orderLength; i++) {
-	        // Get value and key
-	        key = order[i];
-	        value = values[key];
-	
-	        // Load rubix for this value
-	        valueRubix = rubix;
-	        if (value.link) {
-	            valueRubix = (value.link !== ANGLE_DISTANCE) ? Rubix['link'] : Rubix[ANGLE_DISTANCE];
-	        }
-	
-	        // Calculate new value
-	        output = valueRubix.process(key, value, values, props, action, frameDuration);
-	        
-	        // Limit if range set
-	        if (valueRubix.limit) {
-	            output = valueRubix.limit(output, value);
-	        }
-	        
-	        // Round value if rounding set to true
-	        if (value.round) {
-	            output = Math.round(output);
-	        }
-	
-	        // Update change from previous frame
-	        value.frameChange = calc.difference(value.current, output);
-	        
-	        // Calculate velocity
-	        if (!valueRubix.calculatesVelocity) {
-	            value.velocity = calc.speedPerSecond(value.frameChange, frameDuration);
-	        }
-	        
-	        // Update current speed
-	        value.speed = Math.abs(value.velocity);
-	        
-	        // Check if changed and update
-	        if (value.current != output) {
-	            hasChanged = true;
-	        }
-	
-	        // Set current and add unit (if any) for output
-	        value.current = output;
-	        action.output[value.route] = action.output[value.route] || {};
-	        action.output[defaultRoute] = action.output[defaultRoute] || {};
-	        action.output[defaultRoute][key] = action.output[value.route][value.name] = (value.unit) ? output + value.unit : output;
-	    }
-	
-	    // shard onFrame and onChange
-	    routes.shard(function (route, output) {
-	        // Fire onFrame every frame
-	        if (route.onFrame) {
-	            route.onFrame(output, action, values, props, data);
-	        }
-	        
-	        // Fire onChanged if values have changed
-	        if (hasChanged && route.onChange) {
-	            route.onChange(output, action, values, props, data);
-	        }
-	    }, action.output);
-	
-	    // Fire onEnd if ended
-	    if (rubix.hasEnded(action, hasChanged)) {
-	        action.isActive(false);
-	
-	        routes.onEnd(action.output, action, values, props, data);
-	        
-	        if (!action.isActive() && props.rubix === 'play') {
-	            action.next();
-	        }
-	    }
-	    
-	    action.framestamp = framestamp;
-	};
-
-/***/ },
-/* 33 */
-/*!**************************************!*\
-  !*** ./src/defaults/action-props.js ***!
-  \**************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	    // [string]: What to use to process this aciton
-	    rubix: 'play',
-	    
-	    // [number]: Multiply output value by
-	    amp: 1,
-	    
-	    // [number]: Multiply output value outside min/max by
-	    escapeAmp: 0,
-	    
-	    // [number]: Delay this action by x ms
-	    delay: 0,
-	    
-	    // [number]: Time of animation (if animating) in ms
-	    duration: 400,
-	    
-	    // [string]: Ease animation
-	    ease: 'easeInOut',
-	    
-	    // [number]: Multiply progress by this (.5 is half speed)
-	    dilate: 1,
-	    
-	    // [number]: Number of frames of no change before Action is declared inactive
-	    maxInactiveFrames: 3,
-	    
-	    // [boolean || number]: Number of times to loop values, true for indefinite
-	    loop: false,
-	    
-	    // [boolean || number]: Number of times to yoyo values, true for indefinite
-	    yoyo: false,
-	    
-	    // [boolean || number]: Number of times to flip values, true for indefinite
-	    flip: false,
-	    
-	    // [function]: Callback when Action process starts
-	    onStart: undefined,
-	    
-	    // [function]: Callback when any value changes
-	    onChange: undefined,
-	    
-	    // [function]: Callback every frame
-	    onFrame: undefined,
-	    
-	    // [function]: Callback when Action process ends
-	    onEnd: undefined
-	};
-
-/***/ },
-/* 34 */
-/*!**************************************!*\
-  !*** ./src/defaults/action-state.js ***!
-  \**************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	    // [boolean]: True if Action is current active
-	    active: false,
-	    
-	    // [number]: Progress represented in a range of 0 - 1
-	    progress: 0,
-	    
-	    // [int]: Time elapsed in milliseconds
-	    elapsed: 0,
-	    
-	    // [int]: Number of frames Action has been inactive
-	    inactiveFrames: 0,
-	    
-	    // [int]: 1 = forward, -1 = backwards
-	    playDirection: 1,
-	    
-	    // [int]: Number of times values have been flipped
-	    flipCount: 0,
-	    
-	    // [int]: Number of times values have been looped
-	    loopCount: 0,
-	    
-	    // [int]: Number of times values have been yoyoed
-	    yoyoCount: 0
-	};
-
-/***/ },
-/* 35 */
-/*!**********************************!*\
-  !*** ./src/routes/css/styler.js ***!
-  \**********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var cssStyler = function () {
-		var testElement = document.getElementsByTagName('body')[0],
-			prefixes = ['Webkit','Moz','O','ms', ''],
-			prefixesLength = prefixes.length,
-			cache = {},
-			
-			/*
-				Test style property for prefixed version
-				
-				@param [string]: Style property
-				@return [string]: Cached property name
-			*/
-			testPrefix = function (key) {
-				cache[key] = key;
-	
-				for (var i = 0; i < prefixesLength; i++) {
-					var prefixed = prefixes[i] + key.charAt(0).toUpperCase() + key.slice(1);
-	
-					if (testElement.style.hasOwnProperty(prefixed)) {
-						cache[key] = prefixed;
-					}
-				}
-				
-				return cache[key];
-			};
-			
-		/*
-			Stylee function call
-			
-			Syntax
-				
-				Get property
-					style(element, 'property');
-					
-				Set property
-					style(element, {
-						foo: 'bar'
-					});
-		*/
-		return function (element, prop) {
-			// If prop is a string, we're requesting a property
-			if (typeof prop === 'string') {
-				return window.getComputedStyle(element, null)[cache[prop] || testPrefix(prop)];
-			
-			// If it's an object, we're setting
-			} else {
-				
-				for (var key in prop) {
-					if (prop.hasOwnProperty(key)) {
-						element.style[cache[key] || testPrefix(key)] = prop[key];
-					}
-				}
-				
-				return this;
-			}
-		}
-	};
-	
-	module.exports = new cssStyler();
-
-/***/ },
-/* 36 */
 /*!******************************!*\
   !*** ./src/utils/history.js ***!
   \******************************/
@@ -3774,7 +3085,7 @@
 	module.exports = History;
 
 /***/ },
-/* 37 */
+/* 29 */
 /*!********************************!*\
   !*** ./src/process/manager.js ***!
   \********************************/
@@ -3782,7 +3093,7 @@
 
 	"use strict";
 	
-	var theLoop = __webpack_require__(/*! ./loop.js */ 52),
+	var theLoop = __webpack_require__(/*! ./loop.js */ 49),
 	    ProcessManager = function () {
 	        this.all = {};
 	        this.active = [];
@@ -3950,6 +3261,712 @@
 	};
 	
 	module.exports = new ProcessManager();
+
+/***/ },
+/* 30 */
+/*!**********************************!*\
+  !*** ./src/action/parse-args.js ***!
+  \**********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 20),
+	    presets = __webpack_require__(/*! ./presets.js */ 18),
+	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 50),
+	
+	    STRING = 'string',
+	    NUMBER = 'number',
+	    OBJECT = 'object',
+	    
+	    /*
+	        Generic argument parsing
+	        
+	        Checks first argument to be a string and loads preset,
+	        merges in next object as override
+	    */
+	    generic = function () {
+	        var props = {},
+	            playlist = [],
+	            base = arguments[0],
+	            override = arguments[1],
+	            playlistLength = 0,
+	            argsAsArray = [].slice.call(arguments),
+	            i = 1;
+	
+	        if (typeof base == STRING) {
+	            playlist = base.split(' ');
+	            playlistLength = playlist.length;
+	            props = presets.getDefined(playlist[0]);
+	
+	            // If we've had multiple presets, loop through and add each to the queue
+	            if (playlistLength > 1) {
+	                for (; i < playlistLength; i++) {
+	                    argsAsArray.shift();
+	                    argsAsArray.unshift(playlist[i]);
+	                    this.queue.add.apply(this.queue, argsAsArray);
+	                }
+	            }
+	            
+	            if (typeof override == OBJECT) {
+	                props = utils.merge(props, override);
+	            }
+	        // If object, assign directly
+	        } else if (typeof base == OBJECT) {
+	            props = base;
+	
+	            if (this.isActive()) {
+	                this.queue.add.apply(this.queue, argsAsArray);
+	            }
+	        }
+	        
+	        props.playDirection = 1;
+	        
+	        return props;
+	    };
+	
+	module.exports = {
+	    
+	    /*
+	        Parse play arguments
+	        
+	        Syntax
+	            .play(preset [,override, duration, easing, onEnd])
+	            .play(properties [, duration, easing, onEnd])
+	    */
+	    play: function () {
+	        var props = generic.apply(this, arguments),
+	            argsLength = arguments.length,
+	            i = 0,
+	            arg,
+	            typeofArg = '';
+	        
+	        // Play specific properties
+	        props.loopCount = props.yoyoCount = props.flipCount = 0;
+	        
+	        for (; i < argsLength; i++) {
+	            arg = arguments[i];
+	            typeofArg = typeof arg;
+	            
+	            // Easing if string and not first index
+	            if (typeofArg == STRING && i !== 0) {
+	                props.ease = arg;
+	            
+	            // Duration if number
+	            } else if (typeofArg == NUMBER) {
+	                props.duration = arg;
+	                
+	            // Callback if function
+	            } else if (utils.isFunc(arg)) {
+	                props.onEnd = arg;
+	            }
+	        }
+	
+	        return props;
+	    },
+	    
+	    /*
+	        Parse track arguments
+	        
+	        Syntax
+	            .track(preset [, override], event/Input)
+	            .track(properties, event/Input)
+	    */
+	    track: function () {
+	        var props = {},
+	            argsLength = arguments.length,
+	            inputIndex = argsLength - 1,
+	            input = arguments[inputIndex];
+	        
+	        // Loop until inputIndex
+	        for (var i = 0; i < inputIndex; i++) {
+	            
+	            // Preset if string
+	            if (typeof arguments[i] === STRING) {
+	                props = presets.getDefined(arguments[i]);
+	                
+	            // Or override
+	            } else {
+	                props = utils.merge(props, arguments[i]);
+	            }
+	        }
+	        
+	        // Create Pointer if this isn't an Input
+	        input = (!input.current) ? new Pointer(input) : input;
+	        
+	        // Append input
+	        props.input = input;
+	        props.inputOrigin = input.get();
+	        
+	        return props;
+	    },
+	    
+	    generic: generic
+	};
+
+/***/ },
+/* 31 */
+/*!****************************!*\
+  !*** ./src/types/value.js ***!
+  \****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var defaultProps = __webpack_require__(/*! ../defaults/value-props.js */ 40),
+	    defaultState = __webpack_require__(/*! ../defaults/value-state.js */ 51),
+	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 52),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
+	
+	    CURRENT = 'current',
+	    ORIGIN = 'origin',
+	    FORCE_NUMBER = [CURRENT, ORIGIN, 'to', 'start'],
+	    
+	    /*
+	        Parse setter arguments
+	    */
+	    parseSetArgs = function (arg0, arg1) {
+	        var newProps = {};
+	
+	        // If we've just got a value, set default
+	        if (arguments.length === 1) {
+	            newProps[CURRENT] = arg0;
+	            
+	        // Or we've got key/value args
+	        } else {
+	            newProps[arg0] = arg1;
+	        }
+	        
+	        return newProps;
+	    },
+	
+	    /*
+	        Value constructor
+	    */
+	    Value = function (key, props, inherit, action) {
+	        this.key = key;
+	        this.action = action;
+	        this.scope = action.getProp('scope');
+	
+	        if (props.start) {
+	            props.current = props.start;
+	        }
+	
+	        this._set(defaultProps);
+	        this._set(defaultState);
+	        this.set(props, inherit);
+	    };
+	    
+	Value.prototype = {
+	
+	    /*
+	        Set value properties
+	        
+	        Syntax
+	            .set('key', value) // Set specific value
+	            .set({ key: value }) // Set multiple values
+	            .set({ key: value }, { key: value2 }) // Set multiple with inherit
+	            .set(value) // Set .current
+	    */
+	    set: function () {
+	        this._set.apply(this, arguments);
+	        
+	        // Update Action value process order
+	        this.action.updateOrder(this.key, utils.isString(this.link));
+	        
+	        return this;
+	    },
+	    
+	    /*
+	        Internal setter, doesn't update order
+	    */
+	    _set: function () {
+	        var multiVal = utils.isObj(arguments[0]),
+	            newProps = multiVal ? arguments[0] : parseSetArgs.apply(self, arguments),
+	            inherit = multiVal ? arguments[1] : false,
+	            toSet = {},
+	            key = '';
+	        
+	        // Deal with inherited values first
+	        if (inherit) {
+	            for (key in inherit) {
+	                // Check this is a Value, not Action property
+	                if (defaultProps.hasOwnProperty(key)) {
+	                    toSet[key] = inherit[key];
+	                }
+	            }
+	        }
+	        
+	        // Loop through all properties and set
+	        for (key in newProps) {
+	            toSet[key] = newProps[key];
+	        }
+	        
+	        // Loop through collected values and set
+	        for (key in toSet) {
+	            this[key] = resolve(toSet[key], this[key], this, this.scope);
+	                
+	            if (FORCE_NUMBER.indexOf(key) > -1) {
+	                this[key] = parseFloat(this[key]);
+	            }
+	            
+	            if (key === 'to') {
+	                this.target = this.to;
+	            }
+	        }
+	        
+	        // Set hasRange to true if min and max are numbers
+	        this.hasRange = (utils.isNum(this.min) && utils.isNum(this.max)) ? true : false;
+	        
+	        return this;
+	    },
+	    
+	    /*
+	        Set current value to origin
+	    */
+	    reset: function () {
+	        this._set('to', this.target);
+	        return this._set(CURRENT, this[ORIGIN]);
+	    },
+	    
+	    /*
+	        Reset properties to defaults
+	    */
+	    resetProps: function () {
+	        this.set(defaultProps);
+	    },
+	    
+	    /*
+	        Swap current target and origin
+	    */
+	    flip: function () {
+	        var newTo = this[ORIGIN],
+	            newOrigin = (this.target !== undefined) ? this.target : this[CURRENT];
+	
+	        return this.set({
+	            to: newTo,
+	            origin: newOrigin
+	        });
+	    },
+	    
+	    retarget: function (target) {
+	        target = (target !== undefined) ? target : this.target;
+	        return this.set('to', target);
+	    }
+	};
+	
+	module.exports = Value;
+
+/***/ },
+/* 32 */
+/*!***************************!*\
+  !*** ./src/types/repo.js ***!
+  \***************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 20),
+	
+	    /*
+	        Get data with specified key
+	        
+	        @param [string]: Name of property to access
+	        @returns [var]: Data found
+	    */
+	    get = function (key) {
+	        return (key !== undefined) ? this[key] : this;
+	    },
+	            
+	    /*
+	        Set data either has object or key/value pair
+	        
+	        Syntax
+	            .set(data)
+	                @param [object]: Data to store
+	                
+	            .set(key, value)
+	                @param [string]: Name of data
+	                @param [val]: Data to store
+	    */
+	    set = function (data, prop) {
+	        var multiArg = (arguments.length > 1),
+	            toSet = multiArg ? {} : data,
+	            key = '';
+	        
+	        // If this is a key/value setter, add to toSet
+	        if (multiArg) {
+	            toSet[data] = prop;
+	        }
+	        
+	        // Loop over toSet and assign to our data store
+	        for (key in toSet) {
+	            if (toSet.hasOwnProperty(key)) {
+	                this[key] = toSet[key];
+	            }
+	        }
+	    },
+	
+	    /*
+	        Repo class
+	    */
+	    Repo = function (context) {
+	        var store = {};
+	
+	        /*
+	            Determine whether call is getter or setter
+	        */
+	        return function () {
+	            var argsLength = arguments.length;
+	
+	            // If this is a getter, return value
+	            if ((!argsLength || (argsLength === 1 && utils.isString(arguments[0])))) {
+	                return get.apply(store, arguments);
+	
+	            // Or this is a setter, return this
+	            } else {
+	                set.apply(store, arguments);
+	                return context;
+	            }
+	        };
+	    };
+	
+	module.exports = Repo;
+
+/***/ },
+/* 33 */
+/*!*****************************!*\
+  !*** ./src/action/queue.js ***!
+  \*****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var Queue = function () {
+	        this.clear();
+	    };
+	
+	Queue.prototype = {
+	    
+	    /*
+	        Add a set of arguments to queue
+	    */
+	    add: function () {
+	        this.queue.push([].slice.call(arguments));
+	    },
+	    
+	    /*
+	        Get next set of arguments from queue
+	    */
+	    next: function (direction) {
+	        var queue = this.queue,
+	            returnVal = false,
+	            index = this.index;
+	            
+	        direction = (arguments.length) ? direction : 1;
+	        
+	        // If our index is between 0 and the queue length, return that item
+	        if (index >= 0 && index < queue.length) {
+	            returnVal = queue[index];
+	            this.index = index + direction;
+	        
+	        // Or clear
+	        } else {
+	            this.clear();
+	        }
+	        
+	        return returnVal;
+	    },
+	
+	    /*
+	        Replace queue with empty array
+	    */
+	    clear: function () {
+	        this.queue = [];
+	        this.index = 0;
+	    }
+	};
+	
+	module.exports = Queue;
+
+/***/ },
+/* 34 */
+/*!*********************************!*\
+  !*** ./src/action/processor.js ***!
+  \*********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Process actions
+	*/
+	"use strict";
+	
+	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 42),
+	    routes = __webpack_require__(/*! ./routes.js */ 21),
+	    calc = __webpack_require__(/*! ../utils/calc.js */ 14),
+	    
+	    ANGLE_DISTANCE = 'angleAndDistance';
+	
+	module.exports = function (action, framestamp, frameDuration) {
+	    var props = action.props(),
+	        data = action.data(),
+	        values = action.values,
+	        rubix = Rubix[props.rubix],
+	        valueRubix = rubix,
+	        hasChanged = false,
+	        defaultRoute = routes.getName(),
+	        i = 0,
+	        order = props.order = props.order || [],
+	        orderLength = order.length,
+	        key = '', value, output;
+	    
+	    // Update elapsed
+	    if (rubix.updateInput) {
+	        rubix.updateInput(action, props, frameDuration);
+	    }
+	
+	    // Fire onStart if first frame
+	    if (action.firstFrame) {
+	        routes.onStart(action.output, action, values, props, data);
+	        
+	        action.firstFrame = false;
+	    }
+	    
+	    // Update Input if available
+	    if (props.input) {
+	        action.output.input = props.input.onFrame(framestamp);
+	    }
+	
+	    // Update values
+	    for (; i < orderLength; i++) {
+	        // Get value and key
+	        key = order[i];
+	        value = values[key];
+	
+	        // Load rubix for this value
+	        valueRubix = rubix;
+	        if (value.link) {
+	            valueRubix = (value.link !== ANGLE_DISTANCE) ? Rubix['link'] : Rubix[ANGLE_DISTANCE];
+	        }
+	
+	        // Calculate new value
+	        output = valueRubix.process(key, value, values, props, action, frameDuration);
+	        
+	        // Limit if range set
+	        if (valueRubix.limit) {
+	            output = valueRubix.limit(output, value);
+	        }
+	        
+	        // Round value if rounding set to true
+	        if (value.round) {
+	            output = Math.round(output);
+	        }
+	
+	        // Update change from previous frame
+	        value.frameChange = calc.difference(value.current, output);
+	        
+	        // Calculate velocity
+	        if (!valueRubix.calculatesVelocity) {
+	            value.velocity = calc.speedPerSecond(value.frameChange, frameDuration);
+	        }
+	        
+	        // Update current speed
+	        value.speed = Math.abs(value.velocity);
+	        
+	        // Check if changed and update
+	        if (value.current != output) {
+	            hasChanged = true;
+	        }
+	
+	        // Set current and add unit (if any) for output
+	        value.current = output;
+	        action.output[value.route] = action.output[value.route] || {};
+	        action.output[defaultRoute] = action.output[defaultRoute] || {};
+	        action.output[defaultRoute][key] = action.output[value.route][value.name] = (value.unit) ? output + value.unit : output;
+	    }
+	
+	    // shard onFrame and onChange
+	    routes.shard(function (route, output) {
+	        // Fire onFrame every frame
+	        if (route.onFrame) {
+	            route.onFrame(output, action, values, props, data);
+	        }
+	        
+	        // Fire onChanged if values have changed
+	        if (hasChanged && route.onChange) {
+	            route.onChange(output, action, values, props, data);
+	        }
+	    }, action.output);
+	
+	    // Fire onEnd if ended
+	    if (rubix.hasEnded(action, hasChanged)) {
+	        action.isActive(false);
+	
+	        routes.onEnd(action.output, action, values, props, data);
+	        
+	        if (!action.isActive() && props.rubix === 'play') {
+	            action.next();
+	        }
+	    }
+	    
+	    action.framestamp = framestamp;
+	};
+
+/***/ },
+/* 35 */
+/*!**************************************!*\
+  !*** ./src/defaults/action-props.js ***!
+  \**************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	    // [string]: What to use to process this aciton
+	    rubix: 'play',
+	    
+	    // [number]: Multiply output value by
+	    amp: 1,
+	    
+	    // [number]: Multiply output value outside min/max by
+	    escapeAmp: 0,
+	    
+	    // [number]: Delay this action by x ms
+	    delay: 0,
+	    
+	    // [number]: Time of animation (if animating) in ms
+	    duration: 400,
+	    
+	    // [string]: Ease animation
+	    ease: 'easeInOut',
+	    
+	    // [number]: Multiply progress by this (.5 is half speed)
+	    dilate: 1,
+	    
+	    // [number]: Number of frames of no change before Action is declared inactive
+	    maxInactiveFrames: 3,
+	    
+	    // [boolean || number]: Number of times to loop values, true for indefinite
+	    loop: false,
+	    
+	    // [boolean || number]: Number of times to yoyo values, true for indefinite
+	    yoyo: false,
+	    
+	    // [boolean || number]: Number of times to flip values, true for indefinite
+	    flip: false,
+	    
+	    // [function]: Callback when Action process starts
+	    onStart: undefined,
+	    
+	    // [function]: Callback when any value changes
+	    onChange: undefined,
+	    
+	    // [function]: Callback every frame
+	    onFrame: undefined,
+	    
+	    // [function]: Callback when Action process ends
+	    onEnd: undefined
+	};
+
+/***/ },
+/* 36 */
+/*!**************************************!*\
+  !*** ./src/defaults/action-state.js ***!
+  \**************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	    // [boolean]: True if Action is current active
+	    active: false,
+	    
+	    // [number]: Progress represented in a range of 0 - 1
+	    progress: 0,
+	    
+	    // [int]: Time elapsed in milliseconds
+	    elapsed: 0,
+	    
+	    // [int]: Number of frames Action has been inactive
+	    inactiveFrames: 0,
+	    
+	    // [int]: 1 = forward, -1 = backwards
+	    playDirection: 1,
+	    
+	    // [int]: Number of times values have been flipped
+	    flipCount: 0,
+	    
+	    // [int]: Number of times values have been looped
+	    loopCount: 0,
+	    
+	    // [int]: Number of times values have been yoyoed
+	    yoyoCount: 0
+	};
+
+/***/ },
+/* 37 */
+/*!**********************************!*\
+  !*** ./src/routes/css/styler.js ***!
+  \**********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var cssStyler = function () {
+		var testElement = document.getElementsByTagName('body')[0],
+			prefixes = ['Webkit','Moz','O','ms', ''],
+			prefixesLength = prefixes.length,
+			cache = {},
+			
+			/*
+				Test style property for prefixed version
+				
+				@param [string]: Style property
+				@return [string]: Cached property name
+			*/
+			testPrefix = function (key) {
+				cache[key] = key;
+	
+				for (var i = 0; i < prefixesLength; i++) {
+					var prefixed = prefixes[i] + key.charAt(0).toUpperCase() + key.slice(1);
+	
+					if (testElement.style.hasOwnProperty(prefixed)) {
+						cache[key] = prefixed;
+					}
+				}
+				
+				return cache[key];
+			};
+			
+		/*
+			Stylee function call
+			
+			Syntax
+				
+				Get property
+					style(element, 'property');
+					
+				Set property
+					style(element, {
+						foo: 'bar'
+					});
+		*/
+		return function (element, prop) {
+			// If prop is a string, we're requesting a property
+			if (typeof prop === 'string') {
+				return window.getComputedStyle(element, null)[cache[prop] || testPrefix(prop)];
+			
+			// If it's an object, we're setting
+			} else {
+				
+				for (var key in prop) {
+					if (prop.hasOwnProperty(key)) {
+						element.style[cache[key] || testPrefix(key)] = prop[key];
+					}
+				}
+				
+				return this;
+			}
+		}
+	};
+	
+	module.exports = new cssStyler();
 
 /***/ },
 /* 38 */
@@ -4128,6 +4145,15 @@
 
 /***/ },
 /* 39 */
+/*!****************************!*\
+  !*** ./src/core/routes.js ***!
+  \****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {};
+
+/***/ },
+/* 40 */
 /*!*************************************!*\
   !*** ./src/defaults/value-props.js ***!
   \*************************************/
@@ -4199,7 +4225,7 @@
 	    bounce: 0,
 	    
 	    // [number]: Spring strength during 'string'
-	    spring: 0.03,
+	    spring: 80,
 	    
 	    // [number]: Timeconstant of glide
 	    timeConstant: 395,
@@ -4211,7 +4237,7 @@
 	    capture: false,
 	    
 	    // [number]: Friction to apply per frame
-	    friction: 5,
+	    friction: 0.05,
 	
 	    /*
 	        .play() properties
@@ -4244,73 +4270,7 @@
 	};
 
 /***/ },
-/* 40 */
-/*!****************************!*\
-  !*** ./src/core/routes.js ***!
-  \****************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {};
-
-/***/ },
 /* 41 */
-/*!***************************!*\
-  !*** ./src/core/rubix.js ***!
-  \***************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    Anatomy of a Rubix:
-	    
-	        Props
-	            createMethod [boolean]:
-	                If true, will create Action shorthand method 
-	                with the name of the rubix, ie .play()
-	
-	            calculatesVelocity [boolean]:
-	                Set to true if your Rubix will calculate
-	                the new Value velocity (otherwise Redshift may override it)
-	                
-	        Methods
-	            updateInput
-	                Run once per frame, before Values are processed. .play uses this
-	                to update the timer, .track uses it to check the input device.
-	
-	                @param [Action]: The Action being processed
-	                @param [object]: Action properties
-	                @param [int]: Duration since the last frame in milliseconds
-	            
-	            process (required)
-	                Run once for every Action value, this method returns the latest value
-	
-	                @param [string]: Name of value being processed
-	                @param [Value]: Value being processed
-	                @param [object]: Action values
-	                @param [object]: Action properties
-	                @param [Action]: Action
-	                @param [int]: Duration since the last frame in milliseconds
-	                @return [int]: Latest value
-	                
-	            limit
-	                Run once for every Action value, this can be used to limit the value
-	                within any parameters
-	                
-	                @param [int]: Value returned from process method
-	                @param [Value]: Value being processed
-	                @return [int]: Latest value
-	                
-	            hasEnded (required)
-	                Returns true if this current Action has ended. Redshift will
-	                then check the Action's queue or yoyo/loop properties to decide
-	                what action to take next
-	                
-	                @param [Action]: Action being processed
-	                @param [boolean]: True if any value has changed
-	*/            
-	module.exports = {};
-
-/***/ },
-/* 42 */
 /*!*********************************!*\
   !*** ./src/core/simulations.js ***!
   \*********************************/
@@ -4419,7 +4379,84 @@
 	};
 
 /***/ },
+/* 42 */
+/*!***************************!*\
+  !*** ./src/core/rubix.js ***!
+  \***************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Anatomy of a Rubix:
+	    
+	        Props
+	            createMethod [boolean]:
+	                If true, will create Action shorthand method 
+	                with the name of the rubix, ie .play()
+	
+	            calculatesVelocity [boolean]:
+	                Set to true if your Rubix will calculate
+	                the new Value velocity (otherwise Redshift may override it)
+	                
+	        Methods
+	            updateInput
+	                Run once per frame, before Values are processed. .play uses this
+	                to update the timer, .track uses it to check the input device.
+	
+	                @param [Action]: The Action being processed
+	                @param [object]: Action properties
+	                @param [int]: Duration since the last frame in milliseconds
+	            
+	            process (required)
+	                Run once for every Action value, this method returns the latest value
+	
+	                @param [string]: Name of value being processed
+	                @param [Value]: Value being processed
+	                @param [object]: Action values
+	                @param [object]: Action properties
+	                @param [Action]: Action
+	                @param [int]: Duration since the last frame in milliseconds
+	                @return [int]: Latest value
+	                
+	            limit
+	                Run once for every Action value, this can be used to limit the value
+	                within any parameters
+	                
+	                @param [int]: Value returned from process method
+	                @param [Value]: Value being processed
+	                @return [int]: Latest value
+	                
+	            hasEnded (required)
+	                Returns true if this current Action has ended. Redshift will
+	                then check the Action's queue or yoyo/loop properties to decide
+	                what action to take next
+	                
+	                @param [Action]: Action being processed
+	                @param [boolean]: True if any value has changed
+	*/            
+	module.exports = {};
+
+/***/ },
 /* 43 */
+/*!***********************************!*\
+  !*** ./src/routes/path/lookup.js ***!
+  \***********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	var STROKE = 'stroke',
+	    DASH = STROKE + '-dash', // stoke-width
+	    DASH_ARRAY = DASH + 'array'
+	
+	module.exports = {
+	    opacity: STROKE + '-opacity',
+	    width: STROKE + '-width',
+	    offset: DASH + 'offset',
+	    length: DASH_ARRAY,
+	    spacing: DASH_ARRAY,
+	    miterlimit: STROKE + '-miterlimit'
+	};
+
+/***/ },
+/* 44 */
 /*!**************************************!*\
   !*** ./src/routes/css/dictionary.js ***!
   \**************************************/
@@ -4473,7 +4510,7 @@
 	module.exports = terms;
 
 /***/ },
-/* 44 */
+/* 45 */
 /*!*************************************!*\
   !*** ./src/routes/css/templates.js ***!
   \*************************************/
@@ -4481,7 +4518,7 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 43),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 44),
 	
 	    defaultValues = {
 	        Alpha: 1
@@ -4549,7 +4586,7 @@
 	module.exports = templates;
 
 /***/ },
-/* 45 */
+/* 46 */
 /*!**********************************!*\
   !*** ./src/routes/css/lookup.js ***!
   \**********************************/
@@ -4597,7 +4634,7 @@
 	};
 
 /***/ },
-/* 46 */
+/* 47 */
 /*!********************************************!*\
   !*** ./src/routes/css/default-property.js ***!
   \********************************************/
@@ -4648,7 +4685,7 @@
 	module.exports = defaults;
 
 /***/ },
-/* 47 */
+/* 48 */
 /*!*************************************!*\
   !*** ./src/routes/css/splitters.js ***!
   \*************************************/
@@ -4656,7 +4693,7 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 43),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 44),
 	    utils = __webpack_require__(/*! ../../utils/utils.js */ 20),
 	
 	    /*
@@ -4887,203 +4924,7 @@
 	module.exports = splitters;
 
 /***/ },
-/* 48 */
-/*!***********************************!*\
-  !*** ./src/routes/path/lookup.js ***!
-  \***********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	var STROKE = 'stroke',
-	    DASH = STROKE + '-dash', // stoke-width
-	    DASH_ARRAY = DASH + 'array'
-	
-	module.exports = {
-	    opacity: STROKE + '-opacity',
-	    width: STROKE + '-width',
-	    offset: DASH + 'offset',
-	    length: DASH_ARRAY,
-	    spacing: DASH_ARRAY,
-	    miterlimit: STROKE + '-miterlimit'
-	};
-
-/***/ },
 /* 49 */
-/*!******************************!*\
-  !*** ./src/input/pointer.js ***!
-  \******************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var Input = __webpack_require__(/*! ./input.js */ 16),
-	    currentPointer, // Sort this out for multitouch
-	    
-	    TOUCHMOVE = 'touchmove',
-	    MOUSEMOVE = 'mousemove',
-	    
-	    doc = document.documentElement,
-	
-	    /*
-	        Convert event into point
-	        
-	        Scrape the x/y coordinates from the provided event
-	        
-	        @param [event]: Original pointer event
-	        @param [boolean]: True if touch event
-	        @return [object]: x/y coordinates of event
-	    */
-	    eventToPoint = function (event, isTouchEvent) {
-	        var touchChanged = isTouchEvent ? event.changedTouches[0] : false;
-	        
-	        return {
-	            x: touchChanged ? touchChanged.clientX : event.screenX,
-	            y: touchChanged ? touchChanged.clientY : event.screenY
-	        }
-	    },
-	    
-	    /*
-	        Get actual event
-	        
-	        Checks for jQuery's .originalEvent if present
-	        
-	        @param [event | jQuery event]
-	        @return [event]: The actual JS event  
-	    */
-	    getActualEvent = function (event) {
-	        return event.originalEvent || event;
-	    },
-	
-	    
-	    /*
-	        Pointer constructor
-	    */
-	    Pointer = function (e) {
-	        var event = getActualEvent(e), // In case of jQuery event
-	            isTouch = (event.touches) ? true : false,
-	            startPoint = eventToPoint(event, isTouch);
-	        
-	        this.update(startPoint);
-	        this.isTouch = isTouch;
-	        this.bindEvents();
-	    },
-	    
-	    proto = Pointer.prototype = new Input();
-	
-	/*
-	    Bind move event
-	*/
-	proto.bindEvents = function () {
-	    this.moveEvent = this.isTouch ? TOUCHMOVE : MOUSEMOVE;
-	    
-	    currentPointer = this;
-	    
-	    doc.addEventListener(this.moveEvent, this.onMove);
-	};
-	
-	/*
-	    Unbind move event
-	*/
-	proto.unbindEvents = function () {
-	    doc.removeEventListener(this.moveEvent, this.onMove);
-	};
-	
-	/*
-	    Pointer onMove event handler
-	    
-	    @param [event]: Pointer move event
-	*/
-	proto.onMove = function (e) {
-	    var newPoint = eventToPoint(e, currentPointer.isTouch);
-	    e = getActualEvent(e);
-	    e.preventDefault();
-	    currentPointer.update(newPoint);
-	};
-	
-	proto.stop = function () {
-	    this.unbindEvents();
-	};
-	
-	module.exports = Pointer;
-
-/***/ },
-/* 50 */
-/*!*************************************!*\
-  !*** ./src/defaults/value-state.js ***!
-  \*************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	    // [number]: Current value
-	    current: 0,
-	    
-	    // [number]: Change per second
-	    speed: 0,
-	    
-	    // [number]: Change per second plus direction (ie can be negative)
-	    velocity: 0,
-	    
-	    // [number]: Amount value has changed in the most recent frame
-	    frameChange: 0
-	};
-
-/***/ },
-/* 51 */
-/*!******************************!*\
-  !*** ./src/utils/resolve.js ***!
-  \******************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    Property resolver
-	    -------------------------------------
-	    
-	    Checks if a property being set is
-	        a) a function
-	        b) a relative value
-	        c) a value as a unit
-	    and returns the resolved value
-	        
-	    @param [number || string || function]: New property value
-	    @param [number || string] (optional): Current property value
-	    @param [object] (optional): Parent property
-	    @param [object] (optional): Scope to resolve first argument if provided
-	    @returns [number || string]: Resolved value
-	*/
-	"use strict";
-	
-	var calc = __webpack_require__(/*! ./calc.js */ 14),
-	    utils = __webpack_require__(/*! ./utils.js */ 20);
-	
-	module.exports = function (newValue, currentValue, parent, scope) {
-	    var splitValueUnit = {};
-	    
-	    currentValue = currentValue || 0;
-	
-	    // Run function if this is a function
-	    if (typeof newValue == 'function') {
-	        newValue = newValue.call(scope, currentValue);
-	    }
-	    
-	    // Check if value is relative ie '+=10' - could have been returned from function
-	    if (newValue && newValue.indexOf && newValue.indexOf('=') > 0) {
-	        newValue = calc.relativeValue(currentValue, newValue);
-	    }
-	    
-	    // If value is still string it might have a unit property
-	    if (typeof newValue === 'string') {
-	        splitValueUnit = utils.splitValUnit(newValue);
-	
-	        if (!isNaN(splitValueUnit.value)) {
-	            newValue = splitValueUnit.value;
-	            parent.unit = splitValueUnit.unit;
-	        }
-	    }
-	
-	    return newValue;
-	};
-
-/***/ },
-/* 52 */
 /*!*****************************!*\
   !*** ./src/process/loop.js ***!
   \*****************************/
@@ -5157,6 +4998,180 @@
 	};
 	
 	module.exports = new Loop();
+
+/***/ },
+/* 50 */
+/*!******************************!*\
+  !*** ./src/input/pointer.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var Input = __webpack_require__(/*! ./input.js */ 16),
+	    currentPointer, // Sort this out for multitouch
+	    
+	    TOUCHMOVE = 'touchmove',
+	    MOUSEMOVE = 'mousemove',
+	
+	    /*
+	        Convert event into point
+	        
+	        Scrape the x/y coordinates from the provided event
+	        
+	        @param [event]: Original pointer event
+	        @param [boolean]: True if touch event
+	        @return [object]: x/y coordinates of event
+	    */
+	    eventToPoint = function (event, isTouchEvent) {
+	        var touchChanged = isTouchEvent ? event.changedTouches[0] : false;
+	        
+	        return {
+	            x: touchChanged ? touchChanged.clientX : event.screenX,
+	            y: touchChanged ? touchChanged.clientY : event.screenY
+	        }
+	    },
+	    
+	    /*
+	        Get actual event
+	        
+	        Checks for jQuery's .originalEvent if present
+	        
+	        @param [event | jQuery event]
+	        @return [event]: The actual JS event  
+	    */
+	    getActualEvent = function (event) {
+	        return event.originalEvent || event;
+	    },
+	
+	    
+	    /*
+	        Pointer constructor
+	    */
+	    Pointer = function (e) {
+	        var event = getActualEvent(e), // In case of jQuery event
+	            isTouch = (event.touches) ? true : false,
+	            startPoint = eventToPoint(event, isTouch);
+	        
+	        this.update(startPoint);
+	        this.isTouch = isTouch;
+	        this.bindEvents();
+	    },
+	    
+	    proto = Pointer.prototype = new Input();
+	
+	/*
+	    Bind move event
+	*/
+	proto.bindEvents = function () {
+	    this.moveEvent = this.isTouch ? TOUCHMOVE : MOUSEMOVE;
+	    
+	    currentPointer = this;
+	    
+	    document.documentElement.addEventListener(this.moveEvent, this.onMove);
+	};
+	
+	/*
+	    Unbind move event
+	*/
+	proto.unbindEvents = function () {
+	    document.documentElement.removeEventListener(this.moveEvent, this.onMove);
+	};
+	
+	/*
+	    Pointer onMove event handler
+	    
+	    @param [event]: Pointer move event
+	*/
+	proto.onMove = function (e) {
+	    var newPoint = eventToPoint(e, currentPointer.isTouch);
+	    e = getActualEvent(e);
+	    e.preventDefault();
+	    currentPointer.update(newPoint);
+	};
+	
+	proto.stop = function () {
+	    this.unbindEvents();
+	};
+	
+	module.exports = Pointer;
+
+/***/ },
+/* 51 */
+/*!*************************************!*\
+  !*** ./src/defaults/value-state.js ***!
+  \*************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	    // [number]: Current value
+	    current: 0,
+	    
+	    // [number]: Change per second
+	    speed: 0,
+	    
+	    // [number]: Change per second plus direction (ie can be negative)
+	    velocity: 0,
+	    
+	    // [number]: Amount value has changed in the most recent frame
+	    frameChange: 0
+	};
+
+/***/ },
+/* 52 */
+/*!******************************!*\
+  !*** ./src/utils/resolve.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Property resolver
+	    -------------------------------------
+	    
+	    Checks if a property being set is
+	        a) a function
+	        b) a relative value
+	        c) a value as a unit
+	    and returns the resolved value
+	        
+	    @param [number || string || function]: New property value
+	    @param [number || string] (optional): Current property value
+	    @param [object] (optional): Parent property
+	    @param [object] (optional): Scope to resolve first argument if provided
+	    @returns [number || string]: Resolved value
+	*/
+	"use strict";
+	
+	var calc = __webpack_require__(/*! ./calc.js */ 14),
+	    utils = __webpack_require__(/*! ./utils.js */ 20);
+	
+	module.exports = function (newValue, currentValue, parent, scope) {
+	    var splitValueUnit = {};
+	    
+	    currentValue = currentValue || 0;
+	
+	    // Run function if this is a function
+	    if (typeof newValue == 'function') {
+	        newValue = newValue.call(scope, currentValue);
+	    }
+	    
+	    // Check if value is relative ie '+=10' - could have been returned from function
+	    if (newValue && newValue.indexOf && newValue.indexOf('=') > 0) {
+	        newValue = calc.relativeValue(currentValue, newValue);
+	    }
+	    
+	    // If value is still string it might have a unit property
+	    if (typeof newValue === 'string') {
+	        splitValueUnit = utils.splitValUnit(newValue);
+	
+	        if (!isNaN(splitValueUnit.value)) {
+	            newValue = splitValueUnit.value;
+	            parent.unit = splitValueUnit.unit;
+	        }
+	    }
+	
+	    return newValue;
+	};
 
 /***/ },
 /* 53 */
