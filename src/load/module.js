@@ -4,7 +4,6 @@ var redshift = require('../redshift.js');
 
 redshift
     // Add default Rubix processor modules
-    .addRubix('angleAndDistance',   require('../rubix/angle-distance.js'))
     .addRubix('fire',               require('../rubix/fire.js'))
     .addRubix('link',               require('../rubix/link.js'))
     .addRubix('play',               require('../rubix/play.js'))

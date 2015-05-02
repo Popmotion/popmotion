@@ -19,8 +19,8 @@ var Input = require('./input.js'),
         var touchChanged = isTouchEvent ? event.changedTouches[0] : false;
         
         return {
-            x: touchChanged ? touchChanged.clientX : event.screenX,
-            y: touchChanged ? touchChanged.clientY : event.screenY
+            x: touchChanged ? touchChanged.clientX : event.pageX,
+            y: touchChanged ? touchChanged.clientY : event.pageY
         }
     },
     

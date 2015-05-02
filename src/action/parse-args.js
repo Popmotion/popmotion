@@ -125,7 +125,10 @@ module.exports = {
         
         // Append input
         props.input = input;
-        props.inputOrigin = input.get();
+
+        if (!props.inputOrigin) {
+            props.inputOrigin = input.get();
+        }
         
         return props;
     },

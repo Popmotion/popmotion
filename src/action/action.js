@@ -12,7 +12,6 @@ var parseArgs = require('./parse-args.js'),
     calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
     styler = require('../routes/css/styler.js'),
-    linkToAngleDistance = { link: 'AngleAndDistance' },
 
     namespace = function (key, space) {
         return (space && space !== routes.defaultRoute) ? key + '.' + space : key;
@@ -141,12 +140,6 @@ Action.prototype = {
                 }
             }
         }, props);
-        
-        // Create radialX and radialY if we're tracking angle and distance
-        if (values['angle'] && values['distance']) {
-            self.setValue('radialX', linkToAngleDistance)
-                .setValue('radialY', linkToAngleDistance);
-        }
         
         self.resetOrigins();
 

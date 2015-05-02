@@ -62,7 +62,6 @@
 	
 	redshift
 	    // Add default Rubix processor modules
-	    .addRubix('angleAndDistance',   __webpack_require__(/*! ../rubix/angle-distance.js */ 3))
 	    .addRubix('fire',               __webpack_require__(/*! ../rubix/fire.js */ 4))
 	    .addRubix('link',               __webpack_require__(/*! ../rubix/link.js */ 5))
 	    .addRubix('play',               __webpack_require__(/*! ../rubix/play.js */ 6))
@@ -231,52 +230,7 @@
 	};
 
 /***/ },
-/* 3 */
-/*!*************************************!*\
-  !*** ./src/rubix/angle-distance.js ***!
-  \*************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    Process angle and distance values based on x and y values
-	*/
-	"use strict";
-	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 14),
-	
-	    CURRENT = 'current';
-	
-	module.exports = {
-	
-	    /*
-	        Process new value
-	
-	        Note: currently inefficient as this gets called one each for
-	              radialX and radialY
-	              
-	        @param [string]: Name of current value
-	        @param [object]: Current Value
-	        @param [object]: All Values in current Action
-	        
-	        @return [number]: Calculated value
-	    */
-	    process: function (key, value, values) {
-	        var origin = {
-	                x: (values.x) ? values.x.get(CURRENT) : 0,
-	                y: (values.y) ? values.y.get(CURRENT) : 0
-	            },
-	            point = calc.pointFromAngleAndDistance(origin, values.angle.get(CURRENT), values.distance.get(CURRENT)),
-	            newValue = {
-	                radialX: point.x,
-	                radialY: point.y
-	            };
-	        
-	        return newValue[key];
-	    } 
-	
-	};
-
-/***/ },
+/* 3 */,
 /* 4 */
 /*!***************************!*\
   !*** ./src/rubix/fire.js ***!
@@ -859,7 +813,7 @@
 	            @return [radian]: Angle between 0, 0 and point in radians
 	        */
 	        angleFromCenter: function (x, y) {
-	            return Math.atan2(y, x);
+	            return this.radiansToDegrees(Math.atan2(y, x));
 	        },
 	        
 	        /*
@@ -1002,7 +956,7 @@
 	                    }
 	                } 
 	            }
-	            
+	
 	            if (isNum(offset.x) && isNum(offset.y)) {
 	                offset.angle = this.angle(a, b);
 	                offset.distance = this.distance2D(a, b);
@@ -1233,7 +1187,6 @@
 	    calc = __webpack_require__(/*! ../utils/calc.js */ 14),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
 	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 35),
-	    linkToAngleDistance = { link: 'AngleAndDistance' },
 	
 	    namespace = function (key, space) {
 	        return (space && space !== routes.defaultRoute) ? key + '.' + space : key;
@@ -1362,12 +1315,6 @@
 	                }
 	            }
 	        }, props);
-	        
-	        // Create radialX and radialY if we're tracking angle and distance
-	        if (values['angle'] && values['distance']) {
-	            self.setValue('radialX', linkToAngleDistance)
-	                .setValue('radialY', linkToAngleDistance);
-	        }
 	        
 	        self.resetOrigins();
 	
@@ -3141,7 +3088,10 @@
 	        
 	        // Append input
 	        props.input = input;
-	        props.inputOrigin = input.get();
+	
+	        if (!props.inputOrigin) {
+	            props.inputOrigin = input.get();
+	        }
 	        
 	        return props;
 	    },
@@ -3448,9 +3398,7 @@
 	
 	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 42),
 	    routes = __webpack_require__(/*! ./routes.js */ 21),
-	    calc = __webpack_require__(/*! ../utils/calc.js */ 14),
-	    
-	    ANGLE_DISTANCE = 'angleAndDistance';
+	    calc = __webpack_require__(/*! ../utils/calc.js */ 14);
 	
 	module.exports = function (action, framestamp, frameDuration) {
 	    var props = action.props(),
@@ -3491,7 +3439,7 @@
 	        // Load rubix for this value
 	        valueRubix = rubix;
 	        if (value.link) {
-	            valueRubix = (value.link !== ANGLE_DISTANCE) ? Rubix['link'] : Rubix[ANGLE_DISTANCE];
+	            valueRubix = Rubix['link'];
 	        }
 	
 	        // Calculate new value
@@ -5030,8 +4978,8 @@
 	        var touchChanged = isTouchEvent ? event.changedTouches[0] : false;
 	        
 	        return {
-	            x: touchChanged ? touchChanged.clientX : event.screenX,
-	            y: touchChanged ? touchChanged.clientY : event.screenY
+	            x: touchChanged ? touchChanged.clientX : event.pageX,
+	            y: touchChanged ? touchChanged.clientY : event.pageY
 	        }
 	    },
 	    

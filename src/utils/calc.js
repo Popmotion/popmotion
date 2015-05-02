@@ -42,7 +42,7 @@ var utils = require('./utils.js'),
             @return [radian]: Angle between 0, 0 and point in radians
         */
         angleFromCenter: function (x, y) {
-            return Math.atan2(y, x);
+            return this.radiansToDegrees(Math.atan2(y, x));
         },
         
         /*
@@ -185,7 +185,7 @@ var utils = require('./utils.js'),
                     }
                 } 
             }
-            
+
             if (isNum(offset.x) && isNum(offset.y)) {
                 offset.angle = this.angle(a, b);
                 offset.distance = this.distance2D(a, b);
