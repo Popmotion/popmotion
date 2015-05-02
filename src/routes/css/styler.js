@@ -1,7 +1,7 @@
 "use strict";
 
 var cssStyler = function () {
-	var testElement = document.getElementsByTagName('body')[0],
+	var testElement,
 		prefixes = ['Webkit','Moz','O','ms', ''],
 		prefixesLength = prefixes.length,
 		cache = {},
@@ -25,7 +25,7 @@ var cssStyler = function () {
 			
 			return cache[key];
 		};
-		
+	
 	/*
 		Stylee function call
 		
@@ -46,7 +46,9 @@ var cssStyler = function () {
 		
 		// If it's an object, we're setting
 		} else {
-			
+		    // Cache body tag if we haven't already
+			testElement = testElement || document.getElementsByTagName('body')[0];
+
 			for (var key in prop) {
 				if (prop.hasOwnProperty(key)) {
 					element.style[cache[key] || testPrefix(key)] = prop[key];
