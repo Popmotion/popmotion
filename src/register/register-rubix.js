@@ -7,7 +7,7 @@ var actionPrototype = require('../action/action.js').prototype,
 module.exports = function (name, newRubix) {
     var parser = parseArgs[name] || parseArgs.generic;
 
-    if (newRubix.createMethod && !actionPrototype[name]) {
+    if (!newRubix.surpressMethod && !actionPrototype[name]) {
         actionPrototype[name] = function () {
             this.set(parser.apply(this, arguments));
             return this.start(name);

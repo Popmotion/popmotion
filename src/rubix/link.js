@@ -25,6 +25,8 @@ var calc = require('../utils/calc.js'),
 
 module.exports = {
 
+    surpressMethod: true,
+
     /*
         Process this value
         

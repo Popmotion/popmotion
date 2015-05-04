@@ -15,8 +15,6 @@ module.exports = {
     
     makeDefault: true,
     
-    name: 'values',
-    
     onStart: function (action, values, props, data) {
         if (props.start) {
             props.start.call(props.scope, data);

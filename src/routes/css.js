@@ -8,9 +8,6 @@ var build = require('./css/build.js'),
     cssCache = css + 'Cache';
 
 module.exports = {
-    
-    name: css,
-    
     preprocess: function (key, value, action) {
         var values = split(key, value);
         

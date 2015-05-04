@@ -32,9 +32,6 @@ var routes = require('../core/routes.js'),
             Add route
             
             @param [object]: Object of route functions
-                Valid properties
-                    .name [string] (required)
-
                 Valid methods
                     .preprocess
                     .onStart
@@ -50,6 +47,7 @@ var routes = require('../core/routes.js'),
                 this.defaultRoute = name;
             }
             
+            route.name = name;
             routes[name] = route;
             
             return this;

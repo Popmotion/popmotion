@@ -3,9 +3,7 @@
 var createStyles = require('./path/builder.js');
 
 module.exports = {
-    
-    name: 'svgPath',
-    
+
     onStart: function (output, action, values, props) {
         if (props.dom) {
             props.pathLength = props.dom.getTotalLength();

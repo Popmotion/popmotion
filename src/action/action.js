@@ -87,8 +87,7 @@ Action.prototype = {
         @return [Action]
     */
     set: function (props, defaultProp) {
-        var self = this,
-            values = self.values;
+        var self = this;
         
         // Reset properties to defaults
         this.resetProps();

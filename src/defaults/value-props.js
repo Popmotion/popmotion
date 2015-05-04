@@ -70,7 +70,7 @@ module.exports = {
     timeConstant: 395,
     
     // [number]: Stop simulation under this speed
-    stopSpeed: 0.5,
+    stopSpeed: 10,
     
     // [boolean]: Capture with spring physics on limit breach
     capture: false,

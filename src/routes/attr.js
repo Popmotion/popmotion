@@ -1,9 +1,7 @@
 "use strict";
 
 module.exports = {
-    
-    name: 'attr',
-    
+
     onChange: function (output, action, values, props) {
         var dom = props.dom;
 
