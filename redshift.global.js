@@ -889,14 +889,14 @@
 	
 	                    // If no preprocess step, assign directly
 	                    if (!route.preprocess) {
-	                        self.setValue(key, valueBase, props, route.name);
+	                        self.setValue(key, valueBase, props, route.name, true);
 	                        
 	                    // Else preprocess and add each returned value
 	                    } else {
 	                        preprocessedValues = route.preprocess(key, valueBase, self, props);
 	
 	                        for (var subKey in preprocessedValues) {
-	                            self.setValue(subKey, preprocessedValues[subKey], props, route.name);
+	                            self.setValue(subKey, preprocessedValues[subKey], props, route.name, true);
 	                        }
 	                    }
 	                }
@@ -1142,7 +1142,7 @@
 	        return stepTaken;
 	    },
 	    
-	    setValue: function (key, value, inherit, space) {
+	    setValue: function (key, value, inherit, space, reset) {
 	        var existing = this.getValue(key, space);
 	        
 	        key = namespace(key, space);
@@ -1150,7 +1150,10 @@
 	        // Update if value exists
 	        if (existing) {
 	            // Overwrite with defaults
-	            existing.resetProps();
+	            if (reset) {
+	                existing.resetProps();
+	            }
+	
 	            existing.set(value, inherit);
 	
 	        // Or create new if it doesn't
@@ -1258,7 +1261,7 @@
 	
 	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
-	    History = __webpack_require__(/*! ../utils/history.js */ 35),
+	    History = __webpack_require__(/*! ../utils/history.js */ 36),
 	
 	    /*
 	        Input constructor
@@ -1390,7 +1393,7 @@
 	*/
 	"use strict";
 	
-	var manager = __webpack_require__(/*! ./manager.js */ 36),
+	var manager = __webpack_require__(/*! ./manager.js */ 35),
 	
 	    /*
 	        Process constructor
@@ -2562,7 +2565,7 @@
 
 	"use strict";
 	
-	var routes = __webpack_require__(/*! ../core/routes.js */ 38),
+	var routes = __webpack_require__(/*! ../core/routes.js */ 39),
 	    routeKeys = [],
 	    numRoutes,
 	    processes = ['preprocess', 'onStart', 'onEnd'],
@@ -2663,7 +2666,7 @@
 	
 	var actionPrototype = __webpack_require__(/*! ../action/action.js */ 13).prototype,
 	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 27),
-	    rubix = __webpack_require__(/*! ../core/rubix.js */ 39);
+	    rubix = __webpack_require__(/*! ../core/rubix.js */ 38);
 	
 	module.exports = function (name, newRubix) {
 	    var parser = parseArgs[name] || parseArgs.generic;
@@ -2690,7 +2693,7 @@
 	*/
 	"use strict";
 	
-	var simulations = __webpack_require__(/*! ../core/simulations.js */ 40);
+	var simulations = __webpack_require__(/*! ../core/simulations.js */ 43);
 	
 	module.exports = function (name, simulation) {
 	    simulations[name] = simulation;
@@ -2705,7 +2708,7 @@
 
 	"use strict";
 	
-	var simulations = __webpack_require__(/*! ../core/simulations.js */ 40);
+	var simulations = __webpack_require__(/*! ../core/simulations.js */ 43);
 	
 	module.exports = function (simulation, value, duration, started) {
 	    var velocity = simulations[simulation](value, duration, started);
@@ -2722,9 +2725,9 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 41),
-	    templates = __webpack_require__(/*! ./templates.js */ 42),
-	    lookup = __webpack_require__(/*! ./lookup.js */ 43),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 40),
+	    templates = __webpack_require__(/*! ./templates.js */ 41),
+	    lookup = __webpack_require__(/*! ./lookup.js */ 42),
 	    
 	    TRANSFORM = 'transform',
 	    TRANSLATE_Z = 'translateZ',
@@ -2785,8 +2788,8 @@
 	"use strict";
 	
 	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 44),
-	    dictionary = __webpack_require__(/*! ./dictionary.js */ 41),
-	    splitLookup = __webpack_require__(/*! ./lookup.js */ 43),
+	    dictionary = __webpack_require__(/*! ./dictionary.js */ 40),
+	    splitLookup = __webpack_require__(/*! ./lookup.js */ 42),
 	    splitters = __webpack_require__(/*! ./splitters.js */ 45),
 	    
 	    utils = __webpack_require__(/*! ../../utils/utils.js */ 19),
@@ -2951,7 +2954,7 @@
 	
 	var utils = __webpack_require__(/*! ../utils/utils.js */ 19),
 	    presets = __webpack_require__(/*! ./presets.js */ 16),
-	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 47),
+	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 50),
 	
 	    STRING = 'string',
 	    NUMBER = 'number',
@@ -3094,9 +3097,9 @@
 
 	"use strict";
 	
-	var defaultProps = __webpack_require__(/*! ../defaults/value-props.js */ 48),
-	    defaultState = __webpack_require__(/*! ../defaults/value-state.js */ 49),
-	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 50),
+	var defaultProps = __webpack_require__(/*! ../defaults/value-props.js */ 47),
+	    defaultState = __webpack_require__(/*! ../defaults/value-state.js */ 48),
+	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 49),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
 	
 	    CURRENT = 'current',
@@ -3382,7 +3385,7 @@
 	*/
 	"use strict";
 	
-	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 39),
+	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 38),
 	    routes = __webpack_require__(/*! ./routes.js */ 20),
 	    calc = __webpack_require__(/*! ../utils/calc.js */ 18);
 	
@@ -3651,83 +3654,6 @@
 
 /***/ },
 /* 35 */
-/*!******************************!*\
-  !*** ./src/utils/history.js ***!
-  \******************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var // [number]: Default max size of history
-	    maxHistorySize = 3,
-	    
-	    /*
-	        History constructor
-	        
-	        @param [var]: Variable to store in first history slot
-	        @param [int] (optional): Maximum size of history
-	    */
-	    History = function (obj, max) {
-	        this.max = max || maxHistorySize;
-	        this.entries = [];
-	        this.add(obj);
-	    };
-	    
-	History.prototype = {
-	    
-	    /*
-	        Push new var to history
-	        
-	        Shift out oldest entry if we've reached maximum capacity
-	        
-	        @param [var]: Variable to push into history.entries
-	    */
-	    add: function (obj) {
-	        var currentSize = this.getSize();
-	        
-	        this.entries.push(obj);
-	        
-	        if (currentSize >= this.max) {
-	            this.entries.shift();
-	        }
-	    },
-	    
-	    /*
-	        Get variable at specified index
-	
-	        @param [int]: Index
-	        @return [var]: Var found at specified index
-	    */
-	    get: function (i) {
-	        i = (typeof i === 'number') ? i : this.getSize() - 1;
-	
-	        return this.entries[i];
-	    },
-	    
-	    /*
-	        Get the second newest history entry
-	        
-	        @return [var]: Entry found at index size - 2
-	    */
-	    getPrevious: function () {
-	        return this.get(this.getSize() - 2);
-	    },
-	    
-	    /*
-	        Get current history size
-	        
-	        @return [int]: Current length of entries.length
-	    */
-	    getSize: function () {
-	        return this.entries.length;
-	    }
-	    
-	};
-	
-	module.exports = History;
-
-/***/ },
-/* 36 */
 /*!********************************!*\
   !*** ./src/process/manager.js ***!
   \********************************/
@@ -3903,6 +3829,83 @@
 	};
 	
 	module.exports = new ProcessManager();
+
+/***/ },
+/* 36 */
+/*!******************************!*\
+  !*** ./src/utils/history.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var // [number]: Default max size of history
+	    maxHistorySize = 3,
+	    
+	    /*
+	        History constructor
+	        
+	        @param [var]: Variable to store in first history slot
+	        @param [int] (optional): Maximum size of history
+	    */
+	    History = function (obj, max) {
+	        this.max = max || maxHistorySize;
+	        this.entries = [];
+	        this.add(obj);
+	    };
+	    
+	History.prototype = {
+	    
+	    /*
+	        Push new var to history
+	        
+	        Shift out oldest entry if we've reached maximum capacity
+	        
+	        @param [var]: Variable to push into history.entries
+	    */
+	    add: function (obj) {
+	        var currentSize = this.getSize();
+	        
+	        this.entries.push(obj);
+	        
+	        if (currentSize >= this.max) {
+	            this.entries.shift();
+	        }
+	    },
+	    
+	    /*
+	        Get variable at specified index
+	
+	        @param [int]: Index
+	        @return [var]: Var found at specified index
+	    */
+	    get: function (i) {
+	        i = (typeof i === 'number') ? i : this.getSize() - 1;
+	
+	        return this.entries[i];
+	    },
+	    
+	    /*
+	        Get the second newest history entry
+	        
+	        @return [var]: Entry found at index size - 2
+	    */
+	    getPrevious: function () {
+	        return this.get(this.getSize() - 2);
+	    },
+	    
+	    /*
+	        Get current history size
+	        
+	        @return [int]: Current length of entries.length
+	    */
+	    getSize: function () {
+	        return this.entries.length;
+	    }
+	    
+	};
+	
+	module.exports = History;
 
 /***/ },
 /* 37 */
@@ -4081,15 +4084,6 @@
 
 /***/ },
 /* 38 */
-/*!****************************!*\
-  !*** ./src/core/routes.js ***!
-  \****************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {};
-
-/***/ },
-/* 39 */
 /*!***************************!*\
   !*** ./src/core/rubix.js ***!
   \***************************/
@@ -4146,7 +4140,194 @@
 	module.exports = {};
 
 /***/ },
+/* 39 */
+/*!****************************!*\
+  !*** ./src/core/routes.js ***!
+  \****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {};
+
+/***/ },
 /* 40 */
+/*!**************************************!*\
+  !*** ./src/routes/css/dictionary.js ***!
+  \**************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var X = 'X',
+	    Y = 'Y',
+	    TRANSFORM_PERSPECTIVE = 'transformPerspective',
+	    SCALE = 'scale',
+	    ROTATE = 'rotate',
+	
+	    terms = {
+	        colors: ['Red', 'Green', 'Blue', 'Alpha'],
+	        positions: [X, Y, 'Z'],
+	        dimensions: ['Top', 'Right', 'Bottom', 'Left'],
+	        shadow: [X, Y, 'Radius', 'Spread', 'Color'],
+	        valueProps: ['current', 'to', 'start', 'min', 'max'],
+	        transformFuncs: ['translate', SCALE, ROTATE, 'skew', TRANSFORM_PERSPECTIVE],
+	        transformProps: {} // objects are faster at direct lookups
+	    };
+	
+	// Create transform terms
+	(function () {
+	    var transformFuncs = terms.transformFuncs,
+	        transformProps = terms.transformProps,
+	        numOfTransformFuncs = transformFuncs.length,
+	        i = 0,
+	
+	        createProps = function (funcName) {
+	            var typeTerms = terms.positions,
+	                j = 0;
+	
+	            if (typeTerms) {
+	                for (; j < typeTerms.length; j++) {
+	                    transformProps[funcName + typeTerms[j]] = true;
+	                }
+	            }
+	        };
+	    
+	    // Manually add skew and transform perspective  
+	    transformProps[ROTATE] = transformProps[SCALE] = transformProps[TRANSFORM_PERSPECTIVE] = true;
+	    
+	    // Loop over each function name and create function/property terms
+	    for (; i < numOfTransformFuncs; i++) {
+	        createProps(transformFuncs[i]);
+	    }
+	})();
+	
+	module.exports = terms;
+
+/***/ },
+/* 41 */
+/*!*************************************!*\
+  !*** ./src/routes/css/templates.js ***!
+  \*************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 40),
+	
+	    defaultValues = {
+	        Alpha: 1
+	    },
+	
+	    functionCreate = function (value, prefix) {
+	        return prefix + '(' + value + ')';
+	    },
+	
+	    createSpaceDelimited = function (key, object, terms) {
+	        return createDelimitedString(key, object, terms, ' ');
+	    },
+	    
+	    createCommaDelimited = function (key, object, terms) {
+	        return createDelimitedString(key, object, terms, ', ').slice(0, -2);
+	    },
+	    
+	    createDelimitedString = function (key, object, terms, delimiter) {
+	        var string = '',
+	            propKey = '',
+	            termsLength = terms.length;
+	        
+	        for (var i = 0; i < termsLength; i++) {
+	            propKey = key + terms[i];
+	
+	            if (object[propKey] !== undefined) {
+	                string += object[propKey];
+	            } else {
+	                if (defaultValues[terms[i]] !== undefined) {
+	                    string += defaultValues[terms[i]];
+	                }
+	            }
+	            
+	            string += delimiter;
+	        }
+	    
+	        return string;
+	    },
+	
+	    templates = {
+	        
+	        colors: function (key, values) {
+	            return functionCreate(createCommaDelimited(key, values, dictionary.colors), 'rgba');
+	        },
+	        
+	        dimensions: function (key, values) {
+	            return createSpaceDelimited(key, values, dictionary.dimensions);
+	        },
+	        
+	        positions: function (key, values) {
+	            return createSpaceDelimited(key, values, dictionary.positions);
+	        },
+	        
+	        shadow: function (key, values) {
+	            var shadowTerms = dictionary.shadow.slice(0,4);
+	            
+	            return createSpaceDelimited(key, values, shadowTerms) + templates.colors(key, values);
+	        },
+	        
+	        transform: function (key, values) {
+	            return key + '(' + values[key] +')';
+	        }
+	    };
+	
+	module.exports = templates;
+
+/***/ },
+/* 42 */
+/*!**********************************!*\
+  !*** ./src/routes/css/lookup.js ***!
+  \**********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var COLOR = 'colors',
+	    POSITIONS = 'positions',
+	    TRANSFORM = 'transform',
+	    DIMENSIONS = 'dimensions',
+	    SHADOW = 'shadow';
+	
+	module.exports = {
+	    // Color properties
+	    color: COLOR,
+	    backgroundColor: COLOR,
+	    borderColor: COLOR,
+	    borderTopColor: COLOR,
+	    borderRightColor: COLOR,
+	    borderBottomColor: COLOR,
+	    borderLeftColor: COLOR,
+	    outlineColor: COLOR,
+	    fill: COLOR,
+	    stroke: COLOR,
+	
+	    // Dimensions
+	    margin: DIMENSIONS,
+	    padding: DIMENSIONS,
+	
+	    // Positions
+	    backgroundPosition: POSITIONS,
+	    perspectiveOrigin: POSITIONS,
+	    transformOrigin: POSITIONS,
+	    
+	    // Transform functions
+	    skew: TRANSFORM,
+	    translate: TRANSFORM,
+	    rotate: TRANSFORM,
+	    scale: TRANSFORM,
+	    
+	    // Shadows
+	    textShadow: SHADOW,
+	    boxShadow: SHADOW
+	};
+
+/***/ },
+/* 43 */
 /*!*********************************!*\
   !*** ./src/core/simulations.js ***!
   \*********************************/
@@ -4255,184 +4436,6 @@
 	};
 
 /***/ },
-/* 41 */
-/*!**************************************!*\
-  !*** ./src/routes/css/dictionary.js ***!
-  \**************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var X = 'X',
-	    Y = 'Y',
-	    TRANSFORM_PERSPECTIVE = 'transformPerspective',
-	    SCALE = 'scale',
-	    ROTATE = 'rotate',
-	
-	    terms = {
-	        colors: ['Red', 'Green', 'Blue', 'Alpha'],
-	        positions: [X, Y, 'Z'],
-	        dimensions: ['Top', 'Right', 'Bottom', 'Left'],
-	        shadow: [X, Y, 'Radius', 'Spread', 'Color'],
-	        valueProps: ['current', 'to', 'start', 'min', 'max'],
-	        transformFuncs: ['translate', SCALE, ROTATE, 'skew', TRANSFORM_PERSPECTIVE],
-	        transformProps: {} // objects are faster at direct lookups
-	    };
-	
-	// Create transform terms
-	(function () {
-	    var transformFuncs = terms.transformFuncs,
-	        transformProps = terms.transformProps,
-	        numOfTransformFuncs = transformFuncs.length,
-	        i = 0,
-	
-	        createProps = function (funcName) {
-	            var typeTerms = terms.positions,
-	                j = 0;
-	
-	            if (typeTerms) {
-	                for (; j < typeTerms.length; j++) {
-	                    transformProps[funcName + typeTerms[j]] = true;
-	                }
-	            }
-	        };
-	    
-	    // Manually add skew and transform perspective  
-	    transformProps[ROTATE] = transformProps[SCALE] = transformProps[TRANSFORM_PERSPECTIVE] = true;
-	    
-	    // Loop over each function name and create function/property terms
-	    for (; i < numOfTransformFuncs; i++) {
-	        createProps(transformFuncs[i]);
-	    }
-	})();
-	
-	module.exports = terms;
-
-/***/ },
-/* 42 */
-/*!*************************************!*\
-  !*** ./src/routes/css/templates.js ***!
-  \*************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 41),
-	
-	    defaultValues = {
-	        Alpha: 1
-	    },
-	
-	    functionCreate = function (value, prefix) {
-	        return prefix + '(' + value + ')';
-	    },
-	
-	    createSpaceDelimited = function (key, object, terms) {
-	        return createDelimitedString(key, object, terms, ' ');
-	    },
-	    
-	    createCommaDelimited = function (key, object, terms) {
-	        return createDelimitedString(key, object, terms, ', ').slice(0, -2);
-	    },
-	    
-	    createDelimitedString = function (key, object, terms, delimiter) {
-	        var string = '',
-	            propKey = '',
-	            termsLength = terms.length;
-	        
-	        for (var i = 0; i < termsLength; i++) {
-	            propKey = key + terms[i];
-	
-	            if (object[propKey] !== undefined) {
-	                string += object[propKey];
-	            } else {
-	                if (defaultValues[terms[i]] !== undefined) {
-	                    string += defaultValues[terms[i]];
-	                }
-	            }
-	            
-	            string += delimiter;
-	        }
-	    
-	        return string;
-	    },
-	
-	    templates = {
-	        
-	        colors: function (key, values) {
-	            return functionCreate(createCommaDelimited(key, values, dictionary.colors), 'rgba');
-	        },
-	        
-	        dimensions: function (key, values) {
-	            return createSpaceDelimited(key, values, dictionary.dimensions);
-	        },
-	        
-	        positions: function (key, values) {
-	            return createSpaceDelimited(key, values, dictionary.positions);
-	        },
-	        
-	        shadow: function (key, values) {
-	            var shadowTerms = dictionary.shadow.slice(0,4);
-	            
-	            return createSpaceDelimited(key, values, shadowTerms) + templates.colors(key, values);
-	        },
-	        
-	        transform: function (key, values) {
-	            return key + '(' + values[key] +')';
-	        }
-	    };
-	
-	module.exports = templates;
-
-/***/ },
-/* 43 */
-/*!**********************************!*\
-  !*** ./src/routes/css/lookup.js ***!
-  \**********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var COLOR = 'colors',
-	    POSITIONS = 'positions',
-	    TRANSFORM = 'transform',
-	    DIMENSIONS = 'dimensions',
-	    SHADOW = 'shadow';
-	
-	module.exports = {
-	    // Color properties
-	    color: COLOR,
-	    backgroundColor: COLOR,
-	    borderColor: COLOR,
-	    borderTopColor: COLOR,
-	    borderRightColor: COLOR,
-	    borderBottomColor: COLOR,
-	    borderLeftColor: COLOR,
-	    outlineColor: COLOR,
-	    fill: COLOR,
-	    stroke: COLOR,
-	
-	    // Dimensions
-	    margin: DIMENSIONS,
-	    padding: DIMENSIONS,
-	
-	    // Positions
-	    backgroundPosition: POSITIONS,
-	    perspectiveOrigin: POSITIONS,
-	    transformOrigin: POSITIONS,
-	    
-	    // Transform functions
-	    skew: TRANSFORM,
-	    translate: TRANSFORM,
-	    rotate: TRANSFORM,
-	    scale: TRANSFORM,
-	    
-	    // Shadows
-	    textShadow: SHADOW,
-	    boxShadow: SHADOW
-	};
-
-/***/ },
 /* 44 */
 /*!********************************************!*\
   !*** ./src/routes/css/default-property.js ***!
@@ -4492,7 +4495,7 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 41),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 40),
 	    utils = __webpack_require__(/*! ../../utils/utils.js */ 19),
 	
 	    /*
@@ -4744,103 +4747,6 @@
 
 /***/ },
 /* 47 */
-/*!******************************!*\
-  !*** ./src/input/pointer.js ***!
-  \******************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var Input = __webpack_require__(/*! ./input.js */ 14),
-	    currentPointer, // Sort this out for multitouch
-	    
-	    TOUCHMOVE = 'touchmove',
-	    MOUSEMOVE = 'mousemove',
-	
-	    /*
-	        Convert event into point
-	        
-	        Scrape the x/y coordinates from the provided event
-	        
-	        @param [event]: Original pointer event
-	        @param [boolean]: True if touch event
-	        @return [object]: x/y coordinates of event
-	    */
-	    eventToPoint = function (event, isTouchEvent) {
-	        var touchChanged = isTouchEvent ? event.changedTouches[0] : false;
-	        
-	        return {
-	            x: touchChanged ? touchChanged.clientX : event.pageX,
-	            y: touchChanged ? touchChanged.clientY : event.pageY
-	        }
-	    },
-	    
-	    /*
-	        Get actual event
-	        
-	        Checks for jQuery's .originalEvent if present
-	        
-	        @param [event | jQuery event]
-	        @return [event]: The actual JS event  
-	    */
-	    getActualEvent = function (event) {
-	        return event.originalEvent || event;
-	    },
-	
-	    
-	    /*
-	        Pointer constructor
-	    */
-	    Pointer = function (e) {
-	        var event = getActualEvent(e), // In case of jQuery event
-	            isTouch = (event.touches) ? true : false,
-	            startPoint = eventToPoint(event, isTouch);
-	        
-	        this.update(startPoint);
-	        this.isTouch = isTouch;
-	        this.bindEvents();
-	    },
-	    
-	    proto = Pointer.prototype = new Input();
-	
-	/*
-	    Bind move event
-	*/
-	proto.bindEvents = function () {
-	    this.moveEvent = this.isTouch ? TOUCHMOVE : MOUSEMOVE;
-	    
-	    currentPointer = this;
-	    
-	    document.documentElement.addEventListener(this.moveEvent, this.onMove);
-	};
-	
-	/*
-	    Unbind move event
-	*/
-	proto.unbindEvents = function () {
-	    document.documentElement.removeEventListener(this.moveEvent, this.onMove);
-	};
-	
-	/*
-	    Pointer onMove event handler
-	    
-	    @param [event]: Pointer move event
-	*/
-	proto.onMove = function (e) {
-	    var newPoint = eventToPoint(e, currentPointer.isTouch);
-	    e = getActualEvent(e);
-	    e.preventDefault();
-	    currentPointer.update(newPoint);
-	};
-	
-	proto.stop = function () {
-	    this.unbindEvents();
-	};
-	
-	module.exports = Pointer;
-
-/***/ },
-/* 48 */
 /*!*************************************!*\
   !*** ./src/defaults/value-props.js ***!
   \*************************************/
@@ -4957,7 +4863,7 @@
 	};
 
 /***/ },
-/* 49 */
+/* 48 */
 /*!*************************************!*\
   !*** ./src/defaults/value-state.js ***!
   \*************************************/
@@ -4978,7 +4884,7 @@
 	};
 
 /***/ },
-/* 50 */
+/* 49 */
 /*!******************************!*\
   !*** ./src/utils/resolve.js ***!
   \******************************/
@@ -5032,6 +4938,103 @@
 	
 	    return newValue;
 	};
+
+/***/ },
+/* 50 */
+/*!******************************!*\
+  !*** ./src/input/pointer.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var Input = __webpack_require__(/*! ./input.js */ 14),
+	    currentPointer, // Sort this out for multitouch
+	    
+	    TOUCHMOVE = 'touchmove',
+	    MOUSEMOVE = 'mousemove',
+	
+	    /*
+	        Convert event into point
+	        
+	        Scrape the x/y coordinates from the provided event
+	        
+	        @param [event]: Original pointer event
+	        @param [boolean]: True if touch event
+	        @return [object]: x/y coordinates of event
+	    */
+	    eventToPoint = function (event, isTouchEvent) {
+	        var touchChanged = isTouchEvent ? event.changedTouches[0] : false;
+	        
+	        return {
+	            x: touchChanged ? touchChanged.clientX : event.pageX,
+	            y: touchChanged ? touchChanged.clientY : event.pageY
+	        }
+	    },
+	    
+	    /*
+	        Get actual event
+	        
+	        Checks for jQuery's .originalEvent if present
+	        
+	        @param [event | jQuery event]
+	        @return [event]: The actual JS event  
+	    */
+	    getActualEvent = function (event) {
+	        return event.originalEvent || event;
+	    },
+	
+	    
+	    /*
+	        Pointer constructor
+	    */
+	    Pointer = function (e) {
+	        var event = getActualEvent(e), // In case of jQuery event
+	            isTouch = (event.touches) ? true : false,
+	            startPoint = eventToPoint(event, isTouch);
+	        
+	        this.update(startPoint);
+	        this.isTouch = isTouch;
+	        this.bindEvents();
+	    },
+	    
+	    proto = Pointer.prototype = new Input();
+	
+	/*
+	    Bind move event
+	*/
+	proto.bindEvents = function () {
+	    this.moveEvent = this.isTouch ? TOUCHMOVE : MOUSEMOVE;
+	    
+	    currentPointer = this;
+	    
+	    document.documentElement.addEventListener(this.moveEvent, this.onMove);
+	};
+	
+	/*
+	    Unbind move event
+	*/
+	proto.unbindEvents = function () {
+	    document.documentElement.removeEventListener(this.moveEvent, this.onMove);
+	};
+	
+	/*
+	    Pointer onMove event handler
+	    
+	    @param [event]: Pointer move event
+	*/
+	proto.onMove = function (e) {
+	    var newPoint = eventToPoint(e, currentPointer.isTouch);
+	    e = getActualEvent(e);
+	    e.preventDefault();
+	    currentPointer.update(newPoint);
+	};
+	
+	proto.stop = function () {
+	    this.unbindEvents();
+	};
+	
+	module.exports = Pointer;
 
 /***/ },
 /* 51 */

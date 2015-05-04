@@ -126,14 +126,14 @@ Action.prototype = {
 
                     // If no preprocess step, assign directly
                     if (!route.preprocess) {
-                        self.setValue(key, valueBase, props, route.name);
+                        self.setValue(key, valueBase, props, route.name, true);
                         
                     // Else preprocess and add each returned value
                     } else {
                         preprocessedValues = route.preprocess(key, valueBase, self, props);
 
                         for (var subKey in preprocessedValues) {
-                            self.setValue(subKey, preprocessedValues[subKey], props, route.name);
+                            self.setValue(subKey, preprocessedValues[subKey], props, route.name, true);
                         }
                     }
                 }
@@ -379,7 +379,7 @@ Action.prototype = {
         return stepTaken;
     },
     
-    setValue: function (key, value, inherit, space) {
+    setValue: function (key, value, inherit, space, reset) {
         var existing = this.getValue(key, space);
         
         key = namespace(key, space);
@@ -387,7 +387,10 @@ Action.prototype = {
         // Update if value exists
         if (existing) {
             // Overwrite with defaults
-            existing.resetProps();
+            if (reset) {
+                existing.resetProps();
+            }
+
             existing.set(value, inherit);
 
         // Or create new if it doesn't
