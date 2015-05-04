@@ -94,16 +94,16 @@
 	*/
 	"use strict";
 	
-	var Action = __webpack_require__(/*! ./action/action.js */ 13),
-	    Input = __webpack_require__(/*! ./input/input.js */ 14),
-	    Process = __webpack_require__(/*! ./process/process.js */ 15),
-	    presets = __webpack_require__(/*! ./action/presets.js */ 16),
-	    easing = __webpack_require__(/*! ./utils/easing.js */ 17),
-	    calc = __webpack_require__(/*! ./utils/calc.js */ 18),
-	    utils = __webpack_require__(/*! ./utils/utils.js */ 19),
-	    route = __webpack_require__(/*! ./action/routes.js */ 20),
-	    registerRubix = __webpack_require__(/*! ./register/register-rubix.js */ 21),
-	    registerSimulation = __webpack_require__(/*! ./register/register-simulation.js */ 22);
+	var Action = __webpack_require__(/*! ./action/action.js */ 15),
+	    Input = __webpack_require__(/*! ./input/input.js */ 16),
+	    Process = __webpack_require__(/*! ./process/process.js */ 17),
+	    presets = __webpack_require__(/*! ./action/presets.js */ 18),
+	    easing = __webpack_require__(/*! ./utils/easing.js */ 19),
+	    calc = __webpack_require__(/*! ./utils/calc.js */ 13),
+	    utils = __webpack_require__(/*! ./utils/utils.js */ 20),
+	    route = __webpack_require__(/*! ./action/routes.js */ 21),
+	    registerRubix = __webpack_require__(/*! ./register/register-rubix.js */ 22),
+	    registerSimulation = __webpack_require__(/*! ./register/register-simulation.js */ 23);
 	
 	module.exports = {
 	
@@ -296,7 +296,7 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 13),
 	    
 	    CURRENT = 'current',
 	    INPUT_OFFSET = 'inputOffset',
@@ -366,9 +366,9 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
-	    easing = __webpack_require__(/*! ../utils/easing.js */ 17),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 13),
+	    easing = __webpack_require__(/*! ../utils/easing.js */ 19),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
 	    
 	    CURRENT = 'current',
 	    HAS_ENDED = 'hasEnded';
@@ -456,8 +456,8 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
-	    simulate = __webpack_require__(/*! ../action/simulate.js */ 23);
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 13),
+	    simulate = __webpack_require__(/*! ../action/simulate.js */ 14);
 	
 	module.exports = {
 	
@@ -542,7 +542,7 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 13),
 	
 	    CURRENT = 'current',
 	    INPUT_OFFSET = 'inputOffset';
@@ -756,6 +756,427 @@
 
 /***/ },
 /* 13 */
+/*!***************************!*\
+  !*** ./src/utils/calc.js ***!
+  \***************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Calculators
+	    ----------------------------------------
+	    
+	    Simple I/O snippets
+	*/
+	"use strict";
+	
+	var utils = __webpack_require__(/*! ./utils.js */ 20),
+	
+	    calc = {
+	        /*
+	            Angle between points
+	            
+	            Translates the hypothetical line so that the 'from' coordinates
+	            are at 0,0, then return the angle using .angleFromCenter()
+	            
+	            @param [object]: X and Y coordinates of from point
+	            @param [object]: X and Y cordinates of to point
+	            @return [radian]: Angle between the two points in radians
+	        */
+	        angle: function (pointA, pointB) {
+	            var from = pointB ? pointA : {x: 0, y: 0},
+	                to = pointB || pointA,
+	                point = {
+	                    x: difference(from.x, to.x),
+	                    y: difference(from.y, to.y)
+	                };
+	            
+	            return this.angleFromCenter(point.x, point.y);
+	        },
+	    
+	    
+	        /*
+	            Angle from center
+	            
+	            Returns the current angle, in radians, of a defined point
+	            from a center (assumed 0,0)
+	            
+	            @param [number]: X coordinate of second point
+	            @param [number]: Y coordinate of second point
+	            @return [radian]: Angle between 0, 0 and point in radians
+	        */
+	        angleFromCenter: function (x, y) {
+	            return this.radiansToDegrees(Math.atan2(y, x));
+	        },
+	        
+	        /*
+	            Convert degrees to radians
+	            
+	            @param [number]: Value in degrees
+	            @return [number]: Value in radians
+	        */
+	        degreesToRadians: function (degrees) {
+	            return degrees * Math.PI / 180;
+	        },
+	        
+	        /*
+	            Difference
+	            
+	            Returns the difference between a and b by subtracting b from a.
+	            Useful in calcualting the zero-normalised position of b, or the
+	            difference something has travelled between the two points
+	            
+	            @param [number]: Value a
+	            @param [number]: Value b
+	            @return [number]: Difference between value a and value b
+	        */
+	        difference: function (a, b) {
+	            return b - a;
+	        },
+	        
+	        /*
+	            Dilate
+	            
+	            Change the progression between a and b according to dilation.
+	            
+	            So dilation = 0.5 would change
+	            
+	            a --------- b
+	            
+	            to
+	            
+	            a ---- b
+	            
+	            @param [number]: Previous value
+	            @param [number]: Current value
+	            @param [number]: Dilate progress by x
+	            @return [number]: Previous value plus the dilated difference
+	        */
+	        dilate: function (a, b, dilation) {
+	            return a + ((b - a) * dilation);
+	        },
+	            
+	        /*
+	            Distance
+	            
+	            Returns the distance between (0,0) and pointA, unless pointB
+	            is provided, then we return the difference between the two.
+	            
+	            @param [object/number]: x and y or just x of point A
+	            @param [object/number]: (optional): x and y or just x of point B
+	            @return [number]: The distance between the two points
+	        */
+	        distance: function (pointA, pointB) {
+	            return (typeof pointA === "number") ? this.distance1D(pointA, pointB) : this.distance2D(pointA, pointB);
+	        },
+	    
+	    
+	        /*
+	            Distance 1D
+	            
+	            Returns the distance between point A and point B
+	            
+	            @param [number]: Point A
+	            @param [number]: (optional): Point B
+	            @return [number]: The distance between the two points
+	        */
+	        distance1D: function (pointA, pointB) {
+	            var bIsNum = (typeof pointB === 'number'),
+	                from = bIsNum ? pointA : 0,
+	                to = bIsNum ? pointB : pointA;
+	    
+	            return absolute(difference(from, to));
+	        },
+	    
+	      
+	        /*
+	            Distance 2D
+	            
+	            Returns the distance between (0,0) and point A, unless point B
+	            is provided, then we return the difference between the two.
+	            
+	            @param [object]: x and y of point A
+	            @param [object]: (optional): x and y of point B
+	            @return [number]: The distance between the two points
+	        */
+	        distance2D: function (pointA, pointB) {
+	            var bIsObj = (typeof pointB === "object"),
+	                from = bIsObj ? pointA : {x: 0, y: 0},
+	                to = bIsObj ? pointB : pointA,
+	                point = {
+	                    x: absolute(difference(from.x, to.x)),
+	                    y: absolute(difference(from.y, to.y))
+	                };
+	                
+	            return this.hypotenuse(point.x, point.y);
+	        },
+	            
+	        /*
+	            Hypotenuse
+	            
+	            Returns the hypotenuse, side C, given the lengths of sides A and B.
+	            
+	            @param [number]: Length of A
+	            @param [number]: Length of B
+	            @return [number]: Length of C
+	        */
+	        hypotenuse: function (a, b) {
+	            var a2 = a * a,
+	                b2 = b * b,
+	                c2 = a2 + b2;
+	                
+	            return Math.sqrt(c2);
+	        },
+	        
+	        /*
+	            Offset between two inputs
+	            
+	            Calculate the difference between two different inputs
+	            
+	            @param [Point]: First input
+	            @param [Point]: Second input
+	            @return [Offset]: Distance metrics between two points
+	        */
+	        offset: function (a, b) {
+	            var offset = {};
+	    
+	            for (var key in b) {
+	                if (b.hasOwnProperty(key)) {
+	                    if (a.hasOwnProperty(key)) {
+	                        offset[key] = difference(a[key], b[key]);
+	                    } else {
+	                        offset[key] = 0;
+	                    }
+	                } 
+	            }
+	
+	            if (isNum(offset.x) && isNum(offset.y)) {
+	                offset.angle = this.angle(a, b);
+	                offset.distance = this.distance2D(a, b);
+	            }
+	                
+	            return offset;
+	        },
+	        
+	        /*
+	            Point from angle and distance
+	            
+	            @param [object]: 2D point of origin
+	            @param [number]: Angle from origin
+	            @param [number]: Distance from origin
+	            @return [object]: Calculated 2D point
+	        */
+	        pointFromAngleAndDistance: function (origin, angle, distance) {
+	            var point = {};
+	    
+	    		point.x = distance * Math.cos(angle) + origin.x;
+	            point.y = distance * Math.sin(angle) + origin.y;
+	    
+	            return point;
+	        },
+	    
+	        /*
+	            Progress within given range
+	            
+	            Given a lower limit and an upper limit, we return the progress
+	            (expressed as a number 0-1) represented by the given value, and
+	            limit that progress to within 0-1.
+	            
+	            @param [number]: Value to find progress within given range
+	            @param [number]: Lower limit if full range given, upper if not
+	            @param [number] (optional): Upper limit of range
+	            @return [number]: Progress of value within range as expressed 0-1
+	        */
+	        progress: function (value, limitA, limitB) {
+	            var bIsNum = (typeof limitB === 'number'),
+	                from = bIsNum ? limitA : 0,
+	                to = bIsNum ? limitB : limitA,
+	                range = difference(from, to),
+	                progress = (value - from) / range;
+	    
+	            return progress;
+	        },
+	        
+	        /*
+	            Convert radians to degrees
+	            
+	            @param [number]: Value in radians
+	            @return [number]: Value in degrees
+	        */
+	        radiansToDegrees: function (radians) {
+	            return radians * 180 / Math.PI;
+	        },
+	        
+	        /*
+	            Return random number between range
+	            
+	            @param [number] (optional): Output minimum
+	            @param [number] (optional): Output maximum
+	            @return [number]: Random number within range, or 0 and 1 if none provided
+	        */
+	        random: function (min, max) {
+	            min = isNum(min) ? min : 0;
+	            max = isNum(max) ? max : 1;
+	            return Math.random() * (max - min) + min;
+	        },
+	    
+	        
+	        /*
+	            Calculate relative value
+	            
+	            Takes the operator and value from a string, ie "+=5", and applies
+	            to the current value to resolve a new target.
+	            
+	            @param [number]: Current value
+	            @param [string]: Relative value
+	            @return [number]: New value
+	        */
+	        relativeValue: function (current, rel) {
+	            var newValue = current,
+	                equation = rel.split('='),
+	                operator = equation[0],
+	                splitVal = utils.splitValUnit(equation[1]);
+	    
+	            switch (operator) {
+	                case '+':
+	                    newValue += splitVal.value;
+	                    break;
+	                case '-':
+	                    newValue -= splitVal.value;
+	                    break;
+	                case '*':
+	                    newValue *= splitVal.value;
+	                    break;
+	                case '/':
+	                    newValue /= splitVal.value;
+	                    break;
+	            }
+	            
+	            if (splitVal.unit) {
+	                newValue += splitVal.unit;
+	            }
+	    
+	            return newValue;
+	        },
+	    
+	    
+	        /*
+	            Restrict value to range
+	            
+	            Return value within the range of lowerLimit and upperLimit
+	            
+	            @param [number]: Value to keep within range
+	            @param [number]: Lower limit of range
+	            @param [number]: Upper limit of range
+	            @return [number]: Value as limited within given range
+	        */
+	        restricted: function (value, min, max) {
+	            var restricted = (min !== undefined) ? Math.max(value, min) : value;
+	            restricted = (max !== undefined) ? Math.min(restricted, max) : restricted;
+	    
+	            return restricted;
+	        },
+	    
+	        /*
+	            Convert x per second to per frame velocity based on fps
+	            
+	            @param [number]: Unit per second
+	            @param [number]: Frame duration in ms
+	        */
+	        speedPerFrame: function (xps, frameDuration) {
+	            return (isNum(xps)) ? xps / (1000 / frameDuration) : 0;
+	        },
+	    
+	        /*
+	            Convert velocity into velicity per second
+	            
+	            @param [number]: Unit per frame
+	            @param [number]: Frame duration in ms
+	        */
+	        speedPerSecond: function (velocity, frameDuration) {
+	            return velocity * (1000 / frameDuration);
+	        },
+	        
+	    
+	        /*
+	            Time remaining
+	            
+	            Return the amount of time remaining from the progress already made
+	            
+	            @param [number]: Progress through time limit between 0-1
+	            @param [number]: Duration
+	        */
+	        timeRemaining: function (progress, duration) {
+	            return (1 - progress) * duration;
+	        },
+	    
+	     
+	        /*
+	            Value in range from progress
+	            
+	            Given a lower limit and an upper limit, we return the value within
+	            that range as expressed by progress (a number from 0-1)
+	            
+	            @param [number]: The progress between lower and upper limits expressed 0-1
+	            @param [number]: Lower limit of range, or upper if limit2 not provided
+	            @param [number] (optional): Upper limit of range
+	            @return [number]: Value as calculated from progress within range (not limited within range)
+	        */
+	        value: function (progress, limitA, limitB) {
+	            var bIsNum = (typeof limitB === 'number'),
+	                from = bIsNum ? limitA : 0,
+	                to = bIsNum ? limitB : limitA;
+	    
+	            return (- progress * from) + (progress * to) + from; 
+	        },
+	    
+	    
+	        /*
+	            Eased value in range from progress
+	            
+	            Given a lower limit and an upper limit, we return the value within
+	            that range as expressed by progress (a number from 0-1)
+	            
+	            @param [number]: The progress between lower and upper limits expressed 0-1
+	            @param [number]: Lower limit of range, or upper if limit2 not provided
+	            @param [number]: Upper limit of range
+	            @param [function]: Easing to apply to value
+	            @return [number]: Value as calculated from progress within range (not limited within range)
+	        */
+	        valueEased: function (progress, from, to, easing) {
+	            var easedProgress = easing(progress);
+	            
+	            return this.value(easedProgress, from, to);
+	        }
+	    },
+	
+	    /*
+	        Caching functions used multiple times to reduce filesize and increase performance
+	    */
+	    isNum = utils.isNum,
+	    difference = calc.difference,
+	    absolute = Math.abs;
+	    
+	module.exports = calc;
+
+/***/ },
+/* 14 */
+/*!********************************!*\
+  !*** ./src/action/simulate.js ***!
+  \********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var simulations = __webpack_require__(/*! ../core/simulations.js */ 27);
+	
+	module.exports = function (simulation, value, duration, started) {
+	    var velocity = simulations[simulation](value, duration, started);
+	    
+	    return (Math.abs(velocity) >= value.stopSpeed) ? velocity : 0;
+	};
+
+/***/ },
+/* 15 */
 /*!******************************!*\
   !*** ./src/action/action.js ***!
   \******************************/
@@ -763,18 +1184,18 @@
 
 	"use strict";
 	
-	var parseArgs = __webpack_require__(/*! ./parse-args.js */ 27),
-	    Value = __webpack_require__(/*! ../types/value.js */ 28),
-	    Repo = __webpack_require__(/*! ../types/repo.js */ 29),
-	    Queue = __webpack_require__(/*! ./queue.js */ 30),
-	    Process = __webpack_require__(/*! ../process/process.js */ 15),
-	    processor = __webpack_require__(/*! ./processor.js */ 31),
-	    routes = __webpack_require__(/*! ./routes.js */ 20),
-	    defaultProps = __webpack_require__(/*! ../defaults/action-props.js */ 32),
-	    defaultState = __webpack_require__(/*! ../defaults/action-state.js */ 33),
-	    calc = __webpack_require__(/*! ../utils/calc.js */ 18),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
-	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 34),
+	var parseArgs = __webpack_require__(/*! ./parse-args.js */ 28),
+	    Value = __webpack_require__(/*! ../types/value.js */ 29),
+	    Repo = __webpack_require__(/*! ../types/repo.js */ 30),
+	    Queue = __webpack_require__(/*! ./queue.js */ 31),
+	    Process = __webpack_require__(/*! ../process/process.js */ 17),
+	    processor = __webpack_require__(/*! ./processor.js */ 32),
+	    routes = __webpack_require__(/*! ./routes.js */ 21),
+	    defaultProps = __webpack_require__(/*! ../defaults/action-props.js */ 33),
+	    defaultState = __webpack_require__(/*! ../defaults/action-state.js */ 34),
+	    calc = __webpack_require__(/*! ../utils/calc.js */ 13),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
+	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 35),
 	
 	    namespace = function (key, space) {
 	        return (space && space !== routes.defaultRoute) ? key + '.' + space : key;
@@ -1245,7 +1666,7 @@
 	module.exports = Action;
 
 /***/ },
-/* 14 */
+/* 16 */
 /*!****************************!*\
   !*** ./src/input/input.js ***!
   \****************************/
@@ -1256,9 +1677,9 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
-	    History = __webpack_require__(/*! ../utils/history.js */ 35),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 13),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
+	    History = __webpack_require__(/*! ../utils/history.js */ 36),
 	
 	    /*
 	        Input constructor
@@ -1379,7 +1800,7 @@
 	module.exports = Input;
 
 /***/ },
-/* 15 */
+/* 17 */
 /*!********************************!*\
   !*** ./src/process/process.js ***!
   \********************************/
@@ -1390,7 +1811,7 @@
 	*/
 	"use strict";
 	
-	var manager = __webpack_require__(/*! ./manager.js */ 36),
+	var manager = __webpack_require__(/*! ./manager.js */ 37),
 	
 	    /*
 	        Process constructor
@@ -1575,7 +1996,7 @@
 	module.exports = Process;
 
 /***/ },
-/* 16 */
+/* 18 */
 /*!*******************************!*\
   !*** ./src/action/presets.js ***!
   \*******************************/
@@ -1583,7 +2004,7 @@
 
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 19),
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 20),
 	    
 	    generateKeys = function (key) {
 	        var keys = key.split(DOT),
@@ -1664,7 +2085,7 @@
 	module.exports = new Presets();
 
 /***/ },
-/* 17 */
+/* 19 */
 /*!*****************************!*\
   !*** ./src/utils/easing.js ***!
   \*****************************/
@@ -1694,8 +2115,8 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ./calc.js */ 18),
-	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 37),
+	var calc = __webpack_require__(/*! ./calc.js */ 13),
+	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 38),
 	    
 	    // Constants
 	    INVALID_EASING = ": Not defined",
@@ -1880,411 +2301,7 @@
 
 
 /***/ },
-/* 18 */
-/*!***************************!*\
-  !*** ./src/utils/calc.js ***!
-  \***************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    Calculators
-	    ----------------------------------------
-	    
-	    Simple I/O snippets
-	*/
-	"use strict";
-	
-	var utils = __webpack_require__(/*! ./utils.js */ 19),
-	
-	    calc = {
-	        /*
-	            Angle between points
-	            
-	            Translates the hypothetical line so that the 'from' coordinates
-	            are at 0,0, then return the angle using .angleFromCenter()
-	            
-	            @param [object]: X and Y coordinates of from point
-	            @param [object]: X and Y cordinates of to point
-	            @return [radian]: Angle between the two points in radians
-	        */
-	        angle: function (pointA, pointB) {
-	            var from = pointB ? pointA : {x: 0, y: 0},
-	                to = pointB || pointA,
-	                point = {
-	                    x: difference(from.x, to.x),
-	                    y: difference(from.y, to.y)
-	                };
-	            
-	            return this.angleFromCenter(point.x, point.y);
-	        },
-	    
-	    
-	        /*
-	            Angle from center
-	            
-	            Returns the current angle, in radians, of a defined point
-	            from a center (assumed 0,0)
-	            
-	            @param [number]: X coordinate of second point
-	            @param [number]: Y coordinate of second point
-	            @return [radian]: Angle between 0, 0 and point in radians
-	        */
-	        angleFromCenter: function (x, y) {
-	            return this.radiansToDegrees(Math.atan2(y, x));
-	        },
-	        
-	        /*
-	            Convert degrees to radians
-	            
-	            @param [number]: Value in degrees
-	            @return [number]: Value in radians
-	        */
-	        degreesToRadians: function (degrees) {
-	            return degrees * Math.PI / 180;
-	        },
-	        
-	        /*
-	            Difference
-	            
-	            Returns the difference between a and b by subtracting b from a.
-	            Useful in calcualting the zero-normalised position of b, or the
-	            difference something has travelled between the two points
-	            
-	            @param [number]: Value a
-	            @param [number]: Value b
-	            @return [number]: Difference between value a and value b
-	        */
-	        difference: function (a, b) {
-	            return b - a;
-	        },
-	        
-	        /*
-	            Dilate
-	            
-	            Change the progression between a and b according to dilation.
-	            
-	            So dilation = 0.5 would change
-	            
-	            a --------- b
-	            
-	            to
-	            
-	            a ---- b
-	            
-	            @param [number]: Previous value
-	            @param [number]: Current value
-	            @param [number]: Dilate progress by x
-	            @return [number]: Previous value plus the dilated difference
-	        */
-	        dilate: function (a, b, dilation) {
-	            return a + ((b - a) * dilation);
-	        },
-	            
-	        /*
-	            Distance
-	            
-	            Returns the distance between (0,0) and pointA, unless pointB
-	            is provided, then we return the difference between the two.
-	            
-	            @param [object/number]: x and y or just x of point A
-	            @param [object/number]: (optional): x and y or just x of point B
-	            @return [number]: The distance between the two points
-	        */
-	        distance: function (pointA, pointB) {
-	            return (typeof pointA === "number") ? this.distance1D(pointA, pointB) : this.distance2D(pointA, pointB);
-	        },
-	    
-	    
-	        /*
-	            Distance 1D
-	            
-	            Returns the distance between point A and point B
-	            
-	            @param [number]: Point A
-	            @param [number]: (optional): Point B
-	            @return [number]: The distance between the two points
-	        */
-	        distance1D: function (pointA, pointB) {
-	            var bIsNum = (typeof pointB === 'number'),
-	                from = bIsNum ? pointA : 0,
-	                to = bIsNum ? pointB : pointA;
-	    
-	            return absolute(difference(from, to));
-	        },
-	    
-	      
-	        /*
-	            Distance 2D
-	            
-	            Returns the distance between (0,0) and point A, unless point B
-	            is provided, then we return the difference between the two.
-	            
-	            @param [object]: x and y of point A
-	            @param [object]: (optional): x and y of point B
-	            @return [number]: The distance between the two points
-	        */
-	        distance2D: function (pointA, pointB) {
-	            var bIsObj = (typeof pointB === "object"),
-	                from = bIsObj ? pointA : {x: 0, y: 0},
-	                to = bIsObj ? pointB : pointA,
-	                point = {
-	                    x: absolute(difference(from.x, to.x)),
-	                    y: absolute(difference(from.y, to.y))
-	                };
-	                
-	            return this.hypotenuse(point.x, point.y);
-	        },
-	            
-	        /*
-	            Hypotenuse
-	            
-	            Returns the hypotenuse, side C, given the lengths of sides A and B.
-	            
-	            @param [number]: Length of A
-	            @param [number]: Length of B
-	            @return [number]: Length of C
-	        */
-	        hypotenuse: function (a, b) {
-	            var a2 = a * a,
-	                b2 = b * b,
-	                c2 = a2 + b2;
-	                
-	            return Math.sqrt(c2);
-	        },
-	        
-	        /*
-	            Offset between two inputs
-	            
-	            Calculate the difference between two different inputs
-	            
-	            @param [Point]: First input
-	            @param [Point]: Second input
-	            @return [Offset]: Distance metrics between two points
-	        */
-	        offset: function (a, b) {
-	            var offset = {};
-	    
-	            for (var key in b) {
-	                if (b.hasOwnProperty(key)) {
-	                    if (a.hasOwnProperty(key)) {
-	                        offset[key] = difference(a[key], b[key]);
-	                    } else {
-	                        offset[key] = 0;
-	                    }
-	                } 
-	            }
-	
-	            if (isNum(offset.x) && isNum(offset.y)) {
-	                offset.angle = this.angle(a, b);
-	                offset.distance = this.distance2D(a, b);
-	            }
-	                
-	            return offset;
-	        },
-	        
-	        /*
-	            Point from angle and distance
-	            
-	            @param [object]: 2D point of origin
-	            @param [number]: Angle from origin
-	            @param [number]: Distance from origin
-	            @return [object]: Calculated 2D point
-	        */
-	        pointFromAngleAndDistance: function (origin, angle, distance) {
-	            var point = {};
-	    
-	    		point.x = distance * Math.cos(angle) + origin.x;
-	            point.y = distance * Math.sin(angle) + origin.y;
-	    
-	            return point;
-	        },
-	    
-	        /*
-	            Progress within given range
-	            
-	            Given a lower limit and an upper limit, we return the progress
-	            (expressed as a number 0-1) represented by the given value, and
-	            limit that progress to within 0-1.
-	            
-	            @param [number]: Value to find progress within given range
-	            @param [number]: Lower limit if full range given, upper if not
-	            @param [number] (optional): Upper limit of range
-	            @return [number]: Progress of value within range as expressed 0-1
-	        */
-	        progress: function (value, limitA, limitB) {
-	            var bIsNum = (typeof limitB === 'number'),
-	                from = bIsNum ? limitA : 0,
-	                to = bIsNum ? limitB : limitA,
-	                range = difference(from, to),
-	                progress = (value - from) / range;
-	    
-	            return progress;
-	        },
-	        
-	        /*
-	            Convert radians to degrees
-	            
-	            @param [number]: Value in radians
-	            @return [number]: Value in degrees
-	        */
-	        radiansToDegrees: function (radians) {
-	            return radians * 180 / Math.PI;
-	        },
-	        
-	        /*
-	            Return random number between range
-	            
-	            @param [number] (optional): Output minimum
-	            @param [number] (optional): Output maximum
-	            @return [number]: Random number within range, or 0 and 1 if none provided
-	        */
-	        random: function (min, max) {
-	            min = isNum(min) ? min : 0;
-	            max = isNum(max) ? max : 1;
-	            return Math.random() * (max - min) + min;
-	        },
-	    
-	        
-	        /*
-	            Calculate relative value
-	            
-	            Takes the operator and value from a string, ie "+=5", and applies
-	            to the current value to resolve a new target.
-	            
-	            @param [number]: Current value
-	            @param [string]: Relative value
-	            @return [number]: New value
-	        */
-	        relativeValue: function (current, rel) {
-	            var newValue = current,
-	                equation = rel.split('='),
-	                operator = equation[0],
-	                splitVal = utils.splitValUnit(equation[1]);
-	    
-	            switch (operator) {
-	                case '+':
-	                    newValue += splitVal.value;
-	                    break;
-	                case '-':
-	                    newValue -= splitVal.value;
-	                    break;
-	                case '*':
-	                    newValue *= splitVal.value;
-	                    break;
-	                case '/':
-	                    newValue /= splitVal.value;
-	                    break;
-	            }
-	            
-	            if (splitVal.unit) {
-	                newValue += splitVal.unit;
-	            }
-	    
-	            return newValue;
-	        },
-	    
-	    
-	        /*
-	            Restrict value to range
-	            
-	            Return value within the range of lowerLimit and upperLimit
-	            
-	            @param [number]: Value to keep within range
-	            @param [number]: Lower limit of range
-	            @param [number]: Upper limit of range
-	            @return [number]: Value as limited within given range
-	        */
-	        restricted: function (value, min, max) {
-	            var restricted = (min !== undefined) ? Math.max(value, min) : value;
-	            restricted = (max !== undefined) ? Math.min(restricted, max) : restricted;
-	    
-	            return restricted;
-	        },
-	    
-	        /*
-	            Convert x per second to per frame velocity based on fps
-	            
-	            @param [number]: Unit per second
-	            @param [number]: Frame duration in ms
-	        */
-	        speedPerFrame: function (xps, frameDuration) {
-	            return (isNum(xps)) ? xps / (1000 / frameDuration) : 0;
-	        },
-	    
-	        /*
-	            Convert velocity into velicity per second
-	            
-	            @param [number]: Unit per frame
-	            @param [number]: Frame duration in ms
-	        */
-	        speedPerSecond: function (velocity, frameDuration) {
-	            return velocity * (1000 / frameDuration);
-	        },
-	        
-	    
-	        /*
-	            Time remaining
-	            
-	            Return the amount of time remaining from the progress already made
-	            
-	            @param [number]: Progress through time limit between 0-1
-	            @param [number]: Duration
-	        */
-	        timeRemaining: function (progress, duration) {
-	            return (1 - progress) * duration;
-	        },
-	    
-	     
-	        /*
-	            Value in range from progress
-	            
-	            Given a lower limit and an upper limit, we return the value within
-	            that range as expressed by progress (a number from 0-1)
-	            
-	            @param [number]: The progress between lower and upper limits expressed 0-1
-	            @param [number]: Lower limit of range, or upper if limit2 not provided
-	            @param [number] (optional): Upper limit of range
-	            @return [number]: Value as calculated from progress within range (not limited within range)
-	        */
-	        value: function (progress, limitA, limitB) {
-	            var bIsNum = (typeof limitB === 'number'),
-	                from = bIsNum ? limitA : 0,
-	                to = bIsNum ? limitB : limitA;
-	    
-	            return (- progress * from) + (progress * to) + from; 
-	        },
-	    
-	    
-	        /*
-	            Eased value in range from progress
-	            
-	            Given a lower limit and an upper limit, we return the value within
-	            that range as expressed by progress (a number from 0-1)
-	            
-	            @param [number]: The progress between lower and upper limits expressed 0-1
-	            @param [number]: Lower limit of range, or upper if limit2 not provided
-	            @param [number]: Upper limit of range
-	            @param [function]: Easing to apply to value
-	            @return [number]: Value as calculated from progress within range (not limited within range)
-	        */
-	        valueEased: function (progress, from, to, easing) {
-	            var easedProgress = easing(progress);
-	            
-	            return this.value(easedProgress, from, to);
-	        }
-	    },
-	
-	    /*
-	        Caching functions used multiple times to reduce filesize and increase performance
-	    */
-	    isNum = utils.isNum,
-	    difference = calc.difference,
-	    absolute = Math.abs;
-	    
-	module.exports = calc;
-
-/***/ },
-/* 19 */
+/* 20 */
 /*!****************************!*\
   !*** ./src/utils/utils.js ***!
   \****************************/
@@ -2554,7 +2571,7 @@
 	};
 
 /***/ },
-/* 20 */
+/* 21 */
 /*!******************************!*\
   !*** ./src/action/routes.js ***!
   \******************************/
@@ -2562,7 +2579,7 @@
 
 	"use strict";
 	
-	var routes = __webpack_require__(/*! ../core/routes.js */ 38),
+	var routes = __webpack_require__(/*! ../core/routes.js */ 39),
 	    routeKeys = [],
 	    numRoutes,
 	    processes = ['preprocess', 'onStart', 'onEnd'],
@@ -2653,7 +2670,7 @@
 	module.exports = manager; 
 
 /***/ },
-/* 21 */
+/* 22 */
 /*!****************************************!*\
   !*** ./src/register/register-rubix.js ***!
   \****************************************/
@@ -2661,9 +2678,9 @@
 
 	"use strict";
 	
-	var actionPrototype = __webpack_require__(/*! ../action/action.js */ 13).prototype,
-	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 27),
-	    rubix = __webpack_require__(/*! ../core/rubix.js */ 39);
+	var actionPrototype = __webpack_require__(/*! ../action/action.js */ 15).prototype,
+	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 28),
+	    rubix = __webpack_require__(/*! ../core/rubix.js */ 40);
 	
 	module.exports = function (name, newRubix) {
 	    var parser = parseArgs[name] || parseArgs.generic;
@@ -2679,7 +2696,7 @@
 	}
 
 /***/ },
-/* 22 */
+/* 23 */
 /*!*********************************************!*\
   !*** ./src/register/register-simulation.js ***!
   \*********************************************/
@@ -2690,28 +2707,11 @@
 	*/
 	"use strict";
 	
-	var simulations = __webpack_require__(/*! ../core/simulations.js */ 40);
+	var simulations = __webpack_require__(/*! ../core/simulations.js */ 27);
 	
 	module.exports = function (name, simulation) {
 	    simulations[name] = simulation;
 	}
-
-/***/ },
-/* 23 */
-/*!********************************!*\
-  !*** ./src/action/simulate.js ***!
-  \********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var simulations = __webpack_require__(/*! ../core/simulations.js */ 40);
-	
-	module.exports = function (simulation, value, duration, started) {
-	    var velocity = simulations[simulation](value, duration, started);
-	    
-	    return (Math.abs(velocity) >= value.stopSpeed) ? velocity : 0;
-	};
 
 /***/ },
 /* 24 */
@@ -2789,7 +2789,7 @@
 	    splitLookup = __webpack_require__(/*! ./lookup.js */ 43),
 	    splitters = __webpack_require__(/*! ./splitters.js */ 45),
 	    
-	    utils = __webpack_require__(/*! ../../utils/utils.js */ 19),
+	    utils = __webpack_require__(/*! ../../utils/utils.js */ 20),
 	    
 	    valueProperties = dictionary.valueProps,
 	    valuePropertyCount = valueProperties.length,
@@ -2942,6 +2942,115 @@
 
 /***/ },
 /* 27 */
+/*!*********************************!*\
+  !*** ./src/core/simulations.js ***!
+  \*********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Anatomy of a simulation
+	    
+	    @param [Value]: Value we're simulating
+	    @param [number]: Time since last frame in milliseconds
+	    @param [number]: Action start time in milliseconds
+	    @return [number]: New velocity
+	*/
+	"use strict";
+	
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 13),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
+	    speedPerFrame = calc.speedPerFrame;
+	
+	module.exports = {
+	    
+	    /*
+	        Velocity
+	        
+	        The default .run() simulation.
+	        
+	        Applies any set deceleration and acceleration to existing velocity
+	    */
+	    velocity: function (value, duration) {
+	        return value.velocity - speedPerFrame(value.deceleration, duration) + speedPerFrame(value.acceleration, duration);
+	    },
+	    
+	    /*
+	        Gravity
+	        
+	        Applies gravity as acceleration
+	    */
+	    gravity: function (value, duration) {
+	        return value.velocity + speedPerFrame(value.gravity, duration);
+	    },
+	    
+	    /*
+	        Glide
+	        
+	        Emulates touch device scrolling effects with exponential decay
+	        http://ariya.ofilabs.com/2013/11/javascript-kinetic-scrolling-part-2.html
+	    */
+	    glide: function (value, duration, started) {
+	        var timeUntilFinished = - utils.currentTime() - started,
+	            delta = - value.to * Math.exp(timeUntilFinished / value.timeConstant);
+	        
+	        return (value.to + delta) - value.current;
+	    },
+	    
+	    /*
+	        Friction
+	    */
+	    friction: function (value, duration) {
+	        var newVelocity = speedPerFrame(value.velocity, duration) * (1 - value.friction);
+	        return calc.speedPerSecond(newVelocity, duration);
+	    },
+	    
+	    /*
+	        Spring
+	    */
+	    spring: function (value, duration) {
+	        var distance = value.to - value.current;
+	        
+	        value.velocity += distance * speedPerFrame(value.spring, duration);
+	        
+	        return this.friction(value, duration);
+	    },
+	    
+	    /*
+	        Bounce
+	        
+	        Invert velocity and reduce by provided fraction
+	    */
+	    bounce: function (value) {
+	        var distance = 0,
+	            to = value.to,
+	            current = value.current,
+	            bounce = value.bounce;
+	        
+	        // If we're using glide simulation we have to flip our target too
+	        if (value.simulate === 'glide') {
+	            distance = to - current;
+	            value.to = current - (distance * bounce);
+	        }
+	        
+	        return value.velocity *= - bounce;
+	    },
+	    
+	    /*
+	        Capture
+	        
+	        Convert simulation to spring and set target to limit
+	    */
+	    capture: function (value, target) {
+	        value.to = target;
+	        value.simulate = 'spring';
+	        value.capture = value.min = value.max = undefined;
+	        value.spring = 90;
+	        value.friction = 0.15;
+	    }
+	};
+
+/***/ },
+/* 28 */
 /*!**********************************!*\
   !*** ./src/action/parse-args.js ***!
   \**********************************/
@@ -2949,8 +3058,8 @@
 
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 19),
-	    presets = __webpack_require__(/*! ./presets.js */ 16),
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 20),
+	    presets = __webpack_require__(/*! ./presets.js */ 18),
 	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 47),
 	
 	    STRING = 'string',
@@ -3086,7 +3195,7 @@
 	};
 
 /***/ },
-/* 28 */
+/* 29 */
 /*!****************************!*\
   !*** ./src/types/value.js ***!
   \****************************/
@@ -3097,7 +3206,7 @@
 	var defaultProps = __webpack_require__(/*! ../defaults/value-props.js */ 48),
 	    defaultState = __webpack_require__(/*! ../defaults/value-state.js */ 49),
 	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 50),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
 	
 	    CURRENT = 'current',
 	    ORIGIN = 'origin',
@@ -3239,7 +3348,7 @@
 	module.exports = Value;
 
 /***/ },
-/* 29 */
+/* 30 */
 /*!***************************!*\
   !*** ./src/types/repo.js ***!
   \***************************/
@@ -3247,7 +3356,7 @@
 
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 19),
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 20),
 	
 	    /*
 	        Get data with specified key
@@ -3315,7 +3424,7 @@
 	module.exports = Repo;
 
 /***/ },
-/* 30 */
+/* 31 */
 /*!*****************************!*\
   !*** ./src/action/queue.js ***!
   \*****************************/
@@ -3371,7 +3480,7 @@
 	module.exports = Queue;
 
 /***/ },
-/* 31 */
+/* 32 */
 /*!*********************************!*\
   !*** ./src/action/processor.js ***!
   \*********************************/
@@ -3382,9 +3491,9 @@
 	*/
 	"use strict";
 	
-	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 39),
-	    routes = __webpack_require__(/*! ./routes.js */ 20),
-	    calc = __webpack_require__(/*! ../utils/calc.js */ 18);
+	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 40),
+	    routes = __webpack_require__(/*! ./routes.js */ 21),
+	    calc = __webpack_require__(/*! ../utils/calc.js */ 13);
 	
 	module.exports = function (action, framestamp, frameDuration) {
 	    var props = action.props(),
@@ -3492,7 +3601,7 @@
 	};
 
 /***/ },
-/* 32 */
+/* 33 */
 /*!**************************************!*\
   !*** ./src/defaults/action-props.js ***!
   \**************************************/
@@ -3546,7 +3655,7 @@
 	};
 
 /***/ },
-/* 33 */
+/* 34 */
 /*!**************************************!*\
   !*** ./src/defaults/action-state.js ***!
   \**************************************/
@@ -3579,7 +3688,7 @@
 	};
 
 /***/ },
-/* 34 */
+/* 35 */
 /*!**********************************!*\
   !*** ./src/routes/css/styler.js ***!
   \**********************************/
@@ -3650,7 +3759,7 @@
 	module.exports = new cssStyler();
 
 /***/ },
-/* 35 */
+/* 36 */
 /*!******************************!*\
   !*** ./src/utils/history.js ***!
   \******************************/
@@ -3727,7 +3836,7 @@
 	module.exports = History;
 
 /***/ },
-/* 36 */
+/* 37 */
 /*!********************************!*\
   !*** ./src/process/manager.js ***!
   \********************************/
@@ -3905,7 +4014,7 @@
 	module.exports = new ProcessManager();
 
 /***/ },
-/* 37 */
+/* 38 */
 /*!*****************************!*\
   !*** ./src/types/bezier.js ***!
   \*****************************/
@@ -4080,7 +4189,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 38 */
+/* 39 */
 /*!****************************!*\
   !*** ./src/core/routes.js ***!
   \****************************/
@@ -4089,7 +4198,7 @@
 	module.exports = {};
 
 /***/ },
-/* 39 */
+/* 40 */
 /*!***************************!*\
   !*** ./src/core/rubix.js ***!
   \***************************/
@@ -4144,115 +4253,6 @@
 	                @param [boolean]: True if any value has changed
 	*/            
 	module.exports = {};
-
-/***/ },
-/* 40 */
-/*!*********************************!*\
-  !*** ./src/core/simulations.js ***!
-  \*********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    Anatomy of a simulation
-	    
-	    @param [Value]: Value we're simulating
-	    @param [number]: Time since last frame in milliseconds
-	    @param [number]: Action start time in milliseconds
-	    @return [number]: New velocity
-	*/
-	"use strict";
-	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
-	    speedPerFrame = calc.speedPerFrame;
-	
-	module.exports = {
-	    
-	    /*
-	        Velocity
-	        
-	        The default .run() simulation.
-	        
-	        Applies any set deceleration and acceleration to existing velocity
-	    */
-	    velocity: function (value, duration) {
-	        return value.velocity - speedPerFrame(value.deceleration, duration) + speedPerFrame(value.acceleration, duration);
-	    },
-	    
-	    /*
-	        Gravity
-	        
-	        Applies gravity as acceleration
-	    */
-	    gravity: function (value, duration) {
-	        return value.velocity + speedPerFrame(value.gravity, duration);
-	    },
-	    
-	    /*
-	        Glide
-	        
-	        Emulates touch device scrolling effects with exponential decay
-	        http://ariya.ofilabs.com/2013/11/javascript-kinetic-scrolling-part-2.html
-	    */
-	    glide: function (value, duration, started) {
-	        var timeUntilFinished = - utils.currentTime() - started,
-	            delta = - value.to * Math.exp(timeUntilFinished / value.timeConstant);
-	        
-	        return (value.to + delta) - value.current;
-	    },
-	    
-	    /*
-	        Friction
-	    */
-	    friction: function (value, duration) {
-	        var newVelocity = speedPerFrame(value.velocity, duration) * (1 - value.friction);
-	        return calc.speedPerSecond(newVelocity, duration);
-	    },
-	    
-	    /*
-	        Spring
-	    */
-	    spring: function (value, duration) {
-	        var distance = value.to - value.current;
-	        
-	        value.velocity += distance * speedPerFrame(value.spring, duration);
-	        
-	        return this.friction(value, duration);
-	    },
-	    
-	    /*
-	        Bounce
-	        
-	        Invert velocity and reduce by provided fraction
-	    */
-	    bounce: function (value) {
-	        var distance = 0,
-	            to = value.to,
-	            current = value.current,
-	            bounce = value.bounce;
-	        
-	        // If we're using glide simulation we have to flip our target too
-	        if (value.simulate === 'glide') {
-	            distance = to - current;
-	            value.to = current - (distance * bounce);
-	        }
-	        
-	        return value.velocity *= - bounce;
-	    },
-	    
-	    /*
-	        Capture
-	        
-	        Convert simulation to spring and set target to limit
-	    */
-	    capture: function (value, target) {
-	        value.to = target;
-	        value.simulate = 'spring';
-	        value.capture = value.min = value.max = undefined;
-	        value.spring = 90;
-	        value.friction = 0.15;
-	    }
-	};
 
 /***/ },
 /* 41 */
@@ -4493,7 +4493,7 @@
 	"use strict";
 	
 	var dictionary = __webpack_require__(/*! ./dictionary.js */ 41),
-	    utils = __webpack_require__(/*! ../../utils/utils.js */ 19),
+	    utils = __webpack_require__(/*! ../../utils/utils.js */ 20),
 	
 	    /*
 	        Split comma delimited into array
@@ -4751,7 +4751,7 @@
 
 	"use strict";
 	
-	var Input = __webpack_require__(/*! ./input.js */ 14),
+	var Input = __webpack_require__(/*! ./input.js */ 16),
 	    currentPointer, // Sort this out for multitouch
 	    
 	    TOUCHMOVE = 'touchmove',
@@ -5002,8 +5002,8 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ./calc.js */ 18),
-	    utils = __webpack_require__(/*! ./utils.js */ 19);
+	var calc = __webpack_require__(/*! ./calc.js */ 13),
+	    utils = __webpack_require__(/*! ./utils.js */ 20);
 	
 	module.exports = function (newValue, currentValue, parent, scope) {
 	    var splitValueUnit = {};
@@ -5118,7 +5118,7 @@
 
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 19),
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 20),
 	
 	    maxElapsed = 33,
 	    Timer = function () {
