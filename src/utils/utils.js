@@ -228,7 +228,7 @@ module.exports = {
             valueSegment = 1 / (steps - 1),
             i = 1;
 
-        for (; i <= steps; i++) {
+        for (; i <= steps + 1; i++) {
             
             if (progress < progressSegment * i) {
                 steppedProgress = valueSegment * (i - 1);

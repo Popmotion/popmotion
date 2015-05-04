@@ -62,21 +62,21 @@
 	
 	redshift
 	    // Add default Rubix processor modules
-	    .addRubix('fire',               __webpack_require__(/*! ../rubix/fire.js */ 3))
-	    .addRubix('link',               __webpack_require__(/*! ../rubix/link.js */ 4))
-	    .addRubix('play',               __webpack_require__(/*! ../rubix/play.js */ 5))
-	    .addRubix('run',                __webpack_require__(/*! ../rubix/run.js */ 6))
-	    .addRubix('track',              __webpack_require__(/*! ../rubix/track.js */ 7))
+	    .addRubix('fire',               __webpack_require__(/*! ../rubix/fire.js */ 4))
+	    .addRubix('link',               __webpack_require__(/*! ../rubix/link.js */ 5))
+	    .addRubix('play',               __webpack_require__(/*! ../rubix/play.js */ 6))
+	    .addRubix('run',                __webpack_require__(/*! ../rubix/run.js */ 7))
+	    .addRubix('track',              __webpack_require__(/*! ../rubix/track.js */ 8))
 	    
 	    // Add DOM value routes
-	    .addRoute('values', __webpack_require__(/*! ../routes/values.js */ 8))
-	    .addRoute('css',    __webpack_require__(/*! ../routes/css.js */ 9))
-	    .addRoute('attr',   __webpack_require__(/*! ../routes/attr.js */ 10))
-	    .addRoute('path',   __webpack_require__(/*! ../routes/path.js */ 11));
+	    .addRoute('values', __webpack_require__(/*! ../routes/values.js */ 9))
+	    .addRoute('css',    __webpack_require__(/*! ../routes/css.js */ 10))
+	    .addRoute('attr',   __webpack_require__(/*! ../routes/attr.js */ 11))
+	    .addRoute('path',   __webpack_require__(/*! ../routes/path.js */ 12));
 	
 	// Check if we need to shim requireAnimationFrame - TODO replace this with
 	// a more general environment check, for instance node or react native
-	__webpack_require__(/*! ../utils/shim.js */ 12);
+	__webpack_require__(/*! ../utils/shim.js */ 13);
 	
 	module.exports = redshift;
 
@@ -96,10 +96,10 @@
 	
 	var Action = __webpack_require__(/*! ./action/action.js */ 15),
 	    Input = __webpack_require__(/*! ./input/input.js */ 16),
-	    Process = __webpack_require__(/*! ./process/process.js */ 17),
+	    Process = __webpack_require__(/*! ./process/process.js */ 19),
 	    presets = __webpack_require__(/*! ./action/presets.js */ 18),
-	    easing = __webpack_require__(/*! ./utils/easing.js */ 19),
-	    calc = __webpack_require__(/*! ./utils/calc.js */ 13),
+	    easing = __webpack_require__(/*! ./utils/easing.js */ 17),
+	    calc = __webpack_require__(/*! ./utils/calc.js */ 14),
 	    utils = __webpack_require__(/*! ./utils/utils.js */ 20),
 	    route = __webpack_require__(/*! ./action/routes.js */ 21),
 	    registerRubix = __webpack_require__(/*! ./register/register-rubix.js */ 22),
@@ -230,7 +230,8 @@
 	};
 
 /***/ },
-/* 3 */
+/* 3 */,
+/* 4 */
 /*!***************************!*\
   !*** ./src/rubix/fire.js ***!
   \***************************/
@@ -271,7 +272,7 @@
 	};
 
 /***/ },
-/* 4 */
+/* 5 */
 /*!***************************!*\
   !*** ./src/rubix/link.js ***!
   \***************************/
@@ -296,7 +297,7 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 13),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 14),
 	    
 	    CURRENT = 'current',
 	    INPUT_OFFSET = 'inputOffset',
@@ -353,7 +354,7 @@
 
 
 /***/ },
-/* 5 */
+/* 6 */
 /*!***************************!*\
   !*** ./src/rubix/play.js ***!
   \***************************/
@@ -366,8 +367,8 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 13),
-	    easing = __webpack_require__(/*! ../utils/easing.js */ 19),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 14),
+	    easing = __webpack_require__(/*! ../utils/easing.js */ 17),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
 	    
 	    CURRENT = 'current',
@@ -445,7 +446,7 @@
 
 
 /***/ },
-/* 6 */
+/* 7 */
 /*!**************************!*\
   !*** ./src/rubix/run.js ***!
   \**************************/
@@ -456,8 +457,8 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 13),
-	    simulate = __webpack_require__(/*! ../action/simulate.js */ 14);
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 14),
+	    simulate = __webpack_require__(/*! ../action/simulate.js */ 24);
 	
 	module.exports = {
 	
@@ -531,7 +532,7 @@
 	};
 
 /***/ },
-/* 7 */
+/* 8 */
 /*!****************************!*\
   !*** ./src/rubix/track.js ***!
   \****************************/
@@ -542,7 +543,7 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 13),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 14),
 	
 	    CURRENT = 'current',
 	    INPUT_OFFSET = 'inputOffset';
@@ -587,7 +588,7 @@
 	};
 
 /***/ },
-/* 8 */
+/* 9 */
 /*!******************************!*\
   !*** ./src/routes/values.js ***!
   \******************************/
@@ -631,7 +632,7 @@
 	};
 
 /***/ },
-/* 9 */
+/* 10 */
 /*!***************************!*\
   !*** ./src/routes/css.js ***!
   \***************************/
@@ -639,8 +640,8 @@
 
 	"use strict";
 	
-	var build = __webpack_require__(/*! ./css/build.js */ 24),
-	    split = __webpack_require__(/*! ./css/split.js */ 25),
+	var build = __webpack_require__(/*! ./css/build.js */ 25),
+	    split = __webpack_require__(/*! ./css/split.js */ 26),
 	    
 	    css = 'css',
 	    cssOrder = css + 'Order',
@@ -663,7 +664,7 @@
 	};
 
 /***/ },
-/* 10 */
+/* 11 */
 /*!****************************!*\
   !*** ./src/routes/attr.js ***!
   \****************************/
@@ -685,7 +686,7 @@
 	};
 
 /***/ },
-/* 11 */
+/* 12 */
 /*!****************************!*\
   !*** ./src/routes/path.js ***!
   \****************************/
@@ -693,7 +694,7 @@
 
 	"use strict";
 	
-	var createStyles = __webpack_require__(/*! ./path/builder.js */ 26);
+	var createStyles = __webpack_require__(/*! ./path/builder.js */ 27);
 	
 	module.exports = {
 	
@@ -709,7 +710,7 @@
 	};
 
 /***/ },
-/* 12 */
+/* 13 */
 /*!***************************!*\
   !*** ./src/utils/shim.js ***!
   \***************************/
@@ -755,7 +756,7 @@
 	}
 
 /***/ },
-/* 13 */
+/* 14 */
 /*!***************************!*\
   !*** ./src/utils/calc.js ***!
   \***************************/
@@ -1159,23 +1160,6 @@
 	module.exports = calc;
 
 /***/ },
-/* 14 */
-/*!********************************!*\
-  !*** ./src/action/simulate.js ***!
-  \********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var simulations = __webpack_require__(/*! ../core/simulations.js */ 27);
-	
-	module.exports = function (simulation, value, duration, started) {
-	    var velocity = simulations[simulation](value, duration, started);
-	    
-	    return (Math.abs(velocity) >= value.stopSpeed) ? velocity : 0;
-	};
-
-/***/ },
 /* 15 */
 /*!******************************!*\
   !*** ./src/action/action.js ***!
@@ -1188,12 +1172,12 @@
 	    Value = __webpack_require__(/*! ../types/value.js */ 29),
 	    Repo = __webpack_require__(/*! ../types/repo.js */ 30),
 	    Queue = __webpack_require__(/*! ./queue.js */ 31),
-	    Process = __webpack_require__(/*! ../process/process.js */ 17),
+	    Process = __webpack_require__(/*! ../process/process.js */ 19),
 	    processor = __webpack_require__(/*! ./processor.js */ 32),
 	    routes = __webpack_require__(/*! ./routes.js */ 21),
 	    defaultProps = __webpack_require__(/*! ../defaults/action-props.js */ 33),
 	    defaultState = __webpack_require__(/*! ../defaults/action-state.js */ 34),
-	    calc = __webpack_require__(/*! ../utils/calc.js */ 13),
+	    calc = __webpack_require__(/*! ../utils/calc.js */ 14),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
 	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 35),
 	
@@ -1677,9 +1661,9 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 13),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 14),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
-	    History = __webpack_require__(/*! ../utils/history.js */ 36),
+	    History = __webpack_require__(/*! ../utils/history.js */ 37),
 	
 	    /*
 	        Input constructor
@@ -1801,291 +1785,6 @@
 
 /***/ },
 /* 17 */
-/*!********************************!*\
-  !*** ./src/process/process.js ***!
-  \********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    Process
-	*/
-	"use strict";
-	
-	var manager = __webpack_require__(/*! ./manager.js */ 37),
-	
-	    /*
-	        Process constructor
-	        
-	        Syntax
-	            var process = new Process(scope, callback);
-	            var process = new Process(callback);
-	    */
-	    Process = function (arg0, arg1) {
-	        var hasScope = (arg1 !== undefined),
-	            callback = hasScope ? arg1 : arg0,
-	            scope = hasScope ? arg0 : this;
-	
-	        this.setCallback(callback);
-	        this.setScope(scope);
-	
-	        this.setId(manager.register(this));
-	    };
-	    
-	Process.prototype = {
-	    
-	    /*
-	        [boolean]: Is this process currently active?
-	    */
-	    isActive: false,
-	    
-	    /*
-	        [boolean]: Has this process been killed?
-	    */
-	    isKilled: false,
-	
-	    /*
-	        Fire callback
-	        
-	        @param [timestamp]: Timestamp of currently-executed frame
-	        @param [number]: Time since last frame
-	    */
-	    fire: function (timestamp, elapsed) {
-	        // Check timers
-	        if (this.isActive) {
-	            this.callback.call(this.scope, timestamp, elapsed);
-	        }
-	        
-	        if (this.isInterval) {
-	            this.deactivate();
-	        }
-	        
-	        return this;
-	    },
-	    
-	    /*
-	        Set process callback
-	        
-	        @param [function]: Function to fire per frame
-	        @return [this]
-	    */
-	    setCallback: function (callback) {
-	        this.callback = callback;
-	        
-	        return this;
-	    },
-	    
-	    /*
-	        Set callback scope
-	        
-	        @param [function]: Fire callback in this context
-	        @return [this]
-	    */
-	    setScope: function (scope) {
-	        this.scope = scope;
-	        
-	        return this;
-	    },
-	    
-	    /*
-	        Start process
-	        
-	        @param [int]: Duration of process in ms, 0 if indefinite
-	        @return [this]
-	    */
-	    start: function (duration) {
-	        var self = this;
-	        
-	        self.reset();
-	        self.activate();
-	        
-	        if (duration) {
-	            self.stopTimer = setTimeout(function () {
-	                self.stop();
-	            }, duration);
-	        }
-	
-	        return self;
-	    },
-	    
-	    /*
-	        Stop process
-	        
-	        @return [this]
-	    */
-	    stop: function () {
-	        this.reset();
-	        this.deactivate();
-	        
-	        return this;
-	    },
-	    
-	    /*
-	        Activate process
-	        
-	        @return [this]
-	    */
-	    activate: function () {
-	        if (!this.isKilled) {
-	            this.isActive = true;
-	            manager.activate(this.id);
-	        }
-	
-	        return this;
-	    },
-	    
-	    /*
-	        Deactivate process
-	        
-	        @return [this]
-	    */
-	    deactivate: function () {
-	        this.isActive = false;
-	        manager.deactivate(this.id);
-	        
-	        return this;
-	    },
-	    
-	    /*
-	        Fire process every x ms
-	        
-	        @param [int]: Number of ms to wait between refiring process.
-	        @return [this]
-	    */
-	    every: function (interval) {
-		    var self = this;
-	
-	        self.reset();
-	
-	        self.isInterval = true;
-	
-	        self.intervalTimer = setInterval(function () {
-	            self.activate();
-	        }, interval);
-	        
-	        return this;
-	    },
-	    
-	    /*
-	        Clear all timers
-	        
-	        @param 
-	    */
-	    reset: function () {
-	        this.isInterval = false;
-	        clearTimeout(this.stopTimer);
-	        clearInterval(this.intervalTimer);
-	        
-	        return this;
-	    },
-	    
-	    /*
-	        Kill function in manager, release for garbage collection
-	    */
-	    kill: function () {
-	        this.stop();
-	        this.isKilled = true;
-	        manager.kill(this.id);
-	    },
-	    
-	    setId: function (id) {
-	        this.id = id;
-	        return this;
-	    }
-	};
-	
-	module.exports = Process;
-
-/***/ },
-/* 18 */
-/*!*******************************!*\
-  !*** ./src/action/presets.js ***!
-  \*******************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 20),
-	    
-	    generateKeys = function (key) {
-	        var keys = key.split(DOT),
-	            keysLength = keys.length,
-	            lastKey = keys[0],
-	            i = 1;
-	        
-	        for (; i < keysLength; i++) {
-	            keys[i] = lastKey += DOT + keys[i];
-	        }
-	        
-	        return keys;
-	    },
-	
-	    presetStore = {},
-	    DOT = '.',
-	    Presets = function () {};
-	
-	Presets.prototype = {
-	
-	    /*
-	        Define a new Action preset
-	        
-	        Syntax
-	        
-	            .define(name, preset)
-	                @param [string]: Name of preset
-	                @param [object]: Preset options/properties
-	                
-	            .define(presets)
-	                @param [object]: Multiple presets as named object
-	                
-	        @return [Redshift]
-	    */
-	    add: function (name, preset) {
-	        var presets = {},
-	            key = '';
-	
-	        if (utils.isObj(name)) {
-	            presets = name;
-	        } else {
-	            presets[name] = preset;
-	        }
-	
-	        for (key in presets) {
-	            if (presets.hasOwnProperty(key)) {
-	                presetStore[key] = presets[key];
-	            }
-	        }
-	    },
-	    
-	    
-	    /*
-	        Get defined action
-	        
-	        @param [string]: The name of the predefined action
-	    */
-	    getDefined: function (key) {
-	        var props = {},
-	            thisProp = {},
-	            keys = generateKeys(key),
-	            keysLength = keys.length,
-	            i = 0;
-	
-	        for (; i < keysLength; i++) {
-	            thisProp = presetStore[keys[i]];
-	
-	            if (thisProp) {
-	                props = utils.merge(props, thisProp);
-	            }
-	        }
-	        
-	        return props;
-	    }
-	    
-	};
-	
-	module.exports = new Presets();
-
-/***/ },
-/* 19 */
 /*!*****************************!*\
   !*** ./src/utils/easing.js ***!
   \*****************************/
@@ -2115,8 +1814,8 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ./calc.js */ 13),
-	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 38),
+	var calc = __webpack_require__(/*! ./calc.js */ 14),
+	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 36),
 	    
 	    // Constants
 	    INVALID_EASING = ": Not defined",
@@ -2299,6 +1998,291 @@
 	
 	module.exports = easing;
 
+
+/***/ },
+/* 18 */
+/*!*******************************!*\
+  !*** ./src/action/presets.js ***!
+  \*******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 20),
+	    
+	    generateKeys = function (key) {
+	        var keys = key.split(DOT),
+	            keysLength = keys.length,
+	            lastKey = keys[0],
+	            i = 1;
+	        
+	        for (; i < keysLength; i++) {
+	            keys[i] = lastKey += DOT + keys[i];
+	        }
+	        
+	        return keys;
+	    },
+	
+	    presetStore = {},
+	    DOT = '.',
+	    Presets = function () {};
+	
+	Presets.prototype = {
+	
+	    /*
+	        Define a new Action preset
+	        
+	        Syntax
+	        
+	            .define(name, preset)
+	                @param [string]: Name of preset
+	                @param [object]: Preset options/properties
+	                
+	            .define(presets)
+	                @param [object]: Multiple presets as named object
+	                
+	        @return [Redshift]
+	    */
+	    add: function (name, preset) {
+	        var presets = {},
+	            key = '';
+	
+	        if (utils.isObj(name)) {
+	            presets = name;
+	        } else {
+	            presets[name] = preset;
+	        }
+	
+	        for (key in presets) {
+	            if (presets.hasOwnProperty(key)) {
+	                presetStore[key] = presets[key];
+	            }
+	        }
+	    },
+	    
+	    
+	    /*
+	        Get defined action
+	        
+	        @param [string]: The name of the predefined action
+	    */
+	    getDefined: function (key) {
+	        var props = {},
+	            thisProp = {},
+	            keys = generateKeys(key),
+	            keysLength = keys.length,
+	            i = 0;
+	
+	        for (; i < keysLength; i++) {
+	            thisProp = presetStore[keys[i]];
+	
+	            if (thisProp) {
+	                props = utils.merge(props, thisProp);
+	            }
+	        }
+	        
+	        return props;
+	    }
+	    
+	};
+	
+	module.exports = new Presets();
+
+/***/ },
+/* 19 */
+/*!********************************!*\
+  !*** ./src/process/process.js ***!
+  \********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Process
+	*/
+	"use strict";
+	
+	var manager = __webpack_require__(/*! ./manager.js */ 38),
+	
+	    /*
+	        Process constructor
+	        
+	        Syntax
+	            var process = new Process(scope, callback);
+	            var process = new Process(callback);
+	    */
+	    Process = function (arg0, arg1) {
+	        var hasScope = (arg1 !== undefined),
+	            callback = hasScope ? arg1 : arg0,
+	            scope = hasScope ? arg0 : this;
+	
+	        this.setCallback(callback);
+	        this.setScope(scope);
+	
+	        this.setId(manager.register(this));
+	    };
+	    
+	Process.prototype = {
+	    
+	    /*
+	        [boolean]: Is this process currently active?
+	    */
+	    isActive: false,
+	    
+	    /*
+	        [boolean]: Has this process been killed?
+	    */
+	    isKilled: false,
+	
+	    /*
+	        Fire callback
+	        
+	        @param [timestamp]: Timestamp of currently-executed frame
+	        @param [number]: Time since last frame
+	    */
+	    fire: function (timestamp, elapsed) {
+	        // Check timers
+	        if (this.isActive) {
+	            this.callback.call(this.scope, timestamp, elapsed);
+	        }
+	        
+	        if (this.isInterval) {
+	            this.deactivate();
+	        }
+	        
+	        return this;
+	    },
+	    
+	    /*
+	        Set process callback
+	        
+	        @param [function]: Function to fire per frame
+	        @return [this]
+	    */
+	    setCallback: function (callback) {
+	        this.callback = callback;
+	        
+	        return this;
+	    },
+	    
+	    /*
+	        Set callback scope
+	        
+	        @param [function]: Fire callback in this context
+	        @return [this]
+	    */
+	    setScope: function (scope) {
+	        this.scope = scope;
+	        
+	        return this;
+	    },
+	    
+	    /*
+	        Start process
+	        
+	        @param [int]: Duration of process in ms, 0 if indefinite
+	        @return [this]
+	    */
+	    start: function (duration) {
+	        var self = this;
+	        
+	        self.reset();
+	        self.activate();
+	        
+	        if (duration) {
+	            self.stopTimer = setTimeout(function () {
+	                self.stop();
+	            }, duration);
+	        }
+	
+	        return self;
+	    },
+	    
+	    /*
+	        Stop process
+	        
+	        @return [this]
+	    */
+	    stop: function () {
+	        this.reset();
+	        this.deactivate();
+	        
+	        return this;
+	    },
+	    
+	    /*
+	        Activate process
+	        
+	        @return [this]
+	    */
+	    activate: function () {
+	        if (!this.isKilled) {
+	            this.isActive = true;
+	            manager.activate(this.id);
+	        }
+	
+	        return this;
+	    },
+	    
+	    /*
+	        Deactivate process
+	        
+	        @return [this]
+	    */
+	    deactivate: function () {
+	        this.isActive = false;
+	        manager.deactivate(this.id);
+	        
+	        return this;
+	    },
+	    
+	    /*
+	        Fire process every x ms
+	        
+	        @param [int]: Number of ms to wait between refiring process.
+	        @return [this]
+	    */
+	    every: function (interval) {
+		    var self = this;
+	
+	        self.reset();
+	
+	        self.isInterval = true;
+	
+	        self.intervalTimer = setInterval(function () {
+	            self.activate();
+	        }, interval);
+	        
+	        return this;
+	    },
+	    
+	    /*
+	        Clear all timers
+	        
+	        @param 
+	    */
+	    reset: function () {
+	        this.isInterval = false;
+	        clearTimeout(this.stopTimer);
+	        clearInterval(this.intervalTimer);
+	        
+	        return this;
+	    },
+	    
+	    /*
+	        Kill function in manager, release for garbage collection
+	    */
+	    kill: function () {
+	        this.stop();
+	        this.isKilled = true;
+	        manager.kill(this.id);
+	    },
+	    
+	    setId: function (id) {
+	        this.id = id;
+	        return this;
+	    }
+	};
+	
+	module.exports = Process;
 
 /***/ },
 /* 20 */
@@ -2537,7 +2521,7 @@
 	            valueSegment = 1 / (steps - 1),
 	            i = 1;
 	
-	        for (; i <= steps; i++) {
+	        for (; i <= steps + 1; i++) {
 	            
 	            if (progress < progressSegment * i) {
 	                steppedProgress = valueSegment * (i - 1);
@@ -2579,7 +2563,7 @@
 
 	"use strict";
 	
-	var routes = __webpack_require__(/*! ../core/routes.js */ 39),
+	var routes = __webpack_require__(/*! ../core/routes.js */ 41),
 	    routeKeys = [],
 	    numRoutes,
 	    processes = ['preprocess', 'onStart', 'onEnd'],
@@ -2680,7 +2664,7 @@
 	
 	var actionPrototype = __webpack_require__(/*! ../action/action.js */ 15).prototype,
 	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 28),
-	    rubix = __webpack_require__(/*! ../core/rubix.js */ 40);
+	    rubix = __webpack_require__(/*! ../core/rubix.js */ 42);
 	
 	module.exports = function (name, newRubix) {
 	    var parser = parseArgs[name] || parseArgs.generic;
@@ -2707,7 +2691,7 @@
 	*/
 	"use strict";
 	
-	var simulations = __webpack_require__(/*! ../core/simulations.js */ 27);
+	var simulations = __webpack_require__(/*! ../core/simulations.js */ 40);
 	
 	module.exports = function (name, simulation) {
 	    simulations[name] = simulation;
@@ -2715,6 +2699,23 @@
 
 /***/ },
 /* 24 */
+/*!********************************!*\
+  !*** ./src/action/simulate.js ***!
+  \********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var simulations = __webpack_require__(/*! ../core/simulations.js */ 40);
+	
+	module.exports = function (simulation, value, duration, started) {
+	    var velocity = simulations[simulation](value, duration, started);
+	    
+	    return (Math.abs(velocity) >= value.stopSpeed) ? velocity : 0;
+	};
+
+/***/ },
+/* 25 */
 /*!*********************************!*\
   !*** ./src/routes/css/build.js ***!
   \*********************************/
@@ -2722,9 +2723,9 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 41),
-	    templates = __webpack_require__(/*! ./templates.js */ 42),
-	    lookup = __webpack_require__(/*! ./lookup.js */ 43),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 43),
+	    templates = __webpack_require__(/*! ./templates.js */ 44),
+	    lookup = __webpack_require__(/*! ./lookup.js */ 45),
 	    
 	    TRANSFORM = 'transform',
 	    TRANSLATE_Z = 'translateZ',
@@ -2776,7 +2777,7 @@
 	};
 
 /***/ },
-/* 25 */
+/* 26 */
 /*!*********************************!*\
   !*** ./src/routes/css/split.js ***!
   \*********************************/
@@ -2784,10 +2785,10 @@
 
 	"use strict";
 	
-	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 44),
-	    dictionary = __webpack_require__(/*! ./dictionary.js */ 41),
-	    splitLookup = __webpack_require__(/*! ./lookup.js */ 43),
-	    splitters = __webpack_require__(/*! ./splitters.js */ 45),
+	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 47),
+	    dictionary = __webpack_require__(/*! ./dictionary.js */ 43),
+	    splitLookup = __webpack_require__(/*! ./lookup.js */ 45),
+	    splitters = __webpack_require__(/*! ./splitters.js */ 48),
 	    
 	    utils = __webpack_require__(/*! ../../utils/utils.js */ 20),
 	    
@@ -2877,7 +2878,7 @@
 	};
 
 /***/ },
-/* 26 */
+/* 27 */
 /*!************************************!*\
   !*** ./src/routes/path/builder.js ***!
   \************************************/
@@ -2941,115 +2942,6 @@
 	};
 
 /***/ },
-/* 27 */
-/*!*********************************!*\
-  !*** ./src/core/simulations.js ***!
-  \*********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    Anatomy of a simulation
-	    
-	    @param [Value]: Value we're simulating
-	    @param [number]: Time since last frame in milliseconds
-	    @param [number]: Action start time in milliseconds
-	    @return [number]: New velocity
-	*/
-	"use strict";
-	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 13),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
-	    speedPerFrame = calc.speedPerFrame;
-	
-	module.exports = {
-	    
-	    /*
-	        Velocity
-	        
-	        The default .run() simulation.
-	        
-	        Applies any set deceleration and acceleration to existing velocity
-	    */
-	    velocity: function (value, duration) {
-	        return value.velocity - speedPerFrame(value.deceleration, duration) + speedPerFrame(value.acceleration, duration);
-	    },
-	    
-	    /*
-	        Gravity
-	        
-	        Applies gravity as acceleration
-	    */
-	    gravity: function (value, duration) {
-	        return value.velocity + speedPerFrame(value.gravity, duration);
-	    },
-	    
-	    /*
-	        Glide
-	        
-	        Emulates touch device scrolling effects with exponential decay
-	        http://ariya.ofilabs.com/2013/11/javascript-kinetic-scrolling-part-2.html
-	    */
-	    glide: function (value, duration, started) {
-	        var timeUntilFinished = - utils.currentTime() - started,
-	            delta = - value.to * Math.exp(timeUntilFinished / value.timeConstant);
-	        
-	        return (value.to + delta) - value.current;
-	    },
-	    
-	    /*
-	        Friction
-	    */
-	    friction: function (value, duration) {
-	        var newVelocity = speedPerFrame(value.velocity, duration) * (1 - value.friction);
-	        return calc.speedPerSecond(newVelocity, duration);
-	    },
-	    
-	    /*
-	        Spring
-	    */
-	    spring: function (value, duration) {
-	        var distance = value.to - value.current;
-	        
-	        value.velocity += distance * speedPerFrame(value.spring, duration);
-	        
-	        return this.friction(value, duration);
-	    },
-	    
-	    /*
-	        Bounce
-	        
-	        Invert velocity and reduce by provided fraction
-	    */
-	    bounce: function (value) {
-	        var distance = 0,
-	            to = value.to,
-	            current = value.current,
-	            bounce = value.bounce;
-	        
-	        // If we're using glide simulation we have to flip our target too
-	        if (value.simulate === 'glide') {
-	            distance = to - current;
-	            value.to = current - (distance * bounce);
-	        }
-	        
-	        return value.velocity *= - bounce;
-	    },
-	    
-	    /*
-	        Capture
-	        
-	        Convert simulation to spring and set target to limit
-	    */
-	    capture: function (value, target) {
-	        value.to = target;
-	        value.simulate = 'spring';
-	        value.capture = value.min = value.max = undefined;
-	        value.spring = 90;
-	        value.friction = 0.15;
-	    }
-	};
-
-/***/ },
 /* 28 */
 /*!**********************************!*\
   !*** ./src/action/parse-args.js ***!
@@ -3060,7 +2952,7 @@
 	
 	var utils = __webpack_require__(/*! ../utils/utils.js */ 20),
 	    presets = __webpack_require__(/*! ./presets.js */ 18),
-	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 47),
+	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 51),
 	
 	    STRING = 'string',
 	    NUMBER = 'number',
@@ -3203,7 +3095,7 @@
 
 	"use strict";
 	
-	var defaultProps = __webpack_require__(/*! ../defaults/value-props.js */ 48),
+	var defaultProps = __webpack_require__(/*! ../defaults/value-props.js */ 39),
 	    defaultState = __webpack_require__(/*! ../defaults/value-state.js */ 49),
 	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 50),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
@@ -3491,9 +3383,9 @@
 	*/
 	"use strict";
 	
-	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 40),
+	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 42),
 	    routes = __webpack_require__(/*! ./routes.js */ 21),
-	    calc = __webpack_require__(/*! ../utils/calc.js */ 13);
+	    calc = __webpack_require__(/*! ../utils/calc.js */ 14);
 	
 	module.exports = function (action, framestamp, frameDuration) {
 	    var props = action.props(),
@@ -3760,261 +3652,6 @@
 
 /***/ },
 /* 36 */
-/*!******************************!*\
-  !*** ./src/utils/history.js ***!
-  \******************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var // [number]: Default max size of history
-	    maxHistorySize = 3,
-	    
-	    /*
-	        History constructor
-	        
-	        @param [var]: Variable to store in first history slot
-	        @param [int] (optional): Maximum size of history
-	    */
-	    History = function (obj, max) {
-	        this.max = max || maxHistorySize;
-	        this.entries = [];
-	        this.add(obj);
-	    };
-	    
-	History.prototype = {
-	    
-	    /*
-	        Push new var to history
-	        
-	        Shift out oldest entry if we've reached maximum capacity
-	        
-	        @param [var]: Variable to push into history.entries
-	    */
-	    add: function (obj) {
-	        var currentSize = this.getSize();
-	        
-	        this.entries.push(obj);
-	        
-	        if (currentSize >= this.max) {
-	            this.entries.shift();
-	        }
-	    },
-	    
-	    /*
-	        Get variable at specified index
-	
-	        @param [int]: Index
-	        @return [var]: Var found at specified index
-	    */
-	    get: function (i) {
-	        i = (typeof i === 'number') ? i : this.getSize() - 1;
-	
-	        return this.entries[i];
-	    },
-	    
-	    /*
-	        Get the second newest history entry
-	        
-	        @return [var]: Entry found at index size - 2
-	    */
-	    getPrevious: function () {
-	        return this.get(this.getSize() - 2);
-	    },
-	    
-	    /*
-	        Get current history size
-	        
-	        @return [int]: Current length of entries.length
-	    */
-	    getSize: function () {
-	        return this.entries.length;
-	    }
-	    
-	};
-	
-	module.exports = History;
-
-/***/ },
-/* 37 */
-/*!********************************!*\
-  !*** ./src/process/manager.js ***!
-  \********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var theLoop = __webpack_require__(/*! ./loop.js */ 51),
-	    ProcessManager = function () {
-	        this.all = {};
-	        this.active = [];
-	        this.deactivateQueue = [];
-	        theLoop.setCallback(this, this.fireActive);
-	    };
-	    
-	ProcessManager.prototype = {
-	    
-	    /*
-	        [int]: Used for process ID
-	    */
-	    processCounter: 0,
-	    
-	    /*
-	        [int]: Number of active processes
-	    */
-	    activeCount: 0,
-	    
-	    /*
-	        Get the process with a given index
-	        
-	        @param [int]: Index of process
-	        @return [Process]
-	    */
-	    getProcess: function (i) {
-	        return this.all[i];
-	    },
-	    
-	    /*
-	        Get number of active processes
-	        
-	        @return [int]: Number of active processes
-	    */
-	    getActiveCount: function () {
-	        return this.activeCount;
-	    },
-	    
-	    /*
-	        Get active tokens
-	
-	        @return [array]: Active tokens
-	    */
-	    getActive: function () {
-	        return this.active;
-	    },
-	    
-	    /*
-	        Get the length of the deactivate queue
-	        
-	        @return [int]: Length of queue
-	    */
-	    getQueueLength: function () {
-	        return this.deactivateQueue.length;
-	    },
-	    
-	    /*
-	        Fire all active processes
-	        
-	        @param [int]: Timestamp of executing frames
-	        @param [int]: Time since previous frame
-	        @return [boolean]: True if active processes found
-	    */
-	    fireActive: function (framestamp, elapsed) {
-	        var process,
-	            activeCount = 0,
-	            activeProcesses = [];
-	
-	        // Purge and check active count before execution
-	        this.purge();
-	        activeCount = this.getActiveCount();
-	        activeProcesses = this.getActive();
-	        
-	        // Loop through active processes and fire callback
-	        for (var i = 0; i < activeCount; i++) {
-	            process = this.getProcess(activeProcesses[i]);
-	            
-	            if (process) {
-	                process.fire(framestamp, elapsed);
-	            }
-	        }
-	
-	        // Repurge and recheck active count after execution
-	        this.purge();
-	        activeCount = this.getActiveCount();
-	        
-	        return activeCount ? true : false;
-	    },
-	    
-	    /*
-	        Register a new process
-	        
-	        @param [Process]
-	        @return [int]: Index of process to be used as ID
-	    */
-	    register: function (process) {
-	        var id = this.processCounter;
-	
-	        this.all[id] = process;
-	        
-	        this.processCounter++;
-	        
-	        return id;
-	    },
-	    
-	    /*
-	        Activate a process
-	        
-	        @param [int]: Index of active process
-	    */
-	    activate: function (i) {
-	        var queueIndex = this.deactivateQueue.indexOf(i),
-	            isQueued = (queueIndex > -1),
-	            isActive = (this.active.indexOf(i) > -1);
-	        
-	        // Remove from deactivateQueue if in there
-	        if (isQueued) {
-	            this.deactivateQueue.splice(queueIndex, 1);
-	        }
-	        
-	        // Add to active processes array if not already in there
-	        if (!isActive) {
-	            this.active.push(i);
-	            this.activeCount++;
-	            theLoop.start(this);
-	        }
-	    },
-	    
-	    /*
-	        Deactivate a process
-	        
-	        @param [int]: Index of process to add to deactivate queue
-	    */
-	    deactivate: function (i) {
-	        this.deactivateQueue.push(i);
-	    },
-	    
-	    /*
-	        Purge the deactivate queue
-	    */
-	    purge: function () {
-	        var activeIndex,
-	            queueLength = this.getQueueLength();
-	        
-	        while (queueLength--) {
-	            activeIndex = this.active.indexOf(this.deactivateQueue[queueLength]);
-	            
-	            // If process in active list deactivate
-	            if (activeIndex > -1) {
-	                this.active.splice(activeIndex, 1);
-	                this.activeCount--;
-	            }
-	        }
-	        
-	        this.deactivateQueue = [];
-	    },
-	    
-	    /*
-	        Remove the provided id and reindex remaining processes
-	    */
-	    kill: function (id) {
-	        delete this.all[id];
-	    }
-	    
-	};
-	
-	module.exports = new ProcessManager();
-
-/***/ },
-/* 38 */
 /*!*****************************!*\
   !*** ./src/types/bezier.js ***!
   \*****************************/
@@ -4189,7 +3826,488 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
+/* 37 */
+/*!******************************!*\
+  !*** ./src/utils/history.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var // [number]: Default max size of history
+	    maxHistorySize = 3,
+	    
+	    /*
+	        History constructor
+	        
+	        @param [var]: Variable to store in first history slot
+	        @param [int] (optional): Maximum size of history
+	    */
+	    History = function (obj, max) {
+	        this.max = max || maxHistorySize;
+	        this.entries = [];
+	        this.add(obj);
+	    };
+	    
+	History.prototype = {
+	    
+	    /*
+	        Push new var to history
+	        
+	        Shift out oldest entry if we've reached maximum capacity
+	        
+	        @param [var]: Variable to push into history.entries
+	    */
+	    add: function (obj) {
+	        var currentSize = this.getSize();
+	        
+	        this.entries.push(obj);
+	        
+	        if (currentSize >= this.max) {
+	            this.entries.shift();
+	        }
+	    },
+	    
+	    /*
+	        Get variable at specified index
+	
+	        @param [int]: Index
+	        @return [var]: Var found at specified index
+	    */
+	    get: function (i) {
+	        i = (typeof i === 'number') ? i : this.getSize() - 1;
+	
+	        return this.entries[i];
+	    },
+	    
+	    /*
+	        Get the second newest history entry
+	        
+	        @return [var]: Entry found at index size - 2
+	    */
+	    getPrevious: function () {
+	        return this.get(this.getSize() - 2);
+	    },
+	    
+	    /*
+	        Get current history size
+	        
+	        @return [int]: Current length of entries.length
+	    */
+	    getSize: function () {
+	        return this.entries.length;
+	    }
+	    
+	};
+	
+	module.exports = History;
+
+/***/ },
+/* 38 */
+/*!********************************!*\
+  !*** ./src/process/manager.js ***!
+  \********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var theLoop = __webpack_require__(/*! ./loop.js */ 52),
+	    ProcessManager = function () {
+	        this.all = {};
+	        this.active = [];
+	        this.deactivateQueue = [];
+	        theLoop.setCallback(this, this.fireActive);
+	    };
+	    
+	ProcessManager.prototype = {
+	    
+	    /*
+	        [int]: Used for process ID
+	    */
+	    processCounter: 0,
+	    
+	    /*
+	        [int]: Number of active processes
+	    */
+	    activeCount: 0,
+	    
+	    /*
+	        Get the process with a given index
+	        
+	        @param [int]: Index of process
+	        @return [Process]
+	    */
+	    getProcess: function (i) {
+	        return this.all[i];
+	    },
+	    
+	    /*
+	        Get number of active processes
+	        
+	        @return [int]: Number of active processes
+	    */
+	    getActiveCount: function () {
+	        return this.activeCount;
+	    },
+	    
+	    /*
+	        Get active tokens
+	
+	        @return [array]: Active tokens
+	    */
+	    getActive: function () {
+	        return this.active;
+	    },
+	    
+	    /*
+	        Get the length of the deactivate queue
+	        
+	        @return [int]: Length of queue
+	    */
+	    getQueueLength: function () {
+	        return this.deactivateQueue.length;
+	    },
+	    
+	    /*
+	        Fire all active processes
+	        
+	        @param [int]: Timestamp of executing frames
+	        @param [int]: Time since previous frame
+	        @return [boolean]: True if active processes found
+	    */
+	    fireActive: function (framestamp, elapsed) {
+	        var process,
+	            activeCount = 0,
+	            activeProcesses = [];
+	
+	        // Purge and check active count before execution
+	        this.purge();
+	        activeCount = this.getActiveCount();
+	        activeProcesses = this.getActive();
+	        
+	        // Loop through active processes and fire callback
+	        for (var i = 0; i < activeCount; i++) {
+	            process = this.getProcess(activeProcesses[i]);
+	            
+	            if (process) {
+	                process.fire(framestamp, elapsed);
+	            }
+	        }
+	
+	        // Repurge and recheck active count after execution
+	        this.purge();
+	        activeCount = this.getActiveCount();
+	        
+	        return activeCount ? true : false;
+	    },
+	    
+	    /*
+	        Register a new process
+	        
+	        @param [Process]
+	        @return [int]: Index of process to be used as ID
+	    */
+	    register: function (process) {
+	        var id = this.processCounter;
+	
+	        this.all[id] = process;
+	        
+	        this.processCounter++;
+	        
+	        return id;
+	    },
+	    
+	    /*
+	        Activate a process
+	        
+	        @param [int]: Index of active process
+	    */
+	    activate: function (i) {
+	        var queueIndex = this.deactivateQueue.indexOf(i),
+	            isQueued = (queueIndex > -1),
+	            isActive = (this.active.indexOf(i) > -1);
+	        
+	        // Remove from deactivateQueue if in there
+	        if (isQueued) {
+	            this.deactivateQueue.splice(queueIndex, 1);
+	        }
+	        
+	        // Add to active processes array if not already in there
+	        if (!isActive) {
+	            this.active.push(i);
+	            this.activeCount++;
+	            theLoop.start(this);
+	        }
+	    },
+	    
+	    /*
+	        Deactivate a process
+	        
+	        @param [int]: Index of process to add to deactivate queue
+	    */
+	    deactivate: function (i) {
+	        this.deactivateQueue.push(i);
+	    },
+	    
+	    /*
+	        Purge the deactivate queue
+	    */
+	    purge: function () {
+	        var activeIndex,
+	            queueLength = this.getQueueLength();
+	        
+	        while (queueLength--) {
+	            activeIndex = this.active.indexOf(this.deactivateQueue[queueLength]);
+	            
+	            // If process in active list deactivate
+	            if (activeIndex > -1) {
+	                this.active.splice(activeIndex, 1);
+	                this.activeCount--;
+	            }
+	        }
+	        
+	        this.deactivateQueue = [];
+	    },
+	    
+	    /*
+	        Remove the provided id and reindex remaining processes
+	    */
+	    kill: function (id) {
+	        delete this.all[id];
+	    }
+	    
+	};
+	
+	module.exports = new ProcessManager();
+
+/***/ },
 /* 39 */
+/*!*************************************!*\
+  !*** ./src/defaults/value-props.js ***!
+  \*************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	    // [number]: Current target value
+	    to: undefined,
+	
+	    // [number]: Maximum permitted value during .track and .run
+	    min: undefined,
+	    
+	    // [number]: Minimum permitted value during .track and .run
+	    max: undefined,
+	    
+	    // [number]: Origin
+	    origin: 0,
+	    
+	    // [boolean]: Set to true when both min and max detected
+	    hasRange: false,
+	
+	    // [boolean]: Round output if true
+	    round: false,
+	    
+	    // [string]: Route
+	    route: 'values',
+	    
+	    // [string]: Non-namespaced output value
+	    name: '',
+	    
+	    // [string]: Unit string to append to value on ourput
+	    unit: undefined,
+	    
+	    parent: '',
+	    
+	    unitName: '',
+	
+	    /*
+	        Link properties
+	    */
+	
+	    // [string]: Name of value to listen to
+	    link: undefined,
+	    
+	    // [array]: Linear range of values (eg [-100, -50, 50, 100]) of linked value to map to .mapTo
+	    mapLink: undefined,
+	    
+	    // [array]: Non-linear range of values (eg [0, 1, 1, 0]) to map to .mapLink - here the linked value being 75 would result in a value of 0.5
+	    mapTo: undefined,
+	
+	
+	    /*
+	        .run() properties
+	    */
+	
+	    // [string]: Simulation to .run
+	    simulate: 'velocity',
+	    
+	    // [number]: Deceleration to apply to value, in units per second
+	    deceleration: 0,
+	    
+	    // [number]: Acceleration to apply to value, in units per second
+	    acceleration: 0,
+	    
+	    // [number]: Gravity acceleration to apply to value, in units per second
+	    gravity: 30,
+	    
+	    // [number]: Factor to multiply velocity by on bounce
+	    bounce: 0,
+	    
+	    // [number]: Spring strength during 'string'
+	    spring: 80,
+	    
+	    // [number]: Timeconstant of glide
+	    timeConstant: 395,
+	    
+	    // [number]: Stop simulation under this speed
+	    stopSpeed: 10,
+	    
+	    // [boolean]: Capture with spring physics on limit breach
+	    capture: false,
+	    
+	    // [number]: Friction to apply per frame
+	    friction: 0.05,
+	
+	    /*
+	        .play() properties
+	    */
+	
+	    // [number]: Duration of animation in ms
+	    duration: 400,
+	    
+	    // [number]: Duration of delay in ms
+	    delay: 0,
+	    
+	    // [number]: Stagger delay as factor of duration (ie 0.2 with duration of 1000ms = 200ms)
+	    stagger: 0,
+	    
+	    // [string]: Easing to apply
+	    ease: 'easeInOut',
+	    
+	    // [number]: Number of steps to execute animation
+	    steps: 0,
+	    
+	    // [string]: Tells Redshift when to step, at the start or end of a step. Other option is 'start' as per CSS spec
+	    stepDirection: 'end',
+	
+	    /*
+	        .track() properties
+	    */
+	
+	    // [number]: Factor of movement outside of maximum range (ie 0.5 will move half as much as 1)
+	    escapeAmp: 0
+	};
+
+/***/ },
+/* 40 */
+/*!*********************************!*\
+  !*** ./src/core/simulations.js ***!
+  \*********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Anatomy of a simulation
+	    
+	    @param [Value]: Value we're simulating
+	    @param [number]: Time since last frame in milliseconds
+	    @param [number]: Action start time in milliseconds
+	    @return [number]: New velocity
+	*/
+	"use strict";
+	
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 14),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
+	    speedPerFrame = calc.speedPerFrame;
+	
+	module.exports = {
+	    
+	    /*
+	        Velocity
+	        
+	        The default .run() simulation.
+	        
+	        Applies any set deceleration and acceleration to existing velocity
+	    */
+	    velocity: function (value, duration) {
+	        return value.velocity - speedPerFrame(value.deceleration, duration) + speedPerFrame(value.acceleration, duration);
+	    },
+	    
+	    /*
+	        Gravity
+	        
+	        Applies gravity as acceleration
+	    */
+	    gravity: function (value, duration) {
+	        return value.velocity + speedPerFrame(value.gravity, duration);
+	    },
+	    
+	    /*
+	        Glide
+	        
+	        Emulates touch device scrolling effects with exponential decay
+	        http://ariya.ofilabs.com/2013/11/javascript-kinetic-scrolling-part-2.html
+	    */
+	    glide: function (value, duration, started) {
+	        var timeUntilFinished = - utils.currentTime() - started,
+	            delta = - value.to * Math.exp(timeUntilFinished / value.timeConstant);
+	        
+	        return (value.to + delta) - value.current;
+	    },
+	    
+	    /*
+	        Friction
+	    */
+	    friction: function (value, duration) {
+	        var newVelocity = speedPerFrame(value.velocity, duration) * (1 - value.friction);
+	        return calc.speedPerSecond(newVelocity, duration);
+	    },
+	    
+	    /*
+	        Spring
+	    */
+	    spring: function (value, duration) {
+	        var distance = value.to - value.current;
+	        
+	        value.velocity += distance * speedPerFrame(value.spring, duration);
+	        
+	        return this.friction(value, duration);
+	    },
+	    
+	    /*
+	        Bounce
+	        
+	        Invert velocity and reduce by provided fraction
+	    */
+	    bounce: function (value) {
+	        var distance = 0,
+	            to = value.to,
+	            current = value.current,
+	            bounce = value.bounce;
+	        
+	        // If we're using glide simulation we have to flip our target too
+	        if (value.simulate === 'glide') {
+	            distance = to - current;
+	            value.to = current - (distance * bounce);
+	        }
+	        
+	        return value.velocity *= - bounce;
+	    },
+	    
+	    /*
+	        Capture
+	        
+	        Convert simulation to spring and set target to limit
+	    */
+	    capture: function (value, target) {
+	        value.to = target;
+	        value.simulate = 'spring';
+	        value.capture = value.min = value.max = undefined;
+	        value.spring = 90;
+	        value.friction = 0.15;
+	    }
+	};
+
+/***/ },
+/* 41 */
 /*!****************************!*\
   !*** ./src/core/routes.js ***!
   \****************************/
@@ -4198,7 +4316,7 @@
 	module.exports = {};
 
 /***/ },
-/* 40 */
+/* 42 */
 /*!***************************!*\
   !*** ./src/core/rubix.js ***!
   \***************************/
@@ -4255,7 +4373,7 @@
 	module.exports = {};
 
 /***/ },
-/* 41 */
+/* 43 */
 /*!**************************************!*\
   !*** ./src/routes/css/dictionary.js ***!
   \**************************************/
@@ -4309,7 +4427,7 @@
 	module.exports = terms;
 
 /***/ },
-/* 42 */
+/* 44 */
 /*!*************************************!*\
   !*** ./src/routes/css/templates.js ***!
   \*************************************/
@@ -4317,7 +4435,7 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 41),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 43),
 	
 	    defaultValues = {
 	        Alpha: 1
@@ -4385,7 +4503,7 @@
 	module.exports = templates;
 
 /***/ },
-/* 43 */
+/* 45 */
 /*!**********************************!*\
   !*** ./src/routes/css/lookup.js ***!
   \**********************************/
@@ -4433,7 +4551,27 @@
 	};
 
 /***/ },
-/* 44 */
+/* 46 */
+/*!***********************************!*\
+  !*** ./src/routes/path/lookup.js ***!
+  \***********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	var STROKE = 'stroke',
+	    DASH = STROKE + '-dash', // stoke-width
+	    DASH_ARRAY = DASH + 'array'
+	
+	module.exports = {
+	    opacity: STROKE + '-opacity',
+	    width: STROKE + '-width',
+	    offset: DASH + 'offset',
+	    length: DASH_ARRAY,
+	    spacing: DASH_ARRAY,
+	    miterlimit: STROKE + '-miterlimit'
+	};
+
+/***/ },
+/* 47 */
 /*!********************************************!*\
   !*** ./src/routes/css/default-property.js ***!
   \********************************************/
@@ -4484,7 +4622,7 @@
 	module.exports = defaults;
 
 /***/ },
-/* 45 */
+/* 48 */
 /*!*************************************!*\
   !*** ./src/routes/css/splitters.js ***!
   \*************************************/
@@ -4492,7 +4630,7 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 41),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 43),
 	    utils = __webpack_require__(/*! ../../utils/utils.js */ 20),
 	
 	    /*
@@ -4723,27 +4861,84 @@
 	module.exports = splitters;
 
 /***/ },
-/* 46 */
-/*!***********************************!*\
-  !*** ./src/routes/path/lookup.js ***!
-  \***********************************/
+/* 49 */
+/*!*************************************!*\
+  !*** ./src/defaults/value-state.js ***!
+  \*************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var STROKE = 'stroke',
-	    DASH = STROKE + '-dash', // stoke-width
-	    DASH_ARRAY = DASH + 'array'
-	
 	module.exports = {
-	    opacity: STROKE + '-opacity',
-	    width: STROKE + '-width',
-	    offset: DASH + 'offset',
-	    length: DASH_ARRAY,
-	    spacing: DASH_ARRAY,
-	    miterlimit: STROKE + '-miterlimit'
+	    // [number]: Current value
+	    current: 0,
+	    
+	    // [number]: Change per second
+	    speed: 0,
+	    
+	    // [number]: Change per second plus direction (ie can be negative)
+	    velocity: 0,
+	    
+	    // [number]: Amount value has changed in the most recent frame
+	    frameChange: 0
 	};
 
 /***/ },
-/* 47 */
+/* 50 */
+/*!******************************!*\
+  !*** ./src/utils/resolve.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Property resolver
+	    -------------------------------------
+	    
+	    Checks if a property being set is
+	        a) a function
+	        b) a relative value
+	        c) a value as a unit
+	    and returns the resolved value
+	        
+	    @param [number || string || function]: New property value
+	    @param [number || string] (optional): Current property value
+	    @param [object] (optional): Parent property
+	    @param [object] (optional): Scope to resolve first argument if provided
+	    @returns [number || string]: Resolved value
+	*/
+	"use strict";
+	
+	var calc = __webpack_require__(/*! ./calc.js */ 14),
+	    utils = __webpack_require__(/*! ./utils.js */ 20);
+	
+	module.exports = function (newValue, currentValue, parent, scope) {
+	    var splitValueUnit = {};
+	    
+	    currentValue = currentValue || 0;
+	
+	    // Run function if this is a function
+	    if (typeof newValue == 'function') {
+	        newValue = newValue.call(scope, currentValue);
+	    }
+	    
+	    // Check if value is relative ie '+=10' - could have been returned from function
+	    if (newValue && newValue.indexOf && newValue.indexOf('=') > 0) {
+	        newValue = calc.relativeValue(currentValue, newValue);
+	    }
+	    
+	    // If value is still string it might have a unit property
+	    if (typeof newValue === 'string') {
+	        splitValueUnit = utils.splitValUnit(newValue);
+	
+	        if (!isNaN(splitValueUnit.value)) {
+	            newValue = splitValueUnit.value;
+	            parent.unit = splitValueUnit.unit;
+	        }
+	    }
+	
+	    return newValue;
+	};
+
+/***/ },
+/* 51 */
 /*!******************************!*\
   !*** ./src/input/pointer.js ***!
   \******************************/
@@ -4840,201 +5035,7 @@
 	module.exports = Pointer;
 
 /***/ },
-/* 48 */
-/*!*************************************!*\
-  !*** ./src/defaults/value-props.js ***!
-  \*************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	    // [number]: Current target value
-	    to: undefined,
-	
-	    // [number]: Maximum permitted value during .track and .run
-	    min: undefined,
-	    
-	    // [number]: Minimum permitted value during .track and .run
-	    max: undefined,
-	    
-	    // [number]: Origin
-	    origin: 0,
-	    
-	    // [boolean]: Set to true when both min and max detected
-	    hasRange: false,
-	
-	    // [boolean]: Round output if true
-	    round: false,
-	    
-	    // [string]: Route
-	    route: 'values',
-	    
-	    // [string]: Non-namespaced output value
-	    name: '',
-	    
-	    // [string]: Unit string to append to value on ourput
-	    unit: undefined,
-	    
-	    parent: '',
-	    
-	    unitName: '',
-	
-	    /*
-	        Link properties
-	    */
-	
-	    // [string]: Name of value to listen to
-	    link: undefined,
-	    
-	    // [array]: Linear range of values (eg [-100, -50, 50, 100]) of linked value to map to .mapTo
-	    mapLink: undefined,
-	    
-	    // [array]: Non-linear range of values (eg [0, 1, 1, 0]) to map to .mapLink - here the linked value being 75 would result in a value of 0.5
-	    mapTo: undefined,
-	
-	
-	    /*
-	        .run() properties
-	    */
-	
-	    // [string]: Simulation to .run
-	    simulate: 'velocity',
-	    
-	    // [number]: Deceleration to apply to value, in units per second
-	    deceleration: 0,
-	    
-	    // [number]: Acceleration to apply to value, in units per second
-	    acceleration: 0,
-	    
-	    // [number]: Gravity acceleration to apply to value, in units per second
-	    gravity: 30,
-	    
-	    // [number]: Factor to multiply velocity by on bounce
-	    bounce: 0,
-	    
-	    // [number]: Spring strength during 'string'
-	    spring: 80,
-	    
-	    // [number]: Timeconstant of glide
-	    timeConstant: 395,
-	    
-	    // [number]: Stop simulation under this speed
-	    stopSpeed: 10,
-	    
-	    // [boolean]: Capture with spring physics on limit breach
-	    capture: false,
-	    
-	    // [number]: Friction to apply per frame
-	    friction: 0.05,
-	
-	    /*
-	        .play() properties
-	    */
-	
-	    // [number]: Duration of animation in ms
-	    duration: 400,
-	    
-	    // [number]: Duration of delay in ms
-	    delay: 0,
-	    
-	    // [number]: Stagger delay as factor of duration (ie 0.2 with duration of 1000ms = 200ms)
-	    stagger: 0,
-	    
-	    // [string]: Easing to apply
-	    ease: 'easeInOut',
-	    
-	    // [number]: Number of steps to execute animation
-	    steps: 0,
-	    
-	    // [string]: Tells Redshift when to step, at the start or end of a step. Other option is 'start' as per CSS spec
-	    stepDirection: 'end',
-	
-	    /*
-	        .track() properties
-	    */
-	
-	    // [number]: Factor of movement outside of maximum range (ie 0.5 will move half as much as 1)
-	    escapeAmp: 0
-	};
-
-/***/ },
-/* 49 */
-/*!*************************************!*\
-  !*** ./src/defaults/value-state.js ***!
-  \*************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	    // [number]: Current value
-	    current: 0,
-	    
-	    // [number]: Change per second
-	    speed: 0,
-	    
-	    // [number]: Change per second plus direction (ie can be negative)
-	    velocity: 0,
-	    
-	    // [number]: Amount value has changed in the most recent frame
-	    frameChange: 0
-	};
-
-/***/ },
-/* 50 */
-/*!******************************!*\
-  !*** ./src/utils/resolve.js ***!
-  \******************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    Property resolver
-	    -------------------------------------
-	    
-	    Checks if a property being set is
-	        a) a function
-	        b) a relative value
-	        c) a value as a unit
-	    and returns the resolved value
-	        
-	    @param [number || string || function]: New property value
-	    @param [number || string] (optional): Current property value
-	    @param [object] (optional): Parent property
-	    @param [object] (optional): Scope to resolve first argument if provided
-	    @returns [number || string]: Resolved value
-	*/
-	"use strict";
-	
-	var calc = __webpack_require__(/*! ./calc.js */ 13),
-	    utils = __webpack_require__(/*! ./utils.js */ 20);
-	
-	module.exports = function (newValue, currentValue, parent, scope) {
-	    var splitValueUnit = {};
-	    
-	    currentValue = currentValue || 0;
-	
-	    // Run function if this is a function
-	    if (typeof newValue == 'function') {
-	        newValue = newValue.call(scope, currentValue);
-	    }
-	    
-	    // Check if value is relative ie '+=10' - could have been returned from function
-	    if (newValue && newValue.indexOf && newValue.indexOf('=') > 0) {
-	        newValue = calc.relativeValue(currentValue, newValue);
-	    }
-	    
-	    // If value is still string it might have a unit property
-	    if (typeof newValue === 'string') {
-	        splitValueUnit = utils.splitValUnit(newValue);
-	
-	        if (!isNaN(splitValueUnit.value)) {
-	            newValue = splitValueUnit.value;
-	            parent.unit = splitValueUnit.unit;
-	        }
-	    }
-	
-	    return newValue;
-	};
-
-/***/ },
-/* 51 */
+/* 52 */
 /*!*****************************!*\
   !*** ./src/process/loop.js ***!
   \*****************************/
@@ -5045,7 +5046,7 @@
 	*/
 	"use strict";
 	
-	var Timer = __webpack_require__(/*! ./timer.js */ 52),
+	var Timer = __webpack_require__(/*! ./timer.js */ 53),
 	    Loop = function () {
 	        this.timer = new Timer();
 	    };
@@ -5110,7 +5111,7 @@
 	module.exports = new Loop();
 
 /***/ },
-/* 52 */
+/* 53 */
 /*!******************************!*\
   !*** ./src/process/timer.js ***!
   \******************************/
