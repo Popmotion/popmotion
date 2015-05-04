@@ -2295,9 +2295,7 @@
 	*/
 	"use strict";
 	
-	var defaultValueProps = __webpack_require__(/*! ../defaults/value-props.js */ 38),
-	
-	    protectedProperties = ['scope',  'dom'],
+	var protectedProperties = ['scope',  'dom'],
 	    
 	    isProtected = function (key) {
 	        return (protectedProperties.indexOf(key) !== -1);
@@ -2513,26 +2511,25 @@
 	        Create stepped version of 0-1 progress
 	        
 	        @param [number]: Current value
-	        @param [number]: Max range
 	        @param [int]: Number of steps
-	        @param [string]: Direction 
 	        @return [number]: Stepped value
 	    */
-	    stepProgress: function (value, steps, direction) {
-	        var stepped = 0,
-	            segment = 1 / steps,
-	            i = 0,
-	            visibility = (direction === defaultValueProps.stepDirection) ? 1 : 0;
-	            
+	    stepProgress: function (progress, steps) {
+	        var steppedProgress = 0,
+	            progressSegment = 1 / steps,
+	            valueSegment = 1 / (steps - 1),
+	            i = 1;
+	
 	        for (; i <= steps; i++) {
-	            stepped = i * segment;
 	            
-	            if (value < (i + visibility) * segment) {
+	            if (progress < progressSegment * i) {
+	                steppedProgress = valueSegment * (i - 1);
 	                break;
 	            }
+	
 	        }
 	        
-	        return stepped;
+	        return steppedProgress;
 	    },
 	
 	    /*
@@ -2565,7 +2562,7 @@
 
 	"use strict";
 	
-	var routes = __webpack_require__(/*! ../core/routes.js */ 39),
+	var routes = __webpack_require__(/*! ../core/routes.js */ 38),
 	    routeKeys = [],
 	    numRoutes,
 	    processes = ['preprocess', 'onStart', 'onEnd'],
@@ -2666,7 +2663,7 @@
 	
 	var actionPrototype = __webpack_require__(/*! ../action/action.js */ 13).prototype,
 	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 27),
-	    rubix = __webpack_require__(/*! ../core/rubix.js */ 40);
+	    rubix = __webpack_require__(/*! ../core/rubix.js */ 39);
 	
 	module.exports = function (name, newRubix) {
 	    var parser = parseArgs[name] || parseArgs.generic;
@@ -2693,7 +2690,7 @@
 	*/
 	"use strict";
 	
-	var simulations = __webpack_require__(/*! ../core/simulations.js */ 41);
+	var simulations = __webpack_require__(/*! ../core/simulations.js */ 40);
 	
 	module.exports = function (name, simulation) {
 	    simulations[name] = simulation;
@@ -2708,7 +2705,7 @@
 
 	"use strict";
 	
-	var simulations = __webpack_require__(/*! ../core/simulations.js */ 41);
+	var simulations = __webpack_require__(/*! ../core/simulations.js */ 40);
 	
 	module.exports = function (simulation, value, duration, started) {
 	    var velocity = simulations[simulation](value, duration, started);
@@ -2725,9 +2722,9 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 42),
-	    templates = __webpack_require__(/*! ./templates.js */ 43),
-	    lookup = __webpack_require__(/*! ./lookup.js */ 44),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 41),
+	    templates = __webpack_require__(/*! ./templates.js */ 42),
+	    lookup = __webpack_require__(/*! ./lookup.js */ 43),
 	    
 	    TRANSFORM = 'transform',
 	    TRANSLATE_Z = 'translateZ',
@@ -2787,10 +2784,10 @@
 
 	"use strict";
 	
-	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 45),
-	    dictionary = __webpack_require__(/*! ./dictionary.js */ 42),
-	    splitLookup = __webpack_require__(/*! ./lookup.js */ 44),
-	    splitters = __webpack_require__(/*! ./splitters.js */ 46),
+	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 44),
+	    dictionary = __webpack_require__(/*! ./dictionary.js */ 41),
+	    splitLookup = __webpack_require__(/*! ./lookup.js */ 43),
+	    splitters = __webpack_require__(/*! ./splitters.js */ 45),
 	    
 	    utils = __webpack_require__(/*! ../../utils/utils.js */ 19),
 	    
@@ -2888,7 +2885,7 @@
 
 	"use strict";
 	
-	var lookup = __webpack_require__(/*! ./lookup.js */ 47),
+	var lookup = __webpack_require__(/*! ./lookup.js */ 46),
 	
 	    /*
 	        Convert percentage to pixels
@@ -2954,7 +2951,7 @@
 	
 	var utils = __webpack_require__(/*! ../utils/utils.js */ 19),
 	    presets = __webpack_require__(/*! ./presets.js */ 16),
-	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 48),
+	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 47),
 	
 	    STRING = 'string',
 	    NUMBER = 'number',
@@ -3097,7 +3094,7 @@
 
 	"use strict";
 	
-	var defaultProps = __webpack_require__(/*! ../defaults/value-props.js */ 38),
+	var defaultProps = __webpack_require__(/*! ../defaults/value-props.js */ 48),
 	    defaultState = __webpack_require__(/*! ../defaults/value-state.js */ 49),
 	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 50),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
@@ -3385,7 +3382,7 @@
 	*/
 	"use strict";
 	
-	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 40),
+	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 39),
 	    routes = __webpack_require__(/*! ./routes.js */ 20),
 	    calc = __webpack_require__(/*! ../utils/calc.js */ 18);
 	
@@ -4084,123 +4081,6 @@
 
 /***/ },
 /* 38 */
-/*!*************************************!*\
-  !*** ./src/defaults/value-props.js ***!
-  \*************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	    // [number]: Current target value
-	    to: undefined,
-	
-	    // [number]: Maximum permitted value during .track and .run
-	    min: undefined,
-	    
-	    // [number]: Minimum permitted value during .track and .run
-	    max: undefined,
-	    
-	    // [number]: Origin
-	    origin: 0,
-	    
-	    // [boolean]: Set to true when both min and max detected
-	    hasRange: false,
-	
-	    // [boolean]: Round output if true
-	    round: false,
-	    
-	    // [string]: Route
-	    route: 'values',
-	    
-	    // [string]: Non-namespaced output value
-	    name: '',
-	    
-	    // [string]: Unit string to append to value on ourput
-	    unit: undefined,
-	    
-	    parent: '',
-	    
-	    unitName: '',
-	
-	    /*
-	        Link properties
-	    */
-	
-	    // [string]: Name of value to listen to
-	    link: undefined,
-	    
-	    // [array]: Linear range of values (eg [-100, -50, 50, 100]) of linked value to map to .mapTo
-	    mapLink: undefined,
-	    
-	    // [array]: Non-linear range of values (eg [0, 1, 1, 0]) to map to .mapLink - here the linked value being 75 would result in a value of 0.5
-	    mapTo: undefined,
-	
-	
-	    /*
-	        .run() properties
-	    */
-	
-	    // [string]: Simulation to .run
-	    simulate: 'velocity',
-	    
-	    // [number]: Deceleration to apply to value, in units per second
-	    deceleration: 0,
-	    
-	    // [number]: Acceleration to apply to value, in units per second
-	    acceleration: 0,
-	    
-	    // [number]: Gravity acceleration to apply to value, in units per second
-	    gravity: 30,
-	    
-	    // [number]: Factor to multiply velocity by on bounce
-	    bounce: 0,
-	    
-	    // [number]: Spring strength during 'string'
-	    spring: 80,
-	    
-	    // [number]: Timeconstant of glide
-	    timeConstant: 395,
-	    
-	    // [number]: Stop simulation under this speed
-	    stopSpeed: 10,
-	    
-	    // [boolean]: Capture with spring physics on limit breach
-	    capture: false,
-	    
-	    // [number]: Friction to apply per frame
-	    friction: 0.05,
-	
-	    /*
-	        .play() properties
-	    */
-	
-	    // [number]: Duration of animation in ms
-	    duration: 400,
-	    
-	    // [number]: Duration of delay in ms
-	    delay: 0,
-	    
-	    // [number]: Stagger delay as factor of duration (ie 0.2 with duration of 1000ms = 200ms)
-	    stagger: 0,
-	    
-	    // [string]: Easing to apply
-	    ease: 'easeInOut',
-	    
-	    // [number]: Number of steps to execute animation
-	    steps: 0,
-	    
-	    // [string]: Tells Redshift when to step, at the start or end of a step. Other option is 'start' as per CSS spec
-	    stepDirection: 'end',
-	
-	    /*
-	        .track() properties
-	    */
-	
-	    // [number]: Factor of movement outside of maximum range (ie 0.5 will move half as much as 1)
-	    escapeAmp: 0
-	};
-
-/***/ },
-/* 39 */
 /*!****************************!*\
   !*** ./src/core/routes.js ***!
   \****************************/
@@ -4209,7 +4089,7 @@
 	module.exports = {};
 
 /***/ },
-/* 40 */
+/* 39 */
 /*!***************************!*\
   !*** ./src/core/rubix.js ***!
   \***************************/
@@ -4266,7 +4146,7 @@
 	module.exports = {};
 
 /***/ },
-/* 41 */
+/* 40 */
 /*!*********************************!*\
   !*** ./src/core/simulations.js ***!
   \*********************************/
@@ -4375,7 +4255,7 @@
 	};
 
 /***/ },
-/* 42 */
+/* 41 */
 /*!**************************************!*\
   !*** ./src/routes/css/dictionary.js ***!
   \**************************************/
@@ -4429,7 +4309,7 @@
 	module.exports = terms;
 
 /***/ },
-/* 43 */
+/* 42 */
 /*!*************************************!*\
   !*** ./src/routes/css/templates.js ***!
   \*************************************/
@@ -4437,7 +4317,7 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 42),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 41),
 	
 	    defaultValues = {
 	        Alpha: 1
@@ -4505,7 +4385,7 @@
 	module.exports = templates;
 
 /***/ },
-/* 44 */
+/* 43 */
 /*!**********************************!*\
   !*** ./src/routes/css/lookup.js ***!
   \**********************************/
@@ -4553,7 +4433,7 @@
 	};
 
 /***/ },
-/* 45 */
+/* 44 */
 /*!********************************************!*\
   !*** ./src/routes/css/default-property.js ***!
   \********************************************/
@@ -4604,7 +4484,7 @@
 	module.exports = defaults;
 
 /***/ },
-/* 46 */
+/* 45 */
 /*!*************************************!*\
   !*** ./src/routes/css/splitters.js ***!
   \*************************************/
@@ -4612,7 +4492,7 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 42),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 41),
 	    utils = __webpack_require__(/*! ../../utils/utils.js */ 19),
 	
 	    /*
@@ -4843,7 +4723,7 @@
 	module.exports = splitters;
 
 /***/ },
-/* 47 */
+/* 46 */
 /*!***********************************!*\
   !*** ./src/routes/path/lookup.js ***!
   \***********************************/
@@ -4863,7 +4743,7 @@
 	};
 
 /***/ },
-/* 48 */
+/* 47 */
 /*!******************************!*\
   !*** ./src/input/pointer.js ***!
   \******************************/
@@ -4958,6 +4838,123 @@
 	};
 	
 	module.exports = Pointer;
+
+/***/ },
+/* 48 */
+/*!*************************************!*\
+  !*** ./src/defaults/value-props.js ***!
+  \*************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	    // [number]: Current target value
+	    to: undefined,
+	
+	    // [number]: Maximum permitted value during .track and .run
+	    min: undefined,
+	    
+	    // [number]: Minimum permitted value during .track and .run
+	    max: undefined,
+	    
+	    // [number]: Origin
+	    origin: 0,
+	    
+	    // [boolean]: Set to true when both min and max detected
+	    hasRange: false,
+	
+	    // [boolean]: Round output if true
+	    round: false,
+	    
+	    // [string]: Route
+	    route: 'values',
+	    
+	    // [string]: Non-namespaced output value
+	    name: '',
+	    
+	    // [string]: Unit string to append to value on ourput
+	    unit: undefined,
+	    
+	    parent: '',
+	    
+	    unitName: '',
+	
+	    /*
+	        Link properties
+	    */
+	
+	    // [string]: Name of value to listen to
+	    link: undefined,
+	    
+	    // [array]: Linear range of values (eg [-100, -50, 50, 100]) of linked value to map to .mapTo
+	    mapLink: undefined,
+	    
+	    // [array]: Non-linear range of values (eg [0, 1, 1, 0]) to map to .mapLink - here the linked value being 75 would result in a value of 0.5
+	    mapTo: undefined,
+	
+	
+	    /*
+	        .run() properties
+	    */
+	
+	    // [string]: Simulation to .run
+	    simulate: 'velocity',
+	    
+	    // [number]: Deceleration to apply to value, in units per second
+	    deceleration: 0,
+	    
+	    // [number]: Acceleration to apply to value, in units per second
+	    acceleration: 0,
+	    
+	    // [number]: Gravity acceleration to apply to value, in units per second
+	    gravity: 30,
+	    
+	    // [number]: Factor to multiply velocity by on bounce
+	    bounce: 0,
+	    
+	    // [number]: Spring strength during 'string'
+	    spring: 80,
+	    
+	    // [number]: Timeconstant of glide
+	    timeConstant: 395,
+	    
+	    // [number]: Stop simulation under this speed
+	    stopSpeed: 10,
+	    
+	    // [boolean]: Capture with spring physics on limit breach
+	    capture: false,
+	    
+	    // [number]: Friction to apply per frame
+	    friction: 0.05,
+	
+	    /*
+	        .play() properties
+	    */
+	
+	    // [number]: Duration of animation in ms
+	    duration: 400,
+	    
+	    // [number]: Duration of delay in ms
+	    delay: 0,
+	    
+	    // [number]: Stagger delay as factor of duration (ie 0.2 with duration of 1000ms = 200ms)
+	    stagger: 0,
+	    
+	    // [string]: Easing to apply
+	    ease: 'easeInOut',
+	    
+	    // [number]: Number of steps to execute animation
+	    steps: 0,
+	    
+	    // [string]: Tells Redshift when to step, at the start or end of a step. Other option is 'start' as per CSS spec
+	    stepDirection: 'end',
+	
+	    /*
+	        .track() properties
+	    */
+	
+	    // [number]: Factor of movement outside of maximum range (ie 0.5 will move half as much as 1)
+	    escapeAmp: 0
+	};
 
 /***/ },
 /* 49 */
