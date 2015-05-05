@@ -86,7 +86,5 @@ module.exports = {
         value.to = target;
         value.simulate = 'spring';
         value.capture = value.min = value.max = undefined;
-        value.spring = 90;
-        value.friction = 0.15;
     }
 };
