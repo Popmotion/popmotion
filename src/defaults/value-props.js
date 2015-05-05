@@ -57,9 +57,6 @@ module.exports = {
     // [number]: Acceleration to apply to value, in units per second
     acceleration: 0,
     
-    // [number]: Gravity acceleration to apply to value, in units per second
-    gravity: 30,
-    
     // [number]: Factor to multiply velocity by on bounce
     bounce: 0,
     

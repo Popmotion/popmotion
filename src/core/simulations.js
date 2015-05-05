@@ -26,15 +26,6 @@ module.exports = {
     },
     
     /*
-        Gravity
-        
-        Applies gravity as acceleration
-    */
-    gravity: function (value, duration) {
-        return value.velocity + speedPerFrame(value.gravity, duration);
-    },
-    
-    /*
         Glide
         
         Emulates touch device scrolling effects with exponential decay
