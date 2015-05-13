@@ -21,6 +21,10 @@ module.exports = {
     */
     updateInput: function (action, props) {
         action[INPUT_OFFSET] = calc.offset(props.inputOrigin, props.input[CURRENT]);
+        
+        if (action.center) {
+            action.centerOffset = calc.offset(props.centerOffsetOrigin, props.input[CURRENT]);
+        }
     },
         
     /*

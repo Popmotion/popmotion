@@ -105,7 +105,8 @@ module.exports = {
         var props = {},
             argsLength = arguments.length,
             inputIndex = argsLength - 1,
-            input = arguments[inputIndex];
+            input = arguments[inputIndex],
+            center = props.center || this.center || false;
         
         // Loop until inputIndex
         for (var i = 0; i < inputIndex; i++) {
@@ -128,6 +129,11 @@ module.exports = {
 
         if (!props.inputOrigin) {
             props.inputOrigin = input.get();
+        }
+        
+        if (center) {
+            props.inputOrigin.angleFromCenter = calc.angle(center, props.inputOrigin);
+            props.inputOrigin.distanceFromCenter = calc.distance2D(center, props.inputOrigin);
         }
         
         return props;

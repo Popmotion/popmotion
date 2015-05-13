@@ -62,21 +62,21 @@
 	
 	redshift
 	    // Add default Rubix processor modules
-	    .addRubix('fire',               __webpack_require__(/*! ../rubix/fire.js */ 3))
-	    .addRubix('link',               __webpack_require__(/*! ../rubix/link.js */ 4))
-	    .addRubix('play',               __webpack_require__(/*! ../rubix/play.js */ 5))
-	    .addRubix('run',                __webpack_require__(/*! ../rubix/run.js */ 6))
-	    .addRubix('track',              __webpack_require__(/*! ../rubix/track.js */ 7))
+	    .addRubix('fire',               __webpack_require__(/*! ../rubix/fire.js */ 4))
+	    .addRubix('link',               __webpack_require__(/*! ../rubix/link.js */ 5))
+	    .addRubix('play',               __webpack_require__(/*! ../rubix/play.js */ 6))
+	    .addRubix('run',                __webpack_require__(/*! ../rubix/run.js */ 7))
+	    .addRubix('track',              __webpack_require__(/*! ../rubix/track.js */ 8))
 	    
 	    // Add DOM value routes
-	    .addRoute('values', __webpack_require__(/*! ../routes/values.js */ 8))
-	    .addRoute('css',    __webpack_require__(/*! ../routes/css.js */ 9))
-	    .addRoute('attr',   __webpack_require__(/*! ../routes/attr.js */ 10))
-	    .addRoute('path',   __webpack_require__(/*! ../routes/path.js */ 11));
+	    .addRoute('values', __webpack_require__(/*! ../routes/values.js */ 9))
+	    .addRoute('css',    __webpack_require__(/*! ../routes/css.js */ 10))
+	    .addRoute('attr',   __webpack_require__(/*! ../routes/attr.js */ 11))
+	    .addRoute('path',   __webpack_require__(/*! ../routes/path.js */ 12));
 	
 	// Check if we need to shim requireAnimationFrame - TODO replace this with
 	// a more general environment check, for instance node or react native
-	__webpack_require__(/*! ../utils/shim.js */ 12);
+	__webpack_require__(/*! ../utils/shim.js */ 13);
 	
 	module.exports = redshift;
 
@@ -94,16 +94,16 @@
 	*/
 	"use strict";
 	
-	var Action = __webpack_require__(/*! ./action/action.js */ 13),
-	    Input = __webpack_require__(/*! ./input/input.js */ 14),
-	    Process = __webpack_require__(/*! ./process/process.js */ 15),
-	    presets = __webpack_require__(/*! ./action/presets.js */ 16),
+	var Action = __webpack_require__(/*! ./action/action.js */ 15),
+	    Input = __webpack_require__(/*! ./input/input.js */ 16),
+	    Process = __webpack_require__(/*! ./process/process.js */ 19),
+	    presets = __webpack_require__(/*! ./action/presets.js */ 18),
 	    easing = __webpack_require__(/*! ./utils/easing.js */ 17),
-	    calc = __webpack_require__(/*! ./utils/calc.js */ 18),
-	    utils = __webpack_require__(/*! ./utils/utils.js */ 19),
-	    route = __webpack_require__(/*! ./action/routes.js */ 20),
-	    registerRubix = __webpack_require__(/*! ./register/register-rubix.js */ 21),
-	    registerSimulation = __webpack_require__(/*! ./register/register-simulation.js */ 22);
+	    calc = __webpack_require__(/*! ./utils/calc.js */ 14),
+	    utils = __webpack_require__(/*! ./utils/utils.js */ 20),
+	    route = __webpack_require__(/*! ./action/routes.js */ 21),
+	    registerRubix = __webpack_require__(/*! ./register/register-rubix.js */ 22),
+	    registerSimulation = __webpack_require__(/*! ./register/register-simulation.js */ 23);
 	
 	module.exports = {
 	
@@ -230,7 +230,8 @@
 	};
 
 /***/ },
-/* 3 */
+/* 3 */,
+/* 4 */
 /*!***************************!*\
   !*** ./src/rubix/fire.js ***!
   \***************************/
@@ -271,7 +272,7 @@
 	};
 
 /***/ },
-/* 4 */
+/* 5 */
 /*!***************************!*\
   !*** ./src/rubix/link.js ***!
   \***************************/
@@ -296,7 +297,7 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 14),
 	    
 	    CURRENT = 'current',
 	    INPUT_OFFSET = 'inputOffset',
@@ -353,7 +354,7 @@
 
 
 /***/ },
-/* 5 */
+/* 6 */
 /*!***************************!*\
   !*** ./src/rubix/play.js ***!
   \***************************/
@@ -366,9 +367,9 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 14),
 	    easing = __webpack_require__(/*! ../utils/easing.js */ 17),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
 	    
 	    CURRENT = 'current',
 	    HAS_ENDED = 'hasEnded';
@@ -445,7 +446,7 @@
 
 
 /***/ },
-/* 6 */
+/* 7 */
 /*!**************************!*\
   !*** ./src/rubix/run.js ***!
   \**************************/
@@ -456,8 +457,8 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
-	    simulate = __webpack_require__(/*! ../action/simulate.js */ 23);
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 14),
+	    simulate = __webpack_require__(/*! ../action/simulate.js */ 24);
 	
 	module.exports = {
 	
@@ -531,7 +532,7 @@
 	};
 
 /***/ },
-/* 7 */
+/* 8 */
 /*!****************************!*\
   !*** ./src/rubix/track.js ***!
   \****************************/
@@ -542,7 +543,7 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 14),
 	
 	    CURRENT = 'current',
 	    INPUT_OFFSET = 'inputOffset';
@@ -560,6 +561,10 @@
 	    */
 	    updateInput: function (action, props) {
 	        action[INPUT_OFFSET] = calc.offset(props.inputOrigin, props.input[CURRENT]);
+	        
+	        if (action.center) {
+	            action.centerOffset = calc.offset(props.centerOffsetOrigin, props.input[CURRENT]);
+	        }
 	    },
 	        
 	    /*
@@ -587,7 +592,7 @@
 	};
 
 /***/ },
-/* 8 */
+/* 9 */
 /*!******************************!*\
   !*** ./src/routes/values.js ***!
   \******************************/
@@ -631,7 +636,7 @@
 	};
 
 /***/ },
-/* 9 */
+/* 10 */
 /*!***************************!*\
   !*** ./src/routes/css.js ***!
   \***************************/
@@ -639,8 +644,8 @@
 
 	"use strict";
 	
-	var build = __webpack_require__(/*! ./css/build.js */ 24),
-	    split = __webpack_require__(/*! ./css/split.js */ 25),
+	var build = __webpack_require__(/*! ./css/build.js */ 25),
+	    split = __webpack_require__(/*! ./css/split.js */ 26),
 	    
 	    css = 'css',
 	    cssOrder = css + 'Order',
@@ -663,7 +668,7 @@
 	};
 
 /***/ },
-/* 10 */
+/* 11 */
 /*!****************************!*\
   !*** ./src/routes/attr.js ***!
   \****************************/
@@ -685,7 +690,7 @@
 	};
 
 /***/ },
-/* 11 */
+/* 12 */
 /*!****************************!*\
   !*** ./src/routes/path.js ***!
   \****************************/
@@ -693,7 +698,7 @@
 
 	"use strict";
 	
-	var createStyles = __webpack_require__(/*! ./path/builder.js */ 26);
+	var createStyles = __webpack_require__(/*! ./path/builder.js */ 27);
 	
 	module.exports = {
 	
@@ -709,7 +714,7 @@
 	};
 
 /***/ },
-/* 12 */
+/* 13 */
 /*!***************************!*\
   !*** ./src/utils/shim.js ***!
   \***************************/
@@ -755,7 +760,411 @@
 	}
 
 /***/ },
-/* 13 */
+/* 14 */
+/*!***************************!*\
+  !*** ./src/utils/calc.js ***!
+  \***************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Calculators
+	    ----------------------------------------
+	    
+	    Simple I/O snippets
+	*/
+	"use strict";
+	
+	var utils = __webpack_require__(/*! ./utils.js */ 20),
+	
+	    calc = {
+	        /*
+	            Angle between points
+	            
+	            Translates the hypothetical line so that the 'from' coordinates
+	            are at 0,0, then return the angle using .angleFromCenter()
+	            
+	            @param [object]: X and Y coordinates of from point
+	            @param [object]: X and Y cordinates of to point
+	            @return [radian]: Angle between the two points in radians
+	        */
+	        angle: function (pointA, pointB) {
+	            var from = pointB ? pointA : {x: 0, y: 0},
+	                to = pointB || pointA,
+	                point = {
+	                    x: difference(from.x, to.x),
+	                    y: difference(from.y, to.y)
+	                };
+	            
+	            return this.angleFromCenter(point.x, point.y);
+	        },
+	    
+	    
+	        /*
+	            Angle from center
+	            
+	            Returns the current angle, in radians, of a defined point
+	            from a center (assumed 0,0)
+	            
+	            @param [number]: X coordinate of second point
+	            @param [number]: Y coordinate of second point
+	            @return [radian]: Angle between 0, 0 and point in radians
+	        */
+	        angleFromCenter: function (x, y) {
+	            return this.radiansToDegrees(Math.atan2(y, x));
+	        },
+	        
+	        /*
+	            Convert degrees to radians
+	            
+	            @param [number]: Value in degrees
+	            @return [number]: Value in radians
+	        */
+	        degreesToRadians: function (degrees) {
+	            return degrees * Math.PI / 180;
+	        },
+	        
+	        /*
+	            Difference
+	            
+	            Returns the difference between a and b by subtracting b from a.
+	            Useful in calcualting the zero-normalised position of b, or the
+	            difference something has travelled between the two points
+	            
+	            @param [number]: Value a
+	            @param [number]: Value b
+	            @return [number]: Difference between value a and value b
+	        */
+	        difference: function (a, b) {
+	            return b - a;
+	        },
+	        
+	        /*
+	            Dilate
+	            
+	            Change the progression between a and b according to dilation.
+	            
+	            So dilation = 0.5 would change
+	            
+	            a --------- b
+	            
+	            to
+	            
+	            a ---- b
+	            
+	            @param [number]: Previous value
+	            @param [number]: Current value
+	            @param [number]: Dilate progress by x
+	            @return [number]: Previous value plus the dilated difference
+	        */
+	        dilate: function (a, b, dilation) {
+	            return a + ((b - a) * dilation);
+	        },
+	            
+	        /*
+	            Distance
+	            
+	            Returns the distance between (0,0) and pointA, unless pointB
+	            is provided, then we return the difference between the two.
+	            
+	            @param [object/number]: x and y or just x of point A
+	            @param [object/number]: (optional): x and y or just x of point B
+	            @return [number]: The distance between the two points
+	        */
+	        distance: function (pointA, pointB) {
+	            return (typeof pointA === "number") ? this.distance1D(pointA, pointB) : this.distance2D(pointA, pointB);
+	        },
+	    
+	    
+	        /*
+	            Distance 1D
+	            
+	            Returns the distance between point A and point B
+	            
+	            @param [number]: Point A
+	            @param [number]: (optional): Point B
+	            @return [number]: The distance between the two points
+	        */
+	        distance1D: function (pointA, pointB) {
+	            var bIsNum = (typeof pointB === 'number'),
+	                from = bIsNum ? pointA : 0,
+	                to = bIsNum ? pointB : pointA;
+	    
+	            return absolute(difference(from, to));
+	        },
+	    
+	      
+	        /*
+	            Distance 2D
+	            
+	            Returns the distance between (0,0) and point A, unless point B
+	            is provided, then we return the difference between the two.
+	            
+	            @param [object]: x and y of point A
+	            @param [object]: (optional): x and y of point B
+	            @return [number]: The distance between the two points
+	        */
+	        distance2D: function (pointA, pointB) {
+	            var bIsObj = (typeof pointB === "object"),
+	                from = bIsObj ? pointA : {x: 0, y: 0},
+	                to = bIsObj ? pointB : pointA,
+	                point = {
+	                    x: absolute(difference(from.x, to.x)),
+	                    y: absolute(difference(from.y, to.y))
+	                };
+	                
+	            return this.hypotenuse(point.x, point.y);
+	        },
+	            
+	        /*
+	            Hypotenuse
+	            
+	            Returns the hypotenuse, side C, given the lengths of sides A and B.
+	            
+	            @param [number]: Length of A
+	            @param [number]: Length of B
+	            @return [number]: Length of C
+	        */
+	        hypotenuse: function (a, b) {
+	            var a2 = a * a,
+	                b2 = b * b,
+	                c2 = a2 + b2;
+	                
+	            return Math.sqrt(c2);
+	        },
+	        
+	        /*
+	            Offset between two inputs
+	            
+	            Calculate the difference between two different inputs
+	            
+	            @param [Point]: First input
+	            @param [Point]: Second input
+	            @return [Offset]: Distance metrics between two points
+	        */
+	        offset: function (a, b) {
+	            var offset = {};
+	    
+	            for (var key in b) {
+	                if (b.hasOwnProperty(key)) {
+	                    if (a.hasOwnProperty(key)) {
+	                        offset[key] = difference(a[key], b[key]);
+	                    } else {
+	                        offset[key] = 0;
+	                    }
+	                } 
+	            }
+	
+	            if (isNum(offset.x) && isNum(offset.y)) {
+	                offset.angle = this.angle(a, b);
+	                offset.distance = this.distance2D(a, b);
+	            }
+	                
+	            return offset;
+	        },
+	        
+	        /*
+	            Point from angle and distance
+	            
+	            @param [object]: 2D point of origin
+	            @param [number]: Angle from origin
+	            @param [number]: Distance from origin
+	            @return [object]: Calculated 2D point
+	        */
+	        pointFromAngleAndDistance: function (origin, angle, distance) {
+	            var point = {};
+	    
+	    		point.x = distance * Math.cos(angle) + origin.x;
+	            point.y = distance * Math.sin(angle) + origin.y;
+	    
+	            return point;
+	        },
+	    
+	        /*
+	            Progress within given range
+	            
+	            Given a lower limit and an upper limit, we return the progress
+	            (expressed as a number 0-1) represented by the given value, and
+	            limit that progress to within 0-1.
+	            
+	            @param [number]: Value to find progress within given range
+	            @param [number]: Lower limit if full range given, upper if not
+	            @param [number] (optional): Upper limit of range
+	            @return [number]: Progress of value within range as expressed 0-1
+	        */
+	        progress: function (value, limitA, limitB) {
+	            var bIsNum = (typeof limitB === 'number'),
+	                from = bIsNum ? limitA : 0,
+	                to = bIsNum ? limitB : limitA,
+	                range = difference(from, to),
+	                progress = (value - from) / range;
+	    
+	            return progress;
+	        },
+	        
+	        /*
+	            Convert radians to degrees
+	            
+	            @param [number]: Value in radians
+	            @return [number]: Value in degrees
+	        */
+	        radiansToDegrees: function (radians) {
+	            return radians * 180 / Math.PI;
+	        },
+	        
+	        /*
+	            Return random number between range
+	            
+	            @param [number] (optional): Output minimum
+	            @param [number] (optional): Output maximum
+	            @return [number]: Random number within range, or 0 and 1 if none provided
+	        */
+	        random: function (min, max) {
+	            min = isNum(min) ? min : 0;
+	            max = isNum(max) ? max : 1;
+	            return Math.random() * (max - min) + min;
+	        },
+	    
+	        
+	        /*
+	            Calculate relative value
+	            
+	            Takes the operator and value from a string, ie "+=5", and applies
+	            to the current value to resolve a new target.
+	            
+	            @param [number]: Current value
+	            @param [string]: Relative value
+	            @return [number]: New value
+	        */
+	        relativeValue: function (current, rel) {
+	            var newValue = current,
+	                equation = rel.split('='),
+	                operator = equation[0],
+	                splitVal = utils.splitValUnit(equation[1]);
+	    
+	            switch (operator) {
+	                case '+':
+	                    newValue += splitVal.value;
+	                    break;
+	                case '-':
+	                    newValue -= splitVal.value;
+	                    break;
+	                case '*':
+	                    newValue *= splitVal.value;
+	                    break;
+	                case '/':
+	                    newValue /= splitVal.value;
+	                    break;
+	            }
+	            
+	            if (splitVal.unit) {
+	                newValue += splitVal.unit;
+	            }
+	    
+	            return newValue;
+	        },
+	    
+	    
+	        /*
+	            Restrict value to range
+	            
+	            Return value within the range of lowerLimit and upperLimit
+	            
+	            @param [number]: Value to keep within range
+	            @param [number]: Lower limit of range
+	            @param [number]: Upper limit of range
+	            @return [number]: Value as limited within given range
+	        */
+	        restricted: function (value, min, max) {
+	            var restricted = (min !== undefined) ? Math.max(value, min) : value;
+	            restricted = (max !== undefined) ? Math.min(restricted, max) : restricted;
+	    
+	            return restricted;
+	        },
+	    
+	        /*
+	            Convert x per second to per frame velocity based on fps
+	            
+	            @param [number]: Unit per second
+	            @param [number]: Frame duration in ms
+	        */
+	        speedPerFrame: function (xps, frameDuration) {
+	            return (isNum(xps)) ? xps / (1000 / frameDuration) : 0;
+	        },
+	    
+	        /*
+	            Convert velocity into velicity per second
+	            
+	            @param [number]: Unit per frame
+	            @param [number]: Frame duration in ms
+	        */
+	        speedPerSecond: function (velocity, frameDuration) {
+	            return velocity * (1000 / frameDuration);
+	        },
+	        
+	    
+	        /*
+	            Time remaining
+	            
+	            Return the amount of time remaining from the progress already made
+	            
+	            @param [number]: Progress through time limit between 0-1
+	            @param [number]: Duration
+	        */
+	        timeRemaining: function (progress, duration) {
+	            return (1 - progress) * duration;
+	        },
+	    
+	     
+	        /*
+	            Value in range from progress
+	            
+	            Given a lower limit and an upper limit, we return the value within
+	            that range as expressed by progress (a number from 0-1)
+	            
+	            @param [number]: The progress between lower and upper limits expressed 0-1
+	            @param [number]: Lower limit of range, or upper if limit2 not provided
+	            @param [number] (optional): Upper limit of range
+	            @return [number]: Value as calculated from progress within range (not limited within range)
+	        */
+	        value: function (progress, limitA, limitB) {
+	            var bIsNum = (typeof limitB === 'number'),
+	                from = bIsNum ? limitA : 0,
+	                to = bIsNum ? limitB : limitA;
+	    
+	            return (- progress * from) + (progress * to) + from; 
+	        },
+	    
+	    
+	        /*
+	            Eased value in range from progress
+	            
+	            Given a lower limit and an upper limit, we return the value within
+	            that range as expressed by progress (a number from 0-1)
+	            
+	            @param [number]: The progress between lower and upper limits expressed 0-1
+	            @param [number]: Lower limit of range, or upper if limit2 not provided
+	            @param [number]: Upper limit of range
+	            @param [function]: Easing to apply to value
+	            @return [number]: Value as calculated from progress within range (not limited within range)
+	        */
+	        valueEased: function (progress, from, to, easing) {
+	            var easedProgress = easing(progress);
+	            
+	            return this.value(easedProgress, from, to);
+	        }
+	    },
+	
+	    /*
+	        Caching functions used multiple times to reduce filesize and increase performance
+	    */
+	    isNum = utils.isNum,
+	    difference = calc.difference,
+	    absolute = Math.abs;
+	    
+	module.exports = calc;
+
+/***/ },
+/* 15 */
 /*!******************************!*\
   !*** ./src/action/action.js ***!
   \******************************/
@@ -763,18 +1172,18 @@
 
 	"use strict";
 	
-	var parseArgs = __webpack_require__(/*! ./parse-args.js */ 27),
-	    Value = __webpack_require__(/*! ../types/value.js */ 28),
-	    Repo = __webpack_require__(/*! ../types/repo.js */ 29),
-	    Queue = __webpack_require__(/*! ./queue.js */ 30),
-	    Process = __webpack_require__(/*! ../process/process.js */ 15),
-	    processor = __webpack_require__(/*! ./processor.js */ 31),
-	    routes = __webpack_require__(/*! ./routes.js */ 20),
-	    defaultProps = __webpack_require__(/*! ../defaults/action-props.js */ 32),
-	    defaultState = __webpack_require__(/*! ../defaults/action-state.js */ 33),
-	    calc = __webpack_require__(/*! ../utils/calc.js */ 18),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
-	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 34),
+	var parseArgs = __webpack_require__(/*! ./parse-args.js */ 28),
+	    Value = __webpack_require__(/*! ../types/value.js */ 29),
+	    Repo = __webpack_require__(/*! ../types/repo.js */ 30),
+	    Queue = __webpack_require__(/*! ./queue.js */ 31),
+	    Process = __webpack_require__(/*! ../process/process.js */ 19),
+	    processor = __webpack_require__(/*! ./processor.js */ 32),
+	    routes = __webpack_require__(/*! ./routes.js */ 21),
+	    defaultProps = __webpack_require__(/*! ../defaults/action-props.js */ 33),
+	    defaultState = __webpack_require__(/*! ../defaults/action-state.js */ 34),
+	    calc = __webpack_require__(/*! ../utils/calc.js */ 14),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
+	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 35),
 	
 	    namespace = function (key, space) {
 	        return (space && space !== routes.defaultRoute) ? key + '.' + space : key;
@@ -1248,7 +1657,7 @@
 	module.exports = Action;
 
 /***/ },
-/* 14 */
+/* 16 */
 /*!****************************!*\
   !*** ./src/input/input.js ***!
   \****************************/
@@ -1259,9 +1668,9 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
-	    History = __webpack_require__(/*! ../utils/history.js */ 35),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 14),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
+	    History = __webpack_require__(/*! ../utils/history.js */ 37),
 	
 	    /*
 	        Input constructor
@@ -1382,291 +1791,6 @@
 	module.exports = Input;
 
 /***/ },
-/* 15 */
-/*!********************************!*\
-  !*** ./src/process/process.js ***!
-  \********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    Process
-	*/
-	"use strict";
-	
-	var manager = __webpack_require__(/*! ./manager.js */ 36),
-	
-	    /*
-	        Process constructor
-	        
-	        Syntax
-	            var process = new Process(scope, callback);
-	            var process = new Process(callback);
-	    */
-	    Process = function (arg0, arg1) {
-	        var hasScope = (arg1 !== undefined),
-	            callback = hasScope ? arg1 : arg0,
-	            scope = hasScope ? arg0 : this;
-	
-	        this.setCallback(callback);
-	        this.setScope(scope);
-	
-	        this.setId(manager.register(this));
-	    };
-	    
-	Process.prototype = {
-	    
-	    /*
-	        [boolean]: Is this process currently active?
-	    */
-	    isActive: false,
-	    
-	    /*
-	        [boolean]: Has this process been killed?
-	    */
-	    isKilled: false,
-	
-	    /*
-	        Fire callback
-	        
-	        @param [timestamp]: Timestamp of currently-executed frame
-	        @param [number]: Time since last frame
-	    */
-	    fire: function (timestamp, elapsed) {
-	        // Check timers
-	        if (this.isActive) {
-	            this.callback.call(this.scope, timestamp, elapsed);
-	        }
-	        
-	        if (this.isInterval) {
-	            this.deactivate();
-	        }
-	        
-	        return this;
-	    },
-	    
-	    /*
-	        Set process callback
-	        
-	        @param [function]: Function to fire per frame
-	        @return [this]
-	    */
-	    setCallback: function (callback) {
-	        this.callback = callback;
-	        
-	        return this;
-	    },
-	    
-	    /*
-	        Set callback scope
-	        
-	        @param [function]: Fire callback in this context
-	        @return [this]
-	    */
-	    setScope: function (scope) {
-	        this.scope = scope;
-	        
-	        return this;
-	    },
-	    
-	    /*
-	        Start process
-	        
-	        @param [int]: Duration of process in ms, 0 if indefinite
-	        @return [this]
-	    */
-	    start: function (duration) {
-	        var self = this;
-	        
-	        self.reset();
-	        self.activate();
-	        
-	        if (duration) {
-	            self.stopTimer = setTimeout(function () {
-	                self.stop();
-	            }, duration);
-	        }
-	
-	        return self;
-	    },
-	    
-	    /*
-	        Stop process
-	        
-	        @return [this]
-	    */
-	    stop: function () {
-	        this.reset();
-	        this.deactivate();
-	        
-	        return this;
-	    },
-	    
-	    /*
-	        Activate process
-	        
-	        @return [this]
-	    */
-	    activate: function () {
-	        if (!this.isKilled) {
-	            this.isActive = true;
-	            manager.activate(this.id);
-	        }
-	
-	        return this;
-	    },
-	    
-	    /*
-	        Deactivate process
-	        
-	        @return [this]
-	    */
-	    deactivate: function () {
-	        this.isActive = false;
-	        manager.deactivate(this.id);
-	        
-	        return this;
-	    },
-	    
-	    /*
-	        Fire process every x ms
-	        
-	        @param [int]: Number of ms to wait between refiring process.
-	        @return [this]
-	    */
-	    every: function (interval) {
-		    var self = this;
-	
-	        self.reset();
-	
-	        self.isInterval = true;
-	
-	        self.intervalTimer = setInterval(function () {
-	            self.activate();
-	        }, interval);
-	        
-	        return this;
-	    },
-	    
-	    /*
-	        Clear all timers
-	        
-	        @param 
-	    */
-	    reset: function () {
-	        this.isInterval = false;
-	        clearTimeout(this.stopTimer);
-	        clearInterval(this.intervalTimer);
-	        
-	        return this;
-	    },
-	    
-	    /*
-	        Kill function in manager, release for garbage collection
-	    */
-	    kill: function () {
-	        this.stop();
-	        this.isKilled = true;
-	        manager.kill(this.id);
-	    },
-	    
-	    setId: function (id) {
-	        this.id = id;
-	        return this;
-	    }
-	};
-	
-	module.exports = Process;
-
-/***/ },
-/* 16 */
-/*!*******************************!*\
-  !*** ./src/action/presets.js ***!
-  \*******************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 19),
-	    
-	    generateKeys = function (key) {
-	        var keys = key.split(DOT),
-	            keysLength = keys.length,
-	            lastKey = keys[0],
-	            i = 1;
-	        
-	        for (; i < keysLength; i++) {
-	            keys[i] = lastKey += DOT + keys[i];
-	        }
-	        
-	        return keys;
-	    },
-	
-	    presetStore = {},
-	    DOT = '.',
-	    Presets = function () {};
-	
-	Presets.prototype = {
-	
-	    /*
-	        Define a new Action preset
-	        
-	        Syntax
-	        
-	            .define(name, preset)
-	                @param [string]: Name of preset
-	                @param [object]: Preset options/properties
-	                
-	            .define(presets)
-	                @param [object]: Multiple presets as named object
-	                
-	        @return [Redshift]
-	    */
-	    add: function (name, preset) {
-	        var presets = {},
-	            key = '';
-	
-	        if (utils.isObj(name)) {
-	            presets = name;
-	        } else {
-	            presets[name] = preset;
-	        }
-	
-	        for (key in presets) {
-	            if (presets.hasOwnProperty(key)) {
-	                presetStore[key] = presets[key];
-	            }
-	        }
-	    },
-	    
-	    
-	    /*
-	        Get defined action
-	        
-	        @param [string]: The name of the predefined action
-	    */
-	    getDefined: function (key) {
-	        var props = {},
-	            thisProp = {},
-	            keys = generateKeys(key),
-	            keysLength = keys.length,
-	            i = 0;
-	
-	        for (; i < keysLength; i++) {
-	            thisProp = presetStore[keys[i]];
-	
-	            if (thisProp) {
-	                props = utils.merge(props, thisProp);
-	            }
-	        }
-	        
-	        return props;
-	    }
-	    
-	};
-	
-	module.exports = new Presets();
-
-/***/ },
 /* 17 */
 /*!*****************************!*\
   !*** ./src/utils/easing.js ***!
@@ -1697,8 +1821,8 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ./calc.js */ 18),
-	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 37),
+	var calc = __webpack_require__(/*! ./calc.js */ 14),
+	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 36),
 	    
 	    // Constants
 	    INVALID_EASING = ": Not defined",
@@ -1884,410 +2008,291 @@
 
 /***/ },
 /* 18 */
-/*!***************************!*\
-  !*** ./src/utils/calc.js ***!
-  \***************************/
+/*!*******************************!*\
+  !*** ./src/action/presets.js ***!
+  \*******************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	/*
-	    Calculators
-	    ----------------------------------------
-	    
-	    Simple I/O snippets
-	*/
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ./utils.js */ 19),
-	
-	    calc = {
-	        /*
-	            Angle between points
-	            
-	            Translates the hypothetical line so that the 'from' coordinates
-	            are at 0,0, then return the angle using .angleFromCenter()
-	            
-	            @param [object]: X and Y coordinates of from point
-	            @param [object]: X and Y cordinates of to point
-	            @return [radian]: Angle between the two points in radians
-	        */
-	        angle: function (pointA, pointB) {
-	            var from = pointB ? pointA : {x: 0, y: 0},
-	                to = pointB || pointA,
-	                point = {
-	                    x: difference(from.x, to.x),
-	                    y: difference(from.y, to.y)
-	                };
-	            
-	            return this.angleFromCenter(point.x, point.y);
-	        },
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 20),
 	    
-	    
-	        /*
-	            Angle from center
-	            
-	            Returns the current angle, in radians, of a defined point
-	            from a center (assumed 0,0)
-	            
-	            @param [number]: X coordinate of second point
-	            @param [number]: Y coordinate of second point
-	            @return [radian]: Angle between 0, 0 and point in radians
-	        */
-	        angleFromCenter: function (x, y) {
-	            return this.radiansToDegrees(Math.atan2(y, x));
-	        },
+	    generateKeys = function (key) {
+	        var keys = key.split(DOT),
+	            keysLength = keys.length,
+	            lastKey = keys[0],
+	            i = 1;
 	        
-	        /*
-	            Convert degrees to radians
-	            
-	            @param [number]: Value in degrees
-	            @return [number]: Value in radians
-	        */
-	        degreesToRadians: function (degrees) {
-	            return degrees * Math.PI / 180;
-	        },
-	        
-	        /*
-	            Difference
-	            
-	            Returns the difference between a and b by subtracting b from a.
-	            Useful in calcualting the zero-normalised position of b, or the
-	            difference something has travelled between the two points
-	            
-	            @param [number]: Value a
-	            @param [number]: Value b
-	            @return [number]: Difference between value a and value b
-	        */
-	        difference: function (a, b) {
-	            return b - a;
-	        },
-	        
-	        /*
-	            Dilate
-	            
-	            Change the progression between a and b according to dilation.
-	            
-	            So dilation = 0.5 would change
-	            
-	            a --------- b
-	            
-	            to
-	            
-	            a ---- b
-	            
-	            @param [number]: Previous value
-	            @param [number]: Current value
-	            @param [number]: Dilate progress by x
-	            @return [number]: Previous value plus the dilated difference
-	        */
-	        dilate: function (a, b, dilation) {
-	            return a + ((b - a) * dilation);
-	        },
-	            
-	        /*
-	            Distance
-	            
-	            Returns the distance between (0,0) and pointA, unless pointB
-	            is provided, then we return the difference between the two.
-	            
-	            @param [object/number]: x and y or just x of point A
-	            @param [object/number]: (optional): x and y or just x of point B
-	            @return [number]: The distance between the two points
-	        */
-	        distance: function (pointA, pointB) {
-	            return (typeof pointA === "number") ? this.distance1D(pointA, pointB) : this.distance2D(pointA, pointB);
-	        },
-	    
-	    
-	        /*
-	            Distance 1D
-	            
-	            Returns the distance between point A and point B
-	            
-	            @param [number]: Point A
-	            @param [number]: (optional): Point B
-	            @return [number]: The distance between the two points
-	        */
-	        distance1D: function (pointA, pointB) {
-	            var bIsNum = (typeof pointB === 'number'),
-	                from = bIsNum ? pointA : 0,
-	                to = bIsNum ? pointB : pointA;
-	    
-	            return absolute(difference(from, to));
-	        },
-	    
-	      
-	        /*
-	            Distance 2D
-	            
-	            Returns the distance between (0,0) and point A, unless point B
-	            is provided, then we return the difference between the two.
-	            
-	            @param [object]: x and y of point A
-	            @param [object]: (optional): x and y of point B
-	            @return [number]: The distance between the two points
-	        */
-	        distance2D: function (pointA, pointB) {
-	            var bIsObj = (typeof pointB === "object"),
-	                from = bIsObj ? pointA : {x: 0, y: 0},
-	                to = bIsObj ? pointB : pointA,
-	                point = {
-	                    x: absolute(difference(from.x, to.x)),
-	                    y: absolute(difference(from.y, to.y))
-	                };
-	                
-	            return this.hypotenuse(point.x, point.y);
-	        },
-	            
-	        /*
-	            Hypotenuse
-	            
-	            Returns the hypotenuse, side C, given the lengths of sides A and B.
-	            
-	            @param [number]: Length of A
-	            @param [number]: Length of B
-	            @return [number]: Length of C
-	        */
-	        hypotenuse: function (a, b) {
-	            var a2 = a * a,
-	                b2 = b * b,
-	                c2 = a2 + b2;
-	                
-	            return Math.sqrt(c2);
-	        },
-	        
-	        /*
-	            Offset between two inputs
-	            
-	            Calculate the difference between two different inputs
-	            
-	            @param [Point]: First input
-	            @param [Point]: Second input
-	            @return [Offset]: Distance metrics between two points
-	        */
-	        offset: function (a, b) {
-	            var offset = {};
-	    
-	            for (var key in b) {
-	                if (b.hasOwnProperty(key)) {
-	                    if (a.hasOwnProperty(key)) {
-	                        offset[key] = difference(a[key], b[key]);
-	                    } else {
-	                        offset[key] = 0;
-	                    }
-	                } 
-	            }
-	
-	            if (isNum(offset.x) && isNum(offset.y)) {
-	                offset.angle = this.angle(a, b);
-	                offset.distance = this.distance2D(a, b);
-	            }
-	                
-	            return offset;
-	        },
-	        
-	        /*
-	            Point from angle and distance
-	            
-	            @param [object]: 2D point of origin
-	            @param [number]: Angle from origin
-	            @param [number]: Distance from origin
-	            @return [object]: Calculated 2D point
-	        */
-	        pointFromAngleAndDistance: function (origin, angle, distance) {
-	            var point = {};
-	    
-	    		point.x = distance * Math.cos(angle) + origin.x;
-	            point.y = distance * Math.sin(angle) + origin.y;
-	    
-	            return point;
-	        },
-	    
-	        /*
-	            Progress within given range
-	            
-	            Given a lower limit and an upper limit, we return the progress
-	            (expressed as a number 0-1) represented by the given value, and
-	            limit that progress to within 0-1.
-	            
-	            @param [number]: Value to find progress within given range
-	            @param [number]: Lower limit if full range given, upper if not
-	            @param [number] (optional): Upper limit of range
-	            @return [number]: Progress of value within range as expressed 0-1
-	        */
-	        progress: function (value, limitA, limitB) {
-	            var bIsNum = (typeof limitB === 'number'),
-	                from = bIsNum ? limitA : 0,
-	                to = bIsNum ? limitB : limitA,
-	                range = difference(from, to),
-	                progress = (value - from) / range;
-	    
-	            return progress;
-	        },
-	        
-	        /*
-	            Convert radians to degrees
-	            
-	            @param [number]: Value in radians
-	            @return [number]: Value in degrees
-	        */
-	        radiansToDegrees: function (radians) {
-	            return radians * 180 / Math.PI;
-	        },
-	        
-	        /*
-	            Return random number between range
-	            
-	            @param [number] (optional): Output minimum
-	            @param [number] (optional): Output maximum
-	            @return [number]: Random number within range, or 0 and 1 if none provided
-	        */
-	        random: function (min, max) {
-	            min = isNum(min) ? min : 0;
-	            max = isNum(max) ? max : 1;
-	            return Math.random() * (max - min) + min;
-	        },
-	    
-	        
-	        /*
-	            Calculate relative value
-	            
-	            Takes the operator and value from a string, ie "+=5", and applies
-	            to the current value to resolve a new target.
-	            
-	            @param [number]: Current value
-	            @param [string]: Relative value
-	            @return [number]: New value
-	        */
-	        relativeValue: function (current, rel) {
-	            var newValue = current,
-	                equation = rel.split('='),
-	                operator = equation[0],
-	                splitVal = utils.splitValUnit(equation[1]);
-	    
-	            switch (operator) {
-	                case '+':
-	                    newValue += splitVal.value;
-	                    break;
-	                case '-':
-	                    newValue -= splitVal.value;
-	                    break;
-	                case '*':
-	                    newValue *= splitVal.value;
-	                    break;
-	                case '/':
-	                    newValue /= splitVal.value;
-	                    break;
-	            }
-	            
-	            if (splitVal.unit) {
-	                newValue += splitVal.unit;
-	            }
-	    
-	            return newValue;
-	        },
-	    
-	    
-	        /*
-	            Restrict value to range
-	            
-	            Return value within the range of lowerLimit and upperLimit
-	            
-	            @param [number]: Value to keep within range
-	            @param [number]: Lower limit of range
-	            @param [number]: Upper limit of range
-	            @return [number]: Value as limited within given range
-	        */
-	        restricted: function (value, min, max) {
-	            var restricted = (min !== undefined) ? Math.max(value, min) : value;
-	            restricted = (max !== undefined) ? Math.min(restricted, max) : restricted;
-	    
-	            return restricted;
-	        },
-	    
-	        /*
-	            Convert x per second to per frame velocity based on fps
-	            
-	            @param [number]: Unit per second
-	            @param [number]: Frame duration in ms
-	        */
-	        speedPerFrame: function (xps, frameDuration) {
-	            return (isNum(xps)) ? xps / (1000 / frameDuration) : 0;
-	        },
-	    
-	        /*
-	            Convert velocity into velicity per second
-	            
-	            @param [number]: Unit per frame
-	            @param [number]: Frame duration in ms
-	        */
-	        speedPerSecond: function (velocity, frameDuration) {
-	            return velocity * (1000 / frameDuration);
-	        },
-	        
-	    
-	        /*
-	            Time remaining
-	            
-	            Return the amount of time remaining from the progress already made
-	            
-	            @param [number]: Progress through time limit between 0-1
-	            @param [number]: Duration
-	        */
-	        timeRemaining: function (progress, duration) {
-	            return (1 - progress) * duration;
-	        },
-	    
-	     
-	        /*
-	            Value in range from progress
-	            
-	            Given a lower limit and an upper limit, we return the value within
-	            that range as expressed by progress (a number from 0-1)
-	            
-	            @param [number]: The progress between lower and upper limits expressed 0-1
-	            @param [number]: Lower limit of range, or upper if limit2 not provided
-	            @param [number] (optional): Upper limit of range
-	            @return [number]: Value as calculated from progress within range (not limited within range)
-	        */
-	        value: function (progress, limitA, limitB) {
-	            var bIsNum = (typeof limitB === 'number'),
-	                from = bIsNum ? limitA : 0,
-	                to = bIsNum ? limitB : limitA;
-	    
-	            return (- progress * from) + (progress * to) + from; 
-	        },
-	    
-	    
-	        /*
-	            Eased value in range from progress
-	            
-	            Given a lower limit and an upper limit, we return the value within
-	            that range as expressed by progress (a number from 0-1)
-	            
-	            @param [number]: The progress between lower and upper limits expressed 0-1
-	            @param [number]: Lower limit of range, or upper if limit2 not provided
-	            @param [number]: Upper limit of range
-	            @param [function]: Easing to apply to value
-	            @return [number]: Value as calculated from progress within range (not limited within range)
-	        */
-	        valueEased: function (progress, from, to, easing) {
-	            var easedProgress = easing(progress);
-	            
-	            return this.value(easedProgress, from, to);
+	        for (; i < keysLength; i++) {
+	            keys[i] = lastKey += DOT + keys[i];
 	        }
+	        
+	        return keys;
 	    },
 	
+	    presetStore = {},
+	    DOT = '.',
+	    Presets = function () {};
+	
+	Presets.prototype = {
+	
 	    /*
-	        Caching functions used multiple times to reduce filesize and increase performance
+	        Define a new Action preset
+	        
+	        Syntax
+	        
+	            .define(name, preset)
+	                @param [string]: Name of preset
+	                @param [object]: Preset options/properties
+	                
+	            .define(presets)
+	                @param [object]: Multiple presets as named object
+	                
+	        @return [Redshift]
 	    */
-	    isNum = utils.isNum,
-	    difference = calc.difference,
-	    absolute = Math.abs;
+	    add: function (name, preset) {
+	        var presets = {},
+	            key = '';
+	
+	        if (utils.isObj(name)) {
+	            presets = name;
+	        } else {
+	            presets[name] = preset;
+	        }
+	
+	        for (key in presets) {
+	            if (presets.hasOwnProperty(key)) {
+	                presetStore[key] = presets[key];
+	            }
+	        }
+	    },
 	    
-	module.exports = calc;
+	    
+	    /*
+	        Get defined action
+	        
+	        @param [string]: The name of the predefined action
+	    */
+	    getDefined: function (key) {
+	        var props = {},
+	            thisProp = {},
+	            keys = generateKeys(key),
+	            keysLength = keys.length,
+	            i = 0;
+	
+	        for (; i < keysLength; i++) {
+	            thisProp = presetStore[keys[i]];
+	
+	            if (thisProp) {
+	                props = utils.merge(props, thisProp);
+	            }
+	        }
+	        
+	        return props;
+	    }
+	    
+	};
+	
+	module.exports = new Presets();
 
 /***/ },
 /* 19 */
+/*!********************************!*\
+  !*** ./src/process/process.js ***!
+  \********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Process
+	*/
+	"use strict";
+	
+	var manager = __webpack_require__(/*! ./manager.js */ 38),
+	
+	    /*
+	        Process constructor
+	        
+	        Syntax
+	            var process = new Process(scope, callback);
+	            var process = new Process(callback);
+	    */
+	    Process = function (arg0, arg1) {
+	        var hasScope = (arg1 !== undefined),
+	            callback = hasScope ? arg1 : arg0,
+	            scope = hasScope ? arg0 : this;
+	
+	        this.setCallback(callback);
+	        this.setScope(scope);
+	
+	        this.setId(manager.register(this));
+	    };
+	    
+	Process.prototype = {
+	    
+	    /*
+	        [boolean]: Is this process currently active?
+	    */
+	    isActive: false,
+	    
+	    /*
+	        [boolean]: Has this process been killed?
+	    */
+	    isKilled: false,
+	
+	    /*
+	        Fire callback
+	        
+	        @param [timestamp]: Timestamp of currently-executed frame
+	        @param [number]: Time since last frame
+	    */
+	    fire: function (timestamp, elapsed) {
+	        // Check timers
+	        if (this.isActive) {
+	            this.callback.call(this.scope, timestamp, elapsed);
+	        }
+	        
+	        if (this.isInterval) {
+	            this.deactivate();
+	        }
+	        
+	        return this;
+	    },
+	    
+	    /*
+	        Set process callback
+	        
+	        @param [function]: Function to fire per frame
+	        @return [this]
+	    */
+	    setCallback: function (callback) {
+	        this.callback = callback;
+	        
+	        return this;
+	    },
+	    
+	    /*
+	        Set callback scope
+	        
+	        @param [function]: Fire callback in this context
+	        @return [this]
+	    */
+	    setScope: function (scope) {
+	        this.scope = scope;
+	        
+	        return this;
+	    },
+	    
+	    /*
+	        Start process
+	        
+	        @param [int]: Duration of process in ms, 0 if indefinite
+	        @return [this]
+	    */
+	    start: function (duration) {
+	        var self = this;
+	        
+	        self.reset();
+	        self.activate();
+	        
+	        if (duration) {
+	            self.stopTimer = setTimeout(function () {
+	                self.stop();
+	            }, duration);
+	        }
+	
+	        return self;
+	    },
+	    
+	    /*
+	        Stop process
+	        
+	        @return [this]
+	    */
+	    stop: function () {
+	        this.reset();
+	        this.deactivate();
+	        
+	        return this;
+	    },
+	    
+	    /*
+	        Activate process
+	        
+	        @return [this]
+	    */
+	    activate: function () {
+	        if (!this.isKilled) {
+	            this.isActive = true;
+	            manager.activate(this.id);
+	        }
+	
+	        return this;
+	    },
+	    
+	    /*
+	        Deactivate process
+	        
+	        @return [this]
+	    */
+	    deactivate: function () {
+	        this.isActive = false;
+	        manager.deactivate(this.id);
+	        
+	        return this;
+	    },
+	    
+	    /*
+	        Fire process every x ms
+	        
+	        @param [int]: Number of ms to wait between refiring process.
+	        @return [this]
+	    */
+	    every: function (interval) {
+		    var self = this;
+	
+	        self.reset();
+	
+	        self.isInterval = true;
+	
+	        self.intervalTimer = setInterval(function () {
+	            self.activate();
+	        }, interval);
+	        
+	        return this;
+	    },
+	    
+	    /*
+	        Clear all timers
+	        
+	        @param 
+	    */
+	    reset: function () {
+	        this.isInterval = false;
+	        clearTimeout(this.stopTimer);
+	        clearInterval(this.intervalTimer);
+	        
+	        return this;
+	    },
+	    
+	    /*
+	        Kill function in manager, release for garbage collection
+	    */
+	    kill: function () {
+	        this.stop();
+	        this.isKilled = true;
+	        manager.kill(this.id);
+	    },
+	    
+	    setId: function (id) {
+	        this.id = id;
+	        return this;
+	    }
+	};
+	
+	module.exports = Process;
+
+/***/ },
+/* 20 */
 /*!****************************!*\
   !*** ./src/utils/utils.js ***!
   \****************************/
@@ -2557,7 +2562,7 @@
 	};
 
 /***/ },
-/* 20 */
+/* 21 */
 /*!******************************!*\
   !*** ./src/action/routes.js ***!
   \******************************/
@@ -2565,7 +2570,7 @@
 
 	"use strict";
 	
-	var routes = __webpack_require__(/*! ../core/routes.js */ 38),
+	var routes = __webpack_require__(/*! ../core/routes.js */ 41),
 	    routeKeys = [],
 	    numRoutes,
 	    processes = ['preprocess', 'onStart', 'onEnd'],
@@ -2656,7 +2661,7 @@
 	module.exports = manager; 
 
 /***/ },
-/* 21 */
+/* 22 */
 /*!****************************************!*\
   !*** ./src/register/register-rubix.js ***!
   \****************************************/
@@ -2664,9 +2669,9 @@
 
 	"use strict";
 	
-	var actionPrototype = __webpack_require__(/*! ../action/action.js */ 13).prototype,
-	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 27),
-	    rubix = __webpack_require__(/*! ../core/rubix.js */ 39);
+	var actionPrototype = __webpack_require__(/*! ../action/action.js */ 15).prototype,
+	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 28),
+	    rubix = __webpack_require__(/*! ../core/rubix.js */ 42);
 	
 	module.exports = function (name, newRubix) {
 	    var parser = parseArgs[name] || parseArgs.generic;
@@ -2682,7 +2687,7 @@
 	}
 
 /***/ },
-/* 22 */
+/* 23 */
 /*!*********************************************!*\
   !*** ./src/register/register-simulation.js ***!
   \*********************************************/
@@ -2700,7 +2705,7 @@
 	}
 
 /***/ },
-/* 23 */
+/* 24 */
 /*!********************************!*\
   !*** ./src/action/simulate.js ***!
   \********************************/
@@ -2717,7 +2722,7 @@
 	};
 
 /***/ },
-/* 24 */
+/* 25 */
 /*!*********************************!*\
   !*** ./src/routes/css/build.js ***!
   \*********************************/
@@ -2725,9 +2730,9 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 41),
-	    templates = __webpack_require__(/*! ./templates.js */ 42),
-	    lookup = __webpack_require__(/*! ./lookup.js */ 43),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 43),
+	    templates = __webpack_require__(/*! ./templates.js */ 44),
+	    lookup = __webpack_require__(/*! ./lookup.js */ 45),
 	    
 	    TRANSFORM = 'transform',
 	    TRANSLATE_Z = 'translateZ',
@@ -2779,7 +2784,7 @@
 	};
 
 /***/ },
-/* 25 */
+/* 26 */
 /*!*********************************!*\
   !*** ./src/routes/css/split.js ***!
   \*********************************/
@@ -2787,12 +2792,12 @@
 
 	"use strict";
 	
-	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 44),
-	    dictionary = __webpack_require__(/*! ./dictionary.js */ 41),
-	    splitLookup = __webpack_require__(/*! ./lookup.js */ 43),
-	    splitters = __webpack_require__(/*! ./splitters.js */ 45),
+	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 47),
+	    dictionary = __webpack_require__(/*! ./dictionary.js */ 43),
+	    splitLookup = __webpack_require__(/*! ./lookup.js */ 45),
+	    splitters = __webpack_require__(/*! ./splitters.js */ 48),
 	    
-	    utils = __webpack_require__(/*! ../../utils/utils.js */ 19),
+	    utils = __webpack_require__(/*! ../../utils/utils.js */ 20),
 	    
 	    valueProperties = dictionary.valueProps,
 	    valuePropertyCount = valueProperties.length,
@@ -2880,7 +2885,7 @@
 	};
 
 /***/ },
-/* 26 */
+/* 27 */
 /*!************************************!*\
   !*** ./src/routes/path/builder.js ***!
   \************************************/
@@ -2944,7 +2949,7 @@
 	};
 
 /***/ },
-/* 27 */
+/* 28 */
 /*!**********************************!*\
   !*** ./src/action/parse-args.js ***!
   \**********************************/
@@ -2952,9 +2957,9 @@
 
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 19),
-	    presets = __webpack_require__(/*! ./presets.js */ 16),
-	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 47),
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 20),
+	    presets = __webpack_require__(/*! ./presets.js */ 18),
+	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 51),
 	
 	    STRING = 'string',
 	    NUMBER = 'number',
@@ -3057,7 +3062,8 @@
 	        var props = {},
 	            argsLength = arguments.length,
 	            inputIndex = argsLength - 1,
-	            input = arguments[inputIndex];
+	            input = arguments[inputIndex],
+	            center = props.center || this.center || false;
 	        
 	        // Loop until inputIndex
 	        for (var i = 0; i < inputIndex; i++) {
@@ -3082,6 +3088,11 @@
 	            props.inputOrigin = input.get();
 	        }
 	        
+	        if (center) {
+	            props.inputOrigin.angleFromCenter = calc.angle(center, props.inputOrigin);
+	            props.inputOrigin.distanceFromCenter = calc.distance2D(center, props.inputOrigin);
+	        }
+	        
 	        return props;
 	    },
 	    
@@ -3089,7 +3100,7 @@
 	};
 
 /***/ },
-/* 28 */
+/* 29 */
 /*!****************************!*\
   !*** ./src/types/value.js ***!
   \****************************/
@@ -3097,10 +3108,10 @@
 
 	"use strict";
 	
-	var defaultProps = __webpack_require__(/*! ../defaults/value-props.js */ 48),
+	var defaultProps = __webpack_require__(/*! ../defaults/value-props.js */ 39),
 	    defaultState = __webpack_require__(/*! ../defaults/value-state.js */ 49),
 	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 50),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
 	
 	    CURRENT = 'current',
 	    ORIGIN = 'origin',
@@ -3242,7 +3253,7 @@
 	module.exports = Value;
 
 /***/ },
-/* 29 */
+/* 30 */
 /*!***************************!*\
   !*** ./src/types/repo.js ***!
   \***************************/
@@ -3250,7 +3261,7 @@
 
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 19),
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 20),
 	
 	    /*
 	        Get data with specified key
@@ -3318,7 +3329,7 @@
 	module.exports = Repo;
 
 /***/ },
-/* 30 */
+/* 31 */
 /*!*****************************!*\
   !*** ./src/action/queue.js ***!
   \*****************************/
@@ -3374,7 +3385,7 @@
 	module.exports = Queue;
 
 /***/ },
-/* 31 */
+/* 32 */
 /*!*********************************!*\
   !*** ./src/action/processor.js ***!
   \*********************************/
@@ -3385,9 +3396,9 @@
 	*/
 	"use strict";
 	
-	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 39),
-	    routes = __webpack_require__(/*! ./routes.js */ 20),
-	    calc = __webpack_require__(/*! ../utils/calc.js */ 18);
+	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 42),
+	    routes = __webpack_require__(/*! ./routes.js */ 21),
+	    calc = __webpack_require__(/*! ../utils/calc.js */ 14);
 	
 	module.exports = function (action, framestamp, frameDuration) {
 	    var props = action.props(),
@@ -3495,7 +3506,7 @@
 	};
 
 /***/ },
-/* 32 */
+/* 33 */
 /*!**************************************!*\
   !*** ./src/defaults/action-props.js ***!
   \**************************************/
@@ -3549,7 +3560,7 @@
 	};
 
 /***/ },
-/* 33 */
+/* 34 */
 /*!**************************************!*\
   !*** ./src/defaults/action-state.js ***!
   \**************************************/
@@ -3582,7 +3593,7 @@
 	};
 
 /***/ },
-/* 34 */
+/* 35 */
 /*!**********************************!*\
   !*** ./src/routes/css/styler.js ***!
   \**********************************/
@@ -3653,262 +3664,7 @@
 	module.exports = new cssStyler();
 
 /***/ },
-/* 35 */
-/*!******************************!*\
-  !*** ./src/utils/history.js ***!
-  \******************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var // [number]: Default max size of history
-	    maxHistorySize = 3,
-	    
-	    /*
-	        History constructor
-	        
-	        @param [var]: Variable to store in first history slot
-	        @param [int] (optional): Maximum size of history
-	    */
-	    History = function (obj, max) {
-	        this.max = max || maxHistorySize;
-	        this.entries = [];
-	        this.add(obj);
-	    };
-	    
-	History.prototype = {
-	    
-	    /*
-	        Push new var to history
-	        
-	        Shift out oldest entry if we've reached maximum capacity
-	        
-	        @param [var]: Variable to push into history.entries
-	    */
-	    add: function (obj) {
-	        var currentSize = this.getSize();
-	        
-	        this.entries.push(obj);
-	        
-	        if (currentSize >= this.max) {
-	            this.entries.shift();
-	        }
-	    },
-	    
-	    /*
-	        Get variable at specified index
-	
-	        @param [int]: Index
-	        @return [var]: Var found at specified index
-	    */
-	    get: function (i) {
-	        i = (typeof i === 'number') ? i : this.getSize() - 1;
-	
-	        return this.entries[i];
-	    },
-	    
-	    /*
-	        Get the second newest history entry
-	        
-	        @return [var]: Entry found at index size - 2
-	    */
-	    getPrevious: function () {
-	        return this.get(this.getSize() - 2);
-	    },
-	    
-	    /*
-	        Get current history size
-	        
-	        @return [int]: Current length of entries.length
-	    */
-	    getSize: function () {
-	        return this.entries.length;
-	    }
-	    
-	};
-	
-	module.exports = History;
-
-/***/ },
 /* 36 */
-/*!********************************!*\
-  !*** ./src/process/manager.js ***!
-  \********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var theLoop = __webpack_require__(/*! ./loop.js */ 51),
-	    ProcessManager = function () {
-	        this.all = {};
-	        this.active = [];
-	        this.deactivateQueue = [];
-	        theLoop.setCallback(this, this.fireActive);
-	    };
-	    
-	ProcessManager.prototype = {
-	    
-	    /*
-	        [int]: Used for process ID
-	    */
-	    processCounter: 0,
-	    
-	    /*
-	        [int]: Number of active processes
-	    */
-	    activeCount: 0,
-	    
-	    /*
-	        Get the process with a given index
-	        
-	        @param [int]: Index of process
-	        @return [Process]
-	    */
-	    getProcess: function (i) {
-	        return this.all[i];
-	    },
-	    
-	    /*
-	        Get number of active processes
-	        
-	        @return [int]: Number of active processes
-	    */
-	    getActiveCount: function () {
-	        return this.activeCount;
-	    },
-	    
-	    /*
-	        Get active tokens
-	
-	        @return [array]: Active tokens
-	    */
-	    getActive: function () {
-	        return this.active;
-	    },
-	    
-	    /*
-	        Get the length of the deactivate queue
-	        
-	        @return [int]: Length of queue
-	    */
-	    getQueueLength: function () {
-	        return this.deactivateQueue.length;
-	    },
-	    
-	    /*
-	        Fire all active processes
-	        
-	        @param [int]: Timestamp of executing frames
-	        @param [int]: Time since previous frame
-	        @return [boolean]: True if active processes found
-	    */
-	    fireActive: function (framestamp, elapsed) {
-	        var process,
-	            activeCount = 0,
-	            activeProcesses = [];
-	
-	        // Purge and check active count before execution
-	        this.purge();
-	        activeCount = this.getActiveCount();
-	        activeProcesses = this.getActive();
-	        
-	        // Loop through active processes and fire callback
-	        for (var i = 0; i < activeCount; i++) {
-	            process = this.getProcess(activeProcesses[i]);
-	            
-	            if (process) {
-	                process.fire(framestamp, elapsed);
-	            }
-	        }
-	
-	        // Repurge and recheck active count after execution
-	        this.purge();
-	        activeCount = this.getActiveCount();
-	        
-	        return activeCount ? true : false;
-	    },
-	    
-	    /*
-	        Register a new process
-	        
-	        @param [Process]
-	        @return [int]: Index of process to be used as ID
-	    */
-	    register: function (process) {
-	        var id = this.processCounter;
-	
-	        this.all[id] = process;
-	        
-	        this.processCounter++;
-	        
-	        return id;
-	    },
-	    
-	    /*
-	        Activate a process
-	        
-	        @param [int]: Index of active process
-	    */
-	    activate: function (i) {
-	        var queueIndex = this.deactivateQueue.indexOf(i),
-	            isQueued = (queueIndex > -1),
-	            isActive = (this.active.indexOf(i) > -1);
-	        
-	        // Remove from deactivateQueue if in there
-	        if (isQueued) {
-	            this.deactivateQueue.splice(queueIndex, 1);
-	        }
-	        
-	        // Add to active processes array if not already in there
-	        if (!isActive) {
-	            this.active.push(i);
-	            this.activeCount++;
-	            theLoop.start(this);
-	        }
-	    },
-	    
-	    /*
-	        Deactivate a process
-	        
-	        @param [int]: Index of process to add to deactivate queue
-	    */
-	    deactivate: function (i) {
-	        this.deactivateQueue.push(i);
-	    },
-	    
-	    /*
-	        Purge the deactivate queue
-	    */
-	    purge: function () {
-	        var activeIndex,
-	            queueLength = this.getQueueLength();
-	        
-	        while (queueLength--) {
-	            activeIndex = this.active.indexOf(this.deactivateQueue[queueLength]);
-	            
-	            // If process in active list deactivate
-	            if (activeIndex > -1) {
-	                this.active.splice(activeIndex, 1);
-	                this.activeCount--;
-	            }
-	        }
-	        
-	        this.deactivateQueue = [];
-	    },
-	    
-	    /*
-	        Remove the provided id and reindex remaining processes
-	    */
-	    kill: function (id) {
-	        delete this.all[id];
-	    }
-	    
-	};
-	
-	module.exports = new ProcessManager();
-
-/***/ },
-/* 37 */
 /*!*****************************!*\
   !*** ./src/types/bezier.js ***!
   \*****************************/
@@ -4083,70 +3839,373 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 38 */
-/*!****************************!*\
-  !*** ./src/core/routes.js ***!
-  \****************************/
+/* 37 */
+/*!******************************!*\
+  !*** ./src/utils/history.js ***!
+  \******************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = {};
+	"use strict";
+	
+	var // [number]: Default max size of history
+	    maxHistorySize = 3,
+	    
+	    /*
+	        History constructor
+	        
+	        @param [var]: Variable to store in first history slot
+	        @param [int] (optional): Maximum size of history
+	    */
+	    History = function (obj, max) {
+	        this.max = max || maxHistorySize;
+	        this.entries = [];
+	        this.add(obj);
+	    };
+	    
+	History.prototype = {
+	    
+	    /*
+	        Push new var to history
+	        
+	        Shift out oldest entry if we've reached maximum capacity
+	        
+	        @param [var]: Variable to push into history.entries
+	    */
+	    add: function (obj) {
+	        var currentSize = this.getSize();
+	        
+	        this.entries.push(obj);
+	        
+	        if (currentSize >= this.max) {
+	            this.entries.shift();
+	        }
+	    },
+	    
+	    /*
+	        Get variable at specified index
+	
+	        @param [int]: Index
+	        @return [var]: Var found at specified index
+	    */
+	    get: function (i) {
+	        i = (typeof i === 'number') ? i : this.getSize() - 1;
+	
+	        return this.entries[i];
+	    },
+	    
+	    /*
+	        Get the second newest history entry
+	        
+	        @return [var]: Entry found at index size - 2
+	    */
+	    getPrevious: function () {
+	        return this.get(this.getSize() - 2);
+	    },
+	    
+	    /*
+	        Get current history size
+	        
+	        @return [int]: Current length of entries.length
+	    */
+	    getSize: function () {
+	        return this.entries.length;
+	    }
+	    
+	};
+	
+	module.exports = History;
+
+/***/ },
+/* 38 */
+/*!********************************!*\
+  !*** ./src/process/manager.js ***!
+  \********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var theLoop = __webpack_require__(/*! ./loop.js */ 52),
+	    ProcessManager = function () {
+	        this.all = {};
+	        this.active = [];
+	        this.deactivateQueue = [];
+	        theLoop.setCallback(this, this.fireActive);
+	    };
+	    
+	ProcessManager.prototype = {
+	    
+	    /*
+	        [int]: Used for process ID
+	    */
+	    processCounter: 0,
+	    
+	    /*
+	        [int]: Number of active processes
+	    */
+	    activeCount: 0,
+	    
+	    /*
+	        Get the process with a given index
+	        
+	        @param [int]: Index of process
+	        @return [Process]
+	    */
+	    getProcess: function (i) {
+	        return this.all[i];
+	    },
+	    
+	    /*
+	        Get number of active processes
+	        
+	        @return [int]: Number of active processes
+	    */
+	    getActiveCount: function () {
+	        return this.activeCount;
+	    },
+	    
+	    /*
+	        Get active tokens
+	
+	        @return [array]: Active tokens
+	    */
+	    getActive: function () {
+	        return this.active;
+	    },
+	    
+	    /*
+	        Get the length of the deactivate queue
+	        
+	        @return [int]: Length of queue
+	    */
+	    getQueueLength: function () {
+	        return this.deactivateQueue.length;
+	    },
+	    
+	    /*
+	        Fire all active processes
+	        
+	        @param [int]: Timestamp of executing frames
+	        @param [int]: Time since previous frame
+	        @return [boolean]: True if active processes found
+	    */
+	    fireActive: function (framestamp, elapsed) {
+	        var process,
+	            activeCount = 0,
+	            activeProcesses = [];
+	
+	        // Purge and check active count before execution
+	        this.purge();
+	        activeCount = this.getActiveCount();
+	        activeProcesses = this.getActive();
+	        
+	        // Loop through active processes and fire callback
+	        for (var i = 0; i < activeCount; i++) {
+	            process = this.getProcess(activeProcesses[i]);
+	            
+	            if (process) {
+	                process.fire(framestamp, elapsed);
+	            }
+	        }
+	
+	        // Repurge and recheck active count after execution
+	        this.purge();
+	        activeCount = this.getActiveCount();
+	        
+	        return activeCount ? true : false;
+	    },
+	    
+	    /*
+	        Register a new process
+	        
+	        @param [Process]
+	        @return [int]: Index of process to be used as ID
+	    */
+	    register: function (process) {
+	        var id = this.processCounter;
+	
+	        this.all[id] = process;
+	        
+	        this.processCounter++;
+	        
+	        return id;
+	    },
+	    
+	    /*
+	        Activate a process
+	        
+	        @param [int]: Index of active process
+	    */
+	    activate: function (i) {
+	        var queueIndex = this.deactivateQueue.indexOf(i),
+	            isQueued = (queueIndex > -1),
+	            isActive = (this.active.indexOf(i) > -1);
+	        
+	        // Remove from deactivateQueue if in there
+	        if (isQueued) {
+	            this.deactivateQueue.splice(queueIndex, 1);
+	        }
+	        
+	        // Add to active processes array if not already in there
+	        if (!isActive) {
+	            this.active.push(i);
+	            this.activeCount++;
+	            theLoop.start(this);
+	        }
+	    },
+	    
+	    /*
+	        Deactivate a process
+	        
+	        @param [int]: Index of process to add to deactivate queue
+	    */
+	    deactivate: function (i) {
+	        this.deactivateQueue.push(i);
+	    },
+	    
+	    /*
+	        Purge the deactivate queue
+	    */
+	    purge: function () {
+	        var activeIndex,
+	            queueLength = this.getQueueLength();
+	        
+	        while (queueLength--) {
+	            activeIndex = this.active.indexOf(this.deactivateQueue[queueLength]);
+	            
+	            // If process in active list deactivate
+	            if (activeIndex > -1) {
+	                this.active.splice(activeIndex, 1);
+	                this.activeCount--;
+	            }
+	        }
+	        
+	        this.deactivateQueue = [];
+	    },
+	    
+	    /*
+	        Remove the provided id and reindex remaining processes
+	    */
+	    kill: function (id) {
+	        delete this.all[id];
+	    }
+	    
+	};
+	
+	module.exports = new ProcessManager();
 
 /***/ },
 /* 39 */
-/*!***************************!*\
-  !*** ./src/core/rubix.js ***!
-  \***************************/
+/*!*************************************!*\
+  !*** ./src/defaults/value-props.js ***!
+  \*************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	/*
-	    Anatomy of a Rubix:
+	module.exports = {
+	    // [number]: Current target value
+	    to: undefined,
+	
+	    // [number]: Maximum permitted value during .track and .run
+	    min: undefined,
 	    
-	        Props
-	            createMethod [boolean]:
-	                If true, will create Action shorthand method 
-	                with the name of the rubix, ie .play()
+	    // [number]: Minimum permitted value during .track and .run
+	    max: undefined,
+	    
+	    // [number]: Origin
+	    origin: 0,
+	    
+	    // [boolean]: Set to true when both min and max detected
+	    hasRange: false,
 	
-	            calculatesVelocity [boolean]:
-	                Set to true if your Rubix will calculate
-	                the new Value velocity (otherwise Redshift may override it)
-	                
-	        Methods
-	            updateInput
-	                Run once per frame, before Values are processed. .play uses this
-	                to update the timer, .track uses it to check the input device.
+	    // [boolean]: Round output if true
+	    round: false,
+	    
+	    // [string]: Route
+	    route: 'values',
+	    
+	    // [string]: Non-namespaced output value
+	    name: '',
+	    
+	    // [string]: Unit string to append to value on ourput
+	    unit: undefined,
+	    
+	    parent: '',
+	    
+	    unitName: '',
 	
-	                @param [Action]: The Action being processed
-	                @param [object]: Action properties
-	                @param [int]: Duration since the last frame in milliseconds
-	            
-	            process (required)
-	                Run once for every Action value, this method returns the latest value
+	    /*
+	        Link properties
+	    */
 	
-	                @param [string]: Name of value being processed
-	                @param [Value]: Value being processed
-	                @param [object]: Action values
-	                @param [object]: Action properties
-	                @param [Action]: Action
-	                @param [int]: Duration since the last frame in milliseconds
-	                @return [int]: Latest value
-	                
-	            limit
-	                Run once for every Action value, this can be used to limit the value
-	                within any parameters
-	                
-	                @param [int]: Value returned from process method
-	                @param [Value]: Value being processed
-	                @return [int]: Latest value
-	                
-	            hasEnded (required)
-	                Returns true if this current Action has ended. Redshift will
-	                then check the Action's queue or yoyo/loop properties to decide
-	                what action to take next
-	                
-	                @param [Action]: Action being processed
-	                @param [boolean]: True if any value has changed
-	*/            
-	module.exports = {};
+	    // [string]: Name of value to listen to
+	    link: undefined,
+	    
+	    // [array]: Linear range of values (eg [-100, -50, 50, 100]) of linked value to map to .mapTo
+	    mapLink: undefined,
+	    
+	    // [array]: Non-linear range of values (eg [0, 1, 1, 0]) to map to .mapLink - here the linked value being 75 would result in a value of 0.5
+	    mapTo: undefined,
+	
+	
+	    /*
+	        .run() properties
+	    */
+	
+	    // [string]: Simulation to .run
+	    simulate: 'velocity',
+	    
+	    // [number]: Deceleration to apply to value, in units per second
+	    deceleration: 0,
+	    
+	    // [number]: Acceleration to apply to value, in units per second
+	    acceleration: 0,
+	    
+	    // [number]: Factor to multiply velocity by on bounce
+	    bounce: 0,
+	    
+	    // [number]: Spring strength during 'string'
+	    spring: 80,
+	    
+	    // [number]: Timeconstant of glide
+	    timeConstant: 395,
+	    
+	    // [number]: Stop simulation under this speed
+	    stopSpeed: 10,
+	    
+	    // [boolean]: Capture with spring physics on limit breach
+	    capture: false,
+	    
+	    // [number]: Friction to apply per frame
+	    friction: 0.05,
+	
+	    /*
+	        .play() properties
+	    */
+	
+	    // [number]: Duration of animation in ms
+	    duration: 400,
+	    
+	    // [number]: Duration of delay in ms
+	    delay: 0,
+	    
+	    // [number]: Stagger delay as factor of duration (ie 0.2 with duration of 1000ms = 200ms)
+	    stagger: 0,
+	    
+	    // [string]: Easing to apply
+	    ease: 'easeInOut',
+	    
+	    // [number]: Number of steps to execute animation
+	    steps: 0,
+	    
+	    // [string]: Tells Redshift when to step, at the start or end of a step. Other option is 'start' as per CSS spec
+	    stepDirection: 'end',
+	
+	    /*
+	        .track() properties
+	    */
+	
+	    // [number]: Factor of movement outside of maximum range (ie 0.5 will move half as much as 1)
+	    escapeAmp: 0
+	};
 
 /***/ },
 /* 40 */
@@ -4165,8 +4224,8 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 14),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
 	    speedPerFrame = calc.speedPerFrame;
 	
 	module.exports = {
@@ -4248,6 +4307,72 @@
 
 /***/ },
 /* 41 */
+/*!****************************!*\
+  !*** ./src/core/routes.js ***!
+  \****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {};
+
+/***/ },
+/* 42 */
+/*!***************************!*\
+  !*** ./src/core/rubix.js ***!
+  \***************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Anatomy of a Rubix:
+	    
+	        Props
+	            createMethod [boolean]:
+	                If true, will create Action shorthand method 
+	                with the name of the rubix, ie .play()
+	
+	            calculatesVelocity [boolean]:
+	                Set to true if your Rubix will calculate
+	                the new Value velocity (otherwise Redshift may override it)
+	                
+	        Methods
+	            updateInput
+	                Run once per frame, before Values are processed. .play uses this
+	                to update the timer, .track uses it to check the input device.
+	
+	                @param [Action]: The Action being processed
+	                @param [object]: Action properties
+	                @param [int]: Duration since the last frame in milliseconds
+	            
+	            process (required)
+	                Run once for every Action value, this method returns the latest value
+	
+	                @param [string]: Name of value being processed
+	                @param [Value]: Value being processed
+	                @param [object]: Action values
+	                @param [object]: Action properties
+	                @param [Action]: Action
+	                @param [int]: Duration since the last frame in milliseconds
+	                @return [int]: Latest value
+	                
+	            limit
+	                Run once for every Action value, this can be used to limit the value
+	                within any parameters
+	                
+	                @param [int]: Value returned from process method
+	                @param [Value]: Value being processed
+	                @return [int]: Latest value
+	                
+	            hasEnded (required)
+	                Returns true if this current Action has ended. Redshift will
+	                then check the Action's queue or yoyo/loop properties to decide
+	                what action to take next
+	                
+	                @param [Action]: Action being processed
+	                @param [boolean]: True if any value has changed
+	*/            
+	module.exports = {};
+
+/***/ },
+/* 43 */
 /*!**************************************!*\
   !*** ./src/routes/css/dictionary.js ***!
   \**************************************/
@@ -4301,7 +4426,7 @@
 	module.exports = terms;
 
 /***/ },
-/* 42 */
+/* 44 */
 /*!*************************************!*\
   !*** ./src/routes/css/templates.js ***!
   \*************************************/
@@ -4309,7 +4434,7 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 41),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 43),
 	
 	    defaultValues = {
 	        Alpha: 1
@@ -4377,7 +4502,7 @@
 	module.exports = templates;
 
 /***/ },
-/* 43 */
+/* 45 */
 /*!**********************************!*\
   !*** ./src/routes/css/lookup.js ***!
   \**********************************/
@@ -4425,7 +4550,27 @@
 	};
 
 /***/ },
-/* 44 */
+/* 46 */
+/*!***********************************!*\
+  !*** ./src/routes/path/lookup.js ***!
+  \***********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	var STROKE = 'stroke',
+	    DASH = STROKE + '-dash', // stoke-width
+	    DASH_ARRAY = DASH + 'array'
+	
+	module.exports = {
+	    opacity: STROKE + '-opacity',
+	    width: STROKE + '-width',
+	    offset: DASH + 'offset',
+	    length: DASH_ARRAY,
+	    spacing: DASH_ARRAY,
+	    miterlimit: STROKE + '-miterlimit'
+	};
+
+/***/ },
+/* 47 */
 /*!********************************************!*\
   !*** ./src/routes/css/default-property.js ***!
   \********************************************/
@@ -4476,7 +4621,7 @@
 	module.exports = defaults;
 
 /***/ },
-/* 45 */
+/* 48 */
 /*!*************************************!*\
   !*** ./src/routes/css/splitters.js ***!
   \*************************************/
@@ -4484,8 +4629,8 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 41),
-	    utils = __webpack_require__(/*! ../../utils/utils.js */ 19),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 43),
+	    utils = __webpack_require__(/*! ../../utils/utils.js */ 20),
 	
 	    /*
 	        Split comma delimited into array
@@ -4715,27 +4860,84 @@
 	module.exports = splitters;
 
 /***/ },
-/* 46 */
-/*!***********************************!*\
-  !*** ./src/routes/path/lookup.js ***!
-  \***********************************/
+/* 49 */
+/*!*************************************!*\
+  !*** ./src/defaults/value-state.js ***!
+  \*************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var STROKE = 'stroke',
-	    DASH = STROKE + '-dash', // stoke-width
-	    DASH_ARRAY = DASH + 'array'
-	
 	module.exports = {
-	    opacity: STROKE + '-opacity',
-	    width: STROKE + '-width',
-	    offset: DASH + 'offset',
-	    length: DASH_ARRAY,
-	    spacing: DASH_ARRAY,
-	    miterlimit: STROKE + '-miterlimit'
+	    // [number]: Current value
+	    current: 0,
+	    
+	    // [number]: Change per second
+	    speed: 0,
+	    
+	    // [number]: Change per second plus direction (ie can be negative)
+	    velocity: 0,
+	    
+	    // [number]: Amount value has changed in the most recent frame
+	    frameChange: 0
 	};
 
 /***/ },
-/* 47 */
+/* 50 */
+/*!******************************!*\
+  !*** ./src/utils/resolve.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Property resolver
+	    -------------------------------------
+	    
+	    Checks if a property being set is
+	        a) a function
+	        b) a relative value
+	        c) a value as a unit
+	    and returns the resolved value
+	        
+	    @param [number || string || function]: New property value
+	    @param [number || string] (optional): Current property value
+	    @param [object] (optional): Parent property
+	    @param [object] (optional): Scope to resolve first argument if provided
+	    @returns [number || string]: Resolved value
+	*/
+	"use strict";
+	
+	var calc = __webpack_require__(/*! ./calc.js */ 14),
+	    utils = __webpack_require__(/*! ./utils.js */ 20);
+	
+	module.exports = function (newValue, currentValue, parent, scope) {
+	    var splitValueUnit = {};
+	    
+	    currentValue = currentValue || 0;
+	
+	    // Run function if this is a function
+	    if (typeof newValue == 'function') {
+	        newValue = newValue.call(scope, currentValue);
+	    }
+	    
+	    // Check if value is relative ie '+=10' - could have been returned from function
+	    if (newValue && newValue.indexOf && newValue.indexOf('=') > 0) {
+	        newValue = calc.relativeValue(currentValue, newValue);
+	    }
+	    
+	    // If value is still string it might have a unit property
+	    if (typeof newValue === 'string') {
+	        splitValueUnit = utils.splitValUnit(newValue);
+	
+	        if (!isNaN(splitValueUnit.value)) {
+	            newValue = splitValueUnit.value;
+	            parent.unit = splitValueUnit.unit;
+	        }
+	    }
+	
+	    return newValue;
+	};
+
+/***/ },
+/* 51 */
 /*!******************************!*\
   !*** ./src/input/pointer.js ***!
   \******************************/
@@ -4743,7 +4945,7 @@
 
 	"use strict";
 	
-	var Input = __webpack_require__(/*! ./input.js */ 14),
+	var Input = __webpack_require__(/*! ./input.js */ 16),
 	    currentPointer, // Sort this out for multitouch
 	    
 	    TOUCHMOVE = 'touchmove',
@@ -4832,198 +5034,7 @@
 	module.exports = Pointer;
 
 /***/ },
-/* 48 */
-/*!*************************************!*\
-  !*** ./src/defaults/value-props.js ***!
-  \*************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	    // [number]: Current target value
-	    to: undefined,
-	
-	    // [number]: Maximum permitted value during .track and .run
-	    min: undefined,
-	    
-	    // [number]: Minimum permitted value during .track and .run
-	    max: undefined,
-	    
-	    // [number]: Origin
-	    origin: 0,
-	    
-	    // [boolean]: Set to true when both min and max detected
-	    hasRange: false,
-	
-	    // [boolean]: Round output if true
-	    round: false,
-	    
-	    // [string]: Route
-	    route: 'values',
-	    
-	    // [string]: Non-namespaced output value
-	    name: '',
-	    
-	    // [string]: Unit string to append to value on ourput
-	    unit: undefined,
-	    
-	    parent: '',
-	    
-	    unitName: '',
-	
-	    /*
-	        Link properties
-	    */
-	
-	    // [string]: Name of value to listen to
-	    link: undefined,
-	    
-	    // [array]: Linear range of values (eg [-100, -50, 50, 100]) of linked value to map to .mapTo
-	    mapLink: undefined,
-	    
-	    // [array]: Non-linear range of values (eg [0, 1, 1, 0]) to map to .mapLink - here the linked value being 75 would result in a value of 0.5
-	    mapTo: undefined,
-	
-	
-	    /*
-	        .run() properties
-	    */
-	
-	    // [string]: Simulation to .run
-	    simulate: 'velocity',
-	    
-	    // [number]: Deceleration to apply to value, in units per second
-	    deceleration: 0,
-	    
-	    // [number]: Acceleration to apply to value, in units per second
-	    acceleration: 0,
-	    
-	    // [number]: Factor to multiply velocity by on bounce
-	    bounce: 0,
-	    
-	    // [number]: Spring strength during 'string'
-	    spring: 80,
-	    
-	    // [number]: Timeconstant of glide
-	    timeConstant: 395,
-	    
-	    // [number]: Stop simulation under this speed
-	    stopSpeed: 10,
-	    
-	    // [boolean]: Capture with spring physics on limit breach
-	    capture: false,
-	    
-	    // [number]: Friction to apply per frame
-	    friction: 0.05,
-	
-	    /*
-	        .play() properties
-	    */
-	
-	    // [number]: Duration of animation in ms
-	    duration: 400,
-	    
-	    // [number]: Duration of delay in ms
-	    delay: 0,
-	    
-	    // [number]: Stagger delay as factor of duration (ie 0.2 with duration of 1000ms = 200ms)
-	    stagger: 0,
-	    
-	    // [string]: Easing to apply
-	    ease: 'easeInOut',
-	    
-	    // [number]: Number of steps to execute animation
-	    steps: 0,
-	    
-	    // [string]: Tells Redshift when to step, at the start or end of a step. Other option is 'start' as per CSS spec
-	    stepDirection: 'end',
-	
-	    /*
-	        .track() properties
-	    */
-	
-	    // [number]: Factor of movement outside of maximum range (ie 0.5 will move half as much as 1)
-	    escapeAmp: 0
-	};
-
-/***/ },
-/* 49 */
-/*!*************************************!*\
-  !*** ./src/defaults/value-state.js ***!
-  \*************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	    // [number]: Current value
-	    current: 0,
-	    
-	    // [number]: Change per second
-	    speed: 0,
-	    
-	    // [number]: Change per second plus direction (ie can be negative)
-	    velocity: 0,
-	    
-	    // [number]: Amount value has changed in the most recent frame
-	    frameChange: 0
-	};
-
-/***/ },
-/* 50 */
-/*!******************************!*\
-  !*** ./src/utils/resolve.js ***!
-  \******************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    Property resolver
-	    -------------------------------------
-	    
-	    Checks if a property being set is
-	        a) a function
-	        b) a relative value
-	        c) a value as a unit
-	    and returns the resolved value
-	        
-	    @param [number || string || function]: New property value
-	    @param [number || string] (optional): Current property value
-	    @param [object] (optional): Parent property
-	    @param [object] (optional): Scope to resolve first argument if provided
-	    @returns [number || string]: Resolved value
-	*/
-	"use strict";
-	
-	var calc = __webpack_require__(/*! ./calc.js */ 18),
-	    utils = __webpack_require__(/*! ./utils.js */ 19);
-	
-	module.exports = function (newValue, currentValue, parent, scope) {
-	    var splitValueUnit = {};
-	    
-	    currentValue = currentValue || 0;
-	
-	    // Run function if this is a function
-	    if (typeof newValue == 'function') {
-	        newValue = newValue.call(scope, currentValue);
-	    }
-	    
-	    // Check if value is relative ie '+=10' - could have been returned from function
-	    if (newValue && newValue.indexOf && newValue.indexOf('=') > 0) {
-	        newValue = calc.relativeValue(currentValue, newValue);
-	    }
-	    
-	    // If value is still string it might have a unit property
-	    if (typeof newValue === 'string') {
-	        splitValueUnit = utils.splitValUnit(newValue);
-	
-	        if (!isNaN(splitValueUnit.value)) {
-	            newValue = splitValueUnit.value;
-	            parent.unit = splitValueUnit.unit;
-	        }
-	    }
-	
-	    return newValue;
-	};
-
-/***/ },
-/* 51 */
+/* 52 */
 /*!*****************************!*\
   !*** ./src/process/loop.js ***!
   \*****************************/
@@ -5034,7 +5045,7 @@
 	*/
 	"use strict";
 	
-	var Timer = __webpack_require__(/*! ./timer.js */ 52),
+	var Timer = __webpack_require__(/*! ./timer.js */ 53),
 	    Loop = function () {
 	        this.timer = new Timer();
 	    };
@@ -5099,7 +5110,7 @@
 	module.exports = new Loop();
 
 /***/ },
-/* 52 */
+/* 53 */
 /*!******************************!*\
   !*** ./src/process/timer.js ***!
   \******************************/
@@ -5107,7 +5118,7 @@
 
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 19),
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 20),
 	
 	    maxElapsed = 33,
 	    Timer = function () {
