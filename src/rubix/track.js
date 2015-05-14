@@ -22,8 +22,10 @@ module.exports = {
     updateInput: function (action, props) {
         action[INPUT_OFFSET] = calc.offset(props.inputOrigin, props.input[CURRENT]);
         
-        if (action.center) {
-            action.centerOffset = calc.offset(props.centerOffsetOrigin, props.input[CURRENT]);
+        if (action.center && action[INPUT_OFFSET].x && action[INPUT_OFFSET].y) {
+            props[INPUT_OFFSET].angleFromCenter = calc.angle(action.center, props.inputOrigin);
+            props[INPUT_OFFSET].distanceFromCenter = calc.distance2D(action.center, props.inputOrigin);
+            action.centerOffset = calc.offset(props[INPUT_OFFSET], props.input[CURRENT]);
         }
     },
         
