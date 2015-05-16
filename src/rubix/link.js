@@ -18,10 +18,40 @@
 "use strict";
 
 var calc = require('../utils/calc.js'),
+
+    STRING = 'string',
     
-    CURRENT = 'current',
-    INPUT_OFFSET = 'inputOffset',
-    LINK = 'link';
+    /*
+        Translate our mapLink value into mapTo
+        
+        @param [number]: Calculated value from linked value
+        @param [Value || object]: Linked value or empty object if we're linking to input
+        @param [array]: List of numbers relating to linked value
+        @param [array]: List of numbers relating to this value
+    */
+    findMappedValue = function (newValue, linkedValue, toValue, mapLink, mapTo) {
+        var mapLength = mapLink.length,
+            i = 1,
+            lastLinkValue,
+            thisLinkValue,
+            lastToValue,
+            thisToValue;
+
+        for (; i < mapLength; i++) {
+            // Assign values from array, or if they're strings, look for them in linkedValue
+            lastLinkValue = (typeof mapLink[i - 1] === STRING) ? linkedValue[mapLink[i - 1]] : mapLink[i - 1];
+            thisLinkValue = (typeof mapLink[i] === STRING) ? linkedValue[mapLink[i]] : mapLink[i];
+            lastToValue = (typeof mapTo[i - 1] === STRING) ? toValue[mapTo[i - 1]] : mapTo[i - 1];
+            thisToValue = (typeof mapTo[i] === STRING) ? toValue[mapTo[i]] : mapTo[i];
+
+            // Check if we've gone past our calculated value, or if we're at the end of the array
+            if (newValue < thisLinkValue || i === mapLength - 1) {
+                newValue = calc.value(calc.restricted(calc.progress(newValue, lastLinkValue, thisLinkValue), 0, 1), lastToValue, thisToValue);
+            }
+        }
+        
+        return newValue;
+    };
 
 module.exports = {
 
@@ -41,27 +71,23 @@ module.exports = {
         @return [number]: Calculated value
     */
     process: function (key, value, values, props, action) {
-        var newValue = value[CURRENT],
-            mapLink = value.mapLink,
-            mapTo = value.mapTo,
-            mapLength = (mapLink !== undefined) ? mapLink.length : 0,
-            newValue;
-
-        // First look at values in Action
-        if (values[value[LINK]]) {
-            newValue = values[value[LINK]][CURRENT];
-
+        var newValue = value.current,
+            linkKey = value.link,
+            linkedValue = values[linkKey] ? values[linkKey] : {},
+            inputOffset = action.inputOffset;
+            
         // Then check values in Input
-        } else if (action[INPUT_OFFSET] && action[INPUT_OFFSET].hasOwnProperty(value[LINK])) {
-            newValue = value.origin + action[INPUT_OFFSET][value[LINK]];
+        if (inputOffset && inputOffset.hasOwnProperty(linkKey)) {
+            newValue = value.origin + inputOffset[linkKey];
+            
+        // First look at Action and check value isn't linking itself
+        } else if (linkedValue.current !== undefined && key !== linkKey) {
+            newValue = linkedValue.current;
         }
-        
-        // Loop through mapLink and mapTo to translate one to the other
-        for (var i = 1; i < mapLength; i++) {
-            if (newValue < mapLink[i] || i === mapLength - 1) {
-                newValue = calc.value( calc.restricted( calc.progress(newValue, mapLink[i - 1], mapLink[i]), 0, 1), mapTo[i - 1], mapTo[i]);
-                break;
-            }
+
+        // If we have mapLink and mapTo properties, translate the new value
+        if (value.mapLink && value.mapTo) {
+            newValue = findMappedValue(newValue, linkedValue, value, value.mapLink, value.mapTo);
         }
 
         return newValue;
