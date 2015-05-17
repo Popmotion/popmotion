@@ -42,7 +42,7 @@ var cssStyler = function () {
 	return function (element, prop) {
 	    // Cache body tag if we haven't already
 		testElement = testElement || document.getElementsByTagName('body')[0];
-console.log(element, prop);
+
 		// If prop is a string, we're requesting a property
 		if (typeof prop === 'string') {
 			return window.getComputedStyle(element, null)[cache[prop] || testPrefix(prop)];
