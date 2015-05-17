@@ -14,9 +14,6 @@ var calc = require('../utils/calc.js'),
 
 module.exports = {
 
-    // [boolean]: Create an Action method for this rubix?
-    createMethod: true,
-
     /*
         Update Action elapsed time
         

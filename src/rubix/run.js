@@ -8,9 +8,6 @@ var calc = require('../utils/calc.js'),
 
 module.exports = {
 
-    // [boolean]: Create an Action method for this rubix?
-    createMethod: true,
-
     // [boolean]: Tell Redshift this rubix calculates a new velocity itself
     calculatesVelocity: true,
     

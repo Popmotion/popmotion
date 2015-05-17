@@ -9,9 +9,6 @@ var calc = require('../utils/calc.js'),
     INPUT_OFFSET = 'inputOffset';
 
 module.exports = {
-
-    // [boolean]: Create an Action method for this rubix?
-    createMethod: true,
     
     /*
         Update Input

@@ -2,8 +2,8 @@
     Anatomy of a Rubix:
     
         Props
-            createMethod [boolean]:
-                If true, will create Action shorthand method 
+            surpressMethod [boolean]:
+                If not true, will create Action shorthand method 
                 with the name of the rubix, ie .play()
 
             calculatesVelocity [boolean]:

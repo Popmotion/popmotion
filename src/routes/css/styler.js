@@ -27,7 +27,7 @@ var cssStyler = function () {
 		};
 	
 	/*
-		Stylee function call
+		Style DOM function
 		
 		Syntax
 			
@@ -40,22 +40,22 @@ var cssStyler = function () {
 				});
 	*/
 	return function (element, prop) {
+	    // Cache body tag if we haven't already
+		testElement = testElement || document.getElementsByTagName('body')[0];
+console.log(element, prop);
 		// If prop is a string, we're requesting a property
 		if (typeof prop === 'string') {
 			return window.getComputedStyle(element, null)[cache[prop] || testPrefix(prop)];
 		
 		// If it's an object, we're setting
 		} else {
-		    // Cache body tag if we haven't already
-			testElement = testElement || document.getElementsByTagName('body')[0];
-
-			for (var key in prop) {
+		    for (var key in prop) {
 				if (prop.hasOwnProperty(key)) {
 					element.style[cache[key] || testPrefix(key)] = prop[key];
 				}
 			}
 			
-			return this;
+			return false;
 		}
 	}
 };

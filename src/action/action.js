@@ -96,7 +96,7 @@ Action.prototype = {
         this.clearOrder();
 
         // Update current properties
-        self.props(props);
+        this.props(props);
         
         // Set default property to current if it isn't set
         defaultProp = defaultProp || 'current';
@@ -468,16 +468,24 @@ Action.prototype = {
     
     /*
         Style our dom element
+        
+        Becomes get if props is string, set if object
     */
-    style: function (prop) {
-        var dom = this.props('dom'),
+    style: function (name, props) {
+        var elementIsDefined = (arguments.length === 2),
+            dom,
             returnVal;
         
+        props = elementIsDefined ? props : name;
+        name = elementIsDefined ? name : 'dom';
+    
+        dom = this.props(name);
+        
         if (dom) {
-            returnVal = styler(dom, prop);
+            returnVal = styler(dom, props);
         }
         
-        return returnVal == styler ? this : returnVal;
+        return (returnVal === false) ? this : returnVal;
     }
     
 };

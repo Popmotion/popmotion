@@ -5,10 +5,7 @@
 
 module.exports = {
 
-    // [boolean]: Create an Action method for this rubix?
-    createMethod: true,
-
-    /*
+   /*
         Process new value
         
         Return existing current

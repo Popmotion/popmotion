@@ -94,12 +94,12 @@
 	*/
 	"use strict";
 	
-	var Action = __webpack_require__(/*! ./action/action.js */ 14),
-	    Input = __webpack_require__(/*! ./input/input.js */ 15),
+	var Action = __webpack_require__(/*! ./action/action.js */ 13),
+	    Input = __webpack_require__(/*! ./input/input.js */ 14),
 	    Process = __webpack_require__(/*! ./process/process.js */ 16),
-	    presets = __webpack_require__(/*! ./action/presets.js */ 17),
-	    easing = __webpack_require__(/*! ./utils/easing.js */ 18),
-	    calc = __webpack_require__(/*! ./utils/calc.js */ 13),
+	    presets = __webpack_require__(/*! ./action/presets.js */ 15),
+	    easing = __webpack_require__(/*! ./utils/easing.js */ 17),
+	    calc = __webpack_require__(/*! ./utils/calc.js */ 18),
 	    utils = __webpack_require__(/*! ./utils/utils.js */ 19),
 	    route = __webpack_require__(/*! ./action/routes.js */ 20),
 	    registerRubix = __webpack_require__(/*! ./register/register-rubix.js */ 21),
@@ -243,10 +243,7 @@
 	
 	module.exports = {
 	
-	    // [boolean]: Create an Action method for this rubix?
-	    createMethod: true,
-	
-	    /*
+	   /*
 	        Process new value
 	        
 	        Return existing current
@@ -296,7 +293,7 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 13),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
 	
 	    STRING = 'string',
 	    
@@ -392,17 +389,14 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 13),
-	    easing = __webpack_require__(/*! ../utils/easing.js */ 18),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
+	    easing = __webpack_require__(/*! ../utils/easing.js */ 17),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
 	    
 	    CURRENT = 'current',
 	    HAS_ENDED = 'hasEnded';
 	
 	module.exports = {
-	
-	    // [boolean]: Create an Action method for this rubix?
-	    createMethod: true,
 	
 	    /*
 	        Update Action elapsed time
@@ -482,13 +476,10 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 13),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
 	    simulate = __webpack_require__(/*! ../action/simulate.js */ 23);
 	
 	module.exports = {
-	
-	    // [boolean]: Create an Action method for this rubix?
-	    createMethod: true,
 	
 	    // [boolean]: Tell Redshift this rubix calculates a new velocity itself
 	    calculatesVelocity: true,
@@ -568,15 +559,12 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 13),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
 	
 	    CURRENT = 'current',
 	    INPUT_OFFSET = 'inputOffset';
 	
 	module.exports = {
-	
-	    // [boolean]: Create an Action method for this rubix?
-	    createMethod: true,
 	    
 	    /*
 	        Update Input
@@ -782,6 +770,1142 @@
 
 /***/ },
 /* 13 */
+/*!******************************!*\
+  !*** ./src/action/action.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var parseArgs = __webpack_require__(/*! ./parse-args.js */ 27),
+	    Value = __webpack_require__(/*! ../types/value.js */ 28),
+	    Repo = __webpack_require__(/*! ../types/repo.js */ 29),
+	    Queue = __webpack_require__(/*! ./queue.js */ 30),
+	    Process = __webpack_require__(/*! ../process/process.js */ 16),
+	    processor = __webpack_require__(/*! ./processor.js */ 31),
+	    routes = __webpack_require__(/*! ./routes.js */ 20),
+	    defaultProps = __webpack_require__(/*! ../defaults/action-props.js */ 32),
+	    defaultState = __webpack_require__(/*! ../defaults/action-state.js */ 33),
+	    calc = __webpack_require__(/*! ../utils/calc.js */ 18),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
+	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 34),
+	
+	    namespace = function (key, space) {
+	        return (space && space !== routes.defaultRoute) ? key + '.' + space : key;
+	    },
+	
+	    Action = function () {
+	        var self = this;
+	        
+	        // Create value repo
+	        self.values = {};
+	        
+	        // Create new property manager
+	        defaultProps.scope = this;
+	        self.props = new Repo();
+	        self.props(defaultState);
+	        self.resetProps();
+	
+	        // Create data store
+	        self.data = new Repo();
+	        
+	        // Register process wth cycl
+	        self.process = new Process(function (framestamp, frameDuration) {
+		        if (self.isActive()) {
+	                processor(self, framestamp, frameDuration);
+		        }
+	        });
+	        
+	        self.queue = new Queue();
+	        self.output = {};
+	
+	        self.set(parseArgs.generic.apply(self, arguments));
+	    };
+	
+	Action.prototype = {
+	
+	    /*
+	        Play the provided actions as animations
+	        
+	        Syntax
+	            .play(playlist, [override])
+	                @param [string]: Playlist of presets
+	                @param [object]: (optional) Override object
+	                
+	            .play(params)
+	                @param [object]: Action properties
+	                
+	            .play(params, [duration, easing, onEnd])
+	                @param [object]: Action props
+	                @param [number]: Duration in ms
+	                @param [string]: Easing function to apply
+	                @param [function]: Function to run on end
+	                
+	        @return [Action]
+	    */
+	    play: function () {
+	        var props = parseArgs.play.apply(this, arguments);
+	
+	        if (!this.isActive()) {
+	            this.set(props, 'to');
+	            this.start('play');
+	        }
+	
+	        return this;
+	    },
+	    
+	    /*
+	        Set Action values and properties
+	        
+	        Syntax
+	            .set(params)
+	                @param [object]: Action properties
+	            
+	        @return [Action]
+	    */
+	    set: function (props, defaultProp) {
+	        var self = this;
+	        
+	        // Reset properties to defaults
+	        this.resetProps();
+	
+	        // Remove current values from order list
+	        this.clearOrder();
+	
+	        // Update current properties
+	        this.props(props);
+	        
+	        // Set default property to current if it isn't set
+	        defaultProp = defaultProp || 'current';
+	        
+	        // Loop over values and update
+	        routes.shard(function (route, routeValues) {
+	            var preprocessedValues = {},
+	                valueBase = {},
+	                value,
+	                base = {
+	                    route: route.name
+	                };
+	
+	            for (var key in routeValues) {
+	                if (routeValues.hasOwnProperty(key)) {
+	                    value = routeValues[key];
+	
+	                    if (!utils.isObj(value)) {
+	                        valueBase = { name: key };
+	                        valueBase[defaultProp] = value;
+	                    } else {
+	                        valueBase = value;
+	                        valueBase.name = key;
+	                    }
+	                    
+	                    valueBase = utils.merge(base, valueBase);
+	
+	                    // If no preprocess step, assign directly
+	                    if (!route.preprocess) {
+	                        self.setValue(key, valueBase, props, route.name, true);
+	                        
+	                    // Else preprocess and add each returned value
+	                    } else {
+	                        preprocessedValues = route.preprocess(key, valueBase, self, props);
+	
+	                        for (var subKey in preprocessedValues) {
+	                            self.setValue(subKey, preprocessedValues[subKey], props, route.name, true);
+	                        }
+	                    }
+	                }
+	            }
+	        }, props);
+	        
+	        self.resetOrigins();
+	
+	        return self;
+	    },
+	    
+	    /*
+	        Loop through all values and create origin points
+	    */
+	    resetOrigins: function () {
+	        var values = this.values,
+	            key = '';
+	
+	        for (key in values) {
+	            if (values.hasOwnProperty(key)) {
+	                values[key].origin = values[key].current;
+	            }
+	        }
+	    },
+	
+	    /*
+	        Start Action
+	
+	        @param [string]: Name of processing type to use
+	        @return [Action]
+	    */
+	    start: function (processType) {
+		    var input = this.getProp('input');
+	
+	        this.resetProgress();
+	        
+	        if (processType) {
+	            this.props('rubix', processType);
+	        }
+	        
+	        if (processType !== 'track' && input && input.stop) {
+	            input.stop();
+	        }
+	
+	        this.isActive(true);
+	        this.started = utils.currentTime() + this.props('delay');
+	        this.framestamp = this.started;
+	        this.firstFrame = true;
+	        
+	        this.process.start();
+	
+	        return self;
+	    },
+	    
+	    /*
+	        Stop current Action process
+	    */
+	    stop: function () {
+	        this.queue.clear();
+	        this.pause();
+	        return this;
+	    },
+	    
+	    /*
+	        Pause current Action
+	    */
+	    pause: function () {
+		    var self = this,
+		        input = this.getProp('input');
+	
+	        self.isActive(false);
+	        self.process.stop();
+	
+	        if (input && input.stop) {
+	            input.stop();
+	        }
+	
+	        return self;
+	    },
+	    
+	    /*
+	        Resume a paused Action
+	    */
+	    resume: function () {
+		    var self = this;
+		    
+	        self.started = utils.currentTime();
+	        self.framestamp = self.started;
+	        self.isActive(true);
+	        
+	        self.process.start();
+	        
+	        return self;
+	    },
+	    
+	    /*
+	        Reset Action progress and values
+	    */
+	    reset: function () {
+		    var self = this,
+		        values = self.values;
+	
+	        self.resetProgress();
+	        
+	        for (var key in values) {
+	            values[key].reset();
+	        }
+	        
+	        return self;
+	    },
+	    
+	    /*
+		    Reset Action progress
+	    */
+	    resetProgress: function () {
+	        var props = this.props();
+	        
+	        props.progress = 0;
+	        props.elapsed = (props.playDirection === 1) ? 0 : props.duration;
+	        props.started = utils.currentTime();
+	        
+	        return this;
+	    },
+	    
+	    /*
+		    Reverse Action progress and values
+	    */
+	    reverse: function () {
+	        var values = this.values,
+	            playDirection = this.props('playDirection');
+	
+	        this.props('playDirection', playDirection * -1);
+	        
+	        for (var key in values) {
+	            if (values.hasOwnProperty(key)) {
+	                values[key].retarget();
+	            }
+	        }
+	
+	        return this;
+	    },
+	    
+	    /*
+	        Swap value origins and to
+	    */
+	    flip: function () {
+	        var values = this.values,
+	            props = this.props();
+	            
+	        props.progress = calc.difference(props.progress, 1);
+	        props.elapsed = calc.difference(props.elapsed, props.duration);
+	        
+	        for (var key in values) {
+	            values[key].flip();
+	        }
+	
+	        return this;
+	    },
+	    
+	    toggle: function () {
+	        if (this.isActive()) {
+	            this.pause();
+	        } else {
+	            this.resume();
+	        }
+	        
+	        return this;
+	    },
+	    
+	    /*
+	        Check for next steps and perform, stop if not
+	    */
+	    next: function () {
+	        var self = this,
+	            nexts = [{
+	                key: 'loop',
+	                callback: self.reset
+	            }, {
+	                key: 'yoyo',
+	                callback: self.reverse
+	            }, {
+	                key: 'flip',
+	                callback: self.flip
+	            }],
+	            possibles = nexts.length,
+	            hasNext = false;
+	            
+	        for (var i = 0; i < possibles; ++i) {
+	            if (self.checkNextStep(nexts[i].key, nexts[i].callback)) {
+	                hasNext = true;
+	                break;
+	            }
+	        }
+	
+	        if (!hasNext && !self.playNext()) {
+	            self.stop();
+	        } else {
+	            self.isActive(true);
+	        }
+	        
+	        return self;
+	    },
+	    
+	    /*
+	        Check next step
+	        
+	        @param [string]: Name of step ('yoyo' or 'loop')
+	        @param [callback]: Function to run if we take this step
+	    */
+	    checkNextStep: function (key, callback) {
+	        var COUNT = 'Count',
+	            stepTaken = false,
+	            step = this.props(key),
+	            count = this.props(key + COUNT),
+	            forever = (step === true);
+	
+	        if (forever || utils.isNum(step)) {
+	            ++count;
+	            this.props(key + COUNT, count);
+	            if (forever || count <= step) {
+	                callback.call(this);
+	                stepTaken = true;
+	            }
+	        }
+	
+	        return stepTaken;
+	    },
+	    
+	    /*
+	        Next in playlist
+	    */
+	    playNext: function () {
+	        var stepTaken = false,
+	            nextInQueue = this.queue.next(this.props('playDirection'));
+	
+	        if (utils.isArray(nextInQueue)) {
+	            this.set(parseArgs.generic.apply(this, nextInQueue), 'to')
+	                .reset();
+	
+	            stepTaken = true;
+	        }
+	
+	        return stepTaken;
+	    },
+	    
+	    setValue: function (key, value, inherit, space, reset) {
+	        var existing = this.getValue(key, space);
+	        
+	        key = namespace(key, space);
+	
+	        // Update if value exists
+	        if (existing) {
+	            // Overwrite with defaults
+	            if (reset) {
+	                existing.resetProps();
+	            }
+	
+	            existing.set(value, inherit);
+	
+	        // Or create new if it doesn't
+	        } else {
+	            this.values[key] = new Value(key, value, inherit, this);
+	        }
+	
+	        return this;
+	    },
+	    
+	    
+	    getValue: function (key, space) {
+	        key = namespace(key, space);
+	
+	        return this.values[key];
+	    },
+	    
+	    
+	    setProp: function (key, value) {
+	        this.props(key, value);
+	        return this;
+	    },
+	    
+	    
+	    getProp: function (key) {
+	        return this.props(key);
+	    },
+	    
+	    resetProps: function () {
+	        this.props(defaultProps);
+	        return this;
+	    },
+	    
+	    /*
+	        Is Action active?
+	        
+	        @param [boolean] (optional): If provided, will set action to active/inactive
+	        @return [boolean]: Active status
+	    */
+	    isActive: function (active) {
+	        var isActive = (active !== undefined) ? active : this.props('active');
+	
+	        this.props('active', isActive);
+	
+	        return isActive;
+	    },
+	    
+	    /*
+	        Update order of value keys
+	        
+	        @param [string]: Key of value
+	        @param [boolean]: Whether to move value to back
+	        @param [string] (optional): Name of order array (if not default)
+	    */
+	    updateOrder: function (key, moveToBack, orderName) {
+	        var props = this.props(),
+	            pos, order;
+	
+	        orderName = orderName || 'order';
+	        order = props[orderName] = props[orderName] || [];
+	        pos = order.indexOf(key);
+	        
+	        if (pos === -1 || moveToBack) {
+	            order.push(key);
+	            
+	            if (pos !== -1) {
+	                order.splice(pos, 1);
+	            }
+	        }
+	    },
+	    
+	    clearOrder: function () {
+	        this.props('order', []);
+	    },
+	    
+	    /*
+	        Style our dom element
+	        
+	        Becomes get if props is string, set if object
+	    */
+	    style: function (name, props) {
+	        var elementIsDefined = (arguments.length === 2),
+	            dom,
+	            returnVal;
+	        
+	        props = elementIsDefined ? props : name;
+	        name = elementIsDefined ? name : 'dom';
+	    
+	        dom = this.props(name);
+	        
+	        if (dom) {
+	            returnVal = styler(dom, props);
+	        }
+	        
+	        return (returnVal === false) ? this : returnVal;
+	    }
+	    
+	};
+	
+	module.exports = Action;
+
+/***/ },
+/* 14 */
+/*!****************************!*\
+  !*** ./src/input/input.js ***!
+  \****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Input controller
+	*/
+	"use strict";
+	
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
+	    History = __webpack_require__(/*! ../utils/history.js */ 35),
+	
+	    /*
+	        Input constructor
+	        
+	            Syntax
+	                newInput(name, value[, poll])
+	                    @param [string]: Name of to track
+	                    @param [number]: Initial value
+	                    @param [function] (optional): Function to poll Input data
+	                    
+	                newInput(props[, poll])
+	                    @param [object]: Object of values
+	                    @param [function] (optional): Function to poll Input data
+	
+	        @return [Input]
+	    */
+	    Input = function () {
+	        var pollPos = arguments.length - 1;
+	
+	        this.current = {};
+	        this.offset = {};
+	        this.velocity = {};
+	        this.history = new History();
+	        this.update(arguments[0], arguments[1]);
+	        
+	        if (utils.isFunc(arguments[pollPos])) {
+	            this.poll = arguments[pollPos];
+	        }
+	    };
+	
+	Input.prototype = {
+	    
+	    // [number]: Number of frames of inactivity before velocity is turned to 0
+	    maxInactiveFrames: 2,
+	    
+	    // [number]: Number of frames input hasn't been updated
+	    inactiveFrames: 0,
+	    
+	    /*
+	        Get latest input values
+	        
+	        @param [string] (optional): Name of specific property to return
+	        @return [object || number]: Latest input values or, if specified, single value
+	    */
+	    get: function (prop) {
+	        var latest = this.history.get(),
+	            val = (prop !== undefined) ? latest[prop] : latest;
+	        
+	        return val;
+	    },
+	
+	    /*
+	        Update the input values
+	        
+	        Syntax
+	            input.update(name, value)
+	                @param [string]: Name of to track
+	                @param [number]: Initial value
+	                
+	            input.update(props)
+	                @param [object]: Object of values
+	                
+	        @return [Input]
+	    */
+	    update: function (arg0, arg1) {
+	        var values = {};
+	
+	        if (utils.isNum(arg1)) {
+	            values[arg0] = arg1;
+	        } else {
+	            values = arg0;
+	        }
+	
+	        this.history.add(utils.merge(this.current, values));
+	        
+	        return this;
+	    },
+	    
+	    /*
+	        Check for input movement and update pointer object's properties
+	        
+	        @param [number]: Timestamp of frame
+	        @return [Input]
+	    */
+	    onFrame: function (timestamp) {
+	        var latest, hasChanged;
+	        
+	        // Check provided timestamp against lastFrame timestamp and return input has already been updated
+	        if (timestamp === this.lastFrame) {
+	            return;
+	        }
+	        
+	        latest = (this.poll) ? this.poll() : this.history.get();
+	        hasChanged = utils.hasChanged(this.current, latest);
+	
+	        // If input has changed between frames  
+	        if (hasChanged) {
+	            this.velocity = calc.offset(this.current, latest);
+	            this.current = latest;
+	            this.inactiveFrames = 0;
+	
+	        // Or it hasn't moved and our frame limit has been reached
+	        } else if (this.inactiveFrames >= this.maxInactiveFrames) {
+	            this.velocity = calc.offset(this.current, this.current);
+	        
+	        // Or input hasn't changed
+	        } else {
+	            this.inactiveFrames++;
+	        }
+	        
+	        this.lastFrame = timestamp;
+	        
+	        return this;
+	    }
+	    
+	};
+	
+	module.exports = Input;
+
+/***/ },
+/* 15 */
+/*!*******************************!*\
+  !*** ./src/action/presets.js ***!
+  \*******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 19),
+	    
+	    generateKeys = function (key) {
+	        var keys = key.split(DOT),
+	            keysLength = keys.length,
+	            lastKey = keys[0],
+	            i = 1;
+	        
+	        for (; i < keysLength; i++) {
+	            keys[i] = lastKey += DOT + keys[i];
+	        }
+	        
+	        return keys;
+	    },
+	
+	    presetStore = {},
+	    DOT = '.',
+	    Presets = function () {};
+	
+	Presets.prototype = {
+	
+	    /*
+	        Define a new Action preset
+	        
+	        Syntax
+	        
+	            .define(name, preset)
+	                @param [string]: Name of preset
+	                @param [object]: Preset options/properties
+	                
+	            .define(presets)
+	                @param [object]: Multiple presets as named object
+	                
+	        @return [Redshift]
+	    */
+	    add: function (name, preset) {
+	        var presets = {},
+	            key = '';
+	
+	        if (utils.isObj(name)) {
+	            presets = name;
+	        } else {
+	            presets[name] = preset;
+	        }
+	
+	        for (key in presets) {
+	            if (presets.hasOwnProperty(key)) {
+	                presetStore[key] = presets[key];
+	            }
+	        }
+	    },
+	    
+	    
+	    /*
+	        Get defined action
+	        
+	        @param [string]: The name of the predefined action
+	    */
+	    getDefined: function (key) {
+	        var props = {},
+	            thisProp = {},
+	            keys = generateKeys(key),
+	            keysLength = keys.length,
+	            i = 0;
+	
+	        for (; i < keysLength; i++) {
+	            thisProp = presetStore[keys[i]];
+	
+	            if (thisProp) {
+	                props = utils.merge(props, thisProp);
+	            }
+	        }
+	        
+	        return props;
+	    }
+	    
+	};
+	
+	module.exports = new Presets();
+
+/***/ },
+/* 16 */
+/*!********************************!*\
+  !*** ./src/process/process.js ***!
+  \********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Process
+	*/
+	"use strict";
+	
+	var manager = __webpack_require__(/*! ./manager.js */ 37),
+	
+	    /*
+	        Process constructor
+	        
+	        Syntax
+	            var process = new Process(scope, callback);
+	            var process = new Process(callback);
+	    */
+	    Process = function (arg0, arg1) {
+	        var hasScope = (arg1 !== undefined),
+	            callback = hasScope ? arg1 : arg0,
+	            scope = hasScope ? arg0 : this;
+	
+	        this.setCallback(callback);
+	        this.setScope(scope);
+	
+	        this.setId(manager.register(this));
+	    };
+	    
+	Process.prototype = {
+	    
+	    /*
+	        [boolean]: Is this process currently active?
+	    */
+	    isActive: false,
+	    
+	    /*
+	        [boolean]: Has this process been killed?
+	    */
+	    isKilled: false,
+	
+	    /*
+	        Fire callback
+	        
+	        @param [timestamp]: Timestamp of currently-executed frame
+	        @param [number]: Time since last frame
+	    */
+	    fire: function (timestamp, elapsed) {
+	        // Check timers
+	        if (this.isActive) {
+	            this.callback.call(this.scope, timestamp, elapsed);
+	        }
+	        
+	        if (this.isInterval) {
+	            this.deactivate();
+	        }
+	        
+	        return this;
+	    },
+	    
+	    /*
+	        Set process callback
+	        
+	        @param [function]: Function to fire per frame
+	        @return [this]
+	    */
+	    setCallback: function (callback) {
+	        this.callback = callback;
+	        
+	        return this;
+	    },
+	    
+	    /*
+	        Set callback scope
+	        
+	        @param [function]: Fire callback in this context
+	        @return [this]
+	    */
+	    setScope: function (scope) {
+	        this.scope = scope;
+	        
+	        return this;
+	    },
+	    
+	    /*
+	        Start process
+	        
+	        @param [int]: Duration of process in ms, 0 if indefinite
+	        @return [this]
+	    */
+	    start: function (duration) {
+	        var self = this;
+	        
+	        self.reset();
+	        self.activate();
+	        
+	        if (duration) {
+	            self.stopTimer = setTimeout(function () {
+	                self.stop();
+	            }, duration);
+	        }
+	
+	        return self;
+	    },
+	    
+	    /*
+	        Stop process
+	        
+	        @return [this]
+	    */
+	    stop: function () {
+	        this.reset();
+	        this.deactivate();
+	        
+	        return this;
+	    },
+	    
+	    /*
+	        Activate process
+	        
+	        @return [this]
+	    */
+	    activate: function () {
+	        if (!this.isKilled) {
+	            this.isActive = true;
+	            manager.activate(this.id);
+	        }
+	
+	        return this;
+	    },
+	    
+	    /*
+	        Deactivate process
+	        
+	        @return [this]
+	    */
+	    deactivate: function () {
+	        this.isActive = false;
+	        manager.deactivate(this.id);
+	        
+	        return this;
+	    },
+	    
+	    /*
+	        Fire process every x ms
+	        
+	        @param [int]: Number of ms to wait between refiring process.
+	        @return [this]
+	    */
+	    every: function (interval) {
+		    var self = this;
+	
+	        self.reset();
+	
+	        self.isInterval = true;
+	
+	        self.intervalTimer = setInterval(function () {
+	            self.activate();
+	        }, interval);
+	        
+	        return this;
+	    },
+	    
+	    /*
+	        Clear all timers
+	        
+	        @param 
+	    */
+	    reset: function () {
+	        this.isInterval = false;
+	        clearTimeout(this.stopTimer);
+	        clearInterval(this.intervalTimer);
+	        
+	        return this;
+	    },
+	    
+	    /*
+	        Kill function in manager, release for garbage collection
+	    */
+	    kill: function () {
+	        this.stop();
+	        this.isKilled = true;
+	        manager.kill(this.id);
+	    },
+	    
+	    setId: function (id) {
+	        this.id = id;
+	        return this;
+	    }
+	};
+	
+	module.exports = Process;
+
+/***/ },
+/* 17 */
+/*!*****************************!*\
+  !*** ./src/utils/easing.js ***!
+  \*****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Easing functions
+	    ----------------------------------------
+	    
+	    Generates and provides easing functions based on baseFunction definitions
+	    
+	    A call to easingFunction.get('functionName') returns a function that can be passed:
+	        @param [number]: Progress 0-1
+	        @param [number] (optional): Amp modifier, only accepted in some easing functions
+	                                    and is used to adjust overall strength
+	        @return [number]: Eased progress
+	        
+	    We can generate new functions by sending an easing function through easingFunction.extend(name, method).
+	    Which will make nameIn, nameOut and nameInOut functions available to use.
+	        
+	    Easing functions from Robert Penner
+	    http://www.robertpenner.com/easing/
+	        
+	    Bezier curve interpretor created from Gaëtan Renaudeau's original BezierEasing  
+	    https://github.com/gre/bezier-easing/blob/master/index.js  
+	    https://github.com/gre/bezier-easing/blob/master/LICENSE
+	*/
+	"use strict";
+	
+	var calc = __webpack_require__(/*! ./calc.js */ 18),
+	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 36),
+	    
+	    // Constants
+	    INVALID_EASING = ": Not defined",
+	    EASE_IN = 'In',
+	    EASE_OUT = 'Out',
+	    EASE_IN_OUT = EASE_IN + EASE_OUT,
+	    
+	    // Base power ease names
+	    powerEasing = ['ease', 'cubic', 'quart', 'quint'],
+	    
+	    // Generate easing function with provided power
+	    generatePowerEasing = function (power) {
+	        return function (progress) {
+	            return Math.pow(progress, power);
+	        }
+	    },
+	
+	    /*
+	        Each of these base functions is an easeIn
+	        
+	        On init, we use EasingFunction.mirror and .reverse to generate easeInOut and
+	        easeOut functions respectively.
+	    */
+	    baseEasing = {
+	        circ: function (progress) {
+	            return 1 - Math.sin(Math.acos(progress));
+	        },
+	        back: function (progress) {
+	            var strength = 1.5;
+	
+	            return (progress * progress) * ((strength + 1) * progress - strength);
+	        }
+	    },
+	    
+	    /*
+	        Mirror easing
+	        
+	        Mirrors the provided easing function, used here for mirroring an
+	        easeIn into an easeInOut
+	        
+	        @param [number]: Progress, from 0 - 1, of current shift
+	        @param [function]: The easing function to mirror
+	        @returns [number]: The easing-adjusted delta
+	    */
+	    mirrorEasing = function (progress, method) {
+	        return (progress <= 0.5) ? method(2 * progress) / 2 : (2 - method(2 * (1 - progress))) / 2;
+	    },
+	            
+	    /*
+	        Reverse easing
+	        
+	        Reverses the output of the provided easing function, used for flipping easeIn
+	        curve to an easeOut.
+	        
+	        @param [number]: Progress, from 0 - 1, of current shift
+	        @param [function]: The easing function to reverse
+	        @returns [number]: The easing-adjusted delta
+	    */
+	    reverseEasing = function (progress, method) {
+	        return 1 - method(1 - progress);
+	    },
+	    
+	    /*
+	        Add new easing function
+	        
+	        Takes name and generates nameIn, nameOut, nameInOut, and easing functions to match
+	        
+	        @param [string]: Base name of the easing functions to generate
+	        @param [function]: Base easing function, as an easeIn, from which to generate Out and InOut
+	    */
+	    generateVariations = function (name, method, isBaseIn) {
+	        var easeIn = name + EASE_IN,
+	            easeOut = name + EASE_OUT,
+	            easeInOut = name + EASE_IN_OUT,
+	            baseName = isBaseIn ? easeIn : easeOut,
+	            reverseName = isBaseIn ? easeOut : easeIn;
+	
+	        // Create the In function
+	        easing[baseName] = method;
+	
+	        // Create the Out function by reversing the transition curve
+	        easing[reverseName] = function (progress) {
+	            return reverseEasing(progress, easing[baseName]);
+	        };
+	        
+	        // Create the InOut function by mirroring the transition curve
+	        easing[easeInOut] = function (progress) {
+	            return mirrorEasing(progress, easing[baseName]);
+	        };
+	    },
+	    
+	    easing = {
+	    
+	        /*
+	            Get the named easing function
+	            
+	            @param [string]: Name of the easing function to get 
+	            @return [function || boolean]: Easing function or false if function undefined
+	        */
+	        get: function (name) {
+	            var easing = this[name];
+	            
+	            if (!easing) {
+	                throw name + INVALID_EASING;
+	            }
+	    
+	            return easing;
+	        },
+	        
+	        
+	        /*
+	            Add Bezier Curve easing
+	            
+	            @param [string]: Name of new easing
+	            @parma [number]: X of coordinate 1
+	            @parma [number]: Y of coordinate 1
+	            @parma [number]: X of coordinate 2
+	            @parma [number]: Y of coordinate 2
+	        */
+	        add: function (name, x1, y1, x2, y2) {
+	            if (!this[name]) {
+	                this[name] = new Bezier(x1, y1, x2, y2);
+	            }
+	        },
+	        
+	        
+	        /*
+	            Ease value within ranged parameters
+	            
+	            @param [number]: Progress between 0 and 1
+	            @param [number]: Value of 0 progress
+	            @param [number]: Value of 1 progress
+	            @param [string]: Easing to use
+	            @param [number]: Amplify progress out of specified range
+	            @return [number]: Value of eased progress in range
+	        */  
+	        withinRange: function (progress, from, to, ease, escapeAmp) {
+	            var progressLimited = calc.restricted(progress, 0, 1);
+	    
+	            if (progressLimited !== progress && escapeAmp) {
+	                ease = 'linear';
+	                progressLimited = progressLimited + (calc.difference(progressLimited, progress) * escapeAmp);
+	            }
+	    
+	            return calc.valueEased(progressLimited, from, to, this.get(ease));
+	        },
+	            
+	        /*
+	            Linear easing adjustment
+	            
+	            The default easing method, not added with .extend as it has no Out or InOut
+	            variation.
+	            
+	            @param [number]: Progress, from 0-1
+	            @return [number]: Unadjusted progress
+	        */
+	        linear: function (progress) {
+	            return progress;
+	        }
+	    };
+	
+	
+	// Initialise Easing  
+	(function () {
+	    var i = 0,
+	        key = '';
+	        
+	    // Generate power easing functions
+	    for (; i < 4; i++) {
+	        baseEasing[powerEasing[i]] = generatePowerEasing(i + 2);
+	    }
+	    
+	    // Generate in/out/inOut easing variations
+	    for (key in baseEasing) {
+	        if (baseEasing.hasOwnProperty(key)) {
+	            generateVariations(key, baseEasing[key], true);
+	        }
+	    }
+	})();
+	
+	module.exports = easing;
+
+
+/***/ },
+/* 18 */
 /*!***************************!*\
   !*** ./src/utils/calc.js ***!
   \***************************/
@@ -1185,1134 +2309,6 @@
 	module.exports = calc;
 
 /***/ },
-/* 14 */
-/*!******************************!*\
-  !*** ./src/action/action.js ***!
-  \******************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var parseArgs = __webpack_require__(/*! ./parse-args.js */ 29),
-	    Value = __webpack_require__(/*! ../types/value.js */ 30),
-	    Repo = __webpack_require__(/*! ../types/repo.js */ 31),
-	    Queue = __webpack_require__(/*! ./queue.js */ 32),
-	    Process = __webpack_require__(/*! ../process/process.js */ 16),
-	    processor = __webpack_require__(/*! ./processor.js */ 33),
-	    routes = __webpack_require__(/*! ./routes.js */ 20),
-	    defaultProps = __webpack_require__(/*! ../defaults/action-props.js */ 34),
-	    defaultState = __webpack_require__(/*! ../defaults/action-state.js */ 35),
-	    calc = __webpack_require__(/*! ../utils/calc.js */ 13),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
-	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 36),
-	
-	    namespace = function (key, space) {
-	        return (space && space !== routes.defaultRoute) ? key + '.' + space : key;
-	    },
-	
-	    Action = function () {
-	        var self = this;
-	        
-	        // Create value repo
-	        self.values = {};
-	        
-	        // Create new property manager
-	        defaultProps.scope = this;
-	        self.props = new Repo();
-	        self.props(defaultState);
-	        self.resetProps();
-	
-	        // Create data store
-	        self.data = new Repo();
-	        
-	        // Register process wth cycl
-	        self.process = new Process(function (framestamp, frameDuration) {
-		        if (self.isActive()) {
-	                processor(self, framestamp, frameDuration);
-		        }
-	        });
-	        
-	        self.queue = new Queue();
-	        self.output = {};
-	
-	        self.set(parseArgs.generic.apply(self, arguments));
-	    };
-	
-	Action.prototype = {
-	
-	    /*
-	        Play the provided actions as animations
-	        
-	        Syntax
-	            .play(playlist, [override])
-	                @param [string]: Playlist of presets
-	                @param [object]: (optional) Override object
-	                
-	            .play(params)
-	                @param [object]: Action properties
-	                
-	            .play(params, [duration, easing, onEnd])
-	                @param [object]: Action props
-	                @param [number]: Duration in ms
-	                @param [string]: Easing function to apply
-	                @param [function]: Function to run on end
-	                
-	        @return [Action]
-	    */
-	    play: function () {
-	        var props = parseArgs.play.apply(this, arguments);
-	
-	        if (!this.isActive()) {
-	            this.set(props, 'to');
-	            this.start('play');
-	        }
-	
-	        return this;
-	    },
-	    
-	    /*
-	        Set Action values and properties
-	        
-	        Syntax
-	            .set(params)
-	                @param [object]: Action properties
-	            
-	        @return [Action]
-	    */
-	    set: function (props, defaultProp) {
-	        var self = this;
-	        
-	        // Reset properties to defaults
-	        this.resetProps();
-	
-	        // Remove current values from order list
-	        this.clearOrder();
-	
-	        // Update current properties
-	        self.props(props);
-	        
-	        // Set default property to current if it isn't set
-	        defaultProp = defaultProp || 'current';
-	        
-	        // Loop over values and update
-	        routes.shard(function (route, routeValues) {
-	            var preprocessedValues = {},
-	                valueBase = {},
-	                value,
-	                base = {
-	                    route: route.name
-	                };
-	
-	            for (var key in routeValues) {
-	                if (routeValues.hasOwnProperty(key)) {
-	                    value = routeValues[key];
-	
-	                    if (!utils.isObj(value)) {
-	                        valueBase = { name: key };
-	                        valueBase[defaultProp] = value;
-	                    } else {
-	                        valueBase = value;
-	                        valueBase.name = key;
-	                    }
-	                    
-	                    valueBase = utils.merge(base, valueBase);
-	
-	                    // If no preprocess step, assign directly
-	                    if (!route.preprocess) {
-	                        self.setValue(key, valueBase, props, route.name, true);
-	                        
-	                    // Else preprocess and add each returned value
-	                    } else {
-	                        preprocessedValues = route.preprocess(key, valueBase, self, props);
-	
-	                        for (var subKey in preprocessedValues) {
-	                            self.setValue(subKey, preprocessedValues[subKey], props, route.name, true);
-	                        }
-	                    }
-	                }
-	            }
-	        }, props);
-	        
-	        self.resetOrigins();
-	
-	        return self;
-	    },
-	    
-	    /*
-	        Loop through all values and create origin points
-	    */
-	    resetOrigins: function () {
-	        var values = this.values,
-	            key = '';
-	
-	        for (key in values) {
-	            if (values.hasOwnProperty(key)) {
-	                values[key].origin = values[key].current;
-	            }
-	        }
-	    },
-	
-	    /*
-	        Start Action
-	
-	        @param [string]: Name of processing type to use
-	        @return [Action]
-	    */
-	    start: function (processType) {
-		    var input = this.getProp('input');
-	
-	        this.resetProgress();
-	        
-	        if (processType) {
-	            this.props('rubix', processType);
-	        }
-	        
-	        if (processType !== 'track' && input && input.stop) {
-	            input.stop();
-	        }
-	
-	        this.isActive(true);
-	        this.started = utils.currentTime() + this.props('delay');
-	        this.framestamp = this.started;
-	        this.firstFrame = true;
-	        
-	        this.process.start();
-	
-	        return self;
-	    },
-	    
-	    /*
-	        Stop current Action process
-	    */
-	    stop: function () {
-	        this.queue.clear();
-	        this.pause();
-	        return this;
-	    },
-	    
-	    /*
-	        Pause current Action
-	    */
-	    pause: function () {
-		    var self = this,
-		        input = this.getProp('input');
-	
-	        self.isActive(false);
-	        self.process.stop();
-	
-	        if (input && input.stop) {
-	            input.stop();
-	        }
-	
-	        return self;
-	    },
-	    
-	    /*
-	        Resume a paused Action
-	    */
-	    resume: function () {
-		    var self = this;
-		    
-	        self.started = utils.currentTime();
-	        self.framestamp = self.started;
-	        self.isActive(true);
-	        
-	        self.process.start();
-	        
-	        return self;
-	    },
-	    
-	    /*
-	        Reset Action progress and values
-	    */
-	    reset: function () {
-		    var self = this,
-		        values = self.values;
-	
-	        self.resetProgress();
-	        
-	        for (var key in values) {
-	            values[key].reset();
-	        }
-	        
-	        return self;
-	    },
-	    
-	    /*
-		    Reset Action progress
-	    */
-	    resetProgress: function () {
-	        var props = this.props();
-	        
-	        props.progress = 0;
-	        props.elapsed = (props.playDirection === 1) ? 0 : props.duration;
-	        props.started = utils.currentTime();
-	        
-	        return this;
-	    },
-	    
-	    /*
-		    Reverse Action progress and values
-	    */
-	    reverse: function () {
-	        var values = this.values,
-	            playDirection = this.props('playDirection');
-	
-	        this.props('playDirection', playDirection * -1);
-	        
-	        for (var key in values) {
-	            if (values.hasOwnProperty(key)) {
-	                values[key].retarget();
-	            }
-	        }
-	
-	        return this;
-	    },
-	    
-	    /*
-	        Swap value origins and to
-	    */
-	    flip: function () {
-	        var values = this.values,
-	            props = this.props();
-	            
-	        props.progress = calc.difference(props.progress, 1);
-	        props.elapsed = calc.difference(props.elapsed, props.duration);
-	        
-	        for (var key in values) {
-	            values[key].flip();
-	        }
-	
-	        return this;
-	    },
-	    
-	    toggle: function () {
-	        if (this.isActive()) {
-	            this.pause();
-	        } else {
-	            this.resume();
-	        }
-	        
-	        return this;
-	    },
-	    
-	    /*
-	        Check for next steps and perform, stop if not
-	    */
-	    next: function () {
-	        var self = this,
-	            nexts = [{
-	                key: 'loop',
-	                callback: self.reset
-	            }, {
-	                key: 'yoyo',
-	                callback: self.reverse
-	            }, {
-	                key: 'flip',
-	                callback: self.flip
-	            }],
-	            possibles = nexts.length,
-	            hasNext = false;
-	            
-	        for (var i = 0; i < possibles; ++i) {
-	            if (self.checkNextStep(nexts[i].key, nexts[i].callback)) {
-	                hasNext = true;
-	                break;
-	            }
-	        }
-	
-	        if (!hasNext && !self.playNext()) {
-	            self.stop();
-	        } else {
-	            self.isActive(true);
-	        }
-	        
-	        return self;
-	    },
-	    
-	    /*
-	        Check next step
-	        
-	        @param [string]: Name of step ('yoyo' or 'loop')
-	        @param [callback]: Function to run if we take this step
-	    */
-	    checkNextStep: function (key, callback) {
-	        var COUNT = 'Count',
-	            stepTaken = false,
-	            step = this.props(key),
-	            count = this.props(key + COUNT),
-	            forever = (step === true);
-	
-	        if (forever || utils.isNum(step)) {
-	            ++count;
-	            this.props(key + COUNT, count);
-	            if (forever || count <= step) {
-	                callback.call(this);
-	                stepTaken = true;
-	            }
-	        }
-	
-	        return stepTaken;
-	    },
-	    
-	    /*
-	        Next in playlist
-	    */
-	    playNext: function () {
-	        var stepTaken = false,
-	            nextInQueue = this.queue.next(this.props('playDirection'));
-	
-	        if (utils.isArray(nextInQueue)) {
-	            this.set(parseArgs.generic.apply(this, nextInQueue), 'to')
-	                .reset();
-	
-	            stepTaken = true;
-	        }
-	
-	        return stepTaken;
-	    },
-	    
-	    setValue: function (key, value, inherit, space, reset) {
-	        var existing = this.getValue(key, space);
-	        
-	        key = namespace(key, space);
-	
-	        // Update if value exists
-	        if (existing) {
-	            // Overwrite with defaults
-	            if (reset) {
-	                existing.resetProps();
-	            }
-	
-	            existing.set(value, inherit);
-	
-	        // Or create new if it doesn't
-	        } else {
-	            this.values[key] = new Value(key, value, inherit, this);
-	        }
-	
-	        return this;
-	    },
-	    
-	    
-	    getValue: function (key, space) {
-	        key = namespace(key, space);
-	
-	        return this.values[key];
-	    },
-	    
-	    
-	    setProp: function (key, value) {
-	        this.props(key, value);
-	        return this;
-	    },
-	    
-	    
-	    getProp: function (key) {
-	        return this.props(key);
-	    },
-	    
-	    resetProps: function () {
-	        this.props(defaultProps);
-	        return this;
-	    },
-	    
-	    /*
-	        Is Action active?
-	        
-	        @param [boolean] (optional): If provided, will set action to active/inactive
-	        @return [boolean]: Active status
-	    */
-	    isActive: function (active) {
-	        var isActive = (active !== undefined) ? active : this.props('active');
-	
-	        this.props('active', isActive);
-	
-	        return isActive;
-	    },
-	    
-	    /*
-	        Update order of value keys
-	        
-	        @param [string]: Key of value
-	        @param [boolean]: Whether to move value to back
-	        @param [string] (optional): Name of order array (if not default)
-	    */
-	    updateOrder: function (key, moveToBack, orderName) {
-	        var props = this.props(),
-	            pos, order;
-	
-	        orderName = orderName || 'order';
-	        order = props[orderName] = props[orderName] || [];
-	        pos = order.indexOf(key);
-	        
-	        if (pos === -1 || moveToBack) {
-	            order.push(key);
-	            
-	            if (pos !== -1) {
-	                order.splice(pos, 1);
-	            }
-	        }
-	    },
-	    
-	    clearOrder: function () {
-	        this.props('order', []);
-	    },
-	    
-	    /*
-	        Style our dom element
-	    */
-	    style: function (prop) {
-	        var dom = this.props('dom'),
-	            returnVal;
-	        
-	        if (dom) {
-	            returnVal = styler(dom, prop);
-	        }
-	        
-	        return returnVal == styler ? this : returnVal;
-	    }
-	    
-	};
-	
-	module.exports = Action;
-
-/***/ },
-/* 15 */
-/*!****************************!*\
-  !*** ./src/input/input.js ***!
-  \****************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    Input controller
-	*/
-	"use strict";
-	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 13),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
-	    History = __webpack_require__(/*! ../utils/history.js */ 28),
-	
-	    /*
-	        Input constructor
-	        
-	            Syntax
-	                newInput(name, value[, poll])
-	                    @param [string]: Name of to track
-	                    @param [number]: Initial value
-	                    @param [function] (optional): Function to poll Input data
-	                    
-	                newInput(props[, poll])
-	                    @param [object]: Object of values
-	                    @param [function] (optional): Function to poll Input data
-	
-	        @return [Input]
-	    */
-	    Input = function () {
-	        var pollPos = arguments.length - 1;
-	
-	        this.current = {};
-	        this.offset = {};
-	        this.velocity = {};
-	        this.history = new History();
-	        this.update(arguments[0], arguments[1]);
-	        
-	        if (utils.isFunc(arguments[pollPos])) {
-	            this.poll = arguments[pollPos];
-	        }
-	    };
-	
-	Input.prototype = {
-	    
-	    // [number]: Number of frames of inactivity before velocity is turned to 0
-	    maxInactiveFrames: 2,
-	    
-	    // [number]: Number of frames input hasn't been updated
-	    inactiveFrames: 0,
-	    
-	    /*
-	        Get latest input values
-	        
-	        @param [string] (optional): Name of specific property to return
-	        @return [object || number]: Latest input values or, if specified, single value
-	    */
-	    get: function (prop) {
-	        var latest = this.history.get(),
-	            val = (prop !== undefined) ? latest[prop] : latest;
-	        
-	        return val;
-	    },
-	
-	    /*
-	        Update the input values
-	        
-	        Syntax
-	            input.update(name, value)
-	                @param [string]: Name of to track
-	                @param [number]: Initial value
-	                
-	            input.update(props)
-	                @param [object]: Object of values
-	                
-	        @return [Input]
-	    */
-	    update: function (arg0, arg1) {
-	        var values = {};
-	
-	        if (utils.isNum(arg1)) {
-	            values[arg0] = arg1;
-	        } else {
-	            values = arg0;
-	        }
-	
-	        this.history.add(utils.merge(this.current, values));
-	        
-	        return this;
-	    },
-	    
-	    /*
-	        Check for input movement and update pointer object's properties
-	        
-	        @param [number]: Timestamp of frame
-	        @return [Input]
-	    */
-	    onFrame: function (timestamp) {
-	        var latest, hasChanged;
-	        
-	        // Check provided timestamp against lastFrame timestamp and return input has already been updated
-	        if (timestamp === this.lastFrame) {
-	            return;
-	        }
-	        
-	        latest = (this.poll) ? this.poll() : this.history.get();
-	        hasChanged = utils.hasChanged(this.current, latest);
-	
-	        // If input has changed between frames  
-	        if (hasChanged) {
-	            this.velocity = calc.offset(this.current, latest);
-	            this.current = latest;
-	            this.inactiveFrames = 0;
-	
-	        // Or it hasn't moved and our frame limit has been reached
-	        } else if (this.inactiveFrames >= this.maxInactiveFrames) {
-	            this.velocity = calc.offset(this.current, this.current);
-	        
-	        // Or input hasn't changed
-	        } else {
-	            this.inactiveFrames++;
-	        }
-	        
-	        this.lastFrame = timestamp;
-	        
-	        return this;
-	    }
-	    
-	};
-	
-	module.exports = Input;
-
-/***/ },
-/* 16 */
-/*!********************************!*\
-  !*** ./src/process/process.js ***!
-  \********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    Process
-	*/
-	"use strict";
-	
-	var manager = __webpack_require__(/*! ./manager.js */ 27),
-	
-	    /*
-	        Process constructor
-	        
-	        Syntax
-	            var process = new Process(scope, callback);
-	            var process = new Process(callback);
-	    */
-	    Process = function (arg0, arg1) {
-	        var hasScope = (arg1 !== undefined),
-	            callback = hasScope ? arg1 : arg0,
-	            scope = hasScope ? arg0 : this;
-	
-	        this.setCallback(callback);
-	        this.setScope(scope);
-	
-	        this.setId(manager.register(this));
-	    };
-	    
-	Process.prototype = {
-	    
-	    /*
-	        [boolean]: Is this process currently active?
-	    */
-	    isActive: false,
-	    
-	    /*
-	        [boolean]: Has this process been killed?
-	    */
-	    isKilled: false,
-	
-	    /*
-	        Fire callback
-	        
-	        @param [timestamp]: Timestamp of currently-executed frame
-	        @param [number]: Time since last frame
-	    */
-	    fire: function (timestamp, elapsed) {
-	        // Check timers
-	        if (this.isActive) {
-	            this.callback.call(this.scope, timestamp, elapsed);
-	        }
-	        
-	        if (this.isInterval) {
-	            this.deactivate();
-	        }
-	        
-	        return this;
-	    },
-	    
-	    /*
-	        Set process callback
-	        
-	        @param [function]: Function to fire per frame
-	        @return [this]
-	    */
-	    setCallback: function (callback) {
-	        this.callback = callback;
-	        
-	        return this;
-	    },
-	    
-	    /*
-	        Set callback scope
-	        
-	        @param [function]: Fire callback in this context
-	        @return [this]
-	    */
-	    setScope: function (scope) {
-	        this.scope = scope;
-	        
-	        return this;
-	    },
-	    
-	    /*
-	        Start process
-	        
-	        @param [int]: Duration of process in ms, 0 if indefinite
-	        @return [this]
-	    */
-	    start: function (duration) {
-	        var self = this;
-	        
-	        self.reset();
-	        self.activate();
-	        
-	        if (duration) {
-	            self.stopTimer = setTimeout(function () {
-	                self.stop();
-	            }, duration);
-	        }
-	
-	        return self;
-	    },
-	    
-	    /*
-	        Stop process
-	        
-	        @return [this]
-	    */
-	    stop: function () {
-	        this.reset();
-	        this.deactivate();
-	        
-	        return this;
-	    },
-	    
-	    /*
-	        Activate process
-	        
-	        @return [this]
-	    */
-	    activate: function () {
-	        if (!this.isKilled) {
-	            this.isActive = true;
-	            manager.activate(this.id);
-	        }
-	
-	        return this;
-	    },
-	    
-	    /*
-	        Deactivate process
-	        
-	        @return [this]
-	    */
-	    deactivate: function () {
-	        this.isActive = false;
-	        manager.deactivate(this.id);
-	        
-	        return this;
-	    },
-	    
-	    /*
-	        Fire process every x ms
-	        
-	        @param [int]: Number of ms to wait between refiring process.
-	        @return [this]
-	    */
-	    every: function (interval) {
-		    var self = this;
-	
-	        self.reset();
-	
-	        self.isInterval = true;
-	
-	        self.intervalTimer = setInterval(function () {
-	            self.activate();
-	        }, interval);
-	        
-	        return this;
-	    },
-	    
-	    /*
-	        Clear all timers
-	        
-	        @param 
-	    */
-	    reset: function () {
-	        this.isInterval = false;
-	        clearTimeout(this.stopTimer);
-	        clearInterval(this.intervalTimer);
-	        
-	        return this;
-	    },
-	    
-	    /*
-	        Kill function in manager, release for garbage collection
-	    */
-	    kill: function () {
-	        this.stop();
-	        this.isKilled = true;
-	        manager.kill(this.id);
-	    },
-	    
-	    setId: function (id) {
-	        this.id = id;
-	        return this;
-	    }
-	};
-	
-	module.exports = Process;
-
-/***/ },
-/* 17 */
-/*!*******************************!*\
-  !*** ./src/action/presets.js ***!
-  \*******************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 19),
-	    
-	    generateKeys = function (key) {
-	        var keys = key.split(DOT),
-	            keysLength = keys.length,
-	            lastKey = keys[0],
-	            i = 1;
-	        
-	        for (; i < keysLength; i++) {
-	            keys[i] = lastKey += DOT + keys[i];
-	        }
-	        
-	        return keys;
-	    },
-	
-	    presetStore = {},
-	    DOT = '.',
-	    Presets = function () {};
-	
-	Presets.prototype = {
-	
-	    /*
-	        Define a new Action preset
-	        
-	        Syntax
-	        
-	            .define(name, preset)
-	                @param [string]: Name of preset
-	                @param [object]: Preset options/properties
-	                
-	            .define(presets)
-	                @param [object]: Multiple presets as named object
-	                
-	        @return [Redshift]
-	    */
-	    add: function (name, preset) {
-	        var presets = {},
-	            key = '';
-	
-	        if (utils.isObj(name)) {
-	            presets = name;
-	        } else {
-	            presets[name] = preset;
-	        }
-	
-	        for (key in presets) {
-	            if (presets.hasOwnProperty(key)) {
-	                presetStore[key] = presets[key];
-	            }
-	        }
-	    },
-	    
-	    
-	    /*
-	        Get defined action
-	        
-	        @param [string]: The name of the predefined action
-	    */
-	    getDefined: function (key) {
-	        var props = {},
-	            thisProp = {},
-	            keys = generateKeys(key),
-	            keysLength = keys.length,
-	            i = 0;
-	
-	        for (; i < keysLength; i++) {
-	            thisProp = presetStore[keys[i]];
-	
-	            if (thisProp) {
-	                props = utils.merge(props, thisProp);
-	            }
-	        }
-	        
-	        return props;
-	    }
-	    
-	};
-	
-	module.exports = new Presets();
-
-/***/ },
-/* 18 */
-/*!*****************************!*\
-  !*** ./src/utils/easing.js ***!
-  \*****************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    Easing functions
-	    ----------------------------------------
-	    
-	    Generates and provides easing functions based on baseFunction definitions
-	    
-	    A call to easingFunction.get('functionName') returns a function that can be passed:
-	        @param [number]: Progress 0-1
-	        @param [number] (optional): Amp modifier, only accepted in some easing functions
-	                                    and is used to adjust overall strength
-	        @return [number]: Eased progress
-	        
-	    We can generate new functions by sending an easing function through easingFunction.extend(name, method).
-	    Which will make nameIn, nameOut and nameInOut functions available to use.
-	        
-	    Easing functions from Robert Penner
-	    http://www.robertpenner.com/easing/
-	        
-	    Bezier curve interpretor created from Gaëtan Renaudeau's original BezierEasing  
-	    https://github.com/gre/bezier-easing/blob/master/index.js  
-	    https://github.com/gre/bezier-easing/blob/master/LICENSE
-	*/
-	"use strict";
-	
-	var calc = __webpack_require__(/*! ./calc.js */ 13),
-	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 38),
-	    
-	    // Constants
-	    INVALID_EASING = ": Not defined",
-	    EASE_IN = 'In',
-	    EASE_OUT = 'Out',
-	    EASE_IN_OUT = EASE_IN + EASE_OUT,
-	    
-	    // Base power ease names
-	    powerEasing = ['ease', 'cubic', 'quart', 'quint'],
-	    
-	    // Generate easing function with provided power
-	    generatePowerEasing = function (power) {
-	        return function (progress) {
-	            return Math.pow(progress, power);
-	        }
-	    },
-	
-	    /*
-	        Each of these base functions is an easeIn
-	        
-	        On init, we use EasingFunction.mirror and .reverse to generate easeInOut and
-	        easeOut functions respectively.
-	    */
-	    baseEasing = {
-	        circ: function (progress) {
-	            return 1 - Math.sin(Math.acos(progress));
-	        },
-	        back: function (progress) {
-	            var strength = 1.5;
-	
-	            return (progress * progress) * ((strength + 1) * progress - strength);
-	        }
-	    },
-	    
-	    /*
-	        Mirror easing
-	        
-	        Mirrors the provided easing function, used here for mirroring an
-	        easeIn into an easeInOut
-	        
-	        @param [number]: Progress, from 0 - 1, of current shift
-	        @param [function]: The easing function to mirror
-	        @returns [number]: The easing-adjusted delta
-	    */
-	    mirrorEasing = function (progress, method) {
-	        return (progress <= 0.5) ? method(2 * progress) / 2 : (2 - method(2 * (1 - progress))) / 2;
-	    },
-	            
-	    /*
-	        Reverse easing
-	        
-	        Reverses the output of the provided easing function, used for flipping easeIn
-	        curve to an easeOut.
-	        
-	        @param [number]: Progress, from 0 - 1, of current shift
-	        @param [function]: The easing function to reverse
-	        @returns [number]: The easing-adjusted delta
-	    */
-	    reverseEasing = function (progress, method) {
-	        return 1 - method(1 - progress);
-	    },
-	    
-	    /*
-	        Add new easing function
-	        
-	        Takes name and generates nameIn, nameOut, nameInOut, and easing functions to match
-	        
-	        @param [string]: Base name of the easing functions to generate
-	        @param [function]: Base easing function, as an easeIn, from which to generate Out and InOut
-	    */
-	    generateVariations = function (name, method, isBaseIn) {
-	        var easeIn = name + EASE_IN,
-	            easeOut = name + EASE_OUT,
-	            easeInOut = name + EASE_IN_OUT,
-	            baseName = isBaseIn ? easeIn : easeOut,
-	            reverseName = isBaseIn ? easeOut : easeIn;
-	
-	        // Create the In function
-	        easing[baseName] = method;
-	
-	        // Create the Out function by reversing the transition curve
-	        easing[reverseName] = function (progress) {
-	            return reverseEasing(progress, easing[baseName]);
-	        };
-	        
-	        // Create the InOut function by mirroring the transition curve
-	        easing[easeInOut] = function (progress) {
-	            return mirrorEasing(progress, easing[baseName]);
-	        };
-	    },
-	    
-	    easing = {
-	    
-	        /*
-	            Get the named easing function
-	            
-	            @param [string]: Name of the easing function to get 
-	            @return [function || boolean]: Easing function or false if function undefined
-	        */
-	        get: function (name) {
-	            var easing = this[name];
-	            
-	            if (!easing) {
-	                throw name + INVALID_EASING;
-	            }
-	    
-	            return easing;
-	        },
-	        
-	        
-	        /*
-	            Add Bezier Curve easing
-	            
-	            @param [string]: Name of new easing
-	            @parma [number]: X of coordinate 1
-	            @parma [number]: Y of coordinate 1
-	            @parma [number]: X of coordinate 2
-	            @parma [number]: Y of coordinate 2
-	        */
-	        add: function (name, x1, y1, x2, y2) {
-	            if (!this[name]) {
-	                this[name] = new Bezier(x1, y1, x2, y2);
-	            }
-	        },
-	        
-	        
-	        /*
-	            Ease value within ranged parameters
-	            
-	            @param [number]: Progress between 0 and 1
-	            @param [number]: Value of 0 progress
-	            @param [number]: Value of 1 progress
-	            @param [string]: Easing to use
-	            @param [number]: Amplify progress out of specified range
-	            @return [number]: Value of eased progress in range
-	        */  
-	        withinRange: function (progress, from, to, ease, escapeAmp) {
-	            var progressLimited = calc.restricted(progress, 0, 1);
-	    
-	            if (progressLimited !== progress && escapeAmp) {
-	                ease = 'linear';
-	                progressLimited = progressLimited + (calc.difference(progressLimited, progress) * escapeAmp);
-	            }
-	    
-	            return calc.valueEased(progressLimited, from, to, this.get(ease));
-	        },
-	            
-	        /*
-	            Linear easing adjustment
-	            
-	            The default easing method, not added with .extend as it has no Out or InOut
-	            variation.
-	            
-	            @param [number]: Progress, from 0-1
-	            @return [number]: Unadjusted progress
-	        */
-	        linear: function (progress) {
-	            return progress;
-	        }
-	    };
-	
-	
-	// Initialise Easing  
-	(function () {
-	    var i = 0,
-	        key = '';
-	        
-	    // Generate power easing functions
-	    for (; i < 4; i++) {
-	        baseEasing[powerEasing[i]] = generatePowerEasing(i + 2);
-	    }
-	    
-	    // Generate in/out/inOut easing variations
-	    for (key in baseEasing) {
-	        if (baseEasing.hasOwnProperty(key)) {
-	            generateVariations(key, baseEasing[key], true);
-	        }
-	    }
-	})();
-	
-	module.exports = easing;
-
-
-/***/ },
 /* 19 */
 /*!****************************!*\
   !*** ./src/utils/utils.js ***!
@@ -2591,7 +2587,7 @@
 
 	"use strict";
 	
-	var routes = __webpack_require__(/*! ../core/routes.js */ 37),
+	var routes = __webpack_require__(/*! ../core/routes.js */ 38),
 	    routeKeys = [],
 	    numRoutes,
 	    processes = ['preprocess', 'onStart', 'onEnd'],
@@ -2690,9 +2686,9 @@
 
 	"use strict";
 	
-	var actionPrototype = __webpack_require__(/*! ../action/action.js */ 14).prototype,
-	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 29),
-	    rubix = __webpack_require__(/*! ../core/rubix.js */ 40);
+	var actionPrototype = __webpack_require__(/*! ../action/action.js */ 13).prototype,
+	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 27),
+	    rubix = __webpack_require__(/*! ../core/rubix.js */ 39);
 	
 	module.exports = function (name, newRubix) {
 	    var parser = parseArgs[name] || parseArgs.generic;
@@ -2719,7 +2715,7 @@
 	*/
 	"use strict";
 	
-	var simulations = __webpack_require__(/*! ../core/simulations.js */ 39);
+	var simulations = __webpack_require__(/*! ../core/simulations.js */ 40);
 	
 	module.exports = function (name, simulation) {
 	    simulations[name] = simulation;
@@ -2734,7 +2730,7 @@
 
 	"use strict";
 	
-	var simulations = __webpack_require__(/*! ../core/simulations.js */ 39);
+	var simulations = __webpack_require__(/*! ../core/simulations.js */ 40);
 	
 	module.exports = function (simulation, value, duration, started) {
 	    var velocity = simulations[simulation](value, duration, started);
@@ -2971,261 +2967,6 @@
 
 /***/ },
 /* 27 */
-/*!********************************!*\
-  !*** ./src/process/manager.js ***!
-  \********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var theLoop = __webpack_require__(/*! ./loop.js */ 47),
-	    ProcessManager = function () {
-	        this.all = {};
-	        this.active = [];
-	        this.deactivateQueue = [];
-	        theLoop.setCallback(this, this.fireActive);
-	    };
-	    
-	ProcessManager.prototype = {
-	    
-	    /*
-	        [int]: Used for process ID
-	    */
-	    processCounter: 0,
-	    
-	    /*
-	        [int]: Number of active processes
-	    */
-	    activeCount: 0,
-	    
-	    /*
-	        Get the process with a given index
-	        
-	        @param [int]: Index of process
-	        @return [Process]
-	    */
-	    getProcess: function (i) {
-	        return this.all[i];
-	    },
-	    
-	    /*
-	        Get number of active processes
-	        
-	        @return [int]: Number of active processes
-	    */
-	    getActiveCount: function () {
-	        return this.activeCount;
-	    },
-	    
-	    /*
-	        Get active tokens
-	
-	        @return [array]: Active tokens
-	    */
-	    getActive: function () {
-	        return this.active;
-	    },
-	    
-	    /*
-	        Get the length of the deactivate queue
-	        
-	        @return [int]: Length of queue
-	    */
-	    getQueueLength: function () {
-	        return this.deactivateQueue.length;
-	    },
-	    
-	    /*
-	        Fire all active processes
-	        
-	        @param [int]: Timestamp of executing frames
-	        @param [int]: Time since previous frame
-	        @return [boolean]: True if active processes found
-	    */
-	    fireActive: function (framestamp, elapsed) {
-	        var process,
-	            activeCount = 0,
-	            activeProcesses = [];
-	
-	        // Purge and check active count before execution
-	        this.purge();
-	        activeCount = this.getActiveCount();
-	        activeProcesses = this.getActive();
-	        
-	        // Loop through active processes and fire callback
-	        for (var i = 0; i < activeCount; i++) {
-	            process = this.getProcess(activeProcesses[i]);
-	            
-	            if (process) {
-	                process.fire(framestamp, elapsed);
-	            }
-	        }
-	
-	        // Repurge and recheck active count after execution
-	        this.purge();
-	        activeCount = this.getActiveCount();
-	        
-	        return activeCount ? true : false;
-	    },
-	    
-	    /*
-	        Register a new process
-	        
-	        @param [Process]
-	        @return [int]: Index of process to be used as ID
-	    */
-	    register: function (process) {
-	        var id = this.processCounter;
-	
-	        this.all[id] = process;
-	        
-	        this.processCounter++;
-	        
-	        return id;
-	    },
-	    
-	    /*
-	        Activate a process
-	        
-	        @param [int]: Index of active process
-	    */
-	    activate: function (i) {
-	        var queueIndex = this.deactivateQueue.indexOf(i),
-	            isQueued = (queueIndex > -1),
-	            isActive = (this.active.indexOf(i) > -1);
-	        
-	        // Remove from deactivateQueue if in there
-	        if (isQueued) {
-	            this.deactivateQueue.splice(queueIndex, 1);
-	        }
-	        
-	        // Add to active processes array if not already in there
-	        if (!isActive) {
-	            this.active.push(i);
-	            this.activeCount++;
-	            theLoop.start(this);
-	        }
-	    },
-	    
-	    /*
-	        Deactivate a process
-	        
-	        @param [int]: Index of process to add to deactivate queue
-	    */
-	    deactivate: function (i) {
-	        this.deactivateQueue.push(i);
-	    },
-	    
-	    /*
-	        Purge the deactivate queue
-	    */
-	    purge: function () {
-	        var activeIndex,
-	            queueLength = this.getQueueLength();
-	        
-	        while (queueLength--) {
-	            activeIndex = this.active.indexOf(this.deactivateQueue[queueLength]);
-	            
-	            // If process in active list deactivate
-	            if (activeIndex > -1) {
-	                this.active.splice(activeIndex, 1);
-	                this.activeCount--;
-	            }
-	        }
-	        
-	        this.deactivateQueue = [];
-	    },
-	    
-	    /*
-	        Remove the provided id and reindex remaining processes
-	    */
-	    kill: function (id) {
-	        delete this.all[id];
-	    }
-	    
-	};
-	
-	module.exports = new ProcessManager();
-
-/***/ },
-/* 28 */
-/*!******************************!*\
-  !*** ./src/utils/history.js ***!
-  \******************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var // [number]: Default max size of history
-	    maxHistorySize = 3,
-	    
-	    /*
-	        History constructor
-	        
-	        @param [var]: Variable to store in first history slot
-	        @param [int] (optional): Maximum size of history
-	    */
-	    History = function (obj, max) {
-	        this.max = max || maxHistorySize;
-	        this.entries = [];
-	        this.add(obj);
-	    };
-	    
-	History.prototype = {
-	    
-	    /*
-	        Push new var to history
-	        
-	        Shift out oldest entry if we've reached maximum capacity
-	        
-	        @param [var]: Variable to push into history.entries
-	    */
-	    add: function (obj) {
-	        var currentSize = this.getSize();
-	        
-	        this.entries.push(obj);
-	        
-	        if (currentSize >= this.max) {
-	            this.entries.shift();
-	        }
-	    },
-	    
-	    /*
-	        Get variable at specified index
-	
-	        @param [int]: Index
-	        @return [var]: Var found at specified index
-	    */
-	    get: function (i) {
-	        i = (typeof i === 'number') ? i : this.getSize() - 1;
-	
-	        return this.entries[i];
-	    },
-	    
-	    /*
-	        Get the second newest history entry
-	        
-	        @return [var]: Entry found at index size - 2
-	    */
-	    getPrevious: function () {
-	        return this.get(this.getSize() - 2);
-	    },
-	    
-	    /*
-	        Get current history size
-	        
-	        @return [int]: Current length of entries.length
-	    */
-	    getSize: function () {
-	        return this.entries.length;
-	    }
-	    
-	};
-	
-	module.exports = History;
-
-/***/ },
-/* 29 */
 /*!**********************************!*\
   !*** ./src/action/parse-args.js ***!
   \**********************************/
@@ -3234,8 +2975,8 @@
 	"use strict";
 	
 	var utils = __webpack_require__(/*! ../utils/utils.js */ 19),
-	    presets = __webpack_require__(/*! ./presets.js */ 17),
-	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 51),
+	    presets = __webpack_require__(/*! ./presets.js */ 15),
+	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 47),
 	
 	    STRING = 'string',
 	    NUMBER = 'number',
@@ -3370,7 +3111,7 @@
 	};
 
 /***/ },
-/* 30 */
+/* 28 */
 /*!****************************!*\
   !*** ./src/types/value.js ***!
   \****************************/
@@ -3523,7 +3264,7 @@
 	module.exports = Value;
 
 /***/ },
-/* 31 */
+/* 29 */
 /*!***************************!*\
   !*** ./src/types/repo.js ***!
   \***************************/
@@ -3599,7 +3340,7 @@
 	module.exports = Repo;
 
 /***/ },
-/* 32 */
+/* 30 */
 /*!*****************************!*\
   !*** ./src/action/queue.js ***!
   \*****************************/
@@ -3655,7 +3396,7 @@
 	module.exports = Queue;
 
 /***/ },
-/* 33 */
+/* 31 */
 /*!*********************************!*\
   !*** ./src/action/processor.js ***!
   \*********************************/
@@ -3666,9 +3407,9 @@
 	*/
 	"use strict";
 	
-	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 40),
+	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 39),
 	    routes = __webpack_require__(/*! ./routes.js */ 20),
-	    calc = __webpack_require__(/*! ../utils/calc.js */ 13);
+	    calc = __webpack_require__(/*! ../utils/calc.js */ 18);
 	
 	module.exports = function (action, framestamp, frameDuration) {
 	    var props = action.props(),
@@ -3776,7 +3517,7 @@
 	};
 
 /***/ },
-/* 34 */
+/* 32 */
 /*!**************************************!*\
   !*** ./src/defaults/action-props.js ***!
   \**************************************/
@@ -3830,7 +3571,7 @@
 	};
 
 /***/ },
-/* 35 */
+/* 33 */
 /*!**************************************!*\
   !*** ./src/defaults/action-state.js ***!
   \**************************************/
@@ -3863,7 +3604,7 @@
 	};
 
 /***/ },
-/* 36 */
+/* 34 */
 /*!**********************************!*\
   !*** ./src/routes/css/styler.js ***!
   \**********************************/
@@ -3898,7 +3639,7 @@
 			};
 		
 		/*
-			Stylee function call
+			Style DOM function
 			
 			Syntax
 				
@@ -3911,22 +3652,22 @@
 					});
 		*/
 		return function (element, prop) {
+		    // Cache body tag if we haven't already
+			testElement = testElement || document.getElementsByTagName('body')[0];
+	console.log(element, prop);
 			// If prop is a string, we're requesting a property
 			if (typeof prop === 'string') {
 				return window.getComputedStyle(element, null)[cache[prop] || testPrefix(prop)];
 			
 			// If it's an object, we're setting
 			} else {
-			    // Cache body tag if we haven't already
-				testElement = testElement || document.getElementsByTagName('body')[0];
-	
-				for (var key in prop) {
+			    for (var key in prop) {
 					if (prop.hasOwnProperty(key)) {
 						element.style[cache[key] || testPrefix(key)] = prop[key];
 					}
 				}
 				
-				return this;
+				return false;
 			}
 		}
 	};
@@ -3934,16 +3675,84 @@
 	module.exports = new cssStyler();
 
 /***/ },
-/* 37 */
-/*!****************************!*\
-  !*** ./src/core/routes.js ***!
-  \****************************/
+/* 35 */
+/*!******************************!*\
+  !*** ./src/utils/history.js ***!
+  \******************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = {};
+	"use strict";
+	
+	var // [number]: Default max size of history
+	    maxHistorySize = 3,
+	    
+	    /*
+	        History constructor
+	        
+	        @param [var]: Variable to store in first history slot
+	        @param [int] (optional): Maximum size of history
+	    */
+	    History = function (obj, max) {
+	        this.max = max || maxHistorySize;
+	        this.entries = [];
+	        this.add(obj);
+	    };
+	    
+	History.prototype = {
+	    
+	    /*
+	        Push new var to history
+	        
+	        Shift out oldest entry if we've reached maximum capacity
+	        
+	        @param [var]: Variable to push into history.entries
+	    */
+	    add: function (obj) {
+	        var currentSize = this.getSize();
+	        
+	        this.entries.push(obj);
+	        
+	        if (currentSize >= this.max) {
+	            this.entries.shift();
+	        }
+	    },
+	    
+	    /*
+	        Get variable at specified index
+	
+	        @param [int]: Index
+	        @return [var]: Var found at specified index
+	    */
+	    get: function (i) {
+	        i = (typeof i === 'number') ? i : this.getSize() - 1;
+	
+	        return this.entries[i];
+	    },
+	    
+	    /*
+	        Get the second newest history entry
+	        
+	        @return [var]: Entry found at index size - 2
+	    */
+	    getPrevious: function () {
+	        return this.get(this.getSize() - 2);
+	    },
+	    
+	    /*
+	        Get current history size
+	        
+	        @return [int]: Current length of entries.length
+	    */
+	    getSize: function () {
+	        return this.entries.length;
+	    }
+	    
+	};
+	
+	module.exports = History;
 
 /***/ },
-/* 38 */
+/* 36 */
 /*!*****************************!*\
   !*** ./src/types/bezier.js ***!
   \*****************************/
@@ -4118,7 +3927,251 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
+/* 37 */
+/*!********************************!*\
+  !*** ./src/process/manager.js ***!
+  \********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var theLoop = __webpack_require__(/*! ./loop.js */ 51),
+	    ProcessManager = function () {
+	        this.all = {};
+	        this.active = [];
+	        this.deactivateQueue = [];
+	        theLoop.setCallback(this, this.fireActive);
+	    };
+	    
+	ProcessManager.prototype = {
+	    
+	    /*
+	        [int]: Used for process ID
+	    */
+	    processCounter: 0,
+	    
+	    /*
+	        [int]: Number of active processes
+	    */
+	    activeCount: 0,
+	    
+	    /*
+	        Get the process with a given index
+	        
+	        @param [int]: Index of process
+	        @return [Process]
+	    */
+	    getProcess: function (i) {
+	        return this.all[i];
+	    },
+	    
+	    /*
+	        Get number of active processes
+	        
+	        @return [int]: Number of active processes
+	    */
+	    getActiveCount: function () {
+	        return this.activeCount;
+	    },
+	    
+	    /*
+	        Get active tokens
+	
+	        @return [array]: Active tokens
+	    */
+	    getActive: function () {
+	        return this.active;
+	    },
+	    
+	    /*
+	        Get the length of the deactivate queue
+	        
+	        @return [int]: Length of queue
+	    */
+	    getQueueLength: function () {
+	        return this.deactivateQueue.length;
+	    },
+	    
+	    /*
+	        Fire all active processes
+	        
+	        @param [int]: Timestamp of executing frames
+	        @param [int]: Time since previous frame
+	        @return [boolean]: True if active processes found
+	    */
+	    fireActive: function (framestamp, elapsed) {
+	        var process,
+	            activeCount = 0,
+	            activeProcesses = [];
+	
+	        // Purge and check active count before execution
+	        this.purge();
+	        activeCount = this.getActiveCount();
+	        activeProcesses = this.getActive();
+	        
+	        // Loop through active processes and fire callback
+	        for (var i = 0; i < activeCount; i++) {
+	            process = this.getProcess(activeProcesses[i]);
+	            
+	            if (process) {
+	                process.fire(framestamp, elapsed);
+	            }
+	        }
+	
+	        // Repurge and recheck active count after execution
+	        this.purge();
+	        activeCount = this.getActiveCount();
+	        
+	        return activeCount ? true : false;
+	    },
+	    
+	    /*
+	        Register a new process
+	        
+	        @param [Process]
+	        @return [int]: Index of process to be used as ID
+	    */
+	    register: function (process) {
+	        var id = this.processCounter;
+	
+	        this.all[id] = process;
+	        
+	        this.processCounter++;
+	        
+	        return id;
+	    },
+	    
+	    /*
+	        Activate a process
+	        
+	        @param [int]: Index of active process
+	    */
+	    activate: function (i) {
+	        var queueIndex = this.deactivateQueue.indexOf(i),
+	            isQueued = (queueIndex > -1),
+	            isActive = (this.active.indexOf(i) > -1);
+	        
+	        // Remove from deactivateQueue if in there
+	        if (isQueued) {
+	            this.deactivateQueue.splice(queueIndex, 1);
+	        }
+	        
+	        // Add to active processes array if not already in there
+	        if (!isActive) {
+	            this.active.push(i);
+	            this.activeCount++;
+	            theLoop.start(this);
+	        }
+	    },
+	    
+	    /*
+	        Deactivate a process
+	        
+	        @param [int]: Index of process to add to deactivate queue
+	    */
+	    deactivate: function (i) {
+	        this.deactivateQueue.push(i);
+	    },
+	    
+	    /*
+	        Purge the deactivate queue
+	    */
+	    purge: function () {
+	        var activeIndex,
+	            queueLength = this.getQueueLength();
+	        
+	        while (queueLength--) {
+	            activeIndex = this.active.indexOf(this.deactivateQueue[queueLength]);
+	            
+	            // If process in active list deactivate
+	            if (activeIndex > -1) {
+	                this.active.splice(activeIndex, 1);
+	                this.activeCount--;
+	            }
+	        }
+	        
+	        this.deactivateQueue = [];
+	    },
+	    
+	    /*
+	        Remove the provided id and reindex remaining processes
+	    */
+	    kill: function (id) {
+	        delete this.all[id];
+	    }
+	    
+	};
+	
+	module.exports = new ProcessManager();
+
+/***/ },
+/* 38 */
+/*!****************************!*\
+  !*** ./src/core/routes.js ***!
+  \****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {};
+
+/***/ },
 /* 39 */
+/*!***************************!*\
+  !*** ./src/core/rubix.js ***!
+  \***************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Anatomy of a Rubix:
+	    
+	        Props
+	            surpressMethod [boolean]:
+	                If not true, will create Action shorthand method 
+	                with the name of the rubix, ie .play()
+	
+	            calculatesVelocity [boolean]:
+	                Set to true if your Rubix will calculate
+	                the new Value velocity (otherwise Redshift may override it)
+	                
+	        Methods
+	            updateInput
+	                Run once per frame, before Values are processed. .play uses this
+	                to update the timer, .track uses it to check the input device.
+	
+	                @param [Action]: The Action being processed
+	                @param [object]: Action properties
+	                @param [int]: Duration since the last frame in milliseconds
+	            
+	            process (required)
+	                Run once for every Action value, this method returns the latest value
+	
+	                @param [string]: Name of value being processed
+	                @param [Value]: Value being processed
+	                @param [object]: Action values
+	                @param [object]: Action properties
+	                @param [Action]: Action
+	                @param [int]: Duration since the last frame in milliseconds
+	                @return [int]: Latest value
+	                
+	            limit
+	                Run once for every Action value, this can be used to limit the value
+	                within any parameters
+	                
+	                @param [int]: Value returned from process method
+	                @param [Value]: Value being processed
+	                @return [int]: Latest value
+	                
+	            hasEnded (required)
+	                Returns true if this current Action has ended. Redshift will
+	                then check the Action's queue or yoyo/loop properties to decide
+	                what action to take next
+	                
+	                @param [Action]: Action being processed
+	                @param [boolean]: True if any value has changed
+	*/            
+	module.exports = {};
+
+/***/ },
+/* 40 */
 /*!*********************************!*\
   !*** ./src/core/simulations.js ***!
   \*********************************/
@@ -4134,7 +4187,7 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 13),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
 	    speedPerFrame = calc.speedPerFrame;
 	
@@ -4214,63 +4267,6 @@
 	        value.capture = value.min = value.max = undefined;
 	    }
 	};
-
-/***/ },
-/* 40 */
-/*!***************************!*\
-  !*** ./src/core/rubix.js ***!
-  \***************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    Anatomy of a Rubix:
-	    
-	        Props
-	            createMethod [boolean]:
-	                If true, will create Action shorthand method 
-	                with the name of the rubix, ie .play()
-	
-	            calculatesVelocity [boolean]:
-	                Set to true if your Rubix will calculate
-	                the new Value velocity (otherwise Redshift may override it)
-	                
-	        Methods
-	            updateInput
-	                Run once per frame, before Values are processed. .play uses this
-	                to update the timer, .track uses it to check the input device.
-	
-	                @param [Action]: The Action being processed
-	                @param [object]: Action properties
-	                @param [int]: Duration since the last frame in milliseconds
-	            
-	            process (required)
-	                Run once for every Action value, this method returns the latest value
-	
-	                @param [string]: Name of value being processed
-	                @param [Value]: Value being processed
-	                @param [object]: Action values
-	                @param [object]: Action properties
-	                @param [Action]: Action
-	                @param [int]: Duration since the last frame in milliseconds
-	                @return [int]: Latest value
-	                
-	            limit
-	                Run once for every Action value, this can be used to limit the value
-	                within any parameters
-	                
-	                @param [int]: Value returned from process method
-	                @param [Value]: Value being processed
-	                @return [int]: Latest value
-	                
-	            hasEnded (required)
-	                Returns true if this current Action has ended. Redshift will
-	                then check the Action's queue or yoyo/loop properties to decide
-	                what action to take next
-	                
-	                @param [Action]: Action being processed
-	                @param [boolean]: True if any value has changed
-	*/            
-	module.exports = {};
 
 /***/ },
 /* 41 */
@@ -4762,79 +4758,100 @@
 
 /***/ },
 /* 47 */
-/*!*****************************!*\
-  !*** ./src/process/loop.js ***!
-  \*****************************/
+/*!******************************!*\
+  !*** ./src/input/pointer.js ***!
+  \******************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	/*
-	    The loop
-	*/
 	"use strict";
 	
-	var Timer = __webpack_require__(/*! ./timer.js */ 52),
-	    Loop = function () {
-	        this.timer = new Timer();
-	    };
+	var Input = __webpack_require__(/*! ./input.js */ 14),
+	    currentPointer, // Sort this out for multitouch
 	    
-	Loop.prototype = {
-	    
-	    /*
-	        [boolean]: Current status of animation loop
-	    */
-	    isRunning: false,
-	    
-	    /*
-	        Fire all active processes once per frame
-	    */
-	    frame: function () {
-	        var self = this;
-	        
-	        requestAnimationFrame(function () {
-	            var framestamp = self.timer.update(), // Currently just measuring in ms - will look into hi-res timestamps
-	                isActive = self.callback.call(self.scope, framestamp, self.timer.getElapsed());
+	    TOUCHMOVE = 'touchmove',
+	    MOUSEMOVE = 'mousemove',
 	
-	            if (isActive) {
-	                self.frame(true);
-	            } else {
-	                self.stop();
-	            }
-	        });
-	    },
-	    
 	    /*
-	        Start loop
+	        Convert event into point
+	        
+	        Scrape the x/y coordinates from the provided event
+	        
+	        @param [event]: Original pointer event
+	        @param [boolean]: True if touch event
+	        @return [object]: x/y coordinates of event
 	    */
-	    start: function () {
-	        // Make sure we're not already running a loop
-	        if (!this.isRunning) {
-	            this.timer.clock();
-	            this.isRunning = true;
-	            this.frame();
+	    eventToPoint = function (event, isTouchEvent) {
+	        var touchChanged = isTouchEvent ? event.changedTouches[0] : false;
+	        
+	        return {
+	            x: touchChanged ? touchChanged.clientX : event.pageX,
+	            y: touchChanged ? touchChanged.clientY : event.pageY
 	        }
 	    },
 	    
 	    /*
-	        Stop the loop
+	        Get actual event
+	        
+	        Checks for jQuery's .originalEvent if present
+	        
+	        @param [event | jQuery event]
+	        @return [event]: The actual JS event  
 	    */
-	    stop: function () {
-	        this.isRunning = false;
+	    getActualEvent = function (event) {
+	        return event.originalEvent || event;
 	    },
+	
 	    
 	    /*
-	        Set the callback to run every frame
-	        
-	        @param [Object]: Execution context
-	        @param [function]: Callback to fire
+	        Pointer constructor
 	    */
-	    setCallback: function (scope, callback) {
-	        this.scope = scope;
-	        this.callback = callback;
-	    }
-	 
+	    Pointer = function (e) {
+	        var event = getActualEvent(e), // In case of jQuery event
+	            isTouch = (event.touches) ? true : false,
+	            startPoint = eventToPoint(event, isTouch);
+	        
+	        this.update(startPoint);
+	        this.isTouch = isTouch;
+	        this.bindEvents();
+	    },
+	    
+	    proto = Pointer.prototype = new Input();
+	
+	/*
+	    Bind move event
+	*/
+	proto.bindEvents = function () {
+	    this.moveEvent = this.isTouch ? TOUCHMOVE : MOUSEMOVE;
+	    
+	    currentPointer = this;
+	    
+	    document.documentElement.addEventListener(this.moveEvent, this.onMove);
 	};
 	
-	module.exports = new Loop();
+	/*
+	    Unbind move event
+	*/
+	proto.unbindEvents = function () {
+	    document.documentElement.removeEventListener(this.moveEvent, this.onMove);
+	};
+	
+	/*
+	    Pointer onMove event handler
+	    
+	    @param [event]: Pointer move event
+	*/
+	proto.onMove = function (e) {
+	    var newPoint = eventToPoint(e, currentPointer.isTouch);
+	    e = getActualEvent(e);
+	    e.preventDefault();
+	    currentPointer.update(newPoint);
+	};
+	
+	proto.stop = function () {
+	    this.unbindEvents();
+	};
+	
+	module.exports = Pointer;
 
 /***/ },
 /* 48 */
@@ -4996,7 +5013,7 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ./calc.js */ 13),
+	var calc = __webpack_require__(/*! ./calc.js */ 18),
 	    utils = __webpack_require__(/*! ./utils.js */ 19);
 	
 	module.exports = function (newValue, currentValue, parent, scope) {
@@ -5029,100 +5046,79 @@
 
 /***/ },
 /* 51 */
-/*!******************************!*\
-  !*** ./src/input/pointer.js ***!
-  \******************************/
+/*!*****************************!*\
+  !*** ./src/process/loop.js ***!
+  \*****************************/
 /***/ function(module, exports, __webpack_require__) {
 
+	/*
+	    The loop
+	*/
 	"use strict";
 	
-	var Input = __webpack_require__(/*! ./input.js */ 15),
-	    currentPointer, // Sort this out for multitouch
+	var Timer = __webpack_require__(/*! ./timer.js */ 52),
+	    Loop = function () {
+	        this.timer = new Timer();
+	    };
 	    
-	    TOUCHMOVE = 'touchmove',
-	    MOUSEMOVE = 'mousemove',
-	
+	Loop.prototype = {
+	    
 	    /*
-	        Convert event into point
-	        
-	        Scrape the x/y coordinates from the provided event
-	        
-	        @param [event]: Original pointer event
-	        @param [boolean]: True if touch event
-	        @return [object]: x/y coordinates of event
+	        [boolean]: Current status of animation loop
 	    */
-	    eventToPoint = function (event, isTouchEvent) {
-	        var touchChanged = isTouchEvent ? event.changedTouches[0] : false;
+	    isRunning: false,
+	    
+	    /*
+	        Fire all active processes once per frame
+	    */
+	    frame: function () {
+	        var self = this;
 	        
-	        return {
-	            x: touchChanged ? touchChanged.clientX : event.pageX,
-	            y: touchChanged ? touchChanged.clientY : event.pageY
+	        requestAnimationFrame(function () {
+	            var framestamp = self.timer.update(), // Currently just measuring in ms - will look into hi-res timestamps
+	                isActive = self.callback.call(self.scope, framestamp, self.timer.getElapsed());
+	
+	            if (isActive) {
+	                self.frame(true);
+	            } else {
+	                self.stop();
+	            }
+	        });
+	    },
+	    
+	    /*
+	        Start loop
+	    */
+	    start: function () {
+	        // Make sure we're not already running a loop
+	        if (!this.isRunning) {
+	            this.timer.clock();
+	            this.isRunning = true;
+	            this.frame();
 	        }
 	    },
 	    
 	    /*
-	        Get actual event
-	        
-	        Checks for jQuery's .originalEvent if present
-	        
-	        @param [event | jQuery event]
-	        @return [event]: The actual JS event  
+	        Stop the loop
 	    */
-	    getActualEvent = function (event) {
-	        return event.originalEvent || event;
+	    stop: function () {
+	        this.isRunning = false;
 	    },
-	
 	    
 	    /*
-	        Pointer constructor
-	    */
-	    Pointer = function (e) {
-	        var event = getActualEvent(e), // In case of jQuery event
-	            isTouch = (event.touches) ? true : false,
-	            startPoint = eventToPoint(event, isTouch);
+	        Set the callback to run every frame
 	        
-	        this.update(startPoint);
-	        this.isTouch = isTouch;
-	        this.bindEvents();
-	    },
-	    
-	    proto = Pointer.prototype = new Input();
-	
-	/*
-	    Bind move event
-	*/
-	proto.bindEvents = function () {
-	    this.moveEvent = this.isTouch ? TOUCHMOVE : MOUSEMOVE;
-	    
-	    currentPointer = this;
-	    
-	    document.documentElement.addEventListener(this.moveEvent, this.onMove);
+	        @param [Object]: Execution context
+	        @param [function]: Callback to fire
+	    */
+	    setCallback: function (scope, callback) {
+	        this.scope = scope;
+	        this.callback = callback;
+	    }
+	 
 	};
 	
-	/*
-	    Unbind move event
-	*/
-	proto.unbindEvents = function () {
-	    document.documentElement.removeEventListener(this.moveEvent, this.onMove);
-	};
-	
-	/*
-	    Pointer onMove event handler
-	    
-	    @param [event]: Pointer move event
-	*/
-	proto.onMove = function (e) {
-	    var newPoint = eventToPoint(e, currentPointer.isTouch);
-	    e = getActualEvent(e);
-	    e.preventDefault();
-	    currentPointer.update(newPoint);
-	};
-	
-	proto.stop = function () {
-	    this.unbindEvents();
-	};
-	
-	module.exports = Pointer;
+	module.exports = new Loop();
 
 /***/ },
 /* 52 */
