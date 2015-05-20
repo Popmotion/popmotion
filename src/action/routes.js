@@ -19,7 +19,7 @@ var routes = require('../core/routes.js'),
                 routeName = routeKeys[i];
                 route = routes[routeName];
     
-                if (route.makeDefault || (route[processName] && props[processName])) {
+                if (route.makeDefault || route[processName]) {
                     route[processName](sourceValues[routeName], action, values, props, data);
                 }
             }

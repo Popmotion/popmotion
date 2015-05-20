@@ -1,6 +1,6 @@
 {
   "name": "redshift",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "A JavaScript UX framework. Handles animation, UI physics and user input tracking.",
   "author": "Matt Perry <admin@redshiftjs.com>",
   "homepage": "http://redshiftjs.com",
