@@ -47,6 +47,7 @@ var calc = require('../utils/calc.js'),
             // Check if we've gone past our calculated value, or if we're at the end of the array
             if (newValue < thisLinkValue || i === mapLength - 1) {
                 newValue = calc.value(calc.restricted(calc.progress(newValue, lastLinkValue, thisLinkValue), 0, 1), lastToValue, thisToValue);
+                break;
             }
         }
         
