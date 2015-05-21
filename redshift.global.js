@@ -351,7 +351,7 @@
 	            
 	        // Then check values in Input
 	        if (inputOffset && inputOffset.hasOwnProperty(linkKey)) {
-	            newValue = value.origin + inputOffset[linkKey];
+	            newValue = value.origin + (inputOffset[linkKey] * value.amp);
 	            
 	        // First look at Action and check value isn't linking itself
 	        } else if (linkedValue.current !== undefined && key !== linkKey) {
@@ -728,18 +728,18 @@
 
 	"use strict";
 	
-	var parseArgs = __webpack_require__(/*! ./parse-args.js */ 27),
-	    Value = __webpack_require__(/*! ../types/value.js */ 28),
-	    Repo = __webpack_require__(/*! ../types/repo.js */ 29),
-	    Queue = __webpack_require__(/*! ./queue.js */ 30),
+	var parseArgs = __webpack_require__(/*! ./parse-args.js */ 26),
+	    Value = __webpack_require__(/*! ../types/value.js */ 27),
+	    Repo = __webpack_require__(/*! ../types/repo.js */ 28),
+	    Queue = __webpack_require__(/*! ./queue.js */ 29),
 	    Process = __webpack_require__(/*! ../process/process.js */ 14),
-	    processor = __webpack_require__(/*! ./processor.js */ 31),
+	    processor = __webpack_require__(/*! ./processor.js */ 30),
 	    routes = __webpack_require__(/*! ./routes.js */ 19),
-	    defaultProps = __webpack_require__(/*! ../defaults/action-props.js */ 32),
-	    defaultState = __webpack_require__(/*! ../defaults/action-state.js */ 33),
+	    defaultProps = __webpack_require__(/*! ../defaults/action-props.js */ 31),
+	    defaultState = __webpack_require__(/*! ../defaults/action-state.js */ 32),
 	    calc = __webpack_require__(/*! ../utils/calc.js */ 17),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 18),
-	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 34),
+	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 33),
 	
 	    namespace = function (key, space) {
 	        return (space && space !== routes.defaultRoute) ? key + '.' + space : key;
@@ -1234,7 +1234,7 @@
 	
 	var calc = __webpack_require__(/*! ../utils/calc.js */ 17),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 18),
-	    History = __webpack_require__(/*! ../utils/history.js */ 26),
+	    History = __webpack_require__(/*! ../utils/history.js */ 34),
 	
 	    /*
 	        Input constructor
@@ -2638,7 +2638,7 @@
 	"use strict";
 	
 	var actionPrototype = __webpack_require__(/*! ../action/action.js */ 12).prototype,
-	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 27),
+	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 26),
 	    rubix = __webpack_require__(/*! ../core/rubix.js */ 38);
 	
 	module.exports = function (name, newRubix) {
@@ -2918,83 +2918,6 @@
 
 /***/ },
 /* 26 */
-/*!******************************!*\
-  !*** ./src/utils/history.js ***!
-  \******************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var // [number]: Default max size of history
-	    maxHistorySize = 3,
-	    
-	    /*
-	        History constructor
-	        
-	        @param [var]: Variable to store in first history slot
-	        @param [int] (optional): Maximum size of history
-	    */
-	    History = function (obj, max) {
-	        this.max = max || maxHistorySize;
-	        this.entries = [];
-	        this.add(obj);
-	    };
-	    
-	History.prototype = {
-	    
-	    /*
-	        Push new var to history
-	        
-	        Shift out oldest entry if we've reached maximum capacity
-	        
-	        @param [var]: Variable to push into history.entries
-	    */
-	    add: function (obj) {
-	        var currentSize = this.getSize();
-	        
-	        this.entries.push(obj);
-	        
-	        if (currentSize >= this.max) {
-	            this.entries.shift();
-	        }
-	    },
-	    
-	    /*
-	        Get variable at specified index
-	
-	        @param [int]: Index
-	        @return [var]: Var found at specified index
-	    */
-	    get: function (i) {
-	        i = (typeof i === 'number') ? i : this.getSize() - 1;
-	
-	        return this.entries[i];
-	    },
-	    
-	    /*
-	        Get the second newest history entry
-	        
-	        @return [var]: Entry found at index size - 2
-	    */
-	    getPrevious: function () {
-	        return this.get(this.getSize() - 2);
-	    },
-	    
-	    /*
-	        Get current history size
-	        
-	        @return [int]: Current length of entries.length
-	    */
-	    getSize: function () {
-	        return this.entries.length;
-	    }
-	    
-	};
-	
-	module.exports = History;
-
-/***/ },
-/* 27 */
 /*!**********************************!*\
   !*** ./src/action/parse-args.js ***!
   \**********************************/
@@ -3139,7 +3062,7 @@
 	};
 
 /***/ },
-/* 28 */
+/* 27 */
 /*!****************************!*\
   !*** ./src/types/value.js ***!
   \****************************/
@@ -3292,7 +3215,7 @@
 	module.exports = Value;
 
 /***/ },
-/* 29 */
+/* 28 */
 /*!***************************!*\
   !*** ./src/types/repo.js ***!
   \***************************/
@@ -3368,7 +3291,7 @@
 	module.exports = Repo;
 
 /***/ },
-/* 30 */
+/* 29 */
 /*!*****************************!*\
   !*** ./src/action/queue.js ***!
   \*****************************/
@@ -3424,7 +3347,7 @@
 	module.exports = Queue;
 
 /***/ },
-/* 31 */
+/* 30 */
 /*!*********************************!*\
   !*** ./src/action/processor.js ***!
   \*********************************/
@@ -3545,7 +3468,7 @@
 	};
 
 /***/ },
-/* 32 */
+/* 31 */
 /*!**************************************!*\
   !*** ./src/defaults/action-props.js ***!
   \**************************************/
@@ -3599,7 +3522,7 @@
 	};
 
 /***/ },
-/* 33 */
+/* 32 */
 /*!**************************************!*\
   !*** ./src/defaults/action-state.js ***!
   \**************************************/
@@ -3632,7 +3555,7 @@
 	};
 
 /***/ },
-/* 34 */
+/* 33 */
 /*!**********************************!*\
   !*** ./src/routes/css/styler.js ***!
   \**********************************/
@@ -3701,6 +3624,83 @@
 	};
 	
 	module.exports = new cssStyler();
+
+/***/ },
+/* 34 */
+/*!******************************!*\
+  !*** ./src/utils/history.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var // [number]: Default max size of history
+	    maxHistorySize = 3,
+	    
+	    /*
+	        History constructor
+	        
+	        @param [var]: Variable to store in first history slot
+	        @param [int] (optional): Maximum size of history
+	    */
+	    History = function (obj, max) {
+	        this.max = max || maxHistorySize;
+	        this.entries = [];
+	        this.add(obj);
+	    };
+	    
+	History.prototype = {
+	    
+	    /*
+	        Push new var to history
+	        
+	        Shift out oldest entry if we've reached maximum capacity
+	        
+	        @param [var]: Variable to push into history.entries
+	    */
+	    add: function (obj) {
+	        var currentSize = this.getSize();
+	        
+	        this.entries.push(obj);
+	        
+	        if (currentSize >= this.max) {
+	            this.entries.shift();
+	        }
+	    },
+	    
+	    /*
+	        Get variable at specified index
+	
+	        @param [int]: Index
+	        @return [var]: Var found at specified index
+	    */
+	    get: function (i) {
+	        i = (typeof i === 'number') ? i : this.getSize() - 1;
+	
+	        return this.entries[i];
+	    },
+	    
+	    /*
+	        Get the second newest history entry
+	        
+	        @return [var]: Entry found at index size - 2
+	    */
+	    getPrevious: function () {
+	        return this.get(this.getSize() - 2);
+	    },
+	    
+	    /*
+	        Get current history size
+	        
+	        @return [int]: Current length of entries.length
+	    */
+	    getSize: function () {
+	        return this.entries.length;
+	    }
+	    
+	};
+	
+	module.exports = History;
 
 /***/ },
 /* 35 */
@@ -4855,6 +4855,9 @@
 	    
 	    // [array]: Non-linear range of values (eg [0, 1, 1, 0]) to map to .mapLink - here the linked value being 75 would result in a value of 0.5
 	    mapTo: undefined,
+	    
+		// [number]: Factor of input movement to direct output
+		amp: 1,
 	
 	
 	    /*

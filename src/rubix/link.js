@@ -79,7 +79,7 @@ module.exports = {
             
         // Then check values in Input
         if (inputOffset && inputOffset.hasOwnProperty(linkKey)) {
-            newValue = value.origin + inputOffset[linkKey];
+            newValue = value.origin + (inputOffset[linkKey] * value.amp);
             
         // First look at Action and check value isn't linking itself
         } else if (linkedValue.current !== undefined && key !== linkKey) {
