@@ -185,7 +185,7 @@ Action.prototype = {
         
         this.process.start();
 
-        return self;
+        return this;
     },
     
     /*

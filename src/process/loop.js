@@ -4,6 +4,7 @@
 "use strict";
 
 var Timer = require('./timer.js'),
+    tick = require('./tick.js'),
     Loop = function () {
         this.timer = new Timer();
     };
@@ -21,7 +22,7 @@ Loop.prototype = {
     frame: function () {
         var self = this;
         
-        requestAnimationFrame(function () {
+        tick(function () {
             var framestamp = self.timer.update(), // Currently just measuring in ms - will look into hi-res timestamps
                 isActive = self.callback.call(self.scope, framestamp, self.timer.getElapsed());
 

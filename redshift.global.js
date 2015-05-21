@@ -62,21 +62,17 @@
 	
 	redshift
 	    // Add default Rubix processor modules
-	    .addRubix('fire',               __webpack_require__(/*! ../rubix/fire.js */ 3))
-	    .addRubix('link',               __webpack_require__(/*! ../rubix/link.js */ 4))
-	    .addRubix('play',               __webpack_require__(/*! ../rubix/play.js */ 5))
-	    .addRubix('run',                __webpack_require__(/*! ../rubix/run.js */ 6))
-	    .addRubix('track',              __webpack_require__(/*! ../rubix/track.js */ 7))
+	    .addRubix('fire',   __webpack_require__(/*! ../rubix/fire.js */ 3))
+	    .addRubix('link',   __webpack_require__(/*! ../rubix/link.js */ 4))
+	    .addRubix('play',   __webpack_require__(/*! ../rubix/play.js */ 5))
+	    .addRubix('run',    __webpack_require__(/*! ../rubix/run.js */ 6))
+	    .addRubix('track',  __webpack_require__(/*! ../rubix/track.js */ 7))
 	    
 	    // Add DOM value routes
 	    .addRoute('values', __webpack_require__(/*! ../routes/values.js */ 8))
 	    .addRoute('css',    __webpack_require__(/*! ../routes/css.js */ 9))
 	    .addRoute('attr',   __webpack_require__(/*! ../routes/attr.js */ 10))
 	    .addRoute('path',   __webpack_require__(/*! ../routes/path.js */ 11));
-	
-	// Check if we need to shim requireAnimationFrame - TODO replace this with
-	// a more general environment check, for instance node or react native
-	__webpack_require__(/*! ../utils/shim.js */ 12);
 	
 	module.exports = redshift;
 
@@ -94,16 +90,16 @@
 	*/
 	"use strict";
 	
-	var Action = __webpack_require__(/*! ./action/action.js */ 13),
-	    Input = __webpack_require__(/*! ./input/input.js */ 14),
-	    Process = __webpack_require__(/*! ./process/process.js */ 15),
-	    presets = __webpack_require__(/*! ./action/presets.js */ 16),
-	    easing = __webpack_require__(/*! ./utils/easing.js */ 17),
-	    calc = __webpack_require__(/*! ./utils/calc.js */ 18),
-	    utils = __webpack_require__(/*! ./utils/utils.js */ 19),
-	    route = __webpack_require__(/*! ./action/routes.js */ 20),
-	    registerRubix = __webpack_require__(/*! ./register/register-rubix.js */ 21),
-	    registerSimulation = __webpack_require__(/*! ./register/register-simulation.js */ 22);
+	var Action = __webpack_require__(/*! ./action/action.js */ 12),
+	    Input = __webpack_require__(/*! ./input/input.js */ 13),
+	    Process = __webpack_require__(/*! ./process/process.js */ 14),
+	    presets = __webpack_require__(/*! ./action/presets.js */ 15),
+	    easing = __webpack_require__(/*! ./utils/easing.js */ 16),
+	    calc = __webpack_require__(/*! ./utils/calc.js */ 17),
+	    utils = __webpack_require__(/*! ./utils/utils.js */ 18),
+	    route = __webpack_require__(/*! ./action/routes.js */ 19),
+	    registerRubix = __webpack_require__(/*! ./register/register-rubix.js */ 20),
+	    registerSimulation = __webpack_require__(/*! ./register/register-simulation.js */ 21);
 	
 	module.exports = {
 	
@@ -293,7 +289,7 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 17),
 	
 	    STRING = 'string',
 	    
@@ -390,9 +386,9 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
-	    easing = __webpack_require__(/*! ../utils/easing.js */ 17),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 17),
+	    easing = __webpack_require__(/*! ../utils/easing.js */ 16),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 18),
 	    
 	    CURRENT = 'current',
 	    HAS_ENDED = 'hasEnded';
@@ -477,8 +473,8 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
-	    simulate = __webpack_require__(/*! ../action/simulate.js */ 23);
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 17),
+	    simulate = __webpack_require__(/*! ../action/simulate.js */ 22);
 	
 	module.exports = {
 	
@@ -560,7 +556,7 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 17),
 	
 	    CURRENT = 'current',
 	    INPUT_OFFSET = 'inputOffset';
@@ -654,8 +650,8 @@
 
 	"use strict";
 	
-	var build = __webpack_require__(/*! ./css/build.js */ 25),
-	    split = __webpack_require__(/*! ./css/split.js */ 26),
+	var build = __webpack_require__(/*! ./css/build.js */ 23),
+	    split = __webpack_require__(/*! ./css/split.js */ 24),
 	    
 	    css = 'css',
 	    cssOrder = css + 'Order',
@@ -708,7 +704,7 @@
 
 	"use strict";
 	
-	var createStyles = __webpack_require__(/*! ./path/builder.js */ 24);
+	var createStyles = __webpack_require__(/*! ./path/builder.js */ 25);
 	
 	module.exports = {
 	
@@ -725,52 +721,6 @@
 
 /***/ },
 /* 12 */
-/*!***************************!*\
-  !*** ./src/utils/shim.js ***!
-  \***************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	/*
-	    requestAnimationFrame polyfill
-	    
-	    For IE8/9 Flinstones
-	
-	    Taken from Paul Irish. We've stripped out cancelAnimationFrame checks because we don't fox with that
-	    
-	    http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-	    http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
-	     
-	    requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
-	     
-	    MIT license
-	*/
-	var lastTime = 0,
-	    vendors = ['ms', 'moz', 'webkit', 'o'],
-	    vendorsLength = vendors.length;
-	
-	// Check for prefixed implementations
-	for (var x = 0; x < vendorsLength && !window.requestAnimationFrame; x++) {
-	    window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-	}
-	
-	// If there is, fo absolute shizzle, no rAF implementations, make one out of setTimeout and putty
-	if (!window.requestAnimationFrame) {
-	    window.requestAnimationFrame = function (callback) {
-	        var currTime = new Date().getTime(),
-	            timeToCall = Math.max(0, 16 - (currTime - lastTime)),
-	            id = window.setTimeout(function () {
-	                    callback(currTime + timeToCall);
-	                }, timeToCall);
-	        
-	        lastTime = currTime + timeToCall;
-	        
-	        return id;
-	    }
-	}
-
-/***/ },
-/* 13 */
 /*!******************************!*\
   !*** ./src/action/action.js ***!
   \******************************/
@@ -782,13 +732,13 @@
 	    Value = __webpack_require__(/*! ../types/value.js */ 28),
 	    Repo = __webpack_require__(/*! ../types/repo.js */ 29),
 	    Queue = __webpack_require__(/*! ./queue.js */ 30),
-	    Process = __webpack_require__(/*! ../process/process.js */ 15),
+	    Process = __webpack_require__(/*! ../process/process.js */ 14),
 	    processor = __webpack_require__(/*! ./processor.js */ 31),
-	    routes = __webpack_require__(/*! ./routes.js */ 20),
+	    routes = __webpack_require__(/*! ./routes.js */ 19),
 	    defaultProps = __webpack_require__(/*! ../defaults/action-props.js */ 32),
 	    defaultState = __webpack_require__(/*! ../defaults/action-state.js */ 33),
-	    calc = __webpack_require__(/*! ../utils/calc.js */ 18),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
+	    calc = __webpack_require__(/*! ../utils/calc.js */ 17),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 18),
 	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 34),
 	
 	    namespace = function (key, space) {
@@ -963,7 +913,7 @@
 	        
 	        this.process.start();
 	
-	        return self;
+	        return this;
 	    },
 	    
 	    /*
@@ -1271,7 +1221,7 @@
 	module.exports = Action;
 
 /***/ },
-/* 14 */
+/* 13 */
 /*!****************************!*\
   !*** ./src/input/input.js ***!
   \****************************/
@@ -1282,9 +1232,9 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
-	    History = __webpack_require__(/*! ../utils/history.js */ 38),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 17),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 18),
+	    History = __webpack_require__(/*! ../utils/history.js */ 26),
 	
 	    /*
 	        Input constructor
@@ -1405,7 +1355,7 @@
 	module.exports = Input;
 
 /***/ },
-/* 15 */
+/* 14 */
 /*!********************************!*\
   !*** ./src/process/process.js ***!
   \********************************/
@@ -1601,7 +1551,7 @@
 	module.exports = Process;
 
 /***/ },
-/* 16 */
+/* 15 */
 /*!*******************************!*\
   !*** ./src/action/presets.js ***!
   \*******************************/
@@ -1609,7 +1559,7 @@
 
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 19),
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 18),
 	    
 	    generateKeys = function (key) {
 	        var keys = key.split(DOT),
@@ -1690,7 +1640,7 @@
 	module.exports = new Presets();
 
 /***/ },
-/* 17 */
+/* 16 */
 /*!*****************************!*\
   !*** ./src/utils/easing.js ***!
   \*****************************/
@@ -1720,8 +1670,8 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ./calc.js */ 18),
-	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 37),
+	var calc = __webpack_require__(/*! ./calc.js */ 17),
+	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 36),
 	    
 	    // Constants
 	    INVALID_EASING = ": Not defined",
@@ -1906,7 +1856,7 @@
 
 
 /***/ },
-/* 18 */
+/* 17 */
 /*!***************************!*\
   !*** ./src/utils/calc.js ***!
   \***************************/
@@ -1920,7 +1870,7 @@
 	*/
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ./utils.js */ 19),
+	var utils = __webpack_require__(/*! ./utils.js */ 18),
 	
 	    calc = {
 	        /*
@@ -2310,7 +2260,7 @@
 	module.exports = calc;
 
 /***/ },
-/* 19 */
+/* 18 */
 /*!****************************!*\
   !*** ./src/utils/utils.js ***!
   \****************************/
@@ -2580,7 +2530,7 @@
 	};
 
 /***/ },
-/* 20 */
+/* 19 */
 /*!******************************!*\
   !*** ./src/action/routes.js ***!
   \******************************/
@@ -2588,7 +2538,7 @@
 
 	"use strict";
 	
-	var routes = __webpack_require__(/*! ../core/routes.js */ 36),
+	var routes = __webpack_require__(/*! ../core/routes.js */ 37),
 	    routeKeys = [],
 	    numRoutes,
 	    processes = ['preprocess', 'onStart', 'onEnd'],
@@ -2679,7 +2629,7 @@
 	module.exports = manager; 
 
 /***/ },
-/* 21 */
+/* 20 */
 /*!****************************************!*\
   !*** ./src/register/register-rubix.js ***!
   \****************************************/
@@ -2687,9 +2637,9 @@
 
 	"use strict";
 	
-	var actionPrototype = __webpack_require__(/*! ../action/action.js */ 13).prototype,
+	var actionPrototype = __webpack_require__(/*! ../action/action.js */ 12).prototype,
 	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 27),
-	    rubix = __webpack_require__(/*! ../core/rubix.js */ 39);
+	    rubix = __webpack_require__(/*! ../core/rubix.js */ 38);
 	
 	module.exports = function (name, newRubix) {
 	    var parser = parseArgs[name] || parseArgs.generic;
@@ -2705,7 +2655,7 @@
 	}
 
 /***/ },
-/* 22 */
+/* 21 */
 /*!*********************************************!*\
   !*** ./src/register/register-simulation.js ***!
   \*********************************************/
@@ -2716,14 +2666,14 @@
 	*/
 	"use strict";
 	
-	var simulations = __webpack_require__(/*! ../core/simulations.js */ 41);
+	var simulations = __webpack_require__(/*! ../core/simulations.js */ 39);
 	
 	module.exports = function (name, simulation) {
 	    simulations[name] = simulation;
 	}
 
 /***/ },
-/* 23 */
+/* 22 */
 /*!********************************!*\
   !*** ./src/action/simulate.js ***!
   \********************************/
@@ -2731,7 +2681,7 @@
 
 	"use strict";
 	
-	var simulations = __webpack_require__(/*! ../core/simulations.js */ 41);
+	var simulations = __webpack_require__(/*! ../core/simulations.js */ 39);
 	
 	module.exports = function (simulation, value, duration, started) {
 	    var velocity = simulations[simulation](value, duration, started);
@@ -2740,71 +2690,7 @@
 	};
 
 /***/ },
-/* 24 */
-/*!************************************!*\
-  !*** ./src/routes/path/builder.js ***!
-  \************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var lookup = __webpack_require__(/*! ./lookup.js */ 40),
-	
-	    /*
-	        Convert percentage to pixels
-	        
-	        @param [number]: Percentage of total length
-	        @param [number]: Total length
-	    */
-	    percentToPixels = function (percentage, length) {
-	        return (parseFloat(percentage) / 100) * length + 'px';
-	    };
-	
-	/*
-	    Create styles
-	    
-	    @param [object]: SVG Path properties
-	    @param [object]: Length of path
-	    @returns [object]: Key/value pairs of valid CSS properties
-	*/
-	module.exports = function (props, pathLength) {
-	    var hasArray = false,
-	        svgProperty = '',
-	        arrayStyles = {
-	            length: 0,
-	            spacing: pathLength + 'px'
-	        },
-	        pathStyles = {};
-	
-	    // Loop over each property and create related css property
-	    for (var key in props) {
-	        if (props.hasOwnProperty(key)) {
-	            svgProperty = lookup[key];
-	            
-	            switch (key) {
-	                case 'length':
-	                case 'spacing':
-	                    hasArray = true;
-	                    arrayStyles[key] = percentToPixels(props[key], pathLength);
-	                    break;
-	                case 'offset':
-	                    pathStyles[svgProperty] = percentToPixels(-props[key], pathLength);
-	                    break;
-	                default:
-	                   pathStyles[svgProperty] = props[key]; 
-	            }
-	        }
-	    }
-	    
-	    if (hasArray) {
-	        pathStyles[lookup.length] = arrayStyles.length + ' ' + arrayStyles.spacing;
-	    }
-	    
-	    return pathStyles;
-	};
-
-/***/ },
-/* 25 */
+/* 23 */
 /*!*********************************!*\
   !*** ./src/routes/css/build.js ***!
   \*********************************/
@@ -2812,9 +2698,9 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 43),
-	    templates = __webpack_require__(/*! ./templates.js */ 46),
-	    lookup = __webpack_require__(/*! ./lookup.js */ 44),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 40),
+	    templates = __webpack_require__(/*! ./templates.js */ 41),
+	    lookup = __webpack_require__(/*! ./lookup.js */ 42),
 	    
 	    TRANSFORM = 'transform',
 	    TRANSLATE_Z = 'translateZ',
@@ -2866,7 +2752,7 @@
 	};
 
 /***/ },
-/* 26 */
+/* 24 */
 /*!*********************************!*\
   !*** ./src/routes/css/split.js ***!
   \*********************************/
@@ -2874,12 +2760,12 @@
 
 	"use strict";
 	
-	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 42),
-	    dictionary = __webpack_require__(/*! ./dictionary.js */ 43),
-	    splitLookup = __webpack_require__(/*! ./lookup.js */ 44),
-	    splitters = __webpack_require__(/*! ./splitters.js */ 45),
+	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 43),
+	    dictionary = __webpack_require__(/*! ./dictionary.js */ 40),
+	    splitLookup = __webpack_require__(/*! ./lookup.js */ 42),
+	    splitters = __webpack_require__(/*! ./splitters.js */ 44),
 	    
-	    utils = __webpack_require__(/*! ../../utils/utils.js */ 19),
+	    utils = __webpack_require__(/*! ../../utils/utils.js */ 18),
 	    
 	    valueProperties = dictionary.valueProps,
 	    valuePropertyCount = valueProperties.length,
@@ -2967,6 +2853,147 @@
 	};
 
 /***/ },
+/* 25 */
+/*!************************************!*\
+  !*** ./src/routes/path/builder.js ***!
+  \************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var lookup = __webpack_require__(/*! ./lookup.js */ 45),
+	
+	    /*
+	        Convert percentage to pixels
+	        
+	        @param [number]: Percentage of total length
+	        @param [number]: Total length
+	    */
+	    percentToPixels = function (percentage, length) {
+	        return (parseFloat(percentage) / 100) * length + 'px';
+	    };
+	
+	/*
+	    Create styles
+	    
+	    @param [object]: SVG Path properties
+	    @param [object]: Length of path
+	    @returns [object]: Key/value pairs of valid CSS properties
+	*/
+	module.exports = function (props, pathLength) {
+	    var hasArray = false,
+	        svgProperty = '',
+	        arrayStyles = {
+	            length: 0,
+	            spacing: pathLength + 'px'
+	        },
+	        pathStyles = {};
+	
+	    // Loop over each property and create related css property
+	    for (var key in props) {
+	        if (props.hasOwnProperty(key)) {
+	            svgProperty = lookup[key];
+	            
+	            switch (key) {
+	                case 'length':
+	                case 'spacing':
+	                    hasArray = true;
+	                    arrayStyles[key] = percentToPixels(props[key], pathLength);
+	                    break;
+	                case 'offset':
+	                    pathStyles[svgProperty] = percentToPixels(-props[key], pathLength);
+	                    break;
+	                default:
+	                   pathStyles[svgProperty] = props[key]; 
+	            }
+	        }
+	    }
+	    
+	    if (hasArray) {
+	        pathStyles[lookup.length] = arrayStyles.length + ' ' + arrayStyles.spacing;
+	    }
+	    
+	    return pathStyles;
+	};
+
+/***/ },
+/* 26 */
+/*!******************************!*\
+  !*** ./src/utils/history.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var // [number]: Default max size of history
+	    maxHistorySize = 3,
+	    
+	    /*
+	        History constructor
+	        
+	        @param [var]: Variable to store in first history slot
+	        @param [int] (optional): Maximum size of history
+	    */
+	    History = function (obj, max) {
+	        this.max = max || maxHistorySize;
+	        this.entries = [];
+	        this.add(obj);
+	    };
+	    
+	History.prototype = {
+	    
+	    /*
+	        Push new var to history
+	        
+	        Shift out oldest entry if we've reached maximum capacity
+	        
+	        @param [var]: Variable to push into history.entries
+	    */
+	    add: function (obj) {
+	        var currentSize = this.getSize();
+	        
+	        this.entries.push(obj);
+	        
+	        if (currentSize >= this.max) {
+	            this.entries.shift();
+	        }
+	    },
+	    
+	    /*
+	        Get variable at specified index
+	
+	        @param [int]: Index
+	        @return [var]: Var found at specified index
+	    */
+	    get: function (i) {
+	        i = (typeof i === 'number') ? i : this.getSize() - 1;
+	
+	        return this.entries[i];
+	    },
+	    
+	    /*
+	        Get the second newest history entry
+	        
+	        @return [var]: Entry found at index size - 2
+	    */
+	    getPrevious: function () {
+	        return this.get(this.getSize() - 2);
+	    },
+	    
+	    /*
+	        Get current history size
+	        
+	        @return [int]: Current length of entries.length
+	    */
+	    getSize: function () {
+	        return this.entries.length;
+	    }
+	    
+	};
+	
+	module.exports = History;
+
+/***/ },
 /* 27 */
 /*!**********************************!*\
   !*** ./src/action/parse-args.js ***!
@@ -2975,9 +3002,9 @@
 
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 19),
-	    presets = __webpack_require__(/*! ./presets.js */ 16),
-	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 47),
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 18),
+	    presets = __webpack_require__(/*! ./presets.js */ 15),
+	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 46),
 	
 	    STRING = 'string',
 	    NUMBER = 'number',
@@ -3120,10 +3147,10 @@
 
 	"use strict";
 	
-	var defaultProps = __webpack_require__(/*! ../defaults/value-props.js */ 48),
-	    defaultState = __webpack_require__(/*! ../defaults/value-state.js */ 49),
-	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 50),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
+	var defaultProps = __webpack_require__(/*! ../defaults/value-props.js */ 47),
+	    defaultState = __webpack_require__(/*! ../defaults/value-state.js */ 48),
+	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 49),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 18),
 	
 	    CURRENT = 'current',
 	    ORIGIN = 'origin',
@@ -3273,7 +3300,7 @@
 
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 19),
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 18),
 	
 	    /*
 	        Get data with specified key
@@ -3408,9 +3435,9 @@
 	*/
 	"use strict";
 	
-	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 39),
-	    routes = __webpack_require__(/*! ./routes.js */ 20),
-	    calc = __webpack_require__(/*! ../utils/calc.js */ 18);
+	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 38),
+	    routes = __webpack_require__(/*! ./routes.js */ 19),
+	    calc = __webpack_require__(/*! ../utils/calc.js */ 17);
 	
 	module.exports = function (action, framestamp, frameDuration) {
 	    var props = action.props(),
@@ -3684,7 +3711,7 @@
 
 	"use strict";
 	
-	var theLoop = __webpack_require__(/*! ./loop.js */ 51),
+	var theLoop = __webpack_require__(/*! ./loop.js */ 50),
 	    ProcessManager = function () {
 	        this.all = {};
 	        this.active = [];
@@ -3855,15 +3882,6 @@
 
 /***/ },
 /* 36 */
-/*!****************************!*\
-  !*** ./src/core/routes.js ***!
-  \****************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {};
-
-/***/ },
-/* 37 */
 /*!*****************************!*\
   !*** ./src/types/bezier.js ***!
   \*****************************/
@@ -4038,84 +4056,16 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 38 */
-/*!******************************!*\
-  !*** ./src/utils/history.js ***!
-  \******************************/
+/* 37 */
+/*!****************************!*\
+  !*** ./src/core/routes.js ***!
+  \****************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
-	
-	var // [number]: Default max size of history
-	    maxHistorySize = 3,
-	    
-	    /*
-	        History constructor
-	        
-	        @param [var]: Variable to store in first history slot
-	        @param [int] (optional): Maximum size of history
-	    */
-	    History = function (obj, max) {
-	        this.max = max || maxHistorySize;
-	        this.entries = [];
-	        this.add(obj);
-	    };
-	    
-	History.prototype = {
-	    
-	    /*
-	        Push new var to history
-	        
-	        Shift out oldest entry if we've reached maximum capacity
-	        
-	        @param [var]: Variable to push into history.entries
-	    */
-	    add: function (obj) {
-	        var currentSize = this.getSize();
-	        
-	        this.entries.push(obj);
-	        
-	        if (currentSize >= this.max) {
-	            this.entries.shift();
-	        }
-	    },
-	    
-	    /*
-	        Get variable at specified index
-	
-	        @param [int]: Index
-	        @return [var]: Var found at specified index
-	    */
-	    get: function (i) {
-	        i = (typeof i === 'number') ? i : this.getSize() - 1;
-	
-	        return this.entries[i];
-	    },
-	    
-	    /*
-	        Get the second newest history entry
-	        
-	        @return [var]: Entry found at index size - 2
-	    */
-	    getPrevious: function () {
-	        return this.get(this.getSize() - 2);
-	    },
-	    
-	    /*
-	        Get current history size
-	        
-	        @return [int]: Current length of entries.length
-	    */
-	    getSize: function () {
-	        return this.entries.length;
-	    }
-	    
-	};
-	
-	module.exports = History;
+	module.exports = {};
 
 /***/ },
-/* 39 */
+/* 38 */
 /*!***************************!*\
   !*** ./src/core/rubix.js ***!
   \***************************/
@@ -4172,27 +4122,7 @@
 	module.exports = {};
 
 /***/ },
-/* 40 */
-/*!***********************************!*\
-  !*** ./src/routes/path/lookup.js ***!
-  \***********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	var STROKE = 'stroke',
-	    DASH = STROKE + '-dash', // stoke-width
-	    DASH_ARRAY = DASH + 'array'
-	
-	module.exports = {
-	    opacity: STROKE + '-opacity',
-	    width: STROKE + '-width',
-	    offset: DASH + 'offset',
-	    length: DASH_ARRAY,
-	    spacing: DASH_ARRAY,
-	    miterlimit: STROKE + '-miterlimit'
-	};
-
-/***/ },
-/* 41 */
+/* 39 */
 /*!*********************************!*\
   !*** ./src/core/simulations.js ***!
   \*********************************/
@@ -4208,8 +4138,8 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 17),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 18),
 	    speedPerFrame = calc.speedPerFrame;
 	
 	module.exports = {
@@ -4290,58 +4220,7 @@
 	};
 
 /***/ },
-/* 42 */
-/*!********************************************!*\
-  !*** ./src/routes/css/default-property.js ***!
-  \********************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var color = {
-	        min: 0,
-	        max: 255,
-	        round: true
-	    },
-	    opacity = {
-	        min: 0,
-	        max: 1
-	    },
-	    angle = {
-	        unit: 'deg'
-	    },
-	    scale = {},
-	    defaults = {
-	        base: {
-	            unit: 'px'
-	        },
-	        
-	        color: color,
-	        Red: color,
-	        Green: color,
-	        Blue: color,
-	    
-	        Alpha: opacity,
-	        opacity: opacity,
-	        
-	        scale: scale,
-	        scaleX: scale,
-	        scaleY: scale,
-	        scaleZ: scale,
-	        
-	        skew: angle,
-	        skewX: angle,
-	        skewY: angle,
-	        rotate: angle,
-	        rotateX: angle,
-	        rotateY: angle,
-	        rotateZ: angle
-	    };
-	    
-	module.exports = defaults;
-
-/***/ },
-/* 43 */
+/* 40 */
 /*!**************************************!*\
   !*** ./src/routes/css/dictionary.js ***!
   \**************************************/
@@ -4395,7 +4274,83 @@
 	module.exports = terms;
 
 /***/ },
-/* 44 */
+/* 41 */
+/*!*************************************!*\
+  !*** ./src/routes/css/templates.js ***!
+  \*************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 40),
+	
+	    defaultValues = {
+	        Alpha: 1
+	    },
+	
+	    functionCreate = function (value, prefix) {
+	        return prefix + '(' + value + ')';
+	    },
+	
+	    createSpaceDelimited = function (key, object, terms) {
+	        return createDelimitedString(key, object, terms, ' ');
+	    },
+	    
+	    createCommaDelimited = function (key, object, terms) {
+	        return createDelimitedString(key, object, terms, ', ').slice(0, -2);
+	    },
+	    
+	    createDelimitedString = function (key, object, terms, delimiter) {
+	        var string = '',
+	            propKey = '',
+	            termsLength = terms.length;
+	        
+	        for (var i = 0; i < termsLength; i++) {
+	            propKey = key + terms[i];
+	
+	            if (object[propKey] !== undefined) {
+	                string += object[propKey];
+	            } else {
+	                if (defaultValues[terms[i]] !== undefined) {
+	                    string += defaultValues[terms[i]];
+	                }
+	            }
+	            
+	            string += delimiter;
+	        }
+	    
+	        return string;
+	    },
+	
+	    templates = {
+	        
+	        colors: function (key, values) {
+	            return functionCreate(createCommaDelimited(key, values, dictionary.colors), 'rgba');
+	        },
+	        
+	        dimensions: function (key, values) {
+	            return createSpaceDelimited(key, values, dictionary.dimensions);
+	        },
+	        
+	        positions: function (key, values) {
+	            return createSpaceDelimited(key, values, dictionary.positions);
+	        },
+	        
+	        shadow: function (key, values) {
+	            var shadowTerms = dictionary.shadow.slice(0,4);
+	            
+	            return createSpaceDelimited(key, values, shadowTerms) + templates.colors(key, values);
+	        },
+	        
+	        transform: function (key, values) {
+	            return key + '(' + values[key] +')';
+	        }
+	    };
+	
+	module.exports = templates;
+
+/***/ },
+/* 42 */
 /*!**********************************!*\
   !*** ./src/routes/css/lookup.js ***!
   \**********************************/
@@ -4443,7 +4398,58 @@
 	};
 
 /***/ },
-/* 45 */
+/* 43 */
+/*!********************************************!*\
+  !*** ./src/routes/css/default-property.js ***!
+  \********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var color = {
+	        min: 0,
+	        max: 255,
+	        round: true
+	    },
+	    opacity = {
+	        min: 0,
+	        max: 1
+	    },
+	    angle = {
+	        unit: 'deg'
+	    },
+	    scale = {},
+	    defaults = {
+	        base: {
+	            unit: 'px'
+	        },
+	        
+	        color: color,
+	        Red: color,
+	        Green: color,
+	        Blue: color,
+	    
+	        Alpha: opacity,
+	        opacity: opacity,
+	        
+	        scale: scale,
+	        scaleX: scale,
+	        scaleY: scale,
+	        scaleZ: scale,
+	        
+	        skew: angle,
+	        skewX: angle,
+	        skewY: angle,
+	        rotate: angle,
+	        rotateX: angle,
+	        rotateY: angle,
+	        rotateZ: angle
+	    };
+	    
+	module.exports = defaults;
+
+/***/ },
+/* 44 */
 /*!*************************************!*\
   !*** ./src/routes/css/splitters.js ***!
   \*************************************/
@@ -4451,8 +4457,8 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 43),
-	    utils = __webpack_require__(/*! ../../utils/utils.js */ 19),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 40),
+	    utils = __webpack_require__(/*! ../../utils/utils.js */ 18),
 	
 	    /*
 	        Split comma delimited into array
@@ -4682,83 +4688,27 @@
 	module.exports = splitters;
 
 /***/ },
-/* 46 */
-/*!*************************************!*\
-  !*** ./src/routes/css/templates.js ***!
-  \*************************************/
+/* 45 */
+/*!***********************************!*\
+  !*** ./src/routes/path/lookup.js ***!
+  \***********************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	var STROKE = 'stroke',
+	    DASH = STROKE + '-dash', // stoke-width
+	    DASH_ARRAY = DASH + 'array'
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 43),
-	
-	    defaultValues = {
-	        Alpha: 1
-	    },
-	
-	    functionCreate = function (value, prefix) {
-	        return prefix + '(' + value + ')';
-	    },
-	
-	    createSpaceDelimited = function (key, object, terms) {
-	        return createDelimitedString(key, object, terms, ' ');
-	    },
-	    
-	    createCommaDelimited = function (key, object, terms) {
-	        return createDelimitedString(key, object, terms, ', ').slice(0, -2);
-	    },
-	    
-	    createDelimitedString = function (key, object, terms, delimiter) {
-	        var string = '',
-	            propKey = '',
-	            termsLength = terms.length;
-	        
-	        for (var i = 0; i < termsLength; i++) {
-	            propKey = key + terms[i];
-	
-	            if (object[propKey] !== undefined) {
-	                string += object[propKey];
-	            } else {
-	                if (defaultValues[terms[i]] !== undefined) {
-	                    string += defaultValues[terms[i]];
-	                }
-	            }
-	            
-	            string += delimiter;
-	        }
-	    
-	        return string;
-	    },
-	
-	    templates = {
-	        
-	        colors: function (key, values) {
-	            return functionCreate(createCommaDelimited(key, values, dictionary.colors), 'rgba');
-	        },
-	        
-	        dimensions: function (key, values) {
-	            return createSpaceDelimited(key, values, dictionary.dimensions);
-	        },
-	        
-	        positions: function (key, values) {
-	            return createSpaceDelimited(key, values, dictionary.positions);
-	        },
-	        
-	        shadow: function (key, values) {
-	            var shadowTerms = dictionary.shadow.slice(0,4);
-	            
-	            return createSpaceDelimited(key, values, shadowTerms) + templates.colors(key, values);
-	        },
-	        
-	        transform: function (key, values) {
-	            return key + '(' + values[key] +')';
-	        }
-	    };
-	
-	module.exports = templates;
+	module.exports = {
+	    opacity: STROKE + '-opacity',
+	    width: STROKE + '-width',
+	    offset: DASH + 'offset',
+	    length: DASH_ARRAY,
+	    spacing: DASH_ARRAY,
+	    miterlimit: STROKE + '-miterlimit'
+	};
 
 /***/ },
-/* 47 */
+/* 46 */
 /*!******************************!*\
   !*** ./src/input/pointer.js ***!
   \******************************/
@@ -4766,7 +4716,7 @@
 
 	"use strict";
 	
-	var Input = __webpack_require__(/*! ./input.js */ 14),
+	var Input = __webpack_require__(/*! ./input.js */ 13),
 	    currentPointer, // Sort this out for multitouch
 	    
 	    TOUCHMOVE = 'touchmove',
@@ -4855,7 +4805,7 @@
 	module.exports = Pointer;
 
 /***/ },
-/* 48 */
+/* 47 */
 /*!*************************************!*\
   !*** ./src/defaults/value-props.js ***!
   \*************************************/
@@ -4969,7 +4919,7 @@
 	};
 
 /***/ },
-/* 49 */
+/* 48 */
 /*!*************************************!*\
   !*** ./src/defaults/value-state.js ***!
   \*************************************/
@@ -4990,7 +4940,7 @@
 	};
 
 /***/ },
-/* 50 */
+/* 49 */
 /*!******************************!*\
   !*** ./src/utils/resolve.js ***!
   \******************************/
@@ -5014,8 +4964,8 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ./calc.js */ 18),
-	    utils = __webpack_require__(/*! ./utils.js */ 19);
+	var calc = __webpack_require__(/*! ./calc.js */ 17),
+	    utils = __webpack_require__(/*! ./utils.js */ 18);
 	
 	module.exports = function (newValue, currentValue, parent, scope) {
 	    var splitValueUnit = {};
@@ -5046,7 +4996,7 @@
 	};
 
 /***/ },
-/* 51 */
+/* 50 */
 /*!*****************************!*\
   !*** ./src/process/loop.js ***!
   \*****************************/
@@ -5057,7 +5007,8 @@
 	*/
 	"use strict";
 	
-	var Timer = __webpack_require__(/*! ./timer.js */ 52),
+	var Timer = __webpack_require__(/*! ./timer.js */ 51),
+	    tick = __webpack_require__(/*! ./tick.js */ 52),
 	    Loop = function () {
 	        this.timer = new Timer();
 	    };
@@ -5075,7 +5026,7 @@
 	    frame: function () {
 	        var self = this;
 	        
-	        requestAnimationFrame(function () {
+	        tick(function () {
 	            var framestamp = self.timer.update(), // Currently just measuring in ms - will look into hi-res timestamps
 	                isActive = self.callback.call(self.scope, framestamp, self.timer.getElapsed());
 	
@@ -5122,7 +5073,7 @@
 	module.exports = new Loop();
 
 /***/ },
-/* 52 */
+/* 51 */
 /*!******************************!*\
   !*** ./src/process/timer.js ***!
   \******************************/
@@ -5130,7 +5081,7 @@
 
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 19),
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 18),
 	
 	    maxElapsed = 33,
 	    Timer = function () {
@@ -5158,6 +5109,52 @@
 	};
 	
 	module.exports = Timer;
+
+/***/ },
+/* 52 */
+/*!*****************************!*\
+  !*** ./src/process/tick.js ***!
+  \*****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	/*
+	    requestAnimationFrame polyfill
+	    
+	    For IE8/9 Flinstones
+	
+	    Taken from Paul Irish. We've stripped out cancelAnimationFrame checks because we don't fox with that
+	    
+	    http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+	    http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
+	     
+	    requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
+	     
+	    MIT license
+	*/
+	var tick,
+	    lastTime = 0,
+	    hasWindow = (typeof window !== 'undefined');
+	
+	if (!hasWindow) {
+	    // Load rAF shim
+	    tick = function (callback) {
+	        var currTime = new Date().getTime(),
+	            timeToCall = Math.max(0, 16 - (currTime - lastTime)),
+	            id = setTimeout(function () {
+	                callback(currTime + timeToCall);
+	            }, timeToCall);
+	
+	        lastTime = currTime + timeToCall;
+	        
+	        return id;
+	    };  
+	    
+	} else {
+	    tick = window.requestAnimationFrame;
+	}
+	
+	module.exports = tick;
 
 /***/ }
 /******/ ]);
