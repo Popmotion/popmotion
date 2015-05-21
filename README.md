@@ -4,14 +4,14 @@
 
 Redshift is a JavaScript UX framework. It can be used for animations, UI physics, and input tracking.
 
-It provides DOM support for ease-of-use but provides the ability to work with raw numbers and custom callbacks for total creative freedom.
+It provides DOM support for ease-of-use but provides the ability to work with raw numbers and custom callbacks for total creative freedom. On the web, on the server, anywhere.
 
 [Download](http://redshiftjs.com/download) | [API](http://redshiftjs.com/api) | [Guides](http://redshiftjs.com/guides/get-started) | [Twitter](http://twitter.com/redshiftjs)
 
 **Flexible**
 * Animate any property without waiting for explicit support.
 * Seamless hand-off between user input, animation and physics.
-* Work with your favourite technology or framework (DOM, jQuery, Canvas, Three.js etc).
+* Work with your favourite technology or framework (DOM, Node, jQuery, Canvas, Three.js, WebSockets etc).
 
 **Extendable**
 * Create custom Input handlers for Oculus/Leap/anything.
