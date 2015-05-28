@@ -54,6 +54,9 @@ module.exports = {
     */
     dom: function (selector) {
 	    var elements = [],
+	    	numElements = 0,
+	    	i = 0,
+	    	domAction = {},
 	    	domSelection = (typeof selector === 'string') ? document.querySelectorAll(selector) : selector;
 	    	
 	    // if jQuery selection, get Array
@@ -69,7 +72,13 @@ module.exports = {
 		    elements.push(domSelection);
 	    }
 	    
-		console.log(elements);
+		numElements = elements.length;
+		
+		for (; i < numElements; i++) {
+			domAction = new Action({
+				dom: elements[i]
+			});
+		}
     },
     
     /*
