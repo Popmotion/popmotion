@@ -48,6 +48,31 @@ module.exports = {
     },
     
     /*
+	    Create an Action Group prepopulated with DOM properties
+	    
+	    @param [string || NodeList || jQuery]: Selector, nodeList or jQuery selection
+    */
+    dom: function (selector) {
+	    var elements = [],
+	    	domSelection = (typeof selector === 'string') ? document.querySelectorAll(selector) : selector;
+	    	
+	    // if jQuery selection, get Array
+	    if (domSelection.get) {
+		    elements = domSelection.get();
+		    
+		// Or convert NodeList to Array
+	    } else if (domSelection.length) {
+		    elements = [].slice.call(domSelection);
+		    
+		// Or put Element into array
+	    } else {
+		    elements.push(domSelection);
+	    }
+	    
+		console.log(elements);
+    },
+    
+    /*
         Define a new Action preset
         
         Syntax
