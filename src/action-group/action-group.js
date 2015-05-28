@@ -1,7 +1,11 @@
 "use strict";
 
 var Action = require('../action/action.js'),
+	generateMethodIterator = require('./generate-iterator.js'),
 
+	/*
+		Action group constructor
+	*/
 	ActionGroup = function () {
 		this.group = [];
 	},
@@ -29,18 +33,7 @@ actionGroupPrototype.addAction = function (props) {
 	var method = '';
 
 	for (method in Action.prototype) {
-		actionGroupPrototype[method] = function () {
-			var numActions = this.group.length,
-				i = 0,
-				action;
-			
-			for (; i < numActions; i++) {
-				action = this.group[i];
-				action[method].apply(action, arguments);
-			}
-			
-			return this;
-		};
+		actionGroupPrototype[method] = generateMethodIterator(method);
 	}
 })();
 

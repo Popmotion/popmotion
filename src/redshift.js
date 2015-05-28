@@ -83,7 +83,7 @@ module.exports = {
 				dom: elements[i]
 			});
 		}
-		console.log(actionGroup);
+
 		return actionGroup;
     },
     
