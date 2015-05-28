@@ -6,6 +6,7 @@
 "use strict";
 
 var Action = require('./action/action.js'),
+	ActionGroup = require('./action-group/action-group.js'),
     Input = require('./input/input.js'),
     Process = require('./process/process.js'),
     presets = require('./action/presets.js'),
@@ -53,7 +54,10 @@ module.exports = {
 	    @param [string || NodeList || jQuery]: Selector, nodeList or jQuery selection
     */
     dom: function (selector) {
-	    var elements = [],
+	    //return new DomAction(selector);
+	    
+	    var actionGroup = new ActionGroup(),
+	    	elements = [],
 	    	numElements = 0,
 	    	i = 0,
 	    	domAction = {},
@@ -75,10 +79,12 @@ module.exports = {
 		numElements = elements.length;
 		
 		for (; i < numElements; i++) {
-			domAction = new Action({
+			actionGroup.addAction({
 				dom: elements[i]
 			});
 		}
+		console.log(actionGroup);
+		return actionGroup;
     },
     
     /*

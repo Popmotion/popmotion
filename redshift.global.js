@@ -91,15 +91,16 @@
 	"use strict";
 	
 	var Action = __webpack_require__(/*! ./action/action.js */ 12),
-	    Input = __webpack_require__(/*! ./input/input.js */ 13),
-	    Process = __webpack_require__(/*! ./process/process.js */ 14),
-	    presets = __webpack_require__(/*! ./action/presets.js */ 15),
-	    easing = __webpack_require__(/*! ./utils/easing.js */ 16),
-	    calc = __webpack_require__(/*! ./utils/calc.js */ 17),
-	    utils = __webpack_require__(/*! ./utils/utils.js */ 18),
-	    route = __webpack_require__(/*! ./action/routes.js */ 19),
-	    registerRubix = __webpack_require__(/*! ./register/register-rubix.js */ 20),
-	    registerSimulation = __webpack_require__(/*! ./register/register-simulation.js */ 21);
+		ActionGroup = __webpack_require__(/*! ./action-group/action-group.js */ 13),
+	    Input = __webpack_require__(/*! ./input/input.js */ 14),
+	    Process = __webpack_require__(/*! ./process/process.js */ 15),
+	    presets = __webpack_require__(/*! ./action/presets.js */ 16),
+	    easing = __webpack_require__(/*! ./utils/easing.js */ 17),
+	    calc = __webpack_require__(/*! ./utils/calc.js */ 18),
+	    utils = __webpack_require__(/*! ./utils/utils.js */ 19),
+	    route = __webpack_require__(/*! ./action/routes.js */ 20),
+	    registerRubix = __webpack_require__(/*! ./register/register-rubix.js */ 21),
+	    registerSimulation = __webpack_require__(/*! ./register/register-simulation.js */ 22);
 	
 	module.exports = {
 	
@@ -130,6 +131,45 @@
 	    */
 	    newProcess: function () {
 	        return new Process(arguments[0], arguments[1]);
+	    },
+	    
+	    /*
+		    Create an Action Group prepopulated with DOM properties
+		    
+		    @param [string || NodeList || jQuery]: Selector, nodeList or jQuery selection
+	    */
+	    dom: function (selector) {
+		    //return new DomAction(selector);
+		    
+		    var actionGroup = new ActionGroup(),
+		    	elements = [],
+		    	numElements = 0,
+		    	i = 0,
+		    	domAction = {},
+		    	domSelection = (typeof selector === 'string') ? document.querySelectorAll(selector) : selector;
+		    	
+		    // if jQuery selection, get Array
+		    if (domSelection.get) {
+			    elements = domSelection.get();
+			    
+			// Or convert NodeList to Array
+		    } else if (domSelection.length) {
+			    elements = [].slice.call(domSelection);
+			    
+			// Or put Element into array
+		    } else {
+			    elements.push(domSelection);
+		    }
+		    
+			numElements = elements.length;
+			
+			for (; i < numElements; i++) {
+				actionGroup.addAction({
+					dom: elements[i]
+				});
+			}
+			console.log(actionGroup);
+			return actionGroup;
 	    },
 	    
 	    /*
@@ -289,7 +329,7 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 17),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
 	
 	    STRING = 'string',
 	    
@@ -386,9 +426,9 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 17),
-	    easing = __webpack_require__(/*! ../utils/easing.js */ 16),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 18),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
+	    easing = __webpack_require__(/*! ../utils/easing.js */ 17),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
 	    
 	    CURRENT = 'current',
 	    HAS_ENDED = 'hasEnded';
@@ -473,8 +513,8 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 17),
-	    simulate = __webpack_require__(/*! ../action/simulate.js */ 22);
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
+	    simulate = __webpack_require__(/*! ../action/simulate.js */ 23);
 	
 	module.exports = {
 	
@@ -556,7 +596,7 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 17),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
 	
 	    CURRENT = 'current',
 	    INPUT_OFFSET = 'inputOffset';
@@ -650,8 +690,8 @@
 
 	"use strict";
 	
-	var build = __webpack_require__(/*! ./css/build.js */ 23),
-	    split = __webpack_require__(/*! ./css/split.js */ 24),
+	var build = __webpack_require__(/*! ./css/build.js */ 24),
+	    split = __webpack_require__(/*! ./css/split.js */ 25),
 	    
 	    css = 'css',
 	    cssOrder = css + 'Order',
@@ -704,7 +744,7 @@
 
 	"use strict";
 	
-	var createStyles = __webpack_require__(/*! ./path/builder.js */ 25);
+	var createStyles = __webpack_require__(/*! ./path/builder.js */ 26);
 	
 	module.exports = {
 	
@@ -728,18 +768,18 @@
 
 	"use strict";
 	
-	var parseArgs = __webpack_require__(/*! ./parse-args.js */ 26),
-	    Value = __webpack_require__(/*! ../types/value.js */ 27),
-	    Repo = __webpack_require__(/*! ../types/repo.js */ 28),
-	    Queue = __webpack_require__(/*! ./queue.js */ 29),
-	    Process = __webpack_require__(/*! ../process/process.js */ 14),
-	    processor = __webpack_require__(/*! ./processor.js */ 30),
-	    routes = __webpack_require__(/*! ./routes.js */ 19),
-	    defaultProps = __webpack_require__(/*! ../defaults/action-props.js */ 31),
-	    defaultState = __webpack_require__(/*! ../defaults/action-state.js */ 32),
-	    calc = __webpack_require__(/*! ../utils/calc.js */ 17),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 18),
-	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 33),
+	var parseArgs = __webpack_require__(/*! ./parse-args.js */ 27),
+	    Value = __webpack_require__(/*! ../types/value.js */ 28),
+	    Repo = __webpack_require__(/*! ../types/repo.js */ 29),
+	    Queue = __webpack_require__(/*! ./queue.js */ 30),
+	    Process = __webpack_require__(/*! ../process/process.js */ 15),
+	    processor = __webpack_require__(/*! ./processor.js */ 31),
+	    routes = __webpack_require__(/*! ./routes.js */ 20),
+	    defaultProps = __webpack_require__(/*! ../defaults/action-props.js */ 32),
+	    defaultState = __webpack_require__(/*! ../defaults/action-state.js */ 33),
+	    calc = __webpack_require__(/*! ../utils/calc.js */ 18),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
+	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 34),
 	
 	    namespace = function (key, space) {
 	        return (space && space !== routes.defaultRoute) ? key + '.' + space : key;
@@ -1222,6 +1262,61 @@
 
 /***/ },
 /* 13 */
+/*!******************************************!*\
+  !*** ./src/action-group/action-group.js ***!
+  \******************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var Action = __webpack_require__(/*! ../action/action.js */ 12),
+	
+		ActionGroup = function () {
+			this.group = [];
+		},
+		
+		actionGroupPrototype = ActionGroup.prototype;
+	
+	/*
+		Stagger the execution of the provided Action method
+	*/
+	actionGroupPrototype.stagger = function () {
+		this.staggerAction = new Action();
+	};
+	
+	/*
+		Add a new Action to the group
+		
+		@param [object]: Action properties
+	*/
+	actionGroupPrototype.addAction = function (props) {
+		this.group.push(new Action(props));
+	};
+	
+	// Initialise Action Group methods
+	(function () {
+		var method = '';
+	
+		for (method in Action.prototype) {
+			actionGroupPrototype[method] = function () {
+				var numActions = this.group.length,
+					i = 0,
+					action;
+				
+				for (; i < numActions; i++) {
+					action = this.group[i];
+					action[method].apply(action, arguments);
+				}
+				
+				return this;
+			};
+		}
+	})();
+	
+	module.exports = ActionGroup;
+
+/***/ },
+/* 14 */
 /*!****************************!*\
   !*** ./src/input/input.js ***!
   \****************************/
@@ -1232,9 +1327,9 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 17),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 18),
-	    History = __webpack_require__(/*! ../utils/history.js */ 34),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
+	    History = __webpack_require__(/*! ../utils/history.js */ 35),
 	
 	    /*
 	        Input constructor
@@ -1355,7 +1450,7 @@
 	module.exports = Input;
 
 /***/ },
-/* 14 */
+/* 15 */
 /*!********************************!*\
   !*** ./src/process/process.js ***!
   \********************************/
@@ -1366,7 +1461,7 @@
 	*/
 	"use strict";
 	
-	var manager = __webpack_require__(/*! ./manager.js */ 35),
+	var manager = __webpack_require__(/*! ./manager.js */ 36),
 	
 	    /*
 	        Process constructor
@@ -1551,7 +1646,7 @@
 	module.exports = Process;
 
 /***/ },
-/* 15 */
+/* 16 */
 /*!*******************************!*\
   !*** ./src/action/presets.js ***!
   \*******************************/
@@ -1559,7 +1654,7 @@
 
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 18),
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 19),
 	    
 	    generateKeys = function (key) {
 	        var keys = key.split(DOT),
@@ -1640,7 +1735,7 @@
 	module.exports = new Presets();
 
 /***/ },
-/* 16 */
+/* 17 */
 /*!*****************************!*\
   !*** ./src/utils/easing.js ***!
   \*****************************/
@@ -1670,8 +1765,8 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ./calc.js */ 17),
-	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 36),
+	var calc = __webpack_require__(/*! ./calc.js */ 18),
+	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 37),
 	    
 	    // Constants
 	    INVALID_EASING = ": Not defined",
@@ -1856,7 +1951,7 @@
 
 
 /***/ },
-/* 17 */
+/* 18 */
 /*!***************************!*\
   !*** ./src/utils/calc.js ***!
   \***************************/
@@ -1870,7 +1965,7 @@
 	*/
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ./utils.js */ 18),
+	var utils = __webpack_require__(/*! ./utils.js */ 19),
 	
 	    calc = {
 	        /*
@@ -2260,7 +2355,7 @@
 	module.exports = calc;
 
 /***/ },
-/* 18 */
+/* 19 */
 /*!****************************!*\
   !*** ./src/utils/utils.js ***!
   \****************************/
@@ -2530,7 +2625,7 @@
 	};
 
 /***/ },
-/* 19 */
+/* 20 */
 /*!******************************!*\
   !*** ./src/action/routes.js ***!
   \******************************/
@@ -2538,7 +2633,7 @@
 
 	"use strict";
 	
-	var routes = __webpack_require__(/*! ../core/routes.js */ 37),
+	var routes = __webpack_require__(/*! ../core/routes.js */ 38),
 	    routeKeys = [],
 	    numRoutes,
 	    processes = ['preprocess', 'onStart', 'onEnd'],
@@ -2629,7 +2724,7 @@
 	module.exports = manager; 
 
 /***/ },
-/* 20 */
+/* 21 */
 /*!****************************************!*\
   !*** ./src/register/register-rubix.js ***!
   \****************************************/
@@ -2638,8 +2733,8 @@
 	"use strict";
 	
 	var actionPrototype = __webpack_require__(/*! ../action/action.js */ 12).prototype,
-	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 26),
-	    rubix = __webpack_require__(/*! ../core/rubix.js */ 38);
+	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 27),
+	    rubix = __webpack_require__(/*! ../core/rubix.js */ 39);
 	
 	module.exports = function (name, newRubix) {
 	    var parser = parseArgs[name] || parseArgs.generic;
@@ -2655,7 +2750,7 @@
 	}
 
 /***/ },
-/* 21 */
+/* 22 */
 /*!*********************************************!*\
   !*** ./src/register/register-simulation.js ***!
   \*********************************************/
@@ -2666,14 +2761,14 @@
 	*/
 	"use strict";
 	
-	var simulations = __webpack_require__(/*! ../core/simulations.js */ 39);
+	var simulations = __webpack_require__(/*! ../core/simulations.js */ 40);
 	
 	module.exports = function (name, simulation) {
 	    simulations[name] = simulation;
 	}
 
 /***/ },
-/* 22 */
+/* 23 */
 /*!********************************!*\
   !*** ./src/action/simulate.js ***!
   \********************************/
@@ -2681,7 +2776,7 @@
 
 	"use strict";
 	
-	var simulations = __webpack_require__(/*! ../core/simulations.js */ 39);
+	var simulations = __webpack_require__(/*! ../core/simulations.js */ 40);
 	
 	module.exports = function (simulation, value, duration, started) {
 	    var velocity = simulations[simulation](value, duration, started);
@@ -2690,7 +2785,7 @@
 	};
 
 /***/ },
-/* 23 */
+/* 24 */
 /*!*********************************!*\
   !*** ./src/routes/css/build.js ***!
   \*********************************/
@@ -2698,9 +2793,9 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 40),
-	    templates = __webpack_require__(/*! ./templates.js */ 41),
-	    lookup = __webpack_require__(/*! ./lookup.js */ 42),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 41),
+	    templates = __webpack_require__(/*! ./templates.js */ 42),
+	    lookup = __webpack_require__(/*! ./lookup.js */ 43),
 	    
 	    TRANSFORM = 'transform',
 	    TRANSLATE_Z = 'translateZ',
@@ -2752,7 +2847,7 @@
 	};
 
 /***/ },
-/* 24 */
+/* 25 */
 /*!*********************************!*\
   !*** ./src/routes/css/split.js ***!
   \*********************************/
@@ -2760,12 +2855,12 @@
 
 	"use strict";
 	
-	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 43),
-	    dictionary = __webpack_require__(/*! ./dictionary.js */ 40),
-	    splitLookup = __webpack_require__(/*! ./lookup.js */ 42),
-	    splitters = __webpack_require__(/*! ./splitters.js */ 44),
+	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 44),
+	    dictionary = __webpack_require__(/*! ./dictionary.js */ 41),
+	    splitLookup = __webpack_require__(/*! ./lookup.js */ 43),
+	    splitters = __webpack_require__(/*! ./splitters.js */ 45),
 	    
-	    utils = __webpack_require__(/*! ../../utils/utils.js */ 18),
+	    utils = __webpack_require__(/*! ../../utils/utils.js */ 19),
 	    
 	    valueProperties = dictionary.valueProps,
 	    valuePropertyCount = valueProperties.length,
@@ -2853,7 +2948,7 @@
 	};
 
 /***/ },
-/* 25 */
+/* 26 */
 /*!************************************!*\
   !*** ./src/routes/path/builder.js ***!
   \************************************/
@@ -2861,7 +2956,7 @@
 
 	"use strict";
 	
-	var lookup = __webpack_require__(/*! ./lookup.js */ 45),
+	var lookup = __webpack_require__(/*! ./lookup.js */ 46),
 	
 	    /*
 	        Convert percentage to pixels
@@ -2917,7 +3012,7 @@
 	};
 
 /***/ },
-/* 26 */
+/* 27 */
 /*!**********************************!*\
   !*** ./src/action/parse-args.js ***!
   \**********************************/
@@ -2925,9 +3020,9 @@
 
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 18),
-	    presets = __webpack_require__(/*! ./presets.js */ 15),
-	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 46),
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 19),
+	    presets = __webpack_require__(/*! ./presets.js */ 16),
+	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 47),
 	
 	    STRING = 'string',
 	    NUMBER = 'number',
@@ -3062,7 +3157,7 @@
 	};
 
 /***/ },
-/* 27 */
+/* 28 */
 /*!****************************!*\
   !*** ./src/types/value.js ***!
   \****************************/
@@ -3070,10 +3165,10 @@
 
 	"use strict";
 	
-	var defaultProps = __webpack_require__(/*! ../defaults/value-props.js */ 47),
-	    defaultState = __webpack_require__(/*! ../defaults/value-state.js */ 48),
-	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 49),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 18),
+	var defaultProps = __webpack_require__(/*! ../defaults/value-props.js */ 48),
+	    defaultState = __webpack_require__(/*! ../defaults/value-state.js */ 49),
+	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 50),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
 	
 	    CURRENT = 'current',
 	    ORIGIN = 'origin',
@@ -3215,7 +3310,7 @@
 	module.exports = Value;
 
 /***/ },
-/* 28 */
+/* 29 */
 /*!***************************!*\
   !*** ./src/types/repo.js ***!
   \***************************/
@@ -3223,7 +3318,7 @@
 
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 18),
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 19),
 	
 	    /*
 	        Get data with specified key
@@ -3291,7 +3386,7 @@
 	module.exports = Repo;
 
 /***/ },
-/* 29 */
+/* 30 */
 /*!*****************************!*\
   !*** ./src/action/queue.js ***!
   \*****************************/
@@ -3347,7 +3442,7 @@
 	module.exports = Queue;
 
 /***/ },
-/* 30 */
+/* 31 */
 /*!*********************************!*\
   !*** ./src/action/processor.js ***!
   \*********************************/
@@ -3358,9 +3453,9 @@
 	*/
 	"use strict";
 	
-	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 38),
-	    routes = __webpack_require__(/*! ./routes.js */ 19),
-	    calc = __webpack_require__(/*! ../utils/calc.js */ 17);
+	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 39),
+	    routes = __webpack_require__(/*! ./routes.js */ 20),
+	    calc = __webpack_require__(/*! ../utils/calc.js */ 18);
 	
 	module.exports = function (action, framestamp, frameDuration) {
 	    var props = action.props(),
@@ -3468,7 +3563,7 @@
 	};
 
 /***/ },
-/* 31 */
+/* 32 */
 /*!**************************************!*\
   !*** ./src/defaults/action-props.js ***!
   \**************************************/
@@ -3522,7 +3617,7 @@
 	};
 
 /***/ },
-/* 32 */
+/* 33 */
 /*!**************************************!*\
   !*** ./src/defaults/action-state.js ***!
   \**************************************/
@@ -3555,7 +3650,7 @@
 	};
 
 /***/ },
-/* 33 */
+/* 34 */
 /*!**********************************!*\
   !*** ./src/routes/css/styler.js ***!
   \**********************************/
@@ -3626,7 +3721,7 @@
 	module.exports = new cssStyler();
 
 /***/ },
-/* 34 */
+/* 35 */
 /*!******************************!*\
   !*** ./src/utils/history.js ***!
   \******************************/
@@ -3703,7 +3798,7 @@
 	module.exports = History;
 
 /***/ },
-/* 35 */
+/* 36 */
 /*!********************************!*\
   !*** ./src/process/manager.js ***!
   \********************************/
@@ -3711,7 +3806,7 @@
 
 	"use strict";
 	
-	var theLoop = __webpack_require__(/*! ./loop.js */ 50),
+	var theLoop = __webpack_require__(/*! ./loop.js */ 51),
 	    ProcessManager = function () {
 	        this.all = {};
 	        this.active = [];
@@ -3881,7 +3976,7 @@
 	module.exports = new ProcessManager();
 
 /***/ },
-/* 36 */
+/* 37 */
 /*!*****************************!*\
   !*** ./src/types/bezier.js ***!
   \*****************************/
@@ -4056,7 +4151,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 37 */
+/* 38 */
 /*!****************************!*\
   !*** ./src/core/routes.js ***!
   \****************************/
@@ -4065,7 +4160,7 @@
 	module.exports = {};
 
 /***/ },
-/* 38 */
+/* 39 */
 /*!***************************!*\
   !*** ./src/core/rubix.js ***!
   \***************************/
@@ -4122,7 +4217,7 @@
 	module.exports = {};
 
 /***/ },
-/* 39 */
+/* 40 */
 /*!*********************************!*\
   !*** ./src/core/simulations.js ***!
   \*********************************/
@@ -4138,8 +4233,8 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 17),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 18),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
 	    speedPerFrame = calc.speedPerFrame;
 	
 	module.exports = {
@@ -4220,7 +4315,7 @@
 	};
 
 /***/ },
-/* 40 */
+/* 41 */
 /*!**************************************!*\
   !*** ./src/routes/css/dictionary.js ***!
   \**************************************/
@@ -4274,7 +4369,7 @@
 	module.exports = terms;
 
 /***/ },
-/* 41 */
+/* 42 */
 /*!*************************************!*\
   !*** ./src/routes/css/templates.js ***!
   \*************************************/
@@ -4282,7 +4377,7 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 40),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 41),
 	
 	    defaultValues = {
 	        Alpha: 1
@@ -4350,7 +4445,7 @@
 	module.exports = templates;
 
 /***/ },
-/* 42 */
+/* 43 */
 /*!**********************************!*\
   !*** ./src/routes/css/lookup.js ***!
   \**********************************/
@@ -4398,7 +4493,7 @@
 	};
 
 /***/ },
-/* 43 */
+/* 44 */
 /*!********************************************!*\
   !*** ./src/routes/css/default-property.js ***!
   \********************************************/
@@ -4449,7 +4544,7 @@
 	module.exports = defaults;
 
 /***/ },
-/* 44 */
+/* 45 */
 /*!*************************************!*\
   !*** ./src/routes/css/splitters.js ***!
   \*************************************/
@@ -4457,8 +4552,8 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 40),
-	    utils = __webpack_require__(/*! ../../utils/utils.js */ 18),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 41),
+	    utils = __webpack_require__(/*! ../../utils/utils.js */ 19),
 	
 	    /*
 	        Split comma delimited into array
@@ -4688,7 +4783,7 @@
 	module.exports = splitters;
 
 /***/ },
-/* 45 */
+/* 46 */
 /*!***********************************!*\
   !*** ./src/routes/path/lookup.js ***!
   \***********************************/
@@ -4708,7 +4803,7 @@
 	};
 
 /***/ },
-/* 46 */
+/* 47 */
 /*!******************************!*\
   !*** ./src/input/pointer.js ***!
   \******************************/
@@ -4716,7 +4811,7 @@
 
 	"use strict";
 	
-	var Input = __webpack_require__(/*! ./input.js */ 13),
+	var Input = __webpack_require__(/*! ./input.js */ 14),
 	    currentPointer, // Sort this out for multitouch
 	    
 	    TOUCHMOVE = 'touchmove',
@@ -4805,7 +4900,7 @@
 	module.exports = Pointer;
 
 /***/ },
-/* 47 */
+/* 48 */
 /*!*************************************!*\
   !*** ./src/defaults/value-props.js ***!
   \*************************************/
@@ -4922,7 +5017,7 @@
 	};
 
 /***/ },
-/* 48 */
+/* 49 */
 /*!*************************************!*\
   !*** ./src/defaults/value-state.js ***!
   \*************************************/
@@ -4943,7 +5038,7 @@
 	};
 
 /***/ },
-/* 49 */
+/* 50 */
 /*!******************************!*\
   !*** ./src/utils/resolve.js ***!
   \******************************/
@@ -4967,8 +5062,8 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ./calc.js */ 17),
-	    utils = __webpack_require__(/*! ./utils.js */ 18);
+	var calc = __webpack_require__(/*! ./calc.js */ 18),
+	    utils = __webpack_require__(/*! ./utils.js */ 19);
 	
 	module.exports = function (newValue, currentValue, parent, scope) {
 	    var splitValueUnit = {};
@@ -4999,7 +5094,7 @@
 	};
 
 /***/ },
-/* 50 */
+/* 51 */
 /*!*****************************!*\
   !*** ./src/process/loop.js ***!
   \*****************************/
@@ -5010,8 +5105,8 @@
 	*/
 	"use strict";
 	
-	var Timer = __webpack_require__(/*! ./timer.js */ 51),
-	    tick = __webpack_require__(/*! ./tick.js */ 52),
+	var Timer = __webpack_require__(/*! ./timer.js */ 52),
+	    tick = __webpack_require__(/*! ./tick.js */ 53),
 	    Loop = function () {
 	        this.timer = new Timer();
 	    };
@@ -5076,7 +5171,7 @@
 	module.exports = new Loop();
 
 /***/ },
-/* 51 */
+/* 52 */
 /*!******************************!*\
   !*** ./src/process/timer.js ***!
   \******************************/
@@ -5084,7 +5179,7 @@
 
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 18),
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 19),
 	
 	    maxElapsed = 33,
 	    Timer = function () {
@@ -5114,7 +5209,7 @@
 	module.exports = Timer;
 
 /***/ },
-/* 52 */
+/* 53 */
 /*!*****************************!*\
   !*** ./src/process/tick.js ***!
   \*****************************/
