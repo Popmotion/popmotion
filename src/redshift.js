@@ -6,7 +6,7 @@
 "use strict";
 
 var Action = require('./action/action.js'),
-	ActionGroup = require('./action-group/action-group.js'),
+	domActionGroup = require('./action-group/dom.js'),
     Input = require('./input/input.js'),
     Process = require('./process/process.js'),
     presets = require('./action/presets.js'),
@@ -54,37 +54,7 @@ module.exports = {
 	    @param [string || NodeList || jQuery]: Selector, nodeList or jQuery selection
     */
     dom: function (selector) {
-	    //return new DomAction(selector);
-	    
-	    var actionGroup = new ActionGroup(),
-	    	elements = [],
-	    	numElements = 0,
-	    	i = 0,
-	    	domAction = {},
-	    	domSelection = (typeof selector === 'string') ? document.querySelectorAll(selector) : selector;
-	    	
-	    // if jQuery selection, get Array
-	    if (domSelection.get) {
-		    elements = domSelection.get();
-		    
-		// Or convert NodeList to Array
-	    } else if (domSelection.length) {
-		    elements = [].slice.call(domSelection);
-		    
-		// Or put Element into array
-	    } else {
-		    elements.push(domSelection);
-	    }
-	    
-		numElements = elements.length;
-		
-		for (; i < numElements; i++) {
-			actionGroup.addAction({
-				dom: elements[i]
-			});
-		}
-
-		return actionGroup;
+	    return domActionGroup(selector);
     },
     
     /*

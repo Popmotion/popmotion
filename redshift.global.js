@@ -91,7 +91,7 @@
 	"use strict";
 	
 	var Action = __webpack_require__(/*! ./action/action.js */ 12),
-		ActionGroup = __webpack_require__(/*! ./action-group/action-group.js */ 13),
+		domActionGroup = __webpack_require__(/*! ./action-group/dom.js */ 13),
 	    Input = __webpack_require__(/*! ./input/input.js */ 14),
 	    Process = __webpack_require__(/*! ./process/process.js */ 15),
 	    presets = __webpack_require__(/*! ./action/presets.js */ 16),
@@ -139,37 +139,7 @@
 		    @param [string || NodeList || jQuery]: Selector, nodeList or jQuery selection
 	    */
 	    dom: function (selector) {
-		    //return new DomAction(selector);
-		    
-		    var actionGroup = new ActionGroup(),
-		    	elements = [],
-		    	numElements = 0,
-		    	i = 0,
-		    	domAction = {},
-		    	domSelection = (typeof selector === 'string') ? document.querySelectorAll(selector) : selector;
-		    	
-		    // if jQuery selection, get Array
-		    if (domSelection.get) {
-			    elements = domSelection.get();
-			    
-			// Or convert NodeList to Array
-		    } else if (domSelection.length) {
-			    elements = [].slice.call(domSelection);
-			    
-			// Or put Element into array
-		    } else {
-			    elements.push(domSelection);
-		    }
-		    
-			numElements = elements.length;
-			
-			for (; i < numElements; i++) {
-				actionGroup.addAction({
-					dom: elements[i]
-				});
-			}
-			console.log(actionGroup);
-			return actionGroup;
+		    return domActionGroup(selector);
 	    },
 	    
 	    /*
@@ -661,9 +631,9 @@
 	    
 	    makeDefault: true,
 	    
-	    onStart: function (action, values, props, data) {
-	        if (props.start) {
-	            props.start.call(props.scope, data);
+	    onStart: function (bucket, action, values, props, data) {
+	        if (props.onStart) {
+	            props.onStart.call(props.scope, data);
 	        }
 	    },
 	    
@@ -748,7 +718,7 @@
 	
 	module.exports = {
 	
-	    onStart: function (output, action, values, props) {
+	    onStart: function (bucket, action, values, props) {
 	        if (props.dom) {
 	            props.pathLength = props.dom.getTotalLength();
 	        }
@@ -1262,58 +1232,45 @@
 
 /***/ },
 /* 13 */
-/*!******************************************!*\
-  !*** ./src/action-group/action-group.js ***!
-  \******************************************/
+/*!*********************************!*\
+  !*** ./src/action-group/dom.js ***!
+  \*********************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
-	var Action = __webpack_require__(/*! ../action/action.js */ 12),
+	var ActionGroup = __webpack_require__(/*! ./action-group.js */ 35);
 	
-		ActionGroup = function () {
-			this.group = [];
-		},
+	module.exports = function (selector) {
+	    var actionGroup = new ActionGroup(),
+	    	elements = [],
+	    	numElements = 0,
+	    	i = 0,
+	    	domSelection = (typeof selector === 'string') ? document.querySelectorAll(selector) : selector;
+	    	
+	    // if jQuery selection, get Array
+	    if (domSelection.get) {
+		    elements = domSelection.get();
+		    
+		// Or convert NodeList to Array
+	    } else if (domSelection.length) {
+		    elements = [].slice.call(domSelection);
+		    
+		// Or put Element into array
+	    } else {
+		    elements.push(domSelection);
+	    }
+	    
+		numElements = elements.length;
 		
-		actionGroupPrototype = ActionGroup.prototype;
-	
-	/*
-		Stagger the execution of the provided Action method
-	*/
-	actionGroupPrototype.stagger = function () {
-		this.staggerAction = new Action();
-	};
-	
-	/*
-		Add a new Action to the group
-		
-		@param [object]: Action properties
-	*/
-	actionGroupPrototype.addAction = function (props) {
-		this.group.push(new Action(props));
-	};
-	
-	// Initialise Action Group methods
-	(function () {
-		var method = '';
-	
-		for (method in Action.prototype) {
-			actionGroupPrototype[method] = function () {
-				var numActions = this.group.length,
-					i = 0,
-					action;
-				
-				for (; i < numActions; i++) {
-					action = this.group[i];
-					action[method].apply(action, arguments);
-				}
-				
-				return this;
-			};
+		for (; i < numElements; i++) {
+			actionGroup.addAction({
+				dom: elements[i]
+			});
 		}
-	})();
 	
-	module.exports = ActionGroup;
+		return actionGroup;
+	};
 
 /***/ },
 /* 14 */
@@ -1329,7 +1286,7 @@
 	
 	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
-	    History = __webpack_require__(/*! ../utils/history.js */ 35),
+	    History = __webpack_require__(/*! ../utils/history.js */ 39),
 	
 	    /*
 	        Input constructor
@@ -2652,7 +2609,7 @@
 	                routeName = routeKeys[i];
 	                route = routes[routeName];
 	    
-	                if (route.makeDefault || route[processName]) {
+	                if (route.makeDefault || route[processName] && props[routeName]) {
 	                    route[processName](sourceValues[routeName], action, values, props, data);
 	                }
 	            }
@@ -2734,7 +2691,7 @@
 	
 	var actionPrototype = __webpack_require__(/*! ../action/action.js */ 12).prototype,
 	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 27),
-	    rubix = __webpack_require__(/*! ../core/rubix.js */ 39);
+	    rubix = __webpack_require__(/*! ../core/rubix.js */ 40);
 	
 	module.exports = function (name, newRubix) {
 	    var parser = parseArgs[name] || parseArgs.generic;
@@ -2761,7 +2718,7 @@
 	*/
 	"use strict";
 	
-	var simulations = __webpack_require__(/*! ../core/simulations.js */ 40);
+	var simulations = __webpack_require__(/*! ../core/simulations.js */ 41);
 	
 	module.exports = function (name, simulation) {
 	    simulations[name] = simulation;
@@ -2776,7 +2733,7 @@
 
 	"use strict";
 	
-	var simulations = __webpack_require__(/*! ../core/simulations.js */ 40);
+	var simulations = __webpack_require__(/*! ../core/simulations.js */ 41);
 	
 	module.exports = function (simulation, value, duration, started) {
 	    var velocity = simulations[simulation](value, duration, started);
@@ -2793,9 +2750,9 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 41),
-	    templates = __webpack_require__(/*! ./templates.js */ 42),
-	    lookup = __webpack_require__(/*! ./lookup.js */ 43),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 42),
+	    templates = __webpack_require__(/*! ./templates.js */ 43),
+	    lookup = __webpack_require__(/*! ./lookup.js */ 44),
 	    
 	    TRANSFORM = 'transform',
 	    TRANSLATE_Z = 'translateZ',
@@ -2855,10 +2812,10 @@
 
 	"use strict";
 	
-	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 44),
-	    dictionary = __webpack_require__(/*! ./dictionary.js */ 41),
-	    splitLookup = __webpack_require__(/*! ./lookup.js */ 43),
-	    splitters = __webpack_require__(/*! ./splitters.js */ 45),
+	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 46),
+	    dictionary = __webpack_require__(/*! ./dictionary.js */ 42),
+	    splitLookup = __webpack_require__(/*! ./lookup.js */ 44),
+	    splitters = __webpack_require__(/*! ./splitters.js */ 47),
 	    
 	    utils = __webpack_require__(/*! ../../utils/utils.js */ 19),
 	    
@@ -2956,7 +2913,7 @@
 
 	"use strict";
 	
-	var lookup = __webpack_require__(/*! ./lookup.js */ 46),
+	var lookup = __webpack_require__(/*! ./lookup.js */ 45),
 	
 	    /*
 	        Convert percentage to pixels
@@ -3022,7 +2979,7 @@
 	
 	var utils = __webpack_require__(/*! ../utils/utils.js */ 19),
 	    presets = __webpack_require__(/*! ./presets.js */ 16),
-	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 47),
+	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 51),
 	
 	    STRING = 'string',
 	    NUMBER = 'number',
@@ -3453,7 +3410,7 @@
 	*/
 	"use strict";
 	
-	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 39),
+	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 40),
 	    routes = __webpack_require__(/*! ./routes.js */ 20),
 	    calc = __webpack_require__(/*! ../utils/calc.js */ 18);
 	
@@ -3722,80 +3679,64 @@
 
 /***/ },
 /* 35 */
-/*!******************************!*\
-  !*** ./src/utils/history.js ***!
-  \******************************/
+/*!******************************************!*\
+  !*** ./src/action-group/action-group.js ***!
+  \******************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
-	var // [number]: Default max size of history
-	    maxHistorySize = 3,
-	    
-	    /*
-	        History constructor
-	        
-	        @param [var]: Variable to store in first history slot
-	        @param [int] (optional): Maximum size of history
-	    */
-	    History = function (obj, max) {
-	        this.max = max || maxHistorySize;
-	        this.entries = [];
-	        this.add(obj);
-	    };
-	    
-	History.prototype = {
-	    
-	    /*
-	        Push new var to history
-	        
-	        Shift out oldest entry if we've reached maximum capacity
-	        
-	        @param [var]: Variable to push into history.entries
-	    */
-	    add: function (obj) {
-	        var currentSize = this.getSize();
-	        
-	        this.entries.push(obj);
-	        
-	        if (currentSize >= this.max) {
-	            this.entries.shift();
-	        }
-	    },
-	    
-	    /*
-	        Get variable at specified index
+	var Action = __webpack_require__(/*! ../action/action.js */ 12),
+		generateMethodIterator = __webpack_require__(/*! ./generate-iterator.js */ 52),
 	
-	        @param [int]: Index
-	        @return [var]: Var found at specified index
-	    */
-	    get: function (i) {
-	        i = (typeof i === 'number') ? i : this.getSize() - 1;
+		/*
+			Action group constructor
+		*/
+		ActionGroup = function (actions) {
+			this.order = actions || [];
+		},
+		
+		actionGroupPrototype = ActionGroup.prototype;
 	
-	        return this.entries[i];
-	    },
-	    
-	    /*
-	        Get the second newest history entry
-	        
-	        @return [var]: Entry found at index size - 2
-	    */
-	    getPrevious: function () {
-	        return this.get(this.getSize() - 2);
-	    },
-	    
-	    /*
-	        Get current history size
-	        
-	        @return [int]: Current length of entries.length
-	    */
-	    getSize: function () {
-	        return this.entries.length;
-	    }
-	    
+	/*
+		Stagger the execution of the provided Action method
+	*/
+	actionGroupPrototype.stagger = function (method, props, duration, ease) {
+		var self = this;
+		
+		this.staggerAction = this.staggerAction || new Action();
+	
+		this.staggerAction.stop().play({
+			values: {
+				i: {
+					start: -1,
+					to: this.order.length - 1
+				}
+			},
+			round: true,
+			onChange: function (output) {
+				self.order[output.i][method](props);
+			}
+		}, duration, ease);
 	};
 	
-	module.exports = History;
+	/*
+		Add a new Action to the group
+		
+		@param [object]: Action properties
+	*/
+	actionGroupPrototype.addAction = function (props) {
+		this.order.push(new Action(props));
+	};
+	
+	// Initialise Action Group methods
+	(function () {
+		for (var method in Action.prototype) {
+			actionGroupPrototype[method] = generateMethodIterator(method);
+		}
+	})();
+	
+	module.exports = ActionGroup;
 
 /***/ },
 /* 36 */
@@ -3806,7 +3747,7 @@
 
 	"use strict";
 	
-	var theLoop = __webpack_require__(/*! ./loop.js */ 51),
+	var theLoop = __webpack_require__(/*! ./loop.js */ 53),
 	    ProcessManager = function () {
 	        this.all = {};
 	        this.active = [];
@@ -4161,6 +4102,83 @@
 
 /***/ },
 /* 39 */
+/*!******************************!*\
+  !*** ./src/utils/history.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var // [number]: Default max size of history
+	    maxHistorySize = 3,
+	    
+	    /*
+	        History constructor
+	        
+	        @param [var]: Variable to store in first history slot
+	        @param [int] (optional): Maximum size of history
+	    */
+	    History = function (obj, max) {
+	        this.max = max || maxHistorySize;
+	        this.entries = [];
+	        this.add(obj);
+	    };
+	    
+	History.prototype = {
+	    
+	    /*
+	        Push new var to history
+	        
+	        Shift out oldest entry if we've reached maximum capacity
+	        
+	        @param [var]: Variable to push into history.entries
+	    */
+	    add: function (obj) {
+	        var currentSize = this.getSize();
+	        
+	        this.entries.push(obj);
+	        
+	        if (currentSize >= this.max) {
+	            this.entries.shift();
+	        }
+	    },
+	    
+	    /*
+	        Get variable at specified index
+	
+	        @param [int]: Index
+	        @return [var]: Var found at specified index
+	    */
+	    get: function (i) {
+	        i = (typeof i === 'number') ? i : this.getSize() - 1;
+	
+	        return this.entries[i];
+	    },
+	    
+	    /*
+	        Get the second newest history entry
+	        
+	        @return [var]: Entry found at index size - 2
+	    */
+	    getPrevious: function () {
+	        return this.get(this.getSize() - 2);
+	    },
+	    
+	    /*
+	        Get current history size
+	        
+	        @return [int]: Current length of entries.length
+	    */
+	    getSize: function () {
+	        return this.entries.length;
+	    }
+	    
+	};
+	
+	module.exports = History;
+
+/***/ },
+/* 40 */
 /*!***************************!*\
   !*** ./src/core/rubix.js ***!
   \***************************/
@@ -4217,7 +4235,7 @@
 	module.exports = {};
 
 /***/ },
-/* 40 */
+/* 41 */
 /*!*********************************!*\
   !*** ./src/core/simulations.js ***!
   \*********************************/
@@ -4315,7 +4333,7 @@
 	};
 
 /***/ },
-/* 41 */
+/* 42 */
 /*!**************************************!*\
   !*** ./src/routes/css/dictionary.js ***!
   \**************************************/
@@ -4369,7 +4387,7 @@
 	module.exports = terms;
 
 /***/ },
-/* 42 */
+/* 43 */
 /*!*************************************!*\
   !*** ./src/routes/css/templates.js ***!
   \*************************************/
@@ -4377,7 +4395,7 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 41),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 42),
 	
 	    defaultValues = {
 	        Alpha: 1
@@ -4445,7 +4463,7 @@
 	module.exports = templates;
 
 /***/ },
-/* 43 */
+/* 44 */
 /*!**********************************!*\
   !*** ./src/routes/css/lookup.js ***!
   \**********************************/
@@ -4493,7 +4511,27 @@
 	};
 
 /***/ },
-/* 44 */
+/* 45 */
+/*!***********************************!*\
+  !*** ./src/routes/path/lookup.js ***!
+  \***********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	var STROKE = 'stroke',
+	    DASH = STROKE + '-dash', // stoke-width
+	    DASH_ARRAY = DASH + 'array'
+	
+	module.exports = {
+	    opacity: STROKE + '-opacity',
+	    width: STROKE + '-width',
+	    offset: DASH + 'offset',
+	    length: DASH_ARRAY,
+	    spacing: DASH_ARRAY,
+	    miterlimit: STROKE + '-miterlimit'
+	};
+
+/***/ },
+/* 46 */
 /*!********************************************!*\
   !*** ./src/routes/css/default-property.js ***!
   \********************************************/
@@ -4544,7 +4582,7 @@
 	module.exports = defaults;
 
 /***/ },
-/* 45 */
+/* 47 */
 /*!*************************************!*\
   !*** ./src/routes/css/splitters.js ***!
   \*************************************/
@@ -4552,7 +4590,7 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 41),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 42),
 	    utils = __webpack_require__(/*! ../../utils/utils.js */ 19),
 	
 	    /*
@@ -4783,123 +4821,6 @@
 	module.exports = splitters;
 
 /***/ },
-/* 46 */
-/*!***********************************!*\
-  !*** ./src/routes/path/lookup.js ***!
-  \***********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	var STROKE = 'stroke',
-	    DASH = STROKE + '-dash', // stoke-width
-	    DASH_ARRAY = DASH + 'array'
-	
-	module.exports = {
-	    opacity: STROKE + '-opacity',
-	    width: STROKE + '-width',
-	    offset: DASH + 'offset',
-	    length: DASH_ARRAY,
-	    spacing: DASH_ARRAY,
-	    miterlimit: STROKE + '-miterlimit'
-	};
-
-/***/ },
-/* 47 */
-/*!******************************!*\
-  !*** ./src/input/pointer.js ***!
-  \******************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var Input = __webpack_require__(/*! ./input.js */ 14),
-	    currentPointer, // Sort this out for multitouch
-	    
-	    TOUCHMOVE = 'touchmove',
-	    MOUSEMOVE = 'mousemove',
-	
-	    /*
-	        Convert event into point
-	        
-	        Scrape the x/y coordinates from the provided event
-	        
-	        @param [event]: Original pointer event
-	        @param [boolean]: True if touch event
-	        @return [object]: x/y coordinates of event
-	    */
-	    eventToPoint = function (event, isTouchEvent) {
-	        var touchChanged = isTouchEvent ? event.changedTouches[0] : false;
-	        
-	        return {
-	            x: touchChanged ? touchChanged.clientX : event.pageX,
-	            y: touchChanged ? touchChanged.clientY : event.pageY
-	        }
-	    },
-	    
-	    /*
-	        Get actual event
-	        
-	        Checks for jQuery's .originalEvent if present
-	        
-	        @param [event | jQuery event]
-	        @return [event]: The actual JS event  
-	    */
-	    getActualEvent = function (event) {
-	        return event.originalEvent || event;
-	    },
-	
-	    
-	    /*
-	        Pointer constructor
-	    */
-	    Pointer = function (e) {
-	        var event = getActualEvent(e), // In case of jQuery event
-	            isTouch = (event.touches) ? true : false,
-	            startPoint = eventToPoint(event, isTouch);
-	        
-	        this.update(startPoint);
-	        this.isTouch = isTouch;
-	        this.bindEvents();
-	    },
-	    
-	    proto = Pointer.prototype = new Input();
-	
-	/*
-	    Bind move event
-	*/
-	proto.bindEvents = function () {
-	    this.moveEvent = this.isTouch ? TOUCHMOVE : MOUSEMOVE;
-	    
-	    currentPointer = this;
-	    
-	    document.documentElement.addEventListener(this.moveEvent, this.onMove);
-	};
-	
-	/*
-	    Unbind move event
-	*/
-	proto.unbindEvents = function () {
-	    document.documentElement.removeEventListener(this.moveEvent, this.onMove);
-	};
-	
-	/*
-	    Pointer onMove event handler
-	    
-	    @param [event]: Pointer move event
-	*/
-	proto.onMove = function (e) {
-	    var newPoint = eventToPoint(e, currentPointer.isTouch);
-	    e = getActualEvent(e);
-	    e.preventDefault();
-	    currentPointer.update(newPoint);
-	};
-	
-	proto.stop = function () {
-	    this.unbindEvents();
-	};
-	
-	module.exports = Pointer;
-
-/***/ },
 /* 48 */
 /*!*************************************!*\
   !*** ./src/defaults/value-props.js ***!
@@ -5095,6 +5016,135 @@
 
 /***/ },
 /* 51 */
+/*!******************************!*\
+  !*** ./src/input/pointer.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var Input = __webpack_require__(/*! ./input.js */ 14),
+	    currentPointer, // Sort this out for multitouch
+	    
+	    TOUCHMOVE = 'touchmove',
+	    MOUSEMOVE = 'mousemove',
+	
+	    /*
+	        Convert event into point
+	        
+	        Scrape the x/y coordinates from the provided event
+	        
+	        @param [event]: Original pointer event
+	        @param [boolean]: True if touch event
+	        @return [object]: x/y coordinates of event
+	    */
+	    eventToPoint = function (event, isTouchEvent) {
+	        var touchChanged = isTouchEvent ? event.changedTouches[0] : false;
+	        
+	        return {
+	            x: touchChanged ? touchChanged.clientX : event.pageX,
+	            y: touchChanged ? touchChanged.clientY : event.pageY
+	        }
+	    },
+	    
+	    /*
+	        Get actual event
+	        
+	        Checks for jQuery's .originalEvent if present
+	        
+	        @param [event | jQuery event]
+	        @return [event]: The actual JS event  
+	    */
+	    getActualEvent = function (event) {
+	        return event.originalEvent || event;
+	    },
+	
+	    
+	    /*
+	        Pointer constructor
+	    */
+	    Pointer = function (e) {
+	        var event = getActualEvent(e), // In case of jQuery event
+	            isTouch = (event.touches) ? true : false,
+	            startPoint = eventToPoint(event, isTouch);
+	        
+	        this.update(startPoint);
+	        this.isTouch = isTouch;
+	        this.bindEvents();
+	    },
+	    
+	    proto = Pointer.prototype = new Input();
+	
+	/*
+	    Bind move event
+	*/
+	proto.bindEvents = function () {
+	    this.moveEvent = this.isTouch ? TOUCHMOVE : MOUSEMOVE;
+	    
+	    currentPointer = this;
+	    
+	    document.documentElement.addEventListener(this.moveEvent, this.onMove);
+	};
+	
+	/*
+	    Unbind move event
+	*/
+	proto.unbindEvents = function () {
+	    document.documentElement.removeEventListener(this.moveEvent, this.onMove);
+	};
+	
+	/*
+	    Pointer onMove event handler
+	    
+	    @param [event]: Pointer move event
+	*/
+	proto.onMove = function (e) {
+	    var newPoint = eventToPoint(e, currentPointer.isTouch);
+	    e = getActualEvent(e);
+	    e.preventDefault();
+	    currentPointer.update(newPoint);
+	};
+	
+	proto.stop = function () {
+	    this.unbindEvents();
+	};
+	
+	module.exports = Pointer;
+
+/***/ },
+/* 52 */
+/*!***********************************************!*\
+  !*** ./src/action-group/generate-iterator.js ***!
+  \***********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+		Generate method iterator
+		
+		Takes a method name and returns a function that will
+		loop over all the Actions in a group and fire that
+		method with those properties
+		
+		@param [string]: Name of method
+	*/
+	module.exports = function (method) {
+		return function () {
+			var numActions = this.group.length,
+				i = 0,
+				action;
+				
+			for (; i < numActions; i++) {
+				action = this.group[i];
+				action[method].apply(action, arguments);
+			}
+			
+			return this;
+		};
+	};
+
+
+/***/ },
+/* 53 */
 /*!*****************************!*\
   !*** ./src/process/loop.js ***!
   \*****************************/
@@ -5105,8 +5155,8 @@
 	*/
 	"use strict";
 	
-	var Timer = __webpack_require__(/*! ./timer.js */ 52),
-	    tick = __webpack_require__(/*! ./tick.js */ 53),
+	var Timer = __webpack_require__(/*! ./timer.js */ 54),
+	    tick = __webpack_require__(/*! ./tick.js */ 55),
 	    Loop = function () {
 	        this.timer = new Timer();
 	    };
@@ -5171,7 +5221,7 @@
 	module.exports = new Loop();
 
 /***/ },
-/* 52 */
+/* 54 */
 /*!******************************!*\
   !*** ./src/process/timer.js ***!
   \******************************/
@@ -5209,7 +5259,7 @@
 	module.exports = Timer;
 
 /***/ },
-/* 53 */
+/* 55 */
 /*!*****************************!*\
   !*** ./src/process/tick.js ***!
   \*****************************/

@@ -6,8 +6,8 @@ var Action = require('../action/action.js'),
 	/*
 		Action group constructor
 	*/
-	ActionGroup = function () {
-		this.group = [];
+	ActionGroup = function (actions) {
+		this.order = actions || [];
 	},
 	
 	actionGroupPrototype = ActionGroup.prototype;
@@ -15,8 +15,23 @@ var Action = require('../action/action.js'),
 /*
 	Stagger the execution of the provided Action method
 */
-actionGroupPrototype.stagger = function () {
-	this.staggerAction = new Action();
+actionGroupPrototype.stagger = function (method, props, duration, ease) {
+	var self = this;
+	
+	this.staggerAction = this.staggerAction || new Action();
+
+	this.staggerAction.stop().play({
+		values: {
+			i: {
+				start: -1,
+				to: this.order.length - 1
+			}
+		},
+		round: true,
+		onChange: function (output) {
+			self.order[output.i][method](props);
+		}
+	}, duration, ease);
 };
 
 /*
@@ -25,14 +40,12 @@ actionGroupPrototype.stagger = function () {
 	@param [object]: Action properties
 */
 actionGroupPrototype.addAction = function (props) {
-	this.group.push(new Action(props));
+	this.order.push(new Action(props));
 };
 
 // Initialise Action Group methods
 (function () {
-	var method = '';
-
-	for (method in Action.prototype) {
+	for (var method in Action.prototype) {
 		actionGroupPrototype[method] = generateMethodIterator(method);
 	}
 })();
