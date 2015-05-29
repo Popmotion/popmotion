@@ -621,9 +621,9 @@
 	    
 	    makeDefault: true,
 	    
-	    onStart: function (action, values, props, data) {
-	        if (props.start) {
-	            props.start.call(props.scope, data);
+	    onStart: function (bucket, action, values, props, data) {
+	        if (props.onStart) {
+	            props.onStart.call(props.scope, data);
 	        }
 	    },
 	    
@@ -708,7 +708,7 @@
 	
 	module.exports = {
 	
-	    onStart: function (output, action, values, props) {
+	    onStart: function (bucket, action, values, props) {
 	        if (props.dom) {
 	            props.pathLength = props.dom.getTotalLength();
 	        }
@@ -2557,7 +2557,7 @@
 	                routeName = routeKeys[i];
 	                route = routes[routeName];
 	    
-	                if (route.makeDefault || route[processName]) {
+	                if (route.makeDefault || route[processName] && props[routeName]) {
 	                    route[processName](sourceValues[routeName], action, values, props, data);
 	                }
 	            }
