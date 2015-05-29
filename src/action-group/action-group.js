@@ -10,7 +10,7 @@ var Action = require('../action/action.js'),
 		Action group constructor
 	*/
 	ActionGroup = function (actions) {
-		this.elements = actions || [];
+		this.actions = actions || [];
 	},
 	
 	actionGroupPrototype = ActionGroup.prototype;
@@ -24,7 +24,8 @@ var Action = require('../action/action.js'),
 	@param [string] (optional): Easing
 */
 actionGroupPrototype.stagger = function (method, duration, props, ease) {
-	var self = this;
+	var self = this,
+		numActions = this.actions.length;
 	
 	this._stagger = this._stagger || new Action();
 	duration = duration || defaultDuration;
@@ -34,14 +35,14 @@ actionGroupPrototype.stagger = function (method, duration, props, ease) {
 		values: {
 			i: {
 				current: -1,
-				to: numElements - 1
+				to: numActions - 1
 			}
 		},
 		round: true,
 		onChange: function (output) {
-			self.elements[output.i][method](props);
+			self.actions[output.i][method](props);
 		}
-	}, duration * this.elements.length, ease);
+	}, duration * numActions, ease);
 };
 
 /*
@@ -50,7 +51,7 @@ actionGroupPrototype.stagger = function (method, duration, props, ease) {
 	@param [object]: Action properties
 */
 actionGroupPrototype.addAction = function (props) {
-	this.elements.push(new Action(props));
+	this.actions.push(new Action(props));
 };
 
 // Initialise Action Group methods

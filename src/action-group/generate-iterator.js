@@ -9,12 +9,12 @@
 */
 module.exports = function (method) {
 	return function () {
-		var numActions = this.group.length,
+		var numActions = this.actions.length,
 			i = 0,
 			action;
 			
 		for (; i < numActions; i++) {
-			action = this.group[i];
+			action = this.actions[i];
 			action[method].apply(action, arguments);
 		}
 		
