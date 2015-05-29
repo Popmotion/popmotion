@@ -1286,7 +1286,7 @@
 	
 	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
-	    History = __webpack_require__(/*! ../utils/history.js */ 39),
+	    History = __webpack_require__(/*! ../utils/history.js */ 36),
 	
 	    /*
 	        Input constructor
@@ -1418,7 +1418,7 @@
 	*/
 	"use strict";
 	
-	var manager = __webpack_require__(/*! ./manager.js */ 36),
+	var manager = __webpack_require__(/*! ./manager.js */ 37),
 	
 	    /*
 	        Process constructor
@@ -1723,7 +1723,7 @@
 	"use strict";
 	
 	var calc = __webpack_require__(/*! ./calc.js */ 18),
-	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 37),
+	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 38),
 	    
 	    // Constants
 	    INVALID_EASING = ": Not defined",
@@ -2590,7 +2590,7 @@
 
 	"use strict";
 	
-	var routes = __webpack_require__(/*! ../core/routes.js */ 38),
+	var routes = __webpack_require__(/*! ../core/routes.js */ 39),
 	    routeKeys = [],
 	    numRoutes,
 	    processes = ['preprocess', 'onStart', 'onEnd'],
@@ -2690,8 +2690,10 @@
 	"use strict";
 	
 	var actionPrototype = __webpack_require__(/*! ../action/action.js */ 12).prototype,
+		actionGroupPrototype = __webpack_require__(/*! ../action-group/action-group.js */ 35).prototype,
+		generateMethodIterator = __webpack_require__(/*! ../action-group/generate-iterator.js */ 40),
 	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 27),
-	    rubix = __webpack_require__(/*! ../core/rubix.js */ 40);
+	    rubix = __webpack_require__(/*! ../core/rubix.js */ 41);
 	
 	module.exports = function (name, newRubix) {
 	    var parser = parseArgs[name] || parseArgs.generic;
@@ -2701,6 +2703,8 @@
 	            this.set(parser.apply(this, arguments));
 	            return this.start(name);
 	        };
+	        
+	        actionGroupPrototype[name] = generateMethodIterator(name);
 	    }
 	    
 	    rubix[name] = newRubix;
@@ -2718,7 +2722,7 @@
 	*/
 	"use strict";
 	
-	var simulations = __webpack_require__(/*! ../core/simulations.js */ 41);
+	var simulations = __webpack_require__(/*! ../core/simulations.js */ 42);
 	
 	module.exports = function (name, simulation) {
 	    simulations[name] = simulation;
@@ -2733,7 +2737,7 @@
 
 	"use strict";
 	
-	var simulations = __webpack_require__(/*! ../core/simulations.js */ 41);
+	var simulations = __webpack_require__(/*! ../core/simulations.js */ 42);
 	
 	module.exports = function (simulation, value, duration, started) {
 	    var velocity = simulations[simulation](value, duration, started);
@@ -2750,9 +2754,9 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 42),
-	    templates = __webpack_require__(/*! ./templates.js */ 43),
-	    lookup = __webpack_require__(/*! ./lookup.js */ 44),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 43),
+	    templates = __webpack_require__(/*! ./templates.js */ 44),
+	    lookup = __webpack_require__(/*! ./lookup.js */ 45),
 	    
 	    TRANSFORM = 'transform',
 	    TRANSLATE_Z = 'translateZ',
@@ -2813,8 +2817,8 @@
 	"use strict";
 	
 	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 46),
-	    dictionary = __webpack_require__(/*! ./dictionary.js */ 42),
-	    splitLookup = __webpack_require__(/*! ./lookup.js */ 44),
+	    dictionary = __webpack_require__(/*! ./dictionary.js */ 43),
+	    splitLookup = __webpack_require__(/*! ./lookup.js */ 45),
 	    splitters = __webpack_require__(/*! ./splitters.js */ 47),
 	    
 	    utils = __webpack_require__(/*! ../../utils/utils.js */ 19),
@@ -2913,7 +2917,7 @@
 
 	"use strict";
 	
-	var lookup = __webpack_require__(/*! ./lookup.js */ 45),
+	var lookup = __webpack_require__(/*! ./lookup.js */ 48),
 	
 	    /*
 	        Convert percentage to pixels
@@ -2979,7 +2983,7 @@
 	
 	var utils = __webpack_require__(/*! ../utils/utils.js */ 19),
 	    presets = __webpack_require__(/*! ./presets.js */ 16),
-	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 51),
+	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 49),
 	
 	    STRING = 'string',
 	    NUMBER = 'number',
@@ -3122,9 +3126,9 @@
 
 	"use strict";
 	
-	var defaultProps = __webpack_require__(/*! ../defaults/value-props.js */ 48),
-	    defaultState = __webpack_require__(/*! ../defaults/value-state.js */ 49),
-	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 50),
+	var defaultProps = __webpack_require__(/*! ../defaults/value-props.js */ 50),
+	    defaultState = __webpack_require__(/*! ../defaults/value-state.js */ 51),
+	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 52),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
 	
 	    CURRENT = 'current',
@@ -3410,7 +3414,7 @@
 	*/
 	"use strict";
 	
-	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 40),
+	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 41),
 	    routes = __webpack_require__(/*! ./routes.js */ 20),
 	    calc = __webpack_require__(/*! ../utils/calc.js */ 18);
 	
@@ -3687,7 +3691,7 @@
 	"use strict";
 	
 	var Action = __webpack_require__(/*! ../action/action.js */ 12),
-		generateMethodIterator = __webpack_require__(/*! ./generate-iterator.js */ 52),
+		generateMethodIterator = __webpack_require__(/*! ./generate-iterator.js */ 40),
 	
 		/*
 			Action group constructor
@@ -3740,6 +3744,83 @@
 
 /***/ },
 /* 36 */
+/*!******************************!*\
+  !*** ./src/utils/history.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var // [number]: Default max size of history
+	    maxHistorySize = 3,
+	    
+	    /*
+	        History constructor
+	        
+	        @param [var]: Variable to store in first history slot
+	        @param [int] (optional): Maximum size of history
+	    */
+	    History = function (obj, max) {
+	        this.max = max || maxHistorySize;
+	        this.entries = [];
+	        this.add(obj);
+	    };
+	    
+	History.prototype = {
+	    
+	    /*
+	        Push new var to history
+	        
+	        Shift out oldest entry if we've reached maximum capacity
+	        
+	        @param [var]: Variable to push into history.entries
+	    */
+	    add: function (obj) {
+	        var currentSize = this.getSize();
+	        
+	        this.entries.push(obj);
+	        
+	        if (currentSize >= this.max) {
+	            this.entries.shift();
+	        }
+	    },
+	    
+	    /*
+	        Get variable at specified index
+	
+	        @param [int]: Index
+	        @return [var]: Var found at specified index
+	    */
+	    get: function (i) {
+	        i = (typeof i === 'number') ? i : this.getSize() - 1;
+	
+	        return this.entries[i];
+	    },
+	    
+	    /*
+	        Get the second newest history entry
+	        
+	        @return [var]: Entry found at index size - 2
+	    */
+	    getPrevious: function () {
+	        return this.get(this.getSize() - 2);
+	    },
+	    
+	    /*
+	        Get current history size
+	        
+	        @return [int]: Current length of entries.length
+	    */
+	    getSize: function () {
+	        return this.entries.length;
+	    }
+	    
+	};
+	
+	module.exports = History;
+
+/***/ },
+/* 37 */
 /*!********************************!*\
   !*** ./src/process/manager.js ***!
   \********************************/
@@ -3917,7 +3998,7 @@
 	module.exports = new ProcessManager();
 
 /***/ },
-/* 37 */
+/* 38 */
 /*!*****************************!*\
   !*** ./src/types/bezier.js ***!
   \*****************************/
@@ -4092,7 +4173,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 38 */
+/* 39 */
 /*!****************************!*\
   !*** ./src/core/routes.js ***!
   \****************************/
@@ -4101,84 +4182,39 @@
 	module.exports = {};
 
 /***/ },
-/* 39 */
-/*!******************************!*\
-  !*** ./src/utils/history.js ***!
-  \******************************/
+/* 40 */
+/*!***********************************************!*\
+  !*** ./src/action-group/generate-iterator.js ***!
+  \***********************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
-	
-	var // [number]: Default max size of history
-	    maxHistorySize = 3,
-	    
-	    /*
-	        History constructor
-	        
-	        @param [var]: Variable to store in first history slot
-	        @param [int] (optional): Maximum size of history
-	    */
-	    History = function (obj, max) {
-	        this.max = max || maxHistorySize;
-	        this.entries = [];
-	        this.add(obj);
-	    };
-	    
-	History.prototype = {
-	    
-	    /*
-	        Push new var to history
-	        
-	        Shift out oldest entry if we've reached maximum capacity
-	        
-	        @param [var]: Variable to push into history.entries
-	    */
-	    add: function (obj) {
-	        var currentSize = this.getSize();
-	        
-	        this.entries.push(obj);
-	        
-	        if (currentSize >= this.max) {
-	            this.entries.shift();
-	        }
-	    },
-	    
-	    /*
-	        Get variable at specified index
-	
-	        @param [int]: Index
-	        @return [var]: Var found at specified index
-	    */
-	    get: function (i) {
-	        i = (typeof i === 'number') ? i : this.getSize() - 1;
-	
-	        return this.entries[i];
-	    },
-	    
-	    /*
-	        Get the second newest history entry
-	        
-	        @return [var]: Entry found at index size - 2
-	    */
-	    getPrevious: function () {
-	        return this.get(this.getSize() - 2);
-	    },
-	    
-	    /*
-	        Get current history size
-	        
-	        @return [int]: Current length of entries.length
-	    */
-	    getSize: function () {
-	        return this.entries.length;
-	    }
-	    
+	/*
+		Generate method iterator
+		
+		Takes a method name and returns a function that will
+		loop over all the Actions in a group and fire that
+		method with those properties
+		
+		@param [string]: Name of method
+	*/
+	module.exports = function (method) {
+		return function () {
+			var numActions = this.group.length,
+				i = 0,
+				action;
+				
+			for (; i < numActions; i++) {
+				action = this.group[i];
+				action[method].apply(action, arguments);
+			}
+			
+			return this;
+		};
 	};
-	
-	module.exports = History;
+
 
 /***/ },
-/* 40 */
+/* 41 */
 /*!***************************!*\
   !*** ./src/core/rubix.js ***!
   \***************************/
@@ -4235,7 +4271,7 @@
 	module.exports = {};
 
 /***/ },
-/* 41 */
+/* 42 */
 /*!*********************************!*\
   !*** ./src/core/simulations.js ***!
   \*********************************/
@@ -4333,7 +4369,7 @@
 	};
 
 /***/ },
-/* 42 */
+/* 43 */
 /*!**************************************!*\
   !*** ./src/routes/css/dictionary.js ***!
   \**************************************/
@@ -4387,7 +4423,7 @@
 	module.exports = terms;
 
 /***/ },
-/* 43 */
+/* 44 */
 /*!*************************************!*\
   !*** ./src/routes/css/templates.js ***!
   \*************************************/
@@ -4395,7 +4431,7 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 42),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 43),
 	
 	    defaultValues = {
 	        Alpha: 1
@@ -4463,7 +4499,7 @@
 	module.exports = templates;
 
 /***/ },
-/* 44 */
+/* 45 */
 /*!**********************************!*\
   !*** ./src/routes/css/lookup.js ***!
   \**********************************/
@@ -4508,26 +4544,6 @@
 	    // Shadows
 	    textShadow: SHADOW,
 	    boxShadow: SHADOW
-	};
-
-/***/ },
-/* 45 */
-/*!***********************************!*\
-  !*** ./src/routes/path/lookup.js ***!
-  \***********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	var STROKE = 'stroke',
-	    DASH = STROKE + '-dash', // stoke-width
-	    DASH_ARRAY = DASH + 'array'
-	
-	module.exports = {
-	    opacity: STROKE + '-opacity',
-	    width: STROKE + '-width',
-	    offset: DASH + 'offset',
-	    length: DASH_ARRAY,
-	    spacing: DASH_ARRAY,
-	    miterlimit: STROKE + '-miterlimit'
 	};
 
 /***/ },
@@ -4590,7 +4606,7 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 42),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 43),
 	    utils = __webpack_require__(/*! ../../utils/utils.js */ 19),
 	
 	    /*
@@ -4822,6 +4838,123 @@
 
 /***/ },
 /* 48 */
+/*!***********************************!*\
+  !*** ./src/routes/path/lookup.js ***!
+  \***********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	var STROKE = 'stroke',
+	    DASH = STROKE + '-dash', // stoke-width
+	    DASH_ARRAY = DASH + 'array'
+	
+	module.exports = {
+	    opacity: STROKE + '-opacity',
+	    width: STROKE + '-width',
+	    offset: DASH + 'offset',
+	    length: DASH_ARRAY,
+	    spacing: DASH_ARRAY,
+	    miterlimit: STROKE + '-miterlimit'
+	};
+
+/***/ },
+/* 49 */
+/*!******************************!*\
+  !*** ./src/input/pointer.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var Input = __webpack_require__(/*! ./input.js */ 14),
+	    currentPointer, // Sort this out for multitouch
+	    
+	    TOUCHMOVE = 'touchmove',
+	    MOUSEMOVE = 'mousemove',
+	
+	    /*
+	        Convert event into point
+	        
+	        Scrape the x/y coordinates from the provided event
+	        
+	        @param [event]: Original pointer event
+	        @param [boolean]: True if touch event
+	        @return [object]: x/y coordinates of event
+	    */
+	    eventToPoint = function (event, isTouchEvent) {
+	        var touchChanged = isTouchEvent ? event.changedTouches[0] : false;
+	        
+	        return {
+	            x: touchChanged ? touchChanged.clientX : event.pageX,
+	            y: touchChanged ? touchChanged.clientY : event.pageY
+	        }
+	    },
+	    
+	    /*
+	        Get actual event
+	        
+	        Checks for jQuery's .originalEvent if present
+	        
+	        @param [event | jQuery event]
+	        @return [event]: The actual JS event  
+	    */
+	    getActualEvent = function (event) {
+	        return event.originalEvent || event;
+	    },
+	
+	    
+	    /*
+	        Pointer constructor
+	    */
+	    Pointer = function (e) {
+	        var event = getActualEvent(e), // In case of jQuery event
+	            isTouch = (event.touches) ? true : false,
+	            startPoint = eventToPoint(event, isTouch);
+	        
+	        this.update(startPoint);
+	        this.isTouch = isTouch;
+	        this.bindEvents();
+	    },
+	    
+	    proto = Pointer.prototype = new Input();
+	
+	/*
+	    Bind move event
+	*/
+	proto.bindEvents = function () {
+	    this.moveEvent = this.isTouch ? TOUCHMOVE : MOUSEMOVE;
+	    
+	    currentPointer = this;
+	    
+	    document.documentElement.addEventListener(this.moveEvent, this.onMove);
+	};
+	
+	/*
+	    Unbind move event
+	*/
+	proto.unbindEvents = function () {
+	    document.documentElement.removeEventListener(this.moveEvent, this.onMove);
+	};
+	
+	/*
+	    Pointer onMove event handler
+	    
+	    @param [event]: Pointer move event
+	*/
+	proto.onMove = function (e) {
+	    var newPoint = eventToPoint(e, currentPointer.isTouch);
+	    e = getActualEvent(e);
+	    e.preventDefault();
+	    currentPointer.update(newPoint);
+	};
+	
+	proto.stop = function () {
+	    this.unbindEvents();
+	};
+	
+	module.exports = Pointer;
+
+/***/ },
+/* 50 */
 /*!*************************************!*\
   !*** ./src/defaults/value-props.js ***!
   \*************************************/
@@ -4938,7 +5071,7 @@
 	};
 
 /***/ },
-/* 49 */
+/* 51 */
 /*!*************************************!*\
   !*** ./src/defaults/value-state.js ***!
   \*************************************/
@@ -4959,7 +5092,7 @@
 	};
 
 /***/ },
-/* 50 */
+/* 52 */
 /*!******************************!*\
   !*** ./src/utils/resolve.js ***!
   \******************************/
@@ -5013,135 +5146,6 @@
 	
 	    return newValue;
 	};
-
-/***/ },
-/* 51 */
-/*!******************************!*\
-  !*** ./src/input/pointer.js ***!
-  \******************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var Input = __webpack_require__(/*! ./input.js */ 14),
-	    currentPointer, // Sort this out for multitouch
-	    
-	    TOUCHMOVE = 'touchmove',
-	    MOUSEMOVE = 'mousemove',
-	
-	    /*
-	        Convert event into point
-	        
-	        Scrape the x/y coordinates from the provided event
-	        
-	        @param [event]: Original pointer event
-	        @param [boolean]: True if touch event
-	        @return [object]: x/y coordinates of event
-	    */
-	    eventToPoint = function (event, isTouchEvent) {
-	        var touchChanged = isTouchEvent ? event.changedTouches[0] : false;
-	        
-	        return {
-	            x: touchChanged ? touchChanged.clientX : event.pageX,
-	            y: touchChanged ? touchChanged.clientY : event.pageY
-	        }
-	    },
-	    
-	    /*
-	        Get actual event
-	        
-	        Checks for jQuery's .originalEvent if present
-	        
-	        @param [event | jQuery event]
-	        @return [event]: The actual JS event  
-	    */
-	    getActualEvent = function (event) {
-	        return event.originalEvent || event;
-	    },
-	
-	    
-	    /*
-	        Pointer constructor
-	    */
-	    Pointer = function (e) {
-	        var event = getActualEvent(e), // In case of jQuery event
-	            isTouch = (event.touches) ? true : false,
-	            startPoint = eventToPoint(event, isTouch);
-	        
-	        this.update(startPoint);
-	        this.isTouch = isTouch;
-	        this.bindEvents();
-	    },
-	    
-	    proto = Pointer.prototype = new Input();
-	
-	/*
-	    Bind move event
-	*/
-	proto.bindEvents = function () {
-	    this.moveEvent = this.isTouch ? TOUCHMOVE : MOUSEMOVE;
-	    
-	    currentPointer = this;
-	    
-	    document.documentElement.addEventListener(this.moveEvent, this.onMove);
-	};
-	
-	/*
-	    Unbind move event
-	*/
-	proto.unbindEvents = function () {
-	    document.documentElement.removeEventListener(this.moveEvent, this.onMove);
-	};
-	
-	/*
-	    Pointer onMove event handler
-	    
-	    @param [event]: Pointer move event
-	*/
-	proto.onMove = function (e) {
-	    var newPoint = eventToPoint(e, currentPointer.isTouch);
-	    e = getActualEvent(e);
-	    e.preventDefault();
-	    currentPointer.update(newPoint);
-	};
-	
-	proto.stop = function () {
-	    this.unbindEvents();
-	};
-	
-	module.exports = Pointer;
-
-/***/ },
-/* 52 */
-/*!***********************************************!*\
-  !*** ./src/action-group/generate-iterator.js ***!
-  \***********************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-		Generate method iterator
-		
-		Takes a method name and returns a function that will
-		loop over all the Actions in a group and fire that
-		method with those properties
-		
-		@param [string]: Name of method
-	*/
-	module.exports = function (method) {
-		return function () {
-			var numActions = this.group.length,
-				i = 0,
-				action;
-				
-			for (; i < numActions; i++) {
-				action = this.group[i];
-				action[method].apply(action, arguments);
-			}
-			
-			return this;
-		};
-	};
-
 
 /***/ },
 /* 53 */
