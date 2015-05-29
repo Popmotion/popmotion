@@ -15,9 +15,9 @@ module.exports = {
     
     makeDefault: true,
     
-    onStart: function (action, values, props, data) {
-        if (props.start) {
-            props.start.call(props.scope, data);
+    onStart: function (bucket, action, values, props, data) {
+        if (props.onStart) {
+            props.onStart.call(props.scope, data);
         }
     },
     
