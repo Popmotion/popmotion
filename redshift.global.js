@@ -2754,8 +2754,8 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 43),
-	    templates = __webpack_require__(/*! ./templates.js */ 44),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 44),
+	    templates = __webpack_require__(/*! ./templates.js */ 47),
 	    lookup = __webpack_require__(/*! ./lookup.js */ 45),
 	    
 	    TRANSFORM = 'transform',
@@ -2816,10 +2816,10 @@
 
 	"use strict";
 	
-	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 46),
-	    dictionary = __webpack_require__(/*! ./dictionary.js */ 43),
+	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 43),
+	    dictionary = __webpack_require__(/*! ./dictionary.js */ 44),
 	    splitLookup = __webpack_require__(/*! ./lookup.js */ 45),
-	    splitters = __webpack_require__(/*! ./splitters.js */ 47),
+	    splitters = __webpack_require__(/*! ./splitters.js */ 46),
 	    
 	    utils = __webpack_require__(/*! ../../utils/utils.js */ 19),
 	    
@@ -2983,7 +2983,7 @@
 	
 	var utils = __webpack_require__(/*! ../utils/utils.js */ 19),
 	    presets = __webpack_require__(/*! ./presets.js */ 16),
-	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 49),
+	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 52),
 	
 	    STRING = 'string',
 	    NUMBER = 'number',
@@ -3126,9 +3126,9 @@
 
 	"use strict";
 	
-	var defaultProps = __webpack_require__(/*! ../defaults/value-props.js */ 50),
-	    defaultState = __webpack_require__(/*! ../defaults/value-state.js */ 51),
-	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 52),
+	var defaultProps = __webpack_require__(/*! ../defaults/value-props.js */ 49),
+	    defaultState = __webpack_require__(/*! ../defaults/value-state.js */ 50),
+	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 51),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
 	
 	    CURRENT = 'current',
@@ -3692,36 +3692,46 @@
 	
 	var Action = __webpack_require__(/*! ../action/action.js */ 12),
 		generateMethodIterator = __webpack_require__(/*! ./generate-iterator.js */ 40),
+		
+		defaultDuration = 250,
+		defaultEase = 'linear',
 	
 		/*
 			Action group constructor
 		*/
 		ActionGroup = function (actions) {
-			this.order = actions || [];
+			this.elements = actions || [];
 		},
 		
 		actionGroupPrototype = ActionGroup.prototype;
 	
 	/*
 		Stagger the execution of the provided Action method
+		
+		@param [string]: Name of Action method to call
+		@param [number] (optional): Duration between method calls
+		@param [string || object] (optional): Argument to pass method
+		@param [string] (optional): Easing
 	*/
-	actionGroupPrototype.stagger = function (method, props, duration, ease) {
+	actionGroupPrototype.stagger = function (method, duration, props, ease) {
 		var self = this;
 		
-		this.staggerAction = this.staggerAction || new Action();
+		this._stagger = this._stagger || new Action();
+		duration = duration || defaultDuration;
+		ease = ease || defaultEase;
 	
-		this.staggerAction.stop().play({
+		this._stagger.stop().play({
 			values: {
 				i: {
-					start: -1,
-					to: this.order.length - 1
+					current: -1,
+					to: numElements - 1
 				}
 			},
 			round: true,
 			onChange: function (output) {
-				self.order[output.i][method](props);
+				self.elements[output.i][method](props);
 			}
-		}, duration, ease);
+		}, duration * this.elements.length, ease);
 	};
 	
 	/*
@@ -3730,7 +3740,7 @@
 		@param [object]: Action properties
 	*/
 	actionGroupPrototype.addAction = function (props) {
-		this.order.push(new Action(props));
+		this.elements.push(new Action(props));
 	};
 	
 	// Initialise Action Group methods
@@ -4370,6 +4380,57 @@
 
 /***/ },
 /* 43 */
+/*!********************************************!*\
+  !*** ./src/routes/css/default-property.js ***!
+  \********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var color = {
+	        min: 0,
+	        max: 255,
+	        round: true
+	    },
+	    opacity = {
+	        min: 0,
+	        max: 1
+	    },
+	    angle = {
+	        unit: 'deg'
+	    },
+	    scale = {},
+	    defaults = {
+	        base: {
+	            unit: 'px'
+	        },
+	        
+	        color: color,
+	        Red: color,
+	        Green: color,
+	        Blue: color,
+	    
+	        Alpha: opacity,
+	        opacity: opacity,
+	        
+	        scale: scale,
+	        scaleX: scale,
+	        scaleY: scale,
+	        scaleZ: scale,
+	        
+	        skew: angle,
+	        skewX: angle,
+	        skewY: angle,
+	        rotate: angle,
+	        rotateX: angle,
+	        rotateY: angle,
+	        rotateZ: angle
+	    };
+	    
+	module.exports = defaults;
+
+/***/ },
+/* 44 */
 /*!**************************************!*\
   !*** ./src/routes/css/dictionary.js ***!
   \**************************************/
@@ -4423,82 +4484,6 @@
 	module.exports = terms;
 
 /***/ },
-/* 44 */
-/*!*************************************!*\
-  !*** ./src/routes/css/templates.js ***!
-  \*************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 43),
-	
-	    defaultValues = {
-	        Alpha: 1
-	    },
-	
-	    functionCreate = function (value, prefix) {
-	        return prefix + '(' + value + ')';
-	    },
-	
-	    createSpaceDelimited = function (key, object, terms) {
-	        return createDelimitedString(key, object, terms, ' ');
-	    },
-	    
-	    createCommaDelimited = function (key, object, terms) {
-	        return createDelimitedString(key, object, terms, ', ').slice(0, -2);
-	    },
-	    
-	    createDelimitedString = function (key, object, terms, delimiter) {
-	        var string = '',
-	            propKey = '',
-	            termsLength = terms.length;
-	        
-	        for (var i = 0; i < termsLength; i++) {
-	            propKey = key + terms[i];
-	
-	            if (object[propKey] !== undefined) {
-	                string += object[propKey];
-	            } else {
-	                if (defaultValues[terms[i]] !== undefined) {
-	                    string += defaultValues[terms[i]];
-	                }
-	            }
-	            
-	            string += delimiter;
-	        }
-	    
-	        return string;
-	    },
-	
-	    templates = {
-	        
-	        colors: function (key, values) {
-	            return functionCreate(createCommaDelimited(key, values, dictionary.colors), 'rgba');
-	        },
-	        
-	        dimensions: function (key, values) {
-	            return createSpaceDelimited(key, values, dictionary.dimensions);
-	        },
-	        
-	        positions: function (key, values) {
-	            return createSpaceDelimited(key, values, dictionary.positions);
-	        },
-	        
-	        shadow: function (key, values) {
-	            var shadowTerms = dictionary.shadow.slice(0,4);
-	            
-	            return createSpaceDelimited(key, values, shadowTerms) + templates.colors(key, values);
-	        },
-	        
-	        transform: function (key, values) {
-	            return key + '(' + values[key] +')';
-	        }
-	    };
-	
-	module.exports = templates;
-
-/***/ },
 /* 45 */
 /*!**********************************!*\
   !*** ./src/routes/css/lookup.js ***!
@@ -4548,57 +4533,6 @@
 
 /***/ },
 /* 46 */
-/*!********************************************!*\
-  !*** ./src/routes/css/default-property.js ***!
-  \********************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var color = {
-	        min: 0,
-	        max: 255,
-	        round: true
-	    },
-	    opacity = {
-	        min: 0,
-	        max: 1
-	    },
-	    angle = {
-	        unit: 'deg'
-	    },
-	    scale = {},
-	    defaults = {
-	        base: {
-	            unit: 'px'
-	        },
-	        
-	        color: color,
-	        Red: color,
-	        Green: color,
-	        Blue: color,
-	    
-	        Alpha: opacity,
-	        opacity: opacity,
-	        
-	        scale: scale,
-	        scaleX: scale,
-	        scaleY: scale,
-	        scaleZ: scale,
-	        
-	        skew: angle,
-	        skewX: angle,
-	        skewY: angle,
-	        rotate: angle,
-	        rotateX: angle,
-	        rotateY: angle,
-	        rotateZ: angle
-	    };
-	    
-	module.exports = defaults;
-
-/***/ },
-/* 47 */
 /*!*************************************!*\
   !*** ./src/routes/css/splitters.js ***!
   \*************************************/
@@ -4606,7 +4540,7 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 43),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 44),
 	    utils = __webpack_require__(/*! ../../utils/utils.js */ 19),
 	
 	    /*
@@ -4837,6 +4771,82 @@
 	module.exports = splitters;
 
 /***/ },
+/* 47 */
+/*!*************************************!*\
+  !*** ./src/routes/css/templates.js ***!
+  \*************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 44),
+	
+	    defaultValues = {
+	        Alpha: 1
+	    },
+	
+	    functionCreate = function (value, prefix) {
+	        return prefix + '(' + value + ')';
+	    },
+	
+	    createSpaceDelimited = function (key, object, terms) {
+	        return createDelimitedString(key, object, terms, ' ');
+	    },
+	    
+	    createCommaDelimited = function (key, object, terms) {
+	        return createDelimitedString(key, object, terms, ', ').slice(0, -2);
+	    },
+	    
+	    createDelimitedString = function (key, object, terms, delimiter) {
+	        var string = '',
+	            propKey = '',
+	            termsLength = terms.length;
+	        
+	        for (var i = 0; i < termsLength; i++) {
+	            propKey = key + terms[i];
+	
+	            if (object[propKey] !== undefined) {
+	                string += object[propKey];
+	            } else {
+	                if (defaultValues[terms[i]] !== undefined) {
+	                    string += defaultValues[terms[i]];
+	                }
+	            }
+	            
+	            string += delimiter;
+	        }
+	    
+	        return string;
+	    },
+	
+	    templates = {
+	        
+	        colors: function (key, values) {
+	            return functionCreate(createCommaDelimited(key, values, dictionary.colors), 'rgba');
+	        },
+	        
+	        dimensions: function (key, values) {
+	            return createSpaceDelimited(key, values, dictionary.dimensions);
+	        },
+	        
+	        positions: function (key, values) {
+	            return createSpaceDelimited(key, values, dictionary.positions);
+	        },
+	        
+	        shadow: function (key, values) {
+	            var shadowTerms = dictionary.shadow.slice(0,4);
+	            
+	            return createSpaceDelimited(key, values, shadowTerms) + templates.colors(key, values);
+	        },
+	        
+	        transform: function (key, values) {
+	            return key + '(' + values[key] +')';
+	        }
+	    };
+	
+	module.exports = templates;
+
+/***/ },
 /* 48 */
 /*!***********************************!*\
   !*** ./src/routes/path/lookup.js ***!
@@ -4858,103 +4868,6 @@
 
 /***/ },
 /* 49 */
-/*!******************************!*\
-  !*** ./src/input/pointer.js ***!
-  \******************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var Input = __webpack_require__(/*! ./input.js */ 14),
-	    currentPointer, // Sort this out for multitouch
-	    
-	    TOUCHMOVE = 'touchmove',
-	    MOUSEMOVE = 'mousemove',
-	
-	    /*
-	        Convert event into point
-	        
-	        Scrape the x/y coordinates from the provided event
-	        
-	        @param [event]: Original pointer event
-	        @param [boolean]: True if touch event
-	        @return [object]: x/y coordinates of event
-	    */
-	    eventToPoint = function (event, isTouchEvent) {
-	        var touchChanged = isTouchEvent ? event.changedTouches[0] : false;
-	        
-	        return {
-	            x: touchChanged ? touchChanged.clientX : event.pageX,
-	            y: touchChanged ? touchChanged.clientY : event.pageY
-	        }
-	    },
-	    
-	    /*
-	        Get actual event
-	        
-	        Checks for jQuery's .originalEvent if present
-	        
-	        @param [event | jQuery event]
-	        @return [event]: The actual JS event  
-	    */
-	    getActualEvent = function (event) {
-	        return event.originalEvent || event;
-	    },
-	
-	    
-	    /*
-	        Pointer constructor
-	    */
-	    Pointer = function (e) {
-	        var event = getActualEvent(e), // In case of jQuery event
-	            isTouch = (event.touches) ? true : false,
-	            startPoint = eventToPoint(event, isTouch);
-	        
-	        this.update(startPoint);
-	        this.isTouch = isTouch;
-	        this.bindEvents();
-	    },
-	    
-	    proto = Pointer.prototype = new Input();
-	
-	/*
-	    Bind move event
-	*/
-	proto.bindEvents = function () {
-	    this.moveEvent = this.isTouch ? TOUCHMOVE : MOUSEMOVE;
-	    
-	    currentPointer = this;
-	    
-	    document.documentElement.addEventListener(this.moveEvent, this.onMove);
-	};
-	
-	/*
-	    Unbind move event
-	*/
-	proto.unbindEvents = function () {
-	    document.documentElement.removeEventListener(this.moveEvent, this.onMove);
-	};
-	
-	/*
-	    Pointer onMove event handler
-	    
-	    @param [event]: Pointer move event
-	*/
-	proto.onMove = function (e) {
-	    var newPoint = eventToPoint(e, currentPointer.isTouch);
-	    e = getActualEvent(e);
-	    e.preventDefault();
-	    currentPointer.update(newPoint);
-	};
-	
-	proto.stop = function () {
-	    this.unbindEvents();
-	};
-	
-	module.exports = Pointer;
-
-/***/ },
-/* 50 */
 /*!*************************************!*\
   !*** ./src/defaults/value-props.js ***!
   \*************************************/
@@ -5071,7 +4984,7 @@
 	};
 
 /***/ },
-/* 51 */
+/* 50 */
 /*!*************************************!*\
   !*** ./src/defaults/value-state.js ***!
   \*************************************/
@@ -5092,7 +5005,7 @@
 	};
 
 /***/ },
-/* 52 */
+/* 51 */
 /*!******************************!*\
   !*** ./src/utils/resolve.js ***!
   \******************************/
@@ -5146,6 +5059,103 @@
 	
 	    return newValue;
 	};
+
+/***/ },
+/* 52 */
+/*!******************************!*\
+  !*** ./src/input/pointer.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var Input = __webpack_require__(/*! ./input.js */ 14),
+	    currentPointer, // Sort this out for multitouch
+	    
+	    TOUCHMOVE = 'touchmove',
+	    MOUSEMOVE = 'mousemove',
+	
+	    /*
+	        Convert event into point
+	        
+	        Scrape the x/y coordinates from the provided event
+	        
+	        @param [event]: Original pointer event
+	        @param [boolean]: True if touch event
+	        @return [object]: x/y coordinates of event
+	    */
+	    eventToPoint = function (event, isTouchEvent) {
+	        var touchChanged = isTouchEvent ? event.changedTouches[0] : false;
+	        
+	        return {
+	            x: touchChanged ? touchChanged.clientX : event.pageX,
+	            y: touchChanged ? touchChanged.clientY : event.pageY
+	        }
+	    },
+	    
+	    /*
+	        Get actual event
+	        
+	        Checks for jQuery's .originalEvent if present
+	        
+	        @param [event | jQuery event]
+	        @return [event]: The actual JS event  
+	    */
+	    getActualEvent = function (event) {
+	        return event.originalEvent || event;
+	    },
+	
+	    
+	    /*
+	        Pointer constructor
+	    */
+	    Pointer = function (e) {
+	        var event = getActualEvent(e), // In case of jQuery event
+	            isTouch = (event.touches) ? true : false,
+	            startPoint = eventToPoint(event, isTouch);
+	        
+	        this.update(startPoint);
+	        this.isTouch = isTouch;
+	        this.bindEvents();
+	    },
+	    
+	    proto = Pointer.prototype = new Input();
+	
+	/*
+	    Bind move event
+	*/
+	proto.bindEvents = function () {
+	    this.moveEvent = this.isTouch ? TOUCHMOVE : MOUSEMOVE;
+	    
+	    currentPointer = this;
+	    
+	    document.documentElement.addEventListener(this.moveEvent, this.onMove);
+	};
+	
+	/*
+	    Unbind move event
+	*/
+	proto.unbindEvents = function () {
+	    document.documentElement.removeEventListener(this.moveEvent, this.onMove);
+	};
+	
+	/*
+	    Pointer onMove event handler
+	    
+	    @param [event]: Pointer move event
+	*/
+	proto.onMove = function (e) {
+	    var newPoint = eventToPoint(e, currentPointer.isTouch);
+	    e = getActualEvent(e);
+	    e.preventDefault();
+	    currentPointer.update(newPoint);
+	};
+	
+	proto.stop = function () {
+	    this.unbindEvents();
+	};
+	
+	module.exports = Pointer;
 
 /***/ },
 /* 53 */

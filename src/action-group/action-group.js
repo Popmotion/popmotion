@@ -2,36 +2,46 @@
 
 var Action = require('../action/action.js'),
 	generateMethodIterator = require('./generate-iterator.js'),
+	
+	defaultDuration = 250,
+	defaultEase = 'linear',
 
 	/*
 		Action group constructor
 	*/
 	ActionGroup = function (actions) {
-		this.order = actions || [];
+		this.elements = actions || [];
 	},
 	
 	actionGroupPrototype = ActionGroup.prototype;
 
 /*
 	Stagger the execution of the provided Action method
+	
+	@param [string]: Name of Action method to call
+	@param [number] (optional): Duration between method calls
+	@param [string || object] (optional): Argument to pass method
+	@param [string] (optional): Easing
 */
-actionGroupPrototype.stagger = function (method, props, duration, ease) {
+actionGroupPrototype.stagger = function (method, duration, props, ease) {
 	var self = this;
 	
-	this.staggerAction = this.staggerAction || new Action();
+	this._stagger = this._stagger || new Action();
+	duration = duration || defaultDuration;
+	ease = ease || defaultEase;
 
-	this.staggerAction.stop().play({
+	this._stagger.stop().play({
 		values: {
 			i: {
-				start: -1,
-				to: this.order.length - 1
+				current: -1,
+				to: numElements - 1
 			}
 		},
 		round: true,
 		onChange: function (output) {
-			self.order[output.i][method](props);
+			self.elements[output.i][method](props);
 		}
-	}, duration, ease);
+	}, duration * this.elements.length, ease);
 };
 
 /*
@@ -40,7 +50,7 @@ actionGroupPrototype.stagger = function (method, props, duration, ease) {
 	@param [object]: Action properties
 */
 actionGroupPrototype.addAction = function (props) {
-	this.order.push(new Action(props));
+	this.elements.push(new Action(props));
 };
 
 // Initialise Action Group methods
