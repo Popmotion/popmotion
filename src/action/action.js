@@ -72,6 +72,8 @@ Action.prototype = {
         if (!this.isActive()) {
             this.set(props, 'to');
             this.start('play');
+        } else {
+	        this.queue.add.apply(this.queue, arguments);
         }
 
         return this;
