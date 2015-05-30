@@ -14,8 +14,8 @@ var Action = require('./action/action.js'),
     calc = require('./utils/calc.js'),
     utils = require('./utils/utils.js'),
     route = require('./action/routes.js'),
-    registerRubix = require('./register/register-rubix.js'),
-    registerSimulation = require('./register/register-simulation.js');
+    registerRubix = require('./core/register-rubix.js'),
+    registerSimulation = require('./core/register-simulation.js');
 
 module.exports = {
 
