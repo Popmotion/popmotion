@@ -165,7 +165,7 @@ var calc = require('./calc.js'),
     
             if (progressLimited !== progress && escapeAmp) {
                 ease = 'linear';
-                progressLimited = progressLimited + (calc.difference(progressLimited, progress) * escapeAmp);
+                progressLimited = progressLimited + ((progress - progressLimited) * escapeAmp);
             }
     
             return calc.valueEased(progressLimited, from, to, this.get(ease));

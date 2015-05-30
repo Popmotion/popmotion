@@ -25,7 +25,8 @@ var Action = require('../action/action.js'),
 */
 actionGroupPrototype.stagger = function (method, duration, props, ease) {
 	var self = this,
-		numActions = this.actions.length;
+		numActions = this.actions.length,
+		i = -1;
 	
 	this._stagger = this._stagger || new Action();
 	duration = duration || defaultDuration;
@@ -34,13 +35,26 @@ actionGroupPrototype.stagger = function (method, duration, props, ease) {
 	this._stagger.stop().play({
 		values: {
 			i: {
-				current: -1,
+				current: i,
 				to: numActions - 1
 			}
 		},
 		round: true,
 		onChange: function (output) {
-			self.actions[output.i][method](props);
+		    var newIndex = output.i;
+		    
+		    // If our new index is only one more than the last
+		    if (newIndex === i + 1) {
+		        self.actions[newIndex][method](props);
+		        
+		    // Or it's more than one more than the last, so fire all indecies
+		    } else {
+    		    for (var index = i + 1; index <= newIndex; index++) {
+		            self.actions[index][method](props);
+    		    }
+		    }
+
+		    i = newIndex;
 		}
 	}, duration * numActions, ease);
 };

@@ -9,68 +9,7 @@
 var utils = require('./utils.js'),
 
     calc = {
-        /*
-            Angle between points
-            
-            Translates the hypothetical line so that the 'from' coordinates
-            are at 0,0, then return the angle using .angleFromCenter()
-            
-            @param [object]: X and Y coordinates of from point
-            @param [object]: X and Y cordinates of to point
-            @return [radian]: Angle between the two points in radians
-        */
-        angle: function (pointA, pointB) {
-            var from = pointB ? pointA : {x: 0, y: 0},
-                to = pointB || pointA,
-                point = {
-                    x: difference(from.x, to.x),
-                    y: difference(from.y, to.y)
-                };
-            
-            return this.angleFromCenter(point.x, point.y);
-        },
-    
-    
-        /*
-            Angle from center
-            
-            Returns the current angle, in radians, of a defined point
-            from a center (assumed 0,0)
-            
-            @param [number]: X coordinate of second point
-            @param [number]: Y coordinate of second point
-            @return [radian]: Angle between 0, 0 and point in radians
-        */
-        angleFromCenter: function (x, y) {
-            return this.radiansToDegrees(Math.atan2(y, x));
-        },
-        
-        /*
-            Convert degrees to radians
-            
-            @param [number]: Value in degrees
-            @return [number]: Value in radians
-        */
-        degreesToRadians: function (degrees) {
-            return degrees * Math.PI / 180;
-        },
-        
-        /*
-            Difference
-            
-            Returns the difference between a and b by subtracting b from a.
-            Useful in calcualting the zero-normalised position of b, or the
-            difference something has travelled between the two points
-            
-            @param [number]: Value a
-            @param [number]: Value b
-            @return [number]: Difference between value a and value b
-        */
-        difference: function (a, b) {
-            return b - a;
-        },
-        
-        /*
+       /*
             Dilate
             
             Change the progression between a and b according to dilation.
@@ -106,7 +45,6 @@ var utils = require('./utils.js'),
             return (typeof pointA === "number") ? this.distance1D(pointA, pointB) : this.distance2D(pointA, pointB);
         },
     
-    
         /*
             Distance 1D
             
@@ -121,7 +59,7 @@ var utils = require('./utils.js'),
                 from = bIsNum ? pointA : 0,
                 to = bIsNum ? pointB : pointA;
     
-            return absolute(difference(from, to));
+            return absolute(to - from);
         },
     
       
@@ -140,8 +78,8 @@ var utils = require('./utils.js'),
                 from = bIsObj ? pointA : {x: 0, y: 0},
                 to = bIsObj ? pointB : pointA,
                 point = {
-                    x: absolute(difference(from.x, to.x)),
-                    y: absolute(difference(from.y, to.y))
+                    x: absolute(to.x - from.x),
+                    y: absolute(to.y - from.y)
                 };
                 
             return this.hypotenuse(point.x, point.y);
@@ -179,7 +117,7 @@ var utils = require('./utils.js'),
             for (var key in b) {
                 if (b.hasOwnProperty(key)) {
                     if (a.hasOwnProperty(key)) {
-                        offset[key] = difference(a[key], b[key]);
+                        offset[key] = b[key] - a[key];
                     } else {
                         offset[key] = 0;
                     }
@@ -227,33 +165,10 @@ var utils = require('./utils.js'),
             var bIsNum = (typeof limitB === 'number'),
                 from = bIsNum ? limitA : 0,
                 to = bIsNum ? limitB : limitA,
-                range = difference(from, to),
+                range = to - from,
                 progress = (value - from) / range;
     
             return progress;
-        },
-        
-        /*
-            Convert radians to degrees
-            
-            @param [number]: Value in radians
-            @return [number]: Value in degrees
-        */
-        radiansToDegrees: function (radians) {
-            return radians * 180 / Math.PI;
-        },
-        
-        /*
-            Return random number between range
-            
-            @param [number] (optional): Output minimum
-            @param [number] (optional): Output maximum
-            @return [number]: Random number within range, or 0 and 1 if none provided
-        */
-        random: function (min, max) {
-            min = isNum(min) ? min : 0;
-            max = isNum(max) ? max : 1;
-            return Math.random() * (max - min) + min;
         },
     
         
@@ -332,19 +247,6 @@ var utils = require('./utils.js'),
         speedPerSecond: function (velocity, frameDuration) {
             return velocity * (1000 / frameDuration);
         },
-        
-    
-        /*
-            Time remaining
-            
-            Return the amount of time remaining from the progress already made
-            
-            @param [number]: Progress through time limit between 0-1
-            @param [number]: Duration
-        */
-        timeRemaining: function (progress, duration) {
-            return (1 - progress) * duration;
-        },
     
      
         /*
@@ -390,7 +292,6 @@ var utils = require('./utils.js'),
         Caching functions used multiple times to reduce filesize and increase performance
     */
     isNum = utils.isNum,
-    difference = calc.difference,
     absolute = Math.abs;
     
 module.exports = calc;

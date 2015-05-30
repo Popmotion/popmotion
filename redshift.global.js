@@ -747,7 +747,6 @@
 	    routes = __webpack_require__(/*! ./routes.js */ 20),
 	    defaultProps = __webpack_require__(/*! ../defaults/action-props.js */ 32),
 	    defaultState = __webpack_require__(/*! ../defaults/action-state.js */ 33),
-	    calc = __webpack_require__(/*! ../utils/calc.js */ 18),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
 	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 34),
 	
@@ -1023,8 +1022,8 @@
 	        var values = this.values,
 	            props = this.props();
 	            
-	        props.progress = calc.difference(props.progress, 1);
-	        props.elapsed = calc.difference(props.elapsed, props.duration);
+	        props.progress = 1 - props.progress;
+	        props.elapsed = props.duration - props.elapsed;
 	        
 	        for (var key in values) {
 	            values[key].flip();
@@ -1504,16 +1503,18 @@
 	    start: function (duration) {
 	        var self = this;
 	        
-	        self.reset();
-	        self.activate();
+	        this.reset();
+	        this.activate();
 	        
 	        if (duration) {
-	            self.stopTimer = setTimeout(function () {
+	            this.stopTimer = setTimeout(function () {
 	                self.stop();
 	            }, duration);
+	            
+	            this.isStopTimerActive = true;
 	        }
 	
-	        return self;
+	        return this;
 	    },
 	    
 	    /*
@@ -1563,13 +1564,15 @@
 	    every: function (interval) {
 		    var self = this;
 	
-	        self.reset();
+	        this.reset();
 	
-	        self.isInterval = true;
+	        this.isInterval = true;
 	
-	        self.intervalTimer = setInterval(function () {
+	        this.intervalTimer = setInterval(function () {
 	            self.activate();
 	        }, interval);
+	        
+	        this.isIntervalTimeActive = true;
 	        
 	        return this;
 	    },
@@ -1581,8 +1584,14 @@
 	    */
 	    reset: function () {
 	        this.isInterval = false;
-	        clearTimeout(this.stopTimer);
-	        clearInterval(this.intervalTimer);
+	        
+	        if (this.isStopTimerActive) {
+	            clearTimeout(this.stopTimer);
+	        }
+	        
+	        if (this.isIntervalTimeActive) {
+	            clearInterval(this.intervalTimer);
+	        }
 	        
 	        return this;
 	    },
@@ -1867,7 +1876,7 @@
 	    
 	            if (progressLimited !== progress && escapeAmp) {
 	                ease = 'linear';
-	                progressLimited = progressLimited + (calc.difference(progressLimited, progress) * escapeAmp);
+	                progressLimited = progressLimited + ((progress - progressLimited) * escapeAmp);
 	            }
 	    
 	            return calc.valueEased(progressLimited, from, to, this.get(ease));
@@ -1927,68 +1936,7 @@
 	var utils = __webpack_require__(/*! ./utils.js */ 19),
 	
 	    calc = {
-	        /*
-	            Angle between points
-	            
-	            Translates the hypothetical line so that the 'from' coordinates
-	            are at 0,0, then return the angle using .angleFromCenter()
-	            
-	            @param [object]: X and Y coordinates of from point
-	            @param [object]: X and Y cordinates of to point
-	            @return [radian]: Angle between the two points in radians
-	        */
-	        angle: function (pointA, pointB) {
-	            var from = pointB ? pointA : {x: 0, y: 0},
-	                to = pointB || pointA,
-	                point = {
-	                    x: difference(from.x, to.x),
-	                    y: difference(from.y, to.y)
-	                };
-	            
-	            return this.angleFromCenter(point.x, point.y);
-	        },
-	    
-	    
-	        /*
-	            Angle from center
-	            
-	            Returns the current angle, in radians, of a defined point
-	            from a center (assumed 0,0)
-	            
-	            @param [number]: X coordinate of second point
-	            @param [number]: Y coordinate of second point
-	            @return [radian]: Angle between 0, 0 and point in radians
-	        */
-	        angleFromCenter: function (x, y) {
-	            return this.radiansToDegrees(Math.atan2(y, x));
-	        },
-	        
-	        /*
-	            Convert degrees to radians
-	            
-	            @param [number]: Value in degrees
-	            @return [number]: Value in radians
-	        */
-	        degreesToRadians: function (degrees) {
-	            return degrees * Math.PI / 180;
-	        },
-	        
-	        /*
-	            Difference
-	            
-	            Returns the difference between a and b by subtracting b from a.
-	            Useful in calcualting the zero-normalised position of b, or the
-	            difference something has travelled between the two points
-	            
-	            @param [number]: Value a
-	            @param [number]: Value b
-	            @return [number]: Difference between value a and value b
-	        */
-	        difference: function (a, b) {
-	            return b - a;
-	        },
-	        
-	        /*
+	       /*
 	            Dilate
 	            
 	            Change the progression between a and b according to dilation.
@@ -2024,7 +1972,6 @@
 	            return (typeof pointA === "number") ? this.distance1D(pointA, pointB) : this.distance2D(pointA, pointB);
 	        },
 	    
-	    
 	        /*
 	            Distance 1D
 	            
@@ -2039,7 +1986,7 @@
 	                from = bIsNum ? pointA : 0,
 	                to = bIsNum ? pointB : pointA;
 	    
-	            return absolute(difference(from, to));
+	            return absolute(to - from);
 	        },
 	    
 	      
@@ -2058,8 +2005,8 @@
 	                from = bIsObj ? pointA : {x: 0, y: 0},
 	                to = bIsObj ? pointB : pointA,
 	                point = {
-	                    x: absolute(difference(from.x, to.x)),
-	                    y: absolute(difference(from.y, to.y))
+	                    x: absolute(to.x - from.x),
+	                    y: absolute(to.y - from.y)
 	                };
 	                
 	            return this.hypotenuse(point.x, point.y);
@@ -2097,7 +2044,7 @@
 	            for (var key in b) {
 	                if (b.hasOwnProperty(key)) {
 	                    if (a.hasOwnProperty(key)) {
-	                        offset[key] = difference(a[key], b[key]);
+	                        offset[key] = b[key] - a[key];
 	                    } else {
 	                        offset[key] = 0;
 	                    }
@@ -2145,33 +2092,10 @@
 	            var bIsNum = (typeof limitB === 'number'),
 	                from = bIsNum ? limitA : 0,
 	                to = bIsNum ? limitB : limitA,
-	                range = difference(from, to),
+	                range = to - from,
 	                progress = (value - from) / range;
 	    
 	            return progress;
-	        },
-	        
-	        /*
-	            Convert radians to degrees
-	            
-	            @param [number]: Value in radians
-	            @return [number]: Value in degrees
-	        */
-	        radiansToDegrees: function (radians) {
-	            return radians * 180 / Math.PI;
-	        },
-	        
-	        /*
-	            Return random number between range
-	            
-	            @param [number] (optional): Output minimum
-	            @param [number] (optional): Output maximum
-	            @return [number]: Random number within range, or 0 and 1 if none provided
-	        */
-	        random: function (min, max) {
-	            min = isNum(min) ? min : 0;
-	            max = isNum(max) ? max : 1;
-	            return Math.random() * (max - min) + min;
 	        },
 	    
 	        
@@ -2250,19 +2174,6 @@
 	        speedPerSecond: function (velocity, frameDuration) {
 	            return velocity * (1000 / frameDuration);
 	        },
-	        
-	    
-	        /*
-	            Time remaining
-	            
-	            Return the amount of time remaining from the progress already made
-	            
-	            @param [number]: Progress through time limit between 0-1
-	            @param [number]: Duration
-	        */
-	        timeRemaining: function (progress, duration) {
-	            return (1 - progress) * duration;
-	        },
 	    
 	     
 	        /*
@@ -2308,7 +2219,6 @@
 	        Caching functions used multiple times to reduce filesize and increase performance
 	    */
 	    isNum = utils.isNum,
-	    difference = calc.difference,
 	    absolute = Math.abs;
 	    
 	module.exports = calc;
@@ -2693,9 +2603,9 @@
 	
 	var actionPrototype = __webpack_require__(/*! ../action/action.js */ 12).prototype,
 		actionGroupPrototype = __webpack_require__(/*! ../action-group/action-group.js */ 35).prototype,
-		generateMethodIterator = __webpack_require__(/*! ../action-group/generate-iterator.js */ 47),
+		generateMethodIterator = __webpack_require__(/*! ../action-group/generate-iterator.js */ 40),
 	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 27),
-	    rubix = __webpack_require__(/*! ../core/rubix.js */ 48);
+	    rubix = __webpack_require__(/*! ../core/rubix.js */ 41);
 	
 	module.exports = function (name, newRubix) {
 	    var parser = parseArgs[name] || parseArgs.generic;
@@ -2724,7 +2634,7 @@
 	*/
 	"use strict";
 	
-	var simulations = __webpack_require__(/*! ../core/simulations.js */ 40);
+	var simulations = __webpack_require__(/*! ../core/simulations.js */ 42);
 	
 	module.exports = function (name, simulation) {
 	    simulations[name] = simulation;
@@ -2739,7 +2649,7 @@
 
 	"use strict";
 	
-	var simulations = __webpack_require__(/*! ../core/simulations.js */ 40);
+	var simulations = __webpack_require__(/*! ../core/simulations.js */ 42);
 	
 	module.exports = function (simulation, value, duration, started) {
 	    var velocity = simulations[simulation](value, duration, started);
@@ -2756,9 +2666,9 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 41),
-	    templates = __webpack_require__(/*! ./templates.js */ 42),
-	    lookup = __webpack_require__(/*! ./lookup.js */ 43),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 43),
+	    templates = __webpack_require__(/*! ./templates.js */ 44),
+	    lookup = __webpack_require__(/*! ./lookup.js */ 45),
 	    
 	    TRANSFORM = 'transform',
 	    TRANSLATE_Z = 'translateZ',
@@ -2818,10 +2728,10 @@
 
 	"use strict";
 	
-	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 44),
-	    dictionary = __webpack_require__(/*! ./dictionary.js */ 41),
-	    splitLookup = __webpack_require__(/*! ./lookup.js */ 43),
-	    splitters = __webpack_require__(/*! ./splitters.js */ 45),
+	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 46),
+	    dictionary = __webpack_require__(/*! ./dictionary.js */ 43),
+	    splitLookup = __webpack_require__(/*! ./lookup.js */ 45),
+	    splitters = __webpack_require__(/*! ./splitters.js */ 47),
 	    
 	    utils = __webpack_require__(/*! ../../utils/utils.js */ 19),
 	    
@@ -2919,7 +2829,7 @@
 
 	"use strict";
 	
-	var lookup = __webpack_require__(/*! ./lookup.js */ 46),
+	var lookup = __webpack_require__(/*! ./lookup.js */ 48),
 	
 	    /*
 	        Convert percentage to pixels
@@ -3412,7 +3322,7 @@
 	*/
 	"use strict";
 	
-	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 48),
+	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 41),
 	    routes = __webpack_require__(/*! ./routes.js */ 20),
 	    calc = __webpack_require__(/*! ../utils/calc.js */ 18);
 	
@@ -3472,7 +3382,7 @@
 	        }
 	
 	        // Update change from previous frame
-	        value.frameChange = calc.difference(value.current, output);
+	        value.frameChange = output - value.current;
 	        
 	        // Calculate velocity
 	        if (!valueRubix.calculatesVelocity) {
@@ -3689,7 +3599,7 @@
 	"use strict";
 	
 	var Action = __webpack_require__(/*! ../action/action.js */ 12),
-		generateMethodIterator = __webpack_require__(/*! ./generate-iterator.js */ 47),
+		generateMethodIterator = __webpack_require__(/*! ./generate-iterator.js */ 40),
 		
 		defaultDuration = 250,
 		defaultEase = 'linear',
@@ -3713,7 +3623,8 @@
 	*/
 	actionGroupPrototype.stagger = function (method, duration, props, ease) {
 		var self = this,
-			numActions = this.actions.length;
+			numActions = this.actions.length,
+			i = -1;
 		
 		this._stagger = this._stagger || new Action();
 		duration = duration || defaultDuration;
@@ -3722,13 +3633,26 @@
 		this._stagger.stop().play({
 			values: {
 				i: {
-					current: -1,
+					current: i,
 					to: numActions - 1
 				}
 			},
 			round: true,
 			onChange: function (output) {
-				self.actions[output.i][method](props);
+			    var newIndex = output.i;
+			    
+			    // If our new index is only one more than the last
+			    if (newIndex === i + 1) {
+			        self.actions[newIndex][method](props);
+			        
+			    // Or it's more than one more than the last, so fire all indecies
+			    } else {
+	    		    for (var index = i + 1; index <= newIndex; index++) {
+			            self.actions[index][method](props);
+	    		    }
+			    }
+	
+			    i = newIndex;
 			}
 		}, duration * numActions, ease);
 	};
@@ -4192,6 +4116,95 @@
 
 /***/ },
 /* 40 */
+/*!***********************************************!*\
+  !*** ./src/action-group/generate-iterator.js ***!
+  \***********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+		Generate method iterator
+		
+		Takes a method name and returns a function that will
+		loop over all the Actions in a group and fire that
+		method with those properties
+		
+		@param [string]: Name of method
+	*/
+	module.exports = function (method) {
+		return function () {
+			var numActions = this.actions.length,
+				i = 0,
+				action;
+				
+			for (; i < numActions; i++) {
+				action = this.actions[i];
+				action[method].apply(action, arguments);
+			}
+			
+			return this;
+		};
+	};
+
+
+/***/ },
+/* 41 */
+/*!***************************!*\
+  !*** ./src/core/rubix.js ***!
+  \***************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Anatomy of a Rubix:
+	    
+	        Props
+	            surpressMethod [boolean]:
+	                If not true, will create Action shorthand method 
+	                with the name of the rubix, ie .play()
+	
+	            calculatesVelocity [boolean]:
+	                Set to true if your Rubix will calculate
+	                the new Value velocity (otherwise Redshift may override it)
+	                
+	        Methods
+	            updateInput
+	                Run once per frame, before Values are processed. .play uses this
+	                to update the timer, .track uses it to check the input device.
+	
+	                @param [Action]: The Action being processed
+	                @param [object]: Action properties
+	                @param [int]: Duration since the last frame in milliseconds
+	            
+	            process (required)
+	                Run once for every Action value, this method returns the latest value
+	
+	                @param [string]: Name of value being processed
+	                @param [Value]: Value being processed
+	                @param [object]: Action values
+	                @param [object]: Action properties
+	                @param [Action]: Action
+	                @param [int]: Duration since the last frame in milliseconds
+	                @return [int]: Latest value
+	                
+	            limit
+	                Run once for every Action value, this can be used to limit the value
+	                within any parameters
+	                
+	                @param [int]: Value returned from process method
+	                @param [Value]: Value being processed
+	                @return [int]: Latest value
+	                
+	            hasEnded (required)
+	                Returns true if this current Action has ended. Redshift will
+	                then check the Action's queue or yoyo/loop properties to decide
+	                what action to take next
+	                
+	                @param [Action]: Action being processed
+	                @param [boolean]: True if any value has changed
+	*/            
+	module.exports = {};
+
+/***/ },
+/* 42 */
 /*!*********************************!*\
   !*** ./src/core/simulations.js ***!
   \*********************************/
@@ -4289,7 +4302,7 @@
 	};
 
 /***/ },
-/* 41 */
+/* 43 */
 /*!**************************************!*\
   !*** ./src/routes/css/dictionary.js ***!
   \**************************************/
@@ -4343,7 +4356,7 @@
 	module.exports = terms;
 
 /***/ },
-/* 42 */
+/* 44 */
 /*!*************************************!*\
   !*** ./src/routes/css/templates.js ***!
   \*************************************/
@@ -4351,7 +4364,7 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 41),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 43),
 	
 	    defaultValues = {
 	        Alpha: 1
@@ -4419,7 +4432,7 @@
 	module.exports = templates;
 
 /***/ },
-/* 43 */
+/* 45 */
 /*!**********************************!*\
   !*** ./src/routes/css/lookup.js ***!
   \**********************************/
@@ -4467,7 +4480,7 @@
 	};
 
 /***/ },
-/* 44 */
+/* 46 */
 /*!********************************************!*\
   !*** ./src/routes/css/default-property.js ***!
   \********************************************/
@@ -4518,7 +4531,7 @@
 	module.exports = defaults;
 
 /***/ },
-/* 45 */
+/* 47 */
 /*!*************************************!*\
   !*** ./src/routes/css/splitters.js ***!
   \*************************************/
@@ -4526,7 +4539,7 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 41),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 43),
 	    utils = __webpack_require__(/*! ../../utils/utils.js */ 19),
 	
 	    /*
@@ -4757,7 +4770,7 @@
 	module.exports = splitters;
 
 /***/ },
-/* 46 */
+/* 48 */
 /*!***********************************!*\
   !*** ./src/routes/path/lookup.js ***!
   \***********************************/
@@ -4775,95 +4788,6 @@
 	    spacing: DASH_ARRAY,
 	    miterlimit: STROKE + '-miterlimit'
 	};
-
-/***/ },
-/* 47 */
-/*!***********************************************!*\
-  !*** ./src/action-group/generate-iterator.js ***!
-  \***********************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-		Generate method iterator
-		
-		Takes a method name and returns a function that will
-		loop over all the Actions in a group and fire that
-		method with those properties
-		
-		@param [string]: Name of method
-	*/
-	module.exports = function (method) {
-		return function () {
-			var numActions = this.actions.length,
-				i = 0,
-				action;
-				
-			for (; i < numActions; i++) {
-				action = this.actions[i];
-				action[method].apply(action, arguments);
-			}
-			
-			return this;
-		};
-	};
-
-
-/***/ },
-/* 48 */
-/*!***************************!*\
-  !*** ./src/core/rubix.js ***!
-  \***************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    Anatomy of a Rubix:
-	    
-	        Props
-	            surpressMethod [boolean]:
-	                If not true, will create Action shorthand method 
-	                with the name of the rubix, ie .play()
-	
-	            calculatesVelocity [boolean]:
-	                Set to true if your Rubix will calculate
-	                the new Value velocity (otherwise Redshift may override it)
-	                
-	        Methods
-	            updateInput
-	                Run once per frame, before Values are processed. .play uses this
-	                to update the timer, .track uses it to check the input device.
-	
-	                @param [Action]: The Action being processed
-	                @param [object]: Action properties
-	                @param [int]: Duration since the last frame in milliseconds
-	            
-	            process (required)
-	                Run once for every Action value, this method returns the latest value
-	
-	                @param [string]: Name of value being processed
-	                @param [Value]: Value being processed
-	                @param [object]: Action values
-	                @param [object]: Action properties
-	                @param [Action]: Action
-	                @param [int]: Duration since the last frame in milliseconds
-	                @return [int]: Latest value
-	                
-	            limit
-	                Run once for every Action value, this can be used to limit the value
-	                within any parameters
-	                
-	                @param [int]: Value returned from process method
-	                @param [Value]: Value being processed
-	                @return [int]: Latest value
-	                
-	            hasEnded (required)
-	                Returns true if this current Action has ended. Redshift will
-	                then check the Action's queue or yoyo/loop properties to decide
-	                what action to take next
-	                
-	                @param [Action]: Action being processed
-	                @param [boolean]: True if any value has changed
-	*/            
-	module.exports = {};
 
 /***/ },
 /* 49 */

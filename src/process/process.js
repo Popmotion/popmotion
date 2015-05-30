@@ -87,16 +87,18 @@ Process.prototype = {
     start: function (duration) {
         var self = this;
         
-        self.reset();
-        self.activate();
+        this.reset();
+        this.activate();
         
         if (duration) {
-            self.stopTimer = setTimeout(function () {
+            this.stopTimer = setTimeout(function () {
                 self.stop();
             }, duration);
+            
+            this.isStopTimerActive = true;
         }
 
-        return self;
+        return this;
     },
     
     /*
@@ -146,13 +148,15 @@ Process.prototype = {
     every: function (interval) {
 	    var self = this;
 
-        self.reset();
+        this.reset();
 
-        self.isInterval = true;
+        this.isInterval = true;
 
-        self.intervalTimer = setInterval(function () {
+        this.intervalTimer = setInterval(function () {
             self.activate();
         }, interval);
+        
+        this.isIntervalTimeActive = true;
         
         return this;
     },
@@ -164,8 +168,14 @@ Process.prototype = {
     */
     reset: function () {
         this.isInterval = false;
-        clearTimeout(this.stopTimer);
-        clearInterval(this.intervalTimer);
+        
+        if (this.isStopTimerActive) {
+            clearTimeout(this.stopTimer);
+        }
+        
+        if (this.isIntervalTimeActive) {
+            clearInterval(this.intervalTimer);
+        }
         
         return this;
     },

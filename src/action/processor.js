@@ -63,7 +63,7 @@ module.exports = function (action, framestamp, frameDuration) {
         }
 
         // Update change from previous frame
-        value.frameChange = calc.difference(value.current, output);
+        value.frameChange = output - value.current;
         
         // Calculate velocity
         if (!valueRubix.calculatesVelocity) {
