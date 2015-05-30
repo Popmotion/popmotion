@@ -27,7 +27,9 @@ module.exports = function (action, framestamp, frameDuration) {
 
     // Fire onStart if first frame
     if (action.firstFrame) {
-        routes.onStart(action.output, action, values, props, data);
+        routes.shard(function (route, output) {
+            route.onStart(output, action, values, props, data);
+        }, action.output);
         
         action.firstFrame = false;
     }
@@ -101,8 +103,10 @@ module.exports = function (action, framestamp, frameDuration) {
     // Fire onEnd if ended
     if (rubix.hasEnded(action, hasChanged)) {
         action.isActive(false);
-
-        routes.onEnd(action.output, action, values, props, data);
+        
+        routes.shard(function (route, output) {
+            route.onEnd(output, action, values, props, data);
+        }, action.output);
         
         if (!action.isActive() && props.rubix === 'play') {
             action.next();
