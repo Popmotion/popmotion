@@ -31,7 +31,7 @@ module.exports = function (action, framestamp, frameDuration) {
             if (route.onStart) {
                 route.onStart(output, action, values, props, data);
             }
-        }, action.output);
+        }, props);
         
         action.firstFrame = false;
     }

@@ -661,8 +661,8 @@
 
 	"use strict";
 	
-	var build = __webpack_require__(/*! ./css/build.js */ 26),
-	    split = __webpack_require__(/*! ./css/split.js */ 27),
+	var build = __webpack_require__(/*! ./css/build.js */ 25),
+	    split = __webpack_require__(/*! ./css/split.js */ 26),
 	    
 	    css = 'css',
 	    cssOrder = css + 'Order',
@@ -715,7 +715,7 @@
 
 	"use strict";
 	
-	var createStyles = __webpack_require__(/*! ./path/builder.js */ 25);
+	var createStyles = __webpack_require__(/*! ./path/builder.js */ 27);
 	
 	module.exports = {
 	
@@ -1374,7 +1374,7 @@
 	
 	var calc = __webpack_require__(/*! ../utils/calc.js */ 19),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
-	    History = __webpack_require__(/*! ../utils/history.js */ 39),
+	    History = __webpack_require__(/*! ../utils/history.js */ 37),
 	
 	    /*
 	        Input constructor
@@ -1506,7 +1506,7 @@
 	*/
 	"use strict";
 	
-	var manager = __webpack_require__(/*! ./manager.js */ 37),
+	var manager = __webpack_require__(/*! ./manager.js */ 38),
 	
 	    /*
 	        Process constructor
@@ -1821,7 +1821,7 @@
 	"use strict";
 	
 	var calc = __webpack_require__(/*! ./calc.js */ 19),
-	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 38),
+	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 39),
 	    
 	    // Constants
 	    INVALID_EASING = ": Not defined",
@@ -2759,70 +2759,6 @@
 
 /***/ },
 /* 25 */
-/*!************************************!*\
-  !*** ./src/routes/path/builder.js ***!
-  \************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var lookup = __webpack_require__(/*! ./lookup.js */ 43),
-	
-	    /*
-	        Convert percentage to pixels
-	        
-	        @param [number]: Percentage of total length
-	        @param [number]: Total length
-	    */
-	    percentToPixels = function (percentage, length) {
-	        return (parseFloat(percentage) / 100) * length + 'px';
-	    };
-	
-	/*
-	    Create styles
-	    
-	    @param [object]: SVG Path properties
-	    @param [object]: Length of path
-	    @returns [object]: Key/value pairs of valid CSS properties
-	*/
-	module.exports = function (props, pathLength) {
-	    var hasArray = false,
-	        svgProperty = '',
-	        arrayStyles = {
-	            length: 0,
-	            spacing: pathLength + 'px'
-	        },
-	        pathStyles = {};
-	
-	    // Loop over each property and create related css property
-	    for (var key in props) {
-	        if (props.hasOwnProperty(key)) {
-	            svgProperty = lookup[key];
-	            
-	            switch (key) {
-	                case 'length':
-	                case 'spacing':
-	                    hasArray = true;
-	                    arrayStyles[key] = percentToPixels(props[key], pathLength);
-	                    break;
-	                case 'offset':
-	                    pathStyles[svgProperty] = percentToPixels(-props[key], pathLength);
-	                    break;
-	                default:
-	                   pathStyles[svgProperty] = props[key]; 
-	            }
-	        }
-	    }
-	    
-	    if (hasArray) {
-	        pathStyles[lookup.length] = arrayStyles.length + ' ' + arrayStyles.spacing;
-	    }
-	    
-	    return pathStyles;
-	};
-
-/***/ },
-/* 26 */
 /*!*********************************!*\
   !*** ./src/routes/css/build.js ***!
   \*********************************/
@@ -2830,9 +2766,9 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 44),
-	    templates = __webpack_require__(/*! ./templates.js */ 45),
-	    lookup = __webpack_require__(/*! ./lookup.js */ 46),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 43),
+	    templates = __webpack_require__(/*! ./templates.js */ 44),
+	    lookup = __webpack_require__(/*! ./lookup.js */ 45),
 	    
 	    TRANSFORM = 'transform',
 	    TRANSLATE_Z = 'translateZ',
@@ -2884,7 +2820,7 @@
 	};
 
 /***/ },
-/* 27 */
+/* 26 */
 /*!*********************************!*\
   !*** ./src/routes/css/split.js ***!
   \*********************************/
@@ -2892,10 +2828,10 @@
 
 	"use strict";
 	
-	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 47),
-	    dictionary = __webpack_require__(/*! ./dictionary.js */ 44),
-	    splitLookup = __webpack_require__(/*! ./lookup.js */ 46),
-	    splitters = __webpack_require__(/*! ./splitters.js */ 48),
+	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 46),
+	    dictionary = __webpack_require__(/*! ./dictionary.js */ 43),
+	    splitLookup = __webpack_require__(/*! ./lookup.js */ 45),
+	    splitters = __webpack_require__(/*! ./splitters.js */ 47),
 	    
 	    utils = __webpack_require__(/*! ../../utils/utils.js */ 20),
 	    
@@ -2982,6 +2918,70 @@
 	    }
 	    
 	    return values;
+	};
+
+/***/ },
+/* 27 */
+/*!************************************!*\
+  !*** ./src/routes/path/builder.js ***!
+  \************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var lookup = __webpack_require__(/*! ./lookup.js */ 48),
+	
+	    /*
+	        Convert percentage to pixels
+	        
+	        @param [number]: Percentage of total length
+	        @param [number]: Total length
+	    */
+	    percentToPixels = function (percentage, length) {
+	        return (parseFloat(percentage) / 100) * length + 'px';
+	    };
+	
+	/*
+	    Create styles
+	    
+	    @param [object]: SVG Path properties
+	    @param [object]: Length of path
+	    @returns [object]: Key/value pairs of valid CSS properties
+	*/
+	module.exports = function (props, pathLength) {
+	    var hasArray = false,
+	        svgProperty = '',
+	        arrayStyles = {
+	            length: 0,
+	            spacing: pathLength + 'px'
+	        },
+	        pathStyles = {};
+	
+	    // Loop over each property and create related css property
+	    for (var key in props) {
+	        if (props.hasOwnProperty(key)) {
+	            svgProperty = lookup[key];
+	            
+	            switch (key) {
+	                case 'length':
+	                case 'spacing':
+	                    hasArray = true;
+	                    arrayStyles[key] = percentToPixels(props[key], pathLength);
+	                    break;
+	                case 'offset':
+	                    pathStyles[svgProperty] = percentToPixels(-props[key], pathLength);
+	                    break;
+	                default:
+	                   pathStyles[svgProperty] = props[key]; 
+	            }
+	        }
+	    }
+	    
+	    if (hasArray) {
+	        pathStyles[lookup.length] = arrayStyles.length + ' ' + arrayStyles.spacing;
+	    }
+	    
+	    return pathStyles;
 	};
 
 /***/ },
@@ -3450,7 +3450,7 @@
 	            if (route.onStart) {
 	                route.onStart(output, action, values, props, data);
 	            }
-	        }, action.output);
+	        }, props);
 	        
 	        action.firstFrame = false;
 	    }
@@ -3731,6 +3731,83 @@
 
 /***/ },
 /* 37 */
+/*!******************************!*\
+  !*** ./src/utils/history.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var // [number]: Default max size of history
+	    maxHistorySize = 3,
+	    
+	    /*
+	        History constructor
+	        
+	        @param [var]: Variable to store in first history slot
+	        @param [int] (optional): Maximum size of history
+	    */
+	    History = function (obj, max) {
+	        this.max = max || maxHistorySize;
+	        this.entries = [];
+	        this.add(obj);
+	    };
+	    
+	History.prototype = {
+	    
+	    /*
+	        Push new var to history
+	        
+	        Shift out oldest entry if we've reached maximum capacity
+	        
+	        @param [var]: Variable to push into history.entries
+	    */
+	    add: function (obj) {
+	        var currentSize = this.getSize();
+	        
+	        this.entries.push(obj);
+	        
+	        if (currentSize >= this.max) {
+	            this.entries.shift();
+	        }
+	    },
+	    
+	    /*
+	        Get variable at specified index
+	
+	        @param [int]: Index
+	        @return [var]: Var found at specified index
+	    */
+	    get: function (i) {
+	        i = (typeof i === 'number') ? i : this.getSize() - 1;
+	
+	        return this.entries[i];
+	    },
+	    
+	    /*
+	        Get the second newest history entry
+	        
+	        @return [var]: Entry found at index size - 2
+	    */
+	    getPrevious: function () {
+	        return this.get(this.getSize() - 2);
+	    },
+	    
+	    /*
+	        Get current history size
+	        
+	        @return [int]: Current length of entries.length
+	    */
+	    getSize: function () {
+	        return this.entries.length;
+	    }
+	    
+	};
+	
+	module.exports = History;
+
+/***/ },
+/* 38 */
 /*!********************************!*\
   !*** ./src/process/manager.js ***!
   \********************************/
@@ -3908,7 +3985,7 @@
 	module.exports = new ProcessManager();
 
 /***/ },
-/* 38 */
+/* 39 */
 /*!*****************************!*\
   !*** ./src/types/bezier.js ***!
   \*****************************/
@@ -4083,83 +4160,6 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 39 */
-/*!******************************!*\
-  !*** ./src/utils/history.js ***!
-  \******************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var // [number]: Default max size of history
-	    maxHistorySize = 3,
-	    
-	    /*
-	        History constructor
-	        
-	        @param [var]: Variable to store in first history slot
-	        @param [int] (optional): Maximum size of history
-	    */
-	    History = function (obj, max) {
-	        this.max = max || maxHistorySize;
-	        this.entries = [];
-	        this.add(obj);
-	    };
-	    
-	History.prototype = {
-	    
-	    /*
-	        Push new var to history
-	        
-	        Shift out oldest entry if we've reached maximum capacity
-	        
-	        @param [var]: Variable to push into history.entries
-	    */
-	    add: function (obj) {
-	        var currentSize = this.getSize();
-	        
-	        this.entries.push(obj);
-	        
-	        if (currentSize >= this.max) {
-	            this.entries.shift();
-	        }
-	    },
-	    
-	    /*
-	        Get variable at specified index
-	
-	        @param [int]: Index
-	        @return [var]: Var found at specified index
-	    */
-	    get: function (i) {
-	        i = (typeof i === 'number') ? i : this.getSize() - 1;
-	
-	        return this.entries[i];
-	    },
-	    
-	    /*
-	        Get the second newest history entry
-	        
-	        @return [var]: Entry found at index size - 2
-	    */
-	    getPrevious: function () {
-	        return this.get(this.getSize() - 2);
-	    },
-	    
-	    /*
-	        Get current history size
-	        
-	        @return [int]: Current length of entries.length
-	    */
-	    getSize: function () {
-	        return this.entries.length;
-	    }
-	    
-	};
-	
-	module.exports = History;
-
-/***/ },
 /* 40 */
 /*!****************************!*\
   !*** ./src/core/routes.js ***!
@@ -4325,26 +4325,6 @@
 
 /***/ },
 /* 43 */
-/*!***********************************!*\
-  !*** ./src/routes/path/lookup.js ***!
-  \***********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	var STROKE = 'stroke',
-	    DASH = STROKE + '-dash', // stoke-width
-	    DASH_ARRAY = DASH + 'array'
-	
-	module.exports = {
-	    opacity: STROKE + '-opacity',
-	    width: STROKE + '-width',
-	    offset: DASH + 'offset',
-	    length: DASH_ARRAY,
-	    spacing: DASH_ARRAY,
-	    miterlimit: STROKE + '-miterlimit'
-	};
-
-/***/ },
-/* 44 */
 /*!**************************************!*\
   !*** ./src/routes/css/dictionary.js ***!
   \**************************************/
@@ -4398,7 +4378,7 @@
 	module.exports = terms;
 
 /***/ },
-/* 45 */
+/* 44 */
 /*!*************************************!*\
   !*** ./src/routes/css/templates.js ***!
   \*************************************/
@@ -4406,7 +4386,7 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 44),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 43),
 	
 	    defaultValues = {
 	        Alpha: 1
@@ -4474,7 +4454,7 @@
 	module.exports = templates;
 
 /***/ },
-/* 46 */
+/* 45 */
 /*!**********************************!*\
   !*** ./src/routes/css/lookup.js ***!
   \**********************************/
@@ -4522,7 +4502,7 @@
 	};
 
 /***/ },
-/* 47 */
+/* 46 */
 /*!********************************************!*\
   !*** ./src/routes/css/default-property.js ***!
   \********************************************/
@@ -4573,7 +4553,7 @@
 	module.exports = defaults;
 
 /***/ },
-/* 48 */
+/* 47 */
 /*!*************************************!*\
   !*** ./src/routes/css/splitters.js ***!
   \*************************************/
@@ -4581,7 +4561,7 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 44),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 43),
 	    utils = __webpack_require__(/*! ../../utils/utils.js */ 20),
 	
 	    /*
@@ -4810,6 +4790,26 @@
 	    };
 	
 	module.exports = splitters;
+
+/***/ },
+/* 48 */
+/*!***********************************!*\
+  !*** ./src/routes/path/lookup.js ***!
+  \***********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	var STROKE = 'stroke',
+	    DASH = STROKE + '-dash', // stoke-width
+	    DASH_ARRAY = DASH + 'array'
+	
+	module.exports = {
+	    opacity: STROKE + '-opacity',
+	    width: STROKE + '-width',
+	    offset: DASH + 'offset',
+	    length: DASH_ARRAY,
+	    spacing: DASH_ARRAY,
+	    miterlimit: STROKE + '-miterlimit'
+	};
 
 /***/ },
 /* 49 */
