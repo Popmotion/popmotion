@@ -6,7 +6,8 @@
 "use strict";
 
 var Action = require('./action/action.js'),
-	domActionGroup = require('./action-group/dom.js'),
+    ActionGroup = require('./action-group/action-group.js'),
+	domGroup = require('./action-group/dom.js'),
     Input = require('./input/input.js'),
     Process = require('./process/process.js'),
     presets = require('./action/presets.js'),
@@ -24,8 +25,8 @@ module.exports = {
         
         @return [Action]: Newly-created Action
     */
-    newAction: function () {
-        return new Action(arguments[0], arguments[1]);
+    newAction: function (props) {
+        return (utils.isArray(props)) ? new ActionGroup(props) : new Action(props);
     },
     
     /*
