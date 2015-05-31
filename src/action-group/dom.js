@@ -25,7 +25,7 @@ module.exports = function (selector) {
 	numElements = elements.length;
 	
 	for (; i < numElements; i++) {
-		actionGroup.addAction({
+		actionGroup.add({
 			dom: elements[i]
 		});
 	}

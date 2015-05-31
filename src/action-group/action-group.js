@@ -64,7 +64,7 @@ actionGroupPrototype.stagger = function (method, duration, props, ease) {
 	
 	@param [object]: Action properties
 */
-actionGroupPrototype.addAction = function (props) {
+actionGroupPrototype.add = function (props) {
 	this.actions.push(new Action(props));
 };
 
