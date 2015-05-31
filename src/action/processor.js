@@ -28,7 +28,9 @@ module.exports = function (action, framestamp, frameDuration) {
     // Fire onStart if first frame
     if (action.firstFrame) {
         routes.shard(function (route, output) {
-            route.onStart(output, action, values, props, data);
+            if (route.onStart) {
+                route.onStart(output, action, values, props, data);
+            }
         }, action.output);
         
         action.firstFrame = false;
@@ -105,7 +107,9 @@ module.exports = function (action, framestamp, frameDuration) {
         action.isActive(false);
         
         routes.shard(function (route, output) {
-            route.onEnd(output, action, values, props, data);
+            if (route.onEnd) {
+                route.onEnd(output, action, values, props, data);
+            }
         }, action.output);
         
         if (!action.isActive() && props.rubix === 'play') {

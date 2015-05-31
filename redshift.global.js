@@ -1374,7 +1374,7 @@
 	
 	var calc = __webpack_require__(/*! ../utils/calc.js */ 19),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
-	    History = __webpack_require__(/*! ../utils/history.js */ 37),
+	    History = __webpack_require__(/*! ../utils/history.js */ 38),
 	
 	    /*
 	        Input constructor
@@ -1506,7 +1506,7 @@
 	*/
 	"use strict";
 	
-	var manager = __webpack_require__(/*! ./manager.js */ 38),
+	var manager = __webpack_require__(/*! ./manager.js */ 37),
 	
 	    /*
 	        Process constructor
@@ -2647,7 +2647,7 @@
 	
 	var actionPrototype = __webpack_require__(/*! ../action/action.js */ 12).prototype,
 		actionGroupPrototype = __webpack_require__(/*! ../action-group/action-group.js */ 13).prototype,
-		generateMethodIterator = __webpack_require__(/*! ../action-group/generate-iterator.js */ 36),
+	    generateMethodIterator = __webpack_require__(/*! ../action-group/generate-iterator.js */ 36),
 	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 28),
 	    rubix = __webpack_require__(/*! ../core/rubix.js */ 41);
 	
@@ -3391,7 +3391,9 @@
 	    // Fire onStart if first frame
 	    if (action.firstFrame) {
 	        routes.shard(function (route, output) {
-	            route.onStart(output, action, values, props, data);
+	            if (route.onStart) {
+	                route.onStart(output, action, values, props, data);
+	            }
 	        }, action.output);
 	        
 	        action.firstFrame = false;
@@ -3468,7 +3470,9 @@
 	        action.isActive(false);
 	        
 	        routes.shard(function (route, output) {
-	            route.onEnd(output, action, values, props, data);
+	            if (route.onEnd) {
+	                route.onEnd(output, action, values, props, data);
+	            }
 	        }, action.output);
 	        
 	        if (!action.isActive() && props.rubix === 'play') {
@@ -3671,83 +3675,6 @@
 
 /***/ },
 /* 37 */
-/*!******************************!*\
-  !*** ./src/utils/history.js ***!
-  \******************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var // [number]: Default max size of history
-	    maxHistorySize = 3,
-	    
-	    /*
-	        History constructor
-	        
-	        @param [var]: Variable to store in first history slot
-	        @param [int] (optional): Maximum size of history
-	    */
-	    History = function (obj, max) {
-	        this.max = max || maxHistorySize;
-	        this.entries = [];
-	        this.add(obj);
-	    };
-	    
-	History.prototype = {
-	    
-	    /*
-	        Push new var to history
-	        
-	        Shift out oldest entry if we've reached maximum capacity
-	        
-	        @param [var]: Variable to push into history.entries
-	    */
-	    add: function (obj) {
-	        var currentSize = this.getSize();
-	        
-	        this.entries.push(obj);
-	        
-	        if (currentSize >= this.max) {
-	            this.entries.shift();
-	        }
-	    },
-	    
-	    /*
-	        Get variable at specified index
-	
-	        @param [int]: Index
-	        @return [var]: Var found at specified index
-	    */
-	    get: function (i) {
-	        i = (typeof i === 'number') ? i : this.getSize() - 1;
-	
-	        return this.entries[i];
-	    },
-	    
-	    /*
-	        Get the second newest history entry
-	        
-	        @return [var]: Entry found at index size - 2
-	    */
-	    getPrevious: function () {
-	        return this.get(this.getSize() - 2);
-	    },
-	    
-	    /*
-	        Get current history size
-	        
-	        @return [int]: Current length of entries.length
-	    */
-	    getSize: function () {
-	        return this.entries.length;
-	    }
-	    
-	};
-	
-	module.exports = History;
-
-/***/ },
-/* 38 */
 /*!********************************!*\
   !*** ./src/process/manager.js ***!
   \********************************/
@@ -3923,6 +3850,83 @@
 	};
 	
 	module.exports = new ProcessManager();
+
+/***/ },
+/* 38 */
+/*!******************************!*\
+  !*** ./src/utils/history.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var // [number]: Default max size of history
+	    maxHistorySize = 3,
+	    
+	    /*
+	        History constructor
+	        
+	        @param [var]: Variable to store in first history slot
+	        @param [int] (optional): Maximum size of history
+	    */
+	    History = function (obj, max) {
+	        this.max = max || maxHistorySize;
+	        this.entries = [];
+	        this.add(obj);
+	    };
+	    
+	History.prototype = {
+	    
+	    /*
+	        Push new var to history
+	        
+	        Shift out oldest entry if we've reached maximum capacity
+	        
+	        @param [var]: Variable to push into history.entries
+	    */
+	    add: function (obj) {
+	        var currentSize = this.getSize();
+	        
+	        this.entries.push(obj);
+	        
+	        if (currentSize >= this.max) {
+	            this.entries.shift();
+	        }
+	    },
+	    
+	    /*
+	        Get variable at specified index
+	
+	        @param [int]: Index
+	        @return [var]: Var found at specified index
+	    */
+	    get: function (i) {
+	        i = (typeof i === 'number') ? i : this.getSize() - 1;
+	
+	        return this.entries[i];
+	    },
+	    
+	    /*
+	        Get the second newest history entry
+	        
+	        @return [var]: Entry found at index size - 2
+	    */
+	    getPrevious: function () {
+	        return this.get(this.getSize() - 2);
+	    },
+	    
+	    /*
+	        Get current history size
+	        
+	        @return [int]: Current length of entries.length
+	    */
+	    getSize: function () {
+	        return this.entries.length;
+	    }
+	    
+	};
+	
+	module.exports = History;
 
 /***/ },
 /* 39 */
