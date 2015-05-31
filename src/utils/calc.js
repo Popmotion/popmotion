@@ -9,7 +9,43 @@
 var utils = require('./utils.js'),
 
     calc = {
-       /*
+        
+        /*
+            Angle between points
+            
+            Translates the hypothetical line so that the 'from' coordinates
+            are at 0,0, then return the angle using .angleFromCenter()
+            
+            @param [object]: X and Y coordinates of from point
+            @param [object]: X and Y cordinates of to point
+            @return [radian]: Angle between the two points in radians
+        */
+        angle: function (pointA, pointB) {
+            var from = pointB ? pointA : {x: 0, y: 0},
+                to = pointB || pointA,
+                point = {
+                    x: difference(from.x, to.x),
+                    y: difference(from.y, to.y)
+                };
+            
+            return this.angleFromCenter(point.x, point.y);
+        },
+
+        /*
+            Angle from center
+            
+            Returns the current angle, in radians, of a defined point
+            from a center (assumed 0,0)
+            
+            @param [number]: X coordinate of second point
+            @param [number]: Y coordinate of second point
+            @return [radian]: Angle between 0, 0 and point in radians
+        */
+        angleFromCenter: function (x, y) {
+            return this.radiansToDegrees(Math.atan2(y, x));
+        },
+
+        /*
             Dilate
             
             Change the progression between a and b according to dilation.
