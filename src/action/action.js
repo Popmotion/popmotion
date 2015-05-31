@@ -162,12 +162,12 @@ Action.prototype = {
         @return [Action]
     */
     start: function (processType) {
-	    var input = this.getProp('input');
+	    var input = this.input;
 
         this.resetProgress();
         
         if (processType) {
-            this.setProp('rubix', processType);
+            this.rubix = processType;
         }
         
         if (processType !== 'track' && input && input.stop) {
@@ -175,7 +175,7 @@ Action.prototype = {
         }
 
         this.isActive(true);
-        this.started = utils.currentTime() + this.setProp('delay');
+        this.started = utils.currentTime() + this.delay;
         this.framestamp = this.started;
         this.firstFrame = true;
         
@@ -198,7 +198,7 @@ Action.prototype = {
     */
     pause: function () {
 	    var self = this,
-	        input = this.getProp('input');
+	        input = this.input;
 
         self.isActive(false);
         self.process.stop();
@@ -413,17 +413,12 @@ Action.prototype = {
         
         // Loop over toSet and assign to our data store
         for (key in toSet) {
-            if (toSet.hasOwnProperty(key)) {
+            if (toSet.hasOwnProperty(key) && !routes.all[key]) {
                 this[key] = toSet[key];
             }
         }
 
         return this;
-    },
-    
-    
-    getProp: function (key) {
-        return this[key];
     },
     
     resetProps: function () {

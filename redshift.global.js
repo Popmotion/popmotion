@@ -737,16 +737,16 @@
 
 	"use strict";
 	
-	var parseArgs = __webpack_require__(/*! ./parse-args.js */ 28),
-	    Value = __webpack_require__(/*! ../types/value.js */ 29),
-	    Queue = __webpack_require__(/*! ./queue.js */ 30),
+	var parseArgs = __webpack_require__(/*! ./parse-args.js */ 29),
+	    Value = __webpack_require__(/*! ../types/value.js */ 30),
+	    Queue = __webpack_require__(/*! ./queue.js */ 31),
 	    Process = __webpack_require__(/*! ../process/process.js */ 16),
-	    processor = __webpack_require__(/*! ./processor.js */ 31),
+	    processor = __webpack_require__(/*! ./processor.js */ 32),
 	    routes = __webpack_require__(/*! ./routes.js */ 21),
-	    defaultProps = __webpack_require__(/*! ../defaults/action-props.js */ 32),
-	    defaultState = __webpack_require__(/*! ../defaults/action-state.js */ 33),
+	    defaultProps = __webpack_require__(/*! ../defaults/action-props.js */ 33),
+	    defaultState = __webpack_require__(/*! ../defaults/action-state.js */ 34),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
-	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 34),
+	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 35),
 	
 	    namespace = function (key, space) {
 	        return (space && space !== routes.defaultRoute) ? key + '.' + space : key;
@@ -899,12 +899,12 @@
 	        @return [Action]
 	    */
 	    start: function (processType) {
-		    var input = this.getProp('input');
+		    var input = this.input;
 	
 	        this.resetProgress();
 	        
 	        if (processType) {
-	            this.setProp('rubix', processType);
+	            this.rubix = processType;
 	        }
 	        
 	        if (processType !== 'track' && input && input.stop) {
@@ -912,7 +912,7 @@
 	        }
 	
 	        this.isActive(true);
-	        this.started = utils.currentTime() + this.setProp('delay');
+	        this.started = utils.currentTime() + this.delay;
 	        this.framestamp = this.started;
 	        this.firstFrame = true;
 	        
@@ -935,7 +935,7 @@
 	    */
 	    pause: function () {
 		    var self = this,
-		        input = this.getProp('input');
+		        input = this.input;
 	
 	        self.isActive(false);
 	        self.process.stop();
@@ -1150,17 +1150,12 @@
 	        
 	        // Loop over toSet and assign to our data store
 	        for (key in toSet) {
-	            if (toSet.hasOwnProperty(key)) {
+	            if (toSet.hasOwnProperty(key) && !routes.all[key]) {
 	                this[key] = toSet[key];
 	            }
 	        }
 	
 	        return this;
-	    },
-	    
-	    
-	    getProp: function (key) {
-	        return this[key];
 	    },
 	    
 	    resetProps: function () {
@@ -1245,7 +1240,7 @@
 	"use strict";
 	
 	var Action = __webpack_require__(/*! ../action/action.js */ 12),
-		generateMethodIterator = __webpack_require__(/*! ./generate-iterator.js */ 35),
+		generateMethodIterator = __webpack_require__(/*! ./generate-iterator.js */ 28),
 		
 		defaultDuration = 250,
 		defaultEase = 'linear',
@@ -2690,6 +2685,8 @@
 	            }
 	        },
 	        
+	        all: routes,
+	        
 	        getName: function (name) {
 	            return (name !== undefined && has(name)) ? name : this.defaultRoute;
 	        }
@@ -2708,8 +2705,8 @@
 	
 	var actionPrototype = __webpack_require__(/*! ../action/action.js */ 12).prototype,
 		actionGroupPrototype = __webpack_require__(/*! ../action-group/action-group.js */ 13).prototype,
-	    generateMethodIterator = __webpack_require__(/*! ../action-group/generate-iterator.js */ 35),
-	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 28),
+	    generateMethodIterator = __webpack_require__(/*! ../action-group/generate-iterator.js */ 28),
+	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 29),
 	    rubix = __webpack_require__(/*! ../core/rubix.js */ 40);
 	
 	module.exports = function (name, newRubix) {
@@ -2991,6 +2988,38 @@
 
 /***/ },
 /* 28 */
+/*!***********************************************!*\
+  !*** ./src/action-group/generate-iterator.js ***!
+  \***********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+		Generate method iterator
+		
+		Takes a method name and returns a function that will
+		loop over all the Actions in a group and fire that
+		method with those properties
+		
+		@param [string]: Name of method
+	*/
+	module.exports = function (method) {
+		return function () {
+			var numActions = this.actions.length,
+				i = 0,
+				action;
+				
+			for (; i < numActions; i++) {
+				action = this.actions[i];
+				action[method].apply(action, arguments);
+			}
+			
+			return this;
+		};
+	};
+
+
+/***/ },
+/* 29 */
 /*!**********************************!*\
   !*** ./src/action/parse-args.js ***!
   \**********************************/
@@ -3131,7 +3160,7 @@
 	};
 
 /***/ },
-/* 29 */
+/* 30 */
 /*!****************************!*\
   !*** ./src/types/value.js ***!
   \****************************/
@@ -3172,7 +3201,7 @@
 	    Value = function (key, props, inherit, action) {
 	        this.key = key;
 	        this.action = action;
-	        this.scope = action.getProp('scope');
+	        this.scope = action.scope;
 	
 	        if (props.start) {
 	            props.current = props.start;
@@ -3284,7 +3313,7 @@
 	module.exports = Value;
 
 /***/ },
-/* 30 */
+/* 31 */
 /*!*****************************!*\
   !*** ./src/action/queue.js ***!
   \*****************************/
@@ -3340,7 +3369,7 @@
 	module.exports = Queue;
 
 /***/ },
-/* 31 */
+/* 32 */
 /*!*********************************!*\
   !*** ./src/action/processor.js ***!
   \*********************************/
@@ -3467,7 +3496,7 @@
 	};
 
 /***/ },
-/* 32 */
+/* 33 */
 /*!**************************************!*\
   !*** ./src/defaults/action-props.js ***!
   \**************************************/
@@ -3521,7 +3550,7 @@
 	};
 
 /***/ },
-/* 33 */
+/* 34 */
 /*!**************************************!*\
   !*** ./src/defaults/action-state.js ***!
   \**************************************/
@@ -3554,7 +3583,7 @@
 	};
 
 /***/ },
-/* 34 */
+/* 35 */
 /*!**********************************!*\
   !*** ./src/routes/css/styler.js ***!
   \**********************************/
@@ -3623,38 +3652,6 @@
 	};
 	
 	module.exports = new cssStyler();
-
-/***/ },
-/* 35 */
-/*!***********************************************!*\
-  !*** ./src/action-group/generate-iterator.js ***!
-  \***********************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-		Generate method iterator
-		
-		Takes a method name and returns a function that will
-		loop over all the Actions in a group and fire that
-		method with those properties
-		
-		@param [string]: Name of method
-	*/
-	module.exports = function (method) {
-		return function () {
-			var numActions = this.actions.length,
-				i = 0,
-				action;
-				
-			for (; i < numActions; i++) {
-				action = this.actions[i];
-				action[method].apply(action, arguments);
-			}
-			
-			return this;
-		};
-	};
-
 
 /***/ },
 /* 36 */
