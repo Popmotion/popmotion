@@ -5,7 +5,7 @@
 */
 "use strict";
 
-var fireCallback = function (name, bucket, action, values) {
+var fireCallback = function (name, bucket, action) {
         if (action[name]) {
             action[name].call(action.scope, bucket);
         }
@@ -15,7 +15,7 @@ module.exports = {
     
     makeDefault: true,
     
-    onStart: function (bucket, action, values) {
+    onStart: function (bucket, action) {
         if (action.onStart) {
             action.onStart.call(action.scope);
         }

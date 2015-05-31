@@ -2,7 +2,7 @@
 
 module.exports = {
 
-    onChange: function (output, action, values) {
+    onChange: function (output, action) {
         var dom = action.dom;
 
         if (dom) {
