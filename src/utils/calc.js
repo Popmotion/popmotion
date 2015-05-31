@@ -44,6 +44,16 @@ var utils = require('./utils.js'),
         angleFromCenter: function (x, y) {
             return this.radiansToDegrees(Math.atan2(y, x));
         },
+        
+        /*
+            Convert degrees to radians
+            
+            @param [number]: Value in degrees
+            @return [number]: Value in radians
+        */
+        degreesToRadians: function (degrees) {
+            return degrees * Math.PI / 180;
+        },
 
         /*
             Dilate
@@ -205,6 +215,16 @@ var utils = require('./utils.js'),
                 progress = (value - from) / range;
     
             return progress;
+        },
+        
+        /*
+            Convert radians to degrees
+            
+            @param [number]: Value in radians
+            @return [number]: Value in degrees
+        */
+        radiansToDegrees: function (radians) {
+            return radians * 180 / Math.PI;
         },
     
         
