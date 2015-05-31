@@ -8,37 +8,35 @@ var Rubix = require('../core/rubix.js'),
     calc = require('../utils/calc.js');
 
 module.exports = function (action, framestamp, frameDuration) {
-    var props = action.props(),
-        data = action.data(),
-        values = action.values,
-        rubix = Rubix[props.rubix],
+    var values = action.values,
+        rubix = Rubix[action.rubix],
         valueRubix = rubix,
         hasChanged = false,
         defaultRoute = routes.getName(),
         i = 0,
-        order = props.order = props.order || [],
+        order = action.order = action.order || [],
         orderLength = order.length,
         key = '', value, output;
     
     // Update elapsed
     if (rubix.updateInput) {
-        rubix.updateInput(action, props, frameDuration);
+        rubix.updateInput(action, frameDuration);
     }
 
     // Fire onStart if first frame
     if (action.firstFrame) {
         routes.shard(function (route, output) {
             if (route.onStart) {
-                route.onStart(output, action, values, props, data);
+                route.onStart(output, action, values);
             }
-        }, props);
+        }, action);
         
         action.firstFrame = false;
     }
     
     // Update Input if available
-    if (props.input) {
-        action.output.input = props.input.onFrame(framestamp);
+    if (action.input) {
+        action.output.input = action.input.onFrame(framestamp);
     }
 
     // Update values
@@ -54,7 +52,7 @@ module.exports = function (action, framestamp, frameDuration) {
         }
 
         // Calculate new value
-        output = valueRubix.process(key, value, values, props, action, frameDuration);
+        output = valueRubix.process(key, value, values, action, frameDuration);
         
         // Limit if range set
         if (valueRubix.limit) {
@@ -93,12 +91,12 @@ module.exports = function (action, framestamp, frameDuration) {
     routes.shard(function (route, output) {
         // Fire onFrame every frame
         if (route.onFrame) {
-            route.onFrame(output, action, values, props, data);
+            route.onFrame(output, action, values);
         }
         
         // Fire onChanged if values have changed
         if (hasChanged && route.onChange) {
-            route.onChange(output, action, values, props, data);
+            route.onChange(output, action, values);
         }
     }, action.output);
 
@@ -108,11 +106,11 @@ module.exports = function (action, framestamp, frameDuration) {
         
         routes.shard(function (route, output) {
             if (route.onEnd) {
-                route.onEnd(output, action, values, props, data);
+                route.onEnd(output, action, values);
             }
         }, action.output);
         
-        if (!action.isActive() && props.rubix === 'play') {
+        if (!action.isActive() && action.rubix === 'play') {
             action.next();
         }
     }

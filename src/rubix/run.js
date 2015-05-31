@@ -22,7 +22,7 @@ module.exports = {
         @param [number]: Duration of frame in ms
         @return [number]: Calculated value
     */
-    process: function (key, value, values, props, action, frameDuration) {
+    process: function (key, value, values, action, frameDuration) {
         value.velocity = simulate(value.simulate, value, frameDuration, action.started);
         return value.current + calc.speedPerFrame(value.velocity, frameDuration);
     },
@@ -38,10 +38,8 @@ module.exports = {
         @return [boolean]: Has Action ended?
     */
     hasEnded: function (action, hasChanged) {
-        var props = action.props();
-
-        props.inactiveFrames = hasChanged ? 0 : props.inactiveFrames + 1;
-        return (props.inactiveFrames > props.maxInactiveFrames);
+        action.inactiveFrames = hasChanged ? 0 : action.inactiveFrames + 1;
+        return (action.inactiveFrames > action.maxInactiveFrames);
     },
     
     /*

@@ -21,8 +21,8 @@ module.exports = {
         @param [object]: Action properties
         @param [number]: Timestamp of current frame
     */
-    updateInput: function (action, props, frameDuration) {
-        props.elapsed += (frameDuration * props.dilate) * props.playDirection;
+    updateInput: function (action, frameDuration) {
+        action.elapsed += (frameDuration * action.dilate) * action.playDirection;
         action[HAS_ENDED] = true;
     },
 
@@ -38,15 +38,15 @@ module.exports = {
         @param [number]: Duration of frame in ms
         @return [number]: Calculated value
     */
-    process: function (key, value, values, props, action) {
+    process: function (key, value, values, action) {
         var target = value.to,
             newValue = value[CURRENT],
             progress, progressTarget;
         
         // If we have a target, process
         if (target !== undefined) {
-            progress = calc.restricted(calc.progress(props.elapsed - value.delay, value.duration) - value.stagger, 0, 1);
-            progressTarget = (props.playDirection === 1) ? 1 : 0;
+            progress = calc.restricted(calc.progress(action.elapsed - value.delay, value.duration) - value.stagger, 0, 1);
+            progressTarget = (action.playDirection === 1) ? 1 : 0;
 
             // Mark Action as not ended if still in progress
             if (progress !== progressTarget) {

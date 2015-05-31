@@ -16,8 +16,8 @@ module.exports = {
         @param [Action]
         @param [object]: Action properties
     */
-    updateInput: function (action, props) {
-        action[INPUT_OFFSET] = calc.offset(props.inputOrigin, props.input[CURRENT]);
+    updateInput: function (action) {
+        action[INPUT_OFFSET] = calc.offset(action.inputOrigin, action.input[CURRENT]);
     },
         
     /*
@@ -30,7 +30,7 @@ module.exports = {
         @param [Action]: Current Action
         @return [number]: Calculated value
     */
-    process: function (key, value, values, props, action) {
+    process: function (key, value, values, action) {
         return (action[INPUT_OFFSET].hasOwnProperty(key)) ? value.origin + action[INPUT_OFFSET][key] : value[CURRENT];
     },
     

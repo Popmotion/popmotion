@@ -16,9 +16,9 @@ module.exports = {
         return values;
     },
     
-    onChange: function (output, action, values, props) {
-        props[cssCache] = props[cssCache] || {};
-        action.style(build(output, props[cssOrder],  props[cssCache], values));
+    onChange: function (output, action, values) {
+        action[cssCache] = action[cssCache] || {};
+        action.style(build(output, action[cssOrder],  action[cssCache], values));
     }
     
 };
