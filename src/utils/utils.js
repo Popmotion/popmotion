@@ -7,6 +7,16 @@ var protectedProperties = ['scope',  'dom'],
     
     isProtected = function (key) {
         return (protectedProperties.indexOf(key) !== -1);
+    },
+
+    /*
+        Get var type as string
+        
+        @param: Variable to test
+        @return [string]: Returns, for instance 'Object' if [object Object]
+    */
+    varType = function (variable) {
+        return Object.prototype.toString.call(variable).slice(8, -1);
     };
 
 module.exports = {
@@ -64,7 +74,7 @@ module.exports = {
         @return [boolean]: Returns true if this.varType === 'Function'
     */
     isFunc: function (obj) {
-        return (this.varType(obj) === 'Function'); 
+        return (varType(obj) === 'Function'); 
     },
     
     /*
@@ -95,19 +105,7 @@ module.exports = {
         @return [boolean]: Returns true if this.varType === 'Array'
     */
     isArray: function (arr) {
-        return (this.varType(arr) === 'Array');
-    },
-    
-    /*
-        Is this value within the given range?
-        
-        @param [number]: Value to test
-        @param [number]: Minimum range limit
-        @param [number]: Maximum range limit
-        @return [boolean]: True if value is within range
-    */
-    isInRange: function (value, min, max) {
-        return (value >= min && value <= max);
+        return (varType(arr) === 'Array');
     },
     
     /*
@@ -229,25 +227,13 @@ module.exports = {
             i = 1;
 
         for (; i <= steps + 1; i++) {
-            
             if (progress < progressSegment * i) {
                 steppedProgress = valueSegment * (i - 1);
                 break;
             }
-
         }
         
         return steppedProgress;
-    },
-
-    /*
-        Get var type as string
-        
-        @param: Variable to test
-        @return [string]: Returns, for instance 'Object' if [object Object]
-    */
-    varType: function (variable) {
-        return Object.prototype.toString.call(variable).slice(8, -1);
     },
     
     /*

@@ -43,10 +43,6 @@ var utils = require('../utils/utils.js'),
         // If object, assign directly
         } else if (typeof base == OBJECT) {
             props = base;
-
-            if (this.isActive()) {
-                this.queue.add.apply(this.queue, argsAsArray);
-            }
         }
         
         props.playDirection = 1;

@@ -27,7 +27,11 @@ module.exports = function (action, framestamp, frameDuration) {
 
     // Fire onStart if first frame
     if (action.firstFrame) {
-        routes.onStart(action.output, action, values, props, data);
+        routes.shard(function (route, output) {
+            if (route.onStart) {
+                route.onStart(output, action, values, props, data);
+            }
+        }, props);
         
         action.firstFrame = false;
     }
@@ -63,7 +67,7 @@ module.exports = function (action, framestamp, frameDuration) {
         }
 
         // Update change from previous frame
-        value.frameChange = calc.difference(value.current, output);
+        value.frameChange = output - value.current;
         
         // Calculate velocity
         if (!valueRubix.calculatesVelocity) {
@@ -101,8 +105,12 @@ module.exports = function (action, framestamp, frameDuration) {
     // Fire onEnd if ended
     if (rubix.hasEnded(action, hasChanged)) {
         action.isActive(false);
-
-        routes.onEnd(action.output, action, values, props, data);
+        
+        routes.shard(function (route, output) {
+            if (route.onEnd) {
+                route.onEnd(output, action, values, props, data);
+            }
+        }, action.output);
         
         if (!action.isActive() && props.rubix === 'play') {
             action.next();

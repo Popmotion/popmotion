@@ -6,6 +6,8 @@
 "use strict";
 
 var Action = require('./action/action.js'),
+    ActionGroup = require('./action-group/action-group.js'),
+	domGroup = require('./action-group/dom.js'),
     Input = require('./input/input.js'),
     Process = require('./process/process.js'),
     presets = require('./action/presets.js'),
@@ -13,8 +15,8 @@ var Action = require('./action/action.js'),
     calc = require('./utils/calc.js'),
     utils = require('./utils/utils.js'),
     route = require('./action/routes.js'),
-    registerRubix = require('./register/register-rubix.js'),
-    registerSimulation = require('./register/register-simulation.js');
+    registerRubix = require('./core/register-rubix.js'),
+    registerSimulation = require('./core/register-simulation.js');
 
 module.exports = {
 
@@ -23,8 +25,8 @@ module.exports = {
         
         @return [Action]: Newly-created Action
     */
-    newAction: function () {
-        return new Action(arguments[0], arguments[1]);
+    newAction: function (props) {
+        return (utils.isArray(props)) ? new ActionGroup(props) : new Action(props);
     },
     
     /*
@@ -45,6 +47,15 @@ module.exports = {
     */
     newProcess: function () {
         return new Process(arguments[0], arguments[1]);
+    },
+    
+    /*
+	    Create an Action Group prepopulated with DOM properties
+	    
+	    @param [string || NodeList || jQuery]: Selector, nodeList or jQuery selection
+    */
+    dom: function (selector) {
+	    return domGroup(selector);
     },
     
     /*

@@ -9,7 +9,6 @@ var parseArgs = require('./parse-args.js'),
     routes = require('./routes.js'),
     defaultProps = require('../defaults/action-props.js'),
     defaultState = require('../defaults/action-state.js'),
-    calc = require('../utils/calc.js'),
     utils = require('../utils/utils.js'),
     styler = require('../routes/css/styler.js'),
 
@@ -72,6 +71,8 @@ Action.prototype = {
         if (!this.isActive()) {
             this.set(props, 'to');
             this.start('play');
+        } else {
+	        this.queue.add.apply(this.queue, arguments);
         }
 
         return this;
@@ -283,8 +284,8 @@ Action.prototype = {
         var values = this.values,
             props = this.props();
             
-        props.progress = calc.difference(props.progress, 1);
-        props.elapsed = calc.difference(props.elapsed, props.duration);
+        props.progress = 1 - props.progress;
+        props.elapsed = props.duration - props.elapsed;
         
         for (var key in values) {
             values[key].flip();

@@ -3,27 +3,9 @@
 var routes = require('../core/routes.js'),
     routeKeys = [],
     numRoutes,
-    processes = ['preprocess', 'onStart', 'onEnd'],
     
     has = function (name) {
         return (routeKeys.indexOf(name) > -1) ? true : false;
-    },
-    
-    process = function (processName) {
-        return function (sourceValues, action, values, props, data) {
-            var routeName = '',
-                route,
-                i = 0;
-    
-            for (; i < numRoutes; i++) {
-                routeName = routeKeys[i];
-                route = routes[routeName];
-    
-                if (route.makeDefault || route[processName] && props[routeName]) {
-                    route[processName](sourceValues[routeName], action, values, props, data);
-                }
-            }
-        };
     },
     
     manager = {
@@ -76,16 +58,5 @@ var routes = require('../core/routes.js'),
             return (name !== undefined && has(name)) ? name : this.defaultRoute;
         }
     };
-    
-(function () {
-    var processesLength = processes.length,
-        processName = '',
-        i = 0;
-
-    for (; i < processesLength; i++) {
-        processName = processes[i];
-        manager[processName] = process(processName);
-    }
-})();
 
 module.exports = manager; 
