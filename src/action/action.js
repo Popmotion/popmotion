@@ -272,7 +272,7 @@ Action.prototype = {
     /*
         Swap value origins and to
     */
-    flip: function () {
+    flipValues: function () {
         var values = this.values;
             
         this.progress = 1 - this.progress;
@@ -308,7 +308,7 @@ Action.prototype = {
                 callback: self.reverse
             }, {
                 key: 'flip',
-                callback: self.flip
+                callback: self.flipValues
             }],
             possibles = nexts.length,
             hasNext = false;
@@ -434,6 +434,8 @@ Action.prototype = {
     */
     isActive: function (active) {
         var isActive = (active !== undefined) ? active : this.active;
+        
+        this.hasChanged = isActive;
 
         this.active = isActive;
 

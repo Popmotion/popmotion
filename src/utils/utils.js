@@ -221,19 +221,11 @@ module.exports = {
         @return [number]: Stepped value
     */
     stepProgress: function (progress, steps) {
-        var steppedProgress = 0,
-            progressSegment = 1 / steps,
-            valueSegment = 1 / (steps - 1),
-            i = 1;
+        var segment = 1 / (steps - 1),
+            target = 1 - (1 / steps),
+            progressOfTarget = Math.min(progress / target, 1);
 
-        for (; i <= steps + 1; i++) {
-            if (progress < progressSegment * i) {
-                steppedProgress = valueSegment * (i - 1);
-                break;
-            }
-        }
-        
-        return steppedProgress;
+        return Math.floor(progressOfTarget / segment) * segment;
     },
     
     /*

@@ -11,7 +11,6 @@ module.exports = function (action, framestamp, frameDuration) {
     var values = action.values,
         rubix = Rubix[action.rubix],
         valueRubix = rubix,
-        hasChanged = false,
         defaultRoute = routes.getName(),
         i = 0,
         order = action.order = action.order || [],
@@ -30,8 +29,6 @@ module.exports = function (action, framestamp, frameDuration) {
                 route.onStart(output, action, values);
             }
         }, action);
-        
-        action.firstFrame = false;
     }
     
     // Update Input if available
@@ -77,7 +74,7 @@ module.exports = function (action, framestamp, frameDuration) {
         
         // Check if changed and update
         if (value.current != output) {
-            hasChanged = true;
+            action.hasChanged = true;
         }
 
         // Set current and add unit (if any) for output
@@ -95,13 +92,13 @@ module.exports = function (action, framestamp, frameDuration) {
         }
         
         // Fire onChanged if values have changed
-        if (hasChanged && route.onChange) {
+        if (action.hasChanged && route.onChange || action.firstFrame) {
             route.onChange(output, action, values);
         }
     }, action.output);
 
     // Fire onEnd if ended
-    if (rubix.hasEnded(action, hasChanged)) {
+    if (rubix.hasEnded(action, action.hasChanged)) {
         action.isActive(false);
         
         routes.shard(function (route, output) {
@@ -114,6 +111,7 @@ module.exports = function (action, framestamp, frameDuration) {
             action.next();
         }
     }
-    
+
+    action.firstFrame = false;
     action.framestamp = framestamp;
 };

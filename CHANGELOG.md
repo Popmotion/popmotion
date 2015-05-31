@@ -2,6 +2,22 @@
 
 Redshift adheres to [Semantic Versioning](http://semver.org/). Change log added v1.4.0.
 
+## [1.4.2] 2015-05-31
+
+### Changed
+- Upgraded stepped easing algorithm.
+
+
+### Removed
+- `.props()` method removed - properties now saved directly to Action object.
+- `.data()` functionality removed.
+- `.flip()` is now `.flipValues()`.
+
+## [1.4.1] 2015-05-31
+
+### Fixed
+- ActionGroup.stagger() wasn't returning `this`
+
 ## [1.4.0] 2015-05-31
 
 ### Added
