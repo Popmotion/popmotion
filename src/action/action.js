@@ -480,7 +480,7 @@ Action.prototype = {
         props = elementIsDefined ? props : name;
         name = elementIsDefined ? name : 'dom';
     
-        dom = this.name;
+        dom = this[name];
         
         if (dom) {
             returnVal = styler(dom, props);

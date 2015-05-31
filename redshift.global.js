@@ -90,18 +90,18 @@
 	*/
 	"use strict";
 	
-	var Action = __webpack_require__(/*! ./action/action.js */ 12),
-	    ActionGroup = __webpack_require__(/*! ./action-group/action-group.js */ 13),
-		domGroup = __webpack_require__(/*! ./action-group/dom.js */ 14),
-	    Input = __webpack_require__(/*! ./input/input.js */ 15),
-	    Process = __webpack_require__(/*! ./process/process.js */ 16),
-	    presets = __webpack_require__(/*! ./action/presets.js */ 17),
-	    easing = __webpack_require__(/*! ./utils/easing.js */ 18),
-	    calc = __webpack_require__(/*! ./utils/calc.js */ 19),
-	    utils = __webpack_require__(/*! ./utils/utils.js */ 20),
-	    route = __webpack_require__(/*! ./action/routes.js */ 21),
-	    registerRubix = __webpack_require__(/*! ./core/register-rubix.js */ 22),
-	    registerSimulation = __webpack_require__(/*! ./core/register-simulation.js */ 23);
+	var Action = __webpack_require__(/*! ./action/action.js */ 18),
+	    ActionGroup = __webpack_require__(/*! ./action-group/action-group.js */ 19),
+		domGroup = __webpack_require__(/*! ./action-group/dom.js */ 20),
+	    Input = __webpack_require__(/*! ./input/input.js */ 21),
+	    Process = __webpack_require__(/*! ./process/process.js */ 22),
+	    presets = __webpack_require__(/*! ./action/presets.js */ 23),
+	    easing = __webpack_require__(/*! ./utils/easing.js */ 13),
+	    calc = __webpack_require__(/*! ./utils/calc.js */ 12),
+	    utils = __webpack_require__(/*! ./utils/utils.js */ 14),
+	    route = __webpack_require__(/*! ./action/routes.js */ 24),
+	    registerRubix = __webpack_require__(/*! ./core/register-rubix.js */ 25),
+	    registerSimulation = __webpack_require__(/*! ./core/register-simulation.js */ 26);
 	
 	module.exports = {
 	
@@ -300,7 +300,7 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 19),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 12),
 	
 	    STRING = 'string',
 	    
@@ -397,9 +397,9 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 19),
-	    easing = __webpack_require__(/*! ../utils/easing.js */ 18),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 12),
+	    easing = __webpack_require__(/*! ../utils/easing.js */ 13),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 14),
 	    
 	    CURRENT = 'current',
 	    HAS_ENDED = 'hasEnded';
@@ -484,8 +484,8 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 19),
-	    simulate = __webpack_require__(/*! ../action/simulate.js */ 24);
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 12),
+	    simulate = __webpack_require__(/*! ../action/simulate.js */ 15);
 	
 	module.exports = {
 	
@@ -565,7 +565,7 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 19),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 12),
 	
 	    CURRENT = 'current',
 	    INPUT_OFFSET = 'inputOffset';
@@ -659,8 +659,8 @@
 
 	"use strict";
 	
-	var build = __webpack_require__(/*! ./css/build.js */ 25),
-	    split = __webpack_require__(/*! ./css/split.js */ 26),
+	var build = __webpack_require__(/*! ./css/build.js */ 16),
+	    split = __webpack_require__(/*! ./css/split.js */ 17),
 	    
 	    css = 'css',
 	    cssOrder = css + 'Order',
@@ -730,6 +730,1019 @@
 
 /***/ },
 /* 12 */
+/*!***************************!*\
+  !*** ./src/utils/calc.js ***!
+  \***************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Calculators
+	    ----------------------------------------
+	    
+	    Simple I/O snippets
+	*/
+	"use strict";
+	
+	var utils = __webpack_require__(/*! ./utils.js */ 14),
+	
+	    calc = {
+	        
+	        /*
+	            Angle between points
+	            
+	            Translates the hypothetical line so that the 'from' coordinates
+	            are at 0,0, then return the angle using .angleFromCenter()
+	            
+	            @param [object]: X and Y coordinates of from point
+	            @param [object]: X and Y cordinates of to point
+	            @return [radian]: Angle between the two points in radians
+	        */
+	        angle: function (pointA, pointB) {
+	            var from = pointB ? pointA : {x: 0, y: 0},
+	                to = pointB || pointA,
+	                point = {
+	                    x: to.x - from.x,
+	                    y: to.y - from.y
+	                };
+	            
+	            return this.angleFromCenter(point.x, point.y);
+	        },
+	
+	        /*
+	            Angle from center
+	            
+	            Returns the current angle, in radians, of a defined point
+	            from a center (assumed 0,0)
+	            
+	            @param [number]: X coordinate of second point
+	            @param [number]: Y coordinate of second point
+	            @return [radian]: Angle between 0, 0 and point in radians
+	        */
+	        angleFromCenter: function (x, y) {
+	            return this.radiansToDegrees(Math.atan2(y, x));
+	        },
+	        
+	        /*
+	            Convert degrees to radians
+	            
+	            @param [number]: Value in degrees
+	            @return [number]: Value in radians
+	        */
+	        degreesToRadians: function (degrees) {
+	            return degrees * Math.PI / 180;
+	        },
+	
+	        /*
+	            Dilate
+	            
+	            Change the progression between a and b according to dilation.
+	            
+	            So dilation = 0.5 would change
+	            
+	            a --------- b
+	            
+	            to
+	            
+	            a ---- b
+	            
+	            @param [number]: Previous value
+	            @param [number]: Current value
+	            @param [number]: Dilate progress by x
+	            @return [number]: Previous value plus the dilated difference
+	        */
+	        dilate: function (a, b, dilation) {
+	            return a + ((b - a) * dilation);
+	        },
+	            
+	        /*
+	            Distance
+	            
+	            Returns the distance between (0,0) and pointA, unless pointB
+	            is provided, then we return the difference between the two.
+	            
+	            @param [object/number]: x and y or just x of point A
+	            @param [object/number]: (optional): x and y or just x of point B
+	            @return [number]: The distance between the two points
+	        */
+	        distance: function (pointA, pointB) {
+	            return (typeof pointA === "number") ? this.distance1D(pointA, pointB) : this.distance2D(pointA, pointB);
+	        },
+	    
+	        /*
+	            Distance 1D
+	            
+	            Returns the distance between point A and point B
+	            
+	            @param [number]: Point A
+	            @param [number]: (optional): Point B
+	            @return [number]: The distance between the two points
+	        */
+	        distance1D: function (pointA, pointB) {
+	            var bIsNum = (typeof pointB === 'number'),
+	                from = bIsNum ? pointA : 0,
+	                to = bIsNum ? pointB : pointA;
+	    
+	            return absolute(to - from);
+	        },
+	    
+	      
+	        /*
+	            Distance 2D
+	            
+	            Returns the distance between (0,0) and point A, unless point B
+	            is provided, then we return the difference between the two.
+	            
+	            @param [object]: x and y of point A
+	            @param [object]: (optional): x and y of point B
+	            @return [number]: The distance between the two points
+	        */
+	        distance2D: function (pointA, pointB) {
+	            var bIsObj = (typeof pointB === "object"),
+	                from = bIsObj ? pointA : {x: 0, y: 0},
+	                to = bIsObj ? pointB : pointA,
+	                point = {
+	                    x: absolute(to.x - from.x),
+	                    y: absolute(to.y - from.y)
+	                };
+	                
+	            return this.hypotenuse(point.x, point.y);
+	        },
+	            
+	        /*
+	            Hypotenuse
+	            
+	            Returns the hypotenuse, side C, given the lengths of sides A and B.
+	            
+	            @param [number]: Length of A
+	            @param [number]: Length of B
+	            @return [number]: Length of C
+	        */
+	        hypotenuse: function (a, b) {
+	            var a2 = a * a,
+	                b2 = b * b,
+	                c2 = a2 + b2;
+	                
+	            return Math.sqrt(c2);
+	        },
+	        
+	        /*
+	            Offset between two inputs
+	            
+	            Calculate the difference between two different inputs
+	            
+	            @param [Point]: First input
+	            @param [Point]: Second input
+	            @return [Offset]: Distance metrics between two points
+	        */
+	        offset: function (a, b) {
+	            var offset = {};
+	    
+	            for (var key in b) {
+	                if (b.hasOwnProperty(key)) {
+	                    if (a.hasOwnProperty(key)) {
+	                        offset[key] = b[key] - a[key];
+	                    } else {
+	                        offset[key] = 0;
+	                    }
+	                } 
+	            }
+	
+	            if (isNum(offset.x) && isNum(offset.y)) {
+	                offset.angle = this.angle(a, b);
+	                offset.distance = this.distance2D(a, b);
+	            }
+	                
+	            return offset;
+	        },
+	        
+	        /*
+	            Point from angle and distance
+	            
+	            @param [object]: 2D point of origin
+	            @param [number]: Angle from origin
+	            @param [number]: Distance from origin
+	            @return [object]: Calculated 2D point
+	        */
+	        pointFromAngleAndDistance: function (origin, angle, distance) {
+	            var point = {};
+	    
+	    		point.x = distance * Math.cos(angle) + origin.x;
+	            point.y = distance * Math.sin(angle) + origin.y;
+	    
+	            return point;
+	        },
+	    
+	        /*
+	            Progress within given range
+	            
+	            Given a lower limit and an upper limit, we return the progress
+	            (expressed as a number 0-1) represented by the given value, and
+	            limit that progress to within 0-1.
+	            
+	            @param [number]: Value to find progress within given range
+	            @param [number]: Lower limit if full range given, upper if not
+	            @param [number] (optional): Upper limit of range
+	            @return [number]: Progress of value within range as expressed 0-1
+	        */
+	        progress: function (value, limitA, limitB) {
+	            var bIsNum = (typeof limitB === 'number'),
+	                from = bIsNum ? limitA : 0,
+	                to = bIsNum ? limitB : limitA,
+	                range = to - from,
+	                progress = (value - from) / range;
+	    
+	            return progress;
+	        },
+	        
+	        /*
+	            Convert radians to degrees
+	            
+	            @param [number]: Value in radians
+	            @return [number]: Value in degrees
+	        */
+	        radiansToDegrees: function (radians) {
+	            return radians * 180 / Math.PI;
+	        },
+	    
+	        
+	        /*
+	            Calculate relative value
+	            
+	            Takes the operator and value from a string, ie "+=5", and applies
+	            to the current value to resolve a new target.
+	            
+	            @param [number]: Current value
+	            @param [string]: Relative value
+	            @return [number]: New value
+	        */
+	        relativeValue: function (current, rel) {
+	            var newValue = current,
+	                equation = rel.split('='),
+	                operator = equation[0],
+	                splitVal = utils.splitValUnit(equation[1]);
+	    
+	            switch (operator) {
+	                case '+':
+	                    newValue += splitVal.value;
+	                    break;
+	                case '-':
+	                    newValue -= splitVal.value;
+	                    break;
+	                case '*':
+	                    newValue *= splitVal.value;
+	                    break;
+	                case '/':
+	                    newValue /= splitVal.value;
+	                    break;
+	            }
+	            
+	            if (splitVal.unit) {
+	                newValue += splitVal.unit;
+	            }
+	    
+	            return newValue;
+	        },
+	    
+	    
+	        /*
+	            Restrict value to range
+	            
+	            Return value within the range of lowerLimit and upperLimit
+	            
+	            @param [number]: Value to keep within range
+	            @param [number]: Lower limit of range
+	            @param [number]: Upper limit of range
+	            @return [number]: Value as limited within given range
+	        */
+	        restricted: function (value, min, max) {
+	            var restricted = (min !== undefined) ? Math.max(value, min) : value;
+	            restricted = (max !== undefined) ? Math.min(restricted, max) : restricted;
+	    
+	            return restricted;
+	        },
+	    
+	        /*
+	            Convert x per second to per frame velocity based on fps
+	            
+	            @param [number]: Unit per second
+	            @param [number]: Frame duration in ms
+	        */
+	        speedPerFrame: function (xps, frameDuration) {
+	            return (isNum(xps)) ? xps / (1000 / frameDuration) : 0;
+	        },
+	    
+	        /*
+	            Convert velocity into velicity per second
+	            
+	            @param [number]: Unit per frame
+	            @param [number]: Frame duration in ms
+	        */
+	        speedPerSecond: function (velocity, frameDuration) {
+	            return velocity * (1000 / frameDuration);
+	        },
+	    
+	     
+	        /*
+	            Value in range from progress
+	            
+	            Given a lower limit and an upper limit, we return the value within
+	            that range as expressed by progress (a number from 0-1)
+	            
+	            @param [number]: The progress between lower and upper limits expressed 0-1
+	            @param [number]: Lower limit of range, or upper if limit2 not provided
+	            @param [number] (optional): Upper limit of range
+	            @return [number]: Value as calculated from progress within range (not limited within range)
+	        */
+	        value: function (progress, limitA, limitB) {
+	            var bIsNum = (typeof limitB === 'number'),
+	                from = bIsNum ? limitA : 0,
+	                to = bIsNum ? limitB : limitA;
+	    
+	            return (- progress * from) + (progress * to) + from; 
+	        },
+	    
+	    
+	        /*
+	            Eased value in range from progress
+	            
+	            Given a lower limit and an upper limit, we return the value within
+	            that range as expressed by progress (a number from 0-1)
+	            
+	            @param [number]: The progress between lower and upper limits expressed 0-1
+	            @param [number]: Lower limit of range, or upper if limit2 not provided
+	            @param [number]: Upper limit of range
+	            @param [function]: Easing to apply to value
+	            @return [number]: Value as calculated from progress within range (not limited within range)
+	        */
+	        valueEased: function (progress, from, to, easing) {
+	            var easedProgress = easing(progress);
+	            
+	            return this.value(easedProgress, from, to);
+	        }
+	    },
+	
+	    /*
+	        Caching functions used multiple times to reduce filesize and increase performance
+	    */
+	    isNum = utils.isNum,
+	    absolute = Math.abs;
+	    
+	module.exports = calc;
+
+/***/ },
+/* 13 */
+/*!*****************************!*\
+  !*** ./src/utils/easing.js ***!
+  \*****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Easing functions
+	    ----------------------------------------
+	    
+	    Generates and provides easing functions based on baseFunction definitions
+	    
+	    A call to easingFunction.get('functionName') returns a function that can be passed:
+	        @param [number]: Progress 0-1
+	        @param [number] (optional): Amp modifier, only accepted in some easing functions
+	                                    and is used to adjust overall strength
+	        @return [number]: Eased progress
+	        
+	    We can generate new functions by sending an easing function through easingFunction.extend(name, method).
+	    Which will make nameIn, nameOut and nameInOut functions available to use.
+	        
+	    Easing functions from Robert Penner
+	    http://www.robertpenner.com/easing/
+	        
+	    Bezier curve interpretor created from Gaëtan Renaudeau's original BezierEasing  
+	    https://github.com/gre/bezier-easing/blob/master/index.js  
+	    https://github.com/gre/bezier-easing/blob/master/LICENSE
+	*/
+	"use strict";
+	
+	var calc = __webpack_require__(/*! ./calc.js */ 12),
+	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 28),
+	    
+	    // Constants
+	    INVALID_EASING = ": Not defined",
+	    EASE_IN = 'In',
+	    EASE_OUT = 'Out',
+	    EASE_IN_OUT = EASE_IN + EASE_OUT,
+	    
+	    // Base power ease names
+	    powerEasing = ['ease', 'cubic', 'quart', 'quint'],
+	    
+	    // Generate easing function with provided power
+	    generatePowerEasing = function (power) {
+	        return function (progress) {
+	            return Math.pow(progress, power);
+	        }
+	    },
+	
+	    /*
+	        Each of these base functions is an easeIn
+	        
+	        On init, we use EasingFunction.mirror and .reverse to generate easeInOut and
+	        easeOut functions respectively.
+	    */
+	    baseEasing = {
+	        circ: function (progress) {
+	            return 1 - Math.sin(Math.acos(progress));
+	        },
+	        back: function (progress) {
+	            var strength = 1.5;
+	
+	            return (progress * progress) * ((strength + 1) * progress - strength);
+	        }
+	    },
+	    
+	    /*
+	        Mirror easing
+	        
+	        Mirrors the provided easing function, used here for mirroring an
+	        easeIn into an easeInOut
+	        
+	        @param [number]: Progress, from 0 - 1, of current shift
+	        @param [function]: The easing function to mirror
+	        @returns [number]: The easing-adjusted delta
+	    */
+	    mirrorEasing = function (progress, method) {
+	        return (progress <= 0.5) ? method(2 * progress) / 2 : (2 - method(2 * (1 - progress))) / 2;
+	    },
+	            
+	    /*
+	        Reverse easing
+	        
+	        Reverses the output of the provided easing function, used for flipping easeIn
+	        curve to an easeOut.
+	        
+	        @param [number]: Progress, from 0 - 1, of current shift
+	        @param [function]: The easing function to reverse
+	        @returns [number]: The easing-adjusted delta
+	    */
+	    reverseEasing = function (progress, method) {
+	        return 1 - method(1 - progress);
+	    },
+	    
+	    /*
+	        Add new easing function
+	        
+	        Takes name and generates nameIn, nameOut, nameInOut, and easing functions to match
+	        
+	        @param [string]: Base name of the easing functions to generate
+	        @param [function]: Base easing function, as an easeIn, from which to generate Out and InOut
+	    */
+	    generateVariations = function (name, method, isBaseIn) {
+	        var easeIn = name + EASE_IN,
+	            easeOut = name + EASE_OUT,
+	            easeInOut = name + EASE_IN_OUT,
+	            baseName = isBaseIn ? easeIn : easeOut,
+	            reverseName = isBaseIn ? easeOut : easeIn;
+	
+	        // Create the In function
+	        easing[baseName] = method;
+	
+	        // Create the Out function by reversing the transition curve
+	        easing[reverseName] = function (progress) {
+	            return reverseEasing(progress, easing[baseName]);
+	        };
+	        
+	        // Create the InOut function by mirroring the transition curve
+	        easing[easeInOut] = function (progress) {
+	            return mirrorEasing(progress, easing[baseName]);
+	        };
+	    },
+	    
+	    easing = {
+	    
+	        /*
+	            Get the named easing function
+	            
+	            @param [string]: Name of the easing function to get 
+	            @return [function || boolean]: Easing function or false if function undefined
+	        */
+	        get: function (name) {
+	            var easing = this[name];
+	            
+	            if (!easing) {
+	                throw name + INVALID_EASING;
+	            }
+	    
+	            return easing;
+	        },
+	        
+	        
+	        /*
+	            Add Bezier Curve easing
+	            
+	            @param [string]: Name of new easing
+	            @parma [number]: X of coordinate 1
+	            @parma [number]: Y of coordinate 1
+	            @parma [number]: X of coordinate 2
+	            @parma [number]: Y of coordinate 2
+	        */
+	        add: function (name, x1, y1, x2, y2) {
+	            if (!this[name]) {
+	                this[name] = new Bezier(x1, y1, x2, y2);
+	            }
+	        },
+	        
+	        
+	        /*
+	            Ease value within ranged parameters
+	            
+	            @param [number]: Progress between 0 and 1
+	            @param [number]: Value of 0 progress
+	            @param [number]: Value of 1 progress
+	            @param [string]: Easing to use
+	            @param [number]: Amplify progress out of specified range
+	            @return [number]: Value of eased progress in range
+	        */  
+	        withinRange: function (progress, from, to, ease, escapeAmp) {
+	            var progressLimited = calc.restricted(progress, 0, 1);
+	    
+	            if (progressLimited !== progress && escapeAmp) {
+	                ease = 'linear';
+	                progressLimited = progressLimited + ((progress - progressLimited) * escapeAmp);
+	            }
+	    
+	            return calc.valueEased(progressLimited, from, to, this.get(ease));
+	        },
+	            
+	        /*
+	            Linear easing adjustment
+	            
+	            The default easing method, not added with .extend as it has no Out or InOut
+	            variation.
+	            
+	            @param [number]: Progress, from 0-1
+	            @return [number]: Unadjusted progress
+	        */
+	        linear: function (progress) {
+	            return progress;
+	        }
+	    };
+	
+	
+	// Initialise Easing  
+	(function () {
+	    var i = 0,
+	        key = '';
+	        
+	    // Generate power easing functions
+	    for (; i < 4; i++) {
+	        baseEasing[powerEasing[i]] = generatePowerEasing(i + 2);
+	    }
+	    
+	    // Generate in/out/inOut easing variations
+	    for (key in baseEasing) {
+	        if (baseEasing.hasOwnProperty(key)) {
+	            generateVariations(key, baseEasing[key], true);
+	        }
+	    }
+	})();
+	
+	module.exports = easing;
+
+
+/***/ },
+/* 14 */
+/*!****************************!*\
+  !*** ./src/utils/utils.js ***!
+  \****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Utility functions
+	*/
+	"use strict";
+	
+	var protectedProperties = ['scope',  'dom'],
+	    
+	    isProtected = function (key) {
+	        return (protectedProperties.indexOf(key) !== -1);
+	    },
+	
+	    /*
+	        Get var type as string
+	        
+	        @param: Variable to test
+	        @return [string]: Returns, for instance 'Object' if [object Object]
+	    */
+	    varType = function (variable) {
+	        return Object.prototype.toString.call(variable).slice(8, -1);
+	    };
+	
+	module.exports = {
+	    
+	    /*
+	        Has one object changed from the other
+	        
+	        Compares the two provided inputs and returns true if they are different
+	        
+	        @param [object]: Input A
+	        @param [object]: Input B
+	        @return [boolean]: True if different
+	    */
+	    hasChanged: function (a, b) {
+	        var hasChanged = false,
+	            key = '';
+	
+	        for (key in b) {
+	            if (a.hasOwnProperty(key) && b.hasOwnProperty(key)) {
+	                if (a[key] !== b[key]) {
+	                    hasChanged = true;
+	                }
+	            } else {
+	                hasChanged = true;
+	            }
+	        }
+	    
+	        return hasChanged;
+	    },
+	    
+	    /*
+	        Is this var a number?
+	        
+	        @param: Variable to test
+	        @return [boolean]: Returns true if typeof === 'number'
+	    */
+	    isNum: function (num) {
+	        return (typeof num === 'number');
+	    },
+	    
+	    /*
+	        Is this var an object?
+	        
+	        @param: Variable to test
+	        @return [boolean]: Returns true if typeof === 'object'
+	    */
+	    isObj: function (obj) {
+	        return (typeof obj === 'object');
+	    },
+	    
+	    /*
+	        Is this var a function ? 
+	        
+	        @param: Variable to test
+	        @return [boolean]: Returns true if this.varType === 'Function'
+	    */
+	    isFunc: function (obj) {
+	        return (varType(obj) === 'Function'); 
+	    },
+	    
+	    /*
+	        Is this var a string ? 
+	        
+	        @param: Variable to test
+	        @return [boolean]: Returns true if typeof str === 'string'
+	    */
+	    isString: function (str) {
+	        return (typeof str === 'string'); 
+	    },
+	
+	
+	    /*
+	        Is this a relative value assignment?
+	        
+	        @param [string]: Variable to test
+	        @return [boolean]: If this looks like a relative value assignment
+	    */
+	    isRelativeValue: function (value) {
+	        return (value && value.indexOf && value.indexOf('=') > 0);
+	    },
+	    
+	    /*
+	        Is this var an array ? 
+	        
+	        @param: Variable to test
+	        @return [boolean]: Returns true if this.varType === 'Array'
+	    */
+	    isArray: function (arr) {
+	        return (varType(arr) === 'Array');
+	    },
+	    
+	    /*
+	        Copy object or array
+	        
+	        Checks whether base is an array or object and makes
+	        appropriate copy
+	        
+	        @param [array || object]: Array or object to copy
+	        @param [array || object]: New copy of array or object
+	    */
+	    copy: function (base) {
+	        return (this.isArray(base)) ? this.copyArray(base) : this.copyObject(base);
+	    },
+	    
+	    /*
+	        Deep copy an object
+	        
+	        Iterates over an object and creates a new copy of every item,
+	        deep copying if it finds any objects/arrays
+	        
+	        @param [object]: Object to copy
+	        @param [object]: New copy of object
+	    */
+	    copyObject: function (base) {
+	        var newObject = {};
+	        
+	        for (var key in base) {
+	            if (base.hasOwnProperty(key)) {
+	                newObject[key] = (this.isObj(base[key]) && !isProtected(key)) ? this.copy(base[key]) : base[key];
+	            }
+	        }
+	        
+	        return newObject;
+	    },
+	    
+	    /*
+	        Deep copy an array
+	        
+	        Loops through an array and creates a new copy of every item,
+	        deep copying if it finds any objects/arrays
+	        
+	        @param [array]: Array to copy
+	        @return [array]: New copy of array
+	    */
+	    copyArray: function (base) {
+	        var newArray = [],
+	            length = base.length,
+	            i = 0;
+	        
+	        for (var i = 0; i < length; i++) {
+	            newArray[i] = (this.isObj(base[i])) ? this.copy(base[i]) : base[i];
+	        }
+	        
+	        return newArray;
+	    },
+	    
+	    /*
+	        Non-destructive merge of object or array
+	        
+	        @param [array || object]: Array or object to use as base
+	        @param [array || object]: Array or object to overwrite base with
+	        @return [array || object]: New array or object
+	    */
+	    merge: function (base, overwrite) {
+	        return (this.isArray(base)) ? this.copyArray(overwrite) : this.mergeObject(base, overwrite);
+	    },
+	    
+	    /*
+	        Non-destructive merge of object
+	        
+	        @param [object]: Object to use as base
+	        @param [object]: Object to overwrite base with
+	        @return [object]: New object
+	    */
+	    mergeObject: function (base, overwrite) {
+	        var hasBase = this.isObj(base),
+	            newObject = hasBase ? this.copy(base) : this.copy(overwrite),
+	            key = '';
+	
+	        if (hasBase) {
+	            for (key in overwrite) {
+	                if (overwrite.hasOwnProperty(key)) {
+	                    newObject[key] = (this.isObj(overwrite[key]) && !isProtected(key)) ? this.merge(base[key], overwrite[key]) : overwrite[key];
+	                }
+	            }
+	        }
+	        return newObject;
+	    },
+	    
+	    /*
+	        Split a value into a value/unit object
+	        
+	            "200px" -> { value: 200, unit: "px" }
+	            
+	        @param [string]: Value to split
+	        @return [object]: Object with value and unit props
+	    */
+	    splitValUnit: function (value) {
+	        var splitVal = value.match(/(-?\d*\.?\d*)(.*)/);
+	
+	        return {
+	            value: parseFloat(splitVal[1]),
+	            unit:  splitVal[2]
+	        };
+	    },
+	
+	    /*
+	        Create stepped version of 0-1 progress
+	        
+	        @param [number]: Current value
+	        @param [int]: Number of steps
+	        @return [number]: Stepped value
+	    */
+	    stepProgress: function (progress, steps) {
+	        var steppedProgress = 0,
+	            progressSegment = 1 / steps,
+	            valueSegment = 1 / (steps - 1),
+	            i = 1;
+	
+	        for (; i <= steps + 1; i++) {
+	            if (progress < progressSegment * i) {
+	                steppedProgress = valueSegment * (i - 1);
+	                break;
+	            }
+	        }
+	        
+	        return steppedProgress;
+	    },
+	    
+	    /*
+	        Generate current timestamp
+	        
+	        @return [timestamp]: Current UNIX timestamp
+	    */
+	    currentTime: function () {
+		    return (typeof performance !== "undefined") ? performance.now() : new Date().getTime();
+	    }
+	    
+	};
+
+/***/ },
+/* 15 */
+/*!********************************!*\
+  !*** ./src/action/simulate.js ***!
+  \********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var simulations = __webpack_require__(/*! ../core/simulations.js */ 29);
+	
+	module.exports = function (simulation, value, duration, started) {
+	    var velocity = simulations[simulation](value, duration, started);
+	    
+	    return (Math.abs(velocity) >= value.stopSpeed) ? velocity : 0;
+	};
+
+/***/ },
+/* 16 */
+/*!*********************************!*\
+  !*** ./src/routes/css/build.js ***!
+  \*********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 41),
+	    templates = __webpack_require__(/*! ./templates.js */ 45),
+	    lookup = __webpack_require__(/*! ./lookup.js */ 42),
+	    
+	    TRANSFORM = 'transform',
+	    TRANSLATE_Z = 'translateZ',
+	    
+	    /*
+	        Generate a CSS rule with the available template
+	    */
+	    generateRule = function (key, output, transformProp) {
+	        var templateKey = transformProp ? TRANSFORM : lookup[key],
+	            template = templates[templateKey];
+	
+	        return template ? template(key, output) : output[key];
+	    };
+	    
+	
+	module.exports = function (output, order, cache) {
+	    var css = {},
+	        numRules = order.length,
+	        hasZ = false,
+	        transformProp = dictionary.transformProps,
+	        i = 0,
+	        rule = '',
+	        key = '',
+	        transform = '';
+	    
+	    for (; i < numRules; i++) {
+	        key = order[i],
+	        rule = generateRule(key, output, transformProp[key]);
+	
+	        if (transformProp[key]) {
+	            transform += rule + ' ';
+	            hasZ = (key === TRANSLATE_Z) ? true : hasZ;
+	
+	        } else if (cache[key] !== rule) {
+	            css[key] = rule;
+	            cache[key] = rule;
+	        }
+	    }
+	    
+	    if (transform != '' && transform != cache[TRANSFORM]) {
+	        if (!hasZ) {
+	            transform += ' ' + TRANSLATE_Z + '(0px)';
+	        }
+	        
+	        css[TRANSFORM] = cache[TRANSFORM] = transform;
+	    }
+	
+	    return css;
+	};
+
+/***/ },
+/* 17 */
+/*!*********************************!*\
+  !*** ./src/routes/css/split.js ***!
+  \*********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 40),
+	    dictionary = __webpack_require__(/*! ./dictionary.js */ 41),
+	    splitLookup = __webpack_require__(/*! ./lookup.js */ 42),
+	    splitters = __webpack_require__(/*! ./splitters.js */ 43),
+	    
+	    utils = __webpack_require__(/*! ../../utils/utils.js */ 14),
+	    
+	    valueProperties = dictionary.valueProps,
+	    valuePropertyCount = valueProperties.length,
+	    
+	    /*
+	        Build a property
+	    */
+	    buildProperty = function (value, parentKey, unitKey, parent, assignDefault) {
+	        var property = defaultProperty[parentKey + unitKey]
+	            || defaultProperty[unitKey]
+	            || defaultProperty[parentKey]
+	            || defaultProperty.base;
+	        
+	        assignDefault = assignDefault || valueProperties[0];
+	         
+	        if (parent) {
+	            property = utils.merge(parent, property);
+	        }
+	        
+	        if (utils.isObj(value)) {
+	            property = utils.merge(property, value);
+	
+	        } else {
+	            property[assignDefault] = value;
+	        }
+	
+	        // If we have a unitKey, name property parentKey + unitKey
+	        property.name = unitKey ? parentKey + unitKey : parentKey;
+	        
+	        return property;
+	    },
+	
+	    /*
+	        Split value with provided splitterID
+	    */
+	    split = function (key, value, splitter) {
+	        var splitValue = {},
+	            splitProperty = {},
+	            newValue = {},
+	            valueKey = '',
+	            unitKey = '',
+	            i = 0;
+	            
+	        if (utils.isObj(value)) {
+	            for (; i < valuePropertyCount; i++) {
+	                valueKey = valueProperties[i];
+	                
+	                if (value.hasOwnProperty(valueKey)) {
+	                    splitProperty = splitter(value[valueKey]);
+	                    
+	                    for (unitKey in splitProperty) {
+	                        splitValue[unitKey] = splitValue[unitKey] || {};
+	                        splitValue[unitKey][valueKey] = splitProperty[unitKey];
+	                    }
+	                }
+	            }
+	        } else {
+	            splitValue = splitter(value);
+	        }
+	        
+	        for (unitKey in splitValue) {
+	            newValue[key + unitKey] = buildProperty(splitValue[unitKey], key, unitKey, value);
+	        }
+	        
+	        return newValue;
+	    };
+	
+	/*
+	    Split CSS property into individual, tweenable values
+	    
+	    @param [string]: Name of CSS property
+	    @param [string || number]: Value of CSS property
+	*/
+	module.exports = function (key, value) {
+	    var splitterID = splitLookup[key],
+	        splitter = splitters[splitterID],
+	        values = (splitter) ? split(key, value, splitter) : {};
+	
+	    // If we don't have a splitter, assign the property directly
+	    if (!splitter) {
+	        values[key] = buildProperty(value, key);
+	    }
+	    
+	    return values;
+	};
+
+/***/ },
+/* 18 */
 /*!******************************!*\
   !*** ./src/action/action.js ***!
   \******************************/
@@ -737,16 +1750,16 @@
 
 	"use strict";
 	
-	var parseArgs = __webpack_require__(/*! ./parse-args.js */ 29),
-	    Value = __webpack_require__(/*! ../types/value.js */ 30),
-	    Queue = __webpack_require__(/*! ./queue.js */ 31),
-	    Process = __webpack_require__(/*! ../process/process.js */ 16),
-	    processor = __webpack_require__(/*! ./processor.js */ 32),
-	    routes = __webpack_require__(/*! ./routes.js */ 21),
-	    defaultProps = __webpack_require__(/*! ../defaults/action-props.js */ 33),
-	    defaultState = __webpack_require__(/*! ../defaults/action-state.js */ 34),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
-	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 35),
+	var parseArgs = __webpack_require__(/*! ./parse-args.js */ 30),
+	    Value = __webpack_require__(/*! ../types/value.js */ 31),
+	    Queue = __webpack_require__(/*! ./queue.js */ 32),
+	    Process = __webpack_require__(/*! ../process/process.js */ 22),
+	    processor = __webpack_require__(/*! ./processor.js */ 33),
+	    routes = __webpack_require__(/*! ./routes.js */ 24),
+	    defaultProps = __webpack_require__(/*! ../defaults/action-props.js */ 34),
+	    defaultState = __webpack_require__(/*! ../defaults/action-state.js */ 35),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 14),
+	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 36),
 	
 	    namespace = function (key, space) {
 	        return (space && space !== routes.defaultRoute) ? key + '.' + space : key;
@@ -1217,7 +2230,7 @@
 	        props = elementIsDefined ? props : name;
 	        name = elementIsDefined ? name : 'dom';
 	    
-	        dom = this.name;
+	        dom = this[name];
 	        
 	        if (dom) {
 	            returnVal = styler(dom, props);
@@ -1231,7 +2244,7 @@
 	module.exports = Action;
 
 /***/ },
-/* 13 */
+/* 19 */
 /*!******************************************!*\
   !*** ./src/action-group/action-group.js ***!
   \******************************************/
@@ -1239,8 +2252,8 @@
 
 	"use strict";
 	
-	var Action = __webpack_require__(/*! ../action/action.js */ 12),
-		generateMethodIterator = __webpack_require__(/*! ./generate-iterator.js */ 28),
+	var Action = __webpack_require__(/*! ../action/action.js */ 18),
+		generateMethodIterator = __webpack_require__(/*! ./generate-iterator.js */ 37),
 		
 		defaultDuration = 250,
 		defaultEase = 'linear',
@@ -1319,7 +2332,7 @@
 	module.exports = ActionGroup;
 
 /***/ },
-/* 14 */
+/* 20 */
 /*!*********************************!*\
   !*** ./src/action-group/dom.js ***!
   \*********************************/
@@ -1327,7 +2340,7 @@
 
 	"use strict";
 	
-	var ActionGroup = __webpack_require__(/*! ./action-group.js */ 13);
+	var ActionGroup = __webpack_require__(/*! ./action-group.js */ 19);
 	
 	module.exports = function (selector) {
 	    var actionGroup = new ActionGroup(),
@@ -1361,7 +2374,7 @@
 	};
 
 /***/ },
-/* 15 */
+/* 21 */
 /*!****************************!*\
   !*** ./src/input/input.js ***!
   \****************************/
@@ -1372,9 +2385,9 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 19),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
-	    History = __webpack_require__(/*! ../utils/history.js */ 36),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 12),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 14),
+	    History = __webpack_require__(/*! ../utils/history.js */ 39),
 	
 	    /*
 	        Input constructor
@@ -1495,7 +2508,7 @@
 	module.exports = Input;
 
 /***/ },
-/* 16 */
+/* 22 */
 /*!********************************!*\
   !*** ./src/process/process.js ***!
   \********************************/
@@ -1506,7 +2519,7 @@
 	*/
 	"use strict";
 	
-	var manager = __webpack_require__(/*! ./manager.js */ 37),
+	var manager = __webpack_require__(/*! ./manager.js */ 44),
 	
 	    /*
 	        Process constructor
@@ -1701,7 +2714,7 @@
 	module.exports = Process;
 
 /***/ },
-/* 17 */
+/* 23 */
 /*!*******************************!*\
   !*** ./src/action/presets.js ***!
   \*******************************/
@@ -1709,7 +2722,7 @@
 
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 20),
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 14),
 	    
 	    generateKeys = function (key) {
 	        var keys = key.split(DOT),
@@ -1790,840 +2803,7 @@
 	module.exports = new Presets();
 
 /***/ },
-/* 18 */
-/*!*****************************!*\
-  !*** ./src/utils/easing.js ***!
-  \*****************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    Easing functions
-	    ----------------------------------------
-	    
-	    Generates and provides easing functions based on baseFunction definitions
-	    
-	    A call to easingFunction.get('functionName') returns a function that can be passed:
-	        @param [number]: Progress 0-1
-	        @param [number] (optional): Amp modifier, only accepted in some easing functions
-	                                    and is used to adjust overall strength
-	        @return [number]: Eased progress
-	        
-	    We can generate new functions by sending an easing function through easingFunction.extend(name, method).
-	    Which will make nameIn, nameOut and nameInOut functions available to use.
-	        
-	    Easing functions from Robert Penner
-	    http://www.robertpenner.com/easing/
-	        
-	    Bezier curve interpretor created from Gaëtan Renaudeau's original BezierEasing  
-	    https://github.com/gre/bezier-easing/blob/master/index.js  
-	    https://github.com/gre/bezier-easing/blob/master/LICENSE
-	*/
-	"use strict";
-	
-	var calc = __webpack_require__(/*! ./calc.js */ 19),
-	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 38),
-	    
-	    // Constants
-	    INVALID_EASING = ": Not defined",
-	    EASE_IN = 'In',
-	    EASE_OUT = 'Out',
-	    EASE_IN_OUT = EASE_IN + EASE_OUT,
-	    
-	    // Base power ease names
-	    powerEasing = ['ease', 'cubic', 'quart', 'quint'],
-	    
-	    // Generate easing function with provided power
-	    generatePowerEasing = function (power) {
-	        return function (progress) {
-	            return Math.pow(progress, power);
-	        }
-	    },
-	
-	    /*
-	        Each of these base functions is an easeIn
-	        
-	        On init, we use EasingFunction.mirror and .reverse to generate easeInOut and
-	        easeOut functions respectively.
-	    */
-	    baseEasing = {
-	        circ: function (progress) {
-	            return 1 - Math.sin(Math.acos(progress));
-	        },
-	        back: function (progress) {
-	            var strength = 1.5;
-	
-	            return (progress * progress) * ((strength + 1) * progress - strength);
-	        }
-	    },
-	    
-	    /*
-	        Mirror easing
-	        
-	        Mirrors the provided easing function, used here for mirroring an
-	        easeIn into an easeInOut
-	        
-	        @param [number]: Progress, from 0 - 1, of current shift
-	        @param [function]: The easing function to mirror
-	        @returns [number]: The easing-adjusted delta
-	    */
-	    mirrorEasing = function (progress, method) {
-	        return (progress <= 0.5) ? method(2 * progress) / 2 : (2 - method(2 * (1 - progress))) / 2;
-	    },
-	            
-	    /*
-	        Reverse easing
-	        
-	        Reverses the output of the provided easing function, used for flipping easeIn
-	        curve to an easeOut.
-	        
-	        @param [number]: Progress, from 0 - 1, of current shift
-	        @param [function]: The easing function to reverse
-	        @returns [number]: The easing-adjusted delta
-	    */
-	    reverseEasing = function (progress, method) {
-	        return 1 - method(1 - progress);
-	    },
-	    
-	    /*
-	        Add new easing function
-	        
-	        Takes name and generates nameIn, nameOut, nameInOut, and easing functions to match
-	        
-	        @param [string]: Base name of the easing functions to generate
-	        @param [function]: Base easing function, as an easeIn, from which to generate Out and InOut
-	    */
-	    generateVariations = function (name, method, isBaseIn) {
-	        var easeIn = name + EASE_IN,
-	            easeOut = name + EASE_OUT,
-	            easeInOut = name + EASE_IN_OUT,
-	            baseName = isBaseIn ? easeIn : easeOut,
-	            reverseName = isBaseIn ? easeOut : easeIn;
-	
-	        // Create the In function
-	        easing[baseName] = method;
-	
-	        // Create the Out function by reversing the transition curve
-	        easing[reverseName] = function (progress) {
-	            return reverseEasing(progress, easing[baseName]);
-	        };
-	        
-	        // Create the InOut function by mirroring the transition curve
-	        easing[easeInOut] = function (progress) {
-	            return mirrorEasing(progress, easing[baseName]);
-	        };
-	    },
-	    
-	    easing = {
-	    
-	        /*
-	            Get the named easing function
-	            
-	            @param [string]: Name of the easing function to get 
-	            @return [function || boolean]: Easing function or false if function undefined
-	        */
-	        get: function (name) {
-	            var easing = this[name];
-	            
-	            if (!easing) {
-	                throw name + INVALID_EASING;
-	            }
-	    
-	            return easing;
-	        },
-	        
-	        
-	        /*
-	            Add Bezier Curve easing
-	            
-	            @param [string]: Name of new easing
-	            @parma [number]: X of coordinate 1
-	            @parma [number]: Y of coordinate 1
-	            @parma [number]: X of coordinate 2
-	            @parma [number]: Y of coordinate 2
-	        */
-	        add: function (name, x1, y1, x2, y2) {
-	            if (!this[name]) {
-	                this[name] = new Bezier(x1, y1, x2, y2);
-	            }
-	        },
-	        
-	        
-	        /*
-	            Ease value within ranged parameters
-	            
-	            @param [number]: Progress between 0 and 1
-	            @param [number]: Value of 0 progress
-	            @param [number]: Value of 1 progress
-	            @param [string]: Easing to use
-	            @param [number]: Amplify progress out of specified range
-	            @return [number]: Value of eased progress in range
-	        */  
-	        withinRange: function (progress, from, to, ease, escapeAmp) {
-	            var progressLimited = calc.restricted(progress, 0, 1);
-	    
-	            if (progressLimited !== progress && escapeAmp) {
-	                ease = 'linear';
-	                progressLimited = progressLimited + ((progress - progressLimited) * escapeAmp);
-	            }
-	    
-	            return calc.valueEased(progressLimited, from, to, this.get(ease));
-	        },
-	            
-	        /*
-	            Linear easing adjustment
-	            
-	            The default easing method, not added with .extend as it has no Out or InOut
-	            variation.
-	            
-	            @param [number]: Progress, from 0-1
-	            @return [number]: Unadjusted progress
-	        */
-	        linear: function (progress) {
-	            return progress;
-	        }
-	    };
-	
-	
-	// Initialise Easing  
-	(function () {
-	    var i = 0,
-	        key = '';
-	        
-	    // Generate power easing functions
-	    for (; i < 4; i++) {
-	        baseEasing[powerEasing[i]] = generatePowerEasing(i + 2);
-	    }
-	    
-	    // Generate in/out/inOut easing variations
-	    for (key in baseEasing) {
-	        if (baseEasing.hasOwnProperty(key)) {
-	            generateVariations(key, baseEasing[key], true);
-	        }
-	    }
-	})();
-	
-	module.exports = easing;
-
-
-/***/ },
-/* 19 */
-/*!***************************!*\
-  !*** ./src/utils/calc.js ***!
-  \***************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    Calculators
-	    ----------------------------------------
-	    
-	    Simple I/O snippets
-	*/
-	"use strict";
-	
-	var utils = __webpack_require__(/*! ./utils.js */ 20),
-	
-	    calc = {
-	        
-	        /*
-	            Angle between points
-	            
-	            Translates the hypothetical line so that the 'from' coordinates
-	            are at 0,0, then return the angle using .angleFromCenter()
-	            
-	            @param [object]: X and Y coordinates of from point
-	            @param [object]: X and Y cordinates of to point
-	            @return [radian]: Angle between the two points in radians
-	        */
-	        angle: function (pointA, pointB) {
-	            var from = pointB ? pointA : {x: 0, y: 0},
-	                to = pointB || pointA,
-	                point = {
-	                    x: to.x - from.x,
-	                    y: to.y - from.y
-	                };
-	            
-	            return this.angleFromCenter(point.x, point.y);
-	        },
-	
-	        /*
-	            Angle from center
-	            
-	            Returns the current angle, in radians, of a defined point
-	            from a center (assumed 0,0)
-	            
-	            @param [number]: X coordinate of second point
-	            @param [number]: Y coordinate of second point
-	            @return [radian]: Angle between 0, 0 and point in radians
-	        */
-	        angleFromCenter: function (x, y) {
-	            return this.radiansToDegrees(Math.atan2(y, x));
-	        },
-	        
-	        /*
-	            Convert degrees to radians
-	            
-	            @param [number]: Value in degrees
-	            @return [number]: Value in radians
-	        */
-	        degreesToRadians: function (degrees) {
-	            return degrees * Math.PI / 180;
-	        },
-	
-	        /*
-	            Dilate
-	            
-	            Change the progression between a and b according to dilation.
-	            
-	            So dilation = 0.5 would change
-	            
-	            a --------- b
-	            
-	            to
-	            
-	            a ---- b
-	            
-	            @param [number]: Previous value
-	            @param [number]: Current value
-	            @param [number]: Dilate progress by x
-	            @return [number]: Previous value plus the dilated difference
-	        */
-	        dilate: function (a, b, dilation) {
-	            return a + ((b - a) * dilation);
-	        },
-	            
-	        /*
-	            Distance
-	            
-	            Returns the distance between (0,0) and pointA, unless pointB
-	            is provided, then we return the difference between the two.
-	            
-	            @param [object/number]: x and y or just x of point A
-	            @param [object/number]: (optional): x and y or just x of point B
-	            @return [number]: The distance between the two points
-	        */
-	        distance: function (pointA, pointB) {
-	            return (typeof pointA === "number") ? this.distance1D(pointA, pointB) : this.distance2D(pointA, pointB);
-	        },
-	    
-	        /*
-	            Distance 1D
-	            
-	            Returns the distance between point A and point B
-	            
-	            @param [number]: Point A
-	            @param [number]: (optional): Point B
-	            @return [number]: The distance between the two points
-	        */
-	        distance1D: function (pointA, pointB) {
-	            var bIsNum = (typeof pointB === 'number'),
-	                from = bIsNum ? pointA : 0,
-	                to = bIsNum ? pointB : pointA;
-	    
-	            return absolute(to - from);
-	        },
-	    
-	      
-	        /*
-	            Distance 2D
-	            
-	            Returns the distance between (0,0) and point A, unless point B
-	            is provided, then we return the difference between the two.
-	            
-	            @param [object]: x and y of point A
-	            @param [object]: (optional): x and y of point B
-	            @return [number]: The distance between the two points
-	        */
-	        distance2D: function (pointA, pointB) {
-	            var bIsObj = (typeof pointB === "object"),
-	                from = bIsObj ? pointA : {x: 0, y: 0},
-	                to = bIsObj ? pointB : pointA,
-	                point = {
-	                    x: absolute(to.x - from.x),
-	                    y: absolute(to.y - from.y)
-	                };
-	                
-	            return this.hypotenuse(point.x, point.y);
-	        },
-	            
-	        /*
-	            Hypotenuse
-	            
-	            Returns the hypotenuse, side C, given the lengths of sides A and B.
-	            
-	            @param [number]: Length of A
-	            @param [number]: Length of B
-	            @return [number]: Length of C
-	        */
-	        hypotenuse: function (a, b) {
-	            var a2 = a * a,
-	                b2 = b * b,
-	                c2 = a2 + b2;
-	                
-	            return Math.sqrt(c2);
-	        },
-	        
-	        /*
-	            Offset between two inputs
-	            
-	            Calculate the difference between two different inputs
-	            
-	            @param [Point]: First input
-	            @param [Point]: Second input
-	            @return [Offset]: Distance metrics between two points
-	        */
-	        offset: function (a, b) {
-	            var offset = {};
-	    
-	            for (var key in b) {
-	                if (b.hasOwnProperty(key)) {
-	                    if (a.hasOwnProperty(key)) {
-	                        offset[key] = b[key] - a[key];
-	                    } else {
-	                        offset[key] = 0;
-	                    }
-	                } 
-	            }
-	
-	            if (isNum(offset.x) && isNum(offset.y)) {
-	                offset.angle = this.angle(a, b);
-	                offset.distance = this.distance2D(a, b);
-	            }
-	                
-	            return offset;
-	        },
-	        
-	        /*
-	            Point from angle and distance
-	            
-	            @param [object]: 2D point of origin
-	            @param [number]: Angle from origin
-	            @param [number]: Distance from origin
-	            @return [object]: Calculated 2D point
-	        */
-	        pointFromAngleAndDistance: function (origin, angle, distance) {
-	            var point = {};
-	    
-	    		point.x = distance * Math.cos(angle) + origin.x;
-	            point.y = distance * Math.sin(angle) + origin.y;
-	    
-	            return point;
-	        },
-	    
-	        /*
-	            Progress within given range
-	            
-	            Given a lower limit and an upper limit, we return the progress
-	            (expressed as a number 0-1) represented by the given value, and
-	            limit that progress to within 0-1.
-	            
-	            @param [number]: Value to find progress within given range
-	            @param [number]: Lower limit if full range given, upper if not
-	            @param [number] (optional): Upper limit of range
-	            @return [number]: Progress of value within range as expressed 0-1
-	        */
-	        progress: function (value, limitA, limitB) {
-	            var bIsNum = (typeof limitB === 'number'),
-	                from = bIsNum ? limitA : 0,
-	                to = bIsNum ? limitB : limitA,
-	                range = to - from,
-	                progress = (value - from) / range;
-	    
-	            return progress;
-	        },
-	        
-	        /*
-	            Convert radians to degrees
-	            
-	            @param [number]: Value in radians
-	            @return [number]: Value in degrees
-	        */
-	        radiansToDegrees: function (radians) {
-	            return radians * 180 / Math.PI;
-	        },
-	    
-	        
-	        /*
-	            Calculate relative value
-	            
-	            Takes the operator and value from a string, ie "+=5", and applies
-	            to the current value to resolve a new target.
-	            
-	            @param [number]: Current value
-	            @param [string]: Relative value
-	            @return [number]: New value
-	        */
-	        relativeValue: function (current, rel) {
-	            var newValue = current,
-	                equation = rel.split('='),
-	                operator = equation[0],
-	                splitVal = utils.splitValUnit(equation[1]);
-	    
-	            switch (operator) {
-	                case '+':
-	                    newValue += splitVal.value;
-	                    break;
-	                case '-':
-	                    newValue -= splitVal.value;
-	                    break;
-	                case '*':
-	                    newValue *= splitVal.value;
-	                    break;
-	                case '/':
-	                    newValue /= splitVal.value;
-	                    break;
-	            }
-	            
-	            if (splitVal.unit) {
-	                newValue += splitVal.unit;
-	            }
-	    
-	            return newValue;
-	        },
-	    
-	    
-	        /*
-	            Restrict value to range
-	            
-	            Return value within the range of lowerLimit and upperLimit
-	            
-	            @param [number]: Value to keep within range
-	            @param [number]: Lower limit of range
-	            @param [number]: Upper limit of range
-	            @return [number]: Value as limited within given range
-	        */
-	        restricted: function (value, min, max) {
-	            var restricted = (min !== undefined) ? Math.max(value, min) : value;
-	            restricted = (max !== undefined) ? Math.min(restricted, max) : restricted;
-	    
-	            return restricted;
-	        },
-	    
-	        /*
-	            Convert x per second to per frame velocity based on fps
-	            
-	            @param [number]: Unit per second
-	            @param [number]: Frame duration in ms
-	        */
-	        speedPerFrame: function (xps, frameDuration) {
-	            return (isNum(xps)) ? xps / (1000 / frameDuration) : 0;
-	        },
-	    
-	        /*
-	            Convert velocity into velicity per second
-	            
-	            @param [number]: Unit per frame
-	            @param [number]: Frame duration in ms
-	        */
-	        speedPerSecond: function (velocity, frameDuration) {
-	            return velocity * (1000 / frameDuration);
-	        },
-	    
-	     
-	        /*
-	            Value in range from progress
-	            
-	            Given a lower limit and an upper limit, we return the value within
-	            that range as expressed by progress (a number from 0-1)
-	            
-	            @param [number]: The progress between lower and upper limits expressed 0-1
-	            @param [number]: Lower limit of range, or upper if limit2 not provided
-	            @param [number] (optional): Upper limit of range
-	            @return [number]: Value as calculated from progress within range (not limited within range)
-	        */
-	        value: function (progress, limitA, limitB) {
-	            var bIsNum = (typeof limitB === 'number'),
-	                from = bIsNum ? limitA : 0,
-	                to = bIsNum ? limitB : limitA;
-	    
-	            return (- progress * from) + (progress * to) + from; 
-	        },
-	    
-	    
-	        /*
-	            Eased value in range from progress
-	            
-	            Given a lower limit and an upper limit, we return the value within
-	            that range as expressed by progress (a number from 0-1)
-	            
-	            @param [number]: The progress between lower and upper limits expressed 0-1
-	            @param [number]: Lower limit of range, or upper if limit2 not provided
-	            @param [number]: Upper limit of range
-	            @param [function]: Easing to apply to value
-	            @return [number]: Value as calculated from progress within range (not limited within range)
-	        */
-	        valueEased: function (progress, from, to, easing) {
-	            var easedProgress = easing(progress);
-	            
-	            return this.value(easedProgress, from, to);
-	        }
-	    },
-	
-	    /*
-	        Caching functions used multiple times to reduce filesize and increase performance
-	    */
-	    isNum = utils.isNum,
-	    absolute = Math.abs;
-	    
-	module.exports = calc;
-
-/***/ },
-/* 20 */
-/*!****************************!*\
-  !*** ./src/utils/utils.js ***!
-  \****************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    Utility functions
-	*/
-	"use strict";
-	
-	var protectedProperties = ['scope',  'dom'],
-	    
-	    isProtected = function (key) {
-	        return (protectedProperties.indexOf(key) !== -1);
-	    },
-	
-	    /*
-	        Get var type as string
-	        
-	        @param: Variable to test
-	        @return [string]: Returns, for instance 'Object' if [object Object]
-	    */
-	    varType = function (variable) {
-	        return Object.prototype.toString.call(variable).slice(8, -1);
-	    };
-	
-	module.exports = {
-	    
-	    /*
-	        Has one object changed from the other
-	        
-	        Compares the two provided inputs and returns true if they are different
-	        
-	        @param [object]: Input A
-	        @param [object]: Input B
-	        @return [boolean]: True if different
-	    */
-	    hasChanged: function (a, b) {
-	        var hasChanged = false,
-	            key = '';
-	
-	        for (key in b) {
-	            if (a.hasOwnProperty(key) && b.hasOwnProperty(key)) {
-	                if (a[key] !== b[key]) {
-	                    hasChanged = true;
-	                }
-	            } else {
-	                hasChanged = true;
-	            }
-	        }
-	    
-	        return hasChanged;
-	    },
-	    
-	    /*
-	        Is this var a number?
-	        
-	        @param: Variable to test
-	        @return [boolean]: Returns true if typeof === 'number'
-	    */
-	    isNum: function (num) {
-	        return (typeof num === 'number');
-	    },
-	    
-	    /*
-	        Is this var an object?
-	        
-	        @param: Variable to test
-	        @return [boolean]: Returns true if typeof === 'object'
-	    */
-	    isObj: function (obj) {
-	        return (typeof obj === 'object');
-	    },
-	    
-	    /*
-	        Is this var a function ? 
-	        
-	        @param: Variable to test
-	        @return [boolean]: Returns true if this.varType === 'Function'
-	    */
-	    isFunc: function (obj) {
-	        return (varType(obj) === 'Function'); 
-	    },
-	    
-	    /*
-	        Is this var a string ? 
-	        
-	        @param: Variable to test
-	        @return [boolean]: Returns true if typeof str === 'string'
-	    */
-	    isString: function (str) {
-	        return (typeof str === 'string'); 
-	    },
-	
-	
-	    /*
-	        Is this a relative value assignment?
-	        
-	        @param [string]: Variable to test
-	        @return [boolean]: If this looks like a relative value assignment
-	    */
-	    isRelativeValue: function (value) {
-	        return (value && value.indexOf && value.indexOf('=') > 0);
-	    },
-	    
-	    /*
-	        Is this var an array ? 
-	        
-	        @param: Variable to test
-	        @return [boolean]: Returns true if this.varType === 'Array'
-	    */
-	    isArray: function (arr) {
-	        return (varType(arr) === 'Array');
-	    },
-	    
-	    /*
-	        Copy object or array
-	        
-	        Checks whether base is an array or object and makes
-	        appropriate copy
-	        
-	        @param [array || object]: Array or object to copy
-	        @param [array || object]: New copy of array or object
-	    */
-	    copy: function (base) {
-	        return (this.isArray(base)) ? this.copyArray(base) : this.copyObject(base);
-	    },
-	    
-	    /*
-	        Deep copy an object
-	        
-	        Iterates over an object and creates a new copy of every item,
-	        deep copying if it finds any objects/arrays
-	        
-	        @param [object]: Object to copy
-	        @param [object]: New copy of object
-	    */
-	    copyObject: function (base) {
-	        var newObject = {};
-	        
-	        for (var key in base) {
-	            if (base.hasOwnProperty(key)) {
-	                newObject[key] = (this.isObj(base[key]) && !isProtected(key)) ? this.copy(base[key]) : base[key];
-	            }
-	        }
-	        
-	        return newObject;
-	    },
-	    
-	    /*
-	        Deep copy an array
-	        
-	        Loops through an array and creates a new copy of every item,
-	        deep copying if it finds any objects/arrays
-	        
-	        @param [array]: Array to copy
-	        @return [array]: New copy of array
-	    */
-	    copyArray: function (base) {
-	        var newArray = [],
-	            length = base.length,
-	            i = 0;
-	        
-	        for (var i = 0; i < length; i++) {
-	            newArray[i] = (this.isObj(base[i])) ? this.copy(base[i]) : base[i];
-	        }
-	        
-	        return newArray;
-	    },
-	    
-	    /*
-	        Non-destructive merge of object or array
-	        
-	        @param [array || object]: Array or object to use as base
-	        @param [array || object]: Array or object to overwrite base with
-	        @return [array || object]: New array or object
-	    */
-	    merge: function (base, overwrite) {
-	        return (this.isArray(base)) ? this.copyArray(overwrite) : this.mergeObject(base, overwrite);
-	    },
-	    
-	    /*
-	        Non-destructive merge of object
-	        
-	        @param [object]: Object to use as base
-	        @param [object]: Object to overwrite base with
-	        @return [object]: New object
-	    */
-	    mergeObject: function (base, overwrite) {
-	        var hasBase = this.isObj(base),
-	            newObject = hasBase ? this.copy(base) : this.copy(overwrite),
-	            key = '';
-	
-	        if (hasBase) {
-	            for (key in overwrite) {
-	                if (overwrite.hasOwnProperty(key)) {
-	                    newObject[key] = (this.isObj(overwrite[key]) && !isProtected(key)) ? this.merge(base[key], overwrite[key]) : overwrite[key];
-	                }
-	            }
-	        }
-	        return newObject;
-	    },
-	    
-	    /*
-	        Split a value into a value/unit object
-	        
-	            "200px" -> { value: 200, unit: "px" }
-	            
-	        @param [string]: Value to split
-	        @return [object]: Object with value and unit props
-	    */
-	    splitValUnit: function (value) {
-	        var splitVal = value.match(/(-?\d*\.?\d*)(.*)/);
-	
-	        return {
-	            value: parseFloat(splitVal[1]),
-	            unit:  splitVal[2]
-	        };
-	    },
-	
-	    /*
-	        Create stepped version of 0-1 progress
-	        
-	        @param [number]: Current value
-	        @param [int]: Number of steps
-	        @return [number]: Stepped value
-	    */
-	    stepProgress: function (progress, steps) {
-	        var steppedProgress = 0,
-	            progressSegment = 1 / steps,
-	            valueSegment = 1 / (steps - 1),
-	            i = 1;
-	
-	        for (; i <= steps + 1; i++) {
-	            if (progress < progressSegment * i) {
-	                steppedProgress = valueSegment * (i - 1);
-	                break;
-	            }
-	        }
-	        
-	        return steppedProgress;
-	    },
-	    
-	    /*
-	        Generate current timestamp
-	        
-	        @return [timestamp]: Current UNIX timestamp
-	    */
-	    currentTime: function () {
-		    return (typeof performance !== "undefined") ? performance.now() : new Date().getTime();
-	    }
-	    
-	};
-
-/***/ },
-/* 21 */
+/* 24 */
 /*!******************************!*\
   !*** ./src/action/routes.js ***!
   \******************************/
@@ -2631,7 +2811,7 @@
 
 	"use strict";
 	
-	var routes = __webpack_require__(/*! ../core/routes.js */ 39),
+	var routes = __webpack_require__(/*! ../core/routes.js */ 38),
 	    routeKeys = [],
 	    numRoutes,
 	    
@@ -2695,7 +2875,7 @@
 	module.exports = manager; 
 
 /***/ },
-/* 22 */
+/* 25 */
 /*!************************************!*\
   !*** ./src/core/register-rubix.js ***!
   \************************************/
@@ -2703,11 +2883,11 @@
 
 	"use strict";
 	
-	var actionPrototype = __webpack_require__(/*! ../action/action.js */ 12).prototype,
-		actionGroupPrototype = __webpack_require__(/*! ../action-group/action-group.js */ 13).prototype,
-	    generateMethodIterator = __webpack_require__(/*! ../action-group/generate-iterator.js */ 28),
-	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 29),
-	    rubix = __webpack_require__(/*! ../core/rubix.js */ 40);
+	var actionPrototype = __webpack_require__(/*! ../action/action.js */ 18).prototype,
+		actionGroupPrototype = __webpack_require__(/*! ../action-group/action-group.js */ 19).prototype,
+	    generateMethodIterator = __webpack_require__(/*! ../action-group/generate-iterator.js */ 37),
+	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 30),
+	    rubix = __webpack_require__(/*! ../core/rubix.js */ 46);
 	
 	module.exports = function (name, newRubix) {
 	    var parser = parseArgs[name] || parseArgs.generic;
@@ -2725,7 +2905,7 @@
 	}
 
 /***/ },
-/* 23 */
+/* 26 */
 /*!*****************************************!*\
   !*** ./src/core/register-simulation.js ***!
   \*****************************************/
@@ -2736,191 +2916,11 @@
 	*/
 	"use strict";
 	
-	var simulations = __webpack_require__(/*! ../core/simulations.js */ 41);
+	var simulations = __webpack_require__(/*! ../core/simulations.js */ 29);
 	
 	module.exports = function (name, simulation) {
 	    simulations[name] = simulation;
 	}
-
-/***/ },
-/* 24 */
-/*!********************************!*\
-  !*** ./src/action/simulate.js ***!
-  \********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var simulations = __webpack_require__(/*! ../core/simulations.js */ 41);
-	
-	module.exports = function (simulation, value, duration, started) {
-	    var velocity = simulations[simulation](value, duration, started);
-	    
-	    return (Math.abs(velocity) >= value.stopSpeed) ? velocity : 0;
-	};
-
-/***/ },
-/* 25 */
-/*!*********************************!*\
-  !*** ./src/routes/css/build.js ***!
-  \*********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 42),
-	    templates = __webpack_require__(/*! ./templates.js */ 43),
-	    lookup = __webpack_require__(/*! ./lookup.js */ 44),
-	    
-	    TRANSFORM = 'transform',
-	    TRANSLATE_Z = 'translateZ',
-	    
-	    /*
-	        Generate a CSS rule with the available template
-	    */
-	    generateRule = function (key, output, transformProp) {
-	        var templateKey = transformProp ? TRANSFORM : lookup[key],
-	            template = templates[templateKey];
-	
-	        return template ? template(key, output) : output[key];
-	    };
-	    
-	
-	module.exports = function (output, order, cache) {
-	    var css = {},
-	        numRules = order.length,
-	        hasZ = false,
-	        transformProp = dictionary.transformProps,
-	        i = 0,
-	        rule = '',
-	        key = '',
-	        transform = '';
-	    
-	    for (; i < numRules; i++) {
-	        key = order[i],
-	        rule = generateRule(key, output, transformProp[key]);
-	
-	        if (transformProp[key]) {
-	            transform += rule + ' ';
-	            hasZ = (key === TRANSLATE_Z) ? true : hasZ;
-	
-	        } else if (cache[key] !== rule) {
-	            css[key] = rule;
-	            cache[key] = rule;
-	        }
-	    }
-	    
-	    if (transform != '' && transform != cache[TRANSFORM]) {
-	        if (!hasZ) {
-	            transform += ' ' + TRANSLATE_Z + '(0px)';
-	        }
-	        
-	        css[TRANSFORM] = cache[TRANSFORM] = transform;
-	    }
-	
-	    return css;
-	};
-
-/***/ },
-/* 26 */
-/*!*********************************!*\
-  !*** ./src/routes/css/split.js ***!
-  \*********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 45),
-	    dictionary = __webpack_require__(/*! ./dictionary.js */ 42),
-	    splitLookup = __webpack_require__(/*! ./lookup.js */ 44),
-	    splitters = __webpack_require__(/*! ./splitters.js */ 46),
-	    
-	    utils = __webpack_require__(/*! ../../utils/utils.js */ 20),
-	    
-	    valueProperties = dictionary.valueProps,
-	    valuePropertyCount = valueProperties.length,
-	    
-	    /*
-	        Build a property
-	    */
-	    buildProperty = function (value, parentKey, unitKey, parent, assignDefault) {
-	        var property = defaultProperty[parentKey + unitKey]
-	            || defaultProperty[unitKey]
-	            || defaultProperty[parentKey]
-	            || defaultProperty.base;
-	        
-	        assignDefault = assignDefault || valueProperties[0];
-	         
-	        if (parent) {
-	            property = utils.merge(parent, property);
-	        }
-	        
-	        if (utils.isObj(value)) {
-	            property = utils.merge(property, value);
-	
-	        } else {
-	            property[assignDefault] = value;
-	        }
-	
-	        // If we have a unitKey, name property parentKey + unitKey
-	        property.name = unitKey ? parentKey + unitKey : parentKey;
-	        
-	        return property;
-	    },
-	
-	    /*
-	        Split value with provided splitterID
-	    */
-	    split = function (key, value, splitter) {
-	        var splitValue = {},
-	            splitProperty = {},
-	            newValue = {},
-	            valueKey = '',
-	            unitKey = '',
-	            i = 0;
-	            
-	        if (utils.isObj(value)) {
-	            for (; i < valuePropertyCount; i++) {
-	                valueKey = valueProperties[i];
-	                
-	                if (value.hasOwnProperty(valueKey)) {
-	                    splitProperty = splitter(value[valueKey]);
-	                    
-	                    for (unitKey in splitProperty) {
-	                        splitValue[unitKey] = splitValue[unitKey] || {};
-	                        splitValue[unitKey][valueKey] = splitProperty[unitKey];
-	                    }
-	                }
-	            }
-	        } else {
-	            splitValue = splitter(value);
-	        }
-	        
-	        for (unitKey in splitValue) {
-	            newValue[key + unitKey] = buildProperty(splitValue[unitKey], key, unitKey, value);
-	        }
-	        
-	        return newValue;
-	    };
-	
-	/*
-	    Split CSS property into individual, tweenable values
-	    
-	    @param [string]: Name of CSS property
-	    @param [string || number]: Value of CSS property
-	*/
-	module.exports = function (key, value) {
-	    var splitterID = splitLookup[key],
-	        splitter = splitters[splitterID],
-	        values = (splitter) ? split(key, value, splitter) : {};
-	
-	    // If we don't have a splitter, assign the property directly
-	    if (!splitter) {
-	        values[key] = buildProperty(value, key);
-	    }
-	    
-	    return values;
-	};
 
 /***/ },
 /* 27 */
@@ -2988,928 +2988,6 @@
 
 /***/ },
 /* 28 */
-/*!***********************************************!*\
-  !*** ./src/action-group/generate-iterator.js ***!
-  \***********************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-		Generate method iterator
-		
-		Takes a method name and returns a function that will
-		loop over all the Actions in a group and fire that
-		method with those properties
-		
-		@param [string]: Name of method
-	*/
-	module.exports = function (method) {
-		return function () {
-			var numActions = this.actions.length,
-				i = 0,
-				action;
-				
-			for (; i < numActions; i++) {
-				action = this.actions[i];
-				action[method].apply(action, arguments);
-			}
-			
-			return this;
-		};
-	};
-
-
-/***/ },
-/* 29 */
-/*!**********************************!*\
-  !*** ./src/action/parse-args.js ***!
-  \**********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 20),
-	    presets = __webpack_require__(/*! ./presets.js */ 17),
-	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 48),
-	
-	    STRING = 'string',
-	    NUMBER = 'number',
-	    OBJECT = 'object',
-	    
-	    /*
-	        Generic argument parsing
-	        
-	        Checks first argument to be a string and loads preset,
-	        merges in next object as override
-	    */
-	    generic = function () {
-	        var props = {},
-	            playlist = [],
-	            base = arguments[0],
-	            override = arguments[1],
-	            playlistLength = 0,
-	            argsAsArray = [].slice.call(arguments),
-	            i = 1;
-	
-	        if (typeof base == STRING) {
-	            playlist = base.split(' ');
-	            playlistLength = playlist.length;
-	            props = presets.getDefined(playlist[0]);
-	
-	            // If we've had multiple presets, loop through and add each to the queue
-	            if (playlistLength > 1) {
-	                for (; i < playlistLength; i++) {
-	                    argsAsArray.shift();
-	                    argsAsArray.unshift(playlist[i]);
-	                    this.queue.add.apply(this.queue, argsAsArray);
-	                }
-	            }
-	            
-	            if (typeof override == OBJECT) {
-	                props = utils.merge(props, override);
-	            }
-	        // If object, assign directly
-	        } else if (typeof base == OBJECT) {
-	            props = base;
-	        }
-	        
-	        props.playDirection = 1;
-	        
-	        return props;
-	    };
-	
-	module.exports = {
-	    
-	    /*
-	        Parse play arguments
-	        
-	        Syntax
-	            .play(preset [,override, duration, easing, onEnd])
-	            .play(properties [, duration, easing, onEnd])
-	    */
-	    play: function () {
-	        var props = generic.apply(this, arguments),
-	            argsLength = arguments.length,
-	            i = 0,
-	            arg,
-	            typeofArg = '';
-	        
-	        // Play specific properties
-	        props.loopCount = props.yoyoCount = props.flipCount = 0;
-	        
-	        for (; i < argsLength; i++) {
-	            arg = arguments[i];
-	            typeofArg = typeof arg;
-	            
-	            // Easing if string and not first index
-	            if (typeofArg == STRING && i !== 0) {
-	                props.ease = arg;
-	            
-	            // Duration if number
-	            } else if (typeofArg == NUMBER) {
-	                props.duration = arg;
-	                
-	            // Callback if function
-	            } else if (utils.isFunc(arg)) {
-	                props.onEnd = arg;
-	            }
-	        }
-	
-	        return props;
-	    },
-	    
-	    /*
-	        Parse track arguments
-	        
-	        Syntax
-	            .track(preset [, override], event/Input)
-	            .track(properties, event/Input)
-	    */
-	    track: function () {
-	        var props = {},
-	            argsLength = arguments.length,
-	            inputIndex = argsLength - 1,
-	            input = arguments[inputIndex];
-	        
-	        // Loop until inputIndex
-	        for (var i = 0; i < inputIndex; i++) {
-	            
-	            // Preset if string
-	            if (typeof arguments[i] === STRING) {
-	                props = presets.getDefined(arguments[i]);
-	                
-	            // Or override
-	            } else {
-	                props = utils.merge(props, arguments[i]);
-	            }
-	        }
-	        
-	        // Create Pointer if this isn't an Input
-	        input = (!input.current) ? new Pointer(input) : input;
-	        
-	        // Append input
-	        props.input = input;
-	
-	        if (!props.inputOrigin) {
-	            props.inputOrigin = input.get();
-	        }
-	        
-	        return props;
-	    },
-	    
-	    generic: generic
-	};
-
-/***/ },
-/* 30 */
-/*!****************************!*\
-  !*** ./src/types/value.js ***!
-  \****************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var defaultProps = __webpack_require__(/*! ../defaults/value-props.js */ 49),
-	    defaultState = __webpack_require__(/*! ../defaults/value-state.js */ 50),
-	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 51),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
-	
-	    CURRENT = 'current',
-	    ORIGIN = 'origin',
-	    FORCE_NUMBER = [CURRENT, ORIGIN, 'to', 'start'],
-	    
-	    /*
-	        Parse setter arguments
-	    */
-	    parseSetArgs = function (arg0, arg1) {
-	        var newProps = {};
-	
-	        // If we've just got a value, set default
-	        if (arguments.length === 1) {
-	            newProps[CURRENT] = arg0;
-	            
-	        // Or we've got key/value args
-	        } else {
-	            newProps[arg0] = arg1;
-	        }
-	        
-	        return newProps;
-	    },
-	
-	    /*
-	        Value constructor
-	    */
-	    Value = function (key, props, inherit, action) {
-	        this.key = key;
-	        this.action = action;
-	        this.scope = action.scope;
-	
-	        if (props.start) {
-	            props.current = props.start;
-	        }
-	
-	        this._set(defaultProps);
-	        this._set(defaultState);
-	        this.set(props, inherit);
-	    };
-	    
-	Value.prototype = {
-	
-	    /*
-	        Set value properties
-	        
-	        Syntax
-	            .set('key', value) // Set specific value
-	            .set({ key: value }) // Set multiple values
-	            .set({ key: value }, { key: value2 }) // Set multiple with inherit
-	            .set(value) // Set .current
-	    */
-	    set: function () {
-	        this._set.apply(this, arguments);
-	        
-	        // Update Action value process order
-	        this.action.updateOrder(this.key, utils.isString(this.link));
-	        
-	        return this;
-	    },
-	    
-	    /*
-	        Internal setter, doesn't update order
-	    */
-	    _set: function () {
-	        var multiVal = utils.isObj(arguments[0]),
-	            newProps = multiVal ? arguments[0] : parseSetArgs.apply(self, arguments),
-	            inherit = multiVal ? arguments[1] : false,
-	            toSet = {},
-	            key = '';
-	        
-	        // Deal with inherited values first
-	        if (inherit) {
-	            for (key in inherit) {
-	                // Check this is a Value, not Action property
-	                if (defaultProps.hasOwnProperty(key)) {
-	                    toSet[key] = inherit[key];
-	                }
-	            }
-	        }
-	        
-	        // Loop through all properties and set
-	        for (key in newProps) {
-	            toSet[key] = newProps[key];
-	        }
-	        
-	        // Loop through collected values and set
-	        for (key in toSet) {
-	            this[key] = resolve(toSet[key], this[key], this, this.scope);
-	                
-	            if (FORCE_NUMBER.indexOf(key) > -1) {
-	                this[key] = parseFloat(this[key]);
-	            }
-	            
-	            if (key === 'to') {
-	                this.target = this.to;
-	            }
-	        }
-	        
-	        // Set hasRange to true if min and max are numbers
-	        this.hasRange = (utils.isNum(this.min) && utils.isNum(this.max)) ? true : false;
-	        
-	        return this;
-	    },
-	    
-	    /*
-	        Set current value to origin
-	    */
-	    reset: function () {
-	        this._set('to', this.target);
-	        return this._set(CURRENT, this[ORIGIN]);
-	    },
-	    
-	    /*
-	        Reset properties to defaults
-	    */
-	    resetProps: function () {
-	        this.set(defaultProps);
-	    },
-	    
-	    /*
-	        Swap current target and origin
-	    */
-	    flip: function () {
-	        var newTo = this[ORIGIN],
-	            newOrigin = (this.target !== undefined) ? this.target : this[CURRENT];
-	
-	        return this.set({
-	            to: newTo,
-	            origin: newOrigin
-	        });
-	    },
-	    
-	    retarget: function (target) {
-	        target = (target !== undefined) ? target : this.target;
-	        return this.set('to', target);
-	    }
-	};
-	
-	module.exports = Value;
-
-/***/ },
-/* 31 */
-/*!*****************************!*\
-  !*** ./src/action/queue.js ***!
-  \*****************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var Queue = function () {
-	        this.clear();
-	    };
-	
-	Queue.prototype = {
-	    
-	    /*
-	        Add a set of arguments to queue
-	    */
-	    add: function () {
-	        this.queue.push([].slice.call(arguments));
-	    },
-	    
-	    /*
-	        Get next set of arguments from queue
-	    */
-	    next: function (direction) {
-	        var queue = this.queue,
-	            returnVal = false,
-	            index = this.index;
-	            
-	        direction = (arguments.length) ? direction : 1;
-	        
-	        // If our index is between 0 and the queue length, return that item
-	        if (index >= 0 && index < queue.length) {
-	            returnVal = queue[index];
-	            this.index = index + direction;
-	        
-	        // Or clear
-	        } else {
-	            this.clear();
-	        }
-	        
-	        return returnVal;
-	    },
-	
-	    /*
-	        Replace queue with empty array
-	    */
-	    clear: function () {
-	        this.queue = [];
-	        this.index = 0;
-	    }
-	};
-	
-	module.exports = Queue;
-
-/***/ },
-/* 32 */
-/*!*********************************!*\
-  !*** ./src/action/processor.js ***!
-  \*********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    Process actions
-	*/
-	"use strict";
-	
-	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 40),
-	    routes = __webpack_require__(/*! ./routes.js */ 21),
-	    calc = __webpack_require__(/*! ../utils/calc.js */ 19);
-	
-	module.exports = function (action, framestamp, frameDuration) {
-	    var values = action.values,
-	        rubix = Rubix[action.rubix],
-	        valueRubix = rubix,
-	        hasChanged = false,
-	        defaultRoute = routes.getName(),
-	        i = 0,
-	        order = action.order = action.order || [],
-	        orderLength = order.length,
-	        key = '', value, output;
-	    
-	    // Update elapsed
-	    if (rubix.updateInput) {
-	        rubix.updateInput(action, frameDuration);
-	    }
-	
-	    // Fire onStart if first frame
-	    if (action.firstFrame) {
-	        routes.shard(function (route, output) {
-	            if (route.onStart) {
-	                route.onStart(output, action, values);
-	            }
-	        }, action);
-	        
-	        action.firstFrame = false;
-	    }
-	    
-	    // Update Input if available
-	    if (action.input) {
-	        action.output.input = action.input.onFrame(framestamp);
-	    }
-	
-	    // Update values
-	    for (; i < orderLength; i++) {
-	        // Get value and key
-	        key = order[i];
-	        value = values[key];
-	
-	        // Load rubix for this value
-	        valueRubix = rubix;
-	        if (value.link) {
-	            valueRubix = Rubix['link'];
-	        }
-	
-	        // Calculate new value
-	        output = valueRubix.process(key, value, values, action, frameDuration);
-	        
-	        // Limit if range set
-	        if (valueRubix.limit) {
-	            output = valueRubix.limit(output, value);
-	        }
-	        
-	        // Round value if rounding set to true
-	        if (value.round) {
-	            output = Math.round(output);
-	        }
-	
-	        // Update change from previous frame
-	        value.frameChange = output - value.current;
-	        
-	        // Calculate velocity
-	        if (!valueRubix.calculatesVelocity) {
-	            value.velocity = calc.speedPerSecond(value.frameChange, frameDuration);
-	        }
-	        
-	        // Update current speed
-	        value.speed = Math.abs(value.velocity);
-	        
-	        // Check if changed and update
-	        if (value.current != output) {
-	            hasChanged = true;
-	        }
-	
-	        // Set current and add unit (if any) for output
-	        value.current = output;
-	        action.output[value.route] = action.output[value.route] || {};
-	        action.output[defaultRoute] = action.output[defaultRoute] || {};
-	        action.output[defaultRoute][key] = action.output[value.route][value.name] = (value.unit) ? output + value.unit : output;
-	    }
-	
-	    // shard onFrame and onChange
-	    routes.shard(function (route, output) {
-	        // Fire onFrame every frame
-	        if (route.onFrame) {
-	            route.onFrame(output, action, values);
-	        }
-	        
-	        // Fire onChanged if values have changed
-	        if (hasChanged && route.onChange) {
-	            route.onChange(output, action, values);
-	        }
-	    }, action.output);
-	
-	    // Fire onEnd if ended
-	    if (rubix.hasEnded(action, hasChanged)) {
-	        action.isActive(false);
-	        
-	        routes.shard(function (route, output) {
-	            if (route.onEnd) {
-	                route.onEnd(output, action, values);
-	            }
-	        }, action.output);
-	        
-	        if (!action.isActive() && action.rubix === 'play') {
-	            action.next();
-	        }
-	    }
-	    
-	    action.framestamp = framestamp;
-	};
-
-/***/ },
-/* 33 */
-/*!**************************************!*\
-  !*** ./src/defaults/action-props.js ***!
-  \**************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	    // [string]: What to use to process this aciton
-	    rubix: 'play',
-	    
-	    // [number]: Multiply output value by
-	    amp: 1,
-	    
-	    // [number]: Multiply output value outside min/max by
-	    escapeAmp: 0,
-	    
-	    // [number]: Delay this action by x ms
-	    delay: 0,
-	    
-	    // [number]: Time of animation (if animating) in ms
-	    duration: 400,
-	    
-	    // [string]: Ease animation
-	    ease: 'easeInOut',
-	    
-	    // [number]: Multiply progress by this (.5 is half speed)
-	    dilate: 1,
-	    
-	    // [number]: Number of frames of no change before Action is declared inactive
-	    maxInactiveFrames: 3,
-	    
-	    // [boolean || number]: Number of times to loop values, true for indefinite
-	    loop: false,
-	    
-	    // [boolean || number]: Number of times to yoyo values, true for indefinite
-	    yoyo: false,
-	    
-	    // [boolean || number]: Number of times to flip values, true for indefinite
-	    flip: false,
-	    
-	    // [function]: Callback when Action process starts
-	    onStart: undefined,
-	    
-	    // [function]: Callback when any value changes
-	    onChange: undefined,
-	    
-	    // [function]: Callback every frame
-	    onFrame: undefined,
-	    
-	    // [function]: Callback when Action process ends
-	    onEnd: undefined
-	};
-
-/***/ },
-/* 34 */
-/*!**************************************!*\
-  !*** ./src/defaults/action-state.js ***!
-  \**************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	    // [boolean]: True if Action is current active
-	    active: false,
-	    
-	    // [number]: Progress represented in a range of 0 - 1
-	    progress: 0,
-	    
-	    // [int]: Time elapsed in milliseconds
-	    elapsed: 0,
-	    
-	    // [int]: Number of frames Action has been inactive
-	    inactiveFrames: 0,
-	    
-	    // [int]: 1 = forward, -1 = backwards
-	    playDirection: 1,
-	    
-	    // [int]: Number of times values have been flipped
-	    flipCount: 0,
-	    
-	    // [int]: Number of times values have been looped
-	    loopCount: 0,
-	    
-	    // [int]: Number of times values have been yoyoed
-	    yoyoCount: 0
-	};
-
-/***/ },
-/* 35 */
-/*!**********************************!*\
-  !*** ./src/routes/css/styler.js ***!
-  \**********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var cssStyler = function () {
-		var testElement,
-			prefixes = ['Webkit','Moz','O','ms', ''],
-			prefixesLength = prefixes.length,
-			cache = {},
-			
-			/*
-				Test style property for prefixed version
-				
-				@param [string]: Style property
-				@return [string]: Cached property name
-			*/
-			testPrefix = function (key) {
-				cache[key] = key;
-	
-				for (var i = 0; i < prefixesLength; i++) {
-					var prefixed = prefixes[i] + key.charAt(0).toUpperCase() + key.slice(1);
-	
-					if (testElement.style.hasOwnProperty(prefixed)) {
-						cache[key] = prefixed;
-					}
-				}
-				
-				return cache[key];
-			};
-		
-		/*
-			Style DOM function
-			
-			Syntax
-				
-				Get property
-					style(element, 'property');
-					
-				Set property
-					style(element, {
-						foo: 'bar'
-					});
-		*/
-		return function (element, prop) {
-		    // Cache body tag if we haven't already
-			testElement = testElement || document.getElementsByTagName('body')[0];
-	
-			// If prop is a string, we're requesting a property
-			if (typeof prop === 'string') {
-				return window.getComputedStyle(element, null)[cache[prop] || testPrefix(prop)];
-			
-			// If it's an object, we're setting
-			} else {
-			    for (var key in prop) {
-					if (prop.hasOwnProperty(key)) {
-						element.style[cache[key] || testPrefix(key)] = prop[key];
-					}
-				}
-				
-				return false;
-			}
-		}
-	};
-	
-	module.exports = new cssStyler();
-
-/***/ },
-/* 36 */
-/*!******************************!*\
-  !*** ./src/utils/history.js ***!
-  \******************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var // [number]: Default max size of history
-	    maxHistorySize = 3,
-	    
-	    /*
-	        History constructor
-	        
-	        @param [var]: Variable to store in first history slot
-	        @param [int] (optional): Maximum size of history
-	    */
-	    History = function (obj, max) {
-	        this.max = max || maxHistorySize;
-	        this.entries = [];
-	        this.add(obj);
-	    };
-	    
-	History.prototype = {
-	    
-	    /*
-	        Push new var to history
-	        
-	        Shift out oldest entry if we've reached maximum capacity
-	        
-	        @param [var]: Variable to push into history.entries
-	    */
-	    add: function (obj) {
-	        var currentSize = this.getSize();
-	        
-	        this.entries.push(obj);
-	        
-	        if (currentSize >= this.max) {
-	            this.entries.shift();
-	        }
-	    },
-	    
-	    /*
-	        Get variable at specified index
-	
-	        @param [int]: Index
-	        @return [var]: Var found at specified index
-	    */
-	    get: function (i) {
-	        i = (typeof i === 'number') ? i : this.getSize() - 1;
-	
-	        return this.entries[i];
-	    },
-	    
-	    /*
-	        Get the second newest history entry
-	        
-	        @return [var]: Entry found at index size - 2
-	    */
-	    getPrevious: function () {
-	        return this.get(this.getSize() - 2);
-	    },
-	    
-	    /*
-	        Get current history size
-	        
-	        @return [int]: Current length of entries.length
-	    */
-	    getSize: function () {
-	        return this.entries.length;
-	    }
-	    
-	};
-	
-	module.exports = History;
-
-/***/ },
-/* 37 */
-/*!********************************!*\
-  !*** ./src/process/manager.js ***!
-  \********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var theLoop = __webpack_require__(/*! ./loop.js */ 52),
-	    ProcessManager = function () {
-	        this.all = {};
-	        this.active = [];
-	        this.deactivateQueue = [];
-	        theLoop.setCallback(this, this.fireActive);
-	    };
-	    
-	ProcessManager.prototype = {
-	    
-	    /*
-	        [int]: Used for process ID
-	    */
-	    processCounter: 0,
-	    
-	    /*
-	        [int]: Number of active processes
-	    */
-	    activeCount: 0,
-	    
-	    /*
-	        Get the process with a given index
-	        
-	        @param [int]: Index of process
-	        @return [Process]
-	    */
-	    getProcess: function (i) {
-	        return this.all[i];
-	    },
-	    
-	    /*
-	        Get number of active processes
-	        
-	        @return [int]: Number of active processes
-	    */
-	    getActiveCount: function () {
-	        return this.activeCount;
-	    },
-	    
-	    /*
-	        Get active tokens
-	
-	        @return [array]: Active tokens
-	    */
-	    getActive: function () {
-	        return this.active;
-	    },
-	    
-	    /*
-	        Get the length of the deactivate queue
-	        
-	        @return [int]: Length of queue
-	    */
-	    getQueueLength: function () {
-	        return this.deactivateQueue.length;
-	    },
-	    
-	    /*
-	        Fire all active processes
-	        
-	        @param [int]: Timestamp of executing frames
-	        @param [int]: Time since previous frame
-	        @return [boolean]: True if active processes found
-	    */
-	    fireActive: function (framestamp, elapsed) {
-	        var process,
-	            activeCount = 0,
-	            activeProcesses = [];
-	
-	        // Purge and check active count before execution
-	        this.purge();
-	        activeCount = this.getActiveCount();
-	        activeProcesses = this.getActive();
-	        
-	        // Loop through active processes and fire callback
-	        for (var i = 0; i < activeCount; i++) {
-	            process = this.getProcess(activeProcesses[i]);
-	            
-	            if (process) {
-	                process.fire(framestamp, elapsed);
-	            }
-	        }
-	
-	        // Repurge and recheck active count after execution
-	        this.purge();
-	        activeCount = this.getActiveCount();
-	        
-	        return activeCount ? true : false;
-	    },
-	    
-	    /*
-	        Register a new process
-	        
-	        @param [Process]
-	        @return [int]: Index of process to be used as ID
-	    */
-	    register: function (process) {
-	        var id = this.processCounter;
-	
-	        this.all[id] = process;
-	        
-	        this.processCounter++;
-	        
-	        return id;
-	    },
-	    
-	    /*
-	        Activate a process
-	        
-	        @param [int]: Index of active process
-	    */
-	    activate: function (i) {
-	        var queueIndex = this.deactivateQueue.indexOf(i),
-	            isQueued = (queueIndex > -1),
-	            isActive = (this.active.indexOf(i) > -1);
-	        
-	        // Remove from deactivateQueue if in there
-	        if (isQueued) {
-	            this.deactivateQueue.splice(queueIndex, 1);
-	        }
-	        
-	        // Add to active processes array if not already in there
-	        if (!isActive) {
-	            this.active.push(i);
-	            this.activeCount++;
-	            theLoop.start(this);
-	        }
-	    },
-	    
-	    /*
-	        Deactivate a process
-	        
-	        @param [int]: Index of process to add to deactivate queue
-	    */
-	    deactivate: function (i) {
-	        this.deactivateQueue.push(i);
-	    },
-	    
-	    /*
-	        Purge the deactivate queue
-	    */
-	    purge: function () {
-	        var activeIndex,
-	            queueLength = this.getQueueLength();
-	        
-	        while (queueLength--) {
-	            activeIndex = this.active.indexOf(this.deactivateQueue[queueLength]);
-	            
-	            // If process in active list deactivate
-	            if (activeIndex > -1) {
-	                this.active.splice(activeIndex, 1);
-	                this.activeCount--;
-	            }
-	        }
-	        
-	        this.deactivateQueue = [];
-	    },
-	    
-	    /*
-	        Remove the provided id and reindex remaining processes
-	    */
-	    kill: function (id) {
-	        delete this.all[id];
-	    }
-	    
-	};
-	
-	module.exports = new ProcessManager();
-
-/***/ },
-/* 38 */
 /*!*****************************!*\
   !*** ./src/types/bezier.js ***!
   \*****************************/
@@ -4084,73 +3162,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 39 */
-/*!****************************!*\
-  !*** ./src/core/routes.js ***!
-  \****************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {};
-
-/***/ },
-/* 40 */
-/*!***************************!*\
-  !*** ./src/core/rubix.js ***!
-  \***************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    Anatomy of a Rubix:
-	    
-	        Props
-	            surpressMethod [boolean]:
-	                If not true, will create Action shorthand method 
-	                with the name of the rubix, ie .play()
-	
-	            calculatesVelocity [boolean]:
-	                Set to true if your Rubix will calculate
-	                the new Value velocity (otherwise Redshift may override it)
-	                
-	        Methods
-	            updateInput
-	                Run once per frame, before Values are processed. .play uses this
-	                to update the timer, .track uses it to check the input device.
-	
-	                @param [Action]: The Action being processed
-	                @param [object]: Action properties
-	                @param [int]: Duration since the last frame in milliseconds
-	            
-	            process (required)
-	                Run once for every Action value, this method returns the latest value
-	
-	                @param [string]: Name of value being processed
-	                @param [Value]: Value being processed
-	                @param [object]: Action values
-	                @param [object]: Action properties
-	                @param [Action]: Action
-	                @param [int]: Duration since the last frame in milliseconds
-	                @return [int]: Latest value
-	                
-	            limit
-	                Run once for every Action value, this can be used to limit the value
-	                within any parameters
-	                
-	                @param [int]: Value returned from process method
-	                @param [Value]: Value being processed
-	                @return [int]: Latest value
-	                
-	            hasEnded (required)
-	                Returns true if this current Action has ended. Redshift will
-	                then check the Action's queue or yoyo/loop properties to decide
-	                what action to take next
-	                
-	                @param [Action]: Action being processed
-	                @param [boolean]: True if any value has changed
-	*/            
-	module.exports = {};
-
-/***/ },
-/* 41 */
+/* 29 */
 /*!*********************************!*\
   !*** ./src/core/simulations.js ***!
   \*********************************/
@@ -4166,8 +3178,8 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 19),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 12),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 14),
 	    speedPerFrame = calc.speedPerFrame;
 	
 	module.exports = {
@@ -4248,7 +3260,811 @@
 	};
 
 /***/ },
-/* 42 */
+/* 30 */
+/*!**********************************!*\
+  !*** ./src/action/parse-args.js ***!
+  \**********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 14),
+	    presets = __webpack_require__(/*! ./presets.js */ 23),
+	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 51),
+	
+	    STRING = 'string',
+	    NUMBER = 'number',
+	    OBJECT = 'object',
+	    
+	    /*
+	        Generic argument parsing
+	        
+	        Checks first argument to be a string and loads preset,
+	        merges in next object as override
+	    */
+	    generic = function () {
+	        var props = {},
+	            playlist = [],
+	            base = arguments[0],
+	            override = arguments[1],
+	            playlistLength = 0,
+	            argsAsArray = [].slice.call(arguments),
+	            i = 1;
+	
+	        if (typeof base == STRING) {
+	            playlist = base.split(' ');
+	            playlistLength = playlist.length;
+	            props = presets.getDefined(playlist[0]);
+	
+	            // If we've had multiple presets, loop through and add each to the queue
+	            if (playlistLength > 1) {
+	                for (; i < playlistLength; i++) {
+	                    argsAsArray.shift();
+	                    argsAsArray.unshift(playlist[i]);
+	                    this.queue.add.apply(this.queue, argsAsArray);
+	                }
+	            }
+	            
+	            if (typeof override == OBJECT) {
+	                props = utils.merge(props, override);
+	            }
+	        // If object, assign directly
+	        } else if (typeof base == OBJECT) {
+	            props = base;
+	        }
+	        
+	        props.playDirection = 1;
+	        
+	        return props;
+	    };
+	
+	module.exports = {
+	    
+	    /*
+	        Parse play arguments
+	        
+	        Syntax
+	            .play(preset [,override, duration, easing, onEnd])
+	            .play(properties [, duration, easing, onEnd])
+	    */
+	    play: function () {
+	        var props = generic.apply(this, arguments),
+	            argsLength = arguments.length,
+	            i = 0,
+	            arg,
+	            typeofArg = '';
+	        
+	        // Play specific properties
+	        props.loopCount = props.yoyoCount = props.flipCount = 0;
+	        
+	        for (; i < argsLength; i++) {
+	            arg = arguments[i];
+	            typeofArg = typeof arg;
+	            
+	            // Easing if string and not first index
+	            if (typeofArg == STRING && i !== 0) {
+	                props.ease = arg;
+	            
+	            // Duration if number
+	            } else if (typeofArg == NUMBER) {
+	                props.duration = arg;
+	                
+	            // Callback if function
+	            } else if (utils.isFunc(arg)) {
+	                props.onEnd = arg;
+	            }
+	        }
+	
+	        return props;
+	    },
+	    
+	    /*
+	        Parse track arguments
+	        
+	        Syntax
+	            .track(preset [, override], event/Input)
+	            .track(properties, event/Input)
+	    */
+	    track: function () {
+	        var props = {},
+	            argsLength = arguments.length,
+	            inputIndex = argsLength - 1,
+	            input = arguments[inputIndex];
+	        
+	        // Loop until inputIndex
+	        for (var i = 0; i < inputIndex; i++) {
+	            
+	            // Preset if string
+	            if (typeof arguments[i] === STRING) {
+	                props = presets.getDefined(arguments[i]);
+	                
+	            // Or override
+	            } else {
+	                props = utils.merge(props, arguments[i]);
+	            }
+	        }
+	        
+	        // Create Pointer if this isn't an Input
+	        input = (!input.current) ? new Pointer(input) : input;
+	        
+	        // Append input
+	        props.input = input;
+	
+	        if (!props.inputOrigin) {
+	            props.inputOrigin = input.get();
+	        }
+	        
+	        return props;
+	    },
+	    
+	    generic: generic
+	};
+
+/***/ },
+/* 31 */
+/*!****************************!*\
+  !*** ./src/types/value.js ***!
+  \****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var defaultProps = __webpack_require__(/*! ../defaults/value-props.js */ 48),
+	    defaultState = __webpack_require__(/*! ../defaults/value-state.js */ 49),
+	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 50),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 14),
+	
+	    CURRENT = 'current',
+	    ORIGIN = 'origin',
+	    FORCE_NUMBER = [CURRENT, ORIGIN, 'to', 'start'],
+	    
+	    /*
+	        Parse setter arguments
+	    */
+	    parseSetArgs = function (arg0, arg1) {
+	        var newProps = {};
+	
+	        // If we've just got a value, set default
+	        if (arguments.length === 1) {
+	            newProps[CURRENT] = arg0;
+	            
+	        // Or we've got key/value args
+	        } else {
+	            newProps[arg0] = arg1;
+	        }
+	        
+	        return newProps;
+	    },
+	
+	    /*
+	        Value constructor
+	    */
+	    Value = function (key, props, inherit, action) {
+	        this.key = key;
+	        this.action = action;
+	        this.scope = action.scope;
+	
+	        if (props.start) {
+	            props.current = props.start;
+	        }
+	
+	        this._set(defaultProps);
+	        this._set(defaultState);
+	        this.set(props, inherit);
+	    };
+	    
+	Value.prototype = {
+	
+	    /*
+	        Set value properties
+	        
+	        Syntax
+	            .set('key', value) // Set specific value
+	            .set({ key: value }) // Set multiple values
+	            .set({ key: value }, { key: value2 }) // Set multiple with inherit
+	            .set(value) // Set .current
+	    */
+	    set: function () {
+	        this._set.apply(this, arguments);
+	        
+	        // Update Action value process order
+	        this.action.updateOrder(this.key, utils.isString(this.link));
+	        
+	        return this;
+	    },
+	    
+	    /*
+	        Internal setter, doesn't update order
+	    */
+	    _set: function () {
+	        var multiVal = utils.isObj(arguments[0]),
+	            newProps = multiVal ? arguments[0] : parseSetArgs.apply(self, arguments),
+	            inherit = multiVal ? arguments[1] : false,
+	            toSet = {},
+	            key = '';
+	        
+	        // Deal with inherited values first
+	        if (inherit) {
+	            for (key in inherit) {
+	                // Check this is a Value, not Action property
+	                if (defaultProps.hasOwnProperty(key)) {
+	                    toSet[key] = inherit[key];
+	                }
+	            }
+	        }
+	        
+	        // Loop through all properties and set
+	        for (key in newProps) {
+	            toSet[key] = newProps[key];
+	        }
+	        
+	        // Loop through collected values and set
+	        for (key in toSet) {
+	            this[key] = resolve(toSet[key], this[key], this, this.scope);
+	                
+	            if (FORCE_NUMBER.indexOf(key) > -1) {
+	                this[key] = parseFloat(this[key]);
+	            }
+	            
+	            if (key === 'to') {
+	                this.target = this.to;
+	            }
+	        }
+	        
+	        // Set hasRange to true if min and max are numbers
+	        this.hasRange = (utils.isNum(this.min) && utils.isNum(this.max)) ? true : false;
+	        
+	        return this;
+	    },
+	    
+	    /*
+	        Set current value to origin
+	    */
+	    reset: function () {
+	        this._set('to', this.target);
+	        return this._set(CURRENT, this[ORIGIN]);
+	    },
+	    
+	    /*
+	        Reset properties to defaults
+	    */
+	    resetProps: function () {
+	        this.set(defaultProps);
+	    },
+	    
+	    /*
+	        Swap current target and origin
+	    */
+	    flip: function () {
+	        var newTo = this[ORIGIN],
+	            newOrigin = (this.target !== undefined) ? this.target : this[CURRENT];
+	
+	        return this.set({
+	            to: newTo,
+	            origin: newOrigin
+	        });
+	    },
+	    
+	    retarget: function (target) {
+	        target = (target !== undefined) ? target : this.target;
+	        return this.set('to', target);
+	    }
+	};
+	
+	module.exports = Value;
+
+/***/ },
+/* 32 */
+/*!*****************************!*\
+  !*** ./src/action/queue.js ***!
+  \*****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var Queue = function () {
+	        this.clear();
+	    };
+	
+	Queue.prototype = {
+	    
+	    /*
+	        Add a set of arguments to queue
+	    */
+	    add: function () {
+	        this.queue.push([].slice.call(arguments));
+	    },
+	    
+	    /*
+	        Get next set of arguments from queue
+	    */
+	    next: function (direction) {
+	        var queue = this.queue,
+	            returnVal = false,
+	            index = this.index;
+	            
+	        direction = (arguments.length) ? direction : 1;
+	        
+	        // If our index is between 0 and the queue length, return that item
+	        if (index >= 0 && index < queue.length) {
+	            returnVal = queue[index];
+	            this.index = index + direction;
+	        
+	        // Or clear
+	        } else {
+	            this.clear();
+	        }
+	        
+	        return returnVal;
+	    },
+	
+	    /*
+	        Replace queue with empty array
+	    */
+	    clear: function () {
+	        this.queue = [];
+	        this.index = 0;
+	    }
+	};
+	
+	module.exports = Queue;
+
+/***/ },
+/* 33 */
+/*!*********************************!*\
+  !*** ./src/action/processor.js ***!
+  \*********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Process actions
+	*/
+	"use strict";
+	
+	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 46),
+	    routes = __webpack_require__(/*! ./routes.js */ 24),
+	    calc = __webpack_require__(/*! ../utils/calc.js */ 12);
+	
+	module.exports = function (action, framestamp, frameDuration) {
+	    var values = action.values,
+	        rubix = Rubix[action.rubix],
+	        valueRubix = rubix,
+	        hasChanged = false,
+	        defaultRoute = routes.getName(),
+	        i = 0,
+	        order = action.order = action.order || [],
+	        orderLength = order.length,
+	        key = '', value, output;
+	    
+	    // Update elapsed
+	    if (rubix.updateInput) {
+	        rubix.updateInput(action, frameDuration);
+	    }
+	
+	    // Fire onStart if first frame
+	    if (action.firstFrame) {
+	        routes.shard(function (route, output) {
+	            if (route.onStart) {
+	                route.onStart(output, action, values);
+	            }
+	        }, action);
+	        
+	        action.firstFrame = false;
+	    }
+	    
+	    // Update Input if available
+	    if (action.input) {
+	        action.output.input = action.input.onFrame(framestamp);
+	    }
+	
+	    // Update values
+	    for (; i < orderLength; i++) {
+	        // Get value and key
+	        key = order[i];
+	        value = values[key];
+	
+	        // Load rubix for this value
+	        valueRubix = rubix;
+	        if (value.link) {
+	            valueRubix = Rubix['link'];
+	        }
+	
+	        // Calculate new value
+	        output = valueRubix.process(key, value, values, action, frameDuration);
+	        
+	        // Limit if range set
+	        if (valueRubix.limit) {
+	            output = valueRubix.limit(output, value);
+	        }
+	        
+	        // Round value if rounding set to true
+	        if (value.round) {
+	            output = Math.round(output);
+	        }
+	
+	        // Update change from previous frame
+	        value.frameChange = output - value.current;
+	        
+	        // Calculate velocity
+	        if (!valueRubix.calculatesVelocity) {
+	            value.velocity = calc.speedPerSecond(value.frameChange, frameDuration);
+	        }
+	        
+	        // Update current speed
+	        value.speed = Math.abs(value.velocity);
+	        
+	        // Check if changed and update
+	        if (value.current != output) {
+	            hasChanged = true;
+	        }
+	
+	        // Set current and add unit (if any) for output
+	        value.current = output;
+	        action.output[value.route] = action.output[value.route] || {};
+	        action.output[defaultRoute] = action.output[defaultRoute] || {};
+	        action.output[defaultRoute][key] = action.output[value.route][value.name] = (value.unit) ? output + value.unit : output;
+	    }
+	
+	    // shard onFrame and onChange
+	    routes.shard(function (route, output) {
+	        // Fire onFrame every frame
+	        if (route.onFrame) {
+	            route.onFrame(output, action, values);
+	        }
+	        
+	        // Fire onChanged if values have changed
+	        if (hasChanged && route.onChange) {
+	            route.onChange(output, action, values);
+	        }
+	    }, action.output);
+	
+	    // Fire onEnd if ended
+	    if (rubix.hasEnded(action, hasChanged)) {
+	        action.isActive(false);
+	        
+	        routes.shard(function (route, output) {
+	            if (route.onEnd) {
+	                route.onEnd(output, action, values);
+	            }
+	        }, action.output);
+	        
+	        if (!action.isActive() && action.rubix === 'play') {
+	            action.next();
+	        }
+	    }
+	    
+	    action.framestamp = framestamp;
+	};
+
+/***/ },
+/* 34 */
+/*!**************************************!*\
+  !*** ./src/defaults/action-props.js ***!
+  \**************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	    // [string]: What to use to process this aciton
+	    rubix: 'play',
+	    
+	    // [number]: Multiply output value by
+	    amp: 1,
+	    
+	    // [number]: Multiply output value outside min/max by
+	    escapeAmp: 0,
+	    
+	    // [number]: Delay this action by x ms
+	    delay: 0,
+	    
+	    // [number]: Time of animation (if animating) in ms
+	    duration: 400,
+	    
+	    // [string]: Ease animation
+	    ease: 'easeInOut',
+	    
+	    // [number]: Multiply progress by this (.5 is half speed)
+	    dilate: 1,
+	    
+	    // [number]: Number of frames of no change before Action is declared inactive
+	    maxInactiveFrames: 3,
+	    
+	    // [boolean || number]: Number of times to loop values, true for indefinite
+	    loop: false,
+	    
+	    // [boolean || number]: Number of times to yoyo values, true for indefinite
+	    yoyo: false,
+	    
+	    // [boolean || number]: Number of times to flip values, true for indefinite
+	    flip: false,
+	    
+	    // [function]: Callback when Action process starts
+	    onStart: undefined,
+	    
+	    // [function]: Callback when any value changes
+	    onChange: undefined,
+	    
+	    // [function]: Callback every frame
+	    onFrame: undefined,
+	    
+	    // [function]: Callback when Action process ends
+	    onEnd: undefined
+	};
+
+/***/ },
+/* 35 */
+/*!**************************************!*\
+  !*** ./src/defaults/action-state.js ***!
+  \**************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	    // [boolean]: True if Action is current active
+	    active: false,
+	    
+	    // [number]: Progress represented in a range of 0 - 1
+	    progress: 0,
+	    
+	    // [int]: Time elapsed in milliseconds
+	    elapsed: 0,
+	    
+	    // [int]: Number of frames Action has been inactive
+	    inactiveFrames: 0,
+	    
+	    // [int]: 1 = forward, -1 = backwards
+	    playDirection: 1,
+	    
+	    // [int]: Number of times values have been flipped
+	    flipCount: 0,
+	    
+	    // [int]: Number of times values have been looped
+	    loopCount: 0,
+	    
+	    // [int]: Number of times values have been yoyoed
+	    yoyoCount: 0
+	};
+
+/***/ },
+/* 36 */
+/*!**********************************!*\
+  !*** ./src/routes/css/styler.js ***!
+  \**********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var cssStyler = function () {
+		var testElement,
+			prefixes = ['Webkit','Moz','O','ms', ''],
+			prefixesLength = prefixes.length,
+			cache = {},
+			
+			/*
+				Test style property for prefixed version
+				
+				@param [string]: Style property
+				@return [string]: Cached property name
+			*/
+			testPrefix = function (key) {
+				cache[key] = key;
+	
+				for (var i = 0; i < prefixesLength; i++) {
+					var prefixed = prefixes[i] + key.charAt(0).toUpperCase() + key.slice(1);
+	
+					if (testElement.style.hasOwnProperty(prefixed)) {
+						cache[key] = prefixed;
+					}
+				}
+				
+				return cache[key];
+			};
+		
+		/*
+			Style DOM function
+			
+			Syntax
+				
+				Get property
+					style(element, 'property');
+					
+				Set property
+					style(element, {
+						foo: 'bar'
+					});
+		*/
+		return function (element, prop) {
+		    // Cache body tag if we haven't already
+			testElement = testElement || document.getElementsByTagName('body')[0];
+	
+			// If prop is a string, we're requesting a property
+			if (typeof prop === 'string') {
+				return window.getComputedStyle(element, null)[cache[prop] || testPrefix(prop)];
+			
+			// If it's an object, we're setting
+			} else {
+			    for (var key in prop) {
+					if (prop.hasOwnProperty(key)) {
+						element.style[cache[key] || testPrefix(key)] = prop[key];
+					}
+				}
+				
+				return false;
+			}
+		}
+	};
+	
+	module.exports = new cssStyler();
+
+/***/ },
+/* 37 */
+/*!***********************************************!*\
+  !*** ./src/action-group/generate-iterator.js ***!
+  \***********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+		Generate method iterator
+		
+		Takes a method name and returns a function that will
+		loop over all the Actions in a group and fire that
+		method with those properties
+		
+		@param [string]: Name of method
+	*/
+	module.exports = function (method) {
+		return function () {
+			var numActions = this.actions.length,
+				i = 0,
+				action;
+				
+			for (; i < numActions; i++) {
+				action = this.actions[i];
+				action[method].apply(action, arguments);
+			}
+			
+			return this;
+		};
+	};
+
+
+/***/ },
+/* 38 */
+/*!****************************!*\
+  !*** ./src/core/routes.js ***!
+  \****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {};
+
+/***/ },
+/* 39 */
+/*!******************************!*\
+  !*** ./src/utils/history.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var // [number]: Default max size of history
+	    maxHistorySize = 3,
+	    
+	    /*
+	        History constructor
+	        
+	        @param [var]: Variable to store in first history slot
+	        @param [int] (optional): Maximum size of history
+	    */
+	    History = function (obj, max) {
+	        this.max = max || maxHistorySize;
+	        this.entries = [];
+	        this.add(obj);
+	    };
+	    
+	History.prototype = {
+	    
+	    /*
+	        Push new var to history
+	        
+	        Shift out oldest entry if we've reached maximum capacity
+	        
+	        @param [var]: Variable to push into history.entries
+	    */
+	    add: function (obj) {
+	        var currentSize = this.getSize();
+	        
+	        this.entries.push(obj);
+	        
+	        if (currentSize >= this.max) {
+	            this.entries.shift();
+	        }
+	    },
+	    
+	    /*
+	        Get variable at specified index
+	
+	        @param [int]: Index
+	        @return [var]: Var found at specified index
+	    */
+	    get: function (i) {
+	        i = (typeof i === 'number') ? i : this.getSize() - 1;
+	
+	        return this.entries[i];
+	    },
+	    
+	    /*
+	        Get the second newest history entry
+	        
+	        @return [var]: Entry found at index size - 2
+	    */
+	    getPrevious: function () {
+	        return this.get(this.getSize() - 2);
+	    },
+	    
+	    /*
+	        Get current history size
+	        
+	        @return [int]: Current length of entries.length
+	    */
+	    getSize: function () {
+	        return this.entries.length;
+	    }
+	    
+	};
+	
+	module.exports = History;
+
+/***/ },
+/* 40 */
+/*!********************************************!*\
+  !*** ./src/routes/css/default-property.js ***!
+  \********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var color = {
+	        min: 0,
+	        max: 255,
+	        round: true
+	    },
+	    opacity = {
+	        min: 0,
+	        max: 1
+	    },
+	    angle = {
+	        unit: 'deg'
+	    },
+	    scale = {},
+	    defaults = {
+	        base: {
+	            unit: 'px'
+	        },
+	        
+	        color: color,
+	        Red: color,
+	        Green: color,
+	        Blue: color,
+	    
+	        Alpha: opacity,
+	        opacity: opacity,
+	        
+	        scale: scale,
+	        scaleX: scale,
+	        scaleY: scale,
+	        scaleZ: scale,
+	        
+	        skew: angle,
+	        skewX: angle,
+	        skewY: angle,
+	        rotate: angle,
+	        rotateX: angle,
+	        rotateY: angle,
+	        rotateZ: angle
+	    };
+	    
+	module.exports = defaults;
+
+/***/ },
+/* 41 */
 /*!**************************************!*\
   !*** ./src/routes/css/dictionary.js ***!
   \**************************************/
@@ -4302,83 +4118,7 @@
 	module.exports = terms;
 
 /***/ },
-/* 43 */
-/*!*************************************!*\
-  !*** ./src/routes/css/templates.js ***!
-  \*************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 42),
-	
-	    defaultValues = {
-	        Alpha: 1
-	    },
-	
-	    functionCreate = function (value, prefix) {
-	        return prefix + '(' + value + ')';
-	    },
-	
-	    createSpaceDelimited = function (key, object, terms) {
-	        return createDelimitedString(key, object, terms, ' ');
-	    },
-	    
-	    createCommaDelimited = function (key, object, terms) {
-	        return createDelimitedString(key, object, terms, ', ').slice(0, -2);
-	    },
-	    
-	    createDelimitedString = function (key, object, terms, delimiter) {
-	        var string = '',
-	            propKey = '',
-	            termsLength = terms.length;
-	        
-	        for (var i = 0; i < termsLength; i++) {
-	            propKey = key + terms[i];
-	
-	            if (object[propKey] !== undefined) {
-	                string += object[propKey];
-	            } else {
-	                if (defaultValues[terms[i]] !== undefined) {
-	                    string += defaultValues[terms[i]];
-	                }
-	            }
-	            
-	            string += delimiter;
-	        }
-	    
-	        return string;
-	    },
-	
-	    templates = {
-	        
-	        colors: function (key, values) {
-	            return functionCreate(createCommaDelimited(key, values, dictionary.colors), 'rgba');
-	        },
-	        
-	        dimensions: function (key, values) {
-	            return createSpaceDelimited(key, values, dictionary.dimensions);
-	        },
-	        
-	        positions: function (key, values) {
-	            return createSpaceDelimited(key, values, dictionary.positions);
-	        },
-	        
-	        shadow: function (key, values) {
-	            var shadowTerms = dictionary.shadow.slice(0,4);
-	            
-	            return createSpaceDelimited(key, values, shadowTerms) + templates.colors(key, values);
-	        },
-	        
-	        transform: function (key, values) {
-	            return key + '(' + values[key] +')';
-	        }
-	    };
-	
-	module.exports = templates;
-
-/***/ },
-/* 44 */
+/* 42 */
 /*!**********************************!*\
   !*** ./src/routes/css/lookup.js ***!
   \**********************************/
@@ -4426,58 +4166,7 @@
 	};
 
 /***/ },
-/* 45 */
-/*!********************************************!*\
-  !*** ./src/routes/css/default-property.js ***!
-  \********************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var color = {
-	        min: 0,
-	        max: 255,
-	        round: true
-	    },
-	    opacity = {
-	        min: 0,
-	        max: 1
-	    },
-	    angle = {
-	        unit: 'deg'
-	    },
-	    scale = {},
-	    defaults = {
-	        base: {
-	            unit: 'px'
-	        },
-	        
-	        color: color,
-	        Red: color,
-	        Green: color,
-	        Blue: color,
-	    
-	        Alpha: opacity,
-	        opacity: opacity,
-	        
-	        scale: scale,
-	        scaleX: scale,
-	        scaleY: scale,
-	        scaleZ: scale,
-	        
-	        skew: angle,
-	        skewX: angle,
-	        skewY: angle,
-	        rotate: angle,
-	        rotateX: angle,
-	        rotateY: angle,
-	        rotateZ: angle
-	    };
-	    
-	module.exports = defaults;
-
-/***/ },
-/* 46 */
+/* 43 */
 /*!*************************************!*\
   !*** ./src/routes/css/splitters.js ***!
   \*************************************/
@@ -4485,8 +4174,8 @@
 
 	"use strict";
 	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 42),
-	    utils = __webpack_require__(/*! ../../utils/utils.js */ 20),
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 41),
+	    utils = __webpack_require__(/*! ../../utils/utils.js */ 14),
 	
 	    /*
 	        Split comma delimited into array
@@ -4716,6 +4405,317 @@
 	module.exports = splitters;
 
 /***/ },
+/* 44 */
+/*!********************************!*\
+  !*** ./src/process/manager.js ***!
+  \********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var theLoop = __webpack_require__(/*! ./loop.js */ 52),
+	    ProcessManager = function () {
+	        this.all = {};
+	        this.active = [];
+	        this.deactivateQueue = [];
+	        theLoop.setCallback(this, this.fireActive);
+	    };
+	    
+	ProcessManager.prototype = {
+	    
+	    /*
+	        [int]: Used for process ID
+	    */
+	    processCounter: 0,
+	    
+	    /*
+	        [int]: Number of active processes
+	    */
+	    activeCount: 0,
+	    
+	    /*
+	        Get the process with a given index
+	        
+	        @param [int]: Index of process
+	        @return [Process]
+	    */
+	    getProcess: function (i) {
+	        return this.all[i];
+	    },
+	    
+	    /*
+	        Get number of active processes
+	        
+	        @return [int]: Number of active processes
+	    */
+	    getActiveCount: function () {
+	        return this.activeCount;
+	    },
+	    
+	    /*
+	        Get active tokens
+	
+	        @return [array]: Active tokens
+	    */
+	    getActive: function () {
+	        return this.active;
+	    },
+	    
+	    /*
+	        Get the length of the deactivate queue
+	        
+	        @return [int]: Length of queue
+	    */
+	    getQueueLength: function () {
+	        return this.deactivateQueue.length;
+	    },
+	    
+	    /*
+	        Fire all active processes
+	        
+	        @param [int]: Timestamp of executing frames
+	        @param [int]: Time since previous frame
+	        @return [boolean]: True if active processes found
+	    */
+	    fireActive: function (framestamp, elapsed) {
+	        var process,
+	            activeCount = 0,
+	            activeProcesses = [];
+	
+	        // Purge and check active count before execution
+	        this.purge();
+	        activeCount = this.getActiveCount();
+	        activeProcesses = this.getActive();
+	        
+	        // Loop through active processes and fire callback
+	        for (var i = 0; i < activeCount; i++) {
+	            process = this.getProcess(activeProcesses[i]);
+	            
+	            if (process) {
+	                process.fire(framestamp, elapsed);
+	            }
+	        }
+	
+	        // Repurge and recheck active count after execution
+	        this.purge();
+	        activeCount = this.getActiveCount();
+	        
+	        return activeCount ? true : false;
+	    },
+	    
+	    /*
+	        Register a new process
+	        
+	        @param [Process]
+	        @return [int]: Index of process to be used as ID
+	    */
+	    register: function (process) {
+	        var id = this.processCounter;
+	
+	        this.all[id] = process;
+	        
+	        this.processCounter++;
+	        
+	        return id;
+	    },
+	    
+	    /*
+	        Activate a process
+	        
+	        @param [int]: Index of active process
+	    */
+	    activate: function (i) {
+	        var queueIndex = this.deactivateQueue.indexOf(i),
+	            isQueued = (queueIndex > -1),
+	            isActive = (this.active.indexOf(i) > -1);
+	        
+	        // Remove from deactivateQueue if in there
+	        if (isQueued) {
+	            this.deactivateQueue.splice(queueIndex, 1);
+	        }
+	        
+	        // Add to active processes array if not already in there
+	        if (!isActive) {
+	            this.active.push(i);
+	            this.activeCount++;
+	            theLoop.start(this);
+	        }
+	    },
+	    
+	    /*
+	        Deactivate a process
+	        
+	        @param [int]: Index of process to add to deactivate queue
+	    */
+	    deactivate: function (i) {
+	        this.deactivateQueue.push(i);
+	    },
+	    
+	    /*
+	        Purge the deactivate queue
+	    */
+	    purge: function () {
+	        var activeIndex,
+	            queueLength = this.getQueueLength();
+	        
+	        while (queueLength--) {
+	            activeIndex = this.active.indexOf(this.deactivateQueue[queueLength]);
+	            
+	            // If process in active list deactivate
+	            if (activeIndex > -1) {
+	                this.active.splice(activeIndex, 1);
+	                this.activeCount--;
+	            }
+	        }
+	        
+	        this.deactivateQueue = [];
+	    },
+	    
+	    /*
+	        Remove the provided id and reindex remaining processes
+	    */
+	    kill: function (id) {
+	        delete this.all[id];
+	    }
+	    
+	};
+	
+	module.exports = new ProcessManager();
+
+/***/ },
+/* 45 */
+/*!*************************************!*\
+  !*** ./src/routes/css/templates.js ***!
+  \*************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 41),
+	
+	    defaultValues = {
+	        Alpha: 1
+	    },
+	
+	    functionCreate = function (value, prefix) {
+	        return prefix + '(' + value + ')';
+	    },
+	
+	    createSpaceDelimited = function (key, object, terms) {
+	        return createDelimitedString(key, object, terms, ' ');
+	    },
+	    
+	    createCommaDelimited = function (key, object, terms) {
+	        return createDelimitedString(key, object, terms, ', ').slice(0, -2);
+	    },
+	    
+	    createDelimitedString = function (key, object, terms, delimiter) {
+	        var string = '',
+	            propKey = '',
+	            termsLength = terms.length;
+	        
+	        for (var i = 0; i < termsLength; i++) {
+	            propKey = key + terms[i];
+	
+	            if (object[propKey] !== undefined) {
+	                string += object[propKey];
+	            } else {
+	                if (defaultValues[terms[i]] !== undefined) {
+	                    string += defaultValues[terms[i]];
+	                }
+	            }
+	            
+	            string += delimiter;
+	        }
+	    
+	        return string;
+	    },
+	
+	    templates = {
+	        
+	        colors: function (key, values) {
+	            return functionCreate(createCommaDelimited(key, values, dictionary.colors), 'rgba');
+	        },
+	        
+	        dimensions: function (key, values) {
+	            return createSpaceDelimited(key, values, dictionary.dimensions);
+	        },
+	        
+	        positions: function (key, values) {
+	            return createSpaceDelimited(key, values, dictionary.positions);
+	        },
+	        
+	        shadow: function (key, values) {
+	            var shadowTerms = dictionary.shadow.slice(0,4);
+	            
+	            return createSpaceDelimited(key, values, shadowTerms) + templates.colors(key, values);
+	        },
+	        
+	        transform: function (key, values) {
+	            return key + '(' + values[key] +')';
+	        }
+	    };
+	
+	module.exports = templates;
+
+/***/ },
+/* 46 */
+/*!***************************!*\
+  !*** ./src/core/rubix.js ***!
+  \***************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Anatomy of a Rubix:
+	    
+	        Props
+	            surpressMethod [boolean]:
+	                If not true, will create Action shorthand method 
+	                with the name of the rubix, ie .play()
+	
+	            calculatesVelocity [boolean]:
+	                Set to true if your Rubix will calculate
+	                the new Value velocity (otherwise Redshift may override it)
+	                
+	        Methods
+	            updateInput
+	                Run once per frame, before Values are processed. .play uses this
+	                to update the timer, .track uses it to check the input device.
+	
+	                @param [Action]: The Action being processed
+	                @param [object]: Action properties
+	                @param [int]: Duration since the last frame in milliseconds
+	            
+	            process (required)
+	                Run once for every Action value, this method returns the latest value
+	
+	                @param [string]: Name of value being processed
+	                @param [Value]: Value being processed
+	                @param [object]: Action values
+	                @param [object]: Action properties
+	                @param [Action]: Action
+	                @param [int]: Duration since the last frame in milliseconds
+	                @return [int]: Latest value
+	                
+	            limit
+	                Run once for every Action value, this can be used to limit the value
+	                within any parameters
+	                
+	                @param [int]: Value returned from process method
+	                @param [Value]: Value being processed
+	                @return [int]: Latest value
+	                
+	            hasEnded (required)
+	                Returns true if this current Action has ended. Redshift will
+	                then check the Action's queue or yoyo/loop properties to decide
+	                what action to take next
+	                
+	                @param [Action]: Action being processed
+	                @param [boolean]: True if any value has changed
+	*/            
+	module.exports = {};
+
+/***/ },
 /* 47 */
 /*!***********************************!*\
   !*** ./src/routes/path/lookup.js ***!
@@ -4737,103 +4737,6 @@
 
 /***/ },
 /* 48 */
-/*!******************************!*\
-  !*** ./src/input/pointer.js ***!
-  \******************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var Input = __webpack_require__(/*! ./input.js */ 15),
-	    currentPointer, // Sort this out for multitouch
-	    
-	    TOUCHMOVE = 'touchmove',
-	    MOUSEMOVE = 'mousemove',
-	
-	    /*
-	        Convert event into point
-	        
-	        Scrape the x/y coordinates from the provided event
-	        
-	        @param [event]: Original pointer event
-	        @param [boolean]: True if touch event
-	        @return [object]: x/y coordinates of event
-	    */
-	    eventToPoint = function (event, isTouchEvent) {
-	        var touchChanged = isTouchEvent ? event.changedTouches[0] : false;
-	        
-	        return {
-	            x: touchChanged ? touchChanged.clientX : event.pageX,
-	            y: touchChanged ? touchChanged.clientY : event.pageY
-	        }
-	    },
-	    
-	    /*
-	        Get actual event
-	        
-	        Checks for jQuery's .originalEvent if present
-	        
-	        @param [event | jQuery event]
-	        @return [event]: The actual JS event  
-	    */
-	    getActualEvent = function (event) {
-	        return event.originalEvent || event;
-	    },
-	
-	    
-	    /*
-	        Pointer constructor
-	    */
-	    Pointer = function (e) {
-	        var event = getActualEvent(e), // In case of jQuery event
-	            isTouch = (event.touches) ? true : false,
-	            startPoint = eventToPoint(event, isTouch);
-	        
-	        this.update(startPoint);
-	        this.isTouch = isTouch;
-	        this.bindEvents();
-	    },
-	    
-	    proto = Pointer.prototype = new Input();
-	
-	/*
-	    Bind move event
-	*/
-	proto.bindEvents = function () {
-	    this.moveEvent = this.isTouch ? TOUCHMOVE : MOUSEMOVE;
-	    
-	    currentPointer = this;
-	    
-	    document.documentElement.addEventListener(this.moveEvent, this.onMove);
-	};
-	
-	/*
-	    Unbind move event
-	*/
-	proto.unbindEvents = function () {
-	    document.documentElement.removeEventListener(this.moveEvent, this.onMove);
-	};
-	
-	/*
-	    Pointer onMove event handler
-	    
-	    @param [event]: Pointer move event
-	*/
-	proto.onMove = function (e) {
-	    var newPoint = eventToPoint(e, currentPointer.isTouch);
-	    e = getActualEvent(e);
-	    e.preventDefault();
-	    currentPointer.update(newPoint);
-	};
-	
-	proto.stop = function () {
-	    this.unbindEvents();
-	};
-	
-	module.exports = Pointer;
-
-/***/ },
-/* 49 */
 /*!*************************************!*\
   !*** ./src/defaults/value-props.js ***!
   \*************************************/
@@ -4950,7 +4853,7 @@
 	};
 
 /***/ },
-/* 50 */
+/* 49 */
 /*!*************************************!*\
   !*** ./src/defaults/value-state.js ***!
   \*************************************/
@@ -4971,7 +4874,7 @@
 	};
 
 /***/ },
-/* 51 */
+/* 50 */
 /*!******************************!*\
   !*** ./src/utils/resolve.js ***!
   \******************************/
@@ -4995,8 +4898,8 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ./calc.js */ 19),
-	    utils = __webpack_require__(/*! ./utils.js */ 20);
+	var calc = __webpack_require__(/*! ./calc.js */ 12),
+	    utils = __webpack_require__(/*! ./utils.js */ 14);
 	
 	module.exports = function (newValue, currentValue, parent, scope) {
 	    var splitValueUnit = {};
@@ -5025,6 +4928,103 @@
 	
 	    return newValue;
 	};
+
+/***/ },
+/* 51 */
+/*!******************************!*\
+  !*** ./src/input/pointer.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var Input = __webpack_require__(/*! ./input.js */ 21),
+	    currentPointer, // Sort this out for multitouch
+	    
+	    TOUCHMOVE = 'touchmove',
+	    MOUSEMOVE = 'mousemove',
+	
+	    /*
+	        Convert event into point
+	        
+	        Scrape the x/y coordinates from the provided event
+	        
+	        @param [event]: Original pointer event
+	        @param [boolean]: True if touch event
+	        @return [object]: x/y coordinates of event
+	    */
+	    eventToPoint = function (event, isTouchEvent) {
+	        var touchChanged = isTouchEvent ? event.changedTouches[0] : false;
+	        
+	        return {
+	            x: touchChanged ? touchChanged.clientX : event.pageX,
+	            y: touchChanged ? touchChanged.clientY : event.pageY
+	        }
+	    },
+	    
+	    /*
+	        Get actual event
+	        
+	        Checks for jQuery's .originalEvent if present
+	        
+	        @param [event | jQuery event]
+	        @return [event]: The actual JS event  
+	    */
+	    getActualEvent = function (event) {
+	        return event.originalEvent || event;
+	    },
+	
+	    
+	    /*
+	        Pointer constructor
+	    */
+	    Pointer = function (e) {
+	        var event = getActualEvent(e), // In case of jQuery event
+	            isTouch = (event.touches) ? true : false,
+	            startPoint = eventToPoint(event, isTouch);
+	        
+	        this.update(startPoint);
+	        this.isTouch = isTouch;
+	        this.bindEvents();
+	    },
+	    
+	    proto = Pointer.prototype = new Input();
+	
+	/*
+	    Bind move event
+	*/
+	proto.bindEvents = function () {
+	    this.moveEvent = this.isTouch ? TOUCHMOVE : MOUSEMOVE;
+	    
+	    currentPointer = this;
+	    
+	    document.documentElement.addEventListener(this.moveEvent, this.onMove);
+	};
+	
+	/*
+	    Unbind move event
+	*/
+	proto.unbindEvents = function () {
+	    document.documentElement.removeEventListener(this.moveEvent, this.onMove);
+	};
+	
+	/*
+	    Pointer onMove event handler
+	    
+	    @param [event]: Pointer move event
+	*/
+	proto.onMove = function (e) {
+	    var newPoint = eventToPoint(e, currentPointer.isTouch);
+	    e = getActualEvent(e);
+	    e.preventDefault();
+	    currentPointer.update(newPoint);
+	};
+	
+	proto.stop = function () {
+	    this.unbindEvents();
+	};
+	
+	module.exports = Pointer;
 
 /***/ },
 /* 52 */
@@ -5112,7 +5112,7 @@
 
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 20),
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 14),
 	
 	    maxElapsed = 33,
 	    Timer = function () {
