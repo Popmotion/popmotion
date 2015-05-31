@@ -1298,6 +1298,8 @@
 			    i = newIndex;
 			}
 		}, duration * numActions, ease);
+		
+		return this;
 	};
 	
 	/*

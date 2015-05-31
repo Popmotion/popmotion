@@ -57,6 +57,8 @@ actionGroupPrototype.stagger = function (method, duration, props, ease) {
 		    i = newIndex;
 		}
 	}, duration * numActions, ease);
+	
+	return this;
 };
 
 /*
