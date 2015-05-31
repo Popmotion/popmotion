@@ -1374,7 +1374,7 @@
 	
 	var calc = __webpack_require__(/*! ../utils/calc.js */ 19),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
-	    History = __webpack_require__(/*! ../utils/history.js */ 38),
+	    History = __webpack_require__(/*! ../utils/history.js */ 37),
 	
 	    /*
 	        Input constructor
@@ -1506,7 +1506,7 @@
 	*/
 	"use strict";
 	
-	var manager = __webpack_require__(/*! ./manager.js */ 37),
+	var manager = __webpack_require__(/*! ./manager.js */ 38),
 	
 	    /*
 	        Process constructor
@@ -2023,7 +2023,43 @@
 	var utils = __webpack_require__(/*! ./utils.js */ 20),
 	
 	    calc = {
-	       /*
+	        
+	        /*
+	            Angle between points
+	            
+	            Translates the hypothetical line so that the 'from' coordinates
+	            are at 0,0, then return the angle using .angleFromCenter()
+	            
+	            @param [object]: X and Y coordinates of from point
+	            @param [object]: X and Y cordinates of to point
+	            @return [radian]: Angle between the two points in radians
+	        */
+	        angle: function (pointA, pointB) {
+	            var from = pointB ? pointA : {x: 0, y: 0},
+	                to = pointB || pointA,
+	                point = {
+	                    x: difference(from.x, to.x),
+	                    y: difference(from.y, to.y)
+	                };
+	            
+	            return this.angleFromCenter(point.x, point.y);
+	        },
+	
+	        /*
+	            Angle from center
+	            
+	            Returns the current angle, in radians, of a defined point
+	            from a center (assumed 0,0)
+	            
+	            @param [number]: X coordinate of second point
+	            @param [number]: Y coordinate of second point
+	            @return [radian]: Angle between 0, 0 and point in radians
+	        */
+	        angleFromCenter: function (x, y) {
+	            return this.radiansToDegrees(Math.atan2(y, x));
+	        },
+	
+	        /*
 	            Dilate
 	            
 	            Change the progression between a and b according to dilation.
@@ -3675,6 +3711,83 @@
 
 /***/ },
 /* 37 */
+/*!******************************!*\
+  !*** ./src/utils/history.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var // [number]: Default max size of history
+	    maxHistorySize = 3,
+	    
+	    /*
+	        History constructor
+	        
+	        @param [var]: Variable to store in first history slot
+	        @param [int] (optional): Maximum size of history
+	    */
+	    History = function (obj, max) {
+	        this.max = max || maxHistorySize;
+	        this.entries = [];
+	        this.add(obj);
+	    };
+	    
+	History.prototype = {
+	    
+	    /*
+	        Push new var to history
+	        
+	        Shift out oldest entry if we've reached maximum capacity
+	        
+	        @param [var]: Variable to push into history.entries
+	    */
+	    add: function (obj) {
+	        var currentSize = this.getSize();
+	        
+	        this.entries.push(obj);
+	        
+	        if (currentSize >= this.max) {
+	            this.entries.shift();
+	        }
+	    },
+	    
+	    /*
+	        Get variable at specified index
+	
+	        @param [int]: Index
+	        @return [var]: Var found at specified index
+	    */
+	    get: function (i) {
+	        i = (typeof i === 'number') ? i : this.getSize() - 1;
+	
+	        return this.entries[i];
+	    },
+	    
+	    /*
+	        Get the second newest history entry
+	        
+	        @return [var]: Entry found at index size - 2
+	    */
+	    getPrevious: function () {
+	        return this.get(this.getSize() - 2);
+	    },
+	    
+	    /*
+	        Get current history size
+	        
+	        @return [int]: Current length of entries.length
+	    */
+	    getSize: function () {
+	        return this.entries.length;
+	    }
+	    
+	};
+	
+	module.exports = History;
+
+/***/ },
+/* 38 */
 /*!********************************!*\
   !*** ./src/process/manager.js ***!
   \********************************/
@@ -3850,83 +3963,6 @@
 	};
 	
 	module.exports = new ProcessManager();
-
-/***/ },
-/* 38 */
-/*!******************************!*\
-  !*** ./src/utils/history.js ***!
-  \******************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var // [number]: Default max size of history
-	    maxHistorySize = 3,
-	    
-	    /*
-	        History constructor
-	        
-	        @param [var]: Variable to store in first history slot
-	        @param [int] (optional): Maximum size of history
-	    */
-	    History = function (obj, max) {
-	        this.max = max || maxHistorySize;
-	        this.entries = [];
-	        this.add(obj);
-	    };
-	    
-	History.prototype = {
-	    
-	    /*
-	        Push new var to history
-	        
-	        Shift out oldest entry if we've reached maximum capacity
-	        
-	        @param [var]: Variable to push into history.entries
-	    */
-	    add: function (obj) {
-	        var currentSize = this.getSize();
-	        
-	        this.entries.push(obj);
-	        
-	        if (currentSize >= this.max) {
-	            this.entries.shift();
-	        }
-	    },
-	    
-	    /*
-	        Get variable at specified index
-	
-	        @param [int]: Index
-	        @return [var]: Var found at specified index
-	    */
-	    get: function (i) {
-	        i = (typeof i === 'number') ? i : this.getSize() - 1;
-	
-	        return this.entries[i];
-	    },
-	    
-	    /*
-	        Get the second newest history entry
-	        
-	        @return [var]: Entry found at index size - 2
-	    */
-	    getPrevious: function () {
-	        return this.get(this.getSize() - 2);
-	    },
-	    
-	    /*
-	        Get current history size
-	        
-	        @return [int]: Current length of entries.length
-	    */
-	    getSize: function () {
-	        return this.entries.length;
-	    }
-	    
-	};
-	
-	module.exports = History;
 
 /***/ },
 /* 39 */

@@ -24,8 +24,8 @@ var utils = require('./utils.js'),
             var from = pointB ? pointA : {x: 0, y: 0},
                 to = pointB || pointA,
                 point = {
-                    x: difference(from.x, to.x),
-                    y: difference(from.y, to.y)
+                    x: to.x - from.x,
+                    y: to.y - from.y
                 };
             
             return this.angleFromCenter(point.x, point.y);
