@@ -7,7 +7,6 @@ Redshift adheres to [Semantic Versioning](http://semver.org/). Change log added 
 ### Changed
 - Upgraded stepped easing algorithm.
 
-
 ### Removed
 - `.props()` method removed - properties now saved directly to Action object.
 - `.data()` functionality removed.
