@@ -91,16 +91,17 @@
 	"use strict";
 	
 	var Action = __webpack_require__(/*! ./action/action.js */ 12),
-		domActionGroup = __webpack_require__(/*! ./action-group/dom.js */ 13),
-	    Input = __webpack_require__(/*! ./input/input.js */ 14),
-	    Process = __webpack_require__(/*! ./process/process.js */ 15),
-	    presets = __webpack_require__(/*! ./action/presets.js */ 16),
-	    easing = __webpack_require__(/*! ./utils/easing.js */ 17),
-	    calc = __webpack_require__(/*! ./utils/calc.js */ 18),
-	    utils = __webpack_require__(/*! ./utils/utils.js */ 19),
-	    route = __webpack_require__(/*! ./action/routes.js */ 20),
-	    registerRubix = __webpack_require__(/*! ./core/register-rubix.js */ 21),
-	    registerSimulation = __webpack_require__(/*! ./core/register-simulation.js */ 22);
+	    ActionGroup = __webpack_require__(/*! ./action-group/action-group.js */ 13),
+		domGroup = __webpack_require__(/*! ./action-group/dom.js */ 14),
+	    Input = __webpack_require__(/*! ./input/input.js */ 15),
+	    Process = __webpack_require__(/*! ./process/process.js */ 16),
+	    presets = __webpack_require__(/*! ./action/presets.js */ 17),
+	    easing = __webpack_require__(/*! ./utils/easing.js */ 18),
+	    calc = __webpack_require__(/*! ./utils/calc.js */ 19),
+	    utils = __webpack_require__(/*! ./utils/utils.js */ 20),
+	    route = __webpack_require__(/*! ./action/routes.js */ 21),
+	    registerRubix = __webpack_require__(/*! ./core/register-rubix.js */ 22),
+	    registerSimulation = __webpack_require__(/*! ./core/register-simulation.js */ 23);
 	
 	module.exports = {
 	
@@ -109,8 +110,8 @@
 	        
 	        @return [Action]: Newly-created Action
 	    */
-	    newAction: function () {
-	        return new Action(arguments[0], arguments[1]);
+	    newAction: function (props) {
+	        return (utils.isArray(props)) ? new ActionGroup(props) : new Action(props);
 	    },
 	    
 	    /*
@@ -139,7 +140,7 @@
 		    @param [string || NodeList || jQuery]: Selector, nodeList or jQuery selection
 	    */
 	    dom: function (selector) {
-		    return domActionGroup(selector);
+		    return domGroup(selector);
 	    },
 	    
 	    /*
@@ -299,7 +300,7 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 19),
 	
 	    STRING = 'string',
 	    
@@ -396,9 +397,9 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
-	    easing = __webpack_require__(/*! ../utils/easing.js */ 17),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 19),
+	    easing = __webpack_require__(/*! ../utils/easing.js */ 18),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
 	    
 	    CURRENT = 'current',
 	    HAS_ENDED = 'hasEnded';
@@ -483,8 +484,8 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
-	    simulate = __webpack_require__(/*! ../action/simulate.js */ 23);
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 19),
+	    simulate = __webpack_require__(/*! ../action/simulate.js */ 24);
 	
 	module.exports = {
 	
@@ -566,7 +567,7 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 19),
 	
 	    CURRENT = 'current',
 	    INPUT_OFFSET = 'inputOffset';
@@ -660,8 +661,8 @@
 
 	"use strict";
 	
-	var build = __webpack_require__(/*! ./css/build.js */ 24),
-	    split = __webpack_require__(/*! ./css/split.js */ 25),
+	var build = __webpack_require__(/*! ./css/build.js */ 25),
+	    split = __webpack_require__(/*! ./css/split.js */ 26),
 	    
 	    css = 'css',
 	    cssOrder = css + 'Order',
@@ -714,7 +715,7 @@
 
 	"use strict";
 	
-	var createStyles = __webpack_require__(/*! ./path/builder.js */ 26);
+	var createStyles = __webpack_require__(/*! ./path/builder.js */ 27);
 	
 	module.exports = {
 	
@@ -738,17 +739,17 @@
 
 	"use strict";
 	
-	var parseArgs = __webpack_require__(/*! ./parse-args.js */ 27),
-	    Value = __webpack_require__(/*! ../types/value.js */ 28),
-	    Repo = __webpack_require__(/*! ../types/repo.js */ 29),
-	    Queue = __webpack_require__(/*! ./queue.js */ 30),
-	    Process = __webpack_require__(/*! ../process/process.js */ 15),
-	    processor = __webpack_require__(/*! ./processor.js */ 31),
-	    routes = __webpack_require__(/*! ./routes.js */ 20),
-	    defaultProps = __webpack_require__(/*! ../defaults/action-props.js */ 32),
-	    defaultState = __webpack_require__(/*! ../defaults/action-state.js */ 33),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
-	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 34),
+	var parseArgs = __webpack_require__(/*! ./parse-args.js */ 28),
+	    Value = __webpack_require__(/*! ../types/value.js */ 29),
+	    Repo = __webpack_require__(/*! ../types/repo.js */ 30),
+	    Queue = __webpack_require__(/*! ./queue.js */ 31),
+	    Process = __webpack_require__(/*! ../process/process.js */ 16),
+	    processor = __webpack_require__(/*! ./processor.js */ 32),
+	    routes = __webpack_require__(/*! ./routes.js */ 21),
+	    defaultProps = __webpack_require__(/*! ../defaults/action-props.js */ 33),
+	    defaultState = __webpack_require__(/*! ../defaults/action-state.js */ 34),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
+	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 35),
 	
 	    namespace = function (key, space) {
 	        return (space && space !== routes.defaultRoute) ? key + '.' + space : key;
@@ -1233,6 +1234,92 @@
 
 /***/ },
 /* 13 */
+/*!******************************************!*\
+  !*** ./src/action-group/action-group.js ***!
+  \******************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var Action = __webpack_require__(/*! ../action/action.js */ 12),
+		generateMethodIterator = __webpack_require__(/*! ./generate-iterator.js */ 36),
+		
+		defaultDuration = 250,
+		defaultEase = 'linear',
+	
+		/*
+			Action group constructor
+		*/
+		ActionGroup = function (actions) {
+			this.actions = actions || [];
+		},
+		
+		actionGroupPrototype = ActionGroup.prototype;
+	
+	/*
+		Stagger the execution of the provided Action method
+		
+		@param [string]: Name of Action method to call
+		@param [number] (optional): Duration between method calls
+		@param [string || object] (optional): Argument to pass method
+		@param [string] (optional): Easing
+	*/
+	actionGroupPrototype.stagger = function (method, duration, props, ease) {
+		var self = this,
+			numActions = this.actions.length,
+			i = -1;
+		
+		this._stagger = this._stagger || new Action();
+		duration = duration || defaultDuration;
+		ease = ease || defaultEase;
+	
+		this._stagger.stop().play({
+			values: {
+				i: {
+					current: i,
+					to: numActions - 1
+				}
+			},
+			round: true,
+			onChange: function (output) {
+			    var newIndex = output.i;
+			    
+			    // If our new index is only one more than the last
+			    if (newIndex === i + 1) {
+			        self.actions[newIndex][method](props);
+			        
+			    // Or it's more than one more than the last, so fire all indecies
+			    } else {
+	    		    for (var index = i + 1; index <= newIndex; index++) {
+			            self.actions[index][method](props);
+	    		    }
+			    }
+	
+			    i = newIndex;
+			}
+		}, duration * numActions, ease);
+	};
+	
+	/*
+		Add a new Action to the group
+		
+		@param [object]: Action properties
+	*/
+	actionGroupPrototype.add = function (props) {
+		this.actions.push(new Action(props));
+	};
+	
+	// Initialise Action Group methods
+	(function () {
+		for (var method in Action.prototype) {
+			actionGroupPrototype[method] = generateMethodIterator(method);
+		}
+	})();
+	
+	module.exports = ActionGroup;
+
+/***/ },
+/* 14 */
 /*!*********************************!*\
   !*** ./src/action-group/dom.js ***!
   \*********************************/
@@ -1240,7 +1327,7 @@
 
 	"use strict";
 	
-	var ActionGroup = __webpack_require__(/*! ./action-group.js */ 35);
+	var ActionGroup = __webpack_require__(/*! ./action-group.js */ 13);
 	
 	module.exports = function (selector) {
 	    var actionGroup = new ActionGroup(),
@@ -1265,7 +1352,7 @@
 		numElements = elements.length;
 		
 		for (; i < numElements; i++) {
-			actionGroup.addAction({
+			actionGroup.add({
 				dom: elements[i]
 			});
 		}
@@ -1274,7 +1361,7 @@
 	};
 
 /***/ },
-/* 14 */
+/* 15 */
 /*!****************************!*\
   !*** ./src/input/input.js ***!
   \****************************/
@@ -1285,9 +1372,9 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
-	    History = __webpack_require__(/*! ../utils/history.js */ 36),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 19),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
+	    History = __webpack_require__(/*! ../utils/history.js */ 37),
 	
 	    /*
 	        Input constructor
@@ -1408,7 +1495,7 @@
 	module.exports = Input;
 
 /***/ },
-/* 15 */
+/* 16 */
 /*!********************************!*\
   !*** ./src/process/process.js ***!
   \********************************/
@@ -1419,7 +1506,7 @@
 	*/
 	"use strict";
 	
-	var manager = __webpack_require__(/*! ./manager.js */ 37),
+	var manager = __webpack_require__(/*! ./manager.js */ 38),
 	
 	    /*
 	        Process constructor
@@ -1614,7 +1701,7 @@
 	module.exports = Process;
 
 /***/ },
-/* 16 */
+/* 17 */
 /*!*******************************!*\
   !*** ./src/action/presets.js ***!
   \*******************************/
@@ -1622,7 +1709,7 @@
 
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 19),
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 20),
 	    
 	    generateKeys = function (key) {
 	        var keys = key.split(DOT),
@@ -1703,7 +1790,7 @@
 	module.exports = new Presets();
 
 /***/ },
-/* 17 */
+/* 18 */
 /*!*****************************!*\
   !*** ./src/utils/easing.js ***!
   \*****************************/
@@ -1733,8 +1820,8 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ./calc.js */ 18),
-	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 38),
+	var calc = __webpack_require__(/*! ./calc.js */ 19),
+	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 39),
 	    
 	    // Constants
 	    INVALID_EASING = ": Not defined",
@@ -1919,7 +2006,7 @@
 
 
 /***/ },
-/* 18 */
+/* 19 */
 /*!***************************!*\
   !*** ./src/utils/calc.js ***!
   \***************************/
@@ -1933,7 +2020,7 @@
 	*/
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ./utils.js */ 19),
+	var utils = __webpack_require__(/*! ./utils.js */ 20),
 	
 	    calc = {
 	       /*
@@ -2224,7 +2311,7 @@
 	module.exports = calc;
 
 /***/ },
-/* 19 */
+/* 20 */
 /*!****************************!*\
   !*** ./src/utils/utils.js ***!
   \****************************/
@@ -2480,7 +2567,7 @@
 	};
 
 /***/ },
-/* 20 */
+/* 21 */
 /*!******************************!*\
   !*** ./src/action/routes.js ***!
   \******************************/
@@ -2488,7 +2575,7 @@
 
 	"use strict";
 	
-	var routes = __webpack_require__(/*! ../core/routes.js */ 39),
+	var routes = __webpack_require__(/*! ../core/routes.js */ 40),
 	    routeKeys = [],
 	    numRoutes,
 	    
@@ -2550,7 +2637,7 @@
 	module.exports = manager; 
 
 /***/ },
-/* 21 */
+/* 22 */
 /*!************************************!*\
   !*** ./src/core/register-rubix.js ***!
   \************************************/
@@ -2559,9 +2646,9 @@
 	"use strict";
 	
 	var actionPrototype = __webpack_require__(/*! ../action/action.js */ 12).prototype,
-		actionGroupPrototype = __webpack_require__(/*! ../action-group/action-group.js */ 35).prototype,
-		generateMethodIterator = __webpack_require__(/*! ../action-group/generate-iterator.js */ 40),
-	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 27),
+		actionGroupPrototype = __webpack_require__(/*! ../action-group/action-group.js */ 13).prototype,
+		generateMethodIterator = __webpack_require__(/*! ../action-group/generate-iterator.js */ 36),
+	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 28),
 	    rubix = __webpack_require__(/*! ../core/rubix.js */ 41);
 	
 	module.exports = function (name, newRubix) {
@@ -2580,7 +2667,7 @@
 	}
 
 /***/ },
-/* 22 */
+/* 23 */
 /*!*****************************************!*\
   !*** ./src/core/register-simulation.js ***!
   \*****************************************/
@@ -2598,7 +2685,7 @@
 	}
 
 /***/ },
-/* 23 */
+/* 24 */
 /*!********************************!*\
   !*** ./src/action/simulate.js ***!
   \********************************/
@@ -2615,7 +2702,7 @@
 	};
 
 /***/ },
-/* 24 */
+/* 25 */
 /*!*********************************!*\
   !*** ./src/routes/css/build.js ***!
   \*********************************/
@@ -2677,7 +2764,7 @@
 	};
 
 /***/ },
-/* 25 */
+/* 26 */
 /*!*********************************!*\
   !*** ./src/routes/css/split.js ***!
   \*********************************/
@@ -2690,7 +2777,7 @@
 	    splitLookup = __webpack_require__(/*! ./lookup.js */ 45),
 	    splitters = __webpack_require__(/*! ./splitters.js */ 47),
 	    
-	    utils = __webpack_require__(/*! ../../utils/utils.js */ 19),
+	    utils = __webpack_require__(/*! ../../utils/utils.js */ 20),
 	    
 	    valueProperties = dictionary.valueProps,
 	    valuePropertyCount = valueProperties.length,
@@ -2778,7 +2865,7 @@
 	};
 
 /***/ },
-/* 26 */
+/* 27 */
 /*!************************************!*\
   !*** ./src/routes/path/builder.js ***!
   \************************************/
@@ -2842,7 +2929,7 @@
 	};
 
 /***/ },
-/* 27 */
+/* 28 */
 /*!**********************************!*\
   !*** ./src/action/parse-args.js ***!
   \**********************************/
@@ -2850,8 +2937,8 @@
 
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 19),
-	    presets = __webpack_require__(/*! ./presets.js */ 16),
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 20),
+	    presets = __webpack_require__(/*! ./presets.js */ 17),
 	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 49),
 	
 	    STRING = 'string',
@@ -2983,7 +3070,7 @@
 	};
 
 /***/ },
-/* 28 */
+/* 29 */
 /*!****************************!*\
   !*** ./src/types/value.js ***!
   \****************************/
@@ -2994,7 +3081,7 @@
 	var defaultProps = __webpack_require__(/*! ../defaults/value-props.js */ 50),
 	    defaultState = __webpack_require__(/*! ../defaults/value-state.js */ 51),
 	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 52),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
 	
 	    CURRENT = 'current',
 	    ORIGIN = 'origin',
@@ -3136,7 +3223,7 @@
 	module.exports = Value;
 
 /***/ },
-/* 29 */
+/* 30 */
 /*!***************************!*\
   !*** ./src/types/repo.js ***!
   \***************************/
@@ -3144,7 +3231,7 @@
 
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 19),
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 20),
 	
 	    /*
 	        Get data with specified key
@@ -3212,7 +3299,7 @@
 	module.exports = Repo;
 
 /***/ },
-/* 30 */
+/* 31 */
 /*!*****************************!*\
   !*** ./src/action/queue.js ***!
   \*****************************/
@@ -3268,7 +3355,7 @@
 	module.exports = Queue;
 
 /***/ },
-/* 31 */
+/* 32 */
 /*!*********************************!*\
   !*** ./src/action/processor.js ***!
   \*********************************/
@@ -3280,8 +3367,8 @@
 	"use strict";
 	
 	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 41),
-	    routes = __webpack_require__(/*! ./routes.js */ 20),
-	    calc = __webpack_require__(/*! ../utils/calc.js */ 18);
+	    routes = __webpack_require__(/*! ./routes.js */ 21),
+	    calc = __webpack_require__(/*! ../utils/calc.js */ 19);
 	
 	module.exports = function (action, framestamp, frameDuration) {
 	    var props = action.props(),
@@ -3393,7 +3480,7 @@
 	};
 
 /***/ },
-/* 32 */
+/* 33 */
 /*!**************************************!*\
   !*** ./src/defaults/action-props.js ***!
   \**************************************/
@@ -3447,7 +3534,7 @@
 	};
 
 /***/ },
-/* 33 */
+/* 34 */
 /*!**************************************!*\
   !*** ./src/defaults/action-state.js ***!
   \**************************************/
@@ -3480,7 +3567,7 @@
 	};
 
 /***/ },
-/* 34 */
+/* 35 */
 /*!**********************************!*\
   !*** ./src/routes/css/styler.js ***!
   \**********************************/
@@ -3551,93 +3638,39 @@
 	module.exports = new cssStyler();
 
 /***/ },
-/* 35 */
-/*!******************************************!*\
-  !*** ./src/action-group/action-group.js ***!
-  \******************************************/
+/* 36 */
+/*!***********************************************!*\
+  !*** ./src/action-group/generate-iterator.js ***!
+  \***********************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
-	
-	var Action = __webpack_require__(/*! ../action/action.js */ 12),
-		generateMethodIterator = __webpack_require__(/*! ./generate-iterator.js */ 40),
-		
-		defaultDuration = 250,
-		defaultEase = 'linear',
-	
-		/*
-			Action group constructor
-		*/
-		ActionGroup = function (actions) {
-			this.actions = actions || [];
-		},
-		
-		actionGroupPrototype = ActionGroup.prototype;
-	
 	/*
-		Stagger the execution of the provided Action method
+		Generate method iterator
 		
-		@param [string]: Name of Action method to call
-		@param [number] (optional): Duration between method calls
-		@param [string || object] (optional): Argument to pass method
-		@param [string] (optional): Easing
+		Takes a method name and returns a function that will
+		loop over all the Actions in a group and fire that
+		method with those properties
+		
+		@param [string]: Name of method
 	*/
-	actionGroupPrototype.stagger = function (method, duration, props, ease) {
-		var self = this,
-			numActions = this.actions.length,
-			i = -1;
-		
-		this._stagger = this._stagger || new Action();
-		duration = duration || defaultDuration;
-		ease = ease || defaultEase;
-	
-		this._stagger.stop().play({
-			values: {
-				i: {
-					current: i,
-					to: numActions - 1
-				}
-			},
-			round: true,
-			onChange: function (output) {
-			    var newIndex = output.i;
-			    
-			    // If our new index is only one more than the last
-			    if (newIndex === i + 1) {
-			        self.actions[newIndex][method](props);
-			        
-			    // Or it's more than one more than the last, so fire all indecies
-			    } else {
-	    		    for (var index = i + 1; index <= newIndex; index++) {
-			            self.actions[index][method](props);
-	    		    }
-			    }
-	
-			    i = newIndex;
+	module.exports = function (method) {
+		return function () {
+			var numActions = this.actions.length,
+				i = 0,
+				action;
+				
+			for (; i < numActions; i++) {
+				action = this.actions[i];
+				action[method].apply(action, arguments);
 			}
-		}, duration * numActions, ease);
+			
+			return this;
+		};
 	};
-	
-	/*
-		Add a new Action to the group
-		
-		@param [object]: Action properties
-	*/
-	actionGroupPrototype.addAction = function (props) {
-		this.actions.push(new Action(props));
-	};
-	
-	// Initialise Action Group methods
-	(function () {
-		for (var method in Action.prototype) {
-			actionGroupPrototype[method] = generateMethodIterator(method);
-		}
-	})();
-	
-	module.exports = ActionGroup;
+
 
 /***/ },
-/* 36 */
+/* 37 */
 /*!******************************!*\
   !*** ./src/utils/history.js ***!
   \******************************/
@@ -3714,7 +3747,7 @@
 	module.exports = History;
 
 /***/ },
-/* 37 */
+/* 38 */
 /*!********************************!*\
   !*** ./src/process/manager.js ***!
   \********************************/
@@ -3892,7 +3925,7 @@
 	module.exports = new ProcessManager();
 
 /***/ },
-/* 38 */
+/* 39 */
 /*!*****************************!*\
   !*** ./src/types/bezier.js ***!
   \*****************************/
@@ -4067,45 +4100,13 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 39 */
+/* 40 */
 /*!****************************!*\
   !*** ./src/core/routes.js ***!
   \****************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {};
-
-/***/ },
-/* 40 */
-/*!***********************************************!*\
-  !*** ./src/action-group/generate-iterator.js ***!
-  \***********************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-		Generate method iterator
-		
-		Takes a method name and returns a function that will
-		loop over all the Actions in a group and fire that
-		method with those properties
-		
-		@param [string]: Name of method
-	*/
-	module.exports = function (method) {
-		return function () {
-			var numActions = this.actions.length,
-				i = 0,
-				action;
-				
-			for (; i < numActions; i++) {
-				action = this.actions[i];
-				action[method].apply(action, arguments);
-			}
-			
-			return this;
-		};
-	};
-
 
 /***/ },
 /* 41 */
@@ -4181,8 +4182,8 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 18),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 19),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 19),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
 	    speedPerFrame = calc.speedPerFrame;
 	
 	module.exports = {
@@ -4501,7 +4502,7 @@
 	"use strict";
 	
 	var dictionary = __webpack_require__(/*! ./dictionary.js */ 43),
-	    utils = __webpack_require__(/*! ../../utils/utils.js */ 19),
+	    utils = __webpack_require__(/*! ../../utils/utils.js */ 20),
 	
 	    /*
 	        Split comma delimited into array
@@ -4759,7 +4760,7 @@
 
 	"use strict";
 	
-	var Input = __webpack_require__(/*! ./input.js */ 14),
+	var Input = __webpack_require__(/*! ./input.js */ 15),
 	    currentPointer, // Sort this out for multitouch
 	    
 	    TOUCHMOVE = 'touchmove',
@@ -5010,8 +5011,8 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ./calc.js */ 18),
-	    utils = __webpack_require__(/*! ./utils.js */ 19);
+	var calc = __webpack_require__(/*! ./calc.js */ 19),
+	    utils = __webpack_require__(/*! ./utils.js */ 20);
 	
 	module.exports = function (newValue, currentValue, parent, scope) {
 	    var splitValueUnit = {};
@@ -5127,7 +5128,7 @@
 
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 19),
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 20),
 	
 	    maxElapsed = 33,
 	    Timer = function () {

@@ -55,7 +55,7 @@ module.exports = {
 	    @param [string || NodeList || jQuery]: Selector, nodeList or jQuery selection
     */
     dom: function (selector) {
-	    return domActionGroup(selector);
+	    return domGroup(selector);
     },
     
     /*
