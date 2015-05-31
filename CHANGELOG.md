@@ -2,7 +2,7 @@
 
 Redshift adheres to [Semantic Versioning](http://semver.org/). Change log added v1.4.0.
 
-## [1.4.0]
+## [1.4.0] 2015-05-31
 
 ### Added
 - Action Groups for controlling multiple Actions at once.
