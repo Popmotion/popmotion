@@ -2,7 +2,7 @@
 
 var actionPrototype = require('../action/action.js').prototype,
 	actionGroupPrototype = require('../action-group/action-group.js').prototype,
-	generateMethodIterator = require('../action-group/generate-iterator.js'),
+    generateMethodIterator = require('../action-group/generate-iterator.js'),
     parseArgs = require('../action/parse-args.js'),
     rubix = require('../core/rubix.js');
 
