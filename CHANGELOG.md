@@ -2,6 +2,11 @@
 
 Redshift adheres to [Semantic Versioning](http://semver.org/). Change log added v1.4.0.
 
+## [2.0.4] 2015-06-01
+
+### Fixed
+- `onStart` regression from 2.0.0 - only firing for 'values' route.
+
 ## [2.0.3] 2015-06-01
 
 ### Fixed

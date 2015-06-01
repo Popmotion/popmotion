@@ -765,9 +765,9 @@
 	
 	        // Register process wth cycl
 	        self.process = new Process(function (framestamp, frameDuration) {
-		        if (self.isActive()) {
+	            if (self.isActive()) {
 	                processor(self, framestamp, frameDuration);
-		        }
+	            }
 	        });
 	        
 	        self.queue = new Queue();
@@ -804,7 +804,7 @@
 	            this.set(props, 'to');
 	            this.start('play');
 	        } else {
-		        this.queue.add.apply(this.queue, arguments);
+	            this.queue.add.apply(this.queue, arguments);
 	        }
 	
 	        return this;
@@ -899,7 +899,7 @@
 	        @return [Action]
 	    */
 	    start: function (processType) {
-		    var input = this.input;
+	        var input = this.input;
 	
 	        this.resetProgress();
 	        
@@ -934,8 +934,8 @@
 	        Pause current Action
 	    */
 	    pause: function () {
-		    var self = this,
-		        input = this.input;
+	        var self = this,
+	            input = this.input;
 	
 	        self.isActive(false);
 	        self.process.stop();
@@ -951,8 +951,8 @@
 	        Resume a paused Action
 	    */
 	    resume: function () {
-		    var self = this;
-		    
+	        var self = this;
+	        
 	        self.started = utils.currentTime();
 	        self.framestamp = self.started;
 	        self.isActive(true);
@@ -966,8 +966,8 @@
 	        Reset Action progress and values
 	    */
 	    reset: function () {
-		    var self = this,
-		        values = self.values;
+	        var self = this,
+	            values = self.values;
 	
 	        self.resetProgress();
 	        
@@ -979,7 +979,7 @@
 	    },
 	    
 	    /*
-		    Reset Action progress
+	        Reset Action progress
 	    */
 	    resetProgress: function () {
 	        this.progress = 0;
@@ -990,7 +990,7 @@
 	    },
 	    
 	    /*
-		    Reverse Action progress and values
+	        Reverse Action progress and values
 	    */
 	    reverse: function () {
 	        var values = this.values;
@@ -1140,6 +1140,7 @@
 	    
 	    setProp: function (data, prop) {
 	        var multiArg = (arguments.length > 1),
+	            defaultRoute = routes.getName(),
 	            toSet = multiArg ? {} : data,
 	            key = '';
 	        
@@ -1150,7 +1151,7 @@
 	        
 	        // Loop over toSet and assign to our data store
 	        for (key in toSet) {
-	            if (toSet.hasOwnProperty(key) && !routes.all[key]) {
+	            if (toSet.hasOwnProperty(key) && key != defaultRoute) {
 	                this[key] = toSet[key];
 	            }
 	        }
@@ -1173,7 +1174,7 @@
 	        var isActive = (active !== undefined) ? active : this.active;
 	        
 	        if (active === true) {
-		        this.hasChanged = active;
+	            this.hasChanged = active;
 	        }
 	
 	        this.active = isActive;
