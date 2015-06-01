@@ -10,6 +10,14 @@ var defaultProperty = require('./default-property.js'),
     valueProperties = dictionary.valueProps,
     valuePropertyCount = valueProperties.length,
     
+    resolve = function (value, scope) {
+	    if (typeof value === 'function') {
+		    value = value.call(scope);
+	    }
+	    
+	    return value;
+    },
+    
     /*
         Build a property
     */
@@ -41,7 +49,7 @@ var defaultProperty = require('./default-property.js'),
     /*
         Split value with provided splitterID
     */
-    split = function (key, value, splitter) {
+    split = function (key, value, splitter, action) {
         var splitValue = {},
             splitProperty = {},
             newValue = {},
@@ -54,7 +62,7 @@ var defaultProperty = require('./default-property.js'),
                 valueKey = valueProperties[i];
                 
                 if (value.hasOwnProperty(valueKey)) {
-                    splitProperty = splitter(value[valueKey]);
+                    splitProperty = splitter(resolve(value[valueKey], action));
                     
                     for (unitKey in splitProperty) {
                         splitValue[unitKey] = splitValue[unitKey] || {};
@@ -63,7 +71,7 @@ var defaultProperty = require('./default-property.js'),
                 }
             }
         } else {
-            splitValue = splitter(value);
+	        splitValue = splitter(resolve(value, action));
         }
         
         for (unitKey in splitValue) {
@@ -79,10 +87,12 @@ var defaultProperty = require('./default-property.js'),
     @param [string]: Name of CSS property
     @param [string || number]: Value of CSS property
 */
-module.exports = function (key, value) {
+module.exports = function (key, value, action) {
     var splitterID = splitLookup[key],
         splitter = splitters[splitterID],
-        values = (splitter) ? split(key, value, splitter) : {};
+        values;
+        
+    values = (splitter) ? split(key, value, splitter, action) : {};
 
     // If we don't have a splitter, assign the property directly
     if (!splitter) {

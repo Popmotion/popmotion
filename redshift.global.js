@@ -668,7 +668,7 @@
 	
 	module.exports = {
 	    preprocess: function (key, value, action) {
-	        var values = split(key, value);
+	        var values = split(key, value, action);
 	        
 	        action.updateOrder(key, false, cssOrder);
 	        
@@ -737,16 +737,16 @@
 
 	"use strict";
 	
-	var parseArgs = __webpack_require__(/*! ./parse-args.js */ 29),
-	    Value = __webpack_require__(/*! ../types/value.js */ 30),
-	    Queue = __webpack_require__(/*! ./queue.js */ 31),
+	var parseArgs = __webpack_require__(/*! ./parse-args.js */ 28),
+	    Value = __webpack_require__(/*! ../types/value.js */ 29),
+	    Queue = __webpack_require__(/*! ./queue.js */ 30),
 	    Process = __webpack_require__(/*! ../process/process.js */ 16),
-	    processor = __webpack_require__(/*! ./processor.js */ 32),
+	    processor = __webpack_require__(/*! ./processor.js */ 31),
 	    routes = __webpack_require__(/*! ./routes.js */ 21),
-	    defaultProps = __webpack_require__(/*! ../defaults/action-props.js */ 33),
-	    defaultState = __webpack_require__(/*! ../defaults/action-state.js */ 34),
+	    defaultProps = __webpack_require__(/*! ../defaults/action-props.js */ 32),
+	    defaultState = __webpack_require__(/*! ../defaults/action-state.js */ 33),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
-	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 35),
+	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 34),
 	
 	    namespace = function (key, space) {
 	        return (space && space !== routes.defaultRoute) ? key + '.' + space : key;
@@ -1242,7 +1242,7 @@
 	"use strict";
 	
 	var Action = __webpack_require__(/*! ../action/action.js */ 12),
-		generateMethodIterator = __webpack_require__(/*! ./generate-iterator.js */ 28),
+		generateMethodIterator = __webpack_require__(/*! ./generate-iterator.js */ 35),
 		
 		defaultDuration = 250,
 		defaultEase = 'linear',
@@ -2699,9 +2699,9 @@
 	
 	var actionPrototype = __webpack_require__(/*! ../action/action.js */ 12).prototype,
 		actionGroupPrototype = __webpack_require__(/*! ../action-group/action-group.js */ 13).prototype,
-	    generateMethodIterator = __webpack_require__(/*! ../action-group/generate-iterator.js */ 28),
-	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 29),
-	    rubix = __webpack_require__(/*! ../core/rubix.js */ 40);
+	    generateMethodIterator = __webpack_require__(/*! ../action-group/generate-iterator.js */ 35),
+	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 28),
+	    rubix = __webpack_require__(/*! ../core/rubix.js */ 41);
 	
 	module.exports = function (name, newRubix) {
 	    var parser = parseArgs[name] || parseArgs.generic;
@@ -2730,7 +2730,7 @@
 	*/
 	"use strict";
 	
-	var simulations = __webpack_require__(/*! ../core/simulations.js */ 41);
+	var simulations = __webpack_require__(/*! ../core/simulations.js */ 40);
 	
 	module.exports = function (name, simulation) {
 	    simulations[name] = simulation;
@@ -2745,7 +2745,7 @@
 
 	"use strict";
 	
-	var simulations = __webpack_require__(/*! ../core/simulations.js */ 41);
+	var simulations = __webpack_require__(/*! ../core/simulations.js */ 40);
 	
 	module.exports = function (simulation, value, duration, started) {
 	    var velocity = simulations[simulation](value, duration, started);
@@ -2834,6 +2834,14 @@
 	    valueProperties = dictionary.valueProps,
 	    valuePropertyCount = valueProperties.length,
 	    
+	    resolve = function (value, scope) {
+		    if (typeof value === 'function') {
+			    value = value.call(scope);
+		    }
+		    
+		    return value;
+	    },
+	    
 	    /*
 	        Build a property
 	    */
@@ -2865,7 +2873,7 @@
 	    /*
 	        Split value with provided splitterID
 	    */
-	    split = function (key, value, splitter) {
+	    split = function (key, value, splitter, action) {
 	        var splitValue = {},
 	            splitProperty = {},
 	            newValue = {},
@@ -2878,7 +2886,7 @@
 	                valueKey = valueProperties[i];
 	                
 	                if (value.hasOwnProperty(valueKey)) {
-	                    splitProperty = splitter(value[valueKey]);
+	                    splitProperty = splitter(resolve(value[valueKey], action));
 	                    
 	                    for (unitKey in splitProperty) {
 	                        splitValue[unitKey] = splitValue[unitKey] || {};
@@ -2887,7 +2895,7 @@
 	                }
 	            }
 	        } else {
-	            splitValue = splitter(value);
+		        splitValue = splitter(resolve(value, action));
 	        }
 	        
 	        for (unitKey in splitValue) {
@@ -2903,10 +2911,12 @@
 	    @param [string]: Name of CSS property
 	    @param [string || number]: Value of CSS property
 	*/
-	module.exports = function (key, value) {
+	module.exports = function (key, value, action) {
 	    var splitterID = splitLookup[key],
 	        splitter = splitters[splitterID],
-	        values = (splitter) ? split(key, value, splitter) : {};
+	        values;
+	        
+	    values = (splitter) ? split(key, value, splitter, action) : {};
 	
 	    // If we don't have a splitter, assign the property directly
 	    if (!splitter) {
@@ -2982,38 +2992,6 @@
 
 /***/ },
 /* 28 */
-/*!***********************************************!*\
-  !*** ./src/action-group/generate-iterator.js ***!
-  \***********************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-		Generate method iterator
-		
-		Takes a method name and returns a function that will
-		loop over all the Actions in a group and fire that
-		method with those properties
-		
-		@param [string]: Name of method
-	*/
-	module.exports = function (method) {
-		return function () {
-			var numActions = this.actions.length,
-				i = 0,
-				action;
-				
-			for (; i < numActions; i++) {
-				action = this.actions[i];
-				action[method].apply(action, arguments);
-			}
-			
-			return this;
-		};
-	};
-
-
-/***/ },
-/* 29 */
 /*!**********************************!*\
   !*** ./src/action/parse-args.js ***!
   \**********************************/
@@ -3154,7 +3132,7 @@
 	};
 
 /***/ },
-/* 30 */
+/* 29 */
 /*!****************************!*\
   !*** ./src/types/value.js ***!
   \****************************/
@@ -3307,7 +3285,7 @@
 	module.exports = Value;
 
 /***/ },
-/* 31 */
+/* 30 */
 /*!*****************************!*\
   !*** ./src/action/queue.js ***!
   \*****************************/
@@ -3363,7 +3341,7 @@
 	module.exports = Queue;
 
 /***/ },
-/* 32 */
+/* 31 */
 /*!*********************************!*\
   !*** ./src/action/processor.js ***!
   \*********************************/
@@ -3374,7 +3352,7 @@
 	*/
 	"use strict";
 	
-	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 40),
+	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 41),
 	    routes = __webpack_require__(/*! ./routes.js */ 21),
 	    calc = __webpack_require__(/*! ../utils/calc.js */ 19);
 	
@@ -3488,7 +3466,7 @@
 	};
 
 /***/ },
-/* 33 */
+/* 32 */
 /*!**************************************!*\
   !*** ./src/defaults/action-props.js ***!
   \**************************************/
@@ -3542,7 +3520,7 @@
 	};
 
 /***/ },
-/* 34 */
+/* 33 */
 /*!**************************************!*\
   !*** ./src/defaults/action-state.js ***!
   \**************************************/
@@ -3575,7 +3553,7 @@
 	};
 
 /***/ },
-/* 35 */
+/* 34 */
 /*!**********************************!*\
   !*** ./src/routes/css/styler.js ***!
   \**********************************/
@@ -3644,6 +3622,38 @@
 	};
 	
 	module.exports = new cssStyler();
+
+/***/ },
+/* 35 */
+/*!***********************************************!*\
+  !*** ./src/action-group/generate-iterator.js ***!
+  \***********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+		Generate method iterator
+		
+		Takes a method name and returns a function that will
+		loop over all the Actions in a group and fire that
+		method with those properties
+		
+		@param [string]: Name of method
+	*/
+	module.exports = function (method) {
+		return function () {
+			var numActions = this.actions.length,
+				i = 0,
+				action;
+				
+			for (; i < numActions; i++) {
+				action = this.actions[i];
+				action[method].apply(action, arguments);
+			}
+			
+			return this;
+		};
+	};
+
 
 /***/ },
 /* 36 */
@@ -4086,63 +4096,6 @@
 
 /***/ },
 /* 40 */
-/*!***************************!*\
-  !*** ./src/core/rubix.js ***!
-  \***************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    Anatomy of a Rubix:
-	    
-	        Props
-	            surpressMethod [boolean]:
-	                If not true, will create Action shorthand method 
-	                with the name of the rubix, ie .play()
-	
-	            calculatesVelocity [boolean]:
-	                Set to true if your Rubix will calculate
-	                the new Value velocity (otherwise Redshift may override it)
-	                
-	        Methods
-	            updateInput
-	                Run once per frame, before Values are processed. .play uses this
-	                to update the timer, .track uses it to check the input device.
-	
-	                @param [Action]: The Action being processed
-	                @param [object]: Action properties
-	                @param [int]: Duration since the last frame in milliseconds
-	            
-	            process (required)
-	                Run once for every Action value, this method returns the latest value
-	
-	                @param [string]: Name of value being processed
-	                @param [Value]: Value being processed
-	                @param [object]: Action values
-	                @param [object]: Action properties
-	                @param [Action]: Action
-	                @param [int]: Duration since the last frame in milliseconds
-	                @return [int]: Latest value
-	                
-	            limit
-	                Run once for every Action value, this can be used to limit the value
-	                within any parameters
-	                
-	                @param [int]: Value returned from process method
-	                @param [Value]: Value being processed
-	                @return [int]: Latest value
-	                
-	            hasEnded (required)
-	                Returns true if this current Action has ended. Redshift will
-	                then check the Action's queue or yoyo/loop properties to decide
-	                what action to take next
-	                
-	                @param [Action]: Action being processed
-	                @param [boolean]: True if any value has changed
-	*/            
-	module.exports = {};
-
-/***/ },
-/* 41 */
 /*!*********************************!*\
   !*** ./src/core/simulations.js ***!
   \*********************************/
@@ -4238,6 +4191,63 @@
 	        value.capture = value.min = value.max = undefined;
 	    }
 	};
+
+/***/ },
+/* 41 */
+/*!***************************!*\
+  !*** ./src/core/rubix.js ***!
+  \***************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Anatomy of a Rubix:
+	    
+	        Props
+	            surpressMethod [boolean]:
+	                If not true, will create Action shorthand method 
+	                with the name of the rubix, ie .play()
+	
+	            calculatesVelocity [boolean]:
+	                Set to true if your Rubix will calculate
+	                the new Value velocity (otherwise Redshift may override it)
+	                
+	        Methods
+	            updateInput
+	                Run once per frame, before Values are processed. .play uses this
+	                to update the timer, .track uses it to check the input device.
+	
+	                @param [Action]: The Action being processed
+	                @param [object]: Action properties
+	                @param [int]: Duration since the last frame in milliseconds
+	            
+	            process (required)
+	                Run once for every Action value, this method returns the latest value
+	
+	                @param [string]: Name of value being processed
+	                @param [Value]: Value being processed
+	                @param [object]: Action values
+	                @param [object]: Action properties
+	                @param [Action]: Action
+	                @param [int]: Duration since the last frame in milliseconds
+	                @return [int]: Latest value
+	                
+	            limit
+	                Run once for every Action value, this can be used to limit the value
+	                within any parameters
+	                
+	                @param [int]: Value returned from process method
+	                @param [Value]: Value being processed
+	                @return [int]: Latest value
+	                
+	            hasEnded (required)
+	                Returns true if this current Action has ended. Redshift will
+	                then check the Action's queue or yoyo/loop properties to decide
+	                what action to take next
+	                
+	                @param [Action]: Action being processed
+	                @param [boolean]: True if any value has changed
+	*/            
+	module.exports = {};
 
 /***/ },
 /* 42 */

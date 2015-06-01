@@ -9,7 +9,7 @@ var build = require('./css/build.js'),
 
 module.exports = {
     preprocess: function (key, value, action) {
-        var values = split(key, value);
+        var values = split(key, value, action);
         
         action.updateOrder(key, false, cssOrder);
         
