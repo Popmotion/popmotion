@@ -2,6 +2,11 @@
 
 Redshift adheres to [Semantic Versioning](http://semver.org/). Change log added v1.4.0.
 
+## [2.0.3] 2015-06-01
+
+### Fixed
+- Fixing hasChanged regression, prevented .run() from stopping automatically.
+
 ## [2.0.2] 2015-06-01
 
 ### Fixed

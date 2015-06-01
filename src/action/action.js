@@ -435,7 +435,9 @@ Action.prototype = {
     isActive: function (active) {
         var isActive = (active !== undefined) ? active : this.active;
         
-        this.hasChanged = isActive;
+        if (active === true) {
+	        this.hasChanged = active;
+        }
 
         this.active = isActive;
 

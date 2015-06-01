@@ -8,9 +8,6 @@ module.exports = {
     // [int]: Time elapsed in milliseconds
     elapsed: 0,
     
-    // [int]: Number of frames Action has been inactive
-    inactiveFrames: 0,
-    
     // [int]: 1 = forward, -1 = backwards
     playDirection: 1,
     

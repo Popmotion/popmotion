@@ -15,7 +15,7 @@ module.exports = function (action, framestamp, frameDuration) {
         i = 0,
         order = action.order = action.order || [],
         orderLength = order.length,
-        key = '', value, output;
+        key = '', value, valueOutput;
     
     // Update elapsed
     if (rubix.updateInput) {
@@ -49,20 +49,20 @@ module.exports = function (action, framestamp, frameDuration) {
         }
 
         // Calculate new value
-        output = valueRubix.process(key, value, values, action, frameDuration);
+        valueOutput = valueRubix.process(key, value, values, action, frameDuration);
         
         // Limit if range set
         if (valueRubix.limit) {
-            output = valueRubix.limit(output, value);
+            valueOutput = valueRubix.limit(valueOutput, value);
         }
         
         // Round value if rounding set to true
         if (value.round) {
-            output = Math.round(output);
+            valueOutput = Math.round(valueOutput);
         }
 
         // Update change from previous frame
-        value.frameChange = output - value.current;
+        value.frameChange = valueOutput - value.current;
         
         // Calculate velocity
         if (!valueRubix.calculatesVelocity) {
@@ -73,15 +73,15 @@ module.exports = function (action, framestamp, frameDuration) {
         value.speed = Math.abs(value.velocity);
         
         // Check if changed and update
-        if (value.current != output) {
+        if (value.current != valueOutput) {
             action.hasChanged = true;
         }
 
         // Set current and add unit (if any) for output
-        value.current = output;
+        value.current = valueOutput;
         action.output[value.route] = action.output[value.route] || {};
         action.output[defaultRoute] = action.output[defaultRoute] || {};
-        action.output[defaultRoute][key] = action.output[value.route][value.name] = (value.unit) ? output + value.unit : output;
+        action.output[defaultRoute][key] = action.output[value.route][value.name] = (value.unit) ? valueOutput + value.unit : valueOutput;
     }
 
     // shard onFrame and onChange
@@ -110,6 +110,8 @@ module.exports = function (action, framestamp, frameDuration) {
         if (!action.isActive() && action.rubix === 'play') {
             action.next();
         }
+    } else {
+	    action.hasChanged = false;
     }
 
     action.firstFrame = false;
