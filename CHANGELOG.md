@@ -6,6 +6,7 @@ Redshift adheres to [Semantic Versioning](http://semver.org/). Change log added 
 
 ### Changed
 - Upgraded stepped easing algorithm.
+- `Action.hasChanged` set to `true` when `Action.isActive(true)`
 
 ### Removed
 - `.props()` method removed - properties now saved directly to Action object.
