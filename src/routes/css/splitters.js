@@ -113,22 +113,21 @@ var dictionary = require('./dictionary.js'),
                 "#ff0000" -> {255, 0, 0}
                 "rgb(255, 0, 0)" -> {255, 0, 0}
                 "rgba(255, 0, 0, 1)" -> {255, 0, 0, 1}
-                //"hsl(0, 100%, 50%)" -> {255, 0, 0}
-                //"hsla(0, 100%, 50%, 1)" -> {255, 0, 0, 1}
                 
             @return [object]: Object with metric for each 
         */
         colors: function (prop) {
             var colors = (prop.indexOf('#') > -1) ? hex(prop) : splitCommaDelimited(functionBreak(prop)),
-                numColors = colors.length,
                 terms = dictionary.colors,
+                numTerms = terms.length,
                 i = 0,
                 rgba = {};
 
-            for (; i < numColors; i++) {
+            for (; i < numTerms; i++) {
+	            colors[i] = (colors[i] || colors[i] === 0) ? colors[i] : 1;
                 rgba[terms[i]] = colors[i];
             }
-            
+
             return rgba;
         },
     

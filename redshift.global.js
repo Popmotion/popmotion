@@ -1376,7 +1376,7 @@
 	
 	var calc = __webpack_require__(/*! ../utils/calc.js */ 19),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
-	    History = __webpack_require__(/*! ../utils/history.js */ 36),
+	    History = __webpack_require__(/*! ../utils/history.js */ 37),
 	
 	    /*
 	        Input constructor
@@ -1508,7 +1508,7 @@
 	*/
 	"use strict";
 	
-	var manager = __webpack_require__(/*! ./manager.js */ 37),
+	var manager = __webpack_require__(/*! ./manager.js */ 36),
 	
 	    /*
 	        Process constructor
@@ -2701,7 +2701,7 @@
 		actionGroupPrototype = __webpack_require__(/*! ../action-group/action-group.js */ 13).prototype,
 	    generateMethodIterator = __webpack_require__(/*! ../action-group/generate-iterator.js */ 35),
 	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 28),
-	    rubix = __webpack_require__(/*! ../core/rubix.js */ 41);
+	    rubix = __webpack_require__(/*! ../core/rubix.js */ 40);
 	
 	module.exports = function (name, newRubix) {
 	    var parser = parseArgs[name] || parseArgs.generic;
@@ -2730,7 +2730,7 @@
 	*/
 	"use strict";
 	
-	var simulations = __webpack_require__(/*! ../core/simulations.js */ 40);
+	var simulations = __webpack_require__(/*! ../core/simulations.js */ 41);
 	
 	module.exports = function (name, simulation) {
 	    simulations[name] = simulation;
@@ -2745,7 +2745,7 @@
 
 	"use strict";
 	
-	var simulations = __webpack_require__(/*! ../core/simulations.js */ 40);
+	var simulations = __webpack_require__(/*! ../core/simulations.js */ 41);
 	
 	module.exports = function (simulation, value, duration, started) {
 	    var velocity = simulations[simulation](value, duration, started);
@@ -3001,7 +3001,7 @@
 	
 	var utils = __webpack_require__(/*! ../utils/utils.js */ 20),
 	    presets = __webpack_require__(/*! ./presets.js */ 17),
-	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 48),
+	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 51),
 	
 	    STRING = 'string',
 	    NUMBER = 'number',
@@ -3140,9 +3140,9 @@
 
 	"use strict";
 	
-	var defaultProps = __webpack_require__(/*! ../defaults/value-props.js */ 49),
-	    defaultState = __webpack_require__(/*! ../defaults/value-state.js */ 50),
-	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 51),
+	var defaultProps = __webpack_require__(/*! ../defaults/value-props.js */ 48),
+	    defaultState = __webpack_require__(/*! ../defaults/value-state.js */ 49),
+	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 50),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
 	
 	    CURRENT = 'current',
@@ -3352,7 +3352,7 @@
 	*/
 	"use strict";
 	
-	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 41),
+	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 40),
 	    routes = __webpack_require__(/*! ./routes.js */ 21),
 	    calc = __webpack_require__(/*! ../utils/calc.js */ 19);
 	
@@ -3657,83 +3657,6 @@
 
 /***/ },
 /* 36 */
-/*!******************************!*\
-  !*** ./src/utils/history.js ***!
-  \******************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var // [number]: Default max size of history
-	    maxHistorySize = 3,
-	    
-	    /*
-	        History constructor
-	        
-	        @param [var]: Variable to store in first history slot
-	        @param [int] (optional): Maximum size of history
-	    */
-	    History = function (obj, max) {
-	        this.max = max || maxHistorySize;
-	        this.entries = [];
-	        this.add(obj);
-	    };
-	    
-	History.prototype = {
-	    
-	    /*
-	        Push new var to history
-	        
-	        Shift out oldest entry if we've reached maximum capacity
-	        
-	        @param [var]: Variable to push into history.entries
-	    */
-	    add: function (obj) {
-	        var currentSize = this.getSize();
-	        
-	        this.entries.push(obj);
-	        
-	        if (currentSize >= this.max) {
-	            this.entries.shift();
-	        }
-	    },
-	    
-	    /*
-	        Get variable at specified index
-	
-	        @param [int]: Index
-	        @return [var]: Var found at specified index
-	    */
-	    get: function (i) {
-	        i = (typeof i === 'number') ? i : this.getSize() - 1;
-	
-	        return this.entries[i];
-	    },
-	    
-	    /*
-	        Get the second newest history entry
-	        
-	        @return [var]: Entry found at index size - 2
-	    */
-	    getPrevious: function () {
-	        return this.get(this.getSize() - 2);
-	    },
-	    
-	    /*
-	        Get current history size
-	        
-	        @return [int]: Current length of entries.length
-	    */
-	    getSize: function () {
-	        return this.entries.length;
-	    }
-	    
-	};
-	
-	module.exports = History;
-
-/***/ },
-/* 37 */
 /*!********************************!*\
   !*** ./src/process/manager.js ***!
   \********************************/
@@ -3909,6 +3832,83 @@
 	};
 	
 	module.exports = new ProcessManager();
+
+/***/ },
+/* 37 */
+/*!******************************!*\
+  !*** ./src/utils/history.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var // [number]: Default max size of history
+	    maxHistorySize = 3,
+	    
+	    /*
+	        History constructor
+	        
+	        @param [var]: Variable to store in first history slot
+	        @param [int] (optional): Maximum size of history
+	    */
+	    History = function (obj, max) {
+	        this.max = max || maxHistorySize;
+	        this.entries = [];
+	        this.add(obj);
+	    };
+	    
+	History.prototype = {
+	    
+	    /*
+	        Push new var to history
+	        
+	        Shift out oldest entry if we've reached maximum capacity
+	        
+	        @param [var]: Variable to push into history.entries
+	    */
+	    add: function (obj) {
+	        var currentSize = this.getSize();
+	        
+	        this.entries.push(obj);
+	        
+	        if (currentSize >= this.max) {
+	            this.entries.shift();
+	        }
+	    },
+	    
+	    /*
+	        Get variable at specified index
+	
+	        @param [int]: Index
+	        @return [var]: Var found at specified index
+	    */
+	    get: function (i) {
+	        i = (typeof i === 'number') ? i : this.getSize() - 1;
+	
+	        return this.entries[i];
+	    },
+	    
+	    /*
+	        Get the second newest history entry
+	        
+	        @return [var]: Entry found at index size - 2
+	    */
+	    getPrevious: function () {
+	        return this.get(this.getSize() - 2);
+	    },
+	    
+	    /*
+	        Get current history size
+	        
+	        @return [int]: Current length of entries.length
+	    */
+	    getSize: function () {
+	        return this.entries.length;
+	    }
+	    
+	};
+	
+	module.exports = History;
 
 /***/ },
 /* 38 */
@@ -4096,6 +4096,63 @@
 
 /***/ },
 /* 40 */
+/*!***************************!*\
+  !*** ./src/core/rubix.js ***!
+  \***************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Anatomy of a Rubix:
+	    
+	        Props
+	            surpressMethod [boolean]:
+	                If not true, will create Action shorthand method 
+	                with the name of the rubix, ie .play()
+	
+	            calculatesVelocity [boolean]:
+	                Set to true if your Rubix will calculate
+	                the new Value velocity (otherwise Redshift may override it)
+	                
+	        Methods
+	            updateInput
+	                Run once per frame, before Values are processed. .play uses this
+	                to update the timer, .track uses it to check the input device.
+	
+	                @param [Action]: The Action being processed
+	                @param [object]: Action properties
+	                @param [int]: Duration since the last frame in milliseconds
+	            
+	            process (required)
+	                Run once for every Action value, this method returns the latest value
+	
+	                @param [string]: Name of value being processed
+	                @param [Value]: Value being processed
+	                @param [object]: Action values
+	                @param [object]: Action properties
+	                @param [Action]: Action
+	                @param [int]: Duration since the last frame in milliseconds
+	                @return [int]: Latest value
+	                
+	            limit
+	                Run once for every Action value, this can be used to limit the value
+	                within any parameters
+	                
+	                @param [int]: Value returned from process method
+	                @param [Value]: Value being processed
+	                @return [int]: Latest value
+	                
+	            hasEnded (required)
+	                Returns true if this current Action has ended. Redshift will
+	                then check the Action's queue or yoyo/loop properties to decide
+	                what action to take next
+	                
+	                @param [Action]: Action being processed
+	                @param [boolean]: True if any value has changed
+	*/            
+	module.exports = {};
+
+/***/ },
+/* 41 */
 /*!*********************************!*\
   !*** ./src/core/simulations.js ***!
   \*********************************/
@@ -4191,63 +4248,6 @@
 	        value.capture = value.min = value.max = undefined;
 	    }
 	};
-
-/***/ },
-/* 41 */
-/*!***************************!*\
-  !*** ./src/core/rubix.js ***!
-  \***************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    Anatomy of a Rubix:
-	    
-	        Props
-	            surpressMethod [boolean]:
-	                If not true, will create Action shorthand method 
-	                with the name of the rubix, ie .play()
-	
-	            calculatesVelocity [boolean]:
-	                Set to true if your Rubix will calculate
-	                the new Value velocity (otherwise Redshift may override it)
-	                
-	        Methods
-	            updateInput
-	                Run once per frame, before Values are processed. .play uses this
-	                to update the timer, .track uses it to check the input device.
-	
-	                @param [Action]: The Action being processed
-	                @param [object]: Action properties
-	                @param [int]: Duration since the last frame in milliseconds
-	            
-	            process (required)
-	                Run once for every Action value, this method returns the latest value
-	
-	                @param [string]: Name of value being processed
-	                @param [Value]: Value being processed
-	                @param [object]: Action values
-	                @param [object]: Action properties
-	                @param [Action]: Action
-	                @param [int]: Duration since the last frame in milliseconds
-	                @return [int]: Latest value
-	                
-	            limit
-	                Run once for every Action value, this can be used to limit the value
-	                within any parameters
-	                
-	                @param [int]: Value returned from process method
-	                @param [Value]: Value being processed
-	                @return [int]: Latest value
-	                
-	            hasEnded (required)
-	                Returns true if this current Action has ended. Redshift will
-	                then check the Action's queue or yoyo/loop properties to decide
-	                what action to take next
-	                
-	                @param [Action]: Action being processed
-	                @param [boolean]: True if any value has changed
-	*/            
-	module.exports = {};
 
 /***/ },
 /* 42 */
@@ -4600,22 +4600,21 @@
 	                "#ff0000" -> {255, 0, 0}
 	                "rgb(255, 0, 0)" -> {255, 0, 0}
 	                "rgba(255, 0, 0, 1)" -> {255, 0, 0, 1}
-	                //"hsl(0, 100%, 50%)" -> {255, 0, 0}
-	                //"hsla(0, 100%, 50%, 1)" -> {255, 0, 0, 1}
 	                
 	            @return [object]: Object with metric for each 
 	        */
 	        colors: function (prop) {
 	            var colors = (prop.indexOf('#') > -1) ? hex(prop) : splitCommaDelimited(functionBreak(prop)),
-	                numColors = colors.length,
 	                terms = dictionary.colors,
+	                numTerms = terms.length,
 	                i = 0,
 	                rgba = {};
 	
-	            for (; i < numColors; i++) {
+	            for (; i < numTerms; i++) {
+		            colors[i] = (colors[i] || colors[i] === 0) ? colors[i] : 1;
 	                rgba[terms[i]] = colors[i];
 	            }
-	            
+	
 	            return rgba;
 	        },
 	    
@@ -4739,103 +4738,6 @@
 
 /***/ },
 /* 48 */
-/*!******************************!*\
-  !*** ./src/input/pointer.js ***!
-  \******************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var Input = __webpack_require__(/*! ./input.js */ 15),
-	    currentPointer, // Sort this out for multitouch
-	    
-	    TOUCHMOVE = 'touchmove',
-	    MOUSEMOVE = 'mousemove',
-	
-	    /*
-	        Convert event into point
-	        
-	        Scrape the x/y coordinates from the provided event
-	        
-	        @param [event]: Original pointer event
-	        @param [boolean]: True if touch event
-	        @return [object]: x/y coordinates of event
-	    */
-	    eventToPoint = function (event, isTouchEvent) {
-	        var touchChanged = isTouchEvent ? event.changedTouches[0] : false;
-	        
-	        return {
-	            x: touchChanged ? touchChanged.clientX : event.pageX,
-	            y: touchChanged ? touchChanged.clientY : event.pageY
-	        }
-	    },
-	    
-	    /*
-	        Get actual event
-	        
-	        Checks for jQuery's .originalEvent if present
-	        
-	        @param [event | jQuery event]
-	        @return [event]: The actual JS event  
-	    */
-	    getActualEvent = function (event) {
-	        return event.originalEvent || event;
-	    },
-	
-	    
-	    /*
-	        Pointer constructor
-	    */
-	    Pointer = function (e) {
-	        var event = getActualEvent(e), // In case of jQuery event
-	            isTouch = (event.touches) ? true : false,
-	            startPoint = eventToPoint(event, isTouch);
-	        
-	        this.update(startPoint);
-	        this.isTouch = isTouch;
-	        this.bindEvents();
-	    },
-	    
-	    proto = Pointer.prototype = new Input();
-	
-	/*
-	    Bind move event
-	*/
-	proto.bindEvents = function () {
-	    this.moveEvent = this.isTouch ? TOUCHMOVE : MOUSEMOVE;
-	    
-	    currentPointer = this;
-	    
-	    document.documentElement.addEventListener(this.moveEvent, this.onMove);
-	};
-	
-	/*
-	    Unbind move event
-	*/
-	proto.unbindEvents = function () {
-	    document.documentElement.removeEventListener(this.moveEvent, this.onMove);
-	};
-	
-	/*
-	    Pointer onMove event handler
-	    
-	    @param [event]: Pointer move event
-	*/
-	proto.onMove = function (e) {
-	    var newPoint = eventToPoint(e, currentPointer.isTouch);
-	    e = getActualEvent(e);
-	    e.preventDefault();
-	    currentPointer.update(newPoint);
-	};
-	
-	proto.stop = function () {
-	    this.unbindEvents();
-	};
-	
-	module.exports = Pointer;
-
-/***/ },
-/* 49 */
 /*!*************************************!*\
   !*** ./src/defaults/value-props.js ***!
   \*************************************/
@@ -4952,7 +4854,7 @@
 	};
 
 /***/ },
-/* 50 */
+/* 49 */
 /*!*************************************!*\
   !*** ./src/defaults/value-state.js ***!
   \*************************************/
@@ -4973,7 +4875,7 @@
 	};
 
 /***/ },
-/* 51 */
+/* 50 */
 /*!******************************!*\
   !*** ./src/utils/resolve.js ***!
   \******************************/
@@ -5027,6 +4929,103 @@
 	
 	    return newValue;
 	};
+
+/***/ },
+/* 51 */
+/*!******************************!*\
+  !*** ./src/input/pointer.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var Input = __webpack_require__(/*! ./input.js */ 15),
+	    currentPointer, // Sort this out for multitouch
+	    
+	    TOUCHMOVE = 'touchmove',
+	    MOUSEMOVE = 'mousemove',
+	
+	    /*
+	        Convert event into point
+	        
+	        Scrape the x/y coordinates from the provided event
+	        
+	        @param [event]: Original pointer event
+	        @param [boolean]: True if touch event
+	        @return [object]: x/y coordinates of event
+	    */
+	    eventToPoint = function (event, isTouchEvent) {
+	        var touchChanged = isTouchEvent ? event.changedTouches[0] : false;
+	        
+	        return {
+	            x: touchChanged ? touchChanged.clientX : event.pageX,
+	            y: touchChanged ? touchChanged.clientY : event.pageY
+	        }
+	    },
+	    
+	    /*
+	        Get actual event
+	        
+	        Checks for jQuery's .originalEvent if present
+	        
+	        @param [event | jQuery event]
+	        @return [event]: The actual JS event  
+	    */
+	    getActualEvent = function (event) {
+	        return event.originalEvent || event;
+	    },
+	
+	    
+	    /*
+	        Pointer constructor
+	    */
+	    Pointer = function (e) {
+	        var event = getActualEvent(e), // In case of jQuery event
+	            isTouch = (event.touches) ? true : false,
+	            startPoint = eventToPoint(event, isTouch);
+	        
+	        this.update(startPoint);
+	        this.isTouch = isTouch;
+	        this.bindEvents();
+	    },
+	    
+	    proto = Pointer.prototype = new Input();
+	
+	/*
+	    Bind move event
+	*/
+	proto.bindEvents = function () {
+	    this.moveEvent = this.isTouch ? TOUCHMOVE : MOUSEMOVE;
+	    
+	    currentPointer = this;
+	    
+	    document.documentElement.addEventListener(this.moveEvent, this.onMove);
+	};
+	
+	/*
+	    Unbind move event
+	*/
+	proto.unbindEvents = function () {
+	    document.documentElement.removeEventListener(this.moveEvent, this.onMove);
+	};
+	
+	/*
+	    Pointer onMove event handler
+	    
+	    @param [event]: Pointer move event
+	*/
+	proto.onMove = function (e) {
+	    var newPoint = eventToPoint(e, currentPointer.isTouch);
+	    e = getActualEvent(e);
+	    e.preventDefault();
+	    currentPointer.update(newPoint);
+	};
+	
+	proto.stop = function () {
+	    this.unbindEvents();
+	};
+	
+	module.exports = Pointer;
 
 /***/ },
 /* 52 */

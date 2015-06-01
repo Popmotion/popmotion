@@ -2,6 +2,11 @@
 
 Redshift adheres to [Semantic Versioning](http://semver.org/). Change log added v1.4.0.
 
+## [2.0.2] 2015-06-01
+
+### Fixed
+- Adding Alpha property to all split color values (default: 1), in case a value has mixed RGB and RGBA properties.
+
 ## [2.0.1] 2015-06-01
 
 ### Added
