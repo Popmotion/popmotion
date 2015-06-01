@@ -2,6 +2,11 @@
 
 Redshift adheres to [Semantic Versioning](http://semver.org/). Change log added v1.4.0.
 
+## [2.0.1] 2015-06-01
+
+### Added
+- CSS values travelling through a splitter (ie backgroundColor is split into RGB values) can be set as functions like normal values.
+
 ## [2.0.0] 2015-06-01
 
 ### Changed
