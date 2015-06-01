@@ -10,7 +10,7 @@ Redshift adheres to [Semantic Versioning](http://semver.org/). Change log added 
 
 ### Removed
 - `.props()` method removed - properties now saved directly to Action object.
-- `.data()` functionality removed.
+- `.data()` functionality removed, just set properties of Action instead.
 - `.flip()` is now `.flipValues()`.
 
 ## [1.4.1] 2015-05-31
