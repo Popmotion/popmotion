@@ -54,6 +54,8 @@ var routes = require('../core/routes.js'),
             }
         },
         
+        all: routes,
+        
         getName: function (name) {
             return (name !== undefined && has(name)) ? name : this.defaultRoute;
         }

@@ -71,7 +71,7 @@ module.exports = {
         @param [Action]: Current Action
         @return [number]: Calculated value
     */
-    process: function (key, value, values, props, action) {
+    process: function (key, value, values, action) {
         var newValue = value.current,
             linkKey = value.link,
             linkedValue = values[linkKey] ? values[linkKey] : {},

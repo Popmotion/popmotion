@@ -2,7 +2,6 @@
 
 var parseArgs = require('./parse-args.js'),
     Value = require('../types/value.js'),
-    Repo = require('../types/repo.js'),
     Queue = require('./queue.js'),
     Process = require('../process/process.js'),
     processor = require('./processor.js'),
@@ -24,13 +23,9 @@ var parseArgs = require('./parse-args.js'),
         
         // Create new property manager
         defaultProps.scope = this;
-        self.props = new Repo();
-        self.props(defaultState);
+        self.setProp(defaultState);
         self.resetProps();
 
-        // Create data store
-        self.data = new Repo();
-        
         // Register process wth cycl
         self.process = new Process(function (framestamp, frameDuration) {
 	        if (self.isActive()) {
@@ -97,7 +92,7 @@ Action.prototype = {
         this.clearOrder();
 
         // Update current properties
-        this.props(props);
+        this.setProp(props);
         
         // Set default property to current if it isn't set
         defaultProp = defaultProp || 'current';
@@ -167,12 +162,12 @@ Action.prototype = {
         @return [Action]
     */
     start: function (processType) {
-	    var input = this.getProp('input');
+	    var input = this.input;
 
         this.resetProgress();
         
         if (processType) {
-            this.props('rubix', processType);
+            this.rubix = processType;
         }
         
         if (processType !== 'track' && input && input.stop) {
@@ -180,7 +175,7 @@ Action.prototype = {
         }
 
         this.isActive(true);
-        this.started = utils.currentTime() + this.props('delay');
+        this.started = utils.currentTime() + this.delay;
         this.framestamp = this.started;
         this.firstFrame = true;
         
@@ -203,7 +198,7 @@ Action.prototype = {
     */
     pause: function () {
 	    var self = this,
-	        input = this.getProp('input');
+	        input = this.input;
 
         self.isActive(false);
         self.process.stop();
@@ -250,11 +245,9 @@ Action.prototype = {
 	    Reset Action progress
     */
     resetProgress: function () {
-        var props = this.props();
-        
-        props.progress = 0;
-        props.elapsed = (props.playDirection === 1) ? 0 : props.duration;
-        props.started = utils.currentTime();
+        this.progress = 0;
+        this.elapsed = (this.playDirection === 1) ? 0 : this.duration;
+        this.started = utils.currentTime();
         
         return this;
     },
@@ -263,10 +256,9 @@ Action.prototype = {
 	    Reverse Action progress and values
     */
     reverse: function () {
-        var values = this.values,
-            playDirection = this.props('playDirection');
+        var values = this.values;
 
-        this.props('playDirection', playDirection * -1);
+        this.playDirection = this.playDirection * -1;
         
         for (var key in values) {
             if (values.hasOwnProperty(key)) {
@@ -280,12 +272,11 @@ Action.prototype = {
     /*
         Swap value origins and to
     */
-    flip: function () {
-        var values = this.values,
-            props = this.props();
+    flipValues: function () {
+        var values = this.values;
             
-        props.progress = 1 - props.progress;
-        props.elapsed = props.duration - props.elapsed;
+        this.progress = 1 - this.progress;
+        this.elapsed = this.duration - this.elapsed;
         
         for (var key in values) {
             values[key].flip();
@@ -317,7 +308,7 @@ Action.prototype = {
                 callback: self.reverse
             }, {
                 key: 'flip',
-                callback: self.flip
+                callback: self.flipValues
             }],
             possibles = nexts.length,
             hasNext = false;
@@ -347,13 +338,13 @@ Action.prototype = {
     checkNextStep: function (key, callback) {
         var COUNT = 'Count',
             stepTaken = false,
-            step = this.props(key),
-            count = this.props(key + COUNT),
+            step = this[key],
+            count = this[key + COUNT],
             forever = (step === true);
 
         if (forever || utils.isNum(step)) {
             ++count;
-            this.props(key + COUNT, count);
+            this[key + COUNT] = count;
             if (forever || count <= step) {
                 callback.call(this);
                 stepTaken = true;
@@ -368,7 +359,7 @@ Action.prototype = {
     */
     playNext: function () {
         var stepTaken = false,
-            nextInQueue = this.queue.next(this.props('playDirection'));
+            nextInQueue = this.queue.next(this.playDirection);
 
         if (utils.isArray(nextInQueue)) {
             this.set(parseArgs.generic.apply(this, nextInQueue), 'to')
@@ -410,18 +401,28 @@ Action.prototype = {
     },
     
     
-    setProp: function (key, value) {
-        this.props(key, value);
+    setProp: function (data, prop) {
+        var multiArg = (arguments.length > 1),
+            toSet = multiArg ? {} : data,
+            key = '';
+        
+        // If this is a key/value setter, add to toSet
+        if (multiArg) {
+            toSet[data] = prop;
+        }
+        
+        // Loop over toSet and assign to our data store
+        for (key in toSet) {
+            if (toSet.hasOwnProperty(key) && !routes.all[key]) {
+                this[key] = toSet[key];
+            }
+        }
+
         return this;
     },
     
-    
-    getProp: function (key) {
-        return this.props(key);
-    },
-    
     resetProps: function () {
-        this.props(defaultProps);
+        this.setProp(defaultProps);
         return this;
     },
     
@@ -432,9 +433,11 @@ Action.prototype = {
         @return [boolean]: Active status
     */
     isActive: function (active) {
-        var isActive = (active !== undefined) ? active : this.props('active');
+        var isActive = (active !== undefined) ? active : this.active;
+        
+        this.hasChanged = isActive;
 
-        this.props('active', isActive);
+        this.active = isActive;
 
         return isActive;
     },
@@ -447,11 +450,10 @@ Action.prototype = {
         @param [string] (optional): Name of order array (if not default)
     */
     updateOrder: function (key, moveToBack, orderName) {
-        var props = this.props(),
-            pos, order;
+        var pos, order;
 
         orderName = orderName || 'order';
-        order = props[orderName] = props[orderName] || [];
+        order = this[orderName] = this[orderName] || [];
         pos = order.indexOf(key);
         
         if (pos === -1 || moveToBack) {
@@ -464,7 +466,7 @@ Action.prototype = {
     },
     
     clearOrder: function () {
-        this.props('order', []);
+        this.order = [];
     },
     
     /*
@@ -480,7 +482,7 @@ Action.prototype = {
         props = elementIsDefined ? props : name;
         name = elementIsDefined ? name : 'dom';
     
-        dom = this.props(name);
+        dom = this[name];
         
         if (dom) {
             returnVal = styler(dom, props);

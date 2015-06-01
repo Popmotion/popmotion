@@ -33,7 +33,7 @@ var defaultProps = require('../defaults/value-props.js'),
     Value = function (key, props, inherit, action) {
         this.key = key;
         this.action = action;
-        this.scope = action.getProp('scope');
+        this.scope = action.scope;
 
         if (props.start) {
             props.current = props.start;
