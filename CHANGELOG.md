@@ -2,6 +2,11 @@
 
 Redshift adheres to [Semantic Versioning](http://semver.org/). Change log added v1.4.0.
 
+## [2.0.5] 2015-06-02
+
+### Added
+- ActionGroup returns array of values when a getter is called.
+
 ## [2.0.4] 2015-06-01
 
 ### Fixed
