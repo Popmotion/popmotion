@@ -91,7 +91,7 @@ Value.prototype = {
         
         // Loop through collected values and set
         for (key in toSet) {
-            this[key] = resolve(toSet[key], this[key], this, this.scope);
+            this[key] = resolve(toSet[key], this.current, this, this.scope);
                 
             if (FORCE_NUMBER.indexOf(key) > -1) {
                 this[key] = parseFloat(this[key]);

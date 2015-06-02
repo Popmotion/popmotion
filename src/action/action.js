@@ -490,7 +490,7 @@ Action.prototype = {
         if (dom) {
             returnVal = styler(dom, props);
         }
-        
+
         return (returnVal === false) ? this : returnVal;
     }
     

@@ -9,15 +9,23 @@
 */
 module.exports = function (method) {
 	return function () {
-		var numActions = this.actions.length,
-			i = 0,
-			action;
+        var numActions = this.actions.length,
+            i = 0,
+			isGetter = false,
+			getterArray = [],
+			action,
+			actionReturn;
 			
 		for (; i < numActions; i++) {
 			action = this.actions[i];
-			action[method].apply(action, arguments);
+			actionReturn = action[method].apply(action, arguments);
+			
+			if (actionReturn != action) {
+    			isGetter = true;
+    			getterArray.push(actionReturn);
+			}
 		}
 		
-		return this;
+		return (isGetter) ? getterArray : this;
 	};
 };

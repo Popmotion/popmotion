@@ -1227,7 +1227,7 @@
 	        if (dom) {
 	            returnVal = styler(dom, props);
 	        }
-	        
+	
 	        return (returnVal === false) ? this : returnVal;
 	    }
 	    
@@ -2262,7 +2262,7 @@
 	                equation = rel.split('='),
 	                operator = equation[0],
 	                splitVal = utils.splitValUnit(equation[1]);
-	    
+	
 	            switch (operator) {
 	                case '+':
 	                    newValue += splitVal.value;
@@ -2628,7 +2628,7 @@
 
 	"use strict";
 	
-	var routes = __webpack_require__(/*! ../core/routes.js */ 39),
+	var routes = __webpack_require__(/*! ../core/routes.js */ 40),
 	    routeKeys = [],
 	    numRoutes,
 	    
@@ -2704,7 +2704,7 @@
 		actionGroupPrototype = __webpack_require__(/*! ../action-group/action-group.js */ 13).prototype,
 	    generateMethodIterator = __webpack_require__(/*! ../action-group/generate-iterator.js */ 35),
 	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 28),
-	    rubix = __webpack_require__(/*! ../core/rubix.js */ 40);
+	    rubix = __webpack_require__(/*! ../core/rubix.js */ 39);
 	
 	module.exports = function (name, newRubix) {
 	    var parser = parseArgs[name] || parseArgs.generic;
@@ -3004,7 +3004,7 @@
 	
 	var utils = __webpack_require__(/*! ../utils/utils.js */ 20),
 	    presets = __webpack_require__(/*! ./presets.js */ 17),
-	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 48),
+	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 51),
 	
 	    STRING = 'string',
 	    NUMBER = 'number',
@@ -3143,9 +3143,9 @@
 
 	"use strict";
 	
-	var defaultProps = __webpack_require__(/*! ../defaults/value-props.js */ 49),
-	    defaultState = __webpack_require__(/*! ../defaults/value-state.js */ 50),
-	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 51),
+	var defaultProps = __webpack_require__(/*! ../defaults/value-props.js */ 48),
+	    defaultState = __webpack_require__(/*! ../defaults/value-state.js */ 49),
+	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 50),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
 	
 	    CURRENT = 'current',
@@ -3234,7 +3234,7 @@
 	        
 	        // Loop through collected values and set
 	        for (key in toSet) {
-	            this[key] = resolve(toSet[key], this[key], this, this.scope);
+	            this[key] = resolve(toSet[key], this.current, this, this.scope);
 	                
 	            if (FORCE_NUMBER.indexOf(key) > -1) {
 	                this[key] = parseFloat(this[key]);
@@ -3355,7 +3355,7 @@
 	*/
 	"use strict";
 	
-	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 40),
+	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 39),
 	    routes = __webpack_require__(/*! ./routes.js */ 21),
 	    calc = __webpack_require__(/*! ../utils/calc.js */ 19);
 	
@@ -3646,16 +3646,24 @@
 	*/
 	module.exports = function (method) {
 		return function () {
-			var numActions = this.actions.length,
-				i = 0,
-				action;
+	        var numActions = this.actions.length,
+	            i = 0,
+				isGetter = false,
+				getterArray = [],
+				action,
+				actionReturn;
 				
 			for (; i < numActions; i++) {
 				action = this.actions[i];
-				action[method].apply(action, arguments);
+				actionReturn = action[method].apply(action, arguments);
+				
+				if (actionReturn != action) {
+	    			isGetter = true;
+	    			getterArray.push(actionReturn);
+				}
 			}
 			
-			return this;
+			return (isGetter) ? getterArray : this;
 		};
 	};
 
@@ -4092,15 +4100,6 @@
 
 /***/ },
 /* 39 */
-/*!****************************!*\
-  !*** ./src/core/routes.js ***!
-  \****************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {};
-
-/***/ },
-/* 40 */
 /*!***************************!*\
   !*** ./src/core/rubix.js ***!
   \***************************/
@@ -4154,6 +4153,15 @@
 	                @param [Action]: Action being processed
 	                @param [boolean]: True if any value has changed
 	*/            
+	module.exports = {};
+
+/***/ },
+/* 40 */
+/*!****************************!*\
+  !*** ./src/core/routes.js ***!
+  \****************************/
+/***/ function(module, exports, __webpack_require__) {
+
 	module.exports = {};
 
 /***/ },
@@ -4743,103 +4751,6 @@
 
 /***/ },
 /* 48 */
-/*!******************************!*\
-  !*** ./src/input/pointer.js ***!
-  \******************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var Input = __webpack_require__(/*! ./input.js */ 15),
-	    currentPointer, // Sort this out for multitouch
-	    
-	    TOUCHMOVE = 'touchmove',
-	    MOUSEMOVE = 'mousemove',
-	
-	    /*
-	        Convert event into point
-	        
-	        Scrape the x/y coordinates from the provided event
-	        
-	        @param [event]: Original pointer event
-	        @param [boolean]: True if touch event
-	        @return [object]: x/y coordinates of event
-	    */
-	    eventToPoint = function (event, isTouchEvent) {
-	        var touchChanged = isTouchEvent ? event.changedTouches[0] : false;
-	        
-	        return {
-	            x: touchChanged ? touchChanged.clientX : event.pageX,
-	            y: touchChanged ? touchChanged.clientY : event.pageY
-	        }
-	    },
-	    
-	    /*
-	        Get actual event
-	        
-	        Checks for jQuery's .originalEvent if present
-	        
-	        @param [event | jQuery event]
-	        @return [event]: The actual JS event  
-	    */
-	    getActualEvent = function (event) {
-	        return event.originalEvent || event;
-	    },
-	
-	    
-	    /*
-	        Pointer constructor
-	    */
-	    Pointer = function (e) {
-	        var event = getActualEvent(e), // In case of jQuery event
-	            isTouch = (event.touches) ? true : false,
-	            startPoint = eventToPoint(event, isTouch);
-	        
-	        this.update(startPoint);
-	        this.isTouch = isTouch;
-	        this.bindEvents();
-	    },
-	    
-	    proto = Pointer.prototype = new Input();
-	
-	/*
-	    Bind move event
-	*/
-	proto.bindEvents = function () {
-	    this.moveEvent = this.isTouch ? TOUCHMOVE : MOUSEMOVE;
-	    
-	    currentPointer = this;
-	    
-	    document.documentElement.addEventListener(this.moveEvent, this.onMove);
-	};
-	
-	/*
-	    Unbind move event
-	*/
-	proto.unbindEvents = function () {
-	    document.documentElement.removeEventListener(this.moveEvent, this.onMove);
-	};
-	
-	/*
-	    Pointer onMove event handler
-	    
-	    @param [event]: Pointer move event
-	*/
-	proto.onMove = function (e) {
-	    var newPoint = eventToPoint(e, currentPointer.isTouch);
-	    e = getActualEvent(e);
-	    e.preventDefault();
-	    currentPointer.update(newPoint);
-	};
-	
-	proto.stop = function () {
-	    this.unbindEvents();
-	};
-	
-	module.exports = Pointer;
-
-/***/ },
-/* 49 */
 /*!*************************************!*\
   !*** ./src/defaults/value-props.js ***!
   \*************************************/
@@ -4956,7 +4867,7 @@
 	};
 
 /***/ },
-/* 50 */
+/* 49 */
 /*!*************************************!*\
   !*** ./src/defaults/value-state.js ***!
   \*************************************/
@@ -4977,7 +4888,7 @@
 	};
 
 /***/ },
-/* 51 */
+/* 50 */
 /*!******************************!*\
   !*** ./src/utils/resolve.js ***!
   \******************************/
@@ -5031,6 +4942,103 @@
 	
 	    return newValue;
 	};
+
+/***/ },
+/* 51 */
+/*!******************************!*\
+  !*** ./src/input/pointer.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var Input = __webpack_require__(/*! ./input.js */ 15),
+	    currentPointer, // Sort this out for multitouch
+	    
+	    TOUCHMOVE = 'touchmove',
+	    MOUSEMOVE = 'mousemove',
+	
+	    /*
+	        Convert event into point
+	        
+	        Scrape the x/y coordinates from the provided event
+	        
+	        @param [event]: Original pointer event
+	        @param [boolean]: True if touch event
+	        @return [object]: x/y coordinates of event
+	    */
+	    eventToPoint = function (event, isTouchEvent) {
+	        var touchChanged = isTouchEvent ? event.changedTouches[0] : false;
+	        
+	        return {
+	            x: touchChanged ? touchChanged.clientX : event.pageX,
+	            y: touchChanged ? touchChanged.clientY : event.pageY
+	        }
+	    },
+	    
+	    /*
+	        Get actual event
+	        
+	        Checks for jQuery's .originalEvent if present
+	        
+	        @param [event | jQuery event]
+	        @return [event]: The actual JS event  
+	    */
+	    getActualEvent = function (event) {
+	        return event.originalEvent || event;
+	    },
+	
+	    
+	    /*
+	        Pointer constructor
+	    */
+	    Pointer = function (e) {
+	        var event = getActualEvent(e), // In case of jQuery event
+	            isTouch = (event.touches) ? true : false,
+	            startPoint = eventToPoint(event, isTouch);
+	        
+	        this.update(startPoint);
+	        this.isTouch = isTouch;
+	        this.bindEvents();
+	    },
+	    
+	    proto = Pointer.prototype = new Input();
+	
+	/*
+	    Bind move event
+	*/
+	proto.bindEvents = function () {
+	    this.moveEvent = this.isTouch ? TOUCHMOVE : MOUSEMOVE;
+	    
+	    currentPointer = this;
+	    
+	    document.documentElement.addEventListener(this.moveEvent, this.onMove);
+	};
+	
+	/*
+	    Unbind move event
+	*/
+	proto.unbindEvents = function () {
+	    document.documentElement.removeEventListener(this.moveEvent, this.onMove);
+	};
+	
+	/*
+	    Pointer onMove event handler
+	    
+	    @param [event]: Pointer move event
+	*/
+	proto.onMove = function (e) {
+	    var newPoint = eventToPoint(e, currentPointer.isTouch);
+	    e = getActualEvent(e);
+	    e.preventDefault();
+	    currentPointer.update(newPoint);
+	};
+	
+	proto.stop = function () {
+	    this.unbindEvents();
+	};
+	
+	module.exports = Pointer;
 
 /***/ },
 /* 52 */

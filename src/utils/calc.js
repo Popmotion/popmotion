@@ -243,7 +243,7 @@ var utils = require('./utils.js'),
                 equation = rel.split('='),
                 operator = equation[0],
                 splitVal = utils.splitValUnit(equation[1]);
-    
+
             switch (operator) {
                 case '+':
                     newValue += splitVal.value;
