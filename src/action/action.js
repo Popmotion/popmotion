@@ -20,9 +20,8 @@ var parseArgs = require('./parse-args.js'),
         
         // Create value repo
         self.values = {};
-        
-        // Create new property manager
-        defaultProps.scope = this;
+
+        this.scope = this;
         self.setProp(defaultState);
         self.resetProps();
 

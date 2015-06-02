@@ -94,8 +94,8 @@
 	    ActionGroup = __webpack_require__(/*! ./action-group/action-group.js */ 13),
 		domGroup = __webpack_require__(/*! ./action-group/dom.js */ 14),
 	    Input = __webpack_require__(/*! ./input/input.js */ 15),
-	    Process = __webpack_require__(/*! ./process/process.js */ 16),
-	    presets = __webpack_require__(/*! ./action/presets.js */ 17),
+	    Process = __webpack_require__(/*! ./process/process.js */ 17),
+	    presets = __webpack_require__(/*! ./action/presets.js */ 16),
 	    easing = __webpack_require__(/*! ./utils/easing.js */ 18),
 	    calc = __webpack_require__(/*! ./utils/calc.js */ 19),
 	    utils = __webpack_require__(/*! ./utils/utils.js */ 20),
@@ -740,7 +740,7 @@
 	var parseArgs = __webpack_require__(/*! ./parse-args.js */ 28),
 	    Value = __webpack_require__(/*! ../types/value.js */ 29),
 	    Queue = __webpack_require__(/*! ./queue.js */ 30),
-	    Process = __webpack_require__(/*! ../process/process.js */ 16),
+	    Process = __webpack_require__(/*! ../process/process.js */ 17),
 	    processor = __webpack_require__(/*! ./processor.js */ 31),
 	    routes = __webpack_require__(/*! ./routes.js */ 21),
 	    defaultProps = __webpack_require__(/*! ../defaults/action-props.js */ 32),
@@ -757,9 +757,8 @@
 	        
 	        // Create value repo
 	        self.values = {};
-	        
-	        // Create new property manager
-	        defaultProps.scope = this;
+	
+	        this.scope = this;
 	        self.setProp(defaultState);
 	        self.resetProps();
 	
@@ -1501,6 +1500,95 @@
 
 /***/ },
 /* 16 */
+/*!*******************************!*\
+  !*** ./src/action/presets.js ***!
+  \*******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 20),
+	    
+	    generateKeys = function (key) {
+	        var keys = key.split(DOT),
+	            keysLength = keys.length,
+	            lastKey = keys[0],
+	            i = 1;
+	        
+	        for (; i < keysLength; i++) {
+	            keys[i] = lastKey += DOT + keys[i];
+	        }
+	        
+	        return keys;
+	    },
+	
+	    presetStore = {},
+	    DOT = '.',
+	    Presets = function () {};
+	
+	Presets.prototype = {
+	
+	    /*
+	        Define a new Action preset
+	        
+	        Syntax
+	        
+	            .define(name, preset)
+	                @param [string]: Name of preset
+	                @param [object]: Preset options/properties
+	                
+	            .define(presets)
+	                @param [object]: Multiple presets as named object
+	                
+	        @return [Redshift]
+	    */
+	    add: function (name, preset) {
+	        var presets = {},
+	            key = '';
+	
+	        if (utils.isObj(name)) {
+	            presets = name;
+	        } else {
+	            presets[name] = preset;
+	        }
+	
+	        for (key in presets) {
+	            if (presets.hasOwnProperty(key)) {
+	                presetStore[key] = presets[key];
+	            }
+	        }
+	    },
+	    
+	    
+	    /*
+	        Get defined action
+	        
+	        @param [string]: The name of the predefined action
+	    */
+	    getDefined: function (key) {
+	        var props = {},
+	            thisProp = {},
+	            keys = generateKeys(key),
+	            keysLength = keys.length,
+	            i = 0;
+	
+	        for (; i < keysLength; i++) {
+	            thisProp = presetStore[keys[i]];
+	
+	            if (thisProp) {
+	                props = utils.merge(props, thisProp);
+	            }
+	        }
+	        
+	        return props;
+	    }
+	    
+	};
+	
+	module.exports = new Presets();
+
+/***/ },
+/* 17 */
 /*!********************************!*\
   !*** ./src/process/process.js ***!
   \********************************/
@@ -1706,95 +1794,6 @@
 	module.exports = Process;
 
 /***/ },
-/* 17 */
-/*!*******************************!*\
-  !*** ./src/action/presets.js ***!
-  \*******************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 20),
-	    
-	    generateKeys = function (key) {
-	        var keys = key.split(DOT),
-	            keysLength = keys.length,
-	            lastKey = keys[0],
-	            i = 1;
-	        
-	        for (; i < keysLength; i++) {
-	            keys[i] = lastKey += DOT + keys[i];
-	        }
-	        
-	        return keys;
-	    },
-	
-	    presetStore = {},
-	    DOT = '.',
-	    Presets = function () {};
-	
-	Presets.prototype = {
-	
-	    /*
-	        Define a new Action preset
-	        
-	        Syntax
-	        
-	            .define(name, preset)
-	                @param [string]: Name of preset
-	                @param [object]: Preset options/properties
-	                
-	            .define(presets)
-	                @param [object]: Multiple presets as named object
-	                
-	        @return [Redshift]
-	    */
-	    add: function (name, preset) {
-	        var presets = {},
-	            key = '';
-	
-	        if (utils.isObj(name)) {
-	            presets = name;
-	        } else {
-	            presets[name] = preset;
-	        }
-	
-	        for (key in presets) {
-	            if (presets.hasOwnProperty(key)) {
-	                presetStore[key] = presets[key];
-	            }
-	        }
-	    },
-	    
-	    
-	    /*
-	        Get defined action
-	        
-	        @param [string]: The name of the predefined action
-	    */
-	    getDefined: function (key) {
-	        var props = {},
-	            thisProp = {},
-	            keys = generateKeys(key),
-	            keysLength = keys.length,
-	            i = 0;
-	
-	        for (; i < keysLength; i++) {
-	            thisProp = presetStore[keys[i]];
-	
-	            if (thisProp) {
-	                props = utils.merge(props, thisProp);
-	            }
-	        }
-	        
-	        return props;
-	    }
-	    
-	};
-	
-	module.exports = new Presets();
-
-/***/ },
 /* 18 */
 /*!*****************************!*\
   !*** ./src/utils/easing.js ***!
@@ -1826,7 +1825,7 @@
 	"use strict";
 	
 	var calc = __webpack_require__(/*! ./calc.js */ 19),
-	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 38),
+	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 39),
 	    
 	    // Constants
 	    INVALID_EASING = ": Not defined",
@@ -2628,7 +2627,7 @@
 
 	"use strict";
 	
-	var routes = __webpack_require__(/*! ../core/routes.js */ 40),
+	var routes = __webpack_require__(/*! ../core/routes.js */ 38),
 	    routeKeys = [],
 	    numRoutes,
 	    
@@ -2704,7 +2703,7 @@
 		actionGroupPrototype = __webpack_require__(/*! ../action-group/action-group.js */ 13).prototype,
 	    generateMethodIterator = __webpack_require__(/*! ../action-group/generate-iterator.js */ 35),
 	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 28),
-	    rubix = __webpack_require__(/*! ../core/rubix.js */ 39);
+	    rubix = __webpack_require__(/*! ../core/rubix.js */ 45);
 	
 	module.exports = function (name, newRubix) {
 	    var parser = parseArgs[name] || parseArgs.generic;
@@ -2733,7 +2732,7 @@
 	*/
 	"use strict";
 	
-	var simulations = __webpack_require__(/*! ../core/simulations.js */ 41);
+	var simulations = __webpack_require__(/*! ../core/simulations.js */ 40);
 	
 	module.exports = function (name, simulation) {
 	    simulations[name] = simulation;
@@ -2748,7 +2747,7 @@
 
 	"use strict";
 	
-	var simulations = __webpack_require__(/*! ../core/simulations.js */ 41);
+	var simulations = __webpack_require__(/*! ../core/simulations.js */ 40);
 	
 	module.exports = function (simulation, value, duration, started) {
 	    var velocity = simulations[simulation](value, duration, started);
@@ -2766,8 +2765,8 @@
 	"use strict";
 	
 	var dictionary = __webpack_require__(/*! ./dictionary.js */ 42),
-	    templates = __webpack_require__(/*! ./templates.js */ 43),
-	    lookup = __webpack_require__(/*! ./lookup.js */ 44),
+	    templates = __webpack_require__(/*! ./templates.js */ 46),
+	    lookup = __webpack_require__(/*! ./lookup.js */ 43),
 	    
 	    TRANSFORM = 'transform',
 	    TRANSLATE_Z = 'translateZ',
@@ -2827,10 +2826,10 @@
 
 	"use strict";
 	
-	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 45),
+	var defaultProperty = __webpack_require__(/*! ./default-property.js */ 41),
 	    dictionary = __webpack_require__(/*! ./dictionary.js */ 42),
-	    splitLookup = __webpack_require__(/*! ./lookup.js */ 44),
-	    splitters = __webpack_require__(/*! ./splitters.js */ 46),
+	    splitLookup = __webpack_require__(/*! ./lookup.js */ 43),
+	    splitters = __webpack_require__(/*! ./splitters.js */ 44),
 	    
 	    utils = __webpack_require__(/*! ../../utils/utils.js */ 20),
 	    
@@ -3003,8 +3002,8 @@
 	"use strict";
 	
 	var utils = __webpack_require__(/*! ../utils/utils.js */ 20),
-	    presets = __webpack_require__(/*! ./presets.js */ 17),
-	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 51),
+	    presets = __webpack_require__(/*! ./presets.js */ 16),
+	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 48),
 	
 	    STRING = 'string',
 	    NUMBER = 'number',
@@ -3143,9 +3142,9 @@
 
 	"use strict";
 	
-	var defaultProps = __webpack_require__(/*! ../defaults/value-props.js */ 48),
-	    defaultState = __webpack_require__(/*! ../defaults/value-state.js */ 49),
-	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 50),
+	var defaultProps = __webpack_require__(/*! ../defaults/value-props.js */ 49),
+	    defaultState = __webpack_require__(/*! ../defaults/value-state.js */ 50),
+	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 51),
 	    utils = __webpack_require__(/*! ../utils/utils.js */ 20),
 	
 	    CURRENT = 'current',
@@ -3355,7 +3354,7 @@
 	*/
 	"use strict";
 	
-	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 39),
+	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 45),
 	    routes = __webpack_require__(/*! ./routes.js */ 21),
 	    calc = __webpack_require__(/*! ../utils/calc.js */ 19);
 	
@@ -3635,6 +3634,7 @@
   \***********************************************/
 /***/ function(module, exports, __webpack_require__) {
 
+	"use strict";
 	/*
 		Generate method iterator
 		
@@ -3925,6 +3925,15 @@
 
 /***/ },
 /* 38 */
+/*!****************************!*\
+  !*** ./src/core/routes.js ***!
+  \****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {};
+
+/***/ },
+/* 39 */
 /*!*****************************!*\
   !*** ./src/types/bezier.js ***!
   \*****************************/
@@ -4099,73 +4108,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 39 */
-/*!***************************!*\
-  !*** ./src/core/rubix.js ***!
-  \***************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    Anatomy of a Rubix:
-	    
-	        Props
-	            surpressMethod [boolean]:
-	                If not true, will create Action shorthand method 
-	                with the name of the rubix, ie .play()
-	
-	            calculatesVelocity [boolean]:
-	                Set to true if your Rubix will calculate
-	                the new Value velocity (otherwise Redshift may override it)
-	                
-	        Methods
-	            updateInput
-	                Run once per frame, before Values are processed. .play uses this
-	                to update the timer, .track uses it to check the input device.
-	
-	                @param [Action]: The Action being processed
-	                @param [object]: Action properties
-	                @param [int]: Duration since the last frame in milliseconds
-	            
-	            process (required)
-	                Run once for every Action value, this method returns the latest value
-	
-	                @param [string]: Name of value being processed
-	                @param [Value]: Value being processed
-	                @param [object]: Action values
-	                @param [object]: Action properties
-	                @param [Action]: Action
-	                @param [int]: Duration since the last frame in milliseconds
-	                @return [int]: Latest value
-	                
-	            limit
-	                Run once for every Action value, this can be used to limit the value
-	                within any parameters
-	                
-	                @param [int]: Value returned from process method
-	                @param [Value]: Value being processed
-	                @return [int]: Latest value
-	                
-	            hasEnded (required)
-	                Returns true if this current Action has ended. Redshift will
-	                then check the Action's queue or yoyo/loop properties to decide
-	                what action to take next
-	                
-	                @param [Action]: Action being processed
-	                @param [boolean]: True if any value has changed
-	*/            
-	module.exports = {};
-
-/***/ },
 /* 40 */
-/*!****************************!*\
-  !*** ./src/core/routes.js ***!
-  \****************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {};
-
-/***/ },
-/* 41 */
 /*!*********************************!*\
   !*** ./src/core/simulations.js ***!
   \*********************************/
@@ -4263,6 +4206,57 @@
 	};
 
 /***/ },
+/* 41 */
+/*!********************************************!*\
+  !*** ./src/routes/css/default-property.js ***!
+  \********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var color = {
+	        min: 0,
+	        max: 255,
+	        round: true
+	    },
+	    opacity = {
+	        min: 0,
+	        max: 1
+	    },
+	    angle = {
+	        unit: 'deg'
+	    },
+	    scale = {},
+	    defaults = {
+	        base: {
+	            unit: 'px'
+	        },
+	        
+	        color: color,
+	        Red: color,
+	        Green: color,
+	        Blue: color,
+	    
+	        Alpha: opacity,
+	        opacity: opacity,
+	        
+	        scale: scale,
+	        scaleX: scale,
+	        scaleY: scale,
+	        scaleZ: scale,
+	        
+	        skew: angle,
+	        skewX: angle,
+	        skewY: angle,
+	        rotate: angle,
+	        rotateX: angle,
+	        rotateY: angle,
+	        rotateZ: angle
+	    };
+	    
+	module.exports = defaults;
+
+/***/ },
 /* 42 */
 /*!**************************************!*\
   !*** ./src/routes/css/dictionary.js ***!
@@ -4318,82 +4312,6 @@
 
 /***/ },
 /* 43 */
-/*!*************************************!*\
-  !*** ./src/routes/css/templates.js ***!
-  \*************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var dictionary = __webpack_require__(/*! ./dictionary.js */ 42),
-	
-	    defaultValues = {
-	        Alpha: 1
-	    },
-	
-	    functionCreate = function (value, prefix) {
-	        return prefix + '(' + value + ')';
-	    },
-	
-	    createSpaceDelimited = function (key, object, terms) {
-	        return createDelimitedString(key, object, terms, ' ');
-	    },
-	    
-	    createCommaDelimited = function (key, object, terms) {
-	        return createDelimitedString(key, object, terms, ', ').slice(0, -2);
-	    },
-	    
-	    createDelimitedString = function (key, object, terms, delimiter) {
-	        var string = '',
-	            propKey = '',
-	            termsLength = terms.length;
-	        
-	        for (var i = 0; i < termsLength; i++) {
-	            propKey = key + terms[i];
-	
-	            if (object[propKey] !== undefined) {
-	                string += object[propKey];
-	            } else {
-	                if (defaultValues[terms[i]] !== undefined) {
-	                    string += defaultValues[terms[i]];
-	                }
-	            }
-	            
-	            string += delimiter;
-	        }
-	    
-	        return string;
-	    },
-	
-	    templates = {
-	        
-	        colors: function (key, values) {
-	            return functionCreate(createCommaDelimited(key, values, dictionary.colors), 'rgba');
-	        },
-	        
-	        dimensions: function (key, values) {
-	            return createSpaceDelimited(key, values, dictionary.dimensions);
-	        },
-	        
-	        positions: function (key, values) {
-	            return createSpaceDelimited(key, values, dictionary.positions);
-	        },
-	        
-	        shadow: function (key, values) {
-	            var shadowTerms = dictionary.shadow.slice(0,4);
-	            
-	            return createSpaceDelimited(key, values, shadowTerms) + templates.colors(key, values);
-	        },
-	        
-	        transform: function (key, values) {
-	            return key + '(' + values[key] +')';
-	        }
-	    };
-	
-	module.exports = templates;
-
-/***/ },
-/* 44 */
 /*!**********************************!*\
   !*** ./src/routes/css/lookup.js ***!
   \**********************************/
@@ -4441,58 +4359,7 @@
 	};
 
 /***/ },
-/* 45 */
-/*!********************************************!*\
-  !*** ./src/routes/css/default-property.js ***!
-  \********************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var color = {
-	        min: 0,
-	        max: 255,
-	        round: true
-	    },
-	    opacity = {
-	        min: 0,
-	        max: 1
-	    },
-	    angle = {
-	        unit: 'deg'
-	    },
-	    scale = {},
-	    defaults = {
-	        base: {
-	            unit: 'px'
-	        },
-	        
-	        color: color,
-	        Red: color,
-	        Green: color,
-	        Blue: color,
-	    
-	        Alpha: opacity,
-	        opacity: opacity,
-	        
-	        scale: scale,
-	        scaleX: scale,
-	        scaleY: scale,
-	        scaleZ: scale,
-	        
-	        skew: angle,
-	        skewX: angle,
-	        skewY: angle,
-	        rotate: angle,
-	        rotateX: angle,
-	        rotateY: angle,
-	        rotateZ: angle
-	    };
-	    
-	module.exports = defaults;
-
-/***/ },
-/* 46 */
+/* 44 */
 /*!*************************************!*\
   !*** ./src/routes/css/splitters.js ***!
   \*************************************/
@@ -4730,6 +4597,139 @@
 	module.exports = splitters;
 
 /***/ },
+/* 45 */
+/*!***************************!*\
+  !*** ./src/core/rubix.js ***!
+  \***************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Anatomy of a Rubix:
+	    
+	        Props
+	            surpressMethod [boolean]:
+	                If not true, will create Action shorthand method 
+	                with the name of the rubix, ie .play()
+	
+	            calculatesVelocity [boolean]:
+	                Set to true if your Rubix will calculate
+	                the new Value velocity (otherwise Redshift may override it)
+	                
+	        Methods
+	            updateInput
+	                Run once per frame, before Values are processed. .play uses this
+	                to update the timer, .track uses it to check the input device.
+	
+	                @param [Action]: The Action being processed
+	                @param [object]: Action properties
+	                @param [int]: Duration since the last frame in milliseconds
+	            
+	            process (required)
+	                Run once for every Action value, this method returns the latest value
+	
+	                @param [string]: Name of value being processed
+	                @param [Value]: Value being processed
+	                @param [object]: Action values
+	                @param [object]: Action properties
+	                @param [Action]: Action
+	                @param [int]: Duration since the last frame in milliseconds
+	                @return [int]: Latest value
+	                
+	            limit
+	                Run once for every Action value, this can be used to limit the value
+	                within any parameters
+	                
+	                @param [int]: Value returned from process method
+	                @param [Value]: Value being processed
+	                @return [int]: Latest value
+	                
+	            hasEnded (required)
+	                Returns true if this current Action has ended. Redshift will
+	                then check the Action's queue or yoyo/loop properties to decide
+	                what action to take next
+	                
+	                @param [Action]: Action being processed
+	                @param [boolean]: True if any value has changed
+	*/            
+	module.exports = {};
+
+/***/ },
+/* 46 */
+/*!*************************************!*\
+  !*** ./src/routes/css/templates.js ***!
+  \*************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var dictionary = __webpack_require__(/*! ./dictionary.js */ 42),
+	
+	    defaultValues = {
+	        Alpha: 1
+	    },
+	
+	    functionCreate = function (value, prefix) {
+	        return prefix + '(' + value + ')';
+	    },
+	
+	    createSpaceDelimited = function (key, object, terms) {
+	        return createDelimitedString(key, object, terms, ' ');
+	    },
+	    
+	    createCommaDelimited = function (key, object, terms) {
+	        return createDelimitedString(key, object, terms, ', ').slice(0, -2);
+	    },
+	    
+	    createDelimitedString = function (key, object, terms, delimiter) {
+	        var string = '',
+	            propKey = '',
+	            termsLength = terms.length;
+	        
+	        for (var i = 0; i < termsLength; i++) {
+	            propKey = key + terms[i];
+	
+	            if (object[propKey] !== undefined) {
+	                string += object[propKey];
+	            } else {
+	                if (defaultValues[terms[i]] !== undefined) {
+	                    string += defaultValues[terms[i]];
+	                }
+	            }
+	            
+	            string += delimiter;
+	        }
+	    
+	        return string;
+	    },
+	
+	    templates = {
+	        
+	        colors: function (key, values) {
+	            return functionCreate(createCommaDelimited(key, values, dictionary.colors), 'rgba');
+	        },
+	        
+	        dimensions: function (key, values) {
+	            return createSpaceDelimited(key, values, dictionary.dimensions);
+	        },
+	        
+	        positions: function (key, values) {
+	            return createSpaceDelimited(key, values, dictionary.positions);
+	        },
+	        
+	        shadow: function (key, values) {
+	            var shadowTerms = dictionary.shadow.slice(0,4);
+	            
+	            return createSpaceDelimited(key, values, shadowTerms) + templates.colors(key, values);
+	        },
+	        
+	        transform: function (key, values) {
+	            return key + '(' + values[key] +')';
+	        }
+	    };
+	
+	module.exports = templates;
+
+/***/ },
 /* 47 */
 /*!***********************************!*\
   !*** ./src/routes/path/lookup.js ***!
@@ -4751,6 +4751,103 @@
 
 /***/ },
 /* 48 */
+/*!******************************!*\
+  !*** ./src/input/pointer.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var Input = __webpack_require__(/*! ./input.js */ 15),
+	    currentPointer, // Sort this out for multitouch
+	    
+	    TOUCHMOVE = 'touchmove',
+	    MOUSEMOVE = 'mousemove',
+	
+	    /*
+	        Convert event into point
+	        
+	        Scrape the x/y coordinates from the provided event
+	        
+	        @param [event]: Original pointer event
+	        @param [boolean]: True if touch event
+	        @return [object]: x/y coordinates of event
+	    */
+	    eventToPoint = function (event, isTouchEvent) {
+	        var touchChanged = isTouchEvent ? event.changedTouches[0] : false;
+	        
+	        return {
+	            x: touchChanged ? touchChanged.clientX : event.pageX,
+	            y: touchChanged ? touchChanged.clientY : event.pageY
+	        }
+	    },
+	    
+	    /*
+	        Get actual event
+	        
+	        Checks for jQuery's .originalEvent if present
+	        
+	        @param [event | jQuery event]
+	        @return [event]: The actual JS event  
+	    */
+	    getActualEvent = function (event) {
+	        return event.originalEvent || event;
+	    },
+	
+	    
+	    /*
+	        Pointer constructor
+	    */
+	    Pointer = function (e) {
+	        var event = getActualEvent(e), // In case of jQuery event
+	            isTouch = (event.touches) ? true : false,
+	            startPoint = eventToPoint(event, isTouch);
+	        
+	        this.update(startPoint);
+	        this.isTouch = isTouch;
+	        this.bindEvents();
+	    },
+	    
+	    proto = Pointer.prototype = new Input();
+	
+	/*
+	    Bind move event
+	*/
+	proto.bindEvents = function () {
+	    this.moveEvent = this.isTouch ? TOUCHMOVE : MOUSEMOVE;
+	    
+	    currentPointer = this;
+	    
+	    document.documentElement.addEventListener(this.moveEvent, this.onMove);
+	};
+	
+	/*
+	    Unbind move event
+	*/
+	proto.unbindEvents = function () {
+	    document.documentElement.removeEventListener(this.moveEvent, this.onMove);
+	};
+	
+	/*
+	    Pointer onMove event handler
+	    
+	    @param [event]: Pointer move event
+	*/
+	proto.onMove = function (e) {
+	    var newPoint = eventToPoint(e, currentPointer.isTouch);
+	    e = getActualEvent(e);
+	    e.preventDefault();
+	    currentPointer.update(newPoint);
+	};
+	
+	proto.stop = function () {
+	    this.unbindEvents();
+	};
+	
+	module.exports = Pointer;
+
+/***/ },
+/* 49 */
 /*!*************************************!*\
   !*** ./src/defaults/value-props.js ***!
   \*************************************/
@@ -4867,7 +4964,7 @@
 	};
 
 /***/ },
-/* 49 */
+/* 50 */
 /*!*************************************!*\
   !*** ./src/defaults/value-state.js ***!
   \*************************************/
@@ -4888,7 +4985,7 @@
 	};
 
 /***/ },
-/* 50 */
+/* 51 */
 /*!******************************!*\
   !*** ./src/utils/resolve.js ***!
   \******************************/
@@ -4942,103 +5039,6 @@
 	
 	    return newValue;
 	};
-
-/***/ },
-/* 51 */
-/*!******************************!*\
-  !*** ./src/input/pointer.js ***!
-  \******************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var Input = __webpack_require__(/*! ./input.js */ 15),
-	    currentPointer, // Sort this out for multitouch
-	    
-	    TOUCHMOVE = 'touchmove',
-	    MOUSEMOVE = 'mousemove',
-	
-	    /*
-	        Convert event into point
-	        
-	        Scrape the x/y coordinates from the provided event
-	        
-	        @param [event]: Original pointer event
-	        @param [boolean]: True if touch event
-	        @return [object]: x/y coordinates of event
-	    */
-	    eventToPoint = function (event, isTouchEvent) {
-	        var touchChanged = isTouchEvent ? event.changedTouches[0] : false;
-	        
-	        return {
-	            x: touchChanged ? touchChanged.clientX : event.pageX,
-	            y: touchChanged ? touchChanged.clientY : event.pageY
-	        }
-	    },
-	    
-	    /*
-	        Get actual event
-	        
-	        Checks for jQuery's .originalEvent if present
-	        
-	        @param [event | jQuery event]
-	        @return [event]: The actual JS event  
-	    */
-	    getActualEvent = function (event) {
-	        return event.originalEvent || event;
-	    },
-	
-	    
-	    /*
-	        Pointer constructor
-	    */
-	    Pointer = function (e) {
-	        var event = getActualEvent(e), // In case of jQuery event
-	            isTouch = (event.touches) ? true : false,
-	            startPoint = eventToPoint(event, isTouch);
-	        
-	        this.update(startPoint);
-	        this.isTouch = isTouch;
-	        this.bindEvents();
-	    },
-	    
-	    proto = Pointer.prototype = new Input();
-	
-	/*
-	    Bind move event
-	*/
-	proto.bindEvents = function () {
-	    this.moveEvent = this.isTouch ? TOUCHMOVE : MOUSEMOVE;
-	    
-	    currentPointer = this;
-	    
-	    document.documentElement.addEventListener(this.moveEvent, this.onMove);
-	};
-	
-	/*
-	    Unbind move event
-	*/
-	proto.unbindEvents = function () {
-	    document.documentElement.removeEventListener(this.moveEvent, this.onMove);
-	};
-	
-	/*
-	    Pointer onMove event handler
-	    
-	    @param [event]: Pointer move event
-	*/
-	proto.onMove = function (e) {
-	    var newPoint = eventToPoint(e, currentPointer.isTouch);
-	    e = getActualEvent(e);
-	    e.preventDefault();
-	    currentPointer.update(newPoint);
-	};
-	
-	proto.stop = function () {
-	    this.unbindEvents();
-	};
-	
-	module.exports = Pointer;
 
 /***/ },
 /* 52 */

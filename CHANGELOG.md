@@ -2,6 +2,11 @@
 
 Redshift adheres to [Semantic Versioning](http://semver.org/). Change log added v1.4.0.
 
+## [2.0.6] 2015-06-02
+
+### Fixed
+- Changed `scope` initialisation, which should have changed after .props() removal.
+
 ## [2.0.5] 2015-06-02
 
 ### Added
