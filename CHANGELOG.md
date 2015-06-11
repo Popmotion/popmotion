@@ -2,6 +2,11 @@
 
 Redshift adheres to [Semantic Versioning](http://semver.org/). Change log added v1.4.0.
 
+## [2.1.1] 2015-06-11
+
+### Fixed
+- Change Action `rubix` from `"seek"` to `"play"` onEnd.
+
 ## [2.1.0] 2015-06-11
 
 ### Added
