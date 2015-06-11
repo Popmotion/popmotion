@@ -8,7 +8,7 @@ redshift
     .addRubix('link',   require('../rubix/link.js'))
     .addRubix('play',   require('../rubix/play.js'))
     .addRubix('run',    require('../rubix/run.js'))
-    .addRubix('seek',  require('../rubix/seek.js'))
+    .addRubix('seek',   require('../rubix/seek.js'))
     .addRubix('track',  require('../rubix/track.js'))
     
     // Add DOM value routes
