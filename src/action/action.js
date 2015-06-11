@@ -172,13 +172,8 @@ Action.prototype = {
         if (processType !== 'track' && input && input.stop) {
             input.stop();
         }
-
-        this.isActive(true);
-        this.started = utils.currentTime() + this.delay;
-        this.framestamp = this.started;
-        this.firstFrame = true;
         
-        this.process.start();
+        this.activate();
 
         return this;
     },
@@ -207,6 +202,31 @@ Action.prototype = {
         }
 
         return self;
+    },
+    
+    /*
+        Move playhead to a specific location
+        
+        @param [number]: 0-1
+    */
+    seek: function (seekTo) {
+        this.elapsed = this.duration * seekTo;
+        
+        if (!this.isActive()) {
+            this.rubix = 'seek';
+            this.activate();
+        }
+        
+        return this;
+    },
+    
+    activate: function () {
+        this.isActive(true);
+        this.started = utils.currentTime() + this.delay;
+        this.framestamp = this.started;
+        this.firstFrame = true;
+        
+        this.process.start();
     },
     
     /*
@@ -244,7 +264,6 @@ Action.prototype = {
         Reset Action progress
     */
     resetProgress: function () {
-        this.progress = 0;
         this.elapsed = (this.playDirection === 1) ? 0 : this.duration;
         this.started = utils.currentTime();
         
@@ -274,7 +293,6 @@ Action.prototype = {
     flipValues: function () {
         var values = this.values;
             
-        this.progress = 1 - this.progress;
         this.elapsed = this.duration - this.elapsed;
         
         for (var key in values) {
