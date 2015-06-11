@@ -3,8 +3,7 @@
 */
 "use strict";
 
-var playRubix = require('./play.js'),
-    fireRubix = require('./fire.js');
+var playRubix = require('./play.js');
 
 module.exports = {
 
@@ -21,9 +20,12 @@ module.exports = {
     /*
         Has Action ended?
         
-        Returns true to end immedietly
+        Returns true to end animation, and sets rubix to 'play'
         
         @return [boolean]: true
     */
-    hasEnded: fireRubix.hasEnded
+    hasEnded: function (action) {
+        action.rubix = 'play';
+        return true;
+    }
 };

@@ -91,15 +91,15 @@
 	*/
 	"use strict";
 	
-	var Action = __webpack_require__(/*! ./action/action.js */ 16),
-	    ActionGroup = __webpack_require__(/*! ./action-group/action-group.js */ 17),
-		domGroup = __webpack_require__(/*! ./action-group/dom.js */ 18),
-	    Input = __webpack_require__(/*! ./input/input.js */ 19),
-	    Process = __webpack_require__(/*! ./process/process.js */ 20),
-	    presets = __webpack_require__(/*! ./action/presets.js */ 21),
-	    easing = __webpack_require__(/*! ./utils/easing.js */ 14),
-	    calc = __webpack_require__(/*! ./utils/calc.js */ 13),
-	    utils = __webpack_require__(/*! ./utils/utils.js */ 15),
+	var Action = __webpack_require__(/*! ./action/action.js */ 13),
+	    ActionGroup = __webpack_require__(/*! ./action-group/action-group.js */ 14),
+		domGroup = __webpack_require__(/*! ./action-group/dom.js */ 15),
+	    Input = __webpack_require__(/*! ./input/input.js */ 16),
+	    Process = __webpack_require__(/*! ./process/process.js */ 17),
+	    presets = __webpack_require__(/*! ./action/presets.js */ 18),
+	    easing = __webpack_require__(/*! ./utils/easing.js */ 19),
+	    calc = __webpack_require__(/*! ./utils/calc.js */ 20),
+	    utils = __webpack_require__(/*! ./utils/utils.js */ 21),
 	    route = __webpack_require__(/*! ./action/routes.js */ 22),
 	    registerRubix = __webpack_require__(/*! ./core/register-rubix.js */ 23),
 	    registerSimulation = __webpack_require__(/*! ./core/register-simulation.js */ 24);
@@ -301,7 +301,7 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 13),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 20),
 	
 	    STRING = 'string',
 	    
@@ -398,9 +398,9 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 13),
-	    easing = __webpack_require__(/*! ../utils/easing.js */ 14),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 15),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 20),
+	    easing = __webpack_require__(/*! ../utils/easing.js */ 19),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 21),
 	    
 	    CURRENT = 'current',
 	    HAS_ENDED = 'hasEnded';
@@ -485,8 +485,8 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 13),
-	    simulate = __webpack_require__(/*! ../action/simulate.js */ 27);
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 20),
+	    simulate = __webpack_require__(/*! ../action/simulate.js */ 25);
 	
 	module.exports = {
 	
@@ -566,8 +566,7 @@
 	*/
 	"use strict";
 	
-	var playRubix = __webpack_require__(/*! ./play.js */ 5),
-	    fireRubix = __webpack_require__(/*! ./fire.js */ 3);
+	var playRubix = __webpack_require__(/*! ./play.js */ 5);
 	
 	module.exports = {
 	
@@ -584,11 +583,14 @@
 	    /*
 	        Has Action ended?
 	        
-	        Returns true to end immedietly
+	        Returns true to end animation, and sets rubix to 'play'
 	        
 	        @return [boolean]: true
 	    */
-	    hasEnded: fireRubix.hasEnded
+	    hasEnded: function (action) {
+	        action.rubix = 'play';
+	        return true;
+	    }
 	};
 
 /***/ },
@@ -603,7 +605,7 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 13),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 20),
 	
 	    CURRENT = 'current',
 	    INPUT_OFFSET = 'inputOffset';
@@ -697,8 +699,8 @@
 
 	"use strict";
 	
-	var build = __webpack_require__(/*! ./css/build.js */ 25),
-	    split = __webpack_require__(/*! ./css/split.js */ 26),
+	var build = __webpack_require__(/*! ./css/build.js */ 26),
+	    split = __webpack_require__(/*! ./css/split.js */ 27),
 	    
 	    css = 'css',
 	    cssOrder = css + 'Order',
@@ -768,831 +770,6 @@
 
 /***/ },
 /* 13 */
-/*!***************************!*\
-  !*** ./src/utils/calc.js ***!
-  \***************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    Calculators
-	    ----------------------------------------
-	    
-	    Simple I/O snippets
-	*/
-	"use strict";
-	
-	var utils = __webpack_require__(/*! ./utils.js */ 15),
-	
-	    calc = {
-	        
-	        /*
-	            Angle between points
-	            
-	            Translates the hypothetical line so that the 'from' coordinates
-	            are at 0,0, then return the angle using .angleFromCenter()
-	            
-	            @param [object]: X and Y coordinates of from point
-	            @param [object]: X and Y cordinates of to point
-	            @return [radian]: Angle between the two points in radians
-	        */
-	        angle: function (pointA, pointB) {
-	            var from = pointB ? pointA : {x: 0, y: 0},
-	                to = pointB || pointA,
-	                point = {
-	                    x: to.x - from.x,
-	                    y: to.y - from.y
-	                };
-	            
-	            return this.angleFromCenter(point.x, point.y);
-	        },
-	
-	        /*
-	            Angle from center
-	            
-	            Returns the current angle, in radians, of a defined point
-	            from a center (assumed 0,0)
-	            
-	            @param [number]: X coordinate of second point
-	            @param [number]: Y coordinate of second point
-	            @return [radian]: Angle between 0, 0 and point in radians
-	        */
-	        angleFromCenter: function (x, y) {
-	            return this.radiansToDegrees(Math.atan2(y, x));
-	        },
-	        
-	        /*
-	            Convert degrees to radians
-	            
-	            @param [number]: Value in degrees
-	            @return [number]: Value in radians
-	        */
-	        degreesToRadians: function (degrees) {
-	            return degrees * Math.PI / 180;
-	        },
-	
-	        /*
-	            Dilate
-	            
-	            Change the progression between a and b according to dilation.
-	            
-	            So dilation = 0.5 would change
-	            
-	            a --------- b
-	            
-	            to
-	            
-	            a ---- b
-	            
-	            @param [number]: Previous value
-	            @param [number]: Current value
-	            @param [number]: Dilate progress by x
-	            @return [number]: Previous value plus the dilated difference
-	        */
-	        dilate: function (a, b, dilation) {
-	            return a + ((b - a) * dilation);
-	        },
-	            
-	        /*
-	            Distance
-	            
-	            Returns the distance between (0,0) and pointA, unless pointB
-	            is provided, then we return the difference between the two.
-	            
-	            @param [object/number]: x and y or just x of point A
-	            @param [object/number]: (optional): x and y or just x of point B
-	            @return [number]: The distance between the two points
-	        */
-	        distance: function (pointA, pointB) {
-	            return (typeof pointA === "number") ? this.distance1D(pointA, pointB) : this.distance2D(pointA, pointB);
-	        },
-	    
-	        /*
-	            Distance 1D
-	            
-	            Returns the distance between point A and point B
-	            
-	            @param [number]: Point A
-	            @param [number]: (optional): Point B
-	            @return [number]: The distance between the two points
-	        */
-	        distance1D: function (pointA, pointB) {
-	            var bIsNum = (typeof pointB === 'number'),
-	                from = bIsNum ? pointA : 0,
-	                to = bIsNum ? pointB : pointA;
-	    
-	            return absolute(to - from);
-	        },
-	    
-	      
-	        /*
-	            Distance 2D
-	            
-	            Returns the distance between (0,0) and point A, unless point B
-	            is provided, then we return the difference between the two.
-	            
-	            @param [object]: x and y of point A
-	            @param [object]: (optional): x and y of point B
-	            @return [number]: The distance between the two points
-	        */
-	        distance2D: function (pointA, pointB) {
-	            var bIsObj = (typeof pointB === "object"),
-	                from = bIsObj ? pointA : {x: 0, y: 0},
-	                to = bIsObj ? pointB : pointA,
-	                point = {
-	                    x: absolute(to.x - from.x),
-	                    y: absolute(to.y - from.y)
-	                };
-	                
-	            return this.hypotenuse(point.x, point.y);
-	        },
-	            
-	        /*
-	            Hypotenuse
-	            
-	            Returns the hypotenuse, side C, given the lengths of sides A and B.
-	            
-	            @param [number]: Length of A
-	            @param [number]: Length of B
-	            @return [number]: Length of C
-	        */
-	        hypotenuse: function (a, b) {
-	            var a2 = a * a,
-	                b2 = b * b,
-	                c2 = a2 + b2;
-	                
-	            return Math.sqrt(c2);
-	        },
-	        
-	        /*
-	            Offset between two inputs
-	            
-	            Calculate the difference between two different inputs
-	            
-	            @param [Point]: First input
-	            @param [Point]: Second input
-	            @return [Offset]: Distance metrics between two points
-	        */
-	        offset: function (a, b) {
-	            var offset = {};
-	    
-	            for (var key in b) {
-	                if (b.hasOwnProperty(key)) {
-	                    if (a.hasOwnProperty(key)) {
-	                        offset[key] = b[key] - a[key];
-	                    } else {
-	                        offset[key] = 0;
-	                    }
-	                } 
-	            }
-	
-	            if (isNum(offset.x) && isNum(offset.y)) {
-	                offset.angle = this.angle(a, b);
-	                offset.distance = this.distance2D(a, b);
-	            }
-	                
-	            return offset;
-	        },
-	        
-	        /*
-	            Point from angle and distance
-	            
-	            @param [object]: 2D point of origin
-	            @param [number]: Angle from origin
-	            @param [number]: Distance from origin
-	            @return [object]: Calculated 2D point
-	        */
-	        pointFromAngleAndDistance: function (origin, angle, distance) {
-	            var point = {};
-	    
-	    		point.x = distance * Math.cos(angle) + origin.x;
-	            point.y = distance * Math.sin(angle) + origin.y;
-	    
-	            return point;
-	        },
-	    
-	        /*
-	            Progress within given range
-	            
-	            Given a lower limit and an upper limit, we return the progress
-	            (expressed as a number 0-1) represented by the given value, and
-	            limit that progress to within 0-1.
-	            
-	            @param [number]: Value to find progress within given range
-	            @param [number]: Lower limit if full range given, upper if not
-	            @param [number] (optional): Upper limit of range
-	            @return [number]: Progress of value within range as expressed 0-1
-	        */
-	        progress: function (value, limitA, limitB) {
-	            var bIsNum = (typeof limitB === 'number'),
-	                from = bIsNum ? limitA : 0,
-	                to = bIsNum ? limitB : limitA,
-	                range = to - from,
-	                progress = (value - from) / range;
-	    
-	            return progress;
-	        },
-	        
-	        /*
-	            Convert radians to degrees
-	            
-	            @param [number]: Value in radians
-	            @return [number]: Value in degrees
-	        */
-	        radiansToDegrees: function (radians) {
-	            return radians * 180 / Math.PI;
-	        },
-	    
-	        
-	        /*
-	            Calculate relative value
-	            
-	            Takes the operator and value from a string, ie "+=5", and applies
-	            to the current value to resolve a new target.
-	            
-	            @param [number]: Current value
-	            @param [string]: Relative value
-	            @return [number]: New value
-	        */
-	        relativeValue: function (current, rel) {
-	            var newValue = current,
-	                equation = rel.split('='),
-	                operator = equation[0],
-	                splitVal = utils.splitValUnit(equation[1]);
-	
-	            switch (operator) {
-	                case '+':
-	                    newValue += splitVal.value;
-	                    break;
-	                case '-':
-	                    newValue -= splitVal.value;
-	                    break;
-	                case '*':
-	                    newValue *= splitVal.value;
-	                    break;
-	                case '/':
-	                    newValue /= splitVal.value;
-	                    break;
-	            }
-	            
-	            if (splitVal.unit) {
-	                newValue += splitVal.unit;
-	            }
-	    
-	            return newValue;
-	        },
-	    
-	    
-	        /*
-	            Restrict value to range
-	            
-	            Return value within the range of lowerLimit and upperLimit
-	            
-	            @param [number]: Value to keep within range
-	            @param [number]: Lower limit of range
-	            @param [number]: Upper limit of range
-	            @return [number]: Value as limited within given range
-	        */
-	        restricted: function (value, min, max) {
-	            var restricted = (min !== undefined) ? Math.max(value, min) : value;
-	            restricted = (max !== undefined) ? Math.min(restricted, max) : restricted;
-	    
-	            return restricted;
-	        },
-	    
-	        /*
-	            Convert x per second to per frame velocity based on fps
-	            
-	            @param [number]: Unit per second
-	            @param [number]: Frame duration in ms
-	        */
-	        speedPerFrame: function (xps, frameDuration) {
-	            return (isNum(xps)) ? xps / (1000 / frameDuration) : 0;
-	        },
-	    
-	        /*
-	            Convert velocity into velicity per second
-	            
-	            @param [number]: Unit per frame
-	            @param [number]: Frame duration in ms
-	        */
-	        speedPerSecond: function (velocity, frameDuration) {
-	            return velocity * (1000 / frameDuration);
-	        },
-	    
-	     
-	        /*
-	            Value in range from progress
-	            
-	            Given a lower limit and an upper limit, we return the value within
-	            that range as expressed by progress (a number from 0-1)
-	            
-	            @param [number]: The progress between lower and upper limits expressed 0-1
-	            @param [number]: Lower limit of range, or upper if limit2 not provided
-	            @param [number] (optional): Upper limit of range
-	            @return [number]: Value as calculated from progress within range (not limited within range)
-	        */
-	        value: function (progress, limitA, limitB) {
-	            var bIsNum = (typeof limitB === 'number'),
-	                from = bIsNum ? limitA : 0,
-	                to = bIsNum ? limitB : limitA;
-	    
-	            return (- progress * from) + (progress * to) + from; 
-	        },
-	    
-	    
-	        /*
-	            Eased value in range from progress
-	            
-	            Given a lower limit and an upper limit, we return the value within
-	            that range as expressed by progress (a number from 0-1)
-	            
-	            @param [number]: The progress between lower and upper limits expressed 0-1
-	            @param [number]: Lower limit of range, or upper if limit2 not provided
-	            @param [number]: Upper limit of range
-	            @param [function]: Easing to apply to value
-	            @return [number]: Value as calculated from progress within range (not limited within range)
-	        */
-	        valueEased: function (progress, from, to, easing) {
-	            var easedProgress = easing(progress);
-	            
-	            return this.value(easedProgress, from, to);
-	        }
-	    },
-	
-	    /*
-	        Caching functions used multiple times to reduce filesize and increase performance
-	    */
-	    isNum = utils.isNum,
-	    absolute = Math.abs;
-	    
-	module.exports = calc;
-
-/***/ },
-/* 14 */
-/*!*****************************!*\
-  !*** ./src/utils/easing.js ***!
-  \*****************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    Easing functions
-	    ----------------------------------------
-	    
-	    Generates and provides easing functions based on baseFunction definitions
-	    
-	    A call to easingFunction.get('functionName') returns a function that can be passed:
-	        @param [number]: Progress 0-1
-	        @param [number] (optional): Amp modifier, only accepted in some easing functions
-	                                    and is used to adjust overall strength
-	        @return [number]: Eased progress
-	        
-	    We can generate new functions by sending an easing function through easingFunction.extend(name, method).
-	    Which will make nameIn, nameOut and nameInOut functions available to use.
-	        
-	    Easing functions from Robert Penner
-	    http://www.robertpenner.com/easing/
-	        
-	    Bezier curve interpretor created from Gaëtan Renaudeau's original BezierEasing  
-	    https://github.com/gre/bezier-easing/blob/master/index.js  
-	    https://github.com/gre/bezier-easing/blob/master/LICENSE
-	*/
-	"use strict";
-	
-	var calc = __webpack_require__(/*! ./calc.js */ 13),
-	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 37),
-	    
-	    // Constants
-	    INVALID_EASING = ": Not defined",
-	    EASE_IN = 'In',
-	    EASE_OUT = 'Out',
-	    EASE_IN_OUT = EASE_IN + EASE_OUT,
-	    
-	    // Base power ease names
-	    powerEasing = ['ease', 'cubic', 'quart', 'quint'],
-	    
-	    // Generate easing function with provided power
-	    generatePowerEasing = function (power) {
-	        return function (progress) {
-	            return Math.pow(progress, power);
-	        }
-	    },
-	
-	    /*
-	        Each of these base functions is an easeIn
-	        
-	        On init, we use EasingFunction.mirror and .reverse to generate easeInOut and
-	        easeOut functions respectively.
-	    */
-	    baseEasing = {
-	        circ: function (progress) {
-	            return 1 - Math.sin(Math.acos(progress));
-	        },
-	        back: function (progress) {
-	            var strength = 1.5;
-	
-	            return (progress * progress) * ((strength + 1) * progress - strength);
-	        }
-	    },
-	    
-	    /*
-	        Mirror easing
-	        
-	        Mirrors the provided easing function, used here for mirroring an
-	        easeIn into an easeInOut
-	        
-	        @param [number]: Progress, from 0 - 1, of current shift
-	        @param [function]: The easing function to mirror
-	        @returns [number]: The easing-adjusted delta
-	    */
-	    mirrorEasing = function (progress, method) {
-	        return (progress <= 0.5) ? method(2 * progress) / 2 : (2 - method(2 * (1 - progress))) / 2;
-	    },
-	            
-	    /*
-	        Reverse easing
-	        
-	        Reverses the output of the provided easing function, used for flipping easeIn
-	        curve to an easeOut.
-	        
-	        @param [number]: Progress, from 0 - 1, of current shift
-	        @param [function]: The easing function to reverse
-	        @returns [number]: The easing-adjusted delta
-	    */
-	    reverseEasing = function (progress, method) {
-	        return 1 - method(1 - progress);
-	    },
-	    
-	    /*
-	        Add new easing function
-	        
-	        Takes name and generates nameIn, nameOut, nameInOut, and easing functions to match
-	        
-	        @param [string]: Base name of the easing functions to generate
-	        @param [function]: Base easing function, as an easeIn, from which to generate Out and InOut
-	    */
-	    generateVariations = function (name, method, isBaseIn) {
-	        var easeIn = name + EASE_IN,
-	            easeOut = name + EASE_OUT,
-	            easeInOut = name + EASE_IN_OUT,
-	            baseName = isBaseIn ? easeIn : easeOut,
-	            reverseName = isBaseIn ? easeOut : easeIn;
-	
-	        // Create the In function
-	        easing[baseName] = method;
-	
-	        // Create the Out function by reversing the transition curve
-	        easing[reverseName] = function (progress) {
-	            return reverseEasing(progress, easing[baseName]);
-	        };
-	        
-	        // Create the InOut function by mirroring the transition curve
-	        easing[easeInOut] = function (progress) {
-	            return mirrorEasing(progress, easing[baseName]);
-	        };
-	    },
-	    
-	    easing = {
-	    
-	        /*
-	            Get the named easing function
-	            
-	            @param [string]: Name of the easing function to get 
-	            @return [function || boolean]: Easing function or false if function undefined
-	        */
-	        get: function (name) {
-	            var easing = this[name];
-	            
-	            if (!easing) {
-	                throw name + INVALID_EASING;
-	            }
-	    
-	            return easing;
-	        },
-	        
-	        
-	        /*
-	            Add Bezier Curve easing
-	            
-	            @param [string]: Name of new easing
-	            @parma [number]: X of coordinate 1
-	            @parma [number]: Y of coordinate 1
-	            @parma [number]: X of coordinate 2
-	            @parma [number]: Y of coordinate 2
-	        */
-	        add: function (name, x1, y1, x2, y2) {
-	            if (!this[name]) {
-	                this[name] = new Bezier(x1, y1, x2, y2);
-	            }
-	        },
-	        
-	        
-	        /*
-	            Ease value within ranged parameters
-	            
-	            @param [number]: Progress between 0 and 1
-	            @param [number]: Value of 0 progress
-	            @param [number]: Value of 1 progress
-	            @param [string]: Easing to use
-	            @param [number]: Amplify progress out of specified range
-	            @return [number]: Value of eased progress in range
-	        */  
-	        withinRange: function (progress, from, to, ease, escapeAmp) {
-	            var progressLimited = calc.restricted(progress, 0, 1);
-	    
-	            if (progressLimited !== progress && escapeAmp) {
-	                ease = 'linear';
-	                progressLimited = progressLimited + ((progress - progressLimited) * escapeAmp);
-	            }
-	    
-	            return calc.valueEased(progressLimited, from, to, this.get(ease));
-	        },
-	            
-	        /*
-	            Linear easing adjustment
-	            
-	            The default easing method, not added with .extend as it has no Out or InOut
-	            variation.
-	            
-	            @param [number]: Progress, from 0-1
-	            @return [number]: Unadjusted progress
-	        */
-	        linear: function (progress) {
-	            return progress;
-	        }
-	    };
-	
-	
-	// Initialise Easing  
-	(function () {
-	    var i = 0,
-	        key = '';
-	        
-	    // Generate power easing functions
-	    for (; i < 4; i++) {
-	        baseEasing[powerEasing[i]] = generatePowerEasing(i + 2);
-	    }
-	    
-	    // Generate in/out/inOut easing variations
-	    for (key in baseEasing) {
-	        if (baseEasing.hasOwnProperty(key)) {
-	            generateVariations(key, baseEasing[key], true);
-	        }
-	    }
-	})();
-	
-	module.exports = easing;
-
-
-/***/ },
-/* 15 */
-/*!****************************!*\
-  !*** ./src/utils/utils.js ***!
-  \****************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    Utility functions
-	*/
-	"use strict";
-	
-	var protectedProperties = ['scope',  'dom'],
-	    
-	    isProtected = function (key) {
-	        return (protectedProperties.indexOf(key) !== -1);
-	    },
-	
-	    /*
-	        Get var type as string
-	        
-	        @param: Variable to test
-	        @return [string]: Returns, for instance 'Object' if [object Object]
-	    */
-	    varType = function (variable) {
-	        return Object.prototype.toString.call(variable).slice(8, -1);
-	    };
-	
-	module.exports = {
-	    
-	    /*
-	        Has one object changed from the other
-	        
-	        Compares the two provided inputs and returns true if they are different
-	        
-	        @param [object]: Input A
-	        @param [object]: Input B
-	        @return [boolean]: True if different
-	    */
-	    hasChanged: function (a, b) {
-	        var hasChanged = false,
-	            key = '';
-	
-	        for (key in b) {
-	            if (a.hasOwnProperty(key) && b.hasOwnProperty(key)) {
-	                if (a[key] !== b[key]) {
-	                    hasChanged = true;
-	                }
-	            } else {
-	                hasChanged = true;
-	            }
-	        }
-	    
-	        return hasChanged;
-	    },
-	    
-	    /*
-	        Is this var a number?
-	        
-	        @param: Variable to test
-	        @return [boolean]: Returns true if typeof === 'number'
-	    */
-	    isNum: function (num) {
-	        return (typeof num === 'number');
-	    },
-	    
-	    /*
-	        Is this var an object?
-	        
-	        @param: Variable to test
-	        @return [boolean]: Returns true if typeof === 'object'
-	    */
-	    isObj: function (obj) {
-	        return (typeof obj === 'object');
-	    },
-	    
-	    /*
-	        Is this var a function ? 
-	        
-	        @param: Variable to test
-	        @return [boolean]: Returns true if this.varType === 'Function'
-	    */
-	    isFunc: function (obj) {
-	        return (varType(obj) === 'Function'); 
-	    },
-	    
-	    /*
-	        Is this var a string ? 
-	        
-	        @param: Variable to test
-	        @return [boolean]: Returns true if typeof str === 'string'
-	    */
-	    isString: function (str) {
-	        return (typeof str === 'string'); 
-	    },
-	
-	
-	    /*
-	        Is this a relative value assignment?
-	        
-	        @param [string]: Variable to test
-	        @return [boolean]: If this looks like a relative value assignment
-	    */
-	    isRelativeValue: function (value) {
-	        return (value && value.indexOf && value.indexOf('=') > 0);
-	    },
-	    
-	    /*
-	        Is this var an array ? 
-	        
-	        @param: Variable to test
-	        @return [boolean]: Returns true if this.varType === 'Array'
-	    */
-	    isArray: function (arr) {
-	        return (varType(arr) === 'Array');
-	    },
-	    
-	    /*
-	        Copy object or array
-	        
-	        Checks whether base is an array or object and makes
-	        appropriate copy
-	        
-	        @param [array || object]: Array or object to copy
-	        @param [array || object]: New copy of array or object
-	    */
-	    copy: function (base) {
-	        return (this.isArray(base)) ? this.copyArray(base) : this.copyObject(base);
-	    },
-	    
-	    /*
-	        Deep copy an object
-	        
-	        Iterates over an object and creates a new copy of every item,
-	        deep copying if it finds any objects/arrays
-	        
-	        @param [object]: Object to copy
-	        @param [object]: New copy of object
-	    */
-	    copyObject: function (base) {
-	        var newObject = {};
-	        
-	        for (var key in base) {
-	            if (base.hasOwnProperty(key)) {
-	                newObject[key] = (this.isObj(base[key]) && !isProtected(key)) ? this.copy(base[key]) : base[key];
-	            }
-	        }
-	        
-	        return newObject;
-	    },
-	    
-	    /*
-	        Deep copy an array
-	        
-	        Loops through an array and creates a new copy of every item,
-	        deep copying if it finds any objects/arrays
-	        
-	        @param [array]: Array to copy
-	        @return [array]: New copy of array
-	    */
-	    copyArray: function (base) {
-	        var newArray = [],
-	            length = base.length,
-	            i = 0;
-	        
-	        for (var i = 0; i < length; i++) {
-	            newArray[i] = (this.isObj(base[i])) ? this.copy(base[i]) : base[i];
-	        }
-	        
-	        return newArray;
-	    },
-	    
-	    /*
-	        Non-destructive merge of object or array
-	        
-	        @param [array || object]: Array or object to use as base
-	        @param [array || object]: Array or object to overwrite base with
-	        @return [array || object]: New array or object
-	    */
-	    merge: function (base, overwrite) {
-	        return (this.isArray(base)) ? this.copyArray(overwrite) : this.mergeObject(base, overwrite);
-	    },
-	    
-	    /*
-	        Non-destructive merge of object
-	        
-	        @param [object]: Object to use as base
-	        @param [object]: Object to overwrite base with
-	        @return [object]: New object
-	    */
-	    mergeObject: function (base, overwrite) {
-	        var hasBase = this.isObj(base),
-	            newObject = hasBase ? this.copy(base) : this.copy(overwrite),
-	            key = '';
-	
-	        if (hasBase) {
-	            for (key in overwrite) {
-	                if (overwrite.hasOwnProperty(key)) {
-	                    newObject[key] = (this.isObj(overwrite[key]) && !isProtected(key)) ? this.merge(base[key], overwrite[key]) : overwrite[key];
-	                }
-	            }
-	        }
-	        return newObject;
-	    },
-	    
-	    /*
-	        Split a value into a value/unit object
-	        
-	            "200px" -> { value: 200, unit: "px" }
-	            
-	        @param [string]: Value to split
-	        @return [object]: Object with value and unit props
-	    */
-	    splitValUnit: function (value) {
-	        var splitVal = value.match(/(-?\d*\.?\d*)(.*)/);
-	
-	        return {
-	            value: parseFloat(splitVal[1]),
-	            unit:  splitVal[2]
-	        };
-	    },
-	
-	    /*
-	        Create stepped version of 0-1 progress
-	        
-	        @param [number]: Current value
-	        @param [int]: Number of steps
-	        @return [number]: Stepped value
-	    */
-	    stepProgress: function (progress, steps) {
-	        var segment = 1 / (steps - 1),
-	            target = 1 - (1 / steps),
-	            progressOfTarget = Math.min(progress / target, 1);
-	
-	        return Math.floor(progressOfTarget / segment) * segment;
-	    },
-	    
-	    /*
-	        Generate current timestamp
-	        
-	        @return [timestamp]: Current UNIX timestamp
-	    */
-	    currentTime: function () {
-		    return (typeof performance !== "undefined") ? performance.now() : new Date().getTime();
-	    }
-	    
-	};
-
-/***/ },
-/* 16 */
 /*!******************************!*\
   !*** ./src/action/action.js ***!
   \******************************/
@@ -1603,12 +780,12 @@
 	var parseArgs = __webpack_require__(/*! ./parse-args.js */ 29),
 	    Value = __webpack_require__(/*! ../types/value.js */ 30),
 	    Queue = __webpack_require__(/*! ./queue.js */ 31),
-	    Process = __webpack_require__(/*! ../process/process.js */ 20),
+	    Process = __webpack_require__(/*! ../process/process.js */ 17),
 	    processor = __webpack_require__(/*! ./processor.js */ 32),
 	    routes = __webpack_require__(/*! ./routes.js */ 22),
 	    defaultProps = __webpack_require__(/*! ../defaults/action-props.js */ 33),
 	    defaultState = __webpack_require__(/*! ../defaults/action-state.js */ 34),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 15),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 21),
 	    styler = __webpack_require__(/*! ../routes/css/styler.js */ 35),
 	
 	    namespace = function (key, space) {
@@ -2116,7 +1293,7 @@
 	module.exports = Action;
 
 /***/ },
-/* 17 */
+/* 14 */
 /*!******************************************!*\
   !*** ./src/action-group/action-group.js ***!
   \******************************************/
@@ -2124,7 +1301,7 @@
 
 	"use strict";
 	
-	var Action = __webpack_require__(/*! ../action/action.js */ 16),
+	var Action = __webpack_require__(/*! ../action/action.js */ 13),
 		generateMethodIterator = __webpack_require__(/*! ./generate-iterator.js */ 36),
 		
 		defaultDuration = 250,
@@ -2204,7 +1381,7 @@
 	module.exports = ActionGroup;
 
 /***/ },
-/* 18 */
+/* 15 */
 /*!*********************************!*\
   !*** ./src/action-group/dom.js ***!
   \*********************************/
@@ -2212,7 +1389,7 @@
 
 	"use strict";
 	
-	var ActionGroup = __webpack_require__(/*! ./action-group.js */ 17);
+	var ActionGroup = __webpack_require__(/*! ./action-group.js */ 14);
 	
 	module.exports = function (selector) {
 	    var actionGroup = new ActionGroup(),
@@ -2246,7 +1423,7 @@
 	};
 
 /***/ },
-/* 19 */
+/* 16 */
 /*!****************************!*\
   !*** ./src/input/input.js ***!
   \****************************/
@@ -2257,9 +1434,9 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 13),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 15),
-	    History = __webpack_require__(/*! ../utils/history.js */ 39),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 20),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 21),
+	    History = __webpack_require__(/*! ../utils/history.js */ 37),
 	
 	    /*
 	        Input constructor
@@ -2380,7 +1557,7 @@
 	module.exports = Input;
 
 /***/ },
-/* 20 */
+/* 17 */
 /*!********************************!*\
   !*** ./src/process/process.js ***!
   \********************************/
@@ -2586,7 +1763,7 @@
 	module.exports = Process;
 
 /***/ },
-/* 21 */
+/* 18 */
 /*!*******************************!*\
   !*** ./src/action/presets.js ***!
   \*******************************/
@@ -2594,7 +1771,7 @@
 
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 15),
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 21),
 	    
 	    generateKeys = function (key) {
 	        var keys = key.split(DOT),
@@ -2673,6 +1850,831 @@
 	};
 	
 	module.exports = new Presets();
+
+/***/ },
+/* 19 */
+/*!*****************************!*\
+  !*** ./src/utils/easing.js ***!
+  \*****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Easing functions
+	    ----------------------------------------
+	    
+	    Generates and provides easing functions based on baseFunction definitions
+	    
+	    A call to easingFunction.get('functionName') returns a function that can be passed:
+	        @param [number]: Progress 0-1
+	        @param [number] (optional): Amp modifier, only accepted in some easing functions
+	                                    and is used to adjust overall strength
+	        @return [number]: Eased progress
+	        
+	    We can generate new functions by sending an easing function through easingFunction.extend(name, method).
+	    Which will make nameIn, nameOut and nameInOut functions available to use.
+	        
+	    Easing functions from Robert Penner
+	    http://www.robertpenner.com/easing/
+	        
+	    Bezier curve interpretor created from Gaëtan Renaudeau's original BezierEasing  
+	    https://github.com/gre/bezier-easing/blob/master/index.js  
+	    https://github.com/gre/bezier-easing/blob/master/LICENSE
+	*/
+	"use strict";
+	
+	var calc = __webpack_require__(/*! ./calc.js */ 20),
+	    Bezier = __webpack_require__(/*! ../types/bezier.js */ 39),
+	    
+	    // Constants
+	    INVALID_EASING = ": Not defined",
+	    EASE_IN = 'In',
+	    EASE_OUT = 'Out',
+	    EASE_IN_OUT = EASE_IN + EASE_OUT,
+	    
+	    // Base power ease names
+	    powerEasing = ['ease', 'cubic', 'quart', 'quint'],
+	    
+	    // Generate easing function with provided power
+	    generatePowerEasing = function (power) {
+	        return function (progress) {
+	            return Math.pow(progress, power);
+	        }
+	    },
+	
+	    /*
+	        Each of these base functions is an easeIn
+	        
+	        On init, we use EasingFunction.mirror and .reverse to generate easeInOut and
+	        easeOut functions respectively.
+	    */
+	    baseEasing = {
+	        circ: function (progress) {
+	            return 1 - Math.sin(Math.acos(progress));
+	        },
+	        back: function (progress) {
+	            var strength = 1.5;
+	
+	            return (progress * progress) * ((strength + 1) * progress - strength);
+	        }
+	    },
+	    
+	    /*
+	        Mirror easing
+	        
+	        Mirrors the provided easing function, used here for mirroring an
+	        easeIn into an easeInOut
+	        
+	        @param [number]: Progress, from 0 - 1, of current shift
+	        @param [function]: The easing function to mirror
+	        @returns [number]: The easing-adjusted delta
+	    */
+	    mirrorEasing = function (progress, method) {
+	        return (progress <= 0.5) ? method(2 * progress) / 2 : (2 - method(2 * (1 - progress))) / 2;
+	    },
+	            
+	    /*
+	        Reverse easing
+	        
+	        Reverses the output of the provided easing function, used for flipping easeIn
+	        curve to an easeOut.
+	        
+	        @param [number]: Progress, from 0 - 1, of current shift
+	        @param [function]: The easing function to reverse
+	        @returns [number]: The easing-adjusted delta
+	    */
+	    reverseEasing = function (progress, method) {
+	        return 1 - method(1 - progress);
+	    },
+	    
+	    /*
+	        Add new easing function
+	        
+	        Takes name and generates nameIn, nameOut, nameInOut, and easing functions to match
+	        
+	        @param [string]: Base name of the easing functions to generate
+	        @param [function]: Base easing function, as an easeIn, from which to generate Out and InOut
+	    */
+	    generateVariations = function (name, method, isBaseIn) {
+	        var easeIn = name + EASE_IN,
+	            easeOut = name + EASE_OUT,
+	            easeInOut = name + EASE_IN_OUT,
+	            baseName = isBaseIn ? easeIn : easeOut,
+	            reverseName = isBaseIn ? easeOut : easeIn;
+	
+	        // Create the In function
+	        easing[baseName] = method;
+	
+	        // Create the Out function by reversing the transition curve
+	        easing[reverseName] = function (progress) {
+	            return reverseEasing(progress, easing[baseName]);
+	        };
+	        
+	        // Create the InOut function by mirroring the transition curve
+	        easing[easeInOut] = function (progress) {
+	            return mirrorEasing(progress, easing[baseName]);
+	        };
+	    },
+	    
+	    easing = {
+	    
+	        /*
+	            Get the named easing function
+	            
+	            @param [string]: Name of the easing function to get 
+	            @return [function || boolean]: Easing function or false if function undefined
+	        */
+	        get: function (name) {
+	            var easing = this[name];
+	            
+	            if (!easing) {
+	                throw name + INVALID_EASING;
+	            }
+	    
+	            return easing;
+	        },
+	        
+	        
+	        /*
+	            Add Bezier Curve easing
+	            
+	            @param [string]: Name of new easing
+	            @parma [number]: X of coordinate 1
+	            @parma [number]: Y of coordinate 1
+	            @parma [number]: X of coordinate 2
+	            @parma [number]: Y of coordinate 2
+	        */
+	        add: function (name, x1, y1, x2, y2) {
+	            if (!this[name]) {
+	                this[name] = new Bezier(x1, y1, x2, y2);
+	            }
+	        },
+	        
+	        
+	        /*
+	            Ease value within ranged parameters
+	            
+	            @param [number]: Progress between 0 and 1
+	            @param [number]: Value of 0 progress
+	            @param [number]: Value of 1 progress
+	            @param [string]: Easing to use
+	            @param [number]: Amplify progress out of specified range
+	            @return [number]: Value of eased progress in range
+	        */  
+	        withinRange: function (progress, from, to, ease, escapeAmp) {
+	            var progressLimited = calc.restricted(progress, 0, 1);
+	    
+	            if (progressLimited !== progress && escapeAmp) {
+	                ease = 'linear';
+	                progressLimited = progressLimited + ((progress - progressLimited) * escapeAmp);
+	            }
+	    
+	            return calc.valueEased(progressLimited, from, to, this.get(ease));
+	        },
+	            
+	        /*
+	            Linear easing adjustment
+	            
+	            The default easing method, not added with .extend as it has no Out or InOut
+	            variation.
+	            
+	            @param [number]: Progress, from 0-1
+	            @return [number]: Unadjusted progress
+	        */
+	        linear: function (progress) {
+	            return progress;
+	        }
+	    };
+	
+	
+	// Initialise Easing  
+	(function () {
+	    var i = 0,
+	        key = '';
+	        
+	    // Generate power easing functions
+	    for (; i < 4; i++) {
+	        baseEasing[powerEasing[i]] = generatePowerEasing(i + 2);
+	    }
+	    
+	    // Generate in/out/inOut easing variations
+	    for (key in baseEasing) {
+	        if (baseEasing.hasOwnProperty(key)) {
+	            generateVariations(key, baseEasing[key], true);
+	        }
+	    }
+	})();
+	
+	module.exports = easing;
+
+
+/***/ },
+/* 20 */
+/*!***************************!*\
+  !*** ./src/utils/calc.js ***!
+  \***************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Calculators
+	    ----------------------------------------
+	    
+	    Simple I/O snippets
+	*/
+	"use strict";
+	
+	var utils = __webpack_require__(/*! ./utils.js */ 21),
+	
+	    calc = {
+	        
+	        /*
+	            Angle between points
+	            
+	            Translates the hypothetical line so that the 'from' coordinates
+	            are at 0,0, then return the angle using .angleFromCenter()
+	            
+	            @param [object]: X and Y coordinates of from point
+	            @param [object]: X and Y cordinates of to point
+	            @return [radian]: Angle between the two points in radians
+	        */
+	        angle: function (pointA, pointB) {
+	            var from = pointB ? pointA : {x: 0, y: 0},
+	                to = pointB || pointA,
+	                point = {
+	                    x: to.x - from.x,
+	                    y: to.y - from.y
+	                };
+	            
+	            return this.angleFromCenter(point.x, point.y);
+	        },
+	
+	        /*
+	            Angle from center
+	            
+	            Returns the current angle, in radians, of a defined point
+	            from a center (assumed 0,0)
+	            
+	            @param [number]: X coordinate of second point
+	            @param [number]: Y coordinate of second point
+	            @return [radian]: Angle between 0, 0 and point in radians
+	        */
+	        angleFromCenter: function (x, y) {
+	            return this.radiansToDegrees(Math.atan2(y, x));
+	        },
+	        
+	        /*
+	            Convert degrees to radians
+	            
+	            @param [number]: Value in degrees
+	            @return [number]: Value in radians
+	        */
+	        degreesToRadians: function (degrees) {
+	            return degrees * Math.PI / 180;
+	        },
+	
+	        /*
+	            Dilate
+	            
+	            Change the progression between a and b according to dilation.
+	            
+	            So dilation = 0.5 would change
+	            
+	            a --------- b
+	            
+	            to
+	            
+	            a ---- b
+	            
+	            @param [number]: Previous value
+	            @param [number]: Current value
+	            @param [number]: Dilate progress by x
+	            @return [number]: Previous value plus the dilated difference
+	        */
+	        dilate: function (a, b, dilation) {
+	            return a + ((b - a) * dilation);
+	        },
+	            
+	        /*
+	            Distance
+	            
+	            Returns the distance between (0,0) and pointA, unless pointB
+	            is provided, then we return the difference between the two.
+	            
+	            @param [object/number]: x and y or just x of point A
+	            @param [object/number]: (optional): x and y or just x of point B
+	            @return [number]: The distance between the two points
+	        */
+	        distance: function (pointA, pointB) {
+	            return (typeof pointA === "number") ? this.distance1D(pointA, pointB) : this.distance2D(pointA, pointB);
+	        },
+	    
+	        /*
+	            Distance 1D
+	            
+	            Returns the distance between point A and point B
+	            
+	            @param [number]: Point A
+	            @param [number]: (optional): Point B
+	            @return [number]: The distance between the two points
+	        */
+	        distance1D: function (pointA, pointB) {
+	            var bIsNum = (typeof pointB === 'number'),
+	                from = bIsNum ? pointA : 0,
+	                to = bIsNum ? pointB : pointA;
+	    
+	            return absolute(to - from);
+	        },
+	    
+	      
+	        /*
+	            Distance 2D
+	            
+	            Returns the distance between (0,0) and point A, unless point B
+	            is provided, then we return the difference between the two.
+	            
+	            @param [object]: x and y of point A
+	            @param [object]: (optional): x and y of point B
+	            @return [number]: The distance between the two points
+	        */
+	        distance2D: function (pointA, pointB) {
+	            var bIsObj = (typeof pointB === "object"),
+	                from = bIsObj ? pointA : {x: 0, y: 0},
+	                to = bIsObj ? pointB : pointA,
+	                point = {
+	                    x: absolute(to.x - from.x),
+	                    y: absolute(to.y - from.y)
+	                };
+	                
+	            return this.hypotenuse(point.x, point.y);
+	        },
+	            
+	        /*
+	            Hypotenuse
+	            
+	            Returns the hypotenuse, side C, given the lengths of sides A and B.
+	            
+	            @param [number]: Length of A
+	            @param [number]: Length of B
+	            @return [number]: Length of C
+	        */
+	        hypotenuse: function (a, b) {
+	            var a2 = a * a,
+	                b2 = b * b,
+	                c2 = a2 + b2;
+	                
+	            return Math.sqrt(c2);
+	        },
+	        
+	        /*
+	            Offset between two inputs
+	            
+	            Calculate the difference between two different inputs
+	            
+	            @param [Point]: First input
+	            @param [Point]: Second input
+	            @return [Offset]: Distance metrics between two points
+	        */
+	        offset: function (a, b) {
+	            var offset = {};
+	    
+	            for (var key in b) {
+	                if (b.hasOwnProperty(key)) {
+	                    if (a.hasOwnProperty(key)) {
+	                        offset[key] = b[key] - a[key];
+	                    } else {
+	                        offset[key] = 0;
+	                    }
+	                } 
+	            }
+	
+	            if (isNum(offset.x) && isNum(offset.y)) {
+	                offset.angle = this.angle(a, b);
+	                offset.distance = this.distance2D(a, b);
+	            }
+	                
+	            return offset;
+	        },
+	        
+	        /*
+	            Point from angle and distance
+	            
+	            @param [object]: 2D point of origin
+	            @param [number]: Angle from origin
+	            @param [number]: Distance from origin
+	            @return [object]: Calculated 2D point
+	        */
+	        pointFromAngleAndDistance: function (origin, angle, distance) {
+	            var point = {};
+	    
+	    		point.x = distance * Math.cos(angle) + origin.x;
+	            point.y = distance * Math.sin(angle) + origin.y;
+	    
+	            return point;
+	        },
+	    
+	        /*
+	            Progress within given range
+	            
+	            Given a lower limit and an upper limit, we return the progress
+	            (expressed as a number 0-1) represented by the given value, and
+	            limit that progress to within 0-1.
+	            
+	            @param [number]: Value to find progress within given range
+	            @param [number]: Lower limit if full range given, upper if not
+	            @param [number] (optional): Upper limit of range
+	            @return [number]: Progress of value within range as expressed 0-1
+	        */
+	        progress: function (value, limitA, limitB) {
+	            var bIsNum = (typeof limitB === 'number'),
+	                from = bIsNum ? limitA : 0,
+	                to = bIsNum ? limitB : limitA,
+	                range = to - from,
+	                progress = (value - from) / range;
+	    
+	            return progress;
+	        },
+	        
+	        /*
+	            Convert radians to degrees
+	            
+	            @param [number]: Value in radians
+	            @return [number]: Value in degrees
+	        */
+	        radiansToDegrees: function (radians) {
+	            return radians * 180 / Math.PI;
+	        },
+	    
+	        
+	        /*
+	            Calculate relative value
+	            
+	            Takes the operator and value from a string, ie "+=5", and applies
+	            to the current value to resolve a new target.
+	            
+	            @param [number]: Current value
+	            @param [string]: Relative value
+	            @return [number]: New value
+	        */
+	        relativeValue: function (current, rel) {
+	            var newValue = current,
+	                equation = rel.split('='),
+	                operator = equation[0],
+	                splitVal = utils.splitValUnit(equation[1]);
+	
+	            switch (operator) {
+	                case '+':
+	                    newValue += splitVal.value;
+	                    break;
+	                case '-':
+	                    newValue -= splitVal.value;
+	                    break;
+	                case '*':
+	                    newValue *= splitVal.value;
+	                    break;
+	                case '/':
+	                    newValue /= splitVal.value;
+	                    break;
+	            }
+	            
+	            if (splitVal.unit) {
+	                newValue += splitVal.unit;
+	            }
+	    
+	            return newValue;
+	        },
+	    
+	    
+	        /*
+	            Restrict value to range
+	            
+	            Return value within the range of lowerLimit and upperLimit
+	            
+	            @param [number]: Value to keep within range
+	            @param [number]: Lower limit of range
+	            @param [number]: Upper limit of range
+	            @return [number]: Value as limited within given range
+	        */
+	        restricted: function (value, min, max) {
+	            var restricted = (min !== undefined) ? Math.max(value, min) : value;
+	            restricted = (max !== undefined) ? Math.min(restricted, max) : restricted;
+	    
+	            return restricted;
+	        },
+	    
+	        /*
+	            Convert x per second to per frame velocity based on fps
+	            
+	            @param [number]: Unit per second
+	            @param [number]: Frame duration in ms
+	        */
+	        speedPerFrame: function (xps, frameDuration) {
+	            return (isNum(xps)) ? xps / (1000 / frameDuration) : 0;
+	        },
+	    
+	        /*
+	            Convert velocity into velicity per second
+	            
+	            @param [number]: Unit per frame
+	            @param [number]: Frame duration in ms
+	        */
+	        speedPerSecond: function (velocity, frameDuration) {
+	            return velocity * (1000 / frameDuration);
+	        },
+	    
+	     
+	        /*
+	            Value in range from progress
+	            
+	            Given a lower limit and an upper limit, we return the value within
+	            that range as expressed by progress (a number from 0-1)
+	            
+	            @param [number]: The progress between lower and upper limits expressed 0-1
+	            @param [number]: Lower limit of range, or upper if limit2 not provided
+	            @param [number] (optional): Upper limit of range
+	            @return [number]: Value as calculated from progress within range (not limited within range)
+	        */
+	        value: function (progress, limitA, limitB) {
+	            var bIsNum = (typeof limitB === 'number'),
+	                from = bIsNum ? limitA : 0,
+	                to = bIsNum ? limitB : limitA;
+	    
+	            return (- progress * from) + (progress * to) + from; 
+	        },
+	    
+	    
+	        /*
+	            Eased value in range from progress
+	            
+	            Given a lower limit and an upper limit, we return the value within
+	            that range as expressed by progress (a number from 0-1)
+	            
+	            @param [number]: The progress between lower and upper limits expressed 0-1
+	            @param [number]: Lower limit of range, or upper if limit2 not provided
+	            @param [number]: Upper limit of range
+	            @param [function]: Easing to apply to value
+	            @return [number]: Value as calculated from progress within range (not limited within range)
+	        */
+	        valueEased: function (progress, from, to, easing) {
+	            var easedProgress = easing(progress);
+	            
+	            return this.value(easedProgress, from, to);
+	        }
+	    },
+	
+	    /*
+	        Caching functions used multiple times to reduce filesize and increase performance
+	    */
+	    isNum = utils.isNum,
+	    absolute = Math.abs;
+	    
+	module.exports = calc;
+
+/***/ },
+/* 21 */
+/*!****************************!*\
+  !*** ./src/utils/utils.js ***!
+  \****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Utility functions
+	*/
+	"use strict";
+	
+	var protectedProperties = ['scope',  'dom'],
+	    
+	    isProtected = function (key) {
+	        return (protectedProperties.indexOf(key) !== -1);
+	    },
+	
+	    /*
+	        Get var type as string
+	        
+	        @param: Variable to test
+	        @return [string]: Returns, for instance 'Object' if [object Object]
+	    */
+	    varType = function (variable) {
+	        return Object.prototype.toString.call(variable).slice(8, -1);
+	    };
+	
+	module.exports = {
+	    
+	    /*
+	        Has one object changed from the other
+	        
+	        Compares the two provided inputs and returns true if they are different
+	        
+	        @param [object]: Input A
+	        @param [object]: Input B
+	        @return [boolean]: True if different
+	    */
+	    hasChanged: function (a, b) {
+	        var hasChanged = false,
+	            key = '';
+	
+	        for (key in b) {
+	            if (a.hasOwnProperty(key) && b.hasOwnProperty(key)) {
+	                if (a[key] !== b[key]) {
+	                    hasChanged = true;
+	                }
+	            } else {
+	                hasChanged = true;
+	            }
+	        }
+	    
+	        return hasChanged;
+	    },
+	    
+	    /*
+	        Is this var a number?
+	        
+	        @param: Variable to test
+	        @return [boolean]: Returns true if typeof === 'number'
+	    */
+	    isNum: function (num) {
+	        return (typeof num === 'number');
+	    },
+	    
+	    /*
+	        Is this var an object?
+	        
+	        @param: Variable to test
+	        @return [boolean]: Returns true if typeof === 'object'
+	    */
+	    isObj: function (obj) {
+	        return (typeof obj === 'object');
+	    },
+	    
+	    /*
+	        Is this var a function ? 
+	        
+	        @param: Variable to test
+	        @return [boolean]: Returns true if this.varType === 'Function'
+	    */
+	    isFunc: function (obj) {
+	        return (varType(obj) === 'Function'); 
+	    },
+	    
+	    /*
+	        Is this var a string ? 
+	        
+	        @param: Variable to test
+	        @return [boolean]: Returns true if typeof str === 'string'
+	    */
+	    isString: function (str) {
+	        return (typeof str === 'string'); 
+	    },
+	
+	
+	    /*
+	        Is this a relative value assignment?
+	        
+	        @param [string]: Variable to test
+	        @return [boolean]: If this looks like a relative value assignment
+	    */
+	    isRelativeValue: function (value) {
+	        return (value && value.indexOf && value.indexOf('=') > 0);
+	    },
+	    
+	    /*
+	        Is this var an array ? 
+	        
+	        @param: Variable to test
+	        @return [boolean]: Returns true if this.varType === 'Array'
+	    */
+	    isArray: function (arr) {
+	        return (varType(arr) === 'Array');
+	    },
+	    
+	    /*
+	        Copy object or array
+	        
+	        Checks whether base is an array or object and makes
+	        appropriate copy
+	        
+	        @param [array || object]: Array or object to copy
+	        @param [array || object]: New copy of array or object
+	    */
+	    copy: function (base) {
+	        return (this.isArray(base)) ? this.copyArray(base) : this.copyObject(base);
+	    },
+	    
+	    /*
+	        Deep copy an object
+	        
+	        Iterates over an object and creates a new copy of every item,
+	        deep copying if it finds any objects/arrays
+	        
+	        @param [object]: Object to copy
+	        @param [object]: New copy of object
+	    */
+	    copyObject: function (base) {
+	        var newObject = {};
+	        
+	        for (var key in base) {
+	            if (base.hasOwnProperty(key)) {
+	                newObject[key] = (this.isObj(base[key]) && !isProtected(key)) ? this.copy(base[key]) : base[key];
+	            }
+	        }
+	        
+	        return newObject;
+	    },
+	    
+	    /*
+	        Deep copy an array
+	        
+	        Loops through an array and creates a new copy of every item,
+	        deep copying if it finds any objects/arrays
+	        
+	        @param [array]: Array to copy
+	        @return [array]: New copy of array
+	    */
+	    copyArray: function (base) {
+	        var newArray = [],
+	            length = base.length,
+	            i = 0;
+	        
+	        for (var i = 0; i < length; i++) {
+	            newArray[i] = (this.isObj(base[i])) ? this.copy(base[i]) : base[i];
+	        }
+	        
+	        return newArray;
+	    },
+	    
+	    /*
+	        Non-destructive merge of object or array
+	        
+	        @param [array || object]: Array or object to use as base
+	        @param [array || object]: Array or object to overwrite base with
+	        @return [array || object]: New array or object
+	    */
+	    merge: function (base, overwrite) {
+	        return (this.isArray(base)) ? this.copyArray(overwrite) : this.mergeObject(base, overwrite);
+	    },
+	    
+	    /*
+	        Non-destructive merge of object
+	        
+	        @param [object]: Object to use as base
+	        @param [object]: Object to overwrite base with
+	        @return [object]: New object
+	    */
+	    mergeObject: function (base, overwrite) {
+	        var hasBase = this.isObj(base),
+	            newObject = hasBase ? this.copy(base) : this.copy(overwrite),
+	            key = '';
+	
+	        if (hasBase) {
+	            for (key in overwrite) {
+	                if (overwrite.hasOwnProperty(key)) {
+	                    newObject[key] = (this.isObj(overwrite[key]) && !isProtected(key)) ? this.merge(base[key], overwrite[key]) : overwrite[key];
+	                }
+	            }
+	        }
+	        return newObject;
+	    },
+	    
+	    /*
+	        Split a value into a value/unit object
+	        
+	            "200px" -> { value: 200, unit: "px" }
+	            
+	        @param [string]: Value to split
+	        @return [object]: Object with value and unit props
+	    */
+	    splitValUnit: function (value) {
+	        var splitVal = value.match(/(-?\d*\.?\d*)(.*)/);
+	
+	        return {
+	            value: parseFloat(splitVal[1]),
+	            unit:  splitVal[2]
+	        };
+	    },
+	
+	    /*
+	        Create stepped version of 0-1 progress
+	        
+	        @param [number]: Current value
+	        @param [int]: Number of steps
+	        @return [number]: Stepped value
+	    */
+	    stepProgress: function (progress, steps) {
+	        var segment = 1 / (steps - 1),
+	            target = 1 - (1 / steps),
+	            progressOfTarget = Math.min(progress / target, 1);
+	
+	        return Math.floor(progressOfTarget / segment) * segment;
+	    },
+	    
+	    /*
+	        Generate current timestamp
+	        
+	        @return [timestamp]: Current UNIX timestamp
+	    */
+	    currentTime: function () {
+		    return (typeof performance !== "undefined") ? performance.now() : new Date().getTime();
+	    }
+	    
+	};
 
 /***/ },
 /* 22 */
@@ -2755,11 +2757,11 @@
 
 	"use strict";
 	
-	var actionPrototype = __webpack_require__(/*! ../action/action.js */ 16).prototype,
-		actionGroupPrototype = __webpack_require__(/*! ../action-group/action-group.js */ 17).prototype,
+	var actionPrototype = __webpack_require__(/*! ../action/action.js */ 13).prototype,
+		actionGroupPrototype = __webpack_require__(/*! ../action-group/action-group.js */ 14).prototype,
 	    generateMethodIterator = __webpack_require__(/*! ../action-group/generate-iterator.js */ 36),
 	    parseArgs = __webpack_require__(/*! ../action/parse-args.js */ 29),
-	    rubix = __webpack_require__(/*! ../core/rubix.js */ 42);
+	    rubix = __webpack_require__(/*! ../core/rubix.js */ 41);
 	
 	module.exports = function (name, newRubix) {
 	    var parser = parseArgs[name] || parseArgs.generic;
@@ -2788,7 +2790,7 @@
 	*/
 	"use strict";
 	
-	var simulations = __webpack_require__(/*! ../core/simulations.js */ 41);
+	var simulations = __webpack_require__(/*! ../core/simulations.js */ 42);
 	
 	module.exports = function (name, simulation) {
 	    simulations[name] = simulation;
@@ -2796,6 +2798,23 @@
 
 /***/ },
 /* 25 */
+/*!********************************!*\
+  !*** ./src/action/simulate.js ***!
+  \********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var simulations = __webpack_require__(/*! ../core/simulations.js */ 42);
+	
+	module.exports = function (simulation, value, duration, started) {
+	    var velocity = simulations[simulation](value, duration, started);
+	    
+	    return (Math.abs(velocity) >= value.stopSpeed) ? velocity : 0;
+	};
+
+/***/ },
+/* 26 */
 /*!*********************************!*\
   !*** ./src/routes/css/build.js ***!
   \*********************************/
@@ -2857,7 +2876,7 @@
 	};
 
 /***/ },
-/* 26 */
+/* 27 */
 /*!*********************************!*\
   !*** ./src/routes/css/split.js ***!
   \*********************************/
@@ -2870,7 +2889,7 @@
 	    splitLookup = __webpack_require__(/*! ./lookup.js */ 45),
 	    splitters = __webpack_require__(/*! ./splitters.js */ 47),
 	    
-	    utils = __webpack_require__(/*! ../../utils/utils.js */ 15),
+	    utils = __webpack_require__(/*! ../../utils/utils.js */ 21),
 	    
 	    valueProperties = dictionary.valueProps,
 	    valuePropertyCount = valueProperties.length,
@@ -2968,23 +2987,6 @@
 	};
 
 /***/ },
-/* 27 */
-/*!********************************!*\
-  !*** ./src/action/simulate.js ***!
-  \********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var simulations = __webpack_require__(/*! ../core/simulations.js */ 41);
-	
-	module.exports = function (simulation, value, duration, started) {
-	    var velocity = simulations[simulation](value, duration, started);
-	    
-	    return (Math.abs(velocity) >= value.stopSpeed) ? velocity : 0;
-	};
-
-/***/ },
 /* 28 */
 /*!************************************!*\
   !*** ./src/routes/path/builder.js ***!
@@ -3057,8 +3059,8 @@
 
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 15),
-	    presets = __webpack_require__(/*! ./presets.js */ 21),
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 21),
+	    presets = __webpack_require__(/*! ./presets.js */ 18),
 	    Pointer = __webpack_require__(/*! ../input/pointer.js */ 49),
 	
 	    STRING = 'string',
@@ -3201,7 +3203,7 @@
 	var defaultProps = __webpack_require__(/*! ../defaults/value-props.js */ 50),
 	    defaultState = __webpack_require__(/*! ../defaults/value-state.js */ 51),
 	    resolve = __webpack_require__(/*! ../utils/resolve.js */ 52),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 15),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 21),
 	
 	    CURRENT = 'current',
 	    ORIGIN = 'origin',
@@ -3410,9 +3412,9 @@
 	*/
 	"use strict";
 	
-	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 42),
+	var Rubix = __webpack_require__(/*! ../core/rubix.js */ 41),
 	    routes = __webpack_require__(/*! ./routes.js */ 22),
-	    calc = __webpack_require__(/*! ../utils/calc.js */ 13);
+	    calc = __webpack_require__(/*! ../utils/calc.js */ 20);
 	
 	module.exports = function (action, framestamp, frameDuration) {
 	    var values = action.values,
@@ -3726,178 +3728,80 @@
 
 /***/ },
 /* 37 */
-/*!*****************************!*\
-  !*** ./src/types/bezier.js ***!
-  \*****************************/
+/*!******************************!*\
+  !*** ./src/utils/history.js ***!
+  \******************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/*
-	    Bezier function generator
-	        
-	    Gaëtan Renaudeau's BezierEasing
-	    https://github.com/gre/bezier-easing/blob/master/index.js  
-	    https://github.com/gre/bezier-easing/blob/master/LICENSE
-	    You're a hero
-	    
-	    Use
-	    
-	        var easeOut = new Bezier(.17,.67,.83,.67),
-	            x = easeOut(0.5); // returns 0.627...
-	*/
 	"use strict";
 	
-	var NEWTON_ITERATIONS = 8,
-	    NEWTON_MIN_SLOPE = 0.001,
-	    SUBDIVISION_PRECISION = 0.0000001,
-	    SUBDIVISION_MAX_ITERATIONS = 10,
-	    K_SPLINE_TABLE_SIZE = 11,
-	    K_SAMPLE_STEP_SIZE = 1.0 / (K_SPLINE_TABLE_SIZE - 1.0),
-	    FLOAT_32_SUPPORTED = 'Float32Array' in global,
+	var // [number]: Default max size of history
+	    maxHistorySize = 3,
 	    
-	    A = function (a1, a2) {
-	        return 1.0 - 3.0 * a2 + 3.0 * a1;
-	    },
+	    /*
+	        History constructor
+	        
+	        @param [var]: Variable to store in first history slot
+	        @param [int] (optional): Maximum size of history
+	    */
+	    History = function (obj, max) {
+	        this.max = max || maxHistorySize;
+	        this.entries = [];
+	        this.add(obj);
+	    };
 	    
-	    B = function (a1, a2) {
-	        return 3.0 * a2 - 6.0 * a1;
-	    },
+	History.prototype = {
 	    
-	    C = function (a1) {
-	        return 3.0 * a1;
-	    },
-	
-	    getSlope = function (t, a1, a2) {
-	        return 3.0 * A(a1, a2) * t * t + 2.0 * B(a1, a2) * t + C(a1);
-	    },
-	
-	    calcBezier = function (t, a1, a2) {
-	        return ((A(a1, a2) * t + B(a1, a2)) * t + C(a1)) * t;
+	    /*
+	        Push new var to history
+	        
+	        Shift out oldest entry if we've reached maximum capacity
+	        
+	        @param [var]: Variable to push into history.entries
+	    */
+	    add: function (obj) {
+	        var currentSize = this.getSize();
+	        
+	        this.entries.push(obj);
+	        
+	        if (currentSize >= this.max) {
+	            this.entries.shift();
+	        }
 	    },
 	    
 	    /*
-	        Bezier constructor
+	        Get variable at specified index
+	
+	        @param [int]: Index
+	        @return [var]: Var found at specified index
 	    */
-	    Bezier = function (mX1, mY1, mX2, mY2) {
-	        var sampleValues = FLOAT_32_SUPPORTED ? new Float32Array(K_SPLINE_TABLE_SIZE) : new Array(K_SPLINE_TABLE_SIZE),
-	            _precomputed = false,
+	    get: function (i) {
+	        i = (typeof i === 'number') ? i : this.getSize() - 1;
+	
+	        return this.entries[i];
+	    },
 	    
-	            binarySubdivide = function (aX, aA, aB) {
-	                var currentX, currentT, i = 0;
-	
-	                do {
-	                    currentT = aA + (aB - aA) / 2.0;
-	                    currentX = calcBezier(currentT, mX1, mX2) - aX;
-	                    if (currentX > 0.0) {
-	                        aB = currentT;
-	                    } else {
-	                        aA = currentT;
-	                    }
-	                } while (Math.abs(currentX) > SUBDIVISION_PRECISION && ++i < SUBDIVISION_MAX_ITERATIONS);
-	
-	                return currentT;
-	            },
+	    /*
+	        Get the second newest history entry
 	        
-	            newtonRaphsonIterate = function (aX, aGuessT) {
-	                var i = 0,
-	                    currentSlope = 0.0,
-	                    currentX;
-	                
-	                for (; i < NEWTON_ITERATIONS; ++i) {
-	                    currentSlope = getSlope(aGuessT, mX1, mX2);
-	                    
-	                    if (currentSlope === 0.0) {
-	                        return aGuessT;
-	                    }
-	                    
-	                    currentX = calcBezier(aGuessT, mX1, mX2) - aX;
-	                    aGuessT -= currentX / currentSlope;
-	                }
-	                
-	                return aGuessT;
-	            },
-	            
-	            
-	            calcSampleValues = function () {
-	                for (var i = 0; i < K_SPLINE_TABLE_SIZE; ++i) {
-	                    sampleValues[i] = calcBezier(i * K_SAMPLE_STEP_SIZE, mX1, mX2);
-	                }
-	            },
-	            
-	            
-	            getTForX = function (aX) {
-	                var intervalStart = 0.0,
-	                    currentSample = 1,
-	                    lastSample = K_SPLINE_TABLE_SIZE - 1,
-	                    dist = 0.0,
-	                    guessForT = 0.0,
-	                    initialSlope = 0.0;
-	                    
-	                for (; currentSample != lastSample && sampleValues[currentSample] <= aX; ++currentSample) {
-	                    intervalStart += K_SAMPLE_STEP_SIZE;
-	                }
-	                
-	                --currentSample;
-	                
-	                dist = (aX - sampleValues[currentSample]) / (sampleValues[currentSample+1] - sampleValues[currentSample]);
-	                guessForT = intervalStart + dist * K_SAMPLE_STEP_SIZE;
-	                
-	                initialSlope = getSlope(guessForT, mX1, mX2);
-	                
-	                // If slope is greater than min
-	                if (initialSlope >= NEWTON_MIN_SLOPE) {
-	                    return newtonRaphsonIterate(aX, guessForT);
-	                // Slope is equal to min
-	                } else if (initialSlope === 0.0) {
-	                    return guessForT;
-	                // Slope is less than min
-	                } else {
-	                    return binarySubdivide(aX, intervalStart, intervalStart + K_SAMPLE_STEP_SIZE);
-	                }
-	            },
-	            
-	            precompute = function () {
-	                _precomputed = true;
-	                if (mX1 != mY1 || mX2 != mY2) {
-	                    calcSampleValues();
-	                }
-	            },
-	            
-	            /*
-	                Generated function
-	                
-	                Returns value 0-1 based on X
-	            */
-	            f = function (aX) {
-	                var returnValue;
+	        @return [var]: Entry found at index size - 2
+	    */
+	    getPrevious: function () {
+	        return this.get(this.getSize() - 2);
+	    },
+	    
+	    /*
+	        Get current history size
+	        
+	        @return [int]: Current length of entries.length
+	    */
+	    getSize: function () {
+	        return this.entries.length;
+	    }
+	    
+	};
 	
-	                if (!_precomputed) {
-	                    precompute();
-	                }
-	                
-	                // If linear gradient, return X as T
-	                if (mX1 === mY1 && mX2 === mY2) {
-	                    returnValue = aX;
-	                    
-	                // If at start, return 0
-	                } else if (aX === 0) {
-	                    returnValue = 0;
-	                    
-	                // If at end, return 1
-	                } else if (aX === 1) {
-	                    returnValue = 1;
-	
-	                } else {
-	                    returnValue = calcBezier(getTForX(aX), mY1, mY2);
-	                }
-	                
-	                return returnValue;
-	            }
-	            
-	            return f;
-	    };
-	
-	module.exports = Bezier;
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+	module.exports = History;
 
 /***/ },
 /* 38 */
@@ -4079,80 +3983,178 @@
 
 /***/ },
 /* 39 */
-/*!******************************!*\
-  !*** ./src/utils/history.js ***!
-  \******************************/
+/*!*****************************!*\
+  !*** ./src/types/bezier.js ***!
+  \*****************************/
 /***/ function(module, exports, __webpack_require__) {
 
+	/* WEBPACK VAR INJECTION */(function(global) {/*
+	    Bezier function generator
+	        
+	    Gaëtan Renaudeau's BezierEasing
+	    https://github.com/gre/bezier-easing/blob/master/index.js  
+	    https://github.com/gre/bezier-easing/blob/master/LICENSE
+	    You're a hero
+	    
+	    Use
+	    
+	        var easeOut = new Bezier(.17,.67,.83,.67),
+	            x = easeOut(0.5); // returns 0.627...
+	*/
 	"use strict";
 	
-	var // [number]: Default max size of history
-	    maxHistorySize = 3,
+	var NEWTON_ITERATIONS = 8,
+	    NEWTON_MIN_SLOPE = 0.001,
+	    SUBDIVISION_PRECISION = 0.0000001,
+	    SUBDIVISION_MAX_ITERATIONS = 10,
+	    K_SPLINE_TABLE_SIZE = 11,
+	    K_SAMPLE_STEP_SIZE = 1.0 / (K_SPLINE_TABLE_SIZE - 1.0),
+	    FLOAT_32_SUPPORTED = 'Float32Array' in global,
+	    
+	    A = function (a1, a2) {
+	        return 1.0 - 3.0 * a2 + 3.0 * a1;
+	    },
+	    
+	    B = function (a1, a2) {
+	        return 3.0 * a2 - 6.0 * a1;
+	    },
+	    
+	    C = function (a1) {
+	        return 3.0 * a1;
+	    },
+	
+	    getSlope = function (t, a1, a2) {
+	        return 3.0 * A(a1, a2) * t * t + 2.0 * B(a1, a2) * t + C(a1);
+	    },
+	
+	    calcBezier = function (t, a1, a2) {
+	        return ((A(a1, a2) * t + B(a1, a2)) * t + C(a1)) * t;
+	    },
 	    
 	    /*
-	        History constructor
-	        
-	        @param [var]: Variable to store in first history slot
-	        @param [int] (optional): Maximum size of history
+	        Bezier constructor
 	    */
-	    History = function (obj, max) {
-	        this.max = max || maxHistorySize;
-	        this.entries = [];
-	        this.add(obj);
+	    Bezier = function (mX1, mY1, mX2, mY2) {
+	        var sampleValues = FLOAT_32_SUPPORTED ? new Float32Array(K_SPLINE_TABLE_SIZE) : new Array(K_SPLINE_TABLE_SIZE),
+	            _precomputed = false,
+	    
+	            binarySubdivide = function (aX, aA, aB) {
+	                var currentX, currentT, i = 0;
+	
+	                do {
+	                    currentT = aA + (aB - aA) / 2.0;
+	                    currentX = calcBezier(currentT, mX1, mX2) - aX;
+	                    if (currentX > 0.0) {
+	                        aB = currentT;
+	                    } else {
+	                        aA = currentT;
+	                    }
+	                } while (Math.abs(currentX) > SUBDIVISION_PRECISION && ++i < SUBDIVISION_MAX_ITERATIONS);
+	
+	                return currentT;
+	            },
+	        
+	            newtonRaphsonIterate = function (aX, aGuessT) {
+	                var i = 0,
+	                    currentSlope = 0.0,
+	                    currentX;
+	                
+	                for (; i < NEWTON_ITERATIONS; ++i) {
+	                    currentSlope = getSlope(aGuessT, mX1, mX2);
+	                    
+	                    if (currentSlope === 0.0) {
+	                        return aGuessT;
+	                    }
+	                    
+	                    currentX = calcBezier(aGuessT, mX1, mX2) - aX;
+	                    aGuessT -= currentX / currentSlope;
+	                }
+	                
+	                return aGuessT;
+	            },
+	            
+	            
+	            calcSampleValues = function () {
+	                for (var i = 0; i < K_SPLINE_TABLE_SIZE; ++i) {
+	                    sampleValues[i] = calcBezier(i * K_SAMPLE_STEP_SIZE, mX1, mX2);
+	                }
+	            },
+	            
+	            
+	            getTForX = function (aX) {
+	                var intervalStart = 0.0,
+	                    currentSample = 1,
+	                    lastSample = K_SPLINE_TABLE_SIZE - 1,
+	                    dist = 0.0,
+	                    guessForT = 0.0,
+	                    initialSlope = 0.0;
+	                    
+	                for (; currentSample != lastSample && sampleValues[currentSample] <= aX; ++currentSample) {
+	                    intervalStart += K_SAMPLE_STEP_SIZE;
+	                }
+	                
+	                --currentSample;
+	                
+	                dist = (aX - sampleValues[currentSample]) / (sampleValues[currentSample+1] - sampleValues[currentSample]);
+	                guessForT = intervalStart + dist * K_SAMPLE_STEP_SIZE;
+	                
+	                initialSlope = getSlope(guessForT, mX1, mX2);
+	                
+	                // If slope is greater than min
+	                if (initialSlope >= NEWTON_MIN_SLOPE) {
+	                    return newtonRaphsonIterate(aX, guessForT);
+	                // Slope is equal to min
+	                } else if (initialSlope === 0.0) {
+	                    return guessForT;
+	                // Slope is less than min
+	                } else {
+	                    return binarySubdivide(aX, intervalStart, intervalStart + K_SAMPLE_STEP_SIZE);
+	                }
+	            },
+	            
+	            precompute = function () {
+	                _precomputed = true;
+	                if (mX1 != mY1 || mX2 != mY2) {
+	                    calcSampleValues();
+	                }
+	            },
+	            
+	            /*
+	                Generated function
+	                
+	                Returns value 0-1 based on X
+	            */
+	            f = function (aX) {
+	                var returnValue;
+	
+	                if (!_precomputed) {
+	                    precompute();
+	                }
+	                
+	                // If linear gradient, return X as T
+	                if (mX1 === mY1 && mX2 === mY2) {
+	                    returnValue = aX;
+	                    
+	                // If at start, return 0
+	                } else if (aX === 0) {
+	                    returnValue = 0;
+	                    
+	                // If at end, return 1
+	                } else if (aX === 1) {
+	                    returnValue = 1;
+	
+	                } else {
+	                    returnValue = calcBezier(getTForX(aX), mY1, mY2);
+	                }
+	                
+	                return returnValue;
+	            }
+	            
+	            return f;
 	    };
-	    
-	History.prototype = {
-	    
-	    /*
-	        Push new var to history
-	        
-	        Shift out oldest entry if we've reached maximum capacity
-	        
-	        @param [var]: Variable to push into history.entries
-	    */
-	    add: function (obj) {
-	        var currentSize = this.getSize();
-	        
-	        this.entries.push(obj);
-	        
-	        if (currentSize >= this.max) {
-	            this.entries.shift();
-	        }
-	    },
-	    
-	    /*
-	        Get variable at specified index
 	
-	        @param [int]: Index
-	        @return [var]: Var found at specified index
-	    */
-	    get: function (i) {
-	        i = (typeof i === 'number') ? i : this.getSize() - 1;
-	
-	        return this.entries[i];
-	    },
-	    
-	    /*
-	        Get the second newest history entry
-	        
-	        @return [var]: Entry found at index size - 2
-	    */
-	    getPrevious: function () {
-	        return this.get(this.getSize() - 2);
-	    },
-	    
-	    /*
-	        Get current history size
-	        
-	        @return [int]: Current length of entries.length
-	    */
-	    getSize: function () {
-	        return this.entries.length;
-	    }
-	    
-	};
-	
-	module.exports = History;
+	module.exports = Bezier;
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 40 */
@@ -4165,6 +4167,63 @@
 
 /***/ },
 /* 41 */
+/*!***************************!*\
+  !*** ./src/core/rubix.js ***!
+  \***************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Anatomy of a Rubix:
+	    
+	        Props
+	            surpressMethod [boolean]:
+	                If not true, will create Action shorthand method 
+	                with the name of the rubix, ie .play()
+	
+	            calculatesVelocity [boolean]:
+	                Set to true if your Rubix will calculate
+	                the new Value velocity (otherwise Redshift may override it)
+	                
+	        Methods
+	            updateInput
+	                Run once per frame, before Values are processed. .play uses this
+	                to update the timer, .track uses it to check the input device.
+	
+	                @param [Action]: The Action being processed
+	                @param [object]: Action properties
+	                @param [int]: Duration since the last frame in milliseconds
+	            
+	            process (required)
+	                Run once for every Action value, this method returns the latest value
+	
+	                @param [string]: Name of value being processed
+	                @param [Value]: Value being processed
+	                @param [object]: Action values
+	                @param [object]: Action properties
+	                @param [Action]: Action
+	                @param [int]: Duration since the last frame in milliseconds
+	                @return [int]: Latest value
+	                
+	            limit
+	                Run once for every Action value, this can be used to limit the value
+	                within any parameters
+	                
+	                @param [int]: Value returned from process method
+	                @param [Value]: Value being processed
+	                @return [int]: Latest value
+	                
+	            hasEnded (required)
+	                Returns true if this current Action has ended. Redshift will
+	                then check the Action's queue or yoyo/loop properties to decide
+	                what action to take next
+	                
+	                @param [Action]: Action being processed
+	                @param [boolean]: True if any value has changed
+	*/            
+	module.exports = {};
+
+/***/ },
+/* 42 */
 /*!*********************************!*\
   !*** ./src/core/simulations.js ***!
   \*********************************/
@@ -4180,8 +4239,8 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ../utils/calc.js */ 13),
-	    utils = __webpack_require__(/*! ../utils/utils.js */ 15),
+	var calc = __webpack_require__(/*! ../utils/calc.js */ 20),
+	    utils = __webpack_require__(/*! ../utils/utils.js */ 21),
 	    speedPerFrame = calc.speedPerFrame;
 	
 	module.exports = {
@@ -4260,63 +4319,6 @@
 	        value.capture = value.min = value.max = undefined;
 	    }
 	};
-
-/***/ },
-/* 42 */
-/*!***************************!*\
-  !*** ./src/core/rubix.js ***!
-  \***************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    Anatomy of a Rubix:
-	    
-	        Props
-	            surpressMethod [boolean]:
-	                If not true, will create Action shorthand method 
-	                with the name of the rubix, ie .play()
-	
-	            calculatesVelocity [boolean]:
-	                Set to true if your Rubix will calculate
-	                the new Value velocity (otherwise Redshift may override it)
-	                
-	        Methods
-	            updateInput
-	                Run once per frame, before Values are processed. .play uses this
-	                to update the timer, .track uses it to check the input device.
-	
-	                @param [Action]: The Action being processed
-	                @param [object]: Action properties
-	                @param [int]: Duration since the last frame in milliseconds
-	            
-	            process (required)
-	                Run once for every Action value, this method returns the latest value
-	
-	                @param [string]: Name of value being processed
-	                @param [Value]: Value being processed
-	                @param [object]: Action values
-	                @param [object]: Action properties
-	                @param [Action]: Action
-	                @param [int]: Duration since the last frame in milliseconds
-	                @return [int]: Latest value
-	                
-	            limit
-	                Run once for every Action value, this can be used to limit the value
-	                within any parameters
-	                
-	                @param [int]: Value returned from process method
-	                @param [Value]: Value being processed
-	                @return [int]: Latest value
-	                
-	            hasEnded (required)
-	                Returns true if this current Action has ended. Redshift will
-	                then check the Action's queue or yoyo/loop properties to decide
-	                what action to take next
-	                
-	                @param [Action]: Action being processed
-	                @param [boolean]: True if any value has changed
-	*/            
-	module.exports = {};
 
 /***/ },
 /* 43 */
@@ -4557,7 +4559,7 @@
 	"use strict";
 	
 	var dictionary = __webpack_require__(/*! ./dictionary.js */ 43),
-	    utils = __webpack_require__(/*! ../../utils/utils.js */ 15),
+	    utils = __webpack_require__(/*! ../../utils/utils.js */ 21),
 	
 	    /*
 	        Split comma delimited into array
@@ -4814,7 +4816,7 @@
 
 	"use strict";
 	
-	var Input = __webpack_require__(/*! ./input.js */ 19),
+	var Input = __webpack_require__(/*! ./input.js */ 16),
 	    currentPointer, // Sort this out for multitouch
 	    
 	    TOUCHMOVE = 'touchmove',
@@ -5065,8 +5067,8 @@
 	*/
 	"use strict";
 	
-	var calc = __webpack_require__(/*! ./calc.js */ 13),
-	    utils = __webpack_require__(/*! ./utils.js */ 15);
+	var calc = __webpack_require__(/*! ./calc.js */ 20),
+	    utils = __webpack_require__(/*! ./utils.js */ 21);
 	
 	module.exports = function (newValue, currentValue, parent, scope) {
 	    var splitValueUnit = {};
@@ -5182,7 +5184,7 @@
 
 	"use strict";
 	
-	var utils = __webpack_require__(/*! ../utils/utils.js */ 15),
+	var utils = __webpack_require__(/*! ../utils/utils.js */ 21),
 	
 	    maxElapsed = 33,
 	    Timer = function () {
