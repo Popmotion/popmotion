@@ -1,0 +1,1 @@
+window.Redshift = require('./module.js');

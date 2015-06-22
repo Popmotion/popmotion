@@ -1,24 +1,24 @@
 "use strict";
 
 var Process = require('../process/Process'),
-    update = require('./update');
+    update = require('./update'),
 
-class Element {
-
-    constructor(element) {
+    Element = function (element) {
         this.element = element || false;
 
         this.values = {};
         this.output = {};
         this.queue = new Queue();
 
-        this.process = new Process(update, this);
-    }
+        this.process = new Process(this, update);
+    };
+
+Element.prototype = {
 
     // [boolean]: Is this Element currently active?
     get isActive() {
         return this._isActive;
-    }
+    },
 
     /*
         Set Element active status
@@ -34,18 +34,6 @@ class Element {
 
         this._isActive = status;
     }
-
-}
-
-
-        var isActive = (active !== undefined) ? active : this.active;
-        
-        if (active === true) {
-            this.hasChanged = active;
-        }
-
-        this.active = isActive;
-
-        return isActive;
+};
 
 module.exports = Element;

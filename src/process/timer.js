@@ -1,6 +1,6 @@
 "use strict";
 
-var utils = require('../utils/utils.js'),
+var utils = require('../inc/utils.js'),
 
     maxElapsed = 33,
     Timer = function () {

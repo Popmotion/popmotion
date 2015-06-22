@@ -16,7 +16,7 @@ module.exports = {
         return select(items);
     },
 
-    addEasing: function (arguments) {
+    addEasing: function () {
         addEasing.apply(this, arguments);
         return this;
     },
