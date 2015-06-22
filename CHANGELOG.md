@@ -2,6 +2,22 @@
 
 Redshift adheres to [Semantic Versioning](http://semver.org/). Change log added v1.4.0.
 
+## [3.0.0] Unreleased
+
+### Added
+- Value types added.
+- Element types added.
+
+### Changed
+- Changed `redshift` to `Redshift`
+- `redshift.newX()` functions changed to `new Redshift.X()` constructors:
+    - `newAction` -> `Element`
+    - `newActionGroup` -> `ElementSystem`
+    - `newInput` -> `Input`
+    - `newProcess` -> `Process`
+- `redshift.dom()` replaced with `Redshift.select()`, which will take a DOM selector, NodeList, or array of object literals and return an `ElementSystem` with each item assigned an `Element`.
+- `redshift.addRubix()` changed to `Redshift.addAction()`, for clearer and semantic naming. 
+
 ## [2.1.1] 2015-06-11
 
 ### Fixed

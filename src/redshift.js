@@ -16,6 +16,11 @@ module.exports = {
         return select(items);
     },
 
+    addAction: function () {
+        addAction.apply(this, arguments);
+        return this;
+    },
+
     addEasing: function () {
         addEasing.apply(this, arguments);
         return this;
