@@ -1,29 +1,30 @@
 "use strict";
+
 /*
 	Generate method iterator
 	
 	Takes a method name and returns a function that will
-	loop over all the Actions in a group and fire that
+	loop over all the Elements in a group and fire that
 	method with those properties
 	
 	@param [string]: Name of method
 */
 module.exports = function (method) {
 	return function () {
-        var numActions = this.actions.length,
+        var numElements = this.elements.length,
             i = 0,
 			isGetter = false,
 			getterArray = [],
-			action,
-			actionReturn;
+			element,
+			elementReturn;
 			
 		for (; i < numActions; i++) {
-			action = this.actions[i];
-			actionReturn = action[method].apply(action, arguments);
+			element = this.elements[i];
+			elementReturn = element[method].apply(element, arguments);
 			
-			if (actionReturn != action) {
+			if (elementReturn != element) {
     			isGetter = true;
-    			getterArray.push(actionReturn);
+    			getterArray.push(elementReturn);
 			}
 		}
 		

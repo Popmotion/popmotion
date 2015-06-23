@@ -10,7 +10,7 @@ var ElementSystem = require('./ElementSystem');
         If not, treated as preexisting NodeList || jQuery object.
 */
 module.exports = function (selector) {
-    var nodes = (typeof selector === 'string') ? document.querySelectorAll(selector) : selector;
+    var nodes = (typeof selector === 'string') ? document.querySelectorAll(selector) : selector,
         elements = [];
 
     // If jQuery selection, get array of Elements

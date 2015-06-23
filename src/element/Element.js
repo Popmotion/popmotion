@@ -1,6 +1,7 @@
 "use strict";
 
 var Process = require('../process/Process'),
+    Queue = require('../inc/Queue'),
     update = require('./update'),
 
     Element = function (element) {
