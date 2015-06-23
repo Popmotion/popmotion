@@ -62,7 +62,10 @@
 	    .addElementType('dom', __webpack_require__(6))
 
 	    .addAction('play', __webpack_require__(7))
-	    .addAction('seek', __webpack_require__(8));
+	    .addAction('run', __webpack_require__(8))
+	    .addAction('fire', __webpack_require__(9))
+	    .addAction('track', __webpack_require__(10))
+	    .addAction('seek', __webpack_require__(11));
 
 	console.timeEnd('load');
 
@@ -93,24 +96,24 @@
 
 	"use strict";
 
-	var select = __webpack_require__(9),
-	    actionManager = __webpack_require__(10),
-	    easingManager = __webpack_require__(11),
-	    presetManager = __webpack_require__(12),
-	    routeManager = __webpack_require__(13),
-	    simulationManager = __webpack_require__(14),
-	    elementTypeManager = __webpack_require__(15),
-	    valueTypeManager = __webpack_require__(16);
+	var select = __webpack_require__(12),
+	    actionManager = __webpack_require__(13),
+	    easingManager = __webpack_require__(14),
+	    presetManager = __webpack_require__(15),
+	    routeManager = __webpack_require__(16),
+	    simulationManager = __webpack_require__(17),
+	    elementTypeManager = __webpack_require__(18),
+	    valueTypeManager = __webpack_require__(19);
 
 	module.exports = {
 
-	    Element: __webpack_require__(17),
+	    Element: __webpack_require__(20),
 
-	    ElementSystem: __webpack_require__(18),
+	    ElementSystem: __webpack_require__(21),
 
-	    Input: __webpack_require__(19),
+	    Input: __webpack_require__(22),
 
-	    Process: __webpack_require__(20),
+	    Process: __webpack_require__(23),
 
 	    select: function (items) {
 	        return select(items);
@@ -159,7 +162,7 @@
 
 	"use strict";
 
-	var getColorValues = __webpack_require__(21),
+	var getColorValues = __webpack_require__(24),
 
 	    defaults = {
 	        Hue: 0,
@@ -194,7 +197,7 @@
 
 	"use strict";
 
-	var getColorValues = __webpack_require__(21),
+	var getColorValues = __webpack_require__(24),
 
 	    defaults = {
 	        Red: 0,
@@ -275,7 +278,7 @@
 
 	"use strict";
 
-	var styleDOM = __webpack_require__(22);
+	var styleDOM = __webpack_require__(25);
 
 	module.exports = {
 
@@ -334,23 +337,23 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
-	    Play rubix
+	    Play action
 	    
 	    Translate numbers for a set amount of time, applying easing if defined
 	*/
 	"use strict";
 
-	var calc = __webpack_require__(23),
-	    utils = __webpack_require__(24),
-	    easingManager = __webpack_require__(11),
+	var calc = __webpack_require__(26),
+	    utils = __webpack_require__(27),
+	    easingManager = __webpack_require__(14),
 
 	    playAction = {
 
-	        // Prevent Redshift from autogenerating Element.prototype.play()
+	        // [boolean] Prevent Redshift from autogenerating Element.prototype.play()
 	        surpressMethod: true,
 
-	        // Methods to add to Element.prototype
-	        elementMethods: __webpack_require__(25),
+	        // [object] Methods to add to Element.prototype
+	        elementMethods: __webpack_require__(28),
 
 	        /*
 	            Update Action elapsed time
@@ -396,7 +399,7 @@
 	                }
 
 	                // Ease value
-	                newValue = easing.withinRange(progress, value.origin, target, value.ease);
+	                newValue = easingManager.withinRange(progress, value.origin, target, value.ease);
 	            }
 
 	            return newValue;
@@ -417,6 +420,179 @@
 
 /***/ },
 /* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Run physics simulation
+	*/
+	"use strict";
+
+	var calc = __webpack_require__(26);
+
+	module.exports = {
+
+	    parse: __webpack_require__(29),
+
+	    // [boolean]: Tell Redshift this rubix calculates a new velocity itself
+	    calculatesVelocity: true,
+	    
+	    /*
+	        Simulate the Value's per-frame movement
+	        
+	        @param [string]: Key of current value
+	        @param [Value]: Current value
+	        @param [number]: Duration of frame in ms
+	        @return [number]: Calculated value
+	    */
+	    process: function (key, value, frameDuration) {
+	        value.velocity = simulate(value.simulate, value, frameDuration, this.started);
+	        return value.current + calc.speedPerFrame(value.velocity, frameDuration);
+	    },
+	    
+	    /*
+	        Has this action ended?
+	        
+	        Use a framecounter to see if Action has changed in the last x frames
+	        and declare ended if not
+	        
+	        @param [boolean]: Has Action changed?
+	        @return [boolean]: Has Action ended?
+	    */
+	    hasEnded: function (hasChanged) {
+	        this.inactiveFrames = hasChanged ? 0 : this.inactiveFrames + 1;
+	        return (this.inactiveFrames > this.maxInactiveFrames);
+	    },
+	    
+	    /*
+	        Limit output to value range, if any
+	        
+	        If velocity is at or more than range, and value has a bounce property,
+	        run the bounce simulation
+	        
+	        @param [number]: Calculated output
+	        @param [Value]: Current Value
+	        @return [number]: Limit-adjusted output
+	    */
+	    limit: function (output, value) {
+	        var isOutsideMax = (output >= value.max),
+	            isOutsideMin = (output <= value.min),
+	            isOutsideRange = isOutsideMax || isOutsideMin;
+	        
+	        if (isOutsideRange) {
+	            output = calc.restricted(output, value.min, value.max);
+
+	            if (value.bounce) {
+	                value.velocity = simulate('bounce', value);
+
+	            } else if (value.capture) {
+	                simulate('capture', value, isOutsideMax ? value.max : value.min);
+	            }
+	        }
+	        
+	        return output;
+	    }
+	};
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Return current value and immedietly end
+	*/
+	"use strict";
+
+	module.exports = {
+
+	    parse: __webpack_require__(29),
+
+	   /*
+	        Process new value
+	        
+	        Return existing current
+	        
+	        @param [string]: Name of value
+	        @param [Value]: Current value
+	    */
+	    process: function (key, value) {
+	        return value.current;
+	    },
+	    
+	    /*
+	        Has Action ended?
+	        
+	        Returns true to end immedietly
+	        
+	        @return [boolean]: true
+	    */
+	    hasEnded: function () {
+	        return true;
+	    }
+	};
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Track user input
+	*/
+	"use strict";
+
+	var calc = __webpack_require__(26),
+	    genericParser = __webpack_require__(29),
+	    Pointer = __webpack_require__(30);
+
+	module.exports = {
+
+	    /*
+	        Parse Input arguments
+	    */
+	    parse: function () {
+	        var props = genericParser.apply(this, arguments),
+	            input = arguments[arguments.length - 1];
+
+	        // Create Pointer if this isn't an Input
+	        props.input = (!input.current) ? new Pointer(input) : input;
+
+	        // Set input origin if not user-defined
+	        if (!props.inputOrigin) {
+	            props.inputOrigin = input.get();
+	        }
+
+	        return props;
+	    },
+	    
+	    /*
+	        Update Input
+	    */
+	    updateInput: function () {
+	        this.inputOffset = calc.offset(this.inputOrigin, this.input.current);
+	    },
+	        
+	    /*
+	        Move Value relative to Input movement
+	        
+	        @param [string]: Key of current value
+	        @param [Value]: Current value
+	        @return [number]: Calculated value
+	    */
+	    process: function (key, value) {
+	        return (this.inputOffset.hasOwnProperty(key)) ? value.origin + this.inputOffset[key] : value.current;
+	    },
+	    
+	    /*
+	        Has this Action ended? 
+	        
+	        @return [boolean]: False to make user manually finish .track()
+	    */
+	    hasEnded: function () {
+	        return false;
+	    }
+	};
+
+/***/ },
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -467,12 +643,12 @@
 	};
 
 /***/ },
-/* 9 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var ElementSystem = __webpack_require__(18);
+	var ElementSystem = __webpack_require__(21);
 
 	/*
 	    Create an ElementSystem based on a selection of DOM nodes
@@ -502,13 +678,13 @@
 	};
 
 /***/ },
-/* 10 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
 	var Element,
-	    ModuleManager = __webpack_require__(26),
+	    ModuleManager = __webpack_require__(31),
 
 	    actionManager = new ModuleManager();
 	/*
@@ -550,42 +726,12 @@
 
 
 /***/ },
-/* 11 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var ModuleManager = __webpack_require__(26);
-
-	module.exports = new ModuleManager();
-
-/***/ },
-/* 12 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var ModuleManager = __webpack_require__(26);
-
-	module.exports = new ModuleManager();
-
-/***/ },
-/* 13 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var ModuleManager = __webpack_require__(26);
-
-	module.exports = new ModuleManager();
-
-/***/ },
 /* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var ModuleManager = __webpack_require__(26);
+	var ModuleManager = __webpack_require__(31);
 
 	module.exports = new ModuleManager();
 
@@ -595,7 +741,7 @@
 
 	"use strict";
 
-	var ModuleManager = __webpack_require__(26);
+	var ModuleManager = __webpack_require__(31);
 
 	module.exports = new ModuleManager();
 
@@ -605,7 +751,7 @@
 
 	"use strict";
 
-	var ModuleManager = __webpack_require__(26);
+	var ModuleManager = __webpack_require__(31);
 
 	module.exports = new ModuleManager();
 
@@ -615,12 +761,42 @@
 
 	"use strict";
 
-	var Process = __webpack_require__(20),
-	    Queue = __webpack_require__(27),
-	    utils = __webpack_require__(24),
-	    update = __webpack_require__(28),
-	    valueOps = __webpack_require__(29),
-	    actionManager = __webpack_require__(10),
+	var ModuleManager = __webpack_require__(31);
+
+	module.exports = new ModuleManager();
+
+/***/ },
+/* 18 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var ModuleManager = __webpack_require__(31);
+
+	module.exports = new ModuleManager();
+
+/***/ },
+/* 19 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var ModuleManager = __webpack_require__(31);
+
+	module.exports = new ModuleManager();
+
+/***/ },
+/* 20 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var Process = __webpack_require__(23),
+	    Queue = __webpack_require__(32),
+	    utils = __webpack_require__(27),
+	    update = __webpack_require__(33),
+	    valueOps = __webpack_require__(34),
+	    actionManager = __webpack_require__(13),
 
 	    Element = function (element) {
 	        this.element = element || false;
@@ -814,13 +990,13 @@
 	module.exports = Element;
 
 /***/ },
-/* 18 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var Element = __webpack_require__(17),
-	    generateMethodIterator = __webpack_require__(30),
+	var Element = __webpack_require__(20),
+	    generateMethodIterator = __webpack_require__(35),
 
 	    /*
 	        ElementSystem constructor
@@ -909,7 +1085,7 @@
 	module.exports = ElementSystem;
 
 /***/ },
-/* 19 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -917,9 +1093,9 @@
 	*/
 	"use strict";
 
-	var calc = __webpack_require__(23),
-	    utils = __webpack_require__(24),
-	    History = __webpack_require__(31),
+	var calc = __webpack_require__(26),
+	    utils = __webpack_require__(27),
+	    History = __webpack_require__(36),
 
 	    /*
 	        Input constructor
@@ -1040,12 +1216,12 @@
 	module.exports = Input;
 
 /***/ },
-/* 20 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var manager = __webpack_require__(32),
+	var manager = __webpack_require__(37),
 
 	    /*
 	        Process constructor
@@ -1205,18 +1381,18 @@
 	module.exports = Process;
 
 /***/ },
-/* 21 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var splitCommaDelimited = __webpack_require__(33),
-	    functionBreak = __webpack_require__(34);
+	var splitCommaDelimited = __webpack_require__(38),
+	    functionBreak = __webpack_require__(39);
 
 	module.exports = function (value) {
 	    return splitCommaDelimited(functionBreak(value));
 	};
 
 /***/ },
-/* 22 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1289,7 +1465,7 @@
 	module.exports = new styleDOM();
 
 /***/ },
-/* 23 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -1300,7 +1476,7 @@
 	*/
 	"use strict";
 
-	var utils = __webpack_require__(24),
+	var utils = __webpack_require__(27),
 
 	    calc = {
 	        
@@ -1647,7 +1823,7 @@
 	module.exports = calc;
 
 /***/ },
-/* 24 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -1892,13 +2068,13 @@
 	};
 
 /***/ },
-/* 25 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var parseArgs = __webpack_require__(35),
-	    utils = __webpack_require__(24);
+	var parseArgs = __webpack_require__(40),
+	    utils = __webpack_require__(27);
 
 	module.exports = {
 	    /*
@@ -2002,7 +2178,118 @@
 	};
 
 /***/ },
-/* 26 */
+/* 29 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var presetManager = __webpack_require__(15);
+
+	module.exports = function (base, override) {
+	    var props = (typeof base === 'string') ? presetManager.getDefined(base) : {};
+
+	    // Override properties with second arg if it's an object
+	    if (typeof override === 'object') {
+	        props = utils.merge(props, override);
+	    }
+	}
+
+/***/ },
+/* 30 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var Input = __webpack_require__(41),
+	    currentPointer, // Sort this out for multitouch
+	    
+	    TOUCHMOVE = 'touchmove',
+	    MOUSEMOVE = 'mousemove',
+
+	    /*
+	        Convert event into point
+	        
+	        Scrape the x/y coordinates from the provided event
+	        
+	        @param [event]: Original pointer event
+	        @param [boolean]: True if touch event
+	        @return [object]: x/y coordinates of event
+	    */
+	    eventToPoint = function (event, isTouchEvent) {
+	        var touchChanged = isTouchEvent ? event.changedTouches[0] : false;
+	        
+	        return {
+	            x: touchChanged ? touchChanged.clientX : event.pageX,
+	            y: touchChanged ? touchChanged.clientY : event.pageY
+	        }
+	    },
+	    
+	    /*
+	        Get actual event
+	        
+	        Checks for jQuery's .originalEvent if present
+	        
+	        @param [event | jQuery event]
+	        @return [event]: The actual JS event  
+	    */
+	    getActualEvent = function (event) {
+	        return event.originalEvent || event;
+	    },
+
+	    
+	    /*
+	        Pointer constructor
+	    */
+	    Pointer = function (e) {
+	        var event = getActualEvent(e), // In case of jQuery event
+	            isTouch = (event.touches) ? true : false,
+	            startPoint = eventToPoint(event, isTouch);
+	        
+	        this.update(startPoint);
+	        this.isTouch = isTouch;
+	        this.bindEvents();
+	    },
+	    
+	    proto = Pointer.prototype = new Input();
+
+	/*
+	    Bind move event
+	*/
+	proto.bindEvents = function () {
+	    this.moveEvent = this.isTouch ? TOUCHMOVE : MOUSEMOVE;
+	    
+	    currentPointer = this;
+	    
+	    document.documentElement.addEventListener(this.moveEvent, this.onMove);
+	};
+
+	/*
+	    Unbind move event
+	*/
+	proto.unbindEvents = function () {
+	    document.documentElement.removeEventListener(this.moveEvent, this.onMove);
+	};
+
+	/*
+	    Pointer onMove event handler
+	    
+	    @param [event]: Pointer move event
+	*/
+	proto.onMove = function (e) {
+	    var newPoint = eventToPoint(e, currentPointer.isTouch);
+	    e = getActualEvent(e);
+	    e.preventDefault();
+	    currentPointer.update(newPoint);
+	};
+
+	proto.stop = function () {
+	    this.unbindEvents();
+	};
+
+	module.exports = Pointer;
+
+/***/ },
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2019,7 +2306,7 @@
 	module.exports = ModuleManager;
 
 /***/ },
-/* 27 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2072,7 +2359,7 @@
 	module.exports = Queue;
 
 /***/ },
-/* 28 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2088,7 +2375,7 @@
 	};
 
 /***/ },
-/* 29 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2156,7 +2443,7 @@
 	module.exports = valueOps;
 
 /***/ },
-/* 30 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2195,7 +2482,7 @@
 
 
 /***/ },
-/* 31 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2269,12 +2556,12 @@
 	module.exports = History;
 
 /***/ },
-/* 32 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var theLoop = __webpack_require__(36),
+	var theLoop = __webpack_require__(42),
 	    ProcessManager = function () {
 	        this.all = {};
 	        this.active = [];
@@ -2444,7 +2731,7 @@
 	module.exports = new ProcessManager();
 
 /***/ },
-/* 33 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (value) {
@@ -2452,7 +2739,7 @@
 	};
 
 /***/ },
-/* 34 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (value) {
@@ -2460,13 +2747,13 @@
 	};
 
 /***/ },
-/* 35 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var presetManager = __webpack_require__(12),
-	    utils = __webpack_require__(24);
+	var presetManager = __webpack_require__(15),
+	    utils = __webpack_require__(27);
 
 	module.exports = function (base, override) {
 	    var props = {},
@@ -2510,7 +2797,138 @@
 	};
 
 /***/ },
-/* 36 */
+/* 41 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Input controller
+	*/
+	"use strict";
+
+	var calc = __webpack_require__(26),
+	    utils = __webpack_require__(27),
+	    History = __webpack_require__(36),
+
+	    /*
+	        Input constructor
+	        
+	            Syntax
+	                newInput(name, value[, poll])
+	                    @param [string]: Name of to track
+	                    @param [number]: Initial value
+	                    @param [function] (optional): Function to poll Input data
+	                    
+	                newInput(props[, poll])
+	                    @param [object]: Object of values
+	                    @param [function] (optional): Function to poll Input data
+
+	        @return [Input]
+	    */
+	    Input = function () {
+	        var pollPos = arguments.length - 1;
+
+	        this.current = {};
+	        this.offset = {};
+	        this.velocity = {};
+	        this.history = new History();
+	        this.update(arguments[0], arguments[1]);
+	        
+	        if (utils.isFunc(arguments[pollPos])) {
+	            this.poll = arguments[pollPos];
+	        }
+	    };
+
+	Input.prototype = {
+	    
+	    // [number]: Number of frames of inactivity before velocity is turned to 0
+	    maxInactiveFrames: 2,
+	    
+	    // [number]: Number of frames input hasn't been updated
+	    inactiveFrames: 0,
+	    
+	    /*
+	        Get latest input values
+	        
+	        @param [string] (optional): Name of specific property to return
+	        @return [object || number]: Latest input values or, if specified, single value
+	    */
+	    get: function (prop) {
+	        var latest = this.history.get(),
+	            val = (prop !== undefined) ? latest[prop] : latest;
+	        
+	        return val;
+	    },
+
+	    /*
+	        Update the input values
+	        
+	        Syntax
+	            input.update(name, value)
+	                @param [string]: Name of to track
+	                @param [number]: Initial value
+	                
+	            input.update(props)
+	                @param [object]: Object of values
+	                
+	        @return [Input]
+	    */
+	    update: function (arg0, arg1) {
+	        var values = {};
+
+	        if (utils.isNum(arg1)) {
+	            values[arg0] = arg1;
+	        } else {
+	            values = arg0;
+	        }
+
+	        this.history.add(utils.merge(this.current, values));
+	        
+	        return this;
+	    },
+	    
+	    /*
+	        Check for input movement and update pointer object's properties
+	        
+	        @param [number]: Timestamp of frame
+	        @return [Input]
+	    */
+	    onFrame: function (timestamp) {
+	        var latest, hasChanged;
+	        
+	        // Check provided timestamp against lastFrame timestamp and return input has already been updated
+	        if (timestamp === this.lastFrame) {
+	            return;
+	        }
+	        
+	        latest = (this.poll) ? this.poll() : this.history.get();
+	        hasChanged = utils.hasChanged(this.current, latest);
+
+	        // If input has changed between frames  
+	        if (hasChanged) {
+	            this.velocity = calc.offset(this.current, latest);
+	            this.current = latest;
+	            this.inactiveFrames = 0;
+
+	        // Or it hasn't moved and our frame limit has been reached
+	        } else if (this.inactiveFrames >= this.maxInactiveFrames) {
+	            this.velocity = calc.offset(this.current, this.current);
+	        
+	        // Or input hasn't changed
+	        } else {
+	            this.inactiveFrames++;
+	        }
+	        
+	        this.lastFrame = timestamp;
+	        
+	        return this;
+	    }
+	    
+	};
+
+	module.exports = Input;
+
+/***/ },
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -2518,8 +2936,8 @@
 	*/
 	"use strict";
 
-	var Timer = __webpack_require__(37),
-	    tick = __webpack_require__(38),
+	var Timer = __webpack_require__(43),
+	    tick = __webpack_require__(44),
 	    Loop = function () {
 	        this.timer = new Timer();
 	    };
@@ -2584,12 +3002,12 @@
 	module.exports = new Loop();
 
 /***/ },
-/* 37 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var utils = __webpack_require__(24),
+	var utils = __webpack_require__(27),
 
 	    maxElapsed = 33,
 	    Timer = function () {
@@ -2619,7 +3037,7 @@
 	module.exports = Timer;
 
 /***/ },
-/* 38 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";

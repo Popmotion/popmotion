@@ -3,7 +3,7 @@
 */
 "use strict";
 
-var calc = require('../utils/calc'),
+var calc = require('../inc/calc'),
     genericParser = require('./generic/parse-args'),
     Pointer = require('../input/Pointer');
 

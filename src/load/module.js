@@ -10,6 +10,9 @@ Redshift
     .addElementType('dom', require('../element-types/dom'))
 
     .addAction('play', require('../actions/play'))
+    .addAction('run', require('../actions/run'))
+    .addAction('fire', require('../actions/fire'))
+    .addAction('track', require('../actions/track'))
     .addAction('seek', require('../actions/seek'));
 
 console.timeEnd('load');
