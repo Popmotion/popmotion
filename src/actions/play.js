@@ -11,9 +11,10 @@ var calc = require('../inc/calc'),
 
     playAction = {
 
-        // Prevent Redshift from autogenerating 
+        // Prevent Redshift from autogenerating Element.prototype.play()
         surpressMethod: true,
 
+        // Methods to add to Element.prototype
         elementMethods: require('./play/element-methods'),
 
         /*

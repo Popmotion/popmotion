@@ -2,18 +2,18 @@
 
 var Process = require('../process/Process'),
     Queue = require('../inc/Queue'),
-    update = require('./update'),
-    actionManager = require('../actions/manager'),
     utils = require('../inc/utils'),
+    update = require('./update'),
+    valueOps = require('./value-operations'),
+    actionManager = require('../actions/manager'),
 
     Element = function (element) {
         this.element = element || false;
-
         this.values = {};
         this.output = {};
         this.queue = new Queue();
-
         this.process = new Process(this, update);
+        this.clearOrder();
     };
 
 Element.prototype = {
@@ -25,6 +25,8 @@ Element.prototype = {
         @param [string] (option): Name of default value property
     */
     set: function () {
+
+
         return this;
     },
 
@@ -91,6 +93,8 @@ Element.prototype = {
     },
 
     reset: function () {
+        this.resetProgress();
+        valueOps('reset', this.values);
         return this;
     },
     
@@ -103,12 +107,61 @@ Element.prototype = {
 
         return this;
     },
-
+    
+    /*
+        Loop through all values and create origin points
+    */
+    resetOrigins: function () {
+        valueOps('resetOrigin', this.values);
+        return this;
+    },
+    
+    /*
+        Reverse Action progress and values
+    */
     reverse: function () {
+        this.playDirection *= -1;
+        valueOps('retarget', this.values);
+        return this;
+    },
+    
+    /*
+        Swap value origins and to
+    */
+    flipValues: function () {
+        this.elapsed = this.duration - this.elapsed;
+        valueOps('flip', this.values);
+        return this;
+    },
+    
+    /*
+        Update order of value keys
+        
+        @param [string]: Key of value
+        @param [boolean]: Whether to move value to back
+    */
+    updateOrder: function (key, moveToBack) {
+        var order = this.order,
+            position = order.indexOf(key);
+
+        // If key isn't in list, or moveToBack is set to true, add key
+        if (position === -1 || moveToBack) {
+            order.push(key);
+
+            // If key already exists, remove
+            if (position !== -1) {
+                order.splice(position, 1);
+            }
+        }
+
         return this;
     },
 
-    flipValues: function () {
+    /*
+        Clear value key update order
+    */
+    clearOrder: function () {
+        this.order = [];
         return this;
     },
 
@@ -130,6 +183,12 @@ Element.prototype = {
         }
 
         this._isActive = status;
+    },
+
+    style: function () {
+        if (this.type && this.type.style) {
+            this.type.style.apply(this, arguments);
+        }
     }
 };
 
