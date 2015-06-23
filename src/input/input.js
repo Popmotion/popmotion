@@ -3,9 +3,9 @@
 */
 "use strict";
 
-var calc = require('../utils/calc.js'),
-    utils = require('../utils/utils.js'),
-    History = require('../utils/history.js'),
+var calc = require('../inc/calc.js'),
+    utils = require('../inc/utils.js'),
+    History = require('../inc/history.js'),
 
     /*
         Input constructor

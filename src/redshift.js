@@ -1,6 +1,12 @@
 "use strict";
 
-var select = require('./element/select');
+var select = require('./element/select'),
+    actionManager = require('./actions/manager'),
+    easingManager = require('./actions/play/easing-manager'),
+    presetManager = require('./element/preset-manager'),
+    routeManager = require('./routes/manager'),
+    simulationManager = require('./actions/run/simulation-manager'),
+    valueTypeManager = require('./value-types/manager');
 
 module.exports = {
 
@@ -17,37 +23,37 @@ module.exports = {
     },
 
     addAction: function () {
-        addAction.apply(this, arguments);
+        actionManager.extend.apply(actionManager, arguments);
         return this;
     },
 
     addEasing: function () {
-        addEasing.apply(this, arguments);
+        easingManager.extend.apply(easingManager, arguments);
         return this;
     },
 
     addPreset: function () {
-        addPreset.apply(this, arguments);
+        presetManager.extend.apply(presetManager, arguments);
         return this;
     },
 
     addSimulation: function () {
-        addSimulation.apply(this, arguments);
+        simulationManager.extend.apply(simulationManager, arguments);
         return this;
     },
 
     addElementType: function () {
-        addElementType.apply(this, arguments);
+        elementTypeManager.extend.apply(elementTypeManager, arguments);
         return this;
     },
 
     addValueType: function () {
-        addValueType.apply(this, arguments);
+        valueTypeManager.extend.apply(valueTypeManager, arguments);
         return this;
     },
 
     addRoute: function () {
-        addRoute.apply(this, arguments);
+        routeManager.extend.apply(routeManager, arguments);
         return this;
     }
 
