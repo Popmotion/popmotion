@@ -7,6 +7,8 @@ Redshift
     .addValueType('rgb', require('../value-types/rgb'))
     .addValueType('hex', require('../value-types/hex'))
 
+    .addElementType('dom', require('../element-types/dom'))
+
     .addAction('play', require('../actions/play'))
     .addAction('seek', require('../actions/seek'));
 

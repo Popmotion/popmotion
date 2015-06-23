@@ -1,5 +1,5 @@
 /*
-    Play rubix
+    Play action
     
     Translate numbers for a set amount of time, applying easing if defined
 */
@@ -11,10 +11,10 @@ var calc = require('../inc/calc'),
 
     playAction = {
 
-        // Prevent Redshift from autogenerating Element.prototype.play()
+        // [boolean] Prevent Redshift from autogenerating Element.prototype.play()
         surpressMethod: true,
 
-        // Methods to add to Element.prototype
+        // [object] Methods to add to Element.prototype
         elementMethods: require('./play/element-methods'),
 
         /*
@@ -61,7 +61,7 @@ var calc = require('../inc/calc'),
                 }
 
                 // Ease value
-                newValue = easing.withinRange(progress, value.origin, target, value.ease);
+                newValue = easingManager.withinRange(progress, value.origin, target, value.ease);
             }
 
             return newValue;

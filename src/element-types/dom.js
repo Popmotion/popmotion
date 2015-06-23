@@ -1,6 +1,6 @@
 "use strict";
 
-var styleDOM = require('./style-dom.js');
+var styleDOM = require('./dom/style-dom.js');
 
 module.exports = {
 
@@ -42,14 +42,14 @@ module.exports = {
         Get height of DOM element
     */
     height: function () {
-        return this.element.outerHeight;
+        return this.element.offsetHeight;
     },
 
     /*
         Get width of DOM element
     */
     width: function () {
-        return this.element.outerWidth;
+        return this.element.offsetWidth;
     }
 
 };

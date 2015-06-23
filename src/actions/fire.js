@@ -5,6 +5,8 @@
 
 module.exports = {
 
+    parse: require('./generic/parse-args'),
+
    /*
         Process new value
         

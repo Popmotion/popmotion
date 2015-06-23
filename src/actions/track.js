@@ -3,21 +3,35 @@
 */
 "use strict";
 
-var calc = require('../utils/calc.js'),
-
-    CURRENT = 'current',
-    INPUT_OFFSET = 'inputOffset';
+var calc = require('../utils/calc'),
+    genericParser = require('./generic/parse-args'),
+    Pointer = require('../input/Pointer');
 
 module.exports = {
+
+    /*
+        Parse Input arguments
+    */
+    parse: function () {
+        var props = genericParser.apply(this, arguments),
+            input = arguments[arguments.length - 1];
+
+        // Create Pointer if this isn't an Input
+        props.input = (!input.current) ? new Pointer(input) : input;
+
+        // Set input origin if not user-defined
+        if (!props.inputOrigin) {
+            props.inputOrigin = input.get();
+        }
+
+        return props;
+    },
     
     /*
         Update Input
-        
-        @param [Action]
-        @param [object]: Action properties
     */
-    updateInput: function (action) {
-        action[INPUT_OFFSET] = calc.offset(action.inputOrigin, action.input[CURRENT]);
+    updateInput: function () {
+        this.inputOffset = calc.offset(this.inputOrigin, this.input.current);
     },
         
     /*
@@ -25,13 +39,10 @@ module.exports = {
         
         @param [string]: Key of current value
         @param [Value]: Current value
-        @param [object]: Collection of all Action values
-        @param [object]: Action properties
-        @param [Action]: Current Action
         @return [number]: Calculated value
     */
-    process: function (key, value, values, action) {
-        return (action[INPUT_OFFSET].hasOwnProperty(key)) ? value.origin + action[INPUT_OFFSET][key] : value[CURRENT];
+    process: function (key, value) {
+        return (this.inputOffset.hasOwnProperty(key)) ? value.origin + this.inputOffset[key] : value.current;
     },
     
     /*

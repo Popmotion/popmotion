@@ -8,6 +8,8 @@ var calc = require('../utils/calc.js'),
 
 module.exports = {
 
+    parse: require('./generic/parse-args'),
+
     // [boolean]: Tell Redshift this rubix calculates a new velocity itself
     calculatesVelocity: true,
     
@@ -16,14 +18,11 @@ module.exports = {
         
         @param [string]: Key of current value
         @param [Value]: Current value
-        @param [object]: Collection of all Action values
-        @param [object]: Action properties
-        @param [Action]: Current Action
         @param [number]: Duration of frame in ms
         @return [number]: Calculated value
     */
-    process: function (key, value, values, action, frameDuration) {
-        value.velocity = simulate(value.simulate, value, frameDuration, action.started);
+    process: function (key, value, frameDuration) {
+        value.velocity = simulate(value.simulate, value, frameDuration, this.started);
         return value.current + calc.speedPerFrame(value.velocity, frameDuration);
     },
     
@@ -33,13 +32,12 @@ module.exports = {
         Use a framecounter to see if Action has changed in the last x frames
         and declare ended if not
         
-        @param [Action]
         @param [boolean]: Has Action changed?
         @return [boolean]: Has Action ended?
     */
-    hasEnded: function (action, hasChanged) {
-        action.inactiveFrames = hasChanged ? 0 : action.inactiveFrames + 1;
-        return (action.inactiveFrames > action.maxInactiveFrames);
+    hasEnded: function (hasChanged) {
+        this.inactiveFrames = hasChanged ? 0 : this.inactiveFrames + 1;
+        return (this.inactiveFrames > this.maxInactiveFrames);
     },
     
     /*

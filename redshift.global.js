@@ -59,8 +59,10 @@
 	    .addValueType('rgb', __webpack_require__(4))
 	    .addValueType('hex', __webpack_require__(5))
 
-	    .addAction('play', __webpack_require__(6))
-	    .addAction('seek', __webpack_require__(7));
+	    .addElementType('dom', __webpack_require__(6))
+
+	    .addAction('play', __webpack_require__(7))
+	    .addAction('seek', __webpack_require__(8));
 
 	console.timeEnd('load');
 
@@ -91,23 +93,24 @@
 
 	"use strict";
 
-	var select = __webpack_require__(8),
-	    actionManager = __webpack_require__(9),
-	    easingManager = __webpack_require__(10),
-	    presetManager = __webpack_require__(11),
-	    routeManager = __webpack_require__(12),
-	    simulationManager = __webpack_require__(13),
-	    valueTypeManager = __webpack_require__(14);
+	var select = __webpack_require__(9),
+	    actionManager = __webpack_require__(10),
+	    easingManager = __webpack_require__(11),
+	    presetManager = __webpack_require__(12),
+	    routeManager = __webpack_require__(13),
+	    simulationManager = __webpack_require__(14),
+	    elementTypeManager = __webpack_require__(15),
+	    valueTypeManager = __webpack_require__(16);
 
 	module.exports = {
 
-	    Element: __webpack_require__(15),
+	    Element: __webpack_require__(17),
 
-	    ElementSystem: __webpack_require__(16),
+	    ElementSystem: __webpack_require__(18),
 
-	    Input: __webpack_require__(17),
+	    Input: __webpack_require__(19),
 
-	    Process: __webpack_require__(18),
+	    Process: __webpack_require__(20),
 
 	    select: function (items) {
 	        return select(items);
@@ -156,7 +159,7 @@
 
 	"use strict";
 
-	var getColorValues = __webpack_require__(19),
+	var getColorValues = __webpack_require__(21),
 
 	    defaults = {
 	        Hue: 0,
@@ -191,7 +194,7 @@
 
 	"use strict";
 
-	var getColorValues = __webpack_require__(19),
+	var getColorValues = __webpack_require__(21),
 
 	    defaults = {
 	        Red: 0,
@@ -270,6 +273,66 @@
 /* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
+	"use strict";
+
+	var styleDOM = __webpack_require__(22);
+
+	module.exports = {
+
+	    /*
+	        Style DOM element
+
+	        @param [string || object]: Either name of style to get/set or an object of properties to set
+	        @parma [string] (optional): Property to set
+	        @return [object || Element]: Returns calculated style if get, or Element if set
+	    */
+	    style: function (name, prop) {
+	        var propDefined = (prop !== undefined),
+	            isGetter = (nameIsString && !propsDefined),
+	            styles = {},
+	            returnVal;
+
+	        // If this is a getter, pass name and set return value
+	        if (isGetter) {
+	            returnVal = styleDOM.get(name);
+
+	        // If this is a setter
+	        } else {
+	            // If we have a property, add it to our object
+	            if (propDefined) {
+	                styles[name] = prop;
+
+	            // Or overwrite our object
+	            } else {
+	                styles = name;
+	            }
+
+	            styleDOM.set(styles);
+	        }
+
+	        return isGetter ? returnVal : this;
+	    },
+
+	    /*
+	        Get height of DOM element
+	    */
+	    height: function () {
+	        return this.element.offsetHeight;
+	    },
+
+	    /*
+	        Get width of DOM element
+	    */
+	    width: function () {
+	        return this.element.offsetWidth;
+	    }
+
+	};
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
 	/*
 	    Play rubix
 	    
@@ -277,157 +340,17 @@
 	*/
 	"use strict";
 
-	var calc = __webpack_require__(20),
-	    utils = __webpack_require__(21),
-	    easingManager = __webpack_require__(10),
-	    presetManager = __webpack_require__(11),
+	var calc = __webpack_require__(23),
+	    utils = __webpack_require__(24),
+	    easingManager = __webpack_require__(11),
 
 	    playAction = {
 
-	        // Prevent Redshift from autogenerating 
+	        // Prevent Redshift from autogenerating Element.prototype.play()
 	        surpressMethod: true,
 
-	        elementMethods: {
-	            /*
-	                Play an animation
-
-	                @param [object || string]: Parameters or preset names
-	                @param [object]: Override parameters
-	            */
-	            play: function () {
-	                var action = 'play';
-
-	                // If there's an active Action, and its play, add to queue
-	                if (this.isActive && this.action === action) {
-	                    this.queue.add.apply(this.queue, arguments);
-	                
-	                // Else, start playing
-	                } else {
-	                    this.set(playAction.parse.apply(this, arguments), 'to');
-	                    this.action = action;
-	                    this.start();
-	                }
-
-	                return this;
-	            },
-
-	            /*
-	                Check for next steps and perform, stop if not
-	            */
-	            next: function () {
-	                var nextSteps = [{
-	                        key: 'loop',
-	                        callback: this.reset
-	                    }, {
-	                        key: 'yoyo',
-	                        callback: this.reverse
-	                    }, {
-	                        key: 'flip',
-	                        callback: this.flipValues
-	                    }],
-	                    numSteps = nextSteps.length,
-	                    hasNextStep = false,
-	                    i = 0;
-
-	                for (; i < numSteps; ++i) {
-	                    if (this.checkNextStep(nextSteps[i].key, nextSteps[i].callback)) {
-	                        hasNextStep = true;
-	                        break;
-	                    }
-	                }
-
-	                if (!hasNextStep && !this.playNext()) {
-	                    this.stop();
-	                } else {
-	                    this.isActive = true;
-	                }
-
-	                return this;
-	            },
-	    
-	            /*
-	                Check next step
-	                
-	                @param [string]: Name of step ('yoyo' or 'loop')
-	                @param [callback]: Function to run if we take this step
-	            */
-	            checkNextStep: function (key, callback) {
-	                var COUNT = 'Count',
-	                    stepTaken = false,
-	                    step = this[key],
-	                    count = this[key + COUNT],
-	                    forever = (step === true);
-
-	                if (forever || utils.isNum(step)) {
-	                    ++count;
-	                    this[key + COUNT] = count;
-	                    if (forever || count <= step) {
-	                        callback.call(this);
-	                        stepTaken = true;
-	                    }
-	                }
-
-	                return stepTaken;
-	            },
-	    
-	            /*
-	                Next in playlist
-	            */
-	            playNext: function () {
-	                var stepTaken = false,
-	                    nextInQueue = this.queue.next(this.playDirection);
-
-	                if (utils.isArray(nextInQueue)) {
-	                    this.set(playAction.parse.apply(this, nextInQueue), 'to')
-	                        .reset();
-
-	                    stepTaken = true;
-	                }
-
-	                return stepTaken;
-	            }
-	        },
-
-	        parse: function (base, override) {
-	            var props = {},
-	                playlist = [],
-	                argsAsArray = [],
-	                i = 0,
-	                playlistLength;
-
-	            // If this is a playlist reference, add presets to queue
-	            if (typeof base === 'string') {
-	                playlist = base.split(' ');
-	                playlistLength = playlist.length;
-	                props = presetManager.getDefined(playlist[0]);
-
-	                // If we've got multiple playlists, loop through and add each to the queue
-	                if (playlistLength > 1) {
-	                    argsAsArray = [].slice.call(arguments);
-
-	                    for (; i < playlistLength; i++) {
-	                        argsAsArray.shift();
-	                        argsAsArray.unshift(playlist[i]);
-	                        this.queue.add.apply(this.queue, argsAsArray);
-	                    }
-	                }
-
-	            // Or, this is a straight set of properties
-	            } else {
-	                props = base;
-	            }
-
-	            // Override properties with second arg if it's an object
-	            if (typeof override === 'object') {
-	                props = utils.merge(props, override);
-	            }
-
-	            // Default .play properties
-	            props.loopCount = props.yoyoCount = props.flipCount = 0;
-	            props.playDirection = 1;
-
-	            return props;
-	        },
+	        // Methods to add to Element.prototype
+	        elementMethods: __webpack_require__(25),
 
 	        /*
 	            Update Action elapsed time
@@ -493,7 +416,7 @@
 
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -501,7 +424,7 @@
 	*/
 	"use strict";
 
-	var play = __webpack_require__(6);
+	var play = __webpack_require__(7);
 
 	module.exports = {
 
@@ -544,12 +467,12 @@
 	};
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var ElementSystem = __webpack_require__(16);
+	var ElementSystem = __webpack_require__(18);
 
 	/*
 	    Create an ElementSystem based on a selection of DOM nodes
@@ -579,13 +502,13 @@
 	};
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
 	var Element,
-	    ModuleManager = __webpack_require__(22),
+	    ModuleManager = __webpack_require__(26),
 
 	    actionManager = new ModuleManager();
 	/*
@@ -627,22 +550,12 @@
 
 
 /***/ },
-/* 10 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var ModuleManager = __webpack_require__(22);
-
-	module.exports = new ModuleManager();
-
-/***/ },
 /* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var ModuleManager = __webpack_require__(22);
+	var ModuleManager = __webpack_require__(26);
 
 	module.exports = new ModuleManager();
 
@@ -652,7 +565,7 @@
 
 	"use strict";
 
-	var ModuleManager = __webpack_require__(22);
+	var ModuleManager = __webpack_require__(26);
 
 	module.exports = new ModuleManager();
 
@@ -662,7 +575,7 @@
 
 	"use strict";
 
-	var ModuleManager = __webpack_require__(22);
+	var ModuleManager = __webpack_require__(26);
 
 	module.exports = new ModuleManager();
 
@@ -672,7 +585,7 @@
 
 	"use strict";
 
-	var ModuleManager = __webpack_require__(22);
+	var ModuleManager = __webpack_require__(26);
 
 	module.exports = new ModuleManager();
 
@@ -682,20 +595,40 @@
 
 	"use strict";
 
-	var Process = __webpack_require__(18),
-	    Queue = __webpack_require__(23),
-	    update = __webpack_require__(24),
-	    actionManager = __webpack_require__(9),
-	    utils = __webpack_require__(21),
+	var ModuleManager = __webpack_require__(26);
+
+	module.exports = new ModuleManager();
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var ModuleManager = __webpack_require__(26);
+
+	module.exports = new ModuleManager();
+
+/***/ },
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var Process = __webpack_require__(20),
+	    Queue = __webpack_require__(27),
+	    utils = __webpack_require__(24),
+	    update = __webpack_require__(28),
+	    valueOps = __webpack_require__(29),
+	    actionManager = __webpack_require__(10),
 
 	    Element = function (element) {
 	        this.element = element || false;
-
 	        this.values = {};
 	        this.output = {};
 	        this.queue = new Queue();
-
 	        this.process = new Process(this, update);
+	        this.clearOrder();
 	    };
 
 	Element.prototype = {
@@ -707,6 +640,8 @@
 	        @param [string] (option): Name of default value property
 	    */
 	    set: function () {
+
+
 	        return this;
 	    },
 
@@ -773,6 +708,8 @@
 	    },
 
 	    reset: function () {
+	        this.resetProgress();
+	        valueOps('reset', this.values);
 	        return this;
 	    },
 	    
@@ -785,12 +722,61 @@
 
 	        return this;
 	    },
-
+	    
+	    /*
+	        Loop through all values and create origin points
+	    */
+	    resetOrigins: function () {
+	        valueOps('resetOrigin', this.values);
+	        return this;
+	    },
+	    
+	    /*
+	        Reverse Action progress and values
+	    */
 	    reverse: function () {
+	        this.playDirection *= -1;
+	        valueOps('retarget', this.values);
+	        return this;
+	    },
+	    
+	    /*
+	        Swap value origins and to
+	    */
+	    flipValues: function () {
+	        this.elapsed = this.duration - this.elapsed;
+	        valueOps('flip', this.values);
+	        return this;
+	    },
+	    
+	    /*
+	        Update order of value keys
+	        
+	        @param [string]: Key of value
+	        @param [boolean]: Whether to move value to back
+	    */
+	    updateOrder: function (key, moveToBack) {
+	        var order = this.order,
+	            position = order.indexOf(key);
+
+	        // If key isn't in list, or moveToBack is set to true, add key
+	        if (position === -1 || moveToBack) {
+	            order.push(key);
+
+	            // If key already exists, remove
+	            if (position !== -1) {
+	                order.splice(position, 1);
+	            }
+	        }
+
 	        return this;
 	    },
 
-	    flipValues: function () {
+	    /*
+	        Clear value key update order
+	    */
+	    clearOrder: function () {
+	        this.order = [];
 	        return this;
 	    },
 
@@ -812,6 +798,12 @@
 	        }
 
 	        this._isActive = status;
+	    },
+
+	    style: function () {
+	        if (this.type && this.type.style) {
+	            this.type.style.apply(this, arguments);
+	        }
 	    }
 	};
 
@@ -822,13 +814,13 @@
 	module.exports = Element;
 
 /***/ },
-/* 16 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var Element = __webpack_require__(15),
-	    generateMethodIterator = __webpack_require__(25),
+	var Element = __webpack_require__(17),
+	    generateMethodIterator = __webpack_require__(30),
 
 	    /*
 	        ElementSystem constructor
@@ -917,7 +909,7 @@
 	module.exports = ElementSystem;
 
 /***/ },
-/* 17 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -925,9 +917,9 @@
 	*/
 	"use strict";
 
-	var calc = __webpack_require__(20),
-	    utils = __webpack_require__(21),
-	    History = __webpack_require__(26),
+	var calc = __webpack_require__(23),
+	    utils = __webpack_require__(24),
+	    History = __webpack_require__(31),
 
 	    /*
 	        Input constructor
@@ -1048,12 +1040,12 @@
 	module.exports = Input;
 
 /***/ },
-/* 18 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var manager = __webpack_require__(27),
+	var manager = __webpack_require__(32),
 
 	    /*
 	        Process constructor
@@ -1213,18 +1205,91 @@
 	module.exports = Process;
 
 /***/ },
-/* 19 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var splitCommaDelimited = __webpack_require__(28),
-	    functionBreak = __webpack_require__(29);
+	var splitCommaDelimited = __webpack_require__(33),
+	    functionBreak = __webpack_require__(34);
 
 	module.exports = function (value) {
 	    return splitCommaDelimited(functionBreak(value));
 	};
 
 /***/ },
-/* 20 */
+/* 22 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var styleDOM = function () {
+		var testElement,
+			prefixes = ['Webkit','Moz','O','ms', ''],
+			prefixesLength = prefixes.length,
+			cache = {},
+			
+			/*
+				Test style property for prefixed version
+				
+				@param [string]: Style property
+				@return [string]: Cached property name
+			*/
+			testPrefix = function (key) {
+				cache[key] = key;
+
+				for (var i = 0; i < prefixesLength; i++) {
+					var prefixed = prefixes[i] + key.charAt(0).toUpperCase() + key.slice(1);
+
+					if (testElement.style.hasOwnProperty(prefixed)) {
+						cache[key] = prefixed;
+					}
+				}
+				
+				return cache[key];
+			},
+
+		    // Cache body tag if we haven't already
+			cacheTestElement = function () {
+				testElement = testElement || document.getElementsByTagName('body')[0];
+			};
+		
+		/*
+			Style DOM functions
+		*/
+		return {
+
+			/*
+				Get DOM styles
+
+				@param [DOM Element]: Element to get styles from
+				@param [string]: Name of style to read
+			*/
+			get: function (element, name) {
+				testElement = cacheTestElement();
+				return window.getComputedStyle(element, null)[cache[name] || testPrefix(name)];
+			},
+
+			/*
+				Set DOM styles
+
+				@param [DOM Element]: Element to set styles on
+				@param [object]: DOM styles to set
+			*/
+			set: function (element, props) {
+				testElement = cacheTestElement();
+			    for (var key in props) {
+					if (props.hasOwnProperty(key)) {
+						element.style[cache[key] || testPrefix(key)] = props[key];
+					}
+				}
+			}
+
+		};
+	};
+
+	module.exports = new styleDOM();
+
+/***/ },
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -1235,7 +1300,7 @@
 	*/
 	"use strict";
 
-	var utils = __webpack_require__(21),
+	var utils = __webpack_require__(24),
 
 	    calc = {
 	        
@@ -1582,7 +1647,7 @@
 	module.exports = calc;
 
 /***/ },
-/* 21 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -1827,7 +1892,117 @@
 	};
 
 /***/ },
-/* 22 */
+/* 25 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var parseArgs = __webpack_require__(35),
+	    utils = __webpack_require__(24);
+
+	module.exports = {
+	    /*
+	        Play an animation
+
+	        @param [object || string]: Parameters or preset names
+	        @param [object]: Override parameters
+	    */
+	    play: function () {
+	        var action = 'play';
+
+	        // If there's an active Action, and its play, add to queue
+	        if (this.isActive && this.action === action) {
+	            this.queue.add.apply(this.queue, arguments);
+	        
+	        // Else, start playing
+	        } else {
+	            this.set(parseArgs.apply(this, arguments), 'to');
+	            this.action = action;
+	            this.start();
+	        }
+
+	        return this;
+	    },
+
+	    /*
+	        Check for next steps and perform, stop if not
+	    */
+	    next: function () {
+	        var nextSteps = [{
+	                key: 'loop',
+	                callback: this.reset
+	            }, {
+	                key: 'yoyo',
+	                callback: this.reverse
+	            }, {
+	                key: 'flip',
+	                callback: this.flipValues
+	            }],
+	            numSteps = nextSteps.length,
+	            hasNextStep = false,
+	            i = 0;
+
+	        for (; i < numSteps; ++i) {
+	            if (this.checkNextStep(nextSteps[i].key, nextSteps[i].callback)) {
+	                hasNextStep = true;
+	                break;
+	            }
+	        }
+
+	        if (!hasNextStep && !this.playNext()) {
+	            this.stop();
+	        } else {
+	            this.isActive = true;
+	        }
+
+	        return this;
+	    },
+
+	    /*
+	        Check next step
+	        
+	        @param [string]: Name of step ('yoyo' or 'loop')
+	        @param [callback]: Function to run if we take this step
+	    */
+	    checkNextStep: function (key, callback) {
+	        var COUNT = 'Count',
+	            stepTaken = false,
+	            step = this[key],
+	            count = this[key + COUNT],
+	            forever = (step === true);
+
+	        if (forever || utils.isNum(step)) {
+	            ++count;
+	            this[key + COUNT] = count;
+	            if (forever || count <= step) {
+	                callback.call(this);
+	                stepTaken = true;
+	            }
+	        }
+
+	        return stepTaken;
+	    },
+
+	    /*
+	        Next in playlist
+	    */
+	    playNext: function () {
+	        var stepTaken = false,
+	            nextInQueue = this.queue.next(this.playDirection);
+
+	        if (utils.isArray(nextInQueue)) {
+	            this.set(playAction.parse.apply(this, nextInQueue), 'to')
+	                .reset();
+
+	            stepTaken = true;
+	        }
+
+	        return stepTaken;
+	    }
+	};
+
+/***/ },
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1844,7 +2019,7 @@
 	module.exports = ModuleManager;
 
 /***/ },
-/* 23 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1897,7 +2072,7 @@
 	module.exports = Queue;
 
 /***/ },
-/* 24 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1913,7 +2088,75 @@
 	};
 
 /***/ },
-/* 25 */
+/* 29 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var operations = {
+
+	        /*
+	            Reset the value current to its origin
+
+	            @param [object]: Value object
+	        */
+	        reset: function (value) {
+	            this.retarget(value);
+	            value.current = value.origin;
+	        },
+
+	        /*
+	            Set value origin property to current value
+	            
+	            @param [object]: Value object
+	        */
+	        resetOrigin: function (value) {
+	            value.origin = value.current;
+	        },
+
+	        /*
+	            Set value to property back to target
+	            
+	            @param [object]: Value object
+	        */
+	        retarget: function (value) {
+	            value.to = value.target;
+	        },
+
+	        /*
+	            Swap value to and origin property
+	            
+	            @param [object]: Value object
+	        */
+	        flip: function (value) {
+	            var newTo = value.origin,
+	                newOrigin = (value.target !== undefined) ? value.target : value.current;
+
+	            value.to = newTo;
+	            value.origin = newOrigin;
+	        }
+	    },
+
+	    /*
+	        Perform operation on set of values
+	        
+	        @parma [string]: Name of operation
+	        @param [object]: Value object
+	    */
+	    valueOps = function (op, values) {
+	        var key = '';
+
+	        for (key in values) {
+	            operations[op](values[key]);
+	        }
+
+	        return this;
+	    };
+
+	module.exports = valueOps;
+
+/***/ },
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1952,7 +2195,7 @@
 
 
 /***/ },
-/* 26 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2026,12 +2269,12 @@
 	module.exports = History;
 
 /***/ },
-/* 27 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var theLoop = __webpack_require__(30),
+	var theLoop = __webpack_require__(36),
 	    ProcessManager = function () {
 	        this.all = {};
 	        this.active = [];
@@ -2201,7 +2444,7 @@
 	module.exports = new ProcessManager();
 
 /***/ },
-/* 28 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (value) {
@@ -2209,7 +2452,7 @@
 	};
 
 /***/ },
-/* 29 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (value) {
@@ -2217,7 +2460,57 @@
 	};
 
 /***/ },
-/* 30 */
+/* 35 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var presetManager = __webpack_require__(12),
+	    utils = __webpack_require__(24);
+
+	module.exports = function (base, override) {
+	    var props = {},
+	        playlist = [],
+	        argsAsArray = [],
+	        i = 0,
+	        playlistLength;
+
+	    // If this is a playlist reference, add presets to queue
+	    if (typeof base === 'string') {
+	        playlist = base.split(' ');
+	        playlistLength = playlist.length;
+	        props = presetManager.getDefined(playlist[0]);
+
+	        // If we've got multiple playlists, loop through and add each to the queue
+	        if (playlistLength > 1) {
+	            argsAsArray = [].slice.call(arguments);
+
+	            for (; i < playlistLength; i++) {
+	                argsAsArray.shift();
+	                argsAsArray.unshift(playlist[i]);
+	                this.queue.add.apply(this.queue, argsAsArray);
+	            }
+	        }
+
+	    // Or, this is a straight set of properties
+	    } else {
+	        props = base;
+	    }
+
+	    // Override properties with second arg if it's an object
+	    if (typeof override === 'object') {
+	        props = utils.merge(props, override);
+	    }
+
+	    // Default .play properties
+	    props.loopCount = props.yoyoCount = props.flipCount = 0;
+	    props.playDirection = 1;
+
+	    return props;
+	};
+
+/***/ },
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -2225,8 +2518,8 @@
 	*/
 	"use strict";
 
-	var Timer = __webpack_require__(31),
-	    tick = __webpack_require__(32),
+	var Timer = __webpack_require__(37),
+	    tick = __webpack_require__(38),
 	    Loop = function () {
 	        this.timer = new Timer();
 	    };
@@ -2291,12 +2584,12 @@
 	module.exports = new Loop();
 
 /***/ },
-/* 31 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var utils = __webpack_require__(21),
+	var utils = __webpack_require__(24),
 
 	    maxElapsed = 33,
 	    Timer = function () {
@@ -2326,7 +2619,7 @@
 	module.exports = Timer;
 
 /***/ },
-/* 32 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
