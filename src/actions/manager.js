@@ -10,6 +10,7 @@ var Element,
     Creates a new Action for Elements
 */
 actionManager.extend = function (name, module) {
+    var methodName = '';
     /*
         Generate new method for Elements if module doesn't have a
         surpressMethod flag and Element doesn't already have a
@@ -22,6 +23,12 @@ actionManager.extend = function (name, module) {
 
             return this.start();
         };
+    }
+
+    if (module.elementMethods) {
+        for (methodName in module.elementMethods) {
+            Element.prototype[methodName] = module.elementMethods[methodName];
+        }
     }
 
     // Call parent extend method

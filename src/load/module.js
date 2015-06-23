@@ -1,13 +1,16 @@
 "use strict";
 
 var Redshift = require('../redshift');
-
+console.time('load');
 Redshift
     .addValueType('hsl', require('../value-types/hsl'))
     .addValueType('rgb', require('../value-types/rgb'))
     .addValueType('hex', require('../value-types/hex'))
 
-    .addAction('play', require('../actions/play'));
+    .addAction('play', require('../actions/play'))
+    .addAction('seek', require('../actions/seek'));
+
+console.timeEnd('load');
 
 //Redshift.addAction()
 

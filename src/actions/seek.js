@@ -3,9 +3,24 @@
 */
 "use strict";
 
-var playRubix = require('./play.js');
+var play = require('./play.js');
 
 module.exports = {
+
+    surpressMethod: true,
+
+    elementMethods: {
+        seek: function (seekTo) {
+            this.elapsed = this.duration * seekTo;
+
+            if (!this.isActive) {
+                this.action = 'seek';
+                this.activate();
+            }
+
+            return this;
+        }
+    },
 
    /*
         Process new value
@@ -15,7 +30,7 @@ module.exports = {
         @param [string]: Name of value
         @param [Value]: Current value
     */
-    process: playRubix.process,
+    process: play.process,
     
     /*
         Has Action ended?
@@ -24,8 +39,8 @@ module.exports = {
         
         @return [boolean]: true
     */
-    hasEnded: function (action) {
-        action.rubix = 'play';
+    hasEnded: function () {
+        this.rubix = 'play';
         return true;
     }
 };

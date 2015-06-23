@@ -17,29 +17,6 @@ var Process = require('../process/Process'),
     };
 
 Element.prototype = {
-
-    /*
-        Play an animation
-
-        @param [object || string]: Parameters or preset names
-        @param [object]: Override parameters
-    */
-    play: function () {
-        var action = 'play';
-
-        // If there's an active Action, and its play, add to queue
-        if (this.isActive && this.action === action) {
-            this.queue.add.apply(this.queue, arguments);
-        
-        // Else, start playing
-        } else {
-            this.set(actionManager[action].parse.apply(this, arguments), 'to');
-            this.action = action;
-            this.start();
-        }
-
-        return this;
-    },
     
     /*
         Set Action values and properties
@@ -69,15 +46,35 @@ Element.prototype = {
         return this;
     },
 
+    /*
+        Pause current Action
+    */
     pause: function () {
+        this.isActive = false;
+        this.process.stop();
         return this;
     },
 
+    /*
+        Resume paused Action
+    */
     resume: function () {
+        this.framestamp = this.started = utils.currentTime();
+        this.isActive = true;
+        this.process.start();
         return this;
     },
 
-    seek: function () {
+    /*
+        Toggle current Action
+    */
+    toggle: function () {
+        if (this.isActive) {
+            this.pause();
+        } else {
+            this.resume();
+        }
+
         return this;
     },
     
@@ -92,6 +89,10 @@ Element.prototype = {
 
         this.process.start();
     },
+
+    reset: function () {
+        return this;
+    },
     
     /*
         Reset Action progress
@@ -100,6 +101,14 @@ Element.prototype = {
         this.elapsed = (this.playDirection === 1) ? 0 : this.duration;
         this.started = utils.currentTime();
 
+        return this;
+    },
+
+    reverse: function () {
+        return this;
+    },
+
+    flipValues: function () {
         return this;
     },
 
