@@ -6,6 +6,7 @@ var Process = require('../process/Process'),
     update = require('./update'),
     valueOps = require('./value-operations'),
     actionManager = require('../actions/manager'),
+    routeManager = require('../routes/manager'),
 
     Element = function (element) {
         this.element = element || false;
@@ -24,8 +25,20 @@ Element.prototype = {
         @param [object]: Element properties
         @param [string] (option): Name of default value property
     */
-    set: function () {
+    set: function (props, defaultValueProp) {
+        var self = this;
 
+        // Reset Element properties and write new props
+        this.clearOrder();
+        this.resetProps();
+        this.setProps(props);
+
+        defaultValueProps = defaultValueProp || 'current';
+
+        // Loop over routes and process value definitions
+        routeManager.shard(function (route, values) {
+            console.log(route, values);
+        }, props);
 
         return this;
     },
