@@ -11,6 +11,9 @@ var calc = require('../inc/calc'),
 
     playAction = {
 
+        // [object] Default Action properties
+        defaultActionProps: require('./play/default-action-props'),
+
         // [boolean] Prevent Redshift from autogenerating Element.prototype.play()
         surpressMethod: true,
 

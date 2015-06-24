@@ -18,7 +18,7 @@ simulationManager
         
         Applies any set deceleration and acceleration to existing velocity
     */
-    .add('velocity', function (value, duration) {
+    .extend('velocity', function (value, duration) {
         return value.velocity - speedPerFrame(value.deceleration, duration) + speedPerFrame(value.acceleration, duration);
     })
     
@@ -28,7 +28,7 @@ simulationManager
         Emulates touch device scrolling effects with exponential decay
         http://ariya.ofilabs.com/2013/11/javascript-kinetic-scrolling-part-2.html
     */
-    .add('glide', function (value, duration, started) {
+    .extend('glide', function (value, duration, started) {
         var timeUntilFinished = - utils.currentTime() - started,
             delta = - value.to * Math.exp(timeUntilFinished / value.timeConstant);
 
@@ -40,7 +40,7 @@ simulationManager
 
         TODO: fold into core physics simulation
     */
-    .add('friction', function (value, duration) {
+    .extend('friction', function (value, duration) {
         var newVelocity = speedPerFrame(value.velocity, duration) * (1 - value.friction);
         return calc.speedPerSecond(newVelocity, duration);
     })
@@ -48,7 +48,7 @@ simulationManager
     /*
         Spring
     */
-    .add('spring', function (value, duration) {
+    .extend('spring', function (value, duration) {
         var distance = value.to - value.current;
         
         value.velocity += distance * speedPerFrame(value.spring, duration);
@@ -61,7 +61,7 @@ simulationManager
         
         Invert velocity and reduce by provided fraction
     */
-    .add('bounce', function (value) {
+    .extend('bounce', function (value) {
         var distance = 0,
             to = value.to,
             current = value.current,
@@ -81,7 +81,7 @@ simulationManager
         
         Convert simulation to spring and set target to limit
     */
-    .add('capture', function (value, target) {
+    .extend('capture', function (value, target) {
         value.to = target;
         value.simulate = 'spring';
         value.capture = value.min = value.max = undefined;

@@ -19,7 +19,7 @@ routeManager.shard = function (callback, validRoutes) {
         key = this._keys[i];
 
         if ((validRoutes && validRoutes.hasOwnProperty(key)) || !validRoutes) {
-            callback(this[key], props[key]);
+            callback(this[key], key, validRoutes[key]);
         }
     }
 };

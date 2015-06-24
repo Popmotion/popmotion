@@ -51,54 +51,9 @@ module.exports = {
         .run() properties
     */
 
-    // [string]: Simulation to .run
-    simulate: 'velocity',
-    
-    // [number]: Deceleration to apply to value, in units per second
-    deceleration: 0,
-    
-    // [number]: Acceleration to apply to value, in units per second
-    acceleration: 0,
-    
-    // [number]: Factor to multiply velocity by on bounce
-    bounce: 0,
-    
-    // [number]: Spring strength during 'string'
-    spring: 80,
-    
-    // [number]: Timeconstant of glide
-    timeConstant: 395,
-    
-    // [number]: Stop simulation under this speed
-    stopSpeed: 10,
-    
-    // [boolean]: Capture with spring physics on limit breach
-    capture: false,
-    
-    // [number]: Friction to apply per frame
-    friction: 0.05,
-
     /*
         .play() properties
     */
-
-    // [number]: Duration of animation in ms
-    duration: 400,
-    
-    // [number]: Duration of delay in ms
-    delay: 0,
-    
-    // [number]: Stagger delay as factor of duration (ie 0.2 with duration of 1000ms = 200ms)
-    stagger: 0,
-    
-    // [string]: Easing to apply
-    ease: 'easeInOut',
-    
-    // [number]: Number of steps to execute animation
-    steps: 0,
-    
-    // [string]: Tells Redshift when to step, at the start or end of a step. Other option is 'start' as per CSS spec
-    stepDirection: 'end',
 
     /*
         .track() properties

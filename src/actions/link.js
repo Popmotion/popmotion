@@ -17,7 +17,7 @@
 */
 "use strict";
 
-var calc = require('../utils/calc.js'),
+var calc = require('../inc/calc.js'),
 
     STRING = 'string',
     
@@ -56,6 +56,8 @@ var calc = require('../utils/calc.js'),
 
 module.exports = {
 
+    defaultValueProps: require('./link/default-value-props'),
+
     surpressMethod: true,
 
     /*
@@ -66,16 +68,14 @@ module.exports = {
             
         @param [string]: Key of current value
         @param [Value]: Current value
-        @param [object]: Collection of all Action values
-        @param [object]: Action properties
-        @param [Action]: Current Action
         @return [number]: Calculated value
     */
-    process: function (key, value, values, action) {
-        var newValue = value.current,
+    process: function (key, value) {
+        var values = this.values,
+            newValue = value.current,
             linkKey = value.link,
             linkedValue = values[linkKey] ? values[linkKey] : {},
-            inputOffset = action.inputOffset;
+            inputOffset = this.inputOffset;
             
         // Then check values in Input
         if (inputOffset && inputOffset.hasOwnProperty(linkKey)) {

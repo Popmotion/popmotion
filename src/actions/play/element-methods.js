@@ -19,8 +19,8 @@ module.exports = {
         
         // Else, start playing
         } else {
-            this.set(parseArgs.apply(this, arguments), 'to');
             this.action = action;
+            this.set(parseArgs.apply(this, arguments), 'to');
             this.start();
         }
 

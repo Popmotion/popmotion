@@ -33,11 +33,17 @@ Element.prototype = {
         this.resetProps();
         this.setProps(props);
 
-        defaultValueProps = defaultValueProp || 'current';
+        defaultValueProp = defaultValueProp || 'current';
 
         // Loop over routes and process value definitions
-        routeManager.shard(function (route, values) {
-            console.log(route, values);
+        routeManager.shard(function (route, routeName, values) {
+            var key = '';
+
+            for (key in values) {
+                if (values.hasOwnProperty(key)) {
+                    
+                }
+            }
         }, props);
 
         return this;
@@ -144,6 +150,30 @@ Element.prototype = {
     flipValues: function () {
         this.elapsed = this.duration - this.elapsed;
         valueOps('flip', this.values);
+        return this;
+    },
+
+    /*
+        Set properties
+
+        @param [object]: Properties to set
+    */
+    setProps: function (props) {
+        var key = '';
+
+        for (key in props) {
+            // Set if this isn't a route
+            if (props.hasOwnProperty(key) && !routeManager.hasOwnProperty(key)) {
+                this[key] = props[key];
+            }
+        }
+    },
+
+    /*
+        Reset properties to Action defaults
+    */
+    resetProps: function () {
+        this.setProps(actionManager[this.action].defaultActionProps);
         return this;
     },
     

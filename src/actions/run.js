@@ -8,6 +8,9 @@ var calc = require('../inc/calc'),
 
 module.exports = {
 
+    // [object] Default Action properties
+    defaultActionProps: require('./run/default-action-props'),
+
     parse: require('./generic/parse-args'),
 
     // [boolean]: Tell Redshift this rubix calculates a new velocity itself

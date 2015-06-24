@@ -12,7 +12,7 @@ ModuleManager.prototype = {
 
         @param [string]: Key to add
     */
-    addKey: function (name) {
+    _addKey: function (name) {
         this._keys.push(name);
         this._numKeys++;
     },
@@ -26,6 +26,8 @@ ModuleManager.prototype = {
     extend: function (name, module) {
         this._addKey(name);
         this[name] = module;
+
+        return this;
     }
 };
 

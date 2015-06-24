@@ -9,6 +9,8 @@ var calc = require('../inc/calc'),
 
 module.exports = {
 
+    defaultValueProps: require('./track/default-value-props'),
+
     /*
         Parse Input arguments
     */
