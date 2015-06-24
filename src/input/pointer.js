@@ -1,6 +1,6 @@
 "use strict";
 
-var Input = require('./input.js'),
+var Input = require('./Input.js'),
     currentPointer, // Sort this out for multitouch
     
     TOUCHMOVE = 'touchmove',

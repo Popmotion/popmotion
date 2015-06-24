@@ -18,7 +18,7 @@ module.exports = function (method) {
 			element,
 			elementReturn;
 			
-		for (; i < numActions; i++) {
+		for (; i < numElements; i++) {
 			element = this.elements[i];
 			elementReturn = element[method].apply(element, arguments);
 			

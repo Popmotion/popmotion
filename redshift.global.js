@@ -53,41 +53,48 @@
 	"use strict";
 
 	var Redshift = __webpack_require__(2);
-	console.time('load');
+
+	console.time('end');
 	Redshift
-	    .addValueType('hsl', __webpack_require__(3))
-	    .addValueType('rgb', __webpack_require__(4))
-	    .addValueType('hex', __webpack_require__(5))
+	    /*
+	        Core Redshift route
+	    */
+	    .addRoute('values', __webpack_require__(3))
+	    /*
+	        Core Redshift Actions
+	    */
+	    .addAction('play', __webpack_require__(4))
+	    .addAction('run', __webpack_require__(5))
+	    .addAction('fire', __webpack_require__(6))
+	    .addAction('track', __webpack_require__(7))
 
-	    .addElementType('dom', __webpack_require__(6))
+	    /*
+	        Seek Action - depedent on 'play' Action
+	    */
+	    .addAction('seek', __webpack_require__(8))
 
-	    .addAction('play', __webpack_require__(7))
-	    .addAction('run', __webpack_require__(8))
-	    .addAction('fire', __webpack_require__(9))
-	    .addAction('track', __webpack_require__(10))
-	    .addAction('seek', __webpack_require__(11));
+	    /*
+	        Optional value type support
+	    */
+	    .addValueType('hsl', __webpack_require__(9))
+	    .addValueType('rgb', __webpack_require__(10))
+	    .addValueType('hex', __webpack_require__(11))
+	    .addValueType('color', __webpack_require__(12))
+
+	    /*
+	        DOM Element type and CSS/Attr route - dependent on core value types being present
+	    */
+	    //.addElementType('dom', require('../element-types/dom'))
+	    //.addRoute('css', require('../routes/css'))
+	    //.addRoute('attr', require('../routes/attr'))
+
+	    /*
+	        SVG route - dependent on DOM route
+	    */
+	    //.addRoute('path', require('../routes/path'));
 
 	console.timeEnd('load');
 
-	//Redshift.addAction()
-
-	        /*
-	            Add core Actions
-	        
-	Redshift.addAction('play',  require('../actions/play.js'))
-	        .addAction('run',   require('../actions/run.js'))
-	        .addAction('track', require('../actions/track.js'))
-	        .addAction('fire',  require('../actions/fire.js'))
-	        .addAction('seek',  require('../actions/seek.js'))
-
-	        /*
-	            Add core value Routes
-	        
-	        .addRoute('values', require('../routes/values.js'))
-	        .addRoute('css',    require('../routes/css.js'))
-	        .addRoute('attr',   require('../routes/attr.js'))
-	        .addRoute('path',   require('../routes/path.js'));
-	*/
 	module.exports = Redshift;
 
 /***/ },
@@ -96,24 +103,24 @@
 
 	"use strict";
 
-	var select = __webpack_require__(12),
-	    actionManager = __webpack_require__(13),
-	    easingManager = __webpack_require__(14),
-	    presetManager = __webpack_require__(15),
-	    routeManager = __webpack_require__(16),
-	    simulationManager = __webpack_require__(17),
-	    elementTypeManager = __webpack_require__(18),
-	    valueTypeManager = __webpack_require__(19);
+	var select = __webpack_require__(13),
+	    actionManager = __webpack_require__(14),
+	    easingManager = __webpack_require__(15),
+	    presetManager = __webpack_require__(16),
+	    routeManager = __webpack_require__(17),
+	    simulationManager = __webpack_require__(18),
+	    elementTypeManager = __webpack_require__(19),
+	    valueTypeManager = __webpack_require__(20);
 
 	module.exports = {
 
-	    Element: __webpack_require__(20),
+	    Element: __webpack_require__(21),
 
-	    ElementSystem: __webpack_require__(21),
+	    ElementSystem: __webpack_require__(22),
 
-	    Input: __webpack_require__(22),
+	    Input: __webpack_require__(23),
 
-	    Process: __webpack_require__(23),
+	    Process: __webpack_require__(24),
 
 	    select: function (items) {
 	        return select(items);
@@ -160,180 +167,45 @@
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/*
+	    Values route (Redshift default)
+	    
+	    Handles raw values and outputs to user-defined callbacks
+	*/
 	"use strict";
 
-	var getColorValues = __webpack_require__(24),
-
-	    defaults = {
-	        Hue: 0,
-	        Saturation: 100,
-	        Lightness: 50,
-	        Alpha: 0
+	var fireCallback = function (name, bucket, action) {
+	        if (action[name]) {
+	            action[name].call(action.scope, bucket);
+	        }
 	    };
 
 	module.exports = {
-
-	    test: function (value) {
-	        return (value.indexOf('hsl') > -1);
+	    
+	    makeDefault: true,
+	    
+	    onStart: function (bucket, action) {
+	        if (action.onStart) {
+	            action.onStart.call(action.scope);
+	        }
 	    },
 	    
-	    split: function (value) {
-	        var colors = getColorValues(value);
+	    onFrame: function (bucket, action, values) {
+	        fireCallback('onFrame', bucket, action, values);
 	    },
-
-	    combine: function (values) {
-	        var hue = (values.hasOwnProperty('Hue')) ? values.Hue : defaults.Hue,
-	            saturation = (values.hasOwnProperty('Saturation')) ? values.Saturation : defaults.Saturation,
-	            lightness = (values.hasOwnProperty('Lightness')) ? values.Lightness : defaults.Lightness,
-	            alpha = (values.hasOwnProperty('Alpha')) ? values.Alpha : defaults.Alpha;
-
-	        return 'hsla(' + hue + ', ' + saturation + ', ' + lightness + ', ' + alpha + ')';
+	    
+	    onChange: function (bucket, action, values) {
+	        fireCallback('onChange', bucket, action, values);
+	    },
+	    
+	    onEnd: function (bucket, action, values) {
+	        fireCallback('onEnd', bucket, action, values);
 	    }
+	    
 	};
 
 /***/ },
 /* 4 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var getColorValues = __webpack_require__(24),
-
-	    defaults = {
-	        Red: 0,
-	        Green: 0,
-	        Blue: 0,
-	        Alpha: 0
-	    };
-
-	module.exports = {
-
-	    test: function (value) {
-	        return (value.indexOf('rgb') > -1);
-	    },
-	    
-	    split: function (value) {
-	        var colors = getColorValues(value);
-	    },
-
-	    combine: function (values) {
-	        var red = (values.hasOwnProperty('Red')) ? values.Red : defaults.Red,
-	            green = (values.hasOwnProperty('Green')) ? values.Green : defaults.Green,
-	            blue = (values.hasOwnProperty('Blue')) ? values.Blue : defaults.Blue,
-	            alpha = (values.hasOwnProperty('Alpha')) ? values.Alpha : defaults.Alpha;
-
-	        return 'rgba(' + red + ', ' + green + ', ' + blue + ', ' + alpha + ')';
-	    }
-	};
-
-/***/ },
-/* 5 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var rgb = __webpack_require__(4);
-
-	module.exports = {
-
-	    test: function (value) {
-	        return (value.indexOf('#') > -1);
-	    },
-	    
-	    split: function (value) {
-	        var r, g, b;
-
-	        // If we have 6 characters, ie #FF0000
-	        if (value.length > 4) {
-	            r = value.substr(1, 2);
-	            g = value.substr(3, 2);
-	            b = value.substr(5, 2);
-
-	        // Or we have 3 characters, ie #F00
-	        } else {
-	            r = value.substr(1, 1);
-	            g = value.substr(2, 1);
-	            b = value.substr(3, 1);
-	            r += r;
-	            g += g;
-	            b += b;
-	        }
-
-	        return {
-	            Red: parseInt(r, 16),
-	            Green: parseInt(g, 16),
-	            Blue: parseInt(b, 16),
-	            Alpha: 1
-	        }
-	    },
-
-	    combine: function (values) {
-	        return rgb.combine(values);
-	    }
-	};
-
-/***/ },
-/* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var styleDOM = __webpack_require__(25);
-
-	module.exports = {
-
-	    /*
-	        Style DOM element
-
-	        @param [string || object]: Either name of style to get/set or an object of properties to set
-	        @parma [string] (optional): Property to set
-	        @return [object || Element]: Returns calculated style if get, or Element if set
-	    */
-	    style: function (name, prop) {
-	        var propDefined = (prop !== undefined),
-	            isGetter = (nameIsString && !propsDefined),
-	            styles = {},
-	            returnVal;
-
-	        // If this is a getter, pass name and set return value
-	        if (isGetter) {
-	            returnVal = styleDOM.get(name);
-
-	        // If this is a setter
-	        } else {
-	            // If we have a property, add it to our object
-	            if (propDefined) {
-	                styles[name] = prop;
-
-	            // Or overwrite our object
-	            } else {
-	                styles = name;
-	            }
-
-	            styleDOM.set(styles);
-	        }
-
-	        return isGetter ? returnVal : this;
-	    },
-
-	    /*
-	        Get height of DOM element
-	    */
-	    height: function () {
-	        return this.element.offsetHeight;
-	    },
-
-	    /*
-	        Get width of DOM element
-	    */
-	    width: function () {
-	        return this.element.offsetWidth;
-	    }
-
-	};
-
-/***/ },
-/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -343,9 +215,9 @@
 	*/
 	"use strict";
 
-	var calc = __webpack_require__(26),
-	    utils = __webpack_require__(27),
-	    easingManager = __webpack_require__(14),
+	var calc = __webpack_require__(25),
+	    utils = __webpack_require__(26),
+	    easingManager = __webpack_require__(15),
 
 	    playAction = {
 
@@ -353,7 +225,7 @@
 	        surpressMethod: true,
 
 	        // [object] Methods to add to Element.prototype
-	        elementMethods: __webpack_require__(28),
+	        elementMethods: __webpack_require__(27),
 
 	        /*
 	            Update Action elapsed time
@@ -419,7 +291,7 @@
 
 
 /***/ },
-/* 8 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -427,11 +299,12 @@
 	*/
 	"use strict";
 
-	var calc = __webpack_require__(26);
+	var calc = __webpack_require__(25),
+	    simulate = __webpack_require__(18);
 
 	module.exports = {
 
-	    parse: __webpack_require__(29),
+	    parse: __webpack_require__(28),
 
 	    // [boolean]: Tell Redshift this rubix calculates a new velocity itself
 	    calculatesVelocity: true,
@@ -494,7 +367,7 @@
 	};
 
 /***/ },
-/* 9 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -504,7 +377,7 @@
 
 	module.exports = {
 
-	    parse: __webpack_require__(29),
+	    parse: __webpack_require__(28),
 
 	   /*
 	        Process new value
@@ -531,7 +404,7 @@
 	};
 
 /***/ },
-/* 10 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -539,9 +412,9 @@
 	*/
 	"use strict";
 
-	var calc = __webpack_require__(26),
-	    genericParser = __webpack_require__(29),
-	    Pointer = __webpack_require__(30);
+	var calc = __webpack_require__(25),
+	    genericParser = __webpack_require__(28),
+	    Pointer = __webpack_require__(29);
 
 	module.exports = {
 
@@ -592,7 +465,7 @@
 	};
 
 /***/ },
-/* 11 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -600,7 +473,7 @@
 	*/
 	"use strict";
 
-	var play = __webpack_require__(7);
+	var play = __webpack_require__(4);
 
 	module.exports = {
 
@@ -643,12 +516,164 @@
 	};
 
 /***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var getColorValues = __webpack_require__(30),
+
+	    defaults = {
+	        Hue: 0,
+	        Saturation: 100,
+	        Lightness: 50,
+	        Alpha: 0
+	    };
+
+	module.exports = {
+
+	    test: function (value) {
+	        return (value.indexOf('hsl') > -1);
+	    },
+	    
+	    split: function (value) {
+	        var colors = getColorValues(value);
+	    },
+
+	    combine: function (values) {
+	        var hue = (values.hasOwnProperty('Hue')) ? values.Hue : defaults.Hue,
+	            saturation = (values.hasOwnProperty('Saturation')) ? values.Saturation : defaults.Saturation,
+	            lightness = (values.hasOwnProperty('Lightness')) ? values.Lightness : defaults.Lightness,
+	            alpha = (values.hasOwnProperty('Alpha')) ? values.Alpha : defaults.Alpha;
+
+	        return 'hsla(' + hue + ', ' + saturation + ', ' + lightness + ', ' + alpha + ')';
+	    }
+	};
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var getColorValues = __webpack_require__(30),
+
+	    defaults = {
+	        Red: 0,
+	        Green: 0,
+	        Blue: 0,
+	        Alpha: 0
+	    };
+
+	module.exports = {
+
+	    test: function (value) {
+	        return (value.indexOf('rgb') > -1);
+	    },
+	    
+	    split: function (value) {
+	        var colors = getColorValues(value);
+	    },
+
+	    combine: function (values) {
+	        var red = (values.hasOwnProperty('Red')) ? values.Red : defaults.Red,
+	            green = (values.hasOwnProperty('Green')) ? values.Green : defaults.Green,
+	            blue = (values.hasOwnProperty('Blue')) ? values.Blue : defaults.Blue,
+	            alpha = (values.hasOwnProperty('Alpha')) ? values.Alpha : defaults.Alpha;
+
+	        return 'rgba(' + red + ', ' + green + ', ' + blue + ', ' + alpha + ')';
+	    }
+	};
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var rgb = __webpack_require__(10);
+
+	module.exports = {
+
+	    test: function (value) {
+	        return (value.indexOf('#') > -1);
+	    },
+	    
+	    split: function (value) {
+	        var r, g, b;
+
+	        // If we have 6 characters, ie #FF0000
+	        if (value.length > 4) {
+	            r = value.substr(1, 2);
+	            g = value.substr(3, 2);
+	            b = value.substr(5, 2);
+
+	        // Or we have 3 characters, ie #F00
+	        } else {
+	            r = value.substr(1, 1);
+	            g = value.substr(2, 1);
+	            b = value.substr(3, 1);
+	            r += r;
+	            g += g;
+	            b += b;
+	        }
+
+	        return {
+	            Red: parseInt(r, 16),
+	            Green: parseInt(g, 16),
+	            Blue: parseInt(b, 16),
+	            Alpha: 1
+	        }
+	    },
+
+	    combine: function (values) {
+	        return rgb.combine(values);
+	    }
+	};
+
+/***/ },
 /* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var ElementSystem = __webpack_require__(21);
+	var rgb = __webpack_require__(10),
+	    hsl = __webpack_require__(9),
+	    hex = __webpack_require__(11),
+	    supported = [rgb, hsl, hex],
+	    numSupported = 3,
+
+	    runSupported = function (method, value) {
+	        for (var i = 0; i < numSupported; i++) {
+	            if (supported[i].test(value)) {
+	                return supported[i][method](value);
+	            }
+	        }
+	    };
+
+	module.exports = {
+
+	    test: function (value) {
+	        return rgb.test(value) || hex.test(value) || hsl.test(value);
+	    },
+
+	    split: function (value) {
+	        return runSupported('split', value);
+	    },
+
+	    combine: function () {
+	        return runSupported('combine', value);
+	    }
+
+	};
+
+/***/ },
+/* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var ElementSystem = __webpack_require__(22);
 
 	/*
 	    Create an ElementSystem based on a selection of DOM nodes
@@ -678,7 +703,7 @@
 	};
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -726,16 +751,6 @@
 
 
 /***/ },
-/* 14 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var ModuleManager = __webpack_require__(31);
-
-	module.exports = new ModuleManager();
-
-/***/ },
 /* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -771,9 +786,95 @@
 
 	"use strict";
 
-	var ModuleManager = __webpack_require__(31);
+	var calc = __webpack_require__(25),
+	    speedPerFrame = calc.speedPerFrame,
 
-	module.exports = new ModuleManager();
+	    ModuleManager = __webpack_require__(31),
+	    simulationManager = new ModuleManager();
+
+	/*
+	    Add core physics simulations
+	*/
+	simulationManager
+
+	    /*
+	        Velocity
+	        
+	        The default .run() simulation.
+	        
+	        Applies any set deceleration and acceleration to existing velocity
+	    */
+	    .add('velocity', function (value, duration) {
+	        return value.velocity - speedPerFrame(value.deceleration, duration) + speedPerFrame(value.acceleration, duration);
+	    })
+	    
+	    /*
+	        Glide
+	        
+	        Emulates touch device scrolling effects with exponential decay
+	        http://ariya.ofilabs.com/2013/11/javascript-kinetic-scrolling-part-2.html
+	    */
+	    .add('glide', function (value, duration, started) {
+	        var timeUntilFinished = - utils.currentTime() - started,
+	            delta = - value.to * Math.exp(timeUntilFinished / value.timeConstant);
+
+	        return (value.to + delta) - value.current;
+	    })
+
+	    /*
+	        Friction
+
+	        TODO: fold into core physics simulation
+	    */
+	    .add('friction', function (value, duration) {
+	        var newVelocity = speedPerFrame(value.velocity, duration) * (1 - value.friction);
+	        return calc.speedPerSecond(newVelocity, duration);
+	    })
+	    
+	    /*
+	        Spring
+	    */
+	    .add('spring', function (value, duration) {
+	        var distance = value.to - value.current;
+	        
+	        value.velocity += distance * speedPerFrame(value.spring, duration);
+	        
+	        return simulationManager.friction(value, duration);
+	    })
+	    
+	    /*
+	        Bounce
+	        
+	        Invert velocity and reduce by provided fraction
+	    */
+	    .add('bounce', function (value) {
+	        var distance = 0,
+	            to = value.to,
+	            current = value.current,
+	            bounce = value.bounce;
+	        
+	        // If we're using glide simulation we have to flip our target too
+	        if (value.simulate === 'glide') {
+	            distance = to - current;
+	            value.to = current - (distance * bounce);
+	        }
+	        
+	        return value.velocity *= - bounce;
+	    })
+	    
+	    /*
+	        Capture
+	        
+	        Convert simulation to spring and set target to limit
+	    */
+	    .add('capture', function (value, target) {
+	        value.to = target;
+	        value.simulate = 'spring';
+	        value.capture = value.min = value.max = undefined;
+	    });
+
+	module.exports = simulationManager;
+
 
 /***/ },
 /* 19 */
@@ -791,12 +892,22 @@
 
 	"use strict";
 
-	var Process = __webpack_require__(23),
+	var ModuleManager = __webpack_require__(31);
+
+	module.exports = new ModuleManager();
+
+/***/ },
+/* 21 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var Process = __webpack_require__(24),
 	    Queue = __webpack_require__(32),
-	    utils = __webpack_require__(27),
+	    utils = __webpack_require__(26),
 	    update = __webpack_require__(33),
 	    valueOps = __webpack_require__(34),
-	    actionManager = __webpack_require__(13),
+	    actionManager = __webpack_require__(14),
 
 	    Element = function (element) {
 	        this.element = element || false;
@@ -990,12 +1101,12 @@
 	module.exports = Element;
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var Element = __webpack_require__(20),
+	var Element = __webpack_require__(21),
 	    generateMethodIterator = __webpack_require__(35),
 
 	    /*
@@ -1085,7 +1196,7 @@
 	module.exports = ElementSystem;
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -1093,8 +1204,8 @@
 	*/
 	"use strict";
 
-	var calc = __webpack_require__(26),
-	    utils = __webpack_require__(27),
+	var calc = __webpack_require__(25),
+	    utils = __webpack_require__(26),
 	    History = __webpack_require__(36),
 
 	    /*
@@ -1216,7 +1327,7 @@
 	module.exports = Input;
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1381,91 +1492,7 @@
 	module.exports = Process;
 
 /***/ },
-/* 24 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var splitCommaDelimited = __webpack_require__(38),
-	    functionBreak = __webpack_require__(39);
-
-	module.exports = function (value) {
-	    return splitCommaDelimited(functionBreak(value));
-	};
-
-/***/ },
 /* 25 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var styleDOM = function () {
-		var testElement,
-			prefixes = ['Webkit','Moz','O','ms', ''],
-			prefixesLength = prefixes.length,
-			cache = {},
-			
-			/*
-				Test style property for prefixed version
-				
-				@param [string]: Style property
-				@return [string]: Cached property name
-			*/
-			testPrefix = function (key) {
-				cache[key] = key;
-
-				for (var i = 0; i < prefixesLength; i++) {
-					var prefixed = prefixes[i] + key.charAt(0).toUpperCase() + key.slice(1);
-
-					if (testElement.style.hasOwnProperty(prefixed)) {
-						cache[key] = prefixed;
-					}
-				}
-				
-				return cache[key];
-			},
-
-		    // Cache body tag if we haven't already
-			cacheTestElement = function () {
-				testElement = testElement || document.getElementsByTagName('body')[0];
-			};
-		
-		/*
-			Style DOM functions
-		*/
-		return {
-
-			/*
-				Get DOM styles
-
-				@param [DOM Element]: Element to get styles from
-				@param [string]: Name of style to read
-			*/
-			get: function (element, name) {
-				testElement = cacheTestElement();
-				return window.getComputedStyle(element, null)[cache[name] || testPrefix(name)];
-			},
-
-			/*
-				Set DOM styles
-
-				@param [DOM Element]: Element to set styles on
-				@param [object]: DOM styles to set
-			*/
-			set: function (element, props) {
-				testElement = cacheTestElement();
-			    for (var key in props) {
-					if (props.hasOwnProperty(key)) {
-						element.style[cache[key] || testPrefix(key)] = props[key];
-					}
-				}
-			}
-
-		};
-	};
-
-	module.exports = new styleDOM();
-
-/***/ },
-/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -1476,7 +1503,7 @@
 	*/
 	"use strict";
 
-	var utils = __webpack_require__(27),
+	var utils = __webpack_require__(26),
 
 	    calc = {
 	        
@@ -1823,7 +1850,7 @@
 	module.exports = calc;
 
 /***/ },
-/* 27 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -2068,13 +2095,13 @@
 	};
 
 /***/ },
-/* 28 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var parseArgs = __webpack_require__(40),
-	    utils = __webpack_require__(27);
+	var parseArgs = __webpack_require__(38),
+	    utils = __webpack_require__(26);
 
 	module.exports = {
 	    /*
@@ -2178,12 +2205,12 @@
 	};
 
 /***/ },
-/* 29 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var presetManager = __webpack_require__(15);
+	var presetManager = __webpack_require__(16);
 
 	module.exports = function (base, override) {
 	    var props = (typeof base === 'string') ? presetManager.getDefined(base) : {};
@@ -2195,12 +2222,12 @@
 	}
 
 /***/ },
-/* 30 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var Input = __webpack_require__(41),
+	var Input = __webpack_require__(23),
 	    currentPointer, // Sort this out for multitouch
 	    
 	    TOUCHMOVE = 'touchmove',
@@ -2287,6 +2314,17 @@
 	};
 
 	module.exports = Pointer;
+
+/***/ },
+/* 30 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var splitCommaDelimited = __webpack_require__(39),
+	    functionBreak = __webpack_require__(40);
+
+	module.exports = function (value) {
+	    return splitCommaDelimited(functionBreak(value));
+	};
 
 /***/ },
 /* 31 */
@@ -2466,7 +2504,7 @@
 				element,
 				elementReturn;
 				
-			for (; i < numActions; i++) {
+			for (; i < numElements; i++) {
 				element = this.elements[i];
 				elementReturn = element[method].apply(element, arguments);
 				
@@ -2561,7 +2599,7 @@
 
 	"use strict";
 
-	var theLoop = __webpack_require__(42),
+	var theLoop = __webpack_require__(41),
 	    ProcessManager = function () {
 	        this.all = {};
 	        this.active = [];
@@ -2734,26 +2772,10 @@
 /* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = function (value) {
-	    return (typeof value === 'string') ? value.split(/,\s*/) : [value];
-	};
-
-/***/ },
-/* 39 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = function (value) {
-	    return value.substring(value.indexOf('(') + 1, value.lastIndexOf(')'));
-	};
-
-/***/ },
-/* 40 */
-/***/ function(module, exports, __webpack_require__) {
-
 	"use strict";
 
-	var presetManager = __webpack_require__(15),
-	    utils = __webpack_require__(27);
+	var presetManager = __webpack_require__(16),
+	    utils = __webpack_require__(26);
 
 	module.exports = function (base, override) {
 	    var props = {},
@@ -2797,138 +2819,23 @@
 	};
 
 /***/ },
-/* 41 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/*
-	    Input controller
-	*/
-	"use strict";
-
-	var calc = __webpack_require__(26),
-	    utils = __webpack_require__(27),
-	    History = __webpack_require__(36),
-
-	    /*
-	        Input constructor
-	        
-	            Syntax
-	                newInput(name, value[, poll])
-	                    @param [string]: Name of to track
-	                    @param [number]: Initial value
-	                    @param [function] (optional): Function to poll Input data
-	                    
-	                newInput(props[, poll])
-	                    @param [object]: Object of values
-	                    @param [function] (optional): Function to poll Input data
-
-	        @return [Input]
-	    */
-	    Input = function () {
-	        var pollPos = arguments.length - 1;
-
-	        this.current = {};
-	        this.offset = {};
-	        this.velocity = {};
-	        this.history = new History();
-	        this.update(arguments[0], arguments[1]);
-	        
-	        if (utils.isFunc(arguments[pollPos])) {
-	            this.poll = arguments[pollPos];
-	        }
-	    };
-
-	Input.prototype = {
-	    
-	    // [number]: Number of frames of inactivity before velocity is turned to 0
-	    maxInactiveFrames: 2,
-	    
-	    // [number]: Number of frames input hasn't been updated
-	    inactiveFrames: 0,
-	    
-	    /*
-	        Get latest input values
-	        
-	        @param [string] (optional): Name of specific property to return
-	        @return [object || number]: Latest input values or, if specified, single value
-	    */
-	    get: function (prop) {
-	        var latest = this.history.get(),
-	            val = (prop !== undefined) ? latest[prop] : latest;
-	        
-	        return val;
-	    },
-
-	    /*
-	        Update the input values
-	        
-	        Syntax
-	            input.update(name, value)
-	                @param [string]: Name of to track
-	                @param [number]: Initial value
-	                
-	            input.update(props)
-	                @param [object]: Object of values
-	                
-	        @return [Input]
-	    */
-	    update: function (arg0, arg1) {
-	        var values = {};
-
-	        if (utils.isNum(arg1)) {
-	            values[arg0] = arg1;
-	        } else {
-	            values = arg0;
-	        }
-
-	        this.history.add(utils.merge(this.current, values));
-	        
-	        return this;
-	    },
-	    
-	    /*
-	        Check for input movement and update pointer object's properties
-	        
-	        @param [number]: Timestamp of frame
-	        @return [Input]
-	    */
-	    onFrame: function (timestamp) {
-	        var latest, hasChanged;
-	        
-	        // Check provided timestamp against lastFrame timestamp and return input has already been updated
-	        if (timestamp === this.lastFrame) {
-	            return;
-	        }
-	        
-	        latest = (this.poll) ? this.poll() : this.history.get();
-	        hasChanged = utils.hasChanged(this.current, latest);
-
-	        // If input has changed between frames  
-	        if (hasChanged) {
-	            this.velocity = calc.offset(this.current, latest);
-	            this.current = latest;
-	            this.inactiveFrames = 0;
-
-	        // Or it hasn't moved and our frame limit has been reached
-	        } else if (this.inactiveFrames >= this.maxInactiveFrames) {
-	            this.velocity = calc.offset(this.current, this.current);
-	        
-	        // Or input hasn't changed
-	        } else {
-	            this.inactiveFrames++;
-	        }
-	        
-	        this.lastFrame = timestamp;
-	        
-	        return this;
-	    }
-	    
+	module.exports = function (value) {
+	    return (typeof value === 'string') ? value.split(/,\s*/) : [value];
 	};
 
-	module.exports = Input;
+/***/ },
+/* 40 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = function (value) {
+	    return value.substring(value.indexOf('(') + 1, value.lastIndexOf(')'));
+	};
 
 /***/ },
-/* 42 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -2936,8 +2843,8 @@
 	*/
 	"use strict";
 
-	var Timer = __webpack_require__(43),
-	    tick = __webpack_require__(44),
+	var Timer = __webpack_require__(42),
+	    tick = __webpack_require__(43),
 	    Loop = function () {
 	        this.timer = new Timer();
 	    };
@@ -3002,12 +2909,12 @@
 	module.exports = new Loop();
 
 /***/ },
-/* 43 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var utils = __webpack_require__(27),
+	var utils = __webpack_require__(26),
 
 	    maxElapsed = 33,
 	    Timer = function () {
@@ -3037,7 +2944,7 @@
 	module.exports = Timer;
 
 /***/ },
-/* 44 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";

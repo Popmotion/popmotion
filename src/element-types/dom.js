@@ -36,20 +36,6 @@ module.exports = {
         }
 
         return isGetter ? returnVal : this;
-    },
-
-    /*
-        Get height of DOM element
-    */
-    height: function () {
-        return this.element.offsetHeight;
-    },
-
-    /*
-        Get width of DOM element
-    */
-    width: function () {
-        return this.element.offsetWidth;
     }
 
 };
