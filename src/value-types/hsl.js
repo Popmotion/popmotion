@@ -3,10 +3,10 @@
 var getColorValues = require('./manipulators/get-color-values.js'),
 
     defaults = {
-        Hue: 0,
-        Saturation: 100,
-        Lightness: 50,
-        Alpha: 0
+        hue: 0,
+        saturation: 100,
+        lightness: 50,
+        alpha: 0
     };
 
 module.exports = {
@@ -17,13 +17,15 @@ module.exports = {
     
     split: function (value) {
         var colors = getColorValues(value);
+
+        return defaults;
     },
 
     combine: function (values) {
-        var hue = (values.hasOwnProperty('Hue')) ? values.Hue : defaults.Hue,
-            saturation = (values.hasOwnProperty('Saturation')) ? values.Saturation : defaults.Saturation,
-            lightness = (values.hasOwnProperty('Lightness')) ? values.Lightness : defaults.Lightness,
-            alpha = (values.hasOwnProperty('Alpha')) ? values.Alpha : defaults.Alpha;
+        var hue = (values.hasOwnProperty('hue')) ? values.hue : defaults.hue,
+            saturation = (values.hasOwnProperty('saturation')) ? values.saturation : defaults.saturation,
+            lightness = (values.hasOwnProperty('lightness')) ? values.lightness : defaults.lightness,
+            alpha = (values.hasOwnProperty('alpha')) ? values.alpha : defaults.alpha;
 
         return 'hsla(' + hue + ', ' + saturation + ', ' + lightness + ', ' + alpha + ')';
     }

@@ -12,7 +12,7 @@ var calc = require('../inc/calc'),
     playAction = {
 
         // [object] Default Action properties
-        defaultActionProps: require('./play/default-action-props'),
+        actionDefaults: require('./play/default-action-props'),
 
         // [boolean] Prevent Redshift from autogenerating Element.prototype.play()
         surpressMethod: true,
@@ -26,7 +26,7 @@ var calc = require('../inc/calc'),
             @param [object]: Action properties
             @param [number]: Timestamp of current frame
         */
-        updateInput: function (frameDuration) {
+        onFrameStart: function (frameDuration) {
             this.elapsed += (frameDuration * this.dilate) * this.playDirection;
             this.hasEnded = true;
         },
@@ -41,7 +41,7 @@ var calc = require('../inc/calc'),
         */
         process: function (key, value) {
             var target = value.to,
-                progressTarget = (this.playDirection === 1) ? 1 : 0;
+                progressTarget = (this.playDirection === 1) ? 1 : 0,
                 newValue = value.current,
                 progress;
 

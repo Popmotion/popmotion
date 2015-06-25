@@ -1,13 +1,10 @@
 "use strict";
 
-var build = require('./css/build.js'),
-    split = require('./css/split.js'),
-    
-    css = 'css',
-    cssOrder = css + 'Order',
-    cssCache = css + 'Cache';
+var lookup = require('./css/lookup');
 
 module.exports = {
+    typeMap: lookup,
+
     preprocess: function (key, value, action) {
         var values = split(key, value, action);
         

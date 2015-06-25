@@ -5,17 +5,20 @@ Redshift adheres to [Semantic Versioning](http://semver.org/). Change log added 
 ## [3.0.0] Unreleased
 
 ### Added
-- Value types added.
+- New Actions (previous "Rubix") can extend Elements with custom methods.
+- Value types added. Now any value going through any route (css/values/attr etc) can be a special value (like a color value). Add new value splitters/combiners with `Redshift.addValueType()`.
 - Element types added.
+- Super modular structure allows you to rip out or extend virtually every facet of Redshift.
 
 ### Changed
 - Changed `redshift` to `Redshift`
 - `redshift.newX()` functions changed to `new Redshift.X()` constructors:
-    - `newAction` -> `Element`
-    - `newActionGroup` -> `ElementSystem`
-    - `newInput` -> `Input`
-    - `newProcess` -> `Process`
-- `redshift.dom()` replaced with `Redshift.select()`, which will take a DOM selector, NodeList, or array of object literals and return an `ElementSystem` with each item assigned an `Element`.
+    - `newAction` -> `new Element`
+    - `newActionGroup` -> `new ElementSystem`
+    - `newInput` -> `new Input`
+    - `newProcess` -> `new Process`
+This cuts out a function call and allows developers to extend these prototypes.
+- `redshift.dom()` replaced with `Redshift.select()`, which will take a DOM selector, NodeList, or array of object literals and return an `ElementSystem` with each item assigned its own `Element`.
 - `redshift.addRubix()` changed to `Redshift.addAction()`, for clearer and semantic naming. 
 
 ## [2.1.1] 2015-06-11

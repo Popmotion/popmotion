@@ -9,7 +9,10 @@ var calc = require('../inc/calc'),
 module.exports = {
 
     // [object] Default Action properties
-    defaultActionProps: require('./run/default-action-props'),
+    actionDefaults: require('./run/default-action-props'),
+
+    // [object] Default value properties
+    valueDefaults: require('./run/default-value-props'),
 
     parse: require('./generic/parse-args'),
 

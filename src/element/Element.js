@@ -33,17 +33,9 @@ Element.prototype = {
         this.resetProps();
         this.setProps(props);
 
-        defaultValueProp = defaultValueProp || 'current';
-
         // Loop over routes and process value definitions
         routeManager.shard(function (route, routeName, values) {
-            var key = '';
-
-            for (key in values) {
-                if (values.hasOwnProperty(key)) {
-                    
-                }
-            }
+            self.setValues(values, routeName, defaultValueProp);
         }, props);
 
         return this;
@@ -176,6 +168,18 @@ Element.prototype = {
         this.setProps(actionManager[this.action].defaultActionProps);
         return this;
     },
+
+    /*
+        Set values
+
+        @param [object || string || number]: Value
+        @param [string] (optional): Name of route
+        @param [string] (optional): Default property to set
+    */
+    setValues: function (values, namespace, defaultValueProp) {
+        valueOps.process(values, this, namespace, defaultValueProp);
+        return this;
+    },
     
     /*
         Update order of value keys
@@ -183,8 +187,8 @@ Element.prototype = {
         @param [string]: Key of value
         @param [boolean]: Whether to move value to back
     */
-    updateOrder: function (key, moveToBack) {
-        var order = this.order,
+    updateOrder: function (key, moveToBack, hasChildren) {
+        var order = !hasChildren ? this.order : this.parentOrder,
             position = order.indexOf(key);
 
         // If key isn't in list, or moveToBack is set to true, add key
@@ -205,6 +209,7 @@ Element.prototype = {
     */
     clearOrder: function () {
         this.order = [];
+        this.parentOrder = [];
         return this;
     },
 

@@ -1,6 +1,6 @@
 "use strict";
 
-var COLOR = 'colors',
+var COLOR = 'color',
     POSITIONS = 'positions',
     TRANSFORM = 'transform',
     DIMENSIONS = 'dimensions',

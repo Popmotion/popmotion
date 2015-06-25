@@ -26,6 +26,14 @@ module.exports = {
 
     combine: function () {
         return runSupported('combine', value);
+    },
+
+    defaultProps: function () {
+        return {
+            min: 0,
+            max: 255,
+            round: true
+        };
     }
 
 };

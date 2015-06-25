@@ -1,8 +1,10 @@
 "use strict";
 
+
+console.time('load');
+
 var Redshift = require('../redshift');
 
-console.time('end');
 Redshift
     /*
         Core Redshift route
@@ -32,14 +34,14 @@ Redshift
     /*
         DOM Element type and CSS/Attr route - dependent on core value types being present
     */
-    //.addElementType('dom', require('../element-types/dom'))
-    //.addRoute('css', require('../routes/css'))
-    //.addRoute('attr', require('../routes/attr'))
+    .addElementType('dom', require('../element-types/dom'))
+    .addRoute('css', require('../routes/css'))
+    .addRoute('attr', require('../routes/attr'))
 
     /*
         SVG route - dependent on DOM route
     */
-    //.addRoute('path', require('../routes/path'));
+    .addRoute('path', require('../routes/path'));
 
 console.timeEnd('load');
 

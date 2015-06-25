@@ -9,7 +9,7 @@ var calc = require('../inc/calc'),
 
 module.exports = {
 
-    defaultValueProps: require('./track/default-value-props'),
+    valueDefaults: require('./track/default-value-props'),
 
     /*
         Parse Input arguments
@@ -30,9 +30,9 @@ module.exports = {
     },
     
     /*
-        Update Input
+        Update input offset
     */
-    updateInput: function () {
+    onFrameStart: function () {
         this.inputOffset = calc.offset(this.inputOrigin, this.input.current);
     },
         

@@ -38,10 +38,10 @@ actionManager.extend = function (name, module) {
     }
 
     // Merge action props with defaults
-    module.defaultActionProps = module.defaultActionProps ? utils.merge(genericActionProps, module.defaultActionProps) : genericActionProps;
+    module.actionDefaults = module.actionDefaults ? utils.merge(genericActionProps, module.actionDefaults) : genericActionProps;
 
     // Merge value props with defaults
-    module.defaultValueProps = module.defaultValueProps ? utils.merge(genericValueProps, module.defaultValueProps) : genericValueProps;
+    module.valueDefaults = module.valueDefaults ? utils.merge(genericValueProps, module.valueDefaults) : genericValueProps;
 
     // Call parent extend method
     ModuleManager.prototype.extend.call(this, name, module);
