@@ -901,11 +901,193 @@
 /* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/*
+	    Easing functions
+	    ----------------------------------------
+	    
+	    Generates and provides easing functions based on baseFunction definitions
+	    
+	    A call to easingFunction.get('functionName') returns a function that can be passed:
+	        @param [number]: Progress 0-1
+	        @param [number] (optional): Amp modifier, only accepted in some easing functions
+	                                    and is used to adjust overall strength
+	        @return [number]: Eased progress
+	        
+	    We can generate new functions by sending an easing function through easingFunction.extend(name, method).
+	    Which will make nameIn, nameOut and nameInOut functions available to use.
+	        
+	    Easing functions from Robert Penner
+	    http://www.robertpenner.com/easing/
+	        
+	    Bezier curve interpretor created from Gaëtan Renaudeau's original BezierEasing  
+	    https://github.com/gre/bezier-easing/blob/master/index.js  
+	    https://github.com/gre/bezier-easing/blob/master/LICENSE
+	*/
 	"use strict";
 
-	var ModuleManager = __webpack_require__(44);
+	var calc = __webpack_require__(29),
+	    Bezier = __webpack_require__(45),
 
-	module.exports = new ModuleManager();
+	    EASE_IN = 'In',
+	    EASE_OUT = 'Out',
+	    EASE_IN_OUT = EASE_IN + EASE_OUT,
+	    
+	    // Base power ease names
+	    powerEasing = ['ease', 'cubic', 'quart', 'quint'],
+	    
+	    // Generate easing function with provided power
+	    generatePowerEasing = function (power) {
+	        return function (progress) {
+	            return Math.pow(progress, power);
+	        }
+	    },
+
+	    /*
+	        Each of these base functions is an easeIn
+	        
+	        On init, we use EasingFunction.mirror and .reverse to generate easeInOut and
+	        easeOut functions respectively.
+	    */
+	    baseEasing = {
+	        circ: function (progress) {
+	            return 1 - Math.sin(Math.acos(progress));
+	        },
+	        back: function (progress) {
+	            var strength = 1.5;
+
+	            return (progress * progress) * ((strength + 1) * progress - strength);
+	        }
+	    },
+	    
+	    /*
+	        Mirror easing
+	        
+	        Mirrors the provided easing function, used here for mirroring an
+	        easeIn into an easeInOut
+	        
+	        @param [number]: Progress, from 0 - 1, of current shift
+	        @param [function]: The easing function to mirror
+	        @returns [number]: The easing-adjusted delta
+	    */
+	    mirrorEasing = function (progress, method) {
+	        return (progress <= 0.5) ? method(2 * progress) / 2 : (2 - method(2 * (1 - progress))) / 2;
+	    },
+	            
+	    /*
+	        Reverse easing
+	        
+	        Reverses the output of the provided easing function, used for flipping easeIn
+	        curve to an easeOut.
+	        
+	        @param [number]: Progress, from 0 - 1, of current shift
+	        @param [function]: The easing function to reverse
+	        @returns [number]: The easing-adjusted delta
+	    */
+	    reverseEasing = function (progress, method) {
+	        return 1 - method(1 - progress);
+	    },
+	    
+	    /*
+	        Add new easing function
+	        
+	        Takes name and generates nameIn, nameOut, nameInOut, and easing functions to match
+	        
+	        @param [string]: Base name of the easing functions to generate
+	        @param [function]: Base easing function, as an easeIn, from which to generate Out and InOut
+	    */
+	    generateVariations = function (name, method) {
+	        var easeIn = name + EASE_IN,
+	            easeOut = name + EASE_OUT,
+	            easeInOut = name + EASE_IN_OUT,
+	            baseName = easeIn,
+	            reverseName = easeOut;
+
+	        // Create the In function
+	        easingManager[baseName] = method;
+
+	        // Create the Out function by reversing the transition curve
+	        easingManager[reverseName] = function (progress) {
+	            return reverseEasing(progress, easing[baseName]);
+	        };
+	        
+	        // Create the InOut function by mirroring the transition curve
+	        easingManager[easeInOut] = function (progress) {
+	            return mirrorEasing(progress, easing[baseName]);
+	        };
+	    },
+
+	    ModuleManager = __webpack_require__(44),
+	    easingManager = new ModuleManager();
+
+	/*
+	    Extend easing functions
+	*/
+	easingManager.extend = function (name, x1, y1, x2, y2) {
+	    // If this is an easing function, generate variations
+	    if (typeof x1 === 'function') {
+	        generateVariations(name, x1);
+
+	    // Otherwise it's a bezier curve, so generate new Bezier curve function
+	    } else {
+	        this[name] = new Bezier(x1, y1, x2, y2);
+	    }
+
+	    return this;
+	};
+
+	/*
+	    Ease value within ranged parameters
+	    
+	    @param [number]: Progress between 0 and 1
+	    @param [number]: Value of 0 progress
+	    @param [number]: Value of 1 progress
+	    @param [string]: Easing to use
+	    @param [number]: Amplify progress out of specified range
+	    @return [number]: Value of eased progress in range
+	*/  
+	easingManager.withinRange = function (progress, from, to, ease, escapeAmp) {
+	    var progressLimited = calc.restricted(progress, 0, 1);
+
+	    if (progressLimited !== progress && escapeAmp) {
+	        ease = 'linear';
+	        progressLimited = progressLimited + ((progress - progressLimited) * escapeAmp);
+	    }
+
+	    return calc.valueEased(progressLimited, from, to, this.get(ease));
+	};
+	            
+	/*
+	    Linear easing adjustment
+	    
+	    The default easing method, not added with .extend as it has no Out or InOut
+	    variation.
+	    
+	    @param [number]: Progress, from 0-1
+	    @return [number]: Unadjusted progress
+	*/
+	easingManager.linear = function (progress) {
+	    return progress;
+	};
+
+	// Initalise easing
+	(function () {
+	    var i = 0,
+	        key = '';
+	        
+	    // Generate power easing functions
+	    for (; i < 4; i++) {
+	        baseEasing[powerEasing[i]] = generatePowerEasing(i + 2);
+	    }
+	    
+	    // Generate in/out/inOut easing variations
+	    for (key in baseEasing) {
+	        if (baseEasing.hasOwnProperty(key)) {
+	            generateVariations(key, baseEasing[key]);
+	        }
+	    }
+	})();
+
+	module.exports = easingManager;
 
 /***/ },
 /* 20 */
@@ -1072,10 +1254,10 @@
 	"use strict";
 
 	var Process = __webpack_require__(28),
-	    Queue = __webpack_require__(45),
+	    Queue = __webpack_require__(46),
 	    utils = __webpack_require__(30),
-	    update = __webpack_require__(46),
-	    valueOps = __webpack_require__(47),
+	    update = __webpack_require__(47),
+	    valueOps = __webpack_require__(48),
 	    actionManager = __webpack_require__(18),
 	    routeManager = __webpack_require__(21),
 
@@ -1324,7 +1506,7 @@
 	"use strict";
 
 	var Element = __webpack_require__(25),
-	    generateMethodIterator = __webpack_require__(48),
+	    generateMethodIterator = __webpack_require__(49),
 
 	    /*
 	        ElementSystem constructor
@@ -1423,7 +1605,7 @@
 
 	var calc = __webpack_require__(29),
 	    utils = __webpack_require__(30),
-	    History = __webpack_require__(49),
+	    History = __webpack_require__(50),
 
 	    /*
 	        Input constructor
@@ -1549,7 +1731,7 @@
 
 	"use strict";
 
-	var manager = __webpack_require__(50),
+	var manager = __webpack_require__(51),
 
 	    /*
 	        Process constructor
@@ -2345,7 +2527,7 @@
 
 	"use strict";
 
-	var parseArgs = __webpack_require__(51),
+	var parseArgs = __webpack_require__(52),
 	    utils = __webpack_require__(30);
 
 	module.exports = {
@@ -2620,8 +2802,8 @@
 /* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var splitCommaDelimited = __webpack_require__(52),
-	    functionBreak = __webpack_require__(53);
+	var splitCommaDelimited = __webpack_require__(53),
+	    functionBreak = __webpack_require__(54);
 
 	module.exports = function (value) {
 	    return splitCommaDelimited(functionBreak(value));
@@ -2751,7 +2933,7 @@
 
 	"use strict";
 
-	var lookup = __webpack_require__(54),
+	var lookup = __webpack_require__(55),
 
 	    /*
 	        Convert percentage to pixels
@@ -2895,6 +3077,178 @@
 /* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/* WEBPACK VAR INJECTION */(function(global) {/*
+	    Bezier function generator
+	        
+	    Gaëtan Renaudeau's BezierEasing
+	    https://github.com/gre/bezier-easing/blob/master/index.js  
+	    https://github.com/gre/bezier-easing/blob/master/LICENSE
+	    You're a hero
+	    
+	    Use
+	    
+	        var easeOut = new Bezier(.17,.67,.83,.67),
+	            x = easeOut(0.5); // returns 0.627...
+	*/
+	"use strict";
+
+	var NEWTON_ITERATIONS = 8,
+	    NEWTON_MIN_SLOPE = 0.001,
+	    SUBDIVISION_PRECISION = 0.0000001,
+	    SUBDIVISION_MAX_ITERATIONS = 10,
+	    K_SPLINE_TABLE_SIZE = 11,
+	    K_SAMPLE_STEP_SIZE = 1.0 / (K_SPLINE_TABLE_SIZE - 1.0),
+	    FLOAT_32_SUPPORTED = 'Float32Array' in global,
+	    
+	    A = function (a1, a2) {
+	        return 1.0 - 3.0 * a2 + 3.0 * a1;
+	    },
+	    
+	    B = function (a1, a2) {
+	        return 3.0 * a2 - 6.0 * a1;
+	    },
+	    
+	    C = function (a1) {
+	        return 3.0 * a1;
+	    },
+
+	    getSlope = function (t, a1, a2) {
+	        return 3.0 * A(a1, a2) * t * t + 2.0 * B(a1, a2) * t + C(a1);
+	    },
+
+	    calcBezier = function (t, a1, a2) {
+	        return ((A(a1, a2) * t + B(a1, a2)) * t + C(a1)) * t;
+	    },
+	    
+	    /*
+	        Bezier constructor
+	    */
+	    Bezier = function (mX1, mY1, mX2, mY2) {
+	        var sampleValues = FLOAT_32_SUPPORTED ? new Float32Array(K_SPLINE_TABLE_SIZE) : new Array(K_SPLINE_TABLE_SIZE),
+	            _precomputed = false,
+	    
+	            binarySubdivide = function (aX, aA, aB) {
+	                var currentX, currentT, i = 0;
+
+	                do {
+	                    currentT = aA + (aB - aA) / 2.0;
+	                    currentX = calcBezier(currentT, mX1, mX2) - aX;
+	                    if (currentX > 0.0) {
+	                        aB = currentT;
+	                    } else {
+	                        aA = currentT;
+	                    }
+	                } while (Math.abs(currentX) > SUBDIVISION_PRECISION && ++i < SUBDIVISION_MAX_ITERATIONS);
+
+	                return currentT;
+	            },
+	        
+	            newtonRaphsonIterate = function (aX, aGuessT) {
+	                var i = 0,
+	                    currentSlope = 0.0,
+	                    currentX;
+	                
+	                for (; i < NEWTON_ITERATIONS; ++i) {
+	                    currentSlope = getSlope(aGuessT, mX1, mX2);
+	                    
+	                    if (currentSlope === 0.0) {
+	                        return aGuessT;
+	                    }
+	                    
+	                    currentX = calcBezier(aGuessT, mX1, mX2) - aX;
+	                    aGuessT -= currentX / currentSlope;
+	                }
+	                
+	                return aGuessT;
+	            },
+	            
+	            
+	            calcSampleValues = function () {
+	                for (var i = 0; i < K_SPLINE_TABLE_SIZE; ++i) {
+	                    sampleValues[i] = calcBezier(i * K_SAMPLE_STEP_SIZE, mX1, mX2);
+	                }
+	            },
+	            
+	            
+	            getTForX = function (aX) {
+	                var intervalStart = 0.0,
+	                    currentSample = 1,
+	                    lastSample = K_SPLINE_TABLE_SIZE - 1,
+	                    dist = 0.0,
+	                    guessForT = 0.0,
+	                    initialSlope = 0.0;
+	                    
+	                for (; currentSample != lastSample && sampleValues[currentSample] <= aX; ++currentSample) {
+	                    intervalStart += K_SAMPLE_STEP_SIZE;
+	                }
+	                
+	                --currentSample;
+	                
+	                dist = (aX - sampleValues[currentSample]) / (sampleValues[currentSample+1] - sampleValues[currentSample]);
+	                guessForT = intervalStart + dist * K_SAMPLE_STEP_SIZE;
+	                
+	                initialSlope = getSlope(guessForT, mX1, mX2);
+	                
+	                // If slope is greater than min
+	                if (initialSlope >= NEWTON_MIN_SLOPE) {
+	                    return newtonRaphsonIterate(aX, guessForT);
+	                // Slope is equal to min
+	                } else if (initialSlope === 0.0) {
+	                    return guessForT;
+	                // Slope is less than min
+	                } else {
+	                    return binarySubdivide(aX, intervalStart, intervalStart + K_SAMPLE_STEP_SIZE);
+	                }
+	            },
+	            
+	            precompute = function () {
+	                _precomputed = true;
+	                if (mX1 != mY1 || mX2 != mY2) {
+	                    calcSampleValues();
+	                }
+	            },
+	            
+	            /*
+	                Generated function
+	                
+	                Returns value 0-1 based on X
+	            */
+	            f = function (aX) {
+	                var returnValue;
+
+	                if (!_precomputed) {
+	                    precompute();
+	                }
+	                
+	                // If linear gradient, return X as T
+	                if (mX1 === mY1 && mX2 === mY2) {
+	                    returnValue = aX;
+	                    
+	                // If at start, return 0
+	                } else if (aX === 0) {
+	                    returnValue = 0;
+	                    
+	                // If at end, return 1
+	                } else if (aX === 1) {
+	                    returnValue = 1;
+
+	                } else {
+	                    returnValue = calcBezier(getTForX(aX), mY1, mY2);
+	                }
+	                
+	                return returnValue;
+	            }
+	            
+	            return f;
+	    };
+
+	module.exports = Bezier;
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 46 */
+/***/ function(module, exports, __webpack_require__) {
+
 	"use strict";
 
 	var Queue = function () {
@@ -2945,7 +3299,7 @@
 	module.exports = Queue;
 
 /***/ },
-/* 46 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3085,7 +3439,7 @@
 	};
 
 /***/ },
-/* 47 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3329,7 +3683,7 @@
 	module.exports = valueOps;
 
 /***/ },
-/* 48 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3368,7 +3722,7 @@
 
 
 /***/ },
-/* 49 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3442,12 +3796,12 @@
 	module.exports = History;
 
 /***/ },
-/* 50 */
+/* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var theLoop = __webpack_require__(55),
+	var theLoop = __webpack_require__(56),
 	    ProcessManager = function () {
 	        this.all = {};
 	        this.active = [];
@@ -3617,7 +3971,7 @@
 	module.exports = new ProcessManager();
 
 /***/ },
-/* 51 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3667,7 +4021,7 @@
 	};
 
 /***/ },
-/* 52 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (value) {
@@ -3675,7 +4029,7 @@
 	};
 
 /***/ },
-/* 53 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (value) {
@@ -3683,7 +4037,7 @@
 	};
 
 /***/ },
-/* 54 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var STROKE = 'stroke',
@@ -3700,7 +4054,7 @@
 	};
 
 /***/ },
-/* 55 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -3708,8 +4062,8 @@
 	*/
 	"use strict";
 
-	var Timer = __webpack_require__(56),
-	    tick = __webpack_require__(57),
+	var Timer = __webpack_require__(57),
+	    tick = __webpack_require__(58),
 	    Loop = function () {
 	        this.timer = new Timer();
 	    };
@@ -3774,7 +4128,7 @@
 	module.exports = new Loop();
 
 /***/ },
-/* 56 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3809,7 +4163,7 @@
 	module.exports = Timer;
 
 /***/ },
-/* 57 */
+/* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
