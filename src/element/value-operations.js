@@ -212,7 +212,7 @@ module.exports = {
         // Preprocess values to set
         for (key in values) {
             valueIsObj = utils.isObj(values[key]);
-            thisValue = valueIsObj ? utils.merge(defaultProps, values[key]) : utils.copy(defaultProps);
+            thisValue = valueIsObj ? values[key] : {};
             namespacedKey = (namespace !== DEFAULT_NAMESPACE) ? key + '.' + namespace : key;
 
             // If this value isn't an object already, set it to the default property
@@ -253,9 +253,7 @@ module.exports = {
 
             // Inherit properties from Element
             for (propKey in defaultProps) {
-                if (element.hasOwnProperty(propKey)) {
-                    thisValue[propKey] = element[propKey];
-                }
+                thisValue[propKey] = (element.hasOwnProperty(propKey)) ? element[propKey] : defaultProps[propKey];
             }
 
             // Loop through all properties and set
