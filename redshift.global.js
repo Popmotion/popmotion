@@ -438,11 +438,11 @@
 
 	var calc = __webpack_require__(28),
 	    genericParser = __webpack_require__(39),
-	    Pointer = __webpack_require__(44);
+	    Pointer = __webpack_require__(40);
 
 	module.exports = {
 
-	    valueDefaults: __webpack_require__(45),
+	    valueDefaults: __webpack_require__(41),
 
 	    /*
 	        Parse Input arguments
@@ -547,9 +547,10 @@
 
 	"use strict";
 
-	var getColorValues = __webpack_require__(40),
-	    terms = __webpack_require__(41).hsl,
-	    numTerms = terms.length;
+	var createDelimited = __webpack_require__(42),
+	    getColorValues = __webpack_require__(43),
+	    functionCreate = __webpack_require__(44),
+	    terms = __webpack_require__(45).hsl;
 
 	module.exports = {
 
@@ -558,12 +559,11 @@
 	    },
 	    
 	    split: function (value) {
-	        var colors = getColorValues(value);
-
+	        return getColorValues(value, terms);
 	    },
 
 	    combine: function (values) {
-	        return functionCreate(createDelimited(values, terms, ', ').split(0, -2), 'hsla');
+	        return functionCreate(createDelimited(values, terms, ', ', 2), 'hsla');
 	    }
 	};
 
@@ -574,10 +574,9 @@
 	"use strict";
 
 	var createDelimited = __webpack_require__(42),
-	    getColorValues = __webpack_require__(40),
-	    functionCreate = __webpack_require__(43),
-	    terms = __webpack_require__(41).colors,
-	    numTerms = terms.length;
+	    getColorValues = __webpack_require__(43),
+	    functionCreate = __webpack_require__(44),
+	    terms = __webpack_require__(45).colors;
 
 	module.exports = {
 
@@ -586,15 +585,7 @@
 	    },
 	    
 	    split: function (value) {
-	        var splitValue = {},
-	            colors = getColorValues(value),
-	            i = 0;
-
-	        for (; i < numTerms; i++) {
-	            splitValue[terms[i]] = (colors[i] !== undefined) ? colors[i] : 1;
-	        }
-
-	        return splitValue;
+	        return getColorValues(value, terms);
 	    },
 
 	    combine: function (values) {
@@ -670,6 +661,10 @@
 
 	module.exports = {
 
+	    test: function (value) {
+	        return rgb.test(value) || hex.test(value) || hsl.test(value);
+	    },
+
 	    split: function (value) {
 	        return runSupported('split', value);
 	    },
@@ -687,7 +682,7 @@
 
 	var createDelimited = __webpack_require__(42),
 	    splitSpaceDelimited = __webpack_require__(46),
-	    terms = __webpack_require__(41).positions;
+	    terms = __webpack_require__(45).positions;
 
 	module.exports = {
 	        
@@ -725,7 +720,7 @@
 
 	"use strict";
 
-	var terms = __webpack_require__(41).dimensions,
+	var terms = __webpack_require__(45).dimensions,
 	    splitSpaceDelimited = __webpack_require__(46);
 
 	module.exports = {
@@ -772,7 +767,7 @@
 
 	var color = __webpack_require__(12),
 	    utils = __webpack_require__(33),
-	    terms = __webpack_require__(41).shadow,
+	    terms = __webpack_require__(45).shadow,
 	    splitSpaceDelimited = __webpack_require__(46),
 	    createDelimited = __webpack_require__(42),
 	    shadowTerms = terms.slice(0,4);
@@ -789,8 +784,8 @@
 	            numBits = bits.length,
 	            hasReachedColor = false,
 	            colorProp = '',
-	            thisBit, color,
-	            i = 0, unit,
+	            thisBit,
+	            i = 0,
 	            splitValue = {};
 
 	        for (; i < numBits; i++) {
@@ -820,7 +815,7 @@
 
 	"use strict";
 
-	var styleDOM = __webpack_require__(49);
+	var styleDOM = __webpack_require__(47);
 
 	module.exports = {
 
@@ -882,8 +877,8 @@
 
 	"use strict";
 
-	var build = __webpack_require__(47),
-	    lookup = __webpack_require__(48),
+	var build = __webpack_require__(48),
+	    lookup = __webpack_require__(49),
 	    CSS_CACHE = '_cssCache';
 
 	module.exports = {
@@ -1831,10 +1826,10 @@
 	"use strict";
 
 	var Process = __webpack_require__(32),
-	    Queue = __webpack_require__(58),
+	    Queue = __webpack_require__(57),
 	    utils = __webpack_require__(33),
-	    update = __webpack_require__(59),
-	    valueOps = __webpack_require__(60),
+	    update = __webpack_require__(58),
+	    valueOps = __webpack_require__(59),
 	    actionManager = __webpack_require__(21),
 	    routeManager = __webpack_require__(24),
 	    elementTypeManager = __webpack_require__(26),
@@ -2206,7 +2201,7 @@
 
 	var calc = __webpack_require__(28),
 	    utils = __webpack_require__(33),
-	    History = __webpack_require__(57),
+	    History = __webpack_require__(60),
 
 	    /*
 	        Input constructor
@@ -2966,68 +2961,6 @@
 /* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var splitCommaDelimited = __webpack_require__(63),
-	    functionBreak = __webpack_require__(64);
-
-	module.exports = function (value) {
-	    return splitCommaDelimited(functionBreak(value));
-	};
-
-/***/ },
-/* 41 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var X = 'X',
-	    Y = 'Y',
-	    ALPHA = 'Alpha',
-
-	    terms = {
-	        colors: ['Red', 'Green', 'Blue', ALPHA],
-	        positions: [X, Y, 'Z'],
-	        dimensions: ['Top', 'Right', 'Bottom', 'Left'],
-	        shadow: [X, Y, 'Radius', 'Spread', 'Color'],
-	        hsl: ['Hue', 'Saturation', 'Lightness', ALPHA]
-	    };
-
-	module.exports = terms;
-
-/***/ },
-/* 42 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	module.exports = function (values, terms, delimiter, chop) {
-	    var combined = '',
-	        key = '',
-	        i = 0,
-	        numTerms = terms.length;
-
-	    for (; i < numTerms; i++) {
-	        key = terms[i];
-
-	        if (values.hasOwnProperty(key)) {
-	            combined += values[key] + delimiter;
-	        }
-	    }
-
-	    return combined.slice(0, -chop);
-	};
-
-/***/ },
-/* 43 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = function (value, prefix) {
-	    return prefix + '(' + value + ')';
-	};
-
-/***/ },
-/* 44 */
-/***/ function(module, exports, __webpack_require__) {
-
 	"use strict";
 
 	var Input = __webpack_require__(31),
@@ -3119,13 +3052,88 @@
 	module.exports = Pointer;
 
 /***/ },
-/* 45 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	    // [number]: Factor of movement outside of maximum range (ie 0.5 will move half as much as 1)
 	    escapeAmp: 0
 	}
+
+/***/ },
+/* 42 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	module.exports = function (values, terms, delimiter, chop) {
+	    var combined = '',
+	        key = '',
+	        i = 0,
+	        numTerms = terms.length;
+
+	    for (; i < numTerms; i++) {
+	        key = terms[i];
+
+	        if (values.hasOwnProperty(key)) {
+	            combined += values[key] + delimiter;
+	        }
+	    }
+
+	    if (chop) {
+	        combined = combined.slice(0, -chop);
+	    }
+
+	    return combined;
+	};
+
+/***/ },
+/* 43 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var splitCommaDelimited = __webpack_require__(63),
+	    functionBreak = __webpack_require__(64);
+
+	module.exports = function (value, terms) {
+	    var splitValue = {},
+	        numTerms = terms.length,
+	        colors = splitCommaDelimited(functionBreak(value)),
+	        i = 0;
+
+	    for (; i < numTerms; i++) {
+	        splitValue[terms[i]] = (colors[i] !== undefined) ? colors[i] : 1;
+	    }
+
+	    return splitValue;
+	};
+
+/***/ },
+/* 44 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = function (value, prefix) {
+	    return prefix + '(' + value + ')';
+	};
+
+/***/ },
+/* 45 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var X = 'X',
+	    Y = 'Y',
+	    ALPHA = 'Alpha',
+
+	    terms = {
+	        colors: ['Red', 'Green', 'Blue', ALPHA],
+	        positions: [X, Y, 'Z'],
+	        dimensions: ['Top', 'Right', 'Bottom', 'Left'],
+	        shadow: [X, Y, 'Radius', 'Spread', 'Color'],
+	        hsl: ['Hue', 'Saturation', 'Lightness', ALPHA]
+	    };
+
+	module.exports = terms;
 
 /***/ },
 /* 46 */
@@ -3137,97 +3145,6 @@
 
 /***/ },
 /* 47 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var transformDictionary = __webpack_require__(65),
-	    transformProps = transformDictionary.props,
-	    lookup = __webpack_require__(48),
-	    
-	    TRANSFORM = 'transform',
-	    TRANSLATE_Z = 'translateZ';
-
-	module.exports = function (output, cache) {
-	    var css = {},
-	        key = '',
-	        transform = '',
-	        transformHasZ = false,
-	        rule = '';
-
-	    // Loop through output, check for transform properties and cache
-	    for (key in output) {
-	        rule = output[key];
-	        // If this is a transform property, add to transform string
-	        if (transformProps[key]) {
-	            transform += key + '(' + rule + ')';
-	            transformHasZ = (key === TRANSLATE_Z) ? true : transformHasZ;
-	        
-	        // Or just assign directly if different from cache
-	        } else if (cache[key] !== rule) {
-	            cache[key] = css[key] = rule;
-	        }
-	    }
-
-	    // If we have transform properties, add translateZ
-	    if (transform != '' && transform != cache[TRANSFORM]) {
-	        if (!transformHasZ) {
-	            transform += ' ' + TRANSLATE_Z + '(0px)';
-	        }
-
-	        cache[key] = css[key] = transform; 
-	    }
-
-	    return css;
-	};
-
-/***/ },
-/* 48 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var COLOR = 'color',
-	    POSITIONS = 'positions',
-	    TRANSFORM = 'transform',
-	    DIMENSIONS = 'dimensions',
-	    SHADOW = 'shadow';
-
-	module.exports = {
-	    // Color properties
-	    color: COLOR,
-	    backgroundColor: COLOR,
-	    borderColor: COLOR,
-	    borderTopColor: COLOR,
-	    borderRightColor: COLOR,
-	    borderBottomColor: COLOR,
-	    borderLeftColor: COLOR,
-	    outlineColor: COLOR,
-	    fill: COLOR,
-	    stroke: COLOR,
-
-	    // Dimensions
-	    margin: DIMENSIONS,
-	    padding: DIMENSIONS,
-
-	    // Positions
-	    backgroundPosition: POSITIONS,
-	    perspectiveOrigin: POSITIONS,
-	    transformOrigin: POSITIONS,
-	    
-	    // Transform functions
-	    skew: TRANSFORM,
-	    translate: TRANSFORM,
-	    rotate: TRANSFORM,
-	    scale: TRANSFORM,
-	    
-	    // Shadows
-	    textShadow: SHADOW,
-	    boxShadow: SHADOW
-	};
-
-/***/ },
-/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3292,6 +3209,96 @@
 	};
 
 	module.exports = new styleDOM();
+
+/***/ },
+/* 48 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var transformDictionary = __webpack_require__(65),
+	    transformProps = transformDictionary.props,
+
+	    TRANSFORM = 'transform',
+	    TRANSLATE_Z = 'translateZ';
+
+	module.exports = function (output, cache) {
+	    var css = {},
+	        key = '',
+	        transform = '',
+	        transformHasZ = false,
+	        rule = '';
+
+	    // Loop through output, check for transform properties and cache
+	    for (key in output) {
+	        rule = output[key];
+	        // If this is a transform property, add to transform string
+	        if (transformProps[key]) {
+	            transform += key + '(' + rule + ')';
+	            transformHasZ = (key === TRANSLATE_Z) ? true : transformHasZ;
+	        
+	        // Or just assign directly if different from cache
+	        } else if (cache[key] !== rule) {
+	            cache[key] = css[key] = rule;
+	        }
+	    }
+
+	    // If we have transform properties, add translateZ
+	    if (transform != '' && transform != cache[TRANSFORM]) {
+	        if (!transformHasZ) {
+	            transform += ' ' + TRANSLATE_Z + '(0px)';
+	        }
+
+	        cache[key] = css[key] = transform; 
+	    }
+
+	    return css;
+	};
+
+/***/ },
+/* 49 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var COLOR = 'color',
+	    POSITIONS = 'positions',
+	    TRANSFORM = 'transform',
+	    DIMENSIONS = 'dimensions',
+	    SHADOW = 'shadow';
+
+	module.exports = {
+	    // Color properties
+	    color: COLOR,
+	    backgroundColor: COLOR,
+	    borderColor: COLOR,
+	    borderTopColor: COLOR,
+	    borderRightColor: COLOR,
+	    borderBottomColor: COLOR,
+	    borderLeftColor: COLOR,
+	    outlineColor: COLOR,
+	    fill: COLOR,
+	    stroke: COLOR,
+
+	    // Dimensions
+	    margin: DIMENSIONS,
+	    padding: DIMENSIONS,
+
+	    // Positions
+	    backgroundPosition: POSITIONS,
+	    perspectiveOrigin: POSITIONS,
+	    transformOrigin: POSITIONS,
+	    
+	    // Transform functions
+	    skew: TRANSFORM,
+	    translate: TRANSFORM,
+	    rotate: TRANSFORM,
+	    scale: TRANSFORM,
+	    
+	    // Shadows
+	    textShadow: SHADOW,
+	    boxShadow: SHADOW
+	};
 
 /***/ },
 /* 50 */
@@ -3685,6 +3692,9 @@
 	        max: 100,
 	        unit: '%'
 	    },
+	    px = {
+	        unit: 'px'
+	    },
 	    angle = {
 	        unit: 'deg'
 	    },
@@ -3710,6 +3720,11 @@
 	        scaleX: scale,
 	        scaleY: scale,
 	        scaleZ: scale,
+
+	        X: px,
+	        Y: px,
+	        Spread: px,
+	        Radius: px,
 	        
 	        skew: angle,
 	        skewX: angle,
@@ -3724,80 +3739,6 @@
 
 /***/ },
 /* 57 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var // [number]: Default max size of history
-	    maxHistorySize = 3,
-	    
-	    /*
-	        History constructor
-	        
-	        @param [var]: Variable to store in first history slot
-	        @param [int] (optional): Maximum size of history
-	    */
-	    History = function (obj, max) {
-	        this.max = max || maxHistorySize;
-	        this.entries = [];
-	        this.add(obj);
-	    };
-	    
-	History.prototype = {
-	    
-	    /*
-	        Push new var to history
-	        
-	        Shift out oldest entry if we've reached maximum capacity
-	        
-	        @param [var]: Variable to push into history.entries
-	    */
-	    add: function (obj) {
-	        var currentSize = this.getSize();
-	        
-	        this.entries.push(obj);
-	        
-	        if (currentSize >= this.max) {
-	            this.entries.shift();
-	        }
-	    },
-	    
-	    /*
-	        Get variable at specified index
-
-	        @param [int]: Index
-	        @return [var]: Var found at specified index
-	    */
-	    get: function (i) {
-	        i = (typeof i === 'number') ? i : this.getSize() - 1;
-
-	        return this.entries[i];
-	    },
-	    
-	    /*
-	        Get the second newest history entry
-	        
-	        @return [var]: Entry found at index size - 2
-	    */
-	    getPrevious: function () {
-	        return this.get(this.getSize() - 2);
-	    },
-	    
-	    /*
-	        Get current history size
-	        
-	        @return [int]: Current length of entries.length
-	    */
-	    getSize: function () {
-	        return this.entries.length;
-	    }
-	    
-	};
-
-	module.exports = History;
-
-/***/ },
-/* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3850,7 +3791,7 @@
 	module.exports = Queue;
 
 /***/ },
-/* 59 */
+/* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3940,6 +3881,7 @@
 
 	            // Create route output if not present
 	            output[value.route] = output[value.route] || {};
+
 	            // Put value in default route output
 	            output[defaultRoute][key] = (value.unit) ? updatedValue + value.unit : updatedValue;
 
@@ -3953,7 +3895,7 @@
 	                output[value.parent][value.propName] = output[defaultRoute][key];
 	            }
 	        }
-	console.log(this.values);
+
 	        // Update parent values from calculated children
 	        for (i = 0; i < numActiveParents; i++) {
 	            key = this.parentOrder[i];
@@ -4010,7 +3952,7 @@
 	};
 
 /***/ },
-/* 60 */
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4133,13 +4075,37 @@
 
 	                // Assign properties to each new value
 	                for (key in splitProperty) {
+	                    // Create new value if it doesn't exist
 	                    splitValues[key] = splitValues[key] || valueTypesManager.defaultProps(key);
-	                    splitValues[key][propertyName] = parseFloat(splitProperty[key]);
+	                    splitValues[key][propertyName] = splitProperty[key];
 	                }
 	            }
 	        }
 
 	        return splitValues;
+	    },
+
+	    /*
+	        Split value into number and unit, set unit to value if present
+
+	        @param [string]: Property to split
+	        @param [object]: Value object to save unit to
+	    */
+	    splitUnit: function (property, value) {
+	        var returnVal = property,
+	            splitUnitValue;
+
+	        // Check for unit property
+	        if (utils.isString(property)) {
+	            splitUnitValue = utils.splitValUnit(property);
+
+	            if (!isNaN(splitUnitValue.value)) {
+	                returnVal = splitUnitValue.value;
+	                value.unit = splitUnitValue.unit;
+	            }
+	        }
+
+	        return returnVal;
 	    },
 
 	    /*
@@ -4149,37 +4115,31 @@
 	        @param [string || number || function]: Property
 	        @param [object]: Parent value
 	        @param [Element]: Parent Element
-	        @param [boolean] (optional): Does element have children?
 	    */
-	    resolve: function (name, property, value, element, hasChildren) {
-	        var splitUnitValue = {};
+	    resolve: function (name, property, value, element) {
+	        var currentValue = value.current || 0,
+	            isNumericalValue = (numericalValues.indexOf(name) > -1);
 
-	        if (!property || isNum(property)) {
-	            return property;
-	        }
-
-	        // If function, resolve function
+	        // If this is a function, resolve
 	        if (utils.isFunc(property)) {
-	            property = property.call(element, value.current);
+	            property = property.call(element, currentValue);
 	        }
 
-	        // Check for relative value (ie '+=10')
-	        if (property.indexOf && property.indexOf('=') > 0) {
-	            property = calc.relativeValue(currentValue, property);
-	        }
-
-	        // Check for unit property
+	        // If this is a string, check for relative values and units
 	        if (utils.isString(property)) {
-	            splitUnitValue = utils.splitValUnit(property);
+	            // If this is a relative value (ie '+=10')
+	            if (property.indexOf('=') > 0) {
+	                property = calc.relativeValue(currentValue, property);
+	            }
 
-	            if (!isNaN(splitUnitValue.value)) {
-	                property = splitUnitValue.value;
-	                value.unit = splitUnitValue.unit;
+	            // Check for unit if should be numerical property
+	            if (isNumericalValue) {
+	                this.splitUnit(property, value);
 	            }
 	        }
 
-	        // Coerce into number
-	        if (!hasChildren && numericalValues.indexOf(name) !== -1) {
+	        // If this is a numerical value, coerce
+	        if (isNumericalValue) {
 	            property = parseFloat(property);
 	        }
 
@@ -4245,7 +4205,7 @@
 	        for (key in processedValues) {
 	            namespacedKey = (namespace !== DEFAULT_NAMESPACE) ? key + '.' + namespace : key;
 	            processedValue = processedValues[key];
-	            thisValue = elementValues[namespacedKey] || this.initialState(processedValue.start, namespace);
+	            thisValue = elementValues[namespacedKey] || this.initialState(this.resolve('start', processedValue.start, {}, element), namespace);
 	            hasChildren = processedValue.children !== undefined;
 
 	            // Inherit properties from Element
@@ -4257,8 +4217,12 @@
 
 	            // Loop through all properties and set
 	            for (propKey in processedValue) {
-	                processedValue[propKey] = (!isNum(processedValue[propKey])) ? this.resolve(propKey, processedValue[propKey], thisValue, element, hasChildren) : processedValue[propKey];
+	                if (processedValue[propKey] !== undefined && !isNum(processedValue[propKey]) && !hasChildren) {
+	                    processedValue[propKey] = this.resolve(propKey, processedValue[propKey], thisValue, element);
+	                }
+
 	                thisValue[propKey] = processedValue[propKey];
+
 	                if (propKey === 'to') {
 	                    thisValue.target = thisValue.to;
 	                }
@@ -4281,6 +4245,80 @@
 	        }
 	    }
 	};
+
+/***/ },
+/* 60 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var // [number]: Default max size of history
+	    maxHistorySize = 3,
+	    
+	    /*
+	        History constructor
+	        
+	        @param [var]: Variable to store in first history slot
+	        @param [int] (optional): Maximum size of history
+	    */
+	    History = function (obj, max) {
+	        this.max = max || maxHistorySize;
+	        this.entries = [];
+	        this.add(obj);
+	    };
+	    
+	History.prototype = {
+	    
+	    /*
+	        Push new var to history
+	        
+	        Shift out oldest entry if we've reached maximum capacity
+	        
+	        @param [var]: Variable to push into history.entries
+	    */
+	    add: function (obj) {
+	        var currentSize = this.getSize();
+	        
+	        this.entries.push(obj);
+	        
+	        if (currentSize >= this.max) {
+	            this.entries.shift();
+	        }
+	    },
+	    
+	    /*
+	        Get variable at specified index
+
+	        @param [int]: Index
+	        @return [var]: Var found at specified index
+	    */
+	    get: function (i) {
+	        i = (typeof i === 'number') ? i : this.getSize() - 1;
+
+	        return this.entries[i];
+	    },
+	    
+	    /*
+	        Get the second newest history entry
+	        
+	        @return [var]: Entry found at index size - 2
+	    */
+	    getPrevious: function () {
+	        return this.get(this.getSize() - 2);
+	    },
+	    
+	    /*
+	        Get current history size
+	        
+	        @return [int]: Current length of entries.length
+	    */
+	    getSize: function () {
+	        return this.entries.length;
+	    }
+	    
+	};
+
+	module.exports = History;
 
 /***/ },
 /* 61 */
@@ -4529,7 +4567,7 @@
 
 	"use strict";
 
-	var positionTerms = __webpack_require__(41).positions,
+	var positionTerms = __webpack_require__(45).positions,
 	    numPositionTerms = positionTerms.length,
 
 	    TRANSFORM_PERSPECTIVE = 'transformPerspective',

@@ -2,8 +2,7 @@
 
 var transformDictionary = require('./transform-dictionary'),
     transformProps = transformDictionary.props,
-    lookup = require('./lookup'),
-    
+
     TRANSFORM = 'transform',
     TRANSLATE_Z = 'translateZ';
 

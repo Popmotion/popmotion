@@ -19,8 +19,8 @@ module.exports = {
             numBits = bits.length,
             hasReachedColor = false,
             colorProp = '',
-            thisBit, color,
-            i = 0, unit,
+            thisBit,
+            i = 0,
             splitValue = {};
 
         for (; i < numBits; i++) {

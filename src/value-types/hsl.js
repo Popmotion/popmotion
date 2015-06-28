@@ -1,8 +1,9 @@
 "use strict";
 
-var getColorValues = require('./manipulators/get-color-values'),
-    terms = require('./settings/dictionary').hsl,
-    numTerms = terms.length;
+var createDelimited = require('./manipulators/create-delimited'),
+    getColorValues = require('./manipulators/get-color-values'),
+    functionCreate = require('./manipulators/function-create'),
+    terms = require('./settings/dictionary').hsl;
 
 module.exports = {
 
@@ -11,11 +12,10 @@ module.exports = {
     },
     
     split: function (value) {
-        var colors = getColorValues(value);
-
+        return getColorValues(value, terms);
     },
 
     combine: function (values) {
-        return functionCreate(createDelimited(values, terms, ', ').split(0, -2), 'hsla');
+        return functionCreate(createDelimited(values, terms, ', ', 2), 'hsla');
     }
 };

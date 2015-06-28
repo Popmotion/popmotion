@@ -16,6 +16,10 @@ var rgb = require('./rgb'),
 
 module.exports = {
 
+    test: function (value) {
+        return rgb.test(value) || hex.test(value) || hsl.test(value);
+    },
+
     split: function (value) {
         return runSupported('split', value);
     },

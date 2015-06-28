@@ -118,13 +118,37 @@ module.exports = {
 
                 // Assign properties to each new value
                 for (key in splitProperty) {
+                    // Create new value if it doesn't exist
                     splitValues[key] = splitValues[key] || valueTypesManager.defaultProps(key);
-                    splitValues[key][propertyName] = parseFloat(splitProperty[key]);
+                    splitValues[key][propertyName] = splitProperty[key];
                 }
             }
         }
 
         return splitValues;
+    },
+
+    /*
+        Split value into number and unit, set unit to value if present
+
+        @param [string]: Property to split
+        @param [object]: Value object to save unit to
+    */
+    splitUnit: function (property, value) {
+        var returnVal = property,
+            splitUnitValue;
+
+        // Check for unit property
+        if (utils.isString(property)) {
+            splitUnitValue = utils.splitValUnit(property);
+
+            if (!isNaN(splitUnitValue.value)) {
+                returnVal = splitUnitValue.value;
+                value.unit = splitUnitValue.unit;
+            }
+        }
+
+        return returnVal;
     },
 
     /*
@@ -134,37 +158,31 @@ module.exports = {
         @param [string || number || function]: Property
         @param [object]: Parent value
         @param [Element]: Parent Element
-        @param [boolean] (optional): Does element have children?
     */
-    resolve: function (name, property, value, element, hasChildren) {
-        var splitUnitValue = {};
+    resolve: function (name, property, value, element) {
+        var currentValue = value.current || 0,
+            isNumericalValue = (numericalValues.indexOf(name) > -1);
 
-        if (!property || isNum(property)) {
-            return property;
-        }
-
-        // If function, resolve function
+        // If this is a function, resolve
         if (utils.isFunc(property)) {
-            property = property.call(element, value.current);
+            property = property.call(element, currentValue);
         }
 
-        // Check for relative value (ie '+=10')
-        if (property.indexOf && property.indexOf('=') > 0) {
-            property = calc.relativeValue(currentValue, property);
-        }
-
-        // Check for unit property
+        // If this is a string, check for relative values and units
         if (utils.isString(property)) {
-            splitUnitValue = utils.splitValUnit(property);
+            // If this is a relative value (ie '+=10')
+            if (property.indexOf('=') > 0) {
+                property = calc.relativeValue(currentValue, property);
+            }
 
-            if (!isNaN(splitUnitValue.value)) {
-                property = splitUnitValue.value;
-                value.unit = splitUnitValue.unit;
+            // Check for unit if should be numerical property
+            if (isNumericalValue) {
+                this.splitUnit(property, value);
             }
         }
 
-        // Coerce into number
-        if (!hasChildren && numericalValues.indexOf(name) !== -1) {
+        // If this is a numerical value, coerce
+        if (isNumericalValue) {
             property = parseFloat(property);
         }
 
@@ -230,7 +248,7 @@ module.exports = {
         for (key in processedValues) {
             namespacedKey = (namespace !== DEFAULT_NAMESPACE) ? key + '.' + namespace : key;
             processedValue = processedValues[key];
-            thisValue = elementValues[namespacedKey] || this.initialState(processedValue.start, namespace);
+            thisValue = elementValues[namespacedKey] || this.initialState(this.resolve('start', processedValue.start, {}, element), namespace);
             hasChildren = processedValue.children !== undefined;
 
             // Inherit properties from Element
@@ -242,8 +260,12 @@ module.exports = {
 
             // Loop through all properties and set
             for (propKey in processedValue) {
-                processedValue[propKey] = (!isNum(processedValue[propKey])) ? this.resolve(propKey, processedValue[propKey], thisValue, element, hasChildren) : processedValue[propKey];
+                if (processedValue[propKey] !== undefined && !isNum(processedValue[propKey]) && !hasChildren) {
+                    processedValue[propKey] = this.resolve(propKey, processedValue[propKey], thisValue, element);
+                }
+
                 thisValue[propKey] = processedValue[propKey];
+
                 if (propKey === 'to') {
                     thisValue.target = thisValue.to;
                 }

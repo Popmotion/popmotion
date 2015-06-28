@@ -3,8 +3,7 @@
 var createDelimited = require('./manipulators/create-delimited'),
     getColorValues = require('./manipulators/get-color-values'),
     functionCreate = require('./manipulators/function-create'),
-    terms = require('./settings/dictionary').colors,
-    numTerms = terms.length;
+    terms = require('./settings/dictionary').colors;
 
 module.exports = {
 
@@ -13,15 +12,7 @@ module.exports = {
     },
     
     split: function (value) {
-        var splitValue = {},
-            colors = getColorValues(value),
-            i = 0;
-
-        for (; i < numTerms; i++) {
-            splitValue[terms[i]] = (colors[i] !== undefined) ? colors[i] : 1;
-        }
-
-        return splitValue;
+        return getColorValues(value, terms);
     },
 
     combine: function (values) {

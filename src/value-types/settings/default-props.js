@@ -18,6 +18,9 @@ var circle = {
         max: 100,
         unit: '%'
     },
+    px = {
+        unit: 'px'
+    },
     angle = {
         unit: 'deg'
     },
@@ -43,6 +46,11 @@ var circle = {
         scaleX: scale,
         scaleY: scale,
         scaleZ: scale,
+
+        X: px,
+        Y: px,
+        Spread: px,
+        Radius: px,
         
         skew: angle,
         skewX: angle,

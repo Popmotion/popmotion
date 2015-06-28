@@ -14,5 +14,9 @@ module.exports = function (values, terms, delimiter, chop) {
         }
     }
 
-    return combined.slice(0, -chop);
+    if (chop) {
+        combined = combined.slice(0, -chop);
+    }
+
+    return combined;
 };
