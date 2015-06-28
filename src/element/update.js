@@ -2,12 +2,14 @@
 
 var actionManager = require('../actions/manager'),
     routeManager = require('../routes/manager'),
+    valueTypeManager = require('../value-types/manager'),
     calc = require('../inc/calc'),
 
     defaultRoute = 'values',
 
     update = function (framestamp, frameDuration) {
-        var values = this.values,
+        var self = this,
+            values = this.values,
             action = actionManager[this.action],
             valueAction = action,
             output = this.output,
@@ -30,12 +32,15 @@ var actionManager = require('../actions/manager'),
 
         // Fire onStart if first frame
         if (this.firstFrame) {
-            routeManager.shard(function (route, routeName, routeValues) {
+            routeManager.shard(function (route) {
                 if (route.onStart) {
-                    route.onStart(values, this);
+                    route.onStart(values, self);
                 }
             }, output);
         }
+
+        // Create default route output if not present
+        output[defaultRoute] = output[defaultRoute] || {};
 
         // Update values
         for (; i < numActiveValues; i++) {
@@ -76,19 +81,33 @@ var actionManager = require('../actions/manager'),
             }
 
             // Set current
-            value.current = updatedValue;
+            this.values[key].current = updatedValue;
 
             // Create route output if not present
             output[value.route] = output[value.route] || {};
-            // Create default route output if not present
-            output[defaultRoute] = output[defaultRoute] || {};
-            // Put value in output buckets
-            output[defaultRoute][key] = output[value.route][value.name] = (value.unit) ? updatedValue + value.unit : updatedValue;
+            // Put value in default route output
+            output[defaultRoute][key] = (value.unit) ? updatedValue + value.unit : updatedValue;
+            // Put in specific root if not a parent
+            if (!value.parent) {
+                output[value.route][value.name] = output[defaultRoute][key];
+
+            // Or add to parent output, to be combined
+            } else {
+                output[value.parent] = output[value.parent] || {};
+                output[value.parent][value.propName] = output[defaultRoute][key];
+            }
         }
 
         // Update parent values from calculated children
         for (i = 0; i < numActiveParents; i++) {
-            // combine values
+            key = this.parentOrder[i];
+            value = this.values[key];
+
+            // Update parent value current property
+            value.current = valueTypeManager[value.type].combine(output[key]);
+
+            // Update output
+            output[value.route][value.name] = output[defaultRoute][key] = value.current;
         }
 
         // Run onFrame and onChange for every output
@@ -96,12 +115,12 @@ var actionManager = require('../actions/manager'),
 
             // Fire onFrame every frame
             if (route.onFrame) {
-                route.onFrame(routeOutput, this);
+                route.onFrame(routeOutput, self);
             }
 
             // Fire onChanged if any value has changed
-            if (this.hasChanged && route.onChange || action.firstFrame && route.onChange) {
-                route.onChange(routeOutput, this);
+            if (self.hasChanged && route.onChange || action.firstFrame && route.onChange) {
+                route.onChange(routeOutput, self);
             }
 
         }, output);
@@ -112,7 +131,7 @@ var actionManager = require('../actions/manager'),
 
             routeManager.shard(function (route, routeName, routeOutput) {
                 if (route.onEnd) {
-                    route.onEnd(routeOutput, this);
+                    route.onEnd(routeOutput, self);
                 }
             });
 

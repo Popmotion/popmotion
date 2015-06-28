@@ -7,14 +7,24 @@ var Process = require('../process/Process'),
     valueOps = require('./value-operations'),
     actionManager = require('../actions/manager'),
     routeManager = require('../routes/manager'),
+    elementTypeManager = require('../element-types/manager'),
 
-    Element = function (element) {
+    Element = function (element, options) {
         this.element = element || false;
         this.values = {};
         this.output = {};
         this.queue = new Queue();
         this.process = new Process(this, update);
         this.clearOrder();
+
+        if (options) {
+            this.type = options.type;
+        }
+
+        // Check for type and detect if none
+        if (!this.type && this.element) {
+
+        }
     };
 
 Element.prototype = {
@@ -105,7 +115,7 @@ Element.prototype = {
 
     reset: function () {
         this.resetProgress();
-        valueOps('reset', this.values);
+        valueOps.all('reset', this.values);
         return this;
     },
     
@@ -123,7 +133,7 @@ Element.prototype = {
         Loop through all values and create origin points
     */
     resetOrigins: function () {
-        valueOps('resetOrigin', this.values);
+        valueOps.all('resetOrigin', this.values);
         return this;
     },
     
@@ -132,7 +142,7 @@ Element.prototype = {
     */
     reverse: function () {
         this.playDirection *= -1;
-        valueOps('retarget', this.values);
+        valueOps.all('retarget', this.values);
         return this;
     },
     
@@ -141,7 +151,7 @@ Element.prototype = {
     */
     flipValues: function () {
         this.elapsed = this.duration - this.elapsed;
-        valueOps('flip', this.values);
+        valueOps.all('flip', this.values);
         return this;
     },
 
@@ -165,7 +175,7 @@ Element.prototype = {
         Reset properties to Action defaults
     */
     resetProps: function () {
-        this.setProps(actionManager[this.action].defaultActionProps);
+        this.setProps(actionManager[this.action].actionDefaults);
         return this;
     },
 
@@ -233,15 +243,24 @@ Element.prototype = {
         this._isActive = status;
     },
 
-    style: function () {
-        if (this.type && this.type.style) {
-            this.type.style.apply(this, arguments);
-        }
+    // [ElementType]
+    get type() {
+        return this._type;
+    },
+
+    /*
+        Set ElementType
+
+        @param [string]: Name of new element
+    */
+    set type(type) {
+        this._type = elementTypeManager[type];
     }
 };
 
 // Register Element with actionManager, so when a new Action is set,
 // We get a new method on Element
 actionManager.setElement(Element);
+elementTypeManager.setElement(Element);
 
 module.exports = Element;

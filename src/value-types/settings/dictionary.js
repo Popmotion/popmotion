@@ -5,12 +5,14 @@ var X = 'X',
     TRANSFORM_PERSPECTIVE = 'transformPerspective',
     SCALE = 'scale',
     ROTATE = 'rotate',
+    ALPHA = 'Alpha',
 
     terms = {
-        colors: ['Red', 'Green', 'Blue', 'Alpha'],
+        colors: ['Red', 'Green', 'Blue', ALPHA],
         positions: [X, Y, 'Z'],
         dimensions: ['Top', 'Right', 'Bottom', 'Left'],
         shadow: [X, Y, 'Radius', 'Spread', 'Color'],
+        hsl: ['Hue', 'Saturation', 'Lightness', ALPHA],
         valueProps: ['current', 'to', 'start', 'min', 'max'],
         transformFuncs: ['translate', SCALE, ROTATE, 'skew', TRANSFORM_PERSPECTIVE],
         transformProps: {} // objects are faster at direct lookups

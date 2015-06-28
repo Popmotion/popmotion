@@ -1,7 +1,9 @@
 "use strict";
 
 var Element,
+    ElementSystem,
     utils = require('../inc/utils'),
+    generateMethodIterator = require('../element/system/generate-iterator'),
     genericActionProps = require('./generic/default-action-props'),
     genericValueProps = require('./generic/default-value-props'),
 
@@ -28,12 +30,15 @@ actionManager.extend = function (name, module) {
 
             return this.start();
         };
+
+        ElementSystem.prototype[name] = generateMethodIterator(name);
     }
 
     // If module has methods to add to Element.prototype
     if (module.elementMethods) {
         for (methodName in module.elementMethods) {
             Element.prototype[methodName] = module.elementMethods[methodName];
+            ElementSystem.prototype[methodName] = generateMethodIterator(methodName);
         }
     }
 
@@ -42,13 +47,17 @@ actionManager.extend = function (name, module) {
 
     // Merge value props with defaults
     module.valueDefaults = module.valueDefaults ? utils.merge(genericValueProps, module.valueDefaults) : genericValueProps;
-
+    
     // Call parent extend method
     ModuleManager.prototype.extend.call(this, name, module);
 };
 
 actionManager.setElement = function (element) {
     Element = element;
+};
+
+actionManager.setElementSystem = function (elementSystem) {
+    ElementSystem = elementSystem;
 };
 
 module.exports = actionManager;

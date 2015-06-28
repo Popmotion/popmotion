@@ -94,7 +94,7 @@ module.exports = {
             nextInQueue = this.queue.next(this.playDirection);
 
         if (utils.isArray(nextInQueue)) {
-            this.set(playAction.parse.apply(this, nextInQueue), 'to')
+            this.set(parseArgs.apply(this, nextInQueue), 'to')
                 .reset();
 
             stepTaken = true;

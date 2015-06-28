@@ -5,9 +5,9 @@
 */
 "use strict";
 
-var fireCallback = function (name, bucket, action) {
-        if (action[name]) {
-            action[name].call(action.scope, bucket);
+var fireCallback = function (name, output, element) {
+        if (element[name]) {
+            element[name].call(element, output);
         }
     };
 
@@ -15,22 +15,20 @@ module.exports = {
     
     makeDefault: true,
     
-    onStart: function (bucket, action) {
-        if (action.onStart) {
-            action.onStart.call(action.scope);
-        }
+    onStart: function (output, element) {
+        fireCallback('onStart', output, element)
     },
     
-    onFrame: function (bucket, action, values) {
-        fireCallback('onFrame', bucket, action, values);
+    onFrame: function (output, element) {
+        fireCallback('onFrame', output, element);
     },
     
-    onChange: function (bucket, action, values) {
-        fireCallback('onChange', bucket, action, values);
+    onChange: function (output, element) {
+        fireCallback('onChange', output, element);
     },
     
-    onEnd: function (bucket, action, values) {
-        fireCallback('onEnd', bucket, action, values);
+    onEnd: function (output, element) {
+        fireCallback('onEnd', output, element);
     }
     
 };

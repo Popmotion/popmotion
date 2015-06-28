@@ -1,14 +1,9 @@
 "use strict";
 
 module.exports = {
-
-    onChange: function (output, action) {
-        var dom = action.dom;
-
-        if (dom) {
-            for (var key in output) {
-                dom.setAttribute(key, output[key]);
-            }
+    onChange: function (output, element) {
+        for (var key in output) {
+            element.attr(key, output[key]);
         }
     }
 };

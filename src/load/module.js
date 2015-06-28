@@ -30,6 +30,9 @@ Redshift
     .addValueType('rgb', require('../value-types/rgb'))
     .addValueType('hex', require('../value-types/hex'))
     .addValueType('color', require('../value-types/color'))
+    .addValueType('positions', require('../value-types/positions'))
+    .addValueType('dimensions', require('../value-types/dimensions'))
+    .addValueType('shadow', require('../value-types/shadow'))
 
     /*
         DOM Element type and CSS/Attr route - dependent on core value types being present
@@ -46,3 +49,9 @@ Redshift
 console.timeEnd('load');
 
 module.exports = Redshift;
+
+/*
+    TODO: 
+        - Get all value types working
+        - Add transform handling to CSS builder
+*/

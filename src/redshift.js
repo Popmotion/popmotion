@@ -7,7 +7,8 @@ var select = require('./element/select'),
     routeManager = require('./routes/manager'),
     simulationManager = require('./actions/run/simulation-manager'),
     elementTypeManager = require('./element-types/manager'),
-    valueTypeManager = require('./value-types/manager');
+    valueTypeManager = require('./value-types/manager'),
+    calc = require('./inc/calc');
 
 module.exports = {
 
@@ -56,6 +57,8 @@ module.exports = {
     addRoute: function () {
         routeManager.extend.apply(routeManager, arguments);
         return this;
-    }
+    },
+
+    calc: calc
 
 };

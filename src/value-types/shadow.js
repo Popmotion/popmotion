@@ -1,16 +1,9 @@
 "use strict";
 
 var color = require('./color'),
-
-    splitSpaceDelimited = require('./manipulators/split-space-delimited'),
-
-    defaults = {
-        X: 0,
-        Y: 0,
-        Radius: 0,
-        Spread: 0,
-        Color: 'rgba(0, 0, 0, 0.5)'
-    };
+    utils = require('../inc/utils'),
+    terms = require('./settings/dictionary'),
+    splitSpaceDelimited = require('./manipulators/split-space-delimited');
 
 module.exports = {
     /*
@@ -22,13 +15,29 @@ module.exports = {
     split: function (value) {
         var bits = splitSpaceDelimited(value),
             numBits = bits.length,
-            colorFound = false,
-            colorValue = '',
-            i = 0,
-            bit, color,
+            hasReachedColor = false,
+            colorProp = '',
+            thisBit, color,
+            i = 0, unit,
+            splitValue = {};
+
+        for (; i < numBits; i++) {
+            thisBit = bits[i];
+
+            // If we've reached the color property, append to color string
+            if (hasReachedColor || color.test(thisBit)) {
+                hasReachedColor = true;
+                colorProp += thisBit;
+
+            } else {
+                splitValue[terms[i]] = thisBit;
+            }
+        }
+        
+        return utils.merge(splitValue, color.split(colorProp));
     },
 
     combine: function (values) {
-        var color = 
+       // var color = 
     }
 };

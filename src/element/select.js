@@ -26,5 +26,5 @@ module.exports = function (selector) {
         elements.push(nodes);
     }
 
-    return new ElementSystem(elements);
+    return new ElementSystem(elements, { type: 'dom' });
 };

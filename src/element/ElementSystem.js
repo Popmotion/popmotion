@@ -2,15 +2,16 @@
 
 var Element = require('./Element'),
     generateMethodIterator = require('./system/generate-iterator'),
+    actionManager = require('../actions/manager'),
 
     /*
         ElementSystem constructor
 
         @param [array]: Array of Elements, or valid Element subjects
     */
-    ElementSystem = function (members) {
+    ElementSystem = function (members, options) {
         this.members = [];
-        this.add(members);
+        this.add(members, options);
     };
 
 ElementSystem.prototype = {
@@ -66,13 +67,13 @@ ElementSystem.prototype = {
 
         @param [array]: Array of Elements, or valid Element subjects
     */
-    add: function (members) {
+    add: function (members, options) {
         var numNewMembers = members.length,
             i = 0,
             newMember;
 
         for (; i < numNewMembers; i++) {
-            newMember = (members[i].prototype !== Element.prototype) ? new Element(members[i]) : members[i];
+            newMember = (members[i].prototype !== Element.prototype) ? new Element(members[i], options) : members[i];
             this.members.push(newMember);
         }
 
@@ -86,5 +87,9 @@ ElementSystem.prototype = {
         ElementSystem.prototype[method] = generateMethodIterator(method);
     }
 })();
+
+// Register Element with actionManager, so when a new Action is set,
+// We get a new method on Element
+actionManager.setElementSystem(ElementSystem);
 
 module.exports = ElementSystem;

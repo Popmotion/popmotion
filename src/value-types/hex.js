@@ -5,7 +5,7 @@ var rgb = require('./rgb');
 module.exports = {
 
     test: function (value) {
-        return (value.indexOf('#') > -1);
+        return (value && value.indexOf('#') > -1);
     },
     
     split: function (value) {

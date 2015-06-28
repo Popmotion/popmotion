@@ -1,8 +1,7 @@
 "use strict";
 
 var styleDOM = function () {
-	var testElement,
-		prefixes = ['Webkit','Moz','O','ms', ''],
+	var prefixes = ['Webkit','Moz','O','ms', ''],
 		prefixesLength = prefixes.length,
 		cache = {},
 		
@@ -13,7 +12,9 @@ var styleDOM = function () {
 			@return [string]: Cached property name
 		*/
 		testPrefix = function (key) {
-			cache[key] = key;
+            var testElement = document.body;
+			
+            cache[key] = key;
 
 			for (var i = 0; i < prefixesLength; i++) {
 				var prefixed = prefixes[i] + key.charAt(0).toUpperCase() + key.slice(1);
@@ -24,11 +25,6 @@ var styleDOM = function () {
 			}
 			
 			return cache[key];
-		},
-
-	    // Cache body tag if we haven't already
-		cacheTestElement = function () {
-			testElement = testElement || document.getElementsByTagName('body')[0];
 		};
 	
 	/*
@@ -43,7 +39,6 @@ var styleDOM = function () {
 			@param [string]: Name of style to read
 		*/
 		get: function (element, name) {
-			testElement = cacheTestElement();
 			return window.getComputedStyle(element, null)[cache[name] || testPrefix(name)];
 		},
 
@@ -54,8 +49,7 @@ var styleDOM = function () {
 			@param [object]: DOM styles to set
 		*/
 		set: function (element, props) {
-			testElement = cacheTestElement();
-		    for (var key in props) {
+			for (var key in props) {
 				if (props.hasOwnProperty(key)) {
 					element.style[cache[key] || testPrefix(key)] = props[key];
 				}

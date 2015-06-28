@@ -1,6 +1,10 @@
 "use strict";
 
-var color = {
+var circle = {
+        min: 0,
+        max: 360
+    },
+    color = {
         min: 0,
         max: 255,
         round: true
@@ -8,6 +12,11 @@ var color = {
     opacity = {
         min: 0,
         max: 1
+    },
+    percent = {
+        min: 0,
+        max: 100,
+        unit: '%'
     },
     angle = {
         unit: 'deg'
@@ -22,6 +31,10 @@ var color = {
         Red: color,
         Green: color,
         Blue: color,
+
+        Hue: circle,
+        Saturation: percent,
+        Lightness: percent,
     
         Alpha: opacity,
         opacity: opacity,

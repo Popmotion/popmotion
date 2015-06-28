@@ -1,18 +1,11 @@
 "use strict";
 
-var getColorValues = require('./manipulators/get-color-values.js'),
-
-    defaults = {
-        Red: 0,
-        Green: 0,
-        Blue: 0,
-        Alpha: 0
-    };
+var getColorValues = require('./manipulators/get-color-values.js');
 
 module.exports = {
 
     test: function (value) {
-        return (value.indexOf('rgb') > -1);
+        return (value && value.indexOf('rgb') > -1);
     },
     
     split: function (value) {

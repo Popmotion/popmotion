@@ -20,12 +20,23 @@ ModuleManager.prototype = {
     /*
         Add a new module
 
-        @param [string]: Name of new module
-        @param [object]: Module to add
+        @param [string || object]: Name of new module or multiple modules
+        @param [object] (optional): Module to add
     */
     extend: function (name, module) {
-        this._addKey(name);
-        this[name] = module;
+        var multiModules = (typeof name == 'object'),
+            modules = multiModules ? name : {},
+            key = '';
+
+        // If we just have one module, coerce
+        if (!multiModules) {
+            modules[name] = module;
+        }
+
+        for (key in modules) {
+            this._addKey(key);
+            this[key] = modules[key];
+        }
 
         return this;
     }

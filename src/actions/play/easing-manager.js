@@ -104,12 +104,12 @@ var calc = require('../../inc/calc.js'),
 
         // Create the Out function by reversing the transition curve
         easingManager[reverseName] = function (progress) {
-            return reverseEasing(progress, easing[baseName]);
+            return reverseEasing(progress, easingManager[baseName]);
         };
         
         // Create the InOut function by mirroring the transition curve
         easingManager[easeInOut] = function (progress) {
-            return mirrorEasing(progress, easing[baseName]);
+            return mirrorEasing(progress, easingManager[baseName]);
         };
     },
 
@@ -150,7 +150,7 @@ easingManager.withinRange = function (progress, from, to, ease, escapeAmp) {
         progressLimited = progressLimited + ((progress - progressLimited) * escapeAmp);
     }
 
-    return calc.valueEased(progressLimited, from, to, this.get(ease));
+    return calc.valueEased(progressLimited, from, to, this[ease]);
 };
             
 /*

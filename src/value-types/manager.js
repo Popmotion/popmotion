@@ -1,5 +1,11 @@
 "use strict";
 
-var ModuleManager = require('../inc/ModuleManager');
+var defaultProps = require('./settings/default-props'),
+    ModuleManager = require('../inc/ModuleManager'),
+    valueTypeManager = new ModuleManager();
 
-module.exports = new ModuleManager();
+valueTypeManager.defaultProps = function (key) {
+    return defaultProps[key] ? utils.copy(defaultProps[key]) : {};
+};
+
+module.exports = valueTypeManager;

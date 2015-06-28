@@ -14,6 +14,9 @@ var calc = require('../inc/calc'),
         // [object] Default Action properties
         actionDefaults: require('./play/default-action-props'),
 
+        // [object]: Default value properties
+        valueDefaults: require('./play/default-value-props'),
+
         // [boolean] Prevent Redshift from autogenerating Element.prototype.play()
         surpressMethod: true,
 
@@ -48,7 +51,7 @@ var calc = require('../inc/calc'),
             // If this value has a to property, otherwise we just return current value
             if (target !== undefined) {
                 progress = calc.restricted(calc.progress(this.elapsed - value.delay, value.duration) - value.stagger, 0, 1);
-                
+
                 // Mark Action as NOT ended if still in progress
                 if (progress !== progressTarget) {
                     this.hasEnded = false;

@@ -16,24 +16,11 @@ var rgb = require('./rgb'),
 
 module.exports = {
 
-    test: function (value) {
-        return rgb.test(value) || hex.test(value) || hsl.test(value);
-    },
-
     split: function (value) {
         return runSupported('split', value);
     },
 
-    combine: function () {
-        return runSupported('combine', value);
-    },
-
-    defaultProps: function () {
-        return {
-            min: 0,
-            max: 255,
-            round: true
-        };
+    combine: function (value) {
+        return (value.Red) ? rgb.combine(value) : hsl.combine(value);
     }
-
 };

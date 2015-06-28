@@ -15,10 +15,12 @@ routeManager.shard = function (callback, validRoutes) {
     var key = '',
         i = 0;
 
+    validRoutes = validRoutes || routeManager;
+
     for (; i < this._numKeys; i++) {
         key = this._keys[i];
 
-        if ((validRoutes && validRoutes.hasOwnProperty(key)) || !validRoutes) {
+        if ((validRoutes && validRoutes.hasOwnProperty(key))) {
             callback(this[key], key, validRoutes[key]);
         }
     }

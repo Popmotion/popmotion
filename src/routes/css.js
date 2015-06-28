@@ -4,18 +4,15 @@ var lookup = require('./css/lookup');
 
 module.exports = {
     typeMap: lookup,
-
-    preprocess: function (key, value, action) {
-        var values = split(key, value, action);
-        
-        action.updateOrder(key, false, cssOrder);
-        
-        return values;
-    },
     
-    onChange: function (output, action, values) {
+    onChange: function (output, element) {
+        element.style(output);
+
+        // TODO: Add a way to set Element type, explicitly or automatically
+/*
         action[cssCache] = action[cssCache] || {};
         action.style(build(output, action[cssOrder],  action[cssCache], values));
+*/
     }
     
 };

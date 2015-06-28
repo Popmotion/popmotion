@@ -11,7 +11,7 @@
 */
 module.exports = function (method) {
 	return function () {
-        var numElements = this.elements.length,
+        var numElements = this.members.length,
             i = 0,
 			isGetter = false,
 			getterArray = [],
@@ -19,7 +19,7 @@ module.exports = function (method) {
 			elementReturn;
 			
 		for (; i < numElements; i++) {
-			element = this.elements[i];
+			element = this.members[i];
 			elementReturn = element[method].apply(element, arguments);
 			
 			if (elementReturn != element) {
