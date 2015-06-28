@@ -119,7 +119,7 @@ module.exports = {
                 // Assign properties to each new value
                 for (key in splitProperty) {
                     splitValues[key] = splitValues[key] || valueTypesManager.defaultProps(key);
-                    splitValues[key][propertyName] = splitProperty[key];
+                    splitValues[key][propertyName] = parseFloat(splitProperty[key]);
                 }
             }
         }
@@ -130,11 +130,13 @@ module.exports = {
     /*
         Resolve property
 
+        @param [string]: Name of value
         @param [string || number || function]: Property
         @param [object]: Parent value
         @param [Element]: Parent Element
+        @param [boolean] (optional): Does element have children?
     */
-    resolve: function (property, value, element) {
+    resolve: function (name, property, value, element, hasChildren) {
         var splitUnitValue = {};
 
         if (!property || isNum(property)) {
@@ -161,6 +163,11 @@ module.exports = {
             }
         }
 
+        // Coerce into number
+        if (!hasChildren && numericalValues.indexOf(name) !== -1) {
+            property = parseFloat(property);
+        }
+
         return property;
     },
 
@@ -178,6 +185,7 @@ module.exports = {
             childValue = {},
             thisValue = {},
             elementValues = element.values,
+            hasChildren = false,
             defaultProps = actionsManager[element.action].valueDefaults;
 
         namespace = namespace || DEFAULT_NAMESPACE;
@@ -223,6 +231,7 @@ module.exports = {
             namespacedKey = (namespace !== DEFAULT_NAMESPACE) ? key + '.' + namespace : key;
             processedValue = processedValues[key];
             thisValue = elementValues[namespacedKey] || this.initialState(processedValue.start, namespace);
+            hasChildren = processedValue.children !== undefined;
 
             // Inherit properties from Element
             for (propKey in defaultProps) {
@@ -233,9 +242,8 @@ module.exports = {
 
             // Loop through all properties and set
             for (propKey in processedValue) {
-                processedValue[propKey] = (!isNum(processedValue[propKey])) ? this.resolve(processedValue[propKey], thisValue, element) : processedValue[propKey];
+                processedValue[propKey] = (!isNum(processedValue[propKey])) ? this.resolve(propKey, processedValue[propKey], thisValue, element, hasChildren) : processedValue[propKey];
                 thisValue[propKey] = processedValue[propKey];
-
                 if (propKey === 'to') {
                     thisValue.target = thisValue.to;
                 }
@@ -254,7 +262,7 @@ module.exports = {
             elementValues[namespacedKey] = thisValue;
 
             // Update order
-            element.updateOrder(namespacedKey, utils.isString(thisValue.link), thisValue.hasOwnProperty('children'));
+            element.updateOrder(namespacedKey, utils.isString(thisValue.link), hasChildren);
         }
     }
 };

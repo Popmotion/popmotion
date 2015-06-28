@@ -87,6 +87,7 @@ var actionManager = require('../actions/manager'),
             output[value.route] = output[value.route] || {};
             // Put value in default route output
             output[defaultRoute][key] = (value.unit) ? updatedValue + value.unit : updatedValue;
+
             // Put in specific root if not a parent
             if (!value.parent) {
                 output[value.route][value.name] = output[defaultRoute][key];
@@ -97,7 +98,7 @@ var actionManager = require('../actions/manager'),
                 output[value.parent][value.propName] = output[defaultRoute][key];
             }
         }
-
+console.log(this.values);
         // Update parent values from calculated children
         for (i = 0; i < numActiveParents; i++) {
             key = this.parentOrder[i];

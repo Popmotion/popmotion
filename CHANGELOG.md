@@ -5,12 +5,16 @@ Redshift adheres to [Semantic Versioning](http://semver.org/). Change log added 
 ## [3.0.0] Unreleased
 
 ### Added
-- Creating new Elements (previously "Actions") now ~3x faster.
+- 10% smaller filesize.
+- HSLA color support (set `type: 'hsl'` on a value, or automatic detection for the `css` route)
 - New Actions (previously "Rubix") can extend Elements with custom methods.
 - Value types added. Now any value going through any route (css/values/attr etc) can be a special value (like a color value). Add new value splitters/combiners with `Redshift.addValueType()`.
-- Element types added.
+- Element types added. Can provide custom methods for use on different elements types. 
 - Super modular structure allows you to rip out or extend virtually every facet of Redshift.
-- Removed Input framelag.
+- Creating new Elements (previously "Actions") now ~3x faster.
+
+### Fixed
+- Removed Input framelag
 
 ### Changed
 - Changed `redshift` to `Redshift`, as this is a major API change and `Redshift` is a singleton.

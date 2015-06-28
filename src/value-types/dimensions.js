@@ -34,5 +34,7 @@ module.exports = {
         return splitValue;
     },
 
-    combine: function () {}
+    combine: function () {
+        return createDelimited(values, terms, ' ');
+    }
 };

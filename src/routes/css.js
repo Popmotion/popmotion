@@ -1,18 +1,15 @@
 "use strict";
 
-var lookup = require('./css/lookup');
+var build = require('./css/build'),
+    lookup = require('./css/lookup'),
+    CSS_CACHE = '_cssCache';
 
 module.exports = {
     typeMap: lookup,
     
     onChange: function (output, element) {
-        element.style(output);
-
-        // TODO: Add a way to set Element type, explicitly or automatically
-/*
-        action[cssCache] = action[cssCache] || {};
-        action.style(build(output, action[cssOrder],  action[cssCache], values));
-*/
+        element[CSS_CACHE] = element[CSS_CACHE] || {};
+        element.style(build(output, element[CSS_CACHE]));
     }
     
 };

@@ -1,8 +1,8 @@
 "use strict";
 
 var getColorValues = require('./manipulators/get-color-values'),
-    dictionary = require('./settings/dictionary'),
-    terms = dictionary.hsl;
+    terms = require('./settings/dictionary').hsl,
+    numTerms = terms.length;
 
 module.exports = {
 
@@ -13,10 +13,9 @@ module.exports = {
     split: function (value) {
         var colors = getColorValues(value);
 
-        return defaults;
     },
 
     combine: function (values) {
-        return 'hsla(' + values.Hue + ', ' + values.Saturation + ', ' + values.Lightness + ', ' + values.Alpha + ')';
+        return functionCreate(createDelimited(values, terms, ', ').split(0, -2), 'hsla');
     }
 };

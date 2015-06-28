@@ -1,53 +1,40 @@
 "use strict";
 
-var dictionary = require('./dictionary.js'),
-    templates = require('./templates.js'),
-    lookup = require('./lookup.js'),
+var transformDictionary = require('./transform-dictionary'),
+    transformProps = transformDictionary.props,
+    lookup = require('./lookup'),
     
     TRANSFORM = 'transform',
-    TRANSLATE_Z = 'translateZ',
-    
-    /*
-        Generate a CSS rule with the available template
-    */
-    generateRule = function (key, output, transformProp) {
-        var templateKey = transformProp ? TRANSFORM : lookup[key],
-            template = templates[templateKey];
+    TRANSLATE_Z = 'translateZ';
 
-        return template ? template(key, output) : output[key];
-    };
-    
-
-module.exports = function (output, order, cache) {
+module.exports = function (output, cache) {
     var css = {},
-        numRules = order.length,
-        hasZ = false,
-        transformProp = dictionary.transformProps,
-        i = 0,
-        rule = '',
         key = '',
-        transform = '';
-    
-    for (; i < numRules; i++) {
-        key = order[i],
-        rule = generateRule(key, output, transformProp[key]);
+        transform = '',
+        transformHasZ = false,
+        rule = '';
 
-        if (transformProp[key]) {
-            transform += rule + ' ';
-            hasZ = (key === TRANSLATE_Z) ? true : hasZ;
-
+    // Loop through output, check for transform properties and cache
+    for (key in output) {
+        rule = output[key];
+        // If this is a transform property, add to transform string
+        if (transformProps[key]) {
+            transform += key + '(' + rule + ')';
+            transformHasZ = (key === TRANSLATE_Z) ? true : transformHasZ;
+        
+        // Or just assign directly if different from cache
         } else if (cache[key] !== rule) {
-            css[key] = rule;
-            cache[key] = rule;
+            cache[key] = css[key] = rule;
         }
     }
-    
+
+    // If we have transform properties, add translateZ
     if (transform != '' && transform != cache[TRANSFORM]) {
-        if (!hasZ) {
+        if (!transformHasZ) {
             transform += ' ' + TRANSLATE_Z + '(0px)';
         }
-        
-        css[TRANSFORM] = cache[TRANSFORM] = transform;
+
+        cache[key] = css[key] = transform; 
     }
 
     return css;

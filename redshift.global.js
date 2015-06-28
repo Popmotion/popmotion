@@ -114,25 +114,25 @@
 
 	"use strict";
 
-	var select = __webpack_require__(26),
-	    actionManager = __webpack_require__(27),
+	var select = __webpack_require__(20),
+	    actionManager = __webpack_require__(21),
 	    easingManager = __webpack_require__(22),
-	    presetManager = __webpack_require__(28),
-	    routeManager = __webpack_require__(29),
-	    simulationManager = __webpack_require__(30),
-	    elementTypeManager = __webpack_require__(31),
-	    valueTypeManager = __webpack_require__(32),
-	    calc = __webpack_require__(20);
+	    presetManager = __webpack_require__(23),
+	    routeManager = __webpack_require__(24),
+	    simulationManager = __webpack_require__(25),
+	    elementTypeManager = __webpack_require__(26),
+	    valueTypeManager = __webpack_require__(27),
+	    calc = __webpack_require__(28);
 
 	module.exports = {
 
-	    Element: __webpack_require__(33),
+	    Element: __webpack_require__(29),
 
-	    ElementSystem: __webpack_require__(34),
+	    ElementSystem: __webpack_require__(30),
 
-	    Input: __webpack_require__(35),
+	    Input: __webpack_require__(31),
 
-	    Process: __webpack_require__(36),
+	    Process: __webpack_require__(32),
 
 	    select: function (items) {
 	        return select(items);
@@ -227,23 +227,23 @@
 	*/
 	"use strict";
 
-	var calc = __webpack_require__(20),
-	    utils = __webpack_require__(21),
+	var calc = __webpack_require__(28),
+	    utils = __webpack_require__(33),
 	    easingManager = __webpack_require__(22),
 
 	    playAction = {
 
 	        // [object] Default Action properties
-	        actionDefaults: __webpack_require__(23),
+	        actionDefaults: __webpack_require__(34),
 
 	        // [object]: Default value properties
-	        valueDefaults: __webpack_require__(24),
+	        valueDefaults: __webpack_require__(35),
 
 	        // [boolean] Prevent Redshift from autogenerating Element.prototype.play()
 	        surpressMethod: true,
 
 	        // [object] Methods to add to Element.prototype
-	        elementMethods: __webpack_require__(25),
+	        elementMethods: __webpack_require__(36),
 
 	        /*
 	            Update Action elapsed time
@@ -317,8 +317,8 @@
 	*/
 	"use strict";
 
-	var calc = __webpack_require__(20),
-	    simulate = __webpack_require__(30);
+	var calc = __webpack_require__(28),
+	    simulate = __webpack_require__(25);
 
 	module.exports = {
 
@@ -436,13 +436,13 @@
 	*/
 	"use strict";
 
-	var calc = __webpack_require__(20),
+	var calc = __webpack_require__(28),
 	    genericParser = __webpack_require__(39),
-	    Pointer = __webpack_require__(40);
+	    Pointer = __webpack_require__(44);
 
 	module.exports = {
 
-	    valueDefaults: __webpack_require__(41),
+	    valueDefaults: __webpack_require__(45),
 
 	    /*
 	        Parse Input arguments
@@ -547,9 +547,9 @@
 
 	"use strict";
 
-	var getColorValues = __webpack_require__(42),
-	    dictionary = __webpack_require__(43),
-	    terms = dictionary.hsl;
+	var getColorValues = __webpack_require__(40),
+	    terms = __webpack_require__(41).hsl,
+	    numTerms = terms.length;
 
 	module.exports = {
 
@@ -560,11 +560,10 @@
 	    split: function (value) {
 	        var colors = getColorValues(value);
 
-	        return defaults;
 	    },
 
 	    combine: function (values) {
-	        return 'hsla(' + values.Hue + ', ' + values.Saturation + ', ' + values.Lightness + ', ' + values.Alpha + ')';
+	        return functionCreate(createDelimited(values, terms, ', ').split(0, -2), 'hsla');
 	    }
 	};
 
@@ -574,7 +573,11 @@
 
 	"use strict";
 
-	var getColorValues = __webpack_require__(42);
+	var createDelimited = __webpack_require__(42),
+	    getColorValues = __webpack_require__(40),
+	    functionCreate = __webpack_require__(43),
+	    terms = __webpack_require__(41).colors,
+	    numTerms = terms.length;
 
 	module.exports = {
 
@@ -583,16 +586,19 @@
 	    },
 	    
 	    split: function (value) {
-	        var colors = getColorValues(value);
+	        var splitValue = {},
+	            colors = getColorValues(value),
+	            i = 0;
+
+	        for (; i < numTerms; i++) {
+	            splitValue[terms[i]] = (colors[i] !== undefined) ? colors[i] : 1;
+	        }
+
+	        return splitValue;
 	    },
 
 	    combine: function (values) {
-	        var red = (values.hasOwnProperty('Red')) ? values.Red : defaults.Red,
-	            green = (values.hasOwnProperty('Green')) ? values.Green : defaults.Green,
-	            blue = (values.hasOwnProperty('Blue')) ? values.Blue : defaults.Blue,
-	            alpha = (values.hasOwnProperty('Alpha')) ? values.Alpha : defaults.Alpha;
-
-	        return 'rgba(' + red + ', ' + green + ', ' + blue + ', ' + alpha + ')';
+	        return functionCreate(createDelimited(values, terms, ', ', 2), 'rgba');
 	    }
 	};
 
@@ -668,8 +674,8 @@
 	        return runSupported('split', value);
 	    },
 
-	    combine: function (value) {
-	        return (value.Red) ? rgb.combine(value) : hsl.combine(value);
+	    combine: function (values) {
+	        return (values.Red) ? rgb.combine(values) : hsl.combine(values);
 	    }
 	};
 
@@ -679,7 +685,9 @@
 
 	"use strict";
 
-	var splitSpaceDelimited = __webpack_require__(44);
+	var createDelimited = __webpack_require__(42),
+	    splitSpaceDelimited = __webpack_require__(46),
+	    terms = __webpack_require__(41).positions;
 
 	module.exports = {
 	        
@@ -706,7 +714,9 @@
 	        return splitValue;
 	    },
 
-	    combine: function () {}
+	    combine: function () {
+	        return createDelimited(values, terms, ' ');
+	    }
 	};
 
 /***/ },
@@ -715,8 +725,8 @@
 
 	"use strict";
 
-	var terms = __webpack_require__(43).dimensions,
-	    splitSpaceDelimited = __webpack_require__(44);
+	var terms = __webpack_require__(41).dimensions,
+	    splitSpaceDelimited = __webpack_require__(46);
 
 	module.exports = {
 	    
@@ -749,7 +759,9 @@
 	        return splitValue;
 	    },
 
-	    combine: function () {}
+	    combine: function () {
+	        return createDelimited(values, terms, ' ');
+	    }
 	};
 
 /***/ },
@@ -759,9 +771,11 @@
 	"use strict";
 
 	var color = __webpack_require__(12),
-	    utils = __webpack_require__(21),
-	    terms = __webpack_require__(43),
-	    splitSpaceDelimited = __webpack_require__(44);
+	    utils = __webpack_require__(33),
+	    terms = __webpack_require__(41).shadow,
+	    splitSpaceDelimited = __webpack_require__(46),
+	    createDelimited = __webpack_require__(42),
+	    shadowTerms = terms.slice(0,4);
 
 	module.exports = {
 	    /*
@@ -796,7 +810,7 @@
 	    },
 
 	    combine: function (values) {
-	       // var color = 
+	        return createDelimited(values, shadowTerms, ' ') + color.combine(values);
 	    }
 	};
 
@@ -806,7 +820,7 @@
 
 	"use strict";
 
-	var styleDOM = __webpack_require__(45);
+	var styleDOM = __webpack_require__(49);
 
 	module.exports = {
 
@@ -868,19 +882,16 @@
 
 	"use strict";
 
-	var lookup = __webpack_require__(46);
+	var build = __webpack_require__(47),
+	    lookup = __webpack_require__(48),
+	    CSS_CACHE = '_cssCache';
 
 	module.exports = {
 	    typeMap: lookup,
 	    
 	    onChange: function (output, element) {
-	        element.style(output);
-
-	        // TODO: Add a way to set Element type, explicitly or automatically
-	/*
-	        action[cssCache] = action[cssCache] || {};
-	        action.style(build(output, action[cssOrder],  action[cssCache], values));
-	*/
+	        element[CSS_CACHE] = element[CSS_CACHE] || {};
+	        element.style(build(output, element[CSS_CACHE]));
 	    }
 	    
 	};
@@ -905,7 +916,7 @@
 
 	"use strict";
 
-	var createStyles = __webpack_require__(47);
+	var createStyles = __webpack_require__(50);
 
 	module.exports = {
 
@@ -924,6 +935,541 @@
 /* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
+	"use strict";
+
+	var ElementSystem = __webpack_require__(30);
+
+	/*
+	    Create an ElementSystem based on a selection of DOM nodes
+
+	    @param [string || NodeList || jQuery object]:
+	        If string, treated as selector.
+	        If not, treated as preexisting NodeList || jQuery object.
+	*/
+	module.exports = function (selector) {
+	    var nodes = (typeof selector === 'string') ? document.querySelectorAll(selector) : selector,
+	        elements = [];
+
+	    // If jQuery selection, get array of Elements
+	    if (nodes.get) {
+	        elements = nodes.get();
+
+	    // Or convert NodeList to array
+	    } else if (nodes.length) {
+	        elements = [].slice.call(nodes);
+
+	    // Or if it's just an Element, put into array
+	    } else {
+	        elements.push(nodes);
+	    }
+
+	    return new ElementSystem(elements, { type: 'dom' });
+	};
+
+/***/ },
+/* 21 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var Element,
+	    ElementSystem,
+	    utils = __webpack_require__(33),
+	    generateMethodIterator = __webpack_require__(51),
+	    genericActionProps = __webpack_require__(52),
+	    genericValueProps = __webpack_require__(53),
+
+	    ModuleManager = __webpack_require__(54),
+
+	    actionManager = new ModuleManager();
+	/*
+	    Add module to ActionManager
+
+	    Creates a new Action for Elements
+	*/
+	actionManager.extend = function (name, module) {
+	    var methodName = '';
+
+	    /*
+	        Generate new method for Elements if module doesn't have a
+	        surpressMethod flag and Element doesn't already have a
+	        method with that name
+	    */
+	    if (!module.surpressMethod && !Element.prototype[name]) {
+	        Element.prototype[name] = function () {
+	            this.action = name;
+	            this.set(module.parser.apply(this, arguments));
+
+	            return this.start();
+	        };
+
+	        ElementSystem.prototype[name] = generateMethodIterator(name);
+	    }
+
+	    // If module has methods to add to Element.prototype
+	    if (module.elementMethods) {
+	        for (methodName in module.elementMethods) {
+	            Element.prototype[methodName] = module.elementMethods[methodName];
+	            ElementSystem.prototype[methodName] = generateMethodIterator(methodName);
+	        }
+	    }
+
+	    // Merge action props with defaults
+	    module.actionDefaults = module.actionDefaults ? utils.merge(genericActionProps, module.actionDefaults) : genericActionProps;
+
+	    // Merge value props with defaults
+	    module.valueDefaults = module.valueDefaults ? utils.merge(genericValueProps, module.valueDefaults) : genericValueProps;
+	    
+	    // Call parent extend method
+	    ModuleManager.prototype.extend.call(this, name, module);
+	};
+
+	actionManager.setElement = function (element) {
+	    Element = element;
+	};
+
+	actionManager.setElementSystem = function (elementSystem) {
+	    ElementSystem = elementSystem;
+	};
+
+	module.exports = actionManager;
+
+
+/***/ },
+/* 22 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Easing functions
+	    ----------------------------------------
+	    
+	    Generates and provides easing functions based on baseFunction definitions
+	    
+	    A call to easingFunction.get('functionName') returns a function that can be passed:
+	        @param [number]: Progress 0-1
+	        @param [number] (optional): Amp modifier, only accepted in some easing functions
+	                                    and is used to adjust overall strength
+	        @return [number]: Eased progress
+	        
+	    We can generate new functions by sending an easing function through easingFunction.extend(name, method).
+	    Which will make nameIn, nameOut and nameInOut functions available to use.
+	        
+	    Easing functions from Robert Penner
+	    http://www.robertpenner.com/easing/
+	        
+	    Bezier curve interpretor created from Gaëtan Renaudeau's original BezierEasing  
+	    https://github.com/gre/bezier-easing/blob/master/index.js  
+	    https://github.com/gre/bezier-easing/blob/master/LICENSE
+	*/
+	"use strict";
+
+	var calc = __webpack_require__(28),
+	    Bezier = __webpack_require__(55),
+
+	    EASE_IN = 'In',
+	    EASE_OUT = 'Out',
+	    EASE_IN_OUT = EASE_IN + EASE_OUT,
+	    
+	    // Base power ease names
+	    powerEasing = ['ease', 'cubic', 'quart', 'quint'],
+	    
+	    // Generate easing function with provided power
+	    generatePowerEasing = function (power) {
+	        return function (progress) {
+	            return Math.pow(progress, power);
+	        }
+	    },
+
+	    /*
+	        Each of these base functions is an easeIn
+	        
+	        On init, we use EasingFunction.mirror and .reverse to generate easeInOut and
+	        easeOut functions respectively.
+	    */
+	    baseEasing = {
+	        circ: function (progress) {
+	            return 1 - Math.sin(Math.acos(progress));
+	        },
+	        back: function (progress) {
+	            var strength = 1.5;
+
+	            return (progress * progress) * ((strength + 1) * progress - strength);
+	        }
+	    },
+	    
+	    /*
+	        Mirror easing
+	        
+	        Mirrors the provided easing function, used here for mirroring an
+	        easeIn into an easeInOut
+	        
+	        @param [number]: Progress, from 0 - 1, of current shift
+	        @param [function]: The easing function to mirror
+	        @returns [number]: The easing-adjusted delta
+	    */
+	    mirrorEasing = function (progress, method) {
+	        return (progress <= 0.5) ? method(2 * progress) / 2 : (2 - method(2 * (1 - progress))) / 2;
+	    },
+	            
+	    /*
+	        Reverse easing
+	        
+	        Reverses the output of the provided easing function, used for flipping easeIn
+	        curve to an easeOut.
+	        
+	        @param [number]: Progress, from 0 - 1, of current shift
+	        @param [function]: The easing function to reverse
+	        @returns [number]: The easing-adjusted delta
+	    */
+	    reverseEasing = function (progress, method) {
+	        return 1 - method(1 - progress);
+	    },
+	    
+	    /*
+	        Add new easing function
+	        
+	        Takes name and generates nameIn, nameOut, nameInOut, and easing functions to match
+	        
+	        @param [string]: Base name of the easing functions to generate
+	        @param [function]: Base easing function, as an easeIn, from which to generate Out and InOut
+	    */
+	    generateVariations = function (name, method) {
+	        var easeIn = name + EASE_IN,
+	            easeOut = name + EASE_OUT,
+	            easeInOut = name + EASE_IN_OUT,
+	            baseName = easeIn,
+	            reverseName = easeOut;
+
+	        // Create the In function
+	        easingManager[baseName] = method;
+
+	        // Create the Out function by reversing the transition curve
+	        easingManager[reverseName] = function (progress) {
+	            return reverseEasing(progress, easingManager[baseName]);
+	        };
+	        
+	        // Create the InOut function by mirroring the transition curve
+	        easingManager[easeInOut] = function (progress) {
+	            return mirrorEasing(progress, easingManager[baseName]);
+	        };
+	    },
+
+	    ModuleManager = __webpack_require__(54),
+	    easingManager = new ModuleManager();
+
+	/*
+	    Extend easing functions
+	*/
+	easingManager.extend = function (name, x1, y1, x2, y2) {
+	    // If this is an easing function, generate variations
+	    if (typeof x1 === 'function') {
+	        generateVariations(name, x1);
+
+	    // Otherwise it's a bezier curve, so generate new Bezier curve function
+	    } else {
+	        this[name] = new Bezier(x1, y1, x2, y2);
+	    }
+
+	    return this;
+	};
+
+	/*
+	    Ease value within ranged parameters
+	    
+	    @param [number]: Progress between 0 and 1
+	    @param [number]: Value of 0 progress
+	    @param [number]: Value of 1 progress
+	    @param [string]: Easing to use
+	    @param [number]: Amplify progress out of specified range
+	    @return [number]: Value of eased progress in range
+	*/  
+	easingManager.withinRange = function (progress, from, to, ease, escapeAmp) {
+	    var progressLimited = calc.restricted(progress, 0, 1);
+
+	    if (progressLimited !== progress && escapeAmp) {
+	        ease = 'linear';
+	        progressLimited = progressLimited + ((progress - progressLimited) * escapeAmp);
+	    }
+
+	    return calc.valueEased(progressLimited, from, to, this[ease]);
+	};
+	            
+	/*
+	    Linear easing adjustment
+	    
+	    The default easing method, not added with .extend as it has no Out or InOut
+	    variation.
+	    
+	    @param [number]: Progress, from 0-1
+	    @return [number]: Unadjusted progress
+	*/
+	easingManager.linear = function (progress) {
+	    return progress;
+	};
+
+	// Initalise easing
+	(function () {
+	    var i = 0,
+	        key = '';
+	        
+	    // Generate power easing functions
+	    for (; i < 4; i++) {
+	        baseEasing[powerEasing[i]] = generatePowerEasing(i + 2);
+	    }
+	    
+	    // Generate in/out/inOut easing variations
+	    for (key in baseEasing) {
+	        if (baseEasing.hasOwnProperty(key)) {
+	            generateVariations(key, baseEasing[key]);
+	        }
+	    }
+	})();
+
+	module.exports = easingManager;
+
+/***/ },
+/* 23 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var utils = __webpack_require__(33),
+	    ModuleManager = __webpack_require__(54),
+	    presetManager = new ModuleManager(),
+
+	    DOT = '.',
+
+	    generateKeys = function (key) {
+	        var keys = key.split(DOT),
+	            numKeys = keys.length,
+	            lastKey = keys[0],
+	            i = 1;
+
+	        for (; i < numKeys; i++) {
+	            keys[i] = lastKey += DOT + keys[i];
+	        }
+
+	        return keys;
+	    };
+
+	/*
+	    Get defined action
+	    
+	    @param [string]: The name of the predefined action
+	*/
+	presetManager.getDefined = function (name) {
+	    var props = {},
+	        thisProp = {},
+	        keys = generateKeys(name),
+	        numKeys = keys.length,
+	        i = 0;
+
+	    for (; i < numKeys; i++) {
+	        thisProp = this[keys[i]];
+
+	        if (thisProp) {
+	            props = utils.merge(props, thisProp);
+	        }
+	    }
+
+	    return props;
+	};
+
+	module.exports = presetManager;
+
+/***/ },
+/* 24 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var ModuleManager = __webpack_require__(54),
+	    routeManager = new ModuleManager();
+
+	/*
+	    Shard function
+
+	    Run callback once for every value route
+
+	    @param [function]: Function to run for each route
+	    @param [object] (optional): Object containing keys of routes to check
+	*/
+	routeManager.shard = function (callback, validRoutes) {
+	    var key = '',
+	        i = 0;
+
+	    validRoutes = validRoutes || routeManager;
+
+	    for (; i < this._numKeys; i++) {
+	        key = this._keys[i];
+
+	        if ((validRoutes && validRoutes.hasOwnProperty(key))) {
+	            callback(this[key], key, validRoutes[key]);
+	        }
+	    }
+	};
+
+	module.exports = routeManager;
+
+/***/ },
+/* 25 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var calc = __webpack_require__(28),
+	    speedPerFrame = calc.speedPerFrame,
+
+	    ModuleManager = __webpack_require__(54),
+	    simulationManager = new ModuleManager();
+
+	/*
+	    Add core physics simulations
+	*/
+	simulationManager
+
+	    /*
+	        Velocity
+	        
+	        The default .run() simulation.
+	        
+	        Applies any set deceleration and acceleration to existing velocity
+	    */
+	    .extend('velocity', function (value, duration) {
+	        return value.velocity - speedPerFrame(value.deceleration, duration) + speedPerFrame(value.acceleration, duration);
+	    })
+	    
+	    /*
+	        Glide
+	        
+	        Emulates touch device scrolling effects with exponential decay
+	        http://ariya.ofilabs.com/2013/11/javascript-kinetic-scrolling-part-2.html
+	    */
+	    .extend('glide', function (value, duration, started) {
+	        var timeUntilFinished = - utils.currentTime() - started,
+	            delta = - value.to * Math.exp(timeUntilFinished / value.timeConstant);
+
+	        return (value.to + delta) - value.current;
+	    })
+
+	    /*
+	        Friction
+
+	        TODO: fold into core physics simulation
+	    */
+	    .extend('friction', function (value, duration) {
+	        var newVelocity = speedPerFrame(value.velocity, duration) * (1 - value.friction);
+	        return calc.speedPerSecond(newVelocity, duration);
+	    })
+	    
+	    /*
+	        Spring
+	    */
+	    .extend('spring', function (value, duration) {
+	        var distance = value.to - value.current;
+	        
+	        value.velocity += distance * speedPerFrame(value.spring, duration);
+	        
+	        return simulationManager.friction(value, duration);
+	    })
+	    
+	    /*
+	        Bounce
+	        
+	        Invert velocity and reduce by provided fraction
+	    */
+	    .extend('bounce', function (value) {
+	        var distance = 0,
+	            to = value.to,
+	            current = value.current,
+	            bounce = value.bounce;
+	        
+	        // If we're using glide simulation we have to flip our target too
+	        if (value.simulate === 'glide') {
+	            distance = to - current;
+	            value.to = current - (distance * bounce);
+	        }
+	        
+	        return value.velocity *= - bounce;
+	    })
+	    
+	    /*
+	        Capture
+	        
+	        Convert simulation to spring and set target to limit
+	    */
+	    .extend('capture', function (value, target) {
+	        value.to = target;
+	        value.simulate = 'spring';
+	        value.capture = value.min = value.max = undefined;
+	    });
+
+	module.exports = simulationManager;
+
+
+/***/ },
+/* 26 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var Element,
+
+	    /*
+	        Generate an Element function
+	    */
+	    generateFunction = function (name) {
+	        return function () {
+	            var type = this.type;
+	            if (type && type[name]) {
+	                type[name].apply(this, arguments);
+	            }
+	        }
+	    },
+
+	    ModuleManager = __webpack_require__(54),
+	    elementTypeManager = new ModuleManager;
+
+	elementTypeManager.extend = function (name, module) {
+	    var methodName = '';
+
+	    for (methodName in module) {
+	        if (module.hasOwnProperty(methodName) && !Element.prototype[methodName]) {
+	            Element.prototype[methodName] = generateFunction(methodName);
+	        }
+	    }
+
+	    // Call parent extend method
+	    ModuleManager.prototype.extend.call(this, name, module);
+	};
+
+	elementTypeManager.setElement = function (element) {
+	    Element = element;
+	};
+
+	module.exports = elementTypeManager;
+
+/***/ },
+/* 27 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var utils = __webpack_require__(33),
+	    defaultProps = __webpack_require__(56),
+	    ModuleManager = __webpack_require__(54),
+	    valueTypeManager = new ModuleManager();
+
+	valueTypeManager.defaultProps = function (key) {
+	    return defaultProps[key] ? utils.copy(defaultProps[key]) : {};
+	};
+
+	module.exports = valueTypeManager;
+
+/***/ },
+/* 28 */
+/***/ function(module, exports, __webpack_require__) {
+
 	/*
 	    Calculators
 	    ----------------------------------------
@@ -932,7 +1478,7 @@
 	*/
 	"use strict";
 
-	var utils = __webpack_require__(21),
+	var utils = __webpack_require__(33),
 
 	    calc = {
 	        
@@ -1279,960 +1825,19 @@
 	module.exports = calc;
 
 /***/ },
-/* 21 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    Utility functions
-	*/
-	"use strict";
-
-	var protectedProperties = ['scope',  'dom'],
-	    
-	    isProtected = function (key) {
-	        return (protectedProperties.indexOf(key) !== -1);
-	    },
-
-	    /*
-	        Get var type as string
-	        
-	        @param: Variable to test
-	        @return [string]: Returns, for instance 'Object' if [object Object]
-	    */
-	    varType = function (variable) {
-	        return Object.prototype.toString.call(variable).slice(8, -1);
-	    };
-
-	module.exports = {
-	    
-	    /*
-	        Has one object changed from the other
-	        
-	        Compares the two provided inputs and returns true if they are different
-	        
-	        @param [object]: Input A
-	        @param [object]: Input B
-	        @return [boolean]: True if different
-	    */
-	    hasChanged: function (a, b) {
-	        var hasChanged = false,
-	            key = '';
-
-	        for (key in b) {
-	            if (a.hasOwnProperty(key) && b.hasOwnProperty(key)) {
-	                if (a[key] !== b[key]) {
-	                    hasChanged = true;
-	                }
-	            } else {
-	                hasChanged = true;
-	            }
-	        }
-	    
-	        return hasChanged;
-	    },
-	    
-	    /*
-	        Is this var a number?
-	        
-	        @param: Variable to test
-	        @return [boolean]: Returns true if typeof === 'number'
-	    */
-	    isNum: function (num) {
-	        return (typeof num === 'number');
-	    },
-	    
-	    /*
-	        Is this var an object?
-	        
-	        @param: Variable to test
-	        @return [boolean]: Returns true if typeof === 'object'
-	    */
-	    isObj: function (obj) {
-	        return (typeof obj === 'object');
-	    },
-	    
-	    /*
-	        Is this var a function ? 
-	        
-	        @param: Variable to test
-	        @return [boolean]: Returns true if this.varType === 'Function'
-	    */
-	    isFunc: function (obj) {
-	        return (varType(obj) === 'Function'); 
-	    },
-	    
-	    /*
-	        Is this var a string ? 
-	        
-	        @param: Variable to test
-	        @return [boolean]: Returns true if typeof str === 'string'
-	    */
-	    isString: function (str) {
-	        return (typeof str === 'string'); 
-	    },
-
-
-	    /*
-	        Is this a relative value assignment?
-	        
-	        @param [string]: Variable to test
-	        @return [boolean]: If this looks like a relative value assignment
-	    */
-	    isRelativeValue: function (value) {
-	        return (value && value.indexOf && value.indexOf('=') > 0);
-	    },
-	    
-	    /*
-	        Is this var an array ? 
-	        
-	        @param: Variable to test
-	        @return [boolean]: Returns true if this.varType === 'Array'
-	    */
-	    isArray: function (arr) {
-	        return (varType(arr) === 'Array');
-	    },
-	    
-	    /*
-	        Copy object or array
-	        
-	        Checks whether base is an array or object and makes
-	        appropriate copy
-	        
-	        @param [array || object]: Array or object to copy
-	        @param [array || object]: New copy of array or object
-	    */
-	    copy: function (base) {
-	        return (this.isArray(base)) ? this.copyArray(base) : this.copyObject(base);
-	    },
-	    
-	    /*
-	        Deep copy an object
-	        
-	        Iterates over an object and creates a new copy of every item,
-	        deep copying if it finds any objects/arrays
-	        
-	        @param [object]: Object to copy
-	        @param [object]: New copy of object
-	    */
-	    copyObject: function (base) {
-	        var newObject = {};
-	        
-	        for (var key in base) {
-	            if (base.hasOwnProperty(key)) {
-	                newObject[key] = (this.isObj(base[key]) && !isProtected(key)) ? this.copy(base[key]) : base[key];
-	            }
-	        }
-	        
-	        return newObject;
-	    },
-	    
-	    /*
-	        Deep copy an array
-	        
-	        Loops through an array and creates a new copy of every item,
-	        deep copying if it finds any objects/arrays
-	        
-	        @param [array]: Array to copy
-	        @return [array]: New copy of array
-	    */
-	    copyArray: function (base) {
-	        var newArray = [],
-	            length = base.length,
-	            i = 0;
-	        
-	        for (var i = 0; i < length; i++) {
-	            newArray[i] = (this.isObj(base[i])) ? this.copy(base[i]) : base[i];
-	        }
-	        
-	        return newArray;
-	    },
-	    
-	    /*
-	        Non-destructive merge of object or array
-	        
-	        @param [array || object]: Array or object to use as base
-	        @param [array || object]: Array or object to overwrite base with
-	        @return [array || object]: New array or object
-	    */
-	    merge: function (base, overwrite) {
-	        return (this.isArray(base)) ? this.copyArray(overwrite) : this.mergeObject(base, overwrite);
-	    },
-	    
-	    /*
-	        Non-destructive merge of object
-	        
-	        @param [object]: Object to use as base
-	        @param [object]: Object to overwrite base with
-	        @return [object]: New object
-	    */
-	    mergeObject: function (base, overwrite) {
-	        var hasBase = this.isObj(base),
-	            newObject = hasBase ? this.copy(base) : this.copy(overwrite),
-	            key = '';
-
-	        if (hasBase) {
-	            for (key in overwrite) {
-	                if (overwrite.hasOwnProperty(key)) {
-	                    newObject[key] = (this.isObj(overwrite[key]) && !isProtected(key)) ? this.merge(base[key], overwrite[key]) : overwrite[key];
-	                }
-	            }
-	        }
-	        return newObject;
-	    },
-	    
-	    /*
-	        Split a value into a value/unit object
-	        
-	            "200px" -> { value: 200, unit: "px" }
-	            
-	        @param [string]: Value to split
-	        @return [object]: Object with value and unit props
-	    */
-	    splitValUnit: function (value) {
-	        var splitVal = value.match(/(-?\d*\.?\d*)(.*)/);
-
-	        return {
-	            value: parseFloat(splitVal[1]),
-	            unit:  splitVal[2]
-	        };
-	    },
-
-	    /*
-	        Create stepped version of 0-1 progress
-	        
-	        @param [number]: Current value
-	        @param [int]: Number of steps
-	        @return [number]: Stepped value
-	    */
-	    stepProgress: function (progress, steps) {
-	        var segment = 1 / (steps - 1),
-	            target = 1 - (1 / steps),
-	            progressOfTarget = Math.min(progress / target, 1);
-
-	        return Math.floor(progressOfTarget / segment) * segment;
-	    },
-	    
-	    /*
-	        Generate current timestamp
-	        
-	        @return [timestamp]: Current UNIX timestamp
-	    */
-	    currentTime: function () {
-		    return (typeof performance !== "undefined") ? performance.now() : new Date().getTime();
-	    }
-	    
-	};
-
-/***/ },
-/* 22 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	    Easing functions
-	    ----------------------------------------
-	    
-	    Generates and provides easing functions based on baseFunction definitions
-	    
-	    A call to easingFunction.get('functionName') returns a function that can be passed:
-	        @param [number]: Progress 0-1
-	        @param [number] (optional): Amp modifier, only accepted in some easing functions
-	                                    and is used to adjust overall strength
-	        @return [number]: Eased progress
-	        
-	    We can generate new functions by sending an easing function through easingFunction.extend(name, method).
-	    Which will make nameIn, nameOut and nameInOut functions available to use.
-	        
-	    Easing functions from Robert Penner
-	    http://www.robertpenner.com/easing/
-	        
-	    Bezier curve interpretor created from Gaëtan Renaudeau's original BezierEasing  
-	    https://github.com/gre/bezier-easing/blob/master/index.js  
-	    https://github.com/gre/bezier-easing/blob/master/LICENSE
-	*/
-	"use strict";
-
-	var calc = __webpack_require__(20),
-	    Bezier = __webpack_require__(48),
-
-	    EASE_IN = 'In',
-	    EASE_OUT = 'Out',
-	    EASE_IN_OUT = EASE_IN + EASE_OUT,
-	    
-	    // Base power ease names
-	    powerEasing = ['ease', 'cubic', 'quart', 'quint'],
-	    
-	    // Generate easing function with provided power
-	    generatePowerEasing = function (power) {
-	        return function (progress) {
-	            return Math.pow(progress, power);
-	        }
-	    },
-
-	    /*
-	        Each of these base functions is an easeIn
-	        
-	        On init, we use EasingFunction.mirror and .reverse to generate easeInOut and
-	        easeOut functions respectively.
-	    */
-	    baseEasing = {
-	        circ: function (progress) {
-	            return 1 - Math.sin(Math.acos(progress));
-	        },
-	        back: function (progress) {
-	            var strength = 1.5;
-
-	            return (progress * progress) * ((strength + 1) * progress - strength);
-	        }
-	    },
-	    
-	    /*
-	        Mirror easing
-	        
-	        Mirrors the provided easing function, used here for mirroring an
-	        easeIn into an easeInOut
-	        
-	        @param [number]: Progress, from 0 - 1, of current shift
-	        @param [function]: The easing function to mirror
-	        @returns [number]: The easing-adjusted delta
-	    */
-	    mirrorEasing = function (progress, method) {
-	        return (progress <= 0.5) ? method(2 * progress) / 2 : (2 - method(2 * (1 - progress))) / 2;
-	    },
-	            
-	    /*
-	        Reverse easing
-	        
-	        Reverses the output of the provided easing function, used for flipping easeIn
-	        curve to an easeOut.
-	        
-	        @param [number]: Progress, from 0 - 1, of current shift
-	        @param [function]: The easing function to reverse
-	        @returns [number]: The easing-adjusted delta
-	    */
-	    reverseEasing = function (progress, method) {
-	        return 1 - method(1 - progress);
-	    },
-	    
-	    /*
-	        Add new easing function
-	        
-	        Takes name and generates nameIn, nameOut, nameInOut, and easing functions to match
-	        
-	        @param [string]: Base name of the easing functions to generate
-	        @param [function]: Base easing function, as an easeIn, from which to generate Out and InOut
-	    */
-	    generateVariations = function (name, method) {
-	        var easeIn = name + EASE_IN,
-	            easeOut = name + EASE_OUT,
-	            easeInOut = name + EASE_IN_OUT,
-	            baseName = easeIn,
-	            reverseName = easeOut;
-
-	        // Create the In function
-	        easingManager[baseName] = method;
-
-	        // Create the Out function by reversing the transition curve
-	        easingManager[reverseName] = function (progress) {
-	            return reverseEasing(progress, easingManager[baseName]);
-	        };
-	        
-	        // Create the InOut function by mirroring the transition curve
-	        easingManager[easeInOut] = function (progress) {
-	            return mirrorEasing(progress, easingManager[baseName]);
-	        };
-	    },
-
-	    ModuleManager = __webpack_require__(49),
-	    easingManager = new ModuleManager();
-
-	/*
-	    Extend easing functions
-	*/
-	easingManager.extend = function (name, x1, y1, x2, y2) {
-	    // If this is an easing function, generate variations
-	    if (typeof x1 === 'function') {
-	        generateVariations(name, x1);
-
-	    // Otherwise it's a bezier curve, so generate new Bezier curve function
-	    } else {
-	        this[name] = new Bezier(x1, y1, x2, y2);
-	    }
-
-	    return this;
-	};
-
-	/*
-	    Ease value within ranged parameters
-	    
-	    @param [number]: Progress between 0 and 1
-	    @param [number]: Value of 0 progress
-	    @param [number]: Value of 1 progress
-	    @param [string]: Easing to use
-	    @param [number]: Amplify progress out of specified range
-	    @return [number]: Value of eased progress in range
-	*/  
-	easingManager.withinRange = function (progress, from, to, ease, escapeAmp) {
-	    var progressLimited = calc.restricted(progress, 0, 1);
-
-	    if (progressLimited !== progress && escapeAmp) {
-	        ease = 'linear';
-	        progressLimited = progressLimited + ((progress - progressLimited) * escapeAmp);
-	    }
-
-	    return calc.valueEased(progressLimited, from, to, this[ease]);
-	};
-	            
-	/*
-	    Linear easing adjustment
-	    
-	    The default easing method, not added with .extend as it has no Out or InOut
-	    variation.
-	    
-	    @param [number]: Progress, from 0-1
-	    @return [number]: Unadjusted progress
-	*/
-	easingManager.linear = function (progress) {
-	    return progress;
-	};
-
-	// Initalise easing
-	(function () {
-	    var i = 0,
-	        key = '';
-	        
-	    // Generate power easing functions
-	    for (; i < 4; i++) {
-	        baseEasing[powerEasing[i]] = generatePowerEasing(i + 2);
-	    }
-	    
-	    // Generate in/out/inOut easing variations
-	    for (key in baseEasing) {
-	        if (baseEasing.hasOwnProperty(key)) {
-	            generateVariations(key, baseEasing[key]);
-	        }
-	    }
-	})();
-
-	module.exports = easingManager;
-
-/***/ },
-/* 23 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	    
-	    // [number]: Delay this action by x ms
-	    delay: 0,
-	    
-	    // [number]: Time of animation (if animating) in ms
-	    duration: 400,
-	    
-	    // [string]: Ease animation
-	    ease: 'easeInOut',
-	    
-	    // [number]: Multiply progress by this (.5 is half speed)
-	    dilate: 1,
-	    
-	    // [boolean || number]: Number of times to loop values, true for indefinite
-	    loop: false,
-	    
-	    // [boolean || number]: Number of times to yoyo values, true for indefinite
-	    yoyo: false,
-	    
-	    // [boolean || number]: Number of times to flip values, true for indefinite
-	    flip: false,
-	};
-
-/***/ },
-/* 24 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	    // [number]: Duration of animation in ms
-	    duration: 400,
-	    
-	    // [number]: Duration of delay in ms
-	    delay: 0,
-	    
-	    // [number]: Stagger delay as factor of duration (ie 0.2 with duration of 1000ms = 200ms)
-	    stagger: 0,
-	    
-	    // [string]: Easing to apply
-	    ease: 'easeInOut',
-	    
-	    // [number]: Number of steps to execute animation
-	    steps: 0,
-	    
-	    // [string]: Tells Redshift when to step, at the start or end of a step. Other option is 'start' as per CSS spec
-	    stepDirection: 'end'
-	};
-
-/***/ },
-/* 25 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var parseArgs = __webpack_require__(53),
-	    utils = __webpack_require__(21);
-
-	module.exports = {
-	    /*
-	        Play an animation
-
-	        @param [object || string]: Parameters or preset names
-	        @param [object]: Override parameters
-	    */
-	    play: function () {
-	        var action = 'play';
-
-	        // If there's an active Action, and its play, add to queue
-	        if (this.isActive && this.action === action) {
-	            this.queue.add.apply(this.queue, arguments);
-	        
-	        // Else, start playing
-	        } else {
-	            this.action = action;
-	            this.set(parseArgs.apply(this, arguments), 'to');
-	            this.start();
-	        }
-
-	        return this;
-	    },
-
-	    /*
-	        Check for next steps and perform, stop if not
-	    */
-	    next: function () {
-	        var nextSteps = [{
-	                key: 'loop',
-	                callback: this.reset
-	            }, {
-	                key: 'yoyo',
-	                callback: this.reverse
-	            }, {
-	                key: 'flip',
-	                callback: this.flipValues
-	            }],
-	            numSteps = nextSteps.length,
-	            hasNextStep = false,
-	            i = 0;
-
-	        for (; i < numSteps; ++i) {
-	            if (this.checkNextStep(nextSteps[i].key, nextSteps[i].callback)) {
-	                hasNextStep = true;
-	                break;
-	            }
-	        }
-
-	        if (!hasNextStep && !this.playNext()) {
-	            this.stop();
-	        } else {
-	            this.isActive = true;
-	        }
-
-	        return this;
-	    },
-
-	    /*
-	        Check next step
-	        
-	        @param [string]: Name of step ('yoyo' or 'loop')
-	        @param [callback]: Function to run if we take this step
-	    */
-	    checkNextStep: function (key, callback) {
-	        var COUNT = 'Count',
-	            stepTaken = false,
-	            step = this[key],
-	            count = this[key + COUNT],
-	            forever = (step === true);
-
-	        if (forever || utils.isNum(step)) {
-	            ++count;
-	            this[key + COUNT] = count;
-	            if (forever || count <= step) {
-	                callback.call(this);
-	                stepTaken = true;
-	            }
-	        }
-
-	        return stepTaken;
-	    },
-
-	    /*
-	        Next in playlist
-	    */
-	    playNext: function () {
-	        var stepTaken = false,
-	            nextInQueue = this.queue.next(this.playDirection);
-
-	        if (utils.isArray(nextInQueue)) {
-	            this.set(parseArgs.apply(this, nextInQueue), 'to')
-	                .reset();
-
-	            stepTaken = true;
-	        }
-
-	        return stepTaken;
-	    }
-	};
-
-/***/ },
-/* 26 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var ElementSystem = __webpack_require__(34);
-
-	/*
-	    Create an ElementSystem based on a selection of DOM nodes
-
-	    @param [string || NodeList || jQuery object]:
-	        If string, treated as selector.
-	        If not, treated as preexisting NodeList || jQuery object.
-	*/
-	module.exports = function (selector) {
-	    var nodes = (typeof selector === 'string') ? document.querySelectorAll(selector) : selector,
-	        elements = [];
-
-	    // If jQuery selection, get array of Elements
-	    if (nodes.get) {
-	        elements = nodes.get();
-
-	    // Or convert NodeList to array
-	    } else if (nodes.length) {
-	        elements = [].slice.call(nodes);
-
-	    // Or if it's just an Element, put into array
-	    } else {
-	        elements.push(nodes);
-	    }
-
-	    return new ElementSystem(elements, { type: 'dom' });
-	};
-
-/***/ },
-/* 27 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var Element,
-	    ElementSystem,
-	    utils = __webpack_require__(21),
-	    generateMethodIterator = __webpack_require__(50),
-	    genericActionProps = __webpack_require__(51),
-	    genericValueProps = __webpack_require__(52),
-
-	    ModuleManager = __webpack_require__(49),
-
-	    actionManager = new ModuleManager();
-	/*
-	    Add module to ActionManager
-
-	    Creates a new Action for Elements
-	*/
-	actionManager.extend = function (name, module) {
-	    var methodName = '';
-
-	    /*
-	        Generate new method for Elements if module doesn't have a
-	        surpressMethod flag and Element doesn't already have a
-	        method with that name
-	    */
-	    if (!module.surpressMethod && !Element.prototype[name]) {
-	        Element.prototype[name] = function () {
-	            this.action = name;
-	            this.set(module.parser.apply(this, arguments));
-
-	            return this.start();
-	        };
-
-	        ElementSystem.prototype[name] = generateMethodIterator(name);
-	    }
-
-	    // If module has methods to add to Element.prototype
-	    if (module.elementMethods) {
-	        for (methodName in module.elementMethods) {
-	            Element.prototype[methodName] = module.elementMethods[methodName];
-	            ElementSystem.prototype[methodName] = generateMethodIterator(methodName);
-	        }
-	    }
-
-	    // Merge action props with defaults
-	    module.actionDefaults = module.actionDefaults ? utils.merge(genericActionProps, module.actionDefaults) : genericActionProps;
-
-	    // Merge value props with defaults
-	    module.valueDefaults = module.valueDefaults ? utils.merge(genericValueProps, module.valueDefaults) : genericValueProps;
-	    
-	    // Call parent extend method
-	    ModuleManager.prototype.extend.call(this, name, module);
-	};
-
-	actionManager.setElement = function (element) {
-	    Element = element;
-	};
-
-	actionManager.setElementSystem = function (elementSystem) {
-	    ElementSystem = elementSystem;
-	};
-
-	module.exports = actionManager;
-
-
-/***/ },
-/* 28 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var utils = __webpack_require__(21),
-	    ModuleManager = __webpack_require__(49),
-	    presetManager = new ModuleManager(),
-
-	    DOT = '.',
-
-	    generateKeys = function (key) {
-	        var keys = key.split(DOT),
-	            numKeys = keys.length,
-	            lastKey = keys[0],
-	            i = 1;
-
-	        for (; i < numKeys; i++) {
-	            keys[i] = lastKey += DOT + keys[i];
-	        }
-
-	        return keys;
-	    };
-
-	/*
-	    Get defined action
-	    
-	    @param [string]: The name of the predefined action
-	*/
-	presetManager.getDefined = function (name) {
-	    var props = {},
-	        thisProp = {},
-	        keys = generateKeys(name),
-	        numKeys = keys.length,
-	        i = 0;
-
-	    for (; i < numKeys; i++) {
-	        thisProp = this[keys[i]];
-
-	        if (thisProp) {
-	            props = utils.merge(props, thisProp);
-	        }
-	    }
-
-	    return props;
-	};
-
-	module.exports = presetManager;
-
-/***/ },
 /* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var ModuleManager = __webpack_require__(49),
-	    routeManager = new ModuleManager();
-
-	/*
-	    Shard function
-
-	    Run callback once for every value route
-
-	    @param [function]: Function to run for each route
-	    @param [object] (optional): Object containing keys of routes to check
-	*/
-	routeManager.shard = function (callback, validRoutes) {
-	    var key = '',
-	        i = 0;
-
-	    validRoutes = validRoutes || routeManager;
-
-	    for (; i < this._numKeys; i++) {
-	        key = this._keys[i];
-
-	        if ((validRoutes && validRoutes.hasOwnProperty(key))) {
-	            callback(this[key], key, validRoutes[key]);
-	        }
-	    }
-	};
-
-	module.exports = routeManager;
-
-/***/ },
-/* 30 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var calc = __webpack_require__(20),
-	    speedPerFrame = calc.speedPerFrame,
-
-	    ModuleManager = __webpack_require__(49),
-	    simulationManager = new ModuleManager();
-
-	/*
-	    Add core physics simulations
-	*/
-	simulationManager
-
-	    /*
-	        Velocity
-	        
-	        The default .run() simulation.
-	        
-	        Applies any set deceleration and acceleration to existing velocity
-	    */
-	    .extend('velocity', function (value, duration) {
-	        return value.velocity - speedPerFrame(value.deceleration, duration) + speedPerFrame(value.acceleration, duration);
-	    })
-	    
-	    /*
-	        Glide
-	        
-	        Emulates touch device scrolling effects with exponential decay
-	        http://ariya.ofilabs.com/2013/11/javascript-kinetic-scrolling-part-2.html
-	    */
-	    .extend('glide', function (value, duration, started) {
-	        var timeUntilFinished = - utils.currentTime() - started,
-	            delta = - value.to * Math.exp(timeUntilFinished / value.timeConstant);
-
-	        return (value.to + delta) - value.current;
-	    })
-
-	    /*
-	        Friction
-
-	        TODO: fold into core physics simulation
-	    */
-	    .extend('friction', function (value, duration) {
-	        var newVelocity = speedPerFrame(value.velocity, duration) * (1 - value.friction);
-	        return calc.speedPerSecond(newVelocity, duration);
-	    })
-	    
-	    /*
-	        Spring
-	    */
-	    .extend('spring', function (value, duration) {
-	        var distance = value.to - value.current;
-	        
-	        value.velocity += distance * speedPerFrame(value.spring, duration);
-	        
-	        return simulationManager.friction(value, duration);
-	    })
-	    
-	    /*
-	        Bounce
-	        
-	        Invert velocity and reduce by provided fraction
-	    */
-	    .extend('bounce', function (value) {
-	        var distance = 0,
-	            to = value.to,
-	            current = value.current,
-	            bounce = value.bounce;
-	        
-	        // If we're using glide simulation we have to flip our target too
-	        if (value.simulate === 'glide') {
-	            distance = to - current;
-	            value.to = current - (distance * bounce);
-	        }
-	        
-	        return value.velocity *= - bounce;
-	    })
-	    
-	    /*
-	        Capture
-	        
-	        Convert simulation to spring and set target to limit
-	    */
-	    .extend('capture', function (value, target) {
-	        value.to = target;
-	        value.simulate = 'spring';
-	        value.capture = value.min = value.max = undefined;
-	    });
-
-	module.exports = simulationManager;
-
-
-/***/ },
-/* 31 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var Element,
-
-	    /*
-	        Generate an Element function
-	    */
-	    generateFunction = function (name) {
-	        return function () {
-	            var type = this.type;
-	            if (type && type[name]) {
-	                type[name].apply(this, arguments);
-	            }
-	        }
-	    },
-
-	    ModuleManager = __webpack_require__(49),
-	    elementTypeManager = new ModuleManager;
-
-	elementTypeManager.extend = function (name, module) {
-	    var methodName = '';
-
-	    for (methodName in module) {
-	        if (module.hasOwnProperty(methodName) && !Element.prototype[methodName]) {
-	            Element.prototype[methodName] = generateFunction(methodName);
-	        }
-	    }
-
-	    // Call parent extend method
-	    ModuleManager.prototype.extend.call(this, name, module);
-	};
-
-	elementTypeManager.setElement = function (element) {
-	    Element = element;
-	};
-
-	module.exports = elementTypeManager;
-
-/***/ },
-/* 32 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var defaultProps = __webpack_require__(54),
-	    ModuleManager = __webpack_require__(49),
-	    valueTypeManager = new ModuleManager();
-
-	valueTypeManager.defaultProps = function (key) {
-	    return defaultProps[key] ? utils.copy(defaultProps[key]) : {};
-	};
-
-	module.exports = valueTypeManager;
-
-/***/ },
-/* 33 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var Process = __webpack_require__(36),
-	    Queue = __webpack_require__(56),
-	    utils = __webpack_require__(21),
-	    update = __webpack_require__(57),
-	    valueOps = __webpack_require__(58),
-	    actionManager = __webpack_require__(27),
-	    routeManager = __webpack_require__(29),
-	    elementTypeManager = __webpack_require__(31),
+	var Process = __webpack_require__(32),
+	    Queue = __webpack_require__(58),
+	    utils = __webpack_require__(33),
+	    update = __webpack_require__(59),
+	    valueOps = __webpack_require__(60),
+	    actionManager = __webpack_require__(21),
+	    routeManager = __webpack_require__(24),
+	    elementTypeManager = __webpack_require__(26),
 
 	    Element = function (element, options) {
 	        this.element = element || false;
@@ -2491,14 +2096,14 @@
 	module.exports = Element;
 
 /***/ },
-/* 34 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var Element = __webpack_require__(33),
-	    generateMethodIterator = __webpack_require__(50),
-	    actionManager = __webpack_require__(27),
+	var Element = __webpack_require__(29),
+	    generateMethodIterator = __webpack_require__(51),
+	    actionManager = __webpack_require__(21),
 
 	    /*
 	        ElementSystem constructor
@@ -2591,7 +2196,7 @@
 	module.exports = ElementSystem;
 
 /***/ },
-/* 35 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -2599,9 +2204,9 @@
 	*/
 	"use strict";
 
-	var calc = __webpack_require__(20),
-	    utils = __webpack_require__(21),
-	    History = __webpack_require__(55),
+	var calc = __webpack_require__(28),
+	    utils = __webpack_require__(33),
+	    History = __webpack_require__(57),
 
 	    /*
 	        Input constructor
@@ -2722,12 +2327,12 @@
 	module.exports = Input;
 
 /***/ },
-/* 36 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var manager = __webpack_require__(59),
+	var manager = __webpack_require__(61),
 
 	    /*
 	        Process constructor
@@ -2887,6 +2492,413 @@
 	module.exports = Process;
 
 /***/ },
+/* 33 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	    Utility functions
+	*/
+	"use strict";
+
+	var protectedProperties = ['scope',  'dom'],
+	    
+	    isProtected = function (key) {
+	        return (protectedProperties.indexOf(key) !== -1);
+	    },
+
+	    /*
+	        Get var type as string
+	        
+	        @param: Variable to test
+	        @return [string]: Returns, for instance 'Object' if [object Object]
+	    */
+	    varType = function (variable) {
+	        return Object.prototype.toString.call(variable).slice(8, -1);
+	    };
+
+	module.exports = {
+	    
+	    /*
+	        Has one object changed from the other
+	        
+	        Compares the two provided inputs and returns true if they are different
+	        
+	        @param [object]: Input A
+	        @param [object]: Input B
+	        @return [boolean]: True if different
+	    */
+	    hasChanged: function (a, b) {
+	        var hasChanged = false,
+	            key = '';
+
+	        for (key in b) {
+	            if (a.hasOwnProperty(key) && b.hasOwnProperty(key)) {
+	                if (a[key] !== b[key]) {
+	                    hasChanged = true;
+	                }
+	            } else {
+	                hasChanged = true;
+	            }
+	        }
+	    
+	        return hasChanged;
+	    },
+	    
+	    /*
+	        Is this var a number?
+	        
+	        @param: Variable to test
+	        @return [boolean]: Returns true if typeof === 'number'
+	    */
+	    isNum: function (num) {
+	        return (typeof num === 'number');
+	    },
+	    
+	    /*
+	        Is this var an object?
+	        
+	        @param: Variable to test
+	        @return [boolean]: Returns true if typeof === 'object'
+	    */
+	    isObj: function (obj) {
+	        return (typeof obj === 'object');
+	    },
+	    
+	    /*
+	        Is this var a function ? 
+	        
+	        @param: Variable to test
+	        @return [boolean]: Returns true if this.varType === 'Function'
+	    */
+	    isFunc: function (obj) {
+	        return (varType(obj) === 'Function'); 
+	    },
+	    
+	    /*
+	        Is this var a string ? 
+	        
+	        @param: Variable to test
+	        @return [boolean]: Returns true if typeof str === 'string'
+	    */
+	    isString: function (str) {
+	        return (typeof str === 'string'); 
+	    },
+
+
+	    /*
+	        Is this a relative value assignment?
+	        
+	        @param [string]: Variable to test
+	        @return [boolean]: If this looks like a relative value assignment
+	    */
+	    isRelativeValue: function (value) {
+	        return (value && value.indexOf && value.indexOf('=') > 0);
+	    },
+	    
+	    /*
+	        Is this var an array ? 
+	        
+	        @param: Variable to test
+	        @return [boolean]: Returns true if this.varType === 'Array'
+	    */
+	    isArray: function (arr) {
+	        return (varType(arr) === 'Array');
+	    },
+	    
+	    /*
+	        Copy object or array
+	        
+	        Checks whether base is an array or object and makes
+	        appropriate copy
+	        
+	        @param [array || object]: Array or object to copy
+	        @param [array || object]: New copy of array or object
+	    */
+	    copy: function (base) {
+	        return (this.isArray(base)) ? this.copyArray(base) : this.copyObject(base);
+	    },
+	    
+	    /*
+	        Deep copy an object
+	        
+	        Iterates over an object and creates a new copy of every item,
+	        deep copying if it finds any objects/arrays
+	        
+	        @param [object]: Object to copy
+	        @param [object]: New copy of object
+	    */
+	    copyObject: function (base) {
+	        var newObject = {};
+	        
+	        for (var key in base) {
+	            if (base.hasOwnProperty(key)) {
+	                newObject[key] = (this.isObj(base[key]) && !isProtected(key)) ? this.copy(base[key]) : base[key];
+	            }
+	        }
+	        
+	        return newObject;
+	    },
+	    
+	    /*
+	        Deep copy an array
+	        
+	        Loops through an array and creates a new copy of every item,
+	        deep copying if it finds any objects/arrays
+	        
+	        @param [array]: Array to copy
+	        @return [array]: New copy of array
+	    */
+	    copyArray: function (base) {
+	        var newArray = [],
+	            length = base.length,
+	            i = 0;
+	        
+	        for (var i = 0; i < length; i++) {
+	            newArray[i] = (this.isObj(base[i])) ? this.copy(base[i]) : base[i];
+	        }
+	        
+	        return newArray;
+	    },
+	    
+	    /*
+	        Non-destructive merge of object or array
+	        
+	        @param [array || object]: Array or object to use as base
+	        @param [array || object]: Array or object to overwrite base with
+	        @return [array || object]: New array or object
+	    */
+	    merge: function (base, overwrite) {
+	        return (this.isArray(base)) ? this.copyArray(overwrite) : this.mergeObject(base, overwrite);
+	    },
+	    
+	    /*
+	        Non-destructive merge of object
+	        
+	        @param [object]: Object to use as base
+	        @param [object]: Object to overwrite base with
+	        @return [object]: New object
+	    */
+	    mergeObject: function (base, overwrite) {
+	        var hasBase = this.isObj(base),
+	            newObject = hasBase ? this.copy(base) : this.copy(overwrite),
+	            key = '';
+
+	        if (hasBase) {
+	            for (key in overwrite) {
+	                if (overwrite.hasOwnProperty(key)) {
+	                    newObject[key] = (this.isObj(overwrite[key]) && !isProtected(key)) ? this.merge(base[key], overwrite[key]) : overwrite[key];
+	                }
+	            }
+	        }
+	        return newObject;
+	    },
+	    
+	    /*
+	        Split a value into a value/unit object
+	        
+	            "200px" -> { value: 200, unit: "px" }
+	            
+	        @param [string]: Value to split
+	        @return [object]: Object with value and unit props
+	    */
+	    splitValUnit: function (value) {
+	        var splitVal = value.match(/(-?\d*\.?\d*)(.*)/);
+
+	        return {
+	            value: parseFloat(splitVal[1]),
+	            unit:  splitVal[2]
+	        };
+	    },
+
+	    /*
+	        Create stepped version of 0-1 progress
+	        
+	        @param [number]: Current value
+	        @param [int]: Number of steps
+	        @return [number]: Stepped value
+	    */
+	    stepProgress: function (progress, steps) {
+	        var segment = 1 / (steps - 1),
+	            target = 1 - (1 / steps),
+	            progressOfTarget = Math.min(progress / target, 1);
+
+	        return Math.floor(progressOfTarget / segment) * segment;
+	    },
+	    
+	    /*
+	        Generate current timestamp
+	        
+	        @return [timestamp]: Current UNIX timestamp
+	    */
+	    currentTime: function () {
+		    return (typeof performance !== "undefined") ? performance.now() : new Date().getTime();
+	    }
+	    
+	};
+
+/***/ },
+/* 34 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	    
+	    // [number]: Delay this action by x ms
+	    delay: 0,
+	    
+	    // [number]: Time of animation (if animating) in ms
+	    duration: 400,
+	    
+	    // [string]: Ease animation
+	    ease: 'easeInOut',
+	    
+	    // [number]: Multiply progress by this (.5 is half speed)
+	    dilate: 1,
+	    
+	    // [boolean || number]: Number of times to loop values, true for indefinite
+	    loop: false,
+	    
+	    // [boolean || number]: Number of times to yoyo values, true for indefinite
+	    yoyo: false,
+	    
+	    // [boolean || number]: Number of times to flip values, true for indefinite
+	    flip: false,
+	};
+
+/***/ },
+/* 35 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	    // [number]: Duration of animation in ms
+	    duration: 400,
+	    
+	    // [number]: Duration of delay in ms
+	    delay: 0,
+	    
+	    // [number]: Stagger delay as factor of duration (ie 0.2 with duration of 1000ms = 200ms)
+	    stagger: 0,
+	    
+	    // [string]: Easing to apply
+	    ease: 'easeInOut',
+	    
+	    // [number]: Number of steps to execute animation
+	    steps: 0,
+	    
+	    // [string]: Tells Redshift when to step, at the start or end of a step. Other option is 'start' as per CSS spec
+	    stepDirection: 'end'
+	};
+
+/***/ },
+/* 36 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var parseArgs = __webpack_require__(62),
+	    utils = __webpack_require__(33);
+
+	module.exports = {
+	    /*
+	        Play an animation
+
+	        @param [object || string]: Parameters or preset names
+	        @param [object]: Override parameters
+	    */
+	    play: function () {
+	        var action = 'play';
+
+	        // If there's an active Action, and its play, add to queue
+	        if (this.isActive && this.action === action) {
+	            this.queue.add.apply(this.queue, arguments);
+	        
+	        // Else, start playing
+	        } else {
+	            this.action = action;
+	            this.set(parseArgs.apply(this, arguments), 'to');
+	            this.start();
+	        }
+
+	        return this;
+	    },
+
+	    /*
+	        Check for next steps and perform, stop if not
+	    */
+	    next: function () {
+	        var nextSteps = [{
+	                key: 'loop',
+	                callback: this.reset
+	            }, {
+	                key: 'yoyo',
+	                callback: this.reverse
+	            }, {
+	                key: 'flip',
+	                callback: this.flipValues
+	            }],
+	            numSteps = nextSteps.length,
+	            hasNextStep = false,
+	            i = 0;
+
+	        for (; i < numSteps; ++i) {
+	            if (this.checkNextStep(nextSteps[i].key, nextSteps[i].callback)) {
+	                hasNextStep = true;
+	                break;
+	            }
+	        }
+
+	        if (!hasNextStep && !this.playNext()) {
+	            this.stop();
+	        } else {
+	            this.isActive = true;
+	        }
+
+	        return this;
+	    },
+
+	    /*
+	        Check next step
+	        
+	        @param [string]: Name of step ('yoyo' or 'loop')
+	        @param [callback]: Function to run if we take this step
+	    */
+	    checkNextStep: function (key, callback) {
+	        var COUNT = 'Count',
+	            stepTaken = false,
+	            step = this[key],
+	            count = this[key + COUNT],
+	            forever = (step === true);
+
+	        if (forever || utils.isNum(step)) {
+	            ++count;
+	            this[key + COUNT] = count;
+	            if (forever || count <= step) {
+	                callback.call(this);
+	                stepTaken = true;
+	            }
+	        }
+
+	        return stepTaken;
+	    },
+
+	    /*
+	        Next in playlist
+	    */
+	    playNext: function () {
+	        var stepTaken = false,
+	            nextInQueue = this.queue.next(this.playDirection);
+
+	        if (utils.isArray(nextInQueue)) {
+	            this.set(parseArgs.apply(this, nextInQueue), 'to')
+	                .reset();
+
+	            stepTaken = true;
+	        }
+
+	        return stepTaken;
+	    }
+	};
+
+/***/ },
 /* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -2939,7 +2951,7 @@
 
 	"use strict";
 
-	var presetManager = __webpack_require__(28);
+	var presetManager = __webpack_require__(23);
 
 	module.exports = function (base, override) {
 	    var props = (typeof base === 'string') ? presetManager.getDefined(base) : {};
@@ -2954,9 +2966,71 @@
 /* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var splitCommaDelimited = __webpack_require__(63),
+	    functionBreak = __webpack_require__(64);
+
+	module.exports = function (value) {
+	    return splitCommaDelimited(functionBreak(value));
+	};
+
+/***/ },
+/* 41 */
+/***/ function(module, exports, __webpack_require__) {
+
 	"use strict";
 
-	var Input = __webpack_require__(35),
+	var X = 'X',
+	    Y = 'Y',
+	    ALPHA = 'Alpha',
+
+	    terms = {
+	        colors: ['Red', 'Green', 'Blue', ALPHA],
+	        positions: [X, Y, 'Z'],
+	        dimensions: ['Top', 'Right', 'Bottom', 'Left'],
+	        shadow: [X, Y, 'Radius', 'Spread', 'Color'],
+	        hsl: ['Hue', 'Saturation', 'Lightness', ALPHA]
+	    };
+
+	module.exports = terms;
+
+/***/ },
+/* 42 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	module.exports = function (values, terms, delimiter, chop) {
+	    var combined = '',
+	        key = '',
+	        i = 0,
+	        numTerms = terms.length;
+
+	    for (; i < numTerms; i++) {
+	        key = terms[i];
+
+	        if (values.hasOwnProperty(key)) {
+	            combined += values[key] + delimiter;
+	        }
+	    }
+
+	    return combined.slice(0, -chop);
+	};
+
+/***/ },
+/* 43 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = function (value, prefix) {
+	    return prefix + '(' + value + ')';
+	};
+
+/***/ },
+/* 44 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var Input = __webpack_require__(31),
 	    currentPointer, // Sort this out for multitouch
 	    
 	    TOUCHMOVE = 'touchmove',
@@ -3045,7 +3119,7 @@
 	module.exports = Pointer;
 
 /***/ },
-/* 41 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
@@ -3054,71 +3128,7 @@
 	}
 
 /***/ },
-/* 42 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var splitCommaDelimited = __webpack_require__(60),
-	    functionBreak = __webpack_require__(61);
-
-	module.exports = function (value) {
-	    return splitCommaDelimited(functionBreak(value));
-	};
-
-/***/ },
-/* 43 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var X = 'X',
-	    Y = 'Y',
-	    TRANSFORM_PERSPECTIVE = 'transformPerspective',
-	    SCALE = 'scale',
-	    ROTATE = 'rotate',
-	    ALPHA = 'Alpha',
-
-	    terms = {
-	        colors: ['Red', 'Green', 'Blue', ALPHA],
-	        positions: [X, Y, 'Z'],
-	        dimensions: ['Top', 'Right', 'Bottom', 'Left'],
-	        shadow: [X, Y, 'Radius', 'Spread', 'Color'],
-	        hsl: ['Hue', 'Saturation', 'Lightness', ALPHA],
-	        valueProps: ['current', 'to', 'start', 'min', 'max'],
-	        transformFuncs: ['translate', SCALE, ROTATE, 'skew', TRANSFORM_PERSPECTIVE],
-	        transformProps: {} // objects are faster at direct lookups
-	    };
-
-	// Create transform terms
-	(function () {
-	    var transformFuncs = terms.transformFuncs,
-	        transformProps = terms.transformProps,
-	        numOfTransformFuncs = transformFuncs.length,
-	        i = 0,
-
-	        createProps = function (funcName) {
-	            var typeTerms = terms.positions,
-	                j = 0;
-
-	            if (typeTerms) {
-	                for (; j < typeTerms.length; j++) {
-	                    transformProps[funcName + typeTerms[j]] = true;
-	                }
-	            }
-	        };
-	    
-	    // Manually add skew and transform perspective  
-	    transformProps[ROTATE] = transformProps[SCALE] = transformProps[TRANSFORM_PERSPECTIVE] = true;
-	    
-	    // Loop over each function name and create function/property terms
-	    for (; i < numOfTransformFuncs; i++) {
-	        createProps(transformFuncs[i]);
-	    }
-	})();
-
-	module.exports = terms;
-
-/***/ },
-/* 44 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (value) {
@@ -3126,7 +3136,98 @@
 	};
 
 /***/ },
-/* 45 */
+/* 47 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var transformDictionary = __webpack_require__(65),
+	    transformProps = transformDictionary.props,
+	    lookup = __webpack_require__(48),
+	    
+	    TRANSFORM = 'transform',
+	    TRANSLATE_Z = 'translateZ';
+
+	module.exports = function (output, cache) {
+	    var css = {},
+	        key = '',
+	        transform = '',
+	        transformHasZ = false,
+	        rule = '';
+
+	    // Loop through output, check for transform properties and cache
+	    for (key in output) {
+	        rule = output[key];
+	        // If this is a transform property, add to transform string
+	        if (transformProps[key]) {
+	            transform += key + '(' + rule + ')';
+	            transformHasZ = (key === TRANSLATE_Z) ? true : transformHasZ;
+	        
+	        // Or just assign directly if different from cache
+	        } else if (cache[key] !== rule) {
+	            cache[key] = css[key] = rule;
+	        }
+	    }
+
+	    // If we have transform properties, add translateZ
+	    if (transform != '' && transform != cache[TRANSFORM]) {
+	        if (!transformHasZ) {
+	            transform += ' ' + TRANSLATE_Z + '(0px)';
+	        }
+
+	        cache[key] = css[key] = transform; 
+	    }
+
+	    return css;
+	};
+
+/***/ },
+/* 48 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var COLOR = 'color',
+	    POSITIONS = 'positions',
+	    TRANSFORM = 'transform',
+	    DIMENSIONS = 'dimensions',
+	    SHADOW = 'shadow';
+
+	module.exports = {
+	    // Color properties
+	    color: COLOR,
+	    backgroundColor: COLOR,
+	    borderColor: COLOR,
+	    borderTopColor: COLOR,
+	    borderRightColor: COLOR,
+	    borderBottomColor: COLOR,
+	    borderLeftColor: COLOR,
+	    outlineColor: COLOR,
+	    fill: COLOR,
+	    stroke: COLOR,
+
+	    // Dimensions
+	    margin: DIMENSIONS,
+	    padding: DIMENSIONS,
+
+	    // Positions
+	    backgroundPosition: POSITIONS,
+	    perspectiveOrigin: POSITIONS,
+	    transformOrigin: POSITIONS,
+	    
+	    // Transform functions
+	    skew: TRANSFORM,
+	    translate: TRANSFORM,
+	    rotate: TRANSFORM,
+	    scale: TRANSFORM,
+	    
+	    // Shadows
+	    textShadow: SHADOW,
+	    boxShadow: SHADOW
+	};
+
+/***/ },
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3193,57 +3294,12 @@
 	module.exports = new styleDOM();
 
 /***/ },
-/* 46 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var COLOR = 'color',
-	    POSITIONS = 'positions',
-	    TRANSFORM = 'transform',
-	    DIMENSIONS = 'dimensions',
-	    SHADOW = 'shadow';
-
-	module.exports = {
-	    // Color properties
-	    color: COLOR,
-	    backgroundColor: COLOR,
-	    borderColor: COLOR,
-	    borderTopColor: COLOR,
-	    borderRightColor: COLOR,
-	    borderBottomColor: COLOR,
-	    borderLeftColor: COLOR,
-	    outlineColor: COLOR,
-	    fill: COLOR,
-	    stroke: COLOR,
-
-	    // Dimensions
-	    margin: DIMENSIONS,
-	    padding: DIMENSIONS,
-
-	    // Positions
-	    backgroundPosition: POSITIONS,
-	    perspectiveOrigin: POSITIONS,
-	    transformOrigin: POSITIONS,
-	    
-	    // Transform functions
-	    skew: TRANSFORM,
-	    translate: TRANSFORM,
-	    rotate: TRANSFORM,
-	    scale: TRANSFORM,
-	    
-	    // Shadows
-	    textShadow: SHADOW,
-	    boxShadow: SHADOW
-	};
-
-/***/ },
-/* 47 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var lookup = __webpack_require__(62),
+	var lookup = __webpack_require__(66),
 
 	    /*
 	        Convert percentage to pixels
@@ -3299,7 +3355,142 @@
 	};
 
 /***/ },
-/* 48 */
+/* 51 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	/*
+		Generate method iterator
+		
+		Takes a method name and returns a function that will
+		loop over all the Elements in a group and fire that
+		method with those properties
+		
+		@param [string]: Name of method
+	*/
+	module.exports = function (method) {
+		return function () {
+	        var numElements = this.members.length,
+	            i = 0,
+				isGetter = false,
+				getterArray = [],
+				element,
+				elementReturn;
+				
+			for (; i < numElements; i++) {
+				element = this.members[i];
+				elementReturn = element[method].apply(element, arguments);
+				
+				if (elementReturn != element) {
+	    			isGetter = true;
+	    			getterArray.push(elementReturn);
+				}
+			}
+			
+			return (isGetter) ? getterArray : this;
+		};
+	};
+
+
+/***/ },
+/* 52 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	    
+	    // [function]: Callback when Action process starts
+	    onStart: undefined,
+	    
+	    // [function]: Callback when any value changes
+	    onChange: undefined,
+	    
+	    // [function]: Callback every frame
+	    onFrame: undefined,
+	    
+	    // [function]: Callback when Action process ends
+	    onEnd: undefined
+
+	}
+
+/***/ },
+/* 53 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+
+	    // [number]: Current target value
+	    to: undefined,
+
+	    // [number]: Maximum permitted value during .track and .run
+	    min: undefined,
+	    
+	    // [number]: Minimum permitted value during .track and .run
+	    max: undefined,
+	    
+	    // [number]: Origin
+	    origin: 0,
+	    
+	    // [boolean]: Set to true when both min and max detected
+	    hasRange: false,
+
+	    // [boolean]: Round output if true
+	    round: false,
+
+	}
+
+/***/ },
+/* 54 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var ModuleManager = function () {
+	        this._keys = [];
+	        this._numKeys = 0;
+	    };
+
+	ModuleManager.prototype = {
+
+	    /*
+	        Add module key to keys list
+
+	        @param [string]: Key to add
+	    */
+	    _addKey: function (name) {
+	        this._keys.push(name);
+	        this._numKeys++;
+	    },
+
+	    /*
+	        Add a new module
+
+	        @param [string || object]: Name of new module or multiple modules
+	        @param [object] (optional): Module to add
+	    */
+	    extend: function (name, module) {
+	        var multiModules = (typeof name == 'object'),
+	            modules = multiModules ? name : {},
+	            key = '';
+
+	        // If we just have one module, coerce
+	        if (!multiModules) {
+	            modules[name] = module;
+	        }
+
+	        for (key in modules) {
+	            this._addKey(key);
+	            this[key] = modules[key];
+	        }
+
+	        return this;
+	    }
+	};
+
+	module.exports = ModuleManager;
+
+/***/ },
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/*
@@ -3471,192 +3662,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 49 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var ModuleManager = function () {
-	        this._keys = [];
-	        this._numKeys = 0;
-	    };
-
-	ModuleManager.prototype = {
-
-	    /*
-	        Add module key to keys list
-
-	        @param [string]: Key to add
-	    */
-	    _addKey: function (name) {
-	        this._keys.push(name);
-	        this._numKeys++;
-	    },
-
-	    /*
-	        Add a new module
-
-	        @param [string || object]: Name of new module or multiple modules
-	        @param [object] (optional): Module to add
-	    */
-	    extend: function (name, module) {
-	        var multiModules = (typeof name == 'object'),
-	            modules = multiModules ? name : {},
-	            key = '';
-
-	        // If we just have one module, coerce
-	        if (!multiModules) {
-	            modules[name] = module;
-	        }
-
-	        for (key in modules) {
-	            this._addKey(key);
-	            this[key] = modules[key];
-	        }
-
-	        return this;
-	    }
-	};
-
-	module.exports = ModuleManager;
-
-/***/ },
-/* 50 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	/*
-		Generate method iterator
-		
-		Takes a method name and returns a function that will
-		loop over all the Elements in a group and fire that
-		method with those properties
-		
-		@param [string]: Name of method
-	*/
-	module.exports = function (method) {
-		return function () {
-	        var numElements = this.members.length,
-	            i = 0,
-				isGetter = false,
-				getterArray = [],
-				element,
-				elementReturn;
-				
-			for (; i < numElements; i++) {
-				element = this.members[i];
-				elementReturn = element[method].apply(element, arguments);
-				
-				if (elementReturn != element) {
-	    			isGetter = true;
-	    			getterArray.push(elementReturn);
-				}
-			}
-			
-			return (isGetter) ? getterArray : this;
-		};
-	};
-
-
-/***/ },
-/* 51 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	    
-	    // [function]: Callback when Action process starts
-	    onStart: undefined,
-	    
-	    // [function]: Callback when any value changes
-	    onChange: undefined,
-	    
-	    // [function]: Callback every frame
-	    onFrame: undefined,
-	    
-	    // [function]: Callback when Action process ends
-	    onEnd: undefined
-
-	}
-
-/***/ },
-/* 52 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-
-	    // [number]: Current target value
-	    to: undefined,
-
-	    // [number]: Maximum permitted value during .track and .run
-	    min: undefined,
-	    
-	    // [number]: Minimum permitted value during .track and .run
-	    max: undefined,
-	    
-	    // [number]: Origin
-	    origin: 0,
-	    
-	    // [boolean]: Set to true when both min and max detected
-	    hasRange: false,
-
-	    // [boolean]: Round output if true
-	    round: false,
-
-	}
-
-/***/ },
-/* 53 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var presetManager = __webpack_require__(28),
-	    utils = __webpack_require__(21);
-
-	module.exports = function (base, override) {
-	    var props = {},
-	        playlist = [],
-	        argsAsArray = [],
-	        i = 0,
-	        playlistLength;
-
-	    // If this is a playlist reference, add presets to queue
-	    if (typeof base === 'string') {
-	        playlist = base.split(' ');
-	        playlistLength = playlist.length;
-	        props = presetManager.getDefined(playlist[0]);
-
-	        // If we've got multiple playlists, loop through and add each to the queue
-	        if (playlistLength > 1) {
-	            argsAsArray = [].slice.call(arguments);
-
-	            for (; i < playlistLength; i++) {
-	                argsAsArray.shift();
-	                argsAsArray.unshift(playlist[i]);
-	                this.queue.add.apply(this.queue, argsAsArray);
-	            }
-	        }
-
-	    // Or, this is a straight set of properties
-	    } else {
-	        props = base;
-	    }
-
-	    // Override properties with second arg if it's an object
-	    if (typeof override === 'object') {
-	        props = utils.merge(props, override);
-	    }
-
-	    // Default .play properties
-	    props.loopCount = props.yoyoCount = props.flipCount = 0;
-	    props.playDirection = 1;
-
-	    return props;
-	};
-
-/***/ },
-/* 54 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3717,7 +3723,7 @@
 	module.exports = defaults;
 
 /***/ },
-/* 55 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3791,7 +3797,7 @@
 	module.exports = History;
 
 /***/ },
-/* 56 */
+/* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3844,15 +3850,15 @@
 	module.exports = Queue;
 
 /***/ },
-/* 57 */
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var actionManager = __webpack_require__(27),
-	    routeManager = __webpack_require__(29),
-	    valueTypeManager = __webpack_require__(32),
-	    calc = __webpack_require__(20),
+	var actionManager = __webpack_require__(21),
+	    routeManager = __webpack_require__(24),
+	    valueTypeManager = __webpack_require__(27),
+	    calc = __webpack_require__(28),
 
 	    defaultRoute = 'values',
 
@@ -3936,6 +3942,7 @@
 	            output[value.route] = output[value.route] || {};
 	            // Put value in default route output
 	            output[defaultRoute][key] = (value.unit) ? updatedValue + value.unit : updatedValue;
+
 	            // Put in specific root if not a parent
 	            if (!value.parent) {
 	                output[value.route][value.name] = output[defaultRoute][key];
@@ -3946,7 +3953,7 @@
 	                output[value.parent][value.propName] = output[defaultRoute][key];
 	            }
 	        }
-
+	console.log(this.values);
 	        // Update parent values from calculated children
 	        for (i = 0; i < numActiveParents; i++) {
 	            key = this.parentOrder[i];
@@ -4003,16 +4010,16 @@
 	};
 
 /***/ },
-/* 58 */
+/* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var utils = __webpack_require__(21),
+	var utils = __webpack_require__(33),
 	    isNum = utils.isNum,
-	    actionsManager = __webpack_require__(27),
-	    valueTypesManager = __webpack_require__(32),
-	    routeManager = __webpack_require__(29),
+	    actionsManager = __webpack_require__(21),
+	    valueTypesManager = __webpack_require__(27),
+	    routeManager = __webpack_require__(24),
 
 	    DEFAULT_NAMESPACE = 'values',
 	    numericalValues = ['current', 'to', 'start', 'min', 'max'],
@@ -4127,7 +4134,7 @@
 	                // Assign properties to each new value
 	                for (key in splitProperty) {
 	                    splitValues[key] = splitValues[key] || valueTypesManager.defaultProps(key);
-	                    splitValues[key][propertyName] = splitProperty[key];
+	                    splitValues[key][propertyName] = parseFloat(splitProperty[key]);
 	                }
 	            }
 	        }
@@ -4138,11 +4145,13 @@
 	    /*
 	        Resolve property
 
+	        @param [string]: Name of value
 	        @param [string || number || function]: Property
 	        @param [object]: Parent value
 	        @param [Element]: Parent Element
+	        @param [boolean] (optional): Does element have children?
 	    */
-	    resolve: function (property, value, element) {
+	    resolve: function (name, property, value, element, hasChildren) {
 	        var splitUnitValue = {};
 
 	        if (!property || isNum(property)) {
@@ -4169,6 +4178,11 @@
 	            }
 	        }
 
+	        // Coerce into number
+	        if (!hasChildren && numericalValues.indexOf(name) !== -1) {
+	            property = parseFloat(property);
+	        }
+
 	        return property;
 	    },
 
@@ -4186,6 +4200,7 @@
 	            childValue = {},
 	            thisValue = {},
 	            elementValues = element.values,
+	            hasChildren = false,
 	            defaultProps = actionsManager[element.action].valueDefaults;
 
 	        namespace = namespace || DEFAULT_NAMESPACE;
@@ -4231,6 +4246,7 @@
 	            namespacedKey = (namespace !== DEFAULT_NAMESPACE) ? key + '.' + namespace : key;
 	            processedValue = processedValues[key];
 	            thisValue = elementValues[namespacedKey] || this.initialState(processedValue.start, namespace);
+	            hasChildren = processedValue.children !== undefined;
 
 	            // Inherit properties from Element
 	            for (propKey in defaultProps) {
@@ -4241,9 +4257,8 @@
 
 	            // Loop through all properties and set
 	            for (propKey in processedValue) {
-	                processedValue[propKey] = (!isNum(processedValue[propKey])) ? this.resolve(processedValue[propKey], thisValue, element) : processedValue[propKey];
+	                processedValue[propKey] = (!isNum(processedValue[propKey])) ? this.resolve(propKey, processedValue[propKey], thisValue, element, hasChildren) : processedValue[propKey];
 	                thisValue[propKey] = processedValue[propKey];
-
 	                if (propKey === 'to') {
 	                    thisValue.target = thisValue.to;
 	                }
@@ -4262,18 +4277,18 @@
 	            elementValues[namespacedKey] = thisValue;
 
 	            // Update order
-	            element.updateOrder(namespacedKey, utils.isString(thisValue.link), thisValue.hasOwnProperty('children'));
+	            element.updateOrder(namespacedKey, utils.isString(thisValue.link), hasChildren);
 	        }
 	    }
 	};
 
 /***/ },
-/* 59 */
+/* 61 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var theLoop = __webpack_require__(63),
+	var theLoop = __webpack_require__(67),
 	    ProcessManager = function () {
 	        this.all = {};
 	        this.active = [];
@@ -4443,7 +4458,57 @@
 	module.exports = new ProcessManager();
 
 /***/ },
-/* 60 */
+/* 62 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var presetManager = __webpack_require__(23),
+	    utils = __webpack_require__(33);
+
+	module.exports = function (base, override) {
+	    var props = {},
+	        playlist = [],
+	        argsAsArray = [],
+	        i = 0,
+	        playlistLength;
+
+	    // If this is a playlist reference, add presets to queue
+	    if (typeof base === 'string') {
+	        playlist = base.split(' ');
+	        playlistLength = playlist.length;
+	        props = presetManager.getDefined(playlist[0]);
+
+	        // If we've got multiple playlists, loop through and add each to the queue
+	        if (playlistLength > 1) {
+	            argsAsArray = [].slice.call(arguments);
+
+	            for (; i < playlistLength; i++) {
+	                argsAsArray.shift();
+	                argsAsArray.unshift(playlist[i]);
+	                this.queue.add.apply(this.queue, argsAsArray);
+	            }
+	        }
+
+	    // Or, this is a straight set of properties
+	    } else {
+	        props = base;
+	    }
+
+	    // Override properties with second arg if it's an object
+	    if (typeof override === 'object') {
+	        props = utils.merge(props, override);
+	    }
+
+	    // Default .play properties
+	    props.loopCount = props.yoyoCount = props.flipCount = 0;
+	    props.playDirection = 1;
+
+	    return props;
+	};
+
+/***/ },
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (value) {
@@ -4451,7 +4516,7 @@
 	};
 
 /***/ },
-/* 61 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (value) {
@@ -4459,7 +4524,50 @@
 	};
 
 /***/ },
-/* 62 */
+/* 65 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var positionTerms = __webpack_require__(41).positions,
+	    numPositionTerms = positionTerms.length,
+
+	    TRANSFORM_PERSPECTIVE = 'transformPerspective',
+	    SCALE = 'scale',
+	    ROTATE = 'rotate',
+	    terms = {
+	        funcs: ['translate', SCALE, ROTATE, 'skew', TRANSFORM_PERSPECTIVE],
+	        props: {} // objects are faster at direct lookups
+	    };
+
+	// Create transform terms
+	(function () {
+	    var funcs = terms.funcs,
+	        props = terms.props,
+	        numFuncs = funcs.length,
+	        i = 0,
+
+	        createProps = function (funcName) {
+	            var j = 0;
+
+	            for (; j < numPositionTerms; j++) {
+	                props[funcName + positionTerms[j]] = true;
+	            }
+	        };
+	    
+	    // Manually add skew and transform perspective  
+	    props[ROTATE] = props[SCALE] = props[TRANSFORM_PERSPECTIVE] = true;
+	    
+	    // Loop over each function name and create function/property terms
+	    for (; i < numFuncs; i++) {
+	        createProps(funcs[i]);
+	    }
+	})();
+
+	module.exports = terms;
+
+/***/ },
+/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var STROKE = 'stroke',
@@ -4476,7 +4584,7 @@
 	};
 
 /***/ },
-/* 63 */
+/* 67 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -4484,8 +4592,8 @@
 	*/
 	"use strict";
 
-	var Timer = __webpack_require__(64),
-	    tick = __webpack_require__(65),
+	var Timer = __webpack_require__(68),
+	    tick = __webpack_require__(69),
 	    Loop = function () {
 	        this.timer = new Timer();
 	    };
@@ -4550,12 +4658,12 @@
 	module.exports = new Loop();
 
 /***/ },
-/* 64 */
+/* 68 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var utils = __webpack_require__(21),
+	var utils = __webpack_require__(33),
 
 	    maxElapsed = 33,
 	    Timer = function () {
@@ -4585,7 +4693,7 @@
 	module.exports = Timer;
 
 /***/ },
-/* 65 */
+/* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";

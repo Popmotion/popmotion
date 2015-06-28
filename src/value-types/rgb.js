@@ -1,6 +1,10 @@
 "use strict";
 
-var getColorValues = require('./manipulators/get-color-values.js');
+var createDelimited = require('./manipulators/create-delimited'),
+    getColorValues = require('./manipulators/get-color-values'),
+    functionCreate = require('./manipulators/function-create'),
+    terms = require('./settings/dictionary').colors,
+    numTerms = terms.length;
 
 module.exports = {
 
@@ -9,15 +13,18 @@ module.exports = {
     },
     
     split: function (value) {
-        var colors = getColorValues(value);
+        var splitValue = {},
+            colors = getColorValues(value),
+            i = 0;
+
+        for (; i < numTerms; i++) {
+            splitValue[terms[i]] = (colors[i] !== undefined) ? colors[i] : 1;
+        }
+
+        return splitValue;
     },
 
     combine: function (values) {
-        var red = (values.hasOwnProperty('Red')) ? values.Red : defaults.Red,
-            green = (values.hasOwnProperty('Green')) ? values.Green : defaults.Green,
-            blue = (values.hasOwnProperty('Blue')) ? values.Blue : defaults.Blue,
-            alpha = (values.hasOwnProperty('Alpha')) ? values.Alpha : defaults.Alpha;
-
-        return 'rgba(' + red + ', ' + green + ', ' + blue + ', ' + alpha + ')';
+        return functionCreate(createDelimited(values, terms, ', ', 2), 'rgba');
     }
 };

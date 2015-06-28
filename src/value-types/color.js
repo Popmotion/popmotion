@@ -20,7 +20,7 @@ module.exports = {
         return runSupported('split', value);
     },
 
-    combine: function (value) {
-        return (value.Red) ? rgb.combine(value) : hsl.combine(value);
+    combine: function (values) {
+        return (values.Red) ? rgb.combine(values) : hsl.combine(values);
     }
 };

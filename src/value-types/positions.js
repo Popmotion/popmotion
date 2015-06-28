@@ -1,6 +1,8 @@
 "use strict";
 
-var splitSpaceDelimited = require('./manipulators/split-space-delimited');
+var createDelimited = require('./manipulators/create-delimited'),
+    splitSpaceDelimited = require('./manipulators/split-space-delimited'),
+    terms = require('./settings/dictionary').positions;
 
 module.exports = {
         
@@ -27,5 +29,7 @@ module.exports = {
         return splitValue;
     },
 
-    combine: function () {}
+    combine: function () {
+        return createDelimited(values, terms, ' ');
+    }
 };

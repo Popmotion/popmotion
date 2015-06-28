@@ -2,8 +2,10 @@
 
 var color = require('./color'),
     utils = require('../inc/utils'),
-    terms = require('./settings/dictionary'),
-    splitSpaceDelimited = require('./manipulators/split-space-delimited');
+    terms = require('./settings/dictionary').shadow,
+    splitSpaceDelimited = require('./manipulators/split-space-delimited'),
+    createDelimited = require('./manipulators/create-delimited'),
+    shadowTerms = terms.slice(0,4);
 
 module.exports = {
     /*
@@ -38,6 +40,6 @@ module.exports = {
     },
 
     combine: function (values) {
-       // var color = 
+        return createDelimited(values, shadowTerms, ' ') + color.combine(values);
     }
 };

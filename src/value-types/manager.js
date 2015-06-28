@@ -1,6 +1,7 @@
 "use strict";
 
-var defaultProps = require('./settings/default-props'),
+var utils = require('../inc/utils'),
+    defaultProps = require('./settings/default-props'),
     ModuleManager = require('../inc/ModuleManager'),
     valueTypeManager = new ModuleManager();
 
