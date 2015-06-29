@@ -846,7 +846,7 @@
 	            nameIsString = (typeof name === 'string'),
 	            isGetter = (nameIsString && !propDefined),
 	            styles = {},
-	            returnVal;
+	            returnVal = this;
 
 	        // If this is a getter, pass name and set return value
 	        if (isGetter) {
@@ -866,7 +866,7 @@
 	            styleDOM.set(this.element, styles);
 	        }
 
-	        return isGetter ? returnVal : this;
+	        return returnVal;
 	    }
 
 	};
@@ -1293,12 +1293,10 @@
 	    var key = '',
 	        i = 0;
 
-	    validRoutes = validRoutes || routeManager;
-
 	    for (; i < this._numKeys; i++) {
 	        key = this._keys[i];
 
-	        if ((validRoutes && validRoutes.hasOwnProperty(key))) {
+	        if ((validRoutes && validRoutes.hasOwnProperty(key)) || key === 'values') {
 	            callback(this[key], key, validRoutes[key]);
 	        }
 	    }
@@ -1415,10 +1413,12 @@
 	    */
 	    generateFunction = function (name) {
 	        return function () {
-	            var type = this.type;
+	            var type = this.type,
+	                returnVal;
 	            if (type && type[name]) {
-	                type[name].apply(this, arguments);
+	                returnVal = type[name].apply(this, arguments);
 	            }
+	            return returnVal;
 	        }
 	    },
 
@@ -3249,7 +3249,7 @@
 	            transform += ' ' + TRANSLATE_Z + '(0px)';
 	        }
 
-	        cache[key] = css[key] = transform; 
+	        cache[TRANSFORM] = css[TRANSFORM] = transform; 
 	    }
 
 	    return css;
@@ -3263,7 +3263,6 @@
 
 	var COLOR = 'color',
 	    POSITIONS = 'positions',
-	    TRANSFORM = 'transform',
 	    DIMENSIONS = 'dimensions',
 	    SHADOW = 'shadow';
 
@@ -3288,12 +3287,6 @@
 	    backgroundPosition: POSITIONS,
 	    perspectiveOrigin: POSITIONS,
 	    transformOrigin: POSITIONS,
-	    
-	    // Transform functions
-	    skew: TRANSFORM,
-	    translate: TRANSFORM,
-	    rotate: TRANSFORM,
-	    scale: TRANSFORM,
 	    
 	    // Shadows
 	    textShadow: SHADOW,
@@ -3732,7 +3725,11 @@
 	        rotate: angle,
 	        rotateX: angle,
 	        rotateY: angle,
-	        rotateZ: angle
+	        rotateZ: angle,
+
+	        translateX: px,
+	        translateY: px,
+	        translateZ: px
 	    };
 	    
 	module.exports = defaults;
@@ -3832,7 +3829,7 @@
 	                if (route.onStart) {
 	                    route.onStart(values, self);
 	                }
-	            }, output);
+	            });
 	        }
 
 	        // Create default route output if not present
@@ -3917,7 +3914,7 @@
 	            }
 
 	            // Fire onChanged if any value has changed
-	            if (self.hasChanged && route.onChange || action.firstFrame && route.onChange) {
+	            if (self.hasChanged && route.onChange || self.firstFrame && route.onChange) {
 	                route.onChange(routeOutput, self);
 	            }
 
@@ -3931,7 +3928,7 @@
 	                if (route.onEnd) {
 	                    route.onEnd(routeOutput, self);
 	                }
-	            });
+	            }), output;
 
 	            // If is a play action, and is not active, check next action
 	            if (!this.isActive && this.action === 'play' && this.next) {
@@ -4054,9 +4051,11 @@
 	    /*
 	        Split value into sub-values
 
+	        @param [string]: Name of value
 	        @param [object]: Base value properties
+	        @param [Elememt]
 	    */
-	    split: function (name, value) {
+	    split: function (name, value, element) {
 	        var valueType = valueTypesManager[value.type],
 	            splitValues = {},
 	            splitProperty = {},
@@ -4188,7 +4187,7 @@
 	            // If this value has a type, make children values
 	            if (thisValue.type) {
 	                thisValue.children = {};
-	                splitValues = this.split(key, thisValue);
+	                splitValues = this.split(key, thisValue, element);
 
 	                for (propKey in splitValues) {
 	                    childValue = utils.merge(thisValue, splitValues[propKey]);

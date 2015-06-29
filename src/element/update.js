@@ -36,7 +36,7 @@ var actionManager = require('../actions/manager'),
                 if (route.onStart) {
                     route.onStart(values, self);
                 }
-            }, output);
+            });
         }
 
         // Create default route output if not present
@@ -121,7 +121,7 @@ var actionManager = require('../actions/manager'),
             }
 
             // Fire onChanged if any value has changed
-            if (self.hasChanged && route.onChange || action.firstFrame && route.onChange) {
+            if (self.hasChanged && route.onChange || self.firstFrame && route.onChange) {
                 route.onChange(routeOutput, self);
             }
 
@@ -135,7 +135,7 @@ var actionManager = require('../actions/manager'),
                 if (route.onEnd) {
                     route.onEnd(routeOutput, self);
                 }
-            });
+            }), output;
 
             // If is a play action, and is not active, check next action
             if (!this.isActive && this.action === 'play' && this.next) {

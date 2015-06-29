@@ -58,7 +58,11 @@ var circle = {
         rotate: angle,
         rotateX: angle,
         rotateY: angle,
-        rotateZ: angle
+        rotateZ: angle,
+
+        translateX: px,
+        translateY: px,
+        translateZ: px
     };
     
 module.exports = defaults;

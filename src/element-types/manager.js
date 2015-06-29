@@ -7,10 +7,12 @@ var Element,
     */
     generateFunction = function (name) {
         return function () {
-            var type = this.type;
+            var type = this.type,
+                returnVal;
             if (type && type[name]) {
-                type[name].apply(this, arguments);
+                returnVal = type[name].apply(this, arguments);
             }
+            return returnVal;
         }
     },
 

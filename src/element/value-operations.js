@@ -97,9 +97,11 @@ module.exports = {
     /*
         Split value into sub-values
 
+        @param [string]: Name of value
         @param [object]: Base value properties
+        @param [Elememt]
     */
-    split: function (name, value) {
+    split: function (name, value, element) {
         var valueType = valueTypesManager[value.type],
             splitValues = {},
             splitProperty = {},
@@ -231,7 +233,7 @@ module.exports = {
             // If this value has a type, make children values
             if (thisValue.type) {
                 thisValue.children = {};
-                splitValues = this.split(key, thisValue);
+                splitValues = this.split(key, thisValue, element);
 
                 for (propKey in splitValues) {
                     childValue = utils.merge(thisValue, splitValues[propKey]);

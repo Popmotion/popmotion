@@ -2,7 +2,6 @@
 
 var COLOR = 'color',
     POSITIONS = 'positions',
-    TRANSFORM = 'transform',
     DIMENSIONS = 'dimensions',
     SHADOW = 'shadow';
 
@@ -27,12 +26,6 @@ module.exports = {
     backgroundPosition: POSITIONS,
     perspectiveOrigin: POSITIONS,
     transformOrigin: POSITIONS,
-    
-    // Transform functions
-    skew: TRANSFORM,
-    translate: TRANSFORM,
-    rotate: TRANSFORM,
-    scale: TRANSFORM,
     
     // Shadows
     textShadow: SHADOW,

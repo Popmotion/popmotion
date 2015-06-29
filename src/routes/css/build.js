@@ -33,7 +33,7 @@ module.exports = function (output, cache) {
             transform += ' ' + TRANSLATE_Z + '(0px)';
         }
 
-        cache[key] = css[key] = transform; 
+        cache[TRANSFORM] = css[TRANSFORM] = transform; 
     }
 
     return css;

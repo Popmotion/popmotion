@@ -31,7 +31,7 @@ module.exports = {
             nameIsString = (typeof name === 'string'),
             isGetter = (nameIsString && !propDefined),
             styles = {},
-            returnVal;
+            returnVal = this;
 
         // If this is a getter, pass name and set return value
         if (isGetter) {
@@ -51,7 +51,7 @@ module.exports = {
             styleDOM.set(this.element, styles);
         }
 
-        return isGetter ? returnVal : this;
+        return returnVal;
     }
 
 };
