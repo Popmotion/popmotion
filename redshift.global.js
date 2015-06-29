@@ -52,9 +52,6 @@
 
 	"use strict";
 
-
-	console.time('load');
-
 	var Redshift = __webpack_require__(2);
 
 	Redshift
@@ -98,15 +95,7 @@
 	    */
 	    .addRoute('path', __webpack_require__(19));
 
-	console.timeEnd('load');
-
 	module.exports = Redshift;
-
-	/*
-	    TODO: 
-	        - Get all value types working
-	        - Add transform handling to CSS builder
-	*/
 
 /***/ },
 /* 2 */
@@ -815,23 +804,19 @@
 
 	"use strict";
 
-	var styleDOM = __webpack_require__(47);
+	var styleDOM = __webpack_require__(47),
+	    getterSetter = __webpack_require__(48);
 
 	module.exports = {
 
 	    /*
 	        Get or set attribute
+
+	        @param [object || string]: Properties to set or name of attribute to get/set
+	        @param [string || number]: Property to set if setting single prop
 	    */
-	    attr: function (name, prop) {
-	        var returnVal;
-
-	        if (prop) {
-	            this.element.setAttribute(name, prop);
-	        } else {
-	            returnVal = this.element.getAttribute(name);
-	        }
-
-	        return returnVal;
+	    attr: function (opts, prop) {
+	        return getterSetter.call(this, opts, prop, this.element.setAttribute, this.element.getAttribute);
 	    },
 
 	    /*
@@ -841,32 +826,17 @@
 	        @parma [string] (optional): Property to set
 	        @return [object || Element]: Returns calculated style if get, or Element if set
 	    */
-	    style: function (name, prop) {
-	        var propDefined = (prop !== undefined),
-	            nameIsString = (typeof name === 'string'),
-	            isGetter = (nameIsString && !propDefined),
-	            styles = {},
-	            returnVal;
+	    style: function (opts, prop) {
+	        return getterSetter.call(this, opts, prop, this.setStyle, this.getStyle);
+	    },
 
-	        // If this is a getter, pass name and set return value
-	        if (isGetter) {
-	            returnVal = styleDOM.get(this.element, name);
+	    setStyle: function (name, rule) {
+	        styleDOM.set(this.element, name, rule);
+	        return this;
+	    },
 
-	        // If this is a setter
-	        } else {
-	            // If we have a property, add it to our object
-	            if (propDefined) {
-	                styles[name] = prop;
-
-	            // Or overwrite our object
-	            } else {
-	                styles = name;
-	            }
-
-	            styleDOM.set(this.element, styles);
-	        }
-
-	        return isGetter ? returnVal : this;
+	    getStyle: function (name) {
+	        return styleDOM.get(this.element, name);
 	    }
 
 	};
@@ -877,8 +847,8 @@
 
 	"use strict";
 
-	var build = __webpack_require__(48),
-	    lookup = __webpack_require__(49),
+	var build = __webpack_require__(49),
+	    lookup = __webpack_require__(50),
 	    CSS_CACHE = '_cssCache';
 
 	module.exports = {
@@ -911,7 +881,7 @@
 
 	"use strict";
 
-	var createStyles = __webpack_require__(50);
+	var createStyles = __webpack_require__(51);
 
 	module.exports = {
 
@@ -970,11 +940,11 @@
 	var Element,
 	    ElementSystem,
 	    utils = __webpack_require__(33),
-	    generateMethodIterator = __webpack_require__(51),
-	    genericActionProps = __webpack_require__(52),
-	    genericValueProps = __webpack_require__(53),
+	    generateMethodIterator = __webpack_require__(52),
+	    genericActionProps = __webpack_require__(53),
+	    genericValueProps = __webpack_require__(54),
 
-	    ModuleManager = __webpack_require__(54),
+	    ModuleManager = __webpack_require__(55),
 
 	    actionManager = new ModuleManager();
 	/*
@@ -1059,7 +1029,7 @@
 	"use strict";
 
 	var calc = __webpack_require__(28),
-	    Bezier = __webpack_require__(55),
+	    Bezier = __webpack_require__(56),
 
 	    EASE_IN = 'In',
 	    EASE_OUT = 'Out',
@@ -1149,7 +1119,7 @@
 	        };
 	    },
 
-	    ModuleManager = __webpack_require__(54),
+	    ModuleManager = __webpack_require__(55),
 	    easingManager = new ModuleManager();
 
 	/*
@@ -1229,7 +1199,7 @@
 	"use strict";
 
 	var utils = __webpack_require__(33),
-	    ModuleManager = __webpack_require__(54),
+	    ModuleManager = __webpack_require__(55),
 	    presetManager = new ModuleManager(),
 
 	    DOT = '.',
@@ -1278,7 +1248,7 @@
 
 	"use strict";
 
-	var ModuleManager = __webpack_require__(54),
+	var ModuleManager = __webpack_require__(55),
 	    routeManager = new ModuleManager();
 
 	/*
@@ -1315,7 +1285,7 @@
 	var calc = __webpack_require__(28),
 	    speedPerFrame = calc.speedPerFrame,
 
-	    ModuleManager = __webpack_require__(54),
+	    ModuleManager = __webpack_require__(55),
 	    simulationManager = new ModuleManager();
 
 	/*
@@ -1422,7 +1392,7 @@
 	        }
 	    },
 
-	    ModuleManager = __webpack_require__(54),
+	    ModuleManager = __webpack_require__(55),
 	    elementTypeManager = new ModuleManager;
 
 	elementTypeManager.extend = function (name, module) {
@@ -1451,8 +1421,8 @@
 	"use strict";
 
 	var utils = __webpack_require__(33),
-	    defaultProps = __webpack_require__(56),
-	    ModuleManager = __webpack_require__(54),
+	    defaultProps = __webpack_require__(57),
+	    ModuleManager = __webpack_require__(55),
 	    valueTypeManager = new ModuleManager();
 
 	valueTypeManager.defaultProps = function (key) {
@@ -1826,10 +1796,10 @@
 	"use strict";
 
 	var Process = __webpack_require__(32),
-	    Queue = __webpack_require__(57),
+	    Queue = __webpack_require__(58),
 	    utils = __webpack_require__(33),
-	    update = __webpack_require__(58),
-	    valueOps = __webpack_require__(59),
+	    update = __webpack_require__(59),
+	    valueOps = __webpack_require__(60),
 	    actionManager = __webpack_require__(21),
 	    routeManager = __webpack_require__(24),
 	    elementTypeManager = __webpack_require__(26),
@@ -2097,7 +2067,7 @@
 	"use strict";
 
 	var Element = __webpack_require__(29),
-	    generateMethodIterator = __webpack_require__(51),
+	    generateMethodIterator = __webpack_require__(52),
 	    actionManager = __webpack_require__(21),
 
 	    /*
@@ -2201,7 +2171,7 @@
 
 	var calc = __webpack_require__(28),
 	    utils = __webpack_require__(33),
-	    History = __webpack_require__(60),
+	    History = __webpack_require__(61),
 
 	    /*
 	        Input constructor
@@ -2327,7 +2297,7 @@
 
 	"use strict";
 
-	var manager = __webpack_require__(61),
+	var manager = __webpack_require__(62),
 
 	    /*
 	        Process constructor
@@ -2789,7 +2759,7 @@
 
 	"use strict";
 
-	var parseArgs = __webpack_require__(62),
+	var parseArgs = __webpack_require__(63),
 	    utils = __webpack_require__(33);
 
 	module.exports = {
@@ -3091,8 +3061,8 @@
 /* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var splitCommaDelimited = __webpack_require__(63),
-	    functionBreak = __webpack_require__(64);
+	var splitCommaDelimited = __webpack_require__(64),
+	    functionBreak = __webpack_require__(65);
 
 	module.exports = function (value, terms) {
 	    var splitValue = {},
@@ -3195,14 +3165,11 @@
 				Set DOM styles
 
 				@param [DOM Element]: Element to set styles on
-				@param [object]: DOM styles to set
+				@param [object]: Name of style to set
+				@param [string]: New rule
 			*/
-			set: function (element, props) {
-				for (var key in props) {
-					if (props.hasOwnProperty(key)) {
-						element.style[cache[key] || testPrefix(key)] = props[key];
-					}
-				}
+			set: function (element, name, rule) {
+				element.style[cache[name] || testPrefix(name)] = rule;
 			}
 
 		};
@@ -3214,9 +3181,44 @@
 /* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/*
+	    Multi-var getter/setter
+
+	    @param [object || string]: Name of value to get/set
+	    @param [string || number] (optional): Single property to set 
+	    @param [function]: Getter
+	    @param [function]: Setter
+	*/
+	module.exports = function (opts, prop, getter, setter) {
+	    var typeOfOpts = typeof opts;
+
+	    // Set single, if this is a string and we have a property
+	    if (typeOfOpts == 'string' && prop) {
+	        setter.call(this, opts, prop);
+
+	    // Set multi, if we have an object
+	    } else if (typeOfOpts == 'object') {
+	        for (var key in opts) {
+	            if (opts.hasOwnProperty(key)) {
+	                setter.call(this, key, opts[key]);
+	            }
+	        }
+
+	    // Or get, if we have a string and no props
+	    } else {
+	        return getter.call(this, opts);
+	    }
+
+	    return this;
+	};
+
+/***/ },
+/* 49 */
+/***/ function(module, exports, __webpack_require__) {
+
 	"use strict";
 
-	var transformDictionary = __webpack_require__(65),
+	var transformDictionary = __webpack_require__(66),
 	    transformProps = transformDictionary.props,
 
 	    TRANSFORM = 'transform',
@@ -3256,7 +3258,7 @@
 	};
 
 /***/ },
-/* 49 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3301,12 +3303,12 @@
 	};
 
 /***/ },
-/* 50 */
+/* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var lookup = __webpack_require__(66),
+	var lookup = __webpack_require__(67),
 
 	    /*
 	        Convert percentage to pixels
@@ -3362,7 +3364,7 @@
 	};
 
 /***/ },
-/* 51 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3401,7 +3403,7 @@
 
 
 /***/ },
-/* 52 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
@@ -3421,7 +3423,7 @@
 	}
 
 /***/ },
-/* 53 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
@@ -3447,7 +3449,7 @@
 	}
 
 /***/ },
-/* 54 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3497,7 +3499,7 @@
 	module.exports = ModuleManager;
 
 /***/ },
-/* 55 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/*
@@ -3669,7 +3671,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 56 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3738,7 +3740,7 @@
 	module.exports = defaults;
 
 /***/ },
-/* 57 */
+/* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3791,7 +3793,7 @@
 	module.exports = Queue;
 
 /***/ },
-/* 58 */
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3952,7 +3954,7 @@
 	};
 
 /***/ },
-/* 59 */
+/* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4245,7 +4247,7 @@
 	};
 
 /***/ },
-/* 60 */
+/* 61 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4319,12 +4321,12 @@
 	module.exports = History;
 
 /***/ },
-/* 61 */
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var theLoop = __webpack_require__(67),
+	var theLoop = __webpack_require__(68),
 	    ProcessManager = function () {
 	        this.all = {};
 	        this.active = [];
@@ -4494,7 +4496,7 @@
 	module.exports = new ProcessManager();
 
 /***/ },
-/* 62 */
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4544,7 +4546,7 @@
 	};
 
 /***/ },
-/* 63 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (value) {
@@ -4552,7 +4554,7 @@
 	};
 
 /***/ },
-/* 64 */
+/* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (value) {
@@ -4560,7 +4562,7 @@
 	};
 
 /***/ },
-/* 65 */
+/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4603,7 +4605,7 @@
 	module.exports = terms;
 
 /***/ },
-/* 66 */
+/* 67 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var STROKE = 'stroke',
@@ -4620,7 +4622,7 @@
 	};
 
 /***/ },
-/* 67 */
+/* 68 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -4628,8 +4630,8 @@
 	*/
 	"use strict";
 
-	var Timer = __webpack_require__(68),
-	    tick = __webpack_require__(69),
+	var Timer = __webpack_require__(69),
+	    tick = __webpack_require__(70),
 	    Loop = function () {
 	        this.timer = new Timer();
 	    };
@@ -4694,7 +4696,7 @@
 	module.exports = new Loop();
 
 /***/ },
-/* 68 */
+/* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4729,7 +4731,7 @@
 	module.exports = Timer;
 
 /***/ },
-/* 69 */
+/* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";

@@ -1,8 +1,5 @@
 "use strict";
 
-
-console.time('load');
-
 var Redshift = require('../redshift');
 
 Redshift
@@ -46,12 +43,4 @@ Redshift
     */
     .addRoute('path', require('../routes/path'));
 
-console.timeEnd('load');
-
 module.exports = Redshift;
-
-/*
-    TODO: 
-        - Get all value types working
-        - Add transform handling to CSS builder
-*/
