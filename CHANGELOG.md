@@ -4,28 +4,34 @@ Redshift adheres to [Semantic Versioning](http://semver.org/). Change log added 
 
 ## [3.0.0] Unreleased
 
-### Added
-- 10% smaller filesize.
-- HSLA color support (set `type: 'hsl'` on a value, or automatic detection for the `css` route)
-- New Actions (previously "Rubix") can extend Elements with custom methods.
-- Value types added. Now any value going through any route (css/values/attr etc) can be a special value (like a color value). Add new value splitters/combiners with `Redshift.addValueType()`.
-- Element types added. Can provide custom methods for use on different elements types. 
-- Super modular structure allows you to rip out or extend virtually every facet of Redshift.
-- Creating new Elements (previously "Actions") now ~3x faster.
-
-### Fixed
-- Removed Input framelag
+**Note:** This is a major, final, API revision. Initiating objects will need to be rewritten after upgrade, all other
 
 ### Changed
-- Changed `redshift` to `Redshift`, as this is a major API change and `Redshift` is a singleton.
-- `redshift.newX()` functions changed to `new Redshift.X()` constructors:
-    - `newAction` -> `new Element`
-    - `newActionGroup` -> `new ElementSystem`
-    - `newInput` -> `new Input`
-    - `newProcess` -> `new Process`
-This cuts out a function call and allows developers to extend these prototypes.
-- `redshift.dom()` replaced with `Redshift.select()`, which will take a DOM selector, NodeList, or array of object literals and return an `ElementSystem` with each item assigned its own `Element`.
-- `redshift.addRubix()` changed to `Redshift.addAction()`, for clearer and semantic naming. 
+- Major terminology changes to fix API semantics:
+    - `redshift` -> `Redshift`: As Redshift is a singleton.
+    - `redshift.newAction()` -> `new Redshift.Element()`: As "Action" was non-descriptive, "Element" is the body of values that you perform Actions on.
+    - `redshift.newActionGroup()` -> `new Redshift.ElementSystem()`: "System" better reflects the current and long-term purpose of this object.
+    - "Rubix" are now "Action"s, as they are performed on Elements and "Rubix" was non-descriptive. And completely invented, the fewer random concepts that have the be explained, the better!
+    - `redshift.addRubix()` -> `Redshift.addAction()`
+- Other object initialisation changes to cut out an unneeded function and encourage extending objects:
+    - `redshift.newInput` -> `new Redshift.Input()`
+    - `redshift.newProcess` -> `new Redshift.Process()`
+- `redshift.dom()` -> `Redshift.select()`
+- `redshift.addBezier()` -> `Redshift.addEasing()`: As this method can now add new easing functions as well as bezier curves.
+- Performance improvements
+
+### Added
+
+#### Value Types
+- Any value going through any route can now be a special value (like a color value). Value types can be default properties, and/or splitter/combine methods that split a value into child values.
+- Add new Value Types with `Redshift.addValueType(valueType)`.
+- Set a value type by setting a value's `type` property to the name of that type. Alternatively add automatic mapping on custom routes with a route's `typeMap` property.
+- HSL/HSLA color support added.
+
+#### Element Types
+- Redshift Elements can be a custom type which can provide type-specific methods to Elements. For instance, the `dom` Element type provides a `style` method. A hypothetical `canvas` Element type could provide an alternative `style` method.
+- `"dom"` Element type included by default. Automatically set to `"dom"` when creating Elements via `Redshift.select(selector)`.
+- Add new Element Types with `Redshift.addElementType(elementType)`.
 
 ## [2.1.1] 2015-06-11
 
