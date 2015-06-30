@@ -46,14 +46,11 @@ var styleDOM = function () {
 			Set DOM styles
 
 			@param [DOM Element]: Element to set styles on
-			@param [object]: DOM styles to set
+			@param [object]: Name of style to set
+			@param [string]: New rule
 		*/
-		set: function (element, props) {
-			for (var key in props) {
-				if (props.hasOwnProperty(key)) {
-					element.style[cache[key] || testPrefix(key)] = props[key];
-				}
-			}
+		set: function (element, name, rule) {
+			element.style[cache[name] || testPrefix(name)] = rule;
 		}
 
 	};

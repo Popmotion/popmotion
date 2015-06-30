@@ -1,22 +1,28 @@
 "use strict";
 
-var styleDOM = require('./dom/style-dom.js');
+var styleDOM = require('./dom/style-dom'),
+    getterSetter = require('../inc/getter-setter');
 
 module.exports = {
 
     /*
         Get or set attribute
+
+        @param [object || string]: Properties to set or name of attribute to get/set
+        @param [string || number]: Property to set if setting single prop
     */
-    attr: function (name, prop) {
-        var returnVal;
-
-        if (prop) {
-            this.element.setAttribute(name, prop);
-        } else {
-            returnVal = this.element.getAttribute(name);
-        }
-
-        return returnVal;
+    attr: function (opts, prop) {
+        return getterSetter.call(this, opts, prop,
+            // Getter
+            function (name) {
+                return this.element.getAttribute(name);
+            },
+            // Setter
+            function (name, prop) {
+                this.element.setAttribute(name, prop);
+                return this;
+            }
+        );
     },
 
     /*
@@ -26,32 +32,17 @@ module.exports = {
         @parma [string] (optional): Property to set
         @return [object || Element]: Returns calculated style if get, or Element if set
     */
-    style: function (name, prop) {
-        var propDefined = (prop !== undefined),
-            nameIsString = (typeof name === 'string'),
-            isGetter = (nameIsString && !propDefined),
-            styles = {},
-            returnVal = this;
-
-        // If this is a getter, pass name and set return value
-        if (isGetter) {
-            returnVal = styleDOM.get(this.element, name);
-
-        // If this is a setter
-        } else {
-            // If we have a property, add it to our object
-            if (propDefined) {
-                styles[name] = prop;
-
-            // Or overwrite our object
-            } else {
-                styles = name;
+    style: function (opts, prop) {
+        return getterSetter.call(this, opts, prop,
+            // Getter
+            function (name) {
+                return styleDOM.get(this.element, name);
+            },
+            // Setter
+            function (name, rule) {
+                styleDOM.set(this.element, name, rule);
+                return this;
             }
-
-            styleDOM.set(this.element, styles);
-        }
-
-        return returnVal;
+        );
     }
-
 };
