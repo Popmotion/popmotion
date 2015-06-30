@@ -3,7 +3,9 @@
 var COLOR = 'color',
     POSITIONS = 'positions',
     DIMENSIONS = 'dimensions',
-    SHADOW = 'shadow';
+    SHADOW = 'shadow',
+    ANGLE = 'angle',
+    PX = 'px';
 
 module.exports = {
     // Color properties

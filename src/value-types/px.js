@@ -1,5 +1,5 @@
 module.exports = {
     defaultProps: {
-        type: 'px'
+        unit: 'px'
     }
 };

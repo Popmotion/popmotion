@@ -251,7 +251,7 @@ module.exports = {
 
                 // Or just apply default props
                 } else {
-                    thisValue = utils.merge(valueTypesManager.defaultProps(thisValue.type, key), thisValue);
+                    processedValues[key] = utils.merge(valueTypesManager.defaultProps(thisValue.type, key), thisValue);
                 }
             }
         }

@@ -33,6 +33,10 @@ Redshift adheres to [Semantic Versioning](http://semver.org/). Change log added 
 - `"dom"` Element type included by default. Automatically set to `"dom"` when creating Elements via `Redshift.select(selector)`.
 - Add new Element Types with `Redshift.addElementType(elementType)`.
 
+#### Misc
+- `Redshift.addEasing()` can take easing functions (provide easeIn function, and Redshift will generate easeOut and easeInOut variations).
+- Add new physics simulations with `Redshift.addSimulation()`.
+
 ## [2.1.1] 2015-06-11
 
 ### Fixed

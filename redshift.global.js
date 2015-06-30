@@ -538,7 +538,7 @@
 
 	module.exports = {
 	    defaultProps: {
-	        type: 'px'
+	        unit: 'px'
 	    }
 	};
 
@@ -1340,9 +1340,13 @@
 	    for (; i < this._numKeys; i++) {
 	        key = this._keys[i];
 	        routeIsValid = (validRoutes && validRoutes.hasOwnProperty(key));
-	        route = routeIsValid ? validRoutes[key] : 'values';
+	        route = routeIsValid ? validRoutes[key] : {};
 
-	        if (routeIsValid || key === 'values') {
+	        /*
+	            If we've been given this route, or we've been given
+	            no routes and this is the default route ('values')
+	        */
+	        if (routeIsValid || key === 'values' && !validRoutes) {
 	            callback(this[key], key, route);
 	        }
 	    }
@@ -1496,15 +1500,14 @@
 
 	"use strict";
 
-	var utils = __webpack_require__(35),
-	    ModuleManager = __webpack_require__(58),
+	var ModuleManager = __webpack_require__(58),
 	    valueTypeManager = new ModuleManager();
 
 	valueTypeManager.defaultProps = function (type, key) {
 	    var valueType = this[type],
 	        defaultProps = (valueType.defaultProps) ? valueType.defaultProps[key] || valueType.defaultProps : {};
 
-	    return utils.copy(defaultProps);
+	    return defaultProps;
 	};
 
 	module.exports = valueTypeManager;
@@ -3368,7 +3371,9 @@
 	var COLOR = 'color',
 	    POSITIONS = 'positions',
 	    DIMENSIONS = 'dimensions',
-	    SHADOW = 'shadow';
+	    SHADOW = 'shadow',
+	    ANGLE = 'angle',
+	    PX = 'px';
 
 	module.exports = {
 	    // Color properties
@@ -3497,7 +3502,7 @@
 			for (; i < numElements; i++) {
 				element = this.members[i];
 				elementReturn = element[method].apply(element, arguments);
-				
+
 				if (elementReturn != element) {
 	    			isGetter = true;
 	    			getterArray.push(elementReturn);
@@ -4248,7 +4253,7 @@
 
 	                // Or just apply default props
 	                } else {
-	                    thisValue = utils.merge(valueTypesManager.defaultProps(thisValue.type, key), thisValue);
+	                    processedValues[key] = utils.merge(valueTypesManager.defaultProps(thisValue.type, key), thisValue);
 	                }
 	            }
 	        }

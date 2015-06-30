@@ -21,7 +21,7 @@ module.exports = function (method) {
 		for (; i < numElements; i++) {
 			element = this.members[i];
 			elementReturn = element[method].apply(element, arguments);
-			
+
 			if (elementReturn != element) {
     			isGetter = true;
     			getterArray.push(elementReturn);

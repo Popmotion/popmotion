@@ -20,9 +20,13 @@ routeManager.shard = function (callback, validRoutes) {
     for (; i < this._numKeys; i++) {
         key = this._keys[i];
         routeIsValid = (validRoutes && validRoutes.hasOwnProperty(key));
-        route = routeIsValid ? validRoutes[key] : 'values';
+        route = routeIsValid ? validRoutes[key] : {};
 
-        if (routeIsValid || key === 'values') {
+        /*
+            If we've been given this route, or we've been given
+            no routes and this is the default route ('values')
+        */
+        if (routeIsValid || key === 'values' && !validRoutes) {
             callback(this[key], key, route);
         }
     }
