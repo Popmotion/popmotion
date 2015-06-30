@@ -121,7 +121,7 @@ module.exports = {
                 // Assign properties to each new value
                 for (key in splitProperty) {
                     // Create new value if it doesn't exist
-                    splitValues[key] = splitValues[key] || valueTypesManager.defaultProps(key);
+                    splitValues[key] = splitValues[key] || utils.copy(valueTypesManager.defaultProps(value.type, key));
                     splitValues[key][propertyName] = splitProperty[key];
                 }
             }
@@ -251,7 +251,7 @@ module.exports = {
 
                 // Or just apply default props
                 } else {
-                    thisValue = utils.merge(valueTypesManager.defaultProps(key), thisValue);
+                    thisValue = utils.merge(valueTypesManager.defaultProps(thisValue.type, key), thisValue);
                 }
             }
         }

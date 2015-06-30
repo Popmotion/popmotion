@@ -1,9 +1,12 @@
 "use strict";
 
 var terms = require('./settings/dictionary').dimensions,
+    pxDefaults = require('./px').defaultProps,
     splitSpaceDelimited = require('./manipulators/split-space-delimited');
 
 module.exports = {
+
+    defaultProps: pxDefaults,
     
     /*
         Split dimensions in format "Top Right Bottom Left"

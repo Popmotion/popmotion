@@ -4,6 +4,8 @@ var rgb = require('./rgb');
 
 module.exports = {
 
+    defaultProps: rgb.defaultProps,
+
     test: function (value) {
         return (value && value.indexOf('#') > -1);
     },

@@ -1,6 +1,7 @@
 "use strict";
 
-var rgb = require('./rgb'),
+var utils = require('../inc/utils'),
+    rgb = require('./rgb'),
     hsl = require('./hsl'),
     hex = require('./hex'),
     supported = [rgb, hsl, hex],
@@ -15,6 +16,8 @@ var rgb = require('./rgb'),
     };
 
 module.exports = {
+
+    defaultProps: utils.merge(rgb.defaultProps, hsl.defaultProps),
 
     test: function (value) {
         return rgb.test(value) || hex.test(value) || hsl.test(value);

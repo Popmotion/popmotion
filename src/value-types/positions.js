@@ -1,10 +1,13 @@
 "use strict";
 
 var createDelimited = require('./manipulators/create-delimited'),
+    pxDefaults = require('./px').defaultProps,
     splitSpaceDelimited = require('./manipulators/split-space-delimited'),
     terms = require('./settings/dictionary').positions;
 
 module.exports = {
+
+    defaultProps: pxDefaults,
         
     /*
         Split positions in format "X Y Z"

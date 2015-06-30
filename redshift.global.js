@@ -75,27 +75,27 @@
 	    /*
 	        Optional value type support
 	    */
-	    .addValueType('px', __webpack_require__(71))
-	    .addValueType('angle', __webpack_require__(72))
-	    .addValueType('hsl', __webpack_require__(9))
-	    .addValueType('rgb', __webpack_require__(10))
-	    .addValueType('hex', __webpack_require__(11))
-	    .addValueType('color', __webpack_require__(12))
-	    .addValueType('positions', __webpack_require__(13))
-	    .addValueType('dimensions', __webpack_require__(14))
-	    .addValueType('shadow', __webpack_require__(15))
+	    .addValueType('px', __webpack_require__(9))
+	    .addValueType('angle', __webpack_require__(10))
+	    .addValueType('hsl', __webpack_require__(11))
+	    .addValueType('rgb', __webpack_require__(12))
+	    .addValueType('hex', __webpack_require__(13))
+	    .addValueType('color', __webpack_require__(14))
+	    .addValueType('positions', __webpack_require__(15))
+	    .addValueType('dimensions', __webpack_require__(16))
+	    .addValueType('shadow', __webpack_require__(17))
 
 	    /*
 	        DOM Element type and CSS/Attr route - dependent on core value types being present
 	    */
-	    .addElementType('dom', __webpack_require__(16))
-	    .addRoute('css', __webpack_require__(17))
-	    .addRoute('attr', __webpack_require__(18))
+	    .addElementType('dom', __webpack_require__(18))
+	    .addRoute('css', __webpack_require__(19))
+	    .addRoute('attr', __webpack_require__(20))
 
 	    /*
 	        SVG route - dependent on DOM route
 	    */
-	    .addRoute('path', __webpack_require__(19));
+	    .addRoute('path', __webpack_require__(21));
 
 	module.exports = Redshift;
 
@@ -105,25 +105,25 @@
 
 	"use strict";
 
-	var select = __webpack_require__(20),
-	    actionManager = __webpack_require__(21),
-	    easingManager = __webpack_require__(22),
-	    presetManager = __webpack_require__(23),
-	    routeManager = __webpack_require__(24),
-	    simulationManager = __webpack_require__(25),
-	    elementTypeManager = __webpack_require__(26),
-	    valueTypeManager = __webpack_require__(27),
-	    calc = __webpack_require__(28);
+	var select = __webpack_require__(22),
+	    actionManager = __webpack_require__(23),
+	    easingManager = __webpack_require__(24),
+	    presetManager = __webpack_require__(25),
+	    routeManager = __webpack_require__(26),
+	    simulationManager = __webpack_require__(27),
+	    elementTypeManager = __webpack_require__(28),
+	    valueTypeManager = __webpack_require__(29),
+	    calc = __webpack_require__(30);
 
 	module.exports = {
 
-	    Element: __webpack_require__(29),
+	    Element: __webpack_require__(31),
 
-	    ElementSystem: __webpack_require__(30),
+	    ElementSystem: __webpack_require__(32),
 
-	    Input: __webpack_require__(31),
+	    Input: __webpack_require__(33),
 
-	    Process: __webpack_require__(32),
+	    Process: __webpack_require__(34),
 
 	    select: function (items) {
 	        return select(items);
@@ -218,23 +218,23 @@
 	*/
 	"use strict";
 
-	var calc = __webpack_require__(28),
-	    utils = __webpack_require__(33),
-	    easingManager = __webpack_require__(22),
+	var calc = __webpack_require__(30),
+	    utils = __webpack_require__(35),
+	    easingManager = __webpack_require__(24),
 
 	    playAction = {
 
 	        // [object] Default Action properties
-	        actionDefaults: __webpack_require__(34),
+	        actionDefaults: __webpack_require__(36),
 
 	        // [object]: Default value properties
-	        valueDefaults: __webpack_require__(35),
+	        valueDefaults: __webpack_require__(37),
 
 	        // [boolean] Prevent Redshift from autogenerating Element.prototype.play()
 	        surpressMethod: true,
 
 	        // [object] Methods to add to Element.prototype
-	        elementMethods: __webpack_require__(36),
+	        elementMethods: __webpack_require__(38),
 
 	        /*
 	            Update Action elapsed time
@@ -308,18 +308,18 @@
 	*/
 	"use strict";
 
-	var calc = __webpack_require__(28),
-	    simulate = __webpack_require__(25);
+	var calc = __webpack_require__(30),
+	    simulate = __webpack_require__(27);
 
 	module.exports = {
 
 	    // [object] Default Action properties
-	    actionDefaults: __webpack_require__(37),
+	    actionDefaults: __webpack_require__(39),
 
 	    // [object] Default value properties
-	    valueDefaults: __webpack_require__(38),
+	    valueDefaults: __webpack_require__(40),
 
-	    parse: __webpack_require__(39),
+	    parse: __webpack_require__(41),
 
 	    // [boolean]: Tell Redshift this rubix calculates a new velocity itself
 	    calculatesVelocity: true,
@@ -392,7 +392,7 @@
 
 	module.exports = {
 
-	    parse: __webpack_require__(39),
+	    parse: __webpack_require__(41),
 
 	   /*
 	        Process new value
@@ -427,13 +427,13 @@
 	*/
 	"use strict";
 
-	var calc = __webpack_require__(28),
-	    genericParser = __webpack_require__(39),
-	    Pointer = __webpack_require__(40);
+	var calc = __webpack_require__(30),
+	    genericParser = __webpack_require__(41),
+	    Pointer = __webpack_require__(42);
 
 	module.exports = {
 
-	    valueDefaults: __webpack_require__(41),
+	    valueDefaults: __webpack_require__(43),
 
 	    /*
 	        Parse Input arguments
@@ -536,14 +536,45 @@
 /* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	module.exports = {
+	    defaultProps: {
+	        type: 'px'
+	    }
+	};
 
-	var createDelimited = __webpack_require__(42),
-	    getColorValues = __webpack_require__(43),
-	    functionCreate = __webpack_require__(44),
-	    terms = __webpack_require__(45).hsl;
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
+	    defaultProps: {
+	        unit: 'deg'
+	    }
+	};
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var createDelimited = __webpack_require__(44),
+	    getColorValues = __webpack_require__(45),
+	    functionCreate = __webpack_require__(46),
+	    defaultProps = __webpack_require__(47),
+	    terms = __webpack_require__(48).hsl;
+
+	module.exports = {
+
+	    defaultProps: {
+	        Hue: {
+	            min: 0,
+	            max: 360
+	        },
+	        Saturation: defaultProps.percent,
+	        Lightness: defaultProps.percent,
+	        Alpha: defaultProps.opacity
+	    },
 
 	    test: function (value) {
 	        return (value && value.indexOf('hsl') > -1);
@@ -559,17 +590,26 @@
 	};
 
 /***/ },
-/* 10 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var createDelimited = __webpack_require__(42),
-	    getColorValues = __webpack_require__(43),
-	    functionCreate = __webpack_require__(44),
-	    terms = __webpack_require__(45).colors;
+	var createDelimited = __webpack_require__(44),
+	    getColorValues = __webpack_require__(45),
+	    functionCreate = __webpack_require__(46),
+	    defaultProps = __webpack_require__(47),
+	    colorDefaults = defaultProps.color,
+	    terms = __webpack_require__(48).colors;
 
 	module.exports = {
+
+	    defaultProps: {
+	        Red: colorDefaults,
+	        Green: colorDefaults,
+	        Blue: colorDefaults,
+	        Alpha: defaultProps.opacity
+	    },
 
 	    test: function (value) {
 	        return (value && value.indexOf('rgb') > -1);
@@ -585,14 +625,16 @@
 	};
 
 /***/ },
-/* 11 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var rgb = __webpack_require__(10);
+	var rgb = __webpack_require__(12);
 
 	module.exports = {
+
+	    defaultProps: rgb.defaultProps,
 
 	    test: function (value) {
 	        return (value && value.indexOf('#') > -1);
@@ -631,14 +673,15 @@
 	};
 
 /***/ },
-/* 12 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var rgb = __webpack_require__(10),
-	    hsl = __webpack_require__(9),
-	    hex = __webpack_require__(11),
+	var utils = __webpack_require__(35),
+	    rgb = __webpack_require__(12),
+	    hsl = __webpack_require__(11),
+	    hex = __webpack_require__(13),
 	    supported = [rgb, hsl, hex],
 	    numSupported = 3,
 
@@ -651,6 +694,8 @@
 	    };
 
 	module.exports = {
+
+	    defaultProps: utils.merge(rgb.defaultProps, hsl.defaultProps),
 
 	    test: function (value) {
 	        return rgb.test(value) || hex.test(value) || hsl.test(value);
@@ -666,16 +711,19 @@
 	};
 
 /***/ },
-/* 13 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var createDelimited = __webpack_require__(42),
-	    splitSpaceDelimited = __webpack_require__(46),
-	    terms = __webpack_require__(45).positions;
+	var createDelimited = __webpack_require__(44),
+	    pxDefaults = __webpack_require__(9).defaultProps,
+	    splitSpaceDelimited = __webpack_require__(49),
+	    terms = __webpack_require__(48).positions;
 
 	module.exports = {
+
+	    defaultProps: pxDefaults,
 	        
 	    /*
 	        Split positions in format "X Y Z"
@@ -706,15 +754,18 @@
 	};
 
 /***/ },
-/* 14 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var terms = __webpack_require__(45).dimensions,
-	    splitSpaceDelimited = __webpack_require__(46);
+	var terms = __webpack_require__(48).dimensions,
+	    pxDefaults = __webpack_require__(9).defaultProps,
+	    splitSpaceDelimited = __webpack_require__(49);
 
 	module.exports = {
+
+	    defaultProps: pxDefaults,
 	    
 	    /*
 	        Split dimensions in format "Top Right Bottom Left"
@@ -751,19 +802,28 @@
 	};
 
 /***/ },
-/* 15 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var color = __webpack_require__(12),
-	    utils = __webpack_require__(33),
-	    terms = __webpack_require__(45).shadow,
-	    splitSpaceDelimited = __webpack_require__(46),
-	    createDelimited = __webpack_require__(42),
+	var color = __webpack_require__(14),
+	    utils = __webpack_require__(35),
+	    pxDefaults = __webpack_require__(9).defaultProps,
+	    terms = __webpack_require__(48).shadow,
+	    splitSpaceDelimited = __webpack_require__(49),
+	    createDelimited = __webpack_require__(44),
 	    shadowTerms = terms.slice(0,4);
 
 	module.exports = {
+
+	    defaultProps: utils.merge(color.defaultProps, {
+	        X: pxDefaults,
+	        Y: pxDefaults,
+	        Radius: pxDefaults,
+	        Spread: pxDefaults
+	    }),
+
 	    /*
 	        Split shadow properties "X Y Radius Spread Color"
 	        
@@ -801,13 +861,13 @@
 	};
 
 /***/ },
-/* 16 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var styleDOM = __webpack_require__(47),
-	    getterSetter = __webpack_require__(48);
+	var styleDOM = __webpack_require__(50),
+	    getterSetter = __webpack_require__(51);
 
 	module.exports = {
 
@@ -854,17 +914,17 @@
 	};
 
 /***/ },
-/* 17 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var build = __webpack_require__(49),
-	    lookup = __webpack_require__(50),
+	var build = __webpack_require__(52),
+	    typeMap = __webpack_require__(53),
 	    CSS_CACHE = '_cssCache';
 
 	module.exports = {
-	    typeMap: lookup,
+	    typeMap: typeMap,
 	    
 	    onChange: function (output, element) {
 	        element[CSS_CACHE] = element[CSS_CACHE] || {};
@@ -874,7 +934,7 @@
 	};
 
 /***/ },
-/* 18 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -888,12 +948,12 @@
 	};
 
 /***/ },
-/* 19 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var createStyles = __webpack_require__(51);
+	var createStyles = __webpack_require__(54);
 
 	module.exports = {
 
@@ -909,12 +969,12 @@
 	};
 
 /***/ },
-/* 20 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var ElementSystem = __webpack_require__(30);
+	var ElementSystem = __webpack_require__(32);
 
 	/*
 	    Create an ElementSystem based on a selection of DOM nodes
@@ -944,19 +1004,19 @@
 	};
 
 /***/ },
-/* 21 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
 	var Element,
 	    ElementSystem,
-	    utils = __webpack_require__(33),
-	    generateMethodIterator = __webpack_require__(52),
-	    genericActionProps = __webpack_require__(53),
-	    genericValueProps = __webpack_require__(54),
+	    utils = __webpack_require__(35),
+	    generateMethodIterator = __webpack_require__(55),
+	    genericActionProps = __webpack_require__(56),
+	    genericValueProps = __webpack_require__(57),
 
-	    ModuleManager = __webpack_require__(55),
+	    ModuleManager = __webpack_require__(58),
 
 	    actionManager = new ModuleManager();
 	/*
@@ -1013,7 +1073,7 @@
 
 
 /***/ },
-/* 22 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -1040,8 +1100,8 @@
 	*/
 	"use strict";
 
-	var calc = __webpack_require__(28),
-	    Bezier = __webpack_require__(56),
+	var calc = __webpack_require__(30),
+	    Bezier = __webpack_require__(59),
 
 	    EASE_IN = 'In',
 	    EASE_OUT = 'Out',
@@ -1131,7 +1191,7 @@
 	        };
 	    },
 
-	    ModuleManager = __webpack_require__(55),
+	    ModuleManager = __webpack_require__(58),
 	    easingManager = new ModuleManager();
 
 	/*
@@ -1205,13 +1265,13 @@
 	module.exports = easingManager;
 
 /***/ },
-/* 23 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var utils = __webpack_require__(33),
-	    ModuleManager = __webpack_require__(55),
+	var utils = __webpack_require__(35),
+	    ModuleManager = __webpack_require__(58),
 	    presetManager = new ModuleManager(),
 
 	    DOT = '.',
@@ -1255,12 +1315,12 @@
 	module.exports = presetManager;
 
 /***/ },
-/* 24 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var ModuleManager = __webpack_require__(55),
+	var ModuleManager = __webpack_require__(58),
 	    routeManager = new ModuleManager();
 
 	/*
@@ -1291,15 +1351,15 @@
 	module.exports = routeManager;
 
 /***/ },
-/* 25 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var calc = __webpack_require__(28),
+	var calc = __webpack_require__(30),
 	    speedPerFrame = calc.speedPerFrame,
 
-	    ModuleManager = __webpack_require__(55),
+	    ModuleManager = __webpack_require__(58),
 	    simulationManager = new ModuleManager();
 
 	/*
@@ -1387,7 +1447,7 @@
 
 
 /***/ },
-/* 26 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1408,7 +1468,7 @@
 	        }
 	    },
 
-	    ModuleManager = __webpack_require__(55),
+	    ModuleManager = __webpack_require__(58),
 	    elementTypeManager = new ModuleManager;
 
 	elementTypeManager.extend = function (name, module) {
@@ -1431,24 +1491,26 @@
 	module.exports = elementTypeManager;
 
 /***/ },
-/* 27 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var utils = __webpack_require__(33),
-	    defaultProps = __webpack_require__(57),
-	    ModuleManager = __webpack_require__(55),
+	var utils = __webpack_require__(35),
+	    ModuleManager = __webpack_require__(58),
 	    valueTypeManager = new ModuleManager();
 
-	valueTypeManager.defaultProps = function (key) {
-	    return defaultProps[key] ? utils.copy(defaultProps[key]) : {};
+	valueTypeManager.defaultProps = function (type, key) {
+	    var valueType = this[type],
+	        defaultProps = (valueType.defaultProps) ? valueType.defaultProps[key] || valueType.defaultProps : {};
+
+	    return utils.copy(defaultProps);
 	};
 
 	module.exports = valueTypeManager;
 
 /***/ },
-/* 28 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -1459,7 +1521,7 @@
 	*/
 	"use strict";
 
-	var utils = __webpack_require__(33),
+	var utils = __webpack_require__(35),
 
 	    calc = {
 	        
@@ -1806,19 +1868,19 @@
 	module.exports = calc;
 
 /***/ },
-/* 29 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var Process = __webpack_require__(32),
-	    Queue = __webpack_require__(58),
-	    utils = __webpack_require__(33),
-	    update = __webpack_require__(59),
-	    valueOps = __webpack_require__(60),
-	    actionManager = __webpack_require__(21),
-	    routeManager = __webpack_require__(24),
-	    elementTypeManager = __webpack_require__(26),
+	var Process = __webpack_require__(34),
+	    Queue = __webpack_require__(60),
+	    utils = __webpack_require__(35),
+	    update = __webpack_require__(61),
+	    valueOps = __webpack_require__(62),
+	    actionManager = __webpack_require__(23),
+	    routeManager = __webpack_require__(26),
+	    elementTypeManager = __webpack_require__(28),
 
 	    Element = function (element, options) {
 	        this.element = element || false;
@@ -2077,14 +2139,14 @@
 	module.exports = Element;
 
 /***/ },
-/* 30 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var Element = __webpack_require__(29),
-	    generateMethodIterator = __webpack_require__(52),
-	    actionManager = __webpack_require__(21),
+	var Element = __webpack_require__(31),
+	    generateMethodIterator = __webpack_require__(55),
+	    actionManager = __webpack_require__(23),
 
 	    /*
 	        ElementSystem constructor
@@ -2177,7 +2239,7 @@
 	module.exports = ElementSystem;
 
 /***/ },
-/* 31 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -2185,9 +2247,9 @@
 	*/
 	"use strict";
 
-	var calc = __webpack_require__(28),
-	    utils = __webpack_require__(33),
-	    History = __webpack_require__(61),
+	var calc = __webpack_require__(30),
+	    utils = __webpack_require__(35),
+	    History = __webpack_require__(63),
 
 	    /*
 	        Input constructor
@@ -2308,12 +2370,12 @@
 	module.exports = Input;
 
 /***/ },
-/* 32 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var manager = __webpack_require__(62),
+	var manager = __webpack_require__(64),
 
 	    /*
 	        Process constructor
@@ -2473,7 +2535,7 @@
 	module.exports = Process;
 
 /***/ },
-/* 33 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -2718,7 +2780,7 @@
 	};
 
 /***/ },
-/* 34 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
@@ -2746,7 +2808,7 @@
 	};
 
 /***/ },
-/* 35 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
@@ -2770,13 +2832,13 @@
 	};
 
 /***/ },
-/* 36 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var parseArgs = __webpack_require__(63),
-	    utils = __webpack_require__(33);
+	var parseArgs = __webpack_require__(65),
+	    utils = __webpack_require__(35);
 
 	module.exports = {
 	    /*
@@ -2880,7 +2942,7 @@
 	};
 
 /***/ },
-/* 37 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
@@ -2892,7 +2954,7 @@
 	};
 
 /***/ },
-/* 38 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
@@ -2927,12 +2989,12 @@
 	};
 
 /***/ },
-/* 39 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var presetManager = __webpack_require__(23);
+	var presetManager = __webpack_require__(25);
 
 	module.exports = function (base, override) {
 	    var props = (typeof base === 'string') ? presetManager.getDefined(base) : {};
@@ -2944,12 +3006,12 @@
 	}
 
 /***/ },
-/* 40 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var Input = __webpack_require__(31),
+	var Input = __webpack_require__(33),
 	    currentPointer, // Sort this out for multitouch
 	    
 	    TOUCHMOVE = 'touchmove',
@@ -3038,7 +3100,7 @@
 	module.exports = Pointer;
 
 /***/ },
-/* 41 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
@@ -3047,7 +3109,7 @@
 	}
 
 /***/ },
-/* 42 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3074,11 +3136,11 @@
 	};
 
 /***/ },
-/* 43 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var splitCommaDelimited = __webpack_require__(64),
-	    functionBreak = __webpack_require__(65);
+	var splitCommaDelimited = __webpack_require__(66),
+	    functionBreak = __webpack_require__(67);
 
 	module.exports = function (value, terms) {
 	    var splitValue = {},
@@ -3094,7 +3156,7 @@
 	};
 
 /***/ },
-/* 44 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (value, prefix) {
@@ -3102,7 +3164,31 @@
 	};
 
 /***/ },
-/* 45 */
+/* 47 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	module.exports = {
+	    color: {
+	        min: 0,
+	        max: 255,
+	        round: true
+	    },
+	    opacity: {
+	        min: 0,
+	        max: 1
+	    },
+	    percent: {
+	        min: 0,
+	        max: 100,
+	        unit: '%'
+	    }
+	};
+
+
+/***/ },
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3122,7 +3208,7 @@
 	module.exports = terms;
 
 /***/ },
-/* 46 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (value) {
@@ -3130,7 +3216,7 @@
 	};
 
 /***/ },
-/* 47 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3194,7 +3280,7 @@
 	module.exports = new styleDOM();
 
 /***/ },
-/* 48 */
+/* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -3229,12 +3315,12 @@
 	};
 
 /***/ },
-/* 49 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var transformDictionary = __webpack_require__(66),
+	var transformDictionary = __webpack_require__(68),
 	    transformProps = transformDictionary.props,
 
 	    TRANSFORM = 'transform',
@@ -3274,7 +3360,7 @@
 	};
 
 /***/ },
-/* 50 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3324,12 +3410,12 @@
 	};
 
 /***/ },
-/* 51 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var lookup = __webpack_require__(67),
+	var lookup = __webpack_require__(69),
 
 	    /*
 	        Convert percentage to pixels
@@ -3385,7 +3471,7 @@
 	};
 
 /***/ },
-/* 52 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3424,7 +3510,7 @@
 
 
 /***/ },
-/* 53 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
@@ -3444,7 +3530,7 @@
 	}
 
 /***/ },
-/* 54 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
@@ -3470,7 +3556,7 @@
 	}
 
 /***/ },
-/* 55 */
+/* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3520,7 +3606,7 @@
 	module.exports = ModuleManager;
 
 /***/ },
-/* 56 */
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/*
@@ -3692,80 +3778,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 57 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var circle = {
-	        min: 0,
-	        max: 360
-	    },
-	    color = {
-	        min: 0,
-	        max: 255,
-	        round: true
-	    },
-	    opacity = {
-	        min: 0,
-	        max: 1
-	    },
-	    percent = {
-	        min: 0,
-	        max: 100,
-	        unit: '%'
-	    },
-	    px = {
-	        unit: 'px'
-	    },
-	    angle = {
-	        unit: 'deg'
-	    },
-	    scale = {},
-	    defaults = {
-	        base: {
-	            unit: 'px'
-	        },
-	        
-	        color: color,
-	        Red: color,
-	        Green: color,
-	        Blue: color,
-
-	        Hue: circle,
-	        Saturation: percent,
-	        Lightness: percent,
-	    
-	        Alpha: opacity,
-	        opacity: opacity,
-	        
-	        scale: scale,
-	        scaleX: scale,
-	        scaleY: scale,
-	        scaleZ: scale,
-
-	        X: px,
-	        Y: px,
-	        Spread: px,
-	        Radius: px,
-	        
-	        skew: angle,
-	        skewX: angle,
-	        skewY: angle,
-	        rotate: angle,
-	        rotateX: angle,
-	        rotateY: angle,
-	        rotateZ: angle,
-
-	        translateX: px,
-	        translateY: px,
-	        translateZ: px
-	    };
-	    
-	module.exports = defaults;
-
-/***/ },
-/* 58 */
+/* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3818,15 +3831,15 @@
 	module.exports = Queue;
 
 /***/ },
-/* 59 */
+/* 61 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var actionManager = __webpack_require__(21),
-	    routeManager = __webpack_require__(24),
-	    valueTypeManager = __webpack_require__(27),
-	    calc = __webpack_require__(28),
+	var actionManager = __webpack_require__(23),
+	    routeManager = __webpack_require__(26),
+	    valueTypeManager = __webpack_require__(29),
+	    calc = __webpack_require__(30),
 
 	    defaultRoute = 'values',
 
@@ -3979,16 +3992,16 @@
 	};
 
 /***/ },
-/* 60 */
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var utils = __webpack_require__(33),
+	var utils = __webpack_require__(35),
 	    isNum = utils.isNum,
-	    actionsManager = __webpack_require__(21),
-	    valueTypesManager = __webpack_require__(27),
-	    routeManager = __webpack_require__(24),
+	    actionsManager = __webpack_require__(23),
+	    valueTypesManager = __webpack_require__(29),
+	    routeManager = __webpack_require__(26),
 
 	    DEFAULT_NAMESPACE = 'values',
 	    numericalValues = ['current', 'to', 'start', 'min', 'max'],
@@ -4105,7 +4118,7 @@
 	                // Assign properties to each new value
 	                for (key in splitProperty) {
 	                    // Create new value if it doesn't exist
-	                    splitValues[key] = splitValues[key] || valueTypesManager.defaultProps(key);
+	                    splitValues[key] = splitValues[key] || utils.copy(valueTypesManager.defaultProps(value.type, key));
 	                    splitValues[key][propertyName] = splitProperty[key];
 	                }
 	            }
@@ -4235,7 +4248,7 @@
 
 	                // Or just apply default props
 	                } else {
-	                    thisValue = utils.merge(valueTypesManager.defaultProps(key), thisValue);
+	                    thisValue = utils.merge(valueTypesManager.defaultProps(thisValue.type, key), thisValue);
 	                }
 	            }
 	        }
@@ -4284,7 +4297,7 @@
 	};
 
 /***/ },
-/* 61 */
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4358,12 +4371,12 @@
 	module.exports = History;
 
 /***/ },
-/* 62 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var theLoop = __webpack_require__(68),
+	var theLoop = __webpack_require__(70),
 	    ProcessManager = function () {
 	        this.all = {};
 	        this.active = [];
@@ -4533,13 +4546,13 @@
 	module.exports = new ProcessManager();
 
 /***/ },
-/* 63 */
+/* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var presetManager = __webpack_require__(23),
-	    utils = __webpack_require__(33);
+	var presetManager = __webpack_require__(25),
+	    utils = __webpack_require__(35);
 
 	module.exports = function (base, override) {
 	    var props = {},
@@ -4583,7 +4596,7 @@
 	};
 
 /***/ },
-/* 64 */
+/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (value) {
@@ -4591,7 +4604,7 @@
 	};
 
 /***/ },
-/* 65 */
+/* 67 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (value) {
@@ -4599,12 +4612,12 @@
 	};
 
 /***/ },
-/* 66 */
+/* 68 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var positionTerms = __webpack_require__(45).positions,
+	var positionTerms = __webpack_require__(48).positions,
 	    numPositionTerms = positionTerms.length,
 
 	    TRANSFORM_PERSPECTIVE = 'transformPerspective',
@@ -4642,7 +4655,7 @@
 	module.exports = terms;
 
 /***/ },
-/* 67 */
+/* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var STROKE = 'stroke',
@@ -4659,7 +4672,7 @@
 	};
 
 /***/ },
-/* 68 */
+/* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -4667,8 +4680,8 @@
 	*/
 	"use strict";
 
-	var Timer = __webpack_require__(69),
-	    tick = __webpack_require__(70),
+	var Timer = __webpack_require__(71),
+	    tick = __webpack_require__(72),
 	    Loop = function () {
 	        this.timer = new Timer();
 	    };
@@ -4733,12 +4746,12 @@
 	module.exports = new Loop();
 
 /***/ },
-/* 69 */
+/* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var utils = __webpack_require__(33),
+	var utils = __webpack_require__(35),
 
 	    maxElapsed = 33,
 	    Timer = function () {
@@ -4768,7 +4781,7 @@
 	module.exports = Timer;
 
 /***/ },
-/* 70 */
+/* 72 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4809,26 +4822,6 @@
 	}
 
 	module.exports = tick;
-
-/***/ },
-/* 71 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	    defaultProps: {
-	        type: 'px'
-	    }
-	};
-
-/***/ },
-/* 72 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	    defaultProps: {
-	        unit: 'deg'
-	    }
-	};
 
 /***/ }
 /******/ ]);
