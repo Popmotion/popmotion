@@ -1,7 +1,7 @@
 "use strict";
 
-var ModuleManager = require('../inc/ModuleManager'),
-    routeManager = new ModuleManager();
+var ModManager = require('../inc/ModManager'),
+    routeManager = new ModManager();
 
 /*
     Shard function

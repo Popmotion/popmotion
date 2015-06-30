@@ -1016,15 +1016,15 @@
 	    genericActionProps = __webpack_require__(56),
 	    genericValueProps = __webpack_require__(57),
 
-	    ModuleManager = __webpack_require__(58),
+	    ModManager = __webpack_require__(58),
 
-	    actionManager = new ModuleManager();
+	    actionManager = new ModManager();
 	/*
 	    Add module to ActionManager
 
 	    Creates a new Action for Elements
 	*/
-	actionManager.extend = function (name, module) {
+	actionManager.extend = function (name, mod) {
 	    var methodName = '';
 
 	    /*
@@ -1032,10 +1032,10 @@
 	        surpressMethod flag and Element doesn't already have a
 	        method with that name
 	    */
-	    if (!module.surpressMethod && !Element.prototype[name]) {
+	    if (!mod.surpressMethod && !Element.prototype[name]) {
 	        Element.prototype[name] = function () {
 	            this.action = name;
-	            this.set(module.parser.apply(this, arguments));
+	            this.set(mod.parser.apply(this, arguments));
 
 	            return this.start();
 	        };
@@ -1044,21 +1044,21 @@
 	    }
 
 	    // If module has methods to add to Element.prototype
-	    if (module.elementMethods) {
-	        for (methodName in module.elementMethods) {
-	            Element.prototype[methodName] = module.elementMethods[methodName];
+	    if (mod.elementMethods) {
+	        for (methodName in mod.elementMethods) {
+	            Element.prototype[methodName] = mod.elementMethods[methodName];
 	            ElementSystem.prototype[methodName] = generateMethodIterator(methodName);
 	        }
 	    }
 
 	    // Merge action props with defaults
-	    module.actionDefaults = module.actionDefaults ? utils.merge(genericActionProps, module.actionDefaults) : genericActionProps;
+	    mod.actionDefaults = mod.actionDefaults ? utils.merge(genericActionProps, mod.actionDefaults) : genericActionProps;
 
 	    // Merge value props with defaults
-	    module.valueDefaults = module.valueDefaults ? utils.merge(genericValueProps, module.valueDefaults) : genericValueProps;
+	    mod.valueDefaults = mod.valueDefaults ? utils.merge(genericValueProps, mod.valueDefaults) : genericValueProps;
 	    
 	    // Call parent extend method
-	    ModuleManager.prototype.extend.call(this, name, module);
+	    ModManager.prototype.extend.call(this, name, mod);
 	};
 
 	actionManager.setElement = function (element) {
@@ -1191,8 +1191,8 @@
 	        };
 	    },
 
-	    ModuleManager = __webpack_require__(58),
-	    easingManager = new ModuleManager();
+	    ModManager = __webpack_require__(58),
+	    easingManager = new ModManager();
 
 	/*
 	    Extend easing functions
@@ -1271,8 +1271,8 @@
 	"use strict";
 
 	var utils = __webpack_require__(35),
-	    ModuleManager = __webpack_require__(58),
-	    presetManager = new ModuleManager(),
+	    ModManager = __webpack_require__(58),
+	    presetManager = new ModManager(),
 
 	    DOT = '.',
 
@@ -1320,8 +1320,8 @@
 
 	"use strict";
 
-	var ModuleManager = __webpack_require__(58),
-	    routeManager = new ModuleManager();
+	var ModManager = __webpack_require__(58),
+	    routeManager = new ModManager();
 
 	/*
 	    Shard function
@@ -1363,8 +1363,8 @@
 	var calc = __webpack_require__(30),
 	    speedPerFrame = calc.speedPerFrame,
 
-	    ModuleManager = __webpack_require__(58),
-	    simulationManager = new ModuleManager();
+	    ModManager = __webpack_require__(58),
+	    simulationManager = new ModManager();
 
 	/*
 	    Add core physics simulations
@@ -1472,20 +1472,20 @@
 	        }
 	    },
 
-	    ModuleManager = __webpack_require__(58),
-	    elementTypeManager = new ModuleManager;
+	    ModManager = __webpack_require__(58),
+	    elementTypeManager = new ModManager;
 
-	elementTypeManager.extend = function (name, module) {
+	elementTypeManager.extend = function (name, mod) {
 	    var methodName = '';
 
-	    for (methodName in module) {
-	        if (module.hasOwnProperty(methodName) && !Element.prototype[methodName]) {
+	    for (methodName in mod) {
+	        if (mod.hasOwnProperty(methodName) && !Element.prototype[methodName]) {
 	            Element.prototype[methodName] = generateFunction(methodName);
 	        }
 	    }
 
 	    // Call parent extend method
-	    ModuleManager.prototype.extend.call(this, name, module);
+	    ModManager.prototype.extend.call(this, name, mod);
 	};
 
 	elementTypeManager.setElement = function (element) {
@@ -1500,8 +1500,8 @@
 
 	"use strict";
 
-	var ModuleManager = __webpack_require__(58),
-	    valueTypeManager = new ModuleManager();
+	var ModManager = __webpack_require__(58),
+	    valueTypeManager = new ModManager();
 
 	valueTypeManager.defaultProps = function (type, key) {
 	    var valueType = this[type],
@@ -3566,12 +3566,12 @@
 
 	"use strict";
 
-	var ModuleManager = function () {
+	var ModManager = function () {
 	        this._keys = [];
 	        this._numKeys = 0;
 	    };
 
-	ModuleManager.prototype = {
+	ModManager.prototype = {
 
 	    /*
 	        Add module key to keys list
@@ -3589,26 +3589,26 @@
 	        @param [string || object]: Name of new module or multiple modules
 	        @param [object] (optional): Module to add
 	    */
-	    extend: function (name, module) {
+	    extend: function (name, mod) {
 	        var multiModules = (typeof name == 'object'),
-	            modules = multiModules ? name : {},
+	            mods = multiModules ? name : {},
 	            key = '';
 
 	        // If we just have one module, coerce
-	        if (!multiModules) {
-	            modules[name] = module;
+	        if (!multiMods) {
+	            mods[name] = mod;
 	        }
 
-	        for (key in modules) {
+	        for (key in mods) {
 	            this._addKey(key);
-	            this[key] = modules[key];
+	            this[key] = mods[key];
 	        }
 
 	        return this;
 	    }
 	};
 
-	module.exports = ModuleManager;
+	module.exports = ModManager;
 
 /***/ },
 /* 59 */

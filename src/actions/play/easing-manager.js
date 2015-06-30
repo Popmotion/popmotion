@@ -113,8 +113,8 @@ var calc = require('../../inc/calc.js'),
         };
     },
 
-    ModuleManager = require('../../inc/ModuleManager'),
-    easingManager = new ModuleManager();
+    ModManager = require('../../inc/ModManager'),
+    easingManager = new ModManager();
 
 /*
     Extend easing functions

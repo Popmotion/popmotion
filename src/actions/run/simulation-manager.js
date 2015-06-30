@@ -3,8 +3,8 @@
 var calc = require('../../inc/calc'),
     speedPerFrame = calc.speedPerFrame,
 
-    ModuleManager = require('../../inc/ModuleManager'),
-    simulationManager = new ModuleManager();
+    ModManager = require('../../inc/ModManager'),
+    simulationManager = new ModManager();
 
 /*
     Add core physics simulations

@@ -1,11 +1,11 @@
 "use strict";
 
-var ModuleManager = function () {
+var ModManager = function () {
         this._keys = [];
         this._numKeys = 0;
     };
 
-ModuleManager.prototype = {
+ModManager.prototype = {
 
     /*
         Add module key to keys list
@@ -23,23 +23,23 @@ ModuleManager.prototype = {
         @param [string || object]: Name of new module or multiple modules
         @param [object] (optional): Module to add
     */
-    extend: function (name, module) {
+    extend: function (name, mod) {
         var multiModules = (typeof name == 'object'),
-            modules = multiModules ? name : {},
+            mods = multiModules ? name : {},
             key = '';
 
         // If we just have one module, coerce
-        if (!multiModules) {
-            modules[name] = module;
+        if (!multiMods) {
+            mods[name] = mod;
         }
 
-        for (key in modules) {
+        for (key in mods) {
             this._addKey(key);
-            this[key] = modules[key];
+            this[key] = mods[key];
         }
 
         return this;
     }
 };
 
-module.exports = ModuleManager;
+module.exports = ModManager;

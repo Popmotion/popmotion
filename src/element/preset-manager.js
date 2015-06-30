@@ -1,8 +1,8 @@
 "use strict";
 
 var utils = require('../inc/utils'),
-    ModuleManager = require('../inc/ModuleManager'),
-    presetManager = new ModuleManager(),
+    ModManager = require('../inc/ModManager'),
+    presetManager = new ModManager(),
 
     DOT = '.',
 

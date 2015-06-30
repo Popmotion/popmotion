@@ -1,7 +1,7 @@
 "use strict";
 
-var ModuleManager = require('../inc/ModuleManager'),
-    valueTypeManager = new ModuleManager();
+var ModManager = require('../inc/ModManager'),
+    valueTypeManager = new ModManager();
 
 valueTypeManager.defaultProps = function (type, key) {
     var valueType = this[type],

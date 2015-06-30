@@ -7,15 +7,15 @@ var Element,
     genericActionProps = require('./generic/default-action-props'),
     genericValueProps = require('./generic/default-value-props'),
 
-    ModuleManager = require('../inc/ModuleManager'),
+    ModManager = require('../inc/ModManager'),
 
-    actionManager = new ModuleManager();
+    actionManager = new ModManager();
 /*
     Add module to ActionManager
 
     Creates a new Action for Elements
 */
-actionManager.extend = function (name, module) {
+actionManager.extend = function (name, mod) {
     var methodName = '';
 
     /*
@@ -23,10 +23,10 @@ actionManager.extend = function (name, module) {
         surpressMethod flag and Element doesn't already have a
         method with that name
     */
-    if (!module.surpressMethod && !Element.prototype[name]) {
+    if (!mod.surpressMethod && !Element.prototype[name]) {
         Element.prototype[name] = function () {
             this.action = name;
-            this.set(module.parser.apply(this, arguments));
+            this.set(mod.parser.apply(this, arguments));
 
             return this.start();
         };
@@ -35,21 +35,21 @@ actionManager.extend = function (name, module) {
     }
 
     // If module has methods to add to Element.prototype
-    if (module.elementMethods) {
-        for (methodName in module.elementMethods) {
-            Element.prototype[methodName] = module.elementMethods[methodName];
+    if (mod.elementMethods) {
+        for (methodName in mod.elementMethods) {
+            Element.prototype[methodName] = mod.elementMethods[methodName];
             ElementSystem.prototype[methodName] = generateMethodIterator(methodName);
         }
     }
 
     // Merge action props with defaults
-    module.actionDefaults = module.actionDefaults ? utils.merge(genericActionProps, module.actionDefaults) : genericActionProps;
+    mod.actionDefaults = mod.actionDefaults ? utils.merge(genericActionProps, mod.actionDefaults) : genericActionProps;
 
     // Merge value props with defaults
-    module.valueDefaults = module.valueDefaults ? utils.merge(genericValueProps, module.valueDefaults) : genericValueProps;
+    mod.valueDefaults = mod.valueDefaults ? utils.merge(genericValueProps, mod.valueDefaults) : genericValueProps;
     
     // Call parent extend method
-    ModuleManager.prototype.extend.call(this, name, module);
+    ModManager.prototype.extend.call(this, name, mod);
 };
 
 actionManager.setElement = function (element) {

@@ -16,20 +16,20 @@ var Element,
         }
     },
 
-    ModuleManager = require('../inc/ModuleManager'),
-    elementTypeManager = new ModuleManager;
+    ModManager = require('../inc/ModManager'),
+    elementTypeManager = new ModManager;
 
-elementTypeManager.extend = function (name, module) {
+elementTypeManager.extend = function (name, mod) {
     var methodName = '';
 
-    for (methodName in module) {
-        if (module.hasOwnProperty(methodName) && !Element.prototype[methodName]) {
+    for (methodName in mod) {
+        if (mod.hasOwnProperty(methodName) && !Element.prototype[methodName]) {
             Element.prototype[methodName] = generateFunction(methodName);
         }
     }
 
     // Call parent extend method
-    ModuleManager.prototype.extend.call(this, name, module);
+    ModManager.prototype.extend.call(this, name, mod);
 };
 
 elementTypeManager.setElement = function (element) {
