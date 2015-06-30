@@ -101,9 +101,8 @@ module.exports = {
         @param [object]: Base value properties
         @param [Elememt]
     */
-    split: function (name, value, element) {
-        var valueType = valueTypesManager[value.type],
-            splitValues = {},
+    split: function (name, value, element, valueType) {
+        var splitValues = {},
             splitProperty = {},
             propertyName = '',
             key = '',
@@ -116,6 +115,7 @@ module.exports = {
                 if (utils.isFunc(value[propertyName])) {
                     value[propertyName] = value[propertyName].call(element);
                 }
+
                 splitProperty = valueType.split(value[propertyName]);
 
                 // Assign properties to each new value
@@ -206,6 +206,7 @@ module.exports = {
             thisValue = {},
             elementValues = element.values,
             hasChildren = false,
+            valueType = {},
             defaultProps = actionsManager[element.action].valueDefaults;
 
         namespace = namespace || DEFAULT_NAMESPACE;
@@ -232,16 +233,25 @@ module.exports = {
 
             // If this value has a type, make children values
             if (thisValue.type) {
-                thisValue.children = {};
-                splitValues = this.split(key, thisValue, element);
+                valueType = valueTypesManager[thisValue.type];
 
-                for (propKey in splitValues) {
-                    childValue = utils.merge(thisValue, splitValues[propKey]);
-                    childValue.parent = namespacedKey;
-                    childValue.propName = propKey;
-                    delete childValue.type;
-                    delete childValue.children;
-                    processedValues[key + propKey] = childValue;
+                // Split if this value type is a splitter
+                if (valueType.split) {
+                    thisValue.children = {};
+                    splitValues = this.split(key, thisValue, element, valueType);
+
+                    for (propKey in splitValues) {
+                        childValue = utils.merge(thisValue, splitValues[propKey]);
+                        childValue.parent = namespacedKey;
+                        childValue.propName = propKey;
+                        delete childValue.type;
+                        delete childValue.children;
+                        processedValues[key + propKey] = childValue;
+                    }
+
+                // Or just apply default props
+                } else {
+                    thisValue = utils.merge(valueTypesManager.defaultProps(key), thisValue);
                 }
             }
         }

@@ -29,5 +29,17 @@ module.exports = {
     
     // Shadows
     textShadow: SHADOW,
-    boxShadow: SHADOW
+    boxShadow: SHADOW,
+
+    // Transform properties
+    rotate: ANGLE,
+    rotateX: ANGLE,
+    rotateY: ANGLE,
+    rotateZ: ANGLE,
+    skewX: ANGLE,
+    skewY: ANGLE,
+    translateX: PX,
+    translateY: PX,
+    translateZ: PX,
+    perspective: PX
 };

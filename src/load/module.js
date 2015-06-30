@@ -23,6 +23,8 @@ Redshift
     /*
         Optional value type support
     */
+    .addValueType('px', require('../value-types/px'))
+    .addValueType('angle', require('../value-types/angle'))
     .addValueType('hsl', require('../value-types/hsl'))
     .addValueType('rgb', require('../value-types/rgb'))
     .addValueType('hex', require('../value-types/hex'))

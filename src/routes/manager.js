@@ -13,13 +13,17 @@ var ModuleManager = require('../inc/ModuleManager'),
 */
 routeManager.shard = function (callback, validRoutes) {
     var key = '',
+        route = '',
+        routeIsValid = false,
         i = 0;
 
     for (; i < this._numKeys; i++) {
         key = this._keys[i];
+        routeIsValid = (validRoutes && validRoutes.hasOwnProperty(key));
+        route = routeIsValid ? validRoutes[key] : 'values';
 
-        if ((validRoutes && validRoutes.hasOwnProperty(key)) || key === 'values') {
-            callback(this[key], key, validRoutes[key]);
+        if (routeIsValid || key === 'values') {
+            callback(this[key], key, route);
         }
     }
 };
