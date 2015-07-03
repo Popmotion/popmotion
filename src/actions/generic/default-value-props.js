@@ -16,6 +16,6 @@ module.exports = {
     hasRange: false,
 
     // [boolean]: Round output if true
-    round: false,
+    round: false
 
 }

@@ -19,5 +19,5 @@ module.exports = {
     yoyo: false,
     
     // [boolean || number]: Number of times to flip values, true for indefinite
-    flip: false,
+    flip: false
 };

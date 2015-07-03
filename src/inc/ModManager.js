@@ -24,8 +24,8 @@ ModManager.prototype = {
         @param [object] (optional): Module to add
     */
     extend: function (name, mod) {
-        var multiModules = (typeof name == 'object'),
-            mods = multiModules ? name : {},
+        var multiMods = (typeof name == 'object'),
+            mods = multiMods ? name : {},
             key = '';
 
         // If we just have one module, coerce

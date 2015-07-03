@@ -957,14 +957,14 @@
 
 	module.exports = {
 
-	    onStart: function (bucket, action) {
-	        if (action.dom) {
-	            action.pathLength = action.dom.getTotalLength();
+	    onStart: function (output, element) {
+	        if (element.element) {
+	            element.pathLength = element.element.getTotalLength();
 	        }
 	    },
 	    
-	    onChange: function (output, action) {
-	        action.style(createStyles(output, action.pathLength));
+	    onChange: function (output, element) {
+	        element.style(createStyles(output, element.pathLength));
 	    }
 	};
 
@@ -2807,7 +2807,7 @@
 	    yoyo: false,
 	    
 	    // [boolean || number]: Number of times to flip values, true for indefinite
-	    flip: false,
+	    flip: false
 	};
 
 /***/ },
@@ -3420,7 +3420,7 @@
 
 	"use strict";
 
-	var lookup = __webpack_require__(69),
+	var lookup = __webpack_require__(72),
 
 	    /*
 	        Convert percentage to pixels
@@ -3471,7 +3471,7 @@
 	    if (hasArray) {
 	        pathStyles[lookup.length] = arrayStyles.length + ' ' + arrayStyles.spacing;
 	    }
-	    
+	    console.log(pathStyles);
 	    return pathStyles;
 	};
 
@@ -3556,7 +3556,7 @@
 	    hasRange: false,
 
 	    // [boolean]: Round output if true
-	    round: false,
+	    round: false
 
 	}
 
@@ -3590,8 +3590,8 @@
 	        @param [object] (optional): Module to add
 	    */
 	    extend: function (name, mod) {
-	        var multiModules = (typeof name == 'object'),
-	            mods = multiModules ? name : {},
+	        var multiMods = (typeof name == 'object'),
+	            mods = multiMods ? name : {},
 	            key = '';
 
 	        // If we just have one module, coerce
@@ -4381,7 +4381,7 @@
 
 	"use strict";
 
-	var theLoop = __webpack_require__(70),
+	var theLoop = __webpack_require__(69),
 	    ProcessManager = function () {
 	        this.all = {};
 	        this.active = [];
@@ -4663,30 +4663,13 @@
 /* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var STROKE = 'stroke',
-	    DASH = STROKE + '-dash', // stoke-width
-	    DASH_ARRAY = DASH + 'array'
-
-	module.exports = {
-	    opacity: STROKE + '-opacity',
-	    width: STROKE + '-width',
-	    offset: DASH + 'offset',
-	    length: DASH_ARRAY,
-	    spacing: DASH_ARRAY,
-	    miterlimit: STROKE + '-miterlimit'
-	};
-
-/***/ },
-/* 70 */
-/***/ function(module, exports, __webpack_require__) {
-
 	/*
 	    The loop
 	*/
 	"use strict";
 
-	var Timer = __webpack_require__(71),
-	    tick = __webpack_require__(72),
+	var Timer = __webpack_require__(70),
+	    tick = __webpack_require__(71),
 	    Loop = function () {
 	        this.timer = new Timer();
 	    };
@@ -4751,7 +4734,7 @@
 	module.exports = new Loop();
 
 /***/ },
-/* 71 */
+/* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4786,7 +4769,7 @@
 	module.exports = Timer;
 
 /***/ },
-/* 72 */
+/* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4827,6 +4810,23 @@
 	}
 
 	module.exports = tick;
+
+/***/ },
+/* 72 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var STROKE = 'stroke',
+	    DASH = STROKE + '-dash', // stoke-width
+	    DASH_ARRAY = DASH + 'array'
+
+	module.exports = {
+	    opacity: STROKE + '-opacity',
+	    width: STROKE + '-width',
+	    offset: DASH + 'offset',
+	    length: DASH_ARRAY,
+	    spacing: DASH_ARRAY,
+	    miterlimit: STROKE + '-miterlimit'
+	};
 
 /***/ }
 /******/ ]);
