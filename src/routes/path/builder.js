@@ -51,6 +51,6 @@ module.exports = function (props, pathLength) {
     if (hasArray) {
         pathStyles[lookup.length] = arrayStyles.length + ' ' + arrayStyles.spacing;
     }
-    console.log(pathStyles);
+
     return pathStyles;
 };

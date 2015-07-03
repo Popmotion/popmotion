@@ -957,6 +957,10 @@
 
 	module.exports = {
 
+	    typeMap: {
+	        stroke: 'color'
+	    },
+
 	    onStart: function (output, element) {
 	        if (element.element) {
 	            element.pathLength = element.element.getTotalLength();
@@ -3420,7 +3424,7 @@
 
 	"use strict";
 
-	var lookup = __webpack_require__(72),
+	var lookup = __webpack_require__(69),
 
 	    /*
 	        Convert percentage to pixels
@@ -3471,7 +3475,7 @@
 	    if (hasArray) {
 	        pathStyles[lookup.length] = arrayStyles.length + ' ' + arrayStyles.spacing;
 	    }
-	    console.log(pathStyles);
+
 	    return pathStyles;
 	};
 
@@ -4225,9 +4229,13 @@
 	                thisValue[defaultValueProp] = values[key];
 	            }
 
-	            // Check if value doesn't have a type property, check routeManager
-	            if (!thisValue.type && routeManager[namespace].typeMap) {
-	                thisValue.type = routeManager[namespace].typeMap[key] || false;
+	            // Check if value doesn't have a type property, check routeManager and auto detect
+	            if (!thisValue.type) {
+	                if (routeManager[namespace].typeMap) {
+	                    thisValue.type = routeManager[namespace].typeMap[key] || false;
+
+	                }
+	                // auto detect
 	            }
 
 	            // Set value
@@ -4381,7 +4389,7 @@
 
 	"use strict";
 
-	var theLoop = __webpack_require__(69),
+	var theLoop = __webpack_require__(70),
 	    ProcessManager = function () {
 	        this.all = {};
 	        this.active = [];
@@ -4663,13 +4671,30 @@
 /* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var STROKE = 'stroke',
+	    DASH = STROKE + '-dash', // stoke-width
+	    DASH_ARRAY = DASH + 'array'
+
+	module.exports = {
+	    opacity: STROKE + '-opacity',
+	    width: STROKE + '-width',
+	    offset: DASH + 'offset',
+	    length: DASH_ARRAY,
+	    spacing: DASH_ARRAY,
+	    miterlimit: STROKE + '-miterlimit'
+	};
+
+/***/ },
+/* 70 */
+/***/ function(module, exports, __webpack_require__) {
+
 	/*
 	    The loop
 	*/
 	"use strict";
 
-	var Timer = __webpack_require__(70),
-	    tick = __webpack_require__(71),
+	var Timer = __webpack_require__(71),
+	    tick = __webpack_require__(72),
 	    Loop = function () {
 	        this.timer = new Timer();
 	    };
@@ -4734,7 +4759,7 @@
 	module.exports = new Loop();
 
 /***/ },
-/* 70 */
+/* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4769,7 +4794,7 @@
 	module.exports = Timer;
 
 /***/ },
-/* 71 */
+/* 72 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4810,23 +4835,6 @@
 	}
 
 	module.exports = tick;
-
-/***/ },
-/* 72 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var STROKE = 'stroke',
-	    DASH = STROKE + '-dash', // stoke-width
-	    DASH_ARRAY = DASH + 'array'
-
-	module.exports = {
-	    opacity: STROKE + '-opacity',
-	    width: STROKE + '-width',
-	    offset: DASH + 'offset',
-	    length: DASH_ARRAY,
-	    spacing: DASH_ARRAY,
-	    miterlimit: STROKE + '-miterlimit'
-	};
 
 /***/ }
 /******/ ]);

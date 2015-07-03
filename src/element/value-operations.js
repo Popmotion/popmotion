@@ -223,9 +223,13 @@ module.exports = {
                 thisValue[defaultValueProp] = values[key];
             }
 
-            // Check if value doesn't have a type property, check routeManager
-            if (!thisValue.type && routeManager[namespace].typeMap) {
-                thisValue.type = routeManager[namespace].typeMap[key] || false;
+            // Check if value doesn't have a type property, check routeManager and auto detect
+            if (!thisValue.type) {
+                if (routeManager[namespace].typeMap) {
+                    thisValue.type = routeManager[namespace].typeMap[key] || false;
+
+                }
+                // auto detect
             }
 
             // Set value
