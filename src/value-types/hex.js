@@ -34,7 +34,7 @@ module.exports = {
             Green: parseInt(g, 16),
             Blue: parseInt(b, 16),
             Alpha: 1
-        }
+        };
     },
 
     combine: function (values) {

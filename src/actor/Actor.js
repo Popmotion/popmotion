@@ -7,9 +7,9 @@ var Process = require('../process/Process'),
     valueOps = require('./value-operations'),
     actionManager = require('../actions/manager'),
     routeManager = require('../routes/manager'),
-    elementTypeManager = require('../element-types/manager'),
+    actorTypeManager = require('../actor-types/manager'),
 
-    Element = function (element, options) {
+    Actor = function (element, options) {
         this.element = element || false;
         this.values = {};
         this.output = {};
@@ -27,7 +27,7 @@ var Process = require('../process/Process'),
         }
     };
 
-Element.prototype = {
+Actor.prototype = {
     
     /*
         Set Action values and properties
@@ -258,13 +258,13 @@ Element.prototype = {
         @param [string]: Name of new element
     */
     set type(type) {
-        this._type = elementTypeManager[type];
+        this._type = actorTypeManager[type];
     }
 };
 
-// Register Element with actionManager, so when a new Action is set,
-// We get a new method on Element
-actionManager.setElement(Element);
-elementTypeManager.setElement(Element);
+// Register Actor with actionManager, so when a new Action is set,
+// We get a new method on Actor
+actionManager.setActor(Element);
+actorTypeManager.setActor(Element);
 
-module.exports = Element;
+module.exports = Actor;

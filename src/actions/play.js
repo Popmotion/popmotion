@@ -20,8 +20,8 @@ var calc = require('../inc/calc'),
         // [boolean] Prevent Redshift from autogenerating Element.prototype.play()
         surpressMethod: true,
 
-        // [object] Methods to add to Element.prototype
-        elementMethods: require('./play/element-methods'),
+        // [object] Methods to add to Actor.prototype
+        actorMethods: require('./play/element-methods'),
 
         /*
             Update Action elapsed time

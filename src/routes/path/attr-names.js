@@ -1,6 +1,6 @@
 var STROKE = 'stroke',
     DASH = STROKE + '-dash', // stoke-width
-    DASH_ARRAY = DASH + 'array'
+    DASH_ARRAY = DASH + 'array';
 
 module.exports = {
     opacity: STROKE + '-opacity',

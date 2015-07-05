@@ -2,6 +2,7 @@
 
 var terms = require('./settings/dictionary').dimensions,
     pxDefaults = require('./px').defaultProps,
+    createDelimited = require('./manipulators/create-delimited'),
     splitSpaceDelimited = require('./manipulators/split-space-delimited');
 
 module.exports = {
@@ -23,7 +24,8 @@ module.exports = {
         var dimensions = splitSpaceDelimited(value),
             numDimensions = dimensions.length,
             jumpBack = (numDimensions !== 1) ? 2 : 1,
-            i, j = i = 0,
+            i = 0,
+            j = 0,
             splitValue = {};
 
         for (; i < 4; i++) {
@@ -37,7 +39,7 @@ module.exports = {
         return splitValue;
     },
 
-    combine: function () {
+    combine: function (values) {
         return createDelimited(values, terms, ' ');
     }
 };

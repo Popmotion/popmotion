@@ -18,4 +18,4 @@ module.exports = {
     // [boolean]: Round output if true
     round: false
 
-}
+};

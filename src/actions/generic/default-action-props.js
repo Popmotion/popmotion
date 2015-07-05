@@ -12,4 +12,4 @@ module.exports = {
     // [function]: Callback when Action process ends
     onEnd: undefined
 
-}
+};

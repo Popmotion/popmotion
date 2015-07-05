@@ -8,23 +8,23 @@ Redshift adheres to [Semantic Versioning](http://semver.org/). Change log added 
 
 ### Changed
 - Terminology changes to fix API semantics:
-    - **Action:** Element
-    - **ActionGroup:** ElementGroup
-    - **Rubix:** Action (as in, an action you perform on an element)
+    - **Action:** Actor
+    - **ActionGroup:** ActionGroup
+    - **Rubix:** Action (as in, an Action an Actor can perform)
 
 ### Added
 - Add new easing functions with `Redshift.addEasing()`. Provide the easeIn function and Redshift will generate easeOut and easeInOut variants.
 - Add new simulation functions to `run` with `Redshift.newSimulation()`.
 - Any value can be a special **value type**, ie a color. `'#FFF'` splits into four numerical properties, `Red`, `Blue`, `Green` and `Alpha`.
 - Add new value types with `Redshift.addValueType()`.
-- Any Element can be a special **element type**, ie a DOM handler. 
-- Add new element types with `Redshift.addElementType()`.
+- Any Actor can be a special **actor type**, ie a DOM handler. 
+- Add new actor types with `Redshift.addActorType()`.
 - HSLA value type support.
 
 ### Deprecated (to be removed in 4.0.0)
 - `redshift` -> Use `Redshift`
-- `redshift.newAction()` -> Use `new Redshift.Element()`
-- `redshift.newActionGroup()` -> Use `new Redshift.ElementGroup()`
+- `redshift.newAction()` -> Use `new Redshift.Actor()`
+- `redshift.newActionGroup()` -> Use `new Redshift.ActorGroup()`
 - `redshift.newInput()` -> Use `new Redshift.Input()`
 - `redshift.newProcess()` -> Use `new Redshift.Process()`
 - `redshift.addBezier()` -> Use `Redshift.addEasing()`

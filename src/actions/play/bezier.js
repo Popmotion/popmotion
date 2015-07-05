@@ -21,24 +21,24 @@ var NEWTON_ITERATIONS = 8,
     K_SAMPLE_STEP_SIZE = 1.0 / (K_SPLINE_TABLE_SIZE - 1.0),
     FLOAT_32_SUPPORTED = 'Float32Array' in global,
     
-    A = function (a1, a2) {
+    a = function (a1, a2) {
         return 1.0 - 3.0 * a2 + 3.0 * a1;
     },
     
-    B = function (a1, a2) {
+    b = function (a1, a2) {
         return 3.0 * a2 - 6.0 * a1;
     },
     
-    C = function (a1) {
+    c = function (a1) {
         return 3.0 * a1;
     },
 
     getSlope = function (t, a1, a2) {
-        return 3.0 * A(a1, a2) * t * t + 2.0 * B(a1, a2) * t + C(a1);
+        return 3.0 * a(a1, a2) * t * t + 2.0 * b(a1, a2) * t + c(a1);
     },
 
     calcBezier = function (t, a1, a2) {
-        return ((A(a1, a2) * t + B(a1, a2)) * t + C(a1)) * t;
+        return ((a(a1, a2) * t + b(a1, a2)) * t + c(a1)) * t;
     },
     
     /*
@@ -158,7 +158,7 @@ var NEWTON_ITERATIONS = 8,
                 }
                 
                 return returnValue;
-            }
+            };
             
             return f;
     };

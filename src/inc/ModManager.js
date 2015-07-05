@@ -34,8 +34,10 @@ ModManager.prototype = {
         }
 
         for (key in mods) {
-            this._addKey(key);
-            this[key] = mods[key];
+            if (mods.hasOwnProperty(key)) {
+                this._addKey(key);
+                this[key] = mods[key];
+            }
         }
 
         return this;

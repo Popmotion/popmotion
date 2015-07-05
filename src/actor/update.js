@@ -49,7 +49,7 @@ var actionManager = require('../actions/manager'),
             value = values[key];
 
             // Load value-specific action
-            valueAction = value.link ? actionManager['link'] : action;
+            valueAction = value.link ? actionManager.link : action;
 
             // Calculate new value
             updatedValue = valueAction.process.call(this, key, value, frameDuration);
@@ -132,7 +132,7 @@ var actionManager = require('../actions/manager'),
                 if (route.onEnd) {
                     route.onEnd(routeOutput, self);
                 }
-            }), output;
+            }, output);
 
             // If is a play action, and is not active, check next action
             if (!this.isActive && this.action === 'play' && this.next) {

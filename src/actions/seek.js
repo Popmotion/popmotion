@@ -9,7 +9,7 @@ module.exports = {
 
     surpressMethod: true,
 
-    elementMethods: {
+    actorMethods: {
         seek: function (seekTo) {
             this.elapsed = this.duration * seekTo;
 

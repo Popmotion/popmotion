@@ -224,7 +224,7 @@ module.exports = {
 
             // Check if value doesn't have a type property, check routeManager and auto detect
             if (!thisValue.type) {
-                if (elementValues[namespacedKey].type) {
+                if (elementValues && elementValues[namespacedKey] && elementValues[namespacedKey].type) {
                     thisValue.type = elementValues[namespacedKey].type;
                 } else if (routeManager[namespace].typeMap) {
                     thisValue.type = routeManager[namespace].typeMap[key] || false;

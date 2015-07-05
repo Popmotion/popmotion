@@ -1,6 +1,7 @@
 "use strict";
 
-var presetManager = require('../../element/preset-manager');
+var presetManager = require('../../actor/preset-manager'),
+    utils = require('../../inc/utils');
 
 module.exports = function (base, override) {
     var props = (typeof base === 'string') ? presetManager.getDefined(base) : {};

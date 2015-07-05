@@ -32,7 +32,7 @@ module.exports = {
         return splitValue;
     },
 
-    combine: function () {
+    combine: function (values) {
         return createDelimited(values, terms, ' ');
     }
 };

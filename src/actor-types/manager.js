@@ -1,6 +1,6 @@
 "use strict";
 
-var Element,
+var Actor,
 
     /*
         Generate an Element function
@@ -13,18 +13,18 @@ var Element,
                 returnVal = type[name].apply(this, arguments);
             }
             return returnVal;
-        }
+        };
     },
 
     ModManager = require('../inc/ModManager'),
-    elementTypeManager = new ModManager;
+    actorTypeManager = new ModManager();
 
-elementTypeManager.extend = function (name, mod) {
+actorTypeManager.extend = function (name, mod) {
     var methodName = '';
 
     for (methodName in mod) {
-        if (mod.hasOwnProperty(methodName) && !Element.prototype[methodName]) {
-            Element.prototype[methodName] = generateFunction(methodName);
+        if (mod.hasOwnProperty(methodName) && !Actor.prototype[methodName]) {
+            Actor.prototype[methodName] = generateFunction(methodName);
         }
     }
 
@@ -32,8 +32,8 @@ elementTypeManager.extend = function (name, mod) {
     ModManager.prototype.extend.call(this, name, mod);
 };
 
-elementTypeManager.setElement = function (element) {
-    Element = element;
+actorTypeManager.setActor = function (actor) {
+    Actor = actor;
 };
 
-module.exports = elementTypeManager;
+module.exports = actorTypeManager;

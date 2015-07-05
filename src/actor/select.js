@@ -1,9 +1,9 @@
 "use strict";
 
-var ElementGroup = require('./ElementGroup');
+var ActorGroup = require('./ActorGroup');
 
 /*
-    Create an ElementGroup based on a selection of DOM nodes
+    Create an ActorGroup based on a selection of DOM nodes
 
     @param [string || NodeList || jQuery object]:
         If string, treated as selector.
@@ -26,5 +26,5 @@ module.exports = function (selector) {
         elements.push(nodes);
     }
 
-    return new ElementGroup(elements, { type: 'dom' });
+    return new ActorGroup(elements, { type: 'dom' });
 };

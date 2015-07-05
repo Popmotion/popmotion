@@ -1,6 +1,6 @@
 "use strict";
 
-var Element = require('./Element'),
+var Actor = require('./Actor'),
     generateMethodIterator = require('./system/generate-iterator'),
     actionManager = require('../actions/manager'),
 
@@ -9,12 +9,12 @@ var Element = require('./Element'),
 
         @param [array]: Array of Elements, or valid Element subjects
     */
-    ElementGroup = function (members, options) {
+    ActorGroup = function (members, options) {
         this.members = [];
         this.add(members, options);
     };
 
-ElementGroup.prototype = {
+ActorGroup.prototype = {
 
     /*
         Stagger the execution of Element methods
@@ -29,7 +29,7 @@ ElementGroup.prototype = {
             numMembers = this.members.length,
             i = -1;
 
-        this._stagger = this._stagger || new Element();
+        this._stagger = this._stagger || new Actor();
         duration = duration || 250;
         ease = ease || 'linear';
 
@@ -63,9 +63,9 @@ ElementGroup.prototype = {
     },
 
     /*
-        Add a group of Elements to our System
+        Add a group of Actors to our System
 
-        @param [array]: Array of Elements, or valid Element subjects
+        @param [array]: Array of Actors, or valid Actor subjects
     */
     add: function (members, options) {
         var numNewMembers = members.length,
@@ -73,7 +73,7 @@ ElementGroup.prototype = {
             newMember;
 
         for (; i < numNewMembers; i++) {
-            newMember = (members[i].prototype !== Element.prototype) ? new Element(members[i], options) : members[i];
+            newMember = (members[i].prototype !== Actor.prototype) ? new Actor(members[i], options) : members[i];
             this.members.push(newMember);
         }
 
@@ -83,13 +83,13 @@ ElementGroup.prototype = {
 
 // Initialise Element System methods
 (function () {
-    for (var method in Element.prototype) {
-        ElementGroup.prototype[method] = generateMethodIterator(method);
+    for (var method in Actor.prototype) {
+        ActorGroup.prototype[method] = generateMethodIterator(method);
     }
 })();
 
 // Register Element with actionManager, so when a new Action is set,
 // We get a new method on Element
-actionManager.setElementGroup(ElementGroup);
+actionManager.setActorGroup(ActorGroup);
 
-module.exports = ElementGroup;
+module.exports = ActorGroup;

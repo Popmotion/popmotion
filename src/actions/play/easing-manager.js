@@ -33,7 +33,7 @@ var calc = require('../../inc/calc.js'),
     generatePowerEasing = function (power) {
         return function (progress) {
             return Math.pow(progress, power);
-        }
+        };
     },
 
     /*

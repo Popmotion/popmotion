@@ -1,9 +1,9 @@
 "use strict";
 
-var Element,
-    ElementGroup,
+var Actor,
+    ActorGroup,
     utils = require('../inc/utils'),
-    generateMethodIterator = require('../element/system/generate-iterator'),
+    generateMethodIterator = require('../actor/system/generate-iterator'),
     genericActionProps = require('./generic/default-action-props'),
     genericValueProps = require('./generic/default-value-props'),
 
@@ -23,22 +23,24 @@ actionManager.extend = function (name, mod) {
         surpressMethod flag and Element doesn't already have a
         method with that name
     */
-    if (!mod.surpressMethod && !Element.prototype[name]) {
-        Element.prototype[name] = function () {
+    if (!mod.surpressMethod && !Actor.prototype[name]) {
+        Actor.prototype[name] = function () {
             this.action = name;
             this.set(mod.parser.apply(this, arguments));
 
             return this.start();
         };
 
-        ElementGroup.prototype[name] = generateMethodIterator(name);
+        ActorGroup.prototype[name] = generateMethodIterator(name);
     }
 
     // If module has methods to add to Element.prototype
-    if (mod.elementMethods) {
-        for (methodName in mod.elementMethods) {
-            Element.prototype[methodName] = mod.elementMethods[methodName];
-            ElementGroup.prototype[methodName] = generateMethodIterator(methodName);
+    if (mod.actorMethods) {
+        for (methodName in mod.actorMethods) {
+            if (mod.actorMethods.hasOwnProperty(methodName)) {
+                Actor.prototype[methodName] = mod.actorMethods[methodName];
+                ActorGroup.prototype[methodName] = generateMethodIterator(methodName);
+            }
         }
     }
 
@@ -52,12 +54,12 @@ actionManager.extend = function (name, mod) {
     ModManager.prototype.extend.call(this, name, mod);
 };
 
-actionManager.setElement = function (element) {
-    Element = element;
+actionManager.setActor = function (actor) {
+    Actor = actor;
 };
 
-actionManager.setElementGroup = function (elementGroup) {
-    ElementGroup = elementGroup;
+actionManager.setActorGroup = function (actorGroup) {
+    ActorGroup = actorGroup;
 };
 
 module.exports = actionManager;
