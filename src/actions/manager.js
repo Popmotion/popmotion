@@ -1,7 +1,7 @@
 "use strict";
 
 var Element,
-    ElementSystem,
+    ElementGroup,
     utils = require('../inc/utils'),
     generateMethodIterator = require('../element/system/generate-iterator'),
     genericActionProps = require('./generic/default-action-props'),
@@ -31,14 +31,14 @@ actionManager.extend = function (name, mod) {
             return this.start();
         };
 
-        ElementSystem.prototype[name] = generateMethodIterator(name);
+        ElementGroup.prototype[name] = generateMethodIterator(name);
     }
 
     // If module has methods to add to Element.prototype
     if (mod.elementMethods) {
         for (methodName in mod.elementMethods) {
             Element.prototype[methodName] = mod.elementMethods[methodName];
-            ElementSystem.prototype[methodName] = generateMethodIterator(methodName);
+            ElementGroup.prototype[methodName] = generateMethodIterator(methodName);
         }
     }
 
@@ -56,8 +56,8 @@ actionManager.setElement = function (element) {
     Element = element;
 };
 
-actionManager.setElementSystem = function (elementSystem) {
-    ElementSystem = elementSystem;
+actionManager.setElementGroup = function (elementGroup) {
+    ElementGroup = elementGroup;
 };
 
 module.exports = actionManager;

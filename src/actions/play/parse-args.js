@@ -6,9 +6,10 @@ var presetManager = require('../../element/preset-manager'),
 module.exports = function (base, override) {
     var props = {},
         playlist = [],
-        argsAsArray = [],
+        argsAsArray = [].slice.call(arguments),
+        argsLength = arguments.length,
         i = 0,
-        playlistLength;
+        playlistLength, arg, typeofArg;
 
     // If this is a playlist reference, add presets to queue
     if (typeof base === 'string') {
@@ -18,8 +19,6 @@ module.exports = function (base, override) {
 
         // If we've got multiple playlists, loop through and add each to the queue
         if (playlistLength > 1) {
-            argsAsArray = [].slice.call(arguments);
-
             for (; i < playlistLength; i++) {
                 argsAsArray.shift();
                 argsAsArray.unshift(playlist[i]);
@@ -35,6 +34,25 @@ module.exports = function (base, override) {
     // Override properties with second arg if it's an object
     if (typeof override === 'object') {
         props = utils.merge(props, override);
+    }
+
+    // Override properties with extra args
+    for (i = 1; i < argsLength; i++) {
+        arg = arguments[i];
+        typeofArg = typeof arg;
+
+         // Easing if string and not first index
+        if (typeofArg === 'string') {
+            props.ease = arg;
+        
+        // Duration if number
+        } else if (typeofArg === 'number') {
+            props.duration = arg;
+            
+        // Callback if function
+        } else if (utils.isFunc(arg)) {
+            props.onEnd = arg;
+        }
     }
 
     // Default .play properties

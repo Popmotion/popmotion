@@ -10,4 +10,16 @@ valueTypeManager.defaultProps = function (type, key) {
     return defaultProps;
 };
 
+valueTypeManager.test = function (value) {
+    var type = false;
+
+    this.each(function (key, mod) {
+        if (mod.test && mod.test(value)) {
+            type = key;
+        }
+    });
+
+    return type;
+};
+
 module.exports = valueTypeManager;

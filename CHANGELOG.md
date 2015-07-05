@@ -4,38 +4,32 @@ Redshift adheres to [Semantic Versioning](http://semver.org/). Change log added 
 
 ## [3.0.0] Unreleased
 
-**Note:** This is a major, final, API revision. Initiating objects will need to be rewritten after upgrade, all other
+**Note:** This is a major, final, API revision with semantic changes.
 
 ### Changed
-- Major terminology changes to fix API semantics:
-    - `redshift` -> `Redshift`: As Redshift is a singleton.
-    - `redshift.newAction()` -> `new Redshift.Element()`: As "Action" was non-descriptive, "Element" is the body of values that you perform Actions on.
-    - `redshift.newActionGroup()` -> `new Redshift.ElementSystem()`: "System" better reflects the current and long-term purpose of this object.
-    - "Rubix" are now "Action"s, as they are performed on Elements and "Rubix" was non-descriptive. And completely invented, the fewer random concepts that have the be explained, the better!
-    - `redshift.addRubix()` -> `Redshift.addAction()`
-- Other object initialisation changes to cut out an unneeded function and encourage extending objects:
-    - `redshift.newInput` -> `new Redshift.Input()`
-    - `redshift.newProcess` -> `new Redshift.Process()`
-- `redshift.dom()` -> `Redshift.select()`
-- `redshift.addBezier()` -> `Redshift.addEasing()`: As this method can now add new easing functions as well as bezier curves.
-- Performance improvements
+- Terminology changes to fix API semantics:
+    - **Action:** Element
+    - **ActionGroup:** ElementGroup
+    - **Rubix:** Action (as in, an action you perform on an element)
 
 ### Added
+- Add new easing functions with `Redshift.addEasing()`. Provide the easeIn function and Redshift will generate easeOut and easeInOut variants.
+- Add new simulation functions to `run` with `Redshift.newSimulation()`.
+- Any value can be a special **value type**, ie a color. `'#FFF'` splits into four numerical properties, `Red`, `Blue`, `Green` and `Alpha`.
+- Add new value types with `Redshift.addValueType()`.
+- Any Element can be a special **element type**, ie a DOM handler. 
+- Add new element types with `Redshift.addElementType()`.
+- HSLA value type support.
 
-#### Value Types
-- Any value going through any route can now be a special value (like a color value). Value types can be default properties, and/or splitter/combine methods that split a value into child values.
-- Add new Value Types with `Redshift.addValueType(valueType)`.
-- Set a value type by setting a value's `type` property to the name of that type. Alternatively add automatic mapping on custom routes with a route's `typeMap` property.
-- HSL/HSLA color support added.
-
-#### Element Types
-- Redshift Elements can be a custom type which can provide type-specific methods to Elements. For instance, the `dom` Element type provides a `style` method. A hypothetical `canvas` Element type could provide an alternative `style` method.
-- `"dom"` Element type included by default. Automatically set to `"dom"` when creating Elements via `Redshift.select(selector)`.
-- Add new Element Types with `Redshift.addElementType(elementType)`.
-
-#### Misc
-- `Redshift.addEasing()` can take easing functions (provide easeIn function, and Redshift will generate easeOut and easeInOut variations).
-- Add new physics simulations with `Redshift.addSimulation()`.
+### Deprecated (to be removed in 4.0.0)
+- `redshift` -> Use `Redshift`
+- `redshift.newAction()` -> Use `new Redshift.Element()`
+- `redshift.newActionGroup()` -> Use `new Redshift.ElementGroup()`
+- `redshift.newInput()` -> Use `new Redshift.Input()`
+- `redshift.newProcess()` -> Use `new Redshift.Process()`
+- `redshift.addBezier()` -> Use `Redshift.addEasing()`
+- `redshift.addRubix()` -> Use `Redshift.addAction()`
+- `redshift.dom()` -> Use `Redshift.select()`
 
 ## [2.1.1] 2015-06-11
 

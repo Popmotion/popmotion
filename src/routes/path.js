@@ -1,6 +1,6 @@
 "use strict";
 
-var createStyles = require('./path/builder.js');
+var createStyles = require('./path/build.js');
 
 module.exports = {
 

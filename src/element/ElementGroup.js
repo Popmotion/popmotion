@@ -9,12 +9,12 @@ var Element = require('./Element'),
 
         @param [array]: Array of Elements, or valid Element subjects
     */
-    ElementSystem = function (members, options) {
+    ElementGroup = function (members, options) {
         this.members = [];
         this.add(members, options);
     };
 
-ElementSystem.prototype = {
+ElementGroup.prototype = {
 
     /*
         Stagger the execution of Element methods
@@ -84,12 +84,12 @@ ElementSystem.prototype = {
 // Initialise Element System methods
 (function () {
     for (var method in Element.prototype) {
-        ElementSystem.prototype[method] = generateMethodIterator(method);
+        ElementGroup.prototype[method] = generateMethodIterator(method);
     }
 })();
 
 // Register Element with actionManager, so when a new Action is set,
 // We get a new method on Element
-actionManager.setElementSystem(ElementSystem);
+actionManager.setElementGroup(ElementGroup);
 
-module.exports = ElementSystem;
+module.exports = ElementGroup;

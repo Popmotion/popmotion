@@ -63,10 +63,9 @@ module.exports = {
         @param [object]: Value object
     */
     flip: function (value) {
-        var newTo = value.origin,
-            newOrigin = (value.target !== undefined) ? value.target : value.current;
+        var newOrigin = (value.target !== undefined) ? value.target : value.current;
 
-        value.to = newTo;
+        value.target = value.to = value.origin;
         value.origin = newOrigin;
     },
 
@@ -225,17 +224,21 @@ module.exports = {
 
             // Check if value doesn't have a type property, check routeManager and auto detect
             if (!thisValue.type) {
-                if (routeManager[namespace].typeMap) {
+                if (elementValues[namespacedKey].type) {
+                    thisValue.type = elementValues[namespacedKey].type;
+                } else if (routeManager[namespace].typeMap) {
                     thisValue.type = routeManager[namespace].typeMap[key] || false;
 
+                // If this property key hasn't been mapped, and it's a string, run tests
+                } else if (utils.isString(thisValue[defaultValueProp])) {
+                    thisValue.type = valueTypesManager.test(thisValue[defaultValueProp]);
                 }
-                // auto detect
             }
 
             // Set value
             processedValues[key] = thisValue;
 
-            // If this value has a type, make children values
+            // If this value has a type, split or assign default props
             if (thisValue.type) {
                 valueType = valueTypesManager[thisValue.type];
 

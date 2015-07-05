@@ -39,6 +39,15 @@ ModManager.prototype = {
         }
 
         return this;
+    },
+
+    each: function (callback) {
+        var key = '';
+
+        for (var i = 0; i < this._numKeys; i++) {
+            key = this._keys[i];
+            callback(key, this[key]);
+        }
     }
 };
 

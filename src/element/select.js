@@ -1,9 +1,9 @@
 "use strict";
 
-var ElementSystem = require('./ElementSystem');
+var ElementGroup = require('./ElementGroup');
 
 /*
-    Create an ElementSystem based on a selection of DOM nodes
+    Create an ElementGroup based on a selection of DOM nodes
 
     @param [string || NodeList || jQuery object]:
         If string, treated as selector.
@@ -26,5 +26,5 @@ module.exports = function (selector) {
         elements.push(nodes);
     }
 
-    return new ElementSystem(elements, { type: 'dom' });
+    return new ElementGroup(elements, { type: 'dom' });
 };

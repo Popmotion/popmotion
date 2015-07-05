@@ -8,17 +8,22 @@ var select = require('./element/select'),
     simulationManager = require('./actions/run/simulation-manager'),
     elementTypeManager = require('./element-types/manager'),
     valueTypeManager = require('./value-types/manager'),
-    calc = require('./inc/calc');
+    calc = require('./inc/calc'),
+
+    Element = require('./element/Element'),
+    ElementGroup = require('./element/ElementGroup'),
+    Input = require('./input/Input'),
+    Process = require('./process/Process');
 
 module.exports = {
 
-    Element: require('./element/Element'),
+    Element: Element,
 
-    ElementSystem: require('./element/ElementSystem'),
+    ElementGroup: ElementGroup,
 
-    Input: require('./input/Input'),
+    Input: Input,
 
-    Process: require('./process/Process'),
+    Process: Process,
 
     select: function (items) {
         return select(items);
@@ -59,6 +64,21 @@ module.exports = {
         return this;
     },
 
-    calc: calc
+    calc: calc,
 
+    /* Depricated methods, removing in 4.0.0 */
+    newAction: function (a, b) {
+        return new Element(a, b);
+    },
+    newActionGroup: function (a) {
+        return new ElementGroup(a);
+    },
+    newInput: function (a, b) {
+        return new Input(a, b);
+    },
+    newProcess: function (a, b) {
+        return new Process(a, b);
+    },
+    addBezier: this.addEasing,
+    addRubix: this.addAction
 };

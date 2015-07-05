@@ -29,9 +29,6 @@ var calc = require('../../inc/calc.js'),
     EASE_OUT = 'Out',
     EASE_IN_OUT = EASE_IN + EASE_OUT,
     
-    // Base power ease names
-    powerEasing = ['ease', 'cubic', 'quart', 'quint'],
-    
     // Generate easing function with provided power
     generatePowerEasing = function (power) {
         return function (progress) {
@@ -166,22 +163,16 @@ easingManager.linear = function (progress) {
     return progress;
 };
 
-// Initalise easing
-(function () {
-    var i = 0,
-        key = '';
-        
-    // Generate power easing functions
-    for (; i < 4; i++) {
-        baseEasing[powerEasing[i]] = generatePowerEasing(i + 2);
+// Generate power easing easing
+['ease', 'cubic', 'quart', 'quint'].forEach(function (easingName, i) {
+    baseEasing[easingName] = generatePowerEasing(i + 2);
+});
+
+// Generate in/out/inOut variations
+for (var key in baseEasing) {
+    if (baseEasing.hasOwnProperty(key)) {
+        generateVariations(key, baseEasing[key]);
     }
-    
-    // Generate in/out/inOut easing variations
-    for (key in baseEasing) {
-        if (baseEasing.hasOwnProperty(key)) {
-            generateVariations(key, baseEasing[key]);
-        }
-    }
-})();
+}
 
 module.exports = easingManager;

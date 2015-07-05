@@ -36,7 +36,7 @@ var actionManager = require('../actions/manager'),
                 if (route.onStart) {
                     route.onStart(values, self);
                 }
-            });
+            }, output);
         }
 
         // Create default route output if not present
@@ -82,9 +82,6 @@ var actionManager = require('../actions/manager'),
 
             // Set current
             this.values[key].current = updatedValue;
-
-            // Create route output if not present
-            output[value.route] = output[value.route] || {};
 
             // Put value in default route output
             output[defaultRoute][key] = (value.unit) ? updatedValue + value.unit : updatedValue;

@@ -31,7 +31,7 @@ module.exports = function (props, pathLength) {
     // Loop over each property and create related css property
     for (var key in props) {
         if (props.hasOwnProperty(key)) {
-            svgProperty = lookup[key];
+            svgProperty = lookup[key] || key;
             
             switch (key) {
                 case 'length':
@@ -51,6 +51,6 @@ module.exports = function (props, pathLength) {
     if (hasArray) {
         pathStyles[lookup.length] = arrayStyles.length + ' ' + arrayStyles.spacing;
     }
-
+console.log(pathStyles);
     return pathStyles;
 };

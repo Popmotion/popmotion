@@ -21,9 +21,9 @@ var Process = require('../process/Process'),
             this.type = options.type;
         }
 
-        // Check for type and detect if none
-        if (!this.type && this.element) {
-
+        // Check if this element is a DOM node, set type to 'dom'
+        if (!this.type && this.element && this.element.nodeType) {
+            this.type = 'dom';
         }
     };
 
@@ -45,6 +45,10 @@ Element.prototype = {
 
         // Loop over routes and process value definitions
         routeManager.shard(function (route, routeName, values) {
+            // Create output object for this route if none exists
+            self.output[routeName] = self.output[routeName] || {};
+
+            // Set values
             self.setValues(values, routeName, defaultValueProp);
         }, props);
 
