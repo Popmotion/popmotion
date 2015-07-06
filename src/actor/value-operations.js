@@ -211,6 +211,8 @@ module.exports = {
             namespacedKey = '',
             propKey = '';
 
+        defaultValueProp = defaultValueProp || 'current';
+
         for (key in values) {
             if (values.hasOwnProperty(key)) {
 
@@ -218,6 +220,8 @@ module.exports = {
                 value = (isValueObj) ? values[key] : {};
                 namespacedKey = key + suffix;
                 existingValue = actor.values[namespacedKey];
+
+                value.name = key;
 
                 if (isValueObj) {
                     value[defaultValueProp] = values[key];
@@ -241,7 +245,7 @@ module.exports = {
                 }
 
                 // Set value
-                preprocessValues[namespacedKey] = value;
+                preprocessedValues[namespacedKey] = value;
 
                 // If process has type, split or assign default props
                 if (value.type) {
@@ -252,10 +256,11 @@ module.exports = {
                         value.children = {};
                         splitValue = this.split(key, value, actor, type);
 
-                        for (propKey in splitValues) {
-                            if (splitValues.hasOwnProperty(propKey)) {
-                                childValue = utils.merge(value, splitValues[propKey]);
+                        for (propKey in splitValue) {
+                            if (splitValue.hasOwnProperty(propKey)) {
+                                childValue = utils.merge(value, splitValue[propKey]);
                                 childValue.parent = key + suffix;
+                                childValue.name = key;
                                 childValue.propName = propKey;
                                 delete childValue.type;
                                 delete childValue.children;
@@ -271,83 +276,57 @@ module.exports = {
         }
 
         return preprocessedValues;
-    }
+    },
 
     /*
         Process new values
     */
     process: function (values, actor, namespace, defaultValueProp) {
-        /*
-            1. Namespace suffix
-            2. Default value
-            3. Preprocess
-
-            4. Process
-        */
         var route = routeManager[namespace],
             namespaceSuffix = (namespace === 'values') ? '' : '.' + namespace,
-            preprocessedValues = this.preprocess(values, actor, route, namespaceSuffix, defaultValueProp);
-
-        defaultValueProp = defaultValueProp || 'current';
-
-
-
-        var key = '',
+            preprocessedValues = this.preprocess(values, actor, route, namespaceSuffix, defaultValueProp),
+            key = '',
             propKey = '',
-            namespacedKey = '',
-            valueIsObj = false,
-            processedValues = {},
-            processedValue = {},
-            splitValues = {},
-            childValue = {},
+            preprocessedValue = {},
             thisValue = {},
-            actorValues = actor.values,
+            defaultProps = actionsManager[actor.action].valueDefaults,
             hasChildren = false,
-            valueType = {},
-            defaultProps = actionsManager[actor.action].valueDefaults;
+            prop;
 
-        namespace = namespace || DEFAULT_NAMESPACE;
-        defaultValueProp = defaultValueProp || 'current';
+        for (key in preprocessedValues) {
+            if (preprocessedValues.hasOwnProperty(key)) {
+                preprocessedValue = preprocessedValues[key];
+                thisValue = actor.values[key] || this.initialState(this.resolve('start', preprocessedValue.start, {}, actor), namespace);
+                hasChildren = (thisValue.children !== undefined);
 
-        // Set preprocessed value
-        for (key in processedValues) {
-            namespacedKey = (namespace !== DEFAULT_NAMESPACE) ? key + '.' + namespace : key;
-            processedValue = processedValues[key];
-            thisValue = actorValues[namespacedKey] || this.initialState(this.resolve('start', processedValue.start, {}, actor), namespace);
-            hasChildren = processedValue.children !== undefined;
-
-            // Inherit properties from actor
-            for (propKey in defaultProps) {
-                thisValue[propKey] = (actor.hasOwnProperty(propKey)) ? actor[propKey] : defaultProps[propKey];
-            }
-
-            // Loop through all properties and set
-            for (propKey in processedValue) {
-                if (processedValue[propKey] !== undefined && !isNum(processedValue[propKey]) && !hasChildren) {
-                    processedValue[propKey] = this.resolve(propKey, processedValue[propKey], thisValue, actor);
+                // Inherit properties from Actor
+                for (propKey in defaultProps) {
+                    if (defaultProps.hasOwnProperty(propKey)) {
+                        thisValue[propKey] = actor[propKey];
+                    } else {
+                        thisValue[propKey] = defaultProps[propKey];
+                    }
                 }
 
-                thisValue[propKey] = processedValue[propKey];
+                // Loop through all properties and resolve
+                for (propKey in preprocessedValue) {
+                    if (preprocessedValue.hasOwnProperty(propKey)) {
+                        prop = preprocessedValue[key];
 
-                if (propKey === 'to') {
-                    thisValue.target = thisValue.to;
+                        thisValue[propKey] = (!isNum(prop) && !hasChildren) ? this.resolve(propKey, prop, thisValue, actor) : prop;
+
+                        if (propKey === 'to') {
+                            thisValue.target = thisValue.to;
+                        }
+                    }
                 }
+
+                thisValue.origin = thisValue.current;
+                thisValue.hasRange = (isNum(thisValue.min) && isNum(thisValue.max)) ? true  : false;
+
+                actor.values[key] = thisValue;
+                actor.updateOrder(key, utils.isString(thisValue.link), hasChildren);
             }
-
-            // Save non-namespaced key
-            thisValue.name = key;
-
-            // Set value origin
-            thisValue.origin = thisValue.current;
-
-            // Set hasRange to true if min and max are numbers
-            thisValue.hasRange = (isNum(thisValue.min) && isNum(thisValue.max)) ? true  : false;
-
-            // Assign thisValue to actorValues[key]
-            actorValues[namespacedKey] = thisValue;
-
-            // Update order
-            actor.updateOrder(namespacedKey, utils.isString(thisValue.link), hasChildren);
         }
     }
 };

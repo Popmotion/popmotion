@@ -4,7 +4,7 @@
 "use strict";
 
 var calc = require('../inc/calc'),
-    simulate = require('./run/simulation-manager.js');
+    simulate = require('./run/simulate.js');
 
 module.exports = {
 

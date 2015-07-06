@@ -15,6 +15,7 @@ var Process = require('../process/Process'),
         this.output = {};
         this.queue = new Queue();
         this.process = new Process(this, update);
+
         this.clearOrder();
 
         if (options) {

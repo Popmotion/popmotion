@@ -1,8 +1,5 @@
 module.exports = {
     
-    // [number]: Delay this action by x ms
-    delay: 0,
-    
     // [number]: Time of animation (if animating) in ms
     duration: 400,
     

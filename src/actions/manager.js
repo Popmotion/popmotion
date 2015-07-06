@@ -26,7 +26,7 @@ actionManager.extend = function (name, mod) {
     if (!mod.surpressMethod && !Actor.prototype[name]) {
         Actor.prototype[name] = function () {
             this.action = name;
-            this.set(mod.parser.apply(this, arguments));
+            this.set(mod.parse.apply(this, arguments));
 
             return this.start();
         };

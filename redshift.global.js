@@ -205,15 +205,15 @@
 
 	var valuesRoute = {},
 
-	    fireCallback = function (name, output, element) {
-	        if (element[name]) {
-	            element[name].call(element, output);
+	    fireCallback = function (name, output, actor) {
+	        if (actor[name]) {
+	            actor[name].call(actor, output);
 	        }
 	    };
 
 	['onStart', 'onFrame', 'onChange', 'onEnd'].forEach(function (key) {
-	    valuesRoute[key] = function (output, element) {
-	        fireCallback(key, output, element);
+	    valuesRoute[key] = function (output, actor) {
+	        fireCallback(key, output, actor);
 	    };
 	});
 
@@ -321,17 +321,17 @@
 	"use strict";
 
 	var calc = __webpack_require__(30),
-	    simulate = __webpack_require__(27);
+	    simulate = __webpack_require__(39);
 
 	module.exports = {
 
 	    // [object] Default Action properties
-	    actionDefaults: __webpack_require__(39),
+	    actionDefaults: __webpack_require__(40),
 
 	    // [object] Default value properties
-	    valueDefaults: __webpack_require__(40),
+	    valueDefaults: __webpack_require__(41),
 
-	    parse: __webpack_require__(41),
+	    parse: __webpack_require__(42),
 
 	    // [boolean]: Tell Redshift this rubix calculates a new velocity itself
 	    calculatesVelocity: true,
@@ -404,7 +404,7 @@
 
 	module.exports = {
 
-	    parse: __webpack_require__(41),
+	    parse: __webpack_require__(42),
 
 	   /*
 	        Process new value
@@ -440,12 +440,12 @@
 	"use strict";
 
 	var calc = __webpack_require__(30),
-	    genericParser = __webpack_require__(41),
-	    Pointer = __webpack_require__(42);
+	    genericParser = __webpack_require__(42),
+	    Pointer = __webpack_require__(43);
 
 	module.exports = {
 
-	    valueDefaults: __webpack_require__(43),
+	    valueDefaults: __webpack_require__(44),
 
 	    /*
 	        Parse Input arguments
@@ -570,11 +570,11 @@
 
 	"use strict";
 
-	var createDelimited = __webpack_require__(44),
-	    getColorValues = __webpack_require__(45),
-	    functionCreate = __webpack_require__(46),
-	    defaultProps = __webpack_require__(47),
-	    terms = __webpack_require__(48).hsl;
+	var createDelimited = __webpack_require__(45),
+	    getColorValues = __webpack_require__(46),
+	    functionCreate = __webpack_require__(47),
+	    defaultProps = __webpack_require__(48),
+	    terms = __webpack_require__(49).hsl;
 
 	module.exports = {
 
@@ -607,12 +607,12 @@
 
 	"use strict";
 
-	var createDelimited = __webpack_require__(44),
-	    getColorValues = __webpack_require__(45),
-	    functionCreate = __webpack_require__(46),
-	    defaultProps = __webpack_require__(47),
+	var createDelimited = __webpack_require__(45),
+	    getColorValues = __webpack_require__(46),
+	    functionCreate = __webpack_require__(47),
+	    defaultProps = __webpack_require__(48),
 	    colorDefaults = defaultProps.color,
-	    terms = __webpack_require__(48).colors;
+	    terms = __webpack_require__(49).colors;
 
 	module.exports = {
 
@@ -728,10 +728,10 @@
 
 	"use strict";
 
-	var createDelimited = __webpack_require__(44),
+	var createDelimited = __webpack_require__(45),
 	    pxDefaults = __webpack_require__(9).defaultProps,
-	    splitSpaceDelimited = __webpack_require__(49),
-	    terms = __webpack_require__(48).positions;
+	    splitSpaceDelimited = __webpack_require__(50),
+	    terms = __webpack_require__(49).positions;
 
 	module.exports = {
 
@@ -771,10 +771,10 @@
 
 	"use strict";
 
-	var terms = __webpack_require__(48).dimensions,
+	var terms = __webpack_require__(49).dimensions,
 	    pxDefaults = __webpack_require__(9).defaultProps,
-	    createDelimited = __webpack_require__(44),
-	    splitSpaceDelimited = __webpack_require__(49);
+	    createDelimited = __webpack_require__(45),
+	    splitSpaceDelimited = __webpack_require__(50);
 
 	module.exports = {
 
@@ -824,9 +824,9 @@
 	var color = __webpack_require__(14),
 	    utils = __webpack_require__(35),
 	    pxDefaults = __webpack_require__(9).defaultProps,
-	    terms = __webpack_require__(48).shadow,
-	    splitSpaceDelimited = __webpack_require__(49),
-	    createDelimited = __webpack_require__(44),
+	    terms = __webpack_require__(49).shadow,
+	    splitSpaceDelimited = __webpack_require__(50),
+	    createDelimited = __webpack_require__(45),
 	    shadowTerms = terms.slice(0,4);
 
 	module.exports = {
@@ -880,8 +880,8 @@
 
 	"use strict";
 
-	var styleDOM = __webpack_require__(50),
-	    getterSetter = __webpack_require__(51);
+	var styleDOM = __webpack_require__(51),
+	    getterSetter = __webpack_require__(52);
 
 	module.exports = {
 
@@ -933,16 +933,16 @@
 
 	"use strict";
 
-	var build = __webpack_require__(52),
-	    typeMap = __webpack_require__(53),
+	var build = __webpack_require__(53),
+	    typeMap = __webpack_require__(54),
 	    CSS_CACHE = '_cssCache';
 
 	module.exports = {
 	    typeMap: typeMap,
 	    
-	    onChange: function (output, element) {
-	        element[CSS_CACHE] = element[CSS_CACHE] || {};
-	        element.style(build(output, element[CSS_CACHE]));
+	    onChange: function (output, actor) {
+	        actor[CSS_CACHE] = actor[CSS_CACHE] || {};
+	        actor.style(build(output, actor[CSS_CACHE]));
 	    }
 	    
 	};
@@ -954,10 +954,10 @@
 	"use strict";
 
 	module.exports = {
-	    onChange: function (output, element) {
+	    onChange: function (output, actor) {
 	        for (var key in output) {
 	            if (output.hasOwnProperty(key)) {
-	                element.attr(key, output[key]);
+	                actor.attr(key, output[key]);
 	            }
 	        }
 	    }
@@ -969,7 +969,7 @@
 
 	"use strict";
 
-	var createStyles = __webpack_require__(54);
+	var createStyles = __webpack_require__(55);
 
 	module.exports = {
 
@@ -977,14 +977,14 @@
 	        stroke: 'color'
 	    },
 
-	    onStart: function (output, element) {
-	        if (element.element) {
-	            element.pathLength = element.element.getTotalLength();
+	    onStart: function (output, actor) {
+	        if (actor.actor) {
+	            actor.pathLength = actor.element.getTotalLength();
 	        }
 	    },
 	    
-	    onChange: function (output, element) {
-	        element.style(createStyles(output, element.pathLength));
+	    onChange: function (output, actor) {
+	        actor.style(createStyles(output, actor.pathLength));
 	    }
 	};
 
@@ -1032,11 +1032,11 @@
 	var Actor,
 	    ActorGroup,
 	    utils = __webpack_require__(35),
-	    generateMethodIterator = __webpack_require__(55),
-	    genericActionProps = __webpack_require__(56),
-	    genericValueProps = __webpack_require__(57),
+	    generateMethodIterator = __webpack_require__(56),
+	    genericActionProps = __webpack_require__(57),
+	    genericValueProps = __webpack_require__(58),
 
-	    ModManager = __webpack_require__(58),
+	    ModManager = __webpack_require__(59),
 
 	    actionManager = new ModManager();
 	/*
@@ -1055,7 +1055,7 @@
 	    if (!mod.surpressMethod && !Actor.prototype[name]) {
 	        Actor.prototype[name] = function () {
 	            this.action = name;
-	            this.set(mod.parser.apply(this, arguments));
+	            this.set(mod.parse.apply(this, arguments));
 
 	            return this.start();
 	        };
@@ -1123,7 +1123,7 @@
 	"use strict";
 
 	var calc = __webpack_require__(30),
-	    Bezier = __webpack_require__(59),
+	    Bezier = __webpack_require__(60),
 
 	    EASE_IN = 'In',
 	    EASE_OUT = 'Out',
@@ -1210,7 +1210,7 @@
 	        };
 	    },
 
-	    ModManager = __webpack_require__(58),
+	    ModManager = __webpack_require__(59),
 	    easingManager = new ModManager();
 
 	/*
@@ -1284,7 +1284,7 @@
 	"use strict";
 
 	var utils = __webpack_require__(35),
-	    ModManager = __webpack_require__(58),
+	    ModManager = __webpack_require__(59),
 	    presetManager = new ModManager(),
 
 	    DOT = '.',
@@ -1333,7 +1333,7 @@
 
 	"use strict";
 
-	var ModManager = __webpack_require__(58),
+	var ModManager = __webpack_require__(59),
 	    routeManager = new ModManager();
 
 	/*
@@ -1374,7 +1374,7 @@
 	    utils = __webpack_require__(35),
 	    speedPerFrame = calc.speedPerFrame,
 
-	    ModManager = __webpack_require__(58),
+	    ModManager = __webpack_require__(59),
 	    simulationManager = new ModManager();
 
 	/*
@@ -1483,7 +1483,7 @@
 	        };
 	    },
 
-	    ModManager = __webpack_require__(58),
+	    ModManager = __webpack_require__(59),
 	    actorTypeManager = new ModManager();
 
 	actorTypeManager.extend = function (name, mod) {
@@ -1511,7 +1511,7 @@
 
 	"use strict";
 
-	var ModManager = __webpack_require__(58),
+	var ModManager = __webpack_require__(59),
 	    valueTypeManager = new ModManager();
 
 	valueTypeManager.defaultProps = function (type, key) {
@@ -1900,10 +1900,10 @@
 	"use strict";
 
 	var Process = __webpack_require__(34),
-	    Queue = __webpack_require__(60),
+	    Queue = __webpack_require__(61),
 	    utils = __webpack_require__(35),
-	    update = __webpack_require__(61),
-	    valueOps = __webpack_require__(62),
+	    update = __webpack_require__(62),
+	    valueOps = __webpack_require__(63),
 	    actionManager = __webpack_require__(23),
 	    routeManager = __webpack_require__(26),
 	    actorTypeManager = __webpack_require__(28),
@@ -1914,6 +1914,7 @@
 	        this.output = {};
 	        this.queue = new Queue();
 	        this.process = new Process(this, update);
+
 	        this.clearOrder();
 
 	        if (options) {
@@ -2175,7 +2176,7 @@
 	"use strict";
 
 	var Actor = __webpack_require__(31),
-	    generateMethodIterator = __webpack_require__(55),
+	    generateMethodIterator = __webpack_require__(56),
 	    actionManager = __webpack_require__(23),
 
 	    /*
@@ -2281,7 +2282,7 @@
 
 	var calc = __webpack_require__(30),
 	    utils = __webpack_require__(35),
-	    History = __webpack_require__(63),
+	    History = __webpack_require__(64),
 
 	    /*
 	        Input constructor
@@ -2407,7 +2408,7 @@
 
 	"use strict";
 
-	var manager = __webpack_require__(64),
+	var manager = __webpack_require__(65),
 
 	    /*
 	        Process constructor
@@ -2817,9 +2818,6 @@
 
 	module.exports = {
 	    
-	    // [number]: Delay this action by x ms
-	    delay: 0,
-	    
 	    // [number]: Time of animation (if animating) in ms
 	    duration: 400,
 	    
@@ -2869,7 +2867,7 @@
 
 	"use strict";
 
-	var parseArgs = __webpack_require__(65),
+	var parseArgs = __webpack_require__(66),
 	    utils = __webpack_require__(35);
 
 	module.exports = {
@@ -2977,6 +2975,19 @@
 /* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
+	"use strict";
+
+	var simulations = __webpack_require__(27);
+
+	module.exports = function (simulation, value, duration, started) {
+	    var velocity = simulations[simulation](value, duration, started);
+	    return (Math.abs(velocity) >= value.stopSpeed) ? velocity : 0;
+	};
+
+/***/ },
+/* 40 */
+/***/ function(module, exports, __webpack_require__) {
+
 	module.exports = {
 	    // [int]: Number of frames Action has been inactive
 	    inactiveFrames: 0,
@@ -2986,7 +2997,7 @@
 	};
 
 /***/ },
-/* 40 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
@@ -3021,7 +3032,7 @@
 	};
 
 /***/ },
-/* 41 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3030,16 +3041,18 @@
 	    utils = __webpack_require__(35);
 
 	module.exports = function (base, override) {
-	    var props = (typeof base === 'string') ? presetManager.getDefined(base) : {};
+	    var props = (typeof base === 'string') ? presetManager.getDefined(base) : base;
 
 	    // Override properties with second arg if it's an object
 	    if (typeof override === 'object') {
 	        props = utils.merge(props, override);
 	    }
+
+	    return props;
 	};
 
 /***/ },
-/* 42 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3133,7 +3146,7 @@
 	module.exports = Pointer;
 
 /***/ },
-/* 43 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
@@ -3142,7 +3155,7 @@
 	};
 
 /***/ },
-/* 44 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3169,11 +3182,11 @@
 	};
 
 /***/ },
-/* 45 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var splitCommaDelimited = __webpack_require__(66),
-	    functionBreak = __webpack_require__(67);
+	var splitCommaDelimited = __webpack_require__(67),
+	    functionBreak = __webpack_require__(68);
 
 	module.exports = function (value, terms) {
 	    var splitValue = {},
@@ -3189,7 +3202,7 @@
 	};
 
 /***/ },
-/* 46 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (value, prefix) {
@@ -3197,7 +3210,7 @@
 	};
 
 /***/ },
-/* 47 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3221,7 +3234,7 @@
 
 
 /***/ },
-/* 48 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3241,7 +3254,7 @@
 	module.exports = terms;
 
 /***/ },
-/* 49 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (value) {
@@ -3249,7 +3262,7 @@
 	};
 
 /***/ },
-/* 50 */
+/* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3313,7 +3326,7 @@
 	module.exports = new styleDOM();
 
 /***/ },
-/* 51 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -3348,12 +3361,12 @@
 	};
 
 /***/ },
-/* 52 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var transformDictionary = __webpack_require__(68),
+	var transformDictionary = __webpack_require__(69),
 	    transformProps = transformDictionary.props,
 
 	    TRANSFORM = 'transform',
@@ -3395,7 +3408,7 @@
 	};
 
 /***/ },
-/* 53 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3447,12 +3460,12 @@
 	};
 
 /***/ },
-/* 54 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var lookup = __webpack_require__(69),
+	var lookup = __webpack_require__(70),
 
 	    /*
 	        Convert percentage to pixels
@@ -3508,7 +3521,7 @@
 	};
 
 /***/ },
-/* 55 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3547,10 +3560,13 @@
 
 
 /***/ },
-/* 56 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
+	    
+	    // [number]: Delay this action by x ms
+	    delay: 0,
 	    
 	    // [function]: Callback when Action process starts
 	    onStart: undefined,
@@ -3567,7 +3583,7 @@
 	};
 
 /***/ },
-/* 57 */
+/* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
@@ -3593,7 +3609,7 @@
 	};
 
 /***/ },
-/* 58 */
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3654,7 +3670,7 @@
 	module.exports = ModManager;
 
 /***/ },
-/* 59 */
+/* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/*
@@ -3826,7 +3842,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 60 */
+/* 61 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3879,7 +3895,7 @@
 	module.exports = Queue;
 
 /***/ },
-/* 61 */
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4037,7 +4053,7 @@
 	};
 
 /***/ },
-/* 62 */
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4049,7 +4065,6 @@
 	    valueTypesManager = __webpack_require__(29),
 	    routeManager = __webpack_require__(26),
 
-	    DEFAULT_NAMESPACE = 'values',
 	    numericalValues = ['current', 'to', 'start', 'min', 'max'],
 	    numNumericalValues = numericalValues.length;
 
@@ -4145,7 +4160,7 @@
 	        @param [object]: Base value properties
 	        @param [Elememt]
 	    */
-	    split: function (name, value, element, valueType) {
+	    split: function (name, value, actor, valueType) {
 	        var splitValues = {},
 	            splitProperty = {},
 	            propertyName = '',
@@ -4157,7 +4172,7 @@
 
 	            if (value.hasOwnProperty(propertyName)) {
 	                if (utils.isFunc(value[propertyName])) {
-	                    value[propertyName] = value[propertyName].call(element);
+	                    value[propertyName] = value[propertyName].call(actor);
 	                }
 
 	                splitProperty = valueType.split(value[propertyName]);
@@ -4205,15 +4220,15 @@
 	        @param [string]: Name of value
 	        @param [string || number || function]: Property
 	        @param [object]: Parent value
-	        @param [Element]: Parent Element
+	        @param [actor]: Parent actor
 	    */
-	    resolve: function (name, property, value, element) {
+	    resolve: function (name, property, value, actor) {
 	        var currentValue = value.current || 0,
 	            isNumericalValue = (numericalValues.indexOf(name) > -1);
 
 	        // If this is a function, resolve
 	        if (utils.isFunc(property)) {
-	            property = property.call(element, currentValue);
+	            property = property.call(actor, currentValue);
 	        }
 
 	        // If this is a string, check for relative values and units
@@ -4238,123 +4253,144 @@
 	    },
 
 	    /*
-	        Process new values
-	    */
-	    process: function (values, element, namespace, defaultValueProp) {
-	        var key = '',
-	            propKey = '',
-	            namespacedKey = '',
-	            valueIsObj = false,
-	            processedValues = {},
-	            processedValue = {},
-	            splitValues = {},
-	            childValue = {},
-	            thisValue = {},
-	            elementValues = element.values,
-	            hasChildren = false,
-	            valueType = {},
-	            defaultProps = actionsManager[element.action].valueDefaults;
+	        Preprocess new values
 
-	        namespace = namespace || DEFAULT_NAMESPACE;
+
+	    */
+	    preprocess: function (values, actor, route, suffix, defaultValueProp) {
+	        var preprocessedValues = {},
+	            value = {},
+	            splitValue = {},
+	            childValue = {},
+	            type = {},
+	            existingValue = {},
+	            isValueObj = false,
+	            key = '',
+	            namespacedKey = '',
+	            propKey = '';
+
 	        defaultValueProp = defaultValueProp || 'current';
 
-	        // Preprocess values to set
 	        for (key in values) {
-	            valueIsObj = utils.isObj(values[key]);
-	            thisValue = valueIsObj ? values[key] : {};
-	            namespacedKey = (namespace !== DEFAULT_NAMESPACE) ? key + '.' + namespace : key;
+	            if (values.hasOwnProperty(key)) {
 
-	            // If this value isn't an object already, set it to the default property
-	            if (!valueIsObj) {
-	                thisValue[defaultValueProp] = values[key];
-	            }
+	                isValueObj = utils.isObj(values[key]);
+	                value = (isValueObj) ? values[key] : {};
+	                namespacedKey = key + suffix;
+	                existingValue = actor.values[namespacedKey];
 
-	            // Check if value doesn't have a type property, check routeManager and auto detect
-	            if (!thisValue.type) {
-	                if (elementValues && elementValues[namespacedKey] && elementValues[namespacedKey].type) {
-	                    thisValue.type = elementValues[namespacedKey].type;
-	                } else if (routeManager[namespace].typeMap) {
-	                    thisValue.type = routeManager[namespace].typeMap[key] || false;
+	                value.name = key;
 
-	                // If this property key hasn't been mapped, and it's a string, run tests
-	                } else if (utils.isString(thisValue[defaultValueProp])) {
-	                    thisValue.type = valueTypesManager.test(thisValue[defaultValueProp]);
+	                if (isValueObj) {
+	                    value[defaultValueProp] = values[key];
 	                }
-	            }
 
-	            // Set value
-	            processedValues[key] = thisValue;
+	                // If this value doesn't have a special type, check for one
+	                if (!value.type && utils.isString(value[defaultValueProp])) {
 
-	            // If this value has a type, split or assign default props
-	            if (thisValue.type) {
-	                valueType = valueTypesManager[thisValue.type];
+	                    // Check if existing value with this key
+	                    if (existingValue && existingValue.type) {
+	                        value.type = existingValue.type;
+	                    
+	                    // Or if this route has a typemap
+	                    } else if (route.typeMap && route.typeMap[key]) {
+	                        value.type = route.typeMap[key];
 
-	                // Split if this value type is a splitter
-	                if (valueType.split) {
-	                    thisValue.children = {};
-	                    splitValues = this.split(key, thisValue, element, valueType);
-
-	                    for (propKey in splitValues) {
-	                        childValue = utils.merge(thisValue, splitValues[propKey]);
-	                        childValue.parent = namespacedKey;
-	                        childValue.propName = propKey;
-	                        delete childValue.type;
-	                        delete childValue.children;
-	                        processedValues[key + propKey] = childValue;
+	                    // Otherwise, check by running tests
+	                    } else {
+	                        value.type = valueTypesManager.test(value[defaultValueProp]);
 	                    }
+	                }
 
-	                // Or just apply default props
-	                } else {
-	                    processedValues[key] = utils.merge(valueTypesManager.defaultProps(thisValue.type, key), thisValue);
+	                // Set value
+	                preprocessedValues[namespacedKey] = value;
+
+	                // If process has type, split or assign default props
+	                if (value.type) {
+	                    type = valueTypesManager[value.type];
+
+	                    // If this has a splitter function, split
+	                    if (type.split) {
+	                        value.children = {};
+	                        splitValue = this.split(key, value, actor, type);
+
+	                        for (propKey in splitValue) {
+	                            if (splitValue.hasOwnProperty(propKey)) {
+	                                childValue = utils.merge(value, splitValue[propKey]);
+	                                childValue.parent = key + suffix;
+	                                childValue.name = key;
+	                                childValue.propName = propKey;
+	                                delete childValue.type;
+	                                delete childValue.children;
+
+	                                preprocessedValues[key + propKey + suffix] = childValue;
+	                            }
+	                        }
+	                    } else {
+	                        preprocessedValues[namespacedKey] = utils.merge(valueTypesManager.defaultProps(value.type, key), value);
+	                    }
 	                }
 	            }
 	        }
 
-	        // Set preprocessed value
-	        for (key in processedValues) {
-	            namespacedKey = (namespace !== DEFAULT_NAMESPACE) ? key + '.' + namespace : key;
-	            processedValue = processedValues[key];
-	            thisValue = elementValues[namespacedKey] || this.initialState(this.resolve('start', processedValue.start, {}, element), namespace);
-	            hasChildren = processedValue.children !== undefined;
+	        return preprocessedValues;
+	    },
 
-	            // Inherit properties from Element
-	            for (propKey in defaultProps) {
-	                thisValue[propKey] = (element.hasOwnProperty(propKey)) ? element[propKey] : defaultProps[propKey];
-	            }
+	    /*
+	        Process new values
+	    */
+	    process: function (values, actor, namespace, defaultValueProp) {
+	        var route = routeManager[namespace],
+	            namespaceSuffix = (namespace === 'values') ? '' : '.' + namespace,
+	            preprocessedValues = this.preprocess(values, actor, route, namespaceSuffix, defaultValueProp),
+	            key = '',
+	            propKey = '',
+	            preprocessedValue = {},
+	            thisValue = {},
+	            defaultProps = actionsManager[actor.action].valueDefaults,
+	            hasChildren = false,
+	            prop;
 
-	            // Loop through all properties and set
-	            for (propKey in processedValue) {
-	                if (processedValue[propKey] !== undefined && !isNum(processedValue[propKey]) && !hasChildren) {
-	                    processedValue[propKey] = this.resolve(propKey, processedValue[propKey], thisValue, element);
+	        for (key in preprocessedValues) {
+	            if (preprocessedValues.hasOwnProperty(key)) {
+	                preprocessedValue = preprocessedValues[key];
+	                thisValue = actor.values[key] || this.initialState(this.resolve('start', preprocessedValue.start, {}, actor), namespace);
+	                hasChildren = (thisValue.children !== undefined);
+
+	                // Inherit properties from Actor
+	                for (propKey in defaultProps) {
+	                    if (defaultProps.hasOwnProperty(propKey)) {
+	                        thisValue[propKey] = actor[propKey];
+	                    } else {
+	                        thisValue[propKey] = defaultProps[propKey];
+	                    }
 	                }
 
-	                thisValue[propKey] = processedValue[propKey];
+	                // Loop through all properties and resolve
+	                for (propKey in preprocessedValue) {
+	                    if (preprocessedValue.hasOwnProperty(propKey)) {
+	                        prop = preprocessedValue[key];
 
-	                if (propKey === 'to') {
-	                    thisValue.target = thisValue.to;
+	                        thisValue[propKey] = (!isNum(prop) && !hasChildren) ? this.resolve(propKey, prop, thisValue, actor) : prop;
+
+	                        if (propKey === 'to') {
+	                            thisValue.target = thisValue.to;
+	                        }
+	                    }
 	                }
+
+	                thisValue.origin = thisValue.current;
+	                thisValue.hasRange = (isNum(thisValue.min) && isNum(thisValue.max)) ? true  : false;
+
+	                actor.values[key] = thisValue;
+	                actor.updateOrder(key, utils.isString(thisValue.link), hasChildren);
 	            }
-
-	            // Save non-namespaced key
-	            thisValue.name = key;
-
-	            // Set value origin
-	            thisValue.origin = thisValue.current;
-
-	            // Set hasRange to true if min and max are numbers
-	            thisValue.hasRange = (isNum(thisValue.min) && isNum(thisValue.max)) ? true  : false;
-
-	            // Assign thisValue to elementValues[key]
-	            elementValues[namespacedKey] = thisValue;
-
-	            // Update order
-	            element.updateOrder(namespacedKey, utils.isString(thisValue.link), hasChildren);
 	        }
 	    }
 	};
 
 /***/ },
-/* 63 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4428,12 +4464,12 @@
 	module.exports = History;
 
 /***/ },
-/* 64 */
+/* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var theLoop = __webpack_require__(70),
+	var theLoop = __webpack_require__(71),
 	    ProcessManager = function () {
 	        this.all = {};
 	        this.active = [];
@@ -4603,7 +4639,7 @@
 	module.exports = new ProcessManager();
 
 /***/ },
-/* 65 */
+/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4663,7 +4699,7 @@
 
 
 /***/ },
-/* 66 */
+/* 67 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (value) {
@@ -4671,7 +4707,7 @@
 	};
 
 /***/ },
-/* 67 */
+/* 68 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (value) {
@@ -4679,12 +4715,12 @@
 	};
 
 /***/ },
-/* 68 */
+/* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var positionTerms = __webpack_require__(48).positions,
+	var positionTerms = __webpack_require__(49).positions,
 	    numPositionTerms = positionTerms.length,
 
 	    TRANSFORM_PERSPECTIVE = 'transformPerspective',
@@ -4722,7 +4758,7 @@
 	module.exports = terms;
 
 /***/ },
-/* 69 */
+/* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var STROKE = 'stroke',
@@ -4739,7 +4775,7 @@
 	};
 
 /***/ },
-/* 70 */
+/* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -4747,8 +4783,8 @@
 	*/
 	"use strict";
 
-	var Timer = __webpack_require__(71),
-	    tick = __webpack_require__(72),
+	var Timer = __webpack_require__(72),
+	    tick = __webpack_require__(73),
 	    Loop = function () {
 	        this.timer = new Timer();
 	    };
@@ -4813,7 +4849,7 @@
 	module.exports = new Loop();
 
 /***/ },
-/* 71 */
+/* 72 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4848,7 +4884,7 @@
 	module.exports = Timer;
 
 /***/ },
-/* 72 */
+/* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
