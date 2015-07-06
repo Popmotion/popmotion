@@ -8,13 +8,13 @@ module.exports = {
         stroke: 'color'
     },
 
-    onStart: function (output, element) {
-        if (element.element) {
-            element.pathLength = element.element.getTotalLength();
+    onStart: function (output, actor) {
+        if (actor.actor) {
+            actor.pathLength = actor.element.getTotalLength();
         }
     },
     
-    onChange: function (output, element) {
-        element.style(createStyles(output, element.pathLength));
+    onChange: function (output, actor) {
+        actor.style(createStyles(output, actor.pathLength));
     }
 };

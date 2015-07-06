@@ -84,7 +84,9 @@ ActorGroup.prototype = {
 // Initialise Element System methods
 (function () {
     for (var method in Actor.prototype) {
-        ActorGroup.prototype[method] = generateMethodIterator(method);
+        if (Actor.prototype.hasOwnProperty(method)) {
+            ActorGroup.prototype[method] = generateMethodIterator(method);
+        }
     }
 })();
 

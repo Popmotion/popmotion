@@ -7,9 +7,9 @@ var build = require('./css/build'),
 module.exports = {
     typeMap: typeMap,
     
-    onChange: function (output, element) {
-        element[CSS_CACHE] = element[CSS_CACHE] || {};
-        element.style(build(output, element[CSS_CACHE]));
+    onChange: function (output, actor) {
+        actor[CSS_CACHE] = actor[CSS_CACHE] || {};
+        actor.style(build(output, actor[CSS_CACHE]));
     }
     
 };

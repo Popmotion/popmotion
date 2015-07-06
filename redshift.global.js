@@ -1032,11 +1032,11 @@
 	var Actor,
 	    ActorGroup,
 	    utils = __webpack_require__(35),
-	    generateMethodIterator = __webpack_require__(57),
-	    genericActionProps = __webpack_require__(58),
-	    genericValueProps = __webpack_require__(59),
+	    generateMethodIterator = __webpack_require__(55),
+	    genericActionProps = __webpack_require__(56),
+	    genericValueProps = __webpack_require__(57),
 
-	    ModManager = __webpack_require__(56),
+	    ModManager = __webpack_require__(58),
 
 	    actionManager = new ModManager();
 	/*
@@ -1123,7 +1123,7 @@
 	"use strict";
 
 	var calc = __webpack_require__(30),
-	    Bezier = __webpack_require__(55),
+	    Bezier = __webpack_require__(59),
 
 	    EASE_IN = 'In',
 	    EASE_OUT = 'Out',
@@ -1210,7 +1210,7 @@
 	        };
 	    },
 
-	    ModManager = __webpack_require__(56),
+	    ModManager = __webpack_require__(58),
 	    easingManager = new ModManager();
 
 	/*
@@ -1284,7 +1284,7 @@
 	"use strict";
 
 	var utils = __webpack_require__(35),
-	    ModManager = __webpack_require__(56),
+	    ModManager = __webpack_require__(58),
 	    presetManager = new ModManager(),
 
 	    DOT = '.',
@@ -1333,7 +1333,7 @@
 
 	"use strict";
 
-	var ModManager = __webpack_require__(56),
+	var ModManager = __webpack_require__(58),
 	    routeManager = new ModManager();
 
 	/*
@@ -1371,9 +1371,10 @@
 	"use strict";
 
 	var calc = __webpack_require__(30),
+	    utils = __webpack_require__(35),
 	    speedPerFrame = calc.speedPerFrame,
 
-	    ModManager = __webpack_require__(56),
+	    ModManager = __webpack_require__(58),
 	    simulationManager = new ModManager();
 
 	/*
@@ -1482,7 +1483,7 @@
 	        };
 	    },
 
-	    ModManager = __webpack_require__(56),
+	    ModManager = __webpack_require__(58),
 	    actorTypeManager = new ModManager();
 
 	actorTypeManager.extend = function (name, mod) {
@@ -1510,7 +1511,7 @@
 
 	"use strict";
 
-	var ModManager = __webpack_require__(56),
+	var ModManager = __webpack_require__(58),
 	    valueTypeManager = new ModManager();
 
 	valueTypeManager.defaultProps = function (type, key) {
@@ -2174,7 +2175,7 @@
 	"use strict";
 
 	var Actor = __webpack_require__(31),
-	    generateMethodIterator = __webpack_require__(57),
+	    generateMethodIterator = __webpack_require__(55),
 	    actionManager = __webpack_require__(23),
 
 	    /*
@@ -2257,7 +2258,9 @@
 	// Initialise Element System methods
 	(function () {
 	    for (var method in Actor.prototype) {
-	        ActorGroup.prototype[method] = generateMethodIterator(method);
+	        if (Actor.prototype.hasOwnProperty(method)) {
+	            ActorGroup.prototype[method] = generateMethodIterator(method);
+	        }
 	    }
 	})();
 
@@ -2725,7 +2728,7 @@
 	            length = base.length,
 	            i = 0;
 	        
-	        for (var i = 0; i < length; i++) {
+	        for (; i < length; i++) {
 	            newArray[i] = (this.isObj(base[i])) ? this.copy(base[i]) : base[i];
 	        }
 	        
@@ -3023,7 +3026,8 @@
 
 	"use strict";
 
-	var presetManager = __webpack_require__(25);
+	var presetManager = __webpack_require__(25),
+	    utils = __webpack_require__(35);
 
 	module.exports = function (base, override) {
 	    var props = (typeof base === 'string') ? presetManager.getDefined(base) : {};
@@ -3032,7 +3036,7 @@
 	    if (typeof override === 'object') {
 	        props = utils.merge(props, override);
 	    }
-	}
+	};
 
 /***/ },
 /* 42 */
@@ -3061,7 +3065,7 @@
 	        return {
 	            x: touchChanged ? touchChanged.clientX : event.pageX,
 	            y: touchChanged ? touchChanged.clientY : event.pageY
-	        }
+	        };
 	    },
 	    
 	    /*
@@ -3135,7 +3139,7 @@
 	module.exports = {
 	    // [number]: Factor of movement outside of maximum range (ie 0.5 will move half as much as 1)
 	    escapeAmp: 0
-	}
+	};
 
 /***/ },
 /* 44 */
@@ -3507,6 +3511,152 @@
 /* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
+	"use strict";
+
+	/*
+		Generate method iterator
+		
+		Takes a method name and returns a function that will
+		loop over all the Elements in a group and fire that
+		method with those properties
+		
+		@param [string]: Name of method
+	*/
+	module.exports = function (method) {
+		return function () {
+	        var numElements = this.members.length,
+	            i = 0,
+				isGetter = false,
+				getterArray = [],
+				element,
+				elementReturn;
+				
+			for (; i < numElements; i++) {
+				element = this.members[i];
+				elementReturn = element[method].apply(element, arguments);
+
+				if (elementReturn != element) {
+	    			isGetter = true;
+	    			getterArray.push(elementReturn);
+				}
+			}
+			
+			return (isGetter) ? getterArray : this;
+		};
+	};
+
+
+/***/ },
+/* 56 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	    
+	    // [function]: Callback when Action process starts
+	    onStart: undefined,
+	    
+	    // [function]: Callback when any value changes
+	    onChange: undefined,
+	    
+	    // [function]: Callback every frame
+	    onFrame: undefined,
+	    
+	    // [function]: Callback when Action process ends
+	    onEnd: undefined
+
+	};
+
+/***/ },
+/* 57 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+
+	    // [number]: Current target value
+	    to: undefined,
+
+	    // [number]: Maximum permitted value during .track and .run
+	    min: undefined,
+	    
+	    // [number]: Minimum permitted value during .track and .run
+	    max: undefined,
+	    
+	    // [number]: Origin
+	    origin: 0,
+	    
+	    // [boolean]: Set to true when both min and max detected
+	    hasRange: false,
+
+	    // [boolean]: Round output if true
+	    round: false
+
+	};
+
+/***/ },
+/* 58 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var ModManager = function () {
+	        this._keys = [];
+	        this._numKeys = 0;
+	    };
+
+	ModManager.prototype = {
+
+	    /*
+	        Add module key to keys list
+
+	        @param [string]: Key to add
+	    */
+	    _addKey: function (name) {
+	        this._keys.push(name);
+	        this._numKeys++;
+	    },
+
+	    /*
+	        Add a new module
+
+	        @param [string || object]: Name of new module or multiple modules
+	        @param [object] (optional): Module to add
+	    */
+	    extend: function (name, mod) {
+	        var multiMods = (typeof name == 'object'),
+	            mods = multiMods ? name : {},
+	            key = '';
+
+	        // If we just have one module, coerce
+	        if (!multiMods) {
+	            mods[name] = mod;
+	        }
+
+	        for (key in mods) {
+	            if (mods.hasOwnProperty(key)) {
+	                this._addKey(key);
+	                this[key] = mods[key];
+	            }
+	        }
+
+	        return this;
+	    },
+
+	    each: function (callback) {
+	        var key = '';
+
+	        for (var i = 0; i < this._numKeys; i++) {
+	            key = this._keys[i];
+	            callback(key, this[key]);
+	        }
+	    }
+	};
+
+	module.exports = ModManager;
+
+/***/ },
+/* 59 */
+/***/ function(module, exports, __webpack_require__) {
+
 	/* WEBPACK VAR INJECTION */(function(global) {/*
 	    Bezier function generator
 	        
@@ -3674,152 +3824,6 @@
 
 	module.exports = Bezier;
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 56 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var ModManager = function () {
-	        this._keys = [];
-	        this._numKeys = 0;
-	    };
-
-	ModManager.prototype = {
-
-	    /*
-	        Add module key to keys list
-
-	        @param [string]: Key to add
-	    */
-	    _addKey: function (name) {
-	        this._keys.push(name);
-	        this._numKeys++;
-	    },
-
-	    /*
-	        Add a new module
-
-	        @param [string || object]: Name of new module or multiple modules
-	        @param [object] (optional): Module to add
-	    */
-	    extend: function (name, mod) {
-	        var multiMods = (typeof name == 'object'),
-	            mods = multiMods ? name : {},
-	            key = '';
-
-	        // If we just have one module, coerce
-	        if (!multiMods) {
-	            mods[name] = mod;
-	        }
-
-	        for (key in mods) {
-	            if (mods.hasOwnProperty(key)) {
-	                this._addKey(key);
-	                this[key] = mods[key];
-	            }
-	        }
-
-	        return this;
-	    },
-
-	    each: function (callback) {
-	        var key = '';
-
-	        for (var i = 0; i < this._numKeys; i++) {
-	            key = this._keys[i];
-	            callback(key, this[key]);
-	        }
-	    }
-	};
-
-	module.exports = ModManager;
-
-/***/ },
-/* 57 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	/*
-		Generate method iterator
-		
-		Takes a method name and returns a function that will
-		loop over all the Elements in a group and fire that
-		method with those properties
-		
-		@param [string]: Name of method
-	*/
-	module.exports = function (method) {
-		return function () {
-	        var numElements = this.members.length,
-	            i = 0,
-				isGetter = false,
-				getterArray = [],
-				element,
-				elementReturn;
-				
-			for (; i < numElements; i++) {
-				element = this.members[i];
-				elementReturn = element[method].apply(element, arguments);
-
-				if (elementReturn != element) {
-	    			isGetter = true;
-	    			getterArray.push(elementReturn);
-				}
-			}
-			
-			return (isGetter) ? getterArray : this;
-		};
-	};
-
-
-/***/ },
-/* 58 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	    
-	    // [function]: Callback when Action process starts
-	    onStart: undefined,
-	    
-	    // [function]: Callback when any value changes
-	    onChange: undefined,
-	    
-	    // [function]: Callback every frame
-	    onFrame: undefined,
-	    
-	    // [function]: Callback when Action process ends
-	    onEnd: undefined
-
-	};
-
-/***/ },
-/* 59 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-
-	    // [number]: Current target value
-	    to: undefined,
-
-	    // [number]: Maximum permitted value during .track and .run
-	    min: undefined,
-	    
-	    // [number]: Minimum permitted value during .track and .run
-	    max: undefined,
-	    
-	    // [number]: Origin
-	    origin: 0,
-	    
-	    // [boolean]: Set to true when both min and max detected
-	    hasRange: false,
-
-	    // [boolean]: Round output if true
-	    round: false
-
-	};
 
 /***/ },
 /* 60 */
@@ -4038,7 +4042,8 @@
 
 	"use strict";
 
-	var utils = __webpack_require__(35),
+	var calc = __webpack_require__(30),
+	    utils = __webpack_require__(35),
 	    isNum = utils.isNum,
 	    actionsManager = __webpack_require__(23),
 	    valueTypesManager = __webpack_require__(29),
@@ -4061,7 +4066,9 @@
 	        var key = '';
 
 	        for (key in values) {
-	            this[op](values[key]);
+	            if (values.hasOwnProperty(key)) {
+	                this[op](values[key]);
+	            }
 	        }
 
 	        return this;
@@ -4157,9 +4164,11 @@
 
 	                // Assign properties to each new value
 	                for (key in splitProperty) {
-	                    // Create new value if it doesn't exist
-	                    splitValues[key] = splitValues[key] || utils.copy(valueTypesManager.defaultProps(value.type, key));
-	                    splitValues[key][propertyName] = splitProperty[key];
+	                    if (splitProperty.hasOwnProperty(key)) {
+	                        // Create new value if it doesn't exist
+	                        splitValues[key] = splitValues[key] || utils.copy(valueTypesManager.defaultProps(value.type, key));
+	                        splitValues[key][propertyName] = splitProperty[key];
+	                    }
 	                }
 	            }
 	        }

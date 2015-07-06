@@ -7,15 +7,15 @@
 
 var valuesRoute = {},
 
-    fireCallback = function (name, output, element) {
-        if (element[name]) {
-            element[name].call(element, output);
+    fireCallback = function (name, output, actor) {
+        if (actor[name]) {
+            actor[name].call(actor, output);
         }
     };
 
 ['onStart', 'onFrame', 'onChange', 'onEnd'].forEach(function (key) {
-    valuesRoute[key] = function (output, element) {
-        fireCallback(key, output, element);
+    valuesRoute[key] = function (output, actor) {
+        fireCallback(key, output, actor);
     };
 });
 

@@ -10,4 +10,4 @@ module.exports = function (base, override) {
     if (typeof override === 'object') {
         props = utils.merge(props, override);
     }
-}
+};

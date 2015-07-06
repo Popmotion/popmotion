@@ -156,7 +156,7 @@ module.exports = {
             length = base.length,
             i = 0;
         
-        for (var i = 0; i < length; i++) {
+        for (; i < length; i++) {
             newArray[i] = (this.isObj(base[i])) ? this.copy(base[i]) : base[i];
         }
         

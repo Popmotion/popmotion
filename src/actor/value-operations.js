@@ -1,12 +1,12 @@
 "use strict";
 
-var utils = require('../inc/utils'),
+var calc = require('../inc/calc'),
+    utils = require('../inc/utils'),
     isNum = utils.isNum,
     actionsManager = require('../actions/manager'),
     valueTypesManager = require('../value-types/manager'),
     routeManager = require('../routes/manager'),
 
-    DEFAULT_NAMESPACE = 'values',
     numericalValues = ['current', 'to', 'start', 'min', 'max'],
     numNumericalValues = numericalValues.length;
 
@@ -23,7 +23,9 @@ module.exports = {
         var key = '';
 
         for (key in values) {
-            this[op](values[key]);
+            if (values.hasOwnProperty(key)) {
+                this[op](values[key]);
+            }
         }
 
         return this;
@@ -100,7 +102,7 @@ module.exports = {
         @param [object]: Base value properties
         @param [Elememt]
     */
-    split: function (name, value, element, valueType) {
+    split: function (name, value, actor, valueType) {
         var splitValues = {},
             splitProperty = {},
             propertyName = '',
@@ -112,16 +114,18 @@ module.exports = {
 
             if (value.hasOwnProperty(propertyName)) {
                 if (utils.isFunc(value[propertyName])) {
-                    value[propertyName] = value[propertyName].call(element);
+                    value[propertyName] = value[propertyName].call(actor);
                 }
 
                 splitProperty = valueType.split(value[propertyName]);
 
                 // Assign properties to each new value
                 for (key in splitProperty) {
-                    // Create new value if it doesn't exist
-                    splitValues[key] = splitValues[key] || utils.copy(valueTypesManager.defaultProps(value.type, key));
-                    splitValues[key][propertyName] = splitProperty[key];
+                    if (splitProperty.hasOwnProperty(key)) {
+                        // Create new value if it doesn't exist
+                        splitValues[key] = splitValues[key] || utils.copy(valueTypesManager.defaultProps(value.type, key));
+                        splitValues[key][propertyName] = splitProperty[key];
+                    }
                 }
             }
         }
@@ -158,15 +162,15 @@ module.exports = {
         @param [string]: Name of value
         @param [string || number || function]: Property
         @param [object]: Parent value
-        @param [Element]: Parent Element
+        @param [actor]: Parent actor
     */
-    resolve: function (name, property, value, element) {
+    resolve: function (name, property, value, actor) {
         var currentValue = value.current || 0,
             isNumericalValue = (numericalValues.indexOf(name) > -1);
 
         // If this is a function, resolve
         if (utils.isFunc(property)) {
-            property = property.call(element, currentValue);
+            property = property.call(actor, currentValue);
         }
 
         // If this is a string, check for relative values and units
@@ -191,9 +195,103 @@ module.exports = {
     },
 
     /*
+        Preprocess new values
+
+
+    */
+    preprocess: function (values, actor, route, suffix, defaultValueProp) {
+        var preprocessedValues = {},
+            value = {},
+            splitValue = {},
+            childValue = {},
+            type = {},
+            existingValue = {},
+            isValueObj = false,
+            key = '',
+            namespacedKey = '',
+            propKey = '';
+
+        for (key in values) {
+            if (values.hasOwnProperty(key)) {
+
+                isValueObj = utils.isObj(values[key]);
+                value = (isValueObj) ? values[key] : {};
+                namespacedKey = key + suffix;
+                existingValue = actor.values[namespacedKey];
+
+                if (isValueObj) {
+                    value[defaultValueProp] = values[key];
+                }
+
+                // If this value doesn't have a special type, check for one
+                if (!value.type && utils.isString(value[defaultValueProp])) {
+
+                    // Check if existing value with this key
+                    if (existingValue && existingValue.type) {
+                        value.type = existingValue.type;
+                    
+                    // Or if this route has a typemap
+                    } else if (route.typeMap && route.typeMap[key]) {
+                        value.type = route.typeMap[key];
+
+                    // Otherwise, check by running tests
+                    } else {
+                        value.type = valueTypesManager.test(value[defaultValueProp]);
+                    }
+                }
+
+                // Set value
+                preprocessValues[namespacedKey] = value;
+
+                // If process has type, split or assign default props
+                if (value.type) {
+                    type = valueTypesManager[value.type];
+
+                    // If this has a splitter function, split
+                    if (type.split) {
+                        value.children = {};
+                        splitValue = this.split(key, value, actor, type);
+
+                        for (propKey in splitValues) {
+                            if (splitValues.hasOwnProperty(propKey)) {
+                                childValue = utils.merge(value, splitValues[propKey]);
+                                childValue.parent = key + suffix;
+                                childValue.propName = propKey;
+                                delete childValue.type;
+                                delete childValue.children;
+
+                                preprocessedValues[key + propKey + suffix] = childValue;
+                            }
+                        }
+                    } else {
+                        preprocessedValues[namespacedKey] = utils.merge(valueTypesManager.defaultProps(value.type, key), value);
+                    }
+                }
+            }
+        }
+
+        return preprocessedValues;
+    }
+
+    /*
         Process new values
     */
-    process: function (values, element, namespace, defaultValueProp) {
+    process: function (values, actor, namespace, defaultValueProp) {
+        /*
+            1. Namespace suffix
+            2. Default value
+            3. Preprocess
+
+            4. Process
+        */
+        var route = routeManager[namespace],
+            namespaceSuffix = (namespace === 'values') ? '' : '.' + namespace,
+            preprocessedValues = this.preprocess(values, actor, route, namespaceSuffix, defaultValueProp);
+
+        defaultValueProp = defaultValueProp || 'current';
+
+
+
         var key = '',
             propKey = '',
             namespacedKey = '',
@@ -203,82 +301,30 @@ module.exports = {
             splitValues = {},
             childValue = {},
             thisValue = {},
-            elementValues = element.values,
+            actorValues = actor.values,
             hasChildren = false,
             valueType = {},
-            defaultProps = actionsManager[element.action].valueDefaults;
+            defaultProps = actionsManager[actor.action].valueDefaults;
 
         namespace = namespace || DEFAULT_NAMESPACE;
         defaultValueProp = defaultValueProp || 'current';
-
-        // Preprocess values to set
-        for (key in values) {
-            valueIsObj = utils.isObj(values[key]);
-            thisValue = valueIsObj ? values[key] : {};
-            namespacedKey = (namespace !== DEFAULT_NAMESPACE) ? key + '.' + namespace : key;
-
-            // If this value isn't an object already, set it to the default property
-            if (!valueIsObj) {
-                thisValue[defaultValueProp] = values[key];
-            }
-
-            // Check if value doesn't have a type property, check routeManager and auto detect
-            if (!thisValue.type) {
-                if (elementValues && elementValues[namespacedKey] && elementValues[namespacedKey].type) {
-                    thisValue.type = elementValues[namespacedKey].type;
-                } else if (routeManager[namespace].typeMap) {
-                    thisValue.type = routeManager[namespace].typeMap[key] || false;
-
-                // If this property key hasn't been mapped, and it's a string, run tests
-                } else if (utils.isString(thisValue[defaultValueProp])) {
-                    thisValue.type = valueTypesManager.test(thisValue[defaultValueProp]);
-                }
-            }
-
-            // Set value
-            processedValues[key] = thisValue;
-
-            // If this value has a type, split or assign default props
-            if (thisValue.type) {
-                valueType = valueTypesManager[thisValue.type];
-
-                // Split if this value type is a splitter
-                if (valueType.split) {
-                    thisValue.children = {};
-                    splitValues = this.split(key, thisValue, element, valueType);
-
-                    for (propKey in splitValues) {
-                        childValue = utils.merge(thisValue, splitValues[propKey]);
-                        childValue.parent = namespacedKey;
-                        childValue.propName = propKey;
-                        delete childValue.type;
-                        delete childValue.children;
-                        processedValues[key + propKey] = childValue;
-                    }
-
-                // Or just apply default props
-                } else {
-                    processedValues[key] = utils.merge(valueTypesManager.defaultProps(thisValue.type, key), thisValue);
-                }
-            }
-        }
 
         // Set preprocessed value
         for (key in processedValues) {
             namespacedKey = (namespace !== DEFAULT_NAMESPACE) ? key + '.' + namespace : key;
             processedValue = processedValues[key];
-            thisValue = elementValues[namespacedKey] || this.initialState(this.resolve('start', processedValue.start, {}, element), namespace);
+            thisValue = actorValues[namespacedKey] || this.initialState(this.resolve('start', processedValue.start, {}, actor), namespace);
             hasChildren = processedValue.children !== undefined;
 
-            // Inherit properties from Element
+            // Inherit properties from actor
             for (propKey in defaultProps) {
-                thisValue[propKey] = (element.hasOwnProperty(propKey)) ? element[propKey] : defaultProps[propKey];
+                thisValue[propKey] = (actor.hasOwnProperty(propKey)) ? actor[propKey] : defaultProps[propKey];
             }
 
             // Loop through all properties and set
             for (propKey in processedValue) {
                 if (processedValue[propKey] !== undefined && !isNum(processedValue[propKey]) && !hasChildren) {
-                    processedValue[propKey] = this.resolve(propKey, processedValue[propKey], thisValue, element);
+                    processedValue[propKey] = this.resolve(propKey, processedValue[propKey], thisValue, actor);
                 }
 
                 thisValue[propKey] = processedValue[propKey];
@@ -297,11 +343,11 @@ module.exports = {
             // Set hasRange to true if min and max are numbers
             thisValue.hasRange = (isNum(thisValue.min) && isNum(thisValue.max)) ? true  : false;
 
-            // Assign thisValue to elementValues[key]
-            elementValues[namespacedKey] = thisValue;
+            // Assign thisValue to actorValues[key]
+            actorValues[namespacedKey] = thisValue;
 
             // Update order
-            element.updateOrder(namespacedKey, utils.isString(thisValue.link), hasChildren);
+            actor.updateOrder(namespacedKey, utils.isString(thisValue.link), hasChildren);
         }
     }
 };

@@ -1,6 +1,7 @@
 "use strict";
 
 var calc = require('../../inc/calc'),
+    utils = require('../../inc/utils'),
     speedPerFrame = calc.speedPerFrame,
 
     ModManager = require('../../inc/ModManager'),

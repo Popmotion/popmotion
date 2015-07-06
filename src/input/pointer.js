@@ -21,7 +21,7 @@ var Input = require('./Input.js'),
         return {
             x: touchChanged ? touchChanged.clientX : event.pageX,
             y: touchChanged ? touchChanged.clientY : event.pageY
-        }
+        };
     },
     
     /*
