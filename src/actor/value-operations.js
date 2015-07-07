@@ -287,7 +287,7 @@ module.exports = {
             propKey = '',
             preprocessedValue = {},
             thisValue = {},
-            defaultProps = actionsManager[actor.action].valueDefaults,
+            defaultProps = {},
             hasChildren = false,
             prop;
 
@@ -296,6 +296,8 @@ module.exports = {
                 preprocessedValue = preprocessedValues[key];
                 thisValue = actor.values[key] || this.initialState(this.resolve('start', preprocessedValue.start, {}, actor), namespace);
                 hasChildren = (thisValue.children !== undefined);
+                thisValue.action = preprocessedValue.link ? 'link' : actor.action;
+                defaultProps = actionsManager[thisValue.action].valueDefaults;
 
                 // Inherit properties from Actor
                 for (propKey in defaultProps) {
