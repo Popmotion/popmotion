@@ -3,5 +3,6 @@ module.exports = {
     output: {
         path: __dirname,
         filename: 'redshift.global.js'
-    }
+    },
+    devtool: 'inline-source-map'
 };

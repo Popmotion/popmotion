@@ -49,7 +49,7 @@ actionManager.extend = function (name, mod) {
 
     // Merge value props with defaults
     mod.valueDefaults = mod.valueDefaults ? utils.merge(genericValueProps, mod.valueDefaults) : genericValueProps;
-    
+
     // Call parent extend method
     ModManager.prototype.extend.call(this, name, mod);
 };

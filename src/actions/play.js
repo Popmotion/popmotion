@@ -21,7 +21,7 @@ var calc = require('../inc/calc'),
         surpressMethod: true,
 
         // [object] Methods to add to Actor.prototype
-        actorMethods: require('./play/element-methods'),
+        actorMethods: require('./play/actor-methods'),
 
         /*
             Update Action elapsed time

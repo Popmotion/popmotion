@@ -265,7 +265,7 @@ Actor.prototype = {
 
 // Register Actor with actionManager, so when a new Action is set,
 // We get a new method on Actor
-actionManager.setActor(Element);
-actorTypeManager.setActor(Element);
+actionManager.setActor(Actor);
+actorTypeManager.setActor(Actor);
 
 module.exports = Actor;

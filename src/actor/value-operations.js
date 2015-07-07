@@ -196,8 +196,6 @@ module.exports = {
 
     /*
         Preprocess new values
-
-
     */
     preprocess: function (values, actor, route, suffix, defaultValueProp) {
         var preprocessedValues = {},
@@ -223,7 +221,7 @@ module.exports = {
 
                 value.name = key;
 
-                if (isValueObj) {
+                if (!isValueObj) {
                     value[defaultValueProp] = values[key];
                 }
 
@@ -328,5 +326,7 @@ module.exports = {
                 actor.updateOrder(key, utils.isString(thisValue.link), hasChildren);
             }
         }
+
+        console.log(actor.values);
     }
 };

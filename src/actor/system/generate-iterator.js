@@ -15,16 +15,16 @@ module.exports = function (method) {
             i = 0,
 			isGetter = false,
 			getterArray = [],
-			element,
-			elementReturn;
-			
-		for (; i < numElements; i++) {
-			element = this.members[i];
-			elementReturn = element[method].apply(element, arguments);
+			actor,
+			actorReturn;
 
-			if (elementReturn != element) {
+		for (; i < numElements; i++) {
+			actor = this.members[i];
+			actorReturn = actor[method].apply(actor, arguments);
+
+			if (actorReturn != actor) {
     			isGetter = true;
-    			getterArray.push(elementReturn);
+    			getterArray.push(actorReturn);
 			}
 		}
 		

@@ -23,11 +23,10 @@ actorTypeManager.extend = function (name, mod) {
     var methodName = '';
 
     for (methodName in mod) {
-        if (mod.hasOwnProperty(methodName) && !Actor.prototype[methodName]) {
+        if (mod.hasOwnProperty(methodName) && !Actor.prototype.hasOwnProperty(methodName)) {
             Actor.prototype[methodName] = generateFunction(methodName);
         }
     }
-
     // Call parent extend method
     ModManager.prototype.extend.call(this, name, mod);
 };
