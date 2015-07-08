@@ -195,7 +195,7 @@ module.exports = {
     },
 
     /*
-        Preprocess new values
+        Process new values
     */
     preprocess: function (values, actor, route, suffix, defaultValueProp) {
         var preprocessedValues = {},
@@ -295,24 +295,26 @@ module.exports = {
             if (preprocessedValues.hasOwnProperty(key)) {
                 preprocessedValue = preprocessedValues[key];
                 thisValue = actor.values[key] || this.initialState(this.resolve('start', preprocessedValue.start, {}, actor), namespace);
-                hasChildren = (thisValue.children !== undefined);
+                hasChildren = (preprocessedValue.children !== undefined);
 
                 // Inherit properties from Actor
                 for (propKey in defaultProps) {
                     if (defaultProps.hasOwnProperty(propKey)) {
-                        thisValue[propKey] = actor[propKey];
-                    } else {
-                        thisValue[propKey] = defaultProps[propKey];
+                        thisValue[propKey] = (actor.hasOwnProperty(propKey)) ? actor[propKey] : defaultProps[propKey];
                     }
                 }
 
                 // Loop through all properties and resolve
                 for (propKey in preprocessedValue) {
                     if (preprocessedValue.hasOwnProperty(propKey)) {
-                        prop = preprocessedValue[key];
+                        prop = preprocessedValue[propKey];
+                        // If property is *not* undefined or a number, resolve
+                        if (prop !== undefined && !isNum(prop) && !hasChildren) {
+                            prop = this.resolve(propKey, prop, thisValue, actor);
+                        }
 
-                        thisValue[propKey] = (!isNum(prop) && !hasChildren) ? this.resolve(propKey, prop, thisValue, actor) : prop;
-
+                        thisValue[propKey] = prop;
+                        // Set internal target if this property is 'to'
                         if (propKey === 'to') {
                             thisValue.target = thisValue.to;
                         }
@@ -328,5 +330,118 @@ module.exports = {
         }
 
         console.log(actor.values);
-    }
+    },
+/*
+
+    process: function (values, element, namespace, defaultValueProp) {
+        var key = '',
+            propKey = '',
+            namespacedKey = '',
+            valueIsObj = false,
+            processedValues = {},
+            processedValue = {},
+            splitValues = {},
+            childValue = {},
+            thisValue = {},
+            elementValues = element.values,
+            hasChildren = false,
+            valueType = {},
+            defaultProps = actionsManager[element.action].valueDefaults;
+var DEFAULT_NAMESPACE = 'values';
+        namespace = namespace || DEFAULT_NAMESPACE;
+        defaultValueProp = defaultValueProp || 'current';
+
+        // Preprocess values to set
+        for (key in values) {
+            valueIsObj = utils.isObj(values[key]);
+            thisValue = valueIsObj ? values[key] : {};
+            namespacedKey = (namespace !== DEFAULT_NAMESPACE) ? key + '.' + namespace : key;
+
+            // If this value isn't an object already, set it to the default property
+            if (!valueIsObj) {
+                thisValue[defaultValueProp] = values[key];
+            }
+
+            // Check if value doesn't have a type property, check routeManager and auto detect
+            if (!thisValue.type) {
+                if (elementValues && elementValues[namespacedKey] && elementValues[namespacedKey].type) {
+                    thisValue.type = elementValues[namespacedKey].type;
+                } else if (routeManager[namespace].typeMap) {
+                    thisValue.type = routeManager[namespace].typeMap[key] || false;
+
+                // If this property key hasn't been mapped, and it's a string, run tests
+                } else if (utils.isString(thisValue[defaultValueProp])) {
+                    thisValue.type = valueTypesManager.test(thisValue[defaultValueProp]);
+                }
+            }
+
+            // Set value
+            processedValues[key] = thisValue;
+
+            // If this value has a type, split or assign default props
+            if (thisValue.type) {
+                valueType = valueTypesManager[thisValue.type];
+
+                // Split if this value type is a splitter
+                if (valueType.split) {
+                    thisValue.children = {};
+                    splitValues = this.split(key, thisValue, element, valueType);
+
+                    for (propKey in splitValues) {
+                        childValue = utils.merge(thisValue, splitValues[propKey]);
+                        childValue.parent = namespacedKey;
+                        childValue.propName = propKey;
+                        delete childValue.type;
+                        delete childValue.children;
+                        processedValues[key + propKey] = childValue;
+                    }
+
+                // Or just apply default props
+                } else {
+                    processedValues[key] = utils.merge(valueTypesManager.defaultProps(thisValue.type, key), thisValue);
+                }
+            }
+        }
+console.log(processedValues);
+        // Set preprocessed value
+        for (key in processedValues) {
+            namespacedKey = (namespace !== DEFAULT_NAMESPACE) ? key + '.' + namespace : key;
+            processedValue = processedValues[key];
+            thisValue = elementValues[namespacedKey] || this.initialState(this.resolve('start', processedValue.start, {}, element), namespace);
+            hasChildren = processedValue.children !== undefined;
+
+            // Inherit properties from Element
+            for (propKey in defaultProps) {
+                thisValue[propKey] = (element.hasOwnProperty(propKey)) ? element[propKey] : defaultProps[propKey];
+            }
+
+            // Loop through all properties and set
+            for (propKey in processedValue) {
+                if (processedValue[propKey] !== undefined && !isNum(processedValue[propKey]) && !hasChildren) {
+                    processedValue[propKey] = this.resolve(propKey, processedValue[propKey], thisValue, element);
+                }
+
+                thisValue[propKey] = processedValue[propKey];
+
+                if (propKey === 'to') {
+                    thisValue.target = thisValue.to;
+                }
+            }
+
+            // Save non-namespaced key
+            thisValue.name = key;
+
+            // Set value origin
+            thisValue.origin = thisValue.current;
+
+            // Set hasRange to true if min and max are numbers
+            thisValue.hasRange = (isNum(thisValue.min) && isNum(thisValue.max)) ? true  : false;
+
+            // Assign thisValue to elementValues[key]
+            elementValues[namespacedKey] = thisValue;
+
+            // Update order
+            element.updateOrder(namespacedKey, utils.isString(thisValue.link), hasChildren);
+        }
+    }*/
 };
