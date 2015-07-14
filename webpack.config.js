@@ -4,5 +4,18 @@ module.exports = {
         path: __dirname,
         filename: 'redshift.global.js'
     },
+    module: {
+        loaders: [
+            {
+                test: /\.es6$/,
+                exclude: /node_modules/,
+                loader: "babel-loader",
+                query: {
+                    loose: "all",
+                    optional: ["runtime"]
+                }
+            }
+        ]
+    },
     devtool: 'inline-source-map'
 };
