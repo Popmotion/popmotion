@@ -58,8 +58,8 @@ actionManager.setActor = function (actor) {
     Actor = actor;
 };
 
-actionManager.setActorCollection = function (ActorCollection) {
-    ActorCollection = ActorCollection;
+actionManager.setActorCollection = function (actorCollection) {
+    ActorCollection = actorCollection;
 };
 
 module.exports = actionManager;

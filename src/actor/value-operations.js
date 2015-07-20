@@ -226,8 +226,7 @@ module.exports = {
                 }
 
                 // If this value doesn't have a special type, check for one
-                if (!value.type && utils.isString(value[defaultValueProp])) {
-
+                if (!value.type) {
                     // Check if existing value with this key
                     if (existingValue && existingValue.type) {
                         value.type = existingValue.type;
@@ -236,8 +235,8 @@ module.exports = {
                     } else if (route.typeMap && route.typeMap[key]) {
                         value.type = route.typeMap[key];
 
-                    // Otherwise, check by running tests
-                    } else {
+                    // Otherwise, check by running tests if this is a string
+                    } else if (utils.isString(value[defaultValueProp])) {
                         value.type = valueTypesManager.test(value[defaultValueProp]);
                     }
                 }

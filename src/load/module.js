@@ -23,8 +23,9 @@ popmotion
     /*
         Optional value type support
     */
-    .addValueType('px', require('../value-types/px'))
+    .addValueType('alpha', require('../value-types/alpha'))
     .addValueType('angle', require('../value-types/angle'))
+    .addValueType('px', require('../value-types/px'))
     .addValueType('hsl', require('../value-types/hsl'))
     .addValueType('rgb', require('../value-types/rgb'))
     .addValueType('hex', require('../value-types/hex'))

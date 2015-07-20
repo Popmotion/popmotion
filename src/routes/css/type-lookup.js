@@ -5,6 +5,7 @@ var COLOR = 'color',
     DIMENSIONS = 'dimensions',
     SHADOW = 'shadow',
     ANGLE = 'angle',
+    ALPHA = 'alpha',
     PX = 'px';
 
 module.exports = {
@@ -43,5 +44,7 @@ module.exports = {
     translateX: PX,
     translateY: PX,
     translateZ: PX,
-    perspective: PX
+    perspective: PX,
+
+    opacity: ALPHA
 };
