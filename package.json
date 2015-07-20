@@ -1,22 +1,22 @@
 {
-  "name": "cowabunga",
+  "name": "popmotion",
   "version": "0.0.1",
   "description": "A JavaScript UI framework. Handles animation, physics, and input tracking.",
-  "author": "Matt Perry <admin@redshiftjs.com>",
-  "homepage": "http://redshiftjs.com",
+  "author": "Matt Perry <sirhound@popmotion.io>",
+  "homepage": "http://popmotion.io",
   "main": "./src/load/module.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/InventingWithMonster/cowabunga"
+    "url": "https://github.com/InventingWithMonster/popmotion"
   },
   "bugs": {
-    "url": "https://github.com/InventingWithMonster/cowabunga/issues"
+    "url": "https://github.com/InventingWithMonster/popmotion/issues"
   },
   "keywords": [
     "animation",
     "ux",
     "ui",
-    "cowabunga",
+    "popmotion",
     "redshift",
     "canvas animation",
     "jquery animation",
