@@ -18,8 +18,6 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 - Add new simulation functions to `run` with `Redshift.newSimulation()`.
 - Any value can be a special **value type**, ie a color. `'#FFF'` splits into four numerical properties, `Red`, `Blue`, `Green` and `Alpha`.
 - Add new value types with `Redshift.addValueType()`.
-- Any Actor can be a special **actor type**, ie a DOM handler. 
-- Add new actor types with `Redshift.addActorType()`.
 - HSLA value type support.
 
 ## [2.1.1] 2015-06-11
