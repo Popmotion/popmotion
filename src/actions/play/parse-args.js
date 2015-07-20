@@ -4,7 +4,8 @@ var presetManager = require('../../actor/preset-manager'),
     utils = require('../../inc/utils'),
 
     parsePlaylist = function (args) {
-        var playlist = args[0].split(' '),
+        var args = [].slice.call(arguments),
+            playlist = args[0].split(' '),
             playlistLength = playlist.length,
             props = presetManager.getDefined(playlist[0]),
             i = 1;
