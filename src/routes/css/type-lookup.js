@@ -45,6 +45,5 @@ module.exports = {
     translateY: PX,
     translateZ: PX,
     perspective: PX,
-
     opacity: ALPHA
 };

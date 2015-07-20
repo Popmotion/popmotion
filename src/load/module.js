@@ -23,16 +23,18 @@ popmotion
     /*
         Optional value type support
     */
-    .addValueType('alpha', require('../value-types/alpha'))
-    .addValueType('angle', require('../value-types/angle'))
-    .addValueType('px', require('../value-types/px'))
-    .addValueType('hsl', require('../value-types/hsl'))
-    .addValueType('rgb', require('../value-types/rgb'))
-    .addValueType('hex', require('../value-types/hex'))
-    .addValueType('color', require('../value-types/color'))
-    .addValueType('positions', require('../value-types/positions'))
-    .addValueType('dimensions', require('../value-types/dimensions'))
-    .addValueType('shadow', require('../value-types/shadow'))
+    .addValueType({
+        alpha: require('../value-types/alpha'),
+        angle: require('../value-types/angle'),
+        px: require('../value-types/px'),
+        hsl: require('../value-types/hsl'),
+        rgb: require('../value-types/rgb'),
+        hex: require('../value-types/hex'),
+        color: require('../value-types/color'),
+        positions: require('../value-types/positions'),
+        dimensions: require('../value-types/dimensions'),
+        shadow: require('../value-types/shadow')
+    })
 
     /*
         DOM Element type and CSS/Attr route - dependent on core value types being present
