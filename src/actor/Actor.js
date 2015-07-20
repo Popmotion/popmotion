@@ -7,9 +7,8 @@ var Process = require('../process/Process'),
     valueOps = require('./value-operations'),
     actionManager = require('../actions/manager'),
     routeManager = require('../routes/manager'),
-    actorTypeManager = require('../actor-types/manager'),
 
-    Actor = function (element, options) {
+    Actor = function (element) {
         this.element = element || false;
         this.values = {};
         this.output = {};
@@ -17,15 +16,6 @@ var Process = require('../process/Process'),
         this.process = new Process(this, update);
 
         this.clearOrder();
-
-        if (options) {
-            this.type = options.type;
-        }
-
-        // Check if this element is a DOM node, set type to 'dom'
-        if (!this.type && this.element && this.element.nodeType) {
-            this.type = 'dom';
-        }
     };
 
 Actor.prototype = {
@@ -246,26 +236,11 @@ Actor.prototype = {
         }
 
         this._isActive = status;
-    },
-
-    // [ElementType]
-    get type() {
-        return this._type;
-    },
-
-    /*
-        Set ElementType
-
-        @param [string]: Name of new element
-    */
-    set type(type) {
-        this._type = actorTypeManager[type];
     }
 };
 
 // Register Actor with actionManager, so when a new Action is set,
 // We get a new method on Actor
 actionManager.setActor(Actor);
-actorTypeManager.setActor(Actor);
 
 module.exports = Actor;

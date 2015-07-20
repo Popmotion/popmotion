@@ -3,7 +3,7 @@
 var presetManager = require('../../actor/preset-manager'),
     utils = require('../../inc/utils'),
 
-    parsePlaylist = function (args) {
+    parsePlaylist = function () {
         var args = [].slice.call(arguments),
             playlist = args[0].split(' '),
             playlistLength = playlist.length,

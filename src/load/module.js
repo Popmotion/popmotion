@@ -37,9 +37,8 @@ popmotion
     })
 
     /*
-        DOM Element type and CSS/Attr route - dependent on core value types being present
+        CSS/Attr route - dependent on core value types being present
     */
-    .addActorType('dom', require('../actor-types/dom'))
     .addRoute('css', require('../routes/css'))
     .addRoute('attr', require('../routes/attr'))
 
