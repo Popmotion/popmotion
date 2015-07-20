@@ -1,8 +1,8 @@
 "use strict";
 
-var Cowabunga = require('../cowabunga');
+var Popmotion = require('../Popmotion');
 
-Cowabunga
+Popmotion
     /*
         Core Cowabunga route
     */
@@ -45,4 +45,4 @@ Cowabunga
     */
     .addRoute('path', require('../routes/path'));
 
-module.exports = Cowabunga;
+module.exports = Popmotion;

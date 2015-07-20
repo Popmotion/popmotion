@@ -1,8 +1,8 @@
-# Cowabunga
+# Popmotion
 
 ## Anything in, anywhere out
 
-Cowabunga is a 12kb JavaScript UX framework. Use it for for animation, physics, and input tracking. In the browser, on Node, anywhere.
+Popmotion is a 12kb JavaScript UX framework. Use it for for animation, physics, and input tracking. In the browser, on Node, anywhere.
 
 [Download](http://redshiftjs.com/download) | [API](http://redshiftjs.com/api) | [Guides](http://redshiftjs.com/guides/get-started) | [Twitter](http://twitter.com/redshiftjs)
 
@@ -30,4 +30,4 @@ Cowabunga is a 12kb JavaScript UX framework. Use it for for animation, physics, 
 
 
 [Get started](http://redshiftjs.com/guides/get-started)
-[Cowabunga vs Velocity.js vs Greensock feature comparison](http://redshiftjs.com/guides/feature-comparison)
+[Popmotion vs Velocity.js vs Greensock feature comparison](http://redshiftjs.com/guides/feature-comparison)
