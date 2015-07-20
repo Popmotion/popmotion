@@ -27,27 +27,31 @@ ActorCollection.prototype = {
     stagger: function (method, duration, props, ease) {
         var self = this,
             numMembers = this.members.length,
-            i = -1;
+            i = -1,
+            targetIndex = numMembers - 1;
 
         this._stagger = this._stagger || new Actor();
         duration = duration || 250;
         ease = ease || 'linear';
 
-        this._stagger.stop().play({
+        this._stagger.play({
             values: {
                 i: {
-                    current: i,
-                    to: numMembers - 1
+                    current: 0,
+                    to: targetIndex
                 }
             },
+            duration: 1000,
+            ease: ease,
             round: true,
+            steps: numMembers,
             onChange: function (output) {
                 var newIndex = output.i;
-                
+
                 // If our new index is only one more than the last
                 if (newIndex === i + 1) {
                     self.members[newIndex][method](props);
-                    
+
                 // Or it's more than one more than the last, so fire all indecies
                 } else {
                     for (var index = i + 1; index <= newIndex; index++) {
@@ -57,7 +61,7 @@ ActorCollection.prototype = {
 
                 i = newIndex;
             }
-        }, duration * numMembers, ease);
+        });
 
         return this;
     },

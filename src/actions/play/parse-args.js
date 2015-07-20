@@ -41,7 +41,7 @@ module.exports = function () {
                 break;
             // Easing
             case 'string':
-                props.ease = props[i];
+                props.ease = args[i];
                 break;
         }
     }
