@@ -1,12 +1,12 @@
-var Popmotion = require('./module.js'),
-    UIref = window.UI;
+var popmotion = require('./module.js'),
+    UIref = window.ui;
 
-window.UI = window.Popmotion = Popmotion;
+window.ui = window.popmotion = popmotion;
 
 /*
     If noConflict is run, the original reference to window.UI is
     restored and Popmotion is loaded to window.Popmotion
 */
-window.UI.noConflict = function () {
-    window.UI = UIref;
+window.ui.noConflict = function () {
+    window.ui = UIref;
 };
