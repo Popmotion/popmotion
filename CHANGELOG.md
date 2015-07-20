@@ -1,12 +1,13 @@
 # Change log
 
-Redshift adheres to [Semantic Versioning](http://semver.org/). Change log added v1.4.0.
+Cowabunga adheres to [Semantic Versioning](http://semver.org/).
 
-## [3.0.0] Unreleased
+## [0.0.1] Unreleased
 
-**Note:** This is a major, final, API revision with semantic changes.
+**Note:** Forked from Redshift v2.1.1.
 
 ### Changed
+- `redshift` object name now `UI`.
 - Terminology changes to fix API semantics:
     - **Action:** Actor
     - **ActionGroup:** ActionGroup
@@ -20,16 +21,6 @@ Redshift adheres to [Semantic Versioning](http://semver.org/). Change log added 
 - Any Actor can be a special **actor type**, ie a DOM handler. 
 - Add new actor types with `Redshift.addActorType()`.
 - HSLA value type support.
-
-### Deprecated (to be removed in 4.0.0)
-- `redshift` -> Use `Redshift`
-- `redshift.newAction()` -> Use `new Redshift.Actor()`
-- `redshift.newActionGroup()` -> Use `new Redshift.ActorGroup()`
-- `redshift.newInput()` -> Use `new Redshift.Input()`
-- `redshift.newProcess()` -> Use `new Redshift.Process()`
-- `redshift.addBezier()` -> Use `Redshift.addEasing()`
-- `redshift.addRubix()` -> Use `Redshift.addAction()`
-- `redshift.dom()` -> Use `Redshift.select()`
 
 ## [2.1.1] 2015-06-11
 

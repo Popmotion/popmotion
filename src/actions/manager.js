@@ -1,7 +1,7 @@
 "use strict";
 
 var Actor,
-    ActorGroup,
+    ActorCollection,
     utils = require('../inc/utils'),
     generateMethodIterator = require('../actor/system/generate-iterator'),
     genericActionProps = require('./generic/default-action-props'),
@@ -31,7 +31,7 @@ actionManager.extend = function (name, mod) {
             return this.start();
         };
 
-        ActorGroup.prototype[name] = generateMethodIterator(name);
+        ActorCollection.prototype[name] = generateMethodIterator(name);
     }
 
     // If module has methods to add to Element.prototype
@@ -39,7 +39,7 @@ actionManager.extend = function (name, mod) {
         for (methodName in mod.actorMethods) {
             if (mod.actorMethods.hasOwnProperty(methodName)) {
                 Actor.prototype[methodName] = mod.actorMethods[methodName];
-                ActorGroup.prototype[methodName] = generateMethodIterator(methodName);
+                ActorCollection.prototype[methodName] = generateMethodIterator(methodName);
             }
         }
     }
@@ -58,8 +58,8 @@ actionManager.setActor = function (actor) {
     Actor = actor;
 };
 
-actionManager.setActorGroup = function (actorGroup) {
-    ActorGroup = actorGroup;
+actionManager.setActorCollection = function (ActorCollection) {
+    ActorCollection = ActorCollection;
 };
 
 module.exports = actionManager;

@@ -1,14 +1,14 @@
 "use strict";
 
-var Redshift = require('../redshift');
+var Cowabunga = require('../cowabunga');
 
-Redshift
+Cowabunga
     /*
-        Core Redshift route
+        Core Cowabunga route
     */
     .addRoute('values', require('../routes/values'))
     /*
-        Core Redshift Actions
+        Core Cowabunga Actions
     */
     .addAction('play', require('../actions/play'))
     .addAction('run', require('../actions/run'))
@@ -45,4 +45,4 @@ Redshift
     */
     .addRoute('path', require('../routes/path'));
 
-module.exports = Redshift;
+module.exports = Cowabunga;

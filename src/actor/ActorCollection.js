@@ -9,12 +9,12 @@ var Actor = require('./Actor'),
 
         @param [array]: Array of Elements, or valid Element subjects
     */
-    ActorGroup = function (members, options) {
+    ActorCollection = function (members, options) {
         this.members = [];
         this.add(members, options);
     };
 
-ActorGroup.prototype = {
+ActorCollection.prototype = {
 
     /*
         Stagger the execution of Element methods
@@ -81,17 +81,15 @@ ActorGroup.prototype = {
     }
 };
 
-// Initialise Element System methods
+// Initialise ActorCollection methods
 (function () {
     for (var method in Actor.prototype) {
         if (Actor.prototype.hasOwnProperty(method)) {
-            ActorGroup.prototype[method] = generateMethodIterator(method);
+            ActorCollection.prototype[method] = generateMethodIterator(method);
         }
     }
 })();
 
-// Register Element with actionManager, so when a new Action is set,
-// We get a new method on Element
-actionManager.setActorGroup(ActorGroup);
+actionManager.setActorCollection(ActorCollection);
 
-module.exports = ActorGroup;
+module.exports = ActorCollection;
