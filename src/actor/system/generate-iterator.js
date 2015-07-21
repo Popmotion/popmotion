@@ -11,7 +11,7 @@
 */
 module.exports = function (method) {
 	return function () {
-        var numElements = this.members.length,
+        var numElements = this.elements.length,
             i = 0,
 			isGetter = false,
 			getterArray = [],
@@ -19,7 +19,7 @@ module.exports = function (method) {
 			actorReturn;
 
 		for (; i < numElements; i++) {
-			actor = this.members[i];
+			actor = this.elements[i];
 			actorReturn = actor[method].apply(actor, arguments);
 
 			if (actorReturn != actor) {

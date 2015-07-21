@@ -2,17 +2,22 @@
 
 var Actor = require('./Actor'),
     generateMethodIterator = require('./system/generate-iterator'),
+    utils = require('../inc/utils'),
     actionManager = require('../actions/manager'),
     routeManager = require('../routes/manager'),
 
     /*
-        ElementSystem constructor
+        ActorCollection constructor
 
-        @param [array]: Array of Elements, or valid Element subjects
+        @param [array]: Array of Actors, or valid Actor elements
     */
-    ActorCollection = function (members, options) {
-        this.members = [];
-        this.add(members, options);
+    ActorCollection = function (elements, options) {
+        // Add initial elements
+        this.elements = [];
+        this.add(elements, options);
+
+        // Create stagger Actor
+        this._stagger = new Actor();
     };
 
 ActorCollection.prototype = {
@@ -20,66 +25,70 @@ ActorCollection.prototype = {
     /*
         Stagger the execution of Element methods
 
-        @param [string]: Name of method to execute
-        @param [number] (optional): Duration between Elements
-        @param [object] (optional): Properties to pass to method
-        @param [string] (optional): Ease over stagger
+        @param [number || object]: Interval between Elements or stagger options
+        @param [string || function]: Name of method to execute or a callback
+        @args ... (optional): Optional arguments to send to callback
     */
-    stagger: function (method, duration, props, ease) {
+    stagger: function (props, method) {
         var self = this,
-            numMembers = this.members.length,
-            i = -1,
-            targetIndex = numMembers - 1;
+            args = [].slice.call(arguments),
+            numElements = this.elements.length,
+            propsIsNum = utils.isNum(props),
+            interval = propsIsNum ? props : props.interval,
+            staggerProps = propsIsNum ? {} : props,
+            i = -1;
 
-        this._stagger = this._stagger || new Actor();
-        duration = duration || 250;
-        ease = ease || 'linear';
+        args.splice(0, 2);
 
-        this._stagger.play({
-            values: {
-                i: {
-                    current: 0,
-                    to: targetIndex
-                }
-            },
-            duration: 1000,
-            ease: ease,
-            round: true,
-            steps: numMembers,
-            onChange: function (output) {
-                var newIndex = output.i;
-
-                // If our new index is only one more than the last
-                if (newIndex === i + 1) {
-                    self.members[newIndex][method](props);
-
-                // Or it's more than one more than the last, so fire all indecies
-                } else {
-                    for (var index = i + 1; index <= newIndex; index++) {
-                        self.members[index][method](props);
-                    }
-                }
-
-                i = newIndex;
+        staggerProps.values = {
+            i: {
+                current: 0,
+                duration: interval * numElements,
+                ease: propsIsNum ? 'linear' : props.ease,
+                round: true,
+                to: numElements - 1
             }
-        });
+        };
+
+        staggerProps.onChange = function (output) {
+            var newIndex = output.i,
+                actor,
+                gapIndex = i + 1;
+
+            // If our new index is only one more than the previous index, fire immedietly
+            if (newIndex === i + 1) {
+                actor = self.elements[newIndex];
+                actor[method].apply(actor, args);
+
+            // Or loop through the distance to fire all indecies. Increase delay.
+            } else {
+                for (; gapIndex <= newIndex; gapIndex++) {
+                    actor = self.elements[gapIndex];
+                    actor[method].apply(actor, args);
+                }
+            }
+
+            i = newIndex;
+        };
+
+        this._stagger.play(staggerProps);
 
         return this;
     },
 
     /*
-        Add a group of Actors to our System
+        Add a group of Actors to our Collection
 
-        @param [array]: Array of Actors, or valid Actor subjects
+        @param [array]: Array of Actors, or valid Actor elements
     */
-    add: function (members, options) {
-        var numNewMembers = members.length,
+    add: function (elements, options) {
+        var numNewElements = elements.length,
             i = 0,
-            newMember;
+            newElement;
 
-        for (; i < numNewMembers; i++) {
-            newMember = (members[i].prototype !== Actor.prototype) ? new Actor(members[i], options) : members[i];
-            this.members.push(newMember);
+        for (; i < numNewElements; i++) {
+            newElement = (elements[i].prototype !== Actor.prototype) ? new Actor(elements[i], options) : elements[i];
+            this.elements.push(newElement);
         }
 
         return this;

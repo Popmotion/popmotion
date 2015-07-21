@@ -18,11 +18,11 @@ module.exports = {
     },
 
     get: function (key) {
-        return styleDom(this.element, key);
+        return styleDom.get(this.element, key);
     },
 
     set: function (key, value) {
-        styleDom(this.element, key, value);
+        styleDom.set(this.element, key, value);
     }
     
 };
