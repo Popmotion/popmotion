@@ -36,7 +36,12 @@ ActorCollection.prototype = {
             propsIsNum = utils.isNum(props),
             interval = propsIsNum ? props : props.interval,
             staggerProps = propsIsNum ? {} : props,
-            i = -1;
+            i = -1,
+
+            callback = utils.isString(method) ?
+                function (actor, i) {
+                    actor[method].apply(actor, args);
+                } : method;
 
         args.splice(0, 2);
 
@@ -45,6 +50,7 @@ ActorCollection.prototype = {
                 current: 0,
                 duration: interval * numElements,
                 ease: propsIsNum ? 'linear' : props.ease,
+                steps: numElements,
                 round: true,
                 to: numElements - 1
             }
@@ -52,19 +58,16 @@ ActorCollection.prototype = {
 
         staggerProps.onChange = function (output) {
             var newIndex = output.i,
-                actor,
                 gapIndex = i + 1;
 
             // If our new index is only one more than the previous index, fire immedietly
             if (newIndex === i + 1) {
-                actor = self.elements[newIndex];
-                actor[method].apply(actor, args);
+                callback(self.elements[gapIndex], gapIndex);
 
             // Or loop through the distance to fire all indecies. Increase delay.
             } else {
                 for (; gapIndex <= newIndex; gapIndex++) {
-                    actor = self.elements[gapIndex];
-                    actor[method].apply(actor, args);
+                    callback(self.elements[gapIndex], gapIndex);
                 }
             }
 
