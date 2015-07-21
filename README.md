@@ -8,9 +8,9 @@ Popmotion is a 12kb JavaScript UX framework. Use it for for animation, physics, 
 
 ### Flexible
 * **Native DOM support:** CSS and DOM attribute support, out the box.
-* **Beat the curve:** Custom callbacks allow you output to any numerical property.
-* **Power anything:** Use with jQuery, Canvas, Three.js, WebSockets, etc...
-* **Seamless interactions:** Tracks every velocity for hand-off between input, animation and physics.
+* **Unlimited:** Custom callbacks allow you output to any numerical property.
+* **Power anything:** Use with jQuery, Canvas, Three.js, WebSockets, etc.
+* **Seamless interaction:** Tracks velocity for hand-off between input, animation and physics.
 * **Node support:** Run on a server or an Arduino to fuel the IoT.
 * **Open rAF loop:** Run any Process on the core requestAnimationFrame loop.
 
