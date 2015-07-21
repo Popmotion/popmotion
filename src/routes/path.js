@@ -14,7 +14,7 @@ module.exports = {
         stroke: 'color'
     },
 
-    onStart: function (output) {
+    onStart: function () {
         if (this.element) {
             this.pathLength = this.element.getTotalLength();
         }

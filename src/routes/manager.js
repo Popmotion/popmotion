@@ -1,6 +1,7 @@
 "use strict";
 
 var getterSetter = require('../inc/getter-setter'),
+    generateMethodIterator = require('../actor/system/generate-iterator'),
     ModManager = require('../inc/ModManager'),
     routeManager = new ModManager(),
     Actor,
@@ -13,7 +14,7 @@ routeManager.extend = function (name, mod) {
             getterSetter.call(this, key, value, mod.get, mod.set);
         };
 
-        ActorCollection.prototype[methodName] = generateMethodIterator(methodName);
+        ActorCollection.prototype[name] = generateMethodIterator(name);
     }
 
     // Call parent extend method

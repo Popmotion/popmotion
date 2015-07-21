@@ -13,8 +13,8 @@ module.exports = {
     typeMap: typeMap,
     
     onChange: function (output) {
-        actor[CSS_CACHE] = actor[CSS_CACHE] || {};
-        this.css(build(output, actor[CSS_CACHE]));
+        this[CSS_CACHE] = this[CSS_CACHE] || {};
+        this.css(build(output, this[CSS_CACHE]));
     },
 
     get: function (key) {
