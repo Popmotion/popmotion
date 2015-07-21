@@ -242,5 +242,6 @@ Actor.prototype = {
 // Register Actor with actionManager, so when a new Action is set,
 // We get a new method on Actor
 actionManager.setActor(Actor);
+routeManager.setActor(Actor);
 
 module.exports = Actor;

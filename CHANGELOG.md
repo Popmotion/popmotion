@@ -10,7 +10,7 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 - `redshift` object name now `UI`.
 - Terminology changes to fix API semantics:
     - **Action:** Actor
-    - **ActionGroup:** ActionGroup
+    - **ActionCollection:** ActionCollection
     - **Rubix:** Action (as in, an Action an Actor can perform)
 
 ### Added

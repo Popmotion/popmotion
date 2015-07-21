@@ -1,7 +1,24 @@
 "use strict";
 
-var ModManager = require('../inc/ModManager'),
-    routeManager = new ModManager();
+var getterSetter = require('../inc/getter-setter'),
+    ModManager = require('../inc/ModManager'),
+    routeManager = new ModManager(),
+    Actor,
+    ActorCollection;
+
+routeManager.extend = function (name, mod) {
+    // Generate getter/setter
+    if (mod.get && mod.set) {
+        Actor.prototype[name] = function (key, value) {
+            getterSetter.call(this, key, value, mod.get, mod.set);
+        };
+
+        ActorCollection.prototype[methodName] = generateMethodIterator(methodName);
+    }
+
+    // Call parent extend method
+    ModManager.prototype.extend.call(this, name, mod);
+};
 
 /*
     Shard function
@@ -27,6 +44,14 @@ routeManager.shard = function (callback, validRoutes) {
             callback(this[key], key, route);
         }
     }
+};
+
+routeManager.setActor = function (actor) {
+    Actor = actor;
+};
+
+routeManager.setActorCollection = function (actorCollection) {
+    ActorCollection = actorCollection;
 };
 
 module.exports = routeManager;

@@ -34,7 +34,7 @@ var actionManager = require('../actions/manager'),
         if (this.firstFrame) {
             routeManager.shard(function (route) {
                 if (route.onStart) {
-                    route.onStart(values, self);
+                    route.onStart.call(self, values);
                 }
             }, output);
         }
@@ -114,12 +114,12 @@ var actionManager = require('../actions/manager'),
 
             // Fire onFrame every frame
             if (route.onFrame) {
-                route.onFrame(routeOutput, self);
+                route.onFrame.call(self, routeOutput);
             }
 
             // Fire onChanged if any value has changed
             if (self.hasChanged && route.onChange || self.firstFrame && route.onChange) {
-                route.onChange(routeOutput, self);
+                route.onChange.call(self, routeOutput);
             }
 
         }, output);
@@ -130,7 +130,7 @@ var actionManager = require('../actions/manager'),
 
             routeManager.shard(function (route, routeName, routeOutput) {
                 if (route.onEnd) {
-                    route.onEnd(routeOutput, self);
+                    route.onEnd.call(self, routeOutput);
                 }
             }, output);
 

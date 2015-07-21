@@ -14,8 +14,8 @@ var valuesRoute = {},
     };
 
 ['onStart', 'onFrame', 'onChange', 'onEnd'].forEach(function (key) {
-    valuesRoute[key] = function (output, actor) {
-        fireCallback(key, output, actor);
+    valuesRoute[key] = function (output) {
+        fireCallback(key, output, this);
     };
 });
 

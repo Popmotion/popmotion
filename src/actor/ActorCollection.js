@@ -3,6 +3,7 @@
 var Actor = require('./Actor'),
     generateMethodIterator = require('./system/generate-iterator'),
     actionManager = require('../actions/manager'),
+    routeManager = require('../routes/manager'),
 
     /*
         ElementSystem constructor
@@ -95,5 +96,6 @@ ActorCollection.prototype = {
 })();
 
 actionManager.setActorCollection(ActorCollection);
+routeManager.setActorCollection(ActorCollection);
 
 module.exports = ActorCollection;

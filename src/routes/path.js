@@ -1,3 +1,9 @@
+/*
+    SVG Path route
+    ==============================================
+
+    Dependent on CSS Route
+*/
 "use strict";
 
 var createStyles = require('./path/build.js');
@@ -8,13 +14,13 @@ module.exports = {
         stroke: 'color'
     },
 
-    onStart: function (output, actor) {
-        if (actor.actor) {
-            actor.pathLength = actor.element.getTotalLength();
+    onStart: function (output) {
+        if (this.element) {
+            this.pathLength = this.element.getTotalLength();
         }
     },
     
-    onChange: function (output, actor) {
-        actor.style(createStyles(output, actor.pathLength));
+    onChange: function (output) {
+        this.css(createStyles(output, this.pathLength));
     }
 };

@@ -43,7 +43,7 @@ popmotion
     .addRoute('attr', require('../routes/attr'))
 
     /*
-        SVG route - dependent on DOM route
+        SVG route - dependent on DOM CSS route
     */
     .addRoute('path', require('../routes/path'));
 
