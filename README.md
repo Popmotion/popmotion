@@ -18,10 +18,9 @@ Popmotion is a 12kb JavaScript UX framework. Use it for for animation, physics, 
 #### Develop your own:
 * **Easing:** Easing functions and bezier curves.
 * **Physics:** Add new physics simulators.
-* **Element types:** Handle different types of element (DOM, Canvas shapes etc) with the same API.
-* **Value types:** Automatically split special values in child values (ie `"#000"` -> `{ Red: 0, Green: 0, Blue: 0, Alpha: 1 }`.
 * **Input:** Create custom Input interfaces for Oculus/Leap/anything.
-* **Value routes:** Output values of a certain type (ie attr, css) in a standardised way.
+* **Value routes:** Extend our CSS/Attr support with routes for Canvas, Three.js, Google Map Symbols or any standardised numerical property.
+* **Value types:** Automatically split special values in child values (ie `"#000"` -> `{ Red: 0, Green: 0, Blue: 0, Alpha: 1 }`.
 
 ### Peformant
 * Uses and exposes a single requestAnimationFrame thread that automatically winds down when not in use.
@@ -30,4 +29,5 @@ Popmotion is a 12kb JavaScript UX framework. Use it for for animation, physics, 
 
 
 [Get started](http://redshiftjs.com/guides/get-started)
+
 [Popmotion vs Velocity.js vs Greensock feature comparison](http://redshiftjs.com/guides/feature-comparison)
