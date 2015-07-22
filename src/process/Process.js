@@ -14,14 +14,10 @@ var manager = require('./manager'),
 
         this.callback = hasScope ? callback : scope;
         this.scope = hasScope ? scope : this;
-
-        this.id = manager.register(this);
+        this.id = manager.register();
 
         // [boolean]: Is this process currently active?
         this.isActive = false;
-
-        // [boolean]: Has this process been killed?
-        this.isKilled = false;
     };
 
 Process.prototype = {
@@ -53,7 +49,7 @@ Process.prototype = {
     */
     start: function (duration) {
         var self = this;
-        
+
         this.reset();
         this.activate();
         
@@ -86,10 +82,8 @@ Process.prototype = {
         @return [this]
     */
     activate: function () {
-        if (!this.isKilled) {
-            this.isActive = true;
-            manager.activate(this.id);
-        }
+        this.isActive = true;
+        manager.activate(this, this.id);
 
         return this;
     },
@@ -145,15 +139,6 @@ Process.prototype = {
         }
         
         return this;
-    },
-    
-    /*
-        Kill function in manager, release for garbage collection
-    */
-    kill: function () {
-        this.stop();
-        this.isKilled = true;
-        manager.kill(this.id);
     }
 };
 

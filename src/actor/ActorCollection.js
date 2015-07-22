@@ -6,6 +6,8 @@ var Actor = require('./Actor'),
     actionManager = require('../actions/manager'),
     routeManager = require('../routes/manager'),
 
+    DEFAULT_STAGGER_EASE = 'linear',
+
     /*
         ActorCollection constructor
 
@@ -13,14 +15,25 @@ var Actor = require('./Actor'),
     */
     ActorCollection = function (elements) {
         // Add initial elements
-        this.elements = [];
-        this.add(elements);
+        this.clear();
+
+        if (elements) {
+            this.add(elements);
+        }
 
         // Create stagger Actor
         this._stagger = new Actor();
     };
 
 ActorCollection.prototype = {
+
+    /*
+        Clear current Actors
+    */
+    clear: function () {
+        this.elements = [];
+        return this;
+    },
 
     /*
         Stagger the execution of Element methods
@@ -49,7 +62,7 @@ ActorCollection.prototype = {
             i: {
                 current: 0,
                 duration: interval * numElements,
-                ease: propsIsNum ? 'linear' : props.ease,
+                ease: propsIsNum ? DEFAULT_STAGGER_EASE : props.ease || DEFAULT_STAGGER_EASE,
                 steps: numElements,
                 round: true,
                 to: numElements - 1
@@ -90,7 +103,8 @@ ActorCollection.prototype = {
             newElement;
 
         for (; i < numNewElements; i++) {
-            newElement = (elements[i].prototype !== Actor.prototype) ? new Actor(elements[i]) : elements[i];
+            console.log;
+            newElement = (elements[i] instanceof Actor) ? elements[i] : new Actor(elements[i]);
             this.elements.push(newElement);
         }
 

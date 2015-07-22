@@ -2,8 +2,8 @@
 
 var theLoop = require('./loop.js'),
     ProcessManager = function () {
-        this.all = {};
-        this.active = [];
+        this.activeIds = [];
+        this.activeProcesses = {};
         this.deactivateQueue = [];
         theLoop.setCallback(this, this.fireActive);
     };
@@ -27,7 +27,7 @@ ProcessManager.prototype = {
         @return [Process]
     */
     getProcess: function (i) {
-        return this.all[i];
+        return this.activeProcesses[i];
     },
     
     /*
@@ -45,7 +45,7 @@ ProcessManager.prototype = {
         @return [array]: Active tokens
     */
     getActive: function () {
-        return this.active;
+        return this.activeIds;
     },
     
     /*
@@ -67,17 +67,18 @@ ProcessManager.prototype = {
     fireActive: function (framestamp, elapsed) {
         var process,
             activeCount = 0,
-            activeProcesses = [];
+            activeIds = [],
+            i = 0;
 
         // Purge and check active count before execution
         this.purge();
         activeCount = this.getActiveCount();
-        activeProcesses = this.getActive();
-        
+        activeIds = this.getActive();
+
         // Loop through active processes and fire callback
-        for (var i = 0; i < activeCount; i++) {
-            process = this.getProcess(activeProcesses[i]);
-            
+        for (; i < activeCount; i++) {
+            process = this.getProcess(activeIds[i]);
+
             if (process) {
                 process.fire(framestamp, elapsed);
             }
@@ -86,7 +87,8 @@ ProcessManager.prototype = {
         // Repurge and recheck active count after execution
         this.purge();
         activeCount = this.getActiveCount();
-        
+
+        // Return true if we still have active processes, or false if none
         return activeCount ? true : false;
     },
     
@@ -96,14 +98,8 @@ ProcessManager.prototype = {
         @param [Process]
         @return [int]: Index of process to be used as ID
     */
-    register: function (process) {
-        var id = this.processCounter;
-
-        this.all[id] = process;
-        
-        this.processCounter++;
-        
-        return id;
+    register: function () {
+        return this.processCounter++;
     },
     
     /*
@@ -111,21 +107,22 @@ ProcessManager.prototype = {
         
         @param [int]: Index of active process
     */
-    activate: function (i) {
+    activate: function (process, i) {
         var queueIndex = this.deactivateQueue.indexOf(i),
             isQueued = (queueIndex > -1),
-            isActive = (this.active.indexOf(i) > -1);
-        
+            isActive = (this.activeIds.indexOf(i) > -1);
+
         // Remove from deactivateQueue if in there
         if (isQueued) {
             this.deactivateQueue.splice(queueIndex, 1);
         }
-        
+
         // Add to active processes array if not already in there
         if (!isActive) {
-            this.active.push(i);
+            this.activeIds.push(i);
+            this.activeProcesses[i] = process;
             this.activeCount++;
-            theLoop.start(this);
+            theLoop.start();
         }
     },
     
@@ -142,27 +139,23 @@ ProcessManager.prototype = {
         Purge the deactivate queue
     */
     purge: function () {
-        var activeIndex,
-            queueLength = this.getQueueLength();
-        
+        var queueLength = this.getQueueLength(),
+            activeIdIndex = 0,
+            idToDelete = 0;
+
         while (queueLength--) {
-            activeIndex = this.active.indexOf(this.deactivateQueue[queueLength]);
-            
+            idToDelete = this.deactivateQueue[queueLength];
+            activeIdIndex = this.activeIds.indexOf(idToDelete);
+
             // If process in active list deactivate
-            if (activeIndex > -1) {
-                this.active.splice(activeIndex, 1);
+            if (activeIdIndex > -1) {
+                this.activeIds.splice(activeIdIndex, 1);
                 this.activeCount--;
+                delete this.activeProcesses[idToDelete];
             }
         }
         
         this.deactivateQueue = [];
-    },
-    
-    /*
-        Remove the provided id and reindex remaining processes
-    */
-    kill: function (id) {
-        delete this.all[id];
     }
     
 };
