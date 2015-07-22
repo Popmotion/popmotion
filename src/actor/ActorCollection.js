@@ -39,7 +39,7 @@ ActorCollection.prototype = {
             i = -1,
 
             callback = utils.isString(method) ?
-                function (actor, i) {
+                function (actor) {
                     actor[method].apply(actor, args);
                 } : method;
 
