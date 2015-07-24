@@ -15,7 +15,7 @@ module.exports = {
 
         // If there's an active Action, and its play, add to queue
         if (this.isActive && this.action === action) {
-            this.queue.add.apply(this.queue, arguments);
+            this.addToQueue.apply(this, arguments);
         
         // Else, start playing
         } else {
@@ -25,6 +25,13 @@ module.exports = {
         }
 
         return this;
+    },
+
+    /*
+        Add arguments to queue
+    */
+    addToQueue: function () {
+        this.queue.add.apply(this.queue, arguments);
     },
 
     /*
@@ -87,7 +94,7 @@ module.exports = {
     },
 
     /*
-        Next in playlist
+        Next in queue
     */
     playNext: function () {
         var stepTaken = false,
