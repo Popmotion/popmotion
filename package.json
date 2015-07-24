@@ -41,6 +41,7 @@
   "devDependencies": {
     "jshint": "^2.8.0",
     "jshint-loader": "^0.8.3",
+    "small": "^0.1.1",
     "webpack": "1.7.2"
   }
 }

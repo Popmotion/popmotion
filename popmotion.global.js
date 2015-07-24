@@ -2,7 +2,7 @@
 var exports = {};
 var popmotion = ((function() {
 var exports = {};
-var __small$_11 = (function() {
+var __small$_10 = (function() {
 var exports = {};
 exports = {
     defaultProps: {
@@ -11,7 +11,7 @@ exports = {
 };
 return exports;
 })();
-var __small$_36 = (function() {
+var __small$_29 = (function() {
 var exports = {};
 /*
     Utility functions
@@ -255,7 +255,7 @@ exports = {
 };
 return exports;
 })();
-var __small$_31 = (function() {
+var __small$_24 = (function() {
 var exports = {};
 /*
     Calculators
@@ -265,7 +265,7 @@ var exports = {};
 */
 "use strict";
 
-var utils = __small$_36,
+var utils = __small$_29,
 
     calc = {
         
@@ -638,7 +638,7 @@ exports = function (values, terms, delimiter, chop) {
 };
 return exports;
 })();
-var __small$_47 = (function() {
+var __small$_46 = (function() {
 var exports = {};
 exports = function (value, prefix) {
     return prefix + '(' + value + ')';
@@ -694,15 +694,15 @@ exports = function (value) {
 };
 return exports;
 })();
-var __small$_34 = (function() {
+var __small$_41 = (function() {
 var exports = {};
 /*
     Input controller
 */
 "use strict";
 
-var calc = __small$_31,
-    utils = __small$_36,
+var calc = __small$_24,
+    utils = __small$_29,
     History = ((function() {
 var exports = {};
 "use strict";
@@ -896,7 +896,7 @@ Input.prototype = {
 exports = Input;
 return exports;
 })();
-var __small$_60 = (function() {
+var __small$_57 = (function() {
 var exports = {};
 "use strict";
 
@@ -956,7 +956,7 @@ ModManager.prototype = {
 exports = ModManager;
 return exports;
 })();
-var __small$_26 = (function() {
+var __small$_27 = (function() {
 var exports = {};
 /*
     Easing functions
@@ -982,7 +982,7 @@ var exports = {};
 */
 "use strict";
 
-var calc = __small$_31,
+var calc = __small$_24,
     Bezier = ((function() {
 var exports = {};
 /*
@@ -1006,7 +1006,7 @@ var NEWTON_ITERATIONS = 8,
     SUBDIVISION_MAX_ITERATIONS = 10,
     K_SPLINE_TABLE_SIZE = 11,
     K_SAMPLE_STEP_SIZE = 1.0 / (K_SPLINE_TABLE_SIZE - 1.0),
-    FLOAT_32_SUPPORTED = 'Float32Array' in global,
+    FLOAT_32_SUPPORTED = (typeof Float32Array !== 'undefined'),
     
     a = function (a1, a2) {
         return 1.0 - 3.0 * a2 + 3.0 * a1;
@@ -1239,7 +1239,7 @@ return exports;
         };
     },
 
-    ModManager = __small$_60,
+    ModManager = __small$_57,
     easingManager = new ModManager();
 
 /*
@@ -1307,12 +1307,12 @@ for (var key in baseEasing) {
 exports = easingManager;
 return exports;
 })();
-var __small$_27 = (function() {
+var __small$_36 = (function() {
 var exports = {};
 "use strict";
 
-var utils = __small$_36,
-    ModManager = __small$_60,
+var utils = __small$_29,
+    ModManager = __small$_57,
     presetManager = new ModManager(),
 
     DOT = '.',
@@ -1356,15 +1356,34 @@ presetManager.getDefined = function (name) {
 exports = presetManager;
 return exports;
 })();
-var __small$_29 = (function() {
+var __small$_28 = (function() {
 var exports = {};
 "use strict";
 
-var calc = __small$_31,
-    utils = __small$_36,
+var presetManager = __small$_36,
+    utils = __small$_29;
+
+exports = function (base, override) {
+    var props = (typeof base === 'string') ? presetManager.getDefined(base) : base;
+
+    // Override properties with second arg if it's an object
+    if (typeof override === 'object') {
+        props = utils.merge(props, override);
+    }
+
+    return props;
+};
+return exports;
+})();
+var __small$_37 = (function() {
+var exports = {};
+"use strict";
+
+var calc = __small$_24,
+    utils = __small$_29,
     speedPerFrame = calc.speedPerFrame,
 
-    ModManager = __small$_60,
+    ModManager = __small$_57,
     simulationManager = new ModManager();
 
 /*
@@ -1452,25 +1471,6 @@ exports = simulationManager;
 
 return exports;
 })();
-var __small$_42 = (function() {
-var exports = {};
-"use strict";
-
-var presetManager = __small$_27,
-    utils = __small$_36;
-
-exports = function (base, override) {
-    var props = (typeof base === 'string') ? presetManager.getDefined(base) : base;
-
-    // Override properties with second arg if it's an object
-    if (typeof override === 'object') {
-        props = utils.merge(props, override);
-    }
-
-    return props;
-};
-return exports;
-})();
 var __small$_4 = (function() {
 var exports = {};
 /*
@@ -1480,9 +1480,9 @@ var exports = {};
 */
 "use strict";
 
-var calc = __small$_31,
-    utils = __small$_36,
-    easingManager = __small$_26,
+var calc = __small$_24,
+    utils = __small$_29,
+    easingManager = __small$_27,
 
     playAction = {
 
@@ -1549,8 +1549,8 @@ var parseArgs = ((function() {
 var exports = {};
 "use strict";
 
-var presetManager = __small$_27,
-    utils = __small$_36,
+var presetManager = __small$_36,
+    utils = __small$_29,
 
     parsePlaylist = function () {
         var args = [].slice.call(arguments),
@@ -1605,7 +1605,7 @@ exports = function () {
 
 return exports;
 })()),
-    utils = __small$_36;
+    utils = __small$_29;
 
 exports = {
     /*
@@ -1774,7 +1774,7 @@ exports = playAction;
 
 return exports;
 })();
-var __small$_46 = (function() {
+var __small$_47 = (function() {
 var exports = {};
 var splitCommaDelimited = ((function() {
 var exports = {};
@@ -1810,8 +1810,8 @@ var exports = {};
 "use strict";
 
 var createDelimited = __small$_45,
-    getColorValues = __small$_46,
-    functionCreate = __small$_47,
+    getColorValues = __small$_47,
+    functionCreate = __small$_46,
     defaultProps = __small$_48,
     terms = __small$_49.hsl;
 
@@ -1846,8 +1846,8 @@ var exports = {};
 "use strict";
 
 var createDelimited = __small$_45,
-    getColorValues = __small$_46,
-    functionCreate = __small$_47,
+    getColorValues = __small$_47,
+    functionCreate = __small$_46,
     defaultProps = __small$_48,
     colorDefaults = defaultProps.color,
     terms = __small$_49.colors;
@@ -1926,7 +1926,7 @@ var __small$_15 = (function() {
 var exports = {};
 "use strict";
 
-var utils = __small$_36,
+var utils = __small$_29,
     rgb = __small$_13,
     hsl = __small$_12,
     hex = __small$_14,
@@ -1963,7 +1963,36 @@ return exports;
 
 var popmotion = ((function() {
 var exports = {};
-var __small$_57 = (function() {
+var __small$_38 = (function() {
+var exports = {};
+"use strict";
+
+var ModManager = __small$_57,
+    valueTypeManager = new ModManager();
+
+valueTypeManager.defaultProps = function (type, key) {
+    var valueType = this[type],
+        defaultProps = (valueType.defaultProps) ? valueType.defaultProps[key] || valueType.defaultProps : {};
+
+    return defaultProps;
+};
+
+valueTypeManager.test = function (value) {
+    var type = false;
+
+    this.each(function (key, mod) {
+        if (mod.test && mod.test(value)) {
+            type = key;
+        }
+    });
+
+    return type;
+};
+
+exports = valueTypeManager;
+return exports;
+})();
+var __small$_59 = (function() {
 var exports = {};
 "use strict";
 
@@ -2001,14 +2030,14 @@ exports = function (method) {
 
 return exports;
 })();
-var __small$_25 = (function() {
+var __small$_34 = (function() {
 var exports = {};
 "use strict";
 
 var Actor,
     ActorCollection,
-    utils = __small$_36,
-    generateMethodIterator = __small$_57,
+    utils = __small$_29,
+    generateMethodIterator = __small$_59,
     genericActionProps = ((function() {
 var exports = {};
 exports = {
@@ -2057,20 +2086,20 @@ exports = {
 return exports;
 })()),
 
-    ModManager = __small$_60,
+    ModManager = __small$_57,
 
     actionManager = new ModManager();
 /*
     Add module to ActionManager
 
-    Creates a new Action for Elements
+    Creates a new Action for Actors
 */
 actionManager.extend = function (name, mod) {
     var methodName = '';
 
     /*
-        Generate new method for Elements if module doesn't have a
-        surpressMethod flag and Element doesn't already have a
+        Generate new method for Actors if module doesn't have a
+        surpressMethod flag and Actor doesn't already have a
         method with that name
     */
     if (!mod.surpressMethod && !Actor.prototype[name]) {
@@ -2084,7 +2113,7 @@ actionManager.extend = function (name, mod) {
         ActorCollection.prototype[name] = generateMethodIterator(name);
     }
 
-    // If module has methods to add to Element.prototype
+    // If module has methods to add to Actor.prototype
     if (mod.actorMethods) {
         for (methodName in mod.actorMethods) {
             if (mod.actorMethods.hasOwnProperty(methodName)) {
@@ -2116,36 +2145,7 @@ exports = actionManager;
 
 return exports;
 })();
-var __small$_30 = (function() {
-var exports = {};
-"use strict";
-
-var ModManager = __small$_60,
-    valueTypeManager = new ModManager();
-
-valueTypeManager.defaultProps = function (type, key) {
-    var valueType = this[type],
-        defaultProps = (valueType.defaultProps) ? valueType.defaultProps[key] || valueType.defaultProps : {};
-
-    return defaultProps;
-};
-
-valueTypeManager.test = function (value) {
-    var type = false;
-
-    this.each(function (key, mod) {
-        if (mod.test && mod.test(value)) {
-            type = key;
-        }
-    });
-
-    return type;
-};
-
-exports = valueTypeManager;
-return exports;
-})();
-var __small$_28 = (function() {
+var __small$_35 = (function() {
 var exports = {};
 "use strict";
 
@@ -2183,8 +2183,8 @@ exports = function (opts, prop, getter, setter) {
 };
 return exports;
 })()),
-    generateMethodIterator = __small$_57,
-    ModManager = __small$_60,
+    generateMethodIterator = __small$_59,
+    ModManager = __small$_57,
     routeManager = new ModManager(),
     Actor,
     ActorCollection;
@@ -2193,7 +2193,7 @@ routeManager.extend = function (name, mod) {
     // Generate getter/setter
     if (mod.get && mod.set) {
         Actor.prototype[name] = function (key, value) {
-            getterSetter.call(this, key, value, mod.get, mod.set);
+            return getterSetter.call(this, key, value, mod.get, mod.set);
         };
 
         ActorCollection.prototype[name] = generateMethodIterator(name);
@@ -2240,7 +2240,7 @@ routeManager.setActorCollection = function (actorCollection) {
 exports = routeManager;
 return exports;
 })();
-var __small$_35 = (function() {
+var __small$_42 = (function() {
 var exports = {};
 "use strict";
 
@@ -2259,7 +2259,7 @@ var Timer = ((function() {
 var exports = {};
 "use strict";
 
-var utils = __small$_36,
+var utils = __small$_29,
 
     maxElapsed = 33,
     Timer = function () {
@@ -2701,11 +2701,11 @@ Process.prototype = {
 exports = Process;
 return exports;
 })();
-var __small$_32 = (function() {
+var __small$_40 = (function() {
 var exports = {};
 "use strict";
 
-var Process = __small$_35,
+var Process = __small$_42,
     Queue = ((function() {
 var exports = {};
 "use strict";
@@ -2758,15 +2758,15 @@ Queue.prototype = {
 exports = Queue;
 return exports;
 })()),
-    utils = __small$_36,
+    utils = __small$_29,
     update = ((function() {
 var exports = {};
 "use strict";
 
-var actionManager = __small$_25,
-    routeManager = __small$_28,
-    valueTypeManager = __small$_30,
-    calc = __small$_31,
+var actionManager = __small$_34,
+    routeManager = __small$_35,
+    valueTypeManager = __small$_38,
+    calc = __small$_24,
 
     defaultRoute = 'values',
 
@@ -2920,12 +2920,12 @@ return exports;
 var exports = {};
 "use strict";
 
-var calc = __small$_31,
-    utils = __small$_36,
+var calc = __small$_24,
+    utils = __small$_29,
     isNum = utils.isNum,
-    actionsManager = __small$_25,
-    valueTypesManager = __small$_30,
-    routeManager = __small$_28,
+    actionsManager = __small$_34,
+    valueTypesManager = __small$_38,
+    routeManager = __small$_35,
 
     numericalValues = ['current', 'to', 'start', 'min', 'max'],
     numNumericalValues = numericalValues.length;
@@ -3253,8 +3253,8 @@ exports = {
 };
 return exports;
 })()),
-    actionManager = __small$_25,
-    routeManager = __small$_28,
+    actionManager = __small$_34,
+    routeManager = __small$_35,
 
     Actor = function (element) {
         this.element = element || false;
@@ -3495,15 +3495,15 @@ routeManager.setActor(Actor);
 exports = Actor;
 return exports;
 })();
-var __small$_33 = (function() {
+var __small$_39 = (function() {
 var exports = {};
 "use strict";
 
-var Actor = __small$_32,
-    generateMethodIterator = __small$_57,
-    utils = __small$_36,
-    actionManager = __small$_25,
-    routeManager = __small$_28,
+var Actor = __small$_40,
+    generateMethodIterator = __small$_59,
+    utils = __small$_29,
+    actionManager = __small$_34,
+    routeManager = __small$_35,
 
     DEFAULT_STAGGER_EASE = 'linear',
 
@@ -3602,7 +3602,6 @@ ActorCollection.prototype = {
             newElement;
 
         for (; i < numNewElements; i++) {
-            console.log;
             newElement = (elements[i] instanceof Actor) ? elements[i] : new Actor(elements[i]);
             this.elements.push(newElement);
         }
@@ -3632,7 +3631,7 @@ var select = ((function() {
 var exports = {};
 "use strict";
 
-var ActorCollection = __small$_33;
+var ActorCollection = __small$_39;
 
 /*
     Create an ActorCollection based on a selection of DOM nodes
@@ -3662,18 +3661,18 @@ exports = function (selector) {
 };
 return exports;
 })()),
-    actionManager = __small$_25,
-    easingManager = __small$_26,
-    presetManager = __small$_27,
-    routeManager = __small$_28,
-    simulationManager = __small$_29,
-    valueTypeManager = __small$_30,
-    calc = __small$_31,
+    actionManager = __small$_34,
+    easingManager = __small$_27,
+    presetManager = __small$_36,
+    routeManager = __small$_35,
+    simulationManager = __small$_37,
+    valueTypeManager = __small$_38,
+    calc = __small$_24,
 
-    Actor = __small$_32,
-    ActorCollection = __small$_33,
-    Input = __small$_34,
-    Process = __small$_35,
+    Actor = __small$_40,
+    ActorCollection = __small$_39,
+    Input = __small$_41,
+    Process = __small$_42,
 
     Popmotion = {
 
@@ -3767,12 +3766,12 @@ var exports = {};
 */
 "use strict";
 
-var calc = __small$_31,
+var calc = __small$_24,
     simulate = ((function() {
 var exports = {};
 "use strict";
 
-var simulations = __small$_29;
+var simulations = __small$_37;
 
 exports = function (simulation, value, duration, started) {
     var velocity = simulations[simulation](value, duration, started);
@@ -3832,7 +3831,7 @@ exports = {
 return exports;
 })()),
 
-    parse: __small$_42,
+    parse: __small$_28,
 
     // [boolean]: Tell Redshift this rubix calculates a new velocity itself
     calculatesVelocity: true,
@@ -3904,7 +3903,7 @@ var exports = {};
 
 exports = {
 
-    parse: __small$_42,
+    parse: __small$_28,
 
    /*
         Process new value
@@ -3938,13 +3937,13 @@ var exports = {};
 */
 "use strict";
 
-var calc = __small$_31,
-    genericParser = __small$_42,
+var calc = __small$_24,
+    genericParser = __small$_28,
     Pointer = ((function() {
 var exports = {};
 "use strict";
 
-var Input = __small$_34,
+var Input = __small$_41,
     currentPointer, // Sort this out for multitouch
     
     TOUCHMOVE = 'touchmove',
@@ -4171,7 +4170,7 @@ exports = {
 };
 return exports;
 })()),
-        px: __small$_11,
+        px: __small$_10,
         hsl: __small$_12,
         rgb: __small$_13,
         hex: __small$_14,
@@ -4181,7 +4180,7 @@ var exports = {};
 "use strict";
 
 var createDelimited = __small$_45,
-    pxDefaults = __small$_11.defaultProps,
+    pxDefaults = __small$_10.defaultProps,
     splitSpaceDelimited = __small$_50,
     terms = __small$_49.positions;
 
@@ -4223,7 +4222,7 @@ var exports = {};
 "use strict";
 
 var terms = __small$_49.dimensions,
-    pxDefaults = __small$_11.defaultProps,
+    pxDefaults = __small$_10.defaultProps,
     createDelimited = __small$_45,
     splitSpaceDelimited = __small$_50;
 
@@ -4272,8 +4271,8 @@ var exports = {};
 "use strict";
 
 var color = __small$_15,
-    utils = __small$_36,
-    pxDefaults = __small$_11.defaultProps,
+    utils = __small$_29,
+    pxDefaults = __small$_10.defaultProps,
     terms = __small$_49.shadow,
     splitSpaceDelimited = __small$_50,
     createDelimited = __small$_45,
@@ -4673,7 +4672,7 @@ exports = function (props, pathLength) {
     if (hasArray) {
         pathStyles[lookup.length] = arrayStyles.length + ' ' + arrayStyles.spacing;
     }
-console.log(pathStyles);
+
     return pathStyles;
 };
 return exports;

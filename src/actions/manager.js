@@ -13,14 +13,14 @@ var Actor,
 /*
     Add module to ActionManager
 
-    Creates a new Action for Elements
+    Creates a new Action for Actors
 */
 actionManager.extend = function (name, mod) {
     var methodName = '';
 
     /*
-        Generate new method for Elements if module doesn't have a
-        surpressMethod flag and Element doesn't already have a
+        Generate new method for Actors if module doesn't have a
+        surpressMethod flag and Actor doesn't already have a
         method with that name
     */
     if (!mod.surpressMethod && !Actor.prototype[name]) {
@@ -34,7 +34,7 @@ actionManager.extend = function (name, mod) {
         ActorCollection.prototype[name] = generateMethodIterator(name);
     }
 
-    // If module has methods to add to Element.prototype
+    // If module has methods to add to Actor.prototype
     if (mod.actorMethods) {
         for (methodName in mod.actorMethods) {
             if (mod.actorMethods.hasOwnProperty(methodName)) {

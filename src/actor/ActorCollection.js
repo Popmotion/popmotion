@@ -103,7 +103,6 @@ ActorCollection.prototype = {
             newElement;
 
         for (; i < numNewElements; i++) {
-            console.log;
             newElement = (elements[i] instanceof Actor) ? elements[i] : new Actor(elements[i]);
             this.elements.push(newElement);
         }

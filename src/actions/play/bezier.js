@@ -19,7 +19,7 @@ var NEWTON_ITERATIONS = 8,
     SUBDIVISION_MAX_ITERATIONS = 10,
     K_SPLINE_TABLE_SIZE = 11,
     K_SAMPLE_STEP_SIZE = 1.0 / (K_SPLINE_TABLE_SIZE - 1.0),
-    FLOAT_32_SUPPORTED = 'Float32Array' in global,
+    FLOAT_32_SUPPORTED = (typeof Float32Array !== 'undefined'),
     
     a = function (a1, a2) {
         return 1.0 - 3.0 * a2 + 3.0 * a1;

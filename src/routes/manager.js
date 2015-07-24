@@ -11,7 +11,7 @@ routeManager.extend = function (name, mod) {
     // Generate getter/setter
     if (mod.get && mod.set) {
         Actor.prototype[name] = function (key, value) {
-            getterSetter.call(this, key, value, mod.get, mod.set);
+            return getterSetter.call(this, key, value, mod.get, mod.set);
         };
 
         ActorCollection.prototype[name] = generateMethodIterator(name);
