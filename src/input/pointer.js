@@ -1,6 +1,6 @@
 "use strict";
 
-var Input = require('./input.js'),
+var Input = require('./Input.js'),
     currentPointer, // Sort this out for multitouch
     
     TOUCHMOVE = 'touchmove',
@@ -21,7 +21,7 @@ var Input = require('./input.js'),
         return {
             x: touchChanged ? touchChanged.clientX : event.pageX,
             y: touchChanged ? touchChanged.clientY : event.pageY
-        }
+        };
     },
     
     /*

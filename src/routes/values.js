@@ -5,32 +5,18 @@
 */
 "use strict";
 
-var fireCallback = function (name, bucket, action) {
-        if (action[name]) {
-            action[name].call(action.scope, bucket);
+var valuesRoute = {},
+
+    fireCallback = function (name, output, actor) {
+        if (actor[name]) {
+            actor[name].call(actor, output);
         }
     };
 
-module.exports = {
-    
-    makeDefault: true,
-    
-    onStart: function (bucket, action) {
-        if (action.onStart) {
-            action.onStart.call(action.scope);
-        }
-    },
-    
-    onFrame: function (bucket, action, values) {
-        fireCallback('onFrame', bucket, action, values);
-    },
-    
-    onChange: function (bucket, action, values) {
-        fireCallback('onChange', bucket, action, values);
-    },
-    
-    onEnd: function (bucket, action, values) {
-        fireCallback('onEnd', bucket, action, values);
-    }
-    
-};
+['onStart', 'onFrame', 'onChange', 'onEnd'].forEach(function (key) {
+    valuesRoute[key] = function (output) {
+        fireCallback(key, output, this);
+    };
+});
+
+module.exports = valuesRoute;

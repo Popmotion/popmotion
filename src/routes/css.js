@@ -1,24 +1,28 @@
+/*
+    DOM CSS route
+    ==============================================
+*/
 "use strict";
 
-var build = require('./css/build.js'),
-    split = require('./css/split.js'),
-    
-    css = 'css',
-    cssOrder = css + 'Order',
-    cssCache = css + 'Cache';
+var build = require('./css/build'),
+    styleDom = require('./css/style-dom'),
+    typeMap = require('./css/type-lookup'),
+    CSS_CACHE = '_cssCache';
 
 module.exports = {
-    preprocess: function (key, value, action) {
-        var values = split(key, value, action);
-        
-        action.updateOrder(key, false, cssOrder);
-        
-        return values;
-    },
+    typeMap: typeMap,
     
-    onChange: function (output, action, values) {
-        action[cssCache] = action[cssCache] || {};
-        action.style(build(output, action[cssOrder],  action[cssCache], values));
+    onChange: function (output) {
+        this[CSS_CACHE] = this[CSS_CACHE] || {};
+        this.css(build(output, this[CSS_CACHE]));
+    },
+
+    get: function (key) {
+        return styleDom.get(this.element, key);
+    },
+
+    set: function (key, value) {
+        styleDom.set(this.element, key, value);
     }
     
 };

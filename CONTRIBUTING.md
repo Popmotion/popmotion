@@ -2,7 +2,7 @@
 
 ## Team members (plural not plural)
 
-- Matt Perry [mailto:admin@redshiftjs.com](admin@redshiftjs.com)
+- Matt Perry [mailto:sirhound@popmotion.io](sirhound@popmotion.io)
 
 ## Learn
 

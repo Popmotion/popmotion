@@ -1,16 +1,26 @@
+/*
+    SVG Path route
+    ==============================================
+
+    Dependent on CSS Route
+*/
 "use strict";
 
-var createStyles = require('./path/builder.js');
+var createStyles = require('./path/build.js');
 
 module.exports = {
 
-    onStart: function (bucket, action) {
-        if (action.dom) {
-            action.pathLength = action.dom.getTotalLength();
+    typeMap: {
+        stroke: 'color'
+    },
+
+    onStart: function () {
+        if (this.element) {
+            this.pathLength = this.element.getTotalLength();
         }
     },
     
-    onChange: function (output, action) {
-        action.style(createStyles(output, action.pathLength));
+    onChange: function (output) {
+        this.css(createStyles(output, this.pathLength));
     }
 };
