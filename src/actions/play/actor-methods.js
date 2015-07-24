@@ -32,6 +32,7 @@ module.exports = {
     */
     addToQueue: function () {
         this.queue.add.apply(this.queue, arguments);
+        return this;
     },
 
     /*
