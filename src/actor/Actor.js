@@ -110,7 +110,6 @@ Actor.prototype = {
 
     reset: function () {
         this.resetProgress();
-        valueOps.all('reset', this.values);
         return this;
     },
     
