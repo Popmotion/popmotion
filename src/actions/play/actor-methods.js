@@ -103,7 +103,7 @@ module.exports = {
 
         if (utils.isArray(nextInQueue)) {
             this.set(parseArgs.apply(this, nextInQueue), 'to')
-                .reset();
+                .resetProgress();
 
             stepTaken = true;
         }

@@ -32,6 +32,16 @@ module.exports = {
     },
 
     /*
+        Reset the value current to its origin
+
+        @param [object]: Value object
+    */
+    reset: function (value) {
+        this.retarget(value);
+        value.current = value.origin;
+    },
+
+    /*
         Set value origin property to current value
         
         @param [object]: Value object
