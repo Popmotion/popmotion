@@ -4,16 +4,17 @@ var popmotion = require('../popmotion');
 
 popmotion
     /*
-        Core Cowabunga route
+        Core route
     */
     .addRoute('values', require('../routes/values'))
     /*
-        Core Cowabunga Actions
+        Core Actions
     */
     .addAction('play', require('../actions/play'))
     .addAction('run', require('../actions/run'))
     .addAction('fire', require('../actions/fire'))
     .addAction('track', require('../actions/track'))
+    .addAction('link', require('../actions/link'))
 
     /*
         Seek Action - depedent on 'play' Action
