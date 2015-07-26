@@ -16,6 +16,8 @@ module.exports = {
     hasRange: false,
 
     // [boolean]: Round output if true
-    round: false
+    round: false,
 
+    // [string]: Name of value to listen to
+    link: undefined
 };

@@ -1,7 +1,4 @@
 module.exports = {
-    // [string]: Name of value to listen to
-    link: undefined,
-    
     // [array]: Linear range of values (eg [-100, -50, 50, 100]) of linked value to map to .mapTo
     mapLink: undefined,
     

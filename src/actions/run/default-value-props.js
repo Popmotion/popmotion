@@ -25,6 +25,6 @@ module.exports = {
     capture: false,
     
     // [number]: Friction to apply per frame
-    friction: 0.05
+    friction: 0
 
 };
