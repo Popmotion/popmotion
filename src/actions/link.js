@@ -56,7 +56,7 @@ var calc = require('../inc/calc.js'),
 
 module.exports = {
 
-    defaultValueProps: require('./link/default-value-props'),
+    valueDefaults: require('./link/default-value-props'),
 
     surpressMethod: true,
 
@@ -76,7 +76,7 @@ module.exports = {
             linkKey = value.link,
             linkedValue = values[linkKey] ? values[linkKey] : {},
             inputOffset = this.inputOffset;
-            
+
         // Then check values in Input
         if (inputOffset && inputOffset.hasOwnProperty(linkKey)) {
             newValue = value.origin + (inputOffset[linkKey] * value.amp);

@@ -15,15 +15,16 @@ module.exports = {
         Parse Input arguments
     */
     parse: function () {
-        var props = genericParser.apply(this, arguments),
-            input = arguments[arguments.length - 1];
+        var args = [].slice.call(arguments),
+            input = args.pop(),
+            props = genericParser.apply(this, args);
 
         // Create Pointer if this isn't an Input
         props.input = (!input.current) ? new Pointer(input) : input;
 
         // Set input origin if not user-defined
         if (!props.inputOrigin) {
-            props.inputOrigin = input.get();
+            props.inputOrigin = props.input.get();
         }
 
         return props;
