@@ -51,7 +51,7 @@ simulationManager.extend({
 
     spring: function (value, duration) {
         var distance = value.to - value.current;
-        console.log('spring');
+
         value.velocity += distance * speedPerFrame(value.spring, duration);
         
         return simulationManager.friction(value, duration);
