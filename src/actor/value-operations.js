@@ -7,7 +7,7 @@ var calc = require('../inc/calc'),
     valueTypesManager = require('../value-types/manager'),
     routeManager = require('../routes/manager'),
 
-    numericalValues = ['current', 'to', 'start', 'min', 'max'],
+    numericalValues = ['current', 'to', 'init', 'min', 'max'],
     numNumericalValues = numericalValues.length;
 
 module.exports = {
@@ -293,7 +293,7 @@ module.exports = {
         for (key in preprocessedValues) {
             if (preprocessedValues.hasOwnProperty(key)) {
                 preprocessedValue = preprocessedValues[key];
-                thisValue = actor.values[key] || this.initialState(this.resolve('start', preprocessedValue.start, {}, actor), namespace);
+                thisValue = actor.values[key] || this.initialState(this.resolve('init', preprocessedValue.init, {}, actor), namespace);
                 hasChildren = (preprocessedValue.children !== undefined);
                 thisValue.action = preprocessedValue.link ? 'link' : actor.action;
                 defaultProps = actionsManager[thisValue.action].valueDefaults;
