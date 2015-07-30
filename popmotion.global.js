@@ -498,7 +498,6 @@ var utils = __small$_37,
             max = isNum(max) ? max : 1;
             return Math.random() * (max - min) + min;
         },
-    
         
         /*
             Calculate relative value
@@ -707,7 +706,7 @@ exports = function (value) {
 };
 return exports;
 })();
-var __small$_35 = (function() {
+var __small$_34 = (function() {
 var exports = {};
 /*
     Input controller
@@ -909,7 +908,7 @@ Input.prototype = {
 exports = Input;
 return exports;
 })();
-var __small$_62 = (function() {
+var __small$_59 = (function() {
 var exports = {};
 "use strict";
 
@@ -1252,7 +1251,7 @@ return exports;
         };
     },
 
-    ModManager = __small$_62,
+    ModManager = __small$_59,
     easingManager = new ModManager();
 
 /*
@@ -1320,12 +1319,12 @@ for (var key in baseEasing) {
 exports = easingManager;
 return exports;
 })();
-var __small$_29 = (function() {
+var __small$_30 = (function() {
 var exports = {};
 "use strict";
 
 var utils = __small$_37,
-    ModManager = __small$_62,
+    ModManager = __small$_59,
     presetManager = new ModManager(),
 
     DOT = '.',
@@ -1377,7 +1376,7 @@ var calc = __small$_24,
     utils = __small$_37,
     speedPerFrame = calc.speedPerFrame,
 
-    ModManager = __small$_62,
+    ModManager = __small$_59,
     simulationManager = new ModManager();
 
 /*
@@ -1460,7 +1459,7 @@ var __small$_43 = (function() {
 var exports = {};
 "use strict";
 
-var presetManager = __small$_29,
+var presetManager = __small$_30,
     utils = __small$_37;
 
 exports = function (base, override) {
@@ -1553,7 +1552,7 @@ var parseArgs = ((function() {
 var exports = {};
 "use strict";
 
-var presetManager = __small$_29,
+var presetManager = __small$_30,
     utils = __small$_37,
 
     parsePlaylist = function () {
@@ -1964,7 +1963,36 @@ return exports;
 
 var popmotion = ((function() {
 var exports = {};
-var __small$_59 = (function() {
+var __small$_32 = (function() {
+var exports = {};
+"use strict";
+
+var ModManager = __small$_59,
+    valueTypeManager = new ModManager();
+
+valueTypeManager.defaultProps = function (type, key) {
+    var valueType = this[type],
+        defaultProps = (valueType.defaultProps) ? valueType.defaultProps[key] || valueType.defaultProps : {};
+
+    return defaultProps;
+};
+
+valueTypeManager.test = function (value) {
+    var type = false;
+
+    this.each(function (key, mod) {
+        if (mod.test && mod.test(value)) {
+            type = key;
+        }
+    });
+
+    return type;
+};
+
+exports = valueTypeManager;
+return exports;
+})();
+var __small$_60 = (function() {
 var exports = {};
 "use strict";
 
@@ -2009,7 +2037,7 @@ var exports = {};
 var Actor,
     ActorCollection,
     utils = __small$_37,
-    generateMethodIterator = __small$_59,
+    generateMethodIterator = __small$_60,
     genericActionProps = ((function() {
 var exports = {};
 exports = {
@@ -2060,7 +2088,7 @@ exports = {
 return exports;
 })()),
 
-    ModManager = __small$_62,
+    ModManager = __small$_59,
 
     actionManager = new ModManager();
 /*
@@ -2119,36 +2147,7 @@ exports = actionManager;
 
 return exports;
 })();
-var __small$_32 = (function() {
-var exports = {};
-"use strict";
-
-var ModManager = __small$_62,
-    valueTypeManager = new ModManager();
-
-valueTypeManager.defaultProps = function (type, key) {
-    var valueType = this[type],
-        defaultProps = (valueType.defaultProps) ? valueType.defaultProps[key] || valueType.defaultProps : {};
-
-    return defaultProps;
-};
-
-valueTypeManager.test = function (value) {
-    var type = false;
-
-    this.each(function (key, mod) {
-        if (mod.test && mod.test(value)) {
-            type = key;
-        }
-    });
-
-    return type;
-};
-
-exports = valueTypeManager;
-return exports;
-})();
-var __small$_30 = (function() {
+var __small$_29 = (function() {
 var exports = {};
 "use strict";
 
@@ -2186,8 +2185,8 @@ exports = function (opts, prop, getter, setter) {
 };
 return exports;
 })()),
-    generateMethodIterator = __small$_59,
-    ModManager = __small$_62,
+    generateMethodIterator = __small$_60,
+    ModManager = __small$_59,
     routeManager = new ModManager(),
     Actor,
     ActorCollection;
@@ -2767,7 +2766,7 @@ var exports = {};
 "use strict";
 
 var actionManager = __small$_27,
-    routeManager = __small$_30,
+    routeManager = __small$_29,
     valueTypeManager = __small$_32,
     calc = __small$_24,
 
@@ -2928,7 +2927,7 @@ var calc = __small$_24,
     isNum = utils.isNum,
     actionsManager = __small$_27,
     valueTypesManager = __small$_32,
-    routeManager = __small$_30,
+    routeManager = __small$_29,
 
     numericalValues = ['current', 'to', 'init', 'min', 'max'],
     numNumericalValues = numericalValues.length;
@@ -3257,7 +3256,7 @@ exports = {
 return exports;
 })()),
     actionManager = __small$_27,
-    routeManager = __small$_30,
+    routeManager = __small$_29,
 
     Actor = function (element) {
         this.element = element || false;
@@ -3303,6 +3302,11 @@ Actor.prototype = {
     start: function () {
         this.resetProgress();
         this.activate();
+        
+        if (this.action !== 'track' && this.input && this.input.stop) {
+            this.input.stop();
+        }
+
         return this;
     },
 
@@ -3499,15 +3503,15 @@ routeManager.setActor(Actor);
 exports = Actor;
 return exports;
 })();
-var __small$_34 = (function() {
+var __small$_35 = (function() {
 var exports = {};
 "use strict";
 
 var Actor = __small$_33,
-    generateMethodIterator = __small$_59,
+    generateMethodIterator = __small$_60,
     utils = __small$_37,
     actionManager = __small$_27,
-    routeManager = __small$_30,
+    routeManager = __small$_29,
 
     DEFAULT_STAGGER_EASE = 'linear',
 
@@ -3635,7 +3639,7 @@ var select = ((function() {
 var exports = {};
 "use strict";
 
-var ActorCollection = __small$_34;
+var ActorCollection = __small$_35;
 
 /*
     Create an ActorCollection based on a selection of DOM nodes
@@ -3667,15 +3671,15 @@ return exports;
 })()),
     actionManager = __small$_27,
     easingManager = __small$_28,
-    presetManager = __small$_29,
-    routeManager = __small$_30,
+    presetManager = __small$_30,
+    routeManager = __small$_29,
     simulationManager = __small$_31,
     valueTypeManager = __small$_32,
     calc = __small$_24,
 
     Actor = __small$_33,
-    ActorCollection = __small$_34,
-    Input = __small$_35,
+    ActorCollection = __small$_35,
+    Input = __small$_34,
     Process = __small$_36,
 
     Popmotion = {
@@ -3947,7 +3951,7 @@ var calc = __small$_24,
 var exports = {};
 "use strict";
 
-var Input = __small$_35,
+var Input = __small$_34,
     currentPointer, // Sort this out for multitouch
     
     TOUCHMOVE = 'touchmove',

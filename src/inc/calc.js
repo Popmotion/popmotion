@@ -239,7 +239,6 @@ var utils = require('./utils.js'),
             max = isNum(max) ? max : 1;
             return Math.random() * (max - min) + min;
         },
-    
         
         /*
             Calculate relative value
