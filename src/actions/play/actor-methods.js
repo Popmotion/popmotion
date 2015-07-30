@@ -11,20 +11,9 @@ module.exports = {
         @param [object]: Override parameters
     */
     play: function () {
-        var action = 'play';
-
-        // If there's an active Action, and its play, add to queue
-        if (this.isActive && this.action === action) {
-            this.addToQueue.apply(this, arguments);
-        
-        // Else, start playing
-        } else {
-            this.action = action;
-            this.set(parseArgs.apply(this, arguments), 'to');
-            this.start();
-        }
-
-        return this;
+        this.action = 'play';
+        this.set(parseArgs.apply(this, arguments), 'to');
+        return this.start();
     },
 
     /*
