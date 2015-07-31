@@ -24,6 +24,8 @@ module.exports = {
     // Dimensions
     margin: DIMENSIONS,
     padding: DIMENSIONS,
+    width: PX,
+    height: PX,
 
     // Positions
     backgroundPosition: POSITIONS,

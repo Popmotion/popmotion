@@ -52,6 +52,11 @@ Actor.prototype = {
     start: function () {
         this.resetProgress();
         this.activate();
+        
+        if (this.action !== 'track' && this.input && this.input.stop) {
+            this.input.stop();
+        }
+
         return this;
     },
 

@@ -2,7 +2,7 @@
 
 ## Anything in, anywhere out
 
-Popmotion is a 12kb JavaScript UX framework. Use it for for animation, physics, and input tracking. In the browser, on Node, anywhere.
+Popmotion is a 12kb JavaScript motion engine. Use it for for animation, physics, and input tracking. In the browser, on Node, anywhere.
 
 [Download](http://redshiftjs.com/download) | [API](http://redshiftjs.com/api) | [Guides](http://redshiftjs.com/guides/get-started) | [Twitter](http://twitter.com/redshiftjs)
 

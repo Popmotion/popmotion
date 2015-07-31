@@ -226,7 +226,19 @@ var utils = require('./utils.js'),
         radiansToDegrees: function (radians) {
             return radians * 180 / Math.PI;
         },
-    
+
+        /*
+            Return random number between range
+            
+            @param [number] (optional): Output minimum
+            @param [number] (optional): Output maximum
+            @return [number]: Random number within range, or 0 and 1 if none provided
+        */
+        random: function (min, max) {
+            min = isNum(min) ? min : 0;
+            max = isNum(max) ? max : 1;
+            return Math.random() * (max - min) + min;
+        },
         
         /*
             Calculate relative value
