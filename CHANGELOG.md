@@ -2,22 +2,22 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
-## [0.0.1] Unreleased
+## [1.0.0] 2015-08-06
 
 **Note:** Forked from Redshift v2.1.1.
 
 ### Changed
-- `redshift` object name now `UI`.
+- `redshift` object name now `ui`.
 - Terminology changes to fix API semantics:
     - **Action:** Actor
     - **ActionCollection:** ActionCollection
     - **Rubix:** Action (as in, an Action an Actor can perform)
 
 ### Added
-- Add new easing functions with `Redshift.addEasing()`. Provide the easeIn function and Redshift will generate easeOut and easeInOut variants.
-- Add new simulation functions to `run` with `Redshift.newSimulation()`.
+- Add new easing functions with `ui.addEasing()`. Provide the easeIn function and Redshift will generate easeOut and easeInOut variants.
+- Add new simulation functions to `run` with `ui.addSimulation()`.
 - Any value can be a special **value type**, ie a color. `'#FFF'` splits into four numerical properties, `Red`, `Blue`, `Green` and `Alpha`.
-- Add new value types with `Redshift.addValueType()`.
+- Add new value types with `ui.addValueType()`.
 - HSLA value type support.
 
 ## [2.1.1] 2015-06-11
