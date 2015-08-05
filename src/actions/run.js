@@ -14,20 +14,18 @@ module.exports = {
     // [object] Default value properties
     valueDefaults: require('./run/default-value-props'),
 
-    parse: require('./generic/parse-args'),
-
     // [boolean]: Tell Redshift this rubix calculates a new velocity itself
     calculatesVelocity: true,
     
     /*
         Simulate the Value's per-frame movement
         
-        @param [string]: Key of current value
         @param [Value]: Current value
+        @param [string]: Key of current value
         @param [number]: Duration of frame in ms
         @return [number]: Calculated value
     */
-    process: function (key, value, frameDuration) {
+    process: function (value, key, frameDuration) {
         value.velocity = simulate(value.simulate, value, frameDuration, this.started);
         return value.current + calc.speedPerFrame(value.velocity, frameDuration);
     },

@@ -5,17 +5,14 @@
 
 module.exports = {
 
-    parse: require('./generic/parse-args'),
-
    /*
         Process new value
         
         Return existing current
         
-        @param [string]: Name of value
         @param [Value]: Current value
     */
-    process: function (key, value) {
+    process: function (value) {
         return value.current;
     },
     

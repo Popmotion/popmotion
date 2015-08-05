@@ -38,11 +38,11 @@ var calc = require('../inc/calc'),
             Calculate progress of value based on time elapsed,
             value delay/duration/stagger properties
 
-            @param [string]: Name of value being processed
             @param [object]: Value state and properties
+            @param [string]: Name of value being processed
             @return [number]: Calculated value
         */
-        process: function (key, value) {
+        process: function (value, key) {
             var target = value.to,
                 progressTarget = (this.playDirection === 1) ? 1 : 0,
                 newValue = value.current,

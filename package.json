@@ -1,7 +1,7 @@
 {
   "name": "popmotion",
   "version": "0.0.21",
-  "description": "A JavaScript UI framework. Handles animation, physics, and input tracking.",
+  "description": "A 12kb JavaScript motion engine. Handles animation, physics, and input tracking.",
   "author": "Matt Perry <sirhound@popmotion.io>",
   "homepage": "http://popmotion.io",
   "main": "./src/load/module.js",
