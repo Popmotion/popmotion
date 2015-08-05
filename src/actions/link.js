@@ -66,11 +66,11 @@ module.exports = {
         First check if this value exists as a Value, if not
         check within Input (if we have one)
             
-        @param [string]: Key of current value
         @param [Value]: Current value
+        @param [string]: Key of current value
         @return [number]: Calculated value
     */
-    process: function (key, value) {
+    process: function (value, key) {
         var values = this.values,
             newValue = value.current,
             linkKey = value.link,

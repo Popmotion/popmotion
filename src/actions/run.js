@@ -22,12 +22,12 @@ module.exports = {
     /*
         Simulate the Value's per-frame movement
         
-        @param [string]: Key of current value
         @param [Value]: Current value
+        @param [string]: Key of current value
         @param [number]: Duration of frame in ms
         @return [number]: Calculated value
     */
-    process: function (key, value, frameDuration) {
+    process: function (value, key, frameDuration) {
         value.velocity = simulate(value.simulate, value, frameDuration, this.started);
         return value.current + calc.speedPerFrame(value.velocity, frameDuration);
     },

@@ -52,7 +52,7 @@ var actionManager = require('../actions/manager'),
             valueAction = value.link ? actionManager.link : action;
 
             // Calculate new value
-            updatedValue = valueAction.process.call(this, key, value, frameDuration);
+            updatedValue = valueAction.process.call(this, value, key, frameDuration);
 
             // Limit if range
             if (valueAction.limit) {

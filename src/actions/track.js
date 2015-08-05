@@ -40,11 +40,11 @@ module.exports = {
     /*
         Move Value relative to Input movement
         
-        @param [string]: Key of current value
         @param [Value]: Current value
+        @param [string]: Key of current value
         @return [number]: Calculated value
     */
-    process: function (key, value) {
+    process: function (value, key) {
         return (this.inputOffset.hasOwnProperty(key)) ? value.origin + this.inputOffset[key] : value.current;
     },
     
