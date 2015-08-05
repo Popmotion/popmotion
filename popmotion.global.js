@@ -2,7 +2,7 @@
 var exports = {};
 var popmotion = ((function() {
 var exports = {};
-var __small$_11 = (function() {
+var __small$_12 = (function() {
 var exports = {};
 exports = {
     defaultProps: {
@@ -11,7 +11,7 @@ exports = {
 };
 return exports;
 })();
-var __small$_37 = (function() {
+var __small$_38 = (function() {
 var exports = {};
 /*
     Utility functions
@@ -255,7 +255,7 @@ exports = {
 };
 return exports;
 })();
-var __small$_23 = (function() {
+var __small$_24 = (function() {
 var exports = {};
 /*
     Calculators
@@ -265,7 +265,7 @@ var exports = {};
 */
 "use strict";
 
-var utils = __small$_37,
+var utils = __small$_38,
 
     calc = {
         
@@ -624,7 +624,7 @@ var utils = __small$_37,
 exports = calc;
 return exports;
 })();
-var __small$_45 = (function() {
+var __small$_46 = (function() {
 var exports = {};
 "use strict";
 
@@ -650,14 +650,14 @@ exports = function (values, terms, delimiter, chop) {
 };
 return exports;
 })();
-var __small$_47 = (function() {
+var __small$_48 = (function() {
 var exports = {};
 exports = function (value, prefix) {
     return prefix + '(' + value + ')';
 };
 return exports;
 })();
-var __small$_48 = (function() {
+var __small$_49 = (function() {
 var exports = {};
 "use strict";
 
@@ -680,7 +680,7 @@ exports = {
 
 return exports;
 })();
-var __small$_49 = (function() {
+var __small$_50 = (function() {
 var exports = {};
 "use strict";
 
@@ -699,22 +699,22 @@ var X = 'X',
 exports = terms;
 return exports;
 })();
-var __small$_52 = (function() {
+var __small$_51 = (function() {
 var exports = {};
 exports = function (value) {
     return (typeof value === 'string') ? value.split(' ') : [value];
 };
 return exports;
 })();
-var __small$_34 = (function() {
+var __small$_36 = (function() {
 var exports = {};
 /*
     Input controller
 */
 "use strict";
 
-var calc = __small$_23,
-    utils = __small$_37,
+var calc = __small$_24,
+    utils = __small$_38,
     History = ((function() {
 var exports = {};
 "use strict";
@@ -908,7 +908,7 @@ Input.prototype = {
 exports = Input;
 return exports;
 })();
-var __small$_60 = (function() {
+var __small$_61 = (function() {
 var exports = {};
 "use strict";
 
@@ -968,56 +968,7 @@ ModManager.prototype = {
 exports = ModManager;
 return exports;
 })();
-var __small$_26 = (function() {
-var exports = {};
-"use strict";
-
-var utils = __small$_37,
-    ModManager = __small$_60,
-    presetManager = new ModManager(),
-
-    DOT = '.',
-
-    generateKeys = function (key) {
-        var keys = key.split(DOT),
-            numKeys = keys.length,
-            lastKey = keys[0],
-            i = 1;
-
-        for (; i < numKeys; i++) {
-            keys[i] = lastKey += DOT + keys[i];
-        }
-
-        return keys;
-    };
-
-/*
-    Get defined action
-    
-    @param [string]: The name of the predefined action
-*/
-presetManager.getDefined = function (name) {
-    var props = {},
-        thisProp = {},
-        keys = generateKeys(name),
-        numKeys = keys.length,
-        i = 0;
-
-    for (; i < numKeys; i++) {
-        thisProp = this[keys[i]];
-
-        if (thisProp) {
-            props = utils.merge(props, thisProp);
-        }
-    }
-
-    return props;
-};
-
-exports = presetManager;
-return exports;
-})();
-var __small$_28 = (function() {
+var __small$_29 = (function() {
 var exports = {};
 /*
     Easing functions
@@ -1043,7 +994,7 @@ var exports = {};
 */
 "use strict";
 
-var calc = __small$_23,
+var calc = __small$_24,
     Bezier = ((function() {
 var exports = {};
 /*
@@ -1300,7 +1251,7 @@ return exports;
         };
     },
 
-    ModManager = __small$_60,
+    ModManager = __small$_61,
     easingManager = new ModManager();
 
 /*
@@ -1368,15 +1319,64 @@ for (var key in baseEasing) {
 exports = easingManager;
 return exports;
 })();
+var __small$_31 = (function() {
+var exports = {};
+"use strict";
+
+var utils = __small$_38,
+    ModManager = __small$_61,
+    presetManager = new ModManager(),
+
+    DOT = '.',
+
+    generateKeys = function (key) {
+        var keys = key.split(DOT),
+            numKeys = keys.length,
+            lastKey = keys[0],
+            i = 1;
+
+        for (; i < numKeys; i++) {
+            keys[i] = lastKey += DOT + keys[i];
+        }
+
+        return keys;
+    };
+
+/*
+    Get defined action
+    
+    @param [string]: The name of the predefined action
+*/
+presetManager.getDefined = function (name) {
+    var props = {},
+        thisProp = {},
+        keys = generateKeys(name),
+        numKeys = keys.length,
+        i = 0;
+
+    for (; i < numKeys; i++) {
+        thisProp = this[keys[i]];
+
+        if (thisProp) {
+            props = utils.merge(props, thisProp);
+        }
+    }
+
+    return props;
+};
+
+exports = presetManager;
+return exports;
+})();
 var __small$_32 = (function() {
 var exports = {};
 "use strict";
 
-var calc = __small$_23,
-    utils = __small$_37,
+var calc = __small$_24,
+    utils = __small$_38,
     speedPerFrame = calc.speedPerFrame,
 
-    ModManager = __small$_60,
+    ModManager = __small$_61,
     simulationManager = new ModManager();
 
 /*
@@ -1455,12 +1455,12 @@ exports = simulationManager;
 
 return exports;
 })();
-var __small$_41 = (function() {
+var __small$_42 = (function() {
 var exports = {};
 "use strict";
 
-var presetManager = __small$_26,
-    utils = __small$_37;
+var presetManager = __small$_31,
+    utils = __small$_38;
 
 exports = function (base, override) {
     var props = (typeof base === 'string') ? presetManager.getDefined(base) : base;
@@ -1483,9 +1483,9 @@ var exports = {};
 */
 "use strict";
 
-var calc = __small$_23,
-    utils = __small$_37,
-    easingManager = __small$_28,
+var calc = __small$_24,
+    utils = __small$_38,
+    easingManager = __small$_29,
 
     playAction = {
 
@@ -1552,8 +1552,8 @@ var parseArgs = ((function() {
 var exports = {};
 "use strict";
 
-var presetManager = __small$_26,
-    utils = __small$_37,
+var presetManager = __small$_31,
+    utils = __small$_38,
 
     parsePlaylist = function () {
         var args = [].slice.call(arguments),
@@ -1608,7 +1608,7 @@ exports = function () {
 
 return exports;
 })()),
-    utils = __small$_37;
+    utils = __small$_38;
 
 exports = {
     /*
@@ -1774,7 +1774,7 @@ exports = playAction;
 
 return exports;
 })();
-var __small$_46 = (function() {
+var __small$_47 = (function() {
 var exports = {};
 var splitCommaDelimited = ((function() {
 var exports = {};
@@ -1809,11 +1809,11 @@ var __small$_13 = (function() {
 var exports = {};
 "use strict";
 
-var createDelimited = __small$_45,
-    getColorValues = __small$_46,
-    functionCreate = __small$_47,
-    defaultProps = __small$_48,
-    terms = __small$_49.hsl;
+var createDelimited = __small$_46,
+    getColorValues = __small$_47,
+    functionCreate = __small$_48,
+    defaultProps = __small$_49,
+    terms = __small$_50.hsl;
 
 exports = {
 
@@ -1845,12 +1845,12 @@ var __small$_14 = (function() {
 var exports = {};
 "use strict";
 
-var createDelimited = __small$_45,
-    getColorValues = __small$_46,
-    functionCreate = __small$_47,
-    defaultProps = __small$_48,
+var createDelimited = __small$_46,
+    getColorValues = __small$_47,
+    functionCreate = __small$_48,
+    defaultProps = __small$_49,
     colorDefaults = defaultProps.color,
-    terms = __small$_49.colors;
+    terms = __small$_50.colors;
 
 exports = {
 
@@ -1926,7 +1926,7 @@ var __small$_16 = (function() {
 var exports = {};
 "use strict";
 
-var utils = __small$_37,
+var utils = __small$_38,
     rgb = __small$_14,
     hsl = __small$_13,
     hex = __small$_15,
@@ -1963,7 +1963,7 @@ return exports;
 
 var popmotion = ((function() {
 var exports = {};
-var __small$_59 = (function() {
+var __small$_58 = (function() {
 var exports = {};
 "use strict";
 
@@ -2001,11 +2001,11 @@ exports = function (method) {
 
 return exports;
 })();
-var __small$_29 = (function() {
+var __small$_33 = (function() {
 var exports = {};
 "use strict";
 
-var ModManager = __small$_60,
+var ModManager = __small$_61,
     valueTypeManager = new ModManager();
 
 valueTypeManager.defaultProps = function (type, key) {
@@ -2030,14 +2030,14 @@ valueTypeManager.test = function (value) {
 exports = valueTypeManager;
 return exports;
 })();
-var __small$_27 = (function() {
+var __small$_28 = (function() {
 var exports = {};
 "use strict";
 
 var Actor,
     ActorCollection,
-    utils = __small$_37,
-    generateMethodIterator = __small$_59,
+    utils = __small$_38,
+    generateMethodIterator = __small$_58,
     genericActionProps = ((function() {
 var exports = {};
 exports = {
@@ -2087,9 +2087,9 @@ exports = {
 };
 return exports;
 })()),
-    genericParse = __small$_41,
+    genericParse = __small$_42,
 
-    ModManager = __small$_60,
+    ModManager = __small$_61,
 
     actionManager = new ModManager();
 /*
@@ -2189,8 +2189,8 @@ exports = function (opts, prop, getter, setter) {
 };
 return exports;
 })()),
-    generateMethodIterator = __small$_59,
-    ModManager = __small$_60,
+    generateMethodIterator = __small$_58,
+    ModManager = __small$_61,
     routeManager = new ModManager(),
     Actor,
     ActorCollection;
@@ -2246,7 +2246,7 @@ routeManager.setActorCollection = function (actorCollection) {
 exports = routeManager;
 return exports;
 })();
-var __small$_36 = (function() {
+var __small$_37 = (function() {
 var exports = {};
 "use strict";
 
@@ -2265,7 +2265,7 @@ var Timer = ((function() {
 var exports = {};
 "use strict";
 
-var utils = __small$_37,
+var utils = __small$_38,
 
     maxElapsed = 33,
     Timer = function () {
@@ -2707,11 +2707,11 @@ Process.prototype = {
 exports = Process;
 return exports;
 })();
-var __small$_31 = (function() {
+var __small$_34 = (function() {
 var exports = {};
 "use strict";
 
-var Process = __small$_36,
+var Process = __small$_37,
     Queue = ((function() {
 var exports = {};
 "use strict";
@@ -2764,15 +2764,15 @@ Queue.prototype = {
 exports = Queue;
 return exports;
 })()),
-    utils = __small$_37,
+    utils = __small$_38,
     update = ((function() {
 var exports = {};
 "use strict";
 
-var actionManager = __small$_27,
+var actionManager = __small$_28,
     routeManager = __small$_30,
-    valueTypeManager = __small$_29,
-    calc = __small$_23,
+    valueTypeManager = __small$_33,
+    calc = __small$_24,
 
     defaultRoute = 'values',
 
@@ -2926,11 +2926,11 @@ return exports;
 var exports = {};
 "use strict";
 
-var calc = __small$_23,
-    utils = __small$_37,
+var calc = __small$_24,
+    utils = __small$_38,
     isNum = utils.isNum,
-    actionsManager = __small$_27,
-    valueTypesManager = __small$_29,
+    actionsManager = __small$_28,
+    valueTypesManager = __small$_33,
     routeManager = __small$_30,
 
     numericalValues = ['current', 'to', 'init', 'min', 'max'],
@@ -3259,7 +3259,7 @@ exports = {
 };
 return exports;
 })()),
-    actionManager = __small$_27,
+    actionManager = __small$_28,
     routeManager = __small$_30,
 
     Actor = function (element) {
@@ -3507,14 +3507,14 @@ routeManager.setActor(Actor);
 exports = Actor;
 return exports;
 })();
-var __small$_33 = (function() {
+var __small$_35 = (function() {
 var exports = {};
 "use strict";
 
-var Actor = __small$_31,
-    generateMethodIterator = __small$_59,
-    utils = __small$_37,
-    actionManager = __small$_27,
+var Actor = __small$_34,
+    generateMethodIterator = __small$_58,
+    utils = __small$_38,
+    actionManager = __small$_28,
     routeManager = __small$_30,
 
     DEFAULT_STAGGER_EASE = 'linear',
@@ -3643,7 +3643,7 @@ var select = ((function() {
 var exports = {};
 "use strict";
 
-var ActorCollection = __small$_33;
+var ActorCollection = __small$_35;
 
 /*
     Create an ActorCollection based on a selection of DOM nodes
@@ -3673,18 +3673,18 @@ exports = function (selector) {
 };
 return exports;
 })()),
-    actionManager = __small$_27,
-    easingManager = __small$_28,
-    presetManager = __small$_26,
+    actionManager = __small$_28,
+    easingManager = __small$_29,
+    presetManager = __small$_31,
     routeManager = __small$_30,
     simulationManager = __small$_32,
-    valueTypeManager = __small$_29,
-    calc = __small$_23,
+    valueTypeManager = __small$_33,
+    calc = __small$_24,
 
-    Actor = __small$_31,
-    ActorCollection = __small$_33,
-    Input = __small$_34,
-    Process = __small$_36,
+    Actor = __small$_34,
+    ActorCollection = __small$_35,
+    Input = __small$_36,
+    Process = __small$_37,
 
     Popmotion = {
 
@@ -3778,7 +3778,7 @@ var exports = {};
 */
 "use strict";
 
-var calc = __small$_23,
+var calc = __small$_24,
     simulate = ((function() {
 var exports = {};
 "use strict";
@@ -3944,13 +3944,13 @@ var exports = {};
 */
 "use strict";
 
-var calc = __small$_23,
-    genericParser = __small$_41,
+var calc = __small$_24,
+    genericParser = __small$_42,
     Pointer = ((function() {
 var exports = {};
 "use strict";
 
-var Input = __small$_34,
+var Input = __small$_36,
     currentPointer, // Sort this out for multitouch
     
     TOUCHMOVE = 'touchmove',
@@ -4122,7 +4122,7 @@ var exports = {};
 */
 "use strict";
 
-var calc = __small$_23,
+var calc = __small$_24,
 
     STRING = 'string',
     
@@ -4297,7 +4297,7 @@ exports = {
 };
 return exports;
 })()),
-        px: __small$_11,
+        px: __small$_12,
         hsl: __small$_13,
         rgb: __small$_14,
         hex: __small$_15,
@@ -4306,10 +4306,10 @@ return exports;
 var exports = {};
 "use strict";
 
-var createDelimited = __small$_45,
-    pxDefaults = __small$_11.defaultProps,
-    splitSpaceDelimited = __small$_52,
-    terms = __small$_49.positions;
+var createDelimited = __small$_46,
+    pxDefaults = __small$_12.defaultProps,
+    splitSpaceDelimited = __small$_51,
+    terms = __small$_50.positions;
 
 exports = {
 
@@ -4348,10 +4348,10 @@ return exports;
 var exports = {};
 "use strict";
 
-var terms = __small$_49.dimensions,
-    pxDefaults = __small$_11.defaultProps,
-    createDelimited = __small$_45,
-    splitSpaceDelimited = __small$_52;
+var terms = __small$_50.dimensions,
+    pxDefaults = __small$_12.defaultProps,
+    createDelimited = __small$_46,
+    splitSpaceDelimited = __small$_51;
 
 exports = {
 
@@ -4398,11 +4398,11 @@ var exports = {};
 "use strict";
 
 var color = __small$_16,
-    utils = __small$_37,
-    pxDefaults = __small$_11.defaultProps,
-    terms = __small$_49.shadow,
-    splitSpaceDelimited = __small$_52,
-    createDelimited = __small$_45,
+    utils = __small$_38,
+    pxDefaults = __small$_12.defaultProps,
+    terms = __small$_50.shadow,
+    splitSpaceDelimited = __small$_51,
+    createDelimited = __small$_46,
     shadowTerms = terms.slice(0,4);
 
 exports = {
@@ -4472,7 +4472,7 @@ var transformDictionary = ((function() {
 var exports = {};
 "use strict";
 
-var positionTerms = __small$_49.positions,
+var positionTerms = __small$_50.positions,
     numPositionTerms = positionTerms.length,
 
     TRANSFORM_PERSPECTIVE = 'transformPerspective',
