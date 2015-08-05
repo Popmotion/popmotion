@@ -14,8 +14,6 @@ module.exports = {
     // [object] Default value properties
     valueDefaults: require('./run/default-value-props'),
 
-    parse: require('./generic/parse-args'),
-
     // [boolean]: Tell Redshift this rubix calculates a new velocity itself
     calculatesVelocity: true,
     

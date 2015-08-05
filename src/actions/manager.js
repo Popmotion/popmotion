@@ -6,6 +6,7 @@ var Actor,
     generateMethodIterator = require('../actor/system/generate-iterator'),
     genericActionProps = require('./generic/default-action-props'),
     genericValueProps = require('./generic/default-value-props'),
+    genericParse = require('./generic/parse-args'),
 
     ModManager = require('../inc/ModManager'),
 
@@ -16,7 +17,8 @@ var Actor,
     Creates a new Action for Actors
 */
 actionManager.extend = function (name, mod) {
-    var methodName = '';
+    var methodName = '',
+        parse;
 
     /*
         Generate new method for Actors if module doesn't have a
@@ -24,9 +26,11 @@ actionManager.extend = function (name, mod) {
         method with that name
     */
     if (!mod.surpressMethod && !Actor.prototype[name]) {
+        parse = mod.parse || genericParse;
+
         Actor.prototype[name] = function () {
             this.action = name;
-            this.set(mod.parse.apply(this, arguments));
+            this.set(parse.apply(this, arguments));
 
             return this.start();
         };
