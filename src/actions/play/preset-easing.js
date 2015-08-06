@@ -22,8 +22,7 @@
 */
 "use strict";
 
-var calc = require('../../inc/calc'),
-    Easing = require('./Easing'),
+var Easing = require('./Easing'),
     easingFunction,
     
     // Generate easing function with provided power

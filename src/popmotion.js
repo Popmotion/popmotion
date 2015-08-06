@@ -2,7 +2,6 @@
 
 var select = require('./actor/select'),
     actionManager = require('./actions/manager'),
-    easingManager = require('./actions/play/easing-manager'),
     presetManager = require('./actor/preset-manager'),
     routeManager = require('./routes/manager'),
     simulationManager = require('./actions/run/simulation-manager'),
@@ -33,11 +32,6 @@ var select = require('./actor/select'),
 
         addAction: function () {
             actionManager.extend.apply(actionManager, arguments);
-            return this;
-        },
-
-        addEasing: function () {
-            easingManager.extend.apply(easingManager, arguments);
             return this;
         },
 

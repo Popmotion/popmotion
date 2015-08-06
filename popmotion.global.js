@@ -11,7 +11,7 @@ exports = {
 };
 return exports;
 })();
-var __small$_38 = (function() {
+var __small$_37 = (function() {
 var exports = {};
 /*
     Utility functions
@@ -265,7 +265,7 @@ var exports = {};
 */
 "use strict";
 
-var utils = __small$_38,
+var utils = __small$_37,
 
     calc = {
         
@@ -624,7 +624,7 @@ var utils = __small$_38,
 exports = calc;
 return exports;
 })();
-var __small$_46 = (function() {
+var __small$_48 = (function() {
 var exports = {};
 "use strict";
 
@@ -650,14 +650,14 @@ exports = function (values, terms, delimiter, chop) {
 };
 return exports;
 })();
-var __small$_48 = (function() {
+var __small$_50 = (function() {
 var exports = {};
 exports = function (value, prefix) {
     return prefix + '(' + value + ')';
 };
 return exports;
 })();
-var __small$_49 = (function() {
+var __small$_51 = (function() {
 var exports = {};
 "use strict";
 
@@ -680,7 +680,7 @@ exports = {
 
 return exports;
 })();
-var __small$_50 = (function() {
+var __small$_52 = (function() {
 var exports = {};
 "use strict";
 
@@ -699,14 +699,14 @@ var X = 'X',
 exports = terms;
 return exports;
 })();
-var __small$_51 = (function() {
+var __small$_53 = (function() {
 var exports = {};
 exports = function (value) {
     return (typeof value === 'string') ? value.split(' ') : [value];
 };
 return exports;
 })();
-var __small$_36 = (function() {
+var __small$_34 = (function() {
 var exports = {};
 /*
     Input controller
@@ -714,7 +714,7 @@ var exports = {};
 "use strict";
 
 var calc = __small$_24,
-    utils = __small$_38,
+    utils = __small$_37,
     History = ((function() {
 var exports = {};
 "use strict";
@@ -908,7 +908,7 @@ Input.prototype = {
 exports = Input;
 return exports;
 })();
-var __small$_61 = (function() {
+var __small$_62 = (function() {
 var exports = {};
 "use strict";
 
@@ -968,34 +968,164 @@ ModManager.prototype = {
 exports = ModManager;
 return exports;
 })();
-var __small$_29 = (function() {
+var __small$_28 = (function() {
 var exports = {};
+"use strict";
+
+var utils = __small$_37,
+    ModManager = __small$_62,
+    presetManager = new ModManager(),
+
+    DOT = '.',
+
+    generateKeys = function (key) {
+        var keys = key.split(DOT),
+            numKeys = keys.length,
+            lastKey = keys[0],
+            i = 1;
+
+        for (; i < numKeys; i++) {
+            keys[i] = lastKey += DOT + keys[i];
+        }
+
+        return keys;
+    };
+
 /*
-    Easing functions
-    ----------------------------------------
+    Get defined action
     
-    Generates and provides easing functions based on baseFunction definitions
-    
-    A call to easingFunction.get('functionName') returns a function that can be passed:
-        @param [number]: Progress 0-1
-        @param [number] (optional): Amp modifier, only accepted in some easing functions
-                                    and is used to adjust overall strength
-        @return [number]: Eased progress
-        
-    We can generate new functions by sending an easing function through easingFunction.extend(name, method).
-    Which will make nameIn, nameOut and nameInOut functions available to use.
-        
-    Easing functions from Robert Penner
-    http://www.robertpenner.com/easing/
-        
-    Bezier curve interpretor created from Gaëtan Renaudeau's original BezierEasing  
-    https://github.com/gre/bezier-easing/blob/master/index.js  
-    https://github.com/gre/bezier-easing/blob/master/LICENSE
+    @param [string]: The name of the predefined action
 */
+presetManager.getDefined = function (name) {
+    var props = {},
+        thisProp = {},
+        keys = generateKeys(name),
+        numKeys = keys.length,
+        i = 0;
+
+    for (; i < numKeys; i++) {
+        thisProp = this[keys[i]];
+
+        if (thisProp) {
+            props = utils.merge(props, thisProp);
+        }
+    }
+
+    return props;
+};
+
+exports = presetManager;
+return exports;
+})();
+var __small$_31 = (function() {
+var exports = {};
 "use strict";
 
 var calc = __small$_24,
-    Bezier = ((function() {
+    utils = __small$_37,
+    speedPerFrame = calc.speedPerFrame,
+
+    ModManager = __small$_62,
+    simulationManager = new ModManager();
+
+/*
+    Add core physics simulations
+*/
+simulationManager.extend({
+    /*
+        Velocity
+        
+        The default .run() simulation.
+        
+        Applies any set deceleration and acceleration to existing velocity
+    */
+    velocity: function (value, duration) {
+        value.velocity = value.velocity - speedPerFrame(value.deceleration, duration) + speedPerFrame(value.acceleration, duration);
+
+        return simulationManager.friction(value, duration);
+    },
+
+    /*
+        Glide
+        
+        Emulates touch device scrolling effects with exponential decay
+        http://ariya.ofilabs.com/2013/11/javascript-kinetic-scrolling-part-2.html
+    */
+    glide: function (value, duration, started) {
+        var timeUntilFinished = - utils.currentTime() - started,
+            delta = - value.to * Math.exp(timeUntilFinished / value.timeConstant);
+
+        return (value.to + delta) - value.current;
+    },
+
+    /*
+        Friction
+
+        Apply friction to the current value
+        TODO: Make this framerate-independent
+    */
+    friction: function (value, duration) {
+        var newVelocity = speedPerFrame(value.velocity, duration) * (1 - value.friction);
+
+        return calc.speedPerSecond(newVelocity, duration);
+    },
+
+    spring: function (value, duration) {
+        var distance = value.to - value.current;
+
+        value.velocity += distance * speedPerFrame(value.spring, duration);
+        
+        return simulationManager.friction(value, duration);
+    },
+
+    bounce: function (value) {
+        var distance = 0,
+            to = value.to,
+            current = value.current,
+            bounce = value.bounce;
+        
+        // If we're using glide simulation we have to flip our target too
+        if (value.simulate === 'glide') {
+            distance = to - current;
+            value.to = current - (distance * bounce);
+        }
+        
+        return value.velocity *= - bounce;
+    },
+
+    capture: function (value, target) {
+        value.to = target;
+        value.simulate = 'spring';
+        value.capture = value.min = value.max = undefined;
+    }
+});
+
+exports = simulationManager;
+
+return exports;
+})();
+var __small$_44 = (function() {
+var exports = {};
+"use strict";
+
+var presetManager = __small$_28,
+    utils = __small$_37;
+
+exports = function (base, override) {
+    var props = (typeof base === 'string') ? presetManager.getDefined(base) : base;
+
+    // Override properties with second arg if it's an object
+    if (typeof override === 'object') {
+        props = utils.merge(props, override);
+    }
+
+    return props;
+};
+return exports;
+})();
+var __small$_36 = (function() {
+var exports = {};
+var Bezier = ((function() {
 var exports = {};
 /*
     Bezier function generator
@@ -1166,34 +1296,6 @@ exports = Bezier;
 return exports;
 })()),
 
-    EASE_IN = 'In',
-    EASE_OUT = 'Out',
-    EASE_IN_OUT = EASE_IN + EASE_OUT,
-    
-    // Generate easing function with provided power
-    generatePowerEasing = function (power) {
-        return function (progress) {
-            return Math.pow(progress, power);
-        };
-    },
-
-    /*
-        Each of these base functions is an easeIn
-        
-        On init, we use EasingFunction.mirror and .reverse to generate easeInOut and
-        easeOut functions respectively.
-    */
-    baseEasing = {
-        circ: function (progress) {
-            return 1 - Math.sin(Math.acos(progress));
-        },
-        back: function (progress) {
-            var strength = 1.5;
-
-            return (progress * progress) * ((strength + 1) * progress - strength);
-        }
-    },
-    
     /*
         Mirror easing
         
@@ -1220,258 +1322,46 @@ return exports;
     */
     reverseEasing = function (progress, method) {
         return 1 - method(1 - progress);
-    },
-    
-    /*
-        Add new easing function
-        
-        Takes name and generates nameIn, nameOut, nameInOut, and easing functions to match
-        
-        @param [string]: Base name of the easing functions to generate
-        @param [function]: Base easing function, as an easeIn, from which to generate Out and InOut
-    */
-    generateVariations = function (name, method) {
-        var easeIn = name + EASE_IN,
-            easeOut = name + EASE_OUT,
-            easeInOut = name + EASE_IN_OUT,
-            baseName = easeIn,
-            reverseName = easeOut;
-
-        // Create the In function
-        easingManager[baseName] = method;
-
-        // Create the Out function by reversing the transition curve
-        easingManager[reverseName] = function (progress) {
-            return reverseEasing(progress, easingManager[baseName]);
-        };
-        
-        // Create the InOut function by mirroring the transition curve
-        easingManager[easeInOut] = function (progress) {
-            return mirrorEasing(progress, easingManager[baseName]);
-        };
-    },
-
-    ModManager = __small$_61,
-    easingManager = new ModManager();
-
-/*
-    Extend easing functions
-*/
-easingManager.extend = function (name, x1, y1, x2, y2) {
-    // If this is an easing function, generate variations
-    if (typeof x1 === 'function') {
-        generateVariations(name, x1);
-
-    // Otherwise it's a bezier curve, so generate new Bezier curve function
-    } else {
-        this[name] = new Bezier(x1, y1, x2, y2);
-    }
-
-    return this;
-};
-
-/*
-    Ease value within ranged parameters
-    
-    @param [number]: Progress between 0 and 1
-    @param [number]: Value of 0 progress
-    @param [number]: Value of 1 progress
-    @param [string]: Easing to use
-    @param [number]: Amplify progress out of specified range
-    @return [number]: Value of eased progress in range
-*/  
-easingManager.withinRange = function (progress, from, to, ease, escapeAmp) {
-    var progressLimited = calc.restricted(progress, 0, 1);
-
-    if (progressLimited !== progress && escapeAmp) {
-        ease = 'linear';
-        progressLimited = progressLimited + ((progress - progressLimited) * escapeAmp);
-    }
-
-    return calc.valueEased(progressLimited, from, to, this[ease]);
-};
-            
-/*
-    Linear easing adjustment
-    
-    The default easing method, not added with .extend as it has no Out or InOut
-    variation.
-    
-    @param [number]: Progress, from 0-1
-    @return [number]: Unadjusted progress
-*/
-easingManager.linear = function (progress) {
-    return progress;
-};
-
-// Generate power easing easing
-['ease', 'cubic', 'quart', 'quint'].forEach(function (easingName, i) {
-    baseEasing[easingName] = generatePowerEasing(i + 2);
-});
-
-// Generate in/out/inOut variations
-for (var key in baseEasing) {
-    if (baseEasing.hasOwnProperty(key)) {
-        generateVariations(key, baseEasing[key]);
-    }
-}
-
-exports = easingManager;
-return exports;
-})();
-var __small$_31 = (function() {
-var exports = {};
-"use strict";
-
-var utils = __small$_38,
-    ModManager = __small$_61,
-    presetManager = new ModManager(),
-
-    DOT = '.',
-
-    generateKeys = function (key) {
-        var keys = key.split(DOT),
-            numKeys = keys.length,
-            lastKey = keys[0],
-            i = 1;
-
-        for (; i < numKeys; i++) {
-            keys[i] = lastKey += DOT + keys[i];
-        }
-
-        return keys;
     };
 
 /*
-    Get defined action
-    
-    @param [string]: The name of the predefined action
+    Easing class
+
+    If provided easing function, returns easing function with 
+    in/out/inOut variations
+
+    If provided four arguments, returns new Bezier class instead.
 */
-presetManager.getDefined = function (name) {
-    var props = {},
-        thisProp = {},
-        keys = generateKeys(name),
-        numKeys = keys.length,
-        i = 0;
+var Easing = function (x1, y1, x2, y2) {
+    var method = x1,
+        easingFunction;
 
-    for (; i < numKeys; i++) {
-        thisProp = this[keys[i]];
+    // If this is a bezier curve, return a bezier function
+    if (arguments.length > 1) {
+        easingFunction = new Bezier(x1, y1, x2, y2);
 
-        if (thisProp) {
-            props = utils.merge(props, thisProp);
-        }
+    } else {
+        easingFunction = function (progress) {
+            return method(progress);
+        };
+
+        easingFunction.in = function (progress) {
+            return method(progress);
+        };
+
+        easingFunction.out = function (progress) {
+            return reverseEasing(progress, method);
+        };
+
+        easingFunction.inOut = function (progress) {
+            return mirrorEasing(progress, method);
+        };
     }
 
-    return props;
+    return easingFunction;
 };
 
-exports = presetManager;
-return exports;
-})();
-var __small$_32 = (function() {
-var exports = {};
-"use strict";
-
-var calc = __small$_24,
-    utils = __small$_38,
-    speedPerFrame = calc.speedPerFrame,
-
-    ModManager = __small$_61,
-    simulationManager = new ModManager();
-
-/*
-    Add core physics simulations
-*/
-simulationManager.extend({
-    /*
-        Velocity
-        
-        The default .run() simulation.
-        
-        Applies any set deceleration and acceleration to existing velocity
-    */
-    velocity: function (value, duration) {
-        value.velocity = value.velocity - speedPerFrame(value.deceleration, duration) + speedPerFrame(value.acceleration, duration);
-
-        return simulationManager.friction(value, duration);
-    },
-
-    /*
-        Glide
-        
-        Emulates touch device scrolling effects with exponential decay
-        http://ariya.ofilabs.com/2013/11/javascript-kinetic-scrolling-part-2.html
-    */
-    glide: function (value, duration, started) {
-        var timeUntilFinished = - utils.currentTime() - started,
-            delta = - value.to * Math.exp(timeUntilFinished / value.timeConstant);
-
-        return (value.to + delta) - value.current;
-    },
-
-    /*
-        Friction
-
-        Apply friction to the current value
-        TODO: Make this framerate-independent
-    */
-    friction: function (value, duration) {
-        var newVelocity = speedPerFrame(value.velocity, duration) * (1 - value.friction);
-
-        return calc.speedPerSecond(newVelocity, duration);
-    },
-
-    spring: function (value, duration) {
-        var distance = value.to - value.current;
-
-        value.velocity += distance * speedPerFrame(value.spring, duration);
-        
-        return simulationManager.friction(value, duration);
-    },
-
-    bounce: function (value) {
-        var distance = 0,
-            to = value.to,
-            current = value.current,
-            bounce = value.bounce;
-        
-        // If we're using glide simulation we have to flip our target too
-        if (value.simulate === 'glide') {
-            distance = to - current;
-            value.to = current - (distance * bounce);
-        }
-        
-        return value.velocity *= - bounce;
-    },
-
-    capture: function (value, target) {
-        value.to = target;
-        value.simulate = 'spring';
-        value.capture = value.min = value.max = undefined;
-    }
-});
-
-exports = simulationManager;
-
-return exports;
-})();
-var __small$_42 = (function() {
-var exports = {};
-"use strict";
-
-var presetManager = __small$_31,
-    utils = __small$_38;
-
-exports = function (base, override) {
-    var props = (typeof base === 'string') ? presetManager.getDefined(base) : base;
-
-    // Override properties with second arg if it's an object
-    if (typeof override === 'object') {
-        props = utils.merge(props, override);
-    }
-
-    return props;
-};
+exports = Easing;
 return exports;
 })();
 var __small$_4 = (function() {
@@ -1484,8 +1374,114 @@ var exports = {};
 "use strict";
 
 var calc = __small$_24,
-    utils = __small$_38,
-    easingManager = __small$_29,
+    utils = __small$_37,
+    presetEasing = ((function() {
+var exports = {};
+/*
+    Easing functions
+    ----------------------------------------
+    
+    Generates and provides easing functions based on baseFunction definitions
+    
+    A call to easingFunction.get('functionName') returns a function that can be passed:
+        @param [number]: Progress 0-1
+        @param [number] (optional): Amp modifier, only accepted in some easing functions
+                                    and is used to adjust overall strength
+        @return [number]: Eased progress
+        
+    We can generate new functions by sending an easing function through easingFunction.extend(name, method).
+    Which will make nameIn, nameOut and nameInOut functions available to use.
+        
+    Easing functions from Robert Penner
+    http://www.robertpenner.com/easing/
+        
+    Bezier curve interpretor created from Gaëtan Renaudeau's original BezierEasing  
+    https://github.com/gre/bezier-easing/blob/master/index.js  
+    https://github.com/gre/bezier-easing/blob/master/LICENSE
+*/
+"use strict";
+
+var Easing = __small$_36,
+    easingFunction,
+    
+    // Generate easing function with provided power
+    generatePowerEasing = function (power) {
+        return function (progress) {
+            return Math.pow(progress, power);
+        };
+    },
+
+    /*
+        Each of these base functions is an easeIn
+        
+        On init, we use EasingFunction.mirror and .reverse to generate easeInOut and
+        easeOut functions respectively.
+    */
+    baseEasing = {
+        circ: function (progress) {
+            return 1 - Math.sin(Math.acos(progress));
+        },
+        back: function (progress) {
+            var strength = 1.5;
+
+            return (progress * progress) * ((strength + 1) * progress - strength);
+        }
+    };
+
+// Generate power easing easing
+['ease', 'cubic', 'quart', 'quint'].forEach(function (easingName, i) {
+    baseEasing[easingName] = generatePowerEasing(i + 2);
+});
+
+// Generate in/out/inOut variations
+for (var key in baseEasing) {
+    if (baseEasing.hasOwnProperty(key)) {
+        easingFunction = new Easing(baseEasing[key]);
+        baseEasing[key + 'In'] = easingFunction.in;
+        baseEasing[key + 'Out'] = easingFunction.out;
+        baseEasing[key + 'InOut'] = easingFunction.inOut;
+    }
+}
+
+/*
+    Linear easing adjustment
+    
+    The default easing method, not added with .extend as it has no Out or InOut
+    variation.
+    
+    @param [number]: Progress, from 0-1
+    @return [number]: Unadjusted progress
+*/
+baseEasing.linear = function (progress) {
+    return progress;
+};
+
+exports = baseEasing;
+return exports;
+})()),
+
+    /*
+        Ease value within ranged parameters
+        
+        @param [number]: Progress between 0 and 1
+        @param [number]: Value of 0 progress
+        @param [number]: Value of 1 progress
+        @param [string || function]: Name of preset easing
+            to use or generated easing function
+        @param [number]: Amplify progress out of specified range
+        @return [number]: Value of eased progress in range
+    */  
+    ease = function (progress, from, to, ease, escapeAmp) {
+        var progressLimited = calc.restricted(progress, 0, 1),
+            easingFunction = utils.isString(ease) ? presetEasing[ease] : ease;
+
+        if (progressLimited !== progress && escapeAmp) {
+            ease = 'linear';
+            progressLimited = progressLimited + ((progress - progressLimited) * escapeAmp);
+        }
+
+        return calc.valueEased(progressLimited, from, to, easingFunction);
+    },
 
     playAction = {
 
@@ -1552,8 +1548,8 @@ var parseArgs = ((function() {
 var exports = {};
 "use strict";
 
-var presetManager = __small$_31,
-    utils = __small$_38,
+var presetManager = __small$_28,
+    utils = __small$_37,
 
     parsePlaylist = function () {
         var args = [].slice.call(arguments),
@@ -1608,7 +1604,7 @@ exports = function () {
 
 return exports;
 })()),
-    utils = __small$_38;
+    utils = __small$_37;
 
 exports = {
     /*
@@ -1754,7 +1750,7 @@ return exports;
                 }
 
                 // Ease value
-                newValue = easingManager.withinRange(progress, value.origin, target, value.ease);
+                newValue = ease(progress, value.origin, target, value.ease);
             }
 
             return newValue;
@@ -1774,7 +1770,7 @@ exports = playAction;
 
 return exports;
 })();
-var __small$_47 = (function() {
+var __small$_49 = (function() {
 var exports = {};
 var splitCommaDelimited = ((function() {
 var exports = {};
@@ -1809,11 +1805,11 @@ var __small$_13 = (function() {
 var exports = {};
 "use strict";
 
-var createDelimited = __small$_46,
-    getColorValues = __small$_47,
-    functionCreate = __small$_48,
-    defaultProps = __small$_49,
-    terms = __small$_50.hsl;
+var createDelimited = __small$_48,
+    getColorValues = __small$_49,
+    functionCreate = __small$_50,
+    defaultProps = __small$_51,
+    terms = __small$_52.hsl;
 
 exports = {
 
@@ -1845,12 +1841,12 @@ var __small$_14 = (function() {
 var exports = {};
 "use strict";
 
-var createDelimited = __small$_46,
-    getColorValues = __small$_47,
-    functionCreate = __small$_48,
-    defaultProps = __small$_49,
+var createDelimited = __small$_48,
+    getColorValues = __small$_49,
+    functionCreate = __small$_50,
+    defaultProps = __small$_51,
     colorDefaults = defaultProps.color,
-    terms = __small$_50.colors;
+    terms = __small$_52.colors;
 
 exports = {
 
@@ -1926,7 +1922,7 @@ var __small$_16 = (function() {
 var exports = {};
 "use strict";
 
-var utils = __small$_38,
+var utils = __small$_37,
     rgb = __small$_14,
     hsl = __small$_13,
     hex = __small$_15,
@@ -1963,7 +1959,7 @@ return exports;
 
 var popmotion = ((function() {
 var exports = {};
-var __small$_58 = (function() {
+var __small$_59 = (function() {
 var exports = {};
 "use strict";
 
@@ -2001,11 +1997,11 @@ exports = function (method) {
 
 return exports;
 })();
-var __small$_33 = (function() {
+var __small$_30 = (function() {
 var exports = {};
 "use strict";
 
-var ModManager = __small$_61,
+var ModManager = __small$_62,
     valueTypeManager = new ModManager();
 
 valueTypeManager.defaultProps = function (type, key) {
@@ -2030,14 +2026,14 @@ valueTypeManager.test = function (value) {
 exports = valueTypeManager;
 return exports;
 })();
-var __small$_28 = (function() {
+var __small$_27 = (function() {
 var exports = {};
 "use strict";
 
 var Actor,
     ActorCollection,
-    utils = __small$_38,
-    generateMethodIterator = __small$_58,
+    utils = __small$_37,
+    generateMethodIterator = __small$_59,
     genericActionProps = ((function() {
 var exports = {};
 exports = {
@@ -2087,9 +2083,9 @@ exports = {
 };
 return exports;
 })()),
-    genericParse = __small$_42,
+    genericParse = __small$_44,
 
-    ModManager = __small$_61,
+    ModManager = __small$_62,
 
     actionManager = new ModManager();
 /*
@@ -2151,7 +2147,7 @@ exports = actionManager;
 
 return exports;
 })();
-var __small$_30 = (function() {
+var __small$_29 = (function() {
 var exports = {};
 "use strict";
 
@@ -2189,8 +2185,8 @@ exports = function (opts, prop, getter, setter) {
 };
 return exports;
 })()),
-    generateMethodIterator = __small$_58,
-    ModManager = __small$_61,
+    generateMethodIterator = __small$_59,
+    ModManager = __small$_62,
     routeManager = new ModManager(),
     Actor,
     ActorCollection;
@@ -2246,7 +2242,7 @@ routeManager.setActorCollection = function (actorCollection) {
 exports = routeManager;
 return exports;
 })();
-var __small$_37 = (function() {
+var __small$_35 = (function() {
 var exports = {};
 "use strict";
 
@@ -2265,7 +2261,7 @@ var Timer = ((function() {
 var exports = {};
 "use strict";
 
-var utils = __small$_38,
+var utils = __small$_37,
 
     maxElapsed = 33,
     Timer = function () {
@@ -2707,11 +2703,11 @@ Process.prototype = {
 exports = Process;
 return exports;
 })();
-var __small$_34 = (function() {
+var __small$_32 = (function() {
 var exports = {};
 "use strict";
 
-var Process = __small$_37,
+var Process = __small$_35,
     Queue = ((function() {
 var exports = {};
 "use strict";
@@ -2764,14 +2760,14 @@ Queue.prototype = {
 exports = Queue;
 return exports;
 })()),
-    utils = __small$_38,
+    utils = __small$_37,
     update = ((function() {
 var exports = {};
 "use strict";
 
-var actionManager = __small$_28,
-    routeManager = __small$_30,
-    valueTypeManager = __small$_33,
+var actionManager = __small$_27,
+    routeManager = __small$_29,
+    valueTypeManager = __small$_30,
     calc = __small$_24,
 
     defaultRoute = 'values',
@@ -2927,11 +2923,11 @@ var exports = {};
 "use strict";
 
 var calc = __small$_24,
-    utils = __small$_38,
+    utils = __small$_37,
     isNum = utils.isNum,
-    actionsManager = __small$_28,
-    valueTypesManager = __small$_33,
-    routeManager = __small$_30,
+    actionsManager = __small$_27,
+    valueTypesManager = __small$_30,
+    routeManager = __small$_29,
 
     numericalValues = ['current', 'to', 'init', 'min', 'max'],
     numNumericalValues = numericalValues.length;
@@ -3259,8 +3255,8 @@ exports = {
 };
 return exports;
 })()),
-    actionManager = __small$_28,
-    routeManager = __small$_30,
+    actionManager = __small$_27,
+    routeManager = __small$_29,
 
     Actor = function (element) {
         this.element = element || false;
@@ -3507,15 +3503,15 @@ routeManager.setActor(Actor);
 exports = Actor;
 return exports;
 })();
-var __small$_35 = (function() {
+var __small$_33 = (function() {
 var exports = {};
 "use strict";
 
-var Actor = __small$_34,
-    generateMethodIterator = __small$_58,
-    utils = __small$_38,
-    actionManager = __small$_28,
-    routeManager = __small$_30,
+var Actor = __small$_32,
+    generateMethodIterator = __small$_59,
+    utils = __small$_37,
+    actionManager = __small$_27,
+    routeManager = __small$_29,
 
     DEFAULT_STAGGER_EASE = 'linear',
 
@@ -3643,7 +3639,7 @@ var select = ((function() {
 var exports = {};
 "use strict";
 
-var ActorCollection = __small$_35;
+var ActorCollection = __small$_33;
 
 /*
     Create an ActorCollection based on a selection of DOM nodes
@@ -3673,18 +3669,18 @@ exports = function (selector) {
 };
 return exports;
 })()),
-    actionManager = __small$_28,
-    easingManager = __small$_29,
-    presetManager = __small$_31,
-    routeManager = __small$_30,
-    simulationManager = __small$_32,
-    valueTypeManager = __small$_33,
+    actionManager = __small$_27,
+    presetManager = __small$_28,
+    routeManager = __small$_29,
+    simulationManager = __small$_31,
+    valueTypeManager = __small$_30,
     calc = __small$_24,
 
-    Actor = __small$_34,
-    ActorCollection = __small$_35,
-    Input = __small$_36,
-    Process = __small$_37,
+    Actor = __small$_32,
+    ActorCollection = __small$_33,
+    Input = __small$_34,
+    Process = __small$_35,
+    Easing = __small$_36,
 
     Popmotion = {
 
@@ -3696,17 +3692,14 @@ return exports;
 
         Process: Process,
 
+        Easing: Easing,
+
         select: function (items) {
             return select(items);
         },
 
         addAction: function () {
             actionManager.extend.apply(actionManager, arguments);
-            return this;
-        },
-
-        addEasing: function () {
-            easingManager.extend.apply(easingManager, arguments);
             return this;
         },
 
@@ -3783,7 +3776,7 @@ var calc = __small$_24,
 var exports = {};
 "use strict";
 
-var simulations = __small$_32;
+var simulations = __small$_31;
 
 exports = function (simulation, value, duration, started) {
     var velocity = simulations[simulation](value, duration, started);
@@ -3945,12 +3938,12 @@ var exports = {};
 "use strict";
 
 var calc = __small$_24,
-    genericParser = __small$_42,
+    genericParser = __small$_44,
     Pointer = ((function() {
 var exports = {};
 "use strict";
 
-var Input = __small$_36,
+var Input = __small$_34,
     currentPointer, // Sort this out for multitouch
     
     TOUCHMOVE = 'touchmove',
@@ -4306,10 +4299,10 @@ return exports;
 var exports = {};
 "use strict";
 
-var createDelimited = __small$_46,
+var createDelimited = __small$_48,
     pxDefaults = __small$_12.defaultProps,
-    splitSpaceDelimited = __small$_51,
-    terms = __small$_50.positions;
+    splitSpaceDelimited = __small$_53,
+    terms = __small$_52.positions;
 
 exports = {
 
@@ -4348,10 +4341,10 @@ return exports;
 var exports = {};
 "use strict";
 
-var terms = __small$_50.dimensions,
+var terms = __small$_52.dimensions,
     pxDefaults = __small$_12.defaultProps,
-    createDelimited = __small$_46,
-    splitSpaceDelimited = __small$_51;
+    createDelimited = __small$_48,
+    splitSpaceDelimited = __small$_53;
 
 exports = {
 
@@ -4398,11 +4391,11 @@ var exports = {};
 "use strict";
 
 var color = __small$_16,
-    utils = __small$_38,
+    utils = __small$_37,
     pxDefaults = __small$_12.defaultProps,
-    terms = __small$_50.shadow,
-    splitSpaceDelimited = __small$_51,
-    createDelimited = __small$_46,
+    terms = __small$_52.shadow,
+    splitSpaceDelimited = __small$_53,
+    createDelimited = __small$_48,
     shadowTerms = terms.slice(0,4);
 
 exports = {
@@ -4472,7 +4465,7 @@ var transformDictionary = ((function() {
 var exports = {};
 "use strict";
 
-var positionTerms = __small$_50.positions,
+var positionTerms = __small$_52.positions,
     numPositionTerms = positionTerms.length,
 
     TRANSFORM_PERSPECTIVE = 'transformPerspective',

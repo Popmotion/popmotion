@@ -1,5 +1,4 @@
-var utils = require('../../inc/utils'),
-    Bezier = require('./Bezier'),
+var Bezier = require('./Bezier'),
 
     /*
         Mirror easing
