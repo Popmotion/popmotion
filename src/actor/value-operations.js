@@ -8,7 +8,11 @@ var calc = require('../inc/calc'),
     routeManager = require('../routes/manager'),
 
     numericalValues = ['current', 'to', 'init', 'min', 'max'],
-    numNumericalValues = numericalValues.length;
+    numNumericalValues = numericalValues.length,
+
+    checkNumericalValue = function (name) {
+        return (numericalValues.indexOf(name) > -1);
+    };
 
 module.exports = {
 
@@ -113,7 +117,7 @@ module.exports = {
             propertyName = numericalValues[i];
 
             if (value.hasOwnProperty(propertyName)) {
-                if (utils.isFunc(value[propertyName])) {
+                if (utils.isFunc(value[propertyName]) && checkNumericalValue(propertyName)) {
                     value[propertyName] = value[propertyName].call(actor);
                 }
 
@@ -166,10 +170,10 @@ module.exports = {
     */
     resolve: function (name, property, value, actor) {
         var currentValue = value.current || 0,
-            isNumericalValue = (numericalValues.indexOf(name) > -1);
+            isNumericalValue = checkNumericalValue(name);
 
         // If this is a function, resolve
-        if (utils.isFunc(property)) {
+        if (utils.isFunc(property) && isNumericalValue) {
             property = property.call(actor, currentValue);
         }
 

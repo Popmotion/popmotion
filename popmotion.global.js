@@ -1017,7 +1017,7 @@ presetManager.getDefined = function (name) {
 exports = presetManager;
 return exports;
 })();
-var __small$_31 = (function() {
+var __small$_30 = (function() {
 var exports = {};
 "use strict";
 
@@ -1959,7 +1959,7 @@ return exports;
 
 var popmotion = ((function() {
 var exports = {};
-var __small$_59 = (function() {
+var __small$_61 = (function() {
 var exports = {};
 "use strict";
 
@@ -1997,7 +1997,7 @@ exports = function (method) {
 
 return exports;
 })();
-var __small$_30 = (function() {
+var __small$_31 = (function() {
 var exports = {};
 "use strict";
 
@@ -2033,7 +2033,7 @@ var exports = {};
 var Actor,
     ActorCollection,
     utils = __small$_37,
-    generateMethodIterator = __small$_59,
+    generateMethodIterator = __small$_61,
     genericActionProps = ((function() {
 var exports = {};
 exports = {
@@ -2185,7 +2185,7 @@ exports = function (opts, prop, getter, setter) {
 };
 return exports;
 })()),
-    generateMethodIterator = __small$_59,
+    generateMethodIterator = __small$_61,
     ModManager = __small$_62,
     routeManager = new ModManager(),
     Actor,
@@ -2767,7 +2767,7 @@ var exports = {};
 
 var actionManager = __small$_27,
     routeManager = __small$_29,
-    valueTypeManager = __small$_30,
+    valueTypeManager = __small$_31,
     calc = __small$_24,
 
     defaultRoute = 'values',
@@ -2926,11 +2926,15 @@ var calc = __small$_24,
     utils = __small$_37,
     isNum = utils.isNum,
     actionsManager = __small$_27,
-    valueTypesManager = __small$_30,
+    valueTypesManager = __small$_31,
     routeManager = __small$_29,
 
     numericalValues = ['current', 'to', 'init', 'min', 'max'],
-    numNumericalValues = numericalValues.length;
+    numNumericalValues = numericalValues.length,
+
+    checkNumericalValue = function (name) {
+        return (numericalValues.indexOf(name) > -1);
+    };
 
 exports = {
 
@@ -3035,7 +3039,7 @@ exports = {
             propertyName = numericalValues[i];
 
             if (value.hasOwnProperty(propertyName)) {
-                if (utils.isFunc(value[propertyName])) {
+                if (utils.isFunc(value[propertyName]) && checkNumericalValue(propertyName)) {
                     value[propertyName] = value[propertyName].call(actor);
                 }
 
@@ -3088,10 +3092,10 @@ exports = {
     */
     resolve: function (name, property, value, actor) {
         var currentValue = value.current || 0,
-            isNumericalValue = (numericalValues.indexOf(name) > -1);
+            isNumericalValue = checkNumericalValue(name);
 
         // If this is a function, resolve
-        if (utils.isFunc(property)) {
+        if (utils.isFunc(property) && isNumericalValue) {
             property = property.call(actor, currentValue);
         }
 
@@ -3508,7 +3512,7 @@ var exports = {};
 "use strict";
 
 var Actor = __small$_32,
-    generateMethodIterator = __small$_59,
+    generateMethodIterator = __small$_61,
     utils = __small$_37,
     actionManager = __small$_27,
     routeManager = __small$_29,
@@ -3672,8 +3676,8 @@ return exports;
     actionManager = __small$_27,
     presetManager = __small$_28,
     routeManager = __small$_29,
-    simulationManager = __small$_31,
-    valueTypeManager = __small$_30,
+    simulationManager = __small$_30,
+    valueTypeManager = __small$_31,
     calc = __small$_24,
 
     Actor = __small$_32,
@@ -3776,7 +3780,7 @@ var calc = __small$_24,
 var exports = {};
 "use strict";
 
-var simulations = __small$_31;
+var simulations = __small$_30;
 
 exports = function (simulation, value, duration, started) {
     var velocity = simulations[simulation](value, duration, started);
