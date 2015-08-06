@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.0.0] 2015-08-07
+
+### Changed
+- New easing functions are now generated with `new ui.Easing()` and provided as the `ease` property. When provided an easeIn function, `in`, `out` and `inOut` methods are returned.
+
 ## [1.0.0] 2015-08-06
 
 **Note:** Forked from Redshift v2.1.1.
@@ -14,7 +19,7 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
     - **Rubix:** Action (as in, an Action an Actor can perform)
 
 ### Added
-- Add new easing functions with `ui.addEasing()`. Provide the easeIn function and Redshift will generate easeOut and easeInOut variants.
+- Add new easing functions with `ui.addEasing()`. Provide the easeIn function and Popmotion will generate easeOut and easeInOut variants.
 - Add new simulation functions to `run` with `ui.addSimulation()`.
 - Any value can be a special **value type**, ie a color. `'#FFF'` splits into four numerical properties, `Red`, `Blue`, `Green` and `Alpha`.
 - Add new value types with `ui.addValueType()`.
