@@ -4,7 +4,10 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
 ## [2.0.0] 2015-08-07
 
-### Changed
+### Removed
+- `ui.addEasing()`
+
+### Added
 - New easing functions are now generated with `new ui.Easing()` and provided as the `ease` property. When provided an easeIn function, `in`, `out` and `inOut` methods are returned.
 
 ## [1.0.0] 2015-08-06
