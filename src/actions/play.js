@@ -7,7 +7,30 @@
 
 var calc = require('../inc/calc'),
     utils = require('../inc/utils'),
-    easingManager = require('./play/easing-manager'),
+    presetEasing = require('./play/preset-easing'),
+
+    /*
+        Ease value within ranged parameters
+        
+        @param [number]: Progress between 0 and 1
+        @param [number]: Value of 0 progress
+        @param [number]: Value of 1 progress
+        @param [string || function]: Name of preset easing
+            to use or generated easing function
+        @param [number]: Amplify progress out of specified range
+        @return [number]: Value of eased progress in range
+    */  
+    ease = function (progress, from, to, ease, escapeAmp) {
+        var progressLimited = calc.restricted(progress, 0, 1),
+            easingFunction = utils.isString(ease) ? presetEasing[ease] : ease;
+
+        if (progressLimited !== progress && escapeAmp) {
+            ease = 'linear';
+            progressLimited = progressLimited + ((progress - progressLimited) * escapeAmp);
+        }
+
+        return calc.valueEased(progressLimited, from, to, easingFunction);
+    },
 
     playAction = {
 
@@ -67,7 +90,7 @@ var calc = require('../inc/calc'),
                 }
 
                 // Ease value
-                newValue = easingManager.withinRange(progress, value.origin, target, value.ease);
+                newValue = ease(progress, value.origin, target, value.ease);
             }
 
             return newValue;

@@ -2,7 +2,6 @@
 
 var select = require('./actor/select'),
     actionManager = require('./actions/manager'),
-    easingManager = require('./actions/play/easing-manager'),
     presetManager = require('./actor/preset-manager'),
     routeManager = require('./routes/manager'),
     simulationManager = require('./actions/run/simulation-manager'),
@@ -13,6 +12,7 @@ var select = require('./actor/select'),
     ActorCollection = require('./actor/ActorCollection'),
     Input = require('./input/Input'),
     Process = require('./process/Process'),
+    Easing = require('./actions/play/Easing'),
 
     Popmotion = {
 
@@ -24,17 +24,14 @@ var select = require('./actor/select'),
 
         Process: Process,
 
+        Easing: Easing,
+
         select: function (items) {
             return select(items);
         },
 
         addAction: function () {
             actionManager.extend.apply(actionManager, arguments);
-            return this;
-        },
-
-        addEasing: function () {
-            easingManager.extend.apply(easingManager, arguments);
             return this;
         },
 
