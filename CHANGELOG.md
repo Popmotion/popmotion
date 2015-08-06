@@ -2,7 +2,7 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
-## [2.0.1 2015-08-07
+## [2.0.1] 2015-08-07
 
 ### Changed
 - Only numerical properties can be set as functions to be resolved on action start.
