@@ -13,6 +13,7 @@ var select = require('./actor/select'),
     ActorCollection = require('./actor/ActorCollection'),
     Input = require('./input/Input'),
     Process = require('./process/Process'),
+    Easing = require('./actions/play/Easing'),
 
     Popmotion = {
 
@@ -23,6 +24,8 @@ var select = require('./actor/select'),
         Input: Input,
 
         Process: Process,
+
+        Easing: Easing,
 
         select: function (items) {
             return select(items);
