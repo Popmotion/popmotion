@@ -4,7 +4,7 @@
 "use strict";
 
 var calc = require('../inc/calc'),
-    simulate = require('./run/simulate.js');
+    utils = require('../inc/utils');
 
 module.exports = {
 
@@ -26,7 +26,11 @@ module.exports = {
         @return [number]: Calculated value
     */
     process: function (value, key, frameDuration) {
-        value.velocity = simulate(value.simulate, value, frameDuration, this.started);
+        var simulate = value.simulate,
+            simulation = utils.isString(simulate) ? simulations[simulate] : simulate,
+            newVelocity = simulation(value, duration, started);
+
+        value.velocity = (Math.abs(newVelocity) >= value.stopSpeed) ? newVelocity : 0;
         return value.current + calc.speedPerFrame(value.velocity, frameDuration);
     },
     
