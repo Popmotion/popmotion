@@ -81,10 +81,6 @@ var calc = require('../inc/calc'),
                 // Mark Action as NOT ended if still in progress
                 if (progress !== progressTarget) {
                     this.hasEnded = false;
-
-                // Or, if we have ended, clear value target
-                } else {
-                    value.to = undefined;
                 }
 
                 // Step progress if we're stepping
