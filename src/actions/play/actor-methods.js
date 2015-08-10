@@ -98,5 +98,13 @@ module.exports = {
         }
 
         return stepTaken;
+    },
+
+    seek: function (progress) {
+        this.elapsed = this.duration * progress;
+
+        if (!this.isActive) {
+            this.process.fire();
+        }
     }
 };
