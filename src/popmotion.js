@@ -4,7 +4,6 @@ var select = require('./actor/select'),
     actionManager = require('./actions/manager'),
     presetManager = require('./actor/preset-manager'),
     routeManager = require('./routes/manager'),
-    simulationManager = require('./actions/run/simulation-manager'),
     valueTypeManager = require('./value-types/manager'),
     calc = require('./inc/calc'),
 
@@ -37,11 +36,6 @@ var select = require('./actor/select'),
 
         addPreset: function () {
             presetManager.extend.apply(presetManager, arguments);
-            return this;
-        },
-
-        addSimulation: function () {
-            simulationManager.extend.apply(simulationManager, arguments);
             return this;
         },
 

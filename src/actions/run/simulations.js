@@ -2,15 +2,12 @@
 
 var calc = require('../../inc/calc'),
     utils = require('../../inc/utils'),
-    speedPerFrame = calc.speedPerFrame,
-
-    ModManager = require('../../inc/ModManager'),
-    simulationManager = new ModManager();
+    speedPerFrame = calc.speedPerFrame;
 
 /*
     Add core physics simulations
 */
-simulationManager.extend({
+var simulations = {
     /*
         Velocity
         
@@ -21,7 +18,7 @@ simulationManager.extend({
     velocity: function (value, duration) {
         value.velocity = value.velocity - speedPerFrame(value.deceleration, duration) + speedPerFrame(value.acceleration, duration);
 
-        return simulationManager.friction(value, duration);
+        return simulations.friction(value, duration);
     },
 
     /*
@@ -54,7 +51,7 @@ simulationManager.extend({
 
         value.velocity += distance * speedPerFrame(value.spring, duration);
         
-        return simulationManager.friction(value, duration);
+        return simulations.friction(value, duration);
     },
 
     bounce: function (value) {
@@ -77,6 +74,6 @@ simulationManager.extend({
         value.simulate = 'spring';
         value.capture = value.min = value.max = undefined;
     }
-});
+};
 
-module.exports = simulationManager;
+module.exports = simulations;

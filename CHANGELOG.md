@@ -2,6 +2,16 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.0.3] 2015-08-10
+
+### Removed
+- Removed undocumented `ui.addSimulation` - new simulations now passed as function instead of simulation name.
+
+## [2.0.2] 2015-08-10
+
+### Changed
+- `Actor.seek` no longer an Action, much higher performance.
+
 ## [2.0.1] 2015-08-07
 
 ### Changed

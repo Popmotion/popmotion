@@ -2,7 +2,7 @@
 var exports = {};
 var popmotion = ((function() {
 var exports = {};
-var __small$_9 = (function() {
+var __small$_11 = (function() {
 var exports = {};
 exports = {
     defaultProps: {
@@ -11,7 +11,7 @@ exports = {
 };
 return exports;
 })();
-var __small$_24 = (function() {
+var __small$_23 = (function() {
 var exports = {};
 /*
     Utility functions
@@ -255,7 +255,7 @@ exports = {
 };
 return exports;
 })();
-var __small$_23 = (function() {
+var __small$_22 = (function() {
 var exports = {};
 /*
     Calculators
@@ -265,7 +265,7 @@ var exports = {};
 */
 "use strict";
 
-var utils = __small$_24,
+var utils = __small$_23,
 
     calc = {
         
@@ -624,7 +624,7 @@ var utils = __small$_24,
 exports = calc;
 return exports;
 })();
-var __small$_46 = (function() {
+var __small$_44 = (function() {
 var exports = {};
 "use strict";
 
@@ -650,11 +650,34 @@ exports = function (values, terms, delimiter, chop) {
 };
 return exports;
 })();
-var __small$_48 = (function() {
+var __small$_47 = (function() {
 var exports = {};
 exports = function (value, prefix) {
     return prefix + '(' + value + ')';
 };
+return exports;
+})();
+var __small$_48 = (function() {
+var exports = {};
+"use strict";
+
+exports = {
+    color: {
+        min: 0,
+        max: 255,
+        round: true
+    },
+    opacity: {
+        min: 0,
+        max: 1
+    },
+    percent: {
+        min: 0,
+        max: 100,
+        unit: '%'
+    }
+};
+
 return exports;
 })();
 var __small$_49 = (function() {
@@ -678,29 +701,6 @@ return exports;
 })();
 var __small$_50 = (function() {
 var exports = {};
-"use strict";
-
-exports = {
-    color: {
-        min: 0,
-        max: 255,
-        round: true
-    },
-    opacity: {
-        min: 0,
-        max: 1
-    },
-    percent: {
-        min: 0,
-        max: 100,
-        unit: '%'
-    }
-};
-
-return exports;
-})();
-var __small$_52 = (function() {
-var exports = {};
 exports = function (value) {
     return (typeof value === 'string') ? value.split(' ') : [value];
 };
@@ -713,8 +713,8 @@ var exports = {};
 */
 "use strict";
 
-var calc = __small$_23,
-    utils = __small$_24,
+var calc = __small$_22,
+    utils = __small$_23,
     History = ((function() {
 var exports = {};
 "use strict";
@@ -968,11 +968,11 @@ ModManager.prototype = {
 exports = ModManager;
 return exports;
 })();
-var __small$_36 = (function() {
+var __small$_38 = (function() {
 var exports = {};
 "use strict";
 
-var utils = __small$_24,
+var utils = __small$_23,
     ModManager = __small$_60,
     presetManager = new ModManager(),
 
@@ -1017,12 +1017,12 @@ presetManager.getDefined = function (name) {
 exports = presetManager;
 return exports;
 })();
-var __small$_29 = (function() {
+var __small$_31 = (function() {
 var exports = {};
 "use strict";
 
-var presetManager = __small$_36,
-    utils = __small$_24;
+var presetManager = __small$_38,
+    utils = __small$_23;
 
 exports = function (base, override) {
     var props = (typeof base === 'string') ? presetManager.getDefined(base) : base;
@@ -1036,94 +1036,7 @@ exports = function (base, override) {
 };
 return exports;
 })();
-var __small$_38 = (function() {
-var exports = {};
-"use strict";
-
-var calc = __small$_23,
-    utils = __small$_24,
-    speedPerFrame = calc.speedPerFrame,
-
-    ModManager = __small$_60,
-    simulationManager = new ModManager();
-
-/*
-    Add core physics simulations
-*/
-simulationManager.extend({
-    /*
-        Velocity
-        
-        The default .run() simulation.
-        
-        Applies any set deceleration and acceleration to existing velocity
-    */
-    velocity: function (value, duration) {
-        value.velocity = value.velocity - speedPerFrame(value.deceleration, duration) + speedPerFrame(value.acceleration, duration);
-
-        return simulationManager.friction(value, duration);
-    },
-
-    /*
-        Glide
-        
-        Emulates touch device scrolling effects with exponential decay
-        http://ariya.ofilabs.com/2013/11/javascript-kinetic-scrolling-part-2.html
-    */
-    glide: function (value, duration, started) {
-        var timeUntilFinished = - utils.currentTime() - started,
-            delta = - value.to * Math.exp(timeUntilFinished / value.timeConstant);
-
-        return (value.to + delta) - value.current;
-    },
-
-    /*
-        Friction
-
-        Apply friction to the current value
-        TODO: Make this framerate-independent
-    */
-    friction: function (value, duration) {
-        var newVelocity = speedPerFrame(value.velocity, duration) * (1 - value.friction);
-
-        return calc.speedPerSecond(newVelocity, duration);
-    },
-
-    spring: function (value, duration) {
-        var distance = value.to - value.current;
-
-        value.velocity += distance * speedPerFrame(value.spring, duration);
-        
-        return simulationManager.friction(value, duration);
-    },
-
-    bounce: function (value) {
-        var distance = 0,
-            to = value.to,
-            current = value.current,
-            bounce = value.bounce;
-        
-        // If we're using glide simulation we have to flip our target too
-        if (value.simulate === 'glide') {
-            distance = to - current;
-            value.to = current - (distance * bounce);
-        }
-        
-        return value.velocity *= - bounce;
-    },
-
-    capture: function (value, target) {
-        value.to = target;
-        value.simulate = 'spring';
-        value.capture = value.min = value.max = undefined;
-    }
-});
-
-exports = simulationManager;
-
-return exports;
-})();
-var __small$_44 = (function() {
+var __small$_45 = (function() {
 var exports = {};
 var Bezier = ((function() {
 var exports = {};
@@ -1364,7 +1277,7 @@ var Easing = function (x1, y1, x2, y2) {
 exports = Easing;
 return exports;
 })();
-var __small$_47 = (function() {
+var __small$_46 = (function() {
 var exports = {};
 var splitCommaDelimited = ((function() {
 var exports = {};
@@ -1399,10 +1312,10 @@ var __small$_12 = (function() {
 var exports = {};
 "use strict";
 
-var createDelimited = __small$_46,
-    getColorValues = __small$_47,
-    functionCreate = __small$_48,
-    defaultProps = __small$_50,
+var createDelimited = __small$_44,
+    getColorValues = __small$_46,
+    functionCreate = __small$_47,
+    defaultProps = __small$_48,
     terms = __small$_49.hsl;
 
 exports = {
@@ -1435,10 +1348,10 @@ var __small$_13 = (function() {
 var exports = {};
 "use strict";
 
-var createDelimited = __small$_46,
-    getColorValues = __small$_47,
-    functionCreate = __small$_48,
-    defaultProps = __small$_50,
+var createDelimited = __small$_44,
+    getColorValues = __small$_46,
+    functionCreate = __small$_47,
+    defaultProps = __small$_48,
     colorDefaults = defaultProps.color,
     terms = __small$_49.colors;
 
@@ -1516,7 +1429,7 @@ var __small$_15 = (function() {
 var exports = {};
 "use strict";
 
-var utils = __small$_24,
+var utils = __small$_23,
     rgb = __small$_13,
     hsl = __small$_12,
     hex = __small$_14,
@@ -1553,36 +1466,7 @@ return exports;
 
 var popmotion = ((function() {
 var exports = {};
-var __small$_39 = (function() {
-var exports = {};
-"use strict";
-
-var ModManager = __small$_60,
-    valueTypeManager = new ModManager();
-
-valueTypeManager.defaultProps = function (type, key) {
-    var valueType = this[type],
-        defaultProps = (valueType.defaultProps) ? valueType.defaultProps[key] || valueType.defaultProps : {};
-
-    return defaultProps;
-};
-
-valueTypeManager.test = function (value) {
-    var type = false;
-
-    this.each(function (key, mod) {
-        if (mod.test && mod.test(value)) {
-            type = key;
-        }
-    });
-
-    return type;
-};
-
-exports = valueTypeManager;
-return exports;
-})();
-var __small$_61 = (function() {
+var __small$_58 = (function() {
 var exports = {};
 "use strict";
 
@@ -1620,14 +1504,14 @@ exports = function (method) {
 
 return exports;
 })();
-var __small$_34 = (function() {
+var __small$_35 = (function() {
 var exports = {};
 "use strict";
 
 var Actor,
     ActorCollection,
-    utils = __small$_24,
-    generateMethodIterator = __small$_61,
+    utils = __small$_23,
+    generateMethodIterator = __small$_58,
     genericActionProps = ((function() {
 var exports = {};
 exports = {
@@ -1677,7 +1561,7 @@ exports = {
 };
 return exports;
 })()),
-    genericParse = __small$_29,
+    genericParse = __small$_31,
 
     ModManager = __small$_60,
 
@@ -1741,6 +1625,35 @@ exports = actionManager;
 
 return exports;
 })();
+var __small$_39 = (function() {
+var exports = {};
+"use strict";
+
+var ModManager = __small$_60,
+    valueTypeManager = new ModManager();
+
+valueTypeManager.defaultProps = function (type, key) {
+    var valueType = this[type],
+        defaultProps = (valueType.defaultProps) ? valueType.defaultProps[key] || valueType.defaultProps : {};
+
+    return defaultProps;
+};
+
+valueTypeManager.test = function (value) {
+    var type = false;
+
+    this.each(function (key, mod) {
+        if (mod.test && mod.test(value)) {
+            type = key;
+        }
+    });
+
+    return type;
+};
+
+exports = valueTypeManager;
+return exports;
+})();
 var __small$_37 = (function() {
 var exports = {};
 "use strict";
@@ -1779,7 +1692,7 @@ exports = function (opts, prop, getter, setter) {
 };
 return exports;
 })()),
-    generateMethodIterator = __small$_61,
+    generateMethodIterator = __small$_58,
     ModManager = __small$_60,
     routeManager = new ModManager(),
     Actor,
@@ -1855,7 +1768,7 @@ var Timer = ((function() {
 var exports = {};
 "use strict";
 
-var utils = __small$_24,
+var utils = __small$_23,
 
     maxElapsed = 33,
     Timer = function () {
@@ -2351,15 +2264,15 @@ Queue.prototype = {
 exports = Queue;
 return exports;
 })()),
-    utils = __small$_24,
+    utils = __small$_23,
     update = ((function() {
 var exports = {};
 "use strict";
 
-var actionManager = __small$_34,
+var actionManager = __small$_35,
     routeManager = __small$_37,
     valueTypeManager = __small$_39,
-    calc = __small$_23,
+    calc = __small$_22,
 
     defaultRoute = 'values',
 
@@ -2509,10 +2422,10 @@ return exports;
 var exports = {};
 "use strict";
 
-var calc = __small$_23,
-    utils = __small$_24,
+var calc = __small$_22,
+    utils = __small$_23,
     isNum = utils.isNum,
-    actionsManager = __small$_34,
+    actionsManager = __small$_35,
     valueTypesManager = __small$_39,
     routeManager = __small$_37,
 
@@ -2846,7 +2759,7 @@ exports = {
 };
 return exports;
 })()),
-    actionManager = __small$_34,
+    actionManager = __small$_35,
     routeManager = __small$_37,
 
     Actor = function (element) {
@@ -3099,9 +3012,9 @@ var exports = {};
 "use strict";
 
 var Actor = __small$_40,
-    generateMethodIterator = __small$_61,
-    utils = __small$_24,
-    actionManager = __small$_34,
+    generateMethodIterator = __small$_58,
+    utils = __small$_23,
+    actionManager = __small$_35,
     routeManager = __small$_37,
 
     DEFAULT_STAGGER_EASE = 'linear',
@@ -3260,18 +3173,17 @@ exports = function (selector) {
 };
 return exports;
 })()),
-    actionManager = __small$_34,
-    presetManager = __small$_36,
+    actionManager = __small$_35,
+    presetManager = __small$_38,
     routeManager = __small$_37,
-    simulationManager = __small$_38,
     valueTypeManager = __small$_39,
-    calc = __small$_23,
+    calc = __small$_22,
 
     Actor = __small$_40,
     ActorCollection = __small$_41,
     Input = __small$_42,
     Process = __small$_43,
-    Easing = __small$_44,
+    Easing = __small$_45,
 
     Popmotion = {
 
@@ -3296,11 +3208,6 @@ return exports;
 
         addPreset: function () {
             presetManager.extend.apply(presetManager, arguments);
-            return this;
-        },
-
-        addSimulation: function () {
-            simulationManager.extend.apply(simulationManager, arguments);
             return this;
         },
 
@@ -3363,8 +3270,8 @@ var exports = {};
 */
 "use strict";
 
-var calc = __small$_23,
-    utils = __small$_24,
+var calc = __small$_22,
+    utils = __small$_23,
     presetEasing = ((function() {
 var exports = {};
 /*
@@ -3391,7 +3298,7 @@ var exports = {};
 */
 "use strict";
 
-var Easing = __small$_44,
+var Easing = __small$_45,
     easingFunction,
     
     // Generate easing function with provided power
@@ -3538,8 +3445,8 @@ var parseArgs = ((function() {
 var exports = {};
 "use strict";
 
-var presetManager = __small$_36,
-    utils = __small$_24,
+var presetManager = __small$_38,
+    utils = __small$_23,
 
     parsePlaylist = function () {
         var args = [].slice.call(arguments),
@@ -3594,7 +3501,7 @@ exports = function () {
 
 return exports;
 })()),
-    utils = __small$_24;
+    utils = __small$_23;
 
 exports = {
     /*
@@ -3774,17 +3681,90 @@ var exports = {};
 */
 "use strict";
 
-var calc = __small$_23,
-    simulate = ((function() {
+var calc = __small$_22,
+    utils = __small$_23,
+    simulations = ((function() {
 var exports = {};
 "use strict";
 
-var simulations = __small$_38;
+var calc = __small$_22,
+    utils = __small$_23,
+    speedPerFrame = calc.speedPerFrame;
 
-exports = function (simulation, value, duration, started) {
-    var velocity = simulations[simulation](value, duration, started);
-    return (Math.abs(velocity) >= value.stopSpeed) ? velocity : 0;
+/*
+    Add core physics simulations
+*/
+var simulations = {
+    /*
+        Velocity
+        
+        The default .run() simulation.
+        
+        Applies any set deceleration and acceleration to existing velocity
+    */
+    velocity: function (value, duration) {
+        value.velocity = value.velocity - speedPerFrame(value.deceleration, duration) + speedPerFrame(value.acceleration, duration);
+
+        return simulations.friction(value, duration);
+    },
+
+    /*
+        Glide
+        
+        Emulates touch device scrolling effects with exponential decay
+        http://ariya.ofilabs.com/2013/11/javascript-kinetic-scrolling-part-2.html
+    */
+    glide: function (value, duration, started) {
+        var timeUntilFinished = - utils.currentTime() - started,
+            delta = - value.to * Math.exp(timeUntilFinished / value.timeConstant);
+
+        return (value.to + delta) - value.current;
+    },
+
+    /*
+        Friction
+
+        Apply friction to the current value
+        TODO: Make this framerate-independent
+    */
+    friction: function (value, duration) {
+        var newVelocity = speedPerFrame(value.velocity, duration) * (1 - value.friction);
+
+        return calc.speedPerSecond(newVelocity, duration);
+    },
+
+    spring: function (value, duration) {
+        var distance = value.to - value.current;
+
+        value.velocity += distance * speedPerFrame(value.spring, duration);
+        
+        return simulations.friction(value, duration);
+    },
+
+    bounce: function (value) {
+        var distance = 0,
+            to = value.to,
+            current = value.current,
+            bounce = value.bounce;
+        
+        // If we're using glide simulation we have to flip our target too
+        if (value.simulate === 'glide') {
+            distance = to - current;
+            value.to = current - (distance * bounce);
+        }
+        
+        return value.velocity *= - bounce;
+    },
+
+    capture: function (value, target) {
+        value.to = target;
+        value.simulate = 'spring';
+        value.capture = value.min = value.max = undefined;
+    }
 };
+
+exports = simulations;
+
 return exports;
 })());
 
@@ -3850,9 +3830,13 @@ return exports;
         @param [number]: Duration of frame in ms
         @return [number]: Calculated value
     */
-    process: function (value, key, frameDuration) {
-        value.velocity = simulate(value.simulate, value, frameDuration, this.started);
-        return value.current + calc.speedPerFrame(value.velocity, frameDuration);
+    process: function (value, key, timeSinceLastFrame) {
+        var simulate = value.simulate,
+            simulation = utils.isString(simulate) ? simulations[simulate] : simulate,
+            newVelocity = simulation(value, timeSinceLastFrame, this.started);
+
+        value.velocity = (Math.abs(newVelocity) >= value.stopSpeed) ? newVelocity : 0;
+        return value.current + calc.speedPerFrame(value.velocity, timeSinceLastFrame);
     },
     
     /*
@@ -3940,8 +3924,8 @@ var exports = {};
 */
 "use strict";
 
-var calc = __small$_23,
-    genericParser = __small$_29,
+var calc = __small$_22,
+    genericParser = __small$_31,
     Pointer = ((function() {
 var exports = {};
 "use strict";
@@ -4118,7 +4102,7 @@ var exports = {};
 */
 "use strict";
 
-var calc = __small$_23,
+var calc = __small$_22,
 
     STRING = 'string',
     
@@ -4239,7 +4223,7 @@ exports = {
 };
 return exports;
 })()),
-        px: __small$_9,
+        px: __small$_11,
         hsl: __small$_12,
         rgb: __small$_13,
         hex: __small$_14,
@@ -4248,9 +4232,9 @@ return exports;
 var exports = {};
 "use strict";
 
-var createDelimited = __small$_46,
-    pxDefaults = __small$_9.defaultProps,
-    splitSpaceDelimited = __small$_52,
+var createDelimited = __small$_44,
+    pxDefaults = __small$_11.defaultProps,
+    splitSpaceDelimited = __small$_50,
     terms = __small$_49.positions;
 
 exports = {
@@ -4291,9 +4275,9 @@ var exports = {};
 "use strict";
 
 var terms = __small$_49.dimensions,
-    pxDefaults = __small$_9.defaultProps,
-    createDelimited = __small$_46,
-    splitSpaceDelimited = __small$_52;
+    pxDefaults = __small$_11.defaultProps,
+    createDelimited = __small$_44,
+    splitSpaceDelimited = __small$_50;
 
 exports = {
 
@@ -4340,11 +4324,11 @@ var exports = {};
 "use strict";
 
 var color = __small$_15,
-    utils = __small$_24,
-    pxDefaults = __small$_9.defaultProps,
+    utils = __small$_23,
+    pxDefaults = __small$_11.defaultProps,
     terms = __small$_49.shadow,
-    splitSpaceDelimited = __small$_52,
-    createDelimited = __small$_46,
+    splitSpaceDelimited = __small$_50,
+    createDelimited = __small$_44,
     shadowTerms = terms.slice(0,4);
 
 exports = {
