@@ -17,11 +17,6 @@ popmotion
     .addAction('link', require('../actions/link'))
 
     /*
-        Seek Action - depedent on 'play' Action
-    */
-    .addAction('seek', require('../actions/seek'))
-
-    /*
         Optional value type support
     */
     .addValueType({

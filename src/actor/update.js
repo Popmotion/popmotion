@@ -26,8 +26,8 @@ var actionManager = require('../actions/manager'),
         }
 
         // Update Action input
-        if (action.onFrameStart) {
-            action.onFrameStart.call(this, frameDuration);
+        if (action.onFrameStart && action.onFrameStart.call(this, frameDuration) === false) {
+            return false;
         }
 
         // Fire onStart if first frame

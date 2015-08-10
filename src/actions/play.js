@@ -53,7 +53,9 @@ var calc = require('../inc/calc'),
             @param [number]: Timestamp of current frame
         */
         onFrameStart: function (frameDuration) {
-            this.elapsed += (frameDuration * this.dilate) * this.playDirection;
+            if (frameDuration) {
+                this.elapsed += (frameDuration * this.dilate) * this.playDirection;
+            }
             this.hasEnded = true;
         },
 
