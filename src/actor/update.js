@@ -1,7 +1,6 @@
 "use strict";
 
 var actionManager = require('../actions/manager'),
-    routeManager = require('../routes/manager'),
     valueTypeManager = require('../value-types/manager'),
     calc = require('../inc/calc'),
 

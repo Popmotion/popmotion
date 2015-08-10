@@ -3,7 +3,6 @@
 var select = require('./actor/select'),
     actionManager = require('./actions/manager'),
     presetManager = require('./actor/preset-manager'),
-    routeManager = require('./routes/manager'),
     valueTypeManager = require('./value-types/manager'),
     calc = require('./inc/calc'),
 
@@ -41,11 +40,6 @@ var select = require('./actor/select'),
 
         addValueType: function () {
             valueTypeManager.extend.apply(valueTypeManager, arguments);
-            return this;
-        },
-
-        addRoute: function () {
-            routeManager.extend.apply(routeManager, arguments);
             return this;
         },
 

@@ -5,7 +5,6 @@ var calc = require('../inc/calc'),
     isNum = utils.isNum,
     actionsManager = require('../actions/manager'),
     valueTypesManager = require('../value-types/manager'),
-    routeManager = require('../routes/manager'),
 
     numericalValues = ['current', 'to', 'init', 'min', 'max', 'velocity', 'friction', 'spring'],
     numNumericalValues = numericalValues.length,

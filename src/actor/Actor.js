@@ -6,7 +6,6 @@ var Process = require('../process/Process'),
     update = require('./update'),
     valueOps = require('./value-operations'),
     actionManager = require('../actions/manager'),
-    routeManager = require('../routes/manager'),
 
     Actor = function (element) {
         this.element = element || false;
@@ -14,6 +13,7 @@ var Process = require('../process/Process'),
         this.output = {};
         this.queue = new Queue();
         this.process = new Process(this, update);
+        this.roles = [];
 
         this.clearOrder();
     };
@@ -248,6 +248,5 @@ Actor.prototype = {
 // Register Actor with actionManager, so when a new Action is set,
 // We get a new method on Actor
 actionManager.setActor(Actor);
-routeManager.setActor(Actor);
 
 module.exports = Actor;

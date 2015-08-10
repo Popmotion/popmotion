@@ -4,10 +4,6 @@ var popmotion = require('../popmotion');
 
 popmotion
     /*
-        Core route
-    */
-    .addRoute('values', require('../routes/values'))
-    /*
         Core Actions
     */
     .addAction('play', require('../actions/play'))
@@ -30,17 +26,6 @@ popmotion
         positions: require('../value-types/positions'),
         dimensions: require('../value-types/dimensions'),
         shadow: require('../value-types/shadow')
-    })
-
-    /*
-        CSS/Attr route - dependent on core value types being present
-    */
-    .addRoute('css', require('../routes/css'))
-    .addRoute('attr', require('../routes/attr'))
-
-    /*
-        SVG route - dependent on DOM CSS route
-    */
-    .addRoute('path', require('../routes/path'));
+    });
 
 module.exports = popmotion;

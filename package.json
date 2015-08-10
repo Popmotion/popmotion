@@ -35,10 +35,11 @@
   "analyze": true,
   "license": "MIT",
   "scripts": {
-    "compile": "small -i src/load/global.js -o popmotion.global.js && uglifyjs popmotion.global.js --screw-ie8 -c --mangle -o popmotion.global.min.js",
+    "compile": "webpack -p --config webpack.config.min.js",
     "watch": "webpack --progress --colors --watch"
   },
   "devDependencies": {
+    "babel-loader": "^5.3.2",
     "jshint": "^2.8.0",
     "jshint-loader": "^0.8.3",
     "small": "^0.1.1",
