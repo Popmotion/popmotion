@@ -7,4 +7,4 @@ module.exports = {
     
     // [number]: Factor of input movement to direct output
     amp: 1
-}
+};
