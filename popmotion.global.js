@@ -2,7 +2,7 @@
 var exports = {};
 var popmotion = ((function() {
 var exports = {};
-var __small$_12 = (function() {
+var __small$_11 = (function() {
 var exports = {};
 exports = {
     defaultProps: {
@@ -11,7 +11,7 @@ exports = {
 };
 return exports;
 })();
-var __small$_37 = (function() {
+var __small$_24 = (function() {
 var exports = {};
 /*
     Utility functions
@@ -255,7 +255,7 @@ exports = {
 };
 return exports;
 })();
-var __small$_24 = (function() {
+var __small$_23 = (function() {
 var exports = {};
 /*
     Calculators
@@ -265,7 +265,7 @@ var exports = {};
 */
 "use strict";
 
-var utils = __small$_37,
+var utils = __small$_24,
 
     calc = {
         
@@ -624,7 +624,7 @@ var utils = __small$_37,
 exports = calc;
 return exports;
 })();
-var __small$_48 = (function() {
+var __small$_46 = (function() {
 var exports = {};
 "use strict";
 
@@ -650,14 +650,14 @@ exports = function (values, terms, delimiter, chop) {
 };
 return exports;
 })();
-var __small$_50 = (function() {
+var __small$_48 = (function() {
 var exports = {};
 exports = function (value, prefix) {
     return prefix + '(' + value + ')';
 };
 return exports;
 })();
-var __small$_51 = (function() {
+var __small$_49 = (function() {
 var exports = {};
 "use strict";
 
@@ -680,7 +680,7 @@ exports = {
 
 return exports;
 })();
-var __small$_52 = (function() {
+var __small$_50 = (function() {
 var exports = {};
 "use strict";
 
@@ -699,22 +699,22 @@ var X = 'X',
 exports = terms;
 return exports;
 })();
-var __small$_53 = (function() {
+var __small$_51 = (function() {
 var exports = {};
 exports = function (value) {
     return (typeof value === 'string') ? value.split(' ') : [value];
 };
 return exports;
 })();
-var __small$_34 = (function() {
+var __small$_37 = (function() {
 var exports = {};
 /*
     Input controller
 */
 "use strict";
 
-var calc = __small$_24,
-    utils = __small$_37,
+var calc = __small$_23,
+    utils = __small$_24,
     History = ((function() {
 var exports = {};
 "use strict";
@@ -908,7 +908,7 @@ Input.prototype = {
 exports = Input;
 return exports;
 })();
-var __small$_62 = (function() {
+var __small$_61 = (function() {
 var exports = {};
 "use strict";
 
@@ -968,12 +968,12 @@ ModManager.prototype = {
 exports = ModManager;
 return exports;
 })();
-var __small$_28 = (function() {
+var __small$_32 = (function() {
 var exports = {};
 "use strict";
 
-var utils = __small$_37,
-    ModManager = __small$_62,
+var utils = __small$_24,
+    ModManager = __small$_61,
     presetManager = new ModManager(),
 
     DOT = '.',
@@ -1017,15 +1017,15 @@ presetManager.getDefined = function (name) {
 exports = presetManager;
 return exports;
 })();
-var __small$_30 = (function() {
+var __small$_33 = (function() {
 var exports = {};
 "use strict";
 
-var calc = __small$_24,
-    utils = __small$_37,
+var calc = __small$_23,
+    utils = __small$_24,
     speedPerFrame = calc.speedPerFrame,
 
-    ModManager = __small$_62,
+    ModManager = __small$_61,
     simulationManager = new ModManager();
 
 /*
@@ -1104,12 +1104,12 @@ exports = simulationManager;
 
 return exports;
 })();
-var __small$_44 = (function() {
+var __small$_42 = (function() {
 var exports = {};
 "use strict";
 
-var presetManager = __small$_28,
-    utils = __small$_37;
+var presetManager = __small$_32,
+    utils = __small$_24;
 
 exports = function (base, override) {
     var props = (typeof base === 'string') ? presetManager.getDefined(base) : base;
@@ -1123,7 +1123,7 @@ exports = function (base, override) {
 };
 return exports;
 })();
-var __small$_36 = (function() {
+var __small$_39 = (function() {
 var exports = {};
 var Bezier = ((function() {
 var exports = {};
@@ -1364,413 +1364,7 @@ var Easing = function (x1, y1, x2, y2) {
 exports = Easing;
 return exports;
 })();
-var __small$_4 = (function() {
-var exports = {};
-/*
-    Play action
-    
-    Translate numbers for a set amount of time, applying easing if defined
-*/
-"use strict";
-
-var calc = __small$_24,
-    utils = __small$_37,
-    presetEasing = ((function() {
-var exports = {};
-/*
-    Easing functions
-    ----------------------------------------
-    
-    Generates and provides easing functions based on baseFunction definitions
-    
-    A call to easingFunction.get('functionName') returns a function that can be passed:
-        @param [number]: Progress 0-1
-        @param [number] (optional): Amp modifier, only accepted in some easing functions
-                                    and is used to adjust overall strength
-        @return [number]: Eased progress
-        
-    We can generate new functions by sending an easing function through easingFunction.extend(name, method).
-    Which will make nameIn, nameOut and nameInOut functions available to use.
-        
-    Easing functions from Robert Penner
-    http://www.robertpenner.com/easing/
-        
-    Bezier curve interpretor created from Gaëtan Renaudeau's original BezierEasing  
-    https://github.com/gre/bezier-easing/blob/master/index.js  
-    https://github.com/gre/bezier-easing/blob/master/LICENSE
-*/
-"use strict";
-
-var Easing = __small$_36,
-    easingFunction,
-    
-    // Generate easing function with provided power
-    generatePowerEasing = function (power) {
-        return function (progress) {
-            return Math.pow(progress, power);
-        };
-    },
-
-    /*
-        Each of these base functions is an easeIn
-        
-        On init, we use EasingFunction.mirror and .reverse to generate easeInOut and
-        easeOut functions respectively.
-    */
-    baseEasing = {
-        circ: function (progress) {
-            return 1 - Math.sin(Math.acos(progress));
-        },
-        back: function (progress) {
-            var strength = 1.5;
-
-            return (progress * progress) * ((strength + 1) * progress - strength);
-        }
-    };
-
-// Generate power easing easing
-['ease', 'cubic', 'quart', 'quint'].forEach(function (easingName, i) {
-    baseEasing[easingName] = generatePowerEasing(i + 2);
-});
-
-// Generate in/out/inOut variations
-for (var key in baseEasing) {
-    if (baseEasing.hasOwnProperty(key)) {
-        easingFunction = new Easing(baseEasing[key]);
-        baseEasing[key + 'In'] = easingFunction.in;
-        baseEasing[key + 'Out'] = easingFunction.out;
-        baseEasing[key + 'InOut'] = easingFunction.inOut;
-    }
-}
-
-/*
-    Linear easing adjustment
-    
-    The default easing method, not added with .extend as it has no Out or InOut
-    variation.
-    
-    @param [number]: Progress, from 0-1
-    @return [number]: Unadjusted progress
-*/
-baseEasing.linear = function (progress) {
-    return progress;
-};
-
-exports = baseEasing;
-return exports;
-})()),
-
-    /*
-        Ease value within ranged parameters
-        
-        @param [number]: Progress between 0 and 1
-        @param [number]: Value of 0 progress
-        @param [number]: Value of 1 progress
-        @param [string || function]: Name of preset easing
-            to use or generated easing function
-        @param [number]: Amplify progress out of specified range
-        @return [number]: Value of eased progress in range
-    */  
-    ease = function (progress, from, to, ease, escapeAmp) {
-        var progressLimited = calc.restricted(progress, 0, 1),
-            easingFunction = utils.isString(ease) ? presetEasing[ease] : ease;
-
-        if (progressLimited !== progress && escapeAmp) {
-            ease = 'linear';
-            progressLimited = progressLimited + ((progress - progressLimited) * escapeAmp);
-        }
-
-        return calc.valueEased(progressLimited, from, to, easingFunction);
-    },
-
-    playAction = {
-
-        // [object] Default Action properties
-        actionDefaults: ((function() {
-var exports = {};
-exports = {
-    
-    // [number]: Time of animation (if animating) in ms
-    duration: 400,
-    
-    // [string]: Ease animation
-    ease: 'easeInOut',
-    
-    // [number]: Multiply progress by this (.5 is half speed)
-    dilate: 1,
-    
-    // [boolean || number]: Number of times to loop values, true for indefinite
-    loop: false,
-    
-    // [boolean || number]: Number of times to yoyo values, true for indefinite
-    yoyo: false,
-    
-    // [boolean || number]: Number of times to flip values, true for indefinite
-    flip: false
-};
-return exports;
-})()),
-
-        // [object]: Default value properties
-        valueDefaults: ((function() {
-var exports = {};
-exports = {
-    // [number]: Duration of animation in ms
-    duration: 400,
-    
-    // [number]: Duration of delay in ms
-    delay: 0,
-    
-    // [number]: Stagger delay as factor of duration (ie 0.2 with duration of 1000ms = 200ms)
-    stagger: 0,
-    
-    // [string]: Easing to apply
-    ease: 'easeInOut',
-    
-    // [number]: Number of steps to execute animation
-    steps: 0,
-    
-    // [string]: Tells Redshift when to step, at the start or end of a step. Other option is 'start' as per CSS spec
-    stepDirection: 'end'
-};
-return exports;
-})()),
-
-        // [boolean] Prevent Redshift from autogenerating Element.prototype.play()
-        surpressMethod: true,
-
-        // [object] Methods to add to Actor.prototype
-        actorMethods: ((function() {
-var exports = {};
-"use strict";
-
-var parseArgs = ((function() {
-var exports = {};
-"use strict";
-
-var presetManager = __small$_28,
-    utils = __small$_37,
-
-    parsePlaylist = function () {
-        var args = [].slice.call(arguments),
-            playlist = args[0].split(' '),
-            playlistLength = playlist.length,
-            props = presetManager.getDefined(playlist[0]),
-            i = 1;
-
-        // If we've got multiple playlists, loop through and add each to the queue
-        if (playlistLength > 1) {
-            for (; i < playlistLength; i++) {
-                args.shift();
-                args.unshift(playlist[i]);
-                this.queue.add.apply(this.queue, args);
-            }
-        }
-
-        return props;
-    };
-
-exports = function () {
-    var args = [].slice.call(arguments),
-        numArgs = args.length,
-        // If first argument is a string, get base object from presets
-        props = utils.isString(args[0]) ? parsePlaylist.apply(this, args) : args[0],
-        i = 1;
-
-    // Loop through arguments
-    for (; i < numArgs; i++) {
-        switch (typeof args[i]) {
-            // Override properties
-            case 'object':
-                props = utils.merge(props, args[i]);
-                break;
-            // Duration
-            case 'number':
-                props.duration = args[i];
-                break;
-            // Easing
-            case 'string':
-                props.ease = args[i];
-                break;
-        }
-    }
-
-    // Default .play properties
-    props.loopCount = props.yoyoCount = props.flipCount = 0;
-    props.playDirection = 1;
-
-    return props;
-};
-
-return exports;
-})()),
-    utils = __small$_37;
-
-exports = {
-    /*
-        Play an animation
-
-        @param [object || string]: Parameters or preset names
-        @param [object]: Override parameters
-    */
-    play: function () {
-        this.action = 'play';
-        this.set(parseArgs.apply(this, arguments), 'to');
-        return this.start();
-    },
-
-    /*
-        Add arguments to queue
-    */
-    addToQueue: function () {
-        this.queue.add.apply(this.queue, arguments);
-        return this;
-    },
-
-    /*
-        Check for next steps and perform, stop if not
-    */
-    next: function () {
-        var nextSteps = [{
-                key: 'loop',
-                callback: this.reset
-            }, {
-                key: 'yoyo',
-                callback: this.reverse
-            }, {
-                key: 'flip',
-                callback: this.flipValues
-            }],
-            numSteps = nextSteps.length,
-            hasNextStep = false,
-            i = 0;
-
-        for (; i < numSteps; ++i) {
-            if (this.checkNextStep(nextSteps[i].key, nextSteps[i].callback)) {
-                hasNextStep = true;
-                break;
-            }
-        }
-
-        if (!hasNextStep && !this.playNext()) {
-            this.stop();
-        } else {
-            this.isActive = true;
-        }
-
-        return this;
-    },
-
-    /*
-        Check next step
-        
-        @param [string]: Name of step ('yoyo' or 'loop')
-        @param [callback]: Function to run if we take this step
-    */
-    checkNextStep: function (key, callback) {
-        var COUNT = 'Count',
-            stepTaken = false,
-            step = this[key],
-            count = this[key + COUNT],
-            forever = (step === true);
-
-        if (forever || utils.isNum(step)) {
-            ++count;
-            this[key + COUNT] = count;
-            if (forever || count <= step) {
-                callback.call(this);
-                stepTaken = true;
-            }
-        }
-
-        return stepTaken;
-    },
-
-    /*
-        Next in queue
-    */
-    playNext: function () {
-        var stepTaken = false,
-            nextInQueue = this.queue.next(this.playDirection);
-
-        if (utils.isArray(nextInQueue)) {
-            this.set(parseArgs.apply(this, nextInQueue), 'to')
-                .resetProgress();
-
-            stepTaken = true;
-        }
-
-        return stepTaken;
-    }
-};
-return exports;
-})()),
-
-        /*
-            Update Action elapsed time
-            
-            @param [object]: Action properties
-            @param [number]: Timestamp of current frame
-        */
-        onFrameStart: function (frameDuration) {
-            this.elapsed += (frameDuration * this.dilate) * this.playDirection;
-            this.hasEnded = true;
-        },
-
-        /*
-            Calculate progress of value based on time elapsed,
-            value delay/duration/stagger properties
-
-            @param [object]: Value state and properties
-            @param [string]: Name of value being processed
-            @return [number]: Calculated value
-        */
-        process: function (value, key) {
-            var target = value.to,
-                progressTarget = (this.playDirection === 1) ? 1 : 0,
-                newValue = value.current,
-                progress;
-
-            // If this value has a to property, otherwise we just return current value
-            if (target !== undefined) {
-                progress = calc.restricted(calc.progress(this.elapsed - value.delay, value.duration) - value.stagger, 0, 1);
-
-                // Mark Action as NOT ended if still in progress
-                if (progress !== progressTarget) {
-                    this.hasEnded = false;
-
-                // Or, if we have ended, clear value target
-                } else {
-                    value.to = undefined;
-                }
-
-                // Step progress if we're stepping
-                if (value.steps) {
-                    progress = utils.stepProgress(progress, value.steps);
-                }
-
-                // Ease value
-                newValue = ease(progress, value.origin, target, value.ease);
-            }
-
-            return newValue;
-        },
-        
-        /*
-            Return hasEnded property
-            
-            @return [boolean]: Have all Values hit 1 progress?
-        */
-        hasEnded: function () {
-            return this.hasEnded;
-        }
-    };
-
-exports = playAction;
-
-return exports;
-})();
-var __small$_49 = (function() {
+var __small$_47 = (function() {
 var exports = {};
 var splitCommaDelimited = ((function() {
 var exports = {};
@@ -1801,15 +1395,15 @@ exports = function (value, terms) {
 };
 return exports;
 })();
-var __small$_13 = (function() {
+var __small$_12 = (function() {
 var exports = {};
 "use strict";
 
-var createDelimited = __small$_48,
-    getColorValues = __small$_49,
-    functionCreate = __small$_50,
-    defaultProps = __small$_51,
-    terms = __small$_52.hsl;
+var createDelimited = __small$_46,
+    getColorValues = __small$_47,
+    functionCreate = __small$_48,
+    defaultProps = __small$_49,
+    terms = __small$_50.hsl;
 
 exports = {
 
@@ -1837,16 +1431,16 @@ exports = {
 };
 return exports;
 })();
-var __small$_14 = (function() {
+var __small$_13 = (function() {
 var exports = {};
 "use strict";
 
-var createDelimited = __small$_48,
-    getColorValues = __small$_49,
-    functionCreate = __small$_50,
-    defaultProps = __small$_51,
+var createDelimited = __small$_46,
+    getColorValues = __small$_47,
+    functionCreate = __small$_48,
+    defaultProps = __small$_49,
     colorDefaults = defaultProps.color,
-    terms = __small$_52.colors;
+    terms = __small$_50.colors;
 
 exports = {
 
@@ -1871,11 +1465,11 @@ exports = {
 };
 return exports;
 })();
-var __small$_15 = (function() {
+var __small$_14 = (function() {
 var exports = {};
 "use strict";
 
-var rgb = __small$_14;
+var rgb = __small$_13;
 
 exports = {
 
@@ -1918,14 +1512,14 @@ exports = {
 };
 return exports;
 })();
-var __small$_16 = (function() {
+var __small$_15 = (function() {
 var exports = {};
 "use strict";
 
-var utils = __small$_37,
-    rgb = __small$_14,
-    hsl = __small$_13,
-    hex = __small$_15,
+var utils = __small$_24,
+    rgb = __small$_13,
+    hsl = __small$_12,
+    hex = __small$_14,
     supported = [rgb, hsl, hex],
     numSupported = 3,
 
@@ -1959,7 +1553,7 @@ return exports;
 
 var popmotion = ((function() {
 var exports = {};
-var __small$_61 = (function() {
+var __small$_58 = (function() {
 var exports = {};
 "use strict";
 
@@ -1997,11 +1591,11 @@ exports = function (method) {
 
 return exports;
 })();
-var __small$_31 = (function() {
+var __small$_34 = (function() {
 var exports = {};
 "use strict";
 
-var ModManager = __small$_62,
+var ModManager = __small$_61,
     valueTypeManager = new ModManager();
 
 valueTypeManager.defaultProps = function (type, key) {
@@ -2026,14 +1620,14 @@ valueTypeManager.test = function (value) {
 exports = valueTypeManager;
 return exports;
 })();
-var __small$_27 = (function() {
+var __small$_30 = (function() {
 var exports = {};
 "use strict";
 
 var Actor,
     ActorCollection,
-    utils = __small$_37,
-    generateMethodIterator = __small$_61,
+    utils = __small$_24,
+    generateMethodIterator = __small$_58,
     genericActionProps = ((function() {
 var exports = {};
 exports = {
@@ -2083,9 +1677,9 @@ exports = {
 };
 return exports;
 })()),
-    genericParse = __small$_44,
+    genericParse = __small$_42,
 
-    ModManager = __small$_62,
+    ModManager = __small$_61,
 
     actionManager = new ModManager();
 /*
@@ -2147,7 +1741,7 @@ exports = actionManager;
 
 return exports;
 })();
-var __small$_29 = (function() {
+var __small$_31 = (function() {
 var exports = {};
 "use strict";
 
@@ -2185,8 +1779,8 @@ exports = function (opts, prop, getter, setter) {
 };
 return exports;
 })()),
-    generateMethodIterator = __small$_61,
-    ModManager = __small$_62,
+    generateMethodIterator = __small$_58,
+    ModManager = __small$_61,
     routeManager = new ModManager(),
     Actor,
     ActorCollection;
@@ -2242,7 +1836,7 @@ routeManager.setActorCollection = function (actorCollection) {
 exports = routeManager;
 return exports;
 })();
-var __small$_35 = (function() {
+var __small$_38 = (function() {
 var exports = {};
 "use strict";
 
@@ -2261,7 +1855,7 @@ var Timer = ((function() {
 var exports = {};
 "use strict";
 
-var utils = __small$_37,
+var utils = __small$_24,
 
     maxElapsed = 33,
     Timer = function () {
@@ -2703,11 +2297,11 @@ Process.prototype = {
 exports = Process;
 return exports;
 })();
-var __small$_32 = (function() {
+var __small$_35 = (function() {
 var exports = {};
 "use strict";
 
-var Process = __small$_35,
+var Process = __small$_38,
     Queue = ((function() {
 var exports = {};
 "use strict";
@@ -2760,15 +2354,15 @@ Queue.prototype = {
 exports = Queue;
 return exports;
 })()),
-    utils = __small$_37,
+    utils = __small$_24,
     update = ((function() {
 var exports = {};
 "use strict";
 
-var actionManager = __small$_27,
-    routeManager = __small$_29,
-    valueTypeManager = __small$_31,
-    calc = __small$_24,
+var actionManager = __small$_30,
+    routeManager = __small$_31,
+    valueTypeManager = __small$_34,
+    calc = __small$_23,
 
     defaultRoute = 'values',
 
@@ -2791,8 +2385,8 @@ var actionManager = __small$_27,
         }
 
         // Update Action input
-        if (action.onFrameStart) {
-            action.onFrameStart.call(this, frameDuration);
+        if (action.onFrameStart && action.onFrameStart.call(this, frameDuration) === false) {
+            return false;
         }
 
         // Fire onStart if first frame
@@ -2922,12 +2516,12 @@ return exports;
 var exports = {};
 "use strict";
 
-var calc = __small$_24,
-    utils = __small$_37,
+var calc = __small$_23,
+    utils = __small$_24,
     isNum = utils.isNum,
-    actionsManager = __small$_27,
-    valueTypesManager = __small$_31,
-    routeManager = __small$_29,
+    actionsManager = __small$_30,
+    valueTypesManager = __small$_34,
+    routeManager = __small$_31,
 
     numericalValues = ['current', 'to', 'init', 'min', 'max'],
     numNumericalValues = numericalValues.length,
@@ -3259,8 +2853,8 @@ exports = {
 };
 return exports;
 })()),
-    actionManager = __small$_27,
-    routeManager = __small$_29,
+    actionManager = __small$_30,
+    routeManager = __small$_31,
 
     Actor = function (element) {
         this.element = element || false;
@@ -3507,15 +3101,15 @@ routeManager.setActor(Actor);
 exports = Actor;
 return exports;
 })();
-var __small$_33 = (function() {
+var __small$_36 = (function() {
 var exports = {};
 "use strict";
 
-var Actor = __small$_32,
-    generateMethodIterator = __small$_61,
-    utils = __small$_37,
-    actionManager = __small$_27,
-    routeManager = __small$_29,
+var Actor = __small$_35,
+    generateMethodIterator = __small$_58,
+    utils = __small$_24,
+    actionManager = __small$_30,
+    routeManager = __small$_31,
 
     DEFAULT_STAGGER_EASE = 'linear',
 
@@ -3643,7 +3237,7 @@ var select = ((function() {
 var exports = {};
 "use strict";
 
-var ActorCollection = __small$_33;
+var ActorCollection = __small$_36;
 
 /*
     Create an ActorCollection based on a selection of DOM nodes
@@ -3673,18 +3267,18 @@ exports = function (selector) {
 };
 return exports;
 })()),
-    actionManager = __small$_27,
-    presetManager = __small$_28,
-    routeManager = __small$_29,
-    simulationManager = __small$_30,
-    valueTypeManager = __small$_31,
-    calc = __small$_24,
+    actionManager = __small$_30,
+    presetManager = __small$_32,
+    routeManager = __small$_31,
+    simulationManager = __small$_33,
+    valueTypeManager = __small$_34,
+    calc = __small$_23,
 
-    Actor = __small$_32,
-    ActorCollection = __small$_33,
-    Input = __small$_34,
-    Process = __small$_35,
-    Easing = __small$_36,
+    Actor = __small$_35,
+    ActorCollection = __small$_36,
+    Input = __small$_37,
+    Process = __small$_38,
+    Easing = __small$_39,
 
     Popmotion = {
 
@@ -3767,7 +3361,422 @@ return exports;
     /*
         Core Actions
     */
-    .addAction('play', __small$_4)
+    .addAction('play', ((function() {
+var exports = {};
+/*
+    Play action
+    
+    Translate numbers for a set amount of time, applying easing if defined
+*/
+"use strict";
+
+var calc = __small$_23,
+    utils = __small$_24,
+    presetEasing = ((function() {
+var exports = {};
+/*
+    Easing functions
+    ----------------------------------------
+    
+    Generates and provides easing functions based on baseFunction definitions
+    
+    A call to easingFunction.get('functionName') returns a function that can be passed:
+        @param [number]: Progress 0-1
+        @param [number] (optional): Amp modifier, only accepted in some easing functions
+                                    and is used to adjust overall strength
+        @return [number]: Eased progress
+        
+    We can generate new functions by sending an easing function through easingFunction.extend(name, method).
+    Which will make nameIn, nameOut and nameInOut functions available to use.
+        
+    Easing functions from Robert Penner
+    http://www.robertpenner.com/easing/
+        
+    Bezier curve interpretor created from Gaëtan Renaudeau's original BezierEasing  
+    https://github.com/gre/bezier-easing/blob/master/index.js  
+    https://github.com/gre/bezier-easing/blob/master/LICENSE
+*/
+"use strict";
+
+var Easing = __small$_39,
+    easingFunction,
+    
+    // Generate easing function with provided power
+    generatePowerEasing = function (power) {
+        return function (progress) {
+            return Math.pow(progress, power);
+        };
+    },
+
+    /*
+        Each of these base functions is an easeIn
+        
+        On init, we use EasingFunction.mirror and .reverse to generate easeInOut and
+        easeOut functions respectively.
+    */
+    baseEasing = {
+        circ: function (progress) {
+            return 1 - Math.sin(Math.acos(progress));
+        },
+        back: function (progress) {
+            var strength = 1.5;
+
+            return (progress * progress) * ((strength + 1) * progress - strength);
+        }
+    };
+
+// Generate power easing easing
+['ease', 'cubic', 'quart', 'quint'].forEach(function (easingName, i) {
+    baseEasing[easingName] = generatePowerEasing(i + 2);
+});
+
+// Generate in/out/inOut variations
+for (var key in baseEasing) {
+    if (baseEasing.hasOwnProperty(key)) {
+        easingFunction = new Easing(baseEasing[key]);
+        baseEasing[key + 'In'] = easingFunction.in;
+        baseEasing[key + 'Out'] = easingFunction.out;
+        baseEasing[key + 'InOut'] = easingFunction.inOut;
+    }
+}
+
+/*
+    Linear easing adjustment
+    
+    The default easing method, not added with .extend as it has no Out or InOut
+    variation.
+    
+    @param [number]: Progress, from 0-1
+    @return [number]: Unadjusted progress
+*/
+baseEasing.linear = function (progress) {
+    return progress;
+};
+
+exports = baseEasing;
+return exports;
+})()),
+
+    /*
+        Ease value within ranged parameters
+        
+        @param [number]: Progress between 0 and 1
+        @param [number]: Value of 0 progress
+        @param [number]: Value of 1 progress
+        @param [string || function]: Name of preset easing
+            to use or generated easing function
+        @param [number]: Amplify progress out of specified range
+        @return [number]: Value of eased progress in range
+    */  
+    ease = function (progress, from, to, ease, escapeAmp) {
+        var progressLimited = calc.restricted(progress, 0, 1),
+            easingFunction = utils.isString(ease) ? presetEasing[ease] : ease;
+
+        if (progressLimited !== progress && escapeAmp) {
+            ease = 'linear';
+            progressLimited = progressLimited + ((progress - progressLimited) * escapeAmp);
+        }
+
+        return calc.valueEased(progressLimited, from, to, easingFunction);
+    },
+
+    playAction = {
+
+        // [object] Default Action properties
+        actionDefaults: ((function() {
+var exports = {};
+exports = {
+    
+    // [number]: Time of animation (if animating) in ms
+    duration: 400,
+    
+    // [string]: Ease animation
+    ease: 'easeInOut',
+    
+    // [number]: Multiply progress by this (.5 is half speed)
+    dilate: 1,
+    
+    // [boolean || number]: Number of times to loop values, true for indefinite
+    loop: false,
+    
+    // [boolean || number]: Number of times to yoyo values, true for indefinite
+    yoyo: false,
+    
+    // [boolean || number]: Number of times to flip values, true for indefinite
+    flip: false
+};
+return exports;
+})()),
+
+        // [object]: Default value properties
+        valueDefaults: ((function() {
+var exports = {};
+exports = {
+    // [number]: Duration of animation in ms
+    duration: 400,
+    
+    // [number]: Duration of delay in ms
+    delay: 0,
+    
+    // [number]: Stagger delay as factor of duration (ie 0.2 with duration of 1000ms = 200ms)
+    stagger: 0,
+    
+    // [string]: Easing to apply
+    ease: 'easeInOut',
+    
+    // [number]: Number of steps to execute animation
+    steps: 0,
+    
+    // [string]: Tells Redshift when to step, at the start or end of a step. Other option is 'start' as per CSS spec
+    stepDirection: 'end'
+};
+return exports;
+})()),
+
+        // [boolean] Prevent Redshift from autogenerating Element.prototype.play()
+        surpressMethod: true,
+
+        // [object] Methods to add to Actor.prototype
+        actorMethods: ((function() {
+var exports = {};
+"use strict";
+
+var parseArgs = ((function() {
+var exports = {};
+"use strict";
+
+var presetManager = __small$_32,
+    utils = __small$_24,
+
+    parsePlaylist = function () {
+        var args = [].slice.call(arguments),
+            playlist = args[0].split(' '),
+            playlistLength = playlist.length,
+            props = presetManager.getDefined(playlist[0]),
+            i = 1;
+
+        // If we've got multiple playlists, loop through and add each to the queue
+        if (playlistLength > 1) {
+            for (; i < playlistLength; i++) {
+                args.shift();
+                args.unshift(playlist[i]);
+                this.queue.add.apply(this.queue, args);
+            }
+        }
+
+        return props;
+    };
+
+exports = function () {
+    var args = [].slice.call(arguments),
+        numArgs = args.length,
+        // If first argument is a string, get base object from presets
+        props = utils.isString(args[0]) ? parsePlaylist.apply(this, args) : args[0],
+        i = 1;
+
+    // Loop through arguments
+    for (; i < numArgs; i++) {
+        switch (typeof args[i]) {
+            // Override properties
+            case 'object':
+                props = utils.merge(props, args[i]);
+                break;
+            // Duration
+            case 'number':
+                props.duration = args[i];
+                break;
+            // Easing
+            case 'string':
+                props.ease = args[i];
+                break;
+        }
+    }
+
+    // Default .play properties
+    props.loopCount = props.yoyoCount = props.flipCount = 0;
+    props.playDirection = 1;
+
+    return props;
+};
+
+return exports;
+})()),
+    utils = __small$_24;
+
+exports = {
+    /*
+        Play an animation
+
+        @param [object || string]: Parameters or preset names
+        @param [object]: Override parameters
+    */
+    play: function () {
+        this.action = 'play';
+        this.set(parseArgs.apply(this, arguments), 'to');
+        return this.start();
+    },
+
+    /*
+        Add arguments to queue
+    */
+    addToQueue: function () {
+        this.queue.add.apply(this.queue, arguments);
+        return this;
+    },
+
+    /*
+        Check for next steps and perform, stop if not
+    */
+    next: function () {
+        var nextSteps = [{
+                key: 'loop',
+                callback: this.reset
+            }, {
+                key: 'yoyo',
+                callback: this.reverse
+            }, {
+                key: 'flip',
+                callback: this.flipValues
+            }],
+            numSteps = nextSteps.length,
+            hasNextStep = false,
+            i = 0;
+
+        for (; i < numSteps; ++i) {
+            if (this.checkNextStep(nextSteps[i].key, nextSteps[i].callback)) {
+                hasNextStep = true;
+                break;
+            }
+        }
+
+        if (!hasNextStep && !this.playNext()) {
+            this.stop();
+        } else {
+            this.isActive = true;
+        }
+
+        return this;
+    },
+
+    /*
+        Check next step
+        
+        @param [string]: Name of step ('yoyo' or 'loop')
+        @param [callback]: Function to run if we take this step
+    */
+    checkNextStep: function (key, callback) {
+        var COUNT = 'Count',
+            stepTaken = false,
+            step = this[key],
+            count = this[key + COUNT],
+            forever = (step === true);
+
+        if (forever || utils.isNum(step)) {
+            ++count;
+            this[key + COUNT] = count;
+            if (forever || count <= step) {
+                callback.call(this);
+                stepTaken = true;
+            }
+        }
+
+        return stepTaken;
+    },
+
+    /*
+        Next in queue
+    */
+    playNext: function () {
+        var stepTaken = false,
+            nextInQueue = this.queue.next(this.playDirection);
+
+        if (utils.isArray(nextInQueue)) {
+            this.set(parseArgs.apply(this, nextInQueue), 'to')
+                .resetProgress();
+
+            stepTaken = true;
+        }
+
+        return stepTaken;
+    },
+
+    seek: function (progress) {
+        this.elapsed = this.duration * progress;
+
+        if (!this.isActive) {
+            this.process.fire();
+        }
+    }
+};
+return exports;
+})()),
+
+        /*
+            Update Action elapsed time
+            
+            @param [object]: Action properties
+            @param [number]: Timestamp of current frame
+        */
+        onFrameStart: function (frameDuration) {
+            if (frameDuration) {
+                this.elapsed += (frameDuration * this.dilate) * this.playDirection;
+            }
+            this.hasEnded = true;
+        },
+
+        /*
+            Calculate progress of value based on time elapsed,
+            value delay/duration/stagger properties
+
+            @param [object]: Value state and properties
+            @param [string]: Name of value being processed
+            @return [number]: Calculated value
+        */
+        process: function (value, key) {
+            var target = value.to,
+                progressTarget = (this.playDirection === 1) ? 1 : 0,
+                newValue = value.current,
+                progress;
+
+            // If this value has a to property, otherwise we just return current value
+            if (target !== undefined) {
+                progress = calc.restricted(calc.progress(this.elapsed - value.delay, value.duration) - value.stagger, 0, 1);
+
+                // Mark Action as NOT ended if still in progress
+                if (progress !== progressTarget) {
+                    this.hasEnded = false;
+
+                // Or, if we have ended, clear value target
+                } else {
+                    value.to = undefined;
+                }
+
+                // Step progress if we're stepping
+                if (value.steps) {
+                    progress = utils.stepProgress(progress, value.steps);
+                }
+
+                // Ease value
+                newValue = ease(progress, value.origin, target, value.ease);
+            }
+
+            return newValue;
+        },
+        
+        /*
+            Return hasEnded property
+            
+            @return [boolean]: Have all Values hit 1 progress?
+        */
+        hasEnded: function () {
+            return this.hasEnded;
+        }
+    };
+
+exports = playAction;
+
+return exports;
+})()))
     .addAction('run', ((function() {
 var exports = {};
 /*
@@ -3775,12 +3784,12 @@ var exports = {};
 */
 "use strict";
 
-var calc = __small$_24,
+var calc = __small$_23,
     simulate = ((function() {
 var exports = {};
 "use strict";
 
-var simulations = __small$_30;
+var simulations = __small$_33;
 
 exports = function (simulation, value, duration, started) {
     var velocity = simulations[simulation](value, duration, started);
@@ -3941,13 +3950,13 @@ var exports = {};
 */
 "use strict";
 
-var calc = __small$_24,
-    genericParser = __small$_44,
+var calc = __small$_23,
+    genericParser = __small$_42,
     Pointer = ((function() {
 var exports = {};
 "use strict";
 
-var Input = __small$_34,
+var Input = __small$_37,
     currentPointer, // Sort this out for multitouch
     
     TOUCHMOVE = 'touchmove',
@@ -4119,7 +4128,7 @@ var exports = {};
 */
 "use strict";
 
-var calc = __small$_24,
+var calc = __small$_23,
 
     STRING = 'string',
     
@@ -4169,7 +4178,7 @@ exports = {
     
     // [number]: Factor of input movement to direct output
     amp: 1
-}
+};
 return exports;
 })()),
 
@@ -4218,60 +4227,6 @@ return exports;
 })()))
 
     /*
-        Seek Action - depedent on 'play' Action
-    */
-    .addAction('seek', ((function() {
-var exports = {};
-/*
-    Return current value and immedietly end
-*/
-"use strict";
-
-var play = __small$_4;
-
-exports = {
-
-    surpressMethod: true,
-
-    actorMethods: {
-        seek: function (seekTo) {
-            this.elapsed = this.duration * seekTo;
-
-            if (!this.isActive) {
-                this.action = 'seek';
-                this.activate();
-            }
-
-            return this;
-        }
-    },
-
-   /*
-        Process new value
-        
-        Return existing current
-        
-        @param [string]: Name of value
-        @param [Value]: Current value
-    */
-    process: play.process,
-    
-    /*
-        Has Action ended?
-        
-        Returns true to end animation, and sets rubix to 'play'
-        
-        @return [boolean]: true
-    */
-    hasEnded: function () {
-        this.rubix = 'play';
-        return true;
-    }
-};
-return exports;
-})()))
-
-    /*
         Optional value type support
     */
     .addValueType({
@@ -4294,19 +4249,19 @@ exports = {
 };
 return exports;
 })()),
-        px: __small$_12,
-        hsl: __small$_13,
-        rgb: __small$_14,
-        hex: __small$_15,
-        color: __small$_16,
+        px: __small$_11,
+        hsl: __small$_12,
+        rgb: __small$_13,
+        hex: __small$_14,
+        color: __small$_15,
         positions: ((function() {
 var exports = {};
 "use strict";
 
-var createDelimited = __small$_48,
-    pxDefaults = __small$_12.defaultProps,
-    splitSpaceDelimited = __small$_53,
-    terms = __small$_52.positions;
+var createDelimited = __small$_46,
+    pxDefaults = __small$_11.defaultProps,
+    splitSpaceDelimited = __small$_51,
+    terms = __small$_50.positions;
 
 exports = {
 
@@ -4345,10 +4300,10 @@ return exports;
 var exports = {};
 "use strict";
 
-var terms = __small$_52.dimensions,
-    pxDefaults = __small$_12.defaultProps,
-    createDelimited = __small$_48,
-    splitSpaceDelimited = __small$_53;
+var terms = __small$_50.dimensions,
+    pxDefaults = __small$_11.defaultProps,
+    createDelimited = __small$_46,
+    splitSpaceDelimited = __small$_51;
 
 exports = {
 
@@ -4394,12 +4349,12 @@ return exports;
 var exports = {};
 "use strict";
 
-var color = __small$_16,
-    utils = __small$_37,
-    pxDefaults = __small$_12.defaultProps,
-    terms = __small$_52.shadow,
-    splitSpaceDelimited = __small$_53,
-    createDelimited = __small$_48,
+var color = __small$_15,
+    utils = __small$_24,
+    pxDefaults = __small$_11.defaultProps,
+    terms = __small$_50.shadow,
+    splitSpaceDelimited = __small$_51,
+    createDelimited = __small$_46,
     shadowTerms = terms.slice(0,4);
 
 exports = {
@@ -4469,7 +4424,7 @@ var transformDictionary = ((function() {
 var exports = {};
 "use strict";
 
-var positionTerms = __small$_52.positions,
+var positionTerms = __small$_50.positions,
     numPositionTerms = positionTerms.length,
 
     TRANSFORM_PERSPECTIVE = 'transformPerspective',
