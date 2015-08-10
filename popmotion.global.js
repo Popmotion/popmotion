@@ -2,7 +2,7 @@
 var exports = {};
 var popmotion = ((function() {
 var exports = {};
-var __small$_11 = (function() {
+var __small$_9 = (function() {
 var exports = {};
 exports = {
     defaultProps: {
@@ -11,7 +11,7 @@ exports = {
 };
 return exports;
 })();
-var __small$_23 = (function() {
+var __small$_19 = (function() {
 var exports = {};
 /*
     Utility functions
@@ -255,7 +255,7 @@ exports = {
 };
 return exports;
 })();
-var __small$_22 = (function() {
+var __small$_18 = (function() {
 var exports = {};
 /*
     Calculators
@@ -265,7 +265,7 @@ var exports = {};
 */
 "use strict";
 
-var utils = __small$_23,
+var utils = __small$_19,
 
     calc = {
         
@@ -624,7 +624,7 @@ var utils = __small$_23,
 exports = calc;
 return exports;
 })();
-var __small$_44 = (function() {
+var __small$_39 = (function() {
 var exports = {};
 "use strict";
 
@@ -650,14 +650,33 @@ exports = function (values, terms, delimiter, chop) {
 };
 return exports;
 })();
-var __small$_47 = (function() {
+var __small$_42 = (function() {
 var exports = {};
 exports = function (value, prefix) {
     return prefix + '(' + value + ')';
 };
 return exports;
 })();
-var __small$_48 = (function() {
+var __small$_43 = (function() {
+var exports = {};
+"use strict";
+
+var X = 'X',
+    Y = 'Y',
+    ALPHA = 'Alpha',
+
+    terms = {
+        colors: ['Red', 'Green', 'Blue', ALPHA],
+        positions: [X, Y, 'Z'],
+        dimensions: ['Top', 'Right', 'Bottom', 'Left'],
+        shadow: [X, Y, 'Radius', 'Spread', 'Color'],
+        hsl: ['Hue', 'Saturation', 'Lightness', ALPHA]
+    };
+
+exports = terms;
+return exports;
+})();
+var __small$_44 = (function() {
 var exports = {};
 "use strict";
 
@@ -680,41 +699,22 @@ exports = {
 
 return exports;
 })();
-var __small$_49 = (function() {
-var exports = {};
-"use strict";
-
-var X = 'X',
-    Y = 'Y',
-    ALPHA = 'Alpha',
-
-    terms = {
-        colors: ['Red', 'Green', 'Blue', ALPHA],
-        positions: [X, Y, 'Z'],
-        dimensions: ['Top', 'Right', 'Bottom', 'Left'],
-        shadow: [X, Y, 'Radius', 'Spread', 'Color'],
-        hsl: ['Hue', 'Saturation', 'Lightness', ALPHA]
-    };
-
-exports = terms;
-return exports;
-})();
-var __small$_50 = (function() {
+var __small$_45 = (function() {
 var exports = {};
 exports = function (value) {
     return (typeof value === 'string') ? value.split(' ') : [value];
 };
 return exports;
 })();
-var __small$_42 = (function() {
+var __small$_29 = (function() {
 var exports = {};
 /*
     Input controller
 */
 "use strict";
 
-var calc = __small$_22,
-    utils = __small$_23,
+var calc = __small$_18,
+    utils = __small$_19,
     History = ((function() {
 var exports = {};
 "use strict";
@@ -908,7 +908,7 @@ Input.prototype = {
 exports = Input;
 return exports;
 })();
-var __small$_60 = (function() {
+var __small$_52 = (function() {
 var exports = {};
 "use strict";
 
@@ -968,12 +968,12 @@ ModManager.prototype = {
 exports = ModManager;
 return exports;
 })();
-var __small$_38 = (function() {
+var __small$_24 = (function() {
 var exports = {};
 "use strict";
 
-var utils = __small$_23,
-    ModManager = __small$_60,
+var utils = __small$_19,
+    ModManager = __small$_52,
     presetManager = new ModManager(),
 
     DOT = '.',
@@ -1017,12 +1017,12 @@ presetManager.getDefined = function (name) {
 exports = presetManager;
 return exports;
 })();
-var __small$_31 = (function() {
+var __small$_36 = (function() {
 var exports = {};
 "use strict";
 
-var presetManager = __small$_38,
-    utils = __small$_23;
+var presetManager = __small$_24,
+    utils = __small$_19;
 
 exports = function (base, override) {
     var props = (typeof base === 'string') ? presetManager.getDefined(base) : base;
@@ -1036,7 +1036,7 @@ exports = function (base, override) {
 };
 return exports;
 })();
-var __small$_45 = (function() {
+var __small$_31 = (function() {
 var exports = {};
 var Bezier = ((function() {
 var exports = {};
@@ -1277,7 +1277,7 @@ var Easing = function (x1, y1, x2, y2) {
 exports = Easing;
 return exports;
 })();
-var __small$_46 = (function() {
+var __small$_41 = (function() {
 var exports = {};
 var splitCommaDelimited = ((function() {
 var exports = {};
@@ -1308,15 +1308,15 @@ exports = function (value, terms) {
 };
 return exports;
 })();
-var __small$_12 = (function() {
+var __small$_11 = (function() {
 var exports = {};
 "use strict";
 
-var createDelimited = __small$_44,
-    getColorValues = __small$_46,
-    functionCreate = __small$_47,
-    defaultProps = __small$_48,
-    terms = __small$_49.hsl;
+var createDelimited = __small$_39,
+    getColorValues = __small$_41,
+    functionCreate = __small$_42,
+    defaultProps = __small$_44,
+    terms = __small$_43.hsl;
 
 exports = {
 
@@ -1344,16 +1344,16 @@ exports = {
 };
 return exports;
 })();
-var __small$_13 = (function() {
+var __small$_12 = (function() {
 var exports = {};
 "use strict";
 
-var createDelimited = __small$_44,
-    getColorValues = __small$_46,
-    functionCreate = __small$_47,
-    defaultProps = __small$_48,
+var createDelimited = __small$_39,
+    getColorValues = __small$_41,
+    functionCreate = __small$_42,
+    defaultProps = __small$_44,
     colorDefaults = defaultProps.color,
-    terms = __small$_49.colors;
+    terms = __small$_43.colors;
 
 exports = {
 
@@ -1378,11 +1378,11 @@ exports = {
 };
 return exports;
 })();
-var __small$_14 = (function() {
+var __small$_13 = (function() {
 var exports = {};
 "use strict";
 
-var rgb = __small$_13;
+var rgb = __small$_12;
 
 exports = {
 
@@ -1425,14 +1425,14 @@ exports = {
 };
 return exports;
 })();
-var __small$_15 = (function() {
+var __small$_14 = (function() {
 var exports = {};
 "use strict";
 
-var utils = __small$_23,
-    rgb = __small$_13,
-    hsl = __small$_12,
-    hex = __small$_14,
+var utils = __small$_19,
+    rgb = __small$_12,
+    hsl = __small$_11,
+    hex = __small$_13,
     supported = [rgb, hsl, hex],
     numSupported = 3,
 
@@ -1466,7 +1466,7 @@ return exports;
 
 var popmotion = ((function() {
 var exports = {};
-var __small$_58 = (function() {
+var __small$_50 = (function() {
 var exports = {};
 "use strict";
 
@@ -1504,14 +1504,43 @@ exports = function (method) {
 
 return exports;
 })();
-var __small$_35 = (function() {
+var __small$_27 = (function() {
+var exports = {};
+"use strict";
+
+var ModManager = __small$_52,
+    valueTypeManager = new ModManager();
+
+valueTypeManager.defaultProps = function (type, key) {
+    var valueType = this[type],
+        defaultProps = (valueType.defaultProps) ? valueType.defaultProps[key] || valueType.defaultProps : {};
+
+    return defaultProps;
+};
+
+valueTypeManager.test = function (value) {
+    var type = false;
+
+    this.each(function (key, mod) {
+        if (mod.test && mod.test(value)) {
+            type = key;
+        }
+    });
+
+    return type;
+};
+
+exports = valueTypeManager;
+return exports;
+})();
+var __small$_25 = (function() {
 var exports = {};
 "use strict";
 
 var Actor,
     ActorCollection,
-    utils = __small$_23,
-    generateMethodIterator = __small$_58,
+    utils = __small$_19,
+    generateMethodIterator = __small$_50,
     genericActionProps = ((function() {
 var exports = {};
 exports = {
@@ -1561,9 +1590,9 @@ exports = {
 };
 return exports;
 })()),
-    genericParse = __small$_31,
+    genericParse = __small$_36,
 
-    ModManager = __small$_60,
+    ModManager = __small$_52,
 
     actionManager = new ModManager();
 /*
@@ -1625,131 +1654,7 @@ exports = actionManager;
 
 return exports;
 })();
-var __small$_39 = (function() {
-var exports = {};
-"use strict";
-
-var ModManager = __small$_60,
-    valueTypeManager = new ModManager();
-
-valueTypeManager.defaultProps = function (type, key) {
-    var valueType = this[type],
-        defaultProps = (valueType.defaultProps) ? valueType.defaultProps[key] || valueType.defaultProps : {};
-
-    return defaultProps;
-};
-
-valueTypeManager.test = function (value) {
-    var type = false;
-
-    this.each(function (key, mod) {
-        if (mod.test && mod.test(value)) {
-            type = key;
-        }
-    });
-
-    return type;
-};
-
-exports = valueTypeManager;
-return exports;
-})();
-var __small$_37 = (function() {
-var exports = {};
-"use strict";
-
-var getterSetter = ((function() {
-var exports = {};
-/*
-    Multi-var getter/setter
-
-    @param [object || string]: Name of value to get/set
-    @param [string || number] (optional): Single property to set 
-    @param [function]: Getter
-    @param [function]: Setter
-*/
-exports = function (opts, prop, getter, setter) {
-    var typeOfOpts = typeof opts;
-
-    // Set single, if this is a string and we have a property
-    if (typeOfOpts == 'string' && prop) {
-        setter.call(this, opts, prop);
-
-    // Set multi, if we have an object
-    } else if (typeOfOpts == 'object') {
-        for (var key in opts) {
-            if (opts.hasOwnProperty(key)) {
-                setter.call(this, key, opts[key]);
-            }
-        }
-
-    // Or get, if we have a string and no props
-    } else {
-        return getter.call(this, opts);
-    }
-
-    return this;
-};
-return exports;
-})()),
-    generateMethodIterator = __small$_58,
-    ModManager = __small$_60,
-    routeManager = new ModManager(),
-    Actor,
-    ActorCollection;
-
-routeManager.extend = function (name, mod) {
-    // Generate getter/setter
-    if (mod.get && mod.set) {
-        Actor.prototype[name] = function (key, value) {
-            return getterSetter.call(this, key, value, mod.get, mod.set);
-        };
-
-        ActorCollection.prototype[name] = generateMethodIterator(name);
-    }
-
-    // Call parent extend method
-    ModManager.prototype.extend.call(this, name, mod);
-};
-
-/*
-    Shard function
-
-    Run callback once for every value route
-
-    @param [function]: Function to run for each route
-    @param [object] (optional): Object containing keys of routes to check
-*/
-routeManager.shard = function (callback, validRoutes) {
-    var key = '',
-        route = '',
-        routeIsValid = false,
-        i = 0;
-
-    for (; i < this._numKeys; i++) {
-        key = this._keys[i];
-        routeIsValid = (validRoutes && validRoutes.hasOwnProperty(key));
-        route = routeIsValid ? validRoutes[key] : {};
-
-        // If we've been given this route, or this is the default route ('values')
-        if (routeIsValid || key === 'values') {
-            callback(this[key], key, route);
-        }
-    }
-};
-
-routeManager.setActor = function (actor) {
-    Actor = actor;
-};
-
-routeManager.setActorCollection = function (actorCollection) {
-    ActorCollection = actorCollection;
-};
-
-exports = routeManager;
-return exports;
-})();
-var __small$_43 = (function() {
+var __small$_30 = (function() {
 var exports = {};
 "use strict";
 
@@ -1768,7 +1673,7 @@ var Timer = ((function() {
 var exports = {};
 "use strict";
 
-var utils = __small$_23,
+var utils = __small$_19,
 
     maxElapsed = 33,
     Timer = function () {
@@ -2207,11 +2112,11 @@ Process.prototype = {
 exports = Process;
 return exports;
 })();
-var __small$_40 = (function() {
+var __small$_26 = (function() {
 var exports = {};
 "use strict";
 
-var Process = __small$_43,
+var Process = __small$_30,
     Queue = ((function() {
 var exports = {};
 "use strict";
@@ -2264,15 +2169,14 @@ Queue.prototype = {
 exports = Queue;
 return exports;
 })()),
-    utils = __small$_23,
+    utils = __small$_19,
     update = ((function() {
 var exports = {};
 "use strict";
 
-var actionManager = __small$_35,
-    routeManager = __small$_37,
-    valueTypeManager = __small$_39,
-    calc = __small$_22,
+var actionManager = __small$_25,
+    valueTypeManager = __small$_27,
+    calc = __small$_18,
 
     defaultRoute = 'values',
 
@@ -2422,12 +2326,11 @@ return exports;
 var exports = {};
 "use strict";
 
-var calc = __small$_22,
-    utils = __small$_23,
+var calc = __small$_18,
+    utils = __small$_19,
     isNum = utils.isNum,
-    actionsManager = __small$_35,
-    valueTypesManager = __small$_39,
-    routeManager = __small$_37,
+    actionsManager = __small$_25,
+    valueTypesManager = __small$_27,
 
     numericalValues = ['current', 'to', 'init', 'min', 'max', 'velocity', 'friction', 'spring'],
     numNumericalValues = numericalValues.length,
@@ -2759,8 +2662,7 @@ exports = {
 };
 return exports;
 })()),
-    actionManager = __small$_35,
-    routeManager = __small$_37,
+    actionManager = __small$_25,
 
     Actor = function (element) {
         this.element = element || false;
@@ -2768,6 +2670,7 @@ return exports;
         this.output = {};
         this.queue = new Queue();
         this.process = new Process(this, update);
+        this.roles = [];
 
         this.clearOrder();
     };
@@ -3002,20 +2905,18 @@ Actor.prototype = {
 // Register Actor with actionManager, so when a new Action is set,
 // We get a new method on Actor
 actionManager.setActor(Actor);
-routeManager.setActor(Actor);
 
 exports = Actor;
 return exports;
 })();
-var __small$_41 = (function() {
+var __small$_28 = (function() {
 var exports = {};
 "use strict";
 
-var Actor = __small$_40,
-    generateMethodIterator = __small$_58,
-    utils = __small$_23,
-    actionManager = __small$_35,
-    routeManager = __small$_37,
+var Actor = __small$_26,
+    generateMethodIterator = __small$_50,
+    utils = __small$_19,
+    actionManager = __small$_25,
 
     DEFAULT_STAGGER_EASE = 'linear',
 
@@ -3132,7 +3033,6 @@ ActorCollection.prototype = {
 })();
 
 actionManager.setActorCollection(ActorCollection);
-routeManager.setActorCollection(ActorCollection);
 
 exports = ActorCollection;
 return exports;
@@ -3143,7 +3043,7 @@ var select = ((function() {
 var exports = {};
 "use strict";
 
-var ActorCollection = __small$_41;
+var ActorCollection = __small$_28;
 
 /*
     Create an ActorCollection based on a selection of DOM nodes
@@ -3173,17 +3073,16 @@ exports = function (selector) {
 };
 return exports;
 })()),
-    actionManager = __small$_35,
-    presetManager = __small$_38,
-    routeManager = __small$_37,
-    valueTypeManager = __small$_39,
-    calc = __small$_22,
+    actionManager = __small$_25,
+    presetManager = __small$_24,
+    valueTypeManager = __small$_27,
+    calc = __small$_18,
 
-    Actor = __small$_40,
-    ActorCollection = __small$_41,
-    Input = __small$_42,
-    Process = __small$_43,
-    Easing = __small$_45,
+    Actor = __small$_26,
+    ActorCollection = __small$_28,
+    Input = __small$_29,
+    Process = __small$_30,
+    Easing = __small$_31,
 
     Popmotion = {
 
@@ -3216,11 +3115,6 @@ return exports;
             return this;
         },
 
-        addRoute: function () {
-            routeManager.extend.apply(routeManager, arguments);
-            return this;
-        },
-
         calc: calc
     };
 
@@ -3229,35 +3123,6 @@ return exports;
 })());
 
 popmotion
-    /*
-        Core route
-    */
-    .addRoute('values', ((function() {
-var exports = {};
-/*
-    Values route (Redshift default)
-    
-    Handles raw values and outputs to user-defined callbacks
-*/
-"use strict";
-
-var valuesRoute = {},
-
-    fireCallback = function (name, output, actor) {
-        if (actor[name]) {
-            actor[name].call(actor, output);
-        }
-    };
-
-['onStart', 'onFrame', 'onChange', 'onEnd'].forEach(function (key) {
-    valuesRoute[key] = function (output) {
-        fireCallback(key, output, this);
-    };
-});
-
-exports = valuesRoute;
-return exports;
-})()))
     /*
         Core Actions
     */
@@ -3270,8 +3135,8 @@ var exports = {};
 */
 "use strict";
 
-var calc = __small$_22,
-    utils = __small$_23,
+var calc = __small$_18,
+    utils = __small$_19,
     presetEasing = ((function() {
 var exports = {};
 /*
@@ -3298,7 +3163,7 @@ var exports = {};
 */
 "use strict";
 
-var Easing = __small$_45,
+var Easing = __small$_31,
     easingFunction,
     
     // Generate easing function with provided power
@@ -3445,8 +3310,8 @@ var parseArgs = ((function() {
 var exports = {};
 "use strict";
 
-var presetManager = __small$_38,
-    utils = __small$_23,
+var presetManager = __small$_24,
+    utils = __small$_19,
 
     parsePlaylist = function () {
         var args = [].slice.call(arguments),
@@ -3501,7 +3366,7 @@ exports = function () {
 
 return exports;
 })()),
-    utils = __small$_23;
+    utils = __small$_19;
 
 exports = {
     /*
@@ -3681,14 +3546,14 @@ var exports = {};
 */
 "use strict";
 
-var calc = __small$_22,
-    utils = __small$_23,
+var calc = __small$_18,
+    utils = __small$_19,
     simulations = ((function() {
 var exports = {};
 "use strict";
 
-var calc = __small$_22,
-    utils = __small$_23,
+var calc = __small$_18,
+    utils = __small$_19,
     speedPerFrame = calc.speedPerFrame;
 
 /*
@@ -3924,13 +3789,13 @@ var exports = {};
 */
 "use strict";
 
-var calc = __small$_22,
-    genericParser = __small$_31,
+var calc = __small$_18,
+    genericParser = __small$_36,
     Pointer = ((function() {
 var exports = {};
 "use strict";
 
-var Input = __small$_42,
+var Input = __small$_29,
     currentPointer, // Sort this out for multitouch
     
     TOUCHMOVE = 'touchmove',
@@ -4102,7 +3967,7 @@ var exports = {};
 */
 "use strict";
 
-var calc = __small$_22,
+var calc = __small$_18,
 
     STRING = 'string',
     
@@ -4223,19 +4088,19 @@ exports = {
 };
 return exports;
 })()),
-        px: __small$_11,
-        hsl: __small$_12,
-        rgb: __small$_13,
-        hex: __small$_14,
-        color: __small$_15,
+        px: __small$_9,
+        hsl: __small$_11,
+        rgb: __small$_12,
+        hex: __small$_13,
+        color: __small$_14,
         positions: ((function() {
 var exports = {};
 "use strict";
 
-var createDelimited = __small$_44,
-    pxDefaults = __small$_11.defaultProps,
-    splitSpaceDelimited = __small$_50,
-    terms = __small$_49.positions;
+var createDelimited = __small$_39,
+    pxDefaults = __small$_9.defaultProps,
+    splitSpaceDelimited = __small$_45,
+    terms = __small$_43.positions;
 
 exports = {
 
@@ -4274,10 +4139,10 @@ return exports;
 var exports = {};
 "use strict";
 
-var terms = __small$_49.dimensions,
-    pxDefaults = __small$_11.defaultProps,
-    createDelimited = __small$_44,
-    splitSpaceDelimited = __small$_50;
+var terms = __small$_43.dimensions,
+    pxDefaults = __small$_9.defaultProps,
+    createDelimited = __small$_39,
+    splitSpaceDelimited = __small$_45;
 
 exports = {
 
@@ -4323,12 +4188,12 @@ return exports;
 var exports = {};
 "use strict";
 
-var color = __small$_15,
-    utils = __small$_23,
-    pxDefaults = __small$_11.defaultProps,
-    terms = __small$_49.shadow,
-    splitSpaceDelimited = __small$_50,
-    createDelimited = __small$_44,
+var color = __small$_14,
+    utils = __small$_19,
+    pxDefaults = __small$_9.defaultProps,
+    terms = __small$_43.shadow,
+    splitSpaceDelimited = __small$_45,
+    createDelimited = __small$_39,
     shadowTerms = terms.slice(0,4);
 
 exports = {
@@ -4377,380 +4242,7 @@ exports = {
 };
 return exports;
 })())
-    })
-
-    /*
-        CSS/Attr route - dependent on core value types being present
-    */
-    .addRoute('css', ((function() {
-var exports = {};
-/*
-    DOM CSS route
-    ==============================================
-*/
-"use strict";
-
-var build = ((function() {
-var exports = {};
-"use strict";
-
-var transformDictionary = ((function() {
-var exports = {};
-"use strict";
-
-var positionTerms = __small$_49.positions,
-    numPositionTerms = positionTerms.length,
-
-    TRANSFORM_PERSPECTIVE = 'transformPerspective',
-    SCALE = 'scale',
-    ROTATE = 'rotate',
-    terms = {
-        funcs: ['translate', SCALE, ROTATE, 'skew', TRANSFORM_PERSPECTIVE],
-        props: {} // objects are faster at direct lookups
-    };
-
-// Create transform terms
-(function () {
-    var funcs = terms.funcs,
-        props = terms.props,
-        numFuncs = funcs.length,
-        i = 0,
-
-        createProps = function (funcName) {
-            var j = 0;
-
-            for (; j < numPositionTerms; j++) {
-                props[funcName + positionTerms[j]] = true;
-            }
-        };
-    
-    // Manually add skew and transform perspective  
-    props[ROTATE] = props[SCALE] = props[TRANSFORM_PERSPECTIVE] = true;
-    
-    // Loop over each function name and create function/property terms
-    for (; i < numFuncs; i++) {
-        createProps(funcs[i]);
-    }
-})();
-
-exports = terms;
-return exports;
-})()),
-    transformProps = transformDictionary.props,
-
-    TRANSFORM = 'transform',
-    TRANSLATE_Z = 'translateZ';
-
-exports = function (output, cache) {
-    var css = {},
-        key = '',
-        transform = '',
-        transformHasZ = false,
-        rule = '';
-
-    // Loop through output, check for transform properties and cache
-    for (key in output) {
-        if (output.hasOwnProperty(key)) {
-            rule = output[key];
-            // If this is a transform property, add to transform string
-            if (transformProps[key]) {
-                transform += key + '(' + rule + ')';
-                transformHasZ = (key === TRANSLATE_Z) ? true : transformHasZ;
-            
-            // Or just assign directly if different from cache
-            } else if (cache[key] !== rule) {
-                cache[key] = css[key] = rule;
-            }
-        }
-    }
-
-    // If we have transform properties, add translateZ
-    if (transform !== '' && transform !== cache[TRANSFORM]) {
-        if (!transformHasZ) {
-            transform += ' ' + TRANSLATE_Z + '(0px)';
-        }
-
-        cache[TRANSFORM] = css[TRANSFORM] = transform; 
-    }
-
-    return css;
-};
-return exports;
-})()),
-    styleDom = ((function() {
-var exports = {};
-"use strict";
-
-var styleDOM = function () {
-	var prefixes = ['Webkit','Moz','O','ms', ''],
-		prefixesLength = prefixes.length,
-		cache = {},
-		
-		/*
-			Test style property for prefixed version
-			
-			@param [string]: Style property
-			@return [string]: Cached property name
-		*/
-		testPrefix = function (key) {
-            var testElement = document.body;
-			
-            cache[key] = key;
-
-			for (var i = 0; i < prefixesLength; i++) {
-				var prefixed = prefixes[i] + key.charAt(0).toUpperCase() + key.slice(1);
-
-				if (testElement.style.hasOwnProperty(prefixed)) {
-					cache[key] = prefixed;
-				}
-			}
-			
-			return cache[key];
-		};
-	
-	/*
-		Style DOM functions
-	*/
-	return {
-
-		/*
-			Get DOM styles
-
-			@param [DOM Element]: Element to get styles from
-			@param [string]: Name of style to read
-		*/
-		get: function (element, name) {
-			return window.getComputedStyle(element, null)[cache[name] || testPrefix(name)];
-		},
-
-		/*
-			Set DOM styles
-
-			@param [DOM Element]: Element to set styles on
-			@param [object]: Name of style to set
-			@param [string]: New rule
-		*/
-		set: function (element, name, rule) {
-			element.style[cache[name] || testPrefix(name)] = rule;
-		}
-
-	};
-};
-
-exports = new styleDOM();
-return exports;
-})()),
-    typeMap = ((function() {
-var exports = {};
-"use strict";
-
-var COLOR = 'color',
-    POSITIONS = 'positions',
-    DIMENSIONS = 'dimensions',
-    SHADOW = 'shadow',
-    ANGLE = 'angle',
-    ALPHA = 'alpha',
-    PX = 'px';
-
-exports = {
-    // Color properties
-    color: COLOR,
-    backgroundColor: COLOR,
-    borderColor: COLOR,
-    borderTopColor: COLOR,
-    borderRightColor: COLOR,
-    borderBottomColor: COLOR,
-    borderLeftColor: COLOR,
-    outlineColor: COLOR,
-    fill: COLOR,
-    stroke: COLOR,
-
-    // Dimensions
-    margin: DIMENSIONS,
-    padding: DIMENSIONS,
-    width: PX,
-    height: PX,
-
-    // Positions
-    backgroundPosition: POSITIONS,
-    perspectiveOrigin: POSITIONS,
-    transformOrigin: POSITIONS,
-    
-    // Shadows
-    textShadow: SHADOW,
-    boxShadow: SHADOW,
-
-    // Transform properties
-    rotate: ANGLE,
-    rotateX: ANGLE,
-    rotateY: ANGLE,
-    rotateZ: ANGLE,
-    skewX: ANGLE,
-    skewY: ANGLE,
-    translateX: PX,
-    translateY: PX,
-    translateZ: PX,
-    perspective: PX,
-    opacity: ALPHA
-};
-return exports;
-})()),
-    CSS_CACHE = '_cssCache';
-
-exports = {
-    typeMap: typeMap,
-    
-    onChange: function (output) {
-        this[CSS_CACHE] = this[CSS_CACHE] || {};
-        this.css(build(output, this[CSS_CACHE]));
-    },
-
-    get: function (key) {
-        return styleDom.get(this.element, key);
-    },
-
-    set: function (key, value) {
-        styleDom.set(this.element, key, value);
-    }
-    
-};
-return exports;
-})()))
-    .addRoute('attr', ((function() {
-var exports = {};
-/*
-    DOM Attr route
-    ==============================================
-*/
-"use strict";
-
-exports = {
-    onChange: function (output) {
-        for (var key in output) {
-            if (output.hasOwnProperty(key)) {
-                this.element.setAttribute(key, output[key]);
-            }
-        }
-    },
-
-    get: function (key) {
-        return this.element.getAttribute(key);
-    },
-
-    set: function (key, value) {
-        this.element.setAttribute(key, value);
-    }
-};
-return exports;
-})()))
-
-    /*
-        SVG route - dependent on DOM CSS route
-    */
-    .addRoute('path', ((function() {
-var exports = {};
-/*
-    SVG Path route
-    ==============================================
-
-    Dependent on CSS Route
-*/
-"use strict";
-
-var createStyles = ((function() {
-var exports = {};
-"use strict";
-
-var lookup = ((function() {
-var exports = {};
-var STROKE = 'stroke',
-    DASH = STROKE + '-dash', // stoke-width
-    DASH_ARRAY = DASH + 'array';
-
-exports = {
-    opacity: STROKE + '-opacity',
-    width: STROKE + '-width',
-    offset: DASH + 'offset',
-    length: DASH_ARRAY,
-    spacing: DASH_ARRAY,
-    miterlimit: STROKE + '-miterlimit'
-};
-return exports;
-})()),
-
-    /*
-        Convert percentage to pixels
-        
-        @param [number]: Percentage of total length
-        @param [number]: Total length
-    */
-    percentToPixels = function (percentage, length) {
-        return (parseFloat(percentage) / 100) * length + 'px';
-    };
-
-/*
-    Create styles
-    
-    @param [object]: SVG Path properties
-    @param [object]: Length of path
-    @returns [object]: Key/value pairs of valid CSS properties
-*/
-exports = function (props, pathLength) {
-    var hasArray = false,
-        svgProperty = '',
-        arrayStyles = {
-            length: 0,
-            spacing: pathLength + 'px'
-        },
-        pathStyles = {};
-
-    // Loop over each property and create related css property
-    for (var key in props) {
-        if (props.hasOwnProperty(key)) {
-            svgProperty = lookup[key] || key;
-            
-            switch (key) {
-                case 'length':
-                case 'spacing':
-                    hasArray = true;
-                    arrayStyles[key] = percentToPixels(props[key], pathLength);
-                    break;
-                case 'offset':
-                    pathStyles[svgProperty] = percentToPixels(-props[key], pathLength);
-                    break;
-                default:
-                   pathStyles[svgProperty] = props[key]; 
-            }
-        }
-    }
-    
-    if (hasArray) {
-        pathStyles[lookup.length] = arrayStyles.length + ' ' + arrayStyles.spacing;
-    }
-
-    return pathStyles;
-};
-return exports;
-})());
-
-exports = {
-
-    typeMap: {
-        stroke: 'color'
-    },
-
-    onStart: function () {
-        if (this.element) {
-            this.pathLength = this.element.getTotalLength();
-        }
-    },
-    
-    onChange: function (output) {
-        this.css(createStyles(output, this.pathLength));
-    }
-};
-return exports;
-})()));
+    });
 
 exports = popmotion;
 return exports;
