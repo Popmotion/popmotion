@@ -4,7 +4,8 @@
 "use strict";
 
 var calc = require('../inc/calc'),
-    utils = require('../inc/utils');
+    utils = require('../inc/utils'),
+    simulations = require('./run/simulations');
 
 module.exports = {
 
@@ -25,13 +26,13 @@ module.exports = {
         @param [number]: Duration of frame in ms
         @return [number]: Calculated value
     */
-    process: function (value, key, frameDuration) {
+    process: function (value, key, timeSinceLastFrame) {
         var simulate = value.simulate,
             simulation = utils.isString(simulate) ? simulations[simulate] : simulate,
-            newVelocity = simulation(value, duration, started);
+            newVelocity = simulation(value, timeSinceLastFrame, this.started);
 
         value.velocity = (Math.abs(newVelocity) >= value.stopSpeed) ? newVelocity : 0;
-        return value.current + calc.speedPerFrame(value.velocity, frameDuration);
+        return value.current + calc.speedPerFrame(value.velocity, timeSinceLastFrame);
     },
     
     /*
