@@ -56,6 +56,7 @@ var calc = require('../inc/calc'),
             if (frameDuration) {
                 this.elapsed += (frameDuration * this.dilate) * this.playDirection;
             }
+
             this.hasEnded = true;
         },
 

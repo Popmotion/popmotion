@@ -28,16 +28,13 @@ Process.prototype = {
         @param [number]: Time since last frame
     */
     fire: function (timestamp, elapsed) {
-        // Check timers
-        if (this.isActive) {
-            this.callback.call(this.scope, timestamp, elapsed);
-        }
+        this.callback.call(this.scope, timestamp, elapsed);
         
         // If we're running at an interval, deactivate again
         if (this.isInterval) {
             this.deactivate();
         }
-        
+
         return this;
     },
     

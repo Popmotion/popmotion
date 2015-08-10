@@ -125,7 +125,7 @@ var actionManager = require('../actions/manager'),
         }, output);
 
         // Fire onEnd if this Action has ended
-        if (action.hasEnded && action.hasEnded.call(this, this.hasChanged)) {
+        if (this.isActive && action.hasEnded && action.hasEnded.call(this, this.hasChanged)) {
             this.isActive = false;
 
             routeManager.shard(function (route, routeName, routeOutput) {
@@ -146,8 +146,4 @@ var actionManager = require('../actions/manager'),
         this.framestamp = framestamp;
     };
 
-module.exports = function () {
-    if (this.isActive) {
-        update.apply(this, arguments);
-    }
-};
+module.exports = update;

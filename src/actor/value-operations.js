@@ -7,7 +7,7 @@ var calc = require('../inc/calc'),
     valueTypesManager = require('../value-types/manager'),
     routeManager = require('../routes/manager'),
 
-    numericalValues = ['current', 'to', 'init', 'min', 'max'],
+    numericalValues = ['current', 'to', 'init', 'min', 'max', 'velocity', 'friction', 'spring'],
     numNumericalValues = numericalValues.length,
 
     checkNumericalValue = function (name) {
