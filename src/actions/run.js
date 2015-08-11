@@ -68,10 +68,10 @@ module.exports = {
             output = calc.restricted(output, value.min, value.max);
 
             if (value.bounce) {
-                value.velocity = simulate('bounce', value);
+                value.velocity = simulations.bounce(value);
 
             } else if (value.capture) {
-                simulate('capture', value, isOutsideMax ? value.max : value.min);
+                simulations.capture(value, isOutsideMax ? value.max : value.min);
             }
         }
         

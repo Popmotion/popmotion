@@ -4,7 +4,7 @@
 
 Popmotion is a 12kb JavaScript motion engine. Use it for for animation, physics, and input tracking. In the browser, on Node, anywhere.
 
-[Download](http://redshiftjs.com/download) | [API](http://redshiftjs.com/api) | [Guides](http://redshiftjs.com/guides/get-started) | [Twitter](http://twitter.com/redshiftjs)
+[Download](http://popmotion.io/download) | [API](http://popmotion.io/api) | [Guides](http://popmotion.io/guides/get-started) | [Twitter](http://twitter.com/popmotionjs)
 
 ### Flexible
 * **Native DOM support:** CSS and DOM attribute support, out the box.
@@ -28,6 +28,6 @@ Popmotion is a 12kb JavaScript motion engine. Use it for for animation, physics,
 * Over **20% smaller** than Velocity.js, **72% smaller** than GreenSock TweenMax. Boom shak shakalaka.
 
 
-[Get started](http://redshiftjs.com/guides/get-started)
+[Get started](http://popmotion.io/guides/get-started)
 
-[Popmotion vs Velocity.js vs Greensock feature comparison](http://redshiftjs.com/guides/feature-comparison)
+[Popmotion vs Velocity.js vs Greensock feature comparison](http://popmotion.io/guides/feature-comparison)
