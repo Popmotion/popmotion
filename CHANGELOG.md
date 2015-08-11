@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.0.4] 2015-08-10
+
+### Fixed
+- Fixing `bounce` and `capture` simulation calls.
+
 ## [2.0.3] 2015-08-10
 
 ### Removed
