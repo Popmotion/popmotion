@@ -4,25 +4,22 @@ var select = require('./actor/select'),
     actionManager = require('./actions/manager'),
     presetManager = require('./actor/preset-manager'),
     valueTypeManager = require('./value-types/manager'),
-    calc = require('./inc/calc'),
-
-    Actor = require('./actor/Actor'),
-    ActorCollection = require('./actor/ActorCollection'),
-    Input = require('./input/Input'),
-    Process = require('./process/Process'),
-    Easing = require('./actions/play/Easing'),
 
     Popmotion = {
 
-        Actor: Actor,
+        Actor: require('./actor/Actor'),
 
-        ActorCollection: ActorCollection,
+        ActorCollection: require('./actor/ActorCollection'),
 
-        Input: Input,
+        Input: require('./input/Input'),
 
-        Process: Process,
+        Process: require('./process/Process'),
 
-        Easing: Easing,
+        Easing: require('./actions/play/Easing'),
+
+        Role: require('./roles/Role'),
+
+        createRole: require('./roles/create-role'),
 
         select: function (items) {
             return select(items);
@@ -43,7 +40,7 @@ var select = require('./actor/select'),
             return this;
         },
 
-        calc: calc
+        calc: require('./inc/calc')
     };
 
 module.exports = Popmotion;
