@@ -1504,7 +1504,7 @@ exports = function (method) {
 
 return exports;
 })();
-var __small$_27 = (function() {
+var __small$_28 = (function() {
 var exports = {};
 "use strict";
 
@@ -1533,7 +1533,7 @@ valueTypeManager.test = function (value) {
 exports = valueTypeManager;
 return exports;
 })();
-var __small$_24 = (function() {
+var __small$_25 = (function() {
 var exports = {};
 "use strict";
 
@@ -1654,7 +1654,7 @@ exports = actionManager;
 
 return exports;
 })();
-var __small$_28 = (function() {
+var __small$_27 = (function() {
 var exports = {};
 "use strict";
 
@@ -2269,9 +2269,9 @@ return exports;
 var exports = {};
 "use strict";
 
-var actionManager = __small$_24,
-    routeManager = __small$_28,
-    valueTypeManager = __small$_27,
+var actionManager = __small$_25,
+    routeManager = __small$_27,
+    valueTypeManager = __small$_28,
     calc = __small$_22,
 
     defaultRoute = 'values',
@@ -2425,9 +2425,9 @@ var exports = {};
 var calc = __small$_22,
     utils = __small$_34,
     isNum = utils.isNum,
-    actionsManager = __small$_24,
-    valueTypesManager = __small$_27,
-    routeManager = __small$_28,
+    actionsManager = __small$_25,
+    valueTypesManager = __small$_28,
+    routeManager = __small$_27,
 
     numericalValues = ['current', 'to', 'init', 'min', 'max', 'velocity', 'friction', 'spring'],
     numNumericalValues = numericalValues.length,
@@ -2759,8 +2759,8 @@ exports = {
 };
 return exports;
 })()),
-    actionManager = __small$_24,
-    routeManager = __small$_28,
+    actionManager = __small$_25,
+    routeManager = __small$_27,
 
     Actor = function (element) {
         this.element = element || false;
@@ -3014,8 +3014,8 @@ var exports = {};
 var Actor = __small$_29,
     generateMethodIterator = __small$_57,
     utils = __small$_34,
-    actionManager = __small$_24,
-    routeManager = __small$_28,
+    actionManager = __small$_25,
+    routeManager = __small$_27,
 
     DEFAULT_STAGGER_EASE = 'linear',
 
@@ -3173,10 +3173,10 @@ exports = function (selector) {
 };
 return exports;
 })()),
-    actionManager = __small$_24,
+    actionManager = __small$_25,
     presetManager = __small$_26,
-    routeManager = __small$_28,
-    valueTypeManager = __small$_27,
+    routeManager = __small$_27,
+    valueTypeManager = __small$_28,
     calc = __small$_22,
 
     Actor = __small$_29,
