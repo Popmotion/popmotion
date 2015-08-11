@@ -28,7 +28,7 @@ module.exports = {
         @param [function]: Callback to fire
     */
     each: function (props, callback) {
-        for (var keys in props) {
+        for (var key in props) {
             if (props.hasOwnProperty(key)) {
                 callback(key, props[key]);
             }

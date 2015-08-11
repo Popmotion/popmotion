@@ -11,7 +11,7 @@ module.exports = createRole({
         };
     },
 
-    onStart: function (element) {
+    actionStart: function (element) {
         this.pathLength = element.getTotalLength();
     },
 

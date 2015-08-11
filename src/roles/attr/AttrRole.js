@@ -1,7 +1,7 @@
 "use strict";
 
 var createRole = require('../create-role'),
-    each = require('../inc/utils').each;
+    each = require('../../inc/utils').each;
 
 module.exports = createRole({
     update: function (output, element, actor) {

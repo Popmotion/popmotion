@@ -1,4 +1,4 @@
-var each = require('./inc/utils').each;
+var each = require('./utils').each;
 
 /*
     Multi-var getter/setter

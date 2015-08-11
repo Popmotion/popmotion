@@ -13,7 +13,7 @@ var Process = require('../process/Process'),
         this.output = {};
         this.queue = new Queue();
         this.process = new Process(this, update);
-        this.roles = [];
+        this.roles = {};
 
         this.clearOrder();
     };
