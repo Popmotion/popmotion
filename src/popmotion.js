@@ -21,6 +21,12 @@ var select = require('./actor/select'),
 
         createRole: require('./roles/create-role'),
 
+        roles: {
+            Attr: require('./roles/attr/AttrRole'),
+            CSS: require('./roles/css/CSSRole'),
+            Path: require('./roles/path/PathRole')
+        },        
+
         select: function (items) {
             return select(items);
         },

@@ -1,4 +1,5 @@
-var Role = require('./Role');
+var Role = require('./Role'),
+    each = require('../inc/utils').each;
 
 /*
     Create new Role
@@ -6,17 +7,21 @@ var Role = require('./Role');
 module.exports = function (opts) {
     var NewRole = function () {
             Role.call(this);
-        },
-        methodName = '';
 
+            if (opts.init) {
+                opts.init();
+            }
+        };
+
+    // Copy base Role prototype
     NewRole.prototype = Object.create(Role.prototype);
 
-    for (methodName in opts) {
-        if (opts.hasOwnProperty(methodName)) {
-            NewRole.prototype[methodName] = opts[methodName];
-        }
-    }
+    // Add methods to new role prototype
+    each(opts, function (key, value) {
+        NewRole.prototype[key] = value;
+    });
 
+    // Assign new constructor
     NewRole.prototype.constructor = NewRole;
 
     return NewRole;

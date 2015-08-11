@@ -20,6 +20,20 @@ var protectedProperties = ['scope',  'dom'],
     };
 
 module.exports = {
+
+    /*
+        Iterate over an object and fire a callback for every item in it
+
+        @param [object]: Properties
+        @param [function]: Callback to fire
+    */
+    each: function (props, callback) {
+        for (var keys in props) {
+            if (props.hasOwnProperty(key)) {
+                callback(key, props[key]);
+            }
+        }
+    },
     
     /*
         Has one object changed from the other

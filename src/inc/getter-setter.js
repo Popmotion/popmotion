@@ -1,3 +1,5 @@
+var each = require('./inc/utils').each;
+
 /*
     Multi-var getter/setter
 
@@ -7,24 +9,23 @@
     @param [function]: Setter
 */
 module.exports = function (opts, prop, getter, setter) {
-    var typeOfOpts = typeof opts;
+    var self = this,
+        typeOfOpts = typeof opts;
 
     // Set single, if this is a string and we have a property
     if (typeOfOpts == 'string' && prop) {
-        setter.call(this, opts, prop);
+        setter.call(self, opts, prop);
 
     // Set multi, if we have an object
     } else if (typeOfOpts == 'object') {
-        for (var key in opts) {
-            if (opts.hasOwnProperty(key)) {
-                setter.call(this, key, opts[key]);
-            }
-        }
+        each(opts, function (key, value) {
+            setter.call(self, key, value);
+        });
 
     // Or get, if we have a string and no props
     } else {
-        return getter.call(this, opts);
+        return getter.call(self, opts);
     }
 
-    return this;
+    return self;
 };

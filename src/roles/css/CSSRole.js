@@ -33,8 +33,8 @@ var createRole = require('../create-role'),
 */
 module.exports = createRole({
     init: function () {
-        this.map: require('./map'),
-        this.typeMap: require('./type-map')
+        this._map = require('./map');
+        this._typeMap = require('./type-map');
     },
 
     update: function (output, actor) {

@@ -1,14 +1,15 @@
 "use strict";
 
-var createRole = require('../create-role');
+var createRole = require('../create-role'),
+    each = require('../inc/utils').each;
 
 module.exports = createRole({
     update: function (output, element, actor) {
-        for (var key in output) {
-            if (output.hasOwnProperty(key)) {
-                this.set(key, output[key], element);
-            }
-        }
+        var set = this.set;
+
+        each(output, function (key, value) {
+            set(key, value, element);
+        });
     },
 
     get: function (name, element) {

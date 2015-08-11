@@ -1,12 +1,18 @@
 "use strict";
 
-var Role = function (props) {
+var each = require('../inc/utils').each,
+
+    Role = function (props) {
         
     };
 
 Role.prototype = {
-    update: function () {
-        console.log('role');
+    map: function (opts) {
+        var map = this._map;
+
+        each(opts, function (key, value) {
+            map[key] = value;
+        });
     }
 };
 
