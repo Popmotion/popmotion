@@ -2,6 +2,7 @@
 
 var createRole = require('../create-role'),
     createStyles = require('./build.js'),
+    each = require('../../inc/utils').each,
     CSSRole = require('../css/CSSRole');
 
 module.exports = createRole({

@@ -20,6 +20,10 @@ var getterSetter = require('../inc/getter-setter'),
         this._cache = {};
         this._map = {};
         this._typeMap = {};
+
+        if (props.init) {
+            props.init();
+        }
     };
 
 Role.prototype = {
@@ -27,8 +31,37 @@ Role.prototype = {
     map: generateGetterSetter('_map'),
     typeMap: generateGetterSetter('_typeMap'),
 
-    get: function () {
-        key = this.map(key)
+    actionStart: function (values) {
+        if (this.onStart) {
+            this.onStart(values);
+        }
+    },
+
+    actionEnd: function (values) {
+        if (this.onEnd) {
+            this.onEnd(values);
+        }
+    },
+
+    update: function (values, hasChanged) {
+        getterSetter.call(this, values, undefined, this.get, undefined);
+
+        if (this.onFrame) {
+            this.onFrame(values);
+        }
+
+        if (this.onUpdate && hasChanged) {
+            this.onUpdate(values);
+        }
+    },
+
+    get: function (key) {
+        return this.getter(this.map(key));
+    },
+
+    set: function (key, value) {
+        this.setter(this.map(key), value);
+        return this;
     }
 };
 

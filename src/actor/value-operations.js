@@ -5,9 +5,16 @@ var calc = require('../inc/calc'),
     isNum = utils.isNum,
     actionsManager = require('../actions/manager'),
     valueTypesManager = require('../value-types/manager'),
+    each = utils.each,
 
     numericalValues = ['current', 'to', 'init', 'min', 'max', 'velocity', 'friction', 'spring'],
     numNumericalValues = numericalValues.length,
+
+    checkRoles = function (type, roles) {
+        each(roles, function (name, role) {
+            type = role.typeMap(name) || type;
+        });
+    },
 
     checkNumericalValue = function (name) {
         return (numericalValues.indexOf(name) > -1);
@@ -80,7 +87,7 @@ module.exports = {
         @param [number] (optional): Initial current
         @return [object]: Default value state
     */
-    initialState: function (start, route) {
+    initialState: function (start) {
         return {
             // [number]: Current value
             current: start || 0,
@@ -92,9 +99,7 @@ module.exports = {
             velocity: 0,
             
             // [number]: Amount value has changed in the most recent frame
-            frameChange: 0,
-
-            route: route
+            frameChange: 0
         };
     },
 
@@ -200,7 +205,7 @@ module.exports = {
     /*
         Process new values
     */
-    preprocess: function (values, actor, route, suffix, defaultValueProp) {
+    preprocess: function (values, actor, defaultValueProp) {
         var preprocessedValues = {},
             value = {},
             splitValue = {},
@@ -209,7 +214,6 @@ module.exports = {
             existingValue = {},
             isValueObj = false,
             key = '',
-            namespacedKey = '',
             propKey = '';
 
         defaultValueProp = defaultValueProp || 'current';
@@ -219,8 +223,7 @@ module.exports = {
 
                 isValueObj = utils.isObj(values[key]);
                 value = (isValueObj) ? values[key] : {};
-                namespacedKey = key + suffix;
-                existingValue = actor.values[namespacedKey];
+                existingValue = actor.values[key];
 
                 value.name = key;
 
@@ -234,18 +237,19 @@ module.exports = {
                     if (existingValue && existingValue.type) {
                         value.type = existingValue.type;
                     
-                    // Or if this route has a typemap
-                    } else if (route.typeMap && route.typeMap[key]) {
-                        value.type = route.typeMap[key];
+                    // Or check route typemaps
+                    } else {
+                        value.type = checkRoles(value.type, value.roles);
 
-                    // Otherwise, check by running tests if this is a string
-                    } else if (utils.isString(value[defaultValueProp])) {
-                        value.type = valueTypesManager.test(value[defaultValueProp]);
+                        // Otherwise, check by running tests if this is a string
+                        if (!value.type && utils.isString(value[defaultValueProp])) {
+                            value.type = valueTypesManager.test(value[defaultValueProp]);
+                        }
                     }
                 }
 
                 // Set value
-                preprocessedValues[namespacedKey] = value;
+                preprocessedValues[key] = value;
 
                 // If process has type, split or assign default props
                 if (value.type) {
@@ -259,17 +263,17 @@ module.exports = {
                         for (propKey in splitValue) {
                             if (splitValue.hasOwnProperty(propKey)) {
                                 childValue = utils.merge(value, splitValue[propKey]);
-                                childValue.parent = key + suffix;
+                                childValue.parent = key;
                                 childValue.name = key;
                                 childValue.propName = propKey;
                                 delete childValue.type;
                                 delete childValue.children;
 
-                                preprocessedValues[key + propKey + suffix] = childValue;
+                                preprocessedValues[key + propKey] = childValue;
                             }
                         }
                     } else {
-                        preprocessedValues[namespacedKey] = utils.merge(valueTypesManager.defaultProps(value.type, key), value);
+                        preprocessedValues[key] = utils.merge(valueTypesManager.defaultProps(value.type, key), value);
                     }
                 }
             }
@@ -281,10 +285,8 @@ module.exports = {
     /*
         Process new values
     */
-    process: function (values, actor, namespace, defaultValueProp) {
-        var route = routeManager[namespace],
-            namespaceSuffix = (namespace === 'values') ? '' : '.' + namespace,
-            preprocessedValues = this.preprocess(values, actor, route, namespaceSuffix, defaultValueProp),
+    process: function (values, actor, defaultValueProp) {
+        var preprocessedValues = this.preprocess(values, actor, defaultValueProp),
             key = '',
             propKey = '',
             preprocessedValue = {},
@@ -296,7 +298,7 @@ module.exports = {
         for (key in preprocessedValues) {
             if (preprocessedValues.hasOwnProperty(key)) {
                 preprocessedValue = preprocessedValues[key];
-                thisValue = actor.values[key] || this.initialState(this.resolve('init', preprocessedValue.init, {}, actor), namespace);
+                thisValue = actor.values[key] || this.initialState(this.resolve('init', preprocessedValue.init, {}, actor));
                 hasChildren = (preprocessedValue.children !== undefined);
                 thisValue.action = preprocessedValue.link ? 'link' : actor.action;
                 defaultProps = actionsManager[thisValue.action].valueDefaults;

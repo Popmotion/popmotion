@@ -68,7 +68,7 @@ var calc = require('../inc/calc'),
             @param [string]: Name of value being processed
             @return [number]: Calculated value
         */
-        process: function (value, key) {
+        process: function (value) {
             var target = value.to,
                 progressTarget = (this.playDirection === 1) ? 1 : 0,
                 newValue = value.current,

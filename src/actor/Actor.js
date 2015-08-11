@@ -6,6 +6,7 @@ var Process = require('../process/Process'),
     update = require('./update'),
     valueOps = require('./value-operations'),
     actionManager = require('../actions/manager'),
+    each = utils.each,
 
     Actor = function (element) {
         this.element = element || false;
@@ -27,21 +28,11 @@ Actor.prototype = {
         @param [string] (option): Name of default value property
     */
     set: function (props, defaultValueProp) {
-        var self = this;
-
         // Reset Element properties and write new props
         this.clearOrder();
         this.resetProps();
         this.setProps(props);
-
-        // Loop over routes and process value definitions
-        routeManager.shard(function (route, routeName, values) {
-            // Create output object for this route if none exists
-            self.output[routeName] = self.output[routeName] || {};
-
-            // Set values
-            self.setValues(values, routeName, defaultValueProp);
-        }, props);
+        this.setValues(props.values, defaultValueProp);
 
         return this;
     },
@@ -162,14 +153,13 @@ Actor.prototype = {
         @param [object]: Properties to set
     */
     setProps: function (props) {
-        var key = '';
+        var actor = this;
 
-        for (key in props) {
-            // Set if this isn't a route
-            if (props.hasOwnProperty(key) && !routeManager.hasOwnProperty(key)) {
-                this[key] = props[key];
+        each(props, function (key, value) {
+            if (key !== 'values') {
+                actor[key] = value;
             }
-        }
+        });
     },
 
     /*
@@ -184,11 +174,10 @@ Actor.prototype = {
         Set values
 
         @param [object || string || number]: Value
-        @param [string] (optional): Name of route
         @param [string] (optional): Default property to set
     */
-    setValues: function (values, namespace, defaultValueProp) {
-        valueOps.process(values, this, namespace, defaultValueProp);
+    setValues: function (values, defaultValueProp) {
+        valueOps.process(values, this, defaultValueProp);
         return this;
     },
     

@@ -42,4 +42,4 @@ module.exports = {
     translateZ: PX,
     perspective: PX,
     opacity: ALPHA
-}
+};

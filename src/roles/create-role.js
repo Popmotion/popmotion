@@ -6,11 +6,7 @@ var Role = require('./Role'),
 */
 module.exports = function (opts) {
     var NewRole = function () {
-            Role.call(this);
-
-            if (opts.init) {
-                opts.init();
-            }
+            Role.call(this, opts);
         };
 
     // Copy base Role prototype

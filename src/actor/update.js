@@ -3,12 +3,10 @@
 var actionManager = require('../actions/manager'),
     valueTypeManager = require('../value-types/manager'),
     calc = require('../inc/calc'),
-
-    defaultRoute = 'values',
+    each = require('../inc/utils').each,
 
     update = function (framestamp, frameDuration) {
-        var self = this,
-            values = this.values,
+        var values = this.values,
             action = actionManager[this.action],
             valueAction = action,
             output = this.output,
@@ -31,15 +29,10 @@ var actionManager = require('../actions/manager'),
 
         // Fire onStart if first frame
         if (this.firstFrame) {
-            routeManager.shard(function (route) {
-                if (route.onStart) {
-                    route.onStart.call(self, values);
-                }
-            }, output);
+            each(this.roles, function (name, role) {
+                    role.start(values);
+            });
         }
-
-        // Create default route output if not present
-        output[defaultRoute] = output[defaultRoute] || {};
 
         // Update values
         for (; i < numActiveValues; i++) {
@@ -83,16 +76,12 @@ var actionManager = require('../actions/manager'),
             this.values[key].current = updatedValue;
 
             // Put value in default route output
-            output[defaultRoute][key] = (value.unit) ? updatedValue + value.unit : updatedValue;
-
-            // Put in specific root if not a parent
-            if (!value.parent) {
-                output[value.route][value.name] = output[defaultRoute][key];
+            output.values[key] = (value.unit) ? updatedValue + value.unit : updatedValue;
 
             // Or add to parent output, to be combined
-            } else {
+            if (value.parent) {
                 output[value.parent] = output[value.parent] || {};
-                output[value.parent][value.propName] = output[defaultRoute][key];
+                output[value.parent][value.propName] = output[key];
             }
         }
 
@@ -105,33 +94,20 @@ var actionManager = require('../actions/manager'),
             value.current = valueTypeManager[value.type].combine(output[key]);
 
             // Update output
-            output[value.route][value.name] = output[defaultRoute][key] = value.current;
+            output[value][value.name] = output[key] = value.current;
         }
 
-        // Run onFrame and onChange for every output
-        routeManager.shard(function (route, routeName, routeOutput) {
-
-            // Fire onFrame every frame
-            if (route.onFrame) {
-                route.onFrame.call(self, routeOutput);
-            }
-
-            // Fire onChanged if any value has changed
-            if (self.hasChanged && route.onChange || self.firstFrame && route.onChange) {
-                route.onChange.call(self, routeOutput);
-            }
-
-        }, output);
+        each(this.roles, function (name, role) {
+            role.update(output.values, (this.hasChanged || this.firstFrame));
+        });
 
         // Fire onEnd if this Action has ended
         if (this.isActive && action.hasEnded && action.hasEnded.call(this, this.hasChanged)) {
             this.isActive = false;
 
-            routeManager.shard(function (route, routeName, routeOutput) {
-                if (route.onEnd) {
-                    route.onEnd.call(self, routeOutput);
-                }
-            }, output);
+            each(this.roles, function (name, role) {
+                role.actionEnd(output.values);
+            });
 
             // If is a play action, and is not active, check next action
             if (!this.isActive && this.action === 'play' && this.next) {

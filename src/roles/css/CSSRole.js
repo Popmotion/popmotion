@@ -1,6 +1,7 @@
 "use strict";
 
 var createRole = require('../create-role'),
+    build = require('./build'),
 
     prefixes = ['Webkit','Moz','O','ms', ''],
     numPrefixes = prefixes.length,
@@ -17,7 +18,7 @@ var createRole = require('../create-role'),
         
         propertyNameCache[key] = key;
 
-        for (var i = 0; i < prefixesLength; i++) {
+        for (var i = 0; i < numPrefixes; i++) {
             var prefixed = prefixes[i] + key.charAt(0).toUpperCase() + key.slice(1);
 
             if (testElement.style.hasOwnProperty(prefixed)) {
@@ -38,7 +39,7 @@ module.exports = createRole({
     },
 
     update: function (output, actor) {
-        this.css(build(output));
+        actor.route('css').set(build(output));
     },
 
     get: function (name, element) {
