@@ -1,7 +1,6 @@
 "use strict";
 
-var Role = function (props) {
-        this.cache = {};
+var Output = function (props) {
         this.map = {};
         this.typeMap = {};
 
@@ -10,7 +9,7 @@ var Role = function (props) {
         }
     };
 
-Role.prototype = {
+Output.prototype = {
     actionStart: function (values) {
         if (this.onStart) {
             this.onStart(values);
@@ -38,14 +37,9 @@ Role.prototype = {
     },
 
     set: function (key, value) {
-        var cachedValue = this.cache[key];
-
-        if (cachedValue !== value) {
-            this.setter(this.map[key] || key, value);
-        }
-
+        this.setter(this.map[key] || key, value);
         return this;
     }
 };
 
-module.exports = Role;
+module.exports = Output;
