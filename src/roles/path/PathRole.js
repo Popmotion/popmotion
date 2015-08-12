@@ -12,11 +12,11 @@ module.exports = createRole({
         };
     },
 
-    actionStart: function (element) {
+    onStart: function (element) {
         this.pathLength = element.getTotalLength();
     },
 
-    update: function (output) {
+    onUpdate: function (output, element) {
         var styles = createStyles(output, this.pathLength);
 
         each(styles, function (key, value) {

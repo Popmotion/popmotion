@@ -21,8 +21,6 @@ var calc = require('../inc/calc'),
     };
 
 module.exports = {
-
-
     /*
         Perform operation on set of values
         
@@ -30,13 +28,11 @@ module.exports = {
         @param [object]: Value object
     */
     all: function (op, values) {
-        var key = '';
+        var valueOps = this;
 
-        for (key in values) {
-            if (values.hasOwnProperty(key)) {
-                this[op](values[key]);
-            }
-        }
+        each(values, function (key, value) {
+            valueOps[op](value);
+        });
 
         return this;
     },
