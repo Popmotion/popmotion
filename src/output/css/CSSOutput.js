@@ -1,6 +1,6 @@
 "use strict";
 
-var createRole = require('../create-role'),
+var Output = require('../Output'),
     build = require('./build'),
 
     prefixes = ['Webkit','Moz','O','ms', ''],
@@ -32,14 +32,14 @@ var createRole = require('../create-role'),
 /*
     CSS Role definition
 */
-module.exports = createRole({
-    init: function () {
-        this.map = require('./map');
-        this.typeMap = require('./type-map');
-    },
+module.exports = new Output({
+    map: require('./map'),
+
+    typeMap: require('./type-map'),
 
     onUpdate: function (output, actor) {
-        actor.route('css').set(build(output));
+
+        //actor.route('css').set(build(output));
     },
 
     get: function (name, element) {
@@ -50,5 +50,3 @@ module.exports = createRole({
         element.style[propertyNameCache[name] || testPrefix(name)] = rule;
     }
 });
-
-

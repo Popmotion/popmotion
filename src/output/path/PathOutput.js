@@ -1,15 +1,13 @@
 "use strict";
 
-var createRole = require('../create-role'),
+var Output = require('../Output'),
     createStyles = require('./build.js'),
     each = require('../../inc/utils').each,
-    CSSRole = require('../css/CSSRole');
+    CSSOutput = require('../css/CSSOutput');
 
-module.exports = createRole({
-    init: function () {
-        this._typeMap = {
-            stroke: 'color'
-        };
+module.exports = new Output({
+    typeMap: {
+        stroke: 'color'
     },
 
     onStart: function (element) {
@@ -20,7 +18,7 @@ module.exports = createRole({
         var styles = createStyles(output, this.pathLength);
 
         each(styles, function (key, value) {
-            CSSRole.prototype.set(key, value, element);
+            CSSOutput.prototype.set(key, value, element);
         });
     }
 });

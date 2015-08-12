@@ -1,9 +1,9 @@
 "use strict";
 
-var createRole = require('../create-role'),
+var Output = require('../Output'),
     each = require('../../inc/utils').each;
 
-module.exports = createRole({
+module.exports = new Output({
     onUpdate: function (output, element) {
         var set = this.set;
 

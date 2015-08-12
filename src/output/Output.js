@@ -1,12 +1,14 @@
 "use strict";
 
 var Output = function (props) {
+        var output = this;
+
         this.map = {};
         this.typeMap = {};
 
-        if (props.init) {
-            props.init();
-        }
+        each(props, function (key, method) {
+            output[key] = method;
+        });
     };
 
 Output.prototype = {

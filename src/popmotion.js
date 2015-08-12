@@ -17,14 +17,12 @@ var select = require('./actor/select'),
 
         Easing: require('./actions/play/Easing'),
 
-        Role: require('./roles/Role'),
+        Output: require('./output/Output'),
 
-        createRole: require('./roles/create-role'),
-
-        roles: {
-            Attr: require('./roles/attr/AttrRole'),
-            CSS: require('./roles/css/CSSRole'),
-            Path: require('./roles/path/PathRole')
+        outputs: {
+            Attr: require('./output/attr/AttrOutput'),
+            CSS: require('./output/css/CSSOutput'),
+            Path: require('./output/path/PathOutput')
         },        
 
         select: function (items) {
