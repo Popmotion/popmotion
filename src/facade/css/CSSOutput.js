@@ -6,7 +6,7 @@ var Output = require('../Output'),
     prefixes = ['Webkit','Moz','O','ms', ''],
     numPrefixes = prefixes.length,
     propertyNameCache = {},
-    
+                    
     /*
         Test style property for prefixed version
         
@@ -16,10 +16,11 @@ var Output = require('../Output'),
     testPrefix = function (key) {
         var testElement = document.body;
         
-        propertyNameCache[key] = key;
+        propertyNameCache[key] = false;
 
         for (var i = 0; i < numPrefixes; i++) {
-            var prefixed = prefixes[i] + key.charAt(0).toUpperCase() + key.slice(1);
+            var prefix = prefixes[i],
+                prefixed = (prefix === '') ? key : prefix + key.charAt(0).toUpperCase() + key.slice(1);
 
             if (testElement.style.hasOwnProperty(prefixed)) {
                 propertyNameCache[key] = prefixed;
@@ -37,16 +38,27 @@ module.exports = new Output({
 
     typeMap: require('./type-map'),
 
-    onUpdate: function (output, actor) {
+    onUpdate: function (element, output) {
+        var set = this.set;
 
-        //actor.route('css').set(build(output));
+        each(build(output), function (key, value) {
+            set(element, key, value);
+        });
     },
 
-    get: function (name, element) {
-        return window.getComputedStyle(element, null)[propertyNameCache[name] || testPrefix(name)];
+    get: function (element, name) {
+        var key = propertyNameCache[name] || testPrefix(name);
+
+        if (key) {
+            return window.getComputedStyle(element, null)[key];
+        }
     },
 
-    set: function (name, rule, element) {
-        element.style[propertyNameCache[name] || testPrefix(name)] = rule;
+    set: function (element, name, rule) {
+        var key = propertyNameCache[name] || testPrefix(name);
+
+        if (key) {
+            element.style[] = rule;
+        }
     }
 });

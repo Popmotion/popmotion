@@ -6,14 +6,14 @@ var transformDictionary = require('./transform-dictionary'),
     TRANSFORM = 'transform',
     TRANSLATE_Z = 'translateZ';
 
-module.exports = function (output, cache) {
+module.exports = function (output) {
     var css = {},
         key = '',
         transform = '',
         transformHasZ = false,
         rule = '';
 
-    // Loop through output, check for transform properties and cache
+    // Loop through output, check for transform properties
     for (key in output) {
         if (output.hasOwnProperty(key)) {
             rule = output[key];
@@ -22,20 +22,18 @@ module.exports = function (output, cache) {
                 transform += key + '(' + rule + ')';
                 transformHasZ = (key === TRANSLATE_Z) ? true : transformHasZ;
             
-            // Or just assign directly if different from cache
-            } else if (cache[key] !== rule) {
-                cache[key] = css[key] = rule;
+            // Or just assign directly
+            } else {
+                css[key] = rule;
             }
         }
     }
 
     // If we have transform properties, add translateZ
-    if (transform !== '' && transform !== cache[TRANSFORM]) {
+    if (transform !== '') {
         if (!transformHasZ) {
             transform += ' ' + TRANSLATE_Z + '(0px)';
         }
-
-        cache[TRANSFORM] = css[TRANSFORM] = transform; 
     }
 
     return css;

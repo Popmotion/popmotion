@@ -9,17 +9,18 @@ var actionManager = require('../actions/manager'),
         var values = this.values,
             action = actionManager[this.action],
             valueAction = action,
-            output = this.output,
+            state = this.state,
             numActiveValues = this.order.length,
             numActiveParents = this.parentOrder.length,
+            element = this.element,
             key = '',
             value = {},
             updatedValue = 0,
             i = 0;
 
-        // Update Input and attach new values to output
+        // Update Input and attach new values to state
         if (this.input) {
-            output.input = this.input.onFrame(framestamp);
+            state.input = this.input.onFrame(framestamp);
         }
 
         // Update Action input
@@ -30,7 +31,7 @@ var actionManager = require('../actions/manager'),
         // Fire onStart if first frame
         if (this.firstFrame) {
             each(this.roles, function (name, role) {
-                    role.start(values);
+                role.actionStart(element, state.values);
             });
         }
 
@@ -75,13 +76,13 @@ var actionManager = require('../actions/manager'),
             // Set current
             this.values[key].current = updatedValue;
 
-            // Put value in default route output
-            output.values[key] = (value.unit) ? updatedValue + value.unit : updatedValue;
+            // Put value in state
+            state.values[key] = (value.unit) ? updatedValue + value.unit : updatedValue;
 
-            // Or add to parent output, to be combined
+            // Or add to parent state, to be combined
             if (value.parent) {
-                output[value.parent] = output[value.parent] || {};
-                output[value.parent][value.propName] = output[key];
+                state[value.parent] = state[value.parent] || {};
+                state[value.parent][value.propName] = state[key];
             }
         }
 
@@ -91,14 +92,14 @@ var actionManager = require('../actions/manager'),
             value = this.values[key];
 
             // Update parent value current property
-            value.current = valueTypeManager[value.type].combine(output[key]);
+            value.current = valueTypeManager[value.type].combine(state[key]);
 
-            // Update output
-            output[value][value.name] = output[key] = value.current;
+            // Update state
+            state[value][value.name] = state[key] = value.current;
         }
 
         each(this.roles, function (name, role) {
-            role.update(output.values, (this.hasChanged || this.firstFrame));
+            role.update(element, state.values, (this.hasChanged || this.firstFrame));
         });
 
         // Fire onEnd if this Action has ended
@@ -106,7 +107,7 @@ var actionManager = require('../actions/manager'),
             this.isActive = false;
 
             each(this.roles, function (name, role) {
-                role.actionEnd(output.values);
+                role.actionEnd(element, state.values);
             });
 
             // If is a play action, and is not active, check next action

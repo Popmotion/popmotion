@@ -11,10 +11,12 @@ var Process = require('../process/Process'),
     Actor = function (element) {
         this.element = element || false;
         this.values = {};
+        this.state = {
+            values: {}
+        };
         this.output = {};
         this.queue = new Queue();
         this.process = new Process(this, update);
-        this.roles = {};
 
         this.clearOrder();
     };
