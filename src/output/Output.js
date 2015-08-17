@@ -13,7 +13,7 @@ var Output = function (props) {
         });
     };
 
-ElementHandler.prototype = {
+Output.prototype = {
     actionStart: function (element, values) {
         if (this.onStart) {
             this.onStart(element, values);
