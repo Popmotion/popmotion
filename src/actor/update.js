@@ -6,7 +6,8 @@ var actionManager = require('../actions/manager'),
     each = require('../inc/utils').each,
 
     update = function (framestamp, frameDuration) {
-        var values = this.values,
+        var actor = this,
+            values = this.values,
             action = actionManager[this.action],
             valueAction = action,
             state = this.state,
@@ -30,8 +31,8 @@ var actionManager = require('../actions/manager'),
 
         // Fire onStart if first frame
         if (this.firstFrame) {
-            each(this.roles, function (name, role) {
-                role.actionStart(element, state.values);
+            each(this.output, function (name, output) {
+                output.actionStart(element, state.values);
             });
         }
 
@@ -95,19 +96,19 @@ var actionManager = require('../actions/manager'),
             value.current = valueTypeManager[value.type].combine(state[key]);
 
             // Update state
-            state[value][value.name] = state[key] = value.current;
+            state[value][value.name] = value.current;
         }
 
-        each(this.roles, function (name, role) {
-            role.update(element, state.values, (this.hasChanged || this.firstFrame));
+        each(this.output, function (name, output) {
+            output.update(element, state.values, (actor.hasChanged || actor.firstFrame));
         });
 
         // Fire onEnd if this Action has ended
         if (this.isActive && action.hasEnded && action.hasEnded.call(this, this.hasChanged)) {
             this.isActive = false;
 
-            each(this.roles, function (name, role) {
-                role.actionEnd(element, state.values);
+            each(this.output, function (name, output) {
+                output.actionEnd(element, state.values);
             });
 
             // If is a play action, and is not active, check next action

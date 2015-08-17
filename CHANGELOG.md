@@ -5,10 +5,10 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 ## [3.0.0] Unreleased
 
 ### Removed
-- `ui.addRoute` - see `Role`
+- `ui.addRoute` - see `Output`
 
 ### Added
-- `Role`
+- `Output` class
 
 ## [2.0.4] 2015-08-10
 

@@ -19,7 +19,7 @@ var select = require('./actor/select'),
 
         Output: require('./output/Output'),
 
-        outputs: {
+        output: {
             Attr: require('./output/attr/AttrOutput'),
             CSS: require('./output/css/CSSOutput'),
             Path: require('./output/path/PathOutput')

@@ -8,8 +8,7 @@ var Process = require('../process/Process'),
     actionManager = require('../actions/manager'),
     each = utils.each,
 
-    Actor = function (element) {
-        this.element = element || false;
+    Actor = function (opts) {
         this.values = {};
         this.state = {
             values: {}
@@ -18,6 +17,7 @@ var Process = require('../process/Process'),
         this.queue = new Queue();
         this.process = new Process(this, update);
 
+        this.set(opts);
         this.clearOrder();
     };
 
@@ -168,7 +168,9 @@ Actor.prototype = {
         Reset properties to Action defaults
     */
     resetProps: function () {
-        this.setProps(actionManager[this.action].actionDefaults);
+        if (this.action) {
+            this.setProps(actionManager[this.action].actionDefaults);
+        }
         return this;
     },
 

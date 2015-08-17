@@ -10,12 +10,12 @@ module.exports = new Output({
         stroke: 'color'
     },
 
-    onStart: function (element) {
-        this.pathLength = element.getTotalLength();
+    onStart: function (output, actor) {
+        actor.pathLength = actor.element.getTotalLength();
     },
 
-    onUpdate: function (output, element) {
-        var styles = createStyles(output, this.pathLength);
+    onUpdate: function (output, actor) {
+        var styles = createStyles(output, actor.pathLength);
 
         each(styles, function (key, value) {
             CSSOutput.prototype.set(key, value, element);

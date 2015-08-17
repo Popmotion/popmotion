@@ -58,7 +58,7 @@ module.exports = new Output({
         var key = propertyNameCache[name] || testPrefix(name);
 
         if (key) {
-            element.style[] = rule;
+            element.style[key] = rule;
         }
     }
 });
