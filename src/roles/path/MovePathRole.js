@@ -1,3 +1,5 @@
+"use strict";
+
 var getAngle = require('../../inc/calc').angle;
 
 var calcRotation = function (path, point, distance) {

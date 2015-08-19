@@ -1,22 +1,24 @@
 "use strict";
 
-var Output = require('../Output'),
-    each = require('../../inc/utils').each;
+var each = require('../../inc/utils').each;
 
-module.exports = new Output({
-    onUpdate: function (output, element) {
-        var set = this.set;
+var AttrRole = {
+    update: function (state) {
+        var actor = this;
 
-        each(output, function (key, value) {
-            set(key, value, element);
+        each(state, function (key, value) {
+            AttrRole.set.call(actor, key, value);
         });
     },
 
-    get: function (name, element) {
-        return element.getAttribute(name);
+    get: function (key) {
+        return this.element.getAttribute(key);
     },
 
-    set: function (name, value, element) {
-        element.setAttribute(name, value);
+    set: function (key, value) {
+        this.element.setAttribute(key, value);
     }
-});
+};
+
+module.exports = AttrRole;
+

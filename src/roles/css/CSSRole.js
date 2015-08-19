@@ -1,7 +1,6 @@
 "use strict";
 
-var Output = require('../Output'),
-    build = require('./build'),
+var build = require('./build'),
 
     prefixes = ['Webkit','Moz','O','ms', ''],
     numPrefixes = prefixes.length,
@@ -30,35 +29,35 @@ var Output = require('../Output'),
         return propertyNameCache[key];
     };
 
-/*
-    CSS Role definition
-*/
-module.exports = new Output({
-    map: require('./map'),
+var CSSRole = {
 
+    map: require('./map'),
     typeMap: require('./type-map'),
 
-    onUpdate: function (element, output) {
-        var set = this.set;
+    update: function (state) {
+        var actor = this;
 
         each(build(output), function (key, value) {
-            set(element, key, value);
+            CSSRole.set.call(this, key, value);
         });
     },
 
-    get: function (element, name) {
-        var key = propertyNameCache[name] || testPrefix(name);
+    get: function (key) {
+        key = propertyNameCache[key] || testPrefix(key);
 
         if (key) {
-            return window.getComputedStyle(element, null)[key];
+            return window.getComputedStyle(this.element, null)[key];
         }
     },
 
-    set: function (element, name, rule) {
-        var key = propertyNameCache[name] || testPrefix(name);
+    set: function (key, value) {
+        key = propertyNameCache[key] || testPrefix(key);
 
         if (key) {
-            element.style[key] = rule;
+            element.style[key] = value;
         }
     }
-});
+
+};
+
+module.exports = CSSRole;
