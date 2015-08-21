@@ -6,7 +6,7 @@ var Process = require('../process/Process'),
     update = require('./update'),
     valueOps = require('./value-operations'),
     actionManager = require('../actions/manager'),
-    callbackRole = require('../roles/defaultRole'),
+    defaultRole = require('../roles/defaultRole'),
     each = utils.each,
 
     Actor = function (opts) {
@@ -14,12 +14,11 @@ var Process = require('../process/Process'),
         this.state = {
             values: {}
         };
-        this.roles = [callbackRole];
+
+        this.roles = [ defaultRole ];
         this.queue = new Queue();
         this.process = new Process(this, update);
-
         this.set(opts);
-        this.clearOrder();
     };
 
 Actor.prototype = {
@@ -34,8 +33,11 @@ Actor.prototype = {
         // Reset Element properties and write new props
         this.clearOrder();
         this.resetProps();
-        this.setProps(props);
-        this.setValues(props.values, defaultValueProp);
+
+        if (props) {
+            this.setProps(props);
+            this.setValues(props.values, defaultValueProp);
+        }
 
         return this;
     },

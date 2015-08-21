@@ -14,6 +14,7 @@ var actionManager = require('../actions/manager'),
             numActiveValues = this.order.length,
             numActiveParents = this.parentOrder.length,
             element = this.element,
+            numRoles = this.roles.length,
             key = '',
             value = {},
             updatedValue = 0,
@@ -31,13 +32,14 @@ var actionManager = require('../actions/manager'),
 
         // Fire onStart if first frame
         if (this.firstFrame) {
-            each(this.output, function (name, output) {
-                output.actionStart(element, state.values);
-            });
+            for (i = 0; i < numRoles; i++) {
+                console.log(this.roles[i]);
+                this.roles[i].start.call(actor);
+            }
         }
 
         // Update values
-        for (; i < numActiveValues; i++) {
+        for (i = 0; i < numActiveValues; i++) {
             // Get value and key
             key = this.order[i];
             value = values[key];
@@ -99,17 +101,23 @@ var actionManager = require('../actions/manager'),
             state[value][value.name] = value.current;
         }
 
-        each(this.output, function (name, output) {
-            output.update(element, state.values, (actor.hasChanged || actor.firstFrame));
-        });
+        // Fire `frame` and `update` callbacks
+        for (i = 0; i < numRoles; i++) {
+            this.roles[i].frame.call(actor, this.state.values);
+
+            if (actor.hasChanged || actor.firstFrame) {
+                this.roles[i].update.call(actor, this.state.values);
+            }
+        }
 
         // Fire onEnd if this Action has ended
         if (this.isActive && action.hasEnded && action.hasEnded.call(this, this.hasChanged)) {
             this.isActive = false;
 
-            each(this.output, function (name, output) {
-                output.actionEnd(element, state.values);
-            });
+            // Fire `complete` callback
+            for (i = 0; i < numRoles; i++) {
+                this.roles[i].complete.call(actor);
+            }
 
             // If is a play action, and is not active, check next action
             if (!this.isActive && this.action === 'play' && this.next) {

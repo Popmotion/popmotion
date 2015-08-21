@@ -31,9 +31,9 @@ popmotion
 /*
     Predefined roles
 */
-popmotion.cssRole = require('./roles/css/cssRole');
-popmotion.attrRole = require('./roles/attr/attrRole');
-popmotion.drawPathRole = require('./roles/path/drawPathRole');
-popmotion.movePathRole = require('./roles/path/movePathRole');  
+popmotion.cssRole = require('../roles/css/cssRole');
+popmotion.attrRole = require('../roles/attr/attrRole');
+popmotion.drawPathRole = require('../roles/path/drawPathRole');
+popmotion.movePathRole = require('../roles/path/movePathRole');  
 
 module.exports = popmotion;

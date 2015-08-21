@@ -22,7 +22,7 @@ var Role = function (methods) {
     role._map = {};
 
     each(methods, function (name, method) {
-        role[name] = utils.copy(method);
+        role[name] = (utils.isFunc(method)) ? method : utils.copy(method);
     });
 };
 
