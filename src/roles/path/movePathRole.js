@@ -3,7 +3,7 @@
 var getAngle = require('../../inc/calc').angle;
 
 var calcRotation = function (path, point, distance) {
-    var testPoint = this.path.getPointAtLength(distance + .2);
+    var testPoint = this.path.getPointAtLength(distance + 0.2);
 
     return getAngle(point, testPoint);
 };

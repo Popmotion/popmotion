@@ -2,6 +2,7 @@
 
 var Role = require('../Role');
 var build = require('./build');
+var each = require('../../inc/utils').each;
 
 var prefixes = ['Webkit','Moz','O','ms', ''];
 var numPrefixes = prefixes.length;
@@ -40,8 +41,8 @@ var CSSRole = new Role({
     update: function (state) {
         var actor = this;
 
-        each(build(output), function (key, value) {
-            CSSRole.set.call(this, key, value);
+        each(build(state), function (key, value) {
+            CSSRole.set.call(actor, key, value);
         });
     },
 
@@ -57,7 +58,7 @@ var CSSRole = new Role({
         key = propertyNameCache[key] || testPrefix(key);
 
         if (key) {
-            element.style[key] = value;
+            this.element.style[key] = value;
         }
     }
 

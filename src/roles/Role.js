@@ -41,7 +41,7 @@ var createRole = function (methods, values) {
     });
 
     return newRole;
-}
+};
 
 Role.prototype = {
 

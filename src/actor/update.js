@@ -3,7 +3,6 @@
 var actionManager = require('../actions/manager'),
     valueTypeManager = require('../value-types/manager'),
     calc = require('../inc/calc'),
-    each = require('../inc/utils').each,
 
     update = function (framestamp, frameDuration) {
         var actor = this,
@@ -13,7 +12,6 @@ var actionManager = require('../actions/manager'),
             state = this.state,
             numActiveValues = this.order.length,
             numActiveParents = this.parentOrder.length,
-            element = this.element,
             numRoles = this.roles.length,
             key = '',
             value = {},

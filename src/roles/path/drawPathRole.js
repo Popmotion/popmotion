@@ -1,6 +1,7 @@
 "use strict";
 
 var Role = require('../Role');
+var cssRole = require('../css/cssRole');
 var each = require('../../inc/utils').each;
 
 /*
@@ -11,7 +12,7 @@ var each = require('../../inc/utils').each;
 */
 var percentToPixels = function (percentage, length) {
     return (parseFloat(percentage) / 100) * length + 'px';
-}
+};
 
 /*
     Create styles
@@ -71,7 +72,7 @@ var SVGDrawPath = new Role({
         x, y and rotation
     */
     update: function (state) {
-        CSSRole.update.call(actor, createStyles(state, this.pathLength));
+        cssRole.update.call(this, createStyles(state, this.pathLength));
     }
 });
 

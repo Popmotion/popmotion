@@ -3,7 +3,6 @@
 var transformDictionary = require('./transform-dictionary'),
     transformProps = transformDictionary.props,
 
-    TRANSFORM = 'transform',
     TRANSLATE_Z = 'translateZ';
 
 module.exports = function (output) {
