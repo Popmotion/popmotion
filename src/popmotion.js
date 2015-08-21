@@ -17,13 +17,7 @@ var select = require('./actor/select'),
 
         Easing: require('./actions/play/Easing'),
 
-        Output: require('./output/Output'),
-
-        output: {
-            Attr: require('./output/attr/AttrOutput'),
-            CSS: require('./output/css/CSSOutput'),
-            Path: require('./output/path/PathOutput')
-        },        
+        Role: require('./roles/Role'),
 
         select: function (items) {
             return select(items);

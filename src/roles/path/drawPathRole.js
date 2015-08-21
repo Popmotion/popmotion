@@ -32,7 +32,7 @@ var createStyles = function (props, length) {
         key = SVGDrawPath._map[key] || key;
 
         switch (key) {
-            case 'length',
+            case 'length':
             case 'spacing':
                 hasDashArray = true;
                 dashArrayStyles[key] = percentToPixels(value, length);

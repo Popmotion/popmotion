@@ -22,7 +22,7 @@ var Role = function (methods) {
     role._map = {};
 
     each(methods, function (name, method) {
-        role[name] = method;
+        role[name] = utils.copy(method);
     });
 };
 
@@ -33,7 +33,7 @@ var Role = function (methods) {
     @param [valuesToMap]: Override existing map with these values
     @return [Role]: New Role
 */
-var createRole(methods, values) {
+var createRole = function (methods, values) {
     var newRole = new Role(methods);
 
     each(values, function (key, value) {
@@ -43,7 +43,7 @@ var createRole(methods, values) {
     return newRole;
 }
 
-Role.prototype = function () {
+Role.prototype = {
 
     /*
         Map value keys or generate new Role with updated map

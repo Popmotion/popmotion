@@ -1,7 +1,7 @@
 "use strict";
 
 var Role = require('../Role');
-var build = require('./build'),
+var build = require('./build');
 
 var prefixes = ['Webkit','Moz','O','ms', ''];
 var numPrefixes = prefixes.length;
