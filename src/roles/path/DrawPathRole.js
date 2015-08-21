@@ -1,5 +1,6 @@
 "use strict";
 
+var Role = require('../Role');
 var each = require('../../inc/utils').each;
 
 /*
@@ -28,7 +29,7 @@ var createStyles = function (props, length) {
         styles = {};
 
     each(props, function (key, value) {
-        key = SVGDrawPath.map[key] || key;
+        key = SVGDrawPath._map[key] || key;
 
         switch (key) {
             case 'length',
@@ -45,7 +46,7 @@ var createStyles = function (props, length) {
     });
 
     if (hasDashArray) {
-        styles[SVGDrawPath.map.length] = dashArrayStyles.length + ' ' + dashArrayStyles.spacing;
+        styles[SVGDrawPath._map.length] = dashArrayStyles.length + ' ' + dashArrayStyles.spacing;
     }
 
     return styles;
@@ -54,8 +55,8 @@ var createStyles = function (props, length) {
 /*
     Draw Path role
 */
-var SVGDrawPath = {
-    map: require('./map'),
+var SVGDrawPath = new Role({
+    _map: require('./map'),
 
     typeMap: {
         stroke: 'color'
@@ -72,6 +73,6 @@ var SVGDrawPath = {
     update: function (state) {
         CSSRole.update.call(actor, createStyles(state, this.pathLength));
     }
-};
+});
 
 module.exports = SVGDrawPath;

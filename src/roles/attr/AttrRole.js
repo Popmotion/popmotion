@@ -1,8 +1,11 @@
 "use strict";
 
+var Role = require('../Role');
 var each = require('../../inc/utils').each;
 
-var AttrRole = {
+var AttrRole = new Role({
+    extend: 'attr',
+
     update: function (state) {
         var actor = this;
 
@@ -18,7 +21,7 @@ var AttrRole = {
     set: function (key, value) {
         this.element.setAttribute(key, value);
     }
-};
+});
 
 module.exports = AttrRole;
 

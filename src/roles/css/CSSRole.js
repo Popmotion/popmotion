@@ -1,18 +1,19 @@
 "use strict";
 
+var Role = require('../Role');
 var build = require('./build'),
 
-    prefixes = ['Webkit','Moz','O','ms', ''],
-    numPrefixes = prefixes.length,
-    propertyNameCache = {},
+var prefixes = ['Webkit','Moz','O','ms', ''];
+var numPrefixes = prefixes.length;
+var propertyNameCache = {};
                     
-    /*
-        Test style property for prefixed version
-        
-        @param [string]: Style property
-        @return [string]: Cached property name
-    */
-    testPrefix = function (key) {
+/*
+    Test style property for prefixed version
+    
+    @param [string]: Style property
+    @return [string]: Cached property name
+*/
+var testPrefix = function (key) {
         var testElement = document.body;
         
         propertyNameCache[key] = false;
@@ -29,10 +30,12 @@ var build = require('./build'),
         return propertyNameCache[key];
     };
 
-var CSSRole = {
+var CSSRole = new Role({
 
-    map: require('./map'),
-    typeMap: require('./type-map'),
+    extend: 'css',
+
+    _map: require('./map'),
+    _typeMap: require('./type-map'),
 
     update: function (state) {
         var actor = this;
@@ -58,6 +61,6 @@ var CSSRole = {
         }
     }
 
-};
+});
 
 module.exports = CSSRole;

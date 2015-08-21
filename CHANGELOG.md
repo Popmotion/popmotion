@@ -5,10 +5,10 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 ## [3.0.0] Unreleased
 
 ### Removed
-- `ui.addRoute` - see `Output`
+- `ui.addRoute` - see Roles
 
 ### Added
-- `Output` class
+- Roles - `CSSRole`, `AttrRole`, `SVGRole`, `SVGDrawRole`, `MovePathRole`
 
 ## [2.0.4] 2015-08-10
 

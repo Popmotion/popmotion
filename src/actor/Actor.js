@@ -6,6 +6,7 @@ var Process = require('../process/Process'),
     update = require('./update'),
     valueOps = require('./value-operations'),
     actionManager = require('../actions/manager'),
+    callbackRole = require('../roles/defaultRole'),
     each = utils.each,
 
     Actor = function (opts) {
@@ -13,7 +14,7 @@ var Process = require('../process/Process'),
         this.state = {
             values: {}
         };
-        this.output = {};
+        this.roles = [callbackRole];
         this.queue = new Queue();
         this.process = new Process(this, update);
 
