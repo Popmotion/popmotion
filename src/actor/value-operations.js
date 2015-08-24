@@ -15,7 +15,7 @@ var calc = require('../inc/calc'),
 
         each(roles, function (key, role) {
             if (role._typeMap) {
-                valueType = role._typeMap[name] || valueType;
+                valueType = role._typeMap[role.map(name)] || valueType;
             }
         });
 

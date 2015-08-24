@@ -10,14 +10,16 @@ module.exports = {
     // Color properties
     color: COLOR,
     backgroundColor: COLOR,
+    outlineColor: COLOR,
+    fill: COLOR,
+    stroke: COLOR,
+    // Border
     borderColor: COLOR,
     borderTopColor: COLOR,
     borderRightColor: COLOR,
     borderBottomColor: COLOR,
     borderLeftColor: COLOR,
-    outlineColor: COLOR,
-    fill: COLOR,
-    stroke: COLOR,    
+    borderRadius: PX,
     // Dimensions
     margin: DIMENSIONS,
     padding: DIMENSIONS,

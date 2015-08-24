@@ -5,7 +5,7 @@ var each = utils.each;
     Role class constructor
 
     @param [object]: Optional methods and props to add:
-        extend [string]:    Name of generated getter/setter method on Actor
+        name [string]:      Name of generated getter/setter method on Actor
         _map [object]:      Map Actor values to these values for this Role
         _typeMap [object]:  Map values to value types
         init [function]:    Callback to run when this Role is added to an Actor

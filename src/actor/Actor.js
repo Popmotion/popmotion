@@ -49,20 +49,17 @@ var Process = require('../process/Process'),
         }
         this.roles = roles;
         this.roles.forEach(function (role) {
-            var init = role.init,
-                name = role.name;
-
             // Extend Actor with getter/setter if
             // Role has name property
-            if (name) {
-                actor[name] = function (a, b) {
+            if (role.name) {
+                actor[role.name] = function (a, b) {
                     return getterSetter.call(actor, a, b, role.get, role.set);
                 };
             }
 
             // Fire init method if one available
-            if (init) {
-                init.call(actor);
+            if (role.init) {
+                role.init.call(actor);
             }
         });
     };

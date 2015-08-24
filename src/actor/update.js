@@ -3,6 +3,7 @@
 var actionManager = require('../actions/manager'),
     valueTypeManager = require('../value-types/manager'),
     calc = require('../inc/calc'),
+    each = require('../inc/utils').each,
 
     update = function (framestamp, frameDuration) {
         var actor = this,
@@ -15,6 +16,7 @@ var actionManager = require('../actions/manager'),
             numRoles = this.roles.length,
             key = '',
             value = {},
+            mappedValues = {},
             updatedValue = 0,
             i = 0,
             role;
@@ -105,13 +107,18 @@ var actionManager = require('../actions/manager'),
         // Fire `frame` and `update` callbacks
         for (i = 0; i < numRoles; i++) {
             role = this.roles[i];
+            mappedValues = {};
+
+            each(this.state.values, function (name, val) {
+                mappedValues[role.map(name)] = val;
+            });
 
             if (role.frame) {
-                role.frame.call(actor, this.state.values);
+                role.frame.call(actor, mappedValues);
             }
 
             if (role.update && (actor.hasChanged || actor.firstFrame)) {
-                role.update.call(actor, this.state.values);
+                role.update.call(actor, mappedValues);
             }
         }
 

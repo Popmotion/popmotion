@@ -26,5 +26,7 @@ module.exports = function (selector) {
         elements.push(nodes);
     }
 
-    return new ActorCollection(elements);
+    return new ActorCollection({
+        elements: elements
+    });
 };
