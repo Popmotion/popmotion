@@ -7,18 +7,64 @@ var Process = require('../process/Process'),
     valueOps = require('./value-operations'),
     actionManager = require('../actions/manager'),
     defaultRole = require('../roles/defaultRole'),
+    cssRole = require('../roles/css/cssRole'),
+    getterSetter = require('../inc/getter-setter'),
     each = utils.each,
 
     Actor = function (opts) {
+        var actor = this,
+            roles = [ defaultRole ];
+
+        // Auto-detect element type, if present
+        if (opts.element) {
+
+            // Add CSS role if HTMLElement
+            if (opts.element instanceof HTMLElement) {
+                roles.push(cssRole);
+
+            } else if (opts.element instanceof SVGElement) {
+
+            }
+        }
+
+        // Set values object and state object
         this.values = {};
         this.state = {
             values: {}
         };
 
-        this.roles = [ defaultRole ];
+        // Init queue and process
         this.queue = new Queue();
         this.process = new Process(this, update);
+
         this.set(opts);
+
+        // Init roles
+        if (opts.as) {
+            if (utils.isArray(opts.as)) {
+                roles.push.apply(roles, opts.as);
+            } else {
+                roles.push(opts.as);
+            }
+        }
+
+        roles.forEach(function (role) {
+            var init = role.init,
+                name = role.name;
+
+            // Extend Actor with getter/setter if
+            // Role has name property
+            if (name) {
+                actor[name] = function (a, b) {
+                    return getterSetter.call(actor, a, b, role.get, role.set);
+                };
+            }
+
+            // Fire init method if one available
+            if (init) {
+                init.call(actor);
+            }
+        });
     };
 
 Actor.prototype = {

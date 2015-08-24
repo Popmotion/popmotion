@@ -22,7 +22,7 @@ var Role = function (methods) {
     role._map = {};
 
     each(methods, function (name, method) {
-        role[name] = (utils.isFunc(method)) ? method : utils.copy(method);
+        role[name] = (!utils.isObj(method)) ? method : utils.copy(method);
     });
 };
 
@@ -58,13 +58,8 @@ Role.prototype = {
     */
     map: function (values) {
         // If this is a string, get mapped value
-        if (utils.isString(values)) {
-            return this._map[values] || values;
-
         // Otherwise this is a map, duplicated role with updated map
-        } else {
-            return createRole(this, values);
-        }
+        return (utils.isString(values)) ? this._map[values] || values : createRole(this, values);
     }
 };
 

@@ -33,7 +33,7 @@ var testPrefix = function (key) {
 
 var CSSRole = new Role({
 
-    extend: 'css',
+    name: 'css',
 
     _map: require('./map'),
     _typeMap: require('./type-map'),

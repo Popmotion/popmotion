@@ -4,7 +4,7 @@ var Role = require('../Role');
 var each = require('../../inc/utils').each;
 
 var AttrRole = new Role({
-    extend: 'attr',
+    name: 'attr',
 
     update: function (state) {
         var actor = this;

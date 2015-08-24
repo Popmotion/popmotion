@@ -2,8 +2,8 @@ var Role = require('./Role');
 
 module.exports = new Role({
     init: function () {
-        if (this.onInit) {
-            this.onInit();
+        if (this.init) {
+            this.init();
         }
     },
 
