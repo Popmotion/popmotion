@@ -16,7 +16,8 @@ var actionManager = require('../actions/manager'),
             key = '',
             value = {},
             updatedValue = 0,
-            i = 0;
+            i = 0,
+            role;
 
         // Update Input and attach new values to state
         if (this.input) {
@@ -31,8 +32,10 @@ var actionManager = require('../actions/manager'),
         // Fire onStart if first frame
         if (this.firstFrame) {
             for (i = 0; i < numRoles; i++) {
-                console.log(this.roles[i]);
-                this.roles[i].start.call(actor);
+                role = this.roles[i];
+                if (role.start) {
+                    role.start.call(actor);
+                }
             }
         }
 
@@ -101,10 +104,14 @@ var actionManager = require('../actions/manager'),
 
         // Fire `frame` and `update` callbacks
         for (i = 0; i < numRoles; i++) {
-            this.roles[i].frame.call(actor, this.state.values);
+            role = this.roles[i];
 
-            if (actor.hasChanged || actor.firstFrame) {
-                this.roles[i].update.call(actor, this.state.values);
+            if (role.frame) {
+                role.frame.call(actor, this.state.values);
+            }
+
+            if (role.update && (actor.hasChanged || actor.firstFrame)) {
+                role.update.call(actor, this.state.values);
             }
         }
 
@@ -114,7 +121,10 @@ var actionManager = require('../actions/manager'),
 
             // Fire `complete` callback
             for (i = 0; i < numRoles; i++) {
-                this.roles[i].complete.call(actor);
+                role = this.roles[i];
+                if (role.complete) {
+                    role.complete.call(actor);
+                }
             }
 
             // If is a play action, and is not active, check next action

@@ -10,10 +10,16 @@ var calc = require('../inc/calc'),
     numericalValues = ['current', 'to', 'init', 'min', 'max', 'velocity', 'friction', 'spring'],
     numNumericalValues = numericalValues.length,
 
-    checkRoles = function (type, roles) {
-        each(roles, function (name, role) {
-            type = role.typeMap(name) || type;
+    checkRoles = function (name, roles) {
+        var valueType;
+
+        each(roles, function (key, role) {
+            if (role._typeMap) {
+                valueType = role._typeMap[name] || valueType;
+            }
         });
+
+        return valueType;
     },
 
     checkNumericalValue = function (name) {
@@ -235,7 +241,7 @@ module.exports = {
                     
                     // Or check route typemaps
                     } else {
-                        value.type = checkRoles(value.type, value.roles);
+                        value.type = checkRoles(key, actor.roles);
 
                         // Otherwise, check by running tests if this is a string
                         if (!value.type && utils.isString(value[defaultValueProp])) {

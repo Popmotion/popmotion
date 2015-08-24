@@ -11,7 +11,7 @@ module.exports = function (output) {
         transform = '',
         transformHasZ = false,
         rule = '';
-
+        
     // Loop through output, check for transform properties
     for (key in output) {
         if (output.hasOwnProperty(key)) {
@@ -33,6 +33,8 @@ module.exports = function (output) {
         if (!transformHasZ) {
             transform += ' ' + TRANSLATE_Z + '(0px)';
         }
+
+        css.transform = transform;
     }
 
     return css;

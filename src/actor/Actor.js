@@ -47,8 +47,8 @@ var Process = require('../process/Process'),
                 roles.push(opts.as);
             }
         }
-
-        roles.forEach(function (role) {
+        this.roles = roles;
+        this.roles.forEach(function (role) {
             var init = role.init,
                 name = role.name;
 

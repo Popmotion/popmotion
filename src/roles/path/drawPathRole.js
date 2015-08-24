@@ -59,7 +59,7 @@ var createStyles = function (props, length) {
 var SVGDrawPath = new Role({
     _map: require('./map'),
 
-    typeMap: {
+    _typeMap: {
         stroke: 'color'
     },
 
