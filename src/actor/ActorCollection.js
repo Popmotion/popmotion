@@ -12,12 +12,12 @@ var Actor = require('./Actor'),
 
         @param [array]: Array of Actors, or valid Actor elements
     */
-    ActorCollection = function (opts) {
+    ActorCollection = function (elements) {
         // Add initial elements
         this.clear();
 
-        if (opts.elements) {
-            this.add(opts.elements);
+        if (elements) {
+            this.add(elements);
         }
 
         // Create stagger Actor
@@ -102,7 +102,7 @@ ActorCollection.prototype = {
             newElement;
 
         for (; i < numNewElements; i++) {
-            newElement = (elements[i] instanceof Actor) ? elements[i] : new Actor(elements[i]);
+            newElement = (elements[i] instanceof Actor) ? elements[i] : new Actor({ element: elements[i] });
             this.elements.push(newElement);
         }
 
