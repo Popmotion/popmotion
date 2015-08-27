@@ -8,6 +8,7 @@ var Process = require('../process/Process'),
     actionManager = require('../actions/manager'),
     defaultRole = require('../roles/defaultRole'),
     cssRole = require('../roles/css/cssRole'),
+    svgRole = require('../roles/svg/svgRole'),
     each = utils.each,
 
     Actor = function (opts) {
@@ -26,8 +27,6 @@ var Process = require('../process/Process'),
 
         // Detect/add roles
         if (opts) {
-            this.set(opts);
-
             // Auto-detect element type, if present and no roles defined
             if (!opts.as && opts.element) {
                 // Add CSS role if HTMLElement
@@ -35,7 +34,7 @@ var Process = require('../process/Process'),
                     roles.push(cssRole);
 
                 } else if (opts.element instanceof SVGElement) {
-
+                    roles.push(svgRole);
                 }
             // Manuall adding roles
             } else if (opts.as) {
@@ -45,6 +44,8 @@ var Process = require('../process/Process'),
                     roles.push(opts.as);
                 }
             }
+
+            this.set(opts);
         }
 
         this.roles = roles;
