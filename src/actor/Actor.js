@@ -8,24 +8,11 @@ var Process = require('../process/Process'),
     actionManager = require('../actions/manager'),
     defaultRole = require('../roles/defaultRole'),
     cssRole = require('../roles/css/cssRole'),
-    getterSetter = require('../inc/getter-setter'),
     each = utils.each,
 
     Actor = function (opts) {
         var actor = this,
             roles = [ defaultRole ];
-
-        // Auto-detect element type, if present
-        if (opts && opts.element) {
-
-            // Add CSS role if HTMLElement
-            if (opts.element instanceof HTMLElement) {
-                roles.push(cssRole);
-
-            } else if (opts.element instanceof SVGElement) {
-
-            }
-        }
 
         // Set values object and state object
         this.values = {};
@@ -37,27 +24,31 @@ var Process = require('../process/Process'),
         this.queue = new Queue();
         this.process = new Process(this, update);
 
-        this.set(opts);
+        // Detect/add roles
+        if (opts) {
+            this.set(opts);
 
-        // Init roles
-        if (opts && opts.as) {
-            if (utils.isArray(opts.as)) {
-                roles.push.apply(roles, opts.as);
-            } else {
-                roles.push(opts.as);
+            // Auto-detect element type, if present and no roles defined
+            if (!opts.as && opts.element) {
+                // Add CSS role if HTMLElement
+                if (opts.element instanceof HTMLElement) {
+                    roles.push(cssRole);
+
+                } else if (opts.element instanceof SVGElement) {
+
+                }
+            // Manuall adding roles
+            } else if (opts.as) {
+                if (utils.isArray(opts.as)) {
+                    roles.push.apply(roles, opts.as);
+                } else {
+                    roles.push(opts.as);
+                }
             }
         }
 
         this.roles = roles;
         this.roles.forEach(function (role) {
-            // Extend Actor with getter/setter if
-            // Role has name property
-            if (role.name) {
-                actor[role.name] = function (a, b) {
-                    return getterSetter.call(actor, a, b, role.get, role.set);
-                };
-            }
-
             // Fire init method if one available
             if (role.init) {
                 role.init.call(actor);

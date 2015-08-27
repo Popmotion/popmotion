@@ -18,6 +18,7 @@ var actionManager = require('../actions/manager'),
             value = {},
             mappedValues = {},
             updatedValue = 0,
+            outputValue = 0,
             i = 0,
             role;
 
@@ -81,14 +82,16 @@ var actionManager = require('../actions/manager'),
 
             // Set current
             this.values[key].current = updatedValue;
+            outputValue = (value.unit) ? updatedValue + value.unit : updatedValue;
 
-            // Put value in state
-            state.values[key] = (value.unit) ? updatedValue + value.unit : updatedValue;
+            // Put value in state if no parent value
+            if (!value.parent) {
+                state.values[key] = outputValue;
 
             // Or add to parent state, to be combined
-            if (value.parent) {
+            } else {
                 state[value.parent] = state[value.parent] || {};
-                state[value.parent][value.propName] = state.values[key];
+                state[value.parent][value.propName] = outputValue;
             }
         }
 
