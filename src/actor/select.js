@@ -9,7 +9,7 @@ var ActorCollection = require('./ActorCollection');
         If string, treated as selector.
         If not, treated as preexisting NodeList || jQuery object.
 */
-module.exports = function (selector) {
+module.exports = function (selector, opts) {
     var nodes = (typeof selector === 'string') ? document.querySelectorAll(selector) : selector,
         elements = [];
 
@@ -26,5 +26,5 @@ module.exports = function (selector) {
         elements.push(nodes);
     }
 
-    return new ActorCollection(elements);
+    return new ActorCollection(elements, opts);
 };

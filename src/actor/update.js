@@ -88,7 +88,7 @@ var actionManager = require('../actions/manager'),
             // Or add to parent state, to be combined
             if (value.parent) {
                 state[value.parent] = state[value.parent] || {};
-                state[value.parent][value.propName] = state[key];
+                state[value.parent][value.propName] = state.values[key];
             }
         }
 
@@ -101,7 +101,7 @@ var actionManager = require('../actions/manager'),
             value.current = valueTypeManager[value.type].combine(state[key]);
 
             // Update state
-            state[value][value.name] = value.current;
+            state.values[value.name] = value.current;
         }
 
         // Fire `frame` and `update` callbacks

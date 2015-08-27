@@ -1,7 +1,6 @@
 "use strict";
 
-var select = require('./actor/select'),
-    actionManager = require('./actions/manager'),
+var actionManager = require('./actions/manager'),
     presetManager = require('./actor/preset-manager'),
     valueTypeManager = require('./value-types/manager'),
 
@@ -19,9 +18,7 @@ var select = require('./actor/select'),
 
         Role: require('./roles/Role'),
 
-        select: function (items) {
-            return select(items);
-        },
+        select: require('./actor/select'),
 
         addAction: function () {
             actionManager.extend.apply(actionManager, arguments);
