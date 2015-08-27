@@ -12,12 +12,12 @@ var Actor = require('./Actor'),
 
         @param [array]: Array of Actors, or valid Actor elements
     */
-    ActorCollection = function (elements) {
+    ActorCollection = function (elements, opts) {
         // Add initial elements
         this.clear();
 
         if (elements) {
-            this.add(elements);
+            this.add(elements, opts);
         }
 
         // Create stagger Actor
@@ -68,7 +68,7 @@ ActorCollection.prototype = {
             }
         };
 
-        staggerProps.onChange = function (output) {
+        staggerProps.onUpdate = function (output) {
             var newIndex = output.i,
                 gapIndex = i + 1;
 
@@ -92,17 +92,30 @@ ActorCollection.prototype = {
     },
 
     /*
+        Iterate over each element in collection
+
+        @param [function]: Callback to run on each Actor, provided (actor, index) args
+    */
+    each: function (callback) {
+        this.elements.forEach(callback);
+        return this;
+    },
+
+    /*
         Add a group of Actors to our Collection
 
         @param [array]: Array of Actors, or valid Actor elements
     */
-    add: function (elements) {
+    add: function (elements, opts) {
         var numNewElements = elements.length,
             i = 0,
             newElement;
 
+        opts = opts || {};
+
         for (; i < numNewElements; i++) {
-            newElement = (elements[i] instanceof Actor) ? elements[i] : new Actor({ element: elements[i] });
+            opts.element = elements[i];
+            newElement = (elements[i] instanceof Actor) ? elements[i] : new Actor(opts);
             this.elements.push(newElement);
         }
 

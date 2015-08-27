@@ -16,7 +16,7 @@ var Process = require('../process/Process'),
             roles = [ defaultRole ];
 
         // Auto-detect element type, if present
-        if (opts.element) {
+        if (opts && opts.element) {
 
             // Add CSS role if HTMLElement
             if (opts.element instanceof HTMLElement) {
@@ -40,13 +40,14 @@ var Process = require('../process/Process'),
         this.set(opts);
 
         // Init roles
-        if (opts.as) {
+        if (opts && opts.as) {
             if (utils.isArray(opts.as)) {
                 roles.push.apply(roles, opts.as);
             } else {
                 roles.push(opts.as);
             }
         }
+
         this.roles = roles;
         this.roles.forEach(function (role) {
             // Extend Actor with getter/setter if
