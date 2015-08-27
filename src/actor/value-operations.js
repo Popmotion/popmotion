@@ -135,6 +135,7 @@ module.exports = {
                         // Create new value if it doesn't exist
                         splitValues[key] = splitValues[key] || utils.copy(valueTypesManager.defaultProps(value.type, key));
                         splitValues[key][propertyName] = splitProperty[key];
+                        this.splitUnit(splitValues[key][propertyName], splitValues[key]);
                     }
                 }
             }
@@ -159,7 +160,10 @@ module.exports = {
 
             if (!isNaN(splitUnitValue.value)) {
                 returnVal = splitUnitValue.value;
-                value.unit = splitUnitValue.unit;
+
+                if (splitUnitValue.unit) {
+                    value.unit = splitUnitValue.unit;
+                }
             }
         }
 
