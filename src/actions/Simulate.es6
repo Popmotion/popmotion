@@ -3,17 +3,21 @@ let Action = require('./Action.es6');
 const DEFAULT_PROP = 'velocity';
 
 class Simulate extends Action {
-    constructor(props) {
-        this.action = 'simulate';
-        this.inactiveFrames = 0;
-        this.maxInactiveFrames = 3;
-        this.set(props, DEFAULT_PROP);
+    getName() {
+        return 'simulate';
+    }
+
+    getDefaultProps() {
+        return {
+            inactiveFrames: 0,
+            maxInactiveFrames: 3
+        };
     }
 
     getDefaultValue() {
         return {
             // [string]: Simulation to .run
-            simulate: 'velocity',
+            simulate: DEFAULT_PROP,
             
             // [number]: Deceleration to apply to value, in units per second
             deceleration: 0,
@@ -43,10 +47,6 @@ class Simulate extends Action {
 
     getDefaultValueProp() {
         return DEFAULT_PROP;
-    }
-
-    extend(props) {
-        return new Simulate(this).set(props, DEFAULT_PROP);
     }
 }
 

@@ -4,8 +4,14 @@ const DEFAULT_PROP = 'current';
 
 class Action {
     constructor(props, defaultProp) {
+        var action = this;
+
+        utils.each(this.getDefaultProps(), function (key, value) {
+            action[key] = value;
+        });
+
         this.values = {};
-        this.set(props, defaultProp);
+        this.set(props, this.getDefaultValueProp());
     }
 
     set(props = {}, defaultProp = DEFAULT_PROP) {
@@ -22,7 +28,7 @@ class Action {
                 values = props.values;
 
             for (let key in values) {
-                let existingValue = currentValues[key] || this.getDefaultValue(),
+                let existingValue = currentValues[key],
                     value = values[key],
                     newValue = {};
 
@@ -37,6 +43,18 @@ class Action {
         }
 
         return this;
+    }
+
+    process(value) {
+        return value.current;
+    }
+
+    getName() {
+        return 'action';
+    }
+
+    getDefaultProps() {
+        return {};
     }
 
     getDefaultValue() {

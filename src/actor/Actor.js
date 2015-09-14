@@ -5,7 +5,6 @@ var Process = require('../process/Process'),
     utils = require('../inc/utils'),
     update = require('./update'),
     valueOps = require('./value-operations'),
-    actionManager = require('../actions/manager'),
     defaultRole = require('../roles/defaultRole'),
     cssRole = require('../roles/css/cssRole'),
     svgRole = require('../roles/svg/svgRole'),
@@ -71,6 +70,10 @@ Actor.prototype = {
         this.resetProps();
 
         if (props) {
+            if (props.getName) {
+                this.action = props;
+            }
+
             this.setProps(props);
             this.setValues(props.values, defaultValueProp);
         }
@@ -79,13 +82,17 @@ Actor.prototype = {
     },
 
     /*
-        Start currently defined Action
+        Start action
     */
-    start: function () {
+    start: function (action) {
+        if (action) {
+            this.set(action);
+        }
+
         this.resetProgress();
         this.activate();
         
-        if (this.action !== 'track' && this.input && this.input.stop) {
+        if (this.action.getName() !== 'track' && this.input && this.input.stop) {
             this.input.stop();
         }
 
@@ -208,7 +215,7 @@ Actor.prototype = {
     */
     resetProps: function () {
         if (this.action) {
-            this.setProps(actionManager[this.action].actionDefaults);
+            this.setProps(this.action.getDefaultProps());
         }
         return this;
     },
@@ -284,9 +291,5 @@ Actor.prototype = {
         this._isActive = status;
     }
 };
-
-// Register Actor with actionManager, so when a new Action is set,
-// We get a new method on Actor
-actionManager.setActor(Actor);
 
 module.exports = Actor;

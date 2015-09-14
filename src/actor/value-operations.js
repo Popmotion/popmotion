@@ -3,7 +3,6 @@
 var calc = require('../inc/calc'),
     utils = require('../inc/utils'),
     isNum = utils.isNum,
-    actionsManager = require('../actions/manager'),
     valueTypesManager = require('../value-types/manager'),
     each = utils.each,
 
@@ -307,7 +306,7 @@ module.exports = {
                 thisValue = actor.values[key] || this.initialState(this.resolve('init', preprocessedValue.init, {}, actor));
                 hasChildren = (preprocessedValue.children !== undefined);
                 thisValue.action = preprocessedValue.link ? 'link' : actor.action;
-                defaultProps = actionsManager[thisValue.action].valueDefaults;
+                defaultProps = actor.action.getDefaultValue();
 
                 // Inherit properties from Actor
                 for (propKey in defaultProps) {

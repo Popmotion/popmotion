@@ -3,7 +3,6 @@
 var Actor = require('./Actor'),
     generateMethodIterator = require('./system/generate-iterator'),
     utils = require('../inc/utils'),
-    actionManager = require('../actions/manager'),
 
     DEFAULT_STAGGER_EASE = 'linear',
 
@@ -131,7 +130,5 @@ ActorCollection.prototype = {
         }
     }
 })();
-
-actionManager.setActorCollection(ActorCollection);
 
 module.exports = ActorCollection;

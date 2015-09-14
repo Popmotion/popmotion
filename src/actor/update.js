@@ -1,7 +1,6 @@
 "use strict";
 
-var actionManager = require('../actions/manager'),
-    valueTypeManager = require('../value-types/manager'),
+var valueTypeManager = require('../value-types/manager'),
     calc = require('../inc/calc'),
     each = require('../inc/utils').each,
 
@@ -14,7 +13,7 @@ var actionManager = require('../actions/manager'),
     update = function (framestamp, frameDuration) {
         var actor = this,
             values = this.values,
-            action = actionManager[this.action],
+            action = this.action,
             valueAction = action,
             state = this.state,
             numActiveValues = this.order.length,
@@ -55,7 +54,8 @@ var actionManager = require('../actions/manager'),
             value = values[key];
 
             // Load value-specific action
-            valueAction = value.link ? actionManager.link : action;
+            valueAction = action;
+            //valueAction = value.link ? actionManager.link : action;
 
             // Calculate new value
             updatedValue = valueAction.process.call(this, value, key, frameDuration);

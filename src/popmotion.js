@@ -1,8 +1,6 @@
 "use strict";
 
-var actionManager = require('./actions/manager'),
-    presetManager = require('./actor/preset-manager'),
-    valueTypeManager = require('./value-types/manager'),
+var valueTypeManager = require('./value-types/manager'),
 
     Popmotion = {
 
@@ -14,13 +12,13 @@ var actionManager = require('./actions/manager'),
 
         Process: require('./process/Process'),
 
-        Easing: require('./actions/play/Easing'),
+        Easing: require('./actions/tween/Easing'),
 
         Role: require('./roles/Role'),
 
         Tween: require('./actions/Tween.es6'),
-        Simulation: require('./actions/Simulation.es6'),
-        Tracker: require('./actions/Tracker.es6'),
+        Simulate: require('./actions/Simulate.es6'),
+        Track: require('./actions/Track.es6'),
 
         select: require('./actor/select'),
 
