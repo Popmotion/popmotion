@@ -5,6 +5,12 @@ var actionManager = require('../actions/manager'),
     calc = require('../inc/calc'),
     each = require('../inc/utils').each,
 
+    createMapper = function (role, mappedValues) {
+        return function (name, val) {
+                mappedValues[role.map(name)] = val;
+        };
+    },
+
     update = function (framestamp, frameDuration) {
         var actor = this,
             values = this.values,
@@ -112,9 +118,7 @@ var actionManager = require('../actions/manager'),
             role = this.roles[i];
             mappedValues = {};
 
-            each(this.state.values, function (name, val) {
-                mappedValues[role.map(name)] = val;
-            });
+            each(this.state.values, createMapper(role, mappedValues));
 
             if (role.frame) {
                 role.frame.call(actor, mappedValues);

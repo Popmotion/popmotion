@@ -214,6 +214,14 @@ Actor.prototype = {
     },
 
     /*
+        Add a new action to the queue
+    */
+    then: function () {
+        this.queue.add.apply(this.queue, arguments);
+        return this;
+    },
+
+    /*
         Set values
 
         @param [object || string || number]: Value

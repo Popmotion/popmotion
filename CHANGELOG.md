@@ -6,9 +6,16 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 - `ui.addRoute` - see Roles
+- `ui.addPreset`, `ui.addAction` - see Tween, Simulation and Tracker classes
 
 ### Added
-- Roles - `CSSRole`, `AttrRole`, `SVGRole`, `SVGDrawRole`, `MovePathRole`
+- Roles - `CSSRole`, `AttrRole`, `SVGRole`, `DrawRole`, `MovePathRole`
+- Action classes/definitions - `Tween`, `Simulation`, `Track`
+
+### Changed
+- `addToQueue` Actor method is now `then`
+- `mapLink` Actor value property is now `linkMap`
+- `mapTo` Actor value property is now `outputMap`
 
 ## [2.0.4] 2015-08-10
 

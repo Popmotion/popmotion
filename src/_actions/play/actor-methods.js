@@ -17,14 +17,6 @@ module.exports = {
     },
 
     /*
-        Add arguments to queue
-    */
-    addToQueue: function () {
-        this.queue.add.apply(this.queue, arguments);
-        return this;
-    },
-
-    /*
         Check for next steps and perform, stop if not
     */
     next: function () {

@@ -18,17 +18,11 @@ var actionManager = require('./actions/manager'),
 
         Role: require('./roles/Role'),
 
+        Tween: require('./actions/Tween.es6'),
+        Simulation: require('./actions/Simulation.es6'),
+        Tracker: require('./actions/Tracker.es6'),
+
         select: require('./actor/select'),
-
-        addAction: function () {
-            actionManager.extend.apply(actionManager, arguments);
-            return this;
-        },
-
-        addPreset: function () {
-            presetManager.extend.apply(presetManager, arguments);
-            return this;
-        },
 
         addValueType: function () {
             valueTypeManager.extend.apply(valueTypeManager, arguments);
