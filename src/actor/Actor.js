@@ -237,6 +237,25 @@ Actor.prototype = {
     },
 
     /*
+        Execute next in queue
+    */
+    next: function () {
+        var nextInQueue = this.queue.next();
+
+        if (nextInQueue) {
+            if (utils.isFunc(nextInQueue)) {
+                nextInQueue();
+            } else {
+                this.start(nextInQueue);
+            }
+        } else {
+            this.stop();
+        }
+
+        return this;
+    },
+
+    /*
         Set values
 
         @param [object || string || number]: Value

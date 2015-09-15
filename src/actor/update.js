@@ -142,8 +142,8 @@ var valueTypeManager = require('../value-types/manager'),
                 }
             }
 
-            // If is a play action, and is not active, check next action
-            if (!this.isActive && this.action === 'play' && this.next) {
+            // If Actor is still inactive, fire next step
+            if (!this.isActive) {
                 this.next();
             }
         } else {
