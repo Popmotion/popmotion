@@ -4,6 +4,7 @@ var calc = require('../inc/calc'),
     utils = require('../inc/utils'),
     isNum = utils.isNum,
     valueTypesManager = require('../value-types/manager'),
+    genericDefaultValue = require('../actions/Action.es6').prototype.getDefaultValue(),
     each = utils.each,
 
     numericalValues = ['current', 'to', 'init', 'min', 'max', 'velocity', 'friction', 'spring'],
@@ -306,7 +307,7 @@ module.exports = {
                 thisValue = actor.values[key] || this.initialState(this.resolve('init', preprocessedValue.init, {}, actor));
                 hasChildren = (preprocessedValue.children !== undefined);
                 thisValue.action = preprocessedValue.watch ? 'watch' : actor.action;
-                defaultProps = actor.action.getDefaultValue();
+                defaultProps = actor.action ? actor.action.getDefaultValue() : genericDefaultValue;
 
                 // Inherit properties from Actor
                 for (propKey in defaultProps) {

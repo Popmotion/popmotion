@@ -4,7 +4,7 @@ var valueTypeManager = require('../value-types/manager'),
     calc = require('../inc/calc'),
     each = require('../inc/utils').each,
     Watch = require('../actions/Watch.es6'),
-    watcher = new Watch,
+    watcher = new Watch(),
 
     createMapper = function (role, mappedValues) {
         return function (name, val) {

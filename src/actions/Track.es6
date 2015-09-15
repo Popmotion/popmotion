@@ -6,14 +6,6 @@ class Track extends Action {
         return 'track';
     }
 
-    getDefaultValue() {
-        return {
-            amp: 1,
-            escapeAmp: 0,
-            round: false
-        };
-    }
-
     /*
         Update input offset
     */

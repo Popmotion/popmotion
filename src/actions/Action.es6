@@ -63,7 +63,11 @@ class Action {
     }
 
     getDefaultValue() {
-        return false;
+        return {
+            amp: 1,
+            escapeAmp: 0,
+            round: false
+        };
     }
 
     getDefaultValueProp() {

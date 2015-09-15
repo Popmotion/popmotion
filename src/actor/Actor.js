@@ -24,6 +24,7 @@ var Process = require('../process/Process'),
         // Init queue and process
         this.queue = new Queue();
         this.process = new Process(this, update);
+        this.clearOrder();
 
         // Detect/add roles
         if (opts) {
@@ -67,7 +68,6 @@ Actor.prototype = {
     */
     set: function (props, defaultValueProp) {
         // Reset Element properties and write new props
-        this.clearOrder();
         this.resetProps();
 
         if (props) {
