@@ -15,22 +15,22 @@ class Watch extends Action {
     process(value, key) {
         var values = this.values,
             newValue = value.current,
-            linkKey = value.link,
-            linkedValue = values[linkKey] ? values[linkKey] : {},
+            watchedKey = value.watch,
+            watchedValue = values[watchedKey] ? values[watchedKey] : {},
             inputOffset = this.inputOffset;
 
         // Then check values in Input
-        if (inputOffset && inputOffset.hasOwnProperty(linkKey)) {
-            newValue = value.origin + (inputOffset[linkKey] * value.amp);
+        if (inputOffset && inputOffset.hasOwnProperty(watchedKey)) {
+            newValue = value.origin + (inputOffset[watchedKey] * value.amp);
             
         // First look at Action and check value isn't linking itself
-        } else if (linkedValue.current !== undefined && key !== linkKey) {
-            newValue = linkedValue.current;
+        } else if (watchedValue.current !== undefined && key !== watchedKey) {
+            newValue = watchedValue.current;
         }
 
         // If we have mapLink and mapTo properties, translate the new value
         if (value.mapLink && value.mapTo) {
-            newValue = findMappedValue(newValue, linkedValue, value, value.mapLink, value.mapTo);
+            newValue = findMappedValue(newValue, watchedValue, value, value.mapLink, value.mapTo);
         }
 
         return newValue;
