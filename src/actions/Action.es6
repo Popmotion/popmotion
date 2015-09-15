@@ -1,4 +1,5 @@
-let utils = require('../inc/utils');
+let calc = require('../inc/calc'),
+    utils = require('../inc/utils');
 
 const DEFAULT_PROP = 'current';
 
@@ -47,6 +48,10 @@ class Action {
 
     process(value) {
         return value.current;
+    }
+        
+    limit(output, value) {
+        return calc.restricted(output, value.min, value.max);
     }
 
     getName() {

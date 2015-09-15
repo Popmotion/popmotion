@@ -3,10 +3,12 @@
 var valueTypeManager = require('../value-types/manager'),
     calc = require('../inc/calc'),
     each = require('../inc/utils').each,
+    Watch = require('../actions/Watch.es6'),
+    watcher = new Watch,
 
     createMapper = function (role, mappedValues) {
         return function (name, val) {
-                mappedValues[role.map(name)] = val;
+            mappedValues[role.map(name)] = val;
         };
     },
 
@@ -54,8 +56,7 @@ var valueTypeManager = require('../value-types/manager'),
             value = values[key];
 
             // Load value-specific action
-            valueAction = action;
-            //valueAction = value.link ? actionManager.link : action;
+            valueAction = value.watch ? watcher : action;
 
             // Calculate new value
             updatedValue = valueAction.process.call(this, value, key, frameDuration);

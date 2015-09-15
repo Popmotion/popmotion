@@ -2,6 +2,7 @@
 
 var Process = require('../process/Process'),
     Queue = require('../inc/Queue'),
+    Pointer = require('../input/Pointer'),
     utils = require('../inc/utils'),
     update = require('./update'),
     valueOps = require('./value-operations'),
@@ -84,17 +85,24 @@ Actor.prototype = {
     /*
         Start action
     */
-    start: function (action) {
+    start: function (action, input) {
         if (action) {
             this.set(action);
+        }
+        
+        // Stop existing inputs if this is a track - do this only for pointers? or unsubscribe?
+        if (this.action.getName() !== 'track' && this.input && this.input.stop) {
+            this.input.stop();
+        }
+
+        if (input) {
+            // Create Pointer if this is an event
+            this.input = (!input.current) ? new Pointer(input) : input;
+            this.inputOrigin = this.input.get();
         }
 
         this.resetProgress();
         this.activate();
-        
-        if (this.action.getName() !== 'track' && this.input && this.input.stop) {
-            this.input.stop();
-        }
 
         return this;
     },
