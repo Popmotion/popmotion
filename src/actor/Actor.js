@@ -86,6 +86,8 @@ Actor.prototype = {
         Start action
     */
     start: function (action, input) {
+        this.resetOrigins();
+
         if (action) {
             this.set(action);
         }
@@ -166,6 +168,33 @@ Actor.prototype = {
 
         return this;
     },
+
+    /*
+        Add a new action to the queue
+    */
+    then: function () {
+        this.queue.add.apply(this.queue, arguments);
+        return this;
+    },
+
+    /*
+        Execute next in queue
+    */
+    next: function () {
+        var nextInQueue = this.queue.next();
+
+        if (nextInQueue) {
+            if (utils.isFunc(nextInQueue)) {
+                nextInQueue();
+            } else {
+                this.start(nextInQueue);
+            }
+        } else {
+            this.stop();
+        }
+
+        return this;
+    },
     
     /*
         Reset Action progress
@@ -225,33 +254,6 @@ Actor.prototype = {
         if (this.action) {
             this.setProps(this.action.getDefaultProps());
         }
-        return this;
-    },
-
-    /*
-        Add a new action to the queue
-    */
-    then: function () {
-        this.queue.add.apply(this.queue, arguments);
-        return this;
-    },
-
-    /*
-        Execute next in queue
-    */
-    next: function () {
-        var nextInQueue = this.queue.next();
-
-        if (nextInQueue) {
-            if (utils.isFunc(nextInQueue)) {
-                nextInQueue();
-            } else {
-                this.start(nextInQueue);
-            }
-        } else {
-            this.stop();
-        }
-
         return this;
     },
 
