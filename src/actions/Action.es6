@@ -51,7 +51,9 @@ class Action {
     }
         
     limit(output, value) {
-        return calc.restricted(output, value.min, value.max);
+        var restricted = calc.restricted(output, value.min, value.max),
+            escapeAmp = value.escapeAmp !== undefined ? value.escapeAmp : 0;
+        return restricted + ((output - restricted) * escapeAmp);
     }
 
     getName() {

@@ -186,6 +186,7 @@ Actor.prototype = {
         if (nextInQueue) {
             if (utils.isFunc(nextInQueue)) {
                 nextInQueue();
+                this.stop();
             } else {
                 this.start(nextInQueue);
             }

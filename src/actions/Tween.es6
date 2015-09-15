@@ -18,11 +18,6 @@ let Action = require('./Action.es6'),
         var progressLimited = calc.restricted(progress, 0, 1),
             easingFunction = utils.isString(ease) ? presetEasing[ease] : ease;
 
-        if (progressLimited !== progress && escapeAmp) {
-            ease = 'linear';
-            progressLimited = progressLimited + ((progress - progressLimited) * escapeAmp);
-        }
-
         return calc.valueEased(progressLimited, from, to, easingFunction);
     };
 
@@ -33,7 +28,9 @@ class Tween extends Action {
 
     getDefaultProps() {
         return {
+            delay: 0,
             dilate: 1,
+            duration: 300,
             loop: false,
             yoyo: false,
             flip: false,
