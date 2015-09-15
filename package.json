@@ -4,7 +4,7 @@
   "description": "A 12kb JavaScript motion engine. Handles animation, physics, and input tracking.",
   "author": "Matt Perry <sirhound@popmotion.io>",
   "homepage": "http://popmotion.io",
-  "main": "./src/load/module.js",
+  "main": "./lib/load/module.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/InventingWithMonster/popmotion"
@@ -35,7 +35,7 @@
   "analyze": true,
   "license": "MIT",
   "scripts": {
-    "compile": "webpack -p --config webpack.config.min.js",
+    "compile": "babel src --out-dir lib && webpack -p --config webpack.config.min.js",
     "watch": "webpack --progress --colors --watch"
   },
   "devDependencies": {
