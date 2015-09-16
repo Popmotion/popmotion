@@ -77,7 +77,7 @@ class Action {
     }
 
     extend(props) {
-        return new this.constructor(props, this.getDefaultValueProp());
+        return new this.constructor(utils.merge(this, props), this.getDefaultValueProp());
     }
 }
 

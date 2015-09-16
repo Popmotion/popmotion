@@ -15,6 +15,7 @@ popmotion.addValueType({
     color: require('../value-types/color'),
     positions: require('../value-types/positions'),
     dimensions: require('../value-types/dimensions'),
+    scale: require('../value-types/scale'),
     shadow: require('../value-types/shadow')
 });
 

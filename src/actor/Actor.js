@@ -12,8 +12,9 @@ var Process = require('../process/Process'),
     each = utils.each,
 
     Actor = function (opts) {
-        var actor = this,
-            roles = [ defaultRole ];
+        var actor = this;
+
+        this.roles = [ defaultRole ];
 
         // Set values object and state object
         this.values = {};
@@ -32,24 +33,23 @@ var Process = require('../process/Process'),
             if (!opts.as && opts.element) {
                 // Add CSS role if HTMLElement
                 if (opts.element instanceof HTMLElement) {
-                    roles.push(cssRole);
+                    this.roles.push(cssRole);
 
                 } else if (opts.element instanceof SVGElement) {
-                    roles.push(svgRole);
+                    this.roles.push(svgRole);
                 }
             // Manuall adding roles
             } else if (opts.as) {
                 if (utils.isArray(opts.as)) {
-                    roles.push.apply(roles, opts.as);
+                    this.roles.push.apply(this.roles, opts.as);
                 } else {
-                    roles.push(opts.as);
+                    this.roles.push(opts.as);
                 }
             }
 
             this.set(opts);
         }
 
-        this.roles = roles;
         this.roles.forEach(function (role) {
             // Fire init method if one available
             if (role.init) {

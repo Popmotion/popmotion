@@ -306,7 +306,7 @@ module.exports = {
                 preprocessedValue = preprocessedValues[key];
                 thisValue = actor.values[key] || this.initialState(this.resolve('init', preprocessedValue.init, {}, actor));
                 hasChildren = (preprocessedValue.children !== undefined);
-                thisValue.action = preprocessedValue.watch ? 'watch' : actor.action;
+                thisValue.action = utils.isString(preprocessedValue.watch) ? 'watch' : actor.action;
                 defaultProps = actor.action ? actor.action.getDefaultValue() : genericDefaultValue;
 
                 // Inherit properties from Actor

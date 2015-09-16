@@ -1,6 +1,7 @@
 "use strict";
 
-var transformDictionary = require('./transform-dictionary'),
+var each = require('../../inc/utils').each,
+    transformDictionary = require('./transform-dictionary'),
     transformProps = transformDictionary.props,
 
     TRANSLATE_Z = 'translateZ';
