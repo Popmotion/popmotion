@@ -9,6 +9,8 @@ var Process = require('../process/Process'),
     defaultRole = require('../roles/defaultRole'),
     cssRole = require('../roles/css/cssRole'),
     svgRole = require('../roles/svg/svgRole'),
+    drawPathRole = require('../roles/path/drawPathRole'),
+    Sync = require('../actions/Sync.es6'),
     each = utils.each,
 
     Actor = function (opts) {
@@ -36,7 +38,11 @@ var Process = require('../process/Process'),
                     this.roles.push(cssRole);
 
                 } else if (opts.element instanceof SVGElement) {
-                    this.roles.push(svgRole);
+                    //this.roles.push(svgRole);
+
+                    if (opts.element.tagName === 'path') {
+                        this.roles.push(drawPathRole);
+                    }
                 }
             // Manuall adding roles
             } else if (opts.as) {
@@ -110,15 +116,6 @@ Actor.prototype = {
     },
 
     /*
-        Stop current Action
-    */
-    stop: function () {
-        this.queue.clear();
-        this.pause();
-        return this;
-    },
-
-    /*
         Pause current Action
     */
     pause: function () {
@@ -138,35 +135,26 @@ Actor.prototype = {
     },
 
     /*
+        Stop current Action
+    */
+    stop: function () {
+        this.queue.clear();
+        this.pause();
+        return this;
+    },
+
+    /*
         Toggle current Action
     */
     toggle: function () {
-        if (this.isActive) {
-            this.pause();
-        } else {
-            this.resume();
-        }
-
-        return this;
+        return this.isActive ? this.pause() : this.resume();
     },
-    
+
     /*
-        Activate Element Action
+        Sync roles with props on next frame
     */
-    activate: function () {
-        this.isActive = true;
-        this.started = utils.currentTime() + this.delay;
-        this.framestamp = this.started;
-        this.firstFrame = true;
-
-        this.process.start();
-    },
-
-    reset: function () {
-        this.resetProgress();
-        valueOps.all('reset', this.values);
-
-        return this;
+    sync: function (props) {
+        return this.start(new Sync(props));
     },
 
     /*
@@ -193,6 +181,25 @@ Actor.prototype = {
         } else {
             this.stop();
         }
+
+        return this;
+    },
+    
+    /*
+        Activate Element Action
+    */
+    activate: function () {
+        this.isActive = true;
+        this.started = utils.currentTime() + this.delay;
+        this.framestamp = this.started;
+        this.firstFrame = true;
+
+        this.process.start();
+    },
+
+    reset: function () {
+        this.resetProgress();
+        valueOps.all('reset', this.values);
 
         return this;
     },

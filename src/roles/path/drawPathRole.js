@@ -47,7 +47,7 @@ var createStyles = function (props, length) {
     });
 
     if (hasDashArray) {
-        styles[SVGDrawPath._map.length] = dashArrayStyles.length + ' ' + dashArrayStyles.spacing;
+        styles['stroke-dasharray'] = dashArrayStyles.length + ' ' + dashArrayStyles.spacing;
     }
 
     return styles;

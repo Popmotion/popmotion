@@ -20,6 +20,10 @@ var Role = function (methods) {
     var role = this;
 
     role._map = {};
+    role._filter = [];
+    role._filterLength = 0;
+    role._only = [];
+    role._onlyLength = 0;
 
     each(methods, function (name, method) {
         role[name] = (!utils.isObj(method)) ? method : utils.copy(method);
@@ -60,6 +64,17 @@ Role.prototype = {
         // If this is a string, get mapped value
         // Otherwise this is a map, duplicated role with updated map
         return (utils.isString(values)) ? this._map[values] || values : createRole(this, values);
+    },
+
+    /*
+        Provide a blacklist of keys
+    */
+    filter: function (keys) {
+        return 
+    },
+
+    only: function (keys) {
+
     }
 };
 
