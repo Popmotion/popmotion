@@ -39,7 +39,7 @@ var createStyles = function (props, length) {
                 dashArrayStyles[key] = percentToPixels(value, length);
                 break;
             case 'offset':
-                styles[key] = percentToPixels(-value, length);
+                styles['stroke-dashoffset'] = percentToPixels(-value, length);
                 break;
             default:
                 styles[key] = value;

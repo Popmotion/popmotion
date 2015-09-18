@@ -121,7 +121,7 @@ var valueTypeManager = require('../value-types/manager'),
             mappedValues = {};
 
             each(this.state.values, createMapper(role, mappedValues));
-
+            
             if (role.frame) {
                 role.frame.call(actor, mappedValues);
             }

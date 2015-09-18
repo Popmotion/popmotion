@@ -38,7 +38,7 @@ var Process = require('../process/Process'),
                     this.roles.push(cssRole);
 
                 } else if (opts.element instanceof SVGElement) {
-                    //this.roles.push(svgRole);
+                    this.roles.push(svgRole);
 
                     if (opts.element.tagName === 'path') {
                         this.roles.push(drawPathRole);
@@ -93,6 +93,7 @@ Actor.prototype = {
     */
     start: function (action, input) {
         this.resetOrigins();
+        this.clearOrder();
 
         if (action) {
             this.set(action);
