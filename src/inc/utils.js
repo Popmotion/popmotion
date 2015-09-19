@@ -30,7 +30,9 @@ module.exports = {
     each: function (props, callback) {
         for (var key in props) {
             if (props.hasOwnProperty(key)) {
-                callback(key, props[key]);
+                if (callback(key, props[key]) === false) {
+                    break;
+                }
             }
         }
     },

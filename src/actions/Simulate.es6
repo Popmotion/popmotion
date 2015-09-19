@@ -6,6 +6,11 @@ let Action = require('./Action.es6'),
 const DEFAULT_PROP = 'velocity';
 
 class Simulate extends Action {
+    constructor(...args) {
+        super(...args);
+        this.calculatesVelocity = true;
+    }
+
     getName() {
         return 'simulate';
     }

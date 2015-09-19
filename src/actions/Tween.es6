@@ -1,7 +1,14 @@
 let Action = require('./Action.es6'),
     calc = require('../inc/calc'),
     utils = require('../inc/utils'),
+    each = utils.each,
     presetEasing = require('./tween/preset-easing'),
+
+    nextSteps = {
+        loop: 'reset',
+        yoyo: 'reverse',
+        flip: 'flipValues'
+    },
 
     /*
         Ease value within ranged parameters
@@ -20,6 +27,8 @@ let Action = require('./Action.es6'),
 
         return calc.valueEased(progressLimited, from, to, easingFunction);
     };
+
+const COUNT = 'count';
 
 class Tween extends Action {
     getName() {
@@ -65,7 +74,7 @@ class Tween extends Action {
             this.elapsed += (frameDuration * this.dilate) * this.playDirection;
         }
 
-        this.hasEnded = true;
+        this.action.hasEnded = true;
     }
 
     /*
@@ -103,12 +112,40 @@ class Tween extends Action {
     }
 
     /*
-        Return hasEnded property
+        If this tween has ended, check if we loop/yoyo/flip
         
-        @return [boolean]: Have all Values hit 1 progress?
+        @return [boolean]: Has this tween really really ended?
     */
     hasEnded() {
+        if (this.hasEnded) {
+            each(nextSteps, (name, action) => {
+                if (this.checkNextStep(name, this[action])) {
+                    this.hasEnded = false;
+                    return false;
+                }
+            });
+        }
+
         return this.hasEnded;
+    }
+
+    checkNextStep(name, action) {
+        var stepTaken = false,
+            step = this[name],
+            count = this[name + COUNT],
+            forever = (step === true);
+
+        if (forever || utils.isNum(step)) {
+            ++count;
+            this[name + COUNT] = count;
+
+            if (forever || count <= step) {
+                action.call(this);
+                stepTaken = true;
+            }
+        }
+
+        return stepTaken;
     }
 }
 
