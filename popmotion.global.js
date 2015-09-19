@@ -11,7 +11,7 @@ exports = {
 };
 return exports;
 })();
-var __small$_34 = (function() {
+var __small$_23 = (function() {
 var exports = {};
 /*
     Utility functions
@@ -265,7 +265,7 @@ var exports = {};
 */
 "use strict";
 
-var utils = __small$_34,
+var utils = __small$_23,
 
     calc = {
         
@@ -706,7 +706,7 @@ exports = function (value) {
 };
 return exports;
 })();
-var __small$_31 = (function() {
+var __small$_35 = (function() {
 var exports = {};
 /*
     Input controller
@@ -714,7 +714,7 @@ var exports = {};
 "use strict";
 
 var calc = __small$_22,
-    utils = __small$_34,
+    utils = __small$_23,
     History = ((function() {
 var exports = {};
 "use strict";
@@ -968,11 +968,11 @@ ModManager.prototype = {
 exports = ModManager;
 return exports;
 })();
-var __small$_26 = (function() {
+var __small$_30 = (function() {
 var exports = {};
 "use strict";
 
-var utils = __small$_34,
+var utils = __small$_23,
     ModManager = __small$_60,
     presetManager = new ModManager(),
 
@@ -1021,8 +1021,8 @@ var __small$_42 = (function() {
 var exports = {};
 "use strict";
 
-var presetManager = __small$_26,
-    utils = __small$_34;
+var presetManager = __small$_30,
+    utils = __small$_23;
 
 exports = function (base, override) {
     var props = (typeof base === 'string') ? presetManager.getDefined(base) : base;
@@ -1036,7 +1036,7 @@ exports = function (base, override) {
 };
 return exports;
 })();
-var __small$_33 = (function() {
+var __small$_37 = (function() {
 var exports = {};
 var Bezier = ((function() {
 var exports = {};
@@ -1429,7 +1429,7 @@ var __small$_15 = (function() {
 var exports = {};
 "use strict";
 
-var utils = __small$_34,
+var utils = __small$_23,
     rgb = __small$_13,
     hsl = __small$_12,
     hex = __small$_14,
@@ -1504,7 +1504,7 @@ exports = function (method) {
 
 return exports;
 })();
-var __small$_28 = (function() {
+var __small$_32 = (function() {
 var exports = {};
 "use strict";
 
@@ -1533,13 +1533,13 @@ valueTypeManager.test = function (value) {
 exports = valueTypeManager;
 return exports;
 })();
-var __small$_25 = (function() {
+var __small$_29 = (function() {
 var exports = {};
 "use strict";
 
 var Actor,
     ActorCollection,
-    utils = __small$_34,
+    utils = __small$_23,
     generateMethodIterator = __small$_57,
     genericActionProps = ((function() {
 var exports = {};
@@ -1654,7 +1654,7 @@ exports = actionManager;
 
 return exports;
 })();
-var __small$_27 = (function() {
+var __small$_31 = (function() {
 var exports = {};
 "use strict";
 
@@ -1749,7 +1749,7 @@ routeManager.setActorCollection = function (actorCollection) {
 exports = routeManager;
 return exports;
 })();
-var __small$_32 = (function() {
+var __small$_36 = (function() {
 var exports = {};
 "use strict";
 
@@ -1768,7 +1768,7 @@ var Timer = ((function() {
 var exports = {};
 "use strict";
 
-var utils = __small$_34,
+var utils = __small$_23,
 
     maxElapsed = 33,
     Timer = function () {
@@ -2207,11 +2207,11 @@ Process.prototype = {
 exports = Process;
 return exports;
 })();
-var __small$_29 = (function() {
+var __small$_33 = (function() {
 var exports = {};
 "use strict";
 
-var Process = __small$_32,
+var Process = __small$_36,
     Queue = ((function() {
 var exports = {};
 "use strict";
@@ -2264,14 +2264,14 @@ Queue.prototype = {
 exports = Queue;
 return exports;
 })()),
-    utils = __small$_34,
+    utils = __small$_23,
     update = ((function() {
 var exports = {};
 "use strict";
 
-var actionManager = __small$_25,
-    routeManager = __small$_27,
-    valueTypeManager = __small$_28,
+var actionManager = __small$_29,
+    routeManager = __small$_31,
+    valueTypeManager = __small$_32,
     calc = __small$_22,
 
     defaultRoute = 'values',
@@ -2423,11 +2423,11 @@ var exports = {};
 "use strict";
 
 var calc = __small$_22,
-    utils = __small$_34,
+    utils = __small$_23,
     isNum = utils.isNum,
-    actionsManager = __small$_25,
-    valueTypesManager = __small$_28,
-    routeManager = __small$_27,
+    actionsManager = __small$_29,
+    valueTypesManager = __small$_32,
+    routeManager = __small$_31,
 
     numericalValues = ['current', 'to', 'init', 'min', 'max', 'velocity', 'friction', 'spring'],
     numNumericalValues = numericalValues.length,
@@ -2759,8 +2759,8 @@ exports = {
 };
 return exports;
 })()),
-    actionManager = __small$_25,
-    routeManager = __small$_27,
+    actionManager = __small$_29,
+    routeManager = __small$_31,
 
     Actor = function (element) {
         this.element = element || false;
@@ -3007,15 +3007,15 @@ routeManager.setActor(Actor);
 exports = Actor;
 return exports;
 })();
-var __small$_30 = (function() {
+var __small$_34 = (function() {
 var exports = {};
 "use strict";
 
-var Actor = __small$_29,
+var Actor = __small$_33,
     generateMethodIterator = __small$_57,
-    utils = __small$_34,
-    actionManager = __small$_25,
-    routeManager = __small$_27,
+    utils = __small$_23,
+    actionManager = __small$_29,
+    routeManager = __small$_31,
 
     DEFAULT_STAGGER_EASE = 'linear',
 
@@ -3104,6 +3104,16 @@ ActorCollection.prototype = {
     },
 
     /*
+        Iterate over each element in collection
+
+        @param [function]: Callback to run on each Actor, provided (actor, index) args
+    */
+    each: function (callback) {
+        this.elements.forEach(callback);
+        return this;
+    },
+
+    /*
         Add a group of Actors to our Collection
 
         @param [array]: Array of Actors, or valid Actor elements
@@ -3143,7 +3153,7 @@ var select = ((function() {
 var exports = {};
 "use strict";
 
-var ActorCollection = __small$_30;
+var ActorCollection = __small$_34;
 
 /*
     Create an ActorCollection based on a selection of DOM nodes
@@ -3173,17 +3183,17 @@ exports = function (selector) {
 };
 return exports;
 })()),
-    actionManager = __small$_25,
-    presetManager = __small$_26,
-    routeManager = __small$_27,
-    valueTypeManager = __small$_28,
+    actionManager = __small$_29,
+    presetManager = __small$_30,
+    routeManager = __small$_31,
+    valueTypeManager = __small$_32,
     calc = __small$_22,
 
-    Actor = __small$_29,
-    ActorCollection = __small$_30,
-    Input = __small$_31,
-    Process = __small$_32,
-    Easing = __small$_33,
+    Actor = __small$_33,
+    ActorCollection = __small$_34,
+    Input = __small$_35,
+    Process = __small$_36,
+    Easing = __small$_37,
 
     Popmotion = {
 
@@ -3271,7 +3281,7 @@ var exports = {};
 "use strict";
 
 var calc = __small$_22,
-    utils = __small$_34,
+    utils = __small$_23,
     presetEasing = ((function() {
 var exports = {};
 /*
@@ -3298,7 +3308,7 @@ var exports = {};
 */
 "use strict";
 
-var Easing = __small$_33,
+var Easing = __small$_37,
     easingFunction,
     
     // Generate easing function with provided power
@@ -3445,8 +3455,8 @@ var parseArgs = ((function() {
 var exports = {};
 "use strict";
 
-var presetManager = __small$_26,
-    utils = __small$_34,
+var presetManager = __small$_30,
+    utils = __small$_23,
 
     parsePlaylist = function () {
         var args = [].slice.call(arguments),
@@ -3501,7 +3511,7 @@ exports = function () {
 
 return exports;
 })()),
-    utils = __small$_34;
+    utils = __small$_23;
 
 exports = {
     /*
@@ -3682,13 +3692,13 @@ var exports = {};
 "use strict";
 
 var calc = __small$_22,
-    utils = __small$_34,
+    utils = __small$_23,
     simulations = ((function() {
 var exports = {};
 "use strict";
 
 var calc = __small$_22,
-    utils = __small$_34,
+    utils = __small$_23,
     speedPerFrame = calc.speedPerFrame;
 
 /*
@@ -3930,7 +3940,7 @@ var calc = __small$_22,
 var exports = {};
 "use strict";
 
-var Input = __small$_31,
+var Input = __small$_35,
     currentPointer, // Sort this out for multitouch
     
     TOUCHMOVE = 'touchmove',
@@ -4324,7 +4334,7 @@ var exports = {};
 "use strict";
 
 var color = __small$_15,
-    utils = __small$_34,
+    utils = __small$_23,
     pxDefaults = __small$_11.defaultProps,
     terms = __small$_50.shadow,
     splitSpaceDelimited = __small$_51,
