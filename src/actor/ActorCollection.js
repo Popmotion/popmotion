@@ -93,6 +93,16 @@ ActorCollection.prototype = {
     },
 
     /*
+        Iterate over each element in collection
+
+        @param [function]: Callback to run on each Actor, provided (actor, index) args
+    */
+    each: function (callback) {
+        this.elements.forEach(callback);
+        return this;
+    },
+
+    /*
         Add a group of Actors to our Collection
 
         @param [array]: Array of Actors, or valid Actor elements
