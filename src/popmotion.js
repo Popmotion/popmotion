@@ -16,6 +16,7 @@ var valueTypeManager = require('./value-types/manager'),
 
         Role: require('./roles/Role'),
 
+        Action: require('./actions/Action.es6'),
         Tween: require('./actions/Tween.es6'),
         Simulate: require('./actions/Simulate.es6'),
         Track: require('./actions/Track.es6'),

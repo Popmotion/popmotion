@@ -122,6 +122,7 @@ class Tween extends Action {
             each(nextSteps, (name, action) => {
                 if (this.checkNextStep(actor, name, actor[action])) {
                     actor.hasEnded = false;
+                    actor.hasChanged = true;
                     return false;
                 }
             });

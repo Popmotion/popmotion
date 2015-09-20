@@ -55,14 +55,15 @@ class Watch extends Action {
             watchedValue = values[watchedKey] ? values[watchedKey] : {},
             inputOffset = actor.inputOffset;
 
-        // Then check values in Input
-        if (inputOffset && inputOffset.hasOwnProperty(watchedKey)) {
-            newValue = value.origin + (inputOffset[watchedKey] * value.amp);
-
         // First look at Action and check value isn't linking itself
-        } else if (watchedValue.current !== undefined && key !== watchedKey) {
+        if (watchedValue.current !== undefined && key !== watchedKey) {
             newValue = watchedValue.current;
+        
+        // Then check values in Input
+        } else if (inputOffset && inputOffset.hasOwnProperty(watchedKey)) {
+            newValue = value.origin + (inputOffset[watchedKey] * value.amp);
         }
+
 
         // If we have mapFrom and mapTo properties, translate the new value
         if (value.mapFrom && value.mapTo) {

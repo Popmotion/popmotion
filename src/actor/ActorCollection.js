@@ -61,7 +61,6 @@ ActorCollection.prototype = {
                 current: 0,
                 duration: interval * numElements,
                 ease: propsIsNum ? DEFAULT_STAGGER_EASE : props.ease || DEFAULT_STAGGER_EASE,
-                steps: numElements,
                 round: true,
                 to: numElements - 1
             }
