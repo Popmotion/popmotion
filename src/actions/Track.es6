@@ -9,8 +9,8 @@ class Track extends Action {
     /*
         Update input offset
     */
-    onFrameStart() {
-        this.inputOffset = calc.offset(this.inputOrigin, this.input.current);
+    onFrameStart(actor) {
+        actor.inputOffset = calc.offset(actor.inputOrigin, actor.input.current);
     }
 
     /*
@@ -20,8 +20,8 @@ class Track extends Action {
         @param [string]: Key of current value
         @return [number]: Calculated value
     */
-    process(value, key) {
-        return (this.inputOffset.hasOwnProperty(key)) ? value.origin + this.inputOffset[key] : value.current;
+    process(actor, value, key) {
+        return (actor.inputOffset.hasOwnProperty(key)) ? value.origin + actor.inputOffset[key] : value.current;
     }
 
     /*

@@ -9,16 +9,20 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 - `ui.addPreset`, `ui.addAction` - see Tween, Simulate and Track classes
 
 ### Added
-- Roles - `CSSRole`, `AttrRole`, `SVGRole`, `DrawRole`, `MovePathRole`
+- Roles - `ui.css`, `ui.attr`, `ui.svg`, `ui.draw`. These are auto-assigned to Actors when initialised with an `element` property, but can also be manually assigned with the `as` property.
+- Actors can have multiple roles by providing an array to `as`.
+- New roles can be created with `new ui.Role()`.
+- Value names can be translated via a Role's `map` property. For example `ui.cssRole` automatically maps `x` to `translateX`.
 - Action classes/definitions - `Tween`, `Simulate`, `Track`
 
 ### Changed
-- `addToQueue` Actor method is now `then`
-- `mapLink` Actor value property is now `linkMap`
-- `mapTo` Actor value property is now `outputMap`
+- `addToQueue` Actor method is now `then`.
+- `mapLink` Actor value property is now `mapFrom`.
+- Default tween `duration` set to `300`.
+- Default tween `ease` set to `"easeOut"`. 
 
 ### Deprecated
-- `play`, `track`, `run` Actor methods - provide `start` with `Tween`, `Simulate` and `Track` instances instead.
+- `flipValues`, `reverse`, `reset`, `resetProgress`, `resetOrigins` and `seek` Actor methods - these are all going to be moved to the `Tween` class in `3.2.0`
 
 ## [2.0.4] 2015-08-10
 

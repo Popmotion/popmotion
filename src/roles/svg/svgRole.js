@@ -28,7 +28,7 @@ module.exports = new Role({
     update: function (state) {
         var actor = this;
         each(build(state, this.svgOrigin), function (key, value) {
-            attrRole.set.call(actor, key, value);
+            attrRole.set(actor, key, value);
         });
     }
 

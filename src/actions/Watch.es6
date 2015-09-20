@@ -43,16 +43,17 @@ class Watch extends Action {
         First check if this value exists as a Value, if not
         check within Input (if we have one)
             
+        @param [Actor]
         @param [Value]: Current value
         @param [string]: Key of current value
         @return [number]: Calculated value
     */
-    process(value, key) {
-        var values = this.values,
+    process(actor, value, key) {
+        var values = actor.values,
             newValue = value.current,
             watchedKey = value.watch,
             watchedValue = values[watchedKey] ? values[watchedKey] : {},
-            inputOffset = this.inputOffset;
+            inputOffset = actor.inputOffset;
 
         // Then check values in Input
         if (inputOffset && inputOffset.hasOwnProperty(watchedKey)) {

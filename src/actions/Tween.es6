@@ -69,34 +69,35 @@ class Tween extends Action {
         @param [object]: Action properties
         @param [number]: Timestamp of current frame
     */
-    onFrameStart(frameDuration) {
+    onFrameStart(actor, frameDuration) {
         if (frameDuration) {
-            this.elapsed += (frameDuration * this.dilate) * this.playDirection;
+            actor.elapsed += (frameDuration * actor.dilate) * actor.playDirection;
         }
 
-        this.action.hasEnded = true;
+        actor.hasEnded = true;
     }
 
     /*
         Calculate progress of value based on time elapsed,
         value delay/duration/stagger properties
 
+        @param [Actor]
         @param [object]: Value state and properties
         @return [number]: Calculated value
     */
-    process(value) {
+    process(actor, value) {
         var target = value.to,
-            progressTarget = (this.playDirection === 1) ? 1 : 0,
+            progressTarget = (actor.playDirection === 1) ? 1 : 0,
             newValue = value.current,
             progress;
 
         // If this value has a to property, otherwise we just return current value
         if (target !== undefined) {
-            progress = calc.restricted(calc.progress(this.elapsed - value.delay, value.duration) - value.stagger, 0, 1);
+            progress = calc.restricted(calc.progress(actor.elapsed - value.delay, value.duration) - value.stagger, 0, 1);
 
             // Mark Action as NOT ended if still in progress
             if (progress !== progressTarget) {
-                this.hasEnded = false;
+                actor.hasEnded = false;
             }
 
             // Step progress if we're stepping
@@ -116,31 +117,31 @@ class Tween extends Action {
         
         @return [boolean]: Has this tween really really ended?
     */
-    hasEnded() {
-        if (this.hasEnded) {
+    hasEnded(actor) {
+        if (actor.hasEnded) {
             each(nextSteps, (name, action) => {
-                if (this.checkNextStep(name, this[action])) {
-                    this.hasEnded = false;
+                if (this.checkNextStep(actor, name, actor[action])) {
+                    actor.hasEnded = false;
                     return false;
                 }
             });
         }
 
-        return this.hasEnded;
+        return actor.hasEnded;
     }
 
-    checkNextStep(name, action) {
+    checkNextStep(actor, name, action) {
         var stepTaken = false,
-            step = this[name],
-            count = this[name + COUNT],
+            step = actor[name],
+            count = actor[name + COUNT] || 0,
             forever = (step === true);
 
         if (forever || utils.isNum(step)) {
             ++count;
-            this[name + COUNT] = count;
+            actor[name + COUNT] = count;
 
             if (forever || count <= step) {
-                action.call(this);
+                action.call(actor);
                 stepTaken = true;
             }
         }

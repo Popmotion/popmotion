@@ -31,10 +31,7 @@ var testPrefix = function (key) {
         return propertyNameCache[key];
     };
 
-var CSSRole = new Role({
-
-    name: 'css',
-
+var cssRole = new Role({
     _map: require('./map'),
     _typeMap: require('./type-map'),
 
@@ -42,26 +39,26 @@ var CSSRole = new Role({
         var actor = this;
 
         each(build(state), function (key, value) {
-            CSSRole.set.call(actor, key, value);
+            cssRole.set(actor.element, key, value);
         });
     },
 
-    get: function (key) {
+    get: function (element, key) {
         key = propertyNameCache[key] || testPrefix(key);
 
         if (key) {
-            return window.getComputedStyle(this.element, null)[key];
+            return window.getComputedStyle(element, null)[key];
         }
     },
 
-    set: function (key, value) {
+    set: function (element, key, value) {
         key = propertyNameCache[key] || testPrefix(key);
 
         if (key) {
-            this.element.style[key] = value;
+            element.style[key] = value;
         }
     }
 
 });
 
-module.exports = CSSRole;
+module.exports = cssRole;

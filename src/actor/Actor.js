@@ -10,7 +10,10 @@ var Process = require('../process/Process'),
     cssRole = require('../roles/css/cssRole'),
     svgRole = require('../roles/svg/svgRole'),
     drawPathRole = require('../roles/path/drawPathRole'),
-    Sync = require('../actions/Sync.es6'),
+    Action = require('../actions/Action.es6'),
+    Tween = require('../actions/Tween.es6'),
+    Track = require('../actions/Track.es6'),
+    Simulate = require('../actions/Simulate.es6'),
     each = utils.each,
 
     Actor = function (opts) {
@@ -93,7 +96,6 @@ Actor.prototype = {
     */
     start: function (action, input) {
         this.resetOrigins();
-        this.clearOrder();
 
         if (action) {
             this.set(action);
@@ -155,7 +157,20 @@ Actor.prototype = {
         Sync roles with props on next frame
     */
     sync: function (props) {
-        return this.start(new Sync(props));
+        return this.start(new Action(props));
+    },
+
+    /*
+        Shorthands
+    */
+    play: function (props) {
+        return this.start(new Tween(props));
+    },
+    run: function (props) {
+        return this.start(new Simulate(props));
+    },
+    track: function (props, e) {
+        return this.start(new Track(props), e);
     },
 
     /*
@@ -198,6 +213,9 @@ Actor.prototype = {
         this.process.start();
     },
 
+    /*
+        DEPRECATED
+    */
     reset: function () {
         this.resetProgress();
         valueOps.all('reset', this.values);
@@ -207,6 +225,7 @@ Actor.prototype = {
     
     /*
         Reset Action progress
+        DEPRECATED
     */
     resetProgress: function () {
         this.elapsed = (this.playDirection === 1) ? 0 : this.duration;
@@ -217,6 +236,7 @@ Actor.prototype = {
     
     /*
         Loop through all values and create origin points
+        DEPRECATED
     */
     resetOrigins: function () {
         valueOps.all('resetOrigin', this.values);
@@ -225,6 +245,7 @@ Actor.prototype = {
     
     /*
         Reverse Action progress and values
+        DEPRECATED
     */
     reverse: function () {
         this.playDirection *= -1;
@@ -234,11 +255,24 @@ Actor.prototype = {
     
     /*
         Swap value origins and to
+        DEPRECATED
     */
     flipValues: function () {
         this.elapsed = this.duration - this.elapsed;
         valueOps.all('flip', this.values);
         return this;
+    },
+
+    /*
+        Seek through the active tween
+        DEPRECATED
+    */
+    seek: function (progress) {
+        this.elapsed = this.duration * progress;
+
+        if (!this.isActive) {
+            this.process.fire();
+        }
     },
 
     /*

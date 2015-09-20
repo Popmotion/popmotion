@@ -46,8 +46,19 @@ class Action {
         return this;
     }
 
-    process(value) {
+    process(actor, value) {
         return value.current;
+    }
+
+   /*
+        Has Action ended?
+        
+        Returns true to end immedietly
+        
+        @return [boolean]: true
+    */
+    hasEnded() {
+        return true;
     }
         
     limit(output, value) {

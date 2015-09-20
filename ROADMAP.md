@@ -1,9 +1,3 @@
-[2.0.2]
-Introduce .seek efficiencies
-
-[2.0.3]
-Remove simulation manager
-
 [3.0.0]
 Remove routes manager / replace with roles
 Remove presets manager / replace with Action definitions
@@ -15,4 +9,5 @@ Remove ModManager
 Add sequencer
 
 [3.2.0]
-Allow executable Actions - auto-generate internal Actors
+Self-executable Actions
+Multiple concurrent Actions on a single Actor

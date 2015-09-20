@@ -17,7 +17,6 @@ class Simulate extends Action {
 
     getDefaultProps() {
         return {
-            inactiveFrames: 0,
             maxInactiveFrames: 3
         };
     }
@@ -63,15 +62,16 @@ class Simulate extends Action {
     /*
         Simulate the Value's per-frame movement
         
+        @param [Actor]
         @param [Value]: Current value
         @param [string]: Key of current value
         @param [number]: Duration of frame in ms
         @return [number]: Calculated value
     */
-    process(value, key, timeSinceLastFrame) {
+    process(actor, value, key, timeSinceLastFrame) {
         var simulate = value.simulate,
             simulation = utils.isString(simulate) ? simulations[simulate] : simulate,
-            newVelocity = simulation(value, timeSinceLastFrame, this.started);
+            newVelocity = simulation(value, timeSinceLastFrame, actor.started);
 
         value.velocity = (Math.abs(newVelocity) >= value.stopSpeed) ? newVelocity : 0;
         return value.current + calc.speedPerFrame(value.velocity, timeSinceLastFrame);
@@ -83,12 +83,13 @@ class Simulate extends Action {
         Use a framecounter to see if Action has changed in the last x frames
         and declare ended if not
         
+        @param [Actor]
         @param [boolean]: Has Action changed?
         @return [boolean]: Has Action ended?
     */
-    hasEnded(hasChanged) {
+    hasEnded(actor, hasChanged) {
         this.inactiveFrames = hasChanged ? 0 : this.inactiveFrames + 1;
-        return (this.inactiveFrames > this.maxInactiveFrames);
+        return (this.inactiveFrames > actor.maxInactiveFrames);
     }
 
     /*
