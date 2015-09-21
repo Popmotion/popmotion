@@ -34,27 +34,7 @@ var Process = require('../process/Process'),
 
         // Detect/add roles
         if (opts) {
-            // Auto-detect element type, if present and no roles defined
-            if (!opts.as && opts.element) {
-                // Add CSS role if HTMLElement
-                if (opts.element instanceof HTMLElement) {
-                    this.roles.push(cssRole);
-
-                } else if (opts.element instanceof SVGElement) {
-                    this.roles.push(svgRole);
-
-                    if (opts.element.tagName === 'path') {
-                        this.roles.push(drawPathRole);
-                    }
-                }
-            // Manuall adding roles
-            } else if (opts.as) {
-                if (utils.isArray(opts.as)) {
-                    this.roles.push.apply(this.roles, opts.as);
-                } else {
-                    this.roles.push(opts.as);
-                }
-            }
+            this.assignRoles(opts);
 
             this.set(opts);
         }
@@ -340,6 +320,34 @@ Actor.prototype = {
         this.order = [];
         this.parentOrder = [];
         return this;
+    },
+
+    assignRoles: function (opts) {
+        // Auto-detect element type, if present and no roles defined
+        if (!opts.as && opts.element) {
+            this.autoAssignRoles(element);
+        // Manually adding roles
+        } else if (opts.as) {
+            if (utils.isArray(opts.as)) {
+                this.roles.push.apply(this.roles, opts.as);
+            } else {
+                this.roles.push(opts.as);
+            }
+        }
+    },
+
+    autoAssignRoles: function (element) {
+        // Add CSS role if HTMLElement
+        if (element instanceof HTMLElement) {
+            this.roles.push(cssRole);
+
+        } else if (element instanceof SVGElement) {
+            this.roles.push(svgRole);
+
+            if (element.tagName === 'path') {
+                this.roles.push(drawPathRole);
+            }
+        }
     },
 
     // [boolean]: Is this Element currently active?
