@@ -4,8 +4,6 @@ var valueTypeManager = require('../value-types/manager'),
     calc = require('../inc/calc'),
     utils = require('../inc/utils'),
     each = utils.each,
-    Watch = require('../actions/Watch.es6'),
-    watcher = new Watch(),
 
     createMapper = function (role, mappedValues) {
         return function (name, val) {
@@ -13,7 +11,41 @@ var valueTypeManager = require('../value-types/manager'),
         };
     },
 
+    /*
+        Update the Actor and its values
+
+        @param [int]: Timestamp of rAF call
+        @param [int]: Time since last frame
+    */
     update = function (framestamp, frameDuration) {
+        var numRoles = this.roles.length;
+
+        // Update Input and attach new values to stata
+        if (this.input) {
+            state.input = this.input.onFrame(framestamp);
+        }
+
+        // Fire onStart callback if this is first frame
+        if (this.firstFrame) {
+            for (let i = 0; i < numRoles; i++) {
+                let role = this.roles[i];
+                if (role.start) {
+                    role.start.call(this);
+                }
+            }
+        }
+
+
+
+
+
+
+
+
+
+/*
+
+
         var actor = this,
             values = this.values,
             action = this.action,
@@ -36,11 +68,6 @@ var valueTypeManager = require('../value-types/manager'),
             state.input = this.input.onFrame(framestamp);
         }
 
-        // Update Action input
-        if (action.onFrameStart && action.onFrameStart(actor, frameDuration) === false) {
-            return false;
-        }
-
         // Fire onStart if first frame
         if (this.firstFrame) {
             for (i = 0; i < numRoles; i++) {
@@ -58,7 +85,13 @@ var valueTypeManager = require('../value-types/manager'),
             value = values[key];
 
             // Load value-specific action
-            valueAction = utils.isString(value.watch) ? watcher : action;
+            valueAction = value.action;
+
+            // Fire onFrameStart if not already fired
+            if (valueAction.onFrameStart && valueAction.lastUpdate !== framestamp) {
+                valueAction.onFrameStart(actor, frameDuration);
+                valueAction.lastUpdate = framestamp;
+            }
 
             // Calculate new value
             updatedValue = valueAction.process(actor, value, key, frameDuration);
@@ -155,6 +188,8 @@ var valueTypeManager = require('../value-types/manager'),
 
         this.firstFrame = false;
         this.framestamp = framestamp;
+
+        */
     };
 
 module.exports = update;

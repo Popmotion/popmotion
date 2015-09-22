@@ -1,367 +1,254 @@
-"use strict";
-
 var Process = require('../process/Process'),
     Queue = require('../inc/Queue'),
     Pointer = require('../input/Pointer'),
     utils = require('../inc/utils'),
     update = require('./update'),
     valueOps = require('./value-operations'),
+    Controls = require('./Controls'),
+
+    /*
+        Role imports
+    */
     defaultRole = require('../roles/defaultRole'),
     cssRole = require('../roles/css/cssRole'),
     svgRole = require('../roles/svg/svgRole'),
     drawPathRole = require('../roles/path/drawPathRole'),
-    Action = require('../actions/Action.es6'),
-    Tween = require('../actions/Tween.es6'),
-    Track = require('../actions/Track.es6'),
-    Simulate = require('../actions/Simulate.es6'),
-    each = utils.each,
 
-    Actor = function (opts) {
-        var actor = this;
+    Action = require('../actions/Action'),
+    each = utils.each;
 
-        this.roles = [ defaultRole ];
+class Actor {
 
-        // Set values object and state object
+    /*
+        @param [object]
+    */
+    constructor(opts = {}) {
         this.values = {};
-        this.state = {
-            values: {}
-        };
-
-        // Init queue and process
-        this.queue = new Queue();
+        this.state = { values: {} };
         this.process = new Process(this, update);
-        this.clearOrder();
+        this.activeActions = {};
+        this.numActive = 0;
+        this.actionCounter = 0;
 
-        // Detect/add roles
-        if (opts) {
-            this.assignRoles(opts);
+        this.assignRoles(opts.element, opts.as, true);
+        this.set(opts);
+        this.initRoles();
+    }
 
-            this.set(opts);
-        }
+    /*
+        Set Actor properties and values
 
-        this.roles.forEach(function (role) {
-            // Fire init method if one available
-            if (role.init) {
-                role.init.call(actor);
+        @param [object]
+        @returns [Actor]
+    */
+    set(opts) {
+        each(opts, (key, value) => {
+            if (key !== 'values' || key !== 'action') {
+                this[key] = value;
             }
         });
-    };
 
-Actor.prototype = {
-    
-    /*
-        Set Action values and properties
-        
-        @param [object]: Element properties
-        @param [string] (option): Name of default value property
-    */
-    set: function (props, defaultValueProp) {
-        // Reset Element properties and write new props
-        this.resetProps();
-
-        if (props) {
-            if (props.getName) {
-                this.action = props;
-            }
-
-            this.setProps(props);
-            this.setValues(props.values, defaultValueProp);
+        if (opts && opts.values) {
+            this.values = valueOps.process(this.values, opts.values, opts, 'current', this);
         }
 
         return this;
-    },
+    }
 
     /*
-        Start action
-    */
-    start: function (action, input) {
-        this.resetOrigins();
+        Bind Action-specific controls to Actor
 
-        if (action) {
-            this.set(action);
-        }
-        
-        // Stop existing inputs if this is a track - do this only for pointers? or unsubscribe?
-        if (this.action.getName() !== 'track' && this.input && this.input.stop) {
-            this.input.stop();
-        }
+        @returns [Controls]
+    */
+    controls(action, input) {
+        return new Controls(this, action.getPlayable(), input);
+    }
+
+    /*
+        Start a new Action
+
+        @param [Action]
+        @param [Input || event] (optional)
+        @returns [Controls]
+    */
+    start(action, input) {
+        var opts = utils.copy(action);
+
+        opts.action = action.getPlayable();
+        this.set(opts);
 
         if (input) {
-            // Create Pointer if this is an event
             this.input = (!input.current) ? new Pointer(input) : input;
             this.inputOrigin = this.input.get();
         }
 
-        this.resetProgress();
         this.activate();
 
-        return this;
-    },
+        return new Controls(this, opts.action, input);
+    }
 
     /*
-        Pause current Action
+        Pause all active Actions
+
+        @param [int] (optional)
+        @returns [Actor]
     */
-    pause: function () {
+    pause(id) {
+        if (id !== undefined) {
+            let action = this.getAction(id);
+            action.isActive = false;
+        }
+
         this.isActive = false;
         this.process.stop();
         return this;
-    },
+    }
 
     /*
-        Resume paused Action
+        Resume all active Actions
+
+        @param [int] (optional)
+        @returns [Actor];
     */
-    resume: function () {
-        this.framestamp = this.started = utils.currentTime();
+    resume(id) {
+        if (id !== undefined) {
+            let action = this.getAction(id);
+            action.isActive = true;
+        }
+
         this.isActive = true;
         this.process.start();
         return this;
-    },
+    }
 
     /*
-        Stop current Action
+        Stop all active Actions
+
+        @param [int] (optional)
+        @returns [Actor]
     */
-    stop: function () {
-        this.queue.clear();
-        this.pause();
+    stop(id) {
+        this.pause(id);
         return this;
-    },
+    }
 
     /*
-        Toggle current Action
+        Toggle all active Actions
+
+        @param [int] (optional)
+        @returns [Actor]
     */
-    toggle: function () {
+    toggle(id) {
+        if (id !== undefined) {
+            let action = this.getAction(id);
+            return action.isActive ? this.pause(id) : this.resume(id);
+        }
+
         return this.isActive ? this.pause() : this.resume();
-    },
+    }
 
     /*
-        Sync roles with props on next frame
+        Syncs `element` with current properties
+
+        @returns [Actor]
     */
-    sync: function (props) {
-        return this.start(new Action(props));
-    },
+    sync() {
+        return this.start(new Action({ values: this.values }));
+    }
 
     /*
-        Shorthands
+        Assign Roles based on element and manually provided props
+
+        @param [object]: Element
+        @param [Role || array]
+        @param [boolean] (optional)
     */
-    play: function (props) {
-        return this.start(new Tween(props));
-    },
-    run: function (props) {
-        return this.start(new Simulate(props));
-    },
-    track: function (props, e) {
-        return this.start(new Track(props), e);
-    },
+    assignRoles(element, manualRoles, surpressInit) {
+        // All Actors get a default Role that handles user callbacks
+        this.roles = [ defaultRole ];
 
-    /*
-        Add a new action to the queue
-    */
-    then: function () {
-        this.queue.add.apply(this.queue, arguments);
-        return this;
-    },
-
-    /*
-        Execute next in queue
-    */
-    next: function () {
-        var nextInQueue = this.queue.next();
-
-        if (nextInQueue) {
-            if (utils.isFunc(nextInQueue)) {
-                nextInQueue();
-                this.stop();
-            } else {
-                this.start(nextInQueue);
-            }
-        } else {
-            this.stop();
-        }
-
-        return this;
-    },
-    
-    /*
-        Activate Element Action
-    */
-    activate: function () {
-        this.isActive = true;
-        this.started = utils.currentTime() + this.delay;
-        this.framestamp = this.started;
-        this.firstFrame = true;
-
-        this.process.start();
-    },
-
-    /*
-        DEPRECATED
-    */
-    reset: function () {
-        this.resetProgress();
-        valueOps.all('reset', this.values);
-        return this;
-    },
-    
-    /*
-        Reset Action progress
-        DEPRECATED
-    */
-    resetProgress: function () {
-        this.elapsed = (this.playDirection === 1) ? 0 : this.duration;
-        this.started = utils.currentTime();
-
-        return this;
-    },
-    
-    /*
-        Loop through all values and create origin points
-        DEPRECATED
-    */
-    resetOrigins: function () {
-        valueOps.all('resetOrigin', this.values);
-        return this;
-    },
-    
-    /*
-        Reverse Action progress and values
-        DEPRECATED
-    */
-    reverse: function () {
-        this.playDirection *= -1;
-        valueOps.all('retarget', this.values);
-        return this;
-    },
-    
-    /*
-        Swap value origins and to
-        DEPRECATED
-    */
-    flipValues: function () {
-        this.elapsed = this.duration - this.elapsed;
-        valueOps.all('flip', this.values);
-        return this;
-    },
-
-    /*
-        Seek through the active tween
-        DEPRECATED
-    */
-    seek: function (progress) {
-        this.elapsed = this.duration * progress;
-
-        if (!this.isActive) {
-            this.process.fire();
-        }
-    },
-
-    /*
-        Set properties
-
-        @param [object]: Properties to set
-    */
-    setProps: function (props) {
-        var actor = this;
-
-        each(props, function (key, value) {
-            if (key !== 'values') {
-                actor[key] = value;
-            }
-        });
-    },
-
-    /*
-        Reset properties to Action defaults
-    */
-    resetProps: function () {
-        if (this.action) {
-            this.setProps(this.action.getDefaultProps());
-        }
-        return this;
-    },
-
-    /*
-        Set values
-
-        @param [object || string || number]: Value
-        @param [string] (optional): Default property to set
-    */
-    setValues: function (values, defaultValueProp) {
-        valueOps.process(values, this, defaultValueProp);
-        return this;
-    },
-    
-    /*
-        Update order of value keys
-        
-        @param [string]: Key of value
-        @param [boolean]: Whether to move value to back
-    */
-    updateOrder: function (key, moveToBack, hasChildren) {
-        var order = !hasChildren ? this.order : this.parentOrder,
-            position = order.indexOf(key);
-
-        // If key isn't in list, or moveToBack is set to true, add key
-        if (position === -1 || moveToBack) {
-            order.push(key);
-
-            // If key already exists, remove
-            if (position !== -1) {
-                order.splice(position, 1);
-            }
-        }
-
-        return this;
-    },
-
-    /*
-        Clear value key update order
-    */
-    clearOrder: function () {
-        this.order = [];
-        this.parentOrder = [];
-        return this;
-    },
-
-    assignRoles: function (opts) {
-        // Auto-detect element type, if present and no roles defined
-        if (!opts.as && opts.element) {
+        // Auto-assign if no manually-set Roles
+        if (!manualRoles && element) {
             this.autoAssignRoles(element);
-        // Manually adding roles
-        } else if (opts.as) {
-            if (utils.isArray(opts.as)) {
-                this.roles.push.apply(this.roles, opts.as);
+
+        // Or manually set if provided
+        } else if (manualRoles) {
+            if (utils.isArray(manualRoles)) {
+                this.roles.push.apply(this.roles, manualRoles);
             } else {
-                this.roles.push(opts.as);
+                this.roles.push(manualRoles);
             }
         }
-    },
 
-    autoAssignRoles: function (element) {
+        if (!surpressInit) {
+            this.initRoles();
+        }
+    }
+
+    /*
+        Automatically assign Roles based on element, designed
+        to be extended
+
+        @param [object]: Element
+    */
+    autoAssignRoles(element) {
         // Add CSS role if HTMLElement
         if (element instanceof HTMLElement) {
             this.roles.push(cssRole);
 
+        // Add SVG role if SVG element
         } else if (element instanceof SVGElement) {
             this.roles.push(svgRole);
 
+            // Add Draw Path role if path element
             if (element.tagName === 'path') {
                 this.roles.push(drawPathRole);
             }
         }
-    },
-
-    // [boolean]: Is this Element currently active?
-    get isActive() {
-        return this._isActive;
-    },
+    }
 
     /*
-        Set Element active status
-
-        If active is being set to true, set hasChanged to true, too
-
-        @param [boolean]: New active status
+        Fire init callbacks
     */
+    initRoles() {
+        // Fire init callback
+        this.roles.forEach((role) => {
+            if (role.init) {
+                role.init.call(this);
+            }
+        });
+    }
+
+    activate() {
+        this.isActive = true;
+        this.firstFrame = true;
+        this.process.start();
+    }
+
+    /*
+        Bind Action and return its table id
+
+        @param [Action]
+        @returns [int]
+    */
+    bindAction(action, id) {
+        id = (id === undefined) ? this.actionCounter++ : id;
+        this.activeActions[id] = action;
+        this.numActive++;
+        return this.actionCounter;
+    }
+
+    unbindAction(id) {
+        this.numActive--;
+        delete this.activeActions[id];
+    }
+
+    // [boolean]: Is this Actor active?
+    get isActive() {
+        return this._isActive;
+    }
+
+    // Set hasChanged to true is this is now active
     set isActive(status) {
         if (status === true) {
             this.hasChanged = status;
@@ -369,6 +256,40 @@ Actor.prototype = {
 
         this._isActive = status;
     }
-};
+}
 
 module.exports = Actor;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

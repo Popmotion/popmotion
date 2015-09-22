@@ -77,6 +77,10 @@ class Action {
 
     getDefaultValue() {
         return {
+            current: 0,
+            speed: 0,
+            velocity: 0,
+            frameChange: 0,
             amp: 1,
             escapeAmp: 0,
             round: false
@@ -89,6 +93,10 @@ class Action {
 
     extend(props) {
         return new this.constructor(utils.merge(this, props), this.getDefaultValueProp());
+    }
+
+    getPlayable() {
+        return this.extend({ isActive: false });
     }
 }
 

@@ -1,4 +1,4 @@
-let Action = require('./Action.es6'),
+let Action = require('./Action'),
     calc = require('../inc/calc'),
 
     STRING = 'string',

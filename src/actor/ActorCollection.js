@@ -123,11 +123,9 @@ ActorCollection.prototype = {
 
 // Initialise ActorCollection methods
 (function () {
-    for (var method in Actor.prototype) {
-        if (Actor.prototype.hasOwnProperty(method)) {
-            ActorCollection.prototype[method] = generateMethodIterator(method);
-        }
-    }
+    utils.each(Actor.prototype, function (name) {
+        ActorCollection.prototype[name] = generateMethodIterator(name);
+    });
 })();
 
 module.exports = ActorCollection;
