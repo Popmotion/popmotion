@@ -4,7 +4,6 @@ var Process = require('../process/Process'),
     utils = require('../inc/utils'),
     update = require('./update'),
     valueOps = require('./value-operations'),
-    Controls = require('./Controls'),
 
     /*
         Role imports
@@ -29,6 +28,8 @@ class Actor {
         this.activeActions = {};
         this.numActive = 0;
         this.actionCounter = 0;
+        this.activeValues = [];
+        this.activeParents = [];
 
         this.assignRoles(opts.element, opts.as, true);
         this.set(opts);
@@ -43,7 +44,7 @@ class Actor {
     */
     set(opts) {
         each(opts, (key, value) => {
-            if (key !== 'values' || key !== 'action') {
+            if (key !== 'values' && key !== 'action') {
                 this[key] = value;
             }
         });
@@ -60,8 +61,9 @@ class Actor {
 
         @returns [Controls]
     */
-    controls(action, input) {
-        return new Controls(this, action.getPlayable(), input);
+    controls(action) {
+        var Controls = action.getControls();
+        return new Controls(this, action.getPlayable());
     }
 
     /*
@@ -72,19 +74,19 @@ class Actor {
         @returns [Controls]
     */
     start(action, input) {
-        var opts = utils.copy(action);
+        var Controls = action.getControls(),
+            opts = utils.copy(action);
 
         opts.action = action.getPlayable();
         this.set(opts);
 
         if (input) {
-            this.input = (!input.current) ? new Pointer(input) : input;
-            this.inputOrigin = this.input.get();
+            this.bindInput(input);
         }
 
         this.activate();
 
-        return new Controls(this, opts.action, input);
+        return new Controls(this, opts.action, true);
     }
 
     /*
@@ -93,12 +95,7 @@ class Actor {
         @param [int] (optional)
         @returns [Actor]
     */
-    pause(id) {
-        if (id !== undefined) {
-            let action = this.getAction(id);
-            action.isActive = false;
-        }
-
+    pause() {
         this.isActive = false;
         this.process.stop();
         return this;
@@ -110,12 +107,7 @@ class Actor {
         @param [int] (optional)
         @returns [Actor];
     */
-    resume(id) {
-        if (id !== undefined) {
-            let action = this.getAction(id);
-            action.isActive = true;
-        }
-
+    resume() {
         this.isActive = true;
         this.process.start();
         return this;
@@ -127,7 +119,7 @@ class Actor {
         @param [int] (optional)
         @returns [Actor]
     */
-    stop(id) {
+    stop() {
         this.pause(id);
         return this;
     }
@@ -139,11 +131,6 @@ class Actor {
         @returns [Actor]
     */
     toggle(id) {
-        if (id !== undefined) {
-            let action = this.getAction(id);
-            return action.isActive ? this.pause(id) : this.resume(id);
-        }
-
         return this.isActive ? this.pause() : this.resume();
     }
 
@@ -241,6 +228,50 @@ class Actor {
     unbindAction(id) {
         this.numActive--;
         delete this.activeActions[id];
+
+        if (!this.numActive) {
+            this.stop();
+        }
+    }
+
+    /*
+        Update processing order
+        
+        @param [string]
+        @param [boolean]
+        @param [boolean]
+    */
+    updateOrder(key, moveToBack, hasChildren) {
+        var order = (!hasChildren) ? this.activeValues : this.activeParents,
+            position = order.indexOf(key);
+
+        // If key isn't list or moveToBack is set to true, add key
+        if (position === -1 || moveToBack) {
+            order.push(key);
+
+            // If key already exists, remove
+            if (position > -1) {
+                order.splice(position, 1);
+            }
+        }
+    }
+
+    startBound(id, input) {
+        var action = this.getAction(id),
+            opts = utils.copy(action);
+
+        this.set(opts);
+
+        if (input) {
+            this.bindInput(input);
+        }
+
+        this.activate();
+    }
+
+    bindInput(input) {
+        this.input = (!input.current) ? new Pointer(input) : input;
+        this.inputOrigin = this.input.get();
     }
 
     // [boolean]: Is this Actor active?

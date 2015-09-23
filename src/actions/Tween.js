@@ -3,10 +3,11 @@ let Action = require('./Action'),
     utils = require('../inc/utils'),
     each = utils.each,
     presetEasing = require('./tween/preset-easing'),
+    TweenControls = require('./tween/TweenControls'),
 
     nextSteps = {
-        loop: 'reset',
-        yoyo: 'reverse',
+        loop: 'resetValues',
+        yoyo: 'reverseValues',
         flip: 'flipValues'
     },
 
@@ -31,6 +32,10 @@ let Action = require('./Action'),
 const COUNT = 'count';
 
 class Tween extends Action {
+    getControls() {
+        return TweenControls;
+    }
+
     getName() {
         return 'tween';
     }
@@ -70,11 +75,13 @@ class Tween extends Action {
         @param [number]: Timestamp of current frame
     */
     onFrameStart(actor, frameDuration) {
+        this.elapsed = this.elapsed || 0;
+
         if (frameDuration) {
-            actor.elapsed += (frameDuration * actor.dilate) * actor.playDirection;
+            this.elapsed += (frameDuration * this.dilate) * this.playDirection;
         }
 
-        actor.hasEnded = true;
+        this.ended = true;
     }
 
     /*
@@ -87,17 +94,17 @@ class Tween extends Action {
     */
     process(actor, value) {
         var target = value.to,
-            progressTarget = (actor.playDirection === 1) ? 1 : 0,
+            progressTarget = (this.playDirection === 1) ? 1 : 0,
             newValue = value.current,
             progress;
 
         // If this value has a to property, otherwise we just return current value
         if (target !== undefined) {
-            progress = calc.restricted(calc.progress(actor.elapsed - value.delay, value.duration) - value.stagger, 0, 1);
+            progress = calc.restricted(calc.progress(this.elapsed - value.delay, value.duration) - value.stagger, 0, 1);
 
             // Mark Action as NOT ended if still in progress
             if (progress !== progressTarget) {
-                actor.hasEnded = false;
+                this.ended = false;
             }
 
             // Step progress if we're stepping
@@ -118,36 +125,51 @@ class Tween extends Action {
         @return [boolean]: Has this tween really really ended?
     */
     hasEnded(actor) {
-        if (actor.hasEnded) {
-            each(nextSteps, (name, action) => {
-                if (this.checkNextStep(actor, name, actor[action])) {
-                    actor.hasEnded = false;
+        if (this.ended) {
+            each(nextSteps, (name, methodName) => {
+                if (this.checkNextStep(actor, name, this[methodName])) {
+                    this.ended = false;
                     actor.hasChanged = true;
                     return false;
                 }
             });
         }
 
-        return actor.hasEnded;
+        return this.ended;
     }
 
-    checkNextStep(actor, name, action) {
+    checkNextStep(actor, name, method) {
         var stepTaken = false,
-            step = actor[name],
-            count = actor[name + COUNT] || 0,
+            step = this[name],
+            count = this[name + COUNT] || 0,
             forever = (step === true);
 
         if (forever || utils.isNum(step)) {
             ++count;
-            actor[name + COUNT] = count;
+            this[name + COUNT] = count;
 
             if (forever || count <= step) {
-                action.call(actor);
+                method.call(this, actor);
                 stepTaken = true;
             }
         }
 
         return stepTaken;
+    }
+
+    flipValues(actor) {
+        this.elapsed = this.duration - this.elapsed;
+    }
+
+    reverseValues(actor) {
+        this.playDirection *= -1;
+    }
+
+    resetValues(actor) {
+        this.elapsed = (this.playDirection === 1) ? 0 : this.duration;
+        this.started = utils.currentTime();
+
+        return this;
     }
 }
 

@@ -6,7 +6,13 @@ var Watch = require('../actions/Watch'),
     each = utils.each;
 
 const numericalValues = ['current', 'to', 'min', 'max', 'velocity', 'friction', 'spring'],
-    numNumericalValues = numericalValues.length;
+    numNumericalValues = numericalValues.length,
+    defaultValue = {
+        current: 0,
+        velocity: 0,
+        speed: 0,
+        frameChange: 0
+    };
 
 function checkNumericalValue(name) {
     return (numericalValues.indexOf(name) > -1);
@@ -239,7 +245,7 @@ module.exports = {
         each(preprocessed, (key, value) => {
             let newValue = utils.copy(existing[key]) || {},
                 hasChildren = (value.children !== undefined),
-                defaultProps = inherit.action ? inherit.action.getDefaultValue() : {};
+                defaultProps = inherit.action ? utils.merge(defaultValue, inherit.action.getDefaultValue()) : defaultValue;
 
             value.action = value.watch ? watcher : inherit.action;
 
@@ -265,6 +271,7 @@ module.exports = {
             newValue.hasRange = (isNum(newValue.min) && isNum(newValue.max)) ? true : false;
 
             existing[key] = newValue;
+            scope.updateOrder(key, utils.isString(newValue.watch), hasChildren);
         });
 
         return existing;

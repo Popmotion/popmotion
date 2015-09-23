@@ -1,5 +1,6 @@
 let calc = require('../inc/calc'),
-    utils = require('../inc/utils');
+    utils = require('../inc/utils'),
+    Controls = require('../actor/Controls');
 
 const DEFAULT_PROP = 'current';
 
@@ -67,6 +68,10 @@ class Action {
         return restricted + ((output - restricted) * escapeAmp);
     }
 
+    getControls() {
+        return Controls;
+    }
+
     getName() {
         return 'action';
     }
@@ -96,7 +101,17 @@ class Action {
     }
 
     getPlayable() {
-        return this.extend({ isActive: false });
+        return this.extend();
+    }
+
+    activate() {
+        this.isActive = true;
+        return this;
+    }
+
+    deactivate() {
+        this.isActive = false;
+        return this;
     }
 }
 
