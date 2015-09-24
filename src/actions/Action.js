@@ -1,11 +1,12 @@
 let calc = require('../inc/calc'),
     utils = require('../inc/utils'),
-    Controls = require('../actor/Controls');
+    each = utils.each,
+    Controls = require('../controls/Controls');
 
 const DEFAULT_PROP = 'current';
 
 class Action {
-    constructor(props, defaultProp) {
+    constructor(props) {
         var action = this;
 
         utils.each(this.getDefaultProps(), function (key, value) {
@@ -17,23 +18,21 @@ class Action {
     }
 
     set(props = {}, defaultProp = DEFAULT_PROP) {
-        // Add properties
-        for (let key in props) {
-            if (props.hasOwnProperty(key) && key !== 'values') {
-                this[key] = props[key];
+        each(props, (key, prop) => {
+            if (key !== 'values') {
+                this[key] = prop;
             }
-        }
+        });
 
         // Merge values
         if (props.values) {
             let currentValues = this.values,
                 values = props.values;
 
-            for (let key in values) {
+            each(values, (key, value) => {
                 let existingValue = currentValues[key],
-                    value = values[key],
                     newValue = {};
-
+                
                 if (utils.isObj(value)) {
                     newValue = value;
                 } else {
@@ -41,7 +40,7 @@ class Action {
                 }
 
                 currentValues[key] = existingValue ? utils.merge(existingValue, newValue) : newValue;
-            }
+            });
         }
 
         return this;

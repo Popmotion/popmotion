@@ -21,12 +21,13 @@ var valueTypeManager = require('../value-types/manager'),
         @returns [boolean]
     */
     checkAndFireHasEnded = function (actor, hasChanged) {
-        var hasEnded = true,
-            activeActions = actor.activeActions;
+        var hasEnded = true;
 
-        each(activeActions, (key, action) => {
+        each(actor.activeActions, (key, action) => {
             if (action.hasEnded && action.hasEnded(actor, hasChanged) === false) {
                 hasEnded = false;
+            } else {
+                delete actor.activeActions[key];
             }
         });
 

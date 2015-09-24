@@ -19,10 +19,9 @@ let Action = require('./Action'),
         @param [number]: Value of 1 progress
         @param [string || function]: Name of preset easing
             to use or generated easing function
-        @param [number]: Amplify progress out of specified range
         @return [number]: Value of eased progress in range
     */  
-    ease = function (progress, from, to, ease, escapeAmp) {
+    ease = function (progress, from, to, ease) {
         var progressLimited = calc.restricted(progress, 0, 1),
             easingFunction = utils.isString(ease) ? presetEasing[ease] : ease;
 
@@ -48,7 +47,9 @@ class Tween extends Action {
             loop: false,
             yoyo: false,
             flip: false,
-            playDirection: 1
+            playDirection: 1,
+            ended: true,
+            elapsed: 0
         };
     }
 
@@ -157,15 +158,15 @@ class Tween extends Action {
         return stepTaken;
     }
 
-    flipValues(actor) {
+    flipValues() {
         this.elapsed = this.duration - this.elapsed;
     }
 
-    reverseValues(actor) {
+    reverseValues() {
         this.playDirection *= -1;
     }
 
-    resetValues(actor) {
+    resetValues() {
         this.elapsed = (this.playDirection === 1) ? 0 : this.duration;
         this.started = utils.currentTime();
 

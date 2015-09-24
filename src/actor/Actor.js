@@ -4,6 +4,7 @@ var Process = require('../process/Process'),
     utils = require('../inc/utils'),
     update = require('./update'),
     valueOps = require('./value-operations'),
+    select = require('./select'),
 
     /*
         Role imports
@@ -24,12 +25,18 @@ class Actor {
     constructor(opts = {}) {
         this.values = {};
         this.state = { values: {} };
+        this.queue = new Queue();
         this.process = new Process(this, update);
         this.activeActions = {};
         this.numActive = 0;
         this.actionCounter = 0;
         this.activeValues = [];
         this.activeParents = [];
+
+        // Get actual elements if this is a selector
+        if (utils.isString(opts.element)) {
+            opts.element = select(opts.element)[0];
+        }
 
         this.assignRoles(opts.element, opts.as, true);
         this.set(opts);
@@ -120,7 +127,7 @@ class Actor {
         @returns [Actor]
     */
     stop() {
-        this.pause(id);
+        this.pause();
         return this;
     }
 
@@ -130,7 +137,7 @@ class Actor {
         @param [int] (optional)
         @returns [Actor]
     */
-    toggle(id) {
+    toggle() {
         return this.isActive ? this.pause() : this.resume();
     }
 
@@ -141,6 +148,34 @@ class Actor {
     */
     sync() {
         return this.start(new Action({ values: this.values }));
+    }
+
+    /*
+        Add a new Action to the queue
+    */
+    then() {
+        this.queue.add.apply(this.queue, arguments);
+        return this;
+    }
+
+    /*
+        Execute next in queue
+    */
+    next() {
+        var next = this.queue.next();
+
+        if (next) {
+            if (utils.isFunc(next)) {
+                next();
+                this.next();
+            } else {
+                this.start(next);
+            }
+        } else {
+            this.stop();
+        }
+
+        return this;
     }
 
     /*
@@ -207,9 +242,11 @@ class Actor {
     }
 
     activate() {
-        this.isActive = true;
-        this.firstFrame = true;
-        this.process.start();
+        if (!this.isActive) {
+            this.isActive = true;
+            this.firstFrame = true;
+            this.process.start();
+        }
     }
 
     /*
@@ -222,7 +259,7 @@ class Actor {
         id = (id === undefined) ? this.actionCounter++ : id;
         this.activeActions[id] = action;
         this.numActive++;
-        return this.actionCounter;
+        return id;
     }
 
     unbindAction(id) {
@@ -232,6 +269,10 @@ class Actor {
         if (!this.numActive) {
             this.stop();
         }
+    }
+
+    getAction(id) {
+        return this.activeActions[id];
     }
 
     /*
@@ -260,6 +301,7 @@ class Actor {
         var action = this.getAction(id),
             opts = utils.copy(action);
 
+        opts.action = action;
         this.set(opts);
 
         if (input) {

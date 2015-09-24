@@ -16,7 +16,7 @@ const numericalValues = ['current', 'to', 'min', 'max', 'velocity', 'friction', 
 
 function checkNumericalValue(name) {
     return (numericalValues.indexOf(name) > -1);
-};
+}
 
 /*
     Check Role typeMaps to see if this value name has been mapped
@@ -35,8 +35,8 @@ function checkRoles(name, roles) {
         }
     });
 
-    return valueType
-};
+    return valueType;
+}
 
 /*
     Check value for special type
@@ -67,7 +67,7 @@ function checkValueType(existingValue, newValue, scope, valueName) {
     }
 
     return valueType;
-};
+}
 
 /*
     Resolve a property
@@ -104,7 +104,7 @@ function resolve(name, prop, value, scope) {
     }
 
     return prop;
-};
+}
 
 /*
     Split a value into sub-values
@@ -137,7 +137,7 @@ function split(name, value, scope, valueTypeHandler) {
             each(splitProp, (key, prop) => {
                 // Create new value if none exists
                 splitValues[key] = splitValues[key] || utils.copy(valueTypesManager.defaultProps(value.type, key));
-                splitValues[key][propName] = splitProp[key];
+                splitValues[key][propName] = prop;
 
                 if (utils.isString(splitProp[key])) {
                     splitUnit(splitValues[key][propName], splitValues[key]);
@@ -147,7 +147,7 @@ function split(name, value, scope, valueTypeHandler) {
     }
 
     return splitValues;
-};
+}
 
 /*
     Split value into number and unit, and set unit to value
@@ -167,7 +167,7 @@ function splitUnit(property, hostValue) {
     }
 
     return returnVal;
-};
+}
 
 /*
     Preprocess incoming values, splitting non-numerical values
@@ -178,7 +178,7 @@ function splitUnit(property, hostValue) {
     @param [object]
     @param [string]
 */
-function preprocess(existing = {}, incoming, scope, defaultProp) {
+function preprocess(existing, incoming, scope, defaultProp) {
     var values = {};
 
     each(incoming, (key, value) => {
@@ -224,7 +224,7 @@ function preprocess(existing = {}, incoming, scope, defaultProp) {
     });
 
     return values;
-};
+}
 
 module.exports = {
 
@@ -243,13 +243,13 @@ module.exports = {
         var preprocessed = preprocess(existing, incoming, scope, defaultProp);
 
         each(preprocessed, (key, value) => {
-            let newValue = utils.copy(existing[key]) || {},
+            let newValue = existing[key] ? utils.copy(existing[key]) : utils.copy(defaultValue),
                 hasChildren = (value.children !== undefined),
-                defaultProps = inherit.action ? utils.merge(defaultValue, inherit.action.getDefaultValue()) : defaultValue;
+                defaultActionValue = inherit.action ? inherit.action.getDefaultValue() : {};
 
             value.action = value.watch ? watcher : inherit.action;
 
-            each(defaultProps, (propName, defaultProp) => {
+            each(defaultActionValue, (propName, defaultProp) => {
                 newValue[propName] = (inherit.hasOwnProperty(propName) && !value.hasOwnProperty(propName)) ? inherit[propName] : defaultProp;
             });
 

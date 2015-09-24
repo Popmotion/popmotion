@@ -1,4 +1,4 @@
-var Controls = require('../../actor/Controls');
+var Controls = require('../../controls/Controls');
 
 class TweenControls extends Controls {
     loop() {
@@ -17,11 +17,14 @@ class TweenControls extends Controls {
     }
 
     seek(progress) {
-        this.action.elapsed = this.actor.duration * progress;
+        this.action.elapsed = this.action.duration * progress;
 
-        if (!this.actor.isActive) {
+        if (!this.action.isActive) {
+            this.action.activate();
             this.actor.process.fire();
+            this.action.deactivate();
         }
+
         return this;
     }
 }

@@ -4,7 +4,7 @@ class Controls {
         this.action = action;
 
         if (hasStarted) {
-            this.bindAction();
+            this.id = this.bindAction();
             this.action.activate();
         }
     }
@@ -38,6 +38,11 @@ class Controls {
         } else {
             this.action.activate();
         }
+        return this;
+    }
+
+    then(...args) {
+        this.actor.then(...args);
         return this;
     }
 
