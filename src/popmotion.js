@@ -25,7 +25,7 @@ var valueTypeManager = require('./value-types/manager'),
         /*
             Create an Iterator of Actors with selected dom elements
         */
-        select: function (selector, opts) {
+        select: function (selector, opts = {}) {
             var selection = select(selector),
                 actors = [];
 
