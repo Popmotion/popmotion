@@ -29,7 +29,7 @@ var valueTypeManager = require('./value-types/manager'),
             var selection = select(selector),
                 actors = [];
 
-            selection.forEach(function (element) {
+            selection.forEach((element) => {
                 opts.element = element;
                 actors.push(new this.Actor(opts));
             });

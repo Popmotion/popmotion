@@ -30,7 +30,7 @@ class Iterator {
         return this;
     }
 
-    stagger(props, method, ...args) {
+    stagger(method, props, ...args) {
         var numMembers = this.members.length,
             propsIsInterval = utils.isNum(props),
             interval = propsIsInterval ? props : props.interval,
