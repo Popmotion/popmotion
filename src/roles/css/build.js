@@ -6,7 +6,7 @@ var each = require('../../inc/utils').each,
 
     TRANSLATE_Z = 'translateZ';
 
-module.exports = function (output) {
+module.exports = function (output, cache) {
     var css = {},
         transform = '',
         transformHasZ = false;
@@ -20,7 +20,9 @@ module.exports = function (output) {
         
         // Or just assign directly
         } else {
-            css[key] = rule;
+            if (rule !== cache[key]) {
+                cache[key] = css[key] = rule;
+            }
         }
     });
 
@@ -30,7 +32,9 @@ module.exports = function (output) {
             transform += ' ' + TRANSLATE_Z + '(0px)';
         }
 
-        css.transform = transform;
+        if (transform !== cache.transform) {
+            cache.transform = css.transform = transform;
+        }
     }
 
     return css;

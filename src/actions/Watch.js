@@ -1,23 +1,5 @@
-/*
-    Link the calculations of on Value into the output of another.
-    
-    Activate by setting the link property of one value with the name
-    of either an Input property or another Value.
-    
-    Map the linked value with mapLink and provide a corressponding mapTo
-    array to translate values from one into the other. For instance:
-    
-    {
-        link: 'x',
-        mapLink: [0, 100, 200],
-        mapTo: [-100, 0, -100]
-    }
-    
-    An output value of 50 from 'x' will translate to -50 for this Value
-*/
-"use strict";
-
-var calc = require('../inc/calc.js'),
+let Action = require('./Action'),
+    calc = require('../inc/calc'),
 
     STRING = 'string',
     
@@ -54,47 +36,42 @@ var calc = require('../inc/calc.js'),
         return newValue;
     };
 
-module.exports = {
-
-    valueDefaults: require('./link/default-value-props'),
-
-    surpressMethod: true,
-
+class Watch extends Action {
     /*
         Process this value
         
         First check if this value exists as a Value, if not
         check within Input (if we have one)
             
+        @param [Actor]
         @param [Value]: Current value
         @param [string]: Key of current value
         @return [number]: Calculated value
     */
-    process: function (value, key) {
-        var values = this.values,
+    process(actor, value, key) {
+        var values = actor.values,
             newValue = value.current,
-            linkKey = value.link,
-            linkedValue = values[linkKey] ? values[linkKey] : {},
-            inputOffset = this.inputOffset;
+            watchedKey = value.watch,
+            watchedValue = values[watchedKey] ? values[watchedKey] : {},
+            inputOffset = actor.inputOffset;
 
-        // Then check values in Input
-        if (inputOffset && inputOffset.hasOwnProperty(linkKey)) {
-            newValue = value.origin + (inputOffset[linkKey] * value.amp);
-            
         // First look at Action and check value isn't linking itself
-        } else if (linkedValue.current !== undefined && key !== linkKey) {
-            newValue = linkedValue.current;
+        if (watchedValue.current !== undefined && key !== watchedKey) {
+            newValue = watchedValue.current;
+        
+        // Then check values in Input
+        } else if (inputOffset && inputOffset.hasOwnProperty(watchedKey)) {
+            newValue = value.origin + (inputOffset[watchedKey] * value.amp);
         }
 
-        // If we have mapLink and mapTo properties, translate the new value
-        if (value.mapLink && value.mapTo) {
-            newValue = findMappedValue(newValue, linkedValue, value, value.mapLink, value.mapTo);
+
+        // If we have mapFrom and mapTo properties, translate the new value
+        if (value.mapFrom && value.mapTo) {
+            newValue = findMappedValue(newValue, watchedValue, value, value.mapFrom, value.mapTo);
         }
 
         return newValue;
-    },
-        
-    limit: function (output, value) {
-        return calc.restricted(output, value.min, value.max);
     }
-};
+}
+
+module.exports = Watch;

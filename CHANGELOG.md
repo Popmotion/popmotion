@@ -7,9 +7,12 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 ### Removed
 - `ui.addRoute` - see Roles
 - `ui.addPreset`, `ui.addAction` - see Tween, Simulate and Track classes
+- `ActorCollection` - see Iterator
 
 ### Added
-- Full SVG support
+- Full SVG support.
+- Multiple simultaneous Actions on a single Actor - mix Simulations, Tracking and Tweens!
+- Iterator - to allow single classes to be extended the ActorCollector has been dropped in favour of a generic Iterator class, which can iterate over any set of classes. This also makes it clearer when you're interacting with multiple items vs a single Actor.
 - Roles - `ui.css`, `ui.attr`, `ui.svg`, `ui.draw`. These are auto-assigned to Actors when initialised with an `element` property, but can also be manually assigned with the `as` property.
 - Actors can have multiple roles by providing an array to `as`.
 - New roles can be created with `new ui.Role()`.

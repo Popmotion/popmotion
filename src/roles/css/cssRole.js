@@ -35,10 +35,14 @@ var cssRole = new Role({
     _map: require('./map'),
     _typeMap: require('./type-map'),
 
+    init: function () {
+        this._cssCache = {};
+    },
+
     update: function (state) {
         var actor = this;
 
-        each(build(state), function (key, value) {
+        each(build(state, actor._cssCache), function (key, value) {
             cssRole.set(actor.element, key, value);
         });
     },

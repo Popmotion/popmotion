@@ -4,8 +4,8 @@ var valueTypeManager = require('../value-types/manager'),
     calc = require('../inc/calc'),
     utils = require('../inc/utils'),
     each = utils.each,
-    Watch = require('../actions/Watch.es6'),
-    watcher = new Watch(),
+    Action = require('../actions/Action'),
+    defaultAction = new Action(),
 
     createMapper = function (role, mappedValues) {
         return function (name, val) {
@@ -13,137 +13,152 @@ var valueTypeManager = require('../value-types/manager'),
         };
     },
 
-    update = function (framestamp, frameDuration) {
-        var actor = this,
-            values = this.values,
-            action = this.action,
-            valueAction = action,
-            state = this.state,
-            numActiveValues = this.order.length,
-            numActiveParents = this.parentOrder.length,
-            numRoles = this.roles.length,
-            hasChanged = this.hasChanged,
-            key = '',
-            value = {},
-            mappedValues = {},
-            updatedValue = 0,
-            outputValue = 0,
-            i = 0,
-            role;
+    /*
+        Check all Actions for `onEnd`, return true if all are true
 
-        // Update Input and attach new values to state
+        @param [Actor]
+        @param [boolean]
+        @returns [boolean]
+    */
+    checkAndFireHasEnded = function (actor, hasChanged) {
+        var hasEnded = true;
+
+        each(actor.activeActions, (key, action) => {
+            if (action.hasEnded && action.hasEnded(actor, hasChanged) === false) {
+                hasEnded = false;
+            } else {
+                delete actor.activeActions[key];
+            }
+        });
+
+        return hasEnded;
+    },
+
+    /*
+        Update the Actor and its values
+
+        @param [int]: Timestamp of rAF call
+        @param [int]: Time since last frame
+    */
+    update = function (framestamp, frameDuration) {
+        var numActiveValues = this.activeValues.length,
+            numActiveParents = this.activeParents.length,
+            numRoles = this.roles.length,
+            state = this.state,
+            hasChanged = this.hasChanged;
+
+        // Update Input and attach new values to stata
         if (this.input) {
             state.input = this.input.onFrame(framestamp);
         }
 
-        // Update Action input
-        if (action.onFrameStart && action.onFrameStart(actor, frameDuration) === false) {
-            return false;
-        }
-
-        // Fire onStart if first frame
+        // Fire onStart callback if this is first frame
         if (this.firstFrame) {
-            for (i = 0; i < numRoles; i++) {
-                role = this.roles[i];
+            for (let i = 0; i < numRoles; i++) {
+                let role = this.roles[i];
                 if (role.start) {
-                    role.start.call(actor);
+                    role.start.call(this);
                 }
             }
         }
 
         // Update values
-        for (i = 0; i < numActiveValues; i++) {
+        for (let i = 0; i < numActiveValues; i++) {
             // Get value and key
-            key = this.order[i];
-            value = values[key];
+            let key = this.activeValues[i];
+            let value = this.values[key];
+            let action = (!value.action || value.action && !value.action.isActive) ? defaultAction : value.action;
 
-            // Load value-specific action
-            valueAction = utils.isString(value.watch) ? watcher : action;
-
-            // Calculate new value
-            updatedValue = valueAction.process(actor, value, key, frameDuration);
-
-            // Limit if range
-            if (valueAction.limit) {
-                updatedValue = valueAction.limit(updatedValue, value);
+            // Fire action onFrameStart if not already fired
+            if (action.onFrameStart && action.lastUpdate !== framestamp) {
+                action.onFrameStart(this, frameDuration);
+                action.lastUpdate = framestamp;
             }
 
-            // Round value if round set to true
+            // Calculate new value
+            let updatedValue = action.process(this, value, key, frameDuration);
+
+            // Limit if this action does that kind of thing
+            if (action.limit && value.hasRange) {
+                updatedValue = action.limit(updatedValue, value);
+            }
+
+            // Round value if round is true
             if (value.round) {
                 updatedValue = Math.round(updatedValue);
             }
 
-            // Update change from previous frame
+            // Update frameChange
             value.frameChange = updatedValue - value.current;
 
-            // Calculate velocity if Action hasn't already
-            if (!valueAction.calculatesVelocity) {
+            // Calculate velocity if Action hasn't
+            if (!action.calculatesVelocity) {
                 value.velocity = calc.speedPerSecond(value.frameChange, frameDuration);
             }
 
             // Update current speed
             value.speed = Math.abs(value.velocity);
 
-            // Check if changed and update
-            if (value.current != updatedValue) {
+            // Check if value's changed
+            if (value.current !== updatedValue) {
                 hasChanged = true;
             }
 
-            // Set current
-            this.values[key].current = updatedValue;
-            outputValue = (value.unit) ? updatedValue + value.unit : updatedValue;
+            // Set new current 
+            value.current = updatedValue;
+            let valueState = (value.unit) ? updatedValue + value.unit : updatedValue;
 
-            // Put value in state if no parent value
+            // Put value in state if no parent
             if (!value.parent) {
-                state.values[key] = outputValue;
+                state.values[key] = valueState;
 
-            // Or add to parent state, to be combined
+            // Or, add to parent state to be combined later
             } else {
                 state[value.parent] = state[value.parent] || {};
-                state[value.parent][value.propName] = outputValue;
+                state[value.parent][value.propName] = valueState;
             }
         }
 
         // Update parent values from calculated children
-        for (i = 0; i < numActiveParents; i++) {
-            key = this.parentOrder[i];
-            value = this.values[key];
+        for (let i = 0; i < numActiveParents; i++) {
+            let key = this.activeParents[i];
+            let value = this.values[key];
 
             // Update parent value current property
-            value.current = valueTypeManager[value.type].combine(state[key]);
+            value.current = valueTypeManager[value.type].combine(state[key], value.template);
 
             // Update state
-            state.values[value.name] = value.current;
+            state.values[key] = value.current;
         }
 
-        // Fire `frame` and `update` callbacks
-        for (i = 0; i < numRoles; i++) {
-            role = this.roles[i];
-            mappedValues = {};
+        // Fire `frame` and `update` callbacks on all Roles
+        for (let i = 0; i < numRoles; i++) {
+            let role = this.roles[i];
+            let mappedValues = {};
 
-            each(this.state.values, createMapper(role, mappedValues));
-            
+            each(state.values, createMapper(role, mappedValues));
+
             if (role.frame) {
-                role.frame.call(actor, mappedValues);
+                role.frame.call(this, mappedValues);
             }
 
-            if (role.update && (hasChanged || actor.firstFrame)) {
-                role.update.call(actor, mappedValues);
+            if (role.update && (hasChanged || this.firstFrame)) {
+                role.update.call(this, mappedValues);
             }
         }
 
-        // Reset hasChanged before further Actions might change this
+        // Reset hasChanged before further Actions might affect this
         this.hasChanged = false;
 
-        // Fire onEnd if this Action has ended
-        if (this.isActive && action.hasEnded && action.hasEnded(actor, hasChanged)) {
+        // Check all Actions and fire onEnd if they've ended
+        if (this.isActive && checkAndFireHasEnded(this, hasChanged)) {
             this.isActive = false;
 
             // Fire `complete` callback
-            for (i = 0; i < numRoles; i++) {
-                role = this.roles[i];
+            for (let i = 0; i < numRoles; i++) {
+                let role = this.roles[i];
                 if (role.complete) {
-                    role.complete.call(actor);
+                    role.complete.call(this);
                 }
             }
 

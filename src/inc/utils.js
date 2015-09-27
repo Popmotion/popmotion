@@ -28,11 +28,15 @@ module.exports = {
         @param [function]: Callback to fire
     */
     each: function (props, callback) {
-        for (var key in props) {
-            if (props.hasOwnProperty(key)) {
-                if (callback(key, props[key]) === false) {
-                    break;
-                }
+        var keys = Object.keys(props),
+            numKeys = keys.length;
+
+        for (let i = 0; i < numKeys; i++) {
+            let key = keys[i],
+                prop = props[key];
+
+            if (callback(key, prop) === false) {
+                break;
             }
         }
     },
