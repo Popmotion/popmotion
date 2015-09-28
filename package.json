@@ -35,7 +35,7 @@
   "analyze": true,
   "license": "MIT",
   "scripts": {
-    "compile": "babel src --out-dir lib && webpack -p --config webpack.config.min.js",
+    "compile": "babel src --out-dir lib && webpack && webpack -p --config webpack.config.min.js",
     "watch": "webpack --progress --colors --watch"
   },
   "devDependencies": {

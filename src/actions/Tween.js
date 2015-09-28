@@ -3,11 +3,12 @@ let Action = require('./Action'),
     utils = require('../inc/utils'),
     each = utils.each,
     presetEasing = require('./tween/preset-easing'),
+    valueOps = require('../actor/value-operations'),
     TweenControls = require('./tween/TweenControls'),
 
     nextSteps = {
-        loop: 'resetValues',
-        yoyo: 'reverseValues',
+        loop: 'restart',
+        yoyo: 'reverse',
         flip: 'flipValues'
     },
 
@@ -157,21 +158,22 @@ class Tween extends Action {
         return stepTaken;
     }
 
-    flipValues() {
+    flipValues(actor) {
+        var actorValues = actor.values;
         this.elapsed = this.duration - this.elapsed;
 
-        // figure out how to flip 
+        each(this.values, (key) => {
+            valueOps.flip(actorValues[key]);
+        });
     }
 
-    reverseValues() {
+    reverse() {
         this.playDirection *= -1;
     }
 
-    resetValues() {
+    restart() {
         this.elapsed = (this.playDirection === 1) ? 0 : this.duration;
         this.started = utils.currentTime();
-
-        return this;
     }
 }
 

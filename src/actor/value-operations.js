@@ -235,6 +235,15 @@ function preprocess(existing, incoming, scope, defaultProp) {
 module.exports = {
 
     /*
+        Flip value target/origin
+    */
+    flip: function (value) {
+        var target = (value.target !== undefined) ? value.target : value.current;
+        value.target = value.to = value.origin;
+        value.origin = target;
+    },
+
+    /*
         Merge existing and incoming values, resolving properties
         set as functions and splitting non-numerical values ie hex
 

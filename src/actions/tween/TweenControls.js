@@ -1,18 +1,13 @@
 var Controls = require('../../controls/Controls');
 
 class TweenControls extends Controls {
-    loop() {
-        this.action.resetValues(this.actor);
+    restart() {
+        this.action.restart();
         return this;
     }
 
-    yoyo() {
-        this.action.reverseValues(this.actor);
-        return this;
-    }
-
-    flip() {
-        this.action.flipValues(this.actor);
+    reverse() {
+        this.action.reverse();
         return this;
     }
 

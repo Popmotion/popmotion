@@ -7,7 +7,7 @@ const DEFAULT_STAGGER_EASE = 'linear';
 function generateCallback(method, ...args) {
     return utils.isString(method) ? 
         function (member) {
-            member[method](...args);
+            return member[method](...args);
         } : method;
 }
 
@@ -36,6 +36,15 @@ class Iterator {
         var callback = generateCallback(method, ...args);
         this.members.forEach(callback);
         return this;
+    }
+
+    eachIntoNew(method, ...args) {
+        var callback = generateCallback(method, ...args),
+            newIterator = new Iterator();
+
+        this.members.forEach((member) => newIterator.add(callback(member)));
+
+        return newIterator;
     }
 
     stagger(method, props, ...args) {
