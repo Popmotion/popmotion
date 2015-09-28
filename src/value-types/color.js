@@ -28,6 +28,6 @@ module.exports = {
     },
 
     combine: function (values) {
-        return (values.Red) ? rgb.combine(values) : hsl.combine(values);
+        return (values.Red !== undefined) ? rgb.combine(values) : hsl.combine(values);
     }
 };

@@ -120,7 +120,6 @@ Input.prototype = {
         
         return this;
     }
-    
 };
 
 module.exports = Input;
