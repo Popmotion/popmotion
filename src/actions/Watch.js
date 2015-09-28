@@ -37,6 +37,11 @@ let Action = require('./Action'),
     };
 
 class Watch extends Action {
+    constructor(...args) {
+        super(...args);
+        this.isActive = true;
+    }
+
     /*
         Process this value
         

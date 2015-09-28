@@ -23,6 +23,8 @@ class Actor {
         @param [object]
     */
     constructor(opts = {}) {
+        var props = utils.isString(opts) ? { element: opts } : opts;
+
         this.values = {};
         this.state = { values: {} };
         this.queue = new Queue();
@@ -33,13 +35,14 @@ class Actor {
         this.activeValues = [];
         this.activeParents = [];
 
+
         // Get actual elements if this is a selector
-        if (utils.isString(opts.element)) {
-            opts.element = select(opts.element)[0];
+        if (utils.isString(props.element)) {
+            props.element = select(props.element)[0];
         }
 
-        this.assignRoles(opts.element, opts.as, true);
-        this.set(opts);
+        this.assignRoles(props.element, props.as, true);
+        this.set(props);
         this.initRoles();
     }
 

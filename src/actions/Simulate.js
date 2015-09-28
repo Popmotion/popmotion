@@ -9,6 +9,7 @@ class Simulate extends Action {
     constructor(...args) {
         super(...args);
         this.calculatesVelocity = true;
+        this.inactiveFrames = 0;
     }
 
     getName() {

@@ -270,6 +270,9 @@ module.exports = {
                     newValue.target = newValue.to;
                 }
             });
+if (key==='x' && existing[key]) {
+    console.log(existing[key].current, newValue.current)
+}
 
             newValue.origin = newValue.current;
             newValue.hasRange = (isNum(newValue.min) && isNum(newValue.max)) ? true : false;
