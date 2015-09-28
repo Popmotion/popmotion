@@ -6,7 +6,8 @@ class Track extends Action {
     /*
         Update input offset
     */
-    onFrameStart(actor) {
+    onFrameStart(actor, frameDuration, framestamp) {
+        actor.state.input = this.input.onFrame(framestamp);
         this.inputOffset = calc.offset(this.inputOrigin, this.input.current);
     }
 

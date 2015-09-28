@@ -61,6 +61,19 @@ class Actor {
             this.values = valueOps.process(this.values, opts.values, opts, 'current', this);
         }
 
+        // Check all active actions for any that can be removed
+        each(this.activeActions, (id, action) => {
+            let actionIsActive = false;
+
+            each(this.values, (key, value) => {
+                actionIsActive = (value.action === action) ? true : actionIsActive;
+            });
+
+            if (!actionIsActive) {
+                this.unbindAction(id);
+            }
+        });
+
         return this;
     }
 
@@ -105,7 +118,7 @@ class Actor {
     */
     pause() {
         this.isActive = false;
-        this.allActiveActions((action) => action.deactivate());
+        each(this.activeActions, (id, action) => action.deactivate());
         this.process.stop();
         return this;
     }
@@ -118,7 +131,7 @@ class Actor {
     */
     resume() {
         this.isActive = true;
-        this.allActiveActions((action) => action.activate());
+        each(this.activeActions, (id, action) => action.activate());
         this.process.start();
         return this;
     }
@@ -287,10 +300,6 @@ class Actor {
 
     hasAction(id) {
         return (this.getAction(id) !== undefined);
-    }
-
-    allActiveActions(callback) {
-        each(this.activeActions, (id, action) => callback(action));
     }
 
     /*

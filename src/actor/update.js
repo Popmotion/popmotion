@@ -47,11 +47,6 @@ var valueTypeManager = require('../value-types/manager'),
             state = this.state,
             hasChanged = this.hasChanged;
 
-        // Update Input and attach new values to stata
-        if (this.input) {
-            state.input = this.input.onFrame(framestamp);
-        }
-
         // Fire onStart callback if this is first frame
         if (this.firstFrame) {
             for (let i = 0; i < numRoles; i++) {
@@ -71,7 +66,7 @@ var valueTypeManager = require('../value-types/manager'),
 
             // Fire action onFrameStart if not already fired
             if (action.onFrameStart && action.lastUpdate !== framestamp) {
-                action.onFrameStart(this, frameDuration);
+                action.onFrameStart(this, frameDuration, framestamp);
                 action.lastUpdate = framestamp;
             }
 
