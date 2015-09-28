@@ -1,16 +1,13 @@
 let Action = require('./Action'),
+    Pointer = require('../input/Pointer'),
     calc = require('../inc/calc');
 
 class Track extends Action {
-    getName() {
-        return 'track';
-    }
-
     /*
         Update input offset
     */
     onFrameStart(actor) {
-        actor.inputOffset = calc.offset(actor.inputOrigin, actor.input.current);
+        this.inputOffset = calc.offset(this.inputOrigin, this.input.current);
     }
 
     /*
@@ -21,7 +18,7 @@ class Track extends Action {
         @return [number]: Calculated value
     */
     process(actor, value, key) {
-        return (actor.inputOffset.hasOwnProperty(key)) ? value.origin + actor.inputOffset[key] : value.current;
+        return (this.inputOffset.hasOwnProperty(key)) ? value.origin + this.inputOffset[key] : value.current;
     }
 
     /*
@@ -29,8 +26,13 @@ class Track extends Action {
         
         @return [boolean]: False to make user manually finish .track()
     */
-    hasEnded() {
+    hasEnded(actor) {
         return false;
+    }
+
+    bindInput(input) {
+        this.input = (!input.current) ? new Pointer(input) : input;
+        this.inputOrigin = this.input.get();
     }
 }
 

@@ -1,6 +1,5 @@
 var Process = require('../process/Process'),
     Queue = require('../inc/Queue'),
-    Pointer = require('../input/Pointer'),
     utils = require('../inc/utils'),
     update = require('./update'),
     valueOps = require('./value-operations'),
@@ -34,7 +33,6 @@ class Actor {
         this.actionCounter = 0;
         this.activeValues = [];
         this.activeParents = [];
-
 
         // Get actual elements if this is a selector
         if (utils.isString(props.element)) {
@@ -90,8 +88,8 @@ class Actor {
         opts.action = action.getPlayable();
         this.set(opts);
 
-        if (input) {
-            this.bindInput(input);
+        if (input && opts.action.bindInput) {
+            opts.action.bindInput(input);
         }
 
         this.activate();
@@ -325,15 +323,10 @@ class Actor {
         this.set(opts);
 
         if (input) {
-            this.bindInput(input);
+            this.bindInput(action, input);
         }
 
         this.activate();
-    }
-
-    bindInput(input) {
-        this.input = (!input.current) ? new Pointer(input) : input;
-        this.inputOrigin = this.input.get();
     }
 
     // [boolean]: Is this Actor active?

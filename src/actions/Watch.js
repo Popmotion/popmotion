@@ -58,7 +58,7 @@ class Watch extends Action {
             newValue = value.current,
             watchedKey = value.watch,
             watchedValue = values[watchedKey] ? values[watchedKey] : {},
-            inputOffset = actor.inputOffset;
+            inputOffset = value.action.inputOffset;
 
         // First look at Action and check value isn't linking itself
         if (watchedValue.current !== undefined && key !== watchedKey) {

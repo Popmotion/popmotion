@@ -35,11 +35,7 @@ class Tween extends Action {
     getControls() {
         return TweenControls;
     }
-
-    getName() {
-        return 'tween';
-    }
-
+    
     getDefaultProps() {
         return {
             delay: 0,

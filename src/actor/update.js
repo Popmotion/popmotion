@@ -24,7 +24,6 @@ var valueTypeManager = require('../value-types/manager'),
         var hasEnded = true;
 
         each(actor.activeActions, (key, action) => {
-            console.log(action)
             if (action.hasEnded && action.hasEnded(actor, hasChanged) === false) {
                 hasEnded = false;
             } else {

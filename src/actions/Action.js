@@ -71,10 +71,6 @@ class Action {
         return Controls;
     }
 
-    getName() {
-        return 'action';
-    }
-
     getDefaultProps() {
         return {};
     }

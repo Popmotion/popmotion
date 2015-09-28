@@ -12,10 +12,6 @@ class Simulate extends Action {
         this.inactiveFrames = 0;
     }
 
-    getName() {
-        return 'simulate';
-    }
-
     getDefaultProps() {
         return {
             maxInactiveFrames: 3
