@@ -1,42 +1,40 @@
 "use strict";
 
-var select = require('./actor/select'),
-    actionManager = require('./actions/manager'),
-    presetManager = require('./actor/preset-manager'),
-    routeManager = require('./routes/manager'),
-    valueTypeManager = require('./value-types/manager'),
-    calc = require('./inc/calc'),
-
-    Actor = require('./actor/Actor'),
-    ActorCollection = require('./actor/ActorCollection'),
-    Input = require('./input/Input'),
-    Process = require('./process/Process'),
-    Easing = require('./actions/play/Easing'),
+var valueTypeManager = require('./value-types/manager'),
+    select = require('./actor/select'),
 
     Popmotion = {
 
-        Actor: Actor,
+        Actor: require('./actor/Actor'),
 
-        ActorCollection: ActorCollection,
+        Input: require('./input/Input'),
 
-        Input: Input,
+        Iterator: require('./iterator/Iterator'),
 
-        Process: Process,
+        Process: require('./process/Process'),
 
-        Easing: Easing,
+        Easing: require('./actions/tween/Easing'),
 
-        select: function (items) {
-            return select(items);
-        },
+        Role: require('./roles/Role'),
 
-        addAction: function () {
-            actionManager.extend.apply(actionManager, arguments);
-            return this;
-        },
+        Action: require('./actions/Action'),
+        Tween: require('./actions/Tween'),
+        Simulate: require('./actions/Simulate'),
+        Track: require('./actions/Track'),
 
-        addPreset: function () {
-            presetManager.extend.apply(presetManager, arguments);
-            return this;
+        /*
+            Create an Iterator of Actors with selected dom elements
+        */
+        select: function (selector, opts = {}) {
+            var selection = select(selector),
+                actors = [];
+
+            selection.forEach((element) => {
+                opts.element = element;
+                actors.push(new this.Actor(opts));
+            });
+
+            return new this.Iterator(actors);
         },
 
         addValueType: function () {
@@ -44,12 +42,7 @@ var select = require('./actor/select'),
             return this;
         },
 
-        addRoute: function () {
-            routeManager.extend.apply(routeManager, arguments);
-            return this;
-        },
-
-        calc: calc
+        calc: require('./inc/calc')
     };
 
 module.exports = Popmotion;

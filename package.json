@@ -1,10 +1,10 @@
 {
   "name": "popmotion",
-  "version": "2.0.5",
-  "description": "A 12kb JavaScript motion engine. Handles animation, physics, and input tracking.",
+  "version": "3.0.0",
+  "description": "A 14kb JavaScript motion engine. Handles animation, physics, and input tracking.",
   "author": "Matt Perry <sirhound@popmotion.io>",
   "homepage": "http://popmotion.io",
-  "main": "./src/load/module.js",
+  "main": "./lib/load/module.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/InventingWithMonster/popmotion"
@@ -35,13 +35,14 @@
   "analyze": true,
   "license": "MIT",
   "scripts": {
-    "compile": "small -i src/load/global.js -o popmotion.global.js && uglifyjs popmotion.global.js --screw-ie8 -c --mangle -o popmotion.global.min.js",
+    "compile": "babel src --out-dir lib && webpack && webpack -p --config webpack.config.min.js",
     "watch": "webpack --progress --colors --watch"
   },
   "devDependencies": {
+    "babel-loader": "^5.3.2",
+    "babel-runtime": "^5.8.24",
     "jshint": "^2.8.0",
     "jshint-loader": "^0.8.3",
-    "small": "^0.1.1",
     "webpack": "1.7.2"
   }
 }

@@ -24,7 +24,7 @@ module.exports = {
                 X: positions[0],
                 Y: (numPositions > 1) ? positions[1] : positions[0]
             };
-            
+
         if (numPositions > 2) {
             splitValue.Z = positions[2];
         }
