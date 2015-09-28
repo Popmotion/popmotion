@@ -4,26 +4,27 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
 ## [3.0.0] Unreleased
 
+### Added
+- Full SVG support.
+- Multiple simultaneous Actions on a single Actor - mix Simulations, Tracking and Tweens on the same elements!
+- Animate complex strings, like `path` `d` attributes.
+- Iterator - to allow single classes to be extended the ActorCollector has been dropped in favour of a generic Iterator class, which can iterate over any set of classes. This also makes it clearer when you're interacting with multiple items vs a single Actor.
+- Roles - `ui.css`, `ui.attr`, `ui.svg`, `ui.draw`. These are auto-assigned to Actors when initialised with an `element` property, but can also be manually assigned with the `as` property on Actor initialisation.
+- Actors can have multiple roles by providing an array to `as`.
+- New roles can be created with `new ui.Role()`.
+- Value names can be translated before a Role accesses it, via a Role's `map` property. For example `ui.cssRole` maps `x` to `translateX`.
+- Action classes/definitions - `Tween`, `Simulate`, `Track`
+
 ### Removed
 - `ui.addRoute` - see Roles
 - `ui.addPreset`, `ui.addAction` - see Tween, Simulate and Track classes
 - `ActorCollection` - see Iterator
 
-### Added
-- Full SVG support.
-- Multiple simultaneous Actions on a single Actor - mix Simulations, Tracking and Tweens!
-- Iterator - to allow single classes to be extended the ActorCollector has been dropped in favour of a generic Iterator class, which can iterate over any set of classes. This also makes it clearer when you're interacting with multiple items vs a single Actor.
-- Roles - `ui.css`, `ui.attr`, `ui.svg`, `ui.draw`. These are auto-assigned to Actors when initialised with an `element` property, but can also be manually assigned with the `as` property.
-- Actors can have multiple roles by providing an array to `as`.
-- New roles can be created with `new ui.Role()`.
-- Value names can be translated via a Role's `map` property. For example `ui.cssRole` automatically maps `x` to `translateX`.
-- Action classes/definitions - `Tween`, `Simulate`, `Track`
-
 ### Changed
-- `addToQueue` Actor method is now `then`.
+- `addToQueue` Actor method is now `then` and takes Tween, Simulate and Track instances instead of raw properties.
 - `mapLink` Actor value property is now `mapFrom`.
 - Default tween `duration` set to `300`.
-- Default tween `ease` set to `"easeOut"`. 
+- Default tween `ease` set to `"easeOut"`.
 
 ### Deprecated
 - `flipValues`, `reverse`, `reset`, `resetProgress`, `resetOrigins` and `seek` Actor methods - these are all going to be moved to the `Tween` class in `3.2.0`

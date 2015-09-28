@@ -217,7 +217,7 @@ function preprocess(existing, incoming, scope, defaultProp) {
                 });
 
                 if (typeHandler.template) {
-                    newValue.template = existing.template || typeHandler.template(newValue.current);
+                    newValue.template = existingValue ? existingValue.template : typeHandler.template(newValue.current);
                 }
 
             // Or just assign default properties for this value

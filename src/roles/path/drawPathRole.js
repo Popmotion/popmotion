@@ -60,7 +60,8 @@ var SVGDrawPath = new Role({
     _map: require('./map'),
 
     _typeMap: {
-        stroke: 'color'
+        stroke: 'color',
+        d: 'complex'
     },
 
     init: function () {

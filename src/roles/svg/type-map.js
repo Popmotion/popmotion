@@ -7,5 +7,6 @@ module.exports = {
     scale: SCALE,
     scaleX: SCALE,
     scaleY: SCALE,
-    transformOrigin: 'positions'
+    transformOrigin: 'positions',
+    d: 'complex'
 };
