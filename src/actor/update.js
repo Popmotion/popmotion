@@ -27,7 +27,7 @@ var valueTypeManager = require('../value-types/manager'),
             if (action.hasEnded && action.hasEnded(actor, hasChanged) === false) {
                 hasEnded = false;
             } else {
-                delete actor.activeActions[key];
+                actor.unbindAction(key);
             }
         });
 

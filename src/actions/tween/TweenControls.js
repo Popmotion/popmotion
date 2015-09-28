@@ -17,6 +17,10 @@ class TweenControls extends Controls {
     }
 
     seek(progress) {
+        if (!this.actor.hasAction(this.id)) {
+            this.start().pause();
+        }
+
         this.action.elapsed = this.action.duration * progress;
 
         if (!this.action.isActive) {

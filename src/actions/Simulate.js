@@ -107,7 +107,7 @@ class Simulate extends Action {
         var isOutsideMax = (output >= value.max),
             isOutsideMin = (output <= value.min),
             isOutsideRange = isOutsideMax || isOutsideMin;
-        
+
         if (isOutsideRange) {
             output = calc.restricted(output, value.min, value.max);
 

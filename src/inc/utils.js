@@ -225,10 +225,10 @@ module.exports = {
         @return [object]: Object with value and unit props
     */
     splitValUnit: function (value) {
-        var splitVal = value.match(/(-?\d*\.?\d*)(.*)/);
+        let splitVal = value.match(/(-?\d*\.?\d*)(.*)/);
 
         return {
-            value: parseFloat(splitVal[1]),
+            value: splitVal[1],
             unit:  splitVal[2]
         };
     },

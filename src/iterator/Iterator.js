@@ -4,6 +4,13 @@ var Actor = require('../actor/Actor'),
 
 const DEFAULT_STAGGER_EASE = 'linear';
 
+function generateCallback(method, ...args) {
+    return utils.isString(method) ? 
+        function (member) {
+            member[method](...args);
+        } : method;
+}
+
 class Iterator {
     constructor(members) {
         this.clear();
@@ -25,7 +32,8 @@ class Iterator {
         return this;
     }
 
-    each(callback) {
+    each(method, ...args) {
+        var callback = generateCallback(method, ...args);
         this.members.forEach(callback);
         return this;
     }
@@ -36,11 +44,7 @@ class Iterator {
             interval = propsIsInterval ? props : props.interval,
             staggerProps = {},
             i = -1,
-
-            callback = utils.isString(method) ?
-                function (member) {
-                    member[method](...args);
-                } : method;
+            callback = generateCallback(method, ...args);
 
         staggerProps.values = {
             i: {
@@ -48,7 +52,7 @@ class Iterator {
                 duration: interval * numMembers,
                 ease: propsIsInterval ? DEFAULT_STAGGER_EASE : props.ease || DEFAULT_STAGGER_EASE,
                 round: true,
-                to: numElements - 1
+                to: numMembers - 1
             }
         };
 

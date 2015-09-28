@@ -1,6 +1,7 @@
 var Watch = require('../actions/Watch'),
     watcher = new Watch(),
     valueTypesManager = require('../value-types/manager'),
+    calc = require('../inc/calc'),
     utils = require('../inc/utils'),
     isNum = utils.isNum,
     each = utils.each;
@@ -128,7 +129,7 @@ function split(name, value, scope, valueTypeHandler) {
 
             // If we need to first resolve this, resolve
             if (utils.isFunc(valueProp)) {
-                valueProp = valueProp.call(actor, actor);
+                valueProp = valueProp.call(scope, scope);
             }
 
             splitProp = valueTypeHandler.split(valueProp);
@@ -156,7 +157,8 @@ function split(name, value, scope, valueTypeHandler) {
     @param [object]
 */
 function splitUnit(property, hostValue) {
-    var returnVal = property,
+    if (utils.isNum(property)) { return property; }
+    let returnVal = property,
         { value, unit } = utils.splitValUnit(property);
 
     if (!isNaN(value)) {
@@ -253,8 +255,8 @@ module.exports = {
 
             value.action = value.watch ? watcher : inherit.action;
 
-            each(defaultActionValue, (propName, defaultProp) => {
-                newValue[propName] = (inherit.hasOwnProperty(propName) && !value.hasOwnProperty(propName)) ? inherit[propName] : defaultProp;
+            each(defaultActionValue, (propName, defaultActionProp) => {
+                newValue[propName] = (inherit.hasOwnProperty(propName) && !value.hasOwnProperty(propName)) ? inherit[propName] : defaultActionProp;
             });
 
             each(value, (valueName, valueProp) => {
@@ -270,12 +272,9 @@ module.exports = {
                     newValue.target = newValue.to;
                 }
             });
-if (key==='x' && existing[key]) {
-    console.log(existing[key].current, newValue.current)
-}
 
             newValue.origin = newValue.current;
-            newValue.hasRange = (isNum(newValue.min) && isNum(newValue.max)) ? true : false;
+            newValue.hasRange = (isNum(newValue.min) || isNum(newValue.max)) ? true : false;
 
             existing[key] = newValue;
             scope.updateOrder(key, utils.isString(newValue.watch), hasChildren);

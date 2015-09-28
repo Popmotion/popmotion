@@ -33,12 +33,8 @@ class Controls {
     }
 
     toggle() {
-        if (this.action.isActive) {
-            this.action.deactivate();
-        } else {
-            this.action.activate();
-        }
-        return this;
+        let resume = this.actor.hasAction(this.id) ? this.resume : this.start;
+        return this.action.isActive ? this.pause() : resume.call(this);
     }
 
     then(...args) {

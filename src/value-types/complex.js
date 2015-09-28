@@ -8,7 +8,8 @@ var utils = require('../inc/utils'),
 
 module.exports = {
     test: function (value) {
-        return utils.isArray(value.match(floatRegex));
+        var matches = value.match(floatRegex);
+        return (utils.isArray(matches) && matches.length > 1);
     },
 
     template: function (value) {

@@ -107,6 +107,7 @@ class Actor {
     */
     pause() {
         this.isActive = false;
+        this.allActiveActions((action) => action.deactivate());
         this.process.stop();
         return this;
     }
@@ -119,6 +120,7 @@ class Actor {
     */
     resume() {
         this.isActive = true;
+        this.allActiveActions((action) => action.activate());
         this.process.start();
         return this;
     }
@@ -130,6 +132,7 @@ class Actor {
         @returns [Actor]
     */
     stop() {
+        this.activeActions = {};
         this.pause();
         return this;
     }
@@ -259,9 +262,15 @@ class Actor {
         @returns [int]
     */
     bindAction(action, id) {
-        id = (id === undefined) ? this.actionCounter++ : id;
-        this.activeActions[id] = action;
-        this.numActive++;
+        if (id === undefined) {
+            id = this.actionCounter++;
+        }
+
+        if (!this.hasAction(id)) {
+            this.activeActions[id] = action;
+            this.numActive++;
+        }
+
         return id;
     }
 
@@ -276,6 +285,14 @@ class Actor {
 
     getAction(id) {
         return this.activeActions[id];
+    }
+
+    hasAction(id) {
+        return (this.getAction(id) !== undefined);
+    }
+
+    allActiveActions(callback) {
+        each(this.activeActions, (id, action) => callback(action));
     }
 
     /*

@@ -79,10 +79,9 @@ class Tween extends Action {
         this.elapsed = this.elapsed || 0;
 
         if (frameDuration) {
-            this.elapsed += (frameDuration * this.dilate) * this.playDirection;
+            this.elapsed += (frameDuration * actor.dilate) * this.playDirection;
+            this.ended = true;
         }
-
-        this.ended = true;
     }
 
     /*
@@ -160,6 +159,8 @@ class Tween extends Action {
 
     flipValues() {
         this.elapsed = this.duration - this.elapsed;
+
+        // figure out how to flip 
     }
 
     reverseValues() {
