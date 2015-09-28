@@ -1,7 +1,3 @@
-"use strict";
-
-var ActorCollection = require('./ActorCollection');
-
 /*
     Create an ActorCollection based on a selection of DOM nodes
 
@@ -26,5 +22,5 @@ module.exports = function (selector) {
         elements.push(nodes);
     }
 
-    return new ActorCollection(elements, { type: 'dom' });
+    return elements;
 };
