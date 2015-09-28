@@ -27,7 +27,7 @@ class Track extends Action {
         
         @return [boolean]: False to make user manually finish .track()
     */
-    hasEnded(actor) {
+    hasEnded() {
         return false;
     }
 
