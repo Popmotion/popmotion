@@ -2,7 +2,13 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
-## [3.0.0] Unreleased
+## [3.0.2] 2015-09-30
+
+### Fixed
+- Bugfix where Popmotion would attempt to split numerical values.
+- Bugfix for `complex` valueType regex where negative numbers were made positive.
+
+## [3.0.0] 2015-09-29
 
 ### Added
 - Full SVG support.
