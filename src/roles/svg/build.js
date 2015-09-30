@@ -1,12 +1,13 @@
 var each = require('../../inc/utils').each,
     transformDictionary = require('../css/transform-dictionary'),
-    transformProps = transformDictionary.props;
+    transformProps = transformDictionary.props,
+    zeroNotZero = 0.0001;
 
 module.exports = function (output, origin) {
     var props = {},
         hasTransform = false,
-        scale = output.scale !== undefined ? output.scale : output.scaleX || 1,
-        scaleY = output.scaleY !== undefined ? output.scaleY : scale || 1,
+        scale = output.scale !== undefined ? output.scale || zeroNotZero : output.scaleX || 1,
+        scaleY = output.scaleY !== undefined ? output.scaleY || zeroNotZero : scale || 1,
         transformOriginX = origin.x,
         transformOriginY = origin.y,
         scaleTransformX = - transformOriginX * (scale * 1),
