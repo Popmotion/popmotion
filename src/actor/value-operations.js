@@ -132,6 +132,10 @@ function split(name, value, scope, valueTypeHandler) {
                 valueProp = valueProp.call(scope, scope);
             }
 
+            if (!utils.isString(valueProp)) {
+                continue;
+            }
+
             splitProp = valueTypeHandler.split(valueProp);
 
             // Assign split properties to each child value
@@ -254,8 +258,10 @@ module.exports = {
         @param [object]
         @returns [object]: New values object
     */
-    process: function (existing = {}, incoming, inherit, defaultProp = 'current', scope) {
-        var preprocessed = preprocess(existing, incoming, scope, defaultProp);
+    process: function (existing, incoming, inherit, defaultProp, scope) {
+        existing = existing || {};
+        defaultProp = defaultProp || 'current';
+        let preprocessed = preprocess(existing, incoming, scope, defaultProp);
 
         each(preprocessed, (key, value) => {
             let newValue = existing[key] ? utils.copy(existing[key]) : utils.copy(defaultValue),

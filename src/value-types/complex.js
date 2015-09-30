@@ -1,6 +1,6 @@
 var utils = require('../inc/utils'),
     each = utils.each,
-    floatRegex = /(\d[\d\.]*)/g,
+    floatRegex = /(-)?(\d[\d\.]*)/g,
 
     generateToken = function (key) {
         return '${' + key + '}';
