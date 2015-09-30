@@ -159,7 +159,15 @@ class Tween extends Action {
         this.elapsed = this.duration - this.elapsed;
 
         each(this.values, (key) => {
-            valueOps.flip(actorValues[key]);
+            let value = actorValues[key];
+
+            if (value.children) {
+                each(value.children, (childKey, childValue) => {
+                    valueOps.flip(childValue);
+                });
+            }
+
+            valueOps.flip(value);
         });
     }
 
