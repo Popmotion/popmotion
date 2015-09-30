@@ -2,7 +2,17 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
-## [3.0.2] 2015-09-30
+## [3.0.4] 2015-09-30
+
+### Fixed
+- Bugfix for subvalues not being flipped correctly.
+
+## [3.0.3] 2015-09-30
+
+### Fixed
+- SVG Role divide by 0 error when `scale` === 0.
+
+## [3.0.2] 2015-09-29
 
 ### Fixed
 - Bugfix where Popmotion would attempt to split numerical values.
