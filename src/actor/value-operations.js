@@ -1,337 +1,300 @@
-"use strict";
-
-var calc = require('../inc/calc'),
+var Watch = require('../actions/Watch'),
+    watcher = new Watch(),
+    valueTypesManager = require('../value-types/manager'),
+    calc = require('../inc/calc'),
     utils = require('../inc/utils'),
     isNum = utils.isNum,
-    actionsManager = require('../actions/manager'),
-    valueTypesManager = require('../value-types/manager'),
-    routeManager = require('../routes/manager'),
+    each = utils.each;
 
-    numericalValues = ['current', 'to', 'init', 'min', 'max', 'velocity', 'friction', 'spring'],
+const numericalValues = ['current', 'to', 'min', 'max', 'velocity', 'friction', 'spring'],
     numNumericalValues = numericalValues.length,
-
-    checkNumericalValue = function (name) {
-        return (numericalValues.indexOf(name) > -1);
+    defaultValue = {
+        current: 0,
+        velocity: 0,
+        speed: 0,
+        frameChange: 0
     };
+
+function checkNumericalValue(name) {
+    return (numericalValues.indexOf(name) > -1);
+}
+
+/*
+    Check Role typeMaps to see if this value name has been mapped
+    to a specific value type
+
+    @param [string]
+    @param [array]
+    @returns [string]: Value type
+*/
+function checkRoles(name, roles) {
+    var valueType;
+
+    each(roles, (key, role) => {
+        if (role._typeMap) {
+            valueType = role._typeMap[role.map(name)] || valueType;
+        }
+    });
+
+    return valueType;
+}
+
+/*
+    Check value for special type
+
+    @param [object]
+    @param [object]
+    @param [object]
+    @param [string]
+    @returns [string || false]
+*/
+function checkValueType(existingValue, newValue, scope, valueName) {
+    var valueType;
+
+    // Check existing value for type already set
+    if (existingValue && existingValue.type) {
+        valueType = existingValue.type;
+    
+    } else {
+        // Or check Role _typeMap properties
+        if (scope.roles) {
+            valueType = checkRoles(valueName, scope.roles);
+        }
+
+        // Finally run tests
+        if (!valueType && utils.isString(newValue.current)) {
+            valueType = valueTypesManager.test(newValue.current);
+        }
+    }
+
+    return valueType;
+}
+
+/*
+    Resolve a property
+
+    @param [string]
+    @param [string || function || number]
+    @param [object]
+    @param [object]
+    @returns [number]
+*/
+function resolve(name, prop, value, scope) {
+    let isNumericalValue = checkNumericalValue(name);
+
+    // If function, resolve
+    if (utils.isFunc(prop) && isNumericalValue) {
+        prop = prop.call(scope, scope);
+    }
+
+    // If string, check for relative numbers and units
+    if (utils.isString(prop)) {
+        // If relative value
+        if (prop.indexOf('=') > 0) {
+            prop = calc.relativeValue(value.current, prop);
+        }
+
+        // If unit
+        if (isNumericalValue) {
+            splitUnit(prop, value);
+        }
+    }
+
+    if (isNumericalValue) {
+        prop = parseFloat(prop);
+    }
+
+    return prop;
+}
+
+/*
+    Split a value into sub-values
+
+    @param [string]
+    @param [object]
+    @param [object]
+    @param [valueTypeHandler]
+    @returns [object]
+*/
+function split(name, value, scope, valueTypeHandler) {
+    var splitValues = {},
+        i = 0;
+
+    for (; i < numNumericalValues; i++) {
+        let propName = numericalValues[i];
+        let splitProp = {};
+
+        if (value.hasOwnProperty(propName)) {
+            let valueProp = value[propName];
+
+            // If we need to first resolve this, resolve
+            if (utils.isFunc(valueProp)) {
+                valueProp = valueProp.call(scope, scope);
+            }
+
+            if (!utils.isString(valueProp)) {
+                continue;
+            }
+
+            splitProp = valueTypeHandler.split(valueProp);
+
+            // Assign split properties to each child value
+            each(splitProp, (key, prop) => {
+                // Create new value if none exists
+                splitValues[key] = splitValues[key] || utils.copy(valueTypesManager.defaultProps(value.type, key));
+                splitValues[key][propName] = prop;
+
+                if (utils.isString(splitProp[key])) {
+                    splitUnit(splitValues[key][propName], splitValues[key]);
+                }
+            });
+        }
+    }
+
+    return splitValues;
+}
+
+/*
+    Split value into number and unit, and set unit to value
+
+    @param [string]
+    @param [object]
+*/
+function splitUnit(property, hostValue) {
+    if (utils.isNum(property)) { return property; }
+    let returnVal = property,
+        { value, unit } = utils.splitValUnit(property);
+
+    if (!isNaN(value)) {
+        returnVal = value;
+        if (unit) {
+            hostValue.unit = unit;
+        }
+    }
+
+    return returnVal;
+}
+
+/*
+    Preprocess incoming values, splitting non-numerical values
+    into sub-values ie hex
+
+    @param [object]
+    @param [object]
+    @param [object]
+    @param [string]
+*/
+function preprocess(existing, incoming, scope, defaultProp) {
+    var values = {};
+
+    each(incoming, (key, value) => {
+        let existingValue = existing[key],
+            newValue = {};
+
+        if (utils.isObj(value)) {
+            newValue = value;
+        } else {
+            newValue[defaultProp] = value;
+        }
+
+        // If value doesn't have a special type, check for one
+        newValue.type = checkValueType(existingValue, newValue, scope, key);
+
+        values[key] = newValue;
+
+        // If we have a type property, split/assign default props
+        if (newValue.type) {
+            let typeHandler = valueTypesManager[newValue.type];
+
+            // If valueType handler has a split function, split this value
+            if (typeHandler.split) {
+                let splitValues = split(key, newValue, scope, typeHandler);
+                newValue.children = {};
+
+                each(splitValues, (childName, childValue) => {
+                    childValue = utils.merge(newValue, childValue);
+                    childValue.parent = childValue.name = key;
+                    childValue.propName = childName;
+
+                    delete childValue.type;
+                    delete childValue.children;
+
+                    newValue.children[childName] = values[key + childName] = childValue;
+                });
+
+                if (typeHandler.template) {
+                    newValue.template = existingValue ? existingValue.template : typeHandler.template(newValue.current);
+                }
+
+            // Or just assign default properties for this value
+            } else {
+                values[key] = utils.merge(valueTypesManager.defaultProps(newValue.type, key), newValue);
+            }
+        }
+    });
+
+    return values;
+}
 
 module.exports = {
 
-
     /*
-        Perform operation on set of values
-        
-        @parma [string]: Name of operation
-        @param [object]: Value object
-    */
-    all: function (op, values) {
-        var key = '';
-
-        for (key in values) {
-            if (values.hasOwnProperty(key)) {
-                this[op](values[key]);
-            }
-        }
-
-        return this;
-    },
-
-    /*
-        Reset the value current to its origin
-
-        @param [object]: Value object
-    */
-    reset: function (value) {
-        this.retarget(value);
-        value.current = value.origin;
-    },
-
-    /*
-        Set value origin property to current value
-        
-        @param [object]: Value object
-    */
-    resetOrigin: function (value) {
-        value.origin = value.current;
-    },
-
-    /*
-        Set value to property back to target
-        
-        @param [object]: Value object
-    */
-    retarget: function (value) {
-        value.to = value.target;
-    },
-
-    /*
-        Swap value to and origin property
-        
-        @param [object]: Value object
+        Flip value target/origin
     */
     flip: function (value) {
-        var newOrigin = (value.target !== undefined) ? value.target : value.current;
-
+        var target = (value.target !== undefined) ? value.target : value.current;
         value.target = value.to = value.origin;
-        value.origin = newOrigin;
+        value.origin = target;
     },
 
     /*
-        Returns an initial value state
+        Merge existing and incoming values, resolving properties
+        set as functions and splitting non-numerical values ie hex
 
-        @param [number] (optional): Initial current
-        @return [object]: Default value state
+        @param [object]
+        @param [object]
+        @param [object]
+        @param [string] (optional)
+        @param [object]
+        @returns [object]: New values object
     */
-    initialState: function (start, route) {
-        return {
-            // [number]: Current value
-            current: start || 0,
-            
-            // [number]: Change per second
-            speed: 0,
-            
-            // [number]: Change per second plus direction (ie can be negative)
-            velocity: 0,
-            
-            // [number]: Amount value has changed in the most recent frame
-            frameChange: 0,
+    process: function (existing, incoming, inherit, defaultProp, scope) {
+        existing = existing || {};
+        defaultProp = defaultProp || 'current';
+        let preprocessed = preprocess(existing, incoming, scope, defaultProp);
 
-            route: route
-        };
-    },
+        each(preprocessed, (key, value) => {
+            let newValue = existing[key] ? utils.copy(existing[key]) : utils.copy(defaultValue),
+                hasChildren = (value.children !== undefined),
+                defaultActionValue = inherit.action ? inherit.action.getDefaultValue() : {};
 
-    /*
-        Split value into sub-values
+            value.action = value.watch ? watcher : inherit.action;
 
-        @param [string]: Name of value
-        @param [object]: Base value properties
-        @param [Elememt]
-    */
-    split: function (name, value, actor, valueType) {
-        var splitValues = {},
-            splitProperty = {},
-            propertyName = '',
-            key = '',
-            i = 0;
+            each(defaultActionValue, (propName, defaultActionProp) => {
+                newValue[propName] = (inherit.hasOwnProperty(propName) && !value.hasOwnProperty(propName)) ? inherit[propName] : defaultActionProp;
+            });
 
-        for (; i < numNumericalValues; i++) {
-            propertyName = numericalValues[i];
-
-            if (value.hasOwnProperty(propertyName)) {
-                if (utils.isFunc(value[propertyName]) && checkNumericalValue(propertyName)) {
-                    value[propertyName] = value[propertyName].call(actor);
+            each(value, (valueName, valueProp) => {
+                // If property is not undefined or a number, resolve
+                if (valueProp !== undefined && !isNum(valueProp) && !hasChildren) {
+                    valueProp = resolve(valueName, valueProp, newValue, scope);
                 }
 
-                splitProperty = valueType.split(value[propertyName]);
+                newValue[valueName] = valueProp;
 
-                // Assign properties to each new value
-                for (key in splitProperty) {
-                    if (splitProperty.hasOwnProperty(key)) {
-                        // Create new value if it doesn't exist
-                        splitValues[key] = splitValues[key] || utils.copy(valueTypesManager.defaultProps(value.type, key));
-                        splitValues[key][propertyName] = splitProperty[key];
-                    }
+                // Set internal target if this property is 'to'
+                if (valueName === 'to') {
+                    newValue.target = newValue.to;
                 }
-            }
-        }
+            });
 
-        return splitValues;
-    },
+            newValue.origin = newValue.current;
+            newValue.hasRange = (isNum(newValue.min) || isNum(newValue.max)) ? true : false;
 
-    /*
-        Split value into number and unit, set unit to value if present
+            existing[key] = newValue;
+            scope.updateOrder(key, utils.isString(newValue.watch), hasChildren);
+        });
 
-        @param [string]: Property to split
-        @param [object]: Value object to save unit to
-    */
-    splitUnit: function (property, value) {
-        var returnVal = property,
-            splitUnitValue;
-
-        // Check for unit property
-        if (utils.isString(property)) {
-            splitUnitValue = utils.splitValUnit(property);
-
-            if (!isNaN(splitUnitValue.value)) {
-                returnVal = splitUnitValue.value;
-                value.unit = splitUnitValue.unit;
-            }
-        }
-
-        return returnVal;
-    },
-
-    /*
-        Resolve property
-
-        @param [string]: Name of value
-        @param [string || number || function]: Property
-        @param [object]: Parent value
-        @param [actor]: Parent actor
-    */
-    resolve: function (name, property, value, actor) {
-        var currentValue = value.current || 0,
-            isNumericalValue = checkNumericalValue(name);
-
-        // If this is a function, resolve
-        if (utils.isFunc(property) && isNumericalValue) {
-            property = property.call(actor, currentValue);
-        }
-
-        // If this is a string, check for relative values and units
-        if (utils.isString(property)) {
-            // If this is a relative value (ie '+=10')
-            if (property.indexOf('=') > 0) {
-                property = calc.relativeValue(currentValue, property);
-            }
-
-            // Check for unit if should be numerical property
-            if (isNumericalValue) {
-                this.splitUnit(property, value);
-            }
-        }
-
-        // If this is a numerical value, coerce
-        if (isNumericalValue) {
-            property = parseFloat(property);
-        }
-
-        return property;
-    },
-
-    /*
-        Process new values
-    */
-    preprocess: function (values, actor, route, suffix, defaultValueProp) {
-        var preprocessedValues = {},
-            value = {},
-            splitValue = {},
-            childValue = {},
-            type = {},
-            existingValue = {},
-            isValueObj = false,
-            key = '',
-            namespacedKey = '',
-            propKey = '';
-
-        defaultValueProp = defaultValueProp || 'current';
-
-        for (key in values) {
-            if (values.hasOwnProperty(key)) {
-
-                isValueObj = utils.isObj(values[key]);
-                value = (isValueObj) ? values[key] : {};
-                namespacedKey = key + suffix;
-                existingValue = actor.values[namespacedKey];
-
-                value.name = key;
-
-                if (!isValueObj) {
-                    value[defaultValueProp] = values[key];
-                }
-
-                // If this value doesn't have a special type, check for one
-                if (!value.type) {
-                    // Check if existing value with this key
-                    if (existingValue && existingValue.type) {
-                        value.type = existingValue.type;
-                    
-                    // Or if this route has a typemap
-                    } else if (route.typeMap && route.typeMap[key]) {
-                        value.type = route.typeMap[key];
-
-                    // Otherwise, check by running tests if this is a string
-                    } else if (utils.isString(value[defaultValueProp])) {
-                        value.type = valueTypesManager.test(value[defaultValueProp]);
-                    }
-                }
-
-                // Set value
-                preprocessedValues[namespacedKey] = value;
-
-                // If process has type, split or assign default props
-                if (value.type) {
-                    type = valueTypesManager[value.type];
-
-                    // If this has a splitter function, split
-                    if (type.split) {
-                        value.children = {};
-                        splitValue = this.split(key, value, actor, type);
-
-                        for (propKey in splitValue) {
-                            if (splitValue.hasOwnProperty(propKey)) {
-                                childValue = utils.merge(value, splitValue[propKey]);
-                                childValue.parent = key + suffix;
-                                childValue.name = key;
-                                childValue.propName = propKey;
-                                delete childValue.type;
-                                delete childValue.children;
-
-                                preprocessedValues[key + propKey + suffix] = childValue;
-                            }
-                        }
-                    } else {
-                        preprocessedValues[namespacedKey] = utils.merge(valueTypesManager.defaultProps(value.type, key), value);
-                    }
-                }
-            }
-        }
-
-        return preprocessedValues;
-    },
-
-    /*
-        Process new values
-    */
-    process: function (values, actor, namespace, defaultValueProp) {
-        var route = routeManager[namespace],
-            namespaceSuffix = (namespace === 'values') ? '' : '.' + namespace,
-            preprocessedValues = this.preprocess(values, actor, route, namespaceSuffix, defaultValueProp),
-            key = '',
-            propKey = '',
-            preprocessedValue = {},
-            thisValue = {},
-            defaultProps = {},
-            hasChildren = false,
-            prop;
-
-        for (key in preprocessedValues) {
-            if (preprocessedValues.hasOwnProperty(key)) {
-                preprocessedValue = preprocessedValues[key];
-                thisValue = actor.values[key] || this.initialState(this.resolve('init', preprocessedValue.init, {}, actor), namespace);
-                hasChildren = (preprocessedValue.children !== undefined);
-                thisValue.action = preprocessedValue.link ? 'link' : actor.action;
-                defaultProps = actionsManager[thisValue.action].valueDefaults;
-
-                // Inherit properties from Actor
-                for (propKey in defaultProps) {
-                    if (defaultProps.hasOwnProperty(propKey)) {
-                        thisValue[propKey] = (actor.hasOwnProperty(propKey)) ? actor[propKey] : defaultProps[propKey];
-                    }
-                }
-
-                // Loop through all properties and resolve
-                for (propKey in preprocessedValue) {
-                    if (preprocessedValue.hasOwnProperty(propKey)) {
-                        prop = preprocessedValue[propKey];
-                        // If property is *not* undefined or a number, resolve
-                        if (prop !== undefined && !isNum(prop) && !hasChildren) {
-                            prop = this.resolve(propKey, prop, thisValue, actor);
-                        }
-
-                        thisValue[propKey] = prop;
-                        // Set internal target if this property is 'to'
-                        if (propKey === 'to') {
-                            thisValue.target = thisValue.to;
-                        }
-                    }
-                }
-
-                thisValue.origin = thisValue.current;
-                thisValue.hasRange = (isNum(thisValue.min) && isNum(thisValue.max)) ? true  : false;
-
-                actor.values[key] = thisValue;
-                actor.updateOrder(key, utils.isString(thisValue.link), hasChildren);
-            }
-        }
+        return existing;
     }
 };

@@ -2,6 +2,51 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.0.4] 2015-09-30
+
+### Fixed
+- Bugfix for subvalues not being flipped correctly.
+
+## [3.0.3] 2015-09-30
+
+### Fixed
+- SVG Role divide by 0 error when `scale` === 0.
+
+## [3.0.2] 2015-09-29
+
+### Fixed
+- Bugfix where Popmotion would attempt to split numerical values.
+- Bugfix for `complex` valueType regex where negative numbers were made positive.
+
+## [3.0.0] 2015-09-29
+
+### Added
+- Full SVG support.
+- Multiple simultaneous Actions on a single Actor - mix Simulations, Tracking and Tweens on the same elements!
+- Animate complex strings, like `path` `d` attributes.
+- Iterator - to allow single classes to be extended the ActorCollector has been dropped in favour of a generic Iterator class, which can iterate over any set of classes. This also makes it clearer when you're interacting with multiple items vs a single Actor, and these items are not longer limited to Actors.
+- Roles - `ui.css`, `ui.attr`, `ui.svg`, `ui.draw`. These are auto-assigned to Actors when initialised with an `element` property, but can also be manually assigned with the `as` property on Actor initialisation.
+- Actors can have multiple roles by providing an array to `as`.
+- New roles can be created with `new ui.Role()`.
+- Value names can be translated before a Role accesses it, via a Role's `map` property. For example `ui.cssRole` maps `x` to `translateX`.
+- Action classes/definitions - `Tween`, `Simulate`, `Track`
+
+### Removed
+- `ui.addRoute` - see Roles
+- `ui.addPreset`, `ui.addAction` - see Tween, Simulate and Track classes
+- `ActorCollection` - see Iterator
+- `play`, `run`, `track` Actor methods - use `start`
+
+### Changed
+- `addToQueue` Actor method is now `then` and takes Tween, Simulate and Track instances instead of raw properties.
+- `mapLink` Actor value property is now `mapFrom`.
+- Default tween `duration` set to `300`.
+- Default tween `ease` set to `"easeOut"`.
+- `reverse`, `reset` -> `restart`, `seek` methods moved to `TweenControls` (returned when a `Tween` is passed to `start`)
+
+### Deprecated
+- `flipValues`, `reverse`, `reset`, `resetProgress`, `resetOrigins` and `seek` Actor methods - these are all going to be moved to the `Tween` class in `3.2.0`
+
 ## [2.0.4] 2015-08-10
 
 ### Fixed

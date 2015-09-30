@@ -1,145 +1,166 @@
 "use strict";
 
-var actionManager = require('../actions/manager'),
-    routeManager = require('../routes/manager'),
-    valueTypeManager = require('../value-types/manager'),
+var valueTypeManager = require('../value-types/manager'),
     calc = require('../inc/calc'),
+    utils = require('../inc/utils'),
+    each = utils.each,
+    Action = require('../actions/Action'),
+    defaultAction = new Action(),
 
-    defaultRoute = 'values',
+    createMapper = function (role, mappedValues) {
+        return function (name, val) {
+            mappedValues[role.map(name)] = val;
+        };
+    },
 
+    /*
+        Check all Actions for `onEnd`, return true if all are true
+
+        @param [Actor]
+        @param [boolean]
+        @returns [boolean]
+    */
+    checkAndFireHasEnded = function (actor, hasChanged) {
+        var hasEnded = true;
+
+        each(actor.activeActions, (key, action) => {
+            if (action.hasEnded && action.hasEnded(actor, hasChanged) === false) {
+                hasEnded = false;
+            } else {
+                actor.unbindAction(key);
+            }
+        });
+
+        return hasEnded;
+    },
+
+    /*
+        Update the Actor and its values
+
+        @param [int]: Timestamp of rAF call
+        @param [int]: Time since last frame
+    */
     update = function (framestamp, frameDuration) {
-        var self = this,
-            values = this.values,
-            action = actionManager[this.action],
-            valueAction = action,
-            output = this.output,
-            numActiveValues = this.order.length,
-            numActiveParents = this.parentOrder.length,
-            key = '',
-            value = {},
-            updatedValue = 0,
-            i = 0;
+        var numActiveValues = this.activeValues.length,
+            numActiveParents = this.activeParents.length,
+            numRoles = this.roles.length,
+            state = this.state,
+            hasChanged = this.hasChanged;
 
-        // Update Input and attach new values to output
-        if (this.input) {
-            output.input = this.input.onFrame(framestamp);
-        }
-
-        // Update Action input
-        if (action.onFrameStart && action.onFrameStart.call(this, frameDuration) === false) {
-            return false;
-        }
-
-        // Fire onStart if first frame
+        // Fire onStart callback if this is first frame
         if (this.firstFrame) {
-            routeManager.shard(function (route) {
-                if (route.onStart) {
-                    route.onStart.call(self, values);
+            for (let i = 0; i < numRoles; i++) {
+                let role = this.roles[i];
+                if (role.start) {
+                    role.start.call(this);
                 }
-            }, output);
+            }
         }
-
-        // Create default route output if not present
-        output[defaultRoute] = output[defaultRoute] || {};
 
         // Update values
-        for (; i < numActiveValues; i++) {
+        for (let i = 0; i < numActiveValues; i++) {
             // Get value and key
-            key = this.order[i];
-            value = values[key];
+            let key = this.activeValues[i];
+            let value = this.values[key];
+            let action = (!value.action || value.action && !value.action.isActive) ? defaultAction : value.action;
 
-            // Load value-specific action
-            valueAction = value.link ? actionManager.link : action;
-
-            // Calculate new value
-            updatedValue = valueAction.process.call(this, value, key, frameDuration);
-
-            // Limit if range
-            if (valueAction.limit) {
-                updatedValue = valueAction.limit(updatedValue, value);
+            // Fire action onFrameStart if not already fired
+            if (action.onFrameStart && action.lastUpdate !== framestamp) {
+                action.onFrameStart(this, frameDuration, framestamp);
+                action.lastUpdate = framestamp;
             }
 
-            // Round value if round set to true
+            // Calculate new value
+            let updatedValue = action.process(this, value, key, frameDuration);
+
+            // Limit if this action does that kind of thing
+            if (action.limit && value.hasRange) {
+                updatedValue = action.limit(updatedValue, value);
+            }
+
+            // Round value if round is true
             if (value.round) {
                 updatedValue = Math.round(updatedValue);
             }
 
-            // Update change from previous frame
+            // Update frameChange
             value.frameChange = updatedValue - value.current;
 
-            // Calculate velocity if Action hasn't already
-            if (!valueAction.calculatesVelocity) {
+            // Calculate velocity if Action hasn't
+            if (!action.calculatesVelocity) {
                 value.velocity = calc.speedPerSecond(value.frameChange, frameDuration);
             }
 
             // Update current speed
             value.speed = Math.abs(value.velocity);
 
-            // Check if changed and update
-            if (value.current != updatedValue) {
-                this.hasChanged = true;
+            // Check if value's changed
+            if (value.current !== updatedValue) {
+                hasChanged = true;
             }
 
-            // Set current
-            this.values[key].current = updatedValue;
+            // Set new current 
+            value.current = updatedValue;
+            let valueState = (value.unit) ? updatedValue + value.unit : updatedValue;
 
-            // Put value in default route output
-            output[defaultRoute][key] = (value.unit) ? updatedValue + value.unit : updatedValue;
-
-            // Put in specific root if not a parent
+            // Put value in state if no parent
             if (!value.parent) {
-                output[value.route][value.name] = output[defaultRoute][key];
+                state.values[key] = valueState;
 
-            // Or add to parent output, to be combined
+            // Or, add to parent state to be combined later
             } else {
-                output[value.parent] = output[value.parent] || {};
-                output[value.parent][value.propName] = output[defaultRoute][key];
+                state[value.parent] = state[value.parent] || {};
+                state[value.parent][value.propName] = valueState;
             }
         }
 
         // Update parent values from calculated children
-        for (i = 0; i < numActiveParents; i++) {
-            key = this.parentOrder[i];
-            value = this.values[key];
+        for (let i = 0; i < numActiveParents; i++) {
+            let key = this.activeParents[i];
+            let value = this.values[key];
 
             // Update parent value current property
-            value.current = valueTypeManager[value.type].combine(output[key]);
+            value.current = valueTypeManager[value.type].combine(state[key], value.template);
 
-            // Update output
-            output[value.route][value.name] = output[defaultRoute][key] = value.current;
+            // Update state
+            state.values[key] = value.current;
         }
 
-        // Run onFrame and onChange for every output
-        routeManager.shard(function (route, routeName, routeOutput) {
+        // Fire `frame` and `update` callbacks on all Roles
+        for (let i = 0; i < numRoles; i++) {
+            let role = this.roles[i];
+            let mappedValues = {};
 
-            // Fire onFrame every frame
-            if (route.onFrame) {
-                route.onFrame.call(self, routeOutput);
+            each(state.values, createMapper(role, mappedValues));
+
+            if (role.frame) {
+                role.frame.call(this, mappedValues);
             }
 
-            // Fire onChanged if any value has changed
-            if (self.hasChanged && route.onChange || self.firstFrame && route.onChange) {
-                route.onChange.call(self, routeOutput);
+            if (role.update && (hasChanged || this.firstFrame)) {
+                role.update.call(this, mappedValues);
             }
+        }
 
-        }, output);
+        // Reset hasChanged before further Actions might affect this
+        this.hasChanged = false;
 
-        // Fire onEnd if this Action has ended
-        if (this.isActive && action.hasEnded && action.hasEnded.call(this, this.hasChanged)) {
+        // Check all Actions and fire onEnd if they've ended
+        if (this.isActive && checkAndFireHasEnded(this, hasChanged)) {
             this.isActive = false;
 
-            routeManager.shard(function (route, routeName, routeOutput) {
-                if (route.onEnd) {
-                    route.onEnd.call(self, routeOutput);
+            // Fire `complete` callback
+            for (let i = 0; i < numRoles; i++) {
+                let role = this.roles[i];
+                if (role.complete) {
+                    role.complete.call(this);
                 }
-            }, output);
+            }
 
-            // If is a play action, and is not active, check next action
-            if (!this.isActive && this.action === 'play' && this.next) {
+            // If Actor is still inactive, fire next step
+            if (!this.isActive) {
                 this.next();
             }
-        } else {
-            this.hasChanged = false;
         }
 
         this.firstFrame = false;

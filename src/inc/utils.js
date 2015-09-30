@@ -20,6 +20,26 @@ var protectedProperties = ['scope',  'dom'],
     };
 
 module.exports = {
+
+    /*
+        Iterate over an object and fire a callback for every item in it
+
+        @param [object]: Properties
+        @param [function]: Callback to fire
+    */
+    each: function (props, callback) {
+        var keys = Object.keys(props),
+            numKeys = keys.length;
+
+        for (let i = 0; i < numKeys; i++) {
+            let key = keys[i],
+                prop = props[key];
+
+            if (callback(key, prop) === false) {
+                break;
+            }
+        }
+    },
     
     /*
         Has one object changed from the other
@@ -205,10 +225,10 @@ module.exports = {
         @return [object]: Object with value and unit props
     */
     splitValUnit: function (value) {
-        var splitVal = value.match(/(-?\d*\.?\d*)(.*)/);
+        let splitVal = value.match(/(-?\d*\.?\d*)(.*)/);
 
         return {
-            value: parseFloat(splitVal[1]),
+            value: splitVal[1],
             unit:  splitVal[2]
         };
     },
