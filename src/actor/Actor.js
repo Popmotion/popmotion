@@ -96,9 +96,12 @@ class Actor {
     */
     start(toSet, input) {
         let actionExists = utils.isNum(toSet),
-            action = (actionExists) ? this.getAction(toSet) : toSet.getPlayable();
+            action = (actionExists) ? this.getAction(toSet) : toSet.getPlayable(),
+            opts = action.getSet();
 
-        this.set(action);
+        opts.action = action;
+
+        this.set(opts);
 
         if (input && action.bindInput) {
             action.bindInput(input);

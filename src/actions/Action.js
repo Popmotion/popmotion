@@ -83,6 +83,18 @@ class Action {
         return DEFAULT_PROP;
     }
 
+    getSet() {
+        var set = { values: this.values };
+
+        each(this.getDefaultProps(), (key, prop) => {
+            if (this.hasOwnProperty(key)) {
+                set[key] = prop;
+            }
+        });
+
+        return set;
+    }
+
     extend(props) {
         return new this.constructor(utils.merge(this, props), this.getDefaultValueProp());
     }
