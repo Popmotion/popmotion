@@ -7,6 +7,9 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Action-specific `onStart`, `onUpdate`, `onFrame` and `onComplete` callbacks.
 
+### Changed
+- `onStart` callbacks are now fired immediately before the Actor is activated, giving actions extra time to initiate and make use of the [< 100ms response window](https://aerotwist.com/blog/flip-your-animations/).
+
 ## [3.0.4] 2015-09-30
 
 ### Fixed
