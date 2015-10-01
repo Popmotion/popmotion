@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.1.0] 2015-10-01
+
+### Added
+- Action-specific `onStart`, `onUpdate`, `onFrame` and `onComplete` callbacks.
+
 ## [3.0.4] 2015-09-30
 
 ### Fixed
