@@ -36,7 +36,8 @@
   "license": "MIT",
   "scripts": {
     "compile": "babel src --out-dir lib && webpack && webpack -p --config webpack.config.min.js",
-    "watch": "webpack --progress --colors --watch"
+    "watch": "webpack --progress --colors --watch",
+    "measure": "gzip -c popmotion.global.min.js | wc -c"
   },
   "devDependencies": {
     "babel-loader": "^5.3.2",

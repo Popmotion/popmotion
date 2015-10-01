@@ -6,6 +6,8 @@ var valueTypeManager = require('../value-types/manager'),
     each = utils.each,
     Action = require('../actions/Action'),
     defaultAction = new Action(),
+    Watch = require('../actions/Watch'),
+    watcher = new Watch(),
 
     createMapper = function (role, mappedValues) {
         return function (name, val) {
@@ -25,11 +27,14 @@ var valueTypeManager = require('../value-types/manager'),
             values = actor.state.values;
 
         each(actor.activeActions, (key, action) => {
+            // Return if action has been deleted elsewhere
+            if (!action) { return; }
+
             if (action.onFrame) {
                 action.onFrame.call(actor, values);
             }
 
-            if (action.onUpdate || hasChanged) {
+            if (action.onUpdate && hasChanged) {
                 action.onUpdate.call(actor, values);
             }
 
@@ -73,7 +78,7 @@ var valueTypeManager = require('../value-types/manager'),
             }
 
             // Calculate new value
-            let updatedValue = action.process(this, value, key, frameDuration);
+            let updatedValue = value.watch ? watcher.process(this, value) : action.process(this, value, key, frameDuration);
 
             // Limit if this action does that kind of thing
             if (action.limit && value.hasRange) {

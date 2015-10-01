@@ -103,12 +103,13 @@ class Actor {
 
         this.set(opts);
 
-        if (input && action.bindInput) {
+        if (input) {
             action.bindInput(input);
         }
 
         // Fire all Role onStarts if not already active
         if (!this.isActive) {
+            let numRoles = this.roles.length;
             for (let i = 0; i < numRoles; i++) {
                 let role = this.roles[i];
                 if (role.start) {
@@ -124,7 +125,7 @@ class Actor {
 
         this.activate();
 
-        if (!haveAction) {
+        if (!actionExists) {
             let Controls = action.getControls();
             return new Controls(this, action, true);
         }
