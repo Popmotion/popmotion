@@ -90,24 +90,45 @@ class Actor {
     /*
         Start a new Action
 
-        @param [Action]
+        @param [Action || number]
         @param [Input || event] (optional)
         @returns [Controls]
     */
-    start(action, input) {
-        var Controls = action.getControls(),
-            opts = utils.copy(action);
+    start(toSet, input) {
+        let actionExists = utils.isNum(toSet),
+            action = (actionExists) ? this.getAction(toSet) : toSet.getPlayable(),
+            opts = action.getSet();
 
-        opts.action = action.getPlayable();
+        opts.action = action;
+
         this.set(opts);
 
-        if (input && opts.action.bindInput) {
-            opts.action.bindInput(input);
+        if (input) {
+            action.bindInput(input);
+        }
+
+        // Fire all Role onStarts if not already active
+        if (!this.isActive) {
+            let numRoles = this.roles.length;
+            for (let i = 0; i < numRoles; i++) {
+                let role = this.roles[i];
+                if (role.start) {
+                    role.start.call(this);
+                }
+            }
+        }
+
+        // Fire new action onStart
+        if (!action.isActive && action.onStart) {
+            action.onStart.call(this);
         }
 
         this.activate();
 
-        return new Controls(this, opts.action, true);
+        if (!actionExists) {
+            let Controls = action.getControls();
+            return new Controls(this, action, true);
+        }
     }
 
     /*
@@ -322,20 +343,6 @@ class Actor {
                 order.splice(position, 1);
             }
         }
-    }
-
-    startBound(id, input) {
-        var action = this.getAction(id),
-            opts = utils.copy(action);
-
-        opts.action = action;
-        this.set(opts);
-
-        if (input) {
-            this.bindInput(action, input);
-        }
-
-        this.activate();
     }
 
     // [boolean]: Is this Actor active?

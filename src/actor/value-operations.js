@@ -1,6 +1,4 @@
-var Watch = require('../actions/Watch'),
-    watcher = new Watch(),
-    valueTypesManager = require('../value-types/manager'),
+var valueTypesManager = require('../value-types/manager'),
     calc = require('../inc/calc'),
     utils = require('../inc/utils'),
     isNum = utils.isNum,
@@ -264,11 +262,11 @@ module.exports = {
         let preprocessed = preprocess(existing, incoming, scope, defaultProp);
 
         each(preprocessed, (key, value) => {
-            let newValue = existing[key] ? utils.copy(existing[key]) : utils.copy(defaultValue),
+            let newValue = existing[key] || utils.copy(defaultValue),
                 hasChildren = (value.children !== undefined),
                 defaultActionValue = inherit.action ? inherit.action.getDefaultValue() : {};
 
-            value.action = value.watch ? watcher : inherit.action;
+            value.action = inherit.action;
 
             each(defaultActionValue, (propName, defaultActionProp) => {
                 newValue[propName] = (inherit.hasOwnProperty(propName) && !value.hasOwnProperty(propName)) ? inherit[propName] : defaultActionProp;

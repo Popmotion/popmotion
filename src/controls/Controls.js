@@ -11,7 +11,7 @@ class Controls {
 
     start(input) {
         this.id = this.bindAction();
-        this.actor.startBound(this.id, input);
+        this.actor.start(this.id, input);
         this.action.activate();
         return this;
     }

@@ -2,6 +2,17 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.1.0] 2015-10-01
+
+### Added
+- Action-specific `onStart`, `onUpdate`, `onFrame` and `onComplete` callbacks. These callbacks will be active only for the duration of the action, while callbacks attached to the host Actor will persist through all actions.
+
+### Changed
+- `onStart` callbacks are now fired immediately before the Actor is activated, giving actions extra time to initiate and make use of the [< 100ms response window](https://aerotwist.com/blog/flip-your-animations/).
+
+### Fixed
+- Bugfix for deep-copying Actions on Action start. That was a whoops and a half.
+
 ## [3.0.4] 2015-09-30
 
 ### Fixed
