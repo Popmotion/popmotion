@@ -6,6 +6,8 @@ var valueTypeManager = require('../value-types/manager'),
     each = utils.each,
     Action = require('../actions/Action'),
     defaultAction = new Action(),
+    Watch = require('../actions/Watch'),
+    watcher = new Watch(),
 
     createMapper = function (role, mappedValues) {
         return function (name, val) {
@@ -21,12 +23,27 @@ var valueTypeManager = require('../value-types/manager'),
         @returns [boolean]
     */
     checkAndFireHasEnded = function (actor, hasChanged) {
-        var hasEnded = true;
+        var hasEnded = true,
+            values = actor.state.values;
 
         each(actor.activeActions, (key, action) => {
+            // Return if action has been deleted elsewhere
+            if (!action) { return; }
+
+            if (action.onFrame) {
+                action.onFrame.call(actor, values);
+            }
+
+            if (action.onUpdate && hasChanged) {
+                action.onUpdate.call(actor, values);
+            }
+
             if (action.hasEnded && action.hasEnded(actor, hasChanged) === false) {
                 hasEnded = false;
             } else {
+                if (action.onComplete) {
+                    action.onComplete.call(actor);
+                }
                 actor.unbindAction(key);
             }
         });
@@ -47,16 +64,6 @@ var valueTypeManager = require('../value-types/manager'),
             state = this.state,
             hasChanged = this.hasChanged;
 
-        // Fire onStart callback if this is first frame
-        if (this.firstFrame) {
-            for (let i = 0; i < numRoles; i++) {
-                let role = this.roles[i];
-                if (role.start) {
-                    role.start.call(this);
-                }
-            }
-        }
-
         // Update values
         for (let i = 0; i < numActiveValues; i++) {
             // Get value and key
@@ -71,7 +78,7 @@ var valueTypeManager = require('../value-types/manager'),
             }
 
             // Calculate new value
-            let updatedValue = action.process(this, value, key, frameDuration);
+            let updatedValue = value.watch ? watcher.process(this, value) : action.process(this, value, key, frameDuration);
 
             // Limit if this action does that kind of thing
             if (action.limit && value.hasRange) {

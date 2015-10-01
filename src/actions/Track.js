@@ -35,6 +35,12 @@ class Track extends Action {
         this.input = (!input.current) ? new Pointer(input) : input;
         this.inputOrigin = this.input.get();
     }
+
+    getDefaultValue() {
+        return {
+            amp: 1
+        };
+    }
 }
 
 module.exports = Track;

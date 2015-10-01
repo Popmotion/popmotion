@@ -4,6 +4,7 @@ let calc = require('../inc/calc'),
     Controls = require('../controls/Controls');
 
 const DEFAULT_PROP = 'current';
+const PRIVATE = ['onStart', 'onFrame', 'onUpdate', 'onComplete'];
 
 class Action {
     constructor(props) {
@@ -81,6 +82,18 @@ class Action {
 
     getDefaultValueProp() {
         return DEFAULT_PROP;
+    }
+
+    getSet() {
+        var set = { values: this.values };
+
+        each(this, (key, prop) => {
+            if (this.hasOwnProperty(key) && PRIVATE.indexOf(key) === -1) {
+                set[key] = prop;
+            }
+        });
+
+        return set;
     }
 
     extend(props) {
