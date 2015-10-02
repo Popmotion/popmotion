@@ -1,0 +1,39 @@
+{
+  "name": "popmotion",
+  "description": "A 12kb JavaScript motion engine. Handles animation, physics, and input tracking.",
+  "author": "Matt Perry <sirhound@popmotion.io>",
+  "homepage": "http://popmotion.io",
+  "main": "./lib/load/module.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Popmotion/popmotion"
+  },
+  "keywords": [
+    "animation",
+    "ux",
+    "ui",
+    "popmotion",
+    "redshift",
+    "canvas animation",
+    "jquery animation",
+    "dom animation",
+    "dom",
+    "pointer tracking",
+    "mouse",
+    "mouse tracking",
+    "touch",
+    "touch tracking",
+    "physics",
+    "interaction",
+    "interface",
+    "svg"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "babel-loader": "^5.3.2",
+    "babel-runtime": "^5.8.24",
+    "jshint": "^2.8.0",
+    "jshint-loader": "^0.8.3",
+    "webpack": "1.7.2"
+  }
+}
