@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.1.1] 2015-10-02
+
+### Fixed
+- Clearing Actor then/next queue on `start`.
+- Saving all arguments to queue via `then` so we can pass Inputs.
+
 ## [3.1.0] 2015-10-01
 
 ### Added

@@ -92,12 +92,14 @@ class Actor {
 
         @param [Action || number]
         @param [Input || event] (optional)
+        @param [boolean] (optional): defined `true` if we surpress making new queue
         @returns [Controls]
     */
     start(toSet, input) {
         let actionExists = utils.isNum(toSet),
             action = (actionExists) ? this.getAction(toSet) : toSet.getPlayable(),
-            opts = action.getSet();
+            opts = action.getSet(),
+            surpressQueueClear = (arguments[arguments.length - 1] === false);
 
         opts.action = action;
 
@@ -105,6 +107,10 @@ class Actor {
 
         if (input) {
             action.bindInput(input);
+        }
+
+        if (!surpressQueueClear) {
+            this.queue.clear();
         }
 
         // Fire all Role onStarts if not already active
@@ -203,11 +209,13 @@ class Actor {
         var next = this.queue.next();
 
         if (next) {
-            if (utils.isFunc(next)) {
-                next();
+            if (utils.isFunc(next[0])) {
+                next[0]();
                 this.next();
+            // Or this is an action
             } else {
-                this.start(next);
+                next.push(false);
+                this.start.apply(this, next);
             }
         } else {
             this.stop();
