@@ -7,7 +7,7 @@ Popmotion is a 12kb JavaScript motion engine. Use it for for animation, physics,
 [Download](http://popmotion.io/download) | [API](http://popmotion.io/api) | [Guides](http://popmotion.io/guides/get-started) | [Twitter](http://twitter.com/popmotionjs)
 
 ### Flexible
-* **Native DOM support:** CSS and DOM attribute support, out the box.
+* **Native DOM support:** CSS and DOM attribute support, out of the box.
 * **Unlimited:** Custom callbacks allow you output to any numerical property.
 * **Power anything:** Use with jQuery, Canvas, Three.js, WebSockets, etc.
 * **Seamless interaction:** Tracks velocity for hand-off between input, animation and physics.
@@ -22,7 +22,7 @@ Popmotion is a 12kb JavaScript motion engine. Use it for for animation, physics,
 * **Value routes:** Extend our CSS/Attr support with routes for Canvas, Three.js, Google Map Symbols or any standardised numerical property.
 * **Value types:** Automatically split special values in child values (ie `"#000"` -> `{ Red: 0, Green: 0, Blue: 0, Alpha: 1 }`.
 
-### Peformant
+### Performant
 * Uses and exposes a single requestAnimationFrame thread that automatically winds down when not in use.
 * Never reads the DOM, leaving you in total control of performance.
 * Over **20% smaller** than Velocity.js, **72% smaller** than GreenSock TweenMax. Boom shak shakalaka.
