@@ -78,7 +78,7 @@ var valueTypeManager = require('../value-types/manager'),
             }
 
             // Calculate new value
-            let updatedValue = value.watch ? watcher.process(this, value) : action.process(this, value, key, frameDuration);
+            let updatedValue = utils.isString(value.watch) ? watcher.process(this, value) : action.process(this, value, key, frameDuration);
 
             // Limit if this action does that kind of thing
             if (action.limit && value.hasRange) {

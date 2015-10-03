@@ -33,8 +33,10 @@ module.exports = function (output, cache) {
         }
 
         if (transform !== cache.transform) {
-            cache.transform = css.transform = transform;
+            css.transform = transform;
         }
+        
+        cache.transform = transform;
     }
 
     return css;

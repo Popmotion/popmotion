@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.1.2] 2015-10-03
+
+### Fixed
+- Major Firefox bug 1) `values` false-positive test for `watch` property, now explicitly checking for `string`.
+- Major Firefox bug 2) `element.style.hasOwnProperty()` always returning false, switching to `in element.style`.
+
 ## [3.1.1] 2015-10-02
 
 ### Fixed
