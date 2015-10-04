@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.1.3] 2015-10-04
+
+## Fixed
+- Actions fired within an `onComplete` wouldn't start because the number of active Actions was being counted incorrectly.
+
 ## [3.1.2] 2015-10-03
 
 ### Fixed
