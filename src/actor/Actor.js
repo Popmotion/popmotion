@@ -315,8 +315,10 @@ class Actor {
     }
 
     unbindAction(id) {
-        this.numActive--;
-        delete this.activeActions[id];
+        if (this.activeActions.hasOwnProperty(id)) {
+            this.numActive--;
+            delete this.activeActions[id];
+        }
 
         if (!this.numActive) {
             this.stop();

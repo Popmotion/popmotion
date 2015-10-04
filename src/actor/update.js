@@ -22,7 +22,7 @@ var valueTypeManager = require('../value-types/manager'),
         @param [boolean]
         @returns [boolean]
     */
-    checkAndFireHasEnded = function (actor, hasChanged) {
+    checkAllActionsHaveEnded = function (actor, hasChanged) {
         var hasEnded = true,
             values = actor.state.values;
 
@@ -62,7 +62,7 @@ var valueTypeManager = require('../value-types/manager'),
             numActiveParents = this.activeParents.length,
             numRoles = this.roles.length,
             state = this.state,
-            hasChanged = this.hasChanged;
+            hasChanged = false;
 
         // Update values
         for (let i = 0; i < numActiveValues; i++) {
@@ -152,25 +152,27 @@ var valueTypeManager = require('../value-types/manager'),
         // Reset hasChanged before further Actions might affect this
         this.hasChanged = false;
 
-        // Check all Actions and fire onEnd if they've ended
-        if (this.isActive && checkAndFireHasEnded(this, hasChanged)) {
+        if (this.isActive) {
             this.isActive = false;
 
-            // Fire `complete` callback
-            for (let i = 0; i < numRoles; i++) {
-                let role = this.roles[i];
-                if (role.complete) {
-                    role.complete.call(this);
+            if (checkAllActionsHaveEnded(this, hasChanged)) {
+                // Fire `complete` callbacks
+                for (let i = 0; i < numRoles; i++) {
+                    let role = this.roles[i];
+                    if (role.complete) {
+                        role.complete.call(this);
+                    }
                 }
-            }
 
-            // If Actor is still inactive, fire next step
-            if (!this.isActive) {
-                this.next();
+                if (!this.isActive) {
+                    this.next();
+                }
+            } else {
+                this.isActive = true;
+                this.firstFrame = false;
             }
         }
-
-        this.firstFrame = false;
+                
         this.framestamp = framestamp;
     };
 
