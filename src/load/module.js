@@ -28,5 +28,6 @@ popmotion.attr = require('../roles/attr/attrRole');
 popmotion.css = require('../roles/css/cssRole');
 popmotion.svg = require('../roles/svg/svgRole');
 popmotion.drawPath = require('../roles/path/drawPathRole');
+popmotion.movePath = require('../roles/path/movePathRole');
 
 module.exports = popmotion;

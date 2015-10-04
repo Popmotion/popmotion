@@ -28,7 +28,7 @@ var utils = require('./utils.js'),
                     y: to.y - from.y
                 };
             
-            return this.angleFromCenter(point.x, point.y);
+            return calc.angleFromCenter(point.x, point.y);
         },
 
         /*
@@ -42,7 +42,7 @@ var utils = require('./utils.js'),
             @return [radian]: Angle between 0, 0 and point in radians
         */
         angleFromCenter: function (x, y) {
-            return this.radiansToDegrees(Math.atan2(y, x));
+            return calc.radiansToDegrees(Math.atan2(y, x));
         },
         
         /*
@@ -88,7 +88,7 @@ var utils = require('./utils.js'),
             @return [number]: The distance between the two points
         */
         distance: function (pointA, pointB) {
-            return (typeof pointA === "number") ? this.distance1D(pointA, pointB) : this.distance2D(pointA, pointB);
+            return (typeof pointA === "number") ? calc.distance1D(pointA, pointB) : calc.distance2D(pointA, pointB);
         },
     
         /*
@@ -128,7 +128,7 @@ var utils = require('./utils.js'),
                     y: absolute(to.y - from.y)
                 };
                 
-            return this.hypotenuse(point.x, point.y);
+            return calc.hypotenuse(point.x, point.y);
         },
             
         /*
@@ -171,8 +171,8 @@ var utils = require('./utils.js'),
             }
 
             if (isNum(offset.x) && isNum(offset.y)) {
-                offset.angle = this.angle(a, b);
-                offset.distance = this.distance2D(a, b);
+                offset.angle = calc.angle(a, b);
+                offset.distance = calc.distance2D(a, b);
             }
                 
             return offset;
@@ -352,7 +352,7 @@ var utils = require('./utils.js'),
         valueEased: function (progress, from, to, easing) {
             var easedProgress = easing(progress);
             
-            return this.value(easedProgress, from, to);
+            return calc.value(easedProgress, from, to);
         }
     },
 

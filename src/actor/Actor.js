@@ -12,8 +12,10 @@ var Process = require('../process/Process'),
     cssRole = require('../roles/css/cssRole'),
     svgRole = require('../roles/svg/svgRole'),
     drawPathRole = require('../roles/path/drawPathRole'),
+    movePathRole = require('../roles/path/movePathRole'),
 
     Action = require('../actions/Action'),
+    elementProps = ['element', 'path'],
     each = utils.each;
 
 class Actor {
@@ -34,12 +36,13 @@ class Actor {
         this.activeValues = [];
         this.activeParents = [];
 
-        // Get actual elements if this is a selector
-        if (utils.isString(props.element)) {
-            props.element = select(props.element)[0];
-        }
+        elementProps.forEach((name) => {
+            if (utils.isString(props[name])) {
+                props[name] = select(props[name])[0];
+            }
+        });
 
-        this.assignRoles(props.element, props.as, true);
+        this.assignRoles(props, true);
         this.set(props);
         this.initRoles();
     }
@@ -227,24 +230,23 @@ class Actor {
     /*
         Assign Roles based on element and manually provided props
 
-        @param [object]: Element
-        @param [Role || array]
+        @param [object]: Opts
         @param [boolean] (optional)
     */
-    assignRoles(element, manualRoles, surpressInit) {
+    assignRoles({ element, path, as }, surpressInit) {
         // All Actors get a default Role that handles user callbacks
         this.roles = [ defaultRole ];
 
         // Auto-assign if no manually-set Roles
-        if (!manualRoles && element) {
-            this.autoAssignRoles(element);
+        if (!as && element) {
+            this.autoAssignRoles(element, path);
 
         // Or manually set if provided
-        } else if (manualRoles) {
-            if (utils.isArray(manualRoles)) {
-                this.roles.push.apply(this.roles, manualRoles);
+        } else if (as) {
+            if (utils.isArray(as)) {
+                this.roles.push.apply(this.roles, as);
             } else {
-                this.roles.push(manualRoles);
+                this.roles.push(as);
             }
         }
 
@@ -258,8 +260,9 @@ class Actor {
         to be extended
 
         @param [object]: Element
+        @param [object]: Element
     */
-    autoAssignRoles(element) {
+    autoAssignRoles(element, path) {
         // Add CSS role if HTMLElement
         if (element instanceof HTMLElement) {
             this.roles.push(cssRole);
@@ -271,6 +274,10 @@ class Actor {
             // Add Draw Path role if path element
             if (element.tagName === 'path') {
                 this.roles.push(drawPathRole);
+            }
+
+            if (path) {
+                this.roles.push(movePathRole);
             }
         }
     }

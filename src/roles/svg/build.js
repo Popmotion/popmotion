@@ -21,7 +21,7 @@ module.exports = function (output, origin) {
             skewX: `skewX(${output.skewX}) `,
             skewY: `skewY(${output.skewY}) `
         };
-
+console.log(transform)
     each(output, function (key, value) {
         if (transformProps[key]) {
             hasTransform = true;
