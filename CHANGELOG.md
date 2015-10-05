@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.1.4] 2015-10-05
+
+## Added
+- Simulation functions are now sent `value <object>, frameDuration <int>, timeStarted <timestamp>` as arguments.
+
 ## [3.1.3] 2015-10-04
 
 ## Fixed

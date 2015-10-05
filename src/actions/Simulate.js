@@ -55,6 +55,10 @@ class Simulate extends Action {
     getDefaultValueProp() {
         return DEFAULT_PROP;
     }
+
+    onStart() {
+        this.started = utils.currentTime();
+    }
     
     /*
         Simulate the Value's per-frame movement
@@ -68,7 +72,7 @@ class Simulate extends Action {
     process(actor, value, key, timeSinceLastFrame) {
         var simulate = value.simulate,
             simulation = utils.isString(simulate) ? simulations[simulate] : simulate,
-            newVelocity = simulation ? simulation(value, timeSinceLastFrame, actor.started) : 0;
+            newVelocity = simulation ? simulation(value, timeSinceLastFrame, this.started) : 0;
 
         value.velocity = (Math.abs(newVelocity) >= value.stopSpeed) ? newVelocity : 0;
         return value.current + calc.speedPerFrame(value.velocity, timeSinceLastFrame);
