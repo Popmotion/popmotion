@@ -2,10 +2,15 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.1.6] 2015-10-05
+
+## Fixed
+- Manually moved the library class filenames to uppercase.
+
 ## [3.1.5] 2015-10-05
 
 ## Fixed
-- Renamed some class files to uppercase to fix include fails in Browserify (sorry Browserify users!)
+- Renamed some class files to uppercase to fix include fails in some Browserify compilations.
 
 ## [3.1.4] 2015-10-05
 
