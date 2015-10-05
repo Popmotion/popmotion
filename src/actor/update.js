@@ -102,7 +102,7 @@ var valueTypeManager = require('../value-types/manager'),
             value.speed = Math.abs(value.velocity);
 
             // Check if value's changed
-            if (value.current !== updatedValue) {
+            if (value.current !== updatedValue || this.firstFrame) {
                 hasChanged = true;
             }
 
@@ -144,7 +144,7 @@ var valueTypeManager = require('../value-types/manager'),
                 role.frame.call(this, mappedValues);
             }
 
-            if (role.update && (hasChanged || this.firstFrame)) {
+            if (role.update && hasChanged) {
                 role.update.call(this, mappedValues);
             }
         }

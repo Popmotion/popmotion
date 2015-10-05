@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.1.7] 2015-10-05
+
+## Fixed
+- Adjusting `hasChanged` logic to always fire on first frame.
+- Changing `Iterator.stagger` logic for more even staggers. 
+
 ## [3.1.6] 2015-10-05
 
 ## Fixed

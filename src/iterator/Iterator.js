@@ -57,11 +57,11 @@ class Iterator {
 
         staggerProps.values = {
             i: {
-                current: 0,
+                current: -0.6,
                 duration: interval * numMembers,
                 ease: propsIsInterval ? DEFAULT_STAGGER_EASE : props.ease || DEFAULT_STAGGER_EASE,
                 round: true,
-                to: numMembers - 1
+                to: numMembers - 0.6
             }
         };
 
