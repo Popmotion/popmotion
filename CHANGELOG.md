@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.1.5] 2015-10-05
+
+## Fixed
+- Renamed some class files to uppercase to fix include fails in Browserify (sorry Browserify users!)
+
 ## [3.1.4] 2015-10-05
 
 ## Added
