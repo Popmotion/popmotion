@@ -35,5 +35,6 @@
     "jshint": "^2.8.0",
     "jshint-loader": "^0.8.3",
     "webpack": "1.7.2"
-  }
+  },
+  "version": "3.2.0"
 }
