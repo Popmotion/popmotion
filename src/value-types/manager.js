@@ -1,4 +1,4 @@
-var each = require('../inc/utils'),
+var each = require('../inc/utils').each,
 
     ValueTypeManager = function () {};
 
@@ -12,7 +12,7 @@ ValueTypeManager.prototype = {
             mods[name] = mod;
         }
 
-        each((key, thisMod) => {
+        each(mods, (key, thisMod) => {
             this[key] = thisMod;
         });
     },
@@ -27,7 +27,7 @@ ValueTypeManager.prototype = {
     test: function (value) {
         var type = false;
 
-        each(function (key, mod) {
+        each(this, function (key, mod) {
             if (mod.test && mod.test(value)) {
                 type = key;
             }

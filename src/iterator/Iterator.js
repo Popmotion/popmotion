@@ -48,7 +48,8 @@ class Iterator {
     }
 
     stagger(method, props, ...args) {
-        var numMembers = this.members.length,
+        var tempMembers = utils.copyArray(this.members),
+            numMembers = tempMembers.length,
             propsIsInterval = utils.isNum(props),
             interval = propsIsInterval ? props : props.interval,
             staggerProps = {},
@@ -71,12 +72,12 @@ class Iterator {
 
             // If our new index is only one more than the previous index, fire immedietly
             if (newIndex === i + 1) {
-                callback(this.members[gapIndex], gapIndex);
+                callback(tempMembers[gapIndex], gapIndex);
 
             // Or loop through the distance to fire all indecies. Increase delay.
             } else {
                 for (; gapIndex <= newIndex; gapIndex++) {
-                    callback(this.members[gapIndex], gapIndex);
+                    callback(tempMembers[gapIndex], gapIndex);
                 }
             }
 
@@ -85,6 +86,14 @@ class Iterator {
 
         this._stagger.start(new Tween(staggerProps));
 
+        return this;
+    }
+
+    /*
+        Array manipulation
+    */
+    reverse() {
+        this.members.reverse();
         return this;
     }
 }

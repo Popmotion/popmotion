@@ -6,15 +6,12 @@ const SAVE_PROP = '__pm_actor_';
 
 module.exports = function (selector, opts = {}) {
     var dom = selectDom(selector),
-        actors;
+        actors = [];
 
     dom.forEach((element) => {
         let actor = element[SAVE_PROP];
 
-        if (actor) {
-            delete opts.element;
-            actor.set(opts);
-        } else {
+        if (!actor) {
             opts.element = element;
             actor = element[SAVE_PROP] = new Actor(opts);
         }

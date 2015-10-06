@@ -177,7 +177,7 @@ module.exports = {
             i = 0;
         
         for (; i < length; i++) {
-            newArray[i] = (this.isObj(base[i])) ? this.copy(base[i]) : base[i];
+            newArray[i] = base[i];
         }
         
         return newArray;
