@@ -1,7 +1,6 @@
 "use strict";
 
 var valueTypeManager = require('./value-types/manager'),
-    select = require('./actor/select'),
 
     Popmotion = {
 
@@ -25,17 +24,7 @@ var valueTypeManager = require('./value-types/manager'),
         /*
             Create an Iterator of Actors with selected dom elements
         */
-        select: function (selector, opts = {}) {
-            var selection = select(selector),
-                actors = [];
-
-            selection.forEach((element) => {
-                opts.element = element;
-                actors.push(new this.Actor(opts));
-            });
-
-            return new this.Iterator(actors);
-        },
+        select: require('./inc/select-actor'),
 
         addValueType: function () {
             valueTypeManager.extend.apply(valueTypeManager, arguments);
