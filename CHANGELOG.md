@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.2.1] 2015-10-07
+
+### Fixed
+- `watch` no longer overwritten on `set`.
+
 ## [3.2.0] 2015-10-06
 
 ### Added

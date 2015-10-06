@@ -197,6 +197,7 @@ function preprocess(existing, incoming, scope, defaultProp) {
 
         // If value doesn't have a special type, check for one
         newValue.type = checkValueType(existingValue, newValue, scope, key);
+        newValue.watch = utils.isString(newValue.watch) ? newValue.watch : undefined;
 
         values[key] = newValue;
 
@@ -267,7 +268,6 @@ module.exports = {
                 defaultActionValue = inherit.action ? inherit.action.getDefaultValue() : {};
 
             value.action = inherit.action;
-            value.watch = preprocessed.watch;
 
             each(defaultActionValue, (propName, defaultActionProp) => {
                 newValue[propName] = (inherit.hasOwnProperty(propName) && !value.hasOwnProperty(propName)) ? inherit[propName] : defaultActionProp;
