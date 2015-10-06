@@ -3,7 +3,7 @@
   "description": "A 12kb JavaScript motion engine. Handles animation, physics, and input tracking.",
   "author": "Matt Perry <sirhound@popmotion.io>",
   "homepage": "http://popmotion.io",
-  "main": "./popmotion.global.min.js",
+  "main": "./popmotion.global.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/Popmotion/popmotion"
