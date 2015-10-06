@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.2.0] 2015-10-06
+
+### Added
+- `ui.select` now caches and finds cached Actors bound to DOM elements. If one Actor is found, it returns an Actor. If multiple Actors are found, an Iterator.
+- `reverse` method to `Iterator`.
+
 ## [3.1.7] 2015-10-05
 
 ## Fixed

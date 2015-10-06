@@ -1,9 +1,9 @@
 var Process = require('../process/Process'),
     Queue = require('../inc/Queue'),
     utils = require('../inc/utils'),
+    select = require('../inc/select-dom'),
     update = require('./update'),
     valueOps = require('./value-operations'),
-    select = require('./select'),
 
     /*
         Role imports

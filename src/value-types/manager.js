@@ -1,25 +1,40 @@
-"use strict";
+var each = require('../inc/utils').each,
 
-var ModManager = require('../inc/ModManager'),
-    valueTypeManager = new ModManager();
+    ValueTypeManager = function () {};
 
-valueTypeManager.defaultProps = function (type, key) {
-    var valueType = this[type],
-        defaultProps = (valueType.defaultProps) ? valueType.defaultProps[key] || valueType.defaultProps : {};
+ValueTypeManager.prototype = {
+    extend: function (name, mod) {
+        var multiMods = (typeof name == 'object'),
+            mods = multiMods ? name : {};
 
-    return defaultProps;
-};
-
-valueTypeManager.test = function (value) {
-    var type = false;
-
-    this.each(function (key, mod) {
-        if (mod.test && mod.test(value)) {
-            type = key;
+        // If we just have one module, coerce
+        if (!multiMods) {
+            mods[name] = mod;
         }
-    });
 
-    return type;
+        each(mods, (key, thisMod) => {
+            this[key] = thisMod;
+        });
+    },
+
+    defaultProps: function (type, key) {
+        var valueType = this[type],
+            defaultProps = (valueType.defaultProps) ? valueType.defaultProps[key] || valueType.defaultProps : {};
+
+        return defaultProps;
+    },
+
+    test: function (value) {
+        var type = false;
+
+        each(this, function (key, mod) {
+            if (mod.test && mod.test(value)) {
+                type = key;
+            }
+        });
+
+        return type;
+    }
 };
 
-module.exports = valueTypeManager;
+module.exports = new ValueTypeManager();
