@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.3.0] 2015-10-08
+
+### Added
+- `smooth` property added to `Track` - smoothes out values coming from `Input` sources.
+
 ## [3.2.1] 2015-10-07
 
 ### Fixed
