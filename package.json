@@ -7,10 +7,10 @@
   "main": "./lib/load/module.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/InventingWithMonster/popmotion"
+    "url": "https://github.com/Popmotion/popmotion"
   },
   "bugs": {
-    "url": "https://github.com/InventingWithMonster/popmotion/issues"
+    "url": "https://github.com/Popmotion/popmotion/issues"
   },
   "keywords": [
     "animation",
