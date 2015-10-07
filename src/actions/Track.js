@@ -1,14 +1,32 @@
 let Action = require('./Action'),
     Pointer = require('../input/Pointer'),
-    calc = require('../inc/calc');
+    calc = require('../inc/calc'),
+    each = require('../inc/utils').each;
+
+function smooth(newOffset, oldOffset, duration, smoothing) {
+    var offset = {};
+
+    each(newOffset, (key, newValue) => {
+        let oldValue = oldOffset[key];
+
+        offset[key] = oldValue + (duration * ( newValue - oldValue ) / smoothing);
+    });
+
+    return offset;
+}
 
 class Track extends Action {
     /*
         Update input offset
     */
     onFrameStart(actor, frameDuration, framestamp) {
+        var newOffset;
+
         actor.state.input = this.input.onFrame(framestamp);
-        this.inputOffset = calc.offset(this.inputOrigin, this.input.current);
+        
+        newOffset = calc.offset(this.inputOrigin, this.input.current);
+
+        this.inputOffset = (actor.smooth && this.inputOffset) ? smooth(newOffset, this.inputOffset, frameDuration, actor.smooth) : newOffset;
     }
 
     /*
@@ -34,6 +52,12 @@ class Track extends Action {
     bindInput(input) {
         this.input = (!input.current) ? new Pointer(input) : input;
         this.inputOrigin = this.input.get();
+    }
+
+    getDefaultProps() {
+        return {
+            smooth: 0
+        };
     }
 
     getDefaultValue() {

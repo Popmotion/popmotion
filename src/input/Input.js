@@ -53,7 +53,6 @@ Input.prototype = {
     get: function (prop) {
         var latest = this.history.get(),
             val = (prop !== undefined) ? latest[prop] : latest;
-        
         return val;
     },
 
