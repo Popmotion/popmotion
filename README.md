@@ -25,7 +25,7 @@ Popmotion is a 12kb JavaScript motion engine. Make it pop with animation, physic
 ### Performant
 * Uses and exposes a single requestAnimationFrame thread that automatically winds down when not in use.
 * Never reads the DOM, leaving you in total control of performance.
-* Over **20% smaller** than Velocity.js, **72% smaller** than GreenSock TweenMax. Boom shak shakalaka.
+* The same size as Velocity.js, **over 66% smaller** than GreenSock TweenMax. Boom shak shakalaka.
 
 
 [Get started](http://popmotion.io/guides/get-started)
