@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.3.1] 2015-10-09
+
+### Added
+- `Actor.smooth` now settable on a per-value basis.
+- `direct` value property added to take direct input values instead of inputOffset.
+
 ## [3.3.0] 2015-10-08
 
 ### Added

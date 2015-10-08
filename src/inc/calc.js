@@ -234,9 +234,7 @@ var utils = require('./utils.js'),
             @param [number] (optional): Output maximum
             @return [number]: Random number within range, or 0 and 1 if none provided
         */
-        random: function (min, max) {
-            min = isNum(min) ? min : 0;
-            max = isNum(max) ? max : 1;
+        random: function (min = 0, max = 1) {
             return Math.random() * (max - min) + min;
         },
         

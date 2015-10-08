@@ -1,18 +1,9 @@
 let Action = require('./Action'),
     Pointer = require('../input/Pointer'),
-    calc = require('../inc/calc'),
-    each = require('../inc/utils').each;
+    calc = require('../inc/calc');
 
-function smooth(newOffset, oldOffset, duration, smoothing) {
-    var offset = {};
-
-    each(newOffset, (key, newValue) => {
-        let oldValue = oldOffset[key];
-
-        offset[key] = oldValue + (duration * ( newValue - oldValue ) / smoothing);
-    });
-
-    return offset;
+function smooth(newValue, oldValue, duration, smoothing) {
+    return oldValue + (duration * (newValue - oldValue) / smoothing);
 }
 
 class Track extends Action {
@@ -20,13 +11,9 @@ class Track extends Action {
         Update input offset
     */
     onFrameStart(actor, frameDuration, framestamp) {
-        var newOffset;
-
         actor.state.input = this.input.onFrame(framestamp);
-        
-        newOffset = calc.offset(this.inputOrigin, this.input.current);
-
-        this.inputOffset = (actor.smooth && this.inputOffset) ? smooth(newOffset, this.inputOffset, frameDuration, actor.smooth) : newOffset;
+        this.inputOffset = calc.offset(this.inputOrigin, this.input.current);
+        this.frameDuration = frameDuration;
     }
 
     /*
@@ -37,7 +24,15 @@ class Track extends Action {
         @return [number]: Calculated value
     */
     process(actor, value, key) {
-        return (this.inputOffset.hasOwnProperty(key)) ? value.origin + this.inputOffset[key] : value.current;
+        var newValue = value.current,
+            unmapped = value.unmapped !== undefined ? value.unmapped : value.current;
+
+        if (this.inputOffset.hasOwnProperty(key)) {
+            newValue = (value.direct) ? this.input.current[key] : value.origin + (this.inputOffset[key] * value.amp);
+            newValue = (value.smooth) ? smooth(newValue, unmapped, this.frameDuration, value.smooth) : newValue;
+        }
+
+        return newValue;
     }
 
     /*
@@ -54,15 +49,11 @@ class Track extends Action {
         this.inputOrigin = this.input.get();
     }
 
-    getDefaultProps() {
-        return {
-            smooth: 0
-        };
-    }
-
     getDefaultValue() {
         return {
-            amp: 1
+            amp: 1,
+            direct: false,
+            smooth: 0
         };
     }
 }

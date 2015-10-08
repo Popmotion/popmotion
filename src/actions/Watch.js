@@ -66,12 +66,12 @@ class Watch extends Action {
         
         // Then check values in Input
         } else if (inputOffset && inputOffset.hasOwnProperty(watchedKey)) {
-            newValue = value.origin + (inputOffset[watchedKey] * value.amp);
+            newValue = value.action.process(actor, value, watchedKey);
         }
-
 
         // If we have mapFrom and mapTo properties, translate the new value
         if (value.mapFrom && value.mapTo) {
+            value.unmapped = newValue;
             newValue = findMappedValue(newValue, watchedValue, value, value.mapFrom, value.mapTo);
         }
 
