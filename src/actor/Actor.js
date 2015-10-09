@@ -119,14 +119,14 @@ class Actor {
             for (let i = 0; i < numRoles; i++) {
                 let role = this.roles[i];
                 if (role.start) {
-                    role.start.call(this);
+                    role.start.call(this, actor);
                 }
             }
         }
 
         // Fire new action onStart
         if (!action.isActive && action.onStart) {
-            action.onStart();
+            action.onStart.call(actor, actor, action);
         }
 
         this.activate();

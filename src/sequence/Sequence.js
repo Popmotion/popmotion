@@ -5,32 +5,34 @@ var calcRelative = require('../inc/calc').relativeValue;
 var playhead = new Tween({
     values: {
         playhead: {
+            ease: 'linear',
             current: 0,
             to: 0
         }
     }
 });
 
-class Sequence {
+function checkActions({ playhead }, sequence, action) {
+    sequence.check.forEach((toCheck, i) => {
+        if (playhead > toCheck.timestamp) {
+            sequence.execute();
+            sequence.check.splice(i, -1);
+        }
+    });
+};
+
+class Sequence extends Actor {
 
     constructor() {
-        var actor = new Actor({
-            onUpdate: (output) => {
-                console.log(output)
-                this.check.forEach((toCheck, i) => {
-                    if (output.elapsed > toCheck.timestamp) {
-                        this.execute(toCheck.action);
-                        this.check.splice(i, 1);
-                    }
-                });
-            }
+        super({
+            labels: {},
+            check: [],
+            sequence: [],
+            currentTimestamp: 0,
+            onUpdate: checkActions
         });
 
-        this.labels = {};
-        this.check = [];
-        this.clear();
-        this.currentTimestamp = 0;
-        this.timeline = actor.controls(playhead);
+        this.timeline = undefined;
     }
 
     add(actor, action, timestamp) {
@@ -41,7 +43,8 @@ class Sequence {
         });
 
         if (action.duration) {
-            this.currentTimestamp += action.duration;
+            let newDuration = this.currentTimestamp += action.duration;
+            this.playhead.to = this.playhead.duration = newDuration;
         }
 
         return this;
@@ -53,27 +56,17 @@ class Sequence {
     }
 
     start() {
+        this.check = this.sequence.slice();
         this.timeline.start();
-        return this;
-    }
-
-    stop() {
-        this.timeline.stop();
-        return this;
-    }
-
-    pause() {
-        this.timeline.pause();
-        return this;
-    }
-
-    resume() {
-        this.timeline.resume();
-        return this;
+        return this.timeline;
     }
 
     label(name, timestamp) {
         this.labels[name] = timestamp;
+    }
+
+    execute(actor, action) {
+        actor.start(action);
     }
 }
 
