@@ -19,6 +19,7 @@ class Controls {
     stop() {
         this.actor.unbindAction(this.id);
         this.action.deactivate();
+
         return this;
     }
 

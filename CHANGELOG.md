@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.3.2] 2015-10-10
+
+### Fixed
+- `Pointer` events now properly unbound on `Actor` stop.
+
 ## [3.3.1] 2015-10-09
 
 ### Added
