@@ -24,6 +24,24 @@ function checkActions({ playhead }, sequence) {
     });
 }
 
+function generateCallback(actor, action) {
+    var callback;
+
+    if (actor.each) {
+        callback = () => {
+            actor.each((actor) => {
+                actor.start(action);
+            });
+        }
+    } else {
+        callback = () => {
+            actor.start(action);
+        }
+    }
+
+    return callback;
+}
+
 class Sequence extends Actor {
 
     constructor() {
@@ -38,21 +56,27 @@ class Sequence extends Actor {
 
     add(actor, action) {
         var isCallback = isFunc(actor),
-            callback = isCallback ? actor : () => { actor.start(action); },
-            timestamp = arguments[arguments.length - 1];
+            callback = isCallback ? actor : generateCallback(actor, action),
+            offset = arguments[arguments.length - 1],
+            timestamp = isString(offset) ? calcRelative(this.currentTimestamp, offset) : this.currentTimestamp;
 
-        timestamp = utils.isString(timestamp) ? calcRelative(this.currentTimestamp, timestamp) : timestamp;
+        this.sequence.push({ timestamp, callback });
 
-        this.sequence.push({
-            timestamp: timestamp || this.currentTimestamp,
-            callback
-        });
-        
+        if (action && action.duration) {
+            this.currentTimestamp = timestamp + action.duration;
+        }
+
         return this;
     }
 
     start() {
-        super.start(timeline);
+        super.start(timeline.extend({
+            duration: this.currentTimestamp,
+            values: {
+                playhead: this.currentTimestamp
+            }
+        }));
+
         this.currentTimestamp = 0;
         return this;
     }

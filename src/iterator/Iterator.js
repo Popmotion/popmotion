@@ -5,10 +5,15 @@ var Actor = require('../actor/Actor'),
 const DEFAULT_STAGGER_EASE = 'linear';
 
 function generateCallback(method, ...args) {
-    return utils.isString(method) ? 
-        function (member) {
-            return member[method](...args);
-        } : method;
+    var callback = method;
+
+    if (utils.isString(method)) {
+        callback = (member) => member[method](...args);
+    } else if (!utils.isFunc(method)) {
+        callback = (member) => member.start(method, ...args);
+    }
+
+    return callback;
 }
 
 class Iterator {
