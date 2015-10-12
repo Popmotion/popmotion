@@ -44,6 +44,16 @@ class Track extends Action {
         return false;
     }
 
+    deactivate() {
+        super.deactivate();
+
+        if (this.input && this.input.stop) {
+            this.input.stop();
+        }
+
+        return this;
+    }
+
     bindInput(input) {
         this.input = (!input.current) ? new Pointer(input) : input;
         this.inputOrigin = this.input.get();

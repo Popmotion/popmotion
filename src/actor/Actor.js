@@ -170,8 +170,8 @@ class Actor {
         @returns [Actor]
     */
     stop() {
-        this.activeActions = {};
         this.pause();
+        each(this.activeActions, (id) => this.unbindAction(id));
         return this;
     }
 

@@ -22,7 +22,7 @@ function checkActions({ playhead }, sequence) {
             sequence.check.splice(i, -1);
         }
     });
-};
+}
 
 class Sequence extends Actor {
 
@@ -38,7 +38,7 @@ class Sequence extends Actor {
 
     add(actor, action) {
         var isCallback = isFunc(actor),
-            callback = isCallback ? actor : () => { actor.start(action) },
+            callback = isCallback ? actor : () => { actor.start(action); },
             timestamp = arguments[arguments.length - 1];
 
         timestamp = utils.isString(timestamp) ? calcRelative(this.currentTimestamp, timestamp) : timestamp;
