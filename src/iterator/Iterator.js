@@ -57,6 +57,7 @@ class Iterator {
             callback = generateCallback(method, ...args);
 
         staggerProps.values = {
+            onComplete: propsIsInterval ? undefined : props.onComplete,
             i: {
                 current: -0.6,
                 duration: interval * numMembers,

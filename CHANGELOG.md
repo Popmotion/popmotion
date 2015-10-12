@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.4.0] Unreleased
+
+### Added
+- `Sequence` class, for creating a sequence of non-sequential actions.
+- `onComplete` property to `Iterator.stagger`.
+
 ## [3.3.1] 2015-10-09
 
 ### Added

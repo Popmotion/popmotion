@@ -141,11 +141,11 @@ var valueTypeManager = require('../value-types/manager'),
             each(state.values, createMapper(role, mappedValues));
 
             if (role.frame) {
-                role.frame.call(this, mappedValues, actor);
+                role.frame.call(this, mappedValues, this);
             }
 
             if (role.update && hasChanged) {
-                role.update.call(this, mappedValues, actor);
+                role.update.call(this, mappedValues, this);
             }
         }
 
@@ -160,7 +160,7 @@ var valueTypeManager = require('../value-types/manager'),
                 for (let i = 0; i < numRoles; i++) {
                     let role = this.roles[i];
                     if (role.complete) {
-                        role.complete.call(this, actor);
+                        role.complete.call(this, this);
                     }
                 }
 
