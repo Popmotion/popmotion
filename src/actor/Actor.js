@@ -123,7 +123,7 @@ class Actor {
                 }
             }
         }
-
+console.log('onstart', action.onStart)
         // Fire new action onStart
         if (!action.isActive && action.onStart) {
             action.onStart.call(this, this, action);
