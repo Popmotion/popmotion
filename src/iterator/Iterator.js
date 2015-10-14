@@ -56,7 +56,7 @@ class Iterator {
         var tempMembers = utils.copyArray(this.members),
             numMembers = tempMembers.length,
             propsIsInterval = utils.isNum(props),
-            interval = propsIsInterval ? props : props.interval,
+            interval = propsIsInterval ? props : props.interval || 100,
             staggerProps = {},
             i = -1,
             callback = generateCallback(method, ...args);
