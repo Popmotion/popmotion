@@ -76,7 +76,7 @@ class Sequence extends Actor {
         });
 
         this.prevActionEnd = this.currentTimestamp + duration + (interval * numItems);
-console.log(this.prevActionEnd)
+
         return this;
     }
 

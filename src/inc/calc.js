@@ -254,6 +254,8 @@ var utils = require('./utils.js'),
                 operator = equation[0],
                 { unit, value } = utils.splitValUnit(equation[1]);
 
+            value = parseFloat(value);
+
             switch (operator) {
                 case '+':
                     newValue += value;
