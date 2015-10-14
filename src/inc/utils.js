@@ -228,7 +228,7 @@ module.exports = {
         let splitVal = value.match(/(-?\d*\.?\d*)(.*)/);
 
         return {
-            value: splitVal[1],
+            value: parseFloat(splitVal[1]),
             unit:  splitVal[2]
         };
     },

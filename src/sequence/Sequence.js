@@ -75,8 +75,8 @@ class Sequence extends Actor {
             iterator.stagger(action, staggerProps);
         });
 
-        this.prevActionEnd = (interval * numItems) + duration;
-
+        this.prevActionEnd = this.currentTimestamp + duration + (interval * numItems);
+console.log(this.prevActionEnd)
         return this;
     }
 
@@ -84,6 +84,7 @@ class Sequence extends Actor {
         if (utils.isString(timestamp)) {
             timestamp = calcRelative(this.currentTimestamp, timestamp);
         }
+
         this.currentTimestamp = timestamp;
         this.duration = Math.max(this.currentTimestamp, this.duration);
         return this;
