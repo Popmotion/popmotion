@@ -1,10 +1,10 @@
-"use strict";
-
 var valueTypeManager = require('./value-types/manager'),
 
     Popmotion = {
 
         Actor: require('./actor/Actor'),
+
+        Sequence: require('./sequence/Sequence'),
 
         Input: require('./input/Input'),
 

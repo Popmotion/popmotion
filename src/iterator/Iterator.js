@@ -5,10 +5,15 @@ var Actor = require('../actor/Actor'),
 const DEFAULT_STAGGER_EASE = 'linear';
 
 function generateCallback(method, ...args) {
-    return utils.isString(method) ? 
-        function (member) {
-            return member[method](...args);
-        } : method;
+    var callback = method;
+
+    if (utils.isString(method)) {
+        callback = (member) => member[method](...args);
+    } else if (!utils.isFunc(method)) {
+        callback = (member) => member.start(method, ...args);
+    }
+
+    return callback;
 }
 
 class Iterator {
@@ -51,7 +56,7 @@ class Iterator {
         var tempMembers = utils.copyArray(this.members),
             numMembers = tempMembers.length,
             propsIsInterval = utils.isNum(props),
-            interval = propsIsInterval ? props : props.interval,
+            interval = propsIsInterval ? props : props.interval || 100,
             staggerProps = {},
             i = -1,
             callback = generateCallback(method, ...args);
@@ -65,6 +70,8 @@ class Iterator {
                 to: numMembers - 0.6
             }
         };
+
+        staggerProps.onComplete = propsIsInterval ? undefined : props.onComplete;
 
         staggerProps.onUpdate = (output) => {
             var newIndex = output.i,

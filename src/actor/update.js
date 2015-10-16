@@ -31,18 +31,18 @@ var valueTypeManager = require('../value-types/manager'),
             if (!action) { return; }
 
             if (action.onFrame) {
-                action.onFrame.call(actor, values);
+                action.onFrame.call(actor, values, actor, action);
             }
 
             if (action.onUpdate && hasChanged) {
-                action.onUpdate.call(actor, values);
+                action.onUpdate.call(actor, values, actor, action);
             }
 
             if (action.hasEnded && action.hasEnded(actor, hasChanged) === false) {
                 hasEnded = false;
             } else {
                 if (action.onComplete) {
-                    action.onComplete.call(actor);
+                    action.onComplete.call(actor, actor, action);
                 }
                 actor.unbindAction(key);
             }
@@ -141,11 +141,11 @@ var valueTypeManager = require('../value-types/manager'),
             each(state.values, createMapper(role, mappedValues));
 
             if (role.frame) {
-                role.frame.call(this, mappedValues);
+                role.frame.call(this, mappedValues, this);
             }
 
             if (role.update && hasChanged) {
-                role.update.call(this, mappedValues);
+                role.update.call(this, mappedValues, this);
             }
         }
 
@@ -160,7 +160,7 @@ var valueTypeManager = require('../value-types/manager'),
                 for (let i = 0; i < numRoles; i++) {
                     let role = this.roles[i];
                     if (role.complete) {
-                        role.complete.call(this);
+                        role.complete.call(this, this);
                     }
                 }
 

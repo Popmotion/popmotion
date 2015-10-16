@@ -22,9 +22,9 @@ Loop.prototype = {
     frame: function () {
         var self = this;
 
-        tick(function () {
-            var framestamp = self.timer.update(), // Currently just measuring in ms - will look into hi-res timestamps
-                isActive = self.callback.call(self.scope, framestamp, self.timer.getElapsed());
+        tick(function (framestamp) {
+            self.timer.update(framestamp);
+            let isActive = self.callback.call(self.scope, framestamp, self.timer.getElapsed());
 
             if (isActive) {
                 self.frame();

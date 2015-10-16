@@ -10,9 +10,9 @@ var utils = require('../inc/utils.js'),
     };
 
 Timer.prototype = {
-    update: function () {
+    update: function (framestamp) {
         this.prev = this.current;
-        this.current = utils.currentTime();
+        this.current = framestamp;
         this.elapsed = Math.min(this.current - this.prev, maxElapsed);
 
         return this.current;

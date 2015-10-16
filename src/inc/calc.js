@@ -252,25 +252,27 @@ var utils = require('./utils.js'),
             var newValue = current,
                 equation = rel.split('='),
                 operator = equation[0],
-                splitVal = utils.splitValUnit(equation[1]);
+                { unit, value } = utils.splitValUnit(equation[1]);
+
+            value = parseFloat(value);
 
             switch (operator) {
                 case '+':
-                    newValue += splitVal.value;
+                    newValue += value;
                     break;
                 case '-':
-                    newValue -= splitVal.value;
+                    newValue -= value;
                     break;
                 case '*':
-                    newValue *= splitVal.value;
+                    newValue *= value;
                     break;
                 case '/':
-                    newValue /= splitVal.value;
+                    newValue /= value;
                     break;
             }
             
-            if (splitVal.unit) {
-                newValue += splitVal.unit;
+            if (unit) {
+                newValue += unit;
             }
     
             return newValue;

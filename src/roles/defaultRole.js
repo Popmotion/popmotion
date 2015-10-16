@@ -1,33 +1,33 @@
 var Role = require('./Role');
 
 module.exports = new Role({
-    init: function () {
-        if (this.init) {
-            this.init();
+    init: function (actor) {
+        if (actor.init) {
+            actor.init(actor);
         }
     },
 
-    start: function () {
-        if (this.onStart) {
-            this.onStart();
+    start: function (actor) {
+        if (actor.onStart) {
+            actor.onStart(actor);
         }
     },
 
-    frame: function (state) {
-        if (this.onFrame) {
-            this.onFrame(state);
+    frame: function (state, actor) {
+        if (actor.onFrame) {
+            actor.onFrame(state, actor);
         }
     },
 
-    update: function (state) {
-        if (this.onUpdate) {
-            this.onUpdate(state);
+    update: function (state, actor) {
+        if (actor.onUpdate) {
+            actor.onUpdate(state, actor);
         }
     },
 
-    complete: function () {
-        if (this.onComplete) {
-            this.onComplete();
+    complete: function (actor) {
+        if (actor.onComplete) {
+            actor.onComplete(actor);
         }
     }
 });
