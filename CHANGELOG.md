@@ -2,12 +2,15 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
-## [3.4.0] Unreleased
+## [3.4.0] 2015-10-16
 
 ### Added
 - `Sequence` class, for creating a sequence of non-sequential actions.
 - `onComplete` property to `Iterator.stagger`.
-- Pass an action as the `method` argument to automatically `start`.
+- Pass an action as the `Iterator.each` and `Iterator.stagger` `method` argument to automatically run `start` on each `Actor`.
+
+### Changed
+- Using rAF-provided timestamp instead of `performance.now` for smoother motion.
 
 ## [3.3.2] 2015-10-10
 

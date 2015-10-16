@@ -45,6 +45,7 @@ class Sequence extends Actor {
         super({
             check: [],
             sequence: [],
+            duration: 0,
             currentTimestamp: 0,
             prevActionEnd: 0,
             onUpdate: checkActions
