@@ -12,6 +12,11 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - Using rAF-provided timestamp instead of `performance.now` for smoother motion.
 
+## [3.3.3] 2015-10-13
+
+### Fixed
+- @stoikerty: Fixed `performance.now` check for IE9.
+
 ## [3.3.2] 2015-10-10
 
 ### Fixed
