@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.4.1] 2015-10-17
+
+### Fixed
+- Delaying test element creation in CSS Role prevents error in server-side rendering.
+
 ## [3.4.0] 2015-10-16
 
 ### Added
