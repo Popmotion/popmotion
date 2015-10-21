@@ -261,7 +261,7 @@ class Actor {
     */
     autoAssignRoles(element) {
         // Add CSS role if HTMLElement
-        if (element instanceof HTMLElement) {
+        if (element instanceof HTMLElement || element.tagName === 'svg') {
             this.roles.push(cssRole);
 
         // Add SVG role if SVG element
