@@ -2,10 +2,15 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.4.4] 2015-10-22
+
+### Fixed
+- `Actor.stop().start()` was failing to run.
+
 ## [3.4.3] 2015-10-21
 
 ### Fixed
-- `Actor.sync` now `Actor` rather than the bound sync `Action`.
+- `Actor.sync` now returns `Actor` rather than the bound sync `Action`.
 
 ## [3.4.2] 2015-10-21
 

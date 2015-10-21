@@ -132,7 +132,12 @@ ProcessManager.prototype = {
         @param [int]: Index of process to add to deactivate queue
     */
     deactivate: function (i) {
-        this.deactivateQueue.push(i);
+        var queueIndex = this.deactivateQueue.indexOf(i),
+            isQueued = (queueIndex > -1);
+
+        if (!isQueued) {
+            this.deactivateQueue.push(i);
+        }
     },
     
     /*
