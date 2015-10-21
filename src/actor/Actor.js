@@ -322,7 +322,7 @@ class Actor {
         }
 
         if (!this.numActive) {
-            this.stop();
+            this.pause();
         }
     }
 
