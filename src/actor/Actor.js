@@ -191,7 +191,8 @@ class Actor {
         @returns [Actor]
     */
     sync() {
-        return this.start(new Action({ values: this.values }));
+        this.start(new Action({ values: this.values }));
+        return this;
     }
 
     /*
