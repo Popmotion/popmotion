@@ -2,6 +2,16 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.4.3] 2015-10-21
+
+### Fixed
+- `Actor.sync` now `Actor` rather than the bound sync `Action`.
+
+## [3.4.2] 2015-10-21
+
+### Fixed
+- `svg` tags are now assigned `ui.css` role.
+
 ## [3.4.1] 2015-10-17
 
 ### Fixed

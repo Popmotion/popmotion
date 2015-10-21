@@ -191,7 +191,8 @@ class Actor {
         @returns [Actor]
     */
     sync() {
-        return this.start(new Action({ values: this.values }));
+        this.start(new Action({ values: this.values }));
+        return this;
     }
 
     /*
@@ -261,7 +262,7 @@ class Actor {
     */
     autoAssignRoles(element) {
         // Add CSS role if HTMLElement
-        if (element instanceof HTMLElement) {
+        if (element instanceof HTMLElement || element.tagName === 'svg') {
             this.roles.push(cssRole);
 
         // Add SVG role if SVG element
