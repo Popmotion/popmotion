@@ -33,6 +33,7 @@ class Actor {
         this.actionCounter = 0;
         this.activeValues = [];
         this.activeParents = [];
+        this.isActive = false;
 
         // Get actual elements if this is a selector
         if (utils.isString(props.element)) {
@@ -322,7 +323,7 @@ class Actor {
         }
 
         if (!this.numActive) {
-            this.stop();
+            this.pause();
         }
     }
 
