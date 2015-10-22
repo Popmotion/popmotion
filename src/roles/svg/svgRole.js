@@ -6,8 +6,6 @@ var Role = require('../Role'),
     each = require('../../inc/utils').each;
 
 module.exports = new Role({
-    name: 'svg',
-
     _map: require('../css/map'),
     _typeMap: require('./type-map'),
 

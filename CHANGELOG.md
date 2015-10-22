@@ -2,7 +2,16 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
-## [3.4.3] 2015-10-21
+## [3.5.0] 2015-10-21
+
+### Added
+- Roles are now getter/setters, if `get` and `set` methods are present. For example: CSS role has getter/setters, so you can call:
+
+    ui.css(element, {
+        position: 'absolute',
+        top: 0
+    });
+
 
 ### Fixed
 - `Actor.sync` now `Actor` rather than the bound sync `Action`.

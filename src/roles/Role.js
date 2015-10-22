@@ -17,13 +17,52 @@ var each = utils.each;
         set [function]:     Set value on actual element
 */
 var Role = function (methods) {
-    var role = this;
+    var role = function (element, opts, prop) {
+        var typeOfOpts = typeof opts;
+
+        // Set single, if this is a string and we have a property
+        if (typeOfOpts === 'string' && prop) {
+            role.set(element, opts, prop);
+        
+        // Set multi, if this is an object
+        } else if (typeOfOpts === 'object') {
+            each(opts, (key, value) => {
+                role.set(element, key, value);
+            });
+        
+        // Or this is a get if we have a string and no props
+        } else {
+            return role.get(element, opts);
+        }
+
+        return role;
+    };
 
     role._map = {};
 
     each(methods, function (name, method) {
         role[name] = (!utils.isObj(method)) ? method : utils.copy(method);
     });
+
+
+    /*
+        Map value keys or generate new Role with updated map
+
+        Getter:
+            @param [string]: Key to map
+            @return [string]: Mapped key, or key if no mapped key found
+
+        Setter: 
+            @param [object]: Map of Actor keys -> Role keys
+            @return [Role]: New Role with unique map
+    */
+    role.map = function (values) {
+        // If this is a string, get mapped value
+        // Otherwise this is a map, duplicated role with updated map
+        return (utils.isString(values)) ? this._map[values] || values : createRole(this, values);
+    };
+
+    return role;
 };
 
 /*
@@ -41,26 +80,6 @@ var createRole = function (methods, values) {
     });
 
     return newRole;
-};
-
-Role.prototype = {
-
-    /*
-        Map value keys or generate new Role with updated map
-
-        Getter:
-            @param [string]: Key to map
-            @return [string]: Mapped key, or key if no mapped key found
-
-        Setter: 
-            @param [object]: Map of Actor keys -> Role keys
-            @return [Role]: New Role with unique map
-    */
-    map: function (values) {
-        // If this is a string, get mapped value
-        // Otherwise this is a map, duplicated role with updated map
-        return (utils.isString(values)) ? this._map[values] || values : createRole(this, values);
-    }
 };
 
 module.exports = Role;
