@@ -133,6 +133,27 @@ var valueTypeManager = require('../value-types/manager'),
             state.values[key] = value.current;
         }
 
+        // Check if we have distance property and update x,y accordingly
+        if (this.values.distance) {
+            let distance = this.values.distance.current;
+            let angle = this.values.angle ? this.values.angle.current : 0;
+            let originX = this.values.originX.current;
+            let originY = this.values.originY.current;
+
+            if (!this.values.x) this.values.x = {};
+            if (!this.values.y) this.values.y = {};
+
+            let newPoint = calc.pointFromAngleAndDistance({ x: originX, y: originY }, angle, distance);
+            
+            this.values.x.current = state.values.x = newPoint.x + this.values.distance.unit;
+            this.values.y.current = state.values.y = newPoint.y + this.values.distance.unit;
+
+            if (this.autoRotate) {
+                if (!this.values.rotate) this.values.rotate = {};
+                this.values.rotate.current = state.values.rotate = calc.angle({ x: originX, y: originY }, newPoint) + 'deg';
+            }
+        }
+
         // Fire `frame` and `update` callbacks on all Roles
         for (let i = 0; i < numRoles; i++) {
             let role = this.roles[i];

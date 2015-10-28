@@ -28,7 +28,7 @@ module.exports = {
     // Positions
     backgroundPosition: POSITIONS,
     perspectiveOrigin: POSITIONS,
-    transformOrigin: POSITIONS,    
+    transformOrigin: POSITIONS,
     // Shadows
     textShadow: SHADOW,
     boxShadow: SHADOW,    
@@ -39,6 +39,7 @@ module.exports = {
     rotateZ: ANGLE,
     skewX: ANGLE,
     skewY: ANGLE,
+    distance: PX,
     translateX: PX,
     translateY: PX,
     translateZ: PX,
