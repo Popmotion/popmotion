@@ -223,7 +223,6 @@ var utils = require('./utils.js'),
             return newValue;
         },
     
-    
         /*
             Restrict value to range
             
@@ -235,6 +234,16 @@ var utils = require('./utils.js'),
             @return [number]: Value as limited within given range
         */
         restricted: (value, min, max) => Math.min(Math.max(value, min), max),
+
+        /*
+            Framerate-independent smoothing
+
+            @param [number]: New value
+            @param [number]: Old value
+            @param [number]: Frame duration
+            @param [number] (optional): Smoothing (0 is none)
+        */
+        smooth: (newValue, oldValue, duration, smoothing = 0) => oldValue + (duration * (newValue - oldValue) / smoothing),
     
         /*
             Convert x per second to per frame velocity based on fps

@@ -2,6 +2,15 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.6.0] 2015-10-29
+
+### Added
+- New `transform(value, key, actor)` property for `Actor` values. Allows you to return a new value after its been processed by an action, but before it's been limited/rounded etc.
+- Exposed our `Track` `smooth` calculator as `ui.calc.smooth`.
+
+### Changed
+- Refactored some files to cut down on filesize.
+
 ## [3.5.0] 2015-10-21
 
 ### Added

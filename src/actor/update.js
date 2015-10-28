@@ -80,6 +80,11 @@ var valueTypeManager = require('../value-types/manager'),
             // Calculate new value
             let updatedValue = utils.isString(value.watch) ? watcher.process(this, value) : action.process(this, value, key, frameDuration);
 
+            // User-defined transform function
+            if (value.transform) {
+                updatedValue = value.transform(updatedValue, key, this);
+            }
+
             // Limit if this action does that kind of thing
             if (action.limit && value.hasRange) {
                 updatedValue = action.limit(updatedValue, value);
