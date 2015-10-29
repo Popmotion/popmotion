@@ -2,6 +2,24 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.6.1] 2015-10-29
+
+### Fixed
+- Smoothing lower than frameduration produced odd values.
+- Smooth by `0` `Infinity` error
+
+## [3.6.0] 2015-10-29
+
+### Added
+- New `transform(value, key, actor)` property for `Actor` values. Allows you to return a new value after its been processed by an action, but before it's been limited/rounded etc.
+- Exposed our `Track` `smooth` calculator as `ui.calc.smooth`.
+
+### Changed
+- Refactored some files to cut down on filesize.
+
+### Fixed
+- Fixed a regression from `3.3.3` that fixed `performance` in IE9.
+
 ## [3.5.0] 2015-10-21
 
 ### Added

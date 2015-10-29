@@ -2,7 +2,6 @@
 
 var Role = require('../Role');
 var build = require('./build');
-var each = require('../../inc/utils').each;
 
 var prefixes = ['Webkit','Moz','O','ms', ''];
 var numPrefixes = prefixes.length;
@@ -16,40 +15,36 @@ var testElement;
     @return [string]: Cached property name
 */
 var testPrefix = function (key) {
-        testElement = testElement || document.createElement('div');
+    testElement = testElement || document.createElement('div');
 
-        if (propertyNameCache[key] === false) {
-            return false;
-        } else {
-            propertyNameCache[key] = false;
+    if (propertyNameCache[key] === false) {
+        return false;
+    } else {
+        propertyNameCache[key] = false;
+    }
+
+    for (var i = 0; i < numPrefixes; i++) {
+        var prefix = prefixes[i],
+            prefixed = (prefix === '') ? key : prefix + key.charAt(0).toUpperCase() + key.slice(1);
+
+        if (prefixed in testElement.style) {
+            propertyNameCache[key] = prefixed;
         }
-
-        for (var i = 0; i < numPrefixes; i++) {
-            var prefix = prefixes[i],
-                prefixed = (prefix === '') ? key : prefix + key.charAt(0).toUpperCase() + key.slice(1);
-
-            if (prefixed in testElement.style) {
-                propertyNameCache[key] = prefixed;
-            }
-        }
-        
-        return propertyNameCache[key];
-    };
+    }
+    
+    return propertyNameCache[key];
+};
 
 var cssRole = new Role({
     _map: require('./map'),
     _typeMap: require('./type-map'),
 
-    init: function () {
-        this._cssCache = {};
+    init: function (actor) {
+        actor._cssCache = {};
     },
 
-    update: function (state) {
-        var actor = this;
-
-        each(build(state, actor._cssCache), function (key, value) {
-            cssRole.set(actor.element, key, value);
-        });
+    update: function (state, actor) {
+        cssRole(actor.element, build(state, actor._cssCache));
     },
 
     get: function (element, key) {

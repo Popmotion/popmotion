@@ -2,10 +2,6 @@ let Action = require('./Action'),
     Pointer = require('../input/Pointer'),
     calc = require('../inc/calc');
 
-function smooth(newValue, oldValue, duration, smoothing) {
-    return oldValue + (duration * (newValue - oldValue) / smoothing);
-}
-
 class Track extends Action {
     /*
         Update input offset
@@ -29,7 +25,7 @@ class Track extends Action {
 
         if (this.inputOffset.hasOwnProperty(key)) {
             newValue = (value.direct) ? this.input.current[key] : value.origin + (this.inputOffset[key] * value.amp);
-            newValue = (value.smooth) ? smooth(newValue, unmapped, this.frameDuration, value.smooth) : newValue;
+            newValue = (value.smooth) ? calc.smooth(newValue, unmapped, this.frameDuration, value.smooth) : newValue;
         }
 
         return newValue;
