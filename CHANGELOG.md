@@ -11,6 +11,9 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - Refactored some files to cut down on filesize.
 
+### Fixed
+- Fixed a regression from `3.3.3` that fixed `performance` in IE9.
+
 ## [3.5.0] 2015-10-21
 
 ### Added
