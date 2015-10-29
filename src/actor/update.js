@@ -1,5 +1,3 @@
-"use strict";
-
 var valueTypeManager = require('../value-types/manager'),
     calc = require('../inc/calc'),
     utils = require('../inc/utils'),

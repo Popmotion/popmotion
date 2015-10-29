@@ -1,5 +1,3 @@
-"use strict";
-
 var color = require('./color'),
     utils = require('../inc/utils'),
     pxDefaults = require('./px').defaultProps,
@@ -23,7 +21,7 @@ module.exports = {
         @param [string]: Shadow property
         @return [object]
     */
-    split: function (value) {
+    split: value => {
         var bits = splitSpaceDelimited(value),
             numBits = bits.length,
             hasReachedColor = false,
@@ -48,7 +46,5 @@ module.exports = {
         return utils.merge(splitValue, color.split(colorProp));
     },
 
-    combine: function (values) {
-        return createDelimited(values, shadowTerms, ' ') + color.combine(values);
-    }
+    combine: values => createDelimited(values, shadowTerms, ' ') + color.combine(values)
 };

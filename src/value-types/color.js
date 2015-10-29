@@ -1,5 +1,3 @@
-"use strict";
-
 var utils = require('../inc/utils'),
     rgb = require('./rgb'),
     hsl = require('./hsl'),
@@ -16,18 +14,11 @@ var utils = require('../inc/utils'),
     };
 
 module.exports = {
-
     defaultProps: utils.merge(rgb.defaultProps, hsl.defaultProps),
 
-    test: function (value) {
-        return rgb.test(value) || hex.test(value) || hsl.test(value);
-    },
+    test: value => rgb.test(value) || hex.test(value) || hsl.test(value),
 
-    split: function (value) {
-        return runSupported('split', value);
-    },
+    split: value => runSupported('split', value),
 
-    combine: function (values) {
-        return (values.Red !== undefined) ? rgb.combine(values) : hsl.combine(values);
-    }
+    combine: values => (values.Red !== undefined) ? rgb.combine(values) : hsl.combine(values)
 };

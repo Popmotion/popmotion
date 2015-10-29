@@ -1,5 +1,3 @@
-"use strict";
-
 var X = 'X',
     Y = 'Y',
     ALPHA = 'Alpha',

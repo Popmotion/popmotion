@@ -1,22 +1,19 @@
-"use strict";
+const maxHistorySize = 3;
 
-var // [number]: Default max size of history
-    maxHistorySize = 3,
-    
+class History {
+
     /*
         History constructor
         
         @param [var]: Variable to store in first history slot
         @param [int] (optional): Maximum size of history
     */
-    History = function (obj, max) {
-        this.max = max || maxHistorySize;
+    constructor(obj, max = maxHistorySize) {
+        this.max = max;
         this.entries = [];
         this.add(obj);
-    };
-    
-History.prototype = {
-    
+    }
+
     /*
         Push new var to history
         
@@ -24,15 +21,13 @@ History.prototype = {
         
         @param [var]: Variable to push into history.entries
     */
-    add: function (obj) {
-        var currentSize = this.getSize();
-        
+    add(obj) {
         this.entries.push(obj);
         
-        if (currentSize >= this.max) {
+        if (this.getSize() >= this.max) {
             this.entries.shift();
         }
-    },
+    }
     
     /*
         Get variable at specified index
@@ -40,30 +35,27 @@ History.prototype = {
         @param [int]: Index
         @return [var]: Var found at specified index
     */
-    get: function (i) {
-        i = (typeof i === 'number') ? i : this.getSize() - 1;
-
+    get(i = this.getSize() - 1) {
         return this.entries[i];
-    },
+    }
     
     /*
         Get the second newest history entry
         
         @return [var]: Entry found at index size - 2
     */
-    getPrevious: function () {
+    getPrevious() {
         return this.get(this.getSize() - 2);
-    },
+    }
     
     /*
         Get current history size
         
         @return [int]: Current length of entries.length
     */
-    getSize: function () {
+    getSize() {
         return this.entries.length;
     }
-    
-};
+}
 
 module.exports = History;

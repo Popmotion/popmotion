@@ -1,4 +1,4 @@
-var valueTypeManager = require('./value-types/manager'),
+var valueTypes = require('./value-types/manager'),
 
     Popmotion = {
 
@@ -26,8 +26,8 @@ var valueTypeManager = require('./value-types/manager'),
         */
         select: require('./inc/select-actor'),
 
-        addValueType: function () {
-            valueTypeManager.extend.apply(valueTypeManager, arguments);
+        addValueType: function (types) {
+            valueTypes.extend(types);
             return this;
         },
 
