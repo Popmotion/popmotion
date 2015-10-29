@@ -243,7 +243,7 @@ var utils = require('./utils.js'),
             @param [number]: Frame duration
             @param [number] (optional): Smoothing (0 is none)
         */
-        smooth: (newValue, oldValue, duration, smoothing = 0) => smoothing ? oldValue + (duration * (newValue - oldValue) / smoothing) : newValue,
+        smooth: (newValue, oldValue, duration, smoothing = 0) => oldValue + (duration * (newValue - oldValue) / Math.max(smoothing, duration)),
     
         /*
             Convert x per second to per frame velocity based on fps

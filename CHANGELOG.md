@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.6.1] 2015-10-29
+
+### Fixed
+- Smoothing lower than frameduration produced odd values.
+- Smooth by `0` `Infinity` error
+
 ## [3.6.0] 2015-10-29
 
 ### Added
