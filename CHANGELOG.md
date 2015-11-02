@@ -2,6 +2,13 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.7.0] 2015-11-07
+
+### Changed
+- Software licence changed. Popmotion is now free for non-commercial uses, and requires a per-project licence for commercial projects.
+- Reduced file size.
+- Some files converted to ES6 syntax.
+
 ## [3.6.1] 2015-10-29
 
 ### Fixed

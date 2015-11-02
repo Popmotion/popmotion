@@ -1,21 +1,83 @@
-The MIT License (MIT)
+# Popmotion License Agreement
 
-Copyright (c) 2015 Matt Perry
+### Copyright (c) 2015 Popmotion, version 3.7.0 and above
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+This license agreement (the “License Agreement”) is a legal agreement between you (either an individual or a single legal entity) and Popmotion, Ltd. covering the installation, use, copying, and distribution of the version of Popmotion code contained in the distributable package delivered at the time of download from Popmotion and any accompanying distributable files, data, and materials.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+Please read the license terms below. If you do not agree to all of the terms and conditions of this License, then do not download, install, use, copy, or distribute Popmotion.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+## Terms and Conditions
+
+### Your Acceptance of this License Agreement
+
+You should carefully read the following terms and conditions before using, installing, copying, or distributing Popmotion. Unless otherwise agreed in a writing signed by Popmotion, Ltd., your use, installation, copying, or distribution of Popmotion indicates your acceptance of this License Agreement.
+
+The terms and conditions of this License Agreement describe the permitted use of each single installation (hereinafter, a “Licensed Copy”) of Popmotion.
+
+### Scope of License
+
+Subject to the terms of this License Agreement, Popmotion, Ltd. grants to you, for each Licensed Copy, a limited, non-exclusive, royalty-free, license to use, install, copy, or distribute Popmotion.
+
+#### You may:
+    
+    - Modify, duplicate and distribute the source code for **non-commercial** uses.
+    
+#### You may not:
+
+    - Sell, rent, lease or loan the source code, in whole or in part, nor permit anyone else to do so, unless such use is expressly **non-commercial**.
+
+### License Agreement Model
+
+This is a single-installation license, meaning you may integrate a Licensed Copy into one self-executable program distribution ("app" or "program"), software application, game, public-facing (“Internet”), internal (“intranet”) web root directory or a copy of a physical device at a time. You may also install and use Popmotion without limitation for local development and testing purposes.
+
+### Licence Agreement Validity
+
+In the event your intended use of Popmotion is a **commercial application**, as defined as follows; *a software application, website, web-based application, physical device or game that charges a one-time or recurring access or usage fee, or in which micro-transaction purchases are available*, a valid commercial license must be owned for that application. A commercial license covers multiple developers, but only one project/application.
+
+### Commercial Licence Terms
+
+    - You agree to pay to Popmotion Ltd, either $9 per month or $90 per year (excluding local sales tax).
+    - Failure to reach payment within 30 days of invoice results in an invalidation of the commercial licence.
+    - A commercial licence can be cancelled at any time by the licensee. This will invalidate the commercial licence immediately.
+    - Refunds are available within 14 days of the commercial licence purchase date.
+
+### Updates
+
+Popmotion, Ltd will provide you with free updates to the edition of Popmotion for the remainder of Popmotion’s lifespan as long as a valid commercial license is owned. Such updates will include any updates for Popmotion that are released by Popmotion, Ltd for general distribution to Popmotion licensees. Popmotion, Ltd has no obligation to provide you with any updates that are not released for general distribution to Popmotion, Ltd’s other licensees. Nothing in this Agreement shall be construed to obligate Popmotion, Ltd to provide updates to you under any circumstances.
+
+### License Transfers
+
+You may transfer your right to use the Licensed Copy to a third party, provided (a) that you transfer this License Agreement and the transferee accepts this License Agreement, (b) that you retain no copies of the Licensed Copy and its associated license key, and (c) that you notify Popmotion, Ltd about the transfer in writing or by email, providing the details of the new licensee. Such transfer involves the termination of the initial license granted to you under this License Agreement. After the transfer you will no longer have any right to use the Licensed Copy.
+
+### Reservation of Rights and Ownership
+
+Popmotion, Ltd reserves all rights not expressly granted to you in this License Agreement. Popmotion, Ltd is protected by copyright and other intellectual property laws and treaties. Popmotion, Ltd owns the title, copyright, and other intellectual property rights in Popmotion, its files, and its source code. For the avoidance of doubt, Popmotion is licensed, not sold. This License Agreement does not grant you any rights to trademarks or service marks.
+
+### Termination
+
+Without prejudice to any other rights, Popmotion, Ltd may terminate this License Agreement if you fail to comply with the terms and conditions of the License. In such event, your right to use, install, copy, and distribute Popmotion terminates automatically and you must then destroy all copies of Popmotion in your possession.
+
+### Warranty
+
+Popmotion, Ltd represents and warrants that a) it has full title and ownership to Popmotion and has the authority to grant the license hereunder. To the best of Popmotion, Ltd’s knowledge, Popmotion does not infringe upon the intellectual property rights of any third party and Popmotion, Ltd has not received any notice regarding any alleged infringement thereof; b) To the knowledge of Popmotion, Ltd, Popmotion will be free from viruses.
+
+### Disclaimer of Warranties
+
+Popmotion and its related material are provided “AS IS” and without warranty of any kind and Popmotion, Ltd expressly disclaims all other warranties, expressed or implied, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose.
+
+### EXCLUSION OF INCIDENTAL, CONSEQUENTIAL, AND CERTAIN OTHER DAMAGES.
+
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL Popmotion, Ltd BE LIABLE FOR ANY SPECIAL, INCIDENTAL, PUNITIVE, INDIRECT, OR CONSEQUENTIAL DAMAGES WHATSOEVER (INCLUDING, BUT NOT LIMITED TO, DAMAGES FOR LOSS OF PROFITS OR CONFIDENTIAL OR OTHER INFORMATION, FOR BUSINESS INTERRUPTION, FOR PERSONAL INJURY, FOR LOSS OF PRIVACY, FOR FAILURE TO MEET ANY DUTY INCLUDING OF GOOD FAITH OR OF REASONABLE CARE, FOR NEGLIGENCE, AND FOR ANY OTHER PECUNIARY OR OTHER LOSS WHATSOEVER) ARISING OUT OF OR IN ANY WAY RELATED TO THE USE OF OR INABILITY TO USE Popmotion, THE PROVISION OF OR FAILURE TO PROVIDE SUPPORT OR OTHER SERVICES, INFORMATION, SOFTWARE, AND RELATED CONTENT THROUGH Popmotion OR OTHERWISE ARISING OUT OF THE USE OF Popmotion, OR OTHERWISE UNDER OR IN CONNECTION WITH ANY PROVISION OF THIS LICENSE, EVEN IN THE EVENT OF THE FAULT, TORT (INCLUDING NEGLIGENCE), MISREPRESENTATION, STRICT LIABILITY, BREACH OF CONTRACT, AND EVEN IF Popmotion, Ltd HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+
+### Limitation of Liability
+
+In no event shall Popmotion, Ltd’s liability exceed the license fees paid.
+
+### Waiver
+
+The waiver of, or failure to enforce, by either party any breach or default hereunder by the other shall not constitute the waiver of any other or subsequent or continuing breach or default.
+
+### Entire Agreement
+
+This License Agreement sets forth the entire agreement between us and supersedes any and all contemporaneous or prior proposals, agreements and representations between us, whether written or oral with respect to the subject matter hereof. Except as expressly provided herein, this License Agreement may be changed or supplemented only by mutual agreement of the parties in writing, executed by persons with authority to enter into such agreements. This License Agreement may not be modified by any course of dealing or usage of trade. It is expressly agreed that the terms of this License Agreement shall supersede the terms in any purchase order or other ordering document.
+
