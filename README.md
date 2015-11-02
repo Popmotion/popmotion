@@ -31,7 +31,6 @@ Make it pop with animation, physics, and input tracking. In the browser, on Node
 * Never reads the DOM, leaving you in total control of performance.
 * The same size as Velocity.js, **over 66% smaller** than GreenSock TweenMax. Boom shak shakalaka.
 
-
 [Get started](http://popmotion.io/guides/get-started)
 
 [Popmotion vs Velocity.js vs Greensock feature comparison](http://popmotion.io/guides/feature-comparison)
