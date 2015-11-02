@@ -2,6 +2,14 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.6.2] 2015-11-02
+
+### Added
+- Meteor support. Published on [Atmosphere](https://atmospherejs.com/popmotion/popmotion) as `popmotion:popmotion`.
+
+### Fixed
+- `performance` and `window` checks in Node.
+
 ## [3.6.1] 2015-10-29
 
 ### Fixed

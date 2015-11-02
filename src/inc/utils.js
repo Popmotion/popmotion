@@ -212,7 +212,7 @@ var protectedProperties = ['scope',  'dom'],
             
             @return [timestamp]: Current UNIX timestamp
         */
-        currentTime: () => (performance && performance.now) ? performance.now() : new Date().getTime()
+        currentTime: () => (typeof performance !== 'undefined' && performance.now) ? performance.now() : new Date().getTime()
     };
 
 module.exports = utils;
