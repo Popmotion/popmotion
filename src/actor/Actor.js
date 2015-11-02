@@ -1,8 +1,17 @@
 var Process = require('../process/Process'),
     Queue = require('../inc/Queue'),
     utils = require('../inc/utils'),
+    select = require('../inc/select-dom'),
     update = require('./update'),
     valueOps = require('./value-operations'),
+
+    /*
+        Role imports
+    */
+    defaultRole = require('../roles/defaultRole'),
+    cssRole = require('../roles/css/cssRole'),
+    svgRole = require('../roles/svg/svgRole'),
+    drawPathRole = require('../roles/path/drawPathRole'),
 
     Action = require('../actions/Action'),
     each = utils.each;
