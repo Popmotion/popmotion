@@ -2,7 +2,11 @@
 
 ## Anything in, anywhere out
 
-Popmotion is a 12kb JavaScript motion engine. Make it pop with animation, physics, and input tracking. In the browser, on Node, anywhere.
+Popmotion is a 12kb JavaScript motion engine. 
+
+Make it pop with animation, physics, and input tracking. In the browser, on Node, anywhere.
+
+**Free** for non-commercial use!
 
 [Download](http://popmotion.io/download) | [API](http://popmotion.io/api) | [Guides](http://popmotion.io/guides/get-started) | [Twitter](http://twitter.com/popmotionjs)
 
