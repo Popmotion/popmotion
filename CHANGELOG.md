@@ -2,6 +2,14 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.6.3] 2015-11-03
+
+### Added
+- Extra tests to ensure Popmotion is loading correctly in Meteor.
+
+### Fixed
+- Explict test for rAF for when `window` is available and `requestAnimationFrame` isn't. 
+
 ## [3.6.2] 2015-11-02
 
 ### Added

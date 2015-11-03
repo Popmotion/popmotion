@@ -1,1 +1,3 @@
-window = {};
+if (window !== "undefined") {
+    window = {};
+}
