@@ -17,10 +17,7 @@ var utils = require('./utils.js'),
             @param [object]: X and Y cordinates of to point
             @return [radian]: Angle between the two points in radians
         */
-        angle: (a, b = zeroPoint) => calc.angleFromCenter({
-            x: a.x - b.x,
-            y: a.y - b.y
-        }),
+        angle: (a, b = zeroPoint) => calc.angleFromCenter(a.x - b.x, a.y - b.y),
 
         /*
             Angle from center
@@ -95,10 +92,7 @@ var utils = require('./utils.js'),
             @param [object]: (optional): x and y of point B
             @return [number]: The distance between the two points
         */
-        distance2D: (a, b = zeroPoint) => calc.hypotenuse({
-            x: Math.abs(a.x - b.x),
-            y: Math.abs(a.y - b.y)
-        }),
+        distance2D: (a, b = zeroPoint) => calc.hypotenuse(Math.abs(a.x - b.x), Math.abs(a.y - b.y)),
             
         /*
             Hypotenuse
