@@ -3,7 +3,7 @@ const each = require('../inc/utils').each;
 module.exports = {
     extend: function (types) {
         each(types, (name, type) => {
-            this[key] = type;
+            this[name] = type;
         });
     },
 

@@ -10,6 +10,9 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 - Moved back to small for production compilation.
 - Upgraded Babel from 5 to 6.
 
+### Added
+- Mocha unit tests.
+
 ## [3.6.2] 2015-11-02
 
 ### Added

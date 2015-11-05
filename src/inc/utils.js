@@ -95,7 +95,7 @@ var protectedProperties = ['scope',  'dom'],
             @param [string]: Variable to test
             @return [boolean]: If utils looks like a relative value assignment
         */
-        isRelativeValue: value => (value && value.indexOf && value.indexOf('=') > 0),
+        isRelativeValue: value => (value && value.indexOf && value.indexOf('=') > 0) ? true : false,
         
         /*
             Is utils var an array ? 
