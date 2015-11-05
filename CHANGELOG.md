@@ -2,7 +2,6 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
-<<<<<<< HEAD
 ## [3.7.0] 2015-11-07
 
 ### Changed
@@ -12,8 +11,8 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 - Upgraded Babel from 5 to 6.
 
 ### Added
-- Mocha unit tests.
-=======
+- Beginning suite of Mocha unit tests.
+
 ## [3.6.3] 2015-11-03
 
 ### Added
@@ -21,7 +20,6 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - Explict test for rAF for when `window` is available and `requestAnimationFrame` isn't. 
->>>>>>> master
 
 ## [3.6.2] 2015-11-02
 
