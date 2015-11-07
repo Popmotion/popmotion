@@ -127,7 +127,7 @@ class Actor {
 
         // Fire new action onStart
         if (!action.isActive && action.onStart) {
-            action.onStart.call(this, this, action);
+            action.onStart(this, action);
         }
 
         this.activate();

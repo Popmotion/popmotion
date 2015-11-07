@@ -227,7 +227,17 @@ var utils = require('./utils.js'),
             @param [number]: Upper limit of range
             @return [number]: Value as limited within given range
         */
-        restricted: (value, min, max) => Math.min(Math.max(value, min), max),
+        restricted: (value, min, max) => {
+            if (utils.isNum(min)) {
+                value = Math.max(value, min);
+            }
+            
+            if (utils.isNum(max)) {
+                value = Math.min(value, max);
+            }
+            
+            return value;
+        },
 
         /*
             Framerate-independent smoothing
