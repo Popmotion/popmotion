@@ -318,6 +318,10 @@ class Actor {
 
     unbindAction(id) {
         if (this.activeActions.hasOwnProperty(id)) {
+            let action = this.activeActions[id];
+            if (action.input && action.input.autoStop === true) {
+                action.input.stop();
+            }
             this.numActive--;
             delete this.activeActions[id];
         }
