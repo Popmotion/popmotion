@@ -1,5 +1,3 @@
-"use strict";
-
 module.exports = {
     color: {
         min: 0,

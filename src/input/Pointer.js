@@ -57,6 +57,7 @@ var Input = require('./Input.js'),
 */
 proto.bindEvents = function () {
     this.moveEvent = this.isTouch ? TOUCHMOVE : MOUSEMOVE;
+    this.autoStop = true;
     
     currentPointer = this;
     

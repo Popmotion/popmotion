@@ -1,3 +1,3 @@
-module.exports = function (value) {
-    return (typeof value === 'string') ? value.split(/,\s*/) : [value];
-};
+const isString = require('../../inc/utils').isString;
+
+module.exports = value => isString(value) ? value.split(/,\s*/) : [value];

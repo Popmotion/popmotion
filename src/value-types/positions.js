@@ -1,5 +1,3 @@
-"use strict";
-
 var createDelimited = require('./manipulators/create-delimited'),
     pxDefaults = require('./px').defaultProps,
     splitSpaceDelimited = require('./manipulators/split-space-delimited'),
@@ -17,7 +15,7 @@ module.exports = {
             "20% 30%" -> {20%, 30%}
             "20%" -> {20%, 20%}
     */
-    split: function (value) {
+    split: value => {
         var positions = splitSpaceDelimited(value),
             numPositions = positions.length,
             splitValue = {
@@ -32,7 +30,5 @@ module.exports = {
         return splitValue;
     },
 
-    combine: function (values) {
-        return createDelimited(values, terms, ' ');
-    }
+    combine: values => createDelimited(values, terms, ' ')
 };

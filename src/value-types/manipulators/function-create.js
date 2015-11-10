@@ -1,3 +1,1 @@
-module.exports = function (value, prefix) {
-    return prefix + '(' + value + ')';
-};
+module.exports = (value, prefix) => `${prefix}(${value})`;

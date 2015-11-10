@@ -2,6 +2,17 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.7.0] 2015-11-07
+
+### Changed
+- Software licence changed. Popmotion is now free for non-commercial uses, and requires a per-project licence for commercial projects.
+- More files converted to ES6 syntax.
+- Moved back to small for production compilation.
+- Upgraded Babel from 5 to 6.
+
+### Added
+- Beginning suite of Mocha unit tests.
+
 ## [3.6.3] 2015-11-03
 
 ### Added

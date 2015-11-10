@@ -9,10 +9,7 @@ module.exports = {
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
-                loader: "babel",
-                query: {
-                    loose: "all"
-                }
+                loader: "babel"
             }
         ]
     },

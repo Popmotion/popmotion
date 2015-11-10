@@ -1,24 +1,14 @@
-var each = require('../inc/utils').each,
+const each = require('../inc/utils').each;
 
-    ValueTypeManager = function () {};
-
-ValueTypeManager.prototype = {
-    extend: function (name, mod) {
-        var multiMods = (typeof name == 'object'),
-            mods = multiMods ? name : {};
-
-        // If we just have one module, coerce
-        if (!multiMods) {
-            mods[name] = mod;
-        }
-
-        each(mods, (key, thisMod) => {
-            this[key] = thisMod;
+module.exports = {
+    extend: function (types) {
+        each(types, (name, type) => {
+            this[name] = type;
         });
     },
 
-    defaultProps: function (type, key) {
-        var valueType = this[type],
+    defaultProps: function (typeName, key) {
+        var valueType = this[typeName],
             defaultProps = (valueType.defaultProps) ? valueType.defaultProps[key] || valueType.defaultProps : {};
 
         return defaultProps;
@@ -27,14 +17,13 @@ ValueTypeManager.prototype = {
     test: function (value) {
         var type = false;
 
-        each(this, function (key, mod) {
-            if (mod.test && mod.test(value)) {
+        each(this, (key, valueType) => {
+            if (valueType.test && valueType.test(value)) {
                 type = key;
+                return false;
             }
         });
 
         return type;
     }
 };
-
-module.exports = new ValueTypeManager();

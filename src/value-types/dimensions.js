@@ -1,5 +1,3 @@
-"use strict";
-
 var terms = require('./settings/dictionary').dimensions,
     pxDefaults = require('./px').defaultProps,
     createDelimited = require('./manipulators/create-delimited'),
@@ -20,7 +18,7 @@ module.exports = {
         
         @return [object]: Object with T/R/B/L metrics
     */
-    split: function (value) {
+    split: value => {
         var dimensions = splitSpaceDelimited(value),
             numDimensions = dimensions.length,
             jumpBack = (numDimensions !== 1) ? 2 : 1,
@@ -39,7 +37,5 @@ module.exports = {
         return splitValue;
     },
 
-    combine: function (values) {
-        return createDelimited(values, terms, ' ');
-    }
+    combine: values => createDelimited(values, terms, ' ')
 };

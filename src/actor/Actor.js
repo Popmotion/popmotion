@@ -127,7 +127,7 @@ class Actor {
 
         // Fire new action onStart
         if (!action.isActive && action.onStart) {
-            action.onStart.call(this, this, action);
+            action.onStart(this, action);
         }
 
         this.activate();
@@ -318,6 +318,10 @@ class Actor {
 
     unbindAction(id) {
         if (this.activeActions.hasOwnProperty(id)) {
+            let action = this.activeActions[id];
+            if (action.input && action.input.autoStop === true) {
+                action.input.stop();
+            }
             this.numActive--;
             delete this.activeActions[id];
         }

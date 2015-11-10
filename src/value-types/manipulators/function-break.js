@@ -1,3 +1,1 @@
-module.exports = function (value) {
-    return value.substring(value.indexOf('(') + 1, value.lastIndexOf(')'));
-};
+module.exports = value => value.substring(value.indexOf('(') + 1, value.lastIndexOf(')'));

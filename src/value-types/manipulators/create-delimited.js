@@ -1,6 +1,4 @@
-"use strict";
-
-module.exports = function (values, terms, delimiter, chop) {
+module.exports = (values, terms, delimiter, chop) => {
     var combined = '',
         key = '',
         i = 0,

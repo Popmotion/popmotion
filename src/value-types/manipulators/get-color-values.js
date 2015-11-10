@@ -1,7 +1,7 @@
 var splitCommaDelimited = require('./split-comma-delimited'),
     functionBreak = require('./function-break');
 
-module.exports = function (value, terms) {
+module.exports = (value, terms) => {
     var splitValue = {},
         numTerms = terms.length,
         colors = splitCommaDelimited(functionBreak(value)),
