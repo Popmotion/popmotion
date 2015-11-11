@@ -20,17 +20,13 @@ Loop.prototype = {
         Fire all active processes once per frame
     */
     frame: function () {
-        var self = this;
-
-        tick(function (framestamp) {
-            self.timer.update(framestamp);
-            let isActive = self.callback.call(self.scope, framestamp, self.timer.getElapsed());
-
-            if (isActive) {
-                self.frame();
-            } else {
-                self.stop();
+        tick(framestamp => {
+            if (this.isRunning) {
+                this.frame();
             }
+            this.timer.update(framestamp);
+            
+            this.isRunning = this.callback.call(this.scope, framestamp, this.timer.getElapsed());
         });
     },
     
