@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.7.1] 2015-11-11
+
+### Changed
+- Refactored core clock to increase performance in lower-end devices.
+
 ## [3.7.0] 2015-11-07
 
 ### Changed
