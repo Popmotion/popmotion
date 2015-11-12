@@ -10,9 +10,7 @@ var Bezier = require('./Bezier'),
         @param [function]: The easing function to mirror
         @returns [number]: The easing-adjusted delta
     */
-    mirrorEasing = function (progress, method) {
-        return (progress <= 0.5) ? method(2 * progress) / 2 : (2 - method(2 * (1 - progress))) / 2;
-    },
+    mirrorEasing = method => (progress, strength) => (progress <= 0.5) ? method(2 * progress, strength) / 2 : (2 - method(2 * (1 - progress), strength)) / 2,
             
     /*
         Reverse easing
@@ -24,9 +22,7 @@ var Bezier = require('./Bezier'),
         @param [function]: The easing function to reverse
         @returns [number]: The easing-adjusted delta
     */
-    reverseEasing = function (progress, method) {
-        return 1 - method(1 - progress);
-    };
+    reverseEasing = method => (progress, strength) => 1 - method(1 - progress, strength);
 
 /*
     Easing class
@@ -45,21 +41,10 @@ var Easing = function (x1, y1, x2, y2) {
         easingFunction = new Bezier(x1, y1, x2, y2);
 
     } else {
-        easingFunction = function (progress) {
-            return method(progress);
-        };
-
-        easingFunction.in = function (progress) {
-            return method(progress);
-        };
-
-        easingFunction.out = function (progress) {
-            return reverseEasing(progress, method);
-        };
-
-        easingFunction.inOut = function (progress) {
-            return mirrorEasing(progress, method);
-        };
+        easingFunction = (progress, strength) => method(progress, strength);
+        easingFunction.in = (progress, strength) => method(progress, strength);
+        easingFunction.out = reverseEasing(method);
+        easingFunction.inOut = mirrorEasing(method);
     }
 
     return easingFunction;

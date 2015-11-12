@@ -19,62 +19,47 @@
     Bezier curve interpretor created from Gaëtan Renaudeau's original BezierEasing  
     https://github.com/gre/bezier-easing/blob/master/index.js  
     https://github.com/gre/bezier-easing/blob/master/LICENSE
+
+    Anticipate easing created by Elliot Gino
+    https://twitter.com/ElliotGeno
 */
-"use strict";
+// Imports
+const Easing = require('./Easing');
+const utils = require('../../inc/utils');
 
-var Easing = require('./Easing'),
-    easingFunction,
+// Values
+const DEFAULT_BACK_STRENGTH = 1.525;
+const DEFAULT_POW_STRENGTH = 2;
+
+// Utility functions
+const generatePowerEasing = strength => (progress, strength) => baseEasing.ease(progress, strength);
+
+/*
+    Each of these base functions is an easeIn
     
-    // Generate easing function with provided power
-    generatePowerEasing = function (power) {
-        return function (progress) {
-            return Math.pow(progress, power);
-        };
-    },
+    On init, we use .mirror and .reverse to generate easeInOut and
+    easeOut functions respectively.
+*/
+let baseEasing = {
+    ease: (progress, strength = DEFAULT_POW_STRENGTH) => process ** strength,
+    circ: progress => 1 - Math.sin(Math.acos(progress)),
+    back: (progress, strength = DEFAULT_BACK_STRENGTH) => (progress * progress) * ((strength + 1) * progress - strength)
+};
 
-    /*
-        Each of these base functions is an easeIn
-        
-        On init, we use EasingFunction.mirror and .reverse to generate easeInOut and
-        easeOut functions respectively.
-    */
-    baseEasing = {
-        circ: function (progress) {
-            return 1 - Math.sin(Math.acos(progress));
-        },
-        back: function (progress) {
-            var strength = 1.5;
-
-            return (progress * progress) * ((strength + 1) * progress - strength);
-        }
-    };
-
-// Generate power easing easing
-['ease', 'cubic', 'quart', 'quint'].forEach(function (easingName, i) {
-    baseEasing[easingName] = generatePowerEasing(i + 2);
+['cubic', 'quart', 'quint'].forEach(function (easingName, i) {
+    baseEasing[easingName] = generatePowerEasing(i + 3);
 });
 
 // Generate in/out/inOut variations
-for (var key in baseEasing) {
-    if (baseEasing.hasOwnProperty(key)) {
-        easingFunction = new Easing(baseEasing[key]);
-        baseEasing[key + 'In'] = easingFunction.in;
-        baseEasing[key + 'Out'] = easingFunction.out;
-        baseEasing[key + 'InOut'] = easingFunction.inOut;
-    }
-}
+utils.each(baseEasing, (key, baseEase) => {
+    let easingFunction = new Easing(baseEase);
+    baseEasing[`${key}In`] = easingFunction.in;
+    baseEasing[`${key}Out`] = easingFunction.out;
+    baseEasing[`${key}InOut`] = easingFunction.inOut;
+});
 
-/*
-    Linear easing adjustment
-    
-    The default easing method, not added with .extend as it has no Out or InOut
-    variation.
-    
-    @param [number]: Progress, from 0-1
-    @return [number]: Unadjusted progress
-*/
-baseEasing.linear = function (progress) {
-    return progress;
-};
+baseEasing.linear = progress => progress;
+baseEasing.anticipate = (progress, strength = DEFAULT_BACK_STRENGTH) =>
+    ((progress*=2) < 1) ? 0.5 * baseEasing.backIn(progress, strength) :  0.5 * (2 - Math.pow(2, -10 * (progress - 1)));
 
 module.exports = baseEasing;

@@ -58,6 +58,7 @@ class Track extends Action {
     getDefaultValue() {
         return {
             amp: 1,
+            escapeAmp: 0,
             direct: false,
             smooth: 0
         };

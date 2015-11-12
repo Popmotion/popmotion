@@ -1,4 +1,5 @@
-var valueTypes = require('./value-types/manager'),
+var Process = require('./process/Process'),
+    valueTypes = require('./value-types/manager'),
 
     Popmotion = {
 
@@ -10,7 +11,7 @@ var valueTypes = require('./value-types/manager'),
 
         Iterator: require('./iterator/Iterator'),
 
-        Process: require('./process/Process'),
+        Process: Process,
 
         Easing: require('./actions/tween/Easing'),
 
@@ -26,9 +27,25 @@ var valueTypes = require('./value-types/manager'),
         */
         select: require('./inc/select-actor'),
 
-        addValueType: function (types) {
+        /*
+            Process helper methods
+        */
+        onNextFrame: method => {
+            const process = new Process(method);
+            return process.start(1);
+        },
+        setInterval: (method, interval) => {
+            const process = new Process(method);
+            return process.every(interval);
+        },
+        setTimeout: (method, timeout) => {
+            const process = new Process(method);
+            return process.after(timeout);
+        },
+
+        addValueType: types => {
             valueTypes.extend(types);
-            return this;
+            return Popmotion;
         },
 
         calc: require('./inc/calc')

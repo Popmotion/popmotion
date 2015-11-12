@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.8.0] 2015-11-15
+
+### Added
+- Elliot Geno's awesome `'anticipate'` easing. Follow him at [@ElliotGeno](https://twitter.com/ElliotGeno/).
+- Create modified easing function strengths, for instance `ease: ui.modifyEase('backOut', 2)`. `'ease'` and `'back'` in/out/inOut variants and `'anticipate'` are available.
+
 ## [3.7.1] 2015-11-11
 
 ### Changed
