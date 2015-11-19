@@ -41,7 +41,7 @@ const generatePowerEasing = strength => (progress, strength) => baseEasing.ease(
     easeOut functions respectively.
 */
 let baseEasing = {
-    ease: (progress, strength = DEFAULT_POW_STRENGTH) => process ** strength,
+    ease: (progress, strength = DEFAULT_POW_STRENGTH) => progress ** strength,
     circ: progress => 1 - Math.sin(Math.acos(progress)),
     back: (progress, strength = DEFAULT_BACK_STRENGTH) => (progress * progress) * ((strength + 1) * progress - strength)
 };

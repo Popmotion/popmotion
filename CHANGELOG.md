@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.8.1] 2015-11-19
+
+### Fixed
+- Pow easings incorrectly named var.
+
 ## [3.8.0] 2015-11-19
 
 ### Added
