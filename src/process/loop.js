@@ -73,7 +73,7 @@ const fire = (method, framestamp, elapsed) => {
         let process = runningProcesses[runningIds[i]];
 
         if (process && process[method]) {
-            process[method](framestamp, elapsed);
+            process[method](process.scope, framestamp, elapsed);
         }
     }
 }

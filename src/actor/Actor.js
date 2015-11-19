@@ -2,8 +2,14 @@ var Process = require('../process/Process'),
     Queue = require('../inc/Queue'),
     utils = require('../inc/utils'),
     select = require('../inc/select-dom'),
-    update = require('./update'),
     valueOps = require('./value-operations'),
+
+    /*
+        Process methods
+    */
+    update = require('./update'),
+    render = require('./render'),
+    postRender = require('./post-render'),
 
     /*
         Role imports
@@ -27,7 +33,7 @@ class Actor {
         this.values = {};
         this.state = { values: {} };
         this.queue = new Queue();
-        this.process = new Process(this, update);
+        this.process = new Process(this, { update, render, postRender });
         this.activeActions = {};
         this.numActive = 0;
         this.actionCounter = 0;
