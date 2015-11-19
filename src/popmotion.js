@@ -1,5 +1,4 @@
-var Process = require('./process/Process'),
-    valueTypes = require('./value-types/manager'),
+var valueTypes = require('./value-types/manager'),
 
     Popmotion = {
 
@@ -11,7 +10,7 @@ var Process = require('./process/Process'),
 
         Iterator: require('./iterator/Iterator'),
 
-        Process: Process,
+        Process: require('./process/Process'),
 
         Easing: require('./actions/tween/Easing'),
 
@@ -27,21 +26,12 @@ var Process = require('./process/Process'),
         */
         select: require('./inc/select-actor'),
 
+        ease: require('./actions/tween/preset-easing'),
+
         /*
-            Process helper methods
+            Modify properties of inbuilt easing function
         */
-        onNextFrame: method => {
-            const process = new Process(method);
-            return process.start(1);
-        },
-        setInterval: (method, interval) => {
-            const process = new Process(method);
-            return process.every(interval);
-        },
-        setTimeout: (method, timeout) => {
-            const process = new Process(method);
-            return process.after(timeout);
-        },
+        modifyEase: require('./actions/tween/modify-ease'),
 
         addValueType: types => {
             valueTypes.extend(types);
