@@ -6,11 +6,8 @@ class Process {
     /*
         @param [function || object]
         @param [object] (optional)
-        @param [boolean] (optional)
     */
-    constructor(callback, scope, isPassive) {
-        const numArgs = arguments.length;      
-
+    constructor(callback, scope) {
         // Set callback
         if (utils.isFunc(callback)) {
             this.render = callback;
@@ -21,9 +18,7 @@ class Process {
             });
         }
 
-        // Set scope
         this.scope = utils.isObj(scope) ? scope : this;
-        this.isPassive = isPassive === true ? true : false;
 
         this.id = loop.getProcessId();
         this.isActive = false;
@@ -47,6 +42,19 @@ class Process {
     deactivate() {
         this.isActive = false;
         loop.deactivate(this, this.id);
+    }
+
+    once() {
+        this.cleanup = () => {
+            this.stop();
+            this.cleanup = undefined;
+        }
+
+        return this.start();
+    }
+
+    setPassive(passive) {
+        this.isPassive = passive;
     }
 }
 

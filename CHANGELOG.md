@@ -6,9 +6,15 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 - New core processing loop. Seperates processes into four stages: `update`, `preRender`, `render`, `postRender`.
+- `Process.once` to fire a Process for a single frame.
 
 ### Changed
 - `new ui.Process()` takes `callback, scope` instead of `scope, callback`.
+- `Process` callbacks now receive `scope` as the first argument, then `framestamp, frameDuration`.
+
+### Removed
+- `Process.every`, `Process.reset` and `Process.fire`. Processes should only be started/stopped with `Process.start` and `Process.stop` respectively, to ensure they're run as part of the main loop. `every` is redundant with a combination of `setInterval` and `Process.once`.
+- `Process.start` no longer takes a time period as an argument - use `setTimeout` to `Process.stop`.
 
 ## [3.8.1] 2015-11-19
 

@@ -1,6 +1,9 @@
 const timer = require('./timer');
 const systemTick = require('./system-tick');
 
+const processOrder = ['update', 'preRender', 'render', 'postRender', 'cleanup'];
+const numProcessSteps = processOrder.length;
+
 // [int]: Process ID, incremented for each new process
 let currentProcessId = 0;
 
@@ -31,14 +34,10 @@ let isRunning = false;
 const updateCount = (add, isPassive) => {
     const modify = add ? 1 : -1;
 
-    runningCount + modify;
+    runningCount += modify;
 
     if (!isPassive) {
-        activeCount + modify;
-
-        if (add) {
-            loop.start();
-        }
+        activeCount += modify;
     }
 }
 
@@ -73,7 +72,7 @@ const fire = (method, framestamp, elapsed) => {
         let process = runningProcesses[runningIds[i]];
 
         if (process && process[method]) {
-            process[method](process.scope, framestamp, elapsed);
+            process[method].call(process.scope, process.scope, framestamp, elapsed);
         }
     }
 }
@@ -88,10 +87,9 @@ const fire = (method, framestamp, elapsed) => {
 const fireAll = (framestamp, elapsed) => {
     purge();
 
-    fire('update');
-    fire('preRender');
-    fire('render');
-    fire('postRender');
+    for (let i = 0; i < numProcessSteps; i++) {
+        fire(processOrder[i], framestamp, elapsed);
+    }
 
     purge();
 
@@ -109,7 +107,6 @@ const loop = {
             }
 
             timer.update(framestamp);
-
             isRunning = fireAll(framestamp, timer.getElapsed());
         });
     },
@@ -151,6 +148,7 @@ module.exports = {
             runningProcesses[processId] = process;
 
             updateCount(true, process.isPassive);
+            loop.start();
         }
     },
 

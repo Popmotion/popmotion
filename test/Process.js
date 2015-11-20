@@ -12,7 +12,7 @@ describe('new Process()', () => {
         expect(process.render).to.equal(testFunc);
     });
 
-    it ('should correctly assign an object', () => {
+    it('should correctly assign an object argument', () => {
         const process = new Process({
             update: testFunc,
             preRender: testFunc
@@ -22,3 +22,16 @@ describe('new Process()', () => {
         expect(process.preRender).to.equal(testFunc);
     });
 });
+
+describe('Process.once', () => {
+    it('should fire callback once', (done) => {
+        let count = 0;
+        const process = new Process(() => {
+            count++;
+            expect(count).to.equal(1);
+            done();
+        });
+
+        process.once();
+    })
+})

@@ -13,7 +13,7 @@ module.exports = (actor) => {
         let value = actor.values[key];
 
         // Update parent value current property
-        value.current = valueTypeManager[value.type].combine(state[key], value.template);
+        value.current = valueTypeManager[value.type].combine(actor.state[key], value.template);
 
         // Update state
         actor.state.values[key] = value.current;
@@ -24,7 +24,7 @@ module.exports = (actor) => {
         let role = actor.roles[i];
         let mappedValues = {};
 
-        each(state.values, createMapper(role, mappedValues));
+        each(actor.state.values, createMapper(role, mappedValues));
 
         if (role.frame) {
             role.frame.call(actor, mappedValues, actor);
