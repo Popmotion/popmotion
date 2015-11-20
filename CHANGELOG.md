@@ -2,6 +2,14 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.0.0] 2015-11-20
+
+### Added
+- New core processing loop. Seperates processes into four stages: `update`, `preRender`, `render`, `postRender`.
+
+### Changed
+- `new ui.Process()` takes `callback, scope` instead of `scope, callback`.
+
 ## [3.8.1] 2015-11-19
 
 ### Fixed

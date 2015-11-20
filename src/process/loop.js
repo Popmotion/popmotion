@@ -56,7 +56,7 @@ const purge = () => {
         if (activeIdIndex > -1) {
             runningIds.splice(activeIdIndex, 1);
 
-            updateCount(false, process.isPassive());
+            updateCount(false, process.isPassive);
 
             delete runningProcesses[idToDelete];
         }
@@ -150,7 +150,7 @@ module.exports = {
             runningIds.push(processId);
             runningProcesses[processId] = process;
 
-            updateCount(true, process.isPassive())
+            updateCount(true, process.isPassive);
         }
     },
 
