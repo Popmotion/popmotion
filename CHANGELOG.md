@@ -7,7 +7,7 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - New core processing loop. Seperates processes into four stages: `update`, `preRender`, `render`, `postRender`.
 - `Process.once` to fire a Process for a single frame.
-- Run background processes by passing `true` to `Process.setBackground`. Background processes won't spin up the process loop when activated, only running when non-background processes are active.
+- Run background processes by passing `true` to `Process.setBackground` or as the last argument to the `Process` constructor. Background processes won't spin up the process loop when activated, only running when non-background processes are active.
 
 ### Changed
 - `new ui.Process()` takes `callback, scope` instead of `scope, callback`.
