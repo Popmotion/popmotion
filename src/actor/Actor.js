@@ -33,7 +33,7 @@ class Actor {
         this.values = {};
         this.state = { values: {} };
         this.queue = new Queue();
-        this.process = new Process(this, { update, render, postRender });
+        this.process = new Process({ update, render, postRender }, this);
         this.activeActions = {};
         this.numActive = 0;
         this.actionCounter = 0;
