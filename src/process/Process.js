@@ -20,6 +20,8 @@ class Process {
 
         this.scope = utils.isObj(scope) ? scope : this;
 
+        this.setBackground(arguments[arguments.length - 1]);
+
         this.id = loop.getProcessId();
         this.isActive = false;
     }
@@ -53,8 +55,9 @@ class Process {
         return this.start();
     }
 
-    setPassive(passive) {
-        this.isPassive = passive;
+    setBackground(runInBackground) {
+        this.isBackground = (runInBackground === true) ? true : false;
+        return this;
     }
 }
 

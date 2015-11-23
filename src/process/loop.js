@@ -31,12 +31,12 @@ let isRunning = false;
     @param [boolean]
     @param [boolean]
 */
-const updateCount = (add, isPassive) => {
+const updateCount = (add, isBackground) => {
     const modify = add ? 1 : -1;
 
     runningCount += modify;
 
-    if (!isPassive) {
+    if (!isBackground) {
         activeCount += modify;
     }
 }
@@ -55,7 +55,7 @@ const purge = () => {
         if (activeIdIndex > -1) {
             runningIds.splice(activeIdIndex, 1);
 
-            updateCount(false, process.isPassive);
+            updateCount(false, process.isBackground);
 
             delete runningProcesses[idToDelete];
         }
@@ -147,7 +147,7 @@ module.exports = {
             runningIds.push(processId);
             runningProcesses[processId] = process;
 
-            updateCount(true, process.isPassive);
+            updateCount(true, process.isBackground);
             loop.start();
         }
     },
