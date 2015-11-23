@@ -43,7 +43,7 @@ class Process {
 
     deactivate() {
         this.isActive = false;
-        loop.deactivate(this, this.id);
+        loop.deactivate(this.id);
     }
 
     once() {

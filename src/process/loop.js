@@ -10,7 +10,7 @@ let currentProcessId = 0;
 // [int]: Number of running processes
 let runningCount = 0;
 
-// [int]: Number of running active processes
+// [int]: Number of running non-background processes
 let activeCount = 0;
 
 // [array]: Array of active process IDs
@@ -55,7 +55,7 @@ const purge = () => {
         if (activeIdIndex > -1) {
             runningIds.splice(activeIdIndex, 1);
 
-            updateCount(false, process.isBackground);
+            updateCount(false, runningProcesses[idToDelete].isBackground);
 
             delete runningProcesses[idToDelete];
         }
@@ -68,7 +68,7 @@ const purge = () => {
     Fire one process stage
 */
 const fire = (method, framestamp, elapsed) => {
-    for (let i = 0; i < activeCount; i++) {
+    for (let i = 0; i < runningCount; i++) {
         let process = runningProcesses[runningIds[i]];
 
         if (process && process[method]) {
@@ -120,7 +120,7 @@ const loop = {
     },
 
     stop: () => {
-        isRunning = false
+        isRunning = false;
     }
 };
 
