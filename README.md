@@ -4,7 +4,7 @@
 
 Make it pop with animation, physics, and input tracking. In the browser, on Node, anywhere.
 
-[Download](http://popmotion.io/download) | [Subscribe](https://popmotion.io/subscribe) | [API](http://popmotion.io/api) | [Guides](http://popmotion.io/guides/get-started) | [Twitter](http://twitter.com/popmotionjs)
+[Download](http://popmotion.io/download) | [API](http://popmotion.io/api) | [Guides](http://popmotion.io/guides/get-started) | [Twitter](http://twitter.com/popmotionjs)
 
 ### Flexible
 * **Native DOM support:** CSS, SVG, SVG path and DOM attribute support, out of the box.
@@ -26,6 +26,6 @@ Make it pop with animation, physics, and input tracking. In the browser, on Node
 * Never magically reads the DOM, leaving you in total control of performance.
 * The same size as Velocity.js, **over 66% smaller** than GreenSock TweenMax.
 
-[Get started](http://popmotion.io/guides/get-started) | [Subscribe](https://popmotion.io/subscribe)
+[Get started](http://popmotion.io/guides/get-started)
 
 [Popmotion vs Velocity.js vs Greensock feature comparison](http://popmotion.io/guides/feature-comparison)
