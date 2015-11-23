@@ -22,7 +22,7 @@ let Action = require('./Action'),
             to use or generated easing function
         @return [number]: Value of eased progress in range
     */  
-    ease = function (progress, from, to, ease) {
+    ease = (progress, from, to, ease) => {
         var progressLimited = calc.restricted(progress, 0, 1),
             easingFunction = utils.isString(ease) ? presetEasing[ease] : ease;
 
@@ -90,14 +90,13 @@ class Tween extends Action {
         @return [number]: Calculated value
     */
     process(actor, value) {
-        var target = value.to,
-            progressTarget = (this.playDirection === 1) ? 1 : 0,
-            newValue = value.current,
-            progress;
+        const target = value.to;
+        const progressTarget = (this.playDirection === 1) ? 1 : 0;
+        let newValue = value.current;
 
         // If this value has a to property, otherwise we just return current value
         if (target !== undefined) {
-            progress = calc.restricted(calc.progress(this.elapsed - value.delay, 0, value.duration) - value.stagger, 0, 1);
+            let progress = calc.restricted(calc.progress(this.elapsed - value.delay, 0, value.duration) - value.stagger, 0, 1);
 
             // Mark Action as NOT ended if still in progress
             if (progress !== progressTarget) {
@@ -136,10 +135,10 @@ class Tween extends Action {
     }
 
     checkNextStep(actor, name, method) {
-        var stepTaken = false,
-            step = this[name],
-            count = this[name + COUNT] || 0,
-            forever = (step === true);
+        const step = this[name];
+        const forever = (step === true);
+        let count = this[name + COUNT] || 0;
+        let stepTaken = false;
 
         if (forever || utils.isNum(step)) {
             ++count;
@@ -155,11 +154,11 @@ class Tween extends Action {
     }
 
     flipValues(actor) {
-        var actorValues = actor.values;
+        const actorValues = actor.values;
         this.elapsed = this.duration - this.elapsed;
 
         each(this.values, (key) => {
-            let value = actorValues[key];
+            const value = actorValues[key];
 
             if (value.children) {
                 each(value.children, (childKey) => {

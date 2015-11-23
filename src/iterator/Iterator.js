@@ -10,7 +10,9 @@ function generateCallback(method, ...args) {
     if (utils.isString(method)) {
         callback = (member) => member[method](...args);
     } else if (!utils.isFunc(method)) {
-        callback = (member) => member.start(method, ...args);
+        callback = (member) => {
+            member.start(method, ...args);
+        }
     }
 
     return callback;
