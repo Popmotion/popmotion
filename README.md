@@ -4,9 +4,6 @@
 
 Make it pop with animation, physics, and input tracking. In the browser, on Node, anywhere.
 
-**Free** for personal and non-profit projects.
-Just [$9/month](https://popmotion.io/subscribe) for commercial use!
-
 [Download](http://popmotion.io/download) | [Subscribe](https://popmotion.io/subscribe) | [API](http://popmotion.io/api) | [Guides](http://popmotion.io/guides/get-started) | [Twitter](http://twitter.com/popmotionjs)
 
 ### Flexible
