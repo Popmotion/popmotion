@@ -77,7 +77,7 @@ class Iterator {
             var newIndex = output.i,
                 gapIndex = i + 1;
 
-            // If our new index is only one more than the previous index, fire immedietly
+            // If our new index is only one more than the previous index, fire now
             if (newIndex === i + 1) {
                 callback(tempMembers[gapIndex], gapIndex);
 

@@ -146,7 +146,6 @@ module.exports = {
         if (!isRunning) {
             runningIds.push(processId);
             runningProcesses[processId] = process;
-
             updateCount(true, process.isBackground);
             loop.start();
         }
