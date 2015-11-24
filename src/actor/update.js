@@ -6,8 +6,8 @@ const Watch = require('../actions/Watch');
 const watcher = new Watch();
 
 module.exports = (actor, framestamp, frameDuration) => {
-    let state = actor.state;
     const numActiveValues = actor.activeValues.length;
+    let state = actor.state;
 
     actor.hasChanged = false;
 

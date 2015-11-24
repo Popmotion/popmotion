@@ -28,7 +28,7 @@ class Actor {
         @param [object]
     */
     constructor(opts = {}) {
-        var props = utils.isString(opts) ? { element: opts } : opts;
+        let props = utils.isString(opts) ? { element: opts } : opts;
 
         this.values = {};
         this.state = { values: {} };
@@ -90,7 +90,7 @@ class Actor {
         @returns [Controls]
     */
     controls(action) {
-        var Controls = action.getControls();
+        const Controls = action.getControls();
         return new Controls(this, action.getPlayable());
     }
 
@@ -103,10 +103,10 @@ class Actor {
         @returns [Controls]
     */
     start(toSet, input) {
-        let actionExists = utils.isNum(toSet),
-            action = (actionExists) ? this.getAction(toSet) : toSet.getPlayable(),
-            opts = action.getSet(),
-            surpressQueueClear = (arguments[arguments.length - 1] === false);
+        let actionExists = utils.isNum(toSet);
+        let action = (actionExists) ? this.getAction(toSet) : toSet.getPlayable();
+        let opts = action.getSet();
+        let surpressQueueClear = (arguments[arguments.length - 1] === false);
 
         opts.action = action;
 

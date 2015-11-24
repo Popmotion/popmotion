@@ -65,19 +65,6 @@ const purge = () => {
 }
 
 /*
-    Fire one process stage
-*/
-const fire = (method, framestamp, elapsed) => {
-    for (let i = 0; i < runningCount; i++) {
-        let process = runningProcesses[runningIds[i]];
-
-        if (process && process[method]) {
-            process[method].call(process.scope, process.scope, framestamp, elapsed);
-        }
-    }
-}
-
-/*
     Fire all active processes
     
     @param [int]: Timestamp of executing frames
@@ -87,8 +74,17 @@ const fire = (method, framestamp, elapsed) => {
 const fireAll = (framestamp, elapsed) => {
     purge();
 
+    const numRunning = runningCount;
     for (let i = 0; i < numProcessSteps; i++) {
-        fire(processOrder[i], framestamp, elapsed);
+        let method = processOrder[i];
+
+        for (let i = 0; i < numRunning; i++) {
+            let process = runningProcesses[runningIds[i]];
+
+            if (process && process[method]) {
+                process[method].call(process.scope, process.scope, framestamp, elapsed);
+            }
+        }
     }
 
     purge();

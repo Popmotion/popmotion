@@ -1,17 +1,17 @@
-var Actor = require('../actor/Actor');
-var Tween = require('../actions/Tween');
-var utils = require('../inc/utils');
-var calcRelative = require('../inc/calc').relativeValue;
+const Actor = require('../actor/Actor');
+const Tween = require('../actions/Tween');
+const utils = require('../inc/utils');
+const calcRelative = require('../inc/calc').relativeValue;
 
-var timeline = new Tween({
+const timeline = new Tween({
     ease: 'linear',
     values: {
         playhead: 0
     }
 });
 
-function checkActions({ playhead }, sequence) {
-    var i = sequence.check.length;
+const checkActions = ({ playhead }, sequence) => {
+    let i = sequence.check.length;
 
     while (i--) {
         let toCheck = sequence.check[i];
@@ -23,8 +23,8 @@ function checkActions({ playhead }, sequence) {
     }
 }
 
-function generateCallback(actor, action) {
-    var callback;
+const generateCallback = (actor, action) => {
+    let callback;
 
     if (actor.each) {
         callback = () => {
@@ -53,7 +53,7 @@ class Sequence extends Actor {
     }
 
     do(actor, action) {
-        var isCallback = utils.isFunc(actor);
+        const isCallback = utils.isFunc(actor);
 
         this.sequence.push({
             timestamp: this.currentTimestamp,
@@ -68,9 +68,9 @@ class Sequence extends Actor {
     }
 
     stagger(iterator, action, staggerProps) {
-        var numItems = iterator.members.length,
-            interval = utils.isNum(staggerProps) ? staggerProps : staggerProps.interval || 100,
-            duration = action.duration ? action.duration : 0;
+        const numItems = iterator.members.length;
+        const interval = utils.isNum(staggerProps) ? staggerProps : staggerProps.interval || 100;
+        const duration = action.duration ? action.duration : 0;
 
         this.do(iterator, () => {
             iterator.stagger(action, staggerProps);
