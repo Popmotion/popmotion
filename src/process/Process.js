@@ -1,140 +1,64 @@
-var manager = require('./manager'),
+const utils = require('../inc/utils');
+const loop = require('./loop');
+
+class Process {
 
     /*
-        Process constructor
-        
-        Syntax
-            var process = new Process(scope, callback);
-            var process = new Process(callback);
+        @param [function || object]
+        @param [object] (optional)
     */
-    Process = function (scope, callback) {
-        var hasScope = (callback !== undefined);
-
-        this.callback = hasScope ? callback : scope;
-        this.scope = hasScope ? scope : this;
-        this.id = manager.register();
-
-        // [boolean]: Is this process currently active?
-        this.isActive = false;
-    };
-
-Process.prototype = {
-    /*
-        Fire callback
+    constructor(callback, scope) {
+        // Set callback
+        if (utils.isFunc(callback)) {
+            this.render = callback;
         
-        @param [timestamp]: Timestamp of currently-executed frame
-        @param [number]: Time since last frame
-    */
-    fire: function (timestamp, elapsed) {
-        this.callback.call(this.scope, timestamp, elapsed);
-        
-        // If we're running at an interval, deactivate again
-        if (this.isInterval) {
-            this.deactivate();
+        } else if (utils.isObj(callback)) {
+            utils.each(callback, (key, value) => {
+                this[key] = value;
+            });
         }
 
-        return this;
-    },
-    
-    /*
-        Start process
-        
-        @param [int]: Duration of process in ms, 0 if indefinite
-        @return [this]
-    */
-    start: function (duration) {
-        var self = this;
+        this.scope = utils.isObj(scope) ? scope : this;
 
-        this.reset();
+        this.setBackground(arguments[arguments.length - 1]);
+
+        this.id = loop.getProcessId();
+        this.isActive = false;
+    }
+
+    start() {
         this.activate();
-        
-        if (duration) {
-            this.stopTimer = setTimeout(function () {
-                self.stop();
-            }, duration);
-            
-            this.isStopTimerActive = true;
-        }
-
-        return this;
-    },
-    
-    /*
-        Stop process
-        
-        @return [this]
-    */
-    stop: function () {
-        this.reset();
-        this.deactivate();
-        
-        return this;
-    },
-    
-    /*
-        Activate process
-        
-        @return [this]
-    */
-    activate: function () {
-        this.isActive = true;
-        manager.activate(this, this.id);
-
-        return this;
-    },
-    
-    /*
-        Deactivate process
-        
-        @return [this]
-    */
-    deactivate: function () {
-        this.isActive = false;
-        manager.deactivate(this.id);
-        
-        return this;
-    },
-    
-    /*
-        Fire process every x ms
-        
-        @param [int]: Number of ms to wait between refiring process.
-        @return [this]
-    */
-    every: function (interval) {
-        var self = this;
-
-        this.reset();
-
-        this.isInterval = true;
-
-        this.intervalTimer = setInterval(function () {
-            self.activate();
-        }, interval);
-        
-        this.isIntervalTimeActive = true;
-        
-        return this;
-    },
-    
-    /*
-        Clear all timers
-        
-        @param 
-    */
-    reset: function () {
-        this.isInterval = false;
-        
-        if (this.isStopTimerActive) {
-            clearTimeout(this.stopTimer);
-        }
-        
-        if (this.isIntervalTimeActive) {
-            clearInterval(this.intervalTimer);
-        }
-        
         return this;
     }
-};
+
+    stop() {
+        this.deactivate();
+        return this;
+    }
+
+    activate() {
+        this.isActive = true;
+        loop.activate(this, this.id);
+    }
+
+    deactivate() {
+        this.isActive = false;
+        loop.deactivate(this.id);
+    }
+
+    once() {
+        this.cleanup = () => {
+            this.stop();
+            this.cleanup = undefined;
+        }
+
+        return this.start();
+    }
+
+    setBackground(runInBackground) {
+        this.isBackground = (runInBackground === true) ? true : false;
+        return this;
+    }
+}
 
 module.exports = Process;

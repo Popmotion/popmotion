@@ -1,65 +1,159 @@
-/*
-    The loop
-*/
-"use strict";
+const timer = require('./timer');
+const systemTick = require('./system-tick');
 
-var Timer = require('./timer.js'),
-    tick = require('./tick.js'),
-    Loop = function () {
-        this.timer = new Timer();
-    };
+const processOrder = ['update', 'preRender', 'render', 'postRender', 'cleanup'];
+const numProcessSteps = processOrder.length;
+
+// [int]: Process ID, incremented for each new process
+let currentProcessId = 0;
+
+// [int]: Number of running processes
+let runningCount = 0;
+
+// [int]: Number of running non-background processes
+let activeCount = 0;
+
+// [array]: Array of active process IDs
+let runningIds = [];
+
+// [object]: Map of active processes
+let runningProcesses = {};
+
+// [array]: Array of process IDs queued for deactivation
+let deactivateQueue = [];
+
+// [boolean]: Is loop running?
+let isRunning = false;
+
+/*
+    Update running
+
+    @param [boolean]
+    @param [boolean]
+*/
+const updateCount = (add, isBackground) => {
+    const modify = add ? 1 : -1;
+
+    runningCount += modify;
+
+    if (!isBackground) {
+        activeCount += modify;
+    }
+}
+
+/*
+    Purge items in the deactivate queue from our runningProcesses
+*/
+const purge = () => {
+    let queueLength = deactivateQueue.length;
+
+    while (queueLength--) {
+        const idToDelete = deactivateQueue[queueLength];
+        const activeIdIndex = runningIds.indexOf(idToDelete);
+
+        // If process is active, deactivate
+        if (activeIdIndex > -1) {
+            runningIds.splice(activeIdIndex, 1);
+
+            updateCount(false, runningProcesses[idToDelete].isBackground);
+
+            delete runningProcesses[idToDelete];
+        }
+    }
+
+    deactivateQueue = [];
+}
+
+/*
+    Fire all active processes
     
-Loop.prototype = {
-    
-    /*
-        [boolean]: Current status of animation loop
-    */
-    isRunning: false,
-    
+    @param [int]: Timestamp of executing frames
+    @param [int]: Time since previous frame
+    @return [boolean]: True if active processes found
+*/
+const fireAll = (framestamp, elapsed) => {
+    purge();
+
+    const numRunning = runningCount;
+    for (let i = 0; i < numProcessSteps; i++) {
+        let method = processOrder[i];
+
+        for (let i = 0; i < numRunning; i++) {
+            let process = runningProcesses[runningIds[i]];
+
+            if (process && process[method]) {
+                process[method].call(process.scope, process.scope, framestamp, elapsed);
+            }
+        }
+    }
+
+    purge();
+
+    return activeCount ? true : false;
+}
+
+const loop = {
     /*
         Fire all active processes once per frame
     */
-    frame: function () {
-        tick(framestamp => {
-            if (this.isRunning) {
-                this.frame();
+    frame: () => {
+        systemTick((framestamp) => {
+            if (isRunning) {
+                loop.frame();
             }
-            this.timer.update(framestamp);
-            
-            this.isRunning = this.callback.call(this.scope, framestamp, this.timer.getElapsed());
+
+            timer.update(framestamp);
+            isRunning = fireAll(framestamp, timer.getElapsed());
         });
     },
-    
-    /*
-        Start loop
-    */
-    start: function () {
-        // Make sure we're not already running a loop
-        if (!this.isRunning) {
-            this.timer.clock();
-            this.isRunning = true;
-            this.frame();
+
+    start: () => {
+        if (!isRunning) {
+            timer.start();
+            isRunning = true;
+            loop.frame();
         }
     },
-    
-    /*
-        Stop the loop
-    */
-    stop: function () {
-        this.isRunning = false;
-    },
-    
-    /*
-        Set the callback to run every frame
-        
-        @param [Object]: Execution context
-        @param [function]: Callback to fire
-    */
-    setCallback: function (scope, callback) {
-        this.scope = scope;
-        this.callback = callback;
+
+    stop: () => {
+        isRunning = false;
     }
- 
 };
 
-module.exports = new Loop();
+module.exports = {
+    // Increments and returns the latest process ID
+    getProcessId: () => currentProcessId++,
+
+    /*
+        @param [Process]
+        @param [int]
+    */
+    activate: (process, processId) => {
+        const queueIndex = deactivateQueue.indexOf(processId);
+        const isQueued = (queueIndex > -1);
+        const isRunning = (runningIds.indexOf(processId) > -1);
+
+        // Remove from deactivateQueue if queued
+        if (isQueued) {
+            deactivateQueue.splice(queueIndex, 1);
+        }
+
+        // Add to running processes array if not there
+        if (!isRunning) {
+            runningIds.push(processId);
+            runningProcesses[processId] = process;
+
+            updateCount(true, process.isBackground);
+            loop.start();
+        }
+    },
+
+    /*
+        @param [int]
+    */
+    deactivate: (processId) => {
+        if (deactivateQueue.indexOf(processId) === -1) {
+            deactivateQueue.push(processId);
+        }
+    }
+};

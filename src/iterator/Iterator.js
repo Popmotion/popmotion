@@ -1,16 +1,18 @@
-var Actor = require('../actor/Actor'),
-    Tween = require('../actions/Tween'),
-    utils = require('../inc/utils');
+const Actor = require('../actor/Actor');
+const Tween = require('../actions/Tween');
+const utils = require('../inc/utils');
 
 const DEFAULT_STAGGER_EASE = 'linear';
 
 function generateCallback(method, ...args) {
-    var callback = method;
+    let callback = method;
 
     if (utils.isString(method)) {
         callback = (member) => member[method](...args);
     } else if (!utils.isFunc(method)) {
-        callback = (member) => member.start(method, ...args);
+        callback = (member) => {
+            member.start(method, ...args);
+        }
     }
 
     return callback;
@@ -38,14 +40,14 @@ class Iterator {
     }
 
     each(method, ...args) {
-        var callback = generateCallback(method, ...args);
+        const callback = generateCallback(method, ...args);
         this.members.forEach(callback);
         return this;
     }
 
     eachIntoNew(method, ...args) {
-        var callback = generateCallback(method, ...args),
-            newIterator = new Iterator();
+        const callback = generateCallback(method, ...args);
+        const newIterator = new Iterator();
 
         this.members.forEach((member) => newIterator.add(callback(member)));
 
@@ -53,13 +55,14 @@ class Iterator {
     }
 
     stagger(method, props, ...args) {
-        var tempMembers = utils.copyArray(this.members),
-            numMembers = tempMembers.length,
-            propsIsInterval = utils.isNum(props),
-            interval = propsIsInterval ? props : props.interval || 100,
-            staggerProps = {},
-            i = -1,
-            callback = generateCallback(method, ...args);
+        const tempMembers = utils.copyArray(this.members);
+        const numMembers = tempMembers.length;
+        const propsIsInterval = utils.isNum(props);
+        const interval = propsIsInterval ? props : props.interval || 100;
+        const callback = generateCallback(method, ...args);
+
+        let i = -1;
+        let staggerProps = {};
 
         staggerProps.values = {
             i: {
@@ -74,8 +77,8 @@ class Iterator {
         staggerProps.onComplete = propsIsInterval ? undefined : props.onComplete;
 
         staggerProps.onUpdate = (output) => {
-            var newIndex = output.i,
-                gapIndex = i + 1;
+            const newIndex = output.i;
+            let gapIndex = i + 1;
 
             // If our new index is only one more than the previous index, fire immedietly
             if (newIndex === i + 1) {

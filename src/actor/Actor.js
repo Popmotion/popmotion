@@ -2,8 +2,14 @@ var Process = require('../process/Process'),
     Queue = require('../inc/Queue'),
     utils = require('../inc/utils'),
     select = require('../inc/select-dom'),
-    update = require('./update'),
     valueOps = require('./value-operations'),
+
+    /*
+        Process methods
+    */
+    update = require('./update'),
+    render = require('./render'),
+    postRender = require('./post-render'),
 
     /*
         Role imports
@@ -22,12 +28,12 @@ class Actor {
         @param [object]
     */
     constructor(opts = {}) {
-        var props = utils.isString(opts) ? { element: opts } : opts;
+        let props = utils.isString(opts) ? { element: opts } : opts;
 
         this.values = {};
         this.state = { values: {} };
         this.queue = new Queue();
-        this.process = new Process(this, update);
+        this.process = new Process({ update, render, postRender }, this);
         this.activeActions = {};
         this.numActive = 0;
         this.actionCounter = 0;
@@ -84,7 +90,7 @@ class Actor {
         @returns [Controls]
     */
     controls(action) {
-        var Controls = action.getControls();
+        const Controls = action.getControls();
         return new Controls(this, action.getPlayable());
     }
 
@@ -97,10 +103,10 @@ class Actor {
         @returns [Controls]
     */
     start(toSet, input) {
-        let actionExists = utils.isNum(toSet),
-            action = (actionExists) ? this.getAction(toSet) : toSet.getPlayable(),
-            opts = action.getSet(),
-            surpressQueueClear = (arguments[arguments.length - 1] === false);
+        let actionExists = utils.isNum(toSet);
+        let action = (actionExists) ? this.getAction(toSet) : toSet.getPlayable();
+        let opts = action.getSet();
+        let surpressQueueClear = (arguments[arguments.length - 1] === false);
 
         opts.action = action;
 

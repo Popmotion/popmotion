@@ -1,30 +1,21 @@
-"use strict";
+const currentTime = require('../inc/utils').currentTime;
+const MAX_ELAPSED = 33;
 
-var utils = require('../inc/utils.js'),
+let current = 0;
+let elapsed = 16.7;
 
-    maxElapsed = 33,
-    Timer = function () {
-        this.elapsed = 16.7;
-        this.current = utils.currentTime();
-        this.update();
-    };
+const timer = {
+    update: (framestamp) => {
+        const prev = current;
+        current = framestamp;
+        elapsed = Math.min(current - prev, MAX_ELAPSED);
 
-Timer.prototype = {
-    update: function (framestamp) {
-        this.prev = this.current;
-        this.current = framestamp;
-        this.elapsed = Math.min(this.current - this.prev, maxElapsed);
-
-        return this.current;
+        return current;
     },
 
-    getElapsed: function () {
-        return this.elapsed;
-    },
-    
-    clock: function () {
-        this.current = utils.currentTime();
-    }
+    start: () => current = currentTime(),
+
+    getElapsed: () => elapsed
 };
 
-module.exports = Timer;
+module.exports = timer;
