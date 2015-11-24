@@ -21,7 +21,7 @@ html-tools@1.0.5
 htmljs@1.0.5
 id-map@1.0.4
 jquery@1.11.4
-local-test:popmotion:popmotion@3.6.1
+local-test:popmotion:popmotion@4.0.0
 logging@1.0.8
 meteor@1.1.10
 minimongo@1.0.10
@@ -30,7 +30,7 @@ mongo-id@1.0.1
 npm-mongo@1.4.39_1
 observe-sequence@1.0.7
 ordered-dict@1.0.4
-popmotion:popmotion@3.6.1
+popmotion:popmotion@4.0.0
 promise@0.5.1
 random@1.0.5
 reactive-var@1.0.6
