@@ -6,7 +6,7 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 - Value `watch` can now be a function returning any value.
-- Added `smooth` for `watch` values.
+- Added `smooth` for all actions.
 
 ## [4.0.0] 2015-11-20
 

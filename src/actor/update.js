@@ -36,6 +36,16 @@ module.exports = (actor, framestamp, frameDuration) => {
             updatedValue = action.limit(updatedValue, value);
         }
 
+        // Smooth value if we have smoothing
+        if (value.smooth) {
+            value.unsmoothed = (value.unsmoothed !== undefined) ? value.unsmoothed : value.current;
+
+            console.log(updatedValue, value.unsmoothed, frameDuration, calc.smooth(updatedValue, value.unsmoothed, frameDuration, value.smooth))
+            let smoothedValue = calc.smooth(updatedValue, value.unsmoothed, frameDuration, value.smooth);
+            value.unsmoothed = updatedValue;
+            updatedValue = smoothedValue;
+        }
+
         // Round value if round is true
         if (value.round) {
             updatedValue = Math.round(updatedValue);

@@ -41,10 +41,6 @@ class Watch extends Action {
         this.isActive = true;
     }
 
-    onFrameStart(actor, frameDuration, framestamp) {
-        this.frameDuration = frameDuration;
-    }
-
     /*
         Process this value
         
@@ -62,8 +58,6 @@ class Watch extends Action {
         let values = actor.values;
         let newValue = value.current;
         let inputOffset = value.action ? value.action.inputOffset : false;
-        
-        value.unmapped = newValue;
 
         if (isString(watchedKey)) {
             watchedValue = values[watchedKey] ? values[watchedKey] : {};
@@ -84,7 +78,6 @@ class Watch extends Action {
         // If we have mapFrom and mapTo properties, translate the new value
         if (value.mapFrom && value.mapTo) {
             newValue = findMappedValue(newValue, watchedValue, value, value.mapFrom, value.mapTo);
-            newValue = (value.smooth) ? calc.smooth(newValue, value.unmapped, 16.7, value.smooth) : newValue;
         }
 
         return newValue;
