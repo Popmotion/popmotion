@@ -197,7 +197,6 @@ function preprocess(existing, incoming, scope, defaultProp) {
 
         // If value doesn't have a special type, check for one
         newValue.type = checkValueType(existingValue, newValue, scope, key);
-        newValue.watch = utils.isString(newValue.watch) ? newValue.watch : undefined;
 
         values[key] = newValue;
 
@@ -291,7 +290,7 @@ module.exports = {
             newValue.hasRange = (isNum(newValue.min) || isNum(newValue.max)) ? true : false;
 
             existing[key] = newValue;
-            scope.updateOrder(key, utils.isString(newValue.watch), hasChildren);
+            scope.updateOrder(key, utils.has(newValue, 'watch'), hasChildren);
         });
 
         return existing;

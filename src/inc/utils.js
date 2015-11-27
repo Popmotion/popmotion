@@ -30,6 +30,15 @@ var protectedProperties = ['scope',  'dom'],
                 }
             }
         },
+
+        /*
+            Check if object has property and it isn't undefined
+
+            @param [object]
+            @param [string]
+            @return [boolean]
+        */
+        has: (object, propertyName) => object.hasOwnProperty(propertyName) && object[propertyName] !== undefined,
         
         /*
             Has one object changed from the other
