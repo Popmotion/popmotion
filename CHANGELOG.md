@@ -5,8 +5,9 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 ## [4.1.0] 2015-11-28
 
 ### Added
-- Value `watch` can now be a function returning any value.
+- Actor value `watch` property can now be a function returning any numerical value.
 - Added `smooth` for all actions.
+- Added `calc.toDecimal` calculator function. 
 
 ## [4.0.0] 2015-11-20
 
