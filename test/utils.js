@@ -48,6 +48,12 @@ describe('hasChanged()', () => {
     it('should return false if provided objects are the same', () => expect(utils.hasChanged(a, b)).to.equal(false))
 })
 
+describe('has()', () => {
+    it('should return true if object has property', () => expect(utils.has({ foo: true }, 'foo')).to.equal(true))
+    it('should return false if object does not have property', () => expect(utils.has({}, 'foo')).to.equal(false))
+    it('should return false if object has property but is undefined', () => expect(utils.has({ foo: undefined }, 'foo')).to.equal(false))
+});
+
 describe('isFunc()', () => {
     it('should return true if argument is a function', () => expect(utils.isFunc(testFunc)).to.equal(true))
     it('should return false if argument is not a function', () => {

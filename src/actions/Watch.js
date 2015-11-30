@@ -1,8 +1,7 @@
 let Action = require('./Action'),
     calc = require('../inc/calc'),
+    isString = require('../inc/utils').isString,
 
-    STRING = 'string',
-    
     /*
         Translate our mapLink value into mapTo
         
@@ -21,10 +20,10 @@ let Action = require('./Action'),
 
         for (; i < mapLength; i++) {
             // Assign values from array, or if they're strings, look for them in linkedValue
-            lastLinkValue = (typeof mapLink[i - 1] === STRING) ? linkedValue[mapLink[i - 1]] : mapLink[i - 1];
-            thisLinkValue = (typeof mapLink[i] === STRING) ? linkedValue[mapLink[i]] : mapLink[i];
-            lastToValue = (typeof mapTo[i - 1] === STRING) ? toValue[mapTo[i - 1]] : mapTo[i - 1];
-            thisToValue = (typeof mapTo[i] === STRING) ? toValue[mapTo[i]] : mapTo[i];
+            lastLinkValue = isString(mapLink[i - 1]) ? linkedValue[mapLink[i - 1]] : mapLink[i - 1];
+            thisLinkValue = isString(mapLink[i]) ? linkedValue[mapLink[i]] : mapLink[i];
+            lastToValue = isString(mapTo[i - 1]) ? toValue[mapTo[i - 1]] : mapTo[i - 1];
+            thisToValue = isString(mapTo[i]) ? toValue[mapTo[i]] : mapTo[i];
 
             // Check if we've gone past our calculated value, or if we're at the end of the array
             if (newValue < thisLinkValue || i === mapLength - 1) {
@@ -54,24 +53,30 @@ class Watch extends Action {
         @return [number]: Calculated value
     */
     process(actor, value, key) {
-        var values = actor.values,
-            newValue = value.current,
-            watchedKey = value.watch,
-            watchedValue = values[watchedKey] ? values[watchedKey] : {},
-            inputOffset = value.action ? value.action.inputOffset : false;
+        const watchedKey = value.watch;
+        let watchedValue = 0;
+        let values = actor.values;
+        let newValue = value.current;
+        let inputOffset = value.action ? value.action.inputOffset : false;
 
-        // First look at Action and check value isn't linking itself
-        if (watchedValue.current !== undefined && key !== watchedKey) {
-            newValue = watchedValue.current;
-        
-        // Then check values in Input
-        } else if (inputOffset && inputOffset.hasOwnProperty(watchedKey)) {
-            newValue = value.action.process(actor, value, watchedKey);
+        if (isString(watchedKey)) {
+            watchedValue = values[watchedKey] ? values[watchedKey] : {};
+
+            // First look at Action and check value isn't linking itself
+            if (watchedValue.current !== undefined && key !== watchedKey) {
+                newValue = watchedValue.current;
+            
+            // Then check values in Input
+            } else if (inputOffset && inputOffset.hasOwnProperty(watchedKey)) {
+                newValue = value.action.process(actor, value, watchedKey);
+            }
+
+        } else {
+            newValue = watchedKey(actor);
         }
 
         // If we have mapFrom and mapTo properties, translate the new value
         if (value.mapFrom && value.mapTo) {
-            value.unmapped = newValue;
             newValue = findMappedValue(newValue, watchedValue, value, value.mapFrom, value.mapTo);
         }
 

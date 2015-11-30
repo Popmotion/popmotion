@@ -20,12 +20,10 @@ class Track extends Action {
         @return [number]: Calculated value
     */
     process(actor, value, key) {
-        var newValue = value.current,
-            unmapped = value.unmapped !== undefined ? value.unmapped : value.current;
+        var newValue = value.current;
 
         if (this.inputOffset.hasOwnProperty(key)) {
             newValue = (value.direct) ? this.input.current[key] : value.origin + (this.inputOffset[key] * value.amp);
-            newValue = (value.smooth) ? calc.smooth(newValue, unmapped, this.frameDuration, value.smooth) : newValue;
         }
 
         return newValue;

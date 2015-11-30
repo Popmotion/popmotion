@@ -125,6 +125,18 @@ describe('smooth()', () => {
     })
 })
 
+describe('toDecimal()', () => {
+    const pi = 3.14159265359;
+
+    it('should round to 2 decimal places if no precision is defined', () => {
+        expect(calc.toDecimal(pi)).to.equal(3.14)
+    })
+
+    it('should round to the number of decimal places given if provided', () => {
+        expect(calc.toDecimal(pi, 5)).to.equal(3.14159)
+    })
+})
+
 describe('value()', () => {
     it('should return correct value has calculated from progress 0-1 and range', () => {
         expect(calc.value(0.5, 100, 200)).to.equal(150)

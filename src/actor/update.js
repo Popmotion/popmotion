@@ -24,7 +24,7 @@ module.exports = (actor, framestamp, frameDuration) => {
         }
     
         // Calculate new value
-        let updatedValue = utils.isString(value.watch) ? watcher.process(actor, value) : action.process(actor, value, key, frameDuration);
+        let updatedValue = utils.has(value, 'watch') ? watcher.process(actor, value) : action.process(actor, value, key, frameDuration);
 
         // User-defined transform function
         if (value.transform) {
@@ -34,6 +34,11 @@ module.exports = (actor, framestamp, frameDuration) => {
         // Limit if actor action does that kind of thing
         if (action.limit && value.hasRange) {
             updatedValue = action.limit(updatedValue, value);
+        }
+
+        // Smooth value if we have smoothing
+        if (value.smooth) {
+            updatedValue = calc.smooth(updatedValue, value.current, frameDuration, value.smooth);
         }
 
         // Round value if round is true

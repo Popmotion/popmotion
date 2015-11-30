@@ -247,7 +247,7 @@ var utils = require('./utils.js'),
             @param [number]: Frame duration
             @param [number] (optional): Smoothing (0 is none)
         */
-        smooth: (newValue, oldValue, duration, smoothing = 0) => oldValue + (duration * (newValue - oldValue) / Math.max(smoothing, duration)),
+        smooth: (newValue, oldValue, duration, smoothing = 0) => calc.toDecimal(oldValue + (duration * (newValue - oldValue) / Math.max(smoothing, duration))),
     
         /*
             Convert x per second to per frame velocity based on fps
@@ -264,7 +264,14 @@ var utils = require('./utils.js'),
             @param [number]: Frame duration in ms
         */
         speedPerSecond: (velocity, frameDuration) => velocity * (1000 / frameDuration),
-    
+
+        /*
+            Convert number to decimal place
+        */
+        toDecimal: (num, precision = 2) => {
+            precision = 10 ** precision;
+            return Math.round(num * precision) / precision;
+        },
      
         /*
             Value in range from progress
