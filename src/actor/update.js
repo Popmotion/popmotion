@@ -38,7 +38,6 @@ module.exports = (actor, framestamp, frameDuration) => {
 
         // Smooth value if we have smoothing
         if (value.smooth) {
-            console.log('updated: ', updatedValue, 'current: ', value.current, 'smoothed: ', calc.smooth(updatedValue, value.current, frameDuration, value.smooth))
             updatedValue = calc.smooth(updatedValue, value.current, frameDuration, value.smooth);
         }
 
