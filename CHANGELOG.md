@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.2.0] 2015-12-02
+
+### Changed
+- Moving to dual commericial and GPLv3 licence.
+
 ## [4.1.0] 2015-11-28
 
 ### Added
