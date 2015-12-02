@@ -717,7 +717,7 @@ You are entitled to receive all *major* version updates of Popmotion from one ye
 
 After one year, you are entitled to all *minor* updates of the current *major* version of Popmotion available on the day one exact year after the original license purchase date. For illustration purposes only, if version 5.0 were the latest version in general release one year after the license purchase date, you would be authorized to to upgrade to version 5.1, 5.2 etc, forever, but version 6.0 would require the purchase of a new license.
 
-This license allows you to use Popmotion in an unlimited number of software or hardware projects. The Personal license allows no more than one developer to work on these projects. The Team license allows no more than five developers to work on these projects. The company license allows no more than 50 developers to work on these projects.
+This license allows you to use Popmotion in an unlimited number of software or hardware projects. The Personal license allows no more than one developer to work on these projects. The Team license allows no more than five developers to work on these projects. The Company license allows no more than 50 developers to work on these projects.
 
 ### License Agreement Validity
 
@@ -727,8 +727,8 @@ If the application of Popmotion is in a released project that is not released un
 
     - You agree to pay to Popmotion Ltd, excluding local sales tax:
         - $79 for one licensed developer, the "Personal" license.
-        - $300 for five licensed developers, the "Team" license.
-        - $1200 for 50 licensed developers, the "Company" license. 
+        - $299 for five licensed developers, the "Team" license.
+        - $1499 for 50 licensed developers, the "Company" license. 
     - Failure to reach payment within 30 days of invoice results in an invalidation of the commercial license.
     - Refunds are available within 14 days of the commercial license purchase date.
 
