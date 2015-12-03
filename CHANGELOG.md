@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.2.2] 2015-12-03
+
+### Update
+- Moving from Babel's official es2015 preset to a custom build.
+
 ## [4.2.1] 2015-12-03
 
 ### Update

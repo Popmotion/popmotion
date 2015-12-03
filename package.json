@@ -48,7 +48,7 @@
   "devDependencies": {
     "babel-core": "^6.0.20",
     "babel-loader": "^6.0.1",
-    "babel-preset-es2015": "^6.0.15",
+    "babel-preset-es2015-subset-loose": "^1.0.0",
     "babel-preset-stage-2": "^6.0.15",
     "chai": "^3.4.0",
     "jshint": "^2.8.0",
