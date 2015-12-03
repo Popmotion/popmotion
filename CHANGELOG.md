@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.2.1] 2015-12-03
+
+### Update
+- Updating Babel to fix transpilation errors in IE10.
+
 ## [4.2.0] 2015-12-02
 
 ### Changed

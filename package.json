@@ -1,6 +1,6 @@
 {
   "name": "popmotion",
-  "version": "4.2.0",
+  "version": "4.2.1",
   "description": "The JavaScript motion engine. Handles animation, physics, and input tracking.",
   "author": "Matt Perry <sirhound@popmotion.io>",
   "homepage": "http://popmotion.io",
@@ -38,7 +38,7 @@
     "svg"
   ],
   "analyze": true,
-  "license": "GPLv3",
+  "license": "GPL-3.0",
   "scripts": {
     "compile": "babel src --out-dir lib && small -i lib/load/global.js -o popmotion.global.js && uglifyjs popmotion.global.js --compress --mangle --screw-ie8 -o popmotion.global.min.js",
     "watch": "webpack --progress --colors --watch",
