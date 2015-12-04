@@ -713,7 +713,7 @@ You may not sell, rent, lease or loan the source code, in whole or in part, nor 
 
 "Major" and "minor" are used here as defined by [Semantic Versioning 2.0.0](http://semver.org/):
 
-You are entitled to receive all *major* version updates of Popmotion from one year after the purchase of the license. For illustration purposes only, a purchase of version 3.0 would entitle you to an upgrade to 5.0 if were released within this one year.
+You are entitled to receive all *major* version updates of Popmotion from one year after the purchase of the license. For illustration purposes only, a purchase of version 3.0 would entitle you to an upgrade to 5.0 if it were released within this one year.
 
 After one year, you are entitled to all *minor* updates of the current *major* version of Popmotion available on the day one exact year after the original license purchase date. For illustration purposes only, if version 5.0 were the latest version in general release one year after the license purchase date, you would be authorized to to upgrade to version 5.1, 5.2 etc, forever, but version 6.0 would require the purchase of a new license.
 
