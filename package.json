@@ -43,13 +43,14 @@
     "compile": "babel src --out-dir lib && small -i lib/load/global.js -o popmotion.global.js && uglifyjs popmotion.global.js --compress --mangle --screw-ie8 -o popmotion.global.min.js",
     "watch": "webpack --progress --colors --watch",
     "measure": "gzip -c popmotion.global.min.js | wc -c",
-    "test": "mocha --compilers js:babel-core/register"
+    "test": "mocha --compilers js:babel-register"
   },
   "devDependencies": {
     "babel-core": "^6.0.20",
     "babel-loader": "^6.0.1",
     "babel-preset-es2015-subset-loose": "^1.0.0",
     "babel-preset-stage-2": "^6.0.15",
+    "babel-register": "^6.3.13",
     "chai": "^3.4.0",
     "jshint": "^2.8.0",
     "jshint-loader": "^0.8.3",
