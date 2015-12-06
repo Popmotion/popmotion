@@ -38,7 +38,8 @@ var valueTypes = require('./value-types/manager'),
             return Popmotion;
         },
 
-        calc: require('./inc/calc')
+        calc: require('./inc/calc'),
+        utils: require('./inc/utils')
     };
 
 module.exports = Popmotion;
