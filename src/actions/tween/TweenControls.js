@@ -2,6 +2,7 @@ const Controls = require('../../controls/Controls');
 
 class TweenControls extends Controls {
     restart() {
+        this.restoreOrigins();
         this.action.restart();
         return this;
     }
