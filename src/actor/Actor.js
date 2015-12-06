@@ -49,6 +49,7 @@ class Actor {
         this.assignRoles(props.element, props.as, true);
         this.set(props);
         this.initRoles();
+        this.sync();
     }
 
     /*
@@ -328,6 +329,7 @@ class Actor {
             if (action.input && action.input.autoStop === true) {
                 action.input.stop();
             }
+            action.deactivate();
             this.numActive--;
             delete this.activeActions[id];
         }

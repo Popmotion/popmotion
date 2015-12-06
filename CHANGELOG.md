@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.2.3] 2015-12-06
+
+### Added
+- Actors automatically `sync` on init.
+
 ## [4.2.2] 2015-12-03
 
 ### Update
