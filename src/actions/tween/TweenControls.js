@@ -1,4 +1,4 @@
-var Controls = require('../../controls/Controls');
+const Controls = require('../../controls/Controls');
 
 class TweenControls extends Controls {
     restart() {
@@ -7,6 +7,7 @@ class TweenControls extends Controls {
     }
 
     reverse() {
+        this.restoreOrigins();
         this.action.reverse();
         return this;
     }

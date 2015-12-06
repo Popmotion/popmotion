@@ -2,6 +2,14 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.2.4] 2015-12-07
+
+### Added
+- `Simulate.autoEnd` property, set to `false` to prevent simulations from automatically ending.
+
+### Fixed
+- TweenControls `reverse` now work on completed Tweens.
+
 ## [4.2.3] 2015-12-06
 
 ### Added

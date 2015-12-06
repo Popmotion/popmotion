@@ -1,7 +1,10 @@
+const each = require('../inc/utils').each;
+
 class Controls {
     constructor(actor, action, hasStarted) {
         this.actor = actor;
         this.action = action;
+        this.saveOrigins();
 
         if (hasStarted) {
             this.id = this.bindAction();
@@ -45,6 +48,20 @@ class Controls {
 
     bindAction() {
         return this.actor.bindAction(this.action, this.id);
+    }
+
+    saveOrigins() {
+        this.origins = {};
+
+        each(this.action.values, (key, value) => {
+            this.origins[key] = this.actor.values[key].current;
+        });
+    }
+
+    restoreOrigins() {
+        each(this.origins, (key, value) => {
+            this.actor.values[key].origin = value;
+        });
     }
 }
 

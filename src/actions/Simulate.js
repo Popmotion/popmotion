@@ -14,6 +14,7 @@ class Simulate extends Action {
 
     getDefaultProps() {
         return {
+            autoEnd: true,
             maxInactiveFrames: 3
         };
     }
@@ -89,8 +90,14 @@ class Simulate extends Action {
         @return [boolean]: Has Action ended?
     */
     hasEnded(actor, hasChanged) {
-        this.inactiveFrames = hasChanged ? 0 : this.inactiveFrames + 1;
-        return (this.inactiveFrames > actor.maxInactiveFrames);
+        let ended = false;
+
+        if (this.autoEnd) {
+            this.inactiveFrames = hasChanged ? 0 : this.inactiveFrames + 1;
+            ended = (this.inactiveFrames > actor.maxInactiveFrames);
+        }
+
+        return ended;
     }
 
     /*
