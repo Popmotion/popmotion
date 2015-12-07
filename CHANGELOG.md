@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.2.5] 2015-12-07
+
+### Added
+- `opacity`, `fillOpacity` and `strokeOpacity` to `ui.svg` Role type map.
+
 ## [4.2.4] 2015-12-07
 
 ### Added
