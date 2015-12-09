@@ -54,7 +54,15 @@ class Controls {
         this.origins = {};
 
         each(this.action.values, (key, value) => {
-            this.origins[key] = this.actor.values[key].current;
+            let actorValue = this.actor.values[key];
+
+            this.origins[key] = actorValue.current;
+
+            if (actorValue.children) {
+                each(actorValue.children, (childKey, childValue) => {
+                    this.origins[key + childKey] = this.actor.values[key + childKey].current;
+                });
+            }
         });
     }
 

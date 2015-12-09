@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.2.6] 2015-12-08
+
+### Fixed
+- Fixed recursive loop when splitting Actor values.
+
 ## [4.2.5] 2015-12-07
 
 ### Added
