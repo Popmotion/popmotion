@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.2.7] 2015-12-09
+
+### Fixed
+- SVG properies set ie `fillOpacity` are now getting set as `fill-opacity`.
+
 ## [4.2.6] 2015-12-08
 
 ### Fixed
