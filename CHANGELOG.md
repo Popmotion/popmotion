@@ -2,6 +2,21 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.2.7] 2015-12-09
+
+### Fixed
+- SVG properies set ie `fillOpacity` are now getting set as `fill-opacity`.
+
+## [4.2.6] 2015-12-08
+
+### Fixed
+- Fixed recursive loop when splitting Actor values.
+
+## [4.2.5] 2015-12-07
+
+### Added
+- `opacity`, `fillOpacity` and `strokeOpacity` to `ui.svg` Role type map.
+
 ## [4.2.4] 2015-12-07
 
 ### Added

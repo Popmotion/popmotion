@@ -210,12 +210,17 @@ function preprocess(existing, incoming, scope, defaultProp) {
                 newValue.children = {};
 
                 each(splitValues, (childName, childValue) => {
-                    childValue = utils.merge(newValue, childValue);
+                    each(newValue, (key ,value) => {
+                        // Not great is it
+                        if (key !== 'children' && key !== 'action' && childValue[key] === undefined) {
+                            childValue[key] = value;
+                        }
+                    });
+
                     childValue.parent = childValue.name = key;
                     childValue.propName = childName;
 
                     delete childValue.type;
-                    delete childValue.children;
 
                     newValue.children[childName] = values[key + childName] = childValue;
                 });

@@ -1,7 +1,9 @@
 var each = require('../../inc/utils').each,
     transformDictionary = require('../css/transform-dictionary'),
     transformProps = transformDictionary.props,
-    zeroNotZero = 0.0001;
+    zeroNotZero = 0.0001,
+    CAMEL_CASE_PATTERN = /([a-z])([A-Z])/g,
+    REPLACE_TEMPLATE = '$1-$2';
 
 module.exports = function (output, origin) {
     var props = {},
@@ -26,7 +28,7 @@ module.exports = function (output, origin) {
         if (transformProps[key]) {
             hasTransform = true;
         } else {
-            props[key] = value;
+            props[key.replace(CAMEL_CASE_PATTERN, REPLACE_TEMPLATE).toLowerCase()] = value;
         }
     });
 

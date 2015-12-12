@@ -1,5 +1,6 @@
-var COLOR = 'color',
-    SCALE = 'scale';
+const ALPHA = 'alpha';
+const COLOR = 'color';
+const SCALE = 'scale';
 
 module.exports = {
     fill: COLOR,
@@ -8,5 +9,8 @@ module.exports = {
     scaleX: SCALE,
     scaleY: SCALE,
     transformOrigin: 'positions',
-    d: 'complex'
+    d: 'complex',
+    opacity: ALPHA,
+    fillOpacity: ALPHA,
+    strokeOpacity: ALPHA
 };
