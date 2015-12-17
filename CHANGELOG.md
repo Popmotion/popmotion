@@ -6,6 +6,7 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 - `scale` value type hooked up to CSS and SVG roles.
+- `utils.camelToDash` utility function for converting camelCase props to dash-case.
 
 ### Changed
 - Default `Simulate` `stopSpeed` changed from `5` to `0.0001` to account for tiny numbers like 0-1.
