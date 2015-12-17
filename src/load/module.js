@@ -23,7 +23,6 @@ popmotion.addValueType({
 /*
     Predefined roles
 */
-
 popmotion.attr = require('../roles/attr/attrRole');
 popmotion.css = require('../roles/css/cssRole');
 popmotion.svg = require('../roles/svg/svgRole');
