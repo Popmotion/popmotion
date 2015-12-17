@@ -40,7 +40,7 @@ class Simulate extends Action {
             timeConstant: 395,
             
             // [number]: Stop simulation under this speed
-            stopSpeed: 5,
+            stopSpeed: 0.0001,
             
             // [boolean]: Capture with spring physics on limit breach
             capture: false,

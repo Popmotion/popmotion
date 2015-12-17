@@ -151,3 +151,9 @@ describe('stepProgress()', () => {
         expect(utils.stepProgress(.5, 2)).to.equal(1)
     })
 })
+
+describe('camelToDash()', () => {
+    it('should convert camel-case to dash case', () => {
+        expect(utils.camelToDash('testProperty')).to.equal('test-property');
+    })
+})

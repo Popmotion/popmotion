@@ -1,12 +1,13 @@
-var each = require('../../inc/utils').each,
-    transformDictionary = require('../css/transform-dictionary'),
-    transformProps = transformDictionary.props,
-    zeroNotZero = 0.0001,
-    CAMEL_CASE_PATTERN = /([a-z])([A-Z])/g,
-    REPLACE_TEMPLATE = '$1-$2';
+const utils = require('../../inc/utils');
+const transformDictionary = require('../css/transform-dictionary');
+
+const each = utils.each;
+const camelToDash = utils.camelToDash;
+const transformProps = transformDictionary.props;
+const zeroNotZero = 0.0001;
 
 module.exports = function (output, origin) {
-    var props = {},
+    let props = {},
         hasTransform = false,
         scale = output.scale !== undefined ? output.scale || zeroNotZero : output.scaleX || 1,
         scaleY = output.scaleY !== undefined ? output.scaleY || zeroNotZero : scale || 1,
@@ -28,7 +29,7 @@ module.exports = function (output, origin) {
         if (transformProps[key]) {
             hasTransform = true;
         } else {
-            props[key.replace(CAMEL_CASE_PATTERN, REPLACE_TEMPLATE).toLowerCase()] = value;
+            props[camelToDash(key)] = value;
         }
     });
 
