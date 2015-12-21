@@ -1,35 +1,34 @@
-let Action = require('./Action'),
-    calc = require('../inc/calc'),
-    utils = require('../inc/utils'),
-    each = utils.each,
-    presetEasing = require('./tween/preset-easing'),
-    valueOps = require('../actor/value-operations'),
-    TweenControls = require('./tween/TweenControls'),
-
-    nextSteps = {
-        loop: 'restart',
-        yoyo: 'reverse',
-        flip: 'flipValues'
-    },
-
-    /*
-        Ease value within ranged parameters
-        
-        @param [number]: Progress between 0 and 1
-        @param [number]: Value of 0 progress
-        @param [number]: Value of 1 progress
-        @param [string || function]: Name of preset easing
-            to use or generated easing function
-        @return [number]: Value of eased progress in range
-    */  
-    ease = (progress, from, to, ease) => {
-        var progressLimited = calc.restricted(progress, 0, 1),
-            easingFunction = utils.isString(ease) ? presetEasing[ease] : ease;
-
-        return calc.valueEased(progressLimited, from, to, easingFunction);
-    };
+const Action = require('./Action');
+const calc = require('../inc/calc');
+const utils = require('../inc/utils');
+const presetEasing = require('./tween/preset-easing');
+const valueOps = require('../actor/value-operations');
+const TweenControls = require('./tween/TweenControls');
+const each = utils.each;
 
 const COUNT = 'count';
+const NEXT_STEPS = {
+    loop: 'restart',
+    yoyo: 'reverse',
+    flip: 'flipValues'
+};
+
+/*
+    Ease value within ranged parameters
+    
+    @param [number]: Progress between 0 and 1
+    @param [number]: Value of 0 progress
+    @param [number]: Value of 1 progress
+    @param [string || function]: Name of preset easing
+        to use or generated easing function
+    @return [number]: Value of eased progress in range
+*/ 
+function ease(progress, from, to, ease) {
+    const progressLimited = calc.restricted(progress, 0, 1);
+    const easingFunction = utils.isString(ease) ? presetEasing[ease] : ease;
+
+    return calc.valueEased(progressLimited, from, to, easingFunction);
+};
 
 class Tween extends Action {
     getControls() {
@@ -45,7 +44,7 @@ class Tween extends Action {
             yoyo: false,
             flip: false,
             playDirection: 1,
-            ended: true,
+            ended: false,
             elapsed: 0
         };
     }
@@ -121,17 +120,22 @@ class Tween extends Action {
         @return [boolean]: Has this tween really really ended?
     */
     hasEnded(actor) {
-        if (this.ended) {
-            each(nextSteps, (name, methodName) => {
+        let ended = this.ended;
+
+        if (ended) {
+            each(NEXT_STEPS, (name, methodName) => {
                 if (this.checkNextStep(actor, name, this[methodName])) {
-                    this.ended = false;
+                    ended = false;
                     actor.hasChanged = true;
                     return false;
                 }
             });
         }
 
-        return this.ended;
+        // Reset `ended`
+        this.ended = false;
+
+        return ended;
     }
 
     checkNextStep(actor, name, method) {

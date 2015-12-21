@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.3.1] 2015-12-24
+
+### Removed
+- `deceleration` from `Simulate`.
+
 ## [4.3.0] 2015-12-17
 
 ### Added
