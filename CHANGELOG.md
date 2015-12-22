@@ -7,6 +7,9 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 ### Removed
 - `deceleration` from `Simulate`.
 
+### Fixed
+- Fixed bug where `Tween` would start as ended if initalised during `update` ie via a `Sequence`.
+
 ## [4.3.0] 2015-12-17
 
 ### Added
