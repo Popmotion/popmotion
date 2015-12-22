@@ -1,17 +1,30 @@
-let Action = require('./Action'),
-    calc = require('../inc/calc'),
-    utils = require('../inc/utils'),
-    simulations = require('./simulate/simulations');
+// Imports
+const Action = require('./Action');
+const calc = require('../inc/calc');
+const utils = require('../inc/utils');
+const simulations = require('./simulate/simulations');
 
+// Values
 const DEFAULT_PROP = 'velocity';
 
 class Simulate extends Action {
+    /*
+        # Simulate class constructor
+        ## Sets parent Action class and then default Simulate properties
+
+        @param [object]
+    */
     constructor(...args) {
         super(...args);
         this.calculatesVelocity = true;
         this.inactiveFrames = 0;
     }
 
+    /*
+        # Get default Simulate props
+
+        @return [object]
+    */
     getDefaultProps() {
         return {
             autoEnd: true,
@@ -19,13 +32,15 @@ class Simulate extends Action {
         };
     }
 
+    /*
+        # Get default Simulate value props
+
+        @return [object]
+    */
     getDefaultValue() {
         return {
             // [string]: Simulation to .run
             simulate: DEFAULT_PROP,
-            
-            // [number]: Deceleration to apply to value, in units per second
-            deceleration: 0,
             
             // [number]: Acceleration to apply to value, in units per second
             acceleration: 0,
@@ -53,16 +68,34 @@ class Simulate extends Action {
         };
     }
 
+    /*
+        # Get default Simulate value property name
+        ## Set values to this when a `value` is not provided as an object
+
+        @return [string]
+    */
     getDefaultValueProp() {
         return DEFAULT_PROP;
     }
 
+    /*
+        # Method to fire when Action starts
+        ## Set `started` to current time.
+    */
     onStart() {
         this.started = utils.currentTime();
     }
+
+    /*
+        # Fire at start of every frame
+        ## Set `hasChanged` to false
+    */
+    onFrameStart() {
+        this.hasChanged = false;
+    }
     
     /*
-        Simulate the Value's per-frame movement
+        # Simulate the `value`s per-frame movement
         
         @param [Actor]
         @param [Value]: Current value
@@ -71,29 +104,39 @@ class Simulate extends Action {
         @return [number]: Calculated value
     */
     process(actor, value, key, timeSinceLastFrame) {
-        var simulate = value.simulate,
-            simulation = utils.isString(simulate) ? simulations[simulate] : simulate,
-            newVelocity = simulation ? simulation(value, timeSinceLastFrame, this.started) : 0;
+        const current = value.current;
+        const simulate = value.simulate;
+        let newValue = current;
+
+        // If string, use in-built simulation otherwise treat as function
+        const simulation = utils.isString(simulate) ? simulations[simulate] : simulate;
+
+        const newVelocity = simulation ? simulation(value, timeSinceLastFrame, this.started) : 0;
 
         value.velocity = (Math.abs(newVelocity) >= value.stopSpeed) ? newVelocity : 0;
-        return value.current + calc.speedPerFrame(value.velocity, timeSinceLastFrame);
+
+        newValue = value.current + calc.speedPerFrame(value.velocity, timeSinceLastFrame);
+
+        if (newValue !== current) {
+            this.hasChanged = false;
+        }
+
+        return newValue;
     }
     
     /*
-        Has this action ended?
-        
-        Use a framecounter to see if Action has changed in the last x frames
+        # Has this action ended?
+        ## Use a framecounter to see if Action has changed in the last x frames
         and declare ended if not
         
         @param [Actor]
-        @param [boolean]: Has Action changed?
         @return [boolean]: Has Action ended?
     */
-    hasEnded(actor, hasChanged) {
+    hasEnded(actor) {
         let ended = false;
 
         if (this.autoEnd) {
-            this.inactiveFrames = hasChanged ? 0 : this.inactiveFrames + 1;
+            this.inactiveFrames = this.hasChanged ? 0 : this.inactiveFrames + 1;
             ended = (this.inactiveFrames > actor.maxInactiveFrames);
         }
 
@@ -101,9 +144,8 @@ class Simulate extends Action {
     }
 
     /*
-        Limit output to value range, if any
-        
-        If velocity is at or more than range, and value has a bounce property,
+        # Limit output to value range, if any
+        ## If velocity is at or more than range, and value has a bounce property,
         run the bounce simulation
         
         @param [number]: Calculated output
@@ -111,9 +153,9 @@ class Simulate extends Action {
         @return [number]: Limit-adjusted output
     */
     limit(output, value) {
-        var isOutsideMax = (output >= value.max),
-            isOutsideMin = (output <= value.min),
-            isOutsideRange = isOutsideMax || isOutsideMin;
+        const isOutsideMax = (output >= value.max);
+        const isOutsideMin = (output <= value.min);
+        const isOutsideRange = isOutsideMax || isOutsideMin;
             
         if (isOutsideRange) {
             output = calc.restricted(output, value.min, value.max);
