@@ -1,4 +1,5 @@
-const each = require('../inc/utils').each;
+const utils = require('../inc/utils');
+const each = utils.each;
 
 /*
     Check all Actions for `onEnd`, return true if all are true
@@ -23,7 +24,7 @@ const checkAllActionsHaveEnded = (actor, hasChanged) => {
             action.onUpdate.call(actor, values, actor, action);
         }
 
-        if (action.hasEnded && action.hasEnded(actor, hasChanged) === false) {
+        if (action.hasEnded && action.hasEnded(actor) === false) {
             hasEnded = false;
         } else {
             if (action.onComplete) {
