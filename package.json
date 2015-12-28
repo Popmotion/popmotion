@@ -46,6 +46,7 @@
     "test": "mocha --compilers js:babel-register"
   },
   "devDependencies": {
+    "babel-cli": "^6.3.17",
     "babel-core": "^6.0.20",
     "babel-loader": "^6.0.1",
     "babel-preset-es2015-subset-loose": "^1.0.0",
@@ -54,6 +55,9 @@
     "chai": "^3.4.0",
     "jshint": "^2.8.0",
     "jshint-loader": "^0.8.3",
+    "mocha": "^2.3.4",
+    "small": "^0.2.2",
+    "uglifyjs": "^2.4.10",
     "webpack": "1.7.2"
   }
 }
