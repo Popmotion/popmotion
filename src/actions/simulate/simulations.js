@@ -16,7 +16,8 @@ var simulations = {
         Applies any set deceleration and acceleration to existing velocity
     */
     velocity: function (value, duration) {
-        value.velocity = value.velocity + speedPerFrame(value.acceleration, duration);
+        var acceleration = utils.isFunc(value.acceleration) ? value.acceleration() : value.acceleration;
+        value.velocity = value.velocity + speedPerFrame(acceleration, duration);
 
         return simulations.friction(value, duration);
     },
