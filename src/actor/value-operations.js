@@ -4,7 +4,7 @@ var valueTypesManager = require('../value-types/manager'),
     isNum = utils.isNum,
     each = utils.each;
 
-const numericalValues = ['current', 'to', 'min', 'max', 'velocity', 'friction', 'spring'],
+const numericalValues = ['current', 'to', 'min', 'max', 'velocity', 'friction', 'spring', 'acceleration'],
     numNumericalValues = numericalValues.length,
     defaultValue = {
         current: 0,
