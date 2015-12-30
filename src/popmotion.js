@@ -20,6 +20,7 @@ var valueTypes = require('./value-types/manager'),
         Tween: require('./actions/Tween'),
         Simulate: require('./actions/Simulate'),
         Track: require('./actions/Track'),
+        Blend: require('./actions/Blend'),
 
         /*
             Create an Iterator of Actors with selected dom elements
