@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.3.4] 2015-12-30
+
+### Fixed
+- `Simulate.hasChanged` incorrectly calculated. 
+
 ## [4.3.3] 2015-12-29
 
 ### Fixed
