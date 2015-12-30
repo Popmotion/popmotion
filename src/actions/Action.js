@@ -163,7 +163,6 @@ class Action {
         @return [Action]
     */
     extend(props) {
-        console.log(this, props)
         return new this.constructor(utils.merge(this, props), this.getDefaultValueProp());
     }
 
