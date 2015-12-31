@@ -199,7 +199,13 @@ class Actor {
         @returns [Actor]
     */
     sync() {
-        this.start(new Action({ values: this.values }));
+        const currentValues = {};
+
+        utils.each(this.values, (key, value) => {
+            currentValues[key] = value.current;
+        });
+
+        this.start(new Action({ values: currentValues }));
         return this;
     }
 

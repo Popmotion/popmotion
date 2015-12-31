@@ -2,6 +2,21 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.3.4] 2015-12-30
+
+### Fixed
+- `Simulate.hasChanged` incorrectly calculated. 
+
+## [4.3.3] 2015-12-29
+
+### Fixed
+- Added `acceleration` to list of properties that can be set as functions, resolved when an Action starts.
+
+## [4.3.2] 2015-12-26
+
+### Fixed
+- Recursion bug with `Actor.sync` under specific circumstances.
+
 ## [4.3.1] 2015-12-24
 
 ### Removed

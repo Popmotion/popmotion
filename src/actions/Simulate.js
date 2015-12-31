@@ -118,7 +118,7 @@ class Simulate extends Action {
         newValue = value.current + calc.speedPerFrame(value.velocity, timeSinceLastFrame);
 
         if (newValue !== current) {
-            this.hasChanged = false;
+            this.hasChanged = true;
         }
 
         return newValue;
