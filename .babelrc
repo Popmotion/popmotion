@@ -1,5 +1,5 @@
 {
-    "presets": ["es2015-subset-loose", "stage-2"],
+    "presets": ["es2015-subset-loose", "stage-2", "react"],
     "env": {
         "development": {
             "sourceMaps": "inline"

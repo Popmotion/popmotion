@@ -1,0 +1,176 @@
+<html>
+    <head></head>
+    <style>
+        .test-area {
+            background: #2a2a2a;
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+        .ball {
+            opacity: 1;
+            background: #ff2420;
+            border-radius: 50%;
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            left: 50%;
+            top: 50%;
+            margin: -25px 0 0 -25px;
+            transform-origin: 50%;
+        }
+    </style>
+    <body>
+        <div class="test-area"></div>
+
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="popmotion.global.js"></script>
+        <script>
+        $(document).ready(function() {
+
+            var $body = $('body');
+            var activeBall;
+            var balls = ui.select('.ball', {
+                values: {
+                    originX: 0,
+                    originY: 0,
+                    opacity: 1,
+                    x: 0,
+                    y: 0,
+                }
+            });
+
+            var trackBall = new ui.Track({
+                values: {
+                    x: {},
+                    y: {}
+                }
+            });
+
+            var springBack = new ui.Simulate({
+                onFrame: function () {
+                    console.log('test')
+                },
+                values: {
+                    x: {
+                        to: 0,
+                        simulate: 'spring',
+                        spring: 300,
+                        friction: 0.01,
+                    },
+                    y: {
+                        to: 0,
+                        simulate: 'spring',
+                        spring: 300,
+                        friction: 0.1,
+                    }
+                }
+            });
+
+
+
+
+
+
+
+        });
+/*
+
+    var activeBall = null;
+    var balls = ui.select('.ball', {
+        onUpdate: function() {
+            console.log('onUpdate', this.values.x);
+        },
+        shape: CollisionDetector.CIRCLE,
+        onCollisionEnter: function(actor, otherActor) {
+            console.log('collision!')
+
+            var mass1 = actor.collider.width;
+            var mass2 = otherActor.collider.width;
+            var velX1 = actor.values.x.speed;
+            var velX2 = otherActor.values.x.speed;
+            var velY1 = actor.values.y.speed;
+            var velY2 = otherActor.values.y.speed;
+
+            var newVelX1 = (velX1 * (mass1 - mass2) + (2 * mass2 * velX2)) / (mass1 + mass2);
+            var newVelX2 = (velX2 * (mass2 - mass1) + (2 * mass1 * velX1)) / (mass1 + mass2);
+            var newVelY1 = (velY1 * (mass1 - mass2) + (2 * mass2 * velY2)) / (mass1 + mass2);
+            var newVelY2 = (velY2 * (mass2 - mass1) + (2 * mass1 * velY1)) / (mass1 + mass2);
+
+            actor.values.x.speed = newVelX1;
+            otherActor.values.x.speed = newVelX2;
+            actor.values.y.speed = newVelY1;
+            otherActor.values.y.speed = newVelY2;
+
+            //   actor.values.x = actor.values.x + newVelX1;
+            //   actor.values.y = actor.values.y + newVelY1;
+            //   otherActor.values.x = otherActor.values.x + newVelX2;
+            //   otherActor.values.y = otherActor.values.y + newVelY2;
+
+        }
+    });
+
+    balls.each(function(ball) {
+        ball.set({
+            values: {
+                originX: 0,
+                originY: 0,
+                opacity: 1,
+                x: 0,
+                y: 0,
+            }
+        })
+    })
+
+    var collisionDetector = new CollisionDetector(balls);
+
+    var $body = $('body');
+
+    var showBall = new ui.Tween({
+        values: {
+            y: 0,
+            opacity: 1
+        }
+    });
+
+    var trackBall = new ui.Track({
+        values: {
+            x: {},
+            y: {}
+        }
+    });
+
+    var springBack = new ui.Simulate({
+        simulate: 'spring',
+        spring: 100,
+        friction: 0.05,
+        values: {
+            x: {
+                to: 0
+            },
+            y: {
+                to: 0
+            }
+        }
+    });
+
+    $body.on('mousedown touchstart', '.ball', function(event) {
+        event.stopPropagation();
+        event.preventDefault();
+        activeBall = ui.select(this);
+        activeBall.start(trackBall, event);
+
+        $body.on('mouseup touchend', function(event) {
+            event.stopPropagation();
+            event.preventDefault();
+            activeBall.start(springBack);
+        });
+    });
+})
+*/
+        </script>
+    </body>
+</html>
