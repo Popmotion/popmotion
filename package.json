@@ -55,5 +55,10 @@
     "jshint": "^2.8.0",
     "jshint-loader": "^0.8.3",
     "webpack": "1.7.2"
+  },
+  "dependencies": {
+    "framesync": "^1.0.1",
+    "ui-calc": "^1.0.1",
+    "ui-utils": "^1.2.0"
   }
 }
