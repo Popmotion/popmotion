@@ -29,23 +29,24 @@ export default class Action extends Process {
         @return [Action]
     */
     set(props, defaultValueProp = DEFAULT_PROP) {
+        const { values, ...propsToSet } = props;
+
         // Loop through non-`value` props and set
-        each(props, (value, key) => {
-            if (key !== 'values') {
-                this[key] = value;
-            }
+        each(propsToSet, (value, key) => {
+            this[key] = value;
         });
 
         // Merge `value` properties with existing
-        if (props.values) {
-            const currrentValues = this.values;
+        if (values) {
+            const currentValues = this.values;
+            const defaultValue = this.getDefaultValue();
 
-            each(props.values, (value, key) => {
+            each(values, (value, key) => {
                 const existingValue = currentValues[key];
-                let newValue = {};
+                let newValue = { ...defaultValue };
 
                 if (isObj(value)) {
-                    newValue = value;
+                    newValue = { ...newValue, ...value };
                 } else {
                     newValue[defaultValueProp] = value;
                 }
@@ -54,6 +55,16 @@ export default class Action extends Process {
             });
         }
 
+        return this;
+    }
+
+    pause() {
+        super.stop();
+        return this;
+    }
+
+    resume() {
+        super.start();
         return this;
     }
 
@@ -72,7 +83,10 @@ export default class Action extends Process {
         @return [object]
     */
     getDefaultValue() {
-        return {};
+        return {
+            current: 0,
+            velocity: 0
+        };
     }
 
     /*

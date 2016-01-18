@@ -1,9 +1,6 @@
 import Action from './Action';
-import {
-    speedPerFrame,
-    speedPerSecond
-} from 'ui-calc';
-import { isNum } from 'ui-utils';
+import { speedPerFrame, speedPerSecond } from 'ui-calc';
+import { each, isNum } from 'ui-utils';
 
 export default class Physics extends Action {
 
@@ -19,7 +16,10 @@ export default class Physics extends Action {
             const previousValue = value.current;
 
             // Apply acceleration
-            value.velocity += speedPerFrame(value.acceleration, elapsed);
+            value.velocity += speedPerFrame(value.force, elapsed);
+
+            // Apply friction
+            value.velocity *= (1 - value.friction) ** (elapsed / 10);
 
             // Apply spring
             if (value.spring && isNum(value.to)) {
@@ -27,12 +27,10 @@ export default class Physics extends Action {
                 value.velocity += distanceToTarget * speedPerFrame(value.spring, elapsed);
             }
 
-            // Apply friction
-            value.velocity *= value.friction ** elapsed;
-
             // Apply latest velocity
             value.current += speedPerFrame(value.velocity, elapsed);
-
+            
+            // Check if value has changed
             if (value.current !== previousValue || Math.abs(value.velocity) >= value.stopSpeed) {
                 this.hasChanged = true;
             }
@@ -41,9 +39,9 @@ export default class Physics extends Action {
 
     frameEnd() {
         if (this.autoEnd) {
-            this.inactiveFrames = this.hasChanged ? 0 : this.inactiveFrames + 1;
+            this.inactiveFrames = this.hasChanged ? 1 : this.inactiveFrames + 1;
 
-            if (this.inactiveFrames > this.maxInactiveFrames) {
+            if (this.inactiveFrames >= this.maxInactiveFrames) {
                 this.stop();
             }
         }
@@ -56,6 +54,7 @@ export default class Physics extends Action {
     */
     getDefaultProps() {
         return {
+            ...super.getDefaultProps(),
             autoEnd: true,
             maxInactiveFrames: 3
         };
@@ -68,12 +67,12 @@ export default class Physics extends Action {
     */
     getDefaultValue() {
         return {
-            acceleration: 0, // [number]: Acceleration to apply to value, in units per second
+            ...super.getDefaultValue(),
+            force: 0, // [number]: Acceleration to apply to value, in units per second
             bounce: 0, // [number]: Factor to multiply velocity by on bounce
             spring: 0, // [number]: Spring strength during 'string'
             stopSpeed: 0.0001, // [number]: Stop simulation under this speed
-            friction: 0, // [number]: Friction to apply per frame, 0-1
-            to: 0
+            friction: 0 // [number]: Friction to apply per frame, 0-1
         };
     }
 
@@ -84,6 +83,6 @@ export default class Physics extends Action {
         @return [string]
     */
     getDefaultValueProp() {
-        return DEFAULT_PROP;
+        return 'velocity';
     }
 }

@@ -3,6 +3,7 @@ import presetEasing from './tween/preset-easing';
 import {
     currentTime,
     each,
+    isNum,
     isString
 } from 'ui-utils';
 import {
@@ -12,7 +13,7 @@ import {
     stepProgress
 } from 'ui-calc';
 
-const COUNT = 'count';
+const COUNT = 'Count';
 const NEXT_STEPS = {
     loop: 'restart',
     yoyo: 'reverse',
@@ -38,6 +39,11 @@ function ease(progress, from, to, ease) {
 };
 
 export default class Tween extends Action {
+    start() {
+        super.start();
+        this.elapsed = 0;
+        this.flipCount = this.yoyoCount = this.loopCount = 0;
+    }
 
     update(tween, frameStamp, elapsed) {
         const progressTarget = (this.playDirection === 1) ? 1 : 0;
@@ -101,10 +107,12 @@ export default class Tween extends Action {
 
     seek(progress) {
         this.elapsed = this.duration * progress;
+        this.once();
     }
     
     getDefaultProps() {
         return {
+            ...super.getDefaultProps(),
             delay: 0,
             dilate: 1,
             duration: 300,
@@ -119,12 +127,14 @@ export default class Tween extends Action {
 
     getDefaultValue() {
         return {
+            ...super.getDefaultValue(),
             delay: 0,
             duration: 300,
             ease: 'easeOut',
             elapsed: 0,
             stagger: 0,
             steps: 0,
+            from: 0,
             to: 0,
             round: false
         };

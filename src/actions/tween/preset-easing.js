@@ -24,8 +24,8 @@
     https://twitter.com/ElliotGeno
 */
 // Imports
-const Easing = require('./Easing');
-const utils = require('../../inc/utils');
+import createEasing from './create-easing';
+import { each } from 'ui-utils';
 
 // Values
 const DEFAULT_BACK_STRENGTH = 1.525;
@@ -51,8 +51,8 @@ let baseEasing = {
 });
 
 // Generate in/out/inOut variations
-utils.each(baseEasing, (key, baseEase) => {
-    let easingFunction = new Easing(baseEase);
+each(baseEasing, (baseEase, key) => {
+    let easingFunction = createEasing(baseEase);
     baseEasing[`${key}In`] = easingFunction.in;
     baseEasing[`${key}Out`] = easingFunction.out;
     baseEasing[`${key}InOut`] = easingFunction.inOut;
@@ -62,4 +62,4 @@ baseEasing.linear = progress => progress;
 baseEasing.anticipate = (progress, strength = DEFAULT_BACK_STRENGTH) =>
     ((progress*=2) < 1) ? 0.5 * baseEasing.backIn(progress, strength) :  0.5 * (2 - Math.pow(2, -10 * (progress - 1)));
 
-module.exports = baseEasing;
+export default baseEasing;
