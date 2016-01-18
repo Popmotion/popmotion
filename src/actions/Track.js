@@ -6,6 +6,10 @@ export default class Track extends Action {
     constructor(props, input) {
         super(props);
         this.input = input;
+    }
+
+    start() {
+        super.start();
         this.inputOrigin = {};
     }
 

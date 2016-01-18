@@ -1,3 +1,12 @@
+import { Process } from 'framesync';
+
+class Input extends Process {
+
+}
+
+
+
+
 /*
     Input controller
 */

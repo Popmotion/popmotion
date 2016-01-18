@@ -41,6 +41,14 @@ export default class Action extends Process {
             const currentValues = this.values;
             const defaultValue = this.getDefaultValue();
 
+            // Inherit values from props
+            each(defaultValue, (value, key) => {
+                if (propsToSet[key] !== undefined) {
+                    defaultValue[key] = propsToSet[key];
+                }
+            });
+
+            // Overwrite per-value props
             each(values, (value, key) => {
                 const existingValue = currentValues[key];
                 let newValue = { ...defaultValue };

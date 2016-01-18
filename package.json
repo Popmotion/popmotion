@@ -1,10 +1,10 @@
 {
   "name": "popmotion",
-  "version": "4.3.4",
-  "description": "The JavaScript motion engine. Handles animation, physics, and input tracking.",
+  "version": "5.0.0",
+  "description": "The JavaScript motion engine. Animation, physics, and input tracking.",
   "author": "Matt Perry <sirhound@popmotion.io>",
   "homepage": "http://popmotion.io",
-  "main": "./lib/load/module.js",
+  "main": "./popmotion.js",
   "files": [
     "lib",
     "popmotion.global.js",

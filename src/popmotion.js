@@ -1,7 +1,19 @@
+// Actions
+import Action from './actions/Action';
 import Tween from './actions/Tween';
 import Physics from './actions/Physics';
 import Track from './actions/Track';
 
-const popmotion = { Tween, Physics, Track };
+// Input
+import Input from './input/Input';
 
-module.exports = popmotion;
+export {
+    // Actions
+    Action,
+    Tween,
+    Track,
+    Physics,
+
+    // Input
+    Input
+};

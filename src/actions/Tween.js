@@ -47,8 +47,9 @@ export default class Tween extends Action {
 
     update(tween, frameStamp, elapsed) {
         const progressTarget = (this.playDirection === 1) ? 1 : 0;
-        this.elapsed += (elapsed * this.dilate) * this.playDirection;
+
         this.ended = true;
+        this.elapsed += (elapsed * this.dilate) * this.playDirection;
 
         each(this.values, (value, key) => {
             let progress = restrict(getProgressFromValue(this.elapsed - value.delay, 0, value.duration), 0, 1);
@@ -106,8 +107,8 @@ export default class Tween extends Action {
     }
 
     seek(progress) {
-        this.elapsed = this.duration * progress;
         this.once();
+        this.elapsed = this.duration * progress;
     }
     
     getDefaultProps() {
