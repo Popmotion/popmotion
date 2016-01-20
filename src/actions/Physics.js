@@ -1,6 +1,6 @@
 import Action from './Action';
-import { speedPerFrame, speedPerSecond } from 'ui-calc';
-import { each, isNum } from 'ui-utils';
+import { speedPerFrame, speedPerSecond } from '../inc/calc';
+import { each, isNum } from '../inc/utils';
 
 export default class Physics extends Action {
 

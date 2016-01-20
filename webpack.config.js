@@ -1,7 +1,7 @@
 module.exports = {
     entry: './src/load/global.js',
     output: {
-        path: __dirname,
+        path: __dirname + '/dist',
         filename: 'popmotion.global.js'
     },
     module: {

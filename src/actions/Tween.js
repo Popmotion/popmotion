@@ -5,13 +5,13 @@ import {
     each,
     isNum,
     isString
-} from 'ui-utils';
+} from '../inc/utils';
 import {
     restrict,
     getProgressFromValue,
     getValueFromProgress,
     stepProgress
-} from 'ui-calc';
+} from '../inc/calc';
 
 const COUNT = 'Count';
 const NEXT_STEPS = {

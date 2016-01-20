@@ -1,1 +1,3 @@
-module.exports = (easing, ...args) => (progress) => easing(progress, ...args);
+export default function modifyEase(easing, ...args) {
+    return easing(progress, ...args);
+}

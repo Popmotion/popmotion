@@ -40,9 +40,9 @@
   "analyze": true,
   "license": "GPL-3.0",
   "scripts": {
-    "compile": "babel src --out-dir lib && small -i lib/load/global.js -o popmotion.global.js && uglifyjs popmotion.global.js --compress --mangle --screw-ie8 -o popmotion.global.min.js",
+    "compile": "babel src --out-dir lib && small -i lib/load/global.js -o ./dist/popmotion.global.js && uglifyjs ./dist/popmotion.global.js --compress --mangle --screw-ie8 -o ./dist/popmotion.global.min.js",
     "watch": "webpack --progress --colors --watch",
-    "measure": "gzip -c popmotion.global.min.js | wc -c",
+    "measure": "gzip -c dist/popmotion.global.min.js | wc -c",
     "test": "mocha --compilers js:babel-register"
   },
   "devDependencies": {
@@ -57,8 +57,6 @@
     "webpack": "1.7.2"
   },
   "dependencies": {
-    "framesync": "^1.0.1",
-    "ui-calc": "^1.0.1",
-    "ui-utils": "^1.2.0"
+    "framesync": "^1.0.1"
   }
 }

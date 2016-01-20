@@ -1,21 +1,21 @@
-var valueTypesManager = require('../value-types/manager'),
-    calc = require('../inc/calc'),
-    utils = require('../inc/utils'),
-    isNum = utils.isNum,
-    each = utils.each;
+// Imports
+const valueTypesManager = require('../value-types/manager');
+const calc = require('../inc/calc');
+const utils = require('../inc/utils');
+const isNum = utils.isNum;
+const each = utils.each;
 
-const numericalValues = ['current', 'to', 'min', 'max', 'velocity', 'friction', 'spring', 'acceleration'],
-    numNumericalValues = numericalValues.length,
-    defaultValue = {
-        current: 0,
-        velocity: 0,
-        speed: 0,
-        frameChange: 0
-    };
+// Vars
+const numericalValues = ['current', 'to', 'min', 'max', 'velocity', 'friction', 'spring', 'acceleration'];
+const numNumericalValues = numericalValues.length;
+const defaultValue = {
+    current: 0,
+    velocity: 0,
+    speed: 0,
+    frameChange: 0
+};
 
-function checkNumericalValue(name) {
-    return (numericalValues.indexOf(name) > -1);
-}
+const checkNumericalValue = (name) => numericalValues.indexOf(name) > -1;
 
 /*
     Check Role typeMaps to see if this value name has been mapped
@@ -26,7 +26,7 @@ function checkNumericalValue(name) {
     @returns [string]: Value type
 */
 function checkRoles(name, roles) {
-    var valueType;
+    let valueType;
 
     each(roles, (key, role) => {
         if (role._typeMap) {

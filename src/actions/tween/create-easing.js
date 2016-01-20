@@ -1,5 +1,3 @@
-import Bezier from './Bezier';
-
 /*
     Mirror easing
     
@@ -10,7 +8,7 @@ import Bezier from './Bezier';
     @param [function]: The easing function to mirror
     @returns [number]: The easing-adjusted delta
 */
-const mirrorEasing = method => (progress, strength) => (progress <= 0.5) ? method(2 * progress, strength) / 2 : (2 - method(2 * (1 - progress), strength)) / 2;
+const mirrorEasing = (method) => (progress, strength) => (progress <= 0.5) ? method(2 * progress, strength) / 2 : (2 - method(2 * (1 - progress), strength)) / 2;
         
 /*
     Reverse easing
@@ -22,7 +20,7 @@ const mirrorEasing = method => (progress, strength) => (progress <= 0.5) ? metho
     @param [function]: The easing function to reverse
     @returns [number]: The easing-adjusted delta
 */
-const reverseEasing = method => (progress, strength) => 1 - method(1 - progress, strength);
+const reverseEasing = (method) => (progress, strength) => 1 - method(1 - progress, strength);
 
 /*
     Easing class
@@ -32,20 +30,12 @@ const reverseEasing = method => (progress, strength) => 1 - method(1 - progress,
 
     If provided four arguments, returns new Bezier class instead.
 */
-export default function createEasing (x1, y1, x2, y2) {
-    const method = x1;
-    let easingFunction;
+export default function createEasingFunction(method) {
+    let easingFunction = (progress, strength) => method(progress, strength);
 
-    // If this is a bezier curve, return a bezier function
-    if (arguments.length > 1) {
-        easingFunction = new Bezier(x1, y1, x2, y2);
-
-    } else {
-        easingFunction = (progress, strength) => method(progress, strength);
-        easingFunction.in = (progress, strength) => method(progress, strength);
-        easingFunction.out = reverseEasing(method);
-        easingFunction.inOut = mirrorEasing(method);
-    }
+    easingFunction.in = (progress, strength) => method(progress, strength);
+    easingFunction.out = reverseEasing(method);
+    easingFunction.inOut = mirrorEasing(method);
 
     return easingFunction;
 }

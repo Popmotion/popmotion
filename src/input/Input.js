@@ -1,5 +1,5 @@
 import { Process } from 'framesync';
-import { isFunc } from 'ui-utils';
+import { isFunc } from '../inc/utils';
 
 export default class Input extends Process {
     constructor(initialValues, poll) {

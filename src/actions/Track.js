@@ -1,8 +1,8 @@
 import Action from './Action';
 import Mouse from '../input/Mouse';
 import Touch from '../input/Touch';
-import { offset } from 'ui-calc';
-import { each } from 'ui-utils';
+import { offset } from '../inc/calc';
+import { each } from '../inc/utils';
 
 const createPointer = (e) => e.touches ? new Touch(e) : new Mouse(e);
 const getActualEvent = (e) => e.originalEvent || e;

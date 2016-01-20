@@ -1,5 +1,5 @@
 import { Process } from 'framesync';
-import { each, isObj } from 'ui-utils';
+import { each, isObj } from '../inc/utils';
 
 const DEFAULT_PROP = 'current';
 

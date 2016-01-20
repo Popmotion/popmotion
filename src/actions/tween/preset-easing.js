@@ -25,7 +25,7 @@
 */
 // Imports
 import createEasing from './create-easing';
-import { each } from 'ui-utils';
+import { each } from '../../inc/utils';
 
 // Values
 const DEFAULT_BACK_STRENGTH = 1.525;
@@ -46,9 +46,7 @@ let baseEasing = {
     back: (progress, strength = DEFAULT_BACK_STRENGTH) => (progress * progress) * ((strength + 1) * progress - strength)
 };
 
-['cubic', 'quart', 'quint'].forEach(function (easingName, i) {
-    baseEasing[easingName] = generatePowerEasing(i + 3);
-});
+['cubic', 'quart', 'quint'].forEach((easingName, i) => baseEasing[easingName] = generatePowerEasing(i + 3));
 
 // Generate in/out/inOut variations
 each(baseEasing, (baseEase, key) => {

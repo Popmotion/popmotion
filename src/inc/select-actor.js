@@ -21,3 +21,18 @@ module.exports = function (selector, opts = {}) {
 
     return (actors.length > 1) ? new Iterator(actors) : actors[0];
 };
+
+
+        // Add CSS role if HTMLElement
+        if (element instanceof HTMLElement || element.tagName === 'svg') {
+            this.roles.push(cssRole);
+
+        // Add SVG role if SVG element
+        } else if (element instanceof SVGElement) {
+            this.roles.push(svgRole);
+
+            // Add Draw Path role if path element
+            if (element.tagName === 'path') {
+                this.roles.push(drawPathRole);
+            }
+        }

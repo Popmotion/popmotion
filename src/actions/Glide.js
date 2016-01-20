@@ -1,5 +1,5 @@
 import Action from './Action';
-import { currentTime } from 'ui-utils';
+import { currentTime } from '../inc/utils';
 
 const TIME_CONSTANT = 395;
 
