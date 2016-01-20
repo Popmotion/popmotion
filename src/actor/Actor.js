@@ -14,3 +14,21 @@ export default class Actor extends Action {
 
     }
 }
+
+
+const menu = new Actor({
+    render: Render.CSS,
+    element: document.getElementById('test'),
+    values: {
+        scaleY: 1
+    }
+});
+
+const closeMenu = new Tween({
+    duration: 400,
+    ease: Easing.easeOut,
+    values: {
+        scaleY: 0
+    }
+});
+
