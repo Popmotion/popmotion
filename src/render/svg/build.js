@@ -6,8 +6,8 @@ const ZERO_NOT_ZERO = 0.0001;
 export default function build(state, origin) {
     let props = {},
         hasTransform = false,
-        scale = state.scale !== undefined ? state.scale || zeroNotZero : state.scaleX || 1,
-        scaleY = state.scaleY !== undefined ? state.scaleY || zeroNotZero : scale || 1,
+        scale = state.scale !== undefined ? state.scale || ZERO_NOT_ZERO : state.scaleX || 1,
+        scaleY = state.scaleY !== undefined ? state.scaleY || ZERO_NOT_ZERO : scale || 1,
         transformOriginX = origin.x,
         transformOriginY = origin.y,
         scaleTransformX = - transformOriginX * (scale * 1),
