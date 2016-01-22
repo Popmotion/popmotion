@@ -20,23 +20,23 @@ const detectRenderer = (element) => {
             return renderSVG;
         }
     }
-};
+}
+
+const createActor = (element) => {
+    let actor = element[SAVE_PROP];
+
+    if (!actor) {
+        props.element = element;
+        props.onRender = detectRenderer(element);
+        actor = element[SAVE_PROP] = new Actor(props);
+    }
+
+    return actor;
+}
 
 export default function selectActor(selector, props) {
     const elements = selectDom(selector);
-    const actors = [];
-
-    elements.forEach((element) => {
-        let actor = element[SAVE_PROP];
-
-        if (!actor) {
-            props.element = element;
-            props.onRender = detectRenderer(element);
-            actor = element[SAVE_PROP] = new Actor(props);
-        }
-
-        actors.push(actor);
-    });
+    const actors = elements.map(createActor);
 
     return (actors.length > 1) ? actors : actors[0];
 }
