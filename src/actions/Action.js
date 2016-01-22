@@ -51,6 +51,8 @@ export default class Action extends Process {
                     newValue[defaultValueProp] = value;
                 }
 
+                // update values
+
                 currentValues[key] = existingValue ? { ...existingValue, ...newValue } : newValue;
             });
         }

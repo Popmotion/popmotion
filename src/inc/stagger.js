@@ -8,7 +8,7 @@ export default function stagger(array, props, callback) {
     const arrayLength = array.length;
     const propsIsInterval = isNum(props);
     const interval = propsIsInterval ? props : props.interval || DEFAULT_INTERVAL;
-    const prevIndex = -1;
+    let prevIndex = -1;
 
     const staggerTween = new Tween({
         duration: interval * arrayLength,
@@ -21,7 +21,7 @@ export default function stagger(array, props, callback) {
             }
         },
         onRender: ({ i }) => {
-            const gapIndex = prevIndex + 1;
+            let gapIndex = prevIndex + 1;
 
             for (; gapIndex <= i; gapIndex++) {
                 callback(array[gapIndex], gapIndex);
