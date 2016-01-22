@@ -1,4 +1,4 @@
-import { Process } from 'framesync';
+import Process from '../process/Process';
 import { isFunc } from '../inc/utils';
 
 export default class Input extends Process {
@@ -8,7 +8,7 @@ export default class Input extends Process {
         this.offset = {};
 
         if (isFunc(poll)) {
-            this.frameStart = () => this.latest(this.poll());
+            this.onFrameStart = () => this.latest(this.poll());
         }
     }
 

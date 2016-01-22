@@ -1,13 +1,12 @@
-var rgb = require('./rgb');
+import rgb from './rgb';
 
-module.exports = {
-
+export default {
     defaultProps: rgb.defaultProps,
 
-    test: value => (value && value.indexOf('#') > -1),
-    
-    split: value => {
-        var r, g, b;
+    test: (value) => (value && value.indexOf('#') > -1),
+
+    split: (value) => {
+        let r, g, b;
 
         // If we have 6 characters, ie #FF0000
         if (value.length > 4) {
@@ -33,5 +32,5 @@ module.exports = {
         };
     },
 
-    combine: values => rgb.combine(values)
+    combine: (value) => rgb.combine(values)
 };

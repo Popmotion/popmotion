@@ -6,29 +6,20 @@ export default class Actor extends Action {
         this.once();
     }
 
+    do(action) {
+        if (this.reducer) {
+            this.start(this.reducer(action, this.values));
+        }
+    }
+
+    start(action) {
+        super.start();
+        const actionInstance = action.inherit();
+
+        return actionInstance;
+    }
+
     willRender() {
 
     }
-
-    render() {
-
-    }
 }
-
-
-const menu = new Actor({
-    render: Render.CSS,
-    element: document.getElementById('test'),
-    values: {
-        scaleY: 1
-    }
-});
-
-const closeMenu = new Tween({
-    duration: 400,
-    ease: Easing.easeOut,
-    values: {
-        scaleY: 0
-    }
-});
-

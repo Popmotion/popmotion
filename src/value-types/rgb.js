@@ -1,22 +1,18 @@
-var createDelimited = require('./manipulators/create-delimited'),
-    getColorValues = require('./manipulators/get-color-values'),
-    functionCreate = require('./manipulators/function-create'),
-    defaultProps = require('./settings/default-props'),
-    colorDefaults = defaultProps.color,
-    terms = require('./settings/dictionary').colors;
+import { createDelimited, createFunctionString, getColorValues } from '../inc/utils';
+import { rgb as rgbTerms } from './settings/dictionary';
+import { rgb as defaultRGB, opacity as defaultOpacity } from './settings/default-props';
 
-module.exports = {
-
+export default {
     defaultProps: {
-        Red: colorDefaults,
-        Green: colorDefaults,
-        Blue: colorDefaults,
-        Alpha: defaultProps.opacity
+        Red: defaultRGB,
+        Green: defaultRGB,
+        Blue: defaultRGB,
+        Alpha: defaultOpacity
     },
 
-    test: value => (value && value.indexOf('rgb') > -1),
-    
-    split: value => getColorValues(value, terms),
+    test: (value) => (value && value.indexOf('rgb') > -1),
 
-    combine: values => functionCreate(createDelimited(values, terms, ', ', 2), 'rgba')
+    split: (value) => getColorValues(value, rgbTerms),
+
+    combine: (value) => createFunctionString(createDelimited(values, rgbTerms, ', ', 2), 'rgba')
 };

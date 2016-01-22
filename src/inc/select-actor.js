@@ -1,38 +1,23 @@
-var Actor = require('../actor/Actor'),
-    Iterator = require('../iterator/Iterator'),
-    selectDom = require('./select-dom');
+import Actor from '../actor/Actor';
+import { selectDom } from '../inc/utils';
+
+import renderCSS from '../render/css';
+import renderSVG from '../render/svg';
+import renderSVGPath from '../render/svg-path';
 
 const SAVE_PROP = '__pm_actor_';
 
-module.exports = function (selector, opts = {}) {
-    var dom = selectDom(selector),
-        actors = [];
+const detectRenderer = (element) => {
+    // If HTMLElement load renderCSS
+    if (element instanceof HTMLElement || element.tagName === 'svg') {
+        return renderCSS;
 
-    dom.forEach((element) => {
-        let actor = element[SAVE_PROP];
-
-        if (!actor) {
-            opts.element = element;
-            actor = element[SAVE_PROP] = new Actor(opts);
+    // Or SVG
+    } else if (element instanceof SVGElement) {
+        if (element.tagName === 'path') {
+            return renderSVGPath;
+        } else {
+            return renderSVG;
         }
-
-        actors.push(actor);
-    });
-
-    return (actors.length > 1) ? new Iterator(actors) : actors[0];
+    }
 };
-
-
-        // Add CSS role if HTMLElement
-        if (element instanceof HTMLElement || element.tagName === 'svg') {
-            this.roles.push(cssRole);
-
-        // Add SVG role if SVG element
-        } else if (element instanceof SVGElement) {
-            this.roles.push(svgRole);
-
-            // Add Draw Path role if path element
-            if (element.tagName === 'path') {
-                this.roles.push(drawPathRole);
-            }
-        }

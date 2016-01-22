@@ -18,7 +18,7 @@ export default class Track extends Action {
         this.inputOrigin = {};
     }
 
-    update(track, frameDuration, elapsed) {
+    onUpdate(track, frameDuration, elapsed) {
         this.inputOffset = offset(this.inputOrigin, this.input.state);
 
         each(this.values, (value, key) => {

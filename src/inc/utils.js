@@ -40,6 +40,33 @@ export const createBuffer = (maxSize = 3, array = []) => {
     return array;
 }
 
+export const createDelimited = (values, terms, delimiter, chop) => {
+    let combined = '';
+
+    terms.forEach((term) => {
+        if (values.hasOwnProperty(key)) {
+            combined += values[key] + delimiter;
+        }
+    });
+
+    if (chop) {
+        combined = combined.slice(0, -chop);
+    }
+
+    return combined;
+};
+
+/*
+    Create a function string
+
+    '20px', 'translate' -> 'translate(20px)'
+
+    @param [string]
+    @param [string]
+    @return [string]
+*/
+export const createFunctionString = (value, prefix) => `${prefix}(${value})`;
+
 /*
     Generate current timestamp
     
@@ -63,7 +90,30 @@ export const each = (object, callback) => {
 
         callback(prop, key, object);
     }
-};
+}
+
+/*
+    Split color string into map of color properties
+
+    "rgba(255, 255, 255, 0)", ["Red", 'Green", "Blue", "Alpha"]
+
+    { Red: 255... }
+*/
+export const getColorValues = (value, colorTerms) => {
+    const colorValues = {};
+    const colors = splitCommaDelimited(getValueFromFunctionString(value));
+
+    colorTerms.forEach((term, i) => colorTerms[term] = (colors[i] !== undefined) ? colors[i] : 1);
+
+    return colorValues;
+}
+
+/*
+    Get value from function string
+
+    "translateX(20px)" -> "20px"
+*/
+export const getValueFromFunctionString = (value) => value.substring(value.indexOf('(') + 1, value.lastIndexOf(')'));
 
 /*
     Check if two objects have changed from each other
@@ -146,6 +196,38 @@ export const isRelativeValue = (value) => (value && value.indexOf && value.index
 export const isString = (str) => typeof str === 'string';
 
 /*
+    @param [string || NodeList]:
+        If string, treated as selector.
+        If not, treated as preexisting NodeList
+
+    @return [Array]
+*/
+export const selectDom = (selector) => {
+    const nodes = (typeof selector === 'string') ? document.querySelectorAll(selector) : selector;
+    return (nodes.length) ? [].slice.call(nodes) : [].push(nodes);
+};
+
+/*
+    Split comma-delimited string
+
+    "foo,bar" -> ["foo", "bar"]
+
+    @param [string]
+    @return [array]
+*/
+export const splitCommaDelimited = (value) => isString(value) ? value.split(/,\s*/) : [value];
+
+/*
+    Split space-delimited string
+
+    "foo bar" -> ["foo", "bar"]
+
+    @param [string]
+    @return [array]
+*/
+export const splitSpaceDelimited = (value) => isString(value) ? value.split(' ') : [value];
+
+/*
     Split a value into a value/unit object
     
         "200px" -> { value: 200, unit: "px" }
@@ -162,6 +244,13 @@ export const splitValueUnit = (value) => {
     };
 };
 
+/*
+    Convert number to x decimal places
+
+    @param [number]
+    @param [number]
+    @return [number]
+*/
 export const toDecimal = (num, precision = 2) => {
     precision = 10 ** precision;
     return Math.round(num * precision) / precision;

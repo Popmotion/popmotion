@@ -45,7 +45,7 @@ export default class Tween extends Action {
         this.flipCount = this.yoyoCount = this.loopCount = 0;
     }
 
-    update(tween, frameStamp, elapsed) {
+    onUpdate(tween, frameStamp, elapsed) {
         const progressTarget = (this.playDirection === 1) ? 1 : 0;
 
         this.ended = true;
@@ -69,7 +69,7 @@ export default class Tween extends Action {
         });
     }
 
-    frameEnd() {
+    onFrameEnd() {
         if (this.ended) {
             let stepTaken = false;
 

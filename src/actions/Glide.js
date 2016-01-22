@@ -9,7 +9,7 @@ export default class Glide extends Action {
         this.started = currentTime();
     }
 
-    update(glide, frameStart, elapsed) {
+    onUpdate(glide, frameStart, elapsed) {
         const timeUntilFinished = - currentTime() - this.started;
 
         each(this.values, (value, key) => {

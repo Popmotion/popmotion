@@ -1,34 +1,38 @@
-var createDelimited = require('./manipulators/create-delimited'),
-    pxDefaults = require('./px').defaultProps,
-    splitSpaceDelimited = require('./manipulators/split-space-delimited'),
-    terms = require('./settings/dictionary').positions;
+import { positions } from './settings/dictionary';
+import { createDelimited, splitSpaceDelimited } from '../inc/utils';
+import pxValueType from './px';
 
-module.exports = {
+export default {
+    defaultProps: pxValueType.defaultProps,
 
-    defaultProps: pxDefaults,
-        
     /*
-        Split positions in format "X Y Z"
+        Split dimensions in format "Top Right Bottom Left"
         
-        @param [string]: Position values
-            "20% 30% 0" -> {20%, 30%, 0}
-            "20% 30%" -> {20%, 30%}
-            "20%" -> {20%, 20%}
+        @param [string]: Dimension values
+            "20px 0 30px 40px" -> {20px, 0, 30px, 40px}
+            "20px 0 30px" -> {20px, 0, 30px, 0}
+            "20px 0" -> {20px, 0, 20px, 0}
+            "20px" -> {20px, 20px, 20px, 20px}
+        
+        @return [object]: Object with T/R/B/L metrics
     */
-    split: value => {
-        var positions = splitSpaceDelimited(value),
-            numPositions = positions.length,
-            splitValue = {
-                X: positions[0],
-                Y: (numPositions > 1) ? positions[1] : positions[0]
-            };
+    split: (value) => {
+        const splitValue = {};
+        const splitPositions = splitSpaceDelimited(value);
+        const numPositions = splitPositions.length;
+        const jumpBack = (numDimensions !== 1) ? 2 : 1;
+        let j = 0;
 
-        if (numPositions > 2) {
-            splitValue.Z = positions[2];
+        for (let i = 0; i < 4; i++) {
+            splitValue[positions[i]] = splitPositions[j];
+
+            // Jump back (to start) counter if we've reached the end of our values
+            j++;
+            j = (j === numDimensions) ? j - jumpBack : j;
         }
 
         return splitValue;
     },
 
-    combine: values => createDelimited(values, terms, ' ')
+    combine: (values) => createDelimited(values, positions, ' ')
 };

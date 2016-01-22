@@ -9,7 +9,7 @@ export default class Physics extends Action {
         this.inactiveFrames = 0;
     }
 
-    update(physics, frameStamp, elapsed) {
+    onUpdate(physics, frameStamp, elapsed) {
         this.hasChanged = false;
 
         each(this.values, (value, key) => {
@@ -37,7 +37,7 @@ export default class Physics extends Action {
         });
     }
 
-    frameEnd() {
+    onFrameEnd() {
         if (this.autoEnd) {
             this.inactiveFrames = this.hasChanged ? 1 : this.inactiveFrames + 1;
 

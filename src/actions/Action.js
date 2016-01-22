@@ -1,23 +1,16 @@
-import { Process } from 'framesync';
+import Process from '../process/Process';
 import { each, isObj } from '../inc/utils';
 
 const DEFAULT_PROP = 'current';
 
 export default class Action extends Process {
-    /*
-        # Action class constructor
-        ## Assign default properties of Action or extended class and set user-defined props
+    constructor(...args) {
+        super(...args);
 
-        @param [object]
-    */
-    constructor(props) {
-        super();
-
-        // Load default props
-        each(this.getDefaultProps(), (value, key) => this[key] = value);
-
-        this.values = {};
-        this.set(props, this.getDefaultValueProp());
+        // Initalise renderer 
+        if (this.onRender && this.onRender.init) {
+            this.onRender.init(this);
+        }
     }
 
     /*
@@ -25,21 +18,20 @@ export default class Action extends Process {
         ## Set user-defined Action properties
 
         @param [object]
-        @param [string]: Name of default value property (set when `value` is **not** provided as object)
         @return [Action]
     */
-    set(props, defaultValueProp = DEFAULT_PROP) {
+    set(props) {
         const { values, ...propsToSet } = props;
 
-        // Loop through non-`value` props and set
-        each(propsToSet, (value, key) => {
-            this[key] = value;
-        });
+        super.set(propsToSet);
+
+        this.values = this.values || {};
 
         // Merge `value` properties with existing
         if (values) {
             const currentValues = this.values;
             const defaultValue = this.getDefaultValue();
+            const defaultValueProp = this.getDefaultValueProp();
 
             // Inherit values from props
             each(defaultValue, (value, key) => {
@@ -77,15 +69,6 @@ export default class Action extends Process {
     }
 
     /*
-        # Get default Action properties
-
-        @return [object]
-    */
-    getDefaultProps() {
-        return {};
-    }
-
-    /*
         # Get default Action value properties
 
         @return [object]
@@ -105,16 +88,5 @@ export default class Action extends Process {
     */
     getDefaultValueProp() {
         return DEFAULT_PROP;
-    }
-
-    /*
-        # Extend this Action with new properties
-        ## Returns new instance of this Action's `prototype` with existing and new properties
-
-        @param [object] (optional)
-        @return [Action]
-    */
-    extend(props) {
-        return new this.constructor({ ...this, props }, this.getDefaultValueProp());
     }
 };

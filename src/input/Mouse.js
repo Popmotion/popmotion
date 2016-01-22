@@ -1,4 +1,4 @@
-import Input from './Pointer';
+import Input from './Input';
 
 const MOUSE_MOVE = 'mousemove';
 

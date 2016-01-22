@@ -1,33 +1,30 @@
 // Actor
+export Actor from './actor/Actor';
 
 // Actions
-import Action from './actions/Action';
-import Tween from './actions/Tween';
-import Physics from './actions/Physics';
-import Track from './actions/Track';
+export Action from './actions/Action';
+export Tween from './actions/Tween';
+export Physics from './actions/Physics';
+export Track from './actions/Track';
+
+export Sequence from './sequence';
 
 // Input
-import Input from './input/Input';
-import Mouse from './input/Mouse';
-import Touch from './input/Touch';
+export Input from './input/Input';
+export Mouse from './input/Mouse';
+export Touch from './input/Touch';
+
+// Renderers
+export renderAttr from './render/attr';
+export renderCSS from './render/css';
+export renderSVG from './render/svg';
+
+// Transformers
+export watch from './transformers/watch';
 
 // Utils
-import * as calc from './inc/calc';
-import * as utils from './inc/utils';
-
-export {
-    // Actions
-    Action,
-    Tween,
-    Track,
-    Physics,
-
-    // Input
-    Input,
-    Mouse,
-    Touch,
-
-    // Utils
-    calc,
-    utils
-};
+export * as calc from './inc/calc';
+export * as utils from './inc/utils';
+export selectActor from './inc/select-actor';
+export setDilation from './process/timer';
+export stagger from './inc/stagger';
