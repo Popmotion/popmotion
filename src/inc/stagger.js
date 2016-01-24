@@ -2,7 +2,7 @@ import Tween from '../actions/Tween';
 import { isNum } from './utils';
 
 const DEFAULT_INTERVAL = 100;
-const DEFAULT_EASING = Easing.Linear;
+const DEFAULT_EASING = Tween.Easing.LINEAR;
 
 export default function stagger(array, props, callback) {
     const arrayLength = array.length;

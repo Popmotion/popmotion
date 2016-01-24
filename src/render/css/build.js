@@ -3,7 +3,7 @@ import transformProps from './transform-props';
 
 const TRANSLATE_Z = 'translateZ';
 
-export default buildPropertyString = (state, disableHardwareAcceleration) => {
+export default (state, disableHardwareAcceleration) => {
     let propertyString = '';
     let transformString = '';
     let transformHasZ = false;

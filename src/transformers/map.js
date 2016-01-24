@@ -1,6 +1,6 @@
 import { getProgressFromValue, getValueFromProgress, restrict } from '../inc/calc';
 
-export default createMapTransform = (from, to) => {
+export default (from, to) => {
     const mapLength = from.length;
 
     return (value) => {

@@ -3,7 +3,7 @@ import { defaultProps as pxDefaultProps } from './px';
 import { shadow as shadowTerms } from './settings/dictionary';
 import { splitSpaceDelimited } from '../inc/utils';
 
-const shadowWithoutColorTerms = shadowTerms.split(0, 4);
+const shadowWithoutColorTerms = shadowTerms.slice(0, 4);
 
 export default {
     defaultProps: {
