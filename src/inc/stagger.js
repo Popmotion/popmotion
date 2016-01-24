@@ -1,4 +1,4 @@
-import Tween from '../actions/tween';
+import Tween from '../actions/Tween';
 import { isNum } from './utils';
 
 const DEFAULT_INTERVAL = 100;

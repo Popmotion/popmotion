@@ -5,13 +5,15 @@ const processOrder = [
     { step: 'onFrameStart' },
     { step: 'onUpdate' },
     { step: 'willRender', decideRender: true },
-    { step: 'preRender', isRender: true },
     { step: 'onRender', isRender: true },
     { step: 'postRender', isRender: true },
     { step: 'onFrameEnd' },
     { step: 'onCleanup' }
 ];
 const numProcessSteps = processOrder.length;
+
+// [boolean]: Is loop running?
+let isRunning = false;
 
 // [int]: Process ID, incremented for each new process
 let currentProcessId = 0;
@@ -23,16 +25,36 @@ let runningCount = 0;
 let activeCount = 0;
 
 // [array]: Array of active process IDs
-let runningIds = [];
+const runningIds = [];
 
 // [object]: Map of active processes
-let runningProcesses = {};
+const runningProcesses = {};
+
+// [array]: Array of process IDs queued for activation
+let activateQueue = [];
 
 // [array]: Array of process IDs queued for deactivation
 let deactivateQueue = [];
 
-// [boolean]: Is loop running?
-let isRunning = false;
+/*
+    Update lists
+
+    @param [number]
+    @param [array]
+    @param [array]
+*/
+function updateLists(id, inList, outList) {
+    const inPosition = inList.indexOf(inList);
+    const outPosition = outList.indexOf(outList);
+
+    if (inPosition === -1) {
+        inList.push(id);
+    }
+
+    if (outPosition > -1) {
+        outList.splice(outPosition, 1);
+    }
+}
 
 /*
     Update running
@@ -50,23 +72,43 @@ function updateCount(add, isLazy) {
     }
 }
 
-function purge() {
-    let queueLength = deactivateQueue.length;
+function resolveQueues() {
+    let activateQueueLength = activateQueue.length;
+    let deactivateQueueLength = deactivateQueue.length;
 
-    while (queueLength--) {
-        const idToDelete = deactivateQueue[queueLength];
-        const activeIdIndex = runningIds.indexOf(idToDelete);
+    while (activateQueueLength--) {
+        const id = activateQueue[activateQueueLength];
+        const activeIdIndex = runningIds.indexOf(id);
+        const process = runningProceses[id];
 
-        // If process is active, deactivate
         if (activeIdIndex > -1) {
-            runningIds.splice(activeIdIndex, 1);
+            runningIds.push(id);
+        }
 
-            updateCount(false, runningProcesses[idToDelete].isLazy);
+        updateCount(true, process.isLazy);
 
-            delete runningProcesses[idToDelete];
+        if (process.onStart) {
+            process.onStart(process);
         }
     }
 
+    while (deactivateQueue--) {
+        const id = deactivateQueue[deactivateQueueLength];
+        const activeIdIndex = runningIds.indexOf(id);
+        const process = runningProceses[id];
+
+        if (activeIdIndex > -1) {
+            runningIds.splice(activeIdIndex, 1);
+            updateCount(false, process.isLazy);
+            runningProceses[id] = undefined;
+        }
+
+        if (process.onEnd) {
+            process.onEnd(process);
+        }
+    }
+
+    activateQueue = [];
     deactivateQueue = [];
 }
 
@@ -81,7 +123,7 @@ function fireAll(frameStamp, elapsed) {
     let process;
     let result;
 
-    purge();
+    resolveQueues();
 
     const numRunning = runningCount;
 
@@ -142,21 +184,10 @@ export function getProcessId() {
     [Process]: Process to activate
 */
 export function activate(id, process) {
-    const queueIndex = deactivateQueue.indexOf(id);
-    const isQueued = (queueIndex > -1);
-    const isRunning = (runningIds.indexOf(id) > -1);
+    updateLists(id, activateQueue, deactivateQueue);
+    runningProcesses[id] = process;
 
-    // Remove from deactivateQueue if queued
-    if (isQueued) {
-        deactivateQueue.splice(queueIndex, 1);
-    }
-
-    // Add to running processes array if not there
     if (!isRunning) {
-        runningIds.push(id);
-        runningProcesses[id] = process;
-
-        updateCount(true, process.isLazy);
         start();
     }
 }
@@ -165,7 +196,5 @@ export function activate(id, process) {
     [int]: Process ID to deactivate
 */
 export function deactivate(id) {
-    if (deactivateQueue.indexOf(id) === -1) {
-        deactivateQueue.push(id);
-    }
+    updateLists(id, deactivateQueue, activateQueue);
 }

@@ -21,6 +21,8 @@ export renderSVGPath from './render/svg-path';
 // Utils
 export * as calc from './inc/calc';
 export * as utils from './inc/utils';
+export cubicBezier from './actions/tween/create-bezier';
+export createEasing from './actions/tween/create-easing';
 export createMapTransform from './transformers/map';
 export selectActor from './inc/select-actor';
 export setDilation from './process/timer';
