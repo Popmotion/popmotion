@@ -79,12 +79,12 @@ function resolveQueues() {
     while (deactivateQueue--) {
         const id = deactivateQueue[deactivateQueueLength];
         const activeIdIndex = runningIds.indexOf(id);
-        const process = runningProceses[id];
+        const process = runningProcesses[id];
 
         if (activeIdIndex > -1) {
             runningIds.splice(activeIdIndex, 1);
             updateCount(false, process.isLazy);
-            runningProceses[id] = undefined;
+            runningProcesses[id] = undefined;
         }
 
         if (process.onEnd) {
@@ -95,9 +95,9 @@ function resolveQueues() {
     while (activateQueueLength--) {
         const id = activateQueue[activateQueueLength];
         const activeIdIndex = runningIds.indexOf(id);
-        const process = runningProceses[id];
+        const process = runningProcesses[id];
 
-        if (activeIdIndex > -1) {
+        if (activeIdIndex === -1) {
             runningIds.push(id);
         }
 
@@ -132,15 +132,15 @@ function fireAll(frameStamp, elapsed) {
         methodName = method.step;
         isRenderStep = method.isRender ? true : false;
 
-        for (let i = 0; i < numRunning; i++) {
-            process = runningProcesses[runningIds[i]];
+        for (let i2 = 0; i2 < numRunning; i2++) {
+            process = runningProcesses[runningIds[i2]];
 
-            if (process && process[methodName] && (!isRenderStep || (isRenderStep && process._render === true))) {
+            if (process && process[methodName] && (!isRenderStep || (isRenderStep && process._renderThisFrame === true))) {
                 result = process[methodName].call(process, process, frameStamp, elapsed);
             }
 
             if (method.decideRender) {
-                process._render = (process[methodName] && result === false) ? false : true; 
+                process._renderThisFrame = (process[methodName] && result !== true) ? false : true; 
             }
         }
     }
@@ -185,6 +185,7 @@ export function getProcessId() {
 */
 export function activate(id, process) {
     updateLists(id, activateQueue, deactivateQueue);
+    
     runningProcesses[id] = process;
 
     if (!isRunning) {

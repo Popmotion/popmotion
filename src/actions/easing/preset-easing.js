@@ -24,7 +24,7 @@
     https://twitter.com/ElliotGeno
 */
 // Imports
-import easingFunction from './create-easing';
+import createEasingFunction from './create-easing';
 import cubicBezier from './create-bezier';
 import { each } from '../../inc/utils';
 
@@ -51,7 +51,7 @@ let baseEasing = {
 
 // Generate in/out/inOut variations
 each(baseEasing, (baseEase, key) => {
-    let easingFunction = easingFunction(baseEase);
+    let easingFunction = createEasingFunction(baseEase);
     baseEasing[`${key}In`] = easingFunction.in;
     baseEasing[`${key}Out`] = easingFunction.out;
     baseEasing[`${key}InOut`] = easingFunction.inOut;
@@ -61,7 +61,7 @@ baseEasing.linear = progress => progress;
 baseEasing.anticipate = (progress, strength = DEFAULT_BACK_STRENGTH) =>
     ((progress*=2) < 1) ? 0.5 * baseEasing.backIn(progress, strength) :  0.5 * (2 - Math.pow(2, -10 * (progress - 1)));
 
-baseEasing.easingFunction = easingFunction;
+baseEasing.easingFunction = createEasingFunction;
 baseEasing.cubicBezier = cubicBezier;
 baseEasing.modifyEase = (easing, ...args) => (progress) => easing(progress, ...args);
 

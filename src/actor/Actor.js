@@ -16,14 +16,13 @@ export default class Actor extends Action {
 
     start(action) {
         super.start();
-        const actionInstance = action.inherit();
+        
+        if (action) {
+            const actionInstance = action.inherit();
 
-        // Assign action to appropriate values
+            // Assign action to appropriate values
 
-        return actionInstance;
-    }
-
-    preRender() {
-        // process parent values
+            return actionInstance;
+        }
     }
 }

@@ -22,21 +22,20 @@ const detectRenderer = (element) => {
     }
 }
 
-const createActor = (element) => {
-    let actor = element[SAVE_PROP];
-
-    if (!actor) {
-        props.element = element;
-        props.onRender = detectRenderer(element);
-        actor = element[SAVE_PROP] = new Actor(props);
-    }
-
-    return actor;
-}
-
-export default function selectActor(selector, props) {
+export default function selectActor(selector, props = {}) {
     const elements = selectDom(selector);
-    const actors = elements.map(createActor);
+
+    const actors = elements.map((element) => {
+        let actor = element[SAVE_PROP];
+
+        if (!actor) {
+            props.element = element;
+            props.onRender = detectRenderer(element);
+            actor = element[SAVE_PROP] = new Actor(props);
+        }
+
+        return actor;
+    });
 
     return (actors.length > 1) ? actors : actors[0];
 }

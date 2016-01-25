@@ -1,4 +1,5 @@
 import Process from '../process/Process';
+import { speedPerSecond } from '../inc/calc';
 import { each, isObj } from '../inc/utils';
 
 const DEFAULT_PROP = 'current';
@@ -6,6 +7,10 @@ const DEFAULT_PROP = 'current';
 export default class Action extends Process {
     constructor(...args) {
         super(...args);
+        this.values = {};
+        this.state = {};
+        this.valueKeys = [];
+        this.parentKeys = [];
 
         // Initalise renderer 
         if (this.onRender && this.onRender.init) {
@@ -25,17 +30,13 @@ export default class Action extends Process {
 
         super.set(propsToSet);
 
-        this.values = this.values || {};
-        this.valueKeys = this.valueKeys || [];
-        this.parentKeys = this.parentKeys || [];
-
         // Merge `value` properties with existing
         if (values) {
             const currentValues = this.values;
             const defaultValue = this.getDefaultValue();
             const defaultValueProp = this.getDefaultValueProp();
 
-            // Inherit values from props
+            // Inheritable values from props
             each(defaultValue, (value, key) => {
                 if (propsToSet[key] !== undefined) {
                     defaultValue[key] = propsToSet[key];
@@ -45,6 +46,7 @@ export default class Action extends Process {
             // Overwrite per-value props
             each(values, (value, key) => {
                 const existingValue = currentValues[key];
+                // Check for value type
                 let newValue = { ...defaultValue };
 
                 if (isObj(value)) {
@@ -53,11 +55,17 @@ export default class Action extends Process {
                     newValue[defaultValueProp] = value;
                 }
 
-                // update values
-
                 currentValues[key] = existingValue ? { ...existingValue, ...newValue } : newValue;
 
-                // push key to active value list
+                if (currentValues[key].children) {
+                    if (this.valueKeys.indexOf(key) === -1) {
+                        this.valueKeys.push(key);
+                    }
+                } else {
+                    if (this.parentKeys.indexOf(key) === -1) {
+                        this.parentKeys.push(key);
+                    }
+                }
             });
 
             // Precomputer value key and parent key length to prevent per-frame measurement
@@ -100,8 +108,19 @@ export default class Action extends Process {
                 updatedValue = smooth(updatedValue, value.current, elapsed, value.smooth);
             }
 
+            // Round value
             if (value.round) {
                 updatedValue = Math.round(updatedValue);
+            }
+
+            // Cap to minimum value
+            if (value.min !== undefined) {
+                updatedValue = Math.max(updatedValue, value.min);
+            }
+
+            // Cap to maximum value
+            if (value.max !== undefined) {
+                updatedValue = Math.min(updatedValue, value.max);
             }
 
             value.velocity = speedPerSecond(updatedValue - value.current, elapsed);
@@ -111,28 +130,28 @@ export default class Action extends Process {
             }
 
             value.current = updatedValue;
+        }
 
-            // Update state
-            if (value.unit) {
-                const valueWithUnit = updatedValue + value.unit;
-            }
+        return (this.onCleanup) ? true : hasChanged;
+    }
+
+    onPreRender() {
+        for (let i = 0; i < this.numValueKeys; i++) {
+            const key = this.valueKeys[i];
+            const value = this.values[key];
+
+            const valueForState = (value.unit) ? value.current + value.unit : value.current;
 
             // Add straight to state if no parent
             if (!value.parent) {
                 const mappedKey = (this.onRender && this.onRender.stateMap) ? this.onRender.stateMap[key] : key;
-                this.state[key] = updatedValue;
+                this.state[key] = valueForState;
 
             // Or add to parent
             } else {
-                this.values[value.parent].children[key] = updatedValue;
+                this.values[value.parent].children[key] = valueForState;
             }
         }
-
-        return hasChanged;
-    }
-
-    preRender() {
-        // if we're rendering, update our state
     }
 
     pause() {
