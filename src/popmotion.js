@@ -19,17 +19,17 @@ export renderSVG from './render/svg';
 export renderSVGPath from './render/svg-path';
 
 // Easing
-export Easing from './actions/easing/preset-easing';
+export easing from './actions/easing/preset-easing';
 
 // Utils
 export * as calc from './inc/calc';
 export * as utils from './inc/utils';
 export cubicBezier from './actions/tween/create-bezier';
-export createEasing from './actions/tween/create-easing';
-export createMapTransform from './transformers/map';
+export easingFunction from './actions/tween/create-easing';
 export selectActor from './inc/select-actor';
 export setDilation from './process/timer';
 export stagger from './inc/stagger';
+export timeline from './inc/timeline';
 
 // Value types
 export alphaType from './value-types/alpha';
@@ -44,3 +44,6 @@ export pxType from './value-types/px';
 export rgbType from './value-types/rgb';
 export scaleType from './value-types/scale';
 export shadowType from './value-types/shadow';
+
+// Transformers
+export createMapTransform from './transformers/map';

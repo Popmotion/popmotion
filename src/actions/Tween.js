@@ -105,8 +105,12 @@ export default class Tween extends Action {
     }
 
     seek(progress) {
+        this.seekTime(this.duration * progress);
+    }
+
+    seekTime(elapsed) {
         this.once();
-        this.elapsed = this.duration * progress;
+        this.elapsed = elapsed;
     }
     
     getDefaultProps() {

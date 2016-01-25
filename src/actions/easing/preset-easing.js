@@ -25,7 +25,7 @@
 */
 // Imports
 import easingFunction from './create-easing';
-import cubicBezier from 'create-bezier';
+import cubicBezier from './create-bezier';
 import { each } from '../../inc/utils';
 
 // Values
