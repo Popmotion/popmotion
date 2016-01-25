@@ -18,6 +18,9 @@ export renderCSS from './render/css';
 export renderSVG from './render/svg';
 export renderSVGPath from './render/svg-path';
 
+// Easing
+export Easing from './actions/easing/preset-easing';
+
 // Utils
 export * as calc from './inc/calc';
 export * as utils from './inc/utils';

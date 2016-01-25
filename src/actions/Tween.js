@@ -1,5 +1,4 @@
 import Action from './Action';
-import presetEasing from './tween/preset-easing';
 import {
     currentTime,
     each,
@@ -32,8 +31,7 @@ const NEXT_STEPS = {
 */ 
 function ease(progress, from, to, ease) {
     const progressLimited = restrict(progress, 0, 1);
-    const easingFunction = isString(ease) ? presetEasing[ease] : ease;
-    const easedProgress = easingFunction(progressLimited);
+    const easedProgress = ease(progressLimited);
 
     return getValueFromProgress(easedProgress, from, to);
 };

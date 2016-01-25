@@ -1,8 +1,8 @@
 import Tween from '../actions/Tween';
+import { linear } from '../actions/easing/preset-easing';
 import { isNum } from './utils';
 
 const DEFAULT_INTERVAL = 100;
-const DEFAULT_EASING = Tween.Easing.LINEAR;
 
 export default function stagger(array, props, callback) {
     const arrayLength = array.length;
@@ -17,7 +17,7 @@ export default function stagger(array, props, callback) {
                 from: 0,
                 to: numMembers - 1,
                 round: true,
-                ease: propsIsInterval ? DEFAULT_EASING : props.ease || DEFAULT_EASING
+                ease: propsIsInterval ? linear : props.ease || linear
             }
         },
         onRender: ({ i }) => {

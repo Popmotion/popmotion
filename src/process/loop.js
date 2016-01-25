@@ -76,22 +76,6 @@ function resolveQueues() {
     let activateQueueLength = activateQueue.length;
     let deactivateQueueLength = deactivateQueue.length;
 
-    while (activateQueueLength--) {
-        const id = activateQueue[activateQueueLength];
-        const activeIdIndex = runningIds.indexOf(id);
-        const process = runningProceses[id];
-
-        if (activeIdIndex > -1) {
-            runningIds.push(id);
-        }
-
-        updateCount(true, process.isLazy);
-
-        if (process.onStart) {
-            process.onStart(process);
-        }
-    }
-
     while (deactivateQueue--) {
         const id = deactivateQueue[deactivateQueueLength];
         const activeIdIndex = runningIds.indexOf(id);
@@ -105,6 +89,22 @@ function resolveQueues() {
 
         if (process.onEnd) {
             process.onEnd(process);
+        }
+    }
+
+    while (activateQueueLength--) {
+        const id = activateQueue[activateQueueLength];
+        const activeIdIndex = runningIds.indexOf(id);
+        const process = runningProceses[id];
+
+        if (activeIdIndex > -1) {
+            runningIds.push(id);
+        }
+
+        updateCount(true, process.isLazy);
+
+        if (process.onStart) {
+            process.onStart(process);
         }
     }
 
