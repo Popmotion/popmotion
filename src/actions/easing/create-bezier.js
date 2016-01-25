@@ -33,7 +33,7 @@ const calcBezier = (t, a1, a2) => ((a(a1, a2) * t + b(a1, a2)) * t + c(a1)) * t;
 /*
     Create a cubic bezier resolver
 */
-export default function createCubicBezier(mX1, mY1, mX2, mY2) {
+export default function cubicBezier(mX1, mY1, mX2, mY2) {
     const sampleValues = FLOAT_32_SUPPORTED ? new Float32Array(K_SPLINE_TABLE_SIZE) : new Array(K_SPLINE_TABLE_SIZE);
     let _precomputed = false;
 

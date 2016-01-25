@@ -30,4 +30,4 @@ const testPrefix = (key) => {
     return propertyNameCache[key];
 }
 
-export default prefixer = (key) => cache[key] || testPrefix(key);
+export default (key) => cache[key] || testPrefix(key);

@@ -9,6 +9,6 @@ const TERMS = ['translate', SCALE, ROTATE, 'skew', TRANSFORM_PERSPECTIVE];
 
 transformProps[ROTATE] = transformProps[SCALE] = transformProps[TRANSFORM_PERSPECTIVE] = true;
 
-TERMS.forEach((term) => axes.forEach((axis) => transformProps[term + position] = true));
+TERMS.forEach((term) => axes.forEach((axis) => transformProps[term + axis] = true));
 
 export default transformProps;
