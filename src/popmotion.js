@@ -9,8 +9,7 @@ export Track from './actions/Track';
 
 // Input
 export Input from './input/Input';
-export Mouse from './input/Mouse';
-export Touch from './input/Touch';
+export Pointer from './input/Pointer';
 
 // Renderers
 export renderAttr from './render/attr';

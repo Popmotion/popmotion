@@ -1,10 +1,28 @@
 import Action from './Action';
-import Mouse from '../input/Mouse';
-import Touch from '../input/Touch';
+import Mouse from '../input/Pointer';
 import { offset } from '../inc/calc';
 import { each } from '../inc/utils';
 
-const createPointer = (e) => e.touches ? new Touch(e) : new Mouse(e);
+/*
+    Scrape x/y coordinates from provided event
+
+    @param [event]
+    @return [object]
+*/
+const mouseEventToPoint = (e) => ({
+    x: e.pageX,
+    y: e.pageY
+});
+
+const touchEventToPoint = ({ changedTouches }) => ({
+    x: changedTouches[0].clientX,
+    y: changedTouches[0].clientY
+});
+
+const createPointer = (e) => e.touches ?
+    new Pointer(mouseEventToPoint(e), 'mousemove', mouseEventToPoint) :
+    new Pointer(touchEventToPoint(e), 'touchmove', touchEventToPoint);
+
 const getActualEvent = (e) => e.originalEvent || e;
 
 export default class Track extends Action {
