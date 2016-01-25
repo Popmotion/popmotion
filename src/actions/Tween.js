@@ -1,4 +1,5 @@
 import Action from './Action';
+import { easeOut } from './easing/preset-easing';
 import {
     currentTime,
     each,
@@ -133,7 +134,7 @@ export default class Tween extends Action {
             ...super.getDefaultValue(),
             delay: 0,
             duration: 300,
-            ease: 'easeOut',
+            ease: easeOut,
             elapsed: 0,
             stagger: 0,
             steps: 0,
