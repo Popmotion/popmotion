@@ -35,14 +35,14 @@ const analyze = (defs) => {
         timeline.push({
             from: currentPlayhead,
             duration: duration,
-            fire: tween.seekTime,
+            fire: tween.seekTime
         });
 
         currentPlayhead += tween.duration;
     });
 
     return { totalTime: currentPlayhead, timeline };
-}
+};
 
 const setTweens = ({ timeline, timelineLength, state }) => {
     const playhead = state.p;
@@ -55,7 +55,7 @@ const setTweens = ({ timeline, timelineLength, state }) => {
             tween.fire(tweenTime);
         }
     }
-}
+};
 
 export default function timeline(def, props = {}) {
     const { totalTime, timeline } = analyze(def);
@@ -63,6 +63,7 @@ export default function timeline(def, props = {}) {
     const timelineProps = {
         ...props,
         duration: totalTime,
+        ease: linear,
         values: {
             p: 1
         },

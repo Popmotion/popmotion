@@ -18,16 +18,16 @@ export default function build(state, length) {
 
     each(state, (value, key) => {
         switch (key) {
-            case 'length':
-            case 'spacing':
-                hasDashArray = true;
-                dashArrayStyles[key] = percentToPixels(value, length);
-                break;
-            case 'offset':
-                styles['stroke-dashoffset'] = percentToPixels(-value, length);
-                break;
-            default:
-                styles[key] = value;
+        case 'length':
+        case 'spacing':
+            hasDashArray = true;
+            dashArrayStyles[key] = percentToPixels(value, length);
+            break;
+        case 'offset':
+            styles['stroke-dashoffset'] = percentToPixels(-value, length);
+            break;
+        default:
+            styles[key] = value;
         }
     });
 

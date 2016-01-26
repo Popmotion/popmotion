@@ -14,5 +14,5 @@ export default {
 
     split: (value) => getColorValues(value, rgbTerms),
 
-    combine: (value) => createFunctionString(createDelimited(values, rgbTerms, ', ', 2), 'rgba')
+    combine: (values) => createFunctionString(createDelimited(values, rgbTerms, ', ', 2), 'rgba')
 };

@@ -1,6 +1,4 @@
 import Action from '../actions/Action';
-import { smooth } from '../inc/calc';
-import { each, speedPerSecond } from '../inc/utils';
 
 export default class Actor extends Action {
     constructor(...args) {

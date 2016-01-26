@@ -20,7 +20,7 @@ const detectRenderer = (element) => {
             return renderSVG;
         }
     }
-}
+};
 
 export default function selectActor(selector, props = {}) {
     const elements = selectDom(selector);

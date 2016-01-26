@@ -27,4 +27,4 @@ export default (state, disableHardwareAcceleration) => {
     }
 
     return propertyString;
-} 
+};

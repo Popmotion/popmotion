@@ -33,7 +33,7 @@ if (hasRAF) {
         lastTime = currentTime + timeToCall;
 
         setTimeout(() => callback(lastTime), timeToCall);
-    }
+    };
 }
 
 export default tick;

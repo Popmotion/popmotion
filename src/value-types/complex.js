@@ -1,4 +1,4 @@
-import { each, isArray } from "../inc/utils";
+import { each, isArray } from '../inc/utils';
 
 const FLOAT_REGEX = /(-)?(\d[\d\.]*)/g;
 const generateToken = (token) => '${' + token + '}';

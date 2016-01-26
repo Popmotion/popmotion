@@ -38,7 +38,7 @@
     "svg"
   ],
   "analyze": true,
-  "license": "GPL-3.0",
+  "license": "MIT",
   "scripts": {
     "compile": "babel src --out-dir lib && small -i lib/load/global.js -o ./dist/popmotion.global.js && uglifyjs ./dist/popmotion.global.js --compress --mangle --screw-ie8 -o ./dist/popmotion.global.min.js",
     "watch": "webpack --progress --colors --watch",
@@ -47,17 +47,30 @@
   },
   "devDependencies": {
     "babel-core": "^6.0.20",
+    "babel-eslint": "^4.1.6",
     "babel-loader": "^6.0.1",
     "babel-plugin-transform-export-extensions": "^6.4.0",
     "babel-preset-es2015-subset-loose": "^1.0.0",
     "babel-preset-stage-2": "^6.0.15",
     "babel-register": "^6.3.13",
     "chai": "^3.4.0",
-    "jshint": "^2.8.0",
-    "jshint-loader": "^0.8.3",
     "webpack": "1.7.2"
   },
   "dependencies": {
     "framesync": "^1.0.1"
+  },
+  "jshintConfig": {
+    "curly": true,
+    "eqeqeq": true,
+    "esnext": true,
+    "forin": true,
+    "freeze": true,
+    "latedef": true,
+    "nocomma": true,
+    "nonbsp": true,
+    "notypeof": true,
+    "undef": true,
+    "unused": true,
+    "varstmt": true
   }
 }

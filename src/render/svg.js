@@ -16,7 +16,7 @@ renderSVG.init = (actor) => {
         x: bBox.width * (transformOriginX / 100) + bBox.x,
         y: bBox.height * (transformOriginY / 100) + bBox.y
     };
-}
+};
 
 renderSVG.stateMap = stateMap;
 renderSVG.valueTypeMap = valueTypeMap;

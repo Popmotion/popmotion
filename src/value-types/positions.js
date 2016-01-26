@@ -8,7 +8,7 @@ export default {
     /*
         Split dimensions in format "Top Right Bottom Left"
         
-        @param [string]: Dimension values
+        @param [string]: Position values
             "20px 0 30px 40px" -> {20px, 0, 30px, 40px}
             "20px 0 30px" -> {20px, 0, 30px, 0}
             "20px 0" -> {20px, 0, 20px, 0}
@@ -20,7 +20,7 @@ export default {
         const splitValue = {};
         const splitPositions = splitSpaceDelimited(value);
         const numPositions = splitPositions.length;
-        const jumpBack = (numDimensions !== 1) ? 2 : 1;
+        const jumpBack = (numPositions !== 1) ? 2 : 1;
         let j = 0;
 
         for (let i = 0; i < 4; i++) {
@@ -28,7 +28,7 @@ export default {
 
             // Jump back (to start) counter if we've reached the end of our values
             j++;
-            j = (j === numDimensions) ? j - jumpBack : j;
+            j = (j === numPositions) ? j - jumpBack : j;
         }
 
         return splitValue;

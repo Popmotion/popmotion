@@ -1,7 +1,7 @@
 import color from './color';
 import { defaultProps as pxDefaultProps } from './px';
 import { shadow as shadowTerms } from './settings/dictionary';
-import { splitSpaceDelimited } from '../inc/utils';
+import { splitSpaceDelimited, createDelimited } from '../inc/utils';
 
 const shadowWithoutColorTerms = shadowTerms.slice(0, 4);
 
@@ -22,7 +22,7 @@ export default {
 
         bits.forEach((bit, i) => {
             // If we've reached the color props, append to color string
-            if (hasReachedColor || color.test(thisBit)) {
+            if (hasReachedColor || color.test(bit)) {
                 hasReachedColor = true;
                 colorProp += bit;
 
@@ -37,5 +37,5 @@ export default {
         return { ...splitValue, splitColorProps };
     },
 
-    combine: (value) => createDelimited(values, shadowWithoutColorTerms, ' ') + color.combine(values)
+    combine: (values) => createDelimited(values, shadowWithoutColorTerms, ' ') + color.combine(values)
 };

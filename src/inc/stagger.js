@@ -15,7 +15,7 @@ export default function stagger(array, props, callback) {
         values: {
             i: {
                 from: 0,
-                to: numMembers - 1,
+                to: arrayLength - 1,
                 round: true,
                 ease: propsIsInterval ? linear : props.ease || linear
             }

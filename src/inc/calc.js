@@ -188,18 +188,18 @@ export const relativeValue = (current, relative) => {
     value = parseFloat(value);
 
     switch (operator) {
-        case '+':
-            newValue += value;
-            break;
-        case '-':
-            newValue -= value;
-            break;
-        case '*':
-            newValue *= value;
-            break;
-        case '/':
-            newValue /= value;
-            break;
+    case '+':
+        newValue += value;
+        break;
+    case '-':
+        newValue -= value;
+        break;
+    case '*':
+        newValue *= value;
+        break;
+    case '/':
+        newValue /= value;
+        break;
     }
     
     if (unit) {

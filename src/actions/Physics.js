@@ -1,5 +1,5 @@
 import Action from './Action';
-import { speedPerFrame, speedPerSecond } from '../inc/calc';
+import { speedPerFrame } from '../inc/calc';
 import { each, isNum } from '../inc/utils';
 
 export default class Physics extends Action {
@@ -12,7 +12,7 @@ export default class Physics extends Action {
     onUpdate(physics, frameStamp, elapsed) {
         this.hasChanged = false;
 
-        each(this.values, (value, key) => {
+        each(this.values, (value) => {
             const previousValue = value.current;
 
             // Apply acceleration

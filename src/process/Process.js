@@ -62,4 +62,4 @@ export default class Process {
     inherit(props) {
         return new this.constructor({ ...this, props });
     }
-};
+}

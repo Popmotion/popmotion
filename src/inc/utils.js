@@ -38,14 +38,14 @@ export const createBuffer = (maxSize = 3, array = []) => {
     array._maxSize = maxSize || 0;
 
     return array;
-}
+};
 
 export const createDelimited = (values, terms, delimiter, chop) => {
     let combined = '';
 
     terms.forEach((term) => {
-        if (values.hasOwnProperty(key)) {
-            combined += values[key] + delimiter;
+        if (values.hasOwnProperty(term)) {
+            combined += values[term] + delimiter;
         }
     });
 
@@ -90,7 +90,7 @@ export const each = (object, callback) => {
 
         callback(prop, key, object);
     }
-}
+};
 
 /*
     Split color string into map of color properties
@@ -106,7 +106,7 @@ export const getColorValues = (value, colorTerms) => {
     colorTerms.forEach((term, i) => colorTerms[term] = (colors[i] !== undefined) ? colors[i] : 1);
 
     return colorValues;
-}
+};
 
 /*
     Get value from function string

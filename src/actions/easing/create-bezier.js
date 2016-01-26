@@ -53,7 +53,7 @@ export default function cubicBezier(mX1, mY1, mX2, mY2) {
         } while (Math.abs(currentX) > SUBDIVISION_PRECISION && ++i < SUBDIVISION_MAX_ITERATIONS);
 
         return currentT;
-    }
+    };
 
     const newtonRaphsonIterate = (aX, aGuessT) => {
         let i = 0;
@@ -72,13 +72,13 @@ export default function cubicBezier(mX1, mY1, mX2, mY2) {
         }
         
         return aGuessT;
-    }
+    };
 
     const calcSampleValues = () => {
         for (let i = 0; i < K_SPLINE_TABLE_SIZE; ++i) {
             sampleValues[i] = calcBezier(i * K_SAMPLE_STEP_SIZE, mX1, mX2);
         }
-    }
+    };
 
     const getTForX = (aX) => {
         let intervalStart = 0.0;
@@ -109,14 +109,14 @@ export default function cubicBezier(mX1, mY1, mX2, mY2) {
         } else {
             return binarySubdivide(aX, intervalStart, intervalStart + K_SAMPLE_STEP_SIZE);
         }
-    }
+    };
 
     const precompute = () => {
         _precomputed = true;
         if (mX1 != mY1 || mX2 != mY2) {
             calcSampleValues();
         }
-    }
+    };
 
     const resolver = (aX) => {
         let returnValue;
@@ -142,7 +142,7 @@ export default function cubicBezier(mX1, mY1, mX2, mY2) {
         }
         
         return returnValue;
-    }
+    };
 
     return resolver;
 }

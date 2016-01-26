@@ -32,9 +32,6 @@ import { each } from '../../inc/utils';
 const DEFAULT_BACK_STRENGTH = 1.525;
 const DEFAULT_POW_STRENGTH = 2;
 
-// Utility functions
-const generatePowerEasing = strength => (progress, strength) => baseEasing.ease(progress, strength);
-
 /*
     Each of these base functions is an easeIn
     
@@ -46,6 +43,9 @@ let baseEasing = {
     circ: progress => 1 - Math.sin(Math.acos(progress)),
     back: (progress, strength = DEFAULT_BACK_STRENGTH) => (progress * progress) * ((strength + 1) * progress - strength)
 };
+
+// Utility functions
+const generatePowerEasing = (strength) => (progress) => baseEasing.ease(progress, strength);
 
 ['cubic', 'quart', 'quint'].forEach((easingName, i) => baseEasing[easingName] = generatePowerEasing(i + 3));
 

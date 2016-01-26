@@ -169,11 +169,6 @@ function start() {
     }
 }
 
-// Stop loop
-function stop() {
-    isRunning = false;
-}
-
 // Exports
 export function getProcessId() {
     return currentProcessId++;

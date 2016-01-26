@@ -3,8 +3,7 @@ import { easeOut } from './easing/preset-easing';
 import {
     currentTime,
     each,
-    isNum,
-    isString
+    isNum
 } from '../inc/utils';
 import {
     restrict,
@@ -30,7 +29,7 @@ const NEXT_STEPS = {
         to use or generated easing function
     @return [number]: Value of eased progress in range
 */ 
-function ease(progress, from, to, ease) {
+const ease = (progress, from, to, ease) => {
     const progressLimited = restrict(progress, 0, 1);
     const easedProgress = ease(progressLimited);
 
@@ -50,7 +49,7 @@ export default class Tween extends Action {
         this.ended = true;
         this.elapsed += (elapsed * this.dilate) * this.playDirection;
 
-        each(this.values, (value, key) => {
+        each(this.values, (value) => {
             let progress = restrict(getProgressFromValue(this.elapsed - value.delay, 0, value.duration), 0, 1);
 
             // Mark Tween as NOT ended if still in progress
@@ -91,7 +90,7 @@ export default class Tween extends Action {
     flipValues() {
         this.elapsed = this.duration - this.elapsed;
 
-        each(this.values, (value, key) => {
+        each(this.values, (value) => {
             [value.to, value.from] = [value.from, value.to];
         });
     }

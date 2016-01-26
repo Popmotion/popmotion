@@ -1,5 +1,5 @@
 import Action from './Action';
-import Mouse from '../input/Pointer';
+import Pointer from '../input/Pointer';
 import { offset } from '../inc/calc';
 import { each } from '../inc/utils';
 
@@ -36,7 +36,7 @@ export default class Track extends Action {
         this.inputOrigin = {};
     }
 
-    onUpdate(track, frameDuration, elapsed) {
+    onUpdate() {
         this.inputOffset = offset(this.inputOrigin, this.input.state);
 
         each(this.values, (value, key) => {

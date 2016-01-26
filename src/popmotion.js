@@ -1,15 +1,23 @@
 // Actor
-export Actor from './actor/Actor';
+import Actor from './actor/Actor';
 
 // Actions
-export Action from './actions/Action';
-export Tween from './actions/Tween';
-export Physics from './actions/Physics';
-export Track from './actions/Track';
+import Tween from './actions/Tween';
+import Physics from './actions/Physics';
+import Track from './actions/Track';
+
+// Process
+import Process from './process/Process';
 
 // Input
-export Input from './input/Input';
-export Pointer from './input/Pointer';
+import Input from './input/Input';
+
+export const actor = (props) => new Actor(props);
+export const tween = (props) => new Tween(props);
+export const physics = (props) => new Physics(props);
+export const track = (...args) => new Track(...args);
+export const input = (...args) => new Input(...args);
+export const process = (...args) => new Process(...args);
 
 // Renderers
 export renderAttr from './render/attr';

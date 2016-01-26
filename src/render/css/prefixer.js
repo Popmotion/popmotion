@@ -12,10 +12,10 @@ let testElement;
 const testPrefix = (key) => {
     testElement = testElement || document.createElement('div');
 
-    if (propertyNameCache[key] === false) {
+    if (cache[key] === false) {
         return false;
     } else {
-        propertyNameCache[key] = false;
+        cache[key] = false;
     }
 
     for (var i = 0; i < numPrefixes; i++) {
@@ -23,11 +23,11 @@ const testPrefix = (key) => {
             prefixed = (prefix === '') ? key : prefix + key.charAt(0).toUpperCase() + key.slice(1);
 
         if (prefixed in testElement.style) {
-            propertyNameCache[key] = prefixed;
+            cache[key] = prefixed;
         }
     }
     
-    return propertyNameCache[key];
-}
+    return cache[key];
+};
 
 export default (key) => cache[key] || testPrefix(key);

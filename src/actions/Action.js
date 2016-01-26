@@ -1,16 +1,23 @@
 import Process from '../process/Process';
-import { speedPerSecond } from '../inc/calc';
+import { smooth, speedPerSecond } from '../inc/calc';
 import { each, isObj } from '../inc/utils';
 
 const DEFAULT_PROP = 'current';
+const NUMERICAL_VALUES = [DEFAULT_PROP, 'from', 'to', 'min', 'max'];
+
+/*
+    Map key given given stateMap
+
+    @param [string]
+    @param [Renderer]
+    @return [string]
+*/
+const mapKey = (key, renderer) => (renderer && renderer.stateMap) ? renderer.stateMap[key] || key : key;
 
 export default class Action extends Process {
-    constructor(...args) {
-        super(...args);
-        this.values = {};
-        this.state = {};
-        this.valueKeys = [];
-        this.parentKeys = [];
+    constructor(props) {
+        props.state = {};
+        super(props);
 
         // Initalise renderer 
         if (this.onRender && this.onRender.init) {
@@ -30,48 +37,120 @@ export default class Action extends Process {
 
         super.set(propsToSet);
 
-        // Merge `value` properties with existing
-        if (values) {
-            const currentValues = this.values;
-            const defaultValue = this.getDefaultValue();
-            const defaultValueProp = this.getDefaultValueProp();
+        this.values = this.values || {};
+        this.valueKeys = this.valueKeys || [];
+        this.parentKeys = this.parentKeys || [];
 
-            // Inheritable values from props
-            each(defaultValue, (value, key) => {
-                if (propsToSet[key] !== undefined) {
-                    defaultValue[key] = propsToSet[key];
+        // Merge new `value` properties with existing
+        const currentValues = this.values;
+        const defaultValue = this.getDefaultValue();
+        const defaultValueProp = this.getDefaultValueProp();
+        const renderer = this.onRender;
+        let valueTypeMap = (renderer && renderer.valueTypeMap) ? renderer.valueTypeMap : false;
+
+        // Inherit value properties from `props`
+        each(defaultValue, (value, key) => {
+            if (propsToSet[key] !== undefined) {
+                defaultValue[key] = propsToSet[key];
+            }
+        });
+
+        // Check all values and split into child values as neccessary
+        each(values, (value, key) => {
+            const existingValue = currentValues[key];
+            let valueType = {};
+            let newValue = {};
+
+            // Convert new value into object if it isn't already
+            if (isObj(value)) {
+                newValue = value;
+            } else {
+                newValue[defaultValueProp] = value;
+            }
+
+            // If value already exists, check for and use existing type
+            if (existingValue) {
+                newValue = { ...existingValue, ...newValue };
+                valueType = existingValue.type;
+
+            // If this is a new value, check for type
+            } else {
+                newValue = { ...defaultValue, ...newValue };
+                // If one is explicitly assigned, use that
+                if (value.type) {
+                    valueType = value.type;
+
+                // Or if our renderer has a typeMap, use that
+                } else if (valueTypeMap) {
+                    valueType = valueTypeMap[mapKey(key, renderer)];
                 }
-            });
 
-            // Overwrite per-value props
-            each(values, (value, key) => {
-                const existingValue = currentValues[key];
-                // Check for value type
-                let newValue = { ...defaultValue };
+                // Maybe run `test` on color here
+            }
 
-                if (isObj(value)) {
-                    newValue = { ...newValue, ...value };
-                } else {
-                    newValue[defaultValueProp] = value;
+            // If we've got a valueType then preprocess the value accordingly
+            if (valueType) {
+                // If this value should be split, split
+                if (valueType.split) {
+                    const childValues = {};
+
+                    // Loop over numerical values and split any present
+                    NUMERICAL_VALUES.forEach((propName) => {
+                        if (newValue.hasOwnProperty(propName)) {
+                            const splitValues = valueType.split(newValue[propName]);
+
+                            each(splitValues, (splitValue, splitKey) => {
+                                // Create new child value if doesn't exist
+                                if (!childValues[splitKey]) {
+                                    childValues[splitKey] = {};
+
+                                    if (valueType.defaultProps) {
+                                        childValues[splitKey] = (valueType.defaultProps[splitKey]) ? { ...valueType.defaultProps[splitKey] } : { ...valueType.defaultProps };
+                                    }
+                                }
+
+                                childValues[splitKey][propName] = splitValue;
+                            });
+                        }
+                    });
+
+                    newValue.children = [];
+
+                    // Now loop through all child values and add them as normal values
+                    each(childValues, (childValue, childKey) => {
+                        const combinedKey = key + childKey;
+
+                        newValue.children.push(combinedKey);
+                        currentValues[combinedKey] = childValue;
+
+                        if (this.valueKeys.indexOf(combinedKey) === -1) {
+                            this.valueKeys.push(combinedKey);
+                        }
+                    });
+
+                // Or we just have default value props, load those   
+                } else if (valueType.defaultProps) {
+                    newValue = { ...valueType.defaultProps, ...newValue };
                 }
+            }
 
-                currentValues[key] = existingValue ? { ...existingValue, ...newValue } : newValue;
-
-                if (currentValues[key].children) {
-                    if (this.valueKeys.indexOf(key) === -1) {
-                        this.valueKeys.push(key);
-                    }
-                } else {
-                    if (this.parentKeys.indexOf(key) === -1) {
-                        this.parentKeys.push(key);
-                    }
+            // Update appropriate lists with value key
+            if (newValue.children) {
+                if (this.parentKeys.indexOf(key) === -1) {
+                    this.parentKeys.push(key);
                 }
-            });
+            } else {
+                if (this.valueKeys.indexOf(key) === -1) {
+                    this.valueKeys.push(key);
+                }
+            }
 
-            // Precomputer value key and parent key length to prevent per-frame measurement
-            this.numValueKeys = this.valueKeys.length;
-            this.numParentKeys = this.parentKeys.length;
-        }
+            currentValues[key] = newValue;
+        });
+
+        // Precompute value key and parent key length to prevent per-frame measurement
+        this.numValueKeys = this.valueKeys.length;
+        this.numParentKeys = this.parentKeys.length;
 
         return this;
     }
@@ -144,8 +223,7 @@ export default class Action extends Process {
 
             // Add straight to state if no parent
             if (!value.parent) {
-                const mappedKey = (this.onRender && this.onRender.stateMap) ? this.onRender.stateMap[key] : key;
-                this.state[key] = valueForState;
+                this.state[mapKey(key, this.onRender)] = valueForState;
 
             // Or add to parent
             } else {
@@ -185,4 +263,4 @@ export default class Action extends Process {
     getDefaultValueProp() {
         return DEFAULT_PROP;
     }
-};
+}

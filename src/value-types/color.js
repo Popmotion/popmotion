@@ -1,4 +1,3 @@
-import { each } from '../inc/utils';
 import rgb from './rgb';
 import hsl from './hsl';
 import hex from './hex';
@@ -19,5 +18,5 @@ export default {
         }
     },
 
-    combine: (value) => (values.Red !== undefined) ? rgb.combine(values) : hsl.combine(values)
+    combine: (values) => (values.Red !== undefined) ? rgb.combine(values) : hsl.combine(values)
 };

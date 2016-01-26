@@ -10,7 +10,7 @@ import buildPropertyString from './css/build';
 */
 function renderCSS({ element, state }) {
     element.style.cssText += ';' + buildPropertyString(state);
-};
+}
 
 /*
     Get CSS property of element
@@ -25,7 +25,7 @@ renderCSS.get = (element, key) => {
     if (key) {
         return window.getComputedStyle(element, null)[key];
     }
-}
+};
 
 renderCSS.stateMap = stateMap;
 renderCSS.valueTypeMap = valueTypeMap;

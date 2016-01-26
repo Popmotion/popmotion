@@ -32,5 +32,5 @@ export default {
         };
     },
 
-    combine: (value) => rgb.combine(values)
+    combine: (values) => rgb.combine(values)
 };

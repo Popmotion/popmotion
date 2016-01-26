@@ -2,6 +2,21 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.0.0] 2015-02-01
+
+**Warning:** This is a major API revision.
+
+### Added
+- `timeline`
+- `stagger`
+
+### Removed
+- Native Meteor support.
+- `Sequence`: Dropped in favour of the `timeline` function.
+- `Iterator`: Dropped in favour of using native array methods and the `stagger` function.
+
+### Changed
+
 ## [4.3.4] 2015-12-30
 
 ### Fixed
