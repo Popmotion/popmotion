@@ -9,7 +9,7 @@ export default class Actor extends Action {
     bind(action) {
         return action.inherit({
             onStart: () => {
-                
+
             }
         });
     }
@@ -23,5 +23,9 @@ export default class Actor extends Action {
         }
 
         return super.start();
+    }
+
+    onPreRender() {
+        
     }
 }
