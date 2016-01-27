@@ -6,21 +6,35 @@ export default class Actor extends Action {
         this.once();
     }
 
-    do(action) {
+    set(props, forceInstant) {
+        super.set(props);
+
         if (this.reducer) {
-            this.start(this.reducer(action, this.values));
+            props = this.reducer(this);
         }
     }
 
+    bind(action) {
+        return action.inherit({
+            preRender: (action) => {
+                for (let i = 0; i < this.numValueKeys; i++) {
+                    const key = this.valueKeys[i];
+                    const value = this.values[key];
+
+                    
+                }
+            }
+        });
+    }
+
     start(action) {
-        super.start();
-        
         if (action) {
-            const actionInstance = action.inherit();
+            const boundAction = this.bind(action);
+            boundAction.start();
 
-            // Assign action to appropriate values
-
-            return actionInstance;
+            return boundAction;
         }
+
+        return super.start();
     }
 }

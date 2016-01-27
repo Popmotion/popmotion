@@ -49,7 +49,10 @@ export default class Tween extends Action {
         this.ended = true;
         this.elapsed += (elapsed * this.dilate) * this.playDirection;
 
-        each(this.values, (value) => {
+        for (let i = 0; i < this.numValueKeys; i++) {
+            const key = this.valueKeys[i];
+            const value = this.values[key];
+
             let progress = restrict(getProgressFromValue(this.elapsed - value.delay, 0, value.duration), 0, 1);
 
             // Mark Tween as NOT ended if still in progress
@@ -64,7 +67,7 @@ export default class Tween extends Action {
 
             // Ease progress
             value.current = ease(progress, value.from, value.to, value.ease);
-        });
+        }
     }
 
     onFrameEnd() {

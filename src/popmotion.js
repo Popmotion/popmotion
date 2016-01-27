@@ -31,7 +31,7 @@ export easing from './actions/easing/preset-easing';
 // Utils
 export * as calc from './inc/calc';
 export * as utils from './inc/utils';
-export selectDomActor from './inc/select-actor';
+export $ from './inc/select-actor';
 export setDilation from './process/timer';
 export stagger from './inc/stagger';
 export timeline from './inc/timeline';
