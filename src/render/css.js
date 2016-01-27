@@ -8,9 +8,7 @@ import buildPropertyString from './css/build';
 
     @param { DOMElement, Object }
 */
-function renderCSS({ element, state }) {
-    element.style.cssText += ';' + buildPropertyString(state);
-}
+const renderCSS = ({ element, state }) => element.style.cssText += ';' + buildPropertyString(state);
 
 /*
     Get CSS property of element

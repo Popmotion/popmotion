@@ -12,6 +12,7 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 - Native Meteor support.
+- jQuery support in `selectDomActor` - provide `$().get()` instead.
 - `Sequence`: Dropped in favour of the `timeline` function.
 - `Iterator`: Dropped in favour of using native array methods and the `stagger` function.
 

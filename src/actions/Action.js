@@ -76,6 +76,7 @@ export default class Action extends Process {
             // If this is a new value, check for type
             } else {
                 newValue = { ...defaultValue, ...newValue };
+
                 // If one is explicitly assigned, use that
                 if (value.type) {
                     valueType = value.type;
@@ -90,6 +91,8 @@ export default class Action extends Process {
 
             // If we've got a valueType then preprocess the value accordingly
             if (valueType) {
+                value.type = valueType;
+
                 // If this value should be split, split
                 if (valueType.split) {
                     const childValues = {};
@@ -102,10 +105,12 @@ export default class Action extends Process {
                             each(splitValues, (splitValue, splitKey) => {
                                 // Create new child value if doesn't exist
                                 if (!childValues[splitKey]) {
-                                    childValues[splitKey] = {};
+                                    childValues[splitKey] = { ...newValue };
 
                                     if (valueType.defaultProps) {
-                                        childValues[splitKey] = (valueType.defaultProps[splitKey]) ? { ...valueType.defaultProps[splitKey] } : { ...valueType.defaultProps };
+                                        childValues[splitKey] = (valueType.defaultProps[splitKey]) ?
+                                            { ...valueType.defaultProps[splitKey], ...childValues[splitKey] } :
+                                            { ...valueType.defaultProps, ...childValues[splitKey] };
                                     }
                                 }
 
@@ -114,19 +119,24 @@ export default class Action extends Process {
                         }
                     });
 
-                    newValue.children = [];
+                    newValue.children = {};
 
                     // Now loop through all child values and add them as normal values
                     each(childValues, (childValue, childKey) => {
                         const combinedKey = key + childKey;
 
-                        newValue.children.push(combinedKey);
+                        newValue.children[key] = childValue.current;
                         currentValues[combinedKey] = childValue;
 
                         if (this.valueKeys.indexOf(combinedKey) === -1) {
                             this.valueKeys.push(combinedKey);
                         }
                     });
+
+                    // Save a template for recombination if present
+                    if (valueType.template) {
+                        newValue.template = newValue.template || valueType.template(newValue.current);
+                    }
 
                 // Or we just have default value props, load those   
                 } else if (valueType.defaultProps) {
@@ -166,16 +176,12 @@ export default class Action extends Process {
     willRender(action, frameStamp, elapsed) {
         let hasChanged = false;
 
+        // Update base values
         for (let i = 0; i < this.numValueKeys; i++) {
             const key = this.valueKeys[i];
             const value = this.values[key];
 
             let updatedValue = value.current;
-
-            // Update value based on active action
-            if (value.action) {
-                updatedValue = value.action.values[key].current;
-            }
 
             // Run transform function (if present)
             if (value.transform) {
@@ -187,49 +193,41 @@ export default class Action extends Process {
                 updatedValue = smooth(updatedValue, value.current, elapsed, value.smooth);
             }
 
-            // Round value
-            if (value.round) {
-                updatedValue = Math.round(updatedValue);
-            }
-
-            // Cap to minimum value
-            if (value.min !== undefined) {
-                updatedValue = Math.max(updatedValue, value.min);
-            }
-
-            // Cap to maximum value
-            if (value.max !== undefined) {
-                updatedValue = Math.min(updatedValue, value.max);
-            }
-
             value.velocity = speedPerSecond(updatedValue - value.current, elapsed);
 
-            if (updatedValue !== value.current) {
-                hasChanged = true;
-            }
-
             value.current = updatedValue;
-        }
-
-        return (this.onCleanup) ? true : hasChanged;
-    }
-
-    onPreRender() {
-        for (let i = 0; i < this.numValueKeys; i++) {
-            const key = this.valueKeys[i];
-            const value = this.values[key];
 
             const valueForState = (value.unit) ? value.current + value.unit : value.current;
 
             // Add straight to state if no parent
             if (!value.parent) {
-                this.state[mapKey(key, this.onRender)] = valueForState;
+                const mappedKey = mapKey(key, this.onRender);
 
+                if (this.state[mappedKey] !== valueForState) {
+                    this.state[mappedKey] = valueForState;
+                    hasChanged = true;
+                }
             // Or add to parent
             } else {
                 this.values[value.parent].children[key] = valueForState;
             }
         }
+
+        // Update parent values
+        for (let i = 0; i < this.numParentKeys; i++) {
+            const key = this.parentKeys[i];
+            const value = this.values[key];
+            const mappedKey = mapKey(key, this.onRender);
+
+            value.current = value.type.combine(value.children, value.template);
+
+            if (this.state[mappedKey] !== value.current) {
+                this.state[mappedKey] = value.current;
+                hasChanged = true;
+            }
+        }
+
+        return (this.onCleanup) ? true : hasChanged;
     }
 
     pause() {

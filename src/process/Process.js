@@ -60,6 +60,7 @@ export default class Process {
         @return [Process]
     */
     inherit(props) {
-        return new this.constructor({ ...this, props });
+        const newProcess = new this.constructor(this);
+        return newProcess.set(props);
     }
 }

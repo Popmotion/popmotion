@@ -1,5 +1,5 @@
 import Action from './Action';
-import { easeOut } from './easing/preset-easing';
+import easing from './easing/preset-easing';
 import {
     currentTime,
     each,
@@ -93,9 +93,7 @@ export default class Tween extends Action {
     flipValues() {
         this.elapsed = this.duration - this.elapsed;
 
-        each(this.values, (value) => {
-            [value.to, value.from] = [value.from, value.to];
-        });
+        each(this.values, (value) => [value.to, value.from] = [value.from, value.to]);
     }
 
     reverse() {
@@ -136,7 +134,7 @@ export default class Tween extends Action {
             ...super.getDefaultValue(),
             delay: 0,
             duration: 300,
-            ease: easeOut,
+            ease: easing.easeOut,
             elapsed: 0,
             stagger: 0,
             steps: 0,

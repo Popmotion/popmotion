@@ -5,8 +5,9 @@ const processOrder = [
     { step: 'onFrameStart' },
     { step: 'onUpdate' },
     { step: 'willRender', decideRender: true },
+    { step: 'onPreRender', isRender: true },
     { step: 'onRender', isRender: true },
-    { step: 'postRender', isRender: true },
+    { step: 'onPostRender', isRender: true },
     { step: 'onFrameEnd' },
     { step: 'onCleanup' }
 ];
@@ -76,7 +77,7 @@ function resolveQueues() {
     let activateQueueLength = activateQueue.length;
     let deactivateQueueLength = deactivateQueue.length;
 
-    while (deactivateQueue--) {
+    while (deactivateQueueLength--) {
         const id = deactivateQueue[deactivateQueueLength];
         const activeIdIndex = runningIds.indexOf(id);
         const process = runningProcesses[id];
