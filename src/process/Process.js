@@ -23,12 +23,22 @@ export default class Process {
     start() {
         this.isActive = true;
         loop.activate(this.id, this);
+
+        if (this.onStart) {
+            this.onStart(this);
+        }
+
         return this;
     }
 
     stop() {
         this.isActive = false;
         loop.deactivate(this.id);
+
+        if (this.onStop) {
+            this.onStop(this);
+        }
+
         return this;
     }
 

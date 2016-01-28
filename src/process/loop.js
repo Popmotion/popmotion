@@ -88,7 +88,7 @@ function resolveQueues() {
             runningProcesses[id] = undefined;
         }
 
-        if (process.onEnd) {
+        if (process.onDeactivate) {
             process.onEnd(process);
         }
     }
@@ -104,7 +104,7 @@ function resolveQueues() {
 
         updateCount(true, process.isLazy);
 
-        if (process.onStart) {
+        if (process.onActivate) {
             process.onStart(process);
         }
     }
