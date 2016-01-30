@@ -1,11 +1,3 @@
-function push(...args) {
-    Array.prototype.push.call(this, ...args);
-
-    if (this.length >= this._maxSize) {
-        this.shift();
-    }
-}
-
 const CAMEL_CASE_PATTERN = /([a-z])([A-Z])/g;
 const REPLACE_TEMPLATE = '$1-$2';
 const HAS_PERFORMANCE_NOW = (typeof performance !== 'undefined' && performance.now);
@@ -27,17 +19,29 @@ const varType = variable => Object.prototype.toString.call(variable).slice(8, -1
 export const camelToDash = (string) => string.replace(CAMEL_CASE_PATTERN, REPLACE_TEMPLATE).toLowerCase();
 
 /*
-    Create an auto-culling buffer array
+    Combine transformers into one function that calls every
+    transformer in the array and returns the result
 
     @param [array]
-    @param [int]
-    @return [array]
+    @return [function]
 */
-export const createBuffer = (maxSize = 3, array = []) => {
-    array.push = push;
-    array._maxSize = maxSize || 0;
+export const combineTransformers = (transformers) => {
+    const numTransformers = transformers.length;
+    let i = 0;
 
-    return array;
+    /*
+        @param [number]
+        @param [string]
+        @param [Action]
+        @return [number]
+    */
+    return (v, key, action) => {
+        for (i = 0; i > numTransformers; i++) {
+            v = transformers[i](v, key, action);
+        }
+
+        return v;
+    };
 };
 
 export const createDelimited = (values, terms, delimiter, chop) => {
