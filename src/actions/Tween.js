@@ -41,6 +41,8 @@ export default class Tween extends Action {
         super.start();
         this.elapsed = 0;
         this.flipCount = this.yoyoCount = this.loopCount = 0;
+
+        return this;
     }
 
     onUpdate(tween, frameStamp, elapsed) {
@@ -94,24 +96,29 @@ export default class Tween extends Action {
         this.elapsed = this.duration - this.elapsed;
 
         each(this.values, (value) => [value.to, value.from] = [value.from, value.to]);
+        return this;
     }
 
     reverse() {
         this.playDirection *= -1;
+        return this;
     }
 
     restart() {
         this.elapsed = (this.playDirection === 1) ? 0 : this.duration;
         this.started = currentTime();
+        return this;
     }
 
     seek(progress) {
         this.seekTime(this.duration * progress);
+        return this;
     }
 
     seekTime(elapsed) {
         this.once();
         this.elapsed = elapsed;
+        return this;
     }
     
     getDefaultProps() {

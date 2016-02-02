@@ -1,4 +1,5 @@
 import Action from '../actions/Action';
+import { each } from '../inc/utils';
 
 const boundProps = (actor, action) => ({
     onStart: () => {
@@ -17,7 +18,6 @@ const boundProps = (actor, action) => ({
 export default class Actor extends Action {
     constructor(...args) {
         super(...args);
-        this.once();
         this.activeActions = {};
         this.numActiveActions = 0;
     }
@@ -25,6 +25,7 @@ export default class Actor extends Action {
     set(props, instant) {
         if (instant || !this.reducer) {
             super.set(props);
+            this.once();
         } else {
             const action = this.reducer(props);
             if (action) {
@@ -80,7 +81,6 @@ export default class Actor extends Action {
     activateAction(id, action) {
         this.activeActions[id] = action;
         this.numActiveActions++;
-        this.start();
     }
 
     /*
@@ -91,9 +91,5 @@ export default class Actor extends Action {
     deactivateAction(id) {
         this.activeActions[id] = undefined;
         this.numActiveActions--;
-
-        if (!this.numActiveActions) {
-            this.stop();
-        }
     }
 }

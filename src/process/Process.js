@@ -70,7 +70,8 @@ export default class Process {
         @return [Process]
     */
     inherit(props) {
-        const newProcess = new this.constructor(this);
+        const { id, ...inheritedProps } = this;
+        const newProcess = new this.constructor(inheritedProps);
         return newProcess.set(props);
     }
 }
