@@ -51,4 +51,4 @@ export scaleType from './value-types/scale';
 export shadowType from './value-types/shadow';
 
 // Transformers
-export createMapTransform from './transformers/map';
+export * as transformers from './inc/transformers';
