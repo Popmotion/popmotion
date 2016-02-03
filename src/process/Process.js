@@ -61,17 +61,4 @@ export default class Process {
     getDefaultProps() {
         return {};
     }
-
-    /*
-        # Extend this Process with new properties
-        ## Returns new instance of this Process's `prototype` with existing and new properties
-
-        @param [object] (optional)
-        @return [Process]
-    */
-    inherit(props) {
-        const { id, ...inheritedProps } = this;
-        const newProcess = new this.constructor(inheritedProps);
-        return newProcess.set(props);
-    }
 }
