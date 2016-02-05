@@ -60,7 +60,7 @@ const setTweens = ({ timeline, timelineLength, state }) => {
 export default function timeline(def, props = {}) {
     const { totalTime, timeline } = analyze(def);
 
-    const timelineProps = {
+    return new Tween({
         ...props,
         duration: totalTime,
         ease: linear,
@@ -70,7 +70,5 @@ export default function timeline(def, props = {}) {
         timeline: timeline,
         timelineLength: timeline.length,
         onRender: setTweens
-    };
-
-    return new Tween(timelineProps);
+    });
 }
