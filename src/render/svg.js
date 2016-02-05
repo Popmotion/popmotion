@@ -1,10 +1,15 @@
-import { each } from '../inc/utils';
 import stateMap from './css/state-map';
 import valueTypeMap from './svg/value-type-map';
 import build from './svg/build';
 
 function renderSVG({ state, element, svgOrigin }) {
-    each(build(state, svgOrigin), (value, key) => element.setAttribute(key, value));
+    const props = build(state, svgOrigin);
+
+    for (let key in props) {
+        if (props.hasOwnProperty(key)) {
+            element.setAttribute(key, props[key]);
+        }
+    }
 }
 
 renderSVG.init = (actor) => {

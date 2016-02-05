@@ -1,7 +1,6 @@
 import Action from './Action';
 import Pointer from '../input/Pointer';
 import { offset } from '../inc/calc';
-import { each } from '../inc/utils';
 
 /*
     Scrape x/y coordinates from provided event
@@ -37,17 +36,19 @@ export default class Track extends Action {
     }
 
     onUpdate() {
+        const values = this.values;
         this.inputOffset = offset(this.inputOrigin, this.input.state);
 
-        each(this.values, (value, key) => {
-            if (this.inputOffset.hasOwnProperty(key)) {
+        for (let key in values) {
+            if (values.hasOwnProperty(key) && this.inputOffset.hasOwnProperty(key)) {
+                const value = values[key];
                 if (value.direct) {
                     value.current = this.input.state[key];
                 } else {
                     value.current = value.origin + this.inputOffset[key];
                 }
             }
-        });
+        }
     }
 
     getDefaultValue() {

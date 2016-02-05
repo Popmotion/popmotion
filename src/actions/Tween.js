@@ -1,10 +1,6 @@
 import Action from './Action';
 import easing from './easing/preset-easing';
-import {
-    currentTime,
-    each,
-    isNum
-} from '../inc/utils';
+import { currentTime, isNum } from '../inc/utils';
 import {
     restrict,
     getProgressFromValue,
@@ -76,15 +72,17 @@ export default class Tween extends Action {
         if (this.ended) {
             let stepTaken = false;
 
-            each(NEXT_STEPS, (method, step) => {
-                const maxSteps = this[step];
+            for (let key in NEXT_STEPS) {
+                if (NEXT_STEPS.hasOwnProperty(key)) {
+                    const maxSteps = this[key];
 
-                if (maxSteps === true || (isNum(maxSteps) && maxSteps > this[step + COUNT])) {
-                    this[step + COUNT]++;
-                    stepTaken = true;
-                    this[method]();
+                    if (maxSteps === true || (isNum(maxSteps) && maxSteps > this[key + COUNT])) {
+                        this[key + COUNT]++;
+                        stepTaken = true;
+                        this[NEXT_STEPS[key]]();
+                    }
                 }
-            });
+            }
 
             if (!stepTaken) {
                 this.stop();
@@ -93,9 +91,17 @@ export default class Tween extends Action {
     }
 
     flipValues() {
+        const values = this.values;
+
         this.elapsed = this.duration - this.elapsed;
 
-        each(this.values, (value) => [value.to, value.from] = [value.from, value.to]);
+        for (let key in values) {
+            if (values.hasOwnProperty(key)) {
+                const value = values[key];
+                [value.to, value.from] = [value.from, value.to]
+            }
+        }
+
         return this;
     }
 

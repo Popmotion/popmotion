@@ -1,9 +1,10 @@
 import Process from '../process/Process';
 import { smooth, speedPerSecond } from '../inc/calc';
-import { each, isObj } from '../inc/utils';
+import { isObj } from '../inc/utils';
 
 const DEFAULT_PROP = 'current';
 const NUMERICAL_VALUES = [DEFAULT_PROP, 'from', 'to', 'min', 'max'];
+const NUM_NUMERICAL_VALUES = NUMERICAL_VALUES.length;
 
 /*
     Map key given given stateMap
@@ -49,114 +50,127 @@ export default class Action extends Process {
         let valueTypeMap = (renderer && renderer.valueTypeMap) ? renderer.valueTypeMap : false;
 
         // Inherit value properties from `props`
-        each(defaultValue, (value, key) => {
-            if (propsToSet[key] !== undefined) {
-                defaultValue[key] = propsToSet[key];
+        for (let key in defaultValue) {
+            if (defaultValue.hasOwnProperty(key)) {
+                if (propsToSet[key] !== undefined) {
+                    defaultValue[key] = propsToSet[key];
+                }
             }
-        });
+        }
 
         // Check all values and split into child values as neccessary
-        each(values, (value, key) => {
-            const existingValue = currentValues[key];
-            let valueType = {};
-            let newValue = {};
+        for (let key in values) {
+            if (values.hasOwnProperty(key)) {
+                const value = values[key];
+                const existingValue = currentValues[key];
+                let valueType = {};
+                let newValue = {};
 
-            // Convert new value into object if it isn't already
-            if (isObj(value)) {
-                newValue = value;
-            } else {
-                newValue[defaultValueProp] = value;
-            }
-
-            // If value already exists, check for and use existing type
-            if (existingValue) {
-                newValue = { ...existingValue, ...newValue };
-                valueType = existingValue.type;
-
-            // If this is a new value, check for type
-            } else {
-                newValue = { ...defaultValue, ...newValue };
-
-                // If one is explicitly assigned, use that
-                if (value.type) {
-                    valueType = value.type;
-
-                // Or if our renderer has a typeMap, use that
-                } else if (valueTypeMap) {
-                    valueType = valueTypeMap[mapKey(key, renderer)];
+                // Convert new value into object if it isn't already
+                if (isObj(value)) {
+                    newValue = value;
+                } else {
+                    newValue[defaultValueProp] = value;
                 }
 
-                // Maybe run `test` on color here
-            }
+                // If value already exists, check for and use existing type
+                if (existingValue) {
+                    newValue = { ...existingValue, ...newValue };
+                    valueType = existingValue.type;
 
-            // If we've got a valueType then preprocess the value accordingly
-            if (valueType) {
-                value.type = valueType;
+                // If this is a new value, check for type
+                } else {
+                    newValue = { ...defaultValue, ...newValue };
 
-                // If this value should be split, split
-                if (valueType.split) {
-                    const childValues = {};
+                    // If one is explicitly assigned, use that
+                    if (value.type) {
+                        valueType = value.type;
 
-                    // Loop over numerical values and split any present
-                    NUMERICAL_VALUES.forEach((propName) => {
-                        if (newValue.hasOwnProperty(propName)) {
-                            const splitValues = valueType.split(newValue[propName]);
-
-                            each(splitValues, (splitValue, splitKey) => {
-                                // Create new child value if doesn't exist
-                                if (!childValues[splitKey]) {
-                                    childValues[splitKey] = { ...newValue };
-
-                                    if (valueType.defaultProps) {
-                                        childValues[splitKey] = (valueType.defaultProps[splitKey]) ?
-                                            { ...valueType.defaultProps[splitKey], ...childValues[splitKey] } :
-                                            { ...valueType.defaultProps, ...childValues[splitKey] };
-                                    }
-                                }
-
-                                childValues[splitKey][propName] = splitValue;
-                            });
-                        }
-                    });
-
-                    newValue.children = {};
-
-                    // Now loop through all child values and add them as normal values
-                    each(childValues, (childValue, childKey) => {
-                        const combinedKey = key + childKey;
-
-                        newValue.children[key] = childValue.current;
-                        currentValues[combinedKey] = childValue;
-
-                        if (this.valueKeys.indexOf(combinedKey) === -1) {
-                            this.valueKeys.push(combinedKey);
-                        }
-                    });
-
-                    // Save a template for recombination if present
-                    if (valueType.template) {
-                        newValue.template = newValue.template || valueType.template(newValue.current);
+                    // Or if our renderer has a typeMap, use that
+                    } else if (valueTypeMap) {
+                        valueType = valueTypeMap[mapKey(key, renderer)];
                     }
 
-                // Or we just have default value props, load those   
-                } else if (valueType.defaultProps) {
-                    newValue = { ...valueType.defaultProps, ...newValue };
+                    // Maybe run `test` on color here
                 }
-            }
 
-            // Update appropriate lists with value key
-            if (newValue.children) {
-                if (this.parentKeys.indexOf(key) === -1) {
-                    this.parentKeys.push(key);
-                }
-            } else {
-                if (this.valueKeys.indexOf(key) === -1) {
-                    this.valueKeys.push(key);
-                }
-            }
+                // If we've got a valueType then preprocess the value accordingly
+                if (valueType) {
+                    value.type = valueType;
 
-            currentValues[key] = newValue;
-        });
+                    // If this value should be split, split
+                    if (valueType.split) {
+                        const childValues = {};
+
+                        // Loop over numerical values and split any present
+                        for (let i = 0; i < NUM_NUMERICAL_VALUES; i++) {
+                            const propName = NUMERICAL_VALUES[i];
+
+                            if (newValue.hasOwnProperty(propName)) {
+                                const splitValues = valueType.split(newValue[propName]);
+
+                                for (let splitKey in splitValues) {
+                                    if (splitValues.hasOwnProperty(splitKey)) {
+                                        const splitValue = splitValues[splitKey];
+                                        // Create new child value if doesn't exist
+                                        if (!childValues[splitKey]) {
+                                            childValues[splitKey] = { ...newValue };
+
+                                            if (valueType.defaultProps) {
+                                                childValues[splitKey] = (valueType.defaultProps[splitKey]) ?
+                                                    { ...valueType.defaultProps[splitKey], ...childValues[splitKey] } :
+                                                    { ...valueType.defaultProps, ...childValues[splitKey] };
+                                            }
+                                        }
+
+                                        childValues[splitKey][propName] = splitValue;
+                                    }
+                                }
+                            }
+                        }
+
+                        newValue.children = {};
+
+                        // Now loop through all child values and add them as normal values
+                        for (let childKey in childValues) {
+                            if (childValues.hasOwnProperty(childKey)) {
+                                const childValue = childValues[childKey];
+                                const combinedKey = key + childKey;
+
+                                newValue.children[key] = childValue.current;
+                                currentValues[combinedKey] = childValue;
+
+                                if (this.valueKeys.indexOf(combinedKey) === -1) {
+                                    this.valueKeys.push(combinedKey);
+                                }
+                            }
+                        }
+
+                        // Save a template for recombination if present
+                        if (valueType.template) {
+                            newValue.template = newValue.template || valueType.template(newValue.current);
+                        }
+
+                    // Or we just have default value props, load those   
+                    } else if (valueType.defaultProps) {
+                        newValue = { ...valueType.defaultProps, ...newValue };
+                    }
+                }
+
+                // Update appropriate lists with value key
+                if (newValue.children) {
+                    if (this.parentKeys.indexOf(key) === -1) {
+                        this.parentKeys.push(key);
+                    }
+                } else {
+                    if (this.valueKeys.indexOf(key) === -1) {
+                        this.valueKeys.push(key);
+                    }
+                }
+
+                currentValues[key] = newValue;
+            }
+        }
 
         // Precompute value key and parent key length to prevent per-frame measurement
         this.numValueKeys = this.valueKeys.length;

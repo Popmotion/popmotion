@@ -1,4 +1,4 @@
-import { each, camelToDash } from '../../inc/utils';
+import { camelToDash } from '../../inc/utils';
 import transformProps from '../css/transform-props';
 
 const ZERO_NOT_ZERO = 0.0001;
@@ -22,21 +22,25 @@ export default function build(state, origin) {
             skewY: `skewY(${state.skewY}) `
         };
 
-    each(state, (key, value) => {
-        if (transformProps[key]) {
-            hasTransform = true;
-        } else {
-            props[camelToDash(key)] = value;
+    for (let key in state) {
+        if (state.hasOwnProperty(key)) {
+            if (transformProps[key]) {
+                hasTransform = true;
+            } else {
+                props[camelToDash(key)] = state[key];
+            }
         }
-    });
+    }
 
     if (hasTransform) {
         props.transform = '';
 
-        each(transform, (key, value) => {
-            var defaultValue = (key === 'scale') ? '1' : '0';
-            props.transform += value.replace(/undefined/g, defaultValue);
-        });
+        for (let key in transform) {
+            if (transform.hasOwnProperty(key)) {
+                const defaultValue = (key === 'scale') ? '1' : '0';
+                props.transform += transform[key].replace(/undefined/g, defaultValue);
+            }
+        }
     }
 
     return props;

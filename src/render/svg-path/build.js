@@ -1,5 +1,3 @@
-import { each } from '../../inc/utils';
-
 /*
     Convert percentage to pixels
     
@@ -16,20 +14,24 @@ export default function build(state, length) {
     };
     let hasDashArray = false;
 
-    each(state, (value, key) => {
-        switch (key) {
-        case 'length':
-        case 'spacing':
-            hasDashArray = true;
-            dashArrayStyles[key] = percentToPixels(value, length);
-            break;
-        case 'offset':
-            styles['stroke-dashoffset'] = percentToPixels(-value, length);
-            break;
-        default:
-            styles[key] = value;
+    for (let key in state) {
+        if (state.hasOwnProperty(key)) {
+            const value = state[key];
+
+            switch (key) {
+            case 'length':
+            case 'spacing':
+                hasDashArray = true;
+                dashArrayStyles[key] = percentToPixels(value, length);
+                break;
+            case 'offset':
+                styles['stroke-dashoffset'] = percentToPixels(-value, length);
+                break;
+            default:
+                styles[key] = value;
+            }
         }
-    });
+    }
 
     if (hasDashArray) {
         styles['stroke-dasharray'] = dashArrayStyles.length + ' ' + dashArrayStyles.spacing;

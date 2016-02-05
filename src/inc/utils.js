@@ -129,15 +129,17 @@ export const getValueFromFunctionString = (value) => value.substring(value.index
 export const hasChanged = (a, b) => {
     let changed = false;
 
-    each(a, (value, key) => {
-        if (hasProperty(b, key)) {
-            if (value !== b[key]) {
+    for (let key in a) {
+        if (a.hasOwnProperty(key)) {
+            if (hasProperty(b, key)) {
+                if (a[key] !== b[key]) {
+                    changed = true;
+                }
+            } else {
                 changed = true;
             }
-        } else {
-            changed = true;
         }
-    });
+    }
 
     return changed;
 };

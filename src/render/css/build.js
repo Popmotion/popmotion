@@ -1,4 +1,3 @@
-import { each } from '../../inc/utils';
 import transformProps from './transform-props';
 
 const TRANSLATE_Z = 'translateZ';
@@ -8,15 +7,19 @@ export default (state, disableHardwareAcceleration) => {
     let transformString = '';
     let transformHasZ = false;
 
-    each(state, (value, key) => {
-        if (transformProps[key]) {
-            transformString += key + '(' + value + ') ';
-            transformHasZ = (key === TRANSLATE_Z) ? true : transformHasZ;
+    for (let key in state) {
+        if (state.hasOwnProperty(key)) {
+            const value = state[key];
 
-        } else {
-            propertyString += ';' + key + ':' + value;
+            if (transformProps[key]) {
+                transformString += key + '(' + value + ') ';
+                transformHasZ = (key === TRANSLATE_Z) ? true : transformHasZ;
+
+            } else {
+                propertyString += ';' + key + ':' + value;
+            }
         }
-    });
+    }
 
     if (transformString !== '') {
         if (!transformHasZ && !disableHardwareAcceleration) {

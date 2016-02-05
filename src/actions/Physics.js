@@ -1,6 +1,6 @@
 import Action from './Action';
 import { speedPerFrame } from '../inc/calc';
-import { each, isNum } from '../inc/utils';
+import { isNum } from '../inc/utils';
 
 export default class Physics extends Action {
 
@@ -12,29 +12,32 @@ export default class Physics extends Action {
     onUpdate(physics, frameStamp, elapsed) {
         this.hasChanged = false;
 
-        each(this.values, (value) => {
-            const previousValue = value.current;
+        for (let key in this.values) {
+            if (this.values.hasOwnProperty(key)) {
+                const value = this.values[key];
+                const previousValue = value.current;
 
-            // Apply acceleration
-            value.velocity += speedPerFrame(value.force, elapsed);
+                // Apply acceleration
+                value.velocity += speedPerFrame(value.force, elapsed);
 
-            // Apply friction
-            value.velocity *= (1 - value.friction) ** (elapsed / 10);
+                // Apply friction
+                value.velocity *= (1 - value.friction) ** (elapsed / 10);
 
-            // Apply spring
-            if (value.spring && isNum(value.to)) {
-                const distanceToTarget = value.to - value.current;
-                value.velocity += distanceToTarget * speedPerFrame(value.spring, elapsed);
+                // Apply spring
+                if (value.spring && isNum(value.to)) {
+                    const distanceToTarget = value.to - value.current;
+                    value.velocity += distanceToTarget * speedPerFrame(value.spring, elapsed);
+                }
+
+                // Apply latest velocity
+                value.current += speedPerFrame(value.velocity, elapsed);
+                
+                // Check if value has changed
+                if (value.current !== previousValue || Math.abs(value.velocity) >= value.stopSpeed) {
+                    this.hasChanged = true;
+                }
             }
-
-            // Apply latest velocity
-            value.current += speedPerFrame(value.velocity, elapsed);
-            
-            // Check if value has changed
-            if (value.current !== previousValue || Math.abs(value.velocity) >= value.stopSpeed) {
-                this.hasChanged = true;
-            }
-        });
+        }
     }
 
     onFrameEnd() {

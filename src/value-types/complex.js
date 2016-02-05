@@ -1,4 +1,4 @@
-import { each, isArray } from '../inc/utils';
+import { isArray } from '../inc/utils';
 
 const FLOAT_REGEX = /(-)?(\d[\d\.]*)/g;
 const generateToken = (token) => '${' + token + '}';
@@ -24,7 +24,12 @@ export default {
     },
 
     combine: (values, template) => {
-        each(values, (value, key) => template = template.replace(generateToken(key), value));
+        for (let key in values) {
+            if (values.hasOwnProperty(key)) {
+                template = template.replace(generateToken(key), values[key]);
+            }
+        }
+
         return template;
     }
 

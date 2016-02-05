@@ -1,5 +1,4 @@
 import {
-    each,
     hasProperty,
     isNum,
     splitValueUnit,
@@ -128,9 +127,11 @@ export const getProgressFromValue = (value, from, to) => (value - from) / (to - 
 export const offset = (a, b) => {
     const offset = {};
 
-    each(b, (value, key) => {
-        offset[key] = hasProperty(a, key) ? value - a[key] : 0;
-    });
+    for (let key in b) {
+        if (b.hasOwnProperty(key)) {
+            offset[key] = hasProperty(a, key) ? b[key] - a[key] : 0;
+        }
+    }
 
     return offset;
 };
