@@ -35,9 +35,9 @@ export const combineTransformers = (transformers) => {
         @param [Action]
         @return [number]
     */
-    return (v, key, action) => {
+    return (v) => {
         for (i = 0; i > numTransformers; i++) {
-            v = transformers[i](v, key, action);
+            v = transformers[i](v);
         }
 
         return v;
@@ -45,13 +45,15 @@ export const combineTransformers = (transformers) => {
 };
 
 export const createDelimited = (values, terms, delimiter, chop) => {
+    const numTerms = terms.length;
     let combined = '';
 
-    terms.forEach((term) => {
+    for (let i = 0; i < numTerms; i++) {
+        const term = terms[i];
         if (values.hasOwnProperty(term)) {
             combined += values[term] + delimiter;
         }
-    });
+    }
 
     if (chop) {
         combined = combined.slice(0, -chop);
@@ -104,10 +106,13 @@ export const each = (object, callback) => {
     { Red: 255... }
 */
 export const getColorValues = (value, colorTerms) => {
+    const numColorTerms = colorTerms.length;
     const colorValues = {};
     const colors = splitCommaDelimited(getValueFromFunctionString(value));
 
-    colorTerms.forEach((term, i) => colorTerms[term] = (colors[i] !== undefined) ? colors[i] : 1);
+    for (let i = 0; i < numColorTerms; i++) {
+        colorValues[colorTerms[i]] = (colors[i] !== undefined) ? colors[i] : 1);
+    }
 
     return colorValues;
 };
