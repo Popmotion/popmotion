@@ -1,6 +1,6 @@
 import { getProgressFromValue, getValueFromProgress, restrict } from '../inc/calc';
 
-export const map (from, to) => {
+export const map = (from, to) => {
     const mapLength = from.length;
 
     return (value) => {
