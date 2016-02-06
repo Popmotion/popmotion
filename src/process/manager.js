@@ -27,8 +27,8 @@ const deactivateQueue = [];
     @param [array]
 */
 const updateQueues = (id, inList, outList) => {
-    const inPosition = inList.indexOf(inList);
-    const outPosition = outList.indexOf(outList);
+    const inPosition = inList.indexOf(id);
+    const outPosition = outList.indexOf(id);
 
     if (inPosition === -1) {
         inList.push(id);
@@ -65,7 +65,9 @@ export default {
     },
 
     // Deactivate a process
-    deactivate: (id) => updateQueues(id, deactivateQueue, activateQueue),
+    deactivate: (id) => {
+        updateQueues(id, deactivateQueue, activateQueue);
+    },
 
     // Number background processes
     getNonBackgroundRunningCount: () => nonBackgroundRunningCount,
@@ -89,7 +91,7 @@ export default {
             if (activeIdIndex > -1) {
                 runningIds.splice(activeIdIndex, 1);
                 updateRunningCount(false, process.isLazy);
-                activeProcesses[id] = undefined;
+                delete activeProcesses[id];
 
                 if (process.onDeactivate) {
                     process.onDeactivate(process);
@@ -114,7 +116,7 @@ export default {
             const process = activeProcesses[id];
 
             // If process isn't already running, activate
-            if (activeIdIndex === -1) {
+            if (activeIdIndex === -1 && process) {
                 runningIds.push(id);
                 updateRunningCount(true, process.isLazy);
 

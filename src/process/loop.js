@@ -30,7 +30,6 @@ let isRunning = false;
 function fireAll(frameStamp, elapsed) {
     const activeIds = manager.getActiveIds();
     const activeProcessCount = activeIds.length;
-
     for (let i = 0; i < numProcessSteps; i++) {
         const step = processStepOrder[i];
 

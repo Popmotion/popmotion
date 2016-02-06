@@ -51,7 +51,7 @@ export default class Action extends Process {
 
         // Inherit value properties from `props`
         for (let key in defaultValue) {
-            if (defaultValue.hasOwnProperty(key)) {
+            if (defaultValue.hasOwnProperty(key) && propsToSet.hasOwnProperty(key)) {
                 if (propsToSet[key] !== undefined) {
                     defaultValue[key] = propsToSet[key];
                 }
@@ -96,7 +96,7 @@ export default class Action extends Process {
 
                 // If we've got a valueType then preprocess the value accordingly
                 if (valueType) {
-                    value.type = valueType;
+                    newValue.type = valueType;
 
                     // If this value should be split, split
                     if (valueType.split) {

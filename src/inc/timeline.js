@@ -1,5 +1,5 @@
 import Tween from '../actions/Tween';
-import { linear } from '../actions/easing/preset-easing';
+import easing from '../actions/easing/preset-easing';
 import { relativeValue } from './calc';
 import { each } from './utils';
 
@@ -20,9 +20,11 @@ import { each } from './utils';
 */
 const analyze = (defs) => {
     const timeline = [];
+    const numDefs = defs.length;
     let currentPlayhead = 0;
 
-    defs.forEach((def) => {
+    for (let i = 0; i < numDefs; i++) {
+        const def = defs[i];
         const defIsObj = def.tween ? true : false;
         const tween = (defIsObj) ? def.tween : def;
 
@@ -30,26 +32,29 @@ const analyze = (defs) => {
             def.at || relativeValue(currentPlayhead, def.offset) : 0);
 
         let duration = 0;
-        each(tween.values, (value) => duration = Math.max(duration, value.duration));
+        for (let key in tween.values) {
+            if (tween.values.hasOwnProperty(key)) {
+                const value = tween.values[key];
+                duration = Math.max(duration, value.duration);
+            }
+        }
 
         timeline.push({
             from: currentPlayhead,
             duration: duration,
-            fire: tween.seekTime
+            fire: (time) => tween.seekTime(time)
         });
 
         currentPlayhead += tween.duration;
-    });
+    }
 
     return { totalTime: currentPlayhead, timeline };
 };
 
-const setTweens = ({ timeline, timelineLength, state }) => {
-    const playhead = state.p;
-
+const setTweens = ({ elapsed, timeline, timelineLength, state }) => {
     for (let i = 0; i < timelineLength; i++) {
         const tween = timeline[i];
-        const tweenTime = playhead - tween.from;
+        const tweenTime = elapsed - tween.from;
 
         if (tweenTime > 0 && tweenTime < tween.duration) {
             tween.fire(tweenTime);
@@ -63,7 +68,7 @@ export default function timeline(def, props = {}) {
     return new Tween({
         ...props,
         duration: totalTime,
-        ease: linear,
+        ease: easing.linear,
         values: {
             p: 1
         },

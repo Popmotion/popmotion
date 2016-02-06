@@ -13,6 +13,11 @@ export default class Process {
         this.isLazy = isLazy || false;
         this.id = loop.getProcessId();
         this.isActive = false;
+        this._onCleanup = () => {
+            this.stop();
+            this.onCleanup = undefined;
+        };
+        this._onActivate = () => this.onCleanup = this._onCleanup;
     }
 
     set(props) {
@@ -23,6 +28,8 @@ export default class Process {
     start() {
         this.isActive = true;
         loop.activate(this.id, this);
+
+        this.onCleanup = this.onActivate = undefined;
 
         if (this.onStart) {
             this.onStart(this);
@@ -43,13 +50,8 @@ export default class Process {
     }
 
     once() {
-        this.onCleanup = () => {
-            this.stop();
-            this.onCleanup = undefined;
-        };
-
         this.start();
-
+        this.onActivate = this._onActivate;
         return this;
     }
 

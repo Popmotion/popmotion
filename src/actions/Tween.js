@@ -124,6 +124,7 @@ export default class Tween extends Action {
     seekTime(elapsed) {
         this.once();
         this.elapsed = elapsed;
+
         return this;
     }
     
