@@ -19,20 +19,27 @@ const touchEventToPoint = ({ changedTouches }) => ({
 });
 
 const createPointer = (e) => e.touches ?
-    new Pointer(mouseEventToPoint(e), 'mousemove', mouseEventToPoint) :
-    new Pointer(touchEventToPoint(e), 'touchmove', touchEventToPoint);
+    new Pointer(touchEventToPoint(e), 'touchmove', touchEventToPoint) : 
+    new Pointer(mouseEventToPoint(e), 'mousemove', mouseEventToPoint);
 
 const getActualEvent = (e) => e.originalEvent || e;
 
 export default class Track extends Action {
-    constructor(props, input) {
-        super(props);
-        this.input = input.state ? input : createPointer(getActualEvent(input));
+    start(input) {
+        super.start();
+
+        if (input) {
+            this.input = input.state ? input : createPointer(getActualEvent(input));
+        }
+
+        this.inputOffset = {};
+        this.inputOrigin = { ...this.input.state };
+        this.input.start();
     }
 
-    start() {
-        super.start();
-        this.inputOrigin = {};
+    stop() {
+        super.stop();
+        this.input.stop();
     }
 
     onUpdate() {
@@ -53,10 +60,10 @@ export default class Track extends Action {
 
     getDefaultValue() {
         return {
+            ...super.getDefaultValue(),
             amp: 1,
             escapeAmp: 0,
-            direct: false,
-            smooth: 0
+            direct: false
         };
     }
 }

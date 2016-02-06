@@ -8,7 +8,7 @@ let dilation = 1;
 
 export default {
     update: (framestamp) => {
-        elapsed = Math.min(framestamp - current, MAX_ELAPSED) * dilation;
+        elapsed = Math.max(Math.min(framestamp - current, MAX_ELAPSED), 1) * dilation;
         current = framestamp;
     },
 

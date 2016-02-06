@@ -4,19 +4,25 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
 ## [5.0.0] 2015-02-01
 
-**Warning:** This is a major API revision.
+**Warning:** This is a major API revision. Previous Popmotion code **will** be incompatible with this upgrade.
 
 ### Added
+- 50% less runtime memory usage.
+- 12% smaller filesize - now just over 10kb max gzipped and minified.
+- `physics`: A unified physics simulation handles `velocity`, `friction` and `spring` without having to explicitly choose between them.
 - `timeline`
 - `stagger`
+- Composable `transforms` replace `watch` and watch maps.
 
 ### Removed
 - Native Meteor support.
 - jQuery support in `selectDomActor` - provide `$().get()` instead.
 - `Sequence`: Dropped in favour of the `timeline` function.
 - `Iterator`: Dropped in favour of using native array methods and the `stagger` function.
+- `Simulate`: Dropped in favour of unified `physics` action.
 
 ### Changed
+- `friction` now a value between `0` and `1` - `1` will strip all velocity within a single frame.
 
 ## [4.3.4] 2015-12-30
 

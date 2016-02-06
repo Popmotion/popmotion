@@ -4,8 +4,7 @@ import { isFunc } from '../inc/utils';
 export default class Input extends Process {
     constructor(initialValues, poll) {
         super();
-        this.state = {};
-        this.offset = {};
+        this.state = initialValues;
 
         if (isFunc(poll)) {
             this.onFrameStart = () => this.latest(this.poll());
@@ -18,6 +17,6 @@ export default class Input extends Process {
         @param [object]
     */
     latest(props) {
-        this.state = { ...this.state, props };
+        this.state = { ...this.state, ...props };
     }
 }

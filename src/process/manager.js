@@ -78,10 +78,10 @@ export default {
         /*
             Process deactivate queue
         */
-        let deactivateQueueLength = deactivateQueue.length;
+        const deactivateQueueLength = deactivateQueue.length;
 
-        while (deactivateQueueLength--) {
-            const id = deactivateQueue[deactivateQueueLength];
+        for (let i = 0; i < deactivateQueueLength; i++) {
+            const id = deactivateQueue[i];
             const activeIdIndex = runningIds.indexOf(id);
             const process = activeProcesses[id];
 
@@ -106,9 +106,10 @@ export default {
         /*
             Process activate queue
         */
-        let activateQueueLength = activateQueue.length;
-        while (activateQueueLength--) {
-            const id = activateQueue[activateQueueLength];
+        const activateQueueLength = activateQueue.length;
+
+        for (let i = 0; i < activateQueueLength; i++) {
+            const id = activateQueue[i];
             const activeIdIndex = runningIds.indexOf(id);
             const process = activeProcesses[id];
 

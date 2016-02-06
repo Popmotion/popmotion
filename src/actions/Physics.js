@@ -7,6 +7,7 @@ export default class Physics extends Action {
     constructor(...args) {
         super(...args);
         this.inactiveFrames = 0;
+        this.calculatesVelocity = true;
     }
 
     onUpdate(physics, frameStamp, elapsed) {
@@ -21,7 +22,7 @@ export default class Physics extends Action {
                 value.velocity += speedPerFrame(value.force, elapsed);
 
                 // Apply friction
-                value.velocity *= (1 - value.friction) ** (elapsed / 10);
+                value.velocity *= (1 - value.friction) ** (elapsed / 100);
 
                 // Apply spring
                 if (value.spring && isNum(value.to)) {
@@ -33,7 +34,7 @@ export default class Physics extends Action {
                 value.current += speedPerFrame(value.velocity, elapsed);
                 
                 // Check if value has changed
-                if (value.current !== previousValue || Math.abs(value.velocity) >= value.stopSpeed) {
+                if (value.current !== previousValue || Math.abs(value.velocity) >= value.stopSpeed || (value.spring && value.current !== value.to)) {
                     this.hasChanged = true;
                 }
             }

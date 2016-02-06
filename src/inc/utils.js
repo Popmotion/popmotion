@@ -111,7 +111,7 @@ export const getColorValues = (value, colorTerms) => {
     const colors = splitCommaDelimited(getValueFromFunctionString(value));
 
     for (let i = 0; i < numColorTerms; i++) {
-        colorValues[colorTerms[i]] = (colors[i] !== undefined) ? colors[i] : 1);
+        colorValues[colorTerms[i]] = (colors[i] !== undefined) ? colors[i] : 1;
     }
 
     return colorValues;

@@ -194,7 +194,6 @@ export default class Action extends Process {
         for (let i = 0; i < this.numValueKeys; i++) {
             const key = this.valueKeys[i];
             const value = this.values[key];
-
             let updatedValue = value.current;
 
             // Run transform function (if present)
@@ -204,12 +203,14 @@ export default class Action extends Process {
 
             // Smooth value if we have smoothing
             if (value.smooth) {
-                updatedValue = smooth(updatedValue, value.current, elapsed, value.smooth);
+                updatedValue = smooth(updatedValue, value.prev, elapsed, value.smooth);
             }
 
-            value.velocity = speedPerSecond(updatedValue - value.current, elapsed);
+            if (!this.calculatesVelocity) {
+                value.velocity = speedPerSecond(updatedValue - value.current, elapsed);
+            }
 
-            value.current = updatedValue;
+            value.prev = value.current = updatedValue;
 
             const valueForState = (value.unit) ? value.current + value.unit : value.current;
 
@@ -252,6 +253,17 @@ export default class Action extends Process {
     resume() {
         super.start();
         return this;
+    }
+
+    start() {
+        const values = this.values;
+        super.start();
+
+        for (let key in values) {
+            if (values.hasOwnProperty(key)) {
+                values[key].prev = values[key].origin = values[key].current;
+            }
+        }
     }
 
     /*

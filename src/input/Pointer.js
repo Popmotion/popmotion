@@ -14,11 +14,11 @@ export default class Pointer extends Input {
 
     start() {
         super.start();
-        document.documentElement.addEventListener(this.moveEvent, this.latest);
+        document.documentElement.addEventListener(this.moveEvent, (e) => this.latest(e));
     }
 
     stop() {
         super.stop();
-        document.documentElement.removeEventListener(this.moveEvent, this.latest);
+        document.documentElement.removeEventListener(this.moveEvent, (e) => this.latest(e));
     }
 }
