@@ -98,7 +98,7 @@ export default class Tween extends Action {
         for (let key in values) {
             if (values.hasOwnProperty(key)) {
                 const value = values[key];
-                [value.to, value.from] = [value.from, value.to]
+                [value.to, value.from] = [value.from, value.to];
             }
         }
 

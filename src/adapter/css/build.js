@@ -1,4 +1,5 @@
 import transformProps from './transform-props';
+import prefixer from './prefixer';
 
 const TRANSLATE_Z = 'translateZ';
 
@@ -16,7 +17,7 @@ export default (state, disableHardwareAcceleration) => {
                 transformHasZ = (key === TRANSLATE_Z) ? true : transformHasZ;
 
             } else {
-                propertyString += ';' + key + ':' + value;
+                propertyString += ';' + prefixer(key) + ':' + value;
             }
         }
     }
@@ -26,7 +27,7 @@ export default (state, disableHardwareAcceleration) => {
             transformString += TRANSLATE_Z + '(0px)';
         }
 
-        propertyString += ';transform:' + transformString;
+        propertyString += ';' + prefixer('transform') + ':' + transformString;
     }
 
     return propertyString;

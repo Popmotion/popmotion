@@ -37,7 +37,7 @@ const updateQueues = (id, inList, outList) => {
     if (outPosition > -1) {
         outList.splice(outPosition, 1);
     }
-}
+};
 
 /*
     Update running
@@ -53,7 +53,7 @@ const updateRunningCount = (add, isLazy) => {
     if (!isLazy) {
         nonBackgroundRunningCount += modify;
     }
-}
+};
 
 export default {
     activeProcesses,
@@ -61,11 +61,13 @@ export default {
     // Activate a process
     activate: (id, process) => {
         activeProcesses[id] = process;
+        process.isActive = true;
         updateQueues(id, activateQueue, deactivateQueue);
     },
 
     // Deactivate a process
     deactivate: (id) => {
+        process.isActive = false;
         updateQueues(id, deactivateQueue, activateQueue);
     },
 

@@ -1,10 +1,10 @@
 import Tween from '../actions/Tween';
-import { linear } from '../actions/easing/preset-easing';
+import easing from '../actions/easing/preset-easing';
 import { isNum } from './utils';
 
 const DEFAULT_INTERVAL = 100;
 
-export default function stagger(array, props, callback) {
+export default function stagger(array, callback, props) {
     const arrayLength = array.length;
     const propsIsInterval = isNum(props);
     const interval = propsIsInterval ? props : props.interval || DEFAULT_INTERVAL;
@@ -17,10 +17,11 @@ export default function stagger(array, props, callback) {
                 from: 0,
                 to: arrayLength - 1,
                 round: true,
-                ease: propsIsInterval ? linear : props.ease || linear
+                ease: propsIsInterval ? easing.linear : props.ease || easing.linear
             }
         },
-        onRender: ({ i }) => {
+        onRender: (tween) => {
+            const i = tween.state.i;
             let gapIndex = prevIndex + 1;
 
             for (; gapIndex <= i; gapIndex++) {

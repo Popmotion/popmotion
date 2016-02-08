@@ -1,18 +1,29 @@
 import Action from '../actions/Action';
-import { each } from '../inc/utils';
 
 const boundProps = (actor, action) => ({
     onStart: () => {
         actor.activateAction(action.id, action);
+
+        for (let key in action.values) {
+            if (action.values.hasOwnProperty(key) && actor.values.hasOwnProperty(key)) {
+                action.values[key].current = actor.values[key].current;
+                action.values[key].velocity = actor.values[key].velocity;
+            }
+        }
     },
     onStop: () => {
         actor.deactivateAction(action.id);
     },
-    onPreRender: () => {
-        actor.state = { ...actor.state, ...action.state };
-    },
-    element: action.element,
-    onRender: action.onRender
+    onPreRender: ({ state, values }) => {
+        // Update actor values with incoming state values
+        for (let key in state) {
+            if (state.hasOwnProperty(key)) {
+                actor.state[key] = state[key];
+                actor.values[key].current = values[key].current;
+                actor.values[key].velocity = values[key].velocity;
+            }
+        }
+    }
 });
 
 export default class Actor extends Action {
@@ -38,6 +49,13 @@ export default class Actor extends Action {
         Bind Action to Actor
     */
     bind(action) {
+        // Create values on actor that don't exist
+        for (let key in action.values) {
+            if (action.values.hasOwnProperty(key) && !this.values.hasOwnProperty(key)) {
+                this.values[key] = {};
+            }
+        }
+
         return action.inherit(boundProps(this, action));
     }
 
@@ -57,11 +75,14 @@ export default class Actor extends Action {
 
             return boundAction;
         } else {
-            each(this.activeActions, (action) => {
-                if (!action.isActive) {
-                    action.start();
+            for (let key in this.activeActions) {
+                if (this.activeActions.hasOwnProperty(key)) {
+                    const action = this.activeActions[key];
+                    if (!action.isActive) {
+                        action.start();
+                    }
                 }
-            });
+            }
         }
 
         return this;
@@ -69,7 +90,16 @@ export default class Actor extends Action {
 
     stop() {
         super.stop();
-        each(this.activeActions, (action) => action.stop());
+
+        for (let key in this.activeActions) {
+            if (this.activeActions.hasOwnProperty(key)) {
+                this.activeActions[key].stop();
+            }
+        }
+    }
+
+    willRender() {
+        return true;
     }
 
     /*
@@ -81,6 +111,10 @@ export default class Actor extends Action {
     activateAction(id, action) {
         this.activeActions[id] = action;
         this.numActiveActions++;
+
+        if (this.numActiveActions) {
+            super.start();
+        }
     }
 
     /*
@@ -89,7 +123,11 @@ export default class Actor extends Action {
         @param [number]
     */
     deactivateAction(id) {
-        this.activeActions[id] = undefined;
+        delete this.activeActions[id];
         this.numActiveActions--;
+
+        if (!this.numActiveActions && this.isActive) {
+            super.stop();
+        }
     }
 }

@@ -207,18 +207,6 @@ export const isRelativeValue = (value) => (value && value.indexOf && value.index
 export const isString = (str) => typeof str === 'string';
 
 /*
-    @param [string || NodeList]:
-        If string, treated as selector.
-        If not, treated as preexisting NodeList
-
-    @return [Array]
-*/
-export const selectDom = (selector) => {
-    const nodes = (typeof selector === 'string') ? document.querySelectorAll(selector) : selector;
-    return (nodes.length) ? [].slice.call(nodes) : [].push(nodes);
-};
-
-/*
     Split comma-delimited string
 
     "foo,bar" -> ["foo", "bar"]

@@ -39,8 +39,8 @@
   "analyze": true,
   "license": "MIT",
   "scripts": {
-    "compile": "babel src --out-dir lib && small -i lib/load/global.js -o ./dist/popmotion.global.js && uglifyjs ./dist/popmotion.global.js --compress --mangle --screw-ie8 -o ./dist/popmotion.global.min.js",
-    "watch": "webpack --progress --colors --watch",
+    "compile": "eslint src && babel src --out-dir lib && NODE_ENV=production webpack && npm run measure",
+    "watch": "NODE_ENV=development webpack --progress --colors --watch",
     "measure": "gzip -c dist/popmotion.global.min.js | wc -c",
     "test": "mocha --compilers js:babel-register"
   },

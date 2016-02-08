@@ -1,7 +1,6 @@
 import Tween from '../actions/Tween';
 import easing from '../actions/easing/preset-easing';
 import { relativeValue } from './calc';
-import { each } from './utils';
 
 /*
     @param [array]
@@ -51,7 +50,7 @@ const analyze = (defs) => {
     return { totalTime: currentPlayhead, timeline };
 };
 
-const setTweens = ({ elapsed, timeline, timelineLength, state }) => {
+const setTweens = ({ elapsed, timeline, timelineLength }) => {
     for (let i = 0; i < timelineLength; i++) {
         const tween = timeline[i];
         const tweenTime = elapsed - tween.from;

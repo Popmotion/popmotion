@@ -19,11 +19,8 @@ export const trackInput = (...args) => new Track(...args);
 export const input = (...args) => new Input(...args);
 export const process = (...args) => new Process(...args);
 
-// Renderers
-export renderAttr from './render/attr';
-export renderCSS from './render/css';
-export renderSVG from './render/svg';
-export renderSVGPath from './render/svg-path';
+// Adapters
+export cssAdapter from './adapter/css-adapter';
 
 // Easing
 export easing from './actions/easing/preset-easing';

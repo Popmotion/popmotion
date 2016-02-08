@@ -1,4 +1,3 @@
-import { each } from '../inc/utils';
 import * as loop from './loop';
 
 export default class Process {
@@ -7,26 +6,33 @@ export default class Process {
         [boolean] (optional): Is Process lazy?
     */
     constructor(props, isLazy) {
-        this.set(this.getDefaultProps());
-        this.set(props);
-
-        this.isLazy = isLazy || false;
         this.id = loop.getProcessId();
-        this.isActive = false;
+
         this._onCleanup = () => {
             this.stop();
             this.onCleanup = undefined;
         };
+
         this._onActivate = () => this.onCleanup = this._onCleanup;
+
+        this.set(this.getDefaultProps());
+        this.set(props);
+
+        this.isLazy = isLazy || false;
+        this.isActive = false;
     }
 
     set(props) {
-        each(props, (value, key) => this[key] = value);
+        for (let key in props) {
+            if (props.hasOwnProperty(key)) {
+                this[key] = props[key];
+            }
+        }
+
         return this;
     }
 
     start() {
-        this.isActive = true;
         loop.activate(this.id, this);
 
         this.onCleanup = this.onActivate = undefined;
@@ -39,7 +45,6 @@ export default class Process {
     }
 
     stop() {
-        this.isActive = false;
         loop.deactivate(this.id);
 
         if (this.onStop) {

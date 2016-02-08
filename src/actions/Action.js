@@ -6,24 +6,10 @@ const DEFAULT_PROP = 'current';
 const NUMERICAL_VALUES = [DEFAULT_PROP, 'from', 'to', 'min', 'max'];
 const NUM_NUMERICAL_VALUES = NUMERICAL_VALUES.length;
 
-/*
-    Map key given given stateMap
-
-    @param [string]
-    @param [Renderer]
-    @return [string]
-*/
-const mapKey = (key, renderer) => (renderer && renderer.stateMap) ? renderer.stateMap[key] || key : key;
-
 export default class Action extends Process {
     constructor(props) {
         props.state = {};
         super(props);
-
-        // Initalise renderer 
-        if (this.onRender && this.onRender.init) {
-            this.onRender.init(this);
-        }
     }
 
     /*
@@ -38,6 +24,11 @@ export default class Action extends Process {
 
         super.set(propsToSet);
 
+        if (props.on) {
+            // check for adapter
+            // detect and bind adapter if not present
+        }
+
         this.values = this.values || {};
         this.valueKeys = this.valueKeys || [];
         this.parentKeys = this.parentKeys || [];
@@ -46,8 +37,6 @@ export default class Action extends Process {
         const currentValues = this.values;
         const defaultValue = this.getDefaultValue();
         const defaultValueProp = this.getDefaultValueProp();
-        const renderer = this.onRender;
-        let valueTypeMap = (renderer && renderer.valueTypeMap) ? renderer.valueTypeMap : false;
 
         // Inherit value properties from `props`
         for (let key in defaultValue) {
@@ -86,9 +75,9 @@ export default class Action extends Process {
                     if (value.type) {
                         valueType = value.type;
 
-                    // Or if our renderer has a typeMap, use that
-                    } else if (valueTypeMap) {
-                        valueType = valueTypeMap[mapKey(key, renderer)];
+                    // Or if our Adapter has a typeMap, use that
+                    } else if (this.element.getValueType) {
+                        valueType = this.element.getValueType(key);
                     }
 
                     // Maybe run `test` on color here
@@ -216,7 +205,7 @@ export default class Action extends Process {
 
             // Add straight to state if no parent
             if (!value.parent) {
-                const mappedKey = mapKey(key, this.onRender);
+                const mappedKey = this.element.mapStateKey ? this.element.mapStateKey(key) : key;
 
                 if (this.state[mappedKey] !== valueForState) {
                     this.state[mappedKey] = valueForState;
@@ -232,7 +221,7 @@ export default class Action extends Process {
         for (let i = 0; i < this.numParentKeys; i++) {
             const key = this.parentKeys[i];
             const value = this.values[key];
-            const mappedKey = mapKey(key, this.onRender);
+            const mappedKey = this.element.mapStateKey ? this.element.mapStateKey(key) : key;
 
             value.current = value.type.combine(value.children, value.template);
 
@@ -243,6 +232,16 @@ export default class Action extends Process {
         }
 
         return (this.onCleanup) ? true : hasChanged;
+    }
+
+    onRender({ state, element }) {
+        if (element.set) {
+            element.set(state);
+        }
+
+        if (this.onFrame) {
+            this.onFrame(this);
+        }
     }
 
     pause() {
