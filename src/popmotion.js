@@ -18,20 +18,22 @@ export const physics = (props) => new Physics(props);
 export const trackInput = (...args) => new Track(...args);
 export const input = (...args) => new Input(...args);
 export const process = (...args) => new Process(...args);
+export stagger from './inc/stagger';
+export timeline from './inc/timeline';
 
 // Adapters
+export adapter from './adapter/adapter';
+export attrAdapter from './adapter/attr-adapter';
 export cssAdapter from './adapter/css-adapter';
+export svgAdapter from './adapter/svg-adapter';
+export svgPathAdapter from './adapter/svg-path-adapter';
 
 // Easing
 export easing from './actions/easing/preset-easing';
 
 // Utils
 export * as calc from './inc/calc';
-export * as utils from './inc/utils';
-export $ from './inc/select-actor';
-export setDilation from './process/timer';
-export stagger from './inc/stagger';
-export timeline from './inc/timeline';
+export { setGlobalDilation } from './process/timer';
 
 // Value types
 export alphaType from './value-types/alpha';

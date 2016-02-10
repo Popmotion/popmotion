@@ -1,6 +1,7 @@
 import Process from '../process/Process';
 import { smooth, speedPerSecond } from '../inc/calc';
 import { isObj } from '../inc/utils';
+import bindAdapter from '../inc/bind-adapter';
 
 const DEFAULT_PROP = 'current';
 const NUMERICAL_VALUES = [DEFAULT_PROP, 'from', 'to', 'min', 'max'];
@@ -20,13 +21,15 @@ export default class Action extends Process {
         @return [Action]
     */
     set(props) {
-        const { values, ...propsToSet } = props;
+        const { values, on, ...propsToSet } = props;
 
         super.set(propsToSet);
 
-        if (props.on) {
-            // check for adapter
-            // detect and bind adapter if not present
+        if (on) {
+            // Ducktypish check for Adapter
+            if (!on.setter) {
+                this.on = bindAdapter(on);
+            }
         }
 
         this.values = this.values || {};
@@ -76,8 +79,8 @@ export default class Action extends Process {
                         valueType = value.type;
 
                     // Or if our Adapter has a typeMap, use that
-                    } else if (this.element.getValueType) {
-                        valueType = this.element.getValueType(key);
+                    } else if (this.on && this.on.getValueType) {
+                        valueType = this.on.getValueType(key);
                     }
 
                     // Maybe run `test` on color here
@@ -205,7 +208,7 @@ export default class Action extends Process {
 
             // Add straight to state if no parent
             if (!value.parent) {
-                const mappedKey = this.element.mapStateKey ? this.element.mapStateKey(key) : key;
+                const mappedKey = (this.on && this.on.mapStateKey) ? this.on.mapStateKey(key) : key;
 
                 if (this.state[mappedKey] !== valueForState) {
                     this.state[mappedKey] = valueForState;
@@ -221,7 +224,7 @@ export default class Action extends Process {
         for (let i = 0; i < this.numParentKeys; i++) {
             const key = this.parentKeys[i];
             const value = this.values[key];
-            const mappedKey = this.element.mapStateKey ? this.element.mapStateKey(key) : key;
+            const mappedKey = (this.on && this.on.mapStateKey) ? this.on.mapStateKey(key) : key;
 
             value.current = value.type.combine(value.children, value.template);
 
@@ -234,9 +237,9 @@ export default class Action extends Process {
         return (this.onCleanup) ? true : hasChanged;
     }
 
-    onRender({ state, element }) {
-        if (element.set) {
-            element.set(state);
+    onRender({ state, on }) {
+        if (on && on.set) {
+            on.set(state);
         }
 
         if (this.onFrame) {

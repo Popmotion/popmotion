@@ -1,6 +1,6 @@
-import { getProgressFromValue, getValueFromProgress, restrict } from '../inc/calc';
+import { getProgressFromValue, getValueFromProgress, restrict, pointFromAngleAndDistance } from '../inc/calc';
 
-export const map = (from, to) => {
+export const createMapper = (from, to) => {
     const mapLength = from.length;
 
     return (value) => {
@@ -11,3 +11,10 @@ export const map = (from, to) => {
         }
     };
 };
+
+export const circularMotion = (v, key, { values }) => 
+    pointFromAngleAndDistance({
+        x: values.originX.current,
+        y: values.originY.current 
+    }, values.angle.current, values.distance.current)[key];
+

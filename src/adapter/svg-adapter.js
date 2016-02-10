@@ -2,7 +2,7 @@ import stateMap from './css/state-map';
 import valueTypeMap from './svg/value-type-map';
 import build from './svg/build';
 import { getter, setter as attrSetter } from './attr-adapter';
-import createAdapter from './create-adapter';
+import createAdapter from './adapter';
 
 export function setter(props) {
     attrSetter(build(props, this.origin));

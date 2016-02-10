@@ -26,7 +26,6 @@
 // Imports
 import createEasingFunction from './create-easing';
 import cubicBezier from './create-bezier';
-import { each } from '../../inc/utils';
 
 // Values
 const DEFAULT_BACK_STRENGTH = 1.525;
@@ -38,7 +37,7 @@ const DEFAULT_POW_STRENGTH = 2;
     On init, we use .mirror and .reverse to generate easeInOut and
     easeOut functions respectively.
 */
-let baseEasing = {
+const baseEasing = {
     ease: (progress, strength = DEFAULT_POW_STRENGTH) => progress ** strength,
     circ: progress => 1 - Math.sin(Math.acos(progress)),
     back: (progress, strength = DEFAULT_BACK_STRENGTH) => (progress * progress) * ((strength + 1) * progress - strength)
@@ -50,12 +49,14 @@ const generatePowerEasing = (strength) => (progress) => baseEasing.ease(progress
 ['cubic', 'quart', 'quint'].forEach((easingName, i) => baseEasing[easingName] = generatePowerEasing(i + 3));
 
 // Generate in/out/inOut variations
-each(baseEasing, (baseEase, key) => {
-    let easingFunction = createEasingFunction(baseEase);
-    baseEasing[`${key}In`] = easingFunction.in;
-    baseEasing[`${key}Out`] = easingFunction.out;
-    baseEasing[`${key}InOut`] = easingFunction.inOut;
-});
+for (let key in baseEasing) {
+    if (baseEasing.hasOwnProperty(key)) {
+        const easingFunction = createEasingFunction(baseEasing[key]);
+        baseEasing[`${key}In`] = easingFunction.in;
+        baseEasing[`${key}Out`] = easingFunction.out;
+        baseEasing[`${key}InOut`] = easingFunction.inOut;
+    }
+}
 
 baseEasing.linear = progress => progress;
 baseEasing.anticipate = (progress, strength = DEFAULT_BACK_STRENGTH) =>

@@ -39,10 +39,10 @@ export default class Adapter {
         @param [boolean]: If `true`, will override cached property
     */
     get(key, refresh) {
-        key = this.mapStateKey(key);
+        const mappedKey = this.mapStateKey(key);
 
         if (refresh || !this.cache.hasOwnProperty(key)) {
-            return this.cache[key] = this.getter(key);
+            return this.cache[key] = this.getter(mappedKey);
         } else {
             return this.cache[key];
         }
@@ -60,7 +60,7 @@ export default class Adapter {
         for (let key in props) {
             if (props.hasOwnProperty(key)) {
                 const mappedKey = this.mapStateKey(key);
-                this.cache[mappedKey] = translatedProps[mappedKey] = props[key];
+                this.cache[key] = translatedProps[mappedKey] = props[key];
             }
         }
 

@@ -17,4 +17,4 @@ export default {
     getElapsed: () => elapsed
 };
 
-export const setDilation = (newDilation) => dilation = newDilation;
+export const setGlobalDilation = (newDilation) => dilation = newDilation;

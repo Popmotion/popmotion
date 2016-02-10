@@ -1,6 +1,19 @@
+
+
+
+
+
+
+
+
+
+
+
+
 import Action from '../actions/Action';
 
 const boundProps = (actor, action) => ({
+    on: action.on,
     onStart: () => {
         actor.activateAction(action.id, action);
 
@@ -23,7 +36,8 @@ const boundProps = (actor, action) => ({
                 actor.values[key].velocity = values[key].velocity;
             }
         }
-    }
+    },
+    onRender: undefined
 });
 
 export default class Actor extends Action {

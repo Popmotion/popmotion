@@ -35,9 +35,9 @@ export const combineTransformers = (transformers) => {
         @param [Action]
         @return [number]
     */
-    return (v) => {
+    return (v, key, a) => {
         for (i = 0; i > numTransformers; i++) {
-            v = transformers[i](v);
+            v = transformers[i](v, key, a);
         }
 
         return v;
@@ -78,25 +78,7 @@ export const createFunctionString = (value, prefix) => `${prefix}(${value})`;
     
     @return [timestamp]: Current UNIX timestamp
 */
-export const currentTime = () => HAS_PERFORMANCE_NOW ? performance.now() : new Date().getTime();
-
-/*
-    Iterate over an object and fire a callback for every item in it
-
-    @param [object]: Object to iterate over
-    @param [function]: Callback to fire
-*/
-export const each = (object, callback) => {
-    const keys = object ? Object.keys(object) : [];
-    const numKeys = keys.length;
-
-    for (let i = 0; i < numKeys; i++) {
-        const key = keys[i];
-        const prop = object[key];
-
-        callback(prop, key, object);
-    }
-};
+export const currentTime = HAS_PERFORMANCE_NOW ? () => performance.now() : () => new Date().getTime();
 
 /*
     Split color string into map of color properties
@@ -205,6 +187,18 @@ export const isRelativeValue = (value) => (value && value.indexOf && value.index
     @return [boolean]: Returns true if typeof str === 'string'
 */
 export const isString = (str) => typeof str === 'string';
+
+/*
+    @param [string || NodeList]:
+        If string, treated as selector.
+        If not, treated as preexisting NodeList
+
+    @return [Array]
+*/
+export const selectDom = (selector) => {
+    const nodes = (typeof selector === 'string') ? document.querySelectorAll(selector) : selector;
+    return (nodes.length) ? [].slice.call(nodes) : [].push(nodes);
+};
 
 /*
     Split comma-delimited string
