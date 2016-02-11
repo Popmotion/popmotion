@@ -208,10 +208,8 @@ export default class Action extends Process {
 
             // Add straight to state if no parent
             if (!value.parent) {
-                const mappedKey = (this.on && this.on.mapStateKey) ? this.on.mapStateKey(key) : key;
-
-                if (this.state[mappedKey] !== valueForState) {
-                    this.state[mappedKey] = valueForState;
+                if (this.state[key] !== valueForState) {
+                    this.state[key] = valueForState;
                     hasChanged = true;
                 }
             // Or add to parent
@@ -224,12 +222,11 @@ export default class Action extends Process {
         for (let i = 0; i < this.numParentKeys; i++) {
             const key = this.parentKeys[i];
             const value = this.values[key];
-            const mappedKey = (this.on && this.on.mapStateKey) ? this.on.mapStateKey(key) : key;
 
             value.current = value.type.combine(value.children, value.template);
 
-            if (this.state[mappedKey] !== value.current) {
-                this.state[mappedKey] = value.current;
+            if (this.state[key] !== value.current) {
+                this.state[key] = value.current;
                 hasChanged = true;
             }
         }

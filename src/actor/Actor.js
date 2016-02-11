@@ -1,15 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
 import Action from '../actions/Action';
 
 const boundProps = (actor, action) => ({
@@ -17,9 +5,19 @@ const boundProps = (actor, action) => ({
     onStart: () => {
         actor.activateAction(action.id, action);
 
+        // Copy Actor properties to Action
         for (let key in action.values) {
-            if (action.values.hasOwnProperty(key) && actor.values.hasOwnProperty(key)) {
-                action.values[key].current = actor.values[key].current;
+            if (action.values.hasOwnProperty(key)) {
+                const actorValue = actor.value[key];
+                const actionValue = action.value[key];
+
+                for (let propKey in actorValue) {
+                    if (actorValue.hasOwnProperty(valueKey)) {
+                        
+                    }
+                }
+
+                action.values[key].from = actor.values[key].current;
                 action.values[key].velocity = actor.values[key].velocity;
             }
         }
@@ -63,11 +61,18 @@ export default class Actor extends Action {
         Bind Action to Actor
     */
     bind(action) {
+        let newValues = {};
+        let hasNewValues = false;
+
         // Create values on actor that don't exist
         for (let key in action.values) {
             if (action.values.hasOwnProperty(key) && !this.values.hasOwnProperty(key)) {
-                this.values[key] = {};
+                newValues[key] = {};
             }
+        }
+
+        if (hasNewValues) {
+            this.set(newValues);
         }
 
         return action.inherit(boundProps(this, action));
