@@ -119,7 +119,12 @@ export default {
 
             // If process isn't already running, activate
             if (activeIdIndex === -1 && process) {
-                runningIds.push(id);
+                if (process.addToFront) {
+                    runningIds.unshift(id);
+                } else {
+                    runningIds.push(id);
+                }
+
                 updateRunningCount(true, process.isLazy);
 
                 if (process.onActivate) {

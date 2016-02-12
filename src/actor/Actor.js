@@ -1,6 +1,7 @@
 import Action from '../actions/Action';
 
 const boundProps = (actor, action) => ({
+    addToFront: true,
     on: action.on,
     onStart: () => {
         actor.activateAction(action.id, action);
@@ -117,8 +118,24 @@ export default class Actor extends Action {
         }
     }
 
-    willRender() {
-        return true;
+    willRender(actor, frameStamp, elapsed) {
+        // update actor values here
+        // Update base values
+        for (let i = 0; i < this.numValueKeys; i++) {
+            const key = this.valueKeys[i];
+            const value = this.values[key];
+
+            if (value.driver) {
+                value.current = this.activeActions[value.driver].values[key].current;
+            }
+
+            // Run transform function (if present)
+            if (value.transform) {
+                value.current = value.transform(value.current, key, this);
+            }
+        }
+
+        super.willRender(actor, frameStamp, elapsed);
     }
 
     /*

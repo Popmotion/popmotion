@@ -1,6 +1,6 @@
 import Action from './Action';
 import Pointer from '../input/Pointer';
-import { offset } from '../inc/calc';
+import { smooth, offset } from '../inc/calc';
 
 /*
     Scrape x/y coordinates from provided event
@@ -42,17 +42,23 @@ export default class Track extends Action {
         this.input.stop();
     }
 
-    onUpdate() {
-        const values = this.values;
+    onUpdate(track, frameStamp, elapsed) {
         this.inputOffset = offset(this.inputOrigin, this.input.state);
 
-        for (let key in values) {
-            if (values.hasOwnProperty(key) && this.inputOffset.hasOwnProperty(key)) {
-                const value = values[key];
+        for (let i = 0; i < this.numValueKeys; i++) {
+            const key = this.valueKeys[i];
+
+            if (this.inputOffset.hasOwnProperty(key)) {
+                const value = this.values[key];
                 if (value.direct) {
                     value.current = this.input.state[key];
                 } else {
                     value.current = value.origin + this.inputOffset[key];
+                }
+
+                // Smooth value if we have smoothing
+                if (value.smooth) {
+                    value.current = smooth(value.current, value.prev, elapsed, value.smooth);
                 }
             }
         }

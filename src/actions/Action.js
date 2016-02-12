@@ -1,5 +1,5 @@
 import Process from '../process/Process';
-import { smooth, speedPerSecond } from '../inc/calc';
+import { speedPerSecond } from '../inc/calc';
 import { isObj } from '../inc/utils';
 import bindAdapter from '../inc/bind-adapter';
 
@@ -73,6 +73,8 @@ export default class Action extends Process {
                 // If this is a new value, check for type
                 } else {
                     newValue = { ...defaultValue, ...newValue };
+
+                    newValue.prev = newValue.current;
 
                     // If one is explicitly assigned, use that
                     if (value.type) {
@@ -182,42 +184,40 @@ export default class Action extends Process {
     willRender(action, frameStamp, elapsed) {
         let hasChanged = false;
 
-        // Update base values
+        // Check if base values have updated 
         for (let i = 0; i < this.numValueKeys; i++) {
             const key = this.valueKeys[i];
             const value = this.values[key];
-            let updatedValue = value.current;
 
-            // Run transform function (if present)
-            if (value.transform) {
-                updatedValue = value.transform(updatedValue, key, this);
-            }
-
-            // Smooth value if we have smoothing
-            if (value.smooth) {
-                updatedValue = smooth(updatedValue, value.prev, elapsed, value.smooth);
-            }
-
+            // Update velocity
             if (!this.calculatesVelocity) {
-                value.velocity = speedPerSecond(updatedValue - value.current, elapsed);
+                value.velocity = speedPerSecond(value.current - value.prev, elapsed);
             }
 
-            value.prev = value.current = updatedValue;
+            // If this value has changed
+            if (value.prev !== value.current) {
+                hasChanged = true;
+                value.prev = value.current;
 
-            const valueForState = (value.unit) ? value.current + value.unit : value.current;
+                // Append unit
+                const valueForState = (value.unit) ? value.current + value.unit : value.current;
 
-            // Add straight to state if no parent
-            if (!value.parent) {
-                if (this.state[key] !== valueForState) {
+                // Add to state if this is not a child vaue
+                if (!value.parent) {
                     this.state[key] = valueForState;
-                    hasChanged = true;
+                } else {
+                    this.values[value.parent].children[key] = valueForState;
                 }
-            // Or add to parent
-            } else {
-                this.values[value.parent].children[key] = valueForState;
             }
         }
 
+        return (this.onCleanup) ? true : hasChanged;
+    }
+
+    /*
+        If we are rendering, recombine parent values first
+    */
+    onPreRender() {
         // Update parent values
         for (let i = 0; i < this.numParentKeys; i++) {
             const key = this.parentKeys[i];
@@ -227,11 +227,8 @@ export default class Action extends Process {
 
             if (this.state[key] !== value.current) {
                 this.state[key] = value.current;
-                hasChanged = true;
             }
         }
-
-        return (this.onCleanup) ? true : hasChanged;
     }
 
     onRender({ state, on }) {
