@@ -20,7 +20,7 @@ export default class Action extends Process {
         @param [object]
         @return [Action]
     */
-    set(props) {
+    set(props = {}) {
         const { values, on, ...propsToSet } = props;
 
         super.set(propsToSet);

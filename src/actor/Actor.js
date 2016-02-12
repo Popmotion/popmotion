@@ -1,31 +1,31 @@
 import Action from '../actions/Action';
 
 const boundProps = (actor, action) => ({
-    on: action.on,
+    on: actor.on,
+
     onStart: () => {
         actor.activateAction(action.id, action);
 
         // Copy Actor properties to Action
         for (let key in action.values) {
             if (action.values.hasOwnProperty(key)) {
-                const actorValue = actor.value[key];
-                const actionValue = action.value[key];
-
+                const actorValue = actor.values[key];
+                const actionValue = action.values[key];
+                // replace property copy with current transfer - maybe replace willRender?
                 for (let propKey in actorValue) {
-                    if (actorValue.hasOwnProperty(valueKey)) {
-                        
+                    if (actorValue.hasOwnProperty(propKey)) {
+                        actionValue[propKey] = actorValue[propKey];
                     }
                 }
-
-                action.values[key].from = actor.values[key].current;
-                action.values[key].velocity = actor.values[key].velocity;
             }
         }
     },
+
     onStop: () => {
         actor.deactivateAction(action.id);
     },
-    onPreRender: ({ state, values }) => {
+
+    willRender: ({ state, values }) => {
         // Update actor values with incoming state values
         for (let key in state) {
             if (state.hasOwnProperty(key)) {
@@ -34,8 +34,9 @@ const boundProps = (actor, action) => ({
                 actor.values[key].velocity = values[key].velocity;
             }
         }
-    },
-    onRender: undefined
+
+        return false;
+    }
 });
 
 export default class Actor extends Action {
@@ -61,12 +62,13 @@ export default class Actor extends Action {
         Bind Action to Actor
     */
     bind(action) {
+        const inheritedAction = action.inherit();
         let newValues = {};
         let hasNewValues = false;
 
         // Create values on actor that don't exist
-        for (let key in action.values) {
-            if (action.values.hasOwnProperty(key) && !this.values.hasOwnProperty(key)) {
+        for (let key in inheritedAction.values) {
+            if (inheritedAction.values.hasOwnProperty(key) && !this.values.hasOwnProperty(key)) {
                 newValues[key] = {};
             }
         }
@@ -75,7 +77,7 @@ export default class Actor extends Action {
             this.set(newValues);
         }
 
-        return action.inherit(boundProps(this, action));
+        return inheritedAction.set(boundProps(this, inheritedAction));
     }
 
     /*
@@ -115,10 +117,6 @@ export default class Actor extends Action {
                 this.activeActions[key].stop();
             }
         }
-    }
-
-    willRender() {
-        return true;
     }
 
     /*
