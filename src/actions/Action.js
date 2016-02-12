@@ -1,6 +1,6 @@
 import Process from '../process/Process';
 import { speedPerSecond } from '../inc/calc';
-import { isObj } from '../inc/utils';
+import { isNum, isObj } from '../inc/utils';
 import bindAdapter from '../inc/bind-adapter';
 
 const DEFAULT_PROP = 'current';
@@ -192,6 +192,21 @@ export default class Action extends Process {
             // Run transform function (if present)
             if (value.transform) {
                 value.current = value.transform(value.current, key, this);
+            }
+
+            // Cap minimum
+            if (isNum(value.min)) {
+                value.current = Math.max(value.current, value.min);
+            }
+
+            // Cap maximum
+            if (isNum(value.max)) {
+                value.current = Math.min(value.current, value.max);
+            }
+
+            // Round number
+            if (value.round) {
+                value.current = Math.round(value.current);
             }
 
             // Update velocity
