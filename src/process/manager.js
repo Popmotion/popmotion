@@ -119,7 +119,7 @@ export default {
 
             // If process isn't already running, activate
             if (activeIdIndex === -1 && process) {
-                if (process.addToFront) {
+                if (process.isPriority) {
                     runningIds.unshift(id);
                 } else {
                     runningIds.push(id);

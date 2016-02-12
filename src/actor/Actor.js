@@ -1,42 +1,16 @@
 import Action from '../actions/Action';
 
-const boundProps = (actor, action) => ({
-    addToFront: true,
-    on: action.on,
-    onStart: () => {
-        actor.activateAction(action.id, action);
-
-        // Copy Actor properties to Action
-        for (let key in action.values) {
-            if (action.values.hasOwnProperty(key)) {
-                const actorValue = actor.values[key];
-                const actionValue = action.values[key];
-                // replace property copy with current transfer - maybe replace willRender?
-                for (let propKey in actorValue) {
-                    if (actorValue.hasOwnProperty(propKey)) {
-                        actionValue[propKey] = actorValue[propKey];
-                    }
-                }
-            }
-        }
-    },
-
-    onStop: () => {
-        actor.deactivateAction(action.id);
-    },
-
-    willRender: ({ state, values }) => {
-        // Update actor values with incoming state values
-        for (let key in state) {
-            if (state.hasOwnProperty(key)) {
-                actor.state[key] = state[key];
-                actor.values[key].current = values[key].current;
-                actor.values[key].velocity = values[key].velocity;
-            }
-        }
-
-        return false;
-    }
+/*
+    Methods and properties to add to bound Actions
+*/
+const boundOnStart = (action) => action.actor.activateAction(action.id, action);
+const boundOnStop = (action) => action.actor.deactivateAction(action.id);
+const boundProps = (actor) => ({
+    actor: actor,
+    isPriority: true,
+    on: actor.on,
+    onStart: boundOnStart,
+    onStop: boundOnStop
 });
 
 export default class Actor extends Action {
@@ -70,6 +44,7 @@ export default class Actor extends Action {
         for (let key in inheritedAction.values) {
             if (inheritedAction.values.hasOwnProperty(key) && !this.values.hasOwnProperty(key)) {
                 newValues[key] = {};
+                hasNewValues = true;
             }
         }
 
@@ -120,19 +95,12 @@ export default class Actor extends Action {
     }
 
     willRender(actor, frameStamp, elapsed) {
-        // update actor values here
-        // Update base values
         for (let i = 0; i < this.numValueKeys; i++) {
             const key = this.valueKeys[i];
             const value = this.values[key];
 
             if (value.driver) {
                 value.current = this.activeActions[value.driver].values[key].current;
-            }
-
-            // Run transform function (if present)
-            if (value.transform) {
-                value.current = value.transform(value.current, key, this);
             }
         }
 
@@ -149,6 +117,13 @@ export default class Actor extends Action {
         this.activeActions[id] = action;
         this.numActiveActions++;
 
+        for (let i = 0; i < action.numValueKeys; i++) {
+            const key = action.valueKeys[i];
+            const value = this.values[key];
+
+            value.driver = id;
+        }
+
         if (this.numActiveActions) {
             super.start();
         }
@@ -160,6 +135,15 @@ export default class Actor extends Action {
         @param [number]
     */
     deactivateAction(id) {
+        const action = this.activeActions[id];
+
+        for (let i = 0; i < action.numValueKeys; i++) {
+            const key = action.valueKeys[i];
+            const value = this.values[key];
+
+            value.driver = undefined;
+        }
+
         delete this.activeActions[id];
         this.numActiveActions--;
 

@@ -189,6 +189,11 @@ export default class Action extends Process {
             const key = this.valueKeys[i];
             const value = this.values[key];
 
+            // Run transform function (if present)
+            if (value.transform) {
+                value.current = value.transform(value.current, key, this);
+            }
+
             // Update velocity
             if (!this.calculatesVelocity) {
                 value.velocity = speedPerSecond(value.current - value.prev, elapsed);
