@@ -27,9 +27,7 @@ export default class Action extends Process {
 
         if (on) {
             // Ducktypish check for Adapter
-            if (!on.setter) {
-                this.on = bindAdapter(on);
-            }
+            this.on = (!on.setter) ? bindAdapter(on) : on;
         }
 
         this.values = this.values || {};
@@ -55,7 +53,7 @@ export default class Action extends Process {
             if (values.hasOwnProperty(key)) {
                 const value = values[key];
                 const existingValue = currentValues[key];
-                let valueType = {};
+                let valueType;
                 let newValue = {};
 
                 // Convert new value into object if it isn't already
@@ -68,7 +66,7 @@ export default class Action extends Process {
                 // If value already exists, check for and use existing type
                 if (existingValue) {
                     newValue = { ...existingValue, ...newValue };
-                    valueType = existingValue.type;
+                    valueType = (this.on && this.on.getValueType) ? this.on.getValueType(key) : existingValue.type;
 
                 // If this is a new value, check for type
                 } else {
@@ -84,7 +82,6 @@ export default class Action extends Process {
                     } else if (this.on && this.on.getValueType) {
                         valueType = this.on.getValueType(key);
                     }
-
                     // Maybe run `test` on color here
                 }
 

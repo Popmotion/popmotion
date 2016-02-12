@@ -5,12 +5,13 @@ import Action from '../actions/Action';
 */
 const boundOnStart = (action) => action.actor.activateAction(action.id, action);
 const boundOnStop = (action) => action.actor.deactivateAction(action.id);
-const boundProps = (actor) => ({
+const boundProps = (actor, action) => ({
     actor: actor,
     isPriority: true,
     on: actor.on,
     onStart: boundOnStart,
-    onStop: boundOnStop
+    onStop: boundOnStop,
+    onRender: undefined
 });
 
 export default class Actor extends Action {
@@ -43,13 +44,13 @@ export default class Actor extends Action {
         // Create values on actor that don't exist
         for (let key in inheritedAction.values) {
             if (inheritedAction.values.hasOwnProperty(key) && !this.values.hasOwnProperty(key)) {
-                newValues[key] = {};
+                newValues[key] = inheritedAction.values[key];
                 hasNewValues = true;
             }
         }
 
         if (hasNewValues) {
-            this.set(newValues);
+            this.set({ values: newValues });
         }
 
         return inheritedAction.set(boundProps(this, inheritedAction));
@@ -104,7 +105,7 @@ export default class Actor extends Action {
             }
         }
 
-        super.willRender(actor, frameStamp, elapsed);
+        return super.willRender(actor, frameStamp, elapsed);
     }
 
     /*

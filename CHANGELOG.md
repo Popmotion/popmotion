@@ -4,6 +4,8 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
 ## [5.0.0] 2015-02-01
 
+### Popmotion 5.0: timelines, streamlined API, declarative Actors, 11kb.
+
 **Warning:** This is a major API revision. Previous Popmotion code **will** be incompatible with this upgrade.
 
 ### Added
