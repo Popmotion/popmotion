@@ -36,7 +36,7 @@ export const combineTransformers = (transformers) => {
         @return [number]
     */
     return (v, key, a) => {
-        for (i = 0; i > numTransformers; i++) {
+        for (i = 0; i < numTransformers; i++) {
             v = transformers[i](v, key, a);
         }
 

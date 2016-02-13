@@ -33,6 +33,7 @@ export easing from './actions/easing/preset-easing';
 
 // Utils
 export * as calc from './inc/calc';
+export { combineTransformers } from './inc/utils';
 export { setGlobalDilation } from './process/timer';
 
 // Value types

@@ -5,12 +5,12 @@ import Action from '../actions/Action';
 */
 const boundOnStart = (action) => action.actor.activateAction(action.id, action);
 const boundOnStop = (action) => action.actor.deactivateAction(action.id);
-const boundProps = (actor, action) => ({
+const boundProps = (actor) => ({
     actor: actor,
     isPriority: true,
     on: actor.on,
-    onStart: boundOnStart,
-    onStop: boundOnStop,
+    _onStart: boundOnStart,
+    _onStop: boundOnStop,
     onRender: undefined
 });
 
@@ -120,9 +120,11 @@ export default class Actor extends Action {
 
         for (let i = 0; i < action.numValueKeys; i++) {
             const key = action.valueKeys[i];
+            const actionValue = action.values[key];
             const value = this.values[key];
 
             value.driver = id;
+            actionValue.from = value.current;
         }
 
         if (this.numActiveActions) {

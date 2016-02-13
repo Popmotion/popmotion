@@ -37,8 +37,14 @@ export default class Process {
 
         this.onCleanup = this.onActivate = undefined;
 
+        // Public `onStart`
         if (this.onStart) {
             this.onStart(this);
+        }
+
+        // Private `onStart`
+        if (this._onStart) {
+            this._onStart(this);
         }
 
         return this;
@@ -47,8 +53,14 @@ export default class Process {
     stop() {
         loop.deactivate(this.id);
 
+        // Public `onStop`
         if (this.onStop) {
             this.onStop(this);
+        }
+
+        // Private `onStop`
+        if (this._onStop) {
+            this._onStop(this);
         }
 
         return this;
