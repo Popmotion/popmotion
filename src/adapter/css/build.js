@@ -1,5 +1,6 @@
 import transformProps from './transform-props';
 import prefixer from './prefixer';
+import { camelToDash } from '../../inc/utils';
 
 const TRANSLATE_Z = 'translateZ';
 
@@ -17,7 +18,7 @@ export default (state, disableHardwareAcceleration) => {
                 transformHasZ = (key === TRANSLATE_Z) ? true : transformHasZ;
 
             } else {
-                propertyString += ';' + prefixer(key) + ':' + value;
+                propertyString += ';' + prefixer(camelToDash(key)) + ':' + value;
             }
         }
     }
