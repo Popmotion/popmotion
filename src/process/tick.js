@@ -7,7 +7,7 @@ const hasRAF = (typeof window !== 'undefined' && window.requestAnimationFrame) ?
 let tick;
 
 if (hasRAF) {
-    tick = window.requestAnimationFrame;
+    tick = (callback) => window.requestAnimationFrame(callback);
 
 } else {
     /*

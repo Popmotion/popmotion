@@ -5,6 +5,7 @@ import prefixer from './css/prefixer';
 import createAdapter from './adapter';
 
 function getter (key) {
+    console.log(this.element)
     return window.getComputedStyle(this.element, null)[prefixer(key)];
 }
 

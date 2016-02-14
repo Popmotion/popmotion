@@ -1,7 +1,8 @@
 import Process from '../process/Process';
 import { speedPerSecond } from '../inc/calc';
-import { isNum, isObj } from '../inc/utils';
+import { isNum, isObj, isString } from '../inc/utils';
 import bindAdapter from '../inc/bind-adapter';
+import colorType from '../value-types/color';
 
 const DEFAULT_PROP = 'current';
 const NUMERICAL_VALUES = [DEFAULT_PROP, 'from', 'to', 'min', 'max'];
@@ -70,6 +71,17 @@ export default class Action extends Process {
 
                 // If this is a new value, check for type
                 } else {
+                    if (newValue.from !== undefined) {
+                        newValue.current = newValue.from;
+
+                    } else if (newValue.current === undefined && this.on) {
+                        newValue.current = this.on.get(key) || 0;
+                    }
+
+                    if (newValue.from === undefined) {
+                        newValue.from = newValue.current;
+                    }
+
                     newValue = { ...defaultValue, ...newValue };
 
                     newValue.prev = newValue.current;
@@ -81,8 +93,19 @@ export default class Action extends Process {
                     // Or if our Adapter has a typeMap, use that
                     } else if (this.on && this.on.getValueType) {
                         valueType = this.on.getValueType(key);
+
+                    } else if (isString(value.current)) {
+                        // Test if this is a color value
+                        if (colorType.test(value.current)) {
+                            valueType = colorType;
+
+                        // Test if this is a complex string
+
+                        // Treat as a unit value
+                        } else {
+
+                        }
                     }
-                    // Maybe run `test` on color here
                 }
 
                 // If we've got a valueType then preprocess the value accordingly
@@ -105,12 +128,12 @@ export default class Action extends Process {
                                         const splitValue = splitValues[splitKey];
                                         // Create new child value if doesn't exist
                                         if (!childValues[splitKey]) {
-                                            childValues[splitKey] = { ...newValue };
+                                            childValues[splitKey] = { ...newValue, parent: key, childKey: splitKey };
 
                                             if (valueType.defaultProps) {
                                                 childValues[splitKey] = (valueType.defaultProps[splitKey]) ?
-                                                    { ...valueType.defaultProps[splitKey], ...childValues[splitKey] } :
-                                                    { ...valueType.defaultProps, ...childValues[splitKey] };
+                                                    { ...childValues[splitKey], ...valueType.defaultProps[splitKey] } :
+                                                    { ...childValues[splitKey], ...valueType.defaultProps };
                                             }
                                         }
 
@@ -128,7 +151,7 @@ export default class Action extends Process {
                                 const childValue = childValues[childKey];
                                 const combinedKey = key + childKey;
 
-                                newValue.children[key] = childValue.current;
+                                newValue.children[childKey] = childValue.current;
                                 currentValues[combinedKey] = childValue;
 
                                 if (this.valueKeys.indexOf(combinedKey) === -1) {
@@ -223,7 +246,7 @@ export default class Action extends Process {
                 if (!value.parent) {
                     this.state[key] = valueForState;
                 } else {
-                    this.values[value.parent].children[key] = valueForState;
+                    this.values[value.parent].children[value.childKey] = valueForState;
                 }
             }
         }
@@ -287,7 +310,8 @@ export default class Action extends Process {
     getDefaultValue() {
         return {
             current: 0,
-            velocity: 0
+            velocity: 0,
+            round: false
         };
     }
 
