@@ -229,12 +229,16 @@ export const splitSpaceDelimited = (value) => isString(value) ? value.split(' ')
     @return [object]: Object with value and unit props
 */
 export const splitValueUnit = (value) => {
-    const splitVal = value.match(/(-?\d*\.?\d*)(.*)/);
+    if (value.match) {
+        const splitValue = value.match(/(-?\d*\.?\d*)(.*)/);
 
-    return {
-        value: parseFloat(splitVal[1]),
-        unit:  splitVal[2]
-    };
+        return {
+            value: parseFloat(splitValue[1]),
+            unit:  splitValue[2]
+        };
+    } else {
+        return { value };
+    }
 };
 
 /*

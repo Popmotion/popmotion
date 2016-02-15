@@ -1,8 +1,9 @@
 import Process from '../process/Process';
 import { speedPerSecond } from '../inc/calc';
-import { isNum, isObj, isString } from '../inc/utils';
+import { isNum, isObj, isString, splitValueUnit } from '../inc/utils';
 import bindAdapter from '../inc/bind-adapter';
 import colorType from '../value-types/color';
+import complexType from '../value-types/complex';
 
 const DEFAULT_PROP = 'current';
 const NUMERICAL_VALUES = [DEFAULT_PROP, 'from', 'to', 'min', 'max'];
@@ -94,16 +95,12 @@ export default class Action extends Process {
                     } else if (this.on && this.on.getValueType) {
                         valueType = this.on.getValueType(key);
 
-                    } else if (isString(value.current)) {
+                    } else if (isString(newValue.current)) {
                         // Test if this is a color value
-                        if (colorType.test(value.current)) {
+                        if (colorType.test(newValue.current)) {
                             valueType = colorType;
-
-                        // Test if this is a complex string
-
-                        // Treat as a unit value
-                        } else {
-
+                        } else if (complexType.test(newValue.current)) {
+                            valueType = complexType;
                         }
                     }
                 }
@@ -137,7 +134,9 @@ export default class Action extends Process {
                                             }
                                         }
 
-                                        childValues[splitKey][propName] = splitValue;
+                                        const valueSplitFromUnit = splitValueUnit(splitValue);
+                                        childValues[splitKey][propName] = valueSplitFromUnit.value;
+                                        childValues[splitKey].unit = valueSplitFromUnit.unit;
                                     }
                                 }
                             }
@@ -168,6 +167,16 @@ export default class Action extends Process {
                     // Or we just have default value props, load those   
                     } else if (valueType.defaultProps) {
                         newValue = { ...valueType.defaultProps, ...newValue };
+
+                        for (let i = 0; i < NUM_NUMERICAL_VALUES; i++) {
+                            const propName = NUMERICAL_VALUES[i];
+
+                            if (isString(newValue[propName])) {
+                                const splitUnit = splitValueUnit(newValue[propName]);
+                                newValue[propName] = splitUnit.value;
+                                newValue.unit = splitUnit.unit;
+                            }
+                        }
                     }
                 }
 
