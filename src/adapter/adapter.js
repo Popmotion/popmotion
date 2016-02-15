@@ -10,7 +10,7 @@
     Set `Extended.prototype.valueTypeMap` as an object key/value map to return a value type with
     `getValueType(key)` (key will be mapped according to `stateMap`)
 */
-export default class Adapter {
+class Adapter {
     constructor(props) {
         this.element = props.element;
         this.cache = {};

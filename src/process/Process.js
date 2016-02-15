@@ -3,9 +3,8 @@ import * as loop from './loop';
 export default class Process {
     /*
         [object]: Properties
-        [boolean] (optional): Is Process lazy?
     */
-    constructor(props, isLazy) {
+    constructor(props) {
         this.id = loop.getProcessId();
 
         this._onCleanup = () => {
@@ -18,7 +17,6 @@ export default class Process {
         this.set(this.getDefaultProps());
         this.set(props);
 
-        this.isLazy = isLazy || false;
         this.isActive = false;
     }
 

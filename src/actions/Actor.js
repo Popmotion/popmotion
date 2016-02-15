@@ -93,6 +93,8 @@ export default class Actor extends Action {
                 this.activeActions[key].stop();
             }
         }
+
+        return this;
     }
 
     willRender(actor, frameStamp, elapsed) {

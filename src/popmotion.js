@@ -1,7 +1,6 @@
-// Actor
-import Actor from './actor/Actor';
-
 // Actions
+import Action from './actions/Action';
+import Actor from './actions/Actor';
 import Tween from './actions/Tween';
 import Physics from './actions/Physics';
 import Track from './actions/Track';
@@ -33,7 +32,7 @@ export easing from './actions/easing/preset-easing';
 
 // Utils
 export * as calc from './inc/calc';
-export { combineTransformers } from './inc/utils';
+export * as utils, { combineTransformers } from './inc/utils';
 export { setGlobalDilation } from './process/timer';
 
 // Value types
