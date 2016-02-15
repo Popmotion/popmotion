@@ -1,3 +1,4 @@
+import adapter from '../adapter/adapter';
 import cssAdapter from '../adapter/css-adapter';
 import svgAdapter from '../adapter/svg-adapter';
 import svgPathAdapter from '../adapter/svg-path-adapter';
@@ -11,27 +12,30 @@ export default (element) => {
 
     // Or detect and bind adapter
     } else {
-        let adapter;
+        let detectedAdapter = adapter;
 
         // If HTMLElement load CSS
         if (element instanceof HTMLElement || element.tagName === 'svg') {
-            adapter = cssAdapter;
+            detectedAdapter = cssAdapter;
 
         // Or SVG
         } else if (element instanceof SVGElement) {
             if (element.tagName === 'path') {
-                adapter = svgPathAdapter;
+                detectedAdapter = svgPathAdapter;
             } else {
-                adapter = svgAdapter;
+                detectedAdapter = svgAdapter;
             }
         }
+
+        const boundAdapter = detectedAdapter(element);
 
         // Bind adapter to element
         Object.defineProperty(element, SAVE_PROP, {
             enumerable: false,
-            value: adapter
+            writable: false,
+            value: boundAdapter
         });
 
-        return adapter(element);
+        return boundAdapter;
     }
 };

@@ -1,4 +1,4 @@
-import createAdapter from './adapter';
+import adapter from './adapter';
 
 export function getter(key) {
     return this.element.getAttribute(key);
@@ -12,4 +12,10 @@ export function setter(props) {
     }
 }
 
-export default (element) => createAdapter({ element, getter, setter });
+export default (element) => {
+    const attrAdapter = adapter(element);
+    attrAdapter.getter = getter;
+    attrAdapter.setter = setter;
+
+    return attrAdapter;
+};

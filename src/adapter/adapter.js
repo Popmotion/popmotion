@@ -11,25 +11,9 @@
     `getValueType(key)` (key will be mapped according to `stateMap`)
 */
 class Adapter {
-    constructor(props) {
-        this.element = props.element;
+    constructor(element) {
+        this.element = element;
         this.cache = {};
-
-        if (props.getter) {
-            this.getter = props.getter;
-        }
-
-        if (props.setter) {
-            this.setter = props.setter;
-        }
-
-        if (props.stateMap) {
-            this.stateMap = props.stateMap;
-        }
-
-        if (props.valueTypeMap) {
-            this.valueTypeMap = props.valueTypeMap;
-        }
     }
 
     /*

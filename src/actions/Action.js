@@ -94,8 +94,9 @@ export default class Action extends Process {
                     // Or if our Adapter has a typeMap, use that
                     } else if (this.on && this.on.getValueType) {
                         valueType = this.on.getValueType(key);
+                    }
 
-                    } else if (isString(newValue.current)) {
+                    if (!valueType && isString(newValue.current)) {
                         // Test if this is a color value
                         if (colorType.test(newValue.current)) {
                             valueType = colorType;

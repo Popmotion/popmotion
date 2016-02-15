@@ -1,5 +1,5 @@
 // Actions
-import Action from './actions/Action';
+export Action from './actions/Action';
 import Actor from './actions/Actor';
 import Tween from './actions/Tween';
 import Physics from './actions/Physics';
