@@ -14,6 +14,7 @@ export function setter(props) {
 
 export default (element) => {
     const attrAdapter = adapter(element);
+
     attrAdapter.getter = getter;
     attrAdapter.setter = setter;
 

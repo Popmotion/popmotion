@@ -14,6 +14,7 @@ class Adapter {
     constructor(element) {
         this.element = element;
         this.cache = {};
+        this.internalCache = {};
     }
 
     /*
@@ -38,17 +39,15 @@ class Adapter {
         @param [object]: Key/value properties to set
     */
     set(props) {
-        const translatedProps = {};
-
         // Translate props
         for (let key in props) {
             if (props.hasOwnProperty(key)) {
                 const mappedKey = this.mapStateKey(key);
-                this.cache[key] = translatedProps[mappedKey] = props[key];
+                this.cache[key] = this.internalCache[mappedKey] = props[key];
             }
         }
 
-        return this.setter(translatedProps);
+        return this.setter(this.internalCache);
     }
 
     /*
@@ -90,4 +89,4 @@ class Adapter {
     }
 }
 
-export default (props) => new Adapter(props);
+export default (element) => new Adapter(element);
