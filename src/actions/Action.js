@@ -50,7 +50,7 @@ export default class Action extends Process {
         // 4) Update existing values with inheritable properties
         for (let key in currentValues) {
             // Exclude variables to be set, as we'll deal with those seperately
-            if (currentValues.hasOwnProperty(key) && !values.hasOwnProperty(key)) {
+            if (currentValues.hasOwnProperty(key) && (values && !values.hasOwnProperty(key))) {
                 currentValues[key] = { ...currentValues[key], ...inheritable };
             }
         }

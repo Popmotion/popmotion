@@ -1,4 +1,5 @@
 import Action from '../actions/Action';
+import { speedPerFrame } from '../inc/calc';
 
 /*
     Methods and properties to add to bound Actions
@@ -102,8 +103,20 @@ export default class Actor extends Action {
             const key = this.valueKeys[i];
             const value = this.values[key];
 
-            if (value.driver) {
-                value.current = this.activeActions[value.driver].values[key].current;
+            if (value.numDrivers === 1) {
+                value.current = this.activeActions[value.drivers[0]].values[key].current;
+
+            } else if (value.numDrivers > 1) {
+                let runningVelocity = 0;
+                let currentVelocity = 0;
+
+                for (let i2 = 0; i2 < value.numDrivers; i2++) {
+                    currentVelocity = this.activeActions[value.drivers[i2]].values[key].velocity;
+                    runningVelocity += currentVelocity;
+                    console.log(this.activeActions[value.drivers[i2]].values[key].velocity, runningVelocity)
+                }
+
+                value.current += speedPerFrame(runningVelocity, elapsed);
             }
         }
 
@@ -124,9 +137,19 @@ export default class Actor extends Action {
             const key = action.valueKeys[i];
             const actionValue = action.values[key];
             const value = this.values[key];
+            const driverIndex = value.drivers.indexOf(id);
 
-            value.driver = id;
-            actionValue.from = value.current;
+            if (driverIndex !== -1) {
+                value.drivers.splice(driverIndex, 1);
+            } else {
+                value.numDrivers++;
+            }
+
+            value.drivers.push(id);
+            
+            if (!action.additive) {
+                actionValue.from = value.current;
+            }
         }
 
         if (this.numActiveActions) {
@@ -145,8 +168,12 @@ export default class Actor extends Action {
         for (let i = 0; i < action.numValueKeys; i++) {
             const key = action.valueKeys[i];
             const value = this.values[key];
+            const driverIndex = value.drivers.indexOf(id);
 
-            value.driver = undefined;
+            if (driverIndex !== -1) {
+                value.drivers.splice(driverIndex, 1);
+                value.numDrivers--;
+            }
         }
 
         delete this.activeActions[id];
@@ -155,5 +182,13 @@ export default class Actor extends Action {
         if (!this.numActiveActions && this.isActive) {
             super.stop();
         }
+    }
+
+    getDefaultValue() {
+        return {
+            ...super.getDefaultValue(),
+            drivers: [],
+            numDrivers: 0
+        };
     }
 }
