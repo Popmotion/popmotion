@@ -72,8 +72,9 @@ export default class Action extends Process {
         for (let key in values) {
             if (values.hasOwnProperty(key)) {
                 let value = {};
-                let hasChildren = false;
                 let children = {};
+                let hasChildren = false;
+                let base = currentValues[key] ? currentValues[key] : defaultValue;
 
                 // If values os an object, use it directly
                 if (isObj(values[key])) {
@@ -84,7 +85,21 @@ export default class Action extends Process {
                     value[defaultValueProp] = values[key];
                 }
 
-                let newValue = { ...defaultValue, ...currentValues[key], ...inheritFrom, ...value };
+                let newValue = { ...base, ...inheritFrom, ...value };
+
+                /*
+                    TODO: Get current value + set `from`
+                    if (newValue.from !== undefined) {
+                        newValue.current = newValue.from;
+
+                    } else if (newValue.current === undefined && this.on) {
+                        newValue.current = this.on.get(key) || 0;
+                    }
+
+                    if (newValue.from === undefined) {
+                        newValue.from = newValue.current;
+                    }
+                */
 
                 // If our Adapter has a `getValueType` function, try to get a `type` with the value key
                 if (!newValue.type && this.on && this.on.getValueType) {
