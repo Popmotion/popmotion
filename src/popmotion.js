@@ -1,5 +1,5 @@
 // Actions
-import Action from './actions/Action';
+export Action from './actions/Action';
 import Actor from './actions/Actor';
 import Tween from './actions/Tween';
 import Physics from './actions/Physics';
@@ -48,6 +48,7 @@ export pxType from './value-types/px';
 export rgbType from './value-types/rgb';
 export scaleType from './value-types/scale';
 export shadowType from './value-types/shadow';
+export unitType from './value-types/unit';
 
 // Transformers
 export * as transformers from './inc/transformers';

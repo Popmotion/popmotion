@@ -7,7 +7,7 @@ export default {
 
     test: (value) => {
         const matches = value.match(FLOAT_REGEX);
-        return (isArray(matches) && matches.length > 0);
+        return (isArray(matches) && matches.length > 1);
     },
 
     template: (value) => {

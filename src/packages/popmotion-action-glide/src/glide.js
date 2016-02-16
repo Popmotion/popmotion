@@ -48,3 +48,4 @@ class Glide extends Action {
     }
 }
 
+export default (props) => new Glide(props);

@@ -1,10 +1,10 @@
 import { actor, tween, easing, calc } from 'popmotion';
 
-const DEFAULT_POSITION = 0;
 const DEFAULT_ACTION = tween({
     duration: 500,
     ease: easing.cubicBezier(0.25, 0.16, 0.45, 1)
 });
+
 let currentAction = DEFAULT_ACTION;
 
 const renderElementScroll = ({ state, on }) => {
@@ -12,9 +12,7 @@ const renderElementScroll = ({ state, on }) => {
     on.element.scrollTop = state.scrollY;
 };
 
-const renderViewportScroll = ({ state, on }) => window.scroll(state.scrollX, state.scrollY);
-
-let currentViewportScrollAction;
+const renderViewportScroll = ({ state }) => window.scroll(state.scrollX, state.scrollY);
 
 /*
     Get element scroll position

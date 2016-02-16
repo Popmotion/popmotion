@@ -1,17 +1,20 @@
 import Process from '../process/Process';
 import { speedPerSecond } from '../inc/calc';
-import { isNum, isObj, isString, splitValueUnit } from '../inc/utils';
+import { isNum, isObj, isString } from '../inc/utils';
 import bindAdapter from '../inc/bind-adapter';
 import colorType from '../value-types/color';
 import complexType from '../value-types/complex';
+import unitType from '../value-types/unit';
 
 const DEFAULT_PROP = 'current';
-const NUMERICAL_VALUES = [DEFAULT_PROP, 'from', 'to', 'min', 'max'];
+const NUMERICAL_VALUES = [DEFAULT_PROP, 'from', 'to', 'prev', 'velocity'];
 const NUM_NUMERICAL_VALUES = NUMERICAL_VALUES.length;
 
 export default class Action extends Process {
     constructor(props) {
         props.state = {};
+        props.valueKeys = [];
+        props.parentKeys = [];
         super(props);
     }
 
@@ -24,182 +27,164 @@ export default class Action extends Process {
     */
     set(props = {}) {
         const { values, on, ...propsToSet } = props;
+        const currentValues = this.values = this.values || {};
+        const defaultValue = this.getDefaultValue();
+        const inheritable = {};
 
+        // 1) Set non-consumed properties
         super.set(propsToSet);
 
+        // 2) Bind `on` to an adapter, if not already
         if (on) {
             // Ducktypish check for Adapter
             this.on = (!on.setter) ? bindAdapter(on) : on;
         }
 
-        this.values = this.values || {};
-        this.valueKeys = this.valueKeys || [];
-        this.parentKeys = this.parentKeys || [];
+        // 3) Prime an object to inherit from, with only `value` properties
+        for (let key in defaultValue) {
+            if (defaultValue.hasOwnProperty(key) && propsToSet.hasOwnProperty(key)) {
+                inheritable[key] = propsToSet[key];
+            }
+        }
 
-        // Merge new `value` properties with existing
+        // 4) Update existing values with inheritable properties
+        for (let key in currentValues) {
+            // Exclude variables to be set, as we'll deal with those seperately
+            if (currentValues.hasOwnProperty(key) && !values.hasOwnProperty(key)) {
+                currentValues[key] = { ...currentValues[key], ...inheritable };
+            }
+        }
+
+        // 5) Update
+        if (values) {
+            this.setValues(values, inheritable);   
+        }
+
+        return this;
+    }
+
+    setValues(values, inheritFrom) {
         const currentValues = this.values;
         const defaultValue = this.getDefaultValue();
         const defaultValueProp = this.getDefaultValueProp();
 
-        // Inherit value properties from `props`
-        for (let key in defaultValue) {
-            if (defaultValue.hasOwnProperty(key) && propsToSet.hasOwnProperty(key)) {
-                if (propsToSet[key] !== undefined) {
-                    defaultValue[key] = propsToSet[key];
-                }
-            }
-        }
-
-        // Check all values and split into child values as neccessary
+        // 2) Loop over every incoming `value` and set
         for (let key in values) {
             if (values.hasOwnProperty(key)) {
-                const value = values[key];
-                const existingValue = currentValues[key];
-                let valueType;
-                let newValue = {};
+                let value = {};
+                let hasChildren = false;
+                let children = {};
 
-                // Convert new value into object if it isn't already
-                if (isObj(value)) {
-                    newValue = value;
+                // If values os an object, use it directly
+                if (isObj(values[key])) {
+                    value = values[key];
+
+                // OR set to a the default value property of a blank object
                 } else {
-                    newValue[defaultValueProp] = value;
+                    value[defaultValueProp] = values[key];
                 }
 
-                // If value already exists, check for and use existing type
-                if (existingValue) {
-                    newValue = { ...existingValue, ...newValue };
-                    valueType = (this.on && this.on.getValueType) ? this.on.getValueType(key) : existingValue.type;
+                let newValue = { ...defaultValue, ...currentValues[key], ...inheritFrom, ...value };
 
-                // If this is a new value, check for type
-                } else {
-                    if (newValue.from !== undefined) {
-                        newValue.current = newValue.from;
+                // If our Adapter has a `getValueType` function, try to get a `type` with the value key
+                if (!newValue.type && this.on && this.on.getValueType) {
+                    newValue.type = this.on.getValueType(key);
+                }
 
-                    } else if (newValue.current === undefined && this.on) {
-                        newValue.current = this.on.get(key) || 0;
-                    }
+                // c) Loop through all numerical property types
+                for (let i = 0; i < NUM_NUMERICAL_VALUES; i++) {
+                    const propName = NUMERICAL_VALUES[i];
+                    const valueProp = newValue[propName];
 
-                    if (newValue.from === undefined) {
-                        newValue.from = newValue.current;
-                    }
+                    // If we have this kind of property, process
+                    if (valueProp !== undefined) {
+                        // If we don't have a type set to this value, find one (unless it's a raw number)
+                        if (!newValue.type && isString(valueProp)) {
+                            if (unitType.test(valueProp)) {
+                                newValue.type = unitType;
 
-                    newValue = { ...defaultValue, ...newValue };
+                            } else if (colorType.test(valueProp)) {
+                                newValue.type = colorType;
 
-                    newValue.prev = newValue.current;
-
-                    // If one is explicitly assigned, use that
-                    if (value.type) {
-                        valueType = value.type;
-
-                    // Or if our Adapter has a typeMap, use that
-                    } else if (this.on && this.on.getValueType) {
-                        valueType = this.on.getValueType(key);
-
-                    } else if (isString(newValue.current)) {
-                        // Test if this is a color value
-                        if (colorType.test(newValue.current)) {
-                            valueType = colorType;
-                        } else if (complexType.test(newValue.current)) {
-                            valueType = complexType;
+                            } else if (complexType.test(valueProp)) {
+                                newValue.type = complexType;
+                            }
                         }
-                    }
-                }
 
-                // If we've got a valueType then preprocess the value accordingly
-                if (valueType) {
-                    newValue.type = valueType;
+                        if (newValue.type) {
+                            // If we're going to split this value into child values
+                            if (newValue.type.hasOwnProperty('split')) {
+                                const splitProp = newValue.type.split(valueProp);
 
-                    // If this value should be split, split
-                    if (valueType.split) {
-                        const childValues = {};
+                                for (let splitKey in splitProp) {
+                                    if (splitProp.hasOwnProperty(splitKey)) {
+                                        const combinedKey = key + splitKey;
 
-                        // Loop over numerical values and split any present
-                        for (let i = 0; i < NUM_NUMERICAL_VALUES; i++) {
-                            const propName = NUMERICAL_VALUES[i];
-
-                            if (newValue.hasOwnProperty(propName)) {
-                                const splitValues = valueType.split(newValue[propName]);
-
-                                for (let splitKey in splitValues) {
-                                    if (splitValues.hasOwnProperty(splitKey)) {
-                                        const splitValue = splitValues[splitKey];
-                                        // Create new child value if doesn't exist
-                                        if (!childValues[splitKey]) {
-                                            childValues[splitKey] = { ...newValue, parent: key, childKey: splitKey };
-
-                                            if (valueType.defaultProps) {
-                                                childValues[splitKey] = (valueType.defaultProps[splitKey]) ?
-                                                    { ...childValues[splitKey], ...valueType.defaultProps[splitKey] } :
-                                                    { ...childValues[splitKey], ...valueType.defaultProps };
-                                            }
+                                        if (!children[combinedKey]) {
+                                            const defaultValue = (newValue.type.defaultProps && newValue.type.defaultProps[splitKey]) ? newValue.type.defaultProps[splitKey] : {};
+                                            children[combinedKey] = {
+                                                ...newValue,
+                                                ...defaultValue,
+                                                parent: key,
+                                                childKey: splitKey,
+                                                type: undefined
+                                            };
                                         }
 
-                                        const valueSplitFromUnit = splitValueUnit(splitValue);
-                                        childValues[splitKey][propName] = valueSplitFromUnit.value;
-                                        childValues[splitKey].unit = valueSplitFromUnit.unit;
+                                        children[combinedKey][propName] = splitProp[splitKey];
                                     }
                                 }
-                            }
-                        }
 
-                        newValue.children = {};
-
-                        // Now loop through all child values and add them as normal values
-                        for (let childKey in childValues) {
-                            if (childValues.hasOwnProperty(childKey)) {
-                                const childValue = childValues[childKey];
-                                const combinedKey = key + childKey;
-
-                                newValue.children[childKey] = childValue.current;
-                                currentValues[combinedKey] = childValue;
-
-                                if (this.valueKeys.indexOf(combinedKey) === -1) {
-                                    this.valueKeys.push(combinedKey);
+                                // If this has a `template` function, generate
+                                if (!newValue.template && newValue.type.template) {
+                                    newValue.template = newValue.type.template(newValue[propName]);
                                 }
+
+                                hasChildren = true;
+
+                            } else if (newValue.type.defaultProps) {
+                                newValue = { ...newValue, ...newValue.type.defaultProps };
                             }
-                        }
 
-                        // Save a template for recombination if present
-                        if (valueType.template) {
-                            newValue.template = newValue.template || valueType.template(newValue.current);
-                        }
-
-                    // Or we just have default value props, load those   
-                    } else if (valueType.defaultProps) {
-                        newValue = { ...valueType.defaultProps, ...newValue };
-
-                        for (let i = 0; i < NUM_NUMERICAL_VALUES; i++) {
-                            const propName = NUMERICAL_VALUES[i];
-
-                            if (isString(newValue[propName])) {
-                                const splitUnit = splitValueUnit(newValue[propName]);
-                                newValue[propName] = splitUnit.value;
-                                newValue.unit = splitUnit.unit;
+                            if (newValue.type.parse) {
+                                newValue[propName] = newValue.type.parse(newValue[propName], newValue);
                             }
                         }
                     }
-                }
+                } // End numerical property iteration
 
-                // Update appropriate lists with value key
-                if (newValue.children) {
-                    if (this.parentKeys.indexOf(key) === -1) {
-                        this.parentKeys.push(key);
-                    }
-                } else {
-                    if (this.valueKeys.indexOf(key) === -1) {
-                        this.valueKeys.push(key);
-                    }
+                // Set `prev` to `current` if it isn't already defined
+                if (newValue.prev === undefined) {
+                    newValue.prev = newValue.current;
                 }
 
                 currentValues[key] = newValue;
-            }
-        }
 
-        // Precompute value key and parent key length to prevent per-frame measurement
+                // If this value doesn't have children, add to valueKeys
+                if (!hasChildren) {
+                    if (this.valueKeys.indexOf(key) === -1) {
+                        this.valueKeys.push(key);
+                    }
+
+                // Or add to parentKeys
+                } else {
+                    newValue.children = newValue.children || {};
+
+                    if (this.parentKeys.indexOf(key) === -1) {
+                        this.parentKeys.push(key);
+                    }
+
+                    this.setValues(children);
+                }
+            }
+        } // End value iteration
+
+        // 3) Precompute value key and parent key length to prevent per-frame measurement
         this.numValueKeys = this.valueKeys.length;
         this.numParentKeys = this.parentKeys.length;
 
         return this;
+
     }
 
     /*
@@ -249,7 +234,7 @@ export default class Action extends Process {
                 value.prev = value.current;
 
                 // Append unit
-                const valueForState = (value.unit) ? value.current + value.unit : value.current;
+                const valueForState = (value.type && value.type.serialize) ? value.type.serialize(value.current, value) : value.current;
 
                 // Add to state if this is not a child vaue
                 if (!value.parent) {

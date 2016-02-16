@@ -27,12 +27,12 @@ function setter(props) {
             this.element.setAttribute(key, builtProps[key]);
         }
     }
-};
+}
 
 function getter(key) {
     return this.element.getAttribute(key);
 }
 
-export default (element) => createAdapter({ element, stateMap, valueTypeMap, getter, setter });
+export default (element) => adapter({ element, stateMap, valueTypeMap, getter, setter });
 
 

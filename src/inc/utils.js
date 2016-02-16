@@ -221,27 +221,6 @@ export const splitCommaDelimited = (value) => isString(value) ? value.split(/,\s
 export const splitSpaceDelimited = (value) => isString(value) ? value.split(' ') : [value];
 
 /*
-    Split a value into a value/unit object
-    
-        "200px" -> { value: 200, unit: "px" }
-        
-    @param [string]: Value to split
-    @return [object]: Object with value and unit props
-*/
-export const splitValueUnit = (value) => {
-    if (value.match) {
-        const splitValue = value.match(/(-?\d*\.?\d*)(.*)/);
-
-        return {
-            value: parseFloat(splitValue[1]),
-            unit:  splitValue[2]
-        };
-    } else {
-        return { value };
-    }
-};
-
-/*
     Convert number to x decimal places
 
     @param [number]
