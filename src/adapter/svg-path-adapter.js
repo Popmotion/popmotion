@@ -12,7 +12,6 @@ export default (element) => {
     adapter.stateMap = stateMap;
     adapter.setter = setter;
     adapter.svgSetter = svgSetter;
-
     adapter.pathLength = element.getTotalLength();
 
     return adapter;

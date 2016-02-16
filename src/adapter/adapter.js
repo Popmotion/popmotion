@@ -11,25 +11,10 @@
     `getValueType(key)` (key will be mapped according to `stateMap`)
 */
 class Adapter {
-    constructor(props) {
-        this.element = props.element;
+    constructor(element) {
+        this.element = element;
         this.cache = {};
-
-        if (props.getter) {
-            this.getter = props.getter;
-        }
-
-        if (props.setter) {
-            this.setter = props.setter;
-        }
-
-        if (props.stateMap) {
-            this.stateMap = props.stateMap;
-        }
-
-        if (props.valueTypeMap) {
-            this.valueTypeMap = props.valueTypeMap;
-        }
+        this.internalCache = {};
     }
 
     /*
@@ -54,17 +39,15 @@ class Adapter {
         @param [object]: Key/value properties to set
     */
     set(props) {
-        const translatedProps = {};
-
         // Translate props
         for (let key in props) {
             if (props.hasOwnProperty(key)) {
                 const mappedKey = this.mapStateKey(key);
-                this.cache[key] = translatedProps[mappedKey] = props[key];
+                this.cache[key] = this.internalCache[mappedKey] = props[key];
             }
         }
 
-        return this.setter(translatedProps);
+        return this.setter(this.internalCache);
     }
 
     /*
@@ -106,4 +89,4 @@ class Adapter {
     }
 }
 
-export default (props) => new Adapter(props);
+export default (element) => new Adapter(element);

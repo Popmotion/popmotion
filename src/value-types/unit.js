@@ -22,7 +22,7 @@ const findValueAndUnit = (value) => {
 
 export default {
     test: function (unparsed) {
-        const { value, unit } = findValueAndUnit(unparsed);
+        const { value } = findValueAndUnit(unparsed);
         return (isNum(value) && !isNaN(value)) ? true : false;
     },
 

@@ -3,7 +3,7 @@ import valueTypeMap from './css/value-type-map';
 import buildPropertyString from './css/build';
 import prefixer from './css/prefixer';
 import transformProps from './css/transform-props';
-import createAdapter from './adapter';
+import adapter from './adapter';
 
 function getter (key) {
     return (!transformProps[key]) ?
@@ -15,4 +15,12 @@ function setter(props) {
     this.element.style.cssText += buildPropertyString(props);
 }
 
-export default (element) => createAdapter({ element, stateMap, valueTypeMap, getter, setter });
+export default (element) => {
+    const cssAdapter = adapter(element);
+    cssAdapter.stateMap = stateMap;
+    cssAdapter.valueTypeMap = valueTypeMap;
+    cssAdapter.getter = getter;
+    cssAdapter.setter = setter;
+
+    return cssAdapter;
+};

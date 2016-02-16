@@ -54,23 +54,5 @@
     "babel-register": "^6.3.13",
     "chai": "^3.4.0",
     "webpack": "1.7.2"
-  },
-  "dependencies": {
-    "babel-plugin-transform-runtime": "^6.5.0",
-    "framesync": "^1.0.1"
-  },
-  "jshintConfig": {
-    "curly": true,
-    "eqeqeq": true,
-    "esnext": true,
-    "forin": true,
-    "freeze": true,
-    "latedef": true,
-    "nocomma": true,
-    "nonbsp": true,
-    "notypeof": true,
-    "undef": true,
-    "unused": true,
-    "varstmt": true
   }
 }

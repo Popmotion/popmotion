@@ -34,5 +34,3 @@ function getter(key) {
 }
 
 export default (element) => adapter({ element, stateMap, valueTypeMap, getter, setter });
-
-
