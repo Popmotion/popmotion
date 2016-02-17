@@ -241,9 +241,11 @@ export default class Action extends Process {
                 value.current = Math.round(value.current);
             }
 
+            value.frameChange = value.current - value.prev;
+
             // Update velocity
             if (!this.calculatesVelocity) {
-                value.velocity = speedPerSecond(value.current - value.prev, elapsed);
+                value.velocity = speedPerSecond(value.frameChange, elapsed);
             }
 
             // If this value has changed
@@ -321,8 +323,8 @@ export default class Action extends Process {
     */
     getDefaultValue() {
         return {
-            current: 0,
             velocity: 0,
+            frameChange: 0,
             round: false
         };
     }

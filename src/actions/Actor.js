@@ -1,5 +1,4 @@
 import Action from '../actions/Action';
-import { smooth, speedPerFrame } from '../inc/calc';
 
 /*
     Methods and properties to add to bound Actions
@@ -23,7 +22,7 @@ export default class Actor extends Action {
     }
 
     set(props, instant) {
-        if (instant || !this.reducer) {
+        if (instant || !this.behaviour) {
             super.set(props);
             this.once();
         } else {
@@ -103,18 +102,31 @@ export default class Actor extends Action {
             const key = this.valueKeys[i];
             const value = this.values[key];
 
+            value.current = value.target + this.activeActions[value.drivers[0]].values[key].current;
+
+            if (value.numDrivers > 1) {
+                for (let i2 = 1; i2 < value.numDrivers; i2++) {
+                    const action = this.activeActions[value.drivers[i2]];
+                    value.current += action.values[key].current;
+                }
+            }
+
+            /*
             if (value.numDrivers === 1) {
                 value.current = this.activeActions[value.drivers[0]].values[key].current;
 
             } else if (value.numDrivers > 1) {
-                let runningVelocity = 0;
-
                 for (let i2 = 0; i2 < value.numDrivers; i2++) {
-                    runningVelocity += this.activeActions[value.drivers[i2]].values[key].velocity;
-                }
+                    const action = this.activeActions[value.drivers[i2]];
 
-                value.current += speedPerFrame(runningVelocity, elapsed);
+                    if (action.additive) {
+                        value.current += action.values[key].current;
+                    } else {
+                        value.current = action.values[key].current;
+                    }
+                }
             }
+            */
         }
 
         return super.willRender(actor, frameStamp, elapsed);
@@ -142,11 +154,23 @@ export default class Actor extends Action {
                 value.numDrivers++;
             }
 
+            if (action.additive) {
+                value.target = actionValue.to;
+
+                if (actionValue.from < actionValue.to) {
+                    actionValue.from = - actionValue.to;
+                    actionValue.to = 0;
+                }
+            }
+
             value.drivers.push(id);
             
+            /**
             if (!action.additive) {
                 actionValue.from = value.current;
             }
+
+            **/
         }
 
         if (this.numActiveActions) {

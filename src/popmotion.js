@@ -14,7 +14,7 @@ import Input from './input/Input';
 export const actor = (props) => new Actor(props);
 export const tween = (props) => new Tween(props);
 export const physics = (props) => new Physics(props);
-export const trackInput = (...args) => new Track(...args);
+export const track = (...args) => new Track(...args);
 export const input = (...args) => new Input(...args);
 export const process = (...args) => new Process(...args);
 export stagger from './inc/stagger';

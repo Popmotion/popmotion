@@ -4,27 +4,33 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
 ## [5.0.0] 2015-02-01
 
-### Popmotion 5.0: timelines, streamlined API, declarative Actors, 11kb.
+### Popmotion 5.0: streamlined API, timelines, additive motion, declarative Actors, under 12kb.
 
 **Warning:** This is a major API revision. Previous Popmotion code **will** be incompatible with this upgrade.
 
 ### Added
-- 50% less runtime memory usage.
-- 12% smaller filesize - now just over 10kb max gzipped and minified.
-- `physics`: A unified physics simulation handles `velocity`, `friction` and `spring` without having to explicitly choose between them.
-- `timeline`
-- `stagger`
-- Composable `transforms` replace `watch` and watch maps.
+- **Timelines**: Super-simple yet fully-featured nestable timelines to easily sequence `tweens`.
+- **Additive tweens**: Smooth transitions between competing tweens.
+- **Declarative Actors**: Provide an `Actor` with a `behaviour` method. This takes arguments provided to `set` and dynamically returns actions.
+- **Standalone Actions**: `tween`, `physics` and `track` can all run without the need for an `actor`.
+- **Adapters**: Minimal `get`/`set` API wrappers for smoothing differences between DOM, SVG and frameworks.
+- **Transformers**: Composable functions to transform values between update and render.
+- **Unified physics engine**: Handles `velocity`, `friction` and `spring` in one unified `physics` Action.
+- **Small**: All this for under 12kb minified & gzipped.
+- **Smaller**: Rewritten entirely using ES6 exports to allow tree-shaking, ignoring the parts of Popmotion you don't include.
+- **Global time dilation**: `setGlobalDilation` method can change the global time.
 
 ### Removed
-- Native Meteor support.
-- jQuery support in `selectDomActor` - provide `$().get()` instead.
+- `new` - dropped in favour of factory functions (ie `new Actor()` becomes `actor()`). This will allow further non-API-breaking optimisations. 
+- Removed Action `watch` property in favour of more flexible `transform`: Simply provide a function that returns a different value.
+- Native Meteor support, as we kept forgetting to update it.
+- jQuery support - provide elements as returned from `$('.yourElement').get()` instead.
 - `Sequence`: Dropped in favour of the `timeline` function.
-- `Iterator`: Dropped in favour of using native array methods and the `stagger` function.
+- `Iterator`: Dropped in favour of using native array methods and the new `stagger` function.
 - `Simulate`: Dropped in favour of unified `physics` action.
 
 ### Changed
-- `friction` now a value between `0` and `1` - `1` will strip all velocity within a single frame.
+- `friction` now a value between `0` and `1` - `0` provides no friction, `1` will strip all velocity within a single frame.
 
 ## [4.3.4] 2015-12-30
 
