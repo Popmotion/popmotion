@@ -106,6 +106,9 @@ export default class Action extends Process {
                     newValue.type = this.on.getValueType(key);
                 }
 
+                // TODO
+                newValue.prev = newValue.current = newValue.from;
+
                 // c) Loop through all numerical property types
                 for (let i = 0; i < NUM_NUMERICAL_VALUES; i++) {
                     const propName = NUMERICAL_VALUES[i];

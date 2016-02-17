@@ -1,5 +1,5 @@
 import Action from '../actions/Action';
-import { speedPerFrame } from '../inc/calc';
+import { smooth, speedPerFrame } from '../inc/calc';
 
 /*
     Methods and properties to add to bound Actions
@@ -108,12 +108,9 @@ export default class Actor extends Action {
 
             } else if (value.numDrivers > 1) {
                 let runningVelocity = 0;
-                let currentVelocity = 0;
 
                 for (let i2 = 0; i2 < value.numDrivers; i2++) {
-                    currentVelocity = this.activeActions[value.drivers[i2]].values[key].velocity;
-                    runningVelocity += currentVelocity;
-                    console.log(this.activeActions[value.drivers[i2]].values[key].velocity, runningVelocity)
+                    runningVelocity += this.activeActions[value.drivers[i2]].values[key].velocity;
                 }
 
                 value.current += speedPerFrame(runningVelocity, elapsed);
