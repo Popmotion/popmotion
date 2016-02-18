@@ -5,7 +5,6 @@ import {
     ease,
     restrict,
     getProgressFromValue,
-    getValueFromProgress,
     stepProgress
 } from '../inc/calc';
 

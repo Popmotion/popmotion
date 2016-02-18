@@ -1,7 +1,6 @@
 import Action from '../actions/Action';
-import { getProgressFromValue, getValueFromProgress, smooth, speedPerFrame, ease, restrict } from '../inc/calc';
-import { currentTime } from '../inc/utils';
-import { createMapper } from '../inc/transformers';
+import { getProgressFromValue, getValueFromProgress, ease, restrict } from '../inc/calc';
+
 /*
     Methods and properties to add to bound Actions
 */
@@ -158,6 +157,15 @@ export default class Actor extends Action {
                 const previousAction = this.activeActions[value.drivers[value.numDrivers - 2]];
                 const previousActionValue = previousAction.values[key];
                 const ACCURACY = 60;
+
+                /*
+                    TODO:
+                        Deal with linear beziers when resolving (seperate function for eahc)
+                        Generate blend function here:
+                        Think about other blend modes - MVP?? This is cool enough for now
+                        Find if closer P2 during iteration and use that instead to avoid crossover
+                */
+
 
                 if (previousAction.elapsed && previousActionValue) {
                     const totalDuration = previousActionValue.delay + previousActionValue.duration;
