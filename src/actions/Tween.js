@@ -2,6 +2,7 @@ import Action from './Action';
 import easing from './easing/preset-easing';
 import { currentTime, isNum } from '../inc/utils';
 import {
+    ease,
     restrict,
     getProgressFromValue,
     getValueFromProgress,
@@ -13,23 +14,6 @@ const NEXT_STEPS = {
     loop: 'restart',
     yoyo: 'reverse',
     flip: 'flipValues'
-};
-
-/*
-    Ease value within ranged parameters
-    
-    @param [number]: Progress between 0 and 1
-    @param [number]: Value of 0 progress
-    @param [number]: Value of 1 progress
-    @param [string || function]: Name of preset easing
-        to use or generated easing function
-    @return [number]: Value of eased progress in range
-*/ 
-const ease = (progress, from, to, ease) => {
-    const progressLimited = restrict(progress, 0, 1);
-    const easedProgress = ease(progressLimited);
-
-    return getValueFromProgress(easedProgress, from, to);
 };
 
 export default class Tween extends Action {

@@ -1,5 +1,7 @@
 import Action from '../actions/Action';
-
+import { getProgressFromValue, getValueFromProgress, smooth, speedPerFrame, ease, restrict } from '../inc/calc';
+import { currentTime } from '../inc/utils';
+import { createMapper } from '../inc/transformers';
 /*
     Methods and properties to add to bound Actions
 */
@@ -101,32 +103,20 @@ export default class Actor extends Action {
         for (let i = 0; i < this.numValueKeys; i++) {
             const key = this.valueKeys[i];
             const value = this.values[key];
-
-            value.current = value.target + this.activeActions[value.drivers[0]].values[key].current;
+            let newCurrent = (value.numDrivers) ? this.activeActions[value.drivers[0]].values[key].current : value.current;
 
             if (value.numDrivers > 1) {
-                for (let i2 = 1; i2 < value.numDrivers; i2++) {
-                    const action = this.activeActions[value.drivers[i2]];
-                    value.current += action.values[key].current;
+                if (value.blendCurve) {
+                    const action = this.activeActions[value.drivers[1]];
+                    const blendProgress = getProgressFromValue(action.elapsed, value.blendCurve[0][0], value.blendCurve[2][0]);
+                    const aP = getValueFromProgress(blendProgress, value.blendCurve[0][1], value.blendCurve[1][1]);
+                    const bP = getValueFromProgress(blendProgress, value.blendCurve[1][1], value.blendCurve[2][1]);
+                    const cP = getValueFromProgress(blendProgress, aP, bP);
+                    newCurrent = cP;
                 }
             }
 
-            /*
-            if (value.numDrivers === 1) {
-                value.current = this.activeActions[value.drivers[0]].values[key].current;
-
-            } else if (value.numDrivers > 1) {
-                for (let i2 = 0; i2 < value.numDrivers; i2++) {
-                    const action = this.activeActions[value.drivers[i2]];
-
-                    if (action.additive) {
-                        value.current += action.values[key].current;
-                    } else {
-                        value.current = action.values[key].current;
-                    }
-                }
-            }
-            */
+            value.current = newCurrent;
         }
 
         return super.willRender(actor, frameStamp, elapsed);
@@ -154,23 +144,47 @@ export default class Actor extends Action {
                 value.numDrivers++;
             }
 
-            if (action.additive) {
-                value.target = actionValue.to;
+            value.target = actionValue.to;
 
-                if (actionValue.from < actionValue.to) {
-                    actionValue.from = - actionValue.to;
-                    actionValue.to = 0;
+            // Pass Actor value properties to Action
+            actionValue.velocity = value.velocity;
+            actionValue.current = value.current;
+
+            // Add to drivers list
+            value.drivers.push(id);
+
+            // If we have to blend this Action in, create quadratic blend curve points
+            if (value.numDrivers > 1 && action.additive) {
+                const previousAction = this.activeActions[value.drivers[value.numDrivers - 2]];
+                const previousActionValue = previousAction.values[key];
+                const ACCURACY = 60;
+
+                if (previousAction.elapsed && previousActionValue) {
+                    const totalDuration = previousActionValue.delay + previousActionValue.duration;
+                    const timeAtPreviousTweenEnd = totalDuration - previousAction.elapsed;
+                    const positionAtPreviousTweenEnd = ease(restrict(getProgressFromValue(timeAtPreviousTweenEnd - actionValue.delay, 0, actionValue.duration), 0, 1), actionValue.from, actionValue.to, actionValue.ease);
+                    const timeStepToTest = timeAtPreviousTweenEnd / ACCURACY;
+                    const biggerAtBlendStart = (actionValue.from > value.current);
+                    const biggerAtBlendEnd = (positionAtPreviousTweenEnd > previousActionValue.to);
+                    const crossover = (biggerAtBlendStart !== biggerAtBlendEnd);
+
+                    value.blendCurve = [[0, previousActionValue.current], [timeAtPreviousTweenEnd, positionAtPreviousTweenEnd]];
+
+                    // If the two tweens crossover, find out where/when to add a point to our quadratic curve
+                    if (crossover) {
+                        for (let i2 = 0; i2 < ACCURACY; i2++) {
+                            const timeStep = i2 * timeStepToTest;
+                            const previousTweenPositionAtTime = ease(getProgressFromValue(previousAction.elapsed + timeStep - previousActionValue.delay, 0, previousActionValue.duration), previousActionValue.from, previousActionValue.to, previousActionValue.ease);
+                            const positionAtTime = ease(getProgressFromValue(timeStep - actionValue.delay, 0, actionValue.duration), actionValue.from, actionValue.to, actionValue.ease); 
+
+                            if ((biggerAtBlendStart && previousTweenPositionAtTime > positionAtTime) || (!biggerAtBlendStart && previousTweenPositionAtTime < positionAtTime)) {
+                                value.blendCurve.splice(1, 0, [timeStep, positionAtTime]);
+                                break;
+                            }
+                        }
+                    }
                 }
             }
-
-            value.drivers.push(id);
-            
-            /**
-            if (!action.additive) {
-                actionValue.from = value.current;
-            }
-
-            **/
         }
 
         if (this.numActiveActions) {

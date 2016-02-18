@@ -50,7 +50,7 @@ export default class Action extends Process {
         // 4) Update existing values with inheritable properties
         for (let key in currentValues) {
             // Exclude variables to be set, as we'll deal with those seperately
-            if (currentValues.hasOwnProperty(key) && (values && !values.hasOwnProperty(key))) {
+            if (currentValues.hasOwnProperty(key)) {
                 currentValues[key] = { ...currentValues[key], ...inheritable };
             }
         }
@@ -87,27 +87,31 @@ export default class Action extends Process {
 
                 let newValue = { ...base, ...inheritFrom, ...value };
 
-                /*
-                    TODO: Get current value + set `from`
+                // Get current value if none is defined
+                if (newValue.current === undefined) {
+                    // If we have a `from` value set, take that
                     if (newValue.from !== undefined) {
                         newValue.current = newValue.from;
-
-                    } else if (newValue.current === undefined && this.on) {
-                        newValue.current = this.on.get(key) || 0;
+                    
+                    // Or if we have an Adapter, get it from that
+                    } else if (this.on && this.on.get) {
+                        newValue.current = this.on.get(key);
                     }
 
-                    if (newValue.from === undefined) {
-                        newValue.from = newValue.current;
+                    // If it's still undefined make it equal 0??
+                    if (newValue.current === undefined) {
+                        newValue.current = 0;
                     }
-                */
+                }
+
+                if (newValue.from === undefined) {
+                    newValue.from = newValue.current;
+                }
 
                 // If our Adapter has a `getValueType` function, try to get a `type` with the value key
                 if (!newValue.type && this.on && this.on.getValueType) {
                     newValue.type = this.on.getValueType(key);
                 }
-
-                // TODO
-                newValue.prev = newValue.current = newValue.from;
 
                 // c) Loop through all numerical property types
                 for (let i = 0; i < NUM_NUMERICAL_VALUES; i++) {
@@ -265,6 +269,10 @@ export default class Action extends Process {
             }
         }
 
+        if (this.onFrame) {
+            this.onFrame(this.state, this);
+        }
+
         return (this.onCleanup) ? true : hasChanged;
     }
 
@@ -290,8 +298,8 @@ export default class Action extends Process {
             on.set(state);
         }
 
-        if (this.onFrame) {
-            this.onFrame(this);
+        if (this.onUpdate) {
+            this.onUpdate(this.state, this);
         }
     }
 
@@ -324,7 +332,6 @@ export default class Action extends Process {
     getDefaultValue() {
         return {
             velocity: 0,
-            frameChange: 0,
             round: false
         };
     }
