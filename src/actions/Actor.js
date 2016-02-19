@@ -163,7 +163,6 @@ export default class Actor extends Action {
                         Deal with linear beziers when resolving (seperate function for eahc)
                         Generate blend function here:
                         Think about other blend modes - MVP?? This is cool enough for now
-                        Find if closer P2 during iteration and use that instead to avoid crossover
                 */
 
 
@@ -180,13 +179,25 @@ export default class Actor extends Action {
 
                     // If the two tweens crossover, find out where/when to add a point to our quadratic curve
                     if (crossover) {
+                        let foundP1 = false;
+                        let foundP2 = false;
+
                         for (let i2 = 0; i2 < ACCURACY; i2++) {
                             const timeStep = i2 * timeStepToTest;
-                            const previousTweenPositionAtTime = ease(getProgressFromValue(previousAction.elapsed + timeStep - previousActionValue.delay, 0, previousActionValue.duration), previousActionValue.from, previousActionValue.to, previousActionValue.ease);
+                            const previousTweenPositionAtTime = Math.min(ease(getProgressFromValue(previousAction.elapsed + timeStep - previousActionValue.delay, 0, previousActionValue.duration), previousActionValue.from, previousActionValue.to, previousActionValue.ease), 1);
                             const positionAtTime = ease(getProgressFromValue(timeStep - actionValue.delay, 0, actionValue.duration), actionValue.from, actionValue.to, actionValue.ease); 
 
-                            if ((biggerAtBlendStart && previousTweenPositionAtTime > positionAtTime) || (!biggerAtBlendStart && previousTweenPositionAtTime < positionAtTime)) {
+                            if (!foundP1 && ((biggerAtBlendStart && previousTweenPositionAtTime > positionAtTime) || (!biggerAtBlendStart && previousTweenPositionAtTime < positionAtTime))) {
                                 value.blendCurve.splice(1, 0, [timeStep, positionAtTime]);
+                                foundP1 = true;
+                            }
+
+                            if (!foundP2 && ((biggerAtBlendStart && value.current > positionAtTime) || (!biggerAtBlendStart && value.current < positionAtTime))) {
+                                value.blendCurve[value.blendCurve.length - 1] = [timeStep, positionAtTime];
+                                foundP2 = true;
+                            }
+
+                            if (foundP1 && foundP2) {
                                 break;
                             }
                         }
