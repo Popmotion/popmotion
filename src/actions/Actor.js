@@ -1,5 +1,5 @@
 import Action from '../actions/Action';
-import { getProgressFromValue, getValueFromProgress, ease, restrict } from '../inc/calc';
+import generateBlendCurve from '../inc/generate-blend-curve';
 
 /*
     Methods and properties to add to bound Actions
@@ -104,15 +104,8 @@ export default class Actor extends Action {
             const value = this.values[key];
             let newCurrent = (value.numDrivers) ? this.activeActions[value.drivers[0]].values[key].current : value.current;
 
-            if (value.numDrivers > 1) {
-                if (value.blendCurve) {
-                    const action = this.activeActions[value.drivers[1]];
-                    const blendProgress = getProgressFromValue(action.elapsed, value.blendCurve[0][0], value.blendCurve[2][0]);
-                    const aP = getValueFromProgress(blendProgress, value.blendCurve[0][1], value.blendCurve[1][1]);
-                    const bP = getValueFromProgress(blendProgress, value.blendCurve[1][1], value.blendCurve[2][1]);
-                    const cP = getValueFromProgress(blendProgress, aP, bP);
-                    newCurrent = cP;
-                }
+            if (value.numDrivers > 1 && value.blend && !value.hasBlended) {
+                newCurrent = value.blend();
             }
 
             value.current = newCurrent;
@@ -150,59 +143,12 @@ export default class Actor extends Action {
             actionValue.current = value.current;
 
             // Add to drivers list
-            value.drivers.push(id);
+            value.drivers.unshift(id);
 
             // If we have to blend this Action in, create quadratic blend curve points
             if (value.numDrivers > 1 && action.additive) {
-                const previousAction = this.activeActions[value.drivers[value.numDrivers - 2]];
-                const previousActionValue = previousAction.values[key];
-                const ACCURACY = 60;
-
-                /*
-                    TODO:
-                        Deal with linear beziers when resolving (seperate function for eahc)
-                        Generate blend function here:
-                        Think about other blend modes - MVP?? This is cool enough for now
-                */
-
-
-                if (previousAction.elapsed && previousActionValue) {
-                    const totalDuration = previousActionValue.delay + previousActionValue.duration;
-                    const timeAtPreviousTweenEnd = totalDuration - previousAction.elapsed;
-                    const positionAtPreviousTweenEnd = ease(restrict(getProgressFromValue(timeAtPreviousTweenEnd - actionValue.delay, 0, actionValue.duration), 0, 1), actionValue.from, actionValue.to, actionValue.ease);
-                    const timeStepToTest = timeAtPreviousTweenEnd / ACCURACY;
-                    const biggerAtBlendStart = (actionValue.from > value.current);
-                    const biggerAtBlendEnd = (positionAtPreviousTweenEnd > previousActionValue.to);
-                    const crossover = (biggerAtBlendStart !== biggerAtBlendEnd);
-
-                    value.blendCurve = [[0, previousActionValue.current], [timeAtPreviousTweenEnd, positionAtPreviousTweenEnd]];
-
-                    // If the two tweens crossover, find out where/when to add a point to our quadratic curve
-                    if (crossover) {
-                        let foundP1 = false;
-                        let foundP2 = false;
-
-                        for (let i2 = 0; i2 < ACCURACY; i2++) {
-                            const timeStep = i2 * timeStepToTest;
-                            const previousTweenPositionAtTime = Math.min(ease(getProgressFromValue(previousAction.elapsed + timeStep - previousActionValue.delay, 0, previousActionValue.duration), previousActionValue.from, previousActionValue.to, previousActionValue.ease), 1);
-                            const positionAtTime = ease(getProgressFromValue(timeStep - actionValue.delay, 0, actionValue.duration), actionValue.from, actionValue.to, actionValue.ease); 
-
-                            if (!foundP1 && ((biggerAtBlendStart && previousTweenPositionAtTime > positionAtTime) || (!biggerAtBlendStart && previousTweenPositionAtTime < positionAtTime))) {
-                                value.blendCurve.splice(1, 0, [timeStep, positionAtTime]);
-                                foundP1 = true;
-                            }
-
-                            if (!foundP2 && ((biggerAtBlendStart && value.current > positionAtTime) || (!biggerAtBlendStart && value.current < positionAtTime))) {
-                                value.blendCurve[value.blendCurve.length - 1] = [timeStep, positionAtTime];
-                                foundP2 = true;
-                            }
-
-                            if (foundP1 && foundP2) {
-                                break;
-                            }
-                        }
-                    }
-                }
+                const previousAction = this.activeActions[value.drivers[value.numDrivers - 1]];
+                value.blend = generateBlendCurve(previousAction, action, key);
             }
         }
 
