@@ -104,7 +104,7 @@ export default class Actor extends Action {
             const value = this.values[key];
             let newCurrent = (value.numDrivers) ? this.activeActions[value.drivers[0]].values[key].current : value.current;
 
-            if (value.numDrivers > 1 && value.blend && !value.hasBlended) {
+            if (value.numDrivers > 1 && value.blend) {
                 newCurrent = value.blend();
             }
 
@@ -128,28 +128,19 @@ export default class Actor extends Action {
             const key = action.valueKeys[i];
             const actionValue = action.values[key];
             const value = this.values[key];
-            const driverIndex = value.drivers.indexOf(id);
-
-            if (driverIndex !== -1) {
-                value.drivers.splice(driverIndex, 1);
-            } else {
-                value.numDrivers++;
-            }
-
-            value.target = actionValue.to;
 
             // Pass Actor value properties to Action
             actionValue.velocity = value.velocity;
             actionValue.current = value.current;
 
-            // Add to drivers list
-            value.drivers.unshift(id);
-
-            // If we have to blend this Action in, create quadratic blend curve points
-            if (value.numDrivers > 1 && action.additive) {
-                const previousAction = this.activeActions[value.drivers[value.numDrivers - 1]];
-                value.blend = generateBlendCurve(previousAction, action, key);
+            // If we're blending this action, and there's on already in progress
+            if (action.blend && value.numDrivers) {
+                value.blend = generateBlendCurve(this.activeActions[value.drivers[0]], action, key);
             }
+
+            value.drivers = [id];
+
+            value.numDrivers = value.drivers.length;
         }
 
         if (this.numActiveActions) {

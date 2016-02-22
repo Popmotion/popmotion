@@ -114,6 +114,7 @@ export default class Tween extends Action {
     getDefaultProps() {
         return {
             ...super.getDefaultProps(),
+            blend: true,
             delay: 0,
             dilate: 1,
             duration: 300,
