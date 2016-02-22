@@ -102,10 +102,11 @@ export default class Actor extends Action {
         for (let i = 0; i < this.numValueKeys; i++) {
             const key = this.valueKeys[i];
             const value = this.values[key];
-            let newCurrent = (value.numDrivers) ? this.activeActions[value.drivers[0]].values[key].current : value.current;
+            const driver = value.numDrivers ? this.activeActions[value.drivers[0]] : false;
+            let newCurrent = value.numDrivers ? driver.values[key].current : value.current;
 
-            if (value.numDrivers > 1 && value.blend) {
-                newCurrent = value.blend();
+            if (driver.blendCurve) {
+                newCurrent = driver.blendCurve();
             }
 
             value.current = newCurrent;
@@ -135,11 +136,10 @@ export default class Actor extends Action {
 
             // If we're blending this action, and there's on already in progress
             if (action.blend && value.numDrivers) {
-                value.blend = generateBlendCurve(this.activeActions[value.drivers[0]], action, key);
+                action.blendCurve = generateBlendCurve(this.activeActions[value.drivers[0]], action, key);
             }
 
             value.drivers = [id];
-
             value.numDrivers = value.drivers.length;
         }
 
@@ -156,19 +156,21 @@ export default class Actor extends Action {
     deactivateAction(id) {
         const action = this.activeActions[id];
 
-        for (let i = 0; i < action.numValueKeys; i++) {
-            const key = action.valueKeys[i];
-            const value = this.values[key];
-            const driverIndex = value.drivers.indexOf(id);
+        if (action) {
+            for (let i = 0; i < action.numValueKeys; i++) {
+                const key = action.valueKeys[i];
+                const value = this.values[key];
+                const driverIndex = value.drivers.indexOf(id);
 
-            if (driverIndex !== -1) {
-                value.drivers.splice(driverIndex, 1);
-                value.numDrivers--;
+                if (driverIndex !== -1) {
+                    value.drivers.splice(driverIndex, 1);
+                    value.numDrivers--;
+                }
             }
-        }
 
-        delete this.activeActions[id];
-        this.numActiveActions--;
+            delete this.activeActions[id];
+            this.numActiveActions--;
+        }
 
         if (!this.numActiveActions && this.isActive) {
             super.stop();

@@ -1,6 +1,6 @@
 import { getProgressFromValue, getValueFromProgress, ease, restrict } from './calc';
 
-const BLEND_ACCURACY = 30;
+const BLEND_ACCURACY = 10;
 
 export default (outAction, inAction, key) => {
     const outValue = outAction.values[key];
@@ -48,14 +48,24 @@ export default (outAction, inAction, key) => {
 
     if (blendCurve.length === 2) {
         // Pass between tweens using incoming easing if just two points
-        return () => ease(restrict(getProgressFromValue(inAction.elapsed, blendCurve[0][0], blendCurve[1][0]), 0, 1), outValue.current, inValue.current, inValue.ease);
+        return () => {
+            if (blendProgress === 1) {
+                inAction.blendCurve = undefined;
+            }
 
+            return ease(restrict(getProgressFromValue(inAction.elapsed, blendCurve[0][0], blendCurve[1][0]), 0, 1), outValue.current, inValue.current, inValue.ease);
+        };
     } else {
         // Pass between tweens using bezier interpolation
         return () => {
             const blendProgress = restrict(getProgressFromValue(inAction.elapsed, blendCurve[0][0], blendCurve[2][0]), 0, 1);
             const aP = getValueFromProgress(blendProgress, blendCurve[0][1], blendCurve[1][1]);
             const bP = getValueFromProgress(blendProgress, blendCurve[1][1], blendCurve[2][1]);
+console.log(blendProgress)
+            if (blendProgress === 1) {
+                inAction.blendCurve = undefined;
+                return inValue.current;
+            }
 
             return getValueFromProgress(blendProgress, aP, bP);
         };
