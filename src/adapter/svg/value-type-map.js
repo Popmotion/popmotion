@@ -12,6 +12,7 @@ export default {
     scaleY: scale,
     transformOrigin: axes,
     d: complex,
+    points: complex,
     opacity: alpha,
     fillOpacity: alpha,
     strokeOpacity: alpha

@@ -63,6 +63,10 @@ export default class Action extends Process {
         return this;
     }
 
+    get(key) {
+        return this.state[key];
+    }
+
     setValues(values, inheritFrom) {
         const currentValues = this.values;
         const defaultValue = this.getDefaultValue();
@@ -135,7 +139,7 @@ export default class Action extends Process {
 
                         if (newValue.type) {
                             // If we're going to split this value into child values
-                            if (newValue.type.hasOwnProperty('split')) {
+                            if (newValue.type.hasOwnProperty('split') && isString(valueProp)) {
                                 const splitProp = newValue.type.split(valueProp);
 
                                 for (let splitKey in splitProp) {
@@ -256,16 +260,16 @@ export default class Action extends Process {
             if (value.prev !== value.current) {
                 hasChanged = true;
                 value.prev = value.current;
+            }
 
-                // Append unit
-                const valueForState = (value.type && value.type.serialize) ? value.type.serialize(value.current, value) : value.current;
+            // Append unit
+            const valueForState = (value.type && value.type.serialize) ? value.type.serialize(value.current, value) : value.current;
 
-                // Add to state if this is not a child vaue
-                if (!value.parent) {
-                    this.state[key] = valueForState;
-                } else {
-                    this.values[value.parent].children[value.childKey] = valueForState;
-                }
+            // Add to state if this is not a child vaue
+            if (!value.parent) {
+                this.state[key] = valueForState;
+            } else {
+                this.values[value.parent].children[value.childKey] = valueForState;
             }
         }
 
@@ -296,10 +300,6 @@ export default class Action extends Process {
     onRender({ state, on }) {
         if (on && on.set) {
             on.set(state);
-        }
-
-        if (this.onUpdate) {
-            this.onUpdate(this.state, this);
         }
     }
 

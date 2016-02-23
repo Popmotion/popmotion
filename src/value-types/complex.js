@@ -17,7 +17,7 @@ export default {
 
     split: (value) => {
         const splitValue = {};
-        
+
         value.match(FLOAT_REGEX).forEach((value, i) => splitValue[i] = value);
 
         return splitValue;

@@ -1,6 +1,6 @@
 // Actions
 export Action from './actions/Action';
-import Actor from './actions/Actor';
+import Actor from './actor/Actor';
 import Tween from './actions/Tween';
 import Physics from './actions/Physics';
 import Track from './actions/Track';
@@ -26,6 +26,7 @@ export attrAdapter from './adapter/attr-adapter';
 export cssAdapter from './adapter/css-adapter';
 export svgAdapter from './adapter/svg-adapter';
 export svgPathAdapter from './adapter/svg-path-adapter';
+export bindAdapter from './inc/bind-adapter';
 
 // Easing
 export easing from './actions/easing/preset-easing';

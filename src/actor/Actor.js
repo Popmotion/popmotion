@@ -1,5 +1,5 @@
 import Action from '../actions/Action';
-import generateBlendCurve from '../inc/generate-blend-curve';
+import generateBlendCurve from './inc/generate-blend-curve';
 
 /*
     Methods and properties to add to bound Actions
@@ -16,8 +16,8 @@ const boundProps = (actor) => ({
 });
 
 export default class Actor extends Action {
-    constructor(...args) {
-        super(...args);
+    constructor(props) {
+        super(props);
         this.activeActions = {};
         this.numActiveActions = 0;
     }

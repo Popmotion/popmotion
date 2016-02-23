@@ -136,7 +136,6 @@ export default class Tween extends Action {
             elapsed: 0,
             stagger: 0,
             steps: 0,
-            from: 0,
             to: 0,
             round: false
         };
