@@ -130,13 +130,13 @@ export default class Actor extends Action {
             const actionValue = action.values[key];
             const value = this.values[key];
 
-            // Pass Actor value properties to Action
-            actionValue.velocity = value.velocity;
-            actionValue.current = value.current;
-
             // If we're blending this action, and there's on already in progress
             if (action.blend && value.numDrivers) {
                 action.blendCurve = generateBlendCurve(this.activeActions[value.drivers[0]], action, key);
+            } else {
+                // Pass Actor value properties to Action
+                actionValue.velocity += value.velocity;
+                actionValue.from = actionValue.current = value.current;
             }
 
             value.drivers = [id];

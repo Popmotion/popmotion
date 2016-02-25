@@ -4,18 +4,13 @@ import build from './svg/build';
 import { getter, setter as attrSetter } from './attr-adapter';
 import adapter from './adapter';
 
-const svgStateMap = {
-    ...cssStateMap,
-    color: 'fill'
-};
-
 export function setter(props) {
     this.attrSetter(build(props, this.origin));
 }
 
 export default (element, transformOriginX = 50, transformOriginY = 50) => {
     const svgAdapter = adapter(element);
-    svgAdapter.stateMap = svgStateMap;
+    svgAdapter.stateMap = cssStateMap;
     svgAdapter.valueTypeMap = valueTypeMap;
     svgAdapter.getter = getter;
     svgAdapter.setter = setter;

@@ -14,7 +14,6 @@ class Adapter {
     constructor(element) {
         this.element = element;
         this.cache = {};
-        this.internalCache = {};
     }
 
     /*
@@ -27,9 +26,9 @@ class Adapter {
         const mappedKey = this.mapStateKey(key);
 
         if (refresh || !this.cache.hasOwnProperty(key)) {
-            return this.cache[key] = this.getter(mappedKey);
+            return this.cache[mappedKey] = this.getter(mappedKey);
         } else {
-            return this.cache[key];
+            return this.cache[mappedKey];
         }
     }
 
@@ -43,11 +42,11 @@ class Adapter {
         for (let key in props) {
             if (props.hasOwnProperty(key)) {
                 const mappedKey = this.mapStateKey(key);
-                this.cache[key] = this.internalCache[mappedKey] = props[key];
+                this.cache[mappedKey] = props[key];
             }
         }
 
-        return this.setter(this.internalCache);
+        return this.setter(this.cache);
     }
 
     /*

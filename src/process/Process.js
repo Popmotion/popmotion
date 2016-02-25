@@ -34,6 +34,7 @@ export default class Process {
         loop.activate(this.id, this);
 
         this.onCleanup = this.onActivate = undefined;
+        this.isComplete = false;
 
         // Private `onStart`
         if (this._onStart) {
@@ -68,6 +69,14 @@ export default class Process {
         this.start();
         this.onActivate = this._onActivate;
         return this;
+    }
+
+    complete() {
+        this.stop();
+
+        if (this.onComplete) {
+            this.onComplete();
+        }
     }
 
     /*

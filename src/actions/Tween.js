@@ -68,7 +68,7 @@ export default class Tween extends Action {
             }
 
             if (!stepTaken) {
-                this.stop();
+                this.complete();
             }
         }
     }

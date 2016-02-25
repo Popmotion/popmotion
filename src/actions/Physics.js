@@ -41,11 +41,11 @@ export default class Physics extends Action {
     }
 
     onFrameEnd() {
-        if (this.autoEnd) {
+        if (this.autoComplete) {
             this.inactiveFrames = this.hasChanged ? 1 : this.inactiveFrames + 1;
 
             if (this.inactiveFrames >= this.maxInactiveFrames) {
-                this.stop();
+                this.complete();
             }
         }
     }
@@ -58,7 +58,7 @@ export default class Physics extends Action {
     getDefaultProps() {
         return {
             ...super.getDefaultProps(),
-            autoEnd: true,
+            autoComplete: true,
             maxInactiveFrames: 3
         };
     }
