@@ -23,15 +23,24 @@ export default class Actor extends Action {
     }
 
     set(props, instant) {
-        if (instant || !this.behaviour) {
+        if (!instant && this.behaviour) {
+            const action = this.behaviour(props);
+
+            if (action) {
+                if (action.length) {
+                    for (let i = 0; i < action.length; i++) {
+                        this.start(action[i])
+                    }
+                } else {
+                    this.start(action);
+                }
+            }
+        } else {
             super.set(props);
             this.once();
-        } else {
-            const action = this.reducer(props);
-            if (action) {
-                this.start(action);
-            }
         }
+
+        return this;
     }
 
     /*
