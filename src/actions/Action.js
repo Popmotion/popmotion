@@ -303,6 +303,12 @@ export default class Action extends Process {
         }
     }
 
+    inherit(props = {}) {
+        const { values, ...propsToSet } = props;
+        super.inherit(propsToSet);
+        return this.setValues(values);
+    }
+
     pause() {
         super.stop();
         return this;

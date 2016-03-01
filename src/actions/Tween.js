@@ -28,7 +28,10 @@ export default class Tween extends Action {
         const progressTarget = (this.playDirection === 1) ? 1 : 0;
 
         this.ended = true;
-        this.elapsed += (elapsed * this.dilate) * this.playDirection;
+
+        if (!this.isScrubbing) {
+            this.elapsed += (elapsed * this.dilate) * this.playDirection;
+        }
 
         for (let i = 0; i < this.numValueKeys; i++) {
             const key = this.valueKeys[i];
@@ -52,7 +55,7 @@ export default class Tween extends Action {
     }
 
     onFrameEnd() {
-        if (this.ended) {
+        if (this.ended && !this.isScrubbing) {
             let stepTaken = false;
 
             for (let key in NEXT_STEPS) {
@@ -71,6 +74,8 @@ export default class Tween extends Action {
                 this.complete();
             }
         }
+
+        this.isScrubbing = false;
     }
 
     flipValues() {
@@ -122,6 +127,7 @@ export default class Tween extends Action {
             yoyo: false,
             flip: false,
             playDirection: 1,
+            isScrubbing: false,
             ended: false,
             elapsed: 0
         };
