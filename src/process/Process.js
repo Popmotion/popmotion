@@ -97,7 +97,6 @@ export default class Process {
     */
     inherit(props) {
         const { id, ...inheritedProps } = this;
-        const newProcess = new this.constructor(inheritedProps);
-        return newProcess.set(props);
+        return new this.constructor({ ...inheritedProps, ...props });
     }
 }

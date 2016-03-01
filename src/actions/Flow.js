@@ -15,7 +15,7 @@ const boundProps = (actor) => ({
     onRender: undefined
 });
 
-export default class Actor extends Action {
+export default class Flow extends Action {
     constructor(props) {
         super(props);
         this.activeActions = {};
