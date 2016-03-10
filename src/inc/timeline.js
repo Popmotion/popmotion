@@ -50,12 +50,12 @@ const analyze = (defs) => {
     return { totalTime: currentPlayhead, timeline };
 };
 
-const setTweens = ({ elapsed, timeline, timelineLength }) => {
+const setTweens = ({ timeline, timelineLength, values, duration }) => {
     for (let i = 0; i < timelineLength; i++) {
         const tween = timeline[i];
-        const tweenTime = elapsed - tween.from;
+        const tweenTime = (values.p.current * duration) - tween.from;
 
-        if (tweenTime > 0 && tweenTime < tween.duration) {
+        if (tweenTime >= -50 && tweenTime <= tween.duration + 50) {
             tween.fire(tweenTime);
         }
     }

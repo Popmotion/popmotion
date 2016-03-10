@@ -1,7 +1,7 @@
-import Process from '../process/Process';
+import Task from '../task/Task';
 import { isFunc } from '../inc/utils';
 
-export default class Input extends Process {
+export default class Input extends Task {
     constructor(initialValues, poll) {
         super();
         this.state = initialValues;

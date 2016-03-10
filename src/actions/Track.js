@@ -24,7 +24,7 @@ const createPointer = (e) => e.touches ?
 
 const getActualEvent = (e) => e.originalEvent || e;
 
-export default class Track extends Action {
+class Track extends Action {
     start(input) {
         super.start();
 
@@ -53,7 +53,7 @@ export default class Track extends Action {
                 if (value.direct) {
                     value.current = this.input.state[key];
                 } else {
-                    value.current = value.origin + this.inputOffset[key];
+                    value.current = value.from + this.inputOffset[key];
                 }
 
                 // Smooth value if we have smoothing
@@ -73,3 +73,11 @@ export default class Track extends Action {
         };
     }
 }
+
+Track.prototype.defaultValue = Action.extendDefaultValue({
+    amp: 1,
+    escapeAmp: 0,
+    direct: false
+});
+
+export default Track;

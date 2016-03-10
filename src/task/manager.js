@@ -1,22 +1,22 @@
-// [int]: Incremented for each new running process
-let currentProcessId = 0;
+// [int]: Incremented for each new running task
+let currentTaskId = 0;
 
-// [int]: Number of all running processes
+// [int]: Number of all running taskes
 let totalRunningCount = 0;
 
-// [int]: Number of running processes excluding background processes
+// [int]: Number of running taskes excluding background taskes
 let nonBackgroundRunningCount = 0;
 
-// [array]: Array of running process IDs
+// [array]: Array of running task IDs
 const runningIds = [];
 
-// [object]: Map of running processes
-const activeProcesses = {};
+// [object]: Map of running taskes
+const activeTasks = {};
 
-// [array]: Array of process IDs queued for activation
+// [array]: Array of task IDs queued for activation
 const activateQueue = [];
 
-// [array]: Array of process IDs queued for deactivation
+// [array]: Array of task IDs queued for deactivation
 const deactivateQueue = [];
 
 /*
@@ -56,47 +56,59 @@ const updateRunningCount = (add, isLazy) => {
 };
 
 export default {
-    activeProcesses,
+    activeTasks,
 
-    // Activate a process
-    activate: (id, process) => {
-        activeProcesses[id] = process;
-        process.isActive = true;
+    // Activate a task
+    activate: (id, task) => {
+        activeTasks[id] = task;
+        task.isActive = true;
         updateQueues(id, activateQueue, deactivateQueue);
+
+        if (task.onActivate) {
+            task.onActivate(task);
+        }
     },
 
-    // Deactivate a process
+    // Deactivate a task
     deactivate: (id) => {
-        process.isActive = false;
-        updateQueues(id, deactivateQueue, activateQueue);
+        const task = activeTasks[id];
+
+        if (task) {
+            updateQueues(id, deactivateQueue, activateQueue);
+            task.isActive = false;
+
+            if (task.onDeactivate) {
+                task.onDeactivate(task);
+            }
+        }
     },
 
-    // Number background processes
+    // Number background taskes
     getNonBackgroundRunningCount: () => nonBackgroundRunningCount,
 
-    // Increment current process ID and return
-    getProcessId: () => currentProcessId++,
+    // Increment current task ID and return
+    getTaskId: () => currentTaskId++,
 
-    // Resolve activate/deactivate processes and return active ids
+    // Resolve activate/deactivate taskes and return active ids
     getActiveIds: () => {
         /*
-            Process deactivate queue
+            task deactivate queue
         */
         const deactivateQueueLength = deactivateQueue.length;
 
         for (let i = 0; i < deactivateQueueLength; i++) {
             const id = deactivateQueue[i];
             const activeIdIndex = runningIds.indexOf(id);
-            const process = activeProcesses[id];
+            const task = activeTasks[id];
 
-            // If this is a running process, deactivate
+            // If this is a running task, deactivate
             if (activeIdIndex > -1) {
                 runningIds.splice(activeIdIndex, 1);
-                updateRunningCount(false, process.isLazy);
-                delete activeProcesses[id];
+                updateRunningCount(false, task.isLazy);
+                delete activeTasks[id];
 
-                if (process.onDeactivate) {
-                    process.onDeactivate(process);
+                if (task.onDeactivate) {
+                    task.onDeactivate(task);
                 }
             }
         }
@@ -108,27 +120,27 @@ export default {
         deactivateQueue.splice(0, deactivateQueueLength);
 
         /*
-            Process activate queue
+            task activate queue
         */
         const activateQueueLength = activateQueue.length;
 
         for (let i = 0; i < activateQueueLength; i++) {
             const id = activateQueue[i];
             const activeIdIndex = runningIds.indexOf(id);
-            const process = activeProcesses[id];
+            const task = activeTasks[id];
 
-            // If process isn't already running, activate
-            if (activeIdIndex === -1 && process) {
-                if (process.isPriority) {
+            // If task isn't already running, activate
+            if (activeIdIndex === -1 && task) {
+                if (task.isPriority) {
                     runningIds.unshift(id);
                 } else {
                     runningIds.push(id);
                 }
 
-                updateRunningCount(true, process.isLazy);
+                updateRunningCount(true, task.isLazy);
 
-                if (process.onActivate) {
-                    process.onActivate(process);
+                if (task.onActivate) {
+                    task.onActivate(task);
                 }
             }
         }

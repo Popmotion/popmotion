@@ -8,7 +8,7 @@ import timer from './timer';
 import tick from './tick';
 import manager from './manager';
 
-const processStepOrder = [
+const taskStepOrder = [
     { name: 'onFrameStart' },
     { name: 'onUpdate' },
     { name: 'willRender', decideRender: true },
@@ -18,7 +18,7 @@ const processStepOrder = [
     { name: 'onFrameEnd' },
     { name: 'onCleanup' }
 ];
-const numProcessSteps = processStepOrder.length;
+const numTaskSteps = taskStepOrder.length;
 
 // [boolean]: Is loop running?
 let isRunning = false;
@@ -29,23 +29,23 @@ let isRunning = false;
 */
 function fireAll(frameStamp, elapsed) {
     const activeIds = manager.getActiveIds();
-    const activeProcessCount = activeIds.length;
+    const activeTaskCount = activeIds.length;
 
-    for (let i = 0; i < numProcessSteps; i++) {
-        const step = processStepOrder[i];
+    for (let i = 0; i < numTaskSteps; i++) {
+        const step = taskStepOrder[i];
 
-        for (let i2 = 0; i2 < activeProcessCount; i2++) {
-            const process = manager.activeProcesses[activeIds[i2]];
+        for (let i2 = 0; i2 < activeTaskCount; i2++) {
+            const task = manager.activeTasks[activeIds[i2]];
             let result = false;
 
-            // Check if this process has this step, or if it's a render step that we're rendering this frame
-            if (process && process[step.name] && (!step.isRender || (step.isRender && process._renderThisFrame === true))) {
-                result = process[step.name].call(process, process, frameStamp, elapsed);
+            // Check if this task has this step, or if it's a render step that we're rendering this frame
+            if (task && task[step.name] && (!step.isRender || (step.isRender && task._renderThisFrame === true))) {
+                result = task[step.name].call(task, task, frameStamp, elapsed);
             }
 
             // If this is a decide render step and it returns `false`, set willRender to false
             if (step.decideRender) {
-                process._renderThisFrame = (process[step.name] && result !== true) ? false : true;
+                task._renderThisFrame = (task[step.name] && result !== true) ? false : true;
             }
         }
     }
@@ -73,14 +73,14 @@ function start() {
 }
 
 // Exports
-export const getProcessId = manager.getProcessId;
+export const getTaskId = manager.getTaskId;
 
 /*
-    [int]: Process ID to activate
-    [Process]: Process to activate
+    [int]: task ID to activate
+    [task]: task to activate
 */
-export function activate(id, process) {
-    manager.activate(id, process);
+export function activate(id, task) {
+    manager.activate(id, task);
 
     if (!isRunning) {
         start();
@@ -88,6 +88,6 @@ export function activate(id, process) {
 }
 
 /*
-    [int]: Process ID to deactivate
+    [int]: task ID to deactivate
 */
 export const deactivate = manager.deactivate;

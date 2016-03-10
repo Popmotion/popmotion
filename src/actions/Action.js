@@ -1,16 +1,12 @@
-import Process from '../process/Process';
+import Task from '../task/Task';
 import { speedPerSecond } from '../inc/calc';
 import { isNum, isObj, isString } from '../inc/utils';
-import bindAdapter from '../inc/bind-adapter';
-import colorType from '../value-types/color';
-import complexType from '../value-types/complex';
-import unitType from '../value-types/unit';
+import detectValueType from '../value-types/detect';
+import NUMERICAL_VALUES from '../inc/numerical-values';
 
-const DEFAULT_PROP = 'current';
-const NUMERICAL_VALUES = [DEFAULT_PROP, 'from', 'to', 'prev', 'velocity'];
 const NUM_NUMERICAL_VALUES = NUMERICAL_VALUES.length;
 
-export default class Action extends Process {
+class Action extends Task {
     constructor(props) {
         props.state = {};
         props.valueKeys = [];
@@ -26,38 +22,35 @@ export default class Action extends Process {
         @return [Action]
     */
     set(props = {}) {
-        const { values, on, ...propsToSet } = props;
-        const currentValues = this.values = this.values || {};
-        const defaultValue = this.getDefaultValue();
+        this.values = this.values || {};
+
+        const { values, ...propsToSet } = props;
         const inheritable = {};
 
-        // 1) Set non-consumed properties
+        // Set non-consumed properties
         super.set(propsToSet);
 
-        // 2) Bind `on` to an adapter, if not already
-        if (on) {
-            // Ducktypish check for Adapter
-            this.on = (!on.setter) ? bindAdapter(on) : on;
-        }
-
-        // 3) Prime an object to inherit from, with only `value` properties
-        for (let key in defaultValue) {
-            if (defaultValue.hasOwnProperty(key) && propsToSet.hasOwnProperty(key)) {
+        // Prime an object to inherit from, with only `value` properties
+        for (let key in this.defaultValue) {
+            if (this.defaultValue.hasOwnProperty(key) && propsToSet.hasOwnProperty(key)) {
                 inheritable[key] = propsToSet[key];
             }
         }
 
-        // 4) Update existing values with inheritable properties
-        for (let key in currentValues) {
-            // Exclude variables to be set, as we'll deal with those seperately
-            if (currentValues.hasOwnProperty(key)) {
-                currentValues[key] = { ...currentValues[key], ...inheritable };
+        // Update existing values with inheritable properties
+        for (let key in this.values) {
+            if (this.values.hasOwnProperty(key)) {
+                this.values[key] = { ...this.values[key], ...inheritable };
             }
         }
 
-        // 5) Update
+        // Update
         if (values) {
-            this.setValues(values, inheritable);   
+            this.setValues(values, inheritable);
+
+            // Precompute number of value key and parent keys to avoid per-frame measurement
+            this.numValueKeys = this.valueKeys.length;
+            this.numParentKeys = this.parentKeys.length;
         }
 
         return this;
@@ -67,125 +60,87 @@ export default class Action extends Process {
         return this.state[key];
     }
 
-    setValues(values, inheritFrom) {
-        const currentValues = this.values;
-        const defaultValue = this.getDefaultValue();
-        const defaultValueProp = this.getDefaultValueProp();
-
-        // 2) Loop over every incoming `value` and set
+    setValues(values, inherit) {
+        // Iterate over all incoming values and set
         for (let key in values) {
             if (values.hasOwnProperty(key)) {
-                let value = {};
-                let children = {};
                 let hasChildren = false;
-                let base = currentValues[key] ? currentValues[key] : defaultValue;
+                const children = {};
+                // Merge into existing value or create new
+                let newValue = this.values[key] ? { ...this.values[key] } : { ...this.defaultValue, ...inherit };
 
-                // If values os an object, use it directly
-                if (isObj(values[key])) {
-                    value = values[key];
-
-                // OR set to a the default value property of a blank object
+                // If values is not an object, assign value to default prop
+                if (!isObj(values[key])) {
+                    newValue[this.defaultValueProp] = values[key];
                 } else {
-                    value[defaultValueProp] = values[key];
+                    newValue = { ...newValue, ...values[key] };
                 }
 
-                let newValue = { ...base, ...inheritFrom, ...value };
-
-                // Get current value if none is defined
-                if (newValue.current === undefined) {
-                    // If we have a `from` value set, take that
-                    if (newValue.from !== undefined) {
-                        newValue.current = newValue.from;
-                    
-                    // Or if we have an Adapter, get it from that
-                    } else if (this.on && this.on.get) {
-                        newValue.current = this.on.get(key);
-                    }
-
-                    // If it's still undefined make it equal 0??
-                    if (newValue.current === undefined) {
-                        newValue.current = 0;
-                    }
+                // If we've got an element, get the current value
+                if (values[key].current === undefined && this.element && this.element.get) {
+                    newValue.current = this.element.get(key);
                 }
 
-                if (newValue.from === undefined) {
-                    newValue.from = newValue.current;
+                // If we don't have a value type and we do have an Adapter, check for type with value key
+                if (!newValue.type && this.element && this.element.getValueType) {
+                    newValue.type = this.element.getValueType(key);
                 }
 
-                // If our Adapter has a `getValueType` function, try to get a `type` with the value key
-                if (!newValue.type && this.on && this.on.getValueType) {
-                    newValue.type = this.on.getValueType(key);
+                // If we still don't have a value type and this is the first time we've set this value, check numerical values for strings and test
+                if (!newValue.type && !this.values[key]) {
+                    newValue.type = detectValueType(newValue);
                 }
 
-                // c) Loop through all numerical property types
-                for (let i = 0; i < NUM_NUMERICAL_VALUES; i++) {
-                    const propName = NUMERICAL_VALUES[i];
-                    const valueProp = newValue[propName];
+                // If we have a value type, handle. This is my least favourite part of Popmotion, so... enjoy.
+                if (newValue.type) {
+                    for (let i = 0; i < NUM_NUMERICAL_VALUES; i++) {
+                        const propName = NUMERICAL_VALUES[i];
+                        const valueProp = newValue[propName];
 
-                    // If we have this kind of property, process
-                    if (valueProp !== undefined) {
-                        // If we don't have a type set to this value, find one (unless it's a raw number)
-                        if (!newValue.type && isString(valueProp)) {
-                            if (unitType.test(valueProp)) {
-                                newValue.type = unitType;
+                        // If this prop is a string and we have a splitter, split
+                        if (newValue.type.hasOwnProperty('split')) {
+                            const splitProp = isString(valueProp) ? newValue.type.split(valueProp) : {};
 
-                            } else if (colorType.test(valueProp)) {
-                                newValue.type = colorType;
+                            for (let splitKey in splitProp) {
+                                if (splitProp.hasOwnProperty(splitKey)) {
+                                    const combinedKey = key + splitKey;
 
-                            } else if (complexType.test(valueProp)) {
-                                newValue.type = complexType;
-                            }
-                        }
+                                    // If we don't have a child value for this key, make one
+                                    if (!children[combinedKey]) {
+                                        const defaultValue = (newValue.type.defaultProps && newValue.type.defaultProps[splitKey]) ? newValue.type.defaultProps[splitKey] : newValue.type.defaultProps || {};
 
-                        if (newValue.type) {
-                            // If we're going to split this value into child values
-                            if (newValue.type.hasOwnProperty('split') && isString(valueProp)) {
-                                const splitProp = newValue.type.split(valueProp);
+                                        children[combinedKey] = {
+                                            ...newValue,
+                                            ...defaultValue,
+                                            parent: key,
+                                            childKey: splitKey
+                                        };
 
-                                for (let splitKey in splitProp) {
-                                    if (splitProp.hasOwnProperty(splitKey)) {
-                                        const combinedKey = key + splitKey;
-
-                                        if (!children[combinedKey]) {
-                                            const defaultValue = (newValue.type.defaultProps && newValue.type.defaultProps[splitKey]) ? newValue.type.defaultProps[splitKey] : {};
-                                            children[combinedKey] = {
-                                                ...newValue,
-                                                ...defaultValue,
-                                                parent: key,
-                                                childKey: splitKey,
-                                                type: undefined
-                                            };
-                                        }
-
-                                        children[combinedKey][propName] = splitProp[splitKey];
+                                        delete children[combinedKey].type;
                                     }
+
+                                    hasChildren = true;
+                                    children[combinedKey][propName] = parseFloat(splitProp[splitKey]);
                                 }
-
-                                // If this has a `template` function, generate
-                                if (!newValue.template && newValue.type.template) {
-                                    newValue.template = newValue.type.template(newValue[propName]);
-                                }
-
-                                hasChildren = true;
-
-                            } else if (newValue.type.defaultProps) {
-                                newValue = { ...newValue, ...newValue.type.defaultProps };
                             }
 
-                            if (newValue.type.parse) {
-                                newValue[propName] = newValue.type.parse(newValue[propName], newValue);
+                            // If we have a template function, generate
+                            if (!newValue.template && newValue.type.template && isString(valueProp)) {
+                                newValue.template = newValue.type.template(valueProp);
                             }
+                        } else if (newValue.type.defaultProps) {
+                            newValue = { ...newValue, ...newValue.type.defaultProps };
+                        }
+
+                        if (valueProp !== undefined && newValue.type.parse) {
+                            newValue[propName] = newValue.type.parse(valueProp, newValue);
                         }
                     }
-                } // End numerical property iteration
+                } // End value type nonsense
 
-                // Set `prev` to `current` if it isn't already defined
-                if (newValue.prev === undefined) {
-                    newValue.prev = newValue.current;
-                }
-
-                currentValues[key] = newValue;
-
+                // Set `prev` to `current` for first frame after set
+                newValue.prev = newValue.current;
+                
                 // If this value doesn't have children, add to valueKeys
                 if (!hasChildren) {
                     if (this.valueKeys.indexOf(key) === -1) {
@@ -202,15 +157,10 @@ export default class Action extends Process {
 
                     this.setValues(children);
                 }
+
+                this.values[key] = newValue;
             }
-        } // End value iteration
-
-        // 3) Precompute value key and parent key length to prevent per-frame measurement
-        this.numValueKeys = this.valueKeys.length;
-        this.numParentKeys = this.parentKeys.length;
-
-        return this;
-
+        }
     }
 
     /*
@@ -297,16 +247,15 @@ export default class Action extends Process {
         }
     }
 
-    onRender({ state, on }) {
-        if (on && on.set) {
-            on.set(state);
-        }
-    }
-
     inherit(props = {}) {
         const { values, ...propsToSet } = props;
-        super.inherit(propsToSet);
-        return this.setValues(values);
+        const newAction = super.inherit(propsToSet);
+
+        if (values) {
+            newAction.set({ values });
+        }
+
+        return newAction;
     }
 
     pause() {
@@ -330,25 +279,20 @@ export default class Action extends Process {
         }
     }
 
-    /*
-        # Get default Action value properties
-
-        @return [object]
-    */
-    getDefaultValue() {
-        return {
-            velocity: 0,
-            round: false
-        };
+    static extendDefaultValue(props) {
+        return { ...this.prototype.defaultValue, ...props };
     }
 
-    /*
-        # Get default Action value property name
-        ## Set this `value` property when set as value instead of object
-
-        @return [string]
-    */
-    getDefaultValueProp() {
-        return DEFAULT_PROP;
+    static extendDefaultProps(props) {
+        return { ...this.prototype.defaultProps, ...props };
     }
 }
+
+Action.prototype.defaultValueProp = 'current';
+Action.prototype.defaultValue = {
+    current: 0,
+    velocity: 0,
+    round: false
+};
+
+export default Action;

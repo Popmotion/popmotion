@@ -1,12 +1,7 @@
 import Action from './Action';
 import easing from './easing/preset-easing';
 import { currentTime, isNum } from '../inc/utils';
-import {
-    ease,
-    restrict,
-    getProgressFromValue,
-    stepProgress
-} from '../inc/calc';
+import { ease, restrict, getProgressFromValue, stepProgress } from '../inc/calc';
 
 const COUNT = 'Count';
 const NEXT_STEPS = {
@@ -15,12 +10,12 @@ const NEXT_STEPS = {
     flip: 'flipValues'
 };
 
-export default class Tween extends Action {
+class Tween extends Action {
     start() {
         super.start();
         this.elapsed = 0;
         this.flipCount = this.yoyoCount = this.loopCount = 0;
-
+        this.isScrubbing = false;
         return this;
     }
 
@@ -60,9 +55,7 @@ export default class Tween extends Action {
 
             for (let key in NEXT_STEPS) {
                 if (NEXT_STEPS.hasOwnProperty(key)) {
-                    const maxSteps = this[key];
-
-                    if (maxSteps === true || (isNum(maxSteps) && maxSteps > this[key + COUNT])) {
+                    if (isNum(this[key]) && this[key] > this[key + COUNT]) {
                         this[key + COUNT]++;
                         stepTaken = true;
                         this[NEXT_STEPS[key]]();
@@ -74,8 +67,6 @@ export default class Tween extends Action {
                 this.complete();
             }
         }
-
-        this.isScrubbing = false;
     }
 
     flipValues() {
@@ -112,42 +103,36 @@ export default class Tween extends Action {
     seekTime(elapsed) {
         this.once();
         this.elapsed = elapsed;
+        this.isScrubbing = true;
 
         return this;
     }
-    
-    getDefaultProps() {
-        return {
-            ...super.getDefaultProps(),
-            blend: true,
-            delay: 0,
-            dilate: 1,
-            duration: 300,
-            loop: false,
-            yoyo: false,
-            flip: false,
-            playDirection: 1,
-            isScrubbing: false,
-            ended: false,
-            elapsed: 0
-        };
-    }
-
-    getDefaultValue() {
-        return {
-            ...super.getDefaultValue(),
-            delay: 0,
-            duration: 300,
-            ease: easing.easeOut,
-            elapsed: 0,
-            stagger: 0,
-            steps: 0,
-            to: 0,
-            round: false
-        };
-    }
-
-    getDefaultValueProp() {
-        return 'to';
-    }
 }
+
+Tween.prototype.defaultValueProp = 'to';
+Tween.prototype.defaultValue = Action.extendDefaultValue({
+    delay: 0,
+    duration: 300,
+    ease: easing.easeOut,
+    elapsed: 0,
+    from: 0,
+    stagger: 0,
+    steps: 0,
+    to: 0,
+    round: false
+});
+Tween.prototype.defaultProps = Action.extendDefaultProps({
+    blend: true,
+    delay: 0,
+    dilate: 1,
+    duration: 300,
+    loop: false,
+    yoyo: false,
+    flip: false,
+    playDirection: 1,
+    isScrubbing: false,
+    ended: false,
+    elapsed: 0
+});
+
+export default Tween;

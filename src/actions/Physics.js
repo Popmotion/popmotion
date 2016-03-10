@@ -2,8 +2,7 @@ import Action from './Action';
 import { speedPerFrame } from '../inc/calc';
 import { isNum } from '../inc/utils';
 
-export default class Physics extends Action {
-
+class Physics extends Action {
     constructor(...args) {
         super(...args);
         this.inactiveFrames = 0;
@@ -49,43 +48,19 @@ export default class Physics extends Action {
             }
         }
     }
-
-    /*
-        # Get default Simulate props
-
-        @return [object]
-    */
-    getDefaultProps() {
-        return {
-            ...super.getDefaultProps(),
-            autoComplete: true,
-            maxInactiveFrames: 3
-        };
-    }
-
-    /*
-        # Get default Simulate value props
-
-        @return [object]
-    */
-    getDefaultValue() {
-        return {
-            ...super.getDefaultValue(),
-            acceleration: 0, // [number]: Acceleration to apply to value, in units per second
-            bounce: 0, // [number]: Factor to multiply velocity by on bounce
-            spring: 0, // [number]: Spring strength during 'string'
-            stopSpeed: 0.0001, // [number]: Stop simulation under this speed
-            friction: 0 // [number]: Friction to apply per frame, 0-1
-        };
-    }
-
-    /*
-        # Get default Simulate value property name
-        ## Set values to this when a `value` is not provided as an object
-
-        @return [string]
-    */
-    getDefaultValueProp() {
-        return 'velocity';
-    }
 }
+
+Physics.prototype.defaultValueProp = 'velocity';
+Physics.prototype.defaultValue = Action.extendDefaultValue({
+    acceleration: 0, // [number]: Acceleration to apply to value, in units per second
+    bounce: 0, // [number]: Factor to multiply velocity by on bounce
+    spring: 0, // [number]: Spring strength during 'string'
+    stopSpeed: 0.0001, // [number]: Stop simulation under this speed
+    friction: 0 // [number]: Friction to apply per frame, 0-1
+});
+Physics.prototype.defaultProps = Action.extendDefaultProps({
+    autoComplete: true,
+    maxInactiveFrames: 3
+});
+
+export default Physics;

@@ -1,21 +1,20 @@
 import Action from '../actions/Action';
-import generateBlendCurve from './inc/generate-blend-curve';
+import generateBlendCurve from './flow/generate-blend-curve';
+import bindAdapter from '../inc/bind-adapter';
 
 /*
     Methods and properties to add to bound Actions
 */
-const boundOnStart = (action) => action.actor.activateAction(action.id, action);
-const boundOnStop = (action) => action.actor.deactivateAction(action.id);
-const boundProps = (actor) => ({
-    actor: actor,
+const boundOnStart = (action) => action.flow.activateAction(action.id, action);
+const boundOnStop = (action) => action.flow.deactivateAction(action.id);
+const boundProps = (flow) => ({
+    flow,
     isPriority: true,
-    on: actor.on,
-    _onStart: boundOnStart,
-    _onStop: boundOnStop,
-    onRender: undefined
+    onActivate: boundOnStart,
+    onDeactivate: boundOnStop
 });
 
-export default class Flow extends Action {
+class Flow extends Action {
     constructor(props) {
         super(props);
         this.activeActions = {};
@@ -29,13 +28,20 @@ export default class Flow extends Action {
             if (action) {
                 if (action.length) {
                     for (let i = 0; i < action.length; i++) {
-                        this.start(action[i])
+                        this.start(action[i]);
                     }
                 } else {
                     this.start(action);
                 }
             }
         } else {
+            // Bind `element` to an adapter, if not already
+            if (props.element && !props.element.setter) {
+                // Ducktypish check for Adapter
+                props.element = bindAdapter(props.element);
+            }
+
+
             super.set(props);
             this.once();
         }
@@ -46,7 +52,7 @@ export default class Flow extends Action {
     /*
         Bind Action to Actor
     */
-    bind(action) {
+    connect(action) {
         const inheritedAction = action.inherit();
         let newValues = {};
         let hasNewValues = false;
@@ -54,7 +60,7 @@ export default class Flow extends Action {
         // Create values on actor that don't exist
         for (let key in inheritedAction.values) {
             if (inheritedAction.values.hasOwnProperty(key) && !this.values.hasOwnProperty(key)) {
-                newValues[key] = inheritedAction.values[key];
+                newValues[key] = {};
                 hasNewValues = true;
             }
         }
@@ -73,21 +79,14 @@ export default class Flow extends Action {
 
         @param (optional) [Action]
     */
-    start(action) {
+    start() {
         super.start();
 
-        if (action) {
-            const boundAction = this.bind(action);
-            boundAction.start();
-
-            return boundAction;
-        } else {
-            for (let key in this.activeActions) {
-                if (this.activeActions.hasOwnProperty(key)) {
-                    const action = this.activeActions[key];
-                    if (!action.isActive) {
-                        action.start();
-                    }
+        for (let key in this.activeActions) {
+            if (this.activeActions.hasOwnProperty(key)) {
+                const action = this.activeActions[key];
+                if (!action.isActive) {
+                    action.start();
                 }
             }
         }
@@ -122,6 +121,12 @@ export default class Flow extends Action {
         }
 
         return super.willRender(actor, frameStamp, elapsed);
+    }
+
+    onRender({ state, element }) {
+        if (element && element.set) {
+            element.set(state);
+        }
     }
 
     /*
@@ -185,12 +190,11 @@ export default class Flow extends Action {
             super.stop();
         }
     }
-
-    getDefaultValue() {
-        return {
-            ...super.getDefaultValue(),
-            drivers: [],
-            numDrivers: 0
-        };
-    }
 }
+
+Flow.prototype.defaultValue = Action.extendDefaultValue({
+    drivers: [],
+    numDrivers: 0
+});
+
+export default Flow;

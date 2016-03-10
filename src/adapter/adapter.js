@@ -26,7 +26,11 @@ class Adapter {
         const mappedKey = this.mapStateKey(key);
 
         if (refresh || !this.cache.hasOwnProperty(key)) {
-            return this.cache[mappedKey] = this.getter(mappedKey);
+            const actualValue = this.getter(mappedKey);
+
+            if (actualValue !== undefined) {
+                return this.cache[mappedKey] = actualValue;
+            }
         } else {
             return this.cache[mappedKey];
         }
