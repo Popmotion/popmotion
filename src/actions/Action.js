@@ -76,14 +76,14 @@ class Action extends Task {
                     newValue = { ...newValue, ...values[key] };
                 }
 
-                // If we've got an element, get the current value
-                if (values[key].current === undefined && this.element && this.element.get) {
-                    newValue.current = this.element.get(key);
+                // If we've got an adapter, get the current value
+                if (values[key].current === undefined && this.adapter && this.adapter.get) {
+                    newValue.current = this.adapter.get(key);
                 }
 
                 // If we don't have a value type and we do have an Adapter, check for type with value key
-                if (!newValue.type && this.element && this.element.getValueType) {
-                    newValue.type = this.element.getValueType(key);
+                if (!newValue.type && this.adapter && this.adapter.getValueType) {
+                    newValue.type = this.adapter.getValueType(key);
                 }
 
                 // If we still don't have a value type and this is the first time we've set this value, check numerical values for strings and test
@@ -292,7 +292,10 @@ Action.prototype.defaultValueProp = 'current';
 Action.prototype.defaultValue = {
     current: 0,
     velocity: 0,
-    round: false
+    round: false,
+    min: undefined,
+    max: undefined,
+    transform: undefined
 };
 
 export default Action;

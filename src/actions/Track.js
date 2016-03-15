@@ -50,10 +50,11 @@ class Track extends Action {
 
             if (this.inputOffset.hasOwnProperty(key)) {
                 const value = this.values[key];
+
                 if (value.direct) {
-                    value.current = this.input.state[key];
+                    value.current = this.input.state[value.watch || key];
                 } else {
-                    value.current = value.from + this.inputOffset[key];
+                    value.current = value.from + this.inputOffset[value.watch || key];
                 }
 
                 // Smooth value if we have smoothing
@@ -63,20 +64,10 @@ class Track extends Action {
             }
         }
     }
-
-    getDefaultValue() {
-        return {
-            ...super.getDefaultValue(),
-            amp: 1,
-            escapeAmp: 0,
-            direct: false
-        };
-    }
 }
 
+Track.prototype.defaultValueProp = 'watch';
 Track.prototype.defaultValue = Action.extendDefaultValue({
-    amp: 1,
-    escapeAmp: 0,
     direct: false
 });
 

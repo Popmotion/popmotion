@@ -101,9 +101,12 @@ class Tween extends Action {
     }
 
     seekTime(elapsed) {
-        this.once();
+        if (!this.isActive) {
+            this.once();
+            this.isScrubbing = true;
+        }
+
         this.elapsed = elapsed;
-        this.isScrubbing = true;
 
         return this;
     }
@@ -116,19 +119,16 @@ Tween.prototype.defaultValue = Action.extendDefaultValue({
     ease: easing.easeOut,
     elapsed: 0,
     from: 0,
-    stagger: 0,
     steps: 0,
     to: 0,
     round: false
 });
 Tween.prototype.defaultProps = Action.extendDefaultProps({
     blend: true,
-    delay: 0,
     dilate: 1,
-    duration: 300,
-    loop: false,
-    yoyo: false,
-    flip: false,
+    loop: 0,
+    yoyo: 0,
+    flip: 0,
     playDirection: 1,
     isScrubbing: false,
     ended: false,

@@ -18,15 +18,17 @@ export stagger from './inc/stagger';
 export timeline from './inc/timeline';
 
 // Adapters
-export adapter from './adapter/adapter';
-export attrAdapter from './adapter/attr-adapter';
-export cssAdapter from './adapter/css-adapter';
-export svgAdapter from './adapter/svg-adapter';
-export svgPathAdapter from './adapter/svg-path-adapter';
+import create from './adapter/adapter';
+import attr from './adapter/attr-adapter';
+import css from './adapter/css-adapter';
+import svg from './adapter/svg-adapter';
+import svgPath from './adapter/svg-path-adapter';
+export const adapter = { create, attr, css, svg, svgPath };
 
 // Easing
 export easing from './actions/easing/preset-easing';
 import getFlow from './actions/flow/get-flow';
+export const detectFlow = getFlow;
 
 // Utils
 export * as calc from './inc/calc';
@@ -34,19 +36,20 @@ export * as utils, { combineTransformers } from './inc/utils';
 export { setGlobalDilation } from './task/timer';
 
 // Value types
-export alphaType from './value-types/alpha';
-export angleType from './value-types/angle';
-export axesType from './value-types/axes';
-export colorType from './value-types/color';
-export complexType from './value-types/complex';
-export hexType from './value-types/hex';
-export hslType from './value-types/hsl';
-export positionsType from './value-types/positions';
-export pxType from './value-types/px';
-export rgbType from './value-types/rgb';
-export scaleType from './value-types/scale';
-export shadowType from './value-types/shadow';
-export unitType from './value-types/unit';
+import alpha from './value-types/alpha';
+import angle from './value-types/angle';
+import axes from './value-types/axes';
+import color from './value-types/color';
+import complex from './value-types/complex';
+import hex from './value-types/hex';
+import hsl from './value-types/hsl';
+import positions from './value-types/positions';
+import px from './value-types/px';
+import rgb from './value-types/rgb';
+import scale from './value-types/scale';
+import shadow from './value-types/shadow';
+import unit from './value-types/unit';
+export const valueType = { alpha, angle, axes, color, complex, hex, hsl, positions, px, rgb, scale, shadow, unit };
 
 // Transformers
 export * as transformers from './inc/transformers';

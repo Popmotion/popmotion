@@ -4,25 +4,25 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
 ## [5.0.0] 2015-02-01
 
-### Popmotion 5.0: streamlined API, timelines, additive motion, declarative Actors, under 12kb.
+### Popmotion 5.0: timelines, streamlined API, tween blending, still 12kb.
 
 **Warning:** This is a major API revision. Previous Popmotion code **will** be incompatible with this upgrade.
 
 ### Added
 - **Timelines**: Super-simple yet fully-featured nestable timelines to easily sequence `tweens`.
 - **Tween blending**: Smooth transitions between competing tweens.
-- **Declarative Actors**: Provide an `Actor` with a `behaviour` method. This takes arguments provided to `set` and dynamically returns actions.
 - **Standalone actions**: `tween`, `physics` and `track` can all run without the need for an `actor`.
 - **Adapters**: Minimal `get`/`set` API wrappers for smoothing differences between DOM, SVG and frameworks.
 - **Transformers**: Composable functions to transform values between update and render.
 - **Unified physics engine**: Handles `velocity`, `friction` and `spring` in one unified `physics` Action.
-- **Small**: All this for under 12kb minified & gzipped.
+- **Small**: All this for 12kb minified & gzipped.
 - **Smaller**: Rewritten entirely using ES6 exports to allow tree-shaking, ignoring the parts of Popmotion you don't include.
 - **Global time dilation**: `setGlobalDilation` method can change the global time.
-- `points` property for `polygon` and `polyline` tags.
+- Support `points` property for `polygon` and `polyline` tags.
 
 ### Removed
-- `new` - dropped in favour of factory functions (ie `new Actor()` becomes `actor()`). This will allow further non-API-breaking optimisations. 
+- `new` - dropped in favour of factory functions (ie `new Tween()` becomes `tween()`). This will allow further non-API-breaking optimisations.
+- `Actor` dropped in favour of `flow`. The Actor model was monolithic, flows are automatically generated for `element`s in the background and can be accessed optionally via `detectFlow`.
 - Removed Action `watch` property in favour of more flexible `transform`: Simply provide a function that returns a different value.
 - Native Meteor support, as we kept forgetting to update it.
 - jQuery support - provide elements as returned from `$('.yourElement').get()` instead.

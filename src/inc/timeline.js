@@ -65,9 +65,9 @@ export default function timeline(def, props = {}) {
     const { totalTime, timeline } = analyze(def);
 
     return new Tween({
+        ease: easing.linear,
         ...props,
         duration: totalTime,
-        ease: easing.linear,
         values: {
             p: 1
         },

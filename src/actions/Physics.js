@@ -31,6 +31,11 @@ class Physics extends Action {
 
             // Apply latest velocity
             value.current += speedPerFrame(value.velocity, elapsed);
+
+            // Detect bounce
+            if ((value.min !== undefined && value.current < value.min) || (value.max !== undefined && value.current > value.max)) {
+                value.velocity *= - value.bounce;
+            }
             
             // Check if value has changed
             if (value.current !== previousValue || Math.abs(value.velocity) >= value.stopSpeed || (value.spring && value.current !== value.to)) {
@@ -40,7 +45,7 @@ class Physics extends Action {
     }
 
     onFrameEnd() {
-        if (this.autoComplete) {
+        if (this.maxInactiveFrames !== Infinity) {
             this.inactiveFrames = this.hasChanged ? 1 : this.inactiveFrames + 1;
 
             if (this.inactiveFrames >= this.maxInactiveFrames) {
@@ -55,11 +60,10 @@ Physics.prototype.defaultValue = Action.extendDefaultValue({
     acceleration: 0, // [number]: Acceleration to apply to value, in units per second
     bounce: 0, // [number]: Factor to multiply velocity by on bounce
     spring: 0, // [number]: Spring strength during 'string'
-    stopSpeed: 0.0001, // [number]: Stop simulation under this speed
+    stopSpeed: 0.001, // [number]: Stop simulation under this speed
     friction: 0 // [number]: Friction to apply per frame, 0-1
 });
 Physics.prototype.defaultProps = Action.extendDefaultProps({
-    autoComplete: true,
     maxInactiveFrames: 3
 });
 

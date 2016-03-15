@@ -1,7 +1,7 @@
 import {
     hasProperty,
     isNum,
-    splitValueUnit,
+    findValueAndUnit,
     toDecimal
 } from './utils';
 
@@ -17,7 +17,7 @@ const distance1D = (a, b) => Math.abs(a - b);
     Angle between points
     
     Translates the hypothetical line so that the 'from' coordinates
-    are at 0,0, then return the angle using .angleFromCenter()
+    are at 0,0
     
     @param [object]: X and Y coordinates of from point
     @param [object]: X and Y cordinates of to point
@@ -201,7 +201,7 @@ export const relativeValue = (current, relative) => {
     let newValue = current;
     const equation = relative.split('=');
     const operator = equation[0];
-    let { unit, value } = splitValueUnit(equation[1]);
+    let { unit, value } = findValueAndUnit(equation[1]);
 
     value = parseFloat(value);
 

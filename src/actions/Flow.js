@@ -35,12 +35,11 @@ class Flow extends Action {
                 }
             }
         } else {
-            // Bind `element` to an adapter, if not already
-            if (props.element && !props.element.setter) {
+            // Bind `adapter` to an adapter, if not already
+            if (props.adapter && !props.adapter.setter) {
                 // Ducktypish check for Adapter
-                props.element = bindAdapter(props.element);
+                props.adapter = bindAdapter(props.adapter);
             }
-
 
             super.set(props);
             this.once();
@@ -123,9 +122,9 @@ class Flow extends Action {
         return super.willRender(actor, frameStamp, elapsed);
     }
 
-    onRender({ state, element }) {
-        if (element && element.set) {
-            element.set(state);
+    onRender({ state, adapter }) {
+        if (adapter && adapter.set) {
+            adapter.set(state);
         }
     }
 

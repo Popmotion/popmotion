@@ -81,6 +81,27 @@ export const createFunctionString = (value, prefix) => `${prefix}(${value})`;
 export const currentTime = HAS_PERFORMANCE_NOW ? () => performance.now() : () => new Date().getTime();
 
 /*
+    Split a value into a value/unit object
+    
+        "200px" -> { value: 200, unit: "px" }
+        
+    @param [string]: Value to split
+    @return [object]: Object with value and unit props
+*/
+export const findValueAndUnit = (value) => {
+    if (value.match) {
+        const splitValue = value.match(/(-?\d*\.?\d*)(.*)/);
+
+        return {
+            value: parseFloat(splitValue[1]),
+            unit:  splitValue[2]
+        };
+    } else {
+        return { value };
+    }
+};
+
+/*
     Split color string into map of color properties
 
     "rgba(255, 255, 255, 0)", ["Red", 'Green", "Blue", "Alpha"]
