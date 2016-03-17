@@ -32,7 +32,7 @@ export const detectFlow = getFlow;
 
 // Utils
 export * as calc from './inc/calc';
-export * as utils, { combineTransformers } from './inc/utils';
+export * as utils from './inc/utils';
 export { setGlobalDilation } from './task/timer';
 
 // Value types

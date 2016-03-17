@@ -12,11 +12,11 @@ const NEXT_STEPS = {
 
 class Tween extends Action {
     start() {
-        super.start();
         this.elapsed = 0;
         this.flipCount = this.yoyoCount = this.loopCount = 0;
         this.isScrubbing = false;
-        return this;
+
+        return super.start();
     }
 
     onUpdate(tween, frameStamp, elapsed) {
@@ -129,6 +129,9 @@ Tween.prototype.defaultProps = Action.extendDefaultProps({
     loop: 0,
     yoyo: 0,
     flip: 0,
+    loopCount: 0,
+    yoyoCount: 0,
+    flipCount: 0,
     playDirection: 1,
     isScrubbing: false,
     ended: false,

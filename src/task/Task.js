@@ -41,15 +41,9 @@ export default class Task {
     start() {
         loop.activate(this.id, this);
 
-        this.onCleanup = this.onActivate = undefined;
+        this.onCleanup = this.onActivateOnce = undefined;
         this.isComplete = false;
 
-        // Private `onStart`
-        if (this._onStart) {
-            this._onStart(this);
-        }
-
-        // Public `onStart`
         if (this.onStart) {
             this.onStart(this);
         }
@@ -58,14 +52,9 @@ export default class Task {
     }
 
     stop() {
+        console.log('test')
         loop.deactivate(this.id);
-
-        // Private `onStop`
-        if (this._onStop) {
-            this._onStop(this);
-        }
-
-        // Public `onStop`
+        
         if (this.onStop) {
             this.onStop(this);
         }
@@ -75,7 +64,7 @@ export default class Task {
 
     once() {
         loop.activate(this.id, this);
-        this.onActivate = this._onActivate;
+        this.onActivateOnce = this._onActivate;
         this.onCleanup = undefined;
         return this;
     }
@@ -84,7 +73,7 @@ export default class Task {
         this.stop();
 
         if (this.onComplete) {
-            this.onComplete();
+            this.onComplete(this);
         }
     }
 

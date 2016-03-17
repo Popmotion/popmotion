@@ -268,6 +268,10 @@ class Action extends Task {
         return this;
     }
 
+    toggle() {
+        return this.isActive ? this.pause() : this.resume();
+    }
+
     start() {
         const values = this.values;
         super.start();

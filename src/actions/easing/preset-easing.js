@@ -62,8 +62,8 @@ baseEasing.linear = progress => progress;
 baseEasing.anticipate = (progress, strength = DEFAULT_BACK_STRENGTH) =>
     ((progress*=2) < 1) ? 0.5 * baseEasing.backIn(progress, strength) :  0.5 * (2 - Math.pow(2, -10 * (progress - 1)));
 
-baseEasing.easingFunction = createEasingFunction;
+baseEasing.createVariations = createEasingFunction;
 baseEasing.cubicBezier = cubicBezier;
-baseEasing.modifyEase = (easing, ...args) => (progress) => easing(progress, ...args);
+baseEasing.modify = (easing, ...args) => (progress) => easing(progress, ...args);
 
 export default baseEasing;

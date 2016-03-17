@@ -6,7 +6,7 @@ export default (element) => {
     if (element[SAVE_PROP]) {
         return element[SAVE_PROP];
     } else {
-        const flow = new Flow({ element });
+        const flow = new Flow({ adapter: element });
 
         // Bind adapter to element
         Object.defineProperty(element, SAVE_PROP, {

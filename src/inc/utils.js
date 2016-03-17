@@ -18,32 +18,6 @@ const varType = variable => Object.prototype.toString.call(variable).slice(8, -1
 */
 export const camelToDash = (string) => string.replace(CAMEL_CASE_PATTERN, REPLACE_TEMPLATE).toLowerCase();
 
-/*
-    Combine transformers into one function that calls every
-    transformer in the array and returns the result
-
-    @param [array]
-    @return [function]
-*/
-export const combineTransformers = (transformers) => {
-    const numTransformers = transformers.length;
-    let i = 0;
-
-    /*
-        @param [number]
-        @param [string]
-        @param [Action]
-        @return [number]
-    */
-    return (v, key, a) => {
-        for (i = 0; i < numTransformers; i++) {
-            v = transformers[i](v, key, a);
-        }
-
-        return v;
-    };
-};
-
 export const createDelimited = (values, terms, delimiter, chop) => {
     const numTerms = terms.length;
     let combined = '';

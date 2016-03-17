@@ -21,29 +21,15 @@ class Flow extends Action {
         this.numActiveActions = 0;
     }
 
-    set(props, instant) {
-        if (!instant && this.behaviour) {
-            const action = this.behaviour(props);
-
-            if (action) {
-                if (action.length) {
-                    for (let i = 0; i < action.length; i++) {
-                        this.start(action[i]);
-                    }
-                } else {
-                    this.start(action);
-                }
-            }
-        } else {
-            // Bind `adapter` to an adapter, if not already
-            if (props.adapter && !props.adapter.setter) {
-                // Ducktypish check for Adapter
-                props.adapter = bindAdapter(props.adapter);
-            }
-
-            super.set(props);
-            this.once();
+    set(props) {
+        // Bind `adapter` to an adapter, if not already
+        if (props.adapter && !props.adapter.setter) {
+            // Ducktypish check for Adapter
+            props.adapter = bindAdapter(props.adapter);
         }
+
+        super.set(props);
+        this.once();
 
         return this;
     }

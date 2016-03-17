@@ -67,6 +67,10 @@ export default {
         if (task.onActivate) {
             task.onActivate(task);
         }
+
+        if (task.onActivateOnce) {
+            task.onActivateOnce(task);
+        }
     },
 
     // Deactivate a task
@@ -106,10 +110,6 @@ export default {
                 runningIds.splice(activeIdIndex, 1);
                 updateRunningCount(false, task.isLazy);
                 delete activeTasks[id];
-
-                if (task.onDeactivate) {
-                    task.onDeactivate(task);
-                }
             }
         }
 
@@ -138,10 +138,6 @@ export default {
                 }
 
                 updateRunningCount(true, task.isLazy);
-
-                if (task.onActivate) {
-                    task.onActivate(task);
-                }
             }
         }
 
