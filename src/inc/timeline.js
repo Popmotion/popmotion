@@ -27,8 +27,13 @@ const analyze = (defs) => {
         const defIsObj = def.tween ? true : false;
         const tween = (defIsObj) ? def.tween : def;
 
-        currentPlayhead += ((defIsObj && def.offset) ?
-            def.at || relativeValue(currentPlayhead, def.offset) : 0);
+        if (defIsObj) {
+            if (def.offset !== undefined) {
+                currentPlayhead = relativeValue(currentPlayhead, def.offset);
+            } else if (def.at !== undefined) {
+                currentPlayhead = def.at;
+            }
+        }
 
         let duration = 0;
         for (let key in tween.values) {
@@ -44,7 +49,7 @@ const analyze = (defs) => {
             fire: (time) => tween.seekTime(time)
         });
 
-        currentPlayhead += tween.duration;
+        currentPlayhead += duration;
     }
 
     return { totalTime: currentPlayhead, timeline };

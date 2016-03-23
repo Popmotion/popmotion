@@ -1,10 +1,8 @@
 import angle from '../../value-types/angle';
 import alpha from '../../value-types/alpha';
-import axes from '../../value-types/axes';
 import color from '../../value-types/color';
 import scale from '../../value-types/scale';
 import shadow from '../../value-types/shadow';
-import positions from '../../value-types/positions';
 import px from '../../value-types/px';
 
 export default {
@@ -24,15 +22,8 @@ export default {
     borderRadius: px,
 
     // Positioning
-    margin: positions,
-    padding: positions,
     width: px,
     height: px,
-
-    // Axes
-    backgroundPosition: axes,
-    perspectiveOrigin: axes,
-    transformOrigin: axes,
 
     // Shadows
     textShadow: shadow,

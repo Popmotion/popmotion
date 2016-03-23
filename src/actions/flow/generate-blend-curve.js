@@ -1,8 +1,8 @@
 import { getProgressFromValue, getValueFromProgress, ease, restrict } from '../../inc/calc';
 
-const BLEND_ACCURACY = 10;
+const BLEND_ACCURACY = 60;
 
-export default (outAction, inAction, key) => {
+export default (outAction, inAction, flowValue, key) => {
     const outValue = outAction.values[key];
 
     if (outAction.elapsed === undefined || !outValue) {
@@ -11,7 +11,7 @@ export default (outAction, inAction, key) => {
 
     const inValue = inAction.values[key];
     const outTotalDuration = outValue.delay + outValue.duration;
-    const timeUntilOutEnd = outTotalDuration - outAction.elapsed;
+    const timeUntilOutEnd = Math.min(outTotalDuration - outAction.elapsed, inValue.delay + inValue.duration);
     const inPositionAtOutEnd = ease(restrict(getProgressFromValue(timeUntilOutEnd, 0, inValue.delay + inValue.duration), 0, 1), inValue.from, inValue.to, inValue.ease);
     const inBiggerThanOutAtStart = inValue.from > outValue.current;
     const inBiggerThanOutAtEnd = inPositionAtOutEnd > outValue.to;
@@ -52,7 +52,7 @@ export default (outAction, inAction, key) => {
             const blendProgress = restrict(getProgressFromValue(inAction.elapsed, blendCurve[0][0], blendCurve[1][0]), 0, 1);
 
             if (blendProgress === 1) {
-                inAction.blendCurve = undefined;
+                flowValue.blendCurve = undefined;
             }
 
             return ease(blendProgress, outValue.current, inValue.current, inValue.ease);
@@ -65,7 +65,7 @@ export default (outAction, inAction, key) => {
             const bP = getValueFromProgress(blendProgress, blendCurve[1][1], blendCurve[2][1]);
 
             if (blendProgress === 1) {
-                inAction.blendCurve = undefined;
+                flowValue.blendCurve = undefined;
                 return inValue.current;
             }
 

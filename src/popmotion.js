@@ -38,18 +38,16 @@ export { setGlobalDilation } from './task/timer';
 // Value types
 import alpha from './value-types/alpha';
 import angle from './value-types/angle';
-import axes from './value-types/axes';
 import color from './value-types/color';
 import complex from './value-types/complex';
 import hex from './value-types/hex';
 import hsl from './value-types/hsl';
-import positions from './value-types/positions';
 import px from './value-types/px';
 import rgb from './value-types/rgb';
 import scale from './value-types/scale';
 import shadow from './value-types/shadow';
 import unit from './value-types/unit';
-export const valueType = { alpha, angle, axes, color, complex, hex, hsl, positions, px, rgb, scale, shadow, unit };
+export const valueType = { alpha, angle, color, complex, hex, hsl, px, rgb, scale, shadow, unit };
 
 // Transformers
 export * as transformers from './inc/transformers';

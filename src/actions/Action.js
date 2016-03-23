@@ -223,17 +223,6 @@ class Action extends Task {
             }
         }
 
-        if (this.onFrame) {
-            this.onFrame(this.state, this);
-        }
-
-        return (this.onCleanup) ? true : hasChanged;
-    }
-
-    /*
-        If we are rendering, recombine parent values first
-    */
-    onPreRender() {
         // Update parent values
         for (let i = 0; i < this.numParentKeys; i++) {
             const key = this.parentKeys[i];
@@ -241,10 +230,14 @@ class Action extends Task {
 
             value.current = value.type.combine(value.children, value.template);
 
-            if (this.state[key] !== value.current) {
-                this.state[key] = value.current;
-            }
+            this.state[key] = value.current;
         }
+
+        if (this.onFrame) {
+            this.onFrame(this.state, this);
+        }
+
+        return (this.onCleanup) ? true : hasChanged;
     }
 
     inherit(props = {}) {
@@ -281,6 +274,8 @@ class Action extends Task {
                 values[key].prev = values[key].origin = values[key].current;
             }
         }
+
+        return this;
     }
 
     static extendDefaultValue(props) {

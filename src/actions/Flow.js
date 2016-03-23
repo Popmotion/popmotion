@@ -14,6 +14,8 @@ const boundProps = (flow) => ({
     onDeactivate: boundOnStop
 });
 
+const defaultRenderer = ({ state, adapter }) => adapter.set(state);
+
 class Flow extends Action {
     constructor(props) {
         super(props);
@@ -22,13 +24,18 @@ class Flow extends Action {
     }
 
     set(props) {
+        super.set(props);
+
         // Bind `adapter` to an adapter, if not already
-        if (props.adapter && !props.adapter.setter) {
-            // Ducktypish check for Adapter
-            props.adapter = bindAdapter(props.adapter);
+        if (props.adapter) {
+            if (!props.adapter.setter) {
+                // Ducktypish check for Adapter
+                this.adapter = bindAdapter(props.adapter);
+            }
+
+            this.onRender = defaultRenderer;
         }
 
-        super.set(props);
         this.once();
 
         return this;
@@ -98,20 +105,14 @@ class Flow extends Action {
             const driver = value.numDrivers ? this.activeActions[value.drivers[0]] : false;
             let newCurrent = value.numDrivers ? driver.values[key].current : value.current;
 
-            if (driver.blendCurve) {
-                newCurrent = driver.blendCurve();
+            if (value.blendCurve) {
+                newCurrent = value.blendCurve();
             }
 
             value.current = newCurrent;
         }
 
         return super.willRender(actor, frameStamp, elapsed);
-    }
-
-    onRender({ state, adapter }) {
-        if (adapter && adapter.set) {
-            adapter.set(state);
-        }
     }
 
     /*
@@ -130,9 +131,10 @@ class Flow extends Action {
             const value = this.values[key];
 
             // If we're blending this action, and there's on already in progress
-            if (action.blend && value.numDrivers) {
-                action.blendCurve = generateBlendCurve(this.activeActions[value.drivers[0]], action, key);
+            if (action.blend && value.numDrivers && !value.blendCurve && (value.drivers[0].prototype === action.prototype)) {
+                value.blendCurve = generateBlendCurve(this.activeActions[value.drivers[0]], action, value, key);
             } else {
+                value.blendCurve = undefined;
                 // Pass Actor value properties to Action
                 actionValue.velocity += value.velocity;
                 actionValue.from = actionValue.current = value.current;

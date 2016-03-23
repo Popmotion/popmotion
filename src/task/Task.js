@@ -3,6 +3,11 @@
 */
 import * as loop from './loop';
 
+function cleanup() {
+    this.onCleanup = undefined;
+    loop.deactivate(this.id);
+}
+
 export default class Task {
     constructor(props) {
         this.id = loop.getTaskId();
@@ -19,15 +24,6 @@ export default class Task {
         this.set(props);
     }
 
-    _onActivate() {
-        this.onCleanup = this._onCleanup;
-    }
-
-    _onCleanup() {
-        this.onCleanup = undefined;
-        loop.deactivate(this.id);
-    }
-
     set(props) {
         for (let key in props) {
             if (props.hasOwnProperty(key)) {
@@ -41,7 +37,7 @@ export default class Task {
     start() {
         loop.activate(this.id, this);
 
-        this.onCleanup = this.onActivateOnce = undefined;
+        this.onCleanup = undefined;
         this.isComplete = false;
 
         if (this.onStart) {
@@ -52,7 +48,6 @@ export default class Task {
     }
 
     stop() {
-        console.log('test')
         loop.deactivate(this.id);
         
         if (this.onStop) {
@@ -64,8 +59,8 @@ export default class Task {
 
     once() {
         loop.activate(this.id, this);
-        this.onActivateOnce = this._onActivate;
-        this.onCleanup = undefined;
+        this.onCleanup = cleanup;
+
         return this;
     }
 
