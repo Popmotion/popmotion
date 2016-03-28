@@ -21,9 +21,10 @@ export timeline from './inc/timeline';
 import create from './adapter/adapter';
 import attr from './adapter/attr-adapter';
 import css from './adapter/css-adapter';
+import object from './adapter/object-adapter';
 import svg from './adapter/svg-adapter';
 import svgPath from './adapter/svg-path-adapter';
-export const adapter = { create, attr, css, svg, svgPath };
+export const adapter = { create, attr, css, object, svg, svgPath };
 
 // Easing
 export easing from './actions/easing/preset-easing';

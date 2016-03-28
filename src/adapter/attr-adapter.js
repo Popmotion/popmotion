@@ -1,22 +1,12 @@
-import adapter from './adapter';
+import createAdapter from './adapter';
 
-export function getter(key) {
-    return this.element.getAttribute(key);
-}
-
-export function setter(props) {
+export const getter = (element, key) => element.getAttribute(key);
+export const setter = (element, props) => {
     for (let key in props) {
         if (props.hasOwnProperty(key)) {
-            this.element.setAttribute(key, props[key]);
+            element.setAttribute(key, props[key]);
         }
     }
-}
-
-export default (element) => {
-    const attrAdapter = adapter(element);
-
-    attrAdapter.getter = getter;
-    attrAdapter.setter = setter;
-
-    return attrAdapter;
 };
+
+export default createAdapter({ getter, setter });

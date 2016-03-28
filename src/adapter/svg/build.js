@@ -3,13 +3,13 @@ import transformProps from '../css/transform-props';
 
 const ZERO_NOT_ZERO = 0.0001;
 
-export default function build(state, origin) {
+export default function build(state) {
     let props = {},
         hasTransform = false,
         scale = state.scale !== undefined ? state.scale || ZERO_NOT_ZERO : state.scaleX || 1,
         scaleY = state.scaleY !== undefined ? state.scaleY || ZERO_NOT_ZERO : scale || 1,
-        transformOriginX = origin.x,
-        transformOriginY = origin.y,
+        transformOriginX = state.originX || 50,
+        transformOriginY = state.originY || 50,
         scaleTransformX = - transformOriginX * (scale * 1),
         scaleTransformY = - transformOriginY * (scaleY * 1),
         scaleReplaceX = transformOriginX / scale,

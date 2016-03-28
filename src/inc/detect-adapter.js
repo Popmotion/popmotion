@@ -1,10 +1,10 @@
-import adapter from '../adapter/adapter';
+import objectAdapter from '../adapter/object-adapter';
 import cssAdapter from '../adapter/css-adapter';
 import svgAdapter from '../adapter/svg-adapter';
 import svgPathAdapter from '../adapter/svg-path-adapter';
 
 export default (element) => {
-    let detectedAdapter = adapter;
+    let detectedAdapter = objectAdapter;
 
     // If HTMLElement load CSS
     if (element instanceof HTMLElement || element.tagName === 'svg') {

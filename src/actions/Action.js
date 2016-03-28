@@ -3,8 +3,11 @@ import { speedPerSecond } from '../inc/calc';
 import { isNum, isObj, isString } from '../inc/utils';
 import detectValueType from '../value-types/detect';
 import NUMERICAL_VALUES from '../inc/numerical-values';
+import detectAdapter from '../inc/detect-adapter';
 
 const NUM_NUMERICAL_VALUES = NUMERICAL_VALUES.length;
+
+const defaultRenderer = ({ state, adapter, adapterData, element }) => adapter.set(element, state, adapterData);
 
 class Action extends Task {
     constructor(props) {
@@ -29,6 +32,20 @@ class Action extends Task {
 
         // Set non-consumed properties
         super.set(propsToSet);
+
+        // Detect correct `adapter` if none exists and `element` is being set
+        if (this.element) {
+            if (!this.adapter) {
+                // Ducktypish check for Adapter
+                this.adapter = detectAdapter(propsToSet.adapter);
+
+                if (this.adapter.onBind) {
+                    this.adapterData = this.adapter.onBind(this.element);
+                }
+            }
+
+            this.onRender = defaultRenderer;
+        }
 
         // Prime an object to inherit from, with only `value` properties
         for (let key in this.defaultValue) {
@@ -77,13 +94,13 @@ class Action extends Task {
                 }
 
                 // If we've got an adapter, get the current value
-                if (values[key].current === undefined && this.adapter && this.adapter.get) {
-                    newValue.current = this.adapter.get(key);
+                if (values[key].current === undefined && this.adapter) {
+                    newValue.current = this.adapter.get(this.element, key);
                 }
 
                 // If we don't have a value type and we do have an Adapter, check for type with value key
-                if (!newValue.type && this.adapter && this.adapter.getValueType) {
-                    newValue.type = this.adapter.getValueType(key);
+                if (!newValue.type && this.adapter && this.adapter.checkValueType) {
+                    newValue.type = this.adapter.checkValueType(key);
                 }
 
                 // If we still don't have a value type and this is the first time we've set this value, check numerical values for strings and test

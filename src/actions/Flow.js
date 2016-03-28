@@ -1,6 +1,5 @@
 import Action from '../actions/Action';
 import generateBlendCurve from './flow/generate-blend-curve';
-import bindAdapter from '../inc/bind-adapter';
 
 /*
     Methods and properties to add to bound Actions
@@ -14,8 +13,6 @@ const boundProps = (flow) => ({
     onDeactivate: boundOnStop
 });
 
-const defaultRenderer = ({ state, adapter }) => adapter.set(state);
-
 class Flow extends Action {
     constructor(props) {
         super(props);
@@ -25,16 +22,6 @@ class Flow extends Action {
 
     set(props) {
         super.set(props);
-
-        // Bind `adapter` to an adapter, if not already
-        if (props.adapter) {
-            if (!props.adapter.setter) {
-                // Ducktypish check for Adapter
-                this.adapter = bindAdapter(props.adapter);
-            }
-
-            this.onRender = defaultRenderer;
-        }
 
         this.once();
 

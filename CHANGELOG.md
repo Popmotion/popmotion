@@ -10,14 +10,15 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 - **Timelines**: Super-simple yet fully-featured nestable timelines to easily sequence `tweens`.
-- **Tween blending**: Smooth transitions between competing tweens.
+- **Tween blending**: Smooth transitions between overlapping tweens.
 - **Standalone actions**: `tween`, `physics` and `track` can all run without the need for an `actor`.
 - **Adapters**: Minimal `get`/`set` API wrappers for smoothing differences between DOM, SVG and frameworks.
 - **Transformers**: Composable functions to transform values between update and render.
-- **Unified physics engine**: Handles `velocity`, `friction` and `spring` in one unified `physics` Action.
-- **Small**: All this for 12kb minified & gzipped.
+- **Unified physics engine**: Handles `velocity`, `friction` and `spring` in one unified `physics` action.
+- **Small**: All this for less than 12kb minified & gzipped.
 - **Smaller**: Rewritten entirely using ES6 exports to allow tree-shaking, ignoring the parts of Popmotion you don't include.
 - **Global time dilation**: `setGlobalDilation` method can change the global time.
+- **Flow layer**: Replaces Actors and can work entirely in the background to manage multiple actions on the same object.
 - Support `points` property for `polygon` and `polyline` tags.
 
 ### Removed
