@@ -1,10 +1,10 @@
 {
   "name": "popmotion",
-  "version": "4.3.4",
-  "description": "The JavaScript motion engine. Handles animation, physics, and input tracking.",
+  "version": "5.0.0",
+  "description": "The JavaScript motion engine. Animation, physics, and input tracking.",
   "author": "Matt Perry <sirhound@popmotion.io>",
   "homepage": "http://popmotion.io",
-  "main": "./lib/load/module.js",
+  "main": "./popmotion.js",
   "files": [
     "lib",
     "popmotion.global.js",
@@ -22,7 +22,6 @@
     "ux",
     "ui",
     "popmotion",
-    "redshift",
     "canvas animation",
     "jquery animation",
     "dom animation",
@@ -38,22 +37,22 @@
     "svg"
   ],
   "analyze": true,
-  "license": "GPL-3.0",
+  "license": "MIT",
   "scripts": {
-    "compile": "babel src --out-dir lib && small -i lib/load/global.js -o popmotion.global.js && uglifyjs popmotion.global.js --compress --mangle --screw-ie8 -o popmotion.global.min.js",
-    "watch": "webpack --progress --colors --watch",
-    "measure": "gzip -c popmotion.global.min.js | wc -c",
+    "compile": "eslint src && babel src --out-dir lib && NODE_ENV=production webpack && npm run measure",
+    "watch": "NODE_ENV=development webpack --progress --colors --watch",
+    "measure": "gzip -c dist/popmotion.global.min.js | wc -c",
     "test": "mocha --compilers js:babel-register"
   },
   "devDependencies": {
     "babel-core": "^6.0.20",
+    "babel-eslint": "^4.1.6",
     "babel-loader": "^6.0.1",
+    "babel-plugin-transform-export-extensions": "^6.4.0",
     "babel-preset-es2015-subset-loose": "^1.0.0",
     "babel-preset-stage-2": "^6.0.15",
     "babel-register": "^6.3.13",
     "chai": "^3.4.0",
-    "jshint": "^2.8.0",
-    "jshint-loader": "^0.8.3",
     "webpack": "1.7.2"
   }
 }

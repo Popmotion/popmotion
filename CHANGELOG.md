@@ -2,6 +2,40 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.0.0] 2016-03-29
+
+### Popmotion 5.0: timelines, streamlined API, tween blending, still 12kb.
+
+**Warning:** This is a major API revision. Previous Popmotion code **will** be incompatible with this upgrade.
+
+### Added
+- **Timelines**: Super-simple yet fully-featured nestable timelines to easily sequence `tweens`.
+- **Tween blending**: Smooth transitions between overlapping tweens.
+- **Standalone actions**: `tween`, `physics` and `track` can all run without the need for an `actor`.
+- **Adapters**: Minimal `get`/`set` API wrappers for smoothing differences between DOM, SVG and frameworks.
+- **Transformers**: Composable functions to transform values between update and render.
+- **Unified physics engine**: Handles `velocity`, `friction` and `spring` in one unified `physics` action.
+- **Small**: All this for less than 12kb minified & gzipped.
+- **Smaller**: Rewritten entirely using ES6 exports to allow tree-shaking, ignoring the parts of Popmotion you don't include.
+- **Global time dilation**: `setGlobalDilation` method can change the global time.
+- **Flow layer**: Replaces Actors and can work entirely in the background to manage multiple actions on the same object.
+- Support `points` property for `polygon` and `polyline` tags.
+- **MIT**: Changed licence to MIT.
+
+### Removed
+- `new` - dropped in favour of factory functions (ie `new Tween()` becomes `tween()`). This will allow further non-API-breaking optimisations.
+- `Actor` dropped in favour of `flow`. The Actor model was monolithic, flows are automatically generated for `element`s in the background and can be accessed optionally via `detectFlow`.
+- `process`: Now `task`. Prevents conflict with global common in browsers.
+- Removed Action `watch` property in favour of more flexible `transform`: Simply provide a function that returns a different value.
+- Native Meteor support, as we kept forgetting to update it.
+- jQuery support - provide elements as returned from `$('.yourElement').get()` instead.
+- `Sequence`: Dropped in favour of the `timeline` function.
+- `Iterator`: Dropped in favour of using native array methods and the new `stagger` function.
+- `Simulate`: Dropped in favour of unified `physics` action.
+
+### Changed
+- `friction` now a value between `0` and `1` - `0` provides no friction, `1` will strip all velocity within a single frame.
+
 ## [4.3.4] 2015-12-30
 
 ### Fixed

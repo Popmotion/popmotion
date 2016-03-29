@@ -1,5 +1,5 @@
-module.exports = {
+export default {
     defaultProps: {
-        init: 1
+        current: 1
     }
 };

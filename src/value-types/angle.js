@@ -1,5 +1,8 @@
-module.exports = {
+import unitType from './unit';
+
+export default {
     defaultProps: {
-        unit: 'deg'
+        unit: 'deg',
+        type: unitType
     }
 };

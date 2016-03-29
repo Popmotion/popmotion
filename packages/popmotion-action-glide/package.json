@@ -1,0 +1,33 @@
+{
+  "name": "popmotion-action-glide",
+  "version": "5.0.0",
+  "description": "",
+  "author": "Matt Perry <sirhound@popmotion.io>",
+  "homepage": "http://popmotion.io",
+  "main": "./lib/glide.js",
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Popmotion/popmotion/tree/master/packages/popmotion-action-glide"
+  },
+  "bugs": {
+    "url": "https://github.com/Popmotion/popmotion/issues"
+  },
+  "keywords": [
+    "popmotion",
+    "scroll",
+    "ui",
+    "animation"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "compile": "eslint src && babel src --out-dir lib",
+    "watch": "NODE_ENV=development webpack --progress --colors --watch",
+    "measure": "gzip -c dist/popmotion.global.min.js | wc -c",
+    "test": "mocha --compilers js:babel-register"
+  },
+  "devDependencies": {},
+  "dependencies": {}
+}

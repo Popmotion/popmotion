@@ -1,24 +1,21 @@
-var createDelimited = require('./manipulators/create-delimited'),
-    getColorValues = require('./manipulators/get-color-values'),
-    functionCreate = require('./manipulators/function-create'),
-    defaultProps = require('./settings/default-props'),
-    terms = require('./settings/dictionary').hsl;
+import { percent, opacity } from './settings/default-props';
+import { hsl as hslTerms } from './settings/dictionary';
+import { createDelimited, createFunctionString, getColorValues } from '../inc/utils';
 
-module.exports = {
-
+export default {
     defaultProps: {
         Hue: {
             min: 0,
             max: 360
         },
-        Saturation: defaultProps.percent,
-        Lightness: defaultProps.percent,
-        Alpha: defaultProps.opacity
+        Saturation: percent,
+        Lightness: percent,
+        Alpha: opacity
     },
 
-    test: value => (value && value.indexOf('hsl') > -1),
-    
-    split: value => getColorValues(value, terms),
+    test: (value) => (value && value.indexOf('hsl') > -1),
 
-    combine: values => functionCreate(createDelimited(values, terms, ', ', 2), 'hsla')
+    split: (value) => getColorValues(value, hslTerms),
+
+    combine: (values) => createFunctionString(createDelimited(values, hslTerms, ', ', 2), 'hsla')
 };

@@ -1,1 +1,0 @@
-module.exports = value => value.substring(value.indexOf('(') + 1, value.lastIndexOf(')'));

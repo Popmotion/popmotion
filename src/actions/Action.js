@@ -1,28 +1,20 @@
-// Imports
-const calc = require('../inc/calc');
-const utils = require('../inc/utils');
-const Controls = require('../controls/Controls');
-const each = utils.each;
+import Task from '../task/Task';
+import { speedPerSecond } from '../inc/calc';
+import { isNum, isObj, isString } from '../inc/utils';
+import detectValueType from '../value-types/detect';
+import NUMERICAL_VALUES from '../inc/numerical-values';
+import detectAdapter from '../inc/detect-adapter';
 
-// Values
-const DEFAULT_PROP = 'current';
-const PRIVATE = ['onStart', 'onFrame', 'onUpdate', 'onComplete'];
+const NUM_NUMERICAL_VALUES = NUMERICAL_VALUES.length;
 
-class Action {
+const defaultRenderer = ({ state, adapter, adapterData, element }) => adapter(element, state, adapterData);
 
-    /*
-        # Action class constructor
-        ## Assign default properties of Action or extended class and set user-defined props
-
-        @param [object]
-    */
+class Action extends Task {
     constructor(props) {
-        each(this.getDefaultProps(), (key, value) => {
-            this[key] = value;
-        });
-
-        this.values = {};
-        this.set(props, this.getDefaultValueProp());
+        props.state = {};
+        props.valueKeys = [];
+        props.parentKeys = [];
+        super(props);
     }
 
     /*
@@ -30,170 +22,296 @@ class Action {
         ## Set user-defined Action properties
 
         @param [object]
-        @param [string]: Name of default value property (set when `value` is **not** provided as object)
         @return [Action]
     */
-    set(props = {}, defaultProp = DEFAULT_PROP) {
-        // Loop through non-`value` properties and set
-        each(props, (key, value) => {
-            if (key !== 'values') {
-                this[key] = value;
-            }
-        });
+    set(props = {}) {
+        this.values = this.values || {};
 
-        // Merge `value` properties with existing
-        if (props.values) {
-            let currentValues = this.values;
+        const { values, ...propsToSet } = props;
+        const inheritable = {};
 
-            each(props.values, (key, value) => {
-                const existingValue = currentValues[key];
-                let newValue = {};
-                
-                if (utils.isObj(value)) {
-                    newValue = value;
-                } else {
-                    newValue[defaultProp] = value;
+        // Set non-consumed properties
+        super.set(propsToSet);
+
+        // Detect correct `adapter` if none exists and `element` is being set
+        if (this.element) {
+            if (!this.adapter) {
+                // Ducktypish check for Adapter
+                this.adapter = detectAdapter(this.element);
+
+                if (this.adapter.getElementData) {
+                    this.adapterData = this.adapter.getElementData(this.element);
                 }
+            }
 
-                currentValues[key] = (existingValue) ? utils.merge(existingValue, newValue) : newValue;
-            });
+            this.onRender = defaultRenderer;
+        }
+
+        // Prime an object to inherit from, with only `value` properties
+        for (let key in this.defaultValue) {
+            if (this.defaultValue.hasOwnProperty(key) && propsToSet.hasOwnProperty(key)) {
+                inheritable[key] = propsToSet[key];
+            }
+        }
+
+        // Update existing values with inheritable properties
+        for (let key in this.values) {
+            if (this.values.hasOwnProperty(key)) {
+                this.values[key] = { ...this.values[key], ...inheritable };
+            }
+        }
+
+        // Update
+        if (values) {
+            this.setValues(values, inheritable);
+
+            // Precompute number of value key and parent keys to avoid per-frame measurement
+            this.numValueKeys = this.valueKeys.length;
+            this.numParentKeys = this.parentKeys.length;
         }
 
         return this;
     }
 
-    /*
-        # Process latest `current` value
-        ## Actions performs existing `current` value
-
-        @param [Actor]
-        @param [object]
-        @return [number]
-    */
-    process(actor, value) {
-        return value.current;
+    get(key) {
+        return this.state[key];
     }
 
-    /*
-        # Has Action ended?
-        ## Returns `true` to end Action (Action only fires once).
-        
-        @return [boolean]
-    */
-    hasEnded() {
-        return true;
-    }
+    setValues(values, inherit) {
+        // Iterate over all incoming values and set
+        for (let key in values) {
+            if (values.hasOwnProperty(key)) {
+                let hasChildren = false;
+                const children = {};
+                // Merge into existing value or create new
+                let newValue = this.values[key] ? { ...this.values[key] } : { ...this.defaultValue, ...inherit };
 
-    /*
-        # Limit value to within set parameters
-        ## Return value within min/max, with outlying values multiplied by `escapeAmp`
+                // If values is not an object, assign value to default prop
+                if (!isObj(values[key])) {
+                    newValue[this.defaultValueProp] = values[key];
+                } else {
+                    newValue = { ...newValue, ...values[key] };
+                }
 
-        @param [number]
-        @param [object] { min: number, max: number, escapeAmp: factor }
-        @return [number]
-    */
-    limit(output, value) {
-        const restricted = calc.restricted(output, value.min, value.max);
-        const escapeAmp = value.escapeAmp !== undefined ? value.escapeAmp : 0;
+                // If we've got an adapter, get the current value
+                if (values[key].current === undefined && this.adapter) {
+                    newValue.current = this.adapter.get(this.element, key);
+                }
 
-        return restricted + ((output - restricted) * escapeAmp);
-    }
+                // If we don't have a value type and we do have an Adapter, check for type with value key
+                if (!newValue.type && this.adapter && this.adapter.checkValueType) {
+                    newValue.type = this.adapter.checkValueType(key);
+                }
 
-    /*
-        # Get Controls class for this Action
-        ## Inherited Actions may return different Controls class
+                // If we still don't have a value type and this is the first time we've set this value, check numerical values for strings and test
+                if (!newValue.type && !this.values[key]) {
+                    newValue.type = detectValueType(newValue);
+                }
 
-        @return [Controls]
-    */
-    getControls() {
-        return Controls;
-    }
+                // If we have a value type, handle. This is my least favourite part of Popmotion, so... enjoy.
+                if (newValue.type) {
+                    for (let i = 0; i < NUM_NUMERICAL_VALUES; i++) {
+                        const propName = NUMERICAL_VALUES[i];
+                        const valueProp = newValue[propName];
 
-    /*
-        # Get default Action properties
+                        // If this prop is a string and we have a splitter, split
+                        if (newValue.type.hasOwnProperty('split')) {
+                            const splitProp = isString(valueProp) ? newValue.type.split(valueProp) : {};
 
-        @return [object]
-    */
-    getDefaultProps() {
-        return {};
-    }
+                            for (let splitKey in splitProp) {
+                                if (splitProp.hasOwnProperty(splitKey)) {
+                                    const combinedKey = key + splitKey;
 
-    /*
-        # Get default Action value properties
+                                    // If we don't have a child value for this key, make one
+                                    if (!children[combinedKey]) {
+                                        const defaultValue = (newValue.type.defaultProps && newValue.type.defaultProps[splitKey]) ? newValue.type.defaultProps[splitKey] : newValue.type.defaultProps || {};
 
-        @return [object]
-    */
-    getDefaultValue() {
-        return {};
-    }
+                                        children[combinedKey] = {
+                                            ...newValue,
+                                            ...defaultValue,
+                                            parent: key,
+                                            childKey: splitKey
+                                        };
 
-    /*
-        # Get default Action value property name
-        ## Set this `value` property when set as value instead of object
+                                        delete children[combinedKey].type;
+                                    }
 
-        @return [string]
-    */
-    getDefaultValueProp() {
-        return DEFAULT_PROP;
-    }
+                                    hasChildren = true;
+                                    children[combinedKey][propName] = parseFloat(splitProp[splitKey]);
+                                }
+                            }
 
-    /*
-        # Get set properties
-        ## Get user-set properties for this Action
+                            // If we have a template function, generate
+                            if (!newValue.template && newValue.type.template && isString(valueProp)) {
+                                newValue.template = newValue.type.template(valueProp);
+                            }
+                        } else if (newValue.type.defaultProps) {
+                            newValue = { ...newValue, ...newValue.type.defaultProps };
+                        }
 
-        @return [object]
-    */
-    getSet() {
-        let set = { values: this.values };
+                        if (valueProp !== undefined && newValue.type.parse) {
+                            newValue[propName] = newValue.type.parse(valueProp, newValue);
+                        }
+                    }
+                } // End value type nonsense
 
-        each(this, (key, prop) => {
-            if (this.hasOwnProperty(key) && PRIVATE.indexOf(key) === -1) {
-                set[key] = prop;
+                // Set `prev` to `current` for first frame after set
+                newValue.prev = newValue.current;
+                
+                // If this value doesn't have children, add to valueKeys
+                if (!hasChildren) {
+                    if (this.valueKeys.indexOf(key) === -1) {
+                        this.valueKeys.push(key);
+                    }
+
+                // Or add to parentKeys
+                } else {
+                    newValue.children = newValue.children || {};
+
+                    if (this.parentKeys.indexOf(key) === -1) {
+                        this.parentKeys.push(key);
+                    }
+
+                    this.setValues(children);
+                }
+
+                this.values[key] = newValue;
             }
-        });
-
-        return set;
+        }
     }
 
     /*
-        # Extend this Action with new properties
-        ## Returns new instance of this Action's `prototype` with existing and new properties
+        Decide whether this Action will render on next frame
 
-        @param [object] (optional)
-        @return [Action]
+        @param [Action]
+        @param [number]
+        @param [number]
+        @return [boolean]: Return true to render
     */
-    extend(props) {
-        return new this.constructor(utils.merge(this, props), this.getDefaultValueProp());
+    willRender(action, frameStamp, elapsed) {
+        let hasChanged = false;
+
+        // Check if base values have updated 
+        for (let i = 0; i < this.numValueKeys; i++) {
+            const key = this.valueKeys[i];
+            const value = this.values[key];
+
+            // Run transform function (if present)
+            if (value.transform) {
+                value.current = value.transform(value.current, key, this);
+            }
+
+            // Cap minimum
+            if (isNum(value.min)) {
+                value.current = Math.max(value.current, value.min);
+            }
+
+            // Cap maximum
+            if (isNum(value.max)) {
+                value.current = Math.min(value.current, value.max);
+            }
+
+            // Round number
+            if (value.round) {
+                value.current = Math.round(value.current);
+            }
+
+            value.frameChange = value.current - value.prev;
+
+            // Update velocity
+            if (!this.calculatesVelocity) {
+                value.velocity = speedPerSecond(value.frameChange, elapsed);
+            }
+
+            // If this value has changed
+            if (value.prev !== value.current) {
+                hasChanged = true;
+                value.prev = value.current;
+            }
+
+            // Append unit
+            const valueForState = (value.type && value.type.serialize) ? value.type.serialize(value.current, value) : value.current;
+
+            // Add to state if this is not a child vaue
+            if (!value.parent) {
+                this.state[key] = valueForState;
+            } else {
+                this.values[value.parent].children[value.childKey] = valueForState;
+            }
+        }
+
+        // Update parent values
+        for (let i = 0; i < this.numParentKeys; i++) {
+            const key = this.parentKeys[i];
+            const value = this.values[key];
+
+            value.current = value.type.combine(value.children, value.template);
+
+            this.state[key] = value.current;
+        }
+
+        if (this.onFrame) {
+            this.onFrame(this.state, this);
+        }
+
+        return (this.onCleanup) ? true : hasChanged;
     }
 
-    /*
-        # Get a new playable version of this Action
+    inherit(props = {}) {
+        const { values, ...propsToSet } = props;
+        const newAction = super.inherit(propsToSet);
 
-        @return [Action]
-    */
-    getPlayable() {
-        return this.extend();
+        if (values) {
+            newAction.set({ values });
+        }
+
+        return newAction;
     }
 
-    /*
-        # Activate this Action
-
-        @return [Action]
-    */
-    activate() {
-        this.isActive = true;
+    pause() {
+        super.stop();
         return this;
     }
 
-    /*
-        # Deactivate this Action
-
-        @return [Action]
-    */
-    deactivate() {
-        this.isActive = false;
+    resume() {
+        super.start();
         return this;
+    }
+
+    toggle() {
+        return this.isActive ? this.pause() : this.resume();
+    }
+
+    start() {
+        const values = this.values;
+        super.start();
+
+        for (let key in values) {
+            if (values.hasOwnProperty(key)) {
+                values[key].prev = values[key].origin = values[key].current;
+            }
+        }
+
+        return this;
+    }
+
+    static extendDefaultValue(props) {
+        return { ...this.prototype.defaultValue, ...props };
+    }
+
+    static extendDefaultProps(props) {
+        return { ...this.prototype.defaultProps, ...props };
     }
 }
 
-module.exports = Action;
+Action.prototype.defaultValueProp = 'current';
+Action.prototype.defaultValue = {
+    current: 0,
+    velocity: 0,
+    round: false,
+    min: undefined,
+    max: undefined,
+    transform: undefined
+};
+
+export default Action;

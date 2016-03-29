@@ -1,45 +1,69 @@
-var valueTypes = require('./value-types/manager'),
+// Import classes - long term goal to move towards composition
+import Action from './actions/Action';
+import Flow from './actions/Flow';
+import Tween from './actions/Tween';
+import Physics from './actions/Physics';
+import Track from './actions/Track';
+import Task from './task/Task';
+import Input from './input/Input';
 
-    Popmotion = {
+// Export factory functions
+export const flow = (...args) => new Flow(...args);
+export const tween = (props) => new Tween(props);
+export const physics = (props) => new Physics(props);
+export const track = (...args) => new Track(...args);
+export const input = (...args) => new Input(...args);
+export const task = (...args) => new Task(...args);
+export stagger from './inc/stagger';
+export timeline from './inc/timeline';
 
-        Actor: require('./actor/Actor'),
+// Adapters
+export createAdapter from './adapter/adapter';
+export attr from './adapter/attr-adapter';
+export css from './adapter/css-adapter';
+export object from './adapter/object-adapter';
+export svg from './adapter/svg-adapter';
+export svgPath from './adapter/svg-path-adapter';
 
-        Sequence: require('./sequence/Sequence'),
+// Easing
+export easing from './actions/easing/preset-easing';
+import getFlow from './actions/flow/get-flow';
+export const detectFlow = getFlow;
 
-        Input: require('./input/Input'),
+// Utils
+export * as calc from './inc/calc';
+export * as utils from './inc/utils';
+export { setGlobalDilation } from './task/timer';
 
-        Iterator: require('./iterator/Iterator'),
+// Value types
+import alpha from './value-types/alpha';
+import angle from './value-types/angle';
+import color from './value-types/color';
+import complex from './value-types/complex';
+import hex from './value-types/hex';
+import hsl from './value-types/hsl';
+import px from './value-types/px';
+import rgb from './value-types/rgb';
+import scale from './value-types/scale';
+import shadow from './value-types/shadow';
+import unit from './value-types/unit';
+export const valueType = { alpha, angle, color, complex, hex, hsl, px, rgb, scale, shadow, unit };
 
-        Process: require('./process/Process'),
+// Transformers
+export * as transformers from './inc/transformers';
 
-        Easing: require('./actions/tween/Easing'),
+/*
+    Returns a version of the Action bound to a Flow
 
-        Role: require('./roles/Role'),
+    We're adding `on` here because Flow extends Action,
+    otherwise creating a circular modular dependency. Future
+    refactoring, ie moving to a compositional model will
+    remove the need for us to do this here.
+*/
+Action.prototype.on = function (element) {
+    if (!element.connect) {
+        element = getFlow(element);
+    }
 
-        Action: require('./actions/Action'),
-        Tween: require('./actions/Tween'),
-        Simulate: require('./actions/Simulate'),
-        Track: require('./actions/Track'),
-
-        /*
-            Create an Iterator of Actors with selected dom elements
-        */
-        select: require('./inc/select-actor'),
-
-        ease: require('./actions/tween/preset-easing'),
-
-        /*
-            Modify properties of inbuilt easing function
-        */
-        modifyEase: require('./actions/tween/modify-ease'),
-
-        addValueType: types => {
-            valueTypes.extend(types);
-            return Popmotion;
-        },
-
-        calc: require('./inc/calc'),
-        utils: require('./inc/utils')
-    };
-
-module.exports = Popmotion;
+    return element.connect(this);
+};

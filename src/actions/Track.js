@@ -1,66 +1,74 @@
-let Action = require('./Action'),
-    Pointer = require('../input/Pointer'),
-    calc = require('../inc/calc');
+import Action from './Action';
+import Pointer from '../input/Pointer';
+import { smooth, offset } from '../inc/calc';
+
+/*
+    Scrape x/y coordinates from provided event
+
+    @param [event]
+    @return [object]
+*/
+const mouseEventToPoint = (e) => ({
+    x: e.pageX,
+    y: e.pageY
+});
+
+const touchEventToPoint = ({ changedTouches }) => ({
+    x: changedTouches[0].clientX,
+    y: changedTouches[0].clientY
+});
+
+const createPointer = (e) => e.touches ?
+    new Pointer(touchEventToPoint(e), 'touchmove', touchEventToPoint) : 
+    new Pointer(mouseEventToPoint(e), 'mousemove', mouseEventToPoint);
+
+const getActualEvent = (e) => e.originalEvent || e;
 
 class Track extends Action {
-    /*
-        Update input offset
-    */
-    onFrameStart(actor, frameDuration, framestamp) {
-        actor.state.input = this.input.onFrame(framestamp);
-        this.inputOffset = calc.offset(this.inputOrigin, this.input.current);
-        this.frameDuration = frameDuration;
-    }
+    start(input) {
+        super.start();
 
-    /*
-        Move Value relative to Input movement
-        
-        @param [Value]: Current value
-        @param [string]: Key of current value
-        @return [number]: Calculated value
-    */
-    process(actor, value, key) {
-        var newValue = value.current;
-
-        if (this.inputOffset.hasOwnProperty(key)) {
-            newValue = (value.direct) ? this.input.current[key] : value.origin + (this.inputOffset[key] * value.amp);
+        if (input) {
+            this.input = input.state ? input : createPointer(getActualEvent(input));
         }
 
-        return newValue;
+        this.inputOffset = {};
+        this.inputOrigin = { ...this.input.state };
+        this.input.start();
     }
 
-    /*
-        Has this Action ended? 
-        
-        @return [boolean]: False to make user manually finish .track()
-    */
-    hasEnded() {
-        return false;
+    stop() {
+        super.stop();
+        this.input.stop();
     }
 
-    deactivate() {
-        super.deactivate();
+    onUpdate(track, frameStamp, elapsed) {
+        this.inputOffset = offset(this.inputOrigin, this.input.state);
 
-        if (this.input && this.input.stop) {
-            this.input.stop();
+        for (let i = 0; i < this.numValueKeys; i++) {
+            const key = this.valueKeys[i];
+
+            if (this.inputOffset.hasOwnProperty(key)) {
+                const value = this.values[key];
+
+                if (value.direct) {
+                    value.current = this.input.state[value.watch || key];
+                } else {
+                    value.current = value.from + this.inputOffset[value.watch || key];
+                }
+
+                // Smooth value if we have smoothing
+                if (value.smooth) {
+                    value.current = smooth(value.current, value.prev, elapsed, value.smooth);
+                }
+            }
         }
-
-        return this;
-    }
-
-    bindInput(input) {
-        this.input = (!input.current) ? new Pointer(input) : input;
-        this.inputOrigin = this.input.get();
-    }
-
-    getDefaultValue() {
-        return {
-            amp: 1,
-            escapeAmp: 0,
-            direct: false,
-            smooth: 0
-        };
     }
 }
 
-module.exports = Track;
+Track.prototype.defaultValueProp = 'watch';
+Track.prototype.defaultValue = Action.extendDefaultValue({
+    direct: false
+});
+
+export default Track;

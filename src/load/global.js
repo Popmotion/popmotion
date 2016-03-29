@@ -1,8 +1,9 @@
-var popmotion = require('./module.js'),
-    UIref = window.ui;
+import * as popmotion from '../popmotion';
+
+const UIref = window.motion;
 
 popmotion.noConflict = function () {
-    window.ui = UIref;
+    window.motion = UIref;
 };
 
-window.ui = window.popmotion = popmotion;
+window.motion = window.popmotion = popmotion;

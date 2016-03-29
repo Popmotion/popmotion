@@ -1,6 +1,5 @@
-module.exports = {
-    defaultProps: {
-        min: 0,
-        max: 1
-    }
+import { opacity } from './settings/default-props';
+
+export default {
+    defaultProps: opacity
 };

@@ -1,13 +1,9 @@
-var X = 'X',
-    Y = 'Y',
-    ALPHA = 'Alpha',
+const X = 'X';
+const Y = 'Y';
+const ALPHA = 'Alpha';
 
-    terms = {
-        colors: ['Red', 'Green', 'Blue', ALPHA],
-        positions: [X, Y, 'Z'],
-        dimensions: ['Top', 'Right', 'Bottom', 'Left'],
-        shadow: [X, Y, 'Radius', 'Spread', 'Color'],
-        hsl: ['Hue', 'Saturation', 'Lightness', ALPHA]
-    };
-
-module.exports = terms;
+export const axes = [X, Y, 'Z'];
+export const rgb = ['Red', 'Green', 'Blue', ALPHA];
+export const hsl = ['Hue', 'Saturation', 'Lightness', ALPHA];
+export const positions = ['Top', 'Right', 'Bottom', 'Left'];
+export const shadow = [X, Y, 'Radius', 'Spread', 'Color'];
