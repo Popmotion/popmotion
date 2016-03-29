@@ -2,7 +2,7 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
-## [5.0.0] 2015-02-01
+## [5.0.0] 2016-03-29
 
 ### Popmotion 5.0: timelines, streamlined API, tween blending, still 12kb.
 
@@ -20,10 +20,12 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 - **Global time dilation**: `setGlobalDilation` method can change the global time.
 - **Flow layer**: Replaces Actors and can work entirely in the background to manage multiple actions on the same object.
 - Support `points` property for `polygon` and `polyline` tags.
+- **MIT**: Changed licence to MIT.
 
 ### Removed
 - `new` - dropped in favour of factory functions (ie `new Tween()` becomes `tween()`). This will allow further non-API-breaking optimisations.
 - `Actor` dropped in favour of `flow`. The Actor model was monolithic, flows are automatically generated for `element`s in the background and can be accessed optionally via `detectFlow`.
+- `process`: Now `task`. Prevents conflict with global common in browsers.
 - Removed Action `watch` property in favour of more flexible `transform`: Simply provide a function that returns a different value.
 - Native Meteor support, as we kept forgetting to update it.
 - jQuery support - provide elements as returned from `$('.yourElement').get()` instead.
