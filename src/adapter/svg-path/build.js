@@ -6,7 +6,7 @@
 */
 const percentToPixels = (percent, length) => (parseFloat(percent) / 100) * length + 'px';
 
-export default function build(state, length) {
+export default (state, length) => {
     const styles = {};
     const dashArrayStyles = {
         length: 0,
@@ -38,4 +38,4 @@ export default function build(state, length) {
     }
 
     return styles;
-}
+};

@@ -18,13 +18,12 @@ export stagger from './inc/stagger';
 export timeline from './inc/timeline';
 
 // Adapters
-import create from './adapter/adapter';
-import attr from './adapter/attr-adapter';
-import css from './adapter/css-adapter';
-import object from './adapter/object-adapter';
-import svg from './adapter/svg-adapter';
-import svgPath from './adapter/svg-path-adapter';
-export const adapter = { create, attr, css, object, svg, svgPath };
+export createAdapter from './adapter/adapter';
+export attr from './adapter/attr-adapter';
+export css from './adapter/css-adapter';
+export object from './adapter/object-adapter';
+export svg from './adapter/svg-adapter';
+export svgPath from './adapter/svg-path-adapter';
 
 // Easing
 export easing from './actions/easing/preset-easing';

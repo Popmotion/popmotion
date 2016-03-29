@@ -137,6 +137,10 @@ export default {
                     runningIds.push(id);
                 }
 
+                if (task.onActivateLoop) {
+                    task.onActivateLoop();
+                }
+
                 updateRunningCount(true, task.isLazy);
             }
         }

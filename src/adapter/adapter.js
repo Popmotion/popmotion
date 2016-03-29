@@ -24,7 +24,7 @@ export default (options) => {
                 if (props.hasOwnProperty(key)) {
                     const mappedKey = mapKey(key, options.stateMap);
                     
-                    if (mappedKey) {
+                    if (mappedKey !== key) {
                         props[mappedKey] = props[key];
                         delete props[key];
                     }
@@ -37,6 +37,7 @@ export default (options) => {
 
     adapter.get = (element, key) => options.getter(element, mapKey(key, options.stateMap));
     adapter.checkValueType = (key) => options.valueTypeMap ? options.valueTypeMap[mapKey(key, options.stateMap)] : false;
+    adapter.getElementData = options.getElementData;
 
     return adapter;
 };

@@ -101,7 +101,7 @@ class Tween extends Action {
     }
 
     seekTime(elapsed) {
-        if (!this.isActive) {
+        if (!this.isActive || this.isScrubbing) {
             this.once();
             this.isScrubbing = true;
         }

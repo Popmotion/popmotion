@@ -7,7 +7,7 @@ import detectAdapter from '../inc/detect-adapter';
 
 const NUM_NUMERICAL_VALUES = NUMERICAL_VALUES.length;
 
-const defaultRenderer = ({ state, adapter, adapterData, element }) => adapter.set(element, state, adapterData);
+const defaultRenderer = ({ state, adapter, adapterData, element }) => adapter(element, state, adapterData);
 
 class Action extends Task {
     constructor(props) {
@@ -37,10 +37,10 @@ class Action extends Task {
         if (this.element) {
             if (!this.adapter) {
                 // Ducktypish check for Adapter
-                this.adapter = detectAdapter(propsToSet.adapter);
+                this.adapter = detectAdapter(this.element);
 
-                if (this.adapter.onBind) {
-                    this.adapterData = this.adapter.onBind(this.element);
+                if (this.adapter.getElementData) {
+                    this.adapterData = this.adapter.getElementData(this.element);
                 }
             }
 

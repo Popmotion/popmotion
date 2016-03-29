@@ -19,5 +19,5 @@ export default (element) => {
         }
     }
 
-    return detectedAdapter(element);
+    return detectedAdapter;
 };

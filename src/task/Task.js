@@ -8,6 +8,10 @@ function cleanup() {
     loop.deactivate(this.id);
 }
 
+function activate() {
+    this.onCleanup = cleanup;
+}
+
 export default class Task {
     constructor(props) {
         this.id = loop.getTaskId();
@@ -37,7 +41,7 @@ export default class Task {
     start() {
         loop.activate(this.id, this);
 
-        this.onCleanup = undefined;
+        this.onActivateLoop = this.onCleanup = undefined;
         this.isComplete = false;
 
         if (this.onStart) {
@@ -59,7 +63,8 @@ export default class Task {
 
     once() {
         loop.activate(this.id, this);
-        this.onCleanup = cleanup;
+        this.onCleanup = undefined;
+        this.onActivateLoop = activate;
 
         return this;
     }
