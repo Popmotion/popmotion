@@ -100,6 +100,10 @@ class Action extends Task {
                     newValue.current = this.adapter.get(this.element, key);
                 }
 
+                if (values[key].from === undefined && this.adapter) {
+                    newValue.from = newValue.current;
+                }
+
                 // If we don't have a value type and we do have an Adapter, check for type with value key
                 if (!newValue.type && this.adapter && this.adapter.checkValueType) {
                     newValue.type = this.adapter.checkValueType(key);
