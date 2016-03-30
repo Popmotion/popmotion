@@ -1,1 +1,0 @@
-// position, rotation, scale - x, y  and z
