@@ -10,7 +10,7 @@ const NUM_NUMERICAL_VALUES = NUMERICAL_VALUES.length;
 const defaultRenderer = ({ state, adapter, adapterData, element }) => adapter(element, state, adapterData);
 
 class Action extends Task {
-    constructor(props) {
+    constructor(props = {}) {
         props.state = {};
         props.valueKeys = [];
         props.parentKeys = [];
@@ -44,13 +44,19 @@ class Action extends Task {
                 }
             }
 
-            this.onRender = defaultRenderer;
+            if (!this.onRender) {
+                this.onRender = defaultRenderer;
+            }
         }
 
         // Prime an object to inherit from, with only `value` properties
         for (let key in this.defaultValue) {
-            if (this.defaultValue.hasOwnProperty(key) && propsToSet.hasOwnProperty(key)) {
-                inheritable[key] = propsToSet[key];
+            if (this.defaultValue.hasOwnProperty(key)) {
+                if (propsToSet.hasOwnProperty(key)) {
+                    inheritable[key] = propsToSet[key];
+                } else if (this[key] !== undefined) {
+                    inheritable[key] = this[key];
+                }
             }
         }
 
@@ -71,10 +77,6 @@ class Action extends Task {
         }
 
         return this;
-    }
-
-    get(key) {
-        return this.state[key];
     }
 
     setValues(values, inherit) {

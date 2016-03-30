@@ -51,18 +51,18 @@ const parsePoint = (point, currentPoint) => {
         scrollPoint.x = boundingBox.left + currentPoint.x;
         scrollPoint.y = boundingBox.top + currentPoint.y;
 
-    // If it's a number/relative value, parse
+        // If it's a number/relative value, parse
     } else if (typeOfPoint === 'number' || typeOfPoint === 'string') {
-        scrollPoint.y = parseAxis(point, currentPoint.y);
+            scrollPoint.y = parseAxis(point, currentPoint.y);
 
-    // If it's an object, parse both
-    } else if (typeOfPoint === 'object') {
-        scrollPoint.y = parseAxis(point.y, currentPoint.y);
-        scrollPoint.x = parseAxis(point.x, currentPoint.x);
-    }
+            // If it's an object, parse both
+        } else if (typeOfPoint === 'object') {
+                scrollPoint.y = parseAxis(point.y, currentPoint.y);
+                scrollPoint.x = parseAxis(point.x, currentPoint.x);
+            }
 
     return scrollPoint;
-}
+};
 
 /*
     Parse a single axis from number/relative value to new value
@@ -83,10 +83,10 @@ const parseAxis = (axis, currentAxis) => {
     }
 
     return scrollAxis;
-}
+};
 
 const scrollTo = (point, element) => {
-    const isViewport = (element === undefined);
+    const isViewport = element === undefined;
     const adapter = isViewport ? viewportScrollAdapter : elementScrollAdapter;
     element = isViewport ? window : element;
     const currentPoint = {
@@ -106,11 +106,11 @@ const scrollTo = (point, element) => {
                 from: currentPoint.x,
                 to: scrollPoint.x
             }
-        },
+        }
     }).start();
-}
+};
 
-scrollTo.setMovement = (action) => {
+scrollTo.setMovement = action => {
     currentAction = action;
     return scrollTo;
 };
