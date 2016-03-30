@@ -67,3 +67,5 @@ Action.prototype.on = function (element) {
 
     return element.connect(this);
 };
+
+export { Action };
