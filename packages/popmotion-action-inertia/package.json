@@ -1,16 +1,16 @@
 {
-  "name": "popmotion-action-glide",
+  "name": "popmotion-action-inertia",
   "version": "5.0.0",
-  "description": "",
+  "description": "Stop the movement of a value according to its velocity, e.g for momentum-based scrolling.",
   "author": "Matt Perry <sirhound@popmotion.io>",
   "homepage": "http://popmotion.io",
-  "main": "./lib/glide.js",
+  "main": "./lib/inertia.js",
   "files": [
     "lib"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Popmotion/popmotion/tree/master/packages/popmotion-action-glide"
+    "url": "https://github.com/Popmotion/popmotion/tree/master/packages/popmotion-action-inertia"
   },
   "bugs": {
     "url": "https://github.com/Popmotion/popmotion/issues"

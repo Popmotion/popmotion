@@ -2,6 +2,10 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.0.1] 2016-03-30
+
+Minor bugfixes.
+
 ## [5.0.0] 2016-03-29
 
 ### Popmotion 5.0: timelines, streamlined API, tween blending, still 12kb.
