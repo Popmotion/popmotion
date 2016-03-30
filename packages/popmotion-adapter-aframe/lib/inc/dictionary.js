@@ -6,7 +6,8 @@ const dictionary = {};
 
 types.forEach(type => dimensions.forEach((dimension, i) => dictionary[`${ type }${ dimension }`] = {
     prop: type,
-    position: i
+    position: i,
+    unit: dimension.toLowerCase()
 }));
 
 export default dictionary;
