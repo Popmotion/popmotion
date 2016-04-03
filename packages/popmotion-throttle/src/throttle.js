@@ -1,17 +1,19 @@
 import { task } from 'popmotion';
 
 export default (callback, limit = 35, renderStep = 'onFrameStart') => {
-    let totalElapsed = 0;
+    let wait = false;
     const definition = {};
 
-    definition[renderStep] = (t, frameStamp, elapsed) => {
-        totalElapsed += elapsed;
+    definition[renderStep] = callback;
 
-        if (totalElapsed >= limit) {
-            callback();
-            totalElapsed = 0;
+    const callbackTask = task(definition);
+
+    return () => {
+        if (!wait) {
+            callbackTask.once();
+            wait = true;
+
+            setTimeout(() => wait = false, limit);
         }
-    }
-
-    return task(definition).start();
-}
+    };
+};
