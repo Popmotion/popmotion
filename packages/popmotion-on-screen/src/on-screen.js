@@ -5,6 +5,18 @@ import debounce from 'popmotion-debounce';
 let hasInitialised = false;
 const elementsToCheck = [];
 
+const check = (flow) => {
+
+};
+
+const checkAll = () => {
+    elementsToCheck.forEach(check);
+};
+
+const measureAll = () => {
+    
+};
+
 const init = () => {
     viewport = new Viewport();
 
