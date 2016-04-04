@@ -1,0 +1,32 @@
+{
+  "name": "popmotion-on-screen",
+  "version": "1.0.0",
+  "description": "Detect when DOM elements enter and leave the viewport.",
+  "author": "Matt Perry <sirhound@popmotion.io>",
+  "homepage": "http://popmotion.io",
+  "main": "./lib/on-screen.js",
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Popmotion/popmotion/tree/master/packages/popmotion-on-screen"
+  },
+  "bugs": {
+    "url": "https://github.com/Popmotion/popmotion/issues"
+  },
+  "keywords": [
+    "popmotion",
+    "ui",
+    "animation"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "compile": "eslint src && babel src --out-dir lib",
+    "watch": "NODE_ENV=development webpack --progress --colors --watch",
+    "measure": "gzip -c dist/popmotion.global.min.js | wc -c",
+    "test": "mocha --compilers js:babel-register"
+  },
+  "devDependencies": {},
+  "dependencies": {}
+}

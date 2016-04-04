@@ -4,7 +4,7 @@
   "description": "The JavaScript motion engine. Animation, physics, and input tracking.",
   "author": "Matt Perry <sirhound@popmotion.io>",
   "homepage": "http://popmotion.io",
-  "main": "./popmotion.js",
+  "main": "./lib/popmotion.js",
   "files": [
     "lib",
     "popmotion.global.js",

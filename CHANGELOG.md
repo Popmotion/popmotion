@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.0.2] 2016-04-06
+
+### Fixed
+- Fixing entry point in `package.json`.
+
 ## [5.0.1] 2016-03-30
 
 Minor bugfixes.
