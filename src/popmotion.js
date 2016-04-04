@@ -1,4 +1,5 @@
 // Import classes - long term goal to move towards composition
+import Action from './actions/Action';
 import Flow from './actions/Flow';
 import Tween from './actions/Tween';
 import Physics from './actions/Physics';
@@ -50,3 +51,21 @@ export const valueType = { alpha, angle, color, complex, hex, hsl, px, rgb, scal
 
 // Transformers
 export * as transformers from './inc/transformers';
+
+/*
+    Returns a version of the Action bound to a Flow
+
+    We're adding `on` here because Flow extends Action,
+    otherwise creating a circular modular dependency. Future
+    refactoring, ie moving to a compositional model will
+    remove the need for us to do this here.
+*/
+Action.prototype.on = function (element) {
+    if (!element.connect) {
+        element = getFlow(element);
+    }
+
+    return element.connect(this);
+};
+
+export { Action };
