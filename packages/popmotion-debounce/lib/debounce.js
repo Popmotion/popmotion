@@ -1,6 +1,6 @@
 import { task } from 'popmotion';
 
-export default (callback, wait = 200, renderStep = 'onFrameStart') => {
+export default ((callback, wait = 200, renderStep = 'onFrameStart') => {
     let timer;
     const definition = {};
 
@@ -13,4 +13,4 @@ export default (callback, wait = 200, renderStep = 'onFrameStart') => {
 
         timer = setTimeout(() => callbackTask.once(), wait);
     };
-};
+})
