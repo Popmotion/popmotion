@@ -29,5 +29,7 @@
     "test": "mocha --compilers js:babel-register"
   },
   "devDependencies": {},
-  "dependencies": {}
+  "dependencies": {
+    "popmotion": "^5.0.3"
+  }
 }
