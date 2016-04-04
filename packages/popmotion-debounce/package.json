@@ -1,6 +1,6 @@
 {
   "name": "popmotion-debounce",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Prevent firing a function until `x` milliseconds after it was last called.",
   "author": "Matt Perry <sirhound@popmotion.io>",
   "homepage": "http://popmotion.io",
@@ -24,8 +24,6 @@
   "license": "MIT",
   "scripts": {
     "compile": "eslint src && babel src --out-dir lib",
-    "watch": "NODE_ENV=development webpack --progress --colors --watch",
-    "measure": "gzip -c dist/popmotion.global.min.js | wc -c",
     "test": "mocha --compilers js:babel-register"
   },
   "devDependencies": {},

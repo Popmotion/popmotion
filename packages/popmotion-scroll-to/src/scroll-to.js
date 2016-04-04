@@ -62,7 +62,7 @@ const parsePoint = (point, currentPoint) => {
     }
 
     return scrollPoint;
-}
+};
 
 /*
     Parse a single axis from number/relative value to new value
@@ -74,16 +74,16 @@ const parseAxis = (axis, currentAxis) => {
     let scrollAxis = currentAxis;
 
     switch (typeof axis) {
-        case 'number':
-            scrollAxis = axis;
-            break;
-        case 'string':
-            scrollAxis = calc.relativeValue(currentAxis, axis);
-            break;
+    case 'number':
+        scrollAxis = axis;
+        break;
+    case 'string':
+        scrollAxis = calc.relativeValue(currentAxis, axis);
+        break;
     }
 
     return scrollAxis;
-}
+};
 
 const scrollTo = (point, element) => {
     const isViewport = (element === undefined);
@@ -106,9 +106,9 @@ const scrollTo = (point, element) => {
                 from: currentPoint.x,
                 to: scrollPoint.x
             }
-        },
+        }
     }).start();
-}
+};
 
 scrollTo.setMovement = (action) => {
     currentAction = action;

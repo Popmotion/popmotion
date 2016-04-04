@@ -1,6 +1,6 @@
 {
   "name": "popmotion-action-inertia",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "description": "Stop the movement of a value according to its velocity, e.g for momentum-based scrolling.",
   "author": "Matt Perry <sirhound@popmotion.io>",
   "homepage": "http://popmotion.io",

@@ -1,6 +1,6 @@
 {
   "name": "popmotion-adapter-three",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "description": "Animate Three.js objects, lights and cameras with Popmotion.",
   "author": "Matt Perry <sirhound@popmotion.io>",
   "homepage": "http://popmotion.io",
@@ -21,7 +21,7 @@
   "analyze": true,
   "license": "MIT",
   "scripts": {
-    "compile": "babel src --out-dir lib"
+    "compile": "eslint src && babel src --out-dir lib"
   },
   "devDependencies": {
     "babel-core": "^6.0.20",
