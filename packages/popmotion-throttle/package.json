@@ -1,6 +1,6 @@
 {
   "name": "popmotion-throttle",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Limit a function to firing no more than every `x` milliseconds, synced to the device framerate.",
   "author": "Matt Perry <sirhound@popmotion.io>",
   "homepage": "http://popmotion.io",
@@ -29,5 +29,7 @@
     "test": "mocha --compilers js:babel-register"
   },
   "devDependencies": {},
-  "dependencies": {}
+  "dependencies": {
+    "popmotion": "^5.0.3"
+  }
 }

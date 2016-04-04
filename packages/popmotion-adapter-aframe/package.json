@@ -1,6 +1,6 @@
 {
   "name": "popmotion-adapter-aframe",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "Animate A-Frame elements with Popmotion.",
   "author": "Matt Perry <sirhound@popmotion.io>",
   "homepage": "http://popmotion.io",
@@ -29,6 +29,6 @@
     "babel-preset-stage-2": "^6.0.15"
   },
   "dependencies": {
-    "popmotion": "^5.0.0"
+    "popmotion": "^5.0.3"
   }
 }
