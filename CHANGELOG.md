@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.0.5] 2016-04-13
+
+### Fixed
+- On `set`, `current` was returning undefined if `values` prop set as value, forcing an `adapter` read.
+
 ## [5.0.4] 2016-04-13
 
 ### Fixed

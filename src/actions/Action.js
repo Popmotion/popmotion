@@ -87,8 +87,10 @@ class Action extends Task {
             if (values.hasOwnProperty(key)) {
                 let hasChildren = false;
                 const children = {};
+
                 // Merge into existing value or create new
-                let newValue = this.values[key] ? { ...this.values[key] } : { ...this.defaultValue, ...inherit };
+                const valueAlreadyExists = this.values[key] !== undefined;
+                let newValue = valueAlreadyExists ? { ...this.values[key] } : { ...inherit };
 
                 // If values is not an object, assign value to default prop
                 if (!isObj(values[key])) {
@@ -98,12 +100,17 @@ class Action extends Task {
                 }
 
                 // If we've got an adapter, get the current value
-                if (values[key].current === undefined && this.adapter) {
+                if (newValue.current === undefined && this.adapter) {
                     newValue.current = convertIfShouldBeNumber(this.adapter.get(this.element, key));
                 }
 
-                if (values[key].from === undefined && this.adapter) {
+                if (newValue.from === undefined && this.adapter) {
                     newValue.from = newValue.current;
+                }
+
+                // Apply default value properties
+                if (!valueAlreadyExists) {
+                    newValue = { ...this.defaultValue, ...newValue };
                 }
 
                 // If we don't have a value type and we do have an Adapter, check for type with value key
