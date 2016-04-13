@@ -46,13 +46,14 @@
   },
   "devDependencies": {
     "babel-core": "^6.0.20",
-    "babel-eslint": "^4.1.6",
+    "babel-eslint": "^5.0.4",
     "babel-loader": "^6.0.1",
     "babel-plugin-transform-export-extensions": "^6.4.0",
     "babel-preset-es2015-subset-loose": "^1.0.0",
     "babel-preset-stage-2": "^6.0.15",
     "babel-register": "^6.3.13",
     "chai": "^3.4.0",
+    "eslint": "^1.10.3",
     "webpack": "1.7.2"
   }
 }

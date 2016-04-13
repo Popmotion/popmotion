@@ -9,6 +9,8 @@ const NUM_NUMERICAL_VALUES = NUMERICAL_VALUES.length;
 
 const defaultRenderer = ({ state, adapter, adapterData, element }) => adapter(element, state, adapterData);
 
+const convertIfShouldBeNumber = (value) => !isNaN(value) ? parseFloat(value) : value;
+
 class Action extends Task {
     constructor(props = {}) {
         props.state = {};
@@ -97,7 +99,7 @@ class Action extends Task {
 
                 // If we've got an adapter, get the current value
                 if (values[key].current === undefined && this.adapter) {
-                    newValue.current = this.adapter.get(this.element, key);
+                    newValue.current = convertIfShouldBeNumber(this.adapter.get(this.element, key));
                 }
 
                 if (values[key].from === undefined && this.adapter) {

@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.0.4] 2016-04-13
+
+### Fixed
+- If `adapter` returns a string that should be a pure number, we parse that as a float.
+
 ## [5.0.3] 2016-04-06
 
 ### Fixed

@@ -18,8 +18,6 @@ const measureAll = () => {
 };
 
 const init = () => {
-    viewport = new Viewport();
-
     window.addEventListener('scroll', throttle(checkAll, 1000 / 30)); // 30fps
     window.addEventListener('resize', debounce(measureAll));
 
