@@ -1,4 +1,4 @@
-import React, { Children, Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
 export default class FlowTransitionChild extends Component {
