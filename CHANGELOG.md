@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.0.6] 2016-04-17
+
+### Changed
+- Inherited actions now receive a `parentId` property with the `id` of their parent action.
+
 ## [5.0.5] 2016-04-13
 
 ### Fixed

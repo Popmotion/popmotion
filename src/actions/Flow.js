@@ -48,6 +48,8 @@ class Flow extends Action {
             this.set({ values: newValues });
         }
 
+        inheritedAction.parentId = action.id;
+
         return inheritedAction.set(boundProps(this, inheritedAction));
     }
 
