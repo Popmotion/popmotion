@@ -2,9 +2,9 @@
 
 ## The JavaScript motion engine.
 
-Make it pop with animation, physics, and input tracking. In the browser, on Node, anywhere.
+Animate with tweens, physics, and input tracking. Natively supports CSS and SVG, with plugins for React, Three.js, and A-Frame.
 
-[Download](http://popmotion.io/download) | [API](http://popmotion.io/api) | [Guides](http://popmotion.io/guides/get-started) | [Twitter](http://twitter.com/popmotionjs)
+[Install](https://popmotion.io/install) | [API](https://popmotion.io/api) | [Guides](https://popmotion.io/guides/basics/get-started/) | [Twitter](http://twitter.com/popmotionjs)
 
 ### Flexible
 * **Native DOM support:** CSS, SVG, SVG path and DOM attribute support, out of the box.
@@ -26,6 +26,4 @@ Make it pop with animation, physics, and input tracking. In the browser, on Node
 * Never magically reads the DOM, leaving you in total control of performance.
 * The same size as Velocity.js, **over 66% smaller** than GreenSock TweenMax.
 
-[Get started](http://popmotion.io/guides/get-started)
-
-[Popmotion vs Velocity.js vs Greensock feature comparison](http://popmotion.io/guides/feature-comparison)
+####[Get started](https://popmotion.io/guides/basics/get-started/)
