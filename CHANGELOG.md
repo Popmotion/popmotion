@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.0.7] 2016-04-20
+
+### Changed
+- Subsequent actions started on a flow are only given the flow's velocity if their velocity is 0.
+
 ## [5.0.6] 2016-04-17
 
 ### Changed

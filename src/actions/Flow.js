@@ -125,7 +125,10 @@ class Flow extends Action {
             } else if (!action.isScrubbing) {
                 value.blendCurve = undefined;
                 // Pass Actor value properties to Action
-                actionValue.velocity += value.velocity;
+                if (actionValue.velocity === 0) {
+                    actionValue.velocity = value.velocity;
+                }
+
                 actionValue.from = actionValue.current = value.current;
             }
 

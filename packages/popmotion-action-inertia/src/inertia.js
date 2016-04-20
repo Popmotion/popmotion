@@ -9,32 +9,27 @@ class Inertia extends Action {
     start() {
         super.start();
         this.started = currentTime();
-        this.targetEnd = this.started + 0;
 
         for (let i = 0; i < this.numValueKeys; i++) {
             const value = this.values[this.valueKeys[i]];
 
-            if (value.to === undefined) {
-                value.to = Math.round(value.current + (value.mass * value.velocity));
-            }
+            value.targetDistance = value.amp * value.velocity;
+            value.to = Math.round(value.current + value.targetDistance);
         }
     }
 
-    onUpdate() {
-        const totalElapsed = currentTime() - this.started;
+    onUpdate(i, frameStamp) {
+        const totalElapsed = Math.max(frameStamp, this.started) - this.started;
 
         this.ended = true;
 
         for (let i = 0; i < this.numValueKeys; i++) {
             const value = this.values[this.valueKeys[i]];
-            const delta = - value.to * Math.exp(- totalElapsed / value.timeConstant);
+            const delta = - value.targetDistance * Math.exp(- totalElapsed / value.timeConstant);
 
-            // If we're still far away from the target, continue
             if (delta > 0.1 || delta < -0.1) {
                 this.ended = false;
                 value.current = value.to + delta;
-
-            // Otherwise snap to target
             } else {
                 value.current = value.to;
             }
@@ -50,8 +45,8 @@ class Inertia extends Action {
 
 Inertia.prototype.defaultValueProp = 'velocity';
 Inertia.prototype.defaultValue = Action.extendDefaultValue({
-    timeConstant: 325,
-    amp: 0.8
+    amp: 0.8,
+    timeConstant: 325
 });
 
 export default (props) => new Inertia(props);
