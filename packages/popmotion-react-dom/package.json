@@ -1,6 +1,6 @@
 {
   "name": "popmotion-react-dom",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "React components for using Popmotion actions with React DOM",
   "author": "Matt Perry <sirhound@popmotion.io>",
   "homepage": "http://popmotion.io",
@@ -24,7 +24,8 @@
   "analyze": true,
   "license": "MIT",
   "scripts": {
-    "compile": "babel src --out-dir lib"
+    "compile": "babel src --out-dir lib",
+    "compile-package": "npm run compile && webpack ./example.js ./dist/example.js -p"
   },
   "devDependencies": {
     "babel-core": "^6.0.20",
@@ -34,6 +35,9 @@
     "eslint": "^2.7.0"
   },
   "dependencies": {
-    "popmotion": "^5.0.6"
+    "popmotion": "^5.0.6",
+    "react": "^15.0.1",
+    "react-addons-transition-group": "^15.0.1",
+    "react-dom": "^15.0.1"
   }
 }

@@ -1,6 +1,6 @@
 import React, { Children, Component, PropTypes } from 'react';
 import ReactTransitionGroup from 'react-addons-transition-group';
-import FlowTransitionChild from './flow-transition-child';
+import FlowTransitionChild from './flow-transition-child-component';
 import { detectFlow } from 'popmotion';
 
 export default class FlowTransitionGroup extends Component {
