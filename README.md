@@ -4,7 +4,7 @@
 
 Animate with tweens, physics, and input tracking. Natively supports CSS and SVG, with plugins for React, Three.js, and A-Frame.
 
-[Download](http://popmotion.io/download) | [API](http://popmotion.io/api) | [Guides](http://popmotion.io/guides/get-started) | [Twitter](http://twitter.com/popmotionjs)
+[Install](https://popmotion.io/install) | [API](https://popmotion.io/api) | [Guides](https://popmotion.io/guides/basics/get-started/) | [Twitter](http://twitter.com/popmotionjs)
 
 ### Flexible
 * **Native DOM support:** CSS, SVG, SVG path and DOM attribute support, out of the box.
