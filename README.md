@@ -2,7 +2,7 @@
 
 ## The JavaScript motion engine.
 
-Make it pop with animation, physics, and input tracking. In the browser, on Node, anywhere.
+Animate with tweens, physics, and input tracking. Natively supports CSS and SVG, with plugins for React, Three.js, and A-Frame.
 
 [Download](http://popmotion.io/download) | [API](http://popmotion.io/api) | [Guides](http://popmotion.io/guides/get-started) | [Twitter](http://twitter.com/popmotionjs)
 
