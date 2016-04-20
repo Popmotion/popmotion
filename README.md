@@ -26,6 +26,4 @@ Animate with tweens, physics, and input tracking. Natively supports CSS and SVG,
 * Never magically reads the DOM, leaving you in total control of performance.
 * The same size as Velocity.js, **over 66% smaller** than GreenSock TweenMax.
 
-[Get started](http://popmotion.io/guides/get-started)
-
-[Popmotion vs Velocity.js vs Greensock feature comparison](http://popmotion.io/guides/feature-comparison)
+####[Get started](http://popmotion.io/guides/get-started)
