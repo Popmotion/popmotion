@@ -5,6 +5,7 @@ export default class Pointer extends Input {
         super(initialState);
         this.eventToPoint = eventToPoint;
         this.moveEvent = moveEvent;
+				this.boundLatest = this.latest.bind(this);
     }
 
     latest(e) {
@@ -14,11 +15,11 @@ export default class Pointer extends Input {
 
     start() {
         super.start();
-        document.documentElement.addEventListener(this.moveEvent, (e) => this.latest(e));
+        document.documentElement.addEventListener(this.moveEvent, this.boundLatest);
     }
 
     stop() {
         super.stop();
-        document.documentElement.removeEventListener(this.moveEvent, (e) => this.latest(e));
+        document.documentElement.removeEventListener(this.moveEvent, this.boundLatest);
     }
 }
