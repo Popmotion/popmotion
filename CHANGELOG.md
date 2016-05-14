@@ -2,6 +2,14 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.0.8] 2016-05-15
+
+### Added
+- Unit tests for `transformers.createMapper`.
+
+### Fixed
+- Fixed mapped values calculated from `transformers.createMapper` mappers that are outside of the input range returning `undefined`.
+
 ## [5.0.7] 2016-04-20
 
 ### Changed
