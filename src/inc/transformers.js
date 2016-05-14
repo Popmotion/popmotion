@@ -1,12 +1,25 @@
-import { getProgressFromValue, getValueFromProgress, restrict, pointFromAngleAndDistance } from '../inc/calc';
+import { getProgressFromValue, getValueFromProgress, pointFromAngleAndDistance } from '../inc/calc';
 
-export const createMapper = (from, to) => {
-    const mapLength = from.length;
+export const createMapper = (input, output) => {
+    const mapLength = input.length;
+    const finalIndex = mapLength - 1;
 
     return (value) => {
+        // If value outside minimum input range, quickly return
+        if (value <= input[0]) {
+            return output[0];
+        }
+
+        // If value outside maximum input range, quickly return
+        if (value >= input[finalIndex]) {
+            return output[finalIndex];
+        }
+
+        // If within overall input range, find specific range
         for (let i = 1; i < mapLength; i++) {
-            if (value < from[i] || i === mapLength) {
-                return getValueFromProgress(restrict(getProgressFromValue(value, from[i - 1], from[i]), 0, 1), to[i - 1], to[i]);
+            if (value < input[i] || i === finalIndex) {
+                const progressInRange = getProgressFromValue(value, input[i - 1], input[i]);
+                return getValueFromProgress(progressInRange, output[i - 1], output[i]);
             }
         }
     };
