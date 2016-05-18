@@ -1,5 +1,4 @@
 const cache = {};
-const prefixes = ['Webkit','Moz','O','ms', ''];
 const prefixesFind = ['Webkit','Moz','O','ms', ''];
 const prefixesReplace = ['-webkit-','-moz-','-o-','-ms-', ''];
 const numPrefixes = prefixesFind.length;
