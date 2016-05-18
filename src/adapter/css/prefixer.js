@@ -21,7 +21,7 @@ const testPrefix = (key) => {
 
     for (var i = 0; i < numPrefixes; i++) {
         var prefix = prefixesFind[i],
-            prefixed = (prefix === '') ? key : prefix + key.charAt(0).toUpperCase() + key.slice(1); //
+            prefixed = (prefix === '') ? key : prefix + key.charAt(0).toUpperCase() + key.slice(1);
 
         if (prefixed in testElement.style) {
             cache[key] = prefixesReplace[i] + key;
