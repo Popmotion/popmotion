@@ -80,7 +80,6 @@ export default class Flow extends Component {
     }
 }
 
-Flow.displayName = "Flow";
 Flow.propTypes = {
     actions: PropTypes.array,
     behavior: PropTypes.func,
