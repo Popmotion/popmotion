@@ -1,6 +1,7 @@
 const cache = {};
-const prefixes = ['Webkit','Moz','O','ms', ''];
-const numPrefixes = prefixes.length;
+const prefixesFind = ['Webkit','Moz','O','ms', ''];
+const prefixesReplace = ['-webkit-','-moz-','-o-','-ms-', ''];
+const numPrefixes = prefixesFind.length;
 let testElement;
 
 /*
@@ -19,11 +20,11 @@ const testPrefix = (key) => {
     }
 
     for (var i = 0; i < numPrefixes; i++) {
-        var prefix = prefixes[i],
+        var prefix = prefixesFind[i],
             prefixed = (prefix === '') ? key : prefix + key.charAt(0).toUpperCase() + key.slice(1);
 
         if (prefixed in testElement.style) {
-            cache[key] = prefixed;
+            cache[key] = prefixesReplace[i] + key;
         }
     }
     
