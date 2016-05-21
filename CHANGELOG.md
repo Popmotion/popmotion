@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.0.9] 2016-05-21
+
+### Fixed
+- @jamieowen: Prefixed properties now being set correctly.
+
 ## [5.0.8] 2016-05-15
 
 ### Added
