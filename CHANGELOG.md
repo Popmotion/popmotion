@@ -8,7 +8,7 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 - Tween `blend` property set to `false` by default.
 
 ### Fixed
-- Mouse tracking in Firefox.
+- Mouse tracking in Firefox - `Object.watch` is truthy in Firefox.
 
 ## [5.0.10] 2016-05-21
 
