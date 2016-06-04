@@ -2,6 +2,14 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.0.11] 2016-05-21
+
+### Changed
+- Tween `blend` property set to `false` by default.
+
+### Fixed
+- Mouse tracking in Firefox.
+
 ## [5.0.10] 2016-05-21
 
 ### Fixed

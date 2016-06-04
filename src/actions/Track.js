@@ -50,11 +50,12 @@ class Track extends Action {
 
             if (this.inputOffset.hasOwnProperty(key)) {
                 const value = this.values[key];
+                const inputProp = value.hasOwnProperty('watch') ? value.watch : key;
 
                 if (value.direct) {
-                    value.current = this.input.state[value.watch || key];
+                    value.current = this.input.state[inputProp];
                 } else {
-                    value.current = value.from + this.inputOffset[value.watch || key];
+                    value.current = value.from + this.inputOffset[inputProp];
                 }
 
                 // Smooth value if we have smoothing
