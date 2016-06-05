@@ -94,6 +94,11 @@ class Flow extends Action {
             const driver = value.numDrivers ? this.activeActions[value.drivers[0]] : false;
             let newCurrent = value.numDrivers ? driver.values[key].current : value.current;
 
+            /**
+             * TODO: replace with blend tree resolver
+             * Additive motion
+             * Bezier tween blend
+             */
             if (value.blendCurve) {
                 newCurrent = value.blendCurve();
             }
