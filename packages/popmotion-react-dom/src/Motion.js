@@ -34,30 +34,42 @@ class Motion extends React.Component {
   }
 
   componentWillAppear(onComplete) {
-    if (this.props.onWillAppear) {
-      this.props.onWillAppear(this.flow, onComplete);
+    if (this.props.onAppear) {
+      this.startAction(this.props.onAppear, onComplete);  
+    } else {
+      onComplete();
     }
+
     return true;
   }
 
   componentWillEnter(onComplete) {
-    if (this.props.onWillEnter) {
-      this.props.onWillEnter(this.flow, onComplete);
+    if (this.props.onEnter) {
+      this.startAction(this.props.onEnter, onComplete);  
+    } else {
+      onComplete();
     }
+
     return true;
   }
 
   componentWillLeave(onComplete) {
-    if (this.props.onWillLeave) {
-      this.props.onWillLeave(this.flow, onComplete);
+    if (this.props.onLeave) {
+      this.startAction(this.props.onLeave, onComplete);
+    } else {
+      onComplete();
     }
+
     return true;
   }
 
-  startAction(action) {
+  startAction(action, onComplete) {
     if (Array.isArray(action)) {
       action.forEach((singleAction) => this.flow.connect(singleAction).start());
     } else {
+      if (onComplete) {
+        action.onComplete = onComplete;
+      }
       this.flow.connect(action).start();
     }
   }

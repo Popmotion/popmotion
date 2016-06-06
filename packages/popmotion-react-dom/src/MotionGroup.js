@@ -7,18 +7,23 @@ class MotionGroup extends React.Component {
   componentDidMount() {
     this.flow = detectFlow(findDOMNode(this));
     this.setValues(this.props.currentState);
-    console.log('mount')
   }
 
   render() {
-    const { children, ...props } = this.props;
+    const {
+      onWillAppear,
+      onWillEnter,
+      onWillLeave
+      children,
+      ...props
+    } = this.props;
 
     return {
       <ReactTransitionGroup { ...props }>
         { React.Children.map(children, (child) => (<Motion
-          onWillAppear={ (node, callback) => this.childWillAppear(node, callback) }
-          onWillEnter={ (node, callback) => this.childWillEnter(node, callback) }
-          onWillLeave={ (node, callback) => this.childWillLeave(node, callback) }
+          onAppear={ onAppear }
+          onEnter={ onEnter }
+          onLeave={ onLeave }
         >
           {component}
         </Motion>);
