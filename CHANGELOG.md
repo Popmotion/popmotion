@@ -2,6 +2,24 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.0.11] 2016-05-21
+
+### Changed
+- Tween `blend` property set to `false` by default.
+
+### Fixed
+- Mouse tracking in Firefox - `Object.watch` is truthy in Firefox.
+
+## [5.0.10] 2016-05-21
+
+### Fixed
+- @[FreakTheMighty](https://github.com/FreakTheMighty): Setting bound pointer listener to ensure correct removal on `Pointer.stop`.
+
+## [5.0.9] 2016-05-21
+
+### Fixed
+- @[jamieowen](https://github.com/jamieowen): Prefixed properties now being set correctly.
+
 ## [5.0.8] 2016-05-15
 
 ### Added

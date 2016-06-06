@@ -49,8 +49,8 @@ export default class Flow extends Component {
     }
 
     setValues(values) {
-        if (this.props.behavior) {
-            const actions = this.props.behavior(this.flow, values);
+        if (this.props.onStateChange) {
+            const actions = this.props.onStateChange(this.flow, values);
 
             if (actions) {
                 if (isArray(actions)) {
@@ -67,7 +67,7 @@ export default class Flow extends Component {
     }
 
     startAction(action) {
-        this.flow.connect(action).start(this.props.input);
+        this.flow.connect(action).start();
     }
 
     render() {
@@ -80,10 +80,9 @@ export default class Flow extends Component {
     }
 }
 
-Flow.displayName = "Flow";
 Flow.propTypes = {
     actions: PropTypes.array,
-    behavior: PropTypes.func,
+    onStateChange: PropTypes.func,
     input: PropTypes.object,
     values: PropTypes.object
 };

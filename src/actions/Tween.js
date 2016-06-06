@@ -124,7 +124,7 @@ Tween.prototype.defaultValue = Action.extendDefaultValue({
     round: false
 });
 Tween.prototype.defaultProps = Action.extendDefaultProps({
-    blend: true,
+    blend: false,
     dilate: 1,
     loop: 0,
     yoyo: 0,

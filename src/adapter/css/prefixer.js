@@ -1,7 +1,9 @@
-const cache = {};
-const prefixesFind = ['Webkit','Moz','O','ms', ''];
-const prefixesReplace = ['-webkit-','-moz-','-o-','-ms-', ''];
-const numPrefixes = prefixesFind.length;
+import { camelToDash } from '../../inc/utils';
+
+const camelCache = {};
+const dashCache = {};
+const prefixes = ['Webkit','Moz','O','ms', ''];
+const numPrefixes = prefixes.length;
 let testElement;
 
 /*
@@ -13,22 +15,24 @@ let testElement;
 const testPrefix = (key) => {
     testElement = testElement || document.createElement('div');
 
-    if (cache[key] === false) {
-        return false;
-    } else {
-        cache[key] = false;
-    }
+    for (let i = 0; i < numPrefixes; i++) {
+        const prefix = prefixes[i];
+        const noPrefix = (prefix === '');
+        const prefixedPropertyName = noPrefix ? key : prefix + key.charAt(0).toUpperCase() + key.slice(1);
 
-    for (var i = 0; i < numPrefixes; i++) {
-        var prefix = prefixesFind[i],
-            prefixed = (prefix === '') ? key : prefix + key.charAt(0).toUpperCase() + key.slice(1);
-
-        if (prefixed in testElement.style) {
-            cache[key] = prefixesReplace[i] + key;
+        if (prefixedPropertyName in testElement.style) {
+            camelCache[key] = prefixedPropertyName;
+            dashCache[key] = `${(noPrefix ? '' : '-')}${camelToDash(prefixedPropertyName)}`;
         }
     }
-    
-    return cache[key];
 };
 
-export default (key) => cache[key] || testPrefix(key);
+export default (key, asDashCase) => {
+    const cache = asDashCase ? dashCache : camelCache;
+
+    if (!cache[key]) {
+        testPrefix(key);
+    }
+
+    return cache[key];
+};

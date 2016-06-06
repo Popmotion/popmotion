@@ -25,5 +25,3 @@ export default class FlowTransitionChild extends Component {
         return this.props.children;
     }
 }
-
-FlowTransitionChild.displayName = 'FlowTransitionChild';

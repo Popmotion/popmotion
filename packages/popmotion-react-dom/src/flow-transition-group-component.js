@@ -64,7 +64,6 @@ export default class FlowTransitionGroup extends Component {
     }
 }
 
-FlowTransitionGroup.displayName = 'FlowTransitionGroup';
 FlowTransitionGroup.propTypes = {
     component: PropTypes.string,
     enter: PropTypes.object,
