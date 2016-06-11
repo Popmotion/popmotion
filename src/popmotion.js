@@ -53,19 +53,19 @@ export const valueType = { alpha, angle, color, complex, hex, hsl, px, rgb, scal
 export * as transformers from './inc/transformers';
 
 /*
-    Returns a version of the Action bound to a Flow
+  Returns a version of the Action bound to a Flow
 
-    We're adding `on` here because Flow extends Action,
-    otherwise creating a circular modular dependency. Future
-    refactoring, ie moving to a compositional model will
-    remove the need for us to do this here.
+  We're adding `on` here because Flow extends Action,
+  otherwise creating a circular modular dependency. Future
+  refactoring, ie moving to a compositional model will
+  remove the need for us to do this here.
 */
 Action.prototype.on = function (element) {
-    if (!element.connect) {
-        element = getFlow(element);
-    }
+  if (!element.connect) {
+    element = getFlow(element);
+  }
 
-    return element.connect(this);
+  return element.connect(this);
 };
 
 export { Action };

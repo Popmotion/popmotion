@@ -2,6 +2,15 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.0.12] 2016-xx-xx
+
+### Fixed
+- @[jamieowen](https://github.com/jamieowen): `transform` now being prefixed correctly.
+- [#156](https://github.com/Popmotion/popmotion/issues/156): Explicit tween `from` values now honoured by `flow.start`.
+
+### Changed
+- Converted project from 4 space indent to 2.
+
 ## [5.0.11] 2016-05-21
 
 ### Changed

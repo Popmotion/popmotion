@@ -1,5 +1,5 @@
 export default {
-    defaultProps: {
-        current: 1
-    }
+  defaultProps: {
+    current: 1
+  }
 };

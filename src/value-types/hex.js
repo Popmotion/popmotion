@@ -1,36 +1,36 @@
 import rgb from './rgb';
 
 export default {
-    defaultProps: rgb.defaultProps,
+  defaultProps: rgb.defaultProps,
 
-    test: (value) => (value && value.indexOf('#') > -1),
+  test: (value) => (value && value.indexOf('#') > -1),
 
-    split: (value) => {
-        let r, g, b;
+  split: (value) => {
+    let r, g, b;
 
-        // If we have 6 characters, ie #FF0000
-        if (value.length > 4) {
-            r = value.substr(1, 2);
-            g = value.substr(3, 2);
-            b = value.substr(5, 2);
+    // If we have 6 characters, ie #FF0000
+    if (value.length > 4) {
+      r = value.substr(1, 2);
+      g = value.substr(3, 2);
+      b = value.substr(5, 2);
 
-        // Or we have 3 characters, ie #F00
-        } else {
-            r = value.substr(1, 1);
-            g = value.substr(2, 1);
-            b = value.substr(3, 1);
-            r += r;
-            g += g;
-            b += b;
-        }
+    // Or we have 3 characters, ie #F00
+    } else {
+      r = value.substr(1, 1);
+      g = value.substr(2, 1);
+      b = value.substr(3, 1);
+      r += r;
+      g += g;
+      b += b;
+    }
 
-        return {
-            Red: parseInt(r, 16),
-            Green: parseInt(g, 16),
-            Blue: parseInt(b, 16),
-            Alpha: 1
-        };
-    },
+    return {
+      Red: parseInt(r, 16),
+      Green: parseInt(g, 16),
+      Blue: parseInt(b, 16),
+      Alpha: 1
+    };
+  },
 
-    combine: (values) => rgb.combine(values)
+  combine: (values) => rgb.combine(values)
 };
