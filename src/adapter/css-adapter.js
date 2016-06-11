@@ -6,13 +6,13 @@ import transformProps from './css/transform-props';
 import createAdapter from './adapter';
 
 export default createAdapter({
-    getter: (element, key) => {
-        return (!transformProps[key]) ?
-            window.getComputedStyle(element, null)[prefixer(key)] :
-            valueTypeMap[key].defaultProps.current || 0;
-    },
-    setter: (element, props) => element.style.cssText += buildPropertyString(props),
-    valueTypeMap,
-    stateMap
+  getter: (element, key) => {
+    return (!transformProps[key]) ?
+      window.getComputedStyle(element, null)[prefixer(key)] :
+      valueTypeMap[key].defaultProps.current || 0;
+  },
+  setter: (element, props) => element.style.cssText += buildPropertyString(props),
+  valueTypeMap,
+  stateMap
 });
 
