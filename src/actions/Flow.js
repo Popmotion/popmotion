@@ -39,7 +39,7 @@ class Flow extends Action {
     // Create values on actor that don't exist
     for (let key in inheritedAction.values) {
       if (inheritedAction.values.hasOwnProperty(key) && !this.values.hasOwnProperty(key)) {
-        newValues[key] = {};
+        newValues[key] = inheritedAction.values[key];
         hasNewValues = true;
       }
     }
