@@ -1,8 +1,8 @@
 import unitType from './unit';
 
 export default {
-    defaultProps: {
-        unit: 'px',
-        type: unitType
-    }
+  defaultProps: {
+    unit: 'px',
+    type: unitType
+  }
 };
