@@ -2,6 +2,7 @@ import { isNum, findValueAndUnit } from '../inc/utils';
 
 export default {
   test: function (unparsed) {
+    console.log(unparsed)
     const { value } = findValueAndUnit(unparsed);
     return (isNum(value) && !isNaN(value)) ? true : false;
   },
