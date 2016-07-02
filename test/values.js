@@ -1,9 +1,14 @@
 import chai from 'chai';
 import alpha from '../src/values/alpha';
 import degrees from '../src/values/degrees';
+import hex from '../src/values/hex';
 import percent from '../src/values/percent';
 import px from '../src/values/px';
-import rgb from '../src/values/rgb';
+import rgba from '../src/values/rgba';
+import rgbColor from '../src/values/rgb-color';
+
+// Utils
+import contains from '../src/values/utils/contains';
 
 const { expect } = chai;
 
@@ -28,6 +33,14 @@ describe('degrees', () => {
   it('.output should return a value that ends with "deg"', () => {
     expect(degrees.output(-10)).to.equal('-10deg');
     expect(degrees.output(50)).to.equal('50deg');
+  });
+});
+
+describe('hex', () => {
+  it('.test should correctly return `true` for hex values', () => {
+    expect(hex.test('#f00')).to.equal(true);
+    expect(hex.test('#000000')).to.equal(true);
+    expect(hex.test('rgb(0,0,0)')).to.equal(false);
   });
 });
 
@@ -63,10 +76,29 @@ describe('px', () => {
   });
 });
 
-describe('rgb', () => {
+describe('rgba', () => {
+  it('.test should correctly return `true` for rgb and rgba values', () => {
+    expect(rgba.test('rgb(0,0,0)')).to.equal(true);
+    expect(rgba.test('rgba(0,0,0,0)')).to.equal(true);
+    expect(rgba.test('hsl(0,0,0)')).to.equal(false);
+  });
+});
+
+describe('rgbColor', () => {
   it('.output should return a rounded value between 0 and 255', () => {
-    expect(rgb.output(-1)).to.equal(0);
-    expect(rgb.output(255.1)).to.equal(255);
-    expect(rgb.output(100.5)).to.equal(101);
+    expect(rgbColor.output(-1)).to.equal(0);
+    expect(rgbColor.output(255.1)).to.equal(255);
+    expect(rgbColor.output(100.5)).to.equal(101);
+  });
+});
+
+describe('contains', () => {
+  it('should return true if value contains term', () => {
+    expect(contains('hsl')('hsla(0,0,0,0)')).to.equal(true);
+    expect(contains('rgb')('rgba(0,0,0,0)')).to.equal(true);
+  });
+
+  it('should return false if value does not contain term', () => {
+    expect(contains('rgb')('a(0,0,0,0)')).to.equal(false);
   });
 });

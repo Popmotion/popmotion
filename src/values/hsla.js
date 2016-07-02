@@ -1,3 +1,4 @@
+import contains from './utils/contains';
 import alpha from './alpha';
 import degrees from './degrees';
 import percent from './percent';
@@ -10,9 +11,9 @@ export default {
     Alpha: alpha
   },
 
-  test: (v) => (v.indexOf('hsl') === 0),
+  test: contains('hsl'),
 
-  parse: () => ,
+  parse: ,
 
   template: ({ Hue, Saturation, Lightness, Alpha }) => `hsla(${Hue}, ${Saturation}, ${Lightness}, ${Alpha})`,
 
