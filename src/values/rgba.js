@@ -1,4 +1,4 @@
-import contains from './utils/contains';
+import isFirstChar from './utils/is-first-char';
 import alpha from './alpha';
 import rgbColor from './rgb-color';
 
@@ -10,7 +10,7 @@ export default {
     Alpha: alpha
   },
 
-  test: contains('rgb'),
+  test: isFirstChar('rgb'),
 
   parse: () => {},
 

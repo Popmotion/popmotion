@@ -1,10 +1,10 @@
-import contains from './utils/contains';
+import isFirstChar from './utils/is-first-char';
 import rgba from './rgba';
 
 export default {
   ...rgba,
 
-  test: contains('#'),
+  test: isFirstChar('#'),
 
   parse: (v) => {
     let r, g, b;

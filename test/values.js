@@ -8,7 +8,7 @@ import rgba from '../src/values/rgba';
 import rgbColor from '../src/values/rgb-color';
 
 // Utils
-import contains from '../src/values/utils/contains';
+import isFirstChar from '../src/values/utils/is-first-char';
 
 const { expect } = chai;
 
@@ -92,13 +92,13 @@ describe('rgbColor', () => {
   });
 });
 
-describe('contains', () => {
-  it('should return true if value contains term', () => {
-    expect(contains('hsl')('hsla(0,0,0,0)')).to.equal(true);
-    expect(contains('rgb')('rgba(0,0,0,0)')).to.equal(true);
+describe('isFirstChar', () => {
+  it('should return true if first chars are x', () => {
+    expect(isFirstChar('hsl')('hsla(0,0,0,0)')).to.equal(true);
+    expect(isFirstChar('rgb')('rgba(0,0,0,0)')).to.equal(true);
   });
 
-  it('should return false if value does not contain term', () => {
-    expect(contains('rgb')('a(0,0,0,0)')).to.equal(false);
+  it('should return false if value if first chars are not', () => {
+    expect(isFirstChar('rgb')('a(0,0,0,0)')).to.equal(false);
   });
 });

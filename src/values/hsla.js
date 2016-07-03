@@ -1,4 +1,4 @@
-import contains from './utils/contains';
+import isFirstChar from './utils/is-first-char';
 import alpha from './alpha';
 import degrees from './degrees';
 import percent from './percent';
@@ -11,7 +11,7 @@ export default {
     Alpha: alpha
   },
 
-  test: contains('hsl'),
+  test: isFirstChar('hsl'),
 
   parse: ,
 
