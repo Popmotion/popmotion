@@ -8,7 +8,7 @@ export default function splitColorValues(terms) {
     const valuesArray = splitCommaDelimited(getValueFromFunctionString(v));
 
     for (let i = 0; i < numTerms; i++) {
-      values[terms[i]] = (valuesArray[i] !== undefined) ? valuesArray[i] : 1;
+      values[terms[i]] = (valuesArray[i] !== undefined) ? parseFloat(valuesArray[i]) : 1;
     }
 
     return values;
