@@ -1,13 +1,12 @@
 /*
   Detect and load an appropriate clock setting for the environment
 */
-
 const hasRAF = (typeof window !== 'undefined' && window.requestAnimationFrame) ? true : false;
 
-let tick;
+let onNextFrame;
 
 if (hasRAF) {
-  tick = (callback) => window.requestAnimationFrame(callback);
+  onNextFrame = (callback) => window.requestAnimationFrame(callback);
 
 } else {
   /*
@@ -26,9 +25,9 @@ if (hasRAF) {
   */
   let lastTime = 0;
 
-  tick = (callback) => {
+  onNextFrame = (callback) => {
     const currentTime = new Date().getTime();
-    const timeToCall = Math.max(0, 16 - (currentTime - lastTime));
+    const timeToCall = Math.max(0, 16.7 - (currentTime - lastTime));
 
     lastTime = currentTime + timeToCall;
 
@@ -36,4 +35,4 @@ if (hasRAF) {
   };
 }
 
-export default tick;
+export default onNextFrame;

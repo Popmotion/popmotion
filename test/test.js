@@ -1,4 +1,5 @@
 import calc from './calc';
 import utils from './utils';
+import framesync from './framesync';
 import transformers from './transformers';
-import values from './values';
+import values from './value-types';
