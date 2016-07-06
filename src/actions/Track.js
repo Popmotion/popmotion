@@ -35,11 +35,15 @@ class Track extends Action {
     this.inputOffset = {};
     this.inputOrigin = { ...this.input.state };
     this.input.start();
+
+    return this;
   }
 
   stop() {
     super.stop();
     this.input.stop();
+
+    return this;
   }
 
   onUpdate(track, frameStamp, elapsed) {
@@ -69,7 +73,8 @@ class Track extends Action {
 
 Track.prototype.defaultValueProp = 'watch';
 Track.prototype.defaultValue = Action.extendDefaultValue({
-  direct: false
+  direct: false,
+  from: 0
 });
 
 export default Track;

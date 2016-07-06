@@ -2,7 +2,13 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
-## [5.0.12] 2016-xx-xx
+## [5.0.13] 2016-06-07
+
+### Fixed
+- `track.start` and `track.stop` now returning `this`, allowing chaining.
+- `from` restored as `track` default value.
+
+## [5.0.12] 2016-06-01
 
 ### Fixed
 - @[jamieowen](https://github.com/jamieowen): `transform` now being prefixed correctly.
