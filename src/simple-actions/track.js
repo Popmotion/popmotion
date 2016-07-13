@@ -8,11 +8,16 @@ class Track extends Action {
   onUpdate({ current }) {
     this.offset = this;
     this.current = this.from  + this.inputOrigin;
+
+    if (this.smooth) {
+      this.current = smooth(this.current, current, elapsed, this.smooth);
+    }
   }
 }
 
 Track.defaultProps = {
-  from: 0
+  from: 0,
+  smooth: 0
 };
 
 export default function track(props) {
