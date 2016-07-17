@@ -27,6 +27,16 @@ Physics.defaultProps = {
   spring: 0
 };
 
+function (Component) {
+  return class Spring extends Action {
+    onUpdate() {
+      Component.onUpdate();
+      const distanceToTarget = this.to - this.current;
+      velocity += distanceToTarget * speedPerFrame(this.spring, elapsed); 
+    }
+  }
+}
+
 export default function physics(props) {
   return new Physics(props);
 };

@@ -1,6 +1,7 @@
 import chai from 'chai';
 
 import onNextFrame from '../src/framesync/on-next-frame';
+import { onNextUpdate, onNextRender } from '../src/framesync/framesync';
 
 const { expect } = chai;
 

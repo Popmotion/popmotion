@@ -4,7 +4,7 @@ var filename = isProd ? 'popmotion.global.min.js' : 'popmotion.global.js';
 var devTool = isProd ? false : 'inline-source-map';
 
 module.exports = {
-    entry: './src/load/global.js',
+    entry: './src/global.js',
     output: {
         path: __dirname + '/dist',
         filename: filename
