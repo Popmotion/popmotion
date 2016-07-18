@@ -17,11 +17,13 @@ class Tween extends Action {
     this.isScrubbing = false;
 
     // Set default `from` if none set
-    for (let i = 0; i < this.numValueKeys; i++) {
-      const key = this.valueKeys[i];
-      const value = this.values[key];
-      if (value.from === undefined) {
-        value.from = 0;
+    if (!this.flow) {
+      for (let i = 0; i < this.numValueKeys; i++) {
+        const key = this.valueKeys[i];
+        const value = this.values[key];
+        if (value.from === undefined) {
+          value.from = 0;
+        }
       }
     }
 
@@ -59,7 +61,7 @@ class Tween extends Action {
   }
 
   onFrameEnd() {
-    if (this.ended && !this.isScrubbing) {
+    if (this.ended) {
       let stepTaken = false;
 
       for (let key in NEXT_STEPS) {

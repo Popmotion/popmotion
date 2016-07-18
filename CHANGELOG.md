@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.0.14] 2016-18-07
+
+### Fixed
+- Preventing `current` being overwritten by value type default properties.
+- `Tween`s now finish automatically when scrubbed, fixing timeline/stagger bug where tweens wouldn't end.
+
 ## [5.0.13] 2016-06-07
 
 ### Fixed

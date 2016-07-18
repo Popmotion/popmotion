@@ -74,7 +74,7 @@ export default function timeline(def, props = {}) {
     ...props,
     duration: totalTime,
     values: {
-      p: 1
+      p: { from: 0, to: 1 }
     },
     timeline: timeline,
     timelineLength: timeline.length,

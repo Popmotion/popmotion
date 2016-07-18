@@ -100,8 +100,10 @@ class Action extends Task {
         }
 
         // If we've got an adapter, get the current value
-        if (newValue.current === undefined && this.adapter) {
-          newValue.current = convertIfShouldBeNumber(this.adapter.get(this.element, key));
+        if (newValue.current === undefined) {
+          if (this.adapter) {
+            newValue.current = convertIfShouldBeNumber(this.adapter.get(this.element, key));
+          }
         }
 
         if (newValue.from === undefined && this.adapter) {
@@ -161,7 +163,12 @@ class Action extends Task {
                 newValue.template = newValue.type.template(valueProp);
               }
             } else if (newValue.type.defaultProps) {
-              newValue = { ...newValue, ...newValue.type.defaultProps };
+              newValue = { ...newValue.type.defaultProps, ...newValue };
+
+              // This is a bit of a hack - this entire function is a hack. Sorry future self. I look forward to scrapping the lot of it.
+              if (newValue.type.defaultProps.type) {
+                newValue.type = newValue.type.defaultProps.type;
+              }
             }
 
             if (valueProp !== undefined && newValue.type.parse) {
@@ -321,7 +328,6 @@ class Action extends Task {
 
 Action.prototype.defaultValueProp = 'current';
 Action.prototype.defaultValue = {
-  current: 0,
   velocity: 0,
   round: false,
   min: undefined,

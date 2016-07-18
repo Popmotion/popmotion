@@ -27,7 +27,7 @@ export default (state, disableHardwareAcceleration) => {
       transformString += TRANSLATE_Z + '(0px)';
     }
 
-    propertyString += ';' + prefixer('transform',true) + ':' + transformString;
+    propertyString += ';' + prefixer('transform', true) + ':' + transformString;
   }
 
   return propertyString;

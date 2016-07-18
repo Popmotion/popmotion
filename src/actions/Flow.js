@@ -129,6 +129,7 @@ class Flow extends Action {
         value.blendCurve = generateBlendCurve(this.activeActions[value.drivers[0]], action, value, key);
       } else if (!action.isScrubbing) {
         value.blendCurve = undefined;
+
         // Pass Actor value properties to Action
         if (actionValue.velocity === 0) {
           actionValue.velocity = value.velocity;
