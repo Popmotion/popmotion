@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.0.15] 2016-18-07
+
+### Fixed
+- Missing compilation of `5.0.14`
+
 ## [5.0.14] 2016-18-07
 
 ### Fixed
