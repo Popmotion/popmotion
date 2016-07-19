@@ -1,4 +1,5 @@
 import onNextFrame from './on-next-frame';
+import coreTimer from './core-timer';
 
 /**
  * `true` when loop is active
@@ -12,21 +13,15 @@ let isActive = false;
  * next frame, reusing each to avoid GC.
  * @type {Array}
  */
-const toUpdate = [];
-const toUpdateNextFrame = [];
+let toUpdate = [];
+let toUpdateNextFrame = [];
 
 /**
  * Queue of methods to fire at the `render` stage
  * @type {Array}
  */
-const toRender = [];
-const toRenderNextFrame = [];
-
-/**
- * Internal Clock to get frame elapsed time
- * @type {Clock}
- */
-const internalClock = new Clock();
+let toRender = [];
+let toRenderNextFrame = [];
 
 /**
  * Generic counter for render loops
@@ -36,7 +31,7 @@ let i = 0;
 
 function startLoop() {
   if (!isActive) {
-    // start timeer here
+    coreTimer.start();
     isActive = true;
     onNextFrame(frame);
   }
@@ -76,8 +71,8 @@ function updateAll(framestamp, elapsed) {
  * @return {void}
  */
 function frame(framestamp) {
-  internalClock.update(framestamp);
-  isActive = !!updateAll(framestamp, internalClock.getVelocity());
+  coreTimer.update(framestamp);
+  isActive = !!updateAll(coreTimer.elapsed);
 
   if (isActive) {
     onNextFrame(frame);
@@ -95,6 +90,10 @@ export function onNextUpdate(callback) {
 }
 
 export function onNextRender(callback) {
+  if (!isActive) {
+    startLoop();
+  }
+
   if (toRenderNextFrame.indexOf(callback) === -1) {
     toRenderNextFrame.push(callback);
   }
