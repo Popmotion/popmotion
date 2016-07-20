@@ -41,26 +41,27 @@ function startLoop() {
  * Update all queued methods and clear queue for next frame
  * @param  {Array} thisFrame
  * @param  {Array} nextFrame
+ * @param  {Number} framestamp
  * @param  {Number} elapsed
  * @return {void}
  */
-function executeQueue(thisFrame, nextFrame, elapsed) {
+function executeQueue(thisFrame, nextFrame, framestamp, elapsed) {
   // Remove all items from next frame queue
   nextFrame.length = 0;
 
   const numThisFrame = thisFrame.length;
   for (i = 0; i < numThisFrame; i++) {
-    thisFrame[i](elapsed);
+    thisFrame[i](framestamp, elapsed);
   }
 }
 
 function updateAll(framestamp, elapsed) {
   // Swap this frame/next frame arrays to avoid GC
   [toUpdate, toUpdateNextFrame] = [toUpdateNextFrame, toUpdate];
-  executeQueue(toUpdate, toUpdateNextFrame, elapsed);
+  executeQueue(toUpdate, toUpdateNextFrame, framestamp, elapsed);
 
   [toRender, toRenderNextFrame] = [toRenderNextFrame, toRender];
-  executeQueue(toRender, toRenderNextFrame, elapsed);
+  executeQueue(toRender, toRenderNextFrame, framestamp, elapsed);
 
   return toUpdateNextFrame.length;
 }
