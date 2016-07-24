@@ -51,7 +51,9 @@ function executeQueue(thisFrame, nextFrame, framestamp, elapsed) {
 
   const numThisFrame = thisFrame.length;
   for (i = 0; i < numThisFrame; i++) {
-    thisFrame[i](framestamp, elapsed);
+    if (thisFrame[i].isActive) {
+      thisFrame[i](framestamp, elapsed);
+    }
   }
 }
 
@@ -86,6 +88,7 @@ export function onNextUpdate(callback) {
   }
 
   if (toUpdateNextFrame.indexOf(callback) === -1) {
+    callback.isActive = true;
     toUpdateNextFrame.push(callback);
   }
 }
@@ -96,6 +99,7 @@ export function onNextRender(callback) {
   }
 
   if (toRenderNextFrame.indexOf(callback) === -1) {
+    callback.isActive = true;
     toRenderNextFrame.push(callback);
   }
 }

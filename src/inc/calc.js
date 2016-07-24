@@ -133,27 +133,6 @@ export const getValueFromProgress = (progress, from, to) => (- progress * from) 
 export const getProgressFromValue = (value, from, to) => (value - from) / (to - from);
 
 /*
-  Offset between two objects of numbers
-
-  If property is found in b not present in a, it will return `0` for that prop.
-  
-  @param [Point]: First object
-  @param [Point]: Second object
-  @return [Offset]: Distance metrics between two points
-*/
-export const offset = (a, b) => {
-  const offset = {};
-
-  for (let key in b) {
-    if (b.hasOwnProperty(key)) {
-      offset[key] = hasProperty(a, key) ? b[key] - a[key] : 0;
-    }
-  }
-
-  return offset;
-};
-
-/*
   Point from angle and distance
   
   @param [object]: 2D point of origin

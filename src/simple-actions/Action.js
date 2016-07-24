@@ -2,16 +2,11 @@ import { onNextUpdate } from '../framesync/loop';
 
 class Action {
   constructor(props) {
-    for (let key in props) {
-      this[key] = props[key];
-    }
-
+    this.props = { ...props };
     this.update = this.update.bind(this);
   }
 
   start() {
-    this.isActive = true;
-
     onNextUpdate(this.update);
 
     if (this.onStart) {
@@ -22,8 +17,6 @@ class Action {
   }
 
   stop() {
-    this.isActive = false;
-
     if (this.onStop) {
       this.onStop();
     }
@@ -32,13 +25,15 @@ class Action {
   }
 
   update(framestamp, elapsed) {
-    const current = this.current;
+    const current = this.props.current;
 
     this.lastUpdated = framestamp;
 
     if (this.onUpdate) {
-      this.onUpdate(this.input);
+      this.onUpdate(elapsed);
     }
+
+    // set velocity
 
     onNextUpdate(this.update);
 

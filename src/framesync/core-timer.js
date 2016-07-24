@@ -4,7 +4,7 @@ import { currentTime } from '../inc/utils';
  * Maximum permitted ms since last frame
  * @type {Number}
  */
-const MAX_ELAPSED = 33;
+const MAX_ELAPSED = 20;
 
 export default {
   /**

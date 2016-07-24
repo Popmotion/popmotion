@@ -2,7 +2,7 @@ import Action from './Action';
 
 class Track extends Action {
   onStart() {
-    this.inputOrigin = this.input.get();
+    this.inputOrigin = this.input.getCurrent();
   }
 
   onUpdate({ current }) {
@@ -23,3 +23,14 @@ Track.defaultProps = {
 export default function track(props) {
   return new Track(props);
 };
+
+
+class Anticipate extends Action {
+  onUpdate() {
+    doThis(props)
+  }
+}
+
+new Anticipate({
+  
+})
