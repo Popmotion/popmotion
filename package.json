@@ -1,6 +1,6 @@
 {
   "name": "popmotion",
-  "version": "5.0.15",
+  "version": "5.0.16",
   "description": "The JavaScript motion engine. Animation, physics, and input tracking.",
   "author": "Matt Perry <sirhound@popmotion.io>",
   "homepage": "http://popmotion.io",
