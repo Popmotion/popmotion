@@ -41,6 +41,10 @@ class Physics extends Action {
       if (value.current !== previousValue || Math.abs(value.velocity) >= value.stopSpeed) {
         this.hasChanged = true;
       }
+
+      if (value.spring && !this.hasChanged) {
+        value.current = value.to;
+      }
     }
   }
 
