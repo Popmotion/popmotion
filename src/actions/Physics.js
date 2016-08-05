@@ -38,7 +38,7 @@ class Physics extends Action {
       }
       
       // Check if value has changed
-      if (value.current !== previousValue || Math.abs(value.velocity) >= value.stopSpeed || (value.spring && value.current !== value.to)) {
+      if (value.current !== previousValue || Math.abs(value.velocity) >= value.stopSpeed) {
         this.hasChanged = true;
       }
     }

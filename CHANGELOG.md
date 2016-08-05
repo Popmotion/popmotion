@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+
+## [5.0.16] 2016-05-08
+
+### Fixed
+- Spring physics action now automatically ending when target is reached.
+
 ## [5.0.15] 2016-18-07
 
 ### Fixed
