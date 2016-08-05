@@ -2,6 +2,10 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.0.17] 2016-05-08
+
+### Fixed
+- Actually fixing spring clamping this time.
 
 ## [5.0.16] 2016-05-08
 
