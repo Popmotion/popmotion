@@ -129,16 +129,16 @@ export default {
       const activeIdIndex = runningIds.indexOf(id);
       const task = activeTasks[id];
 
+      if (task && task.onActivateLoop) {
+        task.onActivateLoop();
+      }
+
       // If task isn't already running, activate
       if (activeIdIndex === -1 && task) {
         if (task.isPriority) {
           runningIds.unshift(id);
         } else {
           runningIds.push(id);
-        }
-
-        if (task.onActivateLoop) {
-          task.onActivateLoop();
         }
 
         updateRunningCount(true, task.isLazy);

@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.0.18] 2016-08-08
+
+### Fixed
+Firing `onActivateLoop` even if task is already active to prevent `once` from running more than once.
+
 ## [5.0.17] 2016-05-08
 
 ### Fixed
