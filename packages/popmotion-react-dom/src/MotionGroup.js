@@ -5,31 +5,34 @@ import { detectFlow } from 'popmotion';
 
 class MotionGroup extends React.Component {
   componentDidMount() {
-  this.flow = detectFlow(findDOMNode(this));
-  this.setValues(this.props.currentState);
+    this.flow = detectFlow(findDOMNode(this));
+    this.setValues(this.props.currentState);
   }
 
   render() {
-  const {
-    onWillAppear,
-    onWillEnter,
-    onWillLeave
-    children,
-    ...props
-  } = this.props;
+    const {
+      onWillAppear,
+      onWillEnter,
+      onWillLeave,
+      children,
+      ...props
+    } = this.props;
 
-  return {
-    <ReactTransitionGroup { ...props }>
-    { React.Children.map(children, (child) => (<Motion
-      onAppear={ onAppear }
-      onEnter={ onEnter }
-      onLeave={ onLeave }
-    >
-      {component}
-    </Motion>);
-    ) }
-    </ReactTransitionGroup>
-  );
+    return (
+      <ReactTransitionGroup {...props}>
+        {React.Children.map(children, (component) => {
+          return (
+            <Motion
+              onAppear={onWillAppear}
+              onEnter={onWillEnter}
+              onLeave={onWillLeave}
+            >
+              {component}
+            </Motion>
+          );
+        })}
+      </ReactTransitionGroup>
+    );
   }
 }
 
