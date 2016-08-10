@@ -1,6 +1,6 @@
 {
   "name": "popmotion-react-dom",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "React components for using Popmotion actions with React DOM",
   "author": "Matt Perry <sirhound@popmotion.io>",
   "homepage": "http://popmotion.io",
