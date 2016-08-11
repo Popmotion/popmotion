@@ -5,8 +5,8 @@ export default function (...definitions) {
   return (flow, fromState, toState) => {
     for (let i = 0; i < numDefs; i++) {
       const def = defs[i];
-      const matchesFrom = (!def.from || (def.from === fromState));
-      const matchesTo = (!def.to || (def.to === toState));
+      const matchesFrom = (def.from === undefined || (def.from === fromState));
+      const matchesTo = (def.to === undefined || (def.to === toState));
 
       if (matchesFrom && matchesTo) {
         if (typeof def.action === 'function') {

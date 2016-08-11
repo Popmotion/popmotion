@@ -5,7 +5,9 @@ import { detectFlow } from 'popmotion';
 class Motion extends React.Component {
   componentDidMount() {
     this.flow = detectFlow(findDOMNode(this));
-    this.setValues(this.props.initialValues);
+    if (this.props.onMount) {
+      this.props.onMount(this.flow);
+    }
   }
 
   componentWillUnmount() {
