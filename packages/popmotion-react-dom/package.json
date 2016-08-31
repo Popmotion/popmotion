@@ -1,6 +1,6 @@
 {
   "name": "popmotion-react-dom",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "React components for using Popmotion actions with React DOM",
   "author": "Matt Perry <sirhound@popmotion.io>",
   "homepage": "http://popmotion.io",
@@ -19,10 +19,8 @@
     "popmotion",
     "animation",
     "window",
-    "window scroll",
-    "viewport",
-    "viewport scroll",
-    "scroll"
+    "react",
+    "react animation"
   ],
   "analyze": true,
   "license": "MIT",

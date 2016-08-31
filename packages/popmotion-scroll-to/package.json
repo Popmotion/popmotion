@@ -5,6 +5,9 @@
   "author": "Matt Perry <sirhound@popmotion.io>",
   "homepage": "http://popmotion.io",
   "main": "./lib/scroll-to.js",
+  "files": [
+    "lib"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/Popmotion/popmotion/tree/master/packages/popmotion-scroll-to/"
@@ -24,7 +27,7 @@
   "analyze": true,
   "license": "MIT",
   "scripts": {
-    "compile": "eslint src && babel src --out-dir lib"
+    "compile": "babel src --out-dir lib"
   },
   "devDependencies": {
     "babel-core": "^6.0.20",
@@ -32,6 +35,6 @@
     "babel-preset-stage-2": "^6.0.15"
   },
   "dependencies": {
-    "popmotion": "^5.0.3"
+    "popmotion": "^5.0.6"
   }
 }
