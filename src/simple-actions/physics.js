@@ -30,7 +30,8 @@ Physics.valueProps = [
 
 Physics.defaultProps = {
   acceleration: 0,
-  spring: 0
+  spring: 0,
+  to: 0
 };
 
 export default function physics(props) {

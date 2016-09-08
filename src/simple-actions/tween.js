@@ -5,7 +5,7 @@ class Tween extends Action {
     this.elapsed = 0;
   }
 
-  onUpdate({ elapsed }) {
+  onUpdate(framestamp, elapsed) {
     let progress = restrict(getProgressFromValue(elapsed - this.delay, 0, this.duration), 0, 1);
 
     // Step progress if we're stepping

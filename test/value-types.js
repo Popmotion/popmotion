@@ -1,19 +1,19 @@
 import chai from 'chai';
 
 // Value types
-import alpha from '../src/value-types/alpha';
-import degrees from '../src/value-types/degrees';
-import hex from '../src/value-types/hex';
-import hsla from '../src/value-types/hsla';
-import number from '../src/value-types/number';
-import percent from '../src/value-types/percent';
-import px from '../src/value-types/px';
-import rgba from '../src/value-types/rgba';
-import rgbColor from '../src/value-types/rgb-color';
+import alpha from '../src/value/types/alpha';
+import degrees from '../src/value/types/degrees';
+import hex from '../src/value/types/hex';
+import hsla from '../src/value/types/hsla';
+import number from '../src/value/types/number';
+import percent from '../src/value/types/percent';
+import px from '../src/value/types/px';
+import rgba from '../src/value/types/rgba';
+import rgbColor from '../src/value/types/rgb-color';
 
 // Utils
-import contains from '../src/value-types/utils/contains';
-import isFirstChar from '../src/value-types/utils/is-first-char';
+import contains from '../src/value/utils/contains';
+import isFirstChar from '../src/value/utils/is-first-char';
 
 const { expect } = chai;
 
