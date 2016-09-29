@@ -4,13 +4,13 @@ import * as calc from '../src/inc/calc';
 const expect = chai.expect;
 
 const a = {
-    x: 0,
-    y: 0
+  x: 0,
+  y: 0
 };
 
 const b = {
-    x: 1,
-    y: 1
+  x: 1,
+  y: 1
 };
 
 describe('angle()', () => {
@@ -62,16 +62,6 @@ describe('getProgressFromValue()', () => {
     it('should return, as a number representing 0 as the lower limit and 1 as the upper limit, a progress of a value between given limits', () => {
         expect(calc.getProgressFromValue(50, 0, 100)).to.equal(.5);
         expect(calc.getProgressFromValue(50, 100, 200)).to.equal(-0.5);
-    });
-});
-
-describe('offset()', () => {
-    it('should return a new object with the differences between each property', () => {
-        expect(calc.offset(a, b).x).to.equal(1);
-    });
-
-    it('should return 0 for offset of new properties', () => {
-        expect(calc.offset({}, b).x).to.equal(0);
     });
 });
 

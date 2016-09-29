@@ -1,62 +1,149 @@
-import { onNextUpdate } from '../framesync/loop';
+import { onFrameUpdate, cancelOnFrameUpdate, timeSinceLastFrame } from '../framesync/render-loop';
+import { speedPerSecond } from '../inc/calc';
 
 class Action {
   constructor(props) {
     this.props = { ...props };
+    this.current = 0;
+    this.velocity = 0;
     this.update = this.update.bind(this);
   }
 
+  addChild(action) {
+    this.children.push(action);
+  }
+
   start() {
-    onNextUpdate(this.update);
+    onFrameUpdate(this.update);
+
+    if (this.props.from === undefined && this.props.value) {
+      this.props.from = this.props.value.getCurrent();
+    }
 
     if (this.onStart) {
-      this.onStart();
+      fireOnStart(this);
     }
 
     return this;
   }
 
   stop() {
-    if (this.onStop) {
-      this.onStop();
+    cancelOnFrameUpdate(this.update);
+
+    if (this.onStart) {
+      fireOnStop(this);
+    }
+
+    return this;
+  }
+
+  complete() {
+    if (this.onComplete) {
+      this.onComplete(this);
     }
 
     return this;
   }
 
   update(framestamp, elapsed) {
-    const current = this.props.current;
-
-    this.lastUpdated = framestamp;
+    const current = this.getCurrent();
+    const velocity = this.getVelocity();
 
     if (this.onUpdate) {
-      this.onUpdate(elapsed);
+      this.current = this.onUpdate(framestamp, elapsed);
+      this.velocity = speedPerSecond(this.current - current, elapsed);
+
+      if (this.velocity) {
+        // tell renderer to render
+      }
     }
 
-    // set velocity
 
-    onNextUpdate(this.update);
 
+    // Check if action is complete, if not, fire on the next frame
+    if (this.isActionComplete && this.isActionComplete()) {
+      this.complete();
+    } else {
+      onFrameUpdate(this.update);
+    }
+
+    this.lastUpdated = framestamp;
+  }
+
+  set(props) {
+    this.props = { ...this.props, ...props };
     return this;
   }
 
-  complete() {
-    this.stop();
-
-    if (this.onComplete) {
-      this.onComplete();
-    }
-
-    return this;
+  get(key) {
+    return this.props[key];
   }
 
   getCurrent() {
-    return (this.current === undefined) ? 0 : this.current;
+    return this.current;
   }
 
   getVelocity() {
-    return (this.velocity === undefined) ? 0 : this.velocity;
+    return this.velocity;
+  }
+};
+
+export default Action;
+
+
+class Value {
+  constructor(initialValue, onUpdate) {
+    this.state = {
+      current: initialValue,
+      velocity: 0
+    };
+  }
+
+  update(latest) {
+    const { current } = this.state;
+    this.state.current = latest;
+    this.state.velocity = speedPerSecond(latest - current, timeSinceLastFrame());
+
+    onFrameRender();
+  }
+
+  get() {
+    return this.state.current;
+  }
+
+  getVelocity() {
+    return this.state.velocity;
   }
 }
 
-export default Action;
+function value(initialValue) {
+  let current = initialValue;
+  let velocity = 0;
+
+  return {
+    get: () => initialValue,
+    set: 
+  };
+}
+
+import { value, renderCSS } from 'popmotion';
+
+const x = value();
+const menu = renderCSS(document.getElementById('menu'), {
+  x,
+  y: chain(x, interpolator([0, 1], [200, 0]))
+});
+
+tween().on(menu.get('x'))
+
+menu.get('x')
+menu.set('y', {
+  output: 
+})
+
+
+
+flow(, )
+
+play(tween(0, 50), );
+
