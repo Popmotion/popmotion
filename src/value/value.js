@@ -200,3 +200,40 @@ class Value {
 export default function value(initialValue, onUpdate) {
   return new Value(initialValue, onUpdate);
 }
+
+
+
+
+const foo = tween(10, 20)
+
+player(foo).start()
+
+
+isScrolling: bool
+isInertia: bool
+isWithinBounds: bool
+index: int
+
+
+State({
+  isScrolling: false,
+  isWithinBounds: true
+})
+
+const edge = connect(
+  state({
+    isScrolling: false
+  }),
+  state({
+    isScrolling: true
+  }),
+  (current, velocity) => physics(velocity, current)
+);
+
+const edge = connect(
+  state({ isWithinBounds: false }),
+  state({ isWithinBounds: true }),
+  (s) => s.stop()
+);
+
+StateMachine()

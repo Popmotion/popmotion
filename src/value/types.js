@@ -13,7 +13,8 @@
  */
 import between from '../transformers/between';
 import chain from '../transformers/chain';
-import { createUnitType, isFirstChar, splitColorValues, isNum } from './utils';
+import { createUnitType, isFirstChar, splitColorValues } from './utils';
+import { isNum } from '../inc/utils';
 
 // String properties
 const RED = 'Red';
@@ -23,7 +24,6 @@ const ALPHA = 'Alpha';
 const HUE = 'Hue';
 const SATURATION = 'Saturation';
 const LIGHTNESS = 'Lightness';
-const ALPHA = 'Alpha';
 
 // Templates
 const rgbaTemplate = (colors) => `rgba(${colors[RED]}, ${colors[GREEN]}, ${colors[BLUE]}, ${colors[ALPHA]})`;
@@ -51,7 +51,7 @@ export const rgbUnit = {
   )
 };
 
-export const rgba {
+export const rgba = {
   childTypes: {
     [RED]: rgbUnit,
     [GREEN]: rgbUnit,
@@ -64,7 +64,7 @@ export const rgba {
   parse: splitColorValues([RED, GREEN, BLUE, ALPHA]),
 
   output: rgbaTemplate
-}
+};
 
 export const hex = {
   ...rgba,
