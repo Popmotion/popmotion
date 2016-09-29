@@ -1,3 +1,5 @@
+import { getProgressFromValue, getValueFromProgress } from '../inc/calc';
+
 /**
  * Append Unit
  * Creates a function that will append the unit to a given value
@@ -27,9 +29,35 @@ export const compose = (...transformers) => {
   };
 };
 
-export const createLerp = (input, output) => {
+export const interpolate = (input, output, rangeEasing) => {
+  const rangeLength = input.length;
+  const finalIndex = rangeLength - 1;
 
-} 
+  return (v) => {
+    // If value outside minimum range, quickly return
+    if (v <= input[0]) {
+      return output[0];
+    }
+
+    // If value outside maximum range, quickly return
+    if (v >= input[finalIndex]) {
+      return output[finalIndex];
+    }
+
+    let i = 0;
+
+    // Find index of range start
+    for (; i < rangeLength; i++) {
+      if (input[i] > v || i === finalIndex) {
+        break;
+      }
+    }
+
+    const progressInRange = getProgressFromValue(v, input[i], input[i + 1]);
+    const easedProgress = (rangeEasing) ? rangeEasing[i](progressInRange) : progressInRange;
+    return getValueFromProgress(easedProgress, output[i], output[i + 1]);
+  };
+};
 
 /**
  * Restrict value between

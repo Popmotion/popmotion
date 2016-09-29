@@ -11,8 +11,7 @@
  * rgb
  * scale
  */
-import between from '../transformers/between';
-import chain from '../transformers/chain';
+import { restrictBetween, compose } from './transformers';
 import { createUnitType, isFirstChar, splitColorValues } from './utils';
 import { isNum } from '../inc/utils';
 
@@ -31,7 +30,7 @@ const hslaTemplate = (colors) => `hsla(${colors[HUE]}, ${colors[SATURATION]}, ${
 
 // Value types
 export const alpha = {
-  output: between(0, 1)
+  output: restrictBetween(0, 1)
 };
 
 export const degrees = createUnitType('deg');
@@ -45,8 +44,18 @@ export const scale = {
 };
 
 export const rgbUnit = {
-  output: chain(
-    between(0, 255),
+  output: compose(
+    //http://codepen.io/osublake/full/xGVVaN/
+    (v, value, action) => {
+      if (action) {
+        const fromColor = action.from * action.from;
+        const toColor = action.to * action.to;
+        return Math.sqrt(action.progress * (toColor - fromColor) + fromColor) >> 0;
+      }
+
+      return v;
+    },
+    restrictBetween(0, 255),
     Math.round
   )
 };
