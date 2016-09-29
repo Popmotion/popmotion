@@ -41,9 +41,9 @@ export default {
   skewX: angle,
   skewY: angle,
   distance: px,
-  translateX: px,
-  translateY: px,
-  translateZ: px,
+  x: px,
+  y: px,
+  z: px,
   perspective: px,
   opacity: alpha
 };

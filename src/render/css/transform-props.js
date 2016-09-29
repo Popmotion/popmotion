@@ -1,4 +1,4 @@
-import { axes } from '../../value-types/settings/dictionary';
+const axes = ['X', 'Y', 'Z'];
 
 let transformProps = {};
 
