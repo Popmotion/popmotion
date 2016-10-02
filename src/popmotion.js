@@ -1,7 +1,22 @@
-export Action from './simple-actions/Action';
+// Framesync schedulers
+export {
+  onFrameStart,
+  onFrameUpdate,
+  onFrameRender,
+  onFrameEnd,
+  cancelOnFrameStart,
+  cancelOnFrameUpdate,
+  cancelOnFrameRender,
+  cancelOnFrameEnd,
+  timeSinceLastFrame,
+  currentFrameTimestamp
+} from './framesync';
 
-
-
+export value from './value';
+export Action from './actions';
+export tween from './actions/tween';
+export velocity from './actions/velocity';
+import track from './actions/track';
 
 // // Import classes - long term goal to move towards composition
 // import Action from './actions/Action';

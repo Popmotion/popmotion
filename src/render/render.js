@@ -30,3 +30,5 @@ class Render {
 }
 
 export default (output, valueMap) => new Render(output, valueMap);
+
+
