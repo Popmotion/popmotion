@@ -69,3 +69,7 @@ export const interpolate = (input, output, rangeEasing) => {
 export const restrictUnder = (max) => (v) => Math.min(v, max);
 export const restrictOver = (min) => (v) => Math.max(v, min);
 export const restrictBetween = (min, max) => compose(restrictOver(min), restrictUnder(max));
+
+export const steppedMotion = (min, max) => (v) => {
+  
+};

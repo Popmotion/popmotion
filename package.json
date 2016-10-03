@@ -1,6 +1,6 @@
 {
   "name": "popmotion",
-  "version": "5.0.12",
+  "version": "6.0.0",
   "description": "The JavaScript motion engine. Animation, physics, and input tracking.",
   "author": "Matt Perry <sirhound@popmotion.io>",
   "homepage": "http://popmotion.io",
@@ -39,12 +39,13 @@
   "analyze": true,
   "license": "MIT",
   "scripts": {
-    "compile": "eslint src && babel src --out-dir lib && NODE_ENV=production webpack && npm run measure",
+    "compile": "babel src --out-dir lib && NODE_ENV=production webpack && npm run measure",
     "watch": "NODE_ENV=development webpack --progress --colors --watch",
     "measure": "gzip -c dist/popmotion.global.min.js | wc -c",
     "test": "mocha --compilers js:babel-register"
   },
   "devDependencies": {
+    "babel-cli": "^6.16.0",
     "babel-core": "^6.0.20",
     "babel-eslint": "^5.0.4",
     "babel-loader": "^6.0.1",
@@ -55,6 +56,7 @@
     "babel-register": "^6.3.13",
     "chai": "^3.4.0",
     "eslint": "^1.10.3",
+    "flow-bin": "^0.33.0",
     "webpack": "1.7.2"
   }
 }

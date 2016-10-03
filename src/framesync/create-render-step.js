@@ -23,7 +23,7 @@ export default function createRenderStep(startRenderLoop) {
       }
     },
 
-    process: (framestamp, elapsed) => {
+    process: () => {
       // Swap this frame and next frame arrays to avoid GC
       [functionsToRun, functionsToRunNextFrame] = [functionsToRunNextFrame, functionsToRun];
 
@@ -33,7 +33,7 @@ export default function createRenderStep(startRenderLoop) {
       // Execute all of this frame's functions
       const numThisFrame = functionsToRun.length;
       for (let i = 0; i < numThisFrame; i++) {
-        functionsToRun[i](framestamp, elapsed);
+        functionsToRun[i]();
       }
     }
   };

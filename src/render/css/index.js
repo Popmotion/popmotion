@@ -23,16 +23,3 @@ export default function renderCSS(element, values, disableHardwareAcceleration) 
 
   return group;
 }
-
-box.color = '#f00';
-
-const box = css(document.getElementByTag('header'), {
-
-});
-
-box.set({
-  color: '#f00'
-});
-
-box.color.red.set(0)
-
