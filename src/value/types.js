@@ -50,7 +50,7 @@ export const rgbUnit = {
       if (action) {
         const fromColor = action.from * action.from;
         const toColor = action.to * action.to;
-        return Math.sqrt(action.progress * (toColor - fromColor) + fromColor) >> 0;
+        return Math.sqrt(action.progress * (toColor - fromColor) + fromColor);
       }
 
       return v;
