@@ -78,34 +78,6 @@ export const distance = (a, b = ZERO_POINT) => {
 };
 
 /*
-  Ease value within ranged parameters
-  
-  @param [number]: Progress between 0 and 1
-  @param [number]: Value of 0 progress
-  @param [number]: Value of 1 progress
-  @param [string || function]: Name of preset easing
-    to use or generated easing function
-  @return [number]: Value of eased progress in range
-*/ 
-export const ease = (progress, from, to, ease) => {
-  const progressLimited = restrict(progress, 0, 1);
-  const easedProgress = ease(progressLimited);
-
-  return getValueFromProgress(easedProgress, from, to);
-};
- 
-/*
-  Hypotenuse
-  
-  Returns the hypotenuse, side C, given the lengths of sides A and B.
-  
-  @param [number]: Length of A
-  @param [number]: Length of B
-  @return [number]: Length of C
-*/
-export const hypotenuse = (a, b) => Math.sqrt((a * a) + (b * b));
-
-/*
   Value in range from progress
   
   Given a lower limit and an upper limit, we return the value within

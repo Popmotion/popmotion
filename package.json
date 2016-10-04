@@ -52,7 +52,7 @@
     "babel-plugin-transform-export-extensions": "^6.4.0",
     "babel-plugin-transform-react-jsx": "^6.7.5",
     "babel-preset-es2015-subset-loose": "^1.0.0",
-    "babel-preset-stage-2": "^6.0.15",
+    "babel-preset-stage-2": "^6.17.0",
     "babel-register": "^6.3.13",
     "chai": "^3.4.0",
     "eslint": "^1.10.3",

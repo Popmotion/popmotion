@@ -16,7 +16,7 @@ export value from './value';
 export Action from './actions';
 export tween from './actions/tween';
 export velocity from './actions/velocity';
-import track from './actions/track';
+export * as easing from './easing';
 
 // // Import classes - long term goal to move towards composition
 // import Action from './actions/Action';
