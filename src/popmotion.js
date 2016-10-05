@@ -15,7 +15,9 @@ export {
 export value from './value';
 export Action from './actions';
 export tween from './actions/tween';
+export track from './actions/track';
 export velocity from './actions/velocity';
+export pointer from './input/pointer';
 export * as easing from './easing';
 
 // // Import classes - long term goal to move towards composition

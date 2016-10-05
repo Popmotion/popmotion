@@ -2,15 +2,16 @@ class Value {
   constructor(initialValue) {
     this.current = initialValue;
     this.action = null;
-    this.listeners = [];
   }
 
   update(newValue) {
     this.current = newValue;
 
-    const numListeners = this.listeners.length;
-    for (let i = 0; i < numListeners; i++) {
-      this.listeners[i](newValue, this);
+    if (this.listeners) {
+      const numListeners = this.listeners.length;
+      for (let i = 0; i < numListeners; i++) {
+        this.listeners[i](newValue, this);
+      }
     }
   }
 
@@ -30,18 +31,26 @@ class Value {
   }
 
   addListener(callback) {
+    if (!this.listeners) {
+      this.listeners = [];
+    }
+
     const listenerIndex = this.listeners.indexOf(callback);
-    if (listenerIndex !== -1) {
+    if (listenerIndex === -1) {
       this.listeners.push(callback);
     }
+
     return this;
   }
 
   removeListener(callback) {
-    const listenerIndex = this.listeners.indexOf(callback);
-    if (listenerIndex > -1) {
-      this.listeners.splice(listenerIndex, 1);
+    if (this.listeners) {
+      const listenerIndex = this.listeners.indexOf(callback);
+      if (listenerIndex > -1) {
+        this.listeners.splice(listenerIndex, 1);
+      }
     }
+
     return this;
   }
 }

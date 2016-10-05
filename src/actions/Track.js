@@ -1,40 +1,15 @@
-import Action from './';
-import { timeSinceLastFrame } from '../framesync';
-import { smooth } from '../inc/calc';
+export default function track(v1, v2) {
+  const v1Origin = v1.get();
+  const v2Origin = v2.get();
 
-class Track extends Action {
-  onStart() {
-    this.origin = this.get();
-    this.inputOrigin = this.input.get();
-    this.input.start();
+  const updateV2 = (v) => {
+    const offset = v - v1Origin;
+    v2.update(v2Origin + offset);
   }
 
-  onStop() {
-    this.input.stop();
-  }
+  v1.addListener(updateV2);
 
-  onUpdate() {
-    const prev = this.current;
-    const { direct, input } = this.props;
-    const inputValue = input.get();
-
-    if (direct) {
-      this.current = inputValue;
-    } else {
-      const inputOffset = inputValue - this.inputOrigin;
-      this.current = this.origin + this.inputOrigin;
-    }
-
-    if (smooth) {
-      this.current = smooth(this.current, prev, timeSinceLastFrame(), smooth);
-    }
+  return function snap() {
+    v1.removeListener(updateV2);
   }
 }
-
-Track.defaultProps = {
-  direct: false,
-  smooth: 0
-};
-
-export default (props) => new Track(props);
-

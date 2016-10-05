@@ -1,5 +1,5 @@
 import { splitCommaDelimited, getValueFromFunctionString, isString } from '../inc/utils';
-import { appendUnit } from './transformers';
+import { appendUnit } from './filters';
 
 /**
  *  Returns a function that will check any argument for `term`

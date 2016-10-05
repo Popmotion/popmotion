@@ -11,7 +11,7 @@
  * rgb
  * scale
  */
-import { restrictBetween, compose } from './transformers';
+import { restrictBetween, compose } from './filters';
 import { createUnitType, isFirstChar, splitColorValues } from './utils';
 import { isNum } from '../inc/utils';
 
