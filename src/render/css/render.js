@@ -15,10 +15,11 @@ function buildStylePropertyString(state, disableHardwareAcceleration) {
 
   for (let key in state) {
     if (state.hasOwnProperty(key)) {
+      const value = state[key];
+
       if (translateMap[key]) {
         key = translateMap[key];
       }
-      const value = state[key];
 
       if (transformProps[key]) {
         transformString += key + '(' + value + ') ';
@@ -32,17 +33,16 @@ function buildStylePropertyString(state, disableHardwareAcceleration) {
 
   if (transformString !== '') {
     if (!transformHasZ && !disableHardwareAcceleration) {
-      transformString += translateMap.z + '(0px)';
+      transformString += translateMap.z + '(0)';
     }
 
-    propertyString += ';' + prefixer('transform',true) + ':' + transformString;
+    propertyString += ';' + prefixer('transform', true) + ':' + transformString;
   }
 
   return propertyString;
 }
 
 export default (element, disableHardwareAcceleration) => (values) => {
-  const state = values.get();
-  const propertyString = buildStylePropertyString(state, disableHardwareAcceleration);
+  const propertyString = buildStylePropertyString(values, disableHardwareAcceleration);
   element.style.cssText += propertyString;
 };

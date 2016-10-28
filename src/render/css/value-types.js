@@ -1,10 +1,4 @@
-import angle from '../../value-types/angle';
-import alpha from '../../value-types/alpha';
-import color from '../../value-types/color';
-import scale from '../../value-types/scale';
-import shadow from '../../value-types/shadow';
-import px from '../../value-types/px';
-
+import { angle, alpha, color, scale, shadow, px } from '../../value/types'; 
 export default {
   // Color props
   color: color,

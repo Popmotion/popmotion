@@ -1,18 +1,13 @@
-class Value {
-  constructor(initialValue) {
+export class Value {
+  constructor(initialValue, type) {
     this.current = initialValue;
+    this.type = type;
     this.action = null;
   }
 
   update(newValue) {
     this.current = newValue;
-
-    if (this.listeners) {
-      const numListeners = this.listeners.length;
-      for (let i = 0; i < numListeners; i++) {
-        this.listeners[i](newValue, this);
-      }
-    }
+    this.__fireListeners();
   }
 
   get() {
@@ -28,6 +23,19 @@ class Value {
       this.action.stop();
       this.action = null;
     }
+
+    return this;
+  }
+
+  registerAction(action) {
+    if (this.action) {
+      this.action.stop();
+    }
+
+    this.action = action;
+
+    // Potential todo: Check if source action is this.action
+    return (v) => this.update(v);
   }
 
   addListener(callback) {
@@ -52,6 +60,15 @@ class Value {
     }
 
     return this;
+  }
+
+  __fireListeners() {
+    if (this.listeners) {
+      const numListeners = this.listeners.length;
+      for (let i = 0; i < numListeners; i++) {
+        this.listeners[i](this.current, this);
+      }
+    }
   }
 }
 

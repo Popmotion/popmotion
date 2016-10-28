@@ -1,15 +1,16 @@
-export default function track(v1, v2) {
-  const v1Origin = v1.get();
-  const v2Origin = v2.get();
+import Action from './';
 
-  const updateV2 = (v) => {
-    const offset = v - v1Origin;
-    v2.update(v2Origin + offset);
+class Track extends Action {
+  onStart() {
+    const { input } = this.props;
+    this.inputOrigin = input.get();
   }
 
-  v1.addListener(updateV2);
-
-  return function snap() {
-    v1.removeListener(updateV2);
+  onUpdate() {
+    const { input, from } = this.props;
+    const offset = input.get() - this.inputOrigin;
+    this.current = from + offset;
   }
 }
+
+export default (props) => new Track(props);

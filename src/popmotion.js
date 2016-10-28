@@ -14,29 +14,22 @@ export {
 
 export value from './value';
 export Action from './actions';
+export chain from './actions/chain';
+export delay from './actions/delay';
+export group from './actions/group';
+export physics from './actions/physics';
+export stagger from './actions/stagger';
 export tween from './actions/tween';
 export track from './actions/track';
-export velocity from './actions/velocity';
 export pointer from './input/pointer';
 export * as easing from './easing';
 
-// // Import classes - long term goal to move towards composition
-// import Action from './actions/Action';
-// import Flow from './actions/Flow';
-// import Tween from './actions/Tween';
-// import Physics from './actions/Physics';
-// import Track from './actions/Track';
-// import Task from './task/Task';
-// import Input from './input/Input';
+export { color } from './value/types';
 
-// // Export factory functions
-// export const flow = (...args) => new Flow(...args);
-// export const tween = (props) => new Tween(props);
-// export const physics = (props) => new Physics(props);
-// export const track = (...args) => new Track(...args);
-// export const input = (...args) => new Input(...args);
-// export const task = (...args) => new Task(...args);
-// export stagger from './inc/stagger';
+
+//export cssRender from './render/css';
+
+
 // export timeline from './inc/timeline';
 
 // // Adapters
@@ -46,16 +39,6 @@ export * as easing from './easing';
 // export object from './adapter/object-adapter';
 // export svg from './adapter/svg-adapter';
 // export svgPath from './adapter/svg-path-adapter';
-
-// // Easing
-// export easing from './actions/easing/preset-easing';
-// import getFlow from './actions/flow/get-flow';
-// export const detectFlow = getFlow;
-
-// // Utils
-// export * as calc from './inc/calc';
-// export * as utils from './inc/utils';
-// export { setGlobalDilation } from './task/timer';
 
 // // Value types
 // import alpha from './value-types/alpha';

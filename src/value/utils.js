@@ -25,7 +25,7 @@ export const createUnitType = (type) => {
   return {
     test: contains(type),
     parse: parseFloat,
-    output: appendUnit(type)
+    filter: appendUnit(type)
   };
 };
 

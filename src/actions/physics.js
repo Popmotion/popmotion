@@ -2,7 +2,7 @@ import Action from './';
 import { timeSinceLastFrame } from '../framesync';
 import { speedPerFrame } from '../inc/calc';
 
-class Velocity extends Action {
+class Physics extends Action {
   static defaultProps = {
     acceleration: 0,
     friction: 0,
@@ -11,7 +11,7 @@ class Velocity extends Action {
   }
 
   onUpdate() {
-    const { acceleration, autoStopSpeed, friction, velocity } = this.props;
+    const { acceleration, autoStopSpeed, friction, velocity, spring, to } = this.props;
     let newVelocity = velocity;
     const elapsed = timeSinceLastFrame();
 
@@ -25,6 +25,11 @@ class Velocity extends Action {
       newVelocity *= (1 - friction) ** (elapsed / 100);
     }
 
+    if (spring && to !== undefined) {
+      const distanceToTarget = to - this.current;
+      newVelocity += distanceToTarget * speedPerFrame(spring, elapsed);
+    }
+
     // Apply velocity
     this.current += speedPerFrame(newVelocity, elapsed);
     this.props.velocity = newVelocity;
@@ -35,4 +40,4 @@ class Velocity extends Action {
   }
 }
 
-export default (props) => new Velocity(props);
+export default (props) => new Physics(props);

@@ -1,25 +1,18 @@
-import value from '../../value/value';
-import valueGroup from '../../value/value-group';
-import render from './render';
-import onFrameRender from '../../framesync';
+import Render from '../';
+import compositeValue from '../../value/composite-value';
+import { onFrameRender } from '../../framesync';
+import createRenderer from './render';
 import types from './value-types';
 
-export default function renderCSS(element, values, disableHardwareAcceleration) {
-  const valuesWithTypes = {};
+export default (element, values, disableHardwareAcceleration) => {
+  const renderer = createRenderer(element, disableHardwareAcceleration);
+  
+  const groupedValues = compositeValue(values, types)
+    .addListener((v) => {
+      onFrameRender(() => renderer(v));
+    });
 
-  for (let key in values) {
-    valuesWithTypes[key] = value();
-  }
+  groupedValues.__fireListeners();
 
-  const group = valueGroup(valuesWithTypes);
-  const renderer = render(element, disableHardwareAcceleration);
-
-  group.addListener((v) => onFrameRender(renderer(v)));
-
-  group.__immediateRender = () => { 
-    renderer(group.state);
-    return group;
-  };
-
-  return group;
-}
+  return groupedValues;
+};

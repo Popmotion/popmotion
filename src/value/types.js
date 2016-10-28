@@ -12,7 +12,7 @@
  * scale
  */
 import { restrictBetween, compose } from './filters';
-import { createUnitType, isFirstChar, splitColorValues } from './utils';
+import { createUnitType, isFirstChars, splitColorValues } from './utils';
 import { isNum } from '../inc/utils';
 
 // String properties
@@ -30,7 +30,7 @@ const hslaTemplate = (colors) => `hsla(${colors[HUE]}, ${colors[SATURATION]}, ${
 
 // Value types
 export const alpha = {
-  output: restrictBetween(0, 1)
+  filter: restrictBetween(0, 1)
 };
 
 export const degrees = createUnitType('deg');
@@ -44,17 +44,17 @@ export const scale = {
 };
 
 export const rgbUnit = {
-  output: compose(
+  filter: compose(
     //http://codepen.io/osublake/full/xGVVaN/
-    (v, value, action) => {
-      if (action) {
-        const fromColor = action.from * action.from;
-        const toColor = action.to * action.to;
-        return Math.sqrt(action.progress * (toColor - fromColor) + fromColor);
-      }
+    // (v, value, action) => {
+    //   if (action) {
+    //     const fromColor = action.from * action.from;
+    //     const toColor = action.to * action.to;
+    //     return Math.sqrt(action.progress * (toColor - fromColor) + fromColor);
+    //   }
 
-      return v;
-    },
+    //   return v;
+    // },
     restrictBetween(0, 255),
     Math.round
   )
@@ -68,17 +68,17 @@ export const rgba = {
     [ALPHA]: alpha
   },
 
-  test: isFirstChar('rgb'),
+  test: isFirstChars('rgb'),
 
   parse: splitColorValues([RED, GREEN, BLUE, ALPHA]),
 
-  output: rgbaTemplate
+  combine: rgbaTemplate
 };
 
 export const hex = {
   ...rgba,
 
-  test: isFirstChar('#'),
+  test: isFirstChars('#'),
 
   parse: (v) => {
     let r, g, b;
@@ -116,9 +116,26 @@ export const hsla = {
     [ALPHA]: alpha
   },
 
-  test: isFirstChar('hsl'),
+  test: isFirstChars('hsl'),
 
   parse: splitColorValues([HUE, SATURATION, LIGHTNESS, ALPHA]),
 
-  output: hslaTemplate
+  combine: hslaTemplate
+};
+
+export const color = {
+  childTypes: {
+    ...hsla.childTypes,
+    ...rgba.childTypes
+  },
+
+  test: (value) => rgba.test(value) || hex.test(value) || hsla.test(value)
+};
+
+
+const FLOAT_REGEX = /(-)?(\d[\d\.]*)/g;
+const generateToken = (token) => '${' + token + '}';
+
+export const complexString = {
+
 };

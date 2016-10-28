@@ -14,6 +14,8 @@ class Action {
   }
 
   start() {
+    const { value, onStart, from, velocity } = this.props;
+
     this.isActive = true;
     onFrameUpdate(this.update);
 
@@ -21,14 +23,16 @@ class Action {
       this.onStart();
     }
 
-    if (this.props.onStart) {
-      this.props.onStart(this);
+    if (onStart) {
+      onStart(this);
     }
 
     return this;
   }
 
   stop() {
+    const { onStop } = this.props;
+
     this.isActive = false;
     cancelOnFrameUpdate(this.update);
 
@@ -36,8 +40,8 @@ class Action {
       this.onStop();
     }
 
-    if (this.props.onStop) {
-      this.props.onStop(this);
+    if (onStop) {
+      onStop(this);
     }
 
     return this;
@@ -67,10 +71,8 @@ class Action {
 
     this.velocity = speedPerSecond(this.current - current, timeSinceLastFrame());
 
-    if (this.velocity) {
-      if (this.value) {
-        this.value.set(this.current);
-      }
+    if (this.updateValue) {
+      this.updateValue(this.current);
     }
 
     if (this.props.onUpdate) {
@@ -94,6 +96,13 @@ class Action {
 
   getVelocity() {
     return this.velocity;
+  }
+
+  output(onUpdate) {
+    return new this.constructor({
+      ...this.props,
+      onUpdate
+    });
   }
 }
 

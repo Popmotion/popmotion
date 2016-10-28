@@ -10,7 +10,6 @@ class Tween extends Action {
   static defaultProps = {
     duration: 300,
     ease: easeOut,
-    from: 0,
     to: 0
   }
 
