@@ -1,4 +1,4 @@
-import { getProgressFromValue, getValueFromProgress } from '../inc/calc';
+import { getProgressFromValue, getValueFromProgress, stepProgress } from './calc';
 
 /**
  * Append Unit
@@ -10,19 +10,19 @@ import { getProgressFromValue, getValueFromProgress } from '../inc/calc';
 export const appendUnit = (unit) => (v) => `${v}${unit}`;
 
 /**
- * Pipe
+ * Flow
  * Compose other transformers to run linearily
- * pipe(min(20), max(40))
+ * flow(min(20), max(40))
  * @param  {...functions} transformers
  * @return {function}
  */
-export const pipe = (...transformers) => {
+export const flow = (...transformers) => {
   const numTransformers = transformers.length;
   let i = 0;
 
-  return (v, value) => {
+  return (v) => {
     for (i = 0; i < numTransformers; i++) {
-      v = transformers[i](v, value);
+      v = transformers[i](v);
     }
 
     return v;
@@ -53,9 +53,9 @@ export const interpolate = (input, output, rangeEasing) => {
       }
     }
 
-    const progressInRange = getProgressFromValue(v, input[i], input[i + 1]);
+    const progressInRange = getProgressFromValue(input[i], input[i + 1], v);
     const easedProgress = (rangeEasing) ? rangeEasing[i](progressInRange) : progressInRange;
-    return getValueFromProgress(easedProgress, output[i], output[i + 1]);
+    return getValueFromProgress(output[i], output[i + 1], easedProgress);
   };
 };
 
@@ -70,6 +70,8 @@ export const clampUnder = (max) => (v) => Math.min(v, max);
 export const clampOver = (min) => (v) => Math.max(v, min);
 export const clamp = (min, max) => flow(clampOver(min), clampUnder(max));
 
-export const steppedMotion = (min, max) => (v) => {
-  
+export const steps = (steps, min, max) => (v) => {
+  const progress = getProgressFromValue(min, max, v);
+  return stepProgress(steps, progress);
 };
+

@@ -83,12 +83,12 @@ export const distance = (a, b = ZERO_POINT) => {
   Given a lower limit and an upper limit, we return the value within
   that range as expressed by progress (a number from 0-1)
   
-  @param [number]: The progress between lower and upper limits expressed 0-1
   @param [number]: Lower limit of range
   @param [number]: Upper limit of range
+  @param [number]: The progress between lower and upper limits expressed 0-1
   @return [number]: Value as calculated from progress within range (not limited within range)
 */
-export const getValueFromProgress = (progress, from, to) => (- progress * from) + (progress * to) + from;
+export const getValueFromProgress = (from, to, progress) => (- progress * from) + (progress * to) + from;
 
 /*
   Progress within given range
@@ -97,12 +97,12 @@ export const getValueFromProgress = (progress, from, to) => (- progress * from) 
   (expressed as a number 0-1) represented by the given value, and
   limit that progress to within 0-1.
   
-  @param [number]: Value to find progress within given range
   @param [number]: Lower limit 
   @param [number]: Upper limit
+  @param [number]: Value to find progress within given range
   @return [number]: Progress of value within range as expressed 0-1
 */
-export const getProgressFromValue = (value, from, to) => (value - from) / (to - from);
+export const getProgressFromValue = (from, to, value) => (value - from) / (to - from);
 
 /*
   Point from angle and distance
@@ -128,15 +128,6 @@ export const pointFromAngleAndDistance = (origin, angle, distance) => {
   @return [number]: Value in degrees
 */
 export const radiansToDegrees = (radians) => radians * 180 / Math.PI;
-
-/*
-  Return random number between range
-  
-  @param [number] (optional): Output minimum
-  @param [number] (optional): Output maximum
-  @return [number]: Random number within range, or 0 and 1 if none provided
-*/
-export const random = (min = 0, max = 1) => Math.random() * (max - min) + min;
 
 /*
   Calculate relative value
@@ -179,18 +170,6 @@ export const relativeValue = (current, relative) => {
 };
 
 /*
-  Restrict value to range
-  
-  Return value within the range of lowerLimit and upperLimit
-  
-  @param [number]: Value to keep within range
-  @param [number]: Lower limit of range
-  @param [number]: Upper limit of range
-  @return [number]: Value as limited within given range
-*/
-export const restrict = (value, min, max) => Math.max(Math.min(value, max), min);
-
-/*
   Framerate-independent smoothing
 
   @param [number]: New value
@@ -219,11 +198,11 @@ export const speedPerSecond = (velocity, frameDuration) => velocity * (1000 / fr
 /*
   Create stepped version of 0-1 progress
   
-  @param [number]: Current value
   @param [int]: Number of steps
+  @param [number]: Current value
   @return [number]: Stepped value
 */
-export const stepProgress = (progress, steps) => {
+export const stepProgress = (steps, progress) => {
   const segment = 1 / (steps - 1);
   const target = 1 - (1 / steps);
   const progressOfTarget = Math.min(progress / target, 1);
