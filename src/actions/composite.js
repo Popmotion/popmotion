@@ -11,7 +11,10 @@ class CompositeAction extends Action {
 
   addActions(actions) {
     for (const key in actions) {
-      this.actionKeys.push(key);
+      if (this.actionKeys.indexOf(key) === -1) {
+        this.actionKeys.push(key);
+      }
+
       this[key] = actions[key];
       this[key].setProps({
         // Look into private settable functions
