@@ -34,9 +34,11 @@ class Physics extends Action {
     this.current += speedPerFrame(newVelocity, elapsed);
     this.props.velocity = newVelocity;
 
-    if (!newVelocity || Math.abs(newVelocity) <= autoStopSpeed) {
-      this.complete();
-    }
+    return this.current;
+  }
+
+  isActionComplete() {
+    return (!this.velocity || Math.abs(this.velocity) <= this.props.autoStopSpeed);
   }
 }
 

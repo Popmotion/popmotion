@@ -1,2 +1,2 @@
-import * as Popmotion from './popmotion';
-window.Popmotion = Popmotion;
+import * as popmotion from './popmotion';
+window.popmotion = popmotion;

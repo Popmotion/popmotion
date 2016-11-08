@@ -4,7 +4,6 @@ import { speedPerSecond } from '../inc/calc';
 class Action {
   constructor(props) {
     this.current = 0;
-    this.velocity = 0;
     this.update = this.update.bind(this);
 
     this.props = {
@@ -62,32 +61,33 @@ class Action {
   }
 
   update() {
-    const current = this.current;
-    const velocity = this.velocity;
+    this.lastUpdated = timeSinceLastFrame();
+    this.prev = this.current;
 
     if (this.onUpdate) {
-      this.onUpdate();
-    }
-
-    this.velocity = speedPerSecond(this.current - current, timeSinceLastFrame());
-
-    if (this.updateValue) {
-      this.updateValue(this.current);
+      this.current = this.onUpdate();
     }
 
     if (this.props.onUpdate) {
-      this.props.onUpdate(this);
+      this.props.onUpdate(this.current, this);
     }
 
     if (this.isActive) {
       onFrameUpdate(this.update);
     }
 
+    if (this.isActionComplete && this.isActionComplete()) {
+      this.complete();
+    }
+
     return this;
   }
 
-  set(newValue) {
-    this.current = newValue;
+  setProps(props) {
+    this.props = {
+      ...this.props,
+      ...props
+    };
   }
 
   get() {
@@ -95,14 +95,7 @@ class Action {
   }
 
   getVelocity() {
-    return this.velocity;
-  }
-
-  output(onUpdate) {
-    return new this.constructor({
-      ...this.props,
-      onUpdate
-    });
+    return speedPerSecond(this.prev - this.current, this.lastUpdated);
   }
 }
 

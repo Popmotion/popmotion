@@ -1,15 +1,19 @@
 import Action from './';
 
-const startAction = (action) => action.stop();
-const stopAction = (action) => action.stop();
-
 class Parallel extends Action {
   onStart() {
-    this.props.actions.forEach(startAction);
+    const { actions } = this.props;
+    this.numActiveActions = actions.length;
+
+    actions.forEach((action) => {
+      action.setProps({
+        onStop: () => this.numActiveActions--
+      }).start();
+    });
   }
 
   onStop() {
-    this.props.actions.forEach(stopAction);
+    this.props.actions.forEach((action) => action.stop());
   }
 
   addAction(action) {
@@ -18,6 +22,10 @@ class Parallel extends Action {
     if (actions.indexOf(action) === -1) {
       actions.push(action);
     }
+  }
+
+  isActionComplete() {
+    return (this.numActiveActions === 0);
   }
 }
 

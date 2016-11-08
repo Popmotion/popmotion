@@ -1,32 +1,35 @@
 import Action from './';
 import { timeSinceLastFrame } from '../framesync';
-import { restrictBetween } from '../value/filters';
-import { ease, getProgressFromValue, getValueFromProgress } from '../inc/calc';
+import { flow, clamp } from '../inc/filters';
+import { getProgressFromValue, getValueFromProgress } from '../inc/calc';
 import { easeOut } from '../easing';
 
-const restrictProgress = restrictBetween(0, 1);
+const clampProgress = clamp(0, 1);
 
 class Tween extends Action {
   static defaultProps = {
     duration: 300,
     ease: easeOut,
+    from: 0,
     to: 0
   }
 
   onStart() {
+    const { duration, ease, from, to } = this.props;
+
     this.elapsed = 0;
+
+    this.onUpdate = flow(
+      () => this.elapsed += timeSinceLastFrame(),
+      (elapsed) => getProgressFromValue(0, duration, elapsed),
+      clampProgress,
+      ease,
+      (easedProgress) => getValueFromProgress(from, to, easedProgress)
+    );
   }
 
-  onUpdate() {
-    const { duration, ease, from, to } = this.props;
-    this.elapsed += timeSinceLastFrame();
-    const progress = getProgressFromValue(this.elapsed, 0, duration);
-    const easedProgress = ease(restrictProgress(progress));
-    this.current = getValueFromProgress(easedProgress, from, to);
-
-    if (this.elapsed >= duration) {
-      this.complete();
-    }
+  isActionComplete() {
+    return (this.elapsed >= this.props.duration);
   }
 }
 
