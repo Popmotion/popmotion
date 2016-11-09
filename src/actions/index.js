@@ -3,57 +3,48 @@ import { speedPerSecond } from '../inc/calc';
 
 class Action {
   constructor(props) {
-    this.current = 0;
     this.update = this.update.bind(this);
 
     this.props = {
       ...this.constructor.defaultProps,
       ...props
     };
+
+    this.current = props.current || 0;
   }
 
   start() {
-    const { value, onStart, from, velocity } = this.props;
+    const { onStart, _onStart } = this.props;
 
     this.isActive = true;
     onFrameUpdate(this.update);
 
-    if (this.onStart) {
-      this.onStart();
-    }
-
-    if (onStart) {
-      onStart(this);
-    }
+    if (this.onStart) this.onStart();
+    if (onStart) onStart(this);
+    if (_onStart) _onStart(this);
 
     return this;
   }
 
   stop() {
-    const { onStop } = this.props;
+    const { onStop, _onStop } = this.props;
 
     this.isActive = false;
     cancelOnFrameUpdate(this.update);
 
-    if (this.onStop) {
-      this.onStop();
-    }
-
-    if (onStop) {
-      onStop(this);
-    }
+    if (this.onStop) this.onStop();
+    if (onStop) onStop(this);
+    if (_onStop) _onStop(this);
 
     return this;
   }
 
   complete() {
-    if (this.onComplete) {
-      this.onComplete();
-    }
+    const { onComplete, _onComplete } = this.props;
 
-    if (this.props.onComplete) {
-      this.props.onComplete(this);
-    }
+    if (this.onComplete) this.onComplete();
+    if (onComplete) onComplete(this);
+    if (_onComplete) _onComplete(this);
 
     this.stop();
 
@@ -91,7 +82,8 @@ class Action {
   }
 
   get() {
-    return this.current;
+    const { filter } = this.props;
+    return filter ? filter(this.current) : this.current;
   }
 
   getVelocity() {

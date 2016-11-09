@@ -18,10 +18,10 @@ class CompositeAction extends Action {
       this[key] = actions[key];
       this[key].setProps({
         // Look into private settable functions
-        onUpdate: (v, action) => {
+        _onUpdate: (v, action) => {
           this.current[key] = action.get();
         },
-        onStop: () => this.numActiveActions--
+        _onStop: () => this.numActiveActions--
       });
     }
   }
@@ -51,4 +51,4 @@ export default (actions, props) => {
     actions,
     ...props
   });
-}
+};

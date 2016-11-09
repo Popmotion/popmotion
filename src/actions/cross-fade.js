@@ -9,9 +9,9 @@ class CrossFade extends Action {
   }
 
   onStart() {
-    const { duration, ease } = this.props;
+    const { duration, ease, fader } = this.props;
 
-    this.transferTween = tween({
+    this.fader = fader || tween({
       to: 1,
       duration,
       ease
@@ -20,7 +20,7 @@ class CrossFade extends Action {
 
   onUpdate() {
     const { from, to } = this.props;
-    const balance = this.transferTween.get();
+    const balance = this.fader.get();
     const latestFromValue = from.get();
     const latestToValue = to.get();
     return getValueFromProgress(latestFromValue, latestToValue, balance);

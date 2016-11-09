@@ -7,7 +7,7 @@ class Parallel extends Action {
 
     actions.forEach((action) => {
       action.setProps({
-        onStop: () => this.numActiveActions--
+        _onStop: () => this.numActiveActions--
       }).start();
     });
   }
