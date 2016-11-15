@@ -2,10 +2,15 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.0.19] 2016-11-15
+
+### Added
+- `track` Can take `preventDefault` as optional second param. Defaults to `true`.
+
 ## [5.0.18] 2016-08-08
 
 ### Fixed
-Firing `onActivateLoop` even if task is already active to prevent `once` from running more than once.
+- Firing `onActivateLoop` even if task is already active to prevent `once` from running more than once.
 
 ## [5.0.17] 2016-05-08
 
