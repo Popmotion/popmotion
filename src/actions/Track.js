@@ -18,18 +18,18 @@ const touchEventToPoint = ({ changedTouches }) => ({
   y: changedTouches[0].clientY
 });
 
-const createPointer = (e) => e.touches ?
-  new Pointer(touchEventToPoint(e), 'touchmove', touchEventToPoint) : 
-  new Pointer(mouseEventToPoint(e), 'mousemove', mouseEventToPoint);
+const createPointer = (e, preventDefault) => e.touches ?
+  new Pointer(touchEventToPoint(e), 'touchmove', touchEventToPoint, preventDefault) : 
+  new Pointer(mouseEventToPoint(e), 'mousemove', mouseEventToPoint, preventDefault);
 
 const getActualEvent = (e) => e.originalEvent || e;
 
 class Track extends Action {
-  start(input) {
+  start(input, preventDefault = true) {
     super.start();
 
     if (input) {
-      this.input = input.state ? input : createPointer(getActualEvent(input));
+      this.input = input.state ? input : createPointer(getActualEvent(input), preventDefault);
     }
 
     this.inputOffset = {};

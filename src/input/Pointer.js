@@ -1,8 +1,9 @@
 import Input from './Input';
 
 export default class Pointer extends Input {
-  constructor(initialState, moveEvent, eventToPoint) {
+  constructor(initialState, moveEvent, eventToPoint, preventDefault) {
     super(initialState);
+    this.preventDefault = preventDefault;
     this.eventToPoint = eventToPoint;
     this.moveEvent = moveEvent;
     this.boundLatest = this.latest.bind(this);
@@ -10,7 +11,9 @@ export default class Pointer extends Input {
 
   latest(e) {
     super.latest(this.eventToPoint(e));
-    e.preventDefault();
+    if (this.preventDefault) {
+      e.preventDefault();
+    }
   }
 
   start() {
