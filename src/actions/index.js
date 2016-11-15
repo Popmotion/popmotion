@@ -6,18 +6,21 @@ class Action {
     this.update = this.update.bind(this);
 
     this.props = {
-      ...this.constructor.defaultProps,
-      ...props
+      ...this.constructor.defaultProps
     };
+
+    this.setProps(props);
 
     this.current = props.current || 0;
   }
 
   start() {
-    const { onStart, _onStart } = this.props;
+    const { onStart, _onStart, passive } = this.props;
 
-    this.isActive = true;
-    onFrameUpdate(this.update);
+    if (!passive) {
+      this.isActive = true;
+      onFrameUpdate(this.update);
+    }
 
     if (this.onStart) this.onStart();
     if (onStart) onStart(this);
@@ -27,10 +30,12 @@ class Action {
   }
 
   stop() {
-    const { onStop, _onStop } = this.props;
+    const { onStop, _onStop, passive } = this.props;
 
-    this.isActive = false;
-    cancelOnFrameUpdate(this.update);
+    if (!passive) {
+      this.isActive = false;
+      cancelOnFrameUpdate(this.update);
+    }
 
     if (this.onStop) this.onStop();
     if (onStop) onStop(this);
@@ -55,15 +60,17 @@ class Action {
     this.lastUpdated = timeSinceLastFrame();
     this.prev = this.current;
 
+    const { onUpdate, _onUpdate, passive } = this.props;
+
     if (this.onUpdate) {
       this.current = this.onUpdate();
     }
 
-    if (this.props.onUpdate) {
-      this.props.onUpdate(this.current, this);
-    }
+    const filtered = this.get();
+    if (onUpdate) onUpdate(filtered, this);
+    if (_onUpdate) _onUpdate(filtered, this);
 
-    if (this.isActive) {
+    if (!passive && this.isActive) {
       onFrameUpdate(this.update);
     }
 

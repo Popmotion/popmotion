@@ -11,8 +11,8 @@ class Tween extends Action {
     duration: 300,
     ease: easeOut,
     from: 0,
-    to: 0
-  }
+    to: 1
+  };
 
   onStart() {
     const { duration, ease, from, to } = this.props;

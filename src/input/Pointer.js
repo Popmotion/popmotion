@@ -1,4 +1,22 @@
-import value from '../value';
+import composite from '../actions/composite';
+
+function createPointer({ x, y }, { eventToPoints, moveEvent }) {
+
+  const pointer = composite({
+    x: {
+      from: x
+    },
+    y: {
+      from: x
+    }
+  });
+
+  pointer.setProps({
+    _onStart: () => document.documentElement.addEventListener(moveEvent, pointer.update),
+    _onStop: () => document.documentElement.removeEventListener(moveEvent, pointer.update),
+    _onUpdate: () => {}
+  });
+}
 
 class Pointer {
   constructor({ x, y }, { eventToPoints, moveEvent }) {
@@ -16,13 +34,6 @@ class Pointer {
     this.y.update(y);
   }
 
-  start() {
-    document.documentElement.addEventListener(this.moveEvent, this.update);
-  }
-
-  stop() {
-    document.documentElement.removeEventListener(this.moveEvent, this.update);
-  }
 }
 
 const mouseEventToPoint = (e) => ({
@@ -40,11 +51,11 @@ const getNativeEvent = (e) => e.originalEvent || e.nativeEvent || e;
 export default (e) => {
   const nativeEvent = getNativeEvent(e);
   return (nativeEvent.touches) ?
-    new Pointer(touchEventToPoint(e), {
+    createPointer(touchEventToPoint(e), {
       moveEvent: 'touchmove',
       eventToPoints: touchEventToPoint
     }) :
-    new Pointer(mouseEventToPoint(e), {
+    createPointer(mouseEventToPoint(e), {
       moveEvent: 'mousemove',
       eventToPoints: mouseEventToPoint
     });

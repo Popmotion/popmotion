@@ -20,6 +20,7 @@ export * as filter from './inc/filters';
 // Actions
 export Action from './actions';
 export tween from './actions/tween';
+export track from './actions/track';
 export physics from './actions/physics';
 export parallel from './actions/parallel';
 export chain from './actions/chain';
@@ -27,19 +28,8 @@ export delay from './actions/delay';
 export crossFade from './actions/cross-fade';
 export composite from './actions/composite';
 
-//export Action from './actions';
-
-// export value from './value';
-// export Action from './actions';
-// export chain from './actions/chain';
-// export delay from './actions/delay';
-// export group from './actions/group';
-// export physics from './actions/physics';
-// export stagger from './actions/stagger';
-// export tween from './actions/tween';
-// export track from './actions/track';
-// export pointer from './input/pointer';
-// export * as easing from './easing';
+// Input
+export pointer from './input/pointer';
 
 // export { color } from './value/types';
 
