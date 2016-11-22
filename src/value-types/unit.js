@@ -9,7 +9,7 @@ export default {
   parse: function (unparsed, parent) {
     const { value, unit } = findValueAndUnit(unparsed);
 
-    if (unit && unit !== unit) {
+    if (unit && unit !== parent.unit) {
       parent.unit = unit;
     }
 
