@@ -1,36 +1,47 @@
+import { onFrameStart, onFrameRender } from '../../framesync';
 
+class Render {
+  constructor(props) {
+    this.immediateRead = this.immediateRead.bind(this);
+    this.immediateRender = this.immediateRender.bind(this);
 
-// import { onFrameRender } from '../framesync/render-loop';
+    this.props = {
+      ...this.constructor.defaultProps,
+      ...props
+    };
 
-// class Render {
-//   constructor(onChange, valueMap) {
-//     this.values = {...valueMap};
-//     this.state = {};
-//     this.onChange = onChange;
+    this.state = {};
+  }
 
-//     for (let key in valueMap) {
-//       this.register(valueMap[key]);
-//     }
-//   }
+  render() {
+    onFrameRender(this.immediateRender);
+  }
 
-//   register(value) {
-//     value.subscribe(this.invalidate);
-//   }
+  immediateRender() {
+    if (this.onRender) {
+      this.onRender();
+    }
+  }
 
-//   invalidate() {
-//     if (!this.hasChanged) {
-//       onFrameRender(this.render);
-//     }
+  update(v) {
+    for (let key in v) {
+      if (v.hasOwnProperty(key)) {
+        this.state[key] = v[key];
+      }
+    }
 
-//     this.hasChanged = true;
-//   }
+    this.render();
+  }
 
-//   render() {
-//     this.hasChanged = false;
-//     this.onChange(this.values);
-//   }
-// }
+  read(key, callback) {
+    onFrameStart(() => callback(this.immediateRead(key)));
+  }
 
-// export default (output, valueMap) => new Render(output, valueMap);
+  immediateRead(key) {
+    if (this.onRead) {
+      return this.onRead(key);
+    }
+  }
+}
 
-
+export default Render;

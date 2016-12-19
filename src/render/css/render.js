@@ -8,7 +8,7 @@ const translateMap = {
   z: TRANSLATE + 'Z'
 };
 
-function buildStylePropertyString(state, disableHardwareAcceleration) {
+function buildStylePropertyString(state, disableHardwareAcceleration = false) {
   let propertyString = '';
   let transformString = '';
   let transformHasZ = false;
@@ -42,7 +42,7 @@ function buildStylePropertyString(state, disableHardwareAcceleration) {
   return propertyString;
 }
 
-export default (element, disableHardwareAcceleration) => (values) => {
+export default (element, values, disableHardwareAcceleration) => {
   const propertyString = buildStylePropertyString(values, disableHardwareAcceleration);
   element.style.cssText += propertyString;
 };

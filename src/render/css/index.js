@@ -1,18 +1,19 @@
 import Render from '../';
-import compositeValue from '../../value/composite-value';
-import { onFrameRender } from '../../framesync';
-import createRenderer from './render';
-import types from './value-types';
+import renderCSS from './render';
 
-export default (element, values, disableHardwareAcceleration) => {
-  const renderer = createRenderer(element, disableHardwareAcceleration);
-  
-  const groupedValues = compositeValue(values, types)
-    .addListener((v) => {
-      onFrameRender(() => renderer(v));
-    });
+class CSSRender extends Render {
+  static defaultProps = {
+    enableHardwareAcceleration: true
+  };
 
-  groupedValues.__fireListeners();
+  onRender() {
+    renderCSS(this.props.element, this.state, this.props.enableHardwareAcceleration);
+  }
+}
 
-  return groupedValues;
-};
+export default function (element, enableHardwareAcceleration) {
+  return new CSSRender({
+    element,
+    enableHardwareAcceleration
+  });
+}
