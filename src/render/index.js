@@ -1,47 +1,63 @@
-import { onFrameStart, onFrameRender } from '../../framesync';
+import { onFrameRender } from '../../framesync';
 
-class Render {
+class StateCache {
   constructor(props) {
-    this.immediateRead = this.immediateRead.bind(this);
-    this.immediateRender = this.immediateRender.bind(this);
+    this.render = this.render.bind(this);
 
     this.props = {
       ...this.constructor.defaultProps,
       ...props
     };
 
-    this.state = {};
+    this.clearState();
   }
 
-  render() {
-    onFrameRender(this.immediateRender);
-  }
-
-  immediateRender() {
-    if (this.onRender) {
-      this.onRender();
-    }
-  }
-
-  update(v) {
-    for (let key in v) {
-      if (v.hasOwnProperty(key)) {
-        this.state[key] = v[key];
+  get(key) {
+    if (key) {
+      if (this.state[key] !== undefined) {
+        return this.state[key];
+      } else {
+        return this.read(key);
       }
+    } else {
+      return this.state;
     }
-
-    this.render();
   }
 
-  read(key, callback) {
-    onFrameStart(() => callback(this.immediateRead(key)));
-  }
-
-  immediateRead(key) {
+  read(key) {
     if (this.onRead) {
       return this.onRead(key);
     }
   }
+
+  set(values) {
+    for (let key in values) {
+      if (values.hasOwnProperty(key)) {
+        if (this.state[key] !== values[key]) {
+          this.hasChanged = true;
+          this.changed.push(key);
+          this.state[key] = values[key];
+        }
+      }
+    }
+
+    if (this.hasChanged) {
+      onFrameRender(this.render);
+    }
+  }
+
+  render() {
+    if (this.hasChanged && this.onRender) {
+      this.onRender();
+      this.changed.length = 0;
+    }
+    this.hasChanged = false;
+  }
+
+  clearState() {
+    this.state = {};
+    this.changed = [];
+  }
 }
 
-export default Render;
+export default StateCache;
