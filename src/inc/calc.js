@@ -1,8 +1,16 @@
-import {
-  isNum,
-  findValueAndUnit,
-  toDecimal
-} from './utils';
+import { isNum, findValueAndUnit } from './utils';
+
+/*
+  Convert number to x decimal places
+
+  @param [number]
+  @param [number]
+  @return [number]
+*/
+const toDecimal = (num, precision = 2) => {
+  precision = 10 ** precision;
+  return Math.round(num * precision) / precision;
+};
 
 const ZERO_POINT = {
   x: 0,
@@ -127,46 +135,6 @@ export const pointFromAngleAndDistance = (origin, angle, distance) => {
   @return [number]: Value in degrees
 */
 export const radiansToDegrees = (radians) => radians * 180 / Math.PI;
-
-/*
-  Calculate relative value
-  
-  Takes the operator and value from a string, ie "+=5", and applies
-  to the current value to resolve a new target.
-  
-  @param [number]: Current value
-  @param [string]: Relative value
-  @return [number]: New value
-*/
-export const relativeValue = (current, relative) => {
-  let newValue = current;
-  const equation = relative.split('=');
-  const operator = equation[0];
-  let { unit, value } = findValueAndUnit(equation[1]);
-
-  value = parseFloat(value);
-
-  switch (operator) {
-  case '+':
-    newValue += value;
-    break;
-  case '-':
-    newValue -= value;
-    break;
-  case '*':
-    newValue *= value;
-    break;
-  case '/':
-    newValue /= value;
-    break;
-  }
-  
-  if (unit) {
-    newValue += unit;
-  }
-
-  return newValue;
-};
 
 /*
   Framerate-independent smoothing

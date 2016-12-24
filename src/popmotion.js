@@ -12,9 +12,9 @@ export {
   currentFrameTimestamp
 } from './framesync';
 
-// Helpers
-export * as easing from './easing';
+export * as easing from './inc/easing';
 export * as transformers from './inc/transformers';
+export * as valueTypes from './inc/value-types';
 
 // Actions
 export Action from './actions';
@@ -31,3 +31,5 @@ export composite from './actions/composite';
 // Renderers
 export Renderer from './renderers';
 export css from './renderers/css';
+export svg from './renderers/svg';
+export svgPath from './renderers/svg-path';

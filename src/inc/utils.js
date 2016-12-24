@@ -1,3 +1,5 @@
+import { appendUnit } from './transformers';
+
 const CAMEL_CASE_PATTERN = /([a-z])([A-Z])/g;
 const REPLACE_TEMPLATE = '$1-$2';
 const HAS_PERFORMANCE_NOW = (typeof performance !== 'undefined' && performance.now);
@@ -67,14 +69,6 @@ export const isNum = (num) => typeof num === 'number';
 export const isObj = (obj) => typeof obj === 'object';
 
 /*
-  Is utils a relative value assignment?
-  
-  @param [string]: Variable to test
-  @return [boolean]: If utils looks like a relative value assignment
-*/
-export const isRelativeValue = (value) => (value && value.indexOf && value.indexOf('=') > 0) ? true : false;
-
-/*
   Is utils var a string ? 
   
   @param: Variable to test
@@ -82,6 +76,13 @@ export const isRelativeValue = (value) => (value && value.indexOf && value.index
 */
 export const isString = (str) => typeof str === 'string';
 
+export const setDOMAttrs = (element, attrs) => {
+  for (let key in attrs) {
+    if (attrs.hasOwnProperty(key)) {
+      element.setAttribute(key, attrs[key]);
+    }
+  }
+};
 /*
   Split comma-delimited string
 
@@ -92,24 +93,91 @@ export const isString = (str) => typeof str === 'string';
 */
 export const splitCommaDelimited = (value) => isString(value) ? value.split(/,\s*/) : [value];
 
-/*
-  Split space-delimited string
-
-  "foo bar" -> ["foo", "bar"]
-
-  @param [string]
-  @return [array]
-*/
-export const splitSpaceDelimited = (value) => isString(value) ? value.split(' ') : [value];
-
-/*
-  Convert number to x decimal places
-
-  @param [number]
-  @param [number]
-  @return [number]
-*/
-export const toDecimal = (num, precision = 2) => {
-  precision = 10 ** precision;
-  return Math.round(num * precision) / precision;
+/**
+ *  Returns a function that will check any argument for `term`
+ * `contains('needle')('haystack')`
+ */
+export const contains = (term) => (v) => {
+  return (isString(term) && v.indexOf(term) !== -1);
 };
+
+/**
+ *  Returns a function that will check to see if an argument is
+ *  the first characters in the provided `term`
+ * `isFirstChars('needle')('haystack')`
+ */
+export const isFirstChars = (term) => (v) => {
+  return (isString(term) && v.indexOf(term) === 0);
+};
+
+/**
+ * Create a unit value type
+ */
+export const createUnitType = (type) => {
+  return {
+    test: contains(type),
+    parse: parseFloat,
+    transform: appendUnit(type)
+  };
+};
+
+/**
+ * Creates a function that will split color
+ * values from string into an object of properties
+ * `splitColorValues(['Red', 'Green', 'Blue'])('rgba(0,0,0)')`
+ */
+export function splitColorValues(terms) {
+  const numTerms = terms.length;
+
+  return function (v) {
+    const values = {};
+    const valuesArray = splitCommaDelimited(getValueFromFunctionString(v));
+
+    for (let i = 0; i < numTerms; i++) {
+      values[terms[i]] = (valuesArray[i] !== undefined) ? parseFloat(valuesArray[i]) : 1;
+    }
+
+    return values;
+  };
+}
+
+/*
+  Split a value into a value/unit object
+  
+    "200px" -> { value: 200, unit: "px" }
+    
+  @param [string]: Value to split
+  @return [object]: Object with value and unit props
+*/
+export const findValueAndUnit = (value) => {
+  if (value.match) {
+    const splitValue = value.match(/(-?\d*\.?\d*)(.*)/);
+
+    return {
+      value: parseFloat(splitValue[1]),
+      unit:  splitValue[2]
+    };
+  } else {
+    return { value };
+  }
+};
+
+/*
+  Split color string into map of color properties
+
+  "rgba(255, 255, 255, 0)", ["Red", 'Green", "Blue", "Alpha"]
+
+  { Red: 255... }
+*/
+export const getColorValues = (value, colorTerms) => {
+  const numColorTerms = colorTerms.length;
+  const colorValues = {};
+  const colors = splitCommaDelimited(getValueFromFunctionString(value));
+
+  for (let i = 0; i < numColorTerms; i++) {
+    colorValues[colorTerms[i]] = (colors[i] !== undefined) ? colors[i] : 1;
+  }
+
+  return colorValues;
+};
+

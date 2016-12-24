@@ -39,7 +39,7 @@
   "analyze": true,
   "license": "MIT",
   "scripts": {
-    "compile": "babel src --out-dir lib && NODE_ENV=production webpack && npm run measure",
+    "build": "babel src --out-dir lib && NODE_ENV=production webpack && npm run measure",
     "watch": "NODE_ENV=development webpack --progress --colors --watch",
     "measure": "gzip -c dist/popmotion.global.min.js | wc -c",
     "test": "mocha --compilers js:babel-register"
