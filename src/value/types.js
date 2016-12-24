@@ -11,7 +11,7 @@
  * rgb
  * scale
  */
-import { restrictBetween, compose } from './filters';
+import { clamp, flow } from '../inc/transformers';
 import { createUnitType, isFirstChars, splitColorValues } from './utils';
 import { isNum } from '../inc/utils';
 
@@ -28,23 +28,29 @@ const LIGHTNESS = 'Lightness';
 const rgbaTemplate = (colors) => `rgba(${colors[RED]}, ${colors[GREEN]}, ${colors[BLUE]}, ${colors[ALPHA]})`;
 const hslaTemplate = (colors) => `hsla(${colors[HUE]}, ${colors[SATURATION]}, ${colors[LIGHTNESS]}, ${colors[ALPHA]})`;
 
+export const number = {
+  test: isNum,
+  parse: parseFloat
+};
+
 // Value types
 export const alpha = {
-  filter: restrictBetween(0, 1)
+  ...number,
+  transform: clamp(0, 1)
 };
 
 export const degrees = createUnitType('deg');
 export const percent = createUnitType('%');
 export const px = createUnitType('px');
 
-export const number = { test: isNum };
-
 export const scale = {
+  ...number,
   default: 1
 };
 
 export const rgbUnit = {
-  filter: compose(
+  ...number,
+  transform: flow(
     //http://codepen.io/osublake/full/xGVVaN/
     // (v, value, action) => {
     //   if (action) {
@@ -55,7 +61,7 @@ export const rgbUnit = {
 
     //   return v;
     // },
-    restrictBetween(0, 255),
+    clamp(0, 255),
     Math.round
   )
 };
@@ -72,7 +78,7 @@ export const rgba = {
 
   parse: splitColorValues([RED, GREEN, BLUE, ALPHA]),
 
-  combine: rgbaTemplate
+  transform: rgbaTemplate
 };
 
 export const hex = {
@@ -130,12 +136,4 @@ export const color = {
   },
 
   test: (value) => rgba.test(value) || hex.test(value) || hsla.test(value)
-};
-
-
-const FLOAT_REGEX = /(-)?(\d[\d\.]*)/g;
-const generateToken = (token) => '${' + token + '}';
-
-export const complexString = {
-
 };

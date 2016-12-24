@@ -16,13 +16,14 @@ class CompositeAction extends Action {
       }
 
       this[key] = actions[key];
-      this[key].setProps({
-        // Look into private settable functions
-        _onUpdate: (v, action) => {
-          this.current[key] = action.get();
-        },
-        _onStop: () => this.numActiveActions--
-      });
+
+      const onUpdate = (v, action) => this.current[key] = action.get();
+
+      this[key]
+        .setProps({
+          _onStop: () => this.numActiveActions--
+        })
+        .addListener(onUpdate);
     }
   }
 

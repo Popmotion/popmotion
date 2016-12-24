@@ -14,8 +14,7 @@ export {
 
 // Helpers
 export * as easing from './easing';
-export * as calc from './inc/calc';
-export * as filter from './inc/filters';
+export * as transformers from './inc/transformers';
 
 // Actions
 export Action from './actions';
@@ -28,3 +27,7 @@ export chain from './actions/chain';
 export delay from './actions/delay';
 export crossFade from './actions/cross-fade';
 export composite from './actions/composite';
+
+// Renderers
+export Renderer from './renderers';
+export css from './renderers/css';

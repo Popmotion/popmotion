@@ -1,5 +1,4 @@
 import {
-  hasProperty,
   isNum,
   findValueAndUnit,
   toDecimal

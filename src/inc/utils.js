@@ -19,17 +19,6 @@ const varType = (variable) => Object.prototype.toString.call(variable).slice(8, 
 export const camelToDash = (string) => string.replace(CAMEL_CASE_PATTERN, REPLACE_TEMPLATE).toLowerCase();
 
 /*
-  Create a function string
-
-  '20px', 'translate' -> 'translate(20px)'
-
-  @param [string]
-  @param [string]
-  @return [string]
-*/
-export const createFunctionString = (value, prefix) => `${prefix}(${value})`;
-
-/*
   Generate current timestamp
   
   @return [timestamp]: Current UNIX timestamp

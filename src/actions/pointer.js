@@ -1,39 +1,31 @@
-import composite from '../actions/composite';
+import value from './value';
+import composite from './composite';
 
-function createPointer({ x, y }, { eventToPoints, moveEvent }) {
-
+function createPointer({ x, y }, { eventToPoints, moveEvent, ...props }) {
   const pointer = composite({
-    x: {
-      from: x
-    },
-    y: {
-      from: x
-    }
+    x: value(x),
+    y: value(y)
+  }, {
+    passive: true,
+    ...props
   });
+
+  const updatePointer = (e) => {
+    if (props.preventDefault) {
+      e.preventDefault();
+    }
+
+    const points = eventToPoints(e);
+    pointer.x.set(points.x);
+    pointer.y.set(points.y);
+  };
 
   pointer.setProps({
-    _onStart: () => document.documentElement.addEventListener(moveEvent, pointer.update),
-    _onStop: () => document.documentElement.removeEventListener(moveEvent, pointer.update),
-    _onUpdate: () => {}
+    _onStart: () => document.documentElement.addEventListener(moveEvent, updatePointer),
+    _onStop: () => document.documentElement.removeEventListener(moveEvent, updatePointer)
   });
-}
 
-class Pointer {
-  constructor({ x, y }, { eventToPoints, moveEvent }) {
-    this.x = value(x);
-    this.y = value(y);
-    this.moveEvent = moveEvent;
-    this.eventToPoints = eventToPoints;
-    this.update = this.update.bind(this);
-  }
-
-  update(e) {
-    e.preventDefault();
-    const { x, y } = this.eventToPoints(e);
-    this.x.update(x);
-    this.y.update(y);
-  }
-
+  return pointer;
 }
 
 const mouseEventToPoint = (e) => ({
@@ -48,15 +40,17 @@ const touchEventToPoint = ({ changedTouches }) => ({
 
 const getNativeEvent = (e) => e.originalEvent || e.nativeEvent || e;
 
-export default (e) => {
+export default (e, props) => {
   const nativeEvent = getNativeEvent(e);
   return (nativeEvent.touches) ?
     createPointer(touchEventToPoint(e), {
       moveEvent: 'touchmove',
-      eventToPoints: touchEventToPoint
+      eventToPoints: touchEventToPoint,
+      ...props
     }) :
     createPointer(mouseEventToPoint(e), {
       moveEvent: 'mousemove',
-      eventToPoints: mouseEventToPoint
+      eventToPoints: mouseEventToPoint,
+      ...props
     });
-}
+};

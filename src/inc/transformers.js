@@ -20,9 +20,10 @@ export const flow = (...transformers) => {
   const numTransformers = transformers.length;
   let i = 0;
 
-  return (v) => {
+  return (acc, ...args) => {
+    let v = acc;
     for (i = 0; i < numTransformers; i++) {
-      v = transformers[i](v);
+      v = transformers[i](v, ...args);
     }
 
     return v;
@@ -44,7 +45,7 @@ export const interpolate = (input, output, rangeEasing) => {
       return output[finalIndex];
     }
 
-    let i = 0;
+    let i = 1;
 
     // Find index of range start
     for (; i < rangeLength; i++) {
@@ -53,9 +54,9 @@ export const interpolate = (input, output, rangeEasing) => {
       }
     }
 
-    const progressInRange = getProgressFromValue(input[i], input[i + 1], v);
+    const progressInRange = getProgressFromValue(input[i - 1], input[i], v);
     const easedProgress = (rangeEasing) ? rangeEasing[i](progressInRange) : progressInRange;
-    return getValueFromProgress(output[i], output[i + 1], easedProgress);
+    return getValueFromProgress(output[i - 1], output[i], easedProgress);
   };
 };
 

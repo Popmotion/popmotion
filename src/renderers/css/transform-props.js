@@ -1,6 +1,10 @@
 const axes = ['X', 'Y', 'Z'];
 
-let transformProps = {};
+let transformProps = {
+  x: true,
+  y: true,
+  z: true
+};
 
 const SCALE = 'scale';
 const ROTATE = 'rotate';

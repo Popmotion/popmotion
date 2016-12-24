@@ -60,15 +60,14 @@ class Action {
     this.lastUpdated = timeSinceLastFrame();
     this.prev = this.current;
 
-    const { onUpdate, _onUpdate, passive } = this.props;
+    const { onUpdate, passive } = this.props;
 
     if (this.onUpdate) {
       this.current = this.onUpdate();
     }
 
-    const filtered = this.get();
-    if (onUpdate) onUpdate(filtered, this);
-    if (_onUpdate) _onUpdate(filtered, this);
+    if (onUpdate) onUpdate(this.current, this);
+    this.fireListeners();
 
     if (!passive && this.isActive) {
       onFrameUpdate(this.update);
@@ -86,15 +85,42 @@ class Action {
       ...this.props,
       ...props
     };
+    return this;
   }
 
   get() {
-    const { filter } = this.props;
-    return filter ? filter(this.current) : this.current;
+    return this.current;
   }
 
   getVelocity() {
     return speedPerSecond(this.prev - this.current, this.lastUpdated);
+  }
+
+  addListener(listener) {
+    this.listeners = this.listeners || [];
+    this.numListeners = this.numListeners || 0;
+    if (this.listeners.indexOf(listener) === -1) {
+      this.listeners.push(listener);
+      this.numListeners++;
+    }
+    return this;
+  }
+
+  removeListener(listener) {
+    const listenerIndex = (this.listeners) ? this.listeners.indexOf(listener) : -1;
+    if (listenerIndex !== -1) {
+      this.numListeners--;
+      this.listeners.splice(listenerIndex, 1);
+    }
+    return this;
+  }
+
+  fireListeners() {
+    const current = this.get();
+    for (let i = 0; i < this.numListeners; i++) {
+      this.listeners[i](current, this);
+    }
+    return this;
   }
 }
 

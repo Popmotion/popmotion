@@ -1,12 +1,12 @@
 import { splitCommaDelimited, getValueFromFunctionString, isString } from '../inc/utils';
-import { appendUnit } from './filters';
+import { appendUnit } from '../inc/transformers';
 
 /**
  *  Returns a function that will check any argument for `term`
  * `contains('needle')('haystack')`
  */
 export const contains = (term) => (v) => {
-  return (isString(term) && v.indexOf(term) !== -1)
+  return (isString(term) && v.indexOf(term) !== -1);
 };
 
 /**
@@ -25,7 +25,7 @@ export const createUnitType = (type) => {
   return {
     test: contains(type),
     parse: parseFloat,
-    filter: appendUnit(type)
+    transform: appendUnit(type)
   };
 };
 
@@ -46,7 +46,7 @@ export function splitColorValues(terms) {
     }
 
     return values;
-  }
+  };
 }
 
 /*

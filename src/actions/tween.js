@@ -1,6 +1,6 @@
 import Action from './';
 import { timeSinceLastFrame } from '../framesync';
-import { flow, clamp } from '../inc/filters';
+import { flow, clamp } from '../inc/transformers';
 import { getProgressFromValue, getValueFromProgress } from '../inc/calc';
 import { easeOut } from '../easing';
 
