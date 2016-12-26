@@ -2,9 +2,9 @@ import Action from './';
 import { timeSinceLastFrame } from '../framesync';
 import { flow, clamp } from '../inc/transformers';
 import { getProgressFromValue, getValueFromProgress } from '../inc/calc';
-import { easeOut } from '../easing';
+import { easeOut } from '../inc/easing';
 
-const clampProgress = clamp(0, 1);
+const clampProgress = (v) => clamp(0, 1, v);
 
 class Tween extends Action {
   static defaultProps = {
@@ -21,15 +21,23 @@ class Tween extends Action {
 
     this.onUpdate = flow(
       () => this.elapsed += timeSinceLastFrame(),
-      (elapsed) => getProgressFromValue(0, duration, elapsed),
+      (v) => getProgressFromValue(0, duration, v),
       clampProgress,
       ease,
-      (easedProgress) => getValueFromProgress(from, to, easedProgress)
+      (v) => getValueFromProgress(from, to, v)
     );
   }
 
   isActionComplete() {
     return (this.elapsed >= this.props.duration);
+  }
+
+  getDuration() {
+    return this.props.duration;
+  }
+
+  getElapsed() {
+    return this.elapsed;
   }
 }
 

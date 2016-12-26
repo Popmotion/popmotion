@@ -1,4 +1,4 @@
-import { isNum, findValueAndUnit } from './utils';
+import { isNum } from './utils';
 
 /*
   Convert number to x decimal places

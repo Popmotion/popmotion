@@ -11,7 +11,7 @@ class Physics extends Action {
   }
 
   onUpdate() {
-    const { acceleration, autoStopSpeed, friction, velocity, spring, to } = this.props;
+    const { acceleration, friction, velocity, spring, to } = this.props;
     let newVelocity = velocity;
     const elapsed = timeSinceLastFrame();
 
@@ -38,7 +38,8 @@ class Physics extends Action {
   }
 
   isActionComplete() {
-    return (!this.velocity || Math.abs(this.velocity) <= this.props.autoStopSpeed);
+    const { autoStopSpeed } = this.props;
+    return (!this.velocity || Math.abs(this.velocity) <= autoStopSpeed);
   }
 }
 

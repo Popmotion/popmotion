@@ -18,15 +18,18 @@ export * as valueTypes from './inc/value-types';
 
 // Actions
 export Action from './actions';
+export blendTweens from './actions/blend-tweens';
+export chain from './actions/chain';
+export composite from './actions/composite';
+export crossFade from './actions/cross-fade';
+export delay from './actions/delay';
+export parallel from './actions/parallel';
+export physics from './actions/physics';
+export pointer from './actions/pointer';
 export tween from './actions/tween';
 export track from './actions/track';
-export physics from './actions/physics';
-export parallel from './actions/parallel';
-export pointer from './actions/pointer';
-export chain from './actions/chain';
-export delay from './actions/delay';
-export crossFade from './actions/cross-fade';
-export composite from './actions/composite';
+export stagger from './actions/stagger';
+export value from './actions/value';
 
 // Renderers
 export Renderer from './renderers';

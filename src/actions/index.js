@@ -92,6 +92,10 @@ class Action {
     return this.current;
   }
 
+  getProp(key) {
+    return this.props[key];
+  }
+
   getVelocity() {
     return speedPerSecond(this.prev - this.current, this.lastUpdated);
   }

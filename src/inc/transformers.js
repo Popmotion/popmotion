@@ -2,8 +2,8 @@ import { getProgressFromValue, getValueFromProgress, stepProgress } from './calc
 
 /**
  * Append Unit
- * Creates a function that will append the unit to a given value
- * appendUnit('px')(20) -> '20px'
+ * A function that will append
+ * appendUnit('px', 20) -> '20px'
  * @param  {string} unit)
  * @return {number}
  */

@@ -1,6 +1,6 @@
 import Action from './';
 import tween from './tween';
-import { linear } from '../easing';
+import { linear } from '../inc/easing';
 import { getValueFromProgress } from '../inc/calc';
 
 class CrossFade extends Action {
