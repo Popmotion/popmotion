@@ -2,28 +2,64 @@
 
 ## The JavaScript motion engine.
 
-Animate with tweens, physics, and input tracking. Natively supports CSS and SVG, with plugins for React, Three.js, and A-Frame.
+Use and compose tweens, physics and user input to create unique animations and interactions.
 
-[Install](https://popmotion.io/install) | [API](https://popmotion.io/api) | [Guides](https://popmotion.io/guides/basics/get-started/) | [Twitter](http://twitter.com/popmotionjs)
+Popmotion is tiny, at ~8kb including full CSS, SVG and SVG `path` render support - that's 75% smaller than GreenSock. It's also flexible, allowing custom actions and renderers to be created with ease.
 
-### Flexible
-* **Native DOM support:** CSS, SVG, SVG path and DOM attribute support, out of the box.
-* **Unlimited:** Custom callbacks allow you output to any numerical property or API.
-* **Power anything:** Use with React, Canvas, Three.js, WebSockets, etc.
-* **Seamless interaction:** Tracks velocity for hand-off between input, animation and physics.
-* **Node support:** Run on any Node environment to fuel the IoT.
-* **Open rAF loop:** Run any Process on the core requestAnimationFrame loop.
+It also exposes its interal render loop, allowing you to schedule any callback during or after the `update` and `render` steps.
 
-### Extendable
-#### Develop your own:
-* **Easing:** Easing functions and bezier curves.
-* **Physics:** Add new physics simulation methods.
-* **Input:** Create custom Input interfaces for Oculus/Leap/anything.
-* **Roles:** Extend our CSS/SVG/Attr support with routes for Canvas, Three.js, Google Map Symbols or any standardised numerical property.
+[![npm version](https://img.shields.io/npm/v/popmotion.svg?style=flat-square)](https://www.npmjs.com/package/popmotion)
+[![npm downloads](https://img.shields.io/npm/dm/popmotion.svg?style=flat-square)](https://www.npmjs.com/package/popmotion)
 
-### Performant
-* Uses and exposes a single requestAnimationFrame thread that automatically winds down when not in use.
-* Never magically reads the DOM, leaving you in total control of performance.
-* The same size as Velocity.js, **over 66% smaller** than GreenSock TweenMax.
+[Twitter](http://twitter.com/popmotionjs)
+[Slack](https://popmotion.slack.com)
 
-####[Get started](https://popmotion.io/guides/basics/get-started/)
+## Installation
+
+### npm
+
+In your project root:
+
+```bash
+npm install --save popmotion
+```
+
+In your javascript module:
+
+```javascript
+import { tween } from 'popmotion';
+```
+
+### File include
+
+Download `popmotion.global.min.js` from our [GitHub repo](https://github.com/Popmotion/popmotion/tree/master/dist) and include it in your HTML document:
+
+```html
+<script src="path/to/popmotion.global.min.js"></script>
+```
+
+Popmotion is then available as the global variable `popmotion`.
+
+## Quick start
+
+Creating basic motion like tweens and physics in Popmotion is simple. For example, here's a simple tween that prints its output to the `console`:
+
+```javascript
+import { tween } from 'popmotion';
+
+tween({
+  to: 100,
+  onUpdate: (v) => console.log(v)
+}).start();
+```
+
+To use that tween to move an actual DOM element, we can create a CSS renderer.
+
+```javascript
+const ballRenderer = css(document.getElementById('ball'));
+
+tween({
+  to: 100,
+  onUpdate: (v) => ballRenderer.set('x', v)
+}).start();
+```

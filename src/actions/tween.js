@@ -4,7 +4,7 @@ import { flow, clamp } from '../inc/transformers';
 import { getProgressFromValue, getValueFromProgress } from '../inc/calc';
 import { easeOut } from '../inc/easing';
 
-const clampProgress = (v) => clamp(0, 1, v);
+const clampProgress = clamp(0, 1);
 
 class Tween extends Action {
   static defaultProps = {
