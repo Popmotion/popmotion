@@ -1,4 +1,5 @@
 import { onFrameRender } from '../framesync';
+import { isArray, isObj, isNum, isString } from '../inc/utils';
 
 class Renderer {
   constructor(props) {
@@ -68,11 +69,54 @@ class Renderer {
     return this;
   }
 
+  // > Wiley - 6 in the Morning
+  /**
+   * Set a single value
+   * If a string or number, set directly.
+   * If an object or array, create new object or array
+   * if it doesn't already exist. Then shallow compare
+   * to set and compare individual values.
+   * One of the clearer drawbacks and annoyances with
+   * using mutable instead of immutable states.
+   * @param {[type]} key
+   * @param {[type]} value
+   */
   setValue(key, value) {
-    if (this.state[key] !== value) {
-      this.hasChanged = true;
+    const currentValue = this.state[key];
+
+    // If number or string, set directly
+    if (isNum(value) || isString(value)) {
+      if (currentValue !== value) {
+        this.state[key] = value;
+        this.hasChanged = true;
+      }
+    } else if (isArray(value)) {
+      if (!currentValue) {
+        this.state[key] = [];
+      }
+
+      const numValues = value.length;
+      for (let i = 0; i < numValues; i++) {
+        if (this.state[key][i] !== value[i]) {
+          this.state[key][i] = value[i];
+          this.hasChanged = true;
+        }
+      }
+    } else if (isObj(value)) {
+      if (!currentValue) {
+        this.state[key] = {};
+      }
+
+      for (let valueKey in value) {
+        if (this.state[key][valueKey] !== value[valueKey]) {
+          this.state[key][valueKey] = value[valueKey];
+          this.hasChanged = true;
+        }
+      }
+    }
+
+    if (this.hasChanged) {
       this.changedValues.push(key);
-      this.state[key] = value;
     }
   }
 

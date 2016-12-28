@@ -19,6 +19,9 @@ class CompositeAction extends Action {
 
       const onUpdate = (v, action) => this.current[key] = action.get();
 
+      // Immediately update with the current action state
+      onUpdate(null, this[key]);
+
       this[key]
         .setProps({
           _onStop: () => this.numActiveActions--

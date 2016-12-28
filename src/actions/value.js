@@ -12,4 +12,4 @@ class Value extends Action {
   }
 }
 
-export default (current) => new Value({ current });
+export default (current, onUpdate) => new Value({ current, onUpdate });

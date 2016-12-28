@@ -42,7 +42,8 @@
     "build": "babel src --out-dir lib && NODE_ENV=production webpack && npm run measure",
     "watch": "NODE_ENV=development webpack --progress --colors --watch",
     "measure": "gzip -c dist/popmotion.global.min.js | wc -c",
-    "test": "mocha --compilers js:babel-register"
+    "test": "jest",
+    "prepublishOnly": "npm run test"
   },
   "devDependencies": {
     "babel-cli": "^6.16.0",
@@ -54,9 +55,11 @@
     "babel-preset-es2015-subset-loose": "^1.0.0",
     "babel-preset-stage-2": "^6.17.0",
     "babel-register": "^6.3.13",
-    "chai": "^3.4.0",
     "eslint": "^1.10.3",
-    "flow-bin": "^0.33.0",
+    "jest": "^18.0.0",
     "webpack": "1.7.2"
+  },
+  "jest": {
+    "testRegex": "_tests/[^_].*\\.js$"
   }
 }

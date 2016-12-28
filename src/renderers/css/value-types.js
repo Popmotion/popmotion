@@ -1,4 +1,4 @@
-import { angle, alpha, color, scale, shadow, px } from '../../inc/value-types'; 
+import { alpha, color, degrees, scale, px } from '../../inc/value-types'; 
 export default {
   // Color props
   color: color,
@@ -17,27 +17,23 @@ export default {
 
   // Positioning
   width: px,
-  height: px,
-
-  // Shadows
-  textShadow: shadow,
-  boxShadow: shadow,   
+  height: px,  
 
   // Transform properties
-  rotate: angle,
-  rotateX: angle,
-  rotateY: angle,
-  rotateZ: angle,
+  rotate: degrees,
+  rotateX: degrees,
+  rotateY: degrees,
+  rotateZ: degrees,
   scale: scale,
   scaleX: scale,
   scaleY: scale,
   scaleZ: scale,
-  skewX: angle,
-  skewY: angle,
+  skewX: degrees,
+  skewY: degrees,
   distance: px,
-  x: px,
-  y: px,
-  z: px,
+  translateX: px,
+  translateY: px,
+  translateZ: px,
   perspective: px,
   opacity: alpha
 };

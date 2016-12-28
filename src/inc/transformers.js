@@ -10,6 +10,17 @@ import { getProgressFromValue, getValueFromProgress, stepProgress } from './calc
 export const appendUnit = (unit) => (v) => `${v}${unit}`;
 
 /**
+ * Clamp value between
+ * Creates a function that will restrict a given value between `min` and `max`
+ * @param  {number} min
+ * @param  {number} max
+ * @return {number}
+ */
+export const clampMax = (max) => (v) => Math.min(v, max);
+export const clampMin = (min) => (v) => Math.max(v, min);
+export const clamp = (min, max) => flow(clampMin(min), clampMax(max));
+
+/**
  * Flow
  * Compose other transformers to run linearily
  * flow(min(20), max(40))
@@ -60,19 +71,18 @@ export const interpolate = (input, output, rangeEasing) => {
   };
 };
 
-/**
- * Clamp value between
- * Creates a function that will restrict a given value between `min` and `max`
- * @param  {number} min
- * @param  {number} max
- * @return {number}
- */
-export const clampUnder = (max) => (v) => Math.min(v, max);
-export const clampOver = (min) => (v) => Math.max(v, min);
-export const clamp = (min, max) => flow(clampOver(min), clampUnder(max));
-
 export const steps = (steps, min, max) => (v) => {
   const progress = getProgressFromValue(min, max, v);
   return stepProgress(steps, progress);
 };
 
+export const transformChildValues = (childTransformers) => (v) => {
+  for (let key in v) {
+    const childTransformer = childTransformers[key];
+    if (childTransformer) {
+      v[key] = childTransformer(v[key]);
+    }
+  }
+
+  return v;
+};
