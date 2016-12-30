@@ -4,29 +4,29 @@ var filename = isProd ? 'popmotion.global.min.js' : 'popmotion.global.js';
 var devTool = isProd ? false : 'inline-source-map';
 
 module.exports = {
-    entry: './src/global.js',
-    output: {
-        path: __dirname + '/dist',
-        filename: filename
-    },
-    module: {
-        loaders: [
-            {
-                test: /\.js$/,
-                exclude: /node_modules/,
-                loader: "babel"
-            }
-        ]
-    },
-    plugins: isProd ? [
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false
-            },
-            mangle: true
-        })
-    ] : [
+  entry: './src/global.js',
+  output: {
+    path: __dirname + '/dist',
+    filename: filename
+  },
+  module: {
+    loaders: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: 'babel'
+      }
+    ]
+  },
+  plugins: isProd ? [
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false
+      },
+      mangle: true
+    })
+  ] : [
 
-    ],
-    devtool: devTool
+  ],
+  devtool: devTool
 };
