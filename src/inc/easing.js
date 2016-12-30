@@ -5,8 +5,8 @@ export const createMirroredEasing = (easing) => (p) => (p <= 0.5) ? easing(2 * p
 
 export const linear = (p) => p;
 
-export const createEaseIn = (power) => (p) => p ** power;
-export const easeIn = createEaseIn(2);
+export const createExpoIn = (power) => (p) => p ** power;
+export const easeIn = createExpoIn(2);
 export const easeOut = createReversedEasing(easeIn);
 export const easeInOut = createMirroredEasing(easeIn);
 
