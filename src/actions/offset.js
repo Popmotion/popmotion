@@ -1,6 +1,6 @@
 import Action from './';
 
-class Track extends Action {
+class Offset extends Action {
   static defaultProps = {
     from: 0,
     passive: true
@@ -17,7 +17,7 @@ class Track extends Action {
     input.removeListener(this.update);
   }
 
-  onUpdate() {
+  update() {
     const { input, from } = this.props;
     const offset = input.get() - this.inputOrigin;
     return from + offset;
@@ -27,10 +27,10 @@ class Track extends Action {
 export default (...args) => {
   if (args.length === 1) {
     const [ props ] = args;
-    return new Track(props);
+    return new Offset(props);
   } else {
     const [ input, onUpdate, props ] = args;
-    return new Track({
+    return new Offset({
       input,
       onUpdate,
       ...props

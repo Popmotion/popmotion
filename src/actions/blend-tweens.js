@@ -81,7 +81,7 @@ class TweenBlend extends Action {
     to.start();
   }
 
-  onUpdate() {
+  update() {
     const { from, to } = this.props;
     const a = from;
     const b = to;

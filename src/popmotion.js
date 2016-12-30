@@ -24,11 +24,11 @@ export chain from './actions/chain';
 export composite from './actions/composite';
 export crossFade from './actions/cross-fade';
 export delay from './actions/delay';
+export offset from './actions/offset';
 export parallel from './actions/parallel';
 export physics from './actions/physics';
 export pointer from './actions/pointer';
 export tween from './actions/tween';
-export track from './actions/track';
 export stagger from './actions/stagger';
 export value from './actions/value';
 

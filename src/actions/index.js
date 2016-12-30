@@ -3,7 +3,7 @@ import { speedPerSecond } from '../inc/calc';
 
 class Action {
   constructor(props) {
-    this.update = this.update.bind(this);
+    this.scheduledUpdate = this.scheduledUpdate.bind(this);
 
     this.props = {
       ...this.constructor.defaultProps
@@ -19,7 +19,7 @@ class Action {
 
     if (!passive) {
       this.isActive = true;
-      onFrameUpdate(this.update);
+      onFrameUpdate(this.scheduledUpdate);
     }
 
     if (this.onStart) this.onStart();
@@ -34,7 +34,7 @@ class Action {
 
     if (!passive) {
       this.isActive = false;
-      cancelOnFrameUpdate(this.update);
+      cancelOnFrameUpdate(this.scheduledUpdate);
     }
 
     if (this.onStop) this.onStop();
@@ -56,21 +56,21 @@ class Action {
     return this;
   }
 
-  update() {
+  scheduledUpdate() {
     this.lastUpdated = timeSinceLastFrame();
     this.prev = this.current;
 
     const { onUpdate, passive } = this.props;
 
-    if (this.onUpdate) {
-      this.current = this.onUpdate();
+    if (this.update) {
+      this.current = this.update(this.current);
     }
 
     if (onUpdate) onUpdate(this.current, this);
     this.fireListeners();
 
     if (!passive && this.isActive) {
-      onFrameUpdate(this.update);
+      onFrameUpdate(this.scheduledUpdate);
     }
 
     if (this.isActionComplete && this.isActionComplete()) {
@@ -98,6 +98,10 @@ class Action {
 
   getVelocity() {
     return speedPerSecond(this.prev - this.current, this.lastUpdated);
+  }
+
+  isActive() {
+    return this.isActive;
   }
 
   addListener(listener) {

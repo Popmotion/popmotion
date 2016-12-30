@@ -10,7 +10,7 @@ class Physics extends Action {
     autoStopSpeed: 0.001
   }
 
-  onUpdate() {
+  update() {
     const { acceleration, friction, velocity, spring, to } = this.props;
     let newVelocity = velocity;
     const elapsed = timeSinceLastFrame();

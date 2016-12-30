@@ -18,7 +18,7 @@ class CrossFade extends Action {
     }).start();
   }
 
-  onUpdate() {
+  update() {
     const { from, to } = this.props;
     const balance = this.fader.get();
     const latestFromValue = from.get();

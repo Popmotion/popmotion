@@ -8,7 +8,7 @@ class Value extends Action {
 
   set(v) {
     this.current = v;
-    onFrameUpdate(this.update);
+    onFrameUpdate(this.scheduledUpdate);
   }
 }
 

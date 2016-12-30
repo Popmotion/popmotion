@@ -1,14 +1,24 @@
 # API
 
 - [Actions](/docs/actions)
-  - [tween](/docs/actions/tween.md)
-  - [physics](/docs/actions/physics.md)
-
   - [blendTween](/docs/actions/blend-tween.md)
   - [chain](/docs/actions/chain.md)
   - [composite](/docs/actions/composite.md)
   - [crossFade](/docs/actions/cross-fade.md)
   - [delay](/docs/actions/delay.md)
-  - [delta](/docs/actions/delta.md)
+  - [offset](/docs/actions/offset.md)
   - [parallel](/docs/actions/parallel.md)
+  - [physics](/docs/actions/physics.md)
   - [pointer](/docs/actions/pointer.md)
+  - [tween](/docs/actions/tween.md)
+  - [value](/docs/actions/value.md)
+
+- [Renderers](/docs/renderers)
+  - [css](/docs/renderers/css.md)
+  - [svg](/docs/renderers/svg.md)
+  - [svgPath](/docs/renderers/svg-path.md)
+
+- [Calculators](/docs/calc.md)
+- [Easing](/docs/easing.md)
+- [Render Loop](/docs/render-loop.md)
+- [Transformers](/docs/transformers.md)
