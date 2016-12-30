@@ -7,7 +7,8 @@ import {
   getValueFromProgress,
   pointFromAngleAndDistance,
   radiansToDegrees,
-  smooth
+  smooth,
+  stepProgress
 } from '../calc';
 
 const a = {
@@ -90,5 +91,14 @@ describe('radiansToDegrees()', () => {
 describe('smooth()', () => {
   it('should return value if smoothing is equal or less than frame duration', () => {
     expect(smooth(100, 0, 16.7, 0)).toBe(100);
+  });
+});
+
+describe('stepProgress', () => {
+  it('should return a progress 0 - 1 to the fixed number of steps provided', () => {
+    expect(stepProgress(3, .5)).toBe(.5);
+    expect(stepProgress(3, .4)).toBe(.5);
+    expect(stepProgress(3, .9)).toBe(1);
+    expect(stepProgress(3, .1)).toBe(0);
   });
 });
