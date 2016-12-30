@@ -1,7 +1,7 @@
 # API
 
 - [Actions](/docs/actions)
-  - [blendTween](/docs/actions/blend-tween.md)
+  - [blendTweens](/docs/actions/blend-tweens.md)
   - [chain](/docs/actions/chain.md)
   - [composite](/docs/actions/composite.md)
   - [crossFade](/docs/actions/cross-fade.md)
