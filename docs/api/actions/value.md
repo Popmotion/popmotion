@@ -1,6 +1,12 @@
 ---
-title: Tween
-description: Change a value over a specific duration of time.
+title: Value
+description: A simple value that updates when a new number is passed to `set`.
 ---
 
-# `value`
+# Value
+
+`value(current <Number>, onUpdate <Function>)`
+
+## Methods
+
+- `set <Number>`: Updates `current` and schedules an update.

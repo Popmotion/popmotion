@@ -41,4 +41,15 @@ class Tween extends Action {
   }
 }
 
+export default (...args) => {
+  const numArgs = args.length;
+  if (args.length === 1) {
+    const [ props ] = args;
+    return new Tween(props);
+  } else {
+    const [ from, to, duration, ease, props ] = args;
+    return new Tween({ from, to, duration, ease, ...props });
+  }
+}
+
 export default (props) => new Tween(props);

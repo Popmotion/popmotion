@@ -109,3 +109,18 @@ threeStep(0.1); // 0
 threeStep(0.4); // 0.5
 threeStep(0.9); // 1
 ```
+
+### `wrap`
+Wraps a number around.
+
+`wrap(min <Number>, max <Number>)`
+
+```javascript
+physics({
+  velocity: 1000,
+  onUpdate: flow(
+    wrap(100, 400),
+    console.log
+  )
+});
+```

@@ -1,4 +1,24 @@
 ---
-title: Tween
-description: Change a value over a specific duration of time.
+title: Delay
+description: A dummy action that completes after a set duration of time.
 ---
+
+# Delay
+
+`delay(duration <Number>, props <Object>)`
+
+Delay is a dummy action that fires `onComplete` after a set duration of time. This is useful in composing with other actions.
+
+## Example
+
+```javascript
+import { delay, chain, physics } from 'popmotion';
+
+chain([
+  delay(200),
+  physics({
+    velocity: 100,
+    onUpdate: console.log
+  })
+]).start();
+```

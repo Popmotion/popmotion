@@ -71,6 +71,11 @@ export const interpolate = (input, output, rangeEasing) => {
   };
 };
 
+export const wrap = (min, max) => (v) => {
+  const rangeSize = max - min;
+  return ((v - min) % rangeSize + rangeSize) % rangeSize + min;
+};
+
 export const steps = (steps, min, max) => (v) => {
   const progress = getProgressFromValue(min, max, v);
   return stepProgress(steps, progress);

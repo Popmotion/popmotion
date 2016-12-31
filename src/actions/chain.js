@@ -16,6 +16,8 @@ class Chain extends Action {
     if (i < order.length - 1) {
       this.props.i++;
       this.playCurrent();
+    } else {
+      this.complete();
     }
   }
 
