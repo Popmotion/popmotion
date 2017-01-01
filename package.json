@@ -81,6 +81,7 @@
     "webpack": "1.7.2"
   },
   "jest": {
-    "testRegex": "_tests/[^_].*\\.js$"
+    "testRegex": "_tests/[^_].*\\.js$",
+    "rootDir": "src"
   }
 }

@@ -47,5 +47,3 @@ export default (...args) => {
     return new Tween({ from, to, duration, ease, ...props });
   }
 }
-
-export default (props) => new Tween(props);
