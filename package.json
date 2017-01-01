@@ -45,7 +45,7 @@
     "watch-site": "webpack --config webpack.site.config.js --watch",
     "measure": "gzip -c dist/popmotion.global.min.js | wc -c",
     "test": "jest",
-    "prepublishOnly": "npm run build && npm run test"
+    "prepublish": "npm run build && npm run test"
   },
   "devDependencies": {
     "babel-cli": "^6.16.0",
