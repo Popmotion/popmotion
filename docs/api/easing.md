@@ -35,6 +35,15 @@ Popmotion comes with the following preset easing functions:
 
 ## Easing creation
 
+### `cubicBezier`
+Providing `cubicBezier` with a cubic bezier curve definition (in exactly the same format as the CSS `cubic-bezier` function) will return an easing function based on that curve.
+
+New curves can be generated and tested at Lea Verou's excellent [cubic-bezier.com](http://cubic-bezier.com).
+
+```javascript
+const longTail = easing.cubicBezier(0, .42, 0, 1);
+```
+
 ### `createReversedEasing`
 Reverses the provided easing function.
 

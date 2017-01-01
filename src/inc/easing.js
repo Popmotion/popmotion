@@ -25,3 +25,5 @@ export const createAnticipateEasing = (power) => {
 };
 
 export const anticipate = createAnticipateEasing(DEFAULT_OVERSHOOT_STRENGTH);
+
+export cubicBezier from './cubic-bezier';
