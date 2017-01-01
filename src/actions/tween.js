@@ -32,10 +32,6 @@ class Tween extends Action {
     return (this.elapsed >= this.props.duration);
   }
 
-  getDuration() {
-    return this.props.duration;
-  }
-
   getElapsed() {
     return this.elapsed;
   }
