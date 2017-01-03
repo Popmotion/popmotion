@@ -5,7 +5,7 @@ description: Stagger the start of a series of a actions.
 
 # Stagger
 
-`stagger(actions <Array>, interval <Number | Function>)`
+`stagger(actions <Array>, interval <Number | Function>, onComplete <Function>)`
 
 If `interval` is a function, it's provided `i` and returns a `timeToDelay` for each action in the list.
 
@@ -24,5 +24,5 @@ const mappedTweens = [].slice.call(divs).map((element) => {
   });
 });
 
-stagger(mappedTweens, 50);
+stagger(mappedTweens, 50, () => console.log('done!'));
 ```
