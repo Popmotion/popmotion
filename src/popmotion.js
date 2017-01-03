@@ -14,7 +14,7 @@ export {
 
 export * as calc from './inc/calc';
 export * as easing from './inc/easing';
-export * as transformers from './inc/transformers';
+export * as transform from './inc/transformers';
 export * as valueTypes from './inc/value-types';
 
 // Actions

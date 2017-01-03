@@ -11,7 +11,7 @@ class Action {
 
     this.setProps(props);
 
-    this.current = props.current || 0;
+    this.current = props.current || props.from || 0;
   }
 
   start() {

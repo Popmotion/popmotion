@@ -8,8 +8,8 @@ description: Simple composable functions that take a value and return a new one.
 An Action's `onUpdate` prop is a callback receives `value` as an argument. We can use transformers to change and filter this value before using it:
 
 ```javascript
-import { tween, transformers } from 'popmotion';
-const { flow, clamp } = transformers;
+import { tween, transform } from 'popmotion';
+const { flow, clamp } = transform;
 
 tween({
   from: 0,
