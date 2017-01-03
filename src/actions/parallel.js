@@ -29,4 +29,4 @@ class Parallel extends Action {
   }
 }
 
-export default (actions) => new Parallel({ actions });
+export default (actions, props) => new Parallel({ actions, ...props });

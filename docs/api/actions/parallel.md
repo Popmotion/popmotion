@@ -7,7 +7,7 @@ description: Control playback of multiple actions in parallel.
 
 Control playback of multiple actions in parallel.
 
-`parallel(actions <Array>)`
+`parallel(actions <Array>, props <Object>)`
 
 ## Example
 
