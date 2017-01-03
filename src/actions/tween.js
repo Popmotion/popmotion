@@ -30,7 +30,7 @@ class Tween extends Action {
   onStart() {
     const { duration, ease, from, to, playDirection } = this.props;
 
-    this.elapsed = 0;
+    this.elapsed = (playDirection === 1) ? 0 : duration;
 
     this.update = flow(
       () => this.elapsed += timeSinceLastFrame() * playDirection,
@@ -42,7 +42,8 @@ class Tween extends Action {
   }
 
   isActionComplete() {
-    let isComplete = (this.elapsed >= this.props.duration);
+    const { duration, playDirection } = this.props;
+    let isComplete = (playDirection === 1) ? (this.elapsed >= duration) : (this.elapsed <= 0);
 
     if (isComplete) {
       let isStepTaken = false;
@@ -54,7 +55,9 @@ class Tween extends Action {
         const stepCount = this.getProp(countProp);
 
         if (stepMax > stepCount) {
-          this.setProp(countProp, stepCount + 1);
+          this.setProps({
+            [countProp]: stepCount + 1
+          });
           nextStep(this);
           isStepTaken = true;
         }
