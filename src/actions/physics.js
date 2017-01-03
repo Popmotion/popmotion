@@ -37,7 +37,7 @@ class Physics extends Action {
     // Check if simulation is complete
     // We do this here instead of `isActionComplete` as it allows us
     // to clamp during this update
-    this.isComplete = (!velocity || Math.abs(velocity) <= autoStopSpeed);
+    this.isComplete = (!newVelocity || Math.abs(newVelocity) <= autoStopSpeed);
 
     if (this.isComplete && spring) {
       this.current = to;
