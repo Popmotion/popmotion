@@ -11,7 +11,7 @@ import { isFunc } from '../inc/utils';
  * @param  {function | number} interval
  * @return {Action}
  */
-export default (actions, interval) => {
+export default (actions, interval, onComplete) => {
   const intervalIsFunction = isFunc(interval);
 
   return parallel(actions.map((action, i) => {
@@ -20,5 +20,5 @@ export default (actions, interval) => {
       delay(timeToDelay),
       action
     ]);
-  }));
+  }), { onComplete });
 };
