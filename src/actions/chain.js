@@ -23,7 +23,7 @@ class Chain extends Action {
 
   playCurrent() {
     const { i, order } = this.props;
-    order[i].onComplete = this.playNext;
+    order[i]._onComplete = this.playNext;
     order[i].start();
   }
 
@@ -33,4 +33,4 @@ class Chain extends Action {
   }
 }
 
-export default (order) => new Chain({ order });
+export default (order, onComplete) => new Chain({ order, onComplete });

@@ -47,11 +47,11 @@ class Action {
   complete() {
     const { onComplete, _onComplete } = this.props;
 
+    this.stop();
+
     if (this.onComplete) this.onComplete();
     if (onComplete) onComplete(this);
     if (_onComplete) _onComplete(this);
-
-    this.stop();
 
     return this;
   }
