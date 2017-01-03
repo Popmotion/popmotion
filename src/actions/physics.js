@@ -38,8 +38,8 @@ class Physics extends Action {
   }
 
   isActionComplete() {
-    const { autoStopSpeed } = this.props;
-    return (!this.velocity || Math.abs(this.velocity) <= autoStopSpeed);
+    const { autoStopSpeed, velocity } = this.props;
+    return (!velocity || Math.abs(velocity) <= autoStopSpeed);
   }
 }
 
