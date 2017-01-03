@@ -11,7 +11,7 @@ class Physics extends Action {
   }
 
   update() {
-    const { acceleration, friction, velocity, spring, to } = this.props;
+    const { autoStopSpeed, acceleration, friction, velocity, spring, to } = this.props;
     let newVelocity = velocity;
     const elapsed = timeSinceLastFrame();
 
@@ -34,12 +34,20 @@ class Physics extends Action {
     this.current += speedPerFrame(newVelocity, elapsed);
     this.props.velocity = newVelocity;
 
+    // Check if simulation is complete
+    // We do this here instead of `isActionComplete` as it allows us
+    // to clamp during this update
+    this.isComplete = (!velocity || Math.abs(velocity) <= autoStopSpeed);
+
+    if (this.isComplete && spring) {
+      this.current = to;
+    }
+
     return this.current;
   }
 
   isActionComplete() {
-    const { autoStopSpeed, velocity } = this.props;
-    return (!velocity || Math.abs(velocity) <= autoStopSpeed);
+    return this.isComplete;
   }
 }
 
