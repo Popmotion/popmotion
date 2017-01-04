@@ -18,7 +18,7 @@ class CSSRenderer extends Renderer {
       const domValue = window.getComputedStyle(element, null)[prefixer(key)] || 0;
       return (valueType && valueType.parse) ? valueType.parse(domValue) : domValue;
     } else {
-      return valueType.default || 0;
+      return (valueType) ? valueType.default : 0;
     }
   }
 }
