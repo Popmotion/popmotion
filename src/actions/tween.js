@@ -41,10 +41,10 @@ class Tween extends Action {
   }
 
   isActionComplete() {
-    const { duration, playDirection } = this.props;
+    const { duration, playDirection, yoyo, loop, flip } = this.props;
     let isComplete = (playDirection === 1) ? (this.elapsed >= duration) : (this.elapsed <= 0);
 
-    if (isComplete) {
+    if (isComplete && (yoyo || loop || flip)) {
       let isStepTaken = false;
 
       for (let key in NEXT_STEPS) {
