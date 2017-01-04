@@ -2,6 +2,8 @@
 
 ### The JavaScript motion engine.
 
+#### **Note:** Popmotion 6.0 is currently a RC published under the `alpha` tag. Docs for 5.0 can be found at [popmotion.io](https://popmotion.io)
+
 Create unique animations and interactions with tweens, physics and input tracking.
 
 Popmotion is:
