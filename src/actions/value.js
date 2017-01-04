@@ -7,8 +7,12 @@ class Value extends Action {
   };
 
   set(v) {
-    super.set(v);
+    this.toUpdate = v;
     onFrameUpdate(this.scheduledUpdate);
+  }
+
+  update() {
+    return this.toUpdate;
   }
 }
 
