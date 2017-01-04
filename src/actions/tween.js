@@ -37,7 +37,12 @@ class Tween extends Action {
     const { duration, ease, from, to, playDirection } = this.props;
 
     this.elapsed += timeSinceLastFrame() * playDirection;
-    return getValueFromProgress(from, to, ease(clampProgress(getProgressFromValue(0, duration, this.elapsed))));
+
+    const progress = (this.elapsed - 0) / (duration - 0);
+    const easedProgress = ease(progress);
+    return (- easedProgress * from) + (easedProgress * to) + from;
+
+    //return getValueFromProgress(from, to, ease(clampProgress(getProgressFromValue(0, duration, this.elapsed))));
   }
 
   isActionComplete() {
