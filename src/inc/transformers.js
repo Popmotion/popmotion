@@ -18,7 +18,11 @@ export const appendUnit = (unit) => (v) => `${v}${unit}`;
  */
 export const clampMax = (max) => (v) => Math.min(v, max);
 export const clampMin = (min) => (v) => Math.max(v, min);
-export const clamp = (min, max) => flow(clampMin(min), clampMax(max));
+export const clamp = (min, max) => {
+  const _min = clampMin(min);
+  const _max = clampMax(max);
+  return (v) => _min(_max(v));
+};
 
 /**
  * Flow
