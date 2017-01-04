@@ -31,6 +31,7 @@ export default (key, asDashCase) => {
   const cache = asDashCase ? dashCache : camelCache;
 
   if (!cache[key]) {
+    console.log('prefixtest')
     testPrefix(key);
   }
 
