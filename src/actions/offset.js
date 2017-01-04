@@ -1,4 +1,5 @@
 import Action from './';
+import { onFrameUpdate } from '../framesync';
 
 class Offset extends Action {
   static defaultProps = {
@@ -9,12 +10,17 @@ class Offset extends Action {
   onStart() {
     const { input } = this.props;
     this.inputOrigin = input.get();
-    input.addListener(this.update);
+
+    this.scheduleUpdate = () => {
+      onFrameUpdate(this.scheduledUpdate);
+    };
+
+    input.addListener(this.scheduleUpdate);
   }
 
   onStop() {
     const { input } = this.props;
-    input.removeListener(this.update);
+    input.removeListener(this.scheduleUpdate);
   }
 
   update() {

@@ -24,4 +24,4 @@ document.addEventListener('mousedown', (e) => {
 
 ## Props
 
-- `preventDefault <Boolean>`: If `true`, fire `preventDefault` on `mousemove` or `touchmove` events (default `false`)
+- `preventDefault <Boolean>`: If `true`, fire `preventDefault` on `mousemove` or `touchmove` events (default `true`)
