@@ -29,6 +29,7 @@ export default function buildStylePropertyString(element, state, changedValues, 
     }
 
     if (transformProps[key]) {
+      hasTransform = true;
       transformString += key + '(' + value + ') ';
       transformHasZ = (key === translateMap.z) ? true : transformHasZ;
 
@@ -37,7 +38,6 @@ export default function buildStylePropertyString(element, state, changedValues, 
     }
   }
 
-  console.log(propertyString)
   // // First check if there are any changed transform values
   // // and if true add all transform values
   // const numChangedValues = changedValues.length;
