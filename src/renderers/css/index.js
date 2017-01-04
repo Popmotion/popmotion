@@ -26,6 +26,7 @@ class CSSRenderer extends Renderer {
 export default function (element, props) {
   return new CSSRenderer({
     element,
+    enableHardwareAcceleration: true,
     ...props
   });
 }
