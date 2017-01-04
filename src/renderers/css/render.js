@@ -68,6 +68,6 @@ export default function buildStylePropertyString(element, state, changedValues, 
 
     propertyString += ';' + prefixer('transform', true) + ':' + transformString;
   }
-
+console.log(propertyString)
   element.style.cssText += propertyString;
 }
