@@ -4,6 +4,10 @@
 
 Use tweens, physics and user input to create unique animations and interactions.
 
+Popmotion is:
+- **Tiny**, at just under 8kb.
+- **Fast**
+
 Popmotion is tiny, at ~8kb including full CSS, SVG and SVG `path` render support - that's 75% smaller than GreenSock. It's also flexible, allowing custom actions and renderers to be created with ease.
 
 It also exposes its interal render loop, allowing you to schedule any callback during or after the `update` and `render` steps.

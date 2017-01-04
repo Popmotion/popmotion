@@ -1,6 +1,6 @@
 import Action from './';
 import { timeSinceLastFrame } from '../framesync';
-import { flow, clamp } from '../inc/transformers';
+import { clamp } from '../inc/transformers';
 import { getProgressFromValue, getValueFromProgress } from '../inc/calc';
 import { easeOut } from '../inc/easing';
 
@@ -28,17 +28,16 @@ class Tween extends Action {
   };
 
   onStart() {
-    const { duration, ease, from, to, playDirection } = this.props;
+    const { duration, playDirection } = this.props;
 
     this.elapsed = (playDirection === 1) ? 0 : duration;
+  }
 
-    this.update = flow(
-      () => this.elapsed += timeSinceLastFrame() * playDirection,
-      (v) => getProgressFromValue(0, duration, v),
-      clampProgress,
-      ease,
-      (v) => getValueFromProgress(from, to, v)
-    );
+  update() {
+    const { duration, ease, from, to, playDirection } = this.props;
+
+    this.elapsed += timeSinceLastFrame() * playDirection;
+    return getValueFromProgress(from, to, ease(clampProgress(getProgressFromValue(0, duration, this.elapsed))));
   }
 
   isActionComplete() {
