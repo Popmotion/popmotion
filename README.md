@@ -1,6 +1,6 @@
-# <a href="https://popmotion.io"><img src="https://cloud.githubusercontent.com/assets/7850794/21642571/1910a15e-d27b-11e6-84c7-19e88e207c14.png" height="52" width="" /></a>
+# <a href="https://popmotion.io"><img src="https://cloud.githubusercontent.com/assets/7850794/21642571/1910a15e-d27b-11e6-84c7-19e88e207c14.png" height="52" width="243" alt="Popmotion" /></a>
 
-## The JavaScript motion engine.
+### The JavaScript motion engine.
 
 Use tweens, physics and user input to create unique animations and interactions.
 
