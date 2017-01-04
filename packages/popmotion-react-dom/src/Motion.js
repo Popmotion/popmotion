@@ -4,82 +4,84 @@ import { detectFlow } from 'popmotion';
 
 class Motion extends React.Component {
   componentDidMount() {
-  this.flow = detectFlow(findDOMNode(this));
-  this.setValues(this.props.currentState);
+    this.flow = detectFlow(findDOMNode(this));
+    if (this.props.onMount) {
+      this.props.onMount(this.flow);
+    }
   }
 
   componentWillUnmount() {
-  this.flow.stop();
+    this.flow.stop();
   }
 
   componentWillReceiveProps(newProps) {
-  if (newProps.values !== this.props.values) {
-    this.flow.set(newProps.values);
-  }
-
-  // Set visual state
-  if (newProps.currentState !== this.props.currentState) {
-    if (newProps.onStateChange) {
-    const action = newProps.onStateChange(this.flow, this.props.currentState, newProps.currentState);
-
-    if (action) {
-      this.startAction(action);
-    } else {
-      this.setValues(newProps.currentState);
+    if (newProps.values !== this.props.values) {
+      this.flow.set(newProps.values);
     }
-    } else {
-    this.setValues(newProps.currentState);
+
+    // Set visual state
+    if (newProps.currentState !== this.props.currentState) {
+      if (newProps.onStateChange) {
+        const action = newProps.onStateChange(this.flow, this.props.currentState, newProps.currentState);
+
+        if (action) {
+          this.startAction(action);
+        } else {
+          this.setValues(newProps.currentState);
+        }
+      } else {
+        this.setValues(newProps.currentState);
+      }
     }
-  }
   }
 
   componentWillAppear(onComplete) {
-  if (this.props.onAppear) {
-    this.startAction(this.props.onAppear, onComplete);  
-  } else {
-    onComplete();
-  }
+    if (this.props.onAppear) {
+      this.startAction(this.props.onAppear, onComplete);  
+    } else {
+      onComplete();
+    }
 
-  return true;
+    return true;
   }
 
   componentWillEnter(onComplete) {
-  if (this.props.onEnter) {
-    this.startAction(this.props.onEnter, onComplete);  
-  } else {
-    onComplete();
-  }
+    if (this.props.onEnter) {
+      this.startAction(this.props.onEnter, onComplete);  
+    } else {
+      onComplete();
+    }
 
-  return true;
+    return true;
   }
 
   componentWillLeave(onComplete) {
-  if (this.props.onLeave) {
-    this.startAction(this.props.onLeave, onComplete);
-  } else {
-    onComplete();
-  }
+    if (this.props.onLeave) {
+      this.startAction(this.props.onLeave, onComplete);
+    } else {
+      onComplete();
+    }
 
-  return true;
+    return true;
   }
 
   startAction(action, onComplete) {
-  if (Array.isArray(action)) {
-    action.forEach((singleAction) => this.flow.connect(singleAction).start());
-  } else {
-    if (onComplete) {
-    action.onComplete = onComplete;
+    if (Array.isArray(action)) {
+      action.forEach((singleAction) => this.flow.connect(singleAction).start());
+    } else {
+      if (onComplete) {
+        action.onComplete = onComplete;
+      }
+      this.flow.connect(action).start();
     }
-    this.flow.connect(action).start();
-  }
   }
 
   setValues(values) {
-  this.flow.set({ values });
+    this.flow.set({ values });
   }
 
   render() {
-  return this.props.children;
+    return this.props.children;
   }
 }
 

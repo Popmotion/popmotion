@@ -1,4 +1,5 @@
-import Flow from './flow-component';
-import FlowTransitionGroup from './flow-transition-group-component';
+import defineTransitions from './define-transitions';
+import MotionGroup from './MotionGroup';
+import Motion from './Motion';
 
-export { Flow, FlowTransitionGroup };
+export { defineTransitions, Motion, MotionGroup };

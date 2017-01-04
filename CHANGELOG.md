@@ -6,7 +6,49 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
 - New API
 
-## [5.0.12] 2016-xx-xx
+## [5.0.20] 2016-11-15
+
+### Fixed
+- Accidentally transpiled a version of 6.0.
+
+## [5.0.19] 2016-11-15
+
+### Added
+- `track` Can take `preventDefault` as optional second param. Defaults to `true`.
+
+## [5.0.18] 2016-08-08
+
+### Fixed
+- Firing `onActivateLoop` even if task is already active to prevent `once` from running more than once.
+
+## [5.0.17] 2016-05-08
+
+### Fixed
+- Actually fixing spring clamping this time.
+
+## [5.0.16] 2016-05-08
+
+### Fixed
+- Spring physics action now automatically ending when target is reached.
+
+## [5.0.15] 2016-18-07
+
+### Fixed
+- Missing compilation of `5.0.14`
+
+## [5.0.14] 2016-18-07
+
+### Fixed
+- Preventing `current` being overwritten by value type default properties.
+- `Tween`s now finish automatically when scrubbed, fixing timeline/stagger bug where tweens wouldn't end.
+
+## [5.0.13] 2016-06-07
+
+### Fixed
+- `track.start` and `track.stop` now returning `this`, allowing chaining.
+- `from` restored as `track` default value.
+
+## [5.0.12] 2016-06-01
 
 ### Fixed
 - @[jamieowen](https://github.com/jamieowen): `transform` now being prefixed correctly.
