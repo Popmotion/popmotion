@@ -15,7 +15,7 @@ export default function buildStylePropertyString(element, state, changedValues, 
   let transformString = '';
   let hasTransform = false;
   let transformHasZ = false;
-
+console.log(element, state, changedValues, enableHardwareAcceleration)
   // First check if there are any changed transform values
   // and if true add all transform values
   const numChangedValues = changedValues.length;
