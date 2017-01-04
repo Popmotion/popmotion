@@ -18,7 +18,7 @@ export default function buildStylePropertyString(element, state, changedValues, 
 
   // First check if there are any changed transform values
   // and if true add all transform values
-  // const numChangedValues = changedValues.length;
+  const numChangedValues = changedValues.length;
   for (let i = 0; i < numChangedValues; i++) {
     const key = changedValues[i];
 
