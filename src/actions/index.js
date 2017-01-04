@@ -97,7 +97,7 @@ class Action {
   }
 
   getVelocity() {
-    return speedPerSecond(this.prev - this.current, this.lastUpdated);
+    return speedPerSecond(this.current - this.prev, this.lastUpdated);
   }
 
   isActive() {
