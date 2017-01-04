@@ -1,10 +1,10 @@
 # API
 
 - [Actions](/docs/api/actions)
-  - [blendTweens](/docs/api/actions/blend-tweens.md)
+  - ~~[blendTweens](/docs/api/actions/blend-tweens.md)~~ (Coming in 6.2)
   - [chain](/docs/api/actions/chain.md)
   - [composite](/docs/api/actions/composite.md)
-  - [crossFade](/docs/api/actions/cross-fade.md)
+  - ~~[crossFade](/docs/api/actions/cross-fade.md)~~ (Coming in 6.2)
   - [delay](/docs/api/actions/delay.md)
   - [offset](/docs/api/actions/offset.md)
   - [parallel](/docs/api/actions/parallel.md)
