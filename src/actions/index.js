@@ -92,6 +92,11 @@ class Action {
     return this.current;
   }
 
+  set(v) {
+    this.current = v;
+    return this;
+  }
+
   getProp(key) {
     return this.props[key];
   }
