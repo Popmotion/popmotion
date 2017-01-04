@@ -29,9 +29,8 @@ const testPrefix = (key) => {
 
 export default (key, asDashCase) => {
   const cache = asDashCase ? dashCache : camelCache;
-console.log('prefixing')
+
   if (!cache[key]) {
-    console.log('prefixtest')
     testPrefix(key);
   }
 
