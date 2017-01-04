@@ -1,5 +1,4 @@
-# 
-        
+# ![https://popmotion.io](https://cloud.githubusercontent.com/assets/7850794/21642571/1910a15e-d27b-11e6-84c7-19e88e207c14.png)
 
 ## The JavaScript motion engine.
 
