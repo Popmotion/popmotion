@@ -19,23 +19,23 @@ export default function buildStylePropertyString(element, state, changedValues, 
   // First check if there are any changed transform values
   // and if true add all transform values
   // const numChangedValues = changedValues.length;
-  // for (let i = 0; i < numChangedValues; i++) {
-  //   const key = changedValues[i];
+  for (let i = 0; i < numChangedValues; i++) {
+    const key = changedValues[i];
 
-  //   // If this is a transform property, add all other transform props
-  //   // to changedValues and then break
-  //   if (transformProps[key]) {
-  //     hasTransform = true;
+    // If this is a transform property, add all other transform props
+    // to changedValues and then break
+    if (transformProps[key]) {
+      hasTransform = true;
 
-  //     for (let key in state) {
-  //       if (transformProps[key] && changedValues.indexOf(key) === -1) {
-  //         changedValues.push(key);
-  //       }
-  //     }
+      for (let key in state) {
+        if (transformProps[key] && changedValues.indexOf(key) === -1) {
+          changedValues.push(key);
+        }
+      }
 
-  //     break;
-  //   }
-  // }
+      break;
+    }
+  }
 
   const totalNumChangedValues = changedValues.length;
   for (let i = 0; i < totalNumChangedValues; i++) {
