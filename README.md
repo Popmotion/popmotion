@@ -2,15 +2,14 @@
 
 ### The JavaScript motion engine.
 
-Use tweens, physics and user input to create unique animations and interactions.
+Create unique animations and interactions with tweens, physics and input tracking.
 
 Popmotion is:
-- **Tiny**, at just under 8kb.
-- **Fast**
-
-Popmotion is tiny, at ~8kb including full CSS, SVG and SVG `path` render support - that's 75% smaller than GreenSock. It's also flexible, allowing custom actions and renderers to be created with ease.
-
-It also exposes its interal render loop, allowing you to schedule any callback during or after the `update` and `render` steps.
+- **Tiny:** At ~9kb, it's 75% smaller than GreenSock.
+- **Fast:** Stands up to alternatives in [performance tests](http://codepen.io/popmotion/pen/zNYXmR).
+- **Compatible:** Wide browser support and preloaded with CSS and SVG renderers.
+- **Powerful:** Discrete render step scheduling allows full control over each frame.
+- **Composable:** Actions can be composed, to create complex motion systems.
 
 [![npm version](https://img.shields.io/npm/v/popmotion.svg?style=flat-square)](https://www.npmjs.com/package/popmotion)
 [![npm downloads](https://img.shields.io/npm/dm/popmotion.svg?style=flat-square)](https://www.npmjs.com/package/popmotion)
@@ -67,3 +66,5 @@ tween({
   onUpdate: (v) => ballRenderer.set('x', v)
 }).start();
 ```
+
+### [Full API documentation](docs/api)
