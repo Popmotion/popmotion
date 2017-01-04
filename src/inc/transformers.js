@@ -1,62 +1,97 @@
-import { getProgressFromValue, getValueFromProgress, pointFromAngleAndDistance } from '../inc/calc';
+import { getProgressFromValue, getValueFromProgress, stepProgress } from './calc';
 
-export const createMapper = (input, output) => {
-  const mapLength = input.length;
-  const finalIndex = mapLength - 1;
+/**
+ * Append Unit
+ * A function that will append
+ * appendUnit('px', 20) -> '20px'
+ * @param  {string} unit)
+ * @return {number}
+ */
+export const appendUnit = (unit) => (v) => `${v}${unit}`;
 
-  return (value) => {
-    // If value outside minimum input range, quickly return
-    if (value <= input[0]) {
-      return output[0];
-    }
-
-    // If value outside maximum input range, quickly return
-    if (value >= input[finalIndex]) {
-      return output[finalIndex];
-    }
-
-    // If within overall input range, find specific range
-    for (let i = 1; i < mapLength; i++) {
-      if (value < input[i] || i === finalIndex) {
-        const progressInRange = getProgressFromValue(value, input[i - 1], input[i]);
-        return getValueFromProgress(progressInRange, output[i - 1], output[i]);
-      }
-    }
-  };
+/**
+ * Clamp value between
+ * Creates a function that will restrict a given value between `min` and `max`
+ * @param  {number} min
+ * @param  {number} max
+ * @return {number}
+ */
+export const clampMax = (max) => (v) => Math.min(v, max);
+export const clampMin = (min) => (v) => Math.max(v, min);
+export const clamp = (min, max) => {
+  const _min = clampMin(min);
+  const _max = clampMax(max);
+  return (v) => _min(_max(v));
 };
 
-export const circularMotion = (v, key, { values }) => {
-  const originX = (values.originX) ? values.originX.current : 0;
-  const originY = (values.originY) ? values.originY.current : 0;
-
-  return pointFromAngleAndDistance({
-    x: originX,
-    y: originY 
-  }, values.angle.current, values.distance.current)[key];
-};
-
-/*
-  Combine transformers into one function that calls every
-  transformer in the array and returns the result
-
-  @param [array]
-  @return [function]
-*/
-export const chain = (transformers) => {
+/**
+ * Flow
+ * Compose other transformers to run linearily
+ * flow(min(20), max(40))
+ * @param  {...functions} transformers
+ * @return {function}
+ */
+export const flow = (...transformers) => {
   const numTransformers = transformers.length;
   let i = 0;
 
-  /*
-    @param [number]
-    @param [string]
-    @param [Action]
-    @return [number]
-  */
-  return (v, key, a) => {
+  return (acc, ...args) => {
+    let v = acc;
     for (i = 0; i < numTransformers; i++) {
-      v = transformers[i](v, key, a);
+      v = transformers[i](v, ...args);
     }
 
     return v;
   };
+};
+
+export const interpolate = (input, output, rangeEasing) => {
+  const rangeLength = input.length;
+  const finalIndex = rangeLength - 1;
+
+  return (v) => {
+    // If value outside minimum range, quickly return
+    if (v <= input[0]) {
+      return output[0];
+    }
+
+    // If value outside maximum range, quickly return
+    if (v >= input[finalIndex]) {
+      return output[finalIndex];
+    }
+
+    let i = 1;
+
+    // Find index of range start
+    for (; i < rangeLength; i++) {
+      if (input[i] > v || i === finalIndex) {
+        break;
+      }
+    }
+
+    const progressInRange = getProgressFromValue(input[i - 1], input[i], v);
+    const easedProgress = (rangeEasing) ? rangeEasing[i](progressInRange) : progressInRange;
+    return getValueFromProgress(output[i - 1], output[i], easedProgress);
+  };
+};
+
+export const wrap = (min, max) => (v) => {
+  const rangeSize = max - min;
+  return ((v - min) % rangeSize + rangeSize) % rangeSize + min;
+};
+
+export const steps = (steps, min, max) => (v) => {
+  const progress = getProgressFromValue(min, max, v);
+  return stepProgress(steps, progress);
+};
+
+export const transformChildValues = (childTransformers) => (v) => {
+  for (let key in v) {
+    const childTransformer = childTransformers[key];
+    if (childTransformer) {
+      v[key] = childTransformer(v[key]);
+    }
+  }
+
+  return v;
 };

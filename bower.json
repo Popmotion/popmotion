@@ -1,6 +1,6 @@
 {
   "name": "popmotion",
-  "description": "A 12kb JavaScript motion engine. Handles animation, physics, and input tracking.",
+  "description": "The JavaScript motion engine. Create animations and interactions with tweens, physics and input tracking.",
   "author": "Matt Perry <sirhound@popmotion.io>",
   "homepage": "http://popmotion.io",
   "main": "./popmotion.global.js",

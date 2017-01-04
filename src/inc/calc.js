@@ -1,9 +1,16 @@
-import {
-  hasProperty,
-  isNum,
-  findValueAndUnit,
-  toDecimal
-} from './utils';
+import { isNum } from './utils';
+
+/*
+  Convert number to x decimal places
+
+  @param [number]
+  @param [number]
+  @return [number]
+*/
+const toDecimal = (num, precision = 2) => {
+  precision = 10 ** precision;
+  return Math.round(num * precision) / precision;
+};
 
 const ZERO_POINT = {
   x: 0,
@@ -78,32 +85,18 @@ export const distance = (a, b = ZERO_POINT) => {
 };
 
 /*
-  Ease value within ranged parameters
+  Progress within given range
   
-  @param [number]: Progress between 0 and 1
-  @param [number]: Value of 0 progress
-  @param [number]: Value of 1 progress
-  @param [string || function]: Name of preset easing
-    to use or generated easing function
-  @return [number]: Value of eased progress in range
-*/ 
-export const ease = (progress, from, to, ease) => {
-  const progressLimited = restrict(progress, 0, 1);
-  const easedProgress = ease(progressLimited);
-
-  return getValueFromProgress(easedProgress, from, to);
-};
- 
-/*
-  Hypotenuse
+  Given a lower limit and an upper limit, we return the progress
+  (expressed as a number 0-1) represented by the given value, and
+  limit that progress to within 0-1.
   
-  Returns the hypotenuse, side C, given the lengths of sides A and B.
-  
-  @param [number]: Length of A
-  @param [number]: Length of B
-  @return [number]: Length of C
+  @param [number]: Lower limit 
+  @param [number]: Upper limit
+  @param [number]: Value to find progress within given range
+  @return [number]: Progress of value within range as expressed 0-1
 */
-export const hypotenuse = (a, b) => Math.sqrt((a * a) + (b * b));
+export const getProgressFromValue = (from, to, value) => (value - from) / (to - from);
 
 /*
   Value in range from progress
@@ -111,47 +104,12 @@ export const hypotenuse = (a, b) => Math.sqrt((a * a) + (b * b));
   Given a lower limit and an upper limit, we return the value within
   that range as expressed by progress (a number from 0-1)
   
-  @param [number]: The progress between lower and upper limits expressed 0-1
   @param [number]: Lower limit of range
   @param [number]: Upper limit of range
+  @param [number]: The progress between lower and upper limits expressed 0-1
   @return [number]: Value as calculated from progress within range (not limited within range)
 */
-export const getValueFromProgress = (progress, from, to) => (- progress * from) + (progress * to) + from;
-
-/*
-  Progress within given range
-  
-  Given a lower limit and an upper limit, we return the progress
-  (expressed as a number 0-1) represented by the given value, and
-  limit that progress to within 0-1.
-  
-  @param [number]: Value to find progress within given range
-  @param [number]: Lower limit 
-  @param [number]: Upper limit
-  @return [number]: Progress of value within range as expressed 0-1
-*/
-export const getProgressFromValue = (value, from, to) => (value - from) / (to - from);
-
-/*
-  Offset between two objects of numbers
-
-  If property is found in b not present in a, it will return `0` for that prop.
-  
-  @param [Point]: First object
-  @param [Point]: Second object
-  @return [Offset]: Distance metrics between two points
-*/
-export const offset = (a, b) => {
-  const offset = {};
-
-  for (let key in b) {
-    if (b.hasOwnProperty(key)) {
-      offset[key] = hasProperty(a, key) ? b[key] - a[key] : 0;
-    }
-  }
-
-  return offset;
-};
+export const getValueFromProgress = (from, to, progress) => (- progress * from) + (progress * to) + from;
 
 /*
   Point from angle and distance
@@ -177,67 +135,6 @@ export const pointFromAngleAndDistance = (origin, angle, distance) => {
   @return [number]: Value in degrees
 */
 export const radiansToDegrees = (radians) => radians * 180 / Math.PI;
-
-/*
-  Return random number between range
-  
-  @param [number] (optional): Output minimum
-  @param [number] (optional): Output maximum
-  @return [number]: Random number within range, or 0 and 1 if none provided
-*/
-export const random = (min = 0, max = 1) => Math.random() * (max - min) + min;
-
-/*
-  Calculate relative value
-  
-  Takes the operator and value from a string, ie "+=5", and applies
-  to the current value to resolve a new target.
-  
-  @param [number]: Current value
-  @param [string]: Relative value
-  @return [number]: New value
-*/
-export const relativeValue = (current, relative) => {
-  let newValue = current;
-  const equation = relative.split('=');
-  const operator = equation[0];
-  let { unit, value } = findValueAndUnit(equation[1]);
-
-  value = parseFloat(value);
-
-  switch (operator) {
-  case '+':
-    newValue += value;
-    break;
-  case '-':
-    newValue -= value;
-    break;
-  case '*':
-    newValue *= value;
-    break;
-  case '/':
-    newValue /= value;
-    break;
-  }
-  
-  if (unit) {
-    newValue += unit;
-  }
-
-  return newValue;
-};
-
-/*
-  Restrict value to range
-  
-  Return value within the range of lowerLimit and upperLimit
-  
-  @param [number]: Value to keep within range
-  @param [number]: Lower limit of range
-  @param [number]: Upper limit of range
-  @return [number]: Value as limited within given range
-*/
-export const restrict = (value, min, max) => Math.max(Math.min(value, max), min);
 
 /*
   Framerate-independent smoothing
@@ -268,11 +165,11 @@ export const speedPerSecond = (velocity, frameDuration) => velocity * (1000 / fr
 /*
   Create stepped version of 0-1 progress
   
-  @param [number]: Current value
   @param [int]: Number of steps
+  @param [number]: Current value
   @return [number]: Stepped value
 */
-export const stepProgress = (progress, steps) => {
+export const stepProgress = (steps, progress) => {
   const segment = 1 / (steps - 1);
   const target = 1 - (1 / steps);
   const progressOfTarget = Math.min(progress / target, 1);
