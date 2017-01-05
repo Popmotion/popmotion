@@ -4,8 +4,7 @@ import {
   clampMax,
   clampMin,
   flow,
-  interpolate,
-  steps
+  interpolate
 } from '../transformers';
 
 describe('appendUnit()', () => {
