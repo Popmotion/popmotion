@@ -13,24 +13,28 @@
  */
 import {
   rgbUnit as transformRGBUnit,
-  rgba as transformRGBA,
+  rgba as transformRgba,
   alpha as transformAlpha,
-  hsla as transformHSLA,
+  hsla as transformHsla,
   color as transformColor,
   px as transformPx,
   percent as transformPercent,
   degrees as transformDegrees
 } from './transformers';
-import { createUnitType, isFirstChars, splitColorValues, isNum } from './utils';
-
-// String properties
-const RED = 'red';
-const GREEN = 'green';
-const BLUE = 'blue';
-const ALPHA = 'alpha';
-const HUE = 'hue';
-const SATURATION = 'saturation';
-const LIGHTNESS = 'lightness';
+import {
+  hex as parseHex,
+  rgba as parseRgba,
+  hsla as parseHsla,
+  color as parseColor
+} from './parsers';
+import {
+  createUnitType,
+  isNum,
+  isRgb,
+  isHsl,
+  isHex,
+  isColor
+} from './utils';
 
 export const number = {
   test: isNum,
@@ -58,52 +62,21 @@ export const rgbUnit = {
 };
 
 export const rgba = {
-  test: isFirstChars('rgb'),
-
-  parse: splitColorValues([RED, GREEN, BLUE, ALPHA]),
-
-  transform: transformRGBA
+  test: isRgb,
+  parse: parseRgba,
+  transform: transformRgba
 };
 
 export const hex = {
   ...rgba,
-
-  test: isFirstChars('#'),
-
-  parse: (v) => {
-    let r, g, b;
-
-    // If we have 6 characters, ie #FF0000
-    if (v.length > 4) {
-      r = v.substr(1, 2);
-      g = v.substr(3, 2);
-      b = v.substr(5, 2);
-
-    // Or we have 3 characters, ie #F00
-    } else {
-      r = v.substr(1, 1);
-      g = v.substr(2, 1);
-      b = v.substr(3, 1);
-      r += r;
-      g += g;
-      b += b;
-    }
-
-    return {
-      [RED]: parseInt(r, 16),
-      [GREEN]: parseInt(g, 16),
-      [BLUE]: parseInt(b, 16),
-      [ALPHA]: 1
-    };
-  }
+  test: isHex,
+  parse: parseHex
 };
 
 export const hsla = {
-  test: isFirstChars('hsl'),
-
-  parse: splitColorValues([HUE, SATURATION, LIGHTNESS, ALPHA]),
-
-  transform: transformHSLA
+  test: isHsl,
+  parse: parseHsla,
+  transform: transformHsla
 };
 
 export const color = {
@@ -111,18 +84,7 @@ export const color = {
     ...hsla.childTypes,
     ...rgba.childTypes
   },
-
-  test: (value) => rgba.test(value) || hex.test(value) || hsla.test(value),
-
+  parse: parseColor,
+  test: isColor,
   transform: transformColor
-};
-
-color.parse = (v) => {
-  if (rgba.test(v)) {
-    return rgba.parse(v);
-  } else if (hex.test(v)) {
-    return hex.parse(v);
-  } else if (hsla.test(v)) {
-    return hsla.parse(v);
-  }
 };

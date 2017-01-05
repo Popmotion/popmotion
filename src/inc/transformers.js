@@ -77,6 +77,8 @@ export const interpolate = (input, output, rangeEasing) => {
   };
 };
 
+export const offset = (origin) => (v) => origin - v;
+
 export const wrap = (min, max) => (v) => {
   const rangeSize = max - min;
   return ((v - min) % rangeSize + rangeSize) % rangeSize + min;
@@ -153,7 +155,7 @@ const blend = (from, to, v) => {
 export const blendColor = (from, to) => {
   const fromColor = isString(from) ? parseColor(from) : from;
   const toColor = isString(to) ? parseColor(to): to;
-  console.log(fromColor, toColor)
+
   const blended = { ...fromColor };
 
   return (v) => {

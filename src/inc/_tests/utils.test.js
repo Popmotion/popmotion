@@ -1,56 +1,19 @@
 import {
-  camelToDash,
   isArray,
   isFunc,
   isNum,
   isObj,
   isString,
+  camelToDash,
   splitCommaDelimited,
   contains,
   isFirstChars,
   getValueFromFunctionString,
-  splitColorValues,
-  getColorValues
+  splitColorValues
 } from '../utils';
 
 describe('camelToDash()', () => {
   expect(camelToDash('fooBarBop')).toBe('foo-bar-bop');
-});
-
-describe('isArray()', () => {
-  it('should identify arrays', () => {
-    expect(isArray([])).toBe(true);
-    expect(isArray('')).toBe(false);
-    expect(isArray(0)).toBe(false);
-  });
-});
-
-describe('isFunc()', () => {
-  it('should identify functions', () => {
-    expect(isFunc(() => {})).toBe(true);
-    expect(isFunc('')).toBe(false);
-  });
-});
-
-describe('isNum()', () => {
-  it('should identify numbers', () => {
-    expect(isNum(0)).toBe(true);
-    expect(isNum('')).toBe(false);
-  });
-});
-
-describe('isString()', () => {
-  it('should identify strings', () => {
-    expect(isString('')).toBe(true);
-    expect(isString(0)).toBe(false);
-  });
-});
-
-describe('isObj()', () => {
-  it('should identify objects', () => {
-    expect(isObj({})).toBe(true);
-    expect(isObj('')).toBe(false);
-  });
 });
 
 describe('splitCommaDelimited()', () => {
@@ -90,5 +53,41 @@ describe('splitColorValues()', () => {
       green: 0,
       blue: 255
     });
+  });
+});
+
+describe('isArray()', () => {
+  it('should identify arrays', () => {
+    expect(isArray([])).toBe(true);
+    expect(isArray('')).toBe(false);
+    expect(isArray(0)).toBe(false);
+  });
+});
+
+describe('isFunc()', () => {
+  it('should identify functions', () => {
+    expect(isFunc(() => {})).toBe(true);
+    expect(isFunc('')).toBe(false);
+  });
+});
+
+describe('isNum()', () => {
+  it('should identify numbers', () => {
+    expect(isNum(0)).toBe(true);
+    expect(isNum('')).toBe(false);
+  });
+});
+
+describe('isString()', () => {
+  it('should identify strings', () => {
+    expect(isString('')).toBe(true);
+    expect(isString(0)).toBe(false);
+  });
+});
+
+describe('isObj()', () => {
+  it('should identify objects', () => {
+    expect(isObj({})).toBe(true);
+    expect(isObj('')).toBe(false);
   });
 });

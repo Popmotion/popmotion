@@ -1,5 +1,4 @@
-import { splitColorValues } from './utils';
-import { isRgb, isHex, isHsl } from './test-types';
+import { splitColorValues, isRgb, isHex, isHsl } from './utils';
 
 export const hex = (v) => {
   let r, g, b;

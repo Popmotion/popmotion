@@ -1,29 +1,11 @@
-const CAMEL_CASE_PATTERN = /([a-z])([A-Z])/g;
-const REPLACE_TEMPLATE = '$1-$2';
-const HAS_PERFORMANCE_NOW = (typeof performance !== 'undefined' && performance.now);
+// Test types
 
-/*
-  Get var type as string
-  
-  @param: Variable to test
-  @return [string]: Returns, for instance 'Object' if [object Object]
-*/
 const varType = (variable) => Object.prototype.toString.call(variable).slice(8, -1);
 
-/*
-  Convert camelCase to dash-case
-
-  @param [string]
-  @return [string]
-*/
-export const camelToDash = (string) => string.replace(CAMEL_CASE_PATTERN, REPLACE_TEMPLATE).toLowerCase();
-
-/*
-  Generate current timestamp
-  
-  @return [timestamp]: Current UNIX timestamp
-*/
-export const currentTime = HAS_PERFORMANCE_NOW ? () => performance.now() : () => new Date().getTime();
+export const isHex = isFirstChars('#');
+export const isRgb = isFirstChars('rgb');
+export const isHsl = isFirstChars('hsl');
+export const isColor = (v) => (isHex(v) || isRgb(v) || isHsl(v));
 
 /*
   Is utils var an array ? 
@@ -64,6 +46,25 @@ export const isObj = (obj) => typeof obj === 'object';
   @return [boolean]: Returns true if typeof str === 'string'
 */
 export const isString = (str) => typeof str === 'string';
+
+const CAMEL_CASE_PATTERN = /([a-z])([A-Z])/g;
+const REPLACE_TEMPLATE = '$1-$2';
+const HAS_PERFORMANCE_NOW = (typeof performance !== 'undefined' && performance.now);
+
+/*
+  Convert camelCase to dash-case
+
+  @param [string]
+  @return [string]
+*/
+export const camelToDash = (string) => string.replace(CAMEL_CASE_PATTERN, REPLACE_TEMPLATE).toLowerCase();
+
+/*
+  Generate current timestamp
+  
+  @return [timestamp]: Current UNIX timestamp
+*/
+export const currentTime = HAS_PERFORMANCE_NOW ? () => performance.now() : () => new Date().getTime();
 
 export const setDOMAttrs = (element, attrs) => {
   for (let key in attrs) {
@@ -134,4 +135,4 @@ export function splitColorValues(terms) {
 
     return values;
   };
-};
+}
