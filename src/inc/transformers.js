@@ -97,6 +97,52 @@ export const transformChildValues = (childTransformers) => (v) => {
   return v;
 };
 
+export const percent = appendUnit('%');
+export const degrees = appendUnit('deg');
+export const px = appendUnit('px');
+
+export const rgbUnit = flow(
+  clamp(0, 255),
+  Math.round
+);
+
+const rgbaTemplate = ({ red, green, blue, alpha = 1 }) => 
+  `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+
+export const rgba = flow(
+  transformChildValues({
+    red: rgbUnit,
+    green: rgbUnit,
+    blue: rgbUnit,
+    alpha
+  }),
+  rgbaTemplate
+);
+
+const hslaTemplate = ({ hue, saturation, lightness, alpha = 1 }) => 
+  `hsla(${hue}, ${saturation}, ${lightness}, ${alpha})`;
+
+export const hsla = flow(
+  transformChildValues({
+    hue: parseFloat,
+    saturation: percent,
+    lightness: percent,
+    alpha
+  }),
+  hslaTemplate
+);
+
+export const color = (v) => {
+  if (v.hasOwnProperty('red')) {
+    return rgba(v);
+  } else if (v.hasOwnProperty('hue')) {
+    return hsla(v);
+  }
+  return v;
+};
+
+export const alpha = clamp(0, 1);
+
 const blend = (from, to, v) => {
   const fromExpo = from * from;
   const toExpo = to * to;
@@ -104,8 +150,8 @@ const blend = (from, to, v) => {
 };
 // http://codepen.io/osublake/pen/xGVVaN
 export const blendColor = (from, to) => {
-  // const fromColor = isString(from) ? color.parse(from) : from;
-  // const toColor = isString(to) ? color.parse(to): to;
+  const fromColor = isString(from) ? color(from) : from;
+  const toColor = isString(to) ? color(to): to;
   const blended = { ...fromColor };
 
   return (v) => {

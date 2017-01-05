@@ -1,5 +1,3 @@
-import { appendUnit } from './transformers';
-
 const CAMEL_CASE_PATTERN = /([a-z])([A-Z])/g;
 const REPLACE_TEMPLATE = '$1-$2';
 const HAS_PERFORMANCE_NOW = (typeof performance !== 'undefined' && performance.now);
@@ -113,13 +111,19 @@ export const isFirstChars = (term) => (v) => {
 /**
  * Create a unit value type
  */
-export const createUnitType = (type) => {
+export const createUnitType = (type, transform) => {
   return {
     test: contains(type),
     parse: parseFloat,
-    transform: appendUnit(type)
+    transform
   };
 };
+
+/*
+  Get value from function string
+  "translateX(20px)" -> "20px"
+*/
+export const getValueFromFunctionString = (value) => value.substring(value.indexOf('(') + 1, value.lastIndexOf(')'));
 
 /**
  * Creates a function that will split color

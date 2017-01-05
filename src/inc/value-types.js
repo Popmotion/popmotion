@@ -11,7 +11,16 @@
  * rgb
  * scale
  */
-import { clamp, flow, transformChildValues } from './transformers';
+import {
+  rgbUnit as transformRGBUnit,
+  rgba as transformRGBA,
+  alpha as transformAlpha,
+  hsla as transformHSLA,
+  color as transformColor,
+  px as transformPx,
+  percent as transformPercent,
+  degrees as transformDegrees
+} from './transformers';
 import { createUnitType, isFirstChars, splitColorValues, isNum } from './utils';
 
 // String properties
@@ -23,13 +32,6 @@ const HUE = 'hue';
 const SATURATION = 'saturation';
 const LIGHTNESS = 'lightness';
 
-// Templates
-const rgbaTemplate = ({ red, green, blue, alpha = 1 }) => 
-  `rgba(${red}, ${green}, ${blue}, ${alpha})`;
-
-const hslaTemplate = ({ hue, saturation, lightness, alpha = 1 }) => 
-  `hsla(${hue}, ${saturation}, ${lightness}, ${alpha})`;
-
 export const number = {
   test: isNum,
   parse: parseFloat
@@ -38,12 +40,12 @@ export const number = {
 // Value types
 export const alpha = {
   ...number,
-  transform: clamp(0, 1)
+  transform: transformAlpha
 };
 
-export const degrees = createUnitType('deg');
-export const percent = createUnitType('%');
-export const px = createUnitType('px');
+export const degrees = createUnitType('deg', transformDegrees);
+export const percent = createUnitType('%', transformPercent);
+export const px = createUnitType('px', transformPx);
 
 export const scale = {
   ...number,
@@ -52,10 +54,7 @@ export const scale = {
 
 export const rgbUnit = {
   ...number,
-  transform: flow(
-    clamp(0, 255),
-    Math.round
-  )
+  transform: transformRGBUnit
 };
 
 export const rgba = {
@@ -63,15 +62,7 @@ export const rgba = {
 
   parse: splitColorValues([RED, GREEN, BLUE, ALPHA]),
 
-  transform: flow(
-    transformChildValues({
-      [RED]: rgbUnit.transform,
-      [GREEN]: rgbUnit.transform,
-      [BLUE]: rgbUnit.transform,
-      [ALPHA]: alpha.transform
-    }),
-    rgbaTemplate
-  )
+  transform: transformRGBA
 };
 
 export const hex = {
@@ -112,15 +103,7 @@ export const hsla = {
 
   parse: splitColorValues([HUE, SATURATION, LIGHTNESS, ALPHA]),
 
-  transform: flow(
-    transformChildValues({
-      [HUE]: number.transform,
-      [SATURATION]: percent.transform,
-      [LIGHTNESS]: percent.transform,
-      [ALPHA]: alpha.transform
-    }),
-    hslaTemplate
-  )
+  transform: transformHSLA
 };
 
 export const color = {
@@ -131,12 +114,15 @@ export const color = {
 
   test: (value) => rgba.test(value) || hex.test(value) || hsla.test(value),
 
-  transform: (v) => {
-    if (v.hasOwnProperty('red')) {
-      return rgba.transform(v);
-    } else if (v.hasOwnProperty('hue')) {
-      return hsla.transform(v);
-    }
-    return v;
+  transform: transformColor
+};
+
+color.parse = (v) => {
+  if (rgba.test(v)) {
+    return rgba.parse(v);
+  } else if (hex.test(v)) {
+    return hex.parse(v);
+  } else if (hsla.test(v)) {
+    return hsla.parse(v);
   }
 };
