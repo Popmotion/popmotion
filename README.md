@@ -9,7 +9,7 @@ Create unique animations and interactions with tweens, physics and input trackin
 Popmotion is:
 - **Tiny:** At ~9kb, it's 75% smaller than GreenSock.
 - **Fast:** Stands up to alternatives in [performance tests](http://codepen.io/popmotion/pen/zNYXmR).
-- **Compatible:** Wide browser support and preloaded with CSS and SVG renderers.
+- **Compatible:** Full browser support and preloaded with CSS and SVG renderers.
 - **Powerful:** Discrete render step scheduling allows full control over each frame.
 - **Composable:** Actions can be composed, to create complex motion systems.
 
