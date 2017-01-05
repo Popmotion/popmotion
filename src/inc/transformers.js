@@ -1,5 +1,6 @@
 import { getProgressFromValue, getValueFromProgress, stepProgress } from './calc';
 import { isString } from './utils';
+import { color as parseColor } from './parsers';
 
 /**
  * Append Unit
@@ -150,8 +151,8 @@ const blend = (from, to, v) => {
 };
 // http://codepen.io/osublake/pen/xGVVaN
 export const blendColor = (from, to) => {
-  const fromColor = isString(from) ? color(from) : from;
-  const toColor = isString(to) ? color(to): to;
+  const fromColor = isString(from) ? parseColor(from) : from;
+  const toColor = isString(to) ? parseColor(to): to;
   console.log(fromColor, toColor)
   const blended = { ...fromColor };
 
