@@ -3,8 +3,18 @@ import {
   clamp,
   clampMax,
   clampMin,
+  conditional,
   flow,
-  interpolate
+  interpolate,
+  offset,
+  px,
+  degrees,
+  percent,
+  rgba,
+  rgbUnit,
+  hsla,
+  alpha,
+  color
 } from '../transformers';
 
 describe('appendUnit()', () => {
@@ -34,6 +44,29 @@ describe('clampMin()', () => {
     const clamper = clampMin(0);
     expect(clamper(1)).toBe(1);
     expect(clamper(-1)).toBe(0);
+  });
+});
+
+describe('conditional()', () => {
+  it('should return a function that only fires `ifTrue` if `check` is `true`', () => {
+    const testCondition = conditional(
+      (v) => v < 0,
+      () => 5
+    );
+
+    expect(testCondition(-20)).toBe(5);
+    expect(testCondition(20)).toBe(20);
+  });
+
+  it('should fire `ifFalse` if set', () => {
+    const testCondition = conditional(
+      (v) => v === 0,
+      () => true,
+      () => false
+    );
+
+    expect(testCondition(0)).toBe(true);
+    expect(testCondition(1)).toBe(false);
   });
 });
 
@@ -74,6 +107,43 @@ describe('interpolate()', () => {
   });
 });
 
-describe('steps()', () => {
+describe('offset()', () => {
+  it('should return a function that returns an offset from the provided origin', () => {
+    const offsetFrom50 = offset(50);
+    expect(offsetFrom50(25)).toBe(-25);
+    expect(offsetFrom50(75)).toBe(25);
+  });
+});
 
+describe('unit transformers', () => {
+  it('should append the correct units', () => {
+    expect(px(10)).toBe('10px');
+    expect(degrees(360)).toBe('360deg');
+    expect(percent(100)).toBe('100%');
+    expect(rgbUnit(256)).toBe(255);
+    expect(rgbUnit(24.5)).toBe(25);
+    expect(rgba({
+      red: 256,
+      green: 24.5,
+      blue: 0
+    })).toBe('rgba(255, 25, 0, 1)');
+    expect(hsla({
+      hue: 100,
+      saturation: 50,
+      lightness: 50,
+      alpha: 1
+    })).toBe('hsla(100, 50%, 50%, 1)');
+    expect(alpha(2)).toBe(1);
+    expect(color({
+      red: 256,
+      green: 24.5,
+      blue: 0
+    })).toBe('rgba(255, 25, 0, 1)');
+    expect(color({
+      hue: 100,
+      saturation: 50,
+      lightness: 50,
+      alpha: 1
+    })).toBe('hsla(100, 50%, 50%, 1)');
+  });
 });

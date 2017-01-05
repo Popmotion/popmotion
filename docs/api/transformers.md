@@ -34,6 +34,18 @@ const convertToPx = appendUnit('px');
 convertToPx(5); // '5px'
 ```
 
+### `blendColor`
+Given two colors, returns a function that takes a progress value (0 - 1) and returns a correctly blended color.
+
+See the YouTube video [Computer Color is Broken](https://www.youtube.com/watch?v=LKnqECcg6Gw) for more information.
+
+`blendColor(colorA <String | Object>, colorB <String | Object>)`
+
+```javascript
+const blendRedToBlue = blendColor('#f00', '#00f');
+blendRedToBlue(0.5); // Returns blended object with rgba properties
+```
+
 ### `clampMax`
 Returns a function that caps given values to below `max`.
 
@@ -62,6 +74,23 @@ Returns a function that restricts given values to within the provided range.
 ```javascript
 const rgbRange = clamp(0, 255);
 rgbRange(256); // 255
+```
+
+### `conditional`
+Returns a function that fires `check` when provided a `value`. Returns `value` as passed to `ifTrue` if `check` returns `true`, or `ifFalse` if `check` returns `false`.
+
+`ifFalse` is optional, and will return `value` unaltered if not defined.
+
+`conditional(check <Function>, ifTrue <Function>, ifFalse <Function>)`
+
+```javascript
+const LIMIT = 0;
+const tetherToZero = conditional(
+  (v) => v < LIMIT,
+  spring(5, LIMIT)
+);
+tetherToZero(-20); // passed to `spring`
+tetherToZero(50); // not passed to `spring`
 ```
 
 ### `flow`
@@ -98,6 +127,16 @@ const foo = interpolate(
 foo(75); // 0.25
 ```
 
+### `offset`
+Given an `origin`, returns a function that will return the offset between the `origin` and the provided `value`.
+
+`offset(origin <Number>)`
+
+```javascript
+const from50 = offset(50);
+from50(25); // -25
+```
+
 ### `steps`
 Given a number of steps and a range, returns a function that will fix a given value to the specific number of descrete steps within that range.
 
@@ -123,4 +162,79 @@ physics({
     console.log
   )
 });
+```
+
+## Unit transformers
+
+### `alpha`
+Returns a valid alpha value.
+
+`alpha(<Number>)`
+
+```javascript
+alpha(2); // 1
+```
+
+### `degrees`
+Appends 'degrees' unit type.
+
+`degrees(<Number>)`
+
+```javascript
+degrees(360); // '360deg'
+```
+
+### `hsla`
+Converts composite value to a valid `hsla` value.
+
+`hsla(colors <Object>)`
+
+```javascript
+hsla({
+  hue: 100,
+  saturation: 50,
+  lightness: 50,
+  alpha: 1
+}); // 'hsla(100, 50%, 50%, 1)'
+```
+
+### `rgba`
+Converts composite value to a valid `rgba` value.
+
+`rgba(colors <Object>)`
+
+```javascript
+rgba({
+  red: 256,
+  green: 24.5,
+  blue: 0
+}); // 'rgba(255, 25, 0, 1)'
+```
+
+### `rgbUnit`
+Converts to a valid RGB value.
+
+`rgbUnit(<Number>)`
+
+```javascript
+rgbUnit(256); // 255
+rgbUnit(24.5); // 25
+```
+
+### `percent`
+Appends '%' unit type.
+
+`percent(<Number>)`
+
+```javascript
+percent(100); // '100%'
+```
+
+### `px`
+Appends 'px' unit type.
+
+`px(<Number>)`
+
+```javascript
+px(10); // '10px'
 ```

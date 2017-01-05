@@ -12,6 +12,7 @@ Popmotion is:
 - **Compatible:** Full browser support and preloaded with CSS and SVG renderers.
 - **Powerful:** Discrete render step scheduling allows full control over each frame.
 - **Composable:** Actions can be composed, to create complex motion systems.
+- **Advanced:** Sophisticated tween and color blending for smoothest possible motion.
 
 [![npm version](https://img.shields.io/npm/v/popmotion.svg?style=flat-square)](https://www.npmjs.com/package/popmotion)
 [![npm downloads](https://img.shields.io/npm/dm/popmotion.svg?style=flat-square)](https://www.npmjs.com/package/popmotion)

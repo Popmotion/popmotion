@@ -25,6 +25,7 @@ export colorTween from './actions/color-tween';
 export composite from './actions/composite';
 export crossFade from './actions/cross-fade';
 export delay from './actions/delay';
+export offset from './actions/offset';
 export parallel from './actions/parallel';
 export physics from './actions/physics';
 export pointer from './actions/pointer';

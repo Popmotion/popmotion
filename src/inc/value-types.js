@@ -80,10 +80,6 @@ export const hsla = {
 };
 
 export const color = {
-  childTypes: {
-    ...hsla.childTypes,
-    ...rgba.childTypes
-  },
   parse: parseColor,
   test: isColor,
   transform: transformColor

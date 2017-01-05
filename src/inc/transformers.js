@@ -2,6 +2,8 @@ import { getProgressFromValue, getValueFromProgress, stepProgress } from './calc
 import { isString } from './utils';
 import { color as parseColor } from './parsers';
 
+const noop = (v) => v;
+
 /**
  * Append Unit
  * A function that will append
@@ -26,6 +28,10 @@ export const clamp = (min, max) => {
   return (v) => _min(_max(v));
 };
 
+export const conditional = (condition, ifTrue, ifFalse = noop) => (v) => {
+  return condition(v) ? ifTrue(v) : ifFalse(v);
+};
+
 /**
  * Flow
  * Compose other transformers to run linearily
@@ -47,6 +53,13 @@ export const flow = (...transformers) => {
   };
 };
 
+/**
+ * Interpolate from set of values to another
+ * @param  {Array} input array
+ * @param  {Array} output
+ * @param  {Function} rangeEasing
+ * @return {Function}
+ */
 export const interpolate = (input, output, rangeEasing) => {
   const rangeLength = input.length;
   const finalIndex = rangeLength - 1;
@@ -77,7 +90,16 @@ export const interpolate = (input, output, rangeEasing) => {
   };
 };
 
-export const offset = (origin) => (v) => origin - v;
+export const offset = (origin) => (v) => v - origin;
+
+export const generateNonIntergratedSpring = (alterDisplacement = noop) => (constant, origin) => (v) => {
+  const displacement = Math.abs(origin - v);
+  const springModifier = - constant * (0 - alterDisplacement(displacement));
+  return displacement - springModifier;
+};
+
+export const spring = generateNonIntergratedSpring();
+export const nonlinearSpring = generateNonIntergratedSpring(Math.sqrt);
 
 export const wrap = (min, max) => (v) => {
   const rangeSize = max - min;
@@ -100,6 +122,7 @@ export const transformChildValues = (childTransformers) => (v) => {
   return v;
 };
 
+// Unit transformers
 export const percent = appendUnit('%');
 export const degrees = appendUnit('deg');
 export const px = appendUnit('px');
