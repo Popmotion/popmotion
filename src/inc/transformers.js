@@ -1,4 +1,6 @@
 import { getProgressFromValue, getValueFromProgress, stepProgress } from './calc';
+import { color } from './value-types';
+import { isString } from './utils';
 
 /**
  * Append Unit
@@ -94,4 +96,27 @@ export const transformChildValues = (childTransformers) => (v) => {
   }
 
   return v;
+};
+
+const blend = (from, to, v) => {
+  const fromExpo = from * from;
+  const toExpo = to * to;
+  return Math.sqrt(v * (toExpo - fromExpo) + fromExpo);
+};
+// http://codepen.io/osublake/pen/xGVVaN
+export const blendColor = (from, to) => {
+  const fromColor = isString(from) ? color.parse(from) : from;
+  const toColor = isString(to) ? color.parse(to): to;
+  const blended = { ...fromColor };
+
+  return (v) => {
+    for (let key in blended) {
+      blended[key] = blend(fromColor[key], toColor[key], v);
+    }
+    blended.red = blend(fromColor.red, toColor.red, v);
+    blended.green = blend(fromColor.green, toColor.green, v);
+    blended.blue = blend(fromColor.blue, toColor.blue, v);
+    blended.alpha = getValueFromProgress(fromColor.alpha, toColor.alpha, v);
+    return blended;
+  };
 };

@@ -54,16 +54,6 @@ export const scale = {
 export const rgbUnit = {
   ...number,
   transform: flow(
-    //http://codepen.io/osublake/full/xGVVaN/
-    // (v, value, action) => {
-    //   if (action) {
-    //     const fromColor = action.from * action.from;
-    //     const toColor = action.to * action.to;
-    //     return Math.sqrt(action.progress * (toColor - fromColor) + fromColor);
-    //   }
-
-    //   return v;
-    // },
     clamp(0, 255),
     Math.round
   )

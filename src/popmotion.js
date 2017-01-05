@@ -21,6 +21,7 @@ export * as valueTypes from './inc/value-types';
 export Action from './actions';
 export blendTweens from './actions/blend-tweens';
 export chain from './actions/chain';
+export colorTween from './actions/color-tween';
 export composite from './actions/composite';
 export crossFade from './actions/cross-fade';
 export delay from './actions/delay';
