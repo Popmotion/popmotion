@@ -1,5 +1,4 @@
 import { getProgressFromValue, getValueFromProgress, stepProgress } from './calc';
-import { color } from './value-types';
 import { isString } from './utils';
 
 /**
@@ -97,7 +96,7 @@ export const transformChildValues = (childTransformers) => (v) => {
 
   return v;
 };
-console.log(clamp)
+
 const blend = (from, to, v) => {
   const fromExpo = from * from;
   const toExpo = to * to;
@@ -105,8 +104,8 @@ const blend = (from, to, v) => {
 };
 // http://codepen.io/osublake/pen/xGVVaN
 export const blendColor = (from, to) => {
-  const fromColor = isString(from) ? color.parse(from) : from;
-  const toColor = isString(to) ? color.parse(to): to;
+  // const fromColor = isString(from) ? color.parse(from) : from;
+  // const toColor = isString(to) ? color.parse(to): to;
   const blended = { ...fromColor };
 
   return (v) => {
