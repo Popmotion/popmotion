@@ -152,6 +152,7 @@ const blend = (from, to, v) => {
 export const blendColor = (from, to) => {
   const fromColor = isString(from) ? color(from) : from;
   const toColor = isString(to) ? color(to): to;
+  console.log(fromColor, toColor)
   const blended = { ...fromColor };
 
   return (v) => {
