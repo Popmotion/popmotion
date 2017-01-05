@@ -26,15 +26,6 @@ export const camelToDash = (string) => string.replace(CAMEL_CASE_PATTERN, REPLAC
 export const currentTime = HAS_PERFORMANCE_NOW ? () => performance.now() : () => new Date().getTime();
 
 /*
-  Check if object has property and it isn't undefined
-
-  @param [object]
-  @param [string]
-  @return [boolean]
-*/
-export const hasProperty = (object, propertyName) => object.hasOwnProperty(propertyName) && object[propertyName] !== undefined;
-
-/*
   Is utils var an array ? 
   
   @param: Variable to test
@@ -128,7 +119,7 @@ export const getValueFromFunctionString = (value) => value.substring(value.index
 /**
  * Creates a function that will split color
  * values from string into an object of properties
- * `splitColorValues(['Red', 'Green', 'Blue'])('rgba(0,0,0)')`
+ * `mapArrayToObject(['red', 'green', 'blue'])('rgba(0,0,0)')`
  */
 export function splitColorValues(terms) {
   const numTerms = terms.length;
@@ -143,45 +134,4 @@ export function splitColorValues(terms) {
 
     return values;
   };
-}
-
-/*
-  Split a value into a value/unit object
-  
-    "200px" -> { value: 200, unit: "px" }
-    
-  @param [string]: Value to split
-  @return [object]: Object with value and unit props
-*/
-export const findValueAndUnit = (value) => {
-  if (value.match) {
-    const splitValue = value.match(/(-?\d*\.?\d*)(.*)/);
-
-    return {
-      value: parseFloat(splitValue[1]),
-      unit:  splitValue[2]
-    };
-  } else {
-    return { value };
-  }
 };
-
-/*
-  Split color string into map of color properties
-
-  "rgba(255, 255, 255, 0)", ["Red", 'Green", "Blue", "Alpha"]
-
-  { Red: 255... }
-*/
-export const getColorValues = (value, colorTerms) => {
-  const numColorTerms = colorTerms.length;
-  const colorValues = {};
-  const colors = splitCommaDelimited(getValueFromFunctionString(value));
-
-  for (let i = 0; i < numColorTerms; i++) {
-    colorValues[colorTerms[i]] = (colors[i] !== undefined) ? colors[i] : 1;
-  }
-
-  return colorValues;
-};
-
