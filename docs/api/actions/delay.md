@@ -5,7 +5,7 @@ description: A dummy action that completes after a set duration of time.
 
 # Delay
 
-`delay(duration <Number>, props <Object>)`
+`delay(duration <Number>, onComplete <Function>)`
 
 Delay is a dummy action that fires `onComplete` after a set duration of time. This is useful in composing with other actions.
 

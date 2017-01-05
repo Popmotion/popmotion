@@ -1,3 +1,3 @@
 import tween from './tween';
 
-export default (duration) => tween({ duration });
+export default (duration, onComplete) => tween({ duration, onComplete });
