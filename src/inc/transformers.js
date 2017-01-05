@@ -97,7 +97,7 @@ export const transformChildValues = (childTransformers) => (v) => {
 
   return v;
 };
-
+console.log(clamp)
 const blend = (from, to, v) => {
   const fromExpo = from * from;
   const toExpo = to * to;

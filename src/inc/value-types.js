@@ -11,7 +11,7 @@
  * rgb
  * scale
  */
-import { clamp, flow, transformChildValues } from '../inc/transformers';
+import { clamp, flow, transformChildValues } from './transformers';
 import { createUnitType, isFirstChars, splitColorValues } from './utils';
 import { isNum } from '../inc/utils';
 
