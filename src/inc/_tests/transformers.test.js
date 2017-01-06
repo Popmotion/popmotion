@@ -6,7 +6,8 @@ import {
   conditional,
   flow,
   interpolate,
-  offset,
+  add,
+  subtract,
   px,
   degrees,
   percent,
@@ -107,11 +108,19 @@ describe('interpolate()', () => {
   });
 });
 
-describe('offset()', () => {
+describe('subtract()', () => {
   it('should return a function that returns an offset from the provided origin', () => {
-    const offsetFrom50 = offset(50);
+    const offsetFrom50 = subtract(50);
     expect(offsetFrom50(25)).toBe(-25);
     expect(offsetFrom50(75)).toBe(25);
+  });
+});
+
+describe('add()', () => {
+  it('should return a function that returns the value added to the origin', () => {
+    const addTo50 = add(50);
+    expect(addTo50(25)).toBe(75);
+    expect(addTo50(-75)).toBe(-25);
   });
 });
 

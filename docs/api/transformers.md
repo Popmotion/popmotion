@@ -127,19 +127,6 @@ const foo = interpolate(
 foo(75); // 0.25
 ```
 
-### `offset`
-Given an `origin`, returns a function that will return the offset between the `origin` and the provided `value`.
-
-`offset(origin <Number>)`
-
-```javascript
-const from50 = offset(50);
-from50(25); // -25
-```
-
-### `addTo`
-Given an `origin`, returns a function that will return the `origin` plus the provided `value`.
-
 ### `steps`
 Given a number of steps and a range, returns a function that will fix a given value to the specific number of descrete steps within that range.
 
