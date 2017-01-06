@@ -35,6 +35,10 @@ Popmotion comes with the following preset easing functions:
 
 ## Easing creation
 
+Any function that takes a progress value can be used to ease. For instance, the [`bezier-easing` npm module](https://www.npmjs.com/package/bezier-easing) can produce easing functions based on bezier curves. 
+
+Popmotion also provides the following functions to create your own easing functions:
+
 ### `createReversedEasing`
 Reverses the provided easing function.
 

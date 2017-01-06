@@ -94,8 +94,8 @@ export const offset = (origin) => (v) => v - origin;
 
 export const generateNonIntergratedSpring = (alterDisplacement = noop) => (constant, origin) => (v) => {
   const displacement = Math.abs(origin - v);
-  const springModifier = - constant * (0 - alterDisplacement(displacement));
-  return displacement - springModifier;
+  const springModifiedDisplacement = - constant * (0 - alterDisplacement(displacement));
+  return origin + springModifiedDisplacement;
 };
 
 export const spring = generateNonIntergratedSpring();
