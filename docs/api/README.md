@@ -7,7 +7,6 @@
   - [colorTween](/docs/api/actions/color-tween.md)
   - ~~[crossFade](/docs/api/actions/cross-fade.md)~~ (Coming in 6.2)
   - [delay](/docs/api/actions/delay.md)
-  - [offset](/docs/api/actions/offset.md)
   - [parallel](/docs/api/actions/parallel.md)
   - [physics](/docs/api/actions/physics.md)
   - [pointer](/docs/api/actions/pointer.md)

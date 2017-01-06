@@ -90,7 +90,10 @@ export const interpolate = (input, output, rangeEasing) => {
   };
 };
 
-export const offset = (origin) => (v) => v - origin;
+export const subtract = (origin) => (v) => v - origin;
+export const add = (origin) => (v) => v + origin;
+export const divide = (origin) => (v) => v / origin;
+export const multiply = (origin) => (v) => v * origin;
 
 export const generateNonIntergratedSpring = (alterDisplacement = noop) => (constant, origin) => (v) => {
   const displacement = origin - v;

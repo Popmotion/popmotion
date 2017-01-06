@@ -137,6 +137,9 @@ const from50 = offset(50);
 from50(25); // -25
 ```
 
+### `addTo`
+Given an `origin`, returns a function that will return the `origin` plus the provided `value`.
+
 ### `steps`
 Given a number of steps and a range, returns a function that will fix a given value to the specific number of descrete steps within that range.
 
@@ -172,6 +175,26 @@ physics({
     console.log
   )
 });
+```
+
+## Calculation transformers
+
+### `add`
+Returns a function that will return the provided `value` with the given `valueToAdded` added.
+
+`add(valueToAdd <Number>)`
+
+```javascript
+add(10)(100); // 110
+```
+
+### `subtract`
+Returns a function that will return the provided `value` with the given `valueToSubtract` subtracted.
+
+`subtract(valueToSubtract <Number>)`
+
+```javascript
+subtract(10)(100); // 90
 ```
 
 ## Unit transformers

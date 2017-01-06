@@ -6,7 +6,6 @@ function createPointer({ x, y }, { eventToPoints, moveEvent, ...props }) {
     x: value(x),
     y: value(y)
   }, {
-    passive: true,
     preventDefault: true,
     ...props
   });
