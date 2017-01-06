@@ -93,9 +93,9 @@ export const interpolate = (input, output, rangeEasing) => {
 export const offset = (origin) => (v) => v - origin;
 
 export const generateNonIntergratedSpring = (alterDisplacement = noop) => (constant, origin) => (v) => {
-  const displacement = Math.abs(origin - v);
-  const springModifiedDisplacement = - constant * (0 - alterDisplacement(displacement));
-  return origin + springModifiedDisplacement;
+  const displacement = origin - v;
+  const springModifiedDisplacement = - constant * (0 - alterDisplacement(Math.abs(displacement)));
+  return (displacement <= 0) ? origin + springModifiedDisplacement : origin - springModifiedDisplacement;
 };
 
 export const spring = generateNonIntergratedSpring();
