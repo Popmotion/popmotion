@@ -2,6 +2,9 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.1.0] 2017-01-06
+- Full release of 6.x.
+
 ## [6.0.0@alpha] 2017-01-01
 
 - New API
