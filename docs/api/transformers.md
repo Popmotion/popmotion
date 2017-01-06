@@ -153,14 +153,14 @@ threeStep(0.9); // 1
 ```
 
 ### `spring`
-Creates a spring that, given a strength and an origin, will treat the provided value as a displacement.
+Creates a spring that, given an elasticity and an origin, will treat the provided value as a displacement.
 
-`spring(constant <Number>, origin <Number>)`
+`spring(elasticity <Number>, origin <Number>)`
 
 ### `nonlinearSpring`
 Creates a spring that has a non-linear effect on the displacement - the greater the displacement, the greater effect on the provided value.
 
-`nonlinearSpring(constant <Number>, origin <Number>)`
+`nonlinearSpring(elasticity <Number>, origin <Number>)`
 
 ### `wrap`
 Wraps a number around.
