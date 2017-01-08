@@ -1,0 +1,53 @@
+<!doctype html>
+    <html>
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+        <script src="/path/to/client.js" defer></script>
+        <link href="https://fonts.googleapis.com/css?family=Cousine|Montserrat:400,700" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="styles.css">
+        <link rel="canonical" href="/api/actions/blend-tweens" />
+        <meta name="twitter:card" content="summary"/>
+        <meta name="twitter:site" content="@popmotion"/>
+        <meta name="twitter:domain" content="httsp://popmotion.io"/>
+        <meta name="twitter:creator" content="@popmotion"/>
+
+        <link rel="icon" type="image/png" href="assets/favicon.png" />
+        <link rel="apple-touch-icon-precomposed" href="assets/favicon.png" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <title data-react-helmet="true">Blend Tweens | Popmotion</title>
+        
+        
+      </head>
+      <body>
+        <div data-reactroot="" data-reactid="1" data-react-checksum="-2056279933"><!-- react-empty: 2 --><h1 id="blend-tweens" data-reactid="3"><!-- react-text: 4 -->Blend Tweens<!-- /react-text --></h1><h2 id="example" data-reactid="5"><!-- react-text: 6 -->Example<!-- /react-text --></h2><pre data-reactid="7"><code class="language-javascript" data-reactid="8">import { tween, blendTweens } from &#x27;popmotion&#x27;;
+
+const logValue = (v) =&gt; console.log(v);
+
+const foo = tween({
+  from: 0,
+  to: 1,
+  onUpdate: logValue
+});
+
+const bar = tween({
+  from: 1,
+  to: 0
+});
+
+foo.start();
+
+setTimeout(() =&gt; {
+  // Unset the first tween&#x27;s `onUpdate`
+  foo.setProps({
+    onUpdate: undefined
+  });
+  blendTweens({
+    from: foo,
+    to: bar,
+    onUpdate: logValue
+  }).start();
+}, 150);</code></pre><h2 id="props" data-reactid="9"><!-- react-text: 10 -->Props<!-- /react-text --></h2><ul data-reactid="11"><!-- react-text: 12 --><!-- /react-text --><li data-reactid="13"><!-- react-text: 14 --><!-- /react-text --><code data-reactid="15">from &lt;Tween&gt;</code><!-- react-text: 16 -->: The tween to blend from.<!-- /react-text --></li><!-- react-text: 17 --><!-- /react-text --><li data-reactid="18"><!-- react-text: 19 --><!-- /react-text --><code data-reactid="20">to &lt;Tween&gt;</code><!-- react-text: 21 -->: The tween to blend to.<!-- /react-text --></li><!-- react-text: 22 --><!-- /react-text --></ul></div>
+      </body>
+    </html>
+  

@@ -1,0 +1,40 @@
+<!doctype html>
+    <html>
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+        <script src="/path/to/client.js" defer></script>
+        <link href="https://fonts.googleapis.com/css?family=Cousine|Montserrat:400,700" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="styles.css">
+        <link rel="canonical" href="/api/actions/README" />
+        <meta name="twitter:card" content="summary"/>
+        <meta name="twitter:site" content="@popmotion"/>
+        <meta name="twitter:domain" content="httsp://popmotion.io"/>
+        <meta name="twitter:creator" content="@popmotion"/>
+
+        <link rel="icon" type="image/png" href="assets/favicon.png" />
+        <link rel="apple-touch-icon-precomposed" href="assets/favicon.png" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <title data-react-helmet="true">Action | Popmotion</title>
+        
+        
+      </head>
+      <body>
+        <div data-reactroot="" data-reactid="1" data-react-checksum="-530279149"><!-- react-empty: 2 --><h1 id="action" data-reactid="3"><!-- react-text: 4 -->Action<!-- /react-text --></h1><p data-reactid="5"><!-- react-text: 6 --><!-- /react-text --><code data-reactid="7">Action</code><!-- react-text: 8 --> is the base class of Popmotion’s included actions, like <!-- /react-text --><a href="/docs/actions/tween.md" target="new" data-reactid="9"><!-- react-text: 10 --><!-- /react-text --><code data-reactid="11">tween</code><!-- react-text: 12 --><!-- /react-text --></a><!-- react-text: 13 --> and <!-- /react-text --><a href="/docs/actions/physics.md" target="new" data-reactid="14"><!-- react-text: 15 --><!-- /react-text --><code data-reactid="16">physics</code><!-- react-text: 17 --><!-- /react-text --></a><!-- react-text: 18 -->.<!-- /react-text --></p><p data-reactid="19"><!-- react-text: 20 -->New actions can be created by extending <!-- /react-text --><code data-reactid="21">Action</code><!-- react-text: 22 --> and providing an <!-- /react-text --><code data-reactid="23">update</code><!-- react-text: 24 --> function that takes a value and returns a new one. <!-- /react-text --><code data-reactid="25">onStart</code><!-- react-text: 26 -->, <!-- /react-text --><code data-reactid="27">onStop</code><!-- react-text: 28 --> and <!-- /react-text --><code data-reactid="29">onComplete</code><!-- react-text: 30 --> methods can also be provided, both as <!-- /react-text --><code data-reactid="31">class</code><!-- react-text: 32 --> methods and <!-- /react-text --><code data-reactid="33">Action</code><!-- react-text: 34 --> properties.<!-- /react-text --></p><h2 id="example" data-reactid="35"><!-- react-text: 36 -->Example<!-- /react-text --></h2><pre data-reactid="37"><code class="language-javascript" data-reactid="38">import { Action } from &#x27;popmotion&#x27;;
+
+class CustomAction extends Action {
+  update(current) {
+    const { increment } = this.props;
+    return current + increment;
+  }
+}
+
+const customAction = new CustomAction({
+  increment: 10,
+  onUpdate: (v) =&gt; console.log(v)
+});
+
+customAction.start();</code></pre><h2 id="methods" data-reactid="39"><!-- react-text: 40 -->Methods<!-- /react-text --></h2><ul data-reactid="41"><!-- react-text: 42 --><!-- /react-text --><li data-reactid="43"><!-- react-text: 44 --><!-- /react-text --><code data-reactid="45">start</code><!-- react-text: 46 -->: Start an action. Fires any set <!-- /react-text --><code data-reactid="47">onStart</code><!-- react-text: 48 --> callbacks.<!-- /react-text --></li><!-- react-text: 49 --><!-- /react-text --><li data-reactid="50"><!-- react-text: 51 --><!-- /react-text --><code data-reactid="52">stop</code><!-- react-text: 53 -->: Stop an action. Fires <!-- /react-text --><code data-reactid="54">onStop</code><!-- react-text: 55 --> callback.<!-- /react-text --></li><!-- react-text: 56 --><!-- /react-text --><li data-reactid="57"><!-- react-text: 58 --><!-- /react-text --><code data-reactid="59">get</code><!-- react-text: 60 -->: Get the current value.<!-- /react-text --></li><!-- react-text: 61 --><!-- /react-text --><li data-reactid="62"><!-- react-text: 63 --><!-- /react-text --><code data-reactid="64">getVelocity</code><!-- react-text: 65 -->: Get the action’s current velocity, in units per second.<!-- /react-text --></li><!-- react-text: 66 --><!-- /react-text --><li data-reactid="67"><!-- react-text: 68 --><!-- /react-text --><code data-reactid="69">complete</code><!-- react-text: 70 -->: Stop an action and mark as complete. Fires <!-- /react-text --><code data-reactid="71">onStop</code><!-- react-text: 72 --> and <!-- /react-text --><code data-reactid="73">onComplete</code><!-- react-text: 74 --> callbacks.<!-- /react-text --></li><!-- react-text: 75 --><!-- /react-text --><li data-reactid="76"><!-- react-text: 77 --><!-- /react-text --><code data-reactid="78">setProps(&lt;Object&gt;)</code><!-- react-text: 79 -->: Updates <!-- /react-text --><code data-reactid="80">props</code><!-- react-text: 81 -->.<!-- /react-text --></li><!-- react-text: 82 --><!-- /react-text --><li data-reactid="83"><!-- react-text: 84 --><!-- /react-text --><code data-reactid="85">getProp(&lt;String&gt;)</code><!-- react-text: 86 -->: Returns the named property.<!-- /react-text --></li><!-- react-text: 87 --><!-- /react-text --></ul><h2 id="props" data-reactid="88"><!-- react-text: 89 -->Props<!-- /react-text --></h2><ul data-reactid="90"><!-- react-text: 91 --><!-- /react-text --><li data-reactid="92"><!-- react-text: 93 --><!-- /react-text --><code data-reactid="94">onStart &lt;Function&gt;</code><!-- react-text: 95 -->: Fires when an action starts.<!-- /react-text --></li><!-- react-text: 96 --><!-- /react-text --><li data-reactid="97"><!-- react-text: 98 --><!-- /react-text --><code data-reactid="99">onStop &lt;Function&gt;</code><!-- react-text: 100 -->: Fires when an action is stopped.<!-- /react-text --></li><!-- react-text: 101 --><!-- /react-text --><li data-reactid="102"><!-- react-text: 103 --><!-- /react-text --><code data-reactid="104">onComplete &lt;Function&gt;</code><!-- react-text: 105 -->: Fires when an action is completed.<!-- /react-text --></li><!-- react-text: 106 --><!-- /react-text --></ul></div>
+      </body>
+    </html>
+  

@@ -1,0 +1,34 @@
+<!doctype html>
+    <html>
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+        <script src="/path/to/client.js" defer></script>
+        <link href="https://fonts.googleapis.com/css?family=Cousine|Montserrat:400,700" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="styles.css">
+        <link rel="canonical" href="/api/actions/delay" />
+        <meta name="twitter:card" content="summary"/>
+        <meta name="twitter:site" content="@popmotion"/>
+        <meta name="twitter:domain" content="httsp://popmotion.io"/>
+        <meta name="twitter:creator" content="@popmotion"/>
+
+        <link rel="icon" type="image/png" href="assets/favicon.png" />
+        <link rel="apple-touch-icon-precomposed" href="assets/favicon.png" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <title data-react-helmet="true">Delay | Popmotion</title>
+        
+        
+      </head>
+      <body>
+        <div data-reactroot="" data-reactid="1" data-react-checksum="694627570"><!-- react-empty: 2 --><h1 id="delay" data-reactid="3"><!-- react-text: 4 -->Delay<!-- /react-text --></h1><p data-reactid="5"><!-- react-text: 6 --><!-- /react-text --><code data-reactid="7">delay(duration &lt;Number&gt;, onComplete &lt;Function&gt;)</code><!-- react-text: 8 --><!-- /react-text --></p><p data-reactid="9"><!-- react-text: 10 -->Delay is a dummy action that fires <!-- /react-text --><code data-reactid="11">onComplete</code><!-- react-text: 12 --> after a set duration of time. This is useful in composing with other actions.<!-- /react-text --></p><h2 id="example" data-reactid="13"><!-- react-text: 14 -->Example<!-- /react-text --></h2><pre data-reactid="15"><code class="language-javascript" data-reactid="16">import { delay, chain, physics } from &#x27;popmotion&#x27;;
+
+chain([
+  delay(200),
+  physics({
+    velocity: 100,
+    onUpdate: console.log
+  })
+]).start();</code></pre></div>
+      </body>
+    </html>
+  
