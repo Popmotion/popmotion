@@ -2,8 +2,15 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.2.1] 2017-09-01
+
+### Added
+- Updated bezier tween blend algorithm.
+- Exposed bezier resolver as a transformer.
+
 ## [6.2.0] 2017-09-01
 
+### Added
 - Bezier tween blending
 
 ## [6.1.0] 2017-06-01

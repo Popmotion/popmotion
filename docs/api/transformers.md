@@ -34,6 +34,21 @@ const convertToPx = appendUnit('px');
 convertToPx(5); // '5px'
 ```
 
+### `bezier`
+Returns a function that, provided a progress value from `0` to `1`, will return a resolved number from the provided bezier array.
+
+Can resolve either 3 or 4 bezier points. For more points, the [original implementation](https://github.com/hughsk/bezier) can be used. 
+
+`bezier(points <Array>)`
+
+```javascript
+const resolveBezier = bezier([0, 1, 2, 3]);
+
+resolveBezier(0); // 0
+resolveBezier(0.5); // 1.5
+resolveBezier(1); // 3
+```
+
 ### `blendColor`
 Given two colors, returns a function that takes a progress value (0 - 1) and returns a correctly blended color.
 
