@@ -2,6 +2,14 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.2.0] 2017-09-01
+
+- Bezier tween blending
+
+## [6.1.0] 2017-06-01
+
+- Public release of new API
+
 ## [6.0.0@alpha] 2017-01-01
 
 - New API

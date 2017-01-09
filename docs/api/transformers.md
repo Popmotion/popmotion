@@ -37,7 +37,7 @@ convertToPx(5); // '5px'
 ### `blendColor`
 Given two colors, returns a function that takes a progress value (0 - 1) and returns a correctly blended color.
 
-See the YouTube video [Computer Color is Broken](https://www.youtube.com/watch?v=LKnqECcg6Gw) for more information.
+Watch [Computer Color is Broken](https://www.youtube.com/watch?v=LKnqECcg6Gw) for more information.
 
 `blendColor(colorA <String | Object>, colorB <String | Object>)`
 

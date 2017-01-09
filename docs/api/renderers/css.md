@@ -19,6 +19,13 @@ If a `transform` property isn't present in the caching layer (because it hasn't 
 
 This is because browsers return the `transform` attribute as a matrix, and the size of the code required to convert these is prohibative. However it'd be relatively simple for someone to develop an alternative CSS renderer as a drop-in replacement.
 
+## Property mapping
+The following alias' can be optionally used for setting CSS props:
+
+- `x` -> `translateX`
+- `y` -> `translateY`
+- `z` -> `translateZ`
+
 ## Example
 
 ```javascript

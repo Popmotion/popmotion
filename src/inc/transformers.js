@@ -28,8 +28,8 @@ export const clamp = (min, max) => {
   return (v) => _min(_max(v));
 };
 
-export const conditional = (condition, ifTrue, ifFalse = noop) => (v) => {
-  return condition(v) ? ifTrue(v) : ifFalse(v);
+export const conditional = (condition, ifTrue, ifFalse = noop) => (v, action) => {
+  return condition(v, action) ? ifTrue(v, action) : ifFalse(v, action);
 };
 
 /**

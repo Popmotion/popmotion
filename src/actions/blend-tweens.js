@@ -18,9 +18,10 @@ class TweenBlend extends Action {
     const { from, to, duration, accuracy } = this.props;
     const a = from;
     const b = to;
-    const aDuration = a.getDuration();
-    const bDuration = b.getDuration();
+    const aDuration = a.getProp('duration');
+    const bDuration = b.getProp('duration');
 
+    this.progress = 0;
     this.duration = duration || Math.min(
       aDuration - a.getElapsed(),
       bDuration
@@ -53,16 +54,15 @@ class TweenBlend extends Action {
       const bValueAtTime = calcValueAtTime(bFrom, bTo, bDuration, b.elapsed + totalTime, bEase);
 
       const hasIntersected = (
-        (bStartsHigherThanA && aValueAtTime < bValueAtTime) ||
-        (!bStartsHigherThanA && aValueAtTime > bValueAtTime)
+        (bStartsHigherThanA && aValueAtTime > bValueAtTime) ||
+        (!bStartsHigherThanA && aValueAtTime < bValueAtTime)
       );
 
       if (!foundP1 && hasIntersected) {
-        this.blendPoints.splice(0, 1, [totalTime, bValueAtTime]);
+        this.blendPoints.splice(1, 0, [totalTime, bValueAtTime]);
         foundP1 = true;
       }
 
-      // TODO go back through and comment
       const hasIntersectedB = (
         (bStartsHigherThanA && aValueAtTime < bValueAtTime) ||
         (!bStartsHigherThanA && aValueAtTime > bValueAtTime)
@@ -73,27 +73,30 @@ class TweenBlend extends Action {
         foundP2 = true;
       }
 
-      if (foundP2) {
-        return;
-      }
+      if (foundP2) break;
     }
 
     to.start();
   }
 
   update() {
-    const { from, to } = this.props;
-    const a = from;
+    const { to } = this.props;
     const b = to;
 
-    const progress = clampProgress(getProgressFromValue(this.blendPoints[0][0], this.blendPoints[2][0], a.getElapsed()));
-    if (progress >= 1) {
+    this.progress = clampProgress(getProgressFromValue(this.blendPoints[0][0], this.blendPoints[2][0], b.getElapsed()));
+
+    if (this.progress >= 1) {
       return b.get();
     } else {
-      const aP = getValueFromProgress(this.blendPoints[0][1], this.blendPoints[1][1], progress);
-      const bP = getValueFromProgress(this.blendPoints[1][1], this.blendPoints[2][1], progress);
-      return getValueFromProgress(aP, bP, progress);
+      const aP = getValueFromProgress(this.blendPoints[0][1], this.blendPoints[1][1], this.progress);
+      const bP = getValueFromProgress(this.blendPoints[1][1], this.blendPoints[2][1], this.progress);
+      return getValueFromProgress(aP, bP, this.progress);
     }
+  }
+
+  isActionComplete() {
+    const { to } = this.props;
+    return !to.isActive();
   }
 }
 
