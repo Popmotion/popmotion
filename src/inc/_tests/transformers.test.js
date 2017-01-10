@@ -1,5 +1,6 @@
 import {
   appendUnit,
+  bezier,
   clamp,
   clampMax,
   clampMin,
@@ -21,6 +22,20 @@ import {
 describe('appendUnit()', () => {
   it('should return a function that appends a unit to provided numbers', () => {
     expect(appendUnit('px')(5)).toBe('5px');
+  });
+});
+
+describe('bezier()', () => {
+  it('should return a function that resolves the provided bezier points with either 3 or 4 points', () => {
+    const resolveBezier3 = bezier([0, 1, 2]);
+    expect(resolveBezier3(0)).toBe(0);
+    expect(resolveBezier3(0.5)).toBe(1);
+    expect(resolveBezier3(1)).toBe(2);
+
+    const resolveBezier4 = bezier([0, 1, 2, 3]);
+    expect(resolveBezier4(0)).toBe(0);
+    expect(resolveBezier4(0.5)).toBe(1.5);
+    expect(resolveBezier4(1)).toBe(3);
   });
 });
 

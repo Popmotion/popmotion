@@ -3,20 +3,37 @@ import Helmet from 'react-helmet';
 import MTRC from 'markdown-to-react-components';
 import frontMatter from 'front-matter';
 
-export default function (props) {
-  // const { attributes, body } = frontMatter(doc);
-  // const { title, description } = attributes;
-  // const content = MTRC(body).tree;
-  const title = ''
-  const description = ''
-  const content = ''
+function getDoc({ api }, category, topic) {
+  if (!category) {
+    return api.README;
+  }
+
+  const categoryDocs = api[category];
+
+  if (typeof categoryDocs === 'string') {
+    return categoryDocs;
+  } else {
+    const topicDoc = categoryDocs[topic];
+    return topicDoc;
+  }
+}
+
+export default function ({ category, topic, content }) {
+  const doc = getDoc(content, category, topic);
+
+  if (!doc) return null;
+
+  const { attributes, body } = frontMatter(doc);
+  const { title, description } = attributes;
+  const pageContent = MTRC(body).tree;
+
   return (
     <div>
       <Helmet
-        title={title}
+        title={`${title} | Popmotion`}
         description={description}
       />
-      {content}
+      {pageContent}
     </div>
   );
 }

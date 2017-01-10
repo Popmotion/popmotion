@@ -1,7 +1,7 @@
 # API
 
 - [Actions](/docs/api/actions)
-  - ~~[blendTweens](/docs/api/actions/blend-tweens.md)~~ (Coming in 6.2)
+  - [blendTweens](/docs/api/actions/blend-tweens.md)
   - [chain](/docs/api/actions/chain.md)
   - [composite](/docs/api/actions/composite.md)
   - [colorTween](/docs/api/actions/color-tween.md)

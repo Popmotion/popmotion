@@ -1,0 +1,33 @@
+<!doctype html>
+    <html>
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+        <script src="/path/to/client.js" defer></script>
+        <link href="https://fonts.googleapis.com/css?family=Cousine|Montserrat:400,700" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="styles.css">
+        <link rel="canonical" href="/api/actions/pointer" />
+        <meta name="twitter:card" content="summary"/>
+        <meta name="twitter:site" content="@popmotion"/>
+        <meta name="twitter:domain" content="httsp://popmotion.io"/>
+        <meta name="twitter:creator" content="@popmotion"/>
+
+        <link rel="icon" type="image/png" href="assets/favicon.png" />
+        <link rel="apple-touch-icon-precomposed" href="assets/favicon.png" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <title data-react-helmet="true">Pointer | Popmotion</title>
+        
+        
+      </head>
+      <body>
+        <div data-reactroot="" data-reactid="1" data-react-checksum="-2067445652"><!-- react-empty: 2 --><h1 id="pointer" data-reactid="3"><!-- react-text: 4 -->Pointer<!-- /react-text --></h1><p data-reactid="5"><!-- react-text: 6 -->Creates a composite action that tracks the <!-- /react-text --><code data-reactid="7">x</code><!-- react-text: 8 --> and <!-- /react-text --><code data-reactid="9">y</code><!-- react-text: 10 --> movement of touch and mouse events.<!-- /react-text --></p><p data-reactid="11"><!-- react-text: 12 --><!-- /react-text --><code data-reactid="13">pointer(e &lt;MouseEvent | TouchEvent&gt;, props &lt;Object&gt;)</code><!-- react-text: 14 --><!-- /react-text --></p><h2 id="example" data-reactid="15"><!-- react-text: 16 -->Example<!-- /react-text --></h2><pre data-reactid="17"><code class="language-javascript" data-reactid="18">import { pointer } from &#x27;popmotion&#x27;;
+
+document.addEventListener(&#x27;mousedown&#x27;, (e) =&gt; {
+  pointer(e, {
+    preventDefault: true,
+    onUpdate: ({ x, y }) =&gt; console.log(x, y)
+  }).start();
+});</code></pre><h2 id="props" data-reactid="19"><!-- react-text: 20 -->Props<!-- /react-text --></h2><ul data-reactid="21"><!-- react-text: 22 --><!-- /react-text --><li data-reactid="23"><!-- react-text: 24 --><!-- /react-text --><code data-reactid="25">preventDefault &lt;Boolean&gt;</code><!-- react-text: 26 -->: If <!-- /react-text --><code data-reactid="27">true</code><!-- react-text: 28 -->, fire <!-- /react-text --><code data-reactid="29">preventDefault</code><!-- react-text: 30 --> on <!-- /react-text --><code data-reactid="31">mousemove</code><!-- react-text: 32 --> or <!-- /react-text --><code data-reactid="33">touchmove</code><!-- react-text: 34 --> events (default <!-- /react-text --><code data-reactid="35">true</code><!-- react-text: 36 -->)<!-- /react-text --></li><!-- react-text: 37 --><!-- /react-text --></ul></div>
+      </body>
+    </html>
+  

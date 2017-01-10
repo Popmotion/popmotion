@@ -18,7 +18,7 @@ class Action {
     const { onStart, _onStart, passive } = this.props;
 
     if (!passive) {
-      this.isActive = true;
+      this._isActive = true;
       onFrameUpdate(this.scheduledUpdate);
     }
 
@@ -33,7 +33,7 @@ class Action {
     const { onStop, _onStop, passive } = this.props;
 
     if (!passive) {
-      this.isActive = false;
+      this._isActive = false;
       cancelOnFrameUpdate(this.scheduledUpdate);
     }
 
@@ -69,7 +69,7 @@ class Action {
     if (onUpdate) onUpdate(this.current, this);
     this.fireListeners();
 
-    if (!passive && this.isActive) {
+    if (!passive && this._isActive) {
       onFrameUpdate(this.scheduledUpdate);
     }
 
@@ -106,7 +106,7 @@ class Action {
   }
 
   isActive() {
-    return this.isActive;
+    return this._isActive;
   }
 
   addListener(listener) {

@@ -1,4 +1,8 @@
 ---
-title: Renderers
-description: Change a value over a specific duration of time.
+title: SVG Path Renderer
+description: Optimised SVG Path renderer.
 ---
+
+# SVG Path Renderer
+
+- Docs coming soon
