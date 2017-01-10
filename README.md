@@ -11,14 +11,16 @@ Popmotion is:
 - **Fast:** Stands up to alternatives in [performance tests](http://codepen.io/popmotion/pen/zNYXmR).
 - **Compatible:** Full browser support and preloaded with CSS and SVG renderers.
 - **Powerful:** Discrete render step scheduling allows full control over each frame.
-- **Composable:** Actions can be composed, to create complex motion systems.
-- **Advanced:** Sophisticated tween and color blending for smoothest possible motion.
+- **Composable:** Actions and transformers can be composed to create complex motion systems.
+- **Advanced:** Sophisticated tween and color blending for the smoothest possible motion.
 
 [![npm version](https://img.shields.io/npm/v/popmotion.svg?style=flat-square)](https://www.npmjs.com/package/popmotion)
 [![npm downloads](https://img.shields.io/npm/dm/popmotion.svg?style=flat-square)](https://www.npmjs.com/package/popmotion)
 [![Twitter Follow](https://img.shields.io/twitter/follow/espadrine.svg?style=social&label=Follow)](http://twitter.com/popmotionjs)
 
 [Slack](https://popmotion.slack.com)
+
+### [Full API documentation](docs/api)
 
 ## Installation
 
