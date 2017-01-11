@@ -110,12 +110,15 @@ export const wrap = (min, max) => (v) => {
   return ((v - min) % rangeSize + rangeSize) % rangeSize + min;
 };
 
-export const smooth = (initialValue, smoothing) => {
-  let previousValue = initialValue;
+export const smooth = (strength = 50) => {
+  let previousValue = 0;
+  let hasSmoothed = false;
 
   return (v) => {
-    const newValue = calcSmoothing(v, previousValue, timeSinceLastFrame(), smoothing);
+    const currentValue = (hasSmoothed) ? previousValue : v;
+    const newValue = calcSmoothing(currentValue, previousValue, timeSinceLastFrame(), strength);
     previousValue = newValue;
+    hasSmoothed = true;
     return newValue;
   };
 };

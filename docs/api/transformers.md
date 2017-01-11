@@ -142,6 +142,11 @@ const foo = interpolate(
 foo(75); // 0.25
 ```
 
+### `smooth`
+Will smooth a value over time.
+
+`smooth(strength <Number>)`
+
 ### `steps`
 Given a number of steps and a range, returns a function that will fix a given value to the specific number of descrete steps within that range.
 
