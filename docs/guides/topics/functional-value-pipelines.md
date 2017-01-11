@@ -15,7 +15,7 @@ You can fork [this tutorial template](http://codepen.io/popmotion/pen/XpXoqW?edi
 
 ## Create the slider renderer
 
-We first need to import the [css renderer](../../api/renderers/css). We'll use this to set the `translateX` transform property of the slider.
+Our first job is to make a simple renderer for the slider. The [css renderer](../../api/renderers/css.md) included in Popmotion can create an optimized get/setter for CSS properties. We'll use this to set the `translateX` transform property of the slider.
 
 ```javascript
 const { css } = window.popmotion;
@@ -28,17 +28,17 @@ const sliderRenderer = css(sliderDom);
 
 We can now `set` the `translateX` like this:
 
-```
+```javascript
 sliderRenderer.set('x', -50);
 ```
 
-By setting a property, Popmotion will schedule a render for the next `frameRender` step in the [render loop](../../api/render-loop).
+By setting a property, Popmotion will schedule a render for the next `frameRender` step in the [render loop](../../api/render-loop.md).
 
 ## Pointer tracking
 
 Popmotion provides a `pointer` action to track the movement of mouse and touch movement events. To begin, a mouse or touch event should be passed to `pointer`, and `start` called on the created action:
 
-```
+```javascript
 const { pointer } = window.popmotion;
 let activeAction;
 
@@ -53,7 +53,7 @@ document.body.addEventListener('mousedown', startDrag);
 
 And to stop the action from tracking the pointer we can add a second event listener:
 
-```
+```javascript
 function stopDrag() {
   if (activeAction) activeAction.stop();
 }
@@ -65,7 +65,7 @@ document.body.addEventListener('mouseup', stopDrag);
 
 To now use this pointer to drag the list, we can give the pointer action a new `onUpdate` function that simply sets the `x` property on the renderer we created earlier. As `pointer` returns a [composite action](../../api/actions/composite), we can do this directly on its `x` value using the `output` shorthand method:
 
-```
+```javascript
 // We'll be using this function a lot, so let's abstract it
 const setSliderX = (x) => sliderRenderer.set('x', x);
 
@@ -89,7 +89,7 @@ Functional pipelines in Popmotion are composed from a bunch of functions that we
 
 The glue of functional composition in Popmotion is the `flow` function. It takes a series of functions, and creates a new function where the provided argument is passed from left to right. Here's a completely arbitrary example:
 
-```
+```javascript
 const plusOne = (v) => v + 1;
 const plusThree = flow(plusOne, plusOne, plusOne);
 const value = plusThree(0);
@@ -98,7 +98,7 @@ const value = plusThree(0);
 
 As the `onUpdate` property is a function that receives a single parameter, the output of that action, we can easily compose a bunch of functions with `flow` and provide that.
 
-```
+```javascript
 const { transform } = window.popmotion;
 const { add, subtract, flow } = transform;
 
@@ -127,7 +127,7 @@ Now the slider correctly drags, but it feels a little weird to have it stop dead
 
 The [physics](../../api/physics) action takes a `velocity` property, measured in units per second (these units are usually pixels). Every action, whether it's a tween, pointer, anything, has a `getVelocity` method. So we can use this method to provide a velocity to `physics` when a user stops dragging:
 
-```
+```javascript
 const { physics } = window.popmotion;
 function stopDrag() {
   if (activeAction) {
@@ -147,7 +147,7 @@ function stopDrag() {
 
 If you throw the slider gently, you'll see it move at the speed defined in `velocity`. But we need it to slow down, so we can provide a `friction` property to `physics`. Friction can be defined as `0`, no friction, or `1`, total friction. So let's set it to `0.2`, and you'll see it slow down very gradually.
 
-```
+```javascript
 activeAction = physics({
   from: sliderX,
   velocity: sliderVelocity,
@@ -168,7 +168,7 @@ In this instance we want the left boundary to be `0`, the left side of the scree
 
 So at the top of our script:
 
-```
+```javascript
 // Define the slider width
 const items = document.querySelectorAll('.box');
 const sliderWidth = items[items.length - 1].getBoundingClientRect().right;
@@ -192,7 +192,7 @@ Now we have the range of our permitted free movement, we can start applying spri
 
 Let's revisit our `startDrag` `onUpdate` function:
 
-```
+```javascript
 const onUpdate = flow(
   subtract(pointerX),
   add(sliderX),
@@ -208,7 +208,7 @@ We want to **conditionally** apply springs when our value is outside the permitt
 
 Here's our updated `onUpdate` function:
 
-```
+```javascript
 const SPRING_ELASTICITY = 5; // 0 is no elasticity
 const onUpdate = flow(
   subtract(pointerX),
@@ -240,7 +240,7 @@ The `physics` action itself actually has that capability, and we can use it to a
 
 First, let's change our `stopDrag` function to answer both of these eventualities:
 
-```
+```javascript
 const isOffLeft = (v) => (v >= range[0]);
 const isOffRight = (v) => (v <= range[1]);
 const isOutOfBounds = (v) => (isOffLeft(v) || isOffRight(v));
@@ -264,7 +264,7 @@ function stopDrag(e) {
 
 The first eventuality, a user releases their pointer while the slider is out of bounds, is a simple spring physics simulation to the nearest boundary:
 
-```
+```javascript
 function snapToNearestBoundary(offset, velocity) {
   activeAction = physics({
     from: offset,
@@ -288,7 +288,7 @@ We've set `spring` to a high value, `1000`. This produces a sharp action that fe
 
 Our momentum action is the same as our first `stopDrag` momentum effect, except now we can compose a new `onUpdate` that checks, once per frame, if the slider offset has drifted out of bounds.
 
-```
+```javascript
 function startMomentumScrolling(offset, velocity) {
   const onUpdate = flow(
     conditional(
@@ -326,17 +326,6 @@ If our value drifts out of bounds we use another `physics` action, with a much s
 
 And that's it! Only around 100 lines to make a snappy, responsive slider that works in a fairly declarative manner.
 
-The great thing about this kind of composition is it's quite easy to imagine how we can create configurable factory functions that return these kinds of value pipelines. They can then become sharable across a codebase or on npm.
-
-We could also have made `setSliderX` return the value it's provided. We'd then gain the flexibility of putting other functions after it in the `flow` chain. In the same vein, while debugging an interaction I often insert a function (not included with Popmotion) called `log` at various stages in a flow chain to quickly see how a value is being changed:
-
-```
-const log = (v) => {
-  console.log(label, v);
-  return v;
-}
-
-flow(plusOne, log, plusOne)(0);
-```
+The great thing about this kind of composition is it's quite easy to imagine how we can create configurable factory functions that return these value pipelines. They can then become sharable across a codebase or as modules on npm.
 
 This kind of composition is really changing the way I think about building interactions and I feel like there's a lot of potential to be explored in this area.
