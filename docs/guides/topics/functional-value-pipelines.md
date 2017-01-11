@@ -96,7 +96,7 @@ const value = plusThree(0);
 // value = 3
 ```
 
-As the `onUpdate` property is a function that receives a single parameter, the output of that action, we can easily compose a bunch of functions with `flow` and provide that.
+As an action's `onUpdate` is a function that's passed a single value, we can easily compose other functions into a single `onUpdate` function with `flow`.
 
 ```javascript
 const { transform } = window.popmotion;
