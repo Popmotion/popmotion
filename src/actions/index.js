@@ -88,6 +88,11 @@ class Action { // lawsuit - sorry
     return this;
   }
 
+  output(func) {
+    this.props.onUpdate = func;
+    return this;
+  }
+
   get() {
     return this.current;
   }

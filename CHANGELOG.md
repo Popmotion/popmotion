@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.3.0] 2017-11-01
+
+### Added
+- Actions now have an `output` shorthand for setting the `onUpdate` property.
+
 ## [6.2.1] 2017-09-01
 
 ### Added
