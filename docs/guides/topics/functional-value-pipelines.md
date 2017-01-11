@@ -85,7 +85,7 @@ This is where functional composition enters.
 
 ## Drag the list, properly
 
-Functional pipelines in Popmotion are composed from a bunch of functions that we refer to as [transformers](../../api/transformers.md). Transformers are simply pure functions that take a value, change it, and return it. Many transformers are curried, which means they take some properties and return a function that itself changes that value.
+Functional value pipelines in Popmotion are composed from multiple functions that we refer to as [transformers](../../api/transformers.md). Transformers are simply pure functions that take a value, change it, and return it. Many transformers are curried, which means they first take some configuration properties and return a function that itself changes that value.
 
 The glue of functional composition in Popmotion is the `flow` function. It takes a series of functions, and creates a new function where the provided argument is passed from left to right. Here's a completely arbitrary example:
 
