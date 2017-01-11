@@ -1,9 +1,9 @@
 ---
-title: Creating declarative interaction systems with composed value pipelines
+title: Create a momentum and spring-based slider with composed value pipelines
 description: This guide explains how we can build complex interaction behaviors out of very simple functional blocks.
 ---
 
-# Creating declarative interaction systems with composed value pipelines
+# Create a momentum and spring-based slider with composed value pipelines
 
 The purpose of [Popmotion](https://github.com/Popmotion/popmotion) is to raise the standard of animation and interactions on the web by making it simple to create polished and delightful UIs. In this guide, we're going to explore how basic functional composition can build complex behaviors from small and clear blocks of code.
 
