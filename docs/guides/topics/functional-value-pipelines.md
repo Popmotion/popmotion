@@ -269,9 +269,6 @@ function snapToNearestBoundary(offset, velocity) {
   activeAction = physics({
     from: offset,
     to: isOffLeft(offset) ? range[0] : range[1],
-    spring: 300,
-    friction: 0.9,
-    onUpdate: setSliderX,
     spring: 1000,
     friction: 0.98,
     velocity,
