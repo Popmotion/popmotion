@@ -7,6 +7,11 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Actions now have an `output` shorthand for setting the `onUpdate` property.
 
+## [6.3.1] 2017-11-01
+
+### Fixed
+- `transformChildValues` transformer now keeps a local mutable state rather than mutating the provided state.
+
 ## [6.2.1] 2017-09-01
 
 ### Added

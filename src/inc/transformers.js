@@ -1,6 +1,7 @@
-import { getProgressFromValue, getValueFromProgress, stepProgress } from './calc';
+import { getProgressFromValue, getValueFromProgress, stepProgress, smooth as calcSmoothing } from './calc';
 import { isString } from './utils';
 import { color as parseColor } from './parsers';
+import { timeSinceLastFrame } from '../framesync';
 
 const noop = (v) => v;
 
@@ -109,20 +110,33 @@ export const wrap = (min, max) => (v) => {
   return ((v - min) % rangeSize + rangeSize) % rangeSize + min;
 };
 
+export const smooth = (initialValue, smoothing) => {
+  let previousValue = initialValue;
+
+  return (v) => {
+    const newValue = calcSmoothing(v, previousValue, timeSinceLastFrame(), smoothing);
+    previousValue = newValue;
+    return newValue;
+  };
+};
+
 export const steps = (steps, min, max) => (v) => {
   const progress = getProgressFromValue(min, max, v);
   return stepProgress(steps, progress);
 };
 
-export const transformChildValues = (childTransformers) => (v) => {
-  for (let key in v) {
-    const childTransformer = childTransformers[key];
-    if (childTransformer) {
-      v[key] = childTransformer(v[key]);
+export const transformChildValues = (childTransformers) => {
+  const mutableState = {};
+  return (v) => {
+    for (let key in v) {
+      const childTransformer = childTransformers[key];
+      if (childTransformer) {
+        mutableState[key] = childTransformer(v[key]);
+      }
     }
-  }
 
-  return v;
+    return mutableState;
+  };
 };
 
 // Unit transformers
