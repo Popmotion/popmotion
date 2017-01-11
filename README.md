@@ -19,9 +19,9 @@ Popmotion is:
 [Slack](https://popmotion.slack.com)
 
 ## Examples
-- ~~Simple tween~~
-- ~~Bouncing ball with gravity~~
-- ~~Pointer tracking~~
+- ~~Simple tween~~ (Coming soon)
+- ~~Bouncing ball with gravity~~ (Coming soon)
+- ~~Pointer tracking~~ (Coming soon)
 - [Scrolling list with momentum and spring-loaded boundaries](http://codepen.io/popmotion/full/EZaPxZ/)
 - [Tween blending](http://codepen.io/popmotion/full/wgKpaj)
 - [Color blending](http://codepen.io/popmotion/full/dNPVwP)
