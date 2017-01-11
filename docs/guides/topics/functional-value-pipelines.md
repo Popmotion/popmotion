@@ -5,7 +5,7 @@ description: This guide explains how we can build complex interaction behaviors 
 
 # Create a momentum and spring-based slider with composed value pipelines
 
-The purpose of [Popmotion](https://github.com/Popmotion/popmotion) is to raise the standard of animation and interactions on the web by making it simple to create polished and delightful UIs. In this guide, we're going to explore how basic functional composition can build complex behaviors from small and clear blocks of code.
+In this guide, we're going to explore how you can use [Popmotion](https://github.com/Popmotion/popmotion) and basic functional composition to build complex behaviors from small, readable and testable units of code.
 
 We'll be using physics and pointer tracking to create a scrollable list of items that, when released, move with momentum and slow down via friction. The scroll will be bounded by springs, so when the list is dragged out of bounds it'll be "pulled" back by an iOS-esque spring.
 
