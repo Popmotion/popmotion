@@ -24,7 +24,7 @@ Popmotion is:
 - ~~Pointer tracking~~
 - [Scrolling list with momentum and spring-loaded boundaries](http://codepen.io/popmotion/full/EZaPxZ/)
 - [Tween blending](http://codepen.io/popmotion/full/wgKpaj)
-- [Colour blending](http://codepen.io/popmotion/full/dNPVwP)
+- [Color blending](http://codepen.io/popmotion/full/dNPVwP)
 
 ### [Full API documentation](docs/api)
 
