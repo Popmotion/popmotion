@@ -63,7 +63,7 @@ document.body.addEventListener('mouseup', stopDrag);
 
 ## Drag the list
 
-To now use this pointer to drag the list, we can give the pointer action a new `onUpdate` function that simply sets the `x` property on the renderer we created earlier. As `pointer` returns a [composite action](../../api/actions/composite), we can do this directly on its `x` value using the `output` shorthand method:
+To now use this pointer to drag the list, we can give the pointer action a new `onUpdate` function that simply sets the `x` property on the renderer we created earlier. As `pointer` returns a [composite action](../../api/actions/composite.md), we can do this directly on its `x` value using the `output` shorthand method:
 
 ```javascript
 // We'll be using this function a lot, so let's abstract it
@@ -85,7 +85,7 @@ This is where functional composition enters.
 
 ## Drag the list, properly
 
-Functional pipelines in Popmotion are composed from a bunch of functions that we refer to as [transformers](../../api/transformers). Transformers are simply pure functions that take a value, change it, and return it. Many transformers are curried, which means they take some properties and return a function that itself changes that value.
+Functional pipelines in Popmotion are composed from a bunch of functions that we refer to as [transformers](../../api/transformers.md). Transformers are simply pure functions that take a value, change it, and return it. Many transformers are curried, which means they take some properties and return a function that itself changes that value.
 
 The glue of functional composition in Popmotion is the `flow` function. It takes a series of functions, and creates a new function where the provided argument is passed from left to right. Here's a completely arbitrary example:
 
@@ -125,7 +125,7 @@ Now the slider correctly drags, but it feels a little weird to have it stop dead
 
 ## Scrolling momentum
 
-The [physics](../../api/physics) action takes a `velocity` property, measured in units per second (these units are usually pixels). Every action, whether it's a tween, pointer, anything, has a `getVelocity` method. So we can use this method to provide a velocity to `physics` when a user stops dragging:
+The [physics](../../api/actions/physics.md) action takes a `velocity` property, measured in units per second (these units are usually pixels). Every action, whether it's a tween, pointer, anything, has a `getVelocity` method. So we can use this method to provide a velocity to `physics` when a user stops dragging:
 
 ```javascript
 const { physics } = window.popmotion;
