@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.3.3] 2017-18-01
+
+### Added
+- `top`, `left`, `bottom` and `right` CSS renderer value types.
+
 ## [6.3.2] 2017-11-01
 
 ### Added
