@@ -11,8 +11,8 @@ function createTouches(newTouches, { eventToTouches, moveEvent, ...props }) {
     });
   }
   const touches = composite({
-    changed: composite(touchValues),
-    targetCount: value(newTouches.targetCount)
+    touchChanges: composite(touchValues),
+    touchCount: value(newTouches.touchCount)
   }, {
     preventDefault: true,
     ...props
@@ -26,16 +26,16 @@ function createTouches(newTouches, { eventToTouches, moveEvent, ...props }) {
     const newTouches = eventToTouches(e);
     for (const i in newTouches) {
       const { x, y } = newTouches[i];
-      if (touches.changed[i] != null) {
-        touches.changed[i].x.set(x);
-        touches.changed[i].y.set(y);
+      if (touches.touchChanges[i] != null) {
+        touches.touchChanges[i].x.set(x);
+        touches.touchChanges[i].y.set(y);
       } else {
-        touches.changed[i] = composite({
+        touches.touchChanges[i] = composite({
           x: value(x),
           y: value(y)
         });
       }
-      touches.targetCount.set(newTouches.targetCount);
+      touches.touchCount.set(newTouches.touchCount);
     }
   };
 
@@ -52,7 +52,7 @@ const mouseEventToTouches = (e) => {
     x: e.pageX,
     y: e.pageY
   }];
-  touches.targetCount = 1;
+  touches.touchCount = 1;
   return touches;
 };
 
@@ -65,7 +65,7 @@ const touchEventToTouches = ({ changedTouches, touches }) => {
       y: clientY
     };
   }
-  newTouches.targetCount = touches.length;
+  newTouches.touchCount = touches.length;
   return newTouches;
 };
 
