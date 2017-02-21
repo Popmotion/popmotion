@@ -23,10 +23,10 @@ colorTween({
 });
 ```
 
-## Methods
+## Props
 
 See: [Tween](tween.md)
 
-## Props
+## Methods
 
 See: [Tween](tween.md)
