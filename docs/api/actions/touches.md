@@ -16,26 +16,39 @@ Mouse movements will only ever generate a single touch.
 ```javascript
 import { touches } from 'popmotion';
 
-document.addEventListener('onTouchStart', (e) => {
-  touches(e, {
+let action;
+
+document.addEventListener('touchstart', (e) => {
+  if (action) action.stop();
+  action = touches(e, {
     preventDefault: true,
-    onUpdate: ({ touchChanges, touchCount }) => {
+    onUpdate: ({ targetTouches, touchCount }) => {
       console.log(
         `Total active touches: ${touchCount},
-         Array of changed {x,y} touches: ${touchChanges}`)
+         Array of in-scope touches: ${targetTouches}`)
     }
   }).start();
+});
+
+document.addEventListener('touchend', (e) => {
+  if (action) action.stop();
 });
 ```
 
 ## Properties
 
-* `touchChanges <Array<{x:Number,y:Number}>>`
-  * list of {x,y} coordinates from the `changedTouches` of `touchmove` event
+* `changedTouches <Array<{x:Number,y:Number}>>`
+  * list of client {x,y} coordinates from the TouchEvent's `changedTouches`
+  * mouse events are always a list of one
+* `targetTouches <Array<{x:Number,y:Number}>>`
+  * list of client {x,y} coordinates from the TouchEvent's `targetTouches`
+  * mouse events are always a list of one
+* `touches <Array<{x:Number,y:Number}>>`
+  * list of client {x,y} coordinates from the TouchEvent's `touches`
   * mouse events are always a list of one
 * `touchCount <Number>`
   * count of `touches` in the `touchmove` event
-  * includes all UI touches; may be greater than `touchChanges.length`
+  * includes all UI touches; may be greater than `changedTouches` or `targetTouches`
   * mouse events will always be `1`
 
 ## Props
