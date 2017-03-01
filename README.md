@@ -6,8 +6,8 @@ Create unique animations and interactions with tweens, physics and input trackin
 
 Popmotion is:
 - **Tiny:** At ~9kb, it's 75% smaller than GreenSock.
-- **Fast:** Stands up to alternatives in [performance tests](http://codepen.io/popmotion/pen/zNYXmR).
-- **Compatible:** Full browser support and preloaded with CSS and SVG renderers.
+- **Fast:** Stands up to popular alternatives in [performance tests](http://codepen.io/popmotion/pen/zNYXmR).
+- **Compatible:** Full browser support and preloaded with CSS, SVG and SVG path renderers.
 - **Composable:** Actions and output functions can be composed to [create complex motion systems](http://codepen.io/popmotion/pen/EZaPxZ).
 - **Advanced:** Sophisticated [tween](http://codepen.io/popmotion/pen/wgKpaj) and [color](http://codepen.io/popmotion/pen/dNPVwP) blending for the smoothest possible motion.
 - **Powerful:** [Discrete render step scheduling](docs/api/render-loop.md) allows full control over each frame.
@@ -20,7 +20,7 @@ Popmotion is:
 
 ## Examples
 - ~~Simple tween~~ (Coming soon)
-- ~~Bouncing ball with gravity~~ (Coming soon)
+- [Bouncing ball with gravity](http://codepen.io/popmotion/pen/egwMGQ)
 - ~~Pointer tracking~~ (Coming soon)
 - [Scrolling list with momentum and spring-loaded boundaries](http://codepen.io/popmotion/full/EZaPxZ/)
 - [Tween blending](http://codepen.io/popmotion/full/wgKpaj)
