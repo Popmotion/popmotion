@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.3.4] 2017-03-01
+
+## Fixed
+- Undocumented range easing property in `interpolate` transformer was looking at the wrong index.
+
 ## [6.3.3] 2017-18-01
 
 ### Added

@@ -86,7 +86,7 @@ export const interpolate = (input, output, rangeEasing) => {
     }
 
     const progressInRange = getProgressFromValue(input[i - 1], input[i], v);
-    const easedProgress = (rangeEasing) ? rangeEasing[i](progressInRange) : progressInRange;
+    const easedProgress = (rangeEasing) ? rangeEasing[i - 1](progressInRange) : progressInRange;
     return getValueFromProgress(output[i - 1], output[i], easedProgress);
   };
 };
