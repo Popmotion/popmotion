@@ -34,6 +34,15 @@ const convertToPx = appendUnit('px');
 convertToPx(5); // '5px'
 ```
 
+### `applyOffset`
+Takes the offset of the provided value from `from`, and applies it to `to`.
+
+`applyOffset(from <Number>, to <Number>)`
+
+```javascript
+applyOffset(0, 10)(20); // 30
+```
+
 ### `bezier`
 Returns a function that, provided a progress value from `0` to `1`, will return a resolved number from the provided bezier array.
 

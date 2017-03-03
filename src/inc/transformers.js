@@ -15,6 +15,20 @@ const noop = (v) => v;
 export const appendUnit = (unit) => (v) => `${v}${unit}`;
 
 /**
+ * Apply offset
+ * A function that, given a value, will get the offset from `from`
+ * and apply it to `to`
+ * @param  {number} from
+ * @param  {number} to
+ * @return {function}
+ */
+export const applyOffset = (from, to) => {
+  const getOffset = subtract(from);
+  const applyOffsetTo = add(to);
+  return (v) => applyOffsetTo(getOffset(v));
+};
+
+/**
  * Clamp value between
  * Creates a function that will restrict a given value between `min` and `max`
  * @param  {number} min

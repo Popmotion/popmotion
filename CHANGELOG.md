@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.3.5] 2017-03-03
+
+## Added
+- `applyOffset` transformer.
+
 ## [6.3.4] 2017-03-01
 
 ## Fixed
