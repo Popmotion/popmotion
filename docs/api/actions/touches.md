@@ -22,10 +22,10 @@ document.addEventListener('touchstart', (e) => {
   if (action) action.stop();
   action = touches(e, {
     preventDefault: true,
-    onUpdate: ({ targetTouches, touchCount }) => {
+    onUpdate: ({ touches, touchCount }) => {
       console.log(
-        `Total active touches: ${touchCount},
-         Array of in-scope touches: ${targetTouches}`)
+        `Touch count: ${touchCount},
+         Touch coordinates: ${touches}`)
     }
   }).start();
 });
@@ -37,18 +37,11 @@ document.addEventListener('touchend', (e) => {
 
 ## Properties
 
-* `changedTouches <Array<{x:Number,y:Number}>>`
-  * list of client {x,y} coordinates from the TouchEvent's `changedTouches`
-  * mouse events are always a list of one
-* `targetTouches <Array<{x:Number,y:Number}>>`
-  * list of client {x,y} coordinates from the TouchEvent's `targetTouches`
-  * mouse events are always a list of one
 * `touches <Array<{x:Number,y:Number}>>`
   * list of client {x,y} coordinates from the TouchEvent's `touches`
   * mouse events are always a list of one
 * `touchCount <Number>`
   * count of `touches` in the `touchmove` event
-  * includes all UI touches; may be greater than `changedTouches` or `targetTouches`
   * mouse events will always be `1`
 
 ## Props

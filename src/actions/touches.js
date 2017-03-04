@@ -1,10 +1,8 @@
 import value from './value';
 import composite from './composite';
 
-function createTouches({ changed, target, all }, { eventToTouches, moveEvent, ...props }) {
+function createTouches({ all }, { eventToTouches, moveEvent, ...props }) {
   const touches = composite({
-    changedTouches: mapCoordsToActions(changed),
-    targetTouches: mapCoordsToActions(target),
     touches: mapCoordsToActions(all),
     touchCount: value(all.length)
   }, {
@@ -16,9 +14,7 @@ function createTouches({ changed, target, all }, { eventToTouches, moveEvent, ..
     if (props.preventDefault) {
       e.preventDefault();
     }
-    const { changed, target, all } = eventToTouches(e);
-    updateActionWithTouches(touches, 'changedTouches', changed);
-    updateActionWithTouches(touches, 'targetTouches', target);
+    const { all } = eventToTouches(e);
     updateActionWithTouches(touches, 'touches', all);
     touches.touchCount.set(all.length);
   }
@@ -64,16 +60,12 @@ const mouseEventToTouches = ({ pageX, pageY }) => {
     y: pageY
   }];
   return {
-    changed: touches,
-    target: touches,
     all: touches
   };
 };
 
-const touchEventToTouches = ({ changedTouches, targetTouches, touches }) => {
+const touchEventToTouches = ({ touches }) => {
   return {
-    changed: extractCoords(changedTouches),
-    target: extractCoords(targetTouches),
     all: extractCoords(touches)
   };
 };
