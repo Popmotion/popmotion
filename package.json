@@ -41,8 +41,9 @@
   "scripts": {
     "build": "babel src --out-dir lib && NODE_ENV=production webpack && npm run measure",
     "watch": "NODE_ENV=development webpack --progress --colors --watch",
-    "build-site": "webpack --config webpack.site.config.js",
-    "watch-site": "webpack --config webpack.site.config.js --watch",
+    "build-site": "next build site",
+    "watch-site": "next site",
+    "start-site": "next start site",
     "measure": "gzip -c dist/popmotion.global.min.js | wc -c",
     "test": "jest",
     "prepublish": "rm -rf lib && npm run build && npm run test"
@@ -89,5 +90,12 @@
   "jest": {
     "testRegex": "_tests/[^_].*\\.js$",
     "rootDir": "src"
+  },
+  "dependencies": {
+    "isomorphic-fetch": "^2.2.1",
+    "next": "^2.0.1",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "styled-components": "^1.4.4"
   }
 }
