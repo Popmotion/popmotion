@@ -1,7 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import styled from 'styled-components';
-import regeneratorRuntime from 'regenerator-runtime/runtime';
+import Page from '../components/layout/Page';
 
 const Title = styled.h1`
   color: blue
@@ -9,11 +9,11 @@ const Title = styled.h1`
 
 export default () => {
   return (
-    <div>
+    <Page>
       <Head>
         <title>Popmotion</title>
       </Head>
       <Title>Hello world</Title>
-    </div>
+    </Page>
   );
 };
