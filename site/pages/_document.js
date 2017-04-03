@@ -1,5 +1,5 @@
 import React from 'react';
-import 'regenerator-runtime/runtime';
+import regeneratorRuntime from 'regenerator-runtime/runtime';
 import Document, { Head, Main, NextScript } from 'next/document';
 import styleSheet from 'styled-components/lib/models/StyleSheet';
 

@@ -3,8 +3,8 @@ import Head from 'next/head';
 import styled from 'styled-components';
 import MTRC from 'markdown-to-react-components';
 import frontMatter from 'front-matter';
-import 'isomorphic-fetch';
 import regeneratorRuntime from 'regenerator-runtime/runtime';
+import 'isomorphic-fetch';
 
 const Title = styled.h1`
   color: blue
