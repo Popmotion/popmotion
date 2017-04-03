@@ -7,12 +7,15 @@ description: Optimised CSS renderer.
 
 The CSS renderer provides a simple and optimised `get`/`set` interface for DOM elements.
 
-`css(element <Node>)`
+`css(element <Node>, props <Object>)`
 
 ## Methods
 - `get(key <String>`: Get the property of the provided key.
 - `set(props <Object>)` | `set(key <String>, value)`: Set provided property(s) and schedule render for next frame.
 - `render()`: Immediately render.
+
+## Props
+- `enableHardwareAcceleration <Boolean>`: (default: `true`)
 
 ## Getting `transform` properties
 If a `transform` property isn't present in the caching layer (because it hasn't previously been set by the developer), firing `get` on a property will return its default value (`1` for scale props, `0` for others).

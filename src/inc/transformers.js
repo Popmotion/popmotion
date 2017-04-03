@@ -1,6 +1,7 @@
-import { getProgressFromValue, getValueFromProgress, stepProgress } from './calc';
+import { getProgressFromValue, getValueFromProgress, stepProgress, smooth as calcSmoothing } from './calc';
 import { isString } from './utils';
 import { color as parseColor } from './parsers';
+import { timeSinceLastFrame } from '../framesync';
 
 const noop = (v) => v;
 
@@ -12,6 +13,20 @@ const noop = (v) => v;
  * @return {number}
  */
 export const appendUnit = (unit) => (v) => `${v}${unit}`;
+
+/**
+ * Apply offset
+ * A function that, given a value, will get the offset from `from`
+ * and apply it to `to`
+ * @param  {number} from
+ * @param  {number} to
+ * @return {function}
+ */
+export const applyOffset = (from, to) => {
+  const getOffset = subtract(from);
+  const applyOffsetTo = add(to);
+  return (v) => applyOffsetTo(getOffset(v));
+};
 
 /**
  * Clamp value between
@@ -85,7 +100,7 @@ export const interpolate = (input, output, rangeEasing) => {
     }
 
     const progressInRange = getProgressFromValue(input[i - 1], input[i], v);
-    const easedProgress = (rangeEasing) ? rangeEasing[i](progressInRange) : progressInRange;
+    const easedProgress = (rangeEasing) ? rangeEasing[i - 1](progressInRange) : progressInRange;
     return getValueFromProgress(output[i - 1], output[i], easedProgress);
   };
 };
@@ -109,20 +124,36 @@ export const wrap = (min, max) => (v) => {
   return ((v - min) % rangeSize + rangeSize) % rangeSize + min;
 };
 
+export const smooth = (strength = 50) => {
+  let previousValue = 0;
+  let hasSmoothed = false;
+
+  return (v) => {
+    const currentValue = (hasSmoothed) ? previousValue : v;
+    const newValue = calcSmoothing(currentValue, previousValue, timeSinceLastFrame(), strength);
+    previousValue = newValue;
+    hasSmoothed = true;
+    return newValue;
+  };
+};
+
 export const steps = (steps, min, max) => (v) => {
   const progress = getProgressFromValue(min, max, v);
   return stepProgress(steps, progress);
 };
 
-export const transformChildValues = (childTransformers) => (v) => {
-  for (let key in v) {
-    const childTransformer = childTransformers[key];
-    if (childTransformer) {
-      v[key] = childTransformer(v[key]);
+export const transformChildValues = (childTransformers) => {
+  const mutableState = {};
+  return (v) => {
+    for (let key in v) {
+      const childTransformer = childTransformers[key];
+      if (childTransformer) {
+        mutableState[key] = childTransformer(v[key]);
+      }
     }
-  }
 
-  return v;
+    return mutableState;
+  };
 };
 
 // Unit transformers

@@ -1,3 +1,5 @@
+import { bezier } from './transformers';
+
 const DEFAULT_OVERSHOOT_STRENGTH = 1.525;
 
 export const createReversedEasing = (easing) => (p) => 1 - easing(1 - p);
@@ -25,3 +27,10 @@ export const createAnticipateEasing = (power) => {
 };
 
 export const anticipate = createAnticipateEasing(DEFAULT_OVERSHOOT_STRENGTH);
+
+export const cubicBezier = (x1, y1, x2, y2) => {
+  const xBezier = bezier(0, x1, x2, 1);
+  const yBezier = bezier(0, y1, y2, 1);
+
+  return (t) => yBezier(xBezier(t));
+};

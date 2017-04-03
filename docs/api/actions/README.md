@@ -38,6 +38,7 @@ customAction.start();
 - `complete`: Stop an action and mark as complete. Fires `onStop` and `onComplete` callbacks.
 - `setProps(<Object>)`: Updates `props`.
 - `getProp(<String>)`: Returns the named property.
+- `output(<Function>)`: Shorthand for updating the `onUpdate` property.
 
 ## Props
 

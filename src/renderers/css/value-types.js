@@ -18,6 +18,10 @@ export default {
   // Positioning
   width: px,
   height: px,  
+  top: px,
+  left: px,
+  bottom: px,
+  right: px,
 
   // Transform properties
   rotate: degrees,

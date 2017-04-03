@@ -1,5 +1,6 @@
 import {
   appendUnit,
+  applyOffset,
   bezier,
   clamp,
   clampMax,
@@ -22,6 +23,12 @@ import {
 describe('appendUnit()', () => {
   it('should return a function that appends a unit to provided numbers', () => {
     expect(appendUnit('px')(5)).toBe('5px');
+  });
+});
+
+describe('applyOffset()', () => {
+  it('should return a function that applys the offset from `from` and apply it to `to`', () => {
+    expect(applyOffset(0, 10)(20)).toBe(30);
   });
 });
 

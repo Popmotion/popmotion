@@ -19,7 +19,7 @@ Developers can set any function to run at any of these steps using the `on` and 
 - `onFrameRender`, `cancelOnFrameRender`: Renderers render here
 - `onFrameEnd`, `cancelOnFrameEnd`
 
-`timeSinceLastFrame` and `currentFrameTimestamp` callbacks are also available to understand
+`timeSinceLastFrame` and `currentFrameTimestamp` methods allow frame-locked time measurements.
 
 ### Example
 
