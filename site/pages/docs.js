@@ -4,11 +4,15 @@ import styled from 'styled-components';
 import MTRC from 'markdown-to-react-components';
 import frontMatter from 'front-matter';
 import 'isomorphic-fetch';
-import 'regenerator-runtime/runtime';
+import regeneratorRuntime from 'regenerator-runtime/runtime';
 
 const Title = styled.h1`
   color: blue
 `;
+
+MTRC.configure({
+  h1: Title
+});
 
 export default class extends React.Component {
   static async getInitialProps({ query: { id }}) {
@@ -24,23 +28,24 @@ export default class extends React.Component {
     const doc = await response.text();
     const { attributes, body } = frontMatter(doc);
     const { title, description } = attributes;
-    const pageContent = MTRC(body).tree;
 
     return {
       title,
       description,
-      pageContent
+      body
     };
   }
 
-  render(props) {
-    console.log(props)
+  render() {
+    const { title, description, body } = this.props;
+    const content = MTRC(body).tree;
+
     return (
       <div>
         <Head>
-          <title>test</title>
+          <title>{title}</title>
         </Head>
-        <Title>Docs</Title>
+        {content}
       </div>
     );
   }
