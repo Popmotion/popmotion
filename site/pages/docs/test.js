@@ -44,7 +44,7 @@ export default class extends React.Component {
         <Head>
           <title>{title}</title>
         </Head>
-        {content}
+        oooh
       </div>
     );
   }

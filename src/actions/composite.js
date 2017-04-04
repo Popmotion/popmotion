@@ -1,5 +1,4 @@
 import Action from './';
-import { onFrameUpdate } from '../framesync';
 
 class CompositeAction extends Action {
   constructor(props) {
@@ -18,7 +17,7 @@ class CompositeAction extends Action {
 
       this[key] = actions[key];
 
-      const onUpdate = (v) => this.current[key] = v;;
+      const onUpdate = (v) => this.current[key] = v;
 
       // Immediately update with the current action state
       onUpdate(this[key].get());

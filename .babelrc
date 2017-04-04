@@ -9,7 +9,11 @@
     "transform-export-extensions",
     "transform-react-jsx",
     "transform-react-constant-elements",
-    "transform-strict-mode"
+    "transform-strict-mode",
+    ["transform-runtime", {
+      "helpers": false,
+      "polyfill": false
+    }]
   ],
   "env": {
     "development": {
