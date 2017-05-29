@@ -1,6 +1,7 @@
 ---
 title: CSS Renderer
 description: Optimised CSS renderer.
+category: renderers
 ---
 
 # CSS Renderer

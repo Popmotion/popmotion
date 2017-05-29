@@ -1,6 +1,7 @@
 ---
 title: Physics
 description: Simulate velocity, acceleration, friction and spring physics.
+category: actions
 ---
 
 # Physics

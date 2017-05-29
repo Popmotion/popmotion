@@ -1,6 +1,7 @@
 ---
 title: Cross Fade
 description: Fade between any two actions.
+category: actions
 ---
 
 # Cross Fade
@@ -17,7 +18,7 @@ The "fader", a third action that provides a progress value from `0` to `1`, dict
 - `to <Tween>`: The tween to fade to.
 - `duration <Number>`: Duration of fade (default: `300`).
 - `ease <Function>`: Easing for the fade tween (default: `linear`).
-- `fader <Action>`: Optional action, that outputs between `0` and `1`, to use to fade between the two actions. 
+- `fader <Action>`: Optional action, that outputs between `0` and `1`, to use to fade between the two actions.
 
 ## Example
 

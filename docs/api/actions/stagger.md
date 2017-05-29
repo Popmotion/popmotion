@@ -1,6 +1,7 @@
 ---
 title: Stagger
 description: Stagger the start of a series of a actions.
+category: actions
 ---
 
 # Stagger

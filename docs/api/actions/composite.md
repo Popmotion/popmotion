@@ -1,6 +1,7 @@
 ---
 title: Composite
-description: 
+description: Control multiple named actions simultaneously.
+category: actions
 ---
 
 # Composite Action

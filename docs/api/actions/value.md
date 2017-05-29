@@ -1,6 +1,7 @@
 ---
 title: Value
 description: A simple value that updates when a new number is passed to `set`.
+category: actions
 ---
 
 # Value

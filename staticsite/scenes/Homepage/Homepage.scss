@@ -1,9 +1,0 @@
-@import '../../styles/settings';
-
-.container {
-  @include font-bold;
-
-  h2 {
-    @include font-size($font-xxl);
-  }
-}
