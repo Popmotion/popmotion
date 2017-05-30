@@ -1,8 +1,16 @@
 
 import markdown from 'markdown-in-js';
+import { A, H1, H2, H3, P, Code } from '~/components/primatives';
 import ContentTemplate from '~/components/layout/Content';
 
-const Content = () => markdown`
+const Content = () => markdown({
+  a: A,
+  h1: H1,
+  h2: H2,
+  h3: H3,
+  p: P,
+  code: Code
+})`
 # Cross Fade
 
 Fade between any two actions with the Cross Fade action. It creates a new value, interpolated between the output of two existing actions.

@@ -1,14 +1,23 @@
 
 import markdown from 'markdown-in-js';
+import { A, H1, H2, H3, P, Code } from '~/components/primatives';
 import ContentTemplate from '~/components/layout/Content';
 
-const Content = () => markdown`
+const Content = () => markdown({
+  a: A,
+  h1: H1,
+  h2: H2,
+  h3: H3,
+  p: P,
+  code: Code
+})`
 # Blend Tweens
 
 ## Example
 
 \`\`\`javascript
-import { tween, blendTweens } from 'popmotion';
+import { tween } from 'popmotion';
+import blendTween from 'popmotion/lib/actions/blend-tween';
 
 const logValue = (v) => console.log(v);
 

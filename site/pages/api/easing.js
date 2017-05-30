@@ -1,8 +1,16 @@
 
 import markdown from 'markdown-in-js';
+import { A, H1, H2, H3, P, Code } from '~/components/primatives';
 import ContentTemplate from '~/components/layout/Content';
 
-const Content = () => markdown`
+const Content = () => markdown({
+  a: A,
+  h1: H1,
+  h2: H2,
+  h3: H3,
+  p: P,
+  code: Code
+})`
 # Easing
 
 Easing functions make tweened motion look more natural by emulating the changes in velocity experienced by objects in the real world.

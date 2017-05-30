@@ -1,8 +1,16 @@
 
 import markdown from 'markdown-in-js';
+import { A, H1, H2, H3, P, Code } from '~/components/primatives';
 import ContentTemplate from '~/components/layout/Content';
 
-const Content = () => markdown`
+const Content = () => markdown({
+  a: A,
+  h1: H1,
+  h2: H2,
+  h3: H3,
+  p: P,
+  code: Code
+})`
 # Transformers
 
 An Action's \`onUpdate\` prop is a callback receives \`value\` as an argument. We can use transformers to change and filter this value before using it:

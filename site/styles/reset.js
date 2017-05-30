@@ -1,3 +1,6 @@
+import { bodyFont, codeFont } from '~/styles/fonts';
+import { BLACK, LINK } from '~/styles/vars';
+
 export default `
 * {
   box-sizing: border-box;
@@ -5,10 +8,11 @@ export default `
   padding: 0;
   border: 0;
   outline: 0;
-  font-weight: inherit;
   font-style: inherit;
   font-size: 100%;
-  font-family: inherit;
+  color: ${BLACK};
+  ${bodyFont}
+  font-weight: inherit;
   line-height: 1;
   vertical-align: baseline;
   word-wrap: break-word;
@@ -203,8 +207,7 @@ code,
 kbd,
 pre,
 samp {
-  font-family: monospace, monospace; /* 1 */
-  font-size: 1em; /* 2 */
+  ${codeFont}
 }
 
 /**

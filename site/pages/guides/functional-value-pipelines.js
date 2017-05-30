@@ -1,8 +1,16 @@
 
 import markdown from 'markdown-in-js';
+import { A, H1, H2, H3, P, Code } from '~/components/primatives';
 import ContentTemplate from '~/components/layout/Content';
 
-const Content = () => markdown`
+const Content = () => markdown({
+  a: A,
+  h1: H1,
+  h2: H2,
+  h3: H3,
+  p: P,
+  code: Code
+})`
 # Create a momentum and spring-based slider with composed value pipelines
 
 In this guide, we're going to explore how you can use [Popmotion](https://github.com/Popmotion/popmotion) and basic functional composition to build complex behaviors from small, readable and testable units of code.

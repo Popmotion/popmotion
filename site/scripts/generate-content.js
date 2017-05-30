@@ -49,7 +49,7 @@ function generateContent(rootDir, fullDir) {
   });
 }
 
-const topLevel = fs.readdirSync(contentPath);
+const topLevel = fs.readdirSync(contentPath).filter(filterFilenames);
 topLevel.forEach((dir) => generateContent(dir));
 
 fs.writeFile(contentMetadataOutputPath, JSON.stringify(siteMetadata), (err) => {
