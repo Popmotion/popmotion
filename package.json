@@ -42,7 +42,7 @@
     "build": "babel src --out-dir lib && NODE_ENV=production webpack && npm run measure",
     "watch": "NODE_ENV=development webpack --progress --colors --watch",
     "build-content": "node site/scripts/generate-content.js",
-    "build-site": "next build site && next export -o dist/site",
+    "build-site": "npm run build-content && next build site && next export site -o dist/site",
     "watch-site": "next site",
     "start-site": "next start site",
     "lint-site": "eslint site",

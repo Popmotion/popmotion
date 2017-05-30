@@ -26,7 +26,7 @@ const bar = tween({
 foo.start();
 
 setTimeout(() => {
-  // Unset the first tween's \`onUpdate\`
+  // Unset the first tween's onUpdate
   foo.setProps({
     onUpdate: undefined
   });

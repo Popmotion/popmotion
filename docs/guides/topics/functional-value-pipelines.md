@@ -109,11 +109,11 @@ function startDrag(e) {
   const pointerX = activeAction.x.get();
   const sliderX = sliderRenderer.get('x');
   const onUpdate = flow(
-    // Step 1: Measure the offset from the pointer's `x` origin
+    // Step 1: Measure the offset from the pointer's x origin
     subtract(pointerX),
-    // Step 2: Apply that offset to the slider's `x` origin
+    // Step 2: Apply that offset to the slider's x origin
     add(sliderX),
-    // Step 3: Set slider `x`
+    // Step 3: Set slider x
     setSliderX
   );
 

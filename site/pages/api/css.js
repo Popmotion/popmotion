@@ -39,7 +39,7 @@ const divRenderer = css(div);
 
 divRenderer.get('opacity'); // Reads opacity from div
 divRenderer.set({
-  x: 10, // default value types to \`px\`
+  x: 10, // default value types to px
   y: 10
 }); // set and schedule for render
 \`\`\`

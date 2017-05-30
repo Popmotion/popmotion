@@ -113,8 +113,8 @@ const tetherToZero = conditional(
   (v) => v < LIMIT,
   spring(5, LIMIT)
 );
-tetherToZero(-20); // passed to `spring`
-tetherToZero(50); // not passed to `spring`
+tetherToZero(-20); // passed to spring
+tetherToZero(50); // not passed to spring
 ```
 
 ### `flow`

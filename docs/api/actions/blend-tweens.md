@@ -9,7 +9,8 @@ category: actions
 ## Example
 
 ```javascript
-import { tween, blendTweens } from 'popmotion';
+import { tween } from 'popmotion';
+import blendTween from 'popmotion/lib/actions/blend-tween';
 
 const logValue = (v) => console.log(v);
 
@@ -27,7 +28,7 @@ const bar = tween({
 foo.start();
 
 setTimeout(() => {
-  // Unset the first tween's `onUpdate`
+  // Unset the first tween's onUpdate
   foo.setProps({
     onUpdate: undefined
   });
