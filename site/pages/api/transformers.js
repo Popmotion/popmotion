@@ -113,8 +113,8 @@ const tetherToZero = conditional(
   (v) => v < LIMIT,
   spring(5, LIMIT)
 );
-tetherToZero(-20); // passed to \`spring\`
-tetherToZero(50); // not passed to \`spring\`
+tetherToZero(-20); // passed to spring
+tetherToZero(50); // not passed to spring
 \`\`\`
 
 ### \`flow\`
@@ -288,10 +288,10 @@ Appends 'px' unit type.
 px(10); // '10px'
 \`\`\`
 `;
-
-export default () => (
+const Page = ({ section }) => (
   <ContentTemplate
     id="transformers"
+    section={section}
     category="undefined"
     title="Transformers"
     description="Simple composable functions that take a value and return a new one."
@@ -299,3 +299,10 @@ export default () => (
     <Content />
   </ContentTemplate>
 );
+
+Page.getInitialProps = async ({ pathname }) => {
+  const [, section] = pathname.split('/');
+  return { section };
+};
+
+export default Page;

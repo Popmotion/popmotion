@@ -11,10 +11,10 @@ const Content = () => markdown`
 
 - \`set <Number>\`: Updates \`current\` and schedules an update.
 `;
-
-export default () => (
+const Page = ({ section }) => (
   <ContentTemplate
     id="value"
+    section={section}
     category="actions"
     title="Value"
     description="A simple value that updates when a new number is passed to `set`."
@@ -22,3 +22,10 @@ export default () => (
     <Content />
   </ContentTemplate>
 );
+
+Page.getInitialProps = async ({ pathname }) => {
+  const [, section] = pathname.split('/');
+  return { section };
+};
+
+export default Page;

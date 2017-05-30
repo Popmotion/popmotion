@@ -5,10 +5,10 @@ import markdown from 'markdown-in-js';
 import ContentTemplate from '~/components/layout/Content';
 
 const Content = () => markdown\`${escapeBackticks(body)}\`;
-
-export default () => (
+const Page = ({ section }) => (
   <ContentTemplate
     id="${id}"
+    section={section}
     category="${category}"
     title="${title}"
     description="${description}"
@@ -16,4 +16,11 @@ export default () => (
     <Content />
   </ContentTemplate>
 );
+
+Page.getInitialProps = async ({ pathname }) => {
+  const [, section] = pathname.split('/');
+  return { section };
+};
+
+export default Page;
 `;

@@ -27,10 +27,10 @@ const mappedTweens = [].slice.call(divs).map((element) => {
 stagger(mappedTweens, 50, () => console.log('done!'));
 \`\`\`
 `;
-
-export default () => (
+const Page = ({ section }) => (
   <ContentTemplate
     id="stagger"
+    section={section}
     category="actions"
     title="Stagger"
     description="Stagger the start of a series of a actions."
@@ -38,3 +38,10 @@ export default () => (
     <Content />
   </ContentTemplate>
 );
+
+Page.getInitialProps = async ({ pathname }) => {
+  const [, section] = pathname.split('/');
+  return { section };
+};
+
+export default Page;

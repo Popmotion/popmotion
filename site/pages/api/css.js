@@ -44,10 +44,10 @@ divRenderer.set({
 }); // set and schedule for render
 \`\`\`
 `;
-
-export default () => (
+const Page = ({ section }) => (
   <ContentTemplate
     id="css"
+    section={section}
     category="renderers"
     title="CSS Renderer"
     description="Optimised CSS renderer."
@@ -55,3 +55,10 @@ export default () => (
     <Content />
   </ContentTemplate>
 );
+
+Page.getInitialProps = async ({ pathname }) => {
+  const [, section] = pathname.split('/');
+  return { section };
+};
+
+export default Page;

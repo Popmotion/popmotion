@@ -34,10 +34,10 @@ const fadeBetween = crossFade({
 });
 \`\`\`
 `;
-
-export default () => (
+const Page = ({ section }) => (
   <ContentTemplate
     id="cross-fade"
+    section={section}
     category="actions"
     title="Cross Fade"
     description="Fade between any two actions."
@@ -45,3 +45,10 @@ export default () => (
     <Content />
   </ContentTemplate>
 );
+
+Page.getInitialProps = async ({ pathname }) => {
+  const [, section] = pathname.split('/');
+  return { section };
+};
+
+export default Page;

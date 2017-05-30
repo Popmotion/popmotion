@@ -111,10 +111,10 @@ Convert speed per frame into speed per second.
 
 \`speedPerSecond(speedPerFrame <Number>, frameDuration <Number>)\`
 `;
-
-export default () => (
+const Page = ({ section }) => (
   <ContentTemplate
     id="calc"
+    section={section}
     category="undefined"
     title="Calculators"
     description="Simple functions useful in UI calculations."
@@ -122,3 +122,10 @@ export default () => (
     <Content />
   </ContentTemplate>
 );
+
+Page.getInitialProps = async ({ pathname }) => {
+  const [, section] = pathname.split('/');
+  return { section };
+};
+
+export default Page;

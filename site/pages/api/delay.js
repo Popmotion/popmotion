@@ -23,10 +23,10 @@ chain([
 ]).start();
 \`\`\`
 `;
-
-export default () => (
+const Page = ({ section }) => (
   <ContentTemplate
     id="delay"
+    section={section}
     category="actions"
     title="Delay"
     description="A dummy action that completes after a set duration of time."
@@ -34,3 +34,10 @@ export default () => (
     <Content />
   </ContentTemplate>
 );
+
+Page.getInitialProps = async ({ pathname }) => {
+  const [, section] = pathname.split('/');
+  return { section };
+};
+
+export default Page;

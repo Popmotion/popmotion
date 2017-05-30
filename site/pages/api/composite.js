@@ -22,10 +22,10 @@ const tweenShadowCSSValue = composite({
 }).start();
 \`\`\`
 `;
-
-export default () => (
+const Page = ({ section }) => (
   <ContentTemplate
     id="composite"
+    section={section}
     category="actions"
     title="Composite"
     description="Control multiple named actions simultaneously."
@@ -33,3 +33,10 @@ export default () => (
     <Content />
   </ContentTemplate>
 );
+
+Page.getInitialProps = async ({ pathname }) => {
+  const [, section] = pathname.split('/');
+  return { section };
+};
+
+export default Page;

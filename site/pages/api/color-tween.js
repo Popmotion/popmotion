@@ -31,10 +31,10 @@ See: [Tween](tween.md)
 
 See: [Tween](tween.md)
 `;
-
-export default () => (
+const Page = ({ section }) => (
   <ContentTemplate
     id="color-tween"
+    section={section}
     category="actions"
     title="Color Tween"
     description="Blends from one color to another using linear interpolation."
@@ -42,3 +42,10 @@ export default () => (
     <Content />
   </ContentTemplate>
 );
+
+Page.getInitialProps = async ({ pathname }) => {
+  const [, section] = pathname.split('/');
+  return { section };
+};
+
+export default Page;

@@ -79,10 +79,10 @@ const { createAnticipateEasing } = easing;
 const strongerAnticipate = createAnticipateEasing(3);
 \`\`\`
 `;
-
-export default () => (
+const Page = ({ section }) => (
   <ContentTemplate
     id="easing"
+    section={section}
     category="undefined"
     title="Easing"
     description="Functions that speed or slow a tween over time."
@@ -90,3 +90,10 @@ export default () => (
     <Content />
   </ContentTemplate>
 );
+
+Page.getInitialProps = async ({ pathname }) => {
+  const [, section] = pathname.split('/');
+  return { section };
+};
+
+export default Page;

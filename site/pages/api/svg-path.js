@@ -7,10 +7,10 @@ const Content = () => markdown`
 
 - Docs coming soon
 `;
-
-export default () => (
+const Page = ({ section }) => (
   <ContentTemplate
     id="svg-path"
+    section={section}
     category="renderers"
     title="SVG Path Renderer"
     description="Optimised SVG Path renderer."
@@ -18,3 +18,10 @@ export default () => (
     <Content />
   </ContentTemplate>
 );
+
+Page.getInitialProps = async ({ pathname }) => {
+  const [, section] = pathname.split('/');
+  return { section };
+};
+
+export default Page;

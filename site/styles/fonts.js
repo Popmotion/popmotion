@@ -1,18 +1,13 @@
-const font = `font-family: 'Montserrat', sans-serif;`;
-
 const fontWeight = (weight) => `font-weight: ${weight};`;
-const uppercase = 'text-transform: uppercase;'
 
-export const thickHeadline = `
-  ${font}
-  ${fontWeight(700)}
-  ${uppercase}
+export const bodyFont = `
+  font-family: 'Source Sans Pro', sans-serif;
+  ${fontWeight(300)}
 `;
 
-export const thinHeadline = `
-  ${font}
-  ${fontWeight(300)}
-  ${uppercase}
+export const codeFont = `
+  font-family: 'Inconsolata', monospace;
+  ${fontWeight(400)}
 `;
 
 export const fontSize = (size) => `

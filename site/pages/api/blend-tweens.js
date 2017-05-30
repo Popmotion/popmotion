@@ -43,10 +43,10 @@ setTimeout(() => {
 - \`from <Tween>\`: The tween to blend from.
 - \`to <Tween>\`: The tween to blend to.
 `;
-
-export default () => (
+const Page = ({ section }) => (
   <ContentTemplate
     id="blend-tweens"
+    section={section}
     category="actions"
     title="Blend Tweens"
     description="Blend between two tweens using a bezier interpolator."
@@ -54,3 +54,10 @@ export default () => (
     <Content />
   </ContentTemplate>
 );
+
+Page.getInitialProps = async ({ pathname }) => {
+  const [, section] = pathname.split('/');
+  return { section };
+};
+
+export default Page;

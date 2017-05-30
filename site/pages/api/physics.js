@@ -18,10 +18,10 @@ Simulate velocity, acceleration, friction and spring physics.
 - \`spring <Number>\`: If non-zero and \`to\` is set, decides the intensity of the "pull" of \`to\`.
 - \`to <Number>\`: If set, is used as an anchor for spring physics simulations.
 `;
-
-export default () => (
+const Page = ({ section }) => (
   <ContentTemplate
     id="physics"
+    section={section}
     category="actions"
     title="Physics"
     description="Simulate velocity, acceleration, friction and spring physics."
@@ -29,3 +29,10 @@ export default () => (
     <Content />
   </ContentTemplate>
 );
+
+Page.getInitialProps = async ({ pathname }) => {
+  const [, section] = pathname.split('/');
+  return { section };
+};
+
+export default Page;

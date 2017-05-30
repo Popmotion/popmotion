@@ -1,7 +1,7 @@
 export default ({
   className,
-  from='#c000fe',
-  to='#fd0c74'
+  from='#fff',
+  to='#fff'
 }) => {
   return (
     <svg className={className} width="165" height="64" viewBox="0 0 200 41">

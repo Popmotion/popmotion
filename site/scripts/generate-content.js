@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const frontMatter = require('front-matter');
 const generatePage = require('./generate-content-page');
+const generateMenus = require('./generate-menus');
 const filterFilenames = require('./filter-filenames');
 const buildNextConfig = require('./build-next-config');
 
@@ -56,4 +57,5 @@ fs.writeFile(contentMetadataOutputPath, JSON.stringify(siteMetadata), (err) => {
   console.log(msg);
 });
 
+generateMenus(siteMetadata);
 buildNextConfig(siteMetadata);

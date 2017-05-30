@@ -44,10 +44,10 @@ function stopLogging() {
 setTimeout(stopLogging, 5000);
 \`\`\`
 `;
-
-export default () => (
+const Page = ({ section }) => (
   <ContentTemplate
     id="render-loop"
+    section={section}
     category="undefined"
     title="Render Loop"
     description="Schedule functions to run on Popmotion's internal render loop."
@@ -55,3 +55,10 @@ export default () => (
     <Content />
   </ContentTemplate>
 );
+
+Page.getInitialProps = async ({ pathname }) => {
+  const [, section] = pathname.split('/');
+  return { section };
+};
+
+export default Page;

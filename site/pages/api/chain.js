@@ -20,10 +20,10 @@ chain([
 ]).start();
 \`\`\`
 `;
-
-export default () => (
+const Page = ({ section }) => (
   <ContentTemplate
     id="chain"
+    section={section}
     category="actions"
     title="Chain"
     description="Chain a linear sequence of actions."
@@ -31,3 +31,10 @@ export default () => (
     <Content />
   </ContentTemplate>
 );
+
+Page.getInitialProps = async ({ pathname }) => {
+  const [, section] = pathname.split('/');
+  return { section };
+};
+
+export default Page;

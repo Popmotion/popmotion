@@ -26,10 +26,10 @@ document.addEventListener('mousedown', (e) => {
 
 - \`preventDefault <Boolean>\`: If \`true\`, fire \`preventDefault\` on \`mousemove\` or \`touchmove\` events (default \`true\`)
 `;
-
-export default () => (
+const Page = ({ section }) => (
   <ContentTemplate
     id="pointer"
+    section={section}
     category="actions"
     title="Pointer"
     description="Tracks mouse and touch movement."
@@ -37,3 +37,10 @@ export default () => (
     <Content />
   </ContentTemplate>
 );
+
+Page.getInitialProps = async ({ pathname }) => {
+  const [, section] = pathname.split('/');
+  return { section };
+};
+
+export default Page;

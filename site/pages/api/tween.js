@@ -28,10 +28,10 @@ Flip the tween's \`from\` and \`to\`.
 ### \`reverse\`
 Reverse the tween's progress through time.
 `;
-
-export default () => (
+const Page = ({ section }) => (
   <ContentTemplate
     id="tween"
+    section={section}
     category="actions"
     title="Tween"
     description="Change a value over a specific duration of time."
@@ -39,3 +39,10 @@ export default () => (
     <Content />
   </ContentTemplate>
 );
+
+Page.getInitialProps = async ({ pathname }) => {
+  const [, section] = pathname.split('/');
+  return { section };
+};
+
+export default Page;

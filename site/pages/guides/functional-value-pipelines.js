@@ -327,10 +327,10 @@ The great thing about this kind of composition is it's quite easy to imagine how
 
 This kind of composition is really changing the way I think about building interactions and I feel like there's a lot of potential to be explored in this area.
 `;
-
-export default () => (
+const Page = ({ section }) => (
   <ContentTemplate
     id="functional-value-pipelines"
+    section={section}
     category="undefined"
     title="Create a momentum and spring-based slider with composed value pipelines"
     description="This guide explains how we can build complex interaction behaviors out of very simple functional blocks."
@@ -338,3 +338,10 @@ export default () => (
     <Content />
   </ContentTemplate>
 );
+
+Page.getInitialProps = async ({ pathname }) => {
+  const [, section] = pathname.split('/');
+  return { section };
+};
+
+export default Page;
