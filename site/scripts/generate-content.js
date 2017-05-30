@@ -3,6 +3,7 @@ const path = require('path');
 const frontMatter = require('front-matter');
 const generatePage = require('./generate-content-page');
 const filterFilenames = require('./filter-filenames');
+const buildNextConfig = require('./build-next-config');
 
 const contentPath = path.join(__dirname, '../../docs');
 const contentMetadataOutputPath = path.join(__dirname, '../data/content.json');
@@ -54,3 +55,5 @@ fs.writeFile(contentMetadataOutputPath, JSON.stringify(siteMetadata), (err) => {
   const msg = (!err) ? 'Site content created' : err;
   console.log(msg);
 });
+
+buildNextConfig(siteMetadata);

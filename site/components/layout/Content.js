@@ -1,3 +1,10 @@
+import GlobalTemplate from '~/components/layout/GlobalTemplate';
+
 export default ({ children, id, category, title, description }) => (
-  <div>{children}</div>
+  <GlobalTemplate
+    title={title}
+    description={description}
+  >
+    {children}
+  </GlobalTemplate>
 );
