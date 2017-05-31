@@ -48,13 +48,13 @@ export const conditional = (condition, ifTrue, ifFalse = noop) => (v, action) =>
 };
 
 /**
- * Flow
+ * Pipe
  * Compose other transformers to run linearily
- * flow(min(20), max(40))
+ * pipe(min(20), max(40))
  * @param  {...functions} transformers
  * @return {function}
  */
-export const flow = (...transformers) => {
+export const pipe = (...transformers) => {
   const numTransformers = transformers.length;
   let i = 0;
 
@@ -67,6 +67,9 @@ export const flow = (...transformers) => {
     return v;
   };
 };
+
+// Deprecated: Remove in 7.1.0
+export const flow = pipe;
 
 /**
  * Interpolate from set of values to another

@@ -1,7 +1,7 @@
 
 import markdown from 'markdown-in-js';
-import { A, H1, H2, H3, P, Code } from '~/components/primatives';
-import ContentTemplate from '~/components/layout/Content';
+import { A, H1, H2, H3, P, Li, Ul, Code, Pre } from '~/templates/content/primatives';
+import ContentTemplate from '~/templates/content/Template';
 
 const Content = () => markdown({
   a: A,
@@ -9,7 +9,8 @@ const Content = () => markdown({
   h2: H2,
   h3: H3,
   p: P,
-  code: Code
+  code: Code,
+  pre: Pre
 })`
 # SVG Path Renderer
 

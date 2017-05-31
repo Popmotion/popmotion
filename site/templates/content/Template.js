@@ -1,22 +1,12 @@
-import Head from 'next/head';
-import { injectGlobal } from 'styled-components';
+import GlobalTemplate from '~/components/templates/global/Template.js';
 import LogoContainer from './LogoContainer';
 import Nav from './Nav';
 import ContentNav from './ContentNav';
 import { Container, LeftMargin, RightMargin, ContentArea } from '~/components/layout/grid';
-import reset from '~/styles/reset';
-import settings from '~/data/settings.json';
 
-injectGlobal`${reset}`;
-
-export default ({ children, id, title, section }) => {
-  const pageTitle = `${title ? `${title} | ` : ''}${settings.siteName}`;
-
-  return (
+export default ({ children, id, title, description, section }) => (
+  <GlobalTemplate title={title} description={description}>
     <Container>
-      <Head>
-        <title>{pageTitle}</title>
-      </Head>
       <LogoContainer />
       <Nav section={section} />
       <ContentNav section={section} id={id} />
@@ -26,5 +16,5 @@ export default ({ children, id, title, section }) => {
       <LeftMargin />
       <RightMargin />
     </Container>
-  );
-};
+  </GlobalTemplate>
+);

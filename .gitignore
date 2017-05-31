@@ -4,3 +4,5 @@ npm-debug.log
 lib
 site/.next
 dist/site
+site/pages/api
+site/pages/guides

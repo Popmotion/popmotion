@@ -2,6 +2,17 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.0.0] 2017-xx-xx
+
+## Features
+- `trackOffset` action returns to simplify the process of tracking the offset of other actions.
+
+## Deprecated
+- `flow` is now `pipe`, to avoid terminology clashes with [Flow](https://flow.org/). `flow` will continue to work until `7.1.0`.
+
+## Removed
+- `blendTweens` is now an optional include.
+
 ## [6.3.5] 2017-03-03
 
 ## Added

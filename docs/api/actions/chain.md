@@ -1,7 +1,7 @@
 ---
 title: Chain
 description: Chain a linear sequence of actions.
-category: actions
+category: actionComposition
 ---
 
 # Chain

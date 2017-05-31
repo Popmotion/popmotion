@@ -3,7 +3,7 @@ import { verticalGradient, MAIN, MAIN_FADE } from '~/styles/vars';
 
 export const Container = styled.div`
   display: grid;
-  grid-template-columns: 1fr 209px 645px 9fr;
+  grid-template-columns: 1fr 209px 825px 9fr;
   grid-template-rows: 75px auto;
   grid-template-areas:
     "left-margin header-logo nav right-margin"
@@ -34,8 +34,9 @@ export const NavArea = styled.nav`
   padding-bottom: 10px;
 `;
 
-export const ContentArea = styled.div`
+export const ContentArea = styled.article`
   grid-area: content;
+  padding-bottom: 42px;
 `;
 
 export const ContentNavArea = styled.div`

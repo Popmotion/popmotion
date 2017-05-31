@@ -1,8 +1,12 @@
-import React from 'react';
-import GlobalTemplate from '~/components/layout/GlobalTemplate';
+import GlobalTemplate from '~/templates/global/Template';
+import HomepageHeader from '~/templates/homepage/Header';
+import USPs from '~/templates/homepage/USPs';
 
 export default () => {
   return (
-    <GlobalTemplate />
+    <GlobalTemplate>
+      <HomepageHeader />
+      <USPs />
+    </GlobalTemplate>
   );
 };
