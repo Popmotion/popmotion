@@ -13,6 +13,16 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 ## Removed
 - `blendTweens` is now an optional include.
 
+## [6.7.2] 2017-06-01
+
+## Fixed
+- Removing dependencies from `package.json`
+
+## [6.7.1] 2017-06-01
+
+## Fixed
+- `colorTween` now uses `transform` property to convert from progress to color, which fixes composition compatibility.
+
 ## [6.7.0] 2017-06-01
 
 ## Added
