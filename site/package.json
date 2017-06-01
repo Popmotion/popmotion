@@ -1,15 +1,9 @@
 {
-  "name": "popmotion",
-  "version": "7.0.0",
+  "name": "popmotion-website",
   "description": "The JavaScript motion engine. Create animations and interactions with tweens, physics and input tracking.",
   "author": "Matt Perry <sirhound@popmotion.io>",
   "homepage": "http://popmotion.io",
-  "main": "./lib/popmotion.js",
-  "files": [
-    "lib",
-    "popmotion.global.js",
-    "popmotion.global.min.js"
-  ],
+  "private": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/Popmotion/popmotion"
@@ -84,6 +78,7 @@
   "dependencies": {
     "babel-runtime": "^6.23.0",
     "next": "^3.0.0-beta6",
+    "popmotion": "^6.3.5",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "styled-components": "^2.0.0-17"

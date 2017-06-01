@@ -1,5 +1,5 @@
 import tween from './tween';
-import { blendColor, flow } from '../inc/transformers';
+import { blendColor, pipe } from '../inc/transformers';
 import { color } from '../inc/value-types';
 
 const noop = () => {};
@@ -9,7 +9,7 @@ export default (props) => {
     ...props,
     from: 0,
     to: 1,
-    onUpdate: flow(
+    onUpdate: pipe(
       blendColor(props.from, props.to),
       color.transform,
       props.onUpdate || noop

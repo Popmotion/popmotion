@@ -16,7 +16,7 @@ export default ({
           <stop offset="100%" stopColor={to}/>
         </linearGradient>
       </defs>
-      <g fill="none" fill-rule="evenodd" mask="url(#logo-mask)">
+      <g fill="none" fillRule="evenodd" mask="url(#logo-mask)">
         <rect fill="url(#logo-gradient)" width="200" height="41" />
       </g>
     </svg>

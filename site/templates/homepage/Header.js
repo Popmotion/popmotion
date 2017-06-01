@@ -1,14 +1,9 @@
 import styled from 'styled-components';
 import Link from 'next/link';
+import LavaLampHeader from './LavaLampHeader';
 import Logo from '~/components/layout/Logo';
 import { fontSize } from '~/styles/fonts';
-import { verticalGradient, MAIN, MAIN_FADE, WHITE } from '~/styles/vars';
-
-const HeaderContainer = styled.div`
-  background: ${verticalGradient(MAIN_FADE, MAIN)};
-  padding: 75px;
-  text-align: center;
-`;
+import { WHITE } from '~/styles/vars';
 
 const HomepageLogo = styled(Logo)`
   margin: 0 auto;
@@ -46,7 +41,7 @@ const GetStartedLink = styled.span`
 `;
 
 export default () => (
-  <HeaderContainer>
+  <LavaLampHeader>
     <HomepageLogo from={WHITE} to={WHITE} />
     <MainLine>The JavaScript motion engine</MainLine>
     <SecondaryLine>Create delightful interactions with user input,<br />animations and physics</SecondaryLine>
@@ -55,5 +50,5 @@ export default () => (
         <a>Get Started</a>
       </Link>
     </GetStartedLink>
-  </HeaderContainer>
+  </LavaLampHeader>
 );
