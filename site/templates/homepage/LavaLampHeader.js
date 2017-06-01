@@ -25,9 +25,7 @@ export default class extends React.Component {
         to: PURPLE_BURN,
         duration: 3000
       })
-    }, {
-      onUpdate: setBackgroundGradient
-    }).start();
+    }).output(setBackgroundGradient).start();
   }
 
   componentWillUnmount() {
