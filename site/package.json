@@ -34,5 +34,8 @@
   "license": "MIT",
   "dependencies": {
     "popmotion": "^6.3.5"
+  },
+  "devDependencies": {
+    "babel-plugin-styled-components": "^1.1.4"
   }
 }

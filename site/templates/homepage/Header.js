@@ -46,7 +46,7 @@ export default () => (
     <MainLine>The JavaScript motion engine</MainLine>
     <SecondaryLine>Create delightful interactions with user input,<br />animations and physics</SecondaryLine>
     <GetStartedLink>
-      <Link prefetch href="/guides/get-started">
+      <Link href="/guides/get-started">
         <a>Get Started</a>
       </Link>
     </GetStartedLink>

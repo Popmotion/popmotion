@@ -4,6 +4,12 @@ export const PINK_BURN = '#FF44D1';
 export const PURPLE = '#6127ED';
 export const PURPLE_BURN = '#4496FF';
 
+export const BLUE = '#27E5ED';
+export const BLUE_BURN = '#44FF65';
+
+export const YELLOW = '#EAFF33';
+export const YELLOW_BURN = '#FFAD44';
+
 export const BLACK = '#333';
 export const WHITE = '#fff';
 

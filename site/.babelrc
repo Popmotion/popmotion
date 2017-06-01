@@ -18,7 +18,11 @@
       "helpers": false,
       "polyfill": false
     }],
-    "markdown-in-js/babel"
+    "markdown-in-js/babel",
+    ["styled-components", {
+      "ssr": true,
+      "preprocess": true
+    }]
   ],
   "env": {
     "development": {
