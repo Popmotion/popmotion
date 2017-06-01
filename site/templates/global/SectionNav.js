@@ -1,11 +1,14 @@
 import styled from 'styled-components';
 import Link from 'next/link';
-import { NavArea } from './grid';
 import { fontSize } from '~/styles/fonts';
 import { MAIN, BLACK } from '~/styles/vars';
 
+const Container = styled.ul`
+  margin-left: 45px;
+`;
+
 const MenuItem = styled.li`
-  ${fontSize(20)}
+  ${fontSize(18)}
   display: inline;
   margin-right: 15px;
 
@@ -16,22 +19,24 @@ const MenuItem = styled.li`
   a {
     color: ${BLACK};
     text-decoration: none;
+
+    &:hover {
+
+    }
   }
 `;
 
 export default ({ section }) => (
-  <NavArea>
-    <ul>
-      <MenuItem isSelected={(section === 'api')}>
-        <Link href="/api">
-          <a>API</a>
-        </Link>
-      </MenuItem>
-      <MenuItem isSelected={(section === 'guides')}>
-        <Link href="/guides">
-          <a>Guides</a>
-        </Link>
-      </MenuItem>
-    </ul>
-  </NavArea>
+  <Container>
+    <MenuItem isSelected={(section === 'api')}>
+      <Link href="/api">
+        <a>API</a>
+      </Link>
+    </MenuItem>
+    <MenuItem isSelected={(section === 'guides')}>
+      <Link href="/guides">
+        <a>Guides</a>
+      </Link>
+    </MenuItem>
+  </Container>
 );

@@ -13,8 +13,6 @@ export default ({ children, title, description=settings.siteDescription }) => {
   return (
     <div>
       <Head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
         <meta name="theme-color" content={MAIN} />
         <meta name="msapplication-navbutton-color" content={MAIN} />
         <meta name="apple-mobile-web-app-title" content={settings.siteName} />
@@ -22,9 +20,6 @@ export default ({ children, title, description=settings.siteDescription }) => {
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={description} />
         <meta property="twitter:site" content={settings.twitterUsername} />
-        <meta name="og:locale" property="og:locale" content="en_US" />
-        <link rel="icon" type="image/png" href="static/images/favicon.png" />
-        <link rel="icon" type="image/png" href="static/images/android-favicon.png" sizes="192x192" />
         <title>{pageTitle}</title>
         <Analytics />
       </Head>

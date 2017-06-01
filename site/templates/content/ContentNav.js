@@ -1,28 +1,53 @@
 import Link from 'next/link';
 import styled from 'styled-components';
-import { ContentNavArea } from './grid';
+import { ContentNavArea } from '~/components/layout/grid';
 import { fontSize } from '~/styles/fonts';
-import { MAIN } from '~/styles/vars';
+import { MAIN, cols } from '~/styles/vars';
 import menus from '~/data/menus.json';
 
+const CategoryContainer = styled.li`
+  margin-bottom: ${cols(2)}
+`;
+
 const CategoryHeader = styled.h2`
-  ${fontSize(24)};
-  margin-bottom: 1.1rem;
+  ${fontSize(20)};
+  margin-bottom: 0.8rem;
 `;
 
 const MenuItem = styled.li`
   ${({ level=1 }) => (level === 1)
     ? (`
-      ${fontSize(24)}
-      margin-bottom: 1.1rem;
+      ${fontSize(20)}
+      margin-bottom: 0.8rem;
     `)
     : (`
       ${fontSize(18)}
-      margin-bottom: 1.1rem;
-      margin-left: 12px;
+      margin-bottom: 0.8rem;
+      margin-left: ${cols(1)};
     `)
   }
-  ${({ isSelected }) => (isSelected) && `border-left: 1px solid ${MAIN}`}
+  ${({ isSelected }) => (isSelected) && `
+    position: relative;
+
+    &:after {
+      display: block;
+      content: '';
+      background: ${MAIN};
+      width: 2px;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: -${cols(1)};
+    }
+  `}
+
+  a {
+    text-decoration: none;
+
+    &:hover {
+      color: ${MAIN};
+    }
+  }
 `;
 
 const Item = ({ id, title, contentId, section, level }) => (
@@ -34,12 +59,12 @@ const Item = ({ id, title, contentId, section, level }) => (
 );
 
 const Category = ({ id, title, contentId, posts, section }) => (
-  <li>
+  <CategoryContainer>
     <CategoryHeader>{title}</CategoryHeader>
     <ul>
       {posts.map((post) => <Item {...post} contentId={contentId} section={section} level={2} />)}
     </ul>
-  </li>
+  </CategoryContainer>
 );
 
 export default ({ section, id }) => {
