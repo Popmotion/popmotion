@@ -1,25 +1,6 @@
 {
-  "presets": [
-    "next/babel",
-    "es2015-subset-loose",
-    "react",
-    "stage-0"
-  ],
-  "plugins": [
-    "transform-react-remove-prop-types",
-    "transform-export-extensions",
-    "transform-react-jsx",
-    "transform-react-constant-elements",
-    "transform-strict-mode",
-    ["babel-plugin-root-import", {
-      "rootPathSuffix": "site"
-    }],
-    ["transform-runtime", {
-      "helpers": false,
-      "polyfill": false
-    }],
-    "markdown-in-js/babel"
-  ],
+  "presets": ["es2015-subset-loose", "stage-2"],
+  "plugins": ["transform-export-extensions"],
   "env": {
     "development": {
       "sourceMaps": "inline"

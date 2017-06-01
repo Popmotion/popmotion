@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.7.0] 2017-06-01
+
+## Added
+- `transform` property for actions. If set, any values passed to `onUpdate` or returned from `get` will be run through this function.
+- `getBeforeTransform` method added for actions. Will return the current value, before transform is applied.
+
 ## [6.3.5] 2017-03-03
 
 ## Added
