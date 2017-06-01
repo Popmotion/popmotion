@@ -35,6 +35,7 @@ customAction.start();
 - `stop`: Stop an action. Fires `onStop` callback.
 - `get`: Get the current value.
 - `getVelocity`: Get the action's current velocity, in units per second.
+- `getBeforeTransform`: Returns the current value, without passing through `transform` if a `transform` function is defined.
 - `complete`: Stop an action and mark as complete. Fires `onStop` and `onComplete` callbacks.
 - `setProps(<Object>)`: Updates `props`.
 - `getProp(<String>)`: Returns the named property.
@@ -42,6 +43,8 @@ customAction.start();
 
 ## Props
 
+- `onUpdate <Function>`: Fires every frame the value is updated.
 - `onStart <Function>`: Fires when an action starts.
 - `onStop <Function>`: Fires when an action is stopped.
 - `onComplete <Function>`: Fires when an action is completed.
+- `transform <Function>`: If defined, `get` and `onUpdate` will pass the `current` value through this function before returning.

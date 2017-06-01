@@ -66,7 +66,7 @@ class Action { // lawsuit - sorry
       this.current = this.update(this.current);
     }
 
-    if (onUpdate) onUpdate(this.current, this);
+    if (onUpdate) onUpdate(this.get(), this);
     this.fireListeners();
 
     if (!passive && this._isActive) {
@@ -94,6 +94,11 @@ class Action { // lawsuit - sorry
   }
 
   get() {
+    const { transform } = this.props;
+    return transform ? transform(this.current) : this.current;
+  }
+
+  getBeforeTransform() {
     return this.current;
   }
 
