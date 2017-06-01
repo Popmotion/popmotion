@@ -2,9 +2,7 @@ import tween from './tween';
 import { blendColor, flow } from '../inc/transformers';
 import { color } from '../inc/value-types';
 
-const noop = () => {};
-
-export default ({ from, to }) => {
+export default ({ from, to, ...props }) => {
   return tween({
     ...props,
     from: 0,
