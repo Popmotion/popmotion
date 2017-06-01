@@ -81,14 +81,5 @@
   "jest": {
     "testRegex": "_tests/[^_].*\\.js$",
     "rootDir": "src"
-  },
-  "dependencies": {
-    "babel-runtime": "^6.23.0",
-    "isomorphic-fetch": "^2.2.1",
-    "isomorphic-unfetch": "^1.0.0",
-    "next": "^3.0.0-beta6",
-    "react": "^15.5.4",
-    "react-dom": "^15.5.4",
-    "styled-components": "^2.0.0-17"
   }
 }
