@@ -1,21 +1,24 @@
 
-import markdown from 'markdown-in-js';
+import marksy from 'marksy';
 import { A, H1, H2, H3, P, Li, Ul, Code, Pre } from '~/templates/content/primatives';
 import ContentTemplate from '~/templates/content/Template';
 
-const Content = () => markdown({
+const convertMarkdown = marksy({
   a: A,
   h1: H1,
   h2: H2,
   h3: H3,
   p: P,
   code: Code,
-  pre: Pre
-})`
+  pre: Code
+});
+
+const content = convertMarkdown(`
 # SVG Renderer
 
 - Docs coming soon
-`;
+`);
+
 const Page = ({ section }) => (
   <ContentTemplate
     id="svg"
@@ -24,7 +27,7 @@ const Page = ({ section }) => (
     title="SVG Renderer"
     description="Optimised SVG renderer."
   >
-    <Content />
+    {content.tree}
   </ContentTemplate>
 );
 

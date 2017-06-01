@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { ContentNavArea } from '~/components/layout/grid';
 import { fontSize } from '~/styles/fonts';
 import { MAIN, cols } from '~/styles/vars';
@@ -26,7 +26,7 @@ const MenuItem = styled.li`
       margin-left: ${cols(1)};
     `)
   }
-  ${({ isSelected }) => (isSelected) && `
+  ${({ isSelected }) => (isSelected) && css`
     position: relative;
 
     &:after {
@@ -58,11 +58,11 @@ const Item = ({ id, title, contentId, section, level }) => (
   </MenuItem>
 );
 
-const Category = ({ id, title, contentId, posts, section }) => (
+const Category = ({ title, contentId, posts, section }) => (
   <CategoryContainer>
     <CategoryHeader>{title}</CategoryHeader>
     <ul>
-      {posts.map((post) => <Item {...post} contentId={contentId} section={section} level={2} />)}
+      {posts.map((post) => <Item key={post.id} {...post} contentId={contentId} section={section} level={2} />)}
     </ul>
   </CategoryContainer>
 );
@@ -75,8 +75,8 @@ export default ({ section, id }) => {
       <ul>
       {menu.map(
         ({ posts, ...itemData }) => (posts)
-          ? <Category posts={posts} {...itemData} contentId={id} section={section} />
-          : <Item {...itemData} contentId={id} section={section} isLink />
+          ? <Category key={itemData.id} posts={posts} {...itemData} contentId={id} section={section} />
+          : <Item key={itemData.id} {...itemData} contentId={id} section={section} isLink />
       )}
       </ul>
     </ContentNavArea>

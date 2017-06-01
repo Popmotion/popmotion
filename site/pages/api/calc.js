@@ -1,17 +1,19 @@
 
-import markdown from 'markdown-in-js';
+import marksy from 'marksy';
 import { A, H1, H2, H3, P, Li, Ul, Code, Pre } from '~/templates/content/primatives';
 import ContentTemplate from '~/templates/content/Template';
 
-const Content = () => markdown({
+const convertMarkdown = marksy({
   a: A,
   h1: H1,
   h2: H2,
   h3: H3,
   p: P,
   code: Code,
-  pre: Pre
-})`
+  pre: Code
+});
+
+const content = convertMarkdown(`
 # Calculators
 
 Popmotion provides a series of simple functions useful in UI calculations.
@@ -119,7 +121,8 @@ Convert speed per second into speed per frame.
 Convert speed per frame into speed per second.
 
 \`speedPerSecond(speedPerFrame <Number>, frameDuration <Number>)\`
-`;
+`);
+
 const Page = ({ section }) => (
   <ContentTemplate
     id="calc"
@@ -128,7 +131,7 @@ const Page = ({ section }) => (
     title="Calculators"
     description="Simple functions useful in UI calculations."
   >
-    <Content />
+    {content.tree}
   </ContentTemplate>
 );
 

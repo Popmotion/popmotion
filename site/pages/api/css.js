@@ -1,17 +1,19 @@
 
-import markdown from 'markdown-in-js';
+import marksy from 'marksy';
 import { A, H1, H2, H3, P, Li, Ul, Code, Pre } from '~/templates/content/primatives';
 import ContentTemplate from '~/templates/content/Template';
 
-const Content = () => markdown({
+const convertMarkdown = marksy({
   a: A,
   h1: H1,
   h2: H2,
   h3: H3,
   p: P,
   code: Code,
-  pre: Pre
-})`
+  pre: Code
+});
+
+const content = convertMarkdown(`
 # CSS Renderer
 
 The CSS renderer provides a simple and optimised \`get\`/\`set\` interface for DOM elements.
@@ -52,7 +54,8 @@ divRenderer.set({
   y: 10
 }); // set and schedule for render
 \`\`\`
-`;
+`);
+
 const Page = ({ section }) => (
   <ContentTemplate
     id="css"
@@ -61,7 +64,7 @@ const Page = ({ section }) => (
     title="CSS Renderer"
     description="Optimised CSS renderer."
   >
-    <Content />
+    {content.tree}
   </ContentTemplate>
 );
 

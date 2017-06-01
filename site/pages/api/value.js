@@ -1,17 +1,19 @@
 
-import markdown from 'markdown-in-js';
+import marksy from 'marksy';
 import { A, H1, H2, H3, P, Li, Ul, Code, Pre } from '~/templates/content/primatives';
 import ContentTemplate from '~/templates/content/Template';
 
-const Content = () => markdown({
+const convertMarkdown = marksy({
   a: A,
   h1: H1,
   h2: H2,
   h3: H3,
   p: P,
   code: Code,
-  pre: Pre
-})`
+  pre: Code
+});
+
+const content = convertMarkdown(`
 # Value
 
 \`value(current <Number>, onUpdate <Function>)\`
@@ -19,7 +21,8 @@ const Content = () => markdown({
 ## Methods
 
 - \`set <Number>\`: Updates \`current\` and schedules an update.
-`;
+`);
+
 const Page = ({ section }) => (
   <ContentTemplate
     id="value"
@@ -28,7 +31,7 @@ const Page = ({ section }) => (
     title="Value"
     description="A simple value that updates when a new number is passed to `set`."
   >
-    <Content />
+    {content.tree}
   </ContentTemplate>
 );
 

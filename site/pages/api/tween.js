@@ -1,17 +1,19 @@
 
-import markdown from 'markdown-in-js';
+import marksy from 'marksy';
 import { A, H1, H2, H3, P, Li, Ul, Code, Pre } from '~/templates/content/primatives';
 import ContentTemplate from '~/templates/content/Template';
 
-const Content = () => markdown({
+const convertMarkdown = marksy({
   a: A,
   h1: H1,
   h2: H2,
   h3: H3,
   p: P,
   code: Code,
-  pre: Pre
-})`
+  pre: Code
+});
+
+const content = convertMarkdown(`
 # Tween
 
 - \`tween(props <Object>)\`
@@ -36,7 +38,8 @@ Flip the tween's \`from\` and \`to\`.
 
 ### \`reverse\`
 Reverse the tween's progress through time.
-`;
+`);
+
 const Page = ({ section }) => (
   <ContentTemplate
     id="tween"
@@ -45,7 +48,7 @@ const Page = ({ section }) => (
     title="Tween"
     description="Change a value over a specific duration of time."
   >
-    <Content />
+    {content.tree}
   </ContentTemplate>
 );
 

@@ -1,5 +1,5 @@
 import { bodyFont, codeFont } from '~/styles/fonts';
-import { BLACK, LINK } from '~/styles/vars';
+import { BLACK, WHITE, cols } from '~/styles/vars';
 
 export default `
 * {
@@ -208,6 +208,17 @@ kbd,
 pre,
 samp {
   ${codeFont}
+}
+
+/* Would prefer not to do this - marked doesn't return themable pre tags */
+pre {
+  background: ${BLACK};
+  padding: ${cols(1)};
+  margin-bottom: 1.4rem;
+}
+pre code {
+  color: ${WHITE};
+  line-height: 1.5;
 }
 
 /**

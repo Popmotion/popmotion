@@ -43,7 +43,7 @@ function generateContent(rootDir, fullDir) {
 
       fs.writeFile(
         `${outputPath}/${id}.js`,
-        generatePage(body, siteMetadata[rootDir][id])
+        generatePage(body.replace(new RegExp('.md', 'g'), ''), siteMetadata[rootDir][id])
       );
     }
   });

@@ -1,17 +1,19 @@
 
-import markdown from 'markdown-in-js';
+import marksy from 'marksy';
 import { A, H1, H2, H3, P, Li, Ul, Code, Pre } from '~/templates/content/primatives';
 import ContentTemplate from '~/templates/content/Template';
 
-const Content = () => markdown({
+const convertMarkdown = marksy({
   a: A,
   h1: H1,
   h2: H2,
   h3: H3,
   p: P,
   code: Code,
-  pre: Pre
-})`
+  pre: Code
+});
+
+const content = convertMarkdown(`
 # Chain
 
 Chain a linear sequence of actions. The next action in the sequence is started when the previous action is completed.
@@ -28,7 +30,8 @@ chain([
   tween(1, 1000)
 ]).start();
 \`\`\`
-`;
+`);
+
 const Page = ({ section }) => (
   <ContentTemplate
     id="chain"
@@ -37,7 +40,7 @@ const Page = ({ section }) => (
     title="Chain"
     description="Chain a linear sequence of actions."
   >
-    <Content />
+    {content.tree}
   </ContentTemplate>
 );
 

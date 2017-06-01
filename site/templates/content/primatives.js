@@ -29,17 +29,7 @@ export const P = styled.p`
   margin-bottom: 1.1rem;
 `;
 
-export const Code = styled.code``;
-
-export const Pre = styled.pre`
-  background: #333;
-  padding: 12px;
-  line-height: 1.5;
-  margin-bottom: 1.4rem;
-
-  code {
-    color: #fff;
-  }
+export const Code = styled.code`
 `;
 
 export const Ul = styled.ul``;

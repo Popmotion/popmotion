@@ -1,19 +1,21 @@
 const escapeBackticks = (string) => string.replace(/`/g, '\\`');
 
 module.exports = (body, { category, id, title, description }) => `
-import markdown from 'markdown-in-js';
+import marksy from 'marksy';
 import { A, H1, H2, H3, P, Li, Ul, Code, Pre } from '~/templates/content/primatives';
 import ContentTemplate from '~/templates/content/Template';
 
-const Content = () => markdown({
+const convertMarkdown = marksy({
   a: A,
   h1: H1,
   h2: H2,
   h3: H3,
   p: P,
-  code: Code,
-  pre: Pre
-})\`${escapeBackticks(body)}\`;
+  code: Code
+});
+
+const content = convertMarkdown(\`${escapeBackticks(body)}\`);
+
 const Page = ({ section }) => (
   <ContentTemplate
     id="${id}"
@@ -22,7 +24,7 @@ const Page = ({ section }) => (
     title="${title}"
     description="${description}"
   >
-    <Content />
+    {content.tree}
   </ContentTemplate>
 );
 

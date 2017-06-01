@@ -1,10 +1,6 @@
 {
   "name": "popmotion",
-<<<<<<< HEAD
   "version": "7.0.0",
-=======
-  "version": "6.7.2",
->>>>>>> master
   "description": "The JavaScript motion engine. Create animations and interactions with tweens, physics and input tracking.",
   "author": "Matt Perry <sirhound@popmotion.io>",
   "homepage": "http://popmotion.io",
@@ -45,11 +41,6 @@
   "scripts": {
     "build": "babel src --out-dir lib && NODE_ENV=production webpack && npm run measure",
     "watch": "NODE_ENV=development webpack --progress --colors --watch",
-    "build-content": "node site/scripts/generate-content.js",
-    "build-site": "npm run build-content && next build site && next export site -o dist/site",
-    "watch-site": "next site",
-    "start-site": "next start site",
-    "lint-site": "eslint site",
     "measure": "gzip -c dist/popmotion.global.min.js | wc -c",
     "test": "jest",
     "prepublish": "rm -rf lib && npm run build && npm run test && eslint src"

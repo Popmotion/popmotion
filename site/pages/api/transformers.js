@@ -1,17 +1,19 @@
 
-import markdown from 'markdown-in-js';
+import marksy from 'marksy';
 import { A, H1, H2, H3, P, Li, Ul, Code, Pre } from '~/templates/content/primatives';
 import ContentTemplate from '~/templates/content/Template';
 
-const Content = () => markdown({
+const convertMarkdown = marksy({
   a: A,
   h1: H1,
   h2: H2,
   h3: H3,
   p: P,
   code: Code,
-  pre: Pre
-})`
+  pre: Code
+});
+
+const content = convertMarkdown(`
 # Transformers
 
 An Action's \`onUpdate\` prop is a callback receives \`value\` as an argument. We can use transformers to change and filter this value before using it:
@@ -296,7 +298,8 @@ Appends 'px' unit type.
 \`\`\`javascript
 px(10); // '10px'
 \`\`\`
-`;
+`);
+
 const Page = ({ section }) => (
   <ContentTemplate
     id="transformers"
@@ -305,7 +308,7 @@ const Page = ({ section }) => (
     title="Transformers"
     description="Simple composable functions that take a value and return a new one."
   >
-    <Content />
+    {content.tree}
   </ContentTemplate>
 );
 

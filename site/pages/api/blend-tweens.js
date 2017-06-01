@@ -1,17 +1,19 @@
 
-import markdown from 'markdown-in-js';
+import marksy from 'marksy';
 import { A, H1, H2, H3, P, Li, Ul, Code, Pre } from '~/templates/content/primatives';
 import ContentTemplate from '~/templates/content/Template';
 
-const Content = () => markdown({
+const convertMarkdown = marksy({
   a: A,
   h1: H1,
   h2: H2,
   h3: H3,
   p: P,
   code: Code,
-  pre: Pre
-})`
+  pre: Code
+});
+
+const content = convertMarkdown(`
 # Blend Tweens
 
 ## Example
@@ -52,7 +54,8 @@ setTimeout(() => {
 
 - \`from <Tween>\`: The tween to blend from.
 - \`to <Tween>\`: The tween to blend to.
-`;
+`);
+
 const Page = ({ section }) => (
   <ContentTemplate
     id="blend-tweens"
@@ -61,7 +64,7 @@ const Page = ({ section }) => (
     title="Blend Tweens"
     description="Blend between two tweens using a bezier interpolator."
   >
-    <Content />
+    {content.tree}
   </ContentTemplate>
 );
 

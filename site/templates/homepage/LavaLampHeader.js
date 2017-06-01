@@ -1,11 +1,11 @@
 import React from 'react';
 import { chain, colorTween, composite, css, easing } from 'popmotion';
 import styled from 'styled-components';
-import { verticalGradient, MAIN, MAIN_FADE, PURPLE, PURPLE_BURN, BLUE, BLUE_BURN, YELLOW, YELLOW_BURN } from '~/styles/vars';
+import { verticalGradient, MAIN, MAIN_FADE, PURPLE, PURPLE_BURN, BLUE, BLUE_BURN } from '~/styles/vars';
 
 const COLOR_SEGMENT_DURATION = 30000;
-const MAIN_COLORS = [MAIN, PURPLE, BLUE, YELLOW];
-const BURN_COLORS = [MAIN_FADE, PURPLE_BURN, BLUE_BURN, YELLOW_BURN];
+const MAIN_COLORS = [MAIN, PURPLE, BLUE];
+const BURN_COLORS = [MAIN_FADE, PURPLE_BURN, BLUE_BURN];
 
 const Container = styled.div`
   background: ${verticalGradient(MAIN_FADE, MAIN)};

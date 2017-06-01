@@ -1,3 +1,5 @@
+import { css } from 'styled-components';
+
 export const PINK = '#ED2754';
 export const PINK_BURN = '#FF44D1';
 
@@ -24,3 +26,19 @@ export const verticalGradient = (from, to, start=0, end=100) =>
   `linear-gradient(to bottom, ${to} ${start}%, ${from} ${end}%)`;
 
 export const cols = (num) => `${num * COL_WIDTH}px`;
+
+const breakpoints = {
+  desktop: 992,
+  tablet: 768,
+  phone: 376
+};
+
+export const media = Object.keys(breakpoints).reduce((acc, label) => {
+  acc[label] = (...args) => css`
+    @media (max-width: ${breakpoints[label]}px) {
+      ${css(...args)}
+    }
+  `;
+
+  return acc;
+}, {});

@@ -1,17 +1,19 @@
 
-import markdown from 'markdown-in-js';
+import marksy from 'marksy';
 import { A, H1, H2, H3, P, Li, Ul, Code, Pre } from '~/templates/content/primatives';
 import ContentTemplate from '~/templates/content/Template';
 
-const Content = () => markdown({
+const convertMarkdown = marksy({
   a: A,
   h1: H1,
   h2: H2,
   h3: H3,
   p: P,
   code: Code,
-  pre: Pre
-})`
+  pre: Code
+});
+
+const content = convertMarkdown(`
 # Composite Action
 
 Control multiple named actions simultaneously. Output value is an object. Composite actions can be nested.
@@ -30,7 +32,8 @@ const tweenShadowCSSValue = composite({
   onUpdate: (v) => console.log(v) // { foo: 0, bar: 0 }
 }).start();
 \`\`\`
-`;
+`);
+
 const Page = ({ section }) => (
   <ContentTemplate
     id="composite"
@@ -39,7 +42,7 @@ const Page = ({ section }) => (
     title="Composite"
     description="Control multiple named actions simultaneously."
   >
-    <Content />
+    {content.tree}
   </ContentTemplate>
 );
 

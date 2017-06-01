@@ -1,17 +1,19 @@
 
-import markdown from 'markdown-in-js';
+import marksy from 'marksy';
 import { A, H1, H2, H3, P, Li, Ul, Code, Pre } from '~/templates/content/primatives';
 import ContentTemplate from '~/templates/content/Template';
 
-const Content = () => markdown({
+const convertMarkdown = marksy({
   a: A,
   h1: H1,
   h2: H2,
   h3: H3,
   p: P,
   code: Code,
-  pre: Pre
-})`
+  pre: Code
+});
+
+const content = convertMarkdown(`
 # Stagger
 
 \`stagger(actions <Array>, interval <Number | Function>, onComplete <Function>)\`
@@ -35,7 +37,8 @@ const mappedTweens = [].slice.call(divs).map((element) => {
 
 stagger(mappedTweens, 50, () => console.log('done!'));
 \`\`\`
-`;
+`);
+
 const Page = ({ section }) => (
   <ContentTemplate
     id="stagger"
@@ -44,7 +47,7 @@ const Page = ({ section }) => (
     title="Stagger"
     description="Stagger the start of a series of a actions."
   >
-    <Content />
+    {content.tree}
   </ContentTemplate>
 );
 

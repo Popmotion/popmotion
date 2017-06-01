@@ -1,17 +1,19 @@
 
-import markdown from 'markdown-in-js';
+import marksy from 'marksy';
 import { A, H1, H2, H3, P, Li, Ul, Code, Pre } from '~/templates/content/primatives';
 import ContentTemplate from '~/templates/content/Template';
 
-const Content = () => markdown({
+const convertMarkdown = marksy({
   a: A,
   h1: H1,
   h2: H2,
   h3: H3,
   p: P,
   code: Code,
-  pre: Pre
-})`
+  pre: Code
+});
+
+const content = convertMarkdown(`
 # Easing
 
 Easing functions make tweened motion look more natural by emulating the changes in velocity experienced by objects in the real world.
@@ -87,7 +89,8 @@ Creates an easing function with a small anticipate and ease out. \`anticipate\` 
 const { createAnticipateEasing } = easing;
 const strongerAnticipate = createAnticipateEasing(3);
 \`\`\`
-`;
+`);
+
 const Page = ({ section }) => (
   <ContentTemplate
     id="easing"
@@ -96,7 +99,7 @@ const Page = ({ section }) => (
     title="Easing"
     description="Functions that speed or slow a tween over time."
   >
-    <Content />
+    {content.tree}
   </ContentTemplate>
 );
 

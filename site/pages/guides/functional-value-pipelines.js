@@ -1,17 +1,19 @@
 
-import markdown from 'markdown-in-js';
+import marksy from 'marksy';
 import { A, H1, H2, H3, P, Li, Ul, Code, Pre } from '~/templates/content/primatives';
 import ContentTemplate from '~/templates/content/Template';
 
-const Content = () => markdown({
+const convertMarkdown = marksy({
   a: A,
   h1: H1,
   h2: H2,
   h3: H3,
   p: P,
   code: Code,
-  pre: Pre
-})`
+  pre: Code
+});
+
+const content = convertMarkdown(`
 # Create a momentum and spring-based slider with composed value pipelines
 
 In this guide, we're going to explore how you can use [Popmotion](https://github.com/Popmotion/popmotion) and basic functional composition to build complex behaviors from small, readable and testable units of code.
@@ -24,7 +26,7 @@ You can fork [this tutorial template](http://codepen.io/popmotion/pen/XpXoqW?edi
 
 ## Create the slider renderer
 
-Our first job is to make a simple renderer for the slider. The [css renderer](../../api/renderers/css.md) included in Popmotion can create an optimized get/setter for CSS properties. We'll use this to set the \`translateX\` transform property of the slider.
+Our first job is to make a simple renderer for the slider. The [css renderer](../../api/renderers/css) included in Popmotion can create an optimized get/setter for CSS properties. We'll use this to set the \`translateX\` transform property of the slider.
 
 \`\`\`javascript
 const { css } = window.popmotion;
@@ -41,7 +43,7 @@ We can now \`set\` the \`translateX\` like this:
 sliderRenderer.set('x', -50);
 \`\`\`
 
-By setting a property, Popmotion will schedule a render for the next \`frameRender\` step in the [render loop](../../api/render-loop.md).
+By setting a property, Popmotion will schedule a render for the next \`frameRender\` step in the [render loop](../../api/render-loop).
 
 ## Pointer tracking
 
@@ -72,7 +74,7 @@ document.body.addEventListener('mouseup', stopDrag);
 
 ## Drag the list
 
-To now use this pointer to drag the list, we can give the pointer action a new \`onUpdate\` function that simply sets the \`x\` property on the renderer we created earlier. As \`pointer\` returns a [composite action](../../api/actions/composite.md), we can do this directly on its \`x\` value using the \`output\` shorthand method:
+To now use this pointer to drag the list, we can give the pointer action a new \`onUpdate\` function that simply sets the \`x\` property on the renderer we created earlier. As \`pointer\` returns a [composite action](../../api/actions/composite), we can do this directly on its \`x\` value using the \`output\` shorthand method:
 
 \`\`\`javascript
 // We'll be using this function a lot, so let's abstract it
@@ -94,7 +96,7 @@ This is where functional composition enters.
 
 ## Drag the list, properly
 
-Functional value pipelines in Popmotion are composed from multiple functions that we refer to as [transformers](../../api/transformers.md). Transformers are simply pure functions that take a value, change it, and return it. Many transformers are curried, which means they first take some configuration properties and return a function that itself changes that value.
+Functional value pipelines in Popmotion are composed from multiple functions that we refer to as [transformers](../../api/transformers). Transformers are simply pure functions that take a value, change it, and return it. Many transformers are curried, which means they first take some configuration properties and return a function that itself changes that value.
 
 The glue of functional composition in Popmotion is the \`flow\` function. It takes a series of functions, and creates a new function where the provided argument is passed from left to right. Here's a completely arbitrary example:
 
@@ -134,7 +136,7 @@ Now the slider correctly drags, but it feels a little weird to have it stop dead
 
 ## Scrolling momentum
 
-The [physics](../../api/actions/physics.md) action takes a \`velocity\` property, measured in units per second (these units are usually pixels). Every action, whether it's a tween, pointer, anything, has a \`getVelocity\` method. So we can use this method to provide a velocity to \`physics\` when a user stops dragging:
+The [physics](../../api/actions/physics) action takes a \`velocity\` property, measured in units per second (these units are usually pixels). Every action, whether it's a tween, pointer, anything, has a \`getVelocity\` method. So we can use this method to provide a velocity to \`physics\` when a user stops dragging:
 
 \`\`\`javascript
 const { physics } = window.popmotion;
@@ -335,7 +337,8 @@ And that's it! Only around 100 lines to make a snappy, responsive slider that wo
 The great thing about this kind of composition is it's quite easy to imagine how we can create configurable factory functions that return these value pipelines. They can then become sharable across a codebase or as modules on npm.
 
 This kind of composition is really changing the way I think about building interactions and I feel like there's a lot of potential to be explored in this area.
-`;
+`);
+
 const Page = ({ section }) => (
   <ContentTemplate
     id="functional-value-pipelines"
@@ -344,7 +347,7 @@ const Page = ({ section }) => (
     title="Create a momentum and spring-based slider with composed value pipelines"
     description="This guide explains how we can build complex interaction behaviors out of very simple functional blocks."
   >
-    <Content />
+    {content.tree}
   </ContentTemplate>
 );
 

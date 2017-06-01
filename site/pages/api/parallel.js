@@ -1,17 +1,19 @@
 
-import markdown from 'markdown-in-js';
+import marksy from 'marksy';
 import { A, H1, H2, H3, P, Li, Ul, Code, Pre } from '~/templates/content/primatives';
 import ContentTemplate from '~/templates/content/Template';
 
-const Content = () => markdown({
+const convertMarkdown = marksy({
   a: A,
   h1: H1,
   h2: H2,
   h3: H3,
   p: P,
   code: Code,
-  pre: Pre
-})`
+  pre: Code
+});
+
+const content = convertMarkdown(`
 # Parallel
 
 Control playback of multiple actions in parallel.
@@ -28,7 +30,8 @@ parallel([
   tween(props)
 ]).start()
 \`\`\`
-`;
+`);
+
 const Page = ({ section }) => (
   <ContentTemplate
     id="parallel"
@@ -37,7 +40,7 @@ const Page = ({ section }) => (
     title="Parallel"
     description="Control playback of multiple actions in parallel."
   >
-    <Content />
+    {content.tree}
   </ContentTemplate>
 );
 
