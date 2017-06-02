@@ -2,7 +2,7 @@ import Link from 'next/link';
 import styled, { css } from 'styled-components';
 import { ContentNavArea } from '~/components/layout/grid';
 import { fontSize } from '~/styles/fonts';
-import { MAIN, cols } from '~/styles/vars';
+import { LINK, cols } from '~/styles/vars';
 import menus from '~/data/menus.json';
 
 const CategoryContainer = styled.li`
@@ -10,18 +10,18 @@ const CategoryContainer = styled.li`
 `;
 
 const CategoryHeader = styled.h2`
-  ${fontSize(20)};
+  ${fontSize(18)};
   margin-bottom: 0.8rem;
 `;
 
 const MenuItem = styled.li`
   ${({ level=1 }) => (level === 1)
     ? (`
-      ${fontSize(20)}
+      ${fontSize(18)}
       margin-bottom: 0.8rem;
     `)
     : (`
-      ${fontSize(18)}
+      ${fontSize(14)}
       margin-bottom: 0.8rem;
       margin-left: ${cols(1)};
     `)
@@ -32,7 +32,7 @@ const MenuItem = styled.li`
     &:after {
       display: block;
       content: '';
-      background: ${MAIN};
+      background: ${LINK};
       width: 2px;
       position: absolute;
       top: 0;
@@ -45,7 +45,7 @@ const MenuItem = styled.li`
     text-decoration: none;
 
     &:hover {
-      color: ${MAIN};
+      color: ${LINK};
     }
   }
 `;

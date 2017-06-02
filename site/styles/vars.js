@@ -14,11 +14,12 @@ export const YELLOW_BURN = '#FFAD44';
 
 export const BLACK = '#333';
 export const WHITE = '#fff';
+export const LIGHT_GREY = '#eee';
 
 export const MAIN = PINK;
 export const MAIN_FADE = PINK_BURN;
 
-export const LINK = MAIN;
+export const LINK = PURPLE_BURN;
 
 const COL_WIDTH = 15;
 

@@ -10,7 +10,8 @@ const convertMarkdown = marksy({
   h3: H3,
   p: P,
   code: Code,
-  pre: Code
+  li: Li,
+  ul: Ul
 });
 
 const content = convertMarkdown(`

@@ -6,7 +6,7 @@ category: actions
 
 # Tween
 
-- `tween(props <Object>)`
+`tween(props <Object>)`
 
 ## Props
 

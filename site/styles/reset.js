@@ -12,11 +12,11 @@ export default `
   font-size: 100%;
   color: ${BLACK};
   ${bodyFont}
-  font-weight: inherit;
   line-height: 1;
   vertical-align: baseline;
   word-wrap: break-word;
   -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-font-smoothing: antialiased;
 }
 
 br {
@@ -208,6 +208,7 @@ kbd,
 pre,
 samp {
   ${codeFont}
+  -webkit-font-smoothing: initial;
 }
 
 /* Would prefer not to do this - marked doesn't return themable pre tags */

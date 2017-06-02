@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { verticalGradient, MAIN, MAIN_FADE, cols } from '~/styles/vars';
+import { verticalGradient, MAIN, MAIN_FADE, WHITE, cols } from '~/styles/vars';
 
 export const Container = styled.div`
   display: grid;
@@ -18,7 +18,7 @@ export const LeftMargin = styled.div`
 `;
 
 export const RightMargin = styled.div`
-  background: ${verticalGradient(MAIN_FADE, MAIN)};
+  background: ${WHITE};
   grid-area: right-margin;
 `;
 

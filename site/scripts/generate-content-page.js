@@ -11,7 +11,9 @@ const convertMarkdown = marksy({
   h2: H2,
   h3: H3,
   p: P,
-  code: Code
+  code: Code,
+  li: Li,
+  ul: Ul
 });
 
 const content = convertMarkdown(\`${escapeBackticks(body)}\`);

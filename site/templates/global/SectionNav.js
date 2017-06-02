@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import Link from 'next/link';
 import { fontSize } from '~/styles/fonts';
-import { MAIN, BLACK } from '~/styles/vars';
+import { LINK, BLACK } from '~/styles/vars';
 
 const Container = styled.ul`
   margin-left: 45px;
@@ -13,7 +13,7 @@ const MenuItem = styled.li`
   margin-right: 15px;
 
   ${({ isSelected }) => isSelected && `
-    border-bottom: 3px solid ${MAIN};
+    border-bottom: 3px solid ${LINK};
   `}
 
   a {
@@ -21,7 +21,7 @@ const MenuItem = styled.li`
     text-decoration: none;
 
     &:hover {
-
+      color: ${LINK};
     }
   }
 `;
