@@ -1,6 +1,5 @@
 import { injectGlobal } from 'styled-components';
 import Head from 'next/head';
-import Analytics from './Analytics';
 import reset from '~/styles/reset';
 import { MAIN } from '~/styles/vars';
 import settings from '~/data/settings.json';
@@ -21,7 +20,6 @@ export default ({ children, title, description=settings.siteDescription }) => {
         <meta property="og:description" content={description} />
         <meta property="twitter:site" content={settings.twitterUsername} />
         <title>{pageTitle}</title>
-        <Analytics />
       </Head>
       {children}
     </div>

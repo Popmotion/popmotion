@@ -1,7 +1,7 @@
 ---
 title: Color Tween
 description: Blends from one color to another using linear interpolation.
-category: actions
+category: action
 ---
 
 # Color Tween

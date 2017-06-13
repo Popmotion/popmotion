@@ -29,14 +29,13 @@ export const verticalGradient = (from, to, start=0, end=100) =>
 export const cols = (num) => `${num * COL_WIDTH}px`;
 
 const breakpoints = {
-  desktop: 992,
-  tablet: 768,
-  phone: 376
+  medium: cols(52),
+  small: cols(26)
 };
 
 export const media = Object.keys(breakpoints).reduce((acc, label) => {
   acc[label] = (...args) => css`
-    @media (max-width: ${breakpoints[label]}px) {
+    @media (max-width: ${breakpoints[label]}) {
       ${css(...args)}
     }
   `;

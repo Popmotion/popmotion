@@ -4,32 +4,20 @@ module.exports = {
     return {
     '/': { page: '/' },
   
-        'api/blend-tweens': {
-          page: 'api/blend-tweens'
+        'api/action': {
+          page: 'api/action'
         },
       
-        'api/chain': {
-          page: 'api/chain'
+        'api/blend-tweens': {
+          page: 'api/blend-tweens'
         },
       
         'api/color-tween': {
           page: 'api/color-tween'
         },
       
-        'api/composite': {
-          page: 'api/composite'
-        },
-      
-        'api/cross-fade': {
-          page: 'api/cross-fade'
-        },
-      
         'api/delay': {
           page: 'api/delay'
-        },
-      
-        'api/parallel': {
-          page: 'api/parallel'
         },
       
         'api/physics': {
@@ -40,16 +28,32 @@ module.exports = {
           page: 'api/pointer'
         },
       
-        'api/stagger': {
-          page: 'api/stagger'
-        },
-      
         'api/tween': {
           page: 'api/tween'
         },
       
         'api/value': {
           page: 'api/value'
+        },
+      
+        'api/chain': {
+          page: 'api/chain'
+        },
+      
+        'api/composite': {
+          page: 'api/composite'
+        },
+      
+        'api/cross-fade': {
+          page: 'api/cross-fade'
+        },
+      
+        'api/parallel': {
+          page: 'api/parallel'
+        },
+      
+        'api/stagger': {
+          page: 'api/stagger'
         },
       
         'api/calc': {
@@ -62,6 +66,10 @@ module.exports = {
       
         'api/render-loop': {
           page: 'api/render-loop'
+        },
+      
+        'api/renderers': {
+          page: 'api/renderers'
         },
       
         'api/css': {
@@ -80,8 +88,16 @@ module.exports = {
           page: 'api/transformers'
         },
       
-        'guides/functional-value-pipelines': {
-          page: 'guides/functional-value-pipelines'
+        'guides/undefined': {
+          page: 'guides/undefined'
+        },
+      
+        'guides/get-started': {
+          page: 'guides/get-started'
+        },
+      
+        'guides/slider': {
+          page: 'guides/slider'
         },
       };
   }

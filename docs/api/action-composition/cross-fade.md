@@ -1,7 +1,7 @@
 ---
 title: Cross Fade
 description: Fade between any two actions.
-category: actionComposition
+category: action-composition
 ---
 
 # Cross Fade

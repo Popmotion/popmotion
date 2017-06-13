@@ -1,6 +1,7 @@
 ---
 title: Renderers
 description: Optimised get/set renderers.
+category: renderers
 ---
 
 # Renderer
@@ -37,18 +38,18 @@ Making a new renderer is easy, it accepts two main methods `onRead` and `onRende
 
 ## Example
 
-A typical renderer would look like this: 
+A typical renderer would look like this:
 
 ```javascript
 import { Renderer } from 'popmotion';
 
 class MyRenderer extends Renderer {
   onRead(key) {
-    
+
   }
 
   onRender() {
-    
+
   }
 }
 ```

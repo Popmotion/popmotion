@@ -1,5 +1,5 @@
 ---
-title: Create a momentum and spring-based slider with composed value pipelines
+title: Slider
 description: This guide explains how we can build complex interaction behaviors out of very simple functional blocks.
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: Pointer
 description: Tracks mouse and touch movement.
-category: actions
+category: action
 ---
 
 # Pointer

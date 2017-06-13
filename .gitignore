@@ -3,6 +3,6 @@ node_modules
 npm-debug.log
 lib
 site/.next
-dist/site
+site/public
 site/pages/api
 site/pages/guides

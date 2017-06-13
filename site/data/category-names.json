@@ -1,5 +1,5 @@
 {
-  "actions": "Actions",
-  "actionComposition": "Action composition",
-  "renderers": "Renderers"
+  "action": "Action",
+  "action-composition": "Action composition",
+  "renderers": "Renderer"
 }

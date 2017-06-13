@@ -9,37 +9,25 @@ const CategoryContainer = styled.li`
   margin-bottom: ${cols(2)}
 `;
 
-const CategoryHeader = styled.h2`
-  ${fontSize(18)};
-  margin-bottom: 0.8rem;
+const selectable = ({ isSelected }) => (isSelected) && css`
+  position: relative;
+
+  &:after {
+    display: block;
+    content: '';
+    background: ${LINK};
+    width: 2px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -${cols(1)};
+  }
 `;
 
-const MenuItem = styled.li`
-  ${({ level=1 }) => (level === 1)
-    ? (`
-      ${fontSize(18)}
-      margin-bottom: 0.8rem;
-    `)
-    : (`
-      ${fontSize(14)}
-      margin-bottom: 0.8rem;
-      margin-left: ${cols(1)};
-    `)
-  }
-  ${({ isSelected }) => (isSelected) && css`
-    position: relative;
-
-    &:after {
-      display: block;
-      content: '';
-      background: ${LINK};
-      width: 2px;
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: -${cols(1)};
-    }
-  `}
+const CategoryTitle = styled.h2`
+  ${fontSize(18)}
+  margin-bottom: 0.8rem;
+  ${selectable}
 
   a {
     text-decoration: none;
@@ -50,20 +38,41 @@ const MenuItem = styled.li`
   }
 `;
 
-const Item = ({ id, title, contentId, section, level }) => (
-  <MenuItem level={level} isSelected={id === contentId}>
+const MenuItem = styled.li`
+  ${fontSize(14)}
+  margin-bottom: 0.8rem;
+  margin-left: ${cols(1)};
+  ${selectable}
+
+  a {
+    text-decoration: none;
+
+    &:hover {
+      color: ${LINK};
+    }
+  }
+`;
+
+const Item = ({ id, title, contentId, section }) => (
+  <MenuItem isSelected={id === contentId}>
     <Link href={`/${section}/${id}`}>
       <a>{title}</a>
     </Link>
   </MenuItem>
 );
 
-const Category = ({ title, contentId, posts, section }) => (
+const Category = ({ id, title, contentId, section, posts }) => (
   <CategoryContainer>
-    <CategoryHeader>{title}</CategoryHeader>
-    <ul>
-      {posts.map((post) => <Item key={post.id} {...post} contentId={contentId} section={section} level={2} />)}
-    </ul>
+    <CategoryTitle isSelected={id === contentId}>
+      <Link href={`/${section}/${id}`}>
+        <a>{title}</a>
+      </Link>
+    </CategoryTitle>
+    {posts ? (
+      <ul>
+        {posts.map((post) => <Item key={post.id} {...post} contentId={contentId} section={section} />)}
+      </ul>
+    ) : null}
   </CategoryContainer>
 );
 
@@ -73,11 +82,7 @@ export default ({ section, id }) => {
   return (
     <ContentNavArea>
       <ul>
-      {menu.map(
-        ({ posts, ...itemData }) => (posts)
-          ? <Category key={itemData.id} posts={posts} {...itemData} contentId={id} section={section} />
-          : <Item key={itemData.id} {...itemData} contentId={id} section={section} isLink />
-      )}
+        {menu.map((category) => <Category key={category.id} {...category} contentId={id} section={section} />)}
       </ul>
     </ContentNavArea>
   );

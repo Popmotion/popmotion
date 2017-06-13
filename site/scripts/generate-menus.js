@@ -33,7 +33,9 @@ module.exports = function (siteMetadata) {
           menu.push(categories[category]);
         }
 
-        categories[category].posts.push({ id, title });
+        if (id !== category) {
+          categories[category].posts.push({ id, title });
+        }
 
       // Or stand-alone post
       } else {

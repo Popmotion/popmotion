@@ -1,7 +1,8 @@
 import styled from 'styled-components';
+import Link from 'next/link';
 import { Strong } from '~/templates/global/primatives';
 import { fontSize } from '~/styles/fonts';
-import { cols } from '~/styles/vars';
+import { cols, media, verticalGradient, WHITE, PURPLE, PURPLE_BURN } from '~/styles/vars';
 
 const USPContainer = styled.div`
   display: flex;
@@ -16,6 +17,14 @@ const USP = styled.div`
   padding: ${cols(3)} ${cols(1)} ${cols(1)};
 `;
 
+const USPHeader = styled.h2`
+  flex: 0 0 100%;
+  ${fontSize(36)}
+  margin-bottom: ${cols(1)};
+  margin-top: ${cols(2)};
+  text-align: center;
+`;
+
 const Header = styled.h3`
   ${fontSize(28)}
   margin-bottom: ${cols(1)};
@@ -27,26 +36,36 @@ const Description = styled.p`
   margin-bottom: ${cols(1)};
 `;
 
+const FooterGetStartedLink = styled.span`
+  a {
+    display: block;
+    background: ${verticalGradient(PURPLE_BURN, PURPLE)};
+    border: 2px solid ${WHITE};
+    border-radius: 500px;
+    width: 190px;
+    ${fontSize(24)}
+    padding: 15px 20px;
+    margin: 0 auto;
+    text-decoration: none;
+    text-align: center;
+    color: ${WHITE};
+  }
+`;
+
 export default () => (
   <USPContainer>
+    <USPHeader>Why Popmotion?</USPHeader>
     <USP>
-      <Header>Motion</Header>
-      <Description>Tweens, physics, friction, spring</Description>
+      <Header>Animator's toolbox</Header>
+      <Description>Animate with tweens, velocity, input tracking, springs, friction and momentum.</Description>
     </USP>
     <USP>
       <Header>Size matters</Header>
-      <Description>At ~8kb, it's <Strong>75% smaller</Strong> than Greensock TweenMax.</Description>
-      <Description>Smaller files = quicker downloads = increased user engagement.</Description>
-    </USP>
-    <USP>
-      <Header>Seamless motion</Header>
-      <Description>Easily query the velocity of any action and pass to our physics engine.</Description>
-      <Description>So an animation or a swipe can naturally transition into a momentum scroll or spring-powered snap.</Description>
+      <Description>At ~9kb, it's <Strong>75% smaller</Strong> than Greensock TweenMax. Smaller downloads = engaged users.</Description>
     </USP>
     <USP>
       <Header>Gone in 60 frames per second</Header>
-      <Description>Comparable performance to Greensock and Web Animations API in extreme stress tests.</Description>
-      <Description>Buttery 60fps motion back in the real-world.</Description>
+      <Description>Popmotion bangs out 60fps in real-world use and stands up to Greensock and Web Animations API under extreme stress.</Description>
     </USP>
     <USP>
       <Header>Lego, for motion</Header>
@@ -57,5 +76,15 @@ export default () => (
       <Description>We include CSS, SVG and SVG Path renderers, out of the box.</Description>
       <Description>Renderers leverage Popmotion's scheduled update/render loop to provide top performance even outside animations.</Description>
     </USP>
+    <USP>
+      <Header>Write once, render anywhere</Header>
+      <Description>We include CSS, SVG and SVG Path renderers, out of the box.</Description>
+      <Description>Renderers leverage Popmotion's scheduled update/render loop to provide top performance even outside animations.</Description>
+    </USP>
+    <FooterGetStartedLink>
+      <Link href="/guides/get-started">
+        <a>Get started</a>
+      </Link>
+    </FooterGetStartedLink>
   </USPContainer>
 );

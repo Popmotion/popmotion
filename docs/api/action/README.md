@@ -1,6 +1,7 @@
 ---
 title: Action
 description: A process that changes a value over time.
+category: action
 ---
 
 # Action

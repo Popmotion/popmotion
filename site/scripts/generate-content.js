@@ -3,7 +3,7 @@ const path = require('path');
 const frontMatter = require('front-matter');
 const generatePage = require('./generate-content-page');
 const generateMenus = require('./generate-menus');
-const filterFilenames = require('./filter-filenames');
+const { filterFiles, filterSystemFiles } = require('./filename-operations');
 const buildNextConfig = require('./build-next-config');
 
 const contentPath = path.join(__dirname, '../../docs');
@@ -16,10 +16,11 @@ function generateContent(rootDir, fullDir) {
   const readDir = fullDir ? fullDir : rootDir;
   const readPath = path.join(contentPath, readDir);
   const outputPath = path.join(__dirname, `../pages/${rootDir}`);
+
   // Create directory if none exists
   if (!fs.existsSync(outputPath)) fs.mkdirSync(outputPath);
 
-  const dirList = fs.readdirSync(readPath).filter(filterFilenames);
+  const dirList = fs.readdirSync(readPath).filter(filterSystemFiles);
 
   dirList.forEach((filename) => {
     // If directory
@@ -33,8 +34,10 @@ function generateContent(rootDir, fullDir) {
       const { attributes, body } = frontMatter(file);
       const { title, description, category, published } = attributes;
 
-      siteMetadata[rootDir][id] = {
-        id,
+      const outputId = (id === 'README') ? category : id;
+
+      siteMetadata[rootDir][outputId] = {
+        id: outputId,
         title,
         description,
         category,
@@ -42,14 +45,14 @@ function generateContent(rootDir, fullDir) {
       };
 
       fs.writeFile(
-        `${outputPath}/${id}.js`,
-        generatePage(body.replace(new RegExp('.md', 'g'), ''), siteMetadata[rootDir][id])
+        `${outputPath}/${outputId}.js`,
+        generatePage(body.replace(new RegExp('.md', 'g'), ''), siteMetadata[rootDir][outputId])
       );
     }
   });
 }
 
-const topLevel = fs.readdirSync(contentPath).filter(filterFilenames);
+const topLevel = fs.readdirSync(contentPath).filter(filterFiles);
 topLevel.forEach((dir) => generateContent(dir));
 
 fs.writeFile(contentMetadataOutputPath, JSON.stringify(siteMetadata), (err) => {

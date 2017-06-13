@@ -1,7 +1,7 @@
 ---
 title: Delay
 description: A dummy action that completes after a set duration of time.
-category: actions
+category: action
 ---
 
 # Delay

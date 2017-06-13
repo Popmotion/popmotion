@@ -1,7 +1,7 @@
 ---
 title: Parallel
 description: Control playback of multiple actions in parallel.
-category: actionComposition
+category: action-composition
 ---
 
 # Parallel

@@ -5,6 +5,8 @@ import marksy from 'marksy';
 import { A, H1, H2, H3, P, Li, Ul, Code, Pre } from '~/templates/content/primatives';
 import ContentTemplate from '~/templates/content/Template';
 
+const removeEmpty = filename => filename !== '';
+
 const convertMarkdown = marksy({
   a: A,
   h1: H1,
@@ -31,7 +33,7 @@ const Page = ({ section }) => (
 );
 
 Page.getInitialProps = async ({ pathname }) => {
-  const [, section] = pathname.split('/');
+  const [section] = pathname.split('/').filter(removeEmpty);
   return { section };
 };
 
