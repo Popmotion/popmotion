@@ -1,11 +1,11 @@
 import Link from 'next/link';
 import styled from 'styled-components';
 import SectionNav from './SectionNav';
-import PopmotionIcon from '~/components/icons/PopmotionIcon';
-import GitHubIcon from '~/components/icons/GitHub';
-import TwitterIcon from '~/components/icons/Twitter';
+import Popmotion from '~/components/icons/PopmotionIcon';
+import GitHub from '~/components/icons/GitHub';
+import Twitter from '~/components/icons/Twitter';
 import settings from '~/data/settings.json';
-import { cols } from '~/styles/vars';
+import { cols, media } from '~/styles/vars';
 
 const HeaderContainer = styled.nav`
   display: flex;
@@ -27,6 +27,16 @@ const TwitterLink = IconLink.extend`
   margin-left: none;
   transform: translateY(2px);
 `;
+
+const PopmotionIcon = styled(Popmotion)`
+  ${media.medium`
+    width: 35px;
+    height: 32px;
+  `}
+`;
+
+const GitHubIcon = styled(GitHub)``;
+const TwitterIcon = styled(Twitter)``;
 
 export default ({ section }) => (
   <HeaderContainer>

@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 import Link from 'next/link';
 import { A, Strong } from '~/templates/global/primatives';
+import { GetStartedLink } from './primatives';
 import { fontSize } from '~/styles/fonts';
-import { cols, media, verticalGradient, WHITE, PURPLE, PURPLE_BURN } from '~/styles/vars';
+import { cols, media, verticalGradient, PURPLE, PURPLE_BURN } from '~/styles/vars';
 
 const Container = styled.div`
   margin: 0 auto;
@@ -18,6 +19,11 @@ const USPContainer = styled.div`
 const USP = styled.div`
   flex: 0 0 50%;
   padding: ${cols(2)} ${cols(1)} ${cols(1)};
+
+  ${media.medium`
+    padding: ${cols(1)};
+    flex: 0 0 100%;
+  `}
 `;
 
 const USPHeader = styled.h2`
@@ -26,32 +32,30 @@ const USPHeader = styled.h2`
   margin-bottom: ${cols(1)};
   margin-top: ${cols(3)};
   text-align: center;
+
+  ${media.medium`${fontSize(28)}`}
 `;
 
 const Header = styled.h3`
   ${fontSize(28)}
   margin-bottom: ${cols(1)};
+
+  ${media.medium`${fontSize(18)}`}
 `;
 
 const Description = styled.p`
   ${fontSize(18)}
   line-height: 24px;
   margin-bottom: ${cols(1)};
+
+  ${media.medium`${fontSize(14)}`}
 `;
 
-const FooterGetStartedLink = styled.span`
+const FooterGetStartedLink = GetStartedLink.extend`
   a {
-    display: block;
     background: ${verticalGradient(PURPLE_BURN, PURPLE)};
-    border: 2px solid ${WHITE};
-    border-radius: 500px;
-    width: 190px;
-    ${fontSize(24)}
-    padding: ${cols(1)} 20px;
     margin: ${cols(1)} auto 0;
-    text-decoration: none;
     text-align: center;
-    color: ${WHITE};
   }
 `;
 

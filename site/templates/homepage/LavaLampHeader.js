@@ -1,7 +1,7 @@
 import React from 'react';
 import { chain, colorTween, composite, css, easing } from 'popmotion';
 import styled from 'styled-components';
-import { verticalGradient, MAIN, MAIN_FADE, PURPLE, PURPLE_BURN, BLUE, BLUE_BURN } from '~/styles/vars';
+import { verticalGradient, MAIN, MAIN_FADE, PURPLE, PURPLE_BURN, BLUE, BLUE_BURN, cols, media } from '~/styles/vars';
 
 const COLOR_SEGMENT_DURATION = 30000;
 const MAIN_COLORS = [MAIN, PURPLE, BLUE];
@@ -9,8 +9,12 @@ const BURN_COLORS = [MAIN_FADE, PURPLE_BURN, BLUE_BURN];
 
 const Container = styled.div`
   background: ${verticalGradient(MAIN_FADE, MAIN)};
-  padding: 75px;
+  padding: ${cols(5)};
   text-align: center;
+
+  ${media.medium`
+    padding: ${cols(2)};
+  `}
 `;
 
 export default class extends React.Component {

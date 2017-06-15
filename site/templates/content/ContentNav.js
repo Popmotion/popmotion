@@ -6,6 +6,8 @@ import DropDownArrow from '~/components/icons/DropDownArrow';
 import { fontSize } from '~/styles/fonts';
 import { LINK, cols, media } from '~/styles/vars';
 import menus from '~/data/menus.json';
+import content from '~/data/content.json';
+import sectionNames from '~/data/section-names.json';
 
 const CategoryContainer = styled.li`
   margin-bottom: ${cols(2)}
@@ -77,6 +79,7 @@ const Menu = styled.ul`
 const DropDownMenuIcon = styled(DropDownArrow)`
   position: absolute;
   right: 0;
+  top: 5px;
   ${({ isOpen }) => isOpen && 'transform: rotate(180deg);'}
 `;
 
@@ -91,9 +94,11 @@ const Item = ({ id, title, contentId, section }) => (
 const Category = ({ id, title, contentId, section, posts }) => (
   <CategoryContainer>
     <CategoryTitle isSelected={id === contentId}>
-      <Link href={`/${section}/${id}`}>
-        <a>{title}</a>
-      </Link>
+      {(content[section][id]) ? (
+        <Link href={`/${section}/${id}`}>
+          <a>{title}</a>
+        </Link>
+      ) : title}
     </CategoryTitle>
     {posts ? (
       <ul>
@@ -121,7 +126,7 @@ export default class extends React.Component {
     return (
       <ContentNavArea>
         <MenuToggle onClick={this.toggleMenu}>
-          API topics
+          {`${sectionNames[section]} menu`}
           <DropDownMenuIcon isOpen={isOpen} />
         </MenuToggle>
         <Menu isOpen={isOpen}>

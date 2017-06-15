@@ -2,11 +2,12 @@ import styled from 'styled-components';
 import Link from 'next/link';
 import { fontSize } from '~/styles/fonts';
 import { LINK, BLACK, cols, media } from '~/styles/vars';
+import sectionNames from '~/data/section-names.json';
 
 const Container = styled.ul`
   margin-left: ${cols(3)};
 
-  ${media.medium`margin-left: ${cols(2)};`}
+  ${media.medium`margin-left: ${cols(1)};`}
 `;
 
 const MenuItem = styled.li`
@@ -16,6 +17,10 @@ const MenuItem = styled.li`
 
   ${({ isSelected }) => isSelected && `
     border-bottom: 3px solid ${LINK};
+  `}
+
+  ${media.medium`
+    ${fontSize(16)}
   `}
 
   a {
@@ -28,17 +33,20 @@ const MenuItem = styled.li`
   }
 `;
 
+const routes = {
+  api: '/api',
+  guides: '/guides/get-started',
+  blog: '/blog'
+};
+
 export default ({ section }) => (
   <Container>
-    <MenuItem isSelected={(section === 'api')}>
-      <Link href="/api">
-        <a>API</a>
-      </Link>
-    </MenuItem>
-    <MenuItem isSelected={(section === 'guides')}>
-      <Link href="/guides/get-started">
-        <a>Guides</a>
-      </Link>
-    </MenuItem>
+    {Object.keys(sectionNames).map((name) => (
+      <MenuItem isSelected={(section === name)}>
+        <Link href={routes[name]}>
+          <a>{sectionNames[name]}</a>
+        </Link>
+      </MenuItem>
+    ))}
   </Container>
 );

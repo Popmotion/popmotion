@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { fontSize } from '~/styles/fonts';
-import { WHITE } from '~/styles/vars';
+import { WHITE, media } from '~/styles/vars';
 
 export const GetStartedLink = styled.span`
   a {
@@ -14,5 +14,11 @@ export const GetStartedLink = styled.span`
     margin: 0 auto;
     text-decoration: none;
     color: ${WHITE};
+
+    ${media.medium`
+      ${fontSize(18)}
+      width: 140px;
+      padding: 10px 12px;
+    `}
   }
 `;

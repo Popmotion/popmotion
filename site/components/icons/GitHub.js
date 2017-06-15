@@ -1,5 +1,5 @@
-export default () => (
-  <svg width="27" height="26" viewBox="0 0 27 26" xmlns="http://www.w3.org/2000/svg">
+export default ({ className }) => (
+  <svg width="27" height="26" viewBox="0 0 27 26" xmlns="http://www.w3.org/2000/svg" className={className}>
     <defs>
       <linearGradient x1="50%" y1="100%" x2="50%" y2="0%" id="github-gradient">
         <stop stopColor="#7727ED" offset="0%"/>

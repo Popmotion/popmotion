@@ -1,15 +1,15 @@
 import styled from 'styled-components';
-import { PINK_BURN, WHITE, cols } from '~/styles/vars';
+import { PINK_BURN, BLACK, cols } from '~/styles/vars';
 
 const YEAR = new Date().getFullYear();
 
 const Container = styled.div`
-  background: ${PINK_BURN};
+  border-top: 1px solid ${PINK_BURN};
   padding: ${cols(1)};
 `;
 
 const Spacer = styled.p`
-  color: ${WHITE};
+  color: ${BLACK};
   margin: 0 auto;
   max-width: ${cols(58)};
 `;

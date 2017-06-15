@@ -1,5 +1,7 @@
 {
   "action": "Action",
   "action-composition": "Action composition",
-  "renderers": "Renderer"
+  "renderers": "Renderer",
+  "basics": "Basics",
+  "tutorials": "Tutorials"
 }
