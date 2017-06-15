@@ -1,16 +1,18 @@
 import styled from 'styled-components';
 import Link from 'next/link';
 import { fontSize } from '~/styles/fonts';
-import { LINK, BLACK } from '~/styles/vars';
+import { LINK, BLACK, cols, media } from '~/styles/vars';
 
 const Container = styled.ul`
-  margin-left: 45px;
+  margin-left: ${cols(3)};
+
+  ${media.medium`margin-left: ${cols(2)};`}
 `;
 
 const MenuItem = styled.li`
   ${fontSize(18)}
   display: inline;
-  margin-right: 15px;
+  margin-right: ${cols(1)};
 
   ${({ isSelected }) => isSelected && `
     border-bottom: 3px solid ${LINK};
@@ -34,7 +36,7 @@ export default ({ section }) => (
       </Link>
     </MenuItem>
     <MenuItem isSelected={(section === 'guides')}>
-      <Link href="/guides">
+      <Link href="/guides/get-started">
         <a>Guides</a>
       </Link>
     </MenuItem>

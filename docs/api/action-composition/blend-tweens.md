@@ -1,7 +1,7 @@
 ---
 title: Blend Tweens
 description: Blend between two tweens using a bezier interpolator.
-category: action
+category: action-composition
 ---
 
 # Blend Tweens

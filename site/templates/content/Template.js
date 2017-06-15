@@ -1,7 +1,8 @@
-import GlobalTemplate from '~/templates/global/Template.js';
-import Header from '~/templates/global/Header.js';
+import GlobalTemplate from '~/templates/global/Template';
+import Header from '~/templates/global/Header';
 import ContentNav from './ContentNav';
 import { Container, LeftMargin, RightMargin, ContentArea, HeaderArea } from '~/components/layout/grid';
+import 'prismjs';
 
 export default ({ children, id, title, description, section }) => (
   <GlobalTemplate title={title} description={description}>

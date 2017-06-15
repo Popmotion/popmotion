@@ -1,5 +1,6 @@
-import { bodyFont, codeFont } from '~/styles/fonts';
-import { BLACK, WHITE, cols } from '~/styles/vars';
+import { bodyFont, codeFont, fontSize } from './fonts';
+import { BLACK, WHITE, cols, media } from './vars';
+import syntaxHighlighting from './syntax-highlighting';
 
 export default `
 * {
@@ -206,7 +207,8 @@ svg:not(:root) {
 code,
 kbd,
 pre,
-samp {
+samp,
+code span {
   ${codeFont}
   -webkit-font-smoothing: initial;
 }
@@ -216,12 +218,18 @@ pre {
   background: ${BLACK};
   padding: ${cols(1)};
   margin-bottom: 1.4rem;
+  white-space: pre-wrap;
 }
 pre code {
   color: ${WHITE};
   line-height: 1.5;
 }
 
+@media (max-width: ${cols(50)}) {
+  pre, pre code, pre span, code span {
+    ${fontSize(14)}
+  }
+}
 /**
  * 1. Add the correct box sizing in Firefox.
  * 2. Show the overflow in Edge and IE.
@@ -420,4 +428,5 @@ textarea {
   -webkit-appearance: none; /* 1 */
   font: inherit; /* 2 */
 }
+${syntaxHighlighting}
 `;

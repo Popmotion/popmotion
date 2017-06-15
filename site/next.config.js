@@ -8,10 +8,6 @@ module.exports = {
           page: 'api/action'
         },
       
-        'api/blend-tweens': {
-          page: 'api/blend-tweens'
-        },
-      
         'api/color-tween': {
           page: 'api/color-tween'
         },
@@ -34,6 +30,14 @@ module.exports = {
       
         'api/value': {
           page: 'api/value'
+        },
+      
+        'api/action-composition': {
+          page: 'api/action-composition'
+        },
+      
+        'api/blend-tweens': {
+          page: 'api/blend-tweens'
         },
       
         'api/chain': {

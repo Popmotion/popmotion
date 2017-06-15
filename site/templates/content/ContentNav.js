@@ -1,8 +1,10 @@
+import React from 'react';
 import Link from 'next/link';
 import styled, { css } from 'styled-components';
 import { ContentNavArea } from '~/components/layout/grid';
+import DropDownArrow from '~/components/icons/DropDownArrow';
 import { fontSize } from '~/styles/fonts';
-import { LINK, cols } from '~/styles/vars';
+import { LINK, cols, media } from '~/styles/vars';
 import menus from '~/data/menus.json';
 
 const CategoryContainer = styled.li`
@@ -53,6 +55,31 @@ const MenuItem = styled.li`
   }
 `;
 
+const MenuToggle = styled.div`
+  cursor: pointer;
+  display: none;
+  position: relative;
+
+  ${media.medium`
+    display: block;
+    border-bottom: 1px solid ${LINK};
+    ${fontSize(18)}
+    padding-bottom: 8px;
+  `}
+`;
+
+const Menu = styled.ul`
+  ${media.medium`
+    display: ${({ isOpen }) => isOpen ? 'block' : 'none'}
+  `}
+`;
+
+const DropDownMenuIcon = styled(DropDownArrow)`
+  position: absolute;
+  right: 0;
+  ${({ isOpen }) => isOpen && 'transform: rotate(180deg);'}
+`;
+
 const Item = ({ id, title, contentId, section }) => (
   <MenuItem isSelected={id === contentId}>
     <Link href={`/${section}/${id}`}>
@@ -76,14 +103,31 @@ const Category = ({ id, title, contentId, section, posts }) => (
   </CategoryContainer>
 );
 
-export default ({ section, id }) => {
-  const menu = menus[section];
+export default class extends React.Component {
+  state = {
+    isOpen: false
+  };
 
-  return (
-    <ContentNavArea>
-      <ul>
-        {menu.map((category) => <Category key={category.id} {...category} contentId={id} section={section} />)}
-      </ul>
-    </ContentNavArea>
-  );
-};
+  toggleMenu = () => {
+    const { isOpen } = this.state;
+    this.setState({ isOpen: !isOpen });
+  };
+
+  render() {
+    const { isOpen } = this.state;
+    const { section, id } = this.props;
+    const menu = menus[section];
+
+    return (
+      <ContentNavArea>
+        <MenuToggle onClick={this.toggleMenu}>
+          API topics
+          <DropDownMenuIcon isOpen={isOpen} />
+        </MenuToggle>
+        <Menu isOpen={isOpen}>
+          {menu.map((category) => <Category key={category.id} {...category} contentId={id} section={section} />)}
+        </Menu>
+      </ContentNavArea>
+    );
+  }
+}

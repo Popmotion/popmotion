@@ -29,7 +29,8 @@ export const verticalGradient = (from, to, start=0, end=100) =>
 export const cols = (num) => `${num * COL_WIDTH}px`;
 
 const breakpoints = {
-  medium: cols(52),
+  large: cols(72),
+  medium: cols(50),
   small: cols(26)
 };
 

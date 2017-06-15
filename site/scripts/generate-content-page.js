@@ -2,7 +2,7 @@ const escapeBackticks = (string) => string.replace(/`/g, '\\`');
 
 module.exports = (body, { category, id, title, description }) => `
 import marksy from 'marksy';
-import { A, H1, H2, H3, P, Li, Ul, Code, Pre } from '~/templates/content/primatives';
+import { A, H1, H2, H3, P, Li, Ul, Code, Pre } from '~/templates/global/primatives';
 import ContentTemplate from '~/templates/content/Template';
 
 const removeEmpty = filename => filename !== '';
