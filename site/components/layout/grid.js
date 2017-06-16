@@ -13,6 +13,7 @@ export const Container = styled.div`
 
   ${media.large`
     grid-template-columns: ${cols(1)} ${cols(12)} 1fr 0;
+    grid-row-gap: ${cols(3)};
   `}
 
   ${media.medium`

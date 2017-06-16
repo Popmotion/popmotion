@@ -42,7 +42,7 @@ const routes = {
 export default ({ section }) => (
   <Container>
     {Object.keys(sectionNames).map((name) => (
-      <MenuItem isSelected={(section === name)}>
+      <MenuItem key={name} isSelected={(section === name)}>
         <Link href={routes[name]}>
           <a>{sectionNames[name]}</a>
         </Link>
