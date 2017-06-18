@@ -18,14 +18,54 @@ npm install popmotion --save
 
 ## The "Hello World" tween
 
-A tween is, simply, a function that changes a number over a set duration of time.
+A tween is a function that changes one number to another, over a set duration of time.
 
-<Example>{`
+```javascript
 import { tween } from 'popmotion';
+```
 
-const helloWorld = tween({
-  onUpdate: (v) => console.log(v)
-});
+By default, a tween will change `0` to `1` over `300` milliseconds:
 
-helloWorld.start();
+```marksy
+<Example template="Counter" id="a">{`
+const counter = document.querySelector('#a .counter');
+
+tween({
+  onUpdate: (v) => counter.innerHTML = v
+}).start();
 `}</Example>
+```
+
+All examples on this site are editable; you can edit the above example by adding
+
+```javascript
+  to: 300,
+  duration: 1000
+```
+
+properties to the `tween`. The counter will now count up to `300` over the course of one second.
+
+## Animate!
+
+This raw value output is very powerful. It can be used to drive animations in Three.js, React, D3 - anything that takes a number as an input.
+
+As web developers our most common use-case is to animate the DOM. Popmotion provides in-built functions to help render CSS and SVG.
+
+```javascript
+import { css, svg } from 'popmotion';
+```
+
+By creating a new `onUpdate` function with a `css` renderer, we can quickly make this tween an animation:
+
+```marksy
+<Example template="Box" id="b">{`
+const box = document.querySelector('#b .box');
+const boxRenderer = css(box);
+
+tween({
+  to: 300,
+  duration: 1000,
+  onUpdate: (x) => boxRenderer.set('x', x)
+}).start();
+`}</Example>
+```

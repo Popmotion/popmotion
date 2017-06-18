@@ -208,9 +208,12 @@ code,
 kbd,
 pre,
 samp,
-code span {
+code span,
+pre span {
   ${codeFont}
+  font-size: 14px;
   -webkit-font-smoothing: initial;
+  tab-size: 2;
 }
 
 /* Would prefer not to do this - marked doesn't return themable pre tags */
@@ -220,7 +223,8 @@ pre {
   margin-bottom: 1.4rem;
   white-space: pre-wrap;
 }
-pre code {
+pre code,
+pre.prism-code {
   color: ${WHITE};
   line-height: 1.5;
 }

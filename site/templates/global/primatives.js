@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { fontSize } from '~/styles/fonts';
-import { LINK, LIGHT_GREY, cols, media } from '~/styles/vars';
+import { LINK, LIGHT_GREY, WHITE, cols, media, verticalGradient, PURPLE_BURN, PURPLE } from '~/styles/vars';
 
 export const Strong = styled.strong`
   font-weight: 600;
@@ -54,4 +54,16 @@ export const Ul = styled.ul`
 export const Li = styled.li`
   line-height: 1.5;
   padding-bottom: 10px;
+`;
+
+export const ActionButton = styled.button`
+  background: ${verticalGradient(PURPLE_BURN, PURPLE)};
+  border: 2px solid ${WHITE};
+  border-radius: 500px;
+  cursor: pointer;
+  ${fontSize(24)}
+  padding: ${cols(1)} ${cols(2)};
+  margin: 0 auto;
+  text-decoration: none;
+  color: ${WHITE};
 `;

@@ -35,4 +35,4 @@ export value from './actions/value';
 export Renderer from './renderers';
 export css from './renderers/css';
 export svg from './renderers/svg';
-export svgPath from './renderers/svg-path';
+//export svgPath from './renderers/svg-path';

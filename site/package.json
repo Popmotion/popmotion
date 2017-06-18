@@ -48,6 +48,7 @@
     "prismjs": "^1.6.0",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
+    "react-live": "^1.7.0",
     "styled-components": "^2.0.1"
   },
   "devDependencies": {

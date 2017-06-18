@@ -7,6 +7,6 @@ export default ({ from, to, ...props }) => {
     ...props,
     from: 0,
     to: 1,
-    transform: flow(blendColor(from, to), color.transform)
+    transform: pipe(blendColor(from, to), color.transform)
   });
 };

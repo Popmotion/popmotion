@@ -2,7 +2,7 @@ import { onFrameUpdate, cancelOnFrameUpdate, timeSinceLastFrame } from '../frame
 import { speedPerSecond } from '../inc/calc';
 
 class Action { // lawsuit - sorry
-  constructor(props) {
+  constructor(props = {}) {
     this.scheduledUpdate = this.scheduledUpdate.bind(this);
 
     this.props = {
