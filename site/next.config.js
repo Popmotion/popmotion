@@ -99,10 +99,6 @@ module.exports = {
         'guides/get-started': {
           page: 'guides/get-started'
         },
-      
-        'guides/slider': {
-          page: 'guides/slider'
-        },
       };
   }
 };

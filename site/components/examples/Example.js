@@ -33,11 +33,12 @@ const injectRender = (code) => `
   function start() {
     ${code}
   }
-  render(<Component start={start} />);
+  render(<Component start={start} id={id} />);
 `;
 
 export default ({ children, template, id }) => {
   const Component = templates[template];
+
   return (
     <StyledLiveContainer
       transformCode={injectRender}

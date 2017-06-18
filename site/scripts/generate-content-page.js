@@ -41,10 +41,6 @@ const Page = ({ section }) => (
 Page.getInitialProps = async ({ pathname, req }) => {
   const [section] = pathname.split('/').filter(removeEmpty);
 
-  if (!req && typeof Prism !== 'undefined') {
-    Prism.highlightAll();
-  }
-
   return { section };
 };
 

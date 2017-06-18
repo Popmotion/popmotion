@@ -36,7 +36,7 @@
     "watch-site": "npm run build-content && next",
     "start-site": "next start",
     "lint-site": "eslint",
-    "publish-site": "npm build-site && aws s3 cp public s3://popmotion.io --recursive"
+    "publish-site": "npm run build-site && aws s3 cp public s3://popmotion.io --recursive"
   },
   "analyze": true,
   "license": "MIT",
@@ -44,6 +44,7 @@
     "babel-runtime": "^6.23.0",
     "front-matter": "^2.1.1",
     "marksy": "^1.0.1",
+    "nprogress": "^0.2.0",
     "popmotion": "^6.3.5",
     "prismjs": "^1.6.0",
     "react": "^15.5.4",

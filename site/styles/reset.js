@@ -1,5 +1,5 @@
 import { bodyFont, codeFont, fontSize } from './fonts';
-import { BLACK, WHITE, cols, media } from './vars';
+import { BLACK, WHITE, cols } from './vars';
 import syntaxHighlighting from './syntax-highlighting';
 
 export default `
@@ -211,7 +211,6 @@ samp,
 code span,
 pre span {
   ${codeFont}
-  font-size: 14px;
   -webkit-font-smoothing: initial;
   tab-size: 2;
 }
@@ -222,11 +221,13 @@ pre {
   padding: ${cols(1)};
   margin-bottom: 1.4rem;
   white-space: pre-wrap;
+  font-size: 14px;
 }
 pre code,
 pre.prism-code {
   color: ${WHITE};
   line-height: 1.5;
+  font-size: 14px;
 }
 
 @media (max-width: ${cols(50)}) {

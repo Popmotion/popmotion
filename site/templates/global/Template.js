@@ -1,10 +1,25 @@
 import { injectGlobal } from 'styled-components';
+import NProgress from 'nprogress';
 import Head from 'next/head';
+import Router from 'next/router';
 import reset from '~/styles/reset';
+import nprogressStyles from '~/styles/nprogress';
 import { MAIN } from '~/styles/vars';
 import settings from '~/data/settings.json';
 
-injectGlobal`${reset}`;
+Router.onRouteChangeStart = () => NProgress.start();
+Router.onRouteChangeComplete = () => {
+  if (typeof window !== 'undefined' && typeof window.Prism !== 'undefined') {
+    window.Prism.highlightAll();
+  }
+  NProgress.done();
+};
+Router.onRouteChangeError = () => NProgress.done();
+
+injectGlobal`
+  ${reset}
+  ${nprogressStyles}
+`;
 
 export default ({ children, title, description=settings.siteDescription }) => {
   const pageTitle = `${title ? `${title} | ` : ''}${settings.siteName}`;
