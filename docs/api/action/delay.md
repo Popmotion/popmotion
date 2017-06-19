@@ -23,3 +23,7 @@ chain([
   })
 ]).start();
 ```
+
+## Methods
+
+[...Action](action)

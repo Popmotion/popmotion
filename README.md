@@ -16,7 +16,7 @@ Popmotion is:
 [![npm downloads](https://img.shields.io/npm/dm/popmotion.svg?style=flat-square)](https://www.npmjs.com/package/popmotion)
 [![Twitter Follow](https://img.shields.io/twitter/follow/espadrine.svg?style=social&label=Follow)](http://twitter.com/popmotionjs)
 
-### [Get Started](https://popmotion.io/guides/get-started)
+### [Get Started](https://popmotion.io/learn/get-started)
 ### [Full API documentation](https://popmotion.io/api)
 
 ## Installation
@@ -45,5 +45,5 @@ Download `popmotion.global.min.js` from our [GitHub repo](https://github.com/Pop
 
 Popmotion is then available as the global variable `popmotion`.
 
-### [Get Started](https://popmotion.io/guides/get-started)
+### [Get Started](https://popmotion.io/learn/get-started)
 ### [Full API documentation](https://popmotion.io/api)

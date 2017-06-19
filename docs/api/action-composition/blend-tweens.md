@@ -44,3 +44,7 @@ setTimeout(() => {
 
 - `from <Tween>`: The tween to blend from.
 - `to <Tween>`: The tween to blend to.
+
+## Methods
+
+[...Action](action)

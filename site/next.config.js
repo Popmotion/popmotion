@@ -93,12 +93,8 @@ module.exports = {
           page: '/api/transformers'
         },
       
-        '/guides/undefined': {
-          page: '/guides/undefined'
-        },
-      
-        '/guides/get-started': {
-          page: '/guides/get-started'
+        '/learn/get-started': {
+          page: '/learn/get-started'
         },
       };
   }

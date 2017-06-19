@@ -58,14 +58,14 @@ import { css, svg } from 'popmotion';
 By creating a new `onUpdate` function with a `css` renderer, we can quickly make this tween an animation:
 
 ```marksy
-<Example template="Box" id="b">{`
-const box = document.querySelector('#b .box');
-const boxRenderer = css(box);
+<Example template="Ball" id="b">{`
+const ball = document.querySelector('#b .ball');
+const ballRenderer = css(ball);
 
 tween({
   to: 300,
   duration: 1000,
-  onUpdate: (x) => boxRenderer.set('x', x)
+  onUpdate: (x) => ballRenderer.set('x', x)
 }).start();
 `}</Example>
 ```

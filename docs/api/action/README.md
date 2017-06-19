@@ -30,6 +30,14 @@ const customAction = new CustomAction({
 customAction.start();
 ```
 
+## Props
+
+- `onUpdate <Function>`: Fires every frame the value is updated.
+- `onStart <Function>`: Fires when an action starts.
+- `onStop <Function>`: Fires when an action is stopped.
+- `onComplete <Function>`: Fires when an action is completed.
+- `transform <Function>`: If defined, `get` and `onUpdate` will pass the `current` value through this function before returning.
+
 ## Methods
 
 - `start`: Start an action. Fires any set `onStart` callbacks.
@@ -41,11 +49,3 @@ customAction.start();
 - `setProps(<Object>)`: Updates `props`.
 - `getProp(<String>)`: Returns the named property.
 - `output(<Function>)`: Shorthand for updating the `onUpdate` property.
-
-## Props
-
-- `onUpdate <Function>`: Fires every frame the value is updated.
-- `onStart <Function>`: Fires when an action starts.
-- `onStop <Function>`: Fires when an action is stopped.
-- `onComplete <Function>`: Fires when an action is completed.
-- `transform <Function>`: If defined, `get` and `onUpdate` will pass the `current` value through this function before returning.

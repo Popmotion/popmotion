@@ -20,3 +20,7 @@ parallel([
   tween(props)
 ]).start()
 ```
+
+## Methods
+
+[...Action](action)

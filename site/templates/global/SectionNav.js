@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { fontSize } from '~/styles/fonts';
 import { LINK, BLACK, cols, media } from '~/styles/vars';
 import sectionNames from '~/data/section-names.json';
+import routes from '~/data/route-paths.json';
 
 const Container = styled.ul`
   margin-left: ${cols(3)};
@@ -32,12 +33,6 @@ const MenuItem = styled.li`
     }
   }
 `;
-
-const routes = {
-  api: '/api',
-  guides: '/guides/get-started',
-  blog: '/blog'
-};
 
 export default ({ section }) => (
   <Container>

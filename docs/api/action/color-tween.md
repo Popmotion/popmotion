@@ -26,8 +26,10 @@ colorTween({
 
 ## Props
 
-See: [Tween](tween)
+[...Action](action)
+[...Tween](tween)
 
 ## Methods
 
-See: [Tween](tween)
+[...Action](action)
+[...Tween](tween)

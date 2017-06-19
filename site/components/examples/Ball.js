@@ -20,7 +20,7 @@ const Box = styled.span`
 
 export default ({ start, id }) => (
   <Container id={id}>
-    <Box className="box" />
+    <Box className="ball" />
     <ActionButton onClick={start}>Start</ActionButton>
   </Container>
 );

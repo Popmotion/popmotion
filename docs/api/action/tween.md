@@ -18,6 +18,8 @@ category: action
 - `loop <Number>`: Number of times to restart tween from beginning on tween complete. (default: `0`)
 - `yoyo <Number>`: Number of times to reverse tween on tween complete. (default: `0`)
 
+[...Action](action)
+
 ## Methods
 
 ### `getElapsed`
@@ -28,3 +30,22 @@ Flip the tween's `from` and `to`.
 
 ### `reverse`
 Reverse the tween's progress through time.
+
+[...Action](action)
+
+## Playground
+
+```marksy
+<Example template="Ball">{`
+const ball = document.querySelector('.ball');
+const ballRenderer = css(ball);
+
+tween({
+  to: 300,
+  duration: 1000,
+  ease: easing.easeInOut,
+  loop: Infinity,
+  onUpdate: (x) => ballRenderer.set('x', x)
+}).start();
+`}</Example>
+```

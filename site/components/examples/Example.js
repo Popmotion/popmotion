@@ -1,7 +1,38 @@
 import React from 'react';
 import styled from 'styled-components';
 import { media } from '~/styles/vars';
-import { tween, physics, css, svg, easing } from 'popmotion';
+import {
+  onFrameStart,
+  onFrameUpdate,
+  onFrameRender,
+  onFrameEnd,
+  cancelOnFrameStart,
+  cancelOnFrameUpdate,
+  cancelOnFrameRender,
+  cancelOnFrameEnd,
+  timeSinceLastFrame,
+  currentFrameTimestamp,
+  calc,
+  easing,
+  transform,
+  valueTypes,
+  Action,
+  chain,
+  colorTween,
+  composite,
+  crossFade,
+  delay,
+  parallel,
+  physics,
+  pointer,
+  tween,
+  stagger,
+  value,
+  Renderer,
+  css,
+  svg,
+  svgPath
+} from 'popmotion';
 import { LiveProvider, LiveEditor, LivePreview } from 'react-live';
 import templates from './templates';
 
@@ -43,7 +74,40 @@ export default ({ children, template, id }) => {
     <StyledLiveContainer
       transformCode={injectRender}
       code={stripFirstReturn(children)}
-      scope={{ tween, physics, css, svg, easing, Component, id }}
+      scope={{
+        onFrameStart,
+        onFrameUpdate,
+        onFrameRender,
+        onFrameEnd,
+        cancelOnFrameStart,
+        cancelOnFrameUpdate,
+        cancelOnFrameRender,
+        cancelOnFrameEnd,
+        timeSinceLastFrame,
+        currentFrameTimestamp,
+        calc,
+        easing,
+        transform,
+        valueTypes,
+        Action,
+        chain,
+        colorTween,
+        composite,
+        crossFade,
+        delay,
+        parallel,
+        physics,
+        pointer,
+        tween,
+        stagger,
+        value,
+        Renderer,
+        css,
+        svg,
+        svgPath,
+        Component,
+        id
+      }}
       mountStylesheet={false}
       noInline={true}
     >

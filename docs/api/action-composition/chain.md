@@ -20,3 +20,7 @@ chain([
   tween(1, 1000)
 ]).start();
 ```
+
+## Methods
+
+[...Action](action)

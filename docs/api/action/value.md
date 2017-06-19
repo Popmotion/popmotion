@@ -11,3 +11,5 @@ category: action
 ## Methods
 
 - `set <Number>`: Updates `current` and schedules an update.
+
+[...Action](action)

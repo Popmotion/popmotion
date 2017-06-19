@@ -9,12 +9,12 @@ An Action's `onUpdate` prop is a callback receives `value` as an argument. We ca
 
 ```javascript
 import { tween, transform } from 'popmotion';
-const { flow, clamp } = transform;
+const { pipe, clamp } = transform;
 
 tween({
   from: 0,
   to: 255,
-  onUpdate: flow(
+  onUpdate: pipe(
     clamp(0, 255),
     Math.round,
     console.log
@@ -117,20 +117,6 @@ tetherToZero(-20); // passed to spring
 tetherToZero(50); // not passed to spring
 ```
 
-### `flow`
-Used to compose other transformers, from left to right. The first argument passed to the returned function will be the value and any subsequent arguments will be passed to all functions unaltered.
-
-`flow(...funcs <Functions>)`
-
-```javascript
-const rgbType = flow(
-  clamp(0, 255),
-  Math.round
-);
-
-rgbType(12.25); // 12
-```
-
 ### `interpolate`
 Returns a function that, when passed a value, interpolates from the `inputRange` to the `outputRange`.
 
@@ -149,6 +135,20 @@ const foo = interpolate(
   [0, 0.5, 0]
 );
 foo(75); // 0.25
+```
+
+### `pipe`
+Used to compose other transformers, from left to right. The first argument passed to the returned function will be the value and any subsequent arguments will be passed to all functions unaltered.
+
+`pipe(...funcs <Functions>)`
+
+```javascript
+const rgbType = pipe(
+  clamp(0, 255),
+  Math.round
+);
+
+rgbType(12.25); // 12
 ```
 
 ### `smooth`
@@ -186,7 +186,7 @@ Wraps a number around.
 ```javascript
 physics({
   velocity: 1000,
-  onUpdate: flow(
+  onUpdate: pipe(
     wrap(100, 400),
     console.log
   )

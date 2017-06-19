@@ -19,7 +19,6 @@ const divs = document.getElementByTag('div');
 const mappedTweens = [].slice.call(divs).map((element) => {
   const elementRenderer = css(element);
   return tween({
-    from: 0,
     to: 100,
     onUpdate: (v) => elementRenderer.set('x', v)
   });
@@ -27,3 +26,7 @@ const mappedTweens = [].slice.call(divs).map((element) => {
 
 stagger(mappedTweens, 50, () => console.log('done!'));
 ```
+
+## Methods
+
+[...Action](action)

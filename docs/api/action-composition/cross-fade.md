@@ -34,3 +34,7 @@ const fadeBetween = crossFade({
   onUpdate: (v) => console.log(v)
 });
 ```
+
+## Methods
+
+[...Action](action)

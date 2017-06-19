@@ -18,3 +18,7 @@ Simulate velocity, acceleration, friction and spring physics.
 - `autoStopSpeed <Number>`: When absolute speed drops below this value, physics is marked as complete. (default: `0.001`)
 - `spring <Number>`: If non-zero and `to` is set, decides the intensity of the "pull" of `to`.
 - `to <Number>`: If set, is used as an anchor for spring physics simulations.
+
+## Methods
+
+[...Action](action)

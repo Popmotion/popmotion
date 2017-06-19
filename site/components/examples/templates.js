@@ -1,6 +1,6 @@
 import Counter from './Counter';
-import Box from './Box';
+import Ball from './Ball';
 
 export default {
-  Counter, Box
+  Counter, Ball
 };

@@ -22,3 +22,7 @@ const tweenShadowCSSValue = composite({
   onUpdate: (v) => console.log(v) // { foo: 0, bar: 0 }
 }).start();
 ```
+
+## Methods
+
+[...Action](action)
