@@ -4,6 +4,7 @@ import { A, Strong } from '~/templates/global/primatives';
 import { GetStartedLink } from './primatives';
 import { fontSize } from '~/styles/fonts';
 import { cols, media, verticalGradient, PURPLE, PURPLE_BURN } from '~/styles/vars';
+import routes from '~/data/route-paths.json';
 
 const Container = styled.div`
   margin: 0 auto;
@@ -89,7 +90,7 @@ export default () => (
       </USP>
     </USPContainer>
     <FooterGetStartedLink>
-      <Link href="/guides/get-started">
+      <Link href={routes.learn}>
         <a>Get started</a>
       </Link>
     </FooterGetStartedLink>

@@ -47,7 +47,7 @@ export default () => (
     <MainLine>The JavaScript motion engine</MainLine>
     <SecondaryLine>Create delightful interactions with input<br />tracking, animations and physics</SecondaryLine>
     <GetStartedLink>
-      <Link href="/guides/get-started">
+      <Link href={routes.learn}>
         <a>Get started</a>
       </Link>
     </GetStartedLink>
