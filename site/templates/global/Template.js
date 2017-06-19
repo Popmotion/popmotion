@@ -21,22 +21,18 @@ injectGlobal`
   ${nprogressStyles}
 `;
 
-export default ({ children, title, description=settings.siteDescription }) => {
-  const pageTitle = `${title ? `${title} | ` : ''}${settings.siteName}`;
-
-  return (
-    <div>
-      <Head>
-        <meta name="theme-color" content={MAIN} />
-        <meta name="msapplication-navbutton-color" content={MAIN} />
-        <meta name="apple-mobile-web-app-title" content={settings.siteName} />
-        <meta property="og:site_name" content={settings.siteName} />
-        <meta property="og:title" content={pageTitle} />
-        <meta property="og:description" content={description} />
-        <meta property="twitter:site" content={settings.twitterUsername} />
-        <title>{pageTitle}</title>
-      </Head>
-      {children}
-    </div>
-  );
-};
+export default ({ children, title, description=settings.siteDescription }) => (
+  <div>
+    <Head>
+      <meta name="theme-color" content={MAIN} />
+      <meta name="msapplication-navbutton-color" content={MAIN} />
+      <meta name="apple-mobile-web-app-title" content={settings.siteName} />
+      <meta property="og:site_name" content={settings.siteName} />
+      <meta property="og:title" content={title} />
+      <meta property="og:description" content={description} />
+      <meta property="twitter:site" content={settings.twitterUsername} />
+      <title>{title}</title>
+    </Head>
+    {children}
+  </div>
+);

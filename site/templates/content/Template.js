@@ -5,7 +5,7 @@ import { Container, LeftMargin, RightMargin, ContentArea, HeaderArea } from '~/c
 import 'prismjs';
 
 export default ({ children, id, title, description, section }) => (
-  <GlobalTemplate title={title} description={description}>
+  <GlobalTemplate title={`${title} | Popmotion`} description={description}>
     <Container>
       <HeaderArea>
         <Header section={section} />
