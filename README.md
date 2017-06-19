@@ -16,17 +16,8 @@ Popmotion is:
 [![npm downloads](https://img.shields.io/npm/dm/popmotion.svg?style=flat-square)](https://www.npmjs.com/package/popmotion)
 [![Twitter Follow](https://img.shields.io/twitter/follow/espadrine.svg?style=social&label=Follow)](http://twitter.com/popmotionjs)
 
-[Slack](https://popmotion.slack.com)
-
-## Examples
-- ~~Simple tween~~ (Coming soon)
-- [Bouncing ball with gravity](http://codepen.io/popmotion/pen/egwMGQ)
-- ~~Pointer tracking~~ (Coming soon)
-- [Scrolling list with momentum and spring-loaded boundaries](http://codepen.io/popmotion/full/EZaPxZ/)
-- [Tween blending](http://codepen.io/popmotion/full/wgKpaj)
-- [Color blending](http://codepen.io/popmotion/full/dNPVwP)
-
-### [Full API documentation](docs/api)
+### [Get Started](https://popmotion.io/guides/get-started)
+### [Full API documentation](https://popmotion.io/api)
 
 ## Installation
 
@@ -54,28 +45,5 @@ Download `popmotion.global.min.js` from our [GitHub repo](https://github.com/Pop
 
 Popmotion is then available as the global variable `popmotion`.
 
-## Quick start
-
-Creating basic motion like tweens and physics in Popmotion is simple. For example, here's a simple tween that prints its output to the `console`:
-
-```javascript
-import { tween } from 'popmotion';
-
-tween({
-  to: 100,
-  onUpdate: (v) => console.log(v)
-}).start();
-```
-
-To use that tween to move an actual DOM element, we can create a CSS renderer.
-
-```javascript
-const ballRenderer = css(document.getElementById('ball'));
-
-tween({
-  to: 100,
-  onUpdate: (v) => ballRenderer.set('x', v)
-}).start();
-```
-
-### [Full API documentation](docs/api)
+### [Get Started](https://popmotion.io/guides/get-started)
+### [Full API documentation](https://popmotion.io/api)
