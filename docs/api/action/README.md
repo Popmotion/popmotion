@@ -6,7 +6,7 @@ category: action
 
 # Action
 
-`Action` is the base class of Popmotion's included actions, like [`tween`](/docs/actions/tween.md) and [`physics`](/docs/actions/physics.md).
+`Action` is the base class of Popmotion's included actions, like [`tween`](tween) and [`physics`](physics).
 
 New actions can be created by extending `Action` and providing an `update` function that takes a value and returns a new one. `onStart`, `onStop` and `onComplete` methods can also be provided, both as `class` methods and `Action` properties.
 
