@@ -24,7 +24,7 @@ const generateRouteDefinitions = (data) => {
     pageIds.forEach((pageId) => {
       routes += `
         '${rootId}/${pageId}': {
-          page: '${rootId}/${pageId}'
+          page: '/${rootId}/${pageId}'
         },
       `;
     });
