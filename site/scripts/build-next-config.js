@@ -14,6 +14,7 @@ module.exports = {
 const generateRouteDefinitions = (data) => {
   let routes = `
     '/': { page: '/' },
+    '/api': { page: '/api' }
   `;
 
   Object.keys(data).forEach((rootId) => {
