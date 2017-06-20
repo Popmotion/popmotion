@@ -11,7 +11,7 @@ function createPointer({ x, y }, { eventToPoints, moveEvent, ...props }) {
   });
 
   const updatePointer = (e) => {
-    if (props.preventDefault) {
+    if (pointer.getProp('preventDefault')) {
       e.preventDefault();
     }
 

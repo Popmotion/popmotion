@@ -5,6 +5,7 @@ import Logo from '~/components/layout/Logo';
 import { fontSize } from '~/styles/fonts';
 import { WHITE, cols, media } from '~/styles/vars';
 import { GetStartedLink } from './primatives';
+import routes from '~/data/route-paths.json';
 
 const HomepageLogo = styled(Logo)`
   margin: 0 auto;

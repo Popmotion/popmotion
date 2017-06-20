@@ -10,22 +10,37 @@ Creates a composite action that tracks the `x` and `y` movement of touch and mou
 
 `pointer(e <MouseEvent | TouchEvent>, props <Object>)`
 
-## Example
-
 ```javascript
 import { pointer } from 'popmotion';
+```
 
-document.addEventListener('mousedown', (e) => {
-  pointer(e, {
-    preventDefault: true,
-    onUpdate: ({ x, y }) => console.log(x, y)
+Click "start" and then click and drag around the page.
+
+```marksy
+<Example template="Counter" id="a">{`
+const counter = document.querySelector('#a .counter');
+let pointerTracker;
+
+function startTracking(e) {
+  pointerTracker = pointer(e, {
+    onUpdate: ({ x, y }) => counter.innerHTML = 'x: ' + x + ' y: ' + y
   }).start();
-});
+}
+
+function stopTracking() {
+  if (pointerTracker) pointerTracker.stop();
+}
+
+document.addEventListener('mousedown', startTracking);
+document.addEventListener('touchstart', startTracking);
+document.addEventListener('mouseup', stopTracking);
+document.addEventListener('touchend', stopTracking);
+`}</Example>
 ```
 
 ## Props
 
-- `preventDefault <Boolean>`: If `true`, fire `preventDefault` on `mousemove` or `touchmove` events (default `true`)
+- `preventDefault <Boolean>`: If `true`, fire `preventDefault` on `mousemove` or `touchmove` events (default `false`)
 [...Action](action)
 
 ## Methods

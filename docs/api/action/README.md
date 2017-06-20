@@ -8,28 +8,6 @@ category: action
 
 `Action` is the base class of Popmotion's included actions, like [`tween`](tween) and [`physics`](physics).
 
-New actions can be created by extending `Action` and providing an `update` function that takes a value and returns a new one. `onStart`, `onStop` and `onComplete` methods can also be provided, both as `class` methods and `Action` properties.
-
-## Example
-
-```javascript
-import { Action } from 'popmotion';
-
-class CustomAction extends Action {
-  update(current) {
-    const { increment } = this.props;
-    return current + increment;
-  }
-}
-
-const customAction = new CustomAction({
-  increment: 10,
-  onUpdate: (v) => console.log(v)
-});
-
-customAction.start();
-```
-
 ## Props
 
 - `onUpdate <Function>`: Fires every frame the value is updated.
@@ -49,3 +27,36 @@ customAction.start();
 - `setProps(<Object>)`: Updates `props`.
 - `getProp(<String>)`: Returns the named property.
 - `output(<Function>)`: Shorthand for updating the `onUpdate` property.
+
+## Creating new actions
+
+The `Action` class is available for developers to make new actions or action compositors.
+
+```javascript
+import { Action } from 'popmotion';
+```
+
+New actions can be created by extending `Action` and providing an `update` function that takes one value and returns a new one. This new value will be provided to the `onUpdate` callback in the Action instance.
+
+For example, here's a dummy Action that updates the `current` value by `10` once every frame:
+
+```marksy
+<Example template="Counter" id="a">{`
+const counter = document.querySelector('#a .counter');
+
+class CustomAction extends Action {
+  update(current) {
+    return current + this.props.increment;
+  }
+}
+
+const myCustomAction = new CustomAction({
+  increment: 10,
+  onUpdate: (v) => counter.innerHTML = v
+});
+
+myCustomAction.start();
+`}</Example>
+```
+
+`onStart`, `onStop` and `onComplete` methods can also be provided, both as `class` methods and `Action` properties.
