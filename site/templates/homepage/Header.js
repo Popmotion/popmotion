@@ -5,6 +5,7 @@ import Logo from '~/components/layout/Logo';
 import { fontSize } from '~/styles/fonts';
 import { WHITE, cols, media } from '~/styles/vars';
 import { GetStartedLink } from './primatives';
+import routes from '~/data/route-paths.json';
 
 const HomepageLogo = styled(Logo)`
   margin: 0 auto;
@@ -47,7 +48,7 @@ export default () => (
     <MainLine>The JavaScript motion engine</MainLine>
     <SecondaryLine>Create delightful interactions with input<br />tracking, animations and physics</SecondaryLine>
     <GetStartedLink>
-      <Link href="/guides/get-started">
+      <Link href={routes.learn}>
         <a>Get started</a>
       </Link>
     </GetStartedLink>

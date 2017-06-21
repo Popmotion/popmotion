@@ -6,6 +6,14 @@ category: action-composition
 
 # Blend Tweens
 
+**Experimental**
+
+Blend between two tweens using a bezier interpolator.
+
+```javascript
+import blendTweens from 'popmotion/lib/actions/blend-tweens';
+```
+
 ## Example
 
 ```javascript

@@ -6,23 +6,31 @@ category: action
 
 # Color Tween
 
-Creates a special tween that uses the `blendColor` transformer to smoothly transition between two colors. Popmotion uses an advanced algorithm for smoother blends, as explained in the video [Computer Color is Broken](https://www.youtube.com/watch?v=LKnqECcg6Gw).
+Creates a special tween that smoothly transitions between two colors.
+
+Popmotion uses an advanced algorithm for smoother blends without muddy saturation loss, as explained in the video [Computer Color is Broken](https://www.youtube.com/watch?v=LKnqECcg6Gw).
 
 Colors can be provided either as objects of named color channels ('red', 'green' etc), or as hex/rgb/rgba strings.
 
 `colorTween(props <Object>)`
 
-```javascript
-import { css, colorTween } from 'popmotion';
-
-const element = css(document.getElementById('example'));
+```marksy
+<Example template="Swatch" id="a">{`
+const swatch = document.querySelector('#a .swatch');
+const swatchRenderer = css(swatch);
 
 colorTween({
-  from: '#f00',
-  to: '#00f',
-  onUpdate: (v) => element.set('backgroundColor', v)
-});
+  from: '#ED2754',
+  to: '#6127ED',
+  duration: 700,
+  flip: Infinity,
+  ease: easing.linear,
+  onUpdate: (color) => swatchRenderer.set('backgroundColor', color)
+}).start();
+`}</Example>
 ```
+
+This is the animated version of the `blendColor` transformer.
 
 ## Props
 
