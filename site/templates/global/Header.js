@@ -41,7 +41,7 @@ const TwitterIcon = styled(Twitter)``;
 export default ({ section }) => (
   <HeaderContainer>
     <NavArea>
-      <Link href="/">
+      <Link href="/" name="Homepage">
         <a>
           <PopmotionIcon />
         </a>
@@ -49,10 +49,10 @@ export default ({ section }) => (
       <SectionNav section={section} />
     </NavArea>
     <NavArea>
-      <TwitterLink href={settings.twitterUrl}>
+      <TwitterLink href={settings.twitterUrl} name="Popmotion Twitter">
         <TwitterIcon />
       </TwitterLink>
-      <IconLink href={settings.githubUrl}>
+      <IconLink href={settings.githubUrl} name="Popmotion GitHub">
         <GitHubIcon />
       </IconLink>
     </NavArea>

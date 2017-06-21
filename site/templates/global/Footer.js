@@ -17,7 +17,7 @@ const Spacer = styled.p`
 export default () => (
   <Container>
     <Spacer>
-      {`© 2015-${YEAR} Matt Perry`}
+      {`© 2015-${YEAR} Popmotion Ltd`}
     </Spacer>
   </Container>
 );

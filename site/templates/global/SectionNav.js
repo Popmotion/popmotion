@@ -39,7 +39,7 @@ export default ({ section }) => (
     {Object.keys(sectionNames).map((name) => (
       <MenuItem key={name} isSelected={(section === name)}>
         <Link href={routes[name]}>
-          <a>{sectionNames[name]}</a>
+          <a name={sectionNames[name]}>{sectionNames[name]}</a>
         </Link>
       </MenuItem>
     ))}

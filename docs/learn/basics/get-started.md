@@ -2,6 +2,7 @@
 title: Get Started
 description: Introduction to Popmotion's tween, physics and user input tracking functions.
 category: basics
+next: physics
 ---
 
 # Get Started
@@ -18,7 +19,9 @@ npm install popmotion --save
 
 ## The "Hello World" tween
 
-A tween is a function that changes one number to another, over a set duration of time.
+A tween is a function that changes one number to another, over a set duration of time. It's identical to a CSS transition.
+
+We can import all Popmotion methods like so:
 
 ```javascript
 import { tween } from 'popmotion';
@@ -55,7 +58,22 @@ As web developers our most common use-case is to animate the DOM. Popmotion prov
 import { css, svg } from 'popmotion';
 ```
 
-By creating a new `onUpdate` function with a `css` renderer, we can quickly make this tween an animation:
+When provided a single `Node`, they provide `get` and `set` methods for that element's visual properties.
+
+```marksy
+<Example template="Ball" id="css">{`
+const ball = document.querySelector('#css .ball');
+const ballRenderer = css(ball);
+
+ballRenderer.set({
+  backgroundColor: '#FFAD44',
+  x: 150, // Automatically converted to px
+  y: '100%'
+});
+`}</Example>
+```
+
+By creating a new `onUpdate` function with a `css` renderer, we can easily make the above tween an animation:
 
 ```marksy
 <Example template="Ball" id="b">{`
@@ -69,3 +87,5 @@ tween({
 }).start();
 `}</Example>
 ```
+
+And that's it! Your first animation.

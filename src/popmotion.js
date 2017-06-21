@@ -27,6 +27,7 @@ export delay from './actions/delay';
 export parallel from './actions/parallel';
 export physics from './actions/physics';
 export pointer from './actions/pointer';
+export trackOffset from './actions/track-offset';
 export tween from './actions/tween';
 export stagger from './actions/stagger';
 export value from './actions/value';
