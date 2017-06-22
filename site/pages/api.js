@@ -41,7 +41,7 @@ export default () => (
         <H1>API</H1>
         <CategoriesContainer>
           {apiMenu.map((tl) => (
-            <Category>
+            <Category key={tl.id}>
               <H2>
                 <Link href={`/api/${tl.id}`}>
                   <a>{tl.title}</a>
@@ -51,7 +51,7 @@ export default () => (
               {tl.posts ? (
                 <PagesContainer>
                   {tl.posts.map((sl) => (
-                    <Page>
+                    <Page key={sl.id}>
                       <H3>
                         <Link href={`/api/${sl.id}`}>
                           <a>{sl.title}</a>

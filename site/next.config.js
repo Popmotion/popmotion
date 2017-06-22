@@ -25,6 +25,10 @@ module.exports = {
           page: '/api/pointer'
         },
       
+        '/api/track-offset': {
+          page: '/api/track-offset'
+        },
+      
         '/api/tween': {
           page: '/api/tween'
         },
@@ -95,6 +99,10 @@ module.exports = {
       
         '/learn/get-started': {
           page: '/learn/get-started'
+        },
+      
+        '/learn/input-tracking': {
+          page: '/learn/input-tracking'
         },
       };
   }

@@ -12,13 +12,27 @@ Chain a linear sequence of actions. The next action in the sequence is started w
 
 ## Example
 
-```javascript
-import { chain, tween, stagger } from 'popmotion';
+```marksy
+<Example template="Ball">{`
+const ball = document.querySelector('.ball');
+const ballRenderer = css(ball);
+const setBallX = (v) => ballRenderer.set('x', v);
 
 chain([
-  tween(0, 1),
-  tween(1, 1000)
+  tween({
+    to: 300,
+    onUpdate: setBallX
+  }),
+  delay(200),
+  physics({
+    from: 300,
+    to: 0,
+    spring: 500,
+    friction: 0.9,
+    onUpdate: setBallX
+  })
 ]).start();
+`}</Example>
 ```
 
 ## Methods

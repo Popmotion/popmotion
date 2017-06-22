@@ -12,15 +12,55 @@ Control multiple named actions simultaneously. Output value is an object. Compos
 
 ## Example
 
-```javascript
-import { composite, tween } from 'popmotion';
+```marksy
+<Example template="Ball">{`
+const ball = document.querySelector('.ball');
+const ballRenderer = css(ball);
+let pointerTracker;
+let pointerOffset;
 
-const tweenShadowCSSValue = composite({
-  foo: physics(...opts),
-  bar: physics(...opts)
-}, {
-  onUpdate: (v) => console.log(v) // { foo: 0, bar: 0 }
-}).start();
+const springProps = {
+  to: 0,
+  spring: 500,
+  friction: 0.9
+};
+
+function startTracking(e) {
+  if (pointerOffset) pointerOffset.stop();
+
+  pointerTracker = pointer(e).start();
+  pointerOffset = composite({
+    x: trackOffset(pointerTracker.x)
+    y: trackOffset(pointerTracker.y)
+  }, {
+    onUpdate: (props) => ballRenderer.set(props)
+  }).start();
+}
+
+function stopTracking() {
+  if (pointerTracker) pointerTracker.stop();
+  if (pointerOffset) pointerOffset.stop();
+  pointerOffset = composite({
+    x: physics({
+      from: pointerOffset.get().x,
+      velocity: pointerOffset.getVelocity().x,
+      ...springProps
+    }),
+    y: physics({
+      from: pointerOffset.get().y,
+      velocity: pointerOffset.getVelocity().y,
+      ...springProps
+    })
+  }, {
+    onUpdate: (props) => ballRenderer.set(props)
+  }).start();
+}
+
+document.addEventListener('mousedown', startTracking);
+document.addEventListener('touchstart', startTracking);
+document.addEventListener('mouseup', stopTracking);
+document.addEventListener('touchend', stopTracking);
+`}</Example>
 ```
 
 ## Methods
