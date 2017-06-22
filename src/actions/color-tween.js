@@ -1,5 +1,5 @@
 import tween from './tween';
-import { blendColor, flow } from '../inc/transformers';
+import { blendColor, pipe } from '../inc/transformers';
 import { color } from '../inc/value-types';
 
 export default ({ from, to, ...props }) => {
@@ -7,6 +7,6 @@ export default ({ from, to, ...props }) => {
     ...props,
     from: 0,
     to: 1,
-    transform: flow(blendColor(from, to), color.transform)
+    transform: pipe(blendColor(from, to), color.transform)
   });
 };

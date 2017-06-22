@@ -14,6 +14,7 @@ module.exports = {
 const generateRouteDefinitions = (data) => {
   let routes = `
     '/': { page: '/' },
+    '/api': { page: '/api' },
   `;
 
   Object.keys(data).forEach((rootId) => {
@@ -22,8 +23,8 @@ const generateRouteDefinitions = (data) => {
 
     pageIds.forEach((pageId) => {
       routes += `
-        '${rootId}/${pageId}': {
-          page: '${rootId}/${pageId}'
+        '/${rootId}/${pageId}': {
+          page: '/${rootId}/${pageId}'
         },
       `;
     });

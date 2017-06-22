@@ -1,6 +1,7 @@
 ---
 title: Renderers
 description: Optimised get/set renderers.
+category: renderers
 ---
 
 # Renderer
@@ -13,11 +14,6 @@ The two main efficiencies this enables:
 
 - `get` requests will only perform an expensive read from the underlying platform if the requested value isn't already present in the cache.
 - `set` requests only schedule an expensive render on the underlying platform at a specific point in the render loop. This means multiple `set` requests can be made from different points in your program and they'll be batched into a single efficient call and prevent layout thrashing. **Note:** a render can be manually fired with a renderer's `render` method.
-
-## Renderers
-- [CSS](css)
-- [SVG](svg)
-- [SVG Path](svg-path)
 
 ## Creation
 
@@ -37,18 +33,18 @@ Making a new renderer is easy, it accepts two main methods `onRead` and `onRende
 
 ## Example
 
-A typical renderer would look like this: 
+A typical renderer would look like this:
 
 ```javascript
 import { Renderer } from 'popmotion';
 
 class MyRenderer extends Renderer {
   onRead(key) {
-    
+
   }
 
   onRender() {
-    
+
   }
 }
 ```

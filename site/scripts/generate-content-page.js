@@ -1,10 +1,32 @@
 const escapeBackticks = (string) => string.replace(/`/g, '\\`');
 
 module.exports = (body, { category, id, title, description }) => `
-import markdown from 'markdown-in-js';
-import ContentTemplate from '~/components/layout/Content';
+import dynamic from 'next/dynamic';
+import { createElement } from 'react';
+import marksy from 'marksy/components';
+import { A, H1, H2, H3, P, Li, Ul, Code, Pre } from '~/templates/global/primatives';
+import ContentTemplate from '~/templates/content/Template';
+const Example = dynamic(import('../../components/examples/Example'));
 
-const Content = () => markdown\`${escapeBackticks(body)}\`;
+const removeEmpty = filename => filename !== '';
+
+const convertMarkdown = marksy({
+  createElement,
+  a: A,
+  h1: H1,
+  h2: H2,
+  h3: H3,
+  p: P,
+  code: Code,
+  li: Li,
+  ul: Ul,
+  components: {
+    Example
+  }
+});
+
+const content = convertMarkdown(\`${escapeBackticks(body)}\`);
+
 const Page = ({ section }) => (
   <ContentTemplate
     id="${id}"
@@ -13,12 +35,13 @@ const Page = ({ section }) => (
     title="${title}"
     description="${description}"
   >
-    <Content />
+    {content.tree}
   </ContentTemplate>
 );
 
-Page.getInitialProps = async ({ pathname }) => {
-  const [, section] = pathname.split('/');
+Page.getInitialProps = async ({ pathname, req }) => {
+  const [section] = pathname.split('/').filter(removeEmpty);
+
   return { section };
 };
 

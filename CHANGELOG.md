@@ -2,6 +2,18 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.0.0] 2017-xx-xx
+
+## Features
+- `trackOffset` action returns to simplify the process of tracking the offset of other actions.
+- `esnext` package.json property supported.
+
+## Deprecated
+- `flow` is now `pipe`, to avoid terminology clashes with [Flow](https://flow.org/). `flow` will continue to work until `7.1.0`.
+
+## Removed
+- `blendTweens` is now an optional include.
+
 ## [6.7.2] 2017-06-01
 
 ## Fixed
@@ -215,7 +227,7 @@ Minor bugfixes.
 ## [4.3.4] 2015-12-30
 
 ### Fixed
-- `Simulate.hasChanged` incorrectly calculated. 
+- `Simulate.hasChanged` incorrectly calculated.
 
 ## [4.3.3] 2015-12-29
 
@@ -292,7 +304,7 @@ Minor bugfixes.
 ### Added
 - Actor value `watch` property can now be a function returning any numerical value.
 - Added `smooth` for all actions.
-- Added `calc.toDecimal` calculator function. 
+- Added `calc.toDecimal` calculator function.
 
 ## [4.0.0] 2015-11-20
 
@@ -318,7 +330,7 @@ Minor bugfixes.
 
 ### Added
 - Elliot Geno's awesome `'anticipate'` easing. Follow him at [@ElliotGeno](https://twitter.com/ElliotGeno/).
-- In-built easings now available in the `ui.ease` namespace. So instead of providing `'backOut'` you can reference it literally - `ui.ease.anticipate`. 
+- In-built easings now available in the `ui.ease` namespace. So instead of providing `'backOut'` you can reference it literally - `ui.ease.anticipate`.
 - Create modified easing function strengths, for instance `ease: ui.modifyEase(ui.ease.backOut, 2)`. `'ease'` and `'back'` in/out/inOut variants and `'anticipate'` are available. You must provide the literal reference rather than string reference.
 
 ## [3.7.1] 2015-11-11
@@ -343,7 +355,7 @@ Minor bugfixes.
 - Extra tests to ensure Popmotion is loading correctly in Meteor.
 
 ### Fixed
-- Explict test for rAF for when `window` is available and `requestAnimationFrame` isn't. 
+- Explict test for rAF for when `window` is available and `requestAnimationFrame` isn't.
 
 ## [3.6.2] 2015-11-02
 
@@ -447,7 +459,7 @@ Minor bugfixes.
 
 ## Fixed
 - Adjusting `hasChanged` logic to always fire on first frame.
-- Changing `Iterator.stagger` logic for more even staggers. 
+- Changing `Iterator.stagger` logic for more even staggers.
 
 ## [3.1.6] 2015-10-05
 

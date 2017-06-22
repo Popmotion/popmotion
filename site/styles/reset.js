@@ -1,3 +1,7 @@
+import { bodyFont, codeFont, fontSize } from './fonts';
+import { BLACK, WHITE, cols } from './vars';
+import syntaxHighlighting from './syntax-highlighting';
+
 export default `
 * {
   box-sizing: border-box;
@@ -5,14 +9,15 @@ export default `
   padding: 0;
   border: 0;
   outline: 0;
-  font-weight: inherit;
   font-style: inherit;
   font-size: 100%;
-  font-family: inherit;
+  color: ${BLACK};
+  ${bodyFont}
   line-height: 1;
   vertical-align: baseline;
   word-wrap: break-word;
   -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-font-smoothing: antialiased;
 }
 
 br {
@@ -202,11 +207,34 @@ svg:not(:root) {
 code,
 kbd,
 pre,
-samp {
-  font-family: monospace, monospace; /* 1 */
-  font-size: 1em; /* 2 */
+samp,
+code span,
+pre span {
+  ${codeFont}
+  -webkit-font-smoothing: initial;
+  tab-size: 2;
 }
 
+/* Would prefer not to do this - marked doesn't return themable pre tags */
+pre {
+  background: ${BLACK};
+  padding: ${cols(1)};
+  margin-bottom: 1.4rem;
+  white-space: pre-wrap;
+  font-size: 14px;
+}
+pre code,
+pre.prism-code {
+  color: ${WHITE};
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+@media (max-width: ${cols(50)}) {
+  pre, pre code, pre span, code span {
+    ${fontSize(14)}
+  }
+}
 /**
  * 1. Add the correct box sizing in Firefox.
  * 2. Show the overflow in Edge and IE.
@@ -405,4 +433,5 @@ textarea {
   -webkit-appearance: none; /* 1 */
   font: inherit; /* 2 */
 }
+${syntaxHighlighting}
 `;

@@ -10,20 +10,19 @@ module.exports = {
     filename: filename
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'babel'
+        loader: 'babel-loader'
       }
     ]
   },
   plugins: isProd ? [
+    new webpack.optimize.ModuleConcatenationPlugin(),
     new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
-      },
-      mangle: true
+      mangle: true,
+      minimize: true
     })
   ] : [
 

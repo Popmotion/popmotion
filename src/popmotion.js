@@ -19,7 +19,6 @@ export * as valueTypes from './inc/value-types';
 
 // Actions
 export Action from './actions';
-export blendTweens from './actions/blend-tweens';
 export chain from './actions/chain';
 export colorTween from './actions/color-tween';
 export composite from './actions/composite';
@@ -28,6 +27,7 @@ export delay from './actions/delay';
 export parallel from './actions/parallel';
 export physics from './actions/physics';
 export pointer from './actions/pointer';
+export trackOffset from './actions/track-offset';
 export tween from './actions/tween';
 export stagger from './actions/stagger';
 export value from './actions/value';

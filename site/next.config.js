@@ -3,85 +3,106 @@ module.exports = {
   exportPathMap: function () {
     return {
     '/': { page: '/' },
+    '/api': { page: '/api' },
   
-        'api/blend-tweens': {
-          page: 'api/blend-tweens'
+        '/api/action': {
+          page: '/api/action'
         },
       
-        'api/chain': {
-          page: 'api/chain'
+        '/api/color-tween': {
+          page: '/api/color-tween'
         },
       
-        'api/color-tween': {
-          page: 'api/color-tween'
+        '/api/delay': {
+          page: '/api/delay'
         },
       
-        'api/composite': {
-          page: 'api/composite'
+        '/api/physics': {
+          page: '/api/physics'
         },
       
-        'api/cross-fade': {
-          page: 'api/cross-fade'
+        '/api/pointer': {
+          page: '/api/pointer'
         },
       
-        'api/delay': {
-          page: 'api/delay'
+        '/api/track-offset': {
+          page: '/api/track-offset'
         },
       
-        'api/parallel': {
-          page: 'api/parallel'
+        '/api/tween': {
+          page: '/api/tween'
         },
       
-        'api/physics': {
-          page: 'api/physics'
+        '/api/value': {
+          page: '/api/value'
         },
       
-        'api/pointer': {
-          page: 'api/pointer'
+        '/api/action-composition': {
+          page: '/api/action-composition'
         },
       
-        'api/stagger': {
-          page: 'api/stagger'
+        '/api/blend-tweens': {
+          page: '/api/blend-tweens'
         },
       
-        'api/tween': {
-          page: 'api/tween'
+        '/api/chain': {
+          page: '/api/chain'
         },
       
-        'api/value': {
-          page: 'api/value'
+        '/api/composite': {
+          page: '/api/composite'
         },
       
-        'api/calc': {
-          page: 'api/calc'
+        '/api/cross-fade': {
+          page: '/api/cross-fade'
         },
       
-        'api/easing': {
-          page: 'api/easing'
+        '/api/parallel': {
+          page: '/api/parallel'
         },
       
-        'api/render-loop': {
-          page: 'api/render-loop'
+        '/api/stagger': {
+          page: '/api/stagger'
         },
       
-        'api/css': {
-          page: 'api/css'
+        '/api/calc': {
+          page: '/api/calc'
         },
       
-        'api/svg-path': {
-          page: 'api/svg-path'
+        '/api/easing': {
+          page: '/api/easing'
         },
       
-        'api/svg': {
-          page: 'api/svg'
+        '/api/render-loop': {
+          page: '/api/render-loop'
         },
       
-        'api/transformers': {
-          page: 'api/transformers'
+        '/api/renderers': {
+          page: '/api/renderers'
         },
       
-        'guides/functional-value-pipelines': {
-          page: 'guides/functional-value-pipelines'
+        '/api/css': {
+          page: '/api/css'
+        },
+      
+        '/api/svg-path': {
+          page: '/api/svg-path'
+        },
+      
+        '/api/svg': {
+          page: '/api/svg'
+        },
+      
+        '/api/transformers': {
+          page: '/api/transformers'
+        },
+      
+        '/learn/get-started': {
+          page: '/learn/get-started'
+        },
+      
+        '/learn/input-tracking': {
+          page: '/learn/input-tracking'
         },
       };
   }

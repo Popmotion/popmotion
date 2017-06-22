@@ -1,4 +1,7 @@
 {
-  "actions": "Actions",
-  "renderers": "Renderers"
+  "action": "Action",
+  "action-composition": "Action composition",
+  "renderers": "Renderer",
+  "basics": "Basics",
+  "tutorials": "Tutorials"
 }

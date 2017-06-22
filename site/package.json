@@ -1,0 +1,60 @@
+{
+  "name": "popmotion-website",
+  "description": "The JavaScript motion engine. Create animations and interactions with tweens, physics and input tracking.",
+  "author": "Matt Perry <sirhound@popmotion.io>",
+  "homepage": "http://popmotion.io",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Popmotion/popmotion"
+  },
+  "bugs": {
+    "url": "https://github.com/Popmotion/popmotion/issues"
+  },
+  "keywords": [
+    "animation",
+    "ux",
+    "ui",
+    "popmotion",
+    "canvas animation",
+    "jquery animation",
+    "dom animation",
+    "dom",
+    "pointer tracking",
+    "mouse",
+    "mouse tracking",
+    "touch",
+    "touch tracking",
+    "physics",
+    "interaction",
+    "interface",
+    "svg"
+  ],
+  "scripts": {
+    "build-content": "node scripts/generate-content.js",
+    "build-site": "npm run build-content && next build && next export -o public",
+    "watch-site": "npm run build-content && next",
+    "start-site": "next start",
+    "lint-site": "eslint",
+    "publish-site": "npm run build-site && aws s3 cp public s3://popmotion.io --recursive"
+  },
+  "analyze": true,
+  "license": "MIT",
+  "dependencies": {
+    "babel-runtime": "^6.23.0",
+    "front-matter": "^2.1.1",
+    "marksy": "^1.0.1",
+    "nprogress": "^0.2.0",
+    "popmotion": "^6.3.5",
+    "prismjs": "^1.6.0",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
+    "react-live": "^1.7.0",
+    "styled-components": "^2.0.1"
+  },
+  "devDependencies": {
+    "babel-plugin-styled-components": "^1.1.4",
+    "next": "^3.0.0-beta14",
+    "s3": "^4.4.0"
+  }
+}

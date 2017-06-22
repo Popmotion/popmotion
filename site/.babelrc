@@ -11,14 +11,14 @@
     "transform-react-jsx",
     "transform-react-constant-elements",
     "transform-strict-mode",
-    ["babel-plugin-root-import", {
-      "rootPathSuffix": "site"
-    }],
+    ["babel-plugin-root-import"],
     ["transform-runtime", {
       "helpers": false,
       "polyfill": false
     }],
-    "markdown-in-js/babel"
+    ["styled-components", {
+      "ssr": true
+    }]
   ],
   "env": {
     "development": {

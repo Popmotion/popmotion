@@ -17,8 +17,6 @@ Popmotion comes with a number of preset easing functions, and provides methods t
 import { tween, easing } from 'popmotion';
 
 tween({
-  from: 0,
-  to: 1,
   ease: easing.easeOut
 }).start();
 ```
@@ -32,6 +30,22 @@ Popmotion comes with the following preset easing functions:
 - `circIn`, `circOut`, `circInOut`
 - `backIn`, `backOut`, `backInOut`
 - `anticipate`
+
+Try them out by editing this live example:
+
+```marksy
+<Example template="Ball" id="b">{`
+const ball = document.querySelector('#b .ball');
+const ballRenderer = css(ball);
+
+tween({
+  to: 300,
+  duration: 300,
+  ease: easing.linear,
+  onUpdate: (x) => ballRenderer.set('x', x)
+}).start();
+`}</Example>
+```
 
 ## Easing creation
 
