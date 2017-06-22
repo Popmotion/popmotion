@@ -12,6 +12,8 @@ Control multiple named actions simultaneously. Output value is an object. Compos
 
 ## Example
 
+Press "start" and then try dragging the ball around:
+
 ```marksy
 <Example template="Ball">{`
 const ball = document.querySelector('.ball');
@@ -30,8 +32,12 @@ function startTracking(e) {
 
   pointerTracker = pointer(e).start();
   pointerOffset = composite({
-    x: trackOffset(pointerTracker.x)
-    y: trackOffset(pointerTracker.y)
+    x: trackOffset(pointerTracker.x, {
+      from: ballRenderer.get('x')
+    }),
+    y: trackOffset(pointerTracker.y, {
+      from: ballRenderer.get('y')
+    })
   }, {
     onUpdate: (props) => ballRenderer.set(props)
   }).start();
@@ -56,8 +62,8 @@ function stopTracking() {
   }).start();
 }
 
-document.addEventListener('mousedown', startTracking);
-document.addEventListener('touchstart', startTracking);
+ball.addEventListener('mousedown', startTracking);
+ball.addEventListener('touchstart', startTracking);
 document.addEventListener('mouseup', stopTracking);
 document.addEventListener('touchend', stopTracking);
 `}</Example>

@@ -34,7 +34,7 @@ import {
   svg,
   svgPath
 } from 'popmotion';
-import { LiveProvider, LiveEditor, LivePreview } from 'react-live';
+import { LiveProvider, LiveEditor, LiveError, LivePreview } from 'react-live';
 import templates from './templates';
 
 const StyledLiveContainer = styled(LiveProvider)`
@@ -115,6 +115,7 @@ export default ({ children, template, id }) => {
     >
       <StyledLiveEditor />
       <StyledLivePreview />
+      <LiveError />
     </StyledLiveContainer>
   );
 };

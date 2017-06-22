@@ -3,8 +3,8 @@ import { applyOffset } from '../inc/transformers';
 
 class TrackOffset extends Action {
   onStart() {
-    const { action, from } = this.props;
-    this.applyOffset = applyOffset(action.getBeforeTransform(), from);
+    const { action } = this.props;
+    this.applyOffset = applyOffset(action.getBeforeTransform(), this.current);
   }
 
   update() {
