@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.1.0] 2017-06-23
+
+## Added
+- `complex` `valueType`.
+
 ## [7.0.3] 2017-06-23
 
 ## Fixed

@@ -1,4 +1,4 @@
-import { alpha, color, complex, scale } from '../../inc/value-types';
+import { alpha, color, scale } from '../../inc/value-types';
 
 export default {
   fill: color,
@@ -6,8 +6,6 @@ export default {
   scale: scale,
   scaleX: scale,
   scaleY: scale,
-  d: complex,
-  points: complex,
   opacity: alpha,
   fillOpacity: alpha,
   strokeOpacity: alpha
