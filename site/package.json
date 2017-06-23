@@ -45,7 +45,7 @@
     "front-matter": "^2.1.1",
     "marksy": "^1.0.1",
     "nprogress": "^0.2.0",
-    "popmotion": "^7.0.0",
+    "popmotion": "^7.0.3",
     "prismjs": "^1.6.0",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",

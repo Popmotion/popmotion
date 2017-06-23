@@ -1,11 +1,11 @@
 ---
-title: Get Started
+title: Get started
 description: Introduction to Popmotion's tween, physics and user input tracking functions.
 category: basics
 next: physics
 ---
 
-# Get Started
+# Get started
 
 Popmotion is a JavaScript motion engine that allows developers to combine **actions**, like tweens, physics and input tracking, to create polished and engaging interfaces.
 
