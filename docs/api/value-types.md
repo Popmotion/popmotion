@@ -24,7 +24,7 @@ px(5) === '5px' // true
 ## Included value types
 
 - `alpha`: `Number` between `0` and `1`
-- `complex`: See below
+- `complex`: `String` containing arbitrary sequence of numbers mixed with other characters. See below.
 - `color`: `String` of either `hex`, `hsla` or `rgba` type
 - `degrees`: `String` ending in `deg`
 - `hex`: `String` beginning with `#` and followed by 3 or 6-digit hex code
@@ -37,3 +37,22 @@ px(5) === '5px' // true
 
 ## Complex type
 
+The `complex` value type is slightly different to the others. Instead of a `transform` method, it has a `createTransformer` method which returns the `transform` method:
+
+```javascript
+const svgPath = 'M150 0 L75 200';
+const transform = complex.createTransformer(svgPath);
+```
+
+The returned `transform` function is unique to the string given to it. When this function is provided an object of the same format as returned by `complex.parse()` (in this example `complex.parse(svgPath)`), it will use the original string as a template.
+
+Example: 
+
+```javascript
+transform({
+  '0': 300,
+  '1': 0,
+  '2': 100,
+  '3': 200
+}); // Returns 'M300 0 L100 200'
+```
