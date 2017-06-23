@@ -2,7 +2,20 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
-## [7.0.0] 2017-xx-xx
+## [7.0.3] 2017-06-23
+
+## Fixed
+- Changed `pointer` to read mouse event `client` positioning instead of `page`, to make consistent with touch events.
+
+## [7.0.2] 2017-06-23
+
+- Minor bugfix.
+
+## [7.0.1] 2017-06-23
+
+- Minor bugfix.
+
+## [7.0.0] 2017-06-22
 
 ## Features
 - `trackOffset` action returns to simplify the process of tracking the offset of other actions.

@@ -4,6 +4,11 @@ description: Track user input
 category: basics
 ---
 
+User input tracking can be used for a ton of different purposes. Drag & drop, scrolling galleries and performantly measuring touch scroll speed are some of the first to come to mind.
+
+In this quick tutorial, we'll look at:
+1) 
+
 
 ```marksy
 <Example template="Ball" id="b">{`

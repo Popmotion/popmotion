@@ -32,7 +32,7 @@ const PagesContainer = styled.ul`
 const Page = styled.li``;
 
 export default () => (
-  <GlobalTemplate title="API" description="">
+  <GlobalTemplate title="API | Popmotion" description="">
     <Container>
       <HeaderArea>
         <Header section="api" />

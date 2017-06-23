@@ -29,8 +29,8 @@ function createPointer({ x, y }, { eventToPoints, moveEvent, ...props }) {
 }
 
 const mouseEventToPoint = (e) => ({
-  x: e.pageX,
-  y: e.pageY
+  x: e.clientX,
+  y: e.clientY
 });
 
 const touchEventToPoint = ({ changedTouches }) => ({
