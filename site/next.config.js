@@ -97,6 +97,10 @@ module.exports = {
           page: '/api/transformers'
         },
       
+        '/api/value-types': {
+          page: '/api/value-types'
+        },
+      
         '/learn/get-started': {
           page: '/learn/get-started'
         },

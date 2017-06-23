@@ -24,6 +24,7 @@ px(5) === '5px' // true
 ## Included value types
 
 - `alpha`: `Number` between `0` and `1`
+- `complex`: See below
 - `color`: `String` of either `hex`, `hsla` or `rgba` type
 - `degrees`: `String` ending in `deg`
 - `hex`: `String` beginning with `#` and followed by 3 or 6-digit hex code
@@ -33,3 +34,6 @@ px(5) === '5px' // true
 - `scale`: `Number` with a `default` of `1` instead of `0`
 - `rgbUnit`: Integer between `1` and `255`
 - `rgba`: String in `rgba(rgbUnit, rgbUnit, rgbUnit, alpha)` format
+
+## Complex type
+

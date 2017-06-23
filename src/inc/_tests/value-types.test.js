@@ -9,7 +9,6 @@ const PATH_VALUES = {
   '4': 225,
   '5': 200
 };
-const PATH_TEMPLATE = 'M${0} ${1} L${2} ${3} L${4} ${5} Z';
 
 describe('complex value type', () => {
   it('test returns correctly', () => {
@@ -21,12 +20,8 @@ describe('complex value type', () => {
     expect(complex.parse(PATH)).toEqual(PATH_VALUES);
   });
 
-  it('createTemplate returns a tokenised string template', () => {
-    expect(complex.createTemplate(PATH)).toBe(PATH_TEMPLATE);
-  });
-
   it('createTransformer returns a transformer function that correctly inserts values', () => {
-    const transform = complex.createTransformer(PATH_TEMPLATE);
+    const transform = complex.createTransformer(PATH);
     expect(transform(PATH_VALUES)).toBe(PATH);
   });
 });

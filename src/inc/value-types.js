@@ -98,18 +98,19 @@ export const complex = {
     v.match(FLOAT_REGEX).forEach((value, i) => parsedValue[i] = parseFloat(value));
     return parsedValue;
   },
-  createTemplate: (v) => {
+  createTransformer: (prop) => {
     let counter = 0;
-    return v.replace(FLOAT_REGEX, () => generateToken(counter++));
-  },
-  createTransformer: (template) => (v) => {
-    let output = template;
-    for (let key in v) {
-      if (v.hasOwnProperty(key)) {
-        output = output.replace(generateToken(key), v[key]);
-      }
-    }
+    const template = prop.replace(FLOAT_REGEX, () => generateToken(counter++));
 
-    return output;
+    return (v) => {
+      let output = template;
+      for (let key in v) {
+        if (v.hasOwnProperty(key)) {
+          output = output.replace(generateToken(key), v[key]);
+        }
+      }
+
+      return output;
+    };
   }
 };
