@@ -1,6 +1,6 @@
 import React from 'react';
 import Logo from './Logo';
-import { css, svg, svgPath, tween, easing, parallel, physics } from 'popmotion';
+import { chain, css, svg, svgPath, tween, easing, parallel, physics } from 'popmotion';
 import { WHITE } from '~/styles/vars';
 
 const SVG_ID = 'logo-container';
@@ -23,32 +23,31 @@ export default class extends React.Component {
       strokeOpacity: 1
     });
 
-    this.action = tween({
-      to: 15,
-      duration: 800,
-      ease: easing.easeIn,
-      onUpdate: (v) => pathRenderer.set('length', v),
-      onComplete: () => {
-        this.action.stop();
-        this.action = parallel([
-          tween({
-            onUpdate: (v) => {
-              pathSvgRenderer.set({
-                fillOpacity: v,
-                strokeOpacity: 1 - v
-              });
-            }
-          }),
-          physics({
-            to: 1,
-            velocity: 50,
-            spring: 300,
-            friction: 0.95,
-            onUpdate: (v) => containerRenderer.set('scale', v)
-          })
-        ]).start();
-      }
-    }).start();
+    this.action = chain([
+      tween({
+        to: 15,
+        duration: 800,
+        ease: easing.easeIn,
+        onUpdate: (v) => pathRenderer.set('length', v)
+      }),
+      parallel([
+        tween({
+          onUpdate: (v) => {
+            pathSvgRenderer.set({
+              fillOpacity: v,
+              strokeOpacity: 1 - v
+            });
+          }
+        }),
+        physics({
+          to: 1,
+          velocity: 50,
+          spring: 300,
+          friction: 0.95,
+          onUpdate: (v) => containerRenderer.set('scale', v)
+        })
+      ])
+    ]).start();
   }
 
   componentWillUnmount() {
