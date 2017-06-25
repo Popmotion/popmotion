@@ -1,13 +1,13 @@
 import styled from 'styled-components';
 import Link from 'next/link';
 import LavaLampHeader from './LavaLampHeader';
-import Logo from '~/components/layout/Logo';
+import AnimatedLogo from '~/components/layout/AnimatedLogo';
 import { fontSize } from '~/styles/fonts';
 import { WHITE, cols, media } from '~/styles/vars';
 import { GetStartedLink } from './primatives';
 import routes from '~/data/route-paths.json';
 
-const HomepageLogo = styled(Logo)`
+const HomepageLogo = styled(AnimatedLogo)`
   margin: 0 auto;
   width: 212px;
   height: 48px;
@@ -44,7 +44,7 @@ const SecondaryLine = styled.p`
 
 export default () => (
   <LavaLampHeader>
-    <HomepageLogo from={WHITE} to={WHITE} />
+    <HomepageLogo />
     <MainLine>The JavaScript motion engine</MainLine>
     <SecondaryLine>Create delightful interactions with input<br />tracking, animations and physics</SecondaryLine>
     <GetStartedLink>
