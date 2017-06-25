@@ -24,9 +24,9 @@ export default class extends React.Component {
     });
 
     this.action = tween({
-      to: 18,
-      duration: 1000,
-      ease: easing.easeInOut,
+      to: 15,
+      duration: 800,
+      ease: easing.easeIn,
       onUpdate: (v) => pathRenderer.set('length', v),
       onComplete: () => {
         this.action.stop();
@@ -41,7 +41,7 @@ export default class extends React.Component {
           }),
           physics({
             to: 1,
-            velocity: 40,
+            velocity: 50,
             spring: 300,
             friction: 0.95,
             onUpdate: (v) => containerRenderer.set('scale', v)
