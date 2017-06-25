@@ -6,7 +6,7 @@ category: renderers
 
 # SVG Renderer
 
-The CSS renderer provides a simple and optimised `get`/`set` interface for SVG elements.
+The SVG renderer provides a simple and optimised `get`/`set` interface for SVG elements.
 
 `svg(element <Node>)`
 

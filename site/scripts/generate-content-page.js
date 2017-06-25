@@ -6,7 +6,7 @@ import { createElement } from 'react';
 import marksy from 'marksy/components';
 import { A, H1, H2, H3, P, Li, Ul, Code, Pre } from '~/templates/global/primatives';
 import ContentTemplate from '~/templates/content/Template';
-const Example = dynamic(import('../../components/examples/Example'));
+import Example from '~/components/examples/Example';
 
 const removeEmpty = filename => filename !== '';
 
