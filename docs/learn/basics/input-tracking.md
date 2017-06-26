@@ -2,6 +2,7 @@
 title: Pointers and dragging
 description: Learn to track mouse and touch movement and use that to drag DOM elements.
 category: basics
+next: velocity-and-physics
 ---
 
 # Pointers and dragging

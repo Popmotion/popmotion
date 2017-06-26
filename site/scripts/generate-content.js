@@ -32,7 +32,7 @@ function generateContent(rootDir, fullDir) {
       const [id] = filename.split('.');
       const file = fs.readFileSync(`${readPath}/${filename}`, { encoding: 'utf-8' });
       const { attributes, body } = frontMatter(file);
-      const { title, description, category, published } = attributes;
+      const { title, description, category, published, next } = attributes;
 
       const outputId = (id === 'README') ? category : id;
 
@@ -41,7 +41,8 @@ function generateContent(rootDir, fullDir) {
         title,
         description,
         category,
-        published
+        published,
+        next
       };
 
       fs.writeFile(

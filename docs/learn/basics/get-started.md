@@ -2,7 +2,7 @@
 title: Get started
 description: Introduction to Popmotion's tween, physics and user input tracking functions.
 category: basics
-next: physics
+next: input-tracking
 ---
 
 # Get started

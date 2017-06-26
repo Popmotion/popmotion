@@ -18,30 +18,45 @@ module.exports = function (siteMetadata) {
     const sectionMetadata = siteMetadata[sectionKey];
 
     // Iterate over posts
-    Object.keys(sectionMetadata).forEach((postKey) => {
-      const { id, title, category } = sectionMetadata[postKey];
+    Object.keys(sectionMetadata)
+      .sort((a, b) => {
+        const aPost = sectionMetadata[a];
+        const bPost = sectionMetadata[b];
 
-      // This post has a category
-      if (category) {
-        // If category data doesn't exist
-        if (!categories[category]) {
-          categories[category] = {
-            id: category,
-            title: categoryNames[category],
-            posts: []
-          };
-          menu.push(categories[category]);
+        if (aPost.next === bPost.id) {
+          return -1;
+        } else if (bPost.next === aPost.next) {
+          return 1;
+        } else if (!aPost.next) {
+          return 1;
         }
 
-        if (id !== category) {
-          categories[category].posts.push({ id, title });
-        }
+        return 0;
+      })
+      .forEach((postKey) => {
+        const { id, title, category } = sectionMetadata[postKey];
 
-      // Or stand-alone post
-      } else {
-        menu.push({ id, title });
-      }
-    });
+        // This post has a category
+        if (category) {
+          // If category data doesn't exist
+          if (!categories[category]) {
+            categories[category] = {
+              id: category,
+              title: categoryNames[category],
+              posts: []
+            };
+            menu.push(categories[category]);
+          }
+
+          if (id !== category) {
+            categories[category].posts.push({ id, title });
+          }
+
+        // Or stand-alone post
+        } else {
+          menu.push({ id, title });
+        }
+      });
 
     menus[sectionKey] = menu;
   });
