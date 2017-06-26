@@ -25,9 +25,7 @@ module.exports = function (siteMetadata) {
 
         if (aPost.next === bPost.id) {
           return -1;
-        } else if (bPost.next === aPost.next) {
-          return 1;
-        } else if (!aPost.next) {
+        } else if (bPost.next === aPost.next || !aPost.next) {
           return 1;
         }
 
