@@ -31,6 +31,8 @@ export default ({ children, title, description=settings.siteDescription }) => (
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="twitter:site" content={settings.twitterUsername} />
+      <meta name="twitter:title" content={title} />
+      <meta name="twitter:description" content={description} />
       <title>{title}</title>
     </Head>
     {children}

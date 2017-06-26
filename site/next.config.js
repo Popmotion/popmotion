@@ -105,10 +105,6 @@ module.exports = {
           page: '/learn/action-management'
         },
       
-        '/learn/functional-composition': {
-          page: '/learn/functional-composition'
-        },
-      
         '/learn/get-started': {
           page: '/learn/get-started'
         },

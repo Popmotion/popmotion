@@ -78,7 +78,7 @@ export default () => (
       </USP>
       <USP>
         <Header>Compatible</Header>
-        <Description>Cross-platform CSS and SVG renderers are included for use both in and outside of animations.</Description>
+        <Description>Cross-platform CSS, SVG and SVG `path` renderers are included for use both in and outside of animations.</Description>
       </USP>
       <USP>
         <Header>Composable</Header>
