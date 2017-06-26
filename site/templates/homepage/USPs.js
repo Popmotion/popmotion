@@ -86,7 +86,7 @@ export default () => (
       </USP>
       <USP>
         <Header>Powerful</Header>
-        <Description>Descrete render step scheduling allows full control over each frame.</Description>
+        <Description>Discrete render step scheduling allows full control over each frame.</Description>
       </USP>
     </USPContainer>
     <FooterGetStartedLink>

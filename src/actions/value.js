@@ -9,10 +9,25 @@ class Value extends Action {
   set(v) {
     this.toUpdate = v;
     onFrameUpdate(this.scheduledUpdate);
+    return v;
   }
 
   update() {
     return this.toUpdate;
+  }
+
+  stopRegisteredAction() {
+    if (this.action) this.action.stop();
+  }
+
+  registerAction(action) {
+    this.stopRegisteredAction();
+    this.action = action;
+    return this;
+  }
+
+  onStop() {
+    this.stopRegisteredAction();
   }
 }
 

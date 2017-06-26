@@ -101,12 +101,24 @@ module.exports = {
           page: '/api/value-types'
         },
       
+        '/learn/action-management': {
+          page: '/learn/action-management'
+        },
+      
+        '/learn/functional-composition': {
+          page: '/learn/functional-composition'
+        },
+      
         '/learn/get-started': {
           page: '/learn/get-started'
         },
       
         '/learn/input-tracking': {
           page: '/learn/input-tracking'
+        },
+      
+        '/learn/velocity-and-physics': {
+          page: '/learn/velocity-and-physics'
         },
       };
   }

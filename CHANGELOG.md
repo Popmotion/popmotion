@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.2.0] 2017-06-26
+
+## Added
+- `value` can now be provided to an action's `onUpdate` for automatic action management.
+
 ## [7.1.1] 2017-06-23
 
 - Minor bugfix.

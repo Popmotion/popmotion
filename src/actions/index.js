@@ -80,16 +80,24 @@ class Action { // lawsuit - sorry
     return this;
   }
 
-  setProps(props) {
+  setProps({ onUpdate, ...props }) {
     this.props = {
       ...this.props,
       ...props
     };
+
+    if (onUpdate) this.output(onUpdate);
+
     return this;
   }
 
   output(func) {
-    this.props.onUpdate = func;
+    if (func.registerAction) {
+      func.registerAction(this);
+      this.props.onUpdate = (v) => func.set(v);
+    } else {
+      this.props.onUpdate = func;
+    }
     return this;
   }
 

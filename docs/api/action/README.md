@@ -26,7 +26,7 @@ category: action
 - `complete`: Stop an action and mark as complete. Fires `onStop` and `onComplete` callbacks.
 - `setProps(<Object>)`: Updates `props`.
 - `getProp(<String>)`: Returns the named property.
-- `output(<Function>)`: Shorthand for updating the `onUpdate` property.
+- `output(<Function | value Action>)`: Shorthand for updating the `onUpdate` property. If passed a `value`, will register this action as the sole permitted input to the provided `value` action.
 
 ## Creating new actions
 

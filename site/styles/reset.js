@@ -53,6 +53,7 @@ html {
 
 body {
   margin: 0;
+  overflow-x: hidden;
 }
 
 /* HTML5 display definitions
