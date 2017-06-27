@@ -21,6 +21,8 @@ injectGlobal`
   ${nprogressStyles}
 `;
 
+const TWITTER_CARD = '/static/images/twitter-card.png';
+
 export default ({ children, title, description=settings.siteDescription }) => (
   <div>
     <Head>
@@ -30,9 +32,11 @@ export default ({ children, title, description=settings.siteDescription }) => (
       <meta property="og:site_name" content={settings.siteName} />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
+      <meta property="og:image" content={TWITTER_CARD} />
       <meta property="twitter:site" content={settings.twitterUsername} />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
+      <meta name="twitter:image" content={TWITTER_CARD} />
       <title>{title}</title>
     </Head>
     {children}

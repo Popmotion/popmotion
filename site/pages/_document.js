@@ -20,7 +20,6 @@ export default class PageTemplate extends Document {
           <link rel="icon" type="image/png" sizes="16x16" href="/static/images/favicon-16x16.png" />
           <meta name="twitter:card" content="summary" />
           <meta name="twitter:site" content="@popmotionjs" />
-          <meta name="twitter:image" content="/static/images/twitter-card.png" />
           <link rel="shortcut icon" href="/static/images/favicon.ico" />
           {styleTags}
           <Analytics />
