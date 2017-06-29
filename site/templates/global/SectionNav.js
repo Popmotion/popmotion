@@ -14,7 +14,7 @@ const Container = styled.ul`
 const MenuItem = styled.li`
   ${fontSize(18)}
   display: inline;
-  margin-right: ${cols(1)};
+  margin-right: ${cols(2)};
 
   ${({ isSelected }) => isSelected && `
     border-bottom: 3px solid ${LINK};
@@ -22,6 +22,7 @@ const MenuItem = styled.li`
 
   ${media.medium`
     ${fontSize(16)}
+    margin-right: ${cols(1)};
   `}
 
   a {

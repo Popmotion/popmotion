@@ -1,5 +1,9 @@
 ---
-title: Why Popmotion uses "ease out" as its default easing.
+title: Why Popmotion tweens default to easeOut
 description: 
-dateCreated: 20170625
+published: 20170625
 ---
+
+# Why Popmotion tweens default to `easeOut`
+
+
