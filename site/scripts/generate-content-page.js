@@ -1,6 +1,6 @@
 const escapeBackticks = (string) => string.replace(/`/g, '\\`');
 
-module.exports = (body, { category, id, title, description }) => `
+module.exports = (body, { category, id, title, description, published }) => `
 import dynamic from 'next/dynamic';
 import { createElement } from 'react';
 import marksy from 'marksy/components';
@@ -34,6 +34,7 @@ const Page = ({ section }) => (
     category="${category}"
     title="${title}"
     description="${description}"
+    published="${published}"
   >
     {content.tree}
   </ContentTemplate>

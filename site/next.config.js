@@ -4,6 +4,7 @@ module.exports = {
     return {
     '/': { page: '/' },
     '/api': { page: '/api' },
+    '/blog': { page: '/blog' },
   
         '/api/action': {
           page: '/api/action'

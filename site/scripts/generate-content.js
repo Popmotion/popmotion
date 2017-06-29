@@ -3,6 +3,7 @@ const path = require('path');
 const frontMatter = require('front-matter');
 const generatePage = require('./generate-content-page');
 const generateMenus = require('./generate-menus');
+const convertDateFormat = require('./convert-date-format');
 const { filterFiles, filterSystemFiles } = require('./filename-operations');
 const buildNextConfig = require('./build-next-config');
 
@@ -41,7 +42,7 @@ function generateContent(rootDir, fullDir) {
         title,
         description,
         category,
-        published,
+        published: published ? convertDateFormat(`${published}`) : '',
         next
       };
 

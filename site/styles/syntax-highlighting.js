@@ -1,4 +1,4 @@
-import { WHITE, YELLOW_BURN, BLUE_BURN, PURPLE_BURN, PINK } from './vars';
+import { WHITE, YELLOW_BURN, BLUE_BURN, PURPLE_BURN, PINK_BURN } from './vars';
 
 export default `
 .token {
@@ -25,7 +25,7 @@ export default `
   }
 
   &.function {
-    color: ${PINK};
+    color: ${PINK_BURN};
   }
 }
 `;

@@ -15,6 +15,7 @@ const generateRouteDefinitions = (data) => {
   let routes = `
     '/': { page: '/' },
     '/api': { page: '/api' },
+    '/blog': { page: '/blog' },
   `;
 
   Object.keys(data).forEach((rootId) => {
