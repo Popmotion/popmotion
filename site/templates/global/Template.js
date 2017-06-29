@@ -21,7 +21,7 @@ injectGlobal`
   ${nprogressStyles}
 `;
 
-const TWITTER_CARD = '/static/images/twitter-card.png';
+const TWITTER_CARD = 'https://popmotion.io/static/images/twitter-card.png';
 
 export default ({ children, title, description=settings.siteDescription }) => (
   <div>

@@ -6,7 +6,7 @@ category: basics
 
 # Action management
 
-When creating simple animations, it's common to provide `onUpdate` a simple function:
+When creating simple animations, it's common to provide `onUpdate` a function:
 
 ```javascript
 tween({
@@ -14,9 +14,9 @@ tween({
 });
 ```
 
-As our motion systems grow, and include actions that don't self-terminate (like `pointer` or `trackOffset`), multiple actions can potentially try and fire the same setters.
+As our motion systems grow, and include actions that don't self-terminate (like `pointer` or `trackOffset`), multiple actions can potentially try and fire the same functions.
 
-Likewise, it can become confusing the know which action is the "source of truth" - what do we query to get the true current velocity, for instance?
+Likewise, it can sometimes become confusing the know which action is the "source of truth" - what do we query to get the true current velocity of an object, for instance?
 
 ## Value
 
@@ -32,9 +32,9 @@ Now, when we call this `value`'s `set` method, we'll log the provided value.
 log.set(2); // 2
 ```
 
-Great, but how does this simplify managing multiple actions?
+In this instance, if we provide `log` as another action's `onUpdate`, that action will become the sole updater of `log`.
 
-Whenever we provide this `value` as another action's `onUpdate`, that action becomes the sole updater of the `value`. Any previous actions registered with the `value` are automatically stopped. For instance:
+Any previous actions registered with `log` will be stopped automatically. For instance:
 
 ```javascript
 const log = value(0, (v) => console.log(v));
@@ -54,3 +54,19 @@ setTimeout(() => tween({
 ## Single source of truth
 
 This also means we don't have to decide which action to query for this `value`'s true value, or true velocity. We just have to call its `get` and `getVelocity` methods.
+
+```javascript
+log.getVelocity();
+```
+
+## Stop registered actions
+
+`value` is a special type of action that doesn't need to be `start`ed to work. However we can `stop` the currently registered action simply by calling its `stop` method:
+
+```javascript
+tween({
+  onUpdate: log
+}).start();
+
+log.stop(); // Will stop tween
+```

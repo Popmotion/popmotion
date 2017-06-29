@@ -1,14 +1,14 @@
 ---
-title: Velocity and physics
-description: Query the velocity of any action and apply to spring or momentum physics.
+title: Velocity, momentum and spring physics
+description: Engage users with velocity, momentum and spring physics.
 category: basics
 ---
 
-# Velocity and physics
+# Velocity, momentum and spring physics
 
 A core feature of Popmotion is the ability to query the `velocity` of **any** action.
 
-We can pass this `velocity` value to the `physics` action, to create smooth transitions from one action into either a momentum or spring-based physics-driven animation. 
+We can pass this `velocity` value to the `physics` action, to create smooth transitions from one action into either a momentum or spring-based physics-driven animation.
 
 ## Getting velocity
 
@@ -148,3 +148,76 @@ document.addEventListener('touchend', stopTracking);
 ```
 
 ## Spring
+
+Sometimes you'll want to snap an object in motion to a specific position (like the boundary of a scrolling set of items), or make a button feel more reactive. Spring physics is ideal for these situations.
+
+Spring physics actions not unlike a `tween` with `easing.easeOut`. But a tween runs for a set duration of time and doesn't take into account the initial starting position or cvelocity. For truly reactive motion, spring physics is heavily influenced by its starting conditions.
+
+Creating springs in Popmotion is as simple as providing `physics` two new properties, `to` and `spring`:
+
+```javascript
+physics({
+  to: 0, // Provides the spring a destination
+  spring: 500, // How tight is the spring
+  from: ballX.get(),
+  velocity: ballX.getVelocity(),
+  friction: 0.9,
+  onUpdate: ballX
+}).start();
+```
+
+Press 'start' and throw this ball:
+
+```marksy
+<Example template="Ball" id="c">{`
+const ballDom = document.querySelector('#c .ball');
+const ballRenderer = css(ballDom);
+const ballX = value(0, (v) => ballRenderer.set('x', v));
+
+let pointerTracker;
+
+// Start tracking
+function startTracking(e) {
+  pointerTracker = pointer(e).start();
+  trackOffset(pointerTracker.x, {
+    from: ballX.get(),
+    onUpdate: ballX
+  }).start();
+}
+
+// Finish tracking
+function stopTracking() {
+  if (pointerTracker && pointerTracker.isActive()) {
+    pointerTracker.stop();
+
+    physics({
+      to: 0, // Provides the spring a destination
+      spring: 500, // How tight is the spring
+      from: ballX.get(),
+      velocity: ballX.getVelocity(),
+      friction: 0.9,
+      onUpdate: ballX
+    }).start();
+  }
+}
+
+ballDom.addEventListener('mousedown', startTracking);
+ballDom.addEventListener('touchstart', startTracking);
+document.addEventListener('mouseup', stopTracking);
+document.addEventListener('touchend', stopTracking);
+`}</Example>
+```
+
+Try tweaking the `friction` and `spring` properties, to see how they affect the feel of the ball when it springs back.
+
+Here's a different example of spring physics in action, powering the like button on [Drivetribe](https://drivetribe.com):
+
+![Animation of a user clicking the like button](/static/guides/drivetribe-bump.gif)
+
+Just by tweaking the properties of the physics, we can make the bounce back of an unlike feel marginally duller than a like:
+
+![Animation of a user clicking the unlike button](/static/guides/drivetribe-unbump.gif)
+
+## Conclusion
+
+As we've seen, `physics` can be a core tool in many user interactions. Its ability to do non-deterministic motion makes it incredibly powerful, but it's the ability to change the starting conditions that erodes the barrier between the user and your interface. Using physics in places you might previously have used tweens can make your interface feel more alive, and more engaging.

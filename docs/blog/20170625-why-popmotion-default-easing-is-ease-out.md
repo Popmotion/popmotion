@@ -1,5 +1,5 @@
 ---
-title: Why Popmotion uses "ease out" as its default easing.
-description: 
+title: Why Popmotion defaults to easeOut
+description:
 dateCreated: 20170625
 ---

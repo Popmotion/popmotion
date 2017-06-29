@@ -101,6 +101,10 @@ module.exports = {
           page: '/api/value-types'
         },
       
+        '/blog/20170625-why-popmotion-default-easing-is-ease-out': {
+          page: '/blog/20170625-why-popmotion-default-easing-is-ease-out'
+        },
+      
         '/learn/action-management': {
           page: '/learn/action-management'
         },
