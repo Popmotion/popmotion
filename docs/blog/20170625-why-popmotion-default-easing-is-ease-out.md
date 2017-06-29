@@ -6,4 +6,3 @@ published: 20170625
 
 # Why Popmotion tweens default to `easeOut`
 
-
