@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import { createElement } from 'react';
 import marksy from 'marksy/components';
 import { A, H1, H2, H3, P, Li, Ul, Code, Pre } from '~/templates/global/primatives';
+import { Img } from '~/templates/content/primatives';
 import ContentTemplate from '~/templates/content/Template';
 import Example from '~/components/examples/Example';
 
@@ -20,6 +21,7 @@ const convertMarkdown = marksy({
   code: Code,
   li: Li,
   ul: Ul,
+  img: Img,
   components: {
     Example
   }

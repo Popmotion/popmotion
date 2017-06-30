@@ -51,11 +51,14 @@ export const Ul = styled.ul`
   list-style-type: disc;
   padding-left: ${cols(2)};
   max-width: ${cols(43)};
+  margin-bottom: 1.1rem;
 `;
 
 export const Li = styled.li`
-  line-height: 1.5;
-  padding-bottom: 10px;
+  line-height: 1.7;
+  margin-bottom: 0.5rem;
+  ${fontSize(18)}
+  ${media.medium`${fontSize(14)}`}
 `;
 
 export const ActionButton = styled.button`

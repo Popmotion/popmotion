@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import GlobalTemplate from '~/templates/global/Template';
 import Header from '~/templates/global/Header';
+import Footer from '~/templates/global/Footer';
 import ContentNav from './ContentNav';
 import { Container, LeftMargin, RightMargin, ContentArea, HeaderArea } from '~/components/layout/grid';
 import 'prismjs';
@@ -27,6 +28,7 @@ export default ({ children, id, title, description, section, published }) => (
       </ContentArea>
       <LeftMargin />
       <RightMargin />
+      <Footer />
     </Container>
   </GlobalTemplate>
 );

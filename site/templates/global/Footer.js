@@ -6,6 +6,7 @@ const YEAR = new Date().getFullYear();
 const Container = styled.div`
   border-top: 1px solid ${PINK_BURN};
   padding: ${cols(1)};
+  grid-area: footer;
 `;
 
 const Spacer = styled.p`

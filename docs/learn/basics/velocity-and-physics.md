@@ -212,11 +212,11 @@ Try tweaking the `friction` and `spring` properties, to see how they affect the 
 
 Here's a different example of spring physics in action, powering the like button on [Drivetribe](https://drivetribe.com):
 
-![Animation of a user clicking the like button](/static/guides/drivetribe-bump.gif)
+![](/static/guides/drivetribe-bump.gif)
 
 Just by tweaking the properties of the physics, we can make the bounce back of an unlike feel marginally duller than a like:
 
-![Animation of a user clicking the unlike button](/static/guides/drivetribe-unbump.gif)
+![](/static/guides/drivetribe-unbump.gif)
 
 ## Conclusion
 

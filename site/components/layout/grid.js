@@ -7,7 +7,8 @@ export const Container = styled.div`
   grid-template-rows: 75px auto;
   grid-template-areas:
     "left-margin header header header"
-    "left-margin content-nav content right-margin";
+    "left-margin content-nav content right-margin"
+    "left-margin content-nav footer right-margin";
   grid-row-gap: 65px;
   min-height: 100vh;
 
