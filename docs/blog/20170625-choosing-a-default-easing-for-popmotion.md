@@ -1,7 +1,7 @@
 ---
 title: Choosing the correct default easing for Popmotion
 description: "Why I settled on easeOut for Popmotion's default easing, and why easeInOut sucks for interfaces"
-published: 20170630
+published: 20170701
 ---
 
 # Choosing the correct default easing for Popmotion
