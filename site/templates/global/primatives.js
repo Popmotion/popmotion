@@ -38,6 +38,7 @@ export const P = styled.p`
   ${fontSize(18)}
   line-height: 1.5;
   margin-bottom: 1.1rem;
+  max-width: ${cols(43)};
   ${media.medium`${fontSize(14)}`}
 `;
 
@@ -49,6 +50,7 @@ export const Code = styled.code`
 export const Ul = styled.ul`
   list-style-type: disc;
   padding-left: ${cols(2)};
+  max-width: ${cols(43)};
 `;
 
 export const Li = styled.li`
