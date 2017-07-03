@@ -1,6 +1,6 @@
 {
   "name": "popmotion",
-  "version": "7.2.0",
+  "version": "7.2.1",
   "description": "The JavaScript motion engine. Create animations and interactions with tweens, physics and input tracking.",
   "author": "Matt Perry <sirhound@popmotion.io>",
   "homepage": "http://popmotion.io",
@@ -8,8 +8,7 @@
   "esnext": "./src/popmotion.js",
   "files": [
     "lib",
-    "popmotion.global.js",
-    "popmotion.global.min.js"
+    "src"
   ],
   "repository": {
     "type": "git",

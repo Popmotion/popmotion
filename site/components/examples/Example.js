@@ -34,6 +34,7 @@ import {
   svg,
   svgPath
 } from 'popmotion';
+import { MotionValue } from 'popmotion-react';
 import { LiveProvider, LiveEditor, LiveError, LivePreview } from 'react-live';
 import templates from './templates';
 
@@ -68,12 +69,12 @@ const injectRender = (code) => `
   render(<Component start={start} id={id} />);
 `;
 
-export default ({ children, template, id }) => {
+export default ({ children, template, id, isReactComponent=false }) => {
   const Component = templates[template];
 
   return (
     <StyledLiveContainer
-      transformCode={injectRender}
+      transformCode={isReactComponent ? null : injectRender}
       code={stripFirstReturn(children)}
       scope={{
         onFrameStart,
@@ -108,10 +109,11 @@ export default ({ children, template, id }) => {
         svg,
         svgPath,
         Component,
-        id
+        id,
+        MotionValue
       }}
       mountStylesheet={false}
-      noInline={true}
+      noInline={!isReactComponent}
     >
       <StyledLiveEditor />
       <StyledLivePreview />

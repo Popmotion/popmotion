@@ -74,6 +74,14 @@ module.exports = {
           page: '/api/easing'
         },
       
+        '/api/plugins': {
+          page: '/api/plugins'
+        },
+      
+        '/api/react': {
+          page: '/api/react'
+        },
+      
         '/api/render-loop': {
           page: '/api/render-loop'
         },
@@ -102,8 +110,8 @@ module.exports = {
           page: '/api/value-types'
         },
       
-        '/blog/20170625-choosing-a-default-easing-for-popmotion': {
-          page: '/blog/20170625-choosing-a-default-easing-for-popmotion'
+        '/blog/20170703-choosing-a-default-easing-for-popmotion': {
+          page: '/blog/20170703-choosing-a-default-easing-for-popmotion'
         },
       
         '/learn/action-management': {
