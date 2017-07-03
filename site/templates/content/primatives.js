@@ -13,6 +13,7 @@ const ImgFrame = styled.span`
 const Image = styled.img`
   margin: 0 auto;
   display: block;
+  max-width: 90vw;
 `;
 
 const Caption = styled.span`

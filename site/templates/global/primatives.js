@@ -40,6 +40,7 @@ export const P = styled.p`
   margin-bottom: 1.1rem;
   max-width: ${cols(43)};
   ${media.medium`${fontSize(14)}`}
+  word-break: break-word;
 `;
 
 export const Code = styled.code`

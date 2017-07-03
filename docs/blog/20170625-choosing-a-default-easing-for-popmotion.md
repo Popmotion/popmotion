@@ -1,7 +1,7 @@
 ---
 title: Choosing the correct default easing for Popmotion
 description: "Why I settled on easeOut for Popmotion's default easing, and why easeInOut sucks for interfaces"
-published: 20170701
+published: 20170703
 ---
 
 # Choosing the correct default easing for Popmotion
@@ -26,7 +26,7 @@ there has been one (one) decision that I felt like I got right at the start: Mak
 
 Like many greying front end devs, my first exposure to UI animation was [Greensock's](https://greensock.com) then-ActionScript library, TweenMax. For a platform so disposed to garish show-off loading screen animations, Flash animations were disgusting to hand code unless you were using TweenMax.
 
-And that's largely what we used it for: showy animations. The Flash days were as over-the-top and as divorced from the user's interests as the Amiga demoscene. All you wanted to do was play your cracked version of Worms but first you had to sit through the seizure-inducing cock-prancing of some asshole in Norwich. At least Flash intros occasionally had a skip button.
+And that's largely what we used it for: showy animations. The Flash days were as over-the-top and as divorced from the user's interests as the Amiga demoscene. All you wanted to do was play your cracked version of Worms but first you had to sit through the seizure-inducing cock-prancing of some git in Norwich. At least Flash intros occasionally had a skip button.
 
 ![This, but flashing, and scrolling, and waving. Forever](/static/guides/amiga-demoscene.png)
 
