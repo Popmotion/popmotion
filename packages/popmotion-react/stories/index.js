@@ -5,6 +5,7 @@ import { action } from '@storybook/addon-actions';
 import { linkTo } from '@storybook/addon-links';
 
 import DragSingleChild from './DragSingleChild';
+import RotateThreeCube from './RotateThreeCube';
 
 // storiesOf('Welcome', module).add('to Storybook', () => <Welcome showApp={linkTo('Button')} />);
 
@@ -14,4 +15,5 @@ import DragSingleChild from './DragSingleChild';
 
 
 storiesOf('MotionValue').add('Drag single child', () => <DragSingleChild />);
+storiesOf('MotionValue').add('Rotate Three.js Cube', () => <RotateThreeCube />);
 

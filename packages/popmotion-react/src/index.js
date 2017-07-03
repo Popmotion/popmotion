@@ -32,10 +32,10 @@ export class MotionValue extends React.Component {
   }
 
   componentDidMount() {
-    const { v, isCompositeValue } = this.state;
+    const { initialState } = this.props;
+    const { v, isCompositeValue, setStateTo } = this.state;
 
     const onValueUpdate = (value) => {
-      console.log(value)
       this.setState({
         v: value,
         velocity: this.value.getVelocity()
@@ -53,6 +53,8 @@ export class MotionValue extends React.Component {
           onUpdate: onValueUpdate
         }
       );
+
+    if (initialState && setStateTo) setStateTo[initialState]();
   }
 
   componentWillReceiveProps(nextProps) {

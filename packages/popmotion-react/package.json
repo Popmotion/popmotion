@@ -32,12 +32,14 @@
     "build-storybook": "build-storybook"
   },
   "devDependencies": {
+    "@storybook/react": "^3.1.7",
     "babel-core": "^6.0.20",
     "babel-eslint": "^6.0.2",
     "babel-preset-es2015": "^6.0.15",
     "babel-preset-stage-2": "^6.0.15",
     "eslint": "^2.7.0",
-    "@storybook/react": "^3.1.7"
+    "react-three-renderer": "^3.1.0",
+    "three": "^0.86.0"
   },
   "dependencies": {
     "popmotion": "^7.2.0",
