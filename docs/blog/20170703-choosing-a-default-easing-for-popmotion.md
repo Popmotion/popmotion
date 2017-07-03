@@ -40,7 +40,7 @@ Then it was all about jQuery. jQuery was incredible for literally **everything**
 
 For me, and maybe for you, the coolest thing about jQuery was `animate`. It was amazing to easily get something resembling movement in humble HTML. Even if it defaulted to `swing` easing, a tepid, muddy `easeInOut` of homeopathic strength.
 
-Because of that easing, coupled with a default animation duration of `400`ms and our performance-ignorant tweening of the CPU-choking, layout-breaking `width` and `height` properties, lethargic animation ruled the internet.
+That easing was coupled with a default duration of `400`ms. Then that was folded into our neanderthal, performance-ignorant tweening of the CPU-choking, layout-breaking `width` and `height` properties. Lethargic animation ruled the internet.
 
 ![Feels like a good idea at the time](/static/guides/ease-in-out-example.png)
 
