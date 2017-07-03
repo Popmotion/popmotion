@@ -44,7 +44,6 @@
   "dependencies": {
     "popmotion": "^7.2.0",
     "react": "^15.0.1",
-    "react-addons-transition-group": "^15.0.1",
     "react-dom": "^15.0.1"
   }
 }

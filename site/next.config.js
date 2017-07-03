@@ -74,6 +74,14 @@ module.exports = {
           page: '/api/easing'
         },
       
+        '/api/plugins': {
+          page: '/api/plugins'
+        },
+      
+        '/api/react': {
+          page: '/api/react'
+        },
+      
         '/api/render-loop': {
           page: '/api/render-loop'
         },
