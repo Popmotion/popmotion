@@ -8,8 +8,7 @@
   "esnext": "./src/popmotion.js",
   "files": [
     "lib",
-    "popmotion.global.js",
-    "popmotion.global.min.js"
+    "src"
   ],
   "repository": {
     "type": "git",

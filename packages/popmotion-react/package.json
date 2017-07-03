@@ -1,16 +1,18 @@
 {
-  "name": "popmotion-react-dom",
-  "version": "0.0.7",
-  "description": "React components for using Popmotion actions with React DOM",
+  "name": "popmotion-react",
+  "version": "1.0.0",
+  "description": "Use physics, animation and input tracking with Popmotion and React",
   "author": "Matt Perry <sirhound@popmotion.io>",
   "homepage": "http://popmotion.io",
-  "main": "./lib/popmotion-react-dom.js",
+  "main": "./lib/index.js",
+  "esnext": "./src/index.js",
   "files": [
-    "lib"
+    "lib",
+    "src"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Popmotion/popmotion/tree/master/packages/popmotion-react-dom/"
+    "url": "https://github.com/Popmotion/popmotion/tree/master/packages/popmotion-react/"
   },
   "bugs": {
     "url": "https://github.com/Popmotion/popmotion/issues"
@@ -26,17 +28,19 @@
   "license": "MIT",
   "scripts": {
     "compile": "babel src --out-dir lib",
-    "compile-package": "npm run compile && webpack ./example.js ./dist/example.js -p"
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "devDependencies": {
     "babel-core": "^6.0.20",
     "babel-eslint": "^6.0.2",
     "babel-preset-es2015": "^6.0.15",
     "babel-preset-stage-2": "^6.0.15",
-    "eslint": "^2.7.0"
+    "eslint": "^2.7.0",
+    "@storybook/react": "^3.1.7"
   },
   "dependencies": {
-    "popmotion": "^5.0.6",
+    "popmotion": "^7.2.0",
     "react": "^15.0.1",
     "react-addons-transition-group": "^15.0.1",
     "react-dom": "^15.0.1"

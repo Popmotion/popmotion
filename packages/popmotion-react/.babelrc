@@ -1,0 +1,9 @@
+{
+  "presets": ["es2015-subset-loose", "stage-2"],
+  "plugins": ["transform-export-extensions", "transform-react-jsx"],
+  "env": {
+    "development": {
+      "sourceMaps": "inline"
+    }
+  }
+}
