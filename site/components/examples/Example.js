@@ -74,7 +74,7 @@ export default ({ children, template, id, isReactComponent=false }) => {
 
   return (
     <StyledLiveContainer
-      transformCode={isReactComponent ? null : injectRender}
+      transformCode={isReactComponent ? undefined : injectRender}
       code={stripFirstReturn(children)}
       scope={{
         onFrameStart,

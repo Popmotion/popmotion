@@ -2,7 +2,7 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
-## [7.2.1] 2017-07-03
+## [7.2.2] 2017-07-03
 
 ## Changed
 - `composite` action is now `passive: true` to enable composition of other passive actions.

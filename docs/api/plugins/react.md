@@ -22,7 +22,7 @@ npm install --save popmotion-react
 <Example isReactComponent={true}>{`
 <MotionValue
   initialState="rest"
-  v={{ x: 10, y: 0 }}
+  v={{ x: 0, y: 0 }}
   onStateChange={{
     rest: ({ x, y }) => {
       tween({to: 200,onUpdate: x}).start()
@@ -44,6 +44,7 @@ npm install --save popmotion-react
   }}
 >
   {({ v, setStateTo }) => {
+  console.log(v)
     return (
       <div
         onMouseDown={setStateTo.isDragging}
