@@ -18,7 +18,7 @@ npm install --save popmotion-react
 
 ## Usage
 
-```
+```marksy
 <Example isReactComponent={true}>
 <MotionValue
   initialState="rest"
@@ -50,7 +50,7 @@ npm install --save popmotion-react
       onTouchStart={setStateTo.isDragging}
       onMouseUp={setStateTo.rest}
       onTouchEnd={setStateTo.rest}
-      style={{ transform: `translate(${v.x}px, ${v.y}px)` }}
+      style={{ transform: 'translate(' + v.x + 'px, ' + v.y + 'px)' }}
     />
   )}
 </MotionValue>
