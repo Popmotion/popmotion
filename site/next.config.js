@@ -102,8 +102,8 @@ module.exports = {
           page: '/api/value-types'
         },
       
-        '/blog/20170625-choosing-a-default-easing-for-popmotion': {
-          page: '/blog/20170625-choosing-a-default-easing-for-popmotion'
+        '/blog/20170703-choosing-a-default-easing-for-popmotion': {
+          page: '/blog/20170703-choosing-a-default-easing-for-popmotion'
         },
       
         '/learn/action-management': {
