@@ -1,6 +1,6 @@
 {
   "name": "popmotion-react",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Use physics, animation and input tracking with Popmotion and React",
   "author": "Matt Perry <sirhound@popmotion.io>",
   "homepage": "http://popmotion.io",
@@ -46,7 +46,7 @@
     "three": "^0.86.0"
   },
   "dependencies": {
-    "popmotion": "^7.2.2",
+    "popmotion": "^7.2.3",
     "react": "^15.0.1",
     "react-dom": "^15.0.1"
   }
