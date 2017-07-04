@@ -18,7 +18,7 @@ export default () => (
         x.stop();
         y.stop();
       },
-      isDragging: ({ x, y }, currentState, e) => {
+      isDragging: ({ x, y }, currentState, setStateTo, e) => {
         const trackPointer = pointer(e).start();
 
         trackOffset(trackPointer.x, {
