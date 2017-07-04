@@ -143,6 +143,7 @@ export default () => (
       ref.addEventListener('touchstart', setStateTo.isDragging, { passive: false });
     },
     isDragging: ({ value, setStateTo, e }) => {
+      e.preventDefault();
       const { x, y } = value;
       const trackPointer = pointer(e).start();
 
