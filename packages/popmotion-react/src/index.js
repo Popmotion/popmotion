@@ -17,6 +17,9 @@ export class MotionValue extends React.Component {
     this.state = {
       isCompositeValue,
       v,
+      setRef: (ref) => {
+        if (ref !== null) this.ref = ref;
+      },
       velocity: !isCompositeValue ? 0 : Object.keys(v)
         .reduce((acc, key) => {
           acc[key] = 0;
@@ -27,7 +30,7 @@ export class MotionValue extends React.Component {
         .reduce((acc, key) => {
           acc[key] = (e) => {
             const { state, setStateTo } = this.state;
-            onStateChange[key]({ value: this.value, state, setStateTo, e });
+            onStateChange[key]({ value: this.value, state, ref: this.ref, setStateTo, e });
             this.setState({ state: key });
           };
           return acc;

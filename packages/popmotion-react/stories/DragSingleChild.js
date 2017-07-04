@@ -14,12 +14,17 @@ export default () => (
     initialState="rest"
     v={{ x: 0, y: 0 }}
     onStateChange={{
-      rest: ({ value }) => {
+      rest: ({ value, ref, setStateTo }) => {
         const { x, y } = value;
         x.stop();
         y.stop();
+
+        ref.addEventListener('mousedown', setStateTo.isDragging);
+        ref.addEventListener('touchstart', setStateTo.isDragging, { passive: false });
+        document.removeEventListener('mouseup', setStateTo.rest);
+        document.removeEventListener('touchend', setStateTo.rest);
       },
-      isDragging: ({ value, e }) => {
+      isDragging: ({ value, e, setStateTo }) => {
         const { x, y } = value;
         const trackPointer = pointer(e).start();
 
@@ -33,17 +38,14 @@ export default () => (
           onUpdate: y,
           onStop: () => trackPointer.stop()
         }).start();
+
+        document.addEventListener('mouseup', setStateTo.rest);
+        document.addEventListener('touchend', setStateTo.rest);
       }
     }}
   >
-    {({ v, setStateTo }) => (
-      <Box
-        onMouseDown={setStateTo.isDragging}
-        onTouchStart={setStateTo.isDragging}
-        onMouseUp={setStateTo.rest}
-        onTouchEnd={setStateTo.rest}
-        style={{ transform: `translate(${v.x}px, ${v.y}px)` }}
-      />
+    {({ v, setRef }) => (
+      <Box innerRef={setRef} style={{ transform: `translate(${v.x}px, ${v.y}px)` }} />
     )}
   </MotionValue>
 );

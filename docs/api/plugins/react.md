@@ -64,12 +64,14 @@ export default () => (
   - `velocity <Number>`: Current velocity, or object of named velocities.
   - `state <String>`: Current state name.
   - `setStateTo <Object>`: Object of setter functions, generated from the states defined in `onStateChange` (each optionally accepts an `Event`).
+  - `setRef <Function>`: Provides `onStateChange` setters a `ref` attribute for an escape hatch to the DOM (for instance attaching/removing events).
 - `v <Number | Object>`: An initial number, or object of named numbers. If you wish to use named numbers, this is **required**.
 - `initialState <String>`: Set an initial state for the value.
 - `onStateChange <Object>`: Object of named functions that fire when their state changes. Each function receives an object with the following props:
   - `value <Value | Composite>`
   - `previousState <String>`: State before current state change.
   - `setStateTo <Object>`: Object of state setters (each optionally accepts an `Event`).
+  - `ref <Node>`: A reference to the mounted React component, **if** a component was provided `setRef`.
   - `e <Event>`: The triggering event, **if** a state setter was called with one.
 
 ### Examples
@@ -112,10 +114,9 @@ export default () => (
 ```marksy
 <Example isReactComponent={true}>{`
 <MotionValue
-      initialState={'rest'}
   v={{ x: 0, y: 0 }}
   onStateChange={{
-    rest: ({ value, setStateTo }) => {
+    rest: ({ value, setStateTo, ref }) => {
       const { x, y } = value;
       const springProps = {
         to: 0,
@@ -137,7 +138,10 @@ export default () => (
         onUpdate: y
       }).start();
 
-      document.addEventListener('touchstart', setStateTo.isDragging, { passive: false });
+      // Attach DOM 'touchstart' listener directly to element to avoid performance issues
+      // with Chrome 56+ enforcing `passive: true`
+      ref.addEventListener('mousedown', setStateTo.isDragging);
+      ref.addEventListener('touchstart', setStateTo.isDragging, { passive: false });
     },
     isDragging: ({ value, setStateTo, e }) => {
       const { x, y } = value;
@@ -159,16 +163,13 @@ export default () => (
     }
   }}
 >
-  {({ v, setStateTo }) => (
-    <div
-      onMouseDown={setStateTo.isDragging}
-      style={{
-        transform: 'translate(' + v.x + 'px, ' + v.y + 'px)',
-        width: '100px',
-        height: '100px',
-        background: 'red'
-      }}
-    />
+  {({ v, setStateTo, setRef }) => (
+    <div ref={setRef} style={{
+      transform: 'translate(' + v.x + 'px, ' + v.y + 'px)',
+      width: '100px',
+      height: '100px',
+      background: 'red'
+    }} />
   )}
 </MotionValue>
 `}
