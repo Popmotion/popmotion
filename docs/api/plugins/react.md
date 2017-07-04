@@ -54,7 +54,7 @@ export default () => (
         onClick={state === 'on' ? setStateTo.off : setStateTo.on}
       />
     )}
-  </div>MotionValue>
+  </MotionValue>
 );
 ```
 
