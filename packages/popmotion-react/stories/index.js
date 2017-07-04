@@ -6,6 +6,7 @@ import { linkTo } from '@storybook/addon-links';
 
 import DragSingleChild from './DragSingleChild';
 import RotateThreeCube from './RotateThreeCube';
+import Toggle from './Toggle';
 
 // storiesOf('Welcome', module).add('to Storybook', () => <Welcome showApp={linkTo('Button')} />);
 
@@ -16,4 +17,5 @@ import RotateThreeCube from './RotateThreeCube';
 
 storiesOf('MotionValue').add('Drag single child', () => <DragSingleChild />);
 storiesOf('MotionValue').add('Rotate Three.js Cube', () => <RotateThreeCube />);
+storiesOf('MotionValue').add('Toggle state', () => <Toggle />);
 
