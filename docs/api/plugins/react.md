@@ -28,21 +28,21 @@ The `MotionValue` component allows you to declaratively animate either a single 
 import { tween } from 'popmotion';
 import { MotionValue } from 'popmotion-react';
 
+const stateChangeHandlers = {
+  on: (value) => tween({
+    from: value.get(),
+    to: 100,
+    onUpdate: value
+  }).start(),
+  off: (value) => tween({
+    from: value.get(),
+    to: 0,
+    onUpdate: value
+  }).start()
+};
+
 export default () => (
-  <MotionValue
-    onStateChange={{
-      on: (value) => tween({
-        from: value.get(),
-        to: 100,
-        onUpdate: value
-      }).start(),
-      off: (value) => tween({
-        from: value.get(),
-        to: 0,
-        onUpdate: value
-      }).start()
-    }}
-  >
+  <MotionValue onStateChange={stateChangeHandlers}>
     {({ v, state, setStateTo }) => (
       <div
         style={{
@@ -60,13 +60,13 @@ export default () => (
 
 ### Props
 - `children <Function>` **required**: A function that returns the children component. The function is provided an object of props:
-  - `v <Number | Object">`: The current numerical value, or object of named values.
+  - `v <Number | Object>`: The current numerical value, or object of named values.
   - `velocity <Number>`: Current velocity, or object of named velocities.
   - `state <String>`: Current state name.
   - `setStateTo <Object>`: Object of setter functions, generated from the states defined in `onStateChange` (each optionally accepts an `Event`).
-- `v <Number | Object>`: An initial
+- `v <Number | Object>`: An initial number, or object of named numbers. If you wish to use named numbers, this is **required**.
 - `initialState <String>`: Set an initial state for the value.
-- `onStateChange <Object>`: Object of named functions. Each function is provided the `value` or `composite` value, and fires when the state changes. The full argument list:
+- `onStateChange <Object>`: Object of named functions that fire when their state changes. Each function receives the following arguments:
   - `value <Value | Composite>`
   - `previousState <String>`: State before current state change.
   - `setStateTo <Object>`: Object of state setters (each optionally accepts an `Event`).
@@ -100,10 +100,10 @@ export default () => (
         height: '100px',
         transform: 'translateX(' + v + 'px)'
       }}
-      onClick={state === 'on' ? setStateTo.off : setState.on}
+      onClick={(state === 'on') ? setStateTo.off : setStateTo.on}
     />
   )}
-<MotionValue>
+</MotionValue>
 `}</Example>
 ```
 
