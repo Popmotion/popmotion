@@ -112,6 +112,7 @@ export default () => (
 ```marksy
 <Example isReactComponent={true}>{`
 <MotionValue
+      initialState={'rest'}
   v={{ x: 0, y: 0 }}
   onStateChange={{
     rest: ({ value, setStateTo }) => {
@@ -136,8 +137,7 @@ export default () => (
         onUpdate: y
       }).start();
 
-      document.removeEventListener('mouseup', setStateTo.rest);
-      document.removeEventListener('touchend', setStateTo.rest);
+      document.addEventListener('touchstart', setStateTo.isDragging, { passive: false });
     },
     isDragging: ({ value, setStateTo, e }) => {
       const { x, y } = value;
@@ -162,7 +162,6 @@ export default () => (
   {({ v, setStateTo }) => (
     <div
       onMouseDown={setStateTo.isDragging}
-      onTouchStart={setStateTo.isDragging}
       style={{
         transform: 'translate(' + v.x + 'px, ' + v.y + 'px)',
         width: '100px',

@@ -22,7 +22,8 @@ export const Container = styled.div`
     grid-template-areas:
       "left-margin header"
       "left-margin content-nav"
-      "left-margin content";
+      "left-margin content"
+      "left-margin footer";
     grid-row-gap: ${cols(2)};
   `}
 `;

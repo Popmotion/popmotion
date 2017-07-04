@@ -21,7 +21,7 @@ function createPointer({ x, y }, { eventToPoints, moveEvent, ...props }) {
   };
 
   pointer.setProps({
-    _onStart: () => document.documentElement.addEventListener(moveEvent, updatePointer),
+    _onStart: () => document.documentElement.addEventListener(moveEvent, updatePointer, { passive: !pointer.getProp('preventDefault') }),
     _onStop: () => document.documentElement.removeEventListener(moveEvent, updatePointer)
   });
 

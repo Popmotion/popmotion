@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.2.3] 2017-07-04
+
+## Fixed
+- `pointer` events are now `passive: true` if `preventDefault` is also set to `true` to fix bug introduced by Chrome 56.
+
 ## [7.2.2] 2017-07-03
 
 ## Changed
