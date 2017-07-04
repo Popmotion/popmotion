@@ -23,7 +23,7 @@ export default () => (
       <MotionValue
         initialState="spin"
         onStateChange={{
-          spin: (value) => {
+          spin: ({value}) => {
             physics({
               from: value.get(),
               velocity: 1,

@@ -29,12 +29,12 @@ import { tween } from 'popmotion';
 import { MotionValue } from 'popmotion-react';
 
 const stateChangeHandlers = {
-  on: (value) => tween({
+  on: ({ value }) => tween({
     from: value.get(),
     to: 100,
     onUpdate: value
   }).start(),
-  off: (value) => tween({
+  off: ({ value }) => tween({
     from: value.get(),
     to: 0,
     onUpdate: value
@@ -66,11 +66,11 @@ export default () => (
   - `setStateTo <Object>`: Object of setter functions, generated from the states defined in `onStateChange` (each optionally accepts an `Event`).
 - `v <Number | Object>`: An initial number, or object of named numbers. If you wish to use named numbers, this is **required**.
 - `initialState <String>`: Set an initial state for the value.
-- `onStateChange <Object>`: Object of named functions that fire when their state changes. Each function receives the following arguments:
+- `onStateChange <Object>`: Object of named functions that fire when their state changes. Each function receives an object with the following props:
   - `value <Value | Composite>`
   - `previousState <String>`: State before current state change.
   - `setStateTo <Object>`: Object of state setters (each optionally accepts an `Event`).
-  - `e <Event>`: The triggering event, if a state setter was called with one.
+  - `e <Event>`: The triggering event, **if** a state setter was called with one.
 
 ### Examples
 
@@ -80,12 +80,12 @@ export default () => (
 <Example isReactComponent={true}>{`
 <MotionValue
   onStateChange={{
-    on: (value) => tween({
+    on: ({ value }) => tween({
       from: value.get(),
       to: 100,
       onUpdate: value
     }).start(),
-    off: (value) => tween({
+    off: ({ value }) => tween({
       from: value.get(),
       to: 0,
       onUpdate: value
@@ -114,7 +114,8 @@ export default () => (
 <MotionValue
   v={{ x: 0, y: 0 }}
   onStateChange={{
-    rest: ({ x, y }, prevState, setStateTo) => {
+    rest: ({ value, setStateTo }) => {
+      const { x, y } = value;
       const springProps = {
         to: 0,
         spring: 500,
@@ -138,7 +139,8 @@ export default () => (
       document.removeEventListener('mouseup', setStateTo.rest);
       document.removeEventListener('touchend', setStateTo.rest);
     },
-    isDragging: ({ x, y }, prevState, setStateTo, e) => {
+    isDragging: ({ value, setStateTo, e }) => {
+      const { x, y } = value;
       const trackPointer = pointer(e).start();
 
       trackOffset(trackPointer.x, {

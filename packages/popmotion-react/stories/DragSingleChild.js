@@ -14,11 +14,13 @@ export default () => (
     initialState="rest"
     v={{ x: 0, y: 0 }}
     onStateChange={{
-      rest: ({ x, y }) => {
+      rest: ({ value }) => {
+        const { x, y } = value;
         x.stop();
         y.stop();
       },
-      isDragging: ({ x, y }, currentState, setStateTo, e) => {
+      isDragging: ({ value, e }) => {
+        const { x, y } = value;
         const trackPointer = pointer(e).start();
 
         trackOffset(trackPointer.x, {
