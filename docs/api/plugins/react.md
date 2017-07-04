@@ -8,7 +8,7 @@ category: plugins
 
 Popmotion x React provides a simple interface to bring Popmotion's tweening, physics and input tracking capabilities to any React component.
 
-It uses the "function as children" pattern, which means you can use declarative interactions with any React renderer. This is a simple way to power DOM, SVG, Three.js, A-Frame, Pixi... **anything**.
+It uses the "function as children" pattern, so you can create declarative interactions with the DOM, SVG, Three.js, A-Frame, Pixi... anything that has a React interface.
 
 ## Install
 
@@ -74,7 +74,7 @@ export default () => (
 
 ### Examples
 
-#### Tween
+#### Toggle state (click box to toggle)
 
 ```marksy
 <Example isReactComponent={true}>{`
@@ -112,13 +112,33 @@ export default () => (
 ```marksy
 <Example isReactComponent={true}>{`
 <MotionValue
-  initialState="rest"
   v={{ x: 0, y: 0 }}
   onStateChange={{
-    rest: ({ x, y }) => {
-      tween({to: 200,onUpdate: x}).start()
+    rest: ({ x, y }, prevState, setStateTo) => {
+      const springProps = {
+        to: 0,
+        spring: 500,
+        friction: 0.9
+      };
+
+      physics({
+        ...springProps,
+        from: x.get(),
+        velocity: x.getVelocity(),
+        onUpdate: x
+      }).start();
+
+      physics({
+        ...springProps,
+        from: y.get(),
+        velocity: y.getVelocity(),
+        onUpdate: y
+      }).start();
+
+      document.removeEventListener('mouseup', setStateTo.rest);
+      document.removeEventListener('touchend', setStateTo.rest);
     },
-    isDragging: ({ x, y }, currentState, setStateTo, e) => {
+    isDragging: ({ x, y }, prevState, setStateTo, e) => {
       const trackPointer = pointer(e).start();
 
       trackOffset(trackPointer.x, {
@@ -131,6 +151,9 @@ export default () => (
         onUpdate: y,
         onStop: () => trackPointer.stop()
       }).start();
+
+      document.addEventListener('mouseup', setStateTo.rest);
+      document.addEventListener('touchend', setStateTo.rest);
     }
   }}
 >
@@ -138,8 +161,6 @@ export default () => (
     <div
       onMouseDown={setStateTo.isDragging}
       onTouchStart={setStateTo.isDragging}
-      onMouseUp={setStateTo.rest}
-      onTouchEnd={setStateTo.rest}
       style={{
         transform: 'translate(' + v.x + 'px, ' + v.y + 'px)',
         width: '100px',
@@ -152,4 +173,3 @@ export default () => (
 `}
 </Example>
 ```
-## Examples

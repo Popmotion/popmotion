@@ -4,7 +4,7 @@ module.exports = (body, { category, id, title, description, published }) => `
 import dynamic from 'next/dynamic';
 import { createElement } from 'react';
 import marksy from 'marksy/components';
-import { A, H1, H2, H3, P, Li, Ul, Code, Pre } from '~/templates/global/primatives';
+import { A, H1, H2, H3, H4, P, Li, Ul, Code, Pre } from '~/templates/global/primatives';
 import { Img } from '~/templates/content/primatives';
 import ContentTemplate from '~/templates/content/Template';
 import Example from '~/components/examples/Example';
@@ -17,6 +17,7 @@ const convertMarkdown = marksy({
   h1: H1,
   h2: H2,
   h3: H3,
+  h4: H4,
   p: P,
   code: Code,
   li: Li,

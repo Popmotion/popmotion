@@ -25,8 +25,15 @@ export class MotionValue extends React.Component {
       state: this.valueState,
       setStateTo: onStateChange ? Object.keys(onStateChange)
         .reduce((acc, key) => {
+          const { state, setStateTo } = this.state;
+
           acc[key] = (e) => {
-            onStateChange[key](this.value, this.state.state, this.state.setStateTo, e);
+            onStateChange[key]({
+              value: this.value,
+              state,
+              setStateTo,
+              e
+            });
             this.setState({ state: key });
           };
           return acc;
@@ -61,13 +68,10 @@ export class MotionValue extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const { setStateTo } = this.state;
-    const { state, onStateChange } = this.props;
+    const { state } = this.props;
 
     if (state !== nextProps.state) {
-      onStateChange[nextProps.state](this.value, this.state.state, setStateTo);
-      this.setState({
-        state: this.valueState
-      });
+      setStateTo[nextProps.state]();
     }
   }
 

@@ -34,6 +34,14 @@ export const H3 = styled.h3`
   ${media.medium`${fontSize(18)}`}
 `;
 
+export const H4 = styled.h4`
+  ${fontSize(18)}
+  margin-top: 2.2rem;
+  margin-bottom: 1.1rem;
+  font-weight: 600;
+  ${media.medium`${fontSize(14)}`}
+`;
+
 export const P = styled.p`
   ${fontSize(18)}
   line-height: 1.5;
