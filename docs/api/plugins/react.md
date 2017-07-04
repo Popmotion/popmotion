@@ -114,6 +114,7 @@ export default () => (
 ```marksy
 <Example isReactComponent={true}>{`
 <MotionValue
+  initialState="rest"
   v={{ x: 0, y: 0 }}
   onStateChange={{
     rest: ({ value, setStateTo, ref }) => {
@@ -138,8 +139,6 @@ export default () => (
         onUpdate: y
       }).start();
 
-      // Attach DOM 'touchstart' listener directly to element to avoid performance issues
-      // with Chrome 56+ enforcing `passive: true`
       ref.addEventListener('mousedown', setStateTo.isDragging);
       ref.addEventListener('touchstart', setStateTo.isDragging, { passive: false });
     },
