@@ -16,6 +16,6 @@ import Toggle from './Toggle';
 
 
 storiesOf('MotionValue').add('Drag single child', () => <DragSingleChild />);
-storiesOf('MotionValue').add('Rotate Three.js Cube', () => <RotateThreeCube />);
+//storiesOf('MotionValue').add('Rotate Three.js Cube', () => <RotateThreeCube />);
 storiesOf('MotionValue').add('Toggle state', () => <Toggle />);
 
