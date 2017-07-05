@@ -160,7 +160,7 @@ export const speedPerFrame = (xps, frameDuration) => (isNum(xps)) ? xps / (1000 
   @param [number]: Unit per frame
   @param [number]: Frame duration in ms
 */
-export const speedPerSecond = (velocity, frameDuration) => velocity * (1000 / frameDuration);
+export const speedPerSecond = (velocity, frameDuration) => frameDuration ? velocity * (1000 / frameDuration) : 0;
 
 /*
   Create stepped version of 0-1 progress
