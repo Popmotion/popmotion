@@ -2,24 +2,29 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.2.5] 2017-07-05
+
+### Fixed
+- `lastUpdated` set to `0` on action start to prevent `NaN` velocities.
+
 ## [7.2.4] 2017-07-05
 
-## Fixed
+### Fixed
 - `prev = current` on action start, to prevent `NaN` velocities.
 
 ## [7.2.3] 2017-07-04
 
-## Fixed
+### Fixed
 - `pointer` events are now `passive: true` if `preventDefault` is also set to `true` to fix bug introduced by Chrome 56.
 
 ## [7.2.2] 2017-07-03
 
-## Changed
+### Changed
 - `composite` action is now `passive: true` to enable composition of other passive actions.
 
 ## [7.2.0] 2017-06-26
 
-## Added
+### Added
 - `value` can now be provided to an action's `onUpdate` for automatic action management.
 
 ## [7.1.1] 2017-06-23
@@ -28,12 +33,12 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
 ## [7.1.0] 2017-06-23
 
-## Added
+### Added
 - `complex` `valueType`.
 
 ## [7.0.3] 2017-06-23
 
-## Fixed
+### Fixed
 - Changed `pointer` to read mouse event `client` positioning instead of `page`, to make consistent with touch events.
 
 ## [7.0.2] 2017-06-23
@@ -46,40 +51,40 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
 ## [7.0.0] 2017-06-22
 
-## Features
+### Features
 - `trackOffset` action returns to simplify the process of tracking the offset of other actions.
 - `esnext` package.json property supported.
 
-## Deprecated
+### Deprecated
 - `flow` is now `pipe`, to avoid terminology clashes with [Flow](https://flow.org/). `flow` will continue to work until `7.1.0`.
 
-## Removed
+### Removed
 - `blendTweens` is now an optional include.
 
 ## [6.7.2] 2017-06-01
 
-## Fixed
+### Fixed
 - Removing dependencies from `package.json`
 
 ## [6.7.1] 2017-06-01
 
-## Fixed
+### Fixed
 - `colorTween` now uses `transform` property to convert from progress to color, which fixes composition compatibility.
 
 ## [6.7.0] 2017-06-01
 
-## Added
+### Added
 - `transform` property for actions. If set, any values passed to `onUpdate` or returned from `get` will be run through this function.
 - `getBeforeTransform` method added for actions. Will return the current value, before transform is applied.
 
 ## [6.3.5] 2017-03-03
 
-## Added
+### Added
 - `applyOffset` transformer.
 
 ## [6.3.4] 2017-03-01
 
-## Fixed
+### Fixed
 - Undocumented range easing property in `interpolate` transformer was looking at the wrong index.
 
 ## [6.3.3] 2017-18-01
