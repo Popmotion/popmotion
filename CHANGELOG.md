@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.2.6] 2017-07-05
+
+### Fixed
+- `speedPerSecond` divide by `0` bug.
+
 ## [7.2.5] 2017-07-05
 
 ### Fixed
