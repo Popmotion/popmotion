@@ -11,7 +11,7 @@ class Action { // lawsuit - sorry
 
     this.setProps(props);
 
-    this.current = props.current || props.from || 0;
+    this.prev = this.current = props.current || props.from || 0;
   }
 
   start() {

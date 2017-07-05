@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.2.4] 2017-07-05
+
+## Fixed
+- `prev = current` on action start, to prevent `NaN` velocities.
+
 ## [7.2.3] 2017-07-04
 
 ## Fixed
