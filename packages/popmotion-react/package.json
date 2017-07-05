@@ -61,7 +61,7 @@
   },
   "dependencies": {
     "popmotion": "^7.2.3",
-    "react": "~15.5.3",
+    "react": "^15.5.4",
     "react-dom": "~15.5.3"
   }
 }
