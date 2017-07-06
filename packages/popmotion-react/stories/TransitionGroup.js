@@ -32,10 +32,18 @@ export default class TransitionGroupExample extends React.Component {
   };
 
   componentDidMount() {
+    let direction = 1;
     this.interval = setInterval(() => {
       const { numChildren } = this.state;
+
+      if (numChildren > 4) {
+        direction = -1;
+      } else if (numChildren < 0) {
+        direction = 1;
+      }
+      
       this.setState({
-        numChildren: numChildren + 1
+        numChildren: numChildren + direction
       });
     }, 1000);
   }
