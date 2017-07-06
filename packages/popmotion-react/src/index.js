@@ -28,9 +28,21 @@ export class MotionValue extends React.Component {
       state: this.valueState,
       setStateTo: onStateChange ? Object.keys(onStateChange)
         .reduce((acc, key) => {
-          acc[key] = (e) => {
+          acc[key] = (arg) => {
             const { state, setStateTo } = this.state;
-            onStateChange[key]({ value: this.value, state, ref: this.ref, setStateTo, e });
+            const isArgFunction = (typeof arg === 'function');
+            const e = isArgFunction ? undefined : arg;
+            const onComplete = isArgFunction ? arg : undefined;
+
+            onStateChange[key]({
+              value: this.value,
+              ref: this.ref,
+              previousState: state,
+              setStateTo,
+              e,
+              onComplete
+            });
+
             this.setState({ state: key });
           };
           return acc;
@@ -60,7 +72,7 @@ export class MotionValue extends React.Component {
         }
       );
 
-    if (state && setStateTo) setStateTo[state](this.value, state, setStateTo);
+    if (state && setStateTo) setStateTo[state]();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -70,6 +82,35 @@ export class MotionValue extends React.Component {
     if (state !== nextProps.state) {
       setStateTo[nextProps.state]();
     }
+  }
+
+  transitionGroupLifecycleMethod(method, onComplete) {
+    const { setStateTo } = this.state;
+    if (setStateTo[method]) setStateTo[method](onComplete);
+  }
+
+  componentWillAppear(onComplete) {
+    this.transitionGroupLifecycleMethod('componentWillAppear', onComplete);
+  }
+
+  componentDidAppear() {
+    this.transitionGroupLifecycleMethod('componentDidAppear');
+  }
+
+  componentWillEnter(onComplete) {
+    this.transitionGroupLifecycleMethod('componentWillEnter', onComplete);
+  }
+
+  componentDidEnter() {
+    this.transitionGroupLifecycleMethod('componentDidEnter');
+  }
+
+  componentWillLeave(onComplete) {
+    this.transitionGroupLifecycleMethod('componentWillLeave', onComplete);
+  }
+
+  componentDidLeave() {
+    this.transitionGroupLifecycleMethod('componentDidLeave');
   }
 
   componentWillUnmount() {

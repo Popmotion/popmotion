@@ -10,6 +10,8 @@ Popmotion x React provides a simple interface to bring Popmotion's tweening, phy
 
 It uses the "function as children" pattern, so you can create declarative interactions with the DOM, SVG, Three.js, A-Frame, Pixi... anything that has a React interface.
 
+It also has support for [React TransitionGroup](https://github.com/reactjs/react-transition-group/) lifecycle methods.
+
 ## Install
 
 ```
@@ -73,8 +75,41 @@ export default () => (
   - `setStateTo <Object>`: Object of state setters (each optionally accepts an `Event`).
   - `ref <Node>`: A reference to the mounted React component, **if** a component was provided `setRef`.
   - `e <Event>`: The triggering event, **if** a state setter was called with one.
+  - `onComplete <Function>`: When hooking into `TransitionGroup` lifecycle events `componentWillEnter`, `componentWillAppear` and `componentWillLeave`, this callback is provided and **required**.
 
-### Examples
+### Use with React TransitionGroup
+
+MotionValue fully supports [React TransitionGroup](https://github.com/reactjs/react-transition-group/) lifecycle methods.
+
+Just provide the lifecycle methods as state handlers:
+
+```javascript
+import TransitionGroup from 'react-transition-group/TransitionGroup';
+import { MotionValue } from 'popmotion-react';
+import { tween, transform } from 'popmotion';
+const { px } = transform;
+
+const stateChangeHandlers = {
+  componentWillAppear: ({ value, onComplete }) => tween({
+    from: value.get(),
+    to: 100,
+    onUpdate: value,
+    onComplete
+  }).start()
+};
+
+export default () => (
+  <TransitionGroup>
+    <MotionValue key="unique-id" onStateChange={stateChangeHandlers}>
+      {({ v }) => <div style={{ width: px(v) }} />}
+    </MotionValue>
+  </TransitionGroup>
+);
+```
+
+Remember that `componentWillEnter`, `componentWillAppear` and `componentWillLeave` lifecycle methods provide `onComplete` callbacks, that are mandatory for React TransitionGroup to work.
+
+### Live examples
 
 #### Toggle state (click box to toggle)
 
