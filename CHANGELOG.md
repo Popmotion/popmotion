@@ -1,4 +1,4 @@
-# Change log
+# Changelog
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 

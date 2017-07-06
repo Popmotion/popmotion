@@ -57,5 +57,6 @@ export const ContentNavArea = styled.div`
 
   ${media.medium`
     padding: 0 ${cols(1)};
+    margin: ${cols(1)} 0 ${cols(2)};
   `}
 `;

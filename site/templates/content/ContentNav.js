@@ -72,7 +72,8 @@ const MenuToggle = styled.div`
 
 const Menu = styled.ul`
   ${media.medium`
-    display: ${({ isOpen }) => isOpen ? 'block' : 'none'}
+    display: ${({ isOpen }) => isOpen ? 'block' : 'none'};
+    padding-top: ${cols(1)};
   `}
 `;
 
