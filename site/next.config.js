@@ -118,6 +118,10 @@ module.exports = {
           page: '/blog/20170703-choosing-a-default-easing-for-popmotion'
         },
       
+        '/blog/20170710-mobile-web-is-awful-and-were-all-to-blame': {
+          page: '/blog/20170710-mobile-web-is-awful-and-were-all-to-blame'
+        },
+      
         '/learn/action-management': {
           page: '/learn/action-management'
         },

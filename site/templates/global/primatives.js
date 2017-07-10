@@ -70,6 +70,13 @@ export const Li = styled.li`
   ${media.medium`${fontSize(14)}`}
 `;
 
+export const Hr = styled.hr`
+  border: none;
+  height: 1px;
+  background-color: ${LIGHT_GREY};
+  margin: ${cols(2)} 0;
+`;
+
 export const ActionButton = styled.button`
   background: ${verticalGradient(PURPLE_BURN, PURPLE)};
   border: 2px solid ${WHITE};
