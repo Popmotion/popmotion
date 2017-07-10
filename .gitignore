@@ -6,3 +6,4 @@ site/.next
 site/public
 site/pages/api
 site/pages/learn
+storybook-static
