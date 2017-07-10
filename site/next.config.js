@@ -94,6 +94,10 @@ module.exports = {
           page: '/api/css'
         },
       
+        '/api/scroll': {
+          page: '/api/scroll'
+        },
+      
         '/api/svg-path': {
           page: '/api/svg-path'
         },
