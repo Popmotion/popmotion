@@ -1,9 +1,17 @@
 import { Renderer } from 'popmotion';
 
-class ElementScroll extends Renderer {
+class ScrollRenderer extends Renderer {
+  get(key) {
+    // Break the cache as scroll can be updated by the user
+    this.state[key] = undefined;
+    return super.get(key);
+  }
+}
+
+class ElementScroll extends ScrollRenderer {
   onRender() {
     const { element } = this.props;
-    const { top, left } = this.values;
+    const { top, left } = this.state;
     element.scrollLeft = left;
     element.scrollTop = top;
   }
@@ -14,10 +22,10 @@ class ElementScroll extends Renderer {
   }
 }
 
-class ViewportScroll extends Renderer {
+class ViewportScroll extends ScrollRenderer {
   onRender() {
-    const { top, left } = this.values;
-    if (typeof window !== undefined) window.scrollTop(left, top);
+    const { top, left } = this.state;
+    if (typeof window !== undefined) window.scrollTo(left, top);
   }
 
   onRead(key) {
@@ -26,4 +34,4 @@ class ViewportScroll extends Renderer {
   }
 }
 
-export const scroll = (element) => element ? new ElementScroll({ element }) : new ViewportScroll();
+export default (element) => element ? new ElementScroll({ element }) : new ViewportScroll();
