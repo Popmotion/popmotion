@@ -129,6 +129,10 @@ class Action { // lawsuit - sorry
     return this.props[key];
   }
 
+  setVelocityWindow(velocityWindow) {
+    this.velocityWindow = velocityWindow;
+  }
+
   getVelocity() {
     return speedPerSecond(
       this.prevValues[this.prevValues.length - 1] - this.prevValues[0],
