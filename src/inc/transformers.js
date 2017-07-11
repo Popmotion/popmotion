@@ -164,15 +164,15 @@ export const percent = appendUnit('%');
 export const degrees = appendUnit('deg');
 export const px = appendUnit('px');
 
-export const rgbUnit = flow(
+export const rgbUnit = pipe(
   clamp(0, 255),
   Math.round
 );
 
-const rgbaTemplate = ({ red, green, blue, alpha = 1 }) => 
+const rgbaTemplate = ({ red, green, blue, alpha = 1 }) =>
   `rgba(${red}, ${green}, ${blue}, ${alpha})`;
 
-export const rgba = flow(
+export const rgba = pipe(
   transformChildValues({
     red: rgbUnit,
     green: rgbUnit,
@@ -182,10 +182,10 @@ export const rgba = flow(
   rgbaTemplate
 );
 
-const hslaTemplate = ({ hue, saturation, lightness, alpha = 1 }) => 
+const hslaTemplate = ({ hue, saturation, lightness, alpha = 1 }) =>
   `hsla(${hue}, ${saturation}, ${lightness}, ${alpha})`;
 
-export const hsla = flow(
+export const hsla = pipe(
   transformChildValues({
     hue: parseFloat,
     saturation: percent,
