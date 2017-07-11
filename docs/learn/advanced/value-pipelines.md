@@ -92,28 +92,36 @@ const rgba = pipe(
 
 This is an example of composing already composed functions, which becomes a very clear way of expressing our logic.
 
-## `transform`
+## Applying these to animations
 
-Every Popmotion action supports a `transform` property. This should be a function that accepts and returns a number. This function will be run whenever `.get()` is called, and the result is passed to `onUpdate`.
+Every Popmotion action supports a `transform` property. This accepts any function that accepts and returns a number. This function will be run whenever `.get()` is called, and the result is passed to `onUpdate`.
 
-For instance, if we wanted to apply a static spring on a value, under specific conditions, we could do so purely with transformers:
+So we can ensure we always return a valid number:
 
 ```javascript
-import { pointer, trackOffset, transform, value } from 'popmotion';
-const { pipe, conditional, nonlinearSpring } = transform;
-
-const myValue = value(0);
-
-document.addEventListener('mousedown', (e) => {
-  const trackPointer = pointer(e).start();
-
-  trackOffset(pointerTracker.x, {
-    from: myValue.get(),
-    transform: conditional(
-      (v) => v > 10,
-      nonlinearSpring(5, 10) // strength, target
-    ),
-    onUpdate: myValue
-  });
-});
+tween({
+  from: 0,
+  to: 255,
+  transform: rgbUnit,
+  onUpdate: (v) => console.log(v)
+}).start();
 ```
+
+Or apply stepped motion to spring physics:
+
+```javascript
+physics({
+  from: 0,
+  to: 100,
+  transform: steps(5, 0, 100),
+  onUpdate: (v) => console.log(v)
+}).start();
+```
+
+## Conclusion
+
+These pure, simple functions are easily composed and reused. They can also be used with any action, not just tweens, making them extremely versitile.
+
+Most animation libraries provide options like `step` but we believe this functional approach gives developers the greatest flexibility and predictability.
+
+We've covered just some of the many transformers here, the rest can be found detailed in the [API docs](/api/transformers). As simple functions they're also incredibly easy to create and share, so we hope you experiment with your own.

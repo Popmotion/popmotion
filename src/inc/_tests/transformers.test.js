@@ -17,7 +17,8 @@ import {
   rgbUnit,
   hsla,
   alpha,
-  color
+  color,
+  steps
 } from '../transformers';
 
 describe('appendUnit()', () => {
@@ -176,5 +177,14 @@ describe('unit transformers', () => {
       lightness: 50,
       alpha: 1
     })).toBe('hsla(100, 50%, 50%, 1)');
+  });
+});
+
+describe('steps()', () => {
+  it('should return a function that correctly steps the value given to it across its range', () => {
+    const threeStep = steps(3, 0, 100);
+    expect(threeStep(1)).toBe(0);
+    expect(threeStep(49)).toBe(50);
+    expect(threeStep(75)).toBe(100);
   });
 });
