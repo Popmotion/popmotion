@@ -65,7 +65,7 @@ class Action { // lawsuit - sorry
     this.prevValues.push(this.current);
     this.prevTimes.push(currentTime);
 
-    if (currentTime - this.prevTimes[0] > this.velocityWindow) {
+    while (currentTime - this.prevTimes[0] > this.velocityWindow) {
       this.prevValues.shift();
       this.prevTimes.shift();
     }
