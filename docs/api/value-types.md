@@ -17,8 +17,31 @@ Each `valueType` provides three methods:
 ```javascript
 import { valueTypes } from 'popmotion';
 
-const { px } = valueTypes;
-px(5) === '5px' // true
+const { color } = valueTypes;
+
+// Test
+color.test('#fff'); // true
+color.test(0); // false
+
+// Parse
+color.parse('rgba(255, 255, 255, 8)')
+/*
+Returns {
+  red: 255,
+  blue: 255,
+  green: 255,
+  alpha: 0
+}
+*/
+
+// Transform
+color.transform({
+  hue: 200,
+  saturation: 100,
+  lightness: 50,
+  alpha: 0.5
+});
+// Returns 'hsla(200, 100%, 50%, 0.5)'
 ```
 
 ## Included value types

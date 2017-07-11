@@ -122,6 +122,10 @@ module.exports = {
           page: '/blog/20170710-mobile-web-is-awful-and-were-all-to-blame'
         },
       
+        '/learn/value-pipelines': {
+          page: '/learn/value-pipelines'
+        },
+      
         '/learn/action-management': {
           page: '/learn/action-management'
         },
