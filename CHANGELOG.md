@@ -2,7 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
-## [7.2.8] 2017-07-11
+## [7.2.9] 2017-07-12
+
+### Changed
+- `trackOffset` now calls `get` instead of `getBeforeTransform`.
+
+## [7.2.8] 2017-07-12
 
 ### Fixed
 - `angle` calculation fixed.
