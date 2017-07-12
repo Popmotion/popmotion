@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.2.8] 2017-07-11
+
+### Fixed
+- `angle` calculation fixed.
+
 ## [7.2.7] 2017-07-11
 
 ### Fixed
