@@ -140,9 +140,31 @@ export const smooth = (strength = 50) => {
   };
 };
 
-export const steps = (steps, min = 0, max = 1) => (v) => {
+export const snap = (points) => {
+  let i = 0;
+  const numPoints = points.length;
+
+  return (v) => {
+    let lastDistance = Math.abs(points[0] - v);
+
+    for (i = 1; i < numPoints; i++) {
+      const point = points[i];
+      const distance = Math.abs(point - v);
+
+      if (distance === 0) return point;
+
+      if (distance > lastDistance) return points[i - 1];
+
+      if (i === numPoints - 1) return point;
+
+      lastDistance = distance;
+    }
+  };
+};
+
+export const steps = (steps, min = 0, max = 1, direction = 'start') => (v) => {
   const progress = getProgressFromValue(min, max, v);
-  return getValueFromProgress(min, max, stepProgress(steps, progress));
+  return getValueFromProgress(min, max, stepProgress(steps, progress, direction));
 };
 
 export const transformChildValues = (childTransformers) => {

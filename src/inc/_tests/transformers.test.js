@@ -18,7 +18,9 @@ import {
   hsla,
   alpha,
   color,
-  steps
+  steps,
+  wrap,
+  snap
 } from '../transformers';
 
 describe('appendUnit()', () => {
@@ -186,5 +188,31 @@ describe('steps()', () => {
     expect(threeStep(1)).toBe(0);
     expect(threeStep(49)).toBe(50);
     expect(threeStep(75)).toBe(100);
+  });
+});
+
+describe('snap()', () => {
+  it('should snap a number to the nearest in the provided array', () => {
+    const snapTo = snap([-100, -50, 100, 200]);
+
+    expect(snapTo(-200)).toBe(-100);
+    expect(snapTo(-100)).toBe(-100);
+    expect(snapTo(-76)).toBe(-100);
+    expect(snapTo(-74)).toBe(-50);
+    expect(snapTo(0)).toBe(-50);
+    expect(snapTo(99)).toBe(100);
+    expect(snapTo(150)).toBe(200);
+    expect(snapTo(300)).toBe(200);
+  });
+});
+
+describe('wrap()', () => {
+  it('should wrap numbers back around to the start of provided range', () => {
+    const wrapAround = wrap(-100, 100);
+
+    expect(wrapAround(-100)).toBe(-100);
+    expect(wrapAround(0)).toBe(0);
+    expect(wrapAround(-200)).toBe(0);
+    expect(wrapAround(101)).toBe(-99);
   });
 });

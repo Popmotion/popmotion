@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.3.0] 2017-07-13
+
+### Added
+- New `snap` transformer.
+
 ## [7.2.9] 2017-07-12
 
 ### Changed
