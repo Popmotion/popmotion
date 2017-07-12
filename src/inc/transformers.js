@@ -140,9 +140,9 @@ export const smooth = (strength = 50) => {
   };
 };
 
-export const steps = (steps, min, max) => (v) => {
+export const steps = (steps, min = 0, max = 1) => (v) => {
   const progress = getProgressFromValue(min, max, v);
-  return stepProgress(steps, progress);
+  return getValueFromProgress(min, max, stepProgress(steps, progress));
 };
 
 export const transformChildValues = (childTransformers) => {

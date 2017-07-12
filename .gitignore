@@ -6,6 +6,7 @@ site/.next
 site/public
 site/pages/api
 site/pages/learn
+site/pages/blog
 storybook-static
 site/data/content.json
 site/data/menus.json
