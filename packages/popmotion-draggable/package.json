@@ -1,7 +1,7 @@
 {
-  "name": "popmotion-spinnable",
-  "version": "1.0.1",
-  "description": "Make DOM nodes spinnable with Popmotion",
+  "name": "popmotion-draggable",
+  "version": "1.0.0",
+  "description": "Make DOM nodes draggable with Popmotion",
   "author": "Matt Perry <sirhound@popmotion.io>",
   "homepage": "http://popmotion.io",
   "main": "./lib/index.js",
@@ -12,7 +12,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Popmotion/popmotion/tree/master/packages/popmotion-spinnable/"
+    "url": "https://github.com/Popmotion/popmotion/tree/master/packages/popmotion-draggable/"
   },
   "bugs": {
     "url": "https://github.com/Popmotion/popmotion/issues"

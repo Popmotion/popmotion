@@ -165,7 +165,7 @@ Given a number or an array of two or more numbers, returns a function that will 
 const snapToIntervals = snap(45);
 snapToIntervals(89); // 90
 
-const snapToArbitaryNumbers = snap([0, 90, 270, 360]);
+const snapToArbitaryDegrees = snap([0, 90, 270, 360]);
 snapToArbitaryDegrees(75); // 90
 ```
 
