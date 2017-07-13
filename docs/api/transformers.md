@@ -157,13 +157,16 @@ Will smooth a value over time.
 `smooth(strength <Number>)`
 
 ### `snap`
-Given an array of two or more numbers, returns a function that will snap a given value to the nearest number in the array.
+Given a number or an array of two or more numbers, returns a function that will snap a given value to the nearest multiple or to the nearest number in the array.
 
 `snap(positions <Array>)`
 
 ```javascript
-const snapToDegrees = snap([0, 90, 180, 270, 360]);
-snapToDegrees(75); // 90
+const snapToIntervals = snap(45);
+snapToIntervals(89); // 90
+
+const snapToArbitaryNumbers = snap([0, 90, 270, 360]);
+snapToArbitaryDegrees(75); // 90
 ```
 
 ### `steps`

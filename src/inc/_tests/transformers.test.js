@@ -204,6 +204,15 @@ describe('snap()', () => {
     expect(snapTo(150)).toBe(200);
     expect(snapTo(300)).toBe(200);
   });
+
+  it('should snap a number to a regular interval', () => {
+    const snapTo = snap(45);
+
+    expect(snapTo(1)).toBe(0);
+    expect(snapTo(44)).toBe(45);
+    expect(snapTo(89)).toBe(90);
+    expect(snapTo(-44)).toBe(-45);
+  });
 });
 
 describe('wrap()', () => {

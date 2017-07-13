@@ -1,10 +1,10 @@
 ---
 title: Spinnable
-description: Make any DOM nodes and React component spinnable!
+description: Make any DOM node or React component spinnable!
 category: plugins
 ---
 
-# Popmotion Spinnable
+# Spinnable
 
 Make any DOM node or React DOM component spinnable in one line of code!
 
@@ -35,14 +35,11 @@ Or provide additional options:
 
 ```javascript
 import { transform } from 'popmotion';
-const { pipe, wrap, snap } = transform;
+const { snap } = transform;
 
 spinnable(node, {
   onSpin: (angle) => console.log(angle),
-  transformSpin: pipe(
-    wrap(0, 360),
-    snap([0, 90, 180, 270, 360])
-  ),
+  transformSpin: snap(45),
   friction: 1
 });
 ```

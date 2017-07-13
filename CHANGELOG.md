@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.3.1] 2017-07-13
+
+### Added
+- Updated `snap` transform to take numbers for regular interval snapping.
+
 ## [7.3.0] 2017-07-13
 
 ### Added
