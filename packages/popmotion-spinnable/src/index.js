@@ -9,13 +9,10 @@ import {
 const { angle } = calc;
 
 export default function spinnable(node, {
-  initialRotation,
-  friction,
+  initialRotation = 0,
+  friction = 0.4,
   transformSpin,
   onSpin
-} = {
-  initialRotation: 0,
-  friction: 0.4
 }) {
   const renderer = css(node);
   const nodeRotation = value(initialRotation, (v) => {
