@@ -1,13 +1,13 @@
 const escapeBackticks = (string) => string.replace(/`/g, '\\`');
 
 module.exports = (body, { category, id, title, description, published }) => `
-import dynamic from 'next/dynamic';
 import { createElement } from 'react';
 import marksy from 'marksy/components';
 import { A, H1, H2, H3, H4, P, Li, Ul, Hr, Code, Pre } from '~/templates/global/primatives';
 import { Img } from '~/templates/content/primatives';
 import ContentTemplate from '~/templates/content/Template';
 import Example from '~/components/examples/Example';
+import CodePen from '~/components/examples/CodePen';
 
 const removeEmpty = filename => filename !== '';
 
@@ -25,7 +25,8 @@ const convertMarkdown = marksy({
   hr: Hr,
   img: Img,
   components: {
-    Example
+    Example,
+    CodePen
   }
 });
 
