@@ -90,7 +90,7 @@ class Tween extends Action {
     const { duration } = this.props;
     this.elapsed = getValueFromProgress(0, duration, progress);
     
-    if (!this.isActive()) this.scheduledUpdate;
+    if (!this.isActive()) this.scheduledUpdate();
   }
 }
 

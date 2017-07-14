@@ -9,6 +9,7 @@ import TransitionGroup from './TransitionGroup';
 import Toggle from './Toggle';
 import SpinnableDom from './SpinnableDOM';
 import SpinnableSvg from './SpinnableSVG';
+import Timeline from './Timeline';
 
 // storiesOf('Welcome', module).add('to Storybook', () => <Welcome showApp={linkTo('Button')} />);
 
@@ -23,4 +24,5 @@ storiesOf('MotionValue').add('React TransitionGroup', () => <TransitionGroup />)
 storiesOf('MotionValue').add('Toggle state', () => <Toggle />);
 storiesOf('spinnable').add('Spinnable DOM', () => <SpinnableDom />);
 storiesOf('spinnable').add('Spinnable SVG', () => <SpinnableSvg />);
+storiesOf('timeline').add('Timeline example', () => <Timeline />);
 

@@ -67,7 +67,14 @@ class Action { // lawsuit - sorry
       this.current = this.update(this.current);
     }
 
-    if (onUpdate) onUpdate(this.get(), this);
+    if (onUpdate) {
+      if (onUpdate.registerAction) {
+        onUpdate.set(this.get());
+      } else {
+        onUpdate(this.get(), this);
+      }
+    }
+
     this.fireListeners();
 
     if (!passive && this._isActive) {
@@ -93,12 +100,11 @@ class Action { // lawsuit - sorry
   }
 
   output(func) {
+    this.props.onUpdate = func;
     if (func.registerAction) {
       func.registerAction(this);
-      this.props.onUpdate = (v) => func.set(v);
-    } else {
-      this.props.onUpdate = func;
     }
+
     return this;
   }
 

@@ -30,7 +30,7 @@ export default function timeline(sequence, props) {
           to
         });
 
-        playhead += to;
+        playhead = to;
         duration = Math.max(duration, to);
       }
 
@@ -58,7 +58,7 @@ export default function timeline(sequence, props) {
       return acc;
     }, { targets: [], fragments: [] });
 
-  const numMarkers = markers.length;
+  const numMarkers = markers.fragments.length;
 
   return tween({
     duration,
@@ -80,7 +80,7 @@ export default function timeline(sequence, props) {
           const progress = getProgressFromValue(fragment.from, fragment.to, v);
 
           // Found an active fragment, execute
-          if (progress >= 0 || progress <= 1) {
+          if (progress >= 0 && progress <= 1) {
             foundActiveFragment = true;
             fragment.tween.seek(progress);
           } else {
@@ -97,6 +97,7 @@ export default function timeline(sequence, props) {
         }
 
         if (!foundActiveFragment) {
+          console.log(fragments[closestIndex].tween, closestProgress);
           if (fragments[closestIndex].tween.progress !== closestProgress) fragments[closestIndex].tween.seek(closestProgress);
         }
       }
