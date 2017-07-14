@@ -37,4 +37,4 @@ const fadeBetween = crossFade({
 
 ## Methods
 
-[...Action](action)
+[...Action](/api/action)

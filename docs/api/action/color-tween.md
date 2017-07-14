@@ -34,10 +34,8 @@ This is the animated version of the `blendColor` transformer.
 
 ## Props
 
-[...Action](action)
-[...Tween](tween)
+[...Tween](/api/tween)
 
 ## Methods
 
-[...Action](action)
-[...Tween](tween)
+[...Tween](/api/tween)

@@ -85,14 +85,13 @@ class Tween extends Action {
     this.props.playDirection *= -1;
     return this;
   }
+
+  seek(progress) {
+    const { duration } = this.props;
+    this.elapsed = getValueFromProgress(0, duration, progress);
+    
+    if (!this.isActive()) this.scheduledUpdate;
+  }
 }
 
-export default (...args) => {
-  if (args.length === 1) {
-    const [ props ] = args;
-    return new Tween(props);
-  } else {
-    const [ from, to, duration, ease, props ] = args;
-    return new Tween({ from, to, duration, ease, ...props });
-  }
-};
+export default (props) => new Tween(props);

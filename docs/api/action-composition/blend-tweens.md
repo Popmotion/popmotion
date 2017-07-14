@@ -55,4 +55,4 @@ setTimeout(() => {
 
 ## Methods
 
-[...Action](action)
+[...Action](/api/action)

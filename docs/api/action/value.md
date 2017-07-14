@@ -18,7 +18,7 @@ This means if a second action tries to update the `value`, the first action will
 
 - `set <Number>`: Updates `current` and schedules an update. Returns the `value` passed to it, useful for functional composition.
 
-[...Action](action)
+[...Action](/api/action)
 
 ## Playground
 

@@ -29,4 +29,4 @@ stagger(mappedTweens, 50, () => console.log('done!'));
 
 ## Methods
 
-[...Action](action)
+[...Action](/api/action)

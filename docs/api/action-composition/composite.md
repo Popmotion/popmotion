@@ -71,4 +71,4 @@ document.addEventListener('touchend', stopTracking);
 
 ## Methods
 
-[...Action](action)
+[...Action](/api/action)

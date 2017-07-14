@@ -20,11 +20,11 @@ import { trackOffset } from 'popmotion';
 
 - `from <Number>`: Will apply the action offset to this number. (default: `0`)
 
-[...Action](action)
+[...Action](/api/action)
 
 ## Methods
 
-[...Action](action)
+[...Action](/api/action)
 
 ## Playground
 

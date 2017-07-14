@@ -22,7 +22,7 @@ Simulate velocity, acceleration, friction and spring physics.
 
 ## Methods
 
-[...Action](action)
+[...Action](/api/action)
 
 ## Playground
 

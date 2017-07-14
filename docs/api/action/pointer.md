@@ -41,8 +41,8 @@ document.addEventListener('touchend', stopTracking);
 ## Props
 
 - `preventDefault <Boolean>`: If `true`, fire `preventDefault` on `mousemove` or `touchmove` events (default `false`)
-[...Action](action)
+[...Action](/api/action)
 
 ## Methods
 
-[...Action](action)
+[...Action](/api/action)

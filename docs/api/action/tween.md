@@ -18,7 +18,7 @@ category: action
 - `loop <Number>`: Number of times to restart tween from beginning on tween complete. (default: `0`)
 - `yoyo <Number>`: Number of times to reverse tween on tween complete. (default: `0`)
 
-[...Action](action)
+[...Action](/api/action)
 
 ## Methods
 
@@ -31,7 +31,10 @@ Flip the tween's `from` and `to`.
 ### `reverse`
 Reverse the tween's progress through time.
 
-[...Action](action)
+### `seek(progress <Number>)`
+Given a progress between 0 and 1, this will seek the tween to that position. If the tween is not already active, this will schedule an update.
+
+[...Action](/api/action)
 
 ## Playground
 
