@@ -37,7 +37,11 @@ class Tween extends Action {
   update() {
     const { duration, ease, from, to, playDirection } = this.props;
 
-    this.elapsed += timeSinceLastFrame() * playDirection;
+    if (!this.isManualUpdate) {
+      this.elapsed += timeSinceLastFrame() * playDirection;
+    }
+
+    this.isManualUpdate = false;
     this.progress = clampProgress(getProgressFromValue(0, duration, this.elapsed));
 
     return getValueFromProgress(from, to, ease(this.progress));
@@ -89,7 +93,7 @@ class Tween extends Action {
   seek(progress) {
     const { duration } = this.props;
     this.elapsed = getValueFromProgress(0, duration, progress);
-    
+    this.isManualUpdate = true;
     if (!this.isActive()) this.scheduledUpdate();
   }
 }

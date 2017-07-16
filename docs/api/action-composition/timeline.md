@@ -13,9 +13,21 @@ This timeline is itself a tween, and thus can be composed into another timeline.
 
 `timeline(sequence <Array>, props <Object>)`
 
+## Install
+
+Popmotion Timeline is a seperate package that will add less than 1kb to your bundle.
+
+```
+npm install popmotion-timeline --save
+```
+
+```
+import timeline from 'popmotion-timeline';
+```
+
 ## Usage
 
-Timeline accepts one argument, `sequence`.
+Timeline accepts two arguments, `sequence` (required) and `props`.
 
 `sequence` is an array of `tween`s (or `colorTween`s) and timestamps.
 
@@ -29,8 +41,6 @@ timeline([
   tween(400, 0).output(log)
 ]).start();
 ```
-
-Here, both tweens are playing for their default `300`ms, so the second tween will play at `300`ms and the overall timeline will play for `600`ms.
 
 ### Timestamps
 
@@ -59,6 +69,39 @@ timeline([
 ```
 
 This will start the second tween `200`ms **after the first has ended**.
+
+## Parallel and staggered tweens
+
+We can easily play multiple tweens at the same point by providing an array. For instance:
+
+```javascript
+timeline([
+  [
+    tween(0, 400).output((v) => v),
+    tween(0, 400).output((v) => v)
+    tween(0, 400).output((v) => v)
+    tween(0, 400).output((v) => v)
+  ]
+]).start();
+```
+
+These tweens will all run in parallel.
+
+Staggering these tweens is as simple as providing a number as the final item in the array:
+
+```javascript
+timeline([
+  [
+    tween(0, 400).output((v) => v),
+    tween(0, 400).output((v) => v)
+    tween(0, 400).output((v) => v)
+    tween(0, 400).output((v) => v),
+    50
+  ]
+]).start();
+```
+
+These tweens will now be played with a `50`ms stagger between them.
 
 ## Props
 

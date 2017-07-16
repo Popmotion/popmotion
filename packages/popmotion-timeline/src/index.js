@@ -3,11 +3,36 @@ const { getProgressFromValue } = calc;
 const { clamp } = transform;
 const clampProgress = clamp(0, 1);
 
+function convertArrays(acc, segment) {
+  if (segment.constructor === Array) {
+    const lastArg = segment[segment.length - 1];
+    const isStaggered = typeof lastArg === 'number';
+    const tweens = isStaggered ? segment.slice(0, -1) : segment;
+    const numTweens = tweens.length;
+    let offset = 0;
+
+    tweens.forEach((item, i) => {
+      acc.push(item);
+
+      if (i !== numTweens - 1) {
+        const duration = item.getProp('duration');
+        offset += isStaggered ? lastArg : 0;
+        acc.push(`-${duration - offset}`);
+      }
+    });
+  } else {
+    acc.push(segment);
+  }
+
+  return acc;
+}
+
 export default function timeline(sequence, props) {
   let playhead = 0;
   let duration = 0;
 
   const markers = sequence
+    .reduce(convertArrays, [])
     // Convert sequence
     .reduce((acc, segment) => {
       const typeOfSegment = typeof segment;
@@ -55,8 +80,12 @@ export default function timeline(sequence, props) {
         to: getProgressFromValue(0, duration, marker.to)
       });
 
+      if (output.get) {
+        acc.initialValues[targetIndex] = output.get();
+      }
+
       return acc;
-    }, { targets: [], fragments: [] });
+    }, { initialValues: [], targets: [], fragments: [] });
 
   const numMarkers = markers.fragments.length;
 
@@ -65,7 +94,7 @@ export default function timeline(sequence, props) {
     ease: easing.linear,
     ...props,
     onUpdate: (v) => {
-      // First iterate over output targets, and try to find an active tween 
+      // First iterate over output targets, and try to find an active tween
       for (let i = 0; i < numMarkers; i++) {
         const fragments = markers.fragments[i];
         const numFragments = fragments.length;
@@ -73,6 +102,7 @@ export default function timeline(sequence, props) {
         let prevProgressDistance = Infinity;
         let closestIndex = 0;
         let closestProgress = 0;
+        let tweenHasStarted = false;
         let j = 0;
 
         while (!foundActiveFragment && j < numFragments) {
@@ -84,12 +114,16 @@ export default function timeline(sequence, props) {
             foundActiveFragment = true;
             fragment.tween.seek(progress);
           } else {
-            const distance = (progress < 0) ? Math.abs(progress) : progress - 1;
+            if (progress > 1) {
+              tweenHasStarted = true;
 
-            if (distance < prevProgressDistance) {
-              prevProgressDistance = distance;
-              closestProgress = clampProgress(progress);
-              closestIndex = j;
+              const distance = (progress < 0) ? Math.abs(progress) : progress - 1;
+
+              if (distance < prevProgressDistance) {
+                prevProgressDistance = distance;
+                closestProgress = clampProgress(progress);
+                closestIndex = j;
+              }
             }
           }
 
@@ -97,8 +131,13 @@ export default function timeline(sequence, props) {
         }
 
         if (!foundActiveFragment) {
-          console.log(fragments[closestIndex].tween, closestProgress);
-          if (fragments[closestIndex].tween.progress !== closestProgress) fragments[closestIndex].tween.seek(closestProgress);
+          const target = markers.targets[i];
+
+          if (tweenHasStarted || !target.set) {
+            if (fragments[closestIndex].tween.progress !== closestProgress) fragments[closestIndex].tween.seek(closestProgress);
+          } else if (!tweenHasStarted && target.set) {
+            if (target.get() !== markers.initialValues[i]) target.set(markers.initialValues[i]);
+          }
         }
       }
     }

@@ -22,28 +22,22 @@ export default class Timeline extends React.Component {
           to: 400,
           onUpdate: x
         }),
-        // colorTween({
-        //   from: backgroundColor.get(),
-        //   to: '#000',
-        //   onUpdate: backgroundColor
-        // }),
         tween({
           from: 400,
           to: 0,
           onUpdate: x
         }),
-        '+10000',
+        '+200',
         tween({
           to: 400,
           onUpdate: x
+        }),
+        '-100',
+        colorTween({
+          from: '#000',
+          to: '#0f0',
+          onUpdate: backgroundColor
         })
-
-        // '-100',
-        // colorTween({
-        //   from: '#000',
-        //   to: '#0f0',
-        //   onUpdate: backgroundColor
-        // })
       ]).start();
     }
   };
