@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.4.0] 2017-07-16
+
+### Added
+- Added `seek` to `tween`.
+
 ## [7.3.1] 2017-07-13
 
 ### Added
