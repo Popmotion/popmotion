@@ -47,6 +47,6 @@
     "babel-register": "^6.3.13"
   },
   "dependencies": {
-    "popmotion": "^7.3.0"
+    "popmotion": "^7.4.0"
   }
 }
