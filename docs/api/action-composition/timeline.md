@@ -2,14 +2,13 @@
 title: Timeline
 description: Compose tweens into a single, scrubbable timeline.
 category: action-composition
-draft: true
 ---
 
 # Timeline
 
-Compose tweens into a single, scrubbable timeline.
+Compose `tween`s into a single, scrubbable timeline.
 
-This timeline is itself a tween, and thus can be composed into another timeline.
+This timeline is itself a tween, and thus can be composed into another timeline and can be controlled with all the same methods.
 
 `timeline(sequence <Array>, props <Object>)`
 
@@ -37,8 +36,8 @@ By default, a list of tweens will play one after the other:
 const log = (v) => console.log(v);
 
 timeline([
-  tween(0, 400).output(log),
-  tween(400, 0).output(log)
+  tween({ to: 400 }).output(log),
+  tween({ from: 400, to: 0 }).output(log)
 ]).start();
 ```
 
@@ -50,9 +49,9 @@ A timestamp can either be a raw number, which will set an **absolute** time. For
 
 ```javascript
 timeline([
-  tween(0, 400).output(log),
+  tween({ to: 400 }).output(log),
   1000,
-  tween(400, 0).output(log)
+  tween({ from: 400, to: 0 }).output(log)
 ]).start();
 ```
 
@@ -62,9 +61,9 @@ A timestamp can also be a string, which will set a **relative** time. For instan
 
 ```javascript
 timeline([
-  tween(0, 400).output(log),
+  tween({ to: 400 }).output(log),
   '+200',
-  tween(400, 0).output(log)
+  tween({ from: 400, to: 0 }).output(log)
 ]).start();
 ```
 
@@ -72,7 +71,7 @@ This will start the second tween `200`ms **after the first has ended**.
 
 ## Parallel and staggered tweens
 
-We can easily play multiple tweens at the same point by providing an array. For instance:
+We can easily play multiple tweens at the same point by grouping them in an array. For instance:
 
 ```javascript
 timeline([

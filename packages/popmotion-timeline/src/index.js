@@ -3,7 +3,12 @@ const { getProgressFromValue } = calc;
 const { clamp } = transform;
 const clampProgress = clamp(0, 1);
 
-function convertArrays(acc, segment) {
+/*
+  Flatten arrays, which denote parallel or staggered tweens,
+  into a flat set of instructions which reset the playhead
+  after each tween.
+ */
+function flattenArraysToSequence(sequence, segment) {
   if (segment.constructor === Array) {
     const lastArg = segment[segment.length - 1];
     const isStaggered = typeof lastArg === 'number';
@@ -12,19 +17,19 @@ function convertArrays(acc, segment) {
     let offset = 0;
 
     tweens.forEach((item, i) => {
-      acc.push(item);
+      sequence.push(item);
 
       if (i !== numTweens - 1) {
         const duration = item.getProp('duration');
         offset += isStaggered ? lastArg : 0;
-        acc.push(`-${duration - offset}`);
+        sequence.push(`-${duration - offset}`);
       }
     });
   } else {
-    acc.push(segment);
+    sequence.push(segment);
   }
 
-  return acc;
+  return sequence;
 }
 
 export default function timeline(sequence, props) {
@@ -32,8 +37,8 @@ export default function timeline(sequence, props) {
   let duration = 0;
 
   const markers = sequence
-    .reduce(convertArrays, [])
-    // Convert sequence
+    .reduce(flattenArraysToSequence, [])
+    // Convert sequence to relative timings
     .reduce((acc, segment) => {
       const typeOfSegment = typeof segment;
 
