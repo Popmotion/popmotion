@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.5.1] 2017-07-17
+
+### Fixed
+- Fixed a bug with `smooth`, preventing it from working if the initial given numbers were `0`, or if it was called twice in the same frame.
+
 ## [7.5.0] 2017-07-17
 
 ### Added

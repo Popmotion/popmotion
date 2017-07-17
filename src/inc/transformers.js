@@ -1,7 +1,7 @@
 import { getProgressFromValue, getValueFromProgress, stepProgress, smooth as calcSmoothing } from './calc';
 import { isString } from './utils';
 import { color as parseColor } from './parsers';
-import { timeSinceLastFrame } from '../framesync';
+import { currentFrameTimestamp } from '../framesync';
 
 const noop = (v) => v;
 
@@ -129,13 +129,15 @@ export const wrap = (min, max) => (v) => {
 
 export const smooth = (strength = 50) => {
   let previousValue = 0;
-  let hasSmoothed = false;
+  let lastUpdated = 0;
 
   return (v) => {
-    const currentValue = (hasSmoothed) ? previousValue : v;
-    const newValue = calcSmoothing(currentValue, previousValue, timeSinceLastFrame(), strength);
+    const currentValue = (lastUpdated) ? previousValue : v;
+    const currentFramestamp = currentFrameTimestamp();
+    const timeDelta = (currentFramestamp !== lastUpdated) ? currentFramestamp - lastUpdated : 0;
+    const newValue = timeDelta ? calcSmoothing(v, previousValue, timeDelta, strength) : previousValue;
+    lastUpdated = currentFramestamp;
     previousValue = newValue;
-    hasSmoothed = true;
     return newValue;
   };
 };

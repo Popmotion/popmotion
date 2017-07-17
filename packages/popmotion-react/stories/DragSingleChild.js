@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { pointer, trackOffset } from 'popmotion';
+import { pointer, trackOffset, transform } from '../../../lib/popmotion';
 import { MotionValue } from '../src';
-
+const { smooth } = transform;
 const Box = styled.div`
   width: 100px;
   height: 100px;
@@ -30,6 +30,7 @@ export default () => (
 
         trackOffset(trackPointer.x, {
           from: x.get(),
+          transform: smooth(500),
           onUpdate: x
         }).start();
 
