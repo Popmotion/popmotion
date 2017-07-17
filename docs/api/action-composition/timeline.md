@@ -8,7 +8,7 @@ category: action-composition
 
 Compose `tween`s into a single, scrubbable timeline.
 
-This timeline is itself a tween, and thus can be composed into another timeline and can be controlled with all the same methods.
+This timeline is itself a tween, and thus can be composed into another timeline and can be controlled with all the same methods and properties.
 
 `timeline(sequence <Array>, props <Object>)`
 
@@ -20,7 +20,7 @@ Popmotion Timeline is a seperate package that will add less than 1kb to your bun
 npm install popmotion-timeline --save
 ```
 
-```
+```javascript
 import timeline from 'popmotion-timeline';
 ```
 
@@ -102,9 +102,37 @@ timeline([
 
 These tweens will now be played with a `50`ms stagger between them.
 
-## Props
+## Timeline control
 
+`timeline` supports all the same properties as `tween`. So we can loop a timeline as simply as:
+
+```javascript
+timeline(sequence, { loop: Infinity }).start();
+```
+
+Or scale the entire timeline by changing its duration:
+
+```javascript
+timeline(sequence, { duration: 10000 }).start();
+```
+
+Or even apply easing to the timeline playhead itself:
+
+```javascript
+timeline(sequence, { ease: easing.easeInOut }).start();
+```
+
+**Or** we could go as far as to provide a `transform` property, allowing us to modify the playhead before it gets applied to the timeline.
+
+For instance, we could use the `snap` transformer to snap the playhead to the nearest `0.2`:
+
+```javascript
+timeline(sequence, { transform: snap(0.2) }).start();
+```
+
+## Props
 - `duration <Number>`: This is dynamically calculated from the child tweens. However, if `duration` is manually set, the entire timeline is scaled proportionately.
+- `ease <Function>`: (Default: `easing.linear`)
 
 [...Tween](/api/tween)
 
