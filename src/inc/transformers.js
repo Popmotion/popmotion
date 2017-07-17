@@ -132,7 +132,6 @@ export const smooth = (strength = 50) => {
   let lastUpdated = 0;
 
   return (v) => {
-    const currentValue = (lastUpdated) ? previousValue : v;
     const currentFramestamp = currentFrameTimestamp();
     const timeDelta = (currentFramestamp !== lastUpdated) ? currentFramestamp - lastUpdated : 0;
     const newValue = timeDelta ? calcSmoothing(v, previousValue, timeDelta, strength) : previousValue;
