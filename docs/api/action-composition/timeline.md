@@ -76,10 +76,10 @@ We can easily play multiple tweens at the same point by grouping them in an arra
 ```javascript
 timeline([
   [
-    tween(0, 400).output((v) => v),
-    tween(0, 400).output((v) => v)
-    tween(0, 400).output((v) => v)
-    tween(0, 400).output((v) => v)
+    tween({ to: 400 }).output((v) => v),
+    tween({ to: 400 }).output((v) => v),
+    tween({ to: 400 }).output((v) => v),
+    tween({ to: 400 }).output((v) => v)
   ]
 ]).start();
 ```
@@ -91,10 +91,10 @@ Staggering these tweens is as simple as providing a number as the final item in 
 ```javascript
 timeline([
   [
-    tween(0, 400).output((v) => v),
-    tween(0, 400).output((v) => v)
-    tween(0, 400).output((v) => v)
-    tween(0, 400).output((v) => v),
+    tween({ to: 400 }).output((v) => v),
+    tween({ to: 400 }).output((v) => v),
+    tween({ to: 400 }).output((v) => v),
+    tween({ to: 400 }).output((v) => v),
     50
   ]
 ]).start();
