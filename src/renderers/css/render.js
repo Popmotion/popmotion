@@ -3,12 +3,45 @@ import valueTypes from './value-types';
 import prefixer from './prefixer';
 import { isNum, isObj } from '../../inc/utils';
 
-const TRANSLATE = 'translate';
+const {
+  translate,
+  translateX,
+  translateY,
+  translateZ,
+  scale,
+  scaleX,
+  scaleY,
+  scaleZ,
+  rotate,
+  rotateX,
+  rotateY,
+  rotateZ
+} = transformProps;
+
 const translateMap = {
-  x: TRANSLATE + 'X',
-  y: TRANSLATE + 'Y',
-  z: TRANSLATE + 'Z'
+  x: translateX,
+  y: translateY,
+  z: translateZ
 };
+
+const transformPropOrder = [
+  translate,
+  translateX,
+  translateY,
+  translateZ,
+  scale,
+  scaleX,
+  scaleY,
+  scaleZ,
+  rotate,
+  rotateX,
+  rotateY,
+  rotateZ
+];
+
+function sortTransformProps(a, b) {
+  return transformPropOrder.indexOf(a) - transformPropOrder.indexOf(b);
+}
 
 export default function buildStylePropertyString(element, state, changedValues, enableHardwareAcceleration) {
   let propertyString = '';
@@ -37,6 +70,10 @@ export default function buildStylePropertyString(element, state, changedValues, 
     }
   }
 
+  changedValues.sort(sortTransformProps);
+
+  // Now run through each property, and decide which is a plain style props,
+  // a transform property and CSS vars and handle accordingly
   const totalNumChangedValues = changedValues.length;
   for (let i = 0; i < totalNumChangedValues; i++) {
     let key = changedValues[i];
@@ -51,10 +88,12 @@ export default function buildStylePropertyString(element, state, changedValues, 
       value = valueTypes[key].transform(value);
     }
 
+    // If a transform prop, add to transform string
     if (transformProps[key]) {
       transformString += key + '(' + value + ') ';
       transformHasZ = (key === translateMap.z) ? true : transformHasZ;
 
+    // Or if a simple CSS property, set
     } else {
       propertyString += ';' + prefixer(key, true) + ':' + value;
     }

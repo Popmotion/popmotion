@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.5.0] 2017-07-17
+
+### Added
+- Enforced order for css `transform` properties.
+
 ## [7.4.0] 2017-07-16
 
 ### Added

@@ -30,6 +30,23 @@ The following alias' can be optionally used for setting CSS props:
 - `y` -> `translateY`
 - `z` -> `translateZ`
 
+## Transform property order
+The `transform` property can be animated using template strings, but in most cases we want to animate the `rotate`, `translate` and `scale` properties seperately.
+
+In accordance with the [CSS Transforms Level 2 spec](https://drafts.csswg.org/css-transforms-2/#individual-transforms), if set individually these properties will be set in the following order:
+
+`translate`, `scale`, `rotate`
+
+## Setting CSS variables
+
+[CSS variables](https://css-tricks.com/difference-between-types-of-css-variables/#article-header-id-1) can be set and animated just like any other property:
+
+```javascript
+const htmlRenderer = css(document.documentElement);
+
+htmlRenderer.set('--bg-color', '#000');
+```
+
 ## Example
 
 ```javascript
