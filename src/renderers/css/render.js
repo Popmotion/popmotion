@@ -19,9 +19,9 @@ const {
 } = transformProps;
 
 const translateMap = {
-  x: translateX,
-  y: translateY,
-  z: translateZ
+  x: 'translateX',
+  y: 'translateY',
+  z: 'translateZ'
 };
 
 const transformPropOrder = [
@@ -53,7 +53,7 @@ export default function buildStylePropertyString(element, state, changedValues, 
   // and if true add all transform values
   const numChangedValues = changedValues.length;
   for (let i = 0; i < numChangedValues; i++) {
-    const key = changedValues[i];
+    let key = changedValues[i];
 
     // If this is a transform property, add all other transform props
     // to changedValues and then break

@@ -1,6 +1,6 @@
 {
   "name": "popmotion-timeline",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Compose tweens into a single, scrubbable timeline.",
   "author": "Matt Perry <sirhound@popmotion.io>",
   "homepage": "http://popmotion.io",
