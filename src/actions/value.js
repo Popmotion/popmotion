@@ -1,5 +1,4 @@
 import Action from './';
-import { onFrameUpdate } from '../framesync';
 
 class Value extends Action {
   static defaultProps = {
@@ -8,7 +7,7 @@ class Value extends Action {
 
   set(v) {
     this.toUpdate = v;
-    onFrameUpdate(this.scheduledUpdate);
+    this.scheduledUpdate();
     return v;
   }
 

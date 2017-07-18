@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.5.3] 2017-07-18
+
+### Fixed
+- Consistency issue with scheduling update on `value.set` - area to look at in the future.
+
 ## [7.5.2] 2017-07-18
 
 ### Fixed
