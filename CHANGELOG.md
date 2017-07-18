@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.5.2] 2017-07-18
+
+### Fixed
+- Bug with `css` translate map.
+
 ## [7.5.1] 2017-07-17
 
 ### Fixed
