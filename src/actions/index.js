@@ -103,6 +103,7 @@ class Action { // lawsuit - sorry
     this.props.onUpdate = func;
     if (func.registerAction) {
       func.registerAction(this);
+      func.set(this.get());
     }
 
     return this;
@@ -127,6 +128,7 @@ class Action { // lawsuit - sorry
   }
 
   getVelocity() {
+    console.log(this.current, this.prev, this.lastUpdated)
     return speedPerSecond(this.current - this.prev, this.lastUpdated);
   }
 

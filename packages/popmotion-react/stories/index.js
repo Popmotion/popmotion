@@ -11,6 +11,7 @@ import SpinnableDom from './SpinnableDOM';
 import SpinnableSvg from './SpinnableSVG';
 import Timeline from './Timeline';
 import TimelineStagger from './TimelineStagger';
+import Inertia from './Inertia';
 
 // storiesOf('Welcome', module).add('to Storybook', () => <Welcome showApp={linkTo('Button')} />);
 
@@ -28,3 +29,4 @@ storiesOf('spinnable').add('Spinnable SVG', () => <SpinnableSvg />);
 storiesOf('timeline').add('Timeline example', () => <Timeline />);
 storiesOf('timeline').add('Timeline stagger', () => <TimelineStagger />);
 
+storiesOf('inertia').add('Throw to inertia', () => <Inertia />);
