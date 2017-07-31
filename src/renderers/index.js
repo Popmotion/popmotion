@@ -115,7 +115,7 @@ class Renderer {
       }
     }
 
-    if (this.hasChanged) {
+    if (this.hasChanged && this.changedValues.indexOf(key) === -1) {
       this.changedValues.push(key);
     }
   }

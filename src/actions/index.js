@@ -128,7 +128,6 @@ class Action { // lawsuit - sorry
   }
 
   getVelocity() {
-    console.log(this.current, this.prev, this.lastUpdated)
     return speedPerSecond(this.current - this.prev, this.lastUpdated);
   }
 
