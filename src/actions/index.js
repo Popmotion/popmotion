@@ -103,6 +103,7 @@ class Action { // lawsuit - sorry
     this.props.onUpdate = func;
     if (func.registerAction) {
       func.registerAction(this);
+      func.set(this.get());
     }
 
     return this;

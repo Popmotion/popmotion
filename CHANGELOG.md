@@ -2,6 +2,16 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.5.4] 2017-07-31
+
+### Fixed
+- A key is only added to Renderer's `changedValues` array if it doesn't already exist for that frame.
+
+## [7.5.3] 2017-07-18
+
+### Fixed
+- Consistency issue with scheduling update on `value.set` - area to look at in the future.
+
 ## [7.5.2] 2017-07-18
 
 ### Fixed

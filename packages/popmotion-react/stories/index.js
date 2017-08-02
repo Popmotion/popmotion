@@ -12,6 +12,7 @@ import SpinnableSvg from './spinnable/SpinnableSVG';
 import Timeline from './timeline/Timeline';
 import TimelineStagger from './timeline/TimelineStagger';
 import DragXY from './draggable/DragXY';
+import Inertia from './Inertia';
 
 // storiesOf('Welcome', module).add('to Storybook', () => <Welcome showApp={linkTo('Button')} />);
 
@@ -24,11 +25,17 @@ storiesOf('MotionValue').add('Drag single child', () => <DragSingleChild />);
 storiesOf('MotionValue').add('React TransitionGroup', () => <TransitionGroup />);
 //storiesOf('MotionValue').add('Rotate Three.js Cube', () => <RotateThreeCube />);
 storiesOf('MotionValue').add('Toggle state', () => <Toggle />);
+
+// Spinnable
 storiesOf('spinnable').add('Spinnable DOM', () => <SpinnableDom />);
 storiesOf('spinnable').add('Spinnable SVG', () => <SpinnableSvg />);
+
+// Timeline
 storiesOf('timeline').add('Timeline example', () => <Timeline />);
 storiesOf('timeline').add('Timeline stagger', () => <TimelineStagger />);
 
 // Draggable
 storiesOf('draggable').add('Drag XY', () => <DragXY />);
 
+// Inertia
+storiesOf('inertia').add('Throw to inertia', () => <Inertia />);
