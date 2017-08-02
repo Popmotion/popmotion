@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { pointer, trackOffset, transform } from '../../../lib/popmotion';
-import { MotionValue } from '../src';
+import { pointer, trackOffset, transform } from '../../../../lib/popmotion';
+import { MotionValue } from '../../src';
 const { smooth } = transform;
 const Box = styled.div`
   width: 100px;

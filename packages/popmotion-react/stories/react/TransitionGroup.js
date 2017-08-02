@@ -1,6 +1,6 @@
 import React from 'react';
 import TransitionGroup from 'react-transition-group/TransitionGroup';
-import { MotionValue } from '../src';
+import { MotionValue } from '../../src';
 import { tween, transform } from 'popmotion';
 import styled from 'styled-components';
 const { px } = transform;
@@ -41,7 +41,7 @@ export default class TransitionGroupExample extends React.Component {
       } else if (numChildren < 0) {
         direction = 1;
       }
-      
+
       this.setState({
         numChildren: numChildren + direction
       });

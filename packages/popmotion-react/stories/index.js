@@ -4,13 +4,14 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { linkTo } from '@storybook/addon-links';
 
-import DragSingleChild from './DragSingleChild';
-import TransitionGroup from './TransitionGroup';
-import Toggle from './Toggle';
-import SpinnableDom from './SpinnableDOM';
-import SpinnableSvg from './SpinnableSVG';
-import Timeline from './Timeline';
-import TimelineStagger from './TimelineStagger';
+import DragSingleChild from './react/DragSingleChild';
+import TransitionGroup from './react/TransitionGroup';
+import Toggle from './popmotion/Toggle';
+import SpinnableDom from './spinnable/SpinnableDOM';
+import SpinnableSvg from './spinnable/SpinnableSVG';
+import Timeline from './timeline/Timeline';
+import TimelineStagger from './timeline/TimelineStagger';
+import DragXY from './draggable/DragXY';
 
 // storiesOf('Welcome', module).add('to Storybook', () => <Welcome showApp={linkTo('Button')} />);
 
@@ -27,4 +28,7 @@ storiesOf('spinnable').add('Spinnable DOM', () => <SpinnableDom />);
 storiesOf('spinnable').add('Spinnable SVG', () => <SpinnableSvg />);
 storiesOf('timeline').add('Timeline example', () => <Timeline />);
 storiesOf('timeline').add('Timeline stagger', () => <TimelineStagger />);
+
+// Draggable
+storiesOf('draggable').add('Drag XY', () => <DragXY />);
 

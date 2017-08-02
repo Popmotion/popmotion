@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { tween, colorTween, value, css } from '../../../lib/popmotion';
-import timeline from '../../popmotion-timeline/lib';
+import { tween, colorTween, value, css } from '../../../../lib/popmotion';
+import timeline from '../../../popmotion-timeline/lib';
 
 const Box = styled.div`
   width: 100px;

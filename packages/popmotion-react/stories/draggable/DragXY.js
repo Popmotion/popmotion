@@ -1,5 +1,5 @@
 import React from 'react';
-import spinnable from '../../popmotion-spinnable/src';
+import draggable from '../../../popmotion-draggable/lib';
 import styled from 'styled-components';
 
 const Box = styled.div`
@@ -8,10 +8,10 @@ const Box = styled.div`
   background: red;
 `;
 
-export default class SpinnableDOM extends React.Component {
+export default class DragXY extends React.Component {
   setRef = (ref) => {
     if (ref) {
-      spinnable(ref);
+      draggable(ref);
     }
   };
 
