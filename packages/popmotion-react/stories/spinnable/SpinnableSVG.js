@@ -1,5 +1,5 @@
 import React from 'react';
-import spinnable from '../../popmotion-spinnable/src';
+import spinnable from '../../../popmotion-spinnable/src';
 
 export default class SpinnableDOM extends React.Component {
   setRef = (ref) => {

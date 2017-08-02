@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { tween, value, css } from '../../../lib/popmotion';
-import timeline from '../../popmotion-timeline/lib';
+import { tween, value, css } from '../../../../lib/popmotion';
+import timeline from '../../../popmotion-timeline/lib';
 
 const Box = styled.div`
   width: 100px;
@@ -11,7 +11,7 @@ const Box = styled.div`
 
 export default class Timeline extends React.Component {
   componentDidMount() {
-    timeline([
+    const tweens = [
       this.xSetters.map((setX) => tween({
         from: 0,
         to: 400,
@@ -25,7 +25,9 @@ export default class Timeline extends React.Component {
         })),
         50
       ]
-    ]).start();
+    ];
+
+    timeline(tweens).start();
   }
 
   setRef = (ref) => {

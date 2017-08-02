@@ -214,7 +214,7 @@ const hslaTemplate = ({ hue, saturation, lightness, alpha = 1 }) =>
 
 export const hsla = pipe(
   transformChildValues({
-    hue: parseFloat,
+    hue: parseInt,
     saturation: percent,
     lightness: percent,
     alpha

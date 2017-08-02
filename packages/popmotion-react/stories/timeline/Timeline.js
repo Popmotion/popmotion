@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { tween, colorTween, value, css } from '../../../lib/popmotion';
-import timeline from '../../popmotion-timeline/lib';
+import { tween, colorTween, value, css } from '../../../../lib/popmotion';
+import timeline from '../../../popmotion-timeline/lib';
 
 const Box = styled.div`
   width: 100px;
@@ -38,7 +38,9 @@ export default class Timeline extends React.Component {
           to: '#0f0',
           onUpdate: backgroundColor
         })
-      ]).start();
+      ], {
+        loop: Infinity
+      }).start();
     }
   };
 

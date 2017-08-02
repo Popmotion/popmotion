@@ -1,6 +1,6 @@
 import React from 'react';
 import { tween } from 'popmotion';
-import { MotionValue } from '../src';
+import { MotionValue } from '../../src';
 
 export default () => (
   <MotionValue

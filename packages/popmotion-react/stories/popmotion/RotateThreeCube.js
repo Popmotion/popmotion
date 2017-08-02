@@ -3,7 +3,7 @@ import { physics } from 'popmotion';
 import React3 from 'react-three-renderer';
 import * as THREE from 'three';
 import ReactDOM from 'react-dom';
-import { MotionValue } from '../src';
+import { MotionValue } from '../../src';
 
 export default () => (
   <React3

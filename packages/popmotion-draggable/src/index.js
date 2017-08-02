@@ -8,11 +8,12 @@ export default function draggable(node, {
   onDrag,
   onDragStart,
   onDragStop
-}) {
+} = {}) {
   const nodeRenderer = css(node);
   const values = {};
   if (x) values.x = value(initialX, (v) => nodeRenderer.set('x', v));
   if (y) values.y = value(initialY, (v) => nodeRenderer.set('y', v));
+
   const nodeXY = composite(values, {
     onUpdate: onDrag
   });
@@ -20,24 +21,28 @@ export default function draggable(node, {
   function startTracking(e) {
     const pointerTracker = pointer(e).start();
 
-    trackOffset(pointerTracker.x, {
-      from: nodeXY.x.get(),
-      onUpdate: nodeXY.x
-    }).start();
+    if (x) {
+      trackOffset(pointerTracker.x, {
+        from: nodeXY.x.get(),
+        onUpdate: nodeXY.x
+      }).start();
+    }
 
-    trackOffset(pointerTracker.y, {
-      from: nodeXY.y.get(),
-      onUpdate: nodeXY.y,
-      onStop: () => pointerTracker.stop()
-    }).start();
+    if (y) {
+      trackOffset(pointerTracker.y, {
+        from: nodeXY.y.get(),
+        onUpdate: nodeXY.y,
+        onStop: () => pointerTracker.stop()
+      }).start();
+    }
 
-    if (onDragStart) onDragStart();
+    if (onDragStart) onDragStart(nodeXY);
   }
 
   function stopTracking() {
     nodeXY.stop();
 
-    if (onDragStop) onDragStop();
+    if (onDragStop) onDragStop(nodeXY);
   }
 
   node.addEventListener('mousedown', startTracking);

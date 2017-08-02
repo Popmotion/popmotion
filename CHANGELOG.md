@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.5.5] 2017-08-02
+
+### Fixed
+- Only firing `onStop` on an action bound to a value if the action is active.
+
 ## [7.5.4] 2017-07-31
 
 ### Fixed
