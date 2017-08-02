@@ -32,9 +32,6 @@ draggable(node);
 Or provide additional options:
 
 ```javascript
-import { transform } from 'popmotion';
-const { snap } = transform;
-
 spinnable(node, {
   y: false,
   onDragStop: ({ x }) => physics({
