@@ -12,7 +12,7 @@ import SpinnableSvg from './spinnable/SpinnableSVG';
 import Timeline from './timeline/Timeline';
 import TimelineStagger from './timeline/TimelineStagger';
 import DragXY from './draggable/DragXY';
-import Inertia from './Inertia';
+//import Inertia from './Inertia';
 
 // storiesOf('Welcome', module).add('to Storybook', () => <Welcome showApp={linkTo('Button')} />);
 
@@ -38,4 +38,4 @@ storiesOf('timeline').add('Timeline stagger', () => <TimelineStagger />);
 storiesOf('draggable').add('Drag XY', () => <DragXY />);
 
 // Inertia
-storiesOf('inertia').add('Throw to inertia', () => <Inertia />);
+//storiesOf('inertia').add('Throw to inertia', () => <Inertia />);

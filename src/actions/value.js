@@ -17,7 +17,8 @@ class Value extends Action {
   }
 
   stopRegisteredAction() {
-    if (this.action) this.action.stop();
+    if (this.action && this.action.isActive()) this.action.stop();
+    this.action = undefined;
   }
 
   registerAction(action) {

@@ -11,7 +11,9 @@ const Box = styled.div`
 export default class DragXY extends React.Component {
   setRef = (ref) => {
     if (ref) {
-      draggable(ref);
+      draggable(ref, {
+        y: false
+      });
     }
   };
 
