@@ -32,7 +32,7 @@ draggable(node);
 Or provide additional options:
 
 ```javascript
-spinnable(node, {
+draggable(node, {
   y: false,
   onDragStop: ({ x }) => physics({
     from: x.get(),
