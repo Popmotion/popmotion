@@ -1,0 +1,1 @@
+{"version":3,"file":"calc.js","sourceRoot":"","sources":["../../tssrc/inc/calc.ts"],"names":[],"mappings":";;AAMa,QAAA,aAAa,GAAG,UAAC,GAAW,EAAE,aAAqB;IAC9D,OAAA,GAAG,GAAG,CAAC,IAAI,GAAG,aAAa,CAAC;AAA5B,CAA4B,CAAC;AAQlB,QAAA,cAAc,GAAG,UAAC,QAAgB,EAAE,aAAyB;IAAzB,8BAAA,EAAA,iBAAyB;IACxE,OAAA,aAAa,GAAG,QAAQ,GAAG,CAAC,IAAI,GAAG,aAAa,CAAC,GAAG,CAAC;AAArD,CAAqD,CAAC"}

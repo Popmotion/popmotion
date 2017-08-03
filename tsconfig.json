@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "target": "es5",
+    "rootDir": "tssrc",
+    "outDir": "tslib",
+    "watch": true,
+    "baseUrl": "tssrc/",
+    "alwaysStrict": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": [
+    "tssrc/**/*"
+  ]
+}
