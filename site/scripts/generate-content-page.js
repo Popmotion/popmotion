@@ -3,7 +3,7 @@ const escapeBackticks = (string) => string.replace(/`/g, '\\`');
 module.exports = (body, { category, id, title, description, published }) => `
 import { createElement } from 'react';
 import marksy from 'marksy/components';
-import { A, H1, H2, H3, H4, P, Li, Ul, Hr, Code, Pre } from '~/templates/global/primatives';
+import { A, H1, H2, H3, H4, P, Li, Ul, Hr, Code, Pre, Blockquote } from '~/templates/global/primatives';
 import { Img } from '~/templates/content/primatives';
 import ContentTemplate from '~/templates/content/Template';
 import Example from '~/components/examples/Example';
@@ -24,6 +24,7 @@ const convertMarkdown = marksy({
   ul: Ul,
   hr: Hr,
   img: Img,
+  blockquote: Blockquote,
   components: {
     Example,
     CodePen

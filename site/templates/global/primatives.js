@@ -77,6 +77,13 @@ export const Hr = styled.hr`
   margin: ${cols(2)} 0;
 `;
 
+export const Blockquote = styled.blockquote`
+  border-left: 2px solid ${PURPLE};
+  background: ${LIGHT_GREY};
+  padding: ${cols(1)} ${cols(1)} 8px;
+  margin-bottom: ${cols(2)};
+`;
+
 export const ActionButton = styled.button`
   background: ${verticalGradient(PURPLE_BURN, PURPLE)};
   border: 2px solid ${WHITE};
