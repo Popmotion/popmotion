@@ -13,7 +13,7 @@ class Value extends Action {
   }
 
   update() {
-    return this.toUpdate;
+    return (this.toUpdate !== undefined) ? this.toUpdate : this.current;
   }
 
   stopRegisteredAction() {

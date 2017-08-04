@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.5.6] 2017-08-04
+
+### Fixed
+- Prevent `Value.toUpdate` from being undefined.
+
 ## [7.5.5] 2017-08-02
 
 ### Fixed

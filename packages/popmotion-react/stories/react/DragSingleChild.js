@@ -27,10 +27,9 @@ export default () => (
       isDragging: ({ value, e, setStateTo }) => {
         const { x, y } = value;
         const trackPointer = pointer(e).start();
-
+console.log('is dragging')
         trackOffset(trackPointer.x, {
           from: x.get(),
-          transform: smooth(500),
           onUpdate: x
         }).start();
 
