@@ -1,7 +1,7 @@
 ---
 title: How to manually set scrollTop during an iOS momentum bounce
 description: Why does existence hurt so much
-published: 20170704
+published: 20170804
 ---
 
 # How to manually set scrollTop during an iOS momentum bounce
@@ -12,17 +12,19 @@ I've been writing a Slack-esque chat that lazy-loads new messages as you scroll 
 
 ## The problem
 
-Here's the code to restore a previous scroll position, recalculated to accomodate the newly-loaded messages:
+Here's the code to restore a previous scroll position, (which has to be recalculated to accommodate the newly-loaded messages):
 
 ```javascript
 node.scrollTop = node.scrollHeight - prevScrollTop;
 ```
 
-Works great in every browser, except of course the new IE:
+Works great in every browser, except of course the modern-day IE:
 
 ![Knew this wouldn't be so simple](/static/images/chat-without-hack.gif)
 
-The problem, as I began to understand, was that if you try and manually a node's (and probably the viewport's) scroll position **while iOS is doing it's out-of-bounds bouncy thing**, that scroll position will be immedietly overridden by the rest of the bounce animation.
+As you can see, the scroll position stays at the top, almost as if we never manually reset the scroll position at all.
+
+The problem, as I began to understand, was that if you try and manually set a node's (and probably the viewport's) scroll position **while iOS is doing it's out-of-bounds bouncy thing**, that scroll position will be immediately overridden by the rest of the bounce animation.
 
 ## The fix
 

@@ -35,7 +35,7 @@ export default () => (
       <ContentArea>
         <H1>Blog</H1>
         <CategoriesContainer>
-          {blogMenu.reverse().map((tl) => (
+          {blogMenu.map((tl) => (
             <Category key={tl.id}>
               <H3>
                 <Link href={`/blog/${tl.id}`}>
