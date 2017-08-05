@@ -70,7 +70,7 @@ export default () => (
       </USP>
       <USP>
         <Header>Tiny</Header>
-        <Description>At ~9kb, it's <Strong>75% smaller</Strong> than Greensock TweenMax. Great for users on slower connections.</Description>
+        <Description>At ~10kb, it's <Strong>75% smaller</Strong> than Greensock TweenMax. Great for users on slower connections.</Description>
       </USP>
       <USP>
         <Header>Blazing Fast</Header>

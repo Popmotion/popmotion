@@ -1,5 +1,5 @@
 import React from 'react';
-import spring from './spring';
+import { spring } from 'popmotion';
 import { MotionValue } from '../../src';
 
 const springProps = {

@@ -31,6 +31,7 @@ export pointer from './actions/pointer';
 export trackOffset from './actions/track-offset';
 export tween from './actions/tween';
 export stagger from './actions/stagger';
+export spring from './actions/spring';
 export value from './actions/value';
 
 // Renderers

@@ -7,7 +7,7 @@ import { linkTo } from '@storybook/addon-links';
 import DragSingleChild from './react/DragSingleChild';
 import TransitionGroup from './react/TransitionGroup';
 import Toggle from './popmotion/Toggle';
-import Spring from './popmotion/SpringC';
+import Spring from './popmotion/Spring';
 import SpinnableDom from './spinnable/SpinnableDOM';
 import SpinnableSvg from './spinnable/SpinnableSVG';
 import Timeline from './timeline/Timeline';
