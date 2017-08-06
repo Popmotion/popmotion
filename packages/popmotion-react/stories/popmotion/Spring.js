@@ -2,31 +2,27 @@ import React from 'react';
 import { spring } from '../../../../lib/popmotion';
 import { MotionValue } from '../../src';
 
-const springProps = {
+const makeSpring = (value, to) => spring({
   stiffness: 1000,
   damping: 500,
-  mass: 3
-};
+  mass: 3,
+  from: value.get(),
+  to,
+  velocity: value.getVelocity(),
+  onUpdate: value
+});
 
 export default () => (
   <MotionValue
     onStateChange={{
       on: ({value}) => {
-        spring({
-          from: value.get(),
-          to: 800,
-          ...springProps,
-          velocity: value.getVelocity(),
-          onUpdate: value
-        }).start()
+        console.log(value.getVelocity())
+        makeSpring(value, 800).start();
       },
-      off: ({value}) => spring({
-        from: value.get(),
-        to: 0,
-        ...springProps,
-        velocity: value.getVelocity(),
-        onUpdate: value
-      }).start()
+      off: ({value}) => {
+        console.log(value.getVelocity())
+        makeSpring(value, 0).start();
+      }
     }}
   >
     {({ v, state, setStateTo }) => (
