@@ -33,11 +33,11 @@ class Spring extends Action {
   };
 
   onStart() {
-    const { velocity, to } = this.props;
+    const { velocity, to, from } = this.props;
     this.t = 0;
-    this.initialVelocity = velocity / 1000;
+    this.initialVelocity = velocity ? velocity / 1000 : 0.0;
     this.isComplete = false;
-    this.delta = to - this.from;
+    this.delta = to - from;
   }
 
   update() {
@@ -49,23 +49,23 @@ class Spring extends Action {
 
     const dampingRatio = damping / (2 * Math.sqrt(stiffness * mass));
     const angularFreq = Math.sqrt(stiffness / mass);
-    const expoDecay = angularFreq * Math.sqrt(Math.abs(1.0 - (dampingRatio * dampingRatio)));
+    const expoDecay = angularFreq * Math.sqrt(1.0 - (dampingRatio * dampingRatio));
 
     const x0 = 1;
     let oscillation = 0.0;
-    let velocity = 0.0;
 
     // Underdamped
     if (dampingRatio < 1) {
       const envelope = Math.exp(-dampingRatio * angularFreq * t);
       oscillation = envelope * (((initialVelocity + dampingRatio * angularFreq * x0) / expoDecay) * Math.sin(expoDecay * t) + (x0 * Math.cos(expoDecay * t)));
-      velocity = (envelope * ((Math.cos(expoDecay * t) * (initialVelocity + dampingRatio * angularFreq * x0)) - (expoDecay * x0 * Math.sin(expoDecay * t))) -
+      this.velocity = (envelope * ((Math.cos(expoDecay * t) * (initialVelocity + dampingRatio * angularFreq * x0)) - (expoDecay * x0 * Math.sin(expoDecay * t))) -
         ((dampingRatio * angularFreq * envelope) * ((((Math.sin(expoDecay * t) * (initialVelocity + dampingRatio * angularFreq * x0)) ) / expoDecay) + (x0 * Math.cos(expoDecay * t)))));
+
     // Critically damped
     } else {
-      const envelope = Math.exp(-expoDecay * t);
-      oscillation = envelope * (x0 + (initialVelocity + (expoDecay * x0)) * t);
-      velocity = envelope * ((t * initialVelocity * angularFreq) - (t * x0 * (angularFreq * angularFreq)) + initialVelocity);
+      const envelope = Math.exp(-angularFreq * t);
+      oscillation = envelope * (x0 + (initialVelocity + (angularFreq * x0)) * t);
+      this.velocity = envelope * ((t * initialVelocity * angularFreq) - (t * x0 * (angularFreq * angularFreq)) + initialVelocity);
     }
 
     const fraction = 1 - oscillation;
@@ -74,7 +74,7 @@ class Spring extends Action {
     // Check if simulation is complete
     // We do this here instead of `isActionComplete` as it allows us
     // to clamp to end during update)
-    const isBelowVelocityThreshold = Math.abs(velocity) <= restSpeed;
+    const isBelowVelocityThreshold = Math.abs(this.velocity) <= restSpeed;
     const isBelowDisplacementThreshold = Math.abs(to - position) <= restDisplacement;
     this.isComplete = isBelowVelocityThreshold && isBelowDisplacementThreshold;
 
