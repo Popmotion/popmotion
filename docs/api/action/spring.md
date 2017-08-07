@@ -8,7 +8,9 @@ category: action
 
 A spring animation based on `stiffness`, `damping` and `mass`.
 
-This simulation offers greater variety and accuracy than the basic spring equations in [physics](/api/physics).
+This simulation offers smoother motion and a greater variety of spring-feels than the basic spring integration found in [physics](/api/physics).
+
+It's based on the equations governing a [damped harmonic oscillator](https://en.wikipedia.org/wiki/Harmonic_oscillator#Damped_harmonic_oscillator), the same as those underlying Apple's `CASpringAnimation`.
 
 `spring(props <Object>)`
 
