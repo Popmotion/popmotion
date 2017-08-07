@@ -1,5 +1,5 @@
 ---
-title: DOM Scroll Renderer
+title: DOM Scroll
 description: Scroll viewport and DOM elements with Popmotion tweens and physics.
 category: renderers
 ---

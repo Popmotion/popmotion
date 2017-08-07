@@ -1,5 +1,5 @@
 ---
-title: CSS Renderer
+title: CSS
 description: Optimised CSS renderer.
 category: renderers
 ---

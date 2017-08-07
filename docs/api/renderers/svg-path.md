@@ -1,5 +1,5 @@
 ---
-title: SVG Path Renderer
+title: SVG Path
 description: Optimised SVG Path renderer.
 category: renderers
 ---

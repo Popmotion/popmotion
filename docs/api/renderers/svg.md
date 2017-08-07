@@ -1,5 +1,5 @@
 ---
-title: SVG Renderer
+title: SVG
 description: Optimised SVG renderer.
 category: renderers
 ---
