@@ -88,4 +88,4 @@ tween({
 `}</Example>
 ```
 
-And that's it! Your first animation.
+And that's it! Your first animation. Next, learn about [input tracking](/learn/input-tracking) or deep-dive into the [tween docs](/api/tween)

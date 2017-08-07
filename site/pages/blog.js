@@ -8,8 +8,8 @@ import { Container, LeftMargin, ContentArea, HeaderArea } from '~/components/lay
 import { H1, H3, P } from '~/templates/global/primatives';
 import { LINK } from '~/styles/vars';
 
-const blogMenu = menus.blog;
 const blogContent = content.blog;
+const blogMenu = menus.blog.reverse();
 
 const CategoriesContainer = styled.ul`
   display: block;

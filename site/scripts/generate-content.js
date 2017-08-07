@@ -44,6 +44,7 @@ function generateContent(rootDir, fullDir) {
         title,
         description,
         category,
+        date: published,
         published: published ? convertDateFormat(`${published}`) : '',
         next
       };

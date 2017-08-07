@@ -1,14 +1,14 @@
 ---
 title: Spring
-description: A UI spring simulation, based on Apple's CASpringAnimation.
+description: An accurate, versatile spring animation.
 category: action
 ---
 
 # Spring
 
-A highly-accurate spring simulation based on Apple's `CASpringAnimation` implementation.
+A spring animation based on `stiffness`, `damping` and `mass`.
 
-This simulation offers greater variety and accuracy than the basic spring equations in [`physics`](/api/physics).
+This simulation offers greater variety and accuracy than the basic spring equations in [physics](/api/physics).
 
 `spring(props <Object>)`
 
@@ -21,6 +21,8 @@ This simulation offers greater variety and accuracy than the basic spring equati
 - `to <Number>`: End at this number. (default `0`)
 - `restDisplacement <Number>`: End the animation if the distance to target is below this value (and `restSpeed`) (default: `0.01`)
 - `restSpeed <Number>`: End the animation if the speed drops below this value (and `restDisplacement`) (default: `0.01`)
+
+[...Action](/api/action)
 
 ## Methods
 
@@ -41,7 +43,8 @@ spring({
   mass: 2,
   stiffness: 1000,
   damping: 50,
-  to: 300
+  to: 300,
+  onUpdate: (v) => ballRenderer.set('x', v)
 }).start();
 `}</Example>
 ```

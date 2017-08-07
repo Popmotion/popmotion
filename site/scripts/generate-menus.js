@@ -19,18 +19,21 @@ module.exports = function (siteMetadata) {
 
     // Iterate over posts
     Object.keys(sectionMetadata)
-      .sort((a, b) => {
-        const aPost = sectionMetadata[a];
-        const bPost = sectionMetadata[b];
+//       .sort((a, b) => {
+//         const aPost = sectionMetadata[a];
+//         const bPost = sectionMetadata[b];
+// console.log(aPost.id, aPost.next, bPost.id, bPost.next)
+//         // If explicit next, sort
+//         if (aPost.next || bPost.next) {
+//           if (aPost.next === bPost.id) {
+//             return -1;
+//           } else if (bPost.next === aPost.id) {
+//             return 1;
+//           }
+//         }
 
-        if (aPost.next === bPost.id) {
-          return -1;
-        } else if (bPost.next === aPost.next || !aPost.next) {
-          return 1;
-        }
-
-        return 0;
-      })
+//         return 0;
+//       })
       .forEach((postKey) => {
         const { id, title, category } = sectionMetadata[postKey];
 
@@ -61,6 +64,5 @@ module.exports = function (siteMetadata) {
 
   fs.writeFile(menuOutputPath, JSON.stringify(menus), (err) => {
     const msg = (!err) ? 'Menus created' : err;
-    console.log(msg);
   });
 };

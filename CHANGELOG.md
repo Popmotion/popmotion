@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.6.0] 2017-08-07
+
+### Added
+- New `spring` action based on an interpretation of Apple's `CASpringAnimation` by [@skevy](https://github.com/skevy)
+
 ## [7.5.6] 2017-08-04
 
 ### Fixed

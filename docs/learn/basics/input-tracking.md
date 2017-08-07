@@ -109,4 +109,4 @@ document.addEventListener('touchend', stopTracking);
 `}</Example>
 ```
 
-Now we've got dragging working, in the next topic we'll look at getting the velocity of a user's pointer movements and providing that to a `physics` action. With that, we can produce a variety of momentum-based scrolling or spring-based "snap to" animations that feel natural, physical and engaging compared to traditional tweens.
+Now we've got dragging working, in the [next topic](/learn/velocity-and-physics) we'll look at getting the velocity of a user's pointer movements and providing that to a `physics` action. With that, we can produce a variety of momentum-based scrolling or spring-based "snap to" animations that feel natural, physical and engaging compared to traditional tweens.
