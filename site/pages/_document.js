@@ -24,7 +24,7 @@ export default class PageTemplate extends Document {
           {styleTags}
           <Analytics />
         </Head>
-        <body>
+        <body id="root">
           {main}
           <NextScript />
         </body>

@@ -32,14 +32,14 @@
   ],
   "scripts": {
     "build-content": "node scripts/generate-content.js",
-    "build-site": "npm run build-content && next build && next export -o public",
-    "copy-dist": "cp ../dist/popmotion.global.min.js static/dist/popmotion.min.js",
+    "build-site": "npm run build-content && npm run copy-dist && next build && next export -o public",
+    "copy-dist": "cp -a ../dist/ static/dist/",
     "watch-site": "npm run build-content && next",
     "start-site": "next start",
     "lint-site": "eslint",
     "s3-upload": "aws s3 cp public s3://popmotion.io --recursive",
     "invalidate-cloudfront": "aws configure set preview.cloudfront true && aws cloudfront create-invalidation --distribution-id E31YV8NBB5M5N4 --paths /*",
-    "publish-site": "npm run copy-dist && npm run build-site && npm run s3-upload && npm run invalidate-cloudfront"
+    "publish-site": "npm run build-site && npm run s3-upload && npm run invalidate-cloudfront"
   },
   "analyze": true,
   "license": "MIT",

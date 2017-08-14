@@ -1,0 +1,7 @@
+{
+  "manifest_version": 2,
+  "name": "Popmotion DevTools",
+  "version": "0.0.1",
+  "description": "Chrome devtools for Popmotion",
+  "devtools_page": "index.html"
+}
