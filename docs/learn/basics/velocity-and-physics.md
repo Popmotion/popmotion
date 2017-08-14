@@ -32,6 +32,12 @@ setTimeout(
 );
 ```
 
+By default, the velocity is calculated from the last two values. However, if you know your velocity is roughly linear, you may want to calculate the velocity using a window of values. To do this call the `setVelocityWindow` method with the number of milliseconds you want to sample over.
+
+```javascript
+myTween.setVelocityWindow(50);
+```
+
 ## Applying velocity to physics
 
 Now, let's apply that velocity to our ball from the input tracking tutorial. Let's first create a single `value` to [manage our actions](/learn/action-management).

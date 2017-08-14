@@ -11,8 +11,11 @@ class Action { // lawsuit - sorry
 
     this.setProps(props);
 
-    this.lastUpdated = 0;
-    this.prev = this.current = props.current || props.from || 0;
+    this.current = props.current || props.from || 0;
+    this.prevValues = [];
+    this.prevTimes = [];
+
+    this.velocityWindow = 0;
   }
 
   start() {
@@ -58,8 +61,14 @@ class Action { // lawsuit - sorry
   }
 
   scheduledUpdate() {
-    this.lastUpdated = timeSinceLastFrame();
-    this.prev = this.current;
+    const currentTime = this.prev[this.prev.length - 1].time + timeSinceLastFrame();
+    this.prevValues.push(this.current);
+    this.prevTimes.push(currentTime);
+
+    while (currentTime - this.prevTimes[0] > this.velocityWindow) {
+      this.prevValues.shift();
+      this.prevTimes.shift();
+    }
 
     const { onUpdate, passive } = this.props;
 
@@ -127,8 +136,15 @@ class Action { // lawsuit - sorry
     return this.props[key];
   }
 
+  setVelocityWindow(velocityWindow) {
+    this.velocityWindow = velocityWindow;
+  }
+
   getVelocity() {
-    return speedPerSecond(this.current - this.prev, this.lastUpdated);
+    return speedPerSecond(
+      this.prevValues[this.prevValues.length - 1] - this.prevValues[0],
+      this.prevTimes[this.prevTimes.length - 1] - this.prevTimes[0]
+    );
   }
 
   isActive() {

@@ -47,6 +47,10 @@ class CompositeAction extends Action {
     this.actionKeys.forEach((key) => this[key].stop());
   }
 
+  setVelocityWindow(velocityWindow) {
+    this.actionKeys.forEach((key) => this[key].setVelocityWindow(velocityWindow));
+  }
+
   getVelocity() {
     const velocity = {};
     this.actionKeys.forEach((key) => velocity[key] = this[key].getVelocity());
