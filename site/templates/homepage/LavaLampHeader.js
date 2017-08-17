@@ -3,7 +3,7 @@ import { chain, colorTween, composite, css, easing } from 'popmotion';
 import styled from 'styled-components';
 import { verticalGradient, MAIN, MAIN_FADE, PURPLE, PURPLE_BURN, BLUE, BLUE_BURN, cols, media } from '~/styles/vars';
 
-const COLOR_SEGMENT_DURATION = 30;
+const COLOR_SEGMENT_DURATION = 30000;
 const MAIN_COLORS = [MAIN, PURPLE, BLUE];
 const BURN_COLORS = [MAIN_FADE, PURPLE_BURN, BLUE_BURN];
 
@@ -20,7 +20,7 @@ const Container = styled.div`
 export default class extends React.Component {
   componentDidMount() {
     const renderer = css(this.containerRef);
-    const setBackgroundGradient = (i) => ({ top, bottom }) => { console.log(i);console.trace();renderer.set('background', verticalGradient(bottom, top));}
+    const setBackgroundGradient = ({ top, bottom }) => renderer.set('background', verticalGradient(bottom, top));
 
     const colorCycle = MAIN_COLORS.map((color, i) => {
       const nextIndex = MAIN_COLORS[i + 1] ? i + 1 : 0;
@@ -33,17 +33,15 @@ export default class extends React.Component {
           from: color,
           to: nextColor,
           duration: COLOR_SEGMENT_DURATION,
-          ease: easing.linear,
-          i
+          ease: easing.linear
         }),
         bottom: colorTween({
           from: burnColor,
           to: nextBurnColor,
           duration: COLOR_SEGMENT_DURATION,
-          ease: easing.linear,
-          i
+          ease: easing.linear
         })
-      }).output(setBackgroundGradient(i));
+      }).output(setBackgroundGradient);
     });
 
     this.hueChange = chain(colorCycle).start();
