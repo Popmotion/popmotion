@@ -99,9 +99,7 @@ class Action { // lawsuit - sorry
 
   output(func) {
     this.props.onUpdate = func;
-    if (func.registerAction) {
-      func.registerAction(this);
-    }
+    if (func.registerAction) func.registerAction(this);
 
     return this;
   }
