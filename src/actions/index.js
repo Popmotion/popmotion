@@ -3,8 +3,6 @@ import { speedPerSecond } from '../inc/calc';
 
 class Action { // lawsuit - sorry
   constructor(props = {}) {
-    this.scheduledUpdate = this.scheduledUpdate.bind(this);
-
     this.props = {
       ...this.constructor.defaultProps
     };
@@ -57,7 +55,7 @@ class Action { // lawsuit - sorry
     return this;
   }
 
-  scheduledUpdate() {
+  scheduledUpdate = () => {
     this.lastUpdated = timeSinceLastFrame();
     this.prev = this.current;
 
@@ -86,7 +84,7 @@ class Action { // lawsuit - sorry
     }
 
     return this;
-  }
+  };
 
   setProps({ onUpdate, ...props }) {
     this.props = {
@@ -103,7 +101,6 @@ class Action { // lawsuit - sorry
     this.props.onUpdate = func;
     if (func.registerAction) {
       func.registerAction(this);
-      func.set(this.get());
     }
 
     return this;

@@ -20,7 +20,10 @@ const Container = styled.div`
 export default class extends React.Component {
   componentDidMount() {
     const renderer = css(this.containerRef);
-    const setBackgroundGradient = ({ top, bottom }) => renderer.set('background', verticalGradient(bottom, top));
+    const setBackgroundGradient = (i) => ({ top, bottom }) => {
+      console.log(i);
+      renderer.set('background', verticalGradient(bottom, top));
+    }
 
     const colorCycle = MAIN_COLORS.map((color, i) => {
       const nextIndex = MAIN_COLORS[i + 1] ? i + 1 : 0;
@@ -41,7 +44,7 @@ export default class extends React.Component {
           duration: COLOR_SEGMENT_DURATION,
           ease: easing.linear
         })
-      }).output(setBackgroundGradient);
+      }).output(setBackgroundGradient(i));
     });
 
     this.hueChange = chain(colorCycle).start();

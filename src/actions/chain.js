@@ -1,17 +1,12 @@
 import Action from './';
 
 class Chain extends Action {
-  constructor(props) {
-    super(props);
-    this.playNext = this.playNext.bind(this);
-  }
-
   onStart() {
     this.props.i = 0;
     this.playCurrent();
   }
 
-  playNext() {
+  playNext = () => {
     const { i, order } = this.props;
     if (i < order.length - 1) {
       this.props.i++;
@@ -19,7 +14,7 @@ class Chain extends Action {
     } else {
       this.complete();
     }
-  }
+  };
 
   playCurrent() {
     const { i, order } = this.props;
