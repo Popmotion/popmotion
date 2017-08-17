@@ -27,9 +27,6 @@ class CompositeAction extends Action {
         onFrameUpdate(this.scheduledUpdate);
       };
 
-      // Immediately update with the current action state
-      onUpdate(this[key].get());
-
       this[key]
         .setProps({
           _onStop: () => this.numActiveActions--

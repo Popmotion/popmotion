@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.6.2] 2017-08-17
+
+### Fixed
+- Composite Actions were firing `onUpdate` as soon as registered.
+
 ## [7.6.1] 2017-08-17
 
 ### Fixed
