@@ -7,7 +7,7 @@ class CompositeAction extends Action {
     super(remainingProps);
     this.current = {};
     this.actionKeys = [];
-    this.addActions(props.actions);
+    this.addActions(actions);
   }
 
   addActions(actions) {
@@ -18,7 +18,7 @@ class CompositeAction extends Action {
 
       this[key] = actions[key];
 
-      const onUpdate = (v) => this.current[key] = v;;
+      const onUpdate = (v) => this.current[key] = v;
 
       // Immediately update with the current action state
       onUpdate(this[key].get());

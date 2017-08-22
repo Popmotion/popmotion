@@ -1,22 +1,18 @@
 import value from './value';
 import composite from './composite';
+import parallel from './parallel';
 
-function createTouches({ all }, { eventToTouches, moveEvent, ...props }) {
-  const touches = composite({
-    touches: mapCoordsToActions(all),
-    touchCount: value(all.length)
-  }, {
+function createTouches(initialTouches, { eventToTouches, moveEvent, ...props }) {
+  const touches = parallel(mapCoordsToActions(initialTouches), {
     preventDefault: true,
     ...props
   });
 
   function updateTouches(e) {
-    if (props.preventDefault) {
-      e.preventDefault();
-    }
-    const { all } = eventToTouches(e);
-    updateActionWithTouches(touches, 'touches', all);
-    touches.touchCount.set(all.length);
+    if (props.preventDefault) e.preventDefault();
+
+    const latestTouches = eventToTouches(e);
+    updateActionWithTouches(touches, latestTouches);
   }
 
   touches.setProps({
@@ -27,59 +23,47 @@ function createTouches({ all }, { eventToTouches, moveEvent, ...props }) {
   return touches;
 }
 
-function mapCoordsToActions(coords) { 
+function mapCoordsToActions(coords) {
   let actions = [];
-  for (var i = 0; i < coords.length; i++) {
+  for (let i = 0; i < coords.length; i++) {
     const { x, y } = coords[i];
     actions[i] = composite({
       x: value(x),
       y: value(y)
     });
   }
-  return composite(actions);
+  return actions;
 }
 
-function updateActionWithTouches(action, name, newTouches) {
-  for (const i in newTouches) {
+function updateActionWithTouches(touches, newTouches) {
+  for (let i = 0; i < newTouches.length; i++) {
     const { x, y } = newTouches[i];
-    if (action[name][i] != null) {
-      action[name][i].x.set(x);
-      action[name][i].y.set(y);
+    const touchAction = touches.getAction(i);
+    if (touchAction !== undefined) {
+      touchAction.x.set(x);
+      touchAction.y.set(y);
     } else {
-      action[name][i] = composite({
+      touches.addAction(composite({
         x: value(x),
         y: value(y)
-      });
+      }));
     }
   }
 }
 
-const mouseEventToTouches = ({ pageX, pageY }) => {
-  const touches = [{
-    x: pageX,
-    y: pageY
-  }];
-  return {
-    all: touches
-  };
-};
+const mouseEventToTouches = ({ pageX, pageY }) => [{ x: pageX, y: pageY }];
+const touchEventToTouches = ({ touches }) => extractCoords(touches);
 
-const touchEventToTouches = ({ touches }) => {
-  return {
-    all: extractCoords(touches)
-  };
-};
-
-function extractCoords(touches) { 
-  let actions = [];
+function extractCoords(touches) {
+  let coords = [];
   for (var i = 0; i < touches.length; i++) {
     const { clientX, clientY } = touches[i];
-    actions[i] = {
+    coords[i] = {
       x: clientX,
       y: clientY
     };
   }
-  return actions;
+  return coords;
 }
 
 const getNativeEvent = (e) => e.originalEvent || e.nativeEvent || e;

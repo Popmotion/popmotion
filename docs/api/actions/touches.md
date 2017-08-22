@@ -9,7 +9,7 @@ Creates a composite action that tracks a collection of `x`/`y` movements from mu
 
 `touches(e <MouseEvent | TouchEvent>, props <Object>)`
 
-Mouse movements will only ever generate a single touch.
+Mouse movements will generate a single touch.
 
 ## Example
 
@@ -22,9 +22,9 @@ document.addEventListener('touchstart', (e) => {
   if (action) action.stop();
   action = touches(e, {
     preventDefault: true,
-    onUpdate: ({ touches, touchCount }) => {
+    onUpdate: (touches) => {
       console.log(
-        `Touch count: ${touchCount},
+        `Touch count: ${touches.length},
          Touch coordinates: ${touches}`)
     }
   }).start();
@@ -34,15 +34,6 @@ document.addEventListener('touchend', (e) => {
   if (action) action.stop();
 });
 ```
-
-## Properties
-
-* `touches <Array<{x:Number,y:Number}>>`
-  * list of client {x,y} coordinates from the TouchEvent's `touches`
-  * mouse events are always a list of one
-* `touchCount <Number>`
-  * count of `touches` in the `touchmove` event
-  * mouse events will always be `1`
 
 ## Props
 

@@ -1,31 +1,58 @@
 import Action from './';
+import { onFrameUpdate } from '../framesync';
 
 class Parallel extends Action {
-  onStart() {
-    const { actions } = this.props;
-    this.numActiveActions = actions.length;
-
-    actions.forEach((action) => {
-      action.setProps({
-        _onStop: () => this.numActiveActions--
-      }).start();
-    });
-  }
-
-  onStop() {
-    this.props.actions.forEach((action) => action.stop());
+  constructor(props) {
+    const { actions, ...remainingProps } = props;
+    super(remainingProps);
+    this.actions = [];
+    this.current = [];
+    this.addActions(actions);
   }
 
   addAction(action) {
-    const { actions } = this.props;
+    if (this.actions.indexOf(action) !== -1) return;
 
-    if (actions.indexOf(action) === -1) {
-      actions.push(action);
-    }
+    this.actions.push(action);
+
+    const i = this.actions.length - 1;
+    const onUpdate = (v) => {
+      this.current[i] = v;
+      onFrameUpdate(this.scheduledUpdate);
+    };
+
+    onUpdate(action.get());
+
+    action
+      .setProps({
+        _onStop: () => this.numActiveActions--
+      })
+      .addListener(onUpdate);
+  }
+
+  addActions(actions) {
+    actions.forEach((action) => this.addAction(action));
+  }
+
+  onStart() {
+    this.numActiveActions = this.actions.length;
+    this.actions.forEach((action) => action.start());
+  }
+
+  onStop() {
+    this.actions.forEach((action) => action.stop());
+  }
+
+  getVelocity() {
+    return this.actions.map((action) => action.getVelocity());
   }
 
   isActionComplete() {
     return (this.numActiveActions === 0);
+  }
+
+  getAction(i) {
+    return this.actions[i];
   }
 }
 
