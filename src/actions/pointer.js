@@ -11,7 +11,7 @@ function createPointer({ x, y }, { eventToPoints, moveEvent, ...props }) {
   });
 
   const updatePointer = (e) => {
-    if (props.preventDefault) {
+    if (pointer.getProp('preventDefault')) {
       e.preventDefault();
     }
 
@@ -21,7 +21,7 @@ function createPointer({ x, y }, { eventToPoints, moveEvent, ...props }) {
   };
 
   pointer.setProps({
-    _onStart: () => document.documentElement.addEventListener(moveEvent, updatePointer),
+    _onStart: () => document.documentElement.addEventListener(moveEvent, updatePointer, { passive: !pointer.getProp('preventDefault') }),
     _onStop: () => document.documentElement.removeEventListener(moveEvent, updatePointer)
   });
 
@@ -29,8 +29,8 @@ function createPointer({ x, y }, { eventToPoints, moveEvent, ...props }) {
 }
 
 const mouseEventToPoint = (e) => ({
-  x: e.pageX,
-  y: e.pageY
+  x: e.clientX,
+  y: e.clientY
 });
 
 const touchEventToPoint = ({ changedTouches }) => ({

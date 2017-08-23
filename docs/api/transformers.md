@@ -9,12 +9,12 @@ An Action's `onUpdate` prop is a callback receives `value` as an argument. We ca
 
 ```javascript
 import { tween, transform } from 'popmotion';
-const { flow, clamp } = transform;
+const { pipe, clamp } = transform;
 
 tween({
   from: 0,
   to: 255,
-  onUpdate: flow(
+  onUpdate: pipe(
     clamp(0, 255),
     Math.round,
     console.log
@@ -34,10 +34,19 @@ const convertToPx = appendUnit('px');
 convertToPx(5); // '5px'
 ```
 
+### `applyOffset`
+Takes the offset of the provided value from `from`, and applies it to `to`.
+
+`applyOffset(from <Number>, to <Number>)`
+
+```javascript
+applyOffset(0, 10)(20); // 30
+```
+
 ### `bezier`
 Returns a function that, provided a progress value from `0` to `1`, will return a resolved number from the provided bezier array.
 
-Can resolve either 3 or 4 bezier points. For more points, the [original implementation](https://github.com/hughsk/bezier) can be used. 
+Can resolve either 3 or 4 bezier points. For more points, the [original implementation](https://github.com/hughsk/bezier) can be used.
 
 `bezier(points <Array>)`
 
@@ -104,22 +113,8 @@ const tetherToZero = conditional(
   (v) => v < LIMIT,
   spring(5, LIMIT)
 );
-tetherToZero(-20); // passed to `spring`
-tetherToZero(50); // not passed to `spring`
-```
-
-### `flow`
-Used to compose other transformers, from left to right. The first argument passed to the returned function will be the value and any subsequent arguments will be passed to all functions unaltered.
-
-`flow(...funcs <Functions>)`
-
-```javascript
-const rgbType = flow(
-  clamp(0, 255),
-  Math.round
-);
-
-rgbType(12.25); // 12
+tetherToZero(-20); // passed to spring
+tetherToZero(50); // not passed to spring
 ```
 
 ### `interpolate`
@@ -142,10 +137,37 @@ const foo = interpolate(
 foo(75); // 0.25
 ```
 
+### `pipe`
+Used to compose other transformers, from left to right. The first argument passed to the returned function will be the value and any subsequent arguments will be passed to all functions unaltered.
+
+`pipe(...funcs <Functions>)`
+
+```javascript
+const rgbType = pipe(
+  clamp(0, 255),
+  Math.round
+);
+
+rgbType(12.25); // 12
+```
+
 ### `smooth`
 Will smooth a value over time.
 
 `smooth(strength <Number>)`
+
+### `snap`
+Given a number or an array of two or more numbers, returns a function that will snap a given value to the nearest multiple or to the nearest number in the array.
+
+`snap(positions <Array>)`
+
+```javascript
+const snapToIntervals = snap(45);
+snapToIntervals(89); // 90
+
+const snapToArbitaryDegrees = snap([0, 90, 270, 360]);
+snapToArbitaryDegrees(75); // 90
+```
 
 ### `steps`
 Given a number of steps and a range, returns a function that will fix a given value to the specific number of descrete steps within that range.
@@ -177,7 +199,7 @@ Wraps a number around.
 ```javascript
 physics({
   velocity: 1000,
-  onUpdate: flow(
+  onUpdate: pipe(
     wrap(100, 400),
     console.log
   )

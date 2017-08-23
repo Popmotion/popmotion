@@ -17,8 +17,6 @@ Popmotion comes with a number of preset easing functions, and provides methods t
 import { tween, easing } from 'popmotion';
 
 tween({
-  from: 0,
-  to: 1,
   ease: easing.easeOut
 }).start();
 ```
@@ -33,11 +31,32 @@ Popmotion comes with the following preset easing functions:
 - `backIn`, `backOut`, `backInOut`
 - `anticipate`
 
+Try them out by editing this live example:
+
+```marksy
+<Example template="Ball" id="b">{`
+const ball = document.querySelector('#b .ball');
+const ballRenderer = css(ball);
+
+tween({
+  to: 300,
+  duration: 300,
+  ease: easing.linear,
+  onUpdate: (x) => ballRenderer.set('x', x)
+}).start();
+`}</Example>
+```
+
 ## Easing creation
 
-Any function that takes a progress value can be used to ease. For instance, the [`bezier-easing` npm module](https://www.npmjs.com/package/bezier-easing) can produce easing functions based on bezier curves. 
+Popmotion provides the following functions to create your own easing functions:
 
-Popmotion also provides the following functions to create your own easing functions:
+### `bezier`
+Creates a quadratic or cubic bezier curve.
+
+```javascript
+
+```
 
 ### `createReversedEasing`
 Reverses the provided easing function.

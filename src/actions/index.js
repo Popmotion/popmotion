@@ -2,16 +2,15 @@ import { onFrameUpdate, cancelOnFrameUpdate, timeSinceLastFrame } from '../frame
 import { speedPerSecond } from '../inc/calc';
 
 class Action { // lawsuit - sorry
-  constructor(props) {
-    this.scheduledUpdate = this.scheduledUpdate.bind(this);
-
+  constructor(props = {}) {
     this.props = {
       ...this.constructor.defaultProps
     };
 
     this.setProps(props);
 
-    this.current = props.current || props.from || 0;
+    this.lastUpdated = 0;
+    this.prev = this.current = props.current || props.from || 0;
   }
 
   start() {
@@ -56,7 +55,7 @@ class Action { // lawsuit - sorry
     return this;
   }
 
-  scheduledUpdate() {
+  scheduledUpdate = () => {
     this.lastUpdated = timeSinceLastFrame();
     this.prev = this.current;
 
@@ -66,7 +65,14 @@ class Action { // lawsuit - sorry
       this.current = this.update(this.current);
     }
 
-    if (onUpdate) onUpdate(this.current, this);
+    if (onUpdate) {
+      if (onUpdate.registerAction) {
+        onUpdate.set(this.get());
+      } else {
+        onUpdate(this.get(), this);
+      }
+    }
+
     this.fireListeners();
 
     if (!passive && this._isActive) {
@@ -78,22 +84,32 @@ class Action { // lawsuit - sorry
     }
 
     return this;
-  }
+  };
 
-  setProps(props) {
+  setProps({ onUpdate, ...props }) {
     this.props = {
       ...this.props,
       ...props
     };
+
+    if (onUpdate) this.output(onUpdate);
+
     return this;
   }
 
   output(func) {
     this.props.onUpdate = func;
+    if (func.registerAction) func.registerAction(this);
+
     return this;
   }
 
   get() {
+    const { transform } = this.props;
+    return transform ? transform(this.current) : this.current;
+  }
+
+  getBeforeTransform() {
     return this.current;
   }
 

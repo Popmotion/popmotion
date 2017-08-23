@@ -1,7 +1,7 @@
 import { getProgressFromValue, getValueFromProgress, stepProgress, smooth as calcSmoothing } from './calc';
 import { isString } from './utils';
 import { color as parseColor } from './parsers';
-import { timeSinceLastFrame } from '../framesync';
+import { currentFrameTimestamp } from '../framesync';
 
 const noop = (v) => v;
 
@@ -13,6 +13,20 @@ const noop = (v) => v;
  * @return {number}
  */
 export const appendUnit = (unit) => (v) => `${v}${unit}`;
+
+/**
+ * Apply offset
+ * A function that, given a value, will get the offset from `from`
+ * and apply it to `to`
+ * @param  {number} from
+ * @param  {number} to
+ * @return {function}
+ */
+export const applyOffset = (from, to) => {
+  const getOffset = subtract(from);
+  const applyOffsetTo = add(to);
+  return (v) => applyOffsetTo(getOffset(v));
+};
 
 /**
  * Clamp value between
@@ -34,13 +48,13 @@ export const conditional = (condition, ifTrue, ifFalse = noop) => (v, action) =>
 };
 
 /**
- * Flow
+ * Pipe
  * Compose other transformers to run linearily
- * flow(min(20), max(40))
+ * pipe(min(20), max(40))
  * @param  {...functions} transformers
  * @return {function}
  */
-export const flow = (...transformers) => {
+export const pipe = (...transformers) => {
   const numTransformers = transformers.length;
   let i = 0;
 
@@ -53,6 +67,9 @@ export const flow = (...transformers) => {
     return v;
   };
 };
+
+// Deprecated: Remove in 7.1.0
+export const flow = pipe;
 
 /**
  * Interpolate from set of values to another
@@ -86,7 +103,7 @@ export const interpolate = (input, output, rangeEasing) => {
     }
 
     const progressInRange = getProgressFromValue(input[i - 1], input[i], v);
-    const easedProgress = (rangeEasing) ? rangeEasing[i](progressInRange) : progressInRange;
+    const easedProgress = (rangeEasing) ? rangeEasing[i - 1](progressInRange) : progressInRange;
     return getValueFromProgress(output[i - 1], output[i], easedProgress);
   };
 };
@@ -112,20 +129,47 @@ export const wrap = (min, max) => (v) => {
 
 export const smooth = (strength = 50) => {
   let previousValue = 0;
-  let hasSmoothed = false;
+  let lastUpdated = 0;
 
   return (v) => {
-    const currentValue = (hasSmoothed) ? previousValue : v;
-    const newValue = calcSmoothing(currentValue, previousValue, timeSinceLastFrame(), strength);
+    const currentFramestamp = currentFrameTimestamp();
+    const timeDelta = (currentFramestamp !== lastUpdated) ? currentFramestamp - lastUpdated : 0;
+    const newValue = timeDelta ? calcSmoothing(v, previousValue, timeDelta, strength) : previousValue;
+    lastUpdated = currentFramestamp;
     previousValue = newValue;
-    hasSmoothed = true;
     return newValue;
   };
 };
 
-export const steps = (steps, min, max) => (v) => {
+export const snap = (points) => {
+  if (typeof points === 'number') {
+    return (v) => Math.round(v / points) * points;
+  } else {
+    let i = 0;
+    const numPoints = points.length;
+
+    return (v) => {
+      let lastDistance = Math.abs(points[0] - v);
+
+      for (i = 1; i < numPoints; i++) {
+        const point = points[i];
+        const distance = Math.abs(point - v);
+
+        if (distance === 0) return point;
+
+        if (distance > lastDistance) return points[i - 1];
+
+        if (i === numPoints - 1) return point;
+
+        lastDistance = distance;
+      }
+    };
+  }
+};
+
+export const steps = (steps, min = 0, max = 1, direction = 'start') => (v) => {
   const progress = getProgressFromValue(min, max, v);
-  return stepProgress(steps, progress);
+  return getValueFromProgress(min, max, stepProgress(steps, progress, direction));
 };
 
 export const transformChildValues = (childTransformers) => {
@@ -147,15 +191,15 @@ export const percent = appendUnit('%');
 export const degrees = appendUnit('deg');
 export const px = appendUnit('px');
 
-export const rgbUnit = flow(
+export const rgbUnit = pipe(
   clamp(0, 255),
   Math.round
 );
 
-const rgbaTemplate = ({ red, green, blue, alpha = 1 }) => 
+const rgbaTemplate = ({ red, green, blue, alpha = 1 }) =>
   `rgba(${red}, ${green}, ${blue}, ${alpha})`;
 
-export const rgba = flow(
+export const rgba = pipe(
   transformChildValues({
     red: rgbUnit,
     green: rgbUnit,
@@ -165,12 +209,12 @@ export const rgba = flow(
   rgbaTemplate
 );
 
-const hslaTemplate = ({ hue, saturation, lightness, alpha = 1 }) => 
+const hslaTemplate = ({ hue, saturation, lightness, alpha = 1 }) =>
   `hsla(${hue}, ${saturation}, ${lightness}, ${alpha})`;
 
-export const hsla = flow(
+export const hsla = pipe(
   transformChildValues({
-    hue: parseFloat,
+    hue: parseInt,
     saturation: percent,
     lightness: percent,
     alpha

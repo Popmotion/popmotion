@@ -2,6 +2,10 @@ import Action from './';
 import { onFrameUpdate } from '../framesync';
 
 class CompositeAction extends Action {
+  static defaultProps = {
+    passive: true
+  };
+
   constructor(props) {
     const { actions, ...remainingProps } = props;
     super(remainingProps);
@@ -18,10 +22,10 @@ class CompositeAction extends Action {
 
       this[key] = actions[key];
 
-      const onUpdate = (v) => this.current[key] = v;
-
-      // Immediately update with the current action state
-      onUpdate(this[key].get());
+      const onUpdate = (v) => {
+        this.current[key] = v;
+        onFrameUpdate(this.scheduledUpdate);
+      };
 
       this[key]
         .setProps({

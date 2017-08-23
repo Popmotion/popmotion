@@ -1,0 +1,9 @@
+{
+  "action": "Action",
+  "action-composition": "Action composition",
+  "renderers": "Renderer",
+  "basics": "Basics",
+  "advanced": "Advanced",
+  "plugins": "Plugins",
+  "projects": "Projects"
+}

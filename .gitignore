@@ -2,3 +2,13 @@ node_modules
 .DS_Store
 npm-debug.log
 lib
+site/.next
+site/public
+site/pages/api
+site/pages/learn
+site/pages/blog
+storybook-static
+site/data/content.json
+site/data/menus.json
+site/next.config.js
+packages/popmotion-devtools/dist/index.js

@@ -24,11 +24,11 @@ const b = {
 describe('angle()', () => {
   it('should return the correct angle between two points', () => {
     expect(angle(a, a)).toBe(0);
-    expect(angle(b, a)).toBe(45);
+    expect(angle(a, b)).toBe(45);
   });
 
   it('should assume a second point of 0,0', () => {
-    expect(angle(b)).toBe(45);
+    expect(angle(b)).toBe(-135);
   });
 });
 

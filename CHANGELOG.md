@@ -1,6 +1,176 @@
-# Change log
+# Changelog
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
+
+## [7.6.2] 2017-08-17
+
+### Fixed
+- Composite Actions were firing `onUpdate` as soon as registered.
+
+## [7.6.1] 2017-08-17
+
+### Fixed
+- Actions were firing `onUpdate` as soon as registered.
+
+## [7.6.0] 2017-08-07
+
+### Added
+- New `spring` action based on an interpretation of Apple's `CASpringAnimation` by [@skevy](https://github.com/skevy)
+
+## [7.5.6] 2017-08-04
+
+### Fixed
+- Prevent `Value.toUpdate` from being undefined.
+
+## [7.5.5] 2017-08-02
+
+### Fixed
+- Only firing `onStop` on an action bound to a value if the action is active.
+
+## [7.5.4] 2017-07-31
+
+### Fixed
+- A key is only added to Renderer's `changedValues` array if it doesn't already exist for that frame.
+
+## [7.5.3] 2017-07-18
+
+### Fixed
+- Consistency issue with scheduling update on `value.set` - area to look at in the future.
+
+## [7.5.2] 2017-07-18
+
+### Fixed
+- Bug with `css` translate map.
+
+## [7.5.1] 2017-07-17
+
+### Fixed
+- Fixed a bug with `smooth`, preventing it from working if the initial given numbers were `0`, or if it was called twice in the same frame.
+
+## [7.5.0] 2017-07-17
+
+### Added
+- Enforced order for css `transform` properties.
+
+## [7.4.0] 2017-07-16
+
+### Added
+- Added `seek` to `tween`.
+
+## [7.3.1] 2017-07-13
+
+### Added
+- Updated `snap` transform to take numbers for regular interval snapping.
+
+## [7.3.0] 2017-07-13
+
+### Added
+- New `snap` transformer.
+
+## [7.2.9] 2017-07-12
+
+### Changed
+- `trackOffset` now calls `get` instead of `getBeforeTransform`.
+
+## [7.2.8] 2017-07-12
+
+### Fixed
+- `angle` calculation fixed.
+
+## [7.2.7] 2017-07-11
+
+### Fixed
+- `steps` now returning actual value rather than stepped progress.
+
+## [7.2.6] 2017-07-05
+
+### Fixed
+- `speedPerSecond` divide by `0` bug.
+
+## [7.2.5] 2017-07-05
+
+### Fixed
+- `lastUpdated` set to `0` on action start to prevent `NaN` velocities.
+
+## [7.2.4] 2017-07-05
+
+### Fixed
+- `prev = current` on action start, to prevent `NaN` velocities.
+
+## [7.2.3] 2017-07-04
+
+### Fixed
+- `pointer` events are now `passive: true` if `preventDefault` is also set to `true` to fix bug introduced by Chrome 56.
+
+## [7.2.2] 2017-07-03
+
+### Changed
+- `composite` action is now `passive: true` to enable composition of other passive actions.
+
+## [7.2.0] 2017-06-26
+
+### Added
+- `value` can now be provided to an action's `onUpdate` for automatic action management.
+
+## [7.1.1] 2017-06-23
+
+- Minor bugfix.
+
+## [7.1.0] 2017-06-23
+
+### Added
+- `complex` `valueType`.
+
+## [7.0.3] 2017-06-23
+
+### Fixed
+- Changed `pointer` to read mouse event `client` positioning instead of `page`, to make consistent with touch events.
+
+## [7.0.2] 2017-06-23
+
+- Minor bugfix.
+
+## [7.0.1] 2017-06-23
+
+- Minor bugfix.
+
+## [7.0.0] 2017-06-22
+
+### Features
+- `trackOffset` action returns to simplify the process of tracking the offset of other actions.
+- `esnext` package.json property supported.
+
+### Deprecated
+- `flow` is now `pipe`, to avoid terminology clashes with [Flow](https://flow.org/). `flow` will continue to work until `7.1.0`.
+
+### Removed
+- `blendTweens` is now an optional include.
+
+## [6.7.2] 2017-06-01
+
+### Fixed
+- Removing dependencies from `package.json`
+
+## [6.7.1] 2017-06-01
+
+### Fixed
+- `colorTween` now uses `transform` property to convert from progress to color, which fixes composition compatibility.
+
+## [6.7.0] 2017-06-01
+
+### Added
+- `transform` property for actions. If set, any values passed to `onUpdate` or returned from `get` will be run through this function.
+- `getBeforeTransform` method added for actions. Will return the current value, before transform is applied.
+
+## [6.3.5] 2017-03-03
+
+### Added
+- `applyOffset` transformer.
+
+## [6.3.4] 2017-03-01
+
+### Fixed
+- Undocumented range easing property in `interpolate` transformer was looking at the wrong index.
 
 ## [6.3.3] 2017-18-01
 
@@ -189,7 +359,7 @@ Minor bugfixes.
 ## [4.3.4] 2015-12-30
 
 ### Fixed
-- `Simulate.hasChanged` incorrectly calculated. 
+- `Simulate.hasChanged` incorrectly calculated.
 
 ## [4.3.3] 2015-12-29
 
@@ -266,7 +436,7 @@ Minor bugfixes.
 ### Added
 - Actor value `watch` property can now be a function returning any numerical value.
 - Added `smooth` for all actions.
-- Added `calc.toDecimal` calculator function. 
+- Added `calc.toDecimal` calculator function.
 
 ## [4.0.0] 2015-11-20
 
@@ -292,7 +462,7 @@ Minor bugfixes.
 
 ### Added
 - Elliot Geno's awesome `'anticipate'` easing. Follow him at [@ElliotGeno](https://twitter.com/ElliotGeno/).
-- In-built easings now available in the `ui.ease` namespace. So instead of providing `'backOut'` you can reference it literally - `ui.ease.anticipate`. 
+- In-built easings now available in the `ui.ease` namespace. So instead of providing `'backOut'` you can reference it literally - `ui.ease.anticipate`.
 - Create modified easing function strengths, for instance `ease: ui.modifyEase(ui.ease.backOut, 2)`. `'ease'` and `'back'` in/out/inOut variants and `'anticipate'` are available. You must provide the literal reference rather than string reference.
 
 ## [3.7.1] 2015-11-11
@@ -317,7 +487,7 @@ Minor bugfixes.
 - Extra tests to ensure Popmotion is loading correctly in Meteor.
 
 ### Fixed
-- Explict test for rAF for when `window` is available and `requestAnimationFrame` isn't. 
+- Explict test for rAF for when `window` is available and `requestAnimationFrame` isn't.
 
 ## [3.6.2] 2015-11-02
 
@@ -421,7 +591,7 @@ Minor bugfixes.
 
 ## Fixed
 - Adjusting `hasChanged` logic to always fire on first frame.
-- Changing `Iterator.stagger` logic for more even staggers. 
+- Changing `Iterator.stagger` logic for more even staggers.
 
 ## [3.1.6] 2015-10-05
 

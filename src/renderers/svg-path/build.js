@@ -1,6 +1,6 @@
 /*
   Convert percentage to pixels
-  
+
   @param [number]: Percentage of total length
   @param [number]: Total length
 */
@@ -9,7 +9,7 @@ const percentToPixels = (percent, length) => (parseFloat(percent) / 100) * lengt
 export default (state, length) => {
   const styles = {};
   const dashArrayStyles = {
-    length: 0,
+    length: '0',
     spacing: length + 'px'
   };
   let hasDashArray = false;

@@ -1,0 +1,43 @@
+{
+  "rules": {
+    "strict": 0,
+    "indent": [2, 2],
+    "quotes": [2, "single"],
+    "linebreak-style": [2, "unix"],
+    "semi": [2, "always"],
+    "no-unused-vars": [2, { "ignoreRestSiblings": true }],
+    "react/jsx-uses-react": 1,
+    "react/jsx-uses-vars": 1
+  },
+  "ecmaFeatures": {
+    "restParams": true,
+    "destructuring": true,
+    "modules": true,
+    "jsx": true
+  },
+  "env": {
+    "es6": true,
+    "browser": true,
+    "node": true,
+    "jest": true
+  },
+  "parser": "babel-eslint",
+  "extends": "eslint:recommended",
+  "plugins": [
+    "jsx-a11y",
+    "react",
+    "import",
+    "jasmine",
+    "flowtype"
+  ],
+  "SublimeLinter": {
+    "linters": {
+      "eslint": {
+        "chdir": [
+          "${project}/site",
+          "${project}/src",
+        ]
+      }
+    }
+  }
+}
