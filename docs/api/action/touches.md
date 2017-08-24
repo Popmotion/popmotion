@@ -1,6 +1,7 @@
 ---
 title: Touches
 description: Tracks multi-touch movement.
+category: action
 ---
 
 # Touches

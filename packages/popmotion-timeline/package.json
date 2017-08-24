@@ -46,7 +46,7 @@
     "babel-preset-stage-2": "^6.17.0",
     "babel-register": "^6.3.13"
   },
-  "dependencies": {
-    "popmotion": "^7.4.0"
+  "peerDependencies": {
+    "popmotion": "^7.7.0"
   }
 }

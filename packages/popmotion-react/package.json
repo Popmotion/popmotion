@@ -60,8 +60,8 @@
     "styled-components": "^2.1.1",
     "three": "^0.86.0"
   },
-  "dependencies": {
-    "popmotion": "^7.2.3",
+  "peerDependencies": {
+    "popmotion": "^7.7.0",
     "react": "^15.5.4",
     "react-dom": "~15.5.3"
   }
