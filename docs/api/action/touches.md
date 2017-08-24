@@ -25,8 +25,9 @@ document.addEventListener('touchstart', (e) => {
     preventDefault: false,
     onUpdate: (touches) => {
       console.log(
-        `Touch count: ${touches.length},
-         First touch coordinates: ${touches[0]}`)
+        'Touch count: ' + touches.length,
+         'First touch x: ' + touches[0].x.get()
+      );
     }
   }).start();
 });

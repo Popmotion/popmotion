@@ -134,3 +134,20 @@ export const isHex = isFirstChars('#');
 export const isRgb = isFirstChars('rgb');
 export const isHsl = isFirstChars('hsl');
 export const isColor = (v) => (isHex(v) || isRgb(v) || isHsl(v));
+
+/*
+  Cheap implementation of Facebook's invariant
+
+  @param [boolean]: If false, throw
+  @param [string]: Message to throw
+ */
+const isDev = (typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 'development');
+const noop = () => {};
+export const invariant = isDev ? (condition, message) => {
+  if (!condition) return;
+
+  const error = new Error(message);
+  error.name = 'Invariant violation';
+  error.framesToPop = 1;
+  throw error;
+} : noop;
