@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.8.0] 2017-08-xx
+
+### Added
+- DX improvements with argument type checking.
+
 ## [7.7.0] 2017-08-24
 
 ### Added
