@@ -11,7 +11,7 @@ class CompositeAction extends Action {
     super(remainingProps);
     this.current = {};
     this.actionKeys = [];
-    this.addActions(props.actions);
+    this.addActions(actions);
   }
 
   addActions(actions) {
