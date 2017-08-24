@@ -18,9 +18,12 @@ import { parallel, tween } from 'popmotion';
 parallel([
   tween(props),
   tween(props)
-]).start()
+]).start();
 ```
 
 ## Methods
+
+### `getChildren`
+Returns an array of child actions
 
 [...Action](/api/action)

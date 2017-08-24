@@ -2,6 +2,13 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.7.0] 2017-08-24
+
+### Added
+- `touches` action for multitouch support. (via [Mars](https://twitter.com/marsi))
+- `parallel.getChildren` method now returns array of children actions.
+- `parallel` can now accept an `onUpdate` function that is provided an array of latest child values.
+
 ## [7.6.2] 2017-08-17
 
 ### Fixed

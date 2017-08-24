@@ -6,7 +6,7 @@ category: action
 
 # Pointer
 
-Creates a composite action that tracks the `x` and `y` movement of touch and mouse events.
+Creates a [`composite`](/api/composite) action that tracks the `x` and `y` movement of touch and mouse events.
 
 `pointer(e <MouseEvent | TouchEvent>, props <Object>)`
 
@@ -40,7 +40,7 @@ document.addEventListener('touchend', stopTracking);
 
 ## Props
 
-- `preventDefault <Boolean>`: If `true`, fire `preventDefault` on `mousemove` or `touchmove` events (default `false`)
+- `preventDefault <Boolean>`: If `true`, fire `preventDefault` on `mousemove` or `touchmove` events (default `true`)
 [...Action](/api/action)
 
 ## Methods

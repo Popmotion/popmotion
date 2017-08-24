@@ -5,7 +5,7 @@ description: Tracks multi-touch movement.
 
 # Touches
 
-Creates a composite action that tracks a collection of `x`/`y` movements from multiple touch targets.
+Creates a [`parallel`](/api/parallel) action that tracks an array of `x`/`y` movements from multiple touch targets.
 
 `touches(e <MouseEvent | TouchEvent>, props <Object>)`
 
@@ -16,25 +16,25 @@ Mouse movements will generate a single touch.
 ```javascript
 import { touches } from 'popmotion';
 
-let action;
+let touchesTracker;
 
 document.addEventListener('touchstart', (e) => {
   if (action) action.stop();
-  action = touches(e, {
-    preventDefault: true,
+  touchesTracker = touches(e, {
+    preventDefault: false,
     onUpdate: (touches) => {
       console.log(
         `Touch count: ${touches.length},
-         Touch coordinates: ${touches}`)
+         First touch coordinates: ${touches[0]}`)
     }
   }).start();
 });
 
 document.addEventListener('touchend', (e) => {
-  if (action) action.stop();
+  if (touchesTracker) touchesTracker.stop();
 });
 ```
 
 ## Props
 
-- `preventDefault <Boolean>`: (default `true`) Will `preventDefault` for the `touchmove` or `mousemove` events .
+- `preventDefault <Boolean>`: (default `true`) Will `preventDefault` for the `touchmove` or `mousemove` events (default `true`)

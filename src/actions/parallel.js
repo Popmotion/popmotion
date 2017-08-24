@@ -51,8 +51,8 @@ class Parallel extends Action {
     return (this.numActiveActions === 0);
   }
 
-  getAction(i) {
-    return this.actions[i];
+  getChildren() {
+    return this.actions;
   }
 }
 
