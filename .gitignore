@@ -11,5 +11,4 @@ storybook-static
 site/data/content.json
 site/data/menus.json
 site/next.config.js
-site/dist
 packages/popmotion-devtools/dist/index.js
