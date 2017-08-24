@@ -1,6 +1,6 @@
 {
   "name": "popmotion-scroll",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Scroll viewport and DOM elements with Popmotion animation and physics",
   "author": "Matt Perry <sirhound@popmotion.io>",
   "homepage": "http://popmotion.io",
