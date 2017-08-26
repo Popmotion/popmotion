@@ -1,5 +1,5 @@
 import Action from './';
-import { onFrameUpdate } from '../framesync';
+import { onFrameUpdate } from 'framesync';
 
 class Value extends Action {
   static defaultProps = {

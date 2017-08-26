@@ -1,7 +1,7 @@
 import { getProgressFromValue, getValueFromProgress, stepProgress, smooth as calcSmoothing } from './calc';
 import { isString } from './utils';
 import { color as parseColor } from './parsers';
-import { currentFrameTimestamp } from '../framesync';
+import { currentFrameTimestamp } from 'framesync';
 
 const noop = (v) => v;
 

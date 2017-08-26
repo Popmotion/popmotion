@@ -18,7 +18,7 @@
   @skevy (twitter.com/skevy, github.com/skevy)
  */
 import Action from './';
-import { timeSinceLastFrame } from '../framesync';
+import { timeSinceLastFrame } from 'framesync';
 
 class Spring extends Action {
   static defaultProps = {

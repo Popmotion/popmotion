@@ -10,7 +10,7 @@ export {
   cancelOnFrameEnd,
   timeSinceLastFrame,
   currentFrameTimestamp
-} from './framesync';
+} from 'framesync';
 
 export * as calc from './inc/calc';
 export * as easing from './inc/easing';

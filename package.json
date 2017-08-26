@@ -76,5 +76,8 @@
   "jest": {
     "testRegex": "_tests/[^_].*\\.js$",
     "rootDir": "src"
+  },
+  "dependencies": {
+    "framesync": "^2.0.1"
   }
 }
