@@ -38,7 +38,8 @@ function mapCoordsToActions(coords) {
 function updateActionWithTouches(touches, newTouches) {
   for (let i = 0; i < newTouches.length; i++) {
     const { x, y } = newTouches[i];
-    const touchAction = touches.getAction(i);
+    const touchActions = touches.getChildren();
+    const touchAction = touchActions[i];
     if (touchAction !== undefined) {
       touchAction.x.set(x);
       touchAction.y.set(y);

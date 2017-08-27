@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.7.1] 2017-08-27
+
+### Fixed
+- Bug in `touches` (via [Mars](https://twitter.com/marsi))
+
 ## [7.7.0] 2017-08-24
 
 ### Added
