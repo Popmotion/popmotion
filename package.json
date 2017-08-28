@@ -78,6 +78,6 @@
     "rootDir": "src"
   },
   "dependencies": {
-    "framesync": "^2.0.1"
+    "framesync": "^3.0.1"
   }
 }

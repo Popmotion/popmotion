@@ -1,7 +1,7 @@
 import { getProgressFromValue, getValueFromProgress, stepProgress, smooth as calcSmoothing } from './calc';
 import { isString } from './utils';
 import { color as parseColor } from './parsers';
-import { currentFrameTimestamp } from 'framesync';
+import { currentFrameTime } from 'framesync';
 
 const noop = (v) => v;
 
@@ -132,7 +132,7 @@ export const smooth = (strength = 50) => {
   let lastUpdated = 0;
 
   return (v) => {
-    const currentFramestamp = currentFrameTimestamp();
+    const currentFramestamp = currentFrameTime();
     const timeDelta = (currentFramestamp !== lastUpdated) ? currentFramestamp - lastUpdated : 0;
     const newValue = timeDelta ? calcSmoothing(v, previousValue, timeDelta, strength) : previousValue;
     lastUpdated = currentFramestamp;
