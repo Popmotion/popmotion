@@ -1,4 +1,4 @@
-import { onFrameUpdate, cancelOnFrameUpdate, timeSinceLastFrame } from '../framesync';
+import { onFrameUpdate, cancelOnFrameUpdate, timeSinceLastFrame } from 'framesync';
 import { speedPerSecond } from '../inc/calc';
 
 class Action { // lawsuit - sorry

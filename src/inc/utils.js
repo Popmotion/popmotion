@@ -2,7 +2,6 @@ const varType = (variable) => Object.prototype.toString.call(variable).slice(8, 
 
 const CAMEL_CASE_PATTERN = /([a-z])([A-Z])/g;
 const REPLACE_TEMPLATE = '$1-$2';
-const HAS_PERFORMANCE_NOW = (typeof performance !== 'undefined' && performance.now);
 
 /*
   Convert camelCase to dash-case
@@ -11,13 +10,6 @@ const HAS_PERFORMANCE_NOW = (typeof performance !== 'undefined' && performance.n
   @return [string]
 */
 export const camelToDash = (string) => string.replace(CAMEL_CASE_PATTERN, REPLACE_TEMPLATE).toLowerCase();
-
-/*
-  Generate current timestamp
-  
-  @return [timestamp]: Current UNIX timestamp
-*/
-export const currentTime = HAS_PERFORMANCE_NOW ? () => performance.now() : () => new Date().getTime();
 
 export const setDOMAttrs = (element, attrs) => {
   for (let key in attrs) {
@@ -91,16 +83,16 @@ export function splitColorValues(terms) {
 }
 
 /*
-  Is utils var an array ? 
-  
+  Is utils var an array ?
+
   @param: Variable to test
   @return [boolean]: Returns true if utils.varType === 'Array'
 */
 export const isArray = (arr) => varType(arr) === 'Array';
 
 /*
-  Is utils var a function ? 
-  
+  Is utils var a function ?
+
   @param: Variable to test
   @return [boolean]: Returns true if utils.varType === 'Function'
 */
@@ -108,7 +100,7 @@ export const isFunc = (obj) => varType(obj) === 'Function';
 
 /*
   Is utils var a number?
-  
+
   @param: Variable to test
   @return [boolean]: Returns true if typeof === 'number'
 */
@@ -116,15 +108,15 @@ export const isNum = (num) => typeof num === 'number';
 
 /*
   Is utils var an object?
-  
+
   @param: Variable to test
   @return [boolean]: Returns true if typeof === 'object'
 */
 export const isObj = (obj) => typeof obj === 'object';
 
 /*
-  Is utils var a string ? 
-  
+  Is utils var a string ?
+
   @param: Variable to test
   @return [boolean]: Returns true if typeof str === 'string'
 */

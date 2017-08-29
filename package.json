@@ -1,6 +1,6 @@
 {
   "name": "popmotion",
-  "version": "7.7.1",
+  "version": "7.8.0",
   "description": "The JavaScript motion engine. Create animations and interactions with tweens, physics and input tracking.",
   "author": "Matt Perry <sirhound@popmotion.io>",
   "homepage": "http://popmotion.io",
@@ -76,5 +76,8 @@
   "jest": {
     "testRegex": "_tests/[^_].*\\.js$",
     "rootDir": "src"
+  },
+  "dependencies": {
+    "framesync": "^3.0.1"
   }
 }

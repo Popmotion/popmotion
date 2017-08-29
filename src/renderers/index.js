@@ -1,4 +1,4 @@
-import { onFrameRender } from '../framesync';
+import { onFrameRender } from 'framesync';
 import { isArray, isObj, isNum, isString } from '../inc/utils';
 
 class Renderer {

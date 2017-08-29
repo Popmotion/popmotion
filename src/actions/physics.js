@@ -1,5 +1,5 @@
 import Action from './';
-import { timeSinceLastFrame } from '../framesync';
+import { timeSinceLastFrame } from 'framesync';
 import { speedPerFrame } from '../inc/calc';
 
 class Physics extends Action {
