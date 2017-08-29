@@ -2,6 +2,10 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.8.0] 2017-08-29
+
+- Spinning off `framesync` to it's own module and depcreating render loop functions for removal in `8.0.0`.
+
 ## [7.7.1] 2017-08-27
 
 ### Fixed
