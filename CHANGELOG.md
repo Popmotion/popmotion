@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.8.1] 2017-08-29
+
+### Fixed
+- Fixing mistake where Framesync's renamed `currentFrameTime` was exported instead of the previously-named `currentFrameTimestamp`.
+
 ## [7.8.0] 2017-08-29
 
 - Spinning off `framesync` to it's own module and depcreating render loop functions for removal in `8.0.0`.
