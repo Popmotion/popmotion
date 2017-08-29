@@ -9,7 +9,7 @@ export {
   cancelOnFrameRender,
   cancelOnFrameEnd,
   timeSinceLastFrame,
-  currentFrameTime
+  currentFrameTime as currentFrameTimestamp
 } from 'framesync';
 
 export * as calc from './inc/calc';
