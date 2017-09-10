@@ -1,7 +1,7 @@
 {
   "name": "popmotion",
-  "version": "7.8.0",
-  "description": "The JavaScript motion engine. Create animations and interactions with tweens, physics and input tracking.",
+  "version": "8.0.0",
+  "description": "A functional, reactive JavaScript animation engine. Create animations and interactions with tweens, physics and input tracking.",
   "author": "Matt Perry <sirhound@popmotion.io>",
   "homepage": "http://popmotion.io",
   "main": "./lib/popmotion.js",

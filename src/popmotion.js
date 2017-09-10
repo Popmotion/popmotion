@@ -1,17 +1,4 @@
 // Framesync schedulers
-export {
-  onFrameStart,
-  onFrameUpdate,
-  onFrameRender,
-  onFrameEnd,
-  cancelOnFrameStart,
-  cancelOnFrameUpdate,
-  cancelOnFrameRender,
-  cancelOnFrameEnd,
-  timeSinceLastFrame,
-  currentFrameTime
-} from 'framesync';
-
 export * as calc from './inc/calc';
 export * as easing from './inc/easing';
 export * as transform from './inc/transformers';

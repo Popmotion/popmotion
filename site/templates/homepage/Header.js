@@ -45,7 +45,7 @@ const SecondaryLine = styled.p`
 export default () => (
   <LavaLampHeader>
     <HomepageLogo />
-    <MainLine>The JavaScript motion engine</MainLine>
+    <MainLine>A functional, reactive JavaScript animation engine.</MainLine>
     <SecondaryLine>Create delightful interactions with input<br />tracking, animations and physics</SecondaryLine>
     <GetStartedLink>
       <Link href={routes.learn}>

@@ -130,7 +130,7 @@ class Action { // lawsuit - sorry
     return this._isActive;
   }
 
-  addListener(listener) {
+  subscribe(listener) {
     this.listeners = this.listeners || [];
     this.numListeners = this.numListeners || 0;
     if (this.listeners.indexOf(listener) === -1) {
@@ -140,7 +140,7 @@ class Action { // lawsuit - sorry
     return this;
   }
 
-  removeListener(listener) {
+  unsubscribe(listener) {
     const listenerIndex = (this.listeners) ? this.listeners.indexOf(listener) : -1;
     if (listenerIndex !== -1) {
       this.numListeners--;

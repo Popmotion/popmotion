@@ -68,9 +68,6 @@ export const pipe = (...transformers) => {
   };
 };
 
-// Deprecated: Remove in 7.1.0
-export const flow = pipe;
-
 /**
  * Interpolate from set of values to another
  * @param  {Array} input array

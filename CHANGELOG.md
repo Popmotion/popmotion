@@ -2,6 +2,19 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.0.0]
+
+### Removed
+- Render loop functions. See: https://github.com/popmotion/framesync
+- `addListener` and `removeListener`. These were undocumented features and thus unsupported. Please see `subscribe` in Added.
+- `transform.flow`: Please use `transform.pipe` (renamed to remove confusion with Flowtype)
+
+### Deprecated
+- `Action.output()`, and `onUpdate`, `onStart`, `onStop`, `onComplete` and `transform` properties. Please see `subscribe` in Added. These will be removed in `9.0.0`.
+
+### Added
+- `Action.subscribe`:
+
 ## [7.8.0] 2017-08-29
 
 - Spinning off `framesync` to it's own module and depcreating render loop functions for removal in `8.0.0`.
