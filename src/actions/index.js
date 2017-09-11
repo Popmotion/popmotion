@@ -1,5 +1,6 @@
 import { onFrameUpdate, cancelOnFrameUpdate, timeSinceLastFrame } from 'framesync';
 import { speedPerSecond } from '../inc/calc';
+import { pipe } from '../inc/transform';
 
 class Action { // lawsuit - sorry
   constructor(props = {}) {
@@ -66,11 +67,7 @@ class Action { // lawsuit - sorry
     }
 
     if (onUpdate) {
-      if (onUpdate.registerAction) {
-        onUpdate.set(this.get());
-      } else {
-        onUpdate(this.get(), this);
-      }
+      onUpdate(this.get(), this);
     }
 
     this.fireListeners();
@@ -97,9 +94,19 @@ class Action { // lawsuit - sorry
     return this;
   }
 
-  output(func) {
-    this.props.onUpdate = func;
-    if (func.registerAction) func.registerAction(this);
+  output(...funcs) {
+    const numFuncs = funcs.length;
+    const mappedFuncs = funcs.map((func) => {
+      const isValue = (func.registerAction);
+      if (isValue) func.registerAction(this);
+      return isValue
+        ? (v) => {
+          func.set(v);
+          return v;
+        } : func;
+    });
+
+    this.props.onUpdate = (numFuncs === 1) ? mappedFuncs[0] : pipe(...mappedFuncs);
 
     return this;
   }
