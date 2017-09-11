@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.9.0] 2017-09-11
+
+### Added
+- `Action.output` now auto-pipes sequential functions and `value`s.
+
 ## [7.8.1] 2017-08-29
 
 ### Fixed

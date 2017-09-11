@@ -99,11 +99,7 @@ class Action { // lawsuit - sorry
     const mappedFuncs = funcs.map((func) => {
       const isValue = (func.registerAction);
       if (isValue) func.registerAction(this);
-      return isValue
-        ? (v) => {
-          func.set(v);
-          return v;
-        } : func;
+      return isValue ? (v) => func.set(v) : func;
     });
 
     this.props.onUpdate = (numFuncs === 1) ? mappedFuncs[0] : pipe(...mappedFuncs);

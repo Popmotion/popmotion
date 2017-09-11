@@ -27,7 +27,7 @@ next: action-composition
 - `complete`: Stop an action and mark as complete. Fires `onStop` and `onComplete` callbacks.
 - `setProps(<Object>)`: Updates `props`.
 - `getProp(<String>)`: Returns the named property.
-- `output(<Function | value Action>)`: Shorthand for updating the `onUpdate` property. If passed a `value`, will register this action as the sole permitted input to the provided `value` action.
+- `output(...<Function | value Action>)`: One or more callback functions or `value`s to fire `onUpdate`. If multiple arguments are provided, the functions will be automatically piped, meaning the return value of one will be passed to the next.
 
 ## Creating new actions
 
