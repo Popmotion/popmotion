@@ -1,6 +1,6 @@
 import { onFrameUpdate, cancelOnFrameUpdate, timeSinceLastFrame } from 'framesync';
 import { speedPerSecond } from '../inc/calc';
-import { pipe } from '../inc/transform';
+import { pipe } from '../inc/transformers';
 
 class Action { // lawsuit - sorry
   constructor(props = {}) {

@@ -1,4 +1,4 @@
-const { onFrameUpdate, cancelOnFrameUpdate, timeSinceLastFrame } = require('framesync');
+import { onFrameUpdate, cancelOnFrameUpdate, timeSinceLastFrame } from 'framesync';
 
 const action = (constructor) => ({
   start: function (observer) {
