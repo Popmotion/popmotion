@@ -7,6 +7,7 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 ### Removed
 - Render loop functions. See: https://github.com/popmotion/framesync
 - `addListener` and `removeListener`. These were undocumented features and thus unsupported. Please see `subscribe` in Added.
+- `Action.getBeforeTransform`
 - `transform.flow`: Please use `transform.pipe` (renamed to remove confusion with Flowtype)
 
 ### Deprecated

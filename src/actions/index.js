@@ -1,5 +1,6 @@
 import { onFrameUpdate, cancelOnFrameUpdate, timeSinceLastFrame } from 'framesync';
 import { speedPerSecond } from '../inc/calc';
+import { pipe } from '../inc/transformers';
 
 class Action { // lawsuit - sorry
   constructor(props = {}) {
@@ -86,30 +87,16 @@ class Action { // lawsuit - sorry
     return this;
   };
 
-  setProps({ onUpdate, ...props }) {
+  setProps(props) {
     this.props = {
       ...this.props,
       ...props
     };
 
-    if (onUpdate) this.output(onUpdate);
-
-    return this;
-  }
-
-  output(func) {
-    this.props.onUpdate = func;
-    if (func.registerAction) func.registerAction(this);
-
     return this;
   }
 
   get() {
-    const { transform } = this.props;
-    return transform ? transform(this.current) : this.current;
-  }
-
-  getBeforeTransform() {
     return this.current;
   }
 
@@ -130,7 +117,11 @@ class Action { // lawsuit - sorry
     return this._isActive;
   }
 
-  subscribe(listener) {
+  subscribe(...sequence) {
+    const sequenceLength = sequence.length;
+    const listener = sequenceLength === 1 ? sequence : pipe(...sequence);
+
+
     this.listeners = this.listeners || [];
     this.numListeners = this.numListeners || 0;
     if (this.listeners.indexOf(listener) === -1) {
@@ -140,19 +131,10 @@ class Action { // lawsuit - sorry
     return this;
   }
 
-  unsubscribe(listener) {
-    const listenerIndex = (this.listeners) ? this.listeners.indexOf(listener) : -1;
-    if (listenerIndex !== -1) {
-      this.numListeners--;
-      this.listeners.splice(listenerIndex, 1);
-    }
-    return this;
-  }
-
   fireListeners() {
     const current = this.get();
     for (let i = 0; i < this.numListeners; i++) {
-      this.listeners[i](current, this);
+      this.listeners[i](current);
     }
     return this;
   }
