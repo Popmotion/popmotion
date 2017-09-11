@@ -14,6 +14,16 @@ class Action { // lawsuit - sorry
     this.prev = this.current = props.current || props.from || 0;
   }
 
+  set(v) {
+    this.current = v;
+    onFrameUpdate(this.scheduledUpdate);
+    return v;
+  }
+
+  update() {
+    return this.current;
+  }
+
   start() {
     const { onStart, _onStart, passive } = this.props;
 
@@ -26,11 +36,13 @@ class Action { // lawsuit - sorry
     if (onStart) onStart(this);
     if (_onStart) _onStart(this);
 
+    if (parent) parent.start();
+
     return this;
   }
 
   stop() {
-    const { onStop, _onStop, passive } = this.props;
+    const { onStop, _onStop, passive, parent } = this.props;
 
     if (!passive) {
       this._isActive = false;
@@ -40,6 +52,8 @@ class Action { // lawsuit - sorry
     if (this.onStop) this.onStop();
     if (onStop) onStop(this);
     if (_onStop) _onStop(this);
+
+    if (parent) parent.stop();
 
     return this;
   }
@@ -100,11 +114,6 @@ class Action { // lawsuit - sorry
     return this.current;
   }
 
-  set(v) {
-    this.current = v;
-    return this;
-  }
-
   getProp(key) {
     return this.props[key];
   }
@@ -119,16 +128,19 @@ class Action { // lawsuit - sorry
 
   subscribe(...sequence) {
     const sequenceLength = sequence.length;
-    const listener = sequenceLength === 1 ? sequence : pipe(...sequence);
-
+    const onUpdate = sequenceLength === 1 ? sequence : pipe(...sequence);
+    const child = new Action({
+      onUpdate,
+      passive: true,
+      parent: this
+    });
 
     this.listeners = this.listeners || [];
     this.numListeners = this.numListeners || 0;
-    if (this.listeners.indexOf(listener) === -1) {
-      this.listeners.push(listener);
-      this.numListeners++;
-    }
-    return this;
+    this.listeners.push(child);
+    this.numListeners++;
+
+    return child;
   }
 
   fireListeners() {
