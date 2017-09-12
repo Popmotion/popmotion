@@ -1,32 +1,45 @@
 import { pipe } from '../inc/transformers';
+import {
+  Update,
+  Observer,
+  Observable,
+  ObservableInit,
+  ObservableFactory,
+  Subscription,
+  BoundObservable
+} from './types';
 
-const action = (init, updatePipe) => ({
-  start: function (observerCandidate) {
-    const observer = (typeof observerCandidate === 'function')
-      ? { update: observerCandidate }
-      : observerCandidate;
+const action: ObservableFactory = (init: ObservableInit, updatePipe?: Update): Observable => {
+  return {
+    start: function (observerCandidate: Update | Observer): Subscription {
+      let current: any;
 
-    if (updatePipe) {
-      observer.update = (v) => observer.update(updatePipe(v));
+      const observer: Observer = (typeof observerCandidate === 'function')
+        ? { update: observerCandidate }
+        : observerCandidate;
+
+      const { update } = observer;
+      observer.update = (v?: any) => {
+        current = (typeof updatePipe !== 'undefined') ? updatePipe(v) : v;
+        update(current);
+      };
+
+      const api: Subscription = init(observer);
+
+      return {
+        get: () => current,
+        ...api
+      };
+    },
+    bind: function (observerCandidate: Update | Observer): BoundObservable {
+      return {
+        start: () => this.start(observerCandidate)
+      };
+    },
+    pipe: function (...funcs: Update[]): Observable {
+      return action(init, pipe(...funcs));
     }
-
-    const api = init(observer);
-
-    return api;
-  },
-  bind: function (observer) {
-    return {
-      start: () => this.start(observer)
-    };
-  },
-  pipe: function (...funcs) {
-    return action(init, pipe(funcs));
-  }
-});
+  };
+};
 
 export default action;
-
-
-const tween = ({ from, to, duration, ease }) => action(({ update, complete }) => {
-
-});
