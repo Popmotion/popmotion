@@ -25,7 +25,11 @@ export const appendUnit = (unit) => (v) => `${v}${unit}`;
 export const applyOffset = (from, to) => {
   const getOffset = subtract(from);
   const applyOffsetTo = add(to);
-  return (v) => applyOffsetTo(getOffset(v));
+  return (v) => {
+    const newV = applyOffsetTo(getOffset(v))
+    console.log(newV)
+    return newV
+  };
 };
 
 /**
