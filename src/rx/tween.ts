@@ -87,7 +87,6 @@ const tween = ({
     seek: function (progress: number) {
       elapsed = getValueFromProgress(0, duration, progress);
       onFrameUpdate(updateTween);
-      console.log(this)
       return this;
     },
     reverse: function () {

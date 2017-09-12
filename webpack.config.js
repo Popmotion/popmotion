@@ -19,13 +19,18 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         loader: 'babel-loader'
+      },
+      {
+        test: /\.ts?$/,
+        loader: 'ts-loader'
       }
     ],
   },
   resolve: {
     alias: {
       popmotion: path.resolve(__dirname, 'src/popmotion.js')
-    }
+    },
+    extensions: ['.ts', '.tsx', '.js']
   },
   plugins: isProd ? [
     new webpack.optimize.ModuleConcatenationPlugin(),
