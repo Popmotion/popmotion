@@ -11,18 +11,18 @@ const clampProgress = clamp(0, 1);
 type Easing = (v: number) => number;
 
 type TweenProps = {
-  from: number,
-  to: number,
-  duration: number,
-  ease: Easing,
-  elapsed: number,
-  playDirection: number
-};
-
-type AnimationInterface = {
-  get: () => number,
-  getVelocity: () => number,
-  stop: () => void
+  from?: number,
+  to?: number,
+  duration?: number,
+  ease?: Easing,
+  elapsed?: number,
+  playDirection?: number,
+  flip?: number,
+  flipCount?: number,
+  loop?: number,
+  loopCount?: number,
+  yoyo?: number,
+  yoyoCount?: number
 };
 
 type TweenInterface = {
@@ -42,14 +42,24 @@ const tween = ({
   duration = 300,
   elapsed = 0,
   ease = easeOut,
-  playDirection = 1
-}: TweenProps) => action(({ update, complete }: Observer): TweenInterface => {
+  playDirection = 1,
+  flip = 0,
+  flipCount = 0,
+  loop = 0,
+  loopCount = 0,
+  yoyo = 0,
+  yoyoCount = 0
+}: TweenProps = {}) => action(({ update, complete }: Observer): TweenInterface => {
   let progress = 0;
   let current = from;
   let tweenTimer: Subscription;
 
-  const isTweenComplete = () => {
-    return false;
+  const isTweenComplete = (): boolean => {
+    let isComplete = (playDirection === 1)
+      ? elapsed >= duration
+      : elapsed <= 0;
+
+    return isComplete;
   };
 
   const updateTween = () => {

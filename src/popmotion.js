@@ -30,3 +30,4 @@ export svgPath from './renderers/svg-path';
 export action from './rx/action.ts';
 export clock from './rx/clock.ts';
 export tween from './rx/tween.ts';
+export pointer from './rx/pointer.ts';
