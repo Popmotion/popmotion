@@ -29,5 +29,11 @@ export svgPath from './renderers/svg-path';
 
 export action from './rx/action.ts';
 export clock from './rx/clock.ts';
-export tween from './rx/tween.ts';
+export colorTween from './rx/color-tween.ts';
+export delay from './rx/delay.ts';
+export inertia from './rx/inertia.ts';
+export parallel from './rx/parallel.ts';
+export physics from './rx/physics.ts';
 export pointer from './rx/pointer.ts';
+export spring from './rx/spring.ts';
+export tween from './rx/tween.ts';
