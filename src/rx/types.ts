@@ -3,6 +3,8 @@ export type Complete = () => void;
 export type Error = (err: string) => void;
 
 export interface Subscription {
+  get: () => any,
+  getVelocity: () => any,
   [key: string]: Function
 }
 
