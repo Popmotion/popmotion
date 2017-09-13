@@ -1,10 +1,10 @@
-import action from './action';
+import action from '../rx/action';
 
 const parallel = (...actions) => {
   const output = new Array(actions.length);
 
   return action(({ update }) => {
-    const subs = actions.map((action, i) => action.start((v) => {
+    const subs = actions.map((a, i) => a.start((v) => {
       output[i];
       update(output);
     }));

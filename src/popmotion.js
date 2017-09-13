@@ -27,13 +27,18 @@ export css from './renderers/css';
 export svg from './renderers/svg';
 export svgPath from './renderers/svg-path';
 
+// Actions
 export action from './rx/action.ts';
 export clock from './rx/clock.ts';
 export colorTween from './rx/color-tween.ts';
 export delay from './rx/delay.ts';
 export inertia from './rx/inertia.ts';
-export parallel from './rx/parallel.ts';
 export physics from './rx/physics.ts';
 export pointer from './rx/pointer.ts';
 export spring from './rx/spring.ts';
 export tween from './rx/tween.ts';
+
+// Compositors
+export composite from './rx/composite.ts';
+export merge from './rx/merge.ts';
+export parallel from './rx/parallel.ts';
