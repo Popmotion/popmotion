@@ -6,7 +6,7 @@ type ColorProps = {
   from: string,
   to: string,
   [key: string]: any
-}
+};
 
 const colorTween = ({ from, to, ...props }: ColorProps) =>
   tween(props).pipe(blendColor(from, to), color.transform);
