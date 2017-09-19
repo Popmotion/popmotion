@@ -1,6 +1,6 @@
 type Easing = (v: number) => number;
 
-type TweenProps = {
+export type TweenProps = {
   from?: number,
   to?: number,
   duration?: number,
@@ -15,7 +15,7 @@ type TweenProps = {
   yoyoCount?: number
 };
 
-type TweenInterface = {
+export type TweenInterface = {
   stop: () => void,
   getProgress: () => number,
   getElapsed: () => number,

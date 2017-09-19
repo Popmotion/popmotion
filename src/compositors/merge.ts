@@ -1,6 +1,7 @@
-import action from '../rx/action';
+import action from 'actions/action';
+import { Observable } from 'actions/action/types';
 
-const merge = (...actions) => action((observer) => {
+const merge = (...actions: Observable[]) => action((observer) => {
   const subs = actions.map((thisAction) => thisAction.start({
     update: (v: any) => observer.update(v),
     complete: () => observer.complete()

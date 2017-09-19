@@ -1,5 +1,5 @@
 import action from './action';
-import { Observer, Observable } from './types';
+import { Observer, Observable } from './action/types';
 import { onFrameUpdate, cancelOnFrameUpdate } from 'framesync';
 
 const clock: Observable = action(({ update }: Observer) => {

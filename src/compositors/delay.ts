@@ -1,4 +1,4 @@
-import action from './action';
+import action from 'actions/action';
 
 const delay = (timeToDelay: number) => action(({ complete }) => {
   const timeout = setTimeout(complete);

@@ -1,7 +1,8 @@
 import { onFrameUpdate } from 'framesync';
-import action from '../rx/action';
+import action from 'actions/action';
+import { Observable } from 'actions/action/types';
 
-const parallel = (...actions) => {
+const parallel = (...actions: Observable[]) => {
   return action((observer) => {
     const numActions = actions.length;
     const output = new Array(numActions);
@@ -9,7 +10,7 @@ const parallel = (...actions) => {
     let numCompletedActions = 0;
 
     const subs = actions.map((a, i) => a.start({
-      update: (v) => {
+      update: (v: any) => {
         output[i] = v;
         onFrameUpdate(updateOutput);
       },

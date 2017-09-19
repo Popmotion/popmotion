@@ -1,7 +1,7 @@
 import { timeSinceLastFrame } from 'framesync';
 import action from './action';
 import clock from './clock';
-import { Observer } from './types';
+import { Observer } from './action/types';
 
 type SpringProps = {
   from?: number,

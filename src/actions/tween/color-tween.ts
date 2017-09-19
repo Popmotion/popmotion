@@ -1,6 +1,6 @@
-import tween from './tween';
-import { blendColor } from '../inc/transformers';
-import { color } from '../inc/value-types';
+import tween from './';
+import { blendColor } from 'inc/transformers';
+import { color } from 'inc/value-types';
 
 type ColorProps = {
   from: string,

@@ -1,17 +1,26 @@
 import { onFrameUpdate } from 'framesync';
-import action from '../rx/action';
+import action from 'actions/action';
+import { Observable } from 'actions/action/types';
 
-const composite = (actionMap) => {
+type ObservableMap = {
+  [key: string]: Observable
+};
+
+type ValueMap = {
+  [key: string]: any
+};
+
+const composite = (actionMap: ObservableMap) => {
   return action((observer) => {
-    const output = {};
+    const output: ValueMap = {};
     const updateOutput = () => observer.update(output);
     const keys = Object.keys(actionMap);
     const numActions = keys.length;
     let numCompletedActions = 0;
 
     const subs = Object.keys(actionMap).map((key) => {
-      const a = actionMap[key].start({
-        update: (v) => {
+      return actionMap[key].start({
+        update: (v: any) => {
           output[key] = v;
           onFrameUpdate(updateOutput);
         },

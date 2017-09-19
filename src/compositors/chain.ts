@@ -1,8 +1,12 @@
-const chain = (...actions) => action(({ update, complete }) => {
+import action from 'actions/action';
+import { Observable, Subscription } from 'actions/action/types';
+
+const chain = (...actions: Observable[]) => action(({ update, complete }) => {
   let i = 0;
+  let current: Subscription;
 
   const playCurrent = () => {
-    actions[i].start({
+    current = actions[i].start({
       update,
       complete: () => {
         i++;
@@ -12,13 +16,8 @@ const chain = (...actions) => action(({ update, complete }) => {
   };
 
   return {
-    stop: () => actions[i].stop()
+    stop: () => current && current.stop()
   };
 });
 
 export default chain;
-
-chain(
-  tween(),
-  physics()
-).start()

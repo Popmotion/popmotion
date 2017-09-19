@@ -1,4 +1,4 @@
-import { pipe } from '../inc/transformers';
+import { pipe } from 'inc/transformers';
 import {
   Update,
   Observer,
