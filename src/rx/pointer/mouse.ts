@@ -1,29 +1,24 @@
 import action from '../action';
-import listenerManager from './listener-manager';
-
+import { onFrameUpdate, cancelOnFrameUpdate } from 'framesync';
 import { PointerProps, Point2D } from './types';
 
-let point: Point2D = { x: 0, y: 0 };
-
-const mouseEvents = listenerManager({
-  onEvent: (e: MouseEvent) => {
-    point = {
-      x: e.clientX,
-      y: e.clientY
-    };
-  },
-  onListenersEmpty: (listener: EventListener) =>
-    document.documentElement.removeEventListener('mousemove', listener),
-  onFirstListener: (listener: EventListener) =>
-    document.documentElement.addEventListener('mousemove', listener)
-});
-
 const mouse = ({ preventDefault = true }: PointerProps = {}) => action(({ update }) => {
+  let point: Point2D = { x: 0, y: 0 };
   const updatePoint = () => update(point);
-  mouseEvents.add(updatePoint);
+
+  const onMove = (e: MouseEvent) => {
+    point.x = e.clientX;
+    point.y = e.clientY;
+    onFrameUpdate(updatePoint);
+  };
+
+  document.documentElement.addEventListener('mousemove', onMove);
 
   return {
-    stop: () => mouseEvents.remove(updatePoint)
+    stop: () => {
+      cancelOnFrameUpdate(updatePoint);
+      document.removeEventListener('mousemove', onMove);
+    }
   };
 });
 

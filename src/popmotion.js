@@ -27,18 +27,24 @@ export css from './renderers/css';
 export svg from './renderers/svg';
 export svgPath from './renderers/svg-path';
 
-// Actions
+// Base
 export action from './rx/action.ts';
 export clock from './rx/clock.ts';
+
+// Animations
 export colorTween from './rx/color-tween.ts';
-export delay from './rx/delay.ts';
 export inertia from './rx/inertia.ts';
 export physics from './rx/physics.ts';
-export pointer from './rx/pointer.ts';
 export spring from './rx/spring.ts';
 export tween from './rx/tween.ts';
 
+// Input
+export mouse from './rx/pointer/mouse.ts';
+export pointer from './rx/pointer/index.ts';
+export touch from './rx/pointer/touch.ts';
+
 // Compositors
 export composite from './rx/composite.ts';
+export delay from './rx/delay.ts';
 export merge from './rx/merge.ts';
 export parallel from './rx/parallel.ts';
