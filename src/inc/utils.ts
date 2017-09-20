@@ -1,4 +1,10 @@
-const varType = (variable) => Object.prototype.toString.call(variable).slice(8, -1);
+import { Transformer } from 'actions/action/types';
+
+type NumberMap = {
+  [key: string]: number
+};
+
+const varType = (variable: any) => Object.prototype.toString.call(variable).slice(8, -1);
 
 const CAMEL_CASE_PATTERN = /([a-z])([A-Z])/g;
 const REPLACE_TEMPLATE = '$1-$2';
@@ -9,9 +15,9 @@ const REPLACE_TEMPLATE = '$1-$2';
   @param [string]
   @return [string]
 */
-export const camelToDash = (string) => string.replace(CAMEL_CASE_PATTERN, REPLACE_TEMPLATE).toLowerCase();
+export const camelToDash = (string: string) => string.replace(CAMEL_CASE_PATTERN, REPLACE_TEMPLATE).toLowerCase();
 
-export const setDOMAttrs = (element, attrs) => {
+export const setDOMAttrs = (element: Element, attrs: { [key: string]: any }) => {
   for (let key in attrs) {
     if (attrs.hasOwnProperty(key)) {
       element.setAttribute(key, attrs[key]);
@@ -26,13 +32,13 @@ export const setDOMAttrs = (element, attrs) => {
   @param [string]
   @return [array]
 */
-export const splitCommaDelimited = (value) => isString(value) ? value.split(/,\s*/) : [value];
+export const splitCommaDelimited = (value: string) => isString(value) ? value.split(/,\s*/) : [value];
 
 /**
  *  Returns a function that will check any argument for `term`
  * `contains('needle')('haystack')`
  */
-export const contains = (term) => (v) => {
+export const contains = (term: string) => (v: string) => {
   return (isString(term) && v.indexOf(term) !== -1);
 };
 
@@ -41,14 +47,14 @@ export const contains = (term) => (v) => {
  *  the first characters in the provided `term`
  * `isFirstChars('needle')('haystack')`
  */
-export const isFirstChars = (term) => (v) => {
+export const isFirstChars = (term: string) => (v: string) => {
   return (isString(term) && v.indexOf(term) === 0);
 };
 
 /**
  * Create a unit value type
  */
-export const createUnitType = (type, transform) => {
+export const createUnitType = (type: string, transform: Transformer) => {
   return {
     test: contains(type),
     parse: parseFloat,
@@ -60,18 +66,18 @@ export const createUnitType = (type, transform) => {
   Get value from function string
   "translateX(20px)" -> "20px"
 */
-export const getValueFromFunctionString = (value) => value.substring(value.indexOf('(') + 1, value.lastIndexOf(')'));
+export const getValueFromFunctionString = (value: string) => value.substring(value.indexOf('(') + 1, value.lastIndexOf(')'));
 
 /**
  * Creates a function that will split color
  * values from string into an object of properties
  * `mapArrayToObject(['red', 'green', 'blue'])('rgba(0,0,0)')`
  */
-export function splitColorValues(terms) {
+export function splitColorValues(terms: string[]) {
   const numTerms = terms.length;
 
-  return function (v) {
-    const values = {};
+  return function (v: string) {
+    const values: NumberMap = {};
     const valuesArray = splitCommaDelimited(getValueFromFunctionString(v));
 
     for (let i = 0; i < numTerms; i++) {
@@ -88,7 +94,7 @@ export function splitColorValues(terms) {
   @param: Variable to test
   @return [boolean]: Returns true if utils.varType === 'Array'
 */
-export const isArray = (arr) => varType(arr) === 'Array';
+export const isArray = (arr: any): arr is [] => varType(arr) === 'Array';
 
 /*
   Is utils var a function ?
@@ -96,7 +102,7 @@ export const isArray = (arr) => varType(arr) === 'Array';
   @param: Variable to test
   @return [boolean]: Returns true if utils.varType === 'Function'
 */
-export const isFunc = (obj) => varType(obj) === 'Function';
+export const isFunc = (obj: any): obj is Function => varType(obj) === 'Function';
 
 /*
   Is utils var a number?
@@ -104,7 +110,7 @@ export const isFunc = (obj) => varType(obj) === 'Function';
   @param: Variable to test
   @return [boolean]: Returns true if typeof === 'number'
 */
-export const isNum = (num) => typeof num === 'number';
+export const isNum = (num: any): num is number => (typeof num === 'number');
 
 /*
   Is utils var an object?
@@ -112,7 +118,7 @@ export const isNum = (num) => typeof num === 'number';
   @param: Variable to test
   @return [boolean]: Returns true if typeof === 'object'
 */
-export const isObj = (obj) => typeof obj === 'object';
+export const isObj = (obj: any) => typeof obj === 'object';
 
 /*
   Is utils var a string ?
@@ -120,7 +126,7 @@ export const isObj = (obj) => typeof obj === 'object';
   @param: Variable to test
   @return [boolean]: Returns true if typeof str === 'string'
 */
-export const isString = (str) => typeof str === 'string';
+export const isString = (str: string): str is string => typeof str === 'string';
 
 export const isHex = isFirstChars('#');
 export const isRgb = isFirstChars('rgb');

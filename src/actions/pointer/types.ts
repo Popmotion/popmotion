@@ -3,6 +3,12 @@ export type Point2D = {
   y: number
 };
 
+export type Point3D = Point2D & {
+  z: number
+};
+
+export type Point = Point2D | Point3D;
+
 export type PointerProps = {
   preventDefault?: boolean
 };

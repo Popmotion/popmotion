@@ -1,4 +1,4 @@
-type Easing = (v: number) => number;
+export type Easing = (v: number) => number;
 
 export type TweenProps = {
   from?: number,

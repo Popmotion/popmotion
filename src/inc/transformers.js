@@ -23,8 +23,8 @@ export const appendUnit = (unit) => (v) => `${v}${unit}`;
  * @return {function}
  */
 export const applyOffset = (from, to) => {
-  const getOffset = subtract(from);
-  const applyOffsetTo = add(to);
+  const getOffset = (v) => v - from;
+  const applyOffsetTo = (v) => v + to;
   return (v) => applyOffsetTo(getOffset(v));
 };
 
@@ -68,9 +68,6 @@ export const pipe = (...transformers) => {
   };
 };
 
-// Deprecated: Remove in 7.1.0
-export const flow = pipe;
-
 /**
  * Interpolate from set of values to another
  * @param  {Array} input array
@@ -107,11 +104,6 @@ export const interpolate = (input, output, rangeEasing) => {
     return getValueFromProgress(output[i - 1], output[i], easedProgress);
   };
 };
-
-export const subtract = (origin) => (v) => v - origin;
-export const add = (origin) => (v) => v + origin;
-export const divide = (origin) => (v) => v / origin;
-export const multiply = (origin) => (v) => v * origin;
 
 export const generateNonIntergratedSpring = (alterDisplacement = noop) => (constant, origin) => (v) => {
   const displacement = origin - v;
@@ -238,6 +230,7 @@ const blend = (from, to, v) => {
   const toExpo = to * to;
   return Math.sqrt(v * (toExpo - fromExpo) + fromExpo);
 };
+
 // http://codepen.io/osublake/pen/xGVVaN
 export const blendColor = (from, to) => {
   const fromColor = isString(from) ? parseColor(from) : from;

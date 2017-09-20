@@ -6,10 +6,8 @@ import {
   clampMax,
   clampMin,
   conditional,
-  flow,
+  pipe,
   interpolate,
-  add,
-  subtract,
   px,
   degrees,
   percent,
@@ -96,13 +94,13 @@ describe('conditional()', () => {
   });
 });
 
-describe('flow', () => {
+describe('pipe', () => {
   it(
     `should return a function that will pass all arguments to all functions in
     order, with the first argument being replaced with the returned value
     of the previous function`,
     () => {
-      const func = flow(
+      const func = pipe(
         (v, a) => v * a,
         (v, a) => v + a
       );
@@ -130,22 +128,6 @@ describe('interpolate()', () => {
 
   it('should optionally accept an easing function', () => {
 
-  });
-});
-
-describe('subtract()', () => {
-  it('should return a function that returns an offset from the provided origin', () => {
-    const offsetFrom50 = subtract(50);
-    expect(offsetFrom50(25)).toBe(-25);
-    expect(offsetFrom50(75)).toBe(25);
-  });
-});
-
-describe('add()', () => {
-  it('should return a function that returns the value added to the origin', () => {
-    const addTo50 = add(50);
-    expect(addTo50(25)).toBe(75);
-    expect(addTo50(-75)).toBe(-25);
   });
 });
 

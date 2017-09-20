@@ -1,6 +1,7 @@
 export type Update = Function;
 export type Complete = () => void;
 export type Error = (err: string) => void;
+export type Transformer = (v: any) => any;
 
 export interface Subscription {
   [key: string]: Function

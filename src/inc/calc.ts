@@ -1,4 +1,13 @@
 import { isNum } from './utils';
+import { Point, Point2D, Point3D } from 'actions/pointer/types';
+
+export const isPoint = (point: any): point is Point => {
+  return (<Point>point).x !== undefined && (<Point>point).y !== undefined;
+};
+
+export const isPoint3D = (point: Point): point is Point3D => {
+  return (<Point3D>point).z !== undefined;
+};
 
 /*
   Convert number to x decimal places
@@ -7,18 +16,18 @@ import { isNum } from './utils';
   @param [number]
   @return [number]
 */
-const toDecimal = (num, precision = 2) => {
+const toDecimal = (num: number, precision: number = 2) => {
   precision = 10 ** precision;
   return Math.round(num * precision) / precision;
 };
 
-const ZERO_POINT = {
+const ZERO_POINT: Point = {
   x: 0,
   y: 0,
   z: 0
 };
 
-const distance1D = (a, b) => Math.abs(a - b);
+const distance1D = (a: number, b: number) => Math.abs(a - b);
 
 /*
   Angle between points
@@ -30,7 +39,7 @@ const distance1D = (a, b) => Math.abs(a - b);
   @param [object]: X and Y cordinates of to point
   @return [radian]: Angle between the two points in radians
 */
-export const angle = (a, b = ZERO_POINT) => radiansToDegrees(Math.atan2(b.y - a.y, b.x - a.x));
+export const angle = (a: Point, b: Point = ZERO_POINT) => radiansToDegrees(Math.atan2(b.y - a.y, b.x - a.x));
 
 /*
   Convert degrees to radians
@@ -38,7 +47,7 @@ export const angle = (a, b = ZERO_POINT) => radiansToDegrees(Math.atan2(b.y - a.
   @param [number]: Value in degrees
   @return [number]: Value in radians
 */
-export const degreesToRadians = (degrees) => degrees * Math.PI / 180;
+export const degreesToRadians = (degrees: number) => degrees * Math.PI / 180;
 
 /*
   Dilate
@@ -58,7 +67,7 @@ export const degreesToRadians = (degrees) => degrees * Math.PI / 180;
   @param [number]: Dilate progress by x
   @return [number]: Previous value plus the dilated difference
 */
-export const dilate = (a, b, dilation) => a + ((b - a) * dilation);
+export const dilate = (a: number, b: number, dilation: number) => a + ((b - a) * dilation);
 
 /*
   Distance
@@ -69,19 +78,21 @@ export const dilate = (a, b, dilation) => a + ((b - a) * dilation);
   @param [object/number]: (optional): x and y or just x of point B
   @return [number]: The distance between the two points
 */
-export const distance = (a, b = ZERO_POINT) => {
+export const distance = (a: Point | number, b: Point | number = ZERO_POINT) => {
   // 1D dimensions
-  if (isNum(a)) {
+  if (isNum(a) && isNum(b)) {
     return distance1D(a, b);
 
   // Multi-dimensional
-  } else {
+  } else if (isPoint(a) && isPoint(b)) {
     const xDelta = distance1D(a.x, b.x);
     const yDelta = distance1D(a.y, b.y);
-    const zDelta = (isNum(a.z)) ? distance1D(a.z, b.z) : 0;
+    const zDelta = (isPoint3D(a) && isPoint3D(b)) ? distance1D(a.z, b.z) : 0;
 
     return Math.sqrt((xDelta ** 2) + (yDelta ** 2) + (zDelta ** 2));
   }
+
+  return 0;
 };
 
 /*
@@ -96,7 +107,8 @@ export const distance = (a, b = ZERO_POINT) => {
   @param [number]: Value to find progress within given range
   @return [number]: Progress of value within range as expressed 0-1
 */
-export const getProgressFromValue = (from, to, value) => (value - from) / (to - from);
+export const getProgressFromValue = (from: number, to: number, value: number) =>
+  (value - from) / (to - from);
 
 /*
   Value in range from progress
@@ -109,7 +121,8 @@ export const getProgressFromValue = (from, to, value) => (value - from) / (to - 
   @param [number]: The progress between lower and upper limits expressed 0-1
   @return [number]: Value as calculated from progress within range (not limited within range)
 */
-export const getValueFromProgress = (from, to, progress) => (- progress * from) + (progress * to) + from;
+export const getValueFromProgress = (from: number, to: number, progress: number) =>
+  (- progress * from) + (progress * to) + from;
 
 /*
   Point from angle and distance
@@ -119,7 +132,7 @@ export const getValueFromProgress = (from, to, progress) => (- progress * from) 
   @param [number]: Distance from origin
   @return [object]: Calculated 2D point
 */
-export const pointFromAngleAndDistance = (origin, angle, distance) => {
+export const pointFromAngleAndDistance = (origin: Point2D, angle: number, distance: number) => {
   angle = degreesToRadians(angle);
 
   return {
@@ -134,7 +147,7 @@ export const pointFromAngleAndDistance = (origin, angle, distance) => {
   @param [number]: Value in radians
   @return [number]: Value in degrees
 */
-export const radiansToDegrees = (radians) => radians * 180 / Math.PI;
+export const radiansToDegrees = (radians: number) => radians * 180 / Math.PI;
 
 /*
   Framerate-independent smoothing
@@ -144,7 +157,8 @@ export const radiansToDegrees = (radians) => radians * 180 / Math.PI;
   @param [number]: Frame duration
   @param [number] (optional): Smoothing (0 is none)
 */
-export const smooth = (newValue, oldValue, duration, smoothing = 0) => toDecimal(oldValue + (duration * (newValue - oldValue) / Math.max(smoothing, duration)));
+export const smooth = (newValue: number, oldValue: number, duration: number, smoothing: number = 0) =>
+  toDecimal(oldValue + (duration * (newValue - oldValue) / Math.max(smoothing, duration)));
 
 /*
   Convert x per second to per frame velocity based on fps
@@ -152,7 +166,8 @@ export const smooth = (newValue, oldValue, duration, smoothing = 0) => toDecimal
   @param [number]: Unit per second
   @param [number]: Frame duration in ms
 */
-export const speedPerFrame = (xps, frameDuration) => (isNum(xps)) ? xps / (1000 / frameDuration) : 0;
+export const speedPerFrame = (xps: number, frameDuration: number) =>
+  (isNum(xps)) ? xps / (1000 / frameDuration) : 0;
 
 /*
   Convert velocity into velicity per second
@@ -160,7 +175,8 @@ export const speedPerFrame = (xps, frameDuration) => (isNum(xps)) ? xps / (1000 
   @param [number]: Unit per frame
   @param [number]: Frame duration in ms
 */
-export const speedPerSecond = (velocity, frameDuration) => frameDuration ? velocity * (1000 / frameDuration) : 0;
+export const speedPerSecond = (velocity: number, frameDuration: number) =>
+  frameDuration ? velocity * (1000 / frameDuration) : 0;
 
 /*
   Create stepped version of 0-1 progress
@@ -169,7 +185,7 @@ export const speedPerSecond = (velocity, frameDuration) => frameDuration ? veloc
   @param [number]: Current value
   @return [number]: Stepped value
 */
-export const stepProgress = (steps, progress) => {
+export const stepProgress = (steps: number, progress: number) => {
   const segment = 1 / (steps - 1);
   const target = 1 - (1 / steps);
   const progressOfTarget = Math.min(progress / target, 1);
