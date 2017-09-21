@@ -4,8 +4,6 @@ type NumberMap = {
   [key: string]: number
 };
 
-const varType = (variable: any) => Object.prototype.toString.call(variable).slice(8, -1);
-
 const CAMEL_CASE_PATTERN = /([a-z])([A-Z])/g;
 const REPLACE_TEMPLATE = '$1-$2';
 
@@ -92,9 +90,9 @@ export function splitColorValues(terms: string[]) {
   Is utils var an array ?
 
   @param: Variable to test
-  @return [boolean]: Returns true if utils.varType === 'Array'
+  @return [boolean]: Returns true if constructor is Array
 */
-export const isArray = (arr: any): arr is [] => varType(arr) === 'Array';
+export const isArray = (arr: any): boolean => arr.constructor === Array;
 
 /*
   Is utils var a function ?
@@ -102,7 +100,8 @@ export const isArray = (arr: any): arr is [] => varType(arr) === 'Array';
   @param: Variable to test
   @return [boolean]: Returns true if utils.varType === 'Function'
 */
-export const isFunc = (obj: any): obj is Function => varType(obj) === 'Function';
+export const isFunc = (obj: any): obj is Function =>
+  Object.prototype.toString.call(obj).slice(8, -1) === 'Function';
 
 /*
   Is utils var a number?
@@ -131,4 +130,4 @@ export const isString = (str: string): str is string => typeof str === 'string';
 export const isHex = isFirstChars('#');
 export const isRgb = isFirstChars('rgb');
 export const isHsl = isFirstChars('hsl');
-export const isColor = (v) => (isHex(v) || isRgb(v) || isHsl(v));
+export const isColor = (v: any) => (isHex(v) || isRgb(v) || isHsl(v));

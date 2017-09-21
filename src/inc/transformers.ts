@@ -1,9 +1,9 @@
 import { getProgressFromValue, getValueFromProgress, stepProgress, smooth as calcSmoothing } from './calc';
-import { isString } from './utils';
 import { color as parseColor } from './parsers';
 import { currentFrameTime } from 'framesync';
+import { Easing } from 'actions/tween/types';
 
-const noop = (v) => v;
+const noop = (v: any): any => v;
 
 /**
  * Append Unit
@@ -12,7 +12,7 @@ const noop = (v) => v;
  * @param  {string} unit)
  * @return {number}
  */
-export const appendUnit = (unit) => (v) => `${v}${unit}`;
+export const appendUnit = (unit: string) => (v: number) => `${v}${unit}`;
 
 /**
  * Apply offset
@@ -22,10 +22,10 @@ export const appendUnit = (unit) => (v) => `${v}${unit}`;
  * @param  {number} to
  * @return {function}
  */
-export const applyOffset = (from, to) => {
-  const getOffset = (v) => v - from;
-  const applyOffsetTo = (v) => v + to;
-  return (v) => applyOffsetTo(getOffset(v));
+export const applyOffset = (from: number, to: number) => {
+  const getOffset = (v: number) => v - from;
+  const applyOffsetTo = (v: number) => v + to;
+  return (v: number) => applyOffsetTo(getOffset(v));
 };
 
 /**
@@ -35,16 +35,12 @@ export const applyOffset = (from, to) => {
  * @param  {number} max
  * @return {number}
  */
-export const clampMax = (max) => (v) => Math.min(v, max);
-export const clampMin = (min) => (v) => Math.max(v, min);
-export const clamp = (min, max) => {
+export const clampMax = (max: number) => (v: number) => Math.min(v, max);
+export const clampMin = (min: number) => (v: number) => Math.max(v, min);
+export const clamp = (min: number, max: number) => {
   const _min = clampMin(min);
   const _max = clampMax(max);
-  return (v) => _min(_max(v));
-};
-
-export const conditional = (condition, ifTrue, ifFalse = noop) => (v, action) => {
-  return condition(v, action) ? ifTrue(v, action) : ifFalse(v, action);
+  return (v: number) => _min(_max(v));
 };
 
 /**
@@ -54,11 +50,11 @@ export const conditional = (condition, ifTrue, ifFalse = noop) => (v, action) =>
  * @param  {...functions} transformers
  * @return {function}
  */
-export const pipe = (...transformers) => {
+export const pipe = (...transformers: Function[]) => {
   const numTransformers = transformers.length;
   let i = 0;
 
-  return (acc, ...args) => {
+  return (acc: any, ...args: any[]) => {
     let v = acc;
     for (i = 0; i < numTransformers; i++) {
       v = transformers[i](v, ...args);
@@ -75,11 +71,11 @@ export const pipe = (...transformers) => {
  * @param  {Function} rangeEasing
  * @return {Function}
  */
-export const interpolate = (input, output, rangeEasing) => {
+export const interpolate = (input: number[], output: number[], rangeEasing: Easing[]) => {
   const rangeLength = input.length;
   const finalIndex = rangeLength - 1;
 
-  return (v) => {
+  return (v: number) => {
     // If value outside minimum range, quickly return
     if (v <= input[0]) {
       return output[0];
@@ -105,7 +101,7 @@ export const interpolate = (input, output, rangeEasing) => {
   };
 };
 
-export const generateNonIntergratedSpring = (alterDisplacement = noop) => (constant, origin) => (v) => {
+export const generateNonIntergratedSpring = (alterDisplacement: Function = noop) => (constant: number, origin: number) => (v: number) => {
   const displacement = origin - v;
   const springModifiedDisplacement = - constant * (0 - alterDisplacement(Math.abs(displacement)));
   return (displacement <= 0) ? origin + springModifiedDisplacement : origin - springModifiedDisplacement;
@@ -114,16 +110,16 @@ export const generateNonIntergratedSpring = (alterDisplacement = noop) => (const
 export const spring = generateNonIntergratedSpring();
 export const nonlinearSpring = generateNonIntergratedSpring(Math.sqrt);
 
-export const wrap = (min, max) => (v) => {
+export const wrap = (min: number, max: number) => (v: number) => {
   const rangeSize = max - min;
   return ((v - min) % rangeSize + rangeSize) % rangeSize + min;
 };
 
-export const smooth = (strength = 50) => {
+export const smooth = (strength: number = 50) => {
   let previousValue = 0;
   let lastUpdated = 0;
 
-  return (v) => {
+  return (v: number) => {
     const currentFramestamp = currentFrameTime();
     const timeDelta = (currentFramestamp !== lastUpdated) ? currentFramestamp - lastUpdated : 0;
     const newValue = timeDelta ? calcSmoothing(v, previousValue, timeDelta, strength) : previousValue;
@@ -133,14 +129,14 @@ export const smooth = (strength = 50) => {
   };
 };
 
-export const snap = (points) => {
+export const snap = (points: number | number[]) => {
   if (typeof points === 'number') {
-    return (v) => Math.round(v / points) * points;
+    return (v: number) => Math.round(v / points) * points;
   } else {
     let i = 0;
     const numPoints = points.length;
 
-    return (v) => {
+    return (v: number) => {
       let lastDistance = Math.abs(points[0] - v);
 
       for (i = 1; i < numPoints; i++) {
@@ -159,14 +155,15 @@ export const snap = (points) => {
   }
 };
 
-export const steps = (steps, min = 0, max = 1, direction = 'start') => (v) => {
+// TODO: Revist this and add direction
+export const steps = (steps: number, min = 0, max = 1) => (v: number) => {
   const progress = getProgressFromValue(min, max, v);
-  return getValueFromProgress(min, max, stepProgress(steps, progress, direction));
+  return getValueFromProgress(min, max, stepProgress(steps, progress));
 };
 
-export const transformChildValues = (childTransformers) => {
-  const mutableState = {};
-  return (v) => {
+export const transformChildValues = (childTransformers: { [key: string]: Function }) => {
+  const mutableState: { [key: string]: any } = {};
+  return (v: any) => {
     for (let key in v) {
       const childTransformer = childTransformers[key];
       if (childTransformer) {
@@ -188,8 +185,26 @@ export const rgbUnit = pipe(
   Math.round
 );
 
-const rgbaTemplate = ({ red, green, blue, alpha = 1 }) =>
+type RGBA = {
+  red: number,
+  green: number,
+  blue: number,
+  alpha?: number
+};
+
+type HSLA = {
+  hue: number,
+  saturation: number,
+  lightness: number,
+  alpha?: number
+};
+
+type Color = HSLA | RGBA;
+
+const rgbaTemplate = ({ red, green, blue, alpha = 1 }: RGBA) =>
   `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+
+export const alpha = clamp(0, 1);
 
 export const rgba = pipe(
   transformChildValues({
@@ -201,7 +216,7 @@ export const rgba = pipe(
   rgbaTemplate
 );
 
-const hslaTemplate = ({ hue, saturation, lightness, alpha = 1 }) =>
+const hslaTemplate = ({ hue, saturation, lightness, alpha = 1 }: HSLA) =>
   `hsla(${hue}, ${saturation}, ${lightness}, ${alpha})`;
 
 export const hsla = pipe(
@@ -214,7 +229,7 @@ export const hsla = pipe(
   hslaTemplate
 );
 
-export const color = (v) => {
+export const color = (v: Color) => {
   if (v.hasOwnProperty('red')) {
     return rgba(v);
   } else if (v.hasOwnProperty('hue')) {
@@ -223,22 +238,20 @@ export const color = (v) => {
   return v;
 };
 
-export const alpha = clamp(0, 1);
-
-const blend = (from, to, v) => {
+const blend = (from: number, to: number, v: number) => {
   const fromExpo = from * from;
   const toExpo = to * to;
   return Math.sqrt(v * (toExpo - fromExpo) + fromExpo);
 };
 
 // http://codepen.io/osublake/pen/xGVVaN
-export const blendColor = (from, to) => {
-  const fromColor = isString(from) ? parseColor(from) : from;
-  const toColor = isString(to) ? parseColor(to): to;
+export const blendColor = (from: Color | string, to: Color | string) => {
+  const fromColor = (typeof from === 'string') ? parseColor(from) : from;
+  const toColor = (typeof to === 'string') ? parseColor(to): to;
 
   const blended = { ...fromColor };
 
-  return (v) => {
+  return (v: number) => {
     for (let key in blended) {
       blended[key] = blend(fromColor[key], toColor[key], v);
     }
@@ -275,16 +288,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-const resolve3 = (points) => (t) => {
+const resolve3 = (points: number[]) => (t: number) => {
   const ut = 1 - t;
   return (points[0] * ut + points[1] * t) * ut + (points[1] * ut + points[2] * t) * t;
 };
 
-const resolve4 = (points) => (t) => {
+const resolve4 = (points: number[]) => (t: number) => {
   const ut = 1 - t;
   const a1 = points[1] * ut + points[2] * t;
   return ((points[0] * ut + points[1] * t) * ut + a1 * t) * ut + (a1 * ut + (points[2] * ut + points[3] * t) * t) * t;
 };
 
-export const bezier = (points) =>
+export const bezier = (points: number[]) =>
   (points.length === 3) ? resolve3(points) : resolve4(points);

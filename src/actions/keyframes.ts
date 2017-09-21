@@ -3,23 +3,20 @@ import { easeOut, linear } from 'inc/easing';
 import { interpolate } from 'inc/transformers';
 import { Easing } from './tween/types';
 
-type Value = string | number;
-type Values = Value[];
-
 type KeyframeProps = {
-  values: Values,
+  values: number[],
   times?: number[],
   ease?: Easing[],
   duration?: 300
 };
 
-const defaultEasings = (values: Values): Easing[] =>
+const defaultEasings = (values: number[]): Easing[] =>
   values.map((): Easing => easeOut).splice(0, values.length - 1);
 
-const defaultTimings = (values: Values): number[] => {
+const defaultTimings = (values: number[]): number[] => {
   const numValues = values.length;
 
-  return values.map((value: Value, i: number): number => (i !== 0) ? i / (numValues - 1) : 0);
+  return values.map((value: number, i: number): number => (i !== 0) ? i / (numValues - 1) : 0);
 };
 
 const keyframes = ({ values, ...props }: KeyframeProps) => {

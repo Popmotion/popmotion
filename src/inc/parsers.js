@@ -1,4 +1,4 @@
-import { splitColorValues, isRgb, isHex, isHsl } from './utils';
+import { splitColorValues, isRgb, isHex, isHsl } from './utils.ts';
 
 export const hex = (v) => {
   let r, g, b;
