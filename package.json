@@ -39,12 +39,13 @@
   "analyze": true,
   "license": "MIT",
   "scripts": {
-    "build": "rm -rf lib && babel src --out-dir lib && npm run test && eslint src && NODE_ENV=production webpack && npm run measure",
+    "build": "rm -rf lib && babel src --out-dir lib && eslint src && NODE_ENV=production webpack && npm run measure",
     "watch": "NODE_ENV=development webpack --progress --colors --watch",
     "measure": "gzip -c dist/popmotion.global.min.js | wc -c",
     "test": "jest"
   },
   "devDependencies": {
+    "@types/jest": "^20.0.8",
     "babel-cli": "^6.16.0",
     "babel-core": "^6.0.20",
     "babel-eslint": "^5.0.4",
@@ -71,15 +72,24 @@
     "estraverse-fb": "^1.3.1",
     "jest": "^18.0.0",
     "string-replace-loader": "^1.3.0",
+    "ts-jest": "^21.0.1",
     "ts-loader": "^2.3.7",
     "typescript": "^2.5.2",
     "webpack": "^3.0.0"
   },
   "jest": {
-    "testRegex": "_tests/[^_].*\\.js$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "transform": {
+      "\\.(ts|tsx)$": "./node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "/_tests/.*\\.(ts|tsx|js)$",
     "rootDir": "src"
   },
   "dependencies": {
-    "framesync": "^3.0.1"
+    "framesync": "^3.0.2"
   }
 }

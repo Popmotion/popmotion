@@ -1,4 +1,4 @@
-export type Easing = (v: number) => number;
+import { Easing } from 'inc/easing';
 
 export type TweenProps = {
   from?: number,

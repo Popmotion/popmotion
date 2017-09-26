@@ -6,6 +6,10 @@ category: action
 
 # Color Tween
 
+```
+import colorTween from 'popmotion-color-tween';
+```
+
 Creates a special tween that smoothly transitions between two colors.
 
 Popmotion uses an advanced algorithm for smoother blends without muddy saturation loss, as explained in the video [Computer Color is Broken](https://www.youtube.com/watch?v=LKnqECcg6Gw).

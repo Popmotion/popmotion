@@ -1,14 +1,12 @@
 export * as calc from './inc/calc.ts';
-export * as easing from './inc/easing';
+export * as easing from './inc/easing.ts';
 export * as transform from './inc/transformers.ts';
-export * as valueTypes from './inc/value-types';
 
 // Base
 export action from './actions/action/index.ts';
 export clock from './actions/clock.ts';
 
 // Animations
-export colorTween from './actions/tween/color-tween.ts';
 export keyframes from './actions/keyframes.ts';
 export inertia from './actions/inertia.ts';
 export physics from './actions/physics.ts';
@@ -27,9 +25,3 @@ export delay from './compositors/delay.ts';
 export merge from './compositors/merge.ts';
 export parallel from './compositors/parallel.ts';
 export stagger from './compositors/stagger.ts';
-
-// Renderers - deprecated
-export Renderer from './renderers';
-export css from './renderers/css';
-export svg from './renderers/svg';
-export svgPath from './renderers/svg-path';

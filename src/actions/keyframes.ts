@@ -1,7 +1,7 @@
 import tween from './tween';
 import { easeOut, linear } from 'inc/easing';
 import { interpolate } from 'inc/transformers';
-import { Easing } from './tween/types';
+import { Easing } from 'inc/easing';
 
 type KeyframeProps = {
   values: number[],

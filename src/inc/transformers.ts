@@ -1,7 +1,6 @@
 import { getProgressFromValue, getValueFromProgress, stepProgress, smooth as calcSmoothing } from './calc';
-import { color as parseColor } from './parsers';
 import { currentFrameTime } from 'framesync';
-import { Easing } from 'actions/tween/types';
+import { Easing } from 'inc/easing';
 
 const noop = (v: any): any => v;
 
@@ -175,94 +174,6 @@ export const transformChildValues = (childTransformers: { [key: string]: Functio
   };
 };
 
-// Unit transformers
-export const percent = appendUnit('%');
-export const degrees = appendUnit('deg');
-export const px = appendUnit('px');
-
-export const rgbUnit = pipe(
-  clamp(0, 255),
-  Math.round
-);
-
-type RGBA = {
-  red: number,
-  green: number,
-  blue: number,
-  alpha?: number
-};
-
-type HSLA = {
-  hue: number,
-  saturation: number,
-  lightness: number,
-  alpha?: number
-};
-
-type Color = HSLA | RGBA;
-
-const rgbaTemplate = ({ red, green, blue, alpha = 1 }: RGBA) =>
-  `rgba(${red}, ${green}, ${blue}, ${alpha})`;
-
-export const alpha = clamp(0, 1);
-
-export const rgba = pipe(
-  transformChildValues({
-    red: rgbUnit,
-    green: rgbUnit,
-    blue: rgbUnit,
-    alpha
-  }),
-  rgbaTemplate
-);
-
-const hslaTemplate = ({ hue, saturation, lightness, alpha = 1 }: HSLA) =>
-  `hsla(${hue}, ${saturation}, ${lightness}, ${alpha})`;
-
-export const hsla = pipe(
-  transformChildValues({
-    hue: parseInt,
-    saturation: percent,
-    lightness: percent,
-    alpha
-  }),
-  hslaTemplate
-);
-
-export const color = (v: Color) => {
-  if (v.hasOwnProperty('red')) {
-    return rgba(v);
-  } else if (v.hasOwnProperty('hue')) {
-    return hsla(v);
-  }
-  return v;
-};
-
-const blend = (from: number, to: number, v: number) => {
-  const fromExpo = from * from;
-  const toExpo = to * to;
-  return Math.sqrt(v * (toExpo - fromExpo) + fromExpo);
-};
-
-// http://codepen.io/osublake/pen/xGVVaN
-export const blendColor = (from: Color | string, to: Color | string) => {
-  const fromColor = (typeof from === 'string') ? parseColor(from) : from;
-  const toColor = (typeof to === 'string') ? parseColor(to): to;
-
-  const blended = { ...fromColor };
-
-  return (v: number) => {
-    for (let key in blended) {
-      blended[key] = blend(fromColor[key], toColor[key], v);
-    }
-    blended.red = blend(fromColor.red, toColor.red, v);
-    blended.green = blend(fromColor.green, toColor.green, v);
-    blended.blue = blend(fromColor.blue, toColor.blue, v);
-    blended.alpha = getValueFromProgress(fromColor.alpha, toColor.alpha, v);
-    return blended;
-  };
-};
-
 // Bezier resolver
 // Refactored from https://github.com/hughsk/bezier/blob/master/index.js
 /**
@@ -299,5 +210,5 @@ const resolve4 = (points: number[]) => (t: number) => {
   return ((points[0] * ut + points[1] * t) * ut + a1 * t) * ut + (a1 * ut + (points[2] * ut + points[3] * t) * t) * t;
 };
 
-export const bezier = (points: number[]) =>
+export const bezier = (...points: number[]) =>
   (points.length === 3) ? resolve3(points) : resolve4(points);

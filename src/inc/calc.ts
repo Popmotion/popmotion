@@ -1,5 +1,6 @@
-import { isNum } from './utils';
 import { Point, Point2D, Point3D } from 'actions/pointer/types';
+
+const isNum = (v: any): v is number => typeof v === 'number';
 
 export const isPoint = (point: any): point is Point => {
   return (<Point>point).x !== undefined && (<Point>point).y !== undefined;
@@ -78,7 +79,7 @@ export const dilate = (a: number, b: number, dilation: number) => a + ((b - a) *
   @param [object/number]: (optional): x and y or just x of point B
   @return [number]: The distance between the two points
 */
-export const distance = (a: Point | number, b: Point | number = ZERO_POINT) => {
+export const distance = (a: Point | number, b: Point | number = ZERO_POINT): number => {
   // 1D dimensions
   if (isNum(a) && isNum(b)) {
     return distance1D(a, b);

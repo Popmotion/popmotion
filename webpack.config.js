@@ -30,7 +30,11 @@ module.exports = {
     alias: {
       popmotion: path.resolve(__dirname, 'src/popmotion.js')
     },
-    extensions: ['.ts', '.tsx', '.js']
+    extensions: ['.ts', '.tsx', '.js'],
+    modules: [
+      path.resolve('./node_modules'),
+      path.resolve('./src')
+    ]
   },
   plugins: isProd ? [
     new webpack.optimize.ModuleConcatenationPlugin(),

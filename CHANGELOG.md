@@ -2,10 +2,19 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
-## [7.9.0] 2017-09-11
+## [8.0.0] 2017-xx-xx
 
 ### Added
-- `Action.output` now auto-pipes sequential functions and `value`s.
+- New reactive API.
+- `keyframes` action.
+
+### Removed
+- `flow` alias for `pipe`
+- Transformers:`add`/`subtract`/`divide`/`multiply`/`conditional`/`alpha`/`percent`/`degrees`/`px`/`rgbUnit`/`rgba`/`hex`/`color`/`hsla`
+- Renderers: Moved to [Stylefire](https://github.com/Popmotion/stylefire)
+- Render Loop: Moved to [Framesync](https://github.com/Popmotion/framesync)
+- Color Tween: Moved to [Popmotion Color Tween](https://github.com/Popmotion/popmotion-color-tween)
+- Value Types: Moved to [Style Value Types](https://github.com/Popmotion/style-value-types)
 
 ## [7.8.1] 2017-08-29
 
