@@ -1,7 +1,7 @@
 ---
 title: SVG
-description: Optimised SVG renderer.
-category: renderers
+description: Optimised SVG styler.
+category: stylefire
 ---
 
 # SVG Renderer
@@ -45,3 +45,5 @@ All SVG properties are supported by Popmotion, but some properties are mapped to
 - `opacity`: `alpha`
 - `fillOpacity`: `alpha`
 - `strokeOpacity`: `alpha`
+
+Set transform origin and line drawings

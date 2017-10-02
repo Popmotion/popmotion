@@ -1,7 +1,7 @@
 ---
 title: CSS
 description: Optimised CSS renderer.
-category: renderers
+category: stylefire
 ---
 
 # CSS Renderer

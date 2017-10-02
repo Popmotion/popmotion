@@ -1,7 +1,7 @@
 ---
 title: DOM Scroll
 description: Scroll viewport and DOM elements with Popmotion tweens and physics.
-category: renderers
+category: stylefire
 ---
 
 # Scroll Renderer
