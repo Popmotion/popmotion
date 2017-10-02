@@ -2,4 +2,4 @@
 
 ### Scroll browser viewport and DOM elements using Popmotion.
 
-[Documentation](https://popmotion.io/api/scroll)
+## **Deprecated:** Use the Scroll styler in [Stylefire](https://github.com/popmotion/stylefire).
