@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.8.2] 2017-10-02
+
+### Changed
+- Now publishing `dist` folder on npm for use on CodePen via unpkg.com
+
 ## [7.8.1] 2017-08-29
 
 ### Fixed

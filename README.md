@@ -21,10 +21,6 @@ Popmotion is:
 
 ## Installation
 
-### npm
-
-In your project root:
-
 ```bash
 npm install --save popmotion
 ```
@@ -34,16 +30,6 @@ In your javascript module:
 ```javascript
 import { tween } from 'popmotion';
 ```
-
-### File include
-
-Download `popmotion.global.min.js` from our [GitHub repo](https://github.com/Popmotion/popmotion/tree/master/dist) and include it in your HTML document:
-
-```html
-<script src="path/to/popmotion.global.min.js"></script>
-```
-
-Popmotion is then available as the global variable `popmotion`.
 
 ### [Get Started](https://popmotion.io/learn/get-started)
 ### [Full API documentation](https://popmotion.io/api)

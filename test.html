@@ -1,0 +1,28 @@
+<html>
+  <head>
+    <script src="dist/popmotion.global.min.7.9.0.js"></script>
+    <style>
+      #ball {
+        width: 100px;
+        height: 100px;
+        background: red;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="ball"></div>
+    <script>
+      
+      const { css, tween } = window.popmotion;
+      const ball = css(document.getElementById('ball'))
+      const myTween = tween({
+        to: 100
+      }).pipe((v) => v * 2).start((v) => {console.log(v, myTween.get()); ball.set('x', v)});
+
+      setTimeout(() => {
+        myTween.pause().seek(0.8)
+      }, 150)
+
+    </script>
+  </body>
+</html>
