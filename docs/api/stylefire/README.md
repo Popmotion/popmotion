@@ -8,7 +8,7 @@ category: stylefire
 
 Stylefire is a collection of CSS, SVG and DOM scroll style setters optimized to work with animation libraries. It can also be used outside of animations and provides a cached state to prevent unnecessary DOM reads.
 
-It batches renders to the `render` step of the [Framesync](/api/render-loop) loop to prevent layout thrashing, but renders can also be triggered manually.
+It batches renders to the `render` step of the [Framesync](/api/framesync) loop to prevent layout thrashing, but renders can also be triggered manually.
 
 ## Install
 

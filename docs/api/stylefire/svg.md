@@ -1,14 +1,18 @@
 ---
 title: SVG
-description: Optimised SVG styler.
+description: SVG styler with simplified transformation model and line drawing support.
 category: stylefire
 ---
 
-# SVG Renderer
+# SVG Styler
 
-The SVG renderer provides a simple and optimised `get`/`set` interface for SVG elements.
+The SVG Styler replaces the confusing SVG transformation model with the CSS model. It also provides support for line drawing.
 
-`svg(element <Node>)`
+```javascript
+import svg from 'stylefire/svg';
+```
+
+`svg(element: SVGElement)`
 
 ## Methods
 - `get(key <String>`: Get the property of the provided key.
@@ -18,24 +22,20 @@ The SVG renderer provides a simple and optimised `get`/`set` interface for SVG e
 ## Example
 
 ```javascript
-import { svg } from 'popmotion';
+import svg from 'stylefire/svg';
 
 const polygon = document.querySelector('polygon');
-const polygonRenderer = svg(polygon);
+const polygonStyler = svg(polygon);
 
-polygonRenderer.set({
-  stroke: {
-    red: 255,
-    green: 255,
-    blue: 255
-  },
+polygonStyler.set({
+  stroke: 'rgba(255, 0, 0, 1)',
   x: 100
-}); // set and schedule for render
+});
 ```
 
-## Supported props
+## Supported attributes
 
-All SVG properties are supported by Popmotion, but some properties are mapped to [value types](/api/value-types) for safety and convenience.
+**All SVG attributes are supported**, but some properties are mapped to [value types](/api/value-types) for safety and convenience.
 
 - `fill`: `color`
 - `stroke`: `color`
@@ -46,4 +46,35 @@ All SVG properties are supported by Popmotion, but some properties are mapped to
 - `fillOpacity`: `alpha`
 - `strokeOpacity`: `alpha`
 
-Set transform origin and line drawings
+## Transform origin
+
+Transform origin can be set with the `originX` and `originY` props.
+
+## Line drawings
+
+Line drawing the process of using an SVG `path` element and its `stroke-dasharray` and `stoke-dashoffset` properties to emulate a pen drawing a line. [This blog post](https://css-tricks.com/svg-line-animation-works/) explains the effect in more detail.
+
+Stylefire supports both`'stoke-dasharray'` and `stroke-dashorigin` properties, but also provides:
+
+- `pathLength`
+- `pathSpacing`
+- `pathOffset`
+
+These are all set as a **percentage of the total path length**, which is automatically measured by Stylefire.
+
+So you can define an animation from `0` to `100`:
+
+```javascript
+import { tween } from 'popmotion';
+import svg from 'stylefire/svg';
+
+const path = document.querySelector('path');
+const pathStyler = svg(polygon);
+
+tween({
+  to: 100,
+  onUpdate: (v) => pathStyler.set('pathLength', v)
+}).start();
+```
+
+In this example you can change the real `path` shape and length without having to update the animation.

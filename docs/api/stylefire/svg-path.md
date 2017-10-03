@@ -4,6 +4,6 @@ description: Optimised SVG Path renderer.
 category: stylefire
 ---
 
-# SVG Path Renderer
+# SVG Path
 
 **Deprecated:** The Stylefire [SVG styler](/api/svg) handles SVG Paths.
