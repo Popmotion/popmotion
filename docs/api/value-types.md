@@ -1,6 +1,6 @@
 ---
 title: Value Types
-description: Parsers, transformers and tests for common style value types, eg: %, hex codes etc.
+description: "Parsers, transformers and tests for common style value types, eg: %, hex codes etc."
 ---
 
 # Value Types
