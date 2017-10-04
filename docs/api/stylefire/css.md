@@ -1,12 +1,18 @@
 ---
 title: CSS
-description: Optimised CSS renderer.
-category: renderers
+description: CSS Styler optimised for animation.
+category: stylefire
 ---
 
-# CSS Renderer
+# CSS Styler
 
-The CSS renderer provides a simple and optimised `get`/`set` interface for DOM elements.
+The CSS Styler provides a simple and optimised `get`/`set` interface for DOM elements.
+
+It automatically detects and applies vendor prefixes.
+
+```javascript
+import css from 'stylefire/css';
+```
 
 `css(element <Node>, props <Object>)`
 
@@ -16,7 +22,7 @@ The CSS renderer provides a simple and optimised `get`/`set` interface for DOM e
 - `render()`: Immediately render.
 
 ## Props
-- `enableHardwareAcceleration <Boolean>`: Can be set to `false` to prevent Popmotion from using the GPU to transform elements. This results (often) in higher image quality when scaling up, though reduces performance. (default: `true`)
+- `enableHardwareAcceleration <Boolean>`: Can be set to `false` to prevent Stylefire from using the GPU to transform elements. This results (often) in higher image quality when scaling up, though reduces performance. (default: `true`)
 
 ## Getting `transform` properties
 If a `transform` property isn't present in the caching layer (because it hasn't previously been set by the developer), firing `get` on a property will return its default value (`1` for scale props, `0` for others).
@@ -42,7 +48,7 @@ In accordance with the [CSS Transforms Level 2 spec](https://drafts.csswg.org/cs
 [CSS variables](https://css-tricks.com/difference-between-types-of-css-variables/#article-header-id-1) can be set and animated just like any other property:
 
 ```javascript
-const htmlRenderer = css(document.documentElement);
+const htmlStyler = css(document.documentElement);
 
 htmlRenderer.set('--bg-color', '#000');
 ```
@@ -50,13 +56,13 @@ htmlRenderer.set('--bg-color', '#000');
 ## Example
 
 ```javascript
-import { css } from 'popmotion';
+import css from 'stylefire/css';
 
 const div = document.querySelector('div');
-const divRenderer = css(div);
+const divStyler = css(div);
 
-divRenderer.get('opacity'); // Reads opacity from div
-divRenderer.set({
+divStyler.get('opacity'); // Reads opacity from div
+divStyler.set({
   x: 10, // default value types to px
   y: 10
 }); // set and schedule for render
@@ -69,7 +75,7 @@ All CSS properties are supported by Popmotion, but some properties are mapped to
 So, for example, if you ran:
 
 ```javascript
-myCssRenderer.set('backgroundColor', {
+divStyler.set('backgroundColor', {
   red: 255,
   green: 125.6,
   blue: 0
