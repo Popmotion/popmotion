@@ -16,6 +16,9 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 - Color Tween: Moved to [Popmotion Color Tween](https://github.com/Popmotion/popmotion-color-tween)
 - Value Types: Moved to [Style Value Types](https://github.com/Popmotion/style-value-types)
 
+### Changed
+- `spring` transformer becomes `linearSpring` to avoid clashing with the `spring` action.
+
 ## [7.8.1] 2017-08-29
 
 ### Fixed

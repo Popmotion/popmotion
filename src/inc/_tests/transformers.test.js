@@ -8,14 +8,6 @@ import {
   conditional,
   pipe,
   interpolate,
-  px,
-  degrees,
-  percent,
-  rgba,
-  rgbUnit,
-  hsla,
-  alpha,
-  color,
   steps,
   wrap,
   snap
@@ -128,39 +120,6 @@ describe('interpolate()', () => {
 
   it('should optionally accept an easing function', () => {
 
-  });
-});
-
-describe('unit transformers', () => {
-  it('should append the correct units', () => {
-    expect(px(10)).toBe('10px');
-    expect(degrees(360)).toBe('360deg');
-    expect(percent(100)).toBe('100%');
-    expect(rgbUnit(256)).toBe(255);
-    expect(rgbUnit(24.5)).toBe(25);
-    expect(rgba({
-      red: 256,
-      green: 24.5,
-      blue: 0
-    })).toBe('rgba(255, 25, 0, 1)');
-    expect(hsla({
-      hue: 100,
-      saturation: 50,
-      lightness: 50,
-      alpha: 1
-    })).toBe('hsla(100, 50%, 50%, 1)');
-    expect(alpha(2)).toBe(1);
-    expect(color({
-      red: 256,
-      green: 24.5,
-      blue: 0
-    })).toBe('rgba(255, 25, 0, 1)');
-    expect(color({
-      hue: 100,
-      saturation: 50,
-      lightness: 50,
-      alpha: 1
-    })).toBe('hsla(100, 50%, 50%, 1)');
   });
 });
 

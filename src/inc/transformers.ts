@@ -106,7 +106,7 @@ export const generateNonIntergratedSpring = (alterDisplacement: Function = noop)
   return (displacement <= 0) ? origin + springModifiedDisplacement : origin - springModifiedDisplacement;
 };
 
-export const spring = generateNonIntergratedSpring();
+export const linearSpring = generateNonIntergratedSpring();
 export const nonlinearSpring = generateNonIntergratedSpring(Math.sqrt);
 
 export const wrap = (min: number, max: number) => (v: number) => {
