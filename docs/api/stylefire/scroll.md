@@ -1,22 +1,22 @@
 ---
 title: DOM Scroll
-description: Scroll viewport and DOM elements with Popmotion tweens and physics.
-category: renderers
+description: Scroll viewport and DOM elements.
+category: stylefire
 ---
 
-# Scroll Renderer
+# DOM Scroll Styler
 
-The scroll renderer provides a simple and optimised `get`/`set` interface for DOM elements and `window`.
+The DOM Scroll styler batches `window` and DOM scroll events to the `render` step on the [Framesync render loop](/api/framesync).
 
 ## Install
 
-```
-npm install --save popmotion-scroll
+```javascript
+import scroll from 'stylefire/scroll';
 ```
 
-```javascript
-import scroll from 'popmotion-scroll';
-```
+`scroll()`
+
+`scroll(element: HTMLElement)`
 
 ## Usage
 
@@ -41,7 +41,7 @@ These renderers can be used as any other. To animate a scroll, simply use the re
 
 ```javascript
 import { physics } from 'popmotion';
-import scroll from 'popmotion-scroll';
+import scroll from 'stylefire/scroll';
 
 const windowScroll = scroll();
 

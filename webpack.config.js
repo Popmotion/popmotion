@@ -2,7 +2,6 @@ var webpack = require('webpack');
 var path = require('path');
 var isProd = (process.env.NODE_ENV === 'production');
 var devTool = isProd ? false : 'inline-source-map';
-var { version } = require('./package.json');
 
 module.exports = {
   entry: {
@@ -11,7 +10,7 @@ module.exports = {
   },
   output: {
     path: __dirname + '/dist',
-    filename: 'popmotion.[name].min.' + version + '.js'
+    filename: 'popmotion.[name].min.js'
   },
   module: {
     rules: [

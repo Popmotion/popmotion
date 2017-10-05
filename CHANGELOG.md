@@ -2,6 +2,7 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+<<<<<<< HEAD
 ## [8.0.0] 2017-xx-xx
 
 ### Added
@@ -15,6 +16,12 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 - Render Loop: Moved to [Framesync](https://github.com/Popmotion/framesync)
 - Color Tween: Moved to [Popmotion Color Tween](https://github.com/Popmotion/popmotion-color-tween)
 - Value Types: Moved to [Style Value Types](https://github.com/Popmotion/style-value-types)
+=======
+## [7.8.2] 2017-10-02
+
+### Changed
+- Now publishing `dist` folder on npm for use on CodePen via unpkg.com
+>>>>>>> master
 
 ### Changed
 - `spring` transformer becomes `linearSpring` to avoid clashing with the `spring` action.
