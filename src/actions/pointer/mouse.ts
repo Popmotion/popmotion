@@ -1,9 +1,9 @@
+import { cancelOnFrameUpdate, onFrameUpdate } from 'framesync';
 import action from '../action';
-import { onFrameUpdate, cancelOnFrameUpdate } from 'framesync';
-import { PointerProps, Point2D } from './types';
+import { Point2D, PointerProps } from './types';
 
 const mouse = ({ preventDefault = true }: PointerProps = {}) => action(({ update }) => {
-  let point: Point2D = { x: 0, y: 0 };
+  const point: Point2D = { x: 0, y: 0 };
   const updatePoint = () => update(point);
 
   const onMove = (e: MouseEvent) => {

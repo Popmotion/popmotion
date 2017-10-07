@@ -1,7 +1,7 @@
 import { timeSinceLastFrame } from 'framesync';
 import action from './action';
-import clock from './clock';
 import { Observer } from './action/types';
+import clock from './clock';
 
 type SpringProps = {
   from?: number,
@@ -30,7 +30,7 @@ const spring = ({
 }: SpringProps = {}) => action(({ update, complete }: Observer): SpringInterface => {
   const initialVelocity = velocity ? velocity / 1000 : 0.0;
   let t = 0;
-  let delta = to - from;
+  const delta = to - from;
 
   const springTimer = clock.start(() => {
     const timeDelta = timeSinceLastFrame() / 1000;
@@ -64,7 +64,7 @@ const spring = ({
     // to clamp to end during update)
     const isBelowVelocityThreshold = Math.abs(velocity) <= restSpeed;
     const isBelowDisplacementThreshold = Math.abs(to - position) <= restDisplacement;
-    
+
     if (isBelowVelocityThreshold && isBelowDisplacementThreshold) {
       position = to;
       update(position);
@@ -76,7 +76,7 @@ const spring = ({
 
   return {
     stop: () => springTimer.stop()
-  }
+  };
 });
 
 export default spring;

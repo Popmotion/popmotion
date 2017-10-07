@@ -5,8 +5,8 @@ var devTool = isProd ? false : 'inline-source-map';
 
 module.exports = {
   entry: {
-    global: './src/global.js',
-    xl: './src/global-xl.js'
+    global: './src/global.ts',
+    xl: './src/global-xl.ts'
   },
   output: {
     path: __dirname + '/dist',
@@ -27,7 +27,7 @@ module.exports = {
   },
   resolve: {
     alias: {
-      popmotion: path.resolve(__dirname, 'src/popmotion.js')
+      popmotion: path.resolve(__dirname, 'src/popmotion.ts')
     },
     extensions: ['.ts', '.tsx', '.js'],
     modules: [

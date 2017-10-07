@@ -1,6 +1,6 @@
+import { cancelOnFrameUpdate, onFrameUpdate } from 'framesync';
 import action from './action';
-import { Observer, Observable } from './action/types';
-import { onFrameUpdate, cancelOnFrameUpdate } from 'framesync';
+import { Observable, Observer } from './action/types';
 
 const clock: Observable = action(({ update }: Observer) => {
   const nextFrame = () => {
@@ -12,7 +12,7 @@ const clock: Observable = action(({ update }: Observer) => {
 
   return {
     stop: () => cancelOnFrameUpdate(nextFrame)
-  }
+  };
 });
 
 export default clock;

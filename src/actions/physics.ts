@@ -1,7 +1,7 @@
 import { timeSinceLastFrame } from 'framesync';
+import { speedPerFrame } from '../inc/calc';
 import action from './action';
 import clock from './clock';
-import { speedPerFrame } from '../inc/calc';
 
 type PhysicsProps = {
   from?: number,
