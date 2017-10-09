@@ -34,12 +34,9 @@ import {
  *
  * Also, where an Rx Observable returns a minimal API, an Action Observable
  * can return a custom API (useful for controlling tweens etc)
- *
- * @param init
- * @param updatePipe
  */
 
-const action: ObservableFactory = (init, props) => ({
+const action: ObservableFactory = (init, props = {}) => ({
   /**
    * start
    *
@@ -47,10 +44,8 @@ const action: ObservableFactory = (init, props) => ({
    * actually returns a new instance of a stream, rather than hooking
    * into an existing stream of events), and to make more sense in an
    * animation context.
-   *
-   * @param observerCandidate
    */
-  start(observerCandidate: Update | Observer): Subscription {
+  start(observerCandidate) {
     const { updatePipe } = props;
     const observer: Observer = (typeof observerCandidate === 'function')
       ? { update: observerCandidate }
@@ -58,23 +53,34 @@ const action: ObservableFactory = (init, props) => ({
 
     if (updatePipe) {
       const { update } = observer;
-      observer.update = (v?: any) => update(updatePipe(v));
+      observer.update = pipe(...updatePipe, update);
     }
 
     return {
       ...init(observer)
     };
   },
-  bind(observerCandidate: Update | Observer): BoundObservable {
+  /**
+   * bind
+   *
+   * Returns a bound observer with just a `start` method.
+   */
+  bind(observerCandidate) {
     return {
       start: () => this.start(observerCandidate)
     };
   },
-  pipe(...funcs: Update[]): Observable {
+  /**
+   * pipe
+   *
+   * Returns a new Observable, which, when started, will pipe all update
+   * output through the provided functions.
+   */
+  pipe(...funcs) {
     const { updatePipe } = props;
     return action(init, {
-      updatePipe: updatePipe ? pipe(updatePipe, ...funcs) : pipe(...funcs),
-      ...props
+      ...props,
+      updatePipe: updatePipe ? [...updatePipe, ...funcs] : funcs
     });
   }
 });

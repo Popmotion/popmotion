@@ -10,7 +10,7 @@ export interface Subscription {
 export type ObservableInit = (action: Observer) => { [key: string]: Function };
 
 export type ObservableFactoryProps = {
-  updatePipe?: Update;
+  updatePipe?: Update[];
 };
 
 export type ObservableFactory = (init: ObservableInit, props?: ObservableFactoryProps) => Observable;

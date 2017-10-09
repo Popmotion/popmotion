@@ -23,7 +23,7 @@
 - **Composable:** All actions can be **delayed**, **staggered** **merged**, **crossfaded** and **chained**.
 - **Cross-platform:** Runs on **IE9+**, plus **Node**-based environments like Arduino.
 - **Performant af:** Batches jobs on the [Framesync](https://github.com/popmotion/framesync) `update` render step. Stands up to popular alternatives in [performance tests](http://codepen.io/popmotion/pen/zNYXmR).
-- **Typesafe:** Written in TypeScript, with Flow definitions available on [flow-typed](https://github.com/flowtype/flow-typed).
+- **Typesafe and tested:** Written in TypeScript, with Flow definitions available on [flow-typed](https://github.com/flowtype/flow-typed). Full test coverage.
 - **Supported:** Full ecosystem of awesome plugins.
 
 ## Examples
