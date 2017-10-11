@@ -1,13 +1,5 @@
 import { pipe } from '../inc/transformers';
-import {
-  BoundObservable,
-  Observable,
-  ObservableFactory,
-  ObservableInit,
-  Observer,
-  Subscription,
-  Update
-} from './types';
+import { ObservableFactory, Observer } from './types';
 
 /**
  * action
@@ -46,28 +38,19 @@ const action: ObservableFactory = (init, props = {}) => ({
    * animation context.
    */
   start(observerCandidate) {
-    const { updatePipe } = props;
     const observer: Observer = (typeof observerCandidate === 'function')
       ? { update: observerCandidate }
       : observerCandidate;
 
+    const { updatePipe } = props;
     if (updatePipe) {
       const { update } = observer;
       observer.update = pipe(...updatePipe, update);
     }
 
     return {
+      stop: () => undefined,
       ...init(observer)
-    };
-  },
-  /**
-   * bind
-   *
-   * Returns a bound observer with just a `start` method.
-   */
-  bind(observerCandidate) {
-    return {
-      start: () => this.start(observerCandidate)
     };
   },
   /**

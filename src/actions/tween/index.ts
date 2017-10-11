@@ -1,12 +1,12 @@
-import { onFrameUpdate, timeSinceLastFrame } from 'framesync';
 import action from 'actions/action';
 import clock from 'actions/clock';
+import { onFrameUpdate, timeSinceLastFrame } from 'framesync';
 import { getProgressFromValue, getValueFromProgress } from 'inc/calc';
 import { easeOut } from 'inc/easing';
 import { clamp } from 'inc/transformers';
 
-import { TweenInterface, TweenProps } from './types';
 import { Observer, Subscription } from 'actions/action/types';
+import { TweenInterface, TweenProps } from './types';
 
 const clampProgress = clamp(0, 1);
 
@@ -29,7 +29,7 @@ const tween = ({
   let tweenTimer: Subscription;
 
   const isTweenComplete = (): boolean => {
-    let isComplete = (playDirection === 1)
+    const isComplete = (playDirection === 1)
       ? elapsed >= duration
       : elapsed <= 0;
 
@@ -50,35 +50,35 @@ const tween = ({
 
   const stopTimer = () => {
     if (tweenTimer) tweenTimer.stop();
-  }
+  };
 
   startTimer();
 
   return {
-    getProgress: () => progress,
     getElapsed: () => elapsed,
-    stop: function () {
+    getProgress: () => progress,
+    stop() {
       stopTimer();
     },
-    pause: function () {
+    pause() {
       stopTimer();
       return this;
     },
-    resume: function () {
+    resume() {
       startTimer();
       return this;
     },
-    seek: function (progress: number) {
-      elapsed = getValueFromProgress(0, duration, progress);
+    seek(newProgress: number) {
+      elapsed = getValueFromProgress(0, duration, newProgress);
       onFrameUpdate(updateTween);
       return this;
     },
-    reverse: function () {
+    reverse() {
       elapsed = duration - elapsed;
       [from, to] = [to, from];
       return this;
     },
-    flip: function () {
+    flip() {
       playDirection *= -1;
       return this;
     }
