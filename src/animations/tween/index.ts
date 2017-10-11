@@ -1,11 +1,11 @@
-import action from 'actions/action';
-import clock from 'actions/clock';
 import { onFrameUpdate, timeSinceLastFrame } from 'framesync';
-import { getProgressFromValue, getValueFromProgress } from 'inc/calc';
-import { easeOut } from 'inc/easing';
-import { clamp } from 'inc/transformers';
+import action from '../../action';
+import { getProgressFromValue, getValueFromProgress } from '../../inc/calc';
+import { easeOut } from '../../inc/easing';
+import { clamp } from '../../inc/transformers';
+import everyFrame from '../every-frame';
 
-import { Observer, Subscription } from 'actions/action/types';
+import { Observer, Subscription } from '../../action/types';
 import { TweenInterface, TweenProps } from './types';
 
 const clampProgress = clamp(0, 1);
@@ -42,7 +42,7 @@ const tween = ({
     update(current);
   };
 
-  const startTimer = () => tweenTimer = clock.start(() => {
+  const startTimer = () => tweenTimer = everyFrame().start(() => {
     elapsed += timeSinceLastFrame() * playDirection;
     updateTween();
     if (isTweenComplete() && complete) complete();

@@ -36,4 +36,10 @@ describe('action()', () => {
     a.start((v) => x = v);
     expect(x).toBe(25);
   })
+
+  it('should correctly fire complete', () => {
+    return new Promise((resolve) => {
+      const a = action(({ complete }) => complete()).start({ complete: resolve });
+    });
+  });
 })

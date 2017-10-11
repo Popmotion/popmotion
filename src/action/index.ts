@@ -1,5 +1,20 @@
 import { pipe } from '../inc/transformers';
-import { ObservableFactory, Observer } from './types';
+import { ObservableFactory, Observer, ObserverCandidate } from './types';
+
+const noop = (): void => undefined;
+
+const createObserver = (observerCandidate: ObserverCandidate): Observer => {
+  const providedObserver = (typeof observerCandidate === 'function')
+    ? { update: observerCandidate }
+    : observerCandidate;
+
+  return {
+    complete: noop,
+    error: noop,
+    update: noop,
+    ...providedObserver
+  };
+};
 
 /**
  * action
@@ -20,9 +35,8 @@ import { ObservableFactory, Observer } from './types';
  * You would write something like this:
  *
  * action((observer) => {}).pipe(
- *  throttleTime(1000),
  *  scan((count) => count + 1, 0)
- * ).start(count => console.log(count))
+ * ).start(throttle(count => console.log(count), 1000))
  *
  * Also, where an Rx Observable returns a minimal API, an Action Observable
  * can return a custom API (useful for controlling tweens etc)
@@ -38,9 +52,7 @@ const action: ObservableFactory = (init, props = {}) => ({
    * animation context.
    */
   start(observerCandidate) {
-    const observer: Observer = (typeof observerCandidate === 'function')
-      ? { update: observerCandidate }
-      : observerCandidate;
+    const observer = createObserver(observerCandidate);
 
     const { updatePipe } = props;
     if (updatePipe) {

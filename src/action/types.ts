@@ -23,7 +23,9 @@ export interface Observer {
   error?: Error;
 }
 
+export type ObserverCandidate = Update | Observer;
+
 export interface Observable {
-  start: (observerCandidate: Update | Observer) => Subscription;
+  start: (observerCandidate: ObserverCandidate) => Subscription;
   pipe: (...funcs: Update[]) => Observable;
 }
