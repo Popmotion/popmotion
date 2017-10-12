@@ -2,6 +2,7 @@ import { onFrameUpdate, timeSinceLastFrame } from 'framesync';
 import action from '../../action';
 import { getProgressFromValue, getValueFromProgress } from '../../inc/calc';
 import { easeOut } from '../../inc/easing';
+import { observableWithVelocity } from '../../inc/higher-order-observables';
 import { clamp } from '../../inc/transformers';
 import everyFrame from '../every-frame';
 
@@ -23,17 +24,40 @@ const tween = ({
   loopCount = 0,
   yoyo = 0,
   yoyoCount = 0
-}: TweenProps = {}) => action(({ update, complete }: Observer): TweenInterface => {
+}: TweenProps = {}) => action(observableWithVelocity(({ update, complete }: Observer): TweenInterface => {
   let progress = 0;
   let current = from;
   let tweenTimer: Subscription;
+  let isActive = false;
+  const reverseTween = () => playDirection *= -1;
 
   const isTweenComplete = (): boolean => {
     const isComplete = (playDirection === 1)
       ? elapsed >= duration
       : elapsed <= 0;
 
-    return isComplete;
+    if (!isComplete) return false;
+    if (isComplete && !loop && !flip && !yoyo) return true;
+
+    let isStepTaken = false;
+    if (loop && loopCount < loop) {
+      elapsed = 0;
+      loopCount++;
+      isStepTaken = true;
+
+    } else if (flip && flipCount < flip) {
+      elapsed = duration - elapsed;
+      [from, to] = [to, from];
+      flipCount++;
+      isStepTaken = true;
+
+    } else if (yoyo && yoyoCount < yoyo) {
+      reverseTween();
+      yoyoCount++;
+      isStepTaken = true;
+    }
+
+    return !isStepTaken;
   };
 
   const updateTween = () => {
@@ -42,20 +66,25 @@ const tween = ({
     update(current);
   };
 
-  const startTimer = () => tweenTimer = everyFrame().start(() => {
-    elapsed += timeSinceLastFrame() * playDirection;
-    updateTween();
-    if (isTweenComplete() && complete) complete();
-  });
+  const startTimer = () => {
+    isActive = true;
+    tweenTimer = everyFrame().start(() => {
+      elapsed += timeSinceLastFrame() * playDirection;
+      updateTween();
+      if (isTweenComplete() && complete) complete();
+    });
+  };
 
   const stopTimer = () => {
+    isActive = false;
     if (tweenTimer) tweenTimer.stop();
   };
 
   startTimer();
 
   return {
-    getElapsed: () => elapsed,
+    isActive: () => isActive,
+    getElapsed: () => clamp(0, duration)(elapsed),
     getProgress: () => progress,
     stop() {
       stopTimer();
@@ -74,15 +103,10 @@ const tween = ({
       return this;
     },
     reverse() {
-      elapsed = duration - elapsed;
-      [from, to] = [to, from];
-      return this;
-    },
-    flip() {
-      playDirection *= -1;
+      reverseTween();
       return this;
     }
   };
-});
+}));
 
 export default tween;
