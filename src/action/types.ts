@@ -4,6 +4,7 @@ export type Error = (err: string) => void;
 export type Transformer = (v?: any) => any;
 
 export interface Subscription {
+  stop: () => void;
   [key: string]: Function;
 }
 

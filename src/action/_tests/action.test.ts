@@ -1,10 +1,5 @@
 import action from '../';
 
-const log = (v) => {
-  console.log(v);
-  return v
-};
-
 describe('action()', () => {
   it('should create an observable', () => {
     const a = action(({ update }) => update(1));
@@ -35,5 +30,23 @@ describe('action()', () => {
     let x = 0;
     a.start((v) => x = v);
     expect(x).toBe(25);
-  })
+  });
+
+  it('fires observer update as function', () => {
+    return new Promise((resolve) => {
+      action(({ update }) => update()).start(resolve);
+    });
+  });
+  
+  it('fires observer update as prop', () => {
+    return new Promise((resolve) => {
+      action(({ update }) => update()).start({ update: resolve });
+    });
+  });
+  
+  it('fires observer complete as prop', () => {
+    return new Promise((resolve) => {
+      action(({ complete }) => complete()).start({ complete: resolve });
+    });
+  });
 })

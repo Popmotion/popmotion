@@ -57,6 +57,7 @@ const action: ObservableFactory = (init, props = {}) => ({
     }
 
     return {
+      stop: () => undefined,
       ...init(observer)
     };
   },
