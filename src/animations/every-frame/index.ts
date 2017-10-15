@@ -1,8 +1,7 @@
 import { cancelOnFrameUpdate, onFrameUpdate } from 'framesync';
-import action from './action';
-import { Observable, Observer } from './action/types';
+import action from '../../action';
 
-const clock: Observable = action(({ update }: Observer) => {
+const everyFrame = () => action(({ update }) => {
   const nextFrame = () => {
     update();
     onFrameUpdate(nextFrame);
@@ -15,4 +14,4 @@ const clock: Observable = action(({ update }: Observer) => {
   };
 });
 
-export default clock;
+export default everyFrame;

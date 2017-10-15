@@ -1,5 +1,5 @@
 import { cancelOnFrameUpdate, onFrameUpdate } from 'framesync';
-import action from '../action';
+import action from '../../action';
 import { Point2D, PointerProps } from './types';
 
 const mouse = ({ preventDefault = true }: PointerProps = {}) => action(({ update }) => {

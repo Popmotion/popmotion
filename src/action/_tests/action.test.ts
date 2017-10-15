@@ -50,3 +50,29 @@ describe('action()', () => {
     });
   });
 })
+  })
+
+  it('should correctly fire complete', () => {
+    return new Promise((resolve) => {
+      const a = action(({ complete }) => complete()).start({ complete: resolve });
+    });
+  });
+
+  it('runs while `while` returns true', () => {
+    return new Promise((resolve, reject) => {
+      let i = 0;
+      const a = action(({ complete, update }) => {
+        update(1);
+        update(2);
+        update(3);
+      }).while((v) => v < 3)
+        .start({
+          update: (v) => i = v,
+          complete: () => {
+            if (i === 2) resolve();
+            reject();
+          }
+        });
+    });
+  });
+})

@@ -1,16 +1,8 @@
 // Implementation of https://ariya.io/2013/11/javascript-kinetic-scrolling-part-2
 import { timeSinceLastFrame } from 'framesync';
-import action from './action';
-import clock from './clock';
-
-type InertiaProps = {
-  velocity?: number,
-  from?: number,
-  modifyTarget?: (v: number) => number,
-  power?: number,
-  timeConstant?: number,
-  autoStopDelta?: number
-};
+import action from '../../action';
+import everyFrame from '../every-frame';
+import { InertiaProps } from './types';
 
 const inertia = ({
   velocity = 0,
@@ -27,7 +19,7 @@ const inertia = ({
     ? idealTarget
     : modifyTarget(idealTarget);
 
-  const timer = clock.start(() => {
+  const timer = everyFrame().start(() => {
     elapsed += timeSinceLastFrame();
     const delta = -amplitude * Math.exp(-elapsed / timeConstant);
     const isMoving = (delta > autoStopDelta || delta < -autoStopDelta);

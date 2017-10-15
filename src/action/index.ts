@@ -1,13 +1,6 @@
 import { pipe } from '../inc/transformers';
-import {
-  BoundObservable,
-  Observable,
-  ObservableFactory,
-  ObservableInit,
-  Observer,
-  Subscription,
-  Update
-} from './types';
+import createObserver from './observer';
+import { ObservableFactory, Observer, ObserverCandidate } from './types';
 
 /**
  * action
@@ -28,9 +21,8 @@ import {
  * You would write something like this:
  *
  * action((observer) => {}).pipe(
- *  throttleTime(1000),
  *  scan((count) => count + 1, 0)
- * ).start(count => console.log(count))
+ * ).start(throttle(count => console.log(count), 1000))
  *
  * Also, where an Rx Observable returns a minimal API, an Action Observable
  * can return a custom API (useful for controlling tweens etc)
@@ -46,30 +38,19 @@ const action: ObservableFactory = (init, props = {}) => ({
    * animation context.
    */
   start(observerCandidate) {
-    const { updatePipe } = props;
-    const observer: Observer = (typeof observerCandidate === 'function')
-      ? { update: observerCandidate }
-      : observerCandidate;
-
-    if (updatePipe) {
-      const { update } = observer;
-      observer.update = pipe(...updatePipe, update);
-    }
-
-    return {
+    const observer = createObserver(observerCandidate, props);
+    const observerApi = {
       stop: () => undefined,
       ...init(observer)
     };
+
+    return observerApi;
   },
-  /**
-   * bind
-   *
-   * Returns a bound observer with just a `start` method.
-   */
-  bind(observerCandidate) {
-    return {
-      start: () => this.start(observerCandidate)
-    };
+  applyMiddleware(middleware) {
+    return action(init, {
+      ...props,
+      middleware: props.middleware ? [middleware, ...props.middleware] : [middleware]
+    });
   },
   /**
    * pipe
@@ -78,10 +59,18 @@ const action: ObservableFactory = (init, props = {}) => ({
    * output through the provided functions.
    */
   pipe(...funcs) {
-    const { updatePipe } = props;
-    return action(init, {
-      ...props,
-      updatePipe: updatePipe ? [...updatePipe, ...funcs] : funcs
+    const pipedUpdate = funcs.length === 1 ? funcs[0] : pipe(...funcs);
+    return this.applyMiddleware((update) => (v) => {
+      update(pipedUpdate(v));
+    });
+  },
+  while(predicate) {
+    return this.applyMiddleware((update, complete) => (v) => {
+      if (predicate(v)) {
+        update(v);
+      } else {
+        complete();
+      }
     });
   }
 });

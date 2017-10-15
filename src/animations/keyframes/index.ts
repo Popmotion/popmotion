@@ -1,14 +1,7 @@
-import { easeOut, linear } from '../inc/easing';
-import { Easing } from '../inc/easing';
-import { interpolate } from '../inc/transformers';
-import tween from './tween';
-
-type KeyframeProps = {
-  values: number[],
-  times?: number[],
-  ease?: Easing[],
-  duration?: 300
-};
+import { easeOut, linear } from '../../inc/easing';
+import { interpolate } from '../../inc/transformers';
+import tween from '../tween';
+import { KeyframeProps } from './types';
 
 const defaultEasings = (values: number[]): Easing[] =>
   values.map((): Easing => easeOut).splice(0, values.length - 1);

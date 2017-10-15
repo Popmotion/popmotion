@@ -1,8 +1,7 @@
-import action from '../action';
+import action from '../../action';
 import { onFrameUpdate, cancelOnFrameUpdate } from 'framesync';
 import { PointerProps, Point2D } from './types';
 
-// Temporary hack until TypeScript support { passive: true }
 interface WhatWGEventListenerArgs {
   capture?: boolean;
 }

@@ -7,13 +7,15 @@ const chain = (...actions: Observable[]) => action(({ update, complete }) => {
 
   const playCurrent = () => {
     current = actions[i].start({
-      update,
       complete: () => {
         i++;
         (i >= actions.length) ? complete() : playCurrent();
-      }
+      },
+      update
     });
   };
+
+  playCurrent();
 
   return {
     stop: () => current && current.stop()

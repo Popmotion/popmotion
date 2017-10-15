@@ -16,12 +16,12 @@ export type TweenProps = {
 };
 
 export type TweenInterface = {
+  isActive: () => boolean,
   stop: () => void,
   getProgress: () => number,
   getElapsed: () => number,
   pause: () => TweenInterface,
   resume: () => TweenInterface,
   seek: (progress: number) => TweenInterface,
-  reverse: () => TweenInterface,
-  flip: () => TweenInterface
+  reverse: () => TweenInterface
 };

@@ -1,33 +1,36 @@
 export type Update = (v?: any) => void;
 export type Complete = () => void;
-export type Error = (err: string) => void;
+export type Error = (err?: any) => void;
 export type Transformer = (v?: any) => any;
+export type Predicate = (v?: any) => boolean;
 
 export interface Subscription {
-  stop: () => void;
+  stop: Complete;
   [key: string]: Function;
 }
 
 export type ObservableInit = (action: Observer) => { [key: string]: Function };
 
-export type ObservableFactoryProps = {
-  updatePipe?: Update[];
+type ObserverMiddleware = (update: Update, complete: Complete) => (v: any) => void;
+
+export type ObserverFactoryProps = {
+  middleware?: ObserverMiddleware[];
 };
 
-export type ObservableFactory = (init: ObservableInit, props?: ObservableFactoryProps) => Observable;
+export type ObserverFactory = (observerCandidate: ObserverCandidate, props: ObserverFactoryProps) => Observer;
+
+export type ObservableFactory = (init: ObservableInit, props?: ObserverFactoryProps) => Observable;
 
 export interface Observer {
   update: Update;
   complete?: Complete;
   error?: Error;
-};
-
-export interface BoundObservable {
-  start: () => Subscription;
 }
 
+export type ObserverCandidate = Update | Observer;
+
 export interface Observable {
-  start: (observerCandidate: Update | Observer) => Subscription;
-  bind: (observerCandidate: Update | Observer) => BoundObservable;
+  start: (observerCandidate: ObserverCandidate) => Subscription;
   pipe: (...funcs: Update[]) => Observable;
-};
+  while: (predicate: Predicate) => Observable;
+}
