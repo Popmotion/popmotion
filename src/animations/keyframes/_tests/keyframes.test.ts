@@ -13,7 +13,7 @@ describe('keyframes', () => {
     });
   });
 
-  it('should generate tweens through each value', () => {
+  it('should adjust timing based on provided array', () => {
     return new Promise((resolve, reject) => {
       let i = 0;
       keyframes({
@@ -21,7 +21,7 @@ describe('keyframes', () => {
         values: [0, 1, 2],
         times: [0, .25, .5]
       }).start((v) => i = v);
-      setTimeout(() => i === 2 ? resolve() : reject(), 150)
+      setTimeout(() => i === 2 ? resolve() : reject(), 210)
     });
   });
 });

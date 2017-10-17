@@ -1,15 +1,8 @@
 import { timeSinceLastFrame } from 'framesync';
-import { speedPerFrame } from '../inc/calc';
-import action from './action';
-import clock from './clock';
-
-type PhysicsProps = {
-  from?: number,
-  acceleration?: number,
-  friction?: number,
-  velocity?: number,
-  autoStopSpeed?: number | false
-};
+import action from '../../action';
+import { speedPerFrame } from '../../inc/calc';
+import everyFrame from '../every-frame';
+import { Props } from './types';
 
 const physics = ({
   acceleration = 0,
@@ -17,10 +10,10 @@ const physics = ({
   velocity = 0,
   autoStopSpeed = 0.001,
   from = 0
-}: PhysicsProps = {}) => action(({ complete, update }) => {
+}: Props = {}) => action(({ complete, update }) => {
   let current = from;
 
-  const timer = clock.start(() => {
+  const timer = everyFrame().start(() => {
     const elapsed = timeSinceLastFrame();
 
     if (acceleration) velocity += speedPerFrame(acceleration, elapsed);
