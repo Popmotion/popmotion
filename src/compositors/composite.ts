@@ -1,4 +1,3 @@
-import { onFrameUpdate } from 'framesync';
 import action from '../action';
 import { Observable } from '../action/types';
 
@@ -26,7 +25,7 @@ const composite = (actionMap: ObservableMap) => {
       },
       update: (v: any) => {
         output[key] = v;
-        onFrameUpdate(updateOutput);
+        updateOutput();
       }
     }));
 
