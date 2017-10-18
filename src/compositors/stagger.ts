@@ -5,6 +5,11 @@ type ActionStarter = () => Subscription;
 type Interval = (i: number) => number | number;
 
 const stagger = (actionStarters: ActionStarter[], interval: Interval, onComplete?: Function): ObservableFactory => {
+  delay(timeToDelay).start({
+    complete: actionStarter
+  });
+  
+  
   return parallel(actionStarters.map((actionStarter, i) => {
     const intervalIsFunction = typeof interval === 'number';
     const timeToDelay = intervalIsFunction ? interval : interval(i);
@@ -16,3 +21,6 @@ const stagger = (actionStarters: ActionStarter[], interval: Interval, onComplete
 };
 
 export default stagger;
+
+
+
