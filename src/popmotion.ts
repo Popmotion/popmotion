@@ -3,29 +3,29 @@ import _action from './action';
 export const action = _action;
 
 // Animations
-import _keyframes from './actions/keyframes';
+import _keyframes from './animations/keyframes';
 export const keyframes = _keyframes;
 
-import _inertia from './actions/inertia';
+import _inertia from './animations/inertia';
 export const inertia = _inertia;
 
-import _physics from './actions/physics';
+import _physics from './animations/physics';
 export const physics = _physics;
 
-import _spring from './actions/spring';
+import _spring from './animations/spring';
 export const spring = _spring;
 
-import _tween from './actions/tween';
+import _tween from './animations/tween';
 export const tween = _tween;
 
 // Input
-import _mouse from './actions/pointer/mouse';
+import _mouse from './animations/pointer/mouse';
 export const mouse = _mouse;
 
-import _touch from './actions/pointer/touch';
+import _touch from './animations/pointer/touch';
 export const touch = _touch;
 
-import _pointer from './actions/pointer';
+import _pointer from './animations/pointer';
 export const pointer = _pointer;
 
 // Compositors

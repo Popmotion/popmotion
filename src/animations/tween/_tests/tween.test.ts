@@ -107,13 +107,4 @@ describe('tween', () => {
       });
     });
   });
-
-  it('should correctly report velocity', () => {
-    return new Promise((resolve, reject) => {
-      const a = tween().start((v) => v);
-      setTimeout(() => {
-        a.getVelocity() ? resolve() : reject();
-      }, 150);
-    });
-  });
 });

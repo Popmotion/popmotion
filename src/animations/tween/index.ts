@@ -2,7 +2,6 @@ import { onFrameUpdate, timeSinceLastFrame } from 'framesync';
 import action from '../../action';
 import { getProgressFromValue, getValueFromProgress } from '../../inc/calc';
 import { easeOut } from '../../inc/easing';
-import { observableWithVelocity } from '../../inc/higher-order-observables';
 import { clamp } from '../../inc/transformers';
 import everyFrame from '../every-frame';
 
@@ -24,7 +23,7 @@ const tween = ({
   loopCount = 0,
   yoyo = 0,
   yoyoCount = 0
-}: TweenProps = {}) => action(observableWithVelocity(({ update, complete }: Observer): TweenInterface => {
+}: TweenProps = {}) => action(({ update, complete }: Observer): TweenInterface => {
   let progress = 0;
   let current = from;
   let tweenTimer: Subscription;
@@ -107,6 +106,6 @@ const tween = ({
       return this;
     }
   };
-}));
+});
 
 export default tween;

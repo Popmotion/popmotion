@@ -1,22 +1,9 @@
 import { timeSinceLastFrame } from 'framesync';
-import action from './action';
-import { Observer } from './action/types';
-import clock from './clock';
-
-type SpringProps = {
-  from?: number,
-  to?: number,
-  stiffness?: number,
-  damping?: number,
-  mass?: number,
-  velocity?: number,
-  restSpeed?: number,
-  restDisplacement?: number
-};
-
-type SpringInterface = {
-  stop: () => void
-};
+import action from '../../action';
+import everyFrame from '../every-frame';
+import './math-polyfill';
+import { cosh, sinh } from './math-utils';
+import { SpringInterface, SpringProps } from './types';
 
 const spring = ({
   from = 0.0,
@@ -27,17 +14,16 @@ const spring = ({
   velocity = 0.0,
   restSpeed = 0.01,
   restDisplacement = 0.01
-}: SpringProps = {}) => action(({ update, complete }: Observer): SpringInterface => {
-  const initialVelocity = velocity ? velocity / 1000 : 0.0;
+}: SpringProps = {}) => action(({ update, complete }): SpringInterface => {
+  const initialVelocity = velocity ? - (velocity / 1000) : 0.0;
   let t = 0;
   const delta = to - from;
 
-  const springTimer = clock.start(() => {
+  const springTimer = everyFrame().start(() => {
     const timeDelta = timeSinceLastFrame() / 1000;
     t += timeDelta;
     const dampingRatio = damping / (2 * Math.sqrt(stiffness * mass));
     const angularFreq = Math.sqrt(stiffness / mass);
-    const expoDecay = angularFreq * Math.sqrt(1.0 - (dampingRatio * dampingRatio));
 
     const x0 = 1;
     let oscillation = 0.0;
@@ -45,15 +31,20 @@ const spring = ({
     // Underdamped
     if (dampingRatio < 1) {
       const envelope = Math.exp(-dampingRatio * angularFreq * t);
+      const expoDecay = angularFreq * Math.sqrt(1.0 - (dampingRatio * dampingRatio));
       oscillation = envelope * (((initialVelocity + dampingRatio * angularFreq * x0) / expoDecay) * Math.sin(expoDecay * t) + (x0 * Math.cos(expoDecay * t)));
-      velocity = (envelope * ((Math.cos(expoDecay * t) * (initialVelocity + dampingRatio * angularFreq * x0)) - (expoDecay * x0 * Math.sin(expoDecay * t))) -
-        ((dampingRatio * angularFreq * envelope) * ((((Math.sin(expoDecay * t) * (initialVelocity + dampingRatio * angularFreq * x0)) ) / expoDecay) + (x0 * Math.cos(expoDecay * t)))));
 
     // Critically damped
-    } else {
+    } else if (dampingRatio === 1) {
       const envelope = Math.exp(-angularFreq * t);
       oscillation = envelope * (x0 + (initialVelocity + (angularFreq * x0)) * t);
-      velocity = envelope * ((t * initialVelocity * angularFreq) - (t * x0 * (angularFreq * angularFreq)) + initialVelocity);
+
+    // Overdamped
+    } else {
+      const envelope = Math.exp(-dampingRatio * angularFreq * t);
+      const oscillationFreq = angularFreq * Math.sqrt(dampingRatio * dampingRatio - 1.0);
+      oscillation = to - envelope * ((initialVelocity + dampingRatio * angularFreq * x0) * sinh(oscillationFreq * t) +
+        oscillationFreq * x0 * cosh(oscillationFreq * t)) / oscillationFreq;
     }
 
     const fraction = 1 - oscillation;
