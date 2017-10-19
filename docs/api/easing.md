@@ -11,6 +11,14 @@ It can be any function that takes a progress value from `0` to `1`, and returns 
 
 Popmotion comes with a number of preset easing functions, and provides methods to create new easing functions.
 
+## Import
+
+```javascript
+import { easing } from 'popmotion';
+// or:
+import easing from 'popmotion/lib/easing';
+```
+
 ## Example
 
 ```javascript
@@ -51,11 +59,12 @@ tween({
 
 Popmotion provides the following functions to create your own easing functions:
 
-### `bezier`
-Creates a quadratic or cubic bezier curve.
+### `cubicBezier`
+Creates cubic bezier curve easing function.
 
 ```javascript
-
+const { cubicBezier } = easing;
+const longTail = cubicBezier(0, .42, 0, 1);
 ```
 
 ### `createReversedEasing`

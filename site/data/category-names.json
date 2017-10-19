@@ -1,6 +1,8 @@
 {
   "action": "Action",
-  "action-composition": "Action composition",
+  "animations": "Animations",
+  "compositors": "Compositors",
+  "input": "Input",
   "stylefire": "Stylefire",
   "basics": "Basics",
   "advanced": "Advanced",

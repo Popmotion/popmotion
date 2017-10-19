@@ -7,9 +7,15 @@ description: Simple functions useful in UI calculations.
 
 Popmotion provides a series of simple functions useful in UI calculations.
 
+## Import
+
 ```javascript
 import { calc } from 'popmotion';
+// or:
+import calc from 'popmotion/lib/calc';
 ```
+
+## Methods
 
 ### `angle`
 Calculate the angle between two 2D points, in degrees.

@@ -71,10 +71,8 @@ import svg from 'stylefire/svg';
 const path = document.querySelector('path');
 const pathStyler = svg(polygon);
 
-tween({
-  to: 100,
-  onUpdate: (v) => pathStyler.set('pathLength', v)
-}).start();
+tween({ to: 100 })
+  .start((v) => pathStyler.set('pathLength', v));
 ```
 
 In this example you can change the real `path` shape and length without having to update the animation.

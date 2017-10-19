@@ -18,7 +18,7 @@
 - **[Decay](https://popmotion.io/api/decay):** Exponentially-decayed velocity for motion akin to iOS scroll-deceleration.
 
 ### Popmotion is:
-- **Tiny:** At **5kb**, it's 88% smaller than GreenSock TweenMax and 40% smaller than TweenLite.
+- **Tiny:** At **5kb max**, it's 88% smaller than GreenSock TweenMax. You can also import each action individually.
 - **Reactive:** Super-simple Rx-inspired API for subscribing to streams of animation events.
 - **Composable:** All actions can be **delayed**, **staggered** **merged**, **crossfaded** and **chained**.
 - **Cross-platform:** Runs on **IE9+**, plus **Node**-based environments like Arduino.

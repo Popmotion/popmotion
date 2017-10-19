@@ -1,6 +1,6 @@
 import { pipe } from '../inc/transformers';
 import createObserver from './observer';
-import { ObservableFactory, Observer, ObserverCandidate } from './types';
+import { ObservableFactory } from './types';
 
 /**
  * action
@@ -64,6 +64,12 @@ const action: ObservableFactory = (init, props = {}) => ({
       update(pipedUpdate(v));
     });
   },
+  /**
+   * while
+   *
+   * Returns a new Observable, which will automatically `complete` the first
+   * time the `predicate` function returns false.
+   */
   while(predicate) {
     return this.applyMiddleware((update, complete) => (v) => {
       if (predicate(v)) {

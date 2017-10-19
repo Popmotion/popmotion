@@ -49,9 +49,8 @@ physics({
   from: windowScroll.get('top'),
   to: 500,
   spring: 600,
-  friction: 1,
-  onUpdate: (v) => windowScroll.set('top', v)
-}).start();
+  friction: 1
+}).start((v) => windowScroll.set('top', v));
 ```
 
 ## Methods
