@@ -8,7 +8,7 @@ const physics = ({
   acceleration = 0,
   friction = 0,
   velocity = 0,
-  autoStopSpeed = 0.001,
+  restSpeed = 0.001,
   from = 0,
   springStrength,
   springTarget
@@ -30,7 +30,7 @@ const physics = ({
 
     update(current);
 
-    const isComplete = (autoStopSpeed !== false && (!velocity || Math.abs(velocity) <= autoStopSpeed));
+    const isComplete = (restSpeed !== false && (!velocity || Math.abs(velocity) <= restSpeed));
 
     if (isComplete) complete();
   });

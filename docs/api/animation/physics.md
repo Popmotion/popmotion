@@ -50,7 +50,7 @@ physics({
 ## Props
 
 - `acceleration: number = 0`: Increase `velocity` by this amount every second.
-- `autoStopSpeed: number = 0.001`: When absolute speed drops below this value, `complete` is fired.
+- `restSpeed: number = 0.001`: When absolute speed drops below this value, `complete` is fired.
 - `friction: number = 0`: Amount of friction to apply per frame, from `0` to `1`.
 - `from: number = 0`: Start simulation from this number.
 - `springStrength: number = 0`: If set with `springTarget`, will spring towards target with this strength.

@@ -38,7 +38,7 @@ tween({ to: 255 })
 ### `appendUnit`
 Returns a function that, when given a value, returns that value appended with the provided `unit`.
 
-`appendUnit(unit <String>)`
+`appendUnit(unit: string[])`
 
 ```javascript
 const convertToPx = appendUnit('px');
@@ -48,7 +48,7 @@ convertToPx(5); // '5px'
 ### `applyOffset`
 Takes the offset of the provided value from `from`, and applies it to `to`.
 
-`applyOffset(from <Number>, to <Number>)`
+`applyOffset(from: number, to: number)`
 
 ```javascript
 applyOffset(0, 10)(20); // 30
@@ -59,7 +59,7 @@ Returns a function that, provided a progress value from `0` to `1`, will return 
 
 Can resolve either 3 or 4 bezier points. For more points, the [original implementation](https://github.com/hughsk/bezier) can be used.
 
-`bezier(points <Array>)`
+`bezier(...points: number[])`
 
 ```javascript
 const resolveBezier = bezier(0, 1, 2, 3);
@@ -72,7 +72,7 @@ resolveBezier(1); // 3
 ### `clampMax`
 Returns a function that caps given values to below `max`.
 
-`clampMax(max <Number>)`
+`clampMax(max: number)`
 
 ```javascript
 const capTo50 = clampMax(50);
@@ -82,7 +82,7 @@ capTo50(100); // 50
 ### `clampMin`
 Returns a function that caps given values to above `min`.
 
-`clampMin(min <Number>)`
+`clampMin(min: number)`
 
 ```javascript
 const keepAbove0 = clampMin(0);
@@ -92,11 +92,22 @@ keepAbove0(-100); // 0
 ### `clamp`
 Returns a function that restricts given values to within the provided range.
 
-`clamp(min <Number>, max <Number>)`
+`clamp(min: number, max: number)`
 
 ```javascript
 const rgbRange = clamp(0, 255);
 rgbRange(256); // 255
+```
+
+### `delta`
+Returns a function that returns the delta between every subsequent value from the initial given value **or** the value given the **first time its fired**.
+
+`delta(start?: number)`
+
+```javascript
+const getDelta = delta();
+getDelta(100) // 0
+getDelta(110) // 10
 ```
 
 ### `interpolate`
@@ -106,7 +117,7 @@ An optional easing function can be passed as the third argument, otherwise linea
 
 Provided values outside the given ranges will be clamped to the output range limits.
 
-`interpolate(inputRange <Array>, outputRange <Array>, ease <Function>)`
+`interpolate(inputRange: number[], outputRange: number[], ease: Easing[])`
 
 ```javascript
 const invert = interpolate([0, 100], [100, 0]);
@@ -122,7 +133,7 @@ foo(75); // 0.25
 ### `pipe`
 Used to compose other transformers, from left to right. The first argument passed to the returned function will be the value and any subsequent arguments will be passed to all functions unaltered.
 
-`pipe(...funcs <Functions>)`
+`pipe(...funcs:(v: any) => any[])`
 
 ```javascript
 const rgbType = pipe(
@@ -136,12 +147,12 @@ rgbType(12.25); // 12
 ### `smooth`
 Will smooth a value over time.
 
-`smooth(strength <Number>)`
+`smooth(strength: number)`
 
 ### `snap`
 Given a number or an array of two or more numbers, returns a function that will snap a given value to the nearest multiple or to the nearest number in the array.
 
-`snap(positions <Array>)`
+`snap(positions: number[])`
 
 ```javascript
 const snapToIntervals = snap(45);
@@ -154,7 +165,7 @@ snapToArbitraryDegrees(75); // 90
 ### `steps`
 Given a number of steps and a range, returns a function that will fix a given value to the specific number of discrete steps within that range.
 
-`steps(steps <Number>, min <Number>, max <Number>)`
+`steps(steps: number, min: number, max: number)`
 
 ```javascript
 const threeStep = steps(3, 0.4);
@@ -166,17 +177,17 @@ threeStep(0.9); // 1
 ### `linearSpring`
 Creates a spring that, given an elasticity and an origin, will treat the provided value as a displacement.
 
-`linearSpring(elasticity <Number>, origin <Number>)`
+`linearSpring(elasticity: number, origin: number)`
 
 ### `nonlinearSpring`
 Creates a spring that has a non-linear effect on the displacement - the greater the displacement, the greater effect on the provided value.
 
-`nonlinearSpring(elasticity <Number>, origin <Number>)`
+`nonlinearSpring(elasticity: number, origin: number)`
 
 ### `wrap`
 Wraps a number around.
 
-`wrap(min <Number>, max <Number>)`
+`wrap(min: number, max: number)`
 
 ```javascript
 physics({ velocity: 1000 })

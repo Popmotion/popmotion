@@ -13,7 +13,7 @@ const spring = ({
   mass = 1.0,
   velocity = 0.0,
   restSpeed = 0.01,
-  restDisplacement = 0.01
+  restDelta = 0.01
 }: SpringProps = {}) => action(({ update, complete }): SpringInterface => {
   const initialVelocity = velocity ? - (velocity / 1000) : 0.0;
   let t = 0;
@@ -54,7 +54,7 @@ const spring = ({
     // We do this here instead of `isActionComplete` as it allows us
     // to clamp to end during update)
     const isBelowVelocityThreshold = Math.abs(velocity) <= restSpeed;
-    const isBelowDisplacementThreshold = Math.abs(to - position) <= restDisplacement;
+    const isBelowDisplacementThreshold = Math.abs(to - position) <= restDelta;
 
     if (isBelowVelocityThreshold && isBelowDisplacementThreshold) {
       position = to;

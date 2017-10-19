@@ -1,6 +1,6 @@
 {
   "action": "Action",
-  "animations": "Animations",
+  "animation": "Animation",
   "compositors": "Compositors",
   "input": "Input",
   "stylefire": "Stylefire",

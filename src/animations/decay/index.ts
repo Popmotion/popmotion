@@ -9,7 +9,7 @@ const decay = ({
   from = 0,
   power = 0.8,
   timeConstant = 350,
-  autoStopDelta = 0.5,
+  restDelta = 0.5,
   modifyTarget
 }: Props = {}) => action(({ complete, update }) => {
   let elapsed = 0;
@@ -22,7 +22,7 @@ const decay = ({
   const timer = everyFrame().start(() => {
     elapsed += timeSinceLastFrame();
     const delta = -amplitude * Math.exp(-elapsed / timeConstant);
-    const isMoving = (delta > autoStopDelta || delta < -autoStopDelta);
+    const isMoving = (delta > restDelta || delta < -restDelta);
     const current = isMoving ? target + delta : target;
 
     update(current);

@@ -42,6 +42,22 @@ export const clamp = (min: number, max: number) => {
   return (v: number) => _min(_max(v));
 };
 
+export const delta = (f?: number) => {
+  const isFromDefined = f !== undefined;
+  let from = isFromDefined ? f : 0;
+  let hasFired = !isFromDefined;
+
+  return (v: number) => {
+    if (hasFired) {
+      return v - from;
+    } else {
+      from = v;
+      hasFired = true;
+      return 0;
+    }
+  };
+};
+
 /**
  * Pipe
  * Compose other transformers to run linearily

@@ -1,6 +1,6 @@
 # <a href="https://popmotion.io"><img src="https://cloud.githubusercontent.com/assets/7850794/21642571/1910a15e-d27b-11e6-84c7-19e88e207c14.png" height="52" width="243" alt="Popmotion" /></a>
 
-### A **5kb**, **functional**, **reactive** animation library.
+### A **5kb**, **functional**, **reactive** motion library.
 
 [![npm version](https://img.shields.io/npm/v/popmotion.svg?style=flat-square)](https://www.npmjs.com/package/popmotion)
 [![npm downloads](https://img.shields.io/npm/dm/popmotion.svg?style=flat-square)](https://www.npmjs.com/package/popmotion)
@@ -10,12 +10,12 @@
 ### [Full API documentation](https://popmotion.io/api)
 
 ### Popmotion does:
-- **[Tween](https://popmotion.io/api/tween):** Change a value over specific duration of time. Full suite of [easing and easing creation](https://popmotion.io/api/easing) functions.
+- **[Decay](https://popmotion.io/api/decay):** Exponentially-decayed velocity for motion akin to iOS scroll-deceleration.(https://popmotion.io/api/easing) functions.
 - **[Keyframes](https://popmotion.io/api/keyframes):** Define a series of keyframes to animate between.
 - **[Pointer](https://popmotion.io/api/pointer):** Full support for mouse and multitouch inputs.
-- **[Physics](https://popmotion.io/api/physics):** Simulate velocity, acceleration and friction.
-- **[Spring](https://popmotion.io/api/spring):** A full port of Apple's CASpringAnimation.
-- **[Decay](https://popmotion.io/api/decay):** Exponentially-decayed velocity for motion akin to iOS scroll-deceleration.
+- **[Physics](https://popmotion.io/api/physics):** Integrated, mutable simulation of velocity, acceleration, friction and springs.
+- **[Spring](https://popmotion.io/api/spring):** An accurate spring-mass system ported from Apple's CASpringAnimation.
+- **[Tween](https://popmotion.io/api/tween):** Change a value over specific duration of time. Full suite of [easing and easing creation]
 
 ### Popmotion is:
 - **Tiny:** At **5kb max**, it's 88% smaller than GreenSock TweenMax. You can also import each action individually.

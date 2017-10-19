@@ -4,5 +4,5 @@ export type Props = {
   modifyTarget?: (v: number) => number,
   power?: number,
   timeConstant?: number,
-  autoStopDelta?: number
+  restDelta?: number
 };

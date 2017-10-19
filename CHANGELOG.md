@@ -6,15 +6,22 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 - New reactive API.
-- `keyframes` action.
+- `keyframes` animation.
+- `decay` animation.
 
 ### Removed
 - `flow` alias for `pipe`
-- Transformers:`add`/`subtract`/`divide`/`multiply`/`conditional`/`alpha`/`percent`/`degrees`/`px`/`rgbUnit`/`rgba`/`hex`/`color`/`hsla`
+- Transformers: `add`/`subtract`/`divide`/`multiply`/`conditional`/`alpha`/`percent`/`degrees`/`px`/`rgbUnit`/`rgba`/`hex`/`color`/`hsla`
 - Renderers: Moved to [Stylefire](https://github.com/Popmotion/stylefire)
 - Render Loop: Moved to [Framesync](https://github.com/Popmotion/framesync)
 - Color Tween: Moved to [Popmotion Color Tween](https://github.com/Popmotion/popmotion-color-tween)
 - Value Types: Moved to [Style Value Types](https://github.com/Popmotion/style-value-types)
+
+### Changed
+- `physics` prop `to` is now `springTarget`
+- `physics` prop `spring` is now `springStrength`
+- `physics` prop `autoStopSpeed` is now `restSpeed`.
+- `spring` prop `restDisplacement` is now `restDelta`.
 
 ## [7.8.2] 2017-10-02
 

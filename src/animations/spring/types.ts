@@ -6,7 +6,7 @@ export type SpringProps = {
   mass?: number,
   velocity?: number,
   restSpeed?: number,
-  restDisplacement?: number
+  restDelta?: number
 };
 
 export type SpringInterface = {

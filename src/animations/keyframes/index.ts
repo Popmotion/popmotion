@@ -1,4 +1,4 @@
-import { easeOut, linear } from '../../inc/easing';
+import { easeOut, Easing, linear } from '../../inc/easing';
 import { interpolate } from '../../inc/transformers';
 import tween from '../tween';
 import { KeyframeProps } from './types';
@@ -17,7 +17,8 @@ const keyframes = ({ values, loop, yoyo, flip, ...props }: KeyframeProps) => {
   const ease = props.ease || defaultEasings(values);
   const times = props.times || defaultTimings(values);
 
-  return tween({ duration, ease: linear, loop, yoyo, flip }).pipe(interpolate(times, values, ease));
+  return tween({ duration, ease: linear, loop, yoyo, flip })
+    .pipe(interpolate(times, values, ease));
 };
 
 export default keyframes;

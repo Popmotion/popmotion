@@ -5,6 +5,7 @@ import {
   clamp,
   clampMax,
   clampMin,
+  delta,
   interpolate,
   pipe,
   snap,
@@ -59,6 +60,20 @@ describe('clampMin()', () => {
     const clamper = clampMin(0);
     expect(clamper(1)).toBe(1);
     expect(clamper(-1)).toBe(0);
+  });
+});
+
+describe('delta()', () => {
+  it('should return 0 on first fire if no initial value', () => {
+    expect(delta()(100)).toBe(0);
+  });
+  it('should return the delta on second fire if no initial value', () => {
+    const d = delta();
+    d(100);
+    expect(d(110)).toBe(10);
+  });
+  it('should return the delta on first fire if there is an initial value', () => {
+    expect(delta(100)(10)).toBe(-90);
   });
 });
 

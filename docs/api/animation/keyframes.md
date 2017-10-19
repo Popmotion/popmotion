@@ -37,6 +37,14 @@ keyframes({
 - `ease?: Easing[]`: An array of easing functions for each generated tween. This array should be `values.length - 1`. Defaults to an array of `easeOut`.
 - `times?: number[]`: An array of numbers between `0` and `1`, representing `0` to `duration`, that represent at which point each number should be hit. Defaults to an array of evenly-spread durations will be calculated.
 
+### Tween props
+
+As `keyframes` returns a [`tween`](/api/tween), the following properties can also be provided:
+
+- `loop: number = 0`: Number of times to loop animation on `complete`.
+- `flip: number = 0`: Number of times to flip animation on `complete`.
+- `yoyo: number = 0`: Number of times to reverse tween on `complete`.
+
 ## Methods
 
 - `getElapsed(): number`: Returns time elapsed in milliseconds.
@@ -46,14 +54,6 @@ keyframes({
 - `resume(): this`
 - `reverse(): this`: Reverses the direction of playback. 
 - `stop(): void`
-
-### Tween props
-
-As `keyframes` returns a [`tween`](/api/tween), the following properties can also be provided:
-
-- `loop: number = 0`: Number of times to loop animation on `complete`.
-- `flip: number = 0`: Number of times to flip animation on `complete`.
-- `yoyo: number = 0`: Number of times to reverse tween on `complete`.
 
 ## Example
 
