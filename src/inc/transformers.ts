@@ -1,6 +1,6 @@
-import { getProgressFromValue, getValueFromProgress, stepProgress, smooth as calcSmoothing } from './calc';
 import { currentFrameTime } from 'framesync';
 import { Easing } from 'inc/easing';
+import { getProgressFromValue, getValueFromProgress, smooth as calcSmoothing, stepProgress } from './calc';
 
 const noop = (v: any): any => v;
 
@@ -100,14 +100,14 @@ export const interpolate = (input: number[], output: number[], rangeEasing: Easi
   };
 };
 
-export const generateNonIntergratedSpring = (alterDisplacement: Function = noop) => (constant: number, origin: number) => (v: number) => {
+export const generateNonIntegratedSpring = (alterDisplacement: Function = noop) => (constant: number, origin: number) => (v: number) => {
   const displacement = origin - v;
   const springModifiedDisplacement = - constant * (0 - alterDisplacement(Math.abs(displacement)));
   return (displacement <= 0) ? origin + springModifiedDisplacement : origin - springModifiedDisplacement;
 };
 
-export const linearSpring = generateNonIntergratedSpring();
-export const nonlinearSpring = generateNonIntergratedSpring(Math.sqrt);
+export const linearSpring = generateNonIntegratedSpring();
+export const nonlinearSpring = generateNonIntegratedSpring(Math.sqrt);
 
 export const wrap = (min: number, max: number) => (v: number) => {
   const rangeSize = max - min;
@@ -163,7 +163,7 @@ export const steps = (steps: number, min = 0, max = 1) => (v: number) => {
 export const transformChildValues = (childTransformers: { [key: string]: Function }) => {
   const mutableState: { [key: string]: any } = {};
   return (v: any) => {
-    for (let key in v) {
+    for (const key in v) {
       const childTransformer = childTransformers[key];
       if (childTransformer) {
         mutableState[key] = childTransformer(v[key]);

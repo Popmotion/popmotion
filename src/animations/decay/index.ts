@@ -2,16 +2,16 @@
 import { timeSinceLastFrame } from 'framesync';
 import action from '../../action';
 import everyFrame from '../every-frame';
-import { InertiaProps } from './types';
+import { Props } from './types';
 
-const inertia = ({
+const decay = ({
   velocity = 0,
   from = 0,
   power = 0.8,
   timeConstant = 350,
   autoStopDelta = 0.5,
   modifyTarget
-}: InertiaProps = {}) => action(({ complete, update }) => {
+}: Props = {}) => action(({ complete, update }) => {
   let elapsed = 0;
   const amplitude = power * velocity;
   const idealTarget = Math.round(from + amplitude);
@@ -35,4 +35,4 @@ const inertia = ({
   };
 });
 
-export default inertia;
+export default decay;

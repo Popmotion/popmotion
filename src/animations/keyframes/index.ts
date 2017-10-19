@@ -12,12 +12,12 @@ const defaultTimings = (values: number[]): number[] => {
   return values.map((value: number, i: number): number => (i !== 0) ? i / (numValues - 1) : 0);
 };
 
-const keyframes = ({ values, ...props }: KeyframeProps) => {
+const keyframes = ({ values, loop, yoyo, flip, ...props }: KeyframeProps) => {
   const duration = props.duration || 300;
   const ease = props.ease || defaultEasings(values);
   const times = props.times || defaultTimings(values);
 
-  return tween({ duration, ease: linear }).pipe(interpolate(times, values, ease));
+  return tween({ duration, ease: linear, loop, yoyo, flip }).pipe(interpolate(times, values, ease));
 };
 
 export default keyframes;

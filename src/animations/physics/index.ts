@@ -9,7 +9,9 @@ const physics = ({
   friction = 0,
   velocity = 0,
   autoStopSpeed = 0.001,
-  from = 0
+  from = 0,
+  springStrength,
+  springTarget
 }: Props = {}) => action(({ complete, update }) => {
   let current = from;
 
@@ -18,6 +20,11 @@ const physics = ({
 
     if (acceleration) velocity += speedPerFrame(acceleration, elapsed);
     if (friction) velocity *= (1 - friction) ** (elapsed / 100);
+
+    if (springStrength !== undefined && springTarget !== undefined) {
+      const distanceToTarget = springTarget - current;
+      velocity += distanceToTarget * speedPerFrame(springStrength, elapsed);
+    }
 
     current += speedPerFrame(velocity, elapsed);
 
@@ -29,7 +36,12 @@ const physics = ({
   });
 
   return {
-    stop: () => timer.stop()
+    stop: () => timer.stop(),
+    setVelocity: (v) => velocity = v,
+    setFriction: (v) => friction = v,
+    setAcceleration: (v) => acceleration = v,
+    setSpringStrength: (v) => springStrength = v,
+    setSpringTarget: (v) => springTarget = v
   };
 });
 

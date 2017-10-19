@@ -4,5 +4,8 @@ export type KeyframeProps = {
   values: number[],
   times?: number[],
   ease?: Easing[],
-  duration?: number
+  duration?: number,
+  loop?: number,
+  flip?: number,
+  yoyo?: number
 };

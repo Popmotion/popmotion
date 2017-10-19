@@ -1,4 +1,4 @@
-export type InertiaProps = {
+export type Props = {
   velocity?: number,
   from?: number,
   modifyTarget?: (v: number) => number,

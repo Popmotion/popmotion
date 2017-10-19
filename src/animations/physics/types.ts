@@ -3,5 +3,7 @@ export type Props = {
   acceleration?: number,
   friction?: number,
   velocity?: number,
-  autoStopSpeed?: number | false
+  autoStopSpeed?: number | false,
+  springStrength?: number,
+  springTarget?: number
 };

@@ -6,8 +6,8 @@ export const action = _action;
 import _keyframes from './animations/keyframes';
 export const keyframes = _keyframes;
 
-import _inertia from './animations/inertia';
-export const inertia = _inertia;
+import __decay from './animations/decay';
+export const decay = __decay;
 
 import _physics from './animations/physics';
 export const physics = _physics;
@@ -19,13 +19,13 @@ import _tween from './animations/tween';
 export const tween = _tween;
 
 // Input
-import _mouse from './animations/pointer/mouse';
+import _mouse from './input/pointer/mouse';
 export const mouse = _mouse;
 
-import _touch from './animations/pointer/touch';
+import _touch from './input/pointer/touch';
 export const touch = _touch;
 
-import _pointer from './animations/pointer';
+import _pointer from './input/pointer';
 export const pointer = _pointer;
 
 // Compositors

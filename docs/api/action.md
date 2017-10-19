@@ -1,6 +1,6 @@
 ---
 title: Action
-description: A reactive stream of values.
+description: A reactive stream of values
 next: animations
 ---
 
@@ -14,7 +14,7 @@ Every Popmotion animation and input is an action. When an action is started, it 
 
 ```javascript
 import { action } from 'popmotion';
-// or:
+// or stand-alone:
 import action from 'popmotion/lib/action';
 ```
 
