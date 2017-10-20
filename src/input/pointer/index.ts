@@ -1,6 +1,6 @@
 import merge from '../../compositors/merge';
+import touch from '../touch';
 import mouse from './mouse';
-import touch from './touch';
 
 import { Point2D, PointerProps } from './types';
 

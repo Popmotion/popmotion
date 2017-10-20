@@ -1,6 +1,6 @@
+import { cancelOnFrameUpdate, onFrameUpdate } from 'framesync';
 import action from '../../action';
-import { onFrameUpdate, cancelOnFrameUpdate } from 'framesync';
-import { PointerProps, Point2D } from './types';
+import { Point2D, PointerProps } from '../pointer/types';
 
 interface WhatWGEventListenerArgs {
   capture?: boolean;
@@ -31,8 +31,8 @@ const touch = ({ preventDefault = true }: PointerProps = {}) => action(({ update
     const newPoints: Point2D[] = [];
 
     for (let i = 0; i < numTouches; i++) {
-      const touch = touches[i];
-      newPoints.push(touchToPoint(touch));
+      const thisTouch = touches[i];
+      newPoints.push(touchToPoint(thisTouch));
     }
 
     points = newPoints;

@@ -21,10 +21,24 @@ export const appendUnit = (unit: string) => (v: number) => `${v}${unit}`;
  * @param  {number} to
  * @return {function}
  */
-export const applyOffset = (from: number, to: number) => {
+export const applyOffset = (from: number, to?: number) => {
+  let hasReceivedFrom = true;
+  if (to === undefined) {
+    to = from;
+    hasReceivedFrom = false;
+  }
+
   const getOffset = (v: number) => v - from;
   const applyOffsetTo = (v: number) => v + to;
-  return (v: number) => applyOffsetTo(getOffset(v));
+  return (v: number) => {
+    if (hasReceivedFrom) {
+      return applyOffsetTo(getOffset(v));
+    } else {
+      from = v;
+      hasReceivedFrom = true;
+      return 0;
+    }
+  }
 };
 
 /**
@@ -40,22 +54,6 @@ export const clamp = (min: number, max: number) => {
   const _min = clampMin(min);
   const _max = clampMax(max);
   return (v: number) => _min(_max(v));
-};
-
-export const delta = (f?: number) => {
-  const isFromDefined = f !== undefined;
-  let from = isFromDefined ? f : 0;
-  let hasFired = !isFromDefined;
-
-  return (v: number) => {
-    if (hasFired) {
-      return v - from;
-    } else {
-      from = v;
-      hasFired = true;
-      return 0;
-    }
-  };
 };
 
 /**

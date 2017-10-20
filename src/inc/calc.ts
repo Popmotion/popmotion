@@ -1,4 +1,4 @@
-import { Point, Point2D, Point3D } from 'actions/pointer/types';
+import { Point, Point2D, Point3D } from '../input/pointer/types';
 
 const isNum = (v: any): v is number => typeof v === 'number';
 

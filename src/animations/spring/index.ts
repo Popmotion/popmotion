@@ -1,7 +1,6 @@
 import { timeSinceLastFrame } from 'framesync';
 import action from '../../action';
 import everyFrame from '../every-frame';
-import './math-polyfill';
 import { cosh, sinh } from './math-utils';
 import { SpringInterface, SpringProps } from './types';
 

@@ -43,7 +43,8 @@
     "build": "npm run test && rm -rf lib && babel src --out-dir lib && eslint src && NODE_ENV=production webpack && npm run measure",
     "watch": "NODE_ENV=development webpack --progress --colors --watch",
     "measure": "gzip -c dist/popmotion.global.min.js | wc -c",
-    "test": "jest"
+    "test": "jest",
+    "publish-beta": "npm publish --tag beta"
   },
   "devDependencies": {
     "@types/jest": "^20.0.8",

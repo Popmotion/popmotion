@@ -1,6 +1,6 @@
 import { pipe } from '../inc/transformers';
 import createObserver from './observer';
-import { ObservableFactory } from './types';
+import { Middleware, Observable, ObservableFactory, Subscription } from './types';
 
 /**
  * action
@@ -28,7 +28,7 @@ import { ObservableFactory } from './types';
  * can return a custom API (useful for controlling tweens etc)
  */
 
-const action: ObservableFactory = (init, props = {}) => ({
+const action: ObservableFactory = (init, props = {}): Observable => ({
   /**
    * start
    *
@@ -39,7 +39,7 @@ const action: ObservableFactory = (init, props = {}) => ({
    */
   start(observerCandidate) {
     const observer = createObserver(observerCandidate, props);
-    const observerApi = {
+    const observerApi: Subscription = {
       stop: () => undefined,
       ...init(observer)
     };
@@ -60,9 +60,10 @@ const action: ObservableFactory = (init, props = {}) => ({
    */
   pipe(...funcs) {
     const pipedUpdate = funcs.length === 1 ? funcs[0] : pipe(...funcs);
-    return this.applyMiddleware((update) => (v) => {
+    const middleware: Middleware = (update) => (v) => {
       update(pipedUpdate(v));
-    });
+    };
+    return this.applyMiddleware(middleware);
   },
   /**
    * while
@@ -71,13 +72,10 @@ const action: ObservableFactory = (init, props = {}) => ({
    * time the `predicate` function returns false.
    */
   while(predicate) {
-    return this.applyMiddleware((update, complete) => (v) => {
-      if (predicate(v)) {
-        update(v);
-      } else {
-        complete();
-      }
-    });
+    const middleware: Middleware = (update, complete) => (v) =>
+      predicate(v) ? update(v) : complete();
+
+    return this.applyMiddleware(middleware);
   }
 });
 

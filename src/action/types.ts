@@ -29,8 +29,10 @@ export interface Observer {
 
 export type ObserverCandidate = Update | Observer;
 
+export type Middleware = (update: Update, complete?: Complete) => (v: any) => void;
 export interface Observable {
   start: (observerCandidate: ObserverCandidate) => Subscription;
+  applyMiddleware: (middleware: Middleware) => Observable;
   pipe: (...funcs: Update[]) => Observable;
   while: (predicate: Predicate) => Observable;
 }

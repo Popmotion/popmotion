@@ -22,30 +22,30 @@ export const tween = _tween;
 import _mouse from './input/pointer/mouse';
 export const mouse = _mouse;
 
-import _touch from './input/pointer/touch';
+import _touch from './input/touch';
 export const touch = _touch;
 
 import _pointer from './input/pointer';
 export const pointer = _pointer;
 
 // Compositors
-import _chain from './compositors/chain';
-export const chain = _chain;
+// import _chain from './compositors/chain';
+// export const chain = _chain;
 
-import _composite from './compositors/composite';
-export const composite = _composite;
+// import _composite from './compositors/composite';
+// export const composite = _composite;
 
-import _delay from './compositors/delay';
-export const delay = _delay;
+// import _delay from './compositors/delay';
+// export const delay = _delay;
 
-import _merge from './compositors/merge';
-export const merge = _merge;
+// import _merge from './compositors/merge';
+// export const merge = _merge;
 
-import _parallel from './compositors/parallel';
-export const parallel = _parallel;
+// import _parallel from './compositors/parallel';
+// export const parallel = _parallel;
 
-import _stagger from './compositors/stagger';
-export const stagger = _stagger;
+// import _stagger from './compositors/stagger';
+// export const stagger = _stagger;
 
 // Includes
 import * as _calc from './inc/calc';

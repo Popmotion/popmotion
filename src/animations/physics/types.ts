@@ -3,7 +3,16 @@ export type Props = {
   acceleration?: number,
   friction?: number,
   velocity?: number,
-  autoStopSpeed?: number | false,
+  restSpeed?: number | false,
   springStrength?: number,
   springTarget?: number
+};
+
+export type PhysicsInterface = {
+  setAcceleration(v: number): PhysicsInterface;
+  setFriction(v: number): PhysicsInterface;
+  setSpringStrength(v: number): PhysicsInterface;
+  setSpringTarget(v: number): PhysicsInterface;
+  setVelocity(v: number): PhysicsInterface;
+  stop(): void;
 };

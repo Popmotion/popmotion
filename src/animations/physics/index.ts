@@ -2,7 +2,7 @@ import { timeSinceLastFrame } from 'framesync';
 import action from '../../action';
 import { speedPerFrame } from '../../inc/calc';
 import everyFrame from '../every-frame';
-import { Props } from './types';
+import { PhysicsInterface, Props } from './types';
 
 const physics = ({
   acceleration = 0,
@@ -12,7 +12,7 @@ const physics = ({
   from = 0,
   springStrength,
   springTarget
-}: Props = {}) => action(({ complete, update }) => {
+}: Props = {}) => action(({ complete, update }): PhysicsInterface => {
   let current = from;
 
   const timer = everyFrame().start(() => {
@@ -36,12 +36,27 @@ const physics = ({
   });
 
   return {
-    stop: () => timer.stop(),
-    setVelocity: (v) => velocity = v,
-    setFriction: (v) => friction = v,
-    setAcceleration: (v) => acceleration = v,
-    setSpringStrength: (v) => springStrength = v,
-    setSpringTarget: (v) => springTarget = v
+    setAcceleration(v) {
+      acceleration = v;
+      return this;
+    },
+    setFriction(v) {
+      friction = v;
+      return this;
+    },
+    setSpringStrength(v) {
+      springStrength = v;
+      return this;
+    },
+    setSpringTarget(v) {
+      springTarget = v;
+      return this;
+    },
+    setVelocity(v) {
+      velocity = v;
+      return this;
+    },
+    stop: () => timer.stop()
   };
 });
 

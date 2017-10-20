@@ -20,8 +20,13 @@ describe('appendUnit()', () => {
 });
 
 describe('applyOffset()', () => {
-  it('should return a function that applys the offset from `from` and apply it to `to`', () => {
+  it('should return a function that applies the offset from `from` and apply it to `to`', () => {
     expect(applyOffset(0, 10)(20)).toBe(30);
+  });
+  it('should use the first provided argument as a `from` if only one arg is initially provided', () => {
+    const t = applyOffset(20);
+    t(10);
+    expect(t(11)).toBe(21);
   });
 });
 
@@ -60,20 +65,6 @@ describe('clampMin()', () => {
     const clamper = clampMin(0);
     expect(clamper(1)).toBe(1);
     expect(clamper(-1)).toBe(0);
-  });
-});
-
-describe('delta()', () => {
-  it('should return 0 on first fire if no initial value', () => {
-    expect(delta()(100)).toBe(0);
-  });
-  it('should return the delta on second fire if no initial value', () => {
-    const d = delta();
-    d(100);
-    expect(d(110)).toBe(10);
-  });
-  it('should return the delta on first fire if there is an initial value', () => {
-    expect(delta(100)(10)).toBe(-90);
   });
 });
 

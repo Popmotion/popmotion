@@ -20,7 +20,7 @@ module.exports = {
         loader: 'babel-loader'
       },
       {
-        test: /\.ts?$/,
+        test: (modulePath) => modulePath.endsWith('.ts') && !modulePath.endsWith('test.ts'),
         loader: 'ts-loader'
       }
     ],
