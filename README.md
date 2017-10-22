@@ -1,6 +1,6 @@
 # <a href="https://popmotion.io"><img src="https://cloud.githubusercontent.com/assets/7850794/21642571/1910a15e-d27b-11e6-84c7-19e88e207c14.png" height="52" width="243" alt="Popmotion" /></a>
 
-### A **5kb**, **functional**, **reactive** motion library.
+### A **functional**, **reactive** motion library.
 
 [![npm version](https://img.shields.io/npm/v/popmotion.svg?style=flat-square)](https://www.npmjs.com/package/popmotion)
 [![npm downloads](https://img.shields.io/npm/dm/popmotion.svg?style=flat-square)](https://www.npmjs.com/package/popmotion)
@@ -18,7 +18,7 @@
 - **[Tween](https://popmotion.io/api/tween):** Change a value over specific duration of time. Full suite of [easing and easing creation]
 
 ### Popmotion is:
-- **Tiny:** At **5kb max**, it's 88% smaller than GreenSock TweenMax. You can also import each action individually.
+- **Tiny:** At **5kb max**, it's 88% smaller than GreenSock TweenMax. Everything is also individually importable.
 - **Reactive:** Super-simple Rx-inspired API for subscribing to streams of animation events.
 - **Composable:** All actions can be **delayed**, **staggered** **merged**, **crossfaded** and **chained**.
 - **Cross-platform:** Runs on **IE9+**, plus **Node**-based environments like Arduino.

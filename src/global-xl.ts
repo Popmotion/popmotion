@@ -5,7 +5,7 @@
 // import scroll from '../packages/popmotion-scroll/src';
 // import spinnable from '../packages/popmotion-spinnable/src';
 // import timeline from '../packages/popmotion-timeline/src';
-import * as popmotion from './popmotion';
+import * as popmotion from './';
 
 (window as any).popmotionXL = {
   ...popmotion,

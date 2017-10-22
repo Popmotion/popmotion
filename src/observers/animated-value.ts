@@ -21,8 +21,9 @@ const animatedValue = (initialValue: number, observerCandidate: ObserverCandidat
     get: () => current,
     getVelocity: () => {
       const frame = currentFrameTime();
-      return (frame - lastUpdateTimestamp < 20)
-        ? speedPerSecond(current - prev, timeSinceLastFrame())
+      const frameDelta = timeSinceLastFrame();
+      return (frame - lastUpdateTimestamp <= frameDelta)
+        ? speedPerSecond(current - prev, frameDelta)
         : 0;
     },
     update: (v: number) => {

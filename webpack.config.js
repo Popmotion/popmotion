@@ -27,7 +27,7 @@ module.exports = {
   },
   resolve: {
     alias: {
-      popmotion: path.resolve(__dirname, 'src/popmotion.ts')
+      popmotion: path.resolve(__dirname, 'src/index.ts')
     },
     extensions: ['.ts', '.tsx', '.js'],
     modules: [
