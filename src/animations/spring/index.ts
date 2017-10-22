@@ -1,7 +1,7 @@
 import { timeSinceLastFrame } from 'framesync';
 import action from '../../action';
+import { speedPerSecond } from '../../calc';
 import everyFrame from '../every-frame';
-import { cosh, sinh } from './math-utils';
 import { SpringInterface, SpringProps } from './types';
 
 const spring = ({
@@ -17,6 +17,8 @@ const spring = ({
   const initialVelocity = velocity ? - (velocity / 1000) : 0.0;
   let t = 0;
   const delta = to - from;
+  let position = from;
+  let prevPosition = position;
 
   const springTimer = everyFrame().start(() => {
     const timeDelta = timeSinceLastFrame() / 1000;
@@ -33,21 +35,16 @@ const spring = ({
       const expoDecay = angularFreq * Math.sqrt(1.0 - (dampingRatio * dampingRatio));
       oscillation = envelope * (((initialVelocity + dampingRatio * angularFreq * x0) / expoDecay) * Math.sin(expoDecay * t) + (x0 * Math.cos(expoDecay * t)));
 
-    // Critically damped
-    } else if (dampingRatio === 1) {
+    } else {
       const envelope = Math.exp(-angularFreq * t);
       oscillation = envelope * (x0 + (initialVelocity + (angularFreq * x0)) * t);
-
-    // Overdamped
-    } else {
-      const envelope = Math.exp(-dampingRatio * angularFreq * t);
-      const oscillationFreq = angularFreq * Math.sqrt(dampingRatio * dampingRatio - 1.0);
-      oscillation = to - envelope * ((initialVelocity + dampingRatio * angularFreq * x0) * sinh(oscillationFreq * t) +
-        oscillationFreq * x0 * cosh(oscillationFreq * t)) / oscillationFreq;
     }
 
     const fraction = 1 - oscillation;
-    let position = from + fraction * delta;
+    prevPosition = position;
+    position = from + fraction * delta;
+
+    velocity = speedPerSecond(position - prevPosition, timeDelta * 1000);
 
     // Check if simulation is complete
     // We do this here instead of `isActionComplete` as it allows us

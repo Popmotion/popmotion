@@ -1,4 +1,4 @@
-import { Easing } from 'inc/easing';
+import { Easing } from '../../easing';
 
 export type TweenProps = {
   from?: number,

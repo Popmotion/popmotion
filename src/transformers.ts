@@ -1,6 +1,6 @@
 import { currentFrameTime } from 'framesync';
-import { Easing } from 'inc/easing';
 import { getProgressFromValue, getValueFromProgress, smooth as calcSmoothing, stepProgress } from './calc';
+import { Easing } from './easing';
 
 const noop = (v: any): any => v;
 
@@ -36,7 +36,7 @@ export const applyOffset = (from: number, to?: number) => {
     } else {
       from = v;
       hasReceivedFrom = true;
-      return 0;
+      return to;
     }
   }
 };

@@ -1,8 +1,8 @@
 import { onFrameUpdate, timeSinceLastFrame } from 'framesync';
 import action from '../../action';
-import { getProgressFromValue, getValueFromProgress } from '../../inc/calc';
-import { easeOut } from '../../inc/easing';
-import { clamp } from '../../inc/transformers';
+import { getProgressFromValue, getValueFromProgress } from '../../calc';
+import { easeOut } from '../../easing';
+import { clamp } from '../../transformers';
 import everyFrame from '../every-frame';
 
 import { Observer, Subscription } from '../../action/types';

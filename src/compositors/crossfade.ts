@@ -1,6 +1,6 @@
 import action from '../action';
 import { Observable } from '../action/types';
-import { getValueFromProgress } from '../inc/calc';
+import { getValueFromProgress } from '../calc';
 import parallel from './parallel';
 
 const crossfade = (a: Observable, b: Observable) => action((observer) => {

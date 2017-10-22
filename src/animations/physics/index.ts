@@ -1,6 +1,6 @@
 import { timeSinceLastFrame } from 'framesync';
 import action from '../../action';
-import { speedPerFrame } from '../../inc/calc';
+import { speedPerFrame } from '../../calc';
 import everyFrame from '../every-frame';
 import { PhysicsInterface, Props } from './types';
 

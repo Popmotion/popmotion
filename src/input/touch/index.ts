@@ -1,45 +1,40 @@
 import { cancelOnFrameUpdate, onFrameUpdate } from 'framesync';
 import action from '../../action';
 import { Point2D, PointerProps } from '../pointer/types';
-
-interface WhatWGEventListenerArgs {
-  capture?: boolean;
-}
-
-interface WhatWGAddEventListenerArgs extends WhatWGEventListenerArgs {
-  passive?: boolean;
-  once?: boolean;
-}
-
-type WhatWGAddEventListener = (
-  type: string,
-  listener: (event: Event) => void,
-  options?: WhatWGAddEventListenerArgs
-) => void;
+import { WhatWGAddEventListener } from './types';
 
 const touchToPoint = ({ clientX, clientY }: Touch) => ({
   x: clientX,
   y: clientY
 });
 
-const touch = ({ preventDefault = true }: PointerProps = {}) => action(({ update }) => {
-  let points: Point2D[] = [{ x: 0, y: 0 }];
-  const updatePoint = () => update(points);
-
-  const onMove = ({ touches }: TouchEvent) => {
+const points: Point2D[] = [{ x: 0, y: 0 }];
+let isTouchDevice = false;
+if (typeof document !== 'undefined') {
+  const updatePointsLocation = ({ touches }: TouchEvent) => {
+    isTouchDevice = true;
     const numTouches = touches.length;
-    const newPoints: Point2D[] = [];
+    points.length = 0;
 
     for (let i = 0; i < numTouches; i++) {
       const thisTouch = touches[i];
-      newPoints.push(touchToPoint(thisTouch));
+      points.push(touchToPoint(thisTouch));
     }
+  };
 
-    points = newPoints;
+  document.addEventListener('touchstart', updatePointsLocation);
+  document.addEventListener('touchmove', updatePointsLocation);
+}
+
+const touch = ({ preventDefault = true }: PointerProps = {}) => action(({ update }) => {
+  const updatePoint = () => update(points);
+  const onMove = (e: TouchEvent) => {
+    if (preventDefault) e.preventDefault();
     onFrameUpdate(updatePoint);
   };
 
   (document.addEventListener as WhatWGAddEventListener)('touchmove', onMove, { passive: !preventDefault });
+  if (isTouchDevice) onFrameUpdate(updatePoint);
 
   return {
     stop: () => {
@@ -50,3 +45,4 @@ const touch = ({ preventDefault = true }: PointerProps = {}) => action(({ update
 });
 
 export default touch;
+export const getIsTouchDevice = () => isTouchDevice;

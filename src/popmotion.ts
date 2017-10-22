@@ -47,12 +47,19 @@ export const pointer = _pointer;
 // import _stagger from './compositors/stagger';
 // export const stagger = _stagger;
 
+// Observers
+import _animatedValue from './observers/animated-value';
+export const animatedValue = _animatedValue;
+
+import _broadcast from './observers/broadcast';
+export const broadcast = _broadcast;
+
 // Includes
-import * as _calc from './inc/calc';
+import * as _calc from './calc';
 export const calc = _calc;
 
-import * as _easing from './inc/easing';
+import * as _easing from './easing';
 export const easing = _easing;
 
-import * as _transform from './inc/transformers';
+import * as _transform from './transformers';
 export const transform = _transform;

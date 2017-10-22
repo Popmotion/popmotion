@@ -1,4 +1,4 @@
-import { Observer, ObserverFactory } from './types';
+import { Observer, ObserverCandidate, ObserverFactory } from './types';
 
 const noop = (): void => undefined;
 
@@ -9,12 +9,14 @@ const defaultObserver = (observer: Observer): Observer => ({
   ...observer
 });
 
+export const createDefaultObserver = (observerCandidate: ObserverCandidate) => (typeof observerCandidate === 'function')
+  ? defaultObserver({ update: observerCandidate })
+  : defaultObserver(observerCandidate);
+
 const createObserver: ObserverFactory = (observerCandidate, { middleware } = {}) => {
   let isActive = true;
 
-  const providedObserver = (typeof observerCandidate === 'function')
-    ? defaultObserver({ update: observerCandidate })
-    : defaultObserver(observerCandidate);
+  const providedObserver = createDefaultObserver(observerCandidate);
 
   let update = providedObserver.update;
 

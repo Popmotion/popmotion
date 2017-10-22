@@ -1,5 +1,5 @@
-import { easeOut, Easing, linear } from '../../inc/easing';
-import { interpolate } from '../../inc/transformers';
+import { easeOut, Easing, linear } from '../../easing';
+import { interpolate } from '../../transformers';
 import tween from '../tween';
 import { KeyframeProps } from './types';
 

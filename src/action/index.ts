@@ -1,4 +1,4 @@
-import { pipe } from '../inc/transformers';
+import { pipe } from '../transformers';
 import createObserver from './observer';
 import { Middleware, Observable, ObservableFactory, Subscription } from './types';
 
