@@ -47,13 +47,6 @@ export const pointer = _pointer;
 // import _stagger from './compositors/stagger';
 // export const stagger = _stagger;
 
-// Observers
-import _animatedValue from './observers/animated-value';
-export const animatedValue = _animatedValue;
-
-import _broadcast from './observers/broadcast';
-export const broadcast = _broadcast;
-
 // Includes
 import * as _calc from './calc';
 export const calc = _calc;

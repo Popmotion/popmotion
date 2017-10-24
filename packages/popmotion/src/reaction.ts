@@ -1,8 +1,8 @@
-import observable from './observables/observable';
-import createObserver from './observables/observer';
-import { Observer, ReactionFactory } from './observables/types';
+import observable from './observable/observable';
+import createObserver from './observable/observer';
+import { Observer, ReactionFactory } from './observable/types';
 
-const reaction: ReactionFactory = (props) => {
+const reaction: ReactionFactory = (props = {}) => {
   const subscribers: Observer[] = [];
   let isActive = true;
 

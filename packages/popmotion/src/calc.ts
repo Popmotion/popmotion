@@ -3,11 +3,11 @@ import { Point, Point2D, Point3D } from './input/pointer/types';
 const isNum = (v: any): v is number => typeof v === 'number';
 
 export const isPoint = (point: any): point is Point => {
-  return (<Point>point).x !== undefined && (<Point>point).y !== undefined;
+  return (point as Point).x !== undefined && (point as Point).y !== undefined;
 };
 
 export const isPoint3D = (point: Point): point is Point3D => {
-  return (<Point3D>point).z !== undefined;
+  return (point as Point3D).z !== undefined;
 };
 
 /*

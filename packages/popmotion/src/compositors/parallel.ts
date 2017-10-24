@@ -1,6 +1,6 @@
 import { onFrameUpdate } from 'framesync';
 import action from '../action';
-import { Observable } from '../action/types';
+import { Observable } from '../observable/types';
 
 const parallel = (...actions: Observable[]) => action((observer) => {
   const numActions = actions.length;

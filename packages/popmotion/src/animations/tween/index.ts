@@ -5,7 +5,7 @@ import { easeOut } from '../../easing';
 import { clamp } from '../../transformers';
 import everyFrame from '../every-frame';
 
-import { Observer, Subscription } from '../../action/types';
+import { Observer, Subscription } from '../../observable/types';
 import { TweenInterface, TweenProps } from './types';
 
 const clampProgress = clamp(0, 1);

@@ -9,7 +9,7 @@ import {
   radiansToDegrees,
   smooth,
   stepProgress
-} from '../../calc';
+} from '../calc';
 
 const a = {
   x: 0,

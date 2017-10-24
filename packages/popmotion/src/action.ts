@@ -1,8 +1,8 @@
-import observable from './observables/observable';
-import createObserver from './observables/observer';
-import { ActionFactory, HotSubscription, ObservableProps } from './observables/types';
+import observable from './observable/observable';
+import createObserver from './observable/observer';
+import { ActionFactory, HotSubscription, ObservableProps } from './observable/types';
 
-const action: ActionFactory = (init, props) => ({
+const action: ActionFactory = (init, props = {}) => ({
   ...observable((inheritProps: ObservableProps) => action(init, inheritProps), props),
   start: (observerCandidate) => {
     const observer = createObserver(observerCandidate, props);

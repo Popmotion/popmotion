@@ -1,5 +1,5 @@
 import action from '../action';
-import { Observable } from '../action/types';
+import { Observable } from '../observable/types';
 
 type ObservableMap = {
   [key: string]: Observable

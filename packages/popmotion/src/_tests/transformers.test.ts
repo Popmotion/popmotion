@@ -10,7 +10,7 @@ import {
   snap,
   steps,
   wrap
-} from '../../transformers';
+} from '../transformers';
 
 describe('appendUnit()', () => {
   it('should return a function that appends a unit to provided numbers', () => {

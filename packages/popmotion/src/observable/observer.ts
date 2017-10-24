@@ -13,7 +13,7 @@ const createDefaultObserver = (observerCandidate: ObserverCandidate) => (typeof 
   ? defaultObserver({ update: observerCandidate })
   : defaultObserver(observerCandidate);
 
-const createObserver: ObserverFactory = (observerCandidate, { middleware } = {}) => {
+const createObserver: ObserverFactory = (observerCandidate, { middleware }) => {
   let isActive = true;
 
   const providedObserver = createDefaultObserver(observerCandidate);

@@ -11,16 +11,16 @@ export type Observer = {
   error?: Error;
 };
 
+export type ObserverFactory = (observerCandidate: ObserverCandidate, props: ObservableProps) => Observer;
+
 export type ObserverCandidate = Update | Observer;
 
 type ObservableInit = (observer: Observer) => Subscription | void;
 
-type Observable = {
+export type Observable = {
   applyMiddleware: (middleware: Middleware) => AnyObservable;
   pipe: (...funcs: Update[]) => AnyObservable;
   while: (predicate: Predicate) => AnyObservable;
-  start: (observerCandidate: ObserverCandidate) => HotSubscription;
-  subscribe: (observerCandidate: ObserverCandidate) => ColdSubscription;
 };
 
 export type ObservableProps = {
@@ -28,7 +28,7 @@ export type ObservableProps = {
   middleware?: Middleware[]
 };
 
-type Subscription = {
+export type Subscription = {
   [key: string]: Function
 };
 
@@ -40,13 +40,18 @@ type ColdSubscription = Subscription & {
   unsubscribe: () => void;
 };
 
-type Action = Observable;
-type Reaction = Observable & Observer;
+type Action = Observable & {
+  start: (observerCandidate: ObserverCandidate) => HotSubscription;
+};
 
-type AnyFactory = ReactionFactory | ActionFactory | InternalActionFactory;
+type Reaction = Observable & Observer & {
+  subscribe: (observerCandidate: ObserverCandidate) => ColdSubscription;
+};
+
+type InternalActionFactory = (props?: ObservableProps) => Action;
+type AnyFactory = ReactionFactory | InternalActionFactory;
 type AnyObservable = Reaction | Action;
 
-export type ObservableFactory = (create: AnyFactory, props: ObservableProps) => Observable;
+export type ObservableFactory = (create: AnyFactory, props?: ObservableProps) => Observable;
 export type ReactionFactory = (props?: ObservableProps) => Reaction;
-type InternalActionFactory = (props?: ObservableProps) => Action;
 export type ActionFactory = (init: ObservableInit, props?: ObservableProps) => Action;
