@@ -13,7 +13,7 @@ Outputs the screen position of a single mouse or touch point.
 ```javascript
 import { pointer } from 'popmotion';
 // or stand-alone:
-import pointer from 'popmotion/lib/input/pointer';
+import pointer from 'popmotion/input/pointer';
 ```
 
 ## Usage
@@ -23,17 +23,19 @@ pointer({ preventDefault: true })
   .start(({ x, y }) => console.log(x, y));
 ```
 
-To apply the output of a pointer to, for instance, a slider, you can use the `applyOffset` [transformer](/api/transformers):
+To apply the change in pointer movement to, for instance, a slider, you can use the `applyOffset` [transformer](/api/transformers):
 
 ```javascript
 let sliderPos = 0;
 
-const beginScroll = () => pointer()
-  .pipe(
-    ({ x }) => x,
-    applyOffset(sliderPos)
-  )
-  .start((v) => sliderPos = v);
+const beginScroll = () => {
+  const sliderPos = pointer()
+    .pipe(
+      ({ x }) => x,
+      applyOffset(sliderPos)
+    )
+    .start((v) => sliderPos = v);
+};
 
 document.addEventListener('touchscroll', beginScroll);
 document.addEventListener('mousedown', beginScroll);

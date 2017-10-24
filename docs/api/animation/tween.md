@@ -15,7 +15,7 @@ The behaviour and feel of the animation can be affected by providing a different
 ```javascript
 import { tween } from 'popmotion';
 // or stand-alone:
-import tween from 'popmotion/lib/animations/tween';
+import tween from 'popmotion/animations/tween';
 ```
 
 ## Usage

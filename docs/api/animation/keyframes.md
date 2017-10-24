@@ -17,7 +17,7 @@ It returns a [`tween`](/api/tween), which allows the use of `loop`, `flip` and `
 ```javascript
 import { keyframes } from 'popmotion';
 // or stand-alone:
-import keyframes from 'popmotion/lib/animations/keyframes';
+import keyframes from 'popmotion/animations/keyframes';
 ```
 
 ## Usage

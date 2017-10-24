@@ -9,7 +9,7 @@ const defaultObserver = (observer: Observer): Observer => ({
   ...observer
 });
 
-export const createDefaultObserver = (observerCandidate: ObserverCandidate) => (typeof observerCandidate === 'function')
+const createDefaultObserver = (observerCandidate: ObserverCandidate) => (typeof observerCandidate === 'function')
   ? defaultObserver({ update: observerCandidate })
   : defaultObserver(observerCandidate);
 

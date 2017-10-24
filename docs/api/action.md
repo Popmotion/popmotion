@@ -15,7 +15,7 @@ Every Popmotion animation and input is an action. When an action is started, it 
 ```javascript
 import { action } from 'popmotion';
 // or stand-alone:
-import action from 'popmotion/lib/action';
+import action from 'popmotion/action';
 ```
 
 ## Usage

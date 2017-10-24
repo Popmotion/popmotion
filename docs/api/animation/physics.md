@@ -17,7 +17,7 @@ This is unlike the differential equations in [decay](/api/decay) and [spring](/a
 ```javascript
 import { physics } from 'popmotion';
 // or stand-alone:
-import physics from 'popmotion/lib/animations/physics';
+import physics from 'popmotion/animations/physics';
 ```
 
 ## Usage

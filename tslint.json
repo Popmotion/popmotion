@@ -10,7 +10,8 @@
         "trailing-comma": [false],
         "no-unused-variable": true,
         "interface-name": false,
-        "interface-over-type-literal": false,"max-line-length":false,
+        "interface-over-type-literal": false,
+        "max-line-length":false,
         "curly": false
     },
     "rulesDirectory": []

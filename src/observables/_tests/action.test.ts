@@ -1,4 +1,4 @@
-import action from '../';
+import action from '../../action';
 
 describe('action()', () => {
   it('should create an observable', () => {
@@ -37,20 +37,18 @@ describe('action()', () => {
       action(({ update }) => update()).start(resolve);
     });
   });
-  
+
   it('fires observer update as prop', () => {
     return new Promise((resolve) => {
       action(({ update }) => update()).start({ update: resolve });
     });
   });
-  
+
   it('fires observer complete as prop', () => {
     return new Promise((resolve) => {
       action(({ complete }) => complete()).start({ complete: resolve });
     });
   });
-})
-  })
 
   it('should correctly fire complete', () => {
     return new Promise((resolve) => {
@@ -75,4 +73,4 @@ describe('action()', () => {
         });
     });
   });
-})
+});

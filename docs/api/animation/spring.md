@@ -17,7 +17,7 @@ It's based on the differential equations governing a [damped harmonic oscillator
 ```javascript
 import { spring } from 'popmotion';
 // or stand-alone:
-import spring from 'popmotion/lib/animations/spring';
+import spring from 'popmotion/animations/spring';
 ```
 
 ## Usage

@@ -36,3 +36,7 @@ const animatedValue = (initialValue: number, observerCandidate: ObserverCandidat
 };
 
 export default animatedValue;
+
+const myTween = tween().start();
+
+myTween.velocity.subscribe(() => {});

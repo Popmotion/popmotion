@@ -15,7 +15,7 @@ For single-point input, generally [pointer](/api/pointer) is more appropriate as
 ```javascript
 import { touch } from 'popmotion';
 // or stand-alone:
-import touch from 'popmotion/lib/input/touch';
+import touch from 'popmotion/input/touch';
 ```
 
 ## Usage

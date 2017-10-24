@@ -8,6 +8,7 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 - New reactive API.
 - `keyframes` animation.
 - `decay` animation.
+- `delta` transformer.
 
 ### Removed
 - `flow` alias for `pipe`
