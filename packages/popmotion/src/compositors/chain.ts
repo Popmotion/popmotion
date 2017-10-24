@@ -1,7 +1,7 @@
 import action from '../action';
-import { Observable, Subscription } from '../observable/types';
+import { Action, Subscription } from '../observable/types';
 
-const chain = (...actions: Observable[]) => action(({ update, complete }) => {
+const chain = (...actions: Action[]) => action(({ update, complete }) => {
   let i = 0;
   let current: Subscription;
 

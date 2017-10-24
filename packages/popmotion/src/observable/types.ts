@@ -40,7 +40,7 @@ type ColdSubscription = Subscription & {
   unsubscribe: () => void;
 };
 
-type Action = Observable & {
+export type Action = Observable & {
   start: (observerCandidate: ObserverCandidate) => HotSubscription;
 };
 

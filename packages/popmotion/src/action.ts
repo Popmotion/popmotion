@@ -4,7 +4,7 @@ import { ActionFactory, HotSubscription, ObservableProps } from './observable/ty
 
 const action: ActionFactory = (init, props = {}) => ({
   ...observable((inheritProps: ObservableProps) => action(init, inheritProps), props),
-  start: (observerCandidate) => {
+  start(observerCandidate) {
     const observer = createObserver(observerCandidate, props);
     const api = init(observer);
 
