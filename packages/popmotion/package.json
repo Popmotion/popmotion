@@ -48,5 +48,20 @@
     "framesync": "^3.0.2",
     "style-value-types": "^1.0.3",
     "stylefire": "^1.0.0"
+  },
+  "devDependencies": {
+    "jest": "^21.1.0",
+    "ts-jest": "^21.1.0"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "transform": {
+      "\\.(ts)$": "../node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "/_tests/.*\\.(ts|js)$",
+    "rootDir": "src"
   }
 }

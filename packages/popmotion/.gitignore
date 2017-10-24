@@ -1,1 +1,7 @@
 /*.js
+/*.js.map
+/animations
+/compositors
+/input
+/observables
+/observers
