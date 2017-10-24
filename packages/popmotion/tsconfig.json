@@ -10,7 +10,7 @@
     "noUnusedLocals": true,
     "target": "es5",
     "rootDir": "src",
-    "outDir": "lib",
+    "outDir": "./",
     "watch": false,
     "baseUrl": "src/",
     "alwaysStrict": true,

@@ -15,11 +15,6 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        loader: 'babel-loader'
-      },
-      {
         test: (modulePath) => modulePath.endsWith('.ts') && !modulePath.endsWith('test.ts'),
         loader: 'ts-loader'
       }
@@ -29,7 +24,7 @@ module.exports = {
     alias: {
       popmotion: path.resolve(__dirname, 'src/index.ts')
     },
-    extensions: ['.ts', '.tsx', '.js'],
+    extensions: ['.ts', '.tsx'],
     modules: [
       path.resolve('./node_modules'),
       path.resolve('./src')
