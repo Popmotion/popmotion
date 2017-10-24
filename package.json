@@ -1,50 +1,12 @@
 {
-  "name": "popmotion",
-  "version": "8.0.0",
-  "description": "The JavaScript motion engine. Create animations and interactions with tweens, physics and input tracking.",
-  "author": "Matt Perry <sirhound@popmotion.io>",
-  "homepage": "http://popmotion.io",
-  "main": "./lib/popmotion.js",
-  "esnext": "./src/popmotion.js",
-  "files": [
-    "lib",
-    "src",
-    "dist"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Popmotion/popmotion"
-  },
-  "bugs": {
-    "url": "https://github.com/Popmotion/popmotion/issues"
-  },
-  "keywords": [
-    "animation",
-    "ux",
-    "ui",
-    "popmotion",
-    "canvas animation",
-    "jquery animation",
-    "dom animation",
-    "dom",
-    "pointer tracking",
-    "mouse",
-    "mouse tracking",
-    "touch",
-    "touch tracking",
-    "physics",
-    "interaction",
-    "interface",
-    "svg"
-  ],
-  "analyze": true,
-  "license": "MIT",
+  "private": true,
+  "name": "popmotion-packages",
+  "author": "Matt Perry",
+  "homepage": "https://popmotion.io",
   "scripts": {
-    "build": "npm run test && rm -rf lib && babel src --out-dir lib && eslint src && NODE_ENV=production webpack && npm run measure",
-    "watch": "NODE_ENV=development webpack --progress --colors --watch",
-    "measure": "gzip -c dist/popmotion.global.min.js | wc -c",
-    "test": "jest",
-    "publish-beta": "npm publish --tag beta",
+    "bootstrap": "lerna bootstrap",
+    "clean": "lerna clean",
+    "publish": "lerna publish",
     "playground": "start-storybook -p 6006",
     "build-playground": "build-storybook"
   },
@@ -93,10 +55,5 @@
     },
     "testRegex": "/_tests/.*\\.(ts|js)$",
     "rootDir": "src"
-  },
-  "dependencies": {
-    "framesync": "^3.0.2",
-    "style-value-types": "^1.0.3",
-    "stylefire": "^1.0.0"
   }
 }

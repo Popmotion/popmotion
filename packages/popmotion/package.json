@@ -1,0 +1,50 @@
+{
+  "name": "popmotion",
+  "version": "8.0.0",
+  "description": "A functional, reactive motion library.",
+  "author": "Matt Perry",
+  "homepage": "https://popmotion.io",
+  "main": "./index.js",
+  "module": "",
+  "esnext": "../src/index.js",
+  "files": [],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Popmotion/popmotion"
+  },
+  "bugs": {
+    "url": "https://github.com/Popmotion/popmotion/issues"
+  },
+  "keywords": [
+    "animation",
+    "ux",
+    "ui",
+    "popmotion",
+    "canvas animation",
+    "dom animation",
+    "dom",
+    "pointer tracking",
+    "mouse",
+    "mouse tracking",
+    "touch",
+    "touch tracking",
+    "physics",
+    "interaction",
+    "interface",
+    "svg"
+  ],
+  "analyze": true,
+  "license": "MIT",
+  "scripts": {
+    "build": "npm run test && rm -rf lib && babel src --out-dir lib && eslint src && NODE_ENV=production webpack && npm run measure",
+    "watch": "NODE_ENV=development webpack --progress --colors --watch",
+    "measure": "gzip -c dist/popmotion.global.min.js | wc -c",
+    "test": "jest",
+    "publish-beta": "npm publish --tag beta"
+  },
+  "dependencies": {
+    "framesync": "^3.0.2",
+    "style-value-types": "^1.0.3",
+    "stylefire": "^1.0.0"
+  }
+}
