@@ -1,4 +1,4 @@
-import observable from './observable/observable';
+import observable, { applyMiddleware } from './observable/observable';
 import createObserver from './observable/observer';
 import { Observer, ReactionFactory } from './observable/types';
 
@@ -7,7 +7,10 @@ const reaction: ReactionFactory = (props = {}) => {
   let isActive = true;
 
   return {
-    ...observable(reaction, props),
+    ...observable(props),
+    applyMiddleware(middleware) {
+      return reaction(applyMiddleware(props, middleware));
+    },
     complete: () => {
       isActive = false;
       subscribers.forEach((subscriber) => subscriber.complete());
@@ -29,7 +32,9 @@ const reaction: ReactionFactory = (props = {}) => {
     },
     update: (v: any) => {
       if (!isActive) return;
-      subscribers.forEach((subscriber) => subscriber.update(v));
+      for (let i = 0; i < subscribers.length; i++) {
+        subscribers[i].update(v);
+      }
     }
   };
 };

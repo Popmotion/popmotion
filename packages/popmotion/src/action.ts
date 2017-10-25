@@ -1,9 +1,9 @@
-import observable from './observable/observable';
+import observable, { applyMiddleware } from './observable/observable';
 import createObserver from './observable/observer';
-import { ActionFactory, HotSubscription, ObservableProps } from './observable/types';
+import { ActionFactory, HotSubscription } from './observable/types';
 
 const action: ActionFactory = (init, props = {}) => ({
-  ...observable((inheritProps: ObservableProps) => action(init, inheritProps), props),
+  ...observable(props),
   start(observerCandidate) {
     const observer = createObserver(observerCandidate, props);
     const api = init(observer);
@@ -15,6 +15,9 @@ const action: ActionFactory = (init, props = {}) => ({
     return api
       ? { ...subscription, ...api }
       : subscription;
+  },
+  applyMiddleware(middleware) {
+    return action(init, applyMiddleware(props, middleware));
   }
 });
 
