@@ -14,6 +14,7 @@
     "watch": false,
     "baseUrl": "src/",
     "alwaysStrict": true,
+    "declaration": true,
     "forceConsistentCasingInFileNames": true
   },
   "include": [

@@ -17,9 +17,10 @@ export type ObserverCandidate = Update | Observer;
 
 type ObservableInit = (observer: Observer) => Subscription | void;
 
-export type Observable = {
-  pipe: (...funcs: Update[]) => any;
-  while: (predicate: Predicate) => any;
+export type ObservableFactory<T> = (create: T, props: ObservableProps) => {
+  pipe: (...funcs: Update[]) => T;
+  while: (predicate: Predicate) => T;
+  applyMiddleware: (middleware: Middleware) => T;
 };
 
 export type ObservableProps = {
@@ -41,15 +42,12 @@ type ColdSubscription = Subscription & {
 
 export type Action = Observable & {
   start: (observerCandidate: ObserverCandidate) => HotSubscription;
-  applyMiddleware: (middleware: Middleware) => Action;
 };
 
 type Reaction = Observable & Observer & {
   subscribe: (observerCandidate: ObserverCandidate) => ColdSubscription;
-  applyMiddleware: (middleware: Middleware) => Reaction;
   pipe: (...funcs: Update[]) => Reaction;
 };
 
-export type ObservableFactory = (props?: ObservableProps) => Observable;
 export type ReactionFactory = (props?: ObservableProps) => Reaction;
 export type ActionFactory = (init: ObservableInit, props?: ObservableProps) => Action;
