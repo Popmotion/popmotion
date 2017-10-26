@@ -12,7 +12,7 @@ import { TweenInterface, TweenProps } from './types';
 
 const clampProgress = clamp(0, 1);
 
-const tween = vectorAction(({
+const tween = ({
   from = 0,
   to = 1,
   duration = 300,
@@ -108,10 +108,10 @@ const tween = vectorAction(({
       return this;
     }
   };
-}), {
+});
+
+export default vectorAction(tween, {
   ease: (func: any) => typeof func === 'function',
   from: number.test,
   to: number.test
 });
-
-export default tween;
