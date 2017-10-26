@@ -1,8 +1,8 @@
 import { onFrameUpdate } from 'framesync';
 import action from '../action';
-import { Observable } from '../observable/types';
+import { Action } from '../chainable/types';
 
-const parallel = (...actions: Observable[]) => action((observer) => {
+const parallel = (...actions: Action[]) => action((observer) => {
   const numActions = actions.length;
   const output = new Array(numActions);
   const updateOutput = () => observer.update(output);

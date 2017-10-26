@@ -1,16 +1,18 @@
 import { onFrameUpdate, timeSinceLastFrame } from 'framesync';
+import { number } from 'style-value-types';
 import action from '../../action';
+import vectorAction from '../../action/vector';
 import { getProgressFromValue, getValueFromProgress } from '../../calc';
 import { easeOut } from '../../easing';
 import { clamp } from '../../transformers';
 import everyFrame from '../every-frame';
 
-import { Observer, Subscription } from '../../observable/types';
+import { Action, HotSubscription, Observer } from '../../chainable/types';
 import { TweenInterface, TweenProps } from './types';
 
 const clampProgress = clamp(0, 1);
 
-const tween = ({
+const tween = vectorAction(({
   from = 0,
   to = 1,
   duration = 300,
@@ -23,10 +25,10 @@ const tween = ({
   loopCount = 0,
   yoyo = 0,
   yoyoCount = 0
-}: TweenProps = {}) => action(({ update, complete }: Observer): TweenInterface => {
+}: TweenProps = {}): Action => action(({ update, complete }: Observer): TweenInterface => {
   let progress = 0;
   let current = from;
-  let tweenTimer: Subscription;
+  let tweenTimer: HotSubscription;
   let isActive = false;
   const reverseTween = () => playDirection *= -1;
 
@@ -106,6 +108,10 @@ const tween = ({
       return this;
     }
   };
+}), {
+  ease: (func: any) => typeof func === 'function',
+  from: number.test,
+  to: number.test
 });
 
 export default tween;

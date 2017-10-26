@@ -1,7 +1,7 @@
 import action from '../action';
-import { Action } from '../observable/types';
+import { Action } from '../chainable/types';
 
-type ObservableMap = {
+type ActionMap = {
   [key: string]: Action
 };
 
@@ -9,7 +9,7 @@ type ValueMap = {
   [key: string]: any
 };
 
-const composite = (actionMap: ObservableMap) => {
+const composite = (actionMap: ActionMap) => {
   const actionKeys = Object.keys(actionMap);
   const numActions = actionKeys.length;
 

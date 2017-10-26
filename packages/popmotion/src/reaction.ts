@@ -1,17 +1,18 @@
-import observable, { applyMiddleware } from './observable/observable';
-import createObserver from './observable/observer';
-import { Observer, ReactionFactory } from './observable/types';
+import chainable from './chainable';
+import createObserver from './chainable/observer';
+import {
+  Observer,
+  ObserverProps,
+  Reaction
+} from './chainable/types';
 
-const reaction: ReactionFactory = (props = {}) => {
+const reaction = (props: ObserverProps = {}): Reaction => {
   const subscribers: Observer[] = [];
   let isActive = true;
 
   return {
-    ...observable(props),
-    applyMiddleware(middleware) {
-      return reaction(applyMiddleware(props, middleware));
-    },
-    complete: () => {
+    ...chainable(reaction, props),
+    complete: (): void => {
       isActive = false;
       subscribers.forEach((subscriber) => subscriber.complete());
     },

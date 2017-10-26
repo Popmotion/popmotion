@@ -1,5 +1,5 @@
 import action from '../action';
-import { Action } from '../observable/types';
+import { Action } from '../chainable/types';
 
 const merge = (...actions: Action[]) => action((observer) => {
   const subs = actions.map((thisAction) => thisAction.start({

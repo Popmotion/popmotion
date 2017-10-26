@@ -12,7 +12,8 @@
         "interface-name": false,
         "interface-over-type-literal": false,
         "max-line-length":false,
-        "curly": false
+        "curly": false,
+        "prefer-for-of": false
     },
     "rulesDirectory": []
 }

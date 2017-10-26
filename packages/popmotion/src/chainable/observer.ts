@@ -1,8 +1,8 @@
-import { Observer, ObserverCandidate, ObserverFactory } from './types';
+import { Middleware, Observer, ObserverCandidate, ObserverFactory } from './types';
 
 const noop = (): void => undefined;
 
-const defaultObserver = (observer: Observer): Observer => ({
+const defaultObserver = (observer: ObserverCandidate): Observer => ({
   complete: noop,
   error: noop,
   update: noop,
@@ -37,7 +37,7 @@ const createObserver: ObserverFactory = (observerCandidate, { middleware }) => {
 
   const numMiddleware = middleware ? middleware.length : 0;
   if (numMiddleware) {
-    middleware.forEach((m) => {
+    middleware.forEach((m: Middleware) => {
       update = m(update, observer.complete);
     });
   }
