@@ -1,5 +1,6 @@
 import { cancelOnFrameUpdate, onFrameUpdate } from 'framesync';
 import action from '../../action';
+import { Action } from '../../chainable/types';
 import { Point2D, PointerProps } from './types';
 
 const point: Point2D = { x: 0, y: 0 };
@@ -15,7 +16,7 @@ if (typeof document !== 'undefined') {
   document.addEventListener('mousemove', updatePointLocation);
 }
 
-const mouse = ({ preventDefault = true }: PointerProps = {}) => action(({ update }) => {
+const mouse = ({ preventDefault = true }: PointerProps = {}): Action => action(({ update }) => {
   const updatePoint = () => update(point);
 
   const onMove = (e: MouseEvent) => {

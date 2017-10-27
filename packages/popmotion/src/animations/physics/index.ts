@@ -1,6 +1,9 @@
 import { timeSinceLastFrame } from 'framesync';
+import { number } from 'style-value-types';
 import action from '../../action';
+import vectorAction from '../../action/vector';
 import { speedPerFrame } from '../../calc';
+import { Action } from '../../chainable/types';
 import everyFrame from '../every-frame';
 import { PhysicsInterface, Props } from './types';
 
@@ -12,7 +15,7 @@ const physics = ({
   from = 0,
   springStrength,
   springTarget
-}: Props = {}) => action(({ complete, update }): PhysicsInterface => {
+}: Props = {}): Action => action(({ complete, update }): PhysicsInterface => {
   let current = from;
 
   const timer = everyFrame().start(() => {
@@ -60,4 +63,11 @@ const physics = ({
   };
 });
 
-export default physics;
+export default vectorAction(physics, {
+  acceleration: number.test,
+  friction: number.test,
+  velocity: number.test,
+  from: number.test,
+  springTarget: number.test,
+  springStrength: number.test
+});

@@ -47,15 +47,25 @@ physics({
 }).start((v) => console.log(v));
 ```
 
+We can also provide many properties as `Vector` types, which are maps or arrays of numbers:
+
+```javascript
+physics({
+  from: 100,
+  springTarget: { x: 30, y: 100, z: 20 },
+  springStrength: 500
+})
+```
+
 ## Props
 
-- `acceleration: number = 0`: Increase `velocity` by this amount every second.
+- `acceleration: number | Vector = 0`: Increase `velocity` by this amount every second.
 - `restSpeed: number = 0.001`: When absolute speed drops below this value, `complete` is fired.
-- `friction: number = 0`: Amount of friction to apply per frame, from `0` to `1`.
-- `from: number = 0`: Start simulation from this number.
-- `springStrength: number = 0`: If set with `springTarget`, will spring towards target with this strength.
-- `springTarget: number = 0`: If set with `springStrength`, will gradually "spring" towards this value.
-- `velocity: number = 0`: Velocity in units per second.
+- `friction: number | Vector = 0`: Amount of friction to apply per frame, from `0` to `1`.
+- `from: number | Vector = 0`: Start simulation from this number.
+- `springStrength: number | Vector = 0`: If set with `springTarget`, will spring towards target with this strength.
+- `springTarget: number | Vector = 0`: If set with `springStrength`, will gradually "spring" towards this value.
+- `velocity: number | Vector = 0`: Velocity in units per second.
 
 ## Methods
 

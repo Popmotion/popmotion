@@ -4,36 +4,43 @@ export type Error = (err?: any) => any;
 export type Predicate = (v?: any) => boolean;
 export type Middleware = (update: Update, complete?: Complete) => (v: any) => any;
 
-export type HotSubscription = {
+export interface Observer {
+  update: Update;
+  complete: Complete;
+  error: Error;
+}
+
+export interface Chainable<T> {
+  pipe: (...funcs: Update[]) => T;
+  while: (predicate: Predicate) => T;
+  applyMiddleware: (middleware: Middleware) => T;
+}
+
+export interface Action extends Chainable<Action> {
+  start: (observerCandidate: ObserverCandidate) => ColdSubscription;
+}
+
+export interface Reaction extends Chainable<Reaction>, Observer {
+  subscribe: (observerCandidate: ObserverCandidate) => HotSubscription;
+}
+
+export interface ColdSubscription {
   stop: () => void;
   [key: string]: Function;
-};
+}
 
-export type ColdSubscription = {
+export interface HotSubscription {
   unsubscribe: () => void;
-};
+}
 
 export type ObserverProps = {
   init?: ActionInit;
   middleware?: Middleware[];
 };
 
-export type Action = {
-  pipe: (...funcs: Update[]) => Action;
-  while: (predicate: Predicate) => Action;
-  applyMiddleware: (middleware: Middleware) => Action;
-  start: (observerCandidate: ObserverCandidate) => HotSubscription;
-};
-
-export type ActionInit = (observer: Observer) => HotSubscription | void;
+export type ActionInit = (observer: Observer) => ColdSubscription | void;
 
 export type ObserverFactory = (observerCandidate: ObserverCandidate, props: ObserverProps) => Observer;
-
-export interface Observer {
-  update: Update;
-  complete: Complete;
-  error: Error;
-}
 
 export type ObserverCandidate = Update | Observer | Reaction | {
   update?: Update;
@@ -41,9 +48,4 @@ export type ObserverCandidate = Update | Observer | Reaction | {
   error?: Error;
 };
 
-export type Reaction = Observer & {
-  pipe: (...funcs: Update[]) => Reaction;
-  while: (predicate: Predicate) => Reaction;
-  applyMiddleware: (middleware: Middleware) => Reaction;
-  subscribe: (observerCandidate: ObserverCandidate) => ColdSubscription;
-};
+export type ChainableFactory<T> = (props: ObserverProps) => T;

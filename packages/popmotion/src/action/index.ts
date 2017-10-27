@@ -1,21 +1,15 @@
 import chainable from '../chainable';
 import createObserver from '../chainable/observer';
-import {
-  Action,
-  ActionInit,
-  HotSubscription,
-  ObserverCandidate,
-  ObserverProps
-} from '../chainable/types';
+import { Action, ActionInit, ChainableFactory, ColdSubscription } from '../chainable/types';
 
-const action = (props: ObserverProps = {}): Action => ({
+const action: ChainableFactory<Action> = (props) => ({
   ...chainable(action, props),
-  start: (reactionCandidate: ObserverCandidate): HotSubscription => {
+  start: (observerCandidate) => {
     const { init, ...observerProps } = props;
-    const observer = createObserver(reactionCandidate, observerProps);
+    const observer = createObserver(observerCandidate, observerProps);
     const api = init(observer);
 
-    const subscription: HotSubscription = {
+    const subscription: ColdSubscription = {
       stop: () => undefined
     };
 

@@ -22,19 +22,37 @@ import spring from 'popmotion/animations/spring';
 
 ## Usage
 
+Animate numbers:
+
 ```javascript
 spring({ to: 500, stiffness: 200, damping: 20 })
   .start((v) => console.log(v))
 ```
 
+Or optionally provide vectors:
+
+```javascript
+spring({
+  to: [500, 100],
+  stiffness: 300,
+  damping: [20, 10]
+})
+```
+
+```javascript
+spring({
+  to: { x: 200, y: 300, z: 25 }
+})
+```
+
 ## Props
 
-- `from: number = 0.0`: Value to start from.
-- `to: number = 0.0`: Value to spring to.
-- `stiffness: number = 100`: Spring stiffness.
-- `damping: number = 10`: Strength of opposing force.
-- `mass: number = 1.0`: Mass of the moving object.
-- `velocity: number = 0.0`: Initial velocity of spring.
+- `from: number | Vector = 0.0`: Value to start from.
+- `to: number | Vector = 0.0`: Value to spring to.
+- `stiffness: number | Vector = 100`: Spring stiffness.
+- `damping: number | Vector = 10`: Strength of opposing force.
+- `mass: number | Vector = 1.0`: Mass of the moving object.
+- `velocity: number | Vector = 0.0`: Initial velocity of spring.
 - `restDelta: number = 0.01`: End animation if distance to `to` is below this value **and** `restSpeed` is `true`.
 - `restSpeed: number = 0.01`: End animation if speed drops below this value **and** `restDelta` is `true`.
 

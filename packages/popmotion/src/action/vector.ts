@@ -42,21 +42,23 @@ const createVectorTests: VectorTestFactory = (typeTests) => {
   };
 };
 
-const reduceArrayValue = (props: Props, key: string, i: number) => {
+const reduceArrayValue = (i: number) => (props: Props, key: string) => {
+  // Note: Type coercian makes this inefficient
   props[key] = props[key][i];
   return props;
 };
 
 const createArrayVector: CreateVectorAction = (init, props, vectorKeys) => {
   const [ firstVectorKey ] = vectorKeys;
-  const actionList: Action[] = props[firstVectorKey].map(() => {
-    return init(vectorKeys.reduce(reduceArrayValue, { ...props }));
+  const actionList: Action[] = props[firstVectorKey].map((v: any, i: number) => {
+    return init(vectorKeys.reduce(reduceArrayValue(i), { ...props }));
   });
 
   return parallel(...actionList);
 };
 
 const reduceObjectValue = (key: string) => (props: Props, propKey: string) => {
+  // Note: Type coercian makes this inefficient
   props[propKey] = props[propKey][key];
   return props;
 };

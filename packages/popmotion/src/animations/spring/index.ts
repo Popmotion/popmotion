@@ -1,6 +1,9 @@
 import { timeSinceLastFrame } from 'framesync';
+import { number } from 'style-value-types';
 import action from '../../action';
+import vectorAction from '../../action/vector';
 import { speedPerSecond } from '../../calc';
+import { Action } from '../../chainable/types';
 import everyFrame from '../every-frame';
 import { SpringInterface, SpringProps } from './types';
 
@@ -13,7 +16,7 @@ const spring = ({
   velocity = 0.0,
   restSpeed = 0.01,
   restDelta = 0.01
-}: SpringProps = {}) => action(({ update, complete }): SpringInterface => {
+}: SpringProps = {}): Action => action(({ update, complete }): SpringInterface => {
   const initialVelocity = velocity ? - (velocity / 1000) : 0.0;
   let t = 0;
   const delta = to - from;
@@ -66,4 +69,11 @@ const spring = ({
   };
 });
 
-export default spring;
+export default vectorAction(spring, {
+  from: number.test,
+  to: number.test,
+  stiffness: number.test,
+  damping: number.test,
+  mass: number.test,
+  velocity: number.test
+});

@@ -20,18 +20,45 @@ import tween from 'popmotion/animations/tween';
 
 ## Usage
 
+By default, `tween` will tween from `0` to `1` over `300` milliseconds, with `easeOut` easing.
+
+```javascript
+tween()
+  .start((v) => console.log(v));
+```
+
+Pass props to adjust the character of the tween:
+
 ```javascript
 tween({ to: 200, duration: 500 })
   .start((v) => console.log(v));
 ```
 
+`from`, `to` and `ease` can also be defined as `Vectors`, which are either a map or array of numbers:
+
+```javascript
+tween({
+  from: { x: 124, y: 200 },
+  to: 0, // Both x and y will tween to 0
+  ease: { x: easing.easeOut, y: easing.easeIn }
+})
+```
+
+```javascript
+tween({
+  from: [0, 5, 20],
+  to: [100, 200, 300],
+  ease: easing.linear
+})
+```
+
 ## Props
 
-- `from: number = 0`: Start value of animation.
-- `to: number = 1`: End value of animation.
+- `from: number | Vector[number] = 0`: Start value of animation.
+- `to: number | Vector[number] = 1`: End value of animation.
 - `duration: number = 300`: Total duration of animation, in milliseconds.
 - `elapsed: number = 0`: Duration of animation already elapsed, in milliseconds.
-- `ease: Easing = easeOut`: A function, given a progress between `0` and `1`, that returns a new progress value. Used to affect the rate of playback across the duration of the animation.
+- `ease: Easing | Vector[Easing] = easeOut`: A function, given a progress between `0` and `1`, that returns a new progress value. Used to affect the rate of playback across the duration of the animation.
 - `loop: number = 0`: Number of times to loop animation on `complete`.
 - `flip: number = 0`: Number of times to flip animation on `complete`.
 - `yoyo: number = 0`: Number of times to reverse tween on `complete`.

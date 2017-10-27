@@ -1,7 +1,7 @@
 import { pipe } from '../transformers';
-import { Middleware, ObserverProps, Predicate, Update } from './types';
+import { Chainable, Middleware, ObserverProps, Predicate, Update } from './types';
 
-const chainable = <T>(create: (props: ObserverProps) => T, props: ObserverProps = {}) => ({
+const chainable = <T>(create: (props: ObserverProps) => T, props: ObserverProps = {}): Chainable<T> => ({
   applyMiddleware: (middleware: Middleware): T => create({
     ...props,
     middleware: props.middleware ? [middleware, ...props.middleware] : [middleware]

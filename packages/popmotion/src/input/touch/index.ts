@@ -1,5 +1,6 @@
 import { cancelOnFrameUpdate, onFrameUpdate } from 'framesync';
 import action from '../../action';
+import { Action } from '../../chainable/types';
 import { Point2D, PointerProps } from '../pointer/types';
 import { WhatWGAddEventListener } from './types';
 
@@ -26,7 +27,7 @@ if (typeof document !== 'undefined') {
   document.addEventListener('touchmove', updatePointsLocation);
 }
 
-const touch = ({ preventDefault = true }: PointerProps = {}) => action(({ update }) => {
+const touch = ({ preventDefault = true }: PointerProps = {}): Action => action(({ update }) => {
   const updatePoint = () => update(points);
   const onMove = (e: TouchEvent) => {
     if (preventDefault) e.preventDefault();

@@ -1,8 +1,8 @@
-interface WhatWGEventListenerArgs {
+export interface WhatWGEventListenerArgs {
   capture?: boolean;
 }
 
-interface WhatWGAddEventListenerArgs extends WhatWGEventListenerArgs {
+export interface WhatWGAddEventListenerArgs extends WhatWGEventListenerArgs {
   passive?: boolean;
   once?: boolean;
 }

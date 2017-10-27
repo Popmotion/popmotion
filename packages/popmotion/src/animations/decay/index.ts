@@ -1,6 +1,9 @@
 // Implementation of https://ariya.io/2013/11/javascript-kinetic-scrolling-part-2
 import { timeSinceLastFrame } from 'framesync';
+import { number } from 'style-value-types';
 import action from '../../action';
+import vectorAction from '../../action/vector';
+import { Action } from '../../chainable/types';
 import everyFrame from '../every-frame';
 import { Props } from './types';
 
@@ -11,7 +14,7 @@ const decay = ({
   timeConstant = 350,
   restDelta = 0.5,
   modifyTarget
-}: Props = {}) => action(({ complete, update }) => {
+}: Props = {}): Action => action(({ complete, update }) => {
   let elapsed = 0;
   const amplitude = power * velocity;
   const idealTarget = Math.round(from + amplitude);
@@ -35,4 +38,8 @@ const decay = ({
   };
 });
 
-export default decay;
+export default vectorAction(decay, {
+  from: number.test,
+  velocity: number.test,
+  modifyTarget: (func: any) => typeof func === 'function'
+});

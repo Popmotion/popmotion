@@ -1,11 +1,12 @@
+import { onFrameUpdate } from 'framesync';
 import action from '../action';
-import { Action, HotSubscription } from '../chainable/types';
+import { Action, ColdSubscription } from '../chainable/types';
 
-const createMultiSubscription = (subs: HotSubscription[]) => Object.keys(subs[0])
+const createMultiSubscription = (subs: ColdSubscription[]) => Object.keys(subs[0])
   .filter((key) => key !== 'stop')
-  .reduce((api: HotSubscription, methodName) => {
-    api[methodName] = (...args: any[]) => subs.forEach((sub: HotSubscription) => {
-      if (sub[methodName]) sub[methodName](...args);
+  .reduce((api: ColdSubscription, methodName) => {
+    api[methodName] = (...args: any[]) => subs.map((sub: ColdSubscription) => {
+      if (sub[methodName]) return sub[methodName](...args);
     });
     return api;
   }, {
@@ -34,7 +35,9 @@ const parallel = (...actions: Action[]) => action(({ update, complete, error }) 
         if (updatedActions.length === numActions) allActionsHaveUpdated = true;
       }
 
-      if (allActionsHaveUpdated) updateOutput();
+      // NOTE: This is conceivably a source of 1 delayed frame. Maybe add
+      // a new prerender step to framesync?
+      if (allActionsHaveUpdated) onFrameUpdate(updateOutput);
     }
   }));
 

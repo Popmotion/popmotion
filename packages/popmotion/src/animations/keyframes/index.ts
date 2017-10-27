@@ -1,3 +1,4 @@
+import { Action } from '../../chainable/types';
 import { easeOut, Easing, linear } from '../../easing';
 import { interpolate } from '../../transformers';
 import tween from '../tween';
@@ -12,7 +13,7 @@ const defaultTimings = (values: number[]): number[] => {
   return values.map((value: number, i: number): number => (i !== 0) ? i / (numValues - 1) : 0);
 };
 
-const keyframes = ({ values, loop, yoyo, flip, ...props }: KeyframeProps) => {
+const keyframes = ({ values, loop, yoyo, flip, ...props }: KeyframeProps): Action => {
   const duration = props.duration || 300;
   const ease = props.ease || defaultEasings(values);
   const times = props.times || defaultTimings(values);

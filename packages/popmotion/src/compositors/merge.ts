@@ -2,10 +2,7 @@ import action from '../action';
 import { Action } from '../chainable/types';
 
 const merge = (...actions: Action[]) => action((observer) => {
-  const subs = actions.map((thisAction) => thisAction.start({
-    update: (v: any) => observer.update(v),
-    complete: () => observer.complete()
-  }));
+  const subs = actions.map((thisAction) => thisAction.start(observer));
   return {
     stop: () => subs.forEach((sub) => sub.stop())
   };

@@ -7,7 +7,7 @@ import { easeOut } from '../../easing';
 import { clamp } from '../../transformers';
 import everyFrame from '../every-frame';
 
-import { Action, HotSubscription, Observer } from '../../chainable/types';
+import { Action, ColdSubscription, Observer } from '../../chainable/types';
 import { TweenInterface, TweenProps } from './types';
 
 const clampProgress = clamp(0, 1);
@@ -28,7 +28,7 @@ const tween = ({
 }: TweenProps = {}): Action => action(({ update, complete }: Observer): TweenInterface => {
   let progress = 0;
   let current = from;
-  let tweenTimer: HotSubscription;
+  let tweenTimer: ColdSubscription;
   let isActive = false;
   const reverseTween = () => playDirection *= -1;
 

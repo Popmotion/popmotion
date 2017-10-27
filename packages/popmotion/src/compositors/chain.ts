@@ -1,9 +1,9 @@
 import action from '../action';
-import { Action, Subscription } from '../observable/types';
+import { Action, ColdSubscription } from '../chainable/types';
 
-const chain = (...actions: Action[]) => action(({ update, complete }) => {
+const chain = (...actions: Action[]): Action => action(({ update, complete }) => {
   let i = 0;
-  let current: Subscription;
+  let current: ColdSubscription;
 
   const playCurrent = () => {
     current = actions[i].start({
