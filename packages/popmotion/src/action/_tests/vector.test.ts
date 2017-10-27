@@ -14,7 +14,9 @@ describe('vector', () => {
       va({ p: { x: 1, y: 2 } })
         .start((v) => {
           console.log(v);
-          (v.x === 1 && v.y === 2) ? resolve() : reject();
+          (v.x === 1 && v.y === 2)
+            ? resolve()
+            : reject('composite output incorrect');
         });
     });
   });
@@ -24,7 +26,9 @@ describe('vector', () => {
       va({ p: [0, 1] })
         .start((v) => {
           console.log(v);
-          (v[0] === 0 && v[1] === 1) ? resolve() : reject();
+          (v[0] === 0 && v[1] === 1)
+            ? resolve()
+            : reject('parallel output incorrect');
         });
     });
   });

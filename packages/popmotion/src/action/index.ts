@@ -25,4 +25,4 @@ const action = (props: ObserverProps = {}): Action => ({
   }
 });
 
-export default (init: ActionInit) => action({ init });
+export default (init: ActionInit): Action => action({ init });

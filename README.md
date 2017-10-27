@@ -10,15 +10,15 @@
 ### [Full API documentation](https://popmotion.io/api)
 
 ### Popmotion does:
-- **[Decay](https://popmotion.io/api/decay):** Exponentially-decayed velocity for motion akin to iOS scroll-deceleration.(https://popmotion.io/api/easing) functions.
+- **[Decay](https://popmotion.io/api/decay):** Exponentially-decayed velocity for smooth deceleration.
 - **[Keyframes](https://popmotion.io/api/keyframes):** Define a series of keyframes to animate between.
 - **[Pointer](https://popmotion.io/api/pointer):** Full support for mouse and multitouch inputs.
 - **[Physics](https://popmotion.io/api/physics):** Integrated, mutable simulation of velocity, acceleration, friction and springs.
 - **[Spring](https://popmotion.io/api/spring):** An accurate spring-mass system ported from Apple's CASpringAnimation.
-- **[Tween](https://popmotion.io/api/tween):** Change a value over specific duration of time. Full suite of [easing and easing creation]
+- **[Tween](https://popmotion.io/api/tween):** Change a value over specific duration of time. Full suite of [easing functions](https://popmotion.io/api/easing).
 
 ### Popmotion is:
-- **Tiny:** At **5kb max**, it's 88% smaller than GreenSock TweenMax. Everything is also individually importable.
+- **Tiny:** At **6kb max**, it's 85% smaller than GreenSock TweenMax. Everything is also individually importable.
 - **Reactive:** Super-simple Rx-inspired API for subscribing to streams of animation events.
 - **Composable:** All actions can be **delayed**, **staggered** **merged**, **crossfaded** and **chained**.
 - **Cross-platform:** Runs on **IE9+**, plus **Node**-based environments like Arduino.
@@ -30,11 +30,7 @@
 TODO
 
 ## Official plugins
-- **[Color Tween](https://popmotion.io/api/color-tween):** Tweens colors using a sophisticated color blending equation that prevents weird brightness drops.
-- **[Draggable](https://popmotion.io/api/draggable):** Make elements draggable with just one line of code.
-- **[React](https://popmotion.io/api/react):** A component for animating **anything** in React. 
-- **[Spinnable](https://popmotion.io/api/spinnable):** Make elements spinnable with just one line of code.
-- **[Timeline](https://popmotion.io/api/timeline):** Programmatically create complex sequences of animations.
+TODO: Not yet compatible with Popmotion 8
 
 ## Installation
 

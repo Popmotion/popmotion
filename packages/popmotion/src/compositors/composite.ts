@@ -1,5 +1,5 @@
-import action from '../action';
-import { Action, HotSubscription } from '../chainable/types';
+import { Action } from '../chainable/types';
+import parallel from './parallel';
 
 type ActionMap = {
   [key: string]: Action
@@ -12,45 +12,20 @@ type ValueMap = {
 const composite = (actionMap: ActionMap) => {
   const actionKeys = Object.keys(actionMap);
   const numActions = actionKeys.length;
+  const output: ValueMap = actionKeys.reduce((o: ValueMap, key) => {
+    o[key] = 0;
+    return o;
+  }, {});
+  const actions = actionKeys.map((key) => actionMap[key]);
 
-  return action(({ update, complete, error }): HotSubscription => {
-    const output: ValueMap = {};
-    const updateOutput = () => update(output);
-    let numCompletedActions = 0;
-    const updatedActions: string[] = [];
-    let allActionsHaveUpdated = false;
-
-    const subs = actionKeys.map((key) => actionMap[key].start({
-      complete: () => {
-        numCompletedActions++;
-        if (numCompletedActions === numActions) complete();
-      },
-      error,
-      update: (v: any) => {
-        output[key] = v;
-
-        if (!allActionsHaveUpdated && updatedActions.indexOf(key) === -1) {
-          updatedActions.push(key);
-          if (updatedActions.length === numActions) allActionsHaveUpdated = true;
-        }
-
-        if (allActionsHaveUpdated) updateOutput();
+  return parallel(...actions)
+    .pipe((v: any[]) => {
+      for (let i = 0; i < numActions; i++) {
+        const key = actionKeys[i];
+        output[key] = v[i];
       }
-    }));
-
-    // Take first subscription API and return a new API that
-    // fires all actions
-    return Object.keys(subs[0])
-      .filter((key) => key !== 'stop')
-      .reduce((api: HotSubscription, methodName) => {
-        api[methodName] = (...args: any[]) => subs.forEach((sub) => {
-          if (sub[methodName]) sub[methodName](...args);
-        });
-        return api;
-      }, {
-        stop: () => subs.forEach((sub) => sub.stop())
-      });
-  });
+      return output;
+    });
 };
 
 export default composite;
