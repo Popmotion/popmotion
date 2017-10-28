@@ -1,10 +1,10 @@
-import chainable from './chainable';
-import createObserver from './chainable/observer';
+import chainable from '../chainable';
+import createObserver from '../chainable/observer';
 import {
   Observer,
   ObserverProps,
   Reaction
-} from './chainable/types';
+} from '../chainable/types';
 
 const reaction = (props: ObserverProps = {}): Reaction => {
   const subscribers: Observer[] = [];
