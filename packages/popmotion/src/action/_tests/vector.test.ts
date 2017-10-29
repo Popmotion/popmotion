@@ -26,7 +26,7 @@ describe('vector', () => {
       va({ p: [0, 1, 2, 3, 4] })
         .start((v) => {
           console.log(v);
-          (v[0] === 0 && v[1] === 1)
+          (v[0] === 0 && v[1] === 1 && v[2] === 2 && v[3] === 3 && v[4] === 4)
             ? resolve()
             : reject('parallel output incorrect');
         });

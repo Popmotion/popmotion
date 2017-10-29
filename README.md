@@ -10,12 +10,12 @@
 ### [Full API documentation](https://popmotion.io/api)
 
 ### Popmotion does:
-- **[Decay](https://popmotion.io/api/decay):** Exponentially-decayed velocity for smooth deceleration.
-- **[Keyframes](https://popmotion.io/api/keyframes):** Define a series of keyframes to animate between.
-- **[Pointer](https://popmotion.io/api/pointer):** Full support for mouse and multitouch inputs.
+- **[Tween](https://popmotion.io/api/tween):** Change values over specific duration of time. Full suite of [easing functions](https://popmotion.io/api/easing) included.
 - **[Physics](https://popmotion.io/api/physics):** Integrated, mutable simulation of velocity, acceleration, friction and springs.
+- **[Keyframes](https://popmotion.io/api/keyframes):** Define a series of keyframes to animate between.
 - **[Spring](https://popmotion.io/api/spring):** An accurate spring-mass system ported from Apple's CASpringAnimation.
-- **[Tween](https://popmotion.io/api/tween):** Change a value over specific duration of time. Full suite of [easing functions](https://popmotion.io/api/easing).
+- **[Decay](https://popmotion.io/api/decay):** Exponentially-decayed velocity for smooth deceleration.
+- **[Pointer](https://popmotion.io/api/pointer):** Full support for mouse and multitouch inputs.
 
 ### Popmotion is:
 - **Tiny:** At **6kb max**, it's 85% smaller than GreenSock TweenMax. Everything is also individually importable.
