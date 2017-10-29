@@ -20,7 +20,7 @@ export interface Action extends Chainable<Action> {
   start: (observerCandidate: ObserverCandidate) => ColdSubscription;
 }
 
-export interface Reaction extends Chainable<Reaction>, Observer {
+export interface Reaction extends Observer {
   subscribe: (observerCandidate: ObserverCandidate) => HotSubscription;
 }
 
@@ -35,6 +35,7 @@ export interface HotSubscription {
 
 export type ObserverProps = {
   init?: ActionInit;
+  factory?: Function;
   middleware?: Middleware[];
 };
 

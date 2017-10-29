@@ -23,7 +23,7 @@ describe('vector', () => {
 
   it('should return a parallel action if provided an object', () => {
     return new Promise((resolve, reject) => {
-      va({ p: [0, 1] })
+      va({ p: [0, 1, 2, 3, 4] })
         .start((v) => {
           console.log(v);
           (v[0] === 0 && v[1] === 1)
