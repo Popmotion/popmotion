@@ -1,6 +1,6 @@
 /*.js
 /*.js.map
-/*.d.ts
+*.d.ts
 /action
 /animations
 /compositors
