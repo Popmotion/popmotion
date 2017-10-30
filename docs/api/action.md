@@ -8,7 +8,7 @@ next: animations
 
 Action is a simplified Rx-inspired reactive stream focussed on animation.
 
-Every Popmotion animation and input is an action. When an action is started, it returns a simple  interface that includes **at least** a `stop` method.
+Every Popmotion animation and input is an action. When an action is started, it returns a simple interface that includes **at least** a `stop` method.
 
 ## Import
 
@@ -24,15 +24,19 @@ import action from 'popmotion/action';
 
 The `action` function takes one argument, an initialisation function.
 
-This is passed an object of three functions: `update`, `complete`, and `error`:
+This init function is provided an object of `update`, `complete`, and `error` functions.
 
 ```javascript
 action(({ update, complete, error }) => update(1));
 ```
 
-All of these functions are optional. When called, they will trigger the corresponding functions provided to the action's `start` function.
+These functions are optional. Your action may call all or just some of them.
 
-When the `start` function is called, the **initialisation function is run again**. This means once an action is defined, it can be started many times, and each will be a **new instance**.
+`action` returns a `start` method. When this is called, the init function is executed, creating a **new** instance of the action.
+
+Calling `start` multiple times will create multiple instances.
+
+`start` is provided `update`, `complete`, and/or `error` methods. These **react** when their corresponding `init` functions are fired by the action.
 
 For example:
 
@@ -42,7 +46,9 @@ const foo = action(({ update }) => {
   setInterval(() => update(i++), 50);
 });
 
-foo.start((v) => console.log(v)); // 0, 1, 2...
+foo.start({
+  update: (v) => console.log(v)
+}); // 0, 1, 2...
 foo.start((v) => console.log(v)); // 0, 1, 2...
 ```
 
@@ -63,11 +69,32 @@ foo.start({
 });
 ```
 
+### Interface
+
+The `init` function can **optionally** return an API.
+
+For instance, we might use this to stop a timer:
+
+```javascript
+const foo = action(({ update }) => {
+  const interval = setInterval(() => update('ping!'), 100);
+
+  return {
+    stop: () => clearInterval(interval)
+  };
+});
+
+const bar = foo.start(console.log);
+setTimeout(() => bar.stop(), 1000);
+```
+
+Any method returned by the action init function will be exposed when an action is initialised.
+
 ### Modification
 
-`action` returns other methods which can be used to alter the behaviour of the base action. Currently, these are `while` and `pipe` (see [Methods](#methods)).
+`action` is **chainable**, which means it offers methods that can alter the behaviour of the base action. Currently, these are `while` and `pipe` (see [Methods](#methods)).
 
-They each return a **new action**. For instance:
+When an action is chained, a **new action** is returned. For instance:
 
 ```javascript
 const foo = action(({ update }) => {
@@ -80,6 +107,26 @@ const log = (v) => console.log(v);
 
 foo.start(log); // ...8, 9, 10, 11...
 foo.while(lessThanTen).start(log); // ...8, 9
+```
+
+### Multicasting
+
+Actions output **only** to the set of functions provided to `start`.
+
+Popmotion also provides **(reactions)[/api/reactions]**. These are, like actions, chainable. They are also subscribable by multiple other reactions.
+
+In this way, you can subscribe to multiple different reactions:
+
+```javascript
+const foo = action(({ update }) => update(1));
+const multicast = reaction();
+const logDouble = reaction()
+  .pipe((v) => console.log(v * 2));
+
+multicast.subscribe((v) => console.log(v));
+multicast.subscribe(logDouble);
+
+foo.start(multicast); // 1, 2
 ```
 
 ## Methods
@@ -108,11 +155,12 @@ action(init)
 
 ```typescript
 start(update: (v: any) => void)
-start(observer: {
+start({
   complete? () => void,
   error?: (err: any) => void,
   update?: (v: any) => void
 })
+start(reaction)
 ```
 
 Starts the action by running its initiation function, and returning its API.

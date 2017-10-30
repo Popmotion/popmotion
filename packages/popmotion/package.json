@@ -42,7 +42,7 @@
     "measure": "gzip -c dist/popmotion.global.min.js | wc -c",
     "test": "jest",
     "publish-beta": "npm publish --tag beta",
-    "clean": "git clean -fd -e node_modules/ -x ."
+    "clean": "git clean -fd -e node_modules/ lib/ -x ."
   },
   "dependencies": {
     "framesync": "^3.0.2",

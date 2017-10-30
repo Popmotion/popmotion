@@ -1,7 +1,8 @@
 import { currentFrameTime, timeSinceLastFrame } from 'framesync';
 import { speedPerFrame } from '../calc';
-import { ObserverProps } from '../observer/types';
+import { ObserverCandidate, ObserverProps } from '../observer/types';
 import { BaseReaction } from './base';
+import { HotSubscription } from './types';
 
 export type ValueProps = ObserverProps & {
   value: number
@@ -37,6 +38,13 @@ export class ValueReaction extends BaseReaction<ValueReaction> {
     this.current = v;
     this.lastUpdated = currentFrameTime();
     this.timeDelta = timeSinceLastFrame();
+  }
+
+  subscribe(observerCandidate: ObserverCandidate): HotSubscription {
+    const sub = super.subscribe(observerCandidate);
+    this.update(this.current);
+
+    return sub;
   }
 }
 
