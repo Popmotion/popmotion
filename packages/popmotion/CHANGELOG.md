@@ -2,7 +2,7 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
-## [8.0.0] 2017-xx-xx
+## [8.0.4@beta] 2017-10-30
 
 ### Added
 - New reactive API.
