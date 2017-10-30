@@ -1,7 +1,7 @@
 import React from 'react';
 import { BaseAnimation } from './inc';
-import physics from '../package/popmotion/lib/animations/physics';
-import tween from '../package/popmotion/lib/animations/tween';
+import physics from '../packages/popmotion/lib/animations/physics';
+import tween from '../packages/popmotion/lib/animations/tween';
 
 export class PhysicsVelocity extends BaseAnimation {
   getAnimation = (styler) => physics({

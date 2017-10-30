@@ -1,7 +1,7 @@
 import React from 'react';
 import { BaseAnimation } from './inc';
-import tween from '../package/popmotion/lib/animations/tween';
-import value from '../package/popmotion/lib/animations/tween';
+import tween from '../packages/popmotion/lib/animations/tween';
+import value from '../packages/popmotion/lib/animations/tween';
 
 export class TweenBasic extends BaseAnimation {
   getAnimation = (styler) => tween({

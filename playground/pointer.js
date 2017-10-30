@@ -1,8 +1,8 @@
 import React from 'react';
 import { Box } from './inc';
 import styler from 'stylefire';
-import pointer from '../lib/input/pointer';
-import { applyOffset } from '../lib/transformers';
+import pointer from '../packages/popmotion/lib/input/pointer';
+import { applyOffset } from '../packages/popmotion/lib/transformers';
 
 export class Drag extends React.Component {
   setRef = (dom) => {
