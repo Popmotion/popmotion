@@ -1,6 +1,6 @@
 {
   "name": "popmotion",
-  "version": "8.0.0",
+  "version": "8.0.2",
   "description": "A functional, reactive motion library.",
   "author": "Matt Perry",
   "homepage": "https://popmotion.io",
@@ -36,8 +36,6 @@
   "license": "MIT",
   "scripts": {
     "build": "npm run test && tsc && tsc --outDir lib && NODE_ENV=production webpack && npm run measure",
-    "prepublishOnly": "npm run build",
-    "postpublish": "npm run clean",
     "watch": "NODE_ENV=development webpack --progress --colors --watch",
     "measure": "gzip -c dist/popmotion.global.min.js | wc -c",
     "test": "jest",
@@ -46,8 +44,7 @@
   },
   "dependencies": {
     "framesync": "^3.0.2",
-    "style-value-types": "^1.0.3",
-    "stylefire": "^1.0.0"
+    "style-value-types": "^1.0.3"
   },
   "devDependencies": {
     "jest": "^21.1.0",
