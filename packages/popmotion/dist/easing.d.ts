@@ -1,0 +1,18 @@
+export declare type Easing = (v: number) => number;
+export declare const createReversedEasing: (easing: Easing) => Easing;
+export declare const createMirroredEasing: (easing: Easing) => Easing;
+export declare const linear: Easing;
+export declare const createExpoIn: (power: number) => Easing;
+export declare const easeIn: Easing;
+export declare const easeOut: Easing;
+export declare const easeInOut: Easing;
+export declare const circIn: Easing;
+export declare const circOut: Easing;
+export declare const circInOut: Easing;
+export declare const createBackIn: (power: number) => Easing;
+export declare const backIn: Easing;
+export declare const backOut: Easing;
+export declare const backInOut: Easing;
+export declare const createAnticipateEasing: (power: number) => Easing;
+export declare const anticipate: Easing;
+export declare const cubicBezier: (x1: number, y1: number, x2: number, y2: number) => Easing;
