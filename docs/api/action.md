@@ -8,7 +8,9 @@ next: animations
 
 Action is a simplified Rx-inspired reactive stream focused on animation.
 
-Every Popmotion animation and input is an action. When an action is started, it returns a simple interface that includes **at least** a `stop` method.
+**Every Popmotion animation and input is an action.**
+
+When an action is started, it returns a simple interface that includes **at least** a `stop` method.
 
 ## Import
 
@@ -20,23 +22,27 @@ import action from 'popmotion/action';
 
 ## Usage
 
-### Initialisation
+### Definition
 
-The `action` function takes one argument, an initialisation function.
+The `action` factory takes one argument, an `init` function.
 
-This init function is provided an object of `update`, `complete`, and `error` functions.
+This is a function that is provided an object of `update`, `complete`, and `error` functions.
+
+Usage of these functions is optional. Your action may call all or just some of them:
 
 ```javascript
-action(({ update, complete, error }) => update(1));
+action(({ update, complete, error }) => {
+  update(1);
+});
 ```
 
-These functions are optional. Your action may call all or just some of them.
+### Initialisation
 
-`action` returns a `start` method. When this is called, the init function is executed, creating a **new** instance of the action.
+`action` returns a `start` method. This also accepts an object of `update`, `complete`, and `error` functions.
 
-Calling `start` multiple times will create multiple instances.
+When called, the `init` function is provided these functions, and a **new instance** of the action is created.
 
-`start` is provided `update`, `complete`, and/or `error` methods. These **react** when their corresponding `init` functions are fired by the action.
+Calling `start` multiple times will create multiple, separate instances of the action.
 
 For example:
 
@@ -49,6 +55,11 @@ const foo = action(({ update }) => {
 foo.start({
   update: (v) => console.log(v)
 }); // 0, 1, 2...
+```
+
+If `start` is passed **only a function**, that is assigned to the `update` function:
+
+```javascript
 foo.start((v) => console.log(v)); // 0, 1, 2...
 ```
 
@@ -88,7 +99,7 @@ const bar = foo.start(console.log);
 setTimeout(() => bar.stop(), 1000);
 ```
 
-Any method returned by the action init function will be exposed when an action is initialised.
+Any method returned by the action `init` function will be exposed when an action instance is created.
 
 ### Modification
 
@@ -113,9 +124,9 @@ foo.while(lessThanTen).start(log); // ...8, 9
 
 Actions output **only** to the set of functions provided to `start`.
 
-Popmotion also provides **(reactions)[/api/reactions]**. These are, like actions, chainable. They are also subscribable by multiple other reactions.
+Popmotion also provides **(reactions)[/api/reactions]**. These exposed `update`, `complete` and `error` methods, which mean we can use them to `start` actions.
 
-In this way, you can subscribe to multiple different reactions:
+They're also, like actions, chainable. They can be subscribed to by multiple other reactions:
 
 ```javascript
 const foo = action(({ update }) => update(1));
