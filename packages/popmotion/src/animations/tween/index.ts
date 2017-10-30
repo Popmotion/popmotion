@@ -1,13 +1,13 @@
 import { onFrameUpdate, timeSinceLastFrame } from 'framesync';
 import { number } from 'style-value-types';
-import action from '../../action';
+import action, { Action } from '../../action';
+import { ColdSubscription } from '../../action/types';
 import vectorAction from '../../action/vector';
 import { getProgressFromValue, getValueFromProgress } from '../../calc';
 import { easeOut } from '../../easing';
+import { IObserver } from '../../observer/types';
 import { clamp } from '../../transformers';
 import everyFrame from '../every-frame';
-
-import { Action, ColdSubscription, Observer } from '../../chainable/types';
 import { TweenInterface, TweenProps } from './types';
 
 const clampProgress = clamp(0, 1);
@@ -25,7 +25,7 @@ const tween = ({
   loopCount = 0,
   yoyo = 0,
   yoyoCount = 0
-}: TweenProps = {}): Action => action(({ update, complete }: Observer): TweenInterface => {
+}: TweenProps = {}): Action => action(({ update, complete }: IObserver): TweenInterface => {
   let progress = 0;
   let current = from;
   let tweenTimer: ColdSubscription;

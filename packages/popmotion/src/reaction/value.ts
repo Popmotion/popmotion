@@ -1,14 +1,17 @@
-import { BaseReaction } from './base';
+import { currentFrameTime, timeSinceLastFrame } from 'framesync';
+import { speedPerFrame } from '../calc';
 import { ObserverProps } from '../observer/types';
+import { BaseReaction } from './base';
 
-type ValueProps = ObserverProps & {
+export type ValueProps = ObserverProps & {
   value: number
 };
 
-class ValueReaction extends BaseReaction<ValueReaction> {
+export class ValueReaction extends BaseReaction<ValueReaction> {
   private prev: number;
   private current: number;
   private lastUpdated: number;
+  private timeDelta: number;
 
   constructor(props: ValueProps) {
     super(props);
@@ -24,15 +27,16 @@ class ValueReaction extends BaseReaction<ValueReaction> {
   }
 
   getVelocity() {
-    return 0;
-    //return speedPerFrame(this.current - this.prev);
+    return speedPerFrame(this.current - this.prev, this.timeDelta);
   }
 
+  // TODO: Schedule a velocity check on the next frame
   update(v: number) {
     super.update(v);
     this.prev = this.current;
     this.current = v;
-    // record timestamp
+    this.lastUpdated = currentFrameTime();
+    this.timeDelta = timeSinceLastFrame();
   }
 }
 

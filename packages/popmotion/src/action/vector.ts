@@ -1,6 +1,6 @@
-import { Action } from '../chainable/types';
 import composite from '../compositors/composite';
 import parallel from '../compositors/parallel';
+import { Action } from './';
 // import { blendColor } from '../';
 // import { color } from 'style-value-types';
 

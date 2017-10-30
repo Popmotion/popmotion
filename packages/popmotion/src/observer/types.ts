@@ -1,22 +1,24 @@
 export type Update = (v?: any) => any;
 export type Complete = () => any;
 export type Error = (err?: any) => any;
+export type Middleware = (update: Update, complete?: Complete) => (v: any) => any;
 
-export interface Observer {
+export interface IObserver {
   update: Update;
   complete: Complete;
   error: Error;
 }
 
-export type ObserverProps = {
-  factory?: Function;
-  middleware?: Middleware[];
-};
-
-export type ObserverFactory = (observerCandidate: ObserverCandidate, props: ObserverProps) => Observer;
-
-export type ObserverCandidate = Update | Observer | Reaction | {
+export interface PartialObserver {
   update?: Update;
   complete?: Complete;
   error?: Error;
+}
+
+export type ObserverProps = PartialObserver & {
+  middleware?: Middleware[];
 };
+
+export type ObserverFactory = (observerCandidate: ObserverCandidate, props: ObserverProps) => IObserver;
+
+export type ObserverCandidate = Update | IObserver | PartialObserver;

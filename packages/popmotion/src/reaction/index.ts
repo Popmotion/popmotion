@@ -1,5 +1,5 @@
-import { BaseReaction } from './base';
 import { ObserverProps } from '../observer/types';
+import { BaseReaction } from './base';
 
 export class Reaction extends BaseReaction<Reaction> {
   create(props: ObserverProps) {

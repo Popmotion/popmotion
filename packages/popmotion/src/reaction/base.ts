@@ -1,10 +1,10 @@
 import Chainable from '../chainable';
 import createObserver from '../observer';
-import { Observer, ObserverCandidate } from '../observer/types';
+import { IObserver, ObserverCandidate } from '../observer/types';
 import { HotSubscription } from './types';
 
-export abstract class BaseReaction<T> extends Chainable<T> {
-  private subscribers: Observer[] = [];
+export abstract class BaseReaction<T> extends Chainable<T> implements IObserver {
+  private subscribers: IObserver[] = [];
   private isActive = true;
 
   complete(): void {

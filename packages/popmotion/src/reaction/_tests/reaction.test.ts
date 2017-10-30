@@ -1,4 +1,4 @@
-import reaction from './';
+import reaction from '../';
 import action from '../../action';
 
 describe('reaction', () => {

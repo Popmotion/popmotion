@@ -1,8 +1,7 @@
 import React from 'react';
 import { BaseAnimation } from './inc';
-import styler from 'stylefire';
-import tween from '../lib/animations/tween';
-import animatedValue from '../lib/observers/animated-value';
+import tween from '../package/popmotion/lib/animations/tween';
+import value from '../package/popmotion/lib/reaction/value';
 
 export class TweenBasic extends BaseAnimation {
   getAnimation = (styler) => tween({
@@ -40,14 +39,14 @@ export class TweenYoyo extends BaseAnimation {
 
 export class TweenWithVelocity extends BaseAnimation {
   getAnimation = (styler) => {
-    const value = animatedValue(0, (v) => {
-      styler.set('x', v)
+    const val = value(0, (v) => {
+      styler.set('x', v);
     });
     return tween({
       loop: Infinity,
       to: 300,
       duration: 3000
-    }).start(value);
+    }).start(val);
   }
 }
 

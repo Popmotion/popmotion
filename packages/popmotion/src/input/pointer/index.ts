@@ -1,4 +1,4 @@
-import { Action } from '../../chainable/types';
+import { Action } from '../../action';
 import touch, { getIsTouchDevice } from '../touch';
 import mouse from './mouse';
 import { Point2D, PointerProps } from './types';

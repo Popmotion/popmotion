@@ -1,6 +1,6 @@
-import { Observer, ObserverProps } from '../observer/types';
+import { IObserver, ObserverProps } from '../observer/types';
 
-export type ActionInit = (observer: Observer) => ColdSubscription | void;
+export type ActionInit = (observer: IObserver) => ColdSubscription | void;
 
 export interface ColdSubscription {
   stop: () => void;

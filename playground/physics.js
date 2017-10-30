@@ -1,6 +1,5 @@
 import React from 'react';
 import { BaseAnimation } from './inc';
-import styler from 'stylefire';
 import physics from '../lib/animations/physics';
 import tween from '../lib/animations/tween';
 

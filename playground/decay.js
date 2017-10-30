@@ -1,6 +1,5 @@
 import React from 'react';
 import { BaseAnimation } from './inc';
-import styler from 'stylefire';
 import decay from '../lib/animations/decay';
 
 export class Decay extends BaseAnimation {

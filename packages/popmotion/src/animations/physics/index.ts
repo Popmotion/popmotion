@@ -1,9 +1,9 @@
 import { timeSinceLastFrame } from 'framesync';
 import { number } from 'style-value-types';
 import action from '../../action';
+import { Action } from '../../action';
 import vectorAction from '../../action/vector';
 import { speedPerFrame } from '../../calc';
-import { Action } from '../../chainable/types';
 import everyFrame from '../every-frame';
 import { PhysicsInterface, Props } from './types';
 

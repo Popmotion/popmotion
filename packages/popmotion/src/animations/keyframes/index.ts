@@ -1,4 +1,4 @@
-import { Action } from '../../chainable/types';
+import { Action } from '../../action';
 import { easeOut, Easing, linear } from '../../easing';
 import { interpolate } from '../../transformers';
 import tween from '../tween';

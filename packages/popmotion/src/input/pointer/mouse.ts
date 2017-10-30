@@ -1,6 +1,5 @@
 import { cancelOnFrameUpdate, onFrameUpdate } from 'framesync';
-import action from '../../action';
-import { Action } from '../../chainable/types';
+import action, { Action } from '../../action';
 import { Point2D, PointerProps } from './types';
 
 const point: Point2D = { x: 0, y: 0 };

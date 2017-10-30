@@ -1,5 +1,5 @@
-import action from '../action';
-import { Action, ColdSubscription } from '../chainable/types';
+import action, { Action } from '../action';
+import { ColdSubscription } from '../action/types';
 
 const chain = (...actions: Action[]): Action => action(({ update, complete }) => {
   let i = 0;

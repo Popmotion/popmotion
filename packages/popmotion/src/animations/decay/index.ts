@@ -2,8 +2,8 @@
 import { timeSinceLastFrame } from 'framesync';
 import { number } from 'style-value-types';
 import action from '../../action';
+import { Action } from '../../action';
 import vectorAction from '../../action/vector';
-import { Action } from '../../chainable/types';
 import everyFrame from '../every-frame';
 import { Props } from './types';
 
@@ -40,6 +40,6 @@ const decay = ({
 
 export default vectorAction(decay, {
   from: number.test,
-  velocity: number.test,
-  modifyTarget: (func: any) => typeof func === 'function'
+  modifyTarget: (func: any) => typeof func === 'function',
+  velocity: number.test
 });

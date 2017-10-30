@@ -18,10 +18,11 @@
 - **[Pointer](https://popmotion.io/api/pointer):** Full support for mouse and multitouch inputs.
 
 ### Popmotion is:
-- **Tiny:** At **6kb max**, it's 85% smaller than GreenSock TweenMax. Everything is also individually importable.
+- **Tiny:** At **7kb max**, it's 85% smaller than GreenSock TweenMax. Everything is also individually importable.
 - **Reactive:** Super-simple Rx-inspired API for subscribing to streams of animation events.
 - **Composable:** All actions can be **delayed**, **staggered** **merged**, **crossfaded** and **chained**.
 - **Cross-platform:** Runs on **IE9+**, plus **Node**-based environments like Arduino.
+- **Versatile:** Animate raw numbers, objects or n-dimensional arrays.
 - **Performant af:** Batches jobs on the [Framesync](https://github.com/popmotion/framesync) `update` render step. Stands up to popular alternatives in [performance tests](http://codepen.io/popmotion/pen/zNYXmR).
 - **Typesafe and tested:** Written in TypeScript, with Flow definitions available on [flow-typed](https://github.com/flowtype/flow-typed). Full test coverage.
 - **Supported:** Full ecosystem of awesome plugins.

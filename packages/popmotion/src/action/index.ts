@@ -1,7 +1,7 @@
 import Chainable from '../chainable';
 import createObserver from '../observer';
 import { ObserverCandidate } from '../observer/types';
-import { ActionInit, ColdSubscription } from './types';
+import { ActionInit, ActionProps, ColdSubscription } from './types';
 
 export class Action extends Chainable<Action> {
   create(props: ActionProps) {
@@ -24,27 +24,3 @@ export class Action extends Chainable<Action> {
 }
 
 export default (init: ActionInit) => new Action({ init });
-
-
-// import chainable from '../chainable';
-// import createObserver from '../chainable/observer';
-// import { Action, ActionInit, ColdSubscription, ObserverProps } from '../chainable/types';
-
-// const action = (props: ObserverProps): Action => ({
-//   ...chainable(action, props),
-//   start: (observerCandidate) => {
-//     const { init, ...observerProps } = props;
-//     const observer = createObserver(observerCandidate, observerProps);
-//     const api = init(observer);
-
-//     const subscription: ColdSubscription = {
-//       stop: () => undefined
-//     };
-
-//     return api
-//       ? { ...subscription, ...api }
-//       : subscription;
-//   }
-// });
-
-// export default (init: ActionInit): Action => action({ init });

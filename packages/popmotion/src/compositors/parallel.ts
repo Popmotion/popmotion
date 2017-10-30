@@ -1,6 +1,6 @@
 import { onFrameUpdate } from 'framesync';
-import action from '../action';
-import { Action, ColdSubscription } from '../chainable/types';
+import action,  { Action } from '../action';
+import { ColdSubscription } from '../action/types';
 
 const createMultiSubscription = (subs: ColdSubscription[]) => Object.keys(subs[0])
   .filter((key) => key !== 'stop')

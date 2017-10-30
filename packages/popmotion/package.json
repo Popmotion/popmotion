@@ -51,7 +51,8 @@
   },
   "devDependencies": {
     "jest": "^21.1.0",
-    "ts-jest": "^21.1.0"
+    "ts-jest": "^21.1.0",
+    "webpack": "^3.0.0"
   },
   "jest": {
     "moduleFileExtensions": [

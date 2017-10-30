@@ -1,6 +1,5 @@
 import { cancelOnFrameUpdate, onFrameUpdate } from 'framesync';
-import action from '../../action';
-import { Action } from '../../chainable/types';
+import action, { Action } from '../../action';
 import { Point2D, PointerProps } from '../pointer/types';
 import { WhatWGAddEventListener } from './types';
 

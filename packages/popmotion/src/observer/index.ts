@@ -1,48 +1,51 @@
-import { Middleware, Observer, ObserverCandidate, ObserverFactory } from './types';
+import { IObserver, Middleware, ObserverCandidate, ObserverProps } from './types';
 
-const noop = (): void => undefined;
+export class Observer implements IObserver {
+  private isActive = true;
+  private props: ObserverProps;
 
-const defaultObserver = (observer: ObserverCandidate): Observer => ({
-  complete: noop,
-  error: noop,
-  update: noop,
-  ...observer
-});
+  constructor({ ...props }: ObserverProps) {
+    this.props = props;
 
-const createDefaultObserver = (observerCandidate: ObserverCandidate) => (typeof observerCandidate === 'function')
-  ? defaultObserver({ update: observerCandidate })
-  : defaultObserver(observerCandidate);
+    const { middleware } = props;
+    let { update } = props;
 
-const createObserver: ObserverFactory = (observerCandidate, { middleware }) => {
-  let isActive = true;
-
-  const providedObserver = createDefaultObserver(observerCandidate);
-
-  let update = providedObserver.update;
-
-  const observer: Observer = {
-    complete: () => {
-      isActive = false;
-      providedObserver.complete();
-    },
-    error: (err) => {
-      isActive = false;
-      providedObserver.error(err);
-    },
-    update: (v) => {
-      if (!isActive) return;
-      update(v);
+    if (update && middleware && middleware.length) {
+      middleware.forEach((m: Middleware) => update = m(update, this.complete));
     }
-  };
 
-  const numMiddleware = middleware ? middleware.length : 0;
-  if (numMiddleware) {
-    middleware.forEach((m: Middleware) => {
-      update = m(update, observer.complete);
-    });
+    this.props.update = update;
   }
 
-  return observer;
-};
+  update = (v: any) => {
+    const { update } = this.props;
+    if (update && this.isActive) update(v);
+  }
 
-export default createObserver;
+  complete = () => {
+    const { complete } = this.props;
+    if (complete) complete();
+    this.isActive = false;
+  }
+
+  error = (err: any) => {
+    const { error } = this.props;
+    if (error) error(err);
+    this.isActive = false;
+  }
+}
+
+export default (observerCandidate: ObserverCandidate, { middleware }: ObserverProps) => {
+  let observerProps: ObserverProps = { middleware };
+
+  if (typeof observerCandidate === 'function') {
+    observerProps.update = observerCandidate;
+  } else {
+    observerProps = {
+      ...observerProps,
+      ...observerCandidate
+    };
+  }
+
+  return new Observer(observerProps);
+};

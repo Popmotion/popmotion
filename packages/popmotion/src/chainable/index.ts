@@ -1,14 +1,15 @@
+import { Middleware, Update } from '../observer/types';
 import { pipe } from '../transformers';
-import { Middleware, ObserverProps, Predicate, Update } from './types';
+import { Predicate, Props } from './types';
 
 export default abstract class Chainable<T> {
-  protected props: ObserverProps;
+  protected props: Props;
 
-  constructor(props?: ObserverProps) {
+  constructor(props: Props = {}) {
     this.props = props;
   }
 
-  abstract create(props: ObserverProps): T;
+  abstract create(props: Props): T;
 
   applyMiddleware(middleware: Middleware): T {
     return this.create({
@@ -31,27 +32,3 @@ export default abstract class Chainable<T> {
     return this.applyMiddleware(middleware);
   }
 }
-
-// import { pipe } from '../transformers';
-// import { Chainable, Middleware, ObserverProps, Predicate, Update } from './types';
-
-// const chainable = <T>(create: (props: ObserverProps) => T, props: ObserverProps = {}): Chainable<T> => ({
-//   applyMiddleware: (middleware: Middleware): T => create({
-//     ...props,
-//     middleware: props.middleware ? [middleware, ...props.middleware] : [middleware]
-//   }),
-//   pipe(...funcs: Update[]): T {
-//     const pipedUpdate = funcs.length === 1 ? funcs[0] : pipe(...funcs);
-//     const middleware: Middleware = (update) => (v) => update(pipedUpdate(v));
-
-//     return this.applyMiddleware(middleware);
-//   },
-//   while(predicate: Predicate): T {
-//     const middleware: Middleware = (update, complete) => (v) =>
-//       predicate(v) ? update(v) : complete();
-
-//     return this.applyMiddleware(middleware);
-//   }
-// });
-
-// export default chainable;

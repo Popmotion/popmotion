@@ -1,6 +1,5 @@
 import React from 'react';
 import { BaseAnimation } from './inc';
-import styler from 'stylefire';
 import keyframes from '../lib/animations/keyframes';
 import { linear } from '../lib/inc/easing';
 

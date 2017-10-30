@@ -1,5 +1,4 @@
-import action from '../action';
-import { Action } from '../chainable/types';
+import action, { Action } from '../action';
 
 const delay = (timeToDelay: number): Action => action(({ complete }) => {
   const timeout = setTimeout(complete);

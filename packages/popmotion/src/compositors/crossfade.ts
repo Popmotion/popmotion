@@ -1,6 +1,5 @@
-import action from '../action';
+import action, { Action } from '../action';
 import { getValueFromProgress } from '../calc';
-import { Action } from '../chainable/types';
 import parallel from './parallel';
 
 const crossfade = (a: Action, b: Action) => action((observer) => {
