@@ -73,12 +73,12 @@ describe('pipe', () => {
     order, with the first argument being replaced with the returned value
     of the previous function`,
     () => {
-      const func = pipe(
-        (v, a) => v * a,
-        (v, a) => v + a
-      );
+      const double = (v) => v * 2;
+      const divideByTen = (v) => v / 10;
 
-      expect(func(5, 2)).toBe(12);
+      const func = pipe(double, divideByTen);
+
+      expect(func(10)).toBe(2);
     }
   );
 });

@@ -38,7 +38,7 @@ export const applyOffset = (from: number, to?: number) => {
       hasReceivedFrom = true;
       return to;
     }
-  }
+  };
 };
 
 /**
@@ -63,19 +63,8 @@ export const clamp = (min: number, max: number) => {
  * @param  {...functions} transformers
  * @return {function}
  */
-export const pipe = (...transformers: Function[]) => {
-  const numTransformers = transformers.length;
-  let i = 0;
-
-  return (acc: any, ...args: any[]) => {
-    let v = acc;
-    for (i = 0; i < numTransformers; i++) {
-      v = transformers[i](v, ...args);
-    }
-
-    return v;
-  };
-};
+const combineFunctions = (a: Function, b: Function) => (v: any) => b(a(v));
+export const pipe = (...transformers: Function[]) => transformers.reduce(combineFunctions);
 
 /**
  * Interpolate from set of values to another
