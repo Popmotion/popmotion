@@ -1,6 +1,7 @@
 import Chainable from '../chainable';
-import createObserver from '../chainable/observer';
-import { Observer, ObserverCandidate } from '../chainable/types';
+import createObserver from '../observer';
+import { Observer, ObserverCandidate } from '../observer/types';
+import { HotSubscription } from './types';
 
 export abstract class BaseReaction<T> extends Chainable<T> {
   private subscribers: Observer[] = [];
@@ -23,7 +24,7 @@ export abstract class BaseReaction<T> extends Chainable<T> {
     }
   }
 
-  subscribe(observerCandidate: ObserverCandidate) {
+  subscribe(observerCandidate: ObserverCandidate): HotSubscription {
     const observer = createObserver(observerCandidate, this.props);
     this.subscribers.push(observer);
 

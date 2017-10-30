@@ -18,7 +18,7 @@ describe('action', () => {
   });
 
   it('should create new instance when chained', () => {
-    one.start((v) => expect(v).toBe(1))
+    one.start((v) => expect(v).toBe(1));
     one.pipe((v) => v * 2).start((v) => expect(v).toBe(2));
   })
 });

@@ -1,5 +1,5 @@
 import { BaseReaction } from './base';
-import { ObserverProps } from '../chainable/types';
+import { ObserverProps } from '../observer/types';
 
 type ValueProps = ObserverProps & {
   value: number

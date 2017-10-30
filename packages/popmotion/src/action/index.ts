@@ -1,9 +1,10 @@
 import Chainable from '../chainable';
-import createObserver from '../chainable/observer';
-import { ActionInit, ColdSubscription, ObserverProps, ObserverCandidate } from '../chainable/types';
+import createObserver from '../observer';
+import { ObserverCandidate } from '../observer/types';
+import { ActionInit, ColdSubscription } from './types';
 
 export class Action extends Chainable<Action> {
-  create(props: ObserverProps) {
+  create(props: ActionProps) {
     return new Action(props);
   }
 
