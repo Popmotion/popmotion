@@ -27,6 +27,15 @@
 - **Typesafe and tested:** Written in TypeScript, with Flow definitions available on [flow-typed](https://github.com/flowtype/flow-typed). Full test coverage.
 - **Supported:** Full ecosystem of awesome plugins.
 
+## Beta TODOs
+- Support color
+- Introduce remaining compositors
+- Figure out stagger interface
+- Figure out timeline interface
+- Update Learn documentation
+- Write upgrade guide
+- Investigate vector support for keyframe
+
 ## Examples
 TODO
 

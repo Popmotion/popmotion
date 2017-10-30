@@ -8,7 +8,7 @@ next: animations
 
 Action is a simplified Rx-inspired reactive stream focussed on animation.
 
-Every Popmotion animation and input is an action. When an action is started, it returns an interface that includes **at least** a `stop` method.
+Every Popmotion animation and input is an action. When an action is started, it returns a simple  interface that includes **at least** a `stop` method.
 
 ## Import
 

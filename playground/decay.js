@@ -1,6 +1,6 @@
 import React from 'react';
 import { BaseAnimation } from './inc';
-import decay from '../lib/animations/decay';
+import decay from '../package/popmotion/lib/animations/decay';
 
 export class Decay extends BaseAnimation {
   getAnimation = (styler) => decay({

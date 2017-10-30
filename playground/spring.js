@@ -1,6 +1,6 @@
 import React from 'react';
 import { BaseAnimation } from './inc';
-import spring from '../package/popmotion/animations/spring';
+import spring from '../package/popmotion/lib/animations/spring';
 
 export class Spring extends BaseAnimation {
   getAnimation = (styler) => spring({

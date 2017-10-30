@@ -1,7 +1,7 @@
 import React from 'react';
 import { BaseAnimation } from './inc';
 import tween from '../package/popmotion/lib/animations/tween';
-import value from '../package/popmotion/lib/reaction/value';
+import value from '../package/popmotion/lib/animations/tween';
 
 export class TweenBasic extends BaseAnimation {
   getAnimation = (styler) => tween({
@@ -39,9 +39,7 @@ export class TweenYoyo extends BaseAnimation {
 
 export class TweenWithVelocity extends BaseAnimation {
   getAnimation = (styler) => {
-    const val = value(0, (v) => {
-      styler.set('x', v);
-    });
+    const val = value(0).subscribe((v) => styler.set('x', v));
     return tween({
       loop: Infinity,
       to: 300,
