@@ -1,5 +1,5 @@
 import { currentFrameTime, timeSinceLastFrame } from 'framesync';
-import { speedPerFrame } from '../calc';
+import { speedPerSecond } from '../calc';
 import { ObserverCandidate, ObserverProps } from '../observer/types';
 import { BaseReaction } from './base';
 import { HotSubscription } from './types';
@@ -9,10 +9,10 @@ export type ValueProps = ObserverProps & {
 };
 
 export class ValueReaction extends BaseReaction<ValueReaction> {
-  private prev: number;
-  private current: number;
-  private lastUpdated: number;
-  private timeDelta: number;
+  private prev: number = 0;
+  private current: number = 0;
+  private lastUpdated: number = 0;
+  private timeDelta: number = 0;
 
   constructor(props: ValueProps) {
     super(props);
@@ -28,7 +28,7 @@ export class ValueReaction extends BaseReaction<ValueReaction> {
   }
 
   getVelocity() {
-    return speedPerFrame(this.current - this.prev, this.timeDelta);
+    return speedPerSecond(this.current - this.prev, this.timeDelta);
   }
 
   // TODO: Schedule a velocity check on the next frame

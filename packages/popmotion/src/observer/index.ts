@@ -1,51 +1,42 @@
-import { IObserver, Middleware, ObserverCandidate, ObserverProps } from './types';
+import { IObserver, Update, Middleware, ObserverCandidate, ObserverProps, PartialObserver } from './types';
 
+// TODO clear up some of the terminology here.
 export class Observer implements IObserver {
   private isActive = true;
   private props: ObserverProps;
+  private observer: PartialObserver;
+  private updateObserver: Update;
 
-  constructor({ ...props }: ObserverProps) {
+  constructor({ ...props }: ObserverProps, observer: PartialObserver) {
     this.props = props;
+    this.observer = observer;
+    this.updateObserver = (v: any) => observer.update(v);
 
     const { middleware } = props;
-    let { update } = props;
-
-    if (update && middleware && middleware.length) {
-      middleware.forEach((m: Middleware) => update = m(update, this.complete));
+    if (observer.update && middleware && middleware.length) {
+      middleware.forEach((m: Middleware) => this.updateObserver = m(this.updateObserver, this.complete));
     }
-
-    this.props.update = update;
   }
 
   update = (v: any) => {
-    const { update } = this.props;
-    if (update && this.isActive) update(v);
+    if (this.observer.update && this.isActive) this.updateObserver(v);
   }
 
   complete = () => {
-    const { complete } = this.props;
-    if (complete) complete();
+    if (this.observer.complete) this.observer.complete();
     this.isActive = false;
   }
 
   error = (err: any) => {
-    const { error } = this.props;
-    if (error) error(err);
+    if (this.observer.error) this.observer.error(err);
     this.isActive = false;
   }
 }
 
 export default (observerCandidate: ObserverCandidate, { middleware }: ObserverProps) => {
-  let observerProps: ObserverProps = { middleware };
-
   if (typeof observerCandidate === 'function') {
-    observerProps.update = observerCandidate;
+    return new Observer({ middleware }, { update: observerCandidate });
   } else {
-    observerProps = {
-      ...observerProps,
-      ...observerCandidate
-    };
+    return new Observer({ middleware }, observerCandidate);
   }
-
-  return new Observer(observerProps);
 };
