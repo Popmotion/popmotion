@@ -54,9 +54,34 @@ physics({
 ```
 
 ## Methods
-- `get(key <String>`: Get the property of the provided key.
-- `set(props <Object>)` | `set(key <String>, value)`: Set provided property(s) and schedule render for next frame.
-- `render()`: Immediately render.
+
+### `get`
+
+```typescript
+get(key: string): any
+```
+
+Returns the value of the provided key.
+
+### `set`
+
+```typescript
+set(props: {}): this
+set(key: string, prop: any): this
+set(key: string): (prop: any) => void;
+```
+
+Set the provided property(s) and schedule a render for the next frame.
+
+If only a `key` is provided, this returns a curried function which can then be provided a property value to set to that `key`.
+
+### `render`
+
+```typescript
+render(): this
+```
+
+Immediately render, without waiting for the next frame.
 
 ## Property mapping
 - `top` -> `scrollTop`/`pageYOffset`

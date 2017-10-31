@@ -6,12 +6,29 @@ category: reactions
 
 # Value Reaction
 
+Tracks the state of a number and allows .
+
 ## Import
 
 ```javascript
 import { value } from 'popmotion';
 // or stand-alone:
 import value from 'popmotion/reaction/value';
+```
+
+## Usage
+
+```javascript
+import { tween, value } from 'popmotion';
+import styler from 'stylefire';
+
+const div = styler(document.querySelector('div'));
+const divX = value(0);
+myVal.subscribe(div.set('x'));
+
+tween({ to: 500 }).start(divX);
+
+setTimeout(() => console.log(divX.getVelocity()), 150);
 ```
 
 ## Methods
