@@ -31,7 +31,7 @@ describe('reaction', () => {
     const r = reaction();
     const s = r.pipe((v) => v * 2);
     r.subscribe((v) => expect(v).toBe(1));
-    r.subscribe((v) => expect(v).toBe(2));
+    s.subscribe((v) => expect(v).toBe(2));
     one.start(r);
     one.start(s);
   });

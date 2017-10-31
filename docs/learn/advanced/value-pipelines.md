@@ -89,7 +89,7 @@ const rgba = pipe(
 
 This is an example of composing functions **which were themselves composed**. This is a very clear way of expressing and reusing our logic.
 
-## Applying these to animations
+## Applying transformers to animations
 
 Every Popmotion [action](/api/action) and [reaction](/api/reaction) has a native `pipe` function.
 
