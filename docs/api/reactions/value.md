@@ -1,12 +1,12 @@
 ---
-title: Value Reaction
+title: Value
 description: Track value state and query velocity
 category: reactions
 ---
 
-# Value Reaction
+# Value
 
-Tracks the state of a number and allows .
+Tracks the state of a number and allows velocity queries.
 
 ## Import
 

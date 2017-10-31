@@ -18,7 +18,7 @@
 - **[Pointer](https://popmotion.io/api/pointer):** Full support for mouse and multitouch inputs.
 
 ### Popmotion is:
-- **Tiny:** At **7kb max**, it's 85% smaller than GreenSock TweenMax. All animations are individually importable to squeeze those bytes.
+- **Tiny:** At 9kb **max**, it's 75% smaller than GreenSock TweenMax. Everything is also importable individually.
 - **Reactive:** Super-simple Rx-inspired API for subscribing to streams of animation events.
 - **Composable:** All actions can be **delayed**, **staggered** **merged**, **crossfaded** and **chained**.
 - **Cross-platform:** Runs on **IE9+**, plus **Node**-based environments like Arduino.

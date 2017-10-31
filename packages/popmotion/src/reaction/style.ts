@@ -5,7 +5,7 @@ const noop = (): void => undefined;
 const nodesToArray = (nodes: NodeListOf<Element>): Element[] => [].slice.call(nodes);
 const createStyler = (node: HTMLElement | (SVGGraphicsElement & SVGPathElement)): Styler => styler(node);
 
-const singlePropSetter = (propName: string) => (s: Styler) => s.set(propName);
+const singlePropSetter = (propName: string) => (s: Styler) => (v: any) => s.set(propName, v);
 const multiPropSetter = (s: Styler) => (v: any) => s.set(v);
 const createSetStyleFunc = (propName?: string) => (typeof propName === 'string')
   ? singlePropSetter(propName)
