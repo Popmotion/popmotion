@@ -8,7 +8,7 @@ category: stylefire
 
 The DOM Scroll styler batches `window` and DOM scroll events to the `render` step on the [Framesync render loop](/api/framesync).
 
-## Install
+## Import
 
 ```javascript
 import scroll from 'stylefire/scroll';

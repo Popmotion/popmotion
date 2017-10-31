@@ -10,6 +10,8 @@ The CSS Styler provides a simple and optimised `get`/`set` interface for DOM ele
 
 It automatically detects and applies vendor prefixes.
 
+## Import
+
 ```javascript
 import css from 'stylefire/css';
 ```

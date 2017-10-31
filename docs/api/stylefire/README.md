@@ -12,6 +12,8 @@ It batches renders to the `render` step of the [Framesync](/api/framesync) loop 
 
 ## Install
 
+**Stylefire is included with Popmotion.** If you're using as a standalone library, install with:
+
 ```javascript
 npm install stylefire --save
 ```

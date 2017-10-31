@@ -8,6 +8,8 @@ category: stylefire
 
 The SVG Styler replaces the confusing SVG transformation model with the CSS model. It also provides support for line drawing.
 
+## Import
+
 ```javascript
 import svg from 'stylefire/svg';
 ```
