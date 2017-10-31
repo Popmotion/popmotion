@@ -1,9 +1,10 @@
 // Core
 import action from './action';
 import reaction from './reaction';
+import style from './reaction/style';
 import value from './reaction/value';
 
-export { action, reaction, value };
+export { action, reaction, style, value };
 
 // Animations
 import decay from './animations/decay';
