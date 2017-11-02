@@ -13,7 +13,7 @@ Tracks the state of a number and allows velocity queries.
 ```javascript
 import { value } from 'popmotion';
 // or stand-alone:
-import value from 'popmotion/reaction/value';
+import value from 'popmotion/reactions/value';
 ```
 
 ## Usage

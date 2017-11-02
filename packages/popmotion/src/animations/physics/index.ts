@@ -4,7 +4,7 @@ import action from '../../action';
 import { Action } from '../../action';
 import vectorAction from '../../action/vector';
 import { speedPerFrame } from '../../calc';
-import everyFrame from '../every-frame';
+import onFrame from '../on-frame';
 import { PhysicsInterface, Props } from './types';
 
 const physics = ({
@@ -18,7 +18,7 @@ const physics = ({
 }: Props = {}): Action => action(({ complete, update }): PhysicsInterface => {
   let current = from;
 
-  const timer = everyFrame().start(() => {
+  const timer = onFrame().start(() => {
     const elapsed = timeSinceLastFrame();
 
     if (acceleration) velocity += speedPerFrame(acceleration, elapsed);

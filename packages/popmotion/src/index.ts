@@ -1,19 +1,20 @@
 // Core
 import action from './action';
-import reaction from './reaction';
-import style from './reaction/style';
-import value from './reaction/value';
+import reaction from './reactions';
+import style from './reactions/style';
+import value from './reactions/value';
 
 export { action, reaction, style, value };
 
 // Animations
 import decay from './animations/decay';
 import keyframes from './animations/keyframes';
+import onFrame from './animations/on-frame';
 import physics from './animations/physics';
 import spring from './animations/spring';
 import tween from './animations/tween';
 
-export { decay, keyframes, physics, spring, tween };
+export { decay, keyframes, onFrame, physics, spring, tween };
 
 // Input
 import pointer from './input/pointer';

@@ -4,7 +4,7 @@ import action from '../../action';
 import { Action } from '../../action';
 import vectorAction from '../../action/vector';
 import { speedPerSecond } from '../../calc';
-import everyFrame from '../every-frame';
+import onFrame from '../on-frame';
 import { SpringInterface, SpringProps } from './types';
 
 const spring = ({
@@ -23,7 +23,7 @@ const spring = ({
   let position = from;
   let prevPosition = position;
 
-  const springTimer = everyFrame().start(() => {
+  const springTimer = onFrame().start(() => {
     const timeDelta = timeSinceLastFrame() / 1000;
     t += timeDelta;
     const dampingRatio = damping / (2 * Math.sqrt(stiffness * mass));

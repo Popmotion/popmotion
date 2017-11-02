@@ -1,7 +1,8 @@
 import React from 'react';
-import { BaseAnimation } from './inc';
+import { BaseAnimation, Box } from './inc';
 import tween from '../packages/popmotion/lib/animations/tween';
-import value from '../packages/popmotion/lib/animations/tween';
+import value from '../packages/popmotion/lib/reactions/value';
+import style from '../packages/popmotion/lib/reactions/style';
 
 export class TweenBasic extends BaseAnimation {
   getAnimation = (styler) => tween({
@@ -48,3 +49,21 @@ export class TweenWithVelocity extends BaseAnimation {
   }
 }
 
+export class TweenWithStyle extends React.Component {
+  setRef = (dom) => {
+    if (!dom) return;
+    this.dom = dom;
+  };
+
+  componentDidMount() {
+    tween().start(style(this.dom, 'opacity'));
+  }
+
+  componentWillUnmount() {
+    this.animation.stop();
+  }
+
+  render() {
+    return <Box innerRef={this.setRef} />;
+  }
+}

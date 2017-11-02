@@ -15,6 +15,6 @@ export class BaseAnimation extends React.Component {
   }
 
   render() {
-    return <Box innerRef={this.setRef} />
+    return <Box innerRef={this.setRef} />;
   }
 }

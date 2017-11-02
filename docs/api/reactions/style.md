@@ -8,12 +8,14 @@ category: reactions
 
 Style HTML and SVG elements using the performance of [Stylefire](/api/stylefire).
 
+**Note:** This function returns a **partial** reaction, an update function.
+
 ## Import
 
 ```javascript
 import { style } from 'popmotion';
 // or stand-alone:
-import style from 'popmotion/reaction/style';
+import style from 'popmotion/reactions/style';
 ```
 
 ## Usage
@@ -21,7 +23,7 @@ import style from 'popmotion/reaction/style';
 ### Single prop
 
 ```typescript
-style(selector: string, key?: string): { update: Function }
+style(selector: string, key?: string): (v: any) => void;
 ```
 
 Passing `style` both a `selector` and a `key` will create a reaction that uses all provided values to set that property on **all** selected elements:
@@ -65,4 +67,15 @@ composite({
   x: spring({ to: 500 }),
   opacity: tween({ from: 0, to: 1 })
 }).start(style('./active'));
+```
+
+### Chaining
+
+`reaction` and `value` are `chainable` and `subscribable`. As this function returns **only** an `update` function, to leverage these abilities we need to import and use `reaction`:
+
+```javascript
+const double = reaction().pipe((v) => v * 2);
+double.subscribe(style('div', 'x'));
+
+tween().start(double);
 ```

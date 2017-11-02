@@ -4,7 +4,7 @@ import { number } from 'style-value-types';
 import action from '../../action';
 import { Action } from '../../action';
 import vectorAction from '../../action/vector';
-import everyFrame from '../every-frame';
+import onFrame from '../on-frame';
 import { Props } from './types';
 
 const decay = ({
@@ -22,7 +22,7 @@ const decay = ({
     ? idealTarget
     : modifyTarget(idealTarget);
 
-  const timer = everyFrame().start(() => {
+  const timer = onFrame().start(() => {
     elapsed += timeSinceLastFrame();
     const delta = -amplitude * Math.exp(-elapsed / timeConstant);
     const isMoving = (delta > restDelta || delta < -restDelta);

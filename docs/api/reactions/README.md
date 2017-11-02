@@ -1,6 +1,6 @@
 ---
 title: Reaction
-description: A special ob
+description: A collection of update, complete and error functions that are subscribable.
 category: reactions
 ---
 
@@ -13,7 +13,7 @@ A **reaction** is a collection of `update`, `complete` and `error` functions tha
 ```javascript
 import { reaction } from 'popmotion';
 // or stand-alone:
-import reaction from 'popmotion/reaction';
+import reaction from 'popmotion/reactions';
 ```
 
 ## Methods

@@ -1,9 +1,9 @@
-import { cancelOnFrameUpdate, onFrameUpdate } from 'framesync';
+import { cancelOnFrameUpdate, currentFrameTime, onFrameUpdate } from 'framesync';
 import action, { Action } from '../../action';
 
-const everyFrame = (): Action => action(({ update }) => {
+const frame = (): Action => action(({ update }) => {
   const nextFrame = () => {
-    update();
+    update(currentFrameTime());
     onFrameUpdate(nextFrame);
   };
 
@@ -14,4 +14,4 @@ const everyFrame = (): Action => action(({ update }) => {
   };
 });
 
-export default everyFrame;
+export default frame;
