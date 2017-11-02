@@ -49,9 +49,16 @@ convertToPx(5); // '5px'
 Takes the offset of the provided value from `from`, and applies it to `to`.
 
 `applyOffset(from: number, to: number)`
+`applyOffset(to: number)`
 
 ```javascript
+// With two arguments
 applyOffset(0, 10)(20); // 30
+
+// With one argument
+const offsetFromFirst = applyOffset(10);
+offsetFromFirst(20); // 10
+offsetFromFirst(21); // 11
 ```
 
 ### `bezier`

@@ -5,7 +5,7 @@ import { Point2D, PointerProps } from './types';
 
 const getFirstTouch = ([firstTouch]: Point2D[]): Point2D => firstTouch;
 
-const pointer = (props: PointerProps): Action => getIsTouchDevice()
+const pointer = (props: PointerProps = {}): Action => getIsTouchDevice()
   ? touch(props).pipe(getFirstTouch)
   : mouse(props);
 

@@ -4,6 +4,8 @@ description: Inject a little fun into your text fields with a spring-loaded char
 category: projects
 ---
 
+# TODO: This documentation is specific to Popmotion < 7
+
 # Spring-loaded "characters remaining" counter
 
 Forms are, by nature, dreary. From a user's perspective, there's nothing fun about them: Non-zero friction, effort, the cold exchange of info for goods.

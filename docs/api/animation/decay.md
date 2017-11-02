@@ -34,6 +34,10 @@ decay({ velocity: 200, from: 50 })
 - `restDelta: number = 0.5`: Automatically completes the action when the calculated value is this far away from the target.
 - `modifyTarget: (v: number) => number`: A function that receives the calculated target and returns a new one. Useful for snapping the target to a grid, for example.
 
+## Methods
+
+- `stop(): void`
+
 ## Example
 
 TODO

@@ -1,5 +1,5 @@
 import action from '../../action';
-import everyFrame from '../../animations/every-frame';
+import onFrame from '../../animations/on-frame';
 import chain from '../chain';
 import composite from '../composite';
 import crossFade from '../crossfade';
@@ -12,7 +12,7 @@ const fireOne = action(({ complete, update }) => {
 
 const createCounter = (start) => action(({ complete, update }) => {
   let counter = start;
-  everyFrame().start(() => {
+  onFrame().start(() => {
     counter++;
     if (counter > start + 3) {
       complete();

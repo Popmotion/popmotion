@@ -6,7 +6,9 @@ category: stylefire
 
 # Stylefire
 
-Stylefire is a collection of CSS, SVG and DOM scroll style setters optimized to work with animation libraries. It can also be used outside of animations and provides a cached state to prevent unnecessary DOM reads.
+Stylefire is a collection of CSS, SVG and DOM scroll style setters optimized to work with animation libraries.
+
+It can also be used outside of animations and provides a cached state to prevent unnecessary DOM reads.
 
 It batches renders to the `render` step of the [Framesync](/api/framesync) loop to prevent layout thrashing, but renders can also be triggered manually.
 
@@ -23,6 +25,24 @@ npm install stylefire --save
 - [CSS](/api/css)
 - [SVG](/api/svg)
 - [DOM Scroll](/api/scroll)
+
+## Usage
+
+As a standalone library:
+
+```javascript
+import styler from 'stylefire';
+```
+
+From Popmotion:
+
+```javascript
+import { styler } from 'popmotion';
+// Or, to import on its own:
+import styler from 'stylefire';
+```
+
+`styler` accepts a single `Element` and returns either the [CSS](/api/css) or [SVG](/api/svg) styler depending on element type (see individual docs).
 
 ## Create custom styler
 

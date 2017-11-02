@@ -1,3 +1,12 @@
+export type PointerPoint = {
+  clientX: number,
+  clientY: number,
+  pageX: number,
+  pageY: number,
+  x: number,
+  y: number
+};
+
 export type Point2D = {
   x: number,
   y: number

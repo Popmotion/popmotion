@@ -6,31 +6,41 @@ category: basics
 
 # Velocity, momentum and spring physics
 
-A core feature of Popmotion is the ability to query the `velocity` of **any** action.
+A core feature of Popmotion is to easily query the `velocity` of animations.
 
-We can pass this `velocity` value to the `physics` action, to create smooth transitions from one action into either a momentum or spring-based physics-driven animation.
+We can pass this `velocity` to the `physics` and `spring` actions, to create smooth transitions from one animation into another.
 
-## Getting velocity
+## Query velocity
 
-The first step is to get our velocity. Every action offers the `getVelocity` method, which returns the velocity as measured in **units per second**.
+The `value` reaction can be used to track numbers and query their velocity.
+
+Its `getVelocity` method returns the velocity as measured in **units per second**.
 
 Why units per second, instead of units per frame? Although 60fps is the current common framerate, VR devices support 90+ fps and the iPad Pro delivers a silky 120 frames per second!
 
-To future-proof our code, we decouple velocity from the device framerate, otherwise our animations would run at 1.5x or even 2x the speed.
+To future-proof our code, we decouple velocity from the device framerate, otherwise our animations would run at 1.5x or even 2x the speed on these faster displays.
 
-So for instance, if we make a `tween` that uses `linear` easing over the course of a second, and get its velocity, we will receive its `to` value (because that is its speed per second):
+## Example
+
+For example, lets use a `value` to inspect the velocity of a `tween`:
 
 ```javascript
-const myTween = tween({
-  to: 500,
-  duration: 1000
-}).start();
+import { tween, value } from 'popmotion';
 
-setTimeout(
-  () => console.log(myTween.getVelocity()), // 500
-  500
-);
+const foo = value(0);
+
+tween({ to: 500 }).start(foo);
+
+setTimeout(() => console.log(foo.getVelocity()), 200);
 ```
+
+## Applying velocity to `physics`
+
+Now we can apply that velocity to our ball from the input tracking tutorial.
+
+First, create a single `value` that updates the ball's 
+
+
 
 ## Applying velocity to physics
 

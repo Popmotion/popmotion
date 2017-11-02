@@ -41,6 +41,12 @@ document.addEventListener('touchscroll', beginScroll);
 document.addEventListener('mousedown', beginScroll);
 ```
 
+Reactions are provided the following pointer data:
+
+- `x`, `y`: Alias of `clientX` / `clientY`
+- `clientX`, `clientY`: Position relative to the viewport.
+- `pageX`, `pageY`: Position relative to the document.
+
 ## Props
 
 - `preventDefault: boolean = true`

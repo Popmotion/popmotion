@@ -1,14 +1,15 @@
 import { cancelOnFrameUpdate, onFrameUpdate } from 'framesync';
 import action, { Action } from '../../action';
-import { Point2D, PointerProps } from './types';
+import { defaultPointerPos, eventToPoint } from '../pointer/utils';
+import { PointerPoint, PointerProps } from './types';
 
-const point: Point2D = { x: 0, y: 0 };
+const point: PointerPoint = defaultPointerPos();
 let isMouseDevice = false;
+
 if (typeof document !== 'undefined') {
   const updatePointLocation = (e: MouseEvent) => {
     isMouseDevice = true;
-    point.x = e.clientX;
-    point.y = e.clientY;
+    eventToPoint(e, point);
   };
 
   document.addEventListener('mousedown', updatePointLocation);

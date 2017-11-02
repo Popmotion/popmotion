@@ -1,24 +1,22 @@
 import { cancelOnFrameUpdate, onFrameUpdate } from 'framesync';
 import action, { Action } from '../../action';
-import { Point2D, PointerProps } from '../pointer/types';
+import { PointerPoint, PointerProps } from '../pointer/types';
+import { defaultPointerPos, eventToPoint } from '../pointer/utils';
 import { WhatWGAddEventListener } from './types';
 
-const touchToPoint = ({ clientX, clientY }: Touch) => ({
-  x: clientX,
-  y: clientY
-});
-
-const points: Point2D[] = [{ x: 0, y: 0 }];
+const points: PointerPoint[] = [defaultPointerPos()];
 let isTouchDevice = false;
 if (typeof document !== 'undefined') {
   const updatePointsLocation = ({ touches }: TouchEvent) => {
     isTouchDevice = true;
     const numTouches = touches.length;
+
+    // TODO: Optimisation would be to provide existing points to `eventToPoint`
     points.length = 0;
 
     for (let i = 0; i < numTouches; i++) {
       const thisTouch = touches[i];
-      points.push(touchToPoint(thisTouch));
+      points.push(eventToPoint(thisTouch));
     }
   };
 

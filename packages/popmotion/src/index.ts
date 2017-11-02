@@ -1,10 +1,9 @@
 // Core
 import action from './action';
 import reaction from './reactions';
-import style from './reactions/style';
 import value from './reactions/value';
 
-export { action, reaction, style, value };
+export { action, reaction, value };
 
 // Animations
 import decay from './animations/decay';
@@ -18,10 +17,11 @@ export { decay, keyframes, onFrame, physics, spring, tween };
 
 // Input
 import pointer from './input/pointer';
+import deltaPointer from './input/pointer/delta';
 import mouse from './input/pointer/mouse';
 import touch from './input/touch';
 
-export { pointer, mouse, touch };
+export { deltaPointer, pointer, mouse, touch };
 
 // Compositors
 import composite from './compositors/composite';
@@ -35,3 +35,7 @@ import * as easing from './easing';
 import * as transform from './transformers';
 
 export { calc, easing, transform };
+
+// Stylefire
+import styler from 'stylefire';
+export { styler };
