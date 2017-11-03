@@ -3,7 +3,7 @@ import { applyOffset } from '../../transformers';
 import pointer from './';
 import { Point2D } from './types';
 
-const deltaPointer = (x: number, y: number): Action => {
+const pointerDelta = ({ x, y }: Point2D): Action => {
   const applyXOffset = applyOffset(x);
   const applyYOffset = applyOffset(y);
   const delta = { x: 0, y: 0 };
@@ -15,4 +15,4 @@ const deltaPointer = (x: number, y: number): Action => {
   });
 };
 
-export default deltaPointer;
+export default pointerDelta;

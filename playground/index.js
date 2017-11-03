@@ -5,9 +5,9 @@ import { storiesOf } from '@storybook/react';
 import { Decay, DecayModifyTarget, DecayPower, DecayTimeConstant } from './decay';
 import { Keyframes, KeyframesDuration, KeyframesLoop, KeyframesLinear, KeyframesTimes } from './keyframes';
 import { PhysicsVelocity, PhysicsAcceleration, PhysicsFriction, PhysicsSpring, PhysicsChangeSpringTarget } from './physics';
-import { TweenBasic, TweenLoop, TweenYoyo, TweenFlip, TweenWithVelocity, TweenWithStyle } from './tween';
+import { TweenBasic, TweenLoop, TweenYoyo, TweenFlip, TweenWithVelocity } from './tween';
 import { Spring, SpringVelocity, SpringHeavier, SpringStiffer, SpringStifferDamping } from './spring';
-import { Drag } from './pointer';
+import { Drag, DragWithDeltaPointer } from './pointer';
 
 
 storiesOf('decay', module)
@@ -42,8 +42,8 @@ storiesOf('tween', module)
 .add('loop', () => <TweenLoop />)
 .add('yoyo', () => <TweenYoyo />)
 .add('flip', () => <TweenFlip />)
-.add('track velocity', () => <TweenWithVelocity />)
-.add('tween with style', () => <TweenWithStyle />);
+.add('track velocity', () => <TweenWithVelocity />);
 
 storiesOf('pointer', module)
-.add('drag', () => <Drag />);
+.add('drag', () => <Drag />)
+.add('drag with delta pointer', () => <DragWithDeltaPointer />);
