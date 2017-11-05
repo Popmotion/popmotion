@@ -19,7 +19,7 @@ It's a massive rewrite. It's been ported to TypeScript and has much higher test 
 
 The new API is Rx-inspired, using **action** and **reactions** to create streams of values.
 
-I've added `decay`, `keyframes` and `pointerDelta` actions. I've also removed a lot of the cruft - needless transformers like `add` etc.
+I've added `decay`, `keyframes`, `onFrame` and `pointerDelta` actions. I've also removed a lot of the cruft - needless transformers like `add` etc.
 
 You can also now animate more than raw numbers - `tween`, `physics`, `decay` and `spring` all accept named-objects and n-dimensional arrays. So you can do stuff like this:
 
