@@ -2,7 +2,7 @@
 title: Get started
 description: Introduction to Popmotion's tween animation.
 category: basics
-next: input-tracking
+next: action-basics
 ---
 
 # Get started
@@ -77,4 +77,4 @@ tween({ to: 300, duration: 100 }).start(ballStyler.set('x'))
 `}</Example>
 ```
 
-And that's it! Your first animation. Next, learn about [input tracking](/learn/input-tracking) or deep-dive into the [tween docs](/api/tween).
+And that's it! Your first animation. Next, let's learn more about [actions](/learn/action-basics).
