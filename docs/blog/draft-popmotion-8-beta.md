@@ -53,6 +53,6 @@ There are some notable missing features from 8:
 
 ## How to get in touch
 
-Please raise any issues you have on our GitHub issues page and I'll try and be quick to address them.
+Please raise any issues you have (bugs, thoughts, feature requests) on our [GitHub issues](https://github.com/Popmotion/popmotion/issues) page and I'll try and be quick to address them.
 
 Thanks again for helping me with this.
