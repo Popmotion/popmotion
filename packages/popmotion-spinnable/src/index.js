@@ -1,12 +1,13 @@
 import {
-  pointer,
+  pointerDelta,
   calc,
   value,
-  css,
+  styler,
   physics,
-  trackOffset
+  transform
 } from 'popmotion';
 const { angle } = calc;
+const { applyOffset } = transform;
 
 export default function spinnable(node, {
   initialRotation = 0,
@@ -14,42 +15,41 @@ export default function spinnable(node, {
   transformSpin,
   onSpin
 }) {
-  const renderer = css(node);
-  const nodeRotation = value(initialRotation, (v) => {
+  const nodeStyler = styler(node);
+  const nodeRotation = value(initialRotation);
+
+  nodeRotation.subscribe((v) => {
     const current = transformSpin ? transformSpin(v) : v;
     if (onSpin) onSpin(current);
-    renderer.set('rotate', current);
+    nodeStyler.set('rotate', current);
   });
 
   function startTracking(e) {
     e.preventDefault();
-    const pointerAngle = pointer(e, {
-      transform: (v) => {
-        const nodePos = node.getBoundingClientRect();
-        const nodeCenter = {
-          x: nodePos.left + (nodePos.width / 2),
-          y: nodePos.top + (nodePos.height / 2)
-        };
-        const angleFromCenter = angle(nodeCenter, v);
 
-        return angleFromCenter;
-      }
-    }).start();
+    pointerDelta()
+      .pipe(
+        (v) => {
+          const nodePos = node.getBoundingClientRect();
+          const nodeCenter = {
+            x: nodePos.left + (nodePos.width / 2),
+            y: nodePos.top + (nodePos.height / 2)
+          };
+          const angleFromCenter = angle(nodeCenter, v);
 
-    trackOffset(pointerAngle, {
-      from: nodeRotation.get(),
-      onUpdate: nodeRotation,
-      onStop: () => pointerAngle.stop()
-    }).start();
+          return angleFromCenter;
+        },
+        applyOffset(nodeRotation.get())
+      )
+      .start(nodeRotation);
   }
 
   function stopTracking() {
     physics({
       from: nodeRotation.get(),
       velocity: nodeRotation.getVelocity(),
-      friction,
-      onUpdate: nodeRotation
-    }).start();
+      friction
+    }).start(nodeRotation);
   }
 
   node.addEventListener('mousedown', startTracking);

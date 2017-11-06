@@ -41,7 +41,7 @@
 TODO
 
 ## Official plugins
-TODO: Not yet compatible with Popmotion 8
+- [Draggable](/api/draggable)
 
 ## Installation
 

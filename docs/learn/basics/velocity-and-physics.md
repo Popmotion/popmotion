@@ -55,15 +55,15 @@ const ballX = value(0);
 ballX.subscribe((v) => ballStyler.set('x', v));
 ```
 
-Now we can replace the `startDrag` and `stopDrag` functions with this:
+Now we can replace the `startTracking` and `stopTracking` functions with this:
 
 ```javascript
-function startDrag() {
+function startTracking() {
   pointerTracker = pointerDelta({ x: ballX.get('x'), y: 0 })
     .start(ballX);
 }
 
-function stopDrag() {
+function stopTracking() {
   pointerTracker.stop();
   const velocity = ballX.getVelocity();
 }
@@ -77,7 +77,7 @@ By using the current velocity of an animation to affect a new one, transitions b
 
 Likewise, it's incredibly engaging, delightful and playful for a user when the energy from their actions directly affects the following animations.
 
-Let's modify `stopDrag` three times so we provide `velocity` and take a look at what each of these animations does with it.
+Let's modify `stopTracking` three times so we provide `velocity` and take a look at what each of these animations does with it.
 
 ## `decay`
 
@@ -100,13 +100,13 @@ ballX.subscribe((v) => ballStyler.set('x', v));
 
 let activeAction;
 
-function startDrag() {
+function startTracking() {
   if (activeAction) activeAction.stop();
   activeAction = pointerDelta({ x: ballX.get('x'), y: 0 })
     .start(ballX);
 }
 
-function stopDrag() {
+function stopTracking() {
   if (activeAction) activeAction.stop();
   const velocity = ballX.getVelocity();
   activeAction = decay({ velocity }).start(ballX);
@@ -155,13 +155,13 @@ ballX.subscribe((v) => ballStyler.set('x', v));
 
 let activeAction;
 
-function startDrag() {
+function startTracking() {
   if (activeAction) activeAction.stop();
   activeAction = pointerDelta({ x: ballX.get('x'), y: 0 })
     .start(ballX);
 }
 
-function stopDrag() {
+function stopTracking() {
   if (activeAction) activeAction.stop();
   const velocity = ballX.getVelocity();
   activeAction = spring({
@@ -190,7 +190,7 @@ These equations are incredibly accurate, offering the smoothest motion and in th
 
 Instead, `physics` is an **intergrated simulation**. This means that, once the simulation has started, its properties **can be modified** because `physics` uses **its current state** to calculate its next, unlike the other two which are entirely deterministic.
 
-For instance, you could modify `startDrag` to make a `pointer` update the `springTarget` of a `physics` animation to make the ball spring towards the pointer:
+For instance, you could modify `startTracking` to make a `pointer` update the `springTarget` of a `physics` animation to make the ball spring towards the pointer:
 
 ```javascript
 const springTo = physics({
@@ -215,7 +215,7 @@ ballX.subscribe((v) => ballStyler.set('x', v));
 let activeAction;
 let pointerTracker;
 
-function startDrag() {
+function startTracking() {
   if (activeAction) activeAction.stop();
 
   activeAction = physics({
@@ -230,7 +230,7 @@ function startDrag() {
     .start((v) => activeAction.setSpringTarget(v));
 }
 
-function stopDrag() {
+function stopTracking() {
   if (activeAction) activeAction.stop();
   if (pointerTracker) pointerTracker.stop();
 
