@@ -120,9 +120,11 @@ getDelta(110) // 10
 ### `interpolate`
 Returns a function that, when passed a value, interpolates from the `inputRange` to the `outputRange`.
 
-An optional easing function can be passed as the third argument, otherwise linear interpolation will be used by default.
+An optional array of easing functions can be passed as the third argument, otherwise linear interpolation will be used by default.
 
 Provided values outside the given ranges will be clamped to the output range limits.
+
+**Note:** The `inputRange` must be in linear order. ie `[100, 200, 300]` and ``[100, 0]` are valid, whereas `[100, 50, 200]` is not.
 
 `interpolate(inputRange: number[], outputRange: number[], ease: Easing[])`
 
