@@ -90,18 +90,28 @@ describe('interpolate()', () => {
     () => {
       const simpleInterpolator = interpolate([0, 1000], [500, 600]);
       expect(simpleInterpolator(500)).toBe(550);
+      expect(simpleInterpolator(0)).toBe(500);
 
       const complexInterpolator = interpolate(
         [0, 100, 200],
         [1000, 500, 1000]
       );
       expect(complexInterpolator(100)).toBe(500);
+
+      const simpleInterpolatorR = interpolate([1000, 0], [500, 600]);
+      expect(simpleInterpolatorR(500)).toBe(550);
+      expect(simpleInterpolatorR(1000)).toBe(500);
+      expect(simpleInterpolatorR(0)).toBe(600);
+
+      const complexInterpolatorR = interpolate(
+        [0, 100, 200],
+        [1000, 500, 1000]
+      );
+      expect(complexInterpolatorR(100)).toBe(500);
+      expect(complexInterpolatorR(0)).toBe(1000);
+      expect(complexInterpolatorR(200)).toBe(1000);
     }
   );
-
-  it('should optionally accept an easing function', () => {
-
-  });
 });
 
 describe('steps()', () => {

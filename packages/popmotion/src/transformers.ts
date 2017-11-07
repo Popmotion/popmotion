@@ -77,6 +77,12 @@ export const interpolate = (input: number[], output: number[], rangeEasing: Easi
   const rangeLength = input.length;
   const finalIndex = rangeLength - 1;
 
+  // If input runs highest -> lowest, reverse both arrays
+  if (input[0] > input[finalIndex]) {
+    input.reverse();
+    output.reverse();
+  }
+
   return (v: number) => {
     // If value outside minimum range, quickly return
     if (v <= input[0]) {
