@@ -18,7 +18,7 @@
 - **[Pointer](https://popmotion.io/api/pointer):** Full support for mouse and multitouch inputs.
 
 ### Popmotion is:
-- **Tiny:** At 9kb **max**, it's 75% smaller than GreenSock TweenMax. Everything is also importable individually.
+- **Tiny:** At 9kb **max**, it's 75% smaller than GreenSock TweenMax. Everything is also importable individually to crush those bytes!
 - **Reactive:** Super-simple Rx-inspired API for subscribing to streams of animation events.
 - **Composable:** All actions can be **delayed**, **staggered** **merged**, **crossfaded** and **chained**.
 - **Cross-platform:** Runs on **IE9+**, plus **Node**-based environments like Arduino.
@@ -28,7 +28,6 @@
 - **Supported:** Full ecosystem of awesome plugins.
 
 ## Beta TODOs
-- Learn docs
 - Support color
 - Introduce remaining compositors
 - Figure out stagger interface
@@ -40,20 +39,9 @@
 ## Examples
 TODO
 
-## Official plugins
+## Plugins
 - [Draggable](/api/draggable)
-
-## Installation
-
-```bash
-npm install --save popmotion
-```
-
-In your javascript module:
-
-```javascript
-import { tween } from 'popmotion';
-```
+- [Spinnable](/api/spinnable)
 
 ### [Get Started](https://popmotion.io/learn/get-started)
 ### [Full API documentation](https://popmotion.io/api)

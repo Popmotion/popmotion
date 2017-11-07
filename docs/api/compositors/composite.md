@@ -6,6 +6,8 @@ category: compositors
 
 # Composite
 
+Control a named map of actions, and output to the same structure.
+
 ## Import
 
 ```javascript

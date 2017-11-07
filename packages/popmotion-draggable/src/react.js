@@ -4,6 +4,7 @@ import draggable from './';
 export default class Draggable extends React.Component {
   constructor(props) {
     super(props);
+
     this.setRef = (ref) => {
       if (ref) {
         const { children, className, ...props } = this.props;
@@ -13,7 +14,7 @@ export default class Draggable extends React.Component {
   }
 
   componentWillUnmount() {
-    this.drag.stop();
+    if (this.drag) this.drag.stop();
   }
 
   render() {

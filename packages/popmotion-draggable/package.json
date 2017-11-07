@@ -1,6 +1,6 @@
 {
   "name": "popmotion-draggable",
-  "version": "1.0.1",
+  "version": "8.0.6",
   "description": "Make DOM nodes draggable with Popmotion",
   "author": "Matt Perry <sirhound@popmotion.io>",
   "homepage": "http://popmotion.io",
@@ -48,6 +48,6 @@
     "babel-register": "^6.3.13"
   },
   "peerDependencies": {
-    "popmotion": "^7.7.0"
+    "popmotion": "^8.0.6"
   }
 }

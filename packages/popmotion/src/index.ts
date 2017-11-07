@@ -24,10 +24,11 @@ import touch from './input/touch';
 export { pointerDelta, pointer, mouse, touch };
 
 // Compositors
+import chain from './compositors/chain';
 import composite from './compositors/composite';
 import parallel from './compositors/parallel';
 
-export { composite, parallel };
+export { chain, composite, parallel };
 
 // Includes
 import * as calc from './calc';

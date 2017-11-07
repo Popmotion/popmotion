@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.0.7@beta] 2017-11-07
+
+### Added
+- `chain` compositor.
+
 ## [8.0.4@beta] 2017-10-30
 
 ### Added

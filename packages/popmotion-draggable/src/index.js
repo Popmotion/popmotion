@@ -14,23 +14,24 @@ export default function draggable(node, {
 
   if (x) {
     values.x = value(initialX);
-    values.x.subscribe((v) => nodeRenderer.set('x', v));
+    values.x.subscribe((v) => nodeStyler.set('x', v));
   }
 
   if (y) {
     values.y = value(initialY);
-    values.y.subscribe((v) => nodeRenderer.set('y', v));
+    values.y.subscribe((v) => nodeStyler.set('y', v));
   }
 
   let trackPointer;
 
-  function startTracking(e) {
+  function startTracking() {
     trackPointer = pointerDelta({
       x: x ? values.x.get() : 0,
       y: y ? values.y.get() : 0
     }).start((v) => {
-      if (x) values.x.update(v);
-      if (y) values.y.update(v);
+      if (x) values.x.update(v.x);
+      if (y) values.y.update(v.y);
+      if (onDrag) onDrag(values);
     });
 
     if (onDragStart) onDragStart(values);
@@ -46,5 +47,7 @@ export default function draggable(node, {
   document.addEventListener('mouseup', stopTracking);
   document.addEventListener('touchend', stopTracking);
 
-  return nodeXY;
+  return {
+    stop: () => trackPointer && trackPointer.stop()
+  };
 }

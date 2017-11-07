@@ -44,6 +44,8 @@ spinnable(node, {
 });
 ```
 
+`spinnable` returns an object with a `stop` method.
+
 ## React
 
 ```javascript

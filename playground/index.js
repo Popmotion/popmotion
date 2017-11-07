@@ -8,7 +8,8 @@ import { PhysicsVelocity, PhysicsAcceleration, PhysicsFriction, PhysicsSpring, P
 import { TweenBasic, TweenLoop, TweenYoyo, TweenFlip, TweenWithVelocity } from './tween';
 import { Spring, SpringVelocity, SpringHeavier, SpringStiffer, SpringStifferDamping } from './spring';
 import { Drag, DragWithDeltaPointer } from './pointer';
-
+//import { DraggableDOM, DraggableReact } from './plugins/draggable';
+//import { SpinnableDOM, SpinnableReact } from './plugins/spinnable';
 
 storiesOf('decay', module)
 .add('default decay', () => <Decay />)
@@ -47,3 +48,12 @@ storiesOf('tween', module)
 storiesOf('pointer', module)
 .add('drag', () => <Drag />)
 .add('drag with delta pointer', () => <DragWithDeltaPointer />);
+
+// Commented as there's currently a "Recursion in resolving" error with plugins calling popmotion
+// storiesOf('Plugin: Draggable', module)
+// .add('draggable', () => <DraggableDOM />)
+// .add('draggable React', () => <DraggableReact />);
+
+// storiesOf('Plugin: Spinnable', module)
+// .add('spinnable', () => <SpinnableDOM />)
+// .add('spinnable React', () => <SpinnableReact />);

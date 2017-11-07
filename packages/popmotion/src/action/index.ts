@@ -13,13 +13,15 @@ export class Action extends Chainable<Action> {
     const observer = createObserver(observerCandidate, observerProps);
     const api = init(observer);
 
-    const subscription: ColdSubscription = {
+    const defaultSubscription: ColdSubscription = {
       stop: () => undefined
     };
 
-    return api
-      ? { ...subscription, ...api }
-      : subscription;
+    const subscription = api
+      ? { ...defaultSubscription, ...api }
+      : defaultSubscription;
+
+    return subscription;
   }
 }
 

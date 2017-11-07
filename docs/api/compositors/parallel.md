@@ -6,6 +6,8 @@ category: compositors
 
 # Parallel
 
+Control an n-dimensional array of actions in parallel, and output as an array.
+
 ## Import
 
 ```javascript

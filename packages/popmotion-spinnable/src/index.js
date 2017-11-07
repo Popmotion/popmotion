@@ -1,5 +1,5 @@
 import {
-  pointerDelta,
+  pointer,
   calc,
   value,
   styler,
@@ -14,9 +14,10 @@ export default function spinnable(node, {
   friction = 0.4,
   transformSpin,
   onSpin
-}) {
+} = {}) {
   const nodeStyler = styler(node);
   const nodeRotation = value(initialRotation);
+  let active;
 
   nodeRotation.subscribe((v) => {
     const current = transformSpin ? transformSpin(v) : v;
@@ -26,8 +27,9 @@ export default function spinnable(node, {
 
   function startTracking(e) {
     e.preventDefault();
+    if (active) active.stop();
 
-    pointerDelta()
+    active = pointer()
       .pipe(
         (v) => {
           const nodePos = node.getBoundingClientRect();
@@ -45,7 +47,8 @@ export default function spinnable(node, {
   }
 
   function stopTracking() {
-    physics({
+    if (active) active.stop();
+    active = physics({
       from: nodeRotation.get(),
       velocity: nodeRotation.getVelocity(),
       friction
@@ -57,5 +60,7 @@ export default function spinnable(node, {
   document.addEventListener('mouseup', stopTracking);
   document.addEventListener('touchend', stopTracking);
 
-  return nodeRotation;
+  return {
+    stop: () => active && active.stop()
+  };
 }

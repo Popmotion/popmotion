@@ -43,6 +43,8 @@ draggable(node, {
 });
 ```
 
+`draggable` returns an object with a `stop` method.
+
 ## React
 
 ```javascript
