@@ -35,9 +35,7 @@ const parallel = (...actions: Action[]) => action(({ update, complete, error }) 
         if (updatedActions.length === numActions) allActionsHaveUpdated = true;
       }
 
-      // NOTE: This is conceivably a source of 1 delayed frame. Maybe add
-      // a new prerender step to framesync?
-      if (allActionsHaveUpdated) onFrameUpdate(updateOutput);
+      if (allActionsHaveUpdated) onFrameUpdate(updateOutput, true);
     }
   }));
 

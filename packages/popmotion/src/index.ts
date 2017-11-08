@@ -26,9 +26,13 @@ export { pointerDelta, pointer, mouse, touch };
 // Compositors
 import chain from './compositors/chain';
 import composite from './compositors/composite';
+import crossfade from './compositors/crossfade';
+import delay from './compositors/delay';
+import merge from './compositors/merge';
 import parallel from './compositors/parallel';
+import stagger from './compositors/stagger';
 
-export { chain, composite, parallel };
+export { chain, composite, crossfade, delay, merge, parallel, stagger };
 
 // Includes
 import * as calc from './calc';

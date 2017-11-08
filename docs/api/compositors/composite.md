@@ -1,5 +1,5 @@
 ---
-title: Composite
+title: Crossfade
 description: Control a map of actions and output to that same structure.
 category: compositors
 ---

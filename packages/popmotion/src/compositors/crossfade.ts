@@ -6,8 +6,9 @@ const crossfade = (a: Action, b: Action) => action((observer) => {
   let balance = 0;
   const fadable = parallel(a, b).start({
     ...observer,
-    update: ([va, vb]: [number, number]) =>
-      observer.update(getValueFromProgress(va, vb, balance))
+    update: ([va, vb]: [number, number]) => {
+      observer.update(getValueFromProgress(va, vb, balance));
+    }
   });
 
   return {

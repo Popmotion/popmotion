@@ -46,7 +46,7 @@ describe('crossfade', () => {
     return new Promise((resolve, reject) => {
       const i = 0;
       crossFade(createCounter(0), createCounter(1)).start({
-        complete: () => i === 2 ? resolve() : reject(i),
+        complete: () => i === 3 ? resolve() : reject(i),
         update: (v) => i = v
       });
     });
@@ -55,7 +55,7 @@ describe('crossfade', () => {
     return new Promise((resolve, reject) => {
       const i = 0;
       crossFade(createCounter(0), createCounter(1)).start({
-        complete: () => i === 4.5 ? resolve() : reject(i),
+        complete: () => i === 3.5 ? resolve() : reject(i),
         update: (v) => i = v
       }).setBalance(0.5);
     });

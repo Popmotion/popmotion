@@ -1,26 +1,27 @@
-// import action from '../action';
-// import { ObservableFactory, Subscription } from '../action/types';
+import action, { Action } from '../action';
+import { ColdSubscription } from '../action/types';
+import delay from './delay';
 
-// type ActionStarter = () => Subscription;
-// type Interval = (i: number) => number | number;
+type ActionStarter = () => ColdSubscription;
+type IntervalCalc = (i: number) => number;
+type Interval = number | IntervalCalc;
 
-// const stagger = (actionStarters: ActionStarter[], interval: Interval, onComplete?: Function): ObservableFactory => {
-//   delay(timeToDelay).start({
-//     complete: actionStarter
-//   });
-  
-  
-//   return parallel(actionStarters.map((actionStarter, i) => {
-//     const intervalIsFunction = typeof interval === 'number';
-//     const timeToDelay = intervalIsFunction ? interval : interval(i);
-//     return chain(
-//       delay(timeToDelay),
-//       actionStarter()
-//     );
-//   }));
-// };
+const stagger = (actionStarters: ActionStarter[], interval: Interval): Action => action(({ complete }) => {
+  const intervalIsNumber = typeof interval === 'number';
 
-// export default stagger;
+  const subs: ColdSubscription[] = actionStarters.map((actionStarter, i) => {
+    const timeToDelay: number = intervalIsNumber ? interval as number * i : (interval as IntervalCalc)(i);
 
+    return delay(timeToDelay).start({
+      complete: () => {
+        subs[i] = actionStarter();
+      }
+    });
+  });
 
+  return {
+    stop: () => subs.forEach((sub) => sub.stop && sub.stop())
+  };
+});
 
+export default stagger;
