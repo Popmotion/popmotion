@@ -1,10 +1,12 @@
+import { color } from 'style-value-types';
 import composite from '../compositors/composite';
 import parallel from '../compositors/parallel';
+import { blendColor } from '../transformers';
 import { Action } from './';
-// import { blendColor } from '../';
-// import { color } from 'style-value-types';
 
-// const isColor = color.test;
+// TODO: Clean this shit up
+
+const isColor = color.test;
 
 export type Props = {
   [key: string]: any
@@ -26,6 +28,19 @@ type VectorTestFactory = (typeTests: TypeTestMap) => {
 
 type CreateVectorAction = (init: ActionFactory, props: Props, vectorKeys: string[]) => Action;
 
+const convertToColorAction = (init: ActionFactory, props: Props) => (
+  typeof props.from === 'string' && isColor(props.from) &&
+  typeof props.to === 'string' && isColor(props.to)
+) ? init({
+    ...props,
+    from: 0,
+    to: 1
+  }).pipe(
+    blendColor(props.from, props.to),
+    color.transform
+  )
+  : init(props);
+
 const createVectorTests: VectorTestFactory = (typeTests) => {
   const testNames = Object.keys(typeTests);
 
@@ -43,7 +58,7 @@ const createVectorTests: VectorTestFactory = (typeTests) => {
 };
 
 const reduceArrayValue = (i: number) => (props: Props, key: string) => {
-  // Note: Type coercian makes this inefficient
+  // Note: Type coercion makes this inefficient
   props[key] = props[key][i];
   return props;
 };
@@ -51,14 +66,14 @@ const reduceArrayValue = (i: number) => (props: Props, key: string) => {
 const createArrayVector: CreateVectorAction = (init, props, vectorKeys) => {
   const [ firstVectorKey ] = vectorKeys;
   const actionList: Action[] = props[firstVectorKey].map((v: any, i: number) => {
-    return init(vectorKeys.reduce(reduceArrayValue(i), { ...props }));
+    return convertToColorAction(init, vectorKeys.reduce(reduceArrayValue(i), { ...props }));
   });
 
   return parallel(...actionList);
 };
 
 const reduceObjectValue = (key: string) => (props: Props, propKey: string) => {
-  // Note: Type coercian makes this inefficient
+  // Note: Type coercion makes this inefficient
   props[propKey] = props[propKey][key];
   return props;
 };
@@ -66,21 +81,15 @@ const reduceObjectValue = (key: string) => (props: Props, propKey: string) => {
 const createObjectVector: CreateVectorAction = (init, props, vectorKeys) => {
   const [ firstVectorKey ] = vectorKeys;
   const actionMap: ActionMap = Object.keys(props[firstVectorKey]).reduce((map: ActionMap, key) => {
-    map[key] = init(vectorKeys.reduce(reduceObjectValue(key), { ...props }));
+    map[key] = convertToColorAction(init, vectorKeys.reduce(reduceObjectValue(key), { ...props }));
     return map;
   }, {});
 
   return composite(actionMap);
 };
 
-// const createColorVector: CreateVectorAction = (init, props, vectorKeys) => createObjectVector(
-//   init,
-//   vectorKeys.reduce((colorProps, key) => {
-//     colorProps[key] = color.parse(props[key]);
-//     return colorProps;
-//   }, props),
-//   vectorKeys
-// ).pipe(blendColor(props.from, props.to), color.transform);
+// TODO: With this approach it should be easy to add color support to arrays and objects
+const createColorVector: CreateVectorAction = (init, props) => convertToColorAction(init, props);
 
 const vectorAction: VectorActionFactory = (init, typeTests) => {
   const { test, getVectorKeys } = createVectorTests(typeTests);
@@ -95,8 +104,8 @@ const vectorAction: VectorActionFactory = (init, typeTests) => {
 
     if (Array.isArray(testProp)) {
       return createArrayVector(init, props, vectorKeys);
-    // } else if (isColor(testProp)) {
-    //   return createColorVector(init, props, vectorKeys);
+    } else if (typeof testProp === 'string' && isColor(testProp)) {
+      return createColorVector(init, props, vectorKeys);
     } else {
       return createObjectVector(init, props, vectorKeys);
     }

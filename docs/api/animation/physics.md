@@ -36,13 +36,13 @@ physics({ velocity: 1000, friction: 0.8 })
   .start((v) => console.log(v));
 ```
 
-Finally, to simulate a spring we need to add `springTarget` and `springStrength` properties:
+Finally, to simulate a spring we need to add `to` and `springStrength` properties:
 
 ```javascript
 physics({
   velocity: 1000,
   friction: 0.8,
-  springTarget: 400,
+  to: 400,
   springStrength: 500
 }).start((v) => console.log(v));
 ```
@@ -52,7 +52,7 @@ We can also provide many properties as `Vector` types, which are maps or arrays 
 ```javascript
 physics({
   from: 100,
-  springTarget: { x: 30, y: 100, z: 20 },
+  to: { x: 30, y: 100, z: 20 },
   springStrength: 500
 })
 ```
@@ -63,8 +63,8 @@ physics({
 - `restSpeed: number = 0.001`: When absolute speed drops below this value, `complete` is fired.
 - `friction: number | Vector = 0`: Amount of friction to apply per frame, from `0` to `1`.
 - `from: number | Vector = 0`: Start simulation from this number.
-- `springStrength: number | Vector = 0`: If set with `springTarget`, will spring towards target with this strength.
-- `springTarget: number | Vector = 0`: If set with `springStrength`, will gradually "spring" towards this value.
+- `springStrength: number | Vector = 0`: If set with `to`, will spring towards target with this strength.
+- `to: number | Vector = 0`: If set with `springStrength`, will gradually "spring" towards this value.
 - `velocity: number | Vector = 0`: Velocity in units per second.
 
 ## Methods

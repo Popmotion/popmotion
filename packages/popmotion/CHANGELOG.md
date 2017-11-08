@@ -2,6 +2,16 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.0.9@beta] 2017-11-07
+
+### Added
+- Color support to all vector actions.
+
+## [8.0.8@beta] 2017-11-08
+
+### Added
+- `crossfade`, `delay`, `merge` and `stagger` compositors.
+
 ## [8.0.7@beta] 2017-11-07
 
 ### Added
@@ -24,7 +34,7 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 - Value Types: Moved to [Style Value Types](https://github.com/Popmotion/style-value-types)
 
 ### Changed
-- `physics` prop `to` is now `springTarget`
+- `physics` prop `to` is now `to`
 - `physics` prop `spring` is now `springStrength`
 - `physics` prop `autoStopSpeed` is now `restSpeed`.
 - `spring` prop `restDisplacement` is now `restDelta`.

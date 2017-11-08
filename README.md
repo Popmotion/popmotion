@@ -18,23 +18,18 @@
 - **[Pointer](https://popmotion.io/api/pointer):** Full support for mouse and multitouch inputs.
 
 ### Popmotion is:
-- **Tiny:** At 9kb **max**, it's 75% smaller than GreenSock TweenMax. Everything is also importable individually to crush those bytes!
+- **Tiny:** At 9.5kb **max**, it's 75% smaller than GreenSock TweenMax. Everything is individually importable to crush those bytes!
 - **Reactive:** Super-simple Rx-inspired API for subscribing to streams of animation events.
 - **Composable:** All actions can be **delayed**, **staggered** **merged**, **crossfaded** and **chained**.
 - **Cross-platform:** Runs on **IE9+**, plus **Node**-based environments like Arduino.
 - **Versatile:** Animate raw numbers, colors, objects or n-dimensional arrays.
-- **Performant af:** Batches jobs on the [Framesync](https://github.com/popmotion/framesync) `update` render step. Stands up to popular alternatives in [performance tests](http://codepen.io/popmotion/pen/zNYXmR).
+- **Performant af:** Batches renders on the [Framesync](https://github.com/popmotion/framesync) `render` render step. Stands up to popular alternatives in [performance tests](http://codepen.io/popmotion/pen/zNYXmR).
 - **Typesafe and tested:** Written in TypeScript, with Flow definitions available on [flow-typed](https://github.com/flowtype/flow-typed). Full test coverage.
 - **Supported:** Full ecosystem of awesome plugins.
 
-## Beta TODOs
-- Support color
-- Introduce remaining compositors
-- Figure out stagger interface
+## TODOs:
 - Figure out timeline interface
-- Update Learn documentation
 - Write upgrade guide
-- Investigate vector support for keyframe
 
 ## Examples
 TODO

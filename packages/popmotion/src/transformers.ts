@@ -1,4 +1,5 @@
 import { currentFrameTime } from 'framesync';
+import { color, Color, hsla } from 'style-value-types';
 import { getProgressFromValue, getValueFromProgress, smooth as calcSmoothing, stepProgress } from './calc';
 import { Easing } from './easing';
 
@@ -38,6 +39,38 @@ export const applyOffset = (from: number, to?: number) => {
       hasReceivedFrom = true;
       return to;
     }
+  };
+};
+
+const blend = (from: number, to: number, v: number) => {
+  const fromExpo = from * from;
+  const toExpo = to * to;
+  return Math.sqrt(v * (toExpo - fromExpo) + fromExpo);
+};
+
+// http://codepen.io/osublake/pen/xGVVaN
+export const blendColor = (from: Color | string, to: Color | string) => {
+  const fromColor = (typeof from === 'string') ? color.parse(from) : from;
+  const toColor = (typeof to === 'string') ? color.parse(to) : to;
+  const blended = { ...fromColor };
+
+  // Only use the sqrt blending function for rgba and hex
+  const blendFunc = (
+    (from as HSLA).hue !== undefined ||
+    typeof from === 'string' && hsla.test(from as string)
+  ) ? getValueFromProgress
+    : blend;
+
+  return (v: number) => {
+    for (const key in blended) {
+      if (key !== 'alpha' && blended.hasOwnProperty(key)) {
+        blended[key] = blendFunc(fromColor[key], toColor[key], v);
+      }
+    }
+
+    blended.alpha = getValueFromProgress(fromColor.alpha, toColor.alpha, v);
+
+    return blended;
   };
 };
 
@@ -164,9 +197,9 @@ export const snap = (points: number | number[]) => {
 };
 
 // TODO: Revist this and add direction
-export const steps = (steps: number, min = 0, max = 1) => (v: number) => {
+export const steps = (st: number, min = 0, max = 1) => (v: number) => {
   const progress = getProgressFromValue(min, max, v);
-  return getValueFromProgress(min, max, stepProgress(steps, progress));
+  return getValueFromProgress(min, max, stepProgress(st, progress));
 };
 
 export const transformChildValues = (childTransformers: { [key: string]: Function }) => {
@@ -186,27 +219,27 @@ export const transformChildValues = (childTransformers: { [key: string]: Functio
 // Bezier resolver
 // Refactored from https://github.com/hughsk/bezier/blob/master/index.js
 /**
-## The MIT License (MIT) ##
+    ## The MIT License (MIT) ##
 
-Copyright (c) 2013 Hugh Kennedy
+    Copyright (c) 2013 Hugh Kennedy
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+    The above copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+    THE SOFTWARE.
  */
 const resolve3 = (points: number[]) => (t: number) => {
   const ut = 1 - t;

@@ -182,7 +182,7 @@ document.addEventListener('touchend', stopTracking);
 
 The `physics` animation is the swiss army knife of velocity-based animations.
 
-It offers `friction`, `springTarget` and `springStrength` properties, so it can theoretically be used to create motion similar to `decay` and `spring`. 
+It offers `friction`, `to` and `springStrength` properties, so it can theoretically be used to create motion similar to `decay` and `spring`. 
 
 However, `decay` and `spring` animations are **differential equations** that resolve for a given `elapsedTime`. In practical terms, this means that if you want to change the animation they're creating, you need create a new animation with the new properties.
 
@@ -190,14 +190,14 @@ These equations are incredibly accurate, offering the smoothest motion and in th
 
 Instead, `physics` is an **intergrated simulation**. This means that, once the simulation has started, its properties **can be modified** because `physics` uses **its current state** to calculate its next, unlike the other two which are entirely deterministic.
 
-For instance, you could modify `startTracking` to make a `pointer` update the `springTarget` of a `physics` animation to make the ball spring towards the pointer:
+For instance, you could modify `startTracking` to make a `pointer` update the `to` of a `physics` animation to make the ball spring towards the pointer:
 
 ```javascript
 const springTo = physics({
   velocity: ballX.getVelocity(),
   friction: 0.8,
   springStrength: 400,
-  springTarget: ballX.get('x'),
+  to: ballX.get('x'),
   restSpeed: false
 }).start(ballX);
 
@@ -222,7 +222,7 @@ function startTracking() {
     velocity: ballX.getVelocity(),
     friction: 0.8,
     springStrength: 400,
-    springTarget: ballX.get('x'),
+    to: ballX.get('x'),
     restSpeed: false
   }).start(ballX);
 

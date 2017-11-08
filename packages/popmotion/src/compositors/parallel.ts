@@ -24,7 +24,7 @@ const parallel = (...actions: Action[]) => action(({ update, complete, error }) 
   const subs = actions.map((a, i) => a.start({
     complete: () => {
       numCompletedActions++;
-      if (numCompletedActions === numActions) complete();
+      if (numCompletedActions === numActions) onFrameUpdate(complete, true);
     },
     error,
     update: (v: any) => {

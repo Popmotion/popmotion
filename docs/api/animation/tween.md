@@ -52,6 +52,27 @@ tween({
 })
 ```
 
+`tween` also supports colors:
+
+```javascript
+tween({ from: '#000', to: 'rgba(255, 0, 0, 0.5)' })
+```
+
+Colors can also be provided to arrays or objects:
+
+```javascript
+tween({
+  from: {
+    x: 0,
+    background: 'hsla(125, 100, 50, 1)'
+  },
+  to: {
+    x: 100,
+    background: 'hsla(20, 100, 60, 1)'
+  }
+})
+```
+
 ## Props
 
 - `from: number | Vector[number] = 0`: Start value of animation.

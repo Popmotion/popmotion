@@ -12,7 +12,7 @@ import physics from '../packages/popmotion/lib/animations/physics';
 export class Chain extends BaseAnimation {
   getAnimation = (styler) => chain(
     tween({ to: 300 }),
-    physics({ springTarget: 0 })
+    physics({ to: 0 })
   ).start(styler.set('x'))
 }
 

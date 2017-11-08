@@ -14,7 +14,7 @@ const physics = ({
   restSpeed = 0.001,
   from = 0,
   springStrength,
-  springTarget
+  to
 }: Props = {}): Action => action(({ complete, update }): PhysicsInterface => {
   let current = from;
 
@@ -24,8 +24,8 @@ const physics = ({
     if (acceleration) velocity += speedPerFrame(acceleration, elapsed);
     if (friction) velocity *= (1 - friction) ** (elapsed / 100);
 
-    if (springStrength !== undefined && springTarget !== undefined) {
-      const distanceToTarget = springTarget - current;
+    if (springStrength !== undefined && to !== undefined) {
+      const distanceToTarget = to - current;
       velocity += distanceToTarget * speedPerFrame(springStrength, elapsed);
     }
 
@@ -52,7 +52,7 @@ const physics = ({
       return this;
     },
     setSpringTarget(v) {
-      springTarget = v;
+      to = v;
       return this;
     },
     setVelocity(v) {
@@ -68,6 +68,6 @@ export default vectorAction(physics, {
   friction: number.test,
   velocity: number.test,
   from: number.test,
-  springTarget: number.test,
+  to: number.test,
   springStrength: number.test
 });

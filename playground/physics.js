@@ -25,7 +25,7 @@ export class PhysicsSpring extends BaseAnimation {
     velocity: 1000,
     friction: 0.9,
     springStrength: 300,
-    springTarget: 500
+    to: 500
   }).start((v) => styler.set('x', v));
 }
 export class PhysicsChangeSpringTarget extends BaseAnimation {
@@ -34,7 +34,7 @@ export class PhysicsChangeSpringTarget extends BaseAnimation {
       velocity: 1000,
       friction: 0.5,
       springStrength: 300,
-      springTarget: 500
+      to: 500
     }).start((v) => styler.set('x', v));
 
     tween({ from: 500, to: 0, yoyo: Infinity })

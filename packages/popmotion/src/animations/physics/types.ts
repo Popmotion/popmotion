@@ -5,7 +5,7 @@ export type Props = {
   velocity?: number,
   restSpeed?: number | false,
   springStrength?: number,
-  springTarget?: number
+  to?: number
 };
 
 export type PhysicsInterface = {
