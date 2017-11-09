@@ -34,7 +34,7 @@ describe('vector', () => {
     });
   });
 
-  it('should return a composite action if provided a color', () => {
+  it('should return properly handle colors', () => {
     return new Promise((resolve, reject) => {
       let col = '';
       tween({
@@ -47,7 +47,7 @@ describe('vector', () => {
     });
   });
 
-  it('should return a composite action if provided a color', () => {
+  it('should return a composite action if provided a color in an object', () => {
     return new Promise((resolve, reject) => {
       let output = {};
       tween({

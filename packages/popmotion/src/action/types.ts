@@ -3,7 +3,7 @@ import { IObserver, ObserverProps } from '../observer/types';
 export type ActionInit = (observer: IObserver) => ColdSubscription | void;
 
 export interface ColdSubscription {
-  stop: () => void;
+  stop?: () => void;
   [key: string]: Function;
 }
 

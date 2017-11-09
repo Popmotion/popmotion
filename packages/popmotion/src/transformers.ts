@@ -1,5 +1,6 @@
 import { currentFrameTime } from 'framesync';
 import { color, Color, hsla, HSLA } from 'style-value-types';
+import { Action } from './action';
 import { getProgressFromValue, getValueFromProgress, smooth as calcSmoothing, stepProgress } from './calc';
 import { Easing } from './easing';
 
@@ -101,10 +102,6 @@ export const pipe = (...transformers: Function[]) => transformers.reduce(combine
 
 /**
  * Interpolate from set of values to another
- * @param  {Array} input array
- * @param  {Array} output
- * @param  {Function} rangeEasing
- * @return {Function}
  */
 export const interpolate = (input: number[], output: number[], rangeEasing: Easing[]) => {
   const rangeLength = input.length;

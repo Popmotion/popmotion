@@ -1,6 +1,6 @@
 import { IObserver, Middleware, ObserverCandidate, ObserverProps, PartialObserver, Update } from './types';
 
-// TODO clear up some of the terminology here.
+// TODO clear up some of the terminology here and look at merging more generally with Reaction
 export class Observer implements IObserver {
   private isActive = true;
   private observer: PartialObserver;

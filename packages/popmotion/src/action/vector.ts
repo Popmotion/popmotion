@@ -18,8 +18,10 @@ export type TypeTest = (v: any) => boolean;
 export type TypeTestMap = { [key: string]: TypeTest };
 export type ActionMap = { [key: string]: Action };
 
-export type VectorActionFactory = (init: ActionFactory, typeTests: TypeTestMap) =>
-  (props: Props) => Action;
+export type VectorActionFactory = (
+  init: ActionFactory,
+  typeTests: TypeTestMap
+) => (props: Props) => Action;
 
 type VectorTestFactory = (typeTests: TypeTestMap) => {
   getVectorKeys: (props: Props) => string[];
@@ -88,7 +90,6 @@ const createObjectVector: CreateVectorAction = (init, props, vectorKeys) => {
   return composite(actionMap);
 };
 
-// TODO: With this approach it should be easy to add color support to arrays and objects
 const createColorVector: CreateVectorAction = (init, props) => convertToColorAction(init, props);
 
 const vectorAction: VectorActionFactory = (init, typeTests) => {

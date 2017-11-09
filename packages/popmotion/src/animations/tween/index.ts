@@ -1,13 +1,12 @@
 import { onFrameUpdate, timeSinceLastFrame } from 'framesync';
-import { number } from 'style-value-types';
 import action, { Action } from '../../action';
 import { ColdSubscription } from '../../action/types';
-import vectorAction from '../../action/vector';
 import { getProgressFromValue, getValueFromProgress } from '../../calc';
 import { easeOut } from '../../easing';
 import { IObserver } from '../../observer/types';
 import { clamp } from '../../transformers';
 import onFrame from '../on-frame';
+import scrubber from './scrubber';
 import { TweenInterface, TweenProps } from './types';
 
 const clampProgress = clamp(0, 1);
@@ -26,8 +25,9 @@ const tween = ({
   yoyo = 0,
   yoyoCount = 0
 }: TweenProps = {}): Action => action(({ update, complete }: IObserver): TweenInterface => {
+  const playhead = scrubber({ from, to, ease }).start(update);
+
   let progress = 0;
-  let current = from;
   let tweenTimer: ColdSubscription;
   let isActive = false;
   const reverseTween = () => playDirection *= -1;
@@ -63,8 +63,7 @@ const tween = ({
 
   const updateTween = () => {
     progress = clampProgress(getProgressFromValue(0, duration, elapsed));
-    current = getValueFromProgress(from, to, ease(progress));
-    update(current);
+    playhead.seek(progress);
   };
 
   const startTimer = () => {
@@ -100,7 +99,7 @@ const tween = ({
     },
     seek(newProgress: number) {
       elapsed = getValueFromProgress(0, duration, newProgress);
-      onFrameUpdate(updateTween);
+      onFrameUpdate(updateTween, true);
       return this;
     },
     reverse() {
@@ -110,8 +109,4 @@ const tween = ({
   };
 });
 
-export default vectorAction(tween, {
-  ease: (func: any) => typeof func === 'function',
-  from: number.test,
-  to: number.test
-});
+export default tween;

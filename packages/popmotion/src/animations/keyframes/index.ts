@@ -1,7 +1,8 @@
 import { Action } from '../../action';
+import { getProgressFromValue } from '../../calc';
 import { easeOut, Easing, linear } from '../../easing';
-import { interpolate } from '../../transformers';
 import tween from '../tween';
+import scrubber from '../tween/scrubber';
 import { KeyframeProps } from './types';
 
 const defaultEasings = (values: number[]): Easing[] =>
@@ -13,13 +14,53 @@ const defaultTimings = (values: number[]): number[] => {
   return values.map((value: number, i: number): number => (i !== 0) ? i / (numValues - 1) : 0);
 };
 
+// TODO: Consolidate with `interpolate` transformer and keep this DRY
+const interpolateScrubbers = (input: number[], scrubbers: Action[]) => {
+  let output: any;
+  const rangeLength = input.length;
+  const finalInputIndex = rangeLength - 1;
+  const finalScrubberIndex = finalInputIndex - 1;
+  const subs = scrubbers.map((scrub) => scrub.start((v) => output = v));
+
+  return (v: number) => {
+    // If value outside minimum range, quickly return
+    if (v <= input[0]) {
+      subs[0].seek(0);
+      return output;
+    }
+
+    // If value outside maximum range, quickly return
+    if (v >= input[finalInputIndex]) {
+      subs[finalScrubberIndex].seek(1);
+      return output;
+    }
+
+    let i = 1;
+
+    // Find index of range start
+    for (; i < rangeLength; i++) {
+      if (input[i] > v || i === finalInputIndex) break;
+    }
+
+    const progressInRange = getProgressFromValue(input[i - 1], input[i], v);
+    subs[i - 1].seek(progressInRange);
+    return output;
+  };
+};
+
 const keyframes = ({ values, loop, yoyo, flip, ...props }: KeyframeProps): Action => {
   const duration = props.duration || 300;
   const ease = props.ease || defaultEasings(values);
   const times = props.times || defaultTimings(values);
 
+  const scrubbers = ease.map((easing, i) => scrubber({
+    from: values[i],
+    to: values[i + 1],
+    ease: easing
+  }));
+
   return tween({ duration, ease: linear, loop, yoyo, flip })
-    .pipe(interpolate(times, values, ease));
+    .pipe(interpolateScrubbers(times, scrubbers));
 };
 
 export default keyframes;
