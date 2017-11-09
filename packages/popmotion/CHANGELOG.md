@@ -2,7 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
-## [8.0.9@beta] 2017-11-07
+## [8.0.10@beta] 2017-11-09
+
+### Fixed
+- Fixing broken entry point in `package.json`.
+
+## [8.0.9@beta] 2017-11-08
 
 ### Added
 - Color support to all vector actions.

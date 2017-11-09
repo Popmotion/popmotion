@@ -1,10 +1,10 @@
 {
   "name": "popmotion",
-  "version": "8.0.8",
+  "version": "8.0.9",
   "description": "A functional, reactive motion library.",
   "author": "Matt Perry",
   "homepage": "https://popmotion.io",
-  "main": "./",
+  "main": "./index.js",
   "module": "./src",
   "esnext": "./src",
   "repository": {
@@ -52,6 +52,7 @@
   "devDependencies": {
     "jest": "^21.1.0",
     "ts-jest": "^21.1.0",
+    "tslint-circular-dependencies": "^0.1.0",
     "webpack": "^3.0.0"
   },
   "jest": {
