@@ -1,4 +1,4 @@
-import { currentFrameTime, timeSinceLastFrame } from 'framesync';
+import { timeSinceLastFrame } from 'framesync';
 import { speedPerSecond } from '../calc';
 import { ObserverCandidate, ObserverProps } from '../observer/types';
 import { BaseReaction } from './base';
@@ -11,7 +11,6 @@ export type ValueProps = ObserverProps & {
 export class ValueReaction extends BaseReaction<ValueReaction> {
   private prev: number = 0;
   private current: number = 0;
-  private lastUpdated: number = 0;
   private timeDelta: number = 0;
 
   constructor(props: ValueProps) {
@@ -36,7 +35,6 @@ export class ValueReaction extends BaseReaction<ValueReaction> {
     super.update(v);
     this.prev = this.current;
     this.current = v;
-    this.lastUpdated = currentFrameTime();
     this.timeDelta = timeSinceLastFrame();
   }
 

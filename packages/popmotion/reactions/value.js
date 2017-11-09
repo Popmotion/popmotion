@@ -19,7 +19,6 @@ var ValueReaction = (function (_super) {
         var _this = _super.call(this, props) || this;
         _this.prev = 0;
         _this.current = 0;
-        _this.lastUpdated = 0;
         _this.timeDelta = 0;
         _this.prev = _this.current = props.value || 0;
         return _this;
@@ -37,7 +36,6 @@ var ValueReaction = (function (_super) {
         _super.prototype.update.call(this, v);
         this.prev = this.current;
         this.current = v;
-        this.lastUpdated = framesync_1.currentFrameTime();
         this.timeDelta = framesync_1.timeSinceLastFrame();
     };
     ValueReaction.prototype.subscribe = function (observerCandidate) {

@@ -1,18 +1,15 @@
-import { IObserver, Update, Middleware, ObserverCandidate, ObserverProps, PartialObserver } from './types';
+import { IObserver, Middleware, ObserverCandidate, ObserverProps, PartialObserver, Update } from './types';
 
 // TODO clear up some of the terminology here.
 export class Observer implements IObserver {
   private isActive = true;
-  private props: ObserverProps;
   private observer: PartialObserver;
   private updateObserver: Update;
 
-  constructor({ ...props }: ObserverProps, observer: PartialObserver) {
-    this.props = props;
+  constructor({ middleware }: ObserverProps, observer: PartialObserver) {
     this.observer = observer;
     this.updateObserver = (v: any) => observer.update(v);
 
-    const { middleware } = props;
     if (observer.update && middleware && middleware.length) {
       middleware.forEach((m: Middleware) => this.updateObserver = m(this.updateObserver, this.complete));
     }
