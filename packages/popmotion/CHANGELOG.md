@@ -2,6 +2,14 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.0.11@beta] 2017-11-10
+
+### Added
+- Object, array and colour support to `keyframes`.
+
+### Changed
+- `pointerDelta` has been removed, `pointer` now accepts an initial point.
+
 ## [8.0.10@beta] 2017-11-09
 
 ### Fixed

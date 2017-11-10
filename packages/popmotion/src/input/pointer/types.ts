@@ -19,5 +19,7 @@ export type Point3D = Point2D & {
 export type Point = Point2D | Point3D;
 
 export type PointerProps = {
+  x?: number,
+  y?: number,
   preventDefault?: boolean
 };

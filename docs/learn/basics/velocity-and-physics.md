@@ -59,7 +59,7 @@ Now we can replace the `startTracking` and `stopTracking` functions with this:
 
 ```javascript
 function startTracking() {
-  pointerTracker = pointerDelta({ x: ballX.get('x'), y: 0 })
+  pointerTracker = pointer({ x: ballX.get('x'), y: 0 })
     .start(ballX);
 }
 
@@ -102,7 +102,7 @@ let activeAction;
 
 function startTracking() {
   if (activeAction) activeAction.stop();
-  activeAction = pointerDelta({ x: ballX.get('x'), y: 0 })
+  activeAction = pointer({ x: ballX.get('x'), y: 0 })
     .start(ballX);
 }
 
@@ -157,7 +157,7 @@ let activeAction;
 
 function startTracking() {
   if (activeAction) activeAction.stop();
-  activeAction = pointerDelta({ x: ballX.get('x'), y: 0 })
+  activeAction = pointer({ x: ballX.get('x'), y: 0 })
     .start(ballX);
 }
 
@@ -201,7 +201,7 @@ const springTo = physics({
   restSpeed: false
 }).start(ballX);
 
-pointerDelta({ x: ballX.get('x'), y: 0 })
+pointer({ x: ballX.get('x'), y: 0 })
   .start((v) => springTo.setSpringTarget(v));
 ```
 
@@ -226,7 +226,7 @@ function startTracking() {
     restSpeed: false
   }).start(ballX);
 
-  pointerTracker = pointerDelta({ x: ballX.get('x'), y: 0 })
+  pointerTracker = pointer({ x: ballX.get('x'), y: 0 })
     .start((v) => activeAction.setSpringTarget(v));
 }
 

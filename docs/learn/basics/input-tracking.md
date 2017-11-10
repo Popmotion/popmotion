@@ -74,13 +74,13 @@ Oh dear. The ball moves, but it jumps to a weird location (maybe one that's off-
 
 The reason for this is simple. `pointer` is outputting the position of the pointer **relative to the viewport**. The ball's `x` and `y` transform begins at `0, 0`. So if we apply the pointer's position directly to the ball, it won't move where we want it to.
 
-What we actually want to do is apply the **offset** of the `pointer`'s output, to the ball's initial position.
+What we actually want to do is apply the **movement** of the `pointer`, to the ball's initial position.
 
-For this, Popmotion offers a second `pointer` input, called `pointerDelta`.
+To do this, we can provide `pointer` with an initial point.
 
-## Pointer Delta
+## Apply pointer movement
 
-`pointerDelta` accepts an **initial position**, in this case the ball's position, and then outputs its movement applied to that position.
+`pointer` accepts an **initial position**, in this case the ball's position, and then outputs its movement applied to that position.
 
 So dragging becomes trivial:
 
@@ -91,7 +91,7 @@ const ballStyler = styler(ball);
 let pointerTracker;
 
 function startTracking() {
-  pointerTracker = pointerDelta({
+  pointerTracker = pointer({
     x: ballStyler.get('x'),
     y: ballStyler.get('y')
   }).start(({ x, y }) => ballStyler.set({ x, y }));
@@ -106,22 +106,6 @@ ball.addEventListener('touchstart', startTracking);
 document.addEventListener('mouseup', stopTracking);
 document.addEventListener('touchend', stopTracking);
 `}</Example>
-```
-
-To drive home the power of functional composition, as discussed in the [previous tutorial](/learn/action-basics), here's the full source code of `pointerDelta`:
-
-```javascript
-const pointerDelta = ({ x, y }) => {
-  const applyXOffset = applyOffset(x);
-  const applyYOffset = applyOffset(y);
-  const delta = { x: 0, y: 0 };
-
-  return pointer().pipe((point) => {
-    delta.x = applyXOffset(point.x);
-    delta.y = applyYOffset(point.y);
-    return delta;
-  });
-};
 ```
 
 Now that we've got dragging working, in the [next tutorial](/learn/velocity-and-physics) we can learn how to inspect the `velocity` of a number and apply that to `decay`, `physics` and `spring` to create natural-feeling interactions.
