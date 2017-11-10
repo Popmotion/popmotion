@@ -1,6 +1,5 @@
 import { currentFrameTime } from 'framesync';
 import { color, Color, hsla, HSLA } from 'style-value-types';
-import { Action } from './action';
 import { getProgressFromValue, getValueFromProgress, smooth as calcSmoothing, stepProgress } from './calc';
 import { Easing } from './easing';
 

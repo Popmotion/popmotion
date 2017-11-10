@@ -17,11 +17,10 @@ export { decay, keyframes, onFrame, physics, spring, tween };
 
 // Input
 import pointer from './input/pointer';
-import pointerDelta from './input/pointer/delta';
 import mouse from './input/pointer/mouse';
 import touch from './input/touch';
 
-export { pointerDelta, pointer, mouse, touch };
+export { pointer, mouse, touch };
 
 // Compositors
 import chain from './compositors/chain';
