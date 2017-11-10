@@ -47,7 +47,7 @@ describe('vector', () => {
     });
   });
 
-  it('should return a composite action if provided a color in an object', () => {
+  it('should return a composite action', () => {
     return new Promise((resolve, reject) => {
       let output = {};
       tween({
@@ -82,6 +82,6 @@ describe('vector', () => {
           complete: () => (col === 'hsla(100, 90, 10, 0.5)') ? resolve() : reject()
         });
       })
-    })
+    });
   });
 });

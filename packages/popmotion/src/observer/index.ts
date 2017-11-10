@@ -20,12 +20,12 @@ export class Observer implements IObserver {
   }
 
   complete = () => {
-    if (this.observer.complete) this.observer.complete();
+    if (this.observer.complete && this.isActive) this.observer.complete();
     this.isActive = false;
   }
 
   error = (err: any) => {
-    if (this.observer.error) this.observer.error(err);
+    if (this.observer.error && this.isActive) this.observer.error(err);
     this.isActive = false;
   }
 }

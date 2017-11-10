@@ -50,8 +50,8 @@ const interpolateScrubbers = (input: number[], scrubbers: Action[]) => {
 
 const keyframes = ({ values, loop, yoyo, flip, ...props }: KeyframeProps): Action => {
   const duration = props.duration || 300;
-  const ease = props.ease || defaultEasings(values);
-  const times = props.times || defaultTimings(values);
+  const ease = props.ease || defaultEasings(values as number[]);
+  const times = props.times || defaultTimings(values as number[]);
 
   const scrubbers = ease.map((easing, i) => scrubber({
     from: values[i],

@@ -34,8 +34,8 @@ const tween = ({
 
   const isTweenComplete = (): boolean => {
     const isComplete = (playDirection === 1)
-      ? elapsed >= duration
-      : elapsed <= 0;
+      ? isActive && elapsed >= duration
+      : isActive && elapsed <= 0;
 
     if (!isComplete) return false;
     if (isComplete && !loop && !flip && !yoyo) return true;
@@ -71,7 +71,7 @@ const tween = ({
     tweenTimer = onFrame().start(() => {
       elapsed += timeSinceLastFrame() * playDirection;
       updateTween();
-      if (isTweenComplete() && complete) complete();
+      if (isTweenComplete() && complete) onFrameUpdate(complete, true);
     });
   };
 

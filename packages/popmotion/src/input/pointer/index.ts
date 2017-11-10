@@ -12,8 +12,8 @@ const pointer = (props: PointerProps = {}): Action => getIsTouchDevice()
 
 export default ({ x, y, ...props }: PointerProps = {}): Action => {
   if (x !== undefined || y !== undefined) {
-    const applyXOffset = applyOffset(x);
-    const applyYOffset = applyOffset(y);
+    const applyXOffset = applyOffset(x || 0);
+    const applyYOffset = applyOffset(y || 0);
     const delta = { x: 0, y: 0 };
 
     return pointer(props).pipe((point: Point2D) => {

@@ -9,7 +9,7 @@ export type ScrubberSubscription = {
 };
 
 const scrubber = ({ from = 0, to = 1, ease = linear }): Action =>
-  action(({ update, complete }): ScrubberSubscription => ({
+  action(({ update }): ScrubberSubscription => ({
     seek: (progress) => update(progress)
   })).pipe(
     ease,

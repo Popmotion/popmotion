@@ -6,8 +6,10 @@ export type ValueMap = {
 
 export type ValueList = string|number[];
 
+export type Values = number[] | string[] | ValueMap[] | ValueList[];
+
 export type KeyframeProps = {
-  values: number[] | string[] | ValueMap[] | ValueList[],
+  values: Values,
   times?: number[],
   ease?: Easing[],
   duration?: number,
