@@ -1,4 +1,6 @@
-import { value, styler, pointerDelta } from 'popmotion';
+import value from 'popmotion/reactions/value';
+import pointer from 'popmotion/input/pointer';
+import styler from 'stylefire';
 
 export default function draggable(node, {
   x = true,
@@ -25,7 +27,7 @@ export default function draggable(node, {
   let trackPointer;
 
   function startTracking() {
-    trackPointer = pointerDelta({
+    trackPointer = pointer({
       x: x ? values.x.get() : 0,
       y: y ? values.y.get() : 0
     }).start((v) => {

@@ -22,12 +22,50 @@ import keyframes from 'popmotion/animations/keyframes';
 
 ## Usage
 
+`keyframes` accepts numbers:
+
 ```javascript
 keyframes({
   values: [0, 100, 200],
   duration: 1000,
   times: [0, 0.2, 1]
 }).start((v) => console.log(v));
+```
+
+Colors:
+
+```javascript
+keyframes({
+  values: ['#f00', '#e533a1', 'rgba(0, 0, 0, 0)']
+})
+```
+
+Objects:
+
+```javascript
+keyframes({
+  values: [
+    {
+      x: 100,
+      background: '#f00'
+    },
+    {
+      x: 200,
+      background: '#000'
+    }
+  ]
+});
+```
+
+And arrays:
+
+```javascript
+keyframes({
+  values: [
+    [0, 100, 300],
+    [100, 45, 0]
+  ]
+})
 ```
 
 ## Props

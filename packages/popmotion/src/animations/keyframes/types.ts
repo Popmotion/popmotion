@@ -1,7 +1,13 @@
 import { Easing } from '../../easing';
 
+export type ValueMap = {
+  [key: string]: string | number
+};
+
+export type ValueList = string|number[];
+
 export type KeyframeProps = {
-  values: number[],
+  values: number[] | string[] | ValueMap[] | ValueList[],
   times?: number[],
   ease?: Easing[],
   duration?: number,
