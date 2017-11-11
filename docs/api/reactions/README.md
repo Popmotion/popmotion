@@ -22,27 +22,15 @@ import reaction from 'popmotion/reactions';
 
 `value()` returns:
 
-- `pipe(...funcs: Array<(v) => v)`: Returns a new action that will run `update` values through this sequence of functions.
-- `subscribe(update | { update, complete })`: Starts the action and returns a subscription.
-- `while((v: any) => boolean)`: Returns a new action that will `complete` when the provided function returns `false`.
+- `pipe(...funcs: Array<(v) => v)`: Returns a new reaction that will run `update` values through this sequence of functions.
+- `subscribe(update | { update, complete, error })`: Returns a subscription.
+- `while((v: any) => boolean)`: Returns a new reaction that will `complete` when the provided function returns `false`.
 
 ### Subscription methods
 
 `value().subscribe()` returns:
 
-#### `subscribe`
-
-```typescript
-subscribe(update: (v: any) => void)
-subscribe({
-  complete? () => void,
-  error?: (err: any) => void,
-  update?: (v: any) => void
-})
-subscribe(reaction)
-```
-
-Returns a subscription object with an `unsubscribe` method.
+- `unsubscribe()`
 
 #### Chainable modifiers
 

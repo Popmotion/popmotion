@@ -37,40 +37,14 @@ setTimeout(() => console.log(divX.getVelocity()), 150);
 
 `value()` returns:
 
-- `pipe(...funcs: Array<(v) => v)`: Returns a new action that will run `update` values through this sequence of functions.
-- `subscribe(update | { update, complete })`: Starts the action and returns a subscription.
-- `while((v: any) => boolean)`: Returns a new action that will `complete` when the provided function returns `false`.
+- `get(): number`: Returns the current value state.
+- `getVelocity: number`: Returns the current value velocity.
+- `pipe(...funcs: Array<(v) => v)`: Returns a new reaction that will run `update` values through this sequence of functions.
+- `subscribe(update | { update, complete })`: Returns a subscription.
+- `while((v: any) => boolean)`: Returns a new reaction that will `complete` when the provided function returns `false`.
 
 ### Subscription methods
 
 `value().subscribe()` returns:
 
-#### `get`
-
-```typescript
-get(): number
-```
-
-Returns the current value state.
-
-#### `getVelocity`
-
-```typescript
-getVelocity(): number
-```
-
-Returns the current value velocity.
-
-#### `subscribe`
-
-```typescript
-subscribe(update: (v: any) => void)
-subscribe({
-  complete? () => void,
-  error?: (err: any) => void,
-  update?: (v: any) => void
-})
-subscribe(reaction)
-```
-
-Returns a subscription object with an `unsubscribe` method.
+- `unsubscribe(): void`
