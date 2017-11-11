@@ -24,3 +24,21 @@ parallel(
   spring({ to: 500 })
 ).start(([ tweenOutput, springOutput ]) => {});
 ```
+
+## Methods
+
+### Action methods
+
+`parallel()` returns:
+
+- `pipe(...funcs: Array<(v) => v)`: Returns a new action that will run `update` values through this sequence of functions.
+- `start(update | { update, complete })`: Starts the action and returns a subscription.
+- `while((v: any) => boolean)`: Returns a new action that will `complete` when the provided function returns `false`.
+
+### Subscription methods
+
+`parallel().start()` returns:
+
+- `stop(): void`
+
+**Note:** If all actions return the same API, for instance all composed actions are `tween`s, the `parallel` subscription will also return a version of that API that controls all child actions.

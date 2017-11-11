@@ -58,4 +58,17 @@ spring({
 
 ## Methods
 
+### Action methods
+
+`spring()` returns:
+
+- `pipe(...funcs: Array<(v) => v)`: Returns a new action that will run `update` values through this sequence of functions.
+- `start(update | { update, complete })`: Starts the action and returns a subscription.
+- `while((v: any) => boolean)`: Returns a new action that will `complete` when the provided function returns `false`.
+
+
+### Subscription methods
+
+`spring().start()` returns:
+
 - `stop(): void`

@@ -29,7 +29,7 @@
 
 ## TODOs:
 - Figure out timeline interface
-- Vector support for keyframes
+- Examples of each action
 - Write upgrade guide
 
 ## Examples

@@ -85,6 +85,19 @@ As `keyframes` returns a [`tween`](/api/tween), the following properties can als
 
 ## Methods
 
+### Action methods
+
+`keyframes()` returns:
+
+- `pipe(...funcs: Array<(v) => v)`: Returns a new action that will run `update` values through this sequence of functions.
+- `start(update | { update, complete })`: Starts the action and returns a subscription.
+- `while((v: any) => boolean)`: Returns a new action that will `complete` when the provided function returns `false`.
+
+
+### Subscription methods
+
+`keyframes().start()` returns:
+
 - `getElapsed(): number`: Returns time elapsed in milliseconds.
 - `getProgress(): number`: Returns animation progress as a value of `0`-`1`.
 - `seek(progress: number): this`: Seeks animation to this position as a value of `0`-`1`.

@@ -25,3 +25,21 @@ merge(
   physics({ velocity: 1000 })
 ).start((v) => console.log(v));
 ```
+
+## Methods
+
+### Action methods
+
+`merge()` returns:
+
+- `pipe(...funcs: Array<(v) => v)`: Returns a new action that will run `update` values through this sequence of functions.
+- `start(update | { update, complete })`: Starts the action and returns a subscription.
+- `while((v: any) => boolean)`: Returns a new action that will `complete` when the provided function returns `false`.
+
+
+### Subscription methods
+
+`merge().start()` returns:
+
+- `stop(): void`
+

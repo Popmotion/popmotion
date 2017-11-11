@@ -28,3 +28,21 @@ const blendTweens = crossfade(
 
 tween({ duration: 100 }).start(blendTweens.setBalance);
 ```
+
+## Methods
+
+### Action methods
+
+`crossfade()` returns:
+
+- `pipe(...funcs: Array<(v) => v)`: Returns a new action that will run `update` values through this sequence of functions.
+- `start(update | { update, complete })`: Starts the action and returns a subscription.
+- `while((v: any) => boolean)`: Returns a new action that will `complete` when the provided function returns `false`.
+
+
+### Subscription methods
+
+`crossfade().start()` returns:
+
+- `setBalance(): this`: Sets the balance of blended output from the first action (`0`) to the second (`1`).
+- `stop(): void`

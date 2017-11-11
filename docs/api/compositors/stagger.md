@@ -46,3 +46,18 @@ staggeredTweens.stop();
 ```
 
 `interval` either as a number, or a function that accepts an `index` and returns a number for non-uniform stagger durations.
+
+## Methods
+
+### Action methods
+
+`stagger()` returns:
+
+- `start(update | { update, complete })`: Starts the action and returns a subscription.
+
+### Subscription methods
+
+`stagger().start()` returns:
+
+- `stop(): void`
+

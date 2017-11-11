@@ -32,3 +32,15 @@ chain(
   tween({ to: 400, duration: 500 })
 );
 ```
+
+### Action methods
+
+`delay()` returns:
+
+- `start(update | { update, complete })`: Starts the action and returns a subscription.
+
+### Subscription methods
+
+`delay().start()` returns:
+
+- `stop(): void`
