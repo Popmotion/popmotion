@@ -48,6 +48,6 @@
     "babel-register": "^6.3.13"
   },
   "peerDependencies": {
-    "popmotion": "^8.0.6"
+    "popmotion": "^8.1.0"
   }
 }

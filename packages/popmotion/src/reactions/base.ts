@@ -1,9 +1,11 @@
 import Chainable from '../chainable';
 import createObserver from '../observer';
 import { IObserver, ObserverCandidate } from '../observer/types';
+import { ColdSubscription } from '../action/types';
 import { HotSubscription } from './types';
 
 export abstract class BaseReaction<T> extends Chainable<T> implements IObserver {
+  private parent: ColdSubscription;
   private subscribers: IObserver[] = [];
   private isActive = true;
 
@@ -17,7 +19,7 @@ export abstract class BaseReaction<T> extends Chainable<T> implements IObserver 
     this.subscribers.forEach((subscriber) => subscriber.error(err));
   }
 
-  update(v: any) {
+  update(v: any): void {
     if (!this.isActive) return;
     for (let i = 0; i < this.subscribers.length; i++) {
       this.subscribers[i].update(v);
@@ -28,11 +30,22 @@ export abstract class BaseReaction<T> extends Chainable<T> implements IObserver 
     const observer = createObserver(observerCandidate, this.props);
     this.subscribers.push(observer);
 
-    return {
+    const subscription = {
       unsubscribe: () => {
         const index = this.subscribers.indexOf(observer);
         if (index !== -1) this.subscribers.splice(index, 1);
       }
     };
+
+    return subscription;
+  }
+
+  stop(): void {
+    if (this.parent) this.parent.stop();
+  }
+
+  registerParent(subscription: ColdSubscription): void {
+    this.stop();
+    this.parent = subscription;
   }
 }

@@ -1,8 +1,8 @@
 import React from 'react';
 import styler from 'stylefire';
 
-const styles = { width: '100px', height: '100px', background: 'red' };
-export const Box = ({ innerRef, ...props }) => <div style={styles} ref={innerRef} {...props} />;
+const style = { width: '100px', height: '100px', background: 'red' };
+export const Box = ({ innerRef, ...props }) => <div ref={innerRef} {...props} style={{ ...props.style, ...style }} />;
 
 export class BaseAnimation extends React.Component {
   setRef = (dom) => {

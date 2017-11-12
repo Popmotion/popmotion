@@ -1,45 +1,17 @@
-import { onFrameUpdate } from 'framesync';
-import action, { Action } from '../action';
+import multi from './multi';
+import { Action } from '../action';
 import { ColdSubscription } from '../action/types';
 
-const createMultiSubscription = (subs: ColdSubscription[]) => Object.keys(subs[0])
-  .filter((key) => key !== 'stop')
-  .reduce((api: ColdSubscription, methodName) => {
-    api[methodName] = (...args: any[]) => subs.map((sub: ColdSubscription) => {
+const parallel = multi<Action[], ColdSubscription[], any[], number>({
+  getOutput: () => ([]),
+  getCount: (subs) => subs.length,
+  getFirst: (subs) => subs[0],
+  mapApi: (subs, methodName) =>
+    (...args) => subs.map((sub) => {
       if (sub[methodName]) return sub[methodName](...args);
-    });
-    return api;
-  }, {
-    stop: () => subs.forEach((sub) => sub.stop())
-  });
-
-const parallel = (...actions: Action[]) => action(({ update, complete, error }) => {
-  const numActions = actions.length;
-  const output = new Array(numActions);
-  const updateOutput = () => update(output);
-  let numCompletedActions = 0;
-  const updatedActions: string[] = [];
-  let allActionsHaveUpdated = false;
-
-  const subs = actions.map((a, i) => a.start({
-    complete: () => {
-      numCompletedActions++;
-      if (numCompletedActions === numActions) onFrameUpdate(complete);
-    },
-    error,
-    update: (v: any) => {
-      output[i] = v;
-
-      if (!allActionsHaveUpdated && updatedActions.indexOf(`${i}`) === -1) {
-        updatedActions.push(`${i}`);
-        if (updatedActions.length === numActions) allActionsHaveUpdated = true;
-      }
-
-      if (allActionsHaveUpdated) onFrameUpdate(updateOutput, true);
-    }
-  }));
-
-  return createMultiSubscription(subs);
+    }),
+  setProp: (output, name, v) => output[name] = v,
+  startActions: (actions, starter) => actions.map((action, i) => starter(action, i))
 });
 
-export default parallel;
+export default (...actions: Action[]) => parallel(actions);

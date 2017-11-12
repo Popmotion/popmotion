@@ -79,6 +79,16 @@ describe('parallel', () => {
       ]);
     });
   });
+
+  it('should return a mapped version of the api', () => {
+    const foo = action(({ update }) => {
+      return {
+        test: () => 1
+      };
+    });
+    const api = parallel(foo, foo, foo).start();
+    expect(api.test()).toEqual([1, 1, 1]);
+  });
 });
 
 describe('composite', () => {
@@ -98,6 +108,16 @@ describe('composite', () => {
         { x: 3, y: 4 }
       ]);
     });
+  });
+  
+  it('should return a mapped version of the api', () => {
+    const foo = action(({ update }) => {
+      return {
+        test: () => 1
+      };
+    });
+    const api = composite({ x: foo, y: foo }).start();
+    expect(api.test()).toEqual({ x: 1, y: 1 });
   });
 });
 

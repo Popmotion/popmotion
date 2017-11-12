@@ -2,6 +2,15 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.0.12@beta] 2017-11-11
+
+### Added
+- `value` handles objects and arrays.
+- `reaction` and `value` automatically stop previous action if used to start a new one.
+
+### Fixed
+- `composite` APIs now map return values to the provided object, rather than as a flat array.
+
 ## [8.0.11@beta] 2017-11-10
 
 ### Added

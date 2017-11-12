@@ -1,5 +1,6 @@
+import multi from './multi';
 import { Action } from '../action';
-import parallel from './parallel';
+import { ColdSubscription } from '../action/types';
 
 type ActionMap = {
   [key: string]: Action
@@ -9,23 +10,25 @@ type ValueMap = {
   [key: string]: any
 };
 
-const composite = (actionMap: ActionMap) => {
-  const actionKeys = Object.keys(actionMap);
-  const numActions = actionKeys.length;
-  const output: ValueMap = actionKeys.reduce((o: ValueMap, key) => {
-    o[key] = 0;
-    return o;
-  }, {});
-  const actions = actionKeys.map((key) => actionMap[key]);
-
-  return parallel(...actions)
-    .pipe((v: any[]) => {
-      for (let i = 0; i < numActions; i++) {
-        const key = actionKeys[i];
-        output[key] = v[i];
-      }
-      return output;
-    });
+type ColdSubscriptionMap = {
+  [key: string]: ColdSubscription
 };
+
+const composite = multi<ActionMap, ColdSubscriptionMap, ValueMap, string>({
+  getOutput: () => ({}),
+  getCount: (subs) => Object.keys(subs).length,
+  getFirst: (subs) => subs[Object.keys(subs)[0]],
+  mapApi: (subs, methodName) => (...args) => Object.keys(subs)
+    .reduce((output: ValueMap, propKey: string) => {
+      if (subs[propKey][methodName]) output[propKey] = subs[propKey][methodName](...args);
+      return output;
+    }, {}),
+  setProp: (output, name, v) => output[name] = v,
+  startActions: (actions, starter) => Object.keys(actions)
+    .reduce((subs: ColdSubscriptionMap, key) => {
+      subs[key] = starter(actions[key], key);
+      return subs;
+    }, {})
+});
 
 export default composite;

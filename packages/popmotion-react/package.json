@@ -66,6 +66,6 @@
     "react-dom": "~15.5.3"
   },
   "dependencies": {
-    "popmotion": "^8.0.5"
+    "popmotion": "^8.1.0"
   }
 }

@@ -4,18 +4,53 @@ import { ObserverCandidate, ObserverProps } from '../observer/types';
 import { BaseReaction } from './base';
 import { HotSubscription } from './types';
 
+export type ValueMap = { [key: string]: number | string };
+export type ValueList = Array<number | string>;
+export type Value = number | string | ValueMap | ValueList;
+
 export type ValueProps = ObserverProps & {
-  value: number
+  value: Value
+};
+
+const isValueList = (v: any): v is ValueList => Array.isArray(v);
+const isSingleValue = (v: any): v is string | number => {
+  const typeOfV = typeof v;
+  return (typeOfV === 'string' || typeOfV === 'number');
 };
 
 export class ValueReaction extends BaseReaction<ValueReaction> {
-  private prev: number = 0;
-  private current: number = 0;
-  private timeDelta: number = 0;
+  public updateCurrent: (v: any) => any;
+  public getVelocityOfCurrent: () => any;
+
+  private prev: Value;
+  private current: Value;
+  private timeDelta: number;
 
   constructor(props: ValueProps) {
     super(props);
     this.prev = this.current = props.value || 0;
+
+    if (isSingleValue(this.current)) {
+      this.updateCurrent = (v: number | string) => this.current = v;
+      this.getVelocityOfCurrent = () => this.getSingleVelocity(
+        this.current as string | number, this.prev as string | number
+      );
+
+    } else if (isValueList(this.current)) {
+      this.updateCurrent = (v: ValueList) => this.current = [...v];
+      this.getVelocityOfCurrent = () => this.getListVelocity();
+
+    } else {
+      this.updateCurrent = (v: ValueMap) => {
+        this.current = {};
+        for (const key in v) {
+          if (v.hasOwnProperty(key)) {
+            this.current[key] = v[key];
+          }
+        }
+      };
+      this.getVelocityOfCurrent = () => this.getMapVelocity();
+    }
   }
 
   create(props: ValueProps) {
@@ -27,14 +62,14 @@ export class ValueReaction extends BaseReaction<ValueReaction> {
   }
 
   getVelocity() {
-    return speedPerSecond(this.current - this.prev, this.timeDelta);
+    return this.getVelocityOfCurrent();
   }
 
   // TODO: Schedule a velocity check on the next frame
-  update(v: number) {
+  update(v: Value) {
     super.update(v);
     this.prev = this.current;
-    this.current = v;
+    this.updateCurrent(v);
     this.timeDelta = timeSinceLastFrame();
   }
 
@@ -44,6 +79,30 @@ export class ValueReaction extends BaseReaction<ValueReaction> {
 
     return sub;
   }
+
+  private getSingleVelocity(current: number | string, prev: number | string): number {
+    return (typeof current === 'number' && typeof prev === 'number')
+      ? speedPerSecond(current - prev, this.timeDelta)
+      : 0;
+  }
+
+  private getListVelocity() {
+    return (this.current as ValueList).map(
+      (c: number | string, i: number) => this.getSingleVelocity(c, (this.prev as ValueList)[i])
+    );
+  }
+
+  private getMapVelocity() {
+    const velocity: ValueMap = {};
+    for (const key in this.current as ValueMap) {
+      if (this.current.hasOwnProperty(key)) {
+        velocity[key] = this.getSingleVelocity(
+          (this.current as ValueMap)[key], (this.prev as ValueMap)[key]
+        );
+      }
+    }
+    return velocity;
+  }
 }
 
-export default (value: number) => new ValueReaction({ value });
+export default (value: Value) => new ValueReaction({ value });

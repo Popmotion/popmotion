@@ -11,6 +11,7 @@ import { Drag, DragWithDeltaPointer } from './pointer';
 import { Chain, Composite, Delay, Crossfade, Merge, Parallel, Stagger } from './compositors';
 //import { DraggableDOM, DraggableReact } from './plugins/draggable';
 //import { SpinnableDOM, SpinnableReact } from './plugins/spinnable';
+//import { PopmotionReact } from './plugins/react';
 
 storiesOf('decay', module)
 .add('default decay', () => <Decay />)
@@ -67,3 +68,6 @@ storiesOf('compositors', module)
 // storiesOf('Plugin: Spinnable', module)
 // .add('spinnable', () => <SpinnableDOM />)
 // .add('spinnable React', () => <SpinnableReact />);
+
+// storiesOf('Plugin: React', module)
+// .add('react', () => <PopmotionReact />)

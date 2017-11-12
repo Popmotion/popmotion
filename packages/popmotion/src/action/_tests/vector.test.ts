@@ -14,7 +14,6 @@ describe('vector', () => {
     return new Promise((resolve, reject) => {
       va({ p: { x: 1, y: 2 } })
         .start((v) => {
-          console.log(v);
           (v.x === 1 && v.y === 2)
             ? resolve()
             : reject('composite output incorrect');
@@ -26,7 +25,6 @@ describe('vector', () => {
     return new Promise((resolve, reject) => {
       va({ p: [0, 1, 2, 3, 4] })
         .start((v) => {
-          console.log(v);
           (v[0] === 0 && v[1] === 1 && v[2] === 2 && v[3] === 3 && v[4] === 4)
             ? resolve()
             : reject('parallel output incorrect');

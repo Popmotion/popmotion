@@ -13,7 +13,7 @@ export interface PartialObserver {
   update?: Update;
   complete?: Complete;
   error?: Error;
-  registerActiveSubscription?: Function;
+  registerParent?: Function;
 }
 
 export type ObserverProps = PartialObserver & {

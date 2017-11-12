@@ -1,14 +1,14 @@
 ---
 title: React
-description: Popmotion animation, tweening and input tracking - in React!
+description: Popmotion animation and input tracking - in React!
 category: plugins
 ---
 
 # Popmotion x React
 
-Popmotion x React provides a simple interface to bring Popmotion's animation and input-tracking capabilities to any React component.
+Popmotion x React provides a declarative interface to use Popmotion's animation and input tracking with any React component.
 
-It uses the "function as children" pattern, so you can create declarative interactions with the DOM, SVG, Three.js, A-Frame, Pixi... anything that has a React interface.
+It uses the "function as children" pattern, so you can create declarative interactions with the DOM, SVG, Three.js, A-Frame, Pixi... anything that has a React wrapper available.
 
 It also has support for [React TransitionGroup](https://github.com/reactjs/react-transition-group/) lifecycle methods.
 
@@ -18,13 +18,13 @@ It also has support for [React TransitionGroup](https://github.com/reactjs/react
 npm install --save popmotion-react
 ```
 
-## MotionValue
+## `MotionValue`
 
-The `MotionValue` component allows you to declaratively animate a single `value`, array of `value`s or object of `value`s.
+The `MotionValue` component allows you to declaratively animate a single `value`.
 
 ### Usage
 
-`MotionValue` is a simple state machine. You provide state transition handlers and it provides setters to your component. For instance:
+`MotionValue` is a simple state machine. You provide state transition handlers that describe what animation should play when a state is set, and it provides setter functions to your component. For instance:
 
 ```javascript
 import { tween } from 'popmotion';
