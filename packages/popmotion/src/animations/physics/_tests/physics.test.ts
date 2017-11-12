@@ -9,7 +9,7 @@ describe('physics', () => {
       }).start((v) => i = v);
       setTimeout(() => {
         a.stop();
-        (i >= 100 && i <= 110) ? resolve() : reject(i);
+        (i >= 98 && i <= 102) ? resolve() : reject(i);
       }, 1000);
     });
   });
