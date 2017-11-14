@@ -17,7 +17,7 @@ const spring = ({
   restSpeed = 0.01,
   restDelta = 0.01
 }: SpringProps = {}): Action => action(({ update, complete }): SpringInterface => {
-  const initialVelocity = velocity ? velocity / 1000 : 0.0;
+  const initialVelocity = velocity ? -(velocity / 1000) : 0.0;
   let t = 0;
   const delta = to - from;
   let position = from;

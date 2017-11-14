@@ -11,8 +11,8 @@ export class Spring extends BaseAnimation {
 export class SpringVelocity extends BaseAnimation {
   getAnimation = (styler) => spring({
     to: 300,
-    velocity: 10000
-  }).start((v) => styler.set('x', v));
+    velocity: 20000
+  }).start((v) => styler.set('y', v));
 }
 
 export class SpringHeavier extends BaseAnimation {
