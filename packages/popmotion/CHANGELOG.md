@@ -2,6 +2,13 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.0.20@beta] 2017-11-14
+
+### Fixed
+- Fixed `isActive` bug with observable. Should look at removing this in favor of Reaction.
+
+## [8.0.19@beta] 2017-11-14
+
 ## [8.0.18@beta] 2017-11-14
 
 ### Changed

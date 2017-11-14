@@ -16,7 +16,7 @@ export class Observer implements IObserver {
   }
 
   update = (v: any) => {
-    if (this.observer.update && this.isActive) this.updateObserver(v);
+    if (this.observer.update) this.updateObserver(v);
   }
 
   complete = () => {
