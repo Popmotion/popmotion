@@ -14,6 +14,7 @@ describe('vector', () => {
     return new Promise((resolve, reject) => {
       va({ p: { x: 1, y: 2 } })
         .start((v) => {
+          if (v === undefined) reject('undefined detected');
           (v.x === 1 && v.y === 2)
             ? resolve()
             : reject('composite output incorrect');

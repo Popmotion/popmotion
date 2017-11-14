@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.0.13@beta] 2017-11-14
+
+### Fixed
+- `keyframes` composite undefined value fixed.
+
 ## [8.0.12@beta] 2017-11-11
 
 ### Added

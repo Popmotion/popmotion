@@ -1,5 +1,6 @@
 import { ObserverCandidate } from '../../observer/types';
 import { Value } from '../../reactions/value';
+import { ScrubberSubscription } from '../tween/scrubber';
 import { Easing } from '../../easing';
 
 export type Chunk = {
@@ -11,3 +12,9 @@ export type Chunk = {
 };
 
 export type Segment = number | string | Chunk | Chunk[];
+
+export type TimelineFragment = {
+  scrubber: ScrubberSubscription
+};
+
+export type Timeline = TimelineFragment[];

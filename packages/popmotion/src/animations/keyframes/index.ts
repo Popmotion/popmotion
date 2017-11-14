@@ -4,6 +4,10 @@ import { easeOut, Easing, linear } from '../../easing';
 import tween from '../tween';
 import scrubber from '../tween/scrubber';
 import { KeyframeProps } from './types';
+import { Update } from '../../observer/types';
+import { clamp } from '../../transformers';
+
+const clampProgress = clamp(0, 1);
 
 const defaultEasings = (values: number[]): Easing[] =>
   values.map((): Easing => easeOut).splice(0, values.length - 1);
@@ -15,24 +19,21 @@ const defaultTimings = (values: number[]): number[] => {
 };
 
 // TODO: Consolidate with `interpolate` transformer and keep this DRY
-const interpolateScrubbers = (input: number[], scrubbers: Action[]) => {
-  let output: any;
+const interpolateScrubbers = (input: number[], scrubbers: Action[], update: Update) => {
   const rangeLength = input.length;
   const finalInputIndex = rangeLength - 1;
   const finalScrubberIndex = finalInputIndex - 1;
-  const subs = scrubbers.map((scrub) => scrub.start((v) => output = v));
+  const subs = scrubbers.map((scrub) => scrub.start(update));
 
   return (v: number) => {
     // If value outside minimum range, quickly return
     if (v <= input[0]) {
       subs[0].seek(0);
-      return output;
     }
 
     // If value outside maximum range, quickly return
     if (v >= input[finalInputIndex]) {
       subs[finalScrubberIndex].seek(1);
-      return output;
     }
 
     let i = 1;
@@ -43,8 +44,8 @@ const interpolateScrubbers = (input: number[], scrubbers: Action[]) => {
     }
 
     const progressInRange = getProgressFromValue(input[i - 1], input[i], v);
-    subs[i - 1].seek(progressInRange);
-    return output;
+
+    subs[i - 1].seek(clampProgress(progressInRange));
   };
 };
 
@@ -60,7 +61,10 @@ const keyframes = ({ values, loop, yoyo, flip, ...props }: KeyframeProps): Actio
   }));
 
   return tween({ duration, ease: linear, loop, yoyo, flip })
-    .pipe(interpolateScrubbers(times, scrubbers));
+    .applyMiddleware((update) => {
+      const seek = interpolateScrubbers(times, scrubbers, update);
+      return seek;
+    });
 };
 
 export default keyframes;

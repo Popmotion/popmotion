@@ -15,7 +15,7 @@
 //     segments.forEach((item, i) => {
 //       sequence.push(item);
 
-//       if (i !== numTweens - 1) {
+//       if (i !== numSegments - 1) {
 //         offset += isStaggered ? lastArg : 0;
 //         sequence.push(`-${item.duration - offset}`);
 //       }
@@ -47,9 +47,13 @@
 
 //       // Or if tween, add marker
 //       } else {
-//         const to = playhead + (segment as Chunk).duration;
+//         const scrubber({ from }).start();
 
-//         acc.push();
+//         acc.push({
+          
+//           from: playhead,
+//           to: playhead + (segment as Chunk).duration
+//         });
 //       }
 
 //       return acc;

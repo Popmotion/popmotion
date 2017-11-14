@@ -8,7 +8,10 @@ describe('keyframes', () => {
         values: [0, 1, 2]
       }).start({
         complete: () => i === 2 ? resolve() : reject(),
-        update: (v) => i = v
+        update: (v) => {
+          if (v === undefined) reject('undefined detected');
+          i = v;
+        }
       });
     });
   });
@@ -21,7 +24,7 @@ describe('keyframes', () => {
         values: [0, 1, 2],
         times: [0, .25, .5]
       }).start((v) => i = v);
-      setTimeout(() => i === 2 ? resolve() : reject(), 210);
+      setTimeout(() => i === 2 ? resolve() : reject(i), 210);
     });
   });
 
@@ -58,7 +61,10 @@ describe('keyframes', () => {
         complete: () => (
           i.x === 0 && i.background === 'rgba(0, 0, 0, 1)'
         ) ? resolve() : reject(`${i.x}, ${i.background}`),
-        update: (v) => i = v
+        update: (v) => {
+          if (v === undefined) reject('undefined detected');
+          i = v;
+        }
       });
     });
   });

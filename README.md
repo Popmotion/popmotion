@@ -6,34 +6,86 @@
 [![npm downloads](https://img.shields.io/npm/dm/popmotion.svg?style=flat-square)](https://www.npmjs.com/package/popmotion)
 [![Twitter Follow](https://img.shields.io/twitter/follow/espadrine.svg?style=social&label=Follow)](http://twitter.com/popmotionjs)
 
-### [Get Started](https://popmotion.io/learn/get-started)
-### [Full API documentation](https://popmotion.io/api)
+### [Quick Start](https://popmotion.io/learn/get-started)
 
-### Popmotion does:
+## Features
+
+### Animations
+
 - **[Tween](https://popmotion.io/api/tween):** Change values over specific duration of time. Full suite of [easing functions](https://popmotion.io/api/easing) included.
 - **[Physics](https://popmotion.io/api/physics):** Integrated, mutable simulation of velocity, acceleration, friction and springs.
 - **[Keyframes](https://popmotion.io/api/keyframes):** Define a series of keyframes to animate between.
 - **[Spring](https://popmotion.io/api/spring):** An accurate spring-mass system ported from Apple's CASpringAnimation.
 - **[Decay](https://popmotion.io/api/decay):** Exponentially-decayed velocity for smooth deceleration.
-- **[Pointer](https://popmotion.io/api/pointer):** Full support for mouse and multitouch inputs.
 
-### Popmotion is:
-- **Tiny:** At 10kb **max**, it's 75% smaller than GreenSock TweenMax. Everything is available as an individual import to save bytes!
-- **Reactive:** Super-simple Rx-inspired API for subscribing to streams of animation events.
+### Input tracking
+
+- **[Pointer](https://popmotion.io/api/pointer):** Single-point mouse and touch tracking, with optional offset tracking.
+- **[Multitouch](https://popmotion.io/api/touch):** Track all fingers to create pinch and rotate gestures.
+
+### More...
+
+- **Tiny:** Import every action individually, for a **max** 10kb bundle.
+- **Reactive:** Simple Rx-inspired API for subscribing to streams of animation events.
 - **Composable:** All actions can be **delayed**, **staggered** **merged**, **crossfaded** and **chained**.
 - **Cross-platform:** Runs on **IE9+**, plus **Node**-based environments like Arduino.
 - **Versatile:** Animate raw numbers, colors, objects or n-dimensional arrays.
-- **Performant af:** Batches renders on the [Framesync](https://github.com/popmotion/framesync) `render` render step. Stands up to popular alternatives in [performance tests](http://codepen.io/popmotion/pen/zNYXmR).
+- **Performant af:** Batches updates and renders, and stands up to popular alternatives in [performance tests](http://codepen.io/popmotion/pen/zNYXmR).
 - **Typesafe and tested:** Written in TypeScript, with Flow definitions available on [flow-typed](https://github.com/flowtype/flow-typed). Full test coverage.
 - **Supported:** Full ecosystem of awesome plugins.
+
+## Examples
+
+### Tween
+
+Animate between two numbers:
+
+```javascript
+const divStyler = styler(document.querySelector('div'));
+
+tween({ from: 0, to: 1 }).start(divStyler.set('opacity'));
+```
+
+[Edit on CodePen](https://codepen.io/popmotion/pen/WXOPWX?editors=0010)
+
+
+
+Or two states:
+
+```javascript
+tween({
+  to: { x: 300, rotate: 180 },
+  ease: easing.backOut
+}).start(divStyler.set);
+```
+
+Or two colors:
+
+```javascript
+tween({
+  from: 'rgba()',
+  to: 'rgba()'
+}).start(divStyler.set('background'));
+```
+
+### Physics
+
+
+
+### Pointer
+
+### Keyframes
+
+### Spring
+
+### Decay
+
+### Stagger
 
 ## TODOs:
 - Figure out timeline interface
 - Examples of each action
 - Write upgrade guide
-
-## Examples
-TODO
 
 ## Plugins
 - [Draggable](/api/draggable)
