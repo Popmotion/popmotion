@@ -17,7 +17,7 @@ const spring = ({
   restSpeed = 0.01,
   restDelta = 0.01
 }: SpringProps = {}): Action => action(({ update, complete }): SpringInterface => {
-  const initialVelocity = velocity ? -(velocity / 1000) : 0.0;
+  const initialVelocity = velocity ? - (velocity / 1000) : 0.0;
   let t = 0;
   const delta = to - from;
   let position = from;
@@ -26,26 +26,26 @@ const spring = ({
   const springTimer = onFrame().start(() => {
     const timeDelta = timeSinceLastFrame() / 1000;
     t += timeDelta;
+
     const dampingRatio = damping / (2 * Math.sqrt(stiffness * mass));
     const angularFreq = Math.sqrt(stiffness / mass);
 
-    const x0 = 1;
-    let oscillation = 0.0;
+    prevPosition = position;
 
     // Underdamped
     if (dampingRatio < 1) {
       const envelope = Math.exp(-dampingRatio * angularFreq * t);
-      const expoDecay = angularFreq * Math.sqrt(1.0 - (dampingRatio * dampingRatio));
-      oscillation = envelope * (((initialVelocity + dampingRatio * angularFreq * x0) / expoDecay) * Math.sin(expoDecay * t) + (x0 * Math.cos(expoDecay * t)));
+      const expoDecay = angularFreq * Math.sqrt(1.0 - dampingRatio * dampingRatio);
 
+      position = to - envelope * (
+        (initialVelocity + dampingRatio * angularFreq * delta)
+        / expoDecay * Math.sin(expoDecay * t)
+        + delta * Math.cos(expoDecay * t)
+      );
     } else {
       const envelope = Math.exp(-angularFreq * t);
-      oscillation = envelope * (x0 + (initialVelocity + (angularFreq * x0)) * t);
+      position = to - envelope * (delta + (initialVelocity + angularFreq * delta) * t);
     }
-
-    const fraction = 1 - oscillation;
-    prevPosition = position;
-    position = from + fraction * delta;
 
     velocity = speedPerSecond(position - prevPosition, timeDelta * 1000);
 

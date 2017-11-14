@@ -1,5 +1,5 @@
 import React from 'react';
-import { BaseAnimation } from './inc';
+import { BaseAnimation, Box } from './inc';
 import spring from '../packages/popmotion/lib/animations/spring';
 
 export class Spring extends BaseAnimation {
@@ -10,9 +10,12 @@ export class Spring extends BaseAnimation {
 
 export class SpringVelocity extends BaseAnimation {
   getAnimation = (styler) => spring({
-    to: 300,
-    velocity: 20000
-  }).start((v) => styler.set('y', v));
+    from: 500,
+    to: 0,
+    velocity: -1000,
+    stiffness: 1,
+    damping: 10
+  }).start((v) => styler.set('x', v));
 }
 
 export class SpringHeavier extends BaseAnimation {

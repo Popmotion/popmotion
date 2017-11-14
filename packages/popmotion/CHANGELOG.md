@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.0.17@beta] 2017-11-14
+
+### Changed
+- Changed `spring` equation.
+
 ## [8.0.16@beta] 2017-11-14
 
 ### Fixed
