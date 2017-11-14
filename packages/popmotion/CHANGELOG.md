@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.0.16@beta] 2017-11-14
+
+### Fixed
+- Reactivating a reaction when provided a new parent.
+
 ## [8.0.15@beta] 2017-11-14
 
 ### Fixed

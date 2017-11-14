@@ -46,6 +46,7 @@ export abstract class BaseReaction<T> extends Chainable<T> implements IObserver 
 
   registerParent(subscription: ColdSubscription): void {
     this.stop();
+    this.isActive = true;
     this.parent = subscription;
   }
 }
