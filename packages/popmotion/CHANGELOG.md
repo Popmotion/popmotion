@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.0.14@beta] 2017-11-14
+
+### Fixed
+- Not reversing `spring` initial velocity.
+
 ## [8.0.13@beta] 2017-11-14
 
 ### Fixed
