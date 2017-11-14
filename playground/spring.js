@@ -10,11 +10,9 @@ export class Spring extends BaseAnimation {
 
 export class SpringVelocity extends BaseAnimation {
   getAnimation = (styler) => spring({
-    from: 500,
-    to: 0,
-    velocity: -1000,
-    stiffness: 1,
-    damping: 10
+    from: 0,
+    to: 500,
+    velocity: -10000
   }).start((v) => styler.set('x', v));
 }
 

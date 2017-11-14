@@ -24,11 +24,11 @@ const spring = ({
   let prevPosition = position;
 
   const springTimer = onFrame().start(() => {
-    const timeDelta = timeSinceLastFrame() / 1000;
+    const timeDelta = timeSinceLastFrame();
     t += timeDelta;
 
     const dampingRatio = damping / (2 * Math.sqrt(stiffness * mass));
-    const angularFreq = Math.sqrt(stiffness / mass);
+    const angularFreq = Math.sqrt(stiffness / mass) / 1000;
 
     prevPosition = position;
 
@@ -47,7 +47,7 @@ const spring = ({
       position = to - envelope * (delta + (initialVelocity + angularFreq * delta) * t);
     }
 
-    velocity = speedPerSecond(position - prevPosition, timeDelta * 1000);
+    velocity = speedPerSecond(position - prevPosition, timeDelta);
 
     // Check if simulation is complete
     // We do this here instead of `isActionComplete` as it allows us
