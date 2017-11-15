@@ -6,6 +6,7 @@ import { WhatWGAddEventListener } from './types';
 
 const points: PointerPoint[] = [defaultPointerPos()];
 let isTouchDevice = false;
+
 if (typeof document !== 'undefined') {
   const updatePointsLocation = ({ touches }: TouchEvent) => {
     isTouchDevice = true;
@@ -20,8 +21,8 @@ if (typeof document !== 'undefined') {
     }
   };
 
-  document.addEventListener('touchstart', updatePointsLocation);
-  document.addEventListener('touchmove', updatePointsLocation);
+  document.addEventListener('touchstart', updatePointsLocation, true);
+  document.addEventListener('touchmove', updatePointsLocation, true);
 }
 
 const touch = ({ preventDefault = true }: PointerProps = {}): Action => action(({ update }) => {

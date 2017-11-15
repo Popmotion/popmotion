@@ -1,9 +1,9 @@
 import styled from 'styled-components';
-import { fontSize } from '~/styles/fonts';
+import { fontSize, fontBold } from '~/styles/fonts';
 import { LINK, LIGHT_GREY, WHITE, cols, media, verticalGradient, PURPLE_BURN, PURPLE } from '~/styles/vars';
 
 export const Strong = styled.strong`
-  font-weight: 600;
+  ${fontBold}
 `;
 
 export const A = styled.a`
@@ -13,7 +13,7 @@ export const A = styled.a`
 
 export const H1 = styled.h1`
   ${fontSize(36)}
-  border-bottom: 1px solid ${LIGHT_GREY};
+  ${fontBold}
   padding-bottom: ${cols(1)};
   margin-bottom: ${cols(2)};
   ${media.medium`${fontSize(24)}`}

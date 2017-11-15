@@ -86,6 +86,7 @@ tween({
 - Figure out timeline interface
 - Examples of each action
 - Write upgrade guide
+- Bug: First touch not registered
 
 ## Plugins
 - [Draggable](/api/draggable)

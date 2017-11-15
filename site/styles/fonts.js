@@ -14,4 +14,6 @@ export const fontSize = (size) => `
   font-size: ${size}px;
 `;
 
+export const fontBold = `font-weight: 700;`;
+
 export const lineHeight = (height) => `line-height: ${height}px;`;

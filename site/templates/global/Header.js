@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import styled from 'styled-components';
 import SectionNav from './SectionNav';
-import Popmotion from '~/components/icons/PopmotionIcon';
+import Logo from '~/components/icons/Logo';
+import Icon from '~/components/icons/PopmotionIcon';
 import GitHub from '~/components/icons/GitHub';
 import Twitter from '~/components/icons/Twitter';
 import settings from '~/data/settings.json';
@@ -11,7 +12,8 @@ const HeaderContainer = styled.nav`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: ${cols(1)};
+  padding: 25px ${cols(2)};
+  margin-bottom: ${cols(4)};
 `;
 
 const NavArea = styled.nav`
@@ -28,8 +30,21 @@ const TwitterLink = IconLink.extend`
   transform: translateY(2px);
 `;
 
-const PopmotionIcon = styled(Popmotion)`
+const PopmotionLogo = styled(Logo)`
+  ${props => props.isHomepage && `display: none;`}
+  width: 159px;
+  height: 36px;
+
   ${media.medium`
+    display: none;
+  `}
+`;
+
+const PopmotionIcon = styled(Icon)`
+  ${props => !props.isHomepage && `display: none;`}
+
+  ${media.medium`
+    display: block;
     width: 35px;
     height: 32px;
   `}
@@ -38,12 +53,13 @@ const PopmotionIcon = styled(Popmotion)`
 const GitHubIcon = styled(GitHub)``;
 const TwitterIcon = styled(Twitter)``;
 
-export default ({ section }) => (
+export default ({ section, isHomepage }) => (
   <HeaderContainer>
     <NavArea>
       <Link href="/" name="Homepage">
         <a>
-          <PopmotionIcon />
+          <PopmotionLogo isHomepage={isHomepage} />
+          <PopmotionIcon isHomepage={isHomepage} />
         </a>
       </Link>
       <SectionNav section={section} />

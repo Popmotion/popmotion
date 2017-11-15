@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import Link from 'next/link';
-import { fontSize } from '~/styles/fonts';
-import { LINK, BLACK, cols, media } from '~/styles/vars';
+import { fontSize, fontBold } from '~/styles/fonts';
+import { ACTION, ENTITY, BLACK, cols, media } from '~/styles/vars';
 import sectionNames from '~/data/section-names.json';
 import routes from '~/data/route-paths.json';
 
@@ -14,10 +14,11 @@ const Container = styled.ul`
 const MenuItem = styled.li`
   ${fontSize(18)}
   display: inline;
+  padding-bottom: 4px;
   margin-right: ${cols(2)};
 
   ${({ isSelected }) => isSelected && `
-    border-bottom: 3px solid ${LINK};
+    border-bottom: 3px solid ${ENTITY};
   `}
 
   ${media.medium`
@@ -28,9 +29,10 @@ const MenuItem = styled.li`
   a {
     color: ${BLACK};
     text-decoration: none;
+    ${fontBold}
 
     &:hover {
-      color: ${LINK};
+      color: ${ACTION};
     }
   }
 `;

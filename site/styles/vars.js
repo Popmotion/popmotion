@@ -1,7 +1,7 @@
 import { css } from 'styled-components';
 
 export const verticalGradient = (from, to, start=0, end=100) =>
-  `linear-gradient(to bottom, ${to} ${start}%, ${from} ${end}%)`;
+  `linear-gradient(to bottom, ${from} ${start}%, ${to} ${end}%)`;
 
 export const WHITE = '#fff';
 export const BLACK = '#222';

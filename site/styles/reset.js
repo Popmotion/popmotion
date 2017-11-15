@@ -1,6 +1,5 @@
 import { bodyFont, codeFont, fontSize } from './fonts';
 import { BLACK, WHITE, cols } from './vars';
-import syntaxHighlighting from './syntax-highlighting';
 
 export default `
 * {
@@ -216,21 +215,6 @@ pre span {
   tab-size: 2;
 }
 
-/* Would prefer not to do this - marked doesn't return themable pre tags */
-pre {
-  background: ${BLACK};
-  padding: ${cols(1)};
-  margin-bottom: 1.4rem;
-  white-space: pre-wrap;
-  font-size: 14px;
-}
-pre code,
-pre.prism-code {
-  color: ${WHITE};
-  line-height: 1.5;
-  font-size: 14px;
-}
-
 @media (max-width: ${cols(50)}) {
   pre, pre code, pre span, code span {
     ${fontSize(14)}
@@ -434,5 +418,4 @@ textarea {
   -webkit-appearance: none; /* 1 */
   font: inherit; /* 2 */
 }
-${syntaxHighlighting}
 `;

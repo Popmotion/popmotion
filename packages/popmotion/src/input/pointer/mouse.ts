@@ -12,8 +12,8 @@ if (typeof document !== 'undefined') {
     eventToPoint(e, point);
   };
 
-  document.addEventListener('mousedown', updatePointLocation);
-  document.addEventListener('mousemove', updatePointLocation);
+  document.addEventListener('mousedown', updatePointLocation, true);
+  document.addEventListener('mousemove', updatePointLocation, true);
 }
 
 const mouse = ({ preventDefault = true }: PointerProps = {}): Action => action(({ update }) => {

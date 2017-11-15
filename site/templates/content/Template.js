@@ -4,7 +4,6 @@ import Header from '~/templates/global/Header';
 import Footer from '~/templates/global/Footer';
 import ContentNav from './ContentNav';
 import { Container, LeftMargin, RightMargin, ContentArea, HeaderArea } from '~/components/layout/grid';
-import 'prismjs';
 
 const DatePublished = styled.p`
   font-size: 12px;
