@@ -1,30 +1,31 @@
 import { css } from 'styled-components';
 
-export const PINK = '#ED2754';
-export const PINK_BURN = '#FF44D1';
-
-export const PURPLE = '#6127ED';
-export const PURPLE_BURN = '#4496FF';
-
-export const BLUE = '#27E5ED';
-export const BLUE_BURN = '#44FF65';
-
-export const YELLOW = '#EAFF33';
-export const YELLOW_BURN = '#FFAD44';
-
-export const BLACK = '#333';
-export const WHITE = '#fff';
-export const LIGHT_GREY = '#eee';
-
-export const MAIN = PINK;
-export const MAIN_FADE = PINK_BURN;
-
-export const LINK = PURPLE_BURN;
-
-const COL_WIDTH = 15;
-
 export const verticalGradient = (from, to, start=0, end=100) =>
   `linear-gradient(to bottom, ${to} ${start}%, ${from} ${end}%)`;
+
+export const WHITE = '#fff';
+export const BLACK = '#222';
+export const LIGHT_GREY = '#f2f2f2';
+
+export const PINK = '#FF1C68';
+export const PINK_BURN = '#DB0068';
+
+export const BLUE = '#198FE3';
+export const BLUE_BURN = '#064FB5';
+
+const PURPLE = '#9B65DE';
+
+export const BRAND = PINK;
+export const BRAND_BURN = PINK_BURN;
+export const BRAND_GRADIENT = verticalGradient(PINK, PINK_BURN);
+
+export const ACTION = BLUE;
+export const ACTION_BURN = BLUE_BURN;
+export const ACTION_GRADIENT = verticalGradient(BLUE, BLUE_BURN);
+
+export const ENTITY = PURPLE;
+
+const COL_WIDTH = 15;
 
 export const cols = (num) => `${num * COL_WIDTH}px`;
 

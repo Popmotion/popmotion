@@ -1,7 +1,7 @@
 const fontWeight = (weight) => `font-weight: ${weight};`;
 
 export const bodyFont = `
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: 'PT Sans', sans-serif;
   ${fontWeight(400)}
 `;
 

@@ -1,19 +1,19 @@
-import { WHITE, YELLOW_BURN, BLUE_BURN, PURPLE_BURN, PINK_BURN } from './vars';
+import { BLACK, BRAND, ENTITY, ACTION } from './vars';
 
 export default `
 .token {
-  color: ${WHITE};
+  color: ${BLACK};
 
   &.string {
-    color: ${YELLOW_BURN};
+    color: ${BRAND};
   }
 
   &.operator {
-    color: ${WHITE};
+    color: ${BLACK};
   }
 
   &.keyword {
-    color: ${BLUE_BURN};
+    color: ${ENTITY};
   }
 
   &.comment {
@@ -21,11 +21,11 @@ export default `
   }
 
   &.number {
-    color: ${PURPLE_BURN};
+    color: ${BRAND};
   }
 
   &.function {
-    color: ${PINK_BURN};
+    color: ${ACTION};
   }
 }
 `;

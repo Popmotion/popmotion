@@ -1,9 +1,11 @@
+import { BRAND, BRAND_BURN } from '~/styles/vars';
+
 export default ({className}) => (
   <svg width="41" height="37" viewBox="0 0 41 37" xmlns="http://www.w3.org/2000/svg" className={className}>
     <defs>
       <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="popmotion-gradient">
-        <stop stopColor="#ED2754" offset="0%"/>
-        <stop stopColor="#FF44D1" offset="100%"/>
+        <stop stopColor={BRAND} offset="0%"/>
+        <stop stopColor={BRAND_BURN} offset="100%"/>
       </linearGradient>
     </defs>
     <g fill="none" fillRule="evenodd">

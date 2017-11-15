@@ -7,7 +7,7 @@ import settings from '~/data/settings.json';
 
 export default () => {
   return (
-    <GlobalTemplate title={`${settings.siteName}: The JavaScript motion engine`}>
+    <GlobalTemplate title={`${settings.siteName} - A functional JavaScript motion library`}>
       <Header />
       <HomepageHeader />
       <USPs />
