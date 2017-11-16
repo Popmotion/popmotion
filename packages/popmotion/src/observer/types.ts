@@ -18,6 +18,7 @@ export interface PartialObserver {
 
 export type ObserverProps = PartialObserver & {
   middleware?: Middleware[];
+  onComplete?: Function;
 };
 
 export type ObserverFactory = (observerCandidate: ObserverCandidate, props: ObserverProps) => IObserver;

@@ -1,5 +1,6 @@
 import { cancelOnFrameUpdate, onFrameUpdate } from 'framesync';
 import action, { Action } from '../../action';
+import listen from '../listen';
 import { defaultPointerPos, eventToPoint } from '../pointer/utils';
 import { PointerPoint, PointerProps } from './types';
 
@@ -12,8 +13,8 @@ if (typeof document !== 'undefined') {
     eventToPoint(e, point);
   };
 
-  document.addEventListener('mousedown', updatePointLocation, true);
-  document.addEventListener('mousemove', updatePointLocation, true);
+  listen(document, 'mousedown mousemove', true)
+    .start(updatePointLocation);
 }
 
 const mouse = ({ preventDefault = true }: PointerProps = {}): Action => action(({ update }) => {
@@ -24,14 +25,14 @@ const mouse = ({ preventDefault = true }: PointerProps = {}): Action => action((
     onFrameUpdate(updatePoint);
   };
 
-  document.addEventListener('mousemove', onMove);
+  const updateOnMove = listen(document, 'mousemove').start(onMove);
 
   if (isMouseDevice) onFrameUpdate(updatePoint);
 
   return {
     stop: () => {
       cancelOnFrameUpdate(updatePoint);
-      document.removeEventListener('mousemove', onMove);
+      updateOnMove.stop();
     }
   };
 });

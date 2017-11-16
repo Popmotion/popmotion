@@ -114,6 +114,7 @@ audio:not([controls]) {
 a {
   background-color: transparent; /* 1 */
   -webkit-text-decoration-skip: objects; /* 2 */
+  text-decoration: none;
 }
 
 /**

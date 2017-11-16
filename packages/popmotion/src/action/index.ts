@@ -9,21 +9,28 @@ export class Action extends Chainable<Action> {
   }
 
   start(observerCandidate: ObserverCandidate = {}): ColdSubscription {
-    const { init, ...observerProps } = this.props;
-    const observer = createObserver(observerCandidate, observerProps);
-    const api = init(observer);
-
-    const defaultSubscription: ColdSubscription = {
+    let isComplete = false;
+    let subscription: ColdSubscription = {
       stop: () => undefined
     };
 
-    const subscription = api
-      ? { ...defaultSubscription, ...api }
-      : defaultSubscription;
+    const { init, ...observerProps } = this.props;
+    const observer = createObserver(observerCandidate, observerProps, () => {
+      isComplete = true;
+      subscription.stop();
+    });
+
+    const api = init(observer);
+
+    subscription = api
+      ? { ...subscription, ...api }
+      : subscription;
 
     if ((observerCandidate as PartialObserver).registerParent) {
       (observerCandidate as PartialObserver).registerParent(subscription);
     }
+
+    if (isComplete) subscription.stop();
 
     return subscription;
   }
