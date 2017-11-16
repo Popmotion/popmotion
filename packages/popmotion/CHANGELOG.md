@@ -6,6 +6,7 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 - `scale` and `rotate` properties to `touch`.
+- `listen` action.
 
 ## [8.0.20@beta] 2017-11-14
 
