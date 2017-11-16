@@ -10,6 +10,19 @@ const tweenCode = `tween({
   ease: easing.backOut
 })`;
 
+const springCode = `const ball = document.getElementById('ball');
+
+const ballXY = value({ x: 0, y: 0}, styler(ball).set);
+
+listen(ball, 'mousedown touchstart')
+  .until(listen(document, 'mouseup touchend'))
+  .start({
+    update: pointer(ballXY.get())
+      .start(ballXY),
+    complete: spring({ velocity: ballXY.getVelocity })
+      .start(ballXY)
+  });`;
+
 export default () => (
   <Container>
     <Blurb>
