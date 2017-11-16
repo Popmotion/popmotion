@@ -16,11 +16,12 @@ import tween from './animations/tween';
 export { decay, keyframes, onFrame, physics, spring, tween };
 
 // Input
+import listen from './input/listen';
 import pointer from './input/pointer';
 import mouse from './input/pointer/mouse';
 import touch from './input/touch';
 
-export { pointer, mouse, touch };
+export { listen, pointer, mouse, touch };
 
 // Compositors
 import chain from './compositors/chain';
