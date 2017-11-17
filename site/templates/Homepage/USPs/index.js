@@ -11,29 +11,31 @@ const tweenCode = `tween({
 })`;
 
 const springCode = `const ball = document.getElementById('ball');
+const ballStyler = styler(ball);
 
-const ballXY = value({ x: 0, y: 0}, styler(ball).set);
+const ballXY = value({ x: 0, y: 0});
+const ballXY.subscribe(ballStyler.set);
 
-listen(ball, 'mousedown touchstart')
-  .until(listen(document, 'mouseup touchend'))
-  .start({
-    update: pointer(ballXY.get())
-      .start(ballXY),
-    complete: spring({ velocity: ballXY.getVelocity })
-      .start(ballXY)
-  });`;
+listen(ball, 'mousedown touchstart').start(() => {
+  pointer(ballXY.get())
+    .start(ballXY);
+});
+
+listen(document, 'mouseup touchend').start(() => {
+  spring({ velocity: ballXY.getVelocity() })
+    .start(ballXY);
+});`;
 
 export default () => (
   <Container>
     <Blurb>
-      Popmotion is a <Strong>10kb</Strong> Swiss Army knife for animators and interaction developers.
+      Popmotion is a <Strong>10kb</Strong> Swiss Army knife for animators and interaction developers:
     </Blurb>
     <ExampleSection title="Animations">
       <Example
         title="Tween"
         link="/api/tween"
         description="Animate between two states with a scrubbable playhead. Includes a full suite of easing, and methods to generate your own."
-        code={tweenCode}
       />
     </ExampleSection>
   </Container>

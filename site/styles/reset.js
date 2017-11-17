@@ -1,5 +1,5 @@
 import { bodyFont, codeFont, fontSize } from './fonts';
-import { BLACK, WHITE, cols } from './vars';
+import { ACTION, BLACK, WHITE, cols } from './vars';
 
 export default `
 * {
@@ -114,6 +114,8 @@ audio:not([controls]) {
 a {
   background-color: transparent; /* 1 */
   -webkit-text-decoration-skip: objects; /* 2 */
+  color: ${ACTION};
+  text-decoration: none;
 }
 
 /**
