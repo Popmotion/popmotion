@@ -1,8 +1,9 @@
-import action, { Action } from '../../action';
+import action from '../../action';
+import { EventListener, ListenFactory } from './types';
 
-const listen = (element: Element, events: string): Action => action(({ update }) => {
+const listen: ListenFactory = (element, events, options) => action(({ update }) => {
   const eventNames = events.split(' ').map((eventName: string) => {
-    element.addEventListener(eventName, update);
+    (element.addEventListener as EventListener)(eventName, update, options);
     return eventName;
   });
 

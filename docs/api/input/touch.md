@@ -21,8 +21,23 @@ import touch from 'popmotion/input/touch';
 ## Usage
 
 ```javascript
-touch({ preventDefault: true })
-  .start((touches) => touches.forEach(({ x, y }) => console.log(x, y)));
+touch().start(({ touches, scale, rotation }) => {
+  touches.forEach(({ x, y }) => console.log(x, y))
+});
+```
+
+`touch` provides:
+
+- `touches: { x: number, y: number }[]`: An array of `x`/`y` coordinates representing each active finger.
+- `scale: number`: The distance between the first two fingers since `start`, represented as a multiplier of the original distance.
+- `rotation: number`: The angle rotation of the first two fingers as a delta of the original rotation.
+
+If you often used, for instance, `rotation`, you can easily create a new action that returns only that value:
+
+```javascript
+const touchRotation = touch().pipe(({ rotation }) => rotation);
+
+touchRotation.start((rotation) => console.log(rotation));
 ```
 
 ## Props

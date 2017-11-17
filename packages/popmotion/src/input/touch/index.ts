@@ -1,8 +1,9 @@
 import { cancelOnFrameUpdate, onFrameUpdate } from 'framesync';
 import action, { Action } from '../../action';
+import { angle, distance } from '../../calc';
+import listen from '../listen';
 import { PointerPoint, PointerProps } from '../pointer/types';
 import { defaultPointerPos, eventToPoint } from '../pointer/utils';
-import { WhatWGAddEventListener } from './types';
 
 const points: PointerPoint[] = [defaultPointerPos()];
 let isTouchDevice = false;
@@ -21,24 +22,56 @@ if (typeof document !== 'undefined') {
     }
   };
 
-  document.addEventListener('touchstart', updatePointsLocation, true);
-  document.addEventListener('touchmove', updatePointsLocation, true);
+  listen(document, 'touchstart touchmove', true)
+    .start(updatePointsLocation);
 }
 
 const touch = ({ preventDefault = true }: PointerProps = {}): Action => action(({ update }) => {
-  const updatePoint = () => update(points);
+  const output = {
+    touches: points,
+    scale: 1.0,
+    rotation: 0.0
+  };
+
+  let initialDistance = 0.0;
+  let initialRotation = 0.0;
+
+  const isGesture = points.length > 1;
+
+  if (isGesture) {
+    const [ firstTouch, secondTouch ] = points;
+    initialDistance = distance(firstTouch, secondTouch);
+    initialRotation = angle(firstTouch, secondTouch);
+  }
+
+  const updatePoint = () => {
+    if (isGesture) {
+      const [ firstTouch, secondTouch ] = points;
+      const newDistance = distance(firstTouch, secondTouch);
+      const newRotation = angle(firstTouch, secondTouch);
+
+      output.scale = newDistance / initialDistance;
+      output.rotation = newRotation - initialRotation;
+    }
+
+    update(output);
+  };
+
   const onMove = (e: TouchEvent) => {
     if (preventDefault) e.preventDefault();
     onFrameUpdate(updatePoint);
   };
 
-  (document.addEventListener as WhatWGAddEventListener)('touchmove', onMove, { passive: !preventDefault });
+  const updateOnMove = listen(document, 'touchmove', { passive: !preventDefault })
+    .start(onMove);
+
   if (isTouchDevice) onFrameUpdate(updatePoint);
 
   return {
     stop: () => {
+      console.log('stop')
       cancelOnFrameUpdate(updatePoint);
-      document.removeEventListener('touchmove', onMove);
+      updateOnMove.stop();
     }
   };
 });

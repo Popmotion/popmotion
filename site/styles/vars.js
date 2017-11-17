@@ -1,7 +1,7 @@
 import { css } from 'styled-components';
 
 export const verticalGradient = (from, to, start=0, end=100) =>
-  `linear-gradient(to bottom, ${from} ${start}%, ${to} ${end}%)`;
+  `linear-gradient(to bottom, ${to} ${start}%, ${from} ${end}%)`;
 
 export const WHITE = '#fff';
 export const BLACK = '#222';
@@ -13,6 +13,7 @@ export const PINK_BURN = '#DB0068';
 export const BLUE = '#198FE3';
 export const BLUE_BURN = '#064FB5';
 
+const GREEN = '#14D790';
 const PURPLE = '#9B65DE';
 
 export const BRAND = PINK;

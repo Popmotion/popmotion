@@ -7,7 +7,7 @@ import { Keyframes, KeyframesDuration, KeyframesLoop, KeyframesLinear, Keyframes
 import { PhysicsVelocity, PhysicsAcceleration, PhysicsFriction, PhysicsSpring, PhysicsChangeSpringTarget } from './physics';
 import { TweenBasic, TweenLoop, TweenYoyo, TweenFlip, TweenWithVelocity } from './tween';
 import { Spring, SpringVelocity, SpringHeavier, SpringStiffer, SpringStifferDamping } from './spring';
-import { Drag, DragWithDeltaPointer } from './pointer';
+import { Drag, DragWithDeltaPointer, Multitouch } from './pointer';
 import { Chain, Composite, Delay, Crossfade, Merge, Parallel, Stagger } from './compositors';
 //import { DraggableDOM, DraggableReact } from './plugins/draggable';
 //import { SpinnableDOM, SpinnableReact } from './plugins/spinnable';
@@ -49,7 +49,8 @@ storiesOf('tween', module)
 
 storiesOf('pointer', module)
 .add('drag', () => <Drag />)
-.add('drag with delta pointer', () => <DragWithDeltaPointer />);
+.add('drag with delta pointer', () => <DragWithDeltaPointer />)
+.add('multitouch', () => <Multitouch />);
 
 storiesOf('compositors', module)
 .add('chain', () => <Chain />)

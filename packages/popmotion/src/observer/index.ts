@@ -5,10 +5,12 @@ export class Observer implements IObserver {
   private isActive = true;
   private observer: PartialObserver;
   private updateObserver: Update;
+  private onComplete: Function;
 
-  constructor({ middleware }: ObserverProps, observer: PartialObserver) {
+  constructor({ middleware, onComplete }: ObserverProps, observer: PartialObserver) {
     this.observer = observer;
     this.updateObserver = (v: any) => observer.update(v);
+    this.onComplete = onComplete;
 
     if (observer.update && middleware && middleware.length) {
       middleware.forEach((m: Middleware) => this.updateObserver = m(this.updateObserver, this.complete));
@@ -21,6 +23,7 @@ export class Observer implements IObserver {
 
   complete = () => {
     if (this.observer.complete && this.isActive) this.observer.complete();
+    if (this.onComplete) this.onComplete();
     this.isActive = false;
   }
 
@@ -30,10 +33,10 @@ export class Observer implements IObserver {
   }
 }
 
-export default (observerCandidate: ObserverCandidate, { middleware }: ObserverProps) => {
+export default (observerCandidate: ObserverCandidate, { middleware }: ObserverProps, onComplete?: Function) => {
   if (typeof observerCandidate === 'function') {
-    return new Observer({ middleware }, { update: observerCandidate });
+    return new Observer({ middleware, onComplete }, { update: observerCandidate });
   } else {
-    return new Observer({ middleware }, observerCandidate);
+    return new Observer({ middleware, onComplete }, observerCandidate);
   }
 };
