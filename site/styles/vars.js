@@ -5,6 +5,7 @@ export const verticalGradient = (from, to, start=0, end=100) =>
 
 export const WHITE = '#fff';
 export const BLACK = '#222';
+export const SUPER_LIGHT_GREY = '#FAFAFA';
 export const LIGHT_GREY = '#f2f2f2';
 
 export const PINK = '#FF1C68';
@@ -25,6 +26,9 @@ export const ACTION_BURN = BLUE_BURN;
 export const ACTION_GRADIENT = verticalGradient(BLUE, BLUE_BURN);
 
 export const ENTITY = PURPLE;
+
+export const SKEW = '-5.7deg';
+export const UNSKEW = '5.7deg';
 
 const COL_WIDTH = 15;
 

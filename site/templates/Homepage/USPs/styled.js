@@ -2,6 +2,8 @@ import styled from 'styled-components';
 import { ACTION, cols } from '~/styles/vars';
 import { fontSize, lineHeight, fontBold } from '~/styles/fonts';
 
+const MAX_WIDTH = cols(60);
+
 export const Container = styled.section`
   padding-top: ${cols(4)};
   display: flex;
@@ -19,6 +21,7 @@ export const Blurb = styled.p`
 
 export const SectionContainer = styled.section`
   width: 100%;
+  margin-bottom: ${cols(2)};
 `;
 
 export const SectionHeader = styled.h2`
@@ -29,6 +32,7 @@ export const SectionHeader = styled.h2`
 `;
 
 export const ExampleContainer = styled.div`
+  margin-bottom: ${cols(2)};
 `;
 
 export const ExampleHeader = styled.h3`
@@ -36,6 +40,8 @@ export const ExampleHeader = styled.h3`
   ${lineHeight(28)}
   ${fontBold}
   margin-bottom: ${cols(1)};
+  display: block;
+  width: 100%;
 
   a {
     ${fontBold}
@@ -49,4 +55,11 @@ export const Description = styled.p`
 `;
 
 export const LiveContainer = styled.div``;
+
+export const CenteredContent = styled.div`
+  max-width: ${MAX_WIDTH};
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+`;
 

@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.0.22@beta] 2017-11-16
+
+### Fixed
+- Fixed `tween` flip.
+
 ## [8.0.21@beta] 2017-11-16
 
 ### Added

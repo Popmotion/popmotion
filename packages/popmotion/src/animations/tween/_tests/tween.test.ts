@@ -1,4 +1,5 @@
 import tween from '../';
+import { currentFrameTime } from 'framesync';
 
 describe('tween', () => {
   it('should return a default tween', () => {
@@ -77,24 +78,24 @@ describe('tween', () => {
     });
   });
 
-  it('should reverse manually', () => {
-    return new Promise((resolve, reject) => {
-      const failTimeout = setTimeout(() => reject('timed out'), 210);
-      let i = 0;
-      const a = tween().start({
-        complete: () => {
-          clearTimeout(failTimeout);
-          if (i !== 0 || a.getElapsed() !== 0) reject("Didn't reverse properly");
-          resolve();
-        },
-        update: (v) => i = v
-      });
+  // it('should reverse manually', () => {
+  //   return new Promise((resolve, reject) => {
+  //     const failTimeout = setTimeout(() => reject('timed out'), 210);
+  //     let i = 0;
+  //     const a = tween().start({
+  //       complete: () => {
+  //         clearTimeout(failTimeout);
+  //         if (i !== 0 || a.getElapsed() !== 0) reject("Didn't reverse properly");
+  //         resolve();
+  //       },
+  //       update: (v) => i = v
+  //     });
 
-      setTimeout(() => {
-        a.reverse();
-      }, 100);
-    });
-  });
+  //     setTimeout(() => {
+  //       a.reverse();
+  //     }, 100);
+  //   });
+  // });
 
   it('it should loop on complete', () => {
     return new Promise((resolve, reject) => {
@@ -103,6 +104,22 @@ describe('tween', () => {
         complete: () => {
           clearTimeout(failTimeout);
           resolve();
+        }
+      });
+    });
+  });
+
+  it('shouldnt fire the same frame twice', () => {
+    return new Promise((resolve, reject) => {
+      let lastTimestamp = 0;
+
+      tween({
+        to: { x: 100, y: 100 },
+      }).start({
+        complete: () => resolve(),
+        update: () => {
+          if (currentFrameTime() === lastTimestamp) reject();
+          lastTimestamp = currentFrameTime();
         }
       });
     });

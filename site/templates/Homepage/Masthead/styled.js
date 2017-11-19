@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { WHITE, BLACK, ACTION_GRADIENT, LIGHT_GREY, cols } from '~/styles/vars';
+import { WHITE, BLACK, ACTION_GRADIENT, LIGHT_GREY, UNSKEW, SKEW, cols } from '~/styles/vars';
 import { fontSize, fontBold } from '~/styles/fonts';
 import PopmotionLogo from '~/components/icons/Logo';
 
@@ -37,31 +37,18 @@ export const Blurb = styled.h2`
 `;
 
 export const CTA = styled.div`
+  background: ${ACTION_GRADIENT};
+  box-shadow: 0 1px 0 0 ${BLACK};
   margin: 0 auto;
-  position: relative;
   display: flex;
-  width: 172px;
-  height: 58px;
-
-  &:before {
-    background: ${ACTION_GRADIENT};
-    content: '';
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    transform: skewX(-5.7deg);
-    box-shadow: 0 1px 0 0 ${BLACK};
-  }
+  transform: skewX(${SKEW});
 
   a {
     ${fontSize(24)}
     ${fontBold}
     color: ${WHITE};
     text-decoration: none;
-    position: absolute;
     padding: ${cols(1)} ${cols(2)};
+    transform: skewX(${UNSKEW});
   }
 `;

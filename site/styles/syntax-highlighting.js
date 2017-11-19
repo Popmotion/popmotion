@@ -1,13 +1,13 @@
 import { BLACK, BRAND, ENTITY, ACTION, cols } from './vars';
 
-export const theme = {
+const createTheme = ({ fontSize = 14, lineHeight = 20}) => ({
   'hljs': {
     display: 'block',
     overflowX: 'auto',
     padding: cols(1),
     color: BLACK,
-    fontSize: '14px',
-    lineHeight: '20px'
+    fontSize: `${fontSize}px`,
+    lineHeight: `${lineHeight}px`
   },
   'hljs-comment': {
     opacity: 0.5
@@ -30,4 +30,10 @@ export const theme = {
   'hljs-attribute': {
     color: BRAND
   }
-};
+});
+
+export const codeTheme = createTheme({});
+export const codeThemeLarge = createTheme({
+  fontSize: 18,
+  lineHeight: 26
+});

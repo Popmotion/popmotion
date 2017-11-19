@@ -25,7 +25,7 @@ const tween = ({
   yoyo = 0,
   yoyoCount = 0
 }: TweenProps = {}): Action => action(({ update, complete }: IObserver): TweenInterface => {
-  const playhead = scrubber({ from, to, ease }).start(update);
+  let playhead = scrubber({ from, to, ease }).start(update);
 
   let progress = 0;
   let tweenTimer: ColdSubscription;
@@ -48,7 +48,10 @@ const tween = ({
 
     } else if (flip && flipCount < flip) {
       elapsed = duration - elapsed;
+
       [from, to] = [to, from];
+      playhead = scrubber({ from, to, ease }).start(update);
+
       flipCount++;
       isStepTaken = true;
 
