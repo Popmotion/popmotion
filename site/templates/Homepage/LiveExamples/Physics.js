@@ -1,17 +1,17 @@
 import Template from './Template';
 import { Ball, BottomCenter } from './styled';
-import { styler, value, listen, physics, transform } from 'popmotion';
+import { styler, value, listen, physics, transform, tween } from 'popmotion';
 
 const code = `const gravity = physics({
-  acceleration: 2000,
+  acceleration: 2500,
   restSpeed: false
 }).start(ballY);
 
-listen(ball, 'mousedown touchstart')
-  .start(() => gravity
+listen(ball, 'mousedown touchstart').start(() => {
+  gravity
     .set(ballY.get())
-    .setVelocity(-1000)
-  )`;
+    .setVelocity(-1200);
+});`;
 
 class Example extends React.Component {
   startAnimation = (ref) => {
@@ -20,31 +20,55 @@ class Example extends React.Component {
     let count = 0;
 
     this.boxStyler = styler(ref);
-    const ballX = value(0, this.boxStyler.set('y'));
-
+    this.ballY = value(0, this.boxStyler.set('y'));
+    const ballBorder = value({
+      borderColor: '',
+      borderWidth: 0
+    }, ({ borderColor, borderWidth }) => this.boxStyler.set({
+      boxShadow: `0 0 0 ${borderWidth}px ${borderColor}`
+    }));
+    
     const gravity = physics({
-      acceleration: 2000,
+      acceleration: 2500,
       restSpeed: false
     }).pipe((v) => {
-      if (v <= 0) {
+      if (v >= 0) {
         v = 0;
+        gravity
+          .set(0)
+          .setVelocity(- this.ballY.getVelocity() * 0.8);
+
+        if (this.ballY.getVelocity() !== 0 && ref.innerHTML !== 'Tap') {
+          count = 0;
+          tween({
+            from: { borderWidth: 0, borderColor: 'rgb(255, 28, 104, 1)' },
+            to: { borderWidth: 30, borderColor: 'rgb(255, 28, 104, 0)' }
+          }).start(ballBorder);
+  
+          ref.innerHTML = 'Tap';
+        }
       }
       return v;
-    }).start(ballX);
+    }).start(this.ballY);
 
-    listen(ref, 'mousedown touchstart', (e) => {
+    listen(ref, 'mousedown touchstart').start((e) => {
       e.preventDefault();
       count++;
       ref.innerHTML = count;
 
       gravity
-        .set(ballY.get())
-        .setVelocity(-10000);
+        .set(this.ballY.get())
+        .setVelocity(-1200);
+
+      tween({
+        from: { borderWidth: 0, borderColor: 'rgb(20, 215, 144, 1)' },
+        to: { borderWidth: 30, borderColor: 'rgb(20, 215, 144, 0)' }
+      }).start(ballBorder);
     });
   };
 
   componentWillUnmount() {
-    this.animation && this.animation.stop();
+    this.ballY && this.ballY.stop();
   }
 
   render() {

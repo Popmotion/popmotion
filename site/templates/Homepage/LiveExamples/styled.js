@@ -7,6 +7,7 @@ export const Container = styled.div`
   background: ${SUPER_LIGHT_GREY};
   margin: ${cols(2)} 0 ${cols(4)};
   display: flex;
+  overflow-x: hidden;
 `;
 
 export const LiveExampleContainer = styled.div`
@@ -14,6 +15,7 @@ export const LiveExampleContainer = styled.div`
   display: flex;
   align-items: stretch;
   justify-content: flex-end;
+  min-height: 250px;
 `;
 
 export const ExamplePositioning = styled.div`
@@ -47,6 +49,8 @@ export const CodeContainer = styled.div`
   flex: calc(50% + 30px);
   margin-right: -30px;
   padding-left: ${cols(1)};
+  display: flex;
+  align-items: center;
   
   pre {
     transform: skewX(${UNSKEW});
@@ -68,6 +72,22 @@ export const Ball = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  ${fontSize(18)}
   ${fontBold}
   margin: 0 auto;
+  cursor: default;
+`;
+
+export const Carousel = styled.div`
+  display: flex;
+  align-items: stretch;
+  height: 150px;
+  position: relative;
+`;
+
+export const Item = styled.div`
+  background: ${ENTITY};
+  border-radius: 5px;
+  margin-right: ${cols(1)};
+  flex: 0 0 110px;
 `;

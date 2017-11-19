@@ -2,21 +2,12 @@ import Template from './Template';
 import { Ball, AlignCenter } from './styled';
 import { spring, styler, value, listen, pointer } from 'popmotion';
 
-const code = `const ball = document.querySelector('.ball');
-const ballStyler = styler(ball);
-const ballXY = value({ x: 0, y: 0 }, ballStyler.set);
-
-listen(ball, 'mousedown touchstart').start(() => {
-  pointer(ballXY.get()).start(ballXY);
-});
-
-listen(document, 'mouseup touchend').start(() => {
-  spring({
-    from: ballXY.get(),
-    to: 0,
-    velocity: ballXY.getVelocity()
-  }).start(ballXY);
-});`;
+const code = `spring({
+  from: ballXY.get(),
+  to: 0,
+  velocity: ballXY.getVelocity(),
+  stiffness: 200
+})`;
 
 class Example extends React.Component {
   startAnimation = (ref) => {
@@ -42,7 +33,7 @@ class Example extends React.Component {
   };
 
   componentWillUnmount() {
-    this.animation && this.animation.stop();
+    this.ballXY && this.ballXY.stop();
   }
 
   render() {

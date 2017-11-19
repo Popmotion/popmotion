@@ -10,8 +10,8 @@ import { codeThemeLarge } from '~/styles/syntax-highlighting';
 
 registerLanguage('javascript', js);
 
-export default ({ children, code }) => (
-  <Container>
+export default ({ children, code, hideOverflow }) => (
+  <Container hideOverflow={hideOverflow}>
     <LiveExampleContainer>
       {children}
     </LiveExampleContainer>

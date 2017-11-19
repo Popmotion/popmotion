@@ -5,6 +5,9 @@ import TweenExample from '../LiveExamples/Tween';
 import SpringExample from '../LiveExamples/Spring';
 import KeyframesExample from '../LiveExamples/Keyframes';
 import PhysicsExample from '../LiveExamples/Physics';
+import DecayExample from '../LiveExamples/Decay';
+import PointerExample from '../LiveExamples/Pointer';
+import MultitouchExample from '../LiveExamples/Multitouch';
 import { Strong } from '~/templates/global/styled';
 
 export default () => (
@@ -45,22 +48,25 @@ export default () => (
         title="Decay"
         link="/api/decay"
         description="Exponentially-decayed velocity to smoothly dampen momentum."
-        
-      />
+      >
+        <DecayExample />
+      </Example>
     </ExampleSection>
     <ExampleSection title="Input">
       <Example
         title="Pointer"
         link="/api/pointer"
         description="Provides absolute or relative pointer coordinates."
-        
-      />
+      >
+        <PointerExample />
+      </Example>
       <Example
         title="Multitouch"
         link="/api/touch"
         description="Create multitouch gestures with a list of active touches, delta rotation and scale properties."
-        
-      />
+      >
+        <MultitouchExample />
+      </Example>
       <Example
         title="Listen"
         link="/api/listen"

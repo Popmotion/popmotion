@@ -19,7 +19,7 @@ class Example extends React.Component {
   startAnimation = (ref) => {
     if (!ref) return;
     this.boxStyler = styler(ref);
-    keyframes({
+    this.animation = keyframes({
       values: [
         { x: 0, y: 0, rotateY: 0, background: '#9B65DE' },
         { x: 300, y: 0, rotateY: 180, background: '#14D790' },
