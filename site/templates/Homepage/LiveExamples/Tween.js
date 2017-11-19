@@ -1,7 +1,6 @@
 import Template from './Template';
-import { Box } from './styled';
+import { Box, VerticalCenter } from './styled';
 import { easing, styler, tween } from 'popmotion';
-import { currentFrameTime } from 'framesync';
 
 const code = `tween({
   from: 0,
@@ -20,10 +19,7 @@ class Tween extends React.Component {
       duration: 1200,
       ease: easing.backOut,
       flip: Infinity
-    }).start(v => {
-      console.log(currentFrameTime())
-      this.boxStyler.set(v);
-    });
+    }).start(this.boxStyler.set);
   };
 
   componentWillUnmount() {
@@ -37,6 +33,8 @@ class Tween extends React.Component {
 
 export default () => (
   <Template code={code}>
-    <Tween />
+    <VerticalCenter>
+      <Tween />
+    </VerticalCenter>
   </Template>
 );

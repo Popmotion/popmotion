@@ -82,6 +82,7 @@ physics({
 
 `physics().start()` returns:
 
+- `set(current: number): this`
 - `setAcceleration(acceleration: number): this`
 - `setFriction(friction: number): this`
 - `setSpringStrength(strength: number): this`

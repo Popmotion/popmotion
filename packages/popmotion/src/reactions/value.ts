@@ -1,7 +1,7 @@
 import { timeSinceLastFrame } from 'framesync';
 import { speedPerSecond } from '../calc';
-import { ObserverCandidate, ObserverProps } from '../observer/types';
-import { BaseReaction } from './base';
+import { ObserverCandidate, ObserverProps, Update } from '../observer/types';
+import { BaseMulticast } from './';
 import { HotSubscription } from './types';
 
 export type ValueMap = { [key: string]: number | string };
@@ -9,7 +9,8 @@ export type ValueList = Array<number | string>;
 export type Value = number | string | ValueMap | ValueList;
 
 export type ValueProps = ObserverProps & {
-  value: Value
+  value: Value,
+  initialSubscription?: Update
 };
 
 const isValueList = (v: any): v is ValueList => Array.isArray(v);
@@ -18,7 +19,7 @@ const isSingleValue = (v: any): v is string | number => {
   return (typeOfV === 'string' || typeOfV === 'number');
 };
 
-export class ValueReaction extends BaseReaction<ValueReaction> {
+export class ValueReaction extends BaseMulticast<ValueReaction> {
   public updateCurrent: (v: any) => any;
   public getVelocityOfCurrent: () => any;
 
@@ -51,6 +52,8 @@ export class ValueReaction extends BaseReaction<ValueReaction> {
       };
       this.getVelocityOfCurrent = () => this.getMapVelocity();
     }
+
+    if (props.initialSubscription) this.subscribe(props.initialSubscription);
   }
 
   create(props: ValueProps) {
@@ -105,4 +108,4 @@ export class ValueReaction extends BaseReaction<ValueReaction> {
   }
 }
 
-export default (value: Value) => new ValueReaction({ value });
+export default (value: Value, initialSubscription?: Update) => new ValueReaction({ value, initialSubscription });

@@ -9,6 +9,7 @@ export type Props = {
 };
 
 export type PhysicsInterface = {
+  set(v: number): PhysicsInterface;
   setAcceleration(v: number): PhysicsInterface;
   setFriction(v: number): PhysicsInterface;
   setSpringStrength(v: number): PhysicsInterface;

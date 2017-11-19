@@ -1,11 +1,11 @@
-import reaction from '../';
+import multicast from '../multicast';
 import action from '../../action';
 
-describe('reaction', () => {
+describe('multicast', () => {
   const one = action(({ update }) => update(1));
 
   it('should accept subscribers', () => {
-    const r = reaction();
+    const r = multicast();
     r.subscribe({
       update: (v) => expect(v).toBe(1),
       complete: () => expect(true).toBe(true)
@@ -15,20 +15,20 @@ describe('reaction', () => {
   });
 
   it('should work with actions', () => {
-    const r = reaction();
+    const r = multicast();
     r.subscribe((v) => expect(v).toBe(1));
     const a = one.start(r);
   });
 
   it('should accept multiple subscribers', () => {
-    const r = reaction();
+    const r = multicast();
     r.subscribe((v) => expect(v).toBe(1));
     r.subscribe((v) => expect(v).toBe(1));
     const a = one.start(r);
   });
 
   it('should create a new instance when chained', () => {
-    const r = reaction();
+    const r = multicast();
     const s = r.pipe((v) => v * 2);
     r.subscribe((v) => expect(v).toBe(1));
     s.subscribe((v) => expect(v).toBe(2));

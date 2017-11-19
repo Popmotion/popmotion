@@ -1,9 +1,9 @@
 // Core
 import action from './action';
-import reaction from './reactions';
+import multicast from './reactions/multicast';
 import value from './reactions/value';
 
-export { action, reaction, value };
+export { action, multicast, value };
 
 // Animations
 import decay from './animations/decay';

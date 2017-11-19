@@ -2,6 +2,14 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.0.23@beta] 2017-11-16
+
+### Added
+- `keyframes` `ease` property can now be a single function.
+
+### Changed
+- `reaction` becomes `multicast`.
+
 ## [8.0.22@beta] 2017-11-16
 
 ### Fixed

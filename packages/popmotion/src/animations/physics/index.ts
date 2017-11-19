@@ -39,6 +39,10 @@ const physics = ({
   });
 
   return {
+    set(v) {
+      current = v;
+      return this;
+    },
     setAcceleration(v) {
       acceleration = v;
       return this;

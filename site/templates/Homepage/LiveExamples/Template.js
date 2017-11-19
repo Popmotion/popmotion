@@ -2,7 +2,7 @@ import {
   Container,
   LiveExampleContainer,
   CodeContainer,
-  ExamplePositioning
+  AlignCenter
 } from './styled';
 import SyntaxHighlighter, { registerLanguage } from 'react-syntax-highlighter/dist/light';
 import js from 'react-syntax-highlighter/dist/languages/javascript';
@@ -13,9 +13,7 @@ registerLanguage('javascript', js);
 export default ({ children, code }) => (
   <Container>
     <LiveExampleContainer>
-      <ExamplePositioning>
-        {children}
-      </ExamplePositioning>
+      {children}
     </LiveExampleContainer>
     <CodeContainer>
       <SyntaxHighlighter language="javascript" style={codeThemeLarge}>

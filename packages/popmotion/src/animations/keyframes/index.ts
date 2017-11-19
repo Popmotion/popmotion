@@ -9,8 +9,8 @@ import { clamp } from '../../transformers';
 
 const clampProgress = clamp(0, 1);
 
-const defaultEasings = (values: number[]): Easing[] =>
-  values.map((): Easing => easeOut).splice(0, values.length - 1);
+const defaultEasings = (values: number[], easing?: Easing): Easing[] =>
+  values.map((): Easing => easing || easeOut).splice(0, values.length - 1);
 
 const defaultTimings = (values: number[]): number[] => {
   const numValues = values.length;
@@ -51,7 +51,9 @@ const interpolateScrubbers = (input: number[], scrubbers: Action[], update: Upda
 
 const keyframes = ({ values, loop, yoyo, flip, ...props }: KeyframeProps): Action => {
   const duration = props.duration || 300;
-  const ease = props.ease || defaultEasings(values as number[]);
+  const ease = Array.isArray(props.ease)
+    ? props.ease
+    : defaultEasings(values as number[], props.ease);
   const times = props.times || defaultTimings(values as number[]);
 
   const scrubbers = ease.map((easing, i) => scrubber({

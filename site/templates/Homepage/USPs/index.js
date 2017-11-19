@@ -1,7 +1,10 @@
 import { Container, Blurb } from './styled';
 import ExampleSection from './ExampleSection';
 import Example from './Example';
-import TweenExample from '../LiveExamples';
+import TweenExample from '../LiveExamples/Tween';
+import SpringExample from '../LiveExamples/Spring';
+import KeyframesExample from '../LiveExamples/Keyframes';
+import PhysicsExample from '../LiveExamples/Physics';
 import { Strong } from '~/templates/global/styled';
 
 export default () => (
@@ -21,19 +24,23 @@ export default () => (
         title="Spring"
         link="/api/spring"
         description="An accurate spring simulation powered by the same equations as Apple’s CASpringAnimation. "
-      />
+      >
+        <SpringExample />
+      </Example>
       <Example
         title="Keyframes"
         link="/api/keyframes"
         description="Animate through multiple sequential states with all the power of a single tween."
-        
-      />
+      >
+        <KeyframesExample />
+      </Example>
       <Example
         title="Physics"
         link="/api/physics"
         description="A lightweight integrated physics simulation that can be affected mid-animation."
-        
-      />
+      >
+        <PhysicsExample />
+      </Example>
       <Example
         title="Decay"
         link="/api/decay"

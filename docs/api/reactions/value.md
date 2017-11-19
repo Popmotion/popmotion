@@ -6,7 +6,7 @@ category: reactions
 
 # Value
 
-A [reaction](/api/reactions) that tracks the state of a number and allows velocity queries.
+A [multicast reaction](/api/reactions) that tracks the state of a number and allows velocity queries.
 
 ## Import
 
@@ -18,13 +18,16 @@ import value from 'popmotion/reactions/value';
 
 ## Usage
 
+```typescript
+value(initialValue, onUpdate);
+```
+
 ```javascript
 import { tween, value } from 'popmotion';
 import styler from 'stylefire';
 
 const div = styler(document.querySelector('div'));
-const divX = value(0);
-myVal.subscribe(div.set('x'));
+const divX = value(0, div.set('x'));
 
 tween({ to: 500 }).start(divX);
 
@@ -43,6 +46,14 @@ const bar = value([0, 0]);
 
 foo.getVelocity(); // { x: 0, y: 0 }
 bar.getVelocity(); // [0, 0]
+```
+
+As a multicast reaction, you can optionally `subscribe` with multiple other reactions rather than providing an initial subscription:
+
+```javascript
+const foo = value(0);
+foo.subscribe(() => console.log('first reaction'));
+foo.subscribe(() => console.log('second reaction'));
 ```
 
 ## Methods
