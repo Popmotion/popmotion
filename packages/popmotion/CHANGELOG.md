@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.0.27@beta] 2017-11-16
+
+### Fixed
+
+- `delay` waits appropriate number of time before `complete`.
+
 ## [8.0.26@beta] 2017-11-16
 
 ### Fixed

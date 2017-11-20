@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { fontBold, fontSize } from '~/styles/fonts';
-import { cols, WHITE, ENTITY, SUPER_LIGHT_GREY, LIGHT_GREY, SKEW, UNSKEW } from '~/styles/vars';
-import { ExampleContainer } from '../USPs/styled';
+import { cols, WHITE, ENTITY, GREEN, ACTION, BRAND, SUPER_LIGHT_GREY, LIGHT_GREY, SKEW, UNSKEW } from '~/styles/vars';
 
 export const Container = styled.div`
   background: ${SUPER_LIGHT_GREY};
@@ -41,6 +40,12 @@ export const BottomCenter = ExamplePositioning.extend`
   justify-content: center;
 `;
 
+export const StackedLeft = ExamplePositioning.extend`
+  align-items: flex-start;
+  justify-content: space-around;
+  flex-direction: column;
+`;
+
 export const CodeContainer = styled.div`
   background: ${LIGHT_GREY};
   border-left: 2px solid ${ENTITY};
@@ -56,25 +61,28 @@ export const CodeContainer = styled.div`
   }
 `;
 
-export const Box = styled.div`
-  width: 80px;
-  height: 80px;
+export const ExampleItem = styled.div`
   background: ${ENTITY};
-`;
-
-export const Ball = styled.div`
-  width: 100px;
-  height: 100px;
-  background: ${ENTITY};
-  border-radius: 50%;
   color: ${WHITE};
   display: flex;
   justify-content: center;
   align-items: center;
   ${fontSize(18)}
   ${fontBold}
-  margin: 0 auto;
   cursor: default;
+  text-align: center;
+`;
+
+export const Box = ExampleItem.extend`
+  width: 80px;
+  height: 80px;
+`;
+
+export const Ball = ExampleItem.extend`
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin: 0 auto;
 `;
 
 export const Carousel = styled.div`
@@ -89,4 +97,22 @@ export const Item = styled.div`
   border-radius: 5px;
   margin-right: ${cols(1)};
   flex: 0 0 110px;
+  
+  &:nth-child(4n + 2) {
+    background: ${GREEN};
+  }
+  
+  &:nth-child(4n + 3) {
+    background: ${BRAND};
+  }
+  
+  &:nth-child(4n + 4) {
+    background: ${ACTION};
+  }
+`;
+
+export const SmallBall = Ball.extend`
+  width: 50px;
+  height: 50px;
+  margin: 0;
 `;

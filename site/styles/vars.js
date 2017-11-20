@@ -14,7 +14,7 @@ export const PINK_BURN = '#DB0068';
 export const BLUE = '#198FE3';
 export const BLUE_BURN = '#064FB5';
 
-const GREEN = '#14D790';
+export const GREEN = '#14D790';
 const PURPLE = '#9B65DE';
 
 export const BRAND = PINK;

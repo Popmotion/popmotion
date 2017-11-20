@@ -1,14 +1,15 @@
 import Template from './Template';
 import { Box, TopLeft } from './styled';
+import { GREEN, ENTITY } from '~/styles/vars';
 import { styler, easing, keyframes } from 'popmotion';
 
 const code = `keyframes({
   values: [
-    { x: 0, y: 0, rotateY: 0, background: '#9B65DE' },
-    { x: 300, y: 0, rotateY: 180, background: '#14D790' },
-    { x: 300, y: 200, rotateY: 180, background: '#14D790' },
-    { x: 0, y: 200, rotateY: 0, background: '#9B65DE' },
-    { x: 0, y: 0, rotateY: 0, background: '#9B65DE' }
+    { x: 0, y: 0, rotateY: 0, background: '${ENTITY}' },
+    { x: 300, y: 0, rotateY: 180, background: '${GREEN}' },
+    { x: 300, y: 200, rotateY: 180, background: '${GREEN}' },
+    { x: 0, y: 200, rotateY: 0, background: '${ENTITY}' },
+    { x: 0, y: 0, rotateY: 0, background: '${ENTITY}' }
   ],
   duration: 3000,
   ease: easing.easeInOut,
@@ -21,11 +22,11 @@ class Example extends React.Component {
     this.boxStyler = styler(ref);
     this.animation = keyframes({
       values: [
-        { x: 0, y: 0, rotateY: 0, background: '#9B65DE' },
-        { x: 300, y: 0, rotateY: 180, background: '#14D790' },
-        { x: 300, y: 200, rotateY: 180, background: '#14D790' },
-        { x: 0, y: 200, rotateY: 0, background: '#9B65DE' },
-        { x: 0, y: 0, rotateY: 0, background: '#9B65DE' }
+        { x: 0, y: 0, rotateY: 0, background: ENTITY },
+        { x: 300, y: 0, rotateY: 180, background: GREEN },
+        { x: 300, y: 200, rotateY: 180, background: GREEN },
+        { x: 0, y: 200, rotateY: 0, background: ENTITY },
+        { x: 0, y: 0, rotateY: 0, background: ENTITY }
       ],
       duration: 3000,
       ease: [easing.easeInOut, easing.easeInOut, easing.easeInOut, easing.easeInOut],

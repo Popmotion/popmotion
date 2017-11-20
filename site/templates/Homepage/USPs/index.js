@@ -9,6 +9,7 @@ import DecayExample from '../LiveExamples/Decay';
 import PointerExample from '../LiveExamples/Pointer';
 import MultitouchExample from '../LiveExamples/Multitouch';
 import EveryFrameExample from '../LiveExamples/EveryFrame';
+import StaggerExample from '../LiveExamples/Stagger';
 import { Strong } from '~/templates/global/styled';
 
 export default () => (
@@ -75,29 +76,28 @@ export default () => (
       >
         <MultitouchExample />
       </Example>
-      <Example
-        title="Listen"
-        link="/api/listen"
-        description="Convert any browser event into a chainable action."
-        
-      />
     </ExampleSection>
     <ExampleSection title="More features">
       <Example
-        title="Chain modifiers"
-        description="All animation and input actions can be chained, returning a new version of that action."   
-      />
-      <Example
         title="Stagger"
+        link="/api/stagger"
         description="Stagger any series of animations or functions."   
-      />
+      >
+        <StaggerExample />
+      </Example>
       <Example
-        title="Animate colors"
+        title="Color"
         description="Popmotion uses advanced color blending that avoids muddy saturation loss."
       />
       <Example
         title="Crossfade"
+        link="/api/crossfade"
         description="Blend the output of any two actions."
+      />
+      <Example
+        title="Line animation"
+        link="/api/svg"
+        description="Leverage Stylefire's line drawing capabilities."
       />
     </ExampleSection>
   </Container>

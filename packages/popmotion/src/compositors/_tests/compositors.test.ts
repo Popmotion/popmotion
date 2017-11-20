@@ -3,6 +3,7 @@ import onFrame from '../../animations/every-frame';
 import chain from '../chain';
 import composite from '../composite';
 import crossFade from '../crossfade';
+import delay from '../delay';
 import merge from '../merge';
 import parallel from '../parallel';
 
@@ -58,6 +59,17 @@ describe('crossfade', () => {
         complete: () => i === 3.5 ? resolve() : reject(i),
         update: (v) => i = v
       }).setBalance(0.5);
+    });
+  });
+});
+
+describe('delay', () => {
+  it('should wait the requisite amount of time before firing', () => {
+    return new Promise((resolve, reject) => {
+      const time = Date.now();
+      delay(100).start({
+        complete: () => Date.now() - time < 100 ? reject(Date.now() - time) : resolve()
+      });
     });
   });
 });
