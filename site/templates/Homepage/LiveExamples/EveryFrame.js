@@ -1,6 +1,6 @@
 import Template from './Template';
 import { Ball, VerticalCenter } from './styled';
-import { onFrame, styler } from 'popmotion';
+import { everyFrame, styler } from 'popmotion';
 
 const code = `const ballStylers = Array
   .from(container.childNodes)
@@ -26,7 +26,7 @@ class Example extends React.Component {
 
     const distance = 100;
     
-    onFrame()
+    everyFrame()
       .start((timestamp) => ballStylers.map((styler, i) => {
         styler.set('y', distance * Math.sin(0.004 * timestamp + (i * 0.5)));
       }));

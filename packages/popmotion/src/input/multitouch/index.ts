@@ -26,7 +26,7 @@ if (typeof document !== 'undefined') {
     .start(updatePointsLocation);
 }
 
-const multitouch = ({ preventDefault = true, scale = 0.0, rotate = 0.0 }: PointerProps = {}): Action => action(({ update }) => {
+const multitouch = ({ preventDefault = true, scale = 1.0, rotate = 0.0 }: PointerProps = {}): Action => action(({ update }) => {
   const output = {
     touches: points,
     scale,
@@ -50,8 +50,8 @@ const multitouch = ({ preventDefault = true, scale = 0.0, rotate = 0.0 }: Pointe
       const newDistance = distance(firstTouch, secondTouch);
       const newRotation = angle(firstTouch, secondTouch);
 
-      output.scale = newDistance / initialDistance;
-      output.rotate = newRotation - initialRotation;
+      output.scale = scale + (newDistance / initialDistance);
+      output.rotate = rotate + (newRotation - initialRotation);
     }
 
     update(output);

@@ -2,7 +2,13 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
-## [8.0.23@beta] 2017-11-16
+## [8.0.25@beta] 2017-11-16
+
+### Fixed
+
+- Providing `multitouch` `scale` and `rotate` props outputs the delta as applied to those values. 
+
+## [8.0.24@beta] 2017-11-16
 
 ### Added
 - `keyframes` `ease` property can now be a single function.
