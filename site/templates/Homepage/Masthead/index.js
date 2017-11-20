@@ -8,7 +8,7 @@ export default () => (
       <Logo id="homepage-logo" />
     </Title>
     <Blurb>
-      A functional JavaScript animation library
+      A functional JavaScript motion library
     </Blurb>
     <CTA>
       <Link href="/learn/get-started/" prefetch>Quick start</Link>

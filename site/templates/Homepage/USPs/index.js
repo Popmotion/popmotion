@@ -14,7 +14,7 @@ import { Strong } from '~/templates/global/styled';
 export default () => (
   <Container>
     <Blurb>
-      Popmotion is a <Strong>10kb</Strong> Swiss Army knife for animators and interaction developers:
+      Popmotion is a <Strong>10kb max</Strong> Swiss Army knife for animators and interaction developers:
     </Blurb>
     <ExampleSection title="Animations">
       <Example

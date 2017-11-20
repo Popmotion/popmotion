@@ -50,7 +50,7 @@ const multitouch = ({ preventDefault = true, scale = 1.0, rotate = 0.0 }: Pointe
       const newDistance = distance(firstTouch, secondTouch);
       const newRotation = angle(firstTouch, secondTouch);
 
-      output.scale = scale + (newDistance / initialDistance);
+      output.scale = scale * (newDistance / initialDistance);
       output.rotate = rotate + (newRotation - initialRotation);
     }
 
@@ -58,7 +58,7 @@ const multitouch = ({ preventDefault = true, scale = 1.0, rotate = 0.0 }: Pointe
   };
 
   const onMove = (e: TouchEvent) => {
-    if (preventDefault) e.preventDefault();
+    if (preventDefault || e.touches.length > 1) e.preventDefault();
     onFrameUpdate(updatePoint);
   };
 

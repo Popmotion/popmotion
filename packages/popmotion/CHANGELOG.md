@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.0.26@beta] 2017-11-16
+
+### Fixed
+
+- Fixing `scale` delta equation and firing `preventDefault` on multitouch events.
+
 ## [8.0.25@beta] 2017-11-16
 
 ### Fixed
