@@ -10,6 +10,7 @@ import PointerExample from '../LiveExamples/Pointer';
 import MultitouchExample from '../LiveExamples/Multitouch';
 import EveryFrameExample from '../LiveExamples/EveryFrame';
 import StaggerExample from '../LiveExamples/Stagger';
+import ColorExample from '../LiveExamples/Color';
 import { Strong } from '~/templates/global/styled';
 
 export default () => (
@@ -87,8 +88,10 @@ export default () => (
       </Example>
       <Example
         title="Color"
-        description="Popmotion uses advanced color blending that avoids muddy saturation loss."
-      />
+        description="Popmotion uses advanced color blending that avoids muddy brightness loss."
+      >
+        <ColorExample />
+      </Example>
       <Example
         title="Crossfade"
         link="/api/crossfade"

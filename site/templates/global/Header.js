@@ -14,6 +14,14 @@ const HeaderContainer = styled.nav`
   justify-content: space-between;
   padding: 25px ${cols(2)};
   margin-bottom: ${cols(4)};
+  
+  ${media.medium`
+    margin-bottom: ${cols(2)};
+  `}
+
+  ${media.small`
+    padding: ${cols(1)};
+  `}
 `;
 
 const NavArea = styled.nav`

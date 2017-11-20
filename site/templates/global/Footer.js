@@ -1,24 +1,25 @@
 import styled from 'styled-components';
-import { PINK_BURN, BLACK, cols } from '~/styles/vars';
+import Logo from '~/components/icons/Logo';
+import { fontSize } from '~/styles/fonts';
+import { BRAND, cols } from '~/styles/vars';
 
 const YEAR = new Date().getFullYear();
 
-const Container = styled.div`
-  border-top: 1px solid ${PINK_BURN};
-  padding: ${cols(1)};
-  grid-area: footer;
+const PopmotionLogo = styled(Logo)`
+  width: 159px;
+  height: 36px;
+  margin-bottom: 5px;
 `;
 
-const Spacer = styled.p`
-  color: ${BLACK};
-  margin: 0 auto;
-  max-width: ${cols(58)};
+const Container = styled.div`
+  border-top: 1px solid ${BRAND};
+  padding: ${cols(2)} ${cols(2)} ${cols(6)};
+  ${fontSize(14)}
 `;
 
 export default () => (
   <Container>
-    <Spacer>
-      {`© 2015-${YEAR} Popmotion`}
-    </Spacer>
+    <PopmotionLogo id="footer-logo" />
+    <p>{`© Copyright 2015-${YEAR} Matt Perry`}</p>
   </Container>
 );

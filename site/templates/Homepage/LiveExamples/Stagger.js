@@ -1,35 +1,33 @@
 import Template from './Template';
 import { SmallBall, StackedLeft } from './styled';
-import { easing, styler, spring, physics, tween, stagger } from 'popmotion';
+import { styler, spring, stagger } from 'popmotion';
 
-const code = `stagger([
-  () => tween({ from: 0, to: 300 }).start(ballA),
-  () => spring({ from: 0, to: 300 }).start(ballB)
-], 50)`;
+const code = `const stylers = Array
+  .from(container.childNodes)
+  .map(styler); 
+
+const mapStylerToAnimation = (thisStyler) => () => spring({ to: 300 })
+  .start(thisStyler.set('x'));
+
+stagger(stylers.map(mapStylerToAnimation), 50)`;
 
 class Example extends React.Component {
   setContainer = (ref) => {
     if (!ref) return;
     this.container = ref;
-    this.ballStyler = Array
+    this.ballStylers = Array
       .from(this.container.childNodes)
       .map(styler);
   };
 
   startAnimation = () => {
-    const actions = [
-      tween({ to: 300 }),
-      spring({ to: 300 }),
-      physics({ to: 300, springStrength: 400, friction: 0.8 })
-    ];
-
     stagger(
-      this.ballStyler.map((styler, i) => () => actions[i].start(styler.set('x')))
-    , 150).start();
+      this.ballStylers.map((thisStyler) => () =>  spring({ to: 300 }).start(thisStyler.set('x')))
+    , 100).start();
   };
 
   componentDidMount() {
-    this.timer = setInterval(this.startAnimation, 1000);
+    this.timer = setInterval(this.startAnimation, 1200);
   }
 
   componentWillUnmount() {

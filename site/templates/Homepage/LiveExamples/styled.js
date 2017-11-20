@@ -1,24 +1,33 @@
 import styled from 'styled-components';
 import { fontBold, fontSize } from '~/styles/fonts';
-import { cols, WHITE, ENTITY, GREEN, ACTION, BRAND, SUPER_LIGHT_GREY, LIGHT_GREY, SKEW, UNSKEW } from '~/styles/vars';
+import { cols, WHITE, ENTITY, GREEN, ACTION, BRAND, SUPER_LIGHT_GREY, LIGHT_GREY, SKEW, UNSKEW, media } from '~/styles/vars';
 
 export const Container = styled.div`
   background: ${SUPER_LIGHT_GREY};
   margin: ${cols(2)} 0 ${cols(4)};
   display: flex;
+  flex-wrap: wrap;
 `;
 
 export const LiveExampleContainer = styled.div`
-  flex: 50%;
+  flex: 0 0 50%;
   display: flex;
   align-items: stretch;
   justify-content: flex-end;
   min-height: 250px;
+
+  ${media.large`
+    flex: 0 0 100%;
+  `}
 `;
 
 export const ExamplePositioning = styled.div`
   flex: 0 1 450px;
   display: flex;
+  
+  ${media.large`
+    flex: 0 0 100%;
+  `}
 `;
 
 export const AlignCenter = ExamplePositioning.extend`
@@ -50,7 +59,7 @@ export const CodeContainer = styled.div`
   background: ${LIGHT_GREY};
   border-left: 2px solid ${ENTITY};
   transform: skewX(${SKEW});
-  flex: calc(50% + 30px);
+  flex: 0 0 calc(50% + 30px);
   margin-right: -30px;
   padding-left: ${cols(1)};
   display: flex;
@@ -59,6 +68,18 @@ export const CodeContainer = styled.div`
   pre {
     transform: skewX(${UNSKEW});
   }
+
+  ${media.large`
+    flex: 0 0 100%;
+    transform: none;
+    padding-left: 0;
+    border: none;
+    border-top: 2px solid ${ENTITY};
+
+    pre {
+      transform: none;
+    }
+  `}
 `;
 
 export const ExampleItem = styled.div`
@@ -83,6 +104,11 @@ export const Ball = ExampleItem.extend`
   height: 100px;
   border-radius: 50%;
   margin: 0 auto;
+
+  ${media.medium`
+    width: 80px;
+    height: 80px;
+  `}
 `;
 
 export const Carousel = styled.div`
@@ -115,4 +141,15 @@ export const SmallBall = Ball.extend`
   width: 50px;
   height: 50px;
   margin: 0;
+  
+  ${media.medium`
+    width: 50px;
+    height: 50px;
+  `}
+`;
+
+export const ColorPanel = styled.div`
+  width: 250px;
+  height: 175px;
+  border-radius: 5px;
 `;
