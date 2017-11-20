@@ -7,7 +7,6 @@ export const Container = styled.div`
   background: ${SUPER_LIGHT_GREY};
   margin: ${cols(2)} 0 ${cols(4)};
   display: flex;
-  overflow-x: hidden;
 `;
 
 export const LiveExampleContainer = styled.div`

@@ -5,7 +5,7 @@ import { getProgressFromValue, getValueFromProgress } from '../../calc';
 import { easeOut } from '../../easing';
 import { IObserver } from '../../observer/types';
 import { clamp } from '../../transformers';
-import onFrame from '../on-frame';
+import onFrame from '../every-frame';
 import scrubber from './scrubber';
 import { TweenInterface, TweenProps } from './types';
 

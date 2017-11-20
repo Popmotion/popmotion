@@ -20,15 +20,21 @@ export default abstract class Chainable<T> {
 
   pipe(...funcs: Update[]): T {
     const pipedUpdate = funcs.length === 1 ? funcs[0] : pipe(...funcs);
-    const middleware: Middleware = (update) => (v) => update(pipedUpdate(v));
 
-    return this.applyMiddleware(middleware);
+    return this.applyMiddleware(
+      (update) => (v) => update(pipedUpdate(v))
+    );
   }
 
   while(predicate: Predicate): T {
-    const middleware: Middleware = (update, complete) => (v) =>
-      predicate(v) ? update(v) : complete();
+    return this.applyMiddleware(
+      (update, complete) => (v) => predicate(v) ? update(v) : complete()
+    );
+  }
 
-    return this.applyMiddleware(middleware);
+  filter(predicate: Predicate): T {
+    return this.applyMiddleware(
+      (update, complete) => (v) => predicate(v) && update(v)
+    );
   }
 }

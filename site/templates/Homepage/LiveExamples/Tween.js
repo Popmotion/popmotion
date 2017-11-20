@@ -14,6 +14,7 @@ class Tween extends React.Component {
   startAnimation = (ref) => {
     if (!ref) return;
     this.boxStyler = styler(ref);
+
     this.animation = tween({
       to: { x: 300, rotate: 180 },
       duration: 1200,

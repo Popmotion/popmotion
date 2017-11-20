@@ -1,11 +1,13 @@
 import Template from './Template';
 import { Box, AlignCenter } from './styled';
-import { styler, value, listen, pointer, touch, decay, transform } from 'popmotion';
+import { styler, value, listen, multitouch } from 'popmotion';
 
-const code = `listen(slider, 'mousedown touchstart').start(() => {
-  pointer(sliderX.get())
-    .start(ballXY);
-});`;
+const code = `listen(slider, 'touchstart')
+  .filter(({ touches }) => touches.length >= 2)
+  .start(() => {
+    multitouch(boxTransform.get())
+      .start(boxTransform);
+  });`;
 
 class Example extends React.Component {
   startAnimation = (ref) => {
@@ -15,16 +17,8 @@ class Example extends React.Component {
     this.box = value({ scale: 1, rotate: 0 }, ballStyler.set);
 
     listen(ref, 'touchstart')
-      .start(() => {
-        const { scale: initialScale, rotate: initialRotate } = this.box.get();
-        touch().start(({ scale, rotation }) => {
-          console.log(scale, rotation)
-          this.box.update({
-            scale: initialScale + scale,
-            rotate: initialRotate + rotation
-          });
-        });
-      });
+      .filter(({ touches }) => touches.length >= 2)
+      .start(() => multitouch(this.box.get()).start(this.box));
 
     listen(document, 'mouseup touchend')
       .start(() => this.box.stop());

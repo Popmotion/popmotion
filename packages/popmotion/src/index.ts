@@ -7,21 +7,21 @@ export { action, multicast, value };
 
 // Animations
 import decay from './animations/decay';
+import everyFrame from './animations/every-frame';
 import keyframes from './animations/keyframes';
-import onFrame from './animations/on-frame';
 import physics from './animations/physics';
 import spring from './animations/spring';
 import tween from './animations/tween';
 
-export { decay, keyframes, onFrame, physics, spring, tween };
+export { decay, keyframes, everyFrame, physics, spring, tween };
 
 // Input
 import listen from './input/listen';
+import multitouch from './input/multitouch';
 import pointer from './input/pointer';
 import mouse from './input/pointer/mouse';
-import touch from './input/touch';
 
-export { listen, pointer, mouse, touch };
+export { listen, pointer, mouse, multitouch };
 
 // Compositors
 import chain from './compositors/chain';

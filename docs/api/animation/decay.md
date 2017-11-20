@@ -40,6 +40,7 @@ decay({ velocity: 200, from: 50 })
 
 `decay()` returns:
 
+- `filter((v: any) => boolean)`: Returns a new action that filters out values when the provided function returns `false`.
 - `pipe(...funcs: Array<(v) => v)`: Returns a new action that will run `update` values through this sequence of functions.
 - `start(update | { update, complete })`: Starts the action and returns a subscription.
 - `while((v: any) => boolean)`: Returns a new action that will `complete` when the provided function returns `false`.

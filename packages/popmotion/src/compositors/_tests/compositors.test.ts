@@ -1,5 +1,5 @@
 import action from '../../action';
-import onFrame from '../../animations/on-frame';
+import onFrame from '../../animations/every-frame';
 import chain from '../chain';
 import composite from '../composite';
 import crossFade from '../crossfade';
@@ -109,7 +109,7 @@ describe('composite', () => {
       ]);
     });
   });
-  
+
   it('should return a mapped version of the api', () => {
     const foo = action(({ update }) => {
       return {

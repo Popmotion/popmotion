@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { ACTION, cols } from '~/styles/vars';
+import { cols } from '~/styles/vars';
 import { fontSize, lineHeight, fontBold } from '~/styles/fonts';
 
 const MAX_WIDTH = cols(60);
@@ -22,6 +22,7 @@ export const Blurb = styled.p`
 export const SectionContainer = styled.section`
   width: 100%;
   margin-bottom: ${cols(2)};
+  overflow-x: hidden;
 `;
 
 export const SectionHeader = styled.h2`

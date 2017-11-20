@@ -64,6 +64,7 @@ foo.subscribe(() => console.log('second reaction'));
 
 - `get(): number`: Returns the current value state.
 - `getVelocity: number`: Returns the current value velocity.
+- `filter((v: any) => boolean)`: Returns a new action that filters out values when the provided function returns `false`.
 - `pipe(...funcs: Array<(v) => v)`: Returns a new reaction that will run `update` values through this sequence of functions.
 - `stop()`: Stops parent action.
 - `subscribe(update | { update, complete })`: Returns a subscription.

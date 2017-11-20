@@ -8,6 +8,7 @@ import PhysicsExample from '../LiveExamples/Physics';
 import DecayExample from '../LiveExamples/Decay';
 import PointerExample from '../LiveExamples/Pointer';
 import MultitouchExample from '../LiveExamples/Multitouch';
+import EveryFrameExample from '../LiveExamples/EveryFrame';
 import { Strong } from '~/templates/global/styled';
 
 export default () => (
@@ -50,6 +51,13 @@ export default () => (
         description="Exponentially-decayed velocity to smoothly dampen momentum."
       >
         <DecayExample />
+      </Example>
+      <Example
+        title="Every Frame"
+        link="/api/every-frame"
+        description="Fires every frame with the latest framestamp."
+      >
+        <EveryFrameExample />
       </Example>
     </ExampleSection>
     <ExampleSection title="Input">

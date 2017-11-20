@@ -4,7 +4,7 @@ import { number } from 'style-value-types';
 import action from '../../action';
 import { Action } from '../../action';
 import vectorAction from '../../action/vector';
-import onFrame from '../on-frame';
+import onFrame from '../every-frame';
 import { Props } from './types';
 
 const decay = ({

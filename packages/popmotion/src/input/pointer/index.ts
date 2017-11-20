@@ -1,13 +1,13 @@
 import { Action } from '../../action';
 import { applyOffset } from '../../transformers';
-import touch, { getIsTouchDevice } from '../touch';
+import multitouch, { getIsTouchDevice } from '../multitouch';
 import mouse from './mouse';
 import { Point2D, PointerProps } from './types';
 
 const getFirstTouch = ([firstTouch]: Point2D[]): Point2D => firstTouch;
 
 const pointer = (props: PointerProps = {}): Action => getIsTouchDevice()
-  ? touch(props).pipe(({ touches }) => touches, getFirstTouch)
+  ? multitouch(props).pipe(({ touches }) => touches, getFirstTouch)
   : mouse(props);
 
 export default ({ x, y, ...props }: PointerProps = {}): Action => {

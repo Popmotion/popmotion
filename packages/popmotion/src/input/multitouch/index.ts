@@ -26,11 +26,11 @@ if (typeof document !== 'undefined') {
     .start(updatePointsLocation);
 }
 
-const touch = ({ preventDefault = true }: PointerProps = {}): Action => action(({ update }) => {
+const multitouch = ({ preventDefault = true, scale = 0.0, rotate = 0.0 }: PointerProps = {}): Action => action(({ update }) => {
   const output = {
     touches: points,
-    scale: 1.0,
-    rotation: 0.0
+    scale,
+    rotate
   };
 
   let initialDistance = 0.0;
@@ -69,12 +69,11 @@ const touch = ({ preventDefault = true }: PointerProps = {}): Action => action((
 
   return {
     stop: () => {
-      console.log('stop')
       cancelOnFrameUpdate(updatePoint);
       updateOnMove.stop();
     }
   };
 });
 
-export default touch;
+export default multitouch;
 export const getIsTouchDevice = () => isTouchDevice;

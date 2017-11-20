@@ -21,5 +21,7 @@ export type Point = Point2D | Point3D;
 export type PointerProps = {
   x?: number,
   y?: number,
-  preventDefault?: boolean
+  preventDefault?: boolean,
+  scale?: number,
+  rotate?: number
 };

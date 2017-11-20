@@ -6,9 +6,13 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 - `keyframes` `ease` property can now be a single function.
+- `multitouch` accepts initial `scale` and `rotate` properties.
+- `filter` chainable to actions and reactions.
 
 ### Changed
+- `touch` becomes `multitouch`.
 - `reaction` becomes `multicast`.
+- `onFrame` becomes `everyFrame`.
 
 ## [8.0.22@beta] 2017-11-16
 

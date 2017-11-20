@@ -36,6 +36,7 @@ spring().start(foo); // This will stop `tween`
 
 `value()` returns:
 
+- `filter((v: any) => boolean)`: Returns a new action that filters out values when the provided function returns `false`.
 - `pipe(...funcs: Array<(v) => v)`: Returns a new reaction that will run `update` values through this sequence of functions.
 - `subscribe(update | { update, complete, error })`: Returns a subscription.
 - `stop()`: Stops current parent action.
