@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { fontSize, fontBold, lineHeight } from '~/styles/fonts';
-import { LINK, LINK_BURN, LIGHT_GREY, WHITE, cols, media, verticalGradient, PURPLE_BURN, PURPLE, SKEW, UNSKEW, ENTITY } from '~/styles/vars';
+import { LINK, LINK_BURN, LIGHT_GREY, WHITE, cols, media, verticalGradient, PURPLE_BURN, GREEN, PURPLE, SKEW, UNSKEW, ENTITY } from '~/styles/vars';
 import { Centered, MajorCentered, ArticleHeader as ArticleHeaderPrimitive } from './grid';
 import SyntaxHighlighter, { registerLanguage } from 'react-syntax-highlighter/dist/light';
 import js from 'react-syntax-highlighter/dist/languages/javascript';
@@ -150,17 +150,27 @@ export const Blockquote = styled.blockquote`
   margin-bottom: ${cols(2)};
 `;
 
-export const ActionButton = styled.button`
-  background: ${verticalGradient(PURPLE_BURN, PURPLE)};
-  border: 2px solid ${WHITE};
-  border-radius: 500px;
-  cursor: pointer;
-  ${fontSize(24)}
+const Button = styled.button`
+  background: ${GREEN};
+  border-radius: 0;
   padding: ${cols(1)} ${cols(2)};
+  transform: skewX(${SKEW});
+  cursor: pointer;
   margin: 0 auto;
-  text-decoration: none;
-  color: ${WHITE};
 `;
+
+const ButtonContent = styled.span`
+  color: ${WHITE};
+  ${fontBold}
+  display: block;
+  transform: skewX(${UNSKEW});
+`;
+
+export const ActionButton = ({ children, onClick }) => (
+  <Button onClick={onClick}>
+    <ButtonContent>{ children }</ButtonContent>
+  </Button>
+);
 
 export const DatePublished = styled.p`
   font-size: ${fontSize(12)};

@@ -30,8 +30,32 @@ const createTheme = ({ fontSize = 14, lineHeight = 20, width = '100%'}) => ({
   },
   'hljs-attribute': {
     color: BRAND
+  },
+  'hljs-function': {
+    color: ACTION
   }
 });
+
+export const prismTheme = `
+.token {
+  color: ${BLACK};
+  &.string {
+    color: ${BRAND};
+  }
+  &.keyword {
+    color: ${ENTITY};
+  }
+  &.comment {
+    opacity: 0.5;
+  }
+  &.number {
+    color: ${BRAND};
+  }
+  &.function {
+    color: ${ACTION};
+  }
+}
+`;
 
 export const codeTheme = createTheme({});
 export const codeThemeLarge = createTheme({

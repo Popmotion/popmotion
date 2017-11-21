@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { ActionButton } from '~/templates/global/styled';
+import { fontBold } from '~/styles/fonts';
 
 const CounterContainer = styled.div`
   height: 100%;
@@ -11,11 +12,12 @@ const CounterContainer = styled.div`
 const Counter = styled.span`
   font-size: 42px;
   text-align: center;
+  ${fontBold}
 `;
 
 export default ({ start, id }) => (
   <CounterContainer id={id}>
     <Counter className="counter">0</Counter>
-    <ActionButton onClick={start}>Start</ActionButton>
+    <ActionButton onClick={start}>Start example</ActionButton>
   </CounterContainer>
 );

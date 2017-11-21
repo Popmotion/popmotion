@@ -15,6 +15,7 @@ const Container = styled.div`
   border-top: 1px solid ${BRAND};
   padding: ${cols(2)} ${cols(2)} ${cols(6)};
   ${fontSize(14)}
+  margin-top: ${cols(6)};
 `;
 
 export default () => (

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { media } from '~/styles/vars';
+import { GREEN, media, cols } from '~/styles/vars';
 import {
   action,
   reaction,
@@ -25,27 +25,33 @@ import styler from 'stylefire';
 import { MotionValue } from 'popmotion-react';
 import { LiveProvider, LiveEditor, LiveError, LivePreview } from 'react-live';
 import templates from './templates';
+import {
+  Container,
+  LiveExampleContainer,
+  CodeContainer as CodeContainerPrimitive,
+  AlignCenter
+} from '~/templates/homepage/LiveExamples/styled';
 
-const StyledLiveContainer = styled(LiveProvider)`
-  display: flex;
-  flex-wrap: wrap;
+const StyledLiveContainer = Container.withComponent(LiveProvider);
+
+const CodeContainer = CodeContainerPrimitive.extend`
+  border-color: ${GREEN};
+  padding: ${cols(2)};
+
+  ${media.medium`
+    border-color: ${GREEN};
+    padding: ${cols(2)};
+  `}
 `;
 
 const StyledLiveEditor = styled(LiveEditor)`
   height: 300px;
   max-height: 300px;
   overflow-y: scroll;
-  flex: 0 0 50%;
-  ${media.medium`
-    flex: 0 0 100%;
-  `}
 `;
 
-const StyledLivePreview = styled(LivePreview)`
-  flex: 0 0 50%;
-  ${media.medium`
-    flex: 0 0 100%;
-  `}
+const StyledLivePreview = LiveExampleContainer.withComponent(LivePreview).extend`
+  justify-content: center;
 `;
 
 const stripFirstReturn = ([ code ]) => {
@@ -93,8 +99,10 @@ export default ({ children, template, id, isReactComponent=false }) => {
       mountStylesheet={false}
       noInline={!isReactComponent}
     >
-      <StyledLiveEditor />
       <StyledLivePreview />
+      <CodeContainer>
+        <StyledLiveEditor />
+      </CodeContainer>
       <LiveError />
     </StyledLiveContainer>
   );

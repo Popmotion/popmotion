@@ -1,5 +1,6 @@
 import { bodyFont, codeFont, fontSize } from './fonts';
 import { ACTION, BLACK, WHITE, cols, ACTION_BURN } from './vars';
+import { prismTheme } from '~/styles/syntax-highlighting'
 
 export default `
 * {
@@ -236,6 +237,8 @@ hr {
   height: 0; /* 1 */
   overflow: visible; /* 2 */
 }
+
+${prismTheme}
 
 /* Forms
    ========================================================================== */

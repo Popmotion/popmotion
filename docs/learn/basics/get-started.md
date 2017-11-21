@@ -42,8 +42,9 @@ By default, a `tween` will change `0` to `1` over `300` milliseconds:
 ```marksy
 <Example template="Counter" id="a">{`
 const counter = document.querySelector('#a .counter');
+const updateCounter = (v) => counter.innerHTML = v;
 
-tween().start((v) => counter.innerHTML = v);
+tween().start(updateCounter);
 `}</Example>
 ```
 
