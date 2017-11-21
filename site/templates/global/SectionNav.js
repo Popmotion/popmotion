@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import Link from 'next/link';
 import { fontSize, fontBold } from '~/styles/fonts';
-import { ACTION, ENTITY, BLACK, cols, media } from '~/styles/vars';
+import { ACTION, ENTITY, BLACK, cols, media, SKEW } from '~/styles/vars';
 import sectionNames from '~/data/section-names.json';
 import routes from '~/data/route-paths.json';
 
@@ -16,9 +16,20 @@ const MenuItem = styled.li`
   display: inline;
   padding-bottom: 4px;
   margin-right: ${cols(2)};
+  position: relative;
 
   ${({ isSelected }) => isSelected && `
-    border-bottom: 3px solid ${ENTITY};
+    &:after {
+      content: '';
+      display: block;
+      background: ${ENTITY};
+      position: absolute;
+      bottom: -3px;
+      right: 0;
+      left: 0;
+      height: 4px;
+      transform: skewX(${SKEW});
+    }
   `}
 
   ${media.medium`

@@ -1,6 +1,12 @@
 import styled from 'styled-components';
-import { fontSize, fontBold } from '~/styles/fonts';
-import { LINK, LIGHT_GREY, WHITE, cols, media, verticalGradient, PURPLE_BURN, PURPLE } from '~/styles/vars';
+import { fontSize, fontBold, lineHeight } from '~/styles/fonts';
+import { LINK, LINK_BURN, LIGHT_GREY, WHITE, cols, media, verticalGradient, PURPLE_BURN, PURPLE, SKEW, UNSKEW, ENTITY } from '~/styles/vars';
+import { Centered, MajorCentered, ArticleHeader as ArticleHeaderPrimitive } from './grid';
+import SyntaxHighlighter, { registerLanguage } from 'react-syntax-highlighter/dist/light';
+import js from 'react-syntax-highlighter/dist/languages/javascript';
+import { codeThemeLarge } from '~/styles/syntax-highlighting'; 
+
+registerLanguage('javascript', js);
 
 export const Strong = styled.strong`
   ${fontBold}
@@ -9,29 +15,63 @@ export const Strong = styled.strong`
 export const A = styled.a`
   color: ${LINK};
   text-decoration: none;
+
+  &:hover {
+    color: ${LINK_BURN};
+  }
 `;
 
 export const H1 = styled.h1`
+  ${fontSize(48)}
+  ${lineHeight(54)}
+  ${fontBold}
+  ${media.medium`
+    ${fontSize(36)}
+    ${lineHeight(42)}
+  `}
+  ${media.small`
+    ${fontSize(28)}
+    ${lineHeight(32)}
+  `}
+`;
+
+export const H2 = Centered.withComponent('h2').extend`
   ${fontSize(36)}
   ${fontBold}
-  padding-bottom: ${cols(1)};
-  margin-bottom: ${cols(2)};
-  ${media.medium`${fontSize(24)}`}
-`;
-
-export const H2 = styled.h2`
-  ${fontSize(24)}
-  margin: ${cols(3)} 0 ${cols(1)};
+  margin-top: ${cols(3)};
+  margin-bottom: ${cols(1)};
   border-bottom: 1px solid ${LIGHT_GREY};
   padding-bottom: ${cols(1)};
-  ${media.medium`${fontSize(20)}`}
+  ${media.medium`
+    ${fontSize(28)}
+    ${lineHeight(32)}
+  `}
+  ${media.small`
+    ${fontSize(24)}
+    ${lineHeight(28)}
+  `}
+
+  a {
+    ${fontBold}
+  }
 `;
 
-export const H3 = styled.h3`
-  ${fontSize(20)}
-  margin-top: 2.2rem;
-  margin-bottom: 1.1rem;
-  ${media.medium`${fontSize(18)}`}
+export const H3 = Centered.withComponent('h3').extend`
+  ${fontSize(24)}
+  ${lineHeight(32)}
+  ${fontBold}
+  ${media.medium`
+    ${fontSize(24)}
+    ${lineHeight(30)}
+  `}
+  ${media.small`
+    ${fontSize(18)}
+    ${lineHeight(28)}
+  `}
+
+  a {
+    ${fontBold}
+  }
 `;
 
 export const H4 = styled.h4`
@@ -42,19 +82,45 @@ export const H4 = styled.h4`
   ${media.medium`${fontSize(14)}`}
 `;
 
-export const P = styled.p`
+export const P = Centered.withComponent('p').extend`
   ${fontSize(18)}
+  ${lineHeight(26)}
   line-height: 1.5;
   margin-bottom: 1.1rem;
-  max-width: ${cols(43)};
-  ${media.medium`${fontSize(14)}`}
   word-break: break-word;
+  ${media.medium`
+    ${fontSize(14)}
+    ${lineHeight(22)}
+  `}
 `;
 
-export const Code = styled.code`
+export const CodeTag = styled.code`
   background: #f9f9f9;
   padding: 2px 5px;
 `;
+
+export const CodeBlock = MajorCentered.extend`
+  background: ${LIGHT_GREY};
+  border-left: 2px solid ${ENTITY};
+  transform: skewX(${SKEW});
+  transform-origin: 0 0;
+  margin-bottom: ${cols(3)};
+
+  pre {
+    transform: skewX(${UNSKEW});
+  }
+`;
+
+export const Code = ({ language, children, code }) => (children
+  ? <CodeTag>{children}</CodeTag>
+  : (
+    <CodeBlock>
+      <SyntaxHighlighter language={language} style={codeThemeLarge}>
+        {code}
+      </SyntaxHighlighter>
+    </CodeBlock>
+  )
+);
 
 export const Ul = styled.ul`
   list-style-type: disc;
@@ -95,3 +161,14 @@ export const ActionButton = styled.button`
   text-decoration: none;
   color: ${WHITE};
 `;
+
+export const DatePublished = styled.p`
+  font-size: ${fontSize(12)};
+  margin-bottom: ${cols(1)};
+`;
+
+export const ArticleHeader = ({ children }) => (
+  <ArticleHeaderPrimitive>
+    <H1>API</H1>
+  </ArticleHeaderPrimitive>
+); 

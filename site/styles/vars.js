@@ -4,7 +4,7 @@ export const verticalGradient = (from, to, start=0, end=100) =>
   `linear-gradient(to bottom, ${from} ${start}%, ${to} ${end}%)`;
 
 export const WHITE = '#fff';
-export const BLACK = '#222';
+export const BLACK = '#21282D';
 export const SUPER_LIGHT_GREY = '#FAFAFA';
 export const LIGHT_GREY = '#f2f2f2';
 

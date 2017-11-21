@@ -1,5 +1,5 @@
 import { bodyFont, codeFont, fontSize } from './fonts';
-import { ACTION, BLACK, WHITE, cols } from './vars';
+import { ACTION, BLACK, WHITE, cols, ACTION_BURN } from './vars';
 
 export default `
 * {
@@ -116,6 +116,10 @@ a {
   -webkit-text-decoration-skip: objects; /* 2 */
   color: ${ACTION};
   text-decoration: none;
+
+  &:hover {
+    color: ${ACTION_BURN};
+  }
 }
 
 /**

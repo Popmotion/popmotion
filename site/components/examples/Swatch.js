@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { ActionButton } from '~/templates/global/primatives';
+import { ActionButton } from '~/templates/global/styled';
 
 const Container = styled.div`
   height: 100%;

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { ActionButton } from '~/templates/global/primatives';
+import { ActionButton } from '~/templates/global/styled';
 import { verticalGradient, PINK, PINK_BURN, cols } from '~/styles/vars';
 
 const Container = styled.div`

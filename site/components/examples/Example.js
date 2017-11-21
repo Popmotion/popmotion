@@ -48,7 +48,9 @@ const StyledLivePreview = styled(LivePreview)`
   `}
 `;
 
-const stripFirstReturn = (code) => code.replace(/[\n\r]+/, '');
+const stripFirstReturn = ([ code ]) => {
+  return code.replace(/[\n\r]+/, '');
+}
 
 const injectRender = (code) => `
   function start() {
