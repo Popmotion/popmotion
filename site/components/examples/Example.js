@@ -103,7 +103,6 @@ export default ({ children, template, id, isReactComponent=false }) => {
       <CodeContainer>
         <StyledLiveEditor />
       </CodeContainer>
-      <LiveError />
     </StyledLiveContainer>
   );
 };
