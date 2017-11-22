@@ -1,11 +1,11 @@
 ---
-title: Pointers and dragging
+title: Pointer tracking
 description: Learn to track pointer movement and use that to drag DOM elements.
 category: basics
 next: velocity-and-physics
 ---
 
-# Pointers and dragging
+# Pointer tracking
 
 Pointer tracking can be used for multiple purposes. Drag & drop, scrolling galleries, and performantly measuring touch scroll speed are some obvious ones.
 

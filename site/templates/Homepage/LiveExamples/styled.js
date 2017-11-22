@@ -67,6 +67,7 @@ export const CodeContainer = styled.div`
   
   pre {
     transform: skewX(${UNSKEW});
+    line-height: 18px;
   }
 
   ${media.large`
@@ -78,6 +79,7 @@ export const CodeContainer = styled.div`
 
     pre {
       transform: none;
+      line-height: 18px;
     }
   `}
 `;

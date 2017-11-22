@@ -38,8 +38,8 @@ export const H1 = styled.h1`
 export const H2 = Centered.withComponent('h2').extend`
   ${fontSize(36)}
   ${fontBold}
-  margin-top: ${cols(3)};
-  margin-bottom: ${cols(1)};
+  margin-top: ${cols(4)};
+  margin-bottom: ${cols(2)};
   border-bottom: 1px solid ${LIGHT_GREY};
   padding-bottom: ${cols(1)};
   ${media.medium`
@@ -60,6 +60,8 @@ export const H3 = Centered.withComponent('h3').extend`
   ${fontSize(24)}
   ${lineHeight(32)}
   ${fontBold}
+  margin-top: ${cols(2)};
+  margin-bottom: ${cols(1)};
   ${media.medium`
     ${fontSize(24)}
     ${lineHeight(30)}
@@ -122,7 +124,7 @@ export const Code = ({ language, children, code }) => (children
   )
 );
 
-export const Ul = styled.ul`
+export const Ul = Centered.withComponent('ul').extend`
   list-style-type: disc;
   padding-left: ${cols(2)};
   max-width: ${cols(43)};
@@ -179,6 +181,6 @@ export const DatePublished = styled.p`
 
 export const ArticleHeader = ({ children }) => (
   <ArticleHeaderPrimitive>
-    <H1>API</H1>
+    <H1>{children}</H1>
   </ArticleHeaderPrimitive>
 ); 

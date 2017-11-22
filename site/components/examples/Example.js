@@ -38,7 +38,7 @@ const CodeContainer = CodeContainerPrimitive.extend`
   border-color: ${GREEN};
   padding: ${cols(2)};
 
-  ${media.medium`
+  ${media.large`
     border-color: ${GREEN};
     padding: ${cols(2)};
   `}

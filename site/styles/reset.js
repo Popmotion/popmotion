@@ -225,6 +225,7 @@ pre span {
 @media (max-width: ${cols(50)}) {
   pre, pre code, pre span, code span {
     ${fontSize(14)}
+    line-height: 18px;
   }
 }
 /**
