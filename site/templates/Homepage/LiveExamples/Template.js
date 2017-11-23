@@ -1,8 +1,7 @@
 import {
   Container,
   LiveExampleContainer,
-  CodeContainer,
-  AlignCenter
+  CodeContainer
 } from './styled';
 import SyntaxHighlighter, { registerLanguage } from 'react-syntax-highlighter/dist/light';
 import js from 'react-syntax-highlighter/dist/languages/javascript';

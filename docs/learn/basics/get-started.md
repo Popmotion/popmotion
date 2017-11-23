@@ -19,9 +19,13 @@ In this simple guide we're going to install Popmotion, and use it to animate an 
 
 ## Installation
 
-```javascript
+You can install Popmotion directly from npm:
+
+```bash
 npm install popmotion --save
 ```
+
+Or, you can also download pre-bundled files and fork CodePen playgrounds. Full installation options are available on the [Install Popmotion](/learn/install) page.
 
 ## Import
 

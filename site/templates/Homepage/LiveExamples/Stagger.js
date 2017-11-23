@@ -1,6 +1,7 @@
 import Template from './Template';
 import { SmallBall, StackedLeft } from './styled';
 import { styler, spring, stagger } from 'popmotion';
+import trackVisibility from './track-visibility';
 
 const code = `const stylers = Array
   .from(container.childNodes)
@@ -18,19 +19,32 @@ class Example extends React.Component {
     this.ballStylers = Array
       .from(this.container.childNodes)
       .map(styler);
-  };
 
-  startAnimation = () => {
+    if (this.props.isVisible) this.startAnimation();
+  };
+  
+  componentWillReceiveProps({ isVisible: willBeVisible }) {
+    const { isVisible } = this.props;
+    if (!isVisible && willBeVisible) this.startAnimation();
+    if (isVisible && !willBeVisible) this.stopAnimation();
+  }
+
+  componentWillUnmount() {
+    this.stopAnimation();
+  }
+
+  fireAnimation = () => {
     stagger(
       this.ballStylers.map((thisStyler) => () =>  spring({ to: 300 }).start(thisStyler.set('x')))
     , 100).start();
   };
-
-  componentDidMount() {
-    this.timer = setInterval(this.startAnimation, 1200);
+  
+  startAnimation() {
+    this.fireAnimation();
+    this.timer = setInterval(this.fireAnimation, 1200);
   }
 
-  componentWillUnmount() {
+  stopAnimation() {
     this.animation && this.animation.stop();
     clearInterval(this.timer);
   }
@@ -46,8 +60,8 @@ class Example extends React.Component {
   }
 }
 
-export default () => (
+export default trackVisibility(({ isVisible }) => (
   <Template code={code}>
-    <Example />
+    <Example isVisible={isVisible} />
   </Template>
-);
+));

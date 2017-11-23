@@ -2,6 +2,7 @@ import Template from './Template';
 import { Box, TopLeft } from './styled';
 import { GREEN, ENTITY } from '~/styles/vars';
 import { styler, easing, keyframes } from 'popmotion';
+import trackVisibility from './track-visibility';
 
 const code = `keyframes({
   values: [
@@ -17,9 +18,23 @@ const code = `keyframes({
 })`;
 
 class Example extends React.Component {
-  startAnimation = (ref) => {
+  setRef = (ref) => {
     if (!ref) return;
     this.boxStyler = styler(ref);
+    if (this.props.isVisible) this.startAnimation();
+  };
+
+  componentWillReceiveProps({ isVisible: willBeVisible }) {
+    const { isVisible } = this.props;
+    if (!isVisible && willBeVisible) this.startAnimation();
+    if (isVisible && !willBeVisible) this.stopAnimation();
+  }
+
+  componentWillUnmount() {
+    this.stopAnimation();
+  }
+
+  startAnimation() {
     this.animation = keyframes({
       values: [
         { x: 0, y: 0, rotateY: 0, background: ENTITY },
@@ -32,23 +47,23 @@ class Example extends React.Component {
       ease: [easing.easeInOut, easing.easeInOut, easing.easeInOut, easing.easeInOut],
       loop: Infinity
     }).start(this.boxStyler.set);
-  };
+  }
 
-  componentWillUnmount() {
+  stopAnimation() {
     this.animation && this.animation.stop();
   }
 
   render() {
     return (
-      <Box innerRef={this.startAnimation} />
+      <Box innerRef={this.setRef} />
     );
   }
 }
 
-export default () => (
+export default trackVisibility(({ isVisible }) => (
   <Template code={code}>
     <TopLeft>
-      <Example />
+      <Example isVisible={isVisible} />
     </TopLeft>
   </Template>
-);
+));

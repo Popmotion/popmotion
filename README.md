@@ -6,7 +6,10 @@
 [![npm downloads](https://img.shields.io/npm/dm/popmotion.svg?style=flat-square)](https://www.npmjs.com/package/popmotion)
 [![Twitter Follow](https://img.shields.io/twitter/follow/espadrine.svg?style=social&label=Follow)](http://twitter.com/popmotionjs)
 
+### [Website](https://popmotion.io/)
 ### [Quick Start](https://popmotion.io/learn/get-started)
+### [Installation options](https://popmotion.io/learn/install)
+### [Full API documentation](https://popmotion.io/api)
 
 ## Features
 
@@ -36,62 +39,11 @@
 
 ## Examples
 
-### Tween
+### Examples of every animation are available on the [Popmotion website](https://popmotion.io/)
 
-Animate between two numbers:
+## Quick links
 
-```javascript
-const divStyler = styler(document.querySelector('div'));
-
-tween({ from: 0, to: 1 }).start(divStyler.set('opacity'));
-```
-
-[Edit on CodePen](https://codepen.io/popmotion/pen/WXOPWX?editors=0010)
-
-
-
-Or two states:
-
-```javascript
-tween({
-  to: { x: 300, rotate: 180 },
-  ease: easing.backOut
-}).start(divStyler.set);
-```
-
-Or two colors:
-
-```javascript
-tween({
-  from: 'rgba()',
-  to: 'rgba()'
-}).start(divStyler.set('background'));
-```
-
-### Physics
-
-
-
-### Pointer
-
-### Keyframes
-
-### Spring
-
-### Decay
-
-### Stagger
-
-## TODOs:
-- Figure out timeline interface
-- Examples of each action
-- Write upgrade guide
-- Bug: First touch not registered
-
-## Plugins
-- [Draggable](/api/draggable)
-- [Spinnable](/api/spinnable)
-- [React](/api/react)
-
-### [Get Started](https://popmotion.io/learn/get-started)
+### [Website](https://popmotion.io/)
+### [Quick Start](https://popmotion.io/learn/get-started)
+### [Installation options](https://popmotion.io/learn/install)
 ### [Full API documentation](https://popmotion.io/api)
