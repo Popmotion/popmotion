@@ -3,14 +3,16 @@ import { fontBold, fontSize } from '~/styles/fonts';
 import { cols, WHITE, ENTITY, GREEN, ACTION, BRAND, SUPER_LIGHT_GREY, LIGHT_GREY, SKEW, UNSKEW, media } from '~/styles/vars';
 
 export const Container = styled.div`
+  background: ${SUPER_LIGHT_GREY};
+  display: flex;
   margin: ${cols(2)} 0 ${cols(4)};
   position: relative;
 `;
 
 export const ExampleContainer = styled.div`
-  background: ${SUPER_LIGHT_GREY};
   display: flex;
   flex-wrap: nowrap;
+  width: 100%;
 
   ${media.large`flex-wrap: wrap;`}
 `;
@@ -30,6 +32,8 @@ export const LiveExampleContainer = styled.div`
 export const ExamplePositioning = styled.div`
   flex: 0 1 450px;
   display: flex;
+  perspective: 500px;
+  transform-style: preserve-3d;
   
   ${media.large`
     flex: 0 0 100%;
@@ -169,6 +173,25 @@ export const SmallBall = Ball.extend`
     width: 50px;
     height: 50px;
   `}
+`;
+
+export const MediumBall = Ball.extend`
+  width: 75px;
+  height: 75px;
+  margin-right: 15px;
+  background: ${ENTITY};
+  
+  &:nth-child(4n + 2) {
+    background: ${GREEN};
+  }
+  
+  &:nth-child(4n + 3) {
+    background: ${BRAND};
+  }
+  
+  &:nth-child(4n + 4) {
+    background: ${ACTION};
+  }
 `;
 
 export const ColorPanel = styled.div`

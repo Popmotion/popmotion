@@ -19,7 +19,13 @@ import listen from 'popmotion/input/listen';
 ## Usage
 
 ```typescript
-listen(element: Element, eventNames: string): Action
+type EventOpts = boolean | {
+  capture?: boolean;
+  passive?: boolean;
+  once?: boolean;
+};
+
+listen(element: Element, eventNames: string, opts?: EventOpts): Action
 ```
 
 To listen to an event, provide a DOM element and an event name to `listen`:

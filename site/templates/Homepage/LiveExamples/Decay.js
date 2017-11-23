@@ -66,7 +66,7 @@ class Example extends React.Component {
 }
 
 export default () => (
-  <Template code={code}>
+  <Template code={code} codepen="https://codepen.io/popmotion/pen/Kyewbv?editors=0010">
     <VerticalCenter>
       <Example />
     </VerticalCenter>

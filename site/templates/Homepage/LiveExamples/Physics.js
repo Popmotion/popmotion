@@ -84,7 +84,7 @@ class Example extends React.Component {
 }
 
 export default () => (
-  <Template code={code}>
+  <Template code={code} codepen="https://codepen.io/popmotion/pen/ooybYP?editors=0010">
     <BottomCenter>
       <Example />
     </BottomCenter>

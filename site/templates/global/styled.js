@@ -112,6 +112,7 @@ export const CodeBlock = MajorCentered.extend`
 
   pre {
     transform: skewX(${UNSKEW});
+    transform-origin: 0 0;
   }
 
   ${media.medium`

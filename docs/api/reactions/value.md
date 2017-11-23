@@ -6,7 +6,7 @@ category: reactions
 
 # Value
 
-A [multicast reaction](/api/reactions) that tracks the state of a number and allows velocity queries.
+A [multicast reaction](/api/multicast) that tracks the state of a number and allows velocity queries.
 
 ## Import
 

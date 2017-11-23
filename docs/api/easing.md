@@ -7,7 +7,7 @@ description: Functions that speed or slow a tween over time.
 
 Easing functions make tweened motion look more natural by emulating the changes in velocity experienced by objects in the real world.
 
-It can be any function that takes a progress value from `0` to `1`, and returns a new progress.
+They work by accepting a progress value from `0` to `1`, and returning a new one.
 
 Popmotion comes with a number of preset easing functions, and provides methods to create new easing functions.
 
@@ -33,6 +33,7 @@ tween({
 
 Popmotion comes with the following preset easing functions:
 
+- `cubicBezier`
 - `linear`
 - `easeIn`, `easeOut`, `easeInOut`
 - `circIn`, `circOut`, `circInOut`
@@ -44,14 +45,13 @@ Try them out by editing this live example:
 ```marksy
 <Example template="Ball" id="b">{`
 const ball = document.querySelector('#b .ball');
-const ballRenderer = css(ball);
+const ballStyler = styler(ball);
 
 tween({
   to: 300,
   duration: 300,
-  ease: easing.linear,
-  onUpdate: (x) => ballRenderer.set('x', x)
-}).start();
+  ease: easing.linear
+}).start(ballStyler.set('x'));
 `}</Example>
 ```
 

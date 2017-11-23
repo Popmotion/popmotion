@@ -1,5 +1,5 @@
 import Template from './Template';
-import { Ball, VerticalCenter } from './styled';
+import { MediumBall, VerticalCenter } from './styled';
 import { everyFrame, styler } from 'popmotion';
 import trackVisibility from './track-visibility';
 
@@ -52,9 +52,10 @@ class Example extends React.Component {
   render() {
     return (
       <VerticalCenter innerRef={this.setContainer}>
-        <Ball />
-        <Ball />
-        <Ball />
+        <MediumBall />
+        <MediumBall />
+        <MediumBall />
+        <MediumBall />
       </VerticalCenter>
     );
   }

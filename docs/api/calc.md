@@ -20,7 +20,9 @@ import calc from 'popmotion/calc';
 ### `angle`
 Calculate the angle between two 2D points, in degrees.
 
-`angle(a <Object>, b <Object>)`
+`type Point = { x: number, y: number }`
+
+`angle(a: Point, b: Point)`
 
 ```javascript
 const a = { x: 0, y: 0 };
@@ -31,7 +33,7 @@ calc.angle(a, b); // 45
 ### `degreesToRadians`
 Convert degrees to radians.
 
-`degreesToRadians(degrees <Number>)`
+`degreesToRadians(degrees: number)`
 
 ```javascript
 calc.degreesToRadians(45); // 0.7853981633974483
@@ -40,7 +42,7 @@ calc.degreesToRadians(45); // 0.7853981633974483
 ### `dilate`
 Dilate the difference between two values.
 
-`dilate(a <Number>, b <Number>, dilation <Number>)`
+`dilate(a: number, b: number, dilation: number)`
 
 ```javascript
 calc.dilate(0, 80, .5); // 40
@@ -50,7 +52,9 @@ calc.dilate(100, 200, 2); // 300
 ### `distance`
 Calculate the distance between 1D, 2D or 3D points.
 
-`distance(a <Number | Object>, b <Number | Object>)`
+`type Point = { x: number, y: number, z?: number }`
+
+`distance(a: number | Point, b: number | Point)`
 
 ```javascript
 calc.distance(-100, 100); // 200
@@ -61,7 +65,7 @@ calc.distance({ x: 0, y: 0, z: 0 }, { x: 0, y: 0, z: 10 }); // 10
 ### `getProgressFromValue`
 Calculate a progress (0 - 1) from a value and range.
 
-`getProgressFromValue(min <Number>, max <Number>, value <Number>)`
+`getProgressFromValue(min: number, max: number, value: number)`
 
 ```javascript
 calc.getProgressFromValue(0, 100, 50); // 0.5
@@ -71,7 +75,7 @@ calc.getProgressFromValue(100, 200, 50); // -0.5
 ### `getValueFromProgress`
 Calculate a value from a progress (0 - 1) and range.
 
-`getValueFromProgress(min <Number>, max <Number>, value <Number>)`
+`getValueFromProgress(min: number, max: number, value: number)`
 
 ```javascript
 calc.getValueFromProgress(100, 200, 0.5); // 150
@@ -81,7 +85,7 @@ calc.getValueFromProgress(100, 200, -1); // 0
 ### `pointFromAngleAndDistance`
 Given an origin point, angle in degrees and distance, returns a new point.
 
-`pointFromAngleAndDistance(origin <Object>, angle <Number>, distance <Number>)`
+`pointFromAngleAndDistance(origin: Point, angle: number, distance: number)`
 
 ```javascript
 calc.pointFromAngleAndDistance({ x: 0, y: 0 }, 45, 100);
@@ -96,7 +100,7 @@ calc.pointFromAngleAndDistance({ x: 0, y: 0 }, 45, 100);
 ### `radiansToDegrees`
 Convert radians to degrees.
 
-`radiansToDegrees(radians <Number>)`
+`radiansToDegrees(radians: number)`
 
 ```javascript
 calc.radiansToDegrees(0.7853981633974483); // 45
@@ -105,14 +109,14 @@ calc.radiansToDegrees(0.7853981633974483); // 45
 ### `smooth`
 Framerate-independent value smoothing.
 
-`smooth(newValue <Number>, oldValue <Number>, frameDuration <Number>, smoothing <Number>)`
+`smooth(newValue: number, oldValue: number, frameDuration: number, smoothing: number)`
 
 ### `speedPerFrame`
 Convert speed per second into speed per frame.
 
-`speedPerFrame(speedPerSecond <Number>, frameDuration <Number>)`
+`speedPerFrame(speedPerSecond: number, frameDuration: number)`
 
 ### `speedPerSecond`
 Convert speed per frame into speed per second.
 
-`speedPerSecond(speedPerFrame <Number>, frameDuration <Number>)`
+`speedPerSecond(speedPerFrame: number, frameDuration: number)`
