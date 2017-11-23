@@ -15,9 +15,11 @@ const Counter = styled.span`
   ${fontBold}
 `;
 
-export default ({ start, id }) => (
-  <CounterContainer id={id}>
+export default ({ code, autostart, start, id }) => (
+  <CounterContainer id={id} innerRef={autostart ? start : null}>
     <Counter className="counter">0</Counter>
-    <ActionButton onClick={start}>Start example</ActionButton>
+    {!autostart ? (
+      <ActionButton onClick={start}>Start</ActionButton>
+    ) : null}
   </CounterContainer>
 );

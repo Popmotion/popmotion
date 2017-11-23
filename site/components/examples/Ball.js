@@ -19,9 +19,11 @@ const Box = styled.span`
   border-radius: 50px;
 `;
 
-export default ({ start, id }) => (
-  <Container id={id}>
+export default ({ autostart, start, id }) => (
+  <Container id={id} innerRef={autostart ? start : null}>
     <Box className="ball" />
-    <ActionButton onClick={start}>Start example</ActionButton>
+    {!autostart ? (
+      <ActionButton onClick={start}>Start</ActionButton>
+    ) : null}
   </Container>
 );

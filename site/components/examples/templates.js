@@ -1,7 +1,6 @@
-import dynamic from 'next/dynamic';
-const Counter = dynamic(import('./Counter'));
-const Ball = dynamic(import('./Ball'));
-const Swatch = dynamic(import('./Swatch'));
+import Counter from './Counter';
+import Ball from './Ball';
+import Swatch from './Swatch';
 
 export default {
   Counter,

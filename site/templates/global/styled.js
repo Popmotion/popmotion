@@ -169,7 +169,7 @@ const ButtonContent = styled.span`
 `;
 
 export const ActionButton = ({ children, onClick }) => (
-  <Button onClick={onClick}>
+  <Button type="button" onClick={onClick}>
     <ButtonContent>{ children }</ButtonContent>
   </Button>
 );

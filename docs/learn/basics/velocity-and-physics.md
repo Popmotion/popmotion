@@ -1,33 +1,47 @@
 ---
-title: Velocity and physics
+title: Physics and velocity
 description: Create responsive interactions with velocity, decay, physics and spring.
 category: basics
 ---
 
-# Velocity and physics
+# Physics and velocity
 
-A core feature of Popmotion is to easily inspect the `velocity` of numbers.
+A core feature of Popmotion is the ability for some animations (`decay`, `physics` and `spring`) to take a `velocity` parameter.
 
-We can pass `velocity` to `decay`, `physics` and `spring` actions to create smooth transitions between animations and let the user affect the animations with their own input.
+`velocity` affects them to create smooth transitions between animations.
+
+When we take this `velocity` from pointer input, it allows the user to directly affect animations with their own force leading to natural and playful interactions. 
 
 ## Inspect velocity
 
+But how do we get this `velocity`?
+
 Popmotion provides a special type of reaction called `value`.
 
-`value` can be subscribed to by multiple other reactions and, crucially, it can maintain state. This state can be retrieved with `get`, or its velocity queried with `getVelocity`.
+```javascript
+import { value } from 'popmotion';
+```
 
-`velocity` is measured in **units per second**. Why? Although 60fps is the current common framerate, VR devices support 90+ fps and the iPad Pro delivers a silky 120 frames per second!
+`value` sits between your action and another reaction (for instance a style setter), and can be queried with `get` and `getVelocity`:
+
+```javascript
+const myValue = value(0, (v) => console.log(v));
+
+tween().start(myValue);
+
+setTimeout(() => myValue.getVelocity(), 100)
+```
+
+The returned `velocity` is measured in **units per second**. Why? Although 60fps is the current common framerate, VR devices support 90+ fps and the iPad Pro delivers a silky 120 frames per second!
 
 To future-proof our code, we decouple velocity from the device framerate, otherwise our animations would run at 1.5x or even 2x the speed on these faster displays.
 
 ## Using `value`
 
-`value` is provided a single argument, its initial value:
+`value` is provided a two arguments, a value, and a function to call when the value updates:
 
 ```javascript
-import { value } from 'popmotion';
-
-const foo = value(0);
+const foo = value(0, (v) => console.log(v));
 ```
 
 As `value` is a reaction, it has an `update` method. We can call it to update the value:
@@ -36,37 +50,57 @@ As `value` is a reaction, it has an `update` method. We can call it to update th
 foo.update(5);
 ```
 
-We can also subscribe to the value with another reaction:
+Usually though, we provide the `value` directly to an action:
 
 ```javascript
-foo.subscribe((v) => console.log(v)); // 5
+tween({ to: 5 }).start(foo);
 ```
 
-This reaction will receive the current value as soon as it subscribes, and any future `update`s.
+Like our animations, `value` can accept objects and arrays:
 
-Now, if we pass this value to an animation or input, we can query it to receive the animation's current velocity.
+```javascript
+const xy = value({ x: 0, y: 0 }, console.log);
+const foo = tween({
+  to: { x: 100, y: 200 }
+}).start(xy);
+
+setTimeout(
+  () => foo.getVelocity(), // { x, y }
+  100
+);
+```
+
+Now we know enough about `value` to get the velocity of our user's pointer.
 
 ## Get `pointer` velocity
 
-Using the example from the [previous tutorial](/learn/input-tracking), let's first make a `value` that updates `ballStyler`'s `x` property when it `update`s:
+Using the example from the [previous tutorial](/learn/input-tracking), let's first make a `value` that updates `ballStyler`'s `x` and `y` properties:
 
 ```javascript
-const ballX = value(0);
-ballX.subscribe((v) => ballStyler.set('x', v));
+const ballXY = value({ x: 0, y: 0 }, ballStyler.set);
 ```
 
-Now we can replace the `startTracking` and `stopTracking` functions with this:
+Now we can replace the `startTracking` with this:
 
 ```javascript
-function startTracking() {
-  pointerTracker = pointer({ x: ballX.get('x'), y: 0 })
-    .start(ballX);
-}
+const startTracking = () => {
+  pointer(ballXY.get())
+    .start(ballXY);
+};
+```
 
-function stopTracking() {
-  pointerTracker.stop();
-  const velocity = ballX.getVelocity();
-}
+As an added benefit of using `value`, a value **can't be subscribed to more than one action at a time**.
+
+This means that we can stop using `pointerTracker` to maintain a reference to our active `pointer`.
+
+Instead, we can either use `ballXY.stop()`, which will stop its currently active action. Or we can provide it to a different action, which is what we'll do here.
+
+For now, we'll just use `stopTracking` to get `ballXY`'s current velocity:
+
+```javascript
+const stopTracking = () => {
+  const velocity = ballXY.get();
+};
 ```
 
 ## Using `velocity`

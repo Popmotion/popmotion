@@ -2,7 +2,7 @@
 title: Get started
 description: Introduction to Popmotion's tween animation.
 category: basics
-next: input-tracking
+next: action-reaction
 ---
 
 # Get started
@@ -44,7 +44,7 @@ A `tween` is a function that changes one number to another, over a set duration 
 By default, a `tween` will change `0` to `1` over `300` milliseconds:
 
 ```marksy
-<Example template="Counter" id="a">{`
+<Example template="Counter" id="a" autostart={false}>{`
 const counter = document.querySelector('#a .counter');
 const updateCounter = (v) => counter.innerHTML = v;
 
@@ -79,7 +79,7 @@ It accepts an `Element`, and returns a get/set interface.
 `set`, if called with just a prop name, returns a setter function. So we can swap `updateCounter` with `styler(element).set('x')` to animate the element:
 
 ```marksy
-<Example template="Ball" id="css">{`
+<Example template="Ball" id="css" autostart={false}>{`
 const ball = document.querySelector('#css .ball');
 const ballStyler = styler(ball);
 
@@ -102,7 +102,7 @@ All animations included with Popmotion can animate:
 For instance, by replacing `300` in the previous example with `{ x: 300, scale: 2 }` the action will animate and output `x` and `scale` values:
 
 ```marksy
-<Example template="Ball" id="object">{`
+<Example template="Ball" id="object" autostart={false}>{`
 const ball = document.querySelector('#object .ball');
 const ballStyler = styler(ball);
 
@@ -120,4 +120,8 @@ tween({
 
 This tutorial has covered just the basics for the `tween` animation. You can find more details in the full [tween API docs](/api/tween).
 
-In the next tutorial, we'll learn how to implement pointer tracking with two input actions, [Pointer and Listen](/learn/input-tracking).
+Popmotion uses a simple reactive model. Every animation, like `tween`, and every input is an **action**.
+
+And for every action, there is (naturally) a **reaction**.
+
+In the next tutorial, we'll briefly look at [actions and reactions](/api/action-reaction).

@@ -11,10 +11,11 @@ import {
   onFrame,
   physics,
   spring,
+  listen,
   tween,
   pointer,
   mouse,
-  touch,
+  multitouch,
   composite,
   parallel,
   calc,
@@ -44,10 +45,11 @@ const CodeContainer = CodeContainerPrimitive.extend`
   `}
 `;
 
-const StyledLiveEditor = styled(LiveEditor)`
+const LiveEditorWrapper = styled.div`
   height: 300px;
   max-height: 300px;
-  overflow-y: scroll;
+  width: 100%;
+  overflow: scroll;
 `;
 
 const StyledLivePreview = LiveExampleContainer.withComponent(LivePreview).extend`
@@ -62,10 +64,16 @@ const injectRender = (code) => `
   function start() {
     ${code}
   }
-  render(<Component start={start} id={id} />);
+
+  render(<Component
+    key={Math.random()}
+    autostart={autostart}
+    start={start}
+    id={id}
+  />);
 `;
 
-export default ({ children, template, id, isReactComponent=false }) => {
+export default ({ children, template, id, autostart, isReactComponent=false }) => {
   const Component = templates[template];
 
   return (
@@ -83,9 +91,10 @@ export default ({ children, template, id, isReactComponent=false }) => {
         physics,
         spring,
         tween,
+        listen,
         pointer,
         mouse,
-        touch,
+        multitouch,
         composite,
         parallel,
         calc,
@@ -94,6 +103,7 @@ export default ({ children, template, id, isReactComponent=false }) => {
         styler,
         Component,
         id,
+        autostart,
         MotionValue
       }}
       mountStylesheet={false}
@@ -101,7 +111,9 @@ export default ({ children, template, id, isReactComponent=false }) => {
     >
       <StyledLivePreview />
       <CodeContainer>
-        <StyledLiveEditor />
+        <LiveEditorWrapper>
+          <LiveEditor />
+        </LiveEditorWrapper>
       </CodeContainer>
     </StyledLiveContainer>
   );
