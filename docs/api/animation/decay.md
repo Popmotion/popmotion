@@ -1,6 +1,6 @@
 ---
 title: Decay
-description: Exponential deceleration, primarily for use in momentum scrolling
+description: Exponential deceleration, primarily for use in momentum scrolling.
 category: animation
 ---
 

@@ -127,14 +127,13 @@ Here's \`easeInOut\`.
 \`\`\`marksy
 <Example template="Ball" id="a">{\`
 const ball = document.querySelector('#a .ball');
-const ballRenderer = css(ball);
+const ballRenderer = styler(ball);
 
 tween({
   to: 300,
   duration: 500,
-  ease: easing.easeInOut,
-  onUpdate: (x) => ballRenderer.set('x', x)
-}).start();
+  ease: easing.easeInOut
+}).start((x) => ballRenderer.set('x', x));
 \`}</Example>
 \`\`\`
 
@@ -145,14 +144,12 @@ Conversely, here's an \`easeOut\` with the Popmotion default of \`300\`ms.
 \`\`\`marksy
 <Example template="Ball" id="b">{\`
 const ball = document.querySelector('#b .ball');
-const ballRenderer = css(ball);
+const ballRenderer = styler(ball);
 
 tween({
   to: 300,
-  duration: 500,
-  ease: easing.easeOut,
-  onUpdate: (x) => ballRenderer.set('x', x)
-}).start();
+  ease: easing.easeOut
+}).start((x) => ballRenderer.set('x', x));
 \`}</Example>
 \`\`\`
 

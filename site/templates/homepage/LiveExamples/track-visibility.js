@@ -13,7 +13,7 @@ const trackVisibility = (Component) => {
   
     render() {
       return (
-        <OnStage onLeave={this.hide} onEnter={this.show} buffer={500}>
+        <OnStage onLeave={this.hide} onEnter={this.show}>
           <Component {...this.props} isVisible={this.state.isVisible} />
         </OnStage>
       );

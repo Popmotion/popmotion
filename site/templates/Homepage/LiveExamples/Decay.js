@@ -2,7 +2,10 @@ import Template from './Template';
 import { Ball, Carousel, Item, VerticalCenter } from './styled';
 import { styler, value, listen, pointer, decay, transform } from 'popmotion';
 
-const code = `listen(slider, 'mousedown touchstart').start(() => {
+const code = `const slider = document.querySelector('.slider');
+const sliderX = value(0, styler(slider).set('x'))
+
+listen(slider, 'mousedown touchstart').start(() => {
   pointer({ x: sliderX.get() })
     .pipe(({ x }) => x, clampMovement)
     .start(sliderX);

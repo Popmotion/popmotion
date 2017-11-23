@@ -3,10 +3,16 @@ import { fontBold, fontSize } from '~/styles/fonts';
 import { cols, WHITE, ENTITY, GREEN, ACTION, BRAND, SUPER_LIGHT_GREY, LIGHT_GREY, SKEW, UNSKEW, media } from '~/styles/vars';
 
 export const Container = styled.div`
-  background: ${SUPER_LIGHT_GREY};
   margin: ${cols(2)} 0 ${cols(4)};
+  position: relative;
+`;
+
+export const ExampleContainer = styled.div`
+  background: ${SUPER_LIGHT_GREY};
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+
+  ${media.large`flex-wrap: wrap;`}
 `;
 
 export const LiveExampleContainer = styled.div`
@@ -53,6 +59,21 @@ export const StackedLeft = ExamplePositioning.extend`
   align-items: flex-start;
   justify-content: space-around;
   flex-direction: column;
+`;
+
+export const CodePenLink = styled.a`
+  position: absolute;
+  background: ${ACTION};
+  bottom: ${cols(1)};
+  right: ${cols(1)};
+  transform: skewX(${SKEW});
+  padding: 5px 8px;
+  
+  span {
+    color: white;
+    display: block;
+    transform: skewX(${UNSKEW});
+  }
 `;
 
 export const CodeContainer = styled.div`

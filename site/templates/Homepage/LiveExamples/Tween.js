@@ -47,7 +47,7 @@ class Tween extends React.Component {
 }
 
 export default trackVisibility(({ isVisible }) => (
-  <Template code={code}>
+  <Template code={code} codepen="https://codepen.io/popmotion/pen/WXOPWX?editors=0010">
     <VerticalCenter>
       <Tween isVisible={isVisible} />
     </VerticalCenter>

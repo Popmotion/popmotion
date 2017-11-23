@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { fontSize, fontBold, lineHeight } from '~/styles/fonts';
-import { LINK, LINK_BURN, LIGHT_GREY, WHITE, cols, media, verticalGradient, PURPLE_BURN, GREEN, PURPLE, SKEW, UNSKEW, ENTITY } from '~/styles/vars';
+import { LINK, LINK_BURN, LIGHT_GREY, WHITE, cols, media, GREEN, PURPLE, SKEW, UNSKEW, ENTITY } from '~/styles/vars';
 import { Centered, MajorCentered, ArticleHeader as ArticleHeaderPrimitive } from './grid';
 import SyntaxHighlighter, { registerLanguage } from 'react-syntax-highlighter/dist/light';
 import js from 'react-syntax-highlighter/dist/languages/javascript';
@@ -25,6 +25,8 @@ export const H1 = styled.h1`
   ${fontSize(48)}
   ${lineHeight(54)}
   ${fontBold}
+  max-width: ${cols(52)};
+
   ${media.medium`
     ${fontSize(36)}
     ${lineHeight(42)}
@@ -76,7 +78,7 @@ export const H3 = Centered.withComponent('h3').extend`
   }
 `;
 
-export const H4 = styled.h4`
+export const H4 = Centered.withComponent('h3').extend`
   ${fontSize(18)}
   margin-top: 2.2rem;
   margin-bottom: 1.1rem;
@@ -111,6 +113,18 @@ export const CodeBlock = MajorCentered.extend`
   pre {
     transform: skewX(${UNSKEW});
   }
+
+  ${media.medium`
+    transform: none;
+    margin-left: 0;
+    margin-right: 0;
+
+    pre {
+      transform: none;
+      padding-right: 0!important;
+      width: 100%!important;
+    }
+  `}
 `;
 
 export const Code = ({ language, children, code }) => (children
@@ -174,13 +188,14 @@ export const ActionButton = ({ children, onClick }) => (
   </Button>
 );
 
-export const DatePublished = styled.p`
+export const DatePublished = Centered.withComponent('p').extend`
   font-size: ${fontSize(12)};
   margin-bottom: ${cols(1)};
+  opacity: 0.75;
 `;
 
 export const ArticleHeader = ({ children }) => (
   <ArticleHeaderPrimitive>
     <H1>{children}</H1>
   </ArticleHeaderPrimitive>
-); 
+);

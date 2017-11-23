@@ -49,7 +49,7 @@ class Example extends React.Component {
 }
 
 export default trackVisibility(({isVisible}) => (
-  <Template code={code}>
+  <Template code={code} codepen="https://codepen.io/popmotion/pen/WXybaR?editors=0010">
     <AlignCenter>
       <Example isVisible={isVisible} />
     </AlignCenter>

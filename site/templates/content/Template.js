@@ -1,13 +1,14 @@
 import { Content } from '~/templates/global/grid';
+import ContentNav from './ContentNav';
 import GlobalTemplate from '~/templates/global/Template';
 import { DatePublished } from '~/templates/global/styled';
 import Header from '~/templates/global/Header';
 import Footer from '~/templates/global/Footer';
 
-export default ({ children, title, description, section, published}) => (
+export default ({ children, title, id, description, section, published}) => (
   <GlobalTemplate title={`${title} | Popmotion`} description={description}>
     <Header section={section} />
-    {/* content nav */}
+    <ContentNav section={section} id={id} />
     <Content>
       {published && <DatePublished>{published}</DatePublished>}
       {children}
@@ -15,7 +16,3 @@ export default ({ children, title, description, section, published}) => (
     <Footer />
   </GlobalTemplate>
 );
-
-//       {section !== 'blog' ? (
-//         <ContentNav section={section} id={id} />
-//       ) : null}

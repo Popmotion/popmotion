@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { cols, media, LIGHT_GREY, ENTITY } from '~/styles/vars';
+import { cols, media, LIGHT_GREY } from '~/styles/vars';
 
 export const Content = styled.article`
 `;

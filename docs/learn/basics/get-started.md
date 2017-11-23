@@ -111,9 +111,9 @@ const ball = document.querySelector('#object .ball');
 const ballStyler = styler(ball);
 
 tween({
-	from: { x: 0, scale: 1 },
-	to: { x: 300, scale: 2 },
-	ease: easing.easeInOut,
+  from: { x: 0, scale: 1 },
+  to: { x: 300, scale: 2 },
+  ease: easing.easeInOut,
   flip: Infinity,
   duration: 1000
 }).start(ballStyler.set);
@@ -128,4 +128,4 @@ Popmotion uses a simple reactive model. Every animation, like `tween`, and every
 
 And for every action, there is (naturally) a **reaction**.
 
-In the next tutorial, we'll briefly look at [actions and reactions](/api/action-reaction).
+In the next tutorial, we'll briefly look at [actions and reactions](/learn/action-reaction).

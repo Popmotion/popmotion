@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { GREEN, media, cols } from '~/styles/vars';
+import { fontBold } from '~/styles/fonts';
+import { GREEN, UNSKEW, media, cols } from '~/styles/vars';
 import {
   action,
   reaction,
@@ -24,16 +25,17 @@ import {
 } from 'popmotion';
 import styler from 'stylefire';
 import { MotionValue } from 'popmotion-react';
-import { LiveProvider, LiveEditor, LiveError, LivePreview } from 'react-live';
+import { LiveProvider, LiveEditor, LivePreview } from 'react-live';
 import templates from './templates';
 import {
   Container,
   LiveExampleContainer,
-  CodeContainer as CodeContainerPrimitive,
-  AlignCenter
+  CodeContainer as CodeContainerPrimitive
 } from '~/templates/homepage/LiveExamples/styled';
 
-const StyledLiveContainer = Container.withComponent(LiveProvider);
+const StyledLiveContainer = Container.withComponent(LiveProvider).extend`
+  justify-content: flex-end;
+`;
 
 const CodeContainer = CodeContainerPrimitive.extend`
   border-color: ${GREEN};
@@ -42,6 +44,7 @@ const CodeContainer = CodeContainerPrimitive.extend`
   ${media.large`
     border-color: ${GREEN};
     padding: ${cols(2)};
+    margin-right: 0;
   `}
 `;
 
@@ -53,7 +56,16 @@ const LiveEditorWrapper = styled.div`
 `;
 
 const StyledLivePreview = LiveExampleContainer.withComponent(LivePreview).extend`
+  flex: 0 1 450px;
   justify-content: center;
+`;
+
+const LiveEditorHeader = styled.h4`
+  color: ${GREEN};
+  ${fontBold}
+  transform: skewX(${UNSKEW});
+  display: block;
+  margin-bottom: ${cols(1)};
 `;
 
 const stripFirstReturn = ([ code ]) => {
@@ -112,6 +124,7 @@ export default ({ children, template, id, autostart, isReactComponent=false }) =
       <StyledLivePreview />
       <CodeContainer>
         <LiveEditorWrapper>
+          <LiveEditorHeader>Live editor</LiveEditorHeader>
           <LiveEditor />
         </LiveEditorWrapper>
       </CodeContainer>

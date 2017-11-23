@@ -14,7 +14,6 @@ class Example extends React.Component {
     if (!ref) return;
     this.boxStyler = styler(ref);
     this.ballXY = value({ x: 0, y: 0 }, this.boxStyler.set);
-    this.ballXY.subscribe(this.boxStyler.set);
 
     listen(ref, 'mousedown touchstart')
       .start(() => {
@@ -48,7 +47,7 @@ class Example extends React.Component {
 }
 
 export default () => (
-  <Template code={code}>
+  <Template code={code} codepen="https://codepen.io/popmotion/pen/mqKyjd?editors=0010">
     <Example />
   </Template>
 );

@@ -1,11 +1,11 @@
 ---
-title: Actions and Reactions
+title: Actions and reactions
 description: A quick look at Popmotion's simplified reactive model.
 category: basics
 next: input-tracking
 ---
 
-# Actions and Reactions
+# Actions and reactions
 
 The `tween` function returns what's known in Popmotion as an **action**.
 
@@ -112,7 +112,7 @@ Each function is provided the latest value emitted from `update`, and returns a 
 
 ```javascript
 const double = (v) => v * 2;
-const px = (v) => `${v}px`;
+const px = (v) => v + 'px';
 const twoPx = one.pipe(double, px);
 
 one.start((v) => console.log(v)); // 1
@@ -126,7 +126,7 @@ two.start((v) => console.log(v)); // '2px'
 ```javascript
 one
   .while((v) => v === 2);
-  .start((v) => console.log(v)); // never fires, as `while` returned `false`
+  .start((v) => console.log(v)); // never fires, as while returned false
 ```
 
 ### Combining
@@ -137,7 +137,7 @@ Let's combine `pipe` and `while` to make a [pointer](/api/pointer) that outputs 
 const pickX = ({ x }) => x;
 const viewportWidth = window.innerWidth;
 const percentageOfViewport = (v) => v / viewportWidth * 100;
-const asPercent = (v) => `${v}px`;
+const asPercent = (v) => v + 'px';
 
 pointer()
   .pipe(pickX, percentageOfViewport) // The output of this

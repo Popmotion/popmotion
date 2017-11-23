@@ -2,7 +2,10 @@ import Template from './Template';
 import { Box, AlignCenter } from './styled';
 import { styler, value, listen, multitouch } from 'popmotion';
 
-const code = `listen(slider, 'touchstart')
+const code = `const box = document.querySelector('.box');
+const boxTransform = value({ x: 0, y: 0 }, styler(box).set);
+
+listen(box, 'touchstart')
   .filter(({ touches }) => touches.length >= 2)
   .start(() => {
     multitouch(boxTransform.get())

@@ -10,9 +10,12 @@ const code = `const ballStylers = Array
 const distance = 100;
 
 everyFrame()
-  .start((timestamp) => ballStylers.map((styler, i) => {
-    styler.set('y', distance * Math.sin(0.004 * timestamp + (i * 0.5)));
-  }));`;
+  .start((timestamp) => {
+    ballStylers.map((style, i) => {
+      const y = distance * Math.sin(0.004 * timestamp + (i * 0.5));
+      styler.set('y', y);
+    });
+  });`;
 
 class Example extends React.Component {
   setContainer = (ref) => {
@@ -58,7 +61,7 @@ class Example extends React.Component {
 }
 
 export default trackVisibility(({ isVisible }) => (
-  <Template code={code}>
+  <Template code={code} codepen="https://codepen.io/popmotion/pen/XzYJvP?editors=0010">
     <Example isVisible={isVisible} />
   </Template>
 ));

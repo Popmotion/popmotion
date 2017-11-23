@@ -43,7 +43,7 @@ export default () => (
       <Example
         title="Physics"
         link="/api/physics"
-        description="A lightweight integrated physics simulation that can be affected mid-animation."
+        description="A lightweight integrated physics simulation that can be altered mid-animation."
       >
         <PhysicsExample />
       </Example>
@@ -57,7 +57,7 @@ export default () => (
       <Example
         title="Every Frame"
         link="/api/every-frame"
-        description="Fires every frame with the latest framestamp."
+        description="Fires once every frame with the latest framestamp."
       >
         <EveryFrameExample />
       </Example>

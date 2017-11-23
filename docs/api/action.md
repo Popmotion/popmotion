@@ -1,6 +1,6 @@
 ---
 title: Action
-description: A reactive stream of values
+description: Create a reactive stream of values.
 next: animations
 ---
 
@@ -124,7 +124,7 @@ foo.while(lessThanTen).start(log); // ...8, 9
 
 Actions output **only** to the set of functions provided to `start`.
 
-Popmotion also provides **(reactions)[/api/reactions]**. These exposed `update`, `complete` and `error` methods, which mean we can use them to `start` actions.
+Popmotion also provides **[reactions](/api/reactions)**. These exposed `update`, `complete` and `error` methods, which mean we can use them to `start` actions.
 
 They're also, like actions, chainable. They can be subscribed to by multiple other reactions:
 
@@ -155,7 +155,7 @@ Returns a **new** action that passes the output of the original action's `update
 ```javascript
 const init = ({ update }) => update(10);
 const double = (v) => v * 2;
-const px = (v) => `${v}px`;
+const px = (v) => v + 'px';
 
 action(init)
   .pipe(double, px)

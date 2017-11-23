@@ -1,9 +1,12 @@
 import Template from './Template';
 import { Ball, AlignCenter } from './styled';
-import { styler, value, listen, pointer, decay, transform } from 'popmotion';
+import { styler, value, listen, pointer } from 'popmotion';
 
-const code = `listen(slider, 'mousedown touchstart').start(() => {
-  pointer(sliderX.get())
+const code = `const ball = document.querySelector('.ball');
+const ballXY = value({ x: 0, y: 0 }, styler(ball).set);
+
+listen(ball, 'mousedown touchstart').start(() => {
+  pointer(ballXY.get())
     .start(ballXY);
 });`;
 

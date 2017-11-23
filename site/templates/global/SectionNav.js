@@ -5,12 +5,6 @@ import { ACTION, ENTITY, BLACK, cols, media, SKEW } from '~/styles/vars';
 import sectionNames from '~/data/section-names.json';
 import routes from '~/data/route-paths.json';
 
-const Container = styled.ul`
-  margin-left: ${cols(3)};
-
-  ${media.medium`margin-left: ${cols(1)};`}
-`;
-
 const MenuItem = styled.li`
   ${fontSize(18)}
   display: inline;
@@ -49,7 +43,7 @@ const MenuItem = styled.li`
 `;
 
 export default ({ section }) => (
-  <Container>
+  <ul>
     {Object.keys(sectionNames).map((name) => (
       <MenuItem key={name} isSelected={(section === name)}>
         <Link href={routes[name]}>
@@ -57,5 +51,5 @@ export default ({ section }) => (
         </Link>
       </MenuItem>
     ))}
-  </Container>
+  </ul>
 );

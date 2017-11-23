@@ -2,7 +2,10 @@ import Template from './Template';
 import { Ball, BottomCenter } from './styled';
 import { styler, value, listen, physics, transform, tween } from 'popmotion';
 
-const code = `const gravity = physics({
+const code = `const ball = document.querySelector('.ball');
+const ballY = value(0, styler(ball).set('y'));
+
+const gravity = physics({
   acceleration: 2500,
   restSpeed: false
 }).start(ballY);

@@ -1,12 +1,12 @@
 import Link from 'next/link';
-import { List, Content, Category, ArticleHeader, ItemContainer } from '~/templates/global/grid';
-import { H1, H2, H3, P } from '~/templates/global/styled';
+import { Content, ItemContainer } from '~/templates/global/grid';
+import { H2, H3, P, ArticleHeader, DatePublished } from '~/templates/global/styled';
 import { SectionContainer } from '../global/grid';
 
-export default ({ content, menu }) => (
+export default ({ content, menu, title, section }) => (
   <Content>
     <ArticleHeader>
-      API
+      {title}
     </ArticleHeader>
     <ul>
       {menu.map((tl) => (
@@ -15,10 +15,13 @@ export default ({ content, menu }) => (
             ? (
               <div>
                 <H2>
-                  <Link href={`/api/${tl.id}`}>
+                  <Link href={`/${section}/${tl.id}`}>
                     <a>{tl.title}</a>
                   </Link>
                 </H2>
+                {content[tl.id].published && (
+                  <DatePublished>{content[tl.id].published}</DatePublished>
+                )}
                 <P>{content[tl.id].description}</P>
               </div>
             )
@@ -28,7 +31,7 @@ export default ({ content, menu }) => (
           {tl.posts ? tl.posts.map((sl) => (
             <ItemContainer key={sl.id}>
               <H3>
-                <Link href={`/api/${sl.id}`}>
+                <Link href={`/${section}/${sl.id}`}>
                   <a>{sl.title}</a>
                 </Link>
               </H3>
