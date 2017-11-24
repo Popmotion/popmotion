@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.0.29@beta] 2017-11-24
+
+### Fixed
+
+- Ensuring `everyFrame` stops when it's bloody well told to.
+
 ## [8.0.28@beta] 2017-11-22
 
 ### Changed

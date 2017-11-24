@@ -1,6 +1,6 @@
 import Template from './Template';
 import { Ball, BottomCenter } from './styled';
-import { styler, value, listen, physics, transform, tween } from 'popmotion';
+import { styler, value, listen, physics, spring, tween } from 'popmotion';
 
 const code = `const ball = document.querySelector('.ball');
 const ballY = value(0, styler(ball).set('y'));
@@ -24,35 +24,57 @@ class Example extends React.Component {
 
     this.boxStyler = styler(ref);
     this.ballY = value(0, this.boxStyler.set('y'));
-    const ballBorder = value({
+    this.ballScale = value(1, this.boxStyler.set('scaleY'));
+    this.ballBorder = value({
       borderColor: '',
       borderWidth: 0
     }, ({ borderColor, borderWidth }) => this.boxStyler.set({
       boxShadow: `0 0 0 ${borderWidth}px ${borderColor}`
     }));
     
-    const gravity = physics({
-      acceleration: 2500,
-      restSpeed: false
-    }).pipe((v) => {
-      if (v >= 0) {
+    const checkBounce = (v) => {
+      if (v > 0) {
         v = 0;
-        gravity
-          .set(0)
-          .setVelocity(- this.ballY.getVelocity() * 0.8);
-
-        if (this.ballY.getVelocity() !== 0 && ref.innerHTML !== 'Tap') {
-          count = 0;
-          tween({
-            from: { borderWidth: 0, borderColor: 'rgb(255, 28, 104, 1)' },
-            to: { borderWidth: 30, borderColor: 'rgb(255, 28, 104, 0)' }
-          }).start(ballBorder);
-  
-          ref.innerHTML = 'Tap';
+        
+        if (this.ballY.getVelocity() > 0) {
+          const compression = spring({
+            to: 1,
+            from: 1,
+            velocity: - this.ballY.getVelocity() * 0.04,
+            damping: 20,
+            stiffness: 400
+          }).pipe((s) => {
+            if (s >= 1) {
+              compression.stop();
+              gravity
+                .set(0)
+                .setVelocity(- this.ballScale.getVelocity() * 200);
+            }
+            return s;
+          }).start(this.ballScale);
         }
       }
       return v;
-    }).start(this.ballY);
+    };
+    
+    const checkFail = (v) => {
+      if (v === 0 && this.ballY.getVelocity() !== 0 && ref.innerHTML !== 'Tap') {
+        count = 0;
+        tween({
+          from: { borderWidth: 0, borderColor: 'rgb(255, 28, 104, 1)' },
+          to: { borderWidth: 30, borderColor: 'rgb(255, 28, 104, 0)' }
+        }).start(this.ballBorder);
+    
+        ref.innerHTML = 'Tap';
+      }
+      return v;
+    };
+    
+    const gravity = physics({
+      acceleration: 2500,
+      restSpeed: false
+    }).pipe(checkBounce, checkFail)
+      .start(this.ballY);
 
     listen(ref, 'mousedown touchstart').start((e) => {
       e.preventDefault();
@@ -66,12 +88,14 @@ class Example extends React.Component {
       tween({
         from: { borderWidth: 0, borderColor: 'rgb(20, 215, 144, 1)' },
         to: { borderWidth: 30, borderColor: 'rgb(20, 215, 144, 0)' }
-      }).start(ballBorder);
+      }).start(this.ballBorder);
     });
   };
 
   componentWillUnmount() {
-    this.ballY && this.ballY.stop();
+    this.ballBorder.stop();
+    this.ballScale.stop();
+    this.ballY.stop();
   }
 
   render() {

@@ -1,8 +1,11 @@
-import { cancelOnFrameUpdate, currentFrameTime, onFrameUpdate } from 'framesync';
+import { currentFrameTime, onFrameUpdate } from 'framesync';
 import action, { Action } from '../../action';
 
 const frame = (): Action => action(({ update }) => {
+  let isActive = true;
+
   const nextFrame = () => {
+    if (!isActive) return;
     update(currentFrameTime());
     onFrameUpdate(nextFrame);
   };
@@ -10,7 +13,7 @@ const frame = (): Action => action(({ update }) => {
   onFrameUpdate(nextFrame);
 
   return {
-    stop: () => cancelOnFrameUpdate(nextFrame)
+    stop: () => isActive = false
   };
 });
 

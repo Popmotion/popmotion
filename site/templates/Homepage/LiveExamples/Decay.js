@@ -1,5 +1,5 @@
 import Template from './Template';
-import { Ball, Carousel, Item, VerticalCenter } from './styled';
+import { Carousel, Item, VerticalCenter } from './styled';
 import { styler, value, listen, pointer, decay, transform } from 'popmotion';
 
 const code = `const slider = document.querySelector('.slider');
@@ -22,7 +22,7 @@ listen(document, 'mouseup touchend').start(() => {
 const generateItems = () => {
   const renderedItems = [];
   for (let i = 0; i < 30; i++) {
-    renderedItems.push(<Item />);
+    renderedItems.push(<Item key={i} />);
   }
   return renderedItems;
 };

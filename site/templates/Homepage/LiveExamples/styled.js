@@ -131,6 +131,7 @@ export const Ball = ExampleItem.extend`
   height: 100px;
   border-radius: 50%;
   margin: 0 auto;
+  transform-origin: 50% 100%;
 
   ${media.medium`
     width: 80px;
