@@ -20,82 +20,97 @@ class Example extends React.Component {
   startAnimation = (ref) => {
     if (!ref) return;
 
+    const ballStyler = styler(ref);
+    const ballY = value(0, (v) => ballStyler.set('y', Math.min(0, v)));
+    const ballScale = value(1, (v) => {
+      ballStyler.set('scaleX', 1 + (1 - v));
+      ballStyler.set('scaleY', v);
+    });
     let count = 0;
-
-    this.boxStyler = styler(ref);
-    this.ballY = value(0, this.boxStyler.set('y'));
-    this.ballScale = value(1, this.boxStyler.set('scaleY'));
-    this.ballBorder = value({
+    let isFalling = false;
+    
+    const ballBorder = value({
       borderColor: '',
       borderWidth: 0
-    }, ({ borderColor, borderWidth }) => this.boxStyler.set({
+    }, ({ borderColor, borderWidth }) => ballStyler.set({
       boxShadow: `0 0 0 ${borderWidth}px ${borderColor}`
     }));
     
-    const checkBounce = (v) => {
-      if (v > 0) {
-        v = 0;
-        
-        if (this.ballY.getVelocity() > 0) {
-          const compression = spring({
-            to: 1,
-            from: 1,
-            velocity: - this.ballY.getVelocity() * 0.04,
-            damping: 20,
-            stiffness: 400
-          }).pipe((s) => {
-            if (s >= 1) {
-              compression.stop();
-              gravity
-                .set(0)
-                .setVelocity(- this.ballScale.getVelocity() * 200);
-            }
-            return s;
-          }).start(this.ballScale);
+    const checkBounce = () => {
+      if (!isFalling || ballY.get() < 0) return;
+      
+      isFalling = false;
+      const impactVelocity = ballY.getVelocity();
+      const compression = spring({
+        to: 1,
+        from: 1,
+        velocity: - impactVelocity * 0.01,
+        stiffness: 800
+      }).pipe((s) => {
+        if (s >= 1) {
+          s = 1;
+          compression.stop();
+          
+          if (impactVelocity > 20) {
+            isFalling = true;
+            gravity
+              .set(0)
+              .setVelocity(- impactVelocity * 0.5);
+          }
         }
-      }
-      return v;
+        return s;
+      }).start(ballScale);
     };
     
-    const checkFail = (v) => {
-      if (v === 0 && this.ballY.getVelocity() !== 0 && ref.innerHTML !== 'Tap') {
+    const checkFail = () => {
+      if (ballY.get() >= 0 && ballY.getVelocity() !== 0 && ref.innerHTML !== 'Tap') {
         count = 0;
         tween({
           from: { borderWidth: 0, borderColor: 'rgb(255, 28, 104, 1)' },
           to: { borderWidth: 30, borderColor: 'rgb(255, 28, 104, 0)' }
-        }).start(this.ballBorder);
+        }).start(ballBorder);
     
         ref.innerHTML = 'Tap';
       }
-      return v;
     };
     
     const gravity = physics({
       acceleration: 2500,
       restSpeed: false
-    }).pipe(checkBounce, checkFail)
-      .start(this.ballY);
-
+    }).start((v) => {
+      ballY.update(v);
+      checkBounce(v);
+      checkFail(v);
+    });
+    
     listen(ref, 'mousedown touchstart').start((e) => {
       e.preventDefault();
       count++;
       ref.innerHTML = count;
-
+      
+      isFalling = true;
+      ballScale.stop();
+      ballScale.update(1);
+    
       gravity
-        .set(this.ballY.get())
+        .set(Math.min(0, ballY.get()))
         .setVelocity(-1200);
-
+    
       tween({
         from: { borderWidth: 0, borderColor: 'rgb(20, 215, 144, 1)' },
         to: { borderWidth: 30, borderColor: 'rgb(20, 215, 144, 0)' }
-      }).start(this.ballBorder);
+      }).start(ballBorder);
     });
+
+    this.ballBorder = ballBorder;
+    this.ballScale = ballScale;
+    this.gravity = gravity;
   };
 
   componentWillUnmount() {
     this.ballBorder.stop();
     this.ballScale.stop();
-    this.ballY.stop();
+    this.gravity.stop();
   }
 
   render() {

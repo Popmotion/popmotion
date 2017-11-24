@@ -72,7 +72,7 @@ keyframes({
 
 - `values: number[]`: An array of numbers to animate between.
 - `duration?: number = 300`: The total duration of the animation in milliseconds.
-- `ease?: Easing[]`: An array of easing functions for each generated tween. This array should be `values.length - 1`. Defaults to an array of `easeOut`.
+- `ease?: Easing | Easing[]`: An array of easing functions for each generated tween, or a single easing function applied to all tweens. This array should be `values.length - 1`. Defaults to `easeOut`.
 - `times?: number[]`: An array of numbers between `0` and `1`, representing `0` to `duration`, that represent at which point each number should be hit. Defaults to an array of evenly-spread durations will be calculated.
 
 ### Tween props
