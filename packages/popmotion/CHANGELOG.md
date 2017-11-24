@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.0.30@beta] 2017-11-24
+
+### Fixed
+
+- Published with wrong version of Stylefire.
+
 ## [8.0.29@beta] 2017-11-24
 
 ### Fixed
