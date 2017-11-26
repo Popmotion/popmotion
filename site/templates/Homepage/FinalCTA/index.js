@@ -11,7 +11,7 @@ export default () => (
       Or take it all for 10kb, max. Sound good?
     </Blurb>
     <CTA>
-      <Link href="/learn/get-started/" prefetch>Let's go!</Link>
+      <Link href="/learn/get-started" prefetch><a>Get started</a></Link>
     </CTA>
   </Container>
 );

@@ -17,10 +17,10 @@ listen(ball, 'mousedown touchstart').start(() => {
 });`;
 
 class Example extends React.Component {
-  startAnimation = (ref) => {
-    if (!ref) return;
+  startAnimation = (ball) => {
+    if (!ball) return;
 
-    const ballStyler = styler(ref);
+    const ballStyler = styler(ball);
     const ballY = value(0, (v) => ballStyler.set('y', Math.min(0, v)));
     const ballScale = value(1, (v) => {
       ballStyler.set('scaleX', 1 + (1 - v));
@@ -63,14 +63,14 @@ class Example extends React.Component {
     };
     
     const checkFail = () => {
-      if (ballY.get() >= 0 && ballY.getVelocity() !== 0 && ref.innerHTML !== 'Tap') {
+      if (ballY.get() >= 0 && ballY.getVelocity() !== 0 && ball.innerHTML !== 'Tap') {
         count = 0;
         tween({
           from: { borderWidth: 0, borderColor: 'rgb(255, 28, 104, 1)' },
           to: { borderWidth: 30, borderColor: 'rgb(255, 28, 104, 0)' }
         }).start(ballBorder);
     
-        ref.innerHTML = 'Tap';
+        ball.innerHTML = 'Tap';
       }
     };
     
@@ -83,10 +83,10 @@ class Example extends React.Component {
       checkFail(v);
     });
     
-    listen(ref, 'mousedown touchstart').start((e) => {
+    listen(ball, 'mousedown touchstart').start((e) => {
       e.preventDefault();
       count++;
-      ref.innerHTML = count;
+      ball.innerHTML = count;
       
       isFalling = true;
       ballScale.stop();

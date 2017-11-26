@@ -106,6 +106,7 @@ export const CodeTag = styled.code`
 export const CodeBlock = MajorCentered.extend`
   background: ${LIGHT_GREY};
   border-left: 2px solid ${ENTITY};
+  box-shadow: 100px 0 0 ${LIGHT_GREY};
   transform: skewX(${SKEW});
   transform-origin: 0 0;
   margin-bottom: ${cols(3)};

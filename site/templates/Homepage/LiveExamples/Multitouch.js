@@ -41,7 +41,7 @@ class Example extends React.Component {
 }
 
 export default () => (
-  <Template code={code} hideOverflow>
+  <Template code={code} hideOverflow codepen="https://codepen.io/popmotion/pen/LOBjxQ?editors=0010">
     <AlignCenter>
       <Example />
     </AlignCenter>

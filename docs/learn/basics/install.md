@@ -2,6 +2,7 @@
 title: Install Popmotion
 description: Overview of Popmotion's different installation options.
 category: basics
+next: get-started
 ---
 
 # Install Popmotion
@@ -40,6 +41,6 @@ Or include it directly in your HTML with this `script` tag:
 
 ### CodePen
 
-[This CodePen](https://codepen.io/popmotion/pen/zPjXWa?editors=0010) links to a Popmotion playground, which is set up with the latest version of Popmotion.
+You can fork the [Popmotion playground on CodePen](https://codepen.io/popmotion/pen/zPjXWa?editors=0010), which is set up with the latest version of Popmotion.
 
 You an also add Popmotion to any existing CodePen project by clicking on Settings > JavaScript and then pasting `https://unpkg.com/popmotion/dist/popmotion.global.min.js` into the "Add External JavaScript" field.

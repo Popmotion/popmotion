@@ -11,7 +11,7 @@ export default () => (
       A functional JavaScript motion library
     </Blurb>
     <CTA>
-      <Link href="/learn/get-started/" prefetch>Quick start</Link>
+      <Link href="/learn/get-started" prefetch><a>Quick start</a></Link>
     </CTA>
   </Container>
 );

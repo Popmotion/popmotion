@@ -40,7 +40,7 @@ class Example extends React.Component {
 }
 
 export default () => (
-  <Template code={code}>
+  <Template code={code} codepen="https://codepen.io/popmotion/pen/RjBZoe?editors=0010">
     <AlignCenter>
       <Example />
     </AlignCenter>
