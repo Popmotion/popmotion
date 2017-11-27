@@ -15,7 +15,10 @@ const physics = (props: Props = {}): Action => action(({ complete, update }): Ph
     springStrength,
     to
   } = props;
-  const { from, restSpeed } = props;
+  const {
+    restSpeed = 0.001,
+    from = 0
+  } = props;
   let current = from;
 
   const timer = onFrame().start(() => {
