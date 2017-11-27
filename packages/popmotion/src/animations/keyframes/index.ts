@@ -1,11 +1,11 @@
 import { Action } from '../../action';
 import { getProgressFromValue } from '../../calc';
 import { easeOut, Easing, linear } from '../../easing';
+import { Update } from '../../observer/types';
+import { clamp } from '../../transformers';
 import tween from '../tween';
 import scrubber from '../tween/scrubber';
 import { KeyframeProps } from './types';
-import { Update } from '../../observer/types';
-import { clamp } from '../../transformers';
 
 const clampProgress = clamp(0, 1);
 

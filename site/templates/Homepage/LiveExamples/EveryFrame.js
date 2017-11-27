@@ -39,7 +39,7 @@ class Example extends React.Component {
   }
 
   startAnimation() {
-    everyFrame()
+    this.animation = everyFrame()
       .start((timestamp) => this.ballStylers.map((styler, i) => {
         styler.set('y', this.distance * Math.sin(0.004 * timestamp + (i * 0.5)));
       }));

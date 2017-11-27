@@ -7,14 +7,15 @@ import vectorAction from '../../action/vector';
 import onFrame from '../every-frame';
 import { Props } from './types';
 
-const decay = ({
-  velocity = 0,
-  from = 0,
-  power = 0.8,
-  timeConstant = 350,
-  restDelta = 0.5,
-  modifyTarget
-}: Props = {}): Action => action(({ complete, update }) => {
+const decay = (props: Props = {}): Action => action(({ complete, update }) => {
+  const {
+    velocity = 0,
+    from = 0,
+    power = 0.8,
+    timeConstant = 350,
+    restDelta = 0.5,
+    modifyTarget
+  } = props;
   let elapsed = 0;
   const amplitude = power * velocity;
   const idealTarget = Math.round(from + amplitude);

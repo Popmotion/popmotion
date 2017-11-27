@@ -2,7 +2,6 @@ import {
   ExampleContainer,
   ExampleHeader,
   Description,
-  LiveContainer,
   CenteredContent
 } from './styled';
 import Link from 'next/link';

@@ -11,6 +11,8 @@ import MultitouchExample from '../LiveExamples/Multitouch';
 import EveryFrameExample from '../LiveExamples/EveryFrame';
 import StaggerExample from '../LiveExamples/Stagger';
 import ColorExample from '../LiveExamples/Color';
+import CrossFadeExample from '../LiveExamples/CrossFade';
+import LineDrawingExample from '../LiveExamples/LineDrawing';
 import { Strong } from '~/templates/global/styled';
 
 export default () => (
@@ -96,12 +98,16 @@ export default () => (
         title="Crossfade"
         link="/api/crossfade"
         description="Blend the output of any two actions."
-      />
+      >
+        <CrossFadeExample />
+      </Example>
       <Example
-        title="Line animation"
+        title="Line drawing"
         link="/api/svg"
-        description="Leverage Stylefire's line drawing capabilities."
-      />
+        description="Animate SVG path elements to emulate drawing"
+      >
+        <LineDrawingExample />
+      </Example>
     </ExampleSection>
   </Container>
 );

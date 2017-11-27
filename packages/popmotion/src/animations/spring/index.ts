@@ -7,16 +7,17 @@ import { speedPerSecond } from '../../calc';
 import onFrame from '../every-frame';
 import { SpringInterface, SpringProps } from './types';
 
-const spring = ({
-  from = 0.0,
-  to = 0.0,
-  stiffness = 100,
-  damping = 10,
-  mass = 1.0,
-  velocity = 0.0,
-  restSpeed = 0.01,
-  restDelta = 0.01
-}: SpringProps = {}): Action => action(({ update, complete }): SpringInterface => {
+const spring = (props: SpringProps = {}): Action => action(({ update, complete }): SpringInterface => {
+  const {
+    from = 0.0,
+    to = 0.0,
+    stiffness = 100,
+    damping = 10,
+    mass = 1.0,
+    velocity = 0.0,
+    restSpeed = 0.01,
+    restDelta = 0.01
+  } = props;
   const initialVelocity = velocity ? - (velocity / 1000) : 0.0;
   let t = 0;
   const delta = to - from;

@@ -7,15 +7,15 @@ import { speedPerFrame } from '../../calc';
 import onFrame from '../every-frame';
 import { PhysicsInterface, Props } from './types';
 
-const physics = ({
-  acceleration = 0,
-  friction = 0,
-  velocity = 0,
-  restSpeed = 0.001,
-  from = 0,
-  springStrength,
-  to
-}: Props = {}): Action => action(({ complete, update }): PhysicsInterface => {
+const physics = (props: Props = {}): Action => action(({ complete, update }): PhysicsInterface => {
+  let {
+    acceleration = 0,
+    friction = 0,
+    velocity = 0,
+    springStrength,
+    to
+  } = props;
+  const { from, restSpeed } = props;
   let current = from;
 
   const timer = onFrame().start(() => {

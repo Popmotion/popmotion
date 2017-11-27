@@ -11,20 +11,24 @@ import { TweenInterface, TweenProps } from './types';
 
 const clampProgress = clamp(0, 1);
 
-const tween = ({
-  from = 0,
-  to = 1,
-  duration = 300,
-  elapsed = 0,
-  ease = easeOut,
-  playDirection = 1,
-  flip = 0,
-  flipCount = 0,
-  loop = 0,
-  loopCount = 0,
-  yoyo = 0,
-  yoyoCount = 0
-}: TweenProps = {}): Action => action(({ update, complete }: IObserver): TweenInterface => {
+const tween = (props: TweenProps = {}): Action => action(({ update, complete }: IObserver): TweenInterface => {
+  const {
+    from = 0,
+    to = 1,
+    duration = 300,
+    elapsed = 0,
+    ease = easeOut,
+    flip = 0,
+    loop = 0,
+    yoyo = 0
+  } = props;
+  let {
+    playDirection = 1,
+    flipCount = 0,
+    yoyoCount = 0,
+    loopCount = 0
+  } = props;
+
   let playhead = scrubber({ from, to, ease }).start(update);
 
   let progress = 0;

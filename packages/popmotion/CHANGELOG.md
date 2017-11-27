@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.0.31@beta] 2017-11-27
+
+### Fixed
+
+- Stopped new instances of actions mutating shared vars.
+
 ## [8.0.30@beta] 2017-11-24
 
 ### Fixed
