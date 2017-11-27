@@ -28,7 +28,9 @@ npm install stylefire --save
 
 ## Usage
 
-With Popmotion:
+The `styler` function accepts a single `Element` and returns either the [CSS](/api/css) or [SVG](/api/svg) styler depending on the detected element type.
+
+From Popmotion:
 
 ```javascript
 import { styler } from 'popmotion';
@@ -42,7 +44,35 @@ As a standalone library:
 import styler from 'stylefire';
 ```
 
-`styler` accepts a single `Element` and returns either the [CSS](/api/css) or [SVG](/api/svg) styler depending on element type (see individual docs).
+## Methods
+
+### `get`
+
+```typescript
+get(key: string): any
+```
+
+Returns the value of the provided key.
+
+### `set`
+
+```typescript
+set(props: {}): this
+set(key: string, prop: any): this
+set(key: string): (prop: any) => void;
+```
+
+Set the provided property(s) and schedule a render for the next frame.
+
+If only a `key` is provided, this returns a curried function which can then be provided a property value to set to that `key`.
+
+### `render`
+
+```typescript
+render(): this
+```
+
+Immediately render, without waiting for the next frame.
 
 ## Create custom styler
 

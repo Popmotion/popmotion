@@ -10,6 +10,8 @@ The DOM Scroll styler batches `window` and DOM scroll events to the `render` ste
 
 ## Import
 
+From Popmotion or as a standalone library:
+
 ```javascript
 import scroll from 'stylefire/scroll';
 ```

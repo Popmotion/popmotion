@@ -43,4 +43,10 @@ export { calc, easing, transform };
 
 // Stylefire
 import styler from 'stylefire';
-export { styler };
+import css from 'stylefire/css';
+import svg from 'stylefire/svg';
+export { styler, css, svg };
+
+// Value types
+import * as valueTypes from 'style-value-types';
+export { valueTypes };

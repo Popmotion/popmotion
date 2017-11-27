@@ -11,6 +11,14 @@ The SVG Styler replaces the confusing SVG transformation model with the CSS mode
 ## Import
 
 ```javascript
+import { svg } from 'popmotion';
+// Or, to import on its own:
+import svg from 'stylefire/svg';
+```
+
+As a standalone library:
+
+```javascript
 import svg from 'stylefire/svg';
 ```
 

@@ -1,6 +1,7 @@
 export type Update = (v?: any) => any;
 export type Complete = () => any;
 export type Error = (err?: any) => any;
+export type ObserverEvent = (type?: string, v?: any) => any;
 export type Middleware = (update: Update, complete?: Complete) => (v: any) => any;
 
 export interface IObserver {

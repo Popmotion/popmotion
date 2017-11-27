@@ -5,9 +5,7 @@ description: "Parsers, transformers and tests for common style value types, eg: 
 
 # Value Types
 
-Popmotion works with raw numbers, which are sometimes composed into more complex values using `composite`.
-
-To help convert these into commonly-used special value types, like `px` or `hex`, we provide an optional module called `style-value-types`:
+To help convert numerical values into commonly-used special value types, like `px` or `hex`, we provide an optional module called `style-value-types`:
 
 ```bash
 npm install style-value-types --save 
@@ -19,11 +17,24 @@ Each value type has three functions:
 - `parse`: Returns the value in a format suitable for animation. Either a `number` or `{ [key: string]: number }`.
 - `transform`: The reverse of `parse`. Accepts a `number` or map of named numbers and converts that into the value type.
 
-## Example
+## Import
+
+From Popmotion:
+
+```javascript
+import { valueTypes } from 'popmotion';
+const { color } = valueTypes;
+```
+
+Or, either to save bytes and import `valueTypes` separately, or to use as a stand-alone library:
 
 ```javascript
 import { color } from 'style-value-types';
+```
 
+## Example
+
+```javascript
 // Test
 color.test('#fff'); // true
 color.test(0); // false

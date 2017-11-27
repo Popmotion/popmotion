@@ -12,11 +12,25 @@ It automatically detects and applies vendor prefixes.
 
 ## Import
 
+From Popmotion:
+
+```javascript
+import { css } from 'popmotion';
+// Or, to import on its own:
+import css from 'stylefire/css';
+```
+
+As a standalone library:
+
 ```javascript
 import css from 'stylefire/css';
 ```
 
-`css(element: Node, props: {})`
+```typescript
+css(element: Node, props?: {
+  enableHardwareAcceleration?: Boolean = true
+})
+```
 
 ## Methods
 

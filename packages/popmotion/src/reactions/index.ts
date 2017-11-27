@@ -1,7 +1,7 @@
+import { ColdSubscription } from '../action/types';
 import Chainable from '../chainable';
 import createObserver from '../observer';
 import { IObserver, ObserverCandidate } from '../observer/types';
-import { ColdSubscription } from '../action/types';
 import { HotSubscription } from './types';
 
 export abstract class BaseMulticast<T> extends Chainable<T> implements IObserver {
