@@ -1,18 +1,15 @@
 import Template from './Template';
 import { MediumBall, VerticalCenter } from './styled';
-import { tween, styler, easing, crossfade } from 'popmotion';
+import { tween, styler, easing, crossfade, transform, valueTypes } from 'popmotion';
 import trackVisibility from './track-visibility';
 
-const code = `const circle = document.querySelector('path.outline');
+const code = `const blendedBall = styled(document.querySelector('.blended'));
 
-tween({ ease: easing.easeIn }).start({
-  update: (v) => circle.set({
-    opacity: v,
-    pathLength: v * 45
-  }),
-  complete: () => physics({ velocity: -400 })
-    .start(circle.set('rotation'))
-});`;
+const animateUp = tween({ from: -100, to: 100, flip: Infinity });
+const animateDown = tween({ from: 100, to: -100, flip: Infinity });
+
+crossfade(animateUp, animateDown)
+  .start(blendedBall.set('y'));`;
 
 class Example extends React.Component {
   setContainer = (ref) => {
@@ -42,6 +39,8 @@ class Example extends React.Component {
     const blended = this.ballStylers[1];
     const right = this.ballStylers[2];
 
+    const blendRedBlue = transform.blendColor('#FF1C68', '#198FE3');
+
     const animateLeft = tween({
       from: 100,
       to: -100,
@@ -49,7 +48,7 @@ class Example extends React.Component {
       flip: Infinity,
       duration: 1000
     });
-
+    
     const animateRight = tween({
       from: -100,
       to: 100,
@@ -57,16 +56,26 @@ class Example extends React.Component {
       flip: Infinity,
       duration: 1000
     });
-
-    const a = animateLeft.start(left.set('y'));
-    const b = animateLeft.start(right.set('y'))
-    // animateRight.start(right.set('y'));
-b.stop()
-    //const blendedMotion = crossfade(animateLeft, animateRight).start(blended.set('y'));
+    
+    this.leftAnimation = animateLeft.start(left.set('y'));
+    this.rightAnimation = animateRight.start(right.set('y'));
+    
+    const blendedMotion = crossfade(animateLeft, animateRight)
+      .start(blended.set('y'));
+    
+    this.blendAnimation = tween({
+      duration: 3333,
+      flip: Infinity
+    }).start((v) => {
+      blended.set('background', valueTypes.color.transform(blendRedBlue(v)));
+      blendedMotion.setBalance(v);
+    });
   }
 
   stopAnimation() {
-    this.animation && this.animation.stop();
+    this.leftAnimation && this.leftAnimation.stop();
+    this.rightAnimation && this.rightAnimation.stop();
+    this.blendAnimation && this.blendAnimation.stop();
   }
 
   render() {

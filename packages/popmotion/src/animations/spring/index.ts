@@ -8,13 +8,13 @@ import onFrame from '../every-frame';
 import { SpringInterface, SpringProps } from './types';
 
 const spring = (props: SpringProps = {}): Action => action(({ update, complete }): SpringInterface => {
+  let { velocity = 0.0 } = props;
   const {
     from = 0.0,
     to = 0.0,
     stiffness = 100,
     damping = 10,
     mass = 1.0,
-    velocity = 0.0,
     restSpeed = 0.01,
     restDelta = 0.01
   } = props;

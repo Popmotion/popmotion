@@ -77,7 +77,7 @@ The `rgba` transformer is **itself** composed. Here's the exact code:
 
 ```javascript
 const rgba = pipe(
-  transformChildValues({
+  transformMap({
     red: rgbUnit,
     green: rgbUnit,
     blue: rgbUnit,

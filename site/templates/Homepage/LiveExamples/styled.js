@@ -180,18 +180,18 @@ export const MediumBall = Ball.extend`
   width: 75px;
   height: 75px;
   margin-right: 15px;
-  background: ${ENTITY};
+  background: ${BRAND};
   
   &:nth-child(4n + 2) {
     background: ${GREEN};
   }
   
   &:nth-child(4n + 3) {
-    background: ${BRAND};
+    background: ${ACTION};
   }
   
   &:nth-child(4n + 4) {
-    background: ${ACTION};
+    background: ${ENTITY};
   }
 `;
 
@@ -199,4 +199,9 @@ export const ColorPanel = styled.div`
   width: 250px;
   height: 175px;
   border-radius: 5px;
+`;
+
+export const ThreeContainer = ExamplePositioning.extend`
+  height: 100%;
+  min-height: 300px;
 `;

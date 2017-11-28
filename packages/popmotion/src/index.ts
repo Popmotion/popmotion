@@ -30,6 +30,7 @@ import crossfade from './compositors/crossfade';
 import delay from './compositors/delay';
 import merge from './compositors/merge';
 import parallel from './compositors/parallel';
+import schedule from './compositors/schedule';
 import stagger from './compositors/stagger';
 
 export { chain, composite, crossfade, delay, merge, parallel, stagger };

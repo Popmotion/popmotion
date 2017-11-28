@@ -76,6 +76,18 @@ resolveBezier(0.5); // 1.5
 resolveBezier(1); // 3
 ```
 
+### `blendColor`
+Given two colors, returns a function that takes a progress value (0 - 1) and returns a correctly blended color.
+
+Watch [Computer Color is Broken](https://www.youtube.com/watch?v=LKnqECcg6Gw) for more information.
+
+`blendColor(colorA <String | Object>, colorB <String | Object>)`
+
+```javascript
+const blendRedToBlue = blendColor('#f00', '#00f');
+blendRedToBlue(0.5); // Returns blended object with rgba properties
+```
+
 ### `clampMax`
 Returns a function that caps given values to below `max`.
 
@@ -104,17 +116,6 @@ Returns a function that restricts given values to within the provided range.
 ```javascript
 const rgbRange = clamp(0, 255);
 rgbRange(256); // 255
-```
-
-### `delta`
-Returns a function that returns the delta between every subsequent value from the initial given value **or** the value given the **first time its fired**.
-
-`delta(start?: number)`
-
-```javascript
-const getDelta = delta();
-getDelta(100) // 0
-getDelta(110) // 10
 ```
 
 ### `interpolate`
@@ -192,6 +193,21 @@ Creates a spring that, given an elasticity and an origin, will treat the provide
 Creates a spring that has a non-linear effect on the displacement - the greater the displacement, the greater effect on the provided value.
 
 `nonlinearSpring(elasticity: number, origin: number)`
+
+### `transformMap`
+
+Accepts an object of named transformers that expects `v` of the same structure. Applies those transformers to the corresponding property in `v` and outputs.
+
+`transformMap(map: { [key: string]: (v: any) => any })`
+
+```javascript
+const foo = transformMap({
+  x: (v) => v + 'px',
+  y: (v) => v + '%'
+});
+
+foo({ x: 5, y: 10 }); // { x: '5px', y: '10%' }
+```
 
 ### `wrap`
 Wraps a number around.

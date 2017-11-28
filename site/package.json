@@ -48,14 +48,15 @@
     "front-matter": "^2.1.1",
     "live-on-stage": "^2.0.17",
     "nprogress": "^0.2.0",
-    "popmotion": "^8.0.30",
+    "popmotion": "^8.0.31",
     "popmotion-react": "^1.0.9",
     "prismjs": "^1.6.0",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "react-live": "^1.7.0",
     "react-syntax-highlighter": "^5.8.0",
-    "styled-components": "^2.2.3"
+    "styled-components": "^2.2.3",
+    "three": "^0.88.0"
   },
   "devDependencies": {
     "babel-plugin-styled-components": "^1.1.4",

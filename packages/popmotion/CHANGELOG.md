@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.0.32@beta] 2017-11-28
+
+### Changed
+
+- `transformChildValues` is now `transformMap`, and finally docced.
+
 ## [8.0.31@beta] 2017-11-27
 
 ### Fixed

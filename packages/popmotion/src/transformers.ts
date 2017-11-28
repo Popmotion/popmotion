@@ -198,13 +198,16 @@ export const steps = (st: number, min = 0, max = 1) => (v: number) => {
   return getValueFromProgress(min, max, stepProgress(st, progress));
 };
 
-export const transformChildValues = (childTransformers: { [key: string]: Function }) => {
+export const transformMap = (childTransformers: { [key: string]: Function }) => {
   const mutableState: { [key: string]: any } = {};
+
   return (v: any) => {
     for (const key in v) {
-      const childTransformer = childTransformers[key];
-      if (childTransformer) {
-        mutableState[key] = childTransformer(v[key]);
+      if (v.hasOwnProperty(key)) {
+        const childTransformer = childTransformers[key];
+        if (childTransformer) {
+          mutableState[key] = childTransformer(v[key]);
+        }
       }
     }
 

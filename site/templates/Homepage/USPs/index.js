@@ -13,6 +13,8 @@ import StaggerExample from '../LiveExamples/Stagger';
 import ColorExample from '../LiveExamples/Color';
 import CrossFadeExample from '../LiveExamples/CrossFade';
 import LineDrawingExample from '../LiveExamples/LineDrawing';
+import ThreeExample from '../LiveExamples/Three';
+import SteppedExample from '../LiveExamples/Stepped';
 import { Strong } from '~/templates/global/styled';
 
 export default () => (
@@ -107,6 +109,19 @@ export default () => (
         description="Animate SVG path elements to emulate drawing"
       >
         <LineDrawingExample />
+      </Example>
+      <Example
+        title="Learn once, animate anything"
+        description="Popmotion isn't opinionated, so you can pump out numbers to Three.js, React, A-Frame, PixiJS... anywhere!"
+      >
+        <ThreeExample />
+      </Example>
+      <Example
+        title="Functional composition"
+        link="/learn/value-pipelines"
+        description="Don't wait for the library authors to offer new features via configs. Use pure functions to compose your own."
+      >
+        <SteppedExample />
       </Example>
     </ExampleSection>
   </Container>

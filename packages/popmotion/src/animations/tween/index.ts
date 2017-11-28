@@ -13,16 +13,16 @@ const clampProgress = clamp(0, 1);
 
 const tween = (props: TweenProps = {}): Action => action(({ update, complete }: IObserver): TweenInterface => {
   const {
-    from = 0,
-    to = 1,
     duration = 300,
-    elapsed = 0,
     ease = easeOut,
     flip = 0,
     loop = 0,
     yoyo = 0
   } = props;
   let {
+    from = 0,
+    to = 1,
+    elapsed = 0,
     playDirection = 1,
     flipCount = 0,
     yoyoCount = 0,
