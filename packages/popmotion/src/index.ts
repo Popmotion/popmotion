@@ -33,7 +33,7 @@ import parallel from './compositors/parallel';
 import schedule from './compositors/schedule';
 import stagger from './compositors/stagger';
 
-export { chain, composite, crossfade, delay, merge, parallel, stagger };
+export { chain, composite, crossfade, delay, merge, parallel, schedule, stagger };
 
 // Includes
 import * as calc from './calc';
