@@ -4,6 +4,10 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
 ## [8.0.32@beta] 2017-11-28
 
+### Added
+
+- New `schedule` compositor.
+
 ### Changed
 
 - `transformChildValues` is now `transformMap`, and finally docced.
