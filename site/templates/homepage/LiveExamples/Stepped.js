@@ -11,7 +11,7 @@ const smoothXY = transformMap({
   y: smooth(200)
 });
 
-listen(ref, 'mousedown touchstart').start(() => 
+listen(ball, 'mousedown touchstart').start(() => 
   schedule(everyFrame(), pointer(ballXY.get()))
     .pipe(smoothXY)
     .start(ballXY)
@@ -23,7 +23,7 @@ class Example extends React.Component {
     this.boxStyler = styler(ref);
     this.ballXY = value({ x: 0, y: 0 }, this.boxStyler.set);
 
-    const smoothXY = transform.transformChildValues({
+    const smoothXY = transform.transformMap({
       x: smooth(200),
       y: smooth(200)
     });

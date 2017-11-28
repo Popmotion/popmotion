@@ -33,7 +33,7 @@ export default () => (
       <Example
         title="Spring"
         link="/api/spring"
-        description="An accurate spring simulation powered by the same equations as Apple’s CASpringAnimation. "
+        description="An accurate spring simulation powered by the same equations as Apple’s CASpringAnimation."
       >
         <SpringExample />
       </Example>
@@ -99,14 +99,14 @@ export default () => (
       <Example
         title="Crossfade"
         link="/api/crossfade"
-        description="Blend the output of any two actions."
+        description="Blend the output of any two animations."
       >
         <CrossFadeExample />
       </Example>
       <Example
         title="Line drawing"
         link="/api/svg"
-        description="Animate SVG path elements to emulate drawing"
+        description="Animate SVG path elements to emulate drawing."
       >
         <LineDrawingExample />
       </Example>

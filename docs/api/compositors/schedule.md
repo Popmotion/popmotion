@@ -23,7 +23,7 @@ import schedule from 'popmotion/compositors/schedule';
 ## Usage
 
 ```typescript
-schedule(scheduler: Action, schedulee: Action): Action
+schedule(scheduler: Action, subject: Action): Action
 ```
 
 ```javascript
