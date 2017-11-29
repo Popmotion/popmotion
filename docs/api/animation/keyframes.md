@@ -109,4 +109,4 @@ As `keyframes` returns a [`tween`](/api/tween), the following properties can als
 
 ## Example
 
-TODO
+<CodePen id="JOZGdp" />

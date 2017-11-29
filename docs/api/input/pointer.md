@@ -65,3 +65,7 @@ To apply the change in pointer movement to, for instance, a slider, you can use 
 `pointer().start()` returns:
 
 - `stop(): void`
+
+## Example
+
+<CodePen id="RjBZoe" />

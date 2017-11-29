@@ -111,3 +111,8 @@ tween({ to: 100 })
 ```
 
 In this example you can change the real `path` shape and length without having to update the animation.
+
+## Example
+
+<CodePen id="yPxNao" />
+

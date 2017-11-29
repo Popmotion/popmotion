@@ -107,3 +107,7 @@ tween({
 - `resume(): this`
 - `reverse(): this`: Reverses the direction of playback. 
 - `stop(): void`
+
+## Example
+
+<CodePen id="WXOPWX" />

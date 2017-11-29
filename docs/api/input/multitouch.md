@@ -73,3 +73,7 @@ touchRotation(45).start((rotate) => console.log(rotate));
 `multitouch().start()` returns:
 
 - `stop(): void`
+
+## Example
+
+<CodePen id="LOBjxQ" />

@@ -31,6 +31,7 @@ export const LiveExampleContainer = styled.div`
 
 export const ExamplePositioning = styled.div`
   flex: 0 1 450px;
+  max-width: 450px;
   display: flex;
   perspective: 500px;
   transform-style: preserve-3d;
@@ -140,6 +141,7 @@ export const Ball = ExampleItem.extend`
 `;
 
 export const Carousel = styled.div`
+  background: rgba(0,0,0,0);
   display: flex;
   align-items: stretch;
   height: 150px;

@@ -21,7 +21,7 @@ listen(document, 'mouseup touchend').start(() => {
 
 const generateItems = () => {
   const renderedItems = [];
-  for (let i = 0; i < 30; i++) {
+  for (let i = 0; i < 100; i++) {
     renderedItems.push(<Item key={i} />);
   }
   return renderedItems;

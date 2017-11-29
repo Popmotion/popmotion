@@ -67,9 +67,12 @@ spring({
 - `start(update | { update, complete })`: Starts the action and returns a subscription.
 - `while((v: any) => boolean)`: Returns a new action that will `complete` when the provided function returns `false`.
 
-
 ### Subscription methods
 
 `spring().start()` returns:
 
 - `stop(): void`
+
+## Example
+
+<CodePen id="mqKyjd" />

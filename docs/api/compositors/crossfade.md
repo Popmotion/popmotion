@@ -47,3 +47,7 @@ tween({ duration: 100 }).start(blendTweens.setBalance);
 
 - `setBalance(): this`: Sets the balance of blended output from the first action (`0`) to the second (`1`).
 - `stop(): void`
+
+## Example
+
+<CodePen id="ooPjxj" />

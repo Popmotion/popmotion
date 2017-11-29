@@ -54,4 +54,4 @@ decay({ velocity: 200, from: 50 })
 
 ## Example
 
-TODO
+<CodePen id="Kyewbv" />

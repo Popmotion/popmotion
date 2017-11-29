@@ -51,3 +51,7 @@ everyFrame()
 `everyFrame().start()` returns:
 
 - `stop(): void`
+
+## Example
+
+<CodePen id="XzYJvP" />
