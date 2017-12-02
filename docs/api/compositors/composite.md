@@ -25,6 +25,8 @@ composite({
 }).start(({ x, y }) => {});
 ```
 
+`composite` outputs at most once per frame.
+
 ## Methods
 
 ### Action methods

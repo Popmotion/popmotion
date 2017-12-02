@@ -1,20 +1,22 @@
-import { ObserverCandidate } from '../../observer/types';
 import { Value } from '../../reactions/value';
-import { ScrubberSubscription } from '../tween/scrubber';
+import { Action } from '../../action';
 import { Easing } from '../../easing';
 
-export type Chunk = {
-  on: ObserverCandidate,
-  from: Value,
-  to: Value,
-  duration: number,
-  ease?: Easing
+export type AnimationDefinition = {
+  track: string,
+  from?: Value,
+  to?: Value,
+  duration?: number,
+  ease?: Easing,
+  at?: number
 };
 
-export type Segment = number | string | Chunk | Chunk[];
+export type Instruction = number | string | AnimationDefinition | Array<AnimationDefinition | number>;
 
-export type TimelineFragment = {
-  scrubber: ScrubberSubscription
+export type Tracks = {
+  [key: string]: AnimationDefinition[]
 };
 
-export type Timeline = TimelineFragment[];
+export type TrackActions = {
+  [key: string]: Action
+};

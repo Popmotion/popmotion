@@ -25,6 +25,8 @@ parallel(
 ).start(([ tweenOutput, springOutput ]) => {});
 ```
 
+`parallel` outputs max once per frame.
+
 ## Methods
 
 ### Action methods

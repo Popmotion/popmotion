@@ -1,27 +1,21 @@
-import action, { Action } from '../action';
-import { ColdSubscription } from '../action/types';
+import { Action } from '../action';
+import chain from './chain';
 import delay from './delay';
+import parallel from './parallel';
 
-type ActionStarter = () => ColdSubscription;
 type IntervalCalc = (i: number) => number;
 type Interval = number | IntervalCalc;
 
-const stagger = (actionStarters: ActionStarter[], interval: Interval): Action => action(({ complete }) => {
+const stagger = (actions: Action[], interval: Interval): Action => {
   const intervalIsNumber = typeof interval === 'number';
 
-  const subs: ColdSubscription[] = actionStarters.map((actionStarter, i) => {
+  const actionsWithDelay = actions.map((a, i) => {
     const timeToDelay: number = intervalIsNumber ? interval as number * i : (interval as IntervalCalc)(i);
 
-    return delay(timeToDelay).start({
-      complete: () => {
-        subs[i] = actionStarter();
-      }
-    });
+    return chain(delay(timeToDelay), a);
   });
 
-  return {
-    stop: () => subs.forEach((sub) => sub.stop && sub.stop())
-  };
-});
+  return parallel(...actionsWithDelay);
+};
 
 export default stagger;

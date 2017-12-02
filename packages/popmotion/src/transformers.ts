@@ -52,7 +52,7 @@ const blend = (from: number, to: number, v: number) => {
 export const blendColor = (from: Color | string, to: Color | string) => {
   const fromColor = (typeof from === 'string') ? color.parse(from) : from;
   const toColor = (typeof to === 'string') ? color.parse(to) : to;
-  const blended = { ...fromColor };
+  let blended = { ...fromColor };
 
   // Only use the sqrt blending function for rgba and hex
   const blendFunc = (
@@ -62,6 +62,7 @@ export const blendColor = (from: Color | string, to: Color | string) => {
     : blend;
 
   return (v: number) => {
+    blended = { ...blended };
     for (const key in blended) {
       if (key !== 'alpha' && blended.hasOwnProperty(key)) {
         blended[key] = blendFunc(fromColor[key], toColor[key], v);

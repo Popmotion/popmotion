@@ -11,9 +11,10 @@ import everyFrame from './animations/every-frame';
 import keyframes from './animations/keyframes';
 import physics from './animations/physics';
 import spring from './animations/spring';
+import timeline from './animations/timeline';
 import tween from './animations/tween';
 
-export { decay, keyframes, everyFrame, physics, spring, tween };
+export { decay, keyframes, everyFrame, physics, spring, timeline, tween };
 
 // Input
 import listen from './input/listen';

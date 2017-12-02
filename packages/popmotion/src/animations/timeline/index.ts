@@ -1,69 +1,122 @@
-// import tween from '../tween';
-// import { TweenProps } from '../tween/types';
-// import scrubber from '../tween/scrubber';
-// import { linear } from '../../easing';
-// import { Chunk, Segment, Timeline } from './types';
+import { Action } from '../../action';
+import { AnimationDefinition, Instruction, Tracks, TrackActions } from './types';
+import keyframes from '../keyframes';
+import { KeyframeProps } from '../keyframes/types';
+import { easeInOut } from '../../easing';
+import composite from '../../compositors/composite';
+import { TweenProps } from '../tween/types';
+import { Value } from '../../reactions/value';
 
-// const flattenArraysToSequence = (sequence: Segment[], segment: Segment) => {
-//   if (Array.isArray(segment)) {
-//     const lastArg = segment[segment.length - 1];
-//     const isStaggered = typeof lastArg === 'number';
-//     const segments = isStaggered ? segment.slice(0, -1) : segment;
-//     const numSegments = segments.length;
-//     let offset = 0;
+const flattenTimings = (instructions: Instruction[]) => {
+  const flatInstructions: Instruction[] = [];
+  const numInstructions = instructions.length;
+  const lastArg = instructions[numInstructions - 1];
+  const isStaggered = typeof lastArg === 'number';
+  const staggerDelay = isStaggered ? lastArg : 0;
+  const segments = isStaggered ? instructions.slice(0, -1) : instructions;
 
-//     segments.forEach((item, i) => {
-//       sequence.push(item);
+  let offset = 0;
 
-//       if (i !== numSegments - 1) {
-//         offset += isStaggered ? lastArg : 0;
-//         sequence.push(`-${item.duration - offset}`);
-//       }
-//     });
-//   } else {
-//     sequence.push(segment);
-//   }
+  segments.forEach((item: Instruction, i: number) => {
+    flatInstructions.push(item);
 
-//   return sequence;
-// };
+    if (i !== numInstructions - 1) {
+      offset += staggerDelay as number;
+      flatInstructions.push(`-${(item as AnimationDefinition).duration - offset}`);
+    }
+  });
 
-// const timeline = (sequence: Segment[], props: TweenProps) => {
-//   let playhead = 0;
-//   let duration = 0;
+  return flatInstructions;
+};
 
-//   const markers = sequence
-//     // Find parallel and stagger arrays into a flat
-//     // set of instructions which reset the playhead after each tween
-//     .reduce(flattenArraysToSequence, [])
-//     // Convert sequence into relative times
-//     .reduce((acc: Playlist[], segment: Segment) => {
-//       // If relative timestamp
-//       if (typeof segment === 'string') {
-//         playhead += parseFloat(segment);
+const flattenArrayInstructions = (instructions: Instruction[], instruction: Instruction) => {
+  Array.isArray(instruction)
+    ? instructions.push(...flattenTimings(instruction))
+    : instructions.push(instruction);
 
-//       // If absolute timestamp
-//       } else if (typeof segment === 'number') {
-//         playhead = segment;
+  return instructions;
+};
 
-//       // Or if tween, add marker
-//       } else {
-//         const scrubber({ from }).start();
+const convertDefToProps = (props: KeyframeProps, def: AnimationDefinition, i: number) => {
+  const { duration, ease, times, values } = props;
+  const numValues = values.length;
+  const prevTimeTo = times[numValues - 1];
+  const timeFrom = duration / def.at;
+  const timeTo = duration / (def.at + def.duration);
 
-//         acc.push({
-          
-//           from: playhead,
-//           to: playhead + (segment as Chunk).duration
-//         });
-//       }
+  if (prevTimeTo !== undefined && prevTimeTo !== timeFrom) {
+    const valueFrom = def.from || values[numValues - 1];
+    (values as Value[]).push(valueFrom);
+    times.push(timeFrom);
+  } else {
+    (values as Value[]).push(def.from);
+    times.push(timeFrom);
+  }
 
-//       return acc;
-//     }, []);
+  ease.push(def.ease || easeInOut);
+  (values as Value[]).push(def.to);
+  times.push(timeTo);
 
-//   return tween({
-//     duration,
-//     ease: linear,
-//     ...props
-//   }).pipe();
-// };
+  return props;
+};
 
-// export default timeline;
+// TODO replace most of these steps with reduce when TS bug is fixed
+const timeline = (instructions: Instruction[], props: TweenProps = {}): Action => {
+  let playhead = 0;
+  let duration = 0;
+
+  const flatInstructions = instructions.reduce(flattenArrayInstructions, []);
+
+  const animationDefs: AnimationDefinition[] = [];
+  flatInstructions.forEach((instruction: Instruction) => {
+    // If relative timestamp
+    if (typeof instruction === 'string') {
+      playhead += parseFloat(instruction);
+
+    // If absolute timestamp
+    } else if (typeof instruction === 'number') {
+      playhead = instruction;
+
+    // If animation definition, apply playhead
+    } else {
+      const def: AnimationDefinition = {
+        ...instruction as AnimationDefinition,
+        at: playhead
+      };
+
+      animationDefs.push(def);
+
+      duration = Math.max(duration, def.at + def.duration);
+    }
+  });
+
+  // Split into tracks
+  const tracks: Tracks = {};
+  const numDefs = animationDefs.length;
+
+  for (let i = 0; i < numDefs; i++) {
+    const def = animationDefs[i];
+    const { track } = def;
+
+    if (!tracks.hasOwnProperty(track)) tracks[track] = [];
+    tracks[track].push(def);
+  }
+
+  const trackKeyframes: TrackActions = {};
+  for (const key in tracks) {
+    if (tracks.hasOwnProperty(key)) {
+      const keyframeProps = tracks[key].reduce(convertDefToProps, {
+        duration,
+        ease: [],
+        times: [],
+        values: []
+      });
+
+      trackKeyframes[key] = keyframes(keyframeProps);
+    }
+  }
+
+  return composite(trackKeyframes);
+};
+
+export default timeline;

@@ -5,12 +5,12 @@ import { ColdSubscription } from '../action/types';
 export type ActionStarter<I> = (action: Action, key: I) => ColdSubscription;
 
 export type MultiProps<A, T, V, I> = {
-    getCount: (actions: A) => number;
-    getFirst: (subs: T) => ColdSubscription;
-    getOutput: () => V;
-    mapApi: (subs: T, methodName: string) => (...args: any[]) => V;
-    setProp: (output: V, name: I, value: any) => any;
-    startActions: (actions: A, starter: ActionStarter<I>) => T;
+  getCount: (actions: A) => number;
+  getFirst: (subs: T) => ColdSubscription;
+  getOutput: () => V;
+  mapApi: (subs: T, methodName: string) => (...args: any[]) => V;
+  setProp: (output: V, name: I, value: any) => any;
+  startActions: (actions: A, starter: ActionStarter<I>) => T;
 };
 
 const multi = <A, T, V, I>({
@@ -24,9 +24,7 @@ const multi = <A, T, V, I>({
   const numActions = getCount(actions);
   const output = getOutput();
   const updateOutput = () => update(output);
-  const updatedActions: string[] = [];
   let numCompletedActions = 0;
-  let allActionsHaveUpdated = false;
 
   const subs = startActions(actions, (a, name) => a.start({
     complete: () => {
@@ -36,13 +34,7 @@ const multi = <A, T, V, I>({
     error,
     update: (v: any) => {
       setProp(output, name, v);
-
-      if (!allActionsHaveUpdated && updatedActions.indexOf(`${name}`)) {
-        updatedActions.push(`${name}`);
-        if (updatedActions.length === numActions) allActionsHaveUpdated = true;
-      }
-
-      if (allActionsHaveUpdated) onFrameUpdate(updateOutput, true);
+      onFrameUpdate(updateOutput, true);
     }
   }));
 
