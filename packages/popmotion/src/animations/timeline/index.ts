@@ -2,27 +2,30 @@ import { Action } from '../../action';
 import { AnimationDefinition, Instruction, Tracks, TrackActions } from './types';
 import keyframes from '../keyframes';
 import { KeyframeProps } from '../keyframes/types';
-import { easeInOut } from '../../easing';
+import { easeInOut, linear } from '../../easing';
 import composite from '../../compositors/composite';
 import { TweenProps } from '../tween/types';
 import { Value } from '../../reactions/value';
 
+const DEFAULT_DURATION = 300;
+
 const flattenTimings = (instructions: Instruction[]) => {
   const flatInstructions: Instruction[] = [];
-  const numInstructions = instructions.length;
-  const lastArg = instructions[numInstructions - 1];
+  const lastArg = instructions[instructions.length - 1];
   const isStaggered = typeof lastArg === 'number';
   const staggerDelay = isStaggered ? lastArg : 0;
   const segments = isStaggered ? instructions.slice(0, -1) : instructions;
+  const numSegments = segments.length;
 
   let offset = 0;
 
   segments.forEach((item: Instruction, i: number) => {
     flatInstructions.push(item);
 
-    if (i !== numInstructions - 1) {
+    if (i !== numSegments - 1) {
+      const duration = (item as AnimationDefinition).duration || DEFAULT_DURATION;
       offset += staggerDelay as number;
-      flatInstructions.push(`-${(item as AnimationDefinition).duration - offset}`);
+      flatInstructions.push(`-${duration - offset}`);
     }
   });
 
@@ -41,21 +44,39 @@ const convertDefToProps = (props: KeyframeProps, def: AnimationDefinition, i: nu
   const { duration, ease, times, values } = props;
   const numValues = values.length;
   const prevTimeTo = times[numValues - 1];
-  const timeFrom = duration / def.at;
-  const timeTo = duration / (def.at + def.duration);
+  const timeFrom = def.at === 0 ? 0 : def.at / duration;
+  const timeTo = (def.at + def.duration) / duration;
 
-  if (prevTimeTo !== undefined && prevTimeTo !== timeFrom) {
-    const valueFrom = def.from || values[numValues - 1];
-    (values as Value[]).push(valueFrom);
-    times.push(timeFrom);
-  } else {
+  // If first item, add from
+  if (i === 0) {
     (values as Value[]).push(def.from);
     times.push(timeFrom);
+
+  } else {
+    // If we need to patch an interim tween
+    if (prevTimeTo !== timeFrom) {
+      if (def.from !== undefined) {
+        (values as Value[]).push(values[numValues - 1]);
+        times.push(timeFrom);
+        ease.push(linear);
+      }
+
+      const from = def.from !== undefined ? def.from : values[numValues - 1];
+      (values as Value[]).push(from);
+      times.push(timeFrom);
+      ease.push(linear);
+
+    } else if (def.from !== undefined) {
+      (values as Value[]).push(def.from);
+      times.push(timeFrom);
+      ease.push(linear);
+    }
   }
 
-  ease.push(def.ease || easeInOut);
+  // Add to and easing
   (values as Value[]).push(def.to);
   times.push(timeTo);
+  ease.push(def.ease || easeInOut);
 
   return props;
 };
@@ -84,8 +105,11 @@ const timeline = (instructions: Instruction[], props: TweenProps = {}): Action =
         at: playhead
       };
 
-      animationDefs.push(def);
+      // TODO: Apply defaults in a cleaner fashion
+      def.duration = def.duration === undefined ? DEFAULT_DURATION : def.duration;
 
+      animationDefs.push(def);
+      playhead += def.duration;
       duration = Math.max(duration, def.at + def.duration);
     }
   });
@@ -102,6 +126,7 @@ const timeline = (instructions: Instruction[], props: TweenProps = {}): Action =
     tracks[track].push(def);
   }
 
+  // Create keyframe animations
   const trackKeyframes: TrackActions = {};
   for (const key in tracks) {
     if (tracks.hasOwnProperty(key)) {

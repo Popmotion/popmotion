@@ -7,10 +7,11 @@ const code = `const stylers = Array
   .from(container.childNodes)
   .map(styler); 
 
-const mapStylerToAnimation = (thisStyler) => () => spring({ to: 300 })
-  .start(thisStyler.set('x'));
+const springBall = spring({ to: 300 });
+const animations = Array(stylers.length).fill(springBall);
 
-stagger(stylers.map(mapStylerToAnimation), 50)`;
+stagger(animations, 100)
+  .start((v) => v.forEach((x) => stylers.set('x', v)));`;
 
 class Example extends React.Component {
   setContainer = (ref) => {
@@ -34,9 +35,11 @@ class Example extends React.Component {
   }
 
   fireAnimation = () => {
-    stagger(
-      this.ballStylers.map((thisStyler) => () =>  spring({ to: 300 }).start(thisStyler.set('x')))
-    , 100).start();
+    const animation = spring({ to: 300 });
+    const animations = Array(this.ballStylers.length).fill(animation);
+    
+    stagger(animations, 100)
+      .start((v) => v.forEach((x) => this.ballStylers.set('x', v)));
   };
   
   startAnimation() {
