@@ -2,6 +2,16 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.0.33@beta] 2017-12-04
+
+### Added
+
+- `timeline` animation.
+
+### Changed
+
+- `stagger` now outputs array.
+
 ## [8.0.32@beta] 2017-11-28
 
 ### Added

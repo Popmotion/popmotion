@@ -11,26 +11,26 @@ export class TimelineTest extends React.Component {
     const aStyler = styler(a);
     const bStyler = styler(b);
 
-    timeline([
-      [
-        { track: 'aX', from: 0, to: 100, duration: 1000 },
-        { track: 'bX', from: 0, to: 100, duration: 1000 },
-        100
-      ],
-      '+100',
-      [
-        { track: 'aX', to: 0 },
-        { track: 'bX', to: 0 }
-      ],
-      { track: 'aX', to: 100 },
-      '-200',
-      { track: 'bX', to: 100 },
-    ], {
-      loop: Infinity
-    }).start(({ aX, bX }) => {
-      aStyler.set('x', aX);
-      bStyler.set('x', bX);
-    });
+    // timeline([
+    //   [
+    //     { track: 'aX', from: 0, to: 100, duration: 1000 },
+    //     { track: 'bX', from: 0, to: 100, duration: 1000 },
+    //     100
+    //   ],
+    //   '+100',
+    //   [
+    //     { track: 'aX', to: 0 },
+    //     { track: 'bX', to: 0 }
+    //   ],
+    //   { track: 'aX', to: 100 },
+    //   '-200',
+    //   { track: 'bX', to: 100 },
+    // ], {
+    //   loop: Infinity
+    // }).start(({ aX, bX }) => {
+    //   aStyler.set('x', aX);
+    //   bStyler.set('x', bX);
+    // });
   };
 
   render() {
