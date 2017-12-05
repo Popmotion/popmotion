@@ -14,6 +14,7 @@ export const ContentNavArea = Centered.extend`
   left: 0;
   width: ${cols(14)};
   margin-top: ${cols(1)};
+  z-index: 2;
 
   ${media.large`
     position: relative;
