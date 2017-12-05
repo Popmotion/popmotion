@@ -82,13 +82,7 @@ export const blendColor = (from: Color | string, to: Color | string) => {
  * @param  {number} max
  * @return {number}
  */
-export const clampMax = (max: number) => (v: number) => Math.min(v, max);
-export const clampMin = (min: number) => (v: number) => Math.max(v, min);
-export const clamp = (min: number, max: number) => {
-  const _min = clampMin(min);
-  const _max = clampMax(max);
-  return (v: number) => _min(_max(v));
-};
+export const clamp = (min: number, max: number) => (v: number) => Math.min(Math.max(v, min), max);
 
 /**
  * Pipe
