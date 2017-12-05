@@ -1,5 +1,5 @@
 import { bodyFont, codeFont, fontSize } from './fonts';
-import { ACTION, BLACK, WHITE, cols, ACTION_BURN } from './vars';
+import { ACTION, BLACK, cols, ACTION_BURN } from './vars';
 import { prismTheme } from '~/styles/syntax-highlighting'
 
 export default `

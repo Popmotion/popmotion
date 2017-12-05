@@ -37,11 +37,11 @@ class Example extends React.Component {
   startAnimation() {
     this.animation = keyframes({
       values: [
-        { x: 0, y: 0, rotateY: 0, background: ENTITY },
-        { x: 300, y: 0, rotateY: 180, rotateX: 0, background: GREEN },
-        { x: 300, y: 200, rotateY: 180, rotateX: 180, background: GREEN },
-        { x: 0, y: 200, rotateY: 0, rotateX: 180, background: ENTITY },
-        { x: 0, y: 0, rotateY: 0, rotateX: 0, background: ENTITY }
+        { x: 0, y: 0, rotateY: 0, backgroundColor: ENTITY },
+        { x: 300, y: 0, rotateY: 180, rotateX: 0, backgroundColor: GREEN },
+        { x: 300, y: 200, rotateY: 180, rotateX: 180, backgroundColor: GREEN },
+        { x: 0, y: 200, rotateY: 0, rotateX: 180, backgroundColor: ENTITY },
+        { x: 0, y: 0, rotateY: 0, rotateX: 0, backgroundColor: ENTITY }
       ],
       duration: 3000,
       ease: [easing.easeInOut, easing.easeInOut, easing.easeInOut, easing.easeInOut],

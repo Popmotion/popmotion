@@ -66,6 +66,10 @@ export const CTA = styled.div`
     text-decoration: none;
     padding: ${cols(1)} ${cols(2)};
     transform: skewX(${UNSKEW});
+
+    &:hover {
+      color: ${WHITE};
+    }
   }
 
   ${media.medium`
