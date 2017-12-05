@@ -29,20 +29,6 @@ describe('applyOffset()', () => {
   });
 });
 
-describe('bezier()', () => {
-  it('should return a function that resolves the provided bezier points with either 3 or 4 points', () => {
-    const resolveBezier3 = bezier(0, 1, 2);
-    expect(resolveBezier3(0)).toBe(0);
-    expect(resolveBezier3(0.5)).toBe(1);
-    expect(resolveBezier3(1)).toBe(2);
-
-    const resolveBezier4 = bezier(0, 1, 2, 3);
-    expect(resolveBezier4(0)).toBe(0);
-    expect(resolveBezier4(0.5)).toBe(1.5);
-    expect(resolveBezier4(1)).toBe(3);
-  });
-});
-
 describe('clamp()', () => {
   it('should return a function that clamps numbers to within the provided range', () => {
     const clamper = clamp(0, 1);

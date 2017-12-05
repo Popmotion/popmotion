@@ -53,7 +53,6 @@ export const Blurb = styled.h2`
 
 export const CTA = styled.div`
   background: ${ACTION_GRADIENT};
-  box-shadow: 0 1px 0 0 ${BLACK};
   text-shadow: 0 -1px 0 ${ACTION_BURN};
   margin: 0 auto;
   display: flex;

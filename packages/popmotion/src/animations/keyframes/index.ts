@@ -49,24 +49,24 @@ const interpolateScrubbers = (input: number[], scrubbers: Action[], update: Upda
   };
 };
 
-const keyframes = ({ values, loop, yoyo, flip, ...props }: KeyframeProps): Action => {
-  const duration = props.duration || 300;
-  const ease = Array.isArray(props.ease)
-    ? props.ease
-    : defaultEasings(values as number[], props.ease);
-  const times = props.times || defaultTimings(values as number[]);
+const keyframes = ({ easings, ease = linear, times, values, ...tweenProps }: KeyframeProps): Action => {
+  easings = Array.isArray(easings)
+    ? easings
+    : defaultEasings(values as number[], easings);
+  times = times || defaultTimings(values as number[]);
 
-  const scrubbers = ease.map((easing, i) => scrubber({
+  const scrubbers = easings.map((easing, i) => scrubber({
     from: values[i],
     to: values[i + 1],
     ease: easing
   }));
 
-  return tween({ duration, ease: linear, loop, yoyo, flip })
-    .applyMiddleware((update) => {
-      const seek = interpolateScrubbers(times, scrubbers, update);
-      return seek;
-    });
+  return tween({
+    ...tweenProps,
+    ease
+  }).applyMiddleware(
+    (update) => interpolateScrubbers(times, scrubbers, update)
+  );
 };
 
 export default keyframes;
