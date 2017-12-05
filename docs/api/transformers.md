@@ -88,26 +88,6 @@ const blendRedToBlue = blendColor('#f00', '#00f');
 blendRedToBlue(0.5); // Returns blended object with rgba properties
 ```
 
-### `clampMax`
-Returns a function that caps given values to below `max`.
-
-`clampMax(max: number)`
-
-```javascript
-const capTo50 = clampMax(50);
-capTo50(100); // 50
-```
-
-### `clampMin`
-Returns a function that caps given values to above `min`.
-
-`clampMin(min: number)`
-
-```javascript
-const keepAbove0 = clampMin(0);
-keepAbove0(-100); // 0
-```
-
 ### `clamp`
 Returns a function that restricts given values to within the provided range.
 
@@ -158,6 +138,8 @@ rgbType(12.25); // 12
 Will smooth a value over time.
 
 `smooth(strength: number)`
+
+**Note:** As `smooth` maintains an internal state, it must be initialised individually for every numerical value you wish to smooth.
 
 ### `snap`
 Given a number or an array of two or more numbers, returns a function that will snap a given value to the nearest multiple or to the nearest number in the array.

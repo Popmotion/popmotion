@@ -8,7 +8,7 @@ export default () => (
       Pick and choose any part of Popmotion by importing modules individually.
     </Blurb>
     <Blurb>
-      Or take it all for 10kb, max. Sound good?
+      Or take it all for 11.5kb<br />(That's 66% smaller than Greensock TweenMax!)
     </Blurb>
     <CTA>
       <Link href="/learn/get-started" prefetch><a>Get started</a></Link>

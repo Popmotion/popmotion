@@ -18,6 +18,7 @@
 - **[Tween](https://popmotion.io/api/tween):** Change values over specific duration of time. Full suite of [easing functions](https://popmotion.io/api/easing) included.
 - **[Physics](https://popmotion.io/api/physics):** Integrated, mutable simulation of velocity, acceleration, friction and springs.
 - **[Keyframes](https://popmotion.io/api/keyframes):** Define a series of keyframes to animate between.
+- **[Timeline](https://popmotion.io/api/timeline):** Script complicated sequences of animations.
 - **[Spring](https://popmotion.io/api/spring):** An accurate spring-mass system ported from Apple's CASpringAnimation.
 - **[Decay](https://popmotion.io/api/decay):** Exponentially-decayed velocity for smooth deceleration.
 
@@ -25,10 +26,11 @@
 
 - **[Pointer](https://popmotion.io/api/pointer):** Single-point mouse and touch tracking, with optional offset tracking.
 - **[Multitouch](https://popmotion.io/api/touch):** Track all fingers to create pinch and rotate gestures.
+- **[Listen](https://popmotion.io/api/listen):** Convert DOM event listeners into reactive streams of events.
 
 ### More...
 
-- **Tiny:** Import every action individually, for a **max** 10kb bundle.
+- **Tiny:** Import every action individually, for a **max** 11.5kb bundle.
 - **Reactive:** Simple Rx-inspired API for subscribing to streams of animation events.
 - **Composable:** All actions can be **delayed**, **staggered** **merged**, **crossfaded** and **chained**.
 - **Cross-platform:** Runs on **IE9+**, plus **Node**-based environments like Arduino.
