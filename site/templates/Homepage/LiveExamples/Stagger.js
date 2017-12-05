@@ -4,21 +4,21 @@ import { styler, spring, stagger } from 'popmotion';
 import trackVisibility from './track-visibility';
 
 const code = `const stylers = Array
-  .from(container.childNodes)
+  .from(container.children)
   .map(styler); 
 
-const springBall = spring({ to: 300 });
-const animations = Array(stylers.length).fill(springBall);
+const animations = Array(stylers.length)
+  .fill(spring({ to: 300 }));
 
 stagger(animations, 100)
-  .start((v) => v.forEach((x) => stylers.set('x', v)));`;
+  .start((v) => v.forEach((x, i) => stylers[i].set('x', x)));`;
 
 class Example extends React.Component {
   setContainer = (ref) => {
     if (!ref) return;
     this.container = ref;
     this.ballStylers = Array
-      .from(this.container.childNodes)
+      .from(this.container.children)
       .map(styler);
 
     if (this.props.isVisible) this.startAnimation();
@@ -37,9 +37,13 @@ class Example extends React.Component {
   fireAnimation = () => {
     const animation = spring({ to: 300 });
     const animations = Array(this.ballStylers.length).fill(animation);
-    
+
     stagger(animations, 100)
-      .start((v) => v.forEach((x) => this.ballStylers.set('x', v)));
+      .start((v) => {
+        v.forEach((x, i) => {
+          this.ballStylers[i].set('x', x);
+        })
+      });
   };
   
   startAnimation() {

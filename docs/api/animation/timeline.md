@@ -146,21 +146,19 @@ type AnimationDefinition = {
 
 type Instruction = string | number | AnimationDefinition | AnimationDefinition[];
 
-timeline(instructions: Instruction, props: TweenProps): Action
+timeline(instructions: Instruction, props: Props): Action
 ```
 
-## Tween Props
+## Props
 
 These can be passed as the second argument to `timeline` and are used to define the behaviour of the master playhead.
 
-- `from: number | Vector[number] = 0`: Start value of animation.
-- `to: number | Vector[number] = 1`: End value of animation.
-- `duration: number`: Total duration of animation, in milliseconds. By default, this is calculated by the instructions provided to `timeline`, but if manually overridden will rescale the whole animation.
-- `elapsed: number = 0`: Duration of animation already elapsed, in milliseconds.
-- `ease: Easing | Vector[Easing] = linear`: A function, given a progress between `0` and `1`, that returns a new progress value. Used to affect the rate of playback across the duration of the animation.
-- `loop: number = 0`: Number of times to loop animation on `complete`.
-- `flip: number = 0`: Number of times to flip animation on `complete`.
-- `yoyo: number = 0`: Number of times to reverse tween on `complete`.
+- `duration?: number`: Total duration of animation, in milliseconds. By default, this is calculated by the instructions provided to `timeline`, but if manually overridden will rescale the whole animation.
+- `elapsed?: number = 0`: Duration of animation already elapsed, in milliseconds.
+- `ease?: Easing | Vector[Easing] = linear`: A function, given a progress between `0` and `1`, that returns a new progress value. Used to affect the rate of playback across the duration of the animation.
+- `loop?: number = 0`: Number of times to loop animation on `complete`.
+- `flip?: number = 0`: Number of times to flip animation on `complete`.
+- `yoyo?: number = 0`: Number of times to reverse tween on `complete`.
 
 ## Methods
 

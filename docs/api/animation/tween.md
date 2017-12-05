@@ -75,14 +75,14 @@ tween({
 
 ## Props
 
-- `from: number | Vector[number] = 0`: Start value of animation.
-- `to: number | Vector[number] = 1`: End value of animation.
-- `duration: number = 300`: Total duration of animation, in milliseconds.
-- `elapsed: number = 0`: Duration of animation already elapsed, in milliseconds.
-- `ease: Easing | Vector[Easing] = easeOut`: A function, given a progress between `0` and `1`, that returns a new progress value. Used to affect the rate of playback across the duration of the animation.
-- `loop: number = 0`: Number of times to loop animation on `complete`.
-- `flip: number = 0`: Number of times to flip animation on `complete`.
-- `yoyo: number = 0`: Number of times to reverse tween on `complete`.
+- `from?: number | Vector[number] = 0`: Start value of animation.
+- `to?: number | Vector[number] = 1`: End value of animation.
+- `duration?: number = 300`: Total duration of animation, in milliseconds.
+- `elapsed?: number = 0`: Duration of animation already elapsed, in milliseconds.
+- `ease?: Easing | Vector[Easing] = easeOut`: A function, given a progress between `0` and `1`, that returns a new progress value. Used to affect the rate of playback across the duration of the animation.
+- `loop?: number = 0`: Number of times to loop animation on `complete`.
+- `flip?: number = 0`: Number of times to flip animation on `complete`.
+- `yoyo?: number = 0`: Number of times to reverse tween on `complete`.
 
 ## Methods
 

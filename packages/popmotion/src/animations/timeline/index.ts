@@ -41,7 +41,7 @@ const flattenArrayInstructions = (instructions: Instruction[], instruction: Inst
 };
 
 const convertDefToProps = (props: KeyframeProps, def: AnimationDefinition, i: number) => {
-  const { duration, ease, times, values } = props;
+  const { duration, easings, times, values } = props;
   const numValues = values.length;
   const prevTimeTo = times[numValues - 1];
   const timeFrom = def.at === 0 ? 0 : def.at / duration;
@@ -58,33 +58,36 @@ const convertDefToProps = (props: KeyframeProps, def: AnimationDefinition, i: nu
       if (def.from !== undefined) {
         (values as Value[]).push(values[numValues - 1]);
         times.push(timeFrom);
-        ease.push(linear);
+        easings.push(linear);
       }
 
       const from = def.from !== undefined ? def.from : values[numValues - 1];
       (values as Value[]).push(from);
       times.push(timeFrom);
-      ease.push(linear);
+      easings.push(linear);
 
     } else if (def.from !== undefined) {
       (values as Value[]).push(def.from);
       times.push(timeFrom);
-      ease.push(linear);
+      easings.push(linear);
     }
   }
 
   // Add to and easing
   (values as Value[]).push(def.to);
   times.push(timeTo);
-  ease.push(def.ease || easeInOut);
+  easings.push(def.ease || easeInOut);
 
   return props;
 };
 
 // TODO replace most of these steps with reduce when TS bug is fixed
-const timeline = (instructions: Instruction[], props: TweenProps = {}): Action => {
+const timeline = (
+  instructions: Instruction[],
+  { duration, elapsed, ease, loop, flip, yoyo }: TweenProps = {}
+): Action => {
   let playhead = 0;
-  let duration = 0;
+  let calculatedDuration = 0;
 
   const flatInstructions = instructions.reduce(flattenArrayInstructions, []);
 
@@ -110,7 +113,7 @@ const timeline = (instructions: Instruction[], props: TweenProps = {}): Action =
 
       animationDefs.push(def);
       playhead += def.duration;
-      duration = Math.max(duration, def.at + def.duration);
+      calculatedDuration = Math.max(calculatedDuration, def.at + def.duration);
     }
   });
 
@@ -131,13 +134,21 @@ const timeline = (instructions: Instruction[], props: TweenProps = {}): Action =
   for (const key in tracks) {
     if (tracks.hasOwnProperty(key)) {
       const keyframeProps = tracks[key].reduce(convertDefToProps, {
-        duration,
-        ease: [],
+        duration: calculatedDuration,
+        easings: [],
         times: [],
         values: []
       });
 
-      trackKeyframes[key] = keyframes(keyframeProps);
+      trackKeyframes[key] = keyframes({
+        ...keyframeProps,
+        duration: duration || calculatedDuration,
+        ease,
+        elapsed,
+        loop,
+        yoyo,
+        flip
+      });
     }
   }
 
