@@ -126,30 +126,26 @@ decay({ velocity }).start(ballX);
 ```
 
 ```marksy
-<Example template="Ball" id="a">{`
+<Example template="Ball" id="a" autostart={true}>{`
 const ball = document.querySelector('#a .ball');
 const ballStyler = styler(ball);
-const ballX = value(0);
-ballX.subscribe((v) => ballStyler.set('x', v));
-
-let activeAction;
+const ballX = value(0, ballStyler.set('x'));
 
 function startTracking() {
-  if (activeAction) activeAction.stop();
-  activeAction = pointer({ x: ballX.get('x'), y: 0 })
+  pointer({ x: ballX.get('x'), y: 0 })
+    .pipe(({ x }) => x)
     .start(ballX);
 }
 
 function stopTracking() {
-  if (activeAction) activeAction.stop();
-  const velocity = ballX.getVelocity();
-  activeAction = decay({ velocity }).start(ballX);
+  decay({
+    from: ballX.get(),
+    velocity: ballX.getVelocity()
+  }).start(ballX);
 }
 
-ball.addEventListener('mousedown', startTracking);
-ball.addEventListener('touchstart', startTracking);
-document.addEventListener('mouseup', stopTracking);
-document.addEventListener('touchend', stopTracking);
+listen(ball, 'mousedown touchstart').start(startTracking);
+listen(document, 'mouseup touchend').start(stopTracking);
 `}</Example>
 ```
 
@@ -159,6 +155,7 @@ This can be used, for instance, to snap the target to a grid:
 
 ```javascript
 decay({
+  from: ballX.get(),
   velocity,
   modifyTarget: (target) => Math.ceil(target / 100) * 100
 })
@@ -174,6 +171,7 @@ Springs are great for interaction designers because they're expressive. For inst
 
 ```javascript
 spring({
+  from: ballX.get(),
   velocity,
   stiffness: 300,
   damping: 10
@@ -181,34 +179,28 @@ spring({
 ```
 
 ```marksy
-<Example template="Ball" id="b">{`
+<Example template="Ball" id="b" autostart={true}>{`
 const ball = document.querySelector('#b .ball');
 const ballStyler = styler(ball);
-const ballX = value(0);
-ballX.subscribe((v) => ballStyler.set('x', v));
-
-let activeAction;
+const ballX = value(0, ballStyler.set('x'));
 
 function startTracking() {
-  if (activeAction) activeAction.stop();
-  activeAction = pointer({ x: ballX.get('x'), y: 0 })
+  pointer({ x: ballX.get(), y: 0 })
+    .pipe(({ x }) => x)
     .start(ballX);
 }
 
 function stopTracking() {
-  if (activeAction) activeAction.stop();
-  const velocity = ballX.getVelocity();
-  activeAction = spring({
-    velocity,
-    stiffness: 300,
+  spring({
+    from: ballX.get(),
+    velocity: ballX.getVelocity(),
+    stiffness: 100,
     damping: 10
   }).start(ballX);
 }
 
-ball.addEventListener('mousedown', startTracking);
-ball.addEventListener('touchstart', startTracking);
-document.addEventListener('mouseup', stopTracking);
-document.addEventListener('touchend', stopTracking);
+listen(ball, 'mousedown touchstart').start(startTracking);
+listen(document, 'mouseup touchend').start(stopTracking);
 `}</Example>
 ```
 
@@ -231,55 +223,51 @@ const springTo = physics({
   velocity: ballX.getVelocity(),
   friction: 0.8,
   springStrength: 400,
-  to: ballX.get('x'),
+  to: ballX.get(),
   restSpeed: false
 }).start(ballX);
 
 pointer({ x: ballX.get('x'), y: 0 })
+  .pipe(({ x }) => x)
   .start((v) => springTo.setSpringTarget(v));
 ```
 
 ```marksy
-<Example template="Ball" id="c">{`
+<Example template="Ball" id="c" autostart={true}>{`
 const ball = document.querySelector('#c .ball');
 const ballStyler = styler(ball);
-const ballX = value(0);
-ballX.subscribe((v) => ballStyler.set('x', v));
+const ballX = value(0, ballStyler.set('x'));
 
 let activeAction;
 let pointerTracker;
 
 function startTracking() {
-  if (activeAction) activeAction.stop();
-
-  activeAction = physics({
+  physics({
     velocity: ballX.getVelocity(),
     friction: 0.8,
     springStrength: 400,
-    to: ballX.get('x'),
+    to: ballX.get(),
     restSpeed: false
   }).start(ballX);
 
-  pointerTracker = pointer({ x: ballX.get('x'), y: 0 })
+  pointerTracker = pointer({ x: ballX.get(), y: 0 })
+    .pipe(({ x }) => x)
     .start((v) => activeAction.setSpringTarget(v));
 }
 
 function stopTracking() {
   if (activeAction) activeAction.stop();
   if (pointerTracker) pointerTracker.stop();
-
-  const velocity = ballX.getVelocity();
-  activeAction = spring({
-    velocity,
+  spring({
+    velocity: ballX.getVelocity(),
+    from: ballX.get(),
     stiffness: 300,
     damping: 10
   }).start(ballX);
 }
 
-ball.addEventListener('mousedown', startTracking);
-ball.addEventListener('touchstart', startTracking);
-document.addEventListener('mouseup', stopTracking);
-document.addEventListener('touchend', stopTracking);
+listen(ball, 'mousedown touchstart').start(startTracking);
+listen(document, 'mouseup touchend').start(stopTracking);
 `}</Example>
 ```
 

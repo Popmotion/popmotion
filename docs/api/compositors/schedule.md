@@ -27,7 +27,7 @@ schedule(scheduler: Action, subject: Action): Action
 ```
 
 ```javascript
-// Will run every frame
+// `pointer` will output at most once every frame
 schedule(
   everyFrame(),
   pointer()

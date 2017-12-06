@@ -125,6 +125,10 @@ const timeline = (
     const def = animationDefs[i];
     const { track } = def;
 
+    if (track === undefined) {
+      throw new Error('No track defined');
+    }
+
     if (!tracks.hasOwnProperty(track)) tracks[track] = [];
     tracks[track].push(def);
   }

@@ -24,7 +24,7 @@ import timeline from 'popmotion/animations/timeline';
 
 `timeline` accepts an array of playhead instructions.
 
-A playhead instruction can either be:
+A playhead instruction can either be an:
 - Animation
 - Absolute or relative timestamp
 - Array of animations
@@ -129,6 +129,24 @@ And n-dimensional arrays:
 
 ```javascript
 { track: 'foo', from: [300, 500], to: [0, 0] }
+```
+
+#### Streamlining timeline definitions
+
+As the number of tracks increases, it can become increasingly difficult the mapping of tracks 
+
+We don't want to replace the labels with setter functions. Popmotion's reactive model means that if we output the timeline as a map of values, we retain all the power that the chainable action methods offer, like `pipe` and `filter`.
+
+Instead, we can use `reactionMap`. It accepts a map of reactions and combines them into one.
+
+```javascript
+const timelineReaction = reactionMap({
+
+});
+
+const keys = timelineReaction.getKeys();
+
+timeline([]).start(timelineReaction);
 ```
 
 ### Types
