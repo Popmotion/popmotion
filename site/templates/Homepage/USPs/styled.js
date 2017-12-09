@@ -18,7 +18,7 @@ export const Container = styled.section`
 export const Blurb = styled.p`
   ${fontSize(24)}
   ${lineHeight(32)}
-  max-width: ${cols(30)};
+  max-width: ${cols(32)};
   text-align: center;
   margin-bottom: ${cols(4)};
   

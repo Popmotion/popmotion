@@ -23,9 +23,11 @@ yarn add popmotion
 
 ## File include
 
-**Note:** The Popmotion documentation uses the `import` syntax for importing individual modules. If you use one of the following installation methods, Popmotion will be available on the global `popmotion` variable.
+**Note:** The Popmotion documentation uses the `import` syntax for importing individual modules.
 
-So when you see in the docs `import { tween } from 'popmotion'`, you can use `const { tween } = popmotion` instead.
+**If you use one of the following installation methods, Popmotion will be available on the global `popmotion` variable.**
+
+So, when you see in the docs `import { tween } from 'popmotion'`, you will use `const { tween } = popmotion` instead.
 
 ### Download
 

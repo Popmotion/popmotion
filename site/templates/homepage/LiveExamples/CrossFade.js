@@ -65,7 +65,8 @@ class Example extends React.Component {
     
     this.blendAnimation = tween({
       duration: 3333,
-      flip: Infinity
+      flip: Infinity,
+      ease: easing.easeInOut
     }).start((v) => {
       blended.set('background', valueTypes.color.transform(blendRedBlue(v)));
       blendedMotion.setBalance(v);

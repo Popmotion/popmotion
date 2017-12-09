@@ -9,11 +9,9 @@ next: input-tracking
 
 The `tween` function returns what's known in Popmotion as an **action**.
 
-Popmotion is a reactive library, and **actions** are functions that create streams of values.
+Popmotion is a reactive library, and actions are functions that **create** streams of values. These actions output to **reactions**.
 
-These streams can be acted upon by **reactions**.
-
-**Every animation and input in Popmotion is an action**. In this quick tutorial, we'll gain a better understanding of actions by writing our own.
+**In Popmotion, every animation and input is an action**. In this quick tutorial, we'll gain a better understanding of actions and reactions by writing our own.
 
 ## Import
 
@@ -23,33 +21,38 @@ import { action } from 'popmotion';
 
 ## Creating an action
 
-The `action` function accepts a single value. It's an initialisation function that will be executed **each time the action is started**.
+The `action` function accepts a single argument. It's an initialisation function that will be executed **each time the returned action is started** via its `start` method.
 
 This means that we can define one action, and start it multiple times, leading to multiple instances of that action.
 
-The `init` function is provided three functions: `update`, `complete`, and `error`:
+The `init` function is provided an object of three functions: `update`, `complete`, and `error`:
 
 ```javascript
-const one = action(({ update, complete }) => {
-  update(1);
+action(({ update, complete, error }) => {})
+```
+
+Let's define an function called `just`. It'll return an action that, when started, will fire `update` with the provided value and then `complete`:
+
+```javascript
+const just = (v) => action(({ update, complete }) => {
+  update(v);
   complete();
 });
 ```
 
-In the above example, `one` is now an action that can be started with the action's `start` method:
+Now, when the action returned from `just` is `start`ed, it'll emit the provided value:
 
 ```javascript
-const log = (v) => console.log(v);
-one.start(log); // 1
+just(1).start(console.log); // 1
 ```
 
-`log` is a **reaction**. It is a function that fires whenever the subscribed `action` calls `update`.
+`console.log` is being used as a **reaction**. It will fire whenever the new action instance calls `update` with a new value.
 
-The `one` action we defined above also calls `complete`. Instead of a function, we can provide an object of `update` and `complete` functions as our reaction:
+We also defined `just` to fire `complete` once it's finished. Instead of a function, we can provide an object of `update` and `complete` functions as our reaction:
 
 ```javascript
-one.start({
-  update: log,
+just(1).start({
+  update: console.log,
   complete: () => console.log('complete!')
 });
 ```
@@ -57,17 +60,18 @@ one.start({
 When `start` runs, the initialisation function is run anew, and a **new instance** of the active action is returned:
 
 ```javascript
-one.start(log); // 1
-one.start(log); // 1
+const justOne = just(1);
+justOne.start(console.log); // 1
+justOne.start(console.log); // 1
 ```
 
-As all Popmotion animations and inputs are actions, we can provide these same reactions to, for instance, a `spring`, and we can start that same spring multiple times:
+As all Popmotion animations are actions, we can define an animation once and use it multiple times:
 
 ```javascript
 const mySpring = spring({ to: 500 });
 
 mySpring.start({
-  update: log,
+  update: console.log,
   complete: () => console.log('complete!')
 });
 
@@ -113,10 +117,12 @@ Each function is provided the latest value emitted from `update`, and returns a 
 ```javascript
 const double = (v) => v * 2;
 const px = (v) => v + 'px';
+
+const one = just(1);
 const twoPx = one.pipe(double, px);
 
-one.start((v) => console.log(v)); // 1
-two.start((v) => console.log(v)); // '2px'
+one.start(console.log); // 1
+twoPx.start(console.log); // '2px'
 ```
 
 ### `while`
@@ -124,20 +130,20 @@ two.start((v) => console.log(v)); // '2px'
 `while` accepts a single function. This function is passed every value from `update` and fires `complete` if the function returns `false`:
 
 ```javascript
-one
+just(1)
   .while((v) => v === 2);
-  .start((v) => console.log(v)); // never fires, as while returned false
+  .start(console.log); // never fires, as while returned false
 ```
 
 ### Combining
 
-Let's combine `pipe` and `while` to make a [pointer](/api/pointer) that outputs its `x` position as percentage of the viewport, and automatically stops itself if the pointer is more than 75% across the screen:
+Let's combine `pipe` and `while` to make a [pointer](/api/pointer) that outputs its `x` position as percentage of the current viewport, and automatically stops itself if the pointer is more than 75% across the screen:
 
 ```javascript
 const pickX = ({ x }) => x;
 const viewportWidth = window.innerWidth;
 const percentageOfViewport = (v) => v / viewportWidth * 100;
-const asPercent = (v) => v + 'px';
+const asPercent = (v) => v + '%';
 
 pointer()
   .pipe(pickX, percentageOfViewport) // The output of this
@@ -150,7 +156,7 @@ pointer()
 Every action returns a `stop` method:
 
 ```javascript
-const foo = tween();
+const foo = tween().start(console.log);
 foo.stop();
 ```
 

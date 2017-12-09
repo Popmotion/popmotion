@@ -3,8 +3,6 @@ import {
   applyOffset,
   bezier,
   clamp,
-  clampMax,
-  clampMin,
   interpolate,
   pipe,
   snap,
@@ -34,22 +32,6 @@ describe('clamp()', () => {
     const clamper = clamp(0, 1);
     expect(clamper(-1)).toBe(0);
     expect(clamper(0.5)).toBe(0.5);
-  });
-});
-
-describe('clampMax()', () => {
-  it('should return a function that clamps numbers to under the provided value', () => {
-    const clamper = clampMax(1);
-    expect(clamper(0.5)).toBe(0.5);
-    expect(clamper(2)).toBe(1);
-  });
-});
-
-describe('clampMin()', () => {
-  it('should return a function that clamps numbers to over the provided value', () => {
-    const clamper = clampMin(0);
-    expect(clamper(1)).toBe(1);
-    expect(clamper(-1)).toBe(0);
   });
 });
 

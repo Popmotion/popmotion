@@ -20,7 +20,11 @@ const composite = multi<ActionMap, ColdSubscriptionMap, ValueMap, string>({
   getFirst: (subs) => subs[Object.keys(subs)[0]],
   mapApi: (subs, methodName) => (...args) => Object.keys(subs)
     .reduce((output: ValueMap, propKey: string) => {
-      if (subs[propKey][methodName]) output[propKey] = subs[propKey][methodName](...args);
+      if (subs[propKey][methodName]) {
+        (args[0] && args[0][propKey] !== undefined)
+          ? output[propKey] = subs[propKey][methodName](args[0][propKey])
+          : output[propKey] = subs[propKey][methodName](...args);
+      }
       return output;
     }, {}),
   setProp: (output, name, v) => output[name] = v,

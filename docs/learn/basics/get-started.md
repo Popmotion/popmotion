@@ -11,11 +11,11 @@ Popmotion is a functional, reactive JavaScript motion library.
 
 It allows developers to create animations and interactions from **actions**.
 
-Actions are just streams of numbers, like tweens, physics and pointer tracking.
+Actions are streams of values that can be started and stopped, like tweens, physics and pointer input.
 
-Actions are unopinionated, so those numbers can be used to create animations with CSS, SVG, React, Three.js... any API that accepts a number as an input.
+Actions are unopinionated, so those values can be used to create animations with CSS, SVG, React, Three.js... any API that accepts a number as an input.
 
-In this simple guide we're going to install Popmotion, and use it to animate an element with its `tween` animation and DOM `styler`.
+In this simple introductoary guide we're going to install Popmotion and use it to animate an element using the `tween` animation and DOM `styler`.
 
 ## Installation
 
@@ -25,7 +25,7 @@ You can install Popmotion directly from npm:
 npm install popmotion --save
 ```
 
-Or, you can also download pre-bundled files and fork CodePen playgrounds. Full installation options are available on the [Install Popmotion](/learn/install) page.
+Alternatively, you can also **download pre-bundled files** or **fork CodePen playgrounds**. Full installation options are available on the [Install Popmotion](/learn/install) page.
 
 ## Import
 
@@ -56,13 +56,13 @@ tween().start(updateCounter);
 `}</Example>
 ```
 
-All examples in the green-bordered boxes are editable; you can edit the above example by writing
+**All examples in the green-bordered boxes are editable**. Try editing the above example by writing
 
 ```javascript
 { to: 300, duration: 500 }
 ```
 
-in the `tween` function. The counter will now count up to `300` over the course of half a second.
+as the argument to the `tween` function. The counter will now count up to `300` over the course of half a second.
 
 ## Animate!
 
@@ -76,19 +76,22 @@ For this, we can use the `styler` function:
 import { tween, styler } from 'popmotion';
 ```
 
-`styler` exposes [Stylefire](/api/stylefire), which performantly animates HTML and SVG elements by batching renders [once per frame](/api/framesync).
+`styler` accepts a single `Element` and returns a get/set interface for HTML and SVG styles that's optimised for animation.
 
-It accepts an `Element`, and returns a get/set interface.
+```javascript
+const ball = styler(document.querySelector('.ball'))
+```
 
-`set`, if called with just a prop name, returns a setter function. So we can swap `updateCounter` with `styler(element).set('x')` to animate the element:
+When `set` is called, it schedules a render [on the next frame](/api/framesync). All renders are batched to prevent layout thrashing.
+
+`set`, if called with just a property name, returns a setter function. So we can swap `updateCounter` from the previous example with `styler(element).set('x')` to animate the element:
 
 ```marksy
 <Example template="Ball" id="css" autostart={false}>{`
 const ball = document.querySelector('#css .ball');
-const ballStyler = styler(ball);
 
 tween({ to: 300, duration: 500 })
-  .start(ballStyler.set('x'));
+  .start(styler(ball).set('x'));
 `}</Example>
 ```
 

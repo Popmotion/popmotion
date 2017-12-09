@@ -4,25 +4,25 @@ import { everyFrame, styler } from 'popmotion';
 import trackVisibility from './track-visibility';
 
 const code = `const ballStylers = Array
-  .from(container.childNodes)
+  .from(container.children)
   .map(styler);
 
 const distance = 100;
+const stagger = 0.5;
+const speed = 0.004;
 
 everyFrame()
-  .start((timestamp) => {
-    ballStylers.map((style, i) => {
-      const y = distance * Math.sin(0.004 * timestamp + (i * 0.5));
-      styler.set('y', y);
-    });
-  });`;
+  .start((timestamp) => ballStylers.forEach((style, i) => {
+    const y = distance * Math.sin(speed * timestamp + (i * stagger));
+    styler.set('y', y);
+  }));`;
 
 class Example extends React.Component {
   setContainer = (ref) => {
     if (!ref) return;
     this.container = ref;
     this.ballStylers = Array
-      .from(this.container.childNodes)
+      .from(this.container.children)
       .map(styler);
 
     this.distance = 100;
@@ -40,7 +40,7 @@ class Example extends React.Component {
 
   startAnimation() {
     this.animation = everyFrame()
-      .start((timestamp) => this.ballStylers.map((styler, i) => {
+      .start((timestamp) => this.ballStylers.forEach((styler, i) => {
         styler.set('y', this.distance * Math.sin(0.004 * timestamp + (i * 0.5)));
       }));
   }

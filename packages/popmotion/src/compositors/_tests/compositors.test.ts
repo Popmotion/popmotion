@@ -95,11 +95,15 @@ describe('parallel', () => {
   it('should return a mapped version of the api', () => {
     const foo = action(({ update }) => {
       return {
-        test: () => 1
+        test: () => 1,
+        testArgs: (arg) => arg
       };
     });
     const api = parallel(foo, foo, foo).start();
     expect(api.test()).toEqual([1, 1, 1]);
+    
+    expect(api.testArgs(1)).toEqual([1, 1, 1]);
+    expect(api.testArgs([1, 2, 3])).toEqual([1, 2, 3]);
   });
 });
 
@@ -125,11 +129,15 @@ describe('composite', () => {
   it('should return a mapped version of the api', () => {
     const foo = action(({ update }) => {
       return {
-        test: () => 1
+        test: () => 1,
+        testArgs: (arg) => arg
       };
     });
     const api = composite({ x: foo, y: foo }).start();
     expect(api.test()).toEqual({ x: 1, y: 1 });
+
+    expect(api.testArgs(1)).toEqual({ x: 1, y: 1 });
+    expect(api.testArgs({ x: 0, y: 1 })).toEqual({ x: 0, y: 1 });
   });
 });
 

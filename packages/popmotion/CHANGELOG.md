@@ -2,6 +2,19 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.0.35@beta] 2017-12-09
+
+### Added
+
+- The API matching of `parallel` and `composite` can now accept arguments with the same shape. For instance:
+
+```javascript
+composite({
+  x: physics(),
+  y: physics()
+}).setSpringStrength({ x: 100, y: 50 })
+```
+
 ## [8.0.34@beta] 2017-12-05
 
 ### Changed

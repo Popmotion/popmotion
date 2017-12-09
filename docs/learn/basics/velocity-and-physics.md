@@ -8,13 +8,13 @@ category: basics
 
 A core feature of Popmotion is the ability for some animations (`decay`, `physics` and `spring`) to take a `velocity` parameter.
 
-`velocity` affects them to create smooth transitions between animations.
+`velocity` changes each of these animations in a way that feels natural and visceral. By accepting the velocity of a previous animation we create smoother transitions between animations.
 
 When we take this `velocity` from pointer input, it allows the user to directly affect animations with their own force leading to natural and playful interactions. 
 
 ## Inspect velocity
 
-But how do we get this `velocity`?
+But how do we get `velocity`?
 
 Popmotion provides a special type of reaction called `value`.
 
@@ -25,7 +25,7 @@ import { value } from 'popmotion';
 `value` sits between your action and another reaction (for instance a style setter), and can be queried with `get` and `getVelocity`:
 
 ```javascript
-const myValue = value(0, (v) => console.log(v));
+const myValue = value(0, console.log);
 
 tween().start(myValue);
 
@@ -38,10 +38,10 @@ To future-proof our code, we decouple velocity from the device framerate, otherw
 
 ## Using `value`
 
-`value` is provided a two arguments, a value, and a function to call when the value updates:
+`value` is provided two arguments: A value, and a function to call when this value updates:
 
 ```javascript
-const foo = value(0, (v) => console.log(v));
+const foo = value(0, console.log);
 ```
 
 As `value` is a reaction, it has an `update` method. We can call it to update the value:
@@ -64,10 +64,7 @@ const foo = tween({
   to: { x: 100, y: 200 }
 }).start(xy);
 
-setTimeout(
-  () => foo.getVelocity(), // { x, y }
-  100
-);
+setTimeout(() => foo.getVelocity(), 100); // Returns as object
 ```
 
 Now we know enough about `value` to get the velocity of our user's pointer.
@@ -80,7 +77,7 @@ Using the example from the [previous tutorial](/learn/input-tracking), let's fir
 const ballXY = value({ x: 0, y: 0 }, ballStyler.set);
 ```
 
-Now we can replace the `startTracking` with this:
+Now we can replace our `startTracking` function with this:
 
 ```javascript
 const startTracking = () => {
@@ -93,27 +90,23 @@ As an added benefit of using `value`, a value **can't be subscribed to more than
 
 This means that we can stop using `pointerTracker` to maintain a reference to our active `pointer`.
 
-Instead, we can either use `ballXY.stop()`, which will stop its currently active action. Or we can provide it to a different action, which is what we'll do here.
+Instead, we can either use `ballXY.stop()`, which will stop its currently active action. Or, we can provide it to a different action, which is what we'll do in the following examples.
 
-For now, we'll just use `stopTracking` to get `ballXY`'s current velocity:
+For now, amend `stopTracking` so it queries `ballXY`'s current velocity:
 
 ```javascript
 const stopTracking = () => {
-  const velocity = ballXY.get();
+  const velocity = ballXY.getVelocity();
 };
 ```
 
 ## Using `velocity`
 
-Three Popmotion actions accept a `velocity` property: `decay`, `physics` and `spring`.
-
-By using the current velocity of an animation to affect a new one, transitions between animations are smoother.
-
-Likewise, it's incredibly engaging, delightful and playful for a user when the energy from their actions directly affects the following animations.
+Three Popmotion animations accept a `velocity` property: `decay`, `physics` and `spring`.
 
 Let's modify `stopTracking` three times so we provide `velocity` and take a look at what each of these animations does with it.
 
-## `decay`
+### `decay`
 
 [`decay`](/api/decay) exponentially decreases a velocity over time. It's a form of the algorthim used in smartphone momentum scrolling, making it a natural-feeling way of slowing something down.
 
@@ -122,26 +115,25 @@ Based on the initial properties and `velocity`, it'll automatically calculate a 
 Using it is as easy as passing our newly-calculated `velocity` to `decay`:
 
 ```javascript
-decay({ velocity }).start(ballX);
+decay({ velocity }).start(ballXY);
 ```
 
 ```marksy
 <Example template="Ball" id="a" autostart={true}>{`
 const ball = document.querySelector('#a .ball');
 const ballStyler = styler(ball);
-const ballX = value(0, ballStyler.set('x'));
+const ballXY = value({ x: 0, y: 0 }, ballStyler.set);
 
 function startTracking() {
-  pointer({ x: ballX.get('x'), y: 0 })
-    .pipe(({ x }) => x)
-    .start(ballX);
+  pointer(ballXY.get())
+    .start(ballXY);
 }
 
 function stopTracking() {
   decay({
-    from: ballX.get(),
-    velocity: ballX.getVelocity()
-  }).start(ballX);
+    from: ballXY.get(),
+    velocity: ballXY.getVelocity()
+  }).start(ballXY);
 }
 
 listen(ball, 'mousedown touchstart').start(startTracking);
@@ -161,7 +153,7 @@ decay({
 })
 ```
 
-## `spring`
+### `spring`
 
 [`spring`](/api/spring) is a spring simulation using `mass`, `velocity`, `stiffness` and `damping`. It can be used to simulate a wide variety of spring-feels.
 
@@ -171,32 +163,31 @@ Springs are great for interaction designers because they're expressive. For inst
 
 ```javascript
 spring({
-  from: ballX.get(),
+  from: ballXY.get(),
   velocity,
   stiffness: 300,
   damping: 10
-}).start(ballX);
+}).start(ballXY);
 ```
 
 ```marksy
 <Example template="Ball" id="b" autostart={true}>{`
 const ball = document.querySelector('#b .ball');
 const ballStyler = styler(ball);
-const ballX = value(0, ballStyler.set('x'));
+const ballXY = value({ x: 0, y: 0 }, ballStyler.set);
 
 function startTracking() {
-  pointer({ x: ballX.get(), y: 0 })
-    .pipe(({ x }) => x)
-    .start(ballX);
+  pointer(ballXY.get())
+    .start(ballXY);
 }
 
 function stopTracking() {
   spring({
-    from: ballX.get(),
-    velocity: ballX.getVelocity(),
+    from: ballXY.get(),
+    velocity: ballXY.getVelocity(),
     stiffness: 100,
     damping: 10
-  }).start(ballX);
+  }).start(ballXY);
 }
 
 listen(ball, 'mousedown touchstart').start(startTracking);
@@ -204,7 +195,7 @@ listen(document, 'mouseup touchend').start(stopTracking);
 `}</Example>
 ```
 
-## `physics`
+### `physics`
 
 The `physics` animation is the swiss army knife of velocity-based animations.
 
@@ -216,19 +207,18 @@ These equations are incredibly accurate, offering the smoothest motion and in th
 
 Instead, `physics` is an **intergrated simulation**. This means that, once the simulation has started, its properties **can be modified** because `physics` uses **its current state** to calculate its next, unlike the other two which are entirely deterministic.
 
-For instance, you could modify `startTracking` to make a `pointer` update the `to` of a `physics` animation to make the ball spring towards the pointer:
+For instance, instead of using `pointer` to drag the ball, you could use `physics` to spring towards the output of `pointer`.
 
 ```javascript
 const springTo = physics({
-  velocity: ballX.getVelocity(),
+  velocity: ballXY.getVelocity(),
   friction: 0.8,
   springStrength: 400,
-  to: ballX.get(),
+  to: ballXY.get(),
   restSpeed: false
-}).start(ballX);
+}).start(ballXY);
 
-pointer({ x: ballX.get('x'), y: 0 })
-  .pipe(({ x }) => x)
+pointer(ballXY.get())
   .start((v) => springTo.setSpringTarget(v));
 ```
 
@@ -242,7 +232,7 @@ let activeAction;
 let pointerTracker;
 
 function startTracking() {
-  physics({
+  activeAction = physics({
     velocity: ballX.getVelocity(),
     friction: 0.8,
     springStrength: 400,
