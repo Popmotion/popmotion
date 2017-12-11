@@ -8,6 +8,16 @@ category: stylefire
 
 The SVG Styler replaces the confusing SVG transformation model with the CSS model. It also provides support for line drawing.
 
+## Import
+
+```javascript
+import { svg } from 'popmotion';
+// Or, to import on its own:
+import svg from 'stylefire/svg';
+```
+
+As a standalone library:
+
 ```javascript
 import svg from 'stylefire/svg';
 ```
@@ -15,9 +25,34 @@ import svg from 'stylefire/svg';
 `svg(element: SVGElement)`
 
 ## Methods
-- `get(key <String>`: Get the property of the provided key.
-- `set(props <Object>)` | `set(key <String>, value)`: Set provided property(s) and schedule render for next frame.
-- `render()`: Immediately render.
+
+### `get`
+
+```typescript
+get(key: string): any
+```
+
+Returns the value of the provided key.
+
+### `set`
+
+```typescript
+set(props: {}): this
+set(key: string, prop: any): this
+set(key: string): (prop: any) => void;
+```
+
+Set the provided property(s) and schedule a render for the next frame.
+
+If only a `key` is provided, this returns a curried function which can then be provided a property value to set to that `key`.
+
+### `render`
+
+```typescript
+render(): this
+```
+
+Immediately render, without waiting for the next frame.
 
 ## Example
 
@@ -71,10 +106,13 @@ import svg from 'stylefire/svg';
 const path = document.querySelector('path');
 const pathStyler = svg(polygon);
 
-tween({
-  to: 100,
-  onUpdate: (v) => pathStyler.set('pathLength', v)
-}).start();
+tween({ to: 100 })
+  .start((v) => pathStyler.set('pathLength', v));
 ```
 
 In this example you can change the real `path` shape and length without having to update the animation.
+
+## Example
+
+<CodePen id="yPxNao" />
+

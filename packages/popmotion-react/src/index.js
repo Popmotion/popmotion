@@ -1,5 +1,5 @@
 import React from 'react';
-import { value, composite } from 'popmotion';
+import value from 'popmotion/reactions/value';
 
 export class MotionValue extends React.Component {
   static defaultProps = {
@@ -13,18 +13,14 @@ export class MotionValue extends React.Component {
 
     const isCompositeValue = (typeof v !== 'number');
 
+    this.value = value(v);
     this.valueState = initialState;
     this.state = {
-      isCompositeValue,
       v,
       setRef: (ref) => {
         if (ref !== null) this.ref = ref;
       },
-      velocity: !isCompositeValue ? 0 : Object.keys(v)
-        .reduce((acc, key) => {
-          acc[key] = 0;
-          return acc;
-        }, {}),
+      velocity: this.value.getVelocity(),
       state: this.valueState,
       setStateTo: onStateChange ? Object.keys(onStateChange)
         .reduce((acc, key) => {
@@ -51,7 +47,7 @@ export class MotionValue extends React.Component {
   }
 
   componentDidMount() {
-    const { v, isCompositeValue, setStateTo, state } = this.state;
+    const { v, setStateTo, state } = this.state;
 
     const onValueUpdate = (value) => {
       this.setState({
@@ -60,17 +56,7 @@ export class MotionValue extends React.Component {
       });
     };
 
-    this.value = !isCompositeValue
-      ? value(v, onValueUpdate)
-      : composite(
-        Object.keys(v).reduce((acc, key) => {
-          acc[key] = value(v[key]);
-          return acc;
-        }, {}),
-        {
-          onUpdate: onValueUpdate
-        }
-      );
+    this.value.subscribe(onValueUpdate);
 
     if (state && setStateTo) setStateTo[state]();
   }

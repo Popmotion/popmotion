@@ -1,30 +1,28 @@
 ---
-title: Spring-loaded characters remaining counter
-description: Inject a little fun into your text fields with a spring-loaded characters remaining counter.
+title: "Spring-loaded 'characters remaining' counter"
+description: Inject some fun into your text fields with a spring-loaded characters remaining counter.
 category: projects
 ---
 
 # Spring-loaded "characters remaining" counter
 
-Forms are, by nature, dreary. From a user's perspective, there's nothing fun about them: Non-zero friction, effort, the cold exchange of info for goods.
+Forms are, by nature, dreary. From a user's perspective, there's nothing fun about them: Non-zero friction, mental effort, the cold exchange of info for goods.
 
-It doesn't have to be this way! By adding thoughtful little touches, we can soften the negative form experience and maybe even make something a little bit fun.
+It doesn't have to be this way! By adding thoughtful little touches, we can soften the negative form experience and maybe even make something a little bit delightful.
 
 In this tutorial we're going to take a traditionally mundane part of form, the remaining character counter, and increase its functionality by adding a little playfulness.
 
 We're going to attach a spring that fires on every keypress that goes over the character count limit, drawing attention to the counter. We're also going to slowly change the counter color to red as we approach the limit.
 
-Have a play:
+Have a play by typing in this box:
 
-```marksy
-<CodePen id="GEVrwE" />
-```
+<CodePen id="JOeemQ" />
 
-To begin, you can use [this CodePen template](https://codepen.io/popmotion/pen/MoNMqP?editors=0010) to follow along.
+To begin, you can use [this CodePen template](https://codepen.io/popmotion/pen/XzyypY?editors=0010) to follow along.
 
 ## The counter
 
-Our first job is to get the counter to count down as we enter characters.
+Our first job is to get the counter to actually count down as a user enters characters.
 
 The input field's `maxlength` is set to `10`. We can read this with JavaScript:
 
@@ -32,117 +30,164 @@ The input field's `maxlength` is set to `10`. We can read this with JavaScript:
 const charLimit = parseInt(input.getAttribute('maxlength'));
 ```
 
-Then, add an event listener to the `input` element. We're going to use `keyup`, as this event carries the most updated `value`, which we can then measure:
+Now, let's create a function that takes a string and updates the character counter with the remaining number of characters, which will be calculated by measuring the string and subtracting that from the `charLimit`:
 
 ```javascript
-input.addEventListener('keyup', (e) => {
-  // Measure the length of the input value:
-  const charCount = e.target.value.length;
-
-  // Then, minus this from the charLimit variable:
-  const remainingChars = charLimit - charCount;
-
-  // Finally, set the contents of our counter to this remaining number:
-  counter.innerHTML = remainingChars;
-});
+function updateRemainingCharsCounter(val) {
+  counter.innerHTML = charLimit - val.length;
+}
 ```
 
-Now, as you type into the text box, the character count will decrease. So far we have a functional counter, but not a delightful one. Let's add the spring.
+We can test that this function works by, on the following line, writing:
+
+```javascript
+updateRemainingCharsCounter('test');
+```
+
+`'test'` is four characters long, so our counter displays `6`.
+
+We want this function to fire on every `keyup` event, as this event carries the `input` field's latest value.
+
+We're going to use the [`listen` action](/api/listen) to bind the event. `listen` converts DOM events into reactive streams. As an action, we can use `pipe` to pick the latest value out of the event before passing it on to `updateRemainingCharsCounter`:
+
+```javascript
+listen(input, 'keyup')
+  .pipe(e => e.target.value)
+  .start(updateRemainingCharsCounter);
+```
+
+Now when you type, the character counter updates!
+
+We have a functional counter, but not a delightful one. Let's attach a `spring`.
 
 ## The spring
 
-We're going to increase the counter's `scale` property to draw the user's attention.
+We're going to use the spring to increase the counter's `scale` property.
 
-Spring physics, unlike a simple tween, can take into account a pre-existing velocity. This means we can make a spring that a user can be playful with.
+This isn't just going to look playful. By rapidly enlarging the counter, it'll draw the user's attention. You could use a little shake, or another effect. It's the movement itself that will distract the user to make sure they understand that there's no space for new characters.
 
-Some users might notice that the more rapidly they press the keys the larger they can make the number, and spend a few seconds playing around with that.
+Unlike a simple `tween`, spring physics can take into account a pre-existing velocity. This will make the animation interactive and playful: I haven't seen many people resist hammering away at the keyboard once they realise rapid keypresses builds momentum!
 
-First, we need to import the [`value` action](/api/value) and [`css` renderer](/api/css), as we're going to be tracking and setting the counter DOM element's `scale` property.
+### Rendering the counter's `scale` prop
 
-In CodePen, `popmotion` is a global variable, so we import like this:
+First, we need to import the [`value`](/api/value) and [`styler`](/api/styler) functions.
 
-```javascript
-const { css, value } = window.popmotion;
-```
-
-But if you're working locally with the `npm` module, you'd `import` as per the docs.
-
-Now we can make our setter:
+`value` will help us track and measure the velocity of `scale`, and `styler` will enable us to render it performantly.
 
 ```javascript
-const counterRenderer = css(counter);
-const counterScale = value(1, (v) => counterRenderer.set('scale', v));
+const { listen, value, styler } = window.popmotion;
 ```
 
-We also need to add a new event listener, this time `keydown`. This event fires the moment the user presses down on the key, which is the moment they're imparting energy into the UI. So this feels very responsive - you can try putting the following code under the `keyup` event listener and you'll notice that it feels disconnected.
+We make our styler by simply passing the `counter`'s DOM node to `styler`:
 
 ```javascript
-input.addEventListener('keydown', (e) => {
-  if (e.target.value.length === charLimit) {
-  }
-});
+const counterStyler = styler(counter);
 ```
 
-Within this `if` statement, we can add the `physics` action that will power the spring:
+And we can initialise the `counterScale` value by passing it an initial value (`1`), and create a setter function with `counterStyler.set`: 
 
 ```javascript
-physics({
-  // Start the action from the current scale
-  from: counterScale.get(),
-
-  // We want the spring to rest on 1
-  to: 1,
-
-  // Set the initial velocity to the smaller of
-  //  a) the scale value's current velocity, or
-  //  b) an arbitrary value - we're going to use 100, but
-  //  you should experiment. Higher initial velocity = more powerful spring
-  // A minimum velocity of 0 would already be at rest.
-  velocity: Math.max(counterScale.getVelocity(), 100),
-
-  // Spring power, again higher value = powerful spring. Experiment!
-  spring: 300,
-
-  // Dampen the spring, so we don't get a high bounce - experiment with smaller values!
-  friction: 0.99
-}).start();
+const counterScale = value(1, counterStyler.set('scale'));
 ```
 
-By tweaking the properties of `physics`, you can make springs with different feelings. You can explore these springs to strike a balance between playful and functional, and one that's appropriate for your brand.
+Now, whenever `counterScale` updates, the `counter` DOM node will be updated too.
 
-However, there's one last modification to make. The spring says "Hey! You've reached the character count!" in a loud and abrupt way. By slowly changing the color of the counter we can also quietly inform the user that they're **approaching** the limit.
+### Listening to `keydown`
+
+We also need to listen for a new event, `keydown`.
+
+This event the moment the user presses down on the key, which is the moment they're imparting their physical energy into the UI.
+
+It feels very responsive - try putting the following code under a `keyup` event instead and you'll immediately notice how disconnected the animation feels from your physical actions.
+
+We'll use `listen` again, this time chained with a different method, `filter`. 
+
+`filter`, as the name implies, filters out values that don't meet the provided criteria. In this case, we want to create an event listener that only fires when the number of entered characters is the same as the `chatLimit`:
+
+```javascript
+listen(input, 'keydown')
+  .filter(e => e.target.value.length === charLimit)
+  .start(fireSpring);
+```
+
+### The `spring` function
+
+Now, we're ready to add our `spring`.
+
+```javascript
+const { listen, value, styler, spring } = window.popmotion;
+```
+
+Before this event listener, create a new function called `fireSpring` that'll start a new `spring` animation:
+
+```javascript
+function fireSpring() {
+  spring({
+    // Start the animation from the current scale:
+    from: counterScale.get()
+
+    // We want the spring to rest on 1
+    to: 1,
+
+    // We set the initial velocity to whichever the smallest is:
+    // a) counterScale's current velocity, or
+    // b) an arbitrary minimum. You can experiment.
+    velocity: Math.max(counterScale.getVelocity(), 100),
+
+    // This ratio of stiffness to damping gives a nice, tight spring. Experiment!
+    stiffness: 700,
+    damping: 80
+  }).start(counterScale);
+}
+```
+
+By tweaking the properties of `spring`, you can make springs with wildly different feelings. Some can be playful, some can be terse. Try to find one appropriate for your brand or website.
+
+There's one final modification to make. Currently, the spring says "Hey! You've reached the character count!" in a loud and abrupt way. By slowly changing the color of the counter we can also quietly inform the user that they're **approaching** the limit.
 
 ## The warning color
 
-We're going to compose a very simple [value pipeline](/learn/value-pipelines) function to convert our character count into a color.
+We're going to compose a very simple [value pipeline](/learn/value-pipelines) function that will convert our remaining character count into a color.
 
 We can use three of Popmotion's [transformers](/api/transformers) to achieve this: `pipe`, `blendColor`, and `interpolate`.
 
+We'll use `pipe` to make a new function. This new function will accept a character count and map that to a value between `0` and `1`. That new number is then used to blend between the `counter`'s text color and red:
+
+Import:
+
 ```javascript
-const { transform } = window.popmotion;
+const { listen, value, styler, spring, transform } = window.popmotion;
 const { blendColor, interpolate, pipe } = transform;
+```
 
+And then, after we define `charLimit` and `counterStyler`, create our new function:
+
+```javascript
 const convertCountToColor = pipe(
-  // First, we need to interpolate from a range of character
-  // counts to a simple 0-1 progress. Our input range starts with
-  // charLimit * 0.65, which will start conversion from 65% into
-  // our permitted character range. So in this case our color
-  // will start to change from 7 characters to 10.
-  interpolate([charLimit * 0.65, charLimit], [0, 1]),
-
-  // We then use this progress to blend from the counter's
-  // current color, to red.
-  blendColor(counterRenderer.get('color'), '#f00')
+  // The input range starts at half the charLimit and ends at the
+  // charLimit itself. This means the color will start changing, in this
+  // instance, when the counter hits 5
+  interpolate([charLimit * 0.5, charLimit], [0, 1]),
+  blendColor(counterStyler.get('color'), '#f00')
 );
 ```
 
-With that function created, we simply have to add one line to the end of our `keyup` event handler:
+Now we just need to amend our `updateRemainingCharsCounter` function to set `counterStyler`'s `'color'` property with the output of this function:
 
 ```javascript
-counterRenderer.set('color', convertCountToColor(charCount));
+function updateRemainingCharsCounter(val) {
+  // Measure char count
+  const charCount = val.length;
+
+  // Set remaining chars
+  counter.innerHTML = charLimit - charCount;
+
+  // Set counter color
+  counterStyler.set('color', convertCharCountToColor(charCount));
+}
 ```
 
-Now when you type, the counter will begin to change color as your reach the character limit. You can change `0.65` to start changing color sooner (ie `0.5`) or later (`0.8`).
+Now when you type, the counter will begin to change color as your reach the character limit.
 
 ## Further optimisations
 

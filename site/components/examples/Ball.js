@@ -1,9 +1,10 @@
 import styled from 'styled-components';
-import { ActionButton } from '~/templates/global/primatives';
+import { ActionButton } from '~/templates/global/styled';
 import { verticalGradient, PINK, PINK_BURN, cols } from '~/styles/vars';
 
 const Container = styled.div`
   height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -18,9 +19,11 @@ const Box = styled.span`
   border-radius: 50px;
 `;
 
-export default ({ start, id }) => (
-  <Container id={id}>
+export default ({ autostart, start, id }) => (
+  <Container id={id} innerRef={autostart ? start : null}>
     <Box className="ball" />
-    <ActionButton onClick={start}>Start</ActionButton>
+    {!autostart ? (
+      <ActionButton onClick={start}>Start</ActionButton>
+    ) : null}
   </Container>
 );

@@ -1,14 +1,14 @@
 ---
 title: React
-description: Popmotion animation, tweening and input tracking - in React!
+description: Popmotion animation and input tracking - in React!
 category: plugins
 ---
 
 # Popmotion x React
 
-Popmotion x React provides a simple interface to bring Popmotion's tweening, physics and input tracking capabilities to any React component.
+Popmotion x React provides a declarative interface to use Popmotion's animation and input tracking with any React component.
 
-It uses the "function as children" pattern, so you can create declarative interactions with the DOM, SVG, Three.js, A-Frame, Pixi... anything that has a React interface.
+It uses the "function as children" pattern, so you can create declarative interactions with the DOM, SVG, Three.js, A-Frame, Pixi... anything that has a React wrapper available.
 
 It also has support for [React TransitionGroup](https://github.com/reactjs/react-transition-group/) lifecycle methods.
 
@@ -18,13 +18,13 @@ It also has support for [React TransitionGroup](https://github.com/reactjs/react
 npm install --save popmotion-react
 ```
 
-## MotionValue
+## `MotionValue`
 
-The `MotionValue` component allows you to declaratively animate either a single or composite `value`.
+The `MotionValue` component allows you to declaratively animate a single `value`.
 
 ### Usage
 
-`MotionValue` is a simple state machine. You provide state transition handlers and it provides simple setters to your component. For instance:
+`MotionValue` is a simple state machine. You provide state transition handlers that describe what animation should play when a state is set, and it provides setter functions to your component. For instance:
 
 ```javascript
 import { tween } from 'popmotion';
@@ -33,14 +33,12 @@ import { MotionValue } from 'popmotion-react';
 const stateChangeHandlers = {
   on: ({ value }) => tween({
     from: value.get(),
-    to: 100,
-    onUpdate: value
-  }).start(),
+    to: 100
+  }).start(value),
   off: ({ value }) => tween({
     from: value.get(),
-    to: 0,
-    onUpdate: value
-  }).start()
+    to: 0
+  }).start(value)
 };
 
 export default () => (
@@ -61,21 +59,29 @@ export default () => (
 ```
 
 ### Props
-- `children <Function>` **required**: A function that returns the children component. The function is provided an object of props:
-  - `v <Number | Object>`: The current numerical value, or object of named values.
-  - `velocity <Number>`: Current velocity, or object of named velocities.
-  - `state <String>`: Current state name.
-  - `setStateTo <Object>`: Object of setter functions, generated from the states defined in `onStateChange` (each optionally accepts an `Event`).
-  - `setRef <Function>`: Provides `onStateChange` setters a `ref` attribute for an escape hatch to the DOM (for instance attaching/removing events).
-- `v <Number | Object>`: An initial number, or object of named numbers. If you wish to use named numbers, this is **required**.
-- `initialState <String>`: Set an initial state for the value.
-- `onStateChange <Object>`: Object of named functions that fire when their state changes. Each function receives an object with the following props:
-  - `value <Value | Composite>`
-  - `previousState <String>`: State before current state change.
-  - `setStateTo <Object>`: Object of state setters (each optionally accepts an `Event`).
-  - `ref <Node>`: A reference to the mounted React component, **if** a component was provided `setRef`.
-  - `e <Event>`: The triggering event, **if** a state setter was called with one.
-  - `onComplete <Function>`: When hooking into `TransitionGroup` lifecycle events `componentWillEnter`, `componentWillAppear` and `componentWillLeave`, this callback is provided and **required**.
+
+#### `children` **required**
+A function that returns the children component. The function is provided an object of props:
+- `v: number | number{} | number[]`: The current numerical value, or object of named values.
+- `velocity number | object | number[]`: Current velocity, or object of named velocities.
+- `state: string`: Current state name.
+- `setStateTo: Function{}`: Object of setter functions, generated from the states defined in `onStateChange` (each optionally accepts an `Event`).
+- `setRef: Function`: Provides `onStateChange` setters a `ref` attribute for an escape hatch to the DOM (for instance attaching/removing events).
+
+#### `v: number | number{} | number[]`
+An initial number, or object of named numbers. If you wish to use named numbers, this is **required**.
+
+#### `initialState: string`
+Set an initial state for the value.
+
+#### `onStateChange: Function{}`
+Object of named functions that fire when their state changes. Each function receives an object with the following props:
+  - `value: Value | Value{} | Value[]`
+  - `previousState: string`: State before current state change.
+  - `setStateTo: Function{}`: Object of state setters (each optionally accepts an `Event`).
+  - `ref: Element`: A reference to the mounted React component, **if** a component was provided `setRef`.
+  - `e: Event`: The triggering event, **if** a state setter was called with one.
+  - `complete: Function`: When hooking into `TransitionGroup` lifecycle events `componentWillEnter`, `componentWillAppear` and `componentWillLeave`, this callback is provided and **required**.
 
 ### Use with React TransitionGroup
 
@@ -90,12 +96,15 @@ import { tween, transform } from 'popmotion';
 const { px } = transform;
 
 const stateChangeHandlers = {
-  componentWillAppear: ({ value, onComplete }) => tween({
+  componentWillAppear: ({ value, complete }) => tween({
     from: value.get(),
     to: 100,
     onUpdate: value,
     onComplete
-  }).start()
+  }).start({
+    update: value,
+    complete
+  })
 };
 
 export default () => (
@@ -119,14 +128,12 @@ Remember that `componentWillEnter`, `componentWillAppear` and `componentWillLeav
   onStateChange={{
     on: ({ value }) => tween({
       from: value.get(),
-      to: 100,
-      onUpdate: value
-    }).start(),
+      to: 100
+    }).start(value),
     off: ({ value }) => tween({
       from: value.get(),
-      to: 0,
-      onUpdate: value
-    }).start()
+      to: 0
+    }).start(value)
   }}
 >
   {({ v, state, setStateTo }) => (
@@ -163,16 +170,14 @@ Remember that `componentWillEnter`, `componentWillAppear` and `componentWillLeav
       physics({
         ...springProps,
         from: x.get(),
-        velocity: x.getVelocity(),
-        onUpdate: x
-      }).start();
+        velocity: x.getVelocity()
+      }).start(x);
 
       physics({
         ...springProps,
         from: y.get(),
-        velocity: y.getVelocity(),
-        onUpdate: y
-      }).start();
+        velocity: y.getVelocity()
+      }).start(y);
 
       ref.addEventListener('mousedown', setStateTo.isDragging);
       ref.addEventListener('touchstart', setStateTo.isDragging, { passive: false });
@@ -180,18 +185,13 @@ Remember that `componentWillEnter`, `componentWillAppear` and `componentWillLeav
     isDragging: ({ value, setStateTo, e }) => {
       e.preventDefault();
       const { x, y } = value;
-      const trackPointer = pointer(e).start();
-
-      trackOffset(trackPointer.x, {
-        from: x.get(),
-        onUpdate: x
-      }).start();
-
-      trackOffset(trackPointer.y, {
-        from: y.get(),
-        onUpdate: y,
-        onStop: () => trackPointer.stop()
-      }).start();
+      const trackPointer = pointerDelta({
+        x: x.get(),
+        y: y.get()
+      }).start((v) => {
+        x.update(v.x);
+        y.update(v.y);
+      });
 
       document.addEventListener('mouseup', setStateTo.rest);
       document.addEventListener('touchend', setStateTo.rest);

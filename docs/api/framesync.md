@@ -13,6 +13,10 @@ Popmotion batches updates on the `frameUpdate` step, and Stylefire batches rende
 
 ## Install
 
+**Framesync is installed as part of Popmotion.**
+
+To use as a standalone library, install with:
+
 ```bash
 npm install framesync --save
 ```

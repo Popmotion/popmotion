@@ -10,19 +10,16 @@ Popmotion provides simple utility functions that can take a value and return it 
 
 ```javascript
 import { transform } from 'popmotion';
+// Or save your user's bytes!
+import transform from 'popmotion/transform';
 ```
 
 These functions can perform a wide range of tasks. Something as simple as appending a unit:
 
 ```javascript
-const { px } = transform;
+const { appendUnit } = transform;
+const px = appendUnit('px');
 px(5); // '5px'
-```
-
-Performing arithmatic:
-
-```javascript
-add(5)(10); // 15
 ```
 
 Make an infinite looping sequence:
@@ -80,7 +77,7 @@ The `rgba` transformer is **itself** composed. Here's the exact code:
 
 ```javascript
 const rgba = pipe(
-  transformChildValues({
+  transformMap({
     red: rgbUnit,
     green: rgbUnit,
     blue: rgbUnit,
@@ -92,42 +89,44 @@ const rgba = pipe(
 
 This is an example of composing functions **which were themselves composed**. This is a very clear way of expressing and reusing our logic.
 
-## Applying these to animations
+## Applying transformers to animations
 
-Every Popmotion action supports a `transform` property. `transform` can be provided a function that accepts and returns a number. Sounds familiar?
+Every Popmotion [action](/api/action) and [reaction](/api/reaction) has a native `pipe` function.
 
-The action's current value will be passed through this function
-- Whenever `.get()` is called, and
-- Before being sent to the action's `onUpdate` function.
+Providing a list of functions to `pipe` will return a new instance of the action or reaction, and whenever its `update` function is called, the value will be passed through these functions before being emitted.
 
-So we can ensure the action always return a valid number:
+Consider this tween:
 
 ```javascript
-tween({
-  from: 0,
-  to: 255,
-  transform: rgbUnit,
-  onUpdate: (v) => console.log(v)
-}).start();
+tween({ from: 0, to: 255 });
 ```
 
-Or applies stepped motion to spring physics:
+We can use our `rgbUnit` transformer from before to ensure that whenever this tween is called, it **always** returns a valid RGB unit:
 
 ```javascript
-physics({
-  from: 0,
-  to: 100,
-  transform: steps(5, 0, 100),
-  onUpdate: (v) => console.log(v)
-}).start();
+tween({ from: 0, to: 255 })
+  .pipe(rgbUnit)
+  .start(console.log);
+```
+
+This is a versatile approach to adding functionality to any animation. For instance, many animation libraries offer an option to create stepped tweens, but with this kind of composition we can easily bring that same functionality to `physics` (or any other animation).
+
+Here, we can easily create something that spins at a constant velocity, outputting an angle value that snaps to `45` degree intervals:
+
+```javascript
+physics({ velocity: 100 })
+  .pipe(
+    snap(45),
+    appendUnit('deg')
+  );
 ```
 
 Etc.
 
 ## Conclusion
 
-These pure, simple functions are easily composed and reused. They can be used on their own, or with any action (not just tweens), making them extremely versitile.
+These pure, simple functions are easily composed and reused. They can be used on their own, or with any action (not just tweens), making them extremely versatile.
 
-Most animation libraries provide options like `step` or `round` but we believe this functional approach gives developers the greatest flexibility and predictability.
+We believe this functional approach gives developers the greatest flexibility and predictability.
 
-We've covered just some of the many transformers here, but you should explore the rest can be found detailed in the [API docs](/api/transformers), and have fun creating your own.
+We've covered just some of the many transformers here, but more are documented in our [API docs](/api/transformers). As they're pure functions, not specific to Popmotion, you can easily have fun creating your own.

@@ -10,16 +10,57 @@ The CSS Styler provides a simple and optimised `get`/`set` interface for DOM ele
 
 It automatically detects and applies vendor prefixes.
 
+## Import
+
+From Popmotion:
+
+```javascript
+import { css } from 'popmotion';
+// Or, to import on its own:
+import css from 'stylefire/css';
+```
+
+As a standalone library:
+
 ```javascript
 import css from 'stylefire/css';
 ```
 
-`css(element <Node>, props <Object>)`
+```typescript
+css(element: Node, props?: {
+  enableHardwareAcceleration?: Boolean = true
+})
+```
 
 ## Methods
-- `get(key <String>`: Get the property of the provided key.
-- `set(props <Object>)` | `set(key <String>, value)`: Set provided property(s) and schedule render for next frame.
-- `render()`: Immediately render.
+
+### `get`
+
+```typescript
+get(key: string): any
+```
+
+Returns the value of the provided key.
+
+### `set`
+
+```typescript
+set(props: {}): this
+set(key: string, prop: any): this
+set(key: string): (prop: any) => void;
+```
+
+Set the provided property(s) and schedule a render for the next frame.
+
+If only a `key` is provided, this returns a curried function which can then be provided a property value to set to that `key`.
+
+### `render`
+
+```typescript
+render(): this
+```
+
+Immediately render, without waiting for the next frame.
 
 ## Props
 - `enableHardwareAcceleration <Boolean>`: Can be set to `false` to prevent Stylefire from using the GPU to transform elements. This results (often) in higher image quality when scaling up, though reduces performance. (default: `true`)

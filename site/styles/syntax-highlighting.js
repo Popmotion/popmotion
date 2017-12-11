@@ -1,31 +1,65 @@
-import { WHITE, YELLOW_BURN, BLUE_BURN, PURPLE_BURN, PINK_BURN } from './vars';
+import { BLACK, BRAND, ENTITY, ACTION, cols } from './vars';
 
-export default `
+const createTheme = ({ fontSize = 14, lineHeight = 20, width = '100%'}) => ({
+  'hljs': {
+    display: 'block',
+    overflowX: 'auto',
+    padding: cols(1),
+    color: BLACK,
+    fontSize: `${fontSize}px`,
+    lineHeight: `${lineHeight}px`,
+    width
+  },
+  'hljs-comment': {
+    opacity: 0.5
+  },
+  'hljs-keyword': {
+    color: ENTITY
+  },
+  'hljs-name': {
+    color: ACTION
+  },
+  'hljs-number': {
+    color: BRAND
+  },
+  'hljs-params': {
+    color: ACTION
+  },
+  'hljs-string': {
+    color: BRAND
+  },
+  'hljs-attribute': {
+    color: BRAND
+  },
+  'hljs-function': {
+    color: ACTION
+  }
+});
+
+export const prismTheme = `
 .token {
-  color: ${WHITE};
-
+  color: ${BLACK};
   &.string {
-    color: ${YELLOW_BURN};
+    color: ${BRAND};
   }
-
-  &.operator {
-    color: ${WHITE};
-  }
-
   &.keyword {
-    color: ${BLUE_BURN};
+    color: ${ENTITY};
   }
-
   &.comment {
     opacity: 0.5;
   }
-
   &.number {
-    color: ${PURPLE_BURN};
+    color: ${BRAND};
   }
-
   &.function {
-    color: ${PINK_BURN};
+    color: ${ACTION};
   }
 }
 `;
+
+export const codeTheme = createTheme({});
+export const codeThemeLarge = createTheme({
+  fontSize: 18,
+  lineHeight: 26,
+  width: '85%'
+});

@@ -1,223 +1,266 @@
 ---
-title: Velocity, momentum and spring physics
-description: Engage users with velocity, momentum and spring physics.
+title: Physics and velocity
+description: Create responsive interactions with velocity, decay, physics and spring.
 category: basics
 ---
 
-# Velocity, momentum and spring physics
+# Physics and velocity
 
-A core feature of Popmotion is the ability to query the `velocity` of **any** action.
+A core feature of Popmotion is the ability for some animations ([decay](/api/decay), [spring](/api/spring) and [physics](/api/physics)) to take a `velocity` parameter.
 
-We can pass this `velocity` value to the `physics` action, to create smooth transitions from one action into either a momentum or spring-based physics-driven animation.
+`velocity` changes each of these animations in a way that feels natural and visceral.
 
-## Getting velocity
+By passing the velocity of an existing animation to another, we can create natural-feeling transitions. And if that existing animation is `pointer`, it allows the user to directly affect animations with their own force leading to natural and playful interactions. 
 
-The first step is to get our velocity. Every action offers the `getVelocity` method, which returns the velocity as measured in **units per second**.
+## Inspect velocity
 
-Why units per second, instead of units per frame? Although 60fps is the current common framerate, VR devices support 90+ fps and the iPad Pro delivers a silky 120 frames per second!
+But how do we get `velocity`?
 
-To future-proof our code, we decouple velocity from the device framerate, otherwise our animations would run at 1.5x or even 2x the speed.
-
-So for instance, if we make a `tween` that uses `linear` easing over the course of a second, and get its velocity, we will receive its `to` value (because that is its speed per second):
+Popmotion provides a special type of reaction called `value`.
 
 ```javascript
-const myTween = tween({
-  to: 500,
-  duration: 1000
-}).start();
-
-setTimeout(
-  () => console.log(myTween.getVelocity()), // 500
-  500
-);
+import { value } from 'popmotion';
 ```
 
-## Applying velocity to physics
-
-Now, let's apply that velocity to our ball from the input tracking tutorial. Let's first create a single `value` to [manage our actions](/learn/action-management).
+`value` sits between your action and another reaction (for instance a style setter), and can be queried with `get` and `getVelocity`:
 
 ```javascript
-const ballRenderer = css(document.querySelector('#a .ball'));
-const ballX = value(0, (v) => ballRenderer.set('x', v));
+const myValue = value(0, console.log);
+
+tween().start(myValue);
+
+setTimeout(() => myValue.getVelocity(), 100)
 ```
 
-Next, we'll use the position and velocity of the ball, at the moment the pointer is released, and provide that to `physics`. It'll look something like this:
+The returned `velocity` is measured in **units per second**. Why? Although 60fps is the current common framerate, VR devices support 90+ fps and the iPad Pro delivers a silky 120 frames per second!
+
+To future-proof our code, we decouple velocity from the device framerate, otherwise our animations would run at 1.5x or even 2x the speed on these faster displays.
+
+## Using `value`
+
+`value` is provided two arguments: A value, and a function to call when this value updates:
 
 ```javascript
-physics({
+const foo = value(0, console.log);
+```
+
+As `value` is a reaction, it has an `update` method. We can call it to update the value:
+
+```javascript
+foo.update(5);
+```
+
+Usually though, we provide the `value` directly to an action:
+
+```javascript
+tween({ to: 5 }).start(foo);
+```
+
+Like our animations, `value` can accept objects and arrays:
+
+```javascript
+const xy = value({ x: 0, y: 0 }, console.log);
+const foo = tween({
+  to: { x: 100, y: 200 }
+}).start(xy);
+
+setTimeout(() => foo.getVelocity(), 100); // Returns as object
+```
+
+Now we know enough about `value` to get the velocity of our user's pointer.
+
+## Get `pointer` velocity
+
+Using the example from the [previous tutorial](/learn/input-tracking), let's first make a `value` that updates `ballStyler`'s `x` and `y` properties:
+
+```javascript
+const ballXY = value({ x: 0, y: 0 }, ballStyler.set);
+```
+
+Now we can replace our `startTracking` function with this:
+
+```javascript
+const startTracking = () => {
+  pointer(ballXY.get()).start(ballXY);
+};
+```
+
+As an added benefit of using `value`, a `value` **can't be subscribed to more than one action at a time**.
+
+This means that we can stop using `pointerTracker` to maintain a reference to our active `pointer`.
+
+Instead, we can either use `ballXY.stop()`, which will stop the action it's currently subscribed to. Or, we simply provide it to a different action, which is what we'll do in the following examples.
+
+For now, amend `stopTracking` so it queries `ballXY`'s current velocity:
+
+```javascript
+const stopTracking = () => {
+  const velocity = ballXY.getVelocity();
+};
+```
+
+## Using `velocity`
+
+Three Popmotion animations accept a `velocity` property: `decay`, `physics` and `spring`.
+
+Let's modify `stopTracking` three times, once for each, to see what they each do with `velocity`.
+
+### `decay`
+
+[`decay`](/api/decay) exponentially decreases a velocity over time. It's a form of the algorthim used in smartphone momentum scrolling, making it a natural-feeling way of slowing something down.
+
+Based on the initial properties and `velocity`, it'll automatically calculate a `target` to animate to.
+
+Using it is as easy as passing our newly-calculated `velocity` to `decay`:
+
+```javascript
+decay({ velocity }).start(ballXY);
+```
+
+```marksy
+<Example template="Ball" id="a" autostart={true}>{`
+const ball = document.querySelector('#a .ball');
+const ballStyler = styler(ball);
+const ballXY = value({ x: 0, y: 0 }, ballStyler.set);
+
+function startTracking() {
+  pointer(ballXY.get())
+    .start(ballXY);
+}
+
+function stopTracking() {
+  decay({
+    from: ballXY.get(),
+    velocity: ballXY.getVelocity()
+  }).start(ballXY);
+}
+
+listen(ball, 'mousedown touchstart').start(startTracking);
+listen(document, 'mouseup touchend').start(stopTracking);
+`}</Example>
+```
+
+`decay` also accepts a `modifyTarget` function, which is provided the calculated target and returns a new one.
+
+This can be used, for instance, to snap the target to a grid:
+
+```javascript
+decay({
   from: ballX.get(),
-  velocity: ballX.getVelocity(),
-  onUpdate: ballX
-}).start();
+  velocity,
+  modifyTarget: (target) => Math.ceil(target / 100) * 100
+})
 ```
 
-The full, live, editable demo (click start and then throw the ball):
+### `spring`
 
-```marksy
-<Example template="Ball" id="a">{`
-const ballDom = document.querySelector('#a .ball');
-const ballRenderer = css(ballDom);
-const ballX = value(0, (v) => ballRenderer.set('x', v));
+[`spring`](/api/spring) is a spring simulation using `mass`, `velocity`, `stiffness` and `damping`. It can be used to simulate a wide variety of spring-feels.
 
-let pointerTracker;
+Springs are great for interaction designers because they're expressive. For instance, you could design a spring that has a `stiffness` and `damping` property, but the `mass` property is based on the relative size of the element moving.
 
-// Start tracking
-function startTracking(e) {
-  pointerTracker = pointer(e).start();
-  trackOffset(pointerTracker.x, {
-    from: ballX.get(),
-    onUpdate: ballX
-  }).start();
-}
-
-// Finish tracking
-function stopTracking() {
-  if (pointerTracker && pointerTracker.isActive()) {
-    pointerTracker.stop();
-
-    physics({
-      from: ballX.get(),
-      velocity: ballX.getVelocity(),
-      onUpdate: ballX
-    }).start();
-  }
-}
-
-ballDom.addEventListener('mousedown', startTracking);
-ballDom.addEventListener('touchstart', startTracking);
-document.addEventListener('mouseup', stopTracking);
-document.addEventListener('touchend', stopTracking);
-`}</Example>
-```
-
-Notice how with this code you can both throw the ball and catch it, then throw it off again. We're pretty close to getting scrolling behaviour.
-
-## Friction
-
-However, outside of space, objects in motion usually come to a rest because of an opposing force. In making UIs, one of the forces we use is friction.
-
-The physics `friction` property can be set as a value from `0` to `1`, where `0` applies no force over time, and `1` provides so much force that the object in motion stops immediately.
-
-A nice, light-feeling range to use for scrolling is `0.15` - `0.3`:
+`spring` has defaults for all properties but you'll likely want to adjust at least `stiffness` and `damping`:
 
 ```javascript
-physics({
-  from: ballXAction.get(),
-  velocity: ballXAction.getVelocity(),
-  friction: 0.2,
-  onUpdate: setBallX
-}).start();
+spring({
+  from: ballXY.get(),
+  velocity,
+  stiffness: 300,
+  damping: 10
+}).start(ballXY);
 ```
 
 ```marksy
-<Example template="Ball" id="b">{`
-const ballDom = document.querySelector('#b .ball');
-const ballRenderer = css(ballDom);
-const ballX = value(0, (v) => ballRenderer.set('x', v));
+<Example template="Ball" id="b" autostart={true}>{`
+const ball = document.querySelector('#b .ball');
+const ballStyler = styler(ball);
+const ballXY = value({ x: 0, y: 0 }, ballStyler.set);
 
-let pointerTracker;
-
-// Start tracking
-function startTracking(e) {
-  pointerTracker = pointer(e).start();
-  trackOffset(pointerTracker.x, {
-    from: ballX.get(),
-    onUpdate: ballX
-  }).start();
+function startTracking() {
+  pointer(ballXY.get())
+    .start(ballXY);
 }
 
-// Finish tracking
 function stopTracking() {
-  if (pointerTracker && pointerTracker.isActive()) {
-    pointerTracker.stop();
-
-    physics({
-      from: ballX.get(),
-      velocity: ballX.getVelocity(),
-      friction: 0.2,
-      onUpdate: ballX
-    }).start();
-  }
+  spring({
+    from: ballXY.get(),
+    velocity: ballXY.getVelocity(),
+    stiffness: 100,
+    damping: 10
+  }).start(ballXY);
 }
 
-ballDom.addEventListener('mousedown', startTracking);
-ballDom.addEventListener('touchstart', startTracking);
-document.addEventListener('mouseup', stopTracking);
-document.addEventListener('touchend', stopTracking);
+listen(ball, 'mousedown touchstart').start(startTracking);
+listen(document, 'mouseup touchend').start(stopTracking);
 `}</Example>
 ```
 
-## Spring
+### `physics`
 
-Sometimes you'll want to snap an object in motion to a specific position (like the boundary of a scrolling set of items), or make a button feel more reactive. Spring physics is ideal for these situations.
+The `physics` animation is the swiss army knife of velocity-based animations.
 
-Spring physics actions not unlike a `tween` with `easing.easeOut`. But a tween runs for a set duration of time and doesn't take into account the initial starting position or cvelocity. For truly reactive motion, spring physics is heavily influenced by its starting conditions.
+It offers `friction`, `to` and `springStrength` properties, so it can theoretically be used to create motion similar to `decay` and `spring`. 
 
-Creating springs in Popmotion is as simple as providing `physics` two new properties, `to` and `spring`:
+However, `decay` and `spring` animations are **differential equations** that resolve for a given `elapsedTime`. In practical terms, this means that if you want to change the animation they're creating, you need create a new animation with the new properties.
+
+These equations are incredibly accurate, offering the smoothest motion and in the near future, will allow these animations to be scrubbable the same way `tween` is.
+
+Instead, `physics` is an **intergrated simulation**. This means that, once the simulation has started, its properties **can be modified** because `physics` uses **its current state** to calculate its next
+
+For instance, we can tether a `physics` spring between the ball and the pointer:
 
 ```javascript
-physics({
-  to: 0, // Provides the spring a destination
-  spring: 500, // How tight is the spring
-  from: ballX.get(),
-  velocity: ballX.getVelocity(),
-  friction: 0.9,
-  onUpdate: ballX
-}).start();
-```
+const springTo = physics({
+  velocity: ballXY.getVelocity(),
+  friction: 0.6,
+  springStrength: 400,
+  to: ballXY.get(),
+  restSpeed: false
+}).start(ballXY);
 
-Press 'start' and throw this ball:
+pointer(ballXY.get())
+  .start((v) => springTo.setSpringTarget(v));
+```
 
 ```marksy
-<Example template="Ball" id="c">{`
-const ballDom = document.querySelector('#c .ball');
-const ballRenderer = css(ballDom);
-const ballX = value(0, (v) => ballRenderer.set('x', v));
+<Example template="Ball" id="c" autostart={true}>{`
+const ball = document.querySelector('#c .ball');
+const ballStyler = styler(ball);
+const ballXY = value({ x: 0, y: 0 }, ballStyler.set);
 
+let activeAction;
 let pointerTracker;
 
-// Start tracking
-function startTracking(e) {
-  pointerTracker = pointer(e).start();
-  trackOffset(pointerTracker.x, {
-    from: ballX.get(),
-    onUpdate: ballX
-  }).start();
+function startTracking() {
+  activeAction = physics({
+    velocity: ballXY.getVelocity(),
+    friction: 0.6,
+    springStrength: 400,
+    to: ballXY.get(),
+    restSpeed: false
+  }).start(ballXY);
+
+  pointerTracker = pointer(ballXY.get())
+    .start((v) => activeAction.setSpringTarget(v));
 }
 
-// Finish tracking
 function stopTracking() {
-  if (pointerTracker && pointerTracker.isActive()) {
-    pointerTracker.stop();
-
-    physics({
-      to: 0, // Provides the spring a destination
-      spring: 500, // How tight is the spring
-      from: ballX.get(),
-      velocity: ballX.getVelocity(),
-      friction: 0.9,
-      onUpdate: ballX
-    }).start();
-  }
+  if (activeAction) activeAction.stop();
+  if (pointerTracker) pointerTracker.stop();
+  spring({
+    velocity: ballXY.getVelocity(),
+    from: ballXY.get(),
+    stiffness: 300,
+    damping: 10
+  }).start(ballXY);
 }
 
-ballDom.addEventListener('mousedown', startTracking);
-ballDom.addEventListener('touchstart', startTracking);
-document.addEventListener('mouseup', stopTracking);
-document.addEventListener('touchend', stopTracking);
+listen(ball, 'mousedown touchstart').start(startTracking);
+listen(document, 'mouseup touchend').start(stopTracking);
 `}</Example>
 ```
-
-Try tweaking the `friction` and `spring` properties, to see how they affect the feel of the ball when it springs back.
-
-Here's a different example of spring physics in action, powering the like button on [Drivetribe](https://drivetribe.com):
-
-![](/static/guides/drivetribe-bump.gif)
-
-Just by tweaking the properties of the physics, we can make the bounce back of an unlike feel marginally duller than a like:
-
-![](/static/guides/drivetribe-unbump.gif)
 
 ## Conclusion
 
-As we've seen, `physics` can be a core tool in many user interactions. Its ability to do non-deterministic motion makes it incredibly powerful, but it's the ability to change the starting conditions that erodes the barrier between the user and your interface. Using physics in places you might previously have used tweens can make your interface feel more alive, and more engaging.
+`velocity` is a key part of creating natural interactions with Popmotion.
+
+Be sure to check out the full docs of [value](/api/value), [decay](/api/decay), [spring](/api/spring) and [physics](/api/physics), as there's much more to each than we've been able to cover in this introductory tutorial.

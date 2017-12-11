@@ -1,9 +1,13 @@
 {
   "action": "Action",
-  "action-composition": "Action composition",
-  "stylefire": "Stylefire",
+  "animation": "Animation",
+  "compositors": "Compositors",
+  "input": "Input",
+  "how-to": "How to...",
+  "stylefire": "Styler",
   "basics": "Basics",
   "advanced": "Advanced",
   "plugins": "Plugins",
-  "projects": "Projects"
+  "projects": "Projects",
+  "reactions": "Reactions"
 }

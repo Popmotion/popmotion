@@ -1,6 +1,6 @@
 import { bodyFont, codeFont, fontSize } from './fonts';
-import { BLACK, WHITE, cols } from './vars';
-import syntaxHighlighting from './syntax-highlighting';
+import { ACTION, BLACK, cols, ACTION_BURN } from './vars';
+import { prismTheme } from '~/styles/syntax-highlighting'
 
 export default `
 * {
@@ -115,6 +115,12 @@ audio:not([controls]) {
 a {
   background-color: transparent; /* 1 */
   -webkit-text-decoration-skip: objects; /* 2 */
+  color: ${ACTION};
+  text-decoration: none;
+
+  &:hover {
+    color: ${ACTION_BURN};
+  }
 }
 
 /**
@@ -216,24 +222,10 @@ pre span {
   tab-size: 2;
 }
 
-/* Would prefer not to do this - marked doesn't return themable pre tags */
-pre {
-  background: ${BLACK};
-  padding: ${cols(1)};
-  margin-bottom: 1.4rem;
-  white-space: pre-wrap;
-  font-size: 14px;
-}
-pre code,
-pre.prism-code {
-  color: ${WHITE};
-  line-height: 1.5;
-  font-size: 14px;
-}
-
 @media (max-width: ${cols(50)}) {
   pre, pre code, pre span, code span {
     ${fontSize(14)}
+    line-height: 18px;
   }
 }
 /**
@@ -246,6 +238,8 @@ hr {
   height: 0; /* 1 */
   overflow: visible; /* 2 */
 }
+
+${prismTheme}
 
 /* Forms
    ========================================================================== */
@@ -434,5 +428,4 @@ textarea {
   -webkit-appearance: none; /* 1 */
   font: inherit; /* 2 */
 }
-${syntaxHighlighting}
 `;

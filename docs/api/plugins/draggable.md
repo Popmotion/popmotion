@@ -38,11 +38,12 @@ draggable(node, {
     from: x.get(),
     velocity: x.getVelocity(),
     to: 0,
-    spring: 500,
-    onUpdate: x
-  })
+    spring: 500
+  }).start(x)
 });
 ```
+
+`draggable` returns an object with a `stop` method.
 
 ## React
 

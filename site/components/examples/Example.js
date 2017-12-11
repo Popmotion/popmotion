@@ -1,77 +1,92 @@
 import React from 'react';
 import styled from 'styled-components';
-import { media } from '~/styles/vars';
+import { fontBold } from '~/styles/fonts';
+import { GREEN, UNSKEW, media, cols } from '~/styles/vars';
 import {
-  onFrameStart,
-  onFrameUpdate,
-  onFrameRender,
-  onFrameEnd,
-  cancelOnFrameStart,
-  cancelOnFrameUpdate,
-  cancelOnFrameRender,
-  cancelOnFrameEnd,
-  timeSinceLastFrame,
-  currentFrameTimestamp,
+  action,
+  reaction,
+  style,
+  value,
+  decay,
+  keyframes,
+  onFrame,
+  physics,
+  spring,
+  listen,
+  tween,
+  pointer,
+  mouse,
+  multitouch,
+  multicast,
+  composite,
+  parallel,
   calc,
   easing,
-  transform,
-  valueTypes,
-  Action,
-  chain,
-  colorTween,
-  composite,
-  crossFade,
-  delay,
-  parallel,
-  physics,
-  pointer,
-  touches,
-  trackOffset,
-  tween,
-  stagger,
-  spring,
-  value,
-  Renderer,
-  css,
-  svg,
-  svgPath
+  transform
 } from 'popmotion';
+import styler from 'stylefire';
 import { MotionValue } from 'popmotion-react';
-import { LiveProvider, LiveEditor, LiveError, LivePreview } from 'react-live';
+import { LiveProvider, LiveEditor, LivePreview } from 'react-live';
 import templates from './templates';
+import {
+  Container,
+  LiveExampleContainer,
+  CodeContainer as CodeContainerPrimitive
+} from '~/templates/homepage/LiveExamples/styled';
 
-const StyledLiveContainer = styled(LiveProvider)`
-  display: flex;
-  flex-wrap: wrap;
+const StyledLiveContainer = Container.withComponent(LiveProvider).extend`
+  justify-content: flex-end;
 `;
 
-const StyledLiveEditor = styled(LiveEditor)`
+const CodeContainer = CodeContainerPrimitive.extend`
+  border-color: ${GREEN};
+  padding: ${cols(2)};
+
+  ${media.large`
+    border-color: ${GREEN};
+    padding: ${cols(2)};
+    margin-right: 0;
+  `}
+`;
+
+const LiveEditorWrapper = styled.div`
   height: 300px;
   max-height: 300px;
-  overflow-y: scroll;
-  flex: 0 0 50%;
-  ${media.medium`
-    flex: 0 0 100%;
-  `}
+  width: 100%;
+  overflow: scroll;
 `;
 
-const StyledLivePreview = styled(LivePreview)`
-  flex: 0 0 50%;
-  ${media.medium`
-    flex: 0 0 100%;
-  `}
+const StyledLivePreview = LiveExampleContainer.withComponent(LivePreview).extend`
+  flex: 0 1 450px;
+  justify-content: center;
 `;
 
-const stripFirstReturn = (code) => code.replace(/[\n\r]+/, '');
+const LiveEditorHeader = styled.h4`
+  color: ${GREEN};
+  ${fontBold}
+  transform: skewX(${UNSKEW});
+  display: block;
+  margin-bottom: ${cols(1)};
+`;
+
+const stripFirstReturn = ([ code ]) => {
+  return code.replace(/[\n\r]+/, '');
+}
 
 const injectRender = (code) => `
   function start() {
     ${code}
   }
-  render(<Component start={start} id={id} />);
+
+  render(<Component
+    key={Math.random()}
+    autostart={autostart}
+    start={start}
+    id={id}
+  />);
 `;
 
-export default ({ children, template, id, isReactComponent=false }) => {
+export default ({ children, template, id, autostart, isReactComponent=false }) => {
   const Component = templates[template];
 
   return (
@@ -79,49 +94,42 @@ export default ({ children, template, id, isReactComponent=false }) => {
       transformCode={isReactComponent ? undefined : injectRender}
       code={stripFirstReturn(children)}
       scope={{
-        onFrameStart,
-        onFrameUpdate,
-        onFrameRender,
-        onFrameEnd,
-        cancelOnFrameStart,
-        cancelOnFrameUpdate,
-        cancelOnFrameRender,
-        cancelOnFrameEnd,
-        timeSinceLastFrame,
-        currentFrameTimestamp,
+        action,
+        reaction,
+        style,
+        value,
+        decay,
+        keyframes,
+        onFrame,
+        physics,
+        spring,
+        tween,
+        listen,
+        pointer,
+        mouse,
+        multitouch,
+        multicast,
+        composite,
+        parallel,
         calc,
         easing,
         transform,
-        valueTypes,
-        Action,
-        chain,
-        colorTween,
-        composite,
-        crossFade,
-        delay,
-        parallel,
-        physics,
-        pointer,
-        touches,
-        trackOffset,
-        tween,
-        spring,
-        stagger,
-        value,
-        Renderer,
-        css,
-        svg,
-        svgPath,
+        styler,
         Component,
         id,
+        autostart,
         MotionValue
       }}
       mountStylesheet={false}
       noInline={!isReactComponent}
     >
-      <StyledLiveEditor />
       <StyledLivePreview />
-      <LiveError />
+      <CodeContainer>
+        <LiveEditorWrapper>
+          <LiveEditorHeader>Live editor</LiveEditorHeader>
+          <LiveEditor />
+        </LiveEditorWrapper>
+      </CodeContainer>
     </StyledLiveContainer>
   );
 };

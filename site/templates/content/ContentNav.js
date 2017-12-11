@@ -1,36 +1,44 @@
 import React from 'react';
 import Link from 'next/link';
 import styled, { css } from 'styled-components';
-import { ContentNavArea } from '~/components/layout/grid';
+import { Centered } from '~/templates/global/grid';
 import DropDownArrow from '~/components/icons/DropDownArrow';
-import { fontSize } from '~/styles/fonts';
-import { LINK, cols, media } from '~/styles/vars';
+import { fontSize, fontBold, lineHeight } from '~/styles/fonts';
+import { LINK, ENTITY, cols, media } from '~/styles/vars';
 import menus from '~/data/menus.json';
 import content from '~/data/content.json';
 import sectionNames from '~/data/section-names.json';
+
+export const ContentNavArea = Centered.extend`
+  position: absolute;
+  left: 0;
+  width: ${cols(14)};
+  margin-top: ${cols(1)};
+  z-index: 2;
+
+  ${media.large`
+    position: relative;
+    width: auto;
+    border: 1px solid ${ENTITY};
+    margin-top: 0;
+    margin-bottom: ${cols(2)};
+  `}
+`;
 
 const CategoryContainer = styled.li`
   margin-bottom: ${cols(2)}
 `;
 
 const selectable = ({ isSelected }) => (isSelected) && css`
-  position: relative;
-
-  &:after {
-    display: block;
-    content: '';
-    background: ${LINK};
-    width: 2px;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: -${cols(1)};
+  a {
+    ${fontBold}
+    color: ${ENTITY};
   }
 `;
 
 const CategoryTitle = styled.h2`
   ${fontSize(18)}
-  margin-bottom: 0.8rem;
+  margin-bottom: ${cols(1)};
   ${selectable}
 
   a {
@@ -44,7 +52,8 @@ const CategoryTitle = styled.h2`
 
 const MenuItem = styled.li`
   ${fontSize(14)}
-  margin-bottom: 0.8rem;
+  ${lineHeight(18)}
+  margin-bottom: 5px;
   margin-left: ${cols(1)};
   ${selectable}
 
@@ -58,20 +67,28 @@ const MenuItem = styled.li`
 `;
 
 const MenuToggle = styled.div`
-  cursor: pointer;
-  display: none;
   position: relative;
+  padding-left: ${cols(2)};
+  ${fontSize(18)}
+  ${fontBold}
+  border-bottom: 1px solid ${ENTITY};
+  width: 100%;
+  padding-bottom: ${cols(1)};
+  margin-bottom: ${cols(2)};
 
-  ${media.medium`
-    display: block;
-    border-bottom: 1px solid ${LINK};
+  ${media.large`
+    cursor: pointer;
+    position: relative;
+    border: none;
     ${fontSize(18)}
-    padding-bottom: 8px;
+    padding: ${cols(1)};
+    margin-bottom: 0;
   `}
 `;
 
 const Menu = styled.ul`
-  ${media.medium`
+  padding-left: ${cols(2)};
+  ${media.large`
     display: ${({ isOpen }) => isOpen ? 'block' : 'none'};
     padding-top: ${cols(1)};
   `}
@@ -79,9 +96,13 @@ const Menu = styled.ul`
 
 const DropDownMenuIcon = styled(DropDownArrow)`
   position: absolute;
-  right: 0;
-  top: 5px;
+  right: ${cols(1)};
+  top: 50%;
+  margin-top: -5px;
   ${({ isOpen }) => isOpen && 'transform: rotate(180deg);'}
+
+  display: none;
+  ${media.large`display: block;`}
 `;
 
 const Item = ({ id, title, contentId, section }) => (
@@ -127,7 +148,7 @@ export default class extends React.Component {
     return (
       <ContentNavArea>
         <MenuToggle onClick={this.toggleMenu}>
-          {`${sectionNames[section]} menu`}
+          {sectionNames[section]}
           <DropDownMenuIcon isOpen={isOpen} />
         </MenuToggle>
         <Menu isOpen={isOpen}>

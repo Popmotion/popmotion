@@ -12,3 +12,4 @@ site/data/content.json
 site/data/menus.json
 site/next.config.js
 packages/popmotion-devtools/dist/index.js
+.vscode

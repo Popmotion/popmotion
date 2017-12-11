@@ -1,16 +1,20 @@
 ---
-title: Stylefire
+title: Stylers
 description: Style setters for CSS, SVG and scroll, optimized for animation.
 category: stylefire
 ---
 
-# Stylefire
+# Stylers
 
-Stylefire is a collection of CSS, SVG and DOM scroll style setters optimized to work with animation libraries. It can also be used outside of animations and provides a cached state to prevent unnecessary DOM reads.
+Stylers are performant CSS, SVG and DOM scroll style setters optimized to work with animation libraries.
 
-It batches renders to the `render` step of the [Framesync](/api/framesync) loop to prevent layout thrashing, but renders can also be triggered manually.
+They batch rendering on the render step of the [Framesync render loop](/api/framesync) to prevent layout thrashing.
+
+They also provide a cached state to prevent unnecessary DOM reads.
 
 ## Install
+
+**Stylers are included with Popmotion, but available as the standalone library `stylefire`.**
 
 ```javascript
 npm install stylefire --save
@@ -21,6 +25,54 @@ npm install stylefire --save
 - [CSS](/api/css)
 - [SVG](/api/svg)
 - [DOM Scroll](/api/scroll)
+
+## Usage
+
+The `styler` function accepts a single `Element` and returns either the [CSS](/api/css) or [SVG](/api/svg) styler depending on the detected element type.
+
+From Popmotion:
+
+```javascript
+import { styler } from 'popmotion';
+// Or, to import on its own:
+import styler from 'stylefire';
+```
+
+As a standalone library:
+
+```javascript
+import styler from 'stylefire';
+```
+
+## Methods
+
+### `get`
+
+```typescript
+get(key: string): any
+```
+
+Returns the value of the provided key.
+
+### `set`
+
+```typescript
+set(props: {}): this
+set(key: string, prop: any): this
+set(key: string): (prop: any) => void;
+```
+
+Set the provided property(s) and schedule a render for the next frame.
+
+If only a `key` is provided, this returns a curried function which can then be provided a property value to set to that `key`.
+
+### `render`
+
+```typescript
+render(): this
+```
+
+Immediately render, without waiting for the next frame.
 
 ## Create custom styler
 

@@ -1,23 +1,29 @@
 import styled from 'styled-components';
 import Link from 'next/link';
-import { fontSize } from '~/styles/fonts';
-import { LINK, BLACK, cols, media } from '~/styles/vars';
+import { fontSize, fontBold } from '~/styles/fonts';
+import { ACTION, ENTITY, BLACK, cols, media, SKEW } from '~/styles/vars';
 import sectionNames from '~/data/section-names.json';
 import routes from '~/data/route-paths.json';
-
-const Container = styled.ul`
-  margin-left: ${cols(3)};
-
-  ${media.medium`margin-left: ${cols(1)};`}
-`;
 
 const MenuItem = styled.li`
   ${fontSize(18)}
   display: inline;
+  padding-bottom: 4px;
   margin-right: ${cols(2)};
+  position: relative;
 
   ${({ isSelected }) => isSelected && `
-    border-bottom: 3px solid ${LINK};
+    &:after {
+      content: '';
+      display: block;
+      background: ${ENTITY};
+      position: absolute;
+      bottom: -3px;
+      right: 0;
+      left: 0;
+      height: 4px;
+      transform: skewX(${SKEW});
+    }
   `}
 
   ${media.medium`
@@ -28,15 +34,16 @@ const MenuItem = styled.li`
   a {
     color: ${BLACK};
     text-decoration: none;
+    ${fontBold}
 
     &:hover {
-      color: ${LINK};
+      color: ${ACTION};
     }
   }
 `;
 
 export default ({ section }) => (
-  <Container>
+  <ul>
     {Object.keys(sectionNames).map((name) => (
       <MenuItem key={name} isSelected={(section === name)}>
         <Link href={routes[name]}>
@@ -44,5 +51,5 @@ export default ({ section }) => (
         </Link>
       </MenuItem>
     ))}
-  </Container>
+  </ul>
 );

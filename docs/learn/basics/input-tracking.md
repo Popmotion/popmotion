@@ -1,112 +1,191 @@
 ---
-title: Pointers and dragging
-description: Learn to track mouse and touch movement and use that to drag DOM elements.
+title: Pointer tracking
+description: Learn to track pointer movement and use that to drag DOM elements.
 category: basics
 next: velocity-and-physics
 ---
 
-# Pointers and dragging
+# Pointer tracking
 
-User input tracking can be used for a ton of different purposes. Drag & drop, scrolling galleries and performantly measuring touch scroll speed are some of the first to come to mind.
+Pointer tracking is an integral part of user interfaces.
 
-In this quick tutorial, we'll look at how to track mouse and touch movement with the `pointer` action.
+Drag & drop, scrolling galleries, and measuring touch scroll speed are some obvious use cases.
 
-Then, we'll track the pointer's offset and use that to drag a DOM element around.
+In this quick tutorial, we'll first see how to convert DOM events into streams of values with the `listen` action.
+
+Then, we'll look at how to track mouse and touch movement with the `pointer` action and then use that pointer's movement to drag a DOM element.
+
+## The `listen` action
+
+Popmotion provides the [`listen` action](/api/listen) to add event listeners to the DOM.
+
+```javascript
+import { listen } from 'popmotion';
+```
+
+It accepts event names as a space-delimited string, meaning you can use a single `listen` call to listen to mulitple events:
+
+```javascript
+listen(document, 'mousedown touchstart')
+  .start((e) => console.log(e));
+```
+
+Just like the good-old days of jQuery!
+
+As `listen` is an [action](/api/action), it offers all the same chainable methods.
+
+For example, here's how you could make a `touchmove` listener that only fires when there's more than two `touches`:
+
+```javascript
+listen(document, 'touchmove')
+  .filter(({ touches }) => touches.length >= 2)
+  .start((e) => /* This event has more than 2 touches! */);
+```
 
 ## The `pointer` action
 
-The `pointer` action provides a generic interface for interacting with mouse and touch input. When provided with a `MouseEvent` or `TouchEvent`, it will output the `clientX` `clientY` positions to the provided `onUpdate` function.
-
-First, import the action:
+The `pointer` action provides a generic interface for interacting with **single point** mouse and touch inputs (for multitouch, Popmotion offers the [`multitouch` action](/api/multitouch)).
 
 ```javascript
 import { pointer } from 'popmotion';
 ```
 
-We need to provide either a `MouseEvent` or `TouchEvent` to `pointer` to begin tracking. This is usually taken from a `mousedown`/`touchstart` event, as this is when a user is signalling an intent to interact. But it can be just as easily taken from `mousemove`/`touchmove`.
+By default, `pointer` outputs the pointer's `clientX` and `clientY` properties as `x` and `y`.
 
 ```javascript
 let pointerTracker;
 
-// Start tracking pointer movement
-document.addEventListener('mousedown', (event) => {
-  pointerTracker = pointer(event, {
-    onUpdate: ({ x, y }) => console.log(x, y)
-  }).start();
+listen(document, 'mousedown touchstart').start(() => {
+  pointerTracker = pointer()
+    .start(({ x, y }) => console.log(x, y));
 });
 
-// Stop tracking pointer movement
-document.addEventListener('mouseup', () => {
+listen(document, 'mouseup touchend').start(() => {
   if (pointerTracker) pointerTracker.stop();
 });
 ```
 
 ## Dragging
 
-It's that simple to track and output pointer movement, but the majority of the time we're using that data to drag or scroll.
+The majority of time we actually want to use this movement data to drag or scroll.
 
-`pointer` provides "absolute" positioning. That is, if you start tracking at `x: 50, y: 100`, you can't apply those values directly to an element that might technically be at the location on screen and yet has a `x,y` transform of `0,0`.
+Let's use the `styler` function again to create a DOM element interface to provide the positional data to.
 
-To get "relative" positioning we have another action, `trackOffset`. This tracks the **offset** of any provided action, whether it's `tween`, `physics` or in our case, `pointer`.
-
-```javascript
-import { pointer, trackOffset } from 'popmotion';
-```
-
-Here's how we'd track the offset of just the `x` axis:
-
-```javascript
-document.addEventListener('mousedown', (e) => {
-  const pointerTracker = pointer(e).start();
-
-  // Note: We're providing just the `x` property of `pointerTracker`, as
-  // `pointer` returns a composite action of `x` and `y` actions.
-  trackOffset(pointerTracker.x, {
-    onUpdate: (x) => console.log(x)
-  }).start();
-});
-```
-
-This code will output `0` when the mouse starts moving, and apply any further mouse movement to that `0`. We can also supply a different `from` value to start from a number other than `0`:
-
-```javascript
-trackOffset(pointerTracker.x, {
-  from: 50,
-  onUpdate: (x) => console.log(x)
-}).start();
-```
-
-Which means, if we have a DOM element, we can provide its current `x` location to the `from` property and we'll start applying pointer movement to that, resulting in a drag. Take a look at this live, editable example:
-
-(To activate this demo, press "Start" and then start dragging the ball around)
+Look at `startTracking` function and try to drag the ball:
 
 ```marksy
-<Example template="Ball">{`
-const ball = document.querySelector('.ball');
-const ballRenderer = css(ball);
+<Example template="Ball" id="a" autostart={true}>{`
+const ball = document.querySelector('#a .ball');
+const ballStyler = styler(ball);
 let pointerTracker;
-let xOffset;
 
-// Start tracking
-function startTracking(e) {
-  pointerTracker = pointer(e).start();
-  xOffset = trackOffset(pointerTracker.x, {
-    from: ballRenderer.get('x'),
-    onUpdate: (x) => ballRenderer.set('x', x)
-  }).start();
-}
+const startTracking = () => {
+  pointerTracker = pointer()
+    .start(ballStyler.set);
+};
 
-// Finish tracking
-function stopTracking() {
+const stopTracking = () => {
   if (pointerTracker) pointerTracker.stop();
-  if (xOffset) xOffset.stop();
-}
+};
 
-ball.addEventListener('mousedown', startTracking);
-ball.addEventListener('touchstart', startTracking);
-document.addEventListener('mouseup', stopTracking);
-document.addEventListener('touchend', stopTracking);
+listen(ball, 'mousedown touchstart').start(startTracking);
+listen(document, 'mouseup touchend').start(stopTracking);
 `}</Example>
 ```
 
-Now we've got dragging working, in the [next topic](/learn/velocity-and-physics) we'll look at getting the velocity of a user's pointer movements and providing that to a `physics` action. With that, we can produce a variety of momentum-based scrolling or spring-based "snap to" animations that feel natural, physical and engaging compared to traditional tweens.
+**Oh dear.** The ball moves, but it jumps to a weird location (maybe one that's off-screen entirely!)
+
+The reason for this is simple. `pointer` is outputting the `{ x, y }` position of the pointer **relative to the viewport**.
+
+The **ball's** `{ x, y }` transform begins at `0, 0`. So if we apply the pointer's absolute position directly to the ball, it won't move where we want it to.
+
+Instead, we want to apply the **movement** of the `pointer` to the ball's initial position.
+
+To do this, we can provide `pointer` with an initial `{ x, y }` point, and it will output the movement of its `{ x, y }` **relative to that point**:
+
+```javascript
+pointer({ x: 0, y: 0 })
+```
+
+Dragging becomes trivial:
+
+```marksy
+<Example template="Ball" id="b" autostart={true}>{`
+const ball = document.querySelector('#b .ball');
+const ballStyler = styler(ball);
+let pointerTracker;
+
+const startTracking = () => {
+  pointerTracker = pointer({
+    x: ballStyler.get('x'),
+    y: ballStyler.get('y')
+  }).start(ballStyler.set);
+};
+
+const stopTracking = () => {
+  if (pointerTracker) pointerTracker.stop();
+};
+
+listen(ball, 'mousedown touchstart').start(startTracking);
+listen(document, 'mouseup touchend').start(stopTracking);
+`}</Example>
+```
+
+## Single-axis dragging
+
+Limiting dragging to a single axis is a matter of using just the `x` or `y` output from `pointer`.
+
+We could do this via the reaction:
+
+```javascript
+pointer().start(({ x }) => ballStyler.set('x', x));
+```
+
+But the more reusable way is to **compose a new action** using `pointer`'s `pipe` method. We can provide it a simple picker function that selects `x` from `pointer`'s output and returns it:
+
+```javascript
+const xPointer = (initialX) => pointer({ x: initialX })
+  .pipe(({ x }) => x);
+```
+
+Now we can use our newly composed `xPointer` like so:
+
+```javascript
+xPointer(ballStyler.get('x'))
+  .start(ballStyler.set('x'));
+```
+
+```marksy
+<Example template="Ball" id="c" autostart={true}>{`
+const ball = document.querySelector('#c .ball');
+const ballStyler = styler(ball);
+const xPointer = (initialX) => pointer({ x: initialX })
+  .pipe(({ x }) => x);
+
+let pointerTracker;
+
+const startTracking = () => {
+  pointerTracker = xPointer(ballStyler.get('x'))
+    .start(ballStyler.set('x'));
+};
+
+const stopTracking = () => {
+  if (pointerTracker) pointerTracker.stop();
+};
+
+listen(ball, 'mousedown touchstart').start(startTracking);
+listen(document, 'mouseup touchend').start(stopTracking);
+`}</Example>
+```
+
+## Conclusion
+
+`listen` can convert DOM events into reactive streams of values. Useful for leveraging `pipe` and other chainable methods, and composing `listen` with other actions.
+
+`pointer` can output values either absolutely, or, if we provide initial coordinates, by applying its delta relatively.
+
+Finally, we can compose new actions to produce reusable bits of code with new behaviour, like single-axis dragging.
+
+## Next
+
+Now that we've got dragging working, in the [next tutorial](/learn/velocity-and-physics) we will learn how to inspect the `velocity` of the dragged object and apply that to `decay`, `physics` and `spring` actions to create natural-feeling interactions.

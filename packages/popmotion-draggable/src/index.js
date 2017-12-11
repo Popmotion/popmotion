@@ -1,4 +1,6 @@
-import { composite, value, css, pointer, trackOffset } from 'popmotion';
+import value from 'popmotion/reactions/value';
+import pointer from 'popmotion/input/pointer';
+import styler from 'stylefire';
 
 export default function draggable(node, {
   x = true,
@@ -9,40 +11,37 @@ export default function draggable(node, {
   onDragStart,
   onDragStop
 } = {}) {
-  const nodeRenderer = css(node);
+  const nodeStyler = styler(node);
   const values = {};
-  if (x) values.x = value(initialX, (v) => nodeRenderer.set('x', v));
-  if (y) values.y = value(initialY, (v) => nodeRenderer.set('y', v));
 
-  const nodeXY = composite(values, {
-    onUpdate: onDrag
-  });
+  if (x) {
+    values.x = value(initialX);
+    values.x.subscribe((v) => nodeStyler.set('x', v));
+  }
 
-  function startTracking(e) {
-    const pointerTracker = pointer(e).start();
+  if (y) {
+    values.y = value(initialY);
+    values.y.subscribe((v) => nodeStyler.set('y', v));
+  }
 
-    if (x) {
-      trackOffset(pointerTracker.x, {
-        from: nodeXY.x.get(),
-        onUpdate: nodeXY.x
-      }).start();
-    }
+  let trackPointer;
 
-    if (y) {
-      trackOffset(pointerTracker.y, {
-        from: nodeXY.y.get(),
-        onUpdate: nodeXY.y,
-        onStop: () => pointerTracker.stop()
-      }).start();
-    }
+  function startTracking() {
+    trackPointer = pointer({
+      x: x ? values.x.get() : 0,
+      y: y ? values.y.get() : 0
+    }).start((v) => {
+      if (x) values.x.update(v.x);
+      if (y) values.y.update(v.y);
+      if (onDrag) onDrag(values);
+    });
 
-    if (onDragStart) onDragStart(nodeXY);
+    if (onDragStart) onDragStart(values);
   }
 
   function stopTracking() {
-    nodeXY.stop();
-
-    if (onDragStop) onDragStop(nodeXY);
+    if (trackPointer) trackPointer.stop();
+    if (onDragStop) onDragStop(values);
   }
 
   node.addEventListener('mousedown', startTracking);
@@ -50,5 +49,7 @@ export default function draggable(node, {
   document.addEventListener('mouseup', stopTracking);
   document.addEventListener('touchend', stopTracking);
 
-  return nodeXY;
+  return {
+    stop: () => trackPointer && trackPointer.stop()
+  };
 }

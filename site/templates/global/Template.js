@@ -4,7 +4,7 @@ import Head from 'next/head';
 import Router from 'next/router';
 import reset from '~/styles/reset';
 import nprogressStyles from '~/styles/nprogress';
-import { MAIN } from '~/styles/vars';
+import { BRAND } from '~/styles/vars';
 import settings from '~/data/settings.json';
 
 Router.onRouteChangeStart = () => NProgress.start();
@@ -26,8 +26,8 @@ const TWITTER_CARD = 'https://popmotion.io/static/images/twitter-card.png';
 export default ({ children, title, description=settings.siteDescription }) => (
   <div>
     <Head>
-      <meta name="theme-color" content={MAIN} />
-      <meta name="msapplication-navbutton-color" content={MAIN} />
+      <meta name="theme-color" content={BRAND} />
+      <meta name="msapplication-navbutton-color" content={BRAND} />
       <meta name="apple-mobile-web-app-title" content={settings.siteName} />
       <meta property="og:site_name" content={settings.siteName} />
       <meta property="og:title" content={title} />
