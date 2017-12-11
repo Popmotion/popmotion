@@ -8,6 +8,10 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
 - `everyFrame` now outputs the `timeSinceStart` rather than the current framestamp (which can be taken from `framesync`).
 
+### Fixed
+
+- Actions that use internal `everyFrame` actions now stop the timer when complete.
+
 ## [8.0.35@beta] 2017-12-09
 
 ### Added
