@@ -207,7 +207,7 @@ These equations are incredibly accurate, offering the smoothest motion and in th
 
 Instead, `physics` is an **intergrated simulation**. This means that, once the simulation has started, its properties **can be modified** because `physics` uses **its current state** to calculate its next, unlike the other two which are entirely deterministic.
 
-For instance, instead of using `pointer` to drag the ball, you could use `physics` to spring towards the output of `pointer`.
+For instance, instead of normal `pointer` tracking, we could tether a `physics` spring between the ball and the pointer location:
 
 ```javascript
 const springTo = physics({
@@ -226,22 +226,21 @@ pointer(ballXY.get())
 <Example template="Ball" id="c" autostart={true}>{`
 const ball = document.querySelector('#c .ball');
 const ballStyler = styler(ball);
-const ballX = value(0, ballStyler.set('x'));
+const ballXY = value({ x: 0, y: 0 }, ballStyler.set);
 
 let activeAction;
 let pointerTracker;
 
 function startTracking() {
   activeAction = physics({
-    velocity: ballX.getVelocity(),
+    velocity: ballXY.getVelocity(),
     friction: 0.8,
     springStrength: 400,
-    to: ballX.get(),
+    to: ballXY.get(),
     restSpeed: false
-  }).start(ballX);
+  }).start(ballXY);
 
-  pointerTracker = pointer({ x: ballX.get(), y: 0 })
-    .pipe(({ x }) => x)
+  pointerTracker = pointer(ballXY.get())
     .start((v) => activeAction.setSpringTarget(v));
 }
 
@@ -249,11 +248,11 @@ function stopTracking() {
   if (activeAction) activeAction.stop();
   if (pointerTracker) pointerTracker.stop();
   spring({
-    velocity: ballX.getVelocity(),
-    from: ballX.get(),
+    velocity: ballXY.getVelocity(),
+    from: ballXY.get(),
     stiffness: 300,
     damping: 10
-  }).start(ballX);
+  }).start(ballXY);
 }
 
 listen(ball, 'mousedown touchstart').start(startTracking);

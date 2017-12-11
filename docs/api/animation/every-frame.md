@@ -6,7 +6,7 @@ category: animation
 
 # Every Frame
 
-`everyFrame` fires once per frame, and provides `update` with the current frame's timestamp.
+`everyFrame` fires once per frame, and provides `update` with the duration of time since it started.
 
 ## Import
 
@@ -19,19 +19,8 @@ import everyFrame from 'popmotion/animations/every-frame';
 ## Usage
 
 ```javascript
-everyFrame().start((timestamp) => console.log(timestamp));
-```
-
-To provide `update` with the duration since animation start, you could use `pipe` with [Framesync's](/api/framesync) `currentFrameTime` function and the `applyOffset` [transformer](/api/transformers):
-
-```javascript
-import everyFrame from 'popmotion/animations/every-frame';
-import { applyOffset } from 'popmotion/transformers';
-import { currentFrameTime } from 'framesync';
-
 everyFrame()
-  .pipe(applyOffset(currentFrameTime(), 0))
-  .start((timeSinceStart) => console.log(timeSinceStart))
+  .start((timeSinceStart) => console.log(timeSinceStart));
 ```
 
 ## Methods

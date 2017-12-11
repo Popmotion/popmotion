@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.0.36@beta] 2017-12-11
+
+### Changed
+
+- `everyFrame` now outputs the `timeSinceStart` rather than the current framestamp (which can be taken from `framesync`).
+
 ## [8.0.35@beta] 2017-12-09
 
 ### Added

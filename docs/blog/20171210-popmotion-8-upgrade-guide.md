@@ -1,7 +1,7 @@
 ---
 title: Popmotion 8 upgrade guide
 description: How to upgrade Popmotion 7 to 8
-published: 20180101
+published: 20171210
 author: Matt Perry
 ---
 
