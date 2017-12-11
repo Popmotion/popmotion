@@ -6,6 +6,7 @@ import SpringExample from '../LiveExamples/Spring';
 import KeyframesExample from '../LiveExamples/Keyframes';
 import PhysicsExample from '../LiveExamples/Physics';
 import DecayExample from '../LiveExamples/Decay';
+import TimelineExample from '../LiveExamples/Timeline';
 import PointerExample from '../LiveExamples/Pointer';
 import MultitouchExample from '../LiveExamples/Multitouch';
 import EveryFrameExample from '../LiveExamples/EveryFrame';
@@ -65,6 +66,13 @@ export default () => (
       >
         <EveryFrameExample />
       </Example>
+      <Example
+        title="Timeline"
+        link="/api/timeline"
+        description="Script complicated sequences of tweens with a simple array."
+      >
+        <TimelineExample />
+      </Example>
     </ExampleSection>
     <ExampleSection title="Input">
       <Example
@@ -86,7 +94,7 @@ export default () => (
       <Example
         title="Stagger"
         link="/api/stagger"
-        description="Stagger any series of animations or functions."   
+        description="Stagger any series of animations or functions."
       >
         <StaggerExample />
       </Example>

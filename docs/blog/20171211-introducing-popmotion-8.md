@@ -15,7 +15,7 @@ Crucially, there's a new streamlined, reactive API.
 
 This new API reflects our gradual shift towards functional programming and adopts it as a core part of the design philosophy.
 
-The result is a small, flexible and composable library that all started because I wanted to add a `pipe` method and instead jumped down the rabbit hole.
+The result is a small, flexible and composable library that all started because I wanted to add a `pipe` method and instead fell down the rabbit hole.
 
 Let's take a look at what's new.
 
@@ -71,6 +71,34 @@ keyframes({
 <CodePen id="JOZGdp" />
 
 ### `timeline`
+
+`timeline` is used to orchestrate more complicated patterns of tweens.
+
+It supports absolute and relative timestamps, as well as parallel and staggered motion. The output action has all the same playback methods as `tween`, making it fully scrubbable.
+
+In most animation libraries, the timeline function is a bit of a black box that we chuck setters or selectors into.
+
+As Popmotion is a reactive library, we label each segment with a `track` property, and that then the latest state gets output as an object with those labels:
+
+```javascript
+timeline([
+  { track: 'shade', from: 0, to: 1 },
+  '-100',
+  {
+    track: 'modal',
+    from: { y: -100, opacity: 0 },
+    to: { y: 0, opacity: 1 }
+  }
+]).start(({ shade, modal }) => ...)
+```
+
+This means we can pass the output of timeline through the chainable methods `pipe`, `while` and `filter` (more on those later).
+
+As timelines become more complicated, maintaining the link between labels and setters can become increasingly difficult, but the trade-off is a timeline that is immutable, composable, pure, and testable.
+
+We're also experimenting with functions that can take a timeline definition and automatically generate the output reaction.
+
+<CodePen id="aEoqEG" height={400} />
 
 ## Input
 
@@ -167,7 +195,7 @@ justTwo
 
 ### File size and individual imports
 
-Popmotion has always tried to respect your bytes. One of the reasons I wrote it in the first place was a disatisfaction with the size of existing libraries in comparison to the benefits they provided.
+Popmotion has always tried to respect your bytes. One of the reasons I wrote it in the first place was a dissatisfaction with the size of existing libraries in comparison to the benefits they provided.
 
 Popmotion 8 is a little bigger than 7 (11.5kb vs 10kb). Though, as such a radical rewrite with so many new features, I think there are efficiencies to be made over the coming months.
 
@@ -192,8 +220,8 @@ tween({
 
 That's most of what's new in Popmotion 8. Existing users should check out our [upgrade guide](/blog/20171210-popmotion-8-upgrade-guide) to handle breaking changes.
 
-After three years of development I'm finally happy with the API. I think the reactive model works incredibly well for neatly and declaratively handling streams of values and fits perfectly with the functional approach I was moving towards.
+After three years of development I'm **finally** happy with the API. I think the reactive model works incredibly well for neatly and declaratively handling streams of values and fits perfectly with the functional approach I was moving towards.
 
-The next logical step, without giving too much away, is to build a layer on top of these solid foundations that allows developers to **describe** the kinds of behaviours they want their UIs to exhibit. Kind of like a React and/or CSS for interaction.
+The next logical step is to build a layer on top of these solid foundations that allows developers to **describe** the kinds of behaviours they want their UIs to exhibit. Kind of like a React and/or CSS for interactive motion.
 
 Once more down the rabbit hole.
