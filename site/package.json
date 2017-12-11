@@ -32,8 +32,7 @@
   ],
   "scripts": {
     "build-content": "node scripts/generate-content.js",
-    "build-site": "npm run build-content && npm run copy-dist && next build && next export -o public",
-    "copy-dist": "cp -a ../dist/ static/dist/",
+    "build-site": "npm run build-content && next build && next export -o public",
     "watch-site": "npm run build-content && next",
     "start-site": "next start",
     "lint-site": "eslint",

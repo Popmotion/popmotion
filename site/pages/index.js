@@ -1,3 +1,3 @@
-import Homepage from '~/templates/homepage';
+import Homepage from '~/templates/Homepage';
 
 export default () => <Homepage />;

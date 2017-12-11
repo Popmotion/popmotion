@@ -2,6 +2,10 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.1.0] 2017-12-12
+
+### Release!
+
 ## [8.0.37@beta] 2017-12-11
 
 ### Changed

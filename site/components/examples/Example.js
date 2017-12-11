@@ -32,7 +32,7 @@ import {
   Container,
   LiveExampleContainer,
   CodeContainer as CodeContainerPrimitive
-} from '~/templates/homepage/LiveExamples/styled';
+} from '~/templates/Homepage/LiveExamples/styled';
 
 const StyledLiveContainer = Container.withComponent(LiveProvider).extend`
   justify-content: flex-end;
