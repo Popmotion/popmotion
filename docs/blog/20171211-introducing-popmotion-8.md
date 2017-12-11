@@ -191,6 +191,12 @@ justTwo
   .start(console.log); // '4px'
 ```
 
+In the last 6 months Popmotion has spun out [Framesync](/api/framesync) and [Stylefire](/api/stylefire) as standalone libraries.
+
+It's helped me take greater care and consideration over where to draw the lines between the role and responsibilities of various parts of the library and enables people to use the isolated functionality in their own code or libraries.
+
+I can imagine a near-future where actions are spun out as a tiny reactive library, where people can start dabbling with reactive programming outside of animation without the full payload of something the size of Rx.
+
 ## And the rest...
 
 ### File size and individual imports

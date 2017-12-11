@@ -24,7 +24,7 @@ export const Title = styled.h1`
   margin-bottom: ${cols(1)};
 `;
 
-export const Logo = styled(PopmotionLogo)`
+export const Logo = styled(PopmotionLogo) `
   width: 283px;
   height: 64px;
   
@@ -58,7 +58,7 @@ export const CTA = styled.div`
   display: flex;
   transform: skewX(${SKEW});
 
-  a {
+  a, button {
     ${fontSize(24)}
     ${fontBold}
     color: ${WHITE};
