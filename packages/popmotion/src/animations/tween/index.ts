@@ -78,7 +78,10 @@ const tween = (props: TweenProps = {}): Action => action(({ update, complete }: 
     tweenTimer = onFrame().start(() => {
       elapsed += timeSinceLastFrame() * playDirection;
       updateTween();
-      if (isTweenComplete() && complete) onFrameUpdate(complete, true);
+      if (isTweenComplete() && complete) {
+        tweenTimer.stop();
+        onFrameUpdate(complete, true);
+      }
     });
   };
 

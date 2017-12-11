@@ -31,7 +31,10 @@ const decay = (props: Props = {}): Action => action(({ complete, update }) => {
 
     update(current);
 
-    if (!isMoving) complete();
+    if (!isMoving) {
+      timer.stop();
+      complete();
+    }
   });
 
   return {

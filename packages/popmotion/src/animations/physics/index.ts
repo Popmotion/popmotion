@@ -38,7 +38,10 @@ const physics = (props: Props = {}): Action => action(({ complete, update }): Ph
 
     const isComplete = (restSpeed !== false && (!velocity || Math.abs(velocity) <= restSpeed));
 
-    if (isComplete) complete();
+    if (isComplete) {
+      timer.stop();
+      complete();
+    }
   });
 
   return {

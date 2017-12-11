@@ -59,6 +59,7 @@ const spring = (props: SpringProps = {}): Action => action(({ update, complete }
     if (isBelowVelocityThreshold && isBelowDisplacementThreshold) {
       position = to;
       update(position);
+      springTimer.stop();
       complete();
     } else {
       update(position);
