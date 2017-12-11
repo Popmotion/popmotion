@@ -62,6 +62,7 @@ export const CTA = styled.div`
     ${fontSize(24)}
     ${fontBold}
     color: ${WHITE};
+    cursor: pointer;
     text-decoration: none;
     padding: ${cols(1)} ${cols(2)};
     transform: skewX(${UNSKEW});

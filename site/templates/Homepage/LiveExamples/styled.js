@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { fontBold, fontSize } from '~/styles/fonts';
+import { fontBold, fontSize, lineHeight } from '~/styles/fonts';
 import { cols, WHITE, ENTITY, GREEN, ACTION, BRAND, SUPER_LIGHT_GREY, LIGHT_GREY, SKEW, UNSKEW, media } from '~/styles/vars';
 
 export const Container = styled.div`
@@ -206,4 +206,68 @@ export const ColorPanel = styled.div`
 export const ThreeContainer = ExamplePositioning.extend`
   height: 100%;
   min-height: 300px;
+`;
+
+export const ModalShade = styled.div`
+  opacity: 0;
+  background: radial-gradient(circle at center, rgba(0, 0, 0, 0.4) 0, rgba(0,0,0,0.8) 100%);
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  will-change: opacity;
+`;
+
+export const ModalContainer = styled.div`
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+`;
+
+export const Modal = styled.div`
+  opacity: 0;
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+  background: white;
+  border-radius: 5px;
+  padding: 30px 45px;
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
+export const ModalActions = styled.div`
+  align-self: flex-end;
+  margin-top: 20px;
+`;
+
+const ModalButton = styled.button`
+  cursor: pointer;
+  color: white;
+  background-color: ${ACTION};
+  font-size: 24px;
+  border: none;
+  padding: 20px 25px;
+`;
+
+export const ModalCancel = ModalButton.extend`
+  background-color: white;
+  color: ${BRAND};
+`;
+
+export const ModalOk = ModalButton.extend`
+  background-color: ${GREEN};
+`;
+
+export const ModalHeader = styled.h2`
+  ${fontSize(48)}
+  ${lineHeight(54)}
+  ${fontBold}
+  margin-bottom: 20px;
 `;
