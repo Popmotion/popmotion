@@ -47,7 +47,7 @@ class Example extends React.Component {
   };
 
   cancelModal = () => {
-    timeline([
+    this.animation = timeline([
       {
         track: 'modal',
         duration: 200,
@@ -64,7 +64,7 @@ class Example extends React.Component {
   };
 
   okModal = () => {
-    timeline([
+    this.animation = timeline([
       {
         track: 'modal',
         duration: 200,
@@ -81,7 +81,7 @@ class Example extends React.Component {
   };
 
   animateOpen = () => {
-    timeline([
+    this.animation = timeline([
       { track: 'shade', from: 0, to: 1, ease: easing.linear },
       '-100',
       tweenUp('modal'),

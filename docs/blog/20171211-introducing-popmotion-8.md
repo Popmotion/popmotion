@@ -9,15 +9,15 @@ author: Matt Perry
 
 Popmotion 8 is a functional, reactive animation library.
 
-It introduces `decay`, `everyFrame`, `keyframes` and `timeline` animations and makes input dragging a breeze with our revamped `pointer` and `multitouch` actions.
+It's the result of over three months work, the result of wanting to add a humble `pipe` method and instead tumbling down the rabbit hole.
+
+It introduces new animations: `decay`, `everyFrame`, `keyframes` and `timeline`. It makes input dragging a breeze with our revamped `pointer` and `multitouch` actions.
 
 Crucially, there's a new streamlined, reactive API.
 
-This new API reflects our gradual shift towards functional programming and adopts it as a core part of the design philosophy.
+This new API reflects Popmotion's gradual shift towards functional programming and adopts it as a core part of the design philosophy.
 
-The result is a small, flexible and composable library that all started because I wanted to add a `pipe` method and instead fell down the rabbit hole.
-
-Let's take a look at what's new.
+The result is a small, flexible and composable library that I hope you'll find fun to use. Let's take a look at what's new.
 
 ## Animations
 
@@ -226,8 +226,12 @@ tween({
 
 That's most of what's new in Popmotion 8. Existing users should check out our [upgrade guide](/blog/20171210-popmotion-8-upgrade-guide) to handle breaking changes.
 
-After three years of development I'm **finally** happy with the API. I think the reactive model works incredibly well for neatly and declaratively handling streams of values and fits perfectly with the functional approach I was moving towards.
+After three years of development I'm **finally** happy with the API. I think the reactive model works incredibly well for neatly and declaratively handling streams of values and fits perfectly with the functional approach I was already moving towards.
 
-The next logical step is to build a layer on top of these solid foundations that allows developers to **describe** the kinds of behaviours they want their UIs to exhibit. Kind of like a React and/or CSS for interactive motion.
+With these solid foundations in place, the next logical step feels like exploring a way of describing the properties of UI elements and having motion and interactions derive naturally from that. Like a physically-based rendering for motion.
 
 Once more down the rabbit hole.
+
+---
+
+[Get started with Popmotion](/learn/get-started)

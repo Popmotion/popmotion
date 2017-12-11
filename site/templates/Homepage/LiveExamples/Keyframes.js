@@ -13,7 +13,7 @@ const code = `keyframes({
     { x: 0, y: 0, rotateY: 0, rotateX: 0, background: '${ENTITY}' }
   ],
   duration: 3000,
-  ease: easing.easeInOut,
+  easings: easing.easeInOut,
   loop: Infinity
 })`;
 
@@ -44,7 +44,7 @@ class Example extends React.Component {
         { x: 0, y: 0, rotateY: 0, rotateX: 0, backgroundColor: ENTITY }
       ],
       duration: 3000,
-      ease: [easing.easeInOut, easing.easeInOut, easing.easeInOut, easing.easeInOut],
+      easings: [easing.easeInOut, easing.easeInOut, easing.easeInOut, easing.easeInOut],
       loop: Infinity
     }).start(this.boxStyler.set);
   }

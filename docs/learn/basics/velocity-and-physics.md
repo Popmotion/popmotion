@@ -6,11 +6,11 @@ category: basics
 
 # Physics and velocity
 
-A core feature of Popmotion is the ability for some animations (`decay`, `physics` and `spring`) to take a `velocity` parameter.
+A core feature of Popmotion is the ability for some animations ([decay](/api/decay), [spring](/api/spring) and [physics](/api/physics)) to take a `velocity` parameter.
 
-`velocity` changes each of these animations in a way that feels natural and visceral. By accepting the velocity of a previous animation we create smoother transitions between animations.
+`velocity` changes each of these animations in a way that feels natural and visceral.
 
-When we take this `velocity` from pointer input, it allows the user to directly affect animations with their own force leading to natural and playful interactions. 
+By passing the velocity of an existing animation to another, we can create natural-feeling transitions. And if that existing animation is `pointer`, it allows the user to directly affect animations with their own force leading to natural and playful interactions. 
 
 ## Inspect velocity
 
@@ -81,16 +81,15 @@ Now we can replace our `startTracking` function with this:
 
 ```javascript
 const startTracking = () => {
-  pointer(ballXY.get())
-    .start(ballXY);
+  pointer(ballXY.get()).start(ballXY);
 };
 ```
 
-As an added benefit of using `value`, a value **can't be subscribed to more than one action at a time**.
+As an added benefit of using `value`, a `value` **can't be subscribed to more than one action at a time**.
 
 This means that we can stop using `pointerTracker` to maintain a reference to our active `pointer`.
 
-Instead, we can either use `ballXY.stop()`, which will stop its currently active action. Or, we can provide it to a different action, which is what we'll do in the following examples.
+Instead, we can either use `ballXY.stop()`, which will stop the action it's currently subscribed to. Or, we simply provide it to a different action, which is what we'll do in the following examples.
 
 For now, amend `stopTracking` so it queries `ballXY`'s current velocity:
 
@@ -104,7 +103,7 @@ const stopTracking = () => {
 
 Three Popmotion animations accept a `velocity` property: `decay`, `physics` and `spring`.
 
-Let's modify `stopTracking` three times so we provide `velocity` and take a look at what each of these animations does with it.
+Let's modify `stopTracking` three times, once for each, to see what they each do with `velocity`.
 
 ### `decay`
 
@@ -157,9 +156,9 @@ decay({
 
 [`spring`](/api/spring) is a spring simulation using `mass`, `velocity`, `stiffness` and `damping`. It can be used to simulate a wide variety of spring-feels.
 
-Springs are great for interaction designers because they're expressive. For instance, you could design a spring that has the same `stiffness` and `damping`, but the `mass` property could be based on the relative size of the element moving. A very easy way to make an interface feel "real".
+Springs are great for interaction designers because they're expressive. For instance, you could design a spring that has a `stiffness` and `damping` property, but the `mass` property is based on the relative size of the element moving.
 
-`spring` has defaults for all properties but you'll more than likely want to adjust at least `stiffness` and `damping`, and the lower the `stiffness` the more important it is you pass through `velocity` too:
+`spring` has defaults for all properties but you'll likely want to adjust at least `stiffness` and `damping`:
 
 ```javascript
 spring({
@@ -205,14 +204,14 @@ However, `decay` and `spring` animations are **differential equations** that res
 
 These equations are incredibly accurate, offering the smoothest motion and in the near future, will allow these animations to be scrubbable the same way `tween` is.
 
-Instead, `physics` is an **intergrated simulation**. This means that, once the simulation has started, its properties **can be modified** because `physics` uses **its current state** to calculate its next, unlike the other two which are entirely deterministic.
+Instead, `physics` is an **intergrated simulation**. This means that, once the simulation has started, its properties **can be modified** because `physics` uses **its current state** to calculate its next
 
-For instance, instead of normal `pointer` tracking, we could tether a `physics` spring between the ball and the pointer location:
+For instance, we can tether a `physics` spring between the ball and the pointer:
 
 ```javascript
 const springTo = physics({
   velocity: ballXY.getVelocity(),
-  friction: 0.8,
+  friction: 0.6,
   springStrength: 400,
   to: ballXY.get(),
   restSpeed: false
@@ -234,7 +233,7 @@ let pointerTracker;
 function startTracking() {
   activeAction = physics({
     velocity: ballXY.getVelocity(),
-    friction: 0.8,
+    friction: 0.6,
     springStrength: 400,
     to: ballXY.get(),
     restSpeed: false
