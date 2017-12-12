@@ -163,10 +163,11 @@ Remember that `componentWillEnter`, `componentWillAppear` and `componentWillLeav
     rest: ({ value, setStateTo, ref, context }) => {
       if (context.listener) context.listener.stop();
 
-			decay({
-				from: value.get(),
-				velocity: value.getVelocity()
-			}).start(value);
+      physics({
+        from: value.get(),
+        velocity: value.getVelocity(),
+        friction: 0.8
+      }).start(value);
 
       context.listener = listen(ref, 'mousedown touchstart').start(setStateTo.isDragging);
     },

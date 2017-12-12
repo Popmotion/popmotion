@@ -55,10 +55,8 @@ export default function spinnable(node, {
     }).start(nodeRotation);
   }
 
-  node.addEventListener('mousedown', startTracking);
-  node.addEventListener('touchstart', startTracking, { passive: false });
-  document.addEventListener('mouseup', stopTracking);
-  document.addEventListener('touchend', stopTracking);
+  listen(node, 'mousedown touchstart').start(startTracking);
+  listen(document, 'mouseup touchend').start(stopTracking);
 
   return {
     stop: () => active && active.stop()

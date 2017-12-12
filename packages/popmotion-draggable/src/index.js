@@ -1,4 +1,5 @@
 import value from 'popmotion/reactions/value';
+import listen from 'popmotion/input/listen';
 import pointer from 'popmotion/input/pointer';
 import styler from 'stylefire';
 
@@ -15,13 +16,11 @@ export default function draggable(node, {
   const values = {};
 
   if (x) {
-    values.x = value(initialX);
-    values.x.subscribe((v) => nodeStyler.set('x', v));
+    values.x = value(initialX, nodeStyler.set('x'));
   }
 
   if (y) {
-    values.y = value(initialY);
-    values.y.subscribe((v) => nodeStyler.set('y', v));
+    values.y = value(initialY, nodeStyler.set('y'));
   }
 
   let trackPointer;
@@ -44,10 +43,8 @@ export default function draggable(node, {
     if (onDragStop) onDragStop(values);
   }
 
-  node.addEventListener('mousedown', startTracking);
-  node.addEventListener('touchstart', startTracking, { passive: false });
-  document.addEventListener('mouseup', stopTracking);
-  document.addEventListener('touchend', stopTracking);
+  listen(node, 'mousedown touchstart').start(startTracking);
+  listen(document, 'mouseup touchend').start(stopTracking);
 
   return {
     stop: () => trackPointer && trackPointer.stop()
