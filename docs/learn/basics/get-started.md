@@ -15,7 +15,7 @@ Actions are streams of values that can be started and stopped, like tweens, phys
 
 Actions are unopinionated, so those values can be used to create animations with CSS, SVG, React, Three.js... any API that accepts a number as an input.
 
-In this simple introductoary guide we're going to install Popmotion and use it to animate an element using the `tween` animation and DOM `styler`.
+In this simple introductory guide we're going to install Popmotion and use it to animate an element using the `tween` animation and DOM `styler`.
 
 ## Installation
 
