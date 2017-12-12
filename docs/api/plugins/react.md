@@ -197,4 +197,4 @@ Remember that `componentWillEnter`, `componentWillAppear` and `componentWillLeav
 
 **Note:** In the above example, we're using the `setRef` escape hatch to get a reference to our DOM node. We're then binding `touchstart` events directly to that, rather than to the React component.
 
-This is so we can set the event's `{ passive: false }` option, which was made `true` by default in Chrome 56. For most use-cases, this improves performance, but for dragging a DOM element it's a performance-killer and prevents us from stopping the page from scrolling simultaneously. Hopefully, React will provide a way for us to set this via the component API.
+This is so Popmotion can set the event's `{ passive: false }` option, which was made `true` by default in Chrome 56. For most use-cases, this improves performance, but for dragging a DOM element it's a performance-killer and prevents us from stopping the page from scrolling simultaneously. Hopefully, React will provide a way for us to set this via the component API.
