@@ -77,6 +77,7 @@ Set an initial state for the value.
 #### `onStateChange: Function{}`
 Object of named functions that fire when their state changes. Each function receives an object with the following props:
   - `value: Value | Value{} | Value[]`
+  - `context: {}`: A mutatable object for you to store listeners etc.
   - `previousState: string`: State before current state change.
   - `setStateTo: Function{}`: Object of state setters (each optionally accepts an `Event`).
   - `ref: Element`: A reference to the mounted React component, **if** a component was provided `setRef`.
@@ -159,42 +160,24 @@ Remember that `componentWillEnter`, `componentWillAppear` and `componentWillLeav
   initialState="rest"
   v={{ x: 0, y: 0 }}
   onStateChange={{
-    rest: ({ value, setStateTo, ref }) => {
-      const { x, y } = value;
-      const springProps = {
-        to: 0,
-        spring: 500,
-        friction: 0.9
-      };
+    rest: ({ value, setStateTo, ref, context }) => {
+      if (context.listener) context.listener.stop();
 
-      physics({
-        ...springProps,
-        from: x.get(),
-        velocity: x.getVelocity()
-      }).start(x);
+			decay({
+				from: value.get(),
+				velocity: value.getVelocity()
+			}).start(value);
 
-      physics({
-        ...springProps,
-        from: y.get(),
-        velocity: y.getVelocity()
-      }).start(y);
-
-      ref.addEventListener('mousedown', setStateTo.isDragging);
-      ref.addEventListener('touchstart', setStateTo.isDragging, { passive: false });
+      context.listener = listen(ref, 'mousedown touchstart').start(setStateTo.isDragging);
     },
-    isDragging: ({ value, setStateTo, e }) => {
-      e.preventDefault();
-      const { x, y } = value;
-      const trackPointer = pointerDelta({
-        x: x.get(),
-        y: y.get()
-      }).start((v) => {
-        x.update(v.x);
-        y.update(v.y);
-      });
+    isDragging: ({ value, setStateTo, e, context }) => {
+      if (context.listener) context.listener.stop();
 
-      document.addEventListener('mouseup', setStateTo.rest);
-      document.addEventListener('touchend', setStateTo.rest);
+      e.preventDefault();
+
+      pointer(value.get()).start(value);
+      
+      context.listener = listen(document, 'mouseup touchend').start(setStateTo.rest);
     }
   }}
 >

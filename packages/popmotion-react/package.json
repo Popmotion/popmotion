@@ -1,6 +1,6 @@
 {
   "name": "popmotion-react",
-  "version": "1.1.1",
+  "version": "2.1.0",
   "description": "Use physics, animation and input tracking with Popmotion and React",
   "author": "Matt Perry <sirhound@popmotion.io>",
   "homepage": "http://popmotion.io",
@@ -27,9 +27,7 @@
   "analyze": true,
   "license": "MIT",
   "scripts": {
-    "compile": "babel src --out-dir lib",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "compile": "babel src --out-dir lib"
   },
   "devDependencies": {
     "@storybook/react": "^3.1.7",
@@ -61,7 +59,7 @@
     "three": "^0.86.0"
   },
   "peerDependencies": {
-    "popmotion": "^7.7.0",
+    "popmotion": "^8.1.0",
     "react": "^15.5.4",
     "react-dom": "~15.5.3"
   },

@@ -2,6 +2,14 @@
 
 Popmotion x React adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.1.0] 2017-12-12
+
+- Adding `context`.
+
+## [2.0.0] 2017-12-12
+
+- Upgrading to Popmotion 8.
+
 ## [1.1.1] 2017-08-24
 
 - Changing `popmotion` to peer dependency.

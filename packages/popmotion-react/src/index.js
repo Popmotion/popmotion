@@ -13,6 +13,7 @@ export class MotionValue extends React.Component {
 
     const isCompositeValue = (typeof v !== 'number');
 
+    const context = {};
     this.value = value(v);
     this.valueState = initialState;
     this.state = {
@@ -36,7 +37,8 @@ export class MotionValue extends React.Component {
               previousState: state,
               setStateTo,
               e,
-              onComplete
+              onComplete,
+              context
             });
 
             this.setState({ state: key });
