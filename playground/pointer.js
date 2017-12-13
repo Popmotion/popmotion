@@ -2,7 +2,7 @@ import React from 'react';
 import { Box } from './inc';
 import styler from 'stylefire';
 import pointer from '../packages/popmotion/lib/input/pointer';
-import touch from '../packages/popmotion/lib/input/touch';
+import multitouch from '../packages/popmotion/lib/input/multitouch';
 import spring from '../packages/popmotion/lib/animations/spring';
 import value from '../packages/popmotion/lib/reactions/value';
 import { applyOffset } from '../packages/popmotion/lib/transformers';
@@ -65,10 +65,10 @@ export class DragWithDeltaPointer extends React.Component {
 export class Multitouch extends React.Component {
   componentDidMount() {
     document.addEventListener('touchstart', () => {
-      touch()
+      multitouch()
         .while(({ touches }) => touches.length > 1)
         .start(console.log)
-    })
+    });
   }
 
   render() {
