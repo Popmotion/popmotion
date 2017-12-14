@@ -103,6 +103,10 @@ export const CodeContainer = styled.div`
     border: none;
     border-top: 2px solid ${ENTITY};
 
+    h4 {
+      transform: none;
+    }
+
     pre {
       transform: none;
       line-height: 18px;
