@@ -9,7 +9,7 @@ import { applyOffset } from '../packages/popmotion/lib/transformers';
 
 export class Drag extends React.Component {
   setRef = (dom) => {
-    if (!dom) dom;
+    if (!dom) return;
     this.box = styler(dom);
   };
 
@@ -28,13 +28,13 @@ export class Drag extends React.Component {
   };
 
   render() {
-    return <Box onMouseDown={this.startDrag} onTouchStart={this.startDrag} innerRef={this.setRef} />
+    return <Box onMouseDown={this.startDrag} onTouchStart={this.startDrag} innerRef={this.setRef} />;
   }
 }
 
 export class DragWithDeltaPointer extends React.Component {
   setRef = (dom) => {
-    if (!dom) dom;
+    if (!dom) return;
     this.box = styler(dom);
     this.boxXY = value({ x: 0, y: 0 });
     this.boxXY.subscribe(this.box.set);
@@ -52,26 +52,42 @@ export class DragWithDeltaPointer extends React.Component {
       to: 0,
       velocity: this.boxXY.getVelocity(),
       stiffness: 100,
-    }).start(this.boxXY)
+    }).start(this.boxXY);
     document.removeEventListener('mouseup', this.stopDrag);
     document.removeEventListener('touchend', this.stopDrag);
   };
 
   render() {
-    return <Box onMouseDown={this.startDrag} onTouchStart={this.startDrag} innerRef={this.setRef} />
+    return <Box onMouseDown={this.startDrag} onTouchStart={this.startDrag} innerRef={this.setRef} />;
   }
 }
 
 export class Multitouch extends React.Component {
+  setRef = (dom) => {
+    if (!dom) return;
+    this.box = styler(dom);
+    this.boxRotate = value(0, this.box.set('rotate'));
+  };
+
+  startRotate = () => {
+    multitouch({
+      rotate: this.boxRotate.get()
+    })
+      .while(({ touches }) => touches.length === 2)
+      .pipe(({ rotate }) => rotate)
+      .start(this.boxRotate);
+  }
+
   componentDidMount() {
-    document.addEventListener('touchstart', () => {
-      multitouch()
-        .while(({ touches }) => touches.length > 1)
-        .start(console.log)
-    });
+    document.addEventListener('touchstart', this.startRotate);
+  }
+
+  componentWillUnmount() {
+    if (this.boxRotate) this.boxRotate.stop();
+    document.removeEventListener('touchstart', this.startRotate);
   }
 
   render() {
-    return null;
+    return <Box innerRef={this.setRef} />;
   }
 }

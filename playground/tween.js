@@ -1,5 +1,5 @@
 import React from 'react';
-import { BaseAnimation, Box } from './inc';
+import { BaseAnimation } from './inc';
 import tween from '../packages/popmotion/lib/animations/tween';
 import value from '../packages/popmotion/lib/reactions/value';
 
