@@ -1,5 +1,5 @@
 import React from 'react';
-import { BaseAnimation, Box } from './inc';
+import { BaseAnimation } from './inc';
 import chain from '../packages/popmotion/lib/compositors/chain';
 import composite from '../packages/popmotion/lib/compositors/composite';
 import delay from '../packages/popmotion/lib/compositors/delay';

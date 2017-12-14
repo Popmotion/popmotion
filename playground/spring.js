@@ -1,5 +1,5 @@
 import React from 'react';
-import { BaseAnimation, Box } from './inc';
+import { BaseAnimation } from './inc';
 import spring from '../packages/popmotion/lib/animations/spring';
 
 export class Spring extends BaseAnimation {
