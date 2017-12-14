@@ -28,7 +28,8 @@ class Example extends React.Component {
       y: smooth(200)
     });
 
-    listen(ref, 'mousedown touchstart').start(() => {
+    listen(ref, 'mousedown touchstart').start((e) => {
+      e.preventDefault();
       schedule(everyFrame(), pointer(this.ballXY.get()))
         .pipe(smoothXY)
         .start(this.ballXY)

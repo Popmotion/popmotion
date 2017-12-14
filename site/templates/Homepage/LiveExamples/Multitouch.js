@@ -21,7 +21,10 @@ class Example extends React.Component {
 
     listen(ref, 'touchstart')
       .filter(({ touches }) => touches.length >= 2)
-      .start(() => multitouch(this.box.get()).start(this.box));
+      .start((e) => {
+        e.preventDefault();
+        multitouch(this.box.get()).start(this.box)
+      });
 
     listen(document, 'mouseup touchend')
       .start(() => this.box.stop());

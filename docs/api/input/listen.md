@@ -18,6 +18,36 @@ import listen from 'popmotion/input/listen';
 
 ## Usage
 
+To listen to an event, provide a DOM element and an event name to `listen`:
+
+```javascript
+listen(document, 'mousemove')
+  .start((e) => console.log(e));
+```
+
+### Multiple events
+
+Multiple events can be subscribed to by providing a space-delimited string:
+
+```javascript
+listen(document, 'touchstart touchend')
+```
+
+### Chainable actions
+
+The primary benefit of using `listen` is passing each event through the chainable actions like `filter`. For instance, here's an event listener that only fires when two or more touches are detected:
+
+```javascript
+const onMultitouch = listen(document, 'touchstart')
+  .filter(({ touches }) => touches.length > 1);
+
+onMultitouch.start((e) => ...);
+```
+
+### Options
+
+`listen` optionally accepts a third argument of options:
+
 ```typescript
 type EventOpts = boolean | {
   capture?: boolean;
@@ -26,19 +56,6 @@ type EventOpts = boolean | {
 };
 
 listen(element: Element, eventNames: string, opts?: EventOpts): Action
-```
-
-To listen to an event, provide a DOM element and an event name to `listen`:
-
-```javascript
-listen(document, 'mousemove')
-  .start((e) => console.log(e));
-```
-
-Multiple events can be subscribed to by providing a space-delimited string:
-
-```javascript
-listen(document, 'touchstart touchend')
 ```
 
 ## Methods

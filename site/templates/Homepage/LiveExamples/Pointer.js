@@ -16,11 +16,12 @@ class Example extends React.Component {
 
     const ballStyler = styler(ref);
     const ballXY = value({ x: 0, y: 0 }, ballStyler.set);
-    
+
     listen(ref, 'mousedown touchstart')
-      .start(() => pointer(ballXY.get())
-        .start(ballXY)
-      );
+      .start((e) => {
+        e.preventDefault();
+        pointer(ballXY.get()).start(ballXY);
+      });
 
     listen(document, 'mouseup touchend')
       .start(() => ballXY.stop());

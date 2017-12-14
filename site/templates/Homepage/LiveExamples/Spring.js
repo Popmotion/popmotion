@@ -16,7 +16,8 @@ class Example extends React.Component {
     this.ballXY = value({ x: 0, y: 0 }, this.boxStyler.set);
 
     listen(ref, 'mousedown touchstart')
-      .start(() => {
+      .start((e) => {
+        e.preventDefault();
         pointer(this.ballXY.get()).start(this.ballXY);
       });
 

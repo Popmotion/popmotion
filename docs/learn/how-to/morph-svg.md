@@ -106,7 +106,9 @@ pointer()
   .start()
 ```
 
-However, neither library accepts numbers outside of `0` and `1`, which entails the following:
+One caveat, however, is neither library accepts numbers outside of `0` and `1`, which entails the following:
 
 - `spring` needs to be overdamped by choosing a `damping` property high enough to prevent overshoot.
 - Easing functions that generate overshoot, like `backOut`, will lead to stunted animations.
+
+You can of course `pipe` animations through the `clamp` [transformer](/api/transformers) for safety, but ideally you'll want to create animations that don't exceed these limits.
