@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.1.2] 2017-12-12
+
+### Changed
+
+- Removed `esnext` and `module` settings from package.json, added `src` to exclude.
+
 ## [8.1.1] 2017-12-12
 
 ### Changed

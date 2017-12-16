@@ -1,12 +1,10 @@
 {
   "name": "popmotion",
-  "version": "8.1.1",
+  "version": "8.1.2",
   "description": "A functional, reactive motion library.",
   "author": "Matt Perry",
   "homepage": "https://popmotion.io",
   "main": "./index.js",
-  "module": "./src",
-  "esnext": "./src",
   "repository": {
     "type": "git",
     "url": "https://github.com/Popmotion/popmotion"
