@@ -98,6 +98,16 @@ const rgbRange = clamp(0, 255);
 rgbRange(256); // 255
 ```
 
+### `conditional`
+Conditionally applies a transformer if `check` returns `true`.
+
+```javascript
+const constrainWithSpring = conditional(
+  v => v < 0,
+  nonlinearSpring(50, 0)
+);
+```
+
 ### `interpolate`
 Returns a function that, when passed a value, interpolates from the `inputRange` to the `outputRange`.
 

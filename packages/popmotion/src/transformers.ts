@@ -95,6 +95,13 @@ const combineFunctions = (a: Function, b: Function) => (v: any) => b(a(v));
 export const pipe = (...transformers: Function[]) => transformers.reduce(combineFunctions);
 
 /**
+ * Conditionally apply a transformer using the provided function when `check` returns `true`
+ */
+export type Check = (v: any) => boolean;
+export type Apply = (v: any) => number;
+export const conditional = (check: Check, apply: Apply) => (v: any): any => check(v) ? apply(v) : v;
+
+/**
  * Interpolate from set of values to another
  */
 export const interpolate = (input: number[], output: number[], rangeEasing: Easing[]) => {
