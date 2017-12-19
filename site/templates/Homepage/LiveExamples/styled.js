@@ -127,8 +127,8 @@ export const ExampleItem = styled.div`
 `;
 
 export const Box = ExampleItem.extend`
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
 `;
 
 export const Ball = ExampleItem.extend`

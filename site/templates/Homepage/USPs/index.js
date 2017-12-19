@@ -55,7 +55,7 @@ export default () => (
       <Example
         title="Decay"
         link="/api/decay"
-        description="Exponentially-decayed velocity to smoothly dampen momentum."
+        description="Smoothly dampen velocity for native-feeling momentum scrolling."
       >
         <DecayExample />
       </Example>
@@ -100,7 +100,7 @@ export default () => (
       </Example>
       <Example
         title="Color"
-        description="Popmotion uses advanced color blending that avoids muddy brightness loss."
+        description="Popmotion uses advanced linear RGB color blending to avoid muddy brightness loss."
       >
         <ColorExample />
       </Example>
