@@ -99,9 +99,7 @@ const { px } = transform;
 const stateChangeHandlers = {
   componentWillAppear: ({ value, complete }) => tween({
     from: value.get(),
-    to: 100,
-    onUpdate: value,
-    onComplete
+    to: 100
   }).start({
     update: value,
     complete
@@ -117,7 +115,7 @@ export default () => (
 );
 ```
 
-Remember that `componentWillEnter`, `componentWillAppear` and `componentWillLeave` lifecycle methods provide `onComplete` callbacks, that are mandatory for React TransitionGroup to work.
+Remember that `componentWillEnter`, `componentWillAppear` and `componentWillLeave` lifecycle methods provide `complete` callbacks, that are mandatory for React TransitionGroup to work.
 
 ### Live examples
 
