@@ -16,6 +16,7 @@ const generateRouteDefinitions = (data) => {
     '/': { page: '/' },
     '/api': { page: '/api' },
     '/blog': { page: '/blog' },
+    '/page-not-found': { page: '/_error' },
   `;
 
   Object.keys(data).forEach((rootId) => {

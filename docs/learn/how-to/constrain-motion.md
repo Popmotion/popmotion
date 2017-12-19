@@ -78,9 +78,7 @@ We can replicate this experience with Popmotion using static springs.
 
 ## Static springs
 
-Popmotion has so many springs you could use it as a mattress.
-
-We have two actions capable of simulating springs:
+Popmotion has so many springs you could use it as a mattress. It's not a point of pride, it can be confusing. But, different springs are useful in different situations:
 
 - [Spring](/api/spring) is a highly-accurate simulation, but immutable. Most appropriate for **spring animations**.
 - [Physics](/api/physics) is a lightweight integrated simulation that can change over time. Most appropriate for **spring interactions**.
@@ -121,7 +119,7 @@ const springRange = (from, to, strength) => pipe(
 );
 ```
 
-This can be passed to 
+This can be passed to our `pipe`:
 
 ```javascript
 pointerX(handleX.get())
@@ -137,7 +135,7 @@ Try replacing `linearSpring` with `nonlinearSpring` and adjust the `strength` to
 
 ### Spring back
 
-You'll notice that if you let go of the handle outside the slider's boundaries, it just sits still. This is at odds with the perceived spring that binds the handle to the slider.
+You'll notice that if you release the handle outside the slider's boundaries, it just sits still. This is at odds with the perceived spring that binds the handle to the slider.
 
 For this, we can start a `spring` animation on the mouseup/touchend event.
 
