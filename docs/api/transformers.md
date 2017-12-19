@@ -177,7 +177,7 @@ threeStep(0.9); // 1
 ```
 
 ### `linearSpring`
-Creates a spring that, given an elasticity and an origin, will treat the provided value as a displacement.
+Creates a spring that, given an elasticity (a value less than `1`) and an origin, will treat the provided value as a displacement.
 
 `linearSpring(elasticity: number, origin: number)`
 
@@ -185,6 +185,21 @@ Creates a spring that, given an elasticity and an origin, will treat the provide
 Creates a spring that has a non-linear effect on the displacement - the greater the displacement, the greater effect on the provided value.
 
 `nonlinearSpring(elasticity: number, origin: number)`
+
+### `generateStaticSpring`
+A function that can generate new static springs like `linearSpring` and `nonlinearSpring`.
+
+This function is actually used to create those functions:
+
+```javascript
+const linearSpring = generateStaticSpring();
+const nonlinearSpring = generateStaticSpring(Math.sqrt);
+```
+
+```
+generateStaticSpring(alterDisplacement: (displacement: number) => number)
+  => (elasticity: number, origin: number)
+```
 
 ### `transformMap`
 

@@ -140,14 +140,14 @@ export const interpolate = (input: number[], output: number[], rangeEasing: Easi
   };
 };
 
-export const generateNonIntegratedSpring = (alterDisplacement: Function = noop) => (constant: number, origin: number) => (v: number) => {
+export const generateStaticSpring = (alterDisplacement: Function = noop) => (constant: number, origin: number) => (v: number) => {
   const displacement = origin - v;
   const springModifiedDisplacement = - constant * (0 - alterDisplacement(Math.abs(displacement)));
   return (displacement <= 0) ? origin + springModifiedDisplacement : origin - springModifiedDisplacement;
 };
 
-export const linearSpring = generateNonIntegratedSpring();
-export const nonlinearSpring = generateNonIntegratedSpring(Math.sqrt);
+export const linearSpring = generateStaticSpring();
+export const nonlinearSpring = generateStaticSpring(Math.sqrt);
 
 export const wrap = (min: number, max: number) => (v: number) => {
   const rangeSize = max - min;
