@@ -2,6 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.1.4] 2017-12-22
+
+### Added
+- `generateStaticSpring` transformer.
+
 ## [8.1.3] 2017-12-18
 
 ### Added
