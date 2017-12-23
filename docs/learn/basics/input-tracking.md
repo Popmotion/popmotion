@@ -23,7 +23,7 @@ Popmotion provides the [`listen` action](/api/listen) to add event listeners to 
 import { listen } from 'popmotion';
 ```
 
-It accepts event names as a space-delimited string, meaning you can use a single `listen` call to listen to mulitple events:
+It accepts event names as a space-delimited string, meaning you can use a single `listen` call to listen to multiple events:
 
 ```javascript
 listen(document, 'mousedown touchstart')

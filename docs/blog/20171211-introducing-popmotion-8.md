@@ -128,7 +128,7 @@ pointer({ x: 0, y: 0 }).start(({ x, y }) => ...)
 
 Thanks to the efforts of [Mars](https://twitter.com/marsi), Popmotion has had multitouch support since version 6.
 
-There are two major changes coming in 8. The first and most apparant is we've changed the name of the action from `touches` to `multitouch` to highlight the second change:
+There are two major changes coming in 8. The first and most apparent is we've changed the name of the action from `touches` to `multitouch` to highlight the second change:
 
 It no longer outputs just an array of touches. `touches` is joined by `scale` and `rotate` properties:
 
@@ -163,7 +163,7 @@ const just = (v) => action(({ update, complete }) => {
 just(2).start(console.log); // 2
 ```
 
-Every time we `start` an action, its initialision function runs anew, creating a new instance of the action. Because all animations are actions, we can define an animation once:
+Every time we `start` an action, its initialisation function runs anew, creating a new instance of the action. Because all animations are actions, we can define an animation once:
 
 ```javascript
 const moveRight = tween({ to: 300 });
