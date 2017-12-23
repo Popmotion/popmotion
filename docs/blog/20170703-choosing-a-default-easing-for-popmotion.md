@@ -131,7 +131,7 @@ Notice that when you press start on these examples, you're pressing the button y
 
 It makes a difference! Users can tell.
 
-It does. It makes a difference. It does.Userscantellitmakesadifferencepleasemakeadifferenceuserscantell
+It does. It makes a difference.It does.Userscantellitmakesadifferencepleasemakeadifferenceuserscantell
 
 ---
 
