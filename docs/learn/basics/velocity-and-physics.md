@@ -107,7 +107,7 @@ Let's modify `stopTracking` three times, once for each, to see what they each do
 
 ### `decay`
 
-[`decay`](/api/decay) exponentially decreases a velocity over time. It's a form of the algorthim used in smartphone momentum scrolling, making it a natural-feeling way of slowing something down.
+[`decay`](/api/decay) exponentially decreases a velocity over time. It's a form of the algorithm used in smartphone momentum scrolling, making it a natural-feeling way of slowing something down.
 
 Based on the initial properties and `velocity`, it'll automatically calculate a `target` to animate to.
 
@@ -204,7 +204,7 @@ However, `decay` and `spring` animations are **differential equations** that res
 
 These equations are incredibly accurate, offering the smoothest motion and in the near future, will allow these animations to be scrubbable the same way `tween` is.
 
-Instead, `physics` is an **intergrated simulation**. This means that, once the simulation has started, its properties **can be modified** because `physics` uses **its current state** to calculate its next
+Instead, `physics` is an **integrated simulation**. This means that, once the simulation has started, its properties **can be modified** because `physics` uses **its current state** to calculate its next
 
 For instance, we can tether a `physics` spring between the ball and the pointer:
 

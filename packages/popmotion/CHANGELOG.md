@@ -253,7 +253,7 @@ composite({
 
 ## [7.8.0] 2017-08-29
 
-- Spinning off `framesync` to it's own module and depcreating render loop functions for removal in `8.0.0`.
+- Spinning off `framesync` to it's own module and deprecating render loop functions for removal in `8.0.0`.
 
 ## [7.7.1] 2017-08-27
 
@@ -642,7 +642,7 @@ Minor bugfixes.
 - `deceleration` from `Simulate`.
 
 ### Fixed
-- Fixed bug where `Tween` would start as ended if initalised during `update` ie via a `Sequence`.
+- Fixed bug where `Tween` would start as ended if initialised during `update` ie via a `Sequence`.
 
 ## [4.3.0] 2015-12-17
 
@@ -656,7 +656,7 @@ Minor bugfixes.
 ## [4.2.7] 2015-12-09
 
 ### Fixed
-- SVG properies set ie `fillOpacity` are now getting set as `fill-opacity`.
+- SVG properties set ie `fillOpacity` are now getting set as `fill-opacity`.
 
 ## [4.2.6] 2015-12-08
 
@@ -694,7 +694,7 @@ Minor bugfixes.
 ## [4.2.0] 2015-12-02
 
 ### Changed
-- Moving to dual commericial and GPLv3 licence.
+- Moving to dual commercial and GPLv3 licence.
 
 ## [4.1.0] 2015-11-28
 
@@ -706,7 +706,7 @@ Minor bugfixes.
 ## [4.0.0] 2015-11-20
 
 ### Added
-- New core processing loop. Seperates processes into four stages: `update`, `preRender`, `render`, `postRender`.
+- New core processing loop. Separates processes into four stages: `update`, `preRender`, `render`, `postRender`.
 - `Process.once` to fire a Process for a single frame.
 - Run background processes by passing `true` to `Process.setBackground` or as the last argument to the `Process` constructor. Background processes won't spin up the process loop when activated, only running when non-background processes are active.
 
@@ -752,7 +752,7 @@ Minor bugfixes.
 - Extra tests to ensure Popmotion is loading correctly in Meteor.
 
 ### Fixed
-- Explict test for rAF for when `window` is available and `requestAnimationFrame` isn't.
+- Explicit test for rAF for when `window` is available and `requestAnimationFrame` isn't.
 
 ## [3.6.2] 2015-11-02
 

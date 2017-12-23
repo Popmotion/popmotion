@@ -58,7 +58,7 @@ const { pipe } = transform;
 
 `pipe` is named as such because it takes a list of functions and returns a new function that will run these functions from **left to right**. Essentially, creating a value pipeline.
 
-As our functions are descriptively named, and as many of them are curried, our pipelines become very easy to read. They become less imperitive, and more declarative.
+As our functions are descriptively named, and as many of them are curried, our pipelines become very easy to read. They become less imperative, and more declarative.
 
 For instance, let's compose a function that will always return a valid RGB value. RGB values are simply integers between `0` and `255`.
 

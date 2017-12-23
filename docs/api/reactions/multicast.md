@@ -1,5 +1,5 @@
 ---
-title: Mulitcast
+title: Multicast
 description: A reaction that multiple reactions can subscribe to.
 category: reactions
 ---

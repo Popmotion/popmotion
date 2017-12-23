@@ -58,7 +58,7 @@ No, because we're dirty web peasants, we have to put our nav at the top, where n
 
 Or what do `100%` and `100vh` mean in a viewport that constantly changes and never seems to report the right size? BKB.
 
-Or why is it so difficult to lock page scroll when displaying an overlay, or prevent the page from scrolling to the the top when you **do** manage to lock it, or or or. BKB.
+Or why is it so difficult to lock page scroll when displaying an overlay, or prevent the page from scrolling to the top when you **do** manage to lock it, or or or. BKB.
 
 ### Get over here
 

@@ -68,7 +68,7 @@ Immediately render, without waiting for the next frame.
 ## Getting `transform` properties
 If a `transform` property isn't present in the caching layer (because it hasn't previously been set by the developer), firing `get` on a property will return its default value (`1` for scale props, `0` for others).
 
-This is because browsers return the `transform` attribute as a matrix, and the size of the code required to convert these is prohibative. However it'd be relatively simple for someone to develop an alternative CSS renderer as a drop-in replacement.
+This is because browsers return the `transform` attribute as a matrix, and the size of the code required to convert these is prohibitive. However it'd be relatively simple for someone to develop an alternative CSS renderer as a drop-in replacement.
 
 ## Property mapping
 The following alias' can be optionally used for setting CSS props:
@@ -78,7 +78,7 @@ The following alias' can be optionally used for setting CSS props:
 - `z` -> `translateZ`
 
 ## Transform property order
-The `transform` property can be animated using template strings, but in most cases we want to animate the `rotate`, `translate` and `scale` properties seperately.
+The `transform` property can be animated using template strings, but in most cases we want to animate the `rotate`, `translate` and `scale` properties separately.
 
 In accordance with the [CSS Transforms Level 2 spec](https://drafts.csswg.org/css-transforms-2/#individual-transforms), if set individually these properties will be set in the following order:
 
