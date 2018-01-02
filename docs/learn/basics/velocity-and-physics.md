@@ -64,7 +64,7 @@ const foo = tween({
   to: { x: 100, y: 200 }
 }).start(xy);
 
-setTimeout(() => foo.getVelocity(), 100); // Returns as object
+setTimeout(() => xy.getVelocity(), 100); // Returns as object
 ```
 
 Now we know enough about `value` to get the velocity of our user's pointer.
