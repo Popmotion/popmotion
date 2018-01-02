@@ -31,7 +31,7 @@ The `init` function is provided an object of three functions: `update`, `complet
 action(({ update, complete, error }) => {})
 ```
 
-Let's define an function called `just`. It'll return an action that, when started, will fire `update` with the provided value and then `complete`:
+Let's define a function called `just`. It'll return an action that, when started, will fire `update` with the provided value and then `complete`:
 
 ```javascript
 const just = (v) => action(({ update, complete }) => {
