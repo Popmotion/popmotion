@@ -11,7 +11,7 @@ export type Values = number[] | string[] | ValueMap[] | ValueList[];
 export type KeyframeProps = {
   values: Values,
   times?: number[],
-  ease?: Easing,
+  ease?: Easing | Easing[] | { [key: string]: Easing },
   easings?: Easing[],
   elapsed?: number,
   duration?: number,
