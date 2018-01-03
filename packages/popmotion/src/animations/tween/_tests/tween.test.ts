@@ -66,15 +66,8 @@ describe('tween', () => {
 
   it('should seek correctly', () => {
     return new Promise((resolve, reject) => {
-      const failTimeout = setTimeout(() => reject('timed out'), 160);
-      const a = tween().start({
-        complete: () => {
-          clearTimeout(failTimeout);
-          resolve();
-        }
-      });
-
-      if (a.seek(0.5).getElapsed() !== 150) reject();
+      const a = tween().start(() => {});
+      a.seek(0.5).getElapsed() !== 150 ? reject() : resolve();
     });
   });
 
@@ -99,7 +92,7 @@ describe('tween', () => {
 
   it('it should loop on complete', () => {
     return new Promise((resolve, reject) => {
-      const failTimeout = setTimeout(() => reject('timed out'), 610);
+      const failTimeout = setTimeout(() => reject('timed out'), 1000);
       tween({ loop: 1 }).start({
         complete: () => {
           clearTimeout(failTimeout);

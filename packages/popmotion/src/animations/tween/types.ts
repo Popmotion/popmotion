@@ -1,10 +1,11 @@
+import { Value } from '../../reactions/value';
 import { Easing } from '../../easing';
 
 export type TweenProps = {
-  from?: number,
-  to?: number,
+  from?: Value,
+  to?: Value,
   duration?: number,
-  ease?: Easing,
+  ease?: Easing | Easing[] | { [key: string]: Easing },
   elapsed?: number,
   playDirection?: number,
   flip?: number,

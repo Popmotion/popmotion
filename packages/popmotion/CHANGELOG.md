@@ -6,6 +6,7 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - Upgrading Stylefire.
+- Corrected types on `tween`.
 
 ## [8.1.4] 2017-12-22
 
