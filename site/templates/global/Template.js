@@ -6,6 +6,11 @@ import reset from '~/styles/reset';
 import nprogressStyles from '~/styles/nprogress';
 import { BRAND } from '~/styles/vars';
 import settings from '~/data/settings.json';
+import popmotion from 'popmotion';
+
+if (typeof window !== 'undefined') {
+  window.popmotion = popmotion;
+}
 
 Router.onRouteChangeStart = () => NProgress.start();
 Router.onRouteChangeComplete = () => {
