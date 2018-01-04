@@ -1,4 +1,5 @@
 import React from 'react';
+import { currentFrameTime } from 'framesync';
 import { BaseAnimation } from './inc';
 import tween from '../packages/popmotion/lib/animations/tween';
 import value from '../packages/popmotion/lib/reactions/value';
@@ -34,7 +35,9 @@ export class TweenYoyo extends BaseAnimation {
     to: 300,
     yoyo: Infinity,
     duration: 1000
-  }).start((v) => styler.set('x', v));
+  }).start((v) => {
+    styler.set('x', v)
+  });
 }
 
 export class TweenWithVelocity extends BaseAnimation {

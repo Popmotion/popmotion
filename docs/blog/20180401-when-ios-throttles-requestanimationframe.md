@@ -47,15 +47,27 @@ Instead, the WebKit team is scorching the earth to save a few minutes of battery
 
 It'd make more sense to throttle, or even pause entirely, iframes that lie outside the viewport. This would probably save more battery life while maintaining the quality of in-viewport animations.
 
+Back to the present, this didn't explain why the examples on the homepage were stuttering. They're part of the page itself, not an iframe in sight.
+
+The familiar feeling of nausea from standing on the precipice of a rabbit hole of unknown depth was cut mercifully short when I checked the page on another iPhone.
+
+60fps. I checked the OS version, both the same. Looking at the two phones side by side, bewildered at what the difference between them could be.
+
+Until I saw it, my second realisation:
+
+![Take me from this earth](/static/images/low-power-mode.png)
+
 ## iOS throttles `requestAnimationFrame` in low power mode
-https://bugs.webkit.org/show_bug.cgi?id=168837
+
+As described in this [WebKit bug](https://bugs.webkit.org/show_bug.cgi?id=168837), iOS throttles `requestAnimationFrame` to 30fps whilst in low power mode is active.
+
 ## Conclusion
 
 iOS throttles `requestAnimationFrame` to 30fps in cross-domain iframes and in low power mode.
 
 It's a noble but misguided attempt at sacrificing quality in return for extending battery life.
 
-It's no wonder that the web has a continuing reputation for being of a lower-quality platform than native apps. This kind of nanny-state handholding would **never** be imposed on apps.
+It's no wonder that the web has a continuing reputation for being of a lower-quality platform than native apps. This kind of nanny-state hand holding would **never** be imposed on apps.
 
 This decision doesn't exist in isolation. Take Safari and its magically-appearing bottom navigation. It prevents web navigation being put in the one position recommended by Apple's own app guidelines!
 

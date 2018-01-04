@@ -6,9 +6,10 @@ import reset from '~/styles/reset';
 import nprogressStyles from '~/styles/nprogress';
 import { BRAND } from '~/styles/vars';
 import settings from '~/data/settings.json';
-import popmotion from 'popmotion';
+import * as popmotion from 'popmotion';
 
 if (typeof window !== 'undefined') {
+  console.log('Hey explorer! You can play around with Popmotion right from your console, by using window.popmotion.')
   window.popmotion = popmotion;
 }
 

@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.1.7] 2018-01-04
+
+### Changed
+
+- Updating Framesync to improve performance at 30fps.
+
 ## [8.1.6] 2018-01-03
 
 ### Fixed

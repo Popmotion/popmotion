@@ -43,7 +43,7 @@
     "clean": "git clean -fd -e node_modules/ -e lib/ src/ -x ."
   },
   "dependencies": {
-    "framesync": "^3.1.3",
+    "framesync": "^3.1.4",
     "style-value-types": "^1.0.3",
     "stylefire": "^1.1.8"
   },
