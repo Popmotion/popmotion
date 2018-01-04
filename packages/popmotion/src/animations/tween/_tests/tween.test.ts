@@ -30,18 +30,18 @@ describe('tween', () => {
 
   it('should pause, resume and correctly return isActive', () => {
     return new Promise((resolve, reject) => {
-      const failTimeout = setTimeout(reject, 460);
       const a = tween().start({
         complete: () => {
           clearTimeout(failTimeout);
           resolve();
         }
       });
-      if (a.isActive() === false) reject();
+      const failTimeout = setTimeout(() => reject('timed out ' + a.getElapsed()), 520);
+      if (a.isActive() === false) reject('active false after start');
 
       setTimeout(() => {
         a.pause();
-        if (a.isActive() === true) reject();
+        if (a.isActive() === true) reject('active after pause');
 
         setTimeout(() => {
           a.resume();

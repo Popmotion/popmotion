@@ -68,7 +68,7 @@ describe('delay', () => {
     return new Promise((resolve, reject) => {
       const time = Date.now();
       delay(100).start({
-        complete: () => Date.now() - time < 100 ? reject(Date.now() - time) : resolve()
+        complete: () => Date.now() - time < 98 ? reject(Date.now() - time) : resolve()
       });
     });
   });

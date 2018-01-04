@@ -22,7 +22,8 @@ const physics = (props: Props = {}): Action => action(({ complete, update }): Ph
   let current = from;
 
   const timer = onFrame().start(() => {
-    const elapsed = timeSinceLastFrame();
+    // Integration doesn't work well with very low numbers
+    const elapsed = Math.max(timeSinceLastFrame(), 16);
 
     if (acceleration) velocity += speedPerFrame(acceleration, elapsed);
     if (friction) velocity *= (1 - friction) ** (elapsed / 100);

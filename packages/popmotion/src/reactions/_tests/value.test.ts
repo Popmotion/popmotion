@@ -7,7 +7,7 @@ describe('value', () => {
       const num = value(0);
       physics({ velocity: 100 }).start(num);
       setTimeout(() => {
-        num.getVelocity() >= 99 && num.getVelocity() <= 101 ? resolve() : reject();
+        num.getVelocity() >= 95 && num.getVelocity() <= 105 ? resolve() : reject();
       }, 200);
     });
   })
@@ -19,7 +19,7 @@ describe('value', () => {
       setTimeout(() => {
         const velocity = num.getVelocity();
 
-        velocity.x >= 99 && velocity.x <= 101 && velocity.y >= 199 && velocity.y <= 201
+        velocity.x >= 95 && velocity.x <= 105 && velocity.y >= 195 && velocity.y <= 205
           ? resolve() : reject(`${velocity.x}, ${velocity.y}`);
       }, 200);
     });

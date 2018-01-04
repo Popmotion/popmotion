@@ -24,7 +24,7 @@ describe('keyframes', () => {
         values: [0, 1, 2],
         times: [0, .25, .5]
       }).start((v) => i = v);
-      setTimeout(() => i === 2 ? resolve() : reject(i), 210);
+      setTimeout(() => i > 1.98 && i < 2.22 ? resolve() : reject(i), 217);
     });
   });
 
