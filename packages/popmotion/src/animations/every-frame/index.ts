@@ -7,7 +7,7 @@ const frame = (): Action => action(({ update }) => {
 
   const nextFrame = () => {
     if (!isActive) return;
-    update(currentFrameTime() - startTime);
+    update(Math.max(currentFrameTime() - startTime, 0));
     onFrameUpdate(nextFrame);
   };
 

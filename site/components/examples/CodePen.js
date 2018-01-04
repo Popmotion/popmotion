@@ -1,6 +1,11 @@
 import { Centered } from '~/templates/global/grid';
+import { cols, LIGHT_GREY } from '~/styles/vars';
 
-const FrameContainer = Centered.withComponent('div');
+const FrameContainer = Centered.withComponent('div').extend`
+  margin-top: ${cols(2)};
+  margin-bottom: ${cols(2)};
+  border: 2px solid ${LIGHT_GREY};
+`;
 
 export default ({ id, height=447 }) => (
   <FrameContainer>

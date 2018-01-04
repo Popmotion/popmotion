@@ -98,6 +98,19 @@ export const P = Centered.withComponent('p').extend`
   `}
 `;
 
+export const Blockquote = MajorCentered.withComponent('blockquote').extend`
+  border-left: 2px solid ${PURPLE};
+  background: ${LIGHT_GREY};
+  transform: skewX(${SKEW});
+  padding: ${cols(1)};
+  margin-bottom: ${cols(2)};
+
+  p {
+    margin: 0;
+    transform: skewX(${UNSKEW});
+  }
+`;
+
 export const CodeTag = styled.code`
   background: #f9f9f9;
   padding: 2px 5px;
@@ -159,13 +172,6 @@ export const Hr = styled.hr`
   height: 1px;
   background-color: ${LIGHT_GREY};
   margin: ${cols(2)} 0;
-`;
-
-export const Blockquote = styled.blockquote`
-  border-left: 2px solid ${PURPLE};
-  background: ${LIGHT_GREY};
-  padding: ${cols(1)} ${cols(1)} 8px;
-  margin-bottom: ${cols(2)};
 `;
 
 const Button = styled.button`
