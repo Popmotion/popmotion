@@ -53,6 +53,7 @@ const LiveEditorWrapper = styled.div`
   height: 300px;
   max-height: 300px;
   width: 100%;
+  padding-left: ${cols(3)};
   overflow: scroll;
 `;
 
