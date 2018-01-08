@@ -54,6 +54,10 @@ const LiveEditorWrapper = styled.div`
   max-height: 300px;
   width: 100%;
   overflow: scroll;
+
+  pre {
+    transform-origin: 0 0;
+  }
 `;
 
 const StyledLivePreview = LiveExampleContainer.withComponent(LivePreview).extend`
@@ -65,6 +69,7 @@ const LiveEditorHeader = styled.h4`
   color: ${GREEN};
   ${fontBold}
   transform: skewX(${UNSKEW});
+  transform-origin: 0 0;
   display: block;
   margin-bottom: ${cols(1)};
 `;
