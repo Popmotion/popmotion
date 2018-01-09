@@ -39,6 +39,7 @@ class Example extends React.Component {
       container.innerHTML = '';
       const camera = new THREE.PerspectiveCamera(60, container.offsetWidth / container.offsetHeight, 0.1, 1000);
       const renderer = new THREE.WebGLRenderer();
+      renderer.setPixelRatio(window.devicePixelRatio);
       renderer.setSize(container.offsetWidth, container.offsetHeight);
       container.appendChild(renderer.domElement);
       
@@ -69,11 +70,9 @@ class Example extends React.Component {
       // Add lights
       const spotLight = new THREE.SpotLight(0xffffff);
       spotLight.position.set(100, 1000, 100);
-      spotLight.castShadow = false;
       scene.add(spotLight);
       const spotLight2 = new THREE.SpotLight(0xffffff);
       spotLight2.position.set(100, -1000, 100);
-      spotLight2.castShadow = false;
       scene.add(spotLight2);
       
       // Render loop
