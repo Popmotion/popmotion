@@ -50,7 +50,7 @@ const windowScroll = scroll();
 physics({
   from: windowScroll.get('top'),
   to: 500,
-  spring: 600,
+  springStrength: 600,
   friction: 1
 }).start((v) => windowScroll.set('top', v));
 ```
