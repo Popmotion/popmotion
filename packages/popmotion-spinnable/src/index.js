@@ -4,7 +4,8 @@ import {
   value,
   styler,
   physics,
-  transform
+  transform,
+  listen
 } from 'popmotion';
 const { angle } = calc;
 const { applyOffset } = transform;
