@@ -1,0 +1,14 @@
+{
+  "name": "popmotion-game-loop",
+  "version": "1.0.0",
+  "description": "A game loop for Popmotion",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "popmotion": "^8.1.8"
+  }
+}
