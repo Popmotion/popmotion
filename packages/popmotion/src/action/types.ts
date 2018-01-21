@@ -4,7 +4,7 @@ export type ActionInit = (observer: IObserver) => ColdSubscription | void;
 
 export interface ColdSubscription {
   stop?: () => void;
-  [key: string]: Function;
+  [key: string]: Function | undefined;
 }
 
 export type ActionProps = ObserverProps & {

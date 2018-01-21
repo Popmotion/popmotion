@@ -65,7 +65,7 @@ Checked my partner's phone, same OS, same make and model... 60fps.
 
 Googled for bugs with iOS 11.2.1 and 30fps rAF... Nothing. What the fuuuuuu...
 
-I stared at my phone, dumbfounded. Maybe I needed to reset my phone. Maybe it was because my phone was simply the wrong colour. Maybe I simply needed to be kinder to Siri.
+I stared at my phone, dumbfounded. Maybe I needed to reset my phone. Maybe it was because my phone was the wrong colour. Maybe I simply needed to be kinder to Siri.
 
 Luckily, I saw it, and I knew I'd found the culprit. The nausea lifted. Relief settled:
 
@@ -85,11 +85,9 @@ First, there's no doubt that it's very clever. It is, in the short-term, a boon 
 
 In the long-term, I'm not so sure. I've already covered in detail why the [mobile web is a dreadful platform](https://popmotion.io/blog/20170710-mobile-web-is-awful-and-were-all-to-blame/) to develop for.
 
-This is yet another unpredictable tributary feeding into a much larger torrent of unpredictable nonsense that we have to put up with.
+This is yet another unpredictable tributary feeding into a much larger river of unpredictable nonsense that we have to put up with.
 
-The salmon will get tired. Horizons, ambitions and standards will drop. Further emboldening mobile browser vendors to push for clever solutions to improve user experience and degrade the developer one.
-
-It's a self-perpetuating cycle that creates lazy developers by punishing them with an increasingly inconsistent and hostile environment.
+The salmon will get tired. It's a self-perpetuating cycle. Horizons, ambitions and standards will drop. Further emboldening mobile browser vendors to push for clever solutions to improve user experience and degrade the developer one.
 
 On iOS, the app developers themselves are given the responsibility to [respond to low power mode](https://developer.apple.com/library/content/documentation/Performance/Conceptual/EnergyGuide-iOS/LowPowerMode.html), whereas WebKit still hasn't implemented the [Battery Status API](https://developer.mozilla.org/en-US/docs/Web/API/Battery_Status_API). It's a familiar story, and a shame.
 

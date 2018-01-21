@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.1.8] 2018-01-15
+
+### Fixed
+
+- Fixing TS errors for `stop`
+
 ## [8.1.7] 2018-01-04
 
 ### Changed

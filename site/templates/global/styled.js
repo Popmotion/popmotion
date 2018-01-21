@@ -102,12 +102,14 @@ export const Blockquote = MajorCentered.withComponent('blockquote').extend`
   border-left: 2px solid ${PURPLE};
   background: ${LIGHT_GREY};
   transform: skewX(${SKEW});
+  transform-origin: 0 0;
   padding: ${cols(1)};
   margin-bottom: ${cols(2)};
 
   p {
     margin: 0;
     transform: skewX(${UNSKEW});
+    transform-origin: 0 0;
   }
 `;
 
