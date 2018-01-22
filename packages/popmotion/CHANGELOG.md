@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.1.9] 2018-01-22
+
+### Fixed
+
+- Fix removeEventListener in Chrome 46 [#248](https://github.com/Popmotion/popmotion/pull/248)
+
 ## [8.1.8] 2018-01-15
 
 ### Fixed

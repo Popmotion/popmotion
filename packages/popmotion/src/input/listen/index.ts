@@ -8,7 +8,7 @@ const listen: ListenFactory = (element, events, options) => action(({ update }) 
   });
 
   return {
-    stop: () => eventNames.forEach((eventName) => element.removeEventListener(eventName, update, options))
+    stop: () => eventNames.forEach((eventName) => (element.removeEventListener as EventListener)(eventName, update, options))
   };
 });
 
