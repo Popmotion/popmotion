@@ -7,7 +7,8 @@ import {
   pipe,
   snap,
   steps,
-  wrap
+  wrap,
+  conditional,
 } from '../transformers';
 
 describe('appendUnit()', () => {
@@ -125,3 +126,12 @@ describe('wrap()', () => {
     expect(wrapAround(101)).toBe(-99);
   });
 });
+
+describe('conditional()', () => {
+  it('should applies a transformer if check returns true', () => {
+    const check = v => v < 0
+    const double = (v) => v * 2;
+    expect(conditional(check, double)(1)).toBe(1)
+    expect(conditional(check, double)(-1)).toBe(-2)
+  })
+})
