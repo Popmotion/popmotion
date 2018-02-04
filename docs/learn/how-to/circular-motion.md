@@ -113,6 +113,6 @@ Applying this new function is as easy as modifying `pipe` to read:
 
 Circular motion is much easier to reason about in polar coordinates, and mapping these to cartesian is simple with `pipe`.
 
-We can animate `angle` and `radius` with seperate animations by using the `composite` composition function.
+We can animate `angle` and `radius` with separate animations by using the `composite` composition function.
 
 And finally, we can make the element rotate along with the direction of travel by converting `angle` into degrees and then adding an extra `90` degrees.
