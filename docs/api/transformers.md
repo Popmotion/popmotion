@@ -12,7 +12,7 @@ Transformers are used to take a value, transform it in some way, and then return
 ```javascript
 import { transform } from 'popmotion';
 // or:
-import transform from 'popmotion/lib/transformers';
+import * as transform from 'popmotion/transformers';
 ```
 
 ## Usage
