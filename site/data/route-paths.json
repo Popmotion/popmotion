@@ -1,5 +1,6 @@
 {
   "api": "/api",
   "learn": "/learn/get-started",
-  "blog": "/blog"
+  "blog": "/blog",
+  "community": "https://spectrum.chat/popmotion"
 }
