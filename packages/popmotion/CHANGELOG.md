@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.1.11] 2018-02-19
+
+### Update
+
+- `interpolate` roughly 200x faster when interpolating between just two numbers.
+
 ## [8.1.10] 2018-02-04
 
 ### Fixed

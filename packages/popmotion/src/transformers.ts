@@ -104,8 +104,7 @@ export const conditional = (check: Check, apply: Apply) => (v: any): any => chec
 /**
  * Interpolate from set of values to another
  */
-export const interpolate = (input: number[], output: number[], rangeEasing: Easing[]) => {
-  const rangeLength = input.length;
+const slowInterpolate = (input: number[], output: number[], rangeLength: number, rangeEasing: Easing[]) => {
   const finalIndex = rangeLength - 1;
 
   // If input runs highest -> lowest, reverse both arrays
@@ -138,6 +137,16 @@ export const interpolate = (input: number[], output: number[], rangeEasing: Easi
     const easedProgress = (rangeEasing) ? rangeEasing[i - 1](progressInRange) : progressInRange;
     return getValueFromProgress(output[i - 1], output[i], easedProgress);
   };
+};
+
+const fastInterpolate = (minA: number, maxA: number, minB: number, maxB: number) => (v: number) =>
+  (((v - minA) * (maxB - minB)) / (maxA - minA)) + minB;
+
+export const interpolate = (input: number[], output: number[], rangeEasing: Easing[]) => {
+  const rangeLength = input.length;
+  return rangeLength !== 2
+    ? slowInterpolate(input, output, rangeLength, rangeEasing)
+    : fastInterpolate(input[0], input[1], output[0], output[1])
 };
 
 export const generateStaticSpring = (alterDisplacement: Function = noop) => (constant: number, origin: number) => (v: number) => {
