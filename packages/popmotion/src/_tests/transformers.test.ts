@@ -61,6 +61,9 @@ describe('interpolate()', () => {
       expect(simpleInterpolator(500)).toBe(550);
       expect(simpleInterpolator(0)).toBe(500);
 
+      const negativeInterpolator = interpolate([-500, 500], [0, 1]);
+      expect(negativeInterpolator(-250)).toBe(.25);
+
       const complexInterpolator = interpolate(
         [0, 100, 200],
         [1000, 500, 1000]
