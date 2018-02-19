@@ -40,10 +40,6 @@
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "string-replace-loader": "^1.3.0",
-    "stylefire": "^1.0.0",
-    "ts-jest": "^21.1.0",
-    "ts-loader": "^2.3.7",
-    "typescript": "^2.7.0-dev.20171202",
     "webpack": "^3.0.0"
   },
   "jest": {

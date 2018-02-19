@@ -51,7 +51,9 @@
     "jest": "^21.1.0",
     "ts-jest": "^21.2.4",
     "ts-list": "^1.0.5",
+    "ts-loader": "^3.5.0",
     "tslint-circular-dependencies": "^0.1.0",
+    "typescript": "^2.7.2",
     "webpack": "^3.0.0"
   },
   "jest": {
