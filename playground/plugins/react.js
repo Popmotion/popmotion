@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import Motion from '../../packages/popmotion-react/lib/Motion';
 
 const Box = styled(Motion.div)`
-  width: 400px;
-  height: 400px;
+  width: 100px;
+  height: 100px;
   background: red;
 `;
 
@@ -22,7 +22,7 @@ export const DragY = () => (
 );
 
 export const DragRangeClamp = () => (
-  <Box isDraggable range={{ left: 0, right: 300 }} elasticity={0.3} density={1} />
+  <Box isDraggable="x" range={{ left: 0, right: 300 }} elasticity={0.3} density={1} />
 );
 
 export const DragRange = () => (

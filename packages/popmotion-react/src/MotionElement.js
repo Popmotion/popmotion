@@ -1,6 +1,6 @@
 import React from 'react';
-import { rangeTransformer, noop } from './utils';
-import { pointer, styler, listen, value, spring } from '../../popmotion/lib';
+import { rangeTransformer, noop, just, getDragEndAnimation } from './utils';
+import { pointer, styler, listen, value, spring, composite } from '../../popmotion/lib';
 
 // type Props = {
 //   elementType,
@@ -24,9 +24,18 @@ import { pointer, styler, listen, value, spring } from '../../popmotion/lib';
 
 export default class MotionElement extends React.Component {
   static defaultProps = {
-    dragTransform: noop,
-    density: 1
+    dragTransform: noop
   };
+
+  static getDerivedStateFromProps({ isDraggable }) {
+    console.log('runs')
+    return {
+      dragX: isDraggable === true || isDraggable === 'x',
+      dragY: isDraggable === true || isDraggable === 'y'
+    };
+  }
+
+  state = {};
 
   setRef = (ref) => {
     const { innerRef, xValue, yValue } = this.props;
@@ -73,7 +82,7 @@ export default class MotionElement extends React.Component {
 
     if (onDragStart) onDragStart();
 
-    this.draggingAction = pointer({
+    this.positionAnimation = pointer({
       x: this.x.get(),
       y: this.y.get()
     }).pipe(
@@ -83,34 +92,28 @@ export default class MotionElement extends React.Component {
   }
 
   onDragEnd() {
-    const { elasticity, onDragEnd } = this.props;
+    const { onDragEnd, range } = this.props;
 
-    if (this.draggingAction) this.draggingAction.stop();
+    if (this.positionAnimation) this.positionAnimation.stop();
     if (this.onDragEndListener) this.onDragEndListener.stop();
 
-    if (elasticity) this.springToClosestBoundary();
-
     if (onDragEnd) onDragEnd();
+
+    // Animate to a stop
+    this.positionAnimation = composite({
+      x: getDragEndAnimation(this.x, range.left, range.right),
+      y: getDragEndAnimation(this.y, range.top, range.bottom)
+    }).start(v => this.onDrag(v));
   }
 
   onDrag(xy) {
-    const { onDrag, isDraggable } = this.props;
+    const { dragX, dragY } = this.state;
+    const { onDrag } = this.props;
 
     if (onDrag) onDrag(xy);
 
-    if (isDraggable === true || isDraggable === 'x') this.x.update(xy.x);
-    if (isDraggable === true || isDraggable === 'y') this.y.update(xy.y);
-  }
-
-  springToClosestBoundary() {
-    const radius = this.ref.getBoundingClientRect().width / 2;
-    const area = Math.PI * radius * radius;
-    console.log(area * this.props.density / 10000)
-    spring({
-      from: { x: this.x.get(), y: this.y.get() },
-      to: 0,
-      mass: area * this.props.density / 10000
-    }).start(v => this.onDrag(v));
+    if (dragX) this.x.update(xy.x);
+    if (dragY) this.y.update(xy.y);
   }
 
   /**
