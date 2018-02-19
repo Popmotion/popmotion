@@ -10,5 +10,6 @@ export type SpringProps = {
 };
 
 export type SpringInterface = {
-  stop: () => void
+  stop: () => void,
+  setOrigin: (origin: number) => void;
 };

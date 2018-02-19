@@ -1,21 +1,30 @@
 import React from 'react';
-import { Box } from '../inc';
-import pointer from '../../packages/popmotion/lib/input/pointer';
-import { MotionValue } from '../../packages/popmotion-react/lib';
+import styled from 'styled-components';
+//import pointer from '../../packages/popmotion/lib/input/pointer';
+import Motion from '../../packages/popmotion-react/lib/Motion';
 
-const stateChangeHandlers = {
-  isDragging: ({ value }) => pointer(value.get()).start(value),
-  rest: ({ value }) => value.stop()
-};
+const Box = styled(Motion.div)`
+  width: 400px;
+  height: 400px;
+  background: red;
+`;
 
-export const PopmotionReact = () => (
-  <MotionValue v={{ x: 0, y: 0 }} onStateChange={stateChangeHandlers}>
-    {({ v, setStateTo }) => (
-      <Box
-        style={{ transform: `translateX(${v.x}px) translateY(${v.y}px)` }}
-        onMouseDown={setStateTo.isDragging}
-        onMouseUp={setStateTo.rest}
-      />
-    )}
-  </MotionValue>
+export const DragXY = () => (
+  <Box isDraggable />
+);
+
+export const DragX = () => (
+  <Box isDraggable="x" />
+);
+
+export const DragY = () => (
+  <Box isDraggable="y" />
+);
+
+export const DragRangeClamp = () => (
+  <Box isDraggable range={{ left: 0, right: 300 }} elasticity={0.3} density={1} />
+);
+
+export const DragRange = () => (
+  <Box isDraggable range={{ left: 0, right: 300 }} />
 );

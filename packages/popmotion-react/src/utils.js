@@ -1,4 +1,4 @@
-import { transform } from 'popmotion';
+import { transform } from '../../popmotion/lib';
 const { conditional, linearSpring, pipe, transformMap } = transform;
 
 export const noop = v => v;
@@ -19,6 +19,6 @@ const axisClamp = (axis, min, max, elasticity = 0) => pipe(
 );
 
 export const rangeTransformer = ({ left, right, top, bottom }, elasticity = 0) => transformMap({
-  x: axisClamp('x', top, bottom, elasticity),
-  y: axisClamp('y', left, right, elasticity)
+  x: axisClamp('x', left, right, elasticity),
+  y: axisClamp('y', top, bottom, elasticity)
 });

@@ -20,9 +20,18 @@ const spring = (props: SpringProps = {}): Action => action(({ update, complete }
   } = props;
   const initialVelocity = velocity ? - (velocity / 1000) : 0.0;
   let t = 0;
-  const delta = to - from;
-  let position = from;
-  let prevPosition = position;
+  let delta = 0;
+  let position = 0;
+  let prevPosition = 0;
+
+  const setInitialConditions = (origin: number) => {
+    t = 0;
+    delta = to - origin;
+    position = origin;
+    prevPosition = position;
+  };
+
+  setInitialConditions(from);
 
   const springTimer = onFrame().start(() => {
     const timeDelta = timeSinceLastFrame();
@@ -67,6 +76,7 @@ const spring = (props: SpringProps = {}): Action => action(({ update, complete }
   });
 
   return {
+    setOrigin: setInitialConditions,
     stop: () => springTimer.stop()
   };
 });

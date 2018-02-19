@@ -1,29 +1,31 @@
 import React from 'react';
 import { rangeTransformer, noop } from './utils';
-import { pointer, styler, listen } from 'popmotion';
+import { pointer, styler, listen, value, spring } from '../../popmotion/lib';
 
-type Props = {
-  elementType,
+// type Props = {
+//   elementType,
 
-  // Drag props
-  dragTransform,
-  isDraggable,
-  onDragEnd,
-  onDrag,
-  onDragStart,
-  lockDragAxis,
+//   // Drag props
+//   dragTransform,
+//   isDraggable,
+//   onDragEnd,
+//   onDrag,
+//   onDragStart,
+//   dragX,
+//   dragY,
 
-  // Animation props
-  styles,
-  range,
+//   // Animation props
+//   styles,
+//   range,
 
-  // MotionGroup methods
+//   // MotionGroup methods
 
-};
+// };
 
 export default class MotionElement extends React.Component {
   static defaultProps = {
-    dragTransform: noop
+    dragTransform: noop,
+    density: 1
   };
 
   setRef = (ref) => {
@@ -44,7 +46,7 @@ export default class MotionElement extends React.Component {
   };
 
   componentDidUpdate() {
-    this.checkDraggable();
+    if (this.ref) this.checkDraggable();
   }
 
   /**
@@ -56,7 +58,7 @@ export default class MotionElement extends React.Component {
 
     // If we're draggable and not already listening for pointer events
     if (isDraggable && !this.onDragStartListener) {
-      this.onDragStartListener = listen(this.ref, 'mousedown touchstart').start(this.onDragStart);
+      this.onDragStartListener = listen(this.ref, 'mousedown touchstart').start((e) => this.onDragStart(e));
 
     } else if (!isDraggable && this.onDragStartListener) {
       this.onDragStartListener.stop();
@@ -67,33 +69,49 @@ export default class MotionElement extends React.Component {
     e.preventDefault();
     const { onDragStart, elasticity, range, dragTransform } = this.props;
 
-    this.onDragEndListener = listen(document, 'mouseup touchend').start(this.onDragEnd);
+    this.onDragEndListener = listen(document, 'mouseup touchend').start(() => this.onDragEnd());
 
     if (onDragStart) onDragStart();
 
-    let draggingAction = pointer({
+    this.draggingAction = pointer({
       x: this.x.get(),
       y: this.y.get()
     }).pipe(
       dragTransform,
       range ? rangeTransformer(range, elasticity) : noop
-    ).start(this.onDrag);
+    ).start(v => this.onDrag(v));
   }
 
   onDragEnd() {
-    const { onDragEnd } = this.props;
+    const { elasticity, onDragEnd } = this.props;
 
     if (this.draggingAction) this.draggingAction.stop();
     if (this.onDragEndListener) this.onDragEndListener.stop();
 
+    if (elasticity) this.springToClosestBoundary();
+
     if (onDragEnd) onDragEnd();
   }
 
-  onDrag = (xy) => {
-    const { onDrag } = this.props;
+  onDrag(xy) {
+    const { onDrag, isDraggable } = this.props;
 
     if (onDrag) onDrag(xy);
-  };
+
+    if (isDraggable === true || isDraggable === 'x') this.x.update(xy.x);
+    if (isDraggable === true || isDraggable === 'y') this.y.update(xy.y);
+  }
+
+  springToClosestBoundary() {
+    const radius = this.ref.getBoundingClientRect().width / 2;
+    const area = Math.PI * radius * radius;
+    console.log(area * this.props.density / 10000)
+    spring({
+      from: { x: this.x.get(), y: this.y.get() },
+      to: 0,
+      mass: area * this.props.density / 10000
+    }).start(v => this.onDrag(v));
+  }
 
   /**
    * Animation methods
@@ -109,6 +127,7 @@ export default class MotionElement extends React.Component {
     onDrag,
     ...props
   }) {
+    props.ref = this.setRef;
     return props;
   }
 
