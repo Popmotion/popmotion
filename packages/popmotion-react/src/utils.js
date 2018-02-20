@@ -28,20 +28,31 @@ export const just = (v) => action(({ update, complete }) => {
   complete();
 });
 
-export const getDragEndAnimation = (v, min, max) => {
+export const getDragEndAnimation = (v, isActive, min, max, preserveMomentum) => {
   const from = v.get();
   const velocity = v.getVelocity();
+  const hasMin = min !== undefined;
+  const hasMax = max !== undefined;
+  const hasRange = hasMin || hasMax;
   const isLessThanMin = v < min;
   const isMoreThanMax = v > max;
   const isInRange = !isLessThanMin && !isMoreThanMax;
 
-  return isInRange
-    ? decay({ from, velocity })
-      .while(v => v >= min && v <= max)
-      .pipe(clamp(min, max))
-    : spring({
-      from,
-      velocity,
-      to: isLessThanMin ? min : max
-    });
+
+  return isActive
+    ? hasRange
+      ? isInRange
+        ? decay({ from, velocity })
+          .while(v => (!hasMin || v >= min) && (!hasMax || v <= max))
+          .pipe(
+            hasMin ? v => Math.max(v, min) : noop,
+            hasMax ? v => Math.min(v, max) : noop
+          )
+        : spring({
+          from,
+          velocity,
+          to: isLessThanMin ? min : max
+        })
+      : decay({ from, velocity })
+    : just(current);
 };

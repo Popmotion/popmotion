@@ -4,7 +4,7 @@ import { pointer, styler, listen, value, spring, composite } from '../../popmoti
 
 // type Props = {
 //   elementType,
-
+//    surfaceTension,
 //   // Drag props
 //   dragTransform,
 //   isDraggable,
@@ -13,6 +13,7 @@ import { pointer, styler, listen, value, spring, composite } from '../../popmoti
 //   onDragStart,
 //   dragX,
 //   dragY,
+//   preserveDragMomentum
 
 //   // Animation props
 //   styles,
@@ -27,13 +28,10 @@ export default class MotionElement extends React.Component {
     dragTransform: noop
   };
 
-  static getDerivedStateFromProps({ isDraggable }) {
-    console.log('runs')
-    return {
-      dragX: isDraggable === true || isDraggable === 'x',
-      dragY: isDraggable === true || isDraggable === 'y'
-    };
-  }
+  static getDerivedStateFromProps = ({ isDraggable }) => ({
+    dragX: isDraggable === true || isDraggable === 'x',
+    dragY: isDraggable === true || isDraggable === 'y'
+  });
 
   state = {};
 
@@ -67,7 +65,8 @@ export default class MotionElement extends React.Component {
 
     // If we're draggable and not already listening for pointer events
     if (isDraggable && !this.onDragStartListener) {
-      this.onDragStartListener = listen(this.ref, 'mousedown touchstart').start((e) => this.onDragStart(e));
+      this.onDragStartListener = listen(this.ref, 'mousedown touchstart')
+        .start((e) => this.onDragStart(e));
 
     } else if (!isDraggable && this.onDragStartListener) {
       this.onDragStartListener.stop();
@@ -78,7 +77,8 @@ export default class MotionElement extends React.Component {
     e.preventDefault();
     const { onDragStart, elasticity, range, dragTransform } = this.props;
 
-    this.onDragEndListener = listen(document, 'mouseup touchend').start(() => this.onDragEnd());
+    this.onDragEndListener = listen(document, 'mouseup touchend')
+      .start(() => this.onDragEnd());
 
     if (onDragStart) onDragStart();
 
@@ -92,7 +92,8 @@ export default class MotionElement extends React.Component {
   }
 
   onDragEnd() {
-    const { onDragEnd, range } = this.props;
+    const { dragX, dragY } = this.state;
+    const { onDragEnd, range, preserveDragMomentum } = this.props;
 
     if (this.positionAnimation) this.positionAnimation.stop();
     if (this.onDragEndListener) this.onDragEndListener.stop();
@@ -101,8 +102,8 @@ export default class MotionElement extends React.Component {
 
     // Animate to a stop
     this.positionAnimation = composite({
-      x: getDragEndAnimation(this.x, range.left, range.right),
-      y: getDragEndAnimation(this.y, range.top, range.bottom)
+      x: getDragEndAnimation(this.x, dragX, range && range.left, range && range.right, preserveDragMomentum),
+      y: getDragEndAnimation(this.y, dragY, range && range.top, range && range.bottom, preserveDragMomentum)
     }).start(v => this.onDrag(v));
   }
 
@@ -112,8 +113,10 @@ export default class MotionElement extends React.Component {
 
     if (onDrag) onDrag(xy);
 
-    if (dragX) this.x.update(xy.x);
-    if (dragY) this.y.update(xy.y);
+    if (true) this.x.update(xy.x);
+    if (true) this.y.update(xy.y);
+    // if (dragX) this.x.update(xy.x);
+    // if (dragY) this.y.update(xy.y);
   }
 
   /**
@@ -124,7 +127,6 @@ export default class MotionElement extends React.Component {
   getDomProps({
     isDraggable,
     dragTransform,
-    lockDragAxis,
     onDragEnd,
     onDragStart,
     onDrag,
