@@ -52,6 +52,7 @@ export const getDragEndAnimation = (v, isActive, min, max, preserveMomentum) => 
         })
       : decay({ from, velocity })
     : just(from);
+<<<<<<< HEAD
 };
 
 export const getPositionAnimation = (x, y, { transitions, ...target }, mass) => {
@@ -71,6 +72,8 @@ export const getPositionAnimation = (x, y, { transitions, ...target }, mass) => 
       to: target,
       mass
     });
+=======
+>>>>>>> cfa390eebcf5d17dd7f43bd1c3b9e0a64c2a2d77
 };
 
 
