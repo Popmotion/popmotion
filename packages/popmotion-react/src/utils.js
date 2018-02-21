@@ -54,5 +54,5 @@ export const getDragEndAnimation = (v, isActive, min, max, preserveMomentum) => 
           to: isLessThanMin ? min : max
         })
       : decay({ from, velocity })
-    : just(current);
+    : just(from);
 };
