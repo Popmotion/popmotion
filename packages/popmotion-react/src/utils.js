@@ -34,10 +34,7 @@ export const getDragEndAnimation = (v, isActive, min, max, preserveMomentum) => 
   const hasMin = min !== undefined;
   const hasMax = max !== undefined;
   const hasRange = hasMin || hasMax;
-  const isLessThanMin = v < min;
-  const isMoreThanMax = v > max;
-  const isInRange = !isLessThanMin && !isMoreThanMax;
-
+  const isInRange = from <= max && from >= min;
 
   return isActive
     ? hasRange
@@ -51,8 +48,29 @@ export const getDragEndAnimation = (v, isActive, min, max, preserveMomentum) => 
         : spring({
           from,
           velocity,
-          to: isLessThanMin ? min : max
+          to: from < min ? min : max
         })
       : decay({ from, velocity })
-    : just(current);
+    : just(from);
 };
+
+export const getPositionAnimation = (x, y, { transitions, ...target }, mass) => {
+  const { transitions } = target;
+
+  return (transitions && transitions[previousPose])
+    ? transitions[previousPose](to, from)
+    : spring({
+      from: {
+        x: x.get(),
+        y: y.get()
+      },
+      velocity: {
+        x: x.getVelocity(),
+        y: y.getVelocity()
+      },
+      to: target,
+      mass
+    });
+};
+
+

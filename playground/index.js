@@ -12,7 +12,7 @@ import { storiesOf } from '@storybook/react';
 // import { Chain, Composite, Delay, Crossfade, Merge, Parallel, Stagger } from './compositors';
 //import { DraggableDOM, DraggableReact } from './plugins/draggable';
 //import { SpinnableDOM, SpinnableReact } from './plugins/spinnable';
-import { DragXY, DragX, DragY, DragRangeClamp } from './plugins/react';
+import { DragXY, DragX, DragY, DragRangeClamp, ColorAnimation } from './plugins/react';
 
 // storiesOf('decay', module)
 // .add('default decay', () => <Decay />)
@@ -70,7 +70,8 @@ storiesOf('Popmotion x React', module)
 .add('Drag', () => <DragXY />)
 .add('Drag X', () => <DragX />)
 .add('Drag Y', () => <DragY />)
-.add('Drag range clamp', DragRangeClamp);
+.add('Drag range clamp', DragRangeClamp)
+.add('Color Animation', () => <ColorAnimation />);
 
 // storiesOf('Plugin: Spinnable', module)
 // .add('spinnable', () => <SpinnableDOM />)
