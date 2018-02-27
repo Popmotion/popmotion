@@ -1,13 +1,18 @@
 import React from 'react';
 import { MotionGroupContext } from './MotionGroup';
-import MotionElement from './MotionElement';
+import MotionElement, { MotionElementChildContext } from './MotionElement';
 
 const componentCache = {};
+const hasLifecycleEvents = ({ poseMap }) => (poseMap.appear || poseMap.enter || poseMap.leave);
 
 const createComponent = (elementType) => {
-  const Component = (props) => props.onLeave ? (
+  const Component = (props) => hasLifecycleEvents(props) ? (
     <MotionGroupContext.Consumer>
-      {ctx => <MotionElement elementType={elementType} {...props} {...ctx} />}
+      {groupCtx => (
+        <MotionElementChildContext.Consumer>
+          {elementCtx => <MotionElement elementType={elementType} {...props} {...groupCtx} {...elementCtx} />}}
+        </MotionElementChildContext.Consumer>
+      )}
     </MotionGroupContext.Consumer>
   ) : (
     <MotionElement elementType={elementType} {...props} />

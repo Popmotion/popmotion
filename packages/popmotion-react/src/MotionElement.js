@@ -24,6 +24,8 @@ import { pointer, styler, listen, value, spring, composite } from '../../popmoti
 
 // };
 
+export const MotionElementChildrenContext = React.createContext();
+
 export default class MotionElement extends React.Component {
   static defaultProps = {
     dragTransform: noop,
@@ -37,39 +39,53 @@ export default class MotionElement extends React.Component {
     dragY: draggable === true || draggable === 'y'
   });
 
-  state = {
-    values: {}
+  values = {};
+
+  children = new Set();
+  childCtx = {
+    addChild: (child) => this.children.add(child),
+    removeChild: (child) => this.children.remove(child)
   };
 
   setRef = (ref) => {
-    const { innerRef, xValue, yValue } = this.props;
+    const { innerRef, values } = this.props;
     if (innerRef) innerRef(ref);
 
     if (!ref) return;
     
     this.ref = ref;
     this.styler = styler(ref);
+    this.initValues(values);
 
-    const pose = this.getCurrentPose();
 
-    this.x = xValue || value(pose.x || 0);
-    this.x.subscribe(this.styler.set('x'));
-    this.y = yValue || value(pose.y || 0);
-    this.y.subscribe(this.styler.set('y'));
+
+    // this.x = xValue || value(pose.x || 0);
+    // this.x.subscribe(this.styler.set('x'));
+    // this.y = yValue || value(pose.y || 0);
+    // this.y.subscribe(this.styler.set('y'));
 
     this.checkDraggable();
   };
-
-  getCurrentPose() {
-    const { poseMap, pose } = this.props;
-    return poseMap && poseMap[pose];
-  }
 
   componentDidUpdate(prevProps) {
     const { pose } = this.props;
     this.checkDraggable();
 
     if (position !== prevProps) this.animateToPosition(pose, prevProps.pose);
+  }
+
+  componentWillUnmount() {
+    if (this.positionAnimation) this.positionAnimation.stop();
+  }
+
+  initValues(values) {
+    this.values = values;
+    
+  }
+
+  getCurrentPose() {
+    const { poseMap, pose } = this.props;
+    return poseMap && poseMap[pose];
   }
 
   /**
@@ -165,10 +181,14 @@ export default class MotionElement extends React.Component {
   render() {
     const { elementType, children, ...remaining } = this.props;
 
-    return React.createElement(
-      elementType,
-      this.getDomProps(remaining),
-      ...children
+    return (
+      <MotionElementChildrenContext.Provider value={this.childCtx}>
+        {React.createElement(
+          elementType,
+          this.getDomProps(remaining),
+          ...children
+        )}
+      </MotionElementChildrenContext.Provider>
     );
   }
 }

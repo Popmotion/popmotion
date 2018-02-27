@@ -1,12 +1,13 @@
-import React, { PureComponent, createContext } from 'react';
+import React, { PureComponent, createContext, cloneElement } from 'react';
 
 export const MotionGroupContext = createContext();
 
 export default class MotionGroup extends PureComponent {
   constructor(props) {
     super(props);
-    this.groupApi = {
 
+    this.state = {
+      
     };
   }
 
