@@ -1,7 +1,7 @@
 ---
 title: When iOS throttles requestAnimationFrame to 30fps
 description: In specific situations, iOS throttles rAF to 30fps. Here's when, and why it's wrong.
-published: 20180401
+published: 20180104
 author: Matt Perry
 ---
 
