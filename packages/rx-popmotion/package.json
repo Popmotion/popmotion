@@ -1,0 +1,25 @@
+{
+  "name": "popmotion-observable",
+  "version": "0.0.1",
+  "description": "An Observable wrapper for Popmotion",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/popmotion/popmotion/packages/popmotion-observable"
+  },
+  "keywords": [
+    "popmotion",
+    "animation",
+    "reactive",
+    "observable"
+  ],
+  "author": "Matt Perry",
+  "license": "MIT",
+  "dependencies": {
+    "popmotion": "^8.1.2",
+    "rxjs-es": "^5.0.0-beta.12"
+  }
+}
