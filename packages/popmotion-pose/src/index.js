@@ -20,7 +20,7 @@ const defaultAnimationFactoryMap = {
   dragEnd: ({ from }) => just(from)
 };
 
-const onlyDisplayProps = ({ getTransitionFactory, measureOnEnd, measureOnStart, stiffness, damping,     ...pose }) => pose;
+const onlyDisplayProps = ({ getTransitionFactory, measureOnEnd, measureOnStart, ...pose }) => pose;
 
 const applyPoseMapDefaults = (poseMap, draggable) => {
   if (draggable) {
@@ -200,10 +200,16 @@ const pose = ({ draggable, ...poseMap }) => {
     return {
       set,
       has: (name) => state.poses.has(name),
-      destroy: () => state.actions.forEach(a => a.stop()),
+      destroy: () => {
+        state.actions.forEach(a => a.stop());
+        state.children.forEach(p => p.destroy());
+      },
       addChild: (child) => state.children.add(child),
       removeChild: (child) => state.children.delete(child),
-      clearChildren: () => state.children.clear(),
+      clearChildren: () => {
+        state.children.clear();
+        state.children.forEach(p => p.destroy());
+      },
     };
   };
 };

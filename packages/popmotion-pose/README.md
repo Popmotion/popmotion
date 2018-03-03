@@ -95,9 +95,83 @@ Dragging can be locked to a single axis by passing that axis instead:
 const props = { draggable: 'x' };
 ```
 
+#### `dragEnd` pose
+
+When an element is draggable and a user stops dragging, a special pose called `dragEnd` is automatically set.
+
+You can decide what animation fires by using `transition`:
+
+```javascript
+const props = {
+  draggable: 'x',
+  dragEnd: {
+    transition: ({ from }) => // return custom animation
+  }
+};
+```
+
+**TODO:** Impose ranges for dragging.
+
 ### Children
 
+By adding children to a poser, we can orchestrate multiple animations with a single `set` call.
 
+#### Add children
+
+Every poser has an `addChild` method, which adds another poser as a child.
+
+Whenever `set` is called on the parent poser, it's also set on all children posers.
+
+```javascript
+const sidebar = document.querySelector('.sidebar');
+const sidebarPoser = pose(sidebarDom, {
+  initialPose: 'close',
+  open: { x: '0%' },
+  close: { x: '100%' }
+});
+
+const sidebarItems = document.querySelectorAll('.sidebar .item');
+const itemProps = {
+  initialPose: 'close',
+  open: { opacity: 1, x: 0 },
+  close: { opacity: 0, x: 50 }
+};
+const itemsPoser = Array.from(sidebarItems)
+  .map(item => sidebarPoser.addChild(pose(item, itemProps)));
+
+sidebar.set('open');
+```
+
+#### Delay and stagger children
+
+The above example will set its children's pose immediately. We can delay this by setting `delayChildren` on the parent:
+
+```javascript
+const sidebarProps = {
+  initialPose: 'close',
+  open: {
+    x: '0%',
+    delayChildren: 200
+  },
+  close: { x: '100%' }
+};
+```
+
+Or if we wanted to stagger over the children, we can do so with `staggerChildren`:
+
+```javascript
+const sidebarProps = {
+  initialPose: 'close',
+  open: {
+    x: '0%',
+    delayChildren: 200,
+    staggerChildren: 50
+  },
+  close: { x: '100%' }
+};
+```
+
+**TODO:** Add a second prop to `set` that will allow staggering outwards from a child index other than `0`.
 
 ### FLIP
 
@@ -157,3 +231,61 @@ async function swapContents(contents) {
 ## API
 
 ### `pose`
+
+```javascript
+pose(element, props);
+```
+
+Returns a `Poser`.
+
+#### `props`
+
+##### `draggable: boolean | 'x' | 'y'`
+
+If `true`, `'x'` or `'y'`, the `Poser` will attach event listeners that allow the user to drag the element.
+
+##### `initialPose: string`
+
+The name of the initial pose.
+
+##### `...poses`
+
+All remaining props are poses. You can call a pose anything, and set it using the returned `Poser`'s `set` method.
+
+A pose is defined as an object of style properties like `x`, `backgroundColor` etc along with the following properties:
+
+- `transition: ({ from, to, velocity, key, prevPoseKey }) => animation`: Used to defined custom transitions. **Is run once for every style property in the pose.**
+- `delayChildren: number`: A time, in milliseconds, before setting any children to the same pose.
+- `staggerChildren: number`: A time, in milliseconds, between setting each child to the same pose.
+- `measureOnEnd: boolean`: Measures the state of the DOM when the current transition is finished. Useful for FLIP animations when you wish to perform an operation on the element (like swapping children) in between animations.
+- `measureOnStart: boolean`: Will measure and check the bounding box of the element against that previously measured with a `measureOnEnd` transition. If different, will automatically perform a FLIP animation.
+
+### `Poser`
+
+This is returned from `pose`.
+
+#### Methods
+
+##### `set(poseName: string): Promise`
+
+Sets the current pose to `poseName`. If `Poser` has children, this will get set on those, too.
+
+##### `has(poseName: string): boolean`
+
+Checks if the `Poser` has `poseName` defined as a valid pose.
+
+##### `destroy()`
+
+Stops all active transitions of this `Poser` and its children.
+
+##### `addChild(poser: Poser)`
+
+Adds a child to this `Poser`.
+
+##### `removeChild(poser: Poser)`
+
+Removes a child.
+
+##### `clearChildren()`
+
+Removes all child posers and destroys them.
