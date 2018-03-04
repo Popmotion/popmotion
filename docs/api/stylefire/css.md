@@ -64,6 +64,7 @@ Immediately render, without waiting for the next frame.
 
 ## Props
 - `enableHardwareAcceleration <Boolean>`: Can be set to `false` to prevent Stylefire from using the GPU to transform elements. This results (often) in higher image quality when scaling up, though reduces performance. (default: `true`)
+- `preparseOutput <Boolean>`: If `true`, will preparse the value into an easily-animated value when read with `get` (for instance `20px` will be output as `20`. (default: `true` **Deprecated** will be `false` in a future `2.0.0` release - this was an API misstep)
 
 ## Getting `transform` properties
 If a `transform` property isn't present in the caching layer (because it hasn't previously been set by the developer), firing `get` on a property will return its default value (`1` for scale props, `0` for others).

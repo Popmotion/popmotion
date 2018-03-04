@@ -1,8 +1,8 @@
-import styler from 'stylefire';
+import css from 'stylefire/css';
 import { createPoses, createValues, createPoseSetter, makeDraggable } from './factories';
 
 export default (element, props = {}) => {
-  const elementStyler = styler(element);
+  const elementStyler = css(element, { preparseOutput: false });
   const poses = createPoses(props);
   const values = createValues(poses, elementStyler, props.initialPose);
   const activeActions = new Map();

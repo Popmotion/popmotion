@@ -30,6 +30,6 @@
     "babel-preset-env": "^1.6.1"
   },
   "dependencies": {
-    "popmotion": "^8.1.12"
+    "popmotion": "^8.1.14"
   }
 }
