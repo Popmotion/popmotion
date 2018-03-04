@@ -7,10 +7,7 @@ export class PoseDOM extends React.Component {
     if (ref) {
       this.poser = pose(ref, {
         open: {
-          width: 500
-        },
-        close: {
-          width: 0
+          x: '300%'
         }
       });
 

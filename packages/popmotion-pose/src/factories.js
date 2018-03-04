@@ -108,7 +108,7 @@ export const createPoseSetter = (state) => (next, { delay = 0 } = {}) => {
           ? getTransition({
             from: type ? type.parse(from) : from,
             velocity: thisVal.getVelocity(),
-            to: nextPose[key],
+            to: type ? type.parse(nextPose[key]) : nextPose[key],
             key,
             prevPoseKey: poses[key]
           })
