@@ -7,7 +7,7 @@ export class PoseDOM extends React.Component {
     if (ref) {
       this.poser = pose(ref, {
         open: {
-          x: '300%'
+          backgroundColor: 'rgba(0, 0, 0, 1)'
         }
       });
 

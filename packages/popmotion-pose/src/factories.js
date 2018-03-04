@@ -107,7 +107,7 @@ export const createPoseSetter = (state) => (next, { delay = 0 } = {}) => {
         let transition = (getTransition !== false)
           ? getTransition({
             from: type ? type.parse(from) : from,
-            velocity: thisVal.getVelocity(),
+            velocity: thisVal.getVelocity() || 0,
             to: type ? type.parse(nextPose[key]) : nextPose[key],
             key,
             prevPoseKey: poses[key]
@@ -117,7 +117,10 @@ export const createPoseSetter = (state) => (next, { delay = 0 } = {}) => {
         if (delay) transition = chain(delayAction(delay), transition);
 
         const transitionApi = transition.start({
-          update: v => thisVal.update(v),
+          update: v => {
+            console.log(v)
+            thisVal.update(v)
+          },
           complete
         });
 
