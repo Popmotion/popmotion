@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "babel src -d lib",
+    "watch": "babel src -w -d lib",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -29,6 +30,6 @@
     "babel-preset-env": "^1.6.1"
   },
   "dependencies": {
-    "popmotion": "^8.1.11"
+    "popmotion": "^8.1.12"
   }
 }

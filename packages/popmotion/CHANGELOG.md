@@ -2,6 +2,13 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.1.12] 2018-03-04
+
+### Update
+
+- Running `parseFloat` on string values when returning velocity.
+- Stylefire and Style Value Types upgrade
+
 ## [8.1.11] 2018-02-19
 
 ### Update

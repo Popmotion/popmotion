@@ -86,7 +86,7 @@ export class ValueReaction extends BaseMulticast<ValueReaction> {
   private getSingleVelocity(current: number | string, prev: number | string): number {
     return (typeof current === 'number' && typeof prev === 'number')
       ? speedPerSecond(current - prev, this.timeDelta)
-      : 0;
+      : speedPerSecond(parseFloat(current as string) - parseFloat(prev as string), this.timeDelta) || 0;
   }
 
   private getListVelocity() {
