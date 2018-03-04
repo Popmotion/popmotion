@@ -1,4 +1,4 @@
-# Popmotion Pose
+# ![image](https://user-images.githubusercontent.com/7850794/36951814-dbd58448-1fff-11e8-8fc7-4b03531ddffb.png)
 ### A declarative animation library
 
 [![npm version](https://img.shields.io/npm/v/popmotion-pose.svg?style=flat-square)](https://www.npmjs.com/package/popmotion-pose)
