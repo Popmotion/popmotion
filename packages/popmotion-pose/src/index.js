@@ -14,9 +14,9 @@ export default (element, props = {}) => {
 
   return {
     set,
-    has: (poseName) => poses.has(poseName),
+    has: (poseName) => poses[poseName],
 
-    // Children
+    // Children methods
     addChild: child => children.add(child),
     removeChild: child => children.remove(child),
     clearChildren: () => {
@@ -24,10 +24,12 @@ export default (element, props = {}) => {
       children.clear();
     },
 
-    // Lifecycle
+    // Lifecycle methods
     destroy: () => {
       activeActions.forEach(a => a.stop());
       children.forEach(c => c.destroy());
     }
   };
 };
+
+export { transitionProps, transitionFrom } from './utils';

@@ -1,9 +1,11 @@
 import spring from 'popmotion/animations/spring';
+import tween from 'popmotion/animations/tween'
 import value from 'popmotion/reactions/value';
 import chain from 'popmotion/compositors/chain';
 import delayAction from 'popmotion/compositors/delay';
 import { degrees, percent, px } from 'style-value-types';
 import { pointerX, pointerY, just } from './actions';
+import { transitionProps } from './utils';
 import { flipPose, isFlipPose } from './flip';
 import { stagger } from '../../popmotion/lib';
 
@@ -11,7 +13,14 @@ const getPoses = ({ draggable, initialPose, ...poses }) => poses;
 const getDisplayProps = ({ transition, measureOnEnd, measureOnStart, delayChildren, staggerChildren, ...props }) => props;
 
 const defaultTransitions = new Map([
-  ['default', spring],
+  ['default', transitionProps({
+    x: spring,
+    y: spring,
+    z: spring,
+    scaleX: spring,
+    scaleY: spring,
+    default: tween
+  })],
   ['dragging', ({ key, from }) => key === 'y' ? pointerY(from) : pointerX(from)],
   ['dragEnd', ({ from }) => just(from)]
 ]);
@@ -67,24 +76,22 @@ export const createValues = (poses, styler, initialPose) => Object.values(poses)
 }, new Map());
 
 const childAnimations = (children, nextPoseKey, nextPose) => {
+  const animations = [];
   let delay = 0;
   let stagger = 0;
-  const props = { delay: 0 };
 
   if (nextPose) {
     delay = nextPose.delayChildren || delay;
     stagger = nextPose.staggerChildren || stagger;
   }
 
-  return children.map((child, i) => {
+  Array.from(children).forEach((child, i) => {
     if (child.has(nextPoseKey)) {
-      return child.set(nextPoseKey, {
+      animations.push(child.set(nextPoseKey, {
         delay: delay + (stagger * i)
-      });
+      }));
     }
-  }).filter(Boolean);
-  
-  children.forEach(child => child.has(nextPoseKey) && animations.push(child.set(nextPoseKey, props)));
+  });
 };
 
 export const createPoseSetter = (state) => (next, { delay = 0 } = {}) => {
@@ -117,10 +124,7 @@ export const createPoseSetter = (state) => (next, { delay = 0 } = {}) => {
         if (delay) transition = chain(delayAction(delay), transition);
 
         const transitionApi = transition.start({
-          update: v => {
-            console.log(v)
-            thisVal.update(v)
-          },
+          update: v => thisVal.update(v),
           complete
         });
 
