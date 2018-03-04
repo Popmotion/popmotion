@@ -11,7 +11,7 @@ Popmotion provides simple utility functions that can take a value and return it 
 ```javascript
 import { transform } from 'popmotion';
 // Or save your user's bytes!
-import transform from 'popmotion/transform';
+import * as transform from 'popmotion/transformers';
 ```
 
 These functions can perform a wide range of tasks. Something as simple as appending a unit:
