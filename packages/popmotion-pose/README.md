@@ -12,6 +12,9 @@ JavaScript animation made simple:
 sidePanel.set('open');
 ```
 
+## Examples
+Coming soon
+
 ## Features
 - **Declarative:** Set up a collection of poses and animate between them using a simple `set` command.
 - **Orchestrate:** Add children to orchestrate multiple levels of animations, with full delay and stagger support.
@@ -32,7 +35,7 @@ yarn add popmotion popmotion-pose
 
 ### CDN
 
-```
+```bash
 https://unpkg.com/popmotion-pose/dist/popmotion-pose.js
 ```
 
@@ -293,3 +296,7 @@ Removes a child.
 ##### `clearChildren()`
 
 Removes all child posers and destroys them.
+
+## Upcoming features
+- SVG support
+- Personality-based config
