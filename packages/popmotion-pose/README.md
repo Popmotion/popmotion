@@ -253,7 +253,7 @@ Sets the current pose to `poseName`. If `Poser` has children, this will get set 
 
 ##### `measure()`
 
-Measures the current bounding box.
+Measures the current bounding box. Use this before making a change to the element that will affect physical dimensions (like adding new children, or moving it in the DOM), and then use `flip` to animate it to the new size.
 
 ##### `flip()`
 
