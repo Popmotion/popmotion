@@ -182,50 +182,31 @@ The [FLIP technique](https://aerotwist.com/blog/flip-your-animations/) was devel
 When animating these properties, Popmotion Pose will perform a FLIP animation:
 
 ```javascript
-// Popmotion Pose will animate `scaleX` instead:
+// Popmotion Pose will automatically measure the difference
+// in element size and animate `scaleX` instead:
 const props = {
   open: { width: 200 },
   closed: { width: 0 }
 };
 ```
 
-#### FLIP with calculated dimensions
+#### Explicit FLIP methods
 
-Alternatively, we might be animating from one state to another without knowing the new calculated size. We can do this with the `measureOnEnd` and `measureOnStart` properties.
+Alternatively, we might want to transition to a new state where we don't know the new position or size.
 
-Imagine a modal where we want to animate out its contents, resize the modal to accomodate its new contents and then animate those in:
+For instance, if we change the children of the element, we might change the height. We can smoothly transition to the new height with the `measure` and `flip` methods:
 
 ```javascript
-const modal = document.querySelector('.modal');
-const modalContents = document.querySelector('.modal-contents');
+const poser = pose(element, props);
 
-const modalProps = {
-  contentOut: { measureOnEnd: true },
-  contentIn: {
-    measureOnStart: true,
-    delayChildren: 200
-  }
-};
+// Measure the current bounding box
+poser.measure();
 
-const modalContentsProps = {
-  contentOut: { z: 20, opacity: 0 },
-  contentIn: { z: 0, opacity: 1 }
-};
+// Do stuff, like swap the element's children
+doStuff();
 
-const modalPoser = pose(modal, modalProps);
-let modalContentsPoser = pose(modalContents, modalContentsProps);
-modalPoser.addChild(modalContentsPoser);
-
-async function swapContents(contents) {
-  await modalPoser.set('contentOut');
-  modalPoser.clearChildren();
-  modalContentsPoser = pose(contents, {
-    initialPose: 'contentOut',
-    ...modalContentsProps
-  });
-  modalPose.addChild(modalContentsPoser);
-  modalPoser.set('contentIn');
-}
+// FLIP!
+poser.flip();
 ```
 
 ## API
@@ -255,10 +236,9 @@ All remaining props are poses. You can call a pose anything, and set it using th
 A pose is defined as an object of style properties like `x`, `backgroundColor` etc along with the following properties:
 
 - `transition: ({ from, to, velocity, key, prevPoseKey }) => animation`: Used to defined custom transitions. **Is run once for every style property in the pose.**
-- `delayChildren: number`: A time, in milliseconds, before setting any children to the same pose.
-- `staggerChildren: number`: A time, in milliseconds, between setting each child to the same pose.
-- `measureOnEnd: boolean`: Measures the state of the DOM when the current transition is finished. Useful for FLIP animations when you wish to perform an operation on the element (like swapping children) in between animations.
-- `measureOnStart: boolean`: Will measure and check the bounding box of the element against that previously measured with a `measureOnEnd` transition. If different, will automatically perform a FLIP animation.
+- `delay: number`: A duration, in milliseconds, to delay the transition to the current pose (does **not** affect children).
+- `delayChildren: number`: A duration, in milliseconds, before setting any children to the same pose.
+- `staggerChildren: number`: A duration, in milliseconds, between setting each child to the same pose.
 
 ### `Poser`
 
@@ -269,6 +249,24 @@ This is returned from `pose`.
 ##### `set(poseName: string): Promise`
 
 Sets the current pose to `poseName`. If `Poser` has children, this will get set on those, too.
+
+##### `measure()`
+
+Measures the current bounding box.
+
+##### `flip()`
+
+Performs a FLIP animation between the previously `measure`d bounding box and the latest one.
+
+You can add `flip` as a custom pose use a custom transition for this:
+
+```javascript
+const props = {
+  flip: {
+    transition: () => // your custom transition
+  }
+};
+```
 
 ##### `has(poseName: string): boolean`
 

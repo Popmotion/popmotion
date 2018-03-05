@@ -1,5 +1,5 @@
 import css from 'stylefire/css';
-import { createPoses, createValues, createPoseSetter, makeDraggable } from './factories';
+import { createPoses, createValues, createPoseSetter, makeDraggable, Dimensions } from './factories';
 
 export default (element, props = {}) => {
   const elementStyler = css(element, { preparseOutput: false });
@@ -7,14 +7,19 @@ export default (element, props = {}) => {
   const values = createValues(poses, elementStyler, props.initialPose);
   const activeActions = new Map();
   const children = new Set();
+  const dimensions = new Dimensions(element);
 
-  const set = createPoseSetter({ element, elementStyler, poses, values, children, activeActions });
+  const set = createPoseSetter({ element, elementStyler, poses, values, children, activeActions, dimensions });
 
   if (props.draggable) makeDraggable(element, set, activeActions);
 
   return {
     set,
     has: (poseName) => poses[poseName],
+
+    // FLIP methods
+    measure: () => dimensions.measure(element),
+    flip: () => set('flip'),
 
     // Children methods
     addChild: child => children.add(child),
