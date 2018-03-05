@@ -24,7 +24,7 @@ export default (element, props = {}) => {
         dimensions.measure(element);
         op();
       }
-      set('flip');
+      return set('flip');
     },
 
     // Children methods
