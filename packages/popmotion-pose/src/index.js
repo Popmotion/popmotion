@@ -19,7 +19,13 @@ export default (element, props = {}) => {
 
     // FLIP methods
     measure: () => dimensions.measure(element),
-    flip: () => set('flip'),
+    flip: (op) => {
+      if (op) {
+        dimensions.measure(element);
+        op();
+      }
+      set('flip');
+    },
 
     // Children methods
     addChild: child => children.add(child),
