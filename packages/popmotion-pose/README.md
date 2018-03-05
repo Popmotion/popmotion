@@ -12,6 +12,11 @@ JavaScript animation made simple:
 sidePanel.set('open');
 ```
 
+## Features
+- **Declarative:** Set up a collection of poses and animate between them using a simple `set` command.
+- **Orchestrate:** Add children to orchestrate multiple levels of animations, with full delay and stagger support.
+- **FLIP:** Friends don't let friends animate `width`, and neither does POSE. It uses the [FLIP](https://aerotwist.com/blog/flip-your-animations/) technique to convert slow animations into fast `transform`s.
+
 ## Install
 
 ### Package managers
@@ -26,6 +31,7 @@ yarn add popmotion popmotion-pose
 
 ### CDN
 
+Coming soon
 ```
 https://unpkg.com/popmotion-pose/dist/popmotion-pose.min.js
 ```
@@ -252,7 +258,7 @@ Sets the current pose to `poseName`. If `Poser` has children, this will get set 
 
 ##### `measure()`
 
-Measures the current bounding box.
+Measures the current bounding box. Use this before making a change to the element that will affect physical dimensions (like adding new children, or moving it in the DOM), and then use `flip` to animate it to the new size.
 
 ##### `flip()`
 
