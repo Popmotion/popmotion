@@ -24,7 +24,7 @@ const sidebarProps = {
   initialPose: 'close',
   open: {
     x: '0%',
-    delayChildren: 500,
+    delayChildren: 300,
     staggerChildren: 50
   },
   close: {
@@ -39,6 +39,7 @@ const itemProps = {
     y: 0
   },
   close: {
+    delay: 500,
     opacity: 0,
     y: 20
   }
@@ -66,9 +67,11 @@ export class PoseDOM extends React.Component {
     if (ref) this.items.push(ref);
   };
 
+  close = () => this.sidebarPoser.set('close');
+
   render() {
     return (
-      <SidePanel innerRef={this.setSidePanel}>
+      <SidePanel innerRef={this.setSidePanel} onClick={this.close}>
         <div ref={this.setItem} />
         <div ref={this.setItem} />
         <div ref={this.setItem} />
