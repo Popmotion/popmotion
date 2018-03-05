@@ -2,11 +2,12 @@ import React from 'react';
 
 import { storiesOf } from '@storybook/react';
 
-import { PoseDOM } from './plugins/pose';
+import { PoseDOM, PoserFLIP } from './plugins/pose';
 
 
 storiesOf('Plugin: Pose', module)
 .add('pose', () => <PoseDOM />)
+.add('pose flip', () => <PoserFLIP />)
 
 // import { Decay, DecayModifyTarget, DecayPower, DecayTimeConstant } from './decay';
 // import { Keyframes, KeyframesDuration, KeyframesLoop, KeyframesLinear, KeyframesTimes } from './keyframes';

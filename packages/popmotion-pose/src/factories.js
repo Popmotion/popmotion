@@ -3,14 +3,14 @@ import tween from 'popmotion/animations/tween'
 import value from 'popmotion/reactions/value';
 import chain from 'popmotion/compositors/chain';
 import delayAction from 'popmotion/compositors/delay';
-import { degrees, percent, px } from 'style-value-types';
+import listen from 'popmotion/input/listen';
+import { number, degrees, percent, px } from 'style-value-types';
 import { pointerX, pointerY, just } from './actions';
 import { transitionProps } from './utils';
 import { flipPose, isFlipPose } from './flip';
-import { stagger } from '../../popmotion/lib';
 
 const getPoses = ({ draggable, initialPose, ...poses }) => poses;
-const getDisplayProps = ({ transition, measureOnEnd, measureOnStart, delayChildren, staggerChildren, ...props }) => props;
+const getDisplayProps = ({ transition, delay, delayChildren, staggerChildren, ...props }) => props;
 
 const defaultTransitions = new Map([
   ['default', transitionProps({
@@ -53,18 +53,28 @@ export const createPoses = (props) => {
     };
   }
 
+  poses = {
+    flip: {},
+    ...poses
+  };
+
   return Object.entries(poses).reduce(buildPoseMap, {});
 };
 
-const valueTypeTests = [degrees, percent, px];
+const valueTypeTests = [number, degrees, percent, px];
 const testValueType = v => type => type.test(v);
 export const createValues = (poses, styler, initialPose) => Object.values(poses).reduce((valueMap, pose) => {
   Object.keys(getDisplayProps(pose)).forEach((key) => {
     if (valueMap.has(key)) return;
 
-    let val = value(initialPose ? poses[initialPose][key] : styler.get(key));
     const type = valueTypeTests.find(testValueType(pose[key]));
+    const initialValue = (initialPose)
+      ? poses[initialPose][key]
+      : (type)
+        ? type.parse(styler.get(key))
+        : styler.get(key);
 
+    let val = value(initialValue);
     if (type) val = val.pipe(type.transform);
 
     val.subscribe(styler.set(key));
@@ -92,18 +102,20 @@ const childAnimations = (children, nextPoseKey, nextPose) => {
       }));
     }
   });
+
+  return animations;
 };
 
 export const createPoseSetter = (state) => (next, { delay = 0 } = {}) => {
-  const { activeActions, children, element, poses, values } = state;
+  const { activeActions, children, poses, values } = state;
   const animations = [];
   let nextPose = poses[next];
 
   // Grab the animations for this poser
   if (nextPose) {
-    if (isFlipPose(nextPose)) nextPose = flipPose(state, nextPose);
+    if (isFlipPose(nextPose, next)) nextPose = flipPose(state, nextPose);
 
-    const poserAnimations = Object.keys(getDisplayProps(nextPose)).map(
+    const poserAnimations = nextPose && Object.keys(getDisplayProps(nextPose)).map(
       key => new Promise(complete => {
         const { transition: getTransition } = nextPose;
         const { value: thisVal, type } = values.get(key);
@@ -121,7 +133,10 @@ export const createPoseSetter = (state) => (next, { delay = 0 } = {}) => {
           })
           : just(nextPose[key]);
 
-        if (delay) transition = chain(delayAction(delay), transition);
+        if (delay || nextPose.delay) transition = chain(
+          delayAction(delay || nextPose.delay),
+          transition
+        );
 
         const transitionApi = transition.start({
           update: v => thisVal.update(v),
@@ -139,11 +154,7 @@ export const createPoseSetter = (state) => (next, { delay = 0 } = {}) => {
   // Children animations
   if (children.size) animations.push(...childAnimations(children, next, nextPose));
 
-  const response = Promise.all(animations);
-
-  return (nextPose && nextPose.measureOnEnd)
-    ? response.then(() => state.dimensions = element.getBoundingClientRect())
-    : response;
+  return Promise.all(animations);
 };
 
 export const makeDraggable = (element, set, activeActions) => activeActions.set(
@@ -161,3 +172,22 @@ export const makeDraggable = (element, set, activeActions) => activeActions.set(
     );
   })
 );
+
+export class Dimensions {
+  constructor(element) {
+    this.current = {};
+    this.element = element;
+  }
+  
+  get() {
+    return this.current;
+  }
+
+  measure() {
+    this.current = this.element.getBoundingClientRect();
+  }
+
+  has() {
+    return this.current.width !== undefined;
+  }
+}
