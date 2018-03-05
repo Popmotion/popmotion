@@ -33,7 +33,7 @@ yarn add popmotion popmotion-pose
 ### CDN
 
 ```
-https://unpkg.com/popmotion-pose/dist/popmotion-pose.min.js
+https://unpkg.com/popmotion-pose/dist/popmotion-pose.js
 ```
 
 ## Usage

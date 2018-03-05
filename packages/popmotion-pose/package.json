@@ -1,6 +1,6 @@
 {
   "name": "popmotion-pose",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A declarative animation library",
   "main": "lib/index.js",
   "scripts": {
@@ -35,5 +35,6 @@
   },
   "dependencies": {
     "popmotion": "^8.1.14"
-  }
+  },
+  "unpkg": "./dist/popmotion-pose.js"
 }
