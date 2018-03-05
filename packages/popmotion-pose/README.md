@@ -13,8 +13,8 @@ sidePanel.set('open');
 ```
 
 ## Features
-- **Declarative:** Set up a set of poses, and animate between them using a simple `set` command.
-- **Orchestrate:** Uses a parent-child model to handle delay and staggers across groups of animations.
+- **Declarative:** Set up a collection of poses and animate between them using a simple `set` command.
+- **Orchestrate:** Add children to orchestrate multiple levels of animations, with full delay and stagger support.
 - **FLIP:** Friends don't let friends animate `width`, and neither does POSE. It uses the [FLIP](https://aerotwist.com/blog/flip-your-animations/) technique to convert slow animations into fast `transform`s.
 
 ## Install
