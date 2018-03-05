@@ -32,7 +32,6 @@ yarn add popmotion popmotion-pose
 
 ### CDN
 
-Coming soon
 ```
 https://unpkg.com/popmotion-pose/dist/popmotion-pose.min.js
 ```
