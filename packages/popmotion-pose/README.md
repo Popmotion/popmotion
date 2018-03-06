@@ -89,7 +89,9 @@ const props = {
 
 This function is run **once for each animating property**.
 
-The `transition` function receives one argument, an object containing `from`, `to`, `velocity`, `key` and `prevPoseKey`, which you can use to create and return different animations for different values.
+The `transition` function receives one argument, an object containing `from`, `to`, `velocity`, `key` and `prevPoseKey`.
+
+You can **optionally** use any of these to create and return different animations for different values.
 
 ### Draggable
 
