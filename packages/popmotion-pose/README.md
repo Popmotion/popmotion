@@ -13,7 +13,8 @@ sidePanel.set('open');
 ```
 
 ## Examples
-Coming soon
+
+[FLIP Tooltip](https://codepen.io/popmotion/pen/paXyRE?editors=0010)
 
 ## Features
 - **Declarative:** Set up a collection of poses and animate between them using a simple `set` command.
