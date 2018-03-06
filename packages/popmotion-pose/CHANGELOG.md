@@ -2,6 +2,12 @@
 
 Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.0.10] 2018-03-06
+
+### Fixed
+
+- Fix to second `update`.
+
 ## [0.0.9] 2018-03-06
 
 ### Fixed

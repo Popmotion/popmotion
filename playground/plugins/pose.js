@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import pose from '../../packages/popmotion-pose/lib';
-import {tween} from '../../packages/popmotion/lib';
+import {tween, spring} from '../../packages/popmotion/lib';
 
 const SidePanel = styled.div`
   width: 300px;
@@ -101,7 +101,10 @@ const Modal = styled.div`
 
 const modalProps = {
   flip: {
-    transition: tween
+    transition: (props) => {
+      console.log(props)
+      return spring(props)
+    }
   },
   itemsOut: {
     staggerChildren: 50
@@ -111,8 +114,7 @@ const modalItemProps = {
   initialPose: 'itemsOut',
   itemsOut: {
     x: -50,
-    opacity: 0,
-    transition: tween
+    opacity: 0
   },
   itemsIn: {
     x: 0,

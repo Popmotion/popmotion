@@ -5,49 +5,19 @@ const checkPositionalProp = (key) => positionalProps.has(key);
 const hasPositionalProps = (pose) => Object.keys(pose).some(checkPositionalProp);
 export const isFlipPose = (pose, key) => hasPositionalProps(pose) || key === 'flip';
 
-const flipProp = (calcOffset, eq) => ({ calcOffset, eq });
-const flipScale = (prop) => flipProp((prev, next) => prev[prop] / next[prop], 1);
-const flipTranslate = (prop) => flipProp((prev, next) => prev[prop] - next[prop], 0);
-const flipMoveMethods = {
-  x: flipTranslate('left'),
-  y: flipTranslate('top')
-};
-const flipScaleMethods = {
-  scaleX: flipScale('width'),
-  scaleY: flipScale('height')
-};
-
-const measureFlipDelta = ({ dimensions, element, elementStyler, values }, methods) => {
-  const next = element.getBoundingClientRect();
-  
-  const flipPose = Object.entries(methods).reduce((acc, [key, { calcOffset, eq }]) => {
-    const offset = calcOffset(dimensions.get(), next);
-    if (offset !== eq) {
-      if (values.has(key)) {
-        // Here, if we already have the value, we update it twice.
-        // Because of stylefire's render batching, this isn't going
-        // to actually render twice, but because we're making
-        // the value jump a great distance, we want to reset the velocity
-        // to 0, rather than something arbitrarily high
-        const val = values.get(key).value;
-        val.update(offset);
-        val.update(offset);
-      } else {
-        values.set(key, { value: value(offset, v => elementStyler.set(key, v)) });
-      }
-
-      acc[key] = eq;
-    }
-    return acc;
-  }, {});
-
-  return flipPose;
-};
-
 const setValue = ({ values, elementStyler }, key, to) => {
-  values.has(key)
-    ? values.get(key).value.update(to)
-    : values.set(key, { value: value(to, v => elementStyler.set(key, v)) });
+  if (values.has(key)) {
+    // Here, if we already have the value, we update it twice.
+    // Because of stylefire's render batching, this isn't going
+    // to actually render twice, but because we're making
+    // the value jump a great distance, we want to reset the velocity
+    // to 0, rather than something arbitrarily high
+    const val = values.get(key).value;
+    val.update(to);
+    val.update(to);
+  } else {
+    values.set(key, { value: value(to, v => elementStyler.set(key, v)) });
+  }
 };
 
 const explicitlyFlipPose = (state, nextPose) => {
@@ -91,6 +61,13 @@ const implicitlyFlipPose = (state, nextPose) => {
     : (prev.right === next.right)
       ? '100%'
       : '50%';
+
+
+        // Here, if we already have the value, we update it twice.
+        // Because of stylefire's render batching, this isn't going
+        // to actually render twice, but because we're making
+        // the value jump a great distance, we want to reset the velocity
+        // to 0, rather than something arbitrarily high
 
   elementStyler
     .set({ originX, originY })
