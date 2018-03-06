@@ -1,4 +1,4 @@
-import { timeSinceLastFrame } from 'framesync';
+import { timeSinceLastFrame, currentFrameTime, onFrameEnd } from 'framesync';
 import { speedPerSecond } from '../calc';
 import { ObserverCandidate, ObserverProps, Update } from '../observer/types';
 import { BaseMulticast } from './';
@@ -26,6 +26,7 @@ export class ValueReaction extends BaseMulticast<ValueReaction> {
   private prev: Value;
   private current: Value;
   private timeDelta: number;
+  private lastUpdated: number;
 
   constructor(props: ValueProps) {
     super(props);
@@ -68,12 +69,21 @@ export class ValueReaction extends BaseMulticast<ValueReaction> {
     return this.getVelocityOfCurrent();
   }
 
-  // TODO: Schedule a velocity check on the next frame
   update(v: Value) {
     super.update(v);
     this.prev = this.current;
     this.updateCurrent(v);
     this.timeDelta = timeSinceLastFrame();
+    this.lastUpdated = currentFrameTime();
+    onFrameEnd(this.scheduleVelocityCheck);
+  }
+
+  scheduleVelocityCheck = () => onFrameEnd(this.velocityCheck);
+
+  velocityCheck = () => {
+    if (currentFrameTime() !== this.lastUpdated) {
+      this.prev = this.current;
+    }
   }
 
   subscribe(observerCandidate: ObserverCandidate): HotSubscription {

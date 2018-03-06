@@ -2,6 +2,18 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.1.16] 2018-03-06
+
+### Fixed
+
+- `value` now fires a velocity check at the end of the following frame to set velocity to `0` if it hasn't been updated.
+
+## [8.1.15] 2018-03-06
+
+### Updated
+
+- Stylefire updated to `1.2.5`
+
 ## [8.1.14] 2018-03-04
 
 ### Updated
