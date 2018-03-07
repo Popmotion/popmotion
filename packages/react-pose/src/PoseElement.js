@@ -3,16 +3,31 @@ import pose from 'popmotion-pose';
 
 export default class PoseElement extends React.PureComponent {
   componentDidMount() {
-    this.poser = pose(this.ref);
+    if (!this.ref) return;
+
+    this.poser = pose(this.ref, this.getPoseProps());
+  }
+
+  componentDidUpdate({ current: prevCurrent }) {
+    const { current } = this.props;
+    if (prevCurrent !== current) this.poser.set(current);
   }
 
   componentWillUnmount() {
     if (this.poser) this.poser.destroy();
   }
 
-  setRef = (ref) => {
-    if (ref) this.ref = ref;
-  };
+  setRef = (ref) => this.ref = ref;
+
+  getPoseProps() {
+    const { elementType, children, draggable, poses, current } = this.props;
+
+    return {
+      draggable,
+      initialPose: current,
+      ...poses
+    };
+  }
 
   getDomProps({
     draggable,

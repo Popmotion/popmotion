@@ -1,6 +1,5 @@
 var webpack = require('webpack');
 var path = require('path');
-var isProd = (process.env.NODE_ENV === 'production');
 
 module.exports = {
   entry: {
@@ -8,7 +7,7 @@ module.exports = {
   },
   output: {
     path: __dirname + '/dist',
-    filename: 'popmotion-pose.js'
+    filename: 'react-pose.js'
   },
   resolve: {
     extensions: ['.js'],
