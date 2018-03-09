@@ -1,5 +1,5 @@
 # <a href="https://popmotion.io"><img src="https://user-images.githubusercontent.com/7850794/37059519-9a190c14-2185-11e8-894f-e82a99f45171.png" width="243" alt="React Pose" /></a>
-### A React interface for the Pose animation library
+### A React interface for the Popmotion Pose animation library
 
 [![npm version](https://img.shields.io/npm/v/react-pose.svg?style=flat-square)](https://www.npmjs.com/package/react-pose)
 [![npm downloads](https://img.shields.io/npm/dm/react-pose.svg?style=flat-square)](https://www.npmjs.com/package/react-pose)
@@ -10,7 +10,10 @@
 Coming soon
 
 ## Features
-
+- **Tiny:**
+- **Performant:** Unlike many React animation components, Pose works directly with the DOM node.
+- **Declarative:** Pose automatically chooses appropriate animations based on the properties being animated. Custom animations can be declared for any transition into any post.
+- **Supports SSR:**
 
 ## Install
 
@@ -26,7 +29,7 @@ yarn add react-pose popmotion
 
 ## Usage
 
-### Basic example
+React Pose is a declarative animation library.
 
 ```javascript
 // Import
@@ -39,8 +42,10 @@ const poses = {
 };
 
 // Create poser
-export default ({ current }) => (
-  <Pose.div poses={poses} current={current} />
+export default ({ isOpen }) => (
+  <Pose poses={poses} current={isOpen ? 'open' : 'close'}>
+    <div />
+  </Pose>
 );
 ```
 
