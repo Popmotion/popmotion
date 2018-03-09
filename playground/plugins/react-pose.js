@@ -6,17 +6,28 @@ const Box = styled(Pose.div)`
   background-color: red;
   width: 100px;
   height: 100px;
+  transform-origin: 0 0;
 `;
 
 const poses = {
   open: {
-    originX: '0px',
-    originY: '50%',
-    x: 50,
-    scaleY: 0
+    scaleX: 1
+  },
+  closed: {
+    scaleX: 0
   }
 };
 
-export const ReactPose = () => (
-  <Box poses={poses} current="open" />
-)
+export class ReactPose extends React.PureComponent {
+  state = { isOpen: false }
+
+  componentDidMount() {
+    setTimeout(this.open, 500)
+  }
+
+  open = () => this.setState({ isOpen: true })
+
+  render() {
+    return <Box draggable poses={poses} current={this.state.isOpen ? 'open' : 'closed'} />;
+  }
+}

@@ -68,7 +68,7 @@ export const createValues = (poses, styler, initialPose) => Object.values(poses)
     if (valueMap.has(key)) return;
 
     const type = valueTypeTests.find(testValueType(pose[key]));
-    const unparsedInitialValue = (initialPose && poses[initialPose])
+    const unparsedInitialValue = (initialPose && poses[initialPose] && poses[initialPose][key])
       ? poses[initialPose][key]
       : styler.get(key);
     const initialValue = type.parse(unparsedInitialValue);

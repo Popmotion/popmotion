@@ -2,6 +2,18 @@
 
 Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.0.12] 2018-03-09
+
+### Fixed
+
+- Checking if value exists on initialPose before initializing with it.
+
+## [0.0.11] 2018-03-09
+
+### Fixed
+
+- Fixing special value types on `initialPose`.
+
 ## [0.0.10] 2018-03-06
 
 ### Fixed
