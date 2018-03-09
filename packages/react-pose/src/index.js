@@ -1,1 +1,3 @@
-export { Pose } from './Pose';
+import Pose from './Pose';
+
+export { Pose };

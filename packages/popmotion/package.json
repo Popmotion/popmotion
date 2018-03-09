@@ -1,6 +1,6 @@
 {
   "name": "popmotion",
-  "version": "8.1.16",
+  "version": "8.1.17",
   "description": "A functional, reactive motion library.",
   "author": "Matt Perry",
   "homepage": "https://popmotion.io",
@@ -45,7 +45,7 @@
   "dependencies": {
     "framesync": "^3.1.7",
     "style-value-types": "^1.0.4",
-    "stylefire": "^1.2.5"
+    "stylefire": "^1.2.6"
   },
   "devDependencies": {
     "jest": "^21.1.0",

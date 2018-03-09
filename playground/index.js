@@ -3,11 +3,15 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 
 import { PoseDOM, PoserFLIP } from './plugins/pose';
+import { ReactPose } from './plugins/react-pose';
 
 
 storiesOf('Plugin: Pose', module)
 .add('pose', () => <PoseDOM />)
 .add('pose flip', () => <PoserFLIP />)
+
+storiesOf('Plugin: React Pose', module)
+.add('pose', () => <ReactPose />)
 
 // import { Decay, DecayModifyTarget, DecayPower, DecayTimeConstant } from './decay';
 // import { Keyframes, KeyframesDuration, KeyframesLoop, KeyframesLinear, KeyframesTimes } from './keyframes';

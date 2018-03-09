@@ -1,7 +1,14 @@
 import React from 'react';
+import { posesToStyles } from './utils';
 import pose from 'popmotion-pose';
 
 export default class PoseElement extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    const { poses, current } = props;
+    this.style = poses && current ? posesToStyles(poses[current]) : {};
+  }
+
   componentDidMount() {
     if (!this.ref) return;
 
@@ -33,8 +40,10 @@ export default class PoseElement extends React.PureComponent {
     draggable,
     poses,
     current,
+    style,
     ...props
   }) {
+    props.style = { ...style, ...this.style };
     props.ref = this.setRef;
     return props;
   }

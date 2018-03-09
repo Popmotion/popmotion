@@ -43,9 +43,7 @@ const poses = {
 
 // Create poser
 export default ({ isOpen }) => (
-  <Pose poses={poses} current={isOpen ? 'open' : 'close'}>
-    <div />
-  </Pose>
+  <Pose.div poses={poses} current={isOpen ? 'open' : 'close'} />
 );
 ```
 
