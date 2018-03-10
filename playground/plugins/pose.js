@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import pose from '../../packages/popmotion-pose/lib';
-import {tween, spring} from '../../packages/popmotion/lib';
+import {tween, spring, transform} from '../../packages/popmotion/lib';
 
 const SidePanel = styled.div`
   width: 300px;
@@ -81,6 +81,52 @@ export class PoseDOM extends React.Component {
     );
   }
 }
+
+const passiveModalItemProps = {
+  passiveValues: {
+    opacity: ['x', transform.pipe(
+      parseFloat,
+      transform.interpolate([-100, 0], [0, 1])
+    )]
+  }
+};
+
+export class PoserPassive extends React.Component {
+  componentDidMount() {
+    this.sidebarPoser = pose(this.sidebar, sidebarProps);
+    this.items.forEach(item => this.sidebarPoser.addChild(pose(item, passiveModalItemProps)));
+  
+    setTimeout(() => this.sidebarPoser.set('open'), 1000);
+  }
+
+  componentWillUnmount() {
+    this.sidebarPoser.destroy();
+  }
+
+  items = [];
+
+  setSidePanel = (ref) => {
+    if (ref) this.sidebar = ref;
+  };
+
+  setItem = (ref) => {
+    if (ref) this.items.push(ref);
+  };
+
+  close = () => this.sidebarPoser.set('close');
+
+  render() {
+    return (
+      <SidePanel innerRef={this.setSidePanel} onClick={this.close}>
+        <div ref={this.setItem} />
+        <div ref={this.setItem} />
+        <div ref={this.setItem} />
+        <div ref={this.setItem} />
+      </SidePanel>
+    );
+  }
+}
+
 
 const Modal = styled.div`
   background: grey;

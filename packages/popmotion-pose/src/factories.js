@@ -4,12 +4,13 @@ import value from 'popmotion/reactions/value';
 import chain from 'popmotion/compositors/chain';
 import delayAction from 'popmotion/compositors/delay';
 import listen from 'popmotion/input/listen';
+import { pipe } from 'popmotion/transformers';
 import { number, degrees, percent, px } from 'style-value-types';
 import { pointerX, pointerY, just } from './actions';
 import { transitionProps } from './utils';
 import { flipPose, isFlipPose } from './flip';
 
-const getPoses = ({ draggable, initialPose, ...poses }) => poses;
+const getPoses = ({ draggable, initialPose, passiveValues, ...poses }) => poses;
 const getDisplayProps = ({ transition, delay, delayChildren, staggerChildren, ...props }) => props;
 
 const defaultTransitions = new Map([
@@ -68,10 +69,10 @@ export const createValues = (poses, styler, initialPose) => Object.values(poses)
     if (valueMap.has(key)) return;
 
     const type = valueTypeTests.find(testValueType(pose[key]));
-    const unparsedInitialValue = (initialPose && poses[initialPose] && poses[initialPose][key])
+    const unparsedInitialValue = (initialPose && poses[initialPose] && poses[initialPose][key] !== undefined)
       ? poses[initialPose][key]
       : styler.get(key);
-    const initialValue = type.parse(unparsedInitialValue);
+    const initialValue = type ? type.parse(unparsedInitialValue) : unparsedInitialValue;
     let val = value(initialValue);
     if (type) val = val.pipe(type.transform);
 
@@ -170,6 +171,17 @@ export const makeDraggable = (element, set, activeActions) => activeActions.set(
     );
   })
 );
+
+const bindToParentValues = (parent, passive, styler) => Object.keys(passive).forEach(key => {
+  const [parentKey, output] = passive[key];
+  if (!parent.has(parentKey)) return;
+  const { value: parentValue, type } = parent.get(parentKey);
+  parentValue.subscribe(pipe(output, styler.set(key)));
+});
+
+export const createBindPassiveValues = ({ passiveValues }, styler) => (parentValues) => {
+  if (passiveValues) bindToParentValues(parentValues, passiveValues, styler);
+};
 
 export class Dimensions {
   constructor(element) {

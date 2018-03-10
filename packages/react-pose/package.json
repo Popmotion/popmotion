@@ -34,7 +34,7 @@
     "webpack": "^3.11.0"
   },
   "dependencies": {
-    "popmotion-pose": "0.0.11",
+    "popmotion-pose": "0.0.14",
     "stylefire": "^1.2.6"
   }
 }

@@ -2,6 +2,18 @@
 
 Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.0.14] 2018-03-09
+
+### Fixed
+
+- Replacing falsy check for initial value.
+
+## [0.0.13] 2018-03-09
+
+### Fixed
+
+- Checking if `type` exists before running `parse`.
+
 ## [0.0.12] 2018-03-09
 
 ### Fixed

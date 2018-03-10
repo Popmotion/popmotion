@@ -1,5 +1,5 @@
 import styler from 'stylefire';
-import { createPoses, createValues, createPoseSetter, makeDraggable, Dimensions } from './factories';
+import { createPoses, createValues, createPoseSetter, makeDraggable, createBindPassiveValues, Dimensions } from './factories';
 
 export default (element, props = {}) => {
   const elementStyler = styler(element, { preparseOutput: false });
@@ -15,11 +15,11 @@ export default (element, props = {}) => {
 
   return {
     set,
-    has: (poseName) => poses[poseName],
+    has: name => poses[name],
 
     // FLIP methods
     measure: () => dimensions.measure(element),
-    flip: (op) => {
+    flip: op => {
       if (op) {
         dimensions.measure(element);
         op();
@@ -28,7 +28,10 @@ export default (element, props = {}) => {
     },
 
     // Children methods
-    addChild: child => children.add(child),
+    addChild: child => {
+      child.bindPassiveValues(values);
+      children.add(child);
+    },
     removeChild: child => children.remove(child),
     clearChildren: () => {
       children.forEach(c => c.destroy());
@@ -36,6 +39,7 @@ export default (element, props = {}) => {
     },
 
     // Lifecycle methods
+    bindPassiveValues: createBindPassiveValues(props, elementStyler),
     destroy: () => {
       activeActions.forEach(a => a.stop());
       children.forEach(c => c.destroy());

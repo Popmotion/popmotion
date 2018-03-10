@@ -10,6 +10,7 @@ const Box = styled(Pose.div)`
 `;
 
 const poses = {
+  snapPoints: [{ x: 0 }, { x: 100 }],
   open: {
     scaleX: 1
   },
@@ -22,12 +23,12 @@ export class ReactPose extends React.PureComponent {
   state = { isOpen: false }
 
   componentDidMount() {
-    setTimeout(this.open, 500)
+    setTimeout(this.open, 2000)
   }
 
   open = () => this.setState({ isOpen: true })
 
   render() {
-    return <Box draggable poses={poses} current={this.state.isOpen ? 'open' : 'closed'} />;
+    return <Box poses={poses} current={this.state.isOpen ? 'open' : 'closed'} />;
   }
 }

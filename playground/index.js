@@ -2,13 +2,14 @@ import React from 'react';
 
 import { storiesOf } from '@storybook/react';
 
-import { PoseDOM, PoserFLIP } from './plugins/pose';
+import { PoseDOM, PoserFLIP, PoserPassive } from './plugins/pose';
 import { ReactPose } from './plugins/react-pose';
 
 
 storiesOf('Plugin: Pose', module)
 .add('pose', () => <PoseDOM />)
 .add('pose flip', () => <PoserFLIP />)
+.add('passive values', () => <PoserPassive />)
 
 storiesOf('Plugin: React Pose', module)
 .add('pose', () => <ReactPose />)
