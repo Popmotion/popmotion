@@ -3,7 +3,7 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 
 import { PoseDOM, PoserFLIP, PoserPassive } from './plugins/pose';
-import { ReactPose } from './plugins/react-pose';
+import { ReactPose, ReactPoseChildren } from './plugins/react-pose';
 
 
 storiesOf('Plugin: Pose', module)
@@ -13,6 +13,7 @@ storiesOf('Plugin: Pose', module)
 
 storiesOf('Plugin: React Pose', module)
 .add('pose', () => <ReactPose />)
+.add('children', () => <ReactPoseChildren />)
 
 // import { Decay, DecayModifyTarget, DecayPower, DecayTimeConstant } from './decay';
 // import { Keyframes, KeyframesDuration, KeyframesLoop, KeyframesLinear, KeyframesTimes } from './keyframes';

@@ -1,10 +1,16 @@
 import React from 'react';
-import PoseElement from './PoseElement';
-
+import PoseElement, { PoseParentContext } from './PoseElement';
+console.log(PoseParentContext)
 const componentCache = {};
 
 const createComponent = (elementType) => {
-  const Component = (props) => <PoseElement elementType={elementType} {...props} />;
+  const Component = (props) => (
+    <PoseParentContext.Consumer>
+      {parentCtx => (
+        <PoseElement elementType={elementType} {...props} {...parentCtx} />
+      )}
+    </PoseParentContext.Consumer>
+  );
 
   componentCache[elementType] = Component;
 

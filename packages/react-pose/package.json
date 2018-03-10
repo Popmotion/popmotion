@@ -26,6 +26,10 @@
   "presets": [
     "env"
   ],
+  "peerDependencies": {
+    "react": "^15.5.4",
+    "react-dom": "~15.5.3"
+  },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
