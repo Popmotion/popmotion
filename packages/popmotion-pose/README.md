@@ -158,7 +158,7 @@ Whenever `set` is called on the parent poser, it's also set on all children pose
 
 ```javascript
 const sidebar = document.querySelector('.sidebar');
-const sidebarPoser = pose(sidebarDom, {
+const sidebarPoser = pose(sidebar, {
   initialPose: 'close',
   open: { x: '0%' },
   close: { x: '100%' }
