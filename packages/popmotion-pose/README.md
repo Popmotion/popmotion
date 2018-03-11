@@ -329,4 +329,3 @@ Removes a child.
 ##### `clearChildren()`
 
 Removes all child posers and destroys them.
-

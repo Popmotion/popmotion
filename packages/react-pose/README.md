@@ -110,8 +110,6 @@ const props = {
 };
 ```
 
-**TODO:** Impose ranges for dragging.
-
 ### Children
 
 By adding children to a poser, we can orchestrate multiple animations with a single `set` call.
@@ -172,6 +170,53 @@ const sidebarProps = {
 ```
 
 **TODO:** Add a second prop to `set` that will allow staggering outwards from a child index other than `0`.
+
+### Passive values
+
+Pose allows you to passively animate values based on the state of others by defining the `passive` property.
+
+It accepts a map of values. Each value is defined as a tuple with the following signature:
+
+```javascript
+[from: string, transform: v => v, fromParent?: boolean]
+```
+
+So, for example, we could animate `backgroundColor` based on the `x` position like this:
+
+```javascript
+import { transform } from 'popmotion';
+const { pipe, interpolate, blendColor } = transform;
+
+const props = {
+  draggable: 'x',
+  dragBounds: { left: 0, right: 300 },
+  passive: {
+    backgroundColor: ['x', pipe(
+      interpolate([0, 300], [0, 1])
+      blendColor('#f00', '#0f0')
+    )]
+  }
+};
+```
+
+#### Linking to a parent value
+
+If the current poser is a child of another, we can link instead to the nearest parent by passing `true` as the last value of the tuple:
+
+```javascript
+const parentProps = {
+  draggable: 'x'
+};
+
+const childProps = {
+  passive: {
+    scale: ['x', pipe(
+      clamp(-100, 0),
+      interpolate([-100 , 0], [1, 0.5])
+    ), true]
+  }
+};
+```
 
 ### FLIP
 
