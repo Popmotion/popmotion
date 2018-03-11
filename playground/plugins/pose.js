@@ -23,6 +23,7 @@ const SidePanel = styled.div`
 
 const sidebarProps = {
   initialPose: 'close',
+  dragBounds: { left: -100, right: 0 },
   open: {
     x: '0%',
     delayChildren: 300,
@@ -228,5 +229,23 @@ export class PoserFLIP extends React.Component {
         {this.state.list.map((i) => <div key={i} ref={this.setItemRef} />)}
       </Modal>
     );
+  }
+}
+
+export class PoseDrag extends React.PureComponent {
+  setRef = (ref) => {
+    if (ref) {
+      this.poser = pose(ref, {
+        draggable: true,
+        dragBounds: { left: 0, right: 300 },
+        onDragStart: console.log,
+        onDragEnd: console.log
+      })
+    } else {
+      this.poser.destroy();
+    }
+  }
+  render() {
+    return <SidePanel innerRef={this.setRef} />
   }
 }

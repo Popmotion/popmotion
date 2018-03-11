@@ -1,19 +1,33 @@
 import styler from 'stylefire';
 import { createPoses, createValues, createPoseSetter, makeDraggable, createBindPassiveValues, Dimensions } from './factories';
 
-export default (element, props = {}) => {
+const pose = (element, props = {}) => {
   const elementStyler = styler(element, { preparseOutput: false });
   const poses = createPoses(props);
   const values = createValues(poses, elementStyler, props.initialPose);
   const activeActions = new Map();
   const children = new Set();
   const dimensions = new Dimensions(element);
+  const dragProps = props.draggable ? {
+    bounds: props.dragBounds,
+    onDragStart: props.onDragStart,
+    onDragEnd: props.onDragEnd
+  } : {};
 
-  const set = createPoseSetter({ element, elementStyler, poses, values, children, activeActions, dimensions });
+  const set = createPoseSetter({
+    element,
+    elementStyler,
+    poses,
+    values,
+    children,
+    activeActions,
+    dimensions,
+    dragProps
+  });
 
-  if (props.draggable) makeDraggable(element, set, activeActions);
+  if (props.draggable) makeDraggable(element, set, activeActions, dragProps);
 
-  return {
+  const api = {
     set,
     has: name => poses[name],
 
@@ -21,7 +35,7 @@ export default (element, props = {}) => {
     measure: () => dimensions.measure(element),
     flip: op => {
       if (op) {
-        dimensions.measure(element);
+        api.measure();
         op();
       }
       return set('flip');
@@ -45,6 +59,9 @@ export default (element, props = {}) => {
       children.forEach(c => c.destroy());
     }
   };
+
+  return api;
 };
 
+export default pose;
 export { transitionProps, transitionFrom } from './utils';

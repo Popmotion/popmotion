@@ -10,7 +10,7 @@ import { pointerX, pointerY, just } from './actions';
 import { transitionProps } from './utils';
 import { flipPose, isFlipPose } from './flip';
 
-const getPoses = ({ draggable, initialPose, passiveValues, ...poses }) => poses;
+const getPoses = ({ draggable, initialPose, passiveValues, bounds, ...poses }) => poses;
 const getDisplayProps = ({ transition, delay, delayChildren, staggerChildren, ...props }) => props;
 
 const defaultTransitions = new Map([
@@ -62,20 +62,43 @@ export const createPoses = (props) => {
   return Object.entries(poses).reduce(buildPoseMap, {});
 };
 
+const boundaryMap = {
+  x: ['left', 'right'],
+  y: ['top', 'bottom'],
+  z: ['far', 'near']
+};
+const addBoundaries = (a, bounds, key) => {
+  const enforceBounds = [];
+  const [min, max] = boundaryMap[key];
+
+  if (bounds[min] !== undefined) enforceBounds.push(v => Math.max(v, bounds[min]));
+  if (bounds[max] !== undefined) enforceBounds.push(v => Math.min(v, bounds[max]));
+
+  return enforceBounds.length ? a.pipe(...enforceBounds) : a;
+}; 
+
 const valueTypeTests = [number, degrees, percent, px];
 const testValueType = v => type => type.test(v);
-export const createValues = (poses, styler, initialPose) => Object.values(poses).reduce((valueMap, pose) => {
+export const createValues = (poses, styler, initialPose, bounds) => Object.values(poses).reduce((valueMap, pose) => {
   Object.keys(getDisplayProps(pose)).forEach((key) => {
     if (valueMap.has(key)) return;
 
     const type = valueTypeTests.find(testValueType(pose[key]));
+
+    // If there's an initial pose defined, set the value to that, otherwise attempt to read from the element
     const unparsedInitialValue = (initialPose && poses[initialPose] && poses[initialPose][key] !== undefined)
       ? poses[initialPose][key]
       : styler.get(key);
     const initialValue = type ? type.parse(unparsedInitialValue) : unparsedInitialValue;
     let val = value(initialValue);
+
+    // Add boundaries to physical props
+    if (bounds && boundaryMap[key]) val = addBoundaries(val, bounds, key);
+
+    // Convert to value type
     if (type) val = val.pipe(type.transform);
 
+    // Bind styler setter to value updates
     val.subscribe(styler.set(key));
 
     valueMap.set(key, { value: val, type });
@@ -105,8 +128,9 @@ const childAnimations = (children, nextPoseKey, nextPose) => {
   return animations;
 };
 
+const dragPoses = new Set(['dragging', 'dragEnd']);
 export const createPoseSetter = (state) => (next, { delay = 0 } = {}) => {
-  const { activeActions, children, poses, values } = state;
+  const { activeActions, children, poses, values, dragProps } = state;
   const animations = [];
   let nextPose = poses[next];
 
@@ -132,6 +156,8 @@ export const createPoseSetter = (state) => (next, { delay = 0 } = {}) => {
           })
           : just(nextPose[key]);
 
+        if (dragPoses.has(next) && dragProps.bounds && boundaryMap[key]) transition = addBoundaries(transition, dragProps.bounds, key);
+
         if (delay || nextPose.delay) transition = chain(
           delayAction(delay || nextPose.delay),
           transition
@@ -156,17 +182,19 @@ export const createPoseSetter = (state) => (next, { delay = 0 } = {}) => {
   return Promise.all(animations);
 };
 
-export const makeDraggable = (element, set, activeActions) => activeActions.set(
+export const makeDraggable = (element, set, activeActions, { onDragStart, onDragEnd } = {}) => activeActions.set(
   'dragStartListener',
   listen(element, 'mousedown touchstart').start((e) => {
     e.preventDefault();
     set('dragging');
+    if (onDragStart) onDragStart(e);
 
     activeActions.set(
       'dragEndListener',
       listen(document, 'mouseup touchend').start(() => {
         activeActions.get('dragEndListener').stop();
         set('dragEnd');
+        if (onDragEnd) onDragEnd(e);
       })
     );
   })

@@ -11,7 +11,7 @@ Coming soon
 
 ## Features
 - **Tiny:**
-- **Performant:** Unlike many React animation components, Pose works directly with the DOM node.
+- **Performant:** Pose works directly with the DOM node, bypassing the React reconciler.
 - **Declarative:** Pose automatically chooses appropriate animations based on the properties being animated. Custom animations can be declared for any transition into any post.
 - **Supports SSR:**
 

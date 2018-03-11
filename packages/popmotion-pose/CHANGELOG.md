@@ -2,6 +2,24 @@
 
 Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.1.0] 2018-03-11
+
+### Added
+
+- `onDragStart`, `onDragEnd`, `dragBounds` properties.
+
+## [0.0.16] 2018-03-10
+
+### Removed
+
+- Removed `spawnChild` method.
+
+## [0.0.15] 2018-03-10
+
+### Added
+
+- Undocumented `spawnChild` method.
+
 ## [0.0.14] 2018-03-09
 
 ### Fixed

@@ -2,13 +2,14 @@ import React from 'react';
 import { posesToStyles } from './utils';
 import pose from 'popmotion-pose';
 
-export const PoseParentContext = React.createContext();
+export const PoseParentContext = React.createContext({});
 
 export default class PoseElement extends React.PureComponent {
   constructor(props) {
     super(props);
-    const { poses, current } = props;
-    this.style = poses && current ? posesToStyles(poses[current]) : {};
+    const { poses, current, getCurrentFromParent } = props;
+    const currentPose = this.getInitialPose();
+    this.style = poses && currentPose ? posesToStyles(poses[currentPose]) : {};
   }
 
   /**
@@ -21,6 +22,7 @@ export default class PoseElement extends React.PureComponent {
     this.poser = pose(this.ref, this.getPoseProps());
     const { onMount } = this.props;
     if (onMount) onMount(this.poser);
+    if (this.children.size) this.children.forEach(child => this.poser.addChild(child));
   }
 
   componentDidUpdate({ current: prevCurrent }) {
@@ -32,19 +34,24 @@ export default class PoseElement extends React.PureComponent {
     if (!this.poser) return;
 
     const { onUnmount } = this.props;
-    if (onUnmount) this.onUnmount(this.poser);
+    if (onUnmount) onUnmount(this.poser);
     this.poser.destroy();
   }
 
-  setRef = (ref) => this.ref = ref;
+  setRef = ref => this.ref = ref;
 
   /**
    * Children handlers
    * =============================================
    */
+  children = new Set();
   childrenHandlers = {
-    onMount: child => this.poser.addChild(child),
-    onUnmount: child => this.poser.removeChild(child)
+    onMount: child => this.children.add(child),
+    onUnmount: child => {
+      this.children.remove(child);
+      this.poser.removeChild(child);
+    },
+    getCurrentFromParent: () => this.props.current
   }
 
   /**
@@ -52,11 +59,11 @@ export default class PoseElement extends React.PureComponent {
    * =============================================
    */
   getPoseProps() {
-    const { elementType, children, draggable, poses, current } = this.props;
+    const { elementType, children, draggable, poses } = this.props;
 
     return {
       draggable,
-      initialPose: current,
+      initialPose: this.getInitialPose(),
       ...poses
     };
   }
@@ -66,11 +73,18 @@ export default class PoseElement extends React.PureComponent {
     poses,
     current,
     style,
+    onMount,
+    onUnmount,
     ...props
   }) {
     props.style = { ...style, ...this.style };
     props.ref = this.setRef;
     return props;
+  }
+  
+  getInitialPose() {
+    const { current, getCurrentFromParent } = this.props;
+    return (current) ? current : (getCurrentFromParent) ? getCurrentFromParent() : undefined;
   }
 
   render() {
@@ -78,7 +92,11 @@ export default class PoseElement extends React.PureComponent {
 
     return (
       <PoseParentContext.Provider value={this.childrenHandlers}>
-        {}
+        {React.createElement(
+          elementType,
+          this.getDomProps(remaining),
+          ...children
+        )}
       </PoseParentContext.Provider>
     );
   }

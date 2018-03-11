@@ -122,7 +122,29 @@ const props = {
 };
 ```
 
-**TODO:** Impose ranges for dragging.
+#### Drag lifecycle events
+
+`onDragStart` and `onDragEnd` functions can be defined:
+
+```javascript
+const props {
+  draggable: true,
+  onDragStart: (e) => // not our business!
+}
+```
+
+#### Bound drag movement
+
+We can limit user-input movement with the `dragBounds` object.
+
+It can restrict movement in both dimensions with optional `left`, `right`, `top`, and `bottom` properties:
+
+```javascript
+const props = {
+  draggable: 'x',
+  dragBounds: { left: 0, right: 500 }
+}
+```
 
 ### Children
 
@@ -233,13 +255,21 @@ Returns a `Poser`.
 
 #### `props`
 
+##### `initialPose: string`
+
+The name of the initial pose.
+
 ##### `draggable: boolean | 'x' | 'y'`
 
 If `true`, `'x'` or `'y'`, the `Poser` will attach event listeners that allow the user to drag the element.
 
-##### `initialPose: string`
+##### `dragBounds: { top: number, bottom: number, left: number, right: number }`
 
-The name of the initial pose.
+An object containing limits beyond which a user can't drag an element.
+
+##### `onDragStart`/`onDragEnd`
+
+Optional callbacks for when dragging starts/ends. Both are passed the original `event`.
 
 ##### `...poses`
 
@@ -300,7 +330,3 @@ Removes a child.
 
 Removes all child posers and destroys them.
 
-## Upcoming features
-- SVG support
-- Personality-based config
-- Support `range` while dragging
