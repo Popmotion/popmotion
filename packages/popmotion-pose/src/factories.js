@@ -10,7 +10,7 @@ import { pointerX, pointerY, just } from './actions';
 import { transitionProps } from './utils';
 import { flipPose, isFlipPose } from './flip';
 
-const getPoses = ({ draggable, initialPose, passive, dragBounds, onDragEnd, onDragStart, parentValues, ...poses }) => poses;
+const getPoses = ({ draggable, initialPose, passive, onChange, dragBounds, onDragEnd, onDragStart, parentValues, ...poses }) => poses;
 const getDisplayProps = ({ transition, delay, delayChildren, staggerChildren, staggerDirection, ...props }) => props;
 
 const defaultTransitions = new Map([
@@ -79,7 +79,7 @@ const addBoundaries = (a, bounds, key) => {
 
 const valueTypeTests = [number, degrees, percent, px];
 const testValueType = v => type => type.test(v);
-export const createValues = ({ poses, styler, initialPose, passive, parentValues }) => {
+export const createValues = ({ poses, styler, initialPose, passive, parentValues, onChange }) => {
   const values = new Map();
 
   // Scrape values from poses
@@ -110,21 +110,29 @@ export const createValues = ({ poses, styler, initialPose, passive, parentValues
     return valueMap;
   }, values);
 
-  if (!passive) return values;
-
   // Initiate passive values
-  Object.keys(passive).reduce((valueMap, key) => {
-    const [valueKey, transform, fromParent] = passive[key];
-    const valueToBind = (fromParent && parentValues.has(key))
-      ? parentValues.get(key).value
-      : (values.has(key))
-        ? values.get(key).value
-        : false;
+  if (passive) {
+    Object.keys(passive).forEach(key => {
+      const [valueKey, transform, fromParent] = passive[key];
+      const valueToBind = (fromParent && parentValues.has(key))
+        ? parentValues.get(key).value
+        : (values.has(key))
+          ? values.get(key).value
+          : false;
+  
+      if (!valueToBind) return;
 
-    if (!valueToBind) return;
-    // Maybe make a new value here
-    valueToBind.subscribe(pipe(transform, styler.set(key)));
-  }, values);
+      // Maybe make a new value here
+      valueToBind.subscribe(pipe(transform, styler.set(key)));
+    });
+  }
+
+  // Append onChange callbacks
+  if (onChange) {
+    Object.keys(onChange).forEach(key => {
+      if (values.has(key)) values.get(key).value.subscribe(onChange[key]);
+    });
+  }
 
   return values;
 };

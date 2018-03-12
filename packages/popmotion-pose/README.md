@@ -6,20 +6,27 @@
 [![Twitter Follow](https://img.shields.io/twitter/follow/espadrine.svg?style=social&label=Follow)](http://twitter.com/popmotionjs)
 [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/popmotion)
 
-JavaScript animation made simple:
+Pose is a declarative DOM animation library. It removes all the plumbing typically associated with JavaScript animation and reduces it to code like this:
 
 ```javascript
 sidePanel.set('open');
 ```
+
+With the right configuration, that single call can orchestrate an animation as complex as this:
+
+![Sidebar animation example](https://user-images.githubusercontent.com/7850794/37285984-90b7b860-25f8-11e8-8035-01b99bd0b762.gif)
+[Live example](https://codepen.io/popmotion/pen/EQBxOY)
 
 ## Examples
 
 [FLIP Tooltip](https://codepen.io/popmotion/pen/paXyRE?editors=0010)
 
 ## Features
+
 - **Declarative:** Set up a collection of poses and animate between them using a simple `set` command.
 - **Orchestrate:** Add children to orchestrate multiple levels of animations, with full delay and stagger support.
-- **FLIP:** Friends don't let friends animate `width`, and neither does POSE. It uses the [FLIP](https://aerotwist.com/blog/flip-your-animations/) technique to convert slow animations into fast `transform`s.
+- **FLIP:** Friends don't let friends animate `width`, and neither does Pose. It uses the [FLIP](https://aerotwist.com/blog/flip-your-animations/) technique to convert slow animations into fast `transform`s.
+- **Interactive:** Making an element draggable is as simple as setting `draggable: true`.
 - **Tiny:** Just a 2kb dusting on top of the bits of Popmotion you already use.
 
 ## Install
@@ -27,11 +34,11 @@ sidePanel.set('open');
 ### Package managers
 
 ```bash
-npm install popmotion popmotion-pose --save
+npm install popmotion-pose --save
 ```
 
 ```bash
-yarn add popmotion popmotion-pose
+yarn add popmotion-pose
 ```
 
 ### CDN
@@ -42,56 +49,65 @@ https://unpkg.com/popmotion-pose/dist/popmotion-pose.js
 
 ## Usage
 
-### Basic example
+Pose exports a single function, `pose`.
 
 ```javascript
-// Import
-import pose from 'popmotion-pose';
+import pose from 'popmotion-pose'
+```
 
-// Define props
+It accepts two arguments. A single HTML or SVG element, and a `props` object.
+
+`props` defines some optional configuration options and a series of **poses**. It looks like this:
+
+```javascript
 const props = {
   initialPose: 'close',
   open: { scaleX: 1 },
   close: { scaleX: 0 }
-};
+}
+```
 
-// Create poser
-const divPoser = pose(element, props);
+`pose` returns a **poser**:
+
+```javascript
+const elementPoser = pose(element, props)
+```
+
+The poser is used to `set` different poses:
+
+```javascript
+elementPoser.set('open')
 ```
 
 ### Transitions
 
-#### Defaults
+By default, Pose will choose a transition depending on the property being animated:
 
-`pose` uses the following Popmotion animations by default:
+- `x`, `y`, `z`: [Spring](https://popmotion.io/api/spring)
+- `scale`, `scaleX`, `scaleY`: [Spring](https://popmotion.io/api/spring) (overdamped)
+- Other props: [Tween](https://popmotion.io/api/tween)
 
-- `x`, `y`, `z`: `spring` (slightly bouncy)
-- Other `transform` properties: `spring` (stiff)
-- Other properties: `tween`
+**Note:** In a future release, these default animations will be configurable via `personality` settings.
 
 #### Custom transitions
 
-You can also override these animations completely with the `transition` property:
+Every pose has an optional `transition` property that allows you to define a custom transition:
 
 ```javascript
 const props = {
-  alert: {
-    backgroundColor: '#f00',
+  attention: {
     scale: 1.2,
     transition: ({ from, to }) => tween({ from, to, yoyo: Infinity })
   },
-  ok: {
-    backgroundColor: '#0f0',
-    scale: 1
-  }
-};
+  rest: { scale: 1 }
+}
 ```
 
-This function is run **once for each animating property**.
+This function is run **once for each animating property** and must return a [Popmotion animation](https://popmotion.io/api) (or `false` for no animation).
 
-The `transition` function receives one argument, an object containing `from`, `to`, `velocity`, `key` and `prevPoseKey`.
+The `transition` function receives one argument, an object containing the current value's `from`, `to`, `velocity`, `key` and `prevPoseKey` properties.
 
-You can **optionally** use any of these to create and return different animations for different values.
+You can **optionally** use all, some or none of these to create different animations for different values.
 
 ### Draggable
 
@@ -101,7 +117,7 @@ Any element can be made draggable by passing the `draggable` property to `props`
 const props = { draggable: true };
 ```
 
-Dragging can be locked to a single axis by passing that axis instead:
+Dragging can be locked to a single axis by passing the name of that axis instead:
 
 ```javascript
 const props = { draggable: 'x' };
@@ -111,7 +127,7 @@ const props = { draggable: 'x' };
 
 When an element is draggable and a user stops dragging, a special pose called `dragEnd` is automatically set.
 
-You can decide what animation fires by using `transition`:
+You can decide what animation fires by using the `transition` property:
 
 ```javascript
 const props = {
@@ -124,7 +140,7 @@ const props = {
 
 #### Drag lifecycle events
 
-`onDragStart` and `onDragEnd` functions can be defined:
+`onDragStart` and `onDragEnd` functions can be defined to fire when a user starts and stops dragging:
 
 ```javascript
 const props {
@@ -135,7 +151,7 @@ const props {
 
 #### Bound drag movement
 
-We can limit user-input movement with the `dragBounds` object.
+We can limit pointer-driven movement with the `dragBounds` object.
 
 It can restrict movement in both dimensions with optional `left`, `right`, `top`, and `bottom` properties:
 
@@ -146,54 +162,61 @@ const props = {
 }
 ```
 
+### `onChange` events
+
+We can append `onChange` callbacks to any value with the `onChange` map:
+
+```javascript
+const props = {
+  draggable: true,
+  onChange: {
+    x: v => // Do your thing!
+  }
+}
+```
+
 ### Children
 
-By adding children to a poser, we can orchestrate multiple animations with a single `set` call.
+With a poser's `addChild` method, we can spawn a new poser as a child.
+
+When we call `set` on the parent poser, the same `set` will be passed down to its children. Like this, we can orchestrate multiple animations with a single call.
 
 #### Add children
 
-Every poser has an `addChild` method, which spawns another poser as a child.
-
-Whenever `set` is called on the parent poser, it's also set on all children posers.
-
-`addChild` also returns the child poser, and `set` can still be called on each individually.
+`addChild` is called exactly like `pose`:
 
 ```javascript
-const sidebar = document.querySelector('.sidebar');
-const sidebarPoser = pose(sidebar, {
-  initialPose: 'close',
-  open: { x: '0%' },
-  close: { x: '100%' }
-});
+const childPoser = parentPoser.addChild(element, childProps)
+```
 
-const sidebarItems = document.querySelectorAll('.sidebar .item');
-const itemProps = {
-  initialPose: 'close',
-  open: { opacity: 1, x: 0 },
-  close: { opacity: 0, x: 50 }
-};
-const itemsPoser = Array.from(sidebarItems)
-  .map(item => sidebarPoser.addChild(item, itemProps));
+Now, all `set` calls on `parentPoser` will be passed down to all of its children. It doesn't even need a pose with that label of its own to do so.
 
-sidebar.set('open');
+```javascript
+parentPoser.set('open')
+```
+
+We can still call set on the child posers without affecting the parent or its siblings:
+
+```javascript
+childPoser.set('hover')
 ```
 
 #### Delay and stagger children
 
-The above example will set its children's pose immediately. We can delay this by setting `delayChildren` on the parent:
+We can delay the propagation of a set call `delayChildren` on the parent pose:
 
 ```javascript
-const sidebarProps = {
+const parentProps = {
   initialPose: 'close',
   open: {
     x: '0%',
     delayChildren: 200
   },
   close: { x: '100%' }
-};
+}
 ```
 
-Or if we wanted to stagger over the children, we can do so with `staggerChildren`:
+Or if we wanted to stagger over the children, we can do so with `staggerChildren`, and **optionally** `staggerDirection`:
 
 ```javascript
 const sidebarProps = {
@@ -201,13 +224,12 @@ const sidebarProps = {
   open: {
     x: '0%',
     delayChildren: 200,
-    staggerChildren: 50
+    staggerChildren: 50,
+    staggerDirection: -1 // stagger from the last child
   },
   close: { x: '100%' }
-};
+}
 ```
-
-**TODO:** Add a second prop to `set` that will allow staggering outwards from a child index other than `0`.
 
 ### FLIP
 
@@ -215,15 +237,15 @@ Animating positional and dimensional properties like `width` and `top` is taskin
 
 The [FLIP technique](https://aerotwist.com/blog/flip-your-animations/) was developed to animate these performantly by replacing them with transforms.
 
-When animating these properties, Popmotion Pose will perform a FLIP animation:
+When animating these properties, Pose will automatically perform a FLIP animation instead:
 
 ```javascript
-// Popmotion Pose will automatically measure the difference
+// Pose will automatically measure the difference
 // in element size and animate `scaleX` instead:
 const props = {
   open: { width: 200 },
   closed: { width: 0 }
-};
+}
 ```
 
 #### Explicit FLIP methods
@@ -233,16 +255,22 @@ Alternatively, we might want to transition to a new state where we don't know th
 For instance, if we change the children of the element, we might change the height. We can smoothly transition to the new height with the `measure` and `flip` methods:
 
 ```javascript
-const poser = pose(element, props);
+const poser = pose(element, props)
 
 // Measure the current bounding box
-poser.measure();
+poser.measure()
 
 // Do stuff, like swap the element's children
-doStuff();
+doStuff()
 
 // FLIP!
-poser.flip();
+poser.flip()
+```
+
+Alternatively, we can just pass a callback to `flip`:
+
+```javascript
+poser.flip(doStuff)
 ```
 
 ## API
@@ -272,6 +300,10 @@ An object containing limits beyond which a user can't drag an element.
 ##### `onDragStart`/`onDragEnd`
 
 Optional callbacks for when dragging starts/ends. Both are passed the original `event`.
+
+##### `onChange`
+
+Optional map of callbacks, one for each value, that will fire when that value changes.
 
 ##### `...poses`
 
