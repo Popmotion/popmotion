@@ -9,7 +9,7 @@
 Pose is a declarative DOM animation library. It removes all the plumbing typically associated with JavaScript animation and reduces it to code like this:
 
 ```javascript
-sidePanel.set('open');
+sidePanel.set('open')
 ```
 
 With the right configuration, that single call can orchestrate an animation as complex as this:
@@ -279,7 +279,7 @@ poser.flip(doStuff)
 ### `pose`
 
 ```javascript
-pose(element, props);
+pose(element, props)
 ```
 
 Returns a `Poser`.
@@ -326,7 +326,7 @@ This is returned from `pose`.
 
 ##### `set(poseName: string): Promise`
 
-Sets the current pose to `poseName`. If `Poser` has children, this will get set on those, too.
+Sets the current pose to `poseName`. If `Poser` has children, this will get set on those, too. Returns a `Promise`.
 
 ##### `measure()`
 
