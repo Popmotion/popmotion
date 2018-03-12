@@ -232,6 +232,31 @@ const sidebarProps = {
 }
 ```
 
+### Passive values
+
+Not all values have to be actively animated via a pose. The `passive` property can be used to define values that simply subscribe to actively animated values and update when they do.
+
+For instance, we could update `y` when `x` updates like so:
+
+```javascript
+const props = {
+  draggable: 'x',
+  passive: {
+    y: ['x', x => x]
+  }
+}
+```
+
+Each passive value is defined as a tuple:
+
+```javascript
+[subscribeKey: string, transform: v => v, fromParent?: boolean]
+```
+
+- `subscribeKey`: The key of the value we'll subscribe to.
+- `transform`: Receives the latest subscribed value and returns the passive value.
+- `fromParent`: If `true`, will subscribe to this value in the direct parent instead of the current poser.
+
 ### FLIP
 
 Animating positional and dimensional properties like `width` and `top` is tasking for browsers and can cause stuttering in animations.
@@ -305,6 +330,33 @@ Optional callbacks for when dragging starts/ends. Both are passed the original `
 ##### `onChange`
 
 Optional map of callbacks, one for each value, that will fire when that value changes.
+
+##### `passive`
+
+A passive value 
+
+```typescript
+passive: {
+  [key: string]: [subscribeKey: string, transform: v => v, fromParent?: boolean]
+}
+```
+
+###### Example
+
+The `transform` function here is composed with Popmotion's [transformers](https://popmotion.io/api/transformers):
+
+```javascript
+const props = {
+  draggable: 'x',
+  passive: {
+    backgroundColor: ['x', pipe(
+      clamp(0, 300),
+      interpolate([0, 300], [0, 1]),
+      blendColor('#f00', '#0f0')
+    )]
+  }
+}
+```
 
 ##### `...poses`
 

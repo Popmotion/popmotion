@@ -20,6 +20,7 @@ const defaultTransitions = new Map([
     z: spring,
     scaleX: spring,
     scaleY: spring,
+    scale: spring,
     default: tween
   })],
   ['dragging', ({ key, from }) => key === 'y' ? pointerY(from) : pointerX(from)],
@@ -114,7 +115,7 @@ export const createValues = ({ poses, styler, initialPose, passive, parentValues
   if (passive) {
     Object.keys(passive).forEach(key => {
       const [valueKey, transform, fromParent] = passive[key];
-      const valueToBind = (fromParent && parentValues.has(key))
+      const valueToBind = (fromParent && parentValues && parentValues.has(key))
         ? parentValues.get(key).value
         : (values.has(key))
           ? values.get(key).value
@@ -123,7 +124,9 @@ export const createValues = ({ poses, styler, initialPose, passive, parentValues
       if (!valueToBind) return;
 
       // Maybe make a new value here
-      valueToBind.subscribe(pipe(transform, styler.set(key)));
+      const newValue = value(valueToBind.get(), pipe(transform, styler.set(key)));
+      valueToBind.subscribe(newValue);
+      values.set({ value: valueToBind });
     });
   }
 
