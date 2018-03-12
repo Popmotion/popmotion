@@ -140,7 +140,7 @@ export const createValues = ({ poses, styler, initialPose, passive, parentValues
   return values;
 };
 
-const childAnimations = (children, nextPoseKey, nextPose) => {
+const childAnimations = (children, nextPoseKey, nextPose, props) => {
   const animations = [];
   let delay = 0;
   let stagger = 0;
@@ -160,6 +160,7 @@ const childAnimations = (children, nextPoseKey, nextPose) => {
   Array.from(children).forEach((child, i) => {
     if (child.has(nextPoseKey)) {
       animations.push(child.set(nextPoseKey, {
+        ...props,
         delay: delay + generateStaggerDuration(i)
       }));
     }
@@ -169,7 +170,8 @@ const childAnimations = (children, nextPoseKey, nextPose) => {
 };
 
 const dragPoses = new Set(['dragging', 'dragEnd']);
-export const createPoseSetter = (state) => (next, { delay = 0 } = {}) => {
+export const createPoseSetter = (state) => (next, props = {}) => {
+  const { delay = 0 } = props;
   const { activeActions, children, poses, values, dragProps } = state;
   const animations = [];
   let nextPose = poses[next];
@@ -188,6 +190,7 @@ export const createPoseSetter = (state) => (next, { delay = 0 } = {}) => {
 
         let transition = (getTransition !== false)
           ? getTransition({
+            ...props,
             from: type ? type.parse(from) : from,
             velocity: thisVal.getVelocity() || 0,
             to: type ? type.parse(nextPose[key]) : nextPose[key],
@@ -217,7 +220,7 @@ export const createPoseSetter = (state) => (next, { delay = 0 } = {}) => {
   }
 
   // Children animations
-  if (children.size) animations.push(...childAnimations(children, next, nextPose));
+  if (children.size) animations.push(...childAnimations(children, next, nextPose, props));
 
   return Promise.all(animations);
 };

@@ -106,7 +106,10 @@ const props = {
 
 This function is run **once for each animating property** and must return a [Popmotion animation](https://popmotion.io/api) (or `false` for no animation).
 
-The `transition` function receives one argument, an object containing the current value's `from`, `to`, `velocity`, `key` and `prevPoseKey` properties.
+The `transition` function receives a single argument, an object containing:
+
+- Information about the current transition: `from`, `to`, `velocity`, `key` and `prevPoseKey` properties.
+- Any custom props sent as the second argument of `set`.
 
 You can **optionally** use all, some or none of these to create different animations for different values.
 
@@ -364,7 +367,7 @@ All remaining props are poses. You can call a pose anything, and set it using th
 
 A pose is defined as an object of style properties like `x`, `backgroundColor` etc along with the following properties:
 
-- `transition: ({ from, to, velocity, key, prevPoseKey }) => animation`: Used to defined custom transitions. **Is run once for every style property in the pose.**
+- `transition: ({ from, to, velocity, key, prevPoseKey, ...props }) => animation`: Used to defined custom transitions. **Is run once for every style property in the pose.** Additional `props` can be sent via the `set` method.
 - `delay: number`: A duration, in milliseconds, to delay the transition to the current pose (does **not** affect children).
 - `delayChildren: number`: A duration, in milliseconds, before setting any children to the same pose.
 - `staggerChildren: number`: A duration, in milliseconds, between setting each child to the same pose.
@@ -376,9 +379,11 @@ This is returned from `pose`.
 
 #### Methods
 
-##### `set(poseName: string): Promise`
+##### `set(poseName: string, props?: Object): Promise`
 
 Sets the current pose to `poseName`. If `Poser` has children, this will get set on those, too. Returns a `Promise`.
+
+If `props` is defined, these will be passed through to the selected pose's `transition` function.
 
 ##### `measure()`
 

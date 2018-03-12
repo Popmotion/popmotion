@@ -4,6 +4,10 @@ Pose adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.2.1] 2018-03-12
 
+### Added
+
+- Ability to pass through custom props to `poser.set(pose, props)`. These will be passed through to the `transition` method of that pose.
+
 ### Fixed
 
 - `passive` linking fixed in same-poser.
