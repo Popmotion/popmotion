@@ -152,9 +152,11 @@ By adding children to a poser, we can orchestrate multiple animations with a sin
 
 #### Add children
 
-Every poser has an `addChild` method, which adds another poser as a child.
+Every poser has an `addChild` method, which spawns another poser as a child.
 
 Whenever `set` is called on the parent poser, it's also set on all children posers.
+
+`addChild` also returns the child poser, and `set` can still be called on each individually.
 
 ```javascript
 const sidebar = document.querySelector('.sidebar');
@@ -171,7 +173,7 @@ const itemProps = {
   close: { opacity: 0, x: 50 }
 };
 const itemsPoser = Array.from(sidebarItems)
-  .map(item => sidebarPoser.addChild(pose(item, itemProps)));
+  .map(item => sidebarPoser.addChild(item, itemProps));
 
 sidebar.set('open');
 ```
@@ -281,6 +283,7 @@ A pose is defined as an object of style properties like `x`, `backgroundColor` e
 - `delay: number`: A duration, in milliseconds, to delay the transition to the current pose (does **not** affect children).
 - `delayChildren: number`: A duration, in milliseconds, before setting any children to the same pose.
 - `staggerChildren: number`: A duration, in milliseconds, between setting each child to the same pose.
+- `staggerDirection: 1 | -1 (default: 1)`: If `1`, staggers from first child to last. `-1` is last child to first.
 
 ### `Poser`
 
@@ -318,9 +321,9 @@ Checks if the `Poser` has `poseName` defined as a valid pose.
 
 Stops all active transitions of this `Poser` and its children.
 
-##### `addChild(poser: Poser)`
+##### `addChild(element: HTMLElement | SVGElement, props: PoseProps): Poser`
 
-Adds a child to this `Poser`.
+Creates and returns a new `Poser` as a child.
 
 ##### `removeChild(poser: Poser)`
 

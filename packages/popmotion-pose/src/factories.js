@@ -10,8 +10,8 @@ import { pointerX, pointerY, just } from './actions';
 import { transitionProps } from './utils';
 import { flipPose, isFlipPose } from './flip';
 
-const getPoses = ({ draggable, initialPose, passiveValues, bounds, ...poses }) => poses;
-const getDisplayProps = ({ transition, delay, delayChildren, staggerChildren, ...props }) => props;
+const getPoses = ({ draggable, initialPose, passive, dragBounds, onDragEnd, onDragStart, parentValues, ...poses }) => poses;
+const getDisplayProps = ({ transition, delay, delayChildren, staggerChildren, staggerDirection, ...props }) => props;
 
 const defaultTransitions = new Map([
   ['default', transitionProps({
@@ -79,48 +79,69 @@ const addBoundaries = (a, bounds, key) => {
 
 const valueTypeTests = [number, degrees, percent, px];
 const testValueType = v => type => type.test(v);
-export const createValues = (poses, styler, initialPose, bounds) => Object.values(poses).reduce((valueMap, pose) => {
-  Object.keys(getDisplayProps(pose)).forEach((key) => {
-    if (valueMap.has(key)) return;
+export const createValues = (poses, styler, initialPose, passive) => {
+  const values = new Map();
 
-    const type = valueTypeTests.find(testValueType(pose[key]));
+  // Scrape values from poses
+  Object.keys(poses).reduce((valueMap, poseKey) => {
+    const pose = poses[poseKey];
 
-    // If there's an initial pose defined, set the value to that, otherwise attempt to read from the element
-    const unparsedInitialValue = (initialPose && poses[initialPose] && poses[initialPose][key] !== undefined)
-      ? poses[initialPose][key]
-      : styler.get(key);
-    const initialValue = type ? type.parse(unparsedInitialValue) : unparsedInitialValue;
-    let val = value(initialValue);
+    Object.keys(getDisplayProps(pose)).forEach((key) => {
+      if (valueMap.has(key)) return;
+  
+      const type = valueTypeTests.find(testValueType(pose[key]));
+  
+      // If there's an initial pose defined, set the value to that, otherwise attempt to read from the element
+      const unparsedInitialValue = (initialPose && poses[initialPose] && poses[initialPose][key] !== undefined)
+        ? poses[initialPose][key]
+        : styler.get(key);
+      const initialValue = type ? type.parse(unparsedInitialValue) : unparsedInitialValue;
+      let val = value(initialValue);
+  
+      // Convert to value type
+      if (type) val = val.pipe(type.transform);
+  
+      // Bind styler setter to value updates
+      val.subscribe(styler.set(key));
+  
+      valueMap.set(key, { value: val, type });
+    });
+  
+    return valueMap;
+  }, values);
 
-    // Add boundaries to physical props
-    if (bounds && boundaryMap[key]) val = addBoundaries(val, bounds, key);
+  if (!passive) return values;
 
-    // Convert to value type
-    if (type) val = val.pipe(type.transform);
+  // Initiate passive values
+  Object.keys(passive).reduce((valueMap, key) => {
+    const [valueKey, transform, fromParent] = passive[key];
 
-    // Bind styler setter to value updates
-    val.subscribe(styler.set(key));
+  }, values);
 
-    valueMap.set(key, { value: val, type });
-  });
-
-  return valueMap;
-}, new Map());
+  return values;
+};
 
 const childAnimations = (children, nextPoseKey, nextPose) => {
   const animations = [];
   let delay = 0;
   let stagger = 0;
+  let staggerDirection = 1;
 
   if (nextPose) {
     delay = nextPose.delayChildren || delay;
     stagger = nextPose.staggerChildren || stagger;
+    staggerDirection = nextPose.staggerDirection || staggerDirection;
   }
+
+  const maxStaggerDuration = children.length - 1 * stagger;
+  const generateStaggerDuration = staggerDirection === 1
+    ? i => i * stagger
+    : i => maxStaggerDuration - (i * stagger);
 
   Array.from(children).forEach((child, i) => {
     if (child.has(nextPoseKey)) {
       animations.push(child.set(nextPoseKey, {
-        delay: delay + (stagger * i)
+        delay: delay + generateStaggerDuration(i)
       }));
     }
   });

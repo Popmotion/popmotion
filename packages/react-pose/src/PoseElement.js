@@ -75,6 +75,7 @@ export default class PoseElement extends React.PureComponent {
     style,
     onMount,
     onUnmount,
+    getCurrentFromParent,
     ...props
   }) {
     props.style = { ...style, ...this.style };

@@ -50,7 +50,7 @@ const itemProps = {
 export class PoseDOM extends React.Component {
   componentDidMount() {
     this.sidebarPoser = pose(this.sidebar, sidebarProps);
-    this.items.forEach(item => this.sidebarPoser.addChild(pose(item, itemProps)));
+    this.items.forEach(item => this.sidebarPoser.addChild(item, itemProps));
   
     setTimeout(() => this.sidebarPoser.set('open'), 1000);
   }
@@ -95,7 +95,7 @@ const passiveModalItemProps = {
 export class PoserPassive extends React.Component {
   componentDidMount() {
     this.sidebarPoser = pose(this.sidebar, sidebarProps);
-    this.items.forEach(item => this.sidebarPoser.addChild(pose(item, passiveModalItemProps)));
+    this.items.forEach(item => this.sidebarPoser.addChild(item, passiveModalItemProps));
   
     setTimeout(() => this.sidebarPoser.set('open'), 1000);
   }
@@ -197,7 +197,7 @@ export class PoserFLIP extends React.Component {
 
   componentDidMount() {
     this.modalPoser = pose(this.ref, modalProps);
-    this.listRefs.forEach(el => this.modalPoser.addChild(pose(el, modalItemProps)))
+    this.listRefs.forEach(el => this.modalPoser.addChild(el, modalItemProps))
     this.listRefs.clear();
 
     this.interval = setInterval(() => {
@@ -218,7 +218,7 @@ export class PoserFLIP extends React.Component {
   }
 
   componentDidUpdate() {
-    this.listRefs.forEach(el => this.modalPoser.addChild(pose(el, modalItemProps)));
+    this.listRefs.forEach(el => this.modalPoser.addChild(el, modalItemProps));
     this.listRefs.clear();
     this.modalPoser.flip().then(() => this.modalPoser.set('itemsIn'));
   }

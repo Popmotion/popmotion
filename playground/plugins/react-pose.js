@@ -56,7 +56,8 @@ const sidebarProps = {
   open: {
     x: '0%',
     delayChildren: 300,
-    staggerChildren: 50
+    staggerChildren: 50,
+    staggerDirection: -1
   },
   closed: {
     delay: 500,

@@ -4,7 +4,7 @@ import { createPoses, createValues, createPoseSetter, makeDraggable, createBindP
 const pose = (element, props = {}) => {
   const elementStyler = styler(element, { preparseOutput: false });
   const poses = createPoses(props);
-  const values = createValues(poses, elementStyler, props.initialPose);
+  const values = createValues(poses, elementStyler, props.initialPose, props.passive);
   const activeActions = new Map();
   const children = new Set();
   const dimensions = new Dimensions(element);
@@ -42,9 +42,13 @@ const pose = (element, props = {}) => {
     },
 
     // Children methods
-    addChild: child => {
-      child.bindPassiveValues(values);
+    addChild: (childElement, childProps) => {
+      const child = pose(childElement, {
+        ...childProps,
+        parentValues: values
+      });
       children.add(child);
+      return child;
     },
     removeChild: child => children.remove(child),
     clearChildren: () => {

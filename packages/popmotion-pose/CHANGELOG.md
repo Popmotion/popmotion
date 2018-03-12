@@ -2,6 +2,18 @@
 
 Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.2.0] 2018-03-12
+
+### Changed
+
+- `addChild` now creates and returns the new `Poser`.
+
+## [0.1.1] 2018-03-12
+
+### Added
+
+- `staggerDirection` property.
+
 ## [0.1.0] 2018-03-11
 
 ### Added
