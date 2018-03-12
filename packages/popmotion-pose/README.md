@@ -15,7 +15,8 @@ sidePanel.set('open');
 With the right configuration, that single call can orchestrate an animation as complex as this:
 
 ![Sidebar animation example](https://user-images.githubusercontent.com/7850794/37285984-90b7b860-25f8-11e8-8035-01b99bd0b762.gif)
-[Live example](https://codepen.io/popmotion/pen/EQBxOY)
+
+- [Live example](https://codepen.io/popmotion/pen/EQBxOY)
 
 ## Examples
 
