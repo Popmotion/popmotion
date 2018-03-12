@@ -79,7 +79,7 @@ const addBoundaries = (a, bounds, key) => {
 
 const valueTypeTests = [number, degrees, percent, px];
 const testValueType = v => type => type.test(v);
-export const createValues = (poses, styler, initialPose, passive) => {
+export const createValues = ({ poses, styler, initialPose, passive, parentValues }) => {
   const values = new Map();
 
   // Scrape values from poses
@@ -115,7 +115,15 @@ export const createValues = (poses, styler, initialPose, passive) => {
   // Initiate passive values
   Object.keys(passive).reduce((valueMap, key) => {
     const [valueKey, transform, fromParent] = passive[key];
+    const valueToBind = (fromParent && parentValues.has(key))
+      ? parentValues.get(key).value
+      : (values.has(key))
+        ? values.get(key).value
+        : false;
 
+    if (!valueToBind) return;
+    // Maybe make a new value here
+    valueToBind.subscribe(pipe(transform, styler.set(key)));
   }, values);
 
   return values;
@@ -220,17 +228,6 @@ export const makeDraggable = (element, set, activeActions, { onDragStart, onDrag
     );
   })
 );
-
-const bindToParentValues = (parent, passive, styler) => Object.keys(passive).forEach(key => {
-  const [parentKey, output] = passive[key];
-  if (!parent.has(parentKey)) return;
-  const { value: parentValue, type } = parent.get(parentKey);
-  parentValue.subscribe(pipe(output, styler.set(key)));
-});
-
-export const createBindPassiveValues = ({ passiveValues }, styler) => (parentValues) => {
-  if (passiveValues) bindToParentValues(parentValues, passiveValues, styler);
-};
 
 export class Dimensions {
   constructor(element) {

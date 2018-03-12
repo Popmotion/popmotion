@@ -1,10 +1,10 @@
 import styler from 'stylefire';
-import { createPoses, createValues, createPoseSetter, makeDraggable, createBindPassiveValues, Dimensions } from './factories';
+import { createPoses, createValues, createPoseSetter, makeDraggable, Dimensions } from './factories';
 
 const pose = (element, props = {}) => {
   const elementStyler = styler(element, { preparseOutput: false });
   const poses = createPoses(props);
-  const values = createValues(poses, elementStyler, props.initialPose, props.passive);
+  const values = createValues({ poses, styler: elementStyler, ...props });
   const activeActions = new Map();
   const children = new Set();
   const dimensions = new Dimensions(element);
@@ -57,7 +57,6 @@ const pose = (element, props = {}) => {
     },
 
     // Lifecycle methods
-    bindPassiveValues: createBindPassiveValues(props, elementStyler),
     destroy: () => {
       activeActions.forEach(a => a.stop());
       children.forEach(c => c.destroy());
