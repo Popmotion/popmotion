@@ -428,8 +428,8 @@ Removes all child posers and destroys them.
 ### 1.0.0
 - [ ] Website documentation
 - [ ] Linting
-- [ ] TypeScript
 
 ### 1.x.0
 - [ ] Handle scroll position
 - [ ] Personality API
+- [ ] TypeScript

@@ -1,15 +1,15 @@
 {
   "name": "popmotion-pose",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A declarative animation library",
   "main": "lib/index.js",
   "scripts": {
     "bundle": "NODE_ENV=production webpack",
-    "build": "babel src -d lib",
-    "watch": "babel src -w -d lib",
+    "build": "tsc",
+    "watch": "tsc -w",
     "test": "echo \"Error: no test specified\" && exit 1",
     "measure": "gzip -c dist/popmotion-pose.js | wc -c",
-    "prepublishOnly": "npm run build && npm run bundle"
+    "prepublishOnly": "prettier ./src && npm run build && npm run bundle"
   },
   "repository": {
     "type": "git",
@@ -27,14 +27,15 @@
     "env"
   ],
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.3",
-    "babel-preset-env": "^1.6.1",
+    "typescript": "^2.7.2",
+    "prettier": "1.11.1",
     "webpack": "^3.11.0"
   },
   "dependencies": {
     "popmotion": "^8.1.17"
   },
-  "unpkg": "./dist/popmotion-pose.js"
+  "unpkg": "./dist/popmotion-pose.js",
+  "prettier": {
+    "parser": "typescript"
+  }
 }
