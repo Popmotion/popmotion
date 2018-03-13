@@ -155,12 +155,6 @@ const Modal = styled.div`
 `;
 
 const modalProps = {
-  flip: {
-    transition: (props) => {
-      console.log(props)
-      return spring(props)
-    }
-  },
   itemsOut: {
     staggerChildren: 50
   }

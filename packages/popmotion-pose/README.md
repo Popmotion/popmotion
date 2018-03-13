@@ -346,7 +346,7 @@ passive: {
 
 ###### Example
 
-The `transform` function here is composed with Popmotion's [transformers](https://popmotion.io/api/transformers):
+The `transform` function here is composed with Popmotion [transformers](https://popmotion.io/api/transformers):
 
 ```javascript
 const props = {
@@ -431,4 +431,5 @@ Removes all child posers and destroys them.
 - [ ] TypeScript
 
 ### 1.x.0
+- [ ] Handle scroll position
 - [ ] Personality API
