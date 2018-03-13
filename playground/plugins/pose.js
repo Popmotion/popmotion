@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import pose from '../../packages/popmotion-pose/lib';
 import {tween, spring, transform} from '../../packages/popmotion/lib';
+const { pipe, blendColor, interpolate } = transform;
 
 const SidePanel = styled.div`
   width: 300px;
@@ -32,6 +33,13 @@ const sidebarProps = {
   close: {
     delay: 500,
     x: '-100%'
+  },
+  passive: {
+    backgroundColor: ['x', pipe(
+      parseFloat,
+      interpolate([-100, 0], [0, 1]),
+      blendColor('#a00', '#f00')
+    )]
   }
 };
 

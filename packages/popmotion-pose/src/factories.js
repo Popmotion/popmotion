@@ -115,12 +115,12 @@ export const createValues = ({ poses, styler, initialPose, passive, parentValues
   if (passive) {
     Object.keys(passive).forEach(key => {
       const [valueKey, transform, fromParent] = passive[key];
-      const valueToBind = (fromParent && parentValues && parentValues.has(key))
-        ? parentValues.get(key).value
-        : (values.has(key))
-          ? values.get(key).value
+      const valueToBind = (fromParent && parentValues && parentValues.has(valueKey))
+        ? parentValues.get(valueKey).value
+        : (values.has(valueKey))
+          ? values.get(valueKey).value
           : false;
-  
+
       if (!valueToBind) return;
 
       // Maybe make a new value here
