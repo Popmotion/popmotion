@@ -9,7 +9,7 @@ const schedule = (scheduler: Action, schedulee: Action) => action(({ update, com
   });
 
   const scheduleeSub = schedulee.start({
-    update: (v) => latest = v,
+    update: (v: any) => latest = v,
     complete
   });
 

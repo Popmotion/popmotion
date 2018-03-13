@@ -14,7 +14,9 @@
         "max-line-length":false,
         "curly": false,
         "prefer-for-of": false,
-        "member-access": false
+        "member-access": false,
+        "ordered-imports": false,
+        "object-literal-sort-keys": false
     },
     "rulesDirectory": []
 }

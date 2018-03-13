@@ -8,7 +8,7 @@ export interface EventListenerOptions {
 
 export type EventListener = (
   type: string,
-  listener: (event: Event) => void,
+  listener: Function,
   options?: EventListenerOptions | boolean
 ) => void;
 

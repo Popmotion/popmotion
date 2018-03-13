@@ -2,6 +2,30 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.1.21] 2018-03-13
+
+### Updated
+
+- Updating `stylefire`.
+
+## [8.1.20] 2018-03-13
+
+### Updated
+
+- Updating `stylefire`.
+
+## [8.1.19] 2018-03-13
+
+### Updated
+
+- Updating `stylefire`.
+
+## [8.1.18] 2018-03-13
+
+### Updated
+
+- Changed `Update` type definition to `Function`.
+
 ## [8.1.17] 2018-03-09
 
 ### Updated

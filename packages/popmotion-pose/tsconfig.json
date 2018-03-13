@@ -13,7 +13,8 @@
     "baseUrl": "src/",
     "alwaysStrict": true,
     "declaration": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["es5", "es6", "dom"]
   },
   "include": [
     "src/**/*"

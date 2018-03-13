@@ -1,4 +1,4 @@
-export type Update = (v?: any) => any;
+export type Update = Function;
 export type Complete = () => any;
 export type Error = (err?: any) => any;
 export type ObserverEvent = (type?: string, v?: any) => any;
