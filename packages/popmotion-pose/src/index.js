@@ -30,6 +30,11 @@ const pose = (element, props = {}) => {
   const api = {
     set,
     has: name => poses[name],
+    get: () => {
+      const output = {};
+      values.forEach(({ value }, key) => output[key] = value.get());
+      return output;
+    },
 
     // FLIP methods
     measure: () => dimensions.measure(element),

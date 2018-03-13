@@ -13,14 +13,16 @@ import { flipPose, isFlipPose } from './flip';
 const getPoses = ({ draggable, initialPose, passive, onChange, dragBounds, onDragEnd, onDragStart, parentValues, ...poses }) => poses;
 const getDisplayProps = ({ transition, delay, delayChildren, staggerChildren, staggerDirection, ...props }) => props;
 
+const underDampedSpring = ({ from, velocity, to }) => spring({ from, to, velocity, stiffness: 500, damping: 25 });
+const overDampedSpring = ({ from, velocity, to }) => spring({ from, to, velocity, stiffness: 700, damping: 35 });
 const defaultTransitions = new Map([
   ['default', transitionProps({
-    x: spring,
-    y: spring,
-    z: spring,
-    scaleX: spring,
-    scaleY: spring,
-    scale: spring,
+    x: underDampedSpring,
+    y: underDampedSpring,
+    z: underDampedSpring,
+    scaleX: overDampedSpring,
+    scaleY: overDampedSpring,
+    scale: overDampedSpring,
     default: tween
   })],
   ['dragging', ({ key, from }) => key === 'y' ? pointerY(from) : pointerX(from)],
