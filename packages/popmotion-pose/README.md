@@ -422,3 +422,13 @@ Removes a child.
 ##### `clearChildren()`
 
 Removes all child posers and destroys them.
+
+## TODO
+
+### 1.0.0
+- [ ] Website documentation
+- [ ] Linting
+- [ ] TypeScript
+
+### 1.x.0
+- [ ] Personality API
