@@ -2,6 +2,12 @@
 
 Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.2.3] 2018-03-14
+
+### Changed
+
+- Rewritten in TypeScript.
+
 ## [0.2.2] 2018-03-13
 
 ### Changed

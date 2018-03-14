@@ -40,7 +40,9 @@ With the right configuration, that single call can orchestrate an animation as c
 
 ## Examples
 
-[FLIP Tooltip](https://codepen.io/popmotion/pen/paXyRE?editors=0010)
+- [Side panel and items](https://codepen.io/popmotion/pen/EQBxOY?editors=0010)
+- [SVG line animation](https://codepen.io/popmotion/pen/dmMoVE?editors=0010)
+- [FLIP Tooltip](https://codepen.io/popmotion/pen/paXyRE?editors=0010)
 
 ## Install
 
