@@ -30,6 +30,16 @@ With the right configuration, that single call can orchestrate an animation as c
 - **Interactive:** Making an element draggable is as simple as setting `draggable: true`.
 - **Tiny:** Just a 2kb dusting on top of the bits of Popmotion you already use.
 
+## Contents
+- [Install](#install)
+- [Usage](#install)
+  - [Transitions](#transitions)
+  - [Draggable](#draggable)
+  - [`onChange` events](#onchange-events)
+  - [Children](#children)
+  - [FLIP](#flip)
+- [API](#api)
+
 ## Install
 
 ### Package managers
@@ -422,14 +432,3 @@ Removes a child.
 ##### `clearChildren()`
 
 Removes all child posers and destroys them.
-
-## TODO
-
-### 1.0.0
-- [ ] Website documentation
-- [ ] Linting
-
-### 1.x.0
-- [ ] Handle scroll position
-- [ ] Personality API
-- [ ] TypeScript
