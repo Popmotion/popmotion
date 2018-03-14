@@ -3,7 +3,7 @@ import chain from 'popmotion/compositors/chain';
 import delayAction from 'popmotion/compositors/delay';
 import { flipPose, isFlipPose } from '../dom/flip';
 import { just } from '../inc/default-transitions';
-import { Pose, Poser, PoseSetter, PoseSetterFactoryProps, ActiveActions, ChildPoses, DragProps, ValueMap, TypesMap, PoseMap, Bounds2D, PoseSetterProps } from '../types';
+import { Pose, Poser, PoseSetter, PoseSetterFactoryProps, ChildPoses, Bounds2D, PoseSetterProps } from '../types';
 import { getPoseValues } from 'inc/selectors';
 
 export type PoseSetterFactory = (props: PoseSetterFactoryProps) => PoseSetter;
@@ -82,16 +82,16 @@ const createPoseSetter: PoseSetterFactory = (setterProps) => (next, props = {}) 
         if (activeActions.has(key)) activeActions.get(key).stop();
 
         // Get transition if `transition` prop isn't false
-        let transition = (typeof getTransition !== 'boolean')
-          ? getTransition({
-            ...props,
-            from: type ? type.parse(from) : from,
-            velocity: value.getVelocity() || 0,
-            to: type ? type.parse(unparsedTarget) : unparsedTarget,
-            key,
-            prevPoseKey: activePoses.get(key)
-          })
-          : just(unparsedTarget);
+        let transition = getTransition({
+          ...props,
+          from: type ? type.parse(from) : from,
+          velocity: value.getVelocity() || 0,
+          to: type ? type.parse(unparsedTarget) : unparsedTarget,
+          key,
+          prevPoseKey: activePoses.get(key)
+        });
+
+        if (transition === false) transition = just(unparsedTarget);
 
         // If this is a drag pose, apply boundaries
         if (dragPoses.has(next) && dragBounds && boundaryMap[key]) transition = addBoundaries(transition, dragBounds, key);
@@ -114,6 +114,8 @@ const createPoseSetter: PoseSetterFactory = (setterProps) => (next, props = {}) 
         activePoses.set(key, next);
       })
     );
+
+    animations.push(...poserAnimations);
   }
 
   // Get children animation Promises

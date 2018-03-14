@@ -4,7 +4,6 @@ import {
   ValueMap,
   TypesMap,
   Pose,
-  PoseMap,
   OnChangeMap
 } from '../types';
 import { getPoseValues } from '../inc/selectors';
@@ -32,7 +31,7 @@ const createValues = (values: ValueMap, types: TypesMap, { initialPose, poses, s
 
   values.set(key, thisValue);
 
-  thisValue.subscribe((v) => styler.set(key, v));
+  thisValue.subscribe((v: any) => styler.set(key, v));
 
   if (type) types.set(key, type);
 };
@@ -40,7 +39,7 @@ const createValues = (values: ValueMap, types: TypesMap, { initialPose, poses, s
 const scrapeValuesFromPose = (values: ValueMap, types: TypesMap, props: ValuesFactoryProps) => (key: string) => {
   const pose = props.poses[key];
   Object.keys(getPoseValues(pose)).forEach(createValues(values, types, props, pose));
-}
+};
 
 const bindPassiveValues = (values: ValueMap, { passive, parentValues, styler }: ValuesFactoryProps) => (key: string) => {
   const [valueKey, transform, fromParent] = passive[key];

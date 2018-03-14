@@ -13,10 +13,14 @@ export type Pose = {
   [key: string]: any
 };
 
+export type StateMap = {
+  [key: string]: any
+};
+
 export interface Poser {
   set: (poseName: string, props?: PoseSetterProps) => Promise<any>;
   has: (poseName: string) => boolean;
-  get: () => { [key: string]: any },
+  get: () => StateMap;
   measure: () => void;
   flip: (op: Function) => Promise<any>;
   addChild: (element: Element, props: PoserProps) => Poser;
@@ -129,5 +133,7 @@ export type BoundingBox = {
   width: number,
   height: number,
   left: number,
-  top: number
+  top: number,
+  right: number,
+  bottom: number
 };

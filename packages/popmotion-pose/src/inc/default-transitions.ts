@@ -5,11 +5,11 @@ import pointer from 'popmotion/input/pointer';
 import { transitionProps } from './transition-composers';
 import { RawValue, Transition } from '../types';
 
-const singleAxisPointer = (axis: string) => (from: number) => pointer({ [axis]: from }).pipe((v) => v[axis]);
+const singleAxisPointer = (axis: string) => (from: number) => pointer({ [axis]: from }).pipe((v: any) => v[axis]);
 const pointerX = singleAxisPointer('x');
 const pointerY = singleAxisPointer('y');
 
-export const just = (from: RawValue) => action(({ update, complete }) => {
+export const just = (from: RawValue): Action => action(({ update, complete }) => {
   update(from);
   complete();
 });
@@ -17,16 +17,28 @@ export const just = (from: RawValue) => action(({ update, complete }) => {
 const underDampedSpring: Transition = ({ from, velocity, to }) => spring({ from, to, velocity, stiffness: 500, damping: 25 });
 const overDampedSpring: Transition = ({ from, velocity, to }) => spring({ from, to, velocity, stiffness: 700, damping: 35 });
 
+// TODO: Adjust transitions based on behavioural props
+const intelligentTransition: Transition = transitionProps({
+  x: underDampedSpring,
+  y: underDampedSpring,
+  z: underDampedSpring,
+  scaleX: overDampedSpring,
+  scaleY: overDampedSpring,
+  scale: overDampedSpring,
+  default: tween
+});
+
+// TODO: Move add boundaries here
+const dragAction: Transition = transitionProps({
+  x: ({ from }) => pointerX(from as number),
+  y: ({ from }) => pointerY(from as number)
+});
+
+// TODO: Return `decay` based on behavioural props
+const intelligentDragEnd: Transition = ({ from }) => just(from);
+
 export default new Map<string, Transition>([
-  ['default', transitionProps({
-    x: underDampedSpring,
-    y: underDampedSpring,
-    z: underDampedSpring,
-    scaleX: overDampedSpring,
-    scaleY: overDampedSpring,
-    scale: overDampedSpring,
-    default: tween
-  })],
-  ['dragging', ({ key, from }) => key === 'y' ? pointerY(from as number) : pointerX(from as number)],
-  ['dragEnd', ({ from }) => just(from)]
+  ['default', intelligentTransition],
+  ['dragging', dragAction],
+  ['dragEnd', intelligentDragEnd]
 ]);

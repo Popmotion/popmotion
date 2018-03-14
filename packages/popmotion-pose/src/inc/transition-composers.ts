@@ -1,4 +1,4 @@
-import { Transition, TransitionProps } from '../types';
+import { Transition } from '../types';
 
 type TransitionMap = {
   [key: string]: Transition

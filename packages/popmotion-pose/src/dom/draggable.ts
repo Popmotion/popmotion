@@ -19,3 +19,5 @@ export default (element: Element, set: PoseSetter, activeActions: ActiveActions,
     );
   })
 );
+
+export { ColdSubscription };

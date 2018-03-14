@@ -1,5 +1,5 @@
 import styler from 'stylefire';
-import { PoserFactory, ActivePoses, ActiveActions, ChildPoses } from './types';
+import { Poser, PoserFactory, ActivePoses, ActiveActions, ChildPoses, StateMap } from './types';
 import { getDragProps } from './inc/selectors';
 import { transitionProps, transitionFromPrevPose } from './inc/transition-composers';
 import createPoses from './factories/poses';
@@ -7,6 +7,7 @@ import createValuesAndTypes from './factories/values';
 import createPoseSetter from './factories/pose-setter';
 import createDimensions from './factories/dimensions';
 import makeDraggable from './dom/draggable';
+import { ColdSubscription } from 'popmotion/action/types';
 
 const pose: PoserFactory = (element, props) => {
   const { draggable, initialPose, passive, parentValues, onChange } = props;
@@ -39,7 +40,49 @@ const pose: PoserFactory = (element, props) => {
 
   if (draggable) makeDraggable(element, set, activeActions, dragProps);
 
-  // export API
+  const api: Poser = {
+    set,
+    has: (name) => !!poses[name],
+    get: () => {
+      const output: StateMap = {};
+      values.forEach((value: any, key: string) => output[key] = value.get());
+      return output;
+    },
+
+    // FLIP methods
+    measure: dimensions.measure,
+    flip: (op) => {
+      if (op) {
+        api.measure();
+        op();
+      }
+
+      return set('flip');
+    },
+
+    // Children methods
+    addChild: (childElement, childProps) => {
+      const child = pose(childElement, {
+        ...childProps,
+        parentValues: values
+      });
+      children.add(child);
+      return child;
+    },
+    removeChild: (child) => children.delete(child),
+    clearChildren: () => {
+      children.forEach((c: Poser) => c.destroy());
+      children.clear();
+    },
+
+    // Lifecycle methods
+    destroy: () => {
+      activeActions.forEach((a: ColdSubscription) => a.stop());
+      children.forEach((c: Poser) => c.destroy());
+    }
+  };
+
+  return api;
 };
 
 export default pose;

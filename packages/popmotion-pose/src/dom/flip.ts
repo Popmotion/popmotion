@@ -3,6 +3,8 @@ import { Pose, ValueMap, PoseSetterFactoryProps } from 'types';
 import { Action } from 'popmotion/action';
 import { Styler } from 'stylefire';
 
+export { Action };
+
 type SetValueProps = {
   values: ValueMap,
   elementStyler: Styler
