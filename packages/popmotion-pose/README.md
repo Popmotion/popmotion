@@ -18,9 +18,17 @@ With the right configuration, that single call can orchestrate an animation as c
 
 - [Live example](https://codepen.io/popmotion/pen/EQBxOY)
 
-## Examples
-
-[FLIP Tooltip](https://codepen.io/popmotion/pen/paXyRE?editors=0010)
+## Contents
+- [Features](#features)
+- [Examples](#examples)
+- [Install](#install)
+- [Usage](#install)
+  - [Transitions](#transitions)
+  - [Draggable](#draggable)
+  - [`onChange` events](#onchange-events)
+  - [Children](#children)
+  - [FLIP](#flip)
+- [API](#api)
 
 ## Features
 
@@ -30,15 +38,9 @@ With the right configuration, that single call can orchestrate an animation as c
 - **Interactive:** Making an element draggable is as simple as setting `draggable: true`.
 - **Tiny:** Just a 2kb dusting on top of the bits of Popmotion you already use.
 
-## Contents
-- [Install](#install)
-- [Usage](#install)
-  - [Transitions](#transitions)
-  - [Draggable](#draggable)
-  - [`onChange` events](#onchange-events)
-  - [Children](#children)
-  - [FLIP](#flip)
-- [API](#api)
+## Examples
+
+[FLIP Tooltip](https://codepen.io/popmotion/pen/paXyRE?editors=0010)
 
 ## Install
 
