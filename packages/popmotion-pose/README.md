@@ -18,9 +18,17 @@ With the right configuration, that single call can orchestrate an animation as c
 
 - [Live example](https://codepen.io/popmotion/pen/EQBxOY)
 
-## Examples
-
-[FLIP Tooltip](https://codepen.io/popmotion/pen/paXyRE?editors=0010)
+## Contents
+- [Features](#features)
+- [Examples](#examples)
+- [Install](#install)
+- [Usage](#install)
+  - [Transitions](#transitions)
+  - [Draggable](#draggable)
+  - [`onChange` events](#onchange-events)
+  - [Children](#children)
+  - [FLIP](#flip)
+- [API](#api)
 
 ## Features
 
@@ -29,6 +37,12 @@ With the right configuration, that single call can orchestrate an animation as c
 - **FLIP:** Friends don't let friends animate `width`, and neither does Pose. It uses the [FLIP](https://aerotwist.com/blog/flip-your-animations/) technique to convert slow animations into fast `transform`s.
 - **Interactive:** Making an element draggable is as simple as setting `draggable: true`.
 - **Tiny:** Just a 2kb dusting on top of the bits of Popmotion you already use.
+
+## Examples
+
+- [Side panel and items](https://codepen.io/popmotion/pen/EQBxOY?editors=0010)
+- [SVG line animation](https://codepen.io/popmotion/pen/dmMoVE?editors=0010)
+- [FLIP Tooltip](https://codepen.io/popmotion/pen/paXyRE?editors=0010)
 
 ## Install
 
@@ -422,14 +436,3 @@ Removes a child.
 ##### `clearChildren()`
 
 Removes all child posers and destroys them.
-
-## TODO
-
-### 1.0.0
-- [ ] Website documentation
-- [ ] Linting
-
-### 1.x.0
-- [ ] Handle scroll position
-- [ ] Personality API
-- [ ] TypeScript
