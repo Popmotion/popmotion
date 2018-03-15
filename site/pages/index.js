@@ -1,3 +1,3 @@
-import Homepage from '~/templates/Homepage';
+import PopmotionHomepage from '~/templates/Popmotion';
 
-export default () => <Homepage />;
+export default () => <PopmotionHomepage />;
