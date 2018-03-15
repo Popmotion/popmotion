@@ -4,10 +4,12 @@ export default ({
   className,
   id='logo-gradient',
   pathId,
+  width=165,
+  height=41,
   ...pathAttrs
 }) => {
   return (
-    <svg className={className} width="165" height="41" viewBox="0 0 200 41">
+    <svg className={className} width={width} height={height} viewBox="0 0 200 41">
       <BrandGradient id={id} />
       <path
         fill={`url(#${id})`}

@@ -1,17 +1,19 @@
+import { withTheme } from 'styled-components';
+import SiteLink from '~/components/layout/SiteLink';
 import { Container, Title, Logo, LogoText, Blurb, CTA } from './styled';
 import Link from 'next/link';
 
-export default () => (
+const Masthead = ({ theme }) => (
   <Container>
     <Title>
-      <LogoText>Popmotion</LogoText>
-      <Logo id="homepage-logo" />
+      <LogoText>{theme.name}</LogoText>
+      <theme.Logo id="homepage-logo" {...theme.homepageLogoSize} />
     </Title>
-    <Blurb>
-      A functional JavaScript motion library
-    </Blurb>
+    <Blurb>{theme.tagline}</Blurb>
     <CTA>
-      <Link href="/learn/get-started" prefetch><a>Quick start</a></Link>
+      <SiteLink href="/learn/get-started" prefetch>Quick start</SiteLink>
     </CTA>
   </Container>
 );
+
+export default withTheme(Masthead);

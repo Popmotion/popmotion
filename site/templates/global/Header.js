@@ -38,6 +38,7 @@ const NavArea = styled.nav`
 const LogoArea = NavArea.extend`
   left: ${cols(2)};
   ${media.large`position: static;`}
+  ${props => props.isHomepage && `display: none;`}
 `;
 
 const SectionNavArea = Centered.extend`
@@ -45,9 +46,7 @@ const SectionNavArea = Centered.extend`
   ${media.medium`margin-left: ${cols(1)};`}
 
   ${props => props.isHomepage && `
-    margin-left: ${cols(2)};
-
-    ${media.medium`margin-left: ${cols(1)};`}
+    margin: 0;
   `}
 `;
 
@@ -97,7 +96,7 @@ const Header = ({ section, isHomepage, theme }) => (
     <LogoArea isHomepage={isHomepage}>
       <Link href={theme.data.rootUrl}>
         <a name="Homepage">
-          <PopmotionLogo isHomepage={isHomepage} />
+          <theme.Logo style={{ height: '36px' }} />
           <PopmotionIcon isHomepage={isHomepage} />
         </a>
       </Link>

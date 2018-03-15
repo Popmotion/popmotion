@@ -1,7 +1,7 @@
 import BrandGradient from './BrandGradientDef';
 
-export default ({className}) => (
-  <svg width="41" height="37" viewBox="0 0 41 37" xmlns="http://www.w3.org/2000/svg" className={className}>
+export default ({className, width=41, height=37}) => (
+  <svg width={width} height={height} viewBox="0 0 41 37" xmlns="http://www.w3.org/2000/svg" className={className}>
     <BrandGradient id="icon-gradient" />
     <g fill="none" fillRule="evenodd">
       <ellipse fill="url(#icon-gradient)" cx="17.73" cy="18.99" rx="17.73" ry="18.01"/>
