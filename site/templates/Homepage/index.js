@@ -8,10 +8,12 @@ import settings from '~/data/settings.json';
 
 export default () => (
   <GlobalTemplate title={`${settings.siteName} - A functional JavaScript motion library`}>
-    <Header isHomepage={true} />
-    <Masthead />
-    <USPs />
-    <FinalCTA />
-    <Footer />
+    <React.Fragment>
+      <Header isHomepage={true} />
+      <Masthead />
+      <USPs />
+      <FinalCTA />
+      <Footer />
+    </React.Fragment>
   </GlobalTemplate>
 );

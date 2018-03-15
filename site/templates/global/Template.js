@@ -1,10 +1,11 @@
-import { injectGlobal } from 'styled-components';
+import { injectGlobal, ThemeProvider } from 'styled-components';
 import NProgress from 'nprogress';
 import Head from 'next/head';
 import Router from 'next/router';
 import reset from '~/styles/reset';
 import nprogressStyles from '~/styles/nprogress';
 import { BRAND } from '~/styles/vars';
+import themes from '~/styles/themes';
 import settings from '~/data/settings.json';
 import * as popmotion from 'popmotion';
 
@@ -29,7 +30,7 @@ injectGlobal`
 
 const TWITTER_CARD = 'https://popmotion.io/static/images/twitter-card.png';
 
-export default ({ children, title, description=settings.siteDescription }) => (
+export default ({ children, title, theme="popmotion", description=settings.siteDescription, image=TWITTER_CARD }) => (
   <div>
     <Head>
       <meta name="theme-color" content={BRAND} />
@@ -38,13 +39,15 @@ export default ({ children, title, description=settings.siteDescription }) => (
       <meta property="og:site_name" content={settings.siteName} />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
-      <meta property="og:image" content={TWITTER_CARD} />
+      <meta property="og:image" content={image} />
       <meta property="twitter:site" content={settings.twitterUsername} />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={TWITTER_CARD} />
+      <meta name="twitter:image" content={image} />
       <title>{title}</title>
     </Head>
-    {children}
+    <ThemeProvider theme={themes[theme]}>
+      {children}
+    </ThemeProvider>
   </div>
 );
