@@ -7,9 +7,10 @@ site/public
 site/pages/api
 site/pages/learn
 site/pages/blog
+site/pages/pose/api
+site/pages/pose/learn
 storybook-static
 site/data/content.json
 site/data/menus.json
 site/next.config.js
-packages/popmotion-devtools/dist/index.js
 .vscode

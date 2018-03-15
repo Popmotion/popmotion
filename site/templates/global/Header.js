@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import styled from 'styled-components';
+import styled, { withTheme } from 'styled-components';
 import SectionNav from './SectionNav';
 import Logo from '~/components/icons/Logo';
 import Icon from '~/components/icons/PopmotionIcon';
@@ -92,11 +92,11 @@ const PopmotionIcon = styled(Icon)`
 const GitHubIcon = styled(GitHub)``;
 const TwitterIcon = styled(Twitter)``;
 
-export default ({ section, isHomepage }) => (
+const Header = ({ section, isHomepage, theme }) => (
   <HeaderContainer>
     <LogoArea isHomepage={isHomepage}>
-      <Link href="/" name="Homepage">
-        <a>
+      <Link href={theme.data.rootUrl}>
+        <a name="Homepage">
           <PopmotionLogo isHomepage={isHomepage} />
           <PopmotionIcon isHomepage={isHomepage} />
         </a>
@@ -115,3 +115,5 @@ export default ({ section, isHomepage }) => (
     </SocialArea>
   </HeaderContainer>
 );
+
+export default withTheme(Header);

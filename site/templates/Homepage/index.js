@@ -7,13 +7,11 @@ import USPs from './USPs';
 import settings from '~/data/settings.json';
 
 export default () => (
-  <GlobalTemplate title={`${settings.siteName} - A functional JavaScript motion library`}>
-    <React.Fragment>
-      <Header isHomepage={true} />
-      <Masthead />
-      <USPs />
-      <FinalCTA />
-      <Footer />
-    </React.Fragment>
+  <GlobalTemplate title={`${settings.siteName} - A functional JavaScript motion library`} theme="popmotion">
+    <Header isHomepage={true} />
+    <Masthead />
+    <USPs />
+    <FinalCTA />
+    <Footer />
   </GlobalTemplate>
 );

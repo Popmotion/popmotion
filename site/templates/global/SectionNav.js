@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import Link from 'next/link';
+import styled, { withTheme } from 'styled-components';
+import SiteLink from '~/components/layout/SiteLink';
 import { fontSize, fontBold } from '~/styles/fonts';
 import { ACTION, ENTITY, BLACK, cols, media, SKEW } from '~/styles/vars';
 import sectionNames from '~/data/section-names.json';
@@ -42,14 +42,16 @@ const MenuItem = styled.li`
   }
 `;
 
-export default ({ section }) => (
+const SectionNav = ({ section, theme }) => (
   <ul>
-    {Object.keys(sectionNames).map((name) => (
+    {theme.sections.map((name) => (
       <MenuItem key={name} isSelected={(section === name)}>
-        <Link href={routes[name]}>
-          <a name={sectionNames[name]}>{sectionNames[name]}</a>
-        </Link>
+        <SiteLink href={routes[name]} name={sectionNames[name]}>
+          {sectionNames[name]}
+        </SiteLink>
       </MenuItem>
     ))}
   </ul>
 );
+
+export default withTheme(SectionNav);

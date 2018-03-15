@@ -19,16 +19,21 @@ const generateRouteDefinitions = (data) => {
     '/page-not-found': { page: '/_error' },
   `;
 
-  Object.keys(data).forEach((rootId) => {
-    const rootObject = data[rootId];
-    const pageIds = Object.keys(rootObject);
+  Object.keys(data).forEach(siteId => {
+    const siteData = data[siteId];
 
-    pageIds.forEach((pageId) => {
-      routes += `
-        '/${rootId}/${pageId}': {
-          page: '/${rootId}/${pageId}'
-        },
-      `;
+    Object.keys(siteData).forEach(sectionId => {
+      const sectionData = siteData[sectionId];
+      const pageIds = Object.keys(sectionData);
+
+      pageIds.forEach(pageId => {
+        const route = `/${siteId === 'popmotion' ? '' : siteId + '/'}${sectionId}/${pageId}`;
+        routes += `
+          '${route}': {
+            page: '${route}'
+          },
+        `;
+      });
     });
   });
 

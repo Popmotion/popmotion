@@ -1,6 +1,6 @@
 const escapeBackticks = (string) => string.replace(/`/g, '\\`');
 
-module.exports = (body, { category, id, title, description, published }) => `
+module.exports = (body, { category, id, title, description, published, siteName, section }) => `
 import { createElement } from 'react';
 import marksy from 'marksy/components';
 import { A, H1, H2, H3, H4, P, Li, Ul, Hr, Code, Blockquote, ArticleHeader } from '~/templates/global/styled';
@@ -38,21 +38,16 @@ const content = convertMarkdown(\`${escapeBackticks(body)}\`);
 const Page = ({ section }) => (
   <ContentTemplate
     id="${id}"
-    section={section}
+    section="${section}"
     category="${category}"
     title="${title}"
     description="${description}"
     published="${published}"
+    theme="${siteName}"
   >
     {content.tree}
   </ContentTemplate>
 );
-
-Page.getInitialProps = async ({ pathname, req }) => {
-  const [section] = pathname.split('/').filter(removeEmpty);
-
-  return { section };
-};
 
 export default Page;
 `;

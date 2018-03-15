@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import { injectGlobal, ThemeProvider } from 'styled-components';
 import NProgress from 'nprogress';
 import Head from 'next/head';
@@ -30,7 +31,7 @@ injectGlobal`
 
 const TWITTER_CARD = 'https://popmotion.io/static/images/twitter-card.png';
 
-export default ({ children, title, theme="popmotion", description=settings.siteDescription, image=TWITTER_CARD }) => (
+export default ({ children, title, theme, description=settings.siteDescription, image=TWITTER_CARD }) => (
   <div>
     <Head>
       <meta name="theme-color" content={BRAND} />
@@ -47,7 +48,9 @@ export default ({ children, title, theme="popmotion", description=settings.siteD
       <title>{title}</title>
     </Head>
     <ThemeProvider theme={themes[theme]}>
-      {children}
+      <Fragment>
+        {children}
+      </Fragment>
     </ThemeProvider>
   </div>
 );

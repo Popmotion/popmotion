@@ -1,12 +1,10 @@
 import React from 'react';
-import Link from 'next/link';
-import styled, { css } from 'styled-components';
+import SiteLink from '~/components/layout/SiteLink';
+import styled, { css, withTheme } from 'styled-components';
 import { Centered } from '~/templates/global/grid';
 import DropDownArrow from '~/components/icons/DropDownArrow';
 import { fontSize, fontBold, lineHeight } from '~/styles/fonts';
 import { LINK, ENTITY, cols, media } from '~/styles/vars';
-import menus from '~/data/menus.json';
-import content from '~/data/content.json';
 import sectionNames from '~/data/section-names.json';
 
 export const ContentNavArea = Centered.extend`
@@ -107,19 +105,19 @@ const DropDownMenuIcon = styled(DropDownArrow)`
 
 const Item = ({ id, title, contentId, section }) => (
   <MenuItem isSelected={id === contentId}>
-    <Link href={`/${section}/${id}`}>
+    <SiteLink href={`/${section}/${id}`}>
       <a>{title}</a>
-    </Link>
+    </SiteLink>
   </MenuItem>
 );
 
-const Category = ({ id, title, contentId, section, posts }) => (
+const Category = ({ id, title, contentId, content, section, posts }) => (
   <CategoryContainer>
     <CategoryTitle isSelected={id === contentId}>
-      {(content[section][id]) ? (
-        <Link href={`/${section}/${id}`}>
+      {(content[id]) ? (
+        <SiteLink href={`/${section}/${id}`}>
           <a>{title}</a>
-        </Link>
+        </SiteLink>
       ) : title}
     </CategoryTitle>
     {posts ? (
@@ -130,7 +128,7 @@ const Category = ({ id, title, contentId, section, posts }) => (
   </CategoryContainer>
 );
 
-export default class extends React.Component {
+class ContentNav extends React.PureComponent {
   state = {
     isOpen: false
   };
@@ -142,8 +140,9 @@ export default class extends React.Component {
 
   render() {
     const { isOpen } = this.state;
-    const { section, id } = this.props;
-    const menu = menus[section];
+    const { section, id, theme } = this.props;
+    const menu = theme.data.menus[section];
+    const content = theme.data.content[section];
 
     return (
       <ContentNavArea>
@@ -152,9 +151,11 @@ export default class extends React.Component {
           <DropDownMenuIcon isOpen={isOpen} />
         </MenuToggle>
         <Menu isOpen={isOpen}>
-          {menu.map((category) => <Category key={category.id} {...category} contentId={id} section={section} />)}
+          {menu.map((category) => <Category key={category.id} {...category} content={content} contentId={id} section={section} />)}
         </Menu>
       </ContentNavArea>
     );
   }
 }
+
+export default withTheme(ContentNav);

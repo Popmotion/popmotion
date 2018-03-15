@@ -29,6 +29,7 @@ const setValue = ({ values, elementStyler }: SetValueProps, key: string, to: any
     // to actually render twice, but because we're making
     // the value jump a great distance, we want to reset the velocity
     // to 0, rather than something arbitrarily high
+    // Maybe a more explicit API would be nicer
     const val = values.get(key);
     val.update(to);
     val.update(to);
