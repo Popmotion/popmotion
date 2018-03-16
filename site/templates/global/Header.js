@@ -94,12 +94,13 @@ const TwitterIcon = styled(Twitter)``;
 const Header = ({ section, isHomepage, theme }) => (
   <HeaderContainer>
     <LogoArea isHomepage={isHomepage}>
-      <Link href={theme.data.rootUrl}>
-        <a name="Homepage">
-          <theme.Logo style={{ height: '36px' }} />
-          <PopmotionIcon isHomepage={isHomepage} />
-        </a>
-      </Link>
+      {!isHomepage ? (
+        <Link href={theme.data.rootUrl}>
+          <a name="Homepage">
+            <theme.Logo {...theme.headerLogoSize} />
+          </a>
+        </Link>
+      ) : null}
     </LogoArea>
     <SectionNavArea isHomepage={isHomepage}>
       <SectionNav section={section} />

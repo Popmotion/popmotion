@@ -21,7 +21,12 @@ const themeSettings = {
     homepageLogoSize: {
       width: 283,
       height: 64
-    }
+    },
+    headerLogoSize: {
+      width: 159,
+      height: 41
+    },
+    mastheadBackground: `red`
   },
   pose: {
     name: 'Popmotion Pose',
@@ -31,7 +36,12 @@ const themeSettings = {
     homepageLogoSize: {
       width: 253,
       height: 80
-    }
+    },
+    headerLogoSize: {
+      width: 127,
+      height: 40
+    },
+    mastheadBackground: `red`
   }
 };
 

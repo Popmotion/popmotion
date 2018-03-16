@@ -1,9 +1,16 @@
 import styled from 'styled-components';
 import { WHITE, BLACK, ACTION_GRADIENT, ACTION_BURN, LIGHT_GREY, UNSKEW, SKEW, cols, media } from '~/styles/vars';
 import { fontSize, fontBold } from '~/styles/fonts';
-import PopmotionLogo from '~/components/icons/Logo';
 
 export const Container = styled.section`
+  background: ${({ theme }) => theme.mastheadBackground};
+
+  svg path {
+    fill: ${WHITE};
+  }
+`;
+
+export const MastheadContainer = styled.section`
   display: flex;
   flex-direction: column;
   flex-align: center;
@@ -20,18 +27,9 @@ export const Container = styled.section`
 `;
 
 export const Title = styled.h1`
+  display: block;
   overflow: hidden;
   margin-bottom: ${cols(1)};
-`;
-
-export const Logo = styled(PopmotionLogo) `
-  width: 283px;
-  height: 64px;
-  
-  ${media.medium`
-    width: 175px;
-    height: 38px;
-  `}
 `;
 
 export const LogoText = styled.div`
@@ -44,6 +42,7 @@ export const Blurb = styled.h2`
   ${fontSize(24)}
   ${fontBold}
   margin-bottom: ${cols(3)};
+  color: ${WHITE};
   
   ${media.medium`
     ${fontSize(18)}
@@ -52,8 +51,7 @@ export const Blurb = styled.h2`
 `;
 
 export const CTA = styled.div`
-  background: ${ACTION_GRADIENT};
-  text-shadow: 0 -1px 0 ${ACTION_BURN};
+  background: ${WHITE};
   margin: 0 auto;
   display: flex;
   transform: skewX(${SKEW});
@@ -61,7 +59,7 @@ export const CTA = styled.div`
   a, button {
     ${fontSize(24)}
     ${fontBold}
-    color: ${WHITE};
+    color: ${BLACK};
     cursor: pointer;
     text-decoration: none;
     padding: ${cols(1)} ${cols(2)};

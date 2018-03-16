@@ -8,8 +8,9 @@ import settings from '~/data/settings.json';
 
 export default () => (
   <GlobalTemplate title={`${settings.siteName} - A functional JavaScript motion library`} theme="popmotion">
-    <Header isHomepage={true} />
-    <Masthead />
+    <Masthead>
+      <Header isHomepage={true} />
+    </Masthead>
     <USPs />
     <FinalCTA />
     <Footer />
