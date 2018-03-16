@@ -17,6 +17,7 @@ const HeaderContainer = styled.nav`
   padding: 25px ${cols(2)};
   margin-bottom: ${cols(4)};
   height: 91px;
+  background: ${props => props.isHomepage ? 'rgba(0, 0, 0, 0.1)' : 'none'};
   
   ${media.medium`
     margin-bottom: ${cols(2)};
@@ -92,7 +93,7 @@ const GitHubIcon = styled(GitHub)``;
 const TwitterIcon = styled(Twitter)``;
 
 const Header = ({ section, isHomepage, theme }) => (
-  <HeaderContainer>
+  <HeaderContainer isHomepage={isHomepage}>
     <LogoArea isHomepage={isHomepage}>
       {!isHomepage ? (
         <Link href={theme.data.rootUrl}>
