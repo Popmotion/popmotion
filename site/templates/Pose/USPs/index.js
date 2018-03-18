@@ -1,18 +1,16 @@
-import { Container, Blurb } from '~/templates/Popmotion/USPs/styled';
-import ExampleSection from '~/templates/Popmotion/USPs/ExampleSection';
-import Example from '~/templates/Popmotion/USPs/Example';
-import DeclarativeExample from './DeclarativeExample';
-import IntelligentExample from './IntelligentExample';
-import { Strong } from '~/templates/global/styled';
-import CustomExample from './CustomExample';
-import ChildrenExample from './ChildrenExample';
-import FlipExample from './FlipExample';
+import { Container, Blurb } from "~/templates/Popmotion/USPs/styled";
+import ExampleSection from "~/templates/Popmotion/USPs/ExampleSection";
+import Example from "~/templates/Popmotion/USPs/Example";
+import DeclarativeExample from "./DeclarativeExample";
+import IntelligentExample from "./IntelligentExample";
+import { Strong } from "~/templates/global/styled";
+import CustomExample from "./CustomExample";
+import ChildrenExample from "./ChildrenExample";
+import FlipExample from "./FlipExample";
 
 export default () => (
   <Container>
-    <Blurb>
-      Popmotion Pose combines the simplicity of CSS transitions with the power of JavaScript
-    </Blurb>
+    <Blurb>Popmotion Pose makes JavaScript animation as simple as CSS</Blurb>
     <ExampleSection>
       <Example
         title="Declarative"
@@ -47,13 +45,11 @@ export default () => (
       <Example
         title="Draggable"
         description="A lightweight integrated physics simulation that can be altered mid-animation."
-      >
-      </Example>
+      />
       <Example
         title="Passive values"
         description="A lightweight integrated physics simulation that can be altered mid-animation."
-      >
-      </Example>
+      />
     </ExampleSection>
   </Container>
 );

@@ -2,6 +2,24 @@
 
 Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.3] 2018-03-18
+
+### Update
+
+- Fixing imports.
+
+## [1.0.2] 2018-03-18
+
+### Update
+
+- Exporting `Poser` type.
+
+## [1.0.1] 2018-03-18
+
+### Update
+
+- Exporting `PoserProps` type.
+
 ## [1.0.0] 2018-03-18
 
 ### Changed

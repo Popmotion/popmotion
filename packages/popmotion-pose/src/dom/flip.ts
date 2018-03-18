@@ -1,28 +1,41 @@
 import value from 'popmotion/reactions/value';
-import { Pose, ValueMap, PoseSetterFactoryProps } from 'types';
+import { Pose, ValueMap, PoseSetterFactoryProps } from '../types';
 import { Action } from 'popmotion/action';
 import { Styler } from 'stylefire';
 
 export { Action };
 
 type SetValueProps = {
-  values: ValueMap,
-  elementStyler: Styler
+  values: ValueMap;
+  elementStyler: Styler;
 };
 
 type FlipPose = {
-  scaleX?: number,
-  scaleY?: number,
-  x?: number,
-  y?: number
+  scaleX?: number;
+  scaleY?: number;
+  x?: number;
+  y?: number;
 };
 
-const positionalProps = new Set(['width', 'height', 'top', 'left', 'bottom', 'right']);
+const positionalProps = new Set([
+  'width',
+  'height',
+  'top',
+  'left',
+  'bottom',
+  'right'
+]);
 const checkPositionalProp = (key: string) => positionalProps.has(key);
-const hasPositionalProps = (pose: Pose) => Object.keys(pose).some(checkPositionalProp);
-export const isFlipPose = (pose: Pose, key: string) => hasPositionalProps(pose) || key === 'flip';
+const hasPositionalProps = (pose: Pose) =>
+  Object.keys(pose).some(checkPositionalProp);
+export const isFlipPose = (pose: Pose, key: string) =>
+  hasPositionalProps(pose) || key === 'flip';
 
-const setValue = ({ values, elementStyler }: SetValueProps, key: string, to: any) => {
+const setValue = (
+  { values, elementStyler }: SetValueProps,
+  key: string,
+  to: any
+) => {
   if (values.has(key)) {
     // Here, if we already have the value, we update it twice.
     // Because of stylefire's render batching, this isn't going
@@ -41,10 +54,24 @@ const setValue = ({ values, elementStyler }: SetValueProps, key: string, to: any
 const explicitlyFlipPose = (state: PoseSetterFactoryProps, nextPose: Pose) => {
   const { dimensions, elementStyler } = state;
   dimensions.measure();
-  const { width, height, top, left, bottom, right, ...remainingPose } = nextPose;
+  const {
+    width,
+    height,
+    top,
+    left,
+    bottom,
+    right,
+    ...remainingPose
+  } = nextPose;
 
-  (elementStyler.set({ width, height, top, left, bottom, right }) as Styler)
-    .render();
+  (elementStyler.set({
+    width,
+    height,
+    top,
+    left,
+    bottom,
+    right
+  }) as Styler).render();
 
   return implicitlyFlipPose(state, remainingPose);
 };
@@ -67,20 +94,13 @@ const implicitlyFlipPose = (state: PoseSetterFactoryProps, nextPose: Pose) => {
     flipPoseProps.scaleY = 1;
   }
 
-  const originX = (prev.top === next.top)
-    ? 0
-    : (prev.bottom === next.bottom)
-      ? '100%'
-      : '50%';
+  const originX =
+    prev.top === next.top ? 0 : prev.bottom === next.bottom ? '100%' : '50%';
 
-  const originY = (prev.left === next.left)
-    ? 0
-    : (prev.right === next.right)
-      ? '100%'
-      : '50%';
+  const originY =
+    prev.left === next.left ? 0 : prev.right === next.right ? '100%' : '50%';
 
-  (elementStyler.set({ originX, originY }) as Styler)
-    .render();
+  (elementStyler.set({ originX, originY }) as Styler).render();
 
   return {
     ...nextPose,
@@ -88,6 +108,7 @@ const implicitlyFlipPose = (state: PoseSetterFactoryProps, nextPose: Pose) => {
   };
 };
 
-export const flipPose = (state: PoseSetterFactoryProps, nextPose: Pose) => hasPositionalProps(nextPose)
-  ? explicitlyFlipPose(state, nextPose)
-  : implicitlyFlipPose(state, nextPose);
+export const flipPose = (state: PoseSetterFactoryProps, nextPose: Pose) =>
+  hasPositionalProps(nextPose)
+    ? explicitlyFlipPose(state, nextPose)
+    : implicitlyFlipPose(state, nextPose);

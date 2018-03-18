@@ -6,16 +6,16 @@ import { Styler } from 'stylefire';
 import { HotSubscription } from 'popmotion/reactions/types';
 
 export type Pose = {
-  transition?: Transition,
-  delay?: number,
-  delayChildren?: number,
-  staggerChildren?: number,
-  staggerDirection?: 1 | -1,
-  [key: string]: any
+  transition?: Transition;
+  delay?: number;
+  delayChildren?: number;
+  staggerChildren?: number;
+  staggerDirection?: 1 | -1;
+  [key: string]: any;
 };
 
 export type StateMap = {
-  [key: string]: any
+  [key: string]: any;
 };
 
 export interface Poser {
@@ -34,21 +34,21 @@ export interface Poser {
 export type PoserFactory = (element: Element, props: PoserProps) => Poser;
 
 export type PoseMap = {
-  [key: string]: Pose
+  [key: string]: Pose;
 };
 
 export type Transformer = (v: any) => any;
 
 export type PassiveMap = {
-  [key: string]: [string, Transformer, boolean | undefined]
+  [key: string]: [string, Transformer, boolean | undefined];
 };
 
 export type OnChangeMap = {
-  [key: string]: Transformer
+  [key: string]: Transformer;
 };
 
 export type Bounds2D = {
-  [key: string]: number
+  [key: string]: number;
 };
 
 export interface Dimensions {
@@ -62,11 +62,11 @@ export type Draggable = boolean | 'x' | 'y';
 export type PointerCallback = (e: MouseEvent | TouchEvent) => any;
 
 export type PoserProps = {
-  initialPose?: string,
-  passive?: PassiveMap,
-  onChange?: OnChangeMap,
-  parentValues?: ValueMap,
-  draggable?: Draggable
+  initialPose?: string;
+  passive?: PassiveMap;
+  onChange?: OnChangeMap;
+  parentValues?: ValueMap;
+  draggable?: Draggable;
 } & DragProps;
 
 export type PropsAndPoses = PoserProps & PoseMap;
@@ -74,52 +74,57 @@ export type PropsAndPoses = PoserProps & PoseMap;
 export type RawValue = string | number;
 
 export type TransitionProps = {
-  from: RawValue,
-  velocity: RawValue,
-  to: RawValue,
-  key: string,
-  prevPoseKey: string
+  from: RawValue;
+  velocity: RawValue;
+  to: RawValue;
+  key: string;
+  prevPoseKey: string;
 };
 
-export type Transition = (props: TransitionProps & PoseSetterProps) => Action | false;
+export type Transition = (
+  props: TransitionProps & PoseSetterProps
+) => Action | false;
 
 export type ValueMap = Map<string, ValueReaction>;
 export type TypesMap = Map<string, ValueType>;
 
 export type ValuesFactoryProps = {
-  poses: PoseMap,
-  styler: Styler,
-  initialPose: string,
-  passive: PassiveMap,
-  parentValues: ValueMap,
-  onChange: OnChangeMap
+  poses: PoseMap;
+  styler: Styler;
+  initialPose: string;
+  passive: PassiveMap;
+  parentValues: ValueMap;
+  onChange: OnChangeMap;
 };
 
 export type ValuesAndTypes = {
-  values: ValueMap,
-  types: TypesMap
+  values: ValueMap;
+  types: TypesMap;
 };
 
 export type PoseSetterFactoryProps = {
-  activeActions: ActiveActions,
-  activePoses: ActivePoses,
-  children: ChildPoses,
-  dragProps: DragProps,
-  values: ValueMap,
-  types: TypesMap,
-  poses: PoseMap,
-  elementStyler: Styler,
-  element: Element,
-  dimensions: Dimensions,
-  flipEnabled: boolean
+  activeActions: ActiveActions;
+  activePoses: ActivePoses;
+  children: ChildPoses;
+  dragProps: DragProps;
+  values: ValueMap;
+  types: TypesMap;
+  poses: PoseMap;
+  elementStyler: Styler;
+  element: Element;
+  dimensions: Dimensions;
+  flipEnabled: boolean;
 };
 
 export type PoseSetterProps = {
-  [key: string]: any,
-  delay?: number
+  [key: string]: any;
+  delay?: number;
 };
 
-export type PoseSetter = (next: string, props?: PoseSetterProps) => Promise<any>;
+export type PoseSetter = (
+  next: string,
+  props?: PoseSetterProps
+) => Promise<any>;
 
 export type ActiveActions = Map<string, ColdSubscription>;
 export type ActivePoses = Map<string, string>;
@@ -127,16 +132,16 @@ export type ActivePoses = Map<string, string>;
 export type ChildPoses = Set<Poser>;
 
 export type DragProps = {
-  dragBounds?: Bounds2D,
-  onDragStart?: PointerCallback,
-  onDragEnd?: PointerCallback
+  dragBounds?: Bounds2D;
+  onDragStart?: PointerCallback;
+  onDragEnd?: PointerCallback;
 };
 
 export type BoundingBox = {
-  width: number,
-  height: number,
-  left: number,
-  top: number,
-  right: number,
-  bottom: number
+  width: number;
+  height: number;
+  left: number;
+  top: number;
+  right: number;
+  bottom: number;
 };

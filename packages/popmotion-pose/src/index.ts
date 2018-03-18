@@ -1,5 +1,13 @@
 import styler from 'stylefire';
-import { Poser, PoserFactory, ActivePoses, ActiveActions, ChildPoses, StateMap } from './types';
+import {
+  Poser,
+  PoserProps,
+  PoserFactory,
+  ActivePoses,
+  ActiveActions,
+  ChildPoses,
+  StateMap
+} from './types';
 import { getDragProps } from './inc/selectors';
 import { eachValue, fromPose } from './inc/transition-composers';
 import createPoses from './factories/poses';
@@ -22,7 +30,10 @@ const pose: PoserFactory = (element, props) => {
   const { values, types } = createValuesAndTypes({
     poses,
     styler: elementStyler,
-    initialPose, passive, parentValues, onChange
+    initialPose,
+    passive,
+    parentValues,
+    onChange
   });
 
   const set = createPoseSetter({
@@ -43,16 +54,16 @@ const pose: PoserFactory = (element, props) => {
 
   const api: Poser = {
     set,
-    has: (name) => !!poses[name],
+    has: name => !!poses[name],
     get: () => {
       const output: StateMap = {};
-      values.forEach((value: any, key: string) => output[key] = value.get());
+      values.forEach((value: any, key: string) => (output[key] = value.get()));
       return output;
     },
 
     // FLIP methods
     measure: dimensions.measure,
-    flip: (op) => {
+    flip: op => {
       if (op) {
         api.measure();
         op();
@@ -70,14 +81,15 @@ const pose: PoserFactory = (element, props) => {
       children.add(child);
       return child;
     },
-    removeChild: (child) => children.delete(child),
+    removeChild: child => children.delete(child),
     clearChildren: () => {
       children.forEach((c: Poser) => c.destroy());
       children.clear();
     },
 
     // Lifecycle methods
-    subscribe: (key, callback) => values.has(key) ? values.get(key).subscribe(callback) : false,
+    subscribe: (key, callback) =>
+      values.has(key) ? values.get(key).subscribe(callback) : false,
     destroy: () => {
       activeActions.forEach((a: ColdSubscription) => a.stop());
       children.forEach((c: Poser) => c.destroy());
@@ -88,4 +100,4 @@ const pose: PoserFactory = (element, props) => {
 };
 
 export default pose;
-export { eachValue, fromPose };
+export { eachValue, fromPose, Poser, PoserProps };
