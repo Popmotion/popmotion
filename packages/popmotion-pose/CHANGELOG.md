@@ -2,6 +2,12 @@
 
 Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.0] 2018-03-18
+
+### Changed
+
+- Finalised API.
+
 ## [0.2.3] 2018-03-14
 
 ### Changed

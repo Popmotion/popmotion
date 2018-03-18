@@ -9,5 +9,7 @@
   "advanced": "Advanced",
   "plugins": "Plugins",
   "projects": "Projects",
-  "reactions": "Reactions"
+  "reactions": "Reactions",
+  "dom": "DOM",
+  "react": "React"
 }

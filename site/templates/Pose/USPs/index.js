@@ -11,9 +11,9 @@ import FlipExample from './FlipExample';
 export default () => (
   <Container>
     <Blurb>
-      Pose brings the simplicity of CSS transitions to JavaScript
+      Popmotion Pose combines the simplicity of CSS transitions with the power of JavaScript
     </Blurb>
-    <ExampleSection title="Features">
+    <ExampleSection>
       <Example
         title="Declarative"
         description="Separate your animation and application logic."

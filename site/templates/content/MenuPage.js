@@ -21,7 +21,7 @@ const MenuPage = ({ theme, title, section }) => {
               ? (
                 <div>
                   <H2>
-                    <Link href{`${section}/${tl.id}`}>
+                    <Link href={`${section}/${tl.id}`}>
                       <a>{tl.title}</a>
                     </Link>
                   </H2>

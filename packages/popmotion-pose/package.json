@@ -1,7 +1,7 @@
 {
   "name": "popmotion-pose",
-  "version": "0.2.3",
-  "description": "A declarative animation library",
+  "version": "1.0.0",
+  "description": "A declarative animation library for HTML and SVG",
   "main": "lib/index.js",
   "scripts": {
     "bundle": "NODE_ENV=production webpack",
@@ -9,7 +9,8 @@
     "watch": "tsc -w",
     "test": "echo \"Error: no test specified\" && exit 1",
     "measure": "gzip -c dist/popmotion-pose.js | wc -c",
-    "prepublishOnly": "prettier ./src && npm run build && npm run bundle"
+    "prettier": "prettier ./src/*",
+    "prepublishOnly": "npm run prettier && npm run build && npm run bundle"
   },
   "repository": {
     "type": "git",

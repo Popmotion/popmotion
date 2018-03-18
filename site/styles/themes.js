@@ -2,6 +2,7 @@ import menus from '~/data/menus.json';
 import content from '~/data/content.json';
 import PopmotionLogo from '~/components/icons/Logo';
 import PoseLogo from '~/components/icons/PoseLogo';
+import { color } from './vars';
 
 const generateTheme = (name, props) => ({
   data: {
@@ -14,6 +15,7 @@ const generateTheme = (name, props) => ({
 
 const themeSettings = {
   popmotion: {
+    id: 'popmotion',
     name: 'Popmotion',
     tagline: 'A functional JavaScript motion library',
     sections: ['api', 'learn', 'blog', 'community'],
@@ -26,9 +28,10 @@ const themeSettings = {
       width: 159,
       height: 41
     },
-    mastheadBackground: `red`
+    mastheadBackground: `linear-gradient(${color.brand}, ${color.brandBurn})`
   },
   pose: {
+    id: 'pose',
     name: 'Popmotion Pose',
     tagline: 'A declarative motion library for HTML, SVG and React',
     sections: ['api', 'learn', 'community'],
@@ -41,7 +44,7 @@ const themeSettings = {
       width: 127,
       height: 40
     },
-    mastheadBackground: `red`
+    mastheadBackground: `linear-gradient(${color.pink}, ${color.purple})`
   }
 };
 

@@ -3,6 +3,7 @@ import { ColdSubscription } from 'popmotion/action/types';
 import { ValueReaction } from 'popmotion/reactions/value';
 import { ValueType } from 'style-value-types';
 import { Styler } from 'stylefire';
+import { HotSubscription } from 'popmotion/reactions/types';
 
 export type Pose = {
   transition?: Transition,
@@ -27,6 +28,7 @@ export interface Poser {
   removeChild: (poser: Poser) => void;
   clearChildren: () => void;
   destroy: () => void;
+  subscribe: (key: string, onChange: Function) => HotSubscription | false;
 }
 
 export type PoserFactory = (element: Element, props: PoserProps) => Poser;
@@ -108,7 +110,8 @@ export type PoseSetterFactoryProps = {
   poses: PoseMap,
   elementStyler: Styler,
   element: Element,
-  dimensions: Dimensions
+  dimensions: Dimensions,
+  flipEnabled: boolean
 };
 
 export type PoseSetterProps = {

@@ -4,6 +4,7 @@ import { fontSize, fontBold } from '~/styles/fonts';
 
 export const Container = styled.section`
   background: ${({ theme }) => theme.mastheadBackground};
+  z-index: 0;
 
   svg path {
     fill: ${WHITE};
@@ -16,9 +17,10 @@ export const MastheadContainer = styled.section`
   flex-align: center;
   justify-content: center;
   text-align: center;
-  border-bottom: ${LIGHT_GREY} 1px solid;
   margin: 0 ${cols(4)};
   padding-bottom: ${cols(4)};
+  position: relative;
+  z-index: 1;
 
   ${media.medium`
     margin: 0 ${cols(2)};
@@ -55,6 +57,12 @@ export const CTA = styled.div`
   margin: 0 auto;
   display: flex;
   transform: skewX(${SKEW});
+  transition: transform 100ms cubic-bezier(.17,.67,.34,1.54);
+  box-shadow: 0 2px 0 0 black;
+
+  &:hover {
+    transform: skewX(${SKEW}) scale(1.1);
+  }
 
   a, button {
     ${fontSize(24)}
@@ -64,10 +72,6 @@ export const CTA = styled.div`
     text-decoration: none;
     padding: ${cols(1)} ${cols(2)};
     transform: skewX(${UNSKEW});
-
-    &:hover {
-      color: ${WHITE};
-    }
   }
 
   ${media.medium`

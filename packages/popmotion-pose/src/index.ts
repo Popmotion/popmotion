@@ -1,7 +1,7 @@
 import styler from 'stylefire';
 import { Poser, PoserFactory, ActivePoses, ActiveActions, ChildPoses, StateMap } from './types';
 import { getDragProps } from './inc/selectors';
-import { transitionProps, transitionFromPrevPose } from './inc/transition-composers';
+import { eachValue, fromPose } from './inc/transition-composers';
 import createPoses from './factories/poses';
 import createValuesAndTypes from './factories/values';
 import createPoseSetter from './factories/pose-setter';
@@ -35,7 +35,8 @@ const pose: PoserFactory = (element, props) => {
     activeActions,
     activePoses,
     dimensions,
-    dragProps
+    dragProps,
+    flipEnabled: element instanceof HTMLElement
   });
 
   if (draggable) makeDraggable(element, set, activeActions, dragProps);
@@ -76,6 +77,7 @@ const pose: PoserFactory = (element, props) => {
     },
 
     // Lifecycle methods
+    subscribe: (key, callback) => values.has(key) ? values.get(key).subscribe(callback) : false,
     destroy: () => {
       activeActions.forEach((a: ColdSubscription) => a.stop());
       children.forEach((c: Poser) => c.destroy());
@@ -86,4 +88,4 @@ const pose: PoserFactory = (element, props) => {
 };
 
 export default pose;
-export { transitionProps, transitionFromPrevPose };
+export { eachValue, fromPose };

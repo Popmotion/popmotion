@@ -27,6 +27,13 @@ export const ACTION_GRADIENT = verticalGradient(BLUE, BLUE_BURN);
 
 export const ENTITY = PURPLE;
 
+export const color = {
+  pink: '#FF00C8',
+  purple: '#A100F6',
+  brand: '#FF1C68',
+  brandBurn: '#DB0068'
+};
+
 export const SKEW = '-5.7deg';
 export const UNSKEW = '5.7deg';
 

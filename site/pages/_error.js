@@ -7,7 +7,7 @@ import GlobalTemplate from '~/templates/global/Template';
 import { ArticleHeader, P } from '~/templates/global/styled';
 
 export default () => (
-  <GlobalTemplate title="Lost? | Popmotion" description="Popmotion is a functional, reactive JavaScript motion library.">
+  <GlobalTemplate title="Lost? | Popmotion" description="Popmotion is a functional, reactive JavaScript motion library." theme="popmotion">
     <Header />
     <ArticleHeader>Page Not Found</ArticleHeader>
     <P>You were probably looking for the <a href="https://github.com/Popmotion/popmotion/tree/b4c3a6d296ba58bd99a95ad116f4223ecf47360f/docs">Popmotion 7 docs</a>.</P>

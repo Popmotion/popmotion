@@ -12,5 +12,5 @@ const createTransitionMap: TransitionMapFactory = (key) => (map) => (props) => {
   return transition ? transition(props) : false;
 };
 
-export const transitionProps = createTransitionMap('key');
-export const transitionFromPrevPose = createTransitionMap('prevPoseKey');
+export const eachValue = createTransitionMap('key');
+export const fromPose = createTransitionMap('prevPoseKey');

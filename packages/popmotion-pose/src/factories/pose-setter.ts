@@ -54,7 +54,7 @@ const startChildAnimations = (children: ChildPoses, next: string, nextPose: Pose
     animations.push(child.set(next, {
       ...props,
       delay: delay + generateStaggerDuration(i)
-    }))
+    }));
   });
 
   return animations;
@@ -62,13 +62,13 @@ const startChildAnimations = (children: ChildPoses, next: string, nextPose: Pose
 
 const createPoseSetter: PoseSetterFactory = (setterProps) => (next, props = {}) => {
   const { delay = 0 } = props;
-  const { activeActions, activePoses, children, poses, values, types, dragProps } = setterProps;
+  const { activeActions, activePoses, children, poses, values, types, dragProps, flipEnabled } = setterProps;
   const animations: AnimationsPromiseList = [];
   const { dragBounds } = dragProps;
   let nextPose = poses[next];
 
   if (nextPose) {
-    if (isFlipPose(nextPose, next)) nextPose = flipPose(setterProps, nextPose);
+    if (flipEnabled && isFlipPose(nextPose, next)) nextPose = flipPose(setterProps, nextPose);
     const { transition: getTransition } = nextPose;
 
     const poserAnimations = Object.keys(getPoseValues(nextPose)).map(

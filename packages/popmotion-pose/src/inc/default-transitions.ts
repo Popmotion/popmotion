@@ -2,7 +2,7 @@ import spring from 'popmotion/animations/spring';
 import tween from 'popmotion/animations/tween';
 import action, { Action } from 'popmotion/action';
 import pointer from 'popmotion/input/pointer';
-import { transitionProps } from './transition-composers';
+import { eachValue } from './transition-composers';
 import { RawValue, Transition } from '../types';
 
 const singleAxisPointer = (axis: string) => (from: number) => pointer({ [axis]: from }).pipe((v: any) => v[axis]);
@@ -18,7 +18,7 @@ const underDampedSpring: Transition = ({ from, velocity, to }) => spring({ from,
 const overDampedSpring: Transition = ({ from, velocity, to }) => spring({ from, to, velocity, stiffness: 700, damping: 35 });
 
 // TODO: Adjust transitions based on behavioural props
-const intelligentTransition: Transition = transitionProps({
+const intelligentTransition: Transition = eachValue({
   x: underDampedSpring,
   y: underDampedSpring,
   z: underDampedSpring,
@@ -29,7 +29,7 @@ const intelligentTransition: Transition = transitionProps({
 });
 
 // TODO: Move add boundaries here
-const dragAction: Transition = transitionProps({
+const dragAction: Transition = eachValue({
   x: ({ from }) => pointerX(from as number),
   y: ({ from }) => pointerY(from as number)
 });

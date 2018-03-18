@@ -1,7 +1,7 @@
 import styled, { withTheme } from 'styled-components';
 import SiteLink from '~/components/layout/SiteLink';
 import { fontSize, fontBold } from '~/styles/fonts';
-import { ACTION, ENTITY, BLACK, cols, media, SKEW } from '~/styles/vars';
+import { ACTION, ENTITY, WHITE, BLACK, cols, media, SKEW } from '~/styles/vars';
 import sectionNames from '~/data/section-names.json';
 import routes from '~/data/route-paths.json';
 
@@ -32,20 +32,16 @@ const MenuItem = styled.li`
   `}
 
   a {
-    color: ${BLACK};
+    color: ${(props) => props.isHomepage ? WHITE : BLACK};
     text-decoration: none;
     ${fontBold}
-
-    &:hover {
-      color: ${ACTION};
-    }
   }
 `;
 
-const SectionNav = ({ section, theme }) => (
+const SectionNav = ({ section, theme, isHomepage }) => (
   <ul>
     {theme.sections.map((name) => (
-      <MenuItem key={name} isSelected={(section === name)}>
+      <MenuItem key={name} isSelected={(section === name)} isHomepage={isHomepage}>
         <SiteLink href={routes[name]} name={sectionNames[name]}>
           {sectionNames[name]}
         </SiteLink>

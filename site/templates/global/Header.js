@@ -12,12 +12,12 @@ import { Centered } from '~/templates/global/grid';
 const HeaderContainer = styled.nav`
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
   position: relative;
   padding: 25px ${cols(2)};
   margin-bottom: ${cols(4)};
   height: 91px;
-  background: ${props => props.isHomepage ? 'rgba(0, 0, 0, 0.1)' : 'none'};
+  background: ${props => props.isHomepage ? 'linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0))' : 'none'};
   
   ${media.medium`
     margin-bottom: ${cols(2)};
@@ -34,6 +34,8 @@ const NavArea = styled.nav`
   display: flex;
   align-items: center;
   ${props => !props.isHomepage && 'position: absolute;'}
+  top: 50%;
+  transform: translateY(-50%);
 `;
 
 const LogoArea = NavArea.extend`
@@ -68,27 +70,6 @@ const TwitterLink = IconLink.extend`
   transform: translateY(2px);
 `;
 
-const PopmotionLogo = styled(Logo)`
-  ${props => props.isHomepage && 'display: none;'}
-  width: 159px;
-  height: 36px;
-  margin-right: ${cols(3)};
-
-  ${media.medium`
-    display: none;
-  `}
-`;
-
-const PopmotionIcon = styled(Icon)`
-  ${props => !props.isHomepage && `display: none;`}
-
-  ${media.medium`
-    display: block;
-    width: 35px;
-    height: 32px;
-  `}
-`;
-
 const GitHubIcon = styled(GitHub)``;
 const TwitterIcon = styled(Twitter)``;
 
@@ -104,7 +85,7 @@ const Header = ({ section, isHomepage, theme }) => (
       ) : null}
     </LogoArea>
     <SectionNavArea isHomepage={isHomepage}>
-      <SectionNav section={section} />
+      <SectionNav section={section} isHomepage={isHomepage} />
     </SectionNavArea>
     <SocialArea>
       <TwitterLink href={settings.twitterUrl} name="Popmotion Twitter">
