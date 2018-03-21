@@ -2,6 +2,50 @@
 
 Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.10] 2018-03-21
+
+### Fixed
+
+- Fixed bug where if only defined pose had values set to `true`, it set that as the initial value. Instead we're setting `dragEnd` and `dragging` to `0`.
+- `measure` now returns element dimensions.
+
+## [1.0.9] 2018-03-21
+
+### Fixed
+
+- Merging user and internal drag poses.
+
+## [1.0.8] 2018-03-20
+
+### Added
+
+- Temporarily remove transform before measuring final FLIP position in the event that we're mid-flip.
+- Added array type to `initialPose`
+
+## [1.0.7] 2018-03-19
+
+### Added
+
+- Positional FLIP
+
+## [1.0.6] 2018-03-19
+
+### Added
+
+- `initialPose` can now be set as an array of multiple poses.
+
+## [1.0.5] 2018-03-19
+
+### Fixed
+
+- FLIP bug fixes.
+
+## [1.0.4] 2018-03-19
+
+### Fixed
+
+- Bug fixes.
+
 ## [1.0.3] 2018-03-18
 
 ### Update

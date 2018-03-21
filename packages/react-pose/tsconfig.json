@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "removeComments": true,
     "preserveConstEnums": true,
     "sourceMap": true,
@@ -15,8 +15,9 @@
     "declaration": true,
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
-    "lib": ["es5", "es6", "dom"],
-    "jsx": "react"
+    "lib": ["es6", "dom"],
+    "jsx": "react",
+    "typeRoots": ["node_modules/@types", "module-types"]
   },
   "include": [
     "src/**/*"

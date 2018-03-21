@@ -5,8 +5,6 @@ description: Configure a poser
 
 # Props
 
-These 
-
 ### `initialPose?: string | string[]`
 
 The name of the initial pose (or poses if provided as an array).

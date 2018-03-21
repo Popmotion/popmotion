@@ -13,8 +13,8 @@ const dragPoses = (draggable: Draggable): PoseMap => {
   const dragging: Pose = {};
   const dragEnd: Pose = {};
 
-  if (draggable === true || draggable === 'x') dragging.x = dragEnd.x = true;
-  if (draggable === true || draggable === 'y') dragging.y = dragEnd.y = true;
+  if (draggable === true || draggable === 'x') dragging.x = dragEnd.x = 0;
+  if (draggable === true || draggable === 'y') dragging.y = dragEnd.y = 0;
 
   return { dragging, dragEnd };
 };
@@ -23,11 +23,20 @@ export default (props: PropsAndPoses): PoseMap => {
   let poses: PoseMap = { flip: {}, ...getPoses(props) };
   const { draggable } = props;
 
-  if (draggable) poses = { ...dragPoses(draggable), ...poses };
+  if (draggable) {
+    let { dragging, dragEnd } = dragPoses(draggable);
+    dragging = { ...poses.dragging, ...dragging };
+    dragEnd = { ...poses.dragEnd, ...dragging };
+    poses = {
+      ...poses,
+      dragging,
+      dragEnd
+    };
+  }
 
-  Object.keys(poses).forEach((key) => {
+  Object.keys(poses).forEach(key => {
     const pose = poses[key];
-    poses[key] = pose.transition ? pose : generateTransition(pose, key)
+    poses[key] = pose.transition ? pose : generateTransition(pose, key);
   });
 
   return poses;

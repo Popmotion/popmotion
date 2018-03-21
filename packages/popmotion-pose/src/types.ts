@@ -62,7 +62,7 @@ export type Draggable = boolean | 'x' | 'y';
 export type PointerCallback = (e: MouseEvent | TouchEvent) => any;
 
 export type PoserProps = {
-  initialPose?: string;
+  initialPose?: string | string[];
   passive?: PassiveMap;
   onChange?: OnChangeMap;
   parentValues?: ValueMap;
@@ -91,7 +91,7 @@ export type TypesMap = Map<string, ValueType>;
 export type ValuesFactoryProps = {
   poses: PoseMap;
   styler: Styler;
-  initialPose: string;
+  initialPose: string | string[];
   passive: PassiveMap;
   parentValues: ValueMap;
   onChange: OnChangeMap;

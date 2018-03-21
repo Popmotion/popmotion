@@ -4,6 +4,8 @@ description: Create a Poser
 category: react
 ---
 
+**Note:** React Pose is built with React 16.3.0, which is currently in alpha.
+
 # `PoseGroup`
 
 The `PoseGroup` component manages `enter` and `exit` animations on its direct children as they enter and exit the component tree.
@@ -47,9 +49,14 @@ By default, only children added to the `PoseGroup` **after** it has mounted are 
 
 By setting `animateOnMount` to `true`, all children elements will animate in on mount.
 
-### `singleChild: boolean = false`
+### `enterPose: string = 'enter'`
 
-If `true`, `PoseGroup` will:
+The name of the pose to use when a component enters.
 
-- Only render a single child
-- Finish animating the original posed component out, before animating the new one in.
+### `exitPose: string = 'exit'`
+
+The name of the pose to use when a component leaves.
+
+### `preEnterPose: string = 'exit'`
+
+The name of the pose to set before a component enters. This can be used to configure where a components animates in **from**.

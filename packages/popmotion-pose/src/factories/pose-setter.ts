@@ -1,4 +1,3 @@
-import { Action } from 'popmotion/action';
 import chain from 'popmotion/compositors/chain';
 import delayAction from 'popmotion/compositors/delay';
 import { flipPose, isFlipPose } from '../dom/flip';
@@ -9,7 +8,6 @@ import {
   PoseSetter,
   PoseSetterFactoryProps,
   ChildPoses,
-  Bounds2D,
   PoseSetterProps
 } from '../types';
 import { getPoseValues } from '../inc/selectors';
@@ -75,6 +73,7 @@ const createPoseSetter: PoseSetterFactory = setterProps => (
   if (nextPose) {
     if (flipEnabled && isFlipPose(nextPose, next))
       nextPose = flipPose(setterProps, nextPose);
+
     const { transition: getTransition } = nextPose;
 
     const poserAnimations = Object.keys(getPoseValues(nextPose)).map(

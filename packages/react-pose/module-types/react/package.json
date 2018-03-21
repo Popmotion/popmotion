@@ -1,0 +1,104 @@
+{
+  "_from": "@types/react",
+  "_id": "@types/react@16.0.40",
+  "_inBundle": false,
+  "_integrity": "sha512-OZi2OPNI1DGwnC3Fgbr1CcYfOD6V0pbv+aehXdvuFE+L+sipWjividsasuqFW/G0CZrZ81Ao+9IzjvkRDWCE9Q==",
+  "_location": "/@types/react",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "@types/react",
+    "name": "@types/react",
+    "escapedName": "@types%2freact",
+    "scope": "@types",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@types/react/-/react-16.0.40.tgz",
+  "_shasum": "caabc2296886f40b67f6fc80f0f3464476461df9",
+  "_spec": "@types/react",
+  "_where": "/Users/mattperry/Sites/popmotion/packages/react-pose",
+  "bundleDependencies": false,
+  "contributors": [
+    {
+      "name": "Asana",
+      "url": "https://asana.com"
+    },
+    {
+      "name": "AssureSign",
+      "url": "http://www.assuresign.com"
+    },
+    {
+      "name": "Microsoft",
+      "url": "https://microsoft.com"
+    },
+    {
+      "name": "John Reilly",
+      "url": "https://github.com/johnnyreilly"
+    },
+    {
+      "name": "Benoit Benezech",
+      "url": "https://github.com/bbenezech"
+    },
+    {
+      "name": "Patricio Zavolinsky",
+      "url": "https://github.com/pzavolinsky"
+    },
+    {
+      "name": "Digiguru",
+      "url": "https://github.com/digiguru"
+    },
+    {
+      "name": "Eric Anderson",
+      "url": "https://github.com/ericanderson"
+    },
+    {
+      "name": "Albert Kurniawan",
+      "url": "https://github.com/morcerf"
+    },
+    {
+      "name": "Tanguy Krotoff",
+      "url": "https://github.com/tkrotoff"
+    },
+    {
+      "name": "Dovydas Navickas",
+      "url": "https://github.com/DovydasNavickas"
+    },
+    {
+      "name": "Stéphane Goetz",
+      "url": "https://github.com/onigoetz"
+    },
+    {
+      "name": "Rich Seviora",
+      "url": "https://github.com/richseviora"
+    },
+    {
+      "name": "Josh Rutherford",
+      "url": "https://github.com/theruther4d"
+    },
+    {
+      "name": "Guilherme Hübner",
+      "url": "https://github.com/guilhermehubner"
+    }
+  ],
+  "dependencies": {},
+  "deprecated": false,
+  "description": "TypeScript definitions for React",
+  "license": "MIT",
+  "main": "",
+  "name": "@types/react",
+  "repository": {
+    "type": "git",
+    "url": "https://www.github.com/DefinitelyTyped/DefinitelyTyped.git"
+  },
+  "scripts": {},
+  "typeScriptVersion": "2.6",
+  "typesPublisherContentHash": "232f0f652cdcb14455ccfeb0ccc5d2e003c7da87e5ec81b2fecee8a2d87f0d9a",
+  "version": "16.0.40"
+}

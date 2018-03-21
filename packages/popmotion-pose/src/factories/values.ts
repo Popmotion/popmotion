@@ -3,6 +3,7 @@ import {
   ValuesFactoryProps,
   ValueMap,
   TypesMap,
+  PoseMap,
   Pose,
   OnChangeMap
 } from '../types';
@@ -10,24 +11,48 @@ import { getPoseValues } from '../inc/selectors';
 import { number, degrees, percent, px, ValueType } from 'style-value-types';
 import { pipe } from 'popmotion/transformers';
 import value from 'popmotion/reactions/value';
+import { Styler } from 'stylefire';
 
-export type ValuesAndTypesFactory = (props: ValuesFactoryProps) => ValuesAndTypes;
+export type ValuesAndTypesFactory = (
+  props: ValuesFactoryProps
+) => ValuesAndTypes;
 
 const valueTypeTests = [number, degrees, percent, px];
 const testValueType = (v: any) => (type: ValueType) => type.test(v);
 
-const createValues = (values: ValueMap, types: TypesMap, { initialPose, poses, styler }: ValuesFactoryProps, pose: Pose) => (key: string) => {
+const getInitialValue = (
+  poses: PoseMap,
+  key: string,
+  initialPose: string | string[],
+  styler: Styler
+) => {
+  const posesToSearch = Array.isArray(initialPose)
+    ? initialPose
+    : [initialPose];
+  const pose = posesToSearch.find(
+    name => poses[name] && poses[name][key] !== undefined
+  );
+
+  return pose ? poses[pose][key] : styler.get(key);
+};
+
+const createValues = (
+  values: ValueMap,
+  types: TypesMap,
+  { initialPose, poses, styler }: ValuesFactoryProps,
+  pose: Pose
+) => (key: string) => {
   if (values.has(key)) return;
 
-  const type = valueTypeTests.find(testValueType(pose));
+  const type = valueTypeTests.find(testValueType(pose[key]));
 
-  const rawInitialValue = (initialPose && poses[initialPose] && poses[initialPose][key] !== undefined)
-    ? poses[initialPose][key]
-    : styler.get(key);
+  const rawInitialValue = getInitialValue(poses, key, initialPose, styler);
 
   const initialValue = type ? type.parse(rawInitialValue) : rawInitialValue;
 
-  const thisValue = type ? value(initialValue) : value(initialValue).pipe(type.transform);
+  const thisValue = type
+    ? value(initialValue).pipe(type.transform)
+    : value(initialValue);
 
   values.set(key, thisValue);
 
@@ -36,34 +61,47 @@ const createValues = (values: ValueMap, types: TypesMap, { initialPose, poses, s
   if (type) types.set(key, type);
 };
 
-const scrapeValuesFromPose = (values: ValueMap, types: TypesMap, props: ValuesFactoryProps) => (key: string) => {
+const scrapeValuesFromPose = (
+  values: ValueMap,
+  types: TypesMap,
+  props: ValuesFactoryProps
+) => (key: string) => {
   const pose = props.poses[key];
-  Object.keys(getPoseValues(pose)).forEach(createValues(values, types, props, pose));
+  Object.keys(getPoseValues(pose)).forEach(
+    createValues(values, types, props, pose)
+  );
 };
 
-const bindPassiveValues = (values: ValueMap, { passive, parentValues, styler }: ValuesFactoryProps) => (key: string) => {
+const bindPassiveValues = (
+  values: ValueMap,
+  { passive, parentValues, styler }: ValuesFactoryProps
+) => (key: string) => {
   const [valueKey, transform, fromParent] = passive[key];
-  const valueToBind = (fromParent && parentValues && parentValues.has(valueKey))
-    ? parentValues.get(valueKey)
-    : (values.has(valueKey))
-      ? values.get(valueKey)
-      : false;
+  const valueToBind =
+    fromParent && parentValues && parentValues.has(valueKey)
+      ? parentValues.get(valueKey)
+      : values.has(valueKey) ? values.get(valueKey) : false;
 
   if (!valueToBind) return;
 
-  const newValue = value(valueToBind.get(), pipe(transform, (v: any) => styler.set(key, v)));
+  const newValue = value(
+    valueToBind.get(),
+    pipe(transform, (v: any) => styler.set(key, v))
+  );
   valueToBind.subscribe(newValue);
   values.set(key, newValue);
 };
 
-const bindOnChange = (values: ValueMap, onChange: OnChangeMap) => (key: string) => {
+const bindOnChange = (values: ValueMap, onChange: OnChangeMap) => (
+  key: string
+) => {
   if (values.has(key)) values.get(key).subscribe(onChange[key]);
 };
 
 /**
  * Create value and types map from pose props
  */
-const createValuesAndTypes: ValuesAndTypesFactory = (props) => {
+const createValuesAndTypes: ValuesAndTypesFactory = props => {
   const { passive, poses, onChange } = props;
   const values: ValueMap = new Map();
   const types: TypesMap = new Map();
@@ -75,7 +113,7 @@ const createValuesAndTypes: ValuesAndTypesFactory = (props) => {
   if (passive) Object.keys(passive).forEach(bindPassiveValues(values, props));
 
   // Append onChange callbacks
-  Object.keys(onChange).forEach(bindOnChange(values, onChange));
+  if (onChange) Object.keys(onChange).forEach(bindOnChange(values, onChange));
 
   return { values, types };
 };

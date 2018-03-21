@@ -1,23 +1,25 @@
-import { Fragment } from 'react';
-import { injectGlobal, ThemeProvider } from 'styled-components';
-import NProgress from 'nprogress';
-import Head from 'next/head';
-import Router from 'next/router';
-import reset from '~/styles/reset';
-import nprogressStyles from '~/styles/nprogress';
-import { BRAND } from '~/styles/vars';
-import themes from '~/styles/themes';
-import settings from '~/data/settings.json';
-import * as popmotion from 'popmotion';
+import { Fragment } from "react";
+import { injectGlobal, ThemeProvider } from "styled-components";
+import NProgress from "nprogress";
+import Head from "next/head";
+import Router from "next/router";
+import reset from "~/styles/reset";
+import nprogressStyles from "~/styles/nprogress";
+import { BRAND } from "~/styles/vars";
+import themes from "~/styles/themes";
+import settings from "~/data/settings.json";
+import * as popmotion from "popmotion";
 
-if (typeof window !== 'undefined') {
-  console.log('Hey explorer! You can play around with Popmotion right from your console, by using window.popmotion.')
+if (typeof window !== "undefined") {
+  console.log(
+    "Hey explorer! You can play around with Popmotion right from your console, by using window.popmotion."
+  );
   window.popmotion = popmotion;
 }
 
 Router.onRouteChangeStart = () => NProgress.start();
 Router.onRouteChangeComplete = () => {
-  if (typeof window !== 'undefined' && typeof window.Prism !== 'undefined') {
+  if (typeof window !== "undefined" && typeof window.Prism !== "undefined") {
     window.Prism.highlightAll();
   }
   NProgress.done();
@@ -29,9 +31,13 @@ injectGlobal`
   ${nprogressStyles}
 `;
 
-const TWITTER_CARD = 'https://popmotion.io/static/images/twitter-card.png';
-
-export default ({ children, title, theme, description=settings.siteDescription, image=TWITTER_CARD }) => (
+export default ({
+  children,
+  title,
+  theme,
+  description = settings.siteDescription,
+  image
+}) => (
   <div>
     <Head>
       <meta name="theme-color" content={BRAND} />
@@ -40,17 +46,15 @@ export default ({ children, title, theme, description=settings.siteDescription, 
       <meta property="og:site_name" content={settings.siteName} />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
-      <meta property="og:image" content={image} />
+      <meta property="og:image" content={image || themes[theme].shareImage} />
       <meta property="twitter:site" content={settings.twitterUsername} />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={image} />
+      <meta name="twitter:image" content={image || themes[theme].shareImage} />
       <title>{title}</title>
     </Head>
     <ThemeProvider theme={themes[theme]}>
-      <Fragment>
-        {children}
-      </Fragment>
+      <Fragment>{children}</Fragment>
     </ThemeProvider>
   </div>
 );

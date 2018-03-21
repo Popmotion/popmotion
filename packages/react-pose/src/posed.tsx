@@ -1,57 +1,59 @@
-import React from 'react';
+import * as React from 'react';
+import { ReactElement } from 'react';
+import { PoseElement, PoseParentContext } from './components/PoseElement';
 import {
-  PoseElement,
-  PoseParentContext,
   PoseElementProps,
   PoseContextProps
-} from './components/PoseElement';
+} from './components/PoseElement.types';
 import { PoserProps } from 'popmotion-pose';
 
-type ComponentCache = {
-  [key: string]: React.Node;
-};
+// TODO: Something is wrong with the TypeScript React bindings here,
+// I've had to typecast a component as a Component a couple times now.
+const PoseElementComponent = PoseElement as React.PureComponent;
 
-type ComponentFactory = (name: string) => React.Node;
+type ComponentFactory = (
+  poseProps: PoserProps
+) => (props: PoseElementProps) => ReactElement<any>;
 
-const componentCache: ComponentCache = {};
+const componentCache = new Map<string, ComponentFactory>();
 
-const createComponent: ComponentFactory = (name: string) => {
-  const Component: React.Node = (poseProps: PoserProps) =>
-    React.forwardRef(
-      ({ newTree, ...props }: PoseElementProps, ref: (el: Element) => any) =>
-        newTree ? (
-          <PoseElement
+const createComponentFactory = (key: string) => {
+  const componentFactory: ComponentFactory = poseProps => ({
+    withParent = true,
+    ...props
+  }) =>
+    !withParent ? (
+      <PoseElementComponent
+        poseProps={poseProps}
+        elementType={key}
+        {...props}
+      />
+    ) : (
+      <PoseParentContext.Consumer>
+        {(parentCtx: PoseContextProps) => (
+          <PoseElementComponent
             poseProps={poseProps}
-            elementType={name}
+            elementType={key}
             {...props}
-            innerRef={ref}
+            {...parentCtx}
           />
-        ) : (
-          <PoseParentContext.Consumer>
-            {(parentCtx: PoseContextProps) => (
-              <PoseElement
-                poseProps={poseProps}
-                elementType={name}
-                {...props}
-                {...parentCtx}
-                innerRef={ref}
-              />
-            )}
-          </PoseParentContext.Consumer>
-        )
+        )}
+      </PoseParentContext.Consumer>
     );
 
-  componentCache[name] = Component;
+  componentCache.set(key, componentFactory);
 
-  return Component;
+  return componentFactory;
 };
 
-const getComponent = (element: string) =>
-  componentCache[element] || createComponent(element);
+const getComponentFactory = (key: string) =>
+  componentCache.has(key)
+    ? componentCache.get(key)
+    : createComponentFactory(key);
 
 export default new Proxy(
   {},
   {
-    get: (target, key: string) => getComponent(key)
+    get: (target, key: string) => getComponentFactory(key)
   }
 );

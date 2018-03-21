@@ -1,6 +1,9 @@
-const escapeBackticks = (string) => string.replace(/`/g, '\\`');
+const escapeBackticks = string => string.replace(/`/g, "\\`");
 
-module.exports = (body, { category, id, title, description, published, siteName, section }) => `
+module.exports = (
+  body,
+  { category, id, title, description, published, siteName, section, next }
+) => `
 import { createElement } from 'react';
 import marksy from 'marksy/components';
 import { A, H1, H2, H3, H4, P, Li, Ul, Hr, Code, Blockquote, ArticleHeader } from '~/templates/global/styled';
@@ -44,6 +47,7 @@ const Page = ({ section }) => (
     description="${description}"
     published="${published}"
     theme="${siteName}"
+    next="${next}"
   >
     {content.tree}
   </ContentTemplate>

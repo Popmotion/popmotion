@@ -78,11 +78,15 @@ const explicitlyFlipPose = (state: PoseSetterFactoryProps, nextPose: Pose) => {
 
 const implicitlyFlipPose = (state: PoseSetterFactoryProps, nextPose: Pose) => {
   const { dimensions, element, elementStyler } = state;
-  if (!dimensions.has()) return;
+  if (!dimensions.has()) return {};
 
   const flipPoseProps: FlipPose = {};
   const prev = dimensions.get();
+
+  const transform = (element as HTMLElement).style.transform;
+  (element as HTMLElement).style.transform = '';
   const next = element.getBoundingClientRect();
+  (element as HTMLElement).style.transform = transform;
 
   if (prev.width !== next.width) {
     setValue(state, 'scaleX', prev.width / next.width);
@@ -92,6 +96,16 @@ const implicitlyFlipPose = (state: PoseSetterFactoryProps, nextPose: Pose) => {
   if (prev.height !== next.height) {
     setValue(state, 'scaleY', prev.height / next.height);
     flipPoseProps.scaleY = 1;
+  }
+
+  if (prev.top !== next.top) {
+    setValue(state, 'x', prev.left - next.left);
+    flipPoseProps.x = 0;
+  }
+
+  if (prev.top !== next.top) {
+    setValue(state, 'y', prev.top - next.top);
+    flipPoseProps.y = 0;
   }
 
   const originX =
@@ -104,7 +118,7 @@ const implicitlyFlipPose = (state: PoseSetterFactoryProps, nextPose: Pose) => {
 
   return {
     ...nextPose,
-    ...flipPose
+    ...flipPoseProps
   };
 };
 

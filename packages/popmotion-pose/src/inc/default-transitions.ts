@@ -3,7 +3,7 @@ import tween from 'popmotion/animations/tween';
 import action, { Action } from 'popmotion/action';
 import pointer from 'popmotion/input/pointer';
 import { eachValue } from './transition-composers';
-import { RawValue, Transition, Bounds2D } from '../types';
+import { RawValue, Transition } from '../types';
 
 const singleAxisPointer = (axis: string) => (from: number) =>
   pointer({ [axis]: from }).pipe((v: any) => v[axis]);
@@ -14,8 +14,8 @@ const createPointer = (
   axisPointerCreator: (from: number) => Action,
   min: string,
   max: string
-): Transition => ({ from, dragBounds }) => {
-  const axisPointer = axisPointerCreator(from);
+): Transition => ({ from, dragBounds }): Action => {
+  const axisPointer = axisPointerCreator(from as number);
   const transformQueue: Array<(v: number) => number> = [];
 
   if (dragBounds) {
@@ -25,7 +25,9 @@ const createPointer = (
       transformQueue.push((v: number) => Math.min(v, dragBounds[max]));
   }
 
-  return transformQueue.length ? axisPointer.pipe(...transformQueue) : action;
+  return transformQueue.length
+    ? axisPointer.pipe(...transformQueue)
+    : axisPointer;
 };
 
 export const just = (from: RawValue): Action =>

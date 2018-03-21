@@ -1,20 +1,20 @@
-import React from 'react';
+import React from "react";
 
-import { storiesOf } from '@storybook/react';
+import { storiesOf } from "@storybook/react";
 
-import { PoseDOM, PoserFLIP, PoserPassive, PoseDrag } from './plugins/pose';
-import { ReactPose, ReactPoseChildren } from './plugins/react-pose';
+import { PoseDOM, PoserFLIP, PoserPassive, PoseDrag } from "./plugins/pose";
+import { ReactPose, ReactPoseChildren, Group } from "./plugins/react-pose";
 
+storiesOf("Plugin: Pose", module)
+  .add("pose", () => <PoseDOM />)
+  .add("pose flip", () => <PoserFLIP />)
+  .add("passive values", () => <PoserPassive />)
+  .add("drag", () => <PoseDrag />);
 
-storiesOf('Plugin: Pose', module)
-.add('pose', () => <PoseDOM />)
-.add('pose flip', () => <PoserFLIP />)
-.add('passive values', () => <PoserPassive />)
-.add('drag', () => <PoseDrag />)
-
-storiesOf('Plugin: React Pose', module)
-.add('pose', () => <ReactPose />)
-.add('children', () => <ReactPoseChildren />)
+storiesOf("Plugin: React Pose", module)
+  .add("pose", () => <ReactPose />)
+  .add("children", () => <ReactPoseChildren />)
+  .add("group", () => <Group />);
 
 // import { Decay, DecayModifyTarget, DecayPower, DecayTimeConstant } from './decay';
 // import { Keyframes, KeyframesDuration, KeyframesLoop, KeyframesLinear, KeyframesTimes } from './keyframes';

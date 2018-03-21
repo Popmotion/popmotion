@@ -1,7 +1,9 @@
-import styled from 'styled-components';
-import { fontSize } from '~/styles/fonts';
-import { cols, BLACK, LIGHT_GREY } from '~/styles/vars';
-import { htmlUnencode } from '~/utils/string';
+import styled from "styled-components";
+import { fontSize } from "~/styles/fonts";
+import { cols, BLACK, LIGHT_GREY, BRAND } from "~/styles/vars";
+import { htmlUnencode } from "~/utils/string";
+import SiteLink from "~/components/layout/SiteLink";
+import { Centered } from "~/templates/global/grid";
 
 const ImgFrame = styled.span`
   max-width: ${cols(43)};
@@ -24,9 +26,22 @@ const Caption = styled.span`
   margin-top: ${cols(1)};
 `;
 
-export const Img = ({ className, alt, ...props}) => (
+export const Img = ({ className, alt, ...props }) => (
   <ImgFrame className={className} {...props}>
     <Image {...props} />
     {alt ? <Caption>{htmlUnencode(alt)}</Caption> : null}
   </ImgFrame>
 );
+
+export const NextLinkContainer = styled(Centered)`
+  border-top: 1px ${BRAND} solid;
+  margin-top: ${cols(2)};
+  padding-top: ${cols(2)};
+  padding-bottom: ${cols(2)};
+  display: flex;
+  justify-content: flex-end;
+`;
+
+export const NextLink = styled(SiteLink)`
+  display: block;
+`;

@@ -28,7 +28,8 @@ const themeSettings = {
       width: 159,
       height: 41
     },
-    mastheadBackground: `linear-gradient(${color.brand}, ${color.brandBurn})`
+    mastheadBackground: `linear-gradient(${color.brand}, ${color.brandBurn})`,
+    shareImage: "https://popmotion.io/static/images/twitter-card.png"
   },
   pose: {
     id: "pose",
@@ -44,7 +45,8 @@ const themeSettings = {
       width: 127,
       height: 40
     },
-    mastheadBackground: `linear-gradient(${color.pink}, ${color.purple})`
+    mastheadBackground: `linear-gradient(${color.pink}, ${color.purple})`,
+    shareImage: "https://popmotion.io/static/images/pose-twitter-card.png"
   }
 };
 

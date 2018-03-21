@@ -1,7 +1,7 @@
-import React from 'react';
-import styled from 'styled-components';
-import pose from '../../packages/popmotion-pose/lib';
-import {tween, spring, transform} from '../../packages/popmotion/lib';
+import React from "react";
+import styled from "styled-components";
+import pose from "../../packages/popmotion-pose/lib";
+import { tween, spring, transform } from "../../packages/popmotion/lib";
 const { pipe, blendColor, interpolate } = transform;
 
 const SidePanel = styled.div`
@@ -23,28 +23,31 @@ const SidePanel = styled.div`
 `;
 
 const sidebarProps = {
-  initialPose: 'close',
+  initialPose: "close",
   dragBounds: { left: -100, right: 0 },
   open: {
-    x: '0%',
+    x: "0%",
     delayChildren: 300,
     staggerChildren: 50
   },
   close: {
     delay: 500,
-    x: '-100%'
+    x: "-100%"
   },
   passive: {
-    backgroundColor: ['x', pipe(
-      parseFloat,
-      interpolate([-100, 0], [0, 1]),
-      blendColor('#a00', '#f00')
-    )]
+    backgroundColor: [
+      "x",
+      pipe(
+        parseFloat,
+        interpolate([-100, 0], [0, 1]),
+        blendColor("#a00", "#f00")
+      )
+    ]
   }
 };
 
 const itemProps = {
-  initialPose: 'close',
+  initialPose: ["close"],
   open: {
     opacity: 1,
     y: 0
@@ -59,25 +62,25 @@ export class PoseDOM extends React.Component {
   componentDidMount() {
     this.sidebarPoser = pose(this.sidebar, sidebarProps);
     this.items.forEach(item => this.sidebarPoser.addChild(item, itemProps));
-  
-    setTimeout(() => this.sidebarPoser.set('open'), 1000);
+
+    setTimeout(() => this.sidebarPoser.set("open"), 1000);
   }
 
   componentWillUnmount() {
-    this.sidebarPoser.destroy();
+    if (this.sidebarPoser) this.sidebarPoser.destroy();
   }
 
   items = [];
 
-  setSidePanel = (ref) => {
+  setSidePanel = ref => {
     if (ref) this.sidebar = ref;
   };
 
-  setItem = (ref) => {
+  setItem = ref => {
     if (ref) this.items.push(ref);
   };
 
-  close = () => this.sidebarPoser.set('close');
+  close = () => this.sidebarPoser.set("close");
 
   render() {
     return (
@@ -93,19 +96,21 @@ export class PoseDOM extends React.Component {
 
 const passiveModalItemProps = {
   passiveValues: {
-    opacity: ['x', transform.pipe(
-      parseFloat,
-      transform.interpolate([-100, 0], [0, 1])
-    )]
+    opacity: [
+      "x",
+      transform.pipe(parseFloat, transform.interpolate([-100, 0], [0, 1]))
+    ]
   }
 };
 
 export class PoserPassive extends React.Component {
   componentDidMount() {
     this.sidebarPoser = pose(this.sidebar, sidebarProps);
-    this.items.forEach(item => this.sidebarPoser.addChild(item, passiveModalItemProps));
-  
-    setTimeout(() => this.sidebarPoser.set('open'), 1000);
+    this.items.forEach(item =>
+      this.sidebarPoser.addChild(item, passiveModalItemProps)
+    );
+
+    setTimeout(() => this.sidebarPoser.set("open"), 1000);
   }
 
   componentWillUnmount() {
@@ -114,15 +119,15 @@ export class PoserPassive extends React.Component {
 
   items = [];
 
-  setSidePanel = (ref) => {
+  setSidePanel = ref => {
     if (ref) this.sidebar = ref;
   };
 
-  setItem = (ref) => {
+  setItem = ref => {
     if (ref) this.items.push(ref);
   };
 
-  close = () => this.sidebarPoser.set('close');
+  close = () => this.sidebarPoser.set("close");
 
   render() {
     return (
@@ -135,7 +140,6 @@ export class PoserPassive extends React.Component {
     );
   }
 }
-
 
 const Modal = styled.div`
   background: grey;
@@ -160,7 +164,7 @@ const modalProps = {
   }
 };
 const modalItemProps = {
-  initialPose: 'itemsOut',
+  initialPose: "itemsOut",
   itemsOut: {
     x: -50,
     opacity: 0
@@ -181,7 +185,7 @@ export class PoserFLIP extends React.Component {
 
   listRefs = new Set();
 
-  setContainerRef = (ref) => {
+  setContainerRef = ref => {
     if (ref) {
       this.ref = ref;
     } else if (this.modalPoser) {
@@ -189,7 +193,7 @@ export class PoserFLIP extends React.Component {
     }
   };
 
-  setItemRef = (ref) => {
+  setItemRef = ref => {
     if (ref) {
       this.listRefs.add(ref);
     } else if (this.modalPoser) {
@@ -199,19 +203,17 @@ export class PoserFLIP extends React.Component {
 
   componentDidMount() {
     this.modalPoser = pose(this.ref, modalProps);
-    this.listRefs.forEach(el => this.modalPoser.addChild(el, modalItemProps))
+    this.listRefs.forEach(el => this.modalPoser.addChild(el, modalItemProps));
     this.listRefs.clear();
 
     this.interval = setInterval(() => {
-      this.modalPoser
-        .set('itemsOut')
-        .then(() => {
-          this.modalPoser.clearChildren();
-          this.modalPoser.measure();
-          this.setState({
-            list: this.state.list === this.a ? this.b : this.a
-          });
+      this.modalPoser.set("itemsOut").then(() => {
+        this.modalPoser.clearChildren();
+        this.modalPoser.measure();
+        this.setState({
+          list: this.state.list === this.a ? this.b : this.a
         });
+      });
     }, 5000);
   }
 
@@ -222,32 +224,35 @@ export class PoserFLIP extends React.Component {
   componentDidUpdate() {
     this.listRefs.forEach(el => this.modalPoser.addChild(el, modalItemProps));
     this.listRefs.clear();
-    this.modalPoser.flip().then(() => this.modalPoser.set('itemsIn'));
+    this.modalPoser.flip().then(() => this.modalPoser.set("itemsIn"));
   }
 
   render() {
     return (
       <Modal innerRef={this.setContainerRef}>
-        {this.state.list.map((i) => <div key={i} ref={this.setItemRef} />)}
+        {this.state.list.map(i => <div key={i} ref={this.setItemRef} />)}
       </Modal>
     );
   }
 }
 
 export class PoseDrag extends React.PureComponent {
-  setRef = (ref) => {
+  setRef = ref => {
     if (ref) {
       this.poser = pose(ref, {
         draggable: true,
         dragBounds: { left: 0, right: 300 },
         onDragStart: console.log,
-        onDragEnd: console.log
-      })
+        onDragEnd: console.log,
+        dragEnd: {
+          transition: spring
+        }
+      });
     } else {
       this.poser.destroy();
     }
-  }
+  };
   render() {
-    return <SidePanel innerRef={this.setRef} />
+    return <SidePanel innerRef={this.setRef} />;
   }
 }

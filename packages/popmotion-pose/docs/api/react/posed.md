@@ -4,6 +4,8 @@ description: Create a posed component
 category: react
 ---
 
+**Note:** React Pose is built with React 16.3.0, which is currently in alpha.
+
 # `posed`
 
 `posed` is used to create animated and interactive components that you can reuse throughout your React site.
@@ -112,9 +114,9 @@ const Sidebar = styled(posed.nav(sidebarProps))`
 
 The name or names of the current pose.
 
-### `newTree?: boolean = false`
+### `withParent?: boolean = true`
 
-If set to `true`, this component will create a new tree of posed components.
+If set to `false`, this component won't subscribe to its parent posed component and create root for any further child components.
 
 ### `onChange?: { [key: string]: any }`
 
