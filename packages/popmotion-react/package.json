@@ -1,29 +1,22 @@
 {
   "name": "popmotion-react",
-  "version": "2.1.0",
-  "description": "Use physics, animation and input tracking with Popmotion and React",
+  "version": "2.1.1",
+  "description":
+    "Use physics, animation and input tracking with Popmotion and React",
   "author": "Matt Perry <sirhound@popmotion.io>",
   "homepage": "http://popmotion.io",
   "main": "./lib/index.js",
   "esnext": "./src/index.js",
-  "files": [
-    "lib",
-    "src"
-  ],
+  "files": ["lib", "src"],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Popmotion/popmotion/tree/master/packages/popmotion-react/"
+    "url":
+      "https://github.com/Popmotion/popmotion/tree/master/packages/popmotion-react/"
   },
   "bugs": {
     "url": "https://github.com/Popmotion/popmotion/issues"
   },
-  "keywords": [
-    "popmotion",
-    "animation",
-    "window",
-    "react",
-    "react animation"
-  ],
+  "keywords": ["popmotion", "animation", "window", "react", "react animation"],
   "analyze": true,
   "license": "MIT",
   "scripts": {

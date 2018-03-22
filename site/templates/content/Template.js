@@ -28,7 +28,7 @@ export default ({
     <Content>
       {published && <DatePublished>{published}</DatePublished>}
       {children}
-      {next ? (
+      {next && themes[theme].data.content[section][next] ? (
         <NextLinkContainer>
           <NextLink href={`/${section}/${next}`}>
             Next: {themes[theme].data.content[section][next].title}

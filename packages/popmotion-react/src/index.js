@@ -1,5 +1,5 @@
-import React from 'react';
-import value from 'popmotion/reactions/value';
+import React from "react";
+import value from "popmotion/reactions/value";
 
 export class MotionValue extends React.Component {
   static defaultProps = {
@@ -11,47 +11,48 @@ export class MotionValue extends React.Component {
 
     const { v, onStateChange, initialState } = props;
 
-    const isCompositeValue = (typeof v !== 'number');
+    const isCompositeValue = typeof v !== "number";
 
     const context = {};
     this.value = value(v);
     this.valueState = initialState;
     this.state = {
       v,
-      setRef: (ref) => {
+      setRef: ref => {
         if (ref !== null) this.ref = ref;
       },
       velocity: this.value.getVelocity(),
       state: this.valueState,
-      setStateTo: onStateChange ? Object.keys(onStateChange)
-        .reduce((acc, key) => {
-          acc[key] = (arg) => {
-            const { state, setStateTo } = this.state;
-            const isArgFunction = (typeof arg === 'function');
-            const e = isArgFunction ? undefined : arg;
-            const onComplete = isArgFunction ? arg : undefined;
+      setStateTo: onStateChange
+        ? Object.keys(onStateChange).reduce((acc, key) => {
+            acc[key] = arg => {
+              const { state, setStateTo } = this.state;
+              const isArgFunction = typeof arg === "function";
+              const e = isArgFunction ? undefined : arg;
+              const onComplete = isArgFunction ? arg : undefined;
 
-            onStateChange[key]({
-              value: this.value,
-              ref: this.ref,
-              previousState: state,
-              setStateTo,
-              e,
-              onComplete,
-              context
-            });
+              onStateChange[key]({
+                value: this.value,
+                ref: this.ref,
+                previousState: state,
+                setStateTo,
+                e,
+                onComplete,
+                context
+              });
 
-            this.setState({ state: key });
-          };
-          return acc;
-        }, {}) : null
+              this.setState({ state: key });
+            };
+            return acc;
+          }, {})
+        : null
     };
   }
 
   componentDidMount() {
     const { v, setStateTo, state } = this.state;
 
-    const onValueUpdate = (value) => {
+    const onValueUpdate = value => {
       this.setState({
         v: value,
         velocity: this.value.getVelocity()
@@ -65,11 +66,13 @@ export class MotionValue extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const { setStateTo } = this.state;
-    const { state } = this.props;
+    const { state, v } = this.props;
 
     if (state !== nextProps.state) {
       setStateTo[nextProps.state]();
     }
+
+    if (v !== nextProps.v) this.value.update(v);
   }
 
   transitionGroupLifecycleMethod(method, onComplete) {
@@ -78,27 +81,27 @@ export class MotionValue extends React.Component {
   }
 
   componentWillAppear(onComplete) {
-    this.transitionGroupLifecycleMethod('componentWillAppear', onComplete);
+    this.transitionGroupLifecycleMethod("componentWillAppear", onComplete);
   }
 
   componentDidAppear() {
-    this.transitionGroupLifecycleMethod('componentDidAppear');
+    this.transitionGroupLifecycleMethod("componentDidAppear");
   }
 
   componentWillEnter(onComplete) {
-    this.transitionGroupLifecycleMethod('componentWillEnter', onComplete);
+    this.transitionGroupLifecycleMethod("componentWillEnter", onComplete);
   }
 
   componentDidEnter() {
-    this.transitionGroupLifecycleMethod('componentDidEnter');
+    this.transitionGroupLifecycleMethod("componentDidEnter");
   }
 
   componentWillLeave(onComplete) {
-    this.transitionGroupLifecycleMethod('componentWillLeave', onComplete);
+    this.transitionGroupLifecycleMethod("componentWillLeave", onComplete);
   }
 
   componentDidLeave() {
-    this.transitionGroupLifecycleMethod('componentDidLeave');
+    this.transitionGroupLifecycleMethod("componentDidLeave");
   }
 
   componentWillUnmount() {
