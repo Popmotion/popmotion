@@ -112,7 +112,7 @@ const tween = (props: TweenProps = {}): Action => action(({ update, complete }: 
     },
     restart() {
       playDirection = 1;
-      seek(0)
+      seek(0);
       resume();
       return this;
     },
