@@ -2,6 +2,18 @@
 
 Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.12] 2018-03-22
+
+### Fixed
+
+- Updating `getPoses` to strip new properties.
+
+## [1.0.11] 2018-03-22
+
+### Added
+
+- `values` property to allow external creation and ownership of values.
+
 ## [1.0.10] 2018-03-21
 
 ### Fixed

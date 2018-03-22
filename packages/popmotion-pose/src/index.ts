@@ -18,7 +18,7 @@ import makeDraggable from './dom/draggable';
 import { ColdSubscription } from 'popmotion/action/types';
 
 const pose: PoserFactory = (element, props) => {
-  const { draggable, initialPose, passive, parentValues, onChange } = props;
+  const { draggable, initialPose, passive, values: userSetValues, parentValues, onChange } = props;
   const dragProps = getDragProps(props);
   const activeActions: ActiveActions = new Map();
   const activePoses: ActivePoses = new Map();
@@ -32,6 +32,7 @@ const pose: PoserFactory = (element, props) => {
     styler: elementStyler,
     initialPose,
     passive,
+    userSetValues,
     parentValues,
     onChange
   });

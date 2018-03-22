@@ -108,6 +108,8 @@ const createPoseSetter: PoseSetterFactory = setterProps => (
             );
           }
 
+          if (type) transition = transition.pipe(type.transform);
+
           // Start transition
           const transitionApi = transition.start({
             update: (v: any) => value.update(v),

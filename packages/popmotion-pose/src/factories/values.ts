@@ -8,16 +8,16 @@ import {
   OnChangeMap
 } from '../types';
 import { getPoseValues } from '../inc/selectors';
-import { number, degrees, percent, px, ValueType } from 'style-value-types';
+import { degrees, percent, px, ValueType } from 'style-value-types';
 import { pipe } from 'popmotion/transformers';
-import value from 'popmotion/reactions/value';
+import value, { ValueReaction } from 'popmotion/reactions/value';
 import { Styler } from 'stylefire';
 
 export type ValuesAndTypesFactory = (
   props: ValuesFactoryProps
 ) => ValuesAndTypes;
 
-const valueTypeTests = [number, degrees, percent, px];
+const valueTypeTests = [degrees, percent, px];
 const testValueType = (v: any) => (type: ValueType) => type.test(v);
 
 const getInitialValue = (
@@ -39,25 +39,27 @@ const getInitialValue = (
 const createValues = (
   values: ValueMap,
   types: TypesMap,
-  { initialPose, poses, styler }: ValuesFactoryProps,
+  { initialPose, poses, styler, userSetValues }: ValuesFactoryProps,
   pose: Pose
 ) => (key: string) => {
   if (values.has(key)) return;
 
-  const type = valueTypeTests.find(testValueType(pose[key]));
+  let thisValue: ValueReaction;
+  let type: ValueType;
 
-  const rawInitialValue = getInitialValue(poses, key, initialPose, styler);
+  // If the user has provided a value, use that
+  if (userSetValues && userSetValues[key] !== undefined) {
+    thisValue = userSetValues[key];
+    type = valueTypeTests.find(testValueType(thisValue.get()));
 
-  const initialValue = type ? type.parse(rawInitialValue) : rawInitialValue;
-
-  const thisValue = type
-    ? value(initialValue).pipe(type.transform)
-    : value(initialValue);
+  // Else create a new value
+  } else {
+    thisValue = value(getInitialValue(poses, key, initialPose, styler));
+    type = valueTypeTests.find(testValueType(pose[key]));
+  }
 
   values.set(key, thisValue);
-
   thisValue.subscribe((v: any) => styler.set(key, v));
-
   if (type) types.set(key, type);
 };
 

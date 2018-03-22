@@ -12,6 +12,8 @@ export const getPoses: PoseSelector = ({
   dragBounds,
   onDragStart,
   onDragEnd,
+  parentValues,
+  values,
   ...poses
 }) => poses;
 

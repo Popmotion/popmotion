@@ -2,13 +2,14 @@ import React from "react";
 
 import { storiesOf } from "@storybook/react";
 
-import { PoseDOM, PoserFLIP, PoserPassive, PoseDrag } from "./plugins/pose";
+import { PoseDOM, PoserFLIP, PoserPassive, PoseDrag, PoserManualValues } from "./plugins/pose";
 import { ReactPose, ReactPoseChildren, Group } from "./plugins/react-pose";
 
 storiesOf("Plugin: Pose", module)
   .add("pose", () => <PoseDOM />)
   .add("pose flip", () => <PoserFLIP />)
   .add("passive values", () => <PoserPassive />)
+  .add("manual values", () => <PoserManualValues />)
   .add("drag", () => <PoseDrag />);
 
 storiesOf("Plugin: React Pose", module)

@@ -67,6 +67,7 @@ export type PoserProps = {
   onChange?: OnChangeMap;
   parentValues?: ValueMap;
   draggable?: Draggable;
+  values?: { [key: string]: ValueReaction };
 } & DragProps;
 
 export type PropsAndPoses = PoserProps & PoseMap;
@@ -94,6 +95,7 @@ export type ValuesFactoryProps = {
   initialPose: string | string[];
   passive: PassiveMap;
   parentValues: ValueMap;
+  userSetValues?: { [key: string]: ValueReaction };
   onChange: OnChangeMap;
 };
 
