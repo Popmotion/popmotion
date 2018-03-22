@@ -90,12 +90,17 @@ const tween = (props: TweenProps = {}): Action => action(({ update, complete }: 
     if (tweenTimer) tweenTimer.stop();
   };
 
+  const getPlayDirection = () => {
+    return playDirection;
+  };
+
   startTimer();
 
   return {
     isActive: () => isActive,
     getElapsed: () => clamp(0, duration)(elapsed),
     getProgress: () => progress,
+    getPlayDirection: () => getPlayDirection,
     stop() {
       stopTimer();
     },
