@@ -86,6 +86,7 @@ export class PoseElement extends React.PureComponent<PoseElementProps> {
       onUnmount,
       getPoseFromParent,
       popFromFlow,
+      parentValues,
       ...props
     } = this.props;
 

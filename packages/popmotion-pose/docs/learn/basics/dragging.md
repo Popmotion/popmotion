@@ -59,10 +59,51 @@ const { spring } = popmotion
 
 const props = {
   draggable: true,
-  dragEnd: {
-    transition: spring
-  }
+  dragEnd: { transition: spring }
 }
 ```
 
 <CodePen id="xWdqLy" />
+
+Or (throw lightly!) we can use [decay](/api/decay) to create momentum scrolling.
+
+```javascript
+const { decay } = popmotion
+
+const props = {
+  draggable: true,
+  dragEnd: { transition: decay }
+}
+```
+
+<CodePen id="dmWWdp" />
+
+## `onChange`
+
+Often, we want to respond to changes in a value. We can use the `onChange` prop to accomplish this.
+
+This object allows us to create a callback for each value we animate:
+
+```javascript
+const props = {
+  draggable: true,
+  dragEnd: { transition: decay },
+  onChange: {
+    x: x => console.log(x)
+  }
+}
+```
+
+### `onChange` with React
+
+With React, `onChange` callbacks are handled a little differently to vanilla Pose. Instead, we pass them to the posed component itself:
+
+```javascript
+<Box onChange={{ x: x => console.log(x) }} />
+```
+
+It's important to note that `onChange` can only be defined once, when the component mounts.
+
+## Next
+
+So far we've covered animations and interactions, active stuff. Next, we'll take a look at some values who prefer to sit back and relax. [Passive values](/pose/learn/passive)
