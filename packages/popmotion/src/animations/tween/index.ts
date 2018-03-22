@@ -96,6 +96,9 @@ const tween = (props: TweenProps = {}): Action => action(({ update, complete }: 
     isActive: () => isActive,
     getElapsed: () => clamp(0, duration)(elapsed),
     getProgress: () => progress,
+    getPlayDirection() {
+      return playDirection;
+    },
     stop() {
       stopTimer();
     },
@@ -105,6 +108,12 @@ const tween = (props: TweenProps = {}): Action => action(({ update, complete }: 
     },
     resume() {
       startTimer();
+      return this;
+    },
+    restart() {
+      playDirection = 1;
+      seek(0);
+      resume();
       return this;
     },
     seek(newProgress: number) {
