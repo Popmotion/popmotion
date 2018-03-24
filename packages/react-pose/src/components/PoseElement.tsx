@@ -120,9 +120,11 @@ export class PoseElement extends React.PureComponent<PoseElementProps> {
   componentDidMount() {
     if (!this.ref) return;
 
-    const { poseProps, onChange, registerChild } = this.props;
+    const { poseProps, onChange, registerChild, parentValues, values } = this.props;
     const props: PoserProps = {
       ...poseProps,
+      parentValues,
+      values,
       initialPose: this.getInitialPose(),
       onChange
     };

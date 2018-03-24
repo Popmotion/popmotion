@@ -25,7 +25,7 @@ Currently, these boundaries are enforced by a hard clamp.
 
 Lifecycle callbacks for drag events.
 
-### `onChange`
+### `onChange?: { [key: string]: (v: any) => any }`
 
 Map of callbacks, one for each animated value, that will fire whenever that value changes.
 

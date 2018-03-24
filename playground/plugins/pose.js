@@ -107,7 +107,7 @@ const passiveModalItemProps = {
   passive: {
     opacity: [
       "x",
-      transform.pipe(parseFloat, transform.interpolate([-10, 0], [0, 1])),
+      transform.pipe(parseFloat, transform.interpolate([-100, 0], [0, 1])),
       true
     ]
   }
@@ -116,6 +116,53 @@ const passiveModalItemProps = {
 export class PoserPassive extends React.Component {
   componentDidMount() {
     this.sidebarPoser = pose(this.sidebar, sidebarProps);
+    this.items.forEach(item =>
+      this.sidebarPoser.addChild(item, passiveModalItemProps)
+    );
+
+    setTimeout(() => this.sidebarPoser.set("open"), 1000);
+  }
+
+  componentWillUnmount() {
+    this.sidebarPoser.destroy();
+  }
+
+  items = [];
+
+  setSidePanel = ref => {
+    if (ref) this.sidebar = ref;
+  };
+
+  setItem = ref => {
+    if (ref) this.items.push(ref);
+  };
+
+  close = () => this.sidebarPoser.set("close");
+
+  render() {
+    return (
+      <SidePanel innerRef={this.setSidePanel} onClick={this.close}>
+        <div ref={this.setItem} />
+        <div ref={this.setItem} />
+        <div ref={this.setItem} />
+        <div ref={this.setItem} />
+      </SidePanel>
+    );
+  }
+}
+
+export class PoserManualValues extends React.Component {
+  componentDidMount() {
+    const x = value("-100%");
+    this.sidebarPoser = pose(this.sidebar, {
+      ...sidebarProps,
+      values: {
+        x
+      }
+    });
+
+    setTimeout(() => x.update("50%"), 3000);
+
     this.items.forEach(item =>
       this.sidebarPoser.addChild(item, passiveModalItemProps)
     );

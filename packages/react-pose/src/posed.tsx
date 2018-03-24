@@ -22,7 +22,7 @@ const createComponentFactory = (key: string) => {
     withParent = true,
     ...props
   }) =>
-    !withParent ? (
+    !withParent || props.parentValues ? (
       <PoseElementComponent
         poseProps={poseProps}
         elementType={key}
