@@ -1,8 +1,16 @@
 import React from "react";
+import { Box } from "../inc";
 import styled from "styled-components";
 import pose from "../../packages/popmotion-pose/lib";
-import { tween, spring, transform } from "../../packages/popmotion/lib";
-const { pipe, blendColor, interpolate } = transform;
+import {
+  decay,
+  tween,
+  spring,
+  physics,
+  transform,
+  value
+} from "../../packages/popmotion/lib";
+const { pipe, blendColor, conditional, clamp, interpolate } = transform;
 
 const SidePanel = styled.div`
   width: 300px;
@@ -24,6 +32,7 @@ const SidePanel = styled.div`
 
 const sidebarProps = {
   initialPose: "close",
+  draggable: "x",
   dragBounds: { left: -100, right: 0 },
   open: {
     x: "0%",
@@ -95,10 +104,11 @@ export class PoseDOM extends React.Component {
 }
 
 const passiveModalItemProps = {
-  passiveValues: {
+  passive: {
     opacity: [
       "x",
-      transform.pipe(parseFloat, transform.interpolate([-100, 0], [0, 1]))
+      transform.pipe(parseFloat, transform.interpolate([-10, 0], [0, 1])),
+      true
     ]
   }
 };
@@ -241,18 +251,14 @@ export class PoseDrag extends React.PureComponent {
     if (ref) {
       this.poser = pose(ref, {
         draggable: true,
-        dragBounds: { left: 0, right: 300 },
         onDragStart: console.log,
-        onDragEnd: console.log,
-        dragEnd: {
-          transition: spring
-        }
+        onDragEnd: console.log
       });
     } else {
       this.poser.destroy();
     }
   };
   render() {
-    return <SidePanel innerRef={this.setRef} />;
+    return <Box innerRef={this.setRef} />;
   }
 }

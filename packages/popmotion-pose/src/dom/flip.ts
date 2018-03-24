@@ -1,8 +1,17 @@
 import value from 'popmotion/reactions/value';
-import { Pose, ValueMap, PoseSetterFactoryProps } from '../types';
+import {
+  Pose,
+  ValueMap,
+  PoseSetterFactoryProps,
+  BoundingBox,
+  Dimensions
+} from '../types';
 import { Action } from 'popmotion/action';
 import { Styler } from 'stylefire';
 
+// Prevents the bug where TS errors between "export cannot be named"
+// and import is "declared but unused".
+export { Dimensions };
 export { Action };
 
 type SetValueProps = {
@@ -81,7 +90,7 @@ const implicitlyFlipPose = (state: PoseSetterFactoryProps, nextPose: Pose) => {
   if (!dimensions.has()) return {};
 
   const flipPoseProps: FlipPose = {};
-  const prev = dimensions.get();
+  const prev = dimensions.get() as BoundingBox;
 
   const transform = (element as HTMLElement).style.transform;
   (element as HTMLElement).style.transform = '';

@@ -142,7 +142,7 @@ const slowInterpolate = (input: number[], output: number[], rangeLength: number,
 const fastInterpolate = (minA: number, maxA: number, minB: number, maxB: number) => (v: number) =>
   (((v - minA) * (maxB - minB)) / (maxA - minA)) + minB;
 
-export const interpolate = (input: number[], output: number[], rangeEasing: Easing[]) => {
+export const interpolate = (input: number[], output: number[], rangeEasing?: Easing[]) => {
   const rangeLength = input.length;
   return rangeLength !== 2
     ? slowInterpolate(input, output, rangeLength, rangeEasing)

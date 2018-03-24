@@ -3,6 +3,7 @@
   "version": "0.1.2",
   "description": "A declarative animation library for React",
   "main": "lib/index.js",
+  "types": "./lib/index.d.ts",
   "scripts": {
     "bundle": "NODE_ENV=production webpack",
     "build": "tsc",
@@ -39,7 +40,7 @@
     "webpack": "^3.11.0"
   },
   "dependencies": {
-    "popmotion-pose": "^1.0.10",
+    "popmotion-pose": "^1.0.13",
     "react": "^16.3.0-alpha.2",
     "react-dom": "^16.3.0-alpha.2"
   },

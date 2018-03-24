@@ -86,6 +86,7 @@ export class PoseElement extends React.PureComponent<PoseElementProps> {
       onUnmount,
       getPoseFromParent,
       popFromFlow,
+      values,
       parentValues,
       ...props
     } = this.props;
@@ -145,6 +146,7 @@ export class PoseElement extends React.PureComponent<PoseElementProps> {
 
   componentDidUpdate(prevProps: PoseElementProps) {
     const { pose } = this.props;
+    this.poser.setTransitionProps(this.getSetProps());
     if (pose !== prevProps.pose || pose === 'flip') this.setPose(pose);
   }
 
@@ -159,15 +161,15 @@ export class PoseElement extends React.PureComponent<PoseElementProps> {
     const { initialPose, pose } = this.props;
     this.poser = poser;
     if (initialPose && pose) this.setPose(pose);
+    this.poser.setTransitionProps(this.getSetProps());
     this.flushChildren();
   }
 
   setPose(pose: CurrentPose) {
     const { onPoseComplete } = this.props;
     const poseList: string[] = Array.isArray(pose) ? pose : [pose];
-    const props = this.getSetProps();
 
-    Promise.all(poseList.map(key => key && this.poser.set(key, props))).then(
+    Promise.all(poseList.map(key => key && this.poser.set(key))).then(
       () => onPoseComplete && onPoseComplete()
     );
   }

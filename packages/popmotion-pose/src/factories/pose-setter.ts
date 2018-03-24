@@ -61,9 +61,11 @@ const createPoseSetter: PoseSetterFactory = setterProps => (
     activePoses,
     children,
     poses,
+    dimensions,
     values,
     types,
     dragProps,
+    getTransitionProps,
     flipEnabled
   } = setterProps;
   const animations: AnimationsPromiseList = [];
@@ -94,7 +96,10 @@ const createPoseSetter: PoseSetterFactory = setterProps => (
             to: type ? type.parse(unparsedTarget) : unparsedTarget,
             key,
             prevPoseKey: activePoses.get(key),
+            dimensions,
             dragBounds,
+            type,
+            ...getTransitionProps(),
             ...props
           });
 

@@ -19,6 +19,7 @@ import { ColdSubscription } from 'popmotion/action/types';
 
 const pose: PoserFactory = (element, props) => {
   const { draggable, initialPose, passive, parentValues, onChange } = props;
+  let transitionProps = {};
   const dragProps = getDragProps(props);
   const activeActions: ActiveActions = new Map();
   const activePoses: ActivePoses = new Map();
@@ -47,6 +48,7 @@ const pose: PoserFactory = (element, props) => {
     activePoses,
     dimensions,
     dragProps,
+    getTransitionProps: () => transitionProps,
     flipEnabled: element instanceof HTMLElement
   });
 
@@ -54,6 +56,11 @@ const pose: PoserFactory = (element, props) => {
 
   const api: Poser = {
     set,
+    setTransitionProps: nextProps =>
+      (transitionProps = {
+        ...transitionProps,
+        ...nextProps
+      }),
     has: name => !!poses[name],
     get: () => {
       const output: StateMap = {};

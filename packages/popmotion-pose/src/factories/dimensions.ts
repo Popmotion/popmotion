@@ -1,6 +1,6 @@
-import { BoundingBox } from '../types';
+import { BoundingBox, Dimensions } from '../types';
 
-export default (element: Element) => {
+export default (element: Element): Dimensions => {
   let hasMeasured = false;
   let current: BoundingBox = {
     width: 0,
@@ -12,12 +12,16 @@ export default (element: Element) => {
   };
 
   return {
-    get: () => current,
+    get: measurement => (measurement ? current[measurement] : current),
     measure: () => {
       current = element.getBoundingClientRect();
       hasMeasured = true;
       return current;
     },
+    measurementAsPixels: (measurement, value, type) =>
+      type
+        ? parseFloat(value as string) / 100 * current[measurement]
+        : (value as number),
     has: () => hasMeasured
   };
 };

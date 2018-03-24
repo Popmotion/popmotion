@@ -2,6 +2,19 @@
 
 Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.12] 2018-03-23
+
+### Fixed
+
+- Small type bugs
+
+## [1.0.11] 2018-03-23
+
+### Added
+
+- `dragBounds` can be provided as percentages.
+- Dragging now still works if `x` or `y` have been defined as percentages.
+
 ## [1.0.10] 2018-03-21
 
 ### Fixed

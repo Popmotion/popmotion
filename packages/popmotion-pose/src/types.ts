@@ -20,6 +20,7 @@ export type StateMap = {
 
 export interface Poser {
   set: (poseName: string, props?: PoseSetterProps) => Promise<any>;
+  setTransitionProps: (props: PoseSetterProps) => PoseSetterProps;
   has: (poseName: string) => boolean;
   get: () => StateMap;
   measure: () => void;
@@ -52,7 +53,12 @@ export type Bounds2D = {
 };
 
 export interface Dimensions {
-  get: () => BoundingBox;
+  get: (measurement?: BoundingBoxDimension) => BoundingBox | number;
+  measurementAsPixels: (
+    measurement: BoundingBoxDimension,
+    value: string | number,
+    type?: ValueType
+  ) => number;
   measure: () => void;
   has: () => boolean;
 }
@@ -79,6 +85,7 @@ export type TransitionProps = {
   to: RawValue;
   key: string;
   prevPoseKey: string;
+  dimensions: Dimensions;
 };
 
 export type Transition = (
@@ -113,6 +120,7 @@ export type PoseSetterFactoryProps = {
   elementStyler: Styler;
   element: Element;
   dimensions: Dimensions;
+  getTransitionProps: () => PoseSetterProps;
   flipEnabled: boolean;
 };
 
@@ -137,11 +145,13 @@ export type DragProps = {
   onDragEnd?: PointerCallback;
 };
 
-export type BoundingBox = {
-  width: number;
-  height: number;
-  left: number;
-  top: number;
-  right: number;
-  bottom: number;
-};
+export type BoundingBox = { [key in BoundingBoxDimension]: number };
+
+export enum BoundingBoxDimension {
+  width = 'width',
+  height = 'height',
+  left = 'left',
+  right = 'right',
+  top = 'top',
+  bottom = 'bottom'
+}

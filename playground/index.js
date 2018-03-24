@@ -3,7 +3,12 @@ import React from "react";
 import { storiesOf } from "@storybook/react";
 
 import { PoseDOM, PoserFLIP, PoserPassive, PoseDrag } from "./plugins/pose";
-import { ReactPose, ReactPoseChildren, Group } from "./plugins/react-pose";
+import {
+  ReactPose,
+  ReactPoseChildren,
+  Group,
+  EmailList
+} from "./plugins/react-pose";
 
 storiesOf("Plugin: Pose", module)
   .add("pose", () => <PoseDOM />)
@@ -14,7 +19,8 @@ storiesOf("Plugin: Pose", module)
 storiesOf("Plugin: React Pose", module)
   .add("pose", () => <ReactPose />)
   .add("children", () => <ReactPoseChildren />)
-  .add("group", () => <Group />);
+  .add("group", () => <Group />)
+  .add("email list", () => <EmailList />);
 
 // import { Decay, DecayModifyTarget, DecayPower, DecayTimeConstant } from './decay';
 // import { Keyframes, KeyframesDuration, KeyframesLoop, KeyframesLinear, KeyframesTimes } from './keyframes';
