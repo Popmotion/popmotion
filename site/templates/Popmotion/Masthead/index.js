@@ -1,7 +1,16 @@
-import { withTheme } from 'styled-components';
-import SiteLink from '~/components/layout/SiteLink';
-import { Container, MastheadContainer, Title, Logo, LogoText, Blurb, CTA } from './styled';
-import Link from 'next/link';
+import { withTheme } from "styled-components";
+import SiteLink from "~/components/layout/SiteLink";
+import {
+  Container,
+  MastheadContainer,
+  Title,
+  Logo,
+  LogoContainer,
+  LogoText,
+  Blurb,
+  CTA
+} from "./styled";
+import Link from "next/link";
 
 const Masthead = ({ children, theme }) => (
   <Container>
@@ -9,11 +18,15 @@ const Masthead = ({ children, theme }) => (
     <MastheadContainer>
       <Title>
         <LogoText>{theme.name}</LogoText>
-        <theme.Logo id="homepage-logo" {...theme.homepageLogoSize} />
+        <LogoContainer {...theme.homepageLogoSize}>
+          <theme.Logo id="homepage-logo" />
+        </LogoContainer>
       </Title>
       <Blurb>{theme.tagline}</Blurb>
       <CTA>
-        <SiteLink href="/learn/get-started" prefetch>Quick start</SiteLink>
+        <SiteLink href="/learn/get-started" prefetch>
+          Quick start
+        </SiteLink>
       </CTA>
     </MastheadContainer>
   </Container>

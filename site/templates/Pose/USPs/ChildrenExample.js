@@ -1,40 +1,101 @@
 import Template from '~/templates/Popmotion/LiveExamples/Template';
-import { Carousel, Item, VerticalCenter } from '~/templates/Popmotion/LiveExamples/styled';
-import { styler, value, listen, pointer, decay, transform } from 'popmotion';
+import { AlignCenter } from '~/templates/Popmotion/LiveExamples/styled';
+import {
+  styler,
+  spring,
+  value,
+  listen,
+  tween,
+  pointer,
+  decay,
+  transform
+} from 'popmotion';
+import posed from 'react-pose';
+import styled from 'styled-components';
+import { color } from '~/styles/vars';
+import { eachValue } from 'popmotion-pose';
 
-const code = `const sidebarProps = {
-  open: {
-    y: '-100%',
-    delayChildren: 150
-    staggerChildren: 75
+const Container = styled.div`
+  overflow: hidden;
+`;
+
+const sidepanelProps = {
+  closed: {
+    x: '-100%'
   },
-  closed: { x: '0%' },
-  initialPose
-}
+  open: {
+    x: '0%',
+    delayChildren: 100,
+    staggerChildren: 60
+  }
+};
 
 const itemProps = {
-  open: { opacity: 1, y: '-100%' },
-  closed: { opacity: 0, y: '0%' }
-}
+  closed: {
+    y: 20,
+    opacity: 0
+  },
+  open: {
+    y: 0,
+    opacity: 1
+  }
+};
 
-const sidebarPoser = pose(sidebarElement, sidebarProps)
-itemElements.forEach((itemElement) => sidebarPoser.addChild(itemElement, itemProps))
+const Sidepanel = styled(posed.ul(sidepanelProps))`
+  background: ${color.blue};
+  width: 300px;
+  padding: 20px;
+`;
 
-sidebarPoser.set('open')
+const Item = styled(posed.li(itemProps))`
+  width: 100%;
+  border-radius: 5px;
+  height: 35px;
+  background: ${color.white};
+  margin-bottom: 10px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+`;
+
+const code = `const parent = pose(element, props)
+children.forEach(child => parent.addChild(child, childProps))
+
+parent.set('open')
 `;
 
 class Example extends React.Component {
+  state = { isVisible: false };
+
+  componentDidMount() {
+    this.interval = setInterval(this.toggleVisibility, 2000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
+  toggleVisibility = () => this.setState({ isVisible: !this.state.isVisible });
 
   render() {
-    return (null
+    return (
+      <Container>
+        <Sidepanel pose={this.state.isVisible ? 'open' : 'closed'}>
+          <Item key={0} />
+          <Item key={1} />
+          <Item key={2} />
+          <Item key={3} />
+        </Sidepanel>
+      </Container>
     );
   }
 }
 
 export default () => (
-  <Template code={code} codepen="https://codepen.io/popmotion/pen/Kyewbv?editors=0010">
-    <VerticalCenter>
+  <Template code={code}>
+    <AlignCenter>
       <Example />
-    </VerticalCenter>
+    </AlignCenter>
   </Template>
 );

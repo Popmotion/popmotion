@@ -2,6 +2,31 @@
 
 Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.18] 2018-03-25
+
+### Fixed
+
+- There's a bug in Stylefire where Firefox doesn't respect `originX` or `originY` as separate values. For now we're setting `transformOrigin` as a unified value instead.
+
+## [1.0.17] 2018-03-25
+
+### Fixed
+
+- If `x` or `y` were only defined in dragBounds, they couldn't previously be set as percentages.
+
+## [1.0.16] 2018-03-25
+
+### Added
+
+- Default animation for `scale` props increases damping if `to: 0`.
+
+## [1.0.15] 2018-03-25
+
+### Added
+
+- Default animation for `opacity` is now a tween with linear easing
+- Default animation for `rotate` props is now underdamped `spring`
+
 ## [1.0.14] 2018-03-23
 
 ### Fixed

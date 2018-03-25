@@ -123,7 +123,9 @@ const implicitlyFlipPose = (state: PoseSetterFactoryProps, nextPose: Pose) => {
   const originY =
     prev.left === next.left ? 0 : prev.right === next.right ? '100%' : '50%';
 
-  (elementStyler.set({ originX, originY }) as Styler).render();
+  (elementStyler.set({
+    transformOrigin: `${originX} ${originY}`
+  }) as Styler).render();
 
   return {
     ...nextPose,

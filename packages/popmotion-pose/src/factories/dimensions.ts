@@ -18,8 +18,8 @@ export default (element: Element): Dimensions => {
       hasMeasured = true;
       return current;
     },
-    measurementAsPixels: (measurement, value, type) =>
-      type
+    measurementAsPixels: (measurement, value) =>
+      typeof value === 'string'
         ? parseFloat(value as string) / 100 * current[measurement]
         : (value as number),
     has: () => hasMeasured

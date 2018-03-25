@@ -1,30 +1,80 @@
 import Template from '~/templates/Popmotion/LiveExamples/Template';
-import { Carousel, Item, VerticalCenter } from '~/templates/Popmotion/LiveExamples/styled';
-import { styler, value, listen, pointer, decay, transform } from 'popmotion';
+import {
+  Carousel,
+  Item,
+  AlignCenter
+} from '~/templates/Popmotion/LiveExamples/styled';
+import {
+  styler,
+  spring,
+  value,
+  listen,
+  tween,
+  pointer,
+  decay,
+  transform
+} from 'popmotion';
+import posed from 'react-pose';
+import styled from 'styled-components';
+import { color } from '~/styles/vars';
+import { eachValue } from 'popmotion-pose';
 
-const code = `const props = {
-  open: {
-    x: '0%',
-    transition: ({ from, to }) => tween({ from, to, ease: easing.backOut })
+const props = {
+  rest: {
+    scale: 1,
+    backgroundColor: color.green
   },
-  closed: {
-    x: '-100%',
-    transition: ({ from, to, velocity }) => spring({ from, to, velocity, stiffness: 1000 })
+  alert: {
+    scale: 1.3,
+    backgroundColor: color.brand,
+    transition: eachValue({
+      scale: props => spring({ ...props, stiffness: 200, damping: 0 }),
+      backgroundColor: tween
+    })
   }
+};
+
+const Box = styled(posed.div(props))`
+  width: 100px;
+  height: 100px;
+  background: ${color.green};
+  border-radius: 50%;
+  transform: scaleX(0);
+  transform-origin: 50%;
+`;
+
+const code = `alert: {
+  scale: 1.3,
+  backgroundColor: '#f00',
+  transition: eachValue({
+    scale: (props) =>
+      spring({ ...props, stiffness: 200, damping: 0 }),
+    backgroundColor: tween
+  })
 }`;
 
 class Example extends React.Component {
+  state = { isVisible: false };
+
+  componentDidMount() {
+    this.interval = setInterval(this.toggleVisibility, 2000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
+  toggleVisibility = () => this.setState({ isVisible: !this.state.isVisible });
 
   render() {
-    return (null
-    );
+    return <Box pose={this.state.isVisible ? 'alert' : 'rest'} />;
   }
 }
 
 export default () => (
-  <Template code={code} codepen="https://codepen.io/popmotion/pen/Kyewbv?editors=0010">
-    <VerticalCenter>
+  <Template code={code}>
+    <AlignCenter>
       <Example />
-    </VerticalCenter>
+    </AlignCenter>
   </Template>
 );

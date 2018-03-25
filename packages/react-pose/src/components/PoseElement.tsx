@@ -26,6 +26,12 @@ const calcPopFromFlowStyle = (el: HTMLElement): PopStyle => {
 const hasPose = (pose: CurrentPose, key: string) =>
   Array.isArray(pose) ? pose.indexOf(key) !== -1 : pose === key;
 
+const objectToMap = (obj: { [key: string]: any }): Map<string, any> =>
+  Object.keys(obj).reduce((map, key) => {
+    map.set(key, obj[key]);
+    return map;
+  }, new Map());
+
 export class PoseElement extends React.PureComponent<PoseElementProps> {
   props: PoseElementProps;
   poser: Poser;
@@ -120,12 +126,18 @@ export class PoseElement extends React.PureComponent<PoseElementProps> {
   componentDidMount() {
     if (!this.ref) return;
 
-    const { poseProps, onChange, registerChild, parentValues, values } = this.props;
+    const {
+      poseProps,
+      onChange,
+      registerChild,
+      values,
+      parentValues
+    } = this.props;
     const props: PoserProps = {
       ...poseProps,
-      parentValues,
-      values,
       initialPose: this.getInitialPose(),
+      values,
+      parentValues: parentValues ? objectToMap(parentValues) : parentValues,
       onChange
     };
 

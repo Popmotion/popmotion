@@ -44,14 +44,14 @@
     "webpack": "^3.0.0"
   },
   "jest": {
-    "moduleFileExtensions": [
-      "ts",
-      "js"
-    ],
+    "moduleFileExtensions": ["ts", "js"],
     "transform": {
       "\\.(ts)$": "../node_modules/ts-jest/preprocessor.js"
     },
     "testRegex": "/_tests/.*\\.(ts|js)$",
-    "rootDir": "src"
+    "rootDir": "src",
+    "prettier": {
+      "singleQuote": true
+    }
   }
 }

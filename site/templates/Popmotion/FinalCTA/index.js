@@ -1,17 +1,22 @@
-import { Container, Blurb } from './styled';
+import { Container, ContentContainer } from './styled';
+import { BlurbText } from '~/templates/Popmotion/USPs/styled';
 import { CTA } from '../Masthead/styled';
 import Link from 'next/link';
 
 export default () => (
   <Container>
-    <Blurb>
-      Pick and choose any part of Popmotion by importing modules individually.
-    </Blurb>
-    <Blurb>
-      Or take it all for 11.5kb!
-    </Blurb>
-    <CTA>
-      <Link href="/learn/get-started" prefetch><a>Get started</a></Link>
-    </CTA>
+    <ContentContainer>
+      <BlurbText style={{ marginBottom: 40, maxWidth: '600px' }}>
+        Pick and choose any part of Popmotion by importing modules individually.
+      </BlurbText>
+      <BlurbText style={{ marginBottom: 40, maxWidth: '600px' }}>
+        Or take it all for 11.5kb!
+      </BlurbText>
+      <CTA brandFill>
+        <Link href="/learn/get-started" prefetch>
+          <a>Get started</a>
+        </Link>
+      </CTA>
+    </ContentContainer>
   </Container>
 );

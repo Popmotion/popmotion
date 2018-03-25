@@ -199,7 +199,7 @@ const Tick = posed.path({
   }
 });
 
-const xToProgress = pipe(interpolate([100, 0], [1, 0]), clamp(0, 1));
+const xToProgress = pipe(interpolate([110, 20], [1, 0]), clamp(0, 1));
 
 const IconContainer = posed.div({
   passive: {
@@ -218,7 +218,7 @@ const EmailContainer = posed.div({
 
 const EmailContainerInner = posed.div({
   passive: {
-    backgroundColor: ["x", v => (v >= 0 ? "#FF1C68" : "#eee"), true]
+    backgroundColor: ["x", v => (v >= 0 ? "#14D790" : "#fafafa"), true]
   }
 });
 

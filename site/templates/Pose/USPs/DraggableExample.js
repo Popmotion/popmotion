@@ -1,25 +1,67 @@
 import Template from '~/templates/Popmotion/LiveExamples/Template';
-import { Carousel, Item, VerticalCenter } from '~/templates/Popmotion/LiveExamples/styled';
-import { styler, value, listen, pointer, decay, transform } from 'popmotion';
+import {
+  Carousel,
+  Item,
+  AlignCenter
+} from '~/templates/Popmotion/LiveExamples/styled';
+import {
+  styler,
+  value,
+  listen,
+  pointer,
+  decay,
+  spring,
+  transform
+} from 'popmotion';
+import posed from 'react-pose';
+import styled from 'styled-components';
+import { color } from '~/styles/vars';
 
+const props = {
+  draggable: 'x',
+  dragBounds: { left: '-100%', right: '100%' }
+};
+
+const Box = styled(posed.div(props))`
+  width: 100px;
+  height: 100px;
+  background: ${color.brand};
+  transform: scaleX(0);
+  transform-origin: 50%;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+`;
 
 const code = `const props = {
   draggable: 'x',
-  dragBounds: { left: 0, right: 300 }
-}`;
+  dragBounds: { left: '-100%', right: '100%' }
+};`;
 
 class Example extends React.Component {
+  state = { isVisible: false };
+
+  componentDidMount() {
+    this.interval = setInterval(this.toggleVisibility, 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
+  toggleVisibility = () => this.setState({ isVisible: !this.state.isVisible });
 
   render() {
-    return (null
-    );
+    return <Box pose={this.state.isVisible ? 'open' : 'closed'}>Drag</Box>;
   }
 }
 
 export default () => (
-  <Template code={code} codepen="https://codepen.io/popmotion/pen/Kyewbv?editors=0010">
-    <VerticalCenter>
+  <Template code={code}>
+    <AlignCenter>
       <Example />
-    </VerticalCenter>
+    </AlignCenter>
   </Template>
 );

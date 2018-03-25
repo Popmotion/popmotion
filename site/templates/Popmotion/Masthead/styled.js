@@ -1,6 +1,17 @@
-import styled from 'styled-components';
-import { WHITE, BLACK, ACTION_GRADIENT, ACTION_BURN, LIGHT_GREY, UNSKEW, SKEW, cols, media } from '~/styles/vars';
-import { fontSize, fontBold } from '~/styles/fonts';
+import styled, { css } from "styled-components";
+import {
+  WHITE,
+  BLACK,
+  ACTION_GRADIENT,
+  ACTION_BURN,
+  LIGHT_GREY,
+  UNSKEW,
+  SKEW,
+  cols,
+  media,
+  color
+} from "~/styles/vars";
+import { fontSize, fontBold } from "~/styles/fonts";
 
 export const Container = styled.section`
   background: ${({ theme }) => theme.mastheadBackground};
@@ -25,13 +36,40 @@ export const MastheadContainer = styled.section`
   ${media.medium`
     margin: 0 ${cols(2)};
     padding-bottom: ${cols(2)};
-  `}
+  `};
 `;
 
 export const Title = styled.h1`
   display: block;
   overflow: hidden;
   margin-bottom: ${cols(1)};
+`;
+
+export const LogoContainer = styled.div`
+  svg {
+    ${({ width, height }) => `
+      width: ${width}px!important; // eugh
+      height: ${height}px!important;
+    `};
+  }
+
+  ${media.medium`
+    svg {
+      ${({ width, height }) => `
+        width: ${width * 0.75}px!important;
+        height: ${height * 0.75}px!important;
+      `}
+    }
+  `};
+
+  ${media.small`
+    svg {
+      ${({ width, height }) => `
+        width: ${width * 0.6}px!important;
+        height: ${height * 0.6}px!important;
+      `}
+    }
+  `};
 `;
 
 export const LogoText = styled.div`
@@ -79,4 +117,14 @@ export const CTA = styled.div`
       ${fontSize(18)}
     }
   `}
+  
+  ${props =>
+    props.brandFill &&
+    css`
+      background: ${props.theme.actionColor};
+
+      a {
+        color: ${color.white};
+      }
+    `};
 `;

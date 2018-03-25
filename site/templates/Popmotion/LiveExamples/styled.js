@@ -1,12 +1,26 @@
-import styled from 'styled-components';
-import { fontBold, fontSize, lineHeight } from '~/styles/fonts';
-import { cols, WHITE, ENTITY, GREEN, ACTION, BRAND, SUPER_LIGHT_GREY, LIGHT_GREY, SKEW, UNSKEW, media } from '~/styles/vars';
+import styled from "styled-components";
+import { fontBold, fontSize, lineHeight } from "~/styles/fonts";
+import {
+  cols,
+  WHITE,
+  ENTITY,
+  GREEN,
+  ACTION,
+  BRAND,
+  SUPER_LIGHT_GREY,
+  LIGHT_GREY,
+  SKEW,
+  UNSKEW,
+  media
+} from "~/styles/vars";
 
 export const Container = styled.div`
   background: ${SUPER_LIGHT_GREY};
   display: flex;
   margin: ${cols(2)} 0 ${cols(4)};
   position: relative;
+
+  ${media.large`flex-direction: column;`};
 `;
 
 export const ExampleContainer = styled.div`
@@ -14,7 +28,7 @@ export const ExampleContainer = styled.div`
   flex-wrap: nowrap;
   width: 100%;
 
-  ${media.large`flex-wrap: wrap;`}
+  ${media.large`flex-wrap: wrap;`};
 `;
 
 export const LiveExampleContainer = styled.div`
@@ -26,7 +40,9 @@ export const LiveExampleContainer = styled.div`
 
   ${media.large`
     flex: 0 0 100%;
-  `}
+    justify-content: stretch;
+    align-content: stretch;
+  `};
 `;
 
 export const ExamplePositioning = styled.div`
@@ -35,10 +51,10 @@ export const ExamplePositioning = styled.div`
   display: flex;
   perspective: 500px;
   transform-style: preserve-3d;
-  
+
   ${media.large`
     flex: 0 0 100%;
-  `}
+  `};
 `;
 
 export const AlignCenter = ExamplePositioning.extend`
@@ -73,7 +89,7 @@ export const CodePenLink = styled.a`
   right: ${cols(1)};
   transform: skewX(${SKEW});
   padding: 5px 8px;
-  
+
   span {
     color: white;
     display: block;
@@ -84,13 +100,14 @@ export const CodePenLink = styled.a`
 export const CodeContainer = styled.div`
   background: ${LIGHT_GREY};
   border-left: 2px solid ${ENTITY};
+  box-shadow: 100px 0 0 ${LIGHT_GREY};
   transform: skewX(${SKEW});
   flex: 0 0 calc(50% + 30px);
   margin-right: -30px;
   padding-left: ${cols(1)};
   display: flex;
   align-items: center;
-  
+
   pre {
     transform: skewX(${UNSKEW});
     line-height: 18px;
@@ -111,7 +128,7 @@ export const CodeContainer = styled.div`
       transform: none;
       line-height: 18px;
     }
-  `}
+  `};
 `;
 
 export const ExampleItem = styled.div`
@@ -120,8 +137,7 @@ export const ExampleItem = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  ${fontSize(18)}
-  ${fontBold}
+  ${fontSize(18)} ${fontBold}
   cursor: default;
   text-align: center;
 `;
@@ -141,11 +157,11 @@ export const Ball = ExampleItem.extend`
   ${media.medium`
     width: 80px;
     height: 80px;
-  `}
+  `};
 `;
 
 export const Carousel = styled.div`
-  background: rgba(0,0,0,0);
+  background: rgba(0, 0, 0, 0);
   display: flex;
   align-items: stretch;
   height: 150px;
@@ -157,15 +173,15 @@ export const Item = styled.div`
   border-radius: 5px;
   margin-right: ${cols(1)};
   flex: 0 0 110px;
-  
+
   &:nth-child(4n + 2) {
     background: ${GREEN};
   }
-  
+
   &:nth-child(4n + 3) {
     background: ${BRAND};
   }
-  
+
   &:nth-child(4n + 4) {
     background: ${ACTION};
   }
@@ -175,11 +191,11 @@ export const SmallBall = Ball.extend`
   width: 50px;
   height: 50px;
   margin: 0;
-  
+
   ${media.medium`
     width: 50px;
     height: 50px;
-  `}
+  `};
 `;
 
 export const MediumBall = Ball.extend`
@@ -187,15 +203,15 @@ export const MediumBall = Ball.extend`
   height: 75px;
   margin-right: 15px;
   background: ${BRAND};
-  
+
   &:nth-child(4n + 2) {
     background: ${GREEN};
   }
-  
+
   &:nth-child(4n + 3) {
     background: ${ACTION};
   }
-  
+
   &:nth-child(4n + 4) {
     background: ${ENTITY};
   }
@@ -214,7 +230,11 @@ export const ThreeContainer = ExamplePositioning.extend`
 
 export const ModalShade = styled.div`
   opacity: 0;
-  background: radial-gradient(circle at center, rgba(0, 0, 0, 0.4) 0, rgba(0,0,0,0.8) 100%);
+  background: radial-gradient(
+    circle at center,
+    rgba(0, 0, 0, 0.4) 0,
+    rgba(0, 0, 0, 0.8) 100%
+  );
   position: fixed;
   top: 0;
   right: 0;

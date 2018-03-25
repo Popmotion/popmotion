@@ -1,6 +1,7 @@
 import spring from 'popmotion/animations/spring';
 import tween from 'popmotion/animations/tween';
 import action, { Action } from 'popmotion/action';
+import { linear } from 'popmotion/easing';
 import pointer from 'popmotion/input/pointer';
 import { interpolate } from 'popmotion/transformers';
 import { eachValue } from './transition-composers';
@@ -22,7 +23,7 @@ const createPointer = (
   dimensions.measure();
 
   const axisPointer = axisPointerCreator(
-    dimensions.measurementAsPixels(measurement, from, type)
+    dimensions.measurementAsPixels(measurement, from)
   );
   const transformQueue: Array<(v: number) => number> = [];
 
@@ -31,14 +32,14 @@ const createPointer = (
       transformQueue.push((v: number) =>
         Math.max(
           v,
-          dimensions.measurementAsPixels(measurement, dragBounds[min], type)
+          dimensions.measurementAsPixels(measurement, dragBounds[min])
         )
       );
     if (dragBounds[max] !== undefined)
       transformQueue.push((v: number) =>
         Math.min(
           v,
-          dimensions.measurementAsPixels(measurement, dragBounds[max], type)
+          dimensions.measurementAsPixels(measurement, dragBounds[max])
         )
       );
   }
@@ -64,16 +65,24 @@ export const just = (from: RawValue): Action =>
 const underDampedSpring: Transition = ({ from, velocity, to }) =>
   spring({ from, to, velocity, stiffness: 500, damping: 25 });
 const overDampedSpring: Transition = ({ from, velocity, to }) =>
-  spring({ from, to, velocity, stiffness: 700, damping: 35 });
+  spring({ from, to, velocity, stiffness: 700, damping: to === 0 ? 100 : 35 });
+
+const linearTween: Transition = ({ from, to }) =>
+  tween({ from, to, ease: linear });
 
 // TODO: Adjust transitions based on behavioural props
 const intelligentTransition: Transition = eachValue({
   x: underDampedSpring,
   y: underDampedSpring,
   z: underDampedSpring,
+  rotate: underDampedSpring,
+  rotateX: underDampedSpring,
+  rotateY: underDampedSpring,
+  rotateZ: underDampedSpring,
   scaleX: overDampedSpring,
   scaleY: overDampedSpring,
   scale: overDampedSpring,
+  opacity: linearTween,
   default: tween
 });
 
