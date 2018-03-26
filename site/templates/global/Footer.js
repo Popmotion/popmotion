@@ -1,10 +1,10 @@
-import styled from "styled-components";
-import Logo from "~/components/icons/Logo";
-import { fontSize, fontBold } from "~/styles/fonts";
-import { cols, color, media } from "~/styles/vars";
-import themes from "~/styles/themes";
-import { CenteredContent } from "../Popmotion/USPs/styled";
-import SocialLinks from "~/templates/global/SocialLinks";
+import styled from 'styled-components';
+import Logo from '~/components/icons/Logo';
+import { fontSize, fontBold } from '~/styles/fonts';
+import { cols, color, media } from '~/styles/vars';
+import themes from '~/styles/themes';
+import { CenteredContent } from '../Popmotion/USPs/styled';
+import SocialLinks from '~/templates/global/SocialLinks';
 
 const YEAR = new Date().getFullYear();
 
@@ -114,7 +114,7 @@ export default () => (
     <CenteredContent>
       <Header>
         <span />
-        <HeaderText>Libraries to make the web move</HeaderText>
+        <HeaderText>Libraries to move the web</HeaderText>
         <span />
       </Header>
       <LibraryList>
