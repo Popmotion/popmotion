@@ -35,7 +35,7 @@ export default ({
   children,
   title,
   theme,
-  description = settings.siteDescription,
+  description,
   image
 }) => (
   <div>
@@ -45,7 +45,7 @@ export default ({
       <meta name="apple-mobile-web-app-title" content={settings.siteName} />
       <meta property="og:site_name" content={settings.siteName} />
       <meta property="og:title" content={title} />
-      <meta property="og:description" content={description} />
+      <meta property="og:description" content={description || themes[theme].tagline} />
       <meta property="og:image" content={image || themes[theme].shareImage} />
       <meta property="twitter:site" content={settings.twitterUsername} />
       <meta name="twitter:title" content={title} />

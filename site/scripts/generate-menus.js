@@ -23,21 +23,6 @@ module.exports = function (siteMetadata) {
 
       // Iterate over posts
       Object.keys(sectionMetadata)
-      //       .sort((a, b) => {
-      //         const aPost = sectionMetadata[a];
-      //         const bPost = sectionMetadata[b];
-      // console.log(aPost.id, aPost.next, bPost.id, bPost.next)
-      //         // If explicit next, sort
-      //         if (aPost.next || bPost.next) {
-      //           if (aPost.next === bPost.id) {
-      //             return -1;
-      //           } else if (bPost.next === aPost.id) {
-      //             return 1;
-      //           }
-      //         }
-      
-      //         return 0;
-      //       })
         .forEach(postKey => {
           const { id, title, category } = sectionMetadata[postKey];
   
@@ -62,6 +47,51 @@ module.exports = function (siteMetadata) {
             menu.push({ id, title });
           }
         });
+
+      // Sort posts - adapted/butchered from https://blog.theodorejb.me/linked-list-sorting/
+      menu.forEach((menuItem) => {
+        if (menuItem.posts) {
+          const unsortedList = [];
+          const sortedList = [];
+          const map = new Map();
+          let currentPost = null;
+
+          menuItem.posts.forEach((post, i) => {
+            const { next } = sectionMetadata[post.id];
+
+            if (!next || !sectionMetadata[next]) {
+              unsortedList.push(post);
+            } else {
+              const nextIndex = menuItem.posts.findIndex(({ id }) => id === next);
+              const isFirstPost = menuItem.posts.find(({ id }) => {
+                const thisPost = sectionMetadata[id];
+                return post.id === thisPost.next
+              }) === undefined;
+              if (isFirstPost) currentPost = post;
+
+              if (nextIndex > -1) {
+                map.set(post.id, nextIndex);
+              } else {
+                throw new Error(`${post.id} incorrectly linked to ${next}`)
+              }
+            }
+          });
+
+          const numPosts = menuItem.posts.length;
+          const numUnsorted = unsortedList.length;
+          const numToSort = numPosts - numUnsorted;
+
+          if (numToSort && currentPost) {
+            sortedList.push(currentPost);
+            while (sortedList.length < numToSort) {
+              const nextPost = menuItem.posts[map.get(currentPost.id)];
+              sortedList.push(nextPost);
+              currentPost = nextPost;
+            }
+            menuItem.posts = [...sortedList, ...unsortedList];
+          }
+        }
+      });
 
       siteMenu[sectionKey] = menu;
 

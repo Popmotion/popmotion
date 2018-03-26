@@ -7,9 +7,12 @@ next: custom-transitions
 
 # Get started
 
-Pose is a declarative motion system for HTML, SVG and React.
+Pose is a declarative JavaScript motion system for animating the DOM.
 
-It offers the power and flexibility of JavaScript animation via a simple interface that's familiar to anyone who's used CSS transitions.
+It aims to combine the simplicity of CSS transitions with the power and flexibility of Popmotion.
+
+In the following series of tutorials we'll explore Pose's capabilities.
+
 
 Animations can be created by defining states, like this:
 

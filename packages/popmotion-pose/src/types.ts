@@ -24,7 +24,7 @@ export interface Poser {
   has: (poseName: string) => boolean;
   get: () => StateMap;
   measure: () => void;
-  flip: (op: Function) => Promise<any>;
+  flip: (op?: Function) => Promise<any>;
   addChild: (element: Element, props: PoserProps) => Poser;
   removeChild: (poser: Poser) => void;
   clearChildren: () => void;

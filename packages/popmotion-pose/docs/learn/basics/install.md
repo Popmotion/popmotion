@@ -2,7 +2,7 @@
 title: Install React Pose
 description: Overview of React Pose's different installation options.
 category: basics
-next: get-started-react
+next: get-started
 ---
 
 

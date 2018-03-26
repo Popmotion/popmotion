@@ -2,6 +2,12 @@
 
 Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.19] 2018-03-26
+
+### Fixed
+
+- Fixed type error where the `poser.flip` callback was set to mandatory
+
 ## [1.0.18] 2018-03-25
 
 ### Fixed
