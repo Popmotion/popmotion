@@ -8,7 +8,8 @@ import {
   PoserPassive,
   PoseDrag,
   PoserManualValues,
-  PoseOpacity
+  PoseOpacity,
+  PoseFullScreenFlip
 } from "./plugins/pose";
 import {
   ReactPose,
@@ -23,7 +24,8 @@ storiesOf("Plugin: Pose", module)
   .add("passive values", () => <PoserPassive />)
   .add("manual values", () => <PoserManualValues />)
   .add("drag", () => <PoseDrag />)
-  .add("opacity", () => <PoseOpacity />);
+  .add("opacity", () => <PoseOpacity />)
+.add('full screen flip', () => <PoseFullScreenFlip />);
 
 storiesOf("Plugin: React Pose", module)
   .add("pose", () => <ReactPose />)

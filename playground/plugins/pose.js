@@ -330,3 +330,46 @@ export class PoseDrag extends React.PureComponent {
     return <Box innerRef={this.setRef} />;
   }
 }
+
+const Container = styled.div`
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
+export class PoseFullScreenFlip extends React.PureComponent {
+  isOpen = false;
+
+  setRef = ref => {
+    if (ref) {
+      this.poser = pose(ref, {
+        fullscreen: {
+          width: '100%',
+          height: '100%',
+          transition: tween
+        },
+        thumbnail: {
+          width: 100,
+          height: 100,
+          transition: tween
+        }
+      });
+    } else {
+      this.poser.destroy();
+    }
+  };
+
+  toggle = () => {
+    this.poser.set(this.isOpen ? 'thumbnail' : 'fullscreen')
+    this.isOpen = !this.isOpen
+  }
+
+  render() {
+    return (<Container>
+      <Box innerRef={this.setRef} onClick={this.toggle} />
+    </Container>);
+  }
+}
+

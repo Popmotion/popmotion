@@ -6,6 +6,8 @@ category: plugins
 
 # Popmotion x React
 
+**Deprecated in favour of [Pose](/pose)**
+
 Popmotion x React provides a declarative interface to use Popmotion's animation and input tracking with any React component.
 
 It uses the "function as children" pattern, so you can create declarative interactions with the DOM, SVG, Three.js, A-Frame, Pixi... anything that has a React wrapper available.

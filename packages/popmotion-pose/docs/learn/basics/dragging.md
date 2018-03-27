@@ -37,7 +37,7 @@ const props = {
 
 ## Drag boundaries
 
-We can add drag boundaries with the `dragBounds` property. It accepts `top`, `left`, `bottom` and/or `right`, measured in pixels:
+We can add drag boundaries with the `dragBounds` property. It accepts `top`, `left`, `bottom` and/or `right`, measured in pixels or percentages:
 
 ```javascript
 const props = {
@@ -106,4 +106,4 @@ It's important to note that `onChange` can only be defined once, when the compon
 
 ## Next
 
-So far we've covered animations and interactions, active stuff. Next, we'll take a look at some values who prefer to sit back and relax. [Passive values](/pose/learn/passive)
+So far we've covered animations and interactions, active stuff. Next, we'll take a look at some values who prefer to sit back, relax, and only change when others do.

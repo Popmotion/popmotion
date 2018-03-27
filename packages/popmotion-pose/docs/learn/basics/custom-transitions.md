@@ -110,6 +110,22 @@ setTimeout(() => boxPoser.set('rest'), 2000)
 
 Try changing the timeout duration. The box will animate smoothly from any point, even though the "alert" animation didn't end on its `to` value. And because `scale` uses a spring animation by default, it also maintains some of the property's velocity.
 
+### User-generated `props`
+
+This `props` object can also contain variables set by you when the pose changes.
+
+In Pose, `set` accepts an optional second argument of props:
+
+```javascript
+poser.set('poseName', { customProp: true })
+```
+
+In React Pose, props set on the component are forwarded to the `transition` function:
+
+```javascript
+<PosedComponent pose="poseName" customProp={true} />
+```
+
 ## Next
 
 So far, we've shown how simple it is to animate a single element.

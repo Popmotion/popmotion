@@ -18,7 +18,7 @@ type ComponentFactory = (
 const componentCache = new Map<string, ComponentFactory>();
 
 const createComponentFactory = (key: string) => {
-  const componentFactory: ComponentFactory = poseProps => ({
+  const componentFactory: ComponentFactory = (poseProps = {}) => ({
     withParent = true,
     ...props
   }) =>

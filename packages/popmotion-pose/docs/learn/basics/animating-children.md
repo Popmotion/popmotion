@@ -75,51 +75,63 @@ const sidebar = document.querySelector('.sidebar')
 const items = sidebar.querySelectorAll('.item')
 ```
 
-To make a poser for sidebar, we'll do this exactly as in the previous tutorials:
+We'll make a poser exactly as before:
 
 ```javascript
 const sidebarPoser = pose(sidebar, sidebarProps)
 ```
 
-THe 
-
-
-We want to set the item posers up as children of the `sidebarPoser`. Instead of constructing them with `pose`, we can use a poser method called `addChild`.
-
-It works the exact same way except it also creates a parent-child relationship between the two posers:
+To create new posers as children of `sidebarPoser`, we'll use its `addChild` method instead of `pose`:
 
 ```javascript
-items.forEach(item => sidebarPoser.addChild(item, itemProps))
+const itemPosers = Array.from(items).map(
+  item => sidebarPoser.addChild(item, itemProps)
+)
 ```
 
-Now, firing the animation is the same as before:
+The returned posers are now children of `sidebarPoser`.
+
+Setting a pose on all of these posers is exactly the same as before:
 
 ```javascript
 sidebarPoser.set('open')
 ```
 
-[See the final product](https://codepen.io/popmotion/pen/LdybdN?editors=0010)
+This pose will be set both on the parent **and any children that also contain this pose**. You could even set children on all the `itemPosers` in the same way and trigger animations on those too.
+
+<CodePen id="LdybdN" />
 
 ### React
 
 In React, things are slightly different. We don't need to select any elements or call `addChild` because React is totally declarative and so are our posed components.
 
-Instead, we need to make our `Sidebar` and `Item` components:
+Instead, the parent-child relationship is inferred by the component hierarchy.
+
+Let's make our `Sidebar` and `Item` posed components:
 
 ```javascript
 const Sidebar = posed.ul(sidebarProps)
 const Item = posed.li(itemProps)
 ```
 
-In React Pose, whenever a posed component is created as a child of another, they automatically bind as parent-child. So if we make `Item` the child of `Sidebar`, we only need to set `pose` on `Sidebar` for all the components down the tree to animate:
+Now, when we set a pose on the parent component, it is also triggered on all child components that contain this same pose. Replace the `Example` component's render function with this:
 
 ```javascript
-({ isOpen, items }) => (
-  <Sidebar pose={isOpen ? 'open' : 'closed'}>
-    {items.map(() => <Item />)}
-  </Sidebar>
-)
+render() {
+  const { isOpen } = this.state;
+
+  return (
+    <Sidebar className="sidebar" pose={isOpen ? 'open' : 'closed'}>
+      <Item className="item" />
+      <Item className="item" />
+      <Item className="item" />
+      <Item className="item" />
+    </Sidebar>
+  );
+}
 ```
+
+<CodePen id="yKbawK" />
 
 It's important to note that the posed children **don't need to be direct descendants** of the parent. They can appear anywhere down the tree and the relationship will still be formed.
 
@@ -129,8 +141,6 @@ This can be blocked by setting `withParent={false}`:
 // Will not respond to pose changes on parent
 <Item withParent={false} />
 ```
-
-[See the final product](https://codepen.io/popmotion/pen/yKbawK?editors=0010)
 
 ## Delay and stagger children
 

@@ -14,6 +14,10 @@ import { Styler } from 'stylefire';
 export { Dimensions };
 export { Action };
 
+const ORIGIN_START = 0;
+const ORIGIN_CENTER = '50%';
+const ORIGIN_END = '100%';
+
 type SetValueProps = {
   values: ValueMap;
   elementStyler: Styler;
@@ -25,6 +29,11 @@ type FlipPose = {
   x?: number;
   y?: number;
 };
+
+const findCenter = ({ top, right, bottom, left }: BoundingBox) => ({
+  x: (left + right) / 2,
+  y: (top + bottom) / 2
+});
 
 const positionalProps = new Set([
   'width',
@@ -89,7 +98,6 @@ const implicitlyFlipPose = (state: PoseSetterFactoryProps, nextPose: Pose) => {
   const { dimensions, element, elementStyler } = state;
   if (!dimensions.has()) return {};
 
-  const flipPoseProps: FlipPose = {};
   const prev = dimensions.get() as BoundingBox;
 
   const transform = (element as HTMLElement).style.transform;
@@ -97,6 +105,20 @@ const implicitlyFlipPose = (state: PoseSetterFactoryProps, nextPose: Pose) => {
   const next = element.getBoundingClientRect();
   (element as HTMLElement).style.transform = transform;
 
+  // Find transform origin based on x/y delta
+  const originX =
+    prev.top === next.top ? ORIGIN_START : prev.bottom === next.bottom ? ORIGIN_END : ORIGIN_CENTER;
+
+  const originY =
+    prev.left === next.left ? ORIGIN_START : prev.right === next.right ? ORIGIN_END : ORIGIN_CENTER;
+
+  // Set transform origin
+  elementStyler.set({ transformOrigin: `${originX} ${originY}` });
+
+  // Create target values
+  const flipPoseProps: FlipPose = {};
+
+  // Set initial offsets to replicate previous position with transforms
   if (prev.width !== next.width) {
     setValue(state, 'scaleX', prev.width / next.width);
     flipPoseProps.scaleX = 1;
@@ -107,25 +129,18 @@ const implicitlyFlipPose = (state: PoseSetterFactoryProps, nextPose: Pose) => {
     flipPoseProps.scaleY = 1;
   }
 
-  if (prev.top !== next.top) {
-    setValue(state, 'x', prev.left - next.left);
+  const prevCenter = findCenter(prev);
+  const nextCenter = findCenter(next);
+
+  if (originX === ORIGIN_CENTER) {
+    setValue(state, 'x', prevCenter.x - nextCenter.x);
     flipPoseProps.x = 0;
   }
 
-  if (prev.top !== next.top) {
-    setValue(state, 'y', prev.top - next.top);
+  if (originY === ORIGIN_CENTER) {
+    setValue(state, 'y', prevCenter.y - nextCenter.y);
     flipPoseProps.y = 0;
   }
-
-  const originX =
-    prev.top === next.top ? 0 : prev.bottom === next.bottom ? '100%' : '50%';
-
-  const originY =
-    prev.left === next.left ? 0 : prev.right === next.right ? '100%' : '50%';
-
-  (elementStyler.set({
-    transformOrigin: `${originX} ${originY}`
-  }) as Styler).render();
 
   return {
     ...nextPose,
