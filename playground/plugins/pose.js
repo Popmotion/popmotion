@@ -293,6 +293,26 @@ export class PoserFLIP extends React.Component {
   }
 }
 
+export class PoseOpacity extends React.PureComponent {
+  setRef = ref => {
+    if (ref) {
+      this.poser = pose(ref, {
+        visible: { opacity: 1 },
+        hidden: { opacity: 0 }
+      });
+      this.poser.set("hidden");
+    } else {
+      this.poser.destroy();
+    }
+  };
+
+  componentDidMount() {}
+
+  render() {
+    return <Box innerRef={this.setRef} />;
+  }
+}
+
 export class PoseDrag extends React.PureComponent {
   setRef = ref => {
     if (ref) {
@@ -305,6 +325,7 @@ export class PoseDrag extends React.PureComponent {
       this.poser.destroy();
     }
   };
+
   render() {
     return <Box innerRef={this.setRef} />;
   }

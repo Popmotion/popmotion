@@ -8,7 +8,7 @@ import {
   OnChangeMap
 } from '../types';
 import { getPoseValues } from '../inc/selectors';
-import { degrees, percent, px, ValueType } from 'style-value-types';
+import { number, degrees, percent, px, ValueType } from 'style-value-types';
 import { pipe } from 'popmotion/transformers';
 import value, { ValueReaction } from 'popmotion/reactions/value';
 import { Styler } from 'stylefire';
@@ -17,7 +17,7 @@ export type ValuesAndTypesFactory = (
   props: ValuesFactoryProps
 ) => ValuesAndTypes;
 
-const valueTypeTests = [degrees, percent, px];
+const valueTypeTests = [number, degrees, percent, px];
 const testValueType = (v: any) => (type: ValueType) => type.test(v);
 
 const getInitialValue = (
@@ -52,15 +52,18 @@ const createValues = (
     thisValue = userSetValues[key];
     type = valueTypeTests.find(testValueType(thisValue.get()));
 
-  // Else create a new value
+    // Else create a new value
   } else {
-    thisValue = value(getInitialValue(poses, key, initialPose, styler));
+    const initialValue = getInitialValue(poses, key, initialPose, styler);
     type = valueTypeTests.find(testValueType(pose[key]));
+    thisValue = value(
+      type === number ? type.parse(initialValue) : initialValue
+    );
   }
 
   values.set(key, thisValue);
   thisValue.subscribe((v: any) => styler.set(key, v));
-  if (type) types.set(key, type);
+  if (type && type !== number) types.set(key, type);
 };
 
 const scrapeValuesFromPose = (

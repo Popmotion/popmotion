@@ -2,6 +2,12 @@
 
 Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.20] 2018-03-26
+
+### Fixed
+
+- Now parsing numerical values from Stylefire from string to number.
+
 ## [1.0.19] 2018-03-26
 
 ### Fixed

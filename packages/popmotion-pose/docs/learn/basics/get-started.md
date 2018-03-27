@@ -7,84 +7,79 @@ next: custom-transitions
 
 # Get started
 
-Pose is a declarative JavaScript motion system for animating the DOM.
+Pose is a declarative motion system for the web.
 
-It aims to combine the simplicity of CSS transitions with the power and flexibility of Popmotion.
+It intends to combine the simplicity of CSS transitions with the power and flexibility of Popmotion.
 
-In the following series of tutorials we'll explore Pose's capabilities.
+In this series of tutorials, we'll gradually introduce each of Pose's features. Starting with implementing this very simple `opacity` animation:
 
+<CodePen id="LdOpaN" />
 
-Animations can be created by defining states, like this:
+## Setup
 
-```javascript
-const props = {
-  open: { scaleX: 1 },
-  closed: { scaleX: 0 }
-}
-```
+The easiest way to play around with Pose is to [use this CodePen playground](https://codepen.io/popmotion/pen/bvqJbV?editors=0010).
 
-With these props, we can define a **poser** that will animate to each state:
+For local development, all installation options can be found on the [install](/pose/api/install) page.
 
-```javascript
-// Plain JavaScript
-const poser = pose(element, props)
-poser.set('closed')
+## The "Hello World" animation
 
-// React
-const Component = posed.div(props)
-({ isOpen }) => <Component pose={isOpen ? 'open' : 'closed'} />
-```
-
-## The "Hello world" animation
-
-The easiest way to play around with Pose is to [use this CodePen playground](https://codepen.io/popmotion/pen/bvqJbV?editors=0010) to follow along with this tutorial.
-
-Full installation options can be found on the [install](/pose/api/install) page.
-
-Pose describes all animations in a `props` object. Like CSS, we use this object to describe the possible states (or "poses") that our element can be in:
+Animations in Pose are created by defining states, like this:
 
 ```javascript
-const props = {
+const poseProps = {
   visible: { opacity: 1 },
   hidden: { opacity: 0 }
 }
 ```
 
-To make an element animate between these two states, we pass the element and the `props` object to Pose's [`pose` function](/pose/api/pose):
+This `poseProps` object is at the heart of both Pose and React Pose. Like CSS, we use this object to describe the possible states (or **poses**) that our element can be in.
+
+How we actually use these props differs slightly between Pose and React Pose:
+
+### Pose
+
+With vanilla Pose, we use the [`pose` function](/pose/api/pose) to create a **poser**:
 
 ```javascript
-const boxPoser = pose(box, props)
+const poser = pose(element, poseProps)
 ```
 
-Now we can call `boxPoser`'s `set` method with either of our defined poses, and Pose will automatically animate between them:
+We can now use `poser`'s `set` method with the name a defined pose:
 
 ```javascript
-boxPoser.set('hidden')
+poser.set('hidden')
 ```
 
 ### React
 
-For React users, React Pose exposes the [`posed` function](/pose/api/posed). It creates components change their pose based on the current `pose` prop.
+You can play with React Pose with the [React Pose playground](https://codepen.io/popmotion/pen/mxmrPZ?editors=0010).
 
-You can use the [React Pose playground](https://codepen.io/popmotion/pen/mxmrPZ?editors=0010) to follow along.
-
-With the same props as before, make a new component:
+React Pose exposes the [`posed` function](/pose/api/posed). Similar to [Styled Components'](https://styled-components.com) `styled` function, this creates reusable React components:
 
 ```javascript
-const Component = posed.div(props)
+const Box = posed.div(poseProps)
 ```
 
-Above, we've called `posed.div` to create a `div`, but you can use any HTML or SVG element.
+By calling `posed.div` we've created a component that will output a `div`, but you can use the name of any HTML or SVG element.
 
-Now, replace `return null` on line 12 with our new component:
+To animate this component between poses, we simply pass a `pose` prop on render:
 
 ```javascript
-return <Component pose={this.state.isVisible ? 'visible' : 'hidden'} />
+render() {
+  return (
+    <Box
+      className="box"
+      pose={this.state.isVisible ? 'visible' : 'hidden'}
+    />
+  )
+}
 ```
 
-## But wait, where was the animation?
+## But wait, where did we define the animation?
 
-By default, Pose doesn't require you to explicitly define the animations used to transition between two states.
+Short answer: we didn't.
+
+More helpful answer: By default, Pose **doesn't require you to explicitly define the animations** used to transition between two states.
 
 Instead, it automatically selects a Popmotion animation based on the property being animated:
 
@@ -92,6 +87,8 @@ Instead, it automatically selects a Popmotion animation based on the property be
 - `scale` props use a [tight spring](/api/spring).
 - All other props use a [tween](/api/tween).
 
-These animations have been selected to create snappy and playful interfaces. In the near future, it will be possible to affect these animations by using properties to describe the **characteristics** of the interface.
+These animations have been selected to create snappy and playful interfaces. Physical motion uses `spring` to maintain velocity between animations.
 
-However, there's plenty of situations where we need greater control. For that, we can define [custom transitions](/pose/learn/custom-transitions).
+In the near future, it will be possible to affect these default animations by using properties to describe the **characteristics** of the interface.
+
+However, there will always be situations where we need greater control. For that, we can define [custom transitions](/pose/learn/custom-transitions).

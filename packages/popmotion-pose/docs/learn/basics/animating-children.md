@@ -7,9 +7,9 @@ next: dragging
 
 # Animating children
 
-Animating multiple elements with Pose is as simple as animating just one.
+Traditionally, coordinating animation across multiple children has been an involved process. Especially with React.
 
-In vanilla Pose, it looks like this:
+With Pose, it's as simple as animating just one. In vanilla Pose, it looks like this:
 
 ```javascript
 parent.set('poseName')
@@ -25,13 +25,24 @@ And in React Pose, like this:
 )
 ```
 
+Here's how:
+
 ## Setup
 
-To demonstrate animating children, we're going to create this sidebar animation:
+To demonstrate animating children, we're going to create this sidebar animation (press 'rereun' in the lower-right of the `iframe` if the animation has already played):
 
 <CodePen id="yKbawK" />
 
-First, we need to describe two poses, "open" and "closed", for both the sidebar and the items within it:
+We've created these two CodePen templates for you to use to follow along:
+
+- [Pose](https://codepen.io/popmotion/pen/eMeGeE?editors=0010)
+- [React Pose](https://codepen.io/popmotion/pen/LdOzzJ?editors=0010)
+
+## Pose props
+
+First, we need to describe two poses, "open" and "closed", for both the sidebar and the items within it.
+
+At the top of your editor, define the poses:
 
 ```javascript
 const sidebarProps = {
@@ -46,25 +57,32 @@ const itemProps = {
 }
 ```
 
-How we set the children up varies whether we're using vanilla DOM or React:
+Here, we've defined an `initialPose`. This is only necessary for vanilla Pose, as React Pose will automatically use the `pose` it's mounted with.
 
-- [DOM](#dom)
-- [React](#react)
+## Children
 
-### DOM
+How we set the children up varies whether we're using vanilla Pose or React Pose:
+
+- [Pose](#animating-children-children-pose)
+- [React Pose](#animating-children-children-react)
+
+### Pose
 
 With Popmotion Pose, we need to select the elements we're going to animate.
 
 ```javascript
 const sidebar = document.querySelector('.sidebar')
-const items = Array.from(sidebar.querySelectorAll('.item'))
+const items = sidebar.querySelectorAll('.item')
 ```
 
-Then make posers for all of them. For the sidebar, we'll do this exactly as in the previous tutorials:
+To make a poser for sidebar, we'll do this exactly as in the previous tutorials:
 
 ```javascript
 const sidebarPoser = pose(sidebar, sidebarProps)
 ```
+
+THe 
+
 
 We want to set the item posers up as children of the `sidebarPoser`. Instead of constructing them with `pose`, we can use a poser method called `addChild`.
 

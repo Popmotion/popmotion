@@ -37,13 +37,13 @@ export default () => (
       </Example>
       <Example
         title="Orchestrate"
-        description="Pose's parent-child system makes coordinating animations across multiple elements as simple as just one."
+        description="Pose's parent-child system makes quick work of coordinating animations across multiple elements."
       >
         <ChildrenExample />
       </Example>
       <Example
         title="Interactivity"
-        description="Draggable elements are just a prop away, with more options to come."
+        description="Draggable elements are just a prop away, with more options coming soon."
       >
         <DraggableExample />
       </Example>

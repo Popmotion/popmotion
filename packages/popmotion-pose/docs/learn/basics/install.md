@@ -1,28 +1,32 @@
 ---
-title: Install React Pose
-description: Overview of React Pose's different installation options.
+title: Install
+description: Overview of Pose's installation options.
 category: basics
 next: get-started
 ---
 
+# Install
 
-# Install Pose
+- [Pose](#install-pose)
+- [React Pose](#install-react-pose)
 
-## Package managers
+## Pose
 
-### npm
+### Package managers (recommended)
+
+#### npm
 
 ```bash
 npm install popmotion-pose --save
 ```
 
-### yarn
+#### yarn
 
 ```bash
 yarn add popmotion-pose
 ```
 
-## File include
+### File include
 
 **Note:** The Pose documentation uses the `import` syntax for importing individual modules.
 
@@ -32,11 +36,11 @@ So, when you see in the docs `import pose from 'popmotion-pose'`, you can instea
 
 [Popmotion](https://popmotion.io) is also included with the minified file as a global `popmotion` variable.
 
-### Download
+#### Download
 
 You can download the latest version of Pose at https://unpkg.com/popmotion-pose/dist/popmotion-pose.js
 
-### `script` include
+#### `script` include
 
 You can include it in your HTML with this `script` tag:
 
@@ -50,37 +54,39 @@ You can fork the [Popmotion Pose playground on CodePen](https://codepen.io/popmo
 
 You an also add Pose to any existing CodePen project by clicking on Settings > JavaScript and then pasting `https://unpkg.com/popmotion-pose/dist/popmotion-pose.js` into the "Add External JavaScript" field.
 
-# Install React Pose
+## React Pose
 
 **React Pose requires React 16.3.0.**
 
-## Package managers
+### Package managers (recommended)
 
-### npm
+#### npm
 
 ```bash
 npm install react-pose --save
 ```
 
-### yarn
+#### yarn
 
 ```bash
 yarn add react-pose
 ```
 
-## File include
+### File include
 
 **Note:** The Pose documentation uses the `import` syntax for importing individual modules.
 
-**If you use one of the following installation methods, React Pose will be available as the global `posed` function and `PoseGroup` component.**
+**If you use one of the following installation methods, top-level React Pose exports will be available as the global `posed` and `PoseGroup` variables.**
 
-So, when you see in the docs `import posed from 'react-pose'`, you can instead simply use the global `posed` variable.
+So, when you see in the docs `import posed, { PoseGroup } from 'react-pose'`, you can instead simply use the global `posed` and `PoseGroup` variables.
 
-### Download
+[Popmotion](https://popmotion.io) is also included with the minified file as a global `popmotion` variable.
+
+#### Download
 
 You can download the latest version of Pose at https://unpkg.com/react-pose/dist/react-pose.js
 
-### `script` include
+#### `script` include
 
 You can include it in your HTML with this `script` tag:
 
@@ -90,6 +96,6 @@ You can include it in your HTML with this `script` tag:
 
 ### CodePen
 
-You can fork the [React Pose playground on CodePen](CREATE PLAYGROUND), which is set up with the latest version of Pose.
+You can fork the [React Pose playground on CodePen](https://codepen.io/popmotion/pen/mxmrPZ?editors=0010), which is set up with the latest version of React Pose.
 
 You an also add React Pose to any existing CodePen project by clicking on Settings > JavaScript and then pasting `https://unpkg.com/react-pose/dist/react-pose.js` into the "Add External JavaScript" field.

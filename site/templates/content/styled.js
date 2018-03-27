@@ -1,9 +1,9 @@
-import styled from "styled-components";
-import { fontSize } from "~/styles/fonts";
-import { cols, BLACK, LIGHT_GREY, BRAND } from "~/styles/vars";
-import { htmlUnencode } from "~/utils/string";
-import SiteLink from "~/components/layout/SiteLink";
-import { Centered } from "~/templates/global/grid";
+import styled from 'styled-components';
+import { fontSize, fontBold } from '~/styles/fonts';
+import { cols, BLACK, LIGHT_GREY, BRAND } from '~/styles/vars';
+import { htmlUnencode } from '~/utils/string';
+import SiteLink from '~/components/layout/SiteLink';
+import { Centered } from '~/templates/global/grid';
 
 const ImgFrame = styled.span`
   max-width: ${cols(43)};
@@ -40,8 +40,23 @@ export const NextLinkContainer = styled(Centered)`
   padding-bottom: ${cols(2)};
   display: flex;
   justify-content: flex-end;
+
+  a {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    font-size: 28px;
+    ${fontBold};
+
+    span {
+      font-size: 18px;
+      font-weight: normal;
+    }
+  }
 `;
 
 export const NextLink = styled(SiteLink)`
   display: block;
 `;
+
+export const NextLinkSmall = styled.span``;

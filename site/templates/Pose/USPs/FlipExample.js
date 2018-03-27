@@ -4,7 +4,7 @@ import {
   Item,
   AlignCenter
 } from '~/templates/Popmotion/LiveExamples/styled';
-import { styler, value, listen, pointer, decay, transform } from 'popmotion';
+import { tween, value, listen, pointer, decay, transform } from 'popmotion';
 import posed from 'react-pose';
 import styled from 'styled-components';
 import pose from 'popmotion-pose';
@@ -50,13 +50,18 @@ const modalProps = {
 };
 const modalItemProps = {
   initialPose: 'itemsOut',
+  flip: {
+    transition: tween
+  },
   itemsOut: {
     x: -50,
-    opacity: 0
+    opacity: 0,
+    transition: tween
   },
   itemsIn: {
     x: 0,
-    opacity: 1
+    opacity: 1,
+    transition: tween
   }
 };
 
