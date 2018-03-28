@@ -1,12 +1,12 @@
-import Link from "next/link";
-import styled, { withTheme } from "styled-components";
-import SectionNav from "./SectionNav";
-import SocialLinks from "~/templates/global/SocialLinks";
-import Logo from "~/components/icons/Logo";
-import Icon from "~/components/icons/PopmotionIcon";
-import settings from "~/data/settings.json";
-import { cols, media } from "~/styles/vars";
-import { Centered } from "~/templates/global/grid";
+import Link from 'next/link';
+import styled, { withTheme } from 'styled-components';
+import SectionNav from './SectionNav';
+import SocialLinks from '~/templates/global/SocialLinks';
+import Logo from '~/components/icons/Logo';
+import Icon from '~/components/icons/PopmotionIcon';
+import settings from '~/data/settings.json';
+import { cols, media } from '~/styles/vars';
+import { Centered } from '~/templates/global/grid';
 
 const HeaderContainer = styled.nav`
   display: flex;
@@ -18,10 +18,10 @@ const HeaderContainer = styled.nav`
   height: 91px;
   background: ${props =>
     props.isHomepage
-      ? "linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0))"
-      : "none"};
+      ? 'linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0))'
+      : 'none'};
 
-  ${media.medium`
+  ${media.large`
     margin-bottom: ${cols(2)};
     height: 87px;
   `} ${media.small`
@@ -35,7 +35,7 @@ const HeaderContainer = styled.nav`
 const NavArea = styled.nav`
   display: flex;
   align-items: center;
-  ${props => !props.isHomepage && "position: absolute;"} top: 50%;
+  ${props => !props.isHomepage && 'position: absolute;'} top: 50%;
   transform: translateY(-50%);
 `;
 
@@ -57,7 +57,7 @@ const LogoArea = NavArea.extend`
 
 const SectionNavArea = Centered.extend`
   width: 100%;
-  ${media.medium`margin-left: ${cols(1)};`} ${props =>
+  ${media.large`margin-left: ${cols(1)};`} ${props =>
     props.isHomepage &&
     `
     margin: 0;
@@ -73,7 +73,7 @@ const SectionNavArea = Centered.extend`
 const SocialArea = NavArea.extend`
   right: ${cols(2)};
 
-  ${media.small`
+  ${media.medium`
     display: none;
   `};
 `;

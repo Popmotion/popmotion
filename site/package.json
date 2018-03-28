@@ -61,8 +61,8 @@
     "babel-plugin-styled-components": "^1.1.4",
     "marksy": "^5.0.0",
     "next": "^4.2.1",
-    "popmotion-pose": "^1.0.16",
-    "react-pose": "^0.1.7",
+    "popmotion-pose": "^1.0.24",
+    "react-pose": "^1.0.1",
     "s3": "^4.4.0"
   },
   "version": "7.0.0",

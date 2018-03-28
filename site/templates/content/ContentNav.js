@@ -20,14 +20,16 @@ export const ContentNavArea = Centered.extend`
     border: 1px solid ${ENTITY};
     margin-top: 0;
     margin-bottom: ${cols(2)};
-  `}
+  `};
 `;
 
 const CategoryContainer = styled.li`
-  margin-bottom: ${cols(2)}
+  margin-bottom: ${cols(2)};
 `;
 
-const selectable = ({ isSelected }) => (isSelected) && css`
+const selectable = ({ isSelected }) =>
+  isSelected &&
+  css`
   a {
     ${fontBold}
     color: ${ENTITY};
@@ -49,13 +51,10 @@ const CategoryTitle = styled.h2`
 `;
 
 const MenuItem = styled.li`
-  ${fontSize(14)}
-  ${lineHeight(18)}
+  ${fontSize(14)} ${lineHeight(18)}
   margin-bottom: 5px;
   margin-left: ${cols(1)};
-  ${selectable}
-
-  a {
+  ${selectable} a {
     text-decoration: none;
 
     &:hover {
@@ -87,9 +86,9 @@ const MenuToggle = styled.div`
 const Menu = styled.ul`
   padding-left: ${cols(2)};
   ${media.large`
-    display: ${({ isOpen }) => isOpen ? 'block' : 'none'};
+    display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
     padding-top: ${cols(1)};
-  `}
+  `};
 `;
 
 const DropDownMenuIcon = styled(DropDownArrow)`
@@ -97,10 +96,8 @@ const DropDownMenuIcon = styled(DropDownArrow)`
   right: ${cols(1)};
   top: 50%;
   margin-top: -5px;
-  ${({ isOpen }) => isOpen && 'transform: rotate(180deg);'}
-
-  display: none;
-  ${media.large`display: block;`}
+  ${({ isOpen }) => isOpen && 'transform: rotate(180deg);'} display: none;
+  ${media.large`display: block;`};
 `;
 
 const Item = ({ id, title, contentId, section }) => (
@@ -114,44 +111,51 @@ const Item = ({ id, title, contentId, section }) => (
 const Category = ({ id, title, contentId, content, section, posts }) => (
   <CategoryContainer>
     <CategoryTitle isSelected={id === contentId}>
-      {(content[id]) ? (
+      {content[id] ? (
         <SiteLink href={`/${section}/${id}`}>
           <a>{title}</a>
         </SiteLink>
-      ) : title}
+      ) : (
+        title
+      )}
     </CategoryTitle>
     {posts ? (
       <ul>
-        {posts.map((post) => <Item key={post.id} {...post} contentId={contentId} section={section} />)}
+        {posts.map(post => (
+          <Item
+            key={post.id}
+            {...post}
+            contentId={contentId}
+            section={section}
+          />
+        ))}
       </ul>
     ) : null}
   </CategoryContainer>
 );
 
 class ContentNav extends React.PureComponent {
-  state = {
-    isOpen: false
-  };
-
-  toggleMenu = () => {
-    const { isOpen } = this.state;
-    this.setState({ isOpen: !isOpen });
-  };
-
   render() {
-    const { isOpen } = this.state;
-    const { section, id, theme } = this.props;
+    const { section, id, theme, isOpen, toggleMenu } = this.props;
     const menu = theme.data.menus[section];
     const content = theme.data.content[section];
 
     return (
-      <ContentNavArea>
-        <MenuToggle onClick={this.toggleMenu}>
+      <ContentNavArea pose={isOpen ? 'open' : 'closed'}>
+        <MenuToggle onClick={toggleMenu}>
           {sectionNames[section]}
           <DropDownMenuIcon isOpen={isOpen} />
         </MenuToggle>
         <Menu isOpen={isOpen}>
-          {menu.map((category) => <Category key={category.id} {...category} content={content} contentId={id} section={section} />)}
+          {menu.map(category => (
+            <Category
+              key={category.id}
+              {...category}
+              content={content}
+              contentId={id}
+              section={section}
+            />
+          ))}
         </Menu>
       </ContentNavArea>
     );
