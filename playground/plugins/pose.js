@@ -218,6 +218,9 @@ const Modal = styled.div`
 const modalProps = {
   itemsOut: {
     staggerChildren: 50
+  },
+  flip: {
+    transition: (props) => tween({ ...props, duration: 3000 })
   }
 };
 const modalItemProps = {
@@ -276,6 +279,10 @@ export class PoserFLIP extends React.Component {
 
   componentWillUnmount() {
     clearInterval(this.interval);
+  }
+
+  componentWillUpdate() {
+    this.modalPoser.measure()
   }
 
   componentDidUpdate() {

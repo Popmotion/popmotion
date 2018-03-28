@@ -62,6 +62,7 @@ const mergeChildren = ({
       : moving.has(child.key as string) && flipMove
         ? { pose: [enterPose, 'flip'] }
         : { pose: enterPose };
+
     children.push(cloneElement(child, newChildProps));
   });
 

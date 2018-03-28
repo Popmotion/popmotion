@@ -153,8 +153,7 @@ export class PoseElement extends React.PureComponent<PoseElementProps> {
     }
   }
 
-  // TODO: Replace with a non-deprecated method
-  componentWillUpdate({ pose, resize }: PoseElementProps) {
+  UNSAFE_componentWillUpdate({ pose }: PoseElementProps) {
     if (hasPose(pose, 'flip')) this.poser.measure();
   }
 

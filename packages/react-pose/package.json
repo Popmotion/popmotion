@@ -1,6 +1,6 @@
 {
   "name": "react-pose",
-  "version": "0.1.7",
+  "version": "1.0.0",
   "description": "A declarative animation library for React",
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
@@ -31,8 +31,8 @@
     "env"
   ],
   "peerDependencies": {
-    "react": "^16.3.0-alpha.2",
-    "react-dom": "^16.3.0-alpha.2"
+    "react": "^16.3.0-rc.0",
+    "react-dom": "^16.3.0-rc.0"
   },
   "devDependencies": {
     "prettier": "1.11.1",
@@ -40,9 +40,7 @@
     "webpack": "^3.11.0"
   },
   "dependencies": {
-    "popmotion-pose": "^1.0.17",
-    "react": "^16.3.0-alpha.2",
-    "react-dom": "^16.3.0-alpha.2"
+    "popmotion-pose": "^1.0.23"
   },
   "unpkg": "./dist/react-pose.js",
   "prettier": {

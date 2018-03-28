@@ -2,6 +2,24 @@
 
 Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.23] 2018-03-28
+
+### Fixed
+
+- Fixed flipped-axis FLIP measurements
+
+## [1.0.22] 2018-03-28
+
+### Fixed
+
+- Fixed bug with FLIP `render` happening too late.
+
+## [1.0.21] 2018-03-28
+
+### Fixed
+
+- Improvement to FLIP algo that measures offset from the center of each bounding box.
+
 ## [1.0.20] 2018-03-26
 
 ### Fixed

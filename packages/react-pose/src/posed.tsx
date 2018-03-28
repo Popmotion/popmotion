@@ -11,9 +11,13 @@ import { PoserProps } from 'popmotion-pose';
 // I've had to typecast a component as a Component a couple times now.
 const PoseElementComponent = PoseElement as React.PureComponent;
 
-type ComponentFactory = (
+export type ComponentFactory = (
   poseProps: PoserProps
 ) => (props: PoseElementProps) => ReactElement<any>;
+
+export type Posed = {
+  [key: string]: () => ComponentFactory
+};
 
 const componentCache = new Map<string, ComponentFactory>();
 
@@ -51,9 +55,11 @@ const getComponentFactory = (key: string) =>
     ? componentCache.get(key)
     : createComponentFactory(key);
 
-export default new Proxy(
+const posed: Posed = new Proxy(
   {},
   {
     get: (target, key: string) => getComponentFactory(key)
   }
 );
+
+export default posed;

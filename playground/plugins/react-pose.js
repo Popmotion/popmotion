@@ -166,7 +166,6 @@ export class Group extends React.PureComponent {
         <PoseGroup>
           {this.state.items.map(key => (
             <Item
-              withParent
               key={key}
               style={{ backgroundColor: colorMap[key] }}
             />

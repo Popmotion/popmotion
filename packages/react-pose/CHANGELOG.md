@@ -2,6 +2,13 @@
 
 React Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.0] 2018-03-28
+
+### Update
+
+- Converting `PoseElement` from deprecated lifecycle method to `UNSAFE_componentWillUpdate`
+- Fixing `posed` typescript def
+
 ## [0.1.7] 2018-03-25
 
 ### Update
