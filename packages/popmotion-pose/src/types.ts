@@ -74,9 +74,7 @@ export type PoserProps = {
   parentValues?: ValueMap;
   draggable?: Draggable;
   values?: { [key: string]: ValueReaction };
-} & DragProps;
-
-export type PropsAndPoses = PoserProps & PoseMap;
+} & DragProps & { [key: string]: any };
 
 export type RawValue = string | number;
 

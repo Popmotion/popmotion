@@ -1,8 +1,8 @@
-import { PropsAndPoses, PoseMap, Pose, DragProps } from '../types';
+import { PoserProps, PoseMap, Pose, DragProps } from '../types';
 
-export type PoseSelector = (props: PropsAndPoses) => PoseMap;
+export type PoseSelector = (props: PoserProps) => PoseMap;
 export type PoseValuesSelector = (props: Pose) => Pose;
-export type DragPropsSelector = (props: PropsAndPoses) => DragProps;
+export type DragPropsSelector = (props: PoserProps) => DragProps;
 
 export const getPoses: PoseSelector = ({
   draggable,

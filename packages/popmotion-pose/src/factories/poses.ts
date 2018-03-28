@@ -1,6 +1,6 @@
 import { getPoses } from '../inc/selectors';
 import defaultTransitions from '../inc/default-transitions';
-import { PropsAndPoses, Pose, PoseMap, Draggable } from 'types';
+import { PoserProps, Pose, PoseMap, Draggable } from 'types';
 
 const generateTransition = (pose: Pose, key: string): Pose => ({
   ...pose,
@@ -19,7 +19,7 @@ const dragPoses = (draggable: Draggable): PoseMap => {
   return { dragging, dragEnd };
 };
 
-export default (props: PropsAndPoses): PoseMap => {
+export default (props: PoserProps): PoseMap => {
   let poses: PoseMap = { flip: {}, ...getPoses(props) };
   const { draggable } = props;
 
