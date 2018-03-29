@@ -10,9 +10,9 @@ The FLIP technique, [fully explained here](https://aerotwist.com/blog/flip-your-
 
 Pose provides a few methods for performing FLIP:
 
-1) Animate `width`/`top` etc - these will be automatically FLIPed
-2) Manually with the `measure` and `flip` methods
-3) Via the [`PoseGroup` React Pose component](/pose/api/posegroup)
+1. Animate `width`/`top` etc - these will be automatically FLIPed
+2. Manually with the `measure` and `flip` methods
+3. Via the [`PoseGroup` React Pose component](/pose/api/posegroup)
 
 In this tutorial, we'll take a look at each of these.
 
@@ -49,9 +49,9 @@ Pose also exposes a manual FLIP API for more complicated operations that will af
 
 The process goes like this:
 
-1) Measure the element using `poser.measure()`.
-2) Perform your operation to change the DOM.
-3) Animate from the old position to the new with `poser.flip()`
+1. Measure the element using `poser.measure()`.
+2. Perform your operation to change the DOM.
+3. Animate from the old position to the new with `poser.flip()`
 
 <CodePen id="paXyRE" />
 
@@ -71,8 +71,8 @@ React Pose includes a [component called `PoseGroup`](/pose/api/posegroup).
 
 When wrapping a group of posed components, it enables two things:
 
-1) `enter`/`exit` poses
-2) FLIP-powered re-ordering
+1. `enter`/`exit` poses
+2. FLIP-powered re-ordering
 
 When an item enters or exits the group, or changes position in it, all the other items automatically measure their position before the change and then FLIP into to the new position:
 
