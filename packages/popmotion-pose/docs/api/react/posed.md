@@ -62,23 +62,25 @@ const Sidebar = posed.nav({
   closed: { x: '-100%' }
 })
 
-const NavItem = {
+const NavItem = posed.li({
   open: { opacity: 1 },
   closed: { opacity: 0 }
-}
+})
 
 export default ({ isOpen, navItems }) => (
   <Sidebar pose={isOpen ? 'open' : 'closed'}>
     <ul>
-      {navItems.map({ url, name }) => (
+      {navItems.map(({ url, name }) => (
         <NavItem>
           <a href={url}>{name}</a>
         </NavItem>
-      )}
+      ))}
     </ul>
   </Sidebar>
 )
 ```
+
+<CodePen id="MVQepE" />
 
 In tandem with the [`PoseGroup`](/pose/api/posegroup) component, this capability can be used to orchestrate sophisticated `enter` and `exit` animations.
 
