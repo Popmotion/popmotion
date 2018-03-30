@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { createContext, createElement } from 'react';
+import reactLifecyclesCompat = require('react-lifecycles-compat');
 import poseFactory, { Poser, PoserProps } from 'popmotion-pose';
 import {
   ChildRegistration,
@@ -32,10 +33,13 @@ const objectToMap = (obj: { [key: string]: any }): Map<string, any> =>
     return map;
   }, new Map());
 
-export class PoseElement extends React.PureComponent<PoseElementProps> {
+class PoseElement extends React.PureComponent<PoseElementProps> {
   props: PoseElementProps;
   poser: Poser;
   ref: Element;
+  innerRef: HTMLElement;
+  hostRef: HTMLElement;
+  styleProps: { [key: string]: any };
   children: Set<ChildRegistration> = new Set();
   popStyle?: PopStyle;
 
@@ -74,6 +78,10 @@ export class PoseElement extends React.PureComponent<PoseElementProps> {
     }
   }
 
+  getRef(): Element {
+    return this.hostRef || this.innerRef || this.ref;
+  }
+
   getFirstPose(): CurrentPose | void {
     const { pose } = this.props;
     return pose && pose !== this.getInitialPose() ? pose : undefined;
@@ -87,6 +95,7 @@ export class PoseElement extends React.PureComponent<PoseElementProps> {
       onChange, // Deprecated for 2.0.0
       onValueChange,
       innerRef,
+      hostRef,
       pose,
       initialPose,
       onPoseComplete,
@@ -105,11 +114,11 @@ export class PoseElement extends React.PureComponent<PoseElementProps> {
     // If we're popping this element out from the DOM flow, build
     // and apply position: absolute styles that visually match the previous
     // location in the DOM
-    if (popFromFlow && this.ref && this.ref instanceof HTMLElement) {
+    if (popFromFlow && this.getRef() && this.getRef() instanceof HTMLElement) {
       if (!this.popStyle) {
         props.style = {
           ...props.style,
-          ...calcPopFromFlowStyle(this.ref)
+          ...calcPopFromFlowStyle(this.getRef() as HTMLElement)
         };
         this.popStyle = props.style;
       } else {
@@ -126,6 +135,14 @@ export class PoseElement extends React.PureComponent<PoseElementProps> {
     return props;
   }
 
+  setInnerRef = (ref: HTMLElement) => {
+    this.innerRef = ref;
+  };
+
+  setHostRef = (ref: HTMLElement) => {
+    this.hostRef = ref;
+  };
+
   setRef = (ref: Element) => {
     const { innerRef } = this.props;
     if (innerRef) innerRef(ref);
@@ -133,7 +150,7 @@ export class PoseElement extends React.PureComponent<PoseElementProps> {
   };
 
   componentDidMount() {
-    if (!this.ref) return;
+    if (!this.getRef()) return;
 
     const {
       poseProps,
@@ -156,10 +173,10 @@ export class PoseElement extends React.PureComponent<PoseElementProps> {
 
     // If first in tree
     if (!registerChild) {
-      this.initPoser(poseFactory(this.ref, props));
+      this.initPoser(poseFactory(this.getRef(), props));
     } else {
       registerChild({
-        element: this.ref,
+        element: this.getRef(),
         poserProps: props,
         onRegistered: poser => this.initPoser(poser)
       });
@@ -181,6 +198,9 @@ export class PoseElement extends React.PureComponent<PoseElementProps> {
     const { onUnmount } = this.props;
     if (onUnmount) onUnmount(this.poser);
     this.poser.destroy();
+    this.ref = undefined;
+    this.innerRef = undefined;
+    this.hostRef = undefined;
   }
 
   initPoser(poser: Poser) {
@@ -212,13 +232,34 @@ export class PoseElement extends React.PureComponent<PoseElementProps> {
     const { elementType, children } = this.props;
     const props = this.getSetProps();
 
+    const isStatelessFunctionalComponent =
+      typeof elementType === 'function' &&
+      !(elementType.prototype && 'isReactComponent' in elementType.prototype)
+
+    // Because we can't guarantee that `elementType` is a DOM primative, we may
+    // need to get a ref to an underlying DOM element. The standard is to accept
+    // an `innerRef` prop (ala: Styled Components), so we pass that function
+    // along.
+    // Unfortunately when using Styled Components, it will intercept the
+    // `innerRef` prop, and not pass it down to a wrapped component (when doing
+    // styled(Component)``, hence we pass in a _third_ ref getting function
+    // `hostRef`, which the consuming code can opt into if they want.
+    // ( see https://github.com/facebook/react/issues/11401 )
+    const elementProps = {
+      innerRef: this.setInnerRef,
+      hostRef: this.setHostRef,
+      // Only non-functional components can accept a `ref` prop without throwing
+      // a warning
+      ref: !isStatelessFunctionalComponent ? this.setRef : undefined,
+    }
+
     return (
       <PoseParentContext.Provider value={this.childrenHandlers}>
         {createElement(
           elementType,
           {
             ...props,
-            ref: this.setRef
+            ...elementProps,
           },
           children
         )}
@@ -226,3 +267,7 @@ export class PoseElement extends React.PureComponent<PoseElementProps> {
     );
   }
 }
+
+reactLifecyclesCompat(PoseElement);
+
+export { PoseElement };

@@ -4,8 +4,6 @@ description: Create a posed component
 category: react
 ---
 
-**Note:** React Pose **requires** React 16.3.0.
-
 # `posed`
 
 `posed` is used to create animated and interactive components that you can reuse throughout your React site.
@@ -26,6 +24,12 @@ import posed from 'react-pose'
 
 ### Create a posed component
 
+`pose` can be used in two ways:
+1. Via HTML & SVG element aliases (eg; `posed.div()`)
+2. Called directly with a React component (eg; `posed(MyComponent)`)
+
+#### HTML & SVG element aliases
+
 `pose` isn't called directly, instead we pass [posed props](/pose/api/props) to `posed.div`, `posed.button` etc. Every HTML and SVG element is supported:
 
 ```javascript
@@ -36,6 +40,39 @@ const DraggableCircle = posed.circle({
 
 export default ({ radius }) => <DraggableCircle r={radius} />
 ```
+
+#### Calling `pose` with a React component
+
+`pose` is called directly, passing in [posed props](/pose/api/props):
+
+```javascript
+class MyComponent extends React.Component {
+  /* ... */
+}
+
+const DraggableComponent = posed(MyComponent)({
+  draggable: 'x',
+  dragBounds: { left: 0, right: 100 }
+})
+
+export default ({ radius }) => <DraggableComponent r={radius} />
+```
+
+**Note:** React Pose requires a DOM element to correctly calculate animations,
+as such it needs a reference to a component's underlaying DOM element. A custom
+component can provide this via the callback `hostRef`:
+
+```javascript
+class MyComponent extends React.Component {
+  render() {
+    <div ref={this.props.hostRef}>Drag me</div>
+  }
+}
+```
+
+**Note 2:** `hostRef` is aliased to `innerRef` for components which support it,
+however be warned that Styled Components [do not pass through `innerRef` in some
+cases](https://github.com/styled-components/styled-components/issues/618#issuecomment-289247967)
 
 ### Set a pose
 
@@ -98,10 +135,10 @@ const sidebarProps = {
   closed: { x: '-100%' }
 }
 
-const Sidebar = styled(posed.nav(sidebarProps))`
+const Sidebar = posed(styled.nav`
   width: 300px;
   background: red;
-`;
+`)(sidebarProps);
 ```
 
 #### `className`

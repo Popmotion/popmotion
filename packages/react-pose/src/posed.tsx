@@ -16,6 +16,7 @@ export type ComponentFactory = (
 ) => (props: PoseElementProps) => ReactElement<any>;
 
 export type Posed = {
+  (): ComponentFactory;
   [key: string]: ComponentFactory;
 };
 
@@ -56,9 +57,10 @@ const getComponentFactory = (key: string) =>
     : createComponentFactory(key);
 
 const posed: Posed = new Proxy(
-  {},
+  function() {} as Posed,
   {
-    get: (target, key: string) => getComponentFactory(key)
+    get: (target, key: string) => getComponentFactory(key),
+    apply: (target, thisArg, argumentsList) => getComponentFactory(argumentsList[0]),
   }
 );
 
