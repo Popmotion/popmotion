@@ -1,27 +1,27 @@
-import menus from "~/data/menus.json";
-import content from "~/data/content.json";
-import PopmotionLogo from "~/components/icons/Logo";
-import PoseLogo from "~/components/icons/PoseLogo";
-import StylefireLogo from "~/components/icons/StylefireLogo";
-import FramesyncLogo from "~/components/icons/FramesyncLogo";
-import { color } from "./vars";
+import menus from '~/data/menus.json';
+import content from '~/data/content.json';
+import PopmotionLogo from '~/components/icons/Logo';
+import PoseLogo from '~/components/icons/PoseLogo';
+import StylefireLogo from '~/components/icons/StylefireLogo';
+import FramesyncLogo from '~/components/icons/FramesyncLogo';
+import { color } from './vars';
 
 const generateTheme = (name, props) => ({
   data: {
     menus: menus[name],
     content: content[name],
-    rootUrl: name === "popmotion" ? "/" : `/${name}`
+    rootUrl: name === 'popmotion' ? '/' : `/${name}`
   },
   ...props
 });
 
 const themeSettings = {
   popmotion: {
-    id: "popmotion",
-    name: "Popmotion",
-    url: "/",
-    tagline: "A functional, flexible JavaScript motion library",
-    sections: ["api", "learn", "blog", "community"],
+    id: 'popmotion',
+    name: 'Popmotion',
+    url: '/',
+    tagline: 'A functional, flexible JavaScript motion library',
+    sections: ['api', 'learn', 'blog', 'community'],
     Logo: PopmotionLogo,
     homepageLogoSize: {
       width: 283,
@@ -38,14 +38,14 @@ const themeSettings = {
     actionColor: color.blue,
     brandColor: color.brand,
     mastheadBackground: `linear-gradient(${color.brand}, ${color.brandBurn})`,
-    shareImage: "https://popmotion.io/static/images/twitter-card.png"
+    shareImage: 'https://popmotion.io/static/images/twitter-card.png'
   },
   pose: {
-    id: "pose",
-    name: "Popmotion Pose",
-    url: "/pose",
-    tagline: "Declarative motion system for HTML, SVG & React",
-    sections: ["api", "learn", "community"],
+    id: 'pose',
+    name: 'Popmotion Pose',
+    url: '/pose',
+    tagline: 'Declarative motion system for HTML, SVG & React',
+    sections: ['api', 'learn', 'community'],
     Logo: PoseLogo,
     homepageLogoSize: {
       width: 253,
@@ -62,14 +62,14 @@ const themeSettings = {
     mastheadBackground: `linear-gradient(${color.pink}, ${color.purple})`,
     actionColor: color.blue,
     brandColor: color.purple,
-    shareImage: "https://popmotion.io/static/images/pose-twitter-card.png"
+    shareImage: 'https://popmotion.io/static/images/pose-twitter-card.png'
   },
   stylefire: {
-    id: "stylefire",
-    name: "Stylefire",
-    url: "/api/styler",
-    tagline: "Simple HTML & SVG styler optimised for animation",
-    sections: ["api", "learn", "community"],
+    id: 'stylefire',
+    name: 'Stylefire',
+    url: '/api/stylefire',
+    tagline: 'Simple HTML & SVG styler optimised for animation',
+    sections: ['api', 'learn', 'community'],
     Logo: StylefireLogo,
     homepageLogoSize: {
       width: 253,
@@ -86,14 +86,14 @@ const themeSettings = {
     mastheadBackground: `linear-gradient(${color.pink}, ${color.purple})`,
     actionColor: color.blue,
     brandColor: color.purple,
-    shareImage: "https://popmotion.io/static/images/pose-twitter-card.png"
+    shareImage: 'https://popmotion.io/static/images/pose-twitter-card.png'
   },
   framesync: {
-    id: "framesync",
-    name: "Framesync",
-    url: "/api/framesync",
-    tagline: "Unity-inspired render loop for browsers",
-    sections: ["api", "learn", "community"],
+    id: 'framesync',
+    name: 'Framesync',
+    url: '/api/framesync',
+    tagline: 'Unity-inspired render loop for browsers',
+    sections: ['api', 'learn', 'community'],
     Logo: FramesyncLogo,
     homepageLogoSize: {
       width: 253,
@@ -110,7 +110,7 @@ const themeSettings = {
     mastheadBackground: `linear-gradient(${color.pink}, ${color.purple})`,
     actionColor: color.blue,
     brandColor: color.purple,
-    shareImage: "https://popmotion.io/static/images/pose-twitter-card.png"
+    shareImage: 'https://popmotion.io/static/images/pose-twitter-card.png'
   }
 };
 

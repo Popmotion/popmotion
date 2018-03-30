@@ -19,7 +19,7 @@ In this series of tutorials, we'll gradually introduce each of Pose's features. 
 
 The easiest way to play around with Pose is to [use this CodePen playground](https://codepen.io/popmotion/pen/bvqJbV?editors=0010).
 
-For local development, all installation options can be found on the [install](/pose/api/install) page.
+For local development, all installation options can be found on the [install](/pose/learn/install) page.
 
 ## The "Hello World" animation
 
@@ -51,6 +51,8 @@ poser.set('hidden')
 ```
 
 ### React
+
+**Note:** React Pose requires React 16.3.0
 
 You can play with React Pose with the [React Pose playground](https://codepen.io/popmotion/pen/mxmrPZ?editors=0010).
 

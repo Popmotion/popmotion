@@ -1,4 +1,4 @@
-const escapeBackticks = string => string.replace(/`/g, "\\`");
+const escapeBackticks = string => string.replace(/`/g, '\\`');
 
 module.exports = (
   body,
@@ -42,12 +42,12 @@ const Page = ({ section }) => (
   <ContentTemplate
     id="${id}"
     section="${section}"
-    category="${category}"
+    ${category && `category="${category}"`}
     title="${title}"
     description="${description}"
     published="${published}"
     theme="${siteName}"
-    next="${next}"
+    ${next && `next="${next}"`}
   >
     {content.tree}
   </ContentTemplate>

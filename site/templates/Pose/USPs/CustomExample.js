@@ -26,7 +26,6 @@ const props = {
   },
   alert: {
     scale: 1.3,
-    backgroundColor: color.brand,
     transition: eachValue({
       scale: props => spring({ ...props, stiffness: 200, damping: 0 }),
       backgroundColor: tween
@@ -43,14 +42,10 @@ const Box = styled(posed.div(props))`
   transform-origin: 50%;
 `;
 
-const code = `alert: {
+const code = `attention: {
   scale: 1.3,
-  backgroundColor: '#f00',
-  transition: eachValue({
-    scale: (props) =>
-      spring({ ...props, stiffness: 200, damping: 0 }),
-    backgroundColor: tween
-  })
+  transition: (props) =>
+    spring({ ...props, stiffness: 200, damping: 0 })
 }`;
 
 class Example extends React.Component {

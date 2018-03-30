@@ -12,11 +12,11 @@ import { PoserProps } from 'popmotion-pose';
 const PoseElementComponent = PoseElement as React.PureComponent;
 
 export type ComponentFactory = (
-  poseProps: PoserProps
+  poseProps?: PoserProps
 ) => (props: PoseElementProps) => ReactElement<any>;
 
 export type Posed = {
-  [key: string]: () => ComponentFactory
+  [key: string]: ComponentFactory;
 };
 
 const componentCache = new Map<string, ComponentFactory>();

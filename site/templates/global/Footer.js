@@ -120,7 +120,7 @@ export default () => (
       <LibraryList>
         {Object.keys(themes).map(key => <Library library={themes[key]} />)}
       </LibraryList>
-      <MadeInfo>{`Made in London with 🌯 & 🍺`}</MadeInfo>
+      <MadeInfo>{`Made in London with 🌯`}</MadeInfo>
       <Copyright>{`© 2014-2018 Matt Perry`}</Copyright>
       <SocialLinksContainer>
         <SocialLinks />
