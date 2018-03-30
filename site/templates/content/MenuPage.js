@@ -8,6 +8,7 @@ import {
   ArticleHeader,
   DatePublished
 } from '~/templates/global/styled';
+import SiteLink from '~/components/layout/SiteLink';
 import { SectionContainer } from '../global/grid';
 
 const MenuPage = ({ theme, title, section }) => {
@@ -24,9 +25,7 @@ const MenuPage = ({ theme, title, section }) => {
             {content[tl.id] ? (
               <div>
                 <H2>
-                  <Link href={`/${section}/${tl.id}`}>
-                    <a>{tl.title}</a>
-                  </Link>
+                  <SiteLink href={`/${section}/${tl.id}`}>{tl.title}</SiteLink>
                 </H2>
                 {content[tl.id].published && (
                   <DatePublished>{content[tl.id].published}</DatePublished>
@@ -41,9 +40,9 @@ const MenuPage = ({ theme, title, section }) => {
                 ? tl.posts.map(sl => (
                     <ItemContainer key={sl.id}>
                       <H3>
-                        <Link href={`/${section}/${sl.id}`}>
-                          <a>{sl.title}</a>
-                        </Link>
+                        <SiteLink href={`/${section}/${sl.id}`}>
+                          {sl.title}
+                        </SiteLink>
                       </H3>
                       <P>{content[sl.id].description}</P>
                     </ItemContainer>
