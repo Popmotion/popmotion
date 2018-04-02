@@ -114,11 +114,7 @@ export const handleIncomingChildren = (props: MergeChildrenProps) => {
 
 export const makeChildList = (children: ReactElement[]) => {
   const list: ReactElement[] = [];
-  Children.forEach(children, child => {
-      if (child) {
-          list.push(child);
-      }
-  });
+  Children.forEach(children, child => child && list.push(child));
   return list;
 };
 

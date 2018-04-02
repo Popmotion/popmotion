@@ -2,6 +2,12 @@
 
 Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.1.0] 2018-04-02
+
+### Added
+
+- Support for conditional rendering within `PoseGroup` (@efimweb)
+
 ## [1.0.25] 2018-04-02
 
 ### Fixed
