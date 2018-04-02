@@ -2,6 +2,12 @@
 
 Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.25] 2018-04-02
+
+### Fixed
+
+- Fixing stagger delay calculation when `staggerDirection` is `-1` (@efimweb)
+
 ## [1.0.24] 2018-03-28
 
 ### Update

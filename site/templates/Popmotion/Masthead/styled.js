@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import styled, { css } from 'styled-components';
 import {
   WHITE,
   BLACK,
@@ -10,8 +10,8 @@ import {
   cols,
   media,
   color
-} from "~/styles/vars";
-import { fontSize, fontBold } from "~/styles/fonts";
+} from '~/styles/vars';
+import { fontSize, fontBold } from '~/styles/fonts';
 
 export const Container = styled.section`
   background: ${({ theme }) => theme.mastheadBackground};
@@ -19,6 +19,10 @@ export const Container = styled.section`
 
   svg path {
     fill: ${WHITE};
+  }
+
+  li a:hover {
+    color: ${WHITE};
   }
 `;
 
