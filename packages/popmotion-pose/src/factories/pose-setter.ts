@@ -33,7 +33,7 @@ const startChildAnimations = (
     staggerDirection = nextPose.staggerDirection || staggerDirection;
   }
 
-  const maxStaggerDuration = children.size - 1 * stagger;
+  const maxStaggerDuration = (children.size - 1) * stagger;
   const generateStaggerDuration =
     staggerDirection === 1
       ? (i: number) => i * stagger
