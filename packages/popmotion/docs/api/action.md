@@ -120,26 +120,6 @@ foo.start(log); // ...8, 9, 10, 11...
 foo.while(lessThanTen).start(log); // ...8, 9
 ```
 
-### Multicasting
-
-Actions output **only** to the set of functions provided to `start`.
-
-Popmotion also provides **[reactions](/api/reactions)**. These exposed `update`, `complete` and `error` methods, which mean we can use them to `start` actions.
-
-They're also, like actions, chainable. They can be subscribed to by multiple other reactions:
-
-```javascript
-const foo = action(({ update }) => update(1));
-const multicast = reaction();
-const logDouble = reaction()
-  .pipe((v) => console.log(v * 2));
-
-multicast.subscribe((v) => console.log(v));
-multicast.subscribe(logDouble);
-
-foo.start(multicast); // 1, 2
-```
-
 ## Methods
 
 ### `pipe`
