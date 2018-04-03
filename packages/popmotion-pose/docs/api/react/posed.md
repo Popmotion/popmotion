@@ -4,7 +4,7 @@ description: Create a posed component
 category: react
 ---
 
-**Note:** React Pose is built with React 16.3.0, which is currently in alpha.
+**Note:** React Pose **requires** React 16.3.0.
 
 # `posed`
 

@@ -2,6 +2,18 @@
 
 React Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.1.1] 2018-04-02
+
+### Changed
+
+- Using React `16.3.0` final release.
+
+## [1.1.0] 2018-04-02
+
+### Added
+
+- Support for conditional rendering within `PoseGroup` (@efimweb)
+
 ## [1.0.2] 2018-03-29
 
 ### Fix
