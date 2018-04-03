@@ -29,6 +29,8 @@ Lifecycle callbacks for drag events.
 
 Map of callbacks, one for each animated value, that will fire whenever that value changes.
 
+**Note:** For React Pose, instead use the `onValueChange` property on the posed component.
+
 #### Example
 
 ```javascript

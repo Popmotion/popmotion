@@ -81,7 +81,8 @@ export class PoseElement extends React.PureComponent<PoseElementProps> {
       children,
       elementType,
       poseProps,
-      onChange,
+      onChange, // Deprecated for 2.0.0
+      onValueChange,
       innerRef,
       pose,
       initialPose,
@@ -114,6 +115,10 @@ export class PoseElement extends React.PureComponent<PoseElementProps> {
       this.popStyle = null;
     }
 
+    // Deprecated for 2.0.0
+    // If this is a function, it's intended for the DOM element
+    if (typeof onChange === 'function') props.onChange = onChange;
+
     return props;
   }
 
@@ -128,7 +133,8 @@ export class PoseElement extends React.PureComponent<PoseElementProps> {
 
     const {
       poseProps,
-      onChange,
+      onChange, // Deprecated 2.0.0
+      onValueChange,
       registerChild,
       values,
       parentValues
@@ -138,7 +144,7 @@ export class PoseElement extends React.PureComponent<PoseElementProps> {
       initialPose: this.getInitialPose(),
       values,
       parentValues: parentValues ? objectToMap(parentValues) : parentValues,
-      onChange
+      onChange: onValueChange ? onValueChange : (typeof onChange !== 'function') ? onChange : undefined // 2.0.0 set to just `onValueChange`
     };
 
     // If first in tree
