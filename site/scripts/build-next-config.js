@@ -19,6 +19,8 @@ const generateRouteDefinitions = data => {
     '/blog': { page: '/blog' },
     '/pose': { page: '/pose' },
     '/pose/api': { page: '/pose/api' },
+    '/stylefire': { page: '/stylefire' },
+    '/stylefire/api': { page: '/stylefire/api' },
     '/page-not-found': { page: '/_error' },
   `;
 

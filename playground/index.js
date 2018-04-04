@@ -25,7 +25,7 @@ storiesOf("Plugin: Pose", module)
   .add("manual values", () => <PoserManualValues />)
   .add("drag", () => <PoseDrag />)
   .add("opacity", () => <PoseOpacity />)
-.add('full screen flip', () => <PoseFullScreenFlip />);
+  .add("full screen flip", () => <PoseFullScreenFlip />);
 
 storiesOf("Plugin: React Pose", module)
   .add("pose", () => <ReactPose />)
@@ -108,22 +108,24 @@ storiesOf("Plugin: React Pose", module)
 // storiesOf('Plugin: React', module)
 // .add('react', () => <PopmotionReact />)
 
-
-import styler from '../../stylefire';
+import styler from "../../stylefire";
 
 class Test extends React.Component {
-  setRef = (ref) => {
+  setRef = ref => {
     if (ref) {
-      const s = styler(ref)
-      s.set({ originX: 100, originY: 100, rotate: 180 })
-
+      const s = styler(ref);
+      s.set({ x: "100%", scale: 1 });
     }
   };
 
   render() {
-    return <div ref={this.setRef} style={{ width: 100, height: 100, backgroundColor: 'red'}} />
+    return (
+      <div
+        ref={this.setRef}
+        style={{ width: 100, height: 100, backgroundColor: "red" }}
+      />
+    );
   }
 }
 
-storiesOf("Stylefire", module)
-  .add("pose", () => <Test />)
+storiesOf("Stylefire", module).add("pose", () => <Test />);

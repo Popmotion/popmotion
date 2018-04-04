@@ -15,17 +15,17 @@ The `styler` factory function is used to create a new styler for a single elemen
 
 ## Usage
 
-### Import 
+### Import
 
 ```javascript
-import styler from 'stylefire'
+import styler from "stylefire";
 ```
 
 ### Create a styler
 
 ```javascript
-const div = document.querySelector('div')
-const divStyler = styler(div)
+const div = document.querySelector("div");
+const divStyler = styler(div);
 ```
 
 ### Set style properties
@@ -33,10 +33,10 @@ const divStyler = styler(div)
 The `set` method is used to schedule an update on the next render step.
 
 ```javascript
-divStyler.set({ x: 100 })
+divStyler.set({ x: 100 });
 ```
 
-Stylers understand default property types for many [CSS](/stylefire/api/css-props) and [SVG](/stylefire/api/svg-props) props. So even though we just set `x` as `100`, Stylefire will output `transform: translateX(100px)`.
+Stylers understand default property types for many [CSS](/stylefire/api/html) and [SVG](/stylefire/api/svg) props. So even though we just set `x` as `100`, Stylefire will output `transform: translateX(100px)`.
 
 ### Hard render
 
@@ -45,8 +45,8 @@ Sometimes we need to render outside of the render loop. For instance, if we want
 We can do so with the `render` method:
 
 ```javascript
-divStyler.set({ width: 'auto' })
-divStyler.render()
+divStyler.set({ width: "auto" });
+divStyler.render();
 ```
 
 ### Get style property
@@ -54,9 +54,9 @@ divStyler.render()
 The `get` method can be used to read individual properties:
 
 ```javascript
-const div = document.querySelector('path')
-const pathStyler = styler(path)
-pathStyler.get('pathLength')
+const div = document.querySelector("path");
+const pathStyler = styler(path);
+pathStyler.get("pathLength");
 ```
 
 **Note:** Due to the extra filesize overhead in reading CSS `transform` properties, Stylefire will return the default value for any transform properties unless they've already been `set`.
