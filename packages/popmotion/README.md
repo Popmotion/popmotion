@@ -1,13 +1,10 @@
-# <a href="https://popmotion.io"><img src="https://cloud.githubusercontent.com/assets/7850794/21642571/1910a15e-d27b-11e6-84c7-19e88e207c14.png" height="52" width="243" alt="Popmotion" /></a>
+# <a href="https://popmotion.io/api/stylefire"><img src="https://user-images.githubusercontent.com/7850794/38307473-c62a39c6-380b-11e8-9d9c-91561cb49bba.png" height="74" width="250" alt="Stylefire" /></a>
 
-### A **functional**, **reactive** motion library.
+## Style-setters for HTML and SVG, optimised for animation
 
-[![npm version](https://img.shields.io/npm/v/popmotion.svg?style=flat-square)](https://www.npmjs.com/package/popmotion)
-[![npm downloads](https://img.shields.io/npm/dm/popmotion.svg?style=flat-square)](https://www.npmjs.com/package/popmotion)
+[![npm version](https://img.shields.io/npm/v/stylefire.svg?style=flat-square)](https://www.npmjs.com/package/stylefire)
+[![npm downloads](https://img.shields.io/npm/dm/stylefire.svg?style=flat-square)](https://www.npmjs.com/package/stylefire)
 [![Twitter Follow](https://img.shields.io/twitter/follow/espadrine.svg?style=social&label=Follow)](http://twitter.com/popmotionjs)
-[![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/popmotion)
 
-## [Visit the website](https://popmotion.io/)
-### [Quick Start](https://popmotion.io/learn/get-started)
-### [Installation options](https://popmotion.io/learn/install)
-### [Full API documentation](https://popmotion.io/api)
+### [Repo](https://github.com/popmotion/stylefire)
+### [Docs](https://popmotion.io/stylefire)

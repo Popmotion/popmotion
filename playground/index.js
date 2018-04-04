@@ -107,3 +107,23 @@ storiesOf("Plugin: React Pose", module)
 
 // storiesOf('Plugin: React', module)
 // .add('react', () => <PopmotionReact />)
+
+
+import styler from '../../stylefire';
+
+class Test extends React.Component {
+  setRef = (ref) => {
+    if (ref) {
+      const s = styler(ref)
+      s.set({ originX: 100, originY: 100, rotate: 180 })
+
+    }
+  };
+
+  render() {
+    return <div ref={this.setRef} style={{ width: 100, height: 100, backgroundColor: 'red'}} />
+  }
+}
+
+storiesOf("Stylefire", module)
+  .add("pose", () => <Test />)
