@@ -27,7 +27,7 @@ Our first job is to get the counter to actually count down as a user enters char
 The input field's `maxlength` is set to `10`. We can read this with JavaScript:
 
 ```javascript
-const charLimit = parseInt(input.getAttribute('maxlength'));
+const charLimit = parseInt(input.getAttribute("maxlength"));
 ```
 
 Now, let's create a function that takes a string and updates the character counter with the remaining number of characters, which will be calculated by measuring the string and subtracting that from the `charLimit`:
@@ -41,7 +41,7 @@ function updateRemainingCharsCounter(val) {
 We can test that this function works by, on the following line, writing:
 
 ```javascript
-updateRemainingCharsCounter('test');
+updateRemainingCharsCounter("test");
 ```
 
 `'test'` is four characters long, so our counter displays `6`.
@@ -51,7 +51,7 @@ We want this function to fire on every `keyup` event, as this event carries the 
 We're going to use the [`listen` action](/api/listen) to bind the event. `listen` converts DOM events into reactive streams. As an action, we can use `pipe` to pick the latest value out of the event before passing it on to `updateRemainingCharsCounter`:
 
 ```javascript
-listen(input, 'keyup')
+listen(input, "keyup")
   .pipe(e => e.target.value)
   .start(updateRemainingCharsCounter);
 ```
@@ -70,7 +70,7 @@ Unlike a simple `tween`, spring physics can take into account a pre-existing vel
 
 ### Rendering the counter's `scale` prop
 
-First, we need to import the [`value`](/api/value) and [`styler`](/api/styler) functions.
+First, we need to import the [`value`](/api/value) and [`styler`](/stylefire) functions.
 
 `value` will help us track and measure the velocity of `scale`, and `styler` will enable us to render it performantly.
 
@@ -84,10 +84,10 @@ We make our styler by simply passing the `counter`'s DOM node to `styler`:
 const counterStyler = styler(counter);
 ```
 
-And we can initialise the `counterScale` value by passing it an initial value (`1`), and create a setter function with `counterStyler.set`: 
+And we can initialise the `counterScale` value by passing it an initial value (`1`), and create a setter function with `counterStyler.set`:
 
 ```javascript
-const counterScale = value(1, counterStyler.set('scale'));
+const counterScale = value(1, counterStyler.set("scale"));
 ```
 
 Now, whenever `counterScale` updates, the `counter` DOM node will be updated too.
@@ -100,12 +100,12 @@ This event the moment the user presses down on the key, which is the moment they
 
 It feels very responsive - try putting the following code under a `keyup` event instead and you'll immediately notice how disconnected the animation feels from your physical actions.
 
-We'll use `listen` again, this time chained with a different method, `filter`. 
+We'll use `listen` again, this time chained with a different method, `filter`.
 
 `filter`, as the name implies, filters out values that don't meet the provided criteria. In this case, we want to create an event listener that only fires when the number of entered characters is the same as the `chatLimit`:
 
 ```javascript
-listen(input, 'keydown')
+listen(input, "keydown")
   .filter(e => e.target.value.length === charLimit)
   .start(fireSpring);
 ```
@@ -168,7 +168,7 @@ const convertCountToColor = pipe(
   // charLimit itself. This means the color will start changing, in this
   // instance, when the counter hits 5
   interpolate([charLimit * 0.5, charLimit], [0, 1]),
-  blendColor(counterStyler.get('color'), '#f00')
+  blendColor(counterStyler.get("color"), "#f00")
 );
 ```
 
@@ -183,7 +183,7 @@ function updateRemainingCharsCounter(val) {
   counter.innerHTML = charLimit - charCount;
 
   // Set counter color
-  counterStyler.set('color', convertCharCountToColor(charCount));
+  counterStyler.set("color", convertCharCountToColor(charCount));
 }
 ```
 
@@ -193,7 +193,7 @@ Now when you type, the counter will begin to change color as your reach the char
 
 That's all for this tutorial, but there's plenty of ways in which we can go on to improve this form field counter:
 
-- Visual `focus` state - maybe only show the character remaining count while the input has focus.
-- Allow extra characters to be entered, and allow the "characters remaining" counter to run into the negatives.
-- Not firing the spring on backspace.
-- Only show the counter if JavaScript has loaded.
+* Visual `focus` state - maybe only show the character remaining count while the input has focus.
+* Allow extra characters to be entered, and allow the "characters remaining" counter to run into the negatives.
+* Not firing the spring on backspace.
+* Only show the counter if JavaScript has loaded.

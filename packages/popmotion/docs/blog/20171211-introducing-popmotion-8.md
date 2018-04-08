@@ -58,14 +58,10 @@ Its API is inspired by Apple's `CAKeyframeAnimation`, which makes it trivial to 
 
 ```javascript
 keyframes({
-  values: [
-    { x: 0, y: 0 },
-    { x: 100, y: 0 },
-    { x: 100, y: 100 }
-  ],
+  values: [{ x: 0, y: 0 }, { x: 100, y: 0 }, { x: 100, y: 100 }],
   times: [0, 0.3, 1],
   duration: 1000
-})
+});
 ```
 
 <CodePen id="JOZGdp" />
@@ -149,16 +145,17 @@ The `action` function is used to create streams of reactive values. Think of it 
 It looks like this:
 
 ```javascript
-action(({ update, complete, error }) => {})
+action(({ update, complete, error }) => {});
 ```
 
 For a practical example of how `action` works, let's define an function called `just`. It'll return an action that, when started, will fire `update` with the provided value and then `complete`:
 
 ```javascript
-const just = (v) => action(({ update, complete }) => {
-  update(v);
-  complete();
-});
+const just = v =>
+  action(({ update, complete }) => {
+    update(v);
+    complete();
+  });
 
 just(2).start(console.log); // 2
 ```
@@ -180,18 +177,16 @@ Actions offer a number of chainable methods (currently `filter`, `pipe` and `whi
 
 ```javascript
 const double = v => v * 2;
-const px = v => v + 'px';
+const px = v => v + "px";
 
 const justTwo = just(2);
 
 justTwo.start(console.log); // 2
 
-justTwo
-  .pipe(double, px)
-  .start(console.log); // '4px'
+justTwo.pipe(double, px).start(console.log); // '4px'
 ```
 
-In the last 6 months Popmotion has spun out [Framesync](/api/framesync) and [Stylefire](/api/stylefire) as standalone libraries.
+In the last 6 months Popmotion has spun out [Framesync](/api/framesync) and [Stylefire](/stylefire) as standalone libraries.
 
 It's helped me take greater care and consideration over where to draw the lines between the role and responsibilities of various parts of the library and enables people to use the isolated functionality in their own code or libraries.
 
@@ -205,7 +200,7 @@ Popmotion has always tried to respect your bytes. One of the reasons I wrote it 
 
 Popmotion 8 is a little bigger than 7 (11.5kb vs 10kb). Though, as such a radical rewrite with so many new features, I think there are efficiencies to be made over the coming months.
 
-In the meantime, everything in Popmotion is **now available as an individual import**. Which means, if you only want to use (for instance) `spring`, you can import and use that for roughly 2kb. 
+In the meantime, everything in Popmotion is **now available as an individual import**. Which means, if you only want to use (for instance) `spring`, you can import and use that for roughly 2kb.
 
 ### Colours and multi-prop animations
 

@@ -2,6 +2,7 @@ import GlobalTemplate from '~/templates/global/Template';
 import Header from '~/templates/global/Header';
 import Footer from '~/templates/global/Footer';
 import Masthead from '~/templates/Popmotion/Masthead';
+import USPs from './USPs';
 import settings from '~/data/settings.json';
 
 export default () => (
@@ -12,6 +13,7 @@ export default () => (
     <Masthead>
       <Header isHomepage={true} />
     </Masthead>
+    <USPs />
     <Footer />
   </GlobalTemplate>
 );

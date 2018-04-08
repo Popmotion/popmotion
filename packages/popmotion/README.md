@@ -1,4 +1,4 @@
-# <a href="https://popmotion.io/api/stylefire"><img src="https://user-images.githubusercontent.com/7850794/38307473-c62a39c6-380b-11e8-9d9c-91561cb49bba.png" height="74" width="250" alt="Stylefire" /></a>
+# <a href="https://popmotion.io/stylefire"><img src="https://user-images.githubusercontent.com/7850794/38307473-c62a39c6-380b-11e8-9d9c-91561cb49bba.png" height="74" width="250" alt="Stylefire" /></a>
 
 ## Style-setters for HTML and SVG, optimised for animation
 
@@ -7,4 +7,5 @@
 [![Twitter Follow](https://img.shields.io/twitter/follow/espadrine.svg?style=social&label=Follow)](http://twitter.com/popmotionjs)
 
 ### [Repo](https://github.com/popmotion/stylefire)
+
 ### [Docs](https://popmotion.io/stylefire)

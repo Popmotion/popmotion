@@ -67,7 +67,7 @@ const themeSettings = {
   stylefire: {
     id: 'stylefire',
     name: 'Stylefire',
-    url: '/api/stylefire',
+    url: '/stylefire',
     tagline: 'Simple HTML & SVG styler, optimised for animation',
     sections: ['api', 'community'],
     Logo: StylefireLogo,
