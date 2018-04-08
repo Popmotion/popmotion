@@ -165,10 +165,7 @@ export class Group extends React.PureComponent {
       <SidePanel pose={this.state.isOpen ? "open" : "closed"}>
         <PoseGroup>
           {this.state.items.map(key => (
-            <Item
-              key={key}
-              style={{ backgroundColor: colorMap[key] }}
-            />
+            <Item key={key} style={{ backgroundColor: colorMap[key] }} />
           ))}
         </PoseGroup>
       </SidePanel>
