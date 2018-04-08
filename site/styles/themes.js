@@ -69,7 +69,7 @@ const themeSettings = {
     name: 'Stylefire',
     url: '/stylefire',
     tagline: 'Simple HTML & SVG styler, optimised for animation',
-    sections: ['api', 'community'],
+    sections: ['api', 'learn', 'community'],
     Logo: StylefireLogo,
     homepageLogoSize: {
       width: 301,
