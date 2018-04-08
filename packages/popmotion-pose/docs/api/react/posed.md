@@ -122,7 +122,11 @@ If set to `false`, this component won't subscribe to its parent posed component 
 
 ### `onChange?: { [key: string]: any }`
 
-`onChange` is a map of functions, each corresponding to a value being animated by the posed component and will fire when that value changes.
+**Deprecated:** See `onValueChange`
+
+### `onValueChange?: { [key: string]: any }`
+
+`onValueChange` is a map of functions, each corresponding to a value being animated by the posed component and will fire when that value changes.
 
 ### `...props: { [key: string]: any }`
 

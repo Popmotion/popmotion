@@ -22,7 +22,7 @@ export type PoseElementProps = {
   pose?: CurrentPose;
   initialPose?: CurrentPose;
   withParent?: boolean;
-  onChange?: { [key: string]: (v: any) => any };
+  onValueChange?: { [key: string]: (v: any) => any };
   innerRef?: (el: Element) => any;
   [key: string]: any;
 } & PoseContextProps;

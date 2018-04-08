@@ -2,6 +2,12 @@
 
 React Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.1.2] 2018-04-03
+
+### Deprecated
+
+- Deprecating `onChange` in favour of `onValueChange`. `onChange` will be removed in version 2.0.0. This is because React elements already use the `onChange` prop.
+
 ## [1.1.1] 2018-04-02
 
 ### Changed

@@ -96,13 +96,13 @@ const props = {
 
 ### `onChange` with React
 
-With React, `onChange` callbacks are handled a little differently to vanilla Pose. Instead, we pass them to the posed component itself:
+With React, `onChange` callbacks are handled a little differently to vanilla Pose. Instead, we pass them to the posed component itself as `onValueChange`:
 
 ```javascript
-<Box onChange={{ x: x => console.log(x) }} />
+<Box onValueChange={{ x: x => console.log(x) }} />
 ```
 
-It's important to note that `onChange` can only be defined once, when the component mounts.
+It's important to note that `onValueChange` can only be defined once, when the component mounts.
 
 ## Next
 
