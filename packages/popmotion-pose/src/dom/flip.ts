@@ -107,13 +107,17 @@ const implicitlyFlipPose = (state: PoseSetterFactoryProps, nextPose: Pose) => {
 
   // Find transform origin based on x/y delta
   const originX =
-    prev.left === next.left ? ORIGIN_START : prev.right === next.right ? ORIGIN_END : ORIGIN_CENTER;
+    prev.left === next.left
+      ? ORIGIN_START
+      : prev.right === next.right ? ORIGIN_END : ORIGIN_CENTER;
 
   const originY =
-    prev.top === next.top ? ORIGIN_START : prev.bottom === next.bottom ? ORIGIN_END : ORIGIN_CENTER;
+    prev.top === next.top
+      ? ORIGIN_START
+      : prev.bottom === next.bottom ? ORIGIN_END : ORIGIN_CENTER;
 
   // Set transform origins
-  elementStyler.set({ transformOrigin: `${originX} ${originY}` });
+  elementStyler.set({ originX, originY });
 
   // Create target values
   const flipPoseProps: FlipPose = {};

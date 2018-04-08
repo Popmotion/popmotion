@@ -38,14 +38,14 @@ export class ReactPose extends React.PureComponent {
 }
 
 const sidebarProps = {
-  initialPose: "close",
+  initialPose: "exit",
   dragBounds: { left: -100, right: 0 },
-  open: {
+  enter: {
     x: "0%",
-    delayChildren: 300,
+    delayChildren: 200,
     staggerChildren: 50
   },
-  closed: {
+  exit: {
     delay: 500,
     x: "-100%"
   }
@@ -77,6 +77,7 @@ const SidePanel = styled(posed.div(sidebarProps))`
 
 const itemProps = {
   enter: {
+    delayChildren: 500,
     opacity: 1,
     scaleY: 1,
     transition: ({ from, to }) => tween({ from, to, duration: 400 })
@@ -86,6 +87,7 @@ const itemProps = {
     y: 0
   },
   exit: {
+    delay: 300,
     opacity: 0,
     scaleY: 0,
     transition: ({ from, to }) => tween({ from, to, duration: 400 })
@@ -138,15 +140,24 @@ const colorMap = {
   f: "black"
 };
 
+const ItemChild = styled(
+  posed.div({
+    enter: { x: 0 },
+    exit: { x: 100 }
+  })
+)`
+  background: white;
+  width: 40px;
+  height: 40px;
+`;
+
 export class Group extends React.PureComponent {
   state = {
-    isOpen: false,
-    items: ["a", "b", "c", "d"]
+    isOpen: true,
+    items: ["d", "c", "a"]
   };
 
   componentDidMount() {
-    setTimeout(() => this.setState({ isOpen: true }), 1000);
-
     setTimeout(() => {
       this.setState({ items: ["d", "c", "b", "a"] });
 
@@ -155,17 +166,19 @@ export class Group extends React.PureComponent {
 
         setTimeout(() => {
           this.setState({ items: ["e", "c", "b", "a"] });
-        }, 1000);
-      }, 1000);
-    }, 2000);
+        }, 3000);
+      }, 3000);
+    }, 3000);
   }
 
   render() {
     return (
-      <SidePanel pose={this.state.isOpen ? "open" : "closed"}>
+      <SidePanel pose={this.state.isOpen ? "enter" : "exit"}>
         <PoseGroup>
           {this.state.items.map(key => (
-            <Item key={key} style={{ backgroundColor: colorMap[key] }} />
+            <Item key={key} style={{ backgroundColor: colorMap[key] }}>
+              <ItemChild />
+            </Item>
           ))}
         </PoseGroup>
       </SidePanel>

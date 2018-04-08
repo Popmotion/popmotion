@@ -52,7 +52,7 @@ export class PoseElement extends React.PureComponent<PoseElementProps> {
     },
     onUnmount: child => this.poser.removeChild(child),
     getParentPoseProps: () => this.props.poseProps,
-    getPoseFromParent: () => this.props.pose
+    getInitialPoseFromParent: () => this.getInitialPose()
   };
 
   /**
@@ -61,19 +61,24 @@ export class PoseElement extends React.PureComponent<PoseElementProps> {
    */
 
   getInitialPose(): CurrentPose {
-    const { getPoseFromParent, pose, initialPose } = this.props;
+    const { getInitialPoseFromParent, pose, initialPose } = this.props;
 
     if (initialPose) {
       return initialPose;
     } else {
       // Feel like this could probably be simpler
-      const parentPose = getPoseFromParent && getPoseFromParent();
+      const parentPose = getInitialPoseFromParent && getInitialPoseFromParent();
       const thisPose = Array.isArray(pose) ? pose : [pose];
 
       return Array.isArray(parentPose)
         ? [...parentPose, ...thisPose]
         : [parentPose, ...thisPose];
     }
+  }
+
+  getFirstPose(): CurrentPose | void {
+    const { pose } = this.props;
+    return pose && pose !== this.getInitialPose() ? pose : undefined;
   }
 
   getSetProps() {
@@ -91,6 +96,7 @@ export class PoseElement extends React.PureComponent<PoseElementProps> {
       getParentPoseProps,
       registerChild,
       onUnmount,
+      getInitialPoseFromParent,
       getPoseFromParent,
       popFromFlow,
       values,
@@ -144,7 +150,9 @@ export class PoseElement extends React.PureComponent<PoseElementProps> {
       initialPose: this.getInitialPose(),
       values,
       parentValues: parentValues ? objectToMap(parentValues) : parentValues,
-      onChange: onValueChange ? onValueChange : (typeof onChange !== 'function') ? onChange : undefined // 2.0.0 set to just `onValueChange`
+      onChange: onValueChange
+        ? onValueChange
+        : typeof onChange !== 'function' ? onChange : undefined // 2.0.0 set to just `onValueChange`
     };
 
     // If first in tree
@@ -177,11 +185,12 @@ export class PoseElement extends React.PureComponent<PoseElementProps> {
   }
 
   initPoser(poser: Poser) {
-    const { initialPose, pose } = this.props;
     this.poser = poser;
-    if (initialPose && pose) this.setPose(pose);
     this.poser.setTransitionProps(this.getSetProps());
     this.flushChildren();
+
+    const firstPose = this.getFirstPose();
+    if (firstPose) this.setPose(firstPose);
   }
 
   setPose(pose: CurrentPose) {

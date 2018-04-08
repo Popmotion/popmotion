@@ -2,6 +2,12 @@
 
 React Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.1.3] 2018-04-08
+
+### Fixed
+
+- [#285](https://github.com/Popmotion/popmotion/issues/285) PoseGroup child `enter` poses now animate correctly.
+
 ## [1.1.2] 2018-04-03
 
 ### Deprecated

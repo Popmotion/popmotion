@@ -11,7 +11,7 @@ export type CurrentPose = string | string[];
 export type PoseContextProps = {
   registerChild?: (props: ChildRegistration) => void;
   onUnmount?: (child: Poser) => any;
-  getPoseFromParent?: () => CurrentPose;
+  getInitialPoseFromParent?: () => CurrentPose;
   getParentPoseProps?: () => PoserProps;
 };
 
