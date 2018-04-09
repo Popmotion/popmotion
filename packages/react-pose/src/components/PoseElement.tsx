@@ -148,8 +148,9 @@ export class PoseElement extends React.PureComponent<PoseElementProps> {
     const props: PoserProps = {
       ...poseProps,
       initialPose: this.getInitialPose(),
-      values,
+      values: values || poseProps.values,
       parentValues: parentValues ? objectToMap(parentValues) : parentValues,
+      transitionProps: this.getSetProps(),
       onChange: onValueChange
         ? onValueChange
         : typeof onChange !== 'function' ? onChange : undefined // 2.0.0 set to just `onValueChange`
@@ -186,7 +187,6 @@ export class PoseElement extends React.PureComponent<PoseElementProps> {
 
   initPoser(poser: Poser) {
     this.poser = poser;
-    this.poser.setTransitionProps(this.getSetProps());
     this.flushChildren();
 
     const firstPose = this.getFirstPose();

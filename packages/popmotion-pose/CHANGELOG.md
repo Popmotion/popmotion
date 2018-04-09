@@ -2,6 +2,13 @@
 
 Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.1.0] 2018-04-08
+
+### Added
+
+- Pose props can now be set as functions. These functions will be used to resolve a value's `to` when a pose is entered.
+- `setTransitionProps` introduced to update `transitionProps` on a poser. These will be passed through to `transition` functions.
+
 ## [1.0.25] 2018-04-02
 
 ### Fixed

@@ -32,10 +32,12 @@ const pose: PoserFactory = (element, props) => {
   const activePoses: ActivePoses = new Map();
   const children: ChildPoses = new Set();
   const dimensions = createDimensions(element);
-  let transitionProps: PoseSetterProps = {};
+  let transitionProps: PoseSetterProps = props.transitionProps || {};
 
   const elementStyler = styler(element, { preparseOutput: false });
   const poses = createPoses(props);
+  const getTransitionProps = () => transitionProps;
+
   const { values, types } = createValuesAndTypes({
     poses,
     styler: elementStyler,
@@ -43,7 +45,8 @@ const pose: PoserFactory = (element, props) => {
     passive,
     userSetValues,
     parentValues,
-    onChange
+    onChange,
+    getTransitionProps
   });
 
   const set = createPoseSetter({
@@ -57,7 +60,7 @@ const pose: PoserFactory = (element, props) => {
     activePoses,
     dimensions,
     dragProps,
-    getTransitionProps: () => transitionProps,
+    getTransitionProps,
     flipEnabled: element instanceof HTMLElement
   });
 

@@ -5,12 +5,15 @@ import { ValueType } from 'style-value-types';
 import { Styler } from 'stylefire';
 import { HotSubscription } from 'popmotion/reactions/types';
 
+export type NumberPropFactory = (props: PoseSetterProps) => number;
+export type StaggerDirectionPropFactory = (props: PoseSetterProps) => 1 | -1;
+
 export type Pose = {
   transition?: Transition;
-  delay?: number;
-  delayChildren?: number;
-  staggerChildren?: number;
-  staggerDirection?: 1 | -1;
+  delay?: number | NumberPropFactory;
+  delayChildren?: number | NumberPropFactory;
+  staggerChildren?: number | NumberPropFactory;
+  staggerDirection?: 1 | -1 | StaggerDirectionPropFactory;
   [key: string]: any;
 };
 
@@ -73,6 +76,7 @@ export type PoserProps = {
   onChange?: OnChangeMap;
   parentValues?: ValueMap;
   draggable?: Draggable;
+  transitionProps?: PoseSetterProps;
   values?: { [key: string]: ValueReaction };
 } & DragProps & { [key: string]: any };
 
@@ -102,6 +106,7 @@ export type ValuesFactoryProps = {
   parentValues: ValueMap;
   userSetValues?: { [key: string]: ValueReaction };
   onChange: OnChangeMap;
+  getTransitionProps: () => PoseSetterProps;
 };
 
 export type ValuesAndTypes = {

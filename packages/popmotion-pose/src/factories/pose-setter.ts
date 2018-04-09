@@ -16,6 +16,19 @@ export type PoseSetterFactory = (props: PoseSetterFactoryProps) => PoseSetter;
 
 type AnimationsPromiseList = Array<Promise<any>>;
 
+export const resolveProp = (target: any, props: PoseSetterProps) =>
+  typeof target === 'function' ? target(props) : target;
+
+const poseDefault = (
+  pose: Pose,
+  prop: string,
+  defaultValue: any,
+  resolveProps: PoseSetterProps
+) =>
+  pose && pose[prop] !== undefined
+    ? resolveProp(pose[prop], resolveProps)
+    : defaultValue;
+
 const startChildAnimations = (
   children: ChildPoses,
   next: string,
@@ -23,15 +36,9 @@ const startChildAnimations = (
   props: PoseSetterProps
 ): Array<Promise<any>> => {
   const animations: Array<Promise<any>> = [];
-  let delay = 0;
-  let stagger = 0;
-  let staggerDirection = 1;
-
-  if (nextPose) {
-    delay = nextPose.delayChildren || delay;
-    stagger = nextPose.staggerChildren || stagger;
-    staggerDirection = nextPose.staggerDirection || staggerDirection;
-  }
+  const delay = poseDefault(nextPose, 'delayChildren', 0, props);
+  const stagger = poseDefault(nextPose, 'staggerChildren', 0, props);
+  const staggerDirection = poseDefault(nextPose, 'staggerDirection', 1, props);
 
   const maxStaggerDuration = (children.size - 1) * stagger;
   const generateStaggerDuration =
@@ -55,7 +62,6 @@ const createPoseSetter: PoseSetterFactory = setterProps => (
   next,
   props = {}
 ) => {
-  const { delay = 0 } = props;
   const {
     activeActions,
     activePoses,
@@ -68,9 +74,16 @@ const createPoseSetter: PoseSetterFactory = setterProps => (
     getTransitionProps,
     flipEnabled
   } = setterProps;
+
+  const { delay = 0 } = props;
   const animations: AnimationsPromiseList = [];
   const { dragBounds } = dragProps;
   let nextPose = poses[next];
+
+  const baseTransitionProps = {
+    ...getTransitionProps(),
+    ...props
+  };
 
   if (nextPose) {
     if (flipEnabled && isFlipPose(nextPose, next))
@@ -84,33 +97,35 @@ const createPoseSetter: PoseSetterFactory = setterProps => (
           const value = values.get(key);
           const type = types.get(key);
           const from = value.get();
-          const unparsedTarget = nextPose[key];
+
+          const transitionProps = {
+            key,
+            type,
+            from: type ? type.parse(from) : from,
+            velocity: value.getVelocity() || 0,
+            prevPoseKey: activePoses.get(key),
+            dimensions,
+            dragBounds,
+            ...baseTransitionProps
+          };
+
+          const unparsedTarget = resolveProp(nextPose[key], transitionProps);
 
           // Stop the current action
           if (activeActions.has(key)) activeActions.get(key).stop();
 
           // Get transition if `transition` prop isn't false
           let transition = getTransition({
-            from: type ? type.parse(from) : from,
-            velocity: value.getVelocity() || 0,
             to: type ? type.parse(unparsedTarget) : unparsedTarget,
-            key,
-            prevPoseKey: activePoses.get(key),
-            dimensions,
-            dragBounds,
-            type,
-            ...getTransitionProps(),
-            ...props
+            ...transitionProps
           });
 
           if (transition === false) transition = just(unparsedTarget);
 
           // Add delay if defined
-          if (delay || nextPose.delay) {
-            transition = chain(
-              delayAction(delay || nextPose.delay),
-              transition
-            );
+          const poseDelay = resolveProp(nextPose.delay, baseTransitionProps);
+          if (delay || poseDelay) {
+            transition = chain(delayAction(delay || poseDelay), transition);
           }
 
           if (type) transition = transition.pipe(type.transform);
@@ -131,7 +146,9 @@ const createPoseSetter: PoseSetterFactory = setterProps => (
 
   // Get children animation Promises
   if (children.size)
-    animations.push(...startChildAnimations(children, next, nextPose, props));
+    animations.push(
+      ...startChildAnimations(children, next, nextPose, baseTransitionProps)
+    );
 
   return Promise.all(animations);
 };

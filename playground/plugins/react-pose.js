@@ -98,7 +98,7 @@ const itemProps = {
   },
   closed: {
     opacity: 0,
-    y: 20
+    y: ({ i }) => 20 * i
   }
 };
 
@@ -117,11 +117,11 @@ export class ReactPoseChildren extends React.PureComponent {
     const { isOpen } = this.state;
 
     return (
-      <SidePanel pose={isOpen ? "open" : "closed"}>
-        <Item />
-        <Item />
-        <Item />
-        <Item />
+      <SidePanel innerRef={console.log} pose={isOpen ? "open" : "closed"}>
+        <Item i={0} />
+        <Item i={1} />
+        <Item i={2} />
+        <Item i={3} />
       </SidePanel>
     );
   }

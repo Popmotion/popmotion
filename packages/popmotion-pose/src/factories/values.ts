@@ -5,9 +5,11 @@ import {
   TypesMap,
   PoseMap,
   Pose,
-  OnChangeMap
+  OnChangeMap,
+  PoseSetterProps
 } from '../types';
 import { getPoseValues } from '../inc/selectors';
+import { resolveProp } from './pose-setter';
 import { number, degrees, percent, px, ValueType } from 'style-value-types';
 import { pipe } from 'popmotion/transformers';
 import value, { ValueReaction } from 'popmotion/reactions/value';
@@ -24,7 +26,8 @@ const getInitialValue = (
   poses: PoseMap,
   key: string,
   initialPose: string | string[],
-  styler: Styler
+  styler: Styler,
+  props: PoseSetterProps
 ) => {
   const posesToSearch = Array.isArray(initialPose)
     ? initialPose
@@ -33,13 +36,19 @@ const getInitialValue = (
     name => poses[name] && poses[name][key] !== undefined
   );
 
-  return pose ? poses[pose][key] : styler.get(key);
+  return pose ? resolveProp(poses[pose][key], props) : styler.get(key);
 };
 
 const createValues = (
   values: ValueMap,
   types: TypesMap,
-  { initialPose, poses, styler, userSetValues }: ValuesFactoryProps,
+  {
+    initialPose,
+    poses,
+    styler,
+    userSetValues,
+    getTransitionProps
+  }: ValuesFactoryProps,
   pose: Pose
 ) => (key: string) => {
   if (values.has(key)) return;
@@ -54,7 +63,13 @@ const createValues = (
 
     // Else create a new value
   } else {
-    const initialValue = getInitialValue(poses, key, initialPose, styler);
+    const initialValue = getInitialValue(
+      poses,
+      key,
+      initialPose,
+      styler,
+      getTransitionProps()
+    );
     type = valueTypeTests.find(testValueType(pose[key]));
     thisValue = value(
       type === number ? type.parse(initialValue) : initialValue

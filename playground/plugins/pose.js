@@ -15,14 +15,14 @@ const { pipe, blendColor, conditional, clamp, interpolate } = transform;
 const SidePanel = styled.div`
   width: 300px;
   height: 100vh;
-  background: red;
+  background: #eee;
   padding: 30px;
   display: flex;
   transform: translateX(-100%);
   flex-direction: column;
 
   > div {
-    background: blue;
+    background: #43415f;
     height: 40px;
     width: 100%;
     opacity: 0;
@@ -42,35 +42,40 @@ const sidebarProps = {
   close: {
     delay: 500,
     x: "-100%"
-  },
-  passive: {
-    backgroundColor: [
-      "x",
-      pipe(
-        parseFloat,
-        interpolate([-100, 0], [0, 1]),
-        blendColor("#a00", "#f00")
-      )
-    ]
   }
+  // passive: {
+  //   backgroundColor: [
+  //     "x",
+  //     pipe(
+  //       parseFloat,
+  //       interpolate([-100, 0], [0, 1]),
+  //       blendColor("#a00", "#f00")
+  //     )
+  //   ]
+  // }
 };
 
 const itemProps = {
-  initialPose: ["close"],
+  initialPose: "close",
   open: {
     opacity: 1,
-    y: 0
+    x: 0
   },
   close: {
     opacity: 0,
-    y: 20
+    x: ({ i }) => Math.sin(i * Math.PI * 0.5) * 75
   }
 };
 
 export class PoseDOM extends React.Component {
   componentDidMount() {
     this.sidebarPoser = pose(this.sidebar, sidebarProps);
-    this.items.forEach(item => this.sidebarPoser.addChild(item, itemProps));
+    this.items.forEach((item, i) => {
+      const poser = this.sidebarPoser.addChild(item, {
+        ...itemProps,
+        transitionProps: { i }
+      });
+    });
 
     setTimeout(() => this.sidebarPoser.set("open"), 1000);
   }
@@ -94,6 +99,14 @@ export class PoseDOM extends React.Component {
   render() {
     return (
       <SidePanel innerRef={this.setSidePanel} onClick={this.close}>
+        <div ref={this.setItem} />
+        <div ref={this.setItem} />
+        <div ref={this.setItem} />
+        <div ref={this.setItem} />
+        <div ref={this.setItem} />
+        <div ref={this.setItem} />
+        <div ref={this.setItem} />
+        <div ref={this.setItem} />
         <div ref={this.setItem} />
         <div ref={this.setItem} />
         <div ref={this.setItem} />
@@ -220,7 +233,7 @@ const modalProps = {
     staggerChildren: 50
   },
   flip: {
-    transition: (props) => tween({ ...props, duration: 3000 })
+    transition: props => tween({ ...props, duration: 3000 })
   }
 };
 const modalItemProps = {
@@ -282,7 +295,7 @@ export class PoserFLIP extends React.Component {
   }
 
   componentWillUpdate() {
-    this.modalPoser.measure()
+    this.modalPoser.measure();
   }
 
   componentDidUpdate() {
@@ -344,7 +357,7 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`
+`;
 
 export class PoseFullScreenFlip extends React.PureComponent {
   isOpen = false;
@@ -353,8 +366,8 @@ export class PoseFullScreenFlip extends React.PureComponent {
     if (ref) {
       this.poser = pose(ref, {
         fullscreen: {
-          width: '100%',
-          height: '100%',
+          width: "100%",
+          height: "100%",
           transition: tween
         },
         thumbnail: {
@@ -369,14 +382,15 @@ export class PoseFullScreenFlip extends React.PureComponent {
   };
 
   toggle = () => {
-    this.poser.set(this.isOpen ? 'thumbnail' : 'fullscreen')
-    this.isOpen = !this.isOpen
-  }
+    this.poser.set(this.isOpen ? "thumbnail" : "fullscreen");
+    this.isOpen = !this.isOpen;
+  };
 
   render() {
-    return (<Container>
-      <Box innerRef={this.setRef} onClick={this.toggle} />
-    </Container>);
+    return (
+      <Container>
+        <Box innerRef={this.setRef} onClick={this.toggle} />
+      </Container>
+    );
   }
 }
-

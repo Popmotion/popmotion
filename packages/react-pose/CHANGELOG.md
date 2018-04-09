@@ -2,6 +2,19 @@
 
 React Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.2.0] 2018-04-09
+
+### Added
+
+- Dynamic pose props (Pose 1.1.0)
+- Ref forwarding with `React.forwardRef`.
+
+## [1.1.4] 2018-04-08
+
+### Fixed
+
+- Fixing botched React version mismatch in global file.
+
 ## [1.1.3] 2018-04-08
 
 ### Fixed

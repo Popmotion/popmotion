@@ -101,9 +101,39 @@ This function is run **once for each animating property** and must return a [Pop
 The `transition` function receives a single argument, an object containing:
 
 - Information about the current transition: `from`, `to`, `velocity`, `key` and `prevPoseKey` properties.
-- Any custom props sent as the second argument of `set`.
+- Transition props. These can be set statefully as `props.transitionProps` or via the `setTransitionProps` method. Or they can be set temporarily, as the second argument provided to `set`.
+- **React Pose:** All props set on the posed component.
 
-You can **optionally** use all, some or none of these to create different animations for different values.
+You can use these props to create different animations for different values.
+
+### Dynamic values
+
+Values on a pose can be set as a function that returns the `to` property for a transition.
+
+This function is passed all the same properties as the `transition` function **except** for `to`, which this function is responsible for returning.
+
+```javascript
+const props = {
+  open: { x: 0 },
+  closed: {
+    x: ({ i }) => Math.sin(i * 0.5) * 100
+  }
+}
+
+// Vanilla
+// --------------------
+itemPosers = items.map((item, i) => pose(item, {
+  ...props,
+  transitionProps: { i }
+}))
+
+// React
+// --------------------
+const Item = posed.li(props)
+
+// In component render
+{items.map((item, i) => <Item pose="closed" i={i} />}
+```
 
 ### Draggable
 
@@ -301,6 +331,10 @@ poser.flip(doStuff)
 Sets the current pose to `poseName`. If `Poser` has children, this will get set on those, too. Returns a `Promise`.
 
 If `props` is defined, these will be passed through to the selected pose's `transition` function.
+
+### `setTransitionProps(props: Object)`
+
+Sets props on the poser that will be passed to any functions set on a pose.
 
 ### `measure()`
 
