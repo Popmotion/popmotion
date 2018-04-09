@@ -63,7 +63,8 @@ const itemProps = {
   },
   close: {
     opacity: 0,
-    x: ({ i }) => Math.sin(i * Math.PI * 0.5) * 75
+    x: ({ i }) => Math.sin(i * Math.PI * 0.5) * 75,
+    transition: (props) => tween({...props, duration: 100000})
   }
 };
 

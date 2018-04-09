@@ -112,19 +112,52 @@ Try changing the timeout duration. The box will animate smoothly from any point,
 
 ### User-generated `props`
 
-This `props` object can also contain variables set by you when the pose changes.
+This `props` object can also contain variables set by you.
 
-In Pose, `set` accepts an optional second argument of props:
+#### Pose
+
+In vanilla Pose, you can **statefully** set transition props both when the poser is defined:
 
 ```javascript
-poser.set('poseName', { customProp: true })
+const poser = pose(element, {
+  ...props,
+  transitionProps: {}
+})
 ```
 
-In React Pose, props set on the component are forwarded to the `transition` function:
+And with the `setTransitionProps` method:
+
+```javascript
+poser.setTransitionProps({})
+```
+
+You can also **temporarily** set transition props by passing an object as the second argument of set:
+
+```javascript
+poser.set('poseName', {})
+```
+
+#### React Pose
+
+With posed components, all extra props set on the component are passed through as transition props:
 
 ```javascript
 <PosedComponent pose="poseName" customProp={true} />
 ```
+
+## Dynamic pose props
+
+You can also set pose props as functions that resolve when the pose is entered. These functions get passed all the same properties as `transition` (except for `to`, which these functions return).
+
+For instance, we could pass through an `i` index property to animate something differently based on its position in a list:
+
+```javascript
+closed: {
+  y: ({ i }) => i * 50
+}
+```
+
+<CodePen id="jzXzdz" height="400" />
 
 ## Next
 
