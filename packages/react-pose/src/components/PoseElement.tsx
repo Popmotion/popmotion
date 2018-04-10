@@ -36,9 +36,7 @@ export class PoseElement extends React.PureComponent<PoseElementProps> {
   props: PoseElementProps;
   poser: Poser;
   ref: Element;
-  styleProps: { [key: string]: any };
   children: Set<ChildRegistration> = new Set();
-  restoreDisplay: string;
   popStyle?: PopStyle;
 
   /**
