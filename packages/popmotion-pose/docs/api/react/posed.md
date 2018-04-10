@@ -24,11 +24,11 @@ import posed from 'react-pose'
 
 ### Create a posed component
 
-`pose` can be used in two ways:
-1. Via HTML & SVG element aliases (eg; `posed.div()`)
-2. Called directly with a React component (eg; `posed(MyComponent)`)
+`posed` can be used to create posed components in two ways:
+1) **Recommended:** Create HTML & SVG elements (eg `posed.div()`)
+2) **Advanced:** Convert existing components (eg `posed(Component)()`)
 
-#### HTML & SVG element aliases
+#### HTML & SVG elements
 
 `pose` isn't called directly, instead we pass [posed props](/pose/api/props) to `posed.div`, `posed.button` etc. Every HTML and SVG element is supported:
 
@@ -41,38 +41,31 @@ const DraggableCircle = posed.circle({
 export default ({ radius }) => <DraggableCircle r={radius} />
 ```
 
-#### Calling `pose` with a React component
+#### Existing components
 
-`pose` is called directly, passing in [posed props](/pose/api/props):
+Existing components can be converted to posed components by calling `posed` directly:
 
 ```javascript
-class MyComponent extends React.Component {
-  /* ... */
-}
+const PosedComponent = posed(MyComponent)(poseProps)
+```
 
-const DraggableComponent = posed(MyComponent)({
-  draggable: 'x',
-  dragBounds: { left: 0, right: 100 }
+For performance and layout calculations, React Pose requires a reference to the underlying DOM element. So, the component to be posed **must pass hostRef to the host element's ref prop**.
+
+```javascript
+const MyComponent = ({ hostRef }) => <div ref={hostRef} />
+
+const PosedComponent = posed(MyComponent)({
+  draggable: true
 })
 
-export default ({ radius }) => <DraggableComponent r={radius} />
+export default () => <PosedComponent pose={isOpen ? 'open' : 'closed'} />
 ```
 
-**Note:** React Pose requires a DOM element to correctly calculate animations,
-as such it needs a reference to a component's underlaying DOM element. A custom
-component can provide this via the callback `hostRef`:
+For FLIP support in a `PoseGroup`, it **optionally** needs to pass on the `style` prop:
 
 ```javascript
-class MyComponent extends React.Component {
-  render() {
-    <div ref={this.props.hostRef}>Drag me</div>
-  }
-}
+const MyComponent = ({ hostRef, style }) => <div ref={hostRef} style={style} />
 ```
-
-**Note 2:** `hostRef` is aliased to `innerRef` for components which support it,
-however be warned that Styled Components [do not pass through `innerRef` in some
-cases](https://github.com/styled-components/styled-components/issues/618#issuecomment-289247967)
 
 ### Set a pose
 
@@ -135,10 +128,7 @@ const sidebarProps = {
   closed: { x: '-100%' }
 }
 
-const Sidebar = posed(styled.nav`
-  width: 300px;
-  background: red;
-`)(sidebarProps);
+const Sidebar = styled(posed.nav(sidebarProps))`
 ```
 
 #### `className`
