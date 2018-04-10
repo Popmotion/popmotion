@@ -2,6 +2,12 @@
 
 Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.2.0] 2018-04-10
+
+### Added
+
+- `beforeChildren` and `afterChildren` pose props.
+
 ## [1.1.0] 2018-04-08
 
 ### Added

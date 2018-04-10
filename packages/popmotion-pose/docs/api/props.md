@@ -131,6 +131,14 @@ A duration, in milliseconds, between transitioning each children.
 
 If `1`, staggers from the first child to the last. If `-1`, from last to first.
 
+### `beforeChildren?: boolean | (props: TransitionsProps) => boolean`
+
+If `true`, will ensure this animation completes before firing any child animations.
+
+### `afterChildren?: boolean | (props: TransitionsProps) => boolean`
+
+If `true`, will ensure this animation only fires after all child animations have completed.
+
 ### `...values: any | (props: TransitionProps) => any`
 
 Any remaining properties are treated as stylistic values and will be animated.

@@ -142,7 +142,7 @@ This can be blocked by setting `withParent={false}`:
 <Item withParent={false} />
 ```
 
-## Delay and stagger children
+## Schedule parent and child animations
 
 Currently, our children animations are being fired at the exact same time as the parent. But, often we'd prefer the child animations to be delayed or staggered.
 
@@ -194,7 +194,11 @@ const sidebarProps = {
 
 ### `staggerDirection`
 
-Finally, `staggerDirection` can be used to determine which order we stagger over the children in. It can either be `1` (first to last, default), or `-1` (last to first).
+`staggerDirection` can be used to determine which order we stagger over the children in. It can either be `1` (first to last, default), or `-1` (last to first).
+
+### `beforeChildren`/`afterChildren`
+
+Setting either `beforeChildren` or `afterChildren` props to `true` will make the parent animation play **before** or **after** any children animations.
 
 ## Next
 

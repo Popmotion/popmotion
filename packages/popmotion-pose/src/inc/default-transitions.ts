@@ -63,7 +63,15 @@ export const just = (from: RawValue): Action =>
   });
 
 const underDampedSpring: Transition = ({ from, velocity, to }) =>
-  spring({ from, to, velocity, stiffness: 500, damping: 25 });
+  spring({
+    from,
+    to,
+    velocity,
+    stiffness: 500,
+    damping: 25,
+    restDelta: 0.5,
+    restSpeed: 10
+  });
 const overDampedSpring: Transition = ({ from, velocity, to }) =>
   spring({ from, to, velocity, stiffness: 700, damping: to === 0 ? 100 : 35 });
 

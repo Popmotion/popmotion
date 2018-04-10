@@ -6,6 +6,7 @@ import { Styler } from 'stylefire';
 import { HotSubscription } from 'popmotion/reactions/types';
 
 export type NumberPropFactory = (props: PoseSetterProps) => number;
+export type BooleanPropFactory = (props: PoseSetterProps) => boolean;
 export type StaggerDirectionPropFactory = (props: PoseSetterProps) => 1 | -1;
 
 export type Pose = {
@@ -14,6 +15,8 @@ export type Pose = {
   delayChildren?: number | NumberPropFactory;
   staggerChildren?: number | NumberPropFactory;
   staggerDirection?: 1 | -1 | StaggerDirectionPropFactory;
+  beforeChildren?: boolean | BooleanPropFactory;
+  afterChildren?: boolean | BooleanPropFactory;
   [key: string]: any;
 };
 

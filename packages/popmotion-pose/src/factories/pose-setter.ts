@@ -76,22 +76,32 @@ const createPoseSetter: PoseSetterFactory = setterProps => (
   } = setterProps;
 
   const { delay = 0 } = props;
-  const animations: AnimationsPromiseList = [];
   const { dragBounds } = dragProps;
+  const hasChildren = children.size;
   let nextPose = poses[next];
 
   const baseTransitionProps = {
+    dimensions,
+    dragBounds,
     ...getTransitionProps(),
     ...props
   };
 
-  if (nextPose) {
+  const getChildAnimations = (): AnimationsPromiseList => {
+    return hasChildren
+      ? startChildAnimations(children, next, nextPose, baseTransitionProps)
+      : [];
+  };
+
+  const getParentAnimations = (): AnimationsPromiseList => {
+    if (!nextPose) return [];
+
     if (flipEnabled && isFlipPose(nextPose, next))
       nextPose = flipPose(setterProps, nextPose);
 
     const { transition: getTransition } = nextPose;
 
-    const poserAnimations = Object.keys(getPoseValues(nextPose)).map(
+    return Object.keys(getPoseValues(nextPose)).map(
       key =>
         new Promise(complete => {
           const value = values.get(key);
@@ -104,8 +114,6 @@ const createPoseSetter: PoseSetterFactory = setterProps => (
             from: type ? type.parse(from) : from,
             velocity: value.getVelocity() || 0,
             prevPoseKey: activePoses.get(key),
-            dimensions,
-            dragBounds,
             ...baseTransitionProps
           };
 
@@ -140,17 +148,26 @@ const createPoseSetter: PoseSetterFactory = setterProps => (
           activePoses.set(key, next);
         })
     );
+  };
 
-    animations.push(...poserAnimations);
+  // Check before and afterChildren props to check if we need to reorder these animations
+  if (nextPose && hasChildren) {
+    // parent before children
+    if (resolveProp(nextPose.beforeChildren, baseTransitionProps)) {
+      return Promise.all(getParentAnimations()).then(() =>
+        Promise.all(getChildAnimations())
+      );
+
+      // children before parent
+    } else if (resolveProp(nextPose.afterChildren, baseTransitionProps)) {
+      return Promise.all(getChildAnimations()).then(() =>
+        Promise.all(getParentAnimations())
+      );
+    }
   }
 
-  // Get children animation Promises
-  if (children.size)
-    animations.push(
-      ...startChildAnimations(children, next, nextPose, baseTransitionProps)
-    );
-
-  return Promise.all(animations);
+  // Otherwise, run all animations in parallel
+  return Promise.all([...getParentAnimations(), ...getChildAnimations()]);
 };
 
 export default createPoseSetter;
