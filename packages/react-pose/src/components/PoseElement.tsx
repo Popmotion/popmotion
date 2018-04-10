@@ -37,7 +37,6 @@ class PoseElement extends React.PureComponent<PoseElementProps> {
   props: PoseElementProps;
   poser: Poser;
   ref: Element;
-  innerRef: HTMLElement;
   hostRef: HTMLElement;
   styleProps: { [key: string]: any };
   children: Set<ChildRegistration> = new Set();
@@ -79,7 +78,7 @@ class PoseElement extends React.PureComponent<PoseElementProps> {
   }
 
   getRef(): Element {
-    return this.hostRef || this.innerRef || this.ref;
+    return this.hostRef || this.ref;
   }
 
   getFirstPose(): CurrentPose | void {
@@ -134,10 +133,6 @@ class PoseElement extends React.PureComponent<PoseElementProps> {
 
     return props;
   }
-
-  setInnerRef = (ref: HTMLElement) => {
-    this.innerRef = ref;
-  };
 
   setHostRef = (ref: HTMLElement) => {
     this.hostRef = ref;
@@ -199,7 +194,6 @@ class PoseElement extends React.PureComponent<PoseElementProps> {
     if (onUnmount) onUnmount(this.poser);
     this.poser.destroy();
     this.ref = undefined;
-    this.innerRef = undefined;
     this.hostRef = undefined;
   }
 
@@ -236,7 +230,7 @@ class PoseElement extends React.PureComponent<PoseElementProps> {
       typeof elementType === 'function' &&
       !(elementType.prototype && 'isReactComponent' in elementType.prototype)
 
-    // Because we can't guarantee that `elementType` is a DOM primative, we may
+    // Because we can't guarantee that `elementType` is a DOM primitive, we may
     // need to get a ref to an underlying DOM element. The standard is to accept
     // an `innerRef` prop (ala: Styled Components), so we pass that function
     // along.
@@ -246,10 +240,9 @@ class PoseElement extends React.PureComponent<PoseElementProps> {
     // `hostRef`, which the consuming code can opt into if they want.
     // ( see https://github.com/facebook/react/issues/11401 )
     const elementProps = {
-      innerRef: this.setInnerRef,
+      innerRef: this.setHostRef,
       hostRef: this.setHostRef,
-      // Only non-functional components can accept a `ref` prop without throwing
-      // a warning
+      // Functional components throw a warning when passed a `ref` prop
       ref: !isStatelessFunctionalComponent ? this.setRef : undefined,
     }
 
