@@ -120,6 +120,10 @@ The name or names of the current pose.
 
 If set to `false`, this component won't subscribe to its parent posed component and create root for any further child components.
 
+### `onPoseComplete?: Function`
+
+A callback that fires whenever a pose has finished transitioning.
+
 ### `onChange?: { [key: string]: any }`
 
 **Deprecated:** See `onValueChange`
