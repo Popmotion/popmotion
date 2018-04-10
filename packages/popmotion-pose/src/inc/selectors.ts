@@ -24,6 +24,8 @@ export const getPoseValues: PoseValuesSelector = ({
   delayChildren,
   staggerChildren,
   staggerDirection,
+  afterChildren,
+  beforeChildren,
   ...props
 }) => props;
 

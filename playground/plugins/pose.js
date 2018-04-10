@@ -36,11 +36,11 @@ const sidebarProps = {
   dragBounds: { left: -100, right: 0 },
   open: {
     x: "0%",
-    delayChildren: 300,
+    beforeChildren: true,
     staggerChildren: 50
   },
   close: {
-    delay: 500,
+    afterChildren: true,
     x: "-100%"
   }
   // passive: {
@@ -64,7 +64,7 @@ const itemProps = {
   close: {
     opacity: 0,
     x: ({ i }) => Math.sin(i * Math.PI * 0.5) * 75,
-    transition: (props) => tween({...props, duration: 100000})
+    transition: tween
   }
 };
 
@@ -78,7 +78,10 @@ export class PoseDOM extends React.Component {
       });
     });
 
-    setTimeout(() => this.sidebarPoser.set("open"), 1000);
+    setTimeout(
+      () => this.sidebarPoser.set("open").then(() => console.log("finished")),
+      1000
+    );
   }
 
   componentWillUnmount() {
@@ -368,13 +371,13 @@ export class PoseFullScreenFlip extends React.PureComponent {
       this.poser = pose(ref, {
         fullscreen: {
           width: "100%",
-          height: "100%",
-          transition: tween
+          height: "100%"
+          //transition: tween
         },
         thumbnail: {
           width: 100,
-          height: 100,
-          transition: tween
+          height: 100
+          //transition: tween
         }
       });
     } else {
