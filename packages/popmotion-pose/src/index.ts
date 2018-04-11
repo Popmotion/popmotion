@@ -25,6 +25,7 @@ const pose: PoserFactory = (element, props) => {
     passive,
     values: userSetValues,
     label,
+    parentValues,
     ancestorValues = [],
     onChange
   } = props;
@@ -38,6 +39,8 @@ const pose: PoserFactory = (element, props) => {
   const elementStyler = styler(element, { preparseOutput: false });
   const poses = createPoses(props);
   const getTransitionProps = () => transitionProps;
+
+  if (parentValues) ancestorValues.unshift({ values: parentValues });
 
   const { values, types } = createValuesAndTypes({
     poses,

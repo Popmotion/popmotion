@@ -78,6 +78,7 @@ export type PoserProps = {
   passive?: PassiveMap;
   onChange?: OnChangeMap;
   ancestorValues?: AncestorValue[];
+  parentValues?: ValueMap;
   label?: string;
   draggable?: Draggable;
   transitionProps?: PoseSetterProps;
@@ -99,7 +100,7 @@ export type Transition = (
   props: TransitionProps & PoseSetterProps
 ) => Action | false;
 
-export type AncestorValue = { label: string; values: ValueMap };
+export type AncestorValue = { label?: string; values: ValueMap };
 export type ValueMap = Map<string, ValueReaction>;
 export type TypesMap = Map<string, ValueType>;
 

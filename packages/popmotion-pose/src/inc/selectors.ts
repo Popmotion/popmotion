@@ -14,6 +14,7 @@ export const getPoses: PoseSelector = ({
   onDragEnd,
   label,
   ancestorValues,
+  parentValues,
   values,
   transitionProps,
   ...poses
