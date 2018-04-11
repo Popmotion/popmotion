@@ -24,7 +24,8 @@ const pose: PoserFactory = (element, props) => {
     initialPose,
     passive,
     values: userSetValues,
-    parentValues,
+    label,
+    ancestorValues = [],
     onChange
   } = props;
   const dragProps = getDragProps(props);
@@ -44,7 +45,7 @@ const pose: PoserFactory = (element, props) => {
     initialPose,
     passive,
     userSetValues,
-    parentValues,
+    ancestorValues,
     onChange,
     getTransitionProps
   });
@@ -95,7 +96,7 @@ const pose: PoserFactory = (element, props) => {
     addChild: (childElement, childProps) => {
       const child = pose(childElement, {
         ...childProps,
-        parentValues: values
+        ancestorValues: [{ label, values }, ...ancestorValues]
       });
       children.add(child);
       return child;

@@ -31,6 +31,7 @@ const SidePanel = styled.div`
 `;
 
 const sidebarProps = {
+  label: "sidebar",
   initialPose: "close",
   draggable: "x",
   dragBounds: { left: -100, right: 0 },
@@ -125,7 +126,7 @@ const passiveModalItemProps = {
     opacity: [
       "x",
       transform.pipe(parseFloat, transform.interpolate([-100, 0], [0, 1])),
-      true
+      "sidebar"
     ]
   }
 };
@@ -398,3 +399,34 @@ export class PoseFullScreenFlip extends React.PureComponent {
     );
   }
 }
+
+// pose(container, {
+//   label: 'container',
+//   hover: true,
+//   hoverIn: {
+//     'x y': ({ dimensions }) => {
+//       const { width, height, left, top } = dimensions.measure()
+//       return pointer({
+//         x: width / 2 + left,
+//         y: height / 2 + top
+//       })
+//     }
+//   },
+//   silent: ['x', 'y']
+// });
+
+// pose(box, {
+//   hoverIn: { x: 100, scale: 1.2 },
+//   hoverOut: { x: 0, scale: 1 },
+//   passive: {
+//     rotateY: ['x', x => (x * CO_EFFICIENT.x).toFixed(2) + 'deg', true],
+//     rotateX: ['y', (y * CO_EFFICIENT.y).toFixed(2) + 'deg', true]
+//   }
+// })
+
+// pose(glare, {
+//   passive: {
+//     opacity: ['y', v => v / height * 1, 'container'],
+//     rotate: ['x y', ({ x, y }) => angle({ x: 0, y: 0 }, {x, y}) + 90, 'container']
+//   }
+// })

@@ -47,7 +47,7 @@ export type PoseMap = {
 export type Transformer = (v: any) => any;
 
 export type PassiveMap = {
-  [key: string]: [string, Transformer, boolean | undefined];
+  [key: string]: [string, Transformer, boolean | string | undefined];
 };
 
 export type OnChangeMap = {
@@ -77,7 +77,8 @@ export type PoserProps = {
   initialPose?: string | string[];
   passive?: PassiveMap;
   onChange?: OnChangeMap;
-  parentValues?: ValueMap;
+  ancestorValues?: AncestorValue[];
+  label?: string;
   draggable?: Draggable;
   transitionProps?: PoseSetterProps;
   values?: { [key: string]: ValueReaction };
@@ -98,6 +99,7 @@ export type Transition = (
   props: TransitionProps & PoseSetterProps
 ) => Action | false;
 
+export type AncestorValue = { label: string; values: ValueMap };
 export type ValueMap = Map<string, ValueReaction>;
 export type TypesMap = Map<string, ValueType>;
 
@@ -106,7 +108,7 @@ export type ValuesFactoryProps = {
   styler: Styler;
   initialPose: string | string[];
   passive: PassiveMap;
-  parentValues: ValueMap;
+  ancestorValues: AncestorValue[];
   userSetValues?: { [key: string]: ValueReaction };
   onChange: OnChangeMap;
   getTransitionProps: () => PoseSetterProps;

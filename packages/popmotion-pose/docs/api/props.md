@@ -31,11 +31,15 @@ Lifecycle callbacks for drag events.
 type PassiveValue = [
   subscribedKey: string,
   transform: (subscribedValue: any) => any,
-  fromParent?: boolean
+  fromParent?: true | string
 ]
 ```
 
-Map of values that are passively changed when other values, either on this Poser or its immediate parent, change.
+Map of values that are passively changed when other values, either on this Poser or an ancestor, change.
+
+`fromParent` can be set either as `true` or as a `string`:
+  - `true`: Link to value from immediate parent.
+  - `string`: Link to the nearest ancestor with this `label` prop.
 
 #### Example
 
@@ -53,6 +57,10 @@ const props = {
   }
 }
 ```
+
+### `label: string`
+
+Set a label on this poser. Currently, this allows a `passive` value on a child poser to refer to this ancestor value.
 
 ### `transitionProps: { [key: string]: any }`
 

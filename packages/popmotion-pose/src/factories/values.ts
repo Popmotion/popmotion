@@ -1,6 +1,7 @@
 import {
   ValuesAndTypes,
   ValuesFactoryProps,
+  AncestorValue,
   ValueMap,
   TypesMap,
   PoseMap,
@@ -92,14 +93,27 @@ const scrapeValuesFromPose = (
   );
 };
 
+const getAncestorValue = (
+  key: string,
+  fromParent: boolean | string,
+  ancestors: AncestorValue[]
+): ValueReaction => {
+  if (fromParent === true) {
+    return ancestors[0] && ancestors[0].values.get(key);
+  } else {
+    const foundAncestor = ancestors.find(({ label }) => label === fromParent);
+    return foundAncestor && foundAncestor.values.get(key);
+  }
+};
+
 const bindPassiveValues = (
   values: ValueMap,
-  { passive, parentValues, styler }: ValuesFactoryProps
+  { passive, ancestorValues, styler }: ValuesFactoryProps
 ) => (key: string) => {
   const [valueKey, transform, fromParent] = passive[key];
   const valueToBind =
-    fromParent && parentValues && parentValues.has(valueKey)
-      ? parentValues.get(valueKey)
+    fromParent && ancestorValues.length
+      ? getAncestorValue(valueKey, fromParent, ancestorValues)
       : values.has(valueKey) ? values.get(valueKey) : false;
 
   if (!valueToBind) return;

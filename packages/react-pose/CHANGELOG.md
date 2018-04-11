@@ -2,6 +2,12 @@
 
 React Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.4.0] 2018-04-11
+
+### Added
+
+- Labels. Now passive values can refer to ancestors other than parent by using their label.
+
 ## [1.3.0] 2018-04-10
 
 ### Added
