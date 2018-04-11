@@ -14,6 +14,7 @@ import { resolveProp } from './pose-setter';
 import { number, degrees, percent, px, ValueType } from 'style-value-types';
 import { pipe } from 'popmotion/transformers';
 import value, { ValueReaction } from 'popmotion/reactions/value';
+import { onFrameUpdate } from 'framesync';
 import { Styler } from 'stylefire';
 
 export type ValuesAndTypesFactory = (
@@ -93,28 +94,58 @@ const scrapeValuesFromPose = (
   );
 };
 
-const getAncestorValue = (
-  key: string,
-  fromParent: boolean | string,
-  ancestors: AncestorValue[]
-): ValueReaction => {
-  if (fromParent === true) {
-    return ancestors[0] && ancestors[0].values.get(key);
+const getAncestorValueMap = (ancestors: AncestorValue[], ancestorKey: string | boolean) => {
+  if (ancestorKey === true) {
+    return ancestors[0] && ancestors[0].values;
   } else {
-    const foundAncestor = ancestors.find(({ label }) => label === fromParent);
-    return foundAncestor && foundAncestor.values.get(key);
+    const foundAncestor = ancestors.find(({ label }) => label === ancestorKey);
+    return foundAncestor && foundAncestor.values;
   }
+};
+
+const getCompoundValue = (valueMap: ValueMap, keys: string[]) => {
+  const initialValue = keys.reduce((acc: { [key: string]: any }, key) => {
+    acc[key] = valueMap.get(key).get();
+    return acc;
+  }, {});
+
+  const compoundValue = value(initialValue).applyMiddleware((update) => {
+    let latest: any;
+    const updateLatest = () => update(latest);
+    return (v: any) => {
+      latest = v;
+      onFrameUpdate(updateLatest, true);
+    };
+  });
+
+  keys.forEach((key) => {
+    valueMap.get(key).subscribe((v: any) => {
+      const latest: any = compoundValue.get();
+      return { ...latest, [key]: v };
+    });
+  });
+
+  return compoundValue;
+};
+
+const getValueFromValueMap = (valueMap: ValueMap, key: string) => {
+  const valueKeys = key.split(' ');
+  return (valueKeys.length === 1)
+    ? valueMap.get(key)
+    : getCompoundValue(valueMap, valueKeys);
+};
+
+const getValueToBind = (values: ValueMap, ancestorValues: AncestorValue[], valueKey: string, ancestorKey: string | boolean) => {
+  const valueMap = ancestorKey ? getAncestorValueMap(ancestorValues, ancestorKey) : values;
+  return getValueFromValueMap(valueMap, valueKey);
 };
 
 const bindPassiveValues = (
   values: ValueMap,
   { passive, ancestorValues, styler }: ValuesFactoryProps
 ) => (key: string) => {
-  const [valueKey, transform, fromParent] = passive[key];
-  const valueToBind =
-    fromParent && ancestorValues.length
-      ? getAncestorValue(valueKey, fromParent, ancestorValues)
-      : values.has(valueKey) ? values.get(valueKey) : false;
+  const [valueKey, transform, ancestorKey] = passive[key];
+  const valueToBind = getValueToBind(values, ancestorValues, valueKey, ancestorKey);
 
   if (!valueToBind) return;
 
