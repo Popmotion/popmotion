@@ -81,6 +81,7 @@ export type PoserProps = {
   parentValues?: ValueMap;
   label?: string;
   draggable?: Draggable;
+  hover?: boolean;
   transitionProps?: PoseSetterProps;
   values?: { [key: string]: ValueReaction };
 } & DragProps & { [key: string]: any };

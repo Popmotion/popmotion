@@ -15,12 +15,13 @@ import createPoses from './factories/poses';
 import createValuesAndTypes from './factories/values';
 import createPoseSetter from './factories/pose-setter';
 import createDimensions from './factories/dimensions';
-import makeDraggable from './dom/draggable';
+import { addDragListeners, addHoverListeners } from './dom/draggable';
 import { ColdSubscription } from 'popmotion/action/types';
 
 const pose: PoserFactory = (element, props) => {
   const {
     draggable,
+    hover,
     initialPose,
     passive,
     values: userSetValues,
@@ -68,7 +69,8 @@ const pose: PoserFactory = (element, props) => {
     flipEnabled: element instanceof HTMLElement
   });
 
-  if (draggable) makeDraggable(element, set, activeActions, dragProps);
+  if (draggable) addDragListeners(element, set, activeActions, dragProps);
+  if (hover) addHoverListeners(element, set, activeActions); 
 
   const api: Poser = {
     set,

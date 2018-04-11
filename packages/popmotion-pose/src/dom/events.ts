@@ -2,7 +2,7 @@ import listen from 'popmotion/input/listen';
 import { ColdSubscription } from 'popmotion/action/types';
 import { PoseSetter, ActiveActions, DragProps } from '../types';
 
-export default (
+export const addDragListeners = (
   element: Element,
   set: PoseSetter,
   activeActions: ActiveActions,
@@ -29,5 +29,26 @@ export default (
       }
     )
   );
+
+const isMouseEvent = (e: MouseEvent | TouchEvent) => typeof e.touches === 'undefined';
+
+export const addHoverListeners = (
+  element: Element,
+  set: PoseSetter,
+  activeActions: ActiveActions
+) => activeActions.set(
+  'hoverStartListener',
+  listen(element, 'mouseenter')
+    .filter(isMouseEvent)
+    .start((startEvent: MouseEvent) => {
+      set('hoverIn');
+      if (onHover) onHover(startEvent);
+
+      activeActions.set(
+        'hoverEventListener',
+        listen(element, 'mouseleave')
+      )
+    })
+)
 
 export { ColdSubscription };

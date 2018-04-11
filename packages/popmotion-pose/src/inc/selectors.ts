@@ -17,6 +17,7 @@ export const getPoses: PoseSelector = ({
   parentValues,
   values,
   transitionProps,
+  hover,
   ...poses
 }) => poses;
 
