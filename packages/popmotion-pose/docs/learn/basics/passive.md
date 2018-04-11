@@ -88,15 +88,19 @@ backgroundColor: ['x', pipe(
 
 <CodePen id="vRmRvV" />
 
-## Linking to parents
+## Linking to ancestors
 
-We can also link a passive value to a value in the poser's direct parent.
+We can also link a passive value to a value in one of the poser's ancestors.
 
 Let's revist our [sidebar example](https://codepen.io/popmotion/pen/LdybdN?editors=0010) from earlier.
 
 Currently, we're actively animating the children by setting poses on both the parent and the children.
 
-It's possible to change the opacity of the items as the `x` of the sidebar changes. First, let's add a slower `transition` to `sidebarProps.open` to help us see this in effect.
+But, it's possible to change the opacity of the items as the `x` of their sidebar parent changes.
+
+To do this, we pass `true` as the third and final argument of the tuple.
+
+Add a slower `transition` to `sidebarProps.open` to help us see this in effect.
 
 ```javascript
 transition: (props) => tween({  ...props, duration: 1000 })
@@ -118,3 +122,20 @@ const itemProps = {
 As you can see, we're passing in a third parameter to the passive tuple, `true`. This says "listen to the `x` value, but do so on my immediate parent.
 
 <CodePen id="GxOXeX" />
+
+### Distant ancestors
+
+Using `true` is fine if we want to look just one part up the ancestor chain. But it's also possible to go much further up using `label`.
+
+By explicitly naming our posers with a `label`, we can refer to any poser in the ancestor chain.
+
+Add the label `'sidebar'` to our `sidebarProps`:
+
+```javascript
+const sidebarProps = {
+  label: 'sidebar',
+  /* other props */
+}
+```
+
+Now replace `true` in `itemProps` with `'sidebar'`. It still works, and it will still work if you decide to put a poser between sidebar and items.
