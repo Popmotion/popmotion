@@ -2,6 +2,13 @@
 
 React Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.0] 2018-04-12
+
+### Added
+
+- `posed(Component)` via [Jess Telford](https://twitter.com/jesstelford)
+- React < 16.3 compatibility
+
 ## [1.4.0] 2018-04-11
 
 ### Added

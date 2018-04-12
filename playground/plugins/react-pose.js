@@ -67,7 +67,8 @@ const itemStyle = `
   width: 100%;
   opacity: 0;
   margin-bottom: 10px;
-  transform-origin-y: 0%;
+  transform-origin: 0%;
+  transform-style: flat;
   color: white;
 `;
 
@@ -102,9 +103,9 @@ const itemProps = {
   }
 };
 
-const Item = styled(posed.div(itemProps))`
-  ${itemStyle};
-`;
+const ItemStyled = styled.div`${itemStyle}`
+
+const Item = posed(ItemStyled)(itemProps)
 
 export class ReactPoseChildren extends React.PureComponent {
   state = { isOpen: false };
@@ -118,7 +119,7 @@ export class ReactPoseChildren extends React.PureComponent {
 
     return (
       <SidePanel innerRef={console.log} pose={isOpen ? "open" : "closed"}>
-        <Item i={0} />
+        <Item i={0} ref={console.log} />
         <Item i={1} />
         <Item i={2} />
         <Item i={3} />
