@@ -59,7 +59,6 @@ class PoseElement extends React.PureComponent<PoseElementProps> {
    * Lifecycle
    * =============================================
    */
-
   getInitialPose(): CurrentPose {
     const { getInitialPoseFromParent, pose, initialPose } = this.props;
 
@@ -99,6 +98,8 @@ class PoseElement extends React.PureComponent<PoseElementProps> {
       popFromFlow,
       values,
       parentValues,
+      onDragStart,
+      onDragEnd,
       ...props
     } = this.props;
 
@@ -157,7 +158,9 @@ class PoseElement extends React.PureComponent<PoseElementProps> {
       onValueChange,
       registerChild,
       values,
-      parentValues
+      parentValues,
+      onDragStart,
+      onDragEnd,
     } = this.props;
     const props: PoserProps = {
       ...poseProps,
@@ -165,6 +168,8 @@ class PoseElement extends React.PureComponent<PoseElementProps> {
       values: values || poseProps.values,
       parentValues: parentValues ? objectToMap(parentValues) : parentValues,
       transitionProps: this.getSetProps(),
+      onDragStart,
+      onDragEnd,
       onChange: onValueChange
         ? onValueChange
         : typeof onChange !== 'function' ? onChange : undefined // 2.0.0 set to just `onValueChange`

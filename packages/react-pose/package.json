@@ -1,6 +1,6 @@
 {
   "name": "react-pose",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "A declarative animation library for React",
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",

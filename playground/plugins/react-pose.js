@@ -13,6 +13,7 @@ import {
 const { pipe, blendColor, conditional, clamp, interpolate } = transform;
 
 const boxProps = {
+  draggable: true,
   closed: { scaleX: 0 },
   open: { scaleX: 1 }
 };
@@ -33,7 +34,7 @@ export class ReactPose extends React.PureComponent {
 
   render() {
     const { isOpen } = this.state;
-    return <Box pose={isOpen ? "open" : "closed"} />;
+    return <Box pose={isOpen ? "open" : "closed"} onDragStart={console.log} />;
   }
 }
 

@@ -2,6 +2,12 @@
 
 React Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.1] 2018-04-12
+
+### Added
+
+- `onDragStart`/`onDragEnd` callbacks to posed components.
+
 ## [1.5.0] 2018-04-12
 
 ### Added

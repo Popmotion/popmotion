@@ -160,6 +160,10 @@ A callback that fires whenever a pose has finished transitioning.
 
 `onValueChange` is a map of functions, each corresponding to a value being animated by the posed component and will fire when that value changes.
 
+### `onDragStart`/`onDragEnd: (e: Event) => void`
+
+Callbacks that fire when dragging starts or ends. **Note:** These props are immutable and can't be changed after mounting.
+
 ### `innerRef?: (ref: Element) => void`
 
 An optional function that will call with the posed DOM element when it mounts, and `null` when it unmounts.
