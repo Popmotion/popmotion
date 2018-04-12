@@ -160,6 +160,10 @@ A callback that fires whenever a pose has finished transitioning.
 
 `onValueChange` is a map of functions, each corresponding to a value being animated by the posed component and will fire when that value changes.
 
+### `innerRef?: (ref: Element) => void`
+
+An optional function that will call with the posed DOM element when it mounts, and `null` when it unmounts.
+
 ### `...props: { [key: string]: any }`
 
 Remaining props will be provided to a pose's `transition` function when that pose is entered.
