@@ -25,8 +25,9 @@ import posed from 'react-pose'
 ### Create a posed component
 
 `posed` can be used to create posed components in two ways:
-1) **Recommended:** Create HTML & SVG elements (eg `posed.div()`)
-2) **Advanced:** Convert existing components (eg `posed(Component)()`)
+
+- **Recommended:** Create HTML & SVG elements (eg `posed.div`)
+- **Advanced:** Convert existing components (eg `posed(Component)`)
 
 #### HTML & SVG elements
 

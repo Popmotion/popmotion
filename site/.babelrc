@@ -1,7 +1,6 @@
 {
   "presets": [
     "next/babel",
-    "es2015-subset-loose",
     "react",
     "stage-0"
   ],
