@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { ReactElement } from 'react';
+import reactLifecyclesCompat = require('react-lifecycles-compat');
 import {
   handleIncomingChildren,
   makeChildList,
@@ -24,7 +25,7 @@ export type State = {
   removeFromTree: (key: string) => void;
 };
 
-export class PoseGroup extends React.Component<Props, State> {
+class PoseGroup extends React.Component<Props, State> {
   static defaultProps = {
     flipMove: true,
     preEnterPose: 'exit',
@@ -80,3 +81,7 @@ export class PoseGroup extends React.Component<Props, State> {
     return <Fragment>{children}</Fragment>;
   }
 }
+
+reactLifecyclesCompat(PoseGroup);
+
+export { PoseGroup };

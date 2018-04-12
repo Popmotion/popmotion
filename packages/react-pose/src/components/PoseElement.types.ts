@@ -17,7 +17,7 @@ export type PoseContextProps = {
 
 export type PoseElementProps = {
   children?: any;
-  elementType: string;
+  elementType: any;
   poseProps: PoserProps;
   pose?: CurrentPose;
   initialPose?: CurrentPose;

@@ -4,8 +4,6 @@ description: Create a posed component
 category: react
 ---
 
-**Note:** React Pose **requires** React 16.3.0.
-
 # `posed`
 
 `posed` is used to create animated and interactive components that you can reuse throughout your React site.
@@ -26,6 +24,12 @@ import posed from 'react-pose'
 
 ### Create a posed component
 
+`posed` can be used to create posed components in two ways:
+1) **Recommended:** Create HTML & SVG elements (eg `posed.div()`)
+2) **Advanced:** Convert existing components (eg `posed(Component)()`)
+
+#### HTML & SVG elements
+
 `pose` isn't called directly, instead we pass [posed props](/pose/api/props) to `posed.div`, `posed.button` etc. Every HTML and SVG element is supported:
 
 ```javascript
@@ -35,6 +39,32 @@ const DraggableCircle = posed.circle({
 })
 
 export default ({ radius }) => <DraggableCircle r={radius} />
+```
+
+#### Existing components
+
+Existing components can be converted to posed components by calling `posed` directly:
+
+```javascript
+const PosedComponent = posed(MyComponent)(poseProps)
+```
+
+For performance and layout calculations, React Pose requires a reference to the underlying DOM element. So, the component to be posed **must pass hostRef to the host element's ref prop**.
+
+```javascript
+const MyComponent = ({ hostRef }) => <div ref={hostRef} />
+
+const PosedComponent = posed(MyComponent)({
+  draggable: true
+})
+
+export default () => <PosedComponent pose={isOpen ? 'open' : 'closed'} />
+```
+
+For FLIP support in a `PoseGroup`, it **optionally** needs to pass on the `style` prop:
+
+```javascript
+const MyComponent = ({ hostRef, style }) => <div ref={hostRef} style={style} />
 ```
 
 ### Set a pose
@@ -99,9 +129,6 @@ const sidebarProps = {
 }
 
 const Sidebar = styled(posed.nav(sidebarProps))`
-  width: 300px;
-  background: red;
-`;
 ```
 
 #### `className`
