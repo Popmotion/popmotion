@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ReactElement } from 'react';
-import reactLifecyclesCompat = require('react-lifecycles-compat');
+import reactLifecyclePolyfill = require('react-lifecycles-compat');
 import {
   handleIncomingChildren,
   makeChildList,
@@ -82,6 +82,6 @@ class PoseGroup extends React.Component<Props, State> {
   }
 }
 
-reactLifecyclesCompat(PoseGroup);
+reactLifecyclePolyfill(PoseGroup);
 
 export { PoseGroup };

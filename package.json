@@ -54,5 +54,8 @@
     "prettier": {
       "singleQuote": true
     }
+  },
+  "dependencies": {
+    "@jesstelford/react-pose": "^1.4.0-anycomponent"
   }
 }

@@ -12,6 +12,13 @@ import reactLifecyclePolyfill = require('react-lifecycles-compat');
 
 export const PoseParentContext = createContext({});
 
+type Ref = (ref: Element) => any;
+type RefSetters = {
+  ref?: Ref,
+  innerRef?: Ref,
+  hostRef?: Ref
+};
+
 const calcPopFromFlowStyle = (el: HTMLElement): PopStyle => {
   const { offsetTop, offsetLeft, offsetWidth, offsetHeight } = el;
 
@@ -120,22 +127,6 @@ class PoseElement extends React.PureComponent<PoseElementProps> {
       this.popStyle = null;
     }
 
-    /**
-     * We need to get a ref to the underlying DOM element. Styled Components and
-     * other libraries use `innerRef`, though this will be swallowed if the
-     * styled component is not a primitive (ie styled(Component)).
-     *
-     * Instead we pass another function, `hostRef`, as recommended by Facebook
-     * https://github.com/facebook/react/issues/11401
-     *
-     * We also only pass `ref` to DOM primitive components.
-     */
-    if (typeof elementType === 'string') {
-      props.ref = this.setRef;
-    } else {
-      props.innerRef = props.hostRef = this.setRef;
-    }
-
     // Deprecated for 2.0.0
     // If this is a function, it's intended for the DOM element
     if (typeof onChange === 'function') props.onChange = onChange;
@@ -143,11 +134,38 @@ class PoseElement extends React.PureComponent<PoseElementProps> {
     return props;
   }
 
+
+  /**
+   * We need to get a ref to the underlying DOM element. Styled Components and
+   * other libraries use `innerRef`, though this will be swallowed if the
+   * styled component is not a primitive (ie styled(Component)).
+   *
+   * Instead we pass another function, `hostRef`, as recommended by Facebook
+   * https://github.com/facebook/react/issues/11401
+   *
+   * We also only pass `ref` to DOM primitive components.
+   */
+  getRefs = (): RefSetters => {
+    const refs: RefSetters = {};
+    const { elementType } = this.props;
+
+    if (typeof elementType === 'string') {
+      refs.ref = this.setRef;
+    } else {
+      refs.innerRef = this.setRef;
+      refs.hostRef = this.setRef;
+    }
+
+    return refs;
+  }
+
   setRef = (ref: Element) => {
-    const { innerRef } = this.props;
-    if (innerRef) innerRef(ref);
-    this.ref = ref;
-  };
+    if (ref instanceof Element || (this.ref && ref === null)) {
+      const { innerRef } = this.props;
+      if (innerRef) innerRef(ref);
+      this.ref = ref;
+    }
+  }
 
   componentDidMount() {
     if (!this.ref) return;
@@ -236,7 +254,7 @@ class PoseElement extends React.PureComponent<PoseElementProps> {
       <PoseParentContext.Provider value={this.childrenHandlers}>
         {createElement(
           elementType,
-          this.getSetProps(),
+          { ...this.getSetProps(), ...this.getRefs() },
           children
         )}
       </PoseParentContext.Provider>

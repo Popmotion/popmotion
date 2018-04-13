@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import posed, { PoseGroup } from "../../packages/react-pose/lib";
+import posed, { PoseGroup } from "@jesstelford/react-pose";
 import {
   easing,
   decay,
@@ -18,12 +18,27 @@ const boxProps = {
   open: { scaleX: 1 }
 };
 
-const Box = styled(posed.div(boxProps))`
+const Box = ({ className, children, hostRef }) => (
+  <div className={className} ref={hostRef}>{children}</div>
+);
+
+const StyledBox = styled(Box)`
   background-color: red;
   width: 100px;
   height: 100px;
   transform-origin: 0 0;
-`;
+`
+const AnimatedBox = posed(StyledBox)({
+  enter: { opacity: 1, y: '0%' },
+  exit: { opacity: 0, y: '30%' },
+});
+
+// const Box = styled(posed.div(boxProps))`
+//   background-color: red;
+//   width: 100px;
+//   height: 100px;
+//   transform-origin: 0 0;
+// `;
 
 export class ReactPose extends React.PureComponent {
   state = { isOpen: false };
@@ -34,7 +49,10 @@ export class ReactPose extends React.PureComponent {
 
   render() {
     const { isOpen } = this.state;
-    return <Box pose={isOpen ? "open" : "closed"} onDragStart={console.log} />;
+    return <PoseGroup animateOnMount>
+      <AnimatedBox key="1" />
+      <AnimatedBox key="2" />
+    </PoseGroup>
   }
 }
 
@@ -106,7 +124,7 @@ const itemProps = {
 
 const ItemStyled = styled.div`${itemStyle}`
 
-const Item = posed(ItemStyled)(itemProps)
+const Item = ItemStyled
 
 export class ReactPoseChildren extends React.PureComponent {
   state = { isOpen: false };
@@ -119,8 +137,8 @@ export class ReactPoseChildren extends React.PureComponent {
     const { isOpen } = this.state;
 
     return (
-      <SidePanel innerRef={console.log} pose={isOpen ? "open" : "closed"}>
-        <Item i={0} ref={console.log} />
+      <SidePanel pose={isOpen ? "open" : "closed"}>
+        <Item i={0} />
         <Item i={1} />
         <Item i={2} />
         <Item i={3} />
