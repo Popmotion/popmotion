@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import posed, { PoseGroup } from "@jesstelford/react-pose";
+import posed, { PoseGroup } from "../../packages/react-pose/lib";
 import {
   easing,
   decay,

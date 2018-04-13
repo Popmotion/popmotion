@@ -2,6 +2,12 @@
 
 React Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.2] 2018-04-13
+
+### Fixed
+
+- Checking `ref` for `instanceof Element` before setting in case `innerRef` has been passed to a component.
+
 ## [1.5.1] 2018-04-12
 
 ### Added
