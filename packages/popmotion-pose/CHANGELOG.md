@@ -2,6 +2,22 @@
 
 Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.0.0] 2018-04-10
+
+### Added
+
+- `transitionProps` => `props`
+- Moved `dragBounds` to `props`
+
+### Removed
+
+- Removed `onChange`
+
+### Private changes
+
+- Pose `props` now referred to as `config` to clarify terminology.
+- 
+
 ## [1.2.0] 2018-04-10
 
 ### Added

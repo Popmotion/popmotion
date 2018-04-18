@@ -6,6 +6,7 @@ import pointer from 'popmotion/input/pointer';
 import { interpolate } from 'popmotion/transformers';
 import { eachValue } from './transition-composers';
 import { RawValue, Transition, BoundingBoxDimension } from '../types';
+import pose from '..';
 
 const singleAxisPointer = (axis: string) => (from: number) =>
   pointer({ [axis]: from }).pipe((v: any) => v[axis]);
