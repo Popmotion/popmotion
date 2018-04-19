@@ -22,11 +22,11 @@ const pose = poseFactory<Animated.Value | Animated.AnimatedInterpolation, Animat
     return action;
   },
   stopAction: (action) => action.stop(),
-  getNoTransition: (value, toValue) => Animated.timing(value, {
+  getInstantTransition: (value, toValue) => Animated.timing(value, {
     toValue,
     duration: 0
   }),
-  addTransitionDelay: (delay = 0, transition) => Animated.sequence([
+  addActionDelay: (delay = 0, transition) => Animated.sequence([
     Animated.delay(delay),
     transition
   ]),

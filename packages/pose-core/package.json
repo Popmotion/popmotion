@@ -1,5 +1,5 @@
 {
-  "name": "popmotion-pose",
+  "name": "pose-core",
   "private": true,
   "version": "0.0.1",
   "description": "Factory for Pose animation state machines",

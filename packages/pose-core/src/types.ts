@@ -87,7 +87,7 @@ export type StartAction<A> = (action: A, complete: Function) => A;
 
 export type StopAction<A> = (action: A) => any;
 
-export type GetNoTransition<V, A> = (value: V, target: any) => A;
+export type GetInstantTransition<V, A> = (value: V, target: any) => A;
 
 export type AddTransitionDelay<A> = (delay: number, transition: A) => A;
 
@@ -101,7 +101,7 @@ export type PoseFactoryConfig<V, A, P> = {
   createValue: CreateValue<V>;
   startAction: StartAction<A>;
   stopAction: StopAction<A>;
-  getNoTransition: GetNoTransition<V, A>;
-  addTransitionDelay: AddTransitionDelay<A>;
+  getInstantTransition: GetInstantTransition<V, A>;
+  addActionDelay: AddTransitionDelay<A>;
   transformAPI: TransformAPI<V, A, P>;
 };
