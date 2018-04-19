@@ -22,9 +22,22 @@ export type Pose<A> = {
 };
 
 export type ValueMap<V> = Map<string, V>;
+
 export type AncestorValue<V> = {
   label?: string,
   values: ValueMap<V>
+};
+
+export type AncestorValueList<V> = Array<AncestorValue<V>>;
+
+export type Transformer = (v: any) => any;
+
+export type PassiveValueMap = {
+  [key: string]: [string, Transformer, boolean | string | void]
+};
+
+export type OnChangeCallbacks = {
+  [key: string]: (v: any) => any
 };
 
 export type ActiveActions<A> = Map<string, A>;
@@ -45,13 +58,21 @@ export type PoserConfig<V, A> = {
   label?: string;
   props?: Props;
   parentValues?: ValueMap<V>;
-  ancestorValues?: Array<AncestorValue<V>>;
+  ancestorValues?: AncestorValueList<V>;
   poses?: PoseMap<A>;
 };
+
+export type ReadValue<V> = (value: V) => any;
+
+type CreateValueProps = any;
+
+export type CreateValue<V> = (init: any, props: CreateValueProps) => V;
 
 export type PoseFactoryConfig<V, A> = {
   getDefaultProps?: (config: PoserConfig<V, A>) => Props;
   defaultTransitions?: Map<string, TransitionFactory<A>>;
-  
+  bindOnChange: (values: ValueMap<V>, onChange: OnChangeCallbacks) => (key: string) => any;
+  readValue: ReadValue<V>
+  createValue: CreateValue<V>
   //createPoses?: (config: PoserConfig<V, A>) => PoseMap<A>;
 };

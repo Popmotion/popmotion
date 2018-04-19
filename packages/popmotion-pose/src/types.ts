@@ -1,12 +1,12 @@
 import { ValueType } from 'style-value-types';
 import { PoserConfig } from '../../pose-core/src';
+import { ValueReaction } from 'popmotion/reactions/value';
 import { ColdSubscription } from 'popmotion/action/types';
-import { HotSubscription } from 'popmotion/reactions/types';
 
 export type PopmotionPoserConfig = {
-  draggable: boolean | 'x' | 'y';
+  draggable?: boolean | 'x' | 'y';
   element: Element;
-} & PoserConfig<ColdSubscription, HotSubscription>;
+} & PoserConfig<ValueReaction, ColdSubscription>;
 
 export type Dimensions = {
   get: (measurement?: BoundingBoxDimension) => BoundingBox | number;
