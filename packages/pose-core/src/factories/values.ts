@@ -1,4 +1,5 @@
-import { AncestorValueList, ValueMap, PoseMap, PassiveValueMap, ReadValue, CreateValue } from '../types';
+import { AncestorValueList, Pose, ValueMap, PoseMap, PassiveValueMap, ReadValue, CreateValue } from '../types';
+import { getPoseValues } from '../inc/selectors';
 
 type ValueFactoryProps<V, A> = {
   poses: PoseMap<A>,
@@ -8,11 +9,22 @@ type ValueFactoryProps<V, A> = {
   createValue: CreateValue<V>
 };
 
+const createValues = <V, A>(
+  values: ValueMap<V>,
+  props: ValueFactoryProps<V, A>,
+  pose: Pose<A>
+) => (key: string) => {
+
+};
+
 const scrapeValuesFromPose = <V, A>(
   values: ValueMap<V>,
-  {  }: ValueFactoryProps<V, A>
-) => (key) => {
-  
+  props: ValueFactoryProps<V, A>
+) => (key: string) => {
+  const pose = props.poses[key];
+  Object.keys(getPoseValues<A>(pose)).forEach(
+    createValues<V, A>(values, props, pose)
+  );
 };
 
 const getAncestorValue = <V>(key: string, fromParent: boolean | string, ancestors: AncestorValueList<V>): V => {
@@ -42,14 +54,15 @@ const bindPassiveValues = <V, A>(
 
   const newValue = createValue(readValue(valueToBind), {
     passiveParent: valueToBind,
-    passiveProps: props,
-    key
+    passiveProps: props
   });
+
+  // TODO: Add subscription step here
 
   values.set(key, newValue);
 };
 
-const createValues = <V, A>(props: ValueFactoryProps<V, A>): ValueMap<V> => {
+const createValueMap = <V, A>(props: ValueFactoryProps<V, A>): ValueMap<V> => {
   const { poses, passive } = props;
   const values: ValueMap<V> = new Map();
 
@@ -62,4 +75,4 @@ const createValues = <V, A>(props: ValueFactoryProps<V, A>): ValueMap<V> => {
   return values;
 };
 
-export default createValues;
+export default createValueMap;

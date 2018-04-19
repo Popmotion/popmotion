@@ -1,7 +1,12 @@
-import { PoserConfig, PoseMap } from 'types';
+import { Pose } from '../types';
 
-export const getPoses = <P, V>({
-  label,
-  props,
-  ...poses
-}: PoserConfig<P, V>): PoseMap => poses;
+export const getPoseValues = <A>({
+  transition,
+  delay,
+  delayChildren,
+  staggerChildren,
+  staggerDirection,
+  afterChildren,
+  beforeChildren,
+  ...props
+}: Pose<A>): Pose<A> => props;

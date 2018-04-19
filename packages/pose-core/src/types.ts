@@ -1,24 +1,19 @@
 export type Props = { [key: string]: any };
 
-// export type NumberPropFactory = (props: PoseSetterProps) => number;
-// export type BooleanPropFactory = (props: PoseSetterProps) => boolean;
-// export type StaggerDirectionPropFactory = (props: PoseSetterProps) => 1 | -1;
-
-// export type Pose = {
-//   transition?: Transition;
-//   delay?: number | NumberPropFactory;
-//   delayChildren?: number | NumberPropFactory;
-//   staggerChildren?: number | NumberPropFactory;
-//   staggerDirection?: 1 | -1 | StaggerDirectionPropFactory;
-//   beforeChildren?: boolean | BooleanPropFactory;
-//   afterChildren?: boolean | BooleanPropFactory;
-//   [key: string]: any;
-// };
-
+export type NumberPropFactory = (props: Props) => number;
+export type BooleanPropFactory = (props: Props) => boolean;
+export type StaggerDirectionPropFactory = (props: Props) => 1 | -1;
 export type TransitionFactory<A> = (props: Props) => A | false;
 
 export type Pose<A> = {
-  transition?: TransitionFactory<A>
+  transition?: TransitionFactory<A>;
+  delay?: number | NumberPropFactory;
+  delayChildren?: number | NumberPropFactory;
+  staggerChildren?: number | NumberPropFactory;
+  staggerDirection?: 1 | -1 | StaggerDirectionPropFactory;
+  beforeChildren?: boolean | BooleanPropFactory;
+  afterChildren?: boolean | BooleanPropFactory;
+  [key: string]: any;
 };
 
 export type ValueMap<V> = Map<string, V>;
