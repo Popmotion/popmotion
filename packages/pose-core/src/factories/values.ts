@@ -1,20 +1,44 @@
-import { AncestorValueList, Pose, ValueMap, PoseMap, PassiveValueMap, ReadValue, CreateValue } from '../types';
+import { AncestorValueList, Props, Pose, ValueMap, PoseMap, PassiveValueMap, ReadValue, CreateValue } from '../types';
 import { getPoseValues } from '../inc/selectors';
+import { resolveProp } from './setter';
 
 type ValueFactoryProps<V, A> = {
   poses: PoseMap<A>,
-  passive: PassiveValueMap,
+  passive?: PassiveValueMap,
   ancestorValues: AncestorValueList<V>,
   readValue: ReadValue<V>,
-  createValue: CreateValue<V>
+  createValue: CreateValue<V>,
+  userSetValues: { [key: string]: V },
+  initialPose?: string | string[],
+  props: Props
+};
+
+const getInitialValue = <A>(poses: PoseMap<A>, key: string, initialPose: string | string[], props: Props) => {
+  const posesToSearch = Array.isArray(initialPose) ? initialPose : [initialPose];
+  const pose = posesToSearch.find(name => poses[name] && poses[name][key] !== undefined);
+  return pose ? resolveProp(poses[pose][key], props) : 0; // Hook for renderer inspection?
 };
 
 const createValues = <V, A>(
   values: ValueMap<V>,
-  props: ValueFactoryProps<V, A>,
+  { userSetValues, createValue, initialPose, poses, props }: ValueFactoryProps<V, A>,
   pose: Pose<A>
 ) => (key: string) => {
+  if (values.has(key)) return;
 
+  let value: V;
+
+  // If this user has explicitly created a value, simply use that
+  if (userSetValues && userSetValues[key] !== undefined) {
+    value = userSetValues[key];
+
+  // Or create a new value
+  } else {
+    const initValue = getInitialValue(poses, key, initialPose, props);
+    value = createValue(initValue);
+  }
+
+  values.set(key, value);
 };
 
 const scrapeValuesFromPose = <V, A>(
@@ -57,7 +81,7 @@ const bindPassiveValues = <V, A>(
     passiveProps: props
   });
 
-  // TODO: Add subscription step here
+  // TODO: Add subscription step here?
 
   values.set(key, newValue);
 };

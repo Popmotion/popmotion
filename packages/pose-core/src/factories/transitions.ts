@@ -11,7 +11,7 @@ const applyDefaultTransition = <A>(pose: Pose<A>, key: string, defaultTransition
   };
 };
 
-const generateTransitions = <A>(poses: PoseMap<A>, defaultTransitions: DefaultTransitions<A>): PoseMap => {
+const generateTransitions = <A>(poses: PoseMap<A>, defaultTransitions: DefaultTransitions<A>): PoseMap<A> => {
   Object.keys(poses).forEach(key => {
     const pose = poses[key];
     poses[key] = pose.transition

@@ -1,8 +1,7 @@
 {
-  "name": "popmotion-pose",
-  "private": true,
+  "name": "animated-pose",
   "version": "0.0.1",
-  "description": "Factory for Pose animation state machines",
+  "description": "Pose for the Animated animation library",
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
@@ -38,7 +37,10 @@
     "parser": "typescript",
     "singleQuote": true
   },
-  "dependencies": {
+  "peerDependencies": {
     "react-native": "^0.55.3"
+  },
+  "dependencies": {
+    "@types/react-native": "^0.55.4"
   }
 }
