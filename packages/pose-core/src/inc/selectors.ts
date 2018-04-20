@@ -1,4 +1,4 @@
-import { Pose } from '../types';
+import { Pose, PoseMap, PoserConfig } from '../types';
 
 export const getPoseValues = <A>({
   transition,
@@ -10,3 +10,15 @@ export const getPoseValues = <A>({
   beforeChildren,
   ...props
 }: Pose<A>): Pose<A> => props;
+
+export const selectPoses = <V, A>({
+  label,
+  props,
+  values,
+  parentValues,
+  ancestorValues,
+  onChange,
+  passive,
+  initialPose,
+  ...poses
+}: PoserConfig<V>): PoseMap<A> => poses;

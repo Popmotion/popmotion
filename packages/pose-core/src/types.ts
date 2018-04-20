@@ -45,9 +45,7 @@ export type PoseMap<A> = {
   [key: string]: Pose<A>;
 };
 
-export type PoserFactory<V, A, P> = (
-  config: PoserConfig<V, A>
-) => Poser<V, A, P>;
+export type PoserFactory<V, A, P> = (config: PoserConfig<V>) => Poser<V, A, P>;
 
 export interface Poser<V, A, P> {
   set: (next: string, props?: Props) => Promise<any>;
@@ -55,7 +53,7 @@ export interface Poser<V, A, P> {
   has: (key: string) => boolean;
   destroy: () => void;
   _addChild: (
-    config: PoserConfig<V, A>,
+    config: PoserConfig<V>,
     factory: PoserFactory<V, A, P>
   ) => Poser<V, A, P>;
   removeChild: (child: Poser<V, A, P>) => void;
@@ -70,13 +68,13 @@ export type PoserState<V, A, P> = {
   props: Props;
 };
 
-export type PoserConfig<V, A> = {
+export type PoserConfig<V> = {
+  [key: string]: any;
   label?: string;
   props?: Props;
   values: { [key: string]: V };
   parentValues?: ValueMap<V>;
   ancestorValues?: AncestorValueList<V>;
-  poses?: PoseMap<A>;
   onChange?: OnChangeCallbacks;
   passive: PassiveValueMap;
   initialPose: string | string[];
@@ -106,7 +104,7 @@ export type ExtendAPI<V, A, P> = (
 export type GetTransitionProps<V> = (value: V, target: number) => Props;
 
 export type PoseFactoryConfig<V, A, P> = {
-  getDefaultProps?: (config: PoserConfig<V, A>) => Props;
+  getDefaultProps?: (config: PoserConfig<V>) => Props;
   defaultTransitions?: Map<string, TransitionFactory<A>>;
   bindOnChange: (
     values: ValueMap<V>,
