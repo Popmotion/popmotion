@@ -226,6 +226,8 @@ Each passive value is defined as a tuple. It accepts three properties:
 - `interpolateProps`: The [props](https://facebook.github.io/react-native/docs/animations.html#interpolation) to pass to `Value.interpolate`.
 - `fromParent`: **Optional**. Use this to look up the poser's ancestor tree and bind to a parent `Animated.Value`. `true` is the poser's immediate parent, or a string to match to a parent's `label` property.
 
+**Note:** Currently in Animated Pose, passive values are the **only** way to animate colors.
+
 ## Config
 
 `pose` accepts a single argument, `config`, that can contain the following properties:
