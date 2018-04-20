@@ -18,7 +18,7 @@ High-level libraries for both, with a similar API to [React Pose](https://popmot
 - Declarative API for animation logic
 - Intelligent default animations
 - Automatically handles unit types without manual `Animated.interpolate` binding
-- Create parent-child relationships to seamlessly coordinate animations throughout component trees.
+- Create parent-child relationships to seamlessly coordinate animations throughout component trees using props like `staggerChildren`.
 
 ## Example
 
@@ -43,12 +43,11 @@ class FadeExample extends React.Component {
 
   render() {
     const { children, style } = this.props;
-    const { poser } = this.state;
 
     return (
       <Animated.View style={[style, {
-        opacity: poser.get('opacity'),
-        transform: [{ rotate: poser.get('rotate') }]
+        opacity: this.poser.get('opacity'),
+        transform: [{ rotate: this.poser.get('rotate') }]
       }]}>
         {children}
       </Animated.View>
@@ -69,7 +68,167 @@ npm install animated-pose
 import pose from 'animated-pose';
 ```
 
+## Usage
+
+A poser is created with the `pose` function:
+
+```javascript
+class Example extends React.Component {
+  this.poser = pose(config)
+}
+```
+
+The provided `config` object defines a series of states that the poser can animate between:
+
+```javascript
+const config = {
+  visible: { opacity: 1 },
+  hidden: { opacity: 0 },
+  initialPose: 'hidden'
+};
+```
+
+The poser contains `Animated.Value`s which can be passed to your `Animated` component:
+
+```javascript
+class Example extends React.Component {
+  this.poser = pose(config)
+
+  render() {
+    const { children, styles } = this.props;
+
+    return (
+      <Animated.View style={[style, {
+        opacity: this.poser.get('opacity')
+      }]}>
+        {children}
+      </Animated.View>
+    );
+  }
+}
+```
+
+We can now change the poser in response to incoming props using its `set` method:
+
+```javascript
+componentDidUpdate(prevProps) {
+  const { isVisible } = this.props;
+
+  if (isVisible !== prevProps.isVisible) {
+    this.poser.set(isVisible ? 'visible' : 'hidden');
+  }
+}
+```
+
+## Custom transitions
+
+Each pose property can define a `transition` prop to override Pose's default animations:
+
+```javascript
+const config = {
+  visible: {
+    opacity: 1,
+    transition: (props) => // return animation
+  }
+}
+```
+
+It's provided a single argument, `props`, and must return an animation like `Animated.spring` (or `false`, for instant transition).
+
+`props` contains `value` and `toValue`. `value` **must** be passed to the animation, and `toValue` may optionally be used:
+
+```javascript
+transition: ({ value, toValue }) => Animated.timing(value, {
+  toValue,
+  duration: 1000
+})
+```
+
+`props` also contains:
+
+- All props set on the `prop` property on the `pose` `config` object.
+- All props sent through as the second argument of `poser.set()`
+
+## Values with units
+
+Animated doesn't allow you to animate non-numerical values without using an intermediate `Value.interpolate`, but Animated Pose automates that process.
+
+Simply define a value as a string:
+
+```javascript
+const config = {
+  upsideDown: { rotate: '180deg' },
+  rightWayUp: { rotate: '0deg' }
+}
+```
+
+`poser.get('rotate')` will return the value **with** the unit appended to use in your Animated components, while the `transition` method will work with the raw number.
+
+## Children
+
+A key feature of Pose is the ability to orchestrate animations throughout a hierarchy. We can add children to a poser using `poser.addChild`:
+
+```javascript
+const childPoser = poser.addChild(childConfig)
+```
+
+Now when a pose is set on the parent, this change will propagate through children:
+
+```javascript
+poser.set('open') // Will set `childPoser` to 'open'
+```
+
+By default this animation will play on all children immediately. We can use props like `delay` and `staggerChildren` to declaratively sequence these:
+
+```javascript
+const config = {
+  open: {
+    x: 0,
+    staggerChildren: 50
+  }
+}
+```
+
+In React, managing children can be a little unwieldy, necessitating passing `poser` down to children as a prop:
+
+```javascript
+<Child parentPoser={this.poser} />
+
+// In `Child`:
+componentDidMount() {
+  this.poser = this.props.parentPoser.addChild(config)
+}
+```
+
+With the posed component interface of React Native Pose, this will be handled automatically, like [React Pose](https://popmotion.io/pose/learn/animating-children/).
+
+## Passive values
+
+Using the `passive` property, we can define a list of values that will change whenever the values they're bound to change by using `Value.interpolate`.
+
+```javascript
+const config = {
+  visible: { opacity: 1 },
+  hidden: { opacity: 0 },
+  initialPose: 'hidden',
+  passive: {
+    scale: ['opacity', {
+      inputRange: [0, 1],
+      outputRange: [0.5, 1]
+    }]
+  }
+}
+```
+
+Each passive value is defined as a tuple. It accepts three properties:
+
+- `valueToBind`: This is the name of the value we'll interpolate from.
+- `interpolateProps`: The [props](https://facebook.github.io/react-native/docs/animations.html#interpolation) to pass to `Value.interpolate`.
+- `fromParent`: **Optional**. Use this to look up the poser's ancestor tree and bind to a parent `Animated.Value`. `true` is the poser's immediate parent, or a string to match to a parent's `label` property.
+
 ## Config
+
+`pose` accepts a single argument, `config`, that can contain the following properties:
 
 ### `initialPose: string | string[]`
 
@@ -162,3 +321,35 @@ If `true`, will ensure this animation only fires after all child animations have
 ### `...values: any | (props: Props) => any`
 
 Any remaining properties are treated as stylistic values and will be animated.
+
+## Methods
+
+`pose` returns a poser with the following methods:
+
+### `set(name: string, props?: { [key: string]: any })`
+
+The name of a pose to set. Optionally, some props can be passed that will be sent to the pose's `transition` function and any dynamic props.
+
+### `get(key: string): Animated.Value | Animated.AnimatedInterpolation`
+
+Get the `Animated.Value` or `Animated.AnimatedInterpolation` to pass along to the Animated component.
+
+### `has(key: string): boolean`
+
+Returns `true` if a `pose` is available on the current poser.
+
+### `addChild(config: PoseConfig): Poser`
+
+Creates a new poser as a child of this one, and returns the poser.
+
+### `removeChild(child: Poser)`
+
+Removes the provided poser as a child of this one.
+
+### `clearChildren()`
+
+Removes all children posers.
+
+### `destroy()`
+
+Destroys the current poser and all bound children.
