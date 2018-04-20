@@ -1,6 +1,6 @@
 import { Transition } from '../types';
 import { Animated } from 'react-native';
-import { eachValue } from '../../../pose-core/src';
+import { eachValue } from 'pose-core';
 
 const tween: Transition = ({ value, toValue }) =>
   Animated.timing(value, {

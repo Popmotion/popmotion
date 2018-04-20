@@ -5,13 +5,12 @@
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "bundle": "NODE_ENV=production webpack",
     "build": "tsc",
     "watch": "tsc -w",
     "test": "echo \"Error: no test specified\" && exit 1",
     "measure": "gzip -c dist/popmotion-pose.js | wc -c",
     "prettier": "prettier ./src/*",
-    "prepublishOnly": "npm run prettier && npm run build && npm run bundle"
+    "prepublishOnly": "npm run prettier && npm run build"
   },
   "repository": {
     "type": "git",

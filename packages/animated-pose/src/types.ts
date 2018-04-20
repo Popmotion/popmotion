@@ -1,4 +1,4 @@
-import { Poser, PoserConfig } from '../../pose-core/src';
+import { Poser, PoserConfig } from 'pose-core';
 import { Animated } from 'react-native';
 
 export type Interpolation = {
@@ -14,7 +14,7 @@ export type Value = {
 export type Action = Animated.CompositeAnimation;
 
 export interface AnimatedPoser extends Poser<Value, Action, AnimatedPoser> {
-  addChild: (config: PoserConfig<Value, Action>) => AnimatedPoser;
+  addChild: (config: PoserConfig<Value>) => AnimatedPoser;
 }
 
 export type TransitionProps = {
