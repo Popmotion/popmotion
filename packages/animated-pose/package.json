@@ -1,0 +1,46 @@
+{
+  "name": "animated-pose",
+  "version": "0.0.1",
+  "description": "Pose for the Animated animation library",
+  "main": "lib/index.js",
+  "types": "./lib/index.d.ts",
+  "scripts": {
+    "bundle": "NODE_ENV=production webpack",
+    "build": "tsc",
+    "watch": "tsc -w",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "measure": "gzip -c dist/popmotion-pose.js | wc -c",
+    "prettier": "prettier ./src/*",
+    "prepublishOnly": "npm run prettier && npm run build && npm run bundle"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/popmotion"
+  },
+  "keywords": [
+    "animation",
+    "dom",
+    "declarative",
+    "popmotion"
+  ],
+  "author": "Matt Perry",
+  "license": "MIT",
+  "presets": [
+    "env"
+  ],
+  "devDependencies": {
+    "typescript": "^2.7.2",
+    "prettier": "1.11.1",
+    "webpack": "^3.11.0"
+  },
+  "prettier": {
+    "parser": "typescript",
+    "singleQuote": true
+  },
+  "peerDependencies": {
+    "react-native": "^0.55.3"
+  },
+  "dependencies": {
+    "@types/react-native": "^0.55.4"
+  }
+}

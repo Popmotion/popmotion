@@ -23,21 +23,5 @@
   },
   "parser": "babel-eslint",
   "extends": "eslint:recommended",
-  "plugins": [
-    "jsx-a11y",
-    "react",
-    "import",
-    "jasmine",
-    "flowtype"
-  ],
-  "SublimeLinter": {
-    "linters": {
-      "eslint": {
-        "chdir": [
-          "${project}/site",
-          "${project}/src",
-        ]
-      }
-    }
-  }
+  "plugins": ["jsx-a11y", "react", "import", "jasmine", "flowtype"]
 }
