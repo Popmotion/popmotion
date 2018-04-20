@@ -1,16 +1,32 @@
-import { Poser } from '../../pose-core/src/types';
+import { Poser, PoserConfig } from '../../pose-core/src';
 import { Animated } from 'react-native';
 
 export type Interpolation = {
-  inputRange: number[],
-  outputRange: string[] | number[]
+  inputRange: number[];
+  outputRange: string[] | number[];
 };
+
+export type Value = {
+  raw?: Animated.Value;
+  interpolation?: Animated.AnimatedInterpolation;
+};
+
+export type Action = Animated.CompositeAnimation;
+
+export interface AnimatedPoser extends Poser<Value, Action, AnimatedPoser> {
+  addChild: (config: PoserConfig<Value, Action>) => AnimatedPoser;
+}
+
+export type TransitionProps = {
+  value: Animated.Value;
+  toValue: number;
+};
+
+export type Transition = (
+  { value, toValue }: TransitionProps
+) => Animated.CompositeAnimation;
 
 export type CreateValueProps = {
-  passiveParent?: Animated.Value;
+  passiveParent?: Value;
   passiveProps?: Interpolation;
-};
-
-export type AnimatedPoser = Poser & {
-  addChild: () => void;
 };

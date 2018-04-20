@@ -1,15 +1,29 @@
-import { Props, Pose, PoserState, PoseMap, ChildPosers, Poser, GetNoTransition, StartAction, StopAction, AddTransitionDelay } from '../types';
+import {
+  Props,
+  Pose,
+  PoserState,
+  PoseMap,
+  ChildPosers,
+  GetTransitionProps,
+  GetInstantTransition,
+  StartAction,
+  StopAction,
+  ResolveTarget,
+  AddTransitionDelay
+} from '../types';
 import { getPoseValues } from '../inc/selectors';
 
 type AnimationsPromiseList = Array<Promise<any>>;
 
-type SetterFactoryProps<V, A> = {
-  state: PoserState<V, A>;
+type SetterFactoryProps<V, A, P> = {
+  state: PoserState<V, A, P>;
   poses: PoseMap<A>;
-  getNoTransition: GetNoTransition<V, A>;
+  getInstantTransition: GetInstantTransition<V, A>;
   startAction: StartAction<A>;
   stopAction: StopAction<A>;
-  addTransitionDelay: AddTransitionDelay<A>;
+  addActionDelay: AddTransitionDelay<A>;
+  getTransitionProps: GetTransitionProps<V>;
+  resolveTarget: ResolveTarget<V>;
 };
 
 export const resolveProp = (target: any, props: Props) =>
@@ -25,8 +39,8 @@ const poseDefault = <A>(
     ? resolveProp(pose[prop], resolveProps)
     : defaultValue;
 
-const startChildAnimations = <A>(
-  children: ChildPosers,
+const startChildAnimations = <V, A, P>(
+  children: ChildPosers<V, A, P>,
   next: string,
   pose: Pose<A>,
   props: Props
@@ -42,7 +56,7 @@ const startChildAnimations = <A>(
       ? (i: number) => i * stagger
       : (i: number) => maxStaggerDuration - i * stagger;
 
-  Array.from(children).forEach((child: Poser, i: number) => {
+  Array.from(children).forEach((child, i) => {
     animations.push(
       child.set(next, {
         ...props,
@@ -54,8 +68,19 @@ const startChildAnimations = <A>(
   return animations;
 };
 
-const createPoseSetter = <V, A>(setterProps: SetterFactoryProps<V, A>) => (next: string, nextProps: Props = {}) => {
-  const { state, poses, startAction, stopAction, getNoTransition, addTransitionDelay } = setterProps;
+const createPoseSetter = <V, A, P>(
+  setterProps: SetterFactoryProps<V, A, P>
+) => (next: string, nextProps: Props = {}) => {
+  const {
+    state,
+    poses,
+    startAction,
+    stopAction,
+    getInstantTransition,
+    addActionDelay,
+    getTransitionProps,
+    resolveTarget
+  } = setterProps;
   const { children, values, props, activeActions, activePoses } = state;
 
   const { delay = 0 } = props;
@@ -67,9 +92,10 @@ const createPoseSetter = <V, A>(setterProps: SetterFactoryProps<V, A>) => (next:
     ...nextProps
   };
 
-  const getChildAnimations = (): AnimationsPromiseList => hasChildren
-    ? startChildAnimations<A>(children, next, nextPose, baseTransitionProps)
-    : [];
+  const getChildAnimations = (): AnimationsPromiseList =>
+    hasChildren
+      ? startChildAnimations(children, next, nextPose, baseTransitionProps)
+      : [];
 
   const getParentAnimations = (): AnimationsPromiseList => {
     if (!nextPose) return [];
@@ -80,10 +106,9 @@ const createPoseSetter = <V, A>(setterProps: SetterFactoryProps<V, A>) => (next:
     const { transition: getTransition } = nextPose;
 
     return Object.keys(getPoseValues(nextPose)).map(key => {
-      return new Promise((complete) => {
+      return new Promise(complete => {
         const value = values.get(key);
 
-        // Add hook: `getTransitionProps`
         const transitionProps = {
           ...baseTransitionProps,
           key,
@@ -91,22 +116,27 @@ const createPoseSetter = <V, A>(setterProps: SetterFactoryProps<V, A>) => (next:
         };
 
         // Resolve target from pose
-        const target = resolveProp(nextPose[key], transitionProps);
+        const target = resolveTarget(
+          value,
+          resolveProp(nextPose[key], transitionProps)
+        );
 
         // Stop the current action
         if (activeActions.has(key)) stopAction(activeActions.get(key));
 
         let transition = getTransition({
           to: target,
-          ...transitionProps
+          ...transitionProps,
+          ...getTransitionProps(value, target)
         });
 
-        if (transition === false) transition = getNoTransition(value, target);
+        if (transition === false)
+          transition = getInstantTransition(value, target);
 
         // Add delay if defined on pose
         const poseDelay = resolveProp(nextPose.delay, transitionProps);
         if (delay || poseDelay) {
-          transition = addTransitionDelay(delay || poseDelay, transition);
+          transition = addActionDelay(delay || poseDelay, transition);
         }
 
         // Start transition

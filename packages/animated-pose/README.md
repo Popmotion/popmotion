@@ -7,7 +7,7 @@
 [![Twitter Follow](https://img.shields.io/twitter/follow/popmotionjs.svg?style=social&label=Follow)](http://twitter.com/popmotionjs)
 [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/popmotion)
 
-Animated Pose is a flavour of the [Pose](https://popmotion.io/pose) animation system for React's Animated library.
+Animated Pose is a flavour of the [Pose](https://popmotion.io/pose) declarative animation system for React's Animated library.
 
 It can be used in a low-level way with both [React Native](https://facebook.github.io/react-native/) and [React VR](https://facebook.github.io/react-vr/).
 

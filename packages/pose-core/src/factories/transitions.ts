@@ -1,4 +1,4 @@
-import { PoseMap, Pose, TransitionFactory } from "../types";
+import { PoseMap, Pose, TransitionFactory } from '../types';
 
 type DefaultTransitions<A> = Map<string, TransitionFactory<A>>;
 

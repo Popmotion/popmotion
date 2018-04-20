@@ -12,6 +12,7 @@ import {
 import createPoseSetter from './factories/setter';
 import createValueMap from './factories/values';
 import generateDefaultTransitions from './factories/transitions';
+import { eachValue, fromPose } from './inc/transition-composers';
 
 const poseFactory = <V, A, P>({
   getDefaultProps,
@@ -20,18 +21,23 @@ const poseFactory = <V, A, P>({
   startAction,
   stopAction,
   readValue,
+  resolveTarget,
   createValue,
-  getNoTransition,
-  addTransitionDelay,
-  transformAPI
-}: PoseFactoryConfig<V, A, P>) => (config: PoserConfig<V, A>): P => {
+  getInstantTransition,
+  getTransitionProps,
+  addActionDelay,
+  selectValueToRead,
+  extendAPI
+}: PoseFactoryConfig<V, A, P>) => (
+  config: PoserConfig<V, A>
+): Poser<V, A, P> => {
   // If set, add parent values to ancestor chain
   const { parentValues, ancestorValues } = config;
   if (parentValues) ancestorValues.unshift({ values: parentValues });
 
   const activeActions: ActiveActions<A> = new Map();
   const activePoses: ActivePoses = new Map();
-  const children: ChildPosers<V, A> = new Set();
+  const children: ChildPosers<V, A, P> = new Set();
   const poses = generateDefaultTransitions<A>(config.poses, defaultTransitions);
 
   // Initialise props
@@ -51,7 +57,7 @@ const poseFactory = <V, A, P>({
     props
   });
 
-  const state: PoserState<V, A> = {
+  const state: PoserState<V, A, P> = {
     activeActions,
     activePoses,
     children,
@@ -67,19 +73,21 @@ const poseFactory = <V, A, P>({
   const set = createPoseSetter({
     state,
     poses,
-    getNoTransition,
+    getInstantTransition,
+    getTransitionProps,
     startAction,
     stopAction,
-    addTransitionDelay
+    resolveTarget,
+    addActionDelay
   });
 
-  const api: Poser<V, A> = {
+  const api: Poser<V, A, P> = {
     set,
-    get: (valueName) => values.get(valueName),
-    has: (poseName) => !!poses[poseName],
+    get: valueName => selectValueToRead(values.get(valueName)),
+    has: poseName => !!poses[poseName],
 
     // Child methods
-    addChild: (childConfig, factory) => {
+    _addChild: (childConfig, factory) => {
       const child = factory({
         ...childConfig,
         ancestorValues: [{ label: config.label, values }, ...ancestorValues]
@@ -89,7 +97,7 @@ const poseFactory = <V, A, P>({
 
       return child;
     },
-    removeChild: (child) => children.delete(child),
+    removeChild: child => children.delete(child),
     clearChildren: () => {
       children.forEach(child => child.destroy());
       children.clear();
@@ -102,8 +110,8 @@ const poseFactory = <V, A, P>({
     }
   };
 
-  return transformAPI(api, state);
+  return extendAPI(api, state);
 };
 
 export default poseFactory;
-export { PoserConfig, PoseMap };
+export { Poser, PoserConfig, PoseMap, eachValue, fromPose };
