@@ -33,6 +33,14 @@ const pose = poseFactory<Value, Action, Poser>(config);
 
 All config options are mandatory.
 
+### `getDefaultProps`
+
+Returns default properties to be injected into every poser's `config.props` property.
+
+```typescript
+(config: PoserConfig) => { [key: string]: any }
+```
+
 ### `readValue`
 
 Read and return from `Value`.
@@ -52,6 +60,22 @@ type CreateValueProps = {
 }
 
 (init: any, props?: CreateValueProps) => Value
+```
+
+### `resolveTarget`
+
+Accepts the target as defined in the pose, and returns an animatable version of it. For instance React Animated only animates raw numbers, so it runs every `target` through `parseFloat`.
+
+```typescript
+(value: Value, target: any) => any
+```
+
+### `getTransitionProps`
+
+Takes the `target` as returned from `resolveTarget` and returns default props to be passed to the entered pose's `transition` function. 
+
+```typescript
+(value: Value, target: any) => { [key: string]: any }
 ```
 
 ### `bindOnChange`
@@ -107,7 +131,15 @@ The `Map` must contain **at least** a `'default'` action factory.
 Map<string, (props: Props) => Action>
 ```
 
-### `transformAPI`
+### `selectValueToRead`
+
+Accepts `Value` and returns the value returned by `poser.get(key: string)`
+
+```typescript
+(value: Value) => any
+```
+
+### `extendAPI`
 
 A chance to add methods to the output `Poser`. For instance the Popmotion Pose factory uses this to append DOM-specific FLIP methods. Simply return `api` for no change.
 
