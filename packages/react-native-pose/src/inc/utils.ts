@@ -64,8 +64,8 @@ export const makeDraggable = (
   { draggable, onDragStart, onDragEnd }
 ): GestureResponderHandlers => {
   const values = poser.get();
-  let initialX = 0;
-  let initialY = 0;
+  const dragX = draggable === true || draggable === 'x';
+  const dragY = draggable === true || draggable === 'y';
 
   const panResponder = PanResponder.create({
     onMoveShouldSetPanResponderCapture: () => true,
@@ -73,10 +73,22 @@ export const makeDraggable = (
     onPanResponderGrant: (e, gestureState) => {
       poser.set('dragging');
       if (onDragStart) onDragStart(e, gestureState);
+
+      if (dragX) {
+        values.x.setOffset(values.x._value);
+        values.x.setValue(0);
+      }
+
+      if (dragY) {
+        values.y.setOffset(values.y._value);
+        values.y.setValue(0);
+      }
     },
-    onPanResponderEnd: (e, gestureState) => {
+    onPanResponderRelease: (e, gestureState) => {
       poser.set('dragEnd', { gestureState });
       if (onDragEnd) onDragEnd(e, gestureState);
+      if (dragX) values.x.flattenOffset();
+      if (dragY) values.y.flattenOffset();
     }
   });
 

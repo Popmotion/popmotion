@@ -1,27 +1,53 @@
-import { AncestorValueList, Props, Pose, ValueMap, PoseMap, PassiveValueMap, ReadValue, CreateValue } from '../types';
+import {
+  AncestorValueList,
+  Props,
+  Pose,
+  ValueMap,
+  PoseMap,
+  PassiveValueMap,
+  ReadValue,
+  CreateValue
+} from '../types';
 import { getPoseValues } from '../inc/selectors';
 import { resolveProp } from './setter';
 
 type ValueFactoryProps<V, A> = {
-  poses: PoseMap<A>,
-  passive?: PassiveValueMap,
-  ancestorValues: AncestorValueList<V>,
-  readValue: ReadValue<V>,
-  createValue: CreateValue<V>,
-  userSetValues: { [key: string]: V },
-  initialPose?: string | string[],
-  props: Props
+  poses: PoseMap<A>;
+  passive?: PassiveValueMap;
+  ancestorValues: AncestorValueList<V>;
+  readValue: ReadValue<V>;
+  createValue: CreateValue<V>;
+  userSetValues: { [key: string]: V };
+  initialPose?: string | string[];
+  props: Props;
 };
 
-const getInitialValue = <A>(poses: PoseMap<A>, key: string, initialPose: string | string[], props: Props) => {
-  const posesToSearch = Array.isArray(initialPose) ? initialPose : [initialPose];
-  const pose = posesToSearch.find(name => poses[name] && poses[name][key] !== undefined);
-  return pose ? resolveProp(poses[pose][key], props) : 0; // Hook for renderer inspection?
+const isScale = (key: string) => key.includes('scale');
+
+const getInitialValue = <A>(
+  poses: PoseMap<A>,
+  key: string,
+  initialPose: string | string[],
+  props: Props
+) => {
+  const posesToSearch = Array.isArray(initialPose)
+    ? initialPose
+    : [initialPose];
+  const pose = posesToSearch.find(
+    name => poses[name] && poses[name][key] !== undefined
+  );
+  return pose ? resolveProp(poses[pose][key], props) : isScale(key) ? 1 : 0; // Hook for renderer inspection?
 };
 
 const createValues = <V, A>(
   values: ValueMap<V>,
-  { userSetValues, createValue, initialPose, poses, props }: ValueFactoryProps<V, A>,
+  {
+    userSetValues,
+    createValue,
+    initialPose,
+    poses,
+    props
+  }: ValueFactoryProps<V, A>,
   pose: Pose<A>
 ) => (key: string) => {
   if (values.has(key)) return;
@@ -32,7 +58,7 @@ const createValues = <V, A>(
   if (userSetValues && userSetValues[key] !== undefined) {
     value = userSetValues[key];
 
-  // Or create a new value
+    // Or create a new value
   } else {
     const initValue = getInitialValue(poses, key, initialPose, props);
     value = createValue(initValue);
@@ -51,7 +77,11 @@ const scrapeValuesFromPose = <V, A>(
   );
 };
 
-const getAncestorValue = <V>(key: string, fromParent: boolean | string, ancestors: AncestorValueList<V>): V => {
+const getAncestorValue = <V>(
+  key: string,
+  fromParent: boolean | string,
+  ancestors: AncestorValueList<V>
+): V => {
   if (fromParent === true) {
     return ancestors[0] && ancestors[0].values.get(key);
   } else {
@@ -62,17 +92,13 @@ const getAncestorValue = <V>(key: string, fromParent: boolean | string, ancestor
 
 const bindPassiveValues = <V, A>(
   values: ValueMap<V>,
-  {
-    passive,
-    ancestorValues,
-    createValue,
-    readValue
-  }: ValueFactoryProps<V, A>
+  { passive, ancestorValues, createValue, readValue }: ValueFactoryProps<V, A>
 ) => (key: string) => {
   const [valueKey, props, fromParent] = passive[key];
-  const valueToBind = fromParent && ancestorValues.length
-    ? getAncestorValue<V>(valueKey, fromParent, ancestorValues)
-    : values.has(valueKey) ? values.get(valueKey) : false;
+  const valueToBind =
+    fromParent && ancestorValues.length
+      ? getAncestorValue<V>(valueKey, fromParent, ancestorValues)
+      : values.has(valueKey) ? values.get(valueKey) : false;
 
   if (!valueToBind) return;
 
@@ -94,7 +120,8 @@ const createValueMap = <V, A>(props: ValueFactoryProps<V, A>): ValueMap<V> => {
   Object.keys(poses).forEach(scrapeValuesFromPose<V, A>(values, props));
 
   // Initiate passive values
-  if (passive) Object.keys(passive).forEach(bindPassiveValues<V, A>(values, props));
+  if (passive)
+    Object.keys(passive).forEach(bindPassiveValues<V, A>(values, props));
 
   return values;
 };

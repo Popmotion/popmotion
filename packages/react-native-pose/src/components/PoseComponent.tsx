@@ -1,8 +1,13 @@
 import * as React from 'react';
 import { createContext } from 'react';
-import { GestureResponderHandlers } from 'react-native';
+import { Animated, GestureResponderHandlers } from 'react-native';
 import poseFactory, { AnimatedPoser } from 'animated-pose';
-import { getStylesFromPoser, getProps, makeDraggable } from '../inc/utils';
+import {
+  getStylesFromPoser,
+  getProps,
+  addDragPoses,
+  makeDraggable
+} from '../inc/utils';
 import { PoseComponentProps, ValueMap, ChildAsFunction } from '../types';
 
 export const PoseParentContext = createContext({});
@@ -33,6 +38,10 @@ class PoseComponent extends React.PureComponent<PoseComponentProps> {
     };
 
     if (pose) config.initialPose = pose;
+
+    if (draggable) {
+      config._drag = { x: 0, y: 0 };
+    }
 
     this.poser = registerAsChild
       ? registerAsChild(config)
