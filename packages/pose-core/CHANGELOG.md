@@ -2,6 +2,10 @@
 
 Pose Core adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.1.3] 2018-04-22
+
+- Fixing `delay`
+
 ## [0.1.2] 2018-04-22
 
 - Adding `initialPose` to `addChild`.

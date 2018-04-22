@@ -3,17 +3,23 @@ import { Animated } from 'react-native';
 import { PoseComponent, PoseParentContext } from './components/PoseComponent';
 import { Posed, PosedComponentFactory, PoseContextProps } from './types';
 
-const posedComponentFactory: PosedComponentFactory = Component => config => ({
-  withParent = true,
-  ...props
-}) =>
+const posedComponentFactory: PosedComponentFactory = Component => ({
+  draggable,
+  ...config
+} = {}) => ({ withParent = true, ...props }) =>
   !withParent || props.parentValues ? (
-    <PoseComponent poseConfig={config} Component={Component} {...props} />
+    <PoseComponent
+      poseConfig={config}
+      Component={Component}
+      draggable={draggable}
+      {...props}
+    />
   ) : (
     <PoseParentContext.Consumer>
       {(parentCtx: PoseContextProps) => (
         <PoseComponent
           poseConfig={config}
+          draggable={draggable}
           Component={Component}
           {...props}
           {...parentCtx}
@@ -30,7 +36,9 @@ const componentMap: { [key: string]: React.Component } = {
 };
 
 const posedComponent: PosedComponentFactory = Component =>
-  posedComponentFactory(Animated.createAnimatedComponent(Component));
+  posedComponentFactory(
+    Component ? Animated.createAnimatedComponent(Component) : undefined
+  );
 
 const posed: Posed = Object.keys(componentMap).reduce((acc, key) => {
   const Component = componentMap[key];

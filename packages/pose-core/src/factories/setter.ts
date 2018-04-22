@@ -86,7 +86,7 @@ const createPoseSetter = <V, A, P>(
   } = setterProps;
   const { children, values, props, activeActions, activePoses } = state;
 
-  const { delay = 0 } = props;
+  const { delay = 0 } = nextProps;
   const hasChildren = children.size;
   let nextPose = poses[next];
 

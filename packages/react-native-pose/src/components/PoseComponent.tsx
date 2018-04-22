@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { createContext } from 'react';
+import { GestureResponderHandlers } from 'react-native';
 import poseFactory, { AnimatedPoser } from 'animated-pose';
-import { getStylesFromPoser, getProps } from '../inc/utils';
+import { getStylesFromPoser, getProps, makeDraggable } from '../inc/utils';
 import { PoseComponentProps, ValueMap, ChildAsFunction } from '../types';
 
 export const PoseParentContext = createContext({});
@@ -9,6 +10,7 @@ export const PoseParentContext = createContext({});
 class PoseComponent extends React.PureComponent<PoseComponentProps> {
   poser: AnimatedPoser;
   values: ValueMap;
+  panHandlers: GestureResponderHandlers;
 
   private childrenHandlers: PoseContextProps = {
     registerAsChild: props => this.poser.addChild(props),
@@ -17,7 +19,13 @@ class PoseComponent extends React.PureComponent<PoseComponentProps> {
 
   constructor(props: PoseComponentProps) {
     super(props);
-    const { poseConfig, registerAsChild, pose, ...remainingProps } = props;
+    const {
+      poseConfig,
+      registerAsChild,
+      pose,
+      draggable,
+      ...remainingProps
+    } = props;
 
     const config = {
       ...poseConfig,
@@ -29,6 +37,8 @@ class PoseComponent extends React.PureComponent<PoseComponentProps> {
     this.poser = registerAsChild
       ? registerAsChild(config)
       : poseFactory(config);
+
+    if (draggable) this.panHandlers = makeDraggable(this.poser, props);
   }
 
   componentDidUpdate(prevProps: PoseComponentProps) {
@@ -60,11 +70,12 @@ class PoseComponent extends React.PureComponent<PoseComponentProps> {
           <Component
             {...getProps(props)}
             style={[style, getStylesFromPoser(this.poser)]}
+            {...(this.panHandlers ? this.panHandlers : {})}
           >
             {children}
           </Component>
         ) : (
-          (children(this.values) as ChildAsFunction)
+          (children(this.poser.get()) as ChildAsFunction)
         )}
       </PoseParentContext.Provider>
     );

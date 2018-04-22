@@ -1,3 +1,5 @@
+import { Animated, PanResponder, GestureResponderHandlers } from 'react-native';
+
 const defaultTransformOrder = [
   'x',
   'y',
@@ -35,12 +37,15 @@ export const getStylesFromPoser = poser => {
   }, {});
 
   if (hasTransform) {
-    styles.transform = defaultTransformOrder.reduce((acc, key) => {
-      if (values[key]) {
-        acc.push({ [aliasMap[key] || key]: values[key] });
-      }
-      return acc;
-    }, []);
+    styles.transform = defaultTransformOrder.reduce(
+      (acc, key) => {
+        if (values[key]) {
+          acc.push({ [aliasMap[key] || key]: values[key] });
+        }
+        return acc;
+      },
+      [{ perspective: 1000 }]
+    );
   }
 
   return styles;
@@ -53,3 +58,27 @@ export const getProps = ({
   pose,
   ...props
 }) => props;
+
+export const makeDraggable = (
+  poser,
+  { draggable, onDragStart, onDragEnd }
+): GestureResponderHandlers => {
+  const values = poser.get();
+  let initialX = 0;
+  let initialY = 0;
+
+  const panResponder = PanResponder.create({
+    onMoveShouldSetPanResponderCapture: () => true,
+    onPanResponderMove: Animated.event([null, { dx: values.x, dy: values.y }]),
+    onPanResponderGrant: (e, gestureState) => {
+      poser.set('dragging');
+      if (onDragStart) onDragStart(e, gestureState);
+    },
+    onPanResponderEnd: (e, gestureState) => {
+      poser.set('dragEnd', { gestureState });
+      if (onDragEnd) onDragEnd(e, gestureState);
+    }
+  });
+
+  return panResponder.panHandlers;
+};
