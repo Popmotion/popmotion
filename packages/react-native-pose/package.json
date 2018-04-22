@@ -1,14 +1,13 @@
 {
-  "name": "animated-pose",
-  "version": "0.0.3",
-  "description": "Pose for the Animated animation library",
+  "name": "react-native-pose",
+  "version": "0.0.1",
+  "description": "Pose animation system for React Native",
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "measure": "gzip -c dist/popmotion-pose.js | wc -c",
     "prettier": "prettier ./src/*",
     "prepublishOnly": "npm run prettier && npm run build"
   },
@@ -41,6 +40,7 @@
   },
   "dependencies": {
     "@types/react-native": "^0.55.4",
-    "pose-core": "^0.1.0"
+    "animated-pose": "0.0.2",
+    "pose-core": "^0.1.1"
   }
 }

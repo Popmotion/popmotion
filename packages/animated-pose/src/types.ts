@@ -30,3 +30,5 @@ export type CreateValueProps = {
   passiveParent?: Value;
   passiveProps?: Interpolation;
 };
+
+export type AnimatedPoseConfig = PoserConfig<Value>;

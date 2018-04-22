@@ -9,6 +9,7 @@ import {
   StartAction,
   StopAction,
   ResolveTarget,
+  TransformPose,
   AddTransitionDelay
 } from '../types';
 import { getPoseValues } from '../inc/selectors';
@@ -24,6 +25,7 @@ type SetterFactoryProps<V, A, P> = {
   addActionDelay: AddTransitionDelay<A>;
   getTransitionProps: GetTransitionProps<V>;
   resolveTarget: ResolveTarget<V>;
+  transformPose?: TransformPose<A>;
 };
 
 export const resolveProp = (target: any, props: Props) =>
@@ -79,13 +81,14 @@ const createPoseSetter = <V, A, P>(
     getInstantTransition,
     addActionDelay,
     getTransitionProps,
-    resolveTarget
+    resolveTarget,
+    transformPose
   } = setterProps;
   const { children, values, props, activeActions, activePoses } = state;
 
   const { delay = 0 } = props;
   const hasChildren = children.size;
-  const nextPose = poses[next];
+  let nextPose = poses[next];
 
   const baseTransitionProps = {
     ...props,
@@ -100,10 +103,12 @@ const createPoseSetter = <V, A, P>(
   const getParentAnimations = (): AnimationsPromiseList => {
     if (!nextPose) return [];
 
-    // Potential hook: In Popmotion Pose, this is where we test and transform
-    // if it's a flipPose. We could add a generic hook here, eg `transformPoseBeforeSet`
+    if (transformPose) nextPose = transformPose(nextPose, next);
 
-    const { transition: getTransition } = nextPose;
+    const { preTransition, transition: getTransition } = nextPose;
+
+    // Run pre-transition prep, if set
+    if (preTransition) nextPose.preTransition();
 
     return Object.keys(getPoseValues(nextPose)).map(key => {
       return new Promise(complete => {
@@ -124,12 +129,14 @@ const createPoseSetter = <V, A, P>(
         // Stop the current action
         if (activeActions.has(key)) stopAction(activeActions.get(key));
 
+        // Get the transition
         let transition = getTransition({
           to: target,
           ...transitionProps,
           ...getTransitionProps(value, target)
         });
 
+        // If the transition is `false`, for no transition, set instantly
         if (transition === false)
           transition = getInstantTransition(value, target);
 

@@ -13,6 +13,7 @@ export type Pose<A> = {
   staggerDirection?: 1 | -1 | StaggerDirectionPropFactory;
   beforeChildren?: boolean | BooleanPropFactory;
   afterChildren?: boolean | BooleanPropFactory;
+  preTransform?: () => any;
   [key: string]: any;
 };
 
@@ -49,7 +50,7 @@ export type PoserFactory<V, A, P> = (config: PoserConfig<V>) => Poser<V, A, P>;
 
 export interface Poser<V, A, P> {
   set: (next: string, props?: Props) => Promise<any>;
-  get: (key: string) => V;
+  get: (key?: string) => any;
   has: (key: string) => boolean;
   destroy: () => void;
   _addChild: (
@@ -103,6 +104,10 @@ export type ExtendAPI<V, A, P> = (
 
 export type GetTransitionProps<V> = (value: V, target: number) => Props;
 
+export type SelectValueToRead<V> = (value: V) => any;
+
+export type TransformPose<A> = (pose: Pose<A>, key: string) => Pose<A>;
+
 export type PoseFactoryConfig<V, A, P> = {
   getDefaultProps?: (config: PoserConfig<V>) => Props;
   defaultTransitions?: Map<string, TransitionFactory<A>>;
@@ -118,6 +123,7 @@ export type PoseFactoryConfig<V, A, P> = {
   stopAction: StopAction<A>;
   getInstantTransition: GetInstantTransition<V, A>;
   addActionDelay: AddTransitionDelay<A>;
-  selectValueToRead: (value: V) => any;
+  selectValueToRead: SelectValueToRead<V>;
   extendAPI: ExtendAPI<V, A, P>;
+  transformPose?: TransformPose<A>;
 };

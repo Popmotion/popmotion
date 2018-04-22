@@ -13,7 +13,7 @@ import createPoseSetter from './factories/setter';
 import createValueMap from './factories/values';
 import generateDefaultTransitions from './factories/transitions';
 import { eachValue, fromPose } from './inc/transition-composers';
-import { selectPoses } from './inc/selectors';
+import { selectPoses, selectAllValues } from './inc/selectors';
 
 const poseFactory = <V, A, P>({
   getDefaultProps,
@@ -86,12 +86,16 @@ const poseFactory = <V, A, P>({
 
   const api: Poser<V, A, P> = {
     set,
-    get: valueName => selectValueToRead(values.get(valueName)),
+    get: valueName =>
+      valueName
+        ? selectValueToRead(values.get(valueName))
+        : selectAllValues(values, selectValueToRead),
     has: poseName => !!poses[poseName],
 
     // Child methods
     _addChild: (childConfig, factory) => {
       const child = factory({
+        initialPose,
         ...childConfig,
         ancestorValues: [{ label: config.label, values }, ...ancestorValues]
       });

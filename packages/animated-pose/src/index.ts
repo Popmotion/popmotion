@@ -1,7 +1,13 @@
 import { Animated } from 'react-native';
 import poseFactory, { Poser, PoserConfig } from 'pose-core';
 import defaultTransitions from './inc/default-transitions';
-import { Value, Action, CreateValueProps, AnimatedPoser } from './types';
+import {
+  Value,
+  Action,
+  CreateValueProps,
+  AnimatedPoser,
+  AnimatedPoseConfig
+} from './types';
 
 const pose = poseFactory<Value, Action, AnimatedPoser>({
   /**
@@ -116,7 +122,7 @@ const pose = poseFactory<Value, Action, AnimatedPoser>({
   extendAPI: api => {
     return {
       ...api,
-      addChild: (props: PoserConfig<Value>) => {
+      addChild: (props: AnimatedPoseConfig) => {
         return api._addChild(props, pose);
       }
     };
@@ -124,4 +130,4 @@ const pose = poseFactory<Value, Action, AnimatedPoser>({
 });
 
 export default pose;
-export { Poser };
+export { Poser, PoserConfig, AnimatedPoser, AnimatedPoseConfig };
