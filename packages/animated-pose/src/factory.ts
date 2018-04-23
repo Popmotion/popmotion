@@ -51,14 +51,17 @@ export default ({
       } else {
         let needsInterpolation = false;
         let unit = '';
+        let initValue = 0;
 
         if (typeof init === 'string') {
           unit = getUnit(init);
+          initValue = parseFloat(init);
 
-          if (unitConverters[unit]) needsInterpolation = true;
+          if (!unitConverters[unit]) needsInterpolation = true;
+        } else {
+          initValue = init;
         }
 
-        const initValue = needsInterpolation ? parseFloat(init) : init;
         const value: Value = {
           raw: new Animated.Value(initValue)
         };

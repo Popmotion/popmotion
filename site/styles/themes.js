@@ -44,7 +44,7 @@ const themeSettings = {
     id: 'pose',
     name: 'Popmotion Pose',
     url: '/pose',
-    tagline: 'Declarative motion system for HTML, SVG & React',
+    tagline: 'Declarative motion system for HTML, SVG, React & React Native',
     sections: ['api', 'learn', 'community'],
     Logo: PoseLogo,
     homepageLogoSize: {

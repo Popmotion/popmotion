@@ -49,8 +49,9 @@ class PoseComponent extends React.PureComponent<PoseComponentProps> {
   }
 
   componentDidUpdate(prevProps: PoseComponentProps) {
-    const { pose } = this.props;
-    if (pose !== prevProps.pose) this.setPose(pose);
+    const { pose, poseKey } = this.props;
+    if (pose !== prevProps.pose || poseKey !== prevProps.poseKey)
+      this.setPose(pose);
   }
 
   componentDidMount() {

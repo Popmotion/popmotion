@@ -52,8 +52,6 @@ poser.set('hidden')
 
 ### React
 
-**Note:** React Pose requires React 16.3.0
-
 You can play with React Pose with the [React Pose playground](https://codepen.io/popmotion/pen/mxmrPZ?editors=0010).
 
 React Pose exposes the [`posed` function](/pose/api/posed). Similar to [Styled Components'](https://styled-components.com) `styled` function, this creates reusable React components:

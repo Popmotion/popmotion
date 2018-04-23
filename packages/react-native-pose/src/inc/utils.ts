@@ -68,6 +68,7 @@ export const filterProps = ({
   onUnmount,
   Component,
   pose,
+  poseKey,
   draggable,
   onDragStart,
   onDragEnd,

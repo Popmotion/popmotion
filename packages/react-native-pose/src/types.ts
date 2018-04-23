@@ -22,6 +22,7 @@ export type PoseComponentProps = {
   withParent?: boolean;
   pose?: CurrentPose;
   children?: React.ReactNode | ChildAsFunction;
+  poseKey?: any;
   [key: string]: any;
 };
 
