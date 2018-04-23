@@ -9,14 +9,16 @@ next: custom-transitions
 
 React Native Pose is a declarative motion system for React Native's Animated library.
 
+It aims to bring the simplicity of CSS transitions to React Native animations.
+
 Some key features:
 
-- **Automatic animations:** By default, transition animations are automatically generated based on the properties being animated.
-- **Children binding:** Pose changes are propagated throughout children via context, allowing complex animations throughout components via a single prop change.
+- **Automatic animations:** By default, animations are automatically generated based on the properties being changed.
+- **Children:** Pose changes are propagated throughout posed components via context. This allows simple animation orchestration across components without messy imperative logic or delicate prop chains.
 - **Units:** Handles unit animations without having to manually `interpolate`. Introduces CSS `vw` and `vh` units to React Native.
 - **Easy dragging:** Making a component draggable is as simple as `draggable: true`.
 
-In the following tutorials we'll take a look at each of React Native Pose's features, starting with a very simple `opacity` animation.
+In the following tutorials we'll take a look at each of React Native Pose's features, starting with a very simple animation.
 
 ## Setup
 

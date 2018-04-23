@@ -93,8 +93,6 @@ export const makeDraggable = (
       }
     ]),
     onPanResponderGrant: (e, gestureState) => {
-      poser.set('dragging');
-      if (onDragStart) onDragStart(e, gestureState);
       if (dragX) {
         values.x.setOffset(values.x._value);
         values.x.setValue(0);
@@ -104,12 +102,16 @@ export const makeDraggable = (
         values.y.setOffset(values.y._value);
         values.y.setValue(0);
       }
+
+      if (onDragStart) onDragStart(e, gestureState);
+      poser.set('dragging', { gestureState });
     },
     onPanResponderRelease: (e, gestureState) => {
-      poser.set('dragEnd', { gestureState });
       if (onDragEnd) onDragEnd(e, gestureState);
       if (dragX) values.x.flattenOffset();
       if (dragY) values.y.flattenOffset();
+      if (onDragEnd) onDragEnd(e, gestureState);
+      poser.set('dragEnd', { gestureState });
     }
   });
 
