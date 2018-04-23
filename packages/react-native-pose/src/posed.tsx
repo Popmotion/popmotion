@@ -3,7 +3,7 @@ import { Animated } from 'react-native';
 import { PoseComponent, PoseParentContext } from './components/PoseComponent';
 import { Posed, PosedComponentFactory, PoseContextProps } from './types';
 
-const posedComponentFactory: PosedComponentFactory = Component => ({
+const posedComponentFactory: PosedComponentFactory = (Component: any) => ({
   draggable,
   ...config
 } = {}) => ({ withParent = true, ...props }) =>
@@ -35,7 +35,7 @@ const componentMap: { [key: string]: React.Component } = {
   Text: Animated.Text
 };
 
-const posedComponent: PosedComponentFactory = Component =>
+const posedComponent: Posed = (Component?: any) =>
   posedComponentFactory(
     Component ? Animated.createAnimatedComponent(Component) : undefined
   );

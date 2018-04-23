@@ -2,37 +2,45 @@ import { Transition } from '../types';
 import { Animated } from 'react-native';
 import { eachValue } from 'pose-core';
 
-const tween: Transition = ({ value, toValue }) =>
+const tween: Transition = ({ value, toValue, useNativeDriver = true }) =>
   Animated.timing(value, {
     toValue,
     duration: 300,
-    useNativeDriver: true
+    useNativeDriver
   });
 
-const linearTween: Transition = ({ value, toValue }) =>
+const linearTween: Transition = ({ value, toValue, useNativeDriver = true }) =>
   Animated.timing(value, {
     toValue,
     duration: 300,
     easing: v => v,
-    useNativeDriver: true
+    useNativeDriver
   });
 
-const overDampedSpring: Transition = ({ value, toValue }) =>
+const overDampedSpring: Transition = ({
+  value,
+  toValue,
+  useNativeDriver = true
+}) =>
   Animated.spring(value, {
     toValue,
     stiffness: 700,
     damping: toValue === 0 ? 100 : 35,
-    useNativeDriver: true
+    useNativeDriver
   });
 
-const underDampedSpring: Transition = ({ value, toValue }) =>
+const underDampedSpring: Transition = ({
+  value,
+  toValue,
+  useNativeDriver = true
+}) =>
   Animated.spring(value, {
     toValue,
     stiffness: 500,
     damping: 25,
     restDisplacementThreshold: 0.5,
     restSpeedThreshold: 10,
-    useNativeDriver: true
+    useNativeDriver
   });
 
 const intelligentTransition = eachValue({

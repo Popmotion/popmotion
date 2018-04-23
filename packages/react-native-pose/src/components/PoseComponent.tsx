@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { createContext } from 'react';
-import { Animated, GestureResponderHandlers } from 'react-native';
+import { GestureResponderHandlers } from 'react-native';
 import poseFactory, { AnimatedPoser } from 'animated-pose';
+import { getStylesFromPoser, filterProps, makeDraggable } from '../inc/utils';
 import {
-  getStylesFromPoser,
-  getProps,
-  addDragPoses,
-  makeDraggable
-} from '../inc/utils';
-import { PoseComponentProps, ValueMap, ChildAsFunction } from '../types';
+  PoseComponentProps,
+  ValueMap,
+  CurrentPose,
+  PoseContextProps
+} from '../types';
 
 export const PoseParentContext = createContext({});
 
@@ -24,23 +24,21 @@ class PoseComponent extends React.PureComponent<PoseComponentProps> {
 
   constructor(props: PoseComponentProps) {
     super(props);
-    const {
-      poseConfig,
-      registerAsChild,
-      pose,
-      draggable,
-      ...remainingProps
-    } = props;
+    const { poseConfig, registerAsChild, pose, draggable } = props;
 
     const config = {
       ...poseConfig,
-      props: getProps(remainingProps)
+      props: filterProps(props)
     };
 
     if (pose) config.initialPose = pose;
 
     if (draggable) {
       config._drag = { x: 0, y: 0 };
+      config.props = {
+        ...config.props,
+        useNativeDriver: false
+      };
     }
 
     this.poser = registerAsChild
@@ -53,6 +51,11 @@ class PoseComponent extends React.PureComponent<PoseComponentProps> {
   componentDidUpdate(prevProps: PoseComponentProps) {
     const { pose } = this.props;
     if (pose !== prevProps.pose) this.setPose(pose);
+  }
+
+  componentDidMount() {
+    const { poseOnMount } = this.props;
+    if (poseOnMount) this.setPose(poseOnMount);
   }
 
   componentWillUnmount() {
@@ -77,15 +80,15 @@ class PoseComponent extends React.PureComponent<PoseComponentProps> {
       <PoseParentContext.Provider value={this.childrenHandlers}>
         {Component ? (
           <Component
-            {...getProps(props)}
+            {...filterProps(props)}
             style={[style, getStylesFromPoser(this.poser)]}
             {...(this.panHandlers ? this.panHandlers : {})}
           >
             {children}
           </Component>
-        ) : (
-          (children(this.poser.get()) as ChildAsFunction)
-        )}
+        ) : typeof children === 'function' ? (
+          children(this.poser.get())
+        ) : null}
       </PoseParentContext.Provider>
     );
   }

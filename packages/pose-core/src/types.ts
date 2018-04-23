@@ -73,12 +73,12 @@ export type PoserConfig<V> = {
   [key: string]: any;
   label?: string;
   props?: Props;
-  values: { [key: string]: V };
+  values?: { [key: string]: V };
   parentValues?: ValueMap<V>;
   ancestorValues?: AncestorValueList<V>;
   onChange?: OnChangeCallbacks;
-  passive: PassiveValueMap;
-  initialPose: string | string[];
+  passive?: PassiveValueMap;
+  initialPose?: string | string[];
 };
 
 export type ReadValue<V> = (value: V) => any;

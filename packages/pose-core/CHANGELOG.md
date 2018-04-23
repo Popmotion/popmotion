@@ -2,6 +2,10 @@
 
 Pose Core adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.1.5] 2018-04-23
+
+- Making config types optional.
+
 ## [0.1.4] 2018-04-22
 
 - `scale` values default to `1`.

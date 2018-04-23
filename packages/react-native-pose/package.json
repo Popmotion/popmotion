@@ -39,8 +39,9 @@
     "react-native": "^0.55.3"
   },
   "dependencies": {
+    "@types/react": "^16.3.12",
     "@types/react-native": "^0.55.4",
-    "animated-pose": "0.0.2",
-    "pose-core": "^0.1.1"
+    "animated-pose": "0.0.5",
+    "pose-core": "^0.1.5"
   }
 }

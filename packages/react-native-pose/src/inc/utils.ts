@@ -1,4 +1,6 @@
 import { Animated, PanResponder, GestureResponderHandlers } from 'react-native';
+import { PoseComponentProps } from '../types';
+import { AnimatedPoser } from 'animated-pose/lib/types';
 
 const defaultTransformOrder = [
   'x',
@@ -18,23 +20,33 @@ const defaultTransformOrder = [
   'perspective'
 ];
 
-const aliasMap = {
+const aliasMap: { [key: string]: string } = {
   x: 'translateX',
   y: 'translateY',
   z: 'translateZ'
 };
 
-export const getStylesFromPoser = poser => {
+type TransformList = Array<{ [key: string]: any }>;
+
+type StyleMap = {
+  transform?: TransformList;
+  [key: string]: any;
+};
+
+export const getStylesFromPoser = (poser: AnimatedPoser) => {
   const values = poser.get();
   let hasTransform = false;
-  const styles = Object.keys(values).reduce((acc, key) => {
-    if (defaultTransformOrder.indexOf(key) === -1) {
-      acc[key] = values[key];
-    } else {
-      hasTransform = true;
-    }
-    return acc;
-  }, {});
+  const styles = Object.keys(values).reduce(
+    (acc, key) => {
+      if (defaultTransformOrder.indexOf(key) === -1) {
+        acc[key] = values[key];
+      } else {
+        hasTransform = true;
+      }
+      return acc;
+    },
+    {} as StyleMap
+  );
 
   if (hasTransform) {
     styles.transform = defaultTransformOrder.reduce(
@@ -44,24 +56,27 @@ export const getStylesFromPoser = poser => {
         }
         return acc;
       },
-      [{ perspective: 1000 }]
+      [{ perspective: 1000 }] as TransformList
     );
   }
 
   return styles;
 };
 
-export const getProps = ({
+export const filterProps = ({
   registerAsChild,
   onUnmount,
   Component,
   pose,
+  draggable,
+  onDragStart,
+  onDragEnd,
   ...props
-}) => props;
+}: PoseComponentProps): PoseComponentProps => props;
 
 export const makeDraggable = (
-  poser,
-  { draggable, onDragStart, onDragEnd }
+  poser: AnimatedPoser,
+  { draggable, onDragStart, onDragEnd }: PoseComponentProps
 ): GestureResponderHandlers => {
   const values = poser.get();
   const dragX = draggable === true || draggable === 'x';
@@ -69,11 +84,16 @@ export const makeDraggable = (
 
   const panResponder = PanResponder.create({
     onMoveShouldSetPanResponderCapture: () => true,
-    onPanResponderMove: Animated.event([null, { dx: values.x, dy: values.y }]),
+    onPanResponderMove: Animated.event([
+      null,
+      {
+        dx: dragX ? values.x : null,
+        dy: dragY ? values.y : null
+      }
+    ]),
     onPanResponderGrant: (e, gestureState) => {
       poser.set('dragging');
       if (onDragStart) onDragStart(e, gestureState);
-
       if (dragX) {
         values.x.setOffset(values.x._value);
         values.x.setValue(0);

@@ -1,6 +1,6 @@
 {
   "name": "animated-pose",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "Pose for the Animated animation library",
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",

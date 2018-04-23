@@ -1,22 +1,34 @@
 import { Animated } from 'react-native';
-import { ReactElement, ReactNode } from 'react';
-import { AnimatedPoseProps } from 'animated-pose';
+import { ReactNode } from 'react';
+import { AnimatedPoser, AnimatedPoseConfig } from 'animated-pose';
 
-export type PosedComponent = (config: AnimatedPoseProps) => ReactElement<any>;
+export type PosedComponent = (config: AnimatedPoseConfig) => ReactNode;
 
-export type PosedComponentFactory = (
-  Component: React.Component
-) => PosedComponent;
+export type PosedComponentFactory = (Component: any) => PosedComponent;
 
-export type Posed = {
-  (): PosedComponentFactory;
-  [key: string]: PosedComponent;
+export type Posed = any;
+
+// export type Posed = {
+//   (Component: any): PosedComponent;
+//   [key: string]: PosedComponent;
+// }
+
+export type PoseContextProps = {
+  registerAsChild: (props: AnimatedPoseConfig) => AnimatedPoser;
+  onUnmount: (child: AnimatedPoser) => void;
 };
 
-export type PoseContextProps = {};
+export type PoseComponentProps = {
+  withParent?: boolean;
+  pose?: CurrentPose;
+  children?: React.ReactNode | ChildAsFunction;
+  [key: string]: any;
+};
 
 export type ValueMap = {
   [key: string]: Animated.Value;
 };
 
-export type ChildAsFunction = (values: ValueMap) => ReactElement<any>;
+export type CurrentPose = string | string[];
+
+export type ChildAsFunction = (values: ValueMap) => ReactNode;
