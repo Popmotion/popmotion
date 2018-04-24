@@ -81,8 +81,6 @@ If `onDragStart` or `onDragEnd` callbacks are provided to the component, they'll
 <DraggableComponent onDragEnd={(e, gestureState) => {}} />
 ```
 
-You can use this information to detect
-
 ## Coming soon
 
 Pose for the web has a `dragBounds` property that can clamp movement to within a specified range. This feature will come to React Native Pose in the coming weeks.

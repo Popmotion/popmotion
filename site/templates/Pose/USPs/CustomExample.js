@@ -46,11 +46,11 @@ const code = `const config = {
   attention: { scale: 1.3, transition: looseSpring }
 }
 
-// Vanilla & React DOM
+// Vanilla & React DOM use Popmotion
 const looseSpring = (props) =>
   spring({ ...props, stiffness: 200, damping: 0 })
 
-// React Native
+// React Native uses Animated
 const looseSpring = ({ value, toValue }) =>
   spring(value, { toValue, stiffness: 200, damping: 0 })`;
 

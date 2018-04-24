@@ -65,7 +65,9 @@ const Item = styled(posed.li())`
   }
 `;
 
-const code = `const Item = posed.li()
+const code = `// PoseGroup currently React DOM only
+
+const Item = posed.li()
 
 const List = ({ items }) => (
   <ul>
