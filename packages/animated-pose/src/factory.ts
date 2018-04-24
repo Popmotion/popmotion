@@ -12,6 +12,24 @@ import {
   AnimatedPoserFactory
 } from './types';
 
+const nonLayoutValues = new Set([
+  'x',
+  'y',
+  'z',
+  'scale',
+  'scaleX',
+  'scaleY',
+  'scaleZ',
+  'rotate',
+  'rotateX',
+  'rotateY',
+  'rotateZ',
+  'skewX',
+  'skewY',
+  'skewZ',
+  'opacity'
+]);
+
 export default ({
   convertUnitToPoints,
   unitConverters
@@ -44,9 +62,11 @@ export default ({
      */
     createValue: (
       init,
+      key,
       { passiveParent, passiveProps }: CreateValueProps = {}
     ) => {
       if (passiveParent) {
+        if (!nonLayoutValues.has(key)) passiveParent.useNativeDriver = false;
         return { interpolation: passiveParent.raw.interpolate(passiveProps) };
       } else {
         let needsInterpolation = false;
@@ -57,19 +77,24 @@ export default ({
           unit = getUnit(init);
           initValue = parseFloat(init);
 
-          if (!unitConverters[unit]) needsInterpolation = true;
+          if (unitConverters[unit]) {
+            initValue = convertUnitToPoints(init);
+          } else {
+            needsInterpolation = true;
+          }
         } else {
           initValue = init;
         }
 
         const value: Value = {
-          raw: new Animated.Value(initValue)
+          raw: new Animated.Value(initValue),
+          useNativeDriver: nonLayoutValues.has(key)
         };
 
         if (needsInterpolation) {
           value.interpolation = value.raw.interpolate({
-            inputRange: [0, 360],
-            outputRange: [`0${unit}`, `360${unit}`]
+            inputRange: [0, 1],
+            outputRange: [`0${unit}`, `1${unit}`]
           });
         }
 
@@ -80,8 +105,9 @@ export default ({
     /**
      * Get props to pass to a pose's `transition` method and dynamic props
      */
-    getTransitionProps: ({ raw }, toValue) => ({
+    getTransitionProps: ({ raw, useNativeDriver }, toValue) => ({
       value: raw,
+      useNativeDriver,
       toValue
     }),
 

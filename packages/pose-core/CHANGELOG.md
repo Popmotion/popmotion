@@ -2,6 +2,14 @@
 
 Pose Core adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.1.7] 2018-04-24
+
+- Adding `key` to `createValue`.
+
+## [0.1.6] 2018-04-24
+
+- Adding `setProps`.
+
 ## [0.1.5] 2018-04-23
 
 - Making config types optional.

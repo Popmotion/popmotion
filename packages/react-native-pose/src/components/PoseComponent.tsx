@@ -34,7 +34,11 @@ class PoseComponent extends React.PureComponent<PoseComponentProps> {
     if (pose) config.initialPose = pose;
 
     if (draggable) {
+      // This is a bit of a hacky way to make the poser aware of the x and y axis
       config._drag = { x: 0, y: 0 };
+
+      // We have to disable `useNativeDriver` because of limitations with
+      // mixing native and JS animations on the same property
       config.props = {
         ...config.props,
         useNativeDriver: false
@@ -50,6 +54,7 @@ class PoseComponent extends React.PureComponent<PoseComponentProps> {
 
   componentDidUpdate(prevProps: PoseComponentProps) {
     const { pose, poseKey } = this.props;
+    this.poser.setProps(filterProps(this.props));
     if (pose !== prevProps.pose || poseKey !== prevProps.poseKey)
       this.setPose(pose);
   }

@@ -20,10 +20,6 @@ If `true`, will make the component draggable on both axis. Setting to either `'x
 
 If defined, will allow the use of a special `dragging` and `dragEnd` poses.
 
-### `onDragStart/onDragEnd?: (e: NativeEvent, gestureState: GestureState) => any`
-
-Lifecycle callbacks for drag events. Provided the same arguments as [PanResponder's lifecycle events](https://facebook.github.io/react-native/docs/panresponder.html).
-
 ### `passive?: { [key: string]: PassiveValue }`
 
 ```typescript
@@ -48,7 +44,7 @@ Map of values that are passively changed when other values, either on this Poser
 
 Set a label on this poser. Currently, this allows a `passive` value on a child poser to refer to this ancestor value.
 
-### `props: { [key: string]: any }`
+### `props?: { [key: string]: any }`
 
 Props to provide to the `transition` method and dynamic props of entered poses.
 

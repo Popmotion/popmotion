@@ -28,6 +28,8 @@ const config = {
 }
 ```
 
+<Video src="/static/videos/native-passive-opacity.mp4" height="320" />
+
 The first property in the tuple is the name of the value to bind to.
 
 The second is [the interpolation definition](https://facebook.github.io/react-native/docs/animations.html#interpolation). It maps from the bound value to our passive value.
@@ -38,16 +40,18 @@ We currently use `passive` to animate colors (though the ability to define them 
 
 ```javascript
 const config = {
-  open: { scaleX: 1 },
-  closed: { scaleX: 0 },
+  open: { scale: 1 },
+  closed: { scale: 0 },
   passive: {
-    backgroundColor: ['scaleX', {
-      inputRange: [0, 1],
+    backgroundColor: ['scale', {
+      inputRange: [0.5, 1],
       outputRange: ['#f00', '#0f0']
     }]
   }
 };
 ```
+
+<Video src="/static/videos/native-passive-color.mp4" height="320" />
 
 ## Binding to ancestors
 
@@ -62,14 +66,14 @@ To link to the first ancestor in the posed component ancestor chain, we just pas
 ```javascript
 const Sidebar = posed.View({
   open: { x: 0 },
-  closed: { x: 300 }
+  closed: { x: -300 }
 })
 
 const Item = posed.View({
   passive: {
     opacity: ['x', {
-      inputRange: [0, 300],
-      outputRange: [1, 0]
+      inputRange: [-300, 0],
+      outputRange: [0, 1]
     }, true]
   }
 })
@@ -82,6 +86,8 @@ export default ({ isOpen }) => (
   </Sidebar>
 )
 ```
+
+<Video src="/static/videos/native-passive-children.mp4" height="320" />
 
 ### Further ancestors
 

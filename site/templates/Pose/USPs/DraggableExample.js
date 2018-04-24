@@ -35,10 +35,12 @@ const Box = styled(posed.div(props))`
   font-weight: bold;
 `;
 
-const code = `const props = {
+const code = `const config = {
   draggable: 'x',
   dragBounds: { left: '-100%', right: '100%' }
-};`;
+}
+
+// Note: 'dragBounds' not yet available for React Native`;
 
 class Example extends React.Component {
   state = { isVisible: false };

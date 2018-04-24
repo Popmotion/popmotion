@@ -20,6 +20,8 @@ Some key features:
 
 In the following tutorials we'll take a look at each of React Native Pose's features, starting with a very simple animation.
 
+<Video src="/static/videos/native-get-started.mp4" height="320" />
+
 ## Setup
 
 Install React Native Pose in your React Native project:

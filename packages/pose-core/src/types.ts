@@ -52,6 +52,7 @@ export interface Poser<V, A, P> {
   set: (next: string, props?: Props) => Promise<any>;
   get: (key?: string) => any;
   has: (key: string) => boolean;
+  setProps: (props: Props) => void;
   destroy: () => void;
   _addChild: (
     config: PoserConfig<V>,
@@ -87,7 +88,11 @@ export type ResolveTarget<V> = (value: V, target: any) => any;
 
 export type CreateValueProps = any;
 
-export type CreateValue<V> = (init: any, props?: CreateValueProps) => V;
+export type CreateValue<V> = (
+  init: any,
+  key: string,
+  props?: CreateValueProps
+) => V;
 
 export type StartAction<A> = (action: A, complete: Function) => A;
 

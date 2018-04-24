@@ -1,15 +1,33 @@
 import styled from 'styled-components';
 import { fontSize, fontBold, lineHeight } from '~/styles/fonts';
-import { LINK, LINK_BURN, LIGHT_GREY, WHITE, cols, media, GREEN, PURPLE, SKEW, UNSKEW, ENTITY } from '~/styles/vars';
-import { Centered, MajorCentered, ArticleHeader as ArticleHeaderPrimitive } from './grid';
-import SyntaxHighlighter, { registerLanguage } from 'react-syntax-highlighter/dist/light';
+import {
+  LINK,
+  LINK_BURN,
+  LIGHT_GREY,
+  WHITE,
+  cols,
+  media,
+  GREEN,
+  PURPLE,
+  SKEW,
+  UNSKEW,
+  ENTITY
+} from '~/styles/vars';
+import {
+  Centered,
+  MajorCentered,
+  ArticleHeader as ArticleHeaderPrimitive
+} from './grid';
+import SyntaxHighlighter, {
+  registerLanguage
+} from 'react-syntax-highlighter/dist/light';
 import js from 'react-syntax-highlighter/dist/languages/javascript';
-import { codeThemeLarge } from '~/styles/syntax-highlighting'; 
+import { codeThemeLarge } from '~/styles/syntax-highlighting';
 
 registerLanguage('javascript', js);
 
 export const Strong = styled.strong`
-  ${fontBold}
+  ${fontBold};
 `;
 
 export const A = styled.a`
@@ -141,19 +159,19 @@ export const CodeBlock = MajorCentered.extend`
       padding-right: 0!important;
       width: 100%!important;
     }
-  `}
+  `};
 `;
 
-export const Code = ({ language, children, code }) => (children
-  ? <CodeTag>{children}</CodeTag>
-  : (
+export const Code = ({ language, children, code }) =>
+  children ? (
+    <CodeTag>{children}</CodeTag>
+  ) : (
     <CodeBlock>
       <SyntaxHighlighter language={language} style={codeThemeLarge}>
         {code}
       </SyntaxHighlighter>
     </CodeBlock>
-  )
-);
+  );
 
 export const Ul = Centered.withComponent('ul').extend`
   list-style-type: disc;
@@ -165,8 +183,7 @@ export const Ul = Centered.withComponent('ul').extend`
 export const Li = styled.li`
   line-height: 1.7;
   margin-bottom: 0.5rem;
-  ${fontSize(18)}
-  ${media.medium`${fontSize(14)}`}
+  ${fontSize(18)} ${media.medium`${fontSize(14)}`};
 `;
 
 export const Hr = styled.hr`
@@ -187,14 +204,13 @@ const Button = styled.button`
 
 const ButtonContent = styled.span`
   color: ${WHITE};
-  ${fontBold}
-  display: block;
+  ${fontBold} display: block;
   transform: skewX(${UNSKEW});
 `;
 
 export const ActionButton = ({ children, onClick }) => (
   <Button type="button" onClick={onClick}>
-    <ButtonContent>{ children }</ButtonContent>
+    <ButtonContent>{children}</ButtonContent>
   </Button>
 );
 
@@ -208,4 +224,12 @@ export const ArticleHeader = ({ children }) => (
   <ArticleHeaderPrimitive>
     <H1>{children}</H1>
   </ArticleHeaderPrimitive>
+);
+
+export const Video = ({ src, height = 320 }) => (
+  <Centered>
+    <video autoPlay height={height} controls muted>
+      <source src={src} type="video/mp4" />
+    </video>
+  </Centered>
 );

@@ -59,10 +59,20 @@ const Item = styled(posed.li(itemProps))`
   }
 `;
 
-const code = `const parent = pose(element, props)
-children.forEach(child => parent.addChild(child, childProps))
-
+const code = `// Vanilla
+const parent = pose(element, config)
+items.forEach(item => parent.addChild(item, childConfig))
 parent.set('open')
+
+// React Native
+const Parent = posed.View(config)
+const Child = posed.Image(childConfig)
+
+({ items }) => (
+  <Parent pose="open">
+    {items.map(item => <Child />)}
+  </Parent>
+)
 `;
 
 class Example extends React.Component {

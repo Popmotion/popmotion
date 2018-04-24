@@ -21,6 +21,8 @@ export default ({items}) => (
 )
 ```
 
+<Video src="/static/videos/native-children.mp4" height="320" />
+
 Here's how it's done.
 
 ## Child animation
@@ -78,8 +80,8 @@ So by setting `delay: 300` on the overlay's `closed` pose, the children animatio
 
 ```javascript
 const Overlay = posed.View({
-  open: { x: 0 },
-  closed: { x: '100vh', delay: 300 }
+  open: { y: 0 },
+  closed: { y: '100vh', delay: 300 }
 });
 ```
 
@@ -91,8 +93,8 @@ By setting `delayChildren` on the overlay's `open` pose, we can animate the over
 
 ```javascript
 const Overlay = posed.View({
-  open: { x: 0, delayChildren: 200 },
-  closed: { x: '100vh', delay: 300 }
+  open: { y: 0, delayChildren: 200 },
+  closed: { y: '100vh', delay: 300 }
 });
 ```
 
@@ -103,11 +105,11 @@ Rather than animating all the children in at once, it's possible to stagger them
 ```javascript
 const Overlay = posed.View({
   open: {
-    x: 0,
+    y: 0,
     delayChildren: 200,
     staggerChildren: 50
   },
-  closed: { x: '100vh', delay: 300 }
+  closed: { y: '100vh', delay: 300 }
 });
 ```
 

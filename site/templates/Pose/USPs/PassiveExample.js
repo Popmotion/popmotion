@@ -30,14 +30,20 @@ const Box = styled(posed.div(props))`
   font-weight: bold;
 `;
 
-const code = `const props = {
-  draggable: 'x',
-  passive: {
-    opacity: ['x', interpolate(
-      [-200, -100, 100, 200],
-      [0, 1, 1, 0]
-    )]
-  }
+const code = `// Vanilla & React DOM
+passive: {
+  opacity: ['x', interpolate(
+    [-200, -100, 100, 200],
+    [0, 1, 1, 0]
+  )]
+}
+
+// React Native
+passive: {
+  opacity: ['x', {
+    inputRange: [-200, -100, 100, 200],
+    outputRange: [0, 1, 1, 0]
+  }]
 }`;
 
 class Example extends React.Component {

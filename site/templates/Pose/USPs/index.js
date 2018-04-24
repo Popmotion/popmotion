@@ -15,10 +15,10 @@ import { CTA } from '~/templates/Popmotion/Masthead/styled';
 
 export default () => (
   <Container>
-    <Blurb>CSS simplicity meets Popmotion power</Blurb>
+    <Blurb>CSS simplicity meets JavaScript power</Blurb>
     <ExampleSection>
       <Example
-        title="Zero-config animation"
+        title="Magic animations"
         description="By default, Pose will figure out the animation based on the properties being animated."
       >
         <ZeroConfigExample />
@@ -31,7 +31,7 @@ export default () => (
       </Example>
       <Example
         title="Custom animations"
-        description="Use the power of Popmotion to create complex custom animations."
+        description="Use the power of Popmotion or React Animated to create complex custom animations."
       >
         <CustomExample />
       </Example>
@@ -60,7 +60,7 @@ export default () => (
         <FlipExample />
       </Example>
       <Example
-        title="Awesome with React"
+        title="Awesome with React DOM"
         description="The freedom to use any animation, automatic child binding, FLIP-enhanced enter/exit transitions and more."
       >
         <ReactExample />

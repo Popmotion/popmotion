@@ -6,7 +6,7 @@ module.exports = (
 ) => `
 import { createElement } from 'react';
 import marksy from 'marksy/components';
-import { A, H1, H2, H3, H4, P, Li, Ul, Hr, Code, Blockquote, ArticleHeader } from '~/templates/global/styled';
+import { A, H1, H2, H3, H4, P, Li, Ul, Hr, Code, Blockquote, ArticleHeader, Video } from '~/templates/global/styled';
 import { Img } from '~/templates/content/styled';
 import ContentTemplate from '~/templates/content/Template';
 import Example from '~/components/examples/Example';
@@ -32,7 +32,8 @@ const convertMarkdown = marksy({
   },
   components: {
     Example,
-    CodePen
+    CodePen,
+    Video
   }
 });
 

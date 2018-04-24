@@ -42,11 +42,17 @@ const Box = styled(posed.div(props))`
   transform-origin: 50%;
 `;
 
-const code = `attention: {
-  scale: 1.3,
-  transition: (props) =>
-    spring({ ...props, stiffness: 200, damping: 0 })
-}`;
+const code = `const config = {
+  attention: { scale: 1.3, transition: looseSpring }
+}
+
+// Vanilla & React DOM
+const looseSpring = (props) =>
+  spring({ ...props, stiffness: 200, damping: 0 })
+
+// React Native
+const looseSpring = ({ value, toValue }) =>
+  spring(value, { toValue, stiffness: 200, damping: 0 })`;
 
 class Example extends React.Component {
   state = { isVisible: false };

@@ -4,7 +4,5 @@
 
 * [Popmotion](https://github.com/Popmotion/popmotion/tree/master/packages/popmotion)
 * [Popmotion Pose](https://github.com/Popmotion/popmotion/tree/master/packages/popmotion-pose)
-* [Animated Pose](https://github.com/Popmotion/popmotion/tree/master/packages/animated-pose)
 * [React Pose](https://github.com/Popmotion/popmotion/tree/master/packages/react-pose)
 * [React Native Pose](https://github.com/Popmotion/popmotion/tree/master/packages/react-native-pose)
-* [Pose Core](https://github.com/Popmotion/popmotion/tree/master/packages/pose-core)

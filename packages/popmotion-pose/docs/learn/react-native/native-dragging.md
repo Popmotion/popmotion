@@ -25,6 +25,8 @@ const config = {
 };
 ```
 
+<Video src="/static/videos/native-drag.mp4" height="320" />
+
 `true` sets both axis to draggable, but we can select a single axis to drag on by setting it to `'x'` or `'y'`:
 
 ```javascript
@@ -32,6 +34,8 @@ const config = {
   draggable: 'x'
 }
 ```
+
+<Video src="/static/videos/native-drag-x.mp4" height="320" />
 
 ## Special poses
 
@@ -49,6 +53,8 @@ const config = {
 };
 ```
 
+<Video src="/static/videos/native-drag-pose.mp4" height="320" />
+
 Both of these poses gets provided [PanResponder's](https://facebook.github.io/react-native/docs/panresponder.html) `gestureState` object, so we can make different animations based on the behaviour of the drag:
 
 ```javascript
@@ -64,6 +70,8 @@ const config = {
   }
 }
 ```
+
+<Video src="/static/videos/native-drag-end.mp4" height="320" />
 
 ## `onDragStart`/`onDragEnd`
 

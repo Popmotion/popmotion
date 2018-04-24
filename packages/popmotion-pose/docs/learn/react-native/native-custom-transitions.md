@@ -20,7 +20,7 @@ import { Animated } from 'react-native';
 
 const slowTween = ({ value, toValue }) => Animated.timing(value, {
   toValue,
-  duration: 2000
+  duration: 1500
 })
 
 const config = {
@@ -28,6 +28,8 @@ const config = {
   hidden: { opacity: 0, transition: () => false }
 };
 ```
+
+<Video src="/static/videos/native-custom-transition.mp4" height="320" />
 
 The `transition` function is run **once, for every value in the current pose**. This allows you to return a different animation for each value based on the provided `key` property:
 
@@ -39,7 +41,7 @@ const config = {
     transition: ({ value, toValue, key }) => {
       switch(key) {
         case 'opacity':
-          return slowTween({ value, toValue })
+          return Animated.timing(value, { toValue })
         case 'y':
           return Animated.spring(value, { toValue })
       }
@@ -48,6 +50,8 @@ const config = {
   hidden: { opacity: 0, y: -50 }
 }
 ```
+
+<Video src="/static/videos/native-custom-transition-b.mp4" height="320" />
 
 ## `transition` props
 
@@ -69,23 +73,25 @@ The `props` object will also contain any props passed to the posed component.
 For instance, if we're rendering items in a loop, we could pass the loop index to each component as `i` and change the returned animation based on that:
 
 ```javascript
-const BASE_DURATION = 50;
+const BASE_DURATION = 100;
 
-const Item = posed.View({
+const config = {
   open: {
     scaleX: 1,
     transition: ({ i, value, toValue }) => Animated.timing(value, {
       toValue,
-      duration: i + 1 * BASE_DURATION
+      duration: (i + 1) * BASE_DURATION
     })
   },
   closed: { scaleX: 0 }
-});
+};
 
 export default ({ items, isOpen }) => items.map((item, i) => (
   <Item pose={isOpen ? 'open' : 'closed'} i={i} />
 ))
 ```
+
+<Video src="/static/videos/native-custom-transition-c.mp4" height="320" />
 
 ## Dynamic pose props
 
@@ -102,6 +108,8 @@ closed: {
 }
 ```
 
+<Video src="/static/videos/native-custom-transition-d.mp4" height="320" />
+
 ## Looping and sequencing animations
 
 In the near future, there may be a `loop` property that automatically loops any returned animations. But, because `transition` can return any React Animated animation, we can already implement looping and sequencing.
@@ -114,9 +122,12 @@ const config = {
     scale: 1.3,
     transition: ({ value, toValue }) => Animated.loop(
       Animated.sequence([
-        Animated.timing(value, { toValue, duration: 400 })
+        Animated.timing(value, { toValue, duration: 400 }),
+        Animated.timing(value, { toValue: 1, duration: 400 })
       ])
     )
   }
 }
 ```
+
+<Video src="/static/videos/native-custom-transition-e.mp4" height="320" />

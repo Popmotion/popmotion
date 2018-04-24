@@ -27,9 +27,8 @@ const code = `// Vanilla
 poser.set('open')
 
 // React
-({ isOpen }) => (
-  <PosedComponent pose={isOpen ? 'open' : 'closed'} />
-)`;
+({ isOpen }) =>
+  <Component pose={isOpen ? 'open' : 'closed'} />`;
 
 class Example extends React.Component {
   state = { isVisible: false };

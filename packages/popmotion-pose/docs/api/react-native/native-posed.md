@@ -4,7 +4,7 @@ description: Create posed components
 category: react-native
 ---
 
-# Posed components
+# `posed`
 
 React Native Pose exports a single function, `posed`.
 
@@ -12,7 +12,9 @@ React Native Pose exports a single function, `posed`.
 import posed from 'react-native-pose';
 ```
 
-It's a factory function that creates posed components. These are components [configured with a series of states that it can animate between and other options](/pose/native-config).
+## Posed components
+
+`posed` is a factory function that creates posed components. These are components [configured with a series of states that it can animate between and other options](/pose/native-config).
 
 We can use `posed` to create three different kinds of posed component:
 
@@ -20,7 +22,7 @@ We can use `posed` to create three different kinds of posed component:
 - Custom components
 - Function as child components
 
-## Included components
+### Included components
 
 [React Animated](https://facebook.github.io/react-native/docs/animations.html) ships with four animatable components: `View`, `Text`, `Image` and `ScrollView`.
 
@@ -31,7 +33,7 @@ Likewise, `posed` has shortcuts for each of these components:
 - `posed.Image(config)`
 - `posed.ScrollView(config)`
 
-## Custom components
+### Custom components
 
 Animated also has a helper function that you can use to create animated components from any normal component: `createAnimatedComponent(Component)`.
 
@@ -41,7 +43,7 @@ If `posed` is called as a function, it can also create an animated component fro
 
 This makes `posed.View` practically the same as `posed(View)`.
 
-## Function as children components
+### Function as children components
 
 By creating posed components with the previous two methods, React Native Pose will automatically handle the application of the generated `Animated.Value`s.
 
@@ -58,8 +60,42 @@ const PosedComponent = posed()({
 export default ({ isOpen }) => (
   <PosedComponent pose={isOpen ? 'open': 'closed'}>
     {({ x, scaleY }) => (
-      <Animated.Value style={{ transform: [{ translateX: x }, { scaleY }] }} />
+      <Animated.View style={{ transform: [{ translateX: x }, { scaleY }] }} />
     )}
   </PosedComponent>
 )
 ```
+
+## Props
+
+### `pose?: string | string[]`
+
+The name of one or more poses to set to.
+
+### `poseKey?: string | number`
+
+If `poseKey` changes, it'll force the posed component to transition to the current `pose`, even if it hasn't changed.
+
+This won't be required for the majority of use-cases. But we might have something like a paginated where we pass the x offset to the component but the pose itself doesn't change:
+
+```javascript
+const Slider = posed.View({
+  nextItem: {
+    x: ({ target }) => target
+  }
+})
+
+({ target }) => <Slider pose="nextItem" poseKey={target} target={target} />
+```
+
+### `onDragStart/onDragEnd?: (e: NativeEvent, gestureState: GestureState) => any`
+
+Lifecycle callbacks for drag events. Provided the same arguments as [PanResponder's lifecycle events](https://facebook.github.io/react-native/docs/panresponder.html).
+
+### `withParent?: boolean = true`
+
+If explicitly set to `false`, this posed component will become a new root for any posed children components.
+
+### `values?: { [key: string]: Animated.Value }`
+
+Optional way of providing the posed component the `Animated.Value`s rather than letting it create them itself. In case you want to retain ownership for whatever reason.

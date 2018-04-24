@@ -36,6 +36,7 @@ const getInitialValue = <A>(
   const pose = posesToSearch.find(
     name => poses[name] && poses[name][key] !== undefined
   );
+
   return pose ? resolveProp(poses[pose][key], props) : isScale(key) ? 1 : 0; // Hook for renderer inspection?
 };
 
@@ -61,7 +62,7 @@ const createValues = <V, A>(
     // Or create a new value
   } else {
     const initValue = getInitialValue(poses, key, initialPose, props);
-    value = createValue(initValue);
+    value = createValue(initValue, key);
   }
 
   values.set(key, value);
@@ -102,7 +103,7 @@ const bindPassiveValues = <V, A>(
 
   if (!valueToBind) return;
 
-  const newValue = createValue(readValue(valueToBind), {
+  const newValue = createValue(readValue(valueToBind), key, {
     passiveParent: valueToBind,
     passiveProps: props
   });

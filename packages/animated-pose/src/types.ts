@@ -9,6 +9,7 @@ export type Interpolation = {
 export type Value = {
   raw?: Animated.Value;
   interpolation?: Animated.AnimatedInterpolation;
+  useNativeDriver?: boolean;
 };
 
 export type Action = Animated.CompositeAnimation;
