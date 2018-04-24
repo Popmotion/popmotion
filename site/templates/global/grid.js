@@ -1,7 +1,9 @@
-import styled from "styled-components";
-import { cols, media, LIGHT_GREY } from "~/styles/vars";
+import styled from 'styled-components';
+import { cols, media, LIGHT_GREY } from '~/styles/vars';
 
-export const Content = styled.article``;
+export const Content = styled.article`
+  min-height: 700px;
+`;
 
 export const Centered = styled.div`
   max-width: ${cols(42)};
@@ -25,7 +27,7 @@ export const MajorCentered = styled(Centered)`
   `};
 `;
 
-export const ArticleHeader = MajorCentered.withComponent("header").extend`
+export const ArticleHeader = MajorCentered.withComponent('header').extend`
   padding-bottom: 10px;
   border-bottom: 1px solid ${LIGHT_GREY};
   margin-bottom: ${cols(2)};
@@ -33,7 +35,7 @@ export const ArticleHeader = MajorCentered.withComponent("header").extend`
 
 export const SectionContainer = styled.li``;
 
-export const ItemContainer = Centered.withComponent("li").extend`
+export const ItemContainer = Centered.withComponent('li').extend`
   border-left: 1px solid ${LIGHT_GREY};
   padding: ${cols(1)} ${cols(2)};
   margin-bottom: ${cols(1)};

@@ -1,8 +1,8 @@
 ---
 title: Animating children
 description: How to orchestrate animations across multiple elements
-category: basics
-next: dragging
+category: react-native
+next: native-dragging
 ---
 
 # Animating children

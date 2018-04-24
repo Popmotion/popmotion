@@ -1,8 +1,8 @@
 ---
 title: Get started
 description: Introduction to React Native Pose's declarative animation interface
-category: basics
-next: custom-transitions
+category: react-native
+next: native-custom-transitions
 ---
 
 # Get started
@@ -44,7 +44,7 @@ React Native exports a single function, `posed`.
 import posed from 'react-native-pose';
 ```
 
-`posed` is a factory function that creates posed components. These are components that can be animated between different states defined by a `config` object:
+`posed` is a factory function that [creates posed components](/pose/api/native-posed). These are components that can be animated between different states defined by [a `config` object](/pose/api/native-config):
 
 ```javascript
 const config = {
@@ -81,4 +81,4 @@ These animations are configured identically to those in [Pose and React Pose](/p
 
 In the near future, it will be possible to affect these default animations by using properties to describe the **characteristics** of the interface.
 
-However, there will always be situations where we need greater control over our animations. For that, we can define [custom transitions](/react-native-pose/learn/custom-transitions).
+However, there will always be situations where we need greater control over our animations. For that, we can define [custom transitions](/pose/learn/learn-custom-transitions).

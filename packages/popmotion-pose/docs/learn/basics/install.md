@@ -2,7 +2,7 @@
 title: Install
 description: Overview of Pose's installation options.
 category: basics
-next: get-started
+next: popmotion-get-started
 ---
 
 # Install

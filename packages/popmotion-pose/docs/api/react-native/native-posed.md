@@ -1,11 +1,10 @@
 ---
-title: Posed Components
-description: How to create posed components in React Native Posed
-category: basics
-next: custom-transitions
+title: Posed
+description: Create posed components
+category: react-native
 ---
 
-# Posed Components
+# Posed components
 
 React Native Pose exports a single function, `posed`.
 
@@ -13,7 +12,7 @@ React Native Pose exports a single function, `posed`.
 import posed from 'react-native-pose';
 ```
 
-It's a factory function that creates posed components. These are components configured with a series of states that it can animate between.
+It's a factory function that creates posed components. These are components [configured with a series of states that it can animate between and other options](/pose/native-config).
 
 We can use `posed` to create three different kinds of posed component:
 

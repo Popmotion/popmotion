@@ -11,5 +11,6 @@
   "projects": "Projects",
   "reactions": "Reactions",
   "dom": "DOM",
-  "react": "React"
+  "react": "React",
+  "react-native": "React Native"
 }

@@ -1,8 +1,8 @@
 ---
 title: Custom transitions
 description: How to use React Animated to define custom transitions for posers
-category: basics
-next: animating-children
+category: react-native
+next: native-animating-children
 ---
 
 # Custom transitions
