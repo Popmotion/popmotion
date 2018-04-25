@@ -17,6 +17,7 @@ Some key features:
 - **Children:** Pose changes are propagated throughout posed components via context. This allows simple animation orchestration across components without messy imperative logic or delicate prop chains.
 - **Units:** Handles unit animations without having to manually `interpolate`. Introduces CSS `vw` and `vh` units to React Native.
 - **Easy dragging:** Making a component draggable is as simple as `draggable: true`.
+- **`useNativeDriver`:** Automatically uses it with supported values, and disables it when used with `PanResponder` or when `interpolate`d to an unsupported value like `backgroundColor`.
 
 In the following tutorials we'll take a look at each of React Native Pose's features, starting with a very simple animation.
 
