@@ -14,7 +14,7 @@ import posed from 'react-native-pose';
 
 ## Posed components
 
-`posed` is a factory function that creates posed components. These are components [configured with a series of states that it can animate between and other options](/pose/native-config).
+`posed` is a factory function that creates posed components. These are components [configured with a series of states that it can animate between and other options](/pose/api/native-config).
 
 We can use `posed` to create three different kinds of posed component:
 
