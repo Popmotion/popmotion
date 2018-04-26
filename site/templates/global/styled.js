@@ -173,6 +173,13 @@ export const Code = ({ language, children, code }) =>
     </CodeBlock>
   );
 
+export const Ol = Centered.withComponent('ol').extend`
+  list-style-type: decimal;
+  padding-left: ${cols(2)};
+  max-width: ${cols(43)};
+  margin-bottom: 1.1rem;
+`;
+
 export const Ul = Centered.withComponent('ul').extend`
   list-style-type: disc;
   padding-left: ${cols(2)};
