@@ -108,8 +108,11 @@ export const distance = (a: Point | number, b: Point | number = ZERO_POINT): num
   @param [number]: Value to find progress within given range
   @return [number]: Progress of value within range as expressed 0-1
 */
-export const getProgressFromValue = (from: number, to: number, value: number) =>
-  (value - from) / (to - from);
+export const getProgressFromValue = (from: number, to: number, value: number) => {
+  const toFromDifference = to - from;
+
+  return toFromDifference === 0 ? 1 : (value - from) / toFromDifference;
+}
 
 /*
   Value in range from progress

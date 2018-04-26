@@ -99,6 +99,13 @@ describe('steps()', () => {
     expect(threeStep(49)).toBe(50);
     expect(threeStep(75)).toBe(100);
   });
+
+  it('should handle a range of length 0', () => {
+    const threeStep = steps(3, 4, 4);
+    expect(threeStep(0)).toBe(4);
+    expect(threeStep(4)).toBe(4);
+    expect(threeStep(8)).toBe(4);
+  });
 });
 
 describe('snap()', () => {
