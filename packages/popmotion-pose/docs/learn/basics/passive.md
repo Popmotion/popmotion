@@ -119,7 +119,7 @@ const itemProps = {
 };
 ```
 
-As you can see, we're passing in a third parameter to the passive tuple, `true`. This says "listen to the `x` value, but do so on my immediate parent.
+As you can see, we're passing in a third parameter to the passive tuple, `true`. This says "listen to the `x` value, but do so on my immediate parent".
 
 <CodePen id="GxOXeX" />
 
