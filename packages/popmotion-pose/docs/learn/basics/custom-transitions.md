@@ -62,7 +62,7 @@ const props = {
     transition: (props) => tween({
       ...props,
       duration: 1000,
-      ease: key === 'opacity' ? easing.linear : easing.anticipate
+      ease: props.key === 'opacity' ? easing.linear : easing.anticipate
     })
   }
 }
