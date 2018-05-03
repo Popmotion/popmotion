@@ -16,12 +16,12 @@ import { getPoseValues } from '../inc/selectors';
 
 type AnimationsPromiseList = Array<Promise<any>>;
 
-type SetterFactoryProps<V, A, P> = {
-  state: PoserState<V, A, P>;
+type SetterFactoryProps<V, A, C, P> = {
+  state: PoserState<V, A, C, P>;
   poses: PoseMap<A>;
   getInstantTransition: GetInstantTransition<V, A>;
-  startAction: StartAction<A>;
-  stopAction: StopAction<A>;
+  startAction: StartAction<V, A, C>;
+  stopAction: StopAction<C>;
   addActionDelay: AddTransitionDelay<A>;
   getTransitionProps: GetTransitionProps<V>;
   resolveTarget: ResolveTarget<V>;
@@ -41,8 +41,8 @@ const poseDefault = <A>(
     ? resolveProp(pose[prop], resolveProps)
     : defaultValue;
 
-const startChildAnimations = <V, A, P>(
-  children: ChildPosers<V, A, P>,
+const startChildAnimations = <V, A, C, P>(
+  children: ChildPosers<V, A, C, P>,
   next: string,
   pose: Pose<A>,
   props: Props
@@ -70,8 +70,8 @@ const startChildAnimations = <V, A, P>(
   return animations;
 };
 
-const createPoseSetter = <V, A, P>(
-  setterProps: SetterFactoryProps<V, A, P>
+const createPoseSetter = <V, A, C, P>(
+  setterProps: SetterFactoryProps<V, A, C, P>
 ) => (next: string, nextProps: Props = {}) => {
   const {
     state,
@@ -147,7 +147,7 @@ const createPoseSetter = <V, A, P>(
         }
 
         // Start transition
-        activeActions.set(key, startAction(transition, complete));
+        activeActions.set(key, startAction(value, transition, complete));
         activePoses.set(key, next);
       });
     });

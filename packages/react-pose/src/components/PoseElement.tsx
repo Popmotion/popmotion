@@ -8,15 +8,14 @@ import {
   PoseElementProps,
   PopStyle
 } from './PoseElement.types';
-import reactLifecyclePolyfill = require('react-lifecycles-compat');
 
 export const PoseParentContext = createContext({});
 
 type Ref = (ref: Element) => any;
 type RefSetters = {
-  ref?: Ref,
-  innerRef?: Ref,
-  hostRef?: Ref
+  ref?: Ref;
+  innerRef?: Ref;
+  hostRef?: Ref;
 };
 
 const calcPopFromFlowStyle = (el: HTMLElement): PopStyle => {
@@ -134,7 +133,6 @@ class PoseElement extends React.PureComponent<PoseElementProps> {
     return props;
   }
 
-
   /**
    * We need to get a ref to the underlying DOM element. Styled Components and
    * other libraries use `innerRef`, though this will be swallowed if the
@@ -157,7 +155,7 @@ class PoseElement extends React.PureComponent<PoseElementProps> {
     }
 
     return refs;
-  }
+  };
 
   setRef = (ref: Element) => {
     if (ref instanceof Element || (this.ref && ref === null)) {
@@ -165,7 +163,7 @@ class PoseElement extends React.PureComponent<PoseElementProps> {
       if (innerRef) innerRef(ref);
       this.ref = ref;
     }
-  }
+  };
 
   componentDidMount() {
     if (!this.ref) return;
@@ -178,7 +176,7 @@ class PoseElement extends React.PureComponent<PoseElementProps> {
       values,
       parentValues,
       onDragStart,
-      onDragEnd,
+      onDragEnd
     } = this.props;
     const props: PoserProps = {
       ...poseProps,
@@ -261,7 +259,5 @@ class PoseElement extends React.PureComponent<PoseElementProps> {
     );
   }
 }
-
-reactLifecyclePolyfill(PoseElement);
 
 export { PoseElement };

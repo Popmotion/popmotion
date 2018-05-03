@@ -1,4 +1,11 @@
-import { eachValue } from '../../../pose-core/src/inc/transition-composers';
+import action from 'popmotion/action';
+import { eachValue } from 'pose-core';
+
+export const just = (from: RawValue): Action =>
+  action(({ update, complete }) => {
+    update(from);
+    complete();
+  });
 
 const intelligentTransition = eachValue({});
 

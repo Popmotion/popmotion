@@ -34,7 +34,8 @@
     "webpack": "^3.11.0"
   },
   "dependencies": {
-    "popmotion": "^8.1.22"
+    "popmotion": "^8.1.22",
+    "pose-core": "^0.1.7"
   },
   "unpkg": "./dist/popmotion-pose.js",
   "prettier": {

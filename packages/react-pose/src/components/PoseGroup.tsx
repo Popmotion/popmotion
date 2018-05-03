@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { ReactElement } from 'react';
-import reactLifecyclePolyfill = require('react-lifecycles-compat');
 import {
   handleIncomingChildren,
   makeChildList,
@@ -81,7 +80,5 @@ class PoseGroup extends React.Component<Props, State> {
     return <Fragment>{children}</Fragment>;
   }
 }
-
-reactLifecyclePolyfill(PoseGroup);
 
 export { PoseGroup };

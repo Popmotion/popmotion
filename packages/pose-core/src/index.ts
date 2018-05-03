@@ -15,7 +15,7 @@ import generateDefaultTransitions from './factories/transitions';
 import { eachValue, fromPose } from './inc/transition-composers';
 import { selectPoses, selectAllValues } from './inc/selectors';
 
-const poseFactory = <V, A, P>({
+const poseFactory = <V, A, C, P>({
   getDefaultProps,
   defaultTransitions,
   bindOnChange,
@@ -29,14 +29,16 @@ const poseFactory = <V, A, P>({
   addActionDelay,
   selectValueToRead,
   extendAPI
-}: PoseFactoryConfig<V, A, P>) => (config: PoserConfig<V>): Poser<V, A, P> => {
+}: PoseFactoryConfig<V, A, C, P>) => (
+  config: PoserConfig<V>
+): Poser<V, A, C, P> => {
   // If set, add parent values to ancestor chain
   const { parentValues, ancestorValues } = config;
   if (parentValues) ancestorValues.unshift({ values: parentValues });
 
-  const activeActions: ActiveActions<A> = new Map();
+  const activeActions: ActiveActions<C> = new Map();
   const activePoses: ActivePoses = new Map();
-  const children: ChildPosers<V, A, P> = new Set();
+  const children: ChildPosers<V, A, C, P> = new Set();
 
   const poses = generateDefaultTransitions<A>(
     selectPoses(config),
@@ -60,7 +62,7 @@ const poseFactory = <V, A, P>({
     props
   });
 
-  const state: PoserState<V, A, P> = {
+  const state: PoserState<V, A, C, P> = {
     activeActions,
     activePoses,
     children,
@@ -84,7 +86,7 @@ const poseFactory = <V, A, P>({
     addActionDelay
   });
 
-  const api: Poser<V, A, P> = {
+  const api: Poser<V, A, C, P> = {
     set,
     get: valueName =>
       valueName

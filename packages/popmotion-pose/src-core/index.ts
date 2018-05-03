@@ -1,36 +1,54 @@
+import poseFactory from '../../pose-core/lib';
+import { Action } from 'popmotion/action';
 import { ColdSubscription } from 'popmotion/action/types';
-import { value } from 'popmotion';
-import poseFactory from '../../pose-core/src';
-import createDimensions from './factories/dimensions';
-import defaultTransitions from './inc/default-transitions';
-import { PopmotionPoserConfig } from './types';
-import { ValueReaction } from 'popmotion/reactions/value';
+import { PopmotionPoser, Value } from './types';
+import chain from 'popmotion/compositors/chain';
+import delayAction from 'popmotion/compositors/delay';
+import defaultTransitions, { just } from './inc/default-transitions';
 
-const passThrough = (v: any) => v;
+const createPassiveValue = (init, key, parent, transform) => {};
 
-const pose = poseFactory<ValueReaction, ColdSubscription>({
-  getDefaultProps: ({ element }: PopmotionPoserConfig) => ({
-    dimensions: createDimensions(element)
-  }),
-  defaultTransitions,
-  bindOnChange: (values, onChange) => (key) => {
-    if (values.has(key)) values.get(key).subscribe(onChange[key]);
+const createValue = (init, key) => {};
+
+const pose = poseFactory<Value, Action, ColdSubscription, PopmotionPoser>({
+  bindOnChange: (values, onChange) => key => {
+    if (!values.has(key)) return;
+
+    const { raw } = values.get(key);
+    raw.subscribe(onChange[key]);
   },
-  readValue: value => value.get(),
-  createValue: (init, { passiveParent, passiveProps = passThrough }) => {
-    if (passiveParent) {
-      const newValue = value(init, passiveProps);
-      passiveParent.subscribe(newValue);
-      return newValue;
-    } else {
-      return value(init);
-    }
-  }
-});
 
-export default (element: Element, config: PopmotionPoserConfig) => {
-  return pose({
-    element,
-    ...config
-  });
-};
+  readValue: value => value.get(),
+
+  createValue: (init, key, { passiveParent, passiveProps }) =>
+    passiveParent
+      ? createPassiveValue(init, key, passiveParent, passiveProps)
+      : createValue(init, key),
+
+  getTransitionProps: ({ raw }, to) => ({
+    from: raw.get(),
+    velocity: raw.getVelocity(),
+    to
+  }),
+
+  resolveTarget: ({ type }, to) => (type ? type.parse(to) : to),
+
+  selectValueToRead: ({ raw }) => raw,
+
+  startAction: ({ raw }, action, complete) =>
+    action.start({
+      update: (v: any) => raw.update(v),
+      complete
+    }),
+
+  stopAction: action => action.stop(),
+
+  getInstantTransition: (value, to) => just(to),
+
+  addActionDelay: (delay = 0, transition) =>
+    chain(delayAction(delay), transition),
+
+  defaultTransitions,
+
+  extendAPI: api => api
+});

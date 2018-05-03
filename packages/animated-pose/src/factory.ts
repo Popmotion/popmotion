@@ -170,14 +170,10 @@ export default ({
      * Return the Poser API returned by the factory function, with extra methods
      * specific to Animated Pose
      */
-    extendAPI: api => {
-      return {
-        ...api,
-        addChild: (props: AnimatedPoseConfig) => {
-          return api._addChild(props, pose);
-        }
-      };
-    }
+    extendAPI: api => ({
+      ...api,
+      addChild: (props: AnimatedPoseConfig) => api._addChild(props, pose)
+    })
   });
 
   return pose;
