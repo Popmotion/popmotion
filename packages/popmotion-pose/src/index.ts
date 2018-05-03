@@ -1,126 +1,54 @@
-import styler from 'stylefire';
-import {
-  Poser,
-  PoserProps,
-  PoserFactory,
-  PoseSetterProps,
-  ActivePoses,
-  ActiveActions,
-  ChildPoses,
-  StateMap
-} from './types';
-import { getDragProps } from './inc/selectors';
-import { eachValue, fromPose } from './inc/transition-composers';
-import createPoses from './factories/poses';
-import createValuesAndTypes from './factories/values';
-import createPoseSetter from './factories/pose-setter';
-import createDimensions from './factories/dimensions';
-import makeDraggable from './dom/draggable';
+import poseFactory from '../../pose-core/lib';
+import { Action } from 'popmotion/action';
 import { ColdSubscription } from 'popmotion/action/types';
+import { PopmotionPoser, Value } from './types';
+import chain from 'popmotion/compositors/chain';
+import delayAction from 'popmotion/compositors/delay';
+import defaultTransitions, { just } from './inc/default-transitions';
 
-const pose: PoserFactory = (element, props) => {
-  const {
-    draggable,
-    initialPose,
-    passive,
-    values: userSetValues,
-    label,
-    parentValues,
-    ancestorValues = [],
-    onChange
-  } = props;
-  const dragProps = getDragProps(props);
-  const activeActions: ActiveActions = new Map();
-  const activePoses: ActivePoses = new Map();
-  const children: ChildPoses = new Set();
-  const dimensions = createDimensions(element);
-  let transitionProps: PoseSetterProps = props.transitionProps || {};
+const createPassiveValue = (init, key, parent, transform) => {};
 
-  const elementStyler = styler(element, { preparseOutput: false });
-  const poses = createPoses(props);
-  const getTransitionProps = () => transitionProps;
+const createValue = (init, key) => {};
 
-  if (parentValues) ancestorValues.unshift({ values: parentValues });
+const pose = poseFactory<Value, Action, ColdSubscription, PopmotionPoser>({
+  bindOnChange: (values, onChange) => key => {
+    if (!values.has(key)) return;
 
-  const { values, types } = createValuesAndTypes({
-    poses,
-    styler: elementStyler,
-    initialPose,
-    passive,
-    userSetValues,
-    ancestorValues,
-    onChange,
-    getTransitionProps
-  });
+    const { raw } = values.get(key);
+    raw.subscribe(onChange[key]);
+  },
 
-  const set = createPoseSetter({
-    element,
-    elementStyler,
-    poses,
-    values,
-    types,
-    children,
-    activeActions,
-    activePoses,
-    dimensions,
-    dragProps,
-    getTransitionProps,
-    flipEnabled: element instanceof HTMLElement
-  });
+  readValue: value => value.get(),
 
-  if (draggable) makeDraggable(element, set, activeActions, dragProps);
+  createValue: (init, key, { passiveParent, passiveProps }) =>
+    passiveParent
+      ? createPassiveValue(init, key, passiveParent, passiveProps)
+      : createValue(init, key),
 
-  const api: Poser = {
-    set,
-    setTransitionProps: nextProps =>
-      (transitionProps = {
-        ...transitionProps,
-        ...nextProps
-      }),
-    has: name => !!poses[name],
-    get: () => {
-      const output: StateMap = {};
-      values.forEach((value: any, key: string) => (output[key] = value.get()));
-      return output;
-    },
+  getTransitionProps: ({ raw }, to) => ({
+    from: raw.get(),
+    velocity: raw.getVelocity(),
+    to
+  }),
 
-    // FLIP methods
-    measure: dimensions.measure,
-    flip: op => {
-      if (op) {
-        api.measure();
-        op();
-      }
+  resolveTarget: ({ type }, to) => (type ? type.parse(to) : to),
 
-      return set('flip');
-    },
+  selectValueToRead: ({ raw }) => raw,
 
-    // Children methods
-    addChild: (childElement, childProps) => {
-      const child = pose(childElement, {
-        ...childProps,
-        ancestorValues: [{ label, values }, ...ancestorValues]
-      });
-      children.add(child);
-      return child;
-    },
-    removeChild: child => children.delete(child),
-    clearChildren: () => {
-      children.forEach((c: Poser) => c.destroy());
-      children.clear();
-    },
+  startAction: ({ raw }, action, complete) =>
+    action.start({
+      update: (v: any) => raw.update(v),
+      complete
+    }),
 
-    // Lifecycle methods
-    subscribe: (key, callback) =>
-      values.has(key) ? values.get(key).subscribe(callback) : false,
-    destroy: () => {
-      activeActions.forEach((a: ColdSubscription) => a.stop());
-      children.forEach((c: Poser) => c.destroy());
-    }
-  };
+  stopAction: action => action.stop(),
 
-  return api;
-};
+  getInstantTransition: (value, to) => just(to),
 
-export default pose;
-export { eachValue, fromPose, Poser, PoserProps };
+  addActionDelay: (delay = 0, transition) =>
+    chain(delayAction(delay), transition),
+
+  defaultTransitions,
+
+  extendAPI: api => api
+});
