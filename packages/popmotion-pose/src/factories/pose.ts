@@ -14,11 +14,9 @@ import defaultTransitions, { just } from '../inc/default-transitions';
 import { number, degrees, percent, px, ValueType } from 'style-value-types';
 
 // TODO:
-// - Add FLIP methods
-// - Add draggable
-// - Add DOM stylers
-// - Add Dimensions
-// - Use the pre-transition hook to add dimensions
+// - Add draggable bounds/props
+// - Add a readFromSource method to Pose Core in the event there's no initialPose
+// - remove props like draggable from pose list
 
 const valueTypeTests = [number, degrees, percent, px];
 const testValueType = (v: any) => (type: ValueType) => type.test(v);
@@ -28,7 +26,7 @@ const createPassiveValue = (
   parent: Value,
   transform: Transformer
 ) => {
-  const raw = value(init, transform);
+  const raw = value(init).pipe(transform);
   parent.raw.subscribe(raw);
 
   return { raw };

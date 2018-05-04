@@ -16,6 +16,8 @@ export interface DomPopmotionPoser
   addChild: (element: Element, config: PoserConfig<Value>) => DomPopmotionPoser;
 }
 
+export type Draggable = true | 'x' | 'y';
+
 export type TransitionProps = {
   from: string | number;
   velocity: number;

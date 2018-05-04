@@ -325,9 +325,10 @@ export class PoseOpacity extends React.PureComponent {
     if (ref) {
       this.poser = pose(ref, {
         visible: { opacity: 1 },
-        hidden: { opacity: 0 }
+        hidden: { opacity: 0 },
+        initialPose: "hidden"
       });
-      this.poser.set("hidden");
+      this.poser.set("visible");
     } else {
       this.poser.destroy();
     }
@@ -374,13 +375,13 @@ export class PoseFullScreenFlip extends React.PureComponent {
       this.poser = pose(ref, {
         fullscreen: {
           width: "100%",
-          height: "100%"
-          //transition: tween
+          height: "100%",
+          transition: tween
         },
         thumbnail: {
           width: 100,
-          height: 100
-          //transition: tween
+          height: 100,
+          transition: tween
         }
       });
     } else {

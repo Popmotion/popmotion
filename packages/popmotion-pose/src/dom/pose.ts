@@ -6,7 +6,9 @@ import styler from 'stylefire';
 import { DomPoserConfig, Draggable } from '../types';
 
 const dragPoses = (draggable: Draggable): PoseMap => {
-  const dragging: Pose = {};
+  const dragging: Pose = {
+    preTransition: ({ dimensions }) => dimensions.measure()
+  };
   const dragEnd: Pose = {};
 
   if (draggable === true || draggable === 'x') dragging.x = dragEnd.x = 0;
@@ -15,12 +17,19 @@ const dragPoses = (draggable: Draggable): PoseMap => {
   return { dragging, dragEnd };
 };
 
-const createPoseConfig = (element: Element, config: DomPoserConfig) => {
+const createPoseConfig = (
+  element: Element,
+  { onDragStart, onDragEnd, draggable, dragBounds, ...config }: DomPoserConfig
+) => {
   const poseConfig = {
     flip: {},
     ...config,
     props: {
       ...config.props,
+      draggable,
+      onDragStart,
+      onDragEnd,
+      dragBounds,
       element,
       elementStyler: styler(element, { preparseOutput: false }),
       dimensions: createDimensions(element)
@@ -28,8 +37,8 @@ const createPoseConfig = (element: Element, config: DomPoserConfig) => {
   };
 
   // Handle interaction poses
-  if (poseConfig.draggable) {
-    const { dragging, dragEnd } = dragPoses(poseConfig.dragging);
+  if (draggable) {
+    const { dragging, dragEnd } = dragPoses(poseConfig.draggable);
     poseConfig.dragging = { ...poseConfig.dragging, ...dragging };
     poseConfig.dragEnd = { ...poseConfig.dragEnd, ...dragEnd };
   }

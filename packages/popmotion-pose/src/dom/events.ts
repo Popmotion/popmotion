@@ -28,6 +28,6 @@ const makeDraggable = (
   activeActions.set('dragStartListener', dragStartListener);
 };
 
-export default (element, activeActions, setPose, config) => {
-  if (config.draggable) makeDraggable(element, activeActions, setPose, config);
+export default (element, activeActions, setPose, { props }) => {
+  if (props.draggable) makeDraggable(element, activeActions, setPose, props);
 };
