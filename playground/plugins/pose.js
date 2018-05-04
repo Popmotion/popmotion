@@ -1,7 +1,7 @@
 import React from "react";
 import { Box } from "../inc";
 import styled from "styled-components";
-import pose from "../../packages/popmotion-pose/lib";
+import pose from "../../packages/popmotion-pose/lib/popmotion-pose/src";
 import {
   decay,
   tween,
@@ -64,7 +64,9 @@ const itemProps = {
   },
   close: {
     opacity: 0,
-    x: ({ i }) => Math.sin(i * Math.PI * 0.5) * 75,
+    x: ({ i }) => {
+      return Math.sin(i * Math.PI * 0.5) * 75;
+    },
     transition: tween
   }
 };
@@ -75,7 +77,7 @@ export class PoseDOM extends React.Component {
     this.items.forEach((item, i) => {
       const poser = this.sidebarPoser.addChild(item, {
         ...itemProps,
-        transitionProps: { i }
+        props: { i }
       });
     });
 

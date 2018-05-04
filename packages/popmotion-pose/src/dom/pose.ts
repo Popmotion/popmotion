@@ -2,6 +2,7 @@ import poseFactory from '../factories/pose';
 import createDimensions from './dimensions';
 import appendEventListeners from './events';
 import { flipPose, isFlipPose } from './flip';
+import styler from 'stylefire';
 import { DomPoserConfig, Draggable } from '../types';
 
 const dragPoses = (draggable: Draggable): PoseMap => {
@@ -21,6 +22,7 @@ const createPoseConfig = (element: Element, config: DomPoserConfig) => {
     props: {
       ...config.props,
       element,
+      elementStyler: styler(element, { preparseOutput: false }),
       dimensions: createDimensions(element)
     }
   };
@@ -37,10 +39,13 @@ const createPoseConfig = (element: Element, config: DomPoserConfig) => {
 
 const domPose = poseFactory<DomPopmotionPoser>({
   transformPose: (pose, name, state) =>
-    isFlipPose(pose, name, state) ? flipPose(pose, state) : pose,
+    isFlipPose(pose, name, state) ? flipPose(state, pose) : pose,
+
+  addListenerToValue: (key, elementStyler) => (v: any) =>
+    elementStyler.set(key, v),
 
   extendAPI: (api, { props, activeActions }, config) => {
-    const measure = props.dimensions.measure();
+    const measure = props.dimensions.measure;
     const poserApi = {
       ...api,
       addChild: (element: Element, config: DomPoserConfig) =>

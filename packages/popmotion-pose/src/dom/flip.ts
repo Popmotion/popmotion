@@ -20,7 +20,9 @@ const ORIGIN_END = '100%';
 
 type SetValueProps = {
   values: ValueMap;
-  elementStyler: Styler;
+  props: {
+    elementStyler: Styler;
+  };
 };
 
 type FlipPose = {
@@ -51,11 +53,7 @@ export const isFlipPose = (pose: Pose, key: string, state) =>
   state.props.element instanceof HTMLElement &&
   (hasPositionalProps(pose) || key === 'flip');
 
-const setValue = (
-  { values, elementStyler }: SetValueProps,
-  key: string,
-  to: any
-) => {
+const setValue = ({ values, props }: SetValueProps, key: string, to: any) => {
   if (values.has(key)) {
     // Here, if we already have the value, we update it twice.
     // Because of stylefire's render batching, this isn't going
@@ -63,11 +61,13 @@ const setValue = (
     // the value jump a great distance, we want to reset the velocity
     // to 0, rather than something arbitrarily high
     // Maybe a more explicit API would be nicer
-    const val = values.get(key);
-    val.update(to);
-    val.update(to);
+    const { raw } = values.get(key);
+    raw.update(to);
+    raw.update(to);
   } else {
-    values.set(key, value(to, (v: any) => elementStyler.set(key, v)));
+    values.set(key, {
+      raw: value(to, (v: any) => props.elementStyler.set(key, v))
+    });
   }
 };
 

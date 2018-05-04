@@ -28,6 +28,7 @@ const poseFactory = <V, A, C, P>({
   getTransitionProps,
   addActionDelay,
   selectValueToRead,
+  transformPose,
   extendAPI
 }: PoseFactoryConfig<V, A, C, P>) => (
   config: PoserConfig<V>
@@ -83,7 +84,8 @@ const poseFactory = <V, A, C, P>({
     startAction,
     stopAction,
     resolveTarget,
-    addActionDelay
+    addActionDelay,
+    transformPose
   });
 
   const api: Poser<V, A, C, P> = {

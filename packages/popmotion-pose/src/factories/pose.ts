@@ -1,4 +1,4 @@
-import poseFactory from '../../../pose-core/lib';
+import poseFactory from '../../../pose-core/src';
 import { Action } from 'popmotion/action';
 import value, { ValueReaction } from 'popmotion/reactions/value';
 import { ColdSubscription } from 'popmotion/action/types';
@@ -25,11 +25,11 @@ const testValueType = (v: any) => (type: ValueType) => type.test(v);
 
 const createPassiveValue = (
   init: any,
-  parent: ValueReaction,
+  parent: Value,
   transform: Transformer
 ) => {
   const raw = value(init, transform);
-  parent.subscribe(raw);
+  parent.raw.subscribe(raw);
 
   return { raw };
 };
@@ -40,7 +40,11 @@ const createValue = (init: any) => {
   return { raw, type };
 };
 
-const pose = <P>({ transformPose, extendAPI }: PopmotionPoserFactoryConfig) =>
+const pose = <P>({
+  transformPose,
+  addListenerToValue,
+  extendAPI
+}: PopmotionPoserFactoryConfig) =>
   poseFactory<Value, Action, ColdSubscription, P>({
     bindOnChange: (values, onChange) => key => {
       if (!values.has(key)) return;
@@ -51,26 +55,43 @@ const pose = <P>({ transformPose, extendAPI }: PopmotionPoserFactoryConfig) =>
 
     readValue: ({ raw }) => raw.get(),
 
-    createValue: (init, key, { passiveParent, passiveProps }) =>
-      passiveParent
+    createValue: (
+      init,
+      key,
+      { elementStyler },
+      { passiveParent, passiveProps } = {}
+    ) => {
+      const val = passiveParent
         ? createPassiveValue(init, passiveParent, passiveProps)
-        : createValue(init),
+        : createValue(init);
 
-    getTransitionProps: ({ raw }, to) => ({
-      from: raw.get(),
+      if (addListenerToValue) {
+        val.raw.subscribe(addListenerToValue(key, elementStyler));
+      }
+
+      return val;
+    },
+
+    getTransitionProps: ({ raw, type }, to) => ({
+      from: type ? type.parse(raw.get()) : raw.get(),
       velocity: raw.getVelocity(),
-      to
+      to: type ? type.parse(to) : to
     }),
 
     resolveTarget: ({ type }, to) => (type ? type.parse(to) : to),
 
     selectValueToRead: ({ raw }) => raw,
 
-    startAction: ({ raw }, action, complete) =>
-      action.start({
+    startAction: ({ raw, type }, action, complete) => {
+      const reaction = {
         update: (v: any) => raw.update(v),
         complete
-      }),
+      };
+
+      return type
+        ? action.pipe(type.transform).start(reaction)
+        : action.start(reaction);
+    },
 
     stopAction: action => action.stop(),
 

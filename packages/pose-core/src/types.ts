@@ -93,7 +93,8 @@ export type CreateValueProps = any;
 export type CreateValue<V> = (
   init: any,
   key: string,
-  props?: CreateValueProps
+  props: Props,
+  createValueProps?: CreateValueProps
 ) => V;
 
 export type StartAction<V, A, C> = (

@@ -62,7 +62,7 @@ const createValues = <V, A>(
     // Or create a new value
   } else {
     const initValue = getInitialValue(poses, key, initialPose, props);
-    value = createValue(initValue, key);
+    value = createValue(initValue, key, props);
   }
 
   values.set(key, value);
@@ -93,9 +93,15 @@ const getAncestorValue = <V>(
 
 const bindPassiveValues = <V, A>(
   values: ValueMap<V>,
-  { passive, ancestorValues, createValue, readValue }: ValueFactoryProps<V, A>
+  {
+    passive,
+    ancestorValues,
+    createValue,
+    readValue,
+    props
+  }: ValueFactoryProps<V, A>
 ) => (key: string) => {
-  const [valueKey, props, fromParent] = passive[key];
+  const [valueKey, passiveProps, fromParent] = passive[key];
   const valueToBind =
     fromParent && ancestorValues.length
       ? getAncestorValue<V>(valueKey, fromParent, ancestorValues)
@@ -103,12 +109,10 @@ const bindPassiveValues = <V, A>(
 
   if (!valueToBind) return;
 
-  const newValue = createValue(readValue(valueToBind), key, {
+  const newValue = createValue(readValue(valueToBind), key, props, {
     passiveParent: valueToBind,
-    passiveProps: props
+    passiveProps
   });
-
-  // TODO: Add subscription step here?
 
   values.set(key, newValue);
 };
