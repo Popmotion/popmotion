@@ -99,7 +99,7 @@ export type CreateValue<V> = (
 export type StartAction<V, A, C> = (
   value: V,
   action: A,
-  complete: Function
+  complete: () => any
 ) => C;
 
 export type StopAction<C> = (controls: C) => any;

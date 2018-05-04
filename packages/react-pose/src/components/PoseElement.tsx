@@ -5,7 +5,7 @@ import {
   ChildRegistration,
   CurrentPose,
   PoseContextProps,
-  PoseElementProps,
+  PoseElementInternalProps,
   PopStyle
 } from './PoseElement.types';
 
@@ -39,8 +39,8 @@ const objectToMap = (obj: { [key: string]: any }): Map<string, any> =>
     return map;
   }, new Map());
 
-class PoseElement extends React.PureComponent<PoseElementProps> {
-  props: PoseElementProps;
+class PoseElement extends React.PureComponent<PoseElementInternalProps> {
+  props: PoseElementInternalProps;
   poser: Poser;
   ref: Element;
   styleProps: { [key: string]: any };
@@ -203,11 +203,11 @@ class PoseElement extends React.PureComponent<PoseElementProps> {
     }
   }
 
-  UNSAFE_componentWillUpdate({ pose }: PoseElementProps) {
+  UNSAFE_componentWillUpdate({ pose }: PoseElementInternalProps) {
     if (hasPose(pose, 'flip')) this.poser.measure();
   }
 
-  componentDidUpdate(prevProps: PoseElementProps) {
+  componentDidUpdate(prevProps: PoseElementInternalProps) {
     const { pose } = this.props;
     this.poser.setTransitionProps(this.getSetProps());
     if (pose !== prevProps.pose || pose === 'flip') this.setPose(pose);
