@@ -172,7 +172,7 @@ export default ({
      */
     extendAPI: api => ({
       ...api,
-      addChild: (props: AnimatedPoseConfig) => api._addChild(props, pose)
+      addChild: (config: AnimatedPoseConfig) => api._addChild(config, pose)
     })
   });
 

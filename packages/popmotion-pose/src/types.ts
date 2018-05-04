@@ -11,9 +11,9 @@ export type Value = {
 
 export type Transformer = (v: any) => any;
 
-export interface PopmotionPoser
-  extends Poser<Value, Action, ColdSubscription, PopmotionPoser> {
-  addChild: (config: PoserConfig<Value>) => PopmotionPoser;
+export interface DomPopmotionPoser
+  extends Poser<Value, Action, ColdSubscription, DomPopmotionPoser> {
+  addChild: (element: Element, config: PoserConfig<Value>) => DomPopmotionPoser;
 }
 
 export type TransitionProps = {
@@ -28,6 +28,8 @@ export type TransitionProps = {
 export type Transition = (
   props: TransitionProps & { [key: string]: any }
 ) => Action | false;
+
+export type PopmotionPoserFactoryConfig = {};
 
 // export type PopmotionPoserConfig = {
 //   draggable?: boolean | 'x' | 'y';

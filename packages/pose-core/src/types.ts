@@ -110,14 +110,19 @@ export type AddTransitionDelay<A> = (delay: number, transition: A) => A;
 
 export type ExtendAPI<V, A, C, P> = (
   api: Poser<V, A, C, P>,
-  state: PoserState<V, A, C, P>
+  state: PoserState<V, A, C, P>,
+  config: PoserConfig<V>
 ) => Poser<V, A, C, P>;
 
 export type GetTransitionProps<V> = (value: V, target: number) => Props;
 
 export type SelectValueToRead<V> = (value: V) => any;
 
-export type TransformPose<A> = (pose: Pose<A>, key: string) => Pose<A>;
+export type TransformPose<V, A, C, P> = (
+  pose: Pose<A>,
+  key: string,
+  state: PoserState<V, A, C, P>
+) => Pose<A>;
 
 export type PoseFactoryConfig<V, A, C, P> = {
   getDefaultProps?: (config: PoserConfig<V>) => Props;
@@ -136,5 +141,5 @@ export type PoseFactoryConfig<V, A, C, P> = {
   addActionDelay: AddTransitionDelay<A>;
   selectValueToRead: SelectValueToRead<V>;
   extendAPI: ExtendAPI<V, A, C, P>;
-  transformPose?: TransformPose<A>;
+  transformPose?: TransformPose<V, A, C, P>;
 };

@@ -122,7 +122,7 @@ const poseFactory = <V, A, C, P>({
     }
   };
 
-  return extendAPI(api, state);
+  return extendAPI(api, state, config);
 };
 
 export default poseFactory;

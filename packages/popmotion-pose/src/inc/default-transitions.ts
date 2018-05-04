@@ -18,10 +18,6 @@ const createPointer = (
   max: string,
   measurement: BoundingBoxDimension
 ): Transition => ({ from, type, dimensions, dragBounds }): Action => {
-  // Note: This means we're measuring twice, once for each axis. There's
-  // a nicer way of handling this. Perhaps a `preTransition` hook that runs once per pose
-  dimensions.measure();
-
   const axisPointer = axisPointerCreator(
     dimensions.measurementAsPixels(measurement, from)
   );

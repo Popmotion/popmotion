@@ -25,7 +25,7 @@ type SetterFactoryProps<V, A, C, P> = {
   addActionDelay: AddTransitionDelay<A>;
   getTransitionProps: GetTransitionProps<V>;
   resolveTarget: ResolveTarget<V>;
-  transformPose?: TransformPose<A>;
+  transformPose?: TransformPose<V, A, C, P>;
 };
 
 export const resolveProp = (target: any, props: Props) =>
@@ -103,12 +103,12 @@ const createPoseSetter = <V, A, C, P>(
   const getParentAnimations = (): AnimationsPromiseList => {
     if (!nextPose) return [];
 
-    if (transformPose) nextPose = transformPose(nextPose, next);
+    if (transformPose) nextPose = transformPose(nextPose, next, state);
 
     const { preTransition, transition: getTransition } = nextPose;
 
     // Run pre-transition prep, if set
-    if (preTransition) nextPose.preTransition();
+    if (preTransition) nextPose.preTransition(baseTransitionProps);
 
     return Object.keys(getPoseValues(nextPose)).map(key => {
       return new Promise(complete => {
