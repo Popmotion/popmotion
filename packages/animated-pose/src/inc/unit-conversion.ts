@@ -2,7 +2,7 @@ import { Dimensions } from 'react-native';
 import { DimensionConverterFactory, UnitConverterMap } from '../types';
 
 export const getUnit = (str: string): string =>
-  str.replace(str.match(/\d+/)[0], '');
+  str.replace(str.match(/\d+/)[0], '').replace('-', '');
 
 const dimensionConverter: DimensionConverterFactory = (viewport, axis) => (
   target: number

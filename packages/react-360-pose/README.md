@@ -1,6 +1,6 @@
-# <a href="https://popmotion.io/pose"><img src="https://user-images.githubusercontent.com/7850794/39671125-2d702b42-510a-11e8-9aa4-4c43934b811a.png" width="243" alt="React Native Pose" /></a>
+# <a href="https://popmotion.io/pose"><img src="https://user-images.githubusercontent.com/7850794/39671102-d035ff56-5109-11e8-923d-b5760b296b83.png" width="243" alt="React 360 Pose" /></a>
 
-## Pose animation system in React Native flavour
+## Pose animation system in React 360 flavour
 
 [![npm version](https://img.shields.io/npm/v/react-native-pose.svg?style=flat-square)](https://www.npmjs.com/package/react-native-pose)
 [![npm downloads](https://img.shields.io/npm/dm/react-native-pose.svg?style=flat-square)](https://www.npmjs.com/package/react-native-pose)
@@ -11,5 +11,3 @@
 - [API](https://popmotion.io/pose/api)
 - [Get started](https://popmotion.io/pose/learn/native-get-started)
 
-## Supported by
-<img src="https://user-images.githubusercontent.com/7850794/31086561-107648a4-a792-11e7-88bf-a0c0cfcafb79.png" width="300" alt="DriveTribe Open Source">

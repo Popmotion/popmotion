@@ -93,9 +93,15 @@ const getAncestorValue = <V>(
 
 const bindPassiveValues = <V, A>(
   values: ValueMap<V>,
-  { passive, ancestorValues, createValue, readValue }: ValueFactoryProps<V, A>
+  {
+    passive,
+    ancestorValues,
+    createValue,
+    readValue,
+    props
+  }: ValueFactoryProps<V, A>
 ) => (key: string) => {
-  const [valueKey, props, fromParent] = passive[key];
+  const [valueKey, passiveProps, fromParent] = passive[key];
   const valueToBind =
     fromParent && ancestorValues.length
       ? getAncestorValue<V>(valueKey, fromParent, ancestorValues)
@@ -105,7 +111,8 @@ const bindPassiveValues = <V, A>(
 
   const newValue = createValue(readValue(valueToBind), key, {
     passiveParent: valueToBind,
-    passiveProps: props
+    passiveProps,
+    props
   });
 
   // TODO: Add subscription step here?

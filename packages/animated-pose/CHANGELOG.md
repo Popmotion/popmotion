@@ -2,6 +2,19 @@
 
 Animated Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.2.0] 2018-05-06
+
+- Updating `pose-core`
+- Now invalidating `useNativeDriver` on all values in the event one of them is invalidated by interpolating to a non-accelerated value.
+
+## [0.1.1] 2018-05-05
+
+- Fixing negative string units.
+
+## [0.1.0] 2018-05-05
+
+- Passing `useNativeDriver` through to instant transition.
+
 ## [0.0.10] 2018-04-24
 
 - Adding `useNativeDriver` to value definition.
