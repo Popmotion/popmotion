@@ -38,7 +38,12 @@ class PoseComponent extends React.PureComponent<PoseComponentProps> {
     super(props);
 
     const { poseConfig, factoryConfig, registerAsChild, pose } = props;
-    const { transformConfig, poseFactory, getProps } = factoryConfig;
+    const {
+      transformConfig,
+      poseFactory,
+      getProps,
+      filterConfig
+    } = factoryConfig;
 
     const config = {
       ...poseConfig,
@@ -49,8 +54,8 @@ class PoseComponent extends React.PureComponent<PoseComponentProps> {
     if (transformConfig) transformConfig(config, props);
 
     this.poser = registerAsChild
-      ? registerAsChild(config)
-      : poseFactory(config);
+      ? registerAsChild(filterConfig(config))
+      : poseFactory(filterConfig(config));
 
     if (getProps) this.extraProps = getProps(this.poser, config, props);
   }

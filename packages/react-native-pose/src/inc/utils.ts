@@ -1,4 +1,4 @@
-import { AnimatedPoser } from 'animated-pose/lib/types';
+import { AnimatedPoser } from 'animated-pose';
 
 const defaultTransformOrder = [
   'x',

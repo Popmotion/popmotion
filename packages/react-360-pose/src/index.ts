@@ -14,21 +14,24 @@ const posedFactoryBaseConfig = {
   },
   poseFactory: vrPose,
   createAnimatedComponent,
+  filterConfig: ({ respondCursor, respondClick, ...config }) => config,
   getProps: (poser, config, props) => {
     const newProps = {};
 
-    if (config.cursorHover) {
+    if (config.respondCursor) {
       newProps.onEnter = e => {
+        console.log(e);
         if (props.onEnter) props.onEnter(e);
         poser.set('cursorEnter');
       };
       newProps.onExit = e => {
+        console.log(e);
         if (props.onExit) props.onExit(e);
         poser.set('cursorExit');
       };
     }
 
-    if (config.clickable) {
+    if (config.respondClick) {
       newProps.onInput = e => {
         if (props.onInput) props.onInput(e);
         const { action } = e.nativeEvent.inputEvent;
@@ -89,6 +92,8 @@ const getStylesFromPoser = createTranslateTransforms => poser => {
       return acc;
     }, createTranslateTransforms(values));
   }
+
+  return styles;
 };
 
 const posed = createPosed({

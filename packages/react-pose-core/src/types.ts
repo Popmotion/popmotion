@@ -33,8 +33,9 @@ export type ChildAsFunction = (values: ValueMap) => ReactNode;
 
 export type PosedComponentFactoryConfig = {
   componentMap: { [key: string]: React.Component };
-  poseFactory: (config: AnimatedPoseConfig) => AnimatedPoser;
+  poseFactory: any;
   createAnimatedComponent: (component: React.Component) => React.Component;
+  filterConfig: (config: AnimatedPoseConfig) => AnimatedPoseConfig;
   transformConfig: (
     config: AnimatedPoseConfig,
     props: PoseComponentProps

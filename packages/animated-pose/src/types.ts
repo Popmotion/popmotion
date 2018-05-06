@@ -15,7 +15,7 @@ export type Value = {
 export type Action = Animated.CompositeAnimation;
 
 export interface AnimatedPoser extends Poser<Value, Action, AnimatedPoser> {
-  addChild: (config: PoserConfig<Value>) => AnimatedPoser;
+  addChild: (config: AnimatedPoseConfig) => AnimatedPoser;
 }
 
 export type TransitionProps = {

@@ -1,14 +1,9 @@
-import createPosed from '../../react-pose-core/src';
+import createPosed from 'react-pose-core';
 import { getStylesFromPoser } from './inc/utils';
 import pose from 'animated-pose';
-import {
-  Animated,
-  Button,
-  PanResponder,
-  GestureResponderHandlers
-} from 'react-native';
+import { Animated, PanResponder } from 'react-native';
 
-const createAnimatedComponent = Component =>
+const createAnimatedComponent = (Component: React.Component) =>
   Animated.createAnimatedComponent(Component);
 
 const posed = createPosed({
@@ -16,25 +11,26 @@ const posed = createPosed({
     View: Animated.View,
     Image: Animated.Image,
     Text: Animated.Text,
-    ScrollView: Animated.ScrollView,
-    Button: createAnimatedComponent(Button)
+    ScrollView: Animated.ScrollView
   },
   poseFactory: pose,
   createAnimatedComponent,
-  transformConfig: (config, { draggable }) => {
-    if (draggable) {
-      // This is a bit of a hacky way to make the poser aware of the x and y axis
-      config._drag = { x: 0, y: 0 };
+  filterConfig: ({ draggable, ...config }) => config,
+  transformConfig: config => {
+    const { draggable } = config;
+    if (!draggable) return;
 
-      // We have to disable `useNativeDriver` because of limitations with
-      // mixing native and JS animations on the same property
-      config.props = {
-        ...config.props,
-        useNativeDriver: false
-      };
-    }
+    // This is a bit of a hacky way to make the poser aware of the x and y axis
+    config._drag = { x: 0, y: 0 };
+
+    // We have to disable `useNativeDriver` because of limitations with
+    // mixing native and JS animations on the same property
+    config.props = {
+      ...config.props,
+      useNativeDriver: false
+    };
   },
-  getProps: (poser, config, { draggable, onDragStart, onDragEnd }) => {
+  getProps: (poser, { draggable }, { onDragStart, onDragEnd }) => {
     if (!draggable) return {};
 
     const values = poser.get();
