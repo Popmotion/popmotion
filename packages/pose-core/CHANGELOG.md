@@ -2,6 +2,14 @@
 
 Pose Core adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.3.0] 2018-05-06
+
+- Passing `props` through to `createValue` to allow it be mutated for special cases.
+
+## [0.2.0] 2018-05-05
+
+- Passing through all transition props to `getInstantTransition`
+
 ## [0.1.7] 2018-04-24
 
 - Adding `key` to `createValue`.

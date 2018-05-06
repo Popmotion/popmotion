@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { createContext } from 'react';
-import { GestureResponderHandlers } from 'react-native';
-import poseFactory, { AnimatedPoser } from 'animated-pose';
-import { getStylesFromPoser, filterProps, makeDraggable } from '../inc/utils';
+import { AnimatedPoser } from 'animated-pose';
 import {
   PoseComponentProps,
   ValueMap,
@@ -10,12 +8,26 @@ import {
   PoseContextProps
 } from '../types';
 
+const filterProps = ({
+  registerAsChild,
+  onUnmount,
+  Component,
+  pose,
+  poseKey,
+  draggable,
+  onDragStart,
+  onDragEnd,
+  factoryConfig,
+  poseConfig,
+  ...props
+}: PoseComponentProps): PoseComponentProps => props;
+
 export const PoseParentContext = createContext({});
 
 class PoseComponent extends React.PureComponent<PoseComponentProps> {
   poser: AnimatedPoser;
   values: ValueMap;
-  panHandlers: GestureResponderHandlers;
+  extraProps: PoseComponentProps;
 
   private childrenHandlers: PoseContextProps = {
     registerAsChild: props => this.poser.addChild(props),
@@ -24,7 +36,14 @@ class PoseComponent extends React.PureComponent<PoseComponentProps> {
 
   constructor(props: PoseComponentProps) {
     super(props);
-    const { poseConfig, registerAsChild, pose, draggable } = props;
+
+    const { poseConfig, factoryConfig, registerAsChild, pose } = props;
+    const {
+      transformConfig,
+      poseFactory,
+      getProps,
+      filterConfig
+    } = factoryConfig;
 
     const config = {
       ...poseConfig,
@@ -32,28 +51,18 @@ class PoseComponent extends React.PureComponent<PoseComponentProps> {
     };
 
     if (pose) config.initialPose = pose;
-
-    if (draggable) {
-      // This is a bit of a hacky way to make the poser aware of the x and y axis
-      config._drag = { x: 0, y: 0 };
-
-      // We have to disable `useNativeDriver` because of limitations with
-      // mixing native and JS animations on the same property
-      config.props = {
-        ...config.props,
-        useNativeDriver: false
-      };
-    }
+    if (transformConfig) transformConfig(config, props);
 
     this.poser = registerAsChild
-      ? registerAsChild(config)
-      : poseFactory(config);
+      ? registerAsChild(filterConfig(config))
+      : poseFactory(filterConfig(config));
 
-    if (draggable) this.panHandlers = makeDraggable(this.poser, props);
+    if (getProps) this.extraProps = getProps(this.poser, config, props);
   }
 
   componentDidUpdate(prevProps: PoseComponentProps) {
     const { pose, poseKey } = this.props;
+
     this.poser.setProps(filterProps(this.props));
     if (pose !== prevProps.pose || poseKey !== prevProps.poseKey)
       this.setPose(pose);
@@ -80,7 +89,8 @@ class PoseComponent extends React.PureComponent<PoseComponentProps> {
   }
 
   render() {
-    const { Component, children, style, ...props } = this.props;
+    const { Component, children, style, factoryConfig, ...props } = this.props;
+    const { getStylesFromPoser } = factoryConfig;
 
     return (
       <PoseParentContext.Provider value={this.childrenHandlers}>
@@ -88,7 +98,7 @@ class PoseComponent extends React.PureComponent<PoseComponentProps> {
           <Component
             {...filterProps(props)}
             style={[style, getStylesFromPoser(this.poser)]}
-            {...(this.panHandlers ? this.panHandlers : {})}
+            {...(this.extraProps ? this.extraProps : {})}
           >
             {children}
           </Component>

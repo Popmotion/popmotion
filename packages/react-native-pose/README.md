@@ -1,4 +1,4 @@
-# React Native Pose
+# <a href="https://popmotion.io/pose"><img src="https://user-images.githubusercontent.com/7850794/39671125-2d702b42-510a-11e8-9aa4-4c43934b811a.png" width="243" alt="React Native Pose" /></a>
 
 ## Pose animation system in React Native flavour
 
