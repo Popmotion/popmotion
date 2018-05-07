@@ -58,12 +58,17 @@
     "three": "^0.88.0"
   },
   "devDependencies": {
+    "babel-plugin-root-import": "^5.1.0",
     "babel-plugin-styled-components": "^1.1.4",
+    "babel-plugin-transform-export-extensions": "^6.22.0",
+    "babel-plugin-transform-react-constant-elements": "^6.23.0",
+    "babel-preset-stage-0": "^6.24.1",
     "marksy": "^5.0.0",
     "next": "^4.2.1",
     "popmotion-pose": "^1.0.24",
     "react-pose": "^1.0.1",
-    "s3": "^4.4.0"
+    "s3": "^4.4.0",
+    "webpack": "^4.6.0"
   },
   "version": "7.0.0",
   "prettier": {

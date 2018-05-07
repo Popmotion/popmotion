@@ -63,10 +63,12 @@ export default ({
     createValue: (
       init,
       key,
-      { passiveParent, passiveProps }: CreateValueProps = {}
+      { passiveParent, passiveProps, props }: CreateValueProps = {}
     ) => {
       if (passiveParent) {
-        if (!nonLayoutValues.has(key)) passiveParent.useNativeDriver = false;
+        if (!nonLayoutValues.has(key)) {
+          passiveParent.useNativeDriver = props.useNativeDriver = false;
+        }
         return { interpolation: passiveParent.raw.interpolate(passiveProps) };
       } else {
         let needsInterpolation = false;
@@ -105,9 +107,10 @@ export default ({
     /**
      * Get props to pass to a pose's `transition` method and dynamic props
      */
-    getTransitionProps: ({ raw, useNativeDriver }, toValue) => ({
+    getTransitionProps: ({ raw, useNativeDriver }, toValue, props) => ({
       value: raw,
-      useNativeDriver,
+      useNativeDriver:
+        props.useNativeDriver === false ? false : useNativeDriver,
       toValue
     }),
 
@@ -148,10 +151,11 @@ export default ({
     /**
      * Create a transition that instantly switches one value to another
      */
-    getInstantTransition: (value, toValue) =>
-      Animated.timing(value.raw, {
+    getInstantTransition: ({ raw, useNativeDriver }, { toValue }) =>
+      Animated.timing(raw, {
         toValue,
-        duration: 0
+        duration: 0,
+        useNativeDriver
       }),
 
     /**

@@ -105,7 +105,7 @@ export type StartAction<V, A, C> = (
 
 export type StopAction<C> = (controls: C) => any;
 
-export type GetInstantTransition<V, A> = (value: V, target: any) => A;
+export type GetInstantTransition<V, A> = (value: V, props: Props) => A;
 
 export type AddTransitionDelay<A> = (delay: number, transition: A) => A;
 
@@ -115,7 +115,11 @@ export type ExtendAPI<V, A, C, P> = (
   config: PoserConfig<V>
 ) => Poser<V, A, C, P>;
 
-export type GetTransitionProps<V> = (value: V, target: number) => Props;
+export type GetTransitionProps<V> = (
+  value: V,
+  target: number,
+  props: Props
+) => Props;
 
 export type SelectValueToRead<V> = (value: V) => any;
 

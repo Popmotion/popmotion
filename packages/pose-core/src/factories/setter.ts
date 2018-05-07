@@ -130,15 +130,16 @@ const createPoseSetter = <V, A, C, P>(
         if (activeActions.has(key)) stopAction(activeActions.get(key));
 
         // Get the transition
-        let transition = getTransition({
+        const resolveTransitionProps = {
           to: target,
           ...transitionProps,
-          ...getTransitionProps(value, target)
-        });
+          ...getTransitionProps(value, target, transitionProps)
+        };
+        let transition = getTransition(resolveTransitionProps);
 
         // If the transition is `false`, for no transition, set instantly
         if (transition === false)
-          transition = getInstantTransition(value, target);
+          transition = getInstantTransition(value, resolveTransitionProps);
 
         // Add delay if defined on pose
         const poseDelay = resolveProp(nextPose.delay, transitionProps);

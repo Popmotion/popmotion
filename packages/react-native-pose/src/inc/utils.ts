@@ -1,6 +1,4 @@
-import { Animated, PanResponder, GestureResponderHandlers } from 'react-native';
-import { PoseComponentProps } from '../types';
-import { AnimatedPoser } from 'animated-pose/lib/types';
+import { AnimatedPoser } from 'animated-pose';
 
 const defaultTransformOrder = [
   'x',
@@ -61,59 +59,4 @@ export const getStylesFromPoser = (poser: AnimatedPoser) => {
   }
 
   return styles;
-};
-
-export const filterProps = ({
-  registerAsChild,
-  onUnmount,
-  Component,
-  pose,
-  poseKey,
-  draggable,
-  onDragStart,
-  onDragEnd,
-  ...props
-}: PoseComponentProps): PoseComponentProps => props;
-
-export const makeDraggable = (
-  poser: AnimatedPoser,
-  { draggable, onDragStart, onDragEnd }: PoseComponentProps
-): GestureResponderHandlers => {
-  const values = poser.get();
-  const dragX = draggable === true || draggable === 'x';
-  const dragY = draggable === true || draggable === 'y';
-
-  const panResponder = PanResponder.create({
-    onMoveShouldSetPanResponderCapture: () => true,
-    onPanResponderMove: Animated.event([
-      null,
-      {
-        dx: dragX ? values.x : null,
-        dy: dragY ? values.y : null
-      }
-    ]),
-    onPanResponderGrant: (e, gestureState) => {
-      if (dragX) {
-        values.x.setOffset(values.x._value);
-        values.x.setValue(0);
-      }
-
-      if (dragY) {
-        values.y.setOffset(values.y._value);
-        values.y.setValue(0);
-      }
-
-      if (onDragStart) onDragStart(e, gestureState);
-      poser.set('dragging', { gestureState });
-    },
-    onPanResponderRelease: (e, gestureState) => {
-      if (onDragEnd) onDragEnd(e, gestureState);
-      if (dragX) values.x.flattenOffset();
-      if (dragY) values.y.flattenOffset();
-      if (onDragEnd) onDragEnd(e, gestureState);
-      poser.set('dragEnd', { gestureState });
-    }
-  });
-
-  return panResponder.panHandlers;
 };

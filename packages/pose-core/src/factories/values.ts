@@ -111,7 +111,8 @@ const bindPassiveValues = <V, A>(
 
   const newValue = createValue(readValue(valueToBind), key, props, {
     passiveParent: valueToBind,
-    passiveProps
+    passiveProps,
+    props
   });
 
   values.set(key, newValue);

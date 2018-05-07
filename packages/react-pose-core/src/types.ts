@@ -8,10 +8,7 @@ export type PosedComponentFactory = (Component: any) => PosedComponent;
 
 export type Posed = any;
 
-// export type Posed = {
-//   (Component: any): PosedComponent;
-//   [key: string]: PosedComponent;
-// }
+export type Props = { [key: string]: any };
 
 export type PoseContextProps = {
   registerAsChild: (props: AnimatedPoseConfig) => AnimatedPoser;
@@ -33,3 +30,20 @@ export type ValueMap = {
 export type CurrentPose = string | string[];
 
 export type ChildAsFunction = (values: ValueMap) => ReactNode;
+
+export type PosedComponentFactoryConfig = {
+  componentMap: { [key: string]: React.Component };
+  poseFactory: any;
+  createAnimatedComponent: (component: React.Component) => React.Component;
+  filterConfig: (config: AnimatedPoseConfig) => AnimatedPoseConfig;
+  transformConfig: (
+    config: AnimatedPoseConfig,
+    props: PoseComponentProps
+  ) => void;
+  getProps: (
+    poser: AnimatedPoser,
+    config: AnimatedPoseConfig,
+    props: PoseComponentProps
+  ) => Props;
+  getStylesFromPoser: (poser: AnimatedPoser) => { [key: string]: any };
+};
