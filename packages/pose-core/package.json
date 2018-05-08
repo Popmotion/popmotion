@@ -38,6 +38,6 @@
   },
   "dependencies": {
     "@types/invariant": "^2.2.29",
-    "invariant": "^2.2.4"
+    "@types/node": "^10.0.5"
   }
 }

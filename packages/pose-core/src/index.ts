@@ -8,13 +8,13 @@ import {
   PoseMap,
   PoserState
 } from './types';
-import invariant from 'invariant';
 
 import createPoseSetter from './factories/setter';
 import createValueMap from './factories/values';
 import generateDefaultTransitions from './factories/transitions';
 import { eachValue, fromPose } from './inc/transition-composers';
 import { selectPoses, selectAllValues } from './inc/selectors';
+import { warning } from './inc/dev-exp';
 
 const poseFactory = <V, A, C, P>({
   getDefaultProps,
@@ -35,6 +35,11 @@ const poseFactory = <V, A, C, P>({
 }: PoseFactoryConfig<V, A, C, P>) => (
   config: PoserConfig<V>
 ): Poser<V, A, C, P> => {
+  warning(
+    config.hasOwnProperty('transformProps'),
+    'config.transformProps is deprecated. Use config.props instead.'
+  );
+
   // If set, add parent values to ancestor chain
   const { parentValues, ancestorValues } = config;
   if (parentValues) ancestorValues.unshift({ values: parentValues });
@@ -101,8 +106,8 @@ const poseFactory = <V, A, C, P>({
     setProps: newProps => {
       props = { ...props, ...newProps };
     },
-    setTransformProps: newProps => {
-      invariant(true, 'setTransformProps is deprecated. Use setProps instead.');
+    setTransitionProps: newProps => {
+      warning(false, 'setTransformProps is deprecated. Use setProps instead.');
       props = { ...props, ...newProps };
     },
 
