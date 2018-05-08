@@ -3,6 +3,9 @@
 ## Packages
 
 * [Popmotion](https://github.com/Popmotion/popmotion/tree/master/packages/popmotion)
+
+### Pose
 * [Popmotion Pose](https://github.com/Popmotion/popmotion/tree/master/packages/popmotion-pose)
-* [React Pose](https://github.com/Popmotion/popmotion/tree/master/packages/react-pose)
-* [React Native Pose](https://github.com/Popmotion/popmotion/tree/master/packages/react-native-pose)
+* [React](https://github.com/Popmotion/popmotion/tree/master/packages/react-pose)
+* [React Native](https://github.com/Popmotion/popmotion/tree/master/packages/react-native-pose)
+* [React 360](https://github.com/Popmotion/popmotion/tree/master/packages/react-360-pose)
