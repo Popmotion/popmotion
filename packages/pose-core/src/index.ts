@@ -8,6 +8,7 @@ import {
   PoseMap,
   PoserState
 } from './types';
+import invariant from 'invariant';
 
 import createPoseSetter from './factories/setter';
 import createValueMap from './factories/values';
@@ -48,7 +49,7 @@ const poseFactory = <V, A, C, P>({
   );
 
   // Initialise props
-  let props = config.props || {};
+  let props = config.props || config.transformProps || {};
   if (getDefaultProps) props = { ...props, ...getDefaultProps(config) };
 
   // Create values map
@@ -98,6 +99,10 @@ const poseFactory = <V, A, C, P>({
         : selectAllValues(values, selectValueToRead),
     has: poseName => !!poses[poseName],
     setProps: newProps => {
+      props = { ...props, ...newProps };
+    },
+    setTransformProps: newProps => {
+      invariant(true, 'setTransformProps is deprecated. Use setProps instead.');
       props = { ...props, ...newProps };
     },
 

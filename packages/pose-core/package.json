@@ -35,5 +35,9 @@
   "prettier": {
     "parser": "typescript",
     "singleQuote": true
+  },
+  "dependencies": {
+    "@types/invariant": "^2.2.29",
+    "invariant": "^2.2.4"
   }
 }

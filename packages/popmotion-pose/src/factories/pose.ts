@@ -35,6 +35,7 @@ const createPassiveValue = (
 const createValue = (init: any) => {
   const type = valueTypeTests.find(testValueType(init));
   const raw = value(type === number ? type.parse(init) : init);
+
   return { raw, type };
 };
 

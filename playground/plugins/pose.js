@@ -369,7 +369,7 @@ const Container = styled.div`
 `;
 
 export class PoseFullScreenFlip extends React.PureComponent {
-  isOpen = false;
+  isOpen = true;
 
   setRef = ref => {
     if (ref) {
@@ -383,8 +383,11 @@ export class PoseFullScreenFlip extends React.PureComponent {
           width: 100,
           height: 100,
           transition: tween
-        }
+        },
+        initialPose: "thumbnail"
       });
+
+      this.poser.setTransformProps({ foo: true });
     } else {
       this.poser.destroy();
     }
