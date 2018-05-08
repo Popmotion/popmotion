@@ -2,6 +2,11 @@
 
 React Native Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.2.0] 2018-05-08
+
+- Migrate to React Pose Core
+- Ensure `useNativeDriver` is disabled if *any* other animated value in the same poser is attached by a non-native value like `backgroundColor`.
+
 ## [0.1.0] 2018-04-24
 
 - No one's betting the farm on "0.0.5"
