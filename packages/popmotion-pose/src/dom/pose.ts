@@ -38,7 +38,7 @@ const createPoseConfig = (
 
   // Handle interaction poses
   if (draggable) {
-    const { dragging, dragEnd } = dragPoses(poseConfig.draggable);
+    const { dragging, dragEnd } = dragPoses(draggable);
     poseConfig.dragging = { ...poseConfig.dragging, ...dragging };
     poseConfig.dragEnd = { ...poseConfig.dragEnd, ...dragEnd };
   }

@@ -24,6 +24,7 @@ const poseFactory = <V, A, C, P>({
   readValue,
   resolveTarget,
   createValue,
+  convertValue,
   getInstantTransition,
   getTransitionProps,
   addActionDelay,
@@ -58,6 +59,7 @@ const poseFactory = <V, A, C, P>({
     ancestorValues,
     readValue,
     createValue,
+    convertValue,
     userSetValues,
     initialPose,
     props

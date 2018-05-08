@@ -2,6 +2,10 @@
 
 Pose Core adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.4.0] 2018-05-07
+
+- Adding `convertValue` method. Allows users to define values like Popmotion's `value` or React Animated's `Animated.Value` and for the Pose flavour to upgrade that to a format it uses internally (for example with additional metadata)
+
 ## [0.3.0] 2018-05-06
 
 - Passing `props` through to `createValue` to allow it be mutated for special cases.

@@ -70,6 +70,17 @@ const pose = <P>({
       return val;
     },
 
+    convertValue: (raw: ValueReaction, key, { elementStyler }) => {
+      if (addListenerToValue) {
+        raw.subscribe(addListenerToValue(key, elementStyler));
+      }
+
+      return {
+        raw,
+        type: valueTypeTests.find(testValueType(raw.get()))
+      };
+    },
+
     getTransitionProps: ({ raw, type }, to) => ({
       from: type ? type.parse(raw.get()) : raw.get(),
       velocity: raw.getVelocity(),

@@ -6,7 +6,8 @@ import {
   PoseMap,
   PassiveValueMap,
   ReadValue,
-  CreateValue
+  CreateValue,
+  ConvertValue
 } from '../types';
 import { getPoseValues } from '../inc/selectors';
 import { resolveProp } from './setter';
@@ -17,6 +18,7 @@ type ValueFactoryProps<V, A> = {
   ancestorValues: AncestorValueList<V>;
   readValue: ReadValue<V>;
   createValue: CreateValue<V>;
+  convertValue: ConvertValue<V>;
   userSetValues: { [key: string]: V };
   initialPose?: string | string[];
   props: Props;
@@ -45,6 +47,7 @@ const createValues = <V, A>(
   {
     userSetValues,
     createValue,
+    convertValue,
     initialPose,
     poses,
     props
@@ -55,9 +58,9 @@ const createValues = <V, A>(
 
   let value: V;
 
-  // If this user has explicitly created a value, simply use that
+  // If this user has explicitly created a value, use that
   if (userSetValues && userSetValues[key] !== undefined) {
-    value = userSetValues[key];
+    value = convertValue(userSetValues[key], key, props);
 
     // Or create a new value
   } else {

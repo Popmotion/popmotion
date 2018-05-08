@@ -345,7 +345,8 @@ export class PoseDrag extends React.PureComponent {
   setRef = ref => {
     if (ref) {
       this.poser = pose(ref, {
-        draggable: true,
+        draggable: "x",
+        dragBounds: { left: 0, right: 200 },
         onDragStart: console.log,
         onDragEnd: console.log
       });

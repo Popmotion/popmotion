@@ -97,6 +97,8 @@ export type CreateValue<V> = (
   createValueProps?: CreateValueProps
 ) => V;
 
+export type ConvertValue<V> = (value: any, key: string, props: Props) => V;
+
 export type StartAction<V, A, C> = (
   value: V,
   action: A,
@@ -138,6 +140,7 @@ export type PoseFactoryConfig<V, A, C, P> = {
   ) => (key: string) => any;
   readValue: ReadValue<V>;
   createValue: CreateValue<V>;
+  convertValue: ConvertValue<V>;
   resolveTarget: ResolveTarget<V>;
   getTransitionProps: GetTransitionProps<V>;
   startAction: StartAction<V, A, C>;
