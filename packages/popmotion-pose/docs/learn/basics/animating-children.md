@@ -38,20 +38,20 @@ We've created these two CodePen templates for you to use to follow along:
 - [Pose](https://codepen.io/popmotion/pen/eMeGeE?editors=0010)
 - [React Pose](https://codepen.io/popmotion/pen/LdOzzJ?editors=0010)
 
-## Pose props
+## Pose config
 
 First, we need to describe two poses, "open" and "closed", for both the sidebar and the items within it.
 
 At the top of your editor, define the poses:
 
 ```javascript
-const sidebarProps = {
+const sidebarConfig = {
   open: { x: '0%' },
   closed: { x: '-100%' },
   initialPose: 'closed'
 }
 
-const itemProps = {
+const itemConfig = {
   open: { y: 0, opacity: 1 },
   closed: { y: 20, opacity: 0 }
 }
@@ -78,14 +78,14 @@ const items = sidebar.querySelectorAll('.item')
 We'll make a poser exactly as before:
 
 ```javascript
-const sidebarPoser = pose(sidebar, sidebarProps)
+const sidebarPoser = pose(sidebar, sidebarConfig)
 ```
 
 To create new posers as children of `sidebarPoser`, we'll use its `addChild` method instead of `pose`:
 
 ```javascript
 const itemPosers = Array.from(items).map(
-  item => sidebarPoser.addChild(item, itemProps)
+  item => sidebarPoser.addChild(item, itemConfig)
 )
 ```
 
@@ -110,8 +110,8 @@ Instead, the parent-child relationship is inferred by the component hierarchy.
 Let's make our `Sidebar` and `Item` posed components:
 
 ```javascript
-const Sidebar = posed.ul(sidebarProps)
-const Item = posed.li(itemProps)
+const Sidebar = posed.ul(sidebarConfig)
+const Item = posed.li(itemConfig)
 ```
 
 Now, when we set a pose on the parent component, it is also triggered on all child components that contain this same pose. Replace the `Example` component's render function with this:
@@ -155,7 +155,7 @@ The `delay` property can be used to delay the animation on the current poser, wi
 So by setting `delay: 300` on the sidebar's `closed` pose, the children will all animate out before the sidebar itself.
 
 ```javascript
-const sidebarProps = {
+const sidebarConfig = {
   open: { x: '0%' },
   closed: { x: '-100%', delay: 300 },
   initialPose: 'closed'
@@ -169,7 +169,7 @@ Conversely, the `delayChildren` property can be used to delay all the children a
 By setting `delayChildren` on the sidebar's `open` pose, we can animate the sidebar out and **then** animate the children in:
 
 ```javascript
-const sidebarProps = {
+const sidebarConfig = {
   open: { x: '0%', delayChildren: 200 },
   closed: { x: '-100%', delay: 300 },
   initialPose: 'closed'
@@ -181,7 +181,7 @@ const sidebarProps = {
 Rather than animating all the children in at once, it's possible to stagger them in individually. The `staggerChildren` prop can be used to determine the delay between each one, starting from **after** the `delayChildren` duration:
 
 ```javascript
-const sidebarProps = {
+const sidebarConfig = {
   open: {
     x: '0%',
     delayChildren: 200,

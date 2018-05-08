@@ -17,10 +17,10 @@ For this, we can use **passive values**. In this tutorial we'll see how to defin
 
 ## Defining a passive value
 
-Open the [previous example](https://codepen.io/popmotion/pen/dmWWdp?editors=0010) and replace the `props` object with this:
+Open the [previous example](https://codepen.io/popmotion/pen/dmWWdp?editors=0010) and replace the `config` object with this:
 
 ```javascript
-const props = {
+const config = {
   draggable: 'x'
 }
 ```
@@ -30,7 +30,7 @@ The dragging motion of the element is locked to the `x` axis. We can actually lo
 Passive values are defined a tuples, like this:
 
 ```javascript
-const props = {
+const config = {
   draggable: 'x',
   passive: {
     y: ['x', v => v]
@@ -100,16 +100,16 @@ But, it's possible to change the opacity of the items as the `x` of their sideba
 
 To do this, we pass `true` as the third and final argument of the tuple.
 
-Add a slower `transition` to `sidebarProps.open` to help us see this in effect.
+Add a slower `transition` to `sidebarConfig.open` to help us see this in effect.
 
 ```javascript
 transition: (props) => tween({  ...props, duration: 1000 })
 ```
 
-Now, replace `itemProps` with this:
+Now, replace `itemConfig` with this:
 
 ```javascript
-const itemProps = {
+const itemConfig = {
   passive: {
     opacity: ['x', pipe(
       parseFloat,
@@ -129,13 +129,13 @@ Using `true` is fine if we want to look just one part up the ancestor chain. But
 
 By explicitly naming our posers with a `label`, we can refer to any poser in the ancestor chain.
 
-Add the label `'sidebar'` to our `sidebarProps`:
+Add the label `'sidebar'` to our `sidebarConfig`:
 
 ```javascript
-const sidebarProps = {
+const sidebarConfig = {
   label: 'sidebar',
   /* other props */
 }
 ```
 
-Now replace `true` in `itemProps` with `'sidebar'`. It still works, and it will still work if you decide to put a poser between sidebar and items.
+Now replace `true` in `itemConfig` with `'sidebar'`. It still works, and it will still work if you decide to put a poser between sidebar and items.

@@ -21,15 +21,15 @@ import pose from 'popmotion-pose'
 
 Posers are created with the `pose` function.
 
-`pose` accepts two arguments: A HTML or SVG element, and an object of [pose props](/pose/api/props).
+`pose` accepts two arguments: A HTML or SVG element, and an object of [pose config](/pose/api/config).
 
 ```javascript
-const poser = pose(element, props)
+const poser = pose(element, config)
 ```
 
 ### Animate
 
-Animating to a pose defined in the [pose props](/pose/api/props) is a matter of calling the poser's `set` method:
+Animating to a pose defined in the [pose config](/pose/api/config) is a matter of calling the poser's `set` method:
 
 ```javascript
 poser.set('nameOfPose')
@@ -87,7 +87,7 @@ By default, Pose will choose a transition depending on the property being animat
 Every pose has an optional `transition` property that allows you to define a custom transition:
 
 ```javascript
-const props = {
+const config = {
   attention: {
     scale: 1.2,
     transition: ({ from, to }) => tween({ from, to, yoyo: Infinity })
@@ -101,7 +101,7 @@ This function is run **once for each animating property** and must return a [Pop
 The `transition` function receives a single argument, an object containing:
 
 - Information about the current transition: `from`, `to`, `velocity`, `key` and `prevPoseKey` properties.
-- Transition props. These can be set statefully as `props.transitionProps` or via the `setTransitionProps` method. Or they can be set temporarily, as the second argument provided to `set`.
+- Transition props. These can be set statefully as `config.props` or via the `setProps` method. Or they can be set temporarily, as the second argument provided to `set`.
 - **React Pose:** All props set on the posed component.
 
 You can use these props to create different animations for different values.
@@ -113,7 +113,7 @@ Values on a pose can be set as a function that returns the `to` property for a t
 This function is passed all the same properties as the `transition` function **except** for `to`, which this function is responsible for returning.
 
 ```javascript
-const props = {
+const config = {
   open: { x: 0 },
   closed: {
     x: ({ i }) => Math.sin(i * 0.5) * 100
@@ -123,13 +123,13 @@ const props = {
 // Vanilla
 // --------------------
 itemPosers = items.map((item, i) => pose(item, {
-  ...props,
-  transitionProps: { i }
+  ...config,
+  props: { i }
 }))
 
 // React
 // --------------------
-const Item = posed.li(props)
+const Item = posed.li(config)
 
 // In component render
 {items.map((item, i) => <Item pose="closed" i={i} />}
@@ -137,16 +137,16 @@ const Item = posed.li(props)
 
 ### Draggable
 
-Any element can be made draggable by passing the `draggable` property to `props`:
+Any element can be made draggable by passing the `draggable` property to `config`:
 
 ```javascript
-const props = { draggable: true };
+const config = { draggable: true };
 ```
 
 Dragging can be locked to a single axis by passing the name of that axis instead:
 
 ```javascript
-const props = { draggable: 'x' };
+const config = { draggable: 'x' };
 ```
 
 #### `dragEnd` pose
@@ -156,7 +156,7 @@ When an element is draggable and a user stops dragging, a special pose called `d
 You can decide what animation fires by using the `transition` property:
 
 ```javascript
-const props = {
+const config = {
   draggable: 'x',
   dragEnd: {
     transition: ({ from }) => // return custom animation
@@ -169,7 +169,7 @@ const props = {
 `onDragStart` and `onDragEnd` functions can be defined to fire when a user starts and stops dragging:
 
 ```javascript
-const props {
+const config {
   draggable: true,
   onDragStart: (e) => // not our business!
 }
@@ -182,7 +182,7 @@ We can limit pointer-driven movement with the `dragBounds` object.
 It can restrict movement in both dimensions with optional `left`, `right`, `top`, and `bottom` properties:
 
 ```javascript
-const props = {
+const config = {
   draggable: 'x',
   dragBounds: { left: 0, right: 500 }
 }
@@ -193,7 +193,7 @@ const props = {
 We can append `onChange` callbacks to any value with the `onChange` map:
 
 ```javascript
-const props = {
+const config = {
   draggable: true,
   onChange: {
     x: v => // Do your thing!
@@ -212,7 +212,7 @@ When we call `set` on the parent poser, the same `set` will be passed down to it
 `addChild` is called exactly like `pose`:
 
 ```javascript
-const childPoser = parentPoser.addChild(element, childProps)
+const childPoser = parentPoser.addChild(element, childConfig)
 ```
 
 Now, all `set` calls on `parentPoser` will be passed down to all of its children. It doesn't even need a pose with that label of its own to do so.
@@ -232,7 +232,7 @@ childPoser.set('hover')
 We can delay the propagation of a set call `delayChildren` on the parent pose:
 
 ```javascript
-const parentProps = {
+const parentConfig = {
   initialPose: 'close',
   open: {
     x: '0%',
@@ -245,7 +245,7 @@ const parentProps = {
 Or if we wanted to stagger over the children, we can do so with `staggerChildren`, and **optionally** `staggerDirection`:
 
 ```javascript
-const sidebarProps = {
+const sidebarConfig = {
   initialPose: 'close',
   open: {
     x: '0%',
@@ -264,7 +264,7 @@ Not all values have to be actively animated via a pose. The `passive` property c
 For instance, we could update `y` when `x` updates like so:
 
 ```javascript
-const props = {
+const config = {
   draggable: 'x',
   passive: {
     y: ['x', x => x]
@@ -293,7 +293,7 @@ When animating these properties, Pose will automatically perform a FLIP animatio
 ```javascript
 // Pose will automatically measure the difference
 // in element size and animate `scaleX` instead:
-const props = {
+const config = {
   open: { width: 200 },
   closed: { width: 0 }
 }
@@ -306,7 +306,7 @@ Alternatively, we might want to transition to a new state where we don't know th
 For instance, if we change the children of the element, we might change the height. We can smoothly transition to the new height with the `measure` and `flip` methods:
 
 ```javascript
-const poser = pose(element, props)
+const poser = pose(element, config)
 
 // Measure the current bounding box
 poser.measure()
@@ -332,7 +332,7 @@ Sets the current pose to `poseName`. If `Poser` has children, this will get set 
 
 If `props` is defined, these will be passed through to the selected pose's `transition` function.
 
-### `setTransitionProps(props: Object)`
+### `setProps(props: Object)`
 
 Sets props on the poser that will be passed to any functions set on a pose.
 
@@ -347,14 +347,14 @@ Performs a FLIP animation between the previously `measure`d bounding box and the
 You can add `flip` as a custom pose use a custom transition for this:
 
 ```javascript
-const props = {
+const config = {
   flip: {
     transition: () => // your custom transition
   }
 };
 ```
 
-### `addChild(element: HTMLElement | SVGElement, props: PoseProps): Poser`
+### `addChild(element: HTMLElement | SVGElement, config: PoseConfig): Poser`
 
 Creates and returns a new `Poser` as a child.
 

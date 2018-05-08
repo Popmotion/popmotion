@@ -168,6 +168,6 @@ Callbacks that fire when dragging starts or ends. **Note:** These props are immu
 
 An optional function that will call with the posed DOM element when it mounts, and `null` when it unmounts.
 
-### `...props: { [key: string]: any }`
+### `...config: { [key: string]: any }`
 
-Remaining props will be provided to a pose's `transition` function when that pose is entered.
+Remaining config props will be provided to a pose's `transition` function when that pose is entered.

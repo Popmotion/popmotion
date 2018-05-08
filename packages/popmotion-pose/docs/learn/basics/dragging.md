@@ -15,10 +15,10 @@ For this tutorial you can follow with [vanilla Pose](https://codepen.io/popmotio
 
 ## `dragging`
 
-Making an element draggable is as simple as setting `draggable: true` in the props:
+Making an element draggable is as simple as setting `draggable: true` in the config:
 
 ```javascript
-const props = {
+const config = {
   draggable: true
 }
 ```
@@ -28,7 +28,7 @@ const props = {
 `true` sets both axis to draggable, but we can select a single axis to drag on by setting it to `'x'` or `'y'`:
 
 ```javascript
-const props = {
+const config = {
   draggable: 'x'
 }
 ```
@@ -40,7 +40,7 @@ const props = {
 We can add drag boundaries with the `dragBounds` property. It accepts `top`, `left`, `bottom` and/or `right`, measured in pixels or percentages:
 
 ```javascript
-const props = {
+const config = {
   draggable: 'x',
   dragBounds: { left: -100, right: 100 }
 }
@@ -57,7 +57,7 @@ For example, we could have the element spring back to the center:
 ```javascript
 const { spring } = popmotion
 
-const props = {
+const config = {
   draggable: true,
   dragEnd: { transition: spring }
 }
@@ -70,7 +70,7 @@ Or (throw lightly!) we can use [decay](/api/decay) to create momentum scrolling.
 ```javascript
 const { decay } = popmotion
 
-const props = {
+const config = {
   draggable: true,
   dragEnd: { transition: decay }
 }
@@ -85,7 +85,7 @@ Often, we want to respond to changes in a value. We can use the `onChange` prop 
 This object allows us to create a callback for each value we animate:
 
 ```javascript
-const props = {
+const config = {
   draggable: true,
   dragEnd: { transition: decay },
   onChange: {

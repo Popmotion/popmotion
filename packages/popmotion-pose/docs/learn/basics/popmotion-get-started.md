@@ -26,13 +26,13 @@ For local development, all installation options can be found on the [install](/p
 Animations in Pose are created by defining states, like this:
 
 ```javascript
-const poseProps = {
+const config = {
   visible: { opacity: 1 },
   hidden: { opacity: 0 }
 }
 ```
 
-This `poseProps` object is at the heart of both Pose and React Pose. Like CSS, we use this object to describe the possible states (or **poses**) that our element can be in.
+This `config` object is at the heart of both Pose and React Pose. Like CSS, we use this object to describe the possible states (or **poses**) that our element can be in.
 
 How we actually use these props differs slightly between Pose and React Pose:
 
@@ -41,7 +41,7 @@ How we actually use these props differs slightly between Pose and React Pose:
 With vanilla Pose, we use the [`pose` function](/pose/api/pose) to create a **poser**:
 
 ```javascript
-const poser = pose(element, poseProps)
+const poser = pose(element, config)
 ```
 
 We can now use `poser`'s `set` method with the name a defined pose:
@@ -57,7 +57,7 @@ You can play with React Pose with the [React Pose playground](https://codepen.io
 React Pose exposes the [`posed` function](/pose/api/posed). Similar to [Styled Components'](https://styled-components.com) `styled` function, this creates reusable React components:
 
 ```javascript
-const Box = posed.div(poseProps)
+const Box = posed.div(config)
 ```
 
 By calling `posed.div` we've created a component that will output a `div`, but you can use the name of any HTML or SVG element.
