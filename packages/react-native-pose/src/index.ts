@@ -3,19 +3,47 @@ import { getStylesFromPoser } from './inc/utils';
 import pose from 'animated-pose';
 import { Animated, PanResponder } from 'react-native';
 
-const createAnimatedComponent = (Component: React.Component) =>
-  Animated.createAnimatedComponent(Component);
-
 const posed = createPosed({
+  /**
+   * A map of prebuilt posed components that users can access using
+   * `posed.ComponentName(config)`
+   */
   componentMap: {
     View: Animated.View,
     Image: Animated.Image,
     Text: Animated.Text,
     ScrollView: Animated.ScrollView
   },
+
+  /**
+   * The pose factory function that React Pose Core will use to
+   * create posers with.
+   */
   poseFactory: pose,
-  createAnimatedComponent,
+
+  /**
+   * Create React Native styles object from the poser's animated values.
+   */
+  getStylesFromPoser,
+
+  /**
+   * A function to convert components into Animated components.
+   */
+  createAnimatedComponent: (Component: React.Component) =>
+    Animated.createAnimatedComponent(Component),
+
+  /**
+   * Removes specific props from the poser config before they're
+   * passed to the pose factory. This allows React Native Pose to use
+   * config options that Pose doesn't explicitly support.
+   */
   filterConfig: ({ draggable, ...config }) => config,
+
+  /**
+   * Transforms the incoming poser config object.
+   * If the user has defined `draggable` we force the definition
+   * of x/y Animated.Values and disable `useNativeDriver` via props
+   */
   transformConfig: config => {
     const { draggable } = config;
     if (!draggable) return;
@@ -30,6 +58,11 @@ const posed = createPosed({
       useNativeDriver: false
     };
   },
+
+  /**
+   * Based on the provided pose config and component props, we can
+   * define more props to be passed to the underlying React component.
+   */
   getProps: (poser, { draggable }, { onDragStart, onDragEnd }) => {
     if (!draggable) return {};
 
@@ -70,8 +103,7 @@ const posed = createPosed({
     });
 
     return panResponder.panHandlers;
-  },
-  getStylesFromPoser
+  }
 });
 
 export default posed;
