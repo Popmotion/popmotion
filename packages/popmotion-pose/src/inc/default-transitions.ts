@@ -41,6 +41,7 @@ const createPointer = (
   }
 
   // If we're not handling this axis as pixels, add a converter
+  // Currently we're only handling % types but should look at vw/vh etc
   if (type) {
     transformQueue.push(
       interpolate([0, dimensions.get(measurement) as number], [0, 100])
