@@ -3,11 +3,29 @@ import { Action } from 'popmotion/action';
 import { Poser, PoserConfig } from 'pose-core';
 import { ValueReaction } from 'popmotion/reactions/value';
 import { ColdSubscription } from 'popmotion/action/types';
+import {
+  Pose,
+  PoseMap,
+  PoserState,
+  ExtendAPI,
+  TransformPose
+} from 'pose-core/lib/types';
+import { Styler } from 'stylefire';
 
 export type Value = {
   raw: ValueReaction;
   type?: ValueType;
 };
+
+export type Pose = Pose<Action>;
+export type PoseMap = PoseMap<Action>;
+
+export type PoserState = PoserState<
+  Value,
+  Action,
+  ColdSubscription,
+  DomPopmotionPoser
+>;
 
 export type Transformer = (v: any) => any;
 
@@ -40,7 +58,11 @@ export type Transition = (
   props: TransitionProps & { [key: string]: any }
 ) => Action | false;
 
-export type PopmotionPoserFactoryConfig = {};
+export type PopmotionPoserFactoryConfig<P> = {
+  extendAPI: ExtendAPI<Value, Action, ColdSubscription, P>;
+  transformPose: TransformPose<Value, Action, ColdSubscription, P>;
+  addListenerToValue: (key: string, styler: Styler) => (v: any) => void;
+};
 
 export type Dimensions = {
   get: (measurement?: BoundingBoxDimension) => BoundingBox | number;

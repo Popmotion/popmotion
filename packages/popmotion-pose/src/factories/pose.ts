@@ -1,17 +1,14 @@
 import poseFactory from 'pose-core';
 import { Action } from 'popmotion/action';
-import value, { ValueReaction } from 'popmotion/reactions/value';
+import value from 'popmotion/reactions/value';
 import { ColdSubscription } from 'popmotion/action/types';
-import {
-  PopmotionPoser,
-  Value,
-  Transformer,
-  PopmotionPoserFactoryConfig
-} from '../types';
+import { Value, Transformer, PopmotionPoserFactoryConfig } from '../types';
+import { Poser } from 'pose-core';
 import chain from 'popmotion/compositors/chain';
 import delayAction from 'popmotion/compositors/delay';
 import defaultTransitions, { just } from '../inc/default-transitions';
 import { number, degrees, percent, px, ValueType } from 'style-value-types';
+export { Poser };
 
 // TODO:
 // - Add draggable bounds/props
@@ -43,7 +40,7 @@ const pose = <P>({
   transformPose,
   addListenerToValue,
   extendAPI
-}: PopmotionPoserFactoryConfig) =>
+}: PopmotionPoserFactoryConfig<P>) =>
   poseFactory<Value, Action, ColdSubscription, P>({
     bindOnChange: (values, onChange) => key => {
       if (!values.has(key)) return;
@@ -71,7 +68,7 @@ const pose = <P>({
       return val;
     },
 
-    convertValue: (raw: ValueReaction, key, { elementStyler }) => {
+    convertValue: (raw, key, { elementStyler }) => {
       if (addListenerToValue) {
         raw.subscribe(addListenerToValue(key, elementStyler));
       }

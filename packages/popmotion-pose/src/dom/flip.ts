@@ -1,19 +1,18 @@
 import value from 'popmotion/reactions/value';
-import { BoundingBox, Dimensions } from '../types';
+import { BoundingBox, Dimensions, Value, Pose, PoserState } from '../types';
 import { Action } from 'popmotion/action';
 import { Styler } from 'stylefire';
 
 // Prevents the bug where TS errors between "export cannot be named"
 // and import is "declared but unused".
-export { Dimensions };
-export { Action };
+export { Action, Dimensions };
 
 const ORIGIN_START = 0;
 const ORIGIN_CENTER = '50%';
 const ORIGIN_END = '100%';
 
 type SetValueProps = {
-  values: ValueMap;
+  values: Map<string, Value>;
   props: {
     elementStyler: Styler;
   };
@@ -43,7 +42,7 @@ const checkPositionalProp = (key: string) => positionalProps.has(key);
 const hasPositionalProps = (pose: Pose) =>
   Object.keys(pose).some(checkPositionalProp);
 
-export const isFlipPose = (pose: Pose, key: string, state) =>
+export const isFlipPose = (pose: Pose, key: string, state: PoserState) =>
   state.props.element instanceof HTMLElement &&
   (hasPositionalProps(pose) || key === 'flip');
 
@@ -152,7 +151,7 @@ const implicitlyFlipPose = (state: PoseSetterFactoryProps, nextPose: Pose) => {
   };
 };
 
-export const flipPose = (state: PoseSetterFactoryProps, nextPose: Pose) =>
+export const flipPose = (props: PoseSetterFactoryProps, nextPose: Pose) =>
   hasPositionalProps(nextPose)
-    ? explicitlyFlipPose(state, nextPose)
-    : implicitlyFlipPose(state, nextPose);
+    ? explicitlyFlipPose(props, nextPose)
+    : implicitlyFlipPose(props, nextPose);

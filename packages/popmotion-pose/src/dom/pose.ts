@@ -68,17 +68,16 @@ const domPose = poseFactory<DomPopmotionPoser>({
   transformPose: (pose, name, state) =>
     isFlipPose(pose, name, state) ? flipPose(state, pose) : pose,
 
-  addListenerToValue: (key, elementStyler) => (v: any) =>
-    elementStyler.set(key, v),
+  addListenerToValue: (key, elementStyler) => v => elementStyler.set(key, v),
 
   extendAPI: (api, { props, activeActions }, config) => {
     const measure = props.dimensions.measure;
     const poserApi = {
       ...api,
-      addChild: (element: Element, config: DomPoserConfig) =>
-        api._addChild(createPoseConfig(element, config), domPose),
+      addChild: (element: Element, childConfig?: DomPopmotionConfig) =>
+        api._addChild(createPoseConfig(element, childConfig), domPose),
       measure,
-      flip: op => {
+      flip: (op: Function) => {
         if (op) {
           measure();
           op();
