@@ -1,6 +1,6 @@
 {
   "name": "react-pose",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "A declarative animation library for React",
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
@@ -42,8 +42,7 @@
     "webpack": "^3.11.0"
   },
   "dependencies": {
-    "popmotion-pose": "^1.3.0",
-    "react-lifecycles-compat": "^1.1.4"
+    "popmotion-pose": "^1.3.0"
   },
   "unpkg": "./dist/react-pose.js",
   "prettier": {

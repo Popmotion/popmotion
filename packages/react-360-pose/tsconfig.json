@@ -8,7 +8,7 @@
     "noUnusedLocals": true,
     "target": "es5",
     "rootDir": "src",
-    "outDir": "../../../Hello360/src",
+    "outDir": "lib",
     "watch": false,
     "baseUrl": "src/",
     "alwaysStrict": true,

@@ -18,10 +18,12 @@ Just like CSS, every pose has an optional `transition` property. It's a function
 ```javascript
 import { Animated } from 'react-native';
 
-const slowTween = ({ value, toValue }) => Animated.timing(value, {
-  toValue,
-  duration: 1500
-})
+const slowTween = ({ value, toValue, useNativeDriver }) =>
+  Animated.timing(value, {
+    toValue,
+    useNativeDriver,
+    duration: 1500,
+  });
 
 const config = {
   visible: { opacity: 1, transition: slowTween },
@@ -38,12 +40,12 @@ const config = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: ({ value, toValue, key }) => {
+    transition: ({ value, toValue, useNativeDriver, key }) => {
       switch(key) {
         case 'opacity':
-          return Animated.timing(value, { toValue })
+          return Animated.timing(value, { toValue, useNativeDriver })
         case 'y':
-          return Animated.spring(value, { toValue })
+          return Animated.spring(value, { toValue, useNativeDriver })
       }
     }
   },
@@ -63,6 +65,7 @@ The following props are provided by Pose:
 
 - `value`: The `Animated.Value` for this animating value - you **must** provide this to the returned animation.
 - `toValue`: This is the target defined by the pose. You can optionally provide this to the returned animation.
+- `useNativeDriver`: Pose automatically manages whether you can use the native driver on a specific property. Making a component draggable, or using a `passive` value that isn't a transform or `opacity` will make `useNativeDriver` `false`.
 - `key`: The name of the value being animated.
 - `prevPoseKey`: The name of the pose this value was previously set to.
 
@@ -78,10 +81,12 @@ const BASE_DURATION = 100;
 const config = {
   open: {
     scaleX: 1,
-    transition: ({ i, value, toValue }) => Animated.timing(value, {
-      toValue,
-      duration: (i + 1) * BASE_DURATION
-    })
+    transition: ({ i, value, toValue, useNativeDriver }) =>
+      Animated.timing(value, {
+        toValue,
+        useNativeDriver,
+        duration: (i + 1) * BASE_DURATION
+      })
   },
   closed: { scaleX: 0 }
 };
@@ -120,10 +125,10 @@ For instance, we might want to animate a continuous throbbing animation using `s
 const config = {
   alert: {
     scale: 1.3,
-    transition: ({ value, toValue }) => Animated.loop(
+    transition: ({ value, toValue, useNativeDriver }) => Animated.loop(
       Animated.sequence([
-        Animated.timing(value, { toValue, duration: 400 }),
-        Animated.timing(value, { toValue: 1, duration: 400 })
+        Animated.timing(value, { toValue, useNativeDriver, duration: 400 }),
+        Animated.timing(value, { toValue: 1, useNativeDriver, duration: 400 })
       ])
     )
   }

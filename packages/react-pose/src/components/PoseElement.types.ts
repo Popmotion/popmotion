@@ -17,8 +17,6 @@ export type PoseContextProps = {
 
 export type PoseElementProps = {
   children?: any;
-  elementType: any;
-  poseProps: PoserProps;
   pose?: CurrentPose;
   initialPose?: CurrentPose;
   withParent?: boolean;
@@ -26,6 +24,11 @@ export type PoseElementProps = {
   innerRef?: (el: Element) => any;
   [key: string]: any;
 } & PoseContextProps;
+
+export type PoseElementInternalProps = PoseElementProps & {
+  elementType: any;
+  poseProps: PoserProps;
+};
 
 export type PopStyle = {
   position: 'absolute';

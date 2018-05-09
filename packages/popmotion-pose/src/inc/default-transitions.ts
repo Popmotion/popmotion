@@ -5,7 +5,7 @@ import { linear } from 'popmotion/easing';
 import pointer from 'popmotion/input/pointer';
 import { interpolate } from 'popmotion/transformers';
 import { eachValue } from './transition-composers';
-import { RawValue, Transition, BoundingBoxDimension } from '../types';
+import { Transition, BoundingBoxDimension } from '../types';
 
 const singleAxisPointer = (axis: string) => (from: number) =>
   pointer({ [axis]: from }).pipe((v: any) => v[axis]);
@@ -18,10 +18,6 @@ const createPointer = (
   max: string,
   measurement: BoundingBoxDimension
 ): Transition => ({ from, type, dimensions, dragBounds }): Action => {
-  // Note: This means we're measuring twice, once for each axis. There's
-  // a nicer way of handling this. Perhaps a `preTransition` hook that runs once per pose
-  dimensions.measure();
-
   const axisPointer = axisPointerCreator(
     dimensions.measurementAsPixels(measurement, from)
   );
@@ -56,7 +52,7 @@ const createPointer = (
     : axisPointer;
 };
 
-export const just = (from: RawValue): Action =>
+export const just = (from: any): Action =>
   action(({ update, complete }) => {
     update(from);
     complete();

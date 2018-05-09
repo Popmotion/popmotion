@@ -64,7 +64,9 @@ const itemProps = {
   },
   close: {
     opacity: 0,
-    x: ({ i }) => Math.sin(i * Math.PI * 0.5) * 75,
+    x: ({ i }) => {
+      return Math.sin(i * Math.PI * 0.5) * 75;
+    },
     transition: tween
   }
 };
@@ -75,7 +77,7 @@ export class PoseDOM extends React.Component {
     this.items.forEach((item, i) => {
       const poser = this.sidebarPoser.addChild(item, {
         ...itemProps,
-        transitionProps: { i }
+        props: { i }
       });
     });
 
@@ -323,9 +325,10 @@ export class PoseOpacity extends React.PureComponent {
     if (ref) {
       this.poser = pose(ref, {
         visible: { opacity: 1 },
-        hidden: { opacity: 0 }
+        hidden: { opacity: 0 },
+        initialPose: "hidden"
       });
-      this.poser.set("hidden");
+      this.poser.set("visible");
     } else {
       this.poser.destroy();
     }
@@ -342,7 +345,8 @@ export class PoseDrag extends React.PureComponent {
   setRef = ref => {
     if (ref) {
       this.poser = pose(ref, {
-        draggable: true,
+        draggable: "x",
+        dragBounds: { left: 0, right: 200 },
         onDragStart: console.log,
         onDragEnd: console.log
       });
@@ -365,22 +369,25 @@ const Container = styled.div`
 `;
 
 export class PoseFullScreenFlip extends React.PureComponent {
-  isOpen = false;
+  isOpen = true;
 
   setRef = ref => {
     if (ref) {
       this.poser = pose(ref, {
         fullscreen: {
-          width: "100%",
-          height: "100%"
-          //transition: tween
+          width: () => "100%",
+          height: () => "100%",
+          transition: tween
         },
         thumbnail: {
-          width: 100,
-          height: 100
-          //transition: tween
-        }
+          width: () => 100,
+          height: () => 100,
+          transition: tween
+        },
+        initialPose: "thumbnail"
       });
+
+      this.poser.setTransformProps({ foo: true });
     } else {
       this.poser.destroy();
     }

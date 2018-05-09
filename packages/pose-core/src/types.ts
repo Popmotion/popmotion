@@ -40,32 +40,35 @@ export type ActiveActions<A> = Map<string, A>;
 
 export type ActivePoses = Map<string, string>;
 
-export type ChildPosers<V, A, P> = Set<Poser<V, A, P>>;
+export type ChildPosers<V, A, C, P> = Set<Poser<V, A, C, P>>;
 
 export type PoseMap<A> = {
   [key: string]: Pose<A>;
 };
 
-export type PoserFactory<V, A, P> = (config: PoserConfig<V>) => Poser<V, A, P>;
+export type PoserFactory<V, A, C, P> = (
+  config: PoserConfig<V>
+) => Poser<V, A, C, P>;
 
-export interface Poser<V, A, P> {
+export interface Poser<V, A, C, P> {
   set: (next: string, props?: Props) => Promise<any>;
   get: (key?: string) => any;
   has: (key: string) => boolean;
   setProps: (props: Props) => void;
+  setTransitionProps: (props: Props) => void;
   destroy: () => void;
   _addChild: (
     config: PoserConfig<V>,
-    factory: PoserFactory<V, A, P>
-  ) => Poser<V, A, P>;
-  removeChild: (child: Poser<V, A, P>) => void;
+    factory: PoserFactory<V, A, C, P>
+  ) => Poser<V, A, C, P>;
+  removeChild: (child: Poser<V, A, C, P>) => void;
   clearChildren: () => void;
 }
 
-export type PoserState<V, A, P> = {
-  activeActions: ActiveActions<A>;
+export type PoserState<V, A, C, P> = {
+  activeActions: ActiveActions<C>;
   activePoses: ActivePoses;
-  children: ChildPosers<V, A, P>;
+  children: ChildPosers<V, A, C, P>;
   values: ValueMap<V>;
   props: Props;
 };
@@ -91,21 +94,29 @@ export type CreateValueProps = any;
 export type CreateValue<V> = (
   init: any,
   key: string,
-  props?: CreateValueProps
+  props: Props,
+  createValueProps?: CreateValueProps
 ) => V;
 
-export type StartAction<A> = (action: A, complete: Function) => A;
+export type ConvertValue<V> = (value: any, key: string, props: Props) => V;
 
-export type StopAction<A> = (action: A) => any;
+export type StartAction<V, A, C> = (
+  value: V,
+  action: A,
+  complete: () => any
+) => C;
+
+export type StopAction<C> = (controls: C) => any;
 
 export type GetInstantTransition<V, A> = (value: V, props: Props) => A;
 
 export type AddTransitionDelay<A> = (delay: number, transition: A) => A;
 
-export type ExtendAPI<V, A, P> = (
-  api: Poser<V, A, P>,
-  state: PoserState<V, A, P>
-) => Poser<V, A, P>;
+export type ExtendAPI<V, A, C, P> = (
+  api: Poser<V, A, C, P>,
+  state: PoserState<V, A, C, P>,
+  config: PoserConfig<V>
+) => Poser<V, A, C, P>;
 
 export type GetTransitionProps<V> = (
   value: V,
@@ -115,9 +126,13 @@ export type GetTransitionProps<V> = (
 
 export type SelectValueToRead<V> = (value: V) => any;
 
-export type TransformPose<A> = (pose: Pose<A>, key: string) => Pose<A>;
+export type TransformPose<V, A, C, P> = (
+  pose: Pose<A>,
+  key: string,
+  state: PoserState<V, A, C, P>
+) => Pose<A>;
 
-export type PoseFactoryConfig<V, A, P> = {
+export type PoseFactoryConfig<V, A, C, P> = {
   getDefaultProps?: (config: PoserConfig<V>) => Props;
   defaultTransitions?: Map<string, TransitionFactory<A>>;
   bindOnChange: (
@@ -126,13 +141,14 @@ export type PoseFactoryConfig<V, A, P> = {
   ) => (key: string) => any;
   readValue: ReadValue<V>;
   createValue: CreateValue<V>;
+  convertValue: ConvertValue<V>;
   resolveTarget: ResolveTarget<V>;
   getTransitionProps: GetTransitionProps<V>;
-  startAction: StartAction<A>;
-  stopAction: StopAction<A>;
+  startAction: StartAction<V, A, C>;
+  stopAction: StopAction<C>;
   getInstantTransition: GetInstantTransition<V, A>;
   addActionDelay: AddTransitionDelay<A>;
   selectValueToRead: SelectValueToRead<V>;
-  extendAPI: ExtendAPI<V, A, P>;
-  transformPose?: TransformPose<A>;
+  extendAPI: ExtendAPI<V, A, C, P>;
+  transformPose?: TransformPose<V, A, C, P>;
 };

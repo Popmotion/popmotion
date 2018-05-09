@@ -1,6 +1,6 @@
 {
   "name": "pose-core",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Factory for Pose animation state machines",
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
@@ -35,5 +35,10 @@
   "prettier": {
     "parser": "typescript",
     "singleQuote": true
+  },
+  "dependencies": {
+    "@types/invariant": "^2.2.29",
+    "@types/node": "^10.0.5",
+    "hey-listen": "^1.0.2"
   }
 }

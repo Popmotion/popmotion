@@ -14,8 +14,9 @@ import createValueMap from './factories/values';
 import generateDefaultTransitions from './factories/transitions';
 import { eachValue, fromPose } from './inc/transition-composers';
 import { selectPoses, selectAllValues } from './inc/selectors';
+import { warning } from 'hey-listen';
 
-const poseFactory = <V, A, P>({
+const poseFactory = <V, A, C, P>({
   getDefaultProps,
   defaultTransitions,
   bindOnChange,
@@ -24,19 +25,28 @@ const poseFactory = <V, A, P>({
   readValue,
   resolveTarget,
   createValue,
+  convertValue,
   getInstantTransition,
   getTransitionProps,
   addActionDelay,
   selectValueToRead,
+  transformPose,
   extendAPI
-}: PoseFactoryConfig<V, A, P>) => (config: PoserConfig<V>): Poser<V, A, P> => {
+}: PoseFactoryConfig<V, A, C, P>) => (
+  config: PoserConfig<V>
+): Poser<V, A, C, P> => {
+  warning(
+    config.hasOwnProperty('transformProps'),
+    'config.transformProps is deprecated. Use config.props instead.'
+  );
+
   // If set, add parent values to ancestor chain
   const { parentValues, ancestorValues } = config;
   if (parentValues) ancestorValues.unshift({ values: parentValues });
 
-  const activeActions: ActiveActions<A> = new Map();
+  const activeActions: ActiveActions<C> = new Map();
   const activePoses: ActivePoses = new Map();
-  const children: ChildPosers<V, A, P> = new Set();
+  const children: ChildPosers<V, A, C, P> = new Set();
 
   const poses = generateDefaultTransitions<A>(
     selectPoses(config),
@@ -44,7 +54,7 @@ const poseFactory = <V, A, P>({
   );
 
   // Initialise props
-  let props = config.props || {};
+  let props = config.props || config.transformProps || {};
   if (getDefaultProps) props = { ...props, ...getDefaultProps(config) };
 
   // Create values map
@@ -55,12 +65,13 @@ const poseFactory = <V, A, P>({
     ancestorValues,
     readValue,
     createValue,
+    convertValue,
     userSetValues,
     initialPose,
     props
   });
 
-  const state: PoserState<V, A, P> = {
+  const state: PoserState<V, A, C, P> = {
     activeActions,
     activePoses,
     children,
@@ -81,10 +92,11 @@ const poseFactory = <V, A, P>({
     startAction,
     stopAction,
     resolveTarget,
-    addActionDelay
+    addActionDelay,
+    transformPose
   });
 
-  const api: Poser<V, A, P> = {
+  const api: Poser<V, A, C, P> = {
     set,
     get: valueName =>
       valueName
@@ -92,6 +104,10 @@ const poseFactory = <V, A, P>({
         : selectAllValues(values, selectValueToRead),
     has: poseName => !!poses[poseName],
     setProps: newProps => {
+      props = { ...props, ...newProps };
+    },
+    setTransitionProps: newProps => {
+      warning(false, 'setTransformProps is deprecated. Use setProps instead.');
       props = { ...props, ...newProps };
     },
 
@@ -120,7 +136,7 @@ const poseFactory = <V, A, P>({
     }
   };
 
-  return extendAPI(api, state);
+  return extendAPI(api, state, config);
 };
 
 export default poseFactory;

@@ -6,7 +6,8 @@ import {
   PoseMap,
   PassiveValueMap,
   ReadValue,
-  CreateValue
+  CreateValue,
+  ConvertValue
 } from '../types';
 import { getPoseValues } from '../inc/selectors';
 import { resolveProp } from './setter';
@@ -17,6 +18,7 @@ type ValueFactoryProps<V, A> = {
   ancestorValues: AncestorValueList<V>;
   readValue: ReadValue<V>;
   createValue: CreateValue<V>;
+  convertValue: ConvertValue<V>;
   userSetValues: { [key: string]: V };
   initialPose?: string | string[];
   props: Props;
@@ -45,6 +47,7 @@ const createValues = <V, A>(
   {
     userSetValues,
     createValue,
+    convertValue,
     initialPose,
     poses,
     props
@@ -55,14 +58,14 @@ const createValues = <V, A>(
 
   let value: V;
 
-  // If this user has explicitly created a value, simply use that
+  // If this user has explicitly created a value, use that
   if (userSetValues && userSetValues[key] !== undefined) {
-    value = userSetValues[key];
+    value = convertValue(userSetValues[key], key, props);
 
     // Or create a new value
   } else {
     const initValue = getInitialValue(poses, key, initialPose, props);
-    value = createValue(initValue, key);
+    value = createValue(initValue, key, props);
   }
 
   values.set(key, value);
@@ -109,13 +112,11 @@ const bindPassiveValues = <V, A>(
 
   if (!valueToBind) return;
 
-  const newValue = createValue(readValue(valueToBind), key, {
+  const newValue = createValue(readValue(valueToBind), key, props, {
     passiveParent: valueToBind,
     passiveProps,
     props
   });
-
-  // TODO: Add subscription step here?
 
   values.set(key, newValue);
 };

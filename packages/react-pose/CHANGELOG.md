@@ -2,6 +2,12 @@
 
 React Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.3] 2018-05-04
+
+### Fixed
+
+- TS errors with PoseElementProps
+
 ## [1.5.2] 2018-04-13
 
 ### Fixed
