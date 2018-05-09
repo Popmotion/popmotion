@@ -1,22 +1,20 @@
 import value from 'popmotion/reactions/value';
-import { BoundingBox, Dimensions, Value, Pose, PoserState } from '../types';
+import {
+  BoundingBox,
+  Dimensions,
+  Value,
+  Pose,
+  PoserState,
+  DomPopmotionPoser
+} from '../types';
+import { Poser } from 'pose-core';
 import { Action } from 'popmotion/action';
+import { ColdSubscription } from 'popmotion/action/types';
 import { Styler } from 'stylefire';
-
-// Prevents the bug where TS errors between "export cannot be named"
-// and import is "declared but unused".
-export { Action, Dimensions };
 
 const ORIGIN_START = 0;
 const ORIGIN_CENTER = '50%';
 const ORIGIN_END = '100%';
-
-type SetValueProps = {
-  values: Map<string, Value>;
-  props: {
-    elementStyler: Styler;
-  };
-};
 
 type FlipPose = {
   scaleX?: number;
@@ -46,7 +44,7 @@ export const isFlipPose = (pose: Pose, key: string, state: PoserState) =>
   state.props.element instanceof HTMLElement &&
   (hasPositionalProps(pose) || key === 'flip');
 
-const setValue = ({ values, props }: SetValueProps, key: string, to: any) => {
+const setValue = ({ values, props }: PoserState, key: string, to: any) => {
   if (values.has(key)) {
     // Here, if we already have the value, we update it twice.
     // Because of stylefire's render batching, this isn't going
@@ -64,7 +62,7 @@ const setValue = ({ values, props }: SetValueProps, key: string, to: any) => {
   }
 };
 
-const explicitlyFlipPose = (state: PoseSetterFactoryProps, nextPose: Pose) => {
+const explicitlyFlipPose = (state: PoserState, nextPose: Pose) => {
   const { dimensions, elementStyler } = state.props;
 
   dimensions.measure();
@@ -90,7 +88,7 @@ const explicitlyFlipPose = (state: PoseSetterFactoryProps, nextPose: Pose) => {
   return implicitlyFlipPose(state, remainingPose);
 };
 
-const implicitlyFlipPose = (state: PoseSetterFactoryProps, nextPose: Pose) => {
+const implicitlyFlipPose = (state: PoserState, nextPose: Pose) => {
   const { dimensions, element, elementStyler } = state.props;
   if (!dimensions.has()) return {};
 
@@ -151,7 +149,18 @@ const implicitlyFlipPose = (state: PoseSetterFactoryProps, nextPose: Pose) => {
   };
 };
 
-export const flipPose = (props: PoseSetterFactoryProps, nextPose: Pose) =>
+export const flipPose = (props: PoserState, nextPose: Pose) =>
   hasPositionalProps(nextPose)
     ? explicitlyFlipPose(props, nextPose)
     : implicitlyFlipPose(props, nextPose);
+
+// Prevents the bug where TS errors between "export cannot be named"
+// and import is "declared but unused".
+export {
+  Action,
+  Dimensions,
+  ColdSubscription,
+  DomPopmotionPoser,
+  Poser,
+  Value
+};
