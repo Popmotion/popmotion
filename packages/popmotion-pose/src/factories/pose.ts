@@ -1,4 +1,4 @@
-import poseFactory from '../../../pose-core/src';
+import poseFactory from 'pose-core';
 import { Action } from 'popmotion/action';
 import value, { ValueReaction } from 'popmotion/reactions/value';
 import { ColdSubscription } from 'popmotion/action/types';

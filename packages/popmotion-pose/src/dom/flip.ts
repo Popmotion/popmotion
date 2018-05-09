@@ -1,11 +1,5 @@
 import value from 'popmotion/reactions/value';
-import {
-  Pose,
-  ValueMap,
-  PoseSetterFactoryProps,
-  BoundingBox,
-  Dimensions
-} from '../types';
+import { BoundingBox, Dimensions } from '../types';
 import { Action } from 'popmotion/action';
 import { Styler } from 'stylefire';
 

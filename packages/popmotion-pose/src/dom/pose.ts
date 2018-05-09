@@ -3,11 +3,23 @@ import createDimensions from './dimensions';
 import appendEventListeners from './events';
 import { flipPose, isFlipPose } from './flip';
 import styler from 'stylefire';
-import { DomPoserConfig, Draggable } from '../types';
+import { Poser } from 'pose-core';
+import { Action } from 'popmotion/action';
+import { ValueReaction } from 'popmotion/reactions/value';
+import { ColdSubscription } from 'popmotion/action/types';
+import {
+  DomPopmotionPoser,
+  DomPopmotionConfig,
+  Draggable,
+  Pose,
+  PoseMap,
+  TransitionProps
+} from '../types';
+export { Action, Poser, ValueReaction, ColdSubscription };
 
 const dragPoses = (draggable: Draggable): PoseMap => {
   const dragging: Pose = {
-    preTransition: ({ dimensions }) => dimensions.measure()
+    preTransition: ({ dimensions }: TransitionProps) => dimensions.measure()
   };
   const dragEnd: Pose = {};
 
@@ -19,9 +31,15 @@ const dragPoses = (draggable: Draggable): PoseMap => {
 
 const createPoseConfig = (
   element: Element,
-  { onDragStart, onDragEnd, draggable, dragBounds, ...config }: DomPoserConfig
+  {
+    onDragStart,
+    onDragEnd,
+    draggable,
+    dragBounds,
+    ...config
+  }: DomPopmotionConfig
 ) => {
-  const poseConfig = {
+  const poseConfig: DomPopmotionConfig = {
     flip: {},
     ...config,
     props: {
@@ -76,5 +94,5 @@ const domPose = poseFactory<DomPopmotionPoser>({
   }
 });
 
-export default (element: Element, config: DomPoserConfig) =>
+export default (element: Element, config: DomPopmotionConfig) =>
   domPose(createPoseConfig(element, config));

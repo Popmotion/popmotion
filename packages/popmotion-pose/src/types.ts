@@ -1,6 +1,6 @@
 import { ValueType } from 'style-value-types';
 import { Action } from 'popmotion/action';
-import { Poser, PoserConfig } from '../../pose-core/src';
+import { Poser, PoserConfig } from 'pose-core';
 import { ValueReaction } from 'popmotion/reactions/value';
 import { ColdSubscription } from 'popmotion/action/types';
 
@@ -15,6 +15,15 @@ export interface DomPopmotionPoser
   extends Poser<Value, Action, ColdSubscription, DomPopmotionPoser> {
   addChild: (element: Element, config: PoserConfig<Value>) => DomPopmotionPoser;
 }
+
+export type DomPopmotionConfig = {
+  onDragStart?: (e: MouseEvent | TouchEvent) => any;
+  onDragEnd?: (e: MouseEvent | TouchEvent) => any;
+  draggable?: boolean;
+  dragBounds?: BoundingBox;
+  props?: { [key: string]: any };
+  [key: string]: any;
+};
 
 export type Draggable = true | 'x' | 'y';
 
@@ -32,11 +41,6 @@ export type Transition = (
 ) => Action | false;
 
 export type PopmotionPoserFactoryConfig = {};
-
-// export type PopmotionPoserConfig = {
-//   draggable?: boolean | 'x' | 'y';
-//   element: Element;
-// } & PoserConfig<ValueReaction, ColdSubscription>;
 
 export type Dimensions = {
   get: (measurement?: BoundingBoxDimension) => BoundingBox | number;

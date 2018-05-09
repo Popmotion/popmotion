@@ -1,10 +1,15 @@
 import listen from 'popmotion/input/listen';
+import { ActiveActions } from 'pose-core/lib/types';
+import { ColdSubscription } from 'popmotion/action/types';
+import { DomPopmotionConfig } from '../types';
+
+type Setter = (next: string) => Promise<any>;
 
 const makeDraggable = (
-  element,
-  activeActions,
-  setPose,
-  { onDragStart, onDragEnd }
+  element: Element,
+  activeActions: ActiveActions<ColdSubscription>,
+  setPose: Setter,
+  { onDragStart, onDragEnd }: DomPopmotionConfig
 ) => {
   const dragStartListener = listen(element, 'mousedown touchstart').start(
     (startEvent: MouseEvent | TouchEvent) => {
@@ -28,6 +33,11 @@ const makeDraggable = (
   activeActions.set('dragStartListener', dragStartListener);
 };
 
-export default (element, activeActions, setPose, { props }) => {
+export default (
+  element: Element,
+  activeActions: ActiveActions<ColdSubscription>,
+  setPose: Setter,
+  { props }: DomPopmotionConfig
+) => {
   if (props.draggable) makeDraggable(element, activeActions, setPose, props);
 };
