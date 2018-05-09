@@ -2,13 +2,10 @@
 
 Pose adheres to [Semantic Versioning](http://semver.org/).
 
-## [2.0.0] 2018-xx-xx
+## [2.0.0] 2018-05-09
 
-- Migration to Pose Core
-
-### Changed
-
-- `transformProps` -> `props`
+- Migration to `pose-core`
+- Deprecated `transformProps` -> `props` and `setTransitionProps` -> `setProps`
 
 ## [1.2.0] 2018-04-10
 

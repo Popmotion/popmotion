@@ -14,7 +14,7 @@ import createValueMap from './factories/values';
 import generateDefaultTransitions from './factories/transitions';
 import { eachValue, fromPose } from './inc/transition-composers';
 import { selectPoses, selectAllValues } from './inc/selectors';
-import { warning } from './inc/dev-exp';
+import { warning } from 'hey-listen';
 
 const poseFactory = <V, A, C, P>({
   getDefaultProps,

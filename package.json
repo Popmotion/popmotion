@@ -54,5 +54,6 @@
     "prettier": {
       "singleQuote": true
     }
-  }
+  },
+  "dependencies": {}
 }

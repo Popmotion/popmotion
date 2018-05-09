@@ -1,7 +1,7 @@
 import React from "react";
 import { Box } from "../inc";
 import styled from "styled-components";
-import pose from "../../packages/popmotion-pose/lib/popmotion-pose/src";
+import pose from "../../packages/popmotion-pose/lib";
 import {
   decay,
   tween,
@@ -375,13 +375,13 @@ export class PoseFullScreenFlip extends React.PureComponent {
     if (ref) {
       this.poser = pose(ref, {
         fullscreen: {
-          width: "100%",
-          height: "100%",
+          width: () => "100%",
+          height: () => "100%",
           transition: tween
         },
         thumbnail: {
-          width: 100,
-          height: 100,
+          width: () => 100,
+          height: () => 100,
           transition: tween
         },
         initialPose: "thumbnail"

@@ -1,5 +1,5 @@
 import { PoseMap, Pose, TransitionFactory } from '../types';
-import { invariant } from '../inc/dev-exp';
+import { invariant } from 'hey-listen';
 
 type DefaultTransitions<A> = Map<string, TransitionFactory<A>>;
 

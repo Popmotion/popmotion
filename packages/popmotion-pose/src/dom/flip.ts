@@ -10,7 +10,6 @@ import {
 import { Poser } from 'pose-core';
 import { Action } from 'popmotion/action';
 import { ColdSubscription } from 'popmotion/action/types';
-import { Styler } from 'stylefire';
 
 const ORIGIN_START = 0;
 const ORIGIN_CENTER = '50%';
@@ -23,26 +22,25 @@ type FlipPose = {
   y?: number;
 };
 
+type StyleMap = { [key: string]: any };
+
 const findCenter = ({ top, right, bottom, left }: BoundingBox) => ({
   x: (left + right) / 2,
   y: (top + bottom) / 2
 });
 
-const positionalProps = new Set([
-  'width',
-  'height',
-  'top',
-  'left',
-  'bottom',
-  'right'
-]);
-const checkPositionalProp = (key: string) => positionalProps.has(key);
+const positionalProps = ['width', 'height', 'top', 'left', 'bottom', 'right'];
+const positionalPropsDict = new Set(positionalProps);
+const checkPositionalProp = (key: string) => positionalPropsDict.has(key);
 const hasPositionalProps = (pose: Pose) =>
   Object.keys(pose).some(checkPositionalProp);
 
 export const isFlipPose = (pose: Pose, key: string, state: PoserState) =>
   state.props.element instanceof HTMLElement &&
   (hasPositionalProps(pose) || key === 'flip');
+
+export const resolveProp = (target: any, props: { [key: string]: any }) =>
+  typeof target === 'function' ? target(props) : target;
 
 const setValue = ({ values, props }: PoserState, key: string, to: any) => {
   if (values.has(key)) {
@@ -76,14 +74,19 @@ const explicitlyFlipPose = (state: PoserState, nextPose: Pose) => {
     ...remainingPose
   } = nextPose;
 
-  (elementStyler.set({
-    width,
-    height,
-    top,
-    left,
-    bottom,
-    right
-  }) as Styler).render();
+  elementStyler
+    .set(
+      positionalProps.reduce(
+        (acc, key) => {
+          if (nextPose[key] !== undefined) {
+            acc[key] = resolveProp(nextPose[key], state.props);
+          }
+          return acc;
+        },
+        {} as StyleMap
+      )
+    )
+    .render();
 
   return implicitlyFlipPose(state, remainingPose);
 };

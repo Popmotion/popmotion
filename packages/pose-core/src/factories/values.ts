@@ -64,7 +64,6 @@ const createValues = <V, A>(
 
     // Or create a new value
   } else {
-    console.log(poses, key, initialPose);
     const initValue = getInitialValue(poses, key, initialPose, props);
     value = createValue(initValue, key, props);
   }

@@ -37,7 +37,7 @@ class PoseComponent extends React.PureComponent<PoseComponentProps> {
   constructor(props: PoseComponentProps) {
     super(props);
 
-    const { poseConfig, factoryConfig, registerAsChild, pose } = props;
+    const { poseConfig, factoryConfig, registerAsChild, pose, initialPose } = props;
     const {
       transformConfig,
       poseFactory,
@@ -50,7 +50,7 @@ class PoseComponent extends React.PureComponent<PoseComponentProps> {
       props: filterProps(props)
     };
 
-    if (pose) config.initialPose = pose;
+    if (initialPose || pose) config.initialPose = initialPose || pose;
     if (transformConfig) transformConfig(config, props);
 
     this.poser = registerAsChild
@@ -69,8 +69,8 @@ class PoseComponent extends React.PureComponent<PoseComponentProps> {
   }
 
   componentDidMount() {
-    const { poseOnMount } = this.props;
-    if (poseOnMount) this.setPose(poseOnMount);
+    const { initialPose, pose } = this.props;
+    if (initialPose && pose) this.setPose(pose);
   }
 
   componentWillUnmount() {
