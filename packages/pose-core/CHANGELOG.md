@@ -2,6 +2,10 @@
 
 Pose Core adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.4.1] 2018-05-09
+
+- Moving error messages to `hey-listen`.
+
 ## [0.4.0@rc] 2018-05-07
 
 - Adding `convertValue` method. Allows users to define values like Popmotion's `value` or React Animated's `Animated.Value` and for the Pose flavour to upgrade that to a format it uses internally (for example with additional metadata)

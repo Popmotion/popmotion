@@ -384,10 +384,10 @@ export class PoseFullScreenFlip extends React.PureComponent {
           height: () => 100,
           transition: tween
         },
-        initialPose: "thumbnail"
+        initialPose: "fullscreen"
       });
-
-      this.poser.setTransformProps({ foo: true });
+      this.poser.setProps({ bar: false });
+      this.poser.setTransitionProps({ foo: true });
     } else {
       this.poser.destroy();
     }

@@ -82,7 +82,8 @@ const pose = <P>({
     getTransitionProps: ({ raw, type }, to) => ({
       from: type ? type.parse(raw.get()) : raw.get(),
       velocity: raw.getVelocity(),
-      to: type ? type.parse(to) : to
+      to: type ? type.parse(to) : to,
+      type
     }),
 
     resolveTarget: ({ type }, to) => (type ? type.parse(to) : to),

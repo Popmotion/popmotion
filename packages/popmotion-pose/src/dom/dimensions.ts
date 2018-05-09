@@ -1,4 +1,5 @@
 import { BoundingBox, Dimensions } from '../types';
+import { percent } from 'style-value-types';
 
 export default (element: Element): Dimensions => {
   let hasMeasured = false;
@@ -18,9 +19,9 @@ export default (element: Element): Dimensions => {
       hasMeasured = true;
       return current;
     },
-    measurementAsPixels: (measurement, value) =>
-      typeof value === 'string'
-        ? parseFloat(value as string) / 100 * current[measurement]
+    measurementAsPixels: (measurement, value, type) =>
+      type === percent && typeof value === 'number'
+        ? value / 100 * current[measurement]
         : (value as number),
     has: () => hasMeasured
   };

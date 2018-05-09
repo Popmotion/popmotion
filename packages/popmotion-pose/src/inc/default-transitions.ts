@@ -19,7 +19,7 @@ const createPointer = (
   measurement: BoundingBoxDimension
 ): Transition => ({ from, type, dimensions, dragBounds }): Action => {
   const axisPointer = axisPointerCreator(
-    dimensions.measurementAsPixels(measurement, from)
+    dimensions.measurementAsPixels(measurement, from, type)
   );
   const transformQueue: Array<(v: number) => number> = [];
 
@@ -28,14 +28,14 @@ const createPointer = (
       transformQueue.push((v: number) =>
         Math.max(
           v,
-          dimensions.measurementAsPixels(measurement, dragBounds[min])
+          dimensions.measurementAsPixels(measurement, dragBounds[min], type)
         )
       );
     if (dragBounds[max] !== undefined)
       transformQueue.push((v: number) =>
         Math.min(
           v,
-          dimensions.measurementAsPixels(measurement, dragBounds[max])
+          dimensions.measurementAsPixels(measurement, dragBounds[max], type)
         )
       );
   }
