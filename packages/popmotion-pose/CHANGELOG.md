@@ -2,10 +2,20 @@
 
 Pose adheres to [Semantic Versioning](http://semver.org/).
 
-## [2.0.0] 2018-05-09
+## [1.4.0] 2018-05-09
+
+## Changed
 
 - Migration to `pose-core`
-- Deprecated `transformProps` -> `props` and `setTransitionProps` -> `setProps`
+
+## Deprecated
+
+- `transformProps` -> `props`
+- `setTransitionProps` -> `setProps`
+
+## Fixed
+
+- Positional props on poses (like `width`/`top`) can now be set as functions.
 
 ## [1.2.0] 2018-04-10
 

@@ -324,9 +324,8 @@ export class PoseOpacity extends React.PureComponent {
   setRef = ref => {
     if (ref) {
       this.poser = pose(ref, {
-        visible: { opacity: 1 },
-        hidden: { opacity: 0 },
-        initialPose: "hidden"
+        visible: { opacity: 1, backgroundColor: "#0f0" },
+        hidden: { opacity: 0.5, backgroundColor: "#f00" }
       });
       this.poser.set("visible");
     } else {
@@ -337,7 +336,12 @@ export class PoseOpacity extends React.PureComponent {
   componentDidMount() {}
 
   render() {
-    return <Box innerRef={this.setRef} />;
+    return (
+      <Box
+        style={{ opacity: 0.4, backgroundColor: "#00f" }}
+        innerRef={this.setRef}
+      />
+    );
   }
 }
 

@@ -70,6 +70,8 @@ const domPose = poseFactory<DomPopmotionPoser>({
 
   addListenerToValue: (key, elementStyler) => v => elementStyler.set(key, v),
 
+  readValueFromSource: (key, { elementStyler }) => elementStyler.get(key),
+
   extendAPI: (api, { props, activeActions }, config) => {
     const measure = props.dimensions.measure;
     const poserApi = {

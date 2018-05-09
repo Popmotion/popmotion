@@ -10,11 +10,6 @@ import defaultTransitions, { just } from '../inc/default-transitions';
 import { number, degrees, percent, px, ValueType } from 'style-value-types';
 export { Poser };
 
-// TODO:
-// - Add draggable bounds/props
-// - Add a readFromSource method to Pose Core in the event there's no initialPose
-// - remove props like draggable from pose list
-
 const valueTypeTests = [number, degrees, percent, px];
 const testValueType = (v: any) => (type: ValueType) => type.test(v);
 
@@ -39,7 +34,8 @@ const createValue = (init: any) => {
 const pose = <P>({
   transformPose,
   addListenerToValue,
-  extendAPI
+  extendAPI,
+  readValueFromSource
 }: PopmotionPoserFactoryConfig<P>) =>
   poseFactory<Value, Action, ColdSubscription, P>({
     bindOnChange: (values, onChange) => key => {
@@ -110,6 +106,7 @@ const pose = <P>({
 
     defaultTransitions,
     transformPose,
+    readValueFromSource,
     extendAPI
   });
 

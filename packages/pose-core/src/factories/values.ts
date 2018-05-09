@@ -6,6 +6,7 @@ import {
   PoseMap,
   PassiveValueMap,
   ReadValue,
+  ReadValueFromSource,
   CreateValue,
   ConvertValue
 } from '../types';
@@ -21,16 +22,19 @@ type ValueFactoryProps<V, A> = {
   convertValue: ConvertValue<V>;
   userSetValues: { [key: string]: V };
   initialPose?: string | string[];
+  readValueFromSource?: ReadValueFromSource;
   props: Props;
 };
 
 const isScale = (key: string) => key.includes('scale');
+const defaultReadValueFromSource = (key: string) => (isScale(key) ? 1 : 0);
 
 const getInitialValue = <A>(
   poses: PoseMap<A>,
   key: string,
   initialPose: string | string[],
-  props: Props
+  props: Props,
+  readValueFromSource: ReadValueFromSource = defaultReadValueFromSource
 ) => {
   const posesToSearch = Array.isArray(initialPose)
     ? initialPose
@@ -39,7 +43,9 @@ const getInitialValue = <A>(
     name => poses[name] && poses[name][key] !== undefined
   );
 
-  return pose ? resolveProp(poses[pose][key], props) : isScale(key) ? 1 : 0; // Hook for renderer inspection?
+  return pose
+    ? resolveProp(poses[pose][key], props)
+    : readValueFromSource(key, props);
 };
 
 const createValues = <V, A>(
@@ -48,6 +54,7 @@ const createValues = <V, A>(
     userSetValues,
     createValue,
     convertValue,
+    readValueFromSource,
     initialPose,
     poses,
     props
@@ -64,7 +71,13 @@ const createValues = <V, A>(
 
     // Or create a new value
   } else {
-    const initValue = getInitialValue(poses, key, initialPose, props);
+    const initValue = getInitialValue(
+      poses,
+      key,
+      initialPose,
+      props,
+      readValueFromSource
+    );
     value = createValue(initValue, key, props);
   }
 

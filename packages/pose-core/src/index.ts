@@ -23,6 +23,7 @@ const poseFactory = <V, A, C, P>({
   startAction,
   stopAction,
   readValue,
+  readValueFromSource,
   resolveTarget,
   createValue,
   convertValue,
@@ -66,6 +67,7 @@ const poseFactory = <V, A, C, P>({
     readValue,
     createValue,
     convertValue,
+    readValueFromSource,
     userSetValues,
     initialPose,
     props

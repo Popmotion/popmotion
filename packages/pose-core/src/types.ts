@@ -132,6 +132,8 @@ export type TransformPose<V, A, C, P> = (
   state: PoserState<V, A, C, P>
 ) => Pose<A>;
 
+export type ReadValueFromSource = (key: string, props: Props) => any;
+
 export type PoseFactoryConfig<V, A, C, P> = {
   getDefaultProps?: (config: PoserConfig<V>) => Props;
   defaultTransitions?: Map<string, TransitionFactory<A>>;
@@ -140,6 +142,7 @@ export type PoseFactoryConfig<V, A, C, P> = {
     onChange: OnChangeCallbacks
   ) => (key: string) => any;
   readValue: ReadValue<V>;
+  readValueFromSource?: ReadValueFromSource;
   createValue: CreateValue<V>;
   convertValue: ConvertValue<V>;
   resolveTarget: ResolveTarget<V>;

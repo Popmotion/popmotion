@@ -8,7 +8,8 @@ import {
   PoseMap,
   PoserState,
   ExtendAPI,
-  TransformPose
+  TransformPose,
+  ReadValueFromSource
 } from 'pose-core/lib/types';
 import { Styler } from 'stylefire';
 
@@ -62,6 +63,7 @@ export type PopmotionPoserFactoryConfig<P> = {
   extendAPI: ExtendAPI<Value, Action, ColdSubscription, P>;
   transformPose: TransformPose<Value, Action, ColdSubscription, P>;
   addListenerToValue: (key: string, styler: Styler) => (v: any) => void;
+  readValueFromSource?: ReadValueFromSource;
 };
 
 export type Dimensions = {

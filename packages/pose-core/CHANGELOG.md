@@ -2,7 +2,15 @@
 
 Pose Core adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.5.0] 2018-05-09
+
+### Added
+
+- New `readValueFromSource` config option. Function that can read from the source target when no default pose is defined.
+
 ## [0.4.1] 2018-05-09
+
+### Changed
 
 - Moving error messages to `hey-listen`.
 
