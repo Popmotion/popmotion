@@ -54,10 +54,10 @@ With CSS variables, we're instead going to animate the parent element where the 
 const body = document.querySelector('body')
 ```
 
-Now define the pose props with a single pose, called `right`:
+Now define the pose config with a single pose, called `right`:
 
 ```javascript
-const props = {
+const config = {
   right: { '--distance': '100px' }
 }
 ```
@@ -65,7 +65,7 @@ const props = {
 Bring the two together by creating a new poser:
 
 ```javascript
-const bodyPoser = pose(body, props)
+const bodyPoser = pose(body, config)
 ```
 
 To trigger the animation, set the pose to "right":

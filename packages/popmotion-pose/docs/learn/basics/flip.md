@@ -24,10 +24,10 @@ The problem with animating size and position properties is that they break layou
 
 So, when you set a pose with `width`, `height`, `top`, `left`, `right`, or `bottom` values, these will applied at the start of the animation. Pose will measure the size and position of the element before and after, and animate from one to the other using transform properties instead.
 
-For instance, we can switch a `div` to fullscreen and back using the following props:
+For instance, we can switch a `div` to fullscreen and back using the following config:
 
 ```javascript
-const props = {
+const config = {
   fullscreen: {
     width: '100vw',
     height: '100vh',
@@ -58,7 +58,7 @@ The process goes like this:
 Using this method allows the use of a special Pose called `flip`, so you can change the animation:
 
 ```javascript
-const tooltipProps = {
+const tooltipConfig = {
   flip: {
     transition: (props) => tween({ ...props, ease: easing.backOut })
   }

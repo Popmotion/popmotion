@@ -1,9 +1,9 @@
 ---
-title: Props
+title: Config
 description: Configure a poser
 ---
 
-# Props
+# Config options
 
 ### `initialPose?: string | string[]`
 
@@ -46,7 +46,7 @@ Map of values that are passively changed when other values, either on this Poser
 The `transform` function here is composed with Popmotion [transformers](/api/transformers):
 
 ```javascript
-const props = {
+const config = {
   draggable: 'x',
   passive: {
     backgroundColor: ['x', pipe(
@@ -62,9 +62,9 @@ const props = {
 
 Set a label on this poser. Currently, this allows a `passive` value on a child poser to refer to this ancestor value.
 
-### `transitionProps: { [key: string]: any }`
+### `props: { [key: string]: any }`
 
-Properties to provide to entered pose `transition` methods and dynamic pose props. These can be updated with the `setTransitionProps` method or, in React Pose, by providing props to the posed component.
+Properties to provide to entered pose `transition` methods and dynamic pose props. These can be updated with the `setProps` method or, in React Pose, by providing props to the posed component.
 
 ### `onChange?: { [key: string]: (v: any) => any }`
 
@@ -75,7 +75,7 @@ Map of callbacks, one for each animated value, that will fire whenever that valu
 #### Example
 
 ```javascript
-const props = {
+const config = {
   draggable: 'x',
   onChange: {
     x: (x) => // you do you 
@@ -85,9 +85,9 @@ const props = {
 
 ### `...poses: { [key: string]: Pose }`
 
-Any other props will be treated as [poses](#pose-props).
+Any other config props will be treated as [poses](#pose-props).
 
-### Pose props
+### Pose config
 
 You can call a pose anything, and animate to it by calling `poser.set('poseName')` or setting `<PosedComponent pose="poseName" />`.
 

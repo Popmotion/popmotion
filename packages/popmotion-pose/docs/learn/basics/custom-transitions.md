@@ -7,7 +7,7 @@ next: animating-children
 
 # Custom transitions
 
-With zero-config animations, it's easy to create snappy and playful animations just by defining poses.
+With automatic animations, it's easy to create snappy and playful animations just by defining poses.
 
 But there's plenty of instances where we want full control over our animation. For this, we can use the `transition` property.
 
@@ -15,12 +15,12 @@ But there's plenty of instances where we want full control over our animation. F
 
 Just like CSS, every pose has a `transition` property. This is a function you can optionally provide that creates a [Popmotion animation](/api) (or `false`, for no animation).
 
-Replace the `props` you added to either the [Pose](https://codepen.io/popmotion/pen/bvqJbV?editors=0010) or [React Pose](https://codepen.io/popmotion/pen/mxmrPZ?editors=0010) playgrounds with the following:
+Replace the `config` you added to either the [Pose](https://codepen.io/popmotion/pen/bvqJbV?editors=0010) or [React Pose](https://codepen.io/popmotion/pen/mxmrPZ?editors=0010) playgrounds with the following:
 
 ```javascript
 const { tween } = popmotion
 
-const props = {
+const config = {
   visible: { opacity: 1 },
   hidden: {
     opacity: 0,
@@ -54,7 +54,7 @@ For instance, we can use `key` to return a different animation based on the valu
 ```javascript
 const { easing, tween } = popmotion
 
-const props = {
+const config = {
   visible: { scaleY: 1, opacity: 1 },
   hidden: {
     scaleY: 0,
@@ -72,10 +72,10 @@ const props = {
 
 You're also under no obligation to end the animation on the `to` property. You can do anything with the returned animation.
 
-Set the `.box`'s `opacity` to `1` in the CSS. Now replace our `props` with a new set of poses:
+Set the `.box`'s `opacity` to `1` in the CSS. Now replace our `config` with a new set of poses:
 
 ```javascript
-const props = {
+const config = {
   initialPose: 'rest',
   rest: { scale: 1 },
   alert: { scale: 1.2 }
@@ -87,7 +87,7 @@ Set the poser or posed component to "alert" and the box will transition to the `
 Now we can add a custom `transition` function that will return a `spring` animation with `damping` set to `0`. This will make the animating oscillate around the `to` value indefinitely:
 
 ```javascript
-const props = {
+const config = {
   rest: { scale: 1 },
   alert: {
     scale: 1.2,
@@ -120,15 +120,15 @@ In vanilla Pose, you can **statefully** set transition props both when the poser
 
 ```javascript
 const poser = pose(element, {
-  ...props,
-  transitionProps: {}
+  ...config,
+  props: {}
 })
 ```
 
-And with the `setTransitionProps` method:
+And with the `setProps` method:
 
 ```javascript
-poser.setTransitionProps({})
+poser.setProps({})
 ```
 
 You can also **temporarily** set transition props by passing an object as the second argument of set:

@@ -27,7 +27,7 @@ import { eachValue } from 'popmotion-pose'
 ### Usage
 
 ```javascript
-const props = {
+const config = {
   open: {
     x: 100,
     y: 100,
@@ -52,7 +52,7 @@ import { fromPose } from 'popmotion-pose'
 ### Usage
 
 ```javascript
-const props = {
+const config = {
   offLeft: { x: '-100%' },
   offRight: { x: '100%' },
   on: {
