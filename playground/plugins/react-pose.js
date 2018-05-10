@@ -24,17 +24,17 @@ const Box = ({ className, children, hostRef }) => (
   </div>
 );
 
-const AnimatedBox = styled(
-  posed.div({
-    enter: { opacity: 1, y: "0%" },
-    exit: { opacity: 0, y: "30%" }
-  })
-)`
+const BoxStyled = styled.div`
   background-color: red;
   width: 100px;
   height: 100px;
   transform-origin: 0 0;
 `;
+
+const AnimatedBox = posed(BoxStyled)({
+  enter: { opacity: 1, y: "0%" },
+  exit: { opacity: 0, y: "30%" }
+});
 
 // const Box = styled(posed.div(boxProps))`
 //   background-color: red;
