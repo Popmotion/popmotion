@@ -12,7 +12,7 @@ import {
   PoseElementInternalProps,
   PopStyle
 } from './PoseElement.types';
-import { warning } from 'hey-listen';
+import { warning, invariant } from 'hey-listen';
 
 export const PoseParentContext = createContext({});
 
@@ -71,24 +71,31 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
    * =============================================
    */
   getInitialPose(): CurrentPose {
-    const { getInitialPoseFromParent, pose, initialPose } = this.props;
+    const { getInitialPoseFromParent, pose, _pose, initialPose } = this.props;
 
     if (initialPose) {
       return initialPose;
     } else {
-      // Feel like this could probably be simpler
+      // Feels like this could probably be simpler
       const parentPose = getInitialPoseFromParent && getInitialPoseFromParent();
       const thisPose = Array.isArray(pose) ? pose : [pose];
+      const thisInternalPose = Array.isArray(_pose) ? _pose : [_pose];
 
       return Array.isArray(parentPose)
-        ? [...parentPose, ...thisPose]
-        : [parentPose, ...thisPose];
+        ? [...parentPose, ...thisPose, ...thisInternalPose]
+        : [parentPose, ...thisPose, ...thisInternalPose];
     }
   }
 
   getFirstPose(): CurrentPose | void {
-    const { pose } = this.props;
-    return pose && pose !== this.getInitialPose() ? pose : undefined;
+    const { initialPose, pose, _pose } = this.props;
+    // If don't have an initial pose explicitly defined, return early
+    if (!initialPose) return;
+
+    const thisPose = Array.isArray(pose) ? pose : [pose];
+    const thisInternalPose = Array.isArray(_pose) ? _pose : [_pose];
+
+    return [...thisPose, ...thisInternalPose];
   }
 
   getSetProps() {
@@ -99,6 +106,7 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
       onChange, // Deprecated for 2.0.0
       onValueChange,
       innerRef,
+      _pose,
       pose,
       initialPose,
       onPoseComplete,
@@ -171,7 +179,10 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
   };
 
   componentDidMount() {
-    if (!this.ref) return;
+    invariant(
+      typeof this.ref !== 'undefined',
+      `No DOM ref found. If you're converting an existing component via posed(Component), you must ensure you're passing the hostRef prop to your underlying DOM element.`
+    );
 
     const {
       poseConfig,
@@ -214,14 +225,16 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
     }
   }
 
-  UNSAFE_componentWillUpdate({ pose }: PoseElementInternalProps) {
-    if (hasPose(pose, 'flip')) this.poser.measure();
+  UNSAFE_componentWillUpdate({ pose, _pose }: PoseElementInternalProps) {
+    if (hasPose(pose, 'flip') || hasPose(_pose, 'flip')) this.poser.measure();
   }
 
   componentDidUpdate(prevProps: PoseElementInternalProps) {
-    const { pose } = this.props;
+    const { pose, _pose } = this.props;
     this.poser.setProps(this.getSetProps());
+
     if (pose !== prevProps.pose || pose === 'flip') this.setPose(pose);
+    if (_pose !== prevProps._pose || _pose === 'flip') this.setPose(_pose);
   }
 
   componentWillUnmount() {

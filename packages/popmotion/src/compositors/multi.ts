@@ -1,6 +1,6 @@
-import { onFrameUpdate } from 'framesync';
-import action, { Action } from '../action';
-import { ColdSubscription } from '../action/types';
+import { onFrameUpdate } from "framesync";
+import action, { Action } from "../action";
+import { ColdSubscription } from "../action/types";
 
 export type ActionStarter<I> = (action: Action, key: I) => ColdSubscription;
 
@@ -20,29 +20,38 @@ const multi = <A, T, V, I>({
   mapApi,
   setProp,
   startActions
-}: MultiProps<A, T, V, I>) => (actions: A): Action => action(({ update, complete, error }) => {
-  const numActions = getCount(actions);
-  const output = getOutput();
-  const updateOutput = () => update(output);
-  let numCompletedActions = 0;
+}: MultiProps<A, T, V, I>) => (actions: A): Action =>
+  action(({ update, complete, error }) => {
+    const numActions = getCount(actions);
+    const output = getOutput();
+    const updateOutput = () => update(output);
+    let numCompletedActions = 0;
 
-  const subs = startActions(actions, (a, name) => a.start({
-    complete: () => {
-      numCompletedActions++;
-      if (numCompletedActions === numActions) onFrameUpdate(complete);
-    },
-    error,
-    update: (v: any) => {
-      setProp(output, name, v);
-      onFrameUpdate(updateOutput, true);
-    }
-  }));
+    const subs = startActions(actions, (a, name) => {
+      let hasCompleted = false;
+      return a.start({
+        complete: () => {
+          if (!hasCompleted) {
+            hasCompleted = true;
+            numCompletedActions++;
+            if (numCompletedActions === numActions) onFrameUpdate(complete);
+          }
+        },
+        error,
+        update: (v: any) => {
+          setProp(output, name, v);
+          onFrameUpdate(updateOutput, true);
+        }
+      });
+    });
 
-  return Object.keys(getFirst(subs))
-    .reduce((api: { [key: string ]: Function }, methodName) => {
-      api[methodName] = mapApi(subs, methodName);
-      return api;
-    }, {});
-});
+    return Object.keys(getFirst(subs)).reduce(
+      (api: { [key: string]: Function }, methodName) => {
+        api[methodName] = mapApi(subs, methodName);
+        return api;
+      },
+      {}
+    );
+  });
 
 export default multi;

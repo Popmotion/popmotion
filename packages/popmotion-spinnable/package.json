@@ -1,18 +1,16 @@
 {
   "name": "popmotion-spinnable",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Make DOM nodes spinnable with Popmotion",
   "author": "Matt Perry <sirhound@popmotion.io>",
   "homepage": "http://popmotion.io",
   "main": "./lib/index.js",
   "esnext": "./src/index.js",
-  "files": [
-    "lib",
-    "src"
-  ],
+  "files": ["lib", "src"],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Popmotion/popmotion/tree/master/packages/popmotion-spinnable/"
+    "url":
+      "https://github.com/Popmotion/popmotion/tree/master/packages/popmotion-spinnable/"
   },
   "bugs": {
     "url": "https://github.com/Popmotion/popmotion/issues"
@@ -47,6 +45,6 @@
     "babel-register": "^6.3.13"
   },
   "dependencies": {
-    "popmotion": "^8.1.0"
+    "popmotion": "^8.1.22"
   }
 }

@@ -24,16 +24,17 @@ const Box = ({ className, children, hostRef }) => (
   </div>
 );
 
-const StyledBox = styled(Box)`
+const AnimatedBox = styled(
+  posed.div({
+    enter: { opacity: 1, y: "0%" },
+    exit: { opacity: 0, y: "30%" }
+  })
+)`
   background-color: red;
   width: 100px;
   height: 100px;
   transform-origin: 0 0;
 `;
-const AnimatedBox = posed(StyledBox)({
-  enter: { opacity: 1, y: "0%" },
-  exit: { opacity: 0, y: "30%" }
-});
 
 // const Box = styled(posed.div(boxProps))`
 //   background-color: red;
@@ -387,6 +388,86 @@ export class EmailList extends React.Component {
           ))}
         </PoseGroup>
       </div>
+    );
+  }
+}
+
+const UserPoseContainer = styled.div`
+  height: 100vh;
+  display: flex;
+  width: 600px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+`;
+
+const Square = props => {
+  const { onDel, onFlip, hostRef, text, ...others } = props;
+  return (
+    <div ref={hostRef} {...others}>
+      {text}
+      {onFlip && <button onClick={onFlip}>Flip</button>}
+      {onDel && <button onClick={onDel}>Del</button>}
+    </div>
+  );
+};
+
+const SquarePos = posed(Square)({
+  enter: { scale: 1, rotateY: 0 },
+  flipped: { rotateY: 180 },
+  exit: { scale: 0 }
+});
+
+export class UserPoseInPoseGroup extends React.Component {
+  state = { hovering: false, items: [], flipped_items: [] };
+
+  addMore = () => {
+    const item = { id: Math.random() };
+    this.setState({ items: [...this.state.items, item] });
+  };
+
+  remove = i => {
+    const newState = this.state.items.filter(item => item.id !== i.id);
+    this.setState({ items: newState });
+    console.log(newState);
+  };
+
+  flip = i => {
+    if (this.state.flipped_items.includes(i)) {
+      const newState = this.state.flipped_items.filter(
+        item => item.id !== i.id
+      );
+      this.setState({ flipped_items: newState });
+    } else {
+      this.setState({ flipped_items: [...this.state.flipped_items, i] });
+    }
+  };
+
+  render() {
+    return (
+      <UserPoseContainer>
+        <Square
+          key={`s`}
+          onClick={this.addMore}
+          style={{ background: "blue", width: 100, height: 100 }}
+        />
+        <PoseGroup>
+          {this.state.items.map((i, index) => {
+            const should_flip = this.state.flipped_items.includes(i);
+            console.log(should_flip);
+            return (
+              <SquarePos
+                key={`s-${i.id}`}
+                text={i.id}
+                style={{ background: "red", width: 100, height: 100 }}
+                pose={should_flip ? "flipped" : "enter"}
+                onDel={() => this.remove(i)}
+                onFlip={() => this.flip(i)}
+              />
+            );
+          })}
+        </PoseGroup>
+      </UserPoseContainer>
     );
   }
 }

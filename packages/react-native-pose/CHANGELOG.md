@@ -2,6 +2,12 @@
 
 React Native Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.3.0] 2018-05-10
+
+### Added
+
+- `initialPose` prop for animating on mount.
+
 ## [0.2.1] 2018-05-08
 
 - Release

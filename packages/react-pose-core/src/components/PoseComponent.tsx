@@ -13,7 +13,8 @@ const filterProps = ({
   onUnmount,
   Component,
   pose,
-  poseKey,
+  initialPose,
+  Key,
   draggable,
   onDragStart,
   onDragEnd,
@@ -37,7 +38,13 @@ class PoseComponent extends React.PureComponent<PoseComponentProps> {
   constructor(props: PoseComponentProps) {
     super(props);
 
-    const { poseConfig, factoryConfig, registerAsChild, pose, initialPose } = props;
+    const {
+      poseConfig,
+      factoryConfig,
+      registerAsChild,
+      pose,
+      initialPose
+    } = props;
     const {
       transformConfig,
       poseFactory,

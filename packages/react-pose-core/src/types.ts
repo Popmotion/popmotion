@@ -18,6 +18,7 @@ export type PoseContextProps = {
 export type PoseComponentProps = {
   withParent?: boolean;
   pose?: CurrentPose;
+  initialPose?: CurrentPose;
   children?: React.ReactNode | ChildAsFunction;
   poseKey?: any;
   [key: string]: any;

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { CurrentPose } from '../components/PoseElement.types';
 import { ReactElement } from 'react';
+import { CurrentPose } from '../components/PoseElement.types';
 import { Props, State } from '../components/PoseGroup';
 const { Children, cloneElement } = React;
 
@@ -58,10 +58,10 @@ const mergeChildren = ({
 
   incomingChildren.forEach(child => {
     const newChildProps = entering.has(child.key as string)
-      ? { initialPose: preEnterPose, pose: enterPose }
+      ? { initialPose: preEnterPose, _pose: enterPose }
       : moving.has(child.key as string) && flipMove
-        ? { pose: [enterPose, 'flip'] }
-        : { pose: enterPose };
+        ? { _pose: [enterPose, 'flip'] }
+        : { _pose: enterPose };
 
     children.push(cloneElement(child, newChildProps));
   });
@@ -69,7 +69,7 @@ const mergeChildren = ({
   leaving.forEach(key => {
     const child = displayedChildren.find(c => c.key === key);
     const newChild = cloneElement(child, {
-      pose: exitPose,
+      _pose: exitPose,
       onPoseComplete: removeFromTree(key),
       popFromFlow: flipMove
     });

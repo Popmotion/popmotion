@@ -1,6 +1,6 @@
 {
   "name": "popmotion-pose",
-  "version": "1.4.2",
+  "version": "1.4.4",
   "description": "A declarative animation library for HTML and SVG",
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "popmotion": "^8.1.22",
-    "pose-core": "^0.5.0"
+    "pose-core": "^0.5.2"
   },
   "unpkg": "./dist/popmotion-pose.js",
   "prettier": {

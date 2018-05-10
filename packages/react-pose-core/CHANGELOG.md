@@ -2,6 +2,10 @@
 
 React Pose Core adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.2.0] 2018-05-10
+
+- Adding `initialPose` prop.
+
 ## [0.1.0] 2018-05-06
 
 - Adding `filterConfig` prop.

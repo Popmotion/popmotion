@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.1.22] 2018-05-10
+
+### Fixed
+
+* If an action stops more than once, `parallel` doesn't increase the stop counter.
+
 ## [8.1.22] 2018-03-23
 
 ### Fixed

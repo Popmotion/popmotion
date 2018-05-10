@@ -42,8 +42,7 @@ const poseFactory = <V, A, C, P>({
   );
 
   // If set, add parent values to ancestor chain
-  const { parentValues } = config;
-  const ancestorValues = config.ancestorValues || [];
+  const { parentValues, ancestorValues = [] } = config;
   if (parentValues) ancestorValues.unshift({ values: parentValues });
 
   const activeActions: ActiveActions<C> = new Map();

@@ -21,6 +21,7 @@ export type PoseContextProps = {
 export type PoseElementProps = {
   children?: any;
   pose?: CurrentPose;
+  _pose?: CurrentPose;
   initialPose?: CurrentPose;
   withParent?: boolean;
   onValueChange?: { [key: string]: (v: any) => any };

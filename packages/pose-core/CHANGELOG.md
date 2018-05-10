@@ -2,6 +2,12 @@
 
 Pose Core adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.5.2] 2018-05-10
+
+### Fixed
+
+- Creating default `ancestorValues` if none exists.
+
 ## [0.5.1] 2018-05-10
 
 ### Fixed

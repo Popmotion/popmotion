@@ -2,6 +2,35 @@
 
 React Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.6.3] 2018-05-10
+
+### Added
+
+- Removing an errant console.log. Who needs linting?
+
+## [1.6.2] 2018-05-10
+
+### Added
+
+- IE11 support. Use posed.div, button, a, li or span.
+
+## [1.6.1] 2018-05-10
+
+### Fixed
+
+- Now merging `enter`/`exit` poses with user-set poses when posed components are used within a `PoseGroup`
+
+### Added
+
+- New warning if user isn't passing `hostRef` to underlying DOM element.
+
+## [1.6.0] 2018-05-10
+
+### Updated
+
+- `popmotion-pose@1.4.2`
+- Adding error messages.
+
 ## [1.5.3] 2018-05-04
 
 ### Fixed

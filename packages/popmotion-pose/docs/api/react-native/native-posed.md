@@ -72,6 +72,10 @@ export default ({ isOpen }) => (
 
 The name of one or more poses to set to.
 
+### `initialPose?: string | string[]`
+
+The name of one or more poses to set to before the component mounts. Once the component mounts, it will transition from this pose into `pose`.
+
 ### `poseKey?: string | number`
 
 If `poseKey` changes, it'll force the posed component to transition to the current `pose`, even if it hasn't changed.

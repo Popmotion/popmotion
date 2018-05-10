@@ -15,7 +15,8 @@ import {
   ReactPose,
   ReactPoseChildren,
   Group,
-  EmailList
+  EmailList,
+  UserPoseInPoseGroup
 } from "./plugins/react-pose";
 
 storiesOf("Plugin: Pose", module)
@@ -25,13 +26,14 @@ storiesOf("Plugin: Pose", module)
   .add("manual values", () => <PoserManualValues />)
   .add("drag", () => <PoseDrag />)
   .add("opacity", () => <PoseOpacity />)
-.add('full screen flip', () => <PoseFullScreenFlip />);
+  .add("full screen flip", () => <PoseFullScreenFlip />);
 
 storiesOf("Plugin: React Pose", module)
   .add("pose", () => <ReactPose />)
   .add("children", () => <ReactPoseChildren />)
   .add("group", () => <Group />)
-  .add("email list", () => <EmailList />);
+  .add("email list", () => <EmailList />)
+  .add("user-defined poses within PoseGroup", () => <UserPoseInPoseGroup />);
 
 // import { Decay, DecayModifyTarget, DecayPower, DecayTimeConstant } from './decay';
 // import { Keyframes, KeyframesDuration, KeyframesLoop, KeyframesLinear, KeyframesTimes } from './keyframes';
@@ -42,7 +44,7 @@ storiesOf("Plugin: React Pose", module)
 // import { TimelineTest } from './timeline';
 // import { Chain, Composite, Delay, Crossfade, Merge, Parallel, Stagger } from './compositors';
 //import { DraggableDOM, DraggableReact } from './plugins/draggable';
-//import { SpinnableDOM, SpinnableReact } from './plugins/spinnable';
+// import { SpinnableDOM } from "./plugins/spinnable";
 //import { PopmotionReact } from './plugins/react';
 
 // storiesOf('decay', module)
@@ -101,9 +103,7 @@ storiesOf("Plugin: React Pose", module)
 // .add('draggable', () => <DraggableDOM />)
 // .add('draggable React', () => <DraggableReact />);
 
-// storiesOf('Plugin: Spinnable', module)
-// .add('spinnable', () => <SpinnableDOM />)
-// .add('spinnable React', () => <SpinnableReact />);
+// storiesOf("Plugin: Spinnable", module).add("spinnable", () => <SpinnableDOM />);
 
 // storiesOf('Plugin: React', module)
 // .add('react', () => <PopmotionReact />)

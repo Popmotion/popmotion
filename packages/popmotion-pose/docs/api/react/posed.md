@@ -1,5 +1,5 @@
 ---
-title: Posed component
+title: Posed
 description: Create a posed component
 category: react
 ---
@@ -137,6 +137,16 @@ const Sidebar = styled(posed.nav(sidebarProps))`
 ```javascript
 () => <Sidebar pose="closed" className="my-class" />
 ```
+
+### Internet Explorer 11 support
+
+If you need to support IE11 (poor thing), you're limited to:
+
+- `posed.div`
+- `posed.span`
+- `posed.a`
+- `posed.button`
+- `posed.li`
 
 ## Props
 

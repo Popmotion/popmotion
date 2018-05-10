@@ -7,12 +7,6 @@
 [![Twitter Follow](https://img.shields.io/twitter/follow/popmotionjs.svg?style=social&label=Follow)](http://twitter.com/popmotionjs)
 [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/popmotion)
 
-Pose is a declarative DOM animation library for HTML, SVG & React. It removes all the plumbing typically associated with JavaScript animation and reduces it to code like this:
-
-```javascript
-sidePanel.set('open')
-```
-
 - [Homepage](https://popmotion.io/pose)
 - [API](https://popmotion.io/pose/api)
 - [Get started](https://popmotion.io/pose/learn/get-started)
