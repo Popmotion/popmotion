@@ -138,16 +138,6 @@ const Sidebar = styled(posed.nav(sidebarProps))`
 () => <Sidebar pose="closed" className="my-class" />
 ```
 
-### Internet Explorer 11 support
-
-If you need to support IE11 (poor thing), you're limited to:
-
-- `posed.div`
-- `posed.span`
-- `posed.a`
-- `posed.button`
-- `posed.li`
-
 ## Props
 
 ### `pose?: string | string[]`

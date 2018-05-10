@@ -2,6 +2,12 @@
 
 React Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.6.4] 2018-05-10
+
+### Added
+
+- Shamefully swapped `Proxy` for explicit list of DOM elements. This is because `Proxy` breaks client-rendered sites for googlebot.
+
 ## [1.6.3] 2018-05-10
 
 ### Added
