@@ -5,14 +5,14 @@ import {
   PoseElementProps,
   PoseContextProps
 } from './components/PoseElement.types';
-import { PoserProps } from 'popmotion-pose';
+import { DomPopmotionConfig } from 'popmotion-pose/lib/types';
 
 // TODO: Something is wrong with the TypeScript React bindings here,
 // I've had to typecast a component as a Component a couple times now.
 const PoseElementComponent = PoseElement as React.PureComponent;
 
 export type ComponentFactory = (
-  poseProps?: PoserProps
+  poseConfig?: DomPopmotionConfig
 ) => (props: PoseElementProps) => ReactElement<any>;
 
 export type Posed = {
@@ -23,13 +23,13 @@ export type Posed = {
 const componentCache = new Map<string, ComponentFactory>();
 
 const createComponentFactory = (key: string) => {
-  const componentFactory: ComponentFactory = (poseProps = {}) => ({
+  const componentFactory: ComponentFactory = (poseConfig = {}) => ({
     withParent = true,
     ...props
   }) =>
     !withParent || props.parentValues ? (
       <PoseElementComponent
-        poseProps={poseProps}
+        poseConfig={poseConfig}
         elementType={key}
         {...props}
       />
@@ -37,7 +37,7 @@ const createComponentFactory = (key: string) => {
       <PoseParentContext.Consumer>
         {(parentCtx: PoseContextProps) => (
           <PoseElementComponent
-            poseProps={poseProps}
+            poseConfig={poseConfig}
             elementType={key}
             {...props}
             {...parentCtx}
@@ -56,12 +56,10 @@ const getComponentFactory = (key: string) =>
     ? componentCache.get(key)
     : createComponentFactory(key);
 
-const posed: Posed = new Proxy(
-  function() {} as Posed,
-  {
-    get: (target, key: string) => getComponentFactory(key),
-    apply: (target, thisArg, argumentsList) => getComponentFactory(argumentsList[0]),
-  }
-);
+const posed: Posed = new Proxy(function() {} as Posed, {
+  get: (target, key: string) => getComponentFactory(key),
+  apply: (target, thisArg, argumentsList) =>
+    getComponentFactory(argumentsList[0])
+});
 
 export default posed;

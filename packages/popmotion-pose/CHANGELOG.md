@@ -1,19 +1,37 @@
 # Changelog
 
-Pose adheres to [Semantic Versioning](http://semver.org/).
+Popmotion Pose adheres to [Semantic Versioning](http://semver.org/).
+
+## [1.4.3] 2018-05-10
+
+### Fixed
+
+- Stricter check during dragging for `percent` type.
+
+## [1.4.2] 2018-05-09
+
+### Fixed
+
+- Fixing some types.
+
+## [1.4.1] 2018-05-09
+
+### Fixed
+
+- Fixing some types.
 
 ## [1.4.0] 2018-05-09
 
-## Changed
+### Changed
 
 - Migration to `pose-core`
 
-## Deprecated
+### Deprecated
 
 - `transformProps` -> `props`
 - `setTransitionProps` -> `setProps`
 
-## Fixed
+### Fixed
 
 - Positional props on poses (like `width`/`top`) can now be set as functions.
 

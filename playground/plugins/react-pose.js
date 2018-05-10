@@ -19,7 +19,9 @@ const boxProps = {
 };
 
 const Box = ({ className, children, hostRef }) => (
-  <div className={className} ref={hostRef}>{children}</div>
+  <div className={className} ref={hostRef}>
+    {children}
+  </div>
 );
 
 const StyledBox = styled(Box)`
@@ -27,10 +29,10 @@ const StyledBox = styled(Box)`
   width: 100px;
   height: 100px;
   transform-origin: 0 0;
-`
+`;
 const AnimatedBox = posed(StyledBox)({
-  enter: { opacity: 1, y: '0%' },
-  exit: { opacity: 0, y: '30%' },
+  enter: { opacity: 1, y: "0%" },
+  exit: { opacity: 0, y: "30%" }
 });
 
 // const Box = styled(posed.div(boxProps))`
@@ -49,16 +51,26 @@ export class ReactPose extends React.PureComponent {
 
   render() {
     const { isOpen } = this.state;
-    return <PoseGroup animateOnMount>
-      <AnimatedBox key="1" />
-      <AnimatedBox key="2" />
-    </PoseGroup>
+    return (
+      <PoseGroup animateOnMount>
+        <AnimatedBox key="1" />
+        <AnimatedBox key="2" />
+      </PoseGroup>
+    );
   }
 }
 
 const sidebarProps = {
-  initialPose: "exit",
   dragBounds: { left: -100, right: 0 },
+  open: {
+    x: "0%",
+    delayChildren: 200,
+    staggerChildren: 50
+  },
+  closed: {
+    delay: 500,
+    x: "-100%"
+  },
   enter: {
     x: "0%",
     delayChildren: 200,
@@ -122,9 +134,11 @@ const itemProps = {
   }
 };
 
-const ItemStyled = styled.div`${itemStyle}`
+const ItemStyled = styled(posed.div(itemProps))`
+  ${itemStyle};
+`;
 
-const Item = ItemStyled
+const Item = ItemStyled;
 
 export class ReactPoseChildren extends React.PureComponent {
   state = { isOpen: false };

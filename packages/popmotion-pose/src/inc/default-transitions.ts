@@ -6,6 +6,7 @@ import pointer from 'popmotion/input/pointer';
 import { interpolate } from 'popmotion/transformers';
 import { eachValue } from './transition-composers';
 import { Transition, BoundingBoxDimension } from '../types';
+import { percent } from 'style-value-types';
 
 const singleAxisPointer = (axis: string) => (from: number) =>
   pointer({ [axis]: from }).pipe((v: any) => v[axis]);
@@ -42,7 +43,7 @@ const createPointer = (
 
   // If we're not handling this axis as pixels, add a converter
   // Currently we're only handling % types but should look at vw/vh etc
-  if (type) {
+  if (type === percent) {
     transformQueue.push(
       interpolate([0, dimensions.get(measurement) as number], [0, 100])
     );

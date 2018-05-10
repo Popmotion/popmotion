@@ -1,18 +1,21 @@
-import { Poser, PoserProps } from 'popmotion-pose';
+import {
+  DomPopmotionPoser,
+  DomPopmotionConfig
+} from 'popmotion-pose/lib/types';
 
 export type ChildRegistration = {
   element: Element;
-  poserProps: PoserProps;
-  onRegistered: (poser: Poser) => void;
+  poseConfig: DomPopmotionConfig;
+  onRegistered: (poser: DomPopmotionPoser) => void;
 };
 
 export type CurrentPose = string | string[];
 
 export type PoseContextProps = {
   registerChild?: (props: ChildRegistration) => void;
-  onUnmount?: (child: Poser) => any;
+  onUnmount?: (child: DomPopmotionPoser) => any;
   getInitialPoseFromParent?: () => CurrentPose;
-  getParentPoseProps?: () => PoserProps;
+  getParentPoseConfig?: () => DomPopmotionConfig;
 };
 
 export type PoseElementProps = {
@@ -27,7 +30,7 @@ export type PoseElementProps = {
 
 export type PoseElementInternalProps = PoseElementProps & {
   elementType: any;
-  poseProps: PoserProps;
+  poseConfig: DomPopmotionConfig;
 };
 
 export type PopStyle = {

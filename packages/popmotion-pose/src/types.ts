@@ -33,6 +33,8 @@ export type Transformer = (v: any) => any;
 export interface DomPopmotionPoser
   extends Poser<Value, Action, ColdSubscription, DomPopmotionPoser> {
   addChild: (element: Element, config: PoserConfig<Value>) => DomPopmotionPoser;
+  flip: (pose: string, props: { [key: string]: any }) => Promise<any>;
+  measure: () => BoundingBox;
 }
 
 export type DomPopmotionConfig = {
@@ -73,7 +75,7 @@ export type Dimensions = {
     value: string | number,
     type?: ValueType
   ) => number;
-  measure: () => void;
+  measure: () => BoundingBox;
   has: () => boolean;
 };
 

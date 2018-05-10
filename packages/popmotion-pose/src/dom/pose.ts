@@ -70,14 +70,23 @@ const domPose = poseFactory<DomPopmotionPoser>({
 
   addListenerToValue: (key, elementStyler) => v => elementStyler.set(key, v),
 
-  readValueFromSource: (key, { elementStyler }) => elementStyler.get(key),
+  readValueFromSource: (key, { elementStyler }) => {
+    const value = elementStyler.get(key);
+    return isNaN(value) ? value : parseFloat(value);
+  },
 
   extendAPI: (api, { props, activeActions }, config) => {
     const measure = props.dimensions.measure;
     const poserApi = {
       ...api,
-      addChild: (element: Element, childConfig?: DomPopmotionConfig) =>
-        api._addChild(createPoseConfig(element, childConfig), domPose),
+      addChild: (
+        element: Element,
+        childConfig?: DomPopmotionConfig
+      ): DomPopmotionPoser =>
+        api._addChild(
+          createPoseConfig(element, childConfig),
+          domPose
+        ) as DomPopmotionPoser,
       measure,
       flip: (op: Function) => {
         if (op) {
@@ -95,5 +104,8 @@ const domPose = poseFactory<DomPopmotionPoser>({
   }
 });
 
-export default (element: Element, config: DomPopmotionConfig) =>
-  domPose(createPoseConfig(element, config));
+export default (
+  element: Element,
+  config: DomPopmotionConfig
+): DomPopmotionPoser =>
+  domPose(createPoseConfig(element, config)) as DomPopmotionPoser;

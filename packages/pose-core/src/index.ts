@@ -37,12 +37,13 @@ const poseFactory = <V, A, C, P>({
   config: PoserConfig<V>
 ): Poser<V, A, C, P> => {
   warning(
-    config.hasOwnProperty('transformProps'),
+    !config.hasOwnProperty('transformProps'),
     'config.transformProps is deprecated. Use config.props instead.'
   );
 
   // If set, add parent values to ancestor chain
-  const { parentValues, ancestorValues } = config;
+  const { parentValues } = config;
+  const ancestorValues = config.ancestorValues || [];
   if (parentValues) ancestorValues.unshift({ values: parentValues });
 
   const activeActions: ActiveActions<C> = new Map();

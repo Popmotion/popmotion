@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { createContext, createElement } from 'react';
-import poseFactory, { Poser, PoserProps } from 'popmotion-pose';
+import poseFactory from 'popmotion-pose';
+import {
+  DomPopmotionPoser,
+  DomPopmotionConfig
+} from 'popmotion-pose/lib/types';
 import {
   ChildRegistration,
   CurrentPose,
@@ -8,6 +12,7 @@ import {
   PoseElementInternalProps,
   PopStyle
 } from './PoseElement.types';
+import { warning } from 'hey-listen';
 
 export const PoseParentContext = createContext({});
 
@@ -35,13 +40,13 @@ const hasPose = (pose: CurrentPose, key: string) =>
 
 const objectToMap = (obj: { [key: string]: any }): Map<string, any> =>
   Object.keys(obj).reduce((map, key) => {
-    map.set(key, obj[key]);
+    map.set(key, { raw: obj[key] });
     return map;
   }, new Map());
 
 class PoseElement extends React.PureComponent<PoseElementInternalProps> {
   props: PoseElementInternalProps;
-  poser: Poser;
+  poser: DomPopmotionPoser;
   ref: Element;
   styleProps: { [key: string]: any };
   children: Set<ChildRegistration> = new Set();
@@ -57,7 +62,7 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
       if (this.poser) this.flushChildren();
     },
     onUnmount: child => this.poser.removeChild(child),
-    getParentPoseProps: () => this.props.poseProps,
+    getParentPoseConfig: () => this.props.poseConfig,
     getInitialPoseFromParent: () => this.getInitialPose()
   };
 
@@ -90,14 +95,14 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
     const {
       children,
       elementType,
-      poseProps,
+      poseConfig,
       onChange, // Deprecated for 2.0.0
       onValueChange,
       innerRef,
       pose,
       initialPose,
       onPoseComplete,
-      getParentPoseProps,
+      getParentPoseConfig,
       registerChild,
       onUnmount,
       getInitialPoseFromParent,
@@ -169,7 +174,7 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
     if (!this.ref) return;
 
     const {
-      poseProps,
+      poseConfig,
       onChange, // Deprecated 2.0.0
       onValueChange,
       registerChild,
@@ -178,12 +183,13 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
       onDragStart,
       onDragEnd
     } = this.props;
-    const props: PoserProps = {
-      ...poseProps,
+
+    const config: DomPopmotionConfig = {
+      ...poseConfig,
       initialPose: this.getInitialPose(),
-      values: values || poseProps.values,
-      parentValues: parentValues ? objectToMap(parentValues) : parentValues,
-      transitionProps: this.getSetProps(),
+      values: values || poseConfig.values,
+      parentValues: parentValues ? objectToMap(parentValues) : undefined,
+      props: this.getSetProps(),
       onDragStart,
       onDragEnd,
       onChange: onValueChange
@@ -191,13 +197,18 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
         : typeof onChange !== 'function' ? onChange : undefined // 2.0.0 set to just `onValueChange`
     };
 
+    warning(
+      onChange === undefined || typeof onChange === 'function',
+      'The onChange prop is deprecated. Use onValueChange instead.'
+    );
+
     // If first in tree
     if (!registerChild) {
-      this.initPoser(poseFactory(this.ref, props));
+      this.initPoser(poseFactory(this.ref, config));
     } else {
       registerChild({
         element: this.ref,
-        poserProps: props,
+        poseConfig: config,
         onRegistered: poser => this.initPoser(poser)
       });
     }
@@ -209,7 +220,7 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
 
   componentDidUpdate(prevProps: PoseElementInternalProps) {
     const { pose } = this.props;
-    this.poser.setTransitionProps(this.getSetProps());
+    this.poser.setProps(this.getSetProps());
     if (pose !== prevProps.pose || pose === 'flip') this.setPose(pose);
   }
 
@@ -220,7 +231,7 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
     this.poser.destroy();
   }
 
-  initPoser(poser: Poser) {
+  initPoser(poser: DomPopmotionPoser) {
     this.poser = poser;
     this.flushChildren();
 
@@ -238,8 +249,8 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
   }
 
   flushChildren() {
-    this.children.forEach(({ element, poserProps, onRegistered }) =>
-      onRegistered(this.poser.addChild(element, poserProps))
+    this.children.forEach(({ element, poseConfig, onRegistered }) =>
+      onRegistered(this.poser.addChild(element, poseConfig))
     );
 
     this.children.clear();
