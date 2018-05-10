@@ -15,6 +15,10 @@ But there's plenty of instances where we want full control over our animation. F
 
 Just like CSS, every pose has a `transition` property. This is a function you can optionally provide that creates a [Popmotion animation](/api) (or `false`, for no animation).
 
+If you haven't installed Popmotion, you can do so locally with `npm install popmotion`. Pose uses Popmotion as its engine, so this won't add anything to your filesize.
+
+If you're following along with the CodePen, `popmotion` is already available as a global variable.
+
 Replace the `config` you added to either the [Pose](https://codepen.io/popmotion/pen/bvqJbV?editors=0010) or [React Pose](https://codepen.io/popmotion/pen/mxmrPZ?editors=0010) playgrounds with the following:
 
 ```javascript

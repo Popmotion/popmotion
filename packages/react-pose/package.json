@@ -1,6 +1,6 @@
 {
   "name": "react-pose",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "A declarative animation library for React",
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/popmotion"
+    "url": "https://github.com/popmotion/packages/react-pose"
   },
   "keywords": [
     "animation",

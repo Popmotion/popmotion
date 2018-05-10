@@ -4,8 +4,6 @@ description: Create a Poser
 category: react
 ---
 
-**Note:** React Pose is built with React 16.3.0, which is currently in alpha.
-
 # `PoseGroup`
 
 The `PoseGroup` component manages `enter` and `exit` animations on its direct children as they enter and exit the component tree.
