@@ -36,11 +36,11 @@ const content = convertMarkdown(`
 
 Stylers are performant style setters for HTML and SVG elements, optimised to work with animation libraries.
 
-They batch updates to a single step on the [Framesync](/api/framesync) render loop, preventing layout thrashing or unnecessary renders.
+They batch updates to a single step on the [Framesync](/api/framesync) render loop, preventing layout thrashing and unnecessary renders.
 
 They also allow \`transform\` properties to be set and animated independently.
 
-The \`styler\` factory function is used to create a new styler for a single element.
+The \`styler\` factory function is used to create a new styler for a single element or \`window\`.
 
 ## Usage
 
@@ -67,9 +67,9 @@ divStyler.set({ x: 100 });
 
 Stylers understand default property types for many [CSS](/stylefire/api/html) and [SVG](/stylefire/api/svg) props. So even though we just set \`x\` as \`100\`, Stylefire will output \`transform: translateX(100px)\`.
 
-### Hard render
+### Forced render
 
-Sometimes we need to render outside of the render loop. For instance, if we want to set some properties and then immediately measure the state of the element.
+Sometimes we need to force a render outside of the render loop. For instance, if we want to set some properties and then immediately measure the state of the element.
 
 We can do so with the \`render\` method:
 
@@ -88,7 +88,7 @@ const pathStyler = styler(path);
 pathStyler.get("pathLength");
 \`\`\`
 
-**Note:** Due to the extra filesize overhead in reading CSS \`transform\` properties, Stylefire will return the default value for any transform properties unless they've already been \`set\`.
+**Note:** Due to the considerable filesize overhead in reading CSS \`transform\` properties, Stylefire will return the default value for any transform properties unless they've already been \`set\`.
 
 ## Methods
 

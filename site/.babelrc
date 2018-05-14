@@ -1,10 +1,5 @@
 {
-  "presets": [
-    "next/babel",
-    "es2015-subset-loose",
-    "react",
-    "stage-0"
-  ],
+  "presets": ["next/babel"],
   "plugins": [
     "transform-react-remove-prop-types",
     "transform-export-extensions",
@@ -12,13 +7,12 @@
     "transform-react-constant-elements",
     "transform-strict-mode",
     ["babel-plugin-root-import"],
-    ["transform-runtime", {
-      "helpers": false,
-      "polyfill": false
-    }],
-    ["styled-components", {
-      "ssr": true
-    }]
+    [
+      "styled-components",
+      {
+        "ssr": true
+      }
+    ]
   ],
   "env": {
     "development": {

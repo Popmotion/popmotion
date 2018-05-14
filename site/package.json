@@ -58,9 +58,11 @@
     "three": "^0.88.0"
   },
   "devDependencies": {
+    "@mdx-js/loader": "^0.9.0",
+    "@mdx-js/mdx": "^0.9.0",
     "babel-plugin-styled-components": "^1.1.4",
     "marksy": "^5.0.0",
-    "next": "^4.2.1",
+    "next": "^6.0.2",
     "popmotion-pose": "^1.0.24",
     "react-pose": "^1.0.1",
     "s3": "^4.4.0"

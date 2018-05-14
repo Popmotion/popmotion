@@ -34,7 +34,7 @@ const convertMarkdown = marksy({
 const content = convertMarkdown(`
 # \`createStylerFactory\`
 
-By default, \`styler\` outputs stylers for HTML and SVG elements. It's possible to create a \`styler\` for any JavaScript API that might benefit from render batching or cached state, for instance [A-Frame](https://aframe.io).
+By default, \`styler\` outputs stylers for HTML and SVG elements. It's possible to create a \`styler\` for any JavaScript API that might benefit from render batching or cached state.
 
 For this, we can use the \`createStylerFactory\` function.
 
@@ -43,7 +43,7 @@ For this, we can use the \`createStylerFactory\` function.
 ### Import
 
 \`\`\`javascript
-import { createStylerFactory } from 'stylefire'
+import { createStylerFactory } from "stylefire";
 \`\`\`
 
 ### Create a styler factory
@@ -83,7 +83,7 @@ A key-value map of aliased properties where you can map user-facing properties t
 \`createStylerFactory\` returns a styler factory:
 
 \`\`\`javascript
-const myStylerFactory = createStylerFactory({ onRead, onRender })
+const myStylerFactory = createStylerFactory({ onRead, onRender });
 \`\`\`
 
 This is a function that accepts one argument, an object of props. These props can be anything - they are for you to use in \`onRead\` and \`onRender\` methods.
@@ -91,26 +91,27 @@ This is a function that accepts one argument, an object of props. These props ca
 Here's an incredibly simple example of a styler that simply reads and writes any object provided to it:
 
 \`\`\`javascript
-import { createStylerFactory } from 'stylefire'
+import { createStylerFactory } from "stylefire";
 
 const exampleStyler = createStylerFactory({
   onRead: (key, props) => props[key],
   onRender: (state, props, changedValues) => {
-    changedValues.forEach(key => props[key] = state[key])
+    changedValues.forEach(key => (props[key] = state[key]));
   }
-})
+});
 
-const myExampleStyler = exampleStyler({ red: 255, green: 255, blue: 255 })
-myExampleStyler.set('green', 0)
-\`\`\``);
+const myExampleStyler = exampleStyler({ red: 255, green: 255, blue: 255 });
+myExampleStyler.set("green", 0);
+\`\`\`
+`);
 
 const Page = ({ section }) => (
   <ContentTemplate
     id="create-styler"
     section="api"
-    undefined
+    category="utils"
     title="Create styler factory"
-    description="null"
+    description="Create custom stylers"
     published=""
     theme="stylefire"
     undefined

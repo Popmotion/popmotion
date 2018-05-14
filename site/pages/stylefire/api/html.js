@@ -34,7 +34,7 @@ const convertMarkdown = marksy({
 const content = convertMarkdown(`
 # HTML styler
 
-When [\`styler\`](/stylefire/stylefire) is provided an HTML element, it returns a styler capable of setting CSS and scroll props.
+When [\`styler\`](/stylefire/stylefire) is provided a \`HTMLElement\`, it returns a styler capable of setting CSS and scroll props.
 
 ## Config
 

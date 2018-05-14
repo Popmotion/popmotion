@@ -1,6 +1,7 @@
 ---
 title: Create styler factory
-description:
+description: Create custom stylers
+category: utils
 ---
 
 # `createStylerFactory`

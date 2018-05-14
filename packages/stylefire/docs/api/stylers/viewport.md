@@ -1,5 +1,5 @@
 ---
-title: Viewport styler
+title: Viewport
 description: Performant styler viewport scrolling
 category: styler-types
 ---
