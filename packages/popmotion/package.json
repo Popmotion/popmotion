@@ -33,8 +33,7 @@
   "analyze": true,
   "license": "MIT",
   "scripts": {
-    "build":
-      "npm run test && tsc && tsc --outDir lib && NODE_ENV=production webpack && npm run measure",
+    "build": "npm run test && tsc && tsc --outDir lib && NODE_ENV=production webpack && npm run measure",
     "prepublish": "npm run build",
     "postpublish": "npm run clean",
     "watch": "NODE_ENV=development webpack --progress --colors --watch",
@@ -58,7 +57,10 @@
     "webpack": "^3.0.0"
   },
   "jest": {
-    "moduleFileExtensions": ["ts", "js"],
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
     "transform": {
       "\\.(ts)$": "../node_modules/ts-jest/preprocessor.js"
     },

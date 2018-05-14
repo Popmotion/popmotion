@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "ES2015",
     "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,

@@ -3,6 +3,7 @@
   "version": "1.4.4",
   "description": "A declarative animation library for HTML and SVG",
   "main": "lib/index.js",
+  "module": "es/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
     "bundle": "NODE_ENV=production webpack",
@@ -29,9 +30,10 @@
     "env"
   ],
   "devDependencies": {
-    "typescript": "^2.7.2",
     "prettier": "1.11.1",
-    "webpack": "^3.11.0"
+    "rollup-plugin-node-resolve": "^3.3.0",
+    "rollup-plugin-typescript2": "^0.14.0",
+    "typescript": "^2.7.2"
   },
   "dependencies": {
     "popmotion": "^8.1.22",
