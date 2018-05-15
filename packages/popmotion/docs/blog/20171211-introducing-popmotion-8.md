@@ -191,7 +191,7 @@ justTwo
   .start(console.log); // '4px'
 ```
 
-In the last 6 months Popmotion has spun out [Framesync](/api/framesync) and [Stylefire](/api/stylefire) as standalone libraries.
+In the last 6 months Popmotion has spun out [Framesync](/api/framesync) and [Stylefire](/stylefire) as standalone libraries.
 
 It's helped me take greater care and consideration over where to draw the lines between the role and responsibilities of various parts of the library and enables people to use the isolated functionality in their own code or libraries.
 
