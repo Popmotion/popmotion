@@ -3,9 +3,6 @@
   "plugins": [
     "transform-react-remove-prop-types",
     "transform-export-extensions",
-    "transform-react-jsx",
-    "transform-react-constant-elements",
-    "transform-strict-mode",
     ["babel-plugin-root-import"],
     [
       "styled-components",

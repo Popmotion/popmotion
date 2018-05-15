@@ -7,20 +7,6 @@ const fileTemplate = routes => `
 module.exports = {
   exportPathMap: function () {
     return ${routes};
-  },
-  pageExtensions: ['js', 'jsx', 'md', 'mdx'],
-  webpack: (config, { defaultLoaders }) => {
-    config.module.rules.push({
-      test: /\.md$/,
-      use: [
-        defaultLoaders.babel,
-        {
-          loader: '@mdx-js/loader'
-        }
-      ]
-    })
-
-    return config
   }
 };
 `;

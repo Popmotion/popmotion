@@ -1,1 +1,4 @@
-# Hello world
+Stylefire provides:
+
+* **Render batching:**
+* **Independent**

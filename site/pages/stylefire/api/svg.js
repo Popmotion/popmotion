@@ -66,7 +66,7 @@ In this example you can change the real \`path\` shape and length without having
 
 ### Supported props
 
-**All SVG attrivutes are supported**.
+**All SVG attributes are supported**.
 
 ## Prop types
 
