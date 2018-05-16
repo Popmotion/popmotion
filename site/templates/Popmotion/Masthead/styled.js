@@ -101,6 +101,7 @@ export const CTA = styled.div`
   transform: skewX(${SKEW});
   transition: transform 100ms cubic-bezier(.17,.67,.34,1.54);
   box-shadow: 0 2px 0 0 black;
+  justify-content: stretch;
 
   &:hover {
     transform: skewX(${SKEW}) scale(1.1);
@@ -114,6 +115,9 @@ export const CTA = styled.div`
     text-decoration: none;
     padding: ${cols(1)} ${cols(2)};
     transform: skewX(${UNSKEW});
+    text-align: center;
+    display: block;
+    width: 100%;
   }
 
   ${media.medium`

@@ -53,6 +53,7 @@
     "react": "^16.3.0-rc.0",
     "react-dom": "^16.3.0-rc.0",
     "react-live": "^1.7.0",
+    "react-scrollspy": "^3.3.5",
     "react-syntax-highlighter": "^5.8.0",
     "styled-components": "^2.2.3",
     "three": "^0.88.0"
@@ -63,9 +64,11 @@
     "babel-plugin-transform-export-extensions": "^6.22.0",
     "babel-plugin-transform-react-constant-elements": "^6.23.0",
     "babel-preset-stage-0": "^6.24.1",
+    "file-loader": "^1.1.11",
     "marksy": "^5.0.0",
     "next": "^4.2.1",
     "popmotion-pose": "^1.0.24",
+    "raw-loader": "^0.5.1",
     "react-pose": "^1.0.1",
     "s3": "^4.4.0",
     "webpack": "^4.6.0"

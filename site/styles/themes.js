@@ -67,25 +67,25 @@ const themeSettings = {
   stylefire: {
     id: 'stylefire',
     name: 'Stylefire',
-    url: '/api/stylefire',
-    tagline: 'Simple HTML & SVG styler optimised for animation',
-    sections: ['api', 'learn', 'community'],
+    url: '/stylefire',
+    tagline: 'Simple HTML & SVG styler, optimised for animation',
+    sections: ['api', 'community'],
     Logo: StylefireLogo,
     homepageLogoSize: {
-      width: 253,
-      height: 80
+      width: 301,
+      height: 83
     },
     headerLogoSize: {
-      width: 127,
-      height: 40
+      width: 130,
+      height: 36
     },
     footerLogoSize: {
       width: 188,
       height: 55
     },
-    mastheadBackground: `linear-gradient(${color.pink}, ${color.purple})`,
-    actionColor: color.blue,
-    brandColor: color.purple,
+    mastheadBackground: `linear-gradient(${color.orange}, ${color.orangeBurn})`,
+    actionColor: color.orangeBurn,
+    brandColor: color.orange,
     shareImage: 'https://popmotion.io/static/images/pose-twitter-card.png'
   },
   framesync: {

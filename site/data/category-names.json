@@ -12,5 +12,6 @@
   "reactions": "Reactions",
   "dom": "DOM",
   "react": "React",
-  "react-native": "React Native"
+  "react-native": "React Native",
+  "stylers": "Stylers"
 }

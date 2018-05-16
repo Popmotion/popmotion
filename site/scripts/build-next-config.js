@@ -7,6 +7,21 @@ const fileTemplate = routes => `
 module.exports = {
   exportPathMap: function () {
     return ${routes};
+  },
+  webpack: (config, props) => {
+    config.module.rules.push({
+      test: /\.md$/,
+      loader: 'emit-file-loader',
+      options: {
+        name: 'dist/[path][name].[ext]',
+      },
+    },
+    {
+      test: /\.md$/,
+      loader: 'raw-loader',
+    })
+
+    return config
   }
 };
 `;
@@ -20,6 +35,8 @@ const generateRouteDefinitions = data => {
     '/pose': { page: '/pose' },
     '/pose/api': { page: '/pose/api' },
     '/page-not-found': { page: '/_error' },
+    '/stylefire': { page: '/stylefire' },
+    '/stylefire/api': { page: '/stylefire/api' },
   `;
 
   Object.keys(data).forEach(siteId => {
