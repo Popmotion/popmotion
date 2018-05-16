@@ -36,6 +36,7 @@ const generateRouteDefinitions = data => {
     '/pose/api': { page: '/pose/api' },
     '/page-not-found': { page: '/_error' },
     '/stylefire': { page: '/stylefire' },
+    '/stylefire/api': { page: '/stylefire/api' },
   `;
 
   Object.keys(data).forEach(siteId => {

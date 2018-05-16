@@ -53,6 +53,7 @@
     "react": "^16.3.0-rc.0",
     "react-dom": "^16.3.0-rc.0",
     "react-live": "^1.7.0",
+    "react-scrollspy": "^3.3.5",
     "react-syntax-highlighter": "^5.8.0",
     "styled-components": "^2.2.3",
     "three": "^0.88.0"

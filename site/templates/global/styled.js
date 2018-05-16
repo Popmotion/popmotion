@@ -96,7 +96,15 @@ export const H3 = Centered.withComponent('h3').extend`
   }
 `;
 
-export const H4 = Centered.withComponent('h3').extend`
+export const H4 = Centered.withComponent('h4').extend`
+  ${fontSize(20)}
+  margin-top: 2.2rem;
+  margin-bottom: 1.1rem;
+  font-weight: 600;
+  ${media.medium`${fontSize(16)}`}
+`;
+
+export const H5 = Centered.withComponent('h5').extend`
   ${fontSize(18)}
   margin-top: 2.2rem;
   margin-bottom: 1.1rem;
