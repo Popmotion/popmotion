@@ -10,7 +10,7 @@ export default () => (
         Pick and choose any part of Popmotion by importing modules individually.
       </BlurbText>
       <BlurbText style={{ marginBottom: 40, maxWidth: '600px' }}>
-        Or take it all for 11.5kb!
+        Or take it all for 11kb!
       </BlurbText>
       <CTA brandFill>
         <Link href="/learn/get-started" prefetch>

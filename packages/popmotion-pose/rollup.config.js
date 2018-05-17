@@ -2,6 +2,7 @@ import typescript from 'rollup-plugin-typescript2';
 import uglify from 'rollup-plugin-uglify';
 import resolve from 'rollup-plugin-node-resolve';
 import replace from 'rollup-plugin-replace';
+import commonjs from 'rollup-plugin-commonjs';
 
 const typescriptConfig = { cacheRoot: 'tmp/.rpt2_cache' };
 const noDeclarationConfig = Object.assign({}, typescriptConfig, {
@@ -14,9 +15,9 @@ const config = {
 
 const umd = Object.assign({}, config, {
   output: {
-    file: 'dist/popmotion.js',
+    file: 'dist/popmotion-pose.dev.js',
     format: 'umd',
-    name: 'popmotion',
+    name: 'pose',
     exports: 'named',
     globals: {
       'style-value-types': 'valueTypes'
@@ -26,13 +27,14 @@ const umd = Object.assign({}, config, {
     typescript(noDeclarationConfig),
     replace({
       'process.env.NODE_ENV': JSON.stringify('production')
-    })
+    }),
+    commonjs()
   ]
 });
 
 const umdProd = Object.assign({}, umd, {
   output: Object.assign({}, umd.output, {
-    file: 'dist/popmotion.global.min.js'
+    file: 'dist/popmotion-pose.js'
   }),
   plugins: [
     typescript(noDeclarationConfig),
@@ -40,17 +42,18 @@ const umdProd = Object.assign({}, umd, {
     replace({
       'process.env.NODE_ENV': JSON.stringify('development')
     }),
-    uglify()
+    uglify(),
+    commonjs()
   ]
 });
 
 const es = Object.assign({}, config, {
   output: {
-    file: 'dist/popmotion.es.js',
+    file: 'dist/popmotion-pose.es.js',
     format: 'es',
     exports: 'named'
   },
-  plugins: [typescript(noDeclarationConfig)]
+  plugins: [typescript(noDeclarationConfig), commonjs()]
 });
 
 const cjs = Object.assign({}, config, {
@@ -59,7 +62,7 @@ const cjs = Object.assign({}, config, {
     format: 'cjs',
     exports: 'named'
   },
-  plugins: [typescript(typescriptConfig)]
+  plugins: [typescript(typescriptConfig), commonjs()]
 });
 
 export default [umd, umdProd, es, cjs];

@@ -2,6 +2,12 @@
 
 Popmotion Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.0] 2018-05-10
+
+### Updated
+
+- Moving to Rollup for distribution.
+
 ## [1.4.4] 2018-05-10
 
 ### Updated

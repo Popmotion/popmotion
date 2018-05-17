@@ -12,41 +12,9 @@ const config = {
   input: 'src/index.ts'
 };
 
-const umd = Object.assign({}, config, {
-  output: {
-    file: 'dist/popmotion.js',
-    format: 'umd',
-    name: 'popmotion',
-    exports: 'named',
-    globals: {
-      'style-value-types': 'valueTypes'
-    }
-  },
-  plugins: [
-    typescript(noDeclarationConfig),
-    replace({
-      'process.env.NODE_ENV': JSON.stringify('production')
-    })
-  ]
-});
-
-const umdProd = Object.assign({}, umd, {
-  output: Object.assign({}, umd.output, {
-    file: 'dist/popmotion.global.min.js'
-  }),
-  plugins: [
-    typescript(noDeclarationConfig),
-    resolve(),
-    replace({
-      'process.env.NODE_ENV': JSON.stringify('development')
-    }),
-    uglify()
-  ]
-});
-
 const es = Object.assign({}, config, {
   output: {
-    file: 'dist/popmotion.es.js',
+    file: 'dist/pose-core.es.js',
     format: 'es',
     exports: 'named'
   },
@@ -62,4 +30,4 @@ const cjs = Object.assign({}, config, {
   plugins: [typescript(typescriptConfig)]
 });
 
-export default [umd, umdProd, es, cjs];
+export default [es, cjs];

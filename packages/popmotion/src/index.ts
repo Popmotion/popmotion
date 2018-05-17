@@ -34,7 +34,16 @@ import parallel from './compositors/parallel';
 import schedule from './compositors/schedule';
 import stagger from './compositors/stagger';
 
-export { chain, composite, crossfade, delay, merge, parallel, schedule, stagger };
+export {
+  chain,
+  composite,
+  crossfade,
+  delay,
+  merge,
+  parallel,
+  schedule,
+  stagger
+};
 
 // Includes
 import * as calc from './calc';
@@ -44,9 +53,16 @@ import * as transform from './transformers';
 export { calc, easing, transform };
 
 // Stylefire
-import styler from 'stylefire';
-import css from 'stylefire/css';
-import svg from 'stylefire/svg';
+import styler, { Styler } from 'stylefire';
+import { warning } from 'hey-listen';
+const css = (element: HTMLElement, props: Object): Styler => {
+  warning(false, 'css() is deprecated, use styler instead');
+  return styler(element, props);
+};
+const svg = (element: HTMLElement, props: Object): Styler => {
+  warning(false, 'svg() is deprecated, use styler instead');
+  return styler(element, props);
+};
 export { styler, css, svg };
 
 // Value types
