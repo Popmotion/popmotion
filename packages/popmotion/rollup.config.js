@@ -40,7 +40,14 @@ const umdProd = Object.assign({}, umd, {
     replace({
       'process.env.NODE_ENV': JSON.stringify('development')
     }),
-    uglify()
+    uglify({
+      compress: {
+        drop_console: true,
+        unsafe: true,
+        unsafe_comps: true,
+        warnings: false
+      }
+    })
   ]
 });
 
