@@ -1,12 +1,10 @@
-import spring from 'popmotion/animations/spring';
-import tween from 'popmotion/animations/tween';
-import action, { Action } from 'popmotion/action';
-import { linear } from 'popmotion/easing';
-import pointer from 'popmotion/input/pointer';
-import { interpolate } from 'popmotion/transformers';
+import { spring, tween, action, easing, pointer, transform } from 'popmotion';
+import { Action } from 'popmotion/action';
 import { eachValue } from './transition-composers';
 import { Transition, BoundingBoxDimension } from '../types';
 import { percent } from 'style-value-types';
+const { linear } = easing;
+const { interpolate } = transform;
 
 const singleAxisPointer = (axis: string) => (from: number) =>
   pointer({ [axis]: from }).pipe((v: any) => v[axis]);

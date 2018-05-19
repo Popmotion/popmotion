@@ -14,8 +14,6 @@ It returns a [`tween`](/api/tween), which allows the use of `loop`, `flip` and `
 
 ```javascript
 import { timeline } from 'popmotion';
-// or stand-alone:
-import timeline from 'popmotion/animations/timeline';
 ```
 
 ## Usage

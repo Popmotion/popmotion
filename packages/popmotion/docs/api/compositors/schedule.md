@@ -16,8 +16,6 @@ With `schedule`, you could compose it with `everyFrame` to output the latest `po
 
 ```javascript
 import { schedule } from 'popmotion';
-// or stand-alone:
-import schedule from 'popmotion/compositors/schedule';
 ```
 
 ## Usage

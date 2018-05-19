@@ -14,8 +14,6 @@ This animation is particularly useful for implementing momentum scrolling.
 
 ```javascript
 import { decay } from 'popmotion';
-// or stand-alone:
-import decay from 'popmotion/animations/decay';
 ```
 
 ## Usage

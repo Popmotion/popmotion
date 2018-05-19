@@ -1,14 +1,15 @@
 {
   "name": "pose-core",
-  "version": "0.5.2",
+  "version": "0.6.2",
   "description": "Factory for Pose animation state machines",
   "main": "lib/index.js",
+  "module": "dist/pose-core.es.js",
+  "jsnext:main": "dist/pose-core.es.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc -w",
+    "build": "rollup -c",
+    "watch": "rollup -c -w",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "measure": "gzip -c dist/popmotion-pose.js | wc -c",
     "prettier": "prettier ./src/*",
     "prepublishOnly": "npm run prettier && npm run build"
   },
@@ -30,7 +31,10 @@
   "devDependencies": {
     "typescript": "^2.7.2",
     "prettier": "1.11.1",
-    "webpack": "^3.11.0"
+    "rollup-plugin-replace": "^2.0.0",
+    "rollup-plugin-node-resolve": "^3.3.0",
+    "rollup-plugin-typescript2": "^0.14.0",
+    "rollup-plugin-uglify": "^3.0.0"
   },
   "prettier": {
     "parser": "typescript",
@@ -39,6 +43,6 @@
   "dependencies": {
     "@types/invariant": "^2.2.29",
     "@types/node": "^10.0.5",
-    "hey-listen": "^1.0.2"
+    "hey-listen": "^1.0.5"
   }
 }

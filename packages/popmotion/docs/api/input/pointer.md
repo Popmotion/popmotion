@@ -12,8 +12,6 @@ Outputs the screen position of a single mouse or touch point.
 
 ```javascript
 import { pointer } from 'popmotion';
-// or stand-alone:
-import pointer from 'popmotion/input/pointer';
 ```
 
 ## Usage

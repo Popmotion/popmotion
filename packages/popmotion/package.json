@@ -1,10 +1,12 @@
 {
   "name": "popmotion",
-  "version": "8.1.24",
+  "version": "8.2.1",
   "description": "A functional, reactive motion library.",
   "author": "Matt Perry",
   "homepage": "https://popmotion.io",
-  "main": "./index.js",
+  "main": "./lib/index.js",
+  "module": "dist/popmotion.es.js",
+  "jsnext:main": "dist/popmotion.es.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/Popmotion/popmotion"
@@ -33,20 +35,20 @@
   "analyze": true,
   "license": "MIT",
   "scripts": {
-    "build":
-      "npm run test && tsc && tsc --outDir lib && NODE_ENV=production webpack && npm run measure",
-    "prepublish": "npm run build",
+    "build": "rollup -c && npm run measure",
+    "watch": "rollup -c -w",
+    "prepublishOnly": "npm run test && tsc --module commonjs && npm run build",
     "postpublish": "npm run clean",
-    "watch": "NODE_ENV=development webpack --progress --colors --watch",
     "measure": "gzip -c dist/popmotion.global.min.js | wc -c",
     "test": "jest",
     "publish-beta": "npm publish --tag beta",
     "clean": "git clean -fd -e node_modules/ -e lib/ src/ -x ."
   },
   "dependencies": {
-    "framesync": "^3.1.7",
-    "style-value-types": "^1.0.4",
-    "stylefire": "^1.2.9"
+    "framesync": "^3.1.9",
+    "hey-listen": "^1.0.5",
+    "style-value-types": "^1.0.8",
+    "stylefire": "^2.0.2"
   },
   "devDependencies": {
     "jest": "^21.1.0",
@@ -55,15 +57,25 @@
     "ts-loader": "^3.5.0",
     "tslint-circular-dependencies": "^0.1.0",
     "typescript": "^2.7.2",
-    "webpack": "^3.0.0"
+    "rollup-plugin-replace": "^2.0.0",
+    "rollup-plugin-node-resolve": "^3.3.0",
+    "rollup-plugin-typescript2": "^0.14.0",
+    "rollup-plugin-uglify": "^3.0.0"
   },
   "jest": {
-    "moduleFileExtensions": ["ts", "js"],
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
     "transform": {
       "\\.(ts)$": "../node_modules/ts-jest/preprocessor.js"
     },
     "testRegex": "/_tests/.*\\.(ts|js)$",
     "rootDir": "src"
   },
-  "unpkg": "./dist/popmotion.global.js"
+  "unpkg": "./dist/popmotion.min.js",
+  "prettier": {
+    "parser": "typescript",
+    "singleQuote": true
+  }
 }

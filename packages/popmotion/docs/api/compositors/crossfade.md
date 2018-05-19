@@ -12,8 +12,6 @@ Fade between two numerical actions.
 
 ```javascript
 import { crossfade } from 'popmotion';
-// or stand-alone:
-import crossfade from 'popmotion/compositors/crossfade';
 ```
 
 ## Usage

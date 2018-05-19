@@ -2,6 +2,24 @@
 
 Pose Core adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.6.2] 2018-05-17
+
+### Upgrade
+
+- `hey-listen@1.0.5`
+
+## [0.6.1] 2018-05-17
+
+### Fixed
+
+- Adding `module` path.
+
+## [0.6.0] 2018-05-17
+
+### Changed
+
+- Moving to Rollup for bundling.
+
 ## [0.5.2] 2018-05-10
 
 ### Fixed

@@ -2,7 +2,23 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
-## [8.1.22] 2018-05-10
+## [8.2.1] 2018-05-17
+
+### Fixed
+
+- Removing `process.env.NODE_ENV` from bundled hey-listen
+
+## [8.2.0] 2018-05-17
+
+### Changed
+
+- Added Rollup to build process. Now just 11.1kb.
+
+### Deprecated
+
+- `css` and `svg` functions from `stylefire`. Use `styler` instead.
+
+## [8.1.23] 2018-05-10
 
 ### Fixed
 

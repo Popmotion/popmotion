@@ -14,3 +14,4 @@ site/data/content.json
 site/data/menus.json
 site/next.config.js
 .vscode
+tmp

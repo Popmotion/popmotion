@@ -12,8 +12,6 @@ category: animation
 
 ```javascript
 import { everyFrame } from 'popmotion';
-// or stand-alone:
-import everyFrame from 'popmotion/animations/every-frame';
 ```
 
 ## Usage

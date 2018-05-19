@@ -12,8 +12,6 @@ A [multicast reaction](/api/multicast) that tracks the state of a number and all
 
 ```javascript
 import { value } from 'popmotion';
-// or stand-alone:
-import value from 'popmotion/reactions/value';
 ```
 
 ## Usage

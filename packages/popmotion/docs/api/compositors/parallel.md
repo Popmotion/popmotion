@@ -12,8 +12,6 @@ Control an n-dimensional array of actions in parallel, and output as an array.
 
 ```javascript
 import { parallel } from 'popmotion';
-// or stand-alone:
-import parallel from 'popmotion/compositors/parallel';
 ```
 
 ## Usage

@@ -1,4 +1,4 @@
-import listen from 'popmotion/input/listen';
+import { listen } from 'popmotion';
 import { ActiveActions } from 'pose-core/lib/types';
 import { ColdSubscription } from 'popmotion/action/types';
 import { DomPopmotionConfig } from '../types';
