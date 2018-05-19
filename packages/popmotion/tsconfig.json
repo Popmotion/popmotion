@@ -9,12 +9,14 @@
     "noUnusedLocals": true,
     "target": "es5",
     "rootDir": "src",
-    "outDir": "./",
+    "lib": ["es5", "es6", "dom"],
+    "outDir": "lib/",
     "watch": false,
     "baseUrl": "src/",
     "alwaysStrict": true,
+    "forceConsistentCasingInFileNames": true,
     "declaration": true,
-    "forceConsistentCasingInFileNames": true
+    "importHelpers": true
   },
   "include": [
     "src/**/*"

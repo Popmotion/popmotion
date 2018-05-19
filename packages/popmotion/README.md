@@ -11,3 +11,5 @@
 ### [Quick Start](https://popmotion.io/learn/get-started)
 ### [Installation options](https://popmotion.io/learn/install)
 ### [Full API documentation](https://popmotion.io/api)
+
+Popmotion is 11kb gzipped & minified.

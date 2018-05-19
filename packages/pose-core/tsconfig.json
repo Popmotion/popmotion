@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "module": "ESNext",
+    "moduleResolution": "node",
     "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,
@@ -8,14 +9,14 @@
     "noUnusedLocals": true,
     "target": "es5",
     "rootDir": "src",
-    "outDir": "lib",
+    "lib": ["es5", "es6", "dom"],
+    "outDir": "lib/",
     "watch": false,
     "baseUrl": "src/",
     "alwaysStrict": true,
-    "declaration": true,
     "forceConsistentCasingInFileNames": true,
-    "esModuleInterop": true,
-    "lib": ["es5", "es6", "dom"]
+    "declaration": true,
+    "importHelpers": true
   },
   "include": [
     "src/**/*"

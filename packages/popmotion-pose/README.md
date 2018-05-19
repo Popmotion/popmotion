@@ -10,3 +10,5 @@
 - [Homepage](https://popmotion.io/pose)
 - [API](https://popmotion.io/pose/api)
 - [Get started](https://popmotion.io/pose/learn/get-started)
+
+Popmotion Pose is 14kb gzipped & minified.

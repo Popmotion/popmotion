@@ -1,4 +1,4 @@
-import { value, chain, delay as delayAction } from 'popmotion';
+import { spring, tween, decay, value, chain, delay as delayAction } from 'popmotion';
 import poseFactory from 'pose-core';
 import { Action } from 'popmotion/action';
 import { ColdSubscription } from 'popmotion/action/types';
@@ -101,6 +101,10 @@ const pose = <P>({
 
     addActionDelay: (delay = 0, transition) =>
       chain(delayAction(delay), transition),
+
+    convertTransitionDefinition: (def) => {
+
+    }, 
 
     defaultTransitions,
     transformPose,
