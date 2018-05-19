@@ -2,6 +2,13 @@
 
 React Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.0.0] 2018-05-19
+
+### Added
+
+- Rollup for smaller build sizes.
+- Removed esoteric elements from whitelist in favour of `posed('element')`
+
 ## [1.6.4] 2018-05-10
 
 ### Added

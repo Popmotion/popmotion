@@ -57,7 +57,7 @@ const getComponentFactory = (key: string | React.Component) =>
     ? componentCache.get(key)
     : createComponentFactory(key);
 
-const posed = ((component: React.Component) =>
+const posed = ((component: React.Component | string) =>
   getComponentFactory(component)) as Posed;
 
 supportedElements.reduce((acc, key) => {

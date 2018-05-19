@@ -1,6 +1,6 @@
 {
   "name": "popmotion-pose",
-  "version": "1.4.4",
+  "version": "1.5.0",
   "description": "A declarative animation library for HTML and SVG",
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
@@ -12,7 +12,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "measure": "gzip -c dist/popmotion-pose.js | wc -c",
     "prettier": "prettier ./src/*",
-    "prepublishOnly": "npm run prettier && npm run build && npm run bundle"
+    "prepublishOnly": "npm run prettier && npm run build"
   },
   "repository": {
     "type": "git",
