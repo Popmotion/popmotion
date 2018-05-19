@@ -12,8 +12,6 @@ Fires `complete` after the defined interval.
 
 ```javascript
 import { delay } from 'popmotion';
-// or stand-alone:
-import delay from 'popmotion/compositors/delay';
 ```
 
 ## Usage

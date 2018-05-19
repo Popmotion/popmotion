@@ -14,8 +14,6 @@ It also helps manage actions: if a `multicast` reaction is passed to another `ac
 
 ```javascript
 import { multicast } from 'popmotion';
-// or stand-alone:
-import multicast from 'popmotion/reactions';
 ```
 
 ## Usage

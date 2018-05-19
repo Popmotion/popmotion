@@ -15,8 +15,6 @@ Popmotion comes with a number of preset easing functions, and provides methods t
 
 ```javascript
 import { easing } from 'popmotion';
-// or:
-import * as easing from 'popmotion/easing';
 ```
 
 ## Example

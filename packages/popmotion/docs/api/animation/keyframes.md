@@ -16,8 +16,6 @@ It returns a [`tween`](/api/tween), which allows the use of `ease`, `loop`, `fli
 
 ```javascript
 import { keyframes } from 'popmotion';
-// or stand-alone:
-import keyframes from 'popmotion/animations/keyframes';
 ```
 
 ## Usage

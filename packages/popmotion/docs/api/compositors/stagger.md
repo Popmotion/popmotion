@@ -12,8 +12,6 @@ Stagger the execution of a series of actions.
 
 ```javascript
 import { stagger } from 'popmotion';
-// or stand-alone:
-import stagger from 'popmotion/compositors/stagger';
 ```
 
 ## Usage

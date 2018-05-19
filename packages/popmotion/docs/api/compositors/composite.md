@@ -12,8 +12,6 @@ Control a named map of actions, and output to the same structure.
 
 ```javascript
 import { composite } from 'popmotion';
-// or stand-alone:
-import composite from 'popmotion/compositors/composite';
 ```
 
 ## Usage

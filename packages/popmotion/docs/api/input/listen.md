@@ -12,8 +12,6 @@ category: input
 
 ```javascript
 import { listen } from 'popmotion';
-// or stand-alone:
-import listen from 'popmotion/input/listen';
 ```
 
 ## Usage

@@ -16,8 +16,6 @@ When an action is started, it returns a simple interface that includes **at leas
 
 ```javascript
 import { action } from 'popmotion';
-// or stand-alone:
-import action from 'popmotion/action';
 ```
 
 ## Usage
