@@ -1,18 +1,10 @@
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('popmotion/animations/spring'), require('popmotion/animations/tween'), require('popmotion/action'), require('popmotion/easing'), require('popmotion/input/pointer'), require('popmotion/transformers'), require('style-value-types'), require('pose-core'), require('popmotion/reactions/value'), require('popmotion/compositors/chain'), require('popmotion/compositors/delay'), require('popmotion/input/listen'), require('stylefire')) :
-    typeof define === 'function' && define.amd ? define(['exports', 'popmotion/animations/spring', 'popmotion/animations/tween', 'popmotion/action', 'popmotion/easing', 'popmotion/input/pointer', 'popmotion/transformers', 'style-value-types', 'pose-core', 'popmotion/reactions/value', 'popmotion/compositors/chain', 'popmotion/compositors/delay', 'popmotion/input/listen', 'stylefire'], factory) :
-    (factory((global.pose = {}),null,null,null,null,null,null,global.valueTypes,null,null,null,null,null,null));
-}(this, (function (exports,spring,tween,action,easing,pointer,transformers,styleValueTypes,poseFactory,value,chain,delayAction,listen,styler) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('popmotion'), require('style-value-types'), require('pose-core'), require('popmotion/action'), require('stylefire'), require('popmotion/reactions/value')) :
+    typeof define === 'function' && define.amd ? define(['exports', 'popmotion', 'style-value-types', 'pose-core', 'popmotion/action', 'stylefire', 'popmotion/reactions/value'], factory) :
+    (factory((global.pose = {}),null,global.valueTypes,null,null,null,null));
+}(this, (function (exports,popmotion,styleValueTypes,poseFactory,action,styler,value) { 'use strict';
 
-    spring = spring && spring.hasOwnProperty('default') ? spring['default'] : spring;
-    tween = tween && tween.hasOwnProperty('default') ? tween['default'] : tween;
-    var action__default = 'default' in action ? action['default'] : action;
-    pointer = pointer && pointer.hasOwnProperty('default') ? pointer['default'] : pointer;
     poseFactory = poseFactory && poseFactory.hasOwnProperty('default') ? poseFactory['default'] : poseFactory;
-    var value__default = 'default' in value ? value['default'] : value;
-    chain = chain && chain.hasOwnProperty('default') ? chain['default'] : chain;
-    delayAction = delayAction && delayAction.hasOwnProperty('default') ? delayAction['default'] : delayAction;
-    listen = listen && listen.hasOwnProperty('default') ? listen['default'] : listen;
     styler = styler && styler.hasOwnProperty('default') ? styler['default'] : styler;
 
     /*! *****************************************************************************
@@ -65,8 +57,10 @@
         BoundingBoxDimension["bottom"] = "bottom";
     })(BoundingBoxDimension || (BoundingBoxDimension = {}));
 
+    var linear = popmotion.easing.linear;
+    var interpolate = popmotion.transform.interpolate;
     var singleAxisPointer = function (axis) { return function (from) {
-        return pointer((_a = {}, _a[axis] = from, _a)).pipe(function (v) { return v[axis]; });
+        return popmotion.pointer((_a = {}, _a[axis] = from, _a)).pipe(function (v) { return v[axis]; });
         var _a;
     }; };
     var pointerX = singleAxisPointer('x');
@@ -86,13 +80,13 @@
                 });
         }
         if (type === styleValueTypes.percent) {
-            transformQueue.push(transformers.interpolate([0, dimensions.get(measurement)], [0, 100]));
+            transformQueue.push(interpolate([0, dimensions.get(measurement)], [0, 100]));
         }
         return transformQueue.length
             ? axisPointer.pipe.apply(axisPointer, transformQueue) : axisPointer;
     }; };
     var just = function (from) {
-        return action__default(function (_a) {
+        return popmotion.action(function (_a) {
             var update = _a.update, complete = _a.complete;
             update(from);
             complete();
@@ -100,7 +94,7 @@
     };
     var underDampedSpring = function (_a) {
         var from = _a.from, velocity = _a.velocity, to = _a.to;
-        return spring({
+        return popmotion.spring({
             from: from,
             to: to,
             velocity: velocity,
@@ -112,11 +106,11 @@
     };
     var overDampedSpring = function (_a) {
         var from = _a.from, velocity = _a.velocity, to = _a.to;
-        return spring({ from: from, to: to, velocity: velocity, stiffness: 700, damping: to === 0 ? 100 : 35 });
+        return popmotion.spring({ from: from, to: to, velocity: velocity, stiffness: 700, damping: to === 0 ? 100 : 35 });
     };
     var linearTween = function (_a) {
         var from = _a.from, to = _a.to;
-        return tween({ from: from, to: to, ease: easing.linear });
+        return popmotion.tween({ from: from, to: to, ease: linear });
     };
     var intelligentTransition = eachValue({
         x: underDampedSpring,
@@ -130,7 +124,7 @@
         scaleY: overDampedSpring,
         scale: overDampedSpring,
         opacity: linearTween,
-        default: tween
+        default: popmotion.tween
     });
     var dragAction = eachValue({
         x: createPointer(pointerX, 'left', 'right', BoundingBoxDimension.width),
@@ -149,13 +143,13 @@
     var valueTypeTests = [styleValueTypes.number, styleValueTypes.degrees, styleValueTypes.percent, styleValueTypes.px];
     var testValueType = function (v) { return function (type) { return type.test(v); }; };
     var createPassiveValue = function (init, parent, transform) {
-        var raw = value__default(init).pipe(transform);
+        var raw = popmotion.value(init).pipe(transform);
         parent.raw.subscribe(raw);
         return { raw: raw };
     };
     var createValue = function (init) {
         var type = valueTypeTests.find(testValueType(init));
-        var raw = value__default(type === styleValueTypes.number ? type.parse(init) : init);
+        var raw = popmotion.value(type === styleValueTypes.number ? type.parse(init) : init);
         return { raw: raw, type: type };
     };
     var pose = function (_a) {
@@ -223,7 +217,7 @@
             getInstantTransition: function (_, to) { return just(to); },
             addActionDelay: function (delay, transition) {
                 if (delay === void 0) { delay = 0; }
-                return chain(delayAction(delay), transition);
+                return popmotion.chain(popmotion.delay(delay), transition);
             },
             defaultTransitions: defaultTransitions,
             transformPose: transformPose,
@@ -260,12 +254,12 @@
 
     var makeDraggable = function (element, activeActions, setPose, _a) {
         var onDragStart = _a.onDragStart, onDragEnd = _a.onDragEnd;
-        var dragStartListener = listen(element, 'mousedown touchstart').start(function (startEvent) {
+        var dragStartListener = popmotion.listen(element, 'mousedown touchstart').start(function (startEvent) {
             startEvent.preventDefault();
             setPose('dragging');
             if (onDragStart)
                 onDragStart(startEvent);
-            var dragEndListener = listen(document, 'mouseup touchend').start(function (endEvent) {
+            var dragEndListener = popmotion.listen(document, 'mouseup touchend').start(function (endEvent) {
                 activeActions.get('dragEndListener').stop();
                 setPose('dragEnd');
                 if (onDragEnd)
@@ -313,7 +307,7 @@
         }
         else {
             values.set(key, {
-                raw: value__default(to, function (v) { return props.elementStyler.set(key, v); })
+                raw: popmotion.value(to, function (v) { return props.elementStyler.set(key, v); })
             });
         }
     };

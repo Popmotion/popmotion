@@ -1,11 +1,9 @@
+import { value, chain, delay as delayAction } from 'popmotion';
 import poseFactory from 'pose-core';
 import { Action } from 'popmotion/action';
-import value from 'popmotion/reactions/value';
 import { ColdSubscription } from 'popmotion/action/types';
 import { Value, Transformer, PopmotionPoserFactoryConfig } from '../types';
 import { Poser } from 'pose-core';
-import chain from 'popmotion/compositors/chain';
-import delayAction from 'popmotion/compositors/delay';
 import defaultTransitions, { just } from '../inc/default-transitions';
 import { number, degrees, percent, px, ValueType } from 'style-value-types';
 export { Poser };

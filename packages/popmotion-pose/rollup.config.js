@@ -33,6 +33,7 @@ const umd = Object.assign({}, config, {
 });
 
 const umdProd = Object.assign({}, umd, {
+  input: 'src/global.ts',
   output: Object.assign({}, umd.output, {
     file: 'dist/popmotion-pose.js'
   }),

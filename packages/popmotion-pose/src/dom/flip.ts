@@ -1,4 +1,4 @@
-import value from 'popmotion/reactions/value';
+import { value } from 'popmotion';
 import {
   BoundingBox,
   Dimensions,

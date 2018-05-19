@@ -1,16 +1,9 @@
-import spring from 'popmotion/animations/spring';
-import tween from 'popmotion/animations/tween';
-import action from 'popmotion/action';
-import { linear } from 'popmotion/easing';
-import pointer from 'popmotion/input/pointer';
-import { interpolate } from 'popmotion/transformers';
+import { spring, tween, action, easing, pointer, transform, value, chain, delay, listen } from 'popmotion';
 import { percent, number, degrees, px } from 'style-value-types';
 import poseFactory from 'pose-core';
-import value from 'popmotion/reactions/value';
-import chain from 'popmotion/compositors/chain';
-import delayAction from 'popmotion/compositors/delay';
-import listen from 'popmotion/input/listen';
+import 'popmotion/action';
 import styler from 'stylefire';
+import 'popmotion/reactions/value';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation. All rights reserved.
@@ -62,6 +55,8 @@ var BoundingBoxDimension;
     BoundingBoxDimension["bottom"] = "bottom";
 })(BoundingBoxDimension || (BoundingBoxDimension = {}));
 
+var linear = easing.linear;
+var interpolate = transform.interpolate;
 var singleAxisPointer = function (axis) { return function (from) {
     return pointer((_a = {}, _a[axis] = from, _a)).pipe(function (v) { return v[axis]; });
     var _a;
@@ -145,8 +140,8 @@ var defaultTransitions = new Map([
 
 var valueTypeTests = [number, degrees, percent, px];
 var testValueType = function (v) { return function (type) { return type.test(v); }; };
-var createPassiveValue = function (init, parent, transform) {
-    var raw = value(init).pipe(transform);
+var createPassiveValue = function (init, parent, transform$$1) {
+    var raw = value(init).pipe(transform$$1);
     parent.raw.subscribe(raw);
     return { raw: raw };
 };
@@ -218,9 +213,9 @@ var pose = function (_a) {
         },
         stopAction: function (action$$1) { return action$$1.stop(); },
         getInstantTransition: function (_, to) { return just(to); },
-        addActionDelay: function (delay, transition) {
-            if (delay === void 0) { delay = 0; }
-            return chain(delayAction(delay), transition);
+        addActionDelay: function (delay$$1, transition) {
+            if (delay$$1 === void 0) { delay$$1 = 0; }
+            return chain(delay(delay$$1), transition);
         },
         defaultTransitions: defaultTransitions,
         transformPose: transformPose,
@@ -333,10 +328,10 @@ var implicitlyFlipPose = function (state, nextPose) {
     if (!dimensions.has())
         return {};
     var prev = dimensions.get();
-    var transform = element.style.transform;
+    var transform$$1 = element.style.transform;
     element.style.transform = '';
     var next = element.getBoundingClientRect();
-    element.style.transform = transform;
+    element.style.transform = transform$$1;
     var originX = prev.left === next.left
         ? ORIGIN_START
         : prev.right === next.right ? ORIGIN_END : ORIGIN_CENTER;

@@ -125,7 +125,7 @@ const Page = ({ section }) => (
     section="api"
     undefined
     title="Styler"
-    description="Create style setters for HTML, SVG and the viewport.å"
+    description="Create style setters for HTML, SVG and the viewport."
     published=""
     theme="stylefire"
     undefined
