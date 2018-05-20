@@ -17,13 +17,13 @@ next: popmotion-get-started
 #### npm
 
 ```bash
-npm install popmotion-pose --save
+npm install popmotion popmotion-pose --save
 ```
 
 #### yarn
 
 ```bash
-yarn add popmotion-pose
+yarn add popmotion popmotion-pose
 ```
 
 ### File include

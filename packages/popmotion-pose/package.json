@@ -38,8 +38,10 @@
     "rollup-plugin-uglify": "^3.0.0",
     "typescript": "^2.7.2"
   },
+  "peerDependencies": {
+    "popmotion": "^8.2.1"
+  },
   "dependencies": {
-    "popmotion": "^8.2.1",
     "pose-core": "^0.5.2"
   },
   "unpkg": "./dist/popmotion-pose.js",
