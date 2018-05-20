@@ -63,13 +63,13 @@ You an also add Pose to any existing CodePen project by clicking on Settings > J
 #### npm
 
 ```bash
-npm install react-pose --save
+npm install popmotion popmotion-pose react-pose --save
 ```
 
 #### yarn
 
 ```bash
-yarn add react-pose
+yarn add popmotion popmotion-pose react-pose
 ```
 
 ### File include
