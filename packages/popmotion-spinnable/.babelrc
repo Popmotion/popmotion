@@ -1,9 +1,3 @@
 {
-  "presets": [["env", { "loose": true} ], "stage-2"],
-  "plugins": ["transform-export-extensions", "transform-react-jsx"],
-  "env": {
-    "development": {
-      "sourceMaps": "inline"
-    }
-  }
+  "presets": ["./.babelrc.js"]
 }

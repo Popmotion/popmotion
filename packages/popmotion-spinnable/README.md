@@ -55,7 +55,7 @@ spinnable(node, {
 ## React
 
 ```javascript
-import Spinnable from "popmotion-spinnable/lib/react";
+import Spinnable from "popmotion-spinnable/react";
 
 export default ({ onSpin }) => <Spinnable className="dial" onSpin={onSpin} />;
 ```
