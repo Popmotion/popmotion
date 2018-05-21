@@ -55,7 +55,6 @@ export interface Poser<V, A, C, P> {
   get: (key?: string) => any;
   has: (key: string) => boolean;
   setProps: (props: Props) => void;
-  setTransitionProps: (props: Props) => void;
   destroy: () => void;
   _addChild: (
     config: PoserConfig<V>,

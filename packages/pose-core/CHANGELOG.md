@@ -2,6 +2,10 @@
 
 Pose Core adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.7.0] Unreleased
+
+- Removed support for `transitionProps` and `setTransitionProps`.
+
 ## [0.6.2] 2018-05-17
 
 ### Upgrade
