@@ -381,11 +381,13 @@ export class PoseFullScreenFlip extends React.PureComponent {
         fullscreen: {
           width: () => "100%",
           height: () => "100%",
+          flip: true,
           transition: tween
         },
         thumbnail: {
           width: () => 100,
           height: () => 100,
+          flip: true,
           transition: tween
         },
         initialPose: "fullscreen"

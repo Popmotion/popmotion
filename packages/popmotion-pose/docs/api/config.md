@@ -131,6 +131,10 @@ A duration, in milliseconds, to delay this transition. Does **not** affect child
 
 A duration, in milliseconds, to delay the transition of direct children.
 
+### `flip?: boolean = false`
+
+If `true`, will convert this animation to a [FLIP animation](https://aerotwist.com/blog/flip-your-animations/).
+
 ### `staggerChildren?: number | (props: TransitionsProps) => number`
 
 A duration, in milliseconds, between transitioning each children.

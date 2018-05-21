@@ -10,7 +10,7 @@ The FLIP technique, [fully explained here](https://aerotwist.com/blog/flip-your-
 
 Pose provides a few methods for performing FLIP:
 
-1. Animate `width`/`top` etc - these will be automatically FLIPed
+1. Animate `width`/`top` and adding `flip: true` to a pose
 2. Manually with the `measure` and `flip` methods
 3. Via the [`PoseGroup` React Pose component](/pose/api/posegroup)
 
@@ -18,11 +18,9 @@ In this tutorial, we'll take a look at each of these.
 
 ## `width`/`top`
 
-Friends don't let friends animate size or position, and neither does Pose.
-
 The problem with animating size and position properties is that they break layout. Recalculating layout is expensive, which can slow animations to below 60fps.
 
-So, when you set a pose with `width`, `height`, `top`, `left`, `right`, or `bottom` values, these will applied at the start of the animation. Pose will measure the size and position of the element before and after, and animate from one to the other using transform properties instead.
+So, when you set a pose with `flip: true` and any of `width`, `height`, `top`, `left`, `right`, or `bottom` values, these will applied at the start of the animation. Pose will measure the size and position of the element before and after, and animate from one to the other using transform properties instead.
 
 For instance, we can switch a `div` to fullscreen and back using the following config:
 
@@ -31,12 +29,14 @@ const config = {
   fullscreen: {
     width: '100vw',
     height: '100vh',
-    transition: tween
+    transition: tween,
+    flip: true
   },
   thumbnail: {
     width: 100,
     height: 100,
-    transition: tween
+    transition: tween,
+    flip: true
   }
 }
 ```

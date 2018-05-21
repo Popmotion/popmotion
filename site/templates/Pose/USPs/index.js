@@ -55,7 +55,7 @@ export default () => (
       </Example>
       <Example
         title="FLIPpin' great"
-        description="Slow flow-breaking animations are automatically converted to fast transforms. Plus, an imperative FLIP API allows the poser to respond to DOM operations."
+        description="Slow flow-breaking animations can be easily converted to fast transforms. Plus, an imperative FLIP API allows the poser to respond to DOM operations."
       >
         <FlipExample />
       </Example>

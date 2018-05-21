@@ -65,8 +65,8 @@ const createPoseConfig = (
 };
 
 const domPose = poseFactory<DomPopmotionPoser>({
-  transformPose: (pose, name, state) =>
-    isFlipPose(pose, name, state) ? flipPose(state, pose) : pose,
+  transformPose: ({ flip, ...pose }, name, state) =>
+    isFlipPose(flip, name, state) ? flipPose(state, pose) : pose,
 
   addListenerToValue: (key, elementStyler) => v => elementStyler.set(key, v),
 

@@ -2,7 +2,12 @@
 
 Popmotion Pose adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## [2.0.0] Unreleased
+
+### Added
+
+- `flip: true` required to opt-in to FLIP animations.
+- Fully serialised definitions for custom transitions.
 
 ### Changed
 

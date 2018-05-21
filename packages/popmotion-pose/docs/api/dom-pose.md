@@ -288,14 +288,14 @@ Animating positional and dimensional properties like `width` and `top` is taskin
 
 The [FLIP technique](https://aerotwist.com/blog/flip-your-animations/) was developed to animate these performantly by replacing them with transforms.
 
-When animating these properties, Pose will automatically perform a FLIP animation instead:
+When animating these properties, `flip: true` can be set to use FLIP:
 
 ```javascript
 // Pose will automatically measure the difference
 // in element size and animate `scaleX` instead:
 const config = {
-  open: { width: 200 },
-  closed: { width: 0 }
+  open: { width: 200, flip: true }, // Will FLIP
+  closed: { width: 0 } // Will not FLIP
 }
 ```
 

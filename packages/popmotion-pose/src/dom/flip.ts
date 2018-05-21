@@ -35,9 +35,9 @@ const checkPositionalProp = (key: string) => positionalPropsDict.has(key);
 const hasPositionalProps = (pose: Pose) =>
   Object.keys(pose).some(checkPositionalProp);
 
-export const isFlipPose = (pose: Pose, key: string, state: PoserState) =>
+export const isFlipPose = (flip: boolean, key: string, state: PoserState) =>
   state.props.element instanceof HTMLElement &&
-  (hasPositionalProps(pose) || key === 'flip');
+  (flip === true || key === 'flip');
 
 export const resolveProp = (target: any, props: { [key: string]: any }) =>
   typeof target === 'function' ? target(props) : target;
