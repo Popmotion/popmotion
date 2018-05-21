@@ -99,9 +99,7 @@ const poseFactory = <V, A, C, P>({
         ? selectValueToRead(values.get(valueName))
         : selectAllValues(values, selectValueToRead),
     has: poseName => !!poses[poseName],
-    setProps: newProps => {
-      props = { ...props, ...newProps };
-    },
+    setProps: newProps => (props = { ...props, ...newProps }),
 
     // Child methods
     _addChild: (childConfig, factory) => {
