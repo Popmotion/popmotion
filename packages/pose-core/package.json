@@ -8,6 +8,7 @@
   "types": "./lib/index.d.ts",
   "scripts": {
     "build": "rollup -c",
+    "postbuild": "babel $npm_package_module --out-file $npm_package_module --no-babelrc --plugins annotate-pure-calls",
     "watch": "rollup -c -w",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prettier": "prettier ./src/*",
@@ -29,12 +30,16 @@
     "env"
   ],
   "devDependencies": {
-    "typescript": "^2.7.2",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-plugin-annotate-pure-calls": "^0.2.2",
     "prettier": "1.11.1",
-    "rollup-plugin-replace": "^2.0.0",
+    "rollup": "^0.59.1",
     "rollup-plugin-node-resolve": "^3.3.0",
+    "rollup-plugin-replace": "^2.0.0",
     "rollup-plugin-typescript2": "^0.14.0",
-    "rollup-plugin-uglify": "^3.0.0"
+    "rollup-plugin-uglify": "^3.0.0",
+    "typescript": "^2.7.2"
   },
   "prettier": {
     "parser": "typescript",
@@ -43,6 +48,7 @@
   "dependencies": {
     "@types/invariant": "^2.2.29",
     "@types/node": "^10.0.5",
-    "hey-listen": "^1.0.5"
+    "hey-listen": "^1.0.5",
+    "tslib": "^1.9.1"
   }
 }

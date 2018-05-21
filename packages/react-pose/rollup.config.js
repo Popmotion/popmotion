@@ -2,32 +2,28 @@ import typescript from 'rollup-plugin-typescript2';
 import uglify from 'rollup-plugin-uglify';
 import resolve from 'rollup-plugin-node-resolve';
 import replace from 'rollup-plugin-replace';
-import commonjs from 'rollup-plugin-commonjs';
+import pkg from './package.json';
 
 const typescriptConfig = { cacheRoot: 'tmp/.rpt2_cache' };
 const noDeclarationConfig = Object.assign({}, typescriptConfig, {
   tsconfigOverride: { compilerOptions: { declaration: false } }
 });
 
-const config = {
-  input: 'src/index.ts',
-  external: ['react', 'react-dom']
+const makeExternalPredicate = externalArr => {
+  if (externalArr.length === 0) {
+    return () => false;
+  }
+  const pattern = new RegExp(`^(${externalArr.join("|")})($|/)`);
+  return id => pattern.test(id);
 };
 
-const common = commonjs({
-  ignoreGlobal: true,
-  namedExports: {
-    'node_modules/react/index.js': [
-      'createContext',
-      'createElement',
-      'cloneElement',
-      'Children',
-      'Component',
-      'Fragment',
-      'PureComponent'
-    ]
-  }
-});
+const deps = Object.keys(pkg.dependencies || {})
+const peerDeps = Object.keys(pkg.peerDependencies || {})
+
+const config = {
+  input: 'src/index.ts',
+  external: makeExternalPredicate(deps.concat(peerDeps))
+};
 
 const umd = Object.assign({}, config, {
   output: {
@@ -37,11 +33,12 @@ const umd = Object.assign({}, config, {
     exports: 'named',
     globals: { react: 'React' }
   },
+  external: makeExternalPredicate(peerDeps),
   plugins: [
-    common,
     typescript(noDeclarationConfig),
+    resolve(),
     replace({
-      'process.env.NODE_ENV': JSON.stringify('production')
+      'process.env.NODE_ENV': JSON.stringify('development')
     })
   ]
 });
@@ -55,10 +52,9 @@ const umdProd = Object.assign({}, umd, {
     typescript(noDeclarationConfig),
     resolve(),
     replace({
-      'process.env.NODE_ENV': JSON.stringify('development')
+      'process.env.NODE_ENV': JSON.stringify('production')
     }),
     uglify(),
-    common
   ]
 });
 
@@ -68,7 +64,7 @@ const es = Object.assign({}, config, {
     format: 'es',
     exports: 'named'
   },
-  plugins: [typescript(noDeclarationConfig), common]
+  plugins: [typescript(noDeclarationConfig)]
 });
 
 const cjs = Object.assign({}, config, {
@@ -77,7 +73,7 @@ const cjs = Object.assign({}, config, {
     format: 'cjs',
     exports: 'named'
   },
-  plugins: [typescript(typescriptConfig), common]
+  plugins: [typescript(typescriptConfig)]
 });
 
 export default [umd, umdProd, es, cjs];
