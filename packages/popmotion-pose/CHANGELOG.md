@@ -2,6 +2,12 @@
 
 Popmotion Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+### Changed
+
+- Move `popmotion` from `dependencies` to `peerDependencies`.
+
 ## [1.5.0] 2018-05-10
 
 ### Updated

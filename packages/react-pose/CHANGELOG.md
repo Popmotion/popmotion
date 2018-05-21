@@ -2,6 +2,12 @@
 
 React Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+### Changed
+
+- Move `popmotion` and `popmotion-pose` from `dependencies` to `peerDependencies`.
+
 ## [2.0.0] 2018-05-19
 
 ### Added
