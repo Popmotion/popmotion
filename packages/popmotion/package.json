@@ -36,10 +36,11 @@
   "license": "MIT",
   "scripts": {
     "build": "rollup -c && npm run measure",
+    "postbuild": "babel $npm_package_module --out-file $npm_package_module --no-babelrc --plugins annotate-pure-calls",
     "watch": "rollup -c -w",
     "prepublishOnly": "npm run test && tsc --module commonjs && npm run build",
     "postpublish": "npm run clean",
-    "measure": "gzip -c dist/popmotion.global.min.js | wc -c",
+    "measure": "gzip -c $npm_package_unpkg | wc -c",
     "test": "jest",
     "publish-beta": "npm publish --tag beta",
     "clean": "git clean -fd -e node_modules/ -e lib/ src/ -x ."
@@ -48,19 +49,24 @@
     "framesync": "^3.1.9",
     "hey-listen": "^1.0.5",
     "style-value-types": "^1.0.8",
-    "stylefire": "^2.0.2"
+    "stylefire": "^2.0.2",
+    "tslib": "^1.9.1"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-plugin-annotate-pure-calls": "^0.2.2",
     "jest": "^21.1.0",
+    "rollup": "^0.59.1",
+    "rollup-plugin-node-resolve": "^3.3.0",
+    "rollup-plugin-replace": "^2.0.0",
+    "rollup-plugin-typescript2": "^0.14.0",
+    "rollup-plugin-uglify": "^3.0.0",
     "ts-jest": "^21.2.4",
     "ts-list": "^1.0.5",
     "ts-loader": "^3.5.0",
     "tslint-circular-dependencies": "^0.1.0",
-    "typescript": "^2.7.2",
-    "rollup-plugin-replace": "^2.0.0",
-    "rollup-plugin-node-resolve": "^3.3.0",
-    "rollup-plugin-typescript2": "^0.14.0",
-    "rollup-plugin-uglify": "^3.0.0"
+    "typescript": "^2.7.2"
   },
   "jest": {
     "moduleFileExtensions": [
