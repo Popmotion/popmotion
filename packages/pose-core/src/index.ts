@@ -29,6 +29,7 @@ const poseFactory = <V, A, C, P>({
   convertValue,
   getInstantTransition,
   getTransitionProps,
+  convertTransitionDefinition,
   addActionDelay,
   selectValueToRead,
   transformPose,
@@ -95,7 +96,8 @@ const poseFactory = <V, A, C, P>({
     stopAction,
     resolveTarget,
     addActionDelay,
-    transformPose
+    transformPose,
+    convertTransitionDefinition
   });
 
   const api: Poser<V, A, C, P> = {

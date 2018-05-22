@@ -1,11 +1,26 @@
-import { spring, tween, decay, value, chain, delay as delayAction } from 'popmotion';
+import {
+  spring,
+  tween,
+  decay,
+  keyframes,
+  physics,
+  value,
+  chain,
+  delay as delayAction
+} from 'popmotion';
 import poseFactory from 'pose-core';
 import { Action } from 'popmotion/action';
 import { ColdSubscription } from 'popmotion/action/types';
-import { Value, Transformer, PopmotionPoserFactoryConfig } from '../types';
+import {
+  Value,
+  Transformer,
+  PopmotionPoserFactoryConfig,
+  AnimationProps
+} from '../types';
 import { Poser } from 'pose-core';
 import defaultTransitions, { just } from '../inc/default-transitions';
 import { number, degrees, percent, px, ValueType } from 'style-value-types';
+import { invariant } from 'hey-listen';
 export { Poser };
 
 const valueTypeTests = [number, degrees, percent, px];
@@ -27,6 +42,25 @@ const createValue = (init: any) => {
   const raw = value(type === number ? type.parse(init) : init);
 
   return { raw, type };
+};
+
+const addActionDelay = (delay = 0, transition: Action) =>
+  chain(delayAction(delay), transition);
+
+const animationLookup = new Map<string, Action>([
+  ['tween', tween],
+  ['spring', spring],
+  ['decay', decay],
+  ['keyframes', keyframes],
+  ['physics', physics]
+]);
+const getAction = ({ type, ...props }: AnimationProps) => {
+  invariant(
+    animationLookup.has(type),
+    `You specified invalid transition type '${type}'. Valid transition types are: tween, spring, decay, physics and keyframes.`
+  );
+
+  return animationLookup.get(type)(props);
 };
 
 const pose = <P>({
@@ -99,13 +133,25 @@ const pose = <P>({
 
     getInstantTransition: (_, to) => just(to),
 
-    addActionDelay: (delay = 0, transition) =>
-      chain(delayAction(delay), transition),
+    convertTransitionDefinition: ({
+      delay,
+      round,
+      min,
+      max,
+      ...props
+    }: AnimationProps) => {
+      const action = getAction(props);
+      const outputPipe: Function[] = [];
 
-    convertTransitionDefinition: (def) => {
+      if (delay) addActionDelay(delay, action);
+      if (min !== undefined) outputPipe.push((v: number) => Math.max(v, min));
+      if (max !== undefined) outputPipe.push((v: number) => Math.min(v, max));
+      if (round) outputPipe.push(Math.round);
 
-    }, 
+      return outputPipe.length ? action.push(...outputPipe) : action;
+    },
 
+    addActionDelay,
     defaultTransitions,
     transformPose,
     readValueFromSource,

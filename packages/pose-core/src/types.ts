@@ -134,6 +134,8 @@ export type TransformPose<V, A, C, P> = (
 
 export type ReadValueFromSource = (key: string, props: Props) => any;
 
+export type ConvertTransitionDefinition<A> = (props: Props) => A;
+
 export type PoseFactoryConfig<V, A, C, P> = {
   getDefaultProps?: (config: PoserConfig<V>) => Props;
   defaultTransitions?: Map<string, TransitionFactory<A>>;
@@ -147,6 +149,7 @@ export type PoseFactoryConfig<V, A, C, P> = {
   convertValue: ConvertValue<V>;
   resolveTarget: ResolveTarget<V>;
   getTransitionProps: GetTransitionProps<V>;
+  convertTransitionDefinition: ConvertTransitionDefinition<A>;
   startAction: StartAction<V, A, C>;
   stopAction: StopAction<C>;
   getInstantTransition: GetInstantTransition<V, A>;
