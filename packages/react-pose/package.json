@@ -3,13 +3,14 @@
   "version": "2.0.0",
   "description": "A declarative animation library for React",
   "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
+  "module": "./es/index.js",
+  "types": "./types/index.d.ts",
   "scripts": {
     "build": "rollup -c && npm run measure",
-    "postbuild": "babel $npm_package_module --out-file $npm_package_module --no-babelrc --plugins annotate-pure-calls",
+    "postbuild": "babel es --out-dir es --no-babelrc --plugins annotate-pure-calls",
     "watch": "rollup -c -w",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "measure": "gzip -c dist/react-pose.js | wc -c",
+    "measure": "gzip -c $npm_package_unpkg | wc -c",
     "prettier": "prettier ./src/*",
     "prepublishOnly": "npm run prettier && npm run build"
   },

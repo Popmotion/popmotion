@@ -1,0 +1,42 @@
+{
+  "name": "babel-plugin-popmotion",
+  "version": "1.0.0",
+  "description": "A recommended babel preprocessing plugin for popmotion.",
+  "main": "lib/index.js",
+  "files": [
+    "src",
+    "lib"
+  ],
+  "scripts": {
+    "prebuild": "npm run clean",
+    "build": "babel src -d lib",
+    "watch": "npm run build -- --watch",
+    "clean": "rimraf lib",
+    "test": "jest"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/core": "7.0.0-beta.47",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
+    "jest": "^21.2.1",
+    "jest-in-case": "^1.0.2",
+    "rimraf": "^2.6.1"
+  },
+  "author": "Matt Perry",
+  "homepage": "https://popmotion.io",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Popmotion/popmotion"
+  },
+  "keywords": [
+    "babel",
+    "animation",
+    "popmotion"
+  ],
+  "bugs": {
+    "url": "https://github.com/Popmotion/popmotion/issues"
+  }
+}

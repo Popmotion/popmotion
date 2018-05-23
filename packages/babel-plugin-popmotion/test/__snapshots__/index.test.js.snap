@@ -1,0 +1,90 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`babel 6 default as named specifier 1`] = `
+"
+import { PoseGroup, default as myPosed } from 'react-pose/base';
+
+const AnimatedDiv = /*#__PURE__*/myPosed('div')({ foo: 'bar' });"
+`;
+
+exports[`babel 6 default custom name 1`] = `
+"
+import myPosed from 'react-pose/base';
+
+const AnimatedDiv = /*#__PURE__*/myPosed('div')({ foo: 'bar' });"
+`;
+
+exports[`babel 6 default posed 1`] = `
+"
+import posed from 'react-pose/base';
+
+const AnimatedDiv = /*#__PURE__*/posed('div')({ foo: 'bar' });"
+`;
+
+exports[`babel 6 different member expression 1`] = `
+"
+import test from 'test';
+
+const AnimatedDiv = test.div({ foo: 'bar' });"
+`;
+
+exports[`babel 6 non member expression 1`] = `
+"
+import posed from 'react-pose/base';
+
+const AnimatedDiv = posed('div')({ foo: 'bar' });
+someCall(posed);
+const obj = { posed };"
+`;
+
+exports[`babel 6 rewritten import 1`] = `
+"
+import posed from 'react-pose/base';"
+`;
+
+exports[`babel 7 default as named specifier 1`] = `
+"import { PoseGroup, default as myPosed } from \\"react-pose/base\\";
+const AnimatedDiv =
+/*#__PURE__*/
+myPosed(\\"div\\")({
+  foo: 'bar'
+});"
+`;
+
+exports[`babel 7 default custom name 1`] = `
+"import myPosed from \\"react-pose/base\\";
+const AnimatedDiv =
+/*#__PURE__*/
+myPosed(\\"div\\")({
+  foo: 'bar'
+});"
+`;
+
+exports[`babel 7 default posed 1`] = `
+"import posed from \\"react-pose/base\\";
+const AnimatedDiv =
+/*#__PURE__*/
+posed(\\"div\\")({
+  foo: 'bar'
+});"
+`;
+
+exports[`babel 7 different member expression 1`] = `
+"import test from 'test';
+const AnimatedDiv = test.div({
+  foo: 'bar'
+});"
+`;
+
+exports[`babel 7 non member expression 1`] = `
+"import posed from \\"react-pose/base\\";
+const AnimatedDiv = posed('div')({
+  foo: 'bar'
+});
+someCall(posed);
+const obj = {
+  posed
+};"
+`;
+
+exports[`babel 7 rewritten import 1`] = `"import posed from \\"react-pose/base\\";"`;

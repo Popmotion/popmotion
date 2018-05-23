@@ -5,8 +5,8 @@ import replace from 'rollup-plugin-replace';
 import pkg from './package.json';
 
 const typescriptConfig = { cacheRoot: 'tmp/.rpt2_cache' };
-const noDeclarationConfig = Object.assign({}, typescriptConfig, {
-  tsconfigOverride: { compilerOptions: { declaration: false } }
+const declarationsConfig = Object.assign({}, typescriptConfig, {
+  tsconfigOverride: { compilerOptions: { declaration: true, declarationDir: 'types' } }
 });
 
 const makeExternalPredicate = externalArr => {
@@ -21,11 +21,12 @@ const deps = Object.keys(pkg.dependencies || {})
 const peerDeps = Object.keys(pkg.peerDependencies || {})
 
 const config = {
-  input: 'src/index.ts',
+  input: { index:'src/index.ts', base: 'src/base.ts' },
   external: makeExternalPredicate(deps.concat(peerDeps))
 };
 
 const umd = Object.assign({}, config, {
+  input: 'src/global.ts',
   output: {
     file: 'dist/react-pose.dev.js',
     format: 'umd',
@@ -35,7 +36,7 @@ const umd = Object.assign({}, config, {
   },
   external: makeExternalPredicate(peerDeps),
   plugins: [
-    typescript(noDeclarationConfig),
+    typescript(typescriptConfig),
     resolve(),
     replace({
       'process.env.NODE_ENV': JSON.stringify('development')
@@ -44,12 +45,11 @@ const umd = Object.assign({}, config, {
 });
 
 const umdProd = Object.assign({}, umd, {
-  input: 'src/global.ts',
   output: Object.assign({}, umd.output, {
     file: 'dist/react-pose.js'
   }),
   plugins: [
-    typescript(noDeclarationConfig),
+    typescript(typescriptConfig),
     resolve(),
     replace({
       'process.env.NODE_ENV': JSON.stringify('production')
@@ -59,21 +59,26 @@ const umdProd = Object.assign({}, umd, {
 });
 
 const es = Object.assign({}, config, {
+  experimentalCodeSplitting: true,
   output: {
-    file: 'dist/react-pose.es.js',
+    dir: 'es',
     format: 'es',
-    exports: 'named'
-  },
-  plugins: [typescript(noDeclarationConfig)]
-});
-
-const cjs = Object.assign({}, config, {
-  output: {
-    file: 'lib/index.js',
-    format: 'cjs',
-    exports: 'named'
+    exports: 'named',
+    entryNames: '[alias].js',
   },
   plugins: [typescript(typescriptConfig)]
 });
 
-export default [umd, umdProd, es, cjs];
+const cjs = Object.assign({}, config, {
+  experimentalCodeSplitting: true,
+  output: {
+    dir: 'lib',
+    format: 'cjs',
+    exports: 'named',
+    entryNames: '[alias].js'
+  },
+  // plugins: [typescript(declarationsConfig)]
+  plugins: [typescript(typescriptConfig)]
+});
+
+export default [/*umd, umdProd,*/ es, cjs];
