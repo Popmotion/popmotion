@@ -3,10 +3,19 @@ export type Props = { [key: string]: any };
 export type NumberPropFactory = (props: Props) => number;
 export type BooleanPropFactory = (props: Props) => boolean;
 export type StaggerDirectionPropFactory = (props: Props) => 1 | -1;
-export type TransitionFactory<A> = (props: Props) => A | false;
+export type TransitionFactory<A> = (
+  props: Props
+) => TransitionDefinition | A | false;
+
+export type TransitionDefinition = {
+  [key: string]: any;
+};
+export type TransitionMap<A> = {
+  [key: string]: TransitionDefinition | TransitionFactory<A>;
+};
 
 export type Pose<A> = {
-  transition?: TransitionFactory<A>;
+  transition?: TransitionMap<A> | TransitionFactory<A>;
   delay?: number | NumberPropFactory;
   delayChildren?: number | NumberPropFactory;
   staggerChildren?: number | NumberPropFactory;

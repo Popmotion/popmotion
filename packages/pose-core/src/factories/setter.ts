@@ -11,7 +11,10 @@ import {
   ResolveTarget,
   TransformPose,
   AddTransitionDelay,
-  ConvertTransitionDefinition
+  ConvertTransitionDefinition,
+  TransitionDefinition,
+  TransitionFactory,
+  TransitionMap
 } from '../types';
 import { getPoseValues } from '../inc/selectors';
 
@@ -72,13 +75,13 @@ const startChildAnimations = <V, A, C, P>(
   return animations;
 };
 
-const resolveTransition = (
-  transition,
-  key,
-  props,
-  convertTransitionDefinition
-) => {
-  let resolvedTransition;
+const resolveTransition = <A>(
+  transition: TransitionMap<A> | TransitionFactory<A>,
+  key: string,
+  props: Props,
+  convertTransitionDefinition: ConvertTransitionDefinition<A>
+): A | false => {
+  let resolvedTransition: A | false | TransitionDefinition;
 
   /**
    * transition: () => {}
@@ -94,7 +97,7 @@ const resolveTransition = (
      * }
      */
     if (typeof transition[key] === 'function') {
-      resolvedTransition = transition[key](props);
+      resolvedTransition = (transition[key] as TransitionFactory<A>)(props);
 
       /**
        * transition: {
@@ -112,11 +115,9 @@ const resolveTransition = (
     resolvedTransition = transition;
   }
 
-  if (typeof resolvedTransition.start !== 'function') {
-    resolvedTransition = convertTransitionDefinition(resolvedTransition);
-  }
-
-  return resolvedTransition;
+  return typeof resolvedTransition === 'object'
+    ? convertTransitionDefinition(resolvedTransition)
+    : resolvedTransition;
 };
 
 const createPoseSetter = <V, A, C, P>(
@@ -185,7 +186,7 @@ const createPoseSetter = <V, A, C, P>(
           ...transitionProps,
           ...getTransitionProps(value, target, transitionProps)
         };
-        let transition = resolveTransition(
+        let transition = resolveTransition<A>(
           getTransition,
           key,
           resolveTransitionProps,
