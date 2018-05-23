@@ -12,7 +12,7 @@
     "watch": false,
     "baseUrl": "src/",
     "alwaysStrict": true,
-    "declaration": true,
+    "declaration": false,
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
     "lib": ["es6", "dom"],

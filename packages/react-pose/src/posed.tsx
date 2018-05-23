@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { ReactElement } from 'react';
 import { PoseElement, PoseParentContext } from './components/PoseElement';
-import supportedElements from './utils/supported-elements';
 import {
   PoseElementProps,
   PoseContextProps
@@ -59,10 +58,5 @@ const getComponentFactory = (key: string | React.Component) =>
 
 const posed = ((component: React.Component | string) =>
   getComponentFactory(component)) as Posed;
-
-supportedElements.reduce((acc, key) => {
-  acc[key] = getComponentFactory(key);
-  return acc;
-}, posed);
 
 export default posed;

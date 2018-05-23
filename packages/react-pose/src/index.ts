@@ -1,5 +1,11 @@
-import posed from './posed';
-import { PoseGroup } from './components/PoseGroup';
+import posed from './base';
+import supportedElements from './utils/supported-elements';
 
-export default posed;
-export { PoseGroup };
+export * from './base';
+
+export default supportedElements.reduce((acc, key) => {
+  acc[key] = posed(key);
+  return acc;
+}, posed);
+
+

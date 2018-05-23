@@ -1,0 +1,6 @@
+{
+  "name": "react-pose/base",
+  "private": true,
+  "main": "../lib/base.js",
+  "module": "../es/base.js"
+}
