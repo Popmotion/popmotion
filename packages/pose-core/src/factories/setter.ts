@@ -114,9 +114,9 @@ const resolveTransition = <A>(
   } else {
     resolvedTransition = transition;
   }
-
+  console.log(resolvedTransition);
   return typeof resolvedTransition === 'object'
-    ? convertTransitionDefinition(resolvedTransition)
+    ? convertTransitionDefinition(resolvedTransition, props)
     : resolvedTransition;
 };
 
@@ -186,6 +186,7 @@ const createPoseSetter = <V, A, C, P>(
           ...transitionProps,
           ...getTransitionProps(value, target, transitionProps)
         };
+
         let transition = resolveTransition<A>(
           getTransition,
           key,
