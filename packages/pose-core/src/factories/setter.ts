@@ -29,7 +29,7 @@ type SetterFactoryProps<V, A, C, P> = {
   addActionDelay: AddTransitionDelay<A>;
   getTransitionProps: GetTransitionProps<V>;
   resolveTarget: ResolveTarget<V>;
-  convertTransitionDefinition: ConvertTransitionDefinition<A>;
+  convertTransitionDefinition: ConvertTransitionDefinition<V, A>;
   transformPose?: TransformPose<V, A, C, P>;
 };
 
@@ -75,11 +75,13 @@ const startChildAnimations = <V, A, C, P>(
   return animations;
 };
 
-const resolveTransition = <A>(
+const resolveTransition = <V, A>(
   transition: TransitionMap<A> | TransitionFactory<A>,
   key: string,
+  value: V,
   props: Props,
-  convertTransitionDefinition: ConvertTransitionDefinition<A>
+  convertTransitionDefinition: ConvertTransitionDefinition<V, A>,
+  getInstantTransition: GetInstantTransition<V, A>
 ): A | false => {
   let resolvedTransition: A | false | TransitionDefinition;
 
@@ -101,7 +103,7 @@ const resolveTransition = <A>(
 
       /**
        * transition: {
-       *  x: { type: 'tween' }
+       *  x: { type: 'tween' } || false
        * }
        */
     } else {
@@ -109,15 +111,15 @@ const resolveTransition = <A>(
     }
 
     /**
-     * transition: { type: 'tween' }
+     * transition: { type: 'tween' } || false
      */
   } else {
     resolvedTransition = transition;
   }
-  console.log(resolvedTransition);
-  return typeof resolvedTransition === 'object'
-    ? convertTransitionDefinition(resolvedTransition, props)
-    : resolvedTransition;
+
+  return resolvedTransition === false
+    ? getInstantTransition(value, props)
+    : convertTransitionDefinition(value, resolvedTransition, props);
 };
 
 const createPoseSetter = <V, A, C, P>(
@@ -187,11 +189,13 @@ const createPoseSetter = <V, A, C, P>(
           ...getTransitionProps(value, target, transitionProps)
         };
 
-        let transition = resolveTransition<A>(
+        let transition = resolveTransition<V, A>(
           getTransition,
           key,
+          value,
           resolveTransitionProps,
-          convertTransitionDefinition
+          convertTransitionDefinition,
+          getInstantTransition
         );
 
         // If the transition is `false`, for no transition, set instantly

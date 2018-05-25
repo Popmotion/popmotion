@@ -48,8 +48,15 @@ const testPose = poseFactory<Value, Action, Subscription, PoserAPI>({
   stopAction: action => action.stop(),
   convertValue: raw => ({ i: raw }),
   getInstantTransition: (v, { to }) => mockAction(to),
-  convertTransitionDefinition: ({ multiply }, { to }) => {
-    return multiply ? mockMultiplyAction(to, multiply) : mockAction(to);
+  convertTransitionDefinition: (v, transitionDef, { to }) => {
+    if (transitionDef.hasOwnProperty('start')) {
+      return transitionDef as Action;
+    }
+
+    const { multiply } = transitionDef;
+    return multiply
+      ? mockMultiplyAction(to, multiply)
+      : mockAction(to);
   },
   addActionDelay: (delay, action) => action,
   defaultTransitions: new Map([['default', ({ to }) => mockActionInverse(to)]]),
@@ -65,12 +72,12 @@ const testPoser = testPose({
   left: { y: 50 },
   functionalTransition: {
     x: 10,
-    transition: ({ to }) => mockActionInverse(to)
+    transition: ({ to }) => mockMultiplyAction(to, 10)
   },
   mapFunctionalTransition: {
     x: 9,
     transition: {
-      x: ({ to }) => mockActionInverse(to)
+      x: ({ to }) => mockMultiplyAction(to, 9)
     }
   },
   defTransition: {
@@ -116,6 +123,29 @@ test('sets poses with default transition', () => Promise.all([
   expect(state.y).toBe(-100)
 })
 
-test('resolves custom transitions correctly', () => {
-  
-});
+test('resolves custom transitions correctly', () =>
+  testPoser.set('functionalTransition')
+    .then(() => {
+      expect(testPoser.get().x).toBe(10 * 10)
+      return testPoser.set('mapFunctionalTransition')
+    })
+    .then(() => {
+      expect(testPoser.get().x).toBe(9 * 9)
+      return testPoser.set('defTransition')
+    })
+    .then(() => {
+      expect(testPoser.get().x).toBe(8 * 2)
+      return testPoser.set('functionalDefTransition')
+    })
+    .then(() => {
+      expect(testPoser.get().x).toBe(5 * 10)
+      return testPoser.set('mapDefTransition')
+    })
+    .then(() => {
+      expect(testPoser.get().x).toBe(7 * 3)
+      return testPoser.set('mapFunctionalDefTransition')
+    })
+    .then(() => {
+      expect(testPoser.get().x).toBe(6 * 5)
+    })
+);
