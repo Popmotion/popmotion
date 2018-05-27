@@ -28,9 +28,10 @@ const generateTransitions = <A>(
       `Pose '${key}' is of invalid type. All poses should be objects.`
     );
 
-    poses[key] = pose.transition
-      ? pose
-      : applyDefaultTransition<A>(pose, key, defaultTransitions);
+    poses[key] =
+      pose.transition !== undefined
+        ? pose
+        : applyDefaultTransition<A>(pose, key, defaultTransitions);
   });
 
   return poses;

@@ -100,6 +100,23 @@ const testPoser = testPose({
       x: () => ({ multiply: 5 })
     }
   },
+  instantTransition: {
+    x: 11,
+    transition: false
+  },
+  instantTransitionMap: {
+    x: 12,
+    transition: { x: false }
+  },
+  instantTransitionFunc: {
+    x: 13,
+    transition: () => false },
+  instantTransitionMapFunc: {
+    x: 14,
+    transition: {
+      x: () => false
+    }
+  },
   initialPose: ['open', 'left']
 });
 
@@ -147,5 +164,21 @@ test('resolves custom transitions correctly', () =>
     })
     .then(() => {
       expect(testPoser.get().x).toBe(6 * 5)
+      return testPoser.set('instantTransition');
+    })
+    .then(() => {
+      expect(testPoser.get().x).toBe(11)
+      return testPoser.set('instantTransitionMap');
+    })
+    .then(() => {
+      expect(testPoser.get().x).toBe(12)
+      return testPoser.set('instantTransitionFunc');
+    })
+    .then(() => {
+      expect(testPoser.get().x).toBe(13)
+      return testPoser.set('instantTransitionMapFunc');
+    })
+    .then(() => {
+      expect(testPoser.get().x).toBe(14)
     })
 );

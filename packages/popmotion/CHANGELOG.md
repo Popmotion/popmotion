@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.2.3] 2018-05-28
+
+### Fixed
+
+- Renaming `popmotion.min.js` back to `popmotion.global.min.js`
+
 ## [8.2.1] 2018-05-17
 
 ### Fixed

@@ -82,7 +82,7 @@ const resolveTransition = <V, A>(
   props: Props,
   convertTransitionDefinition: ConvertTransitionDefinition<V, A>,
   getInstantTransition: GetInstantTransition<V, A>
-): A | false => {
+): A => {
   let resolvedTransition: A | false | TransitionDefinition;
 
   /**
@@ -197,10 +197,6 @@ const createPoseSetter = <V, A, C, P>(
           convertTransitionDefinition,
           getInstantTransition
         );
-
-        // If the transition is `false`, for no transition, set instantly
-        if (transition === false)
-          transition = getInstantTransition(value, resolveTransitionProps);
 
         // Add delay if defined on pose
         const poseDelay = resolveProp(nextPose.delay, transitionProps);

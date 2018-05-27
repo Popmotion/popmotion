@@ -143,7 +143,8 @@ export type TransformPose<V, A, C, P> = (
 
 export type ReadValueFromSource = (key: string, props: Props) => any;
 
-export type ConvertTransitionDefinition<A> = (
+export type ConvertTransitionDefinition<V, A> = (
+  value: V,
   transitionDef: TransitionDefinition,
   props: Props
 ) => A;
@@ -161,7 +162,7 @@ export type PoseFactoryConfig<V, A, C, P> = {
   convertValue: ConvertValue<V>;
   resolveTarget: ResolveTarget<V>;
   getTransitionProps: GetTransitionProps<V>;
-  convertTransitionDefinition: ConvertTransitionDefinition<A>;
+  convertTransitionDefinition: ConvertTransitionDefinition<V, A>;
   startAction: StartAction<V, A, C>;
   stopAction: StopAction<C>;
   getInstantTransition: GetInstantTransition<V, A>;

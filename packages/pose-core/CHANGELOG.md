@@ -2,8 +2,22 @@
 
 Pose Core adheres to [Semantic Versioning](http://semver.org/).
 
-## [0.7.0] Unreleased
+## [0.7.0] 2018-05-28
 
+### Added
+- Tests
+- Support for transition definitions. Instead of defining animations with the native library:
+
+```javascript
+transition: ({ value, ...props }) => Animated.spring(value, props)
+```
+
+This can be defined as:å
+```javascript
+transition: { type: 'spring' }
+```
+
+### Removed
 - Removed support for `transitionProps` and `setTransitionProps`.
 
 ## [0.6.2] 2018-05-17
