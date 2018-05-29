@@ -10,7 +10,11 @@ import {
   StopAction,
   ResolveTarget,
   TransformPose,
-  AddTransitionDelay
+  AddTransitionDelay,
+  ConvertTransitionDefinition,
+  TransitionDefinition,
+  TransitionFactory,
+  TransitionMap
 } from '../types';
 import { getPoseValues } from '../inc/selectors';
 
@@ -25,6 +29,7 @@ type SetterFactoryProps<V, A, C, P> = {
   addActionDelay: AddTransitionDelay<A>;
   getTransitionProps: GetTransitionProps<V>;
   resolveTarget: ResolveTarget<V>;
+  convertTransitionDefinition: ConvertTransitionDefinition<V, A>;
   transformPose?: TransformPose<V, A, C, P>;
 };
 
@@ -70,6 +75,53 @@ const startChildAnimations = <V, A, C, P>(
   return animations;
 };
 
+const resolveTransition = <V, A>(
+  transition: TransitionMap<A> | TransitionFactory<A>,
+  key: string,
+  value: V,
+  props: Props,
+  convertTransitionDefinition: ConvertTransitionDefinition<V, A>,
+  getInstantTransition: GetInstantTransition<V, A>
+): A => {
+  let resolvedTransition: A | false | TransitionDefinition;
+
+  /**
+   * transition: () => {}
+   */
+  if (typeof transition === 'function') {
+    resolvedTransition = transition(props);
+
+    // Or if it's a keyed object
+  } else if (transition[key]) {
+    /**
+     * transition: {
+     *  x: () => {}
+     * }
+     */
+    if (typeof transition[key] === 'function') {
+      resolvedTransition = (transition[key] as TransitionFactory<A>)(props);
+
+      /**
+       * transition: {
+       *  x: { type: 'tween' } || false
+       * }
+       */
+    } else {
+      resolvedTransition = transition[key];
+    }
+
+    /**
+     * transition: { type: 'tween' } || false
+     */
+  } else {
+    resolvedTransition = transition;
+  }
+
+  return resolvedTransition === false
+    ? getInstantTransition(value, props)
+    : convertTransitionDefinition(value, resolvedTransition, props);
+};
+
 const createPoseSetter = <V, A, C, P>(
   setterProps: SetterFactoryProps<V, A, C, P>
 ) => (next: string, nextProps: Props = {}) => {
@@ -82,7 +134,8 @@ const createPoseSetter = <V, A, C, P>(
     addActionDelay,
     getTransitionProps,
     resolveTarget,
-    transformPose
+    transformPose,
+    convertTransitionDefinition
   } = setterProps;
   const { children, values, props, activeActions, activePoses } = state;
 
@@ -135,11 +188,15 @@ const createPoseSetter = <V, A, C, P>(
           ...transitionProps,
           ...getTransitionProps(value, target, transitionProps)
         };
-        let transition = getTransition(resolveTransitionProps);
 
-        // If the transition is `false`, for no transition, set instantly
-        if (transition === false)
-          transition = getInstantTransition(value, resolveTransitionProps);
+        let transition = resolveTransition<V, A>(
+          getTransition,
+          key,
+          value,
+          resolveTransitionProps,
+          convertTransitionDefinition,
+          getInstantTransition
+        );
 
         // Add delay if defined on pose
         const poseDelay = resolveProp(nextPose.delay, transitionProps);

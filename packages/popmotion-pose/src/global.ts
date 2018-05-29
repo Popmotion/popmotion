@@ -1,4 +1,4 @@
-import pose from './index';
+import pose from './';
 import * as popmotion from 'popmotion';
 
 (window as any).pose = pose;

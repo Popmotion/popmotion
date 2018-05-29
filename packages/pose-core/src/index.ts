@@ -30,6 +30,7 @@ const poseFactory = <V, A, C, P>({
   getTransitionProps,
   addActionDelay,
   selectValueToRead,
+  convertTransitionDefinition,
   transformPose,
   extendAPI
 }: PoseFactoryConfig<V, A, C, P>) => (
@@ -85,6 +86,7 @@ const poseFactory = <V, A, C, P>({
     poses,
     getInstantTransition,
     getTransitionProps,
+    convertTransitionDefinition,
     startAction,
     stopAction,
     resolveTarget,
