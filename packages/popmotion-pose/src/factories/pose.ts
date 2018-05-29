@@ -6,6 +6,7 @@ import {
   physics,
   value,
   chain,
+  easing,
   delay as delayAction
 } from 'popmotion';
 import poseFactory from 'pose-core';
@@ -48,32 +49,78 @@ const createValue = (init: any) => {
 const addActionDelay = (delay = 0, transition: Action) =>
   chain(delayAction(delay), transition);
 
-const animationLookup = new Map<string, Action>([
+const animationLookup = new Map<
+  string,
+  (props: { [key: string]: any }) => Action
+>([
   ['tween', tween],
   ['spring', spring],
   ['decay', decay],
   ['keyframes', keyframes],
   ['physics', physics]
 ]);
+
+const {
+  easeIn,
+  easeOut,
+  easeInOut,
+  circIn,
+  circOut,
+  circInOut,
+  backIn,
+  backOut,
+  backInOut,
+  anticipate
+} = easing;
+
+const easingLookup = new Map<string, (v: number) => number>([['easeIn']]);
+
 // At the moment this function just uses `type` as a key - in the future
 // we could infer the animation type based on the properties being provided
 const getAction = (
   v: Value,
-  { type, ...def }: AnimationDef,
+  { type = 'tween', ease, ...def }: AnimationDef,
   { from, to, velocity }: TransitionProps
 ) => {
   invariant(
     animationLookup.has(type),
-    `You specified invalid transition type '${type}'. Valid transition types are: tween, spring, decay, physics and keyframes.`
+    `Invalid transition type '${type}'. Valid transition types are: tween, spring, decay, physics and keyframes.`
   );
+
+  // Convert ease definition into easing function
+  if (type === 'tween') {
+    const typeOfEase = typeof ease;
+    if (typeOfEase !== 'function') {
+      if (typeOfEase === 'string') {
+        invariant(
+          easingLookup.has(ease),
+          `Invalid easing type '${ease}'. popmotion.io/pose/api/transition`
+        );
+
+        ease = easingLookup.get(ease);
+      } else if (Array.isArray(ease)) {
+        invariant(
+          ease.length === 4,
+          `Cubic bezier arrays must contain four numerical values.`
+        );
+
+        const [x1, y1, x2, y2] = ease;
+        ease = easing.cubicBezier(x1, y1, x2, y2);
+      }
+    }
+  }
 
   return animationLookup.get(type)({
     from,
     to,
     velocity,
+    ease,
     ...def
   });
 };
+
+const isAction = (action: any): action is Action =>
+  typeof action.start !== 'undefined';
 
 const pose = <P>({
   transformPose,
@@ -145,8 +192,12 @@ const pose = <P>({
 
     getInstantTransition: (_, { to }) => just(to),
 
-    convertTransitionDefinition: (val, def: AnimationDef, props) => {
-      if (typeof def.start === 'function') return def;
+    convertTransitionDefinition: (
+      val,
+      def: AnimationDef | Action,
+      props: TransitionProps
+    ) => {
+      if (isAction(def)) return def;
 
       const { delay, min, max, round, ...remainingDef } = def;
       const action = getAction(val, remainingDef, props);
@@ -157,7 +208,7 @@ const pose = <P>({
       if (max !== undefined) outputPipe.push((v: number) => Math.min(v, max));
       if (round) outputPipe.push(Math.round);
 
-      return outputPipe.length ? action.push(...outputPipe) : action;
+      return outputPipe.length ? action.pipe(...outputPipe) : action;
     },
 
     addActionDelay,

@@ -1,7 +1,8 @@
-import { spring, tween, action, easing, pointer, transform, value, chain, delay, listen } from 'popmotion';
+import { spring, tween, action, easing, pointer, transform, decay, keyframes, physics, value, chain, delay, listen } from 'popmotion';
 import { percent, number, degrees, px } from 'style-value-types';
-import poseFactory from 'pose-core';
 import { __rest, __assign } from 'tslib';
+import poseFactory from 'pose-core';
+import { invariant } from 'hey-listen';
 import 'popmotion/action';
 import styler from 'stylefire';
 import 'popmotion/reactions/value';
@@ -134,6 +135,27 @@ var createValue = function (init) {
     var raw = value(type === number ? type.parse(init) : init);
     return { raw: raw, type: type };
 };
+var addActionDelay = function (delay$$1, transition) {
+    if (delay$$1 === void 0) {
+        delay$$1 = 0;
+    }
+    return chain(delay(delay$$1), transition);
+};
+var animationLookup = /*#__PURE__*/new Map([['tween', tween], ['spring', spring], ['decay', decay], ['keyframes', keyframes], ['physics', physics]]);
+var getAction = function (v, _a, _b) {
+    var from = _b.from,
+        to = _b.to,
+        velocity = _b.velocity;
+    var type = _a.type,
+        def = __rest(_a, ["type"]);
+    invariant(animationLookup.has(type), "You specified invalid transition type '" + type + "'. Valid transition types are: tween, spring, decay, physics and keyframes.");
+    return animationLookup.get(type)(__assign({ from: from,
+        to: to,
+        velocity: velocity }, def));
+};
+var isAction = function (action$$1) {
+    return typeof action$$1.start !== 'undefined';
+};
 var pose = function (_a) {
     var transformPose = _a.transformPose,
         addListenerToValue = _a.addListenerToValue,
@@ -204,15 +226,30 @@ var pose = function (_a) {
         stopAction: function (action$$1) {
             return action$$1.stop();
         },
-        getInstantTransition: function (_, to) {
+        getInstantTransition: function (_, _a) {
+            var to = _a.to;
             return just(to);
         },
-        addActionDelay: function (delay$$1, transition) {
-            if (delay$$1 === void 0) {
-                delay$$1 = 0;
-            }
-            return chain(delay(delay$$1), transition);
+        convertTransitionDefinition: function (val, def, props) {
+            if (isAction(def)) return def;
+            var delay$$1 = def.delay,
+                min = def.min,
+                max = def.max,
+                round = def.round,
+                remainingDef = __rest(def, ["delay", "min", "max", "round"]);
+            var action$$1 = getAction(val, remainingDef, props);
+            var outputPipe = [];
+            if (delay$$1) addActionDelay(delay$$1, action$$1);
+            if (min !== undefined) outputPipe.push(function (v) {
+                return Math.max(v, min);
+            });
+            if (max !== undefined) outputPipe.push(function (v) {
+                return Math.min(v, max);
+            });
+            if (round) outputPipe.push(Math.round);
+            return outputPipe.length ? action$$1.pipe.apply(action$$1, outputPipe) : action$$1;
         },
+        addActionDelay: addActionDelay,
         defaultTransitions: defaultTransitions,
         transformPose: transformPose,
         readValueFromSource: readValueFromSource,
@@ -290,8 +327,8 @@ var checkPositionalProp = function (key) {
 var hasPositionalProps = function (pose) {
     return Object.keys(pose).some(checkPositionalProp);
 };
-var isFlipPose = function (pose, key, state) {
-    return state.props.element instanceof HTMLElement && (hasPositionalProps(pose) || key === 'flip');
+var isFlipPose = function (flip, key, state) {
+    return state.props.element instanceof HTMLElement && (flip === true || key === 'flip');
 };
 var resolveProp = function (target, props) {
     return typeof target === 'function' ? target(props) : target;
@@ -404,8 +441,10 @@ var createPoseConfig = function (element, _a) {
     return poseConfig;
 };
 var domPose = /*#__PURE__*/pose({
-    transformPose: function (pose$$1, name, state) {
-        return isFlipPose(pose$$1, name, state) ? flipPose(state, pose$$1) : pose$$1;
+    transformPose: function (_a, name, state) {
+        var flip = _a.flip,
+            pose$$1 = __rest(_a, ["flip"]);
+        return isFlipPose(flip, name, state) ? flipPose(state, pose$$1) : pose$$1;
     },
     addListenerToValue: function (key, elementStyler) {
         return function (v) {

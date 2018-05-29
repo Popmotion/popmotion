@@ -14,12 +14,12 @@ const makeExternalPredicate = externalArr => {
   if (externalArr.length === 0) {
     return () => false;
   }
-  const pattern = new RegExp(`^(${externalArr.join("|")})($|/)`);
+  const pattern = new RegExp(`^(${externalArr.join('|')})($|/)`);
   return id => pattern.test(id);
 };
 
-const deps = Object.keys(pkg.dependencies || {})
-const peerDeps = Object.keys(pkg.peerDependencies || {})
+const deps = Object.keys(pkg.dependencies || {});
+const peerDeps = Object.keys(pkg.peerDependencies || {});
 
 const config = {
   input: 'src/index.ts',
@@ -36,7 +36,7 @@ const umd = Object.assign({}, config, {
       'style-value-types': 'valueTypes'
     }
   },
-  external: makeExternalPredicate(peerDeps),
+  external: undefined,
   plugins: [
     typescript(noDeclarationConfig),
     resolve(),

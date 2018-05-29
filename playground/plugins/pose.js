@@ -240,7 +240,8 @@ const modalProps = {
     staggerChildren: 50
   },
   flip: {
-    transition: props => tween({ ...props, duration: 3000 })
+    transition: { type: "tween" }
+    //transition: props => tween({ ...props, duration: 3000 })
   }
 };
 const modalItemProps = {
