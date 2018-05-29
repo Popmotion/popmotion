@@ -1,6 +1,6 @@
 {
   "name": "pose-core",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Factory for Pose animation state machines",
   "main": "lib/index.js",
   "module": "dist/pose-core.es.js",
@@ -12,7 +12,7 @@
     "watch": "rollup -c -w",
     "test": "jest",
     "prettier": "prettier ./src/*",
-    "prepublishOnly": "npm run prettier && npm run build"
+    "prepublishOnly": "npm run test && npm run prettier --write && npm run build"
   },
   "repository": {
     "type": "git",
