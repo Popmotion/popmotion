@@ -2,6 +2,12 @@
 
 Pose Core adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.7.3] 2018-05-29
+
+### Added
+
+- Support for `default` named transition
+
 ## [0.7.0] 2018-05-28
 
 ### Added

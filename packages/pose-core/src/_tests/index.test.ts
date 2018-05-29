@@ -117,6 +117,13 @@ const testPoser = testPose({
       x: () => false
     }
   },
+  defaultTransitionMap: {
+    x: 15,
+    y: 15,
+    transition: {
+      default: { multiply: 3 }
+    }
+  },
   initialPose: ['open', 'left']
 });
 
@@ -180,5 +187,9 @@ test('resolves custom transitions correctly', () =>
     })
     .then(() => {
       expect(testPoser.get().x).toBe(14)
+      return testPoser.set('defaultTransitionMap')
+    })
+    .then(() => {
+      expect(testPoser.get().x).toBe(45)
     })
 );

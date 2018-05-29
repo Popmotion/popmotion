@@ -92,14 +92,16 @@ const resolveTransition = <V, A>(
     resolvedTransition = transition(props);
 
     // Or if it's a keyed object
-  } else if (transition[key]) {
+  } else if (transition[key] || transition.default) {
+    const keyTransition = transition[key] || transition.default;
+
     /**
      * transition: {
      *  x: () => {}
      * }
      */
-    if (typeof transition[key] === 'function') {
-      resolvedTransition = (transition[key] as TransitionFactory<A>)(props);
+    if (typeof keyTransition === 'function') {
+      resolvedTransition = (keyTransition as TransitionFactory<A>)(props);
 
       /**
        * transition: {
@@ -107,7 +109,7 @@ const resolveTransition = <V, A>(
        * }
        */
     } else {
-      resolvedTransition = transition[key];
+      resolvedTransition = keyTransition;
     }
 
     /**
@@ -213,7 +215,7 @@ const createPoseSetter = <V, A, C, P>(
 
   // Check before and afterChildren props to check if we need to reorder these animations
   if (nextPose && hasChildren) {
-    // parent before children
+    // parent before children§
     if (resolveProp(nextPose.beforeChildren, baseTransitionProps)) {
       return Promise.all(getParentAnimations()).then(() =>
         Promise.all(getChildAnimations())
