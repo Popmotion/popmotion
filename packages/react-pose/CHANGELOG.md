@@ -12,6 +12,10 @@ React Pose adheres to [Semantic Versioning](http://semver.org/).
 
 - `popmotion-pose` to `2.0.0`
 
+### Removed
+
+- Babel plugin process wouldn't quit, so removed.
+
 ## [1.7.0] 2018-05-19
 
 ### Added

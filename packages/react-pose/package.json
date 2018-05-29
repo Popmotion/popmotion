@@ -6,11 +6,10 @@
   "types": "./lib/index.d.ts",
   "scripts": {
     "build": "rollup -c && npm run measure",
-    "postbuild": "babel $npm_package_module --out-file $npm_package_module --no-babelrc --plugins annotate-pure-calls",
     "watch": "rollup -c -w",
     "test": "echo \"Error: no test specified\" && exit 1",
     "measure": "gzip -c dist/react-pose.js | wc -c",
-    "prettier": "prettier ./src/*",
+    "prettier": "prettier ./src/* --write",
     "prepublishOnly": "npm run prettier && npm run build"
   },
   "repository": {
@@ -32,13 +31,9 @@
   ],
   "peerDependencies": {
     "react": "^16.3.2",
-    "react-dom": "^16.3.2",
-    "popmotion": "^8.2.1"
+    "react-dom": "^16.3.2"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.3",
-    "babel-plugin-annotate-pure-calls": "^0.2.2",
     "prettier": "1.11.1",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
@@ -52,8 +47,8 @@
   },
   "dependencies": {
     "hey-listen": "^1.0.5",
-    "tslib": "^1.9.1",
-    "popmotion-pose": "^2.0.0"
+    "popmotion-pose": "^2.0.0",
+    "tslib": "^1.9.1"
   },
   "unpkg": "./dist/react-pose.js",
   "prettier": {

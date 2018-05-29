@@ -1,6 +1,6 @@
 {
   "name": "popmotion-pose",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A declarative animation library for HTML and SVG",
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
@@ -12,8 +12,8 @@
     "watch": "rollup -c -w",
     "test": "jest",
     "measure": "gzip -c dist/popmotion-pose.js | wc -c",
-    "prettier": "prettier ./src/*",
-    "prepublishOnly": "npm run test && npm run prettier --write && npm run build"
+    "prettier": "prettier ./src/* --write",
+    "prepublishOnly": "npm run test && npm run prettier && npm run build"
   },
   "repository": {
     "type": "git",
@@ -46,14 +46,10 @@
     "rollup-plugin-uglify": "^3.0.0",
     "typescript": "^2.7.2"
   },
-  "peerDependencies": {
-    "popmotion": "^8.2.1"
-  },
   "dependencies": {
     "popmotion": "^8.2.3",
-    "pose-core": "^0.7.2",
+    "pose-core": "^0.7.3",
     "style-value-types": "^1.0.10",
-    "stylefire": "^2.0.2",
     "tslib": "^1.9.1"
   },
   "unpkg": "./dist/popmotion-pose.js",

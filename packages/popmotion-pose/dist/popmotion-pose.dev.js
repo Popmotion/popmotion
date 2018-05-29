@@ -2427,11 +2427,12 @@
         var resolvedTransition;
         if (typeof transition === 'function') {
             resolvedTransition = transition(props);
-        } else if (transition[key]) {
-            if (typeof transition[key] === 'function') {
-                resolvedTransition = transition[key](props);
+        } else if (transition[key] || transition.default) {
+            var keyTransition = transition[key] || transition.default;
+            if (typeof keyTransition === 'function') {
+                resolvedTransition = keyTransition(props);
             } else {
-                resolvedTransition = transition[key];
+                resolvedTransition = keyTransition;
             }
         } else {
             resolvedTransition = transition;
@@ -2824,13 +2825,41 @@
         ['keyframes', keyframes],
         ['physics', index$1$1]
     ]);
+    var easeIn$1 = easing.easeIn, easeOut$1 = easing.easeOut, easeInOut$1 = easing.easeInOut, circIn$1 = easing.circIn, circOut$1 = easing.circOut, circInOut$1 = easing.circInOut, backIn$1 = easing.backIn, backOut$1 = easing.backOut, backInOut$1 = easing.backInOut, anticipate$1 = easing.anticipate;
+    var easingLookup = new Map([
+        ['easeIn', easeIn$1],
+        ['easeOut', easeOut$1],
+        ['easeInOut', easeInOut$1],
+        ['circIn', circIn$1],
+        ['circOut', circOut$1],
+        ['circInOut', circInOut$1],
+        ['backIn', backIn$1],
+        ['backOut', backOut$1],
+        ['backInOut', backInOut$1],
+        ['anticipate', anticipate$1]
+    ]);
     var getAction = function (v, _a, _b) {
         var from = _b.from, to = _b.to, velocity = _b.velocity;
-        var type = _a.type, def = __rest(_a, ["type"]);
-        invariant$1(animationLookup.has(type), "You specified invalid transition type '" + type + "'. Valid transition types are: tween, spring, decay, physics and keyframes.");
+        var _c = _a.type, type = _c === void 0 ? 'tween' : _c, ease = _a.ease, def = __rest(_a, ["type", "ease"]);
+        invariant$1(animationLookup.has(type), "Invalid transition type '" + type + "'. Valid transition types are: tween, spring, decay, physics and keyframes.");
+        if (type === 'tween') {
+            var typeOfEase = typeof ease;
+            if (typeOfEase !== 'function') {
+                if (typeOfEase === 'string') {
+                    invariant$1(easingLookup.has(ease), "Invalid easing type '" + ease + "'. popmotion.io/pose/api/transition");
+                    ease = easingLookup.get(ease);
+                }
+                else if (Array.isArray(ease)) {
+                    invariant$1(ease.length === 4, "Cubic bezier arrays must contain four numerical values.");
+                    var x1 = ease[0], y1 = ease[1], x2 = ease[2], y2 = ease[3];
+                    ease = easing.cubicBezier(x1, y1, x2, y2);
+                }
+            }
+        }
         return animationLookup.get(type)(__assign({ from: from,
             to: to,
-            velocity: velocity }, def));
+            velocity: velocity,
+            ease: ease }, def));
     };
     var isAction = function (action$$1) {
         return typeof action$$1.start !== 'undefined';
@@ -3716,8 +3745,8 @@
         addListenerToValue: function (key, elementStyler) { return function (v) { return elementStyler.set(key, v); }; },
         readValueFromSource: function (key, _a) {
             var elementStyler = _a.elementStyler;
-            var value = elementStyler.get(key);
-            return isNaN(value) ? value : parseFloat(value);
+            var value$$1 = elementStyler.get(key);
+            return isNaN(value$$1) ? value$$1 : parseFloat(value$$1);
         },
         extendAPI: function (api, _a, config) {
             var props = _a.props, activeActions = _a.activeActions;

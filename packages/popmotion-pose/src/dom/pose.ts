@@ -2,7 +2,7 @@ import poseFactory from '../factories/pose';
 import createDimensions from './dimensions';
 import appendEventListeners from './events';
 import { flipPose, isFlipPose } from './flip';
-import styler from 'stylefire';
+import { styler } from 'popmotion';
 import { Poser } from 'pose-core';
 import { Action } from 'popmotion/action';
 import { ValueReaction } from 'popmotion/reactions/value';

@@ -3,12 +3,10 @@ const path = require('path');
 
 const menuOutputPath = path.join(__dirname, '../data/menus.json');
 const categoryNames = JSON.parse(
-  fs.readFileSync(
-    path.join(__dirname, '../data/category-names.json')
-  , 'utf8')
+  fs.readFileSync(path.join(__dirname, '../data/category-names.json'), 'utf8')
 );
 
-module.exports = function (siteMetadata) {
+module.exports = function(siteMetadata) {
   const menus = {};
 
   // Iterate over sites
@@ -22,34 +20,33 @@ module.exports = function (siteMetadata) {
       const sectionMetadata = siteMetadata[siteName][sectionKey];
 
       // Iterate over posts
-      Object.keys(sectionMetadata)
-        .forEach(postKey => {
-          const { id, title, category } = sectionMetadata[postKey];
-  
-          // This post has a category
-          if (category) {
-            // If category data doesn't exist
-            if (!categories[category]) {
-              categories[category] = {
-                id: category,
-                title: categoryNames[category],
-                posts: []
-              };
-              menu.push(categories[category]);
-            }
-  
-            if (id !== category) {
-              categories[category].posts.push({ id, title });
-            }
-  
-          // Or stand-alone post
-          } else {
-            menu.push({ id, title });
+      Object.keys(sectionMetadata).forEach(postKey => {
+        const { id, title, category } = sectionMetadata[postKey];
+
+        // This post has a category
+        if (category) {
+          // If category data doesn't exist
+          if (!categories[category]) {
+            categories[category] = {
+              id: category,
+              title: categoryNames[category],
+              posts: []
+            };
+            menu.push(categories[category]);
           }
-        });
+
+          if (id !== category) {
+            categories[category].posts.push({ id, title });
+          }
+
+          // Or stand-alone post
+        } else {
+          menu.push({ id, title });
+        }
+      });
 
       // Sort posts - adapted/butchered from https://blog.theodorejb.me/linked-list-sorting/
-      menu.forEach((menuItem) => {
+      menu.forEach(menuItem => {
         if (menuItem.posts) {
           const unsortedList = [];
           const sortedList = [];
@@ -62,17 +59,20 @@ module.exports = function (siteMetadata) {
             if (!next || !sectionMetadata[next]) {
               unsortedList.push(post);
             } else {
-              const nextIndex = menuItem.posts.findIndex(({ id }) => id === next);
-              const isFirstPost = menuItem.posts.find(({ id }) => {
-                const thisPost = sectionMetadata[id];
-                return post.id === thisPost.next
-              }) === undefined;
+              const nextIndex = menuItem.posts.findIndex(
+                ({ id }) => id === next
+              );
+              const isFirstPost =
+                menuItem.posts.find(({ id }) => {
+                  const thisPost = sectionMetadata[id];
+                  return post.id === thisPost.next;
+                }) === undefined;
               if (isFirstPost) currentPost = post;
 
               if (nextIndex > -1) {
                 map.set(post.id, nextIndex);
               } else {
-                throw new Error(`${post.id} incorrectly linked to ${next}`)
+                throw new Error(`${post.id} incorrectly linked to ${next}`);
               }
             }
           });
@@ -83,11 +83,17 @@ module.exports = function (siteMetadata) {
 
           if (numToSort && currentPost) {
             sortedList.push(currentPost);
+            const removeIndex = unsortedList.findIndex(
+              ({ id }) => id === currentPost.id
+            );
+            unsortedList.splice(removeIndex, 1);
+
             while (sortedList.length < numToSort) {
               const nextPost = menuItem.posts[map.get(currentPost.id)];
               sortedList.push(nextPost);
               currentPost = nextPost;
             }
+
             menuItem.posts = [...sortedList, ...unsortedList];
           }
         }
@@ -101,7 +107,7 @@ module.exports = function (siteMetadata) {
     menus[siteName] = siteMenu;
   });
 
-  fs.writeFile(menuOutputPath, JSON.stringify(menus), (err) => {
-    const msg = (!err) ? 'Menus created' : err;
+  fs.writeFile(menuOutputPath, JSON.stringify(menus), err => {
+    const msg = !err ? 'Menus created' : err;
   });
 };

@@ -1,11 +1,39 @@
-import { spring, tween, action, easing, pointer, transform, decay, keyframes, physics, value, chain, delay, listen } from 'popmotion';
+import { spring, tween, action, easing, pointer, transform, decay, keyframes, physics, value, chain, delay, listen, styler } from 'popmotion';
 import { percent, number, degrees, px } from 'style-value-types';
-import { __rest, __assign } from 'tslib';
 import poseFactory from 'pose-core';
 import { invariant } from 'hey-listen';
 import 'popmotion/action';
-import styler from 'stylefire';
 import 'popmotion/reactions/value';
+
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation. All rights reserved.
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this file except in compliance with the License. You may obtain a copy of the
+License at http://www.apache.org/licenses/LICENSE-2.0
+
+THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+MERCHANTABLITY OR NON-INFRINGEMENT.
+
+See the Apache Version 2.0 License for specific language governing permissions
+and limitations under the License.
+***************************************************************************** */
+
+var __assign = Object.assign || function __assign(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+    }
+    return t;
+};
+
+function __rest(s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    return t;
+}
 
 var createTransitionMap = function (key) {
     return function (map) {
@@ -142,16 +170,46 @@ var addActionDelay = function (delay$$1, transition) {
     return chain(delay(delay$$1), transition);
 };
 var animationLookup = /*#__PURE__*/new Map([['tween', tween], ['spring', spring], ['decay', decay], ['keyframes', keyframes], ['physics', physics]]);
+var easeIn = easing.easeIn,
+    easeOut = easing.easeOut,
+    easeInOut = easing.easeInOut,
+    circIn = easing.circIn,
+    circOut = easing.circOut,
+    circInOut = easing.circInOut,
+    backIn = easing.backIn,
+    backOut = easing.backOut,
+    backInOut = easing.backInOut,
+    anticipate = easing.anticipate;
+var easingLookup = /*#__PURE__*/new Map([['easeIn', easeIn], ['easeOut', easeOut], ['easeInOut', easeInOut], ['circIn', circIn], ['circOut', circOut], ['circInOut', circInOut], ['backIn', backIn], ['backOut', backOut], ['backInOut', backInOut], ['anticipate', anticipate]]);
 var getAction = function (v, _a, _b) {
     var from = _b.from,
         to = _b.to,
         velocity = _b.velocity;
-    var type = _a.type,
-        def = __rest(_a, ["type"]);
-    invariant(animationLookup.has(type), "You specified invalid transition type '" + type + "'. Valid transition types are: tween, spring, decay, physics and keyframes.");
+    var _c = _a.type,
+        type = _c === void 0 ? 'tween' : _c,
+        ease = _a.ease,
+        def = __rest(_a, ["type", "ease"]);
+    invariant(animationLookup.has(type), "Invalid transition type '" + type + "'. Valid transition types are: tween, spring, decay, physics and keyframes.");
+    if (type === 'tween') {
+        var typeOfEase = typeof ease;
+        if (typeOfEase !== 'function') {
+            if (typeOfEase === 'string') {
+                invariant(easingLookup.has(ease), "Invalid easing type '" + ease + "'. popmotion.io/pose/api/transition");
+                ease = easingLookup.get(ease);
+            } else if (Array.isArray(ease)) {
+                invariant(ease.length === 4, "Cubic bezier arrays must contain four numerical values.");
+                var x1 = ease[0],
+                    y1 = ease[1],
+                    x2 = ease[2],
+                    y2 = ease[3];
+                ease = easing.cubicBezier(x1, y1, x2, y2);
+            }
+        }
+    }
     return animationLookup.get(type)(__assign({ from: from,
         to: to,
-        velocity: velocity }, def));
+        velocity: velocity,
+        ease: ease }, def));
 };
 var isAction = function (action$$1) {
     return typeof action$$1.start !== 'undefined';

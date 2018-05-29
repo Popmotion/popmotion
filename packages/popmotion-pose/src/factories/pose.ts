@@ -73,7 +73,18 @@ const {
   anticipate
 } = easing;
 
-const easingLookup = new Map<string, (v: number) => number>([['easeIn']]);
+const easingLookup = new Map<string, (v: number) => number>([
+  ['easeIn', easeIn],
+  ['easeOut', easeOut],
+  ['easeInOut', easeInOut],
+  ['circIn', circIn],
+  ['circOut', circOut],
+  ['circInOut', circInOut],
+  ['backIn', backIn],
+  ['backOut', backOut],
+  ['backInOut', backInOut],
+  ['anticipate', anticipate]
+]);
 
 // At the moment this function just uses `type` as a key - in the future
 // we could infer the animation type based on the properties being provided
