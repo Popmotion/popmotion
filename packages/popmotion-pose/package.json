@@ -1,6 +1,6 @@
 {
   "name": "popmotion-pose",
-  "version": "1.5.0",
+  "version": "2.0.0",
   "description": "A declarative animation library for HTML and SVG",
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
@@ -10,10 +10,10 @@
     "build": "rollup -c && npm run measure",
     "postbuild": "babel $npm_package_module --out-file $npm_package_module --no-babelrc --plugins annotate-pure-calls",
     "watch": "rollup -c -w",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "measure": "gzip -c dist/popmotion-pose.js | wc -c",
     "prettier": "prettier ./src/*",
-    "prepublishOnly": "npm run prettier && npm run build"
+    "prepublishOnly": "npm run test && npm run prettier --write && npm run build"
   },
   "repository": {
     "type": "git",
@@ -31,6 +31,9 @@
     "env"
   ],
   "devDependencies": {
+    "@types/jest": "^22.2.3",
+    "jest": "^22.4.3",
+    "ts-jest": "^22.4.5",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-plugin-annotate-pure-calls": "^0.2.2",
@@ -47,7 +50,8 @@
     "popmotion": "^8.2.1"
   },
   "dependencies": {
-    "pose-core": "^0.5.2",
+    "popmotion": "^8.2.3",
+    "pose-core": "^0.7.2",
     "style-value-types": "^1.0.10",
     "stylefire": "^2.0.2",
     "tslib": "^1.9.1"
@@ -56,5 +60,16 @@
   "prettier": {
     "parser": "typescript",
     "singleQuote": true
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "transform": {
+      "\\.(ts)$": "../node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "/_tests/.*\\.(ts|js)$",
+    "rootDir": "src"
   }
 }

@@ -90,7 +90,7 @@ export enum BoundingBoxDimension {
   bottom = 'bottom'
 }
 
-export type AnimationProps = {
+export type AnimationDef = {
   type: 'tween' | 'physics' | 'spring' | 'decay' | 'keyframes';
   min?: number;
   max?: number;

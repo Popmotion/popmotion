@@ -13,9 +13,10 @@ import { Action } from 'popmotion/action';
 import { ColdSubscription } from 'popmotion/action/types';
 import {
   Value,
+  TransitionProps,
   Transformer,
   PopmotionPoserFactoryConfig,
-  AnimationProps
+  AnimationDef
 } from '../types';
 import { Poser } from 'pose-core';
 import defaultTransitions, { just } from '../inc/default-transitions';
@@ -54,13 +55,24 @@ const animationLookup = new Map<string, Action>([
   ['keyframes', keyframes],
   ['physics', physics]
 ]);
-const getAction = ({ type, ...props }: AnimationProps) => {
+// At the moment this function just uses `type` as a key - in the future
+// we could infer the animation type based on the properties being provided
+const getAction = (
+  v: Value,
+  { type, ...def }: AnimationDef,
+  { from, to, velocity }: TransitionProps
+) => {
   invariant(
     animationLookup.has(type),
     `You specified invalid transition type '${type}'. Valid transition types are: tween, spring, decay, physics and keyframes.`
   );
 
-  return animationLookup.get(type)(props);
+  return animationLookup.get(type)({
+    from,
+    to,
+    velocity,
+    ...def
+  });
 };
 
 const pose = <P>({
@@ -131,16 +143,13 @@ const pose = <P>({
 
     stopAction: action => action.stop(),
 
-    getInstantTransition: (_, to) => just(to),
+    getInstantTransition: (_, { to }) => just(to),
 
-    convertTransitionDefinition: ({
-      delay,
-      round,
-      min,
-      max,
-      ...props
-    }: AnimationProps) => {
-      const action = getAction(props);
+    convertTransitionDefinition: (val, def: AnimationDef, props) => {
+      if (typeof def.start === 'function') return def;
+
+      const { delay, min, max, round, ...remainingDef } = def;
+      const action = getAction(val, remainingDef, props);
       const outputPipe: Function[] = [];
 
       if (delay) addActionDelay(delay, action);
