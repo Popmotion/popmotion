@@ -80,8 +80,6 @@ yarn add react-pose
 
 So, when you see in the docs `import posed, { PoseGroup } from 'react-pose'`, you can instead simply use the global `posed` and `PoseGroup` variables.
 
-[Popmotion](https://popmotion.io) is also included with the minified file as a global `popmotion` variable.
-
 #### Download
 
 You can download the latest version of Pose at https://unpkg.com/react-pose/dist/react-pose.js
