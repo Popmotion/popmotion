@@ -16,7 +16,8 @@ import {
   ReactPoseChildren,
   Group,
   EmailList,
-  UserPoseInPoseGroup
+  UserPoseInPoseGroup,
+  PoseKey
 } from "./plugins/react-pose";
 
 storiesOf("Plugin: Pose", module)
@@ -33,7 +34,8 @@ storiesOf("Plugin: React Pose", module)
   .add("children", () => <ReactPoseChildren />)
   .add("group", () => <Group />)
   .add("email list", () => <EmailList />)
-  .add("user-defined poses within PoseGroup", () => <UserPoseInPoseGroup />);
+  .add("user-defined poses within PoseGroup", () => <UserPoseInPoseGroup />)
+  .add("pose key test", () => <PoseKey />);
 
 // import { Decay, DecayModifyTarget, DecayPower, DecayTimeConstant } from './decay';
 // import { Keyframes, KeyframesDuration, KeyframesLoop, KeyframesLinear, KeyframesTimes } from './keyframes';

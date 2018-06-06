@@ -12,7 +12,7 @@ import {
   PoseElementInternalProps,
   PopStyle
 } from './PoseElement.types';
-import { warning, invariant } from 'hey-listen';
+import { invariant } from 'hey-listen';
 import { hasChanged } from 'utils/has-changed';
 
 export const PoseParentContext = createContext({});
