@@ -86,7 +86,25 @@ export class PoseKey extends React.Component {
   }
 
   render() {
-    return <SpringBox pose="spring" poseKey={this.state.key} />;
+    return <SpringBox pose={["spring"]} poseKey={this.state.key} />;
+  }
+}
+
+export class PoseKeyFail extends React.Component {
+  state = { key: 0 };
+
+  componentDidMount() {
+    setInterval(
+      () =>
+        this.setState({
+          key: this.state.key + 1
+        }),
+      1000
+    );
+  }
+
+  render() {
+    return <SpringBox pose={["spring"]} />;
   }
 }
 
