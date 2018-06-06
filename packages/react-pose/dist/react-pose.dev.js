@@ -4109,14 +4109,13 @@
         'tspan'
     ];
 
-    var PoseElementComponent = PoseElement;
     var componentCache = new Map();
     var createComponentFactory = function (key) {
         var componentFactory = function (poseConfig) {
             if (poseConfig === void 0) { poseConfig = {}; }
             return function (_a) {
                 var _b = _a.withParent, withParent = _b === void 0 ? true : _b, props = __rest(_a, ["withParent"]);
-                return !withParent || props.parentValues ? (React.createElement(PoseElementComponent, __assign({ poseConfig: poseConfig, elementType: key }, props))) : (React.createElement(PoseParentContext.Consumer, null, function (parentCtx) { return (React.createElement(PoseElementComponent, __assign({ poseConfig: poseConfig, elementType: key }, props, parentCtx))); }));
+                return !withParent || props.parentValues ? (React.createElement(PoseElement, __assign({ poseConfig: poseConfig, elementType: key }, props))) : (React.createElement(PoseParentContext.Consumer, null, function (parentCtx) { return (React.createElement(PoseElement, __assign({ poseConfig: poseConfig, elementType: key }, props, parentCtx))); }));
             };
         };
         componentCache.set(key, componentFactory);

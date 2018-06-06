@@ -7,16 +7,16 @@ const { Children, cloneElement } = React;
 type MergeChildrenProps = Props &
   State & { displayedChildren: Array<ReactElement<any>> };
 
-const getKey = (child: ReactElement): string => child.key;
+const getKey = (child: ReactElement<any>): string => child.key as string;
 
 const animateChildrenList = (
-  incomingChildren: React.ReactChild,
+  incomingChildren: Array<ReactElement<any>>,
   pose: CurrentPose,
   initialPose?: CurrentPose
 ) => {
-  const children: ReactElement = [];
+  const children: Array<ReactElement<any>> = [];
 
-  Children.forEach(incomingChildren, (child: ReactElement) =>
+  Children.forEach(incomingChildren, (child: ReactElement<any>) =>
     children.push(cloneElement(child, { pose, initialPose }))
   );
   return children;
@@ -32,7 +32,7 @@ const mergeChildren = ({
   exitPose,
   flipMove
 }: MergeChildrenProps) => {
-  const children: ReactElement[] = [];
+  const children: Array<ReactElement<any>> = [];
 
   const prevKeys = displayedChildren.map(getKey);
   const nextKeys = incomingChildren.map(getKey);
@@ -112,9 +112,12 @@ export const handleIncomingChildren = (props: MergeChildrenProps) => {
   }
 };
 
-export const makeChildList = (children: ReactElement[]) => {
-  const list: ReactElement[] = [];
-  Children.forEach(children, child => child && list.push(child));
+export const makeChildList = (children: Array<ReactElement<any>>) => {
+  const list: Array<ReactElement<any>> = [];
+  Children.forEach(
+    children,
+    child => child && list.push(child as ReactElement<any>)
+  );
   return list;
 };
 

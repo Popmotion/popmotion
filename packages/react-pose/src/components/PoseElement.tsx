@@ -13,7 +13,7 @@ import {
   PopStyle
 } from './PoseElement.types';
 import { invariant } from 'hey-listen';
-import { hasChanged } from 'utils/has-changed';
+import { hasChanged } from '../utils/has-changed';
 
 export const PoseParentContext = createContext({});
 

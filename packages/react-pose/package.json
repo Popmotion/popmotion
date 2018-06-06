@@ -1,6 +1,6 @@
 {
   "name": "react-pose",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "A declarative animation library for React",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -34,6 +34,7 @@
     "react-dom": "^16.3.2"
   },
   "devDependencies": {
+    "@types/react": "^16.3.16",
     "prettier": "1.11.1",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
