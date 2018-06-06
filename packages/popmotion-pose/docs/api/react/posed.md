@@ -144,6 +144,10 @@ const Sidebar = styled(posed.nav(sidebarProps))`
 
 The name or names of the current pose.
 
+### `initialPose?: string | string[]`
+
+The name of one or more poses to set to before the component mounts. Once the component mounts, it will transition from this pose into `pose`.
+
 ### `withParent?: boolean = true`
 
 If set to `false`, this component won't subscribe to its parent posed component and create root for any further child components.
