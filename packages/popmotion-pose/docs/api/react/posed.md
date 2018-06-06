@@ -172,6 +172,21 @@ Callbacks that fire when dragging starts or ends. **Note:** These props are immu
 
 An optional function that will call with the posed DOM element when it mounts, and `null` when it unmounts.
 
-### `...config: { [key: string]: any }`
+### `...props: { [key: string]: any }`
 
-Remaining config props will be provided to a pose's `transition` function when that pose is entered.
+When a new pose is entered, any remaining props set on a component will be used to resolve that pose's dynamic props:
+
+```javascript
+const Component = posed.div({
+  visible: { opacity: 1, y: 0 },
+  hidden: {
+    opacity: 0,
+    y: ({ i }) => i * 50
+  }
+})
+
+// Later
+({ isVisibile, i }) => (
+  <Component pose={isVisible ? 'visible' : 'hidden'} i={i} />
+)
+```
