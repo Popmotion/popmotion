@@ -148,6 +148,22 @@ The name or names of the current pose.
 
 The name of one or more poses to set to before the component mounts. Once the component mounts, it will transition from this pose into `pose`.
 
+### `poseKey?: string | number`
+
+If `poseKey` changes, it'll force the posed component to transition to the current `pose`, even if it hasn't changed.
+
+This won't be required for the majority of use-cases. But we might have something like a paginated where we pass the x offset to the component but the pose itself doesn't change:
+
+```javascript
+const Slider = posed.div({
+  nextItem: {
+    x: ({ target }) => target
+  }
+})
+
+({ target }) => <Slider pose="nextItem" poseKey={target} target={target} />
+```
+
 ### `withParent?: boolean = true`
 
 If set to `false`, this component won't subscribe to its parent posed component and create root for any further child components.
@@ -155,10 +171,6 @@ If set to `false`, this component won't subscribe to its parent posed component 
 ### `onPoseComplete?: Function`
 
 A callback that fires whenever a pose has finished transitioning.
-
-### `onChange?: { [key: string]: any }`
-
-**Deprecated:** See `onValueChange`
 
 ### `onValueChange?: { [key: string]: any }`
 

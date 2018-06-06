@@ -2,7 +2,17 @@
 
 React Pose adheres to [Semantic Versioning](http://semver.org/).
 
-## [2.0.0] Unreleased
+## [2.1.0] 2018-06-06
+
+### Added
+
+- `poseKey` prop. If this property is changed, it will force an enter into the pose(s) defined in `pose`.
+
+### Fixed
+
+- Adding a shallow equivalency check for `pose` arrays. Now, if `pose` is an array, `['a'] === ['a']`.
+
+## [2.0.0] 2018-06-01
 
 ### Changed
 

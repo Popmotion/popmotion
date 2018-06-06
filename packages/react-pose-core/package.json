@@ -1,6 +1,6 @@
 {
   "name": "react-pose-core",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Factory for creating flavours of React Pose",
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
@@ -8,8 +8,8 @@
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
-    "prettier": "prettier ./src/*",
-    "prepublishOnly": "npm run prettier && npm run build"
+    "prettier": "prettier ./src/* --write",
+    "prepublishOnly": "npm run test && npm run prettier && npm run build"
   },
   "repository": {
     "type": "git",

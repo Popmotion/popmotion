@@ -1,6 +1,9 @@
 import { CurrentPose } from '../components/PoseElement.types';
 
 // Check if pose has changed. Pose can either be an array or string
+// This is duplicated from react-pose-core - that version has a unit test.
+// If anyone reading this knows of an easy way to share modules in a .ts monorepo
+// without publishing to npm, get in touch.
 export const hasChanged = (prev: CurrentPose, next: CurrentPose): boolean => {
   // Immediate return if these are literally the same poses (ie same string or same array reference)
   if (prev === next) return false;
