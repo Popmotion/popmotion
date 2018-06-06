@@ -2,6 +2,10 @@
 
 React Pose Core adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.2.1] 2018-06-06
+
+- Adding shallow equivalency check for poses. Now `['a'] === ['a']`.
+
 ## [0.2.0] 2018-05-10
 
 - Adding `initialPose` prop.

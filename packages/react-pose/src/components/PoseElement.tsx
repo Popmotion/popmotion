@@ -13,6 +13,7 @@ import {
   PopStyle
 } from './PoseElement.types';
 import { warning, invariant } from 'hey-listen';
+import { hasChanged } from 'utils/has-changed';
 
 export const PoseParentContext = createContext({});
 
@@ -103,12 +104,12 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
       children,
       elementType,
       poseConfig,
-      onChange, // Deprecated for 2.0.0
       onValueChange,
       innerRef,
       _pose,
       pose,
       initialPose,
+      poseKey,
       onPoseComplete,
       getParentPoseConfig,
       registerChild,
@@ -138,10 +139,6 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
     } else {
       this.popStyle = null;
     }
-
-    // Deprecated for 2.0.0
-    // If this is a function, it's intended for the DOM element
-    if (typeof onChange === 'function') props.onChange = onChange;
 
     return props;
   }
@@ -186,7 +183,6 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
 
     const {
       poseConfig,
-      onChange, // Deprecated 2.0.0
       onValueChange,
       registerChild,
       values,
@@ -204,14 +200,7 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
       onDragStart,
       onDragEnd,
       onChange: onValueChange
-        ? onValueChange
-        : typeof onChange !== 'function' ? onChange : undefined // 2.0.0 set to just `onValueChange`
     };
-
-    warning(
-      onChange === undefined || typeof onChange === 'function',
-      'The onChange prop is deprecated. Use onValueChange instead.'
-    );
 
     // If first in tree
     if (!registerChild) {
@@ -230,10 +219,19 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
   }
 
   componentDidUpdate(prevProps: PoseElementInternalProps) {
-    const { pose, _pose } = this.props;
+    const { pose, _pose, poseKey } = this.props;
     this.poser.setProps(this.getSetProps());
 
-    if (pose !== prevProps.pose || pose === 'flip') this.setPose(pose);
+    if (
+      poseKey !== prevProps.key ||
+      hasChanged(prevProps.pose, pose) ||
+      pose === 'flip'
+    ) {
+      this.setPose(pose);
+    }
+
+    // Internal use only. Must be a nicer way to reconcile internally and externally-set
+    // poses from children.ts which uses cloneElement. Answers on a postcard.
     if (_pose !== prevProps._pose || _pose === 'flip') this.setPose(_pose);
   }
 

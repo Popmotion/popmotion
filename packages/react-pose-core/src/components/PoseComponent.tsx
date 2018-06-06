@@ -7,25 +7,12 @@ import {
   CurrentPose,
   PoseContextProps
 } from '../types';
-
-const filterProps = ({
-  registerAsChild,
-  onUnmount,
-  Component,
-  pose,
-  initialPose,
-  Key,
-  draggable,
-  onDragStart,
-  onDragEnd,
-  factoryConfig,
-  poseConfig,
-  ...props
-}: PoseComponentProps): PoseComponentProps => props;
+import { filterProps, hasChanged } from '../utils';
 
 export const PoseParentContext = createContext({});
 
 class PoseComponent extends React.PureComponent<PoseComponentProps> {
+  props: PoseComponentProps;
   poser: AnimatedPoser;
   values: ValueMap;
   extraProps: PoseComponentProps;
@@ -71,8 +58,9 @@ class PoseComponent extends React.PureComponent<PoseComponentProps> {
     const { pose, poseKey } = this.props;
 
     this.poser.setProps(filterProps(this.props));
-    if (pose !== prevProps.pose || poseKey !== prevProps.poseKey)
+    if (poseKey !== prevProps.poseKey || hasChanged(prevProps.pose, pose)) {
       this.setPose(pose);
+    }
   }
 
   componentDidMount() {
