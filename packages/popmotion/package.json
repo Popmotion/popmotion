@@ -5,6 +5,7 @@
   "author": "Matt Perry",
   "homepage": "https://popmotion.io",
   "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "module": "dist/popmotion.es.js",
   "jsnext:main": "dist/popmotion.es.js",
   "repository": {

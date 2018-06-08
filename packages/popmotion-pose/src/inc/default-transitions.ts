@@ -1,5 +1,12 @@
-import { spring, tween, action, easing, pointer, transform } from 'popmotion';
-import { Action } from 'popmotion/action';
+import {
+  spring,
+  tween,
+  action,
+  easing,
+  pointer,
+  transform,
+  Action
+} from 'popmotion';
 import { eachValue } from './transition-composers';
 import { Transition, BoundingBoxDimension } from '../types';
 import { percent } from 'style-value-types';

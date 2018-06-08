@@ -1,8 +1,6 @@
 import { ValueType } from 'style-value-types';
-import { Action } from 'popmotion/action';
+import { Action, ValueReaction, ColdSubscription } from 'popmotion';
 import { Poser, PoserConfig } from 'pose-core';
-import { ValueReaction } from 'popmotion/reactions/value';
-import { ColdSubscription } from 'popmotion/action/types';
 import {
   Pose,
   PoseMap,
