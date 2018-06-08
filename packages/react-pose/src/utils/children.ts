@@ -1,11 +1,19 @@
 import * as React from 'react';
 import { ReactElement } from 'react';
 import { CurrentPose } from '../components/PoseElement.types';
-import { Props, State } from '../components/PoseGroup';
 const { Children, cloneElement } = React;
 
-type MergeChildrenProps = Props &
-  State & { displayedChildren: Array<ReactElement<any>> };
+interface MergeChildrenProps {
+  incomingChildren: Array<React.ReactElement<any>>;
+  displayedChildren: Array<React.ReactElement<any>>;
+  isLeaving: Set<string>;
+  removeFromTree: (key: string) => void
+  preEnterPose: string
+  enterPose: string
+  exitPose: string
+  flipMove: boolean
+  animateOnMount: boolean
+}
 
 const getKey = (child: ReactElement<any>): string => child.key as string;
 
@@ -112,7 +120,7 @@ export const handleIncomingChildren = (props: MergeChildrenProps) => {
   }
 };
 
-export const makeChildList = (children: Array<ReactElement<any>>) => {
+export const makeChildList = (children: Array<ReactElement<any>> | ReactElement<any>) => {
   const list: Array<ReactElement<any>> = [];
   Children.forEach(
     children,
