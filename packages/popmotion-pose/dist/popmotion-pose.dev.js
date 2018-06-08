@@ -1,8 +1,8 @@
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
-    typeof define === 'function' && define.amd ? define(['exports'], factory) :
-    (factory((global.pose = {})));
-}(this, (function (exports) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('popmotion/action'), require('popmotion/reactions/value')) :
+    typeof define === 'function' && define.amd ? define(['exports', 'popmotion/action', 'popmotion/reactions/value'], factory) :
+    (factory((global.pose = {}),null,null));
+}(this, (function (exports,action,value) { 'use strict';
 
     /*! *****************************************************************************
     Copyright (c) Microsoft Corporation. All rights reserved.
@@ -132,30 +132,12 @@
         if (willRenderNextFrame)
             useDefaultElapsed = false;
     }
-    var onFrameStart = frameStart.schedule;
     var onFrameUpdate = frameUpdate.schedule;
     var onFrameRender = frameRender.schedule;
     var onFrameEnd = frameEnd.schedule;
-    var cancelOnFrameStart = frameStart.cancel;
     var cancelOnFrameUpdate = frameUpdate.cancel;
-    var cancelOnFrameRender = frameRender.cancel;
-    var cancelOnFrameEnd = frameEnd.cancel;
     var timeSinceLastFrame = function () { return elapsed; };
     var currentFrameTime = function () { return currentFramestamp; };
-
-    var framesync_es = /*#__PURE__*/Object.freeze({
-        currentTime: currentTime,
-        onFrameStart: onFrameStart,
-        onFrameUpdate: onFrameUpdate,
-        onFrameRender: onFrameRender,
-        onFrameEnd: onFrameEnd,
-        cancelOnFrameStart: cancelOnFrameStart,
-        cancelOnFrameUpdate: cancelOnFrameUpdate,
-        cancelOnFrameRender: cancelOnFrameRender,
-        cancelOnFrameEnd: cancelOnFrameEnd,
-        timeSinceLastFrame: timeSinceLastFrame,
-        currentFrameTime: currentFrameTime
-    });
 
     /*! *****************************************************************************
     Copyright (c) Microsoft Corporation. All rights reserved.
@@ -188,8 +170,8 @@
         transform: function (v) { return "" + v + unit; }
     }); };
     var isFirstChars = function (term) { return function (v) { return (typeof v === 'string' && v.indexOf(term) === 0); }; };
-    var getValueFromFunctionString = function (value) { return value.substring(value.indexOf('(') + 1, value.lastIndexOf(')')); };
-    var splitCommaDelimited = function (value) { return typeof value === 'string' ? value.split(/,\s*/) : [value]; };
+    var getValueFromFunctionString = function (value$$1) { return value$$1.substring(value$$1.indexOf('(') + 1, value$$1.lastIndexOf(')')); };
+    var splitCommaDelimited = function (value$$1) { return typeof value$$1 === 'string' ? value$$1.split(/,\s*/) : [value$$1]; };
     function splitColorValues(terms) {
         var numTerms = terms.length;
         return function (v) {
@@ -211,32 +193,6 @@
     var percent = createUnitType('%');
     var px = createUnitType('px');
     var scale = __assign$1({}, number, { default: 1 });
-    var FLOAT_REGEX = /(-)?(\d[\d\.]*)/g;
-    var generateToken = function (token) { return '${' + token + '}'; };
-    var complex = {
-        test: function (v) {
-            var matches = v.match && v.match(FLOAT_REGEX);
-            return (matches !== undefined && matches.constructor === Array && matches.length > 1);
-        },
-        parse: function (v) {
-            var parsedValue = {};
-            v.match(FLOAT_REGEX).forEach(function (value, i) { return parsedValue[i] = parseFloat(value); });
-            return parsedValue;
-        },
-        createTransformer: function (prop) {
-            var counter = 0;
-            var template = prop.replace(FLOAT_REGEX, function () { return generateToken("" + counter++); });
-            return function (v) {
-                var output = template;
-                for (var key in v) {
-                    if (v.hasOwnProperty(key)) {
-                        output = output.replace(generateToken(key), v[key].toString());
-                    }
-                }
-                return output;
-            };
-        }
-    };
     var clampRgbUnit = clamp(0, 255);
     var rgbUnit = __assign$1({}, number, { transform: function (v) { return Math.round(clampRgbUnit(v)); } });
     var rgbaTemplate = function (_a) {
@@ -322,24 +278,6 @@
         },
     };
 
-    var styleValueTypes_es = /*#__PURE__*/Object.freeze({
-        getValueFromFunctionString: getValueFromFunctionString,
-        splitCommaDelimited: splitCommaDelimited,
-        splitColorValues: splitColorValues,
-        number: number,
-        alpha: alpha,
-        degrees: degrees,
-        percent: percent,
-        px: px,
-        scale: scale,
-        complex: complex,
-        rgbUnit: rgbUnit,
-        rgba: rgba,
-        hsla: hsla,
-        hex: hex,
-        color: color
-    });
-
     var HEY_LISTEN = 'Hey, listen! ';
     var invariant = function () { };
     {
@@ -379,10 +317,10 @@
             var state = {};
             var changedValues = [];
             var hasChanged = false;
-            var setValue = function (unmappedKey, value) {
+            var setValue = function (unmappedKey, value$$1) {
                 var key = aliasMap[unmappedKey] || unmappedKey;
                 var currentValue = state[key];
-                state[key] = value;
+                state[key] = value$$1;
                 if (state[key] !== currentValue) {
                     if (changedValues.indexOf(key) === -1) {
                         changedValues.push(key);
@@ -411,10 +349,10 @@
                             : onRead(key, props)
                         : state;
                 },
-                set: function (values, value) {
+                set: function (values, value$$1) {
                     if (typeof values === 'string') {
-                        if (value !== undefined) {
-                            setValue(values, value);
+                        if (value$$1 !== undefined) {
+                            setValue(values, value$$1);
                         }
                         else {
                             return function (v) { return setValue(values, v); };
@@ -548,8 +486,8 @@
     var TRANSFORM = 'transform';
     var TRANSLATE_Z = 'translateZ';
     var TRANSFORM_NONE = ';transform: none';
-    var styleRule = function (key, value) {
-        return "" + SEMI_COLON + key + COLON + value;
+    var styleRule = function (key, value$$1) {
+        return "" + SEMI_COLON + key + COLON + value$$1;
     };
     function buildStylePropertyString(state, changedValues, enableHardwareAcceleration, blacklist) {
         if (changedValues === void 0) { changedValues = true; }
@@ -582,29 +520,29 @@
             if (blacklist.has(key))
                 continue;
             var isTransformKey = isTransformProp(key);
-            var value = state[key];
+            var value$$1 = state[key];
             var valueType = getValueType(key);
             if (isTransformKey) {
-                if ((valueType.default && value !== valueType.default) ||
-                    (!valueType.default && value !== 0)) {
+                if ((valueType.default && value$$1 !== valueType.default) ||
+                    (!valueType.default && value$$1 !== 0)) {
                     transformIsDefault = false;
                 }
             }
             if (valueType &&
-                (typeof value === NUMBER || typeof value === OBJECT) &&
+                (typeof value$$1 === NUMBER || typeof value$$1 === OBJECT) &&
                 valueType.transform) {
-                value = valueType.transform(value);
+                value$$1 = valueType.transform(value$$1);
             }
             if (isTransformKey) {
-                transformString += key + '(' + value + ') ';
+                transformString += key + '(' + value$$1 + ') ';
                 transformHasZ = key === TRANSLATE_Z ? true : transformHasZ;
             }
             else if (isTransformOriginProp(key)) {
-                state[key] = value;
+                state[key] = value$$1;
                 hasTransformOrigin = true;
             }
             else {
-                propertyString += styleRule(prefixer(key, true), value);
+                propertyString += styleRule(prefixer(key, true), value$$1);
             }
         }
         if (hasTransformOrigin) {
@@ -686,19 +624,19 @@
         };
         for (var key in state) {
             if (state.hasOwnProperty(key)) {
-                var value = state[key];
+                var value$$1 = state[key];
                 if (isTransformProp(key)) {
                     hasTransform = true;
                 }
-                else if (isPath && (key === 'pathLength' || key === 'pathSpacing') && typeof value === 'number') {
+                else if (isPath && (key === 'pathLength' || key === 'pathSpacing') && typeof value$$1 === 'number') {
                     hasDashArray = true;
-                    dashArrayStyles[key] = percentToPixels(value, pathLength);
+                    dashArrayStyles[key] = percentToPixels(value$$1, pathLength);
                 }
                 else if (isPath && key === 'pathOffset') {
-                    props['stroke-dashoffset'] = percentToPixels(-value, pathLength);
+                    props['stroke-dashoffset'] = percentToPixels(-value$$1, pathLength);
                 }
                 else {
-                    props[camelToDash(key)] = value;
+                    props[camelToDash(key)] = value$$1;
                 }
             }
         }
@@ -801,16 +739,6 @@
         return getStyler(node, props);
     }
 
-    var HEY_LISTEN$1 = 'Hey, listen! ';
-    var invariant$1 = function () { };
-    {
-        invariant$1 = function (check, message) {
-            if (!check) {
-                throw new Error(HEY_LISTEN$1.toUpperCase() + message);
-            }
-        };
-    }
-
     var isNum = function (v) {
         return typeof v === 'number';
     };
@@ -861,9 +789,9 @@
         }
         return 0;
     };
-    var getProgressFromValue = function (from, to, value) {
+    var getProgressFromValue = function (from, to, value$$1) {
         var toFromDifference = to - from;
-        return toFromDifference === 0 ? 1 : (value - from) / toFromDifference;
+        return toFromDifference === 0 ? 1 : (value$$1 - from) / toFromDifference;
     };
     var getValueFromProgress = function (from, to, progress) {
         return -progress * from + progress * to + from;
@@ -1233,7 +1161,7 @@
         };
         return Action;
     }(Chainable);
-    var action = function (init) {
+    var action$1 = function (init) {
         return new Action({ init: init });
     };
 
@@ -1384,8 +1312,8 @@
         };
         return ValueReaction;
     }(BaseMulticast);
-    var value = function (value, initialSubscription) {
-        return new ValueReaction({ value: value, initialSubscription: initialSubscription });
+    var value$1 = function (value$$1, initialSubscription) {
+        return new ValueReaction({ value: value$$1, initialSubscription: initialSubscription });
     };
 
     var multi = function (_a) {
@@ -1396,7 +1324,7 @@
             setProp = _a.setProp,
             startActions = _a.startActions;
         return function (actions) {
-            return action(function (_a) {
+            return action$1(function (_a) {
                 var update = _a.update,
                     complete = _a.complete,
                     error = _a.error;
@@ -1494,8 +1422,8 @@
             return output[name] = v;
         },
         startActions: function (actions, starter) {
-            return actions.map(function (action, i) {
-                return starter(action, i);
+            return actions.map(function (action$$1, i) {
+                return starter(action$$1, i);
             });
         }
     });
@@ -1580,7 +1508,7 @@
     };
 
     var frame = function () {
-        return action(function (_a) {
+        return action$1(function (_a) {
             var update = _a.update;
             var isActive = true;
             var startTime = currentTime();
@@ -1602,7 +1530,7 @@
         if (props === void 0) {
             props = {};
         }
-        return action(function (_a) {
+        return action$1(function (_a) {
             var complete = _a.complete,
                 update = _a.update;
             var _b = props.velocity,
@@ -1821,7 +1749,7 @@
             to = _c === void 0 ? 1 : _c,
             _d = _a.ease,
             ease = _d === void 0 ? linear : _d;
-        return action(function (_a) {
+        return action$1(function (_a) {
             var update = _a.update;
             return {
                 seek: function (progress) {
@@ -1845,7 +1773,7 @@
         if (props === void 0) {
             props = {};
         }
-        return action(function (_a) {
+        return action$1(function (_a) {
             var update = _a.update,
                 complete = _a.complete;
             var _b = props.duration,
@@ -1964,7 +1892,7 @@
     };
     var defaultTimings = function (values) {
         var numValues = values.length;
-        return values.map(function (value, i) {
+        return values.map(function (value$$1, i) {
             return i !== 0 ? i / (numValues - 1) : 0;
         });
     };
@@ -2015,7 +1943,7 @@
         if (props === void 0) {
             props = {};
         }
-        return action(function (_a) {
+        return action$1(function (_a) {
             var complete = _a.complete,
                 update = _a.update;
             var _b = props.acceleration,
@@ -2091,7 +2019,7 @@
         if (props === void 0) {
             props = {};
         }
-        return action(function (_a) {
+        return action$1(function (_a) {
             var update = _a.update,
                 complete = _a.complete;
             var _b = props.velocity,
@@ -2158,7 +2086,7 @@
     });
 
     var listen = function (element, events, options) {
-        return action(function (_a) {
+        return action$1(function (_a) {
             var update = _a.update;
             var eventNames = events.split(' ').map(function (eventName) {
                 element.addEventListener(eventName, update, options);
@@ -2218,7 +2146,7 @@
             scale$$1 = _d === void 0 ? 1.0 : _d,
             _e = _b.rotate,
             rotate = _e === void 0 ? 0.0 : _e;
-        return action(function (_a) {
+        return action$1(function (_a) {
             var update = _a.update;
             var output = {
                 touches: points,
@@ -2275,7 +2203,7 @@
     var mouse = function (_a) {
         var _b = (_a === void 0 ? {} : _a).preventDefault,
             preventDefault = _b === void 0 ? true : _b;
-        return action(function (_a) {
+        return action$1(function (_a) {
             var update = _a.update;
             var updatePoint = function () {
                 return update(point);
@@ -2334,7 +2262,7 @@
         for (var _i = 0; _i < arguments.length; _i++) {
             actions[_i] = arguments[_i];
         }
-        return action(function (_a) {
+        return action$1(function (_a) {
             var update = _a.update,
                 complete = _a.complete;
             var i = 0;
@@ -2358,7 +2286,7 @@
     };
 
     var delay = function (timeToDelay) {
-        return action(function (_a) {
+        return action$1(function (_a) {
             var complete = _a.complete;
             var timeout = setTimeout(complete, timeToDelay);
             return {
@@ -2395,8 +2323,8 @@
     };
     var selectAllValues = function (values, selectValue) {
         var allValues = {};
-        values.forEach(function (value, key) {
-            return allValues[key] = selectValue(value);
+        values.forEach(function (value$$1, key) {
+            return allValues[key] = selectValue(value$$1);
         });
         return allValues;
     };
@@ -2423,7 +2351,7 @@
         });
         return animations;
     };
-    var resolveTransition = function (transition, key, value, props, convertTransitionDefinition, getInstantTransition) {
+    var resolveTransition = function (transition, key, value$$1, props, convertTransitionDefinition, getInstantTransition) {
         var resolvedTransition;
         if (typeof transition === 'function') {
             resolvedTransition = transition(props);
@@ -2437,7 +2365,7 @@
         } else {
             resolvedTransition = transition;
         }
-        return resolvedTransition === false ? getInstantTransition(value, props) : convertTransitionDefinition(value, resolvedTransition, props);
+        return resolvedTransition === false ? getInstantTransition(value$$1, props) : convertTransitionDefinition(value$$1, resolvedTransition, props);
     };
     var createPoseSetter = function (setterProps) {
         return function (next, nextProps) {
@@ -2475,18 +2403,18 @@
                 if (preTransition) nextPose.preTransition(baseTransitionProps);
                 return Object.keys(getPoseValues(nextPose)).map(function (key) {
                     return new Promise(function (complete) {
-                        var value = values.get(key);
+                        var value$$1 = values.get(key);
                         var transitionProps = __assign({}, baseTransitionProps, { key: key,
-                            value: value });
-                        var target = resolveTarget(value, resolveProp(nextPose[key], transitionProps));
+                            value: value$$1 });
+                        var target = resolveTarget(value$$1, resolveProp(nextPose[key], transitionProps));
                         if (activeActions.has(key)) stopAction(activeActions.get(key));
-                        var resolveTransitionProps = __assign({ to: target }, transitionProps, getTransitionProps(value, target, transitionProps));
-                        var transition = resolveTransition(getTransition, key, value, resolveTransitionProps, convertTransitionDefinition, getInstantTransition);
+                        var resolveTransitionProps = __assign({ to: target }, transitionProps, getTransitionProps(value$$1, target, transitionProps));
+                        var transition = resolveTransition(getTransition, key, value$$1, resolveTransitionProps, convertTransitionDefinition, getInstantTransition);
                         var poseDelay = resolveProp(nextPose.delay, transitionProps);
                         if (delay || poseDelay) {
                             transition = addActionDelay(delay || poseDelay, transition);
                         }
-                        activeActions.set(key, startAction(value, transition, complete));
+                        activeActions.set(key, startAction(value$$1, transition, complete));
                         activePoses.set(key, next);
                     });
                 });
@@ -2532,14 +2460,14 @@
             props = _a.props;
         return function (key) {
             if (values.has(key)) return;
-            var value;
+            var value$$1;
             if (userSetValues && userSetValues[key] !== undefined) {
-                value = convertValue(userSetValues[key], key, props);
+                value$$1 = convertValue(userSetValues[key], key, props);
             } else {
                 var initValue = getInitialValue(poses, key, initialPose, props, readValueFromSource);
-                value = createValue(initValue, key, props);
+                value$$1 = createValue(initValue, key, props);
             }
-            values.set(key, value);
+            values.set(key, value$$1);
         };
     };
     var scrapeValuesFromPose = function (values, props) {
@@ -2595,7 +2523,7 @@
     var generateTransitions = function (poses, defaultTransitions) {
         Object.keys(poses).forEach(function (key) {
             var pose = poses[key];
-            invariant$1(typeof pose === 'object', "Pose '" + key + "' is of invalid type. All poses should be objects.");
+            invariant(typeof pose === 'object', "Pose '" + key + "' is of invalid type. All poses should be objects.");
             poses[key] = pose.transition !== undefined ? pose : applyDefaultTransition(pose, key, defaultTransitions);
         });
         return poses;
@@ -2722,8 +2650,8 @@
     var linear$1 = easing.linear;
     var interpolate$1 = transformers.interpolate;
     var singleAxisPointer = function (axis) { return function (from) {
-        return index$3((_a = {}, _a[axis] = from, _a)).pipe(function (v) { return v[axis]; });
         var _a;
+        return index$3((_a = {}, _a[axis] = from, _a)).pipe(function (v) { return v[axis]; });
     }; };
     var pointerX = singleAxisPointer('x');
     var pointerY = singleAxisPointer('y');
@@ -2748,7 +2676,7 @@
             ? axisPointer.pipe.apply(axisPointer, transformQueue) : axisPointer;
     }; };
     var just = function (from) {
-        return action(function (_a) {
+        return action$1(function (_a) {
             var update = _a.update, complete = _a.complete;
             update(from);
             complete();
@@ -2805,13 +2733,13 @@
     var valueTypeTests = [number, degrees, percent, px];
     var testValueType = function (v) { return function (type) { return type.test(v); }; };
     var createPassiveValue = function (init, parent, transform) {
-        var raw = value(init).pipe(transform);
+        var raw = value$1(init).pipe(transform);
         parent.raw.subscribe(raw);
         return { raw: raw };
     };
     var createValue = function (init) {
         var type = valueTypeTests.find(testValueType(init));
-        var raw = value(type === number ? type.parse(init) : init);
+        var raw = value$1(type === number ? type.parse(init) : init);
         return { raw: raw, type: type };
     };
     var addActionDelay = function (delay$$1, transition) {
@@ -2841,16 +2769,16 @@
     var getAction = function (v, _a, _b) {
         var from = _b.from, to = _b.to, velocity = _b.velocity;
         var _c = _a.type, type = _c === void 0 ? 'tween' : _c, ease = _a.ease, def = __rest(_a, ["type", "ease"]);
-        invariant$1(animationLookup.has(type), "Invalid transition type '" + type + "'. Valid transition types are: tween, spring, decay, physics and keyframes.");
+        invariant(animationLookup.has(type), "Invalid transition type '" + type + "'. Valid transition types are: tween, spring, decay, physics and keyframes.");
         if (type === 'tween') {
             var typeOfEase = typeof ease;
             if (typeOfEase !== 'function') {
                 if (typeOfEase === 'string') {
-                    invariant$1(easingLookup.has(ease), "Invalid easing type '" + ease + "'. popmotion.io/pose/api/transition");
+                    invariant(easingLookup.has(ease), "Invalid easing type '" + ease + "'. popmotion.io/pose/api/transition");
                     ease = easingLookup.get(ease);
                 }
                 else if (Array.isArray(ease)) {
-                    invariant$1(ease.length === 4, "Cubic bezier arrays must contain four numerical values.");
+                    invariant(ease.length === 4, "Cubic bezier arrays must contain four numerical values.");
                     var x1 = ease[0], y1 = ease[1], x2 = ease[2], y2 = ease[3];
                     ease = easing.cubicBezier(x1, y1, x2, y2);
                 }
@@ -2971,10 +2899,10 @@
                 hasMeasured = true;
                 return current;
             },
-            measurementAsPixels: function (measurement, value, type) {
-                return type === percent && typeof value === 'number'
-                    ? value / 100 * current[measurement]
-                    : value;
+            measurementAsPixels: function (measurement, value$$1, type) {
+                return type === percent && typeof value$$1 === 'number'
+                    ? value$$1 / 100 * current[measurement]
+                    : value$$1;
             },
             has: function () { return hasMeasured; }
         };
@@ -3002,452 +2930,6 @@
         if (props.draggable)
             makeDraggable(element, activeActions, setPose, props);
     });
-
-    var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
-
-    function unwrapExports (x) {
-    	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
-    }
-
-    function createCommonjsModule(fn, module) {
-    	return module = { exports: {} }, fn(module, module.exports), module.exports;
-    }
-
-    var calc$1 = createCommonjsModule(function (module, exports) {
-    Object.defineProperty(exports, "__esModule", { value: true });
-    var isNum = function (v) { return typeof v === 'number'; };
-    exports.isPoint = function (point) {
-        return point.x !== undefined && point.y !== undefined;
-    };
-    exports.isPoint3D = function (point) {
-        return point.z !== undefined;
-    };
-    var toDecimal = function (num, precision) {
-        if (precision === void 0) { precision = 2; }
-        precision = Math.pow(10, precision);
-        return Math.round(num * precision) / precision;
-    };
-    var ZERO_POINT = {
-        x: 0,
-        y: 0,
-        z: 0
-    };
-    var distance1D = function (a, b) { return Math.abs(a - b); };
-    exports.angle = function (a, b) {
-        if (b === void 0) { b = ZERO_POINT; }
-        return exports.radiansToDegrees(Math.atan2(b.y - a.y, b.x - a.x));
-    };
-    exports.degreesToRadians = function (degrees) { return degrees * Math.PI / 180; };
-    exports.dilate = function (a, b, dilation) { return a + ((b - a) * dilation); };
-    exports.distance = function (a, b) {
-        if (b === void 0) { b = ZERO_POINT; }
-        if (isNum(a) && isNum(b)) {
-            return distance1D(a, b);
-        }
-        else if (exports.isPoint(a) && exports.isPoint(b)) {
-            var xDelta = distance1D(a.x, b.x);
-            var yDelta = distance1D(a.y, b.y);
-            var zDelta = (exports.isPoint3D(a) && exports.isPoint3D(b)) ? distance1D(a.z, b.z) : 0;
-            return Math.sqrt((Math.pow(xDelta, 2)) + (Math.pow(yDelta, 2)) + (Math.pow(zDelta, 2)));
-        }
-        return 0;
-    };
-    exports.getProgressFromValue = function (from, to, value) {
-        var toFromDifference = to - from;
-        return toFromDifference === 0 ? 1 : (value - from) / toFromDifference;
-    };
-    exports.getValueFromProgress = function (from, to, progress) {
-        return (-progress * from) + (progress * to) + from;
-    };
-    exports.pointFromAngleAndDistance = function (origin, angle, distance) {
-        angle = exports.degreesToRadians(angle);
-        return {
-            x: distance * Math.cos(angle) + origin.x,
-            y: distance * Math.sin(angle) + origin.y
-        };
-    };
-    exports.radiansToDegrees = function (radians) { return radians * 180 / Math.PI; };
-    exports.smooth = function (newValue, oldValue, duration, smoothing) {
-        if (smoothing === void 0) { smoothing = 0; }
-        return toDecimal(oldValue + (duration * (newValue - oldValue) / Math.max(smoothing, duration)));
-    };
-    exports.speedPerFrame = function (xps, frameDuration) {
-        return (isNum(xps)) ? xps / (1000 / frameDuration) : 0;
-    };
-    exports.speedPerSecond = function (velocity, frameDuration) {
-        return frameDuration ? velocity * (1000 / frameDuration) : 0;
-    };
-    exports.stepProgress = function (steps, progress) {
-        var segment = 1 / (steps - 1);
-        var target = 1 - (1 / steps);
-        var progressOfTarget = Math.min(progress / target, 1);
-        return Math.floor(progressOfTarget / segment) * segment;
-    };
-
-    });
-
-    unwrapExports(calc$1);
-    var calc_1 = calc$1.isPoint;
-    var calc_2 = calc$1.isPoint3D;
-    var calc_3 = calc$1.angle;
-    var calc_4 = calc$1.degreesToRadians;
-    var calc_5 = calc$1.dilate;
-    var calc_6 = calc$1.distance;
-    var calc_7 = calc$1.getProgressFromValue;
-    var calc_8 = calc$1.getValueFromProgress;
-    var calc_9 = calc$1.pointFromAngleAndDistance;
-    var calc_10 = calc$1.radiansToDegrees;
-    var calc_11 = calc$1.smooth;
-    var calc_12 = calc$1.speedPerFrame;
-    var calc_13 = calc$1.speedPerSecond;
-    var calc_14 = calc$1.stepProgress;
-
-    var transformers$1 = createCommonjsModule(function (module, exports) {
-    var __assign = (commonjsGlobal && commonjsGlobal.__assign) || Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    Object.defineProperty(exports, "__esModule", { value: true });
-
-
-
-    var noop = function (v) { return v; };
-    exports.appendUnit = function (unit) { return function (v) { return "" + v + unit; }; };
-    exports.applyOffset = function (from, to) {
-        var hasReceivedFrom = true;
-        if (to === undefined) {
-            to = from;
-            hasReceivedFrom = false;
-        }
-        var getOffset = function (v) { return v - from; };
-        var applyOffsetTo = function (v) { return v + to; };
-        return function (v) {
-            if (hasReceivedFrom) {
-                return applyOffsetTo(getOffset(v));
-            }
-            else {
-                from = v;
-                hasReceivedFrom = true;
-                return to;
-            }
-        };
-    };
-    var blend = function (from, to, v) {
-        var fromExpo = from * from;
-        var toExpo = to * to;
-        return Math.sqrt(v * (toExpo - fromExpo) + fromExpo);
-    };
-    exports.blendColor = function (from, to) {
-        var fromColor = (typeof from === 'string') ? styleValueTypes_es.color.parse(from) : from;
-        var toColor = (typeof to === 'string') ? styleValueTypes_es.color.parse(to) : to;
-        var blended = __assign({}, fromColor);
-        var blendFunc = (from.hue !== undefined ||
-            typeof from === 'string' && styleValueTypes_es.hsla.test(from)) ? calc$1.getValueFromProgress
-            : blend;
-        return function (v) {
-            blended = __assign({}, blended);
-            for (var key in blended) {
-                if (key !== 'alpha' && blended.hasOwnProperty(key)) {
-                    blended[key] = blendFunc(fromColor[key], toColor[key], v);
-                }
-            }
-            blended.alpha = calc$1.getValueFromProgress(fromColor.alpha, toColor.alpha, v);
-            return blended;
-        };
-    };
-    exports.clamp = function (min, max) { return function (v) { return Math.min(Math.max(v, min), max); }; };
-    var combineFunctions = function (a, b) { return function (v) { return b(a(v)); }; };
-    exports.pipe = function () {
-        var transformers = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            transformers[_i] = arguments[_i];
-        }
-        return transformers.reduce(combineFunctions);
-    };
-    exports.conditional = function (check, apply) { return function (v) { return check(v) ? apply(v) : v; }; };
-    var slowInterpolate = function (input, output, rangeLength, rangeEasing) {
-        var finalIndex = rangeLength - 1;
-        if (input[0] > input[finalIndex]) {
-            input.reverse();
-            output.reverse();
-        }
-        return function (v) {
-            if (v <= input[0]) {
-                return output[0];
-            }
-            if (v >= input[finalIndex]) {
-                return output[finalIndex];
-            }
-            var i = 1;
-            for (; i < rangeLength; i++) {
-                if (input[i] > v || i === finalIndex) {
-                    break;
-                }
-            }
-            var progressInRange = calc$1.getProgressFromValue(input[i - 1], input[i], v);
-            var easedProgress = (rangeEasing) ? rangeEasing[i - 1](progressInRange) : progressInRange;
-            return calc$1.getValueFromProgress(output[i - 1], output[i], easedProgress);
-        };
-    };
-    var fastInterpolate = function (minA, maxA, minB, maxB) { return function (v) {
-        return (((v - minA) * (maxB - minB)) / (maxA - minA)) + minB;
-    }; };
-    exports.interpolate = function (input, output, rangeEasing) {
-        var rangeLength = input.length;
-        return rangeLength !== 2
-            ? slowInterpolate(input, output, rangeLength, rangeEasing)
-            : fastInterpolate(input[0], input[1], output[0], output[1]);
-    };
-    exports.generateStaticSpring = function (alterDisplacement) {
-        if (alterDisplacement === void 0) { alterDisplacement = noop; }
-        return function (constant, origin) { return function (v) {
-            var displacement = origin - v;
-            var springModifiedDisplacement = -constant * (0 - alterDisplacement(Math.abs(displacement)));
-            return (displacement <= 0) ? origin + springModifiedDisplacement : origin - springModifiedDisplacement;
-        }; };
-    };
-    exports.linearSpring = exports.generateStaticSpring();
-    exports.nonlinearSpring = exports.generateStaticSpring(Math.sqrt);
-    exports.wrap = function (min, max) { return function (v) {
-        var rangeSize = max - min;
-        return ((v - min) % rangeSize + rangeSize) % rangeSize + min;
-    }; };
-    exports.smooth = function (strength) {
-        if (strength === void 0) { strength = 50; }
-        var previousValue = 0;
-        var lastUpdated = 0;
-        return function (v) {
-            var currentFramestamp = framesync_es.currentFrameTime();
-            var timeDelta = (currentFramestamp !== lastUpdated) ? currentFramestamp - lastUpdated : 0;
-            var newValue = timeDelta ? calc$1.smooth(v, previousValue, timeDelta, strength) : previousValue;
-            lastUpdated = currentFramestamp;
-            previousValue = newValue;
-            return newValue;
-        };
-    };
-    exports.snap = function (points) {
-        if (typeof points === 'number') {
-            return function (v) { return Math.round(v / points) * points; };
-        }
-        else {
-            var i_1 = 0;
-            var numPoints_1 = points.length;
-            return function (v) {
-                var lastDistance = Math.abs(points[0] - v);
-                for (i_1 = 1; i_1 < numPoints_1; i_1++) {
-                    var point = points[i_1];
-                    var distance = Math.abs(point - v);
-                    if (distance === 0)
-                        return point;
-                    if (distance > lastDistance)
-                        return points[i_1 - 1];
-                    if (i_1 === numPoints_1 - 1)
-                        return point;
-                    lastDistance = distance;
-                }
-            };
-        }
-    };
-    exports.steps = function (st, min, max) {
-        if (min === void 0) { min = 0; }
-        if (max === void 0) { max = 1; }
-        return function (v) {
-            var progress = calc$1.getProgressFromValue(min, max, v);
-            return calc$1.getValueFromProgress(min, max, calc$1.stepProgress(st, progress));
-        };
-    };
-    exports.transformMap = function (childTransformers) { return function (v) {
-        var output = __assign({}, v);
-        for (var key in childTransformers) {
-            if (childTransformers.hasOwnProperty(key)) {
-                var childTransformer = childTransformers[key];
-                output[key] = childTransformer(v[key]);
-            }
-        }
-        return output;
-    }; };
-
-    });
-
-    unwrapExports(transformers$1);
-    var transformers_1 = transformers$1.appendUnit;
-    var transformers_2 = transformers$1.applyOffset;
-    var transformers_3 = transformers$1.blendColor;
-    var transformers_4 = transformers$1.clamp;
-    var transformers_5 = transformers$1.pipe;
-    var transformers_6 = transformers$1.conditional;
-    var transformers_7 = transformers$1.interpolate;
-    var transformers_8 = transformers$1.generateStaticSpring;
-    var transformers_9 = transformers$1.linearSpring;
-    var transformers_10 = transformers$1.nonlinearSpring;
-    var transformers_11 = transformers$1.wrap;
-    var transformers_12 = transformers$1.smooth;
-    var transformers_13 = transformers$1.snap;
-    var transformers_14 = transformers$1.steps;
-    var transformers_15 = transformers$1.transformMap;
-
-    var chainable = createCommonjsModule(function (module, exports) {
-    var __assign = (commonjsGlobal && commonjsGlobal.__assign) || Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    Object.defineProperty(exports, "__esModule", { value: true });
-
-    var Chainable = (function () {
-        function Chainable(props) {
-            if (props === void 0) { props = {}; }
-            this.props = props;
-        }
-        Chainable.prototype.applyMiddleware = function (middleware) {
-            return this.create(__assign({}, this.props, { middleware: this.props.middleware ? [middleware].concat(this.props.middleware) : [middleware] }));
-        };
-        Chainable.prototype.pipe = function () {
-            var funcs = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                funcs[_i] = arguments[_i];
-            }
-            var pipedUpdate = funcs.length === 1 ? funcs[0] : transformers$1.pipe.apply(void 0, funcs);
-            return this.applyMiddleware(function (update) { return function (v) { return update(pipedUpdate(v)); }; });
-        };
-        Chainable.prototype.while = function (predicate) {
-            return this.applyMiddleware(function (update, complete) { return function (v) { return predicate(v) ? update(v) : complete(); }; });
-        };
-        Chainable.prototype.filter = function (predicate) {
-            return this.applyMiddleware(function (update, complete) { return function (v) { return predicate(v) && update(v); }; });
-        };
-        return Chainable;
-    }());
-    exports.default = Chainable;
-
-    });
-
-    unwrapExports(chainable);
-
-    var observer = createCommonjsModule(function (module, exports) {
-    Object.defineProperty(exports, "__esModule", { value: true });
-    var Observer = (function () {
-        function Observer(_a, observer) {
-            var middleware = _a.middleware, onComplete = _a.onComplete;
-            var _this = this;
-            this.isActive = true;
-            this.update = function (v) {
-                if (_this.observer.update)
-                    _this.updateObserver(v);
-            };
-            this.complete = function () {
-                if (_this.observer.complete && _this.isActive)
-                    _this.observer.complete();
-                if (_this.onComplete)
-                    _this.onComplete();
-                _this.isActive = false;
-            };
-            this.error = function (err) {
-                if (_this.observer.error && _this.isActive)
-                    _this.observer.error(err);
-                _this.isActive = false;
-            };
-            this.observer = observer;
-            this.updateObserver = function (v) { return observer.update(v); };
-            this.onComplete = onComplete;
-            if (observer.update && middleware && middleware.length) {
-                middleware.forEach(function (m) { return _this.updateObserver = m(_this.updateObserver, _this.complete); });
-            }
-        }
-        return Observer;
-    }());
-    exports.Observer = Observer;
-    exports.default = (function (observerCandidate, _a, onComplete) {
-        var middleware = _a.middleware;
-        if (typeof observerCandidate === 'function') {
-            return new Observer({ middleware: middleware, onComplete: onComplete }, { update: observerCandidate });
-        }
-        else {
-            return new Observer({ middleware: middleware, onComplete: onComplete }, observerCandidate);
-        }
-    });
-
-    });
-
-    unwrapExports(observer);
-    var observer_1 = observer.Observer;
-
-    var action$1 = createCommonjsModule(function (module, exports) {
-    var __extends = (commonjsGlobal && commonjsGlobal.__extends) || (function () {
-        var extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return function (d, b) {
-            extendStatics(d, b);
-            function __() { this.constructor = d; }
-            d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-        };
-    })();
-    var __assign = (commonjsGlobal && commonjsGlobal.__assign) || Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    var __rest = (commonjsGlobal && commonjsGlobal.__rest) || function (s, e) {
-        var t = {};
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-            t[p] = s[p];
-        if (s != null && typeof Object.getOwnPropertySymbols === "function")
-            for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
-                t[p[i]] = s[p[i]];
-        return t;
-    };
-    Object.defineProperty(exports, "__esModule", { value: true });
-
-
-    var Action = (function (_super) {
-        __extends(Action, _super);
-        function Action() {
-            return _super !== null && _super.apply(this, arguments) || this;
-        }
-        Action.prototype.create = function (props) {
-            return new Action(props);
-        };
-        Action.prototype.start = function (observerCandidate) {
-            if (observerCandidate === void 0) { observerCandidate = {}; }
-            var isComplete = false;
-            var subscription = {
-                stop: function () { return undefined; }
-            };
-            var _a = this.props, init = _a.init, observerProps = __rest(_a, ["init"]);
-            var observer$$1 = observer.default(observerCandidate, observerProps, function () {
-                isComplete = true;
-                subscription.stop();
-            });
-            var api = init(observer$$1);
-            subscription = api
-                ? __assign({}, subscription, api) : subscription;
-            if (observerCandidate.registerParent) {
-                observerCandidate.registerParent(subscription);
-            }
-            if (isComplete)
-                subscription.stop();
-            return subscription;
-        };
-        return Action;
-    }(chainable.default));
-    exports.Action = Action;
-    exports.default = (function (init) { return new Action({ init: init }); });
-
-    });
-
-    unwrapExports(action$1);
-    var action_1 = action$1.Action;
 
     var ORIGIN_START = 0;
     var ORIGIN_CENTER = '50%';
@@ -3481,7 +2963,7 @@
         }
         else {
             values.set(key, {
-                raw: value(to, function (v) { return props.elementStyler.set(key, v); })
+                raw: value$1(to, function (v) { return props.elementStyler.set(key, v); })
             });
         }
     };
@@ -3542,172 +3024,6 @@
             ? explicitlyFlipPose(props, nextPose)
             : implicitlyFlipPose(props, nextPose);
     };
-
-    var reactions = createCommonjsModule(function (module, exports) {
-    var __extends = (commonjsGlobal && commonjsGlobal.__extends) || (function () {
-        var extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return function (d, b) {
-            extendStatics(d, b);
-            function __() { this.constructor = d; }
-            d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-        };
-    })();
-    Object.defineProperty(exports, "__esModule", { value: true });
-
-
-    var BaseMulticast = (function (_super) {
-        __extends(BaseMulticast, _super);
-        function BaseMulticast() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.subscribers = [];
-            return _this;
-        }
-        BaseMulticast.prototype.complete = function () {
-            this.subscribers.forEach(function (subscriber) { return subscriber.complete(); });
-        };
-        BaseMulticast.prototype.error = function (err) {
-            this.subscribers.forEach(function (subscriber) { return subscriber.error(err); });
-        };
-        BaseMulticast.prototype.update = function (v) {
-            for (var i = 0; i < this.subscribers.length; i++) {
-                this.subscribers[i].update(v);
-            }
-        };
-        BaseMulticast.prototype.subscribe = function (observerCandidate) {
-            var _this = this;
-            var observer$$1 = observer.default(observerCandidate, this.props);
-            this.subscribers.push(observer$$1);
-            var subscription = {
-                unsubscribe: function () {
-                    var index = _this.subscribers.indexOf(observer$$1);
-                    if (index !== -1)
-                        _this.subscribers.splice(index, 1);
-                }
-            };
-            return subscription;
-        };
-        BaseMulticast.prototype.stop = function () {
-            if (this.parent)
-                this.parent.stop();
-        };
-        BaseMulticast.prototype.registerParent = function (subscription) {
-            this.stop();
-            this.parent = subscription;
-        };
-        return BaseMulticast;
-    }(chainable.default));
-    exports.BaseMulticast = BaseMulticast;
-
-    });
-
-    unwrapExports(reactions);
-    var reactions_1 = reactions.BaseMulticast;
-
-    var value$1 = createCommonjsModule(function (module, exports) {
-    var __extends = (commonjsGlobal && commonjsGlobal.__extends) || (function () {
-        var extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return function (d, b) {
-            extendStatics(d, b);
-            function __() { this.constructor = d; }
-            d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-        };
-    })();
-    Object.defineProperty(exports, "__esModule", { value: true });
-
-
-
-    var isValueList = function (v) { return Array.isArray(v); };
-    var isSingleValue = function (v) {
-        var typeOfV = typeof v;
-        return (typeOfV === 'string' || typeOfV === 'number');
-    };
-    var ValueReaction = (function (_super) {
-        __extends(ValueReaction, _super);
-        function ValueReaction(props) {
-            var _this = _super.call(this, props) || this;
-            _this.scheduleVelocityCheck = function () { return framesync_es.onFrameEnd(_this.velocityCheck); };
-            _this.velocityCheck = function () {
-                if (framesync_es.currentFrameTime() !== _this.lastUpdated) {
-                    _this.prev = _this.current;
-                }
-            };
-            _this.prev = _this.current = props.value || 0;
-            if (isSingleValue(_this.current)) {
-                _this.updateCurrent = function (v) { return _this.current = v; };
-                _this.getVelocityOfCurrent = function () { return _this.getSingleVelocity(_this.current, _this.prev); };
-            }
-            else if (isValueList(_this.current)) {
-                _this.updateCurrent = function (v) { return _this.current = v.slice(); };
-                _this.getVelocityOfCurrent = function () { return _this.getListVelocity(); };
-            }
-            else {
-                _this.updateCurrent = function (v) {
-                    _this.current = {};
-                    for (var key in v) {
-                        if (v.hasOwnProperty(key)) {
-                            _this.current[key] = v[key];
-                        }
-                    }
-                };
-                _this.getVelocityOfCurrent = function () { return _this.getMapVelocity(); };
-            }
-            if (props.initialSubscription)
-                _this.subscribe(props.initialSubscription);
-            return _this;
-        }
-        ValueReaction.prototype.create = function (props) {
-            return new ValueReaction(props);
-        };
-        ValueReaction.prototype.get = function () {
-            return this.current;
-        };
-        ValueReaction.prototype.getVelocity = function () {
-            return this.getVelocityOfCurrent();
-        };
-        ValueReaction.prototype.update = function (v) {
-            _super.prototype.update.call(this, v);
-            this.prev = this.current;
-            this.updateCurrent(v);
-            this.timeDelta = framesync_es.timeSinceLastFrame();
-            this.lastUpdated = framesync_es.currentFrameTime();
-            framesync_es.onFrameEnd(this.scheduleVelocityCheck);
-        };
-        ValueReaction.prototype.subscribe = function (observerCandidate) {
-            var sub = _super.prototype.subscribe.call(this, observerCandidate);
-            this.update(this.current);
-            return sub;
-        };
-        ValueReaction.prototype.getSingleVelocity = function (current, prev) {
-            return (typeof current === 'number' && typeof prev === 'number')
-                ? calc$1.speedPerSecond(current - prev, this.timeDelta)
-                : calc$1.speedPerSecond(parseFloat(current) - parseFloat(prev), this.timeDelta) || 0;
-        };
-        ValueReaction.prototype.getListVelocity = function () {
-            var _this = this;
-            return this.current.map(function (c, i) { return _this.getSingleVelocity(c, _this.prev[i]); });
-        };
-        ValueReaction.prototype.getMapVelocity = function () {
-            var velocity = {};
-            for (var key in this.current) {
-                if (this.current.hasOwnProperty(key)) {
-                    velocity[key] = this.getSingleVelocity(this.current[key], this.prev[key]);
-                }
-            }
-            return velocity;
-        };
-        return ValueReaction;
-    }(reactions.BaseMulticast));
-    exports.ValueReaction = ValueReaction;
-    exports.default = (function (value, initialSubscription) { return new ValueReaction({ value: value, initialSubscription: initialSubscription }); });
-
-    });
-
-    unwrapExports(value$1);
-    var value_1 = value$1.ValueReaction;
 
     var dragPoses = function (draggable) {
         var dragging = {

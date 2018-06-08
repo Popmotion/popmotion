@@ -60,10 +60,10 @@ var linear = easing.linear;
 var interpolate = transform.interpolate;
 var singleAxisPointer = function (axis) {
     return function (from) {
+        var _a;
         return pointer((_a = {}, _a[axis] = from, _a)).pipe(function (v) {
             return v[axis];
         });
-        var _a;
     };
 };
 var pointerX = /*#__PURE__*/singleAxisPointer('x');

@@ -1,25 +1,8 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "noImplicitAny": true,
-    "removeComments": true,
-    "preserveConstEnums": true,
-    "sourceMap": true,
-    "noUnusedLocals": true,
-    "target": "es5",
     "rootDir": "src",
-    "outDir": "./",
-    "watch": false,
-    "baseUrl": "src/",
-    "alwaysStrict": true,
-    "declaration": true,
-    "forceConsistentCasingInFileNames": true
+    "outDir": "lib"
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "**/*.test.ts"
-  ]
+  "include": ["src/**/*"]
 }

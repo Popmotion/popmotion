@@ -124,6 +124,12 @@ const testPoser = testPose({
       default: { multiply: 3 }
     }
   },
+  testProps: {
+    x: ({ x }) => x
+  },
+  props: {
+    x: 50
+  },
   initialPose: ['open', 'left']
 });
 
@@ -145,7 +151,22 @@ test('sets poses with default transition', () => Promise.all([
   const state = testPoser.get();
   expect(state.x).toBe(-100)
   expect(state.y).toBe(-100)
-})
+});
+
+test('correctly sets and updates props', () => testPoser.set('testProps')
+  .then(() => {
+    expect(testPoser.get().x).toBe(-50);
+    testPoser.setProps({ x: 51 });
+    return testPoser.set('testProps');
+  })
+  .then(() => {
+    expect(testPoser.get().x).toBe(-51);
+    return testPoser.set('testProps', { x: 52 });
+  })
+  .then(() => {
+    expect(testPoser.get().x).toBe(-52);
+  })
+);
 
 test('resolves custom transitions correctly', () =>
   testPoser.set('functionalTransition')

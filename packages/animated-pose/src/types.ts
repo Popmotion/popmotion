@@ -14,7 +14,8 @@ export type Value = {
 
 export type Action = Animated.CompositeAnimation;
 
-export interface AnimatedPoser extends Poser<Value, Action, AnimatedPoser> {
+export interface AnimatedPoser
+  extends Poser<Value, Action, Action, AnimatedPoser> {
   addChild: (config: AnimatedPoseConfig) => AnimatedPoser;
 }
 
@@ -43,7 +44,7 @@ export type AnimatedFactoryConfig = {
 
 export type AnimatedPoserFactory = (
   config: AnimatedPoseConfig
-) => Poser<Value, Action, AnimatedPoser>;
+) => Poser<Value, Action, Action, AnimatedPoser>;
 
 export type UnitConverter = (v: number) => number;
 

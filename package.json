@@ -5,7 +5,8 @@
   "homepage": "https://popmotion.io",
   "scripts": {
     "playground": "start-storybook -p 6006",
-    "build-playground": "build-storybook"
+    "build-playground": "build-storybook",
+    "clear": "rm -rf node_modules/ yarn.lock packages/*/node_modules"
   },
   "devDependencies": {
     "@storybook/react": "^3.2.13",

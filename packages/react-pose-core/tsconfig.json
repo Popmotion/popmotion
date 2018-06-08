@@ -1,27 +1,11 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "module": "commonjs",
-    "noImplicitAny": true,
-    "removeComments": true,
-    "preserveConstEnums": true,
-    "sourceMap": true,
-    "noUnusedLocals": true,
-    "target": "es5",
     "rootDir": "src",
     "outDir": "lib",
-    "watch": false,
-    "baseUrl": "src/",
-    "alwaysStrict": true,
-    "declaration": true,
-    "forceConsistentCasingInFileNames": true,
-    "lib": ["es5", "es6", "dom"],
     "jsx": "react-native",
-    "types": ["react", "react-native", "jest"]
+    "types": ["react", "react-native", "jest"],
+    "lib": ["es5", "es6"]
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "**/*.test.ts"
-  ]
+  "include": ["src/**/*"]
 }
