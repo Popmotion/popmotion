@@ -1,26 +1,11 @@
 {
   "defaultSeverity": "error",
-  "extends": [
-    "tslint:recommended",
-    "tslint-circular-dependencies"
-  ],
+  "extends": ["tslint:recommended", "tslint-circular-dependencies"],
   "jsRules": {},
   "rules": {
-    "ban-types": [
-      false,
-      [
-        "Function"
-      ]
-    ],
-    "quotemark": [
-      true,
-      "single",
-      "avoid-escape",
-      "avoid-template"
-    ],
-    "trailing-comma": [
-      false
-    ],
+    "ban-types": [false, ["Function"]],
+    "quotemark": [true, "single", "avoid-escape", "avoid-template"],
+    "trailing-comma": [false],
     "no-unused-variable": true,
     "interface-name": false,
     "interface-over-type-literal": false,
@@ -30,7 +15,8 @@
     "member-access": false,
     "ordered-imports": false,
     "object-literal-sort-keys": false,
-    "imports-after-export": false
+    "imports-after-export": false,
+    "no-instanceof-operator": false
   },
   "rulesDirectory": []
 }

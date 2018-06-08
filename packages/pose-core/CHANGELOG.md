@@ -2,6 +2,12 @@
 
 Pose Core adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.7.4] 2018-06-08
+
+### Fixed
+
+- `setProps` wasn't updating `state.props`.
+
 ## [0.7.3] 2018-05-29
 
 ### Added
