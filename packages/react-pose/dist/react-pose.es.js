@@ -1,7 +1,28 @@
 import { __rest, __assign, __extends } from 'tslib';
 import { createElement, createContext, Fragment, Component, PureComponent, Children, cloneElement } from 'react';
 import poseFactory from 'popmotion-pose';
-import { warning, invariant } from 'hey-listen';
+import { invariant } from 'hey-listen';
+
+var hasChanged = function (prev, next) {
+    if (prev === next)
+        return false;
+    var prevIsArray = Array.isArray(prev);
+    var nextIsArray = Array.isArray(next);
+    if (prevIsArray !== nextIsArray || (!prevIsArray && !nextIsArray)) {
+        return true;
+    }
+    else if (prevIsArray && nextIsArray) {
+        var numPrev = prev.length;
+        var numNext = next.length;
+        if (numPrev !== numNext)
+            return true;
+        for (var i = numPrev; i < numPrev; i++) {
+            if (prev[i] !== next[i])
+                return true;
+        }
+    }
+    return false;
+};
 
 var PoseParentContext = createContext({});
 var calcPopFromFlowStyle = function (el) {
@@ -82,7 +103,7 @@ var PoseElement = (function (_super) {
         return thisPose.concat(thisInternalPose);
     };
     PoseElement.prototype.getSetProps = function () {
-        var _a = this.props, children = _a.children, elementType = _a.elementType, poseConfig = _a.poseConfig, onChange = _a.onChange, onValueChange = _a.onValueChange, innerRef = _a.innerRef, _pose = _a._pose, pose = _a.pose, initialPose = _a.initialPose, onPoseComplete = _a.onPoseComplete, getParentPoseConfig = _a.getParentPoseConfig, registerChild = _a.registerChild, onUnmount = _a.onUnmount, getInitialPoseFromParent = _a.getInitialPoseFromParent, popFromFlow = _a.popFromFlow, values = _a.values, parentValues = _a.parentValues, onDragStart = _a.onDragStart, onDragEnd = _a.onDragEnd, props = __rest(_a, ["children", "elementType", "poseConfig", "onChange", "onValueChange", "innerRef", "_pose", "pose", "initialPose", "onPoseComplete", "getParentPoseConfig", "registerChild", "onUnmount", "getInitialPoseFromParent", "popFromFlow", "values", "parentValues", "onDragStart", "onDragEnd"]);
+        var _a = this.props, children = _a.children, elementType = _a.elementType, poseConfig = _a.poseConfig, onValueChange = _a.onValueChange, innerRef = _a.innerRef, _pose = _a._pose, pose = _a.pose, initialPose = _a.initialPose, poseKey = _a.poseKey, onPoseComplete = _a.onPoseComplete, getParentPoseConfig = _a.getParentPoseConfig, registerChild = _a.registerChild, onUnmount = _a.onUnmount, getInitialPoseFromParent = _a.getInitialPoseFromParent, popFromFlow = _a.popFromFlow, values = _a.values, parentValues = _a.parentValues, onDragStart = _a.onDragStart, onDragEnd = _a.onDragEnd, props = __rest(_a, ["children", "elementType", "poseConfig", "onValueChange", "innerRef", "_pose", "pose", "initialPose", "poseKey", "onPoseComplete", "getParentPoseConfig", "registerChild", "onUnmount", "getInitialPoseFromParent", "popFromFlow", "values", "parentValues", "onDragStart", "onDragEnd"]);
         if (popFromFlow && this.ref && this.ref instanceof HTMLElement) {
             if (!this.popStyle) {
                 props.style = __assign({}, props.style, calcPopFromFlowStyle(this.ref));
@@ -95,19 +116,14 @@ var PoseElement = (function (_super) {
         else {
             this.popStyle = null;
         }
-        if (typeof onChange === 'function')
-            props.onChange = onChange;
         return props;
     };
     PoseElement.prototype.componentDidMount = function () {
         var _this = this;
         invariant(typeof this.ref !== 'undefined', "No DOM ref found. If you're converting an existing component via posed(Component), you must ensure you're passing the hostRef prop to your underlying DOM element.");
-        var _a = this.props, poseConfig = _a.poseConfig, onChange = _a.onChange, onValueChange = _a.onValueChange, registerChild = _a.registerChild, values = _a.values, parentValues = _a.parentValues, onDragStart = _a.onDragStart, onDragEnd = _a.onDragEnd;
+        var _a = this.props, poseConfig = _a.poseConfig, onValueChange = _a.onValueChange, registerChild = _a.registerChild, values = _a.values, parentValues = _a.parentValues, onDragStart = _a.onDragStart, onDragEnd = _a.onDragEnd;
         var config = __assign({}, poseConfig, { initialPose: this.getInitialPose(), values: values || poseConfig.values, parentValues: parentValues ? objectToMap(parentValues) : undefined, props: this.getSetProps(), onDragStart: onDragStart,
-            onDragEnd: onDragEnd, onChange: onValueChange
-                ? onValueChange
-                : typeof onChange !== 'function' ? onChange : undefined });
-        warning(onChange === undefined || typeof onChange === 'function', 'The onChange prop is deprecated. Use onValueChange instead.');
+            onDragEnd: onDragEnd, onChange: onValueChange });
         if (!registerChild) {
             this.initPoser(poseFactory(this.ref, config));
         }
@@ -125,10 +141,13 @@ var PoseElement = (function (_super) {
             this.poser.measure();
     };
     PoseElement.prototype.componentDidUpdate = function (prevProps) {
-        var _a = this.props, pose = _a.pose, _pose = _a._pose;
+        var _a = this.props, pose = _a.pose, _pose = _a._pose, poseKey = _a.poseKey;
         this.poser.setProps(this.getSetProps());
-        if (pose !== prevProps.pose || pose === 'flip')
+        if (poseKey !== prevProps.key ||
+            hasChanged(prevProps.pose, pose) ||
+            pose === 'flip') {
             this.setPose(pose);
+        }
         if (_pose !== prevProps._pose || _pose === 'flip')
             this.setPose(_pose);
     };
@@ -259,14 +278,13 @@ var supportedElements = [
     'tspan'
 ];
 
-var PoseElementComponent = PoseElement;
 var componentCache = new Map();
 var createComponentFactory = function (key) {
     var componentFactory = function (poseConfig) {
         if (poseConfig === void 0) { poseConfig = {}; }
         return function (_a) {
             var _b = _a.withParent, withParent = _b === void 0 ? true : _b, props = __rest(_a, ["withParent"]);
-            return !withParent || props.parentValues ? (createElement(PoseElementComponent, __assign({ poseConfig: poseConfig, elementType: key }, props))) : (createElement(PoseParentContext.Consumer, null, function (parentCtx) { return (createElement(PoseElementComponent, __assign({ poseConfig: poseConfig, elementType: key }, props, parentCtx))); }));
+            return !withParent || props.parentValues ? (createElement(PoseElement, __assign({ poseConfig: poseConfig, elementType: key }, props))) : (createElement(PoseParentContext.Consumer, null, function (parentCtx) { return (createElement(PoseElement, __assign({ poseConfig: poseConfig, elementType: key }, props, parentCtx))); }));
         };
     };
     componentCache.set(key, componentFactory);

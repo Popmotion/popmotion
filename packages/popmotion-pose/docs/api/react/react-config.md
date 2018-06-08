@@ -1,13 +1,12 @@
 ---
 title: Config
-description: Configure a poser
+description: Configure a posed component
+category: react
 ---
 
 # Config options
 
-### `initialPose?: string | string[]`
-
-The name of the initial pose (or poses if provided as an array).
+Options to configure [posed components](/pose/api/posed) in React Pose.
 
 ### `draggable?: true | 'x' | 'y'`
 
@@ -20,10 +19,6 @@ If defined, will allow the use of a special `dragEnd` pose
 An object that defines `top`, `right`, `bottom` and/or `left` drag boundaries in pixels.
 
 Currently, these boundaries are enforced by a hard clamp.
-
-### `onDragStart/onDragEnd: (e: MouseEvent | TouchEvent) => any`
-
-Lifecycle callbacks for drag events.
 
 ### `passive: { [key: string]: PassiveValue }`
 
@@ -64,24 +59,7 @@ Set a label on this poser. Currently, this allows a `passive` value on a child p
 
 ### `props: { [key: string]: any }`
 
-Properties to provide to entered pose `transition` methods and dynamic pose props. These can be updated with the `setProps` method or, in React Pose, by providing props to the posed component.
-
-### `onChange?: { [key: string]: (v: any) => any }`
-
-Map of callbacks, one for each animated value, that will fire whenever that value changes.
-
-**Note:** For React Pose, instead use the `onValueChange` property on the posed component.
-
-#### Example
-
-```javascript
-const config = {
-  draggable: 'x',
-  onChange: {
-    x: (x) => // you do you 
-  }
-}
-```
+Default properties to provide to entered pose `transition` methods and dynamic pose props. These can be overridden by providing props to the posed component.
 
 ### `...poses: { [key: string]: Pose }`
 
@@ -89,7 +67,7 @@ Any other config props will be treated as poses (see [Pose config](#pose-config)
 
 ## Pose config
 
-You can call a pose anything, and animate to it by calling `poser.set('poseName')` or setting `<PosedComponent pose="poseName" />`.
+You can call a pose anything, and animate to it by setting `<PosedComponent pose="poseName" />` (or multiple poses with an array).
 
 A pose is defined by style attributes like `x` or `backgroundColor`, and the following optional props:
 
@@ -258,3 +236,5 @@ type TransitionsProps = {
 ### `...values: any | (props: Props) => any`
 
 Any remaining properties are treated as stylistic values and will be animated.
+
+

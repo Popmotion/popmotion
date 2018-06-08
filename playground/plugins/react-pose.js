@@ -61,6 +61,53 @@ export class ReactPose extends React.PureComponent {
   }
 }
 
+const SpringBox = posed(BoxStyled)({
+  spring: {
+    x: 0,
+    transition: {
+      type: "spring",
+      stiffness: 1000,
+      velocity: 1000
+    }
+  }
+});
+
+export class PoseKey extends React.Component {
+  state = { key: 0 };
+
+  componentDidMount() {
+    setInterval(
+      () =>
+        this.setState({
+          key: this.state.key + 1
+        }),
+      1000
+    );
+  }
+
+  render() {
+    return <SpringBox pose={["spring"]} poseKey={this.state.key} />;
+  }
+}
+
+export class PoseKeyFail extends React.Component {
+  state = { key: 0 };
+
+  componentDidMount() {
+    setInterval(
+      () =>
+        this.setState({
+          key: this.state.key + 1
+        }),
+      1000
+    );
+  }
+
+  render() {
+    return <SpringBox pose={["spring"]} />;
+  }
+}
+
 const sidebarProps = {
   dragBounds: { left: -100, right: 0 },
   open: {
@@ -243,7 +290,10 @@ const Tick = posed.path({
   }
 });
 
-const xToProgress = pipe(interpolate([110, 20], [1, 0]), clamp(0, 1));
+const xToProgress = pipe(
+  interpolate([110, 20], [1, 0]),
+  clamp(0, 1)
+);
 
 const IconContainer = posed.div({
   passive: {

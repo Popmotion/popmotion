@@ -97,7 +97,6 @@ const posed = createPosed({
         if (onDragEnd) onDragEnd(e, gestureState);
         if (dragX) values.x.flattenOffset();
         if (dragY) values.y.flattenOffset();
-        if (onDragEnd) onDragEnd(e, gestureState);
         poser.set('dragEnd', { gestureState });
       }
     });

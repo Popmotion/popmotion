@@ -1,6 +1,5 @@
 node_modules
 .DS_Store
-npm-debug.log
 lib
 site/.next
 site/public
@@ -16,3 +15,4 @@ site/next.config.js
 .vscode
 tmp
 dist
+*.log

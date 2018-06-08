@@ -64,8 +64,7 @@ class PoseGroup extends React.Component<Props, State> {
   removeFromChildren(key: string) {
     const { children } = this.state;
 
-    // This literally worked. Mental
-    (this as React.Component).setState({
+    this.setState({
       children: removeFromChildren(children, key)
     });
   }

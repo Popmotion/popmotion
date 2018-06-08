@@ -17,7 +17,7 @@
     "allowSyntheticDefaultImports": true,
     "lib": ["es6", "dom"],
     "jsx": "react",
-    "typeRoots": ["node_modules/@types", "module-types"]
+    "typeRoots": ["node_modules/@types"]
   },
   "include": [
     "src/**/*"

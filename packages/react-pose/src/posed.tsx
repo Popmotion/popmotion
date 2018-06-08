@@ -8,10 +8,6 @@ import {
 } from './components/PoseElement.types';
 import { DomPopmotionConfig } from 'popmotion-pose/lib/types';
 
-// TODO: Something is wrong with the TypeScript React bindings here,
-// I've had to typecast a component as a Component a couple times now.
-const PoseElementComponent = PoseElement as React.PureComponent;
-
 export type ComponentFactory = (
   poseConfig?: DomPopmotionConfig
 ) => (props: PoseElementProps) => ReactElement<any>;
@@ -29,15 +25,11 @@ const createComponentFactory = (key: string | React.Component) => {
     ...props
   }) =>
     !withParent || props.parentValues ? (
-      <PoseElementComponent
-        poseConfig={poseConfig}
-        elementType={key}
-        {...props}
-      />
+      <PoseElement poseConfig={poseConfig} elementType={key} {...props} />
     ) : (
       <PoseParentContext.Consumer>
         {(parentCtx: PoseContextProps) => (
-          <PoseElementComponent
+          <PoseElement
             poseConfig={poseConfig}
             elementType={key}
             {...props}

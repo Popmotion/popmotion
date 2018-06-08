@@ -15,7 +15,8 @@
     "declaration": true,
     "forceConsistentCasingInFileNames": true,
     "lib": ["es5", "es6", "dom"],
-    "jsx": "react-native"
+    "jsx": "react-native",
+    "types": ["react", "react-native", "jest"]
   },
   "include": [
     "src/**/*"
