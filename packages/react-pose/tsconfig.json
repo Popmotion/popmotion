@@ -1,28 +1,8 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "module": "ESNext",
-    "noImplicitAny": false,
-    "removeComments": true,
-    "preserveConstEnums": true,
-    "sourceMap": true,
-    "noUnusedLocals": true,
-    "target": "es5",
     "rootDir": "src",
-    "outDir": "lib",
-    "watch": false,
-    "baseUrl": "src/",
-    "alwaysStrict": true,
-    "declaration": true,
-    "forceConsistentCasingInFileNames": true,
-    "allowSyntheticDefaultImports": true,
-    "lib": ["es6", "dom"],
-    "jsx": "react",
-    "typeRoots": ["node_modules/@types"]
+    "outDir": "lib"
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "**/*.test.ts"
-  ]
+  "include": ["src/**/*"]
 }

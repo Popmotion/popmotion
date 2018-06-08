@@ -30,11 +30,14 @@ const nonLayoutValues = new Set([
   'opacity'
 ]);
 
+const isAction = (action: any): action is Action =>
+  typeof action.start !== 'undefined';
+
 export default ({
   convertUnitToPoints,
   unitConverters
 }: AnimatedFactoryConfig): AnimatedPoserFactory => {
-  const pose = poseFactory<Value, Action, AnimatedPoser>({
+  const pose = poseFactory<Value, Action, Action, AnimatedPoser>({
     /**
      * Bind onChange callbacks
      */
@@ -52,6 +55,17 @@ export default ({
      * either as we can simply create a new value using the `Value.interpolate` method.
      */
     readValue: () => 0,
+
+    /**
+     * Convert value
+     *
+     * If we get a user-defined Animated.Value we can convert that to the
+     * poser's `Value` type
+     */
+    convertValue: (raw, key) => ({
+      raw,
+      useNativeDriver: nonLayoutValues.has(key)
+    }),
 
     /**
      * Create value
@@ -115,6 +129,25 @@ export default ({
     }),
 
     /**
+     * Convert transition definition
+     *
+     * If a transition has been defined as an object of props, convert this
+     * into an Animated animation
+     */
+    convertTransitionDefinition: ({ raw }, def, props) => {
+      if (isAction(def)) return def;
+
+      switch (def.type) {
+        case 'decay':
+          return Animated.decay(raw, def as Animated.DecayAnimationConfig);
+        case 'spring':
+          return Animated.spring(raw, def as Animated.SpringAnimationConfig);
+        default:
+          return Animated.timing(raw, def as Animated.TimingAnimationConfig);
+      }
+    },
+
+    /**
      * Resolve target as a number.
      */
     resolveTarget: ({ interpolation }, target) => {
@@ -138,7 +171,7 @@ export default ({
     /**
      * Start the Animated animation
      */
-    startAction: (action, onComplete) => {
+    startAction: (value, action, onComplete) => {
       action.start(onComplete as Animated.EndCallback);
       return action;
     },
