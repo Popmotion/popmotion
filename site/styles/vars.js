@@ -5,7 +5,7 @@ export const verticalGradient = (from, to, start = 0, end = 100) =>
 
 // Deprecated - migrate to single `color` export
 export const WHITE = '#fff';
-export const BLACK = '#21282D';
+export const BLACK = '#3d454e';
 export const SUPER_LIGHT_GREY = '#FAFAFA';
 export const LIGHT_GREY = '#f2f2f2';
 
@@ -29,17 +29,30 @@ export const ACTION_GRADIENT = verticalGradient(BLUE, BLUE_BURN);
 export const ENTITY = PURPLE;
 
 export const color = {
-  black: '#21282D',
+  black: '#252942',
   blue: '#198FE3',
   green: '#14D790',
   white: '#fff',
   pink: '#FF00C8',
   purple: '#A100F6',
   brand: '#FF1C68',
-  brandBurn: '#DB0068',
+  brandBurn: '#960076',
   orange: '#F30',
   orangeBurn: '#FF8213',
-  yellow: '#FFE42B'
+  yellow: '#FFE42B',
+  lightGrey: '#ECECEC'
+};
+
+export const font = {
+  body: `
+    font-family: 'PT Sans', sans-serif;
+    font-weight: 400;
+  `,
+  code: `
+    font-family: 'Inconsolata', monospace;
+    font-weight: 400;
+  `,
+  bold: `font-weight: 700;`
 };
 
 export const SKEW = '-5.7deg';

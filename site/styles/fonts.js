@@ -1,4 +1,4 @@
-const fontWeight = (weight) => `font-weight: ${weight};`;
+const fontWeight = weight => `font-weight: ${weight};`;
 
 export const bodyFont = `
   font-family: 'PT Sans', sans-serif;
@@ -10,10 +10,15 @@ export const codeFont = `
   ${fontWeight(400)}
 `;
 
-export const fontSize = (size) => `
+export const fontSize = size => `
   font-size: ${size}px;
 `;
 
 export const fontBold = `font-weight: 700;`;
 
-export const lineHeight = (height) => `line-height: ${height}px;`;
+export const lineHeight = height => `line-height: ${height}px;`;
+
+export const font = {
+  body: bodyFont,
+  bold: fontBold
+};

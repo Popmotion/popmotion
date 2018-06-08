@@ -7,7 +7,10 @@ import USPs from './USPs';
 import settings from '~/data/settings.json';
 
 export default () => (
-  <GlobalTemplate title={`${settings.siteName} - A functional JavaScript motion library`} theme="popmotion">
+  <GlobalTemplate
+    title={`${settings.siteName} - A functional JavaScript motion library`}
+    theme="pure"
+  >
     <Masthead>
       <Header isHomepage={true} />
     </Masthead>

@@ -52,7 +52,7 @@ Notice that we don't need to import easing functions separately, as Pose provide
 ease: [.01, .64, .99, .56]
 ```
 
-By default, a transition defined like this will be a tween. But Pose supports Popmotion's [spring](/api/spring), [keyframes](/api/keyframes), [physics](/api/physics) and [decay](/api/decay) animations too.
+By default, a transition defined like this will be a [tween](/api/tween). But Pose supports Popmotion's [spring](/api/spring), [keyframes](/api/keyframes), [physics](/api/physics) and [decay](/api/decay) animations too.
 
 We can switch to one of these by setting `transition.type`:
 
