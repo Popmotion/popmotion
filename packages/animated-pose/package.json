@@ -41,6 +41,6 @@
   },
   "dependencies": {
     "@types/react-native": "^0.55.4",
-    "pose-core": "^0.3.0"
+    "pose-core": "^0.7.3"
   }
 }
