@@ -11,7 +11,8 @@
     "watch": false,
     "baseUrl": "./packages",
     "paths": {
-      "popmotion/*": ["./popmotion/lib/*"],
+      "popmotion": ["./popmotion/lib"],
+      "popmotion-pose": ["./popmotion-pose/lib"],
       "pose-core": ["./pose-core/lib"]
     },
     "alwaysStrict": true,
