@@ -1,6 +1,7 @@
 import { Fragment } from 'react';
 import Homepage from '~/templates/homepage';
 import BlogList from '~/templates/blog';
+import Footer from '~/templates/global-new/Footer';
 import themes from '~/styles/themes';
 import { color, font, media } from '~/styles/vars';
 import { ActionButton, P } from '~/templates/global-new/styled';
@@ -30,14 +31,35 @@ const HeaderContainer = styled.div`
   ${media.medium`height: 180px;`} ${media.small`height: 140px;`};
 `;
 
+import { keyframes, tween, easing, calc } from 'popmotion';
+const dropEasing = easing.createReversedEasing(easing.createBackIn(3));
+const letterEasing = easing.cubicBezier(0, 0.25, 1, 0.75);
 const Char = styled(
   posed.span({
-    exit: { opacity: 0, x: -5, y: 15 },
+    exit: { opacity: 0, scaleY: 0.5, y: 25 },
     enter: {
-      opacity: 1,
       y: 0,
-      x: 0,
-      delay: ({ i }) => i * 15
+      opacity: 1,
+      scaleY: 1,
+      delay: ({ i, total }) =>
+        letterEasing(calc.getProgressFromValue(0, total - 1, i)) * 700,
+      transition: {
+        y: ({ from, to }) =>
+          keyframes({
+            values: [from, -8, to],
+            easings: [easing.easeOut, dropEasing],
+            times: [0, 0.3, 1],
+            duration: 500
+          }),
+        scaleY: ({ from, to }) =>
+          keyframes({
+            values: [from, 1.2, to],
+            easings: [easing.easeOut, dropEasing],
+            times: [0, 0.3, 1],
+            duration: 500
+          }),
+        opacity: props => tween({ ...props, duration: 500 * 0.6 })
+      }
     }
   })
 )`
@@ -48,6 +70,7 @@ const Char = styled(
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.12);
   opacity: 0;
   display: inline-block;
+  transform-origin: 0% 100%;
 
   ${media.medium`
   font-size: 28px;
@@ -66,6 +89,7 @@ class AnimatedText extends React.Component {
     super(props);
     this.words = props.text.split(' ');
     this.chars = this.words.map(word => word.split(''));
+    this.numChars = this.words.reduce((count, word) => count + word.length, 0);
   }
 
   render() {
@@ -77,7 +101,11 @@ class AnimatedText extends React.Component {
             <Word key={wordIndex}>
               {this.chars[wordIndex].map(char => {
                 i++;
-                return <Char i={i} key={i}>{char}</Char>;
+                return (
+                  <Char i={i} key={i} total={this.numChars}>
+                    {char}
+                  </Char>
+                );
               })}
               {`\u00A0`}
             </Word>
@@ -160,16 +188,16 @@ export default () => (
       <ThemeProvider theme={themes.pose}>
         <Product title={themes.pose}>
           <P>
-            Animation system for <em>HTML</em>, <em>SVG</em>, <em>React</em> and{' '}
-            <em>React Native</em> with CSS-like syntax
+            Simple CSS-like animation system for <em>HTML</em>, <em>SVG</em>,{' '}
+            <em>React</em> and <em>React Native</em>
           </P>
         </Product>
       </ThemeProvider>
       <ThemeProvider theme={themes.pure}>
         <Product title={themes.pure}>
           <P>
-            Functional JavaScript animation library for <em>limitless</em>,{' '}
-            <em>advanced</em> use
+            Advanced functional animation library for <em>any</em> JavaScript
+            environment
           </P>
         </Product>
       </ThemeProvider>
@@ -192,5 +220,6 @@ export default () => (
       <SectionHeader>Latest blog posts</SectionHeader>
       <BlogList numItems={5} />
     </Section>
+    <Footer />
   </Homepage>
 );
