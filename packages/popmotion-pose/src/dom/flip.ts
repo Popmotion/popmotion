@@ -1,4 +1,4 @@
-import { value } from 'popmotion';
+import { value, Action, ColdSubscription } from 'popmotion';
 import {
   BoundingBox,
   Dimensions,
@@ -8,8 +8,6 @@ import {
   DomPopmotionPoser
 } from '../types';
 import { Poser } from 'pose-core';
-import { Action } from 'popmotion/action';
-import { ColdSubscription } from 'popmotion/action/types';
 
 const ORIGIN_START = 0;
 const ORIGIN_CENTER = '50%';

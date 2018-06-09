@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "noUnusedLocals": true,
+    "target": "es5",
+    "watch": false,
+    "baseUrl": "./packages",
+    "paths": {
+      "popmotion": ["./popmotion/lib"],
+      "popmotion-pose": ["./popmotion-pose/lib"],
+      "pose-core": ["./pose-core/lib"]
+    },
+    "alwaysStrict": true,
+    "declaration": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["es5", "es6", "dom"],
+    "skipLibCheck": true
+  },
+  "exclude": ["**/*.test.ts"]
+}

@@ -121,5 +121,7 @@ export const makeChildList = (children: Array<ReactElement<any>>) => {
   return list;
 };
 
-export const removeFromChildren = (children, key) =>
-  children.filter(child => child.key !== key);
+export const removeFromChildren = (
+  children: Array<ReactElement<any>>,
+  key: string
+) => children.filter(child => child.key !== key);

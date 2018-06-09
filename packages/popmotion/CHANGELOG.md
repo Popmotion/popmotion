@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.2.4] 2018-06-08
+
+### Added
+
+- Exporting popular types from index.ts.
+
 ## [8.2.3] 2018-05-28
 
 ### Fixed

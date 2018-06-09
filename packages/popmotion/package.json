@@ -1,10 +1,11 @@
 {
   "name": "popmotion",
-  "version": "8.2.3",
+  "version": "8.2.4",
   "description": "A functional, reactive motion library.",
   "author": "Matt Perry",
   "homepage": "https://popmotion.io",
   "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "module": "dist/popmotion.es.js",
   "jsnext:main": "dist/popmotion.es.js",
   "repository": {
@@ -72,7 +73,7 @@
       "js"
     ],
     "transform": {
-      "\\.(ts)$": "../node_modules/ts-jest/preprocessor.js"
+      "\\.(ts)$": "../../../node_modules/ts-jest/preprocessor.js"
     },
     "testRegex": "/_tests/.*\\.(ts|js)$",
     "rootDir": "src"

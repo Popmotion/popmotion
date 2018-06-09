@@ -7,11 +7,11 @@ import {
   value,
   chain,
   easing,
-  delay as delayAction
+  delay as delayAction,
+  Action,
+  ColdSubscription
 } from 'popmotion';
 import poseFactory from 'pose-core';
-import { Action } from 'popmotion/action';
-import { ColdSubscription } from 'popmotion/action/types';
 import {
   Value,
   TransitionProps,

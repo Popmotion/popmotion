@@ -68,3 +68,9 @@ export { styler, css, svg };
 // Value types
 import * as valueTypes from 'style-value-types';
 export { valueTypes };
+
+// Types
+import { Action } from './action';
+import { ColdSubscription } from './action/types';
+import { ValueReaction } from './reactions/value';
+export { Action, ColdSubscription, ValueReaction };
