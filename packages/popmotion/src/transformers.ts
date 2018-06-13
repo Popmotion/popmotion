@@ -1,6 +1,11 @@
 import { currentFrameTime } from 'framesync';
 import { color, Color, hsla, HSLA } from 'style-value-types';
-import { getProgressFromValue, getValueFromProgress, smooth as calcSmoothing, stepProgress } from './calc';
+import {
+  getProgressFromValue,
+  getValueFromProgress,
+  smooth as calcSmoothing,
+  stepProgress
+} from './calc';
 import { Easing } from './easing';
 
 const noop = (v: any): any => v;
@@ -50,16 +55,16 @@ const blend = (from: number, to: number, v: number) => {
 
 // http://codepen.io/osublake/pen/xGVVaN
 export const blendColor = (from: Color | string, to: Color | string) => {
-  const fromColor = (typeof from === 'string') ? color.parse(from) : from;
-  const toColor = (typeof to === 'string') ? color.parse(to) : to;
+  const fromColor = typeof from === 'string' ? color.parse(from) : from;
+  const toColor = typeof to === 'string' ? color.parse(to) : to;
   let blended = { ...fromColor };
 
   // Only use the sqrt blending function for rgba and hex
-  const blendFunc = (
+  const blendFunc =
     (from as HSLA).hue !== undefined ||
-    typeof from === 'string' && hsla.test(from as string)
-  ) ? getValueFromProgress
-    : blend;
+    (typeof from === 'string' && hsla.test(from as string))
+      ? getValueFromProgress
+      : blend;
 
   return (v: number) => {
     blended = { ...blended };
@@ -82,7 +87,8 @@ export const blendColor = (from: Color | string, to: Color | string) => {
  * @param  {number} max
  * @return {number}
  */
-export const clamp = (min: number, max: number) => (v: number) => Math.min(Math.max(v, min), max);
+export const clamp = (min: number, max: number) => (v: number) =>
+  Math.min(Math.max(v, min), max);
 
 /**
  * Pipe
@@ -92,19 +98,26 @@ export const clamp = (min: number, max: number) => (v: number) => Math.min(Math.
  * @return {function}
  */
 const combineFunctions = (a: Function, b: Function) => (v: any) => b(a(v));
-export const pipe = (...transformers: Function[]) => transformers.reduce(combineFunctions);
+export const pipe = (...transformers: Function[]) =>
+  transformers.reduce(combineFunctions);
 
 /**
  * Conditionally apply a transformer using the provided function when `check` returns `true`
  */
 export type Check = (v: any) => boolean;
 export type Apply = (v: any) => any;
-export const conditional = (check: Check, apply: Apply) => (v: any): any => check(v) ? apply(v) : v;
+export const conditional = (check: Check, apply: Apply) => (v: any): any =>
+  check(v) ? apply(v) : v;
 
 /**
  * Interpolate from set of values to another
  */
-const slowInterpolate = (input: number[], output: number[], rangeLength: number, rangeEasing: Easing[]) => {
+const slowInterpolate = (
+  input: number[],
+  output: number[],
+  rangeLength: number,
+  rangeEasing: Easing[]
+) => {
   const finalIndex = rangeLength - 1;
 
   // If input runs highest -> lowest, reverse both arrays
@@ -134,25 +147,41 @@ const slowInterpolate = (input: number[], output: number[], rangeLength: number,
     }
 
     const progressInRange = getProgressFromValue(input[i - 1], input[i], v);
-    const easedProgress = (rangeEasing) ? rangeEasing[i - 1](progressInRange) : progressInRange;
+    const easedProgress = rangeEasing
+      ? rangeEasing[i - 1](progressInRange)
+      : progressInRange;
     return getValueFromProgress(output[i - 1], output[i], easedProgress);
   };
 };
 
-const fastInterpolate = (minA: number, maxA: number, minB: number, maxB: number) => (v: number) =>
-  (((v - minA) * (maxB - minB)) / (maxA - minA)) + minB;
+const fastInterpolate = (
+  minA: number,
+  maxA: number,
+  minB: number,
+  maxB: number
+) => (v: number) => ((v - minA) * (maxB - minB)) / (maxA - minA) + minB;
 
-export const interpolate = (input: number[], output: number[], rangeEasing?: Easing[]) => {
+export const interpolate = (
+  input: number[],
+  output: number[],
+  rangeEasing?: Easing[]
+) => {
   const rangeLength = input.length;
   return rangeLength !== 2
     ? slowInterpolate(input, output, rangeLength, rangeEasing)
-    : fastInterpolate(input[0], input[1], output[0], output[1])
+    : fastInterpolate(input[0], input[1], output[0], output[1]);
 };
 
-export const generateStaticSpring = (alterDisplacement: Function = noop) => (constant: number, origin: number) => (v: number) => {
+export const generateStaticSpring = (alterDisplacement: Function = noop) => (
+  constant: number,
+  origin: number
+) => (v: number) => {
   const displacement = origin - v;
-  const springModifiedDisplacement = - constant * (0 - alterDisplacement(Math.abs(displacement)));
-  return (displacement <= 0) ? origin + springModifiedDisplacement : origin - springModifiedDisplacement;
+  const springModifiedDisplacement =
+    -constant * (0 - alterDisplacement(Math.abs(displacement)));
+  return displacement <= 0
+    ? origin + springModifiedDisplacement
+    : origin - springModifiedDisplacement;
 };
 
 export const linearSpring = generateStaticSpring();
@@ -160,7 +189,7 @@ export const nonlinearSpring = generateStaticSpring(Math.sqrt);
 
 export const wrap = (min: number, max: number) => (v: number) => {
   const rangeSize = max - min;
-  return ((v - min) % rangeSize + rangeSize) % rangeSize + min;
+  return ((((v - min) % rangeSize) + rangeSize) % rangeSize) + min;
 };
 
 export const smooth = (strength: number = 50) => {
@@ -169,8 +198,11 @@ export const smooth = (strength: number = 50) => {
 
   return (v: number) => {
     const currentFramestamp = currentFrameTime();
-    const timeDelta = (currentFramestamp !== lastUpdated) ? currentFramestamp - lastUpdated : 0;
-    const newValue = timeDelta ? calcSmoothing(v, previousValue, timeDelta, strength) : previousValue;
+    const timeDelta =
+      currentFramestamp !== lastUpdated ? currentFramestamp - lastUpdated : 0;
+    const newValue = timeDelta
+      ? calcSmoothing(v, previousValue, timeDelta, strength)
+      : previousValue;
     lastUpdated = currentFramestamp;
     previousValue = newValue;
     return newValue;
@@ -209,7 +241,9 @@ export const steps = (st: number, min = 0, max = 1) => (v: number) => {
   return getValueFromProgress(min, max, stepProgress(st, progress));
 };
 
-export const transformMap = (childTransformers: { [key: string]: Function }) => (v: any) => {
+export const transformMap = (childTransformers: {
+  [key: string]: Function;
+}) => (v: any) => {
   const output: { [key: string]: any } = { ...v };
 
   for (const key in childTransformers) {
