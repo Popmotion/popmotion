@@ -1,6 +1,6 @@
 {
   "name": "popmotion",
-  "version": "8.2.4",
+  "version": "8.2.5",
   "description": "A functional, reactive motion library.",
   "author": "Matt Perry",
   "homepage": "https://popmotion.io",
@@ -65,7 +65,7 @@
     "rollup-plugin-uglify": "^3.0.0",
     "ts-jest": "^21.2.4",
     "tslint-circular-dependencies": "^0.1.0",
-    "typescript": "^2.7.2"
+    "typescript": "^2.8.1"
   },
   "jest": {
     "moduleFileExtensions": [

@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.2.5] 2018-06-13
+
+### Fixed
+
+- Removing `import`s from output declaration files.
+
 ## [8.2.4] 2018-06-08
 
 ### Added

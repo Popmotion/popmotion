@@ -4,7 +4,10 @@ import resolve from 'rollup-plugin-node-resolve';
 import replace from 'rollup-plugin-replace';
 import pkg from './package.json';
 
-const typescriptConfig = { cacheRoot: 'tmp/.rpt2_cache' };
+const typescriptConfig = {
+  cacheRoot: 'tmp/.rpt2_cache',
+  typescript: require('typescript')
+};
 const noDeclarationConfig = Object.assign({}, typescriptConfig, {
   tsconfigOverride: { compilerOptions: { declaration: false } }
 });
@@ -13,12 +16,12 @@ const makeExternalPredicate = externalArr => {
   if (externalArr.length === 0) {
     return () => false;
   }
-  const pattern = new RegExp(`^(${externalArr.join("|")})($|/)`);
+  const pattern = new RegExp(`^(${externalArr.join('|')})($|/)`);
   return id => pattern.test(id);
 };
 
-const deps = Object.keys(pkg.dependencies || {})
-const peerDeps = Object.keys(pkg.peerDependencies || {})
+const deps = Object.keys(pkg.dependencies || {});
+const peerDeps = Object.keys(pkg.peerDependencies || {});
 
 const config = {
   input: 'src/index.ts',
@@ -37,8 +40,8 @@ const umd = Object.assign({}, config, {
   },
   external: makeExternalPredicate(peerDeps),
   plugins: [
-    typescript(noDeclarationConfig),
     resolve(),
+    typescript(noDeclarationConfig),
     replace({
       'process.env.NODE_ENV': JSON.stringify('production')
     })
@@ -50,8 +53,8 @@ const umdProd = Object.assign({}, umd, {
     file: pkg.unpkg
   }),
   plugins: [
-    typescript(noDeclarationConfig),
     resolve(),
+    typescript(noDeclarationConfig),
     replace({
       'process.env.NODE_ENV': JSON.stringify('development')
     }),
@@ -65,7 +68,7 @@ const es = Object.assign({}, config, {
     format: 'es',
     exports: 'named'
   },
-  plugins: [typescript(noDeclarationConfig)]
+  plugins: [resolve(), typescript(noDeclarationConfig)]
 });
 
 const cjs = Object.assign({}, config, {
@@ -74,7 +77,7 @@ const cjs = Object.assign({}, config, {
     format: 'cjs',
     exports: 'named'
   },
-  plugins: [typescript(typescriptConfig)]
+  plugins: [resolve(), typescript(typescriptConfig)]
 });
 
 export default [umd, umdProd, es, cjs];
