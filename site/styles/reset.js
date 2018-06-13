@@ -1,6 +1,6 @@
 import { bodyFont, codeFont, fontSize } from './fonts';
-import { ACTION, BLACK, cols, ACTION_BURN } from './vars';
-import { prismTheme } from '~/styles/syntax-highlighting'
+import { ACTION, color, cols, ACTION_BURN } from './vars';
+import { prismTheme } from '~/styles/syntax-highlighting';
 
 export default `
 * {
@@ -11,7 +11,7 @@ export default `
   outline: 0;
   font-style: inherit;
   font-size: 100%;
-  color: ${BLACK};
+  color: ${color.black};
   ${bodyFont}
   line-height: 1;
   vertical-align: baseline;

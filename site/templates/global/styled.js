@@ -6,6 +6,7 @@ import {
   LIGHT_GREY,
   WHITE,
   cols,
+  color,
   media,
   GREEN,
   PURPLE,
@@ -43,7 +44,7 @@ export const H1 = styled.h1`
   ${fontSize(48)}
   ${lineHeight(54)}
   ${fontBold}
-  max-width: ${cols(52)};
+  text-align: left;
 
   ${media.medium`
     ${fontSize(36)}
@@ -65,6 +66,8 @@ export const H2 = Centered.withComponent('h2').extend`
   ${media.medium`
     ${fontSize(28)}
     ${lineHeight(32)}
+    margin-top: ${cols(2)};
+    margin-bottom: ${cols(1)};
   `}
   ${media.small`
     ${fontSize(24)}
@@ -126,16 +129,12 @@ export const P = Centered.withComponent('p').extend`
 
 export const Blockquote = MajorCentered.withComponent('blockquote').extend`
   border-left: 2px solid ${PURPLE};
-  background: ${LIGHT_GREY};
-  transform: skewX(${SKEW});
-  transform-origin: 0 0;
+  background: ${color.lightGrey};
   padding: ${cols(1)};
   margin-bottom: ${cols(2)};
 
   p {
     margin: 0;
-    transform: skewX(${UNSKEW});
-    transform-origin: 0 0;
   }
 `;
 
@@ -145,25 +144,15 @@ export const CodeTag = styled.code`
 `;
 
 export const CodeBlock = MajorCentered.extend`
-  background: ${LIGHT_GREY};
-  border-left: 2px solid ${ENTITY};
-  box-shadow: 100px 0 0 ${LIGHT_GREY};
-  transform: skewX(${SKEW});
-  transform-origin: 0 0;
+  background: ${color.lightGrey};
+  border-left: 1px solid ${ENTITY};
   margin-bottom: ${cols(3)};
 
-  pre {
-    transform: skewX(${UNSKEW});
-    transform-origin: 0 0;
-  }
-
   ${media.medium`
-    transform: none;
     margin-left: 0;
     margin-right: 0;
 
     pre {
-      transform: none;
       padding-right: 0!important;
       width: 100%!important;
     }
@@ -212,7 +201,6 @@ const Button = styled.button`
   background: ${GREEN};
   border-radius: 0;
   padding: ${cols(1)} ${cols(2)};
-  transform: skewX(${SKEW});
   cursor: pointer;
   margin: 0 auto;
 `;
@@ -220,7 +208,6 @@ const Button = styled.button`
 const ButtonContent = styled.span`
   color: ${WHITE};
   ${fontBold} display: block;
-  transform: skewX(${UNSKEW});
 `;
 
 export const ActionButton = ({ children, onClick }) => (
@@ -230,9 +217,11 @@ export const ActionButton = ({ children, onClick }) => (
 );
 
 export const DatePublished = Centered.withComponent('p').extend`
-  font-size: ${fontSize(12)};
+  font-size: 14px;
   margin-bottom: ${cols(1)};
   opacity: 0.75;
+
+  ${media.medium`font-size: 12px`}
 `;
 
 export const ArticleHeader = ({ children }) => (

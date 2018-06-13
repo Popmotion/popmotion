@@ -65,10 +65,9 @@ const MenuItem = styled.li`
 
 const MenuToggle = styled.div`
   position: relative;
-  padding-left: ${cols(2)};
   ${fontSize(18)}
   ${fontBold}
-  border-bottom: 1px solid ${ENTITY};
+  border-bottom: 1px solid ${({ theme }) => theme.color.base};
   width: 100%;
   padding-bottom: ${cols(1)};
   margin-bottom: ${cols(2)};
@@ -84,7 +83,6 @@ const MenuToggle = styled.div`
 `;
 
 const Menu = styled.ul`
-  padding-left: ${cols(2)};
   ${media.large`
     display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
     padding-top: ${cols(1)};

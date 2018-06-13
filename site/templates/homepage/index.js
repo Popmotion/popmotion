@@ -1,26 +1,14 @@
 import styled from 'styled-components';
-import { color } from '~/styles/vars';
-import Nav from './Nav';
+import { color, media } from '~/styles/vars';
+import Nav from '~/templates/global-new/Nav';
 import GlobalTemplate from '~/templates/global/Template';
-
-const Container = styled.div`
-  ${({ theme }) => `
-    background-color: ${theme.color.base};
-    background-image: radial-gradient(120% 600px at 50% 200px, ${
-      theme.color.base
-    }, ${theme.color.twist} 120%);
-    min-height: 100vh;
-  `};
-  padding: 10px;
-`;
-
-const Content = styled.div`
-  background: ${color.white};
-  padding: 75px 20px;
-`;
+import { Container, ContentContainer } from '~/templates/global-new/styled';
 
 const HeaderContainer = styled.header`
-  padding: 20px;
+  padding: 30px;
+
+  ${media.large`padding: 20px;`};
+  ${media.small`padding: 10px;`};
 `;
 
 export default ({ title, description, theme, Header, children }) => (
@@ -30,7 +18,7 @@ export default ({ title, description, theme, Header, children }) => (
         <Nav isWhite />
         <Header />
       </HeaderContainer>
-      <Content>{children}</Content>
+      <ContentContainer noHeader>{children}</ContentContainer>
     </Container>
   </GlobalTemplate>
 );

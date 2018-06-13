@@ -1,4 +1,4 @@
-import { BRAND } from '~/styles/vars';
+import { color } from '~/styles/vars';
 
 export default `
 /* Make clicks pass-through */
@@ -7,7 +7,7 @@ export default `
 }
 
 #nprogress .bar {
-  background: ${BRAND};
+  background: ${color.white};
   position: fixed;
   z-index: 9999;
   top: 0;
@@ -23,7 +23,7 @@ export default `
   right: 0px;
   width: 100px;
   height: 100%;
-  box-shadow: 0 0 10px ${BRAND}, 0 0 5px ${BRAND};
+  box-shadow: 0 0 10px ${color.white}, 0 0 5px ${color.white};
   opacity: 1.0;
 
   -webkit-transform: rotate(3deg) translate(0px, -4px);

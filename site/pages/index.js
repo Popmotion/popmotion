@@ -2,6 +2,7 @@ import { Fragment } from 'react';
 import Homepage from '~/templates/homepage';
 import BlogList from '~/templates/blog';
 import Footer from '~/templates/global-new/Footer';
+import Link from 'next/link';
 import themes from '~/styles/themes';
 import { color, font, media } from '~/styles/vars';
 import { ActionButton, P } from '~/templates/global-new/styled';
@@ -11,6 +12,7 @@ import styled, {
   injectGlobal
 } from 'styled-components';
 import posed, { PoseGroup } from 'react-pose';
+import { keyframes, tween, easing, calc } from 'popmotion';
 
 injectGlobal`
 @font-face {
@@ -31,7 +33,6 @@ const HeaderContainer = styled.div`
   ${media.medium`height: 180px;`} ${media.small`height: 140px;`};
 `;
 
-import { keyframes, tween, easing, calc } from 'popmotion';
 const dropEasing = easing.createReversedEasing(easing.createBackIn(3));
 const letterEasing = easing.cubicBezier(0, 0.25, 1, 0.75);
 const Char = styled(
@@ -42,7 +43,7 @@ const Char = styled(
       opacity: 1,
       scaleY: 1,
       delay: ({ i, total }) =>
-        letterEasing(calc.getProgressFromValue(0, total - 1, i)) * 700,
+        letterEasing(calc.getProgressFromValue(0, total - 1, i)) * 500,
       transition: {
         y: ({ from, to }) =>
           keyframes({
@@ -149,15 +150,17 @@ const LearnMore = ActionButton.extend`
   margin: 20px auto 0;
 `;
 
-const Product = withTheme(({ title, children, theme }) => (
+const Product = withTheme(({ title, children, theme, prefetch }) => (
   <ProductContainer>
-    <a href={title.url}>
-      <LogoContainer>
-        <title.Logo {...theme.homepageLogoSize} />
-      </LogoContainer>
-      {children}
-      <LearnMore>Learn more</LearnMore>
-    </a>
+    <Link prefetch={prefetch} href={title.url}>
+      <a>
+        <LogoContainer>
+          <title.Logo {...theme.homepageLogoSize} />
+        </LogoContainer>
+        {children}
+        <LearnMore>Learn more</LearnMore>
+      </a>
+    </Link>
   </ProductContainer>
 ));
 
@@ -166,6 +169,10 @@ const Section = styled.section`
   max-width: 650px;
   border-top: 1px solid ${color.lightGrey};
   margin: 75px auto;
+
+  ${media.small`
+    margin: 40px auto;
+  `};
 `;
 
 const SectionHeader = styled.h2`
@@ -175,6 +182,11 @@ const SectionHeader = styled.h2`
   letter-spacing: -1.1px;
   text-align: center;
   margin-bottom: 40px;
+
+  ${media.small`
+    font-size: 24px;
+    letter-spacing: -0.5px;
+  `};
 `;
 
 export default () => (
@@ -184,9 +196,10 @@ export default () => (
     theme="popmotion"
     Header={Header}
   >
+    <SectionHeader>Open source</SectionHeader>
     <Container>
       <ThemeProvider theme={themes.pose}>
-        <Product title={themes.pose}>
+        <Product title={themes.pose} prefetch>
           <P>
             Simple CSS-like animation system for <em>HTML</em>, <em>SVG</em>,{' '}
             <em>React</em> and <em>React Native</em>

@@ -4,6 +4,10 @@ import { P } from '~/templates/global-new/styled';
 
 export const Container = styled.li`
   margin-bottom: 40px;
+
+  a:visited {
+    opacity: 0.75;
+  }
 `;
 
 export const Title = styled.h3`

@@ -7,7 +7,11 @@ import GlobalTemplate from '~/templates/global/Template';
 import MenuPage from '~/templates/content/MenuPage';
 
 export default () => (
-  <GlobalTemplate title="API | Popmotion" description="Popmotion is a functional, reactive JavaScript motion library." theme="popmotion">
+  <GlobalTemplate
+    title="API | Popmotion"
+    description="Popmotion is a functional, reactive JavaScript motion library."
+    theme="pure"
+  >
     <Header section="api" />
     <MenuPage section="api" title="API" />
     <Footer />

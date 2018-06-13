@@ -1,8 +1,14 @@
-import { NextLink, NextLinkContainer, NextLinkSmall } from './styled';
+import {
+  Container,
+  NextLink,
+  NextLinkContainer,
+  NextLinkSmall
+} from './styled';
 import { Fragment } from 'react';
 import { Content } from '~/templates/global/grid';
 import ContentNav from './ContentNav';
 import GlobalTemplate from '~/templates/global/Template';
+import ContentPage from '~/templates/global-new/ContentPage';
 import { DatePublished } from '~/templates/global/styled';
 import Header from '~/templates/global/Header';
 import Footer from '~/templates/global/Footer';
@@ -45,28 +51,32 @@ export default class Template extends React.PureComponent {
         description={description}
         theme={theme}
       >
-        <Header section={section} />
-        <ContentNav
-          isOpen={isMenuOpen}
-          toggleMenu={this.toggleMenu}
-          section={section}
-          id={id}
-        />
-        <ContentArea pose="flip">
-          <Content>
-            {published && <DatePublished>{published}</DatePublished>}
-            {children}
-            {next && themes[theme].data.content[section][next] ? (
-              <NextLinkContainer>
-                <NextLink href={`/${section}/${next}`}>
-                  <NextLinkSmall>Next</NextLinkSmall>
-                  {themes[theme].data.content[section][next].title}
-                </NextLink>
-              </NextLinkContainer>
+        <ContentPage section={section}>
+          <Container>
+            {section !== 'blog' ? (
+              <ContentNav
+                isOpen={isMenuOpen}
+                toggleMenu={this.toggleMenu}
+                section={section}
+                id={id}
+              />
             ) : null}
-          </Content>
-        </ContentArea>
-        <Footer />
+            <ContentArea pose="flip">
+              <Content>
+                {published && <DatePublished>{published}</DatePublished>}
+                {children}
+                {next && themes[theme].data.content[section][next] ? (
+                  <NextLinkContainer>
+                    <NextLink href={`/${section}/${next}`}>
+                      <NextLinkSmall>Next</NextLinkSmall>
+                      {themes[theme].data.content[section][next].title}
+                    </NextLink>
+                  </NextLinkContainer>
+                ) : null}
+              </Content>
+            </ContentArea>
+          </Container>
+        </ContentPage>
       </GlobalTemplate>
     );
   }

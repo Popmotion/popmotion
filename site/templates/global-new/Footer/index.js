@@ -24,7 +24,7 @@ export default () => (
       <Header>Site</Header>
       <ul>
         {themes.popmotion.headerNavLinks.map(({ href, label, isExternal }) => (
-          <NavItem key={url}>
+          <NavItem key={href}>
             <Link href={href}>
               <a>{label}</a>
             </Link>

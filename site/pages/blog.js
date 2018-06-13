@@ -1,8 +1,8 @@
-import { Fragment } from "react";
-import Header from "~/templates/global/Header";
-import Footer from "~/templates/global/Footer";
-import GlobalTemplate from "~/templates/global/Template";
-import MenuPage from "~/templates/content/MenuPage";
+import { Fragment } from 'react';
+import GlobalTemplate from '~/templates/global/Template';
+import ContentPage from '~/templates/global-new/ContentPage';
+import { Section, PageHeader } from '~/templates/global-new/styled';
+import BlogList from '~/templates/blog';
 
 export default () => (
   <GlobalTemplate
@@ -10,8 +10,11 @@ export default () => (
     description="Popmotion is a functional, reactive JavaScript motion library."
     theme="popmotion"
   >
-    <Header section="blog" />
-    <MenuPage section="blog" title="Blog" />
-    <Footer />
+    <ContentPage section="blog">
+      <Section>
+        <PageHeader>Blog</PageHeader>
+        <BlogList />
+      </Section>
+    </ContentPage>
   </GlobalTemplate>
 );

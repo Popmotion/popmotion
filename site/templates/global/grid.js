@@ -10,20 +10,21 @@ export const Centered = styled.div`
   margin: 0 auto;
 
   ${media.medium`
-    margin-left: ${cols(2)};
-    margin-right: ${cols(2)};
-  `} ${media.small`
-    margin-left: ${cols(2)};
-    margin-right: ${cols(2)};
+    margin-left: ${cols(1)};
+    margin-right: ${cols(1)};
+  `};
+  ${media.small`
+    margin-left: ${cols(1)};
+    margin-right: ${cols(1)};
   `};
 `;
 
 export const MajorCentered = styled(Centered)`
-  margin-left: calc((100vw - ${cols(42)}) / 2);
+  margin-left: calc((100vw - ${cols(48)}) / 2);
   max-width: none;
 
   ${media.medium`
-    margin-left: ${cols(2)};
+    margin-left: ${cols(1)};
   `};
 `;
 

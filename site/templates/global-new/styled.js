@@ -1,6 +1,54 @@
 import styled from 'styled-components';
 import { color, font, media } from '~/styles/vars';
 
+export const Container = styled.div`
+  ${({ theme }) => `
+    background-color: ${theme.color.base};
+    background-image: radial-gradient(120% 600px at 50% 200px, ${
+      theme.color.base
+    }, ${theme.color.twist} 120%);
+    min-height: 100vh;
+  `};
+  padding: 10px;
+`;
+
+export const ContentContainer = styled.div`
+  background: ${color.white};
+  padding: ${({ noHeader }) => (noHeader ? '75px' : '30px')} 30px;
+
+  ${media.large`padding: ${({ noHeader }) =>
+    noHeader ? '30px' : '30px'} 20px;`};
+  ${media.small`padding: ${({ noHeader }) =>
+    noHeader ? '10px' : '30px'} 10px;`};
+
+  a {
+    color: ${({ theme }) => theme.color.action};
+
+    &:hover {
+      color: ${({ theme }) => theme.color.actionHighlight};
+    }
+  }
+`;
+
+export const Section = styled.section`
+  margin: 75px auto;
+  max-width: 650px;
+`;
+
+export const PageHeader = styled.h1`
+  font-size: 36px;
+  color: ${color.black};
+  ${font.bold};
+  letter-spacing: -1.1px;
+  text-align: center;
+  margin-bottom: 40px;
+
+  ${media.medium`
+    font-size: 24px;
+    letter-spacing: -0.5px;
+  `};
+`;
+
 export const P = styled.p`
   font-size: 18px;
   line-height: 24px;

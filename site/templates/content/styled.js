@@ -5,6 +5,11 @@ import { htmlUnencode } from '~/utils/string';
 import SiteLink from '~/components/layout/SiteLink';
 import { Centered } from '~/templates/global/grid';
 
+export const Container = styled.div`
+  position: relative;
+  margin: 75px 0;
+`;
+
 const ImgFrame = styled.span`
   max-width: ${cols(43)};
   border-bottom: 1px solid ${LIGHT_GREY};
