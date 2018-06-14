@@ -2,6 +2,18 @@
 
 Popmotion Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.0.5] 2018-06-14
+
+### Fixed
+
+- `transition.delay` now working.
+
+## [2.0.4] 2018-06-14
+
+### Fixed
+
+- Forcing `popmotion@8.2.5`.
+
 ## [2.0.3] 2018-06-08
 
 ### Fixed

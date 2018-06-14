@@ -211,10 +211,10 @@ const pose = <P>({
       if (isAction(def)) return def;
 
       const { delay, min, max, round, ...remainingDef } = def;
-      const action = getAction(val, remainingDef, props);
+      let action = getAction(val, remainingDef, props);
       const outputPipe: Function[] = [];
 
-      if (delay) addActionDelay(delay, action);
+      if (delay) action = addActionDelay(delay, action);
       if (min !== undefined) outputPipe.push((v: number) => Math.max(v, min));
       if (max !== undefined) outputPipe.push((v: number) => Math.min(v, max));
       if (round) outputPipe.push(Math.round);
