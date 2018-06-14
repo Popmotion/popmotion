@@ -8,7 +8,7 @@ import {
 const { Fragment } = React;
 
 export type Props = {
-  children: Array<ReactElement<any>>;
+  children: React.ReactElement<any> | Array<React.ReactElement<any>>;
   flipMove?: boolean;
   preEnterPose?: string;
   enterPose?: string;
@@ -42,11 +42,15 @@ class PoseGroup extends React.Component<Props, State> {
     return {
       incomingChildren,
       children: handleIncomingChildren({
-        ...props,
         incomingChildren,
         displayedChildren: children,
         isLeaving,
-        removeFromTree
+        removeFromTree,
+        enterPose: props.enterPose,
+        exitPose: props.exitPose,
+        flipMove: props.flipMove,
+        animateOnMount: props.animateOnMount,
+        preEnterPose: props.preEnterPose
       })
     };
   };
