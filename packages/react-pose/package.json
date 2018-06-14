@@ -48,7 +48,7 @@
   },
   "dependencies": {
     "hey-listen": "^1.0.5",
-    "popmotion-pose": "^2.0.3",
+    "popmotion-pose": "^2.0.4",
     "tslib": "^1.9.1"
   },
   "unpkg": "./dist/react-pose.js",
