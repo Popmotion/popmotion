@@ -1,5 +1,6 @@
 import { Animated } from 'react-native';
 import poseFactory, { Poser, PoserConfig } from 'pose-core';
+import { warning } from 'hey-listen';
 import defaultTransitions from './inc/default-transitions';
 import { getUnit } from './inc/unit-conversion';
 import {
@@ -77,11 +78,16 @@ export default ({
     createValue: (
       init,
       key,
-      { passiveParent, passiveProps, props }: CreateValueProps = {}
+      props,
+      { passiveParent, passiveProps, passiveParentKey }: CreateValueProps = {}
     ) => {
       if (passiveParent) {
         if (!nonLayoutValues.has(key)) {
           passiveParent.useNativeDriver = props.useNativeDriver = false;
+          warning(
+            false,
+            `useNativeDriver is invalidated on value "${passiveParentKey}", because interpolated value "${key}" can't be animated by the native driver.`
+          );
         }
         return { interpolation: passiveParent.raw.interpolate(passiveProps) };
       } else {

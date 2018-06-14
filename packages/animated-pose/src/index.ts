@@ -1,4 +1,3 @@
-import { Animated } from 'react-native';
 import { Poser, PoserConfig } from 'pose-core';
 import { convertUnitToPoints, unitConverters } from './inc/unit-conversion';
 import animatedPoseFactory from './factory';
@@ -19,7 +18,6 @@ export default nativePose;
 export { vrPose };
 
 // Export types
-Animated; //tslint:disable-line
 export {
   Poser,
   PoserConfig,

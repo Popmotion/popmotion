@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "measure": "gzip -c dist/popmotion-pose.js | wc -c",
     "prettier": "prettier ./src/*",
     "prepublishOnly": "npm run prettier && npm run build"
@@ -28,7 +28,11 @@
     "env"
   ],
   "devDependencies": {
+    "@types/jest": "^22.2.3",
+    "jest": "^22.4.3",
     "prettier": "1.11.1",
+    "react-native": "^0.55.4",
+    "ts-jest": "^22.4.5",
     "typescript": "^2.8.3",
     "webpack": "^3.11.0"
   },
@@ -37,10 +41,23 @@
     "singleQuote": true
   },
   "peerDependencies": {
-    "react-native": "^0.55.3"
+    "react-native": "^0.55.4"
   },
   "dependencies": {
+    "react-native": "^0.55.4",
     "@types/react-native": "^0.55.4",
     "pose-core": "^0.7.3"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "transform": {
+      "^.+\\.(js)$": "../node_modules/react-native/jest/assetFileTransformer.js",
+      "\\.(ts)$": "../../../node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "/_tests/.*\\.(ts|js)$",
+    "rootDir": "src"
   }
 }

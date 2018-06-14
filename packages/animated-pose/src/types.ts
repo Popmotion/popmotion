@@ -32,7 +32,7 @@ export type Transition = (
 export type CreateValueProps = {
   passiveParent?: Value;
   passiveProps?: Interpolation;
-  props?: { [key: string]: any };
+  passiveParentKey?: string;
 };
 
 export type AnimatedPoseConfig = PoserConfig<Value>;

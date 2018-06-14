@@ -2,6 +2,12 @@
 
 Pose Core adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.8.0] 2018-06-14
+
+### Added
+
+- Passing `passiveParentKey` to `createValue`.
+
 ## [0.7.4] 2018-06-08
 
 ### Fixed
@@ -24,7 +30,8 @@ Pose Core adheres to [Semantic Versioning](http://semver.org/).
 transition: ({ value, ...props }) => Animated.spring(value, props)
 ```
 
-This can be defined as:å
+This can be defined as:
+
 ```javascript
 transition: { type: 'spring' }
 ```
