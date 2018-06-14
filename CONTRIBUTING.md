@@ -1,16 +1,83 @@
-# Contribute to Popmotion
+# How to contribute
 
-## Team members (plural not plural)
+Although Popmotion is run by a single individual, contributions are gladly welcomed!
 
-- Matt Perry [mailto:mattgperry@gmail.com](mattgperry@gmail.com)
+This guide will run through the types of contributions you can make and how to set the Popmotion repo up, ready for local development.
 
-## Learn
+- [Types of Contribution](#types-of-contribution)
+  - [Bugs](#bugs)
+  - [Features](#features)
+- [Development](#development)
+- [Codebase Overview](#codebase-overview)
+  - [Package hierarchy](#package-hierarchy)
+- [Get in Touch](#get-in-touch)
 
-- [API](https://popmotion.io/api)
-- [Twitter](https://twitter.com/popmotionjs)
+## Types of Contribution
 
-## Contributing
+### Bugs
 
-If you want to add a feature directly to Popmotion or Pose, get in touch and we can talk about the best place for it.
+Open issues can be found on our [GitHub issues](https://github.com/Popmotion/popmotion/issues) page.
 
-For bugfixes, try and keep within the style established throughout the codebase, and then just open a pull request!
+If you begin working on a bug, post your intent on the issue itself. This will prevent more than one person tackling a bug at once.
+
+If the bug you wish to work on doesn't currently have an issue, make one and label it "Bug".
+
+### Features
+
+Before adding any features, open a Feature Proposal as a [new issue](https://github.com/Popmotion/popmotion/issues).
+
+This will let us talk through your proposed API and/or implementation before you spend time on it.
+
+## Development
+
+Follow these steps to get your code PR-ready:
+
+1. [Fork the Popmotion repo](https://github.com/Popmotion/popmotion).
+2. Clone your fork locally.
+3. Run `yarn` in the repo root ([install Yarn](https://yarnpkg.com/lang/en/docs/install/#mac-stable) if necessary).
+4. Add your code and supporting tests.
+5. If this is a feature that requires doc changes, make as necessary.
+6. Update `CHANGELOG.md`.
+7. Ensure your changes build by running `yarn build` in the appropriate package directory(s).
+
+## Codebase Overview
+
+Other than [Stylefire](https://github.com/popmotion/stylefire) and [Framesync](https://github.com/popmotion/framesync), Popmotion is a monorepo. All Popmotion and Pose packages are contained in the [`packages` directory](https://github.com/Popmotion/popmotion/tree/master/packages).
+
+All code and tests must be written in Typescript.
+
+### Package hierarchy
+
+```
+             +---------------------+                                                                                                         
+             |                     |                                                                                                         
+             |      framesync      |                                                                                                         
+             |                     |                                                                                                         
+             +-----|----------|----+                                                                                                         
+                   |          |                                                                                                              
+                 |              |                                                                                                            
++----------------|----+   +-----|---------------+   +---------------------+                                                                  
+|                     |   |                     |   |                     |                                                                  
+|      stylefire      |   |      popmotion      |   |      pose-core      |                                                                  
+|                     |   |                     |   |                     |                                                                  
++---------------------+   +----------|----------+   +-----|----------|----+                                                                  
+                 |                   |                    |          |                                                                       
+                 |                                      |              |                                                                     
+                 |                     +----------------|----+   +-----|---------------+   +---------------------+                           
+                 |                     |                     |   |                     |   |                     |                           
+                 +-------------------- |   popmotion-pose    |   |    animated-pose    |   |   react-pose-core   |                           
+                                       |                     |   |                     |   |                     |                           
+                                       +----------|----------+   +-----|----------|----+   +-----|----------|----+                           
+                                                  |                    |    -------------------- |          |                                
+                                                  |                    |    |     |---------------          |                                
+                                       +----------|----------+   +-----|----|----------+   +----------------|----+                           
+                                       |                     |   |                     |   |                     |                           
+                                       |     react-pose      |   |  react-native-pose  |   |   react-360-pose    |                           
+                                       |                     |   |                     |   |                     |                           
+                                       +---------------------+   +---------------------+   +---------------------+  
+
+```
+
+## Get in Touch
+
+If you need help, you can reach out to the [official Popmotion Twitter](https://twitter.com/popmotionjs) account or post a discussion in our [Spectrum community](https://spectrum.chat/popmotion).
