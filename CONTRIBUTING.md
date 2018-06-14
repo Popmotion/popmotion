@@ -54,7 +54,6 @@ This flowchart illustrates the Popmotion package dependency tree.
 
 ![Popmotion package hierarchy flowchart](https://user-images.githubusercontent.com/7850794/41407730-3d921f26-6fc8-11e8-9de6-f1756572f6fc.png)
 
-
 ## Get in Touch
 
 If you need help, you can reach out to the [official Popmotion Twitter](https://twitter.com/popmotionjs) account or post a discussion in our [Spectrum community](https://spectrum.chat/popmotion).
