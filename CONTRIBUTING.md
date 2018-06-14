@@ -1,4 +1,4 @@
-# How to contribute
+# How to Contribute
 
 Although Popmotion is run by a single individual, contributions are gladly welcomed!
 
