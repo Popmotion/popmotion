@@ -48,7 +48,12 @@ All code and tests must be written in Typescript.
 
 ### Package Hierarchy
 
-The 
+This flowchart illustrates the Popmotion package dependency tree.
+
+**Note:** Currently, this illustration depicts `popmotion` as **not** dependent on `stylefire`, which isn't currently true. In `popmotion@9.0.0`, I'm considering removing Stylefire as a Popmotion dependency.
+
+![Popmotion package hierarchy flowchart](https://user-images.githubusercontent.com/7850794/41407730-3d921f26-6fc8-11e8-9de6-f1756572f6fc.png)
+
 
 ## Get in Touch
 
