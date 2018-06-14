@@ -9,7 +9,7 @@ This guide will run through the types of contributions you can make and how to s
   - [Features](#features)
 - [Development](#development)
 - [Codebase Overview](#codebase-overview)
-  - [Package hierarchy](#package-hierarchy)
+  - [Package Hierarchy](#package-hierarchy)
 - [Get in Touch](#get-in-touch)
 
 ## Types of Contribution
@@ -46,37 +46,9 @@ Other than [Stylefire](https://github.com/popmotion/stylefire) and [Framesync](h
 
 All code and tests must be written in Typescript.
 
-### Package hierarchy
+### Package Hierarchy
 
-```
-             +---------------------+                                                                                                         
-             |                     |                                                                                                         
-             |      framesync      |                                                                                                         
-             |                     |                                                                                                         
-             +-----|----------|----+                                                                                                         
-                   |          |                                                                                                              
-                 |              |                                                                                                            
-+----------------|----+   +-----|---------------+   +---------------------+                                                                  
-|                     |   |                     |   |                     |                                                                  
-|      stylefire      |   |      popmotion      |   |      pose-core      |                                                                  
-|                     |   |                     |   |                     |                                                                  
-+---------------------+   +----------|----------+   +-----|----------|----+                                                                  
-                 |                   |                    |          |                                                                       
-                 |                                      |              |                                                                     
-                 |                     +----------------|----+   +-----|---------------+   +---------------------+                           
-                 |                     |                     |   |                     |   |                     |                           
-                 +-------------------- |   popmotion-pose    |   |    animated-pose    |   |   react-pose-core   |                           
-                                       |                     |   |                     |   |                     |                           
-                                       +----------|----------+   +-----|----------|----+   +-----|----------|----+                           
-                                                  |                    |    -------------------- |          |                                
-                                                  |                    |    |     |---------------          |                                
-                                       +----------|----------+   +-----|----|----------+   +----------------|----+                           
-                                       |                     |   |                     |   |                     |                           
-                                       |     react-pose      |   |  react-native-pose  |   |   react-360-pose    |                           
-                                       |                     |   |                     |   |                     |                           
-                                       +---------------------+   +---------------------+   +---------------------+  
-
-```
+The 
 
 ## Get in Touch
 
