@@ -1,5 +1,6 @@
 import { Transition } from '../types';
 import { Animated } from 'react-native';
+import { eachValue } from './transition-composers';
 
 const tween: Transition = ({ value, toValue, useNativeDriver = true }) =>
   Animated.timing(value, {
@@ -42,7 +43,7 @@ const underDampedSpring: Transition = ({
     useNativeDriver
   });
 
-const intelligentTransition = {
+const intelligentTransition = eachValue({
   x: underDampedSpring,
   y: underDampedSpring,
   z: underDampedSpring,
@@ -56,6 +57,6 @@ const intelligentTransition = {
   scale: overDampedSpring,
   opacity: linearTween,
   default: tween
-};
+});
 
 export default new Map([['default', intelligentTransition]]);

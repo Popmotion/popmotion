@@ -27,7 +27,7 @@ export type TransitionProps = {
 
 export type Transition = (
   { value, toValue }: TransitionProps
-) => Animated.CompositeAnimation;
+) => false | Animated.CompositeAnimation;
 
 export type CreateValueProps = {
   passiveParent?: Value;

@@ -38,7 +38,12 @@ export default ({
   convertUnitToPoints,
   unitConverters
 }: AnimatedFactoryConfig): AnimatedPoserFactory => {
-  const pose = poseFactory<Value, Action, Action, AnimatedPoser>({
+  const pose: AnimatedPoserFactory = poseFactory<
+    Value,
+    Action,
+    Action,
+    AnimatedPoser
+  >({
     /**
      * Bind onChange callbacks
      */
