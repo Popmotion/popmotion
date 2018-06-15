@@ -2,11 +2,12 @@
 
 React Native Pose adheres to [Semantic Versioning](http://semver.org/).
 
-## [0.4.0] 2018-06-15
+## [0.4.1] Unreleased
 
 ### Added
 
 - Support for transition definitions.
+- Warning messages for `useNativeDriver` invalidation.
 
 ## [0.3.0] 2018-05-10
 
