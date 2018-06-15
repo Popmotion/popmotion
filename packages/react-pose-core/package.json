@@ -1,6 +1,6 @@
 {
   "name": "react-pose-core",
-  "version": "0.3.2-rc",
+  "version": "0.3.3",
   "description": "Factory for creating flavours of React Pose",
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
