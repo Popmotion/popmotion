@@ -2,6 +2,12 @@
 
 Popmotion Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.0.6] 2018-06-15
+
+### Fixed
+
+- Removing `Map`, as its initialiser doesn't play nice with IE11.
+
 ## [2.0.5] 2018-06-14
 
 ### Fixed

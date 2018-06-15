@@ -38,7 +38,8 @@ const sidebarProps = {
   open: {
     x: "0%",
     beforeChildren: true,
-    staggerChildren: 50
+    staggerChildren: 50,
+    transition: { duration: 3000, ease: "easeIn" }
   },
   close: {
     afterChildren: true,
@@ -127,7 +128,10 @@ const passiveModalItemProps = {
   passive: {
     opacity: [
       "x",
-      transform.pipe(parseFloat, transform.interpolate([-100, 0], [0, 1])),
+      transform.pipe(
+        parseFloat,
+        transform.interpolate([-100, 0], [0, 1])
+      ),
       "sidebar"
     ]
   }
