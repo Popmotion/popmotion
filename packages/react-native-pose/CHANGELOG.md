@@ -2,6 +2,12 @@
 
 React Native Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.4.0] 2018-06-15
+
+### Added
+
+- Support for transition definitions.
+
 ## [0.3.0] 2018-05-10
 
 ### Added

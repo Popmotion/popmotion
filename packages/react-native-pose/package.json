@@ -1,6 +1,6 @@
 {
   "name": "react-native-pose",
-  "version": "0.3.0",
+  "version": "0.4.0-rc",
   "description": "Pose animation system for React Native",
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
@@ -27,8 +27,10 @@
     "env"
   ],
   "devDependencies": {
-    "typescript": "^2.7.2",
+    "@types/react": "^16.3.12",
+    "@types/react-native": "^0.55.4",
     "prettier": "1.11.1",
+    "typescript": "^2.7.2",
     "webpack": "^3.11.0"
   },
   "prettier": {
@@ -36,12 +38,10 @@
     "singleQuote": true
   },
   "peerDependencies": {
-    "react-native": "^0.55.3"
+    "react-native": ">=0.54.0"
   },
   "dependencies": {
-    "@types/react": "^16.3.12",
-    "@types/react-native": "^0.55.4",
-    "animated-pose": "^0.2.2",
-    "react-pose-core": "^0.2.0"
+    "animated-pose": "^0.3.2-rc",
+    "react-pose-core": "^0.3.2-rc"
   }
 }
