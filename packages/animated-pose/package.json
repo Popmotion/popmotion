@@ -1,6 +1,6 @@
 {
   "name": "animated-pose",
-  "version": "0.3.1-rc1",
+  "version": "0.3.2-rc",
   "description": "Pose for the Animated animation library",
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
@@ -29,6 +29,7 @@
   ],
   "devDependencies": {
     "@types/jest": "^22.2.3",
+    "@types/react-native": "^0.55.4",
     "babel-jest": "^23.0.1",
     "jest": "^22.4.3",
     "prettier": "1.11.1",
@@ -42,30 +43,9 @@
     "singleQuote": true
   },
   "peerDependencies": {
-    "react-native": "^0.55.4"
+    "react-native": ">=0.54.0"
   },
   "dependencies": {
-    "@types/react-native": "^0.55.4",
-    "babel-jest": "^23.0.1",
     "pose-core": "^0.7.3"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "ts",
-      "js"
-    ],
-    "moduleNameMapper": {
-      "^React$": "../../../node_modules/react"
-    },
-    "modulePathIgnorePatterns": [
-      "../../../node_modules/react-native/Libraries/react-native/"
-    ],
-    "transform": {
-      "^.+\\.js$": "babel-jest",
-      "\\.(ts)$": "../../../node_modules/ts-jest/preprocessor.js"
-    },
-    "testRegex": "/_tests/.*\\.(ts|js)$",
-    "rootDir": "src",
-    "testEnvironment": "node"
   }
 }
