@@ -145,16 +145,30 @@ export default ({
      * If a transition has been defined as an object of props, convert this
      * into an Animated animation
      */
-    convertTransitionDefinition: ({ raw }, def, props) => {
+    convertTransitionDefinition: (
+      { raw, useNativeDriver },
+      def,
+      { toValue }
+    ) => {
       if (isAction(def)) return def;
 
+      const animationProps = {
+        ...def,
+        toValue,
+        useNativeDriver
+      };
+
       switch (def.type) {
-        case 'decay':
-          return Animated.decay(raw, def as Animated.DecayAnimationConfig);
         case 'spring':
-          return Animated.spring(raw, def as Animated.SpringAnimationConfig);
+          return Animated.spring(
+            raw,
+            animationProps as Animated.SpringAnimationConfig
+          );
         default:
-          return Animated.timing(raw, def as Animated.TimingAnimationConfig);
+          return Animated.timing(
+            raw,
+            animationProps as Animated.TimingAnimationConfig
+          );
       }
     },
 

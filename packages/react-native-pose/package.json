@@ -27,6 +27,8 @@
     "env"
   ],
   "devDependencies": {
+    "@types/react": "^16.3.12",
+    "@types/react-native": "^0.55.4",
     "prettier": "1.11.1",
     "typescript": "^2.7.2",
     "webpack": "^3.11.0"
@@ -36,12 +38,10 @@
     "singleQuote": true
   },
   "peerDependencies": {
-    "react-native": "^0.55.3"
+    "react-native": ">=0.54.0"
   },
   "dependencies": {
-    "@types/react": "^16.3.12",
-    "@types/react-native": "^0.55.4",
-    "animated-pose": "^0.3.1-rc1",
-    "react-pose-core": "^0.3.0-rc"
+    "animated-pose": "^0.3.2-rc",
+    "react-pose-core": "^0.3.2-rc"
   }
 }

@@ -13,7 +13,9 @@
     "paths": {
       "popmotion": ["./popmotion/lib"],
       "popmotion-pose": ["./popmotion-pose/lib"],
-      "pose-core": ["./pose-core/lib"]
+      "pose-core": ["./pose-core/lib"],
+      "animated-pose": ["./animated-pose/lib"],
+      "react-pose-core": ["./react-pose-core/lib"]
     },
     "alwaysStrict": true,
     "declaration": true,
