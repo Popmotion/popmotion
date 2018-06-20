@@ -56,12 +56,21 @@ describe('hex()', () => {
   it('should split a hex value into the correct params', () => {
     expect(hex.parse('#f00')).toEqual(red);
   });
+
+  it('should correctly combine a hex value', () => {
+    expect(hex.transform(red)).toBe('rgba(255, 0, 0, 1)');
+  });
 });
 
 describe('rgba()', () => {
   it('should split an rgba value into the correct params', () => {
     expect(rgba.parse('rgba(255, 0, 0, 0.5)')).toEqual({ ...red, alpha: 0.5 });
     expect(rgba.parse('rgb(255,0,0)')).toEqual(red);
+    expect(rgba.parse(red)).toEqual(red);
+  });
+
+  it('should correctly combine rgba value', () => {
+    expect(rgba.transform(red)).toEqual('rgba(255, 0, 0, 1)');
   });
 });
 
@@ -69,6 +78,11 @@ describe('hsla()', () => {
   it('should split an hsl value into the correct params', () => {
     expect(hsla.parse('hsla(170, 50%, 45%, 1)')).toEqual(hslaTestColor);
     expect(hsla.parse('hsl(170, 50%, 45%)')).toEqual(hslaTestColor);
+    expect(hsla.parse(hslaTestColor)).toEqual(hslaTestColor);
+  });
+
+  it('should correctly combine hsla value', () => {
+    expect(hsla.transform(hslaTestColor)).toEqual('hsla(170, 50%, 45%, 1)');
   });
 });
 
@@ -77,6 +91,13 @@ describe('color()', () => {
     expect(color.parse('rgba(255, 0, 0, 1)')).toEqual(red);
     expect(color.parse('#f00')).toEqual(red);
     expect(color.parse('hsla(170, 50%, 45%, 1)')).toEqual(hslaTestColor);
+    expect(color.parse(red)).toEqual(red);
+    expect(color.parse(hslaTestColor)).toEqual(hslaTestColor);
+  });
+
+  it('should correctly combine color value', () => {
+    expect(color.transform(red)).toEqual('rgba(255, 0, 0, 1)');
+    expect(color.transform(hslaTestColor)).toEqual('hsla(170, 50%, 45%, 1)');
   });
 });
 

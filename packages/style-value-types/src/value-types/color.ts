@@ -10,6 +10,9 @@ import { Color, RGBA, HSLA, NumberMap, ValueType } from '../types';
 
 const clampRgbUnit = clamp(0, 255);
 
+const isRgba = (v: Color): v is RGBA => (v as RGBA).red !== undefined;
+const isHsla = (v: Color): v is HSLA => (v as HSLA).hue !== undefined;
+
 /**
  * Creates a function that will split color
  * values from string into an object of properties
@@ -18,7 +21,8 @@ const clampRgbUnit = clamp(0, 255);
 const splitColorValues = (terms: string[]) => {
   const numTerms = terms.length;
 
-  return (v: string) => {
+  return (v: string | RGBA | HSLA) => {
+    if (typeof v !== 'string') return v;
     const values: NumberMap = {};
     const valuesArray = splitCommaDelimited(getValueFromFunctionString(v));
 
@@ -44,8 +48,9 @@ export const rgbUnit: ValueType = {
   transform: (v: number) => Math.round(clampRgbUnit(v))
 };
 
+const testRgbaString = isFirstChars('rgb');
 export const rgba: ValueType = {
-  test: isFirstChars('rgb'),
+  test: v => (typeof v === 'string' ? testRgbaString(v) : isRgba(v)),
   parse: splitColorValues(['red', 'green', 'blue', 'alpha']),
   transform: ({ red, green, blue, alpha }: RGBA) =>
     rgbaTemplate({
@@ -56,8 +61,9 @@ export const rgba: ValueType = {
     })
 };
 
+const testHslaString = isFirstChars('hsl');
 export const hsla: ValueType = {
-  test: isFirstChars('hsl'),
+  test: v => (typeof v === 'string' ? testHslaString(v) : isHsla(v)),
   parse: splitColorValues(['hue', 'saturation', 'lightness', 'alpha']),
   transform: ({ hue, saturation, lightness, alpha }: HSLA) =>
     hslaTemplate({
@@ -100,9 +106,6 @@ export const hex: ValueType = {
     };
   }
 };
-
-const isRgba = (v: Color): v is RGBA => (v as RGBA).red !== undefined;
-const isHsla = (v: Color): v is HSLA => (v as HSLA).hue !== undefined;
 
 export const color: ValueType = {
   test: (v: any) => rgba.test(v) || hsla.test(v) || hex.test(v),

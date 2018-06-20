@@ -1,3 +1,4 @@
 *.md
 docs
 webpack.config.js
+tmp
