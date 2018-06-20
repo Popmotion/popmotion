@@ -1,9 +1,11 @@
+import { ValueType } from '../types';
+
 type TokenMap = { [key: string]: number };
 const FLOAT_REGEX = /(-)?(\d[\d\.]*)/g;
 
 const generateToken = (token: string) => '${' + token + '}';
 
-const complex = {
+const complex: ValueType = {
   test: v => {
     const matches = v.match && v.match(FLOAT_REGEX);
     return (

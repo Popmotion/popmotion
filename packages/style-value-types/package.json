@@ -47,17 +47,20 @@
   "jest": {
     "moduleFileExtensions": [
       "ts",
-      "tsx",
       "js"
     ],
     "transform": {
       "\\.(ts)$": "../../../node_modules/ts-jest/preprocessor.js"
     },
-    "testRegex": "/_tests/.*\\.(ts|tsx|js)$"
+    "testRegex": "/_tests/.*\\.(ts|tsx|js)$",
+    "rootDir": "src"
   },
   "unpkg": "./dist/style-value-types.min.js",
   "prettier": {
     "parser": "typescript",
     "singleQuote": true
+  },
+  "dependencies": {
+    "jest-cli": "^23.1.0"
   }
 }

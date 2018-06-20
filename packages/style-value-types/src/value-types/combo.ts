@@ -34,7 +34,7 @@ const combo: ValueType = {
         const valueType = valueTypes[i];
 
         if (valueType) {
-          built += `${valueType.transform(output[template[i]])} `;
+          built += `${valueType.transform(output[template[i] as number])} `;
         } else {
           built += `${template[i]} `;
         }

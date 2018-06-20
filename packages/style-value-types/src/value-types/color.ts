@@ -6,7 +6,7 @@ import {
 } from '../utils';
 import { number } from './numbers';
 import { percent } from './units';
-import { RGBA, HSLA, NumberMap } from '../types';
+import { Color, RGBA, HSLA, NumberMap, ValueType } from '../types';
 
 const clampRgbUnit = clamp(0, 255);
 
@@ -39,12 +39,12 @@ const hslaTemplate = ({ hue, saturation, lightness, alpha = 1 }: HSLA) =>
   `hsla(${hue}, ${saturation}, ${lightness}, ${alpha})`;
 
 // Value types
-export const rgbUnit = {
+export const rgbUnit: ValueType = {
   ...number,
   transform: (v: number) => Math.round(clampRgbUnit(v))
 };
 
-export const rgba = {
+export const rgba: ValueType = {
   test: isFirstChars('rgb'),
   parse: splitColorValues(['red', 'green', 'blue', 'alpha']),
   transform: ({ red, green, blue, alpha }: RGBA) =>
@@ -56,7 +56,7 @@ export const rgba = {
     })
 };
 
-export const hsla = {
+export const hsla: ValueType = {
   test: isFirstChars('hsl'),
   parse: splitColorValues(['hue', 'saturation', 'lightness', 'alpha']),
   transform: ({ hue, saturation, lightness, alpha }: HSLA) =>
@@ -68,7 +68,7 @@ export const hsla = {
     })
 };
 
-export const hex = {
+export const hex: ValueType = {
   ...rgba,
   test: isFirstChars('#'),
   parse: (v: string): RGBA => {
@@ -104,7 +104,7 @@ export const hex = {
 const isRgba = (v: Color): v is RGBA => (v as RGBA).red !== undefined;
 const isHsla = (v: Color): v is HSLA => (v as HSLA).hue !== undefined;
 
-export const color = {
+export const color: ValueType = {
   test: (v: any) => rgba.test(v) || hsla.test(v) || hex.test(v),
   parse: (v: any) => {
     if (rgba.test(v)) {
