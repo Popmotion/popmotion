@@ -4,32 +4,132 @@ import tween from '../../animations/tween';
 import vector from '../vector';
 
 describe('vector', () => {
-  const va = vector(({ p }) => action(({ update }) => update(p)), { p: number.test });
+  const va = vector(({ p }) => action(({ update }) => update(p)), {
+    p: number.test
+  });
 
   it('should work as usual if only default types passed', () => {
-    va({ p: 1 }).start((v) => expect(v).toBe(1));
+    va({ p: 1 }).start(v => expect(v).toBe(1));
   });
 
   it('should return a composite action if provided an object', () => {
     return new Promise((resolve, reject) => {
-      va({ p: { x: 1, y: 2 } })
-        .start((v) => {
-          if (v === undefined) reject('undefined detected');
-          (v.x === 1 && v.y === 2)
-            ? resolve()
-            : reject('composite output incorrect');
-        });
+      va({ p: { x: 1, y: 2 } }).start(v => {
+        if (v === undefined) reject('undefined detected');
+        v.x === 1 && v.y === 2
+          ? resolve()
+          : reject('composite output incorrect');
+      });
     });
   });
 
   it('should return a parallel action if provided an object', () => {
     return new Promise((resolve, reject) => {
-      va({ p: [0, 1, 2, 3, 4] })
-        .start((v) => {
-          (v[0] === 0 && v[1] === 1 && v[2] === 2 && v[3] === 3 && v[4] === 4)
-            ? resolve()
-            : reject('parallel output incorrect');
-        });
+      va({ p: [0, 1, 2, 3, 4] }).start(v => {
+        v[0] === 0 && v[1] === 1 && v[2] === 2 && v[3] === 3 && v[4] === 4
+          ? resolve()
+          : reject('parallel output incorrect');
+      });
+    });
+  });
+
+  it('should handle px units', () => {
+    return new Promise((resolve, reject) => {
+      let output = '';
+      tween({
+        from: 0,
+        to: '10px',
+        duration: 1
+      }).start({
+        update: v => (output = v),
+        complete: () => (output === '10px' ? resolve() : reject())
+      });
+    });
+  });
+
+  it('should handle % units', () => {
+    return new Promise((resolve, reject) => {
+      let output = '';
+      tween({
+        from: '10%',
+        to: '10%',
+        duration: 1
+      }).start({
+        update: v => (output = v),
+        complete: () => (output === '10%' ? resolve() : reject())
+      });
+    });
+  });
+
+  it('should handle vh units', () => {
+    return new Promise((resolve, reject) => {
+      let output = '';
+      tween({
+        from: 0,
+        to: '10vh',
+        duration: 1
+      }).start({
+        update: v => (output = v),
+        complete: () => (output === '10vh' ? resolve() : reject())
+      });
+    });
+  });
+
+  it('should handle vw units', () => {
+    return new Promise((resolve, reject) => {
+      let output = '';
+      tween({
+        from: 0,
+        to: '10vw',
+        duration: 1
+      }).start({
+        update: v => (output = v),
+        complete: () => (output === '10vw' ? resolve() : reject())
+      });
+    });
+  });
+
+  it('should handle degree units', () => {
+    return new Promise((resolve, reject) => {
+      let output = '';
+      tween({
+        from: 0,
+        to: '10deg',
+        duration: 1
+      }).start({
+        update: v => (output = v),
+        complete: () => (output === '10deg' ? resolve() : reject())
+      });
+    });
+  });
+
+  it('should handle combo units', () => {
+    return new Promise((resolve, reject) => {
+      let output = '';
+      tween({
+        from: 0,
+        to: '10px 10px inset 20vh',
+        duration: 1
+      }).start({
+        update: v => (output = v),
+        complete: () =>
+          output === '10px 10px inset 20vh' ? resolve() : reject()
+      });
+    });
+  });
+
+  it('should handle combo units with color', () => {
+    return new Promise((resolve, reject) => {
+      let output = '';
+      tween({
+        from: 0,
+        to: '10px 10px inset 20vh #f00',
+        duration: 1
+      }).start({
+        update: v => (output = v),
+        complete: () =>
+          output === '10px 10px inset rgba(255, 0, 0, 1)' ? resolve() : reject()
+      });
     });
   });
 
@@ -38,10 +138,11 @@ describe('vector', () => {
       let col = '';
       tween({
         from: '#ff0',
-        to: 'rgba(0, 0, 0, 1)'
+        to: 'rgba(0, 0, 0, 1)',
+        duration: 1
       }).start({
-        update: (v) => col = v,
-        complete: () => (col === 'rgba(0, 0, 0, 1)') ? resolve() : reject()
+        update: v => (col = v),
+        complete: () => (col === 'rgba(0, 0, 0, 1)' ? resolve() : reject())
       });
     });
   });
@@ -57,9 +158,10 @@ describe('vector', () => {
         to: {
           x: 100,
           background: 'rgba(0, 0, 0, 1)'
-        }
+        },
+        duration: 1
       }).start({
-        update: (v) => output = v,
+        update: v => (output = v),
         complete: () => {
           if (output.background === 'rgba(0, 0, 0, 1)' && output.x === 100) {
             resolve();
@@ -75,12 +177,14 @@ describe('vector', () => {
         let col = '';
         tween({
           from: 'hsla(0, 90, 10, 1)',
-          to: 'hsla(100, 90, 10, 0.5)'
+          to: 'hsla(100, 90, 10, 0.5)',
+          duration: 1
         }).start({
-          update: (v) => col = v,
-          complete: () => (col === 'hsla(100, 90, 10, 0.5)') ? resolve() : reject()
+          update: v => (col = v),
+          complete: () =>
+            col === 'hsla(100, 90, 10, 0.5)' ? resolve() : reject()
         });
-      })
+      });
     });
   });
 });
