@@ -2,6 +2,18 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.3.0] 2018-06-20
+
+### Added
+
+- Support for animating value types:
+  - `px`
+  - `deg`
+  - `%`
+  - `vw`
+  - `vh`
+  - Space-delimited ie `'30px 30px inset #f00'`
+
 ## [8.2.5] 2018-06-13
 
 ### Fixed

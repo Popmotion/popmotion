@@ -1,12 +1,17 @@
-import { color, combo, percent, degrees, vh, vw, px } from 'style-value-types';
+import {
+  color,
+  combo,
+  percent,
+  degrees,
+  vh,
+  vw,
+  px,
+  ValueType
+} from 'style-value-types';
 import composite from '../compositors/composite';
 import parallel from '../compositors/parallel';
 import { blendColor } from '../transformers';
 import { Action } from './';
-
-// TODO: Clean this shit up
-
-const isColor = color.test;
 
 export type Props = {
   [key: string]: any;
@@ -36,11 +41,13 @@ type CreateVectorAction = (
   vectorKeys: string[]
 ) => Action;
 
+const unitTypes = [px, percent, degrees, vh, vw];
+
 const convertToColorAction = (init: ActionFactory, props: Props) =>
   typeof props.from === 'string' &&
-  isColor(props.from) &&
+  color.test(props.from) &&
   typeof props.to === 'string' &&
-  isColor(props.to)
+  color.test(props.to)
     ? init({
         ...props,
         from: 0,
@@ -50,6 +57,17 @@ const convertToColorAction = (init: ActionFactory, props: Props) =>
         color.transform
       )
     : init(props);
+
+const convertToUnitAction = (
+  init: ActionFactory,
+  { from, to, ...props }: Props,
+  unitType: ValueType
+) =>
+  init({
+    ...props,
+    from: typeof from === 'string' ? unitType.parse(from) : from,
+    to: typeof to === 'string' ? unitType.parse(to) : to
+  }).pipe(unitType.transform);
 
 const createVectorTests: VectorTestFactory = typeTests => {
   const testNames = Object.keys(typeTests);
@@ -117,6 +135,12 @@ const createObjectVector: CreateVectorAction = (init, props, vectorKeys) => {
 const createColorVector: CreateVectorAction = (init, props) =>
   convertToColorAction(init, props);
 
+const createUnitVector = (
+  init: ActionFactory,
+  props: Props,
+  unitType: ValueType
+) => convertToUnitAction(init, props, unitType);
+
 const vectorAction: VectorActionFactory = (init, typeTests) => {
   const { test, getVectorKeys } = createVectorTests(typeTests);
 
@@ -130,8 +154,14 @@ const vectorAction: VectorActionFactory = (init, typeTests) => {
 
     if (Array.isArray(testProp)) {
       return createArrayVector(init, props, vectorKeys);
-    } else if (typeof testProp === 'string' && isColor(testProp)) {
-      return createColorVector(init, props, vectorKeys);
+    } else if (typeof testProp === 'string') {
+      const unitType = unitTypes.find(type => type.test(testProp));
+
+      if (unitType) {
+        return createUnitVector(init, props, unitType);
+      } else if (color.test(testProp)) {
+        return createColorVector(init, props, vectorKeys);
+      }
     } else {
       return createObjectVector(init, props, vectorKeys);
     }
