@@ -1,0 +1,63 @@
+{
+  "name": "style-value-types",
+  "version": "2.0.0",
+  "description": "Parsers, transformers and tests for special value types, eg: %, hex codes etc.",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "module": "dist/style-value-types.es.js",
+  "jsnext:main": "dist/style-value-types.es.js",
+  "files": [
+    "lib",
+    "dist"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "watch": "rollup -c -w",
+    "lint": "tslint -c tslint.json 'src/**/*.{ts}'",
+    "test": "jest",
+    "measure": "gzip -c dist/style-value-types.min.js | wc -c",
+    "prepublishOnly": "npm run lint && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Popmotion/style-value-types.git"
+  },
+  "keywords": [
+    "css",
+    "svg",
+    "hex",
+    "rgba",
+    "hsla"
+  ],
+  "author": "Matt Perry",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Popmotion/style-value-types/issues"
+  },
+  "homepage": "https://github.com/Popmotion/style-value-types#readme",
+  "devDependencies": {
+    "@types/jest": "^23.1.1",
+    "jest": "^23.1.0",
+    "rollup-plugin-typescript2": "^0.14.0",
+    "rollup-plugin-uglify": "^3.0.0",
+    "ts-jest": "^22.4.6",
+    "typescript": "^2.9.2",
+    "webpack": "^3.12.0"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "transform": {
+      "\\.(ts)$": "../../../node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "/_tests/.*\\.(ts|tsx|js)$"
+  },
+  "unpkg": "./dist/style-value-types.min.js",
+  "prettier": {
+    "parser": "typescript",
+    "singleQuote": true
+  }
+}
