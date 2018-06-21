@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { fontBold } from '~/styles/fonts';
-import { GREEN, UNSKEW, media, cols } from '~/styles/vars';
+import { GREEN, media, cols } from '~/styles/vars';
 import {
   action,
   reaction,
@@ -46,7 +46,7 @@ const CodeContainer = CodeContainerPrimitive.extend`
     border-color: ${GREEN};
     padding: ${cols(2)};
     margin-right: 0;
-  `}
+  `};
 `;
 
 const LiveEditorWrapper = styled.div`
@@ -60,25 +60,24 @@ const LiveEditorWrapper = styled.div`
   }
 `;
 
-const StyledLivePreview = LiveExampleContainer.withComponent(LivePreview).extend`
+const StyledLivePreview = LiveExampleContainer.withComponent(LivePreview)
+  .extend`
   flex: 0 1 450px;
   justify-content: center;
 `;
 
 const LiveEditorHeader = styled.h4`
   color: ${GREEN};
-  ${fontBold}
-  transform: skewX(${UNSKEW});
-  transform-origin: 0 0;
+  ${fontBold};
   display: block;
   margin-bottom: ${cols(1)};
 `;
 
-const stripFirstReturn = ([ code ]) => {
+const stripFirstReturn = ([code]) => {
   return code.replace(/[\n\r]+/, '');
-}
+};
 
-const injectRender = (code) => `
+const injectRender = code => `
   function start() {
     ${code}
   }
@@ -91,7 +90,13 @@ const injectRender = (code) => `
   />);
 `;
 
-export default ({ children, template, id, autostart, isReactComponent=false }) => {
+export default ({
+  children,
+  template,
+  id,
+  autostart,
+  isReactComponent = false
+}) => {
   const Component = templates[template];
 
   return (

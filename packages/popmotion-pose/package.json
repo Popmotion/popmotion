@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/popmotion/packages/popmotion-pose"
+    "url": "https://github.com/Popmotion/popmotion/tree/master/packages/popmotion-pose"
   },
   "keywords": [
     "animation",

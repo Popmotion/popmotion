@@ -10,7 +10,7 @@
   "jsnext:main": "dist/popmotion.es.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Popmotion/popmotion"
+    "url": "https://github.com/Popmotion/popmotion/tree/master/packages/popmotion"
   },
   "bugs": {
     "url": "https://github.com/Popmotion/popmotion/issues"

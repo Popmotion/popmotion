@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Popmotion/style-value-types.git"
+    "url": "https://github.com/Popmotion/popmotion/tree/master/packages/style-value-types"
   },
   "keywords": [
     "css",
@@ -32,9 +32,9 @@
   "author": "Matt Perry",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Popmotion/style-value-types/issues"
+    "url": "https://github.com/Popmotion/popmotion/issues"
   },
-  "homepage": "https://github.com/Popmotion/style-value-types#readme",
+  "homepage": "https://popmotion.io",
   "devDependencies": {
     "@types/jest": "^23.1.1",
     "jest": "^23.1.0",

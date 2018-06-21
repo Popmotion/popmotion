@@ -10,22 +10,43 @@ const addIfAnimatable = (acc: Array<number | Color>, val: string) => {
   return acc;
 };
 
-const parse = (v: string) => v.split(' ').reduce(addIfAnimatable, []);
+const splitCommas = (acc: string[], token: string) => {
+  const splitToken = token.split(',');
+
+  if (splitToken.length > 1) {
+    acc.push(splitToken[0], ',');
+  } else {
+    acc.push(token);
+  }
+
+  return acc;
+};
+
+const parse = (v: string) =>
+  v
+    .split(' ')
+    .reduce(splitCommas, [])
+    .reduce(addIfAnimatable, []);
+
+const getValueType = (v: string) => {
+  if (v === ',') return false;
+  return testOrder.find(valueType => valueType.test(v)) || false;
+};
 
 const combo: ValueType = {
   test: (v: any) => typeof v === 'string' && v.split(' ').length > 1,
   parse,
   createTransformer: (prop: string) => {
-    const values = prop.split(' ');
-    const valueTypes = values.map(
-      (v: string) => testOrder.find(valueType => valueType.test(v)) || false
-    );
+    const splitValues = prop.split(' ').reduce(splitCommas, []);
+    const valueTypes = splitValues.map(getValueType);
+
     let token = 0;
     const template = valueTypes.map((valueType, i) => {
-      const templateValue = valueType ? token : values[i];
+      const templateValue = valueType ? token : splitValues[i];
       if (valueType) token++;
       return templateValue;
     });
+
     const templateLength = template.length;
 
     return (output: any[]) => {
@@ -36,9 +57,13 @@ const combo: ValueType = {
         if (valueType) {
           built += `${valueType.transform(output[template[i] as number])} `;
         } else {
+          if (template[i] === ',') {
+            built = built.trim();
+          }
           built += `${template[i]} `;
         }
       }
+
       return built.trim();
     };
   }

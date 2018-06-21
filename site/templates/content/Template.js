@@ -4,14 +4,11 @@ import {
   NextLinkContainer,
   NextLinkSmall
 } from './styled';
-import { Fragment } from 'react';
 import { Content } from '~/templates/global/grid';
 import ContentNav from './ContentNav';
 import GlobalTemplate from '~/templates/global/Template';
 import ContentPage from '~/templates/global-new/ContentPage';
 import { DatePublished } from '~/templates/global/styled';
-import Header from '~/templates/global/Header';
-import Footer from '~/templates/global/Footer';
 import themes from '~/styles/themes';
 import posed from 'react-pose';
 import { spring } from 'popmotion';

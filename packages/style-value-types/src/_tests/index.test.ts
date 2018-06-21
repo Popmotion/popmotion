@@ -146,6 +146,7 @@ describe('space delimited', () => {
   it('should test correctly', () => {
     expect(combo.test('20px 20px 10px inset #fff')).toEqual(true);
     expect(combo.test('50px')).toEqual(false);
+    expect(combo.test('20px 20px 10px inset #fff, 20px')).toEqual(true);
   });
 
   it('should parse into an array', () => {
@@ -155,14 +156,30 @@ describe('space delimited', () => {
       10,
       { red: 255, green: 255, blue: 255, alpha: 1 }
     ]);
+    expect(
+      combo.parse('20px 20px 10px inset #fff, 20px 20px 10px inset #fff')
+    ).toEqual([
+      20,
+      20,
+      10,
+      { red: 255, green: 255, blue: 255, alpha: 1 },
+      20,
+      20,
+      10,
+      { red: 255, green: 255, blue: 255, alpha: 1 }
+    ]);
   });
 
   it('should create a transformer', () => {
-    const animatable = combo.parse('20px 20px 10px inset #fff');
-    const transformer = combo.createTransformer('20px 20px 10px inset #fff');
+    const animatable = combo.parse(
+      '20px 20px 10px inset #fff, 20px 20px 10px inset #fff'
+    );
+    const transformer = combo.createTransformer(
+      '20px 20px 10px inset #fff, 20px 20px 10px inset #fff'
+    );
 
     expect(transformer(animatable)).toBe(
-      '20px 20px 10px inset rgba(255, 255, 255, 1)'
+      '20px 20px 10px inset rgba(255, 255, 255, 1), 20px 20px 10px inset rgba(255, 255, 255, 1)'
     );
   });
 });

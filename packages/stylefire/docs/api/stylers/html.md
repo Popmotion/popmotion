@@ -70,7 +70,7 @@ If `window` is passed to styler, these are the **only** two supported props.
 
 ### Prop types
 
-For convenience and safety, many props are mapped to [value types](/api/value-types) for safety and convenience.
+For convenience and safety, many props are mapped to [value types](https://github.com/Popmotion/popmotion/tree/master/packages/style-value-types) for safety and convenience.
 
 #### Color props
 

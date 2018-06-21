@@ -135,6 +135,21 @@ describe('vector', () => {
     });
   });
 
+  it('should handle combo units with commas', () => {
+    return new Promise((resolve, reject) => {
+      let output = '';
+      tween({
+        from: '0px 0px inset 10.5vh #fff, 0px 0px inset 10.5vh #fff',
+        to: '10px 10px inset 20vh #f00, 20px 20px inset 40vh #0f0',
+        duration: 1
+      }).start({
+        update: v => (output = v),
+        complete: () =>
+          output === '10px 10px inset 20vh rgba(255, 0, 0, 1), 20px 20px inset 40vh rgba(0, 255, 0, 1)' ? resolve() : reject(output)
+      });
+    });
+  });
+
   it('should handle composite combo units with color', () => {
     return new Promise((resolve, reject) => {
       let output = {v: 0, boxShadow: ''};
@@ -239,18 +254,18 @@ describe('vector', () => {
       });
     });
 
-    it('might do nesting', () => {
+    it('might do nesting wtf', () => {
       return new Promise((resolve, reject) => {
         let output = {};
 
         tween({
-          from: { a: { b: { c: '0vh 0px inset #f00' } } },
-          to: { a: { b: { c: '10vh 20px inset #fff' } } },
+          from: { a: { b: ['0vh 0px inset #f00'] } },
+          to: { a: { b: ['10vh 20px inset #fff'] } },
           duration: 1
         }).start({
           update: v => (output = v),
           complete: () =>
-            output.a.b.c === '10vh 20px inset rgba(255, 255, 255, 1)' ? resolve() : reject(output)
+            output.a.b[0] === '10vh 20px inset rgba(255, 255, 255, 1)' ? resolve() : reject(output)
         });
       })
     })
