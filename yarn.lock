@@ -8019,7 +8019,7 @@ style-loader@^0.20.3:
     loader-utils "^1.1.0"
     schema-utils "^0.4.5"
 
-style-value-types@^1.0.10, style-value-types@^1.0.6, style-value-types@^1.0.8:
+style-value-types@^1.0.10, style-value-types@^1.0.6:
   version "1.0.10"
   resolved "https://registry.yarnpkg.com/style-value-types/-/style-value-types-1.0.10.tgz#e46a11922f7b9efe265fb22bfd3b5429611bc016"
 
