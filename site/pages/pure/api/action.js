@@ -233,7 +233,7 @@ action(init)
   .while((v) => v < 10)
   .start({
     update: (v) => latest = v,
-    complete: () => console.log(v) // 9
+    complete: () => console.log(latest) // 9
   });
 \`\`\`
 `);
