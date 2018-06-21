@@ -2,7 +2,13 @@
 
 Style Value Types adheres to [Semantic Versioning](http://semver.org/).
 
-## [1.1.0] 2018-06-20
+## [2.0.1] 2018-06-21
+
+### Fixed
+
+- Now finding colors containing spaces within combo values.
+
+## [2.0.0] 2018-06-20
 
 ### Added
 

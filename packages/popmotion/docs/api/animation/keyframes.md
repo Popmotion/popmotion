@@ -1,6 +1,6 @@
 ---
 title: Keyframes
-description: Animate through a sequence of states.
+description: Animate through a linear sequence of values.
 category: animation
 ---
 

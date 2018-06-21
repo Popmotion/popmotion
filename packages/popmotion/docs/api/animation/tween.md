@@ -18,18 +18,17 @@ import { tween } from 'popmotion';
 
 ## Usage
 
-By default, `tween` will tween from `0` to `1` over `300` milliseconds, with `easeOut` easing.
+By default, `tween` will tween from `0` to `1` over `300` milliseconds, with `easeOut` easing, and will output values to the function provided to `start`:
 
 ```javascript
 tween()
-  .start((v) => console.log(v));
+  .start(v => console.log(v))
 ```
 
 Pass props to adjust the character of the tween:
 
 ```javascript
 tween({ to: 200, duration: 500 })
-  .start((v) => console.log(v));
 ```
 
 ### Value types

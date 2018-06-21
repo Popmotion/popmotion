@@ -99,6 +99,20 @@ describe('color()', () => {
     expect(color.transform(red)).toEqual('rgba(255, 0, 0, 1)');
     expect(color.transform(hslaTestColor)).toEqual('hsla(170, 50%, 45%, 1)');
   });
+
+  it('should correctly identify color', () => {
+    expect(color.test('#fff')).toBe(true);
+    expect(color.test('#f0f0f0')).toBe(true);
+    expect(color.test('rgb(233, 233, 1)')).toBe(true);
+    expect(color.test('rgba(255, 255, 0, 1)')).toBe(true);
+    expect(color.test('rgba(255,255,0,1)')).toBe(true);
+    expect(color.test('rgba(255,255, 0,1)')).toBe(true);
+    expect(color.test('hsl(0, 0%, 0%)')).toBe(true);
+    expect(color.test('hsl(0, 0%,0%)')).toBe(true);
+    expect(color.test('hsla(180, 360%, 360%, 0.5)')).toBe(true);
+    expect(color.test('greensock')).toBe(false);
+    expect(color.test('filter(190deg)')).toBe(false);
+  });
 });
 
 describe('unit transformers', () => {
@@ -146,7 +160,9 @@ describe('space delimited', () => {
   it('should test correctly', () => {
     expect(combo.test('20px 20px 10px inset #fff')).toEqual(true);
     expect(combo.test('50px')).toEqual(false);
-    expect(combo.test('20px 20px 10px inset #fff, 20px')).toEqual(true);
+    expect(
+      combo.test('20px 20px 10px inset rgba(255, 255, 255, 1), 20px')
+    ).toEqual(true);
   });
 
   it('should parse into an array', () => {
@@ -156,8 +172,16 @@ describe('space delimited', () => {
       10,
       { red: 255, green: 255, blue: 255, alpha: 1 }
     ]);
+    expect(combo.parse('20px 20px 10px inset rgba(255, 255, 255, 1)')).toEqual([
+      20,
+      20,
+      10,
+      { red: 255, green: 255, blue: 255, alpha: 1 }
+    ]);
     expect(
-      combo.parse('20px 20px 10px inset #fff, 20px 20px 10px inset #fff')
+      combo.parse(
+        '20px 20px 10px inset #fff, 20px 20px 10px inset rgba(255, 255, 255, 1)'
+      )
     ).toEqual([
       20,
       20,
@@ -172,10 +196,10 @@ describe('space delimited', () => {
 
   it('should create a transformer', () => {
     const animatable = combo.parse(
-      '20px 20px 10px inset #fff, 20px 20px 10px inset #fff'
+      '20px 20px 10px inset rgba(255, 255, 255, 1), 20px 20px 10px inset #fff'
     );
     const transformer = combo.createTransformer(
-      '20px 20px 10px inset #fff, 20px 20px 10px inset #fff'
+      '20px 20px 10px inset #fff, 20px 20px 10px inset rgba(255, 255, 255, 1)'
     );
 
     expect(transformer(animatable)).toBe(

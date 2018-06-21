@@ -1,5 +1,5 @@
 import { ValueType, Color } from '../types';
-import { color } from './color';
+import { color, containsColorRegex } from './color';
 import { px, percent, degrees, vh, vw } from './units';
 
 const testOrder: ValueType[] = [px, percent, degrees, vh, vw, color];
@@ -11,22 +11,18 @@ const addIfAnimatable = (acc: Array<number | Color>, val: string) => {
 };
 
 const splitCommas = (acc: string[], token: string) => {
-  const splitToken = token.split(',');
-
-  if (splitToken.length > 1) {
-    acc.push(splitToken[0], ',');
-  } else {
-    acc.push(token);
-  }
+  token.slice(-1) === ',' ? acc.push(token.slice(0, -1), ',') : acc.push(token);
 
   return acc;
 };
 
-const parse = (v: string) =>
-  v
+const stripSpaces = (v: string) => v.replace(/ /g, '');
+
+const splitComboString = (comboStr: string) =>
+  comboStr
+    .replace(containsColorRegex, stripSpaces)
     .split(' ')
-    .reduce(splitCommas, [])
-    .reduce(addIfAnimatable, []);
+    .reduce(splitCommas, []);
 
 const getValueType = (v: string) => {
   if (v === ',') return false;
@@ -35,9 +31,9 @@ const getValueType = (v: string) => {
 
 const combo: ValueType = {
   test: (v: any) => typeof v === 'string' && v.split(' ').length > 1,
-  parse,
+  parse: v => splitComboString(v).reduce(addIfAnimatable, []),
   createTransformer: (prop: string) => {
-    const splitValues = prop.split(' ').reduce(splitCommas, []);
+    const splitValues = splitComboString(prop);
     const valueTypes = splitValues.map(getValueType);
 
     let token = 0;

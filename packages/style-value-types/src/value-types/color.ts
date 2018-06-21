@@ -10,6 +10,10 @@ import { Color, RGBA, HSLA, NumberMap, ValueType } from '../types';
 
 const clampRgbUnit = clamp(0, 255);
 
+// Regex taken from https://gist.github.com/olmokramer/82ccce673f86db7cda5e
+const onlyColorRegex = /^(#[0-9a-f]{3}|#(?:[0-9a-f]{2}){2,4}|(rgb|hsl)a?\((-?\d+%?[,\s]+){2,3}\s*[\d\.]+%?\))$/i;
+export const containsColorRegex = /(#[0-9a-f]{3}|#(?:[0-9a-f]{2}){2,4}|(rgb|hsl)a?\((-?\d+%?[,\s]+){2,3}\s*[\d\.]+%?\))/gi;
+
 const isRgba = (v: Color): v is RGBA => (v as RGBA).red !== undefined;
 const isHsla = (v: Color): v is HSLA => (v as HSLA).hue !== undefined;
 
@@ -108,7 +112,11 @@ export const hex: ValueType = {
 };
 
 export const color: ValueType = {
-  test: (v: any) => rgba.test(v) || hsla.test(v) || hex.test(v),
+  test: (v: any) =>
+    (typeof v === 'string' && onlyColorRegex.test(v)) ||
+    rgba.test(v) ||
+    hsla.test(v) ||
+    hex.test(v),
   parse: (v: any) => {
     if (rgba.test(v)) {
       return rgba.parse(v);
