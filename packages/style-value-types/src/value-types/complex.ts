@@ -8,7 +8,7 @@ const colorRegex = /(#[0-9a-f]{3}|#(?:[0-9a-f]{2}){2,4}|(rgb|hsl)a?\((-?\d+%?[,\
 const COLOR_TOKEN = '${c}';
 const NUMBER_TOKEN = '${n}';
 
-const combo: ValueType = {
+const complex: ValueType = {
   test: (v: any) => {
     if (typeof v !== 'string') return false;
 
@@ -75,4 +75,4 @@ const combo: ValueType = {
   }
 };
 
-export default combo;
+export default complex;

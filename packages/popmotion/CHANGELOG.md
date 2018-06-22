@@ -12,7 +12,10 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
   - `%`
   - `vw`
   - `vh`
-  - Space-delimited ie `'30px 30px inset #f00'`
+  - Complex types including:
+    - SVG paths
+    - CSS gradients
+    - CSS shadows
 
 ## [8.2.5] 2018-06-13
 

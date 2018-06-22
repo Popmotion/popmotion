@@ -105,7 +105,7 @@ describe('vector', () => {
     });
   });
 
-  it('should handle combo units', () => {
+  it('should handle complex units', () => {
     return new Promise((resolve, reject) => {
       let output = '';
       tween({
@@ -120,7 +120,22 @@ describe('vector', () => {
     });
   });
 
-  it('should handle combo units with color', () => {
+  it('should handle gradients', () => {
+    return new Promise((resolve, reject) => {
+      let output = '';
+      tween({
+        from: 'linear-gradient(top left, #f00, #666)',
+        to: 'linear-gradient(top left, #666, #fff)',
+        duration: 1
+      }).start({
+        update: v => (output = v),
+        complete: () =>
+          output === 'linear-gradient(top left, rgba(102, 102, 102, 1), rgba(255, 255, 255, 1))' ? resolve() : reject(output)
+      });
+    });
+  });
+
+  it('should handle complex units with color', () => {
     return new Promise((resolve, reject) => {
       let output = '';
       tween({
@@ -135,7 +150,7 @@ describe('vector', () => {
     });
   });
 
-  it('should handle combo units with commas', () => {
+  it('should handle complex units with commas', () => {
     return new Promise((resolve, reject) => {
       let output = '';
       tween({
@@ -150,7 +165,7 @@ describe('vector', () => {
     });
   });
 
-  it('should handle composite combo units with color', () => {
+  it('should handle composite complex units with color', () => {
     return new Promise((resolve, reject) => {
       let output = {v: 0, boxShadow: ''};
       tween({

@@ -1,7 +1,7 @@
 import {
   number,
   color,
-  combo,
+  complex,
   percent,
   degrees,
   vh,
@@ -105,7 +105,7 @@ const createAction: CreateVectorAction = (action, props) => action(props);
  * Creates a parallel-wrapped version of the provided action if
  * any vector prop has been provided as an array.
  *
- * Children values can be of type unit, color, number or combo
+ * Children values can be of type unit, color, number or complex
  */
 const reduceArrayValue = (i: number) => (props: Props, key: string) => {
   // Note: Type coercion makes this inefficient
@@ -198,7 +198,7 @@ const createColorAction: CreateVectorAction = (
   );
 
 /**
- * ## Create combo action
+ * ## Create complex action
  *
  * Creates an animation from a combination value type, ie `0px 0px inset #f00`
  *
@@ -209,19 +209,19 @@ const createColorAction: CreateVectorAction = (
  * Using a `from` and `to` of `0`-`1` we use the output to transition between the two
  * arrays.
  */
-const createComboAction: CreateVectorAction = (
+const createcomplexAction: CreateVectorAction = (
   action,
   { from, to, ...props }
 ) => {
-  const valueTemplate = combo.createTransformer(from);
+  const valueTemplate = complex.createTransformer(from);
 
   invariant(
-    valueTemplate(from) === combo.createTransformer(to)(from),
+    valueTemplate(from) === complex.createTransformer(to)(from),
     `Values '${from}' and '${to}' are of different format, or a value might have changed value type.`
   );
 
   return action({ ...props, from: 0, to: 1 }).pipe(
-    blendArray(combo.parse(from), combo.parse(to)),
+    blendArray(complex.parse(from), complex.parse(to)),
     valueTemplate
   );
 };
@@ -308,8 +308,8 @@ const getActionCreator = (prop: any) => {
     actionCreator = createUnitAction;
   } else if (color.test(prop)) {
     actionCreator = createColorAction;
-  } else if (combo.test(prop)) {
-    actionCreator = createComboAction;
+  } else if (complex.test(prop)) {
+    actionCreator = createcomplexAction;
   } else if (typeof prop === 'object') {
     actionCreator = createObjectAction;
   }
