@@ -25,7 +25,6 @@ import {
   transform
 } from 'popmotion';
 import styler from 'stylefire';
-import { MotionValue } from 'popmotion-react';
 import { LiveProvider, LiveEditor, LivePreview } from 'react-live';
 import templates from './templates';
 import {
@@ -127,8 +126,7 @@ export default ({
         styler,
         Component,
         id,
-        autostart,
-        MotionValue
+        autostart
       }}
       mountStylesheet={false}
       noInline={!isReactComponent}

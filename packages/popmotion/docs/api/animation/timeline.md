@@ -6,9 +6,9 @@ category: animation
 
 # Timeline
 
-Timeline is used to quickly script complex sequences of animation, split across independent tracks.
+Timeline is used to script complex sequences of animation, split across independent tracks.
 
-It returns a [`tween`](/api/tween), which allows the use of `loop`, `flip` and `yoyo` props, as well as tween methods like `pause` and `resume`.
+If offers all the same playback options as a [`tween`](/api/tween).
 
 ## Import
 
@@ -22,10 +22,7 @@ import { timeline } from 'popmotion';
 
 `timeline` accepts an array of playhead instructions.
 
-A playhead instruction can either be an:
-- Animation
-- Absolute or relative timestamp
-- Array of animations
+A playhead instruction can be an animation, array of animations for parallel or staggered execution, or a timestamp.
 
 #### Animation
 
@@ -33,24 +30,26 @@ Each animation is defined as an object. This looks a lot like a simplified `twee
 
 ```javascript
 timeline([
-  { track: 'ballX', from: 0, to: 300, duration: 1000 }
+  { track: 'x', from: 0, to: 300, duration: 1000 }
 ])
 ```
 
-There's an extra, non-optional property called `track`. No two animations should overlap on the same `track`, and `timeline` will output every track to the reaction given to `start`:
+There's a **required** property called `track`. No two animations should overlap that share the same `track` label, and `timeline` will output every track to the function given to `start` together as an object:
 
 ```javascript
 timeline([
-  { track: 'ballX', from: 0, to: 300, duration: 1000 }
-]).start((v) => console.log(v.ballX))
+  { track: 'x', from: 0, to: 300, duration: 1000 }
+]).start(v => console.log(v.x))
 ```
+
+#### Sequencing
 
 If we provide a second animation, it will (by default) play **after** the first:
 
 ```javascript
 timeline([
-  { track: 'ballX', from: 0, to: 300, duration: 1000 },
-  { track: 'ballY', from: 0, to: 300 }
+  { track: 'x', from: 0, to: 300, duration: 1000 },
+  { track: 'y', from: 0, to: 300 }
 ])
 ```
 
@@ -64,9 +63,9 @@ In this example, the second animation will start after `500` milliseconds:
 
 ```javascript
 timeline([
-  { track: 'ballX', from: 0, to: 300, duration: 1000 },
+  { track: 'x', from: 0, to: 300, duration: 1000 },
   500,
-  { track: 'ballY', from: 0, to: 300 }
+  { track: 'y', from: 0, to: 300 }
 ])
 ```
 
@@ -74,9 +73,9 @@ If we instead provide a string, we can move the playhead **relative** to the cur
 
 ```javascript
 timeline([
-  { track: 'ballX', from: 0, to: 300, duration: 1000 },
+  { track: 'x', from: 0, to: 300, duration: 1000 },
   '-200',
-  { track: 'ballY', from: 0, to: 300 }
+  { track: 'y', from: 0, to: 300 }
 ])
 ```
 
@@ -88,10 +87,10 @@ In this example, both animations provided after the first animation will play af
 
 ```javascript
 timeline([
-  { track: 'ballX', from: 0, to: 300, duration: 1000 },
+  { track: 'x', from: 0, to: 300, duration: 1000 },
   [
-    { track: 'ballX', to: 0 },
-    { track: 'ballY', from: 0, to: 300 }
+    { track: 'x', to: 0 },
+    { track: 'y', from: 0, to: 300 }
   ]
 ])
 ```
@@ -100,63 +99,142 @@ If we provide a number as the last item in the array, `timeline` will stagger ov
 
 ```javascript
 timeline([
-  { track: 'ballX', from: 0, to: 300, duration: 1000 },
+  { track: 'x', from: 0, to: 300, duration: 1000 },
   [
-    { track: 'ballX', to: 0 },
-    { track: 'ballY', from: 0, to: 300 },
+    { track: 'x', to: 0 },
+    { track: 'y', from: 0, to: 300 },
     50
   ]
 ])
 ```
 
-#### Colors and multiprops
+### Value types
 
-`timeline` can animate colors:
+`timeline` supports the animation of the following value types:
 
-```javascript
-{ track: 'ballBackgroundColor', from: '#f00', to: '#fff' }
-```
-
-Objects:
+#### Number
 
 ```javascript
-{ track: 'ball', from: 0, to: { x: 300, y: 300 } }
+timeline([
+  { track: 'x', from: 0, to: 100 }
+])
 ```
 
-And n-dimensional arrays:
+#### Units
+
+**Supported**: `px`, `%`, `deg`, `vh`, and `vw`
 
 ```javascript
-{ track: 'foo', from: [300, 500], to: [0, 0] }
+timeline([
+  { track: 'x', from: '0%', to: '100%' }
+])
 ```
 
-### Types
+#### Colors
 
-```typescript
-type Value = number | string | (number | string)[] | { [key: string]: number | string };
+**Supported**: RGB(A), HSL(A) and Hex
 
-type AnimationDefinition = {
-  track?: string,
-  from?: Value = 0,
-  to?: Value = 1,
-  ease?: EasingFunction = easeOut,
-  duration?: number = 300
-};
+```javascript
+timeline([
+  { track: 'backgroundColor', from: '#fff', to: '#f00' }
+])
+```
 
-type Instruction = string | number | AnimationDefinition | AnimationDefinition[];
+#### Combinations
 
-timeline(instructions: Instruction, props: Props): Action
+Space-delimited sequences of values, useful for animating CSS shadows.
+
+May also include arbitrary strings like `'inset'`, and supports sequences of shadows separated with a comma (e.g `'0px 0px 0px inset rgba(0, 0, 0, 0.2), 2px 2px 0px rgba(0, 0, 0, 0.2)'`)
+
+```javascript
+timeline([
+  {
+    track: 'boxShadow',
+    from: '0px 0px 0px inset rgba(0, 0, 0, 0.2)',
+    to: '3px 3px 10px inset rgba(0, 0, 0, 0.5)'
+  }
+])
+```
+
+#### Objects
+
+Named objects composed of any of the above types may also be animated.
+
+```javascript
+timeline([
+  {
+    track: 'ball',
+    from: {
+      backgroundColor: '#f00',
+      x: 0
+    },
+    to: {
+      backgroundColor: '#fff',
+      x: 100
+    }
+  }
+])
+```
+
+#### Arrays
+
+Arrays composed of any of the above types may also be animated.
+
+```javascript
+timeline([
+  {
+    track: 'ball',
+    from: [0, '10vh'],
+    to: [0, '0vh']
+  }
+])
 ```
 
 ## Props
 
-These can be passed as the second argument to `timeline` and are used to define the behaviour of the master playhead.
+The following props can be passed as the second argument to timeline:
 
-- `duration?: number`: Total duration of animation, in milliseconds. By default, this is calculated by the instructions provided to `timeline`, but if manually overridden will rescale the whole animation.
-- `elapsed?: number = 0`: Duration of animation already elapsed, in milliseconds.
-- `ease?: Easing | Vector[Easing] = linear`: A function, given a progress between `0` and `1`, that returns a new progress value. Used to affect the rate of playback across the duration of the animation.
-- `loop?: number = 0`: Number of times to loop animation on `complete`.
-- `flip?: number = 0`: Number of times to flip animation on `complete`.
-- `yoyo?: number = 0`: Number of times to reverse tween on `complete`.
+```javascript
+timeline(playlist, props)
+```
+
+### duration
+
+Total duration of animation, in milliseconds.
+
+**Default:** `300`
+
+### elapsed
+
+Duration of animation already elapsed, in milliseconds.
+
+**Default:** `0`
+
+### ease
+
+A function that, given a progress between `0` and `1`, will return a new progress value. Used to affect the speed of playback across the duration of the animation.
+
+If `from` and `to` are set as objects or arrays, `ease` may be set with a corresponding structure to apply a unique easing for each animating value.
+
+**Default:** `easeOut`
+
+### loop
+
+Number of times to loop animation on `complete`. Set as `Infinity` to loop forever.
+
+**Default:** 0
+
+### flip
+
+Number of times to flip animation on `complete`. Set as `Infinity` to flip forever.
+
+**Default:** 0
+
+### yoyo
+
+Number of times to reverse animation on `complete`. Set as `Infinity` to reverse forever.
+
+**Default:** 0
 
 ## Methods
 
@@ -164,20 +242,89 @@ These can be passed as the second argument to `timeline` and are used to define 
 
 `timeline()` returns:
 
-- `filter((v: any) => boolean)`: Returns a new action that filters out values when the provided function returns `false`.
-- `pipe(...funcs: Array<(v) => v)`: Returns a new action that will run `update` values through this sequence of functions.
-- `start(update | { update, complete })`: Starts the tween and returns a subscription.
-- `while((v: any) => boolean)`: Returns a new action that will `complete` when the provided function returns `false`.
+#### start
 
+Starts the animation and returns playback controls.
 
-### Subscription methods
+Can be provided **either** a function:
 
-`timeline().start()` returns:
+```javascript
+timeline().start(v => {})
+```
 
-- `getElapsed(): number`: Returns time elapsed in milliseconds.
-- `getProgress(): number`: Returns animation progress as a value of `0`-`1`.
-- `seek(progress: number): this`: Seeks animation to this position as a value of `0`-`1`.
-- `pause(): this`
-- `resume(): this`
-- `reverse(): this`: Reverses the direction of playback. 
-- `stop(): void`
+Or a named map of functions for `update` and `complete`:
+
+```javascript
+timeline().start({
+  update: v => {},
+  complete: () => {}
+})
+```
+
+#### filter
+
+Returns a new version of the animation, that filters out any value when the provided predicate function returns `false`:
+
+```javascript
+const filtered = timeline().filter(v => v.x > 0.5)
+
+// This animation will only output values higher than 0.5:
+filtered.start(v => {})
+```
+
+#### pipe
+
+Returns a new animation that will pass any output value through this series of functions:
+
+```javascript
+timeline()
+  .pipe(v => v)
+  .start(v => {})
+```
+
+#### while
+
+Returns a new animation that will `complete` when the provided predicate function returns `false`:
+
+```javascript
+// This animation will end when an output value is higher than 0.5:
+timeline().while(v => v.x < 0.5)
+```
+
+### Playback methods
+
+`timeline().start()` starts a new animation and returns the following playback methods:
+
+#### getElapsed
+
+Returns time elapsed in milliseconds.
+
+#### getProgress
+
+Returns animation progress as a value of `0`-`1`.
+
+#### seek
+
+Seeks animation to this position as a value of `0`-`1`.
+
+```javascript
+const playback = tween().start(v => {})
+
+playback.seek(0.5)
+```
+
+#### pause
+
+Pauses playback.
+
+#### resume
+
+Resumes playback.
+
+#### reverse
+
+Reverses the direction of playback.
+
+#### stop
+
+Stops the animation.

@@ -1,4 +1,5 @@
 import keyframes from '../';
+import { linear } from '../../../easing';
 
 describe('keyframes', () => {
   it('should generate tweens through each value', () => {
