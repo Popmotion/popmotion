@@ -1,39 +1,73 @@
-import { ValueType } from '../types';
+import { ValueType, Color } from '../types';
+import { color } from './color';
+import { number } from './numbers';
 
-type TokenMap = { [key: string]: number };
-const FLOAT_REGEX = /(-)?(\d[\d\.]*)/g;
+const floatRegex = /(-)?(\d[\d\.]*)/g;
+const colorRegex = /(#[0-9a-f]{3}|#(?:[0-9a-f]{2}){2,4}|(rgb|hsl)a?\((-?\d+%?[,\s]+){2,3}\s*[\d\.]+%?\))/gi;
 
-const generateToken = (token: string) => '${' + token + '}';
+const COLOR_TOKEN = '${c}';
+const NUMBER_TOKEN = '${n}';
 
-const complex: ValueType = {
-  test: v => {
-    const matches = v.match && v.match(FLOAT_REGEX);
-    return (
-      matches !== undefined &&
-      matches.constructor === Array &&
-      matches.length > 1
-    );
+const combo: ValueType = {
+  test: (v: any) => {
+    if (typeof v !== 'string') return false;
+
+    let numValues = 0;
+    const foundNumbers = v.match(floatRegex);
+    const foundColors = v.match(colorRegex);
+    if (foundNumbers) numValues += foundNumbers.length;
+    if (foundColors) numValues += foundColors.length;
+
+    return numValues > 1;
   },
-  parse: v => {
-    const parsedValue: TokenMap = {};
-    v.match(FLOAT_REGEX).forEach(
-      (value: string, i: number) => (parsedValue[i] = parseFloat(value))
-    );
-    return parsedValue;
+  parse: (v: any) => {
+    let input = v;
+    const parsed = [];
+
+    const foundColors = input.match(colorRegex);
+    if (foundColors) {
+      // Strip colors from input so they're not picked up by number regex.
+      // There's a better way to combine these regex searches, but its beyond my regex skills
+      input = input.replace(colorRegex, COLOR_TOKEN);
+      parsed.push(...foundColors.map(color.parse));
+    }
+    const foundNumbers = input.match(floatRegex);
+    if (foundNumbers) {
+      parsed.push(...foundNumbers.map(number.parse));
+    }
+
+    return parsed;
   },
   createTransformer: (prop: string) => {
-    let counter = 0;
-    const template = prop.replace(FLOAT_REGEX, () =>
-      generateToken(`${counter++}`)
-    );
+    let template = prop;
+    let token = 0;
 
-    return (v: TokenMap) => {
+    const foundColors = prop.match(colorRegex);
+    const numColors = foundColors ? foundColors.length : 0;
+    if (foundColors) {
+      for (let i = 0; i < numColors; i++) {
+        template = template.replace(foundColors[i], COLOR_TOKEN);
+        token++;
+      }
+    }
+
+    const foundNumbers = prop.match(floatRegex);
+    const numNumbers = foundNumbers ? foundNumbers.length : 0;
+    if (foundNumbers) {
+      for (let i = 0; i < numNumbers; i++) {
+        template = template.replace(foundNumbers[i], NUMBER_TOKEN);
+        token++;
+      }
+    }
+
+    return (v: Array<Color | string>) => {
       let output = template;
 
-      for (const key in v) {
-        if (v.hasOwnProperty(key)) {
-          output = output.replace(generateToken(key), v[key].toString());
-        }
+      for (let i = 0; i < token; i++) {
+        output = output.replace(
+          i < numColors ? COLOR_TOKEN : NUMBER_TOKEN,
+          i < numColors ? color.transform(v[i]) : v[i]
+        );
       }
 
       return output;
@@ -41,4 +75,4 @@ const complex: ValueType = {
   }
 };
 
-export default complex;
+export default combo;

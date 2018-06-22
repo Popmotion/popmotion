@@ -1,6 +1,5 @@
 import {
   alpha,
-  complex,
   hex,
   rgba,
   rgbUnit,
@@ -9,18 +8,11 @@ import {
   px,
   degrees,
   percent,
-  combo
+  complex
 } from '../';
 
 const PATH = 'M150 0 L75 200 L225 200 Z';
-const PATH_VALUES = {
-  '0': 150,
-  '1': 0,
-  '2': 75,
-  '3': 200,
-  '4': 225,
-  '5': 200
-};
+const PATH_VALUES = [150, 0, 75, 200, 225, 200];
 
 describe('complex value type', () => {
   it('test returns correctly', () => {
@@ -156,54 +148,84 @@ describe('unit transformers', () => {
   });
 });
 
-describe('space delimited', () => {
+describe('combination values', () => {
   it('should test correctly', () => {
-    expect(combo.test('20px 20px 10px inset #fff')).toEqual(true);
-    expect(combo.test('50px')).toEqual(false);
+    expect(complex.test('20px 20px 10px inset #fff')).toEqual(true);
+    expect(complex.test('50px')).toEqual(false);
     expect(
-      combo.test('20px 20px 10px inset rgba(255, 255, 255, 1), 20px')
+      complex.test('20px 20px 10px inset rgba(255, 255, 255, 1), 20px')
+    ).toEqual(true);
+    expect(
+      complex.test('linear-gradient(0.25turn, #3f87a6, #ebf8e1, #f69d3c')
     ).toEqual(true);
   });
 
   it('should parse into an array', () => {
-    expect(combo.parse('20px 20px 10px inset #fff')).toEqual([
+    expect(complex.parse('20px 20px 10px inset #fff')).toEqual([
+      { red: 255, green: 255, blue: 255, alpha: 1 },
       20,
       20,
-      10,
-      { red: 255, green: 255, blue: 255, alpha: 1 }
-    ]);
-    expect(combo.parse('20px 20px 10px inset rgba(255, 255, 255, 1)')).toEqual([
-      20,
-      20,
-      10,
-      { red: 255, green: 255, blue: 255, alpha: 1 }
+      10
     ]);
     expect(
-      combo.parse(
+      complex.parse('20px 20px 10px inset rgba(255, 255, 255, 1)')
+    ).toEqual([{ red: 255, green: 255, blue: 255, alpha: 1 }, 20, 20, 10]);
+    expect(
+      complex.parse(
         '20px 20px 10px inset #fff, 20px 20px 10px inset rgba(255, 255, 255, 1)'
       )
     ).toEqual([
-      20,
-      20,
-      10,
+      { red: 255, green: 255, blue: 255, alpha: 1 },
       { red: 255, green: 255, blue: 255, alpha: 1 },
       20,
       20,
       10,
-      { red: 255, green: 255, blue: 255, alpha: 1 }
+      20,
+      20,
+      10
+    ]);
+    expect(complex.parse('linear-gradient(0.25turn, #fff)')).toEqual([
+      {
+        red: 255,
+        green: 255,
+        blue: 255,
+        alpha: 1
+      },
+      0.25
+    ]);
+    expect(
+      complex.parse('linear-gradient(1deg, rgba(255, 255, 255, 1))')
+    ).toEqual([
+      {
+        red: 255,
+        green: 255,
+        blue: 255,
+        alpha: 1
+      },
+      1
     ]);
   });
 
   it('should create a transformer', () => {
-    const animatable = combo.parse(
+    const animatable = complex.parse(
       '20px 20px 10px inset rgba(255, 255, 255, 1), 20px 20px 10px inset #fff'
     );
-    const transformer = combo.createTransformer(
+    const transformer = complex.createTransformer(
       '20px 20px 10px inset #fff, 20px 20px 10px inset rgba(255, 255, 255, 1)'
     );
 
     expect(transformer(animatable)).toBe(
       '20px 20px 10px inset rgba(255, 255, 255, 1), 20px 20px 10px inset rgba(255, 255, 255, 1)'
+    );
+
+    const gradient = complex.parse(
+      'linear-gradient(1deg, rgba(255, 255, 255, 1))'
+    );
+    const gradientTransformer = complex.createTransformer(
+      'linear-gradient(1deg, rgba(255, 255, 255, 1))'
+    );
+    expect(gradientTransformer(gradient)).toBe(
+      'linear-gradient(1deg, rgba(255, 255, 255, 1))'
     );
   });
 });
