@@ -86,11 +86,11 @@ keyframes({
 })
 ```
 
-#### Combinations
+#### Complex
 
-Space-delimited sequences of values, useful for animating CSS shadows.
+Complex sequences of values, like SVG path definitions, CSS shadows and background gradients.
 
-May also include arbitrary strings like `'inset'`, and supports sequences of shadows separated with a comma (e.g `'0px 0px 0px inset rgba(0, 0, 0, 0.2), 2px 2px 0px rgba(0, 0, 0, 0.2)'`)
+The non-numerical portions of these values must stay in the same format in the `from` and `to` props.
 
 ```javascript
 keyframes({
@@ -98,6 +98,16 @@ keyframes({
     '0px 0px 0px inset rgba(0, 0, 0, 0.2)',
     '3px 3px 10px inset rgba(0, 0, 0, 0.5)',
     '10px 10px 20px inset rgba(0, 0, 0, 0.8)'
+  ]
+})
+```
+
+```javascript
+keyframes({
+  values: [
+    'linear-gradient(to right, #f00, #0f0)',
+    'linear-gradient(to right, #00f, #f00)',
+    'linear-gradient(to right, #f00, #0f0)'
   ]
 })
 ```

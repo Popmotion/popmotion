@@ -100,7 +100,7 @@ All animations included with Popmotion can animate:
 - Numbers
 - Colors (rgba, hsla and hex)
 - Units `px`, `%`, `deg`, `vh`, and `vw`
-- Combinations of the above, e.g. `'0px 10px inset #f00'`
+- Complex of the above, e.g. `'0px 10px inset #f00'`
 - Objects of the above
 - Arrays of the above
 

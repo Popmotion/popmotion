@@ -59,11 +59,11 @@ tween({ from: 'rgba(0, 200, 100, 1)', to: 'rgba(60, 100, 80, 0.5)' })
 tween({ from: 'hsl(0, 50%, 50%)', to: 'hsl(180, 80%, 50%)' })
 ```
 
-#### Combinations
+#### Complex
 
-Space-delimited sequences of values, useful for animating CSS shadows.
+Complex sequences of values, like SVG path definitions, CSS shadows and background gradients.
 
-May also include arbitrary strings like `'inset'`, and supports sequences of shadows separated with a comma (e.g `'0px 0px 0px inset rgba(0, 0, 0, 0.2), 2px 2px 0px rgba(0, 0, 0, 0.2)'`)
+The non-numerical portions of these values must stay in the same format in the `from` and `to` props.
 
 ```javascript
 tween({
@@ -72,6 +72,12 @@ tween({
 })
 ```
 
+```javascript
+tween({
+  from: 'linear-gradient(to right, #fff, #000)',
+  to: 'linear-gradient(to right, #333, #666)'
+})
+```
 #### Objects
 
 Named objects composed of any of the above types may also be animated.
