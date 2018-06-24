@@ -49,16 +49,15 @@ const createValue = (init: any) => {
 const addActionDelay = (delay = 0, transition: Action) =>
   chain(delayAction(delay), transition);
 
-const animationLookup = new Map<
-  string,
-  (props: { [key: string]: any }) => Action
->([
-  ['tween', tween],
-  ['spring', spring],
-  ['decay', decay],
-  ['keyframes', keyframes],
-  ['physics', physics]
-]);
+const animationLookup: {
+  [key: string]: (props: { [key: string]: any }) => Action;
+} = {
+  tween,
+  spring,
+  decay,
+  keyframes,
+  physics
+};
 
 const {
   easeIn,
@@ -73,18 +72,18 @@ const {
   anticipate
 } = easing;
 
-const easingLookup = new Map<string, (v: number) => number>([
-  ['easeIn', easeIn],
-  ['easeOut', easeOut],
-  ['easeInOut', easeInOut],
-  ['circIn', circIn],
-  ['circOut', circOut],
-  ['circInOut', circInOut],
-  ['backIn', backIn],
-  ['backOut', backOut],
-  ['backInOut', backInOut],
-  ['anticipate', anticipate]
-]);
+const easingLookup: { [key: string]: (num: number) => number } = {
+  easeIn,
+  easeOut,
+  easeInOut,
+  circIn,
+  circOut,
+  circInOut,
+  backIn,
+  backOut,
+  backInOut,
+  anticipate
+};
 
 // At the moment this function just uses `type` as a key - in the future
 // we could infer the animation type based on the properties being provided
@@ -94,7 +93,7 @@ const getAction = (
   { from, to, velocity }: TransitionProps
 ) => {
   invariant(
-    animationLookup.has(type),
+    animationLookup[type] !== undefined,
     `Invalid transition type '${type}'. Valid transition types are: tween, spring, decay, physics and keyframes.`
   );
 
@@ -104,11 +103,11 @@ const getAction = (
     if (typeOfEase !== 'function') {
       if (typeOfEase === 'string') {
         invariant(
-          easingLookup.has(ease),
+          easingLookup[ease] !== undefined,
           `Invalid easing type '${ease}'. popmotion.io/pose/api/transition`
         );
 
-        ease = easingLookup.get(ease);
+        ease = easingLookup[ease];
       } else if (Array.isArray(ease)) {
         invariant(
           ease.length === 4,
@@ -121,7 +120,7 @@ const getAction = (
     }
   }
 
-  return animationLookup.get(type)({
+  return animationLookup[type]({
     from,
     to,
     velocity,
@@ -211,10 +210,10 @@ const pose = <P>({
       if (isAction(def)) return def;
 
       const { delay, min, max, round, ...remainingDef } = def;
-      const action = getAction(val, remainingDef, props);
+      let action = getAction(val, remainingDef, props);
       const outputPipe: Function[] = [];
 
-      if (delay) addActionDelay(delay, action);
+      if (delay) action = addActionDelay(delay, action);
       if (min !== undefined) outputPipe.push((v: number) => Math.max(v, min));
       if (max !== undefined) outputPipe.push((v: number) => Math.min(v, max));
       if (round) outputPipe.push(Math.round);

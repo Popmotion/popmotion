@@ -2,6 +2,7 @@ import createPosed from 'react-pose-core';
 import { getStylesFromPoser } from './inc/utils';
 import pose from 'animated-pose';
 import { Animated, PanResponder } from 'react-native';
+import { warning } from 'hey-listen';
 
 const posed = createPosed({
   /**
@@ -65,6 +66,11 @@ const posed = createPosed({
    */
   getProps: (poser, { draggable }, { onDragStart, onDragEnd }) => {
     if (!draggable) return {};
+
+    warning(
+      false,
+      'draggable: true disables useNativeDriver for this component.'
+    );
 
     const values = poser.get();
     const dragX = draggable === true || draggable === 'x';

@@ -4,31 +4,30 @@ about: Create a report to help us improve
 
 ---
 
-**Describe the bug**
+## Add the package name to bug title
+For instance, if this is a bug in Popmotion, write "Popmotion: Name of bug"
+
+## Describe the bug
 A clear and concise description of what the bug is.
 
-**To Reproduce**
+## How to reproduce
 Steps to reproduce the behavior:
 1. Go to '...'
 2. Click on '....'
 3. Scroll down to '....'
 4. See error
 
-**Expected behavior**
+## Expected behaviour
 A clear and concise description of what you expected to happen.
 
-**Link to CodePen or similar**
+## Link to CodePen example (or similar)
 
-**Desktop (please complete the following information):**
+## Device information
+In which environment are you reproducing the bug?
+ - Device: [e.g. iPhone6]
  - OS: [e.g. iOS]
  - Browser [e.g. chrome, safari]
  - Version [e.g. 22]
 
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
-
-**Additional context**
+## Additional context
 Add any other context about the problem here.

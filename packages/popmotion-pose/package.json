@@ -1,6 +1,6 @@
 {
   "name": "popmotion-pose",
-  "version": "2.0.3",
+  "version": "2.0.6",
   "description": "A declarative animation library for HTML and SVG",
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
@@ -48,7 +48,7 @@
     "typescript": "^2.8.1"
   },
   "dependencies": {
-    "popmotion": "^8.2.4",
+    "popmotion": "^8.2.5",
     "pose-core": "^0.7.4",
     "style-value-types": "^1.0.10",
     "tslib": "^1.9.1"

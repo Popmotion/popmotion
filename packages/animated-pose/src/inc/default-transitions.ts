@@ -1,6 +1,6 @@
 import { Transition } from '../types';
 import { Animated } from 'react-native';
-import { eachValue } from 'pose-core';
+import { eachValue } from './transition-composers';
 
 const tween: Transition = ({ value, toValue, useNativeDriver = true }) =>
   Animated.timing(value, {

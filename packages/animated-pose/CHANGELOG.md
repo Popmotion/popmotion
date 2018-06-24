@@ -2,7 +2,13 @@
 
 Animated Pose adheres to [Semantic Versioning](http://semver.org/).
 
-## [0.3.0] Unreleased
+## [0.3.4] 2018-06-15
+
+### Adding
+
+- Support for `decay` transition definition.
+
+## [0.3.0-rc] 2018-06-15
 
 ### Adding
 

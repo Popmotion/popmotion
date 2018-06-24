@@ -24,7 +24,14 @@ const poser = pose(div, {
       backgroundColor: { type: 'face' }
     }
   },
-  initialPose: 'foo'
+  initialPose: 'foo',
+  delayedTransition: {
+    backgroundColor: '#eee',
+    transition: {
+      delay: 100,
+      duration: 0
+    }
+  }
 });
 
 test('initial pose', () => {
@@ -51,11 +58,21 @@ test('named transition definition with custom to', () =>
     expect(poser.get('backgroundColor').get()).toBe('rgba(0, 0, 0, 1)');
   }));
 
-test('fail transition', () => {
-  try {
-    poser.set('failTransition');
-    expect(true).toBe(false);
-  } catch (e) {
-    expect(true).toBe(true);
-  }
+// test('fail transition', () => {
+//   try {
+//     poser.set('failTransition');
+//     expect(true).toBe(false);
+//   } catch (e) {
+//     expect(true).toBe(true);
+//   }
+// });
+
+test('delay transition', done => {
+  setTimeout(() => {
+    // Is animating to rgba(238, 238, 238, 1)
+    expect(poser.get('backgroundColor').get()).toBe('rgba(0, 0, 0, 1)');
+    done();
+  }, 50);
+
+  poser.set('delayedTransition');
 });

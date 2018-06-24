@@ -14,7 +14,9 @@
       "popmotion": ["./popmotion/lib"],
       "popmotion-pose": ["./popmotion-pose/lib"],
       "pose-core": ["./pose-core/lib"],
-      "style-value-types": ["./style-value-types/lib"]
+      "style-value-types": ["./style-value-types/lib"],
+      "animated-pose": ["./animated-pose/lib"],
+      "react-pose-core": ["./react-pose-core/lib"]
     },
     "alwaysStrict": true,
     "declaration": true,
