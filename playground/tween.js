@@ -6,11 +6,11 @@ import { tween, value } from "../packages/popmotion/lib";
 export class TweenBasic extends BaseAnimation {
   getAnimation = styler =>
     tween({
-      from: "radial-gradient(circle at 50% 25%, #e66465, #9198e5)",
-      to: "radial-gradient(circle at 50% 25%, #e66465, #9198e5)",
+      from: "radial-gradient(circle at 50% 100%, #e66465, #9198e5)",
+      to: "radial-gradient(circle at 50% 0%, #e66465, #9198e5)",
       loop: Infinity,
       duration: 3000
-    }).start(v => console.log(v));
+    }).start(v => styler.set("background-image", v));
 }
 
 export class TweenLoop extends BaseAnimation {

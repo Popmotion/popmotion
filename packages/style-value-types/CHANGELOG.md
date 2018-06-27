@@ -2,6 +2,12 @@
 
 Style Value Types adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.0.2] 2018-06-27
+
+### Fixed
+
+- Improving color regex to pick 6-letter hex codes first.
+
 ## [3.0.1] 2018-06-27
 
 ### Fixed
