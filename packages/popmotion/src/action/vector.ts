@@ -211,7 +211,7 @@ const createColorAction: CreateVectorAction = (
  * Using a `from` and `to` of `0`-`1` we use the output to transition between the two
  * arrays.
  */
-const createcomplexAction: CreateVectorAction = (
+const createComplexAction: CreateVectorAction = (
   action,
   { from, to, ...props }
 ) => {
@@ -311,7 +311,7 @@ const getActionCreator = (prop: any) => {
   } else if (color.test(prop)) {
     actionCreator = createColorAction;
   } else if (complex.test(prop)) {
-    actionCreator = createcomplexAction;
+    actionCreator = createComplexAction;
   } else if (typeof prop === 'object') {
     actionCreator = createObjectAction;
   }

@@ -6,11 +6,9 @@ import { tween, value } from "../packages/popmotion/lib";
 export class TweenBasic extends BaseAnimation {
   getAnimation = styler =>
     tween({
-      from: "linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%)",
-      to: "linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%)",
       loop: Infinity,
       duration: 3000
-    }).start(v => console.log(v));
+    }).start(v => styler.set("opacity", v));
 }
 
 export class TweenLoop extends BaseAnimation {

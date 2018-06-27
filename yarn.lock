@@ -9411,6 +9411,10 @@ style-value-types@2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/style-value-types/-/style-value-types-2.0.1.tgz#2e503b5c51d4db79d4636fa8eccd2c4550af67bb"
 
+style-value-types@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/style-value-types/-/style-value-types-3.0.0.tgz#29b18bf6e29096b8feaee49203041c407d0ce341"
+
 styled-components@^3.2.6:
   version "3.3.3"
   resolved "https://registry.yarnpkg.com/styled-components/-/styled-components-3.3.3.tgz#09e702055ab11f7a8eab8229b1c0d0b855095686"

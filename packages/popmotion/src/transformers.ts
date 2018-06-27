@@ -89,7 +89,7 @@ export const blendArray = (from: BlendableArray, to: BlendableArray) => {
   const blendValue = from.map((fromThis, i) => {
     const toThis = to[i];
     return typeof fromThis === 'number'
-      ? (v: number) => getValueFromProgress(v, toThis as number, v)
+      ? (v: number) => getValueFromProgress(fromThis, toThis as number, v)
       : blendColor(fromThis, toThis as HSLA | RGBA);
   });
 
