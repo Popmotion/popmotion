@@ -9,7 +9,8 @@ import {
   easing,
   delay as delayAction,
   Action,
-  ColdSubscription
+  ColdSubscription,
+  ValueReaction
 } from 'popmotion';
 import poseFactory from 'pose-core';
 import {
@@ -39,7 +40,7 @@ const createPassiveValue = (
   return { raw };
 };
 
-const createValue = (raw: any) => {
+const createValue = (raw: ValueReaction) => {
   const type = valueTypeTests.find(testValueType(raw));
 
   return { raw, type };
