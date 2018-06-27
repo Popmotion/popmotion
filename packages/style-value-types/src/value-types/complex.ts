@@ -3,7 +3,7 @@ import { color } from './color';
 import { number } from './numbers';
 
 const floatRegex = /(-)?(\d[\d\.]*)/g;
-const colorRegex = /(#[0-9a-f]{3}|#(?:[0-9a-f]{2}){2,4}|(rgb|hsl)a?\((-?\d+%?[,\s]+){2,3}\s*[\d\.]+%?\))/gi;
+const colorRegex = /(#[0-9a-f]{6}|#[0-9a-f]{3}|#(?:[0-9a-f]{2}){2,4}|(rgb|hsl)a?\((-?\d+%?[,\s]+){2,3}\s*[\d\.]+%?\))/gi;
 
 const COLOR_TOKEN = '${c}';
 const NUMBER_TOKEN = '${n}';
@@ -31,6 +31,7 @@ const complex: ValueType = {
       input = input.replace(colorRegex, COLOR_TOKEN);
       parsed.push(...foundColors.map(color.parse));
     }
+
     const foundNumbers = input.match(floatRegex);
     if (foundNumbers) {
       parsed.push(...foundNumbers.map(number.parse));

@@ -93,6 +93,7 @@ describe('color()', () => {
   });
 
   it('should correctly identify color', () => {
+    expect(color.test('#e66465')).toBe(true);
     expect(color.test('#fff')).toBe(true);
     expect(color.test('#f0f0f0')).toBe(true);
     expect(color.test('rgb(233, 233, 1)')).toBe(true);
@@ -225,6 +226,15 @@ describe('combination values', () => {
       217,
       70.71
     ]);
+
+    expect(
+      complex.parse('radial-gradient(circle at 50% 25%, #e66465, #9198e5)')
+    ).toEqual([
+      { alpha: 1, blue: 101, green: 100, red: 230 },
+      { alpha: 1, blue: 229, green: 152, red: 145 },
+      50,
+      25
+    ]);
   });
 
   it('should create a transformer', () => {
@@ -246,7 +256,7 @@ describe('combination values', () => {
       'linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%)'
     );
     expect(gradientTransformer(gradient)).toBe(
-      'linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%)'
+      'linear-gradient(217deg, rgba(255, 0, 0, 0.8), rgba(255, 0, 0, 0) 70.71%)'
     );
   });
 });

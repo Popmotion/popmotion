@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.3.1] 2018-06-27
+
+### Fixed
+
+- Fixing some TypeScript definition incompatibilities with newer versions of TS.
+
 ## [8.3.0] 2018-06-20
 
 ### Added

@@ -9,8 +9,7 @@ import {
   easing,
   delay as delayAction,
   Action,
-  ColdSubscription,
-  ValueReaction
+  ColdSubscription
 } from 'popmotion';
 import poseFactory from 'pose-core';
 import {

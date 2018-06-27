@@ -29,7 +29,7 @@ export type ActionMap = { [key: string]: Action };
 export type VectorActionFactory = (
   init: ActionFactory,
   typeTests: TypeTestMap
-) => (props: Props) => Action;
+) => ActionFactory;
 
 type VectorTestFactory = (
   typeTests: TypeTestMap

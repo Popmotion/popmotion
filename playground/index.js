@@ -2,15 +2,15 @@ import React from "react";
 
 import { storiesOf } from "@storybook/react";
 
-// import {
-//   PoseDOM,
-//   PoserFLIP,
-//   PoserPassive,
-//   PoseDrag,
-//   PoserManualValues,
-//   PoseOpacity,
-//   PoseFullScreenFlip
-// } from "./plugins/pose";
+import {
+  PoseDOM,
+  PoserFLIP,
+  PoserPassive,
+  PoseDrag,
+  PoserManualValues,
+  PoseOpacity,
+  PoseFullScreenFlip
+} from "./plugins/pose";
 // import {
 //   ReactPose,
 //   ReactPoseChildren,
@@ -21,14 +21,14 @@ import { storiesOf } from "@storybook/react";
 //   PoseKeyFail
 // } from "./plugins/react-pose";
 
-// storiesOf("Plugin: Pose", module)
-//   .add("pose", () => <PoseDOM />)
-//   .add("pose flip", () => <PoserFLIP />)
-//   .add("passive values", () => <PoserPassive />)
-//   .add("manual values", () => <PoserManualValues />)
-//   .add("drag", () => <PoseDrag />)
-//   .add("opacity", () => <PoseOpacity />)
-//   .add("full screen flip", () => <PoseFullScreenFlip />);
+storiesOf("Plugin: Pose", module)
+  .add("pose", () => <PoseDOM />)
+  .add("pose flip", () => <PoserFLIP />)
+  .add("passive values", () => <PoserPassive />)
+  .add("manual values", () => <PoserManualValues />)
+  .add("drag", () => <PoseDrag />)
+  .add("opacity", () => <PoseOpacity />)
+  .add("full screen flip", () => <PoseFullScreenFlip />);
 
 // storiesOf("Plugin: React Pose", module)
 //   .add("pose", () => <ReactPose />)
