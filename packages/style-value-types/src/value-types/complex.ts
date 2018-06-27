@@ -51,7 +51,7 @@ const complex: ValueType = {
       }
     }
 
-    const foundNumbers = prop.match(floatRegex);
+    const foundNumbers = template.match(floatRegex);
     const numNumbers = foundNumbers ? foundNumbers.length : 0;
     if (foundNumbers) {
       for (let i = 0; i < numNumbers; i++) {

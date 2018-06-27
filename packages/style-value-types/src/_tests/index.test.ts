@@ -204,6 +204,27 @@ describe('combination values', () => {
       },
       1
     ]);
+
+    expect(
+      complex.parse(
+        'linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%)'
+      )
+    ).toEqual([
+      {
+        red: 255,
+        green: 0,
+        blue: 0,
+        alpha: 0.8
+      },
+      {
+        red: 255,
+        green: 0,
+        blue: 0,
+        alpha: 0
+      },
+      217,
+      70.71
+    ]);
   });
 
   it('should create a transformer', () => {
@@ -219,13 +240,13 @@ describe('combination values', () => {
     );
 
     const gradient = complex.parse(
-      'linear-gradient(1deg, rgba(255, 255, 255, 1))'
+      'linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%)'
     );
     const gradientTransformer = complex.createTransformer(
-      'linear-gradient(1deg, rgba(255, 255, 255, 1))'
+      'linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%)'
     );
     expect(gradientTransformer(gradient)).toBe(
-      'linear-gradient(1deg, rgba(255, 255, 255, 1))'
+      'linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%)'
     );
   });
 });
