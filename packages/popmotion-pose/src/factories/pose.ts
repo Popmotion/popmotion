@@ -40,8 +40,9 @@ const createPassiveValue = (
   return { raw };
 };
 
-const createValue = (raw: ValueReaction) => {
-  const type = valueTypeTests.find(testValueType(raw));
+const createValue = (init: any) => {
+  const type = valueTypeTests.find(testValueType(init));
+  const raw = value(init);
 
   return { raw, type };
 };
