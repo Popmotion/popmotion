@@ -203,6 +203,6 @@ multitouch().start(({ touches, scale, rotate }) => {});
 - `physics` `autoStopSpeed` property is now `restSpeed`.
 - `spring` `restDisplacement` property is now `restDelta`.
 - `flow` alias for `pipe` has been removed.
-- `add`, `subtract`, `divide`, `multiply`, `conditional`, `alpha`, `percent`, `degrees`, `px`, `rgbUnit`, `rgba`, `hex`, `color`, `hsla` transformers have been removed. Value type transformers like `hex` can still be accessed from the [valueTypes](/api/value-types).
+- `add`, `subtract`, `divide`, `multiply`, `conditional`, `alpha`, `percent`, `degrees`, `px`, `rgbUnit`, `rgba`, `hex`, `color`, `hsla` transformers have been removed. Value type transformers like `hex` can still be accessed from the [valueTypes](https://github.com/Popmotion/popmotion/tree/master/packages/style-value-types).
 - Render loop function must be imported separately from [Framesync](https://github.com/Popmotion/framesync)
 

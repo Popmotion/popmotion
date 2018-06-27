@@ -7,15 +7,13 @@ next: action-reaction
 
 # Get started
 
-Popmotion is a functional, reactive JavaScript motion library.
+Popmotion is a low-level, functional JavaScript motion library.
 
-It allows developers to create animations and interactions from **actions**.
+It allows developers to animate in any JavaScript environment (browser, Node), to any render target (CSS, SVG, Three.js, canvas, etc).
 
-Actions are streams of values that can be started and stopped, like tweens, physics and pointer input.
+If you want super-simple DOM or React animation, you're probably after the high-level [Pose](/pose) library. For absolute animation freedom, carry on reading!
 
-Actions are unopinionated, so those values can be used to create animations with CSS, SVG, React, Three.js... any API that accepts a number as an input.
-
-In this simple introductory guide we're going to install Popmotion and use it to animate an element using the `tween` animation and DOM `styler`.
+In this simple introductory guide we're going to install Popmotion and use it to animate a DOM element using the `tween` animation and the DOM `styler` function.
 
 ## Installation
 
@@ -29,21 +27,15 @@ Alternatively, you can also **download pre-bundled files** or **fork CodePen pla
 
 ## Import
 
-In Popmotion, everything can be imported from the main library:
+In Popmotion, everything can be imported from the main library like this:
 
 ```javascript
 import { tween } from 'popmotion';
 ```
 
-Or, if you're only using a small subset of the library you can respect your user's bytes by importing everything individually:
-
-```javascript
-import tween from 'popmotion/animations/tween';
-```
-
 ## The "Hello World" tween
 
-A `tween` is a function that changes one number to another, over a set duration of time. If you're familiar with CSS transitions, that is also a form of tweening.
+A `tween` is a function that changes **one number to another, over a set duration of time**. If you're familiar with CSS transitions, that's a form of tweening.
 
 By default, a `tween` will change `0` to `1` over `300` milliseconds:
 
@@ -66,7 +58,7 @@ as the argument to the `tween` function. The counter will now count up to `300` 
 
 ## Animate!
 
-As web developers, the DOM is our most common target for animations.
+As web developers, the DOM is our most common render target for animations.
 
 So, let's use the exact same animation from before to output to an element's `translateX` property.
 
@@ -76,22 +68,26 @@ For this, we can use the `styler` function:
 import { tween, styler } from 'popmotion';
 ```
 
-`styler` accepts a single `Element` and returns a get/set interface for HTML and SVG styles that's optimised for animation.
+`styler` accepts a single HTML or SVG element. It returns a simple get/set interface for styling the element that unifies the transformation model of CSS and SVG and batches all styling to a single moment, once per frame.
+
+This helps prevent layout-thrashing and allows you to animate transformation properties separately.
+
+It's used like this:
 
 ```javascript
-const ball = styler(document.querySelector('.ball'))
+const element = document.querySelector('.ball');
+const ball = styler(element);
 ```
 
-When `set` is called, it schedules a render [on the next frame](/api/framesync). All renders are batched to prevent layout thrashing.
-
-`set`, if called with just a property name, returns a setter function. So we can swap `updateCounter` from the previous example with `styler(element).set('x')` to animate the element:
+When `ball.set` is called, it schedules a render on the following frame:
 
 ```marksy
-<Example template="Ball" id="css" autostart={false}>{`
-const ball = document.querySelector('#css .ball');
+<Example template="Ball" id="b" autostart={false}>{`
+const element = document.querySelector('#b .ball');
+const ball = styler(element); 
 
 tween({ to: 300, duration: 500 })
-  .start(styler(ball).set('x'));
+  .start(v => ball.set('x', v));
 `}</Example>
 ```
 
@@ -102,15 +98,17 @@ And that's it! Your first animation.
 All animations included with Popmotion can animate:
 
 - Numbers
-- Colors
-- Objects of numbers and colors
-- Arrays of numbers and colors
+- Colors (rgba, hsla and hex)
+- Units `px`, `%`, `deg`, `vh`, and `vw`
+- Complex strings containing numbers, units and colors, e.g. CSS shadows, gradients and SVG path definitions
+- Objects of the above
+- Arrays of the above
 
-For instance, by replacing `300` in the previous example with `{ x: 300, scale: 2 }` the action will animate and output `x` and `scale` values:
+For instance, by replacing `300` in the previous example with `{ x: 300, scale: 2 }` the action will animate both `x` and `scale` values:
 
 ```marksy
-<Example template="Ball" id="object" autostart={false}>{`
-const ball = document.querySelector('#object .ball');
+<Example template="Ball" id="c" autostart={false}>{`
+const ball = document.querySelector('#c .ball');
 const ballStyler = styler(ball);
 
 tween({
@@ -119,16 +117,14 @@ tween({
   ease: easing.easeInOut,
   flip: Infinity,
   duration: 1000
-}).start(ballStyler.set);
+}).start(v => ballStyler.set(v));
 `}</Example>
 ```
 
 ## Next
 
-This tutorial has covered just the basics for the `tween` animation. You can find more details in the full [tween API docs](/api/tween).
+This tutorial has covered the very the basics for the `tween` animation. You can find more details in the full [tween API docs](/api/tween).
 
-Popmotion uses a simple reactive model. Every animation, like `tween`, and every input is an **action**.
+`tween`, and all other Popmotion animations/interactions, are **actions**. Actions are simple reactive streams of values.
 
-And for every action, there is (naturally) a **reaction**.
-
-In the next tutorial, we'll briefly look at [actions and reactions](/learn/action-reaction).
+In the next tutorial, we'll briefly look at these [actions and reactions](/learn/action-reaction).

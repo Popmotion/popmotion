@@ -48,7 +48,6 @@
     "live-on-stage": "^2.0.17",
     "nprogress": "^0.2.0",
     "popmotion": "^8.1.7",
-    "popmotion-react": "^2.1.0",
     "prismjs": "^1.6.0",
     "react": "^16.3.0-rc.0",
     "react-dom": "^16.3.0-rc.0",

@@ -227,7 +227,3 @@ physics({ velocity: 1000 })
   .pipe(wrap(100, 400))
   .start(v => console.log(v));
 ```
-
-### Value type transformers
-
-Transformers that can convert from numbers and objects into value types like px or hsla can be found in the [`style-value-types` package](/api/value-types).

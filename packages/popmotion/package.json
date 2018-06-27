@@ -10,7 +10,7 @@
   "jsnext:main": "dist/popmotion.es.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Popmotion/popmotion"
+    "url": "https://github.com/Popmotion/popmotion/tree/master/packages/popmotion"
   },
   "bugs": {
     "url": "https://github.com/Popmotion/popmotion/issues"
@@ -49,15 +49,17 @@
   "dependencies": {
     "framesync": "^3.1.9",
     "hey-listen": "^1.0.5",
-    "style-value-types": "^1.0.8",
+    "style-value-types": "3.0.1",
     "stylefire": "^2.0.2",
     "tslib": "^1.9.1"
   },
   "devDependencies": {
+    "@types/jest": "^23.1.1",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-plugin-annotate-pure-calls": "^0.2.2",
-    "jest": "^21.1.0",
+    "jest": "^23.1.0",
+    "jest-cli": "^23.1.0",
     "rollup": "^0.59.1",
     "rollup-plugin-node-resolve": "^3.3.0",
     "rollup-plugin-replace": "^2.0.0",
@@ -72,6 +74,9 @@
       "ts",
       "js"
     ],
+    "moduleNameMapper": {
+      "style-value-types": "<rootDir>/../../style-value-types/lib"
+    },
     "transform": {
       "\\.(ts)$": "../../../node_modules/ts-jest/preprocessor.js"
     },

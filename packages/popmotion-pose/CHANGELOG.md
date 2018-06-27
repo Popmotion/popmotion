@@ -2,6 +2,12 @@
 
 Popmotion Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.1.0] 2018-06-xx
+
+### Added
+
+- `popmotion@8.3.0` supports complex value types.
+
 ## [2.0.6] 2018-06-15
 
 ### Fixed

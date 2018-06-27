@@ -1,9 +1,5 @@
----
-title: Value Types
-description: "Parsers, transformers and tests for common style value types, eg: %, hex codes etc."
----
-
-# Value Types
+# Style Value Types
+Parsers, transformers and tests for common style value types, eg: %, hex codes etc.
 
 To help convert numerical values into commonly-used special value types, like `px` or `hex`, we provide an optional module called `style-value-types`:
 
@@ -15,18 +11,12 @@ Each value type has three functions:
 
 - `test`: Returns `true` if the provided value is of that type.
 - `parse`: Returns the value in a format suitable for animation. Either a `number` or `{ [key: string]: number }`.
+
+And one of:
 - `transform`: The reverse of `parse`. Accepts a `number` or map of named numbers and converts that into the value type.
+- `createTransformer`: Accepts a value and returns a `transform` based on that specific value.
 
 ## Import
-
-From Popmotion:
-
-```javascript
-import { valueTypes } from 'popmotion';
-const { color } = valueTypes;
-```
-
-Or, either to save bytes and import `valueTypes` separately, or to use as a stand-alone library:
 
 ```javascript
 import { color } from 'style-value-types';
@@ -51,7 +41,7 @@ color.transform({ hue: 200, saturation: 100, lightness: 50, alpha: 0.5 });
 ## Included value types
 
 - `alpha`: `Number` between `0` and `1`
-- `complex`: `String` containing arbitrary sequence of numbers mixed with other characters. See below.
+- `complex`: Handles space and comma delimited values, like CSS box-shadow: `'10px 10px inset #f00, 5px 5px 30px #fff'`, gradient or a path definition.
 - `color`: `String` of either `hex`, `hsla` or `rgba` type
 - `degrees`: `String` ending in `deg`
 - `hex`: `String` beginning with `#` and followed by 3 or 6-digit hex code
@@ -62,7 +52,7 @@ color.transform({ hue: 200, saturation: 100, lightness: 50, alpha: 0.5 });
 - `rgbUnit`: Integer between `1` and `255`
 - `rgba`: String in `rgba(rgbUnit, rgbUnit, rgbUnit, alpha)` format
 
-## Complex type
+## complex
 
 The `complex` value type is slightly different to the others. Instead of a `transform` method, it has a `createTransformer` method which returns the `transform` method:
 
@@ -72,14 +62,3 @@ const transform = complex.createTransformer(svgPath);
 ```
 
 The returned `transform` function is unique to the string given to it. When this function is provided an object of the same format as returned by `complex.parse()` (in this example `complex.parse(svgPath)`), it will use the original string as a template.
-
-Example: 
-
-```javascript
-transform({
-  '0': 300,
-  '1': 0,
-  '2': 100,
-  '3': 200
-}); // Returns 'M300 0 L100 200'
-```

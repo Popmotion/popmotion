@@ -40,7 +40,8 @@ export const color = {
   orange: '#F30',
   orangeBurn: '#FF8213',
   yellow: '#FFE42B',
-  lightGrey: '#ECECEC'
+  lightGrey: '#ECECEC',
+  superLightGrey: '#fafafa'
 };
 
 export const font = {

@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { fontBold, fontSize, lineHeight } from "~/styles/fonts";
+import styled from 'styled-components';
+import { fontBold, fontSize, lineHeight } from '~/styles/fonts';
 import {
   cols,
   WHITE,
@@ -7,15 +7,12 @@ import {
   GREEN,
   ACTION,
   BRAND,
-  SUPER_LIGHT_GREY,
-  LIGHT_GREY,
-  SKEW,
-  UNSKEW,
-  media
-} from "~/styles/vars";
+  media,
+  color
+} from '~/styles/vars';
 
 export const Container = styled.div`
-  background: ${SUPER_LIGHT_GREY};
+  background: ${color.superLightGrey};
   display: flex;
   margin: ${cols(2)} 0 ${cols(4)};
   position: relative;
@@ -87,29 +84,23 @@ export const CodePenLink = styled.a`
   background: ${ACTION};
   bottom: ${cols(1)};
   right: ${cols(1)};
-  transform: skewX(${SKEW});
   padding: 5px 8px;
 
   span {
     color: white;
     display: block;
-    transform: skewX(${UNSKEW});
   }
 `;
 
 export const CodeContainer = styled.div`
-  background: ${LIGHT_GREY};
+  background: ${color.lightGrey};
   border-left: 2px solid ${ENTITY};
-  box-shadow: 100px 0 0 ${LIGHT_GREY};
-  transform: skewX(${SKEW});
   flex: 0 0 calc(50% + 30px);
-  margin-right: -30px;
   padding-left: ${cols(1)};
   display: flex;
   align-items: center;
 
   pre {
-    transform: skewX(${UNSKEW});
     line-height: 18px;
   }
 

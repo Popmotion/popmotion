@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/popmotion/packages/react-pose-core"
+    "url": "https://github.com/Popmotion/popmotion/tree/master/packages/react-pose-core"
   },
   "keywords": [
     "animation",
@@ -30,7 +30,8 @@
     "@types/jest": "^22.2.3",
     "@types/react": "^16.3.12",
     "@types/react-native": "^0.55.4",
-    "jest": "^22.4.3",
+    "jest": "^23.1.0",
+    "jest-cli": "^23.1.0",
     "prettier": "1.11.1",
     "ts-jest": "^22.4.5",
     "typescript": "^2.7.2"

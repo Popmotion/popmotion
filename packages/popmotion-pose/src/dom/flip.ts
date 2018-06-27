@@ -47,7 +47,7 @@ const setValue = ({ values, props }: PoserState, key: string, to: any) => {
     // to actually render twice, but because we're making
     // the value jump a great distance, we want to reset the velocity
     // to 0, rather than something arbitrarily high
-    // Maybe a more explicit API would be nicer
+    // A more explicit API would be nicer
     const { raw } = values.get(key);
     raw.update(to);
     raw.update(to);

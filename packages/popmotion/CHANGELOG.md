@@ -2,6 +2,21 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.3.0] 2018-06-20
+
+### Added
+
+- Support for animating value types:
+  - `px`
+  - `deg`
+  - `%`
+  - `vw`
+  - `vh`
+  - Complex types including:
+    - SVG paths
+    - CSS gradients
+    - CSS shadows
+
 ## [8.2.5] 2018-06-13
 
 ### Fixed

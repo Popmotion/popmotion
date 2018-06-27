@@ -2,47 +2,53 @@ import React from "react";
 
 import { storiesOf } from "@storybook/react";
 
-import {
-  PoseDOM,
-  PoserFLIP,
-  PoserPassive,
-  PoseDrag,
-  PoserManualValues,
-  PoseOpacity,
-  PoseFullScreenFlip
-} from "./plugins/pose";
-import {
-  ReactPose,
-  ReactPoseChildren,
-  Group,
-  EmailList,
-  UserPoseInPoseGroup,
-  PoseKey,
-  PoseKeyFail
-} from "./plugins/react-pose";
+// import {
+//   PoseDOM,
+//   PoserFLIP,
+//   PoserPassive,
+//   PoseDrag,
+//   PoserManualValues,
+//   PoseOpacity,
+//   PoseFullScreenFlip
+// } from "./plugins/pose";
+// import {
+//   ReactPose,
+//   ReactPoseChildren,
+//   Group,
+//   EmailList,
+//   UserPoseInPoseGroup,
+//   PoseKey,
+//   PoseKeyFail
+// } from "./plugins/react-pose";
 
-storiesOf("Plugin: Pose", module)
-  .add("pose", () => <PoseDOM />)
-  .add("pose flip", () => <PoserFLIP />)
-  .add("passive values", () => <PoserPassive />)
-  .add("manual values", () => <PoserManualValues />)
-  .add("drag", () => <PoseDrag />)
-  .add("opacity", () => <PoseOpacity />)
-  .add("full screen flip", () => <PoseFullScreenFlip />);
+// storiesOf("Plugin: Pose", module)
+//   .add("pose", () => <PoseDOM />)
+//   .add("pose flip", () => <PoserFLIP />)
+//   .add("passive values", () => <PoserPassive />)
+//   .add("manual values", () => <PoserManualValues />)
+//   .add("drag", () => <PoseDrag />)
+//   .add("opacity", () => <PoseOpacity />)
+//   .add("full screen flip", () => <PoseFullScreenFlip />);
 
-storiesOf("Plugin: React Pose", module)
-  .add("pose", () => <ReactPose />)
-  .add("children", () => <ReactPoseChildren />)
-  .add("group", () => <Group />)
-  .add("email list", () => <EmailList />)
-  .add("user-defined poses within PoseGroup", () => <UserPoseInPoseGroup />)
-  .add("pose key test", () => <PoseKey />)
-  .add("pose key fail test", () => <PoseKeyFail />);
+// storiesOf("Plugin: React Pose", module)
+//   .add("pose", () => <ReactPose />)
+//   .add("children", () => <ReactPoseChildren />)
+//   .add("group", () => <Group />)
+//   .add("email list", () => <EmailList />)
+//   .add("user-defined poses within PoseGroup", () => <UserPoseInPoseGroup />)
+//   .add("pose key test", () => <PoseKey />)
+//   .add("pose key fail test", () => <PoseKeyFail />);
 
 // import { Decay, DecayModifyTarget, DecayPower, DecayTimeConstant } from './decay';
 // import { Keyframes, KeyframesDuration, KeyframesLoop, KeyframesLinear, KeyframesTimes } from './keyframes';
 // import { PhysicsVelocity, PhysicsAcceleration, PhysicsFriction, PhysicsSpring, PhysicsChangeSpringTarget } from './physics';
-// import { TweenBasic, TweenLoop, TweenYoyo, TweenFlip, TweenWithVelocity } from './tween';
+import {
+  TweenBasic,
+  TweenLoop,
+  TweenYoyo,
+  TweenFlip,
+  TweenWithVelocity
+} from "./tween";
 // import { Spring, SpringVelocity, SpringHeavier, SpringStiffer, SpringStifferDamping } from './spring';
 // import { Drag, DragWithDeltaPointer, Multitouch } from './pointer';
 // import { TimelineTest } from './timeline';
@@ -78,12 +84,12 @@ storiesOf("Plugin: React Pose", module)
 // .add('increased stiffness', () => <SpringStiffer />)
 // .add('increased stiffness and damping', () => <SpringStifferDamping />);
 
-// storiesOf('tween', module)
-// .add('default props', () => <TweenBasic />)
-// .add('loop', () => <TweenLoop />)
-// .add('yoyo', () => <TweenYoyo />)
-// .add('flip', () => <TweenFlip />)
-// .add('track velocity', () => <TweenWithVelocity />);
+storiesOf("tween", module)
+  .add("default props", () => <TweenBasic />)
+  .add("loop", () => <TweenLoop />)
+  .add("yoyo", () => <TweenYoyo />)
+  .add("flip", () => <TweenFlip />)
+  .add("track velocity", () => <TweenWithVelocity />);
 
 // storiesOf('pointer', module)
 // .add('drag', () => <Drag />)

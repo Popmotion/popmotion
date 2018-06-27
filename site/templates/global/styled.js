@@ -10,8 +10,6 @@ import {
   media,
   GREEN,
   PURPLE,
-  SKEW,
-  UNSKEW,
   ENTITY
 } from '~/styles/vars';
 import {
@@ -144,7 +142,7 @@ export const CodeTag = styled.code`
 `;
 
 export const CodeBlock = MajorCentered.extend`
-  background: ${color.lightGrey};
+  background: ${color.superLightGrey};
   border-left: 1px solid ${ENTITY};
   margin-bottom: ${cols(3)};
 

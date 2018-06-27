@@ -50,7 +50,7 @@ All SVG attributes are supported.
 
 ## Prop types
 
-For convenience and safety, many props are mapped to [value types](/api/value-types) for safety and convenience.
+For convenience and safety, many props are mapped to [value types](https://github.com/Popmotion/popmotion/tree/master/packages/style-value-types) for safety and convenience.
 
 * `fill`: `color`
 * `stroke`: `color`
