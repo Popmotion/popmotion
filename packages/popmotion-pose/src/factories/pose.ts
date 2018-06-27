@@ -39,9 +39,8 @@ const createPassiveValue = (
   return { raw };
 };
 
-const createValue = (init: any) => {
-  const type = valueTypeTests.find(testValueType(init));
-  const raw = value(type === number ? type.parse(init) : init);
+const createValue = (raw: any) => {
+  const type = valueTypeTests.find(testValueType(raw));
 
   return { raw, type };
 };
@@ -177,25 +176,23 @@ const pose = <P>({
     },
 
     getTransitionProps: ({ raw, type }, to) => ({
-      from: type ? type.parse(raw.get()) : raw.get(),
+      from: raw.get(),
       velocity: raw.getVelocity(),
-      to: type ? type.parse(to) : to,
+      to,
       type
     }),
 
-    resolveTarget: ({ type }, to) => (type ? type.parse(to) : to),
+    resolveTarget: (_, to) => to,
 
     selectValueToRead: ({ raw }) => raw,
 
-    startAction: ({ raw, type }, action, complete) => {
+    startAction: ({ raw }, action, complete) => {
       const reaction = {
         update: (v: any) => raw.update(v),
         complete
       };
 
-      return type
-        ? action.pipe(type.transform).start(reaction)
-        : action.start(reaction);
+      return action.start(reaction);
     },
 
     stopAction: action => action.stop(),

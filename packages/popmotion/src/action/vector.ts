@@ -1,5 +1,4 @@
 import {
-  number,
   color,
   complex,
   percent,
@@ -141,16 +140,19 @@ const reduceObjectValue = (key: string) => (props: Props, propKey: string) => {
 
 const createObjectAction: CreateVectorAction = (action, props, vectorKeys) => {
   const [firstVectorKey] = vectorKeys;
-  const actionMap = Object.keys(props[firstVectorKey]).reduce((map, key) => {
-    const childActionProps = vectorKeys.reduce(reduceObjectValue(key), {
-      ...props
-    });
-    map[key] = getActionCreator(props[firstVectorKey][key])(
-      action,
-      childActionProps
-    );
-    return map;
-  }, {});
+  const actionMap = Object.keys(props[firstVectorKey]).reduce(
+    (map, key) => {
+      const childActionProps = vectorKeys.reduce(reduceObjectValue(key), {
+        ...props
+      });
+      map[key] = getActionCreator(props[firstVectorKey][key])(
+        action,
+        childActionProps
+      );
+      return map;
+    },
+    {} as { [key: string]: Action }
+  );
 
   return composite(actionMap);
 };
@@ -277,7 +279,7 @@ const createcomplexAction: CreateVectorAction = (
 const createVectorAction: VectorActionFactory = (action, typeTests) => {
   const { testVectorProps, getVectorKeys } = createVectorTests(typeTests);
 
-  const vectorAction = props => {
+  const vectorAction = (props: Props) => {
     const isVector = testVectorProps(props);
 
     // If the user isn't requesting a vector action, initialise the action as usual

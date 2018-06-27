@@ -50,7 +50,7 @@
   "dependencies": {
     "popmotion": "^8.2.5",
     "pose-core": "^0.7.4",
-    "style-value-types": "^1.0.10",
+    "style-value-types": "3.0.0",
     "tslib": "^1.9.1"
   },
   "unpkg": "./dist/popmotion-pose.js",
