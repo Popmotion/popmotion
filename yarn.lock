@@ -7634,6 +7634,16 @@ pn@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/pn/-/pn-1.1.0.tgz#e2f4cef0e219f463c179ab37463e4e1ecdccbafb"
 
+popmotion@8.3.1:
+  version "8.3.1"
+  resolved "https://registry.yarnpkg.com/popmotion/-/popmotion-8.3.1.tgz#e34291728ec8301639138a2a8e1e369d07409e47"
+  dependencies:
+    framesync "^3.1.9"
+    hey-listen "^1.0.5"
+    style-value-types "^3.0.1"
+    stylefire "^2.0.4"
+    tslib "^1.9.1"
+
 pose-core@^0.1.7:
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/pose-core/-/pose-core-0.1.7.tgz#7c01a55164de620356cdda345725c38499efd1bb"
@@ -9422,13 +9432,13 @@ styled-components@^3.2.6:
     stylis-rule-sheet "^0.0.10"
     supports-color "^3.2.3"
 
-stylefire@^2.0.5:
-  version "2.0.5"
-  resolved "https://registry.yarnpkg.com/stylefire/-/stylefire-2.0.5.tgz#f4b546b0f662dbcc255196802134a9c9e03c92d6"
+stylefire@^2.0.4, stylefire@^2.0.6:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/stylefire/-/stylefire-2.0.6.tgz#aa35093b782e1d2ea746d9aac483f38366954e19"
   dependencies:
     framesync "^3.1.8"
     hey-listen "^1.0.4"
-    style-value-types "^3.0.2"
+    style-value-types "^3.0.3"
     tslib "^1.9.1"
 
 stylis-rule-sheet@^0.0.10:

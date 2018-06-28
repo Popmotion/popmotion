@@ -2,6 +2,12 @@
 
 Style Value Types adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.0.3] 2018-06-28
+
+### Fixed
+
+- Fixing error in `tsconfig.json` that leaves code untranspiled.
+
 ## [3.0.2] 2018-06-27
 
 ### Fixed
