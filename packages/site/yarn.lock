@@ -4587,13 +4587,7 @@ popmotion-pose@^2.0.3:
     style-value-types "^1.0.10"
     tslib "^1.9.1"
 
-popmotion-react@^2.1.0:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/popmotion-react/-/popmotion-react-2.1.1.tgz#8044e699e1aaf20dd88afe1c1afd8ecbc7c323c8"
-  dependencies:
-    popmotion "^8.1.0"
-
-popmotion@^8.1.0, popmotion@^8.1.7, popmotion@^8.2.1, popmotion@^8.2.5:
+popmotion@^8.1.7, popmotion@^8.2.1, popmotion@^8.2.5:
   version "8.2.5"
   resolved "https://registry.yarnpkg.com/popmotion/-/popmotion-8.2.5.tgz#29decf7747720cb95e960bd9c9f9fa92f4163835"
   dependencies:
