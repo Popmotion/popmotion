@@ -41,6 +41,9 @@ const removePointsListener = () => {
     if (pointsListener && pointsListener.stop) {
       pointsListener.stop();
       pointsListener = undefined;
+
+      points.splice(1);
+      points[0] = defaultPointerPos();
     }
   }
 };
