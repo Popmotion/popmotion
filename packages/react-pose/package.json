@@ -3,6 +3,7 @@
   "version": "2.1.2",
   "description": "A declarative animation library for React",
   "main": "./lib/index.js",
+  "module": "./dist/react-pose.es.js",
   "types": "./lib/index.d.ts",
   "scripts": {
     "build": "rollup -c && npm run measure",
