@@ -15,15 +15,21 @@ const defaultEasings = (values: number[], easing?: Easing): Easing[] =>
 const defaultTimings = (values: number[]): number[] => {
   const numValues = values.length;
 
-  return values.map((value: number, i: number): number => (i !== 0) ? i / (numValues - 1) : 0);
+  return values.map(
+    (value: number, i: number): number => (i !== 0 ? i / (numValues - 1) : 0)
+  );
 };
 
 // TODO: Consolidate with `interpolate` transformer and keep this DRY
-const interpolateScrubbers = (input: number[], scrubbers: Action[], update: Update) => {
+const interpolateScrubbers = (
+  input: number[],
+  scrubbers: Action[],
+  update: Update
+) => {
   const rangeLength = input.length;
   const finalInputIndex = rangeLength - 1;
   const finalScrubberIndex = finalInputIndex - 1;
-  const subs = scrubbers.map((scrub) => scrub.start(update));
+  const subs = scrubbers.map(scrub => scrub.start(update));
 
   return (v: number) => {
     // If value outside minimum range, quickly return
@@ -39,6 +45,10 @@ const interpolateScrubbers = (input: number[], scrubbers: Action[], update: Upda
     let i = 1;
 
     // Find index of range start
+    // Note: There's potentially a way of doing this without a loop
+    // 1. Try tweening between 0 and numSegments - 1
+    // 2. Create array of scrubbers.
+    // 3. Take Math.floor(v) as index of scrubber and remainder as progress
     for (; i < rangeLength; i++) {
       if (input[i] > v || i === finalInputIndex) break;
     }
@@ -49,24 +59,30 @@ const interpolateScrubbers = (input: number[], scrubbers: Action[], update: Upda
   };
 };
 
-const keyframes = ({ easings, ease = linear, times, values, ...tweenProps }: KeyframeProps): Action => {
+const keyframes = ({
+  easings,
+  ease = linear,
+  times,
+  values,
+  ...tweenProps
+}: KeyframeProps): Action => {
   easings = Array.isArray(easings)
     ? easings
     : defaultEasings(values as number[], easings);
   times = times || defaultTimings(values as number[]);
 
-  const scrubbers = easings.map((easing, i) => scrubber({
-    from: values[i],
-    to: values[i + 1],
-    ease: easing
-  }));
+  const scrubbers = easings.map((easing, i) =>
+    scrubber({
+      from: values[i],
+      to: values[i + 1],
+      ease: easing
+    })
+  );
 
   return tween({
     ...tweenProps,
     ease
-  }).applyMiddleware(
-    (update) => interpolateScrubbers(times, scrubbers, update)
-  );
+  }).applyMiddleware(update => interpolateScrubbers(times, scrubbers, update));
 };
 
 export default keyframes;

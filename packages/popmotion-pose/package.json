@@ -48,9 +48,9 @@
     "typescript": "^2.8.1"
   },
   "dependencies": {
-    "popmotion": "8.3.1",
+    "popmotion": "^8.3.3",
     "pose-core": "^0.7.4",
-    "style-value-types": "^3.0.1",
+    "style-value-types": "^3.0.3",
     "tslib": "^1.9.1"
   },
   "unpkg": "./dist/popmotion-pose.js",

@@ -329,8 +329,15 @@ export class PoseOpacity extends React.PureComponent {
   setRef = ref => {
     if (ref) {
       this.poser = pose(ref, {
-        visible: { opacity: 1, backgroundColor: "#0f0" },
-        hidden: { opacity: 0.5, backgroundColor: "#f00" }
+        visible: {
+          backgroundImage:
+            "radial-gradient(circle at 50%, #333, #333 50%, #eee 75%, #333 75%)"
+        },
+        hidden: {
+          backgroundImage:
+            "radial-gradient(circle at 100%, #333, #333 50%, #eee 75%, #333 75%)"
+        },
+        initialPose: "hidden"
       });
       this.poser.set("visible");
     } else {

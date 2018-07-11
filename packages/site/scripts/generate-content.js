@@ -7,7 +7,7 @@ const convertDateFormat = require('./convert-date-format');
 const { filterFiles, filterSystemFiles } = require('./filename-operations');
 const buildNextConfig = require('./build-next-config');
 
-const packagesPath = path.join(__dirname, '../../packages');
+const packagesPath = path.join(__dirname, '../../');
 const contentMetadataOutputPath = path.join(__dirname, '../data/content.json');
 const siteNameMap = JSON.parse(
   fs.readFileSync(path.join(__dirname, '../data/site-names.json'), {
@@ -30,10 +30,7 @@ function generateContent({
   if (!siteName) return;
   if (!siteMetadata[siteName]) siteMetadata[siteName] = {};
 
-  const readPath = path.join(
-    __dirname,
-    `../../packages/${packageName}/docs/${subDir}`
-  );
+  const readPath = path.join(__dirname, `../../${packageName}/docs/${subDir}`);
   const outputPath = path.join(
     __dirname,
     `../pages/${siteName === 'pure' ? '' : siteName}/${firstLevelDir}`
