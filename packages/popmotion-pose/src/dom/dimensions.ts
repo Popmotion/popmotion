@@ -20,8 +20,10 @@ export default (element: Element): Dimensions => {
       return current;
     },
     measurementAsPixels: (measurement, value, type) =>
-      type === percent && typeof value === 'number'
-        ? value / 100 * current[measurement]
+      type === percent
+        ? (typeof value === 'string' ? parseFloat(value) : value) /
+          100 *
+          current[measurement]
         : (value as number),
     has: () => hasMeasured
   };

@@ -104,7 +104,7 @@ const getAction = (
       if (typeOfEase === 'string') {
         invariant(
           easingLookup[ease] !== undefined,
-          `Invalid easing type '${ease}'. popmotion.io/pose/api/transition`
+          `Invalid easing type '${ease}'. popmotion.io/pose/api/config`
         );
 
         ease = easingLookup[ease];

@@ -178,6 +178,7 @@ export class PoserPassive extends React.Component {
 export class PoserManualValues extends React.Component {
   componentDidMount() {
     const x = value("-100%");
+
     this.sidebarPoser = pose(this.sidebar, {
       ...sidebarProps,
       values: {
@@ -405,7 +406,7 @@ export class PoseFullScreenFlip extends React.PureComponent {
         initialPose: "fullscreen"
       });
       this.poser.setProps({ bar: false });
-      this.poser.setTransitionProps({ foo: true });
+      this.poser.setProps({ foo: true });
     } else {
       this.poser.destroy();
     }

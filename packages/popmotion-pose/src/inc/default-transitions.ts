@@ -13,13 +13,15 @@ import { percent } from 'style-value-types';
 const { linear } = easing;
 const { interpolate } = transform;
 
-const singleAxisPointer = (axis: string) => (from: number) =>
-  pointer({ [axis]: from }).pipe((v: any) => v[axis]);
+const singleAxisPointer = (axis: string) => (from: number | string) =>
+  pointer({
+    [axis]: typeof from === 'string' ? parseFloat(from) : from
+  }).pipe((v: any) => v[axis]);
 const pointerX = singleAxisPointer('x');
 const pointerY = singleAxisPointer('y');
 
 const createPointer = (
-  axisPointerCreator: (from: number) => Action,
+  axisPointerCreator: (from: number | string) => Action,
   min: string,
   max: string,
   measurement: BoundingBoxDimension
@@ -27,30 +29,33 @@ const createPointer = (
   const axisPointer = axisPointerCreator(
     dimensions.measurementAsPixels(measurement, from, type)
   );
-  const transformQueue: Array<(v: number) => number> = [];
+  const transformQueue: Array<(v: number) => number | string> = [];
 
   if (dragBounds) {
-    if (dragBounds[min] !== undefined)
+    if (dragBounds[min] !== undefined) {
       transformQueue.push((v: number) =>
         Math.max(
           v,
           dimensions.measurementAsPixels(measurement, dragBounds[min], type)
         )
       );
-    if (dragBounds[max] !== undefined)
+    }
+    if (dragBounds[max] !== undefined) {
       transformQueue.push((v: number) =>
         Math.min(
           v,
           dimensions.measurementAsPixels(measurement, dragBounds[max], type)
         )
       );
+    }
   }
 
   // If we're not handling this axis as pixels, add a converter
   // Currently we're only handling % types but should look at vw/vh etc
   if (type === percent) {
     transformQueue.push(
-      interpolate([0, dimensions.get(measurement) as number], [0, 100])
+      interpolate([0, dimensions.get(measurement) as number], [0, 100]),
+      v => v + '%'
     );
   }
 
@@ -75,6 +80,7 @@ const underDampedSpring: Transition = ({ from, velocity, to }) =>
     restDelta: 0.5,
     restSpeed: 10
   });
+
 const overDampedSpring: Transition = ({ from, velocity, to }) =>
   spring({ from, to, velocity, stiffness: 700, damping: to === 0 ? 100 : 35 });
 

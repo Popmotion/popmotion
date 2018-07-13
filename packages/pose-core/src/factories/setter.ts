@@ -163,7 +163,7 @@ const createPoseSetter = <V, A, C, P>(
     const { preTransition, transition: getTransition } = nextPose;
 
     // Run pre-transition prep, if set
-    if (preTransition) nextPose.preTransition(baseTransitionProps);
+    if (preTransition) preTransition(baseTransitionProps);
 
     return Object.keys(getPoseValues(nextPose)).map(key => {
       return new Promise(complete => {
