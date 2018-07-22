@@ -21,18 +21,13 @@ const Box = styled(posed.div(props))`
   transform: translateX(-100%);
 `;
 
-const code = `const config = {
+const code = `// React Pose
+const Box = posed.div({
   left: { x: 100 },
   right: { x: -100 }
-}
+})
 
-// Vanilla
-const poser = pose(element, config)
-poser.set('left')
-
-// React Native
-const Box = posed.View(config)
-() => <Box pose="left" />`;
+({ position }) => <Box pose={position} />`;
 
 class Example extends React.Component {
   state = { isVisible: false };

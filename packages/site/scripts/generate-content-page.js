@@ -11,6 +11,7 @@ import { Img } from '~/templates/content/styled';
 import ContentTemplate from '~/templates/content/Template';
 import Example from '~/components/examples/Example';
 import CodePen from '~/components/examples/CodePen';
+import TOC from '~/templates/content/TableOfContents';
 
 const removeEmpty = filename => filename !== '';
 
@@ -35,7 +36,8 @@ const convertMarkdown = marksy({
   components: {
     Example,
     CodePen,
-    Video
+    Video,
+    TOC: () => <TOC toc={content.toc} />
   }
 });
 

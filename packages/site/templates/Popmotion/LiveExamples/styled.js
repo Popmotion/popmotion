@@ -34,6 +34,7 @@ export const LiveExampleContainer = styled.div`
   align-items: stretch;
   justify-content: flex-end;
   min-height: 250px;
+  overflow: hidden;
 
   ${media.large`
     flex: 0 0 100%;

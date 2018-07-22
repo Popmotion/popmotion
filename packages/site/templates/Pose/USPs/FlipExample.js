@@ -15,7 +15,7 @@ const props = {
   right: { height: '100px', left: '50px' }
 };
 
-const code = `// Vanilla & React DOM only
+const code = `// Vanilla & React Pose only
 await poser.set('childOut')
 await poser.flip(() => {
   poser.clearChildren()

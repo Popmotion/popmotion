@@ -12,16 +12,23 @@ import ChildrenExample from './ChildrenExample';
 import FlipExample from './FlipExample';
 import Link from 'next/link';
 import { CTA } from '~/templates/Popmotion/Masthead/styled';
+import AnimateAnythingExample from './AnimateAnything';
 
 export default () => (
   <Container>
-    <Blurb>CSS simplicity meets JavaScript power</Blurb>
+    <Blurb>JavaScript animation simpler than CSS</Blurb>
     <ExampleSection>
       <Example
         title="Magic animations"
         description="By default, Pose will figure out the animation based on the properties being animated."
       >
         <ZeroConfigExample />
+      </Example>
+      <Example
+        title="Animate anything"
+        description="Numbers, units, colors, box shadows, radial gradients, path definitions - Pose animates them all."
+      >
+        <AnimateAnythingExample />
       </Example>
       <Example
         title="Declarative"
@@ -37,7 +44,7 @@ export default () => (
       </Example>
       <Example
         title="Orchestrate"
-        description="Pose's parent-child system makes quick work of coordinating animations across multiple elements."
+        description="Pose's component tree makes coordinating animations across multiple elements as easy as animating one."
       >
         <ChildrenExample />
       </Example>

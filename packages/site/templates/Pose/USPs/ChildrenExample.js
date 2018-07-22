@@ -59,12 +59,7 @@ const Item = styled(posed.li(itemProps))`
   }
 `;
 
-const code = `// Vanilla
-const parent = pose(element, config)
-items.forEach(item => parent.addChild(item, childConfig))
-parent.set('open')
-
-// React Native
+const code = `// React Native Pose
 const Parent = posed.View(config)
 const Child = posed.Image(childConfig)
 

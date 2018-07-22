@@ -13,7 +13,6 @@ import {
 import posed, { PoseGroup } from 'react-pose';
 import styled from 'styled-components';
 import { color } from '~/styles/vars';
-import { eachValue } from 'popmotion-pose';
 
 const Container = styled.div`
   overflow: hidden;

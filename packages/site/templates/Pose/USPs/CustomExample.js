@@ -17,7 +17,6 @@ import {
 import posed from 'react-pose';
 import styled from 'styled-components';
 import { color } from '~/styles/vars';
-import { eachValue } from 'popmotion-pose';
 
 const props = {
   rest: {
@@ -26,10 +25,10 @@ const props = {
   },
   alert: {
     scale: 1.3,
-    transition: eachValue({
+    transition: {
       scale: props => spring({ ...props, stiffness: 200, damping: 0 }),
       backgroundColor: tween
-    })
+    }
   }
 };
 
@@ -42,17 +41,16 @@ const Box = styled(posed.div(props))`
   transform-origin: 50%;
 `;
 
-const code = `const config = {
-  attention: { scale: 1.3, transition: looseSpring }
-}
-
-// Vanilla & React DOM use Popmotion
-const looseSpring = (props) =>
-  spring({ ...props, stiffness: 200, damping: 0 })
-
-// React Native uses Animated
-const looseSpring = ({ value, toValue }) =>
-  spring(value, { toValue, stiffness: 200, damping: 0 })`;
+const code = `const Circle = posed.div({
+  attention: {
+    scale: 1.3,
+    transition: {
+      type: 'spring',
+      stiffness: 200,
+      damping: 0
+    }
+  }
+})`;
 
 class Example extends React.Component {
   state = { isVisible: false };

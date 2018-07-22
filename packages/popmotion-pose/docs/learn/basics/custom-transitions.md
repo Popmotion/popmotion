@@ -11,18 +11,7 @@ With automatic animations, it's easy to create snappy and playful animations jus
 
 But there's plenty of instances where we want full control over our animation. For this, we can use the `transition` property.
 
-- [Basic usage](#basic-usage)
-- [Available animations](#available-animations)
-  - [Tween](#tween)
-    - [Easing](#easing)
-  - [Spring](#spring)
-  - [Decay](#decay)
-  - [Keyframes](#keyframes)
-  - [Physics](#physics)
-- [Transition props](#transition-props)
-  - [Delay](#delay)
-  - [Min/Max](#min-max)
-  - [Round](#round)
+<TOC />
 
 ## Basic usage
 
