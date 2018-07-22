@@ -7,6 +7,7 @@ test('Correctly detects if a pose has changed', () => {
   const aArr2 = ['a'];
   const bArr = ['a', 'b'];
   const bArr2 = ['a', 'b'];
+  const cArr = ['a', 'c'];
 
   // Hasn't changed
   expect(hasChanged(a, a)).toBe(false);
@@ -17,4 +18,5 @@ test('Correctly detects if a pose has changed', () => {
   // Has changed
   expect(hasChanged(a, b)).toBe(true);
   expect(hasChanged(aArr, bArr)).toBe(true);
+  expect(hasChanged(bArr, cArr)).toBe(true);
 });
