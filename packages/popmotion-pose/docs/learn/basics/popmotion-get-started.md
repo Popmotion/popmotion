@@ -15,6 +15,8 @@ In this series of tutorials, we'll gradually introduce each of Pose's features. 
 
 <CodePen id="LdOpaN" />
 
+<TOC />
+
 ## Setup
 
 The easiest way to play around with Pose is to [use this CodePen playground](https://codepen.io/popmotion/pen/bvqJbV?editors=0010).

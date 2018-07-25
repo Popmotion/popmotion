@@ -15,6 +15,8 @@ Currently, it offers experimental dragging support. In this tutorial, we'll:
 - Hook into the special `dragging` and `dragEnd` poses
 - Use the `onDragStart` and `onDragEnd` callbacks
 
+<TOC />
+
 ## Dragging
 
 To make a component draggable set `draggable: true` in the posed component config:
@@ -73,7 +75,7 @@ const config = {
 
 <Video src="/static/videos/native-drag-end.mp4" height="320" />
 
-## `onDragStart`/`onDragEnd`
+## onDragStart/onDragEnd
 
 If `onDragStart` or `onDragEnd` callbacks are provided to the component, they'll be called with the same arguments as [PanResponder's](https://facebook.github.io/react-native/docs/panresponder.html) `onPanResponderGrant` and `onPanResponderRelease` callbacks.
 

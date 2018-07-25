@@ -10,6 +10,8 @@ Timeline is used to script complex sequences of animation, split across independ
 
 If offers all the same playback options as a [`tween`](/api/tween).
 
+<TOC />
+
 ## Import
 
 ```javascript

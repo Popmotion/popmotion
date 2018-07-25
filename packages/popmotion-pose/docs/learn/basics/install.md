@@ -7,8 +7,7 @@ next: popmotion-get-started
 
 # Install
 
-- [Pose](#install-pose)
-- [React Pose](#install-react-pose)
+<TOC />
 
 ## Pose
 

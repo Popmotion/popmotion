@@ -10,6 +10,8 @@ Animate between two values over a set duration of time.
 
 The behaviour and feel of the animation can be affected by providing a different [easing](/api/easing) function.
 
+<TOC />
+
 ## Import
 
 ```javascript

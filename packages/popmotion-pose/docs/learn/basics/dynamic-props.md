@@ -24,6 +24,8 @@ const config = {
 
 By using the provided `props` argument, this allows us to create dynamic properties that will react to changes in your app.
 
+<TOC />
+
 ## Props
 
 `props` can be set on the initial configuration of a poser:

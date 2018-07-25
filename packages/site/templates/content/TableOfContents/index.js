@@ -12,6 +12,6 @@ const generateLink = ({ title, id, children }) => (
 export default ({ toc }) => (
   <Container>
     <Header>Contents</Header>
-    {generateSection(toc)}
+    {generateSection(toc[0].children)}
   </Container>
 );

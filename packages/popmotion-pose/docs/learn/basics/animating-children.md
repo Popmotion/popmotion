@@ -27,6 +27,8 @@ And in React Pose, like this:
 
 Here's how:
 
+<TOC />
+
 ## Setup
 
 To demonstrate animating children, we're going to create this sidebar animation (press 'rereun' in the lower-right of the `iframe` if the animation has already played):

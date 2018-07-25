@@ -8,6 +8,8 @@ category: animation
 
 `everyFrame` fires once per frame, and provides `update` with the duration of time since it started.
 
+<TOC />
+
 ## Import
 
 ```javascript

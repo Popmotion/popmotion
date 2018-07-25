@@ -12,6 +12,8 @@ This simulation offers smoother motion and a greater variety of spring-feels tha
 
 It's based on the same equations underlying Apple's `CASpringAnimation`.
 
+<TOC />
+
 ## Import
 
 ```javascript

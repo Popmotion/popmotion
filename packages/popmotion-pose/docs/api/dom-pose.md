@@ -149,7 +149,7 @@ Dragging can be locked to a single axis by passing the name of that axis instead
 const config = { draggable: 'x' };
 ```
 
-#### `dragEnd` pose
+#### dragEnd pose
 
 When an element is draggable and a user stops dragging, a special pose called `dragEnd` is automatically set.
 
@@ -188,7 +188,7 @@ const config = {
 }
 ```
 
-### `onChange` events
+### onChange events
 
 We can append `onChange` callbacks to any value with the `onChange` map:
 

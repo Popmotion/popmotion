@@ -16,7 +16,9 @@ Pose provides a few methods for performing FLIP:
 
 In this tutorial, we'll take a look at each of these.
 
-## `width`/`top`
+<TOC />
+
+## width/top
 
 The problem with animating size and position properties is that they break layout. Recalculating layout is expensive, which can slow animations to below 60fps.
 
@@ -65,7 +67,7 @@ const tooltipConfig = {
 };
 ```
 
-## `PoseGroup`
+## PoseGroup
 
 React Pose includes a [component called `PoseGroup`](/pose/api/posegroup).
 

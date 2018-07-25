@@ -12,6 +12,8 @@ This is an integrated simulation, meaning the latest state is incorporated at di
 
 This is unlike the differential equations in [decay](/api/decay) and [spring](/api/spring), which can't be changed while in motion (although both offer higher-accuracy simulations which lead to smoother animations).
 
+<TOC />
+
 ## Import
 
 ```javascript

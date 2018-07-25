@@ -26,6 +26,8 @@ Because these values can be changed, they can be animated. In this tutorial we'l
 
 <CodePen id="JLaBNG" />
 
+<TOC />
+
 ## CSS
 
 First, open this [CodePen](https://codepen.io/popmotion/pen/mxGZNx?editors=0110) to follow along with the tutorial.

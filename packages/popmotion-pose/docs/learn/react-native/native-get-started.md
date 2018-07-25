@@ -23,6 +23,8 @@ In the following tutorials we'll take a look at each of React Native Pose's feat
 
 <Video src="/static/videos/native-get-started.mp4" height="320" />
 
+<TOC />
+
 ## Setup
 
 Install React Native Pose in your React Native project:

@@ -10,6 +10,8 @@ Passive values bind to a value defined in your poses, and change when they chang
 
 They're currently the **only** way to animate colors in React Native Pose.
 
+<TOC />
+
 ## Defining a passive value
 
 Passive values are defined via the `passive` config prop.

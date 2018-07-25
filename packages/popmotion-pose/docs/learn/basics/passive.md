@@ -15,6 +15,8 @@ For instance, we might want an element to disappear as it moves beyond certain b
 
 For this, we can use **passive values**. In this tutorial we'll see how to define them, and how to make them respond to changes in parent values too.
 
+<TOC />
+
 ## Defining a passive value
 
 Open the [previous example](https://codepen.io/popmotion/pen/dmWWdp?editors=0010) and replace the `config` object with this:

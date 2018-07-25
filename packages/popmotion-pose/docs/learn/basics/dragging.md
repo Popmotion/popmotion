@@ -13,7 +13,9 @@ For now, let's implement dragging, boundaries and apply momentum when a user sto
 
 For this tutorial you can follow with [vanilla Pose](https://codepen.io/popmotion/pen/RMVKRM?editors=0010) or [React Pose](https://codepen.io/popmotion/pen/zWwNKK?editors=0010).
 
-## `dragging`
+<TOC />
+
+## dragging
 
 Making an element draggable is as simple as setting `draggable: true` in the config:
 
@@ -48,7 +50,7 @@ const config = {
 
 <CodePen id="RMVKYq" />
 
-## `dragEnd` pose
+## dragEnd pose
 
 Making an element draggable triggers a new pose when the user stops dragging, `dragEnd`. This can be used like any other pose, which means you can use a custom `transition` function.
 
@@ -78,7 +80,7 @@ const config = {
 
 <CodePen id="dmWWdp" />
 
-## `onChange`
+## onChange
 
 Often, we want to respond to changes in a value. We can use the `onChange` prop to accomplish this.
 
@@ -94,7 +96,7 @@ const config = {
 }
 ```
 
-### `onChange` with React
+### onChange with React
 
 With React, `onChange` callbacks are handled a little differently to vanilla Pose. Instead, we pass them to the posed component itself as `onValueChange`:
 

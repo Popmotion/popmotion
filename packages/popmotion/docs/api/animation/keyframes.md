@@ -10,6 +10,8 @@ Keyframes accepts an array of values and will animate between each in sequence.
 
 Timing is defined with a combination of `duration`, `easings` and `times` properties (see [Props](#props))
 
+<TOC />
+
 ## Import
 
 ```javascript
