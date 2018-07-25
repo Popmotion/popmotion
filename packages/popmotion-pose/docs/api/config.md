@@ -5,27 +5,39 @@ description: Configure a poser
 
 # Config options
 
-### `initialPose?: string | string[]`
+<TOC />
+
+### initialPose
+
+`initialPose?: string | string[]`
 
 The name of the initial pose (or poses if provided as an array).
 
-### `draggable?: true | 'x' | 'y'`
+### draggable
+
+`draggable?: true | 'x' | 'y'`
 
 If `true`, will make the element draggable on both axis. Setting to either `'x'` or `'y'` will restrict movement to that axis.
 
 If defined, will allow the use of a special `dragEnd` pose
 
-### `dragBounds?: { [key: string]: number }`
+### dragBounds
+
+`dragBounds?: { [key: string]: number }`
 
 An object that defines `top`, `right`, `bottom` and/or `left` drag boundaries in pixels.
 
 Currently, these boundaries are enforced by a hard clamp.
 
-### `onDragStart/onDragEnd: (e: MouseEvent | TouchEvent) => any`
+### onDragStart/onDragEnd
+
+`onDragStart/onDragEnd: (e: MouseEvent | TouchEvent) => any`
 
 Lifecycle callbacks for drag events.
 
-### `passive: { [key: string]: PassiveValue }`
+### passive
+
+`passive: { [key: string]: PassiveValue }`
 
 ```typescript
 type PassiveValue = [
@@ -58,15 +70,21 @@ const config = {
 }
 ```
 
-### `label: string`
+### label
+
+`label: string`
 
 Set a label on this poser. Currently, this allows a `passive` value on a child poser to refer to this ancestor value.
 
-### `props: { [key: string]: any }`
+### props
+
+`props: { [key: string]: any }`
 
 Properties to provide to entered pose `transition` methods and dynamic pose props. These can be updated with the `setProps` method or, in React Pose, by providing props to the posed component.
 
-### `onChange?: { [key: string]: (v: any) => any }`
+### onChange
+
+`onChange?: { [key: string]: (v: any) => any }`
 
 Map of callbacks, one for each animated value, that will fire whenever that value changes.
 
@@ -83,7 +101,9 @@ const config = {
 }
 ```
 
-### `...poses: { [key: string]: Pose }`
+### ...poses
+
+`...poses: { [key: string]: Pose }`
 
 Any other config props will be treated as poses (see [Pose config](#pose-config)).
 
@@ -93,35 +113,51 @@ You can call a pose anything, and animate to it by calling `poser.set('poseName'
 
 A pose is defined by style attributes like `x` or `backgroundColor`, and the following optional props:
 
-### `delay?: number | (props: Props) => number`
+### delay
+
+`delay?: number | (props: Props) => number`
 
 A duration, in milliseconds, to delay this transition. Does **not** affect children.
 
-### `delayChildren?: number | (props: Props) => number`
+### delayChildren
+
+`delayChildren?: number | (props: Props) => number`
 
 A duration, in milliseconds, to delay the transition of direct children.
 
-### `flip?: boolean = false`
+### flip
+
+`flip?: boolean = false`
 
 If `true`, will convert this animation to a [FLIP animation](https://aerotwist.com/blog/flip-your-animations/).
 
-### `staggerChildren?: number | (props: Props) => number`
+### staggerChildren
+
+`staggerChildren?: number | (props: Props) => number`
 
 A duration, in milliseconds, between transitioning each children.
 
-### `staggerDirection?: 1 | -1 | (props: Props) => 1 | -1`
+### staggerDirection
+
+`staggerDirection?: 1 | -1 | (props: Props) => 1 | -1`
 
 If `1`, staggers from the first child to the last. If `-1`, from last to first.
 
-### `beforeChildren?: boolean | (props: Props) => boolean`
+### beforeChildren
+
+`beforeChildren?: boolean | (props: Props) => boolean`
 
 If `true`, will ensure this animation completes before firing any child animations.
 
-### `afterChildren?: boolean | (props: Props) => boolean`
+### afterChildren
+
+`afterChildren?: boolean | (props: Props) => boolean`
 
 If `true`, will ensure this animation only fires after all child animations have completed.
 
-### `transition?`
+### transition
+
+`transition?`
 
 The `transition` prop can be used to create custom transitions.
 
@@ -255,6 +291,8 @@ type TransitionsProps = {
 - `key`: The name of the value
 - `prevPoseKey`: The name of the pose this value was previously in.
 
-### `...values: any | (props: Props) => any`
+### ...values
+
+`...values: any | (props: Props) => any`
 
 Any remaining properties are treated as stylistic values and will be animated.

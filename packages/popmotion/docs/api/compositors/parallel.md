@@ -8,6 +8,8 @@ category: compositors
 
 Control an n-dimensional array of actions in parallel, and output as an array.
 
+<TOC />
+
 ## Import
 
 ```javascript

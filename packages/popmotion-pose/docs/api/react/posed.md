@@ -8,6 +8,8 @@ category: react
 
 `posed` is used to create animated and interactive components that you can reuse throughout your React site.
 
+<TOC />
+
 ## Install
 
 ```bash
@@ -132,7 +134,7 @@ const sidebarProps = {
 const Sidebar = styled(posed.nav(sidebarProps))`
 ```
 
-#### `className`
+#### className
 
 ```javascript
 () => <Sidebar pose="closed" className="my-class" />
@@ -140,15 +142,21 @@ const Sidebar = styled(posed.nav(sidebarProps))`
 
 ## Props
 
-### `pose?: string | string[]`
+### pose
+
+`pose?: string | string[]`
 
 The name or names of the current pose.
 
-### `initialPose?: string | string[]`
+### initialPose
+
+`initialPose?: string | string[]`
 
 The name of one or more poses to set to before the component mounts. Once the component mounts, it will transition from this pose into `pose`.
 
-### `poseKey?: string | number`
+### poseKey
+
+`poseKey?: string | number`
 
 If `poseKey` changes, it'll force the posed component to transition to the current `pose`, even if it hasn't changed.
 
@@ -164,27 +172,39 @@ const Slider = posed.div({
 ({ target }) => <Slider pose="nextItem" poseKey={target} target={target} />
 ```
 
-### `withParent?: boolean = true`
+### withParent
+
+`withParent?: boolean = true`
 
 If set to `false`, this component won't subscribe to its parent posed component and create root for any further child components.
 
-### `onPoseComplete?: Function`
+### onPoseComplete
+
+`onPoseComplete?: Function`
 
 A callback that fires whenever a pose has finished transitioning.
 
-### `onValueChange?: { [key: string]: any }`
+### onValueChange
+
+`onValueChange?: { [key: string]: any }`
 
 `onValueChange` is a map of functions, each corresponding to a value being animated by the posed component and will fire when that value changes.
 
-### `onDragStart`/`onDragEnd: (e: Event) => void`
+### onDragStart
+
+`onDragStart`/`onDragEnd: (e: Event) => void`
 
 Callbacks that fire when dragging starts or ends. **Note:** These props are immutable and can't be changed after mounting.
 
-### `innerRef?: (ref: Element) => void`
+### innerRef
+
+`innerRef?: (ref: Element) => void`
 
 An optional function that will call with the posed DOM element when it mounts, and `null` when it unmounts.
 
-### `...props: { [key: string]: any }`
+### ...props
+
+`...props: { [key: string]: any }`
 
 When a new pose is entered, any remaining props set on a component will be used to resolve that pose's dynamic props:
 

@@ -9,6 +9,8 @@ A poser is used to animate an element and its poser children.
 
 **Note:** For React, use [posed components](/pose/api/posed).
 
+<TOC />
+
 ## Import
 
 ```javascript
@@ -326,21 +328,29 @@ poser.flip(doStuff)
 
 ## Methods
 
-### `set(poseName: string, props?: Object): Promise`
+### set
+
+`set(poseName: string, props?: Object): Promise`
 
 Sets the current pose to `poseName`. If `Poser` has children, this will get set on those, too. Returns a `Promise`.
 
 If `props` is defined, these will be passed through to the selected pose's `transition` function.
 
-### `setProps(props: Object)`
+### setProps
+
+`setProps(props: Object)`
 
 Sets props on the poser that will be passed to any functions set on a pose.
 
-### `measure()`
+### measure
+
+`measure()`
 
 Measures the current bounding box. Use this before making a change to the element that will affect physical dimensions (like adding new children, or moving it in the DOM), and then use `flip` to animate it to the new size.
 
-### `flip()`
+### flip
+
+`flip()`
 
 Performs a FLIP animation between the previously `measure`d bounding box and the latest one.
 
@@ -354,18 +364,26 @@ const config = {
 };
 ```
 
-### `addChild(element: HTMLElement | SVGElement, config: PoseConfig): Poser`
+### addChild
+
+`addChild(element: HTMLElement | SVGElement, config: PoseConfig): Poser`
 
 Creates and returns a new `Poser` as a child.
 
-### `removeChild(poser: Poser)`
+### removeChild
+
+`removeChild(poser: Poser)`
 
 Removes a child.
 
-### `clearChildren()`
+### clearChildren
+
+`clearChildren()`
 
 Removes all child posers and destroys them.
 
-### `destroy()`
+### destroy
+
+`destroy()`
 
 Stops all active transitions of this `Poser` and its children.

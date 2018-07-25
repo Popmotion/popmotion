@@ -8,6 +8,8 @@ category: compositors
 
 Fires `complete` after the defined interval.
 
+<TOC />
+
 ## Import
 
 ```javascript

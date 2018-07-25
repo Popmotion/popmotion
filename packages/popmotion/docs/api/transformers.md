@@ -7,6 +7,8 @@ description: Simple composable functions that take a value and return a new one.
 
 Transformers are used to take a value, transform it in some way, and then return it. Because all transformers have the same signature, they can be easily composed.
 
+<TOC />
+
 ## Import
 
 ```javascript
@@ -30,7 +32,7 @@ tween({ to: 255 })
 
 ## Preset transformers
 
-### `appendUnit`
+### appendUnit
 
 Returns a function that, when given a value, returns that value appended with the provided `unit`.
 
@@ -41,7 +43,7 @@ const convertToPx = appendUnit("px");
 convertToPx(5); // '5px'
 ```
 
-### `applyOffset`
+### applyOffset
 
 Takes the offset of the provided value from `from`, and applies it to `to`.
 
@@ -58,7 +60,7 @@ offsetFromFirst(20); // 10
 offsetFromFirst(21); // 11
 ```
 
-### `bezier`
+### bezier
 
 Returns a function that, provided a progress value from `0` to `1`, will return a resolved number from the provided bezier array.
 
@@ -74,7 +76,7 @@ resolveBezier(0.5); // 1.5
 resolveBezier(1); // 3
 ```
 
-### `blendColor`
+### blendColor
 
 Given two colors, returns a function that takes a progress value (0 - 1) and returns a correctly blended color.
 
@@ -87,7 +89,7 @@ const blendRedToBlue = blendColor("#f00", "#00f");
 blendRedToBlue(0.5); // Returns blended object with rgba properties
 ```
 
-### `clamp`
+### clamp
 
 Returns a function that restricts given values to within the provided range.
 
@@ -98,7 +100,7 @@ const rgbRange = clamp(0, 255);
 rgbRange(256); // 255
 ```
 
-### `conditional`
+### conditional
 
 Conditionally applies a transformer if `check` returns `true`.
 
@@ -106,7 +108,7 @@ Conditionally applies a transformer if `check` returns `true`.
 const constrainWithSpring = conditional(v => v < 0, nonlinearSpring(50, 0));
 ```
 
-### `interpolate`
+### interpolate
 
 Returns a function that, when passed a value, interpolates from the `inputRange` to the `outputRange`.
 
@@ -126,7 +128,7 @@ const foo = interpolate([0, 50, 100], [0, 0.5, 0]);
 foo(75); // 0.25
 ```
 
-### `pipe`
+### pipe
 
 Used to compose other transformers, from left to right. The first argument passed to the returned function will be the value and any subsequent arguments will be passed to all functions unaltered.
 
@@ -138,7 +140,7 @@ const rgbType = pipe(clamp(0, 255), Math.round);
 rgbType(12.25); // 12
 ```
 
-### `smooth`
+### smooth
 
 Will smooth a value over time.
 
@@ -146,7 +148,7 @@ Will smooth a value over time.
 
 **Note:** As `smooth` maintains an internal state, it must be initialised individually for every numerical value you wish to smooth.
 
-### `snap`
+### snap
 
 Given a number or an array of two or more numbers, returns a function that will snap a given value to the nearest multiple or to the nearest number in the array.
 
@@ -160,7 +162,7 @@ const snapToArbitraryDegrees = snap([0, 90, 270, 360]);
 snapToArbitraryDegrees(75); // 90
 ```
 
-### `steps`
+### steps
 
 Given a number of steps and a range, returns a function that will fix a given value to the specific number of discrete steps within that range.
 
@@ -173,19 +175,19 @@ threeStep(0.4); // 0.5
 threeStep(0.9); // 1
 ```
 
-### `linearSpring`
+### linearSpring
 
 Creates a spring that, given an elasticity (a value less than `1`) and an origin, will treat the provided value as a displacement.
 
 `linearSpring(elasticity: number, origin: number)`
 
-### `nonlinearSpring`
+### nonlinearSpring
 
 Creates a spring that has a non-linear effect on the displacement - the greater the displacement, the greater effect on the provided value.
 
 `nonlinearSpring(elasticity: number, origin: number)`
 
-### `generateStaticSpring`
+### generateStaticSpring
 
 A function that can generate new static springs like `linearSpring` and `nonlinearSpring`.
 
@@ -201,7 +203,7 @@ generateStaticSpring(alterDisplacement: (displacement: number) => number)
   => (elasticity: number, origin: number)
 ```
 
-### `transformMap`
+### transformMap
 
 Accepts an object of named transformers that expects `v` of the same structure. Applies those transformers to the corresponding property in `v` and outputs.
 
@@ -216,7 +218,7 @@ const foo = transformMap({
 foo({ x: 5, y: 10 }); // { x: '5px', y: '10%' }
 ```
 
-### `wrap`
+### wrap
 
 Wraps a number around.
 

@@ -8,6 +8,8 @@ category: compositors
 
 Combine multiple actions into one output.
 
+<TOC />
+
 ## Import
 
 ```javascript

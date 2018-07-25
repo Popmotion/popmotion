@@ -8,6 +8,8 @@ category: input
 
 `listen` creates DOM event listeners as an action stream.
 
+<TOC />
+
 ## Import
 
 ```javascript

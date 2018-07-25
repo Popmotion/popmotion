@@ -8,6 +8,8 @@ category: compositors
 
 Stagger the execution of a series of actions.
 
+<TOC />
+
 ## Import 
 
 ```javascript

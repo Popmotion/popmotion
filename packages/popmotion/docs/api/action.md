@@ -12,6 +12,8 @@ Action is a simplified Rx-inspired reactive stream focused on animation.
 
 When an action is started, it returns a simple interface that includes **at least** a `stop` method.
 
+<TOC />
+
 ## Import
 
 ```javascript
@@ -120,7 +122,7 @@ foo.while(lessThanTen).start(log); // ...8, 9
 
 ## Methods
 
-### `pipe`
+### pipe
 
 ```typescript
 pipe(...funcs: (v: any) => any)
@@ -140,7 +142,7 @@ action(init)
   .start((v) => console.log(v)); // '20px'
 ```
 
-### `start`
+### start
 
 ```typescript
 start(update: (v: any) => void)
@@ -178,7 +180,7 @@ bar.setOutput(2);
 setTimeout(() => bar.stop(), 1000);
 ```
 
-### `while`
+### while
 
 ```typescript
 while(predicate: (v: any) => boolean)

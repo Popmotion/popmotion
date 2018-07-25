@@ -7,6 +7,8 @@ description: Simple functions useful in UI calculations.
 
 Popmotion provides a series of simple functions useful in UI calculations.
 
+<TOC />
+
 ## Import
 
 ```javascript

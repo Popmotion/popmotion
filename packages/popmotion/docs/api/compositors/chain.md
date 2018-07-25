@@ -8,6 +8,8 @@ category: compositors
 
 Chain a sequence of actions, move to the next when the current one completes.
 
+<TOC />
+
 ## Import
 
 ```javascript

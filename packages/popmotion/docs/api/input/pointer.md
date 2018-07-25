@@ -8,6 +8,8 @@ category: input
 
 Outputs the screen position of a single mouse or touch point.
 
+<TOC />
+
 ## Import
 
 ```javascript

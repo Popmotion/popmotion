@@ -8,6 +8,8 @@ category: compositors
 
 Fade between two numerical actions.
 
+<TOC />
+
 ## Import
 
 ```javascript

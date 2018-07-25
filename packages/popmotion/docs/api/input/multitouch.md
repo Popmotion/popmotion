@@ -10,6 +10,8 @@ Tracks multitouch input and outputs a list of active touches, plus scale and rot
 
 For single-point input, generally [pointer](/api/pointer) is more appropriate as it provides a simple, cross-platform interface.
 
+<TOC />
+
 ## Import
 
 ```javascript

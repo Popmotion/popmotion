@@ -12,15 +12,21 @@ Every posed component is created via a config object:
 const PosedComponent = posed.View(config)
 ```
 
+<TOC />
+
 ## Available options
 
-### `draggable?: true | x | y`
+### draggable
+
+`draggable?: true | x | y`
 
 If `true`, will make the component draggable on both axis. Setting to either `'x'` or `'y'` will restrict movement to that axis.
 
 If defined, will allow the use of a special `dragging` and `dragEnd` poses.
 
-### `passive?: { [key: string]: PassiveValue }`
+### passive
+
+`passive?: { [key: string]: PassiveValue }`
 
 ```typescript
 type PassiveValue = [
@@ -40,15 +46,21 @@ Map of values that are passively changed when other values, either on this Poser
   - `true`: Link to value from immediate parent.
   - `string`: Link to the nearest ancestor with this `label` prop.
 
-### `label?: string`
+### label
+
+`label?: string`
 
 Set a label on this poser. Currently, this allows a `passive` value on a child poser to refer to this ancestor value.
 
-### `props?: { [key: string]: any }`
+### props
+
+`props?: { [key: string]: any }`
 
 Props to provide to the `transition` method and dynamic props of entered poses.
 
-### `...poses: { [key: string]: Pose }`
+### ...poses
+
+`...poses: { [key: string]: Pose }`
 
 Remaining keys will be treated as poses:
 
@@ -63,7 +75,9 @@ You can call a pose anything, and animate to it by providing its name to the pos
 
 A pose is defined by style attributes like `x` or `opacity`, and the following optional props:
 
-### `transition?: (props: Props) => Animated.CompositeAnimation | false`
+### transition
+
+`transition?: (props: Props) => Animated.CompositeAnimation | false`
 
 ```javascript
 type Props = {
@@ -90,30 +104,44 @@ You can use `key` to return a different animation depending on the value being a
 
 `poseKey` can be used to return a different animation depending on pose this specific value was previously in.
 
-### `delay?: number | (props: Props) => number`
+### delay
+
+`delay?: number | (props: Props) => number`
 
 A duration, in milliseconds, to delay this transition. Does **not** affect children.
 
-### `delayChildren?: number | (props: Props) => number`
+### delayChildren
+
+`delayChildren?: number | (props: Props) => number`
 
 A duration, in milliseconds, to delay the transition of direct children.
 
-### `staggerChildren?: number | (props: Props) => number`
+### staggerChildren
+
+`staggerChildren?: number | (props: Props) => number`
 
 A duration, in milliseconds, between transitioning each children.
 
-### `staggerDirection?: 1 | -1 | (props: Props) => 1 | -1`
+### staggerDirection
+
+`staggerDirection?: 1 | -1 | (props: Props) => 1 | -1`
 
 If `1`, staggers from the first child to the last. If `-1`, from last to first.
 
-### `beforeChildren?: boolean | (props: Props) => boolean`
+### beforeChildren
+
+`beforeChildren?: boolean | (props: Props) => boolean`
 
 If `true`, will ensure this animation completes before firing any child animations.
 
-### `afterChildren?: boolean | (props: Props) => boolean`
+### afterChildren
+
+`afterChildren?: boolean | (props: Props) => boolean`
 
 If `true`, will ensure this animation only fires after all child animations have completed.
 
-### `...values: any | (props: TransitionProps) => any`
+### ...values
+
+`...values: any | (props: TransitionProps) => any`
 
 Any remaining properties are treated as stylistic values and will be animated.

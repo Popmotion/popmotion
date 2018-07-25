@@ -11,6 +11,8 @@ Segregating actions that read and write to the DOM will avoid [layout thrashing]
 
 Popmotion batches updates on the `frameUpdate` step, and Stylefire batches renders on the `frameRender` step.
 
+<TOC />
+
 ## Install
 
 **Framesync is installed as part of Popmotion.**

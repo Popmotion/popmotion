@@ -8,6 +8,8 @@ category: reactions
 
 A [multicast reaction](/api/multicast) that tracks the state of a number and allows velocity queries.
 
+<TOC />
+
 ## Import
 
 ```javascript

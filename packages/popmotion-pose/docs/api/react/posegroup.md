@@ -8,6 +8,8 @@ category: react
 
 The `PoseGroup` component manages `enter` and `exit` animations on its direct children as they enter and exit the component tree.
 
+<TOC />
+
 ## Import
 
 ```javascript
@@ -41,20 +43,28 @@ In the case of the `exit` pose, `PoseGroup` will only unmount the animating comp
 
 ## Props
 
-### `animateOnMount: boolean = false`
+### animateOnMount
+
+`animateOnMount: boolean = false`
 
 By default, only children added to the `PoseGroup` **after** it has mounted are animated to `enter`.
 
 By setting `animateOnMount` to `true`, all children elements will animate in on mount.
 
-### `enterPose: string = 'enter'`
+### enterPose
+
+`enterPose: string = 'enter'`
 
 The name of the pose to use when a component enters.
 
-### `exitPose: string = 'exit'`
+### exitPose
+
+`exitPose: string = 'exit'`
 
 The name of the pose to use when a component leaves.
 
-### `preEnterPose: string = 'exit'`
+### preEnterPose
+
+`preEnterPose: string = 'exit'`
 
 The name of the pose to set before a component enters. This can be used to configure where a components animates in **from**.
