@@ -39,9 +39,10 @@ const getInitialValue = <A>(
   const posesToSearch = Array.isArray(initialPose)
     ? initialPose
     : [initialPose];
-  const pose = posesToSearch.find(
-    name => poses[name] && poses[name][key] !== undefined
-  );
+
+  const pose = posesToSearch
+    .filter(Boolean)
+    .find(name => poses[name] && poses[name][key] !== undefined);
 
   return pose
     ? resolveProp(poses[pose][key], props)
@@ -78,6 +79,7 @@ const createValues = <V, A>(
       props,
       readValueFromSource
     );
+
     value = createValue(initValue, key, props);
   }
 

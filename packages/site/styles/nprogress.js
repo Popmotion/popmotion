@@ -7,7 +7,7 @@ export default `
 }
 
 #nprogress .bar {
-  background: ${color.white};
+  background: ${color.black};
   position: fixed;
   z-index: 9999;
   top: 0;
@@ -23,7 +23,7 @@ export default `
   right: 0px;
   width: 100px;
   height: 100%;
-  box-shadow: 0 0 10px ${color.white}, 0 0 5px ${color.white};
+  box-shadow: 0 0 10px ${color.black}, 0 0 5px ${color.black};
   opacity: 1.0;
 
   -webkit-transform: rotate(3deg) translate(0px, -4px);

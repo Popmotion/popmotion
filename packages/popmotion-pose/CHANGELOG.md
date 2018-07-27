@@ -2,6 +2,12 @@
 
 Popmotion Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.1.1] 2018-07-27
+
+### Fixed
+
+- Bug where `dragBounds` were defined but no corresponding pose with an initial value for that `x`/`y` value was defined. `x`/`y` is now created with the same value type as its defined boundaries.
+
 ## [2.1.0] 2018-07-01
 
 ### Added

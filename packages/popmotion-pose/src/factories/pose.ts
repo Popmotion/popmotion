@@ -21,12 +21,9 @@ import {
 } from '../types';
 import { Poser } from 'pose-core';
 import defaultTransitions, { just } from '../inc/default-transitions';
-import { number, degrees, percent, px, ValueType } from 'style-value-types';
+import { getValueType } from '../inc/value-types';
 import { invariant } from 'hey-listen';
 export { Poser };
-
-const valueTypeTests = [number, degrees, percent, px];
-const testValueType = (v: any) => (type: ValueType) => type.test(v);
 
 const createPassiveValue = (
   init: any,
@@ -40,7 +37,7 @@ const createPassiveValue = (
 };
 
 const createValue = (init: any) => {
-  const type = valueTypeTests.find(testValueType(init));
+  const type = getValueType(init);
   const raw = value(init);
 
   return { raw, type };
@@ -172,7 +169,7 @@ const pose = <P>({
 
       return {
         raw,
-        type: valueTypeTests.find(testValueType(raw.get()))
+        type: getValueType(raw.get())
       };
     },
 

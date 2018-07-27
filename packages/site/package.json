@@ -68,7 +68,6 @@
     "file-loader": "^1.1.11",
     "marksy": "^5.0.0",
     "next": "^4.2.1",
-    "popmotion-pose": "^1.0.24",
     "raw-loader": "^0.5.1",
     "react-pose": "^2.1.1",
     "s3": "^4.4.0",

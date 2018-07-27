@@ -43,20 +43,8 @@ const code = `const Box = posed.div({
 // Note: 'dragBounds' not yet available for React Native`;
 
 class Example extends React.Component {
-  state = { isVisible: false };
-
-  componentDidMount() {
-    this.interval = setInterval(this.toggleVisibility, 1000);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
-
-  toggleVisibility = () => this.setState({ isVisible: !this.state.isVisible });
-
   render() {
-    return <Box pose={this.state.isVisible ? 'open' : 'closed'}>Drag</Box>;
+    return <Box pose={'init'}>Drag</Box>;
   }
 }
 

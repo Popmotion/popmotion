@@ -2,6 +2,7 @@ import poseFactory from '../factories/pose';
 import createDimensions from './dimensions';
 import appendEventListeners from './events';
 import { flipPose, isFlipPose } from './flip';
+import { getValueType } from '../inc/value-types';
 import { styler, Action, ValueReaction, ColdSubscription } from 'popmotion';
 import { Poser } from 'pose-core';
 import {
@@ -67,8 +68,23 @@ const domPose = poseFactory<DomPopmotionPoser>({
 
   addListenerToValue: (key, elementStyler) => v => elementStyler.set(key, v),
 
-  readValueFromSource: (key, { elementStyler }) => {
-    const value = elementStyler.get(key);
+  readValueFromSource: (key, { elementStyler, dragBounds }) => {
+    let value = elementStyler.get(key);
+
+    // If this is a positional property, use `dragBounds` as a hint
+    // of its value type
+    if (dragBounds && (key === 'x' || key === 'y')) {
+      const bound =
+        key === 'x'
+          ? dragBounds.left || dragBounds.right
+          : dragBounds.top || dragBounds.bottom;
+
+      if (bound) {
+        const boundType = getValueType(bound);
+        value = boundType.transform(value);
+      }
+    }
+
     return isNaN(value) ? value : parseFloat(value);
   },
 
