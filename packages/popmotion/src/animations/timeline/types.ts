@@ -1,6 +1,6 @@
 import { Value } from '../../reactions/value';
 import { Action } from '../../action';
-import { Easing } from '../../easing';
+import { Easing } from '@popmotion/easing';
 
 export type AnimationDefinition = {
   track: string,

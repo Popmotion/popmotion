@@ -2,7 +2,7 @@ import { Action } from '../../action';
 import { AnimationDefinition, Instruction, Tracks, TrackActions } from './types';
 import keyframes from '../keyframes';
 import { KeyframeProps } from '../keyframes/types';
-import { easeInOut, linear } from '../../easing';
+import { easeInOut, linear } from '@popmotion/easing';
 import composite from '../../compositors/composite';
 import { TweenProps } from '../tween/types';
 import { Value } from '../../reactions/value';

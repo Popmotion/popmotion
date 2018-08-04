@@ -33,14 +33,14 @@ export const anticipate = createAnticipateEasing(DEFAULT_OVERSHOOT_STRENGTH);
 
 /*
   Bezier function generator
-    
+
   Gaëtan Renaudeau's BezierEasing
-  https://github.com/gre/bezier-easing/blob/master/index.js  
+  https://github.com/gre/bezier-easing/blob/master/index.js
   https://github.com/gre/bezier-easing/blob/master/LICENSE
   You're a hero
-  
+
   Use
-  
+
     var easeOut = new Bezier(.17,.67,.83,.67),
       x = easeOut(0.5); // returns 0.627...
 */
@@ -95,15 +95,15 @@ export function cubicBezier(mX1: number, mY1: number, mX2: number, mY2: number) 
 
     for (; i < NEWTON_ITERATIONS; ++i) {
       currentSlope = getSlope(aGuessT, mX1, mX2);
-      
+
       if (currentSlope === 0.0) {
         return aGuessT;
       }
-      
+
       currentX = calcBezier(aGuessT, mX1, mX2) - aX;
       aGuessT -= currentX / currentSlope;
     }
-    
+
     return aGuessT;
   };
 
@@ -120,18 +120,18 @@ export function cubicBezier(mX1: number, mY1: number, mX2: number, mY2: number) 
     let dist = 0.0;
     let guessForT = 0.0;
     let initialSlope = 0.0;
-      
+
     for (; currentSample != lastSample && sampleValues[currentSample] <= aX; ++currentSample) {
       intervalStart += K_SAMPLE_STEP_SIZE;
     }
-    
+
     --currentSample;
-    
+
     dist = (aX - sampleValues[currentSample]) / (sampleValues[currentSample+1] - sampleValues[currentSample]);
     guessForT = intervalStart + dist * K_SAMPLE_STEP_SIZE;
-    
+
     initialSlope = getSlope(guessForT, mX1, mX2);
-    
+
     // If slope is greater than min
     if (initialSlope >= NEWTON_MIN_SLOPE) {
       return newtonRaphsonIterate(aX, guessForT);

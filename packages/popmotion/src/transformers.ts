@@ -6,13 +6,13 @@ import {
   smooth as calcSmoothing,
   stepProgress
 } from './calc';
-import { Easing } from './easing';
+import { Easing } from '@popmotion/easing';
 
 const noop = (v: any): any => v;
 
 /**
  * Append Unit
- * A function that will append
+ * A function that will appendw
  * appendUnit('px', 20) -> '20px'
  * @param  {string} unit)
  * @return {number}

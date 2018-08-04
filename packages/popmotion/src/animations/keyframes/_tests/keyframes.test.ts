@@ -1,5 +1,5 @@
 import keyframes from '../';
-import { linear } from '../../../easing';
+import { linear } from '@popmotion/easing';
 
 describe('keyframes', () => {
   it('should generate tweens through each value', () => {
