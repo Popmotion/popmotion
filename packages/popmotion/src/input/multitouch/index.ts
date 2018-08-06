@@ -4,27 +4,49 @@ import { angle, distance } from '../../calc';
 import listen from '../listen';
 import { PointerPoint, PointerProps } from '../pointer/types';
 import { defaultPointerPos, eventToPoint } from '../pointer/utils';
+import { ColdSubscription } from '../../action/types';
 
 const points: PointerPoint[] = [defaultPointerPos()];
 let isTouchDevice = false;
 
-if (typeof document !== 'undefined') {
-  const updatePointsLocation = ({ touches }: TouchEvent) => {
-    isTouchDevice = true;
-    const numTouches = touches.length;
+let listenerCount = 0;
+let pointsListener: ColdSubscription | void;
 
-    // TODO: Optimisation would be to provide existing points to `eventToPoint`
-    points.length = 0;
+const updatePointsLocation = ({ touches }: TouchEvent) => {
+  isTouchDevice = true;
+  const numTouches = touches.length;
 
-    for (let i = 0; i < numTouches; i++) {
-      const thisTouch = touches[i];
-      points.push(eventToPoint(thisTouch));
+  // TODO: Optimisation would be to provide existing points to `eventToPoint`
+  points.length = 0;
+
+  for (let i = 0; i < numTouches; i++) {
+    const thisTouch = touches[i];
+    points.push(eventToPoint(thisTouch));
+  }
+};
+
+const addPointsListener = () => {
+  listenerCount += 1;
+
+  if (typeof document !== 'undefined' && !pointsListener) {
+    pointsListener = listen(document, 'touchstart touchmove', true)
+      .start(updatePointsLocation);
+  }
+};
+
+const removePointsListener = () => {
+  listenerCount -= 1;
+
+  if (listenerCount < 1) {
+    if (pointsListener && pointsListener.stop) {
+      pointsListener.stop();
+      pointsListener = undefined;
+
+      points.splice(1);
+      points[0] = defaultPointerPos();
     }
-  };
-
-  listen(document, 'touchstart touchmove', true)
-    .start(updatePointsLocation);
-}
+  }
+};
 
 const multitouch = ({ preventDefault = true, scale = 1.0, rotate = 0.0 }: PointerProps = {}): Action => action(({ update }) => {
   const output = {
@@ -62,6 +84,8 @@ const multitouch = ({ preventDefault = true, scale = 1.0, rotate = 0.0 }: Pointe
     onFrameUpdate(updatePoint);
   };
 
+  addPointsListener();
+
   const updateOnMove = listen(document, 'touchmove', { passive: !preventDefault })
     .start(onMove);
 
@@ -69,6 +93,7 @@ const multitouch = ({ preventDefault = true, scale = 1.0, rotate = 0.0 }: Pointe
 
   return {
     stop: () => {
+      removePointsListener();
       cancelOnFrameUpdate(updatePoint);
       updateOnMove.stop();
     }
