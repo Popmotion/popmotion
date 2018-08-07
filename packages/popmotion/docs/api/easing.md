@@ -19,6 +19,16 @@ Popmotion comes with a number of preset easing functions, and provides methods t
 import { easing } from 'popmotion';
 ```
 
+To use Popmotion's easing functions with a different animation library, they're available from the `@popmotion/easing` package:
+
+```
+npm install @popmotion/easing
+```
+
+```javascript
+import { linear } from '@popmotion/easing';
+```
+
 ## Example
 
 ```javascript
@@ -60,6 +70,7 @@ tween({
 Popmotion provides the following functions to create your own easing functions:
 
 ### cubicBezier
+
 Creates cubic bezier curve easing function.
 
 ```javascript
@@ -67,23 +78,30 @@ const { cubicBezier } = easing;
 const longTail = cubicBezier(0, .42, 0, 1);
 ```
 
-### createReversedEasing
-Reverses the provided easing function.
+### reversed
+
+Accepts an easing function and returns a new one that reverses the provided one.
+
+For instance, an `easeIn` would become an `easeOut`.
 
 ```javascript
-const { anticipate, createReversedEasing } = easing;
-const anticipateOut = createReversedEasing(anticipate);
+const { anticipate, reversed } = easing;
+const anticipateOut = reversed(anticipate);
 ```
 
-### createMirroredEasing
-Mirrors the provided easing function.
+### mirrored
+
+Accepts an easing function and returns a new one that mirrors the provided one. 
+
+For instance, an `easeIn` would become an `easeInOut`.
 
 ```javascript
-const { anticipate, createMirroredEasing } = easing;
-const anticipateInAndOut = createMirroredEasing(anticipate);
+const { anticipate, mirrored } = easing;
+const anticipateInut = mirrored(anticipate);
 ```
 
 ### createExpoIn
+
 Creates an easing function based on the exponent function `progress ** exponent`. `easeIn` is `createExpoIn(2)`.
 
 ```javascript
@@ -92,14 +110,16 @@ const strongerEaseIn = createExpoIn(3);
 ```
 
 ### createBackIn
+
 Creates an easing function with an overshoot. `backIn` is `createBackIn(1.525)`.
 
 ```javascript
-const { createBackIn, createReversedEasing } = easing;
-const strongerBackOut = createReversedEasing(createBackIn(3));
+const { createBackIn, reversed } = easing;
+const strongerBackOut = reversed(createBackIn(3));
 ```
 
 ### createAnticipateEasing
+
 Creates an easing function with a small anticipate and ease out. `anticipate` is `createAnticipateEasing(1.525)`.
 
 ```javascript

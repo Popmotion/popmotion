@@ -44,10 +44,11 @@
     "measure": "gzip -c $npm_package_unpkg | wc -c",
     "test": "jest",
     "publish-beta": "npm publish --tag beta",
-    "clean": "git clean -fd -e node_modules/ -e lib/ src/ -x ."
+    "clean": "git clean -fd -e node_modules/ -e lib/ src/ -x .",
+    "postinstall": "node ./scripts/postinstall.js || exit 0"
   },
   "dependencies": {
-    "@popmotion/easing": "^0.0.0",
+    "@popmotion/easing": "^1.0.0",
     "framesync": "^3.1.9",
     "hey-listen": "^1.0.5",
     "style-value-types": "^3.0.3",

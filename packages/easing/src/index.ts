@@ -1,33 +1,74 @@
-export type Easing = (v: number) => number;
+/**
+ * Popmotion Easing
+ *
+ * Easing functions for modifying tween animation character.
+ * Functions work with any animation library that accept easing functions
+ * of the signature (number) => number
+ */
 
+/**
+ * Types
+ */
+export type Easing = (v: number) => number;
+export type EasingModifier = (easing: Easing) => Easing;
+
+// Default overshoot value for spring-like easings
 const DEFAULT_OVERSHOOT_STRENGTH = 1.525;
 
-export const createReversedEasing = (easing: Easing): Easing =>
-  (p) => 1 - easing(1 - p);
+/**
+ * Modifiers
+ */
 
-export const createMirroredEasing = (easing: Easing): Easing =>
-  (p) => (p <= 0.5) ? easing(2 * p) / 2 : (2 - easing(2 * (1 - p))) / 2;
+// Accepts an easing function and returns a new one that outputs reversed values.
+// For instance, reversed(linear)(1) would return 0
+export const reversed: EasingModifier = easing => p => 1 - easing(1 - p);
 
-export const linear: Easing = (p) => p;
+// Accepts an easing function and returns a new one that outputs mirrored values.
+// For instance, mirrored(linear)(0.5) would return 1
+export const mirrored: EasingModifier = easing => p =>
+  p <= 0.5 ? easing(2 * p) / 2 : (2 - easing(2 * (1 - p))) / 2;
 
-export const createExpoIn = (power: number): Easing => (p) => p ** power;
-export const easeIn = createExpoIn(2);
-export const easeOut = createReversedEasing(easeIn);
-export const easeInOut = createMirroredEasing(easeIn);
+// Deprecated for removal in Popmotion@9.0.0
+export const createReversedEasing = reversed;
+export const createMirroredEasing = mirrored;
 
-export const circIn: Easing = (p) => 1 - Math.sin(Math.acos(p));
-export const circOut = createReversedEasing(circIn);
-export const circInOut = createMirroredEasing(circOut);
+/**
+ * Easing factories
+ */
 
-export const createBackIn = (power: number): Easing => (p) => (p * p) * ((power + 1) * p - power);
-export const backIn = createBackIn(DEFAULT_OVERSHOOT_STRENGTH);
-export const backOut = createReversedEasing(backIn);
-export const backInOut = createMirroredEasing(backIn);
+// Creates an easing function that is based on the exponent of the provided `power`.
+// The higher the `power`, the stronger the easing.
+export const createExpoIn = (power: number): Easing => p => p ** power;
 
+// Creates an easing function that has a stronger overshoot the higher the provided `power`.
+export const createBackIn = (power: number): Easing => p =>
+  p * p * ((power + 1) * p - power);
+
+// Creates an easing function that pulls back a little before moving, and then
+// has a `createBackIn`-based overshoot
 export const createAnticipateEasing = (power: number): Easing => {
   const backEasing = createBackIn(power);
-  return (p) => ((p *= 2) < 1) ? 0.5 * backEasing(p) : 0.5 * (2 - Math.pow(2, -10 * (p - 1)));
+  return p =>
+    (p *= 2) < 1 ? 0.5 * backEasing(p) : 0.5 * (2 - Math.pow(2, -10 * (p - 1)));
 };
+
+/**
+ * Easing functions
+ */
+
+export const linear: Easing = p => p;
+
+export const easeIn = createExpoIn(2);
+export const easeOut = reversed(easeIn);
+export const easeInOut = mirrored(easeIn);
+
+export const circIn: Easing = p => 1 - Math.sin(Math.acos(p));
+export const circOut = reversed(circIn);
+export const circInOut = mirrored(circOut);
+
+export const backIn = createBackIn(DEFAULT_OVERSHOOT_STRENGTH);
+export const backOut = reversed(backIn);
+export const backInOut = mirrored(backIn);
 
 export const anticipate = createAnticipateEasing(DEFAULT_OVERSHOOT_STRENGTH);
 
@@ -41,8 +82,8 @@ export const anticipate = createAnticipateEasing(DEFAULT_OVERSHOOT_STRENGTH);
 
   Use
 
-    var easeOut = new Bezier(.17,.67,.83,.67),
-      x = easeOut(0.5); // returns 0.627...
+    const easeOut = new Bezier(.17,.67,.83,.67);
+    const x = easeOut(0.5); // returns 0.627...
 */
 
 // Constants
@@ -52,23 +93,31 @@ const SUBDIVISION_PRECISION = 0.0000001;
 const SUBDIVISION_MAX_ITERATIONS = 10;
 const K_SPLINE_TABLE_SIZE = 11;
 const K_SAMPLE_STEP_SIZE = 1.0 / (K_SPLINE_TABLE_SIZE - 1.0);
-const FLOAT_32_SUPPORTED = (typeof Float32Array !== 'undefined');
+const FLOAT_32_SUPPORTED = typeof Float32Array !== 'undefined';
 
 // Helper methods
 const a = (a1: number, a2: number) => 1.0 - 3.0 * a2 + 3.0 * a1;
 const b = (a1: number, a2: number) => 3.0 * a2 - 6.0 * a1;
 const c = (a1: number) => 3.0 * a1;
 
-const getSlope = (t: number, a1: number, a2: number) => 3.0 * a(a1, a2) * t * t + 2.0 * b(a1, a2) * t + c(a1);
+const getSlope = (t: number, a1: number, a2: number) =>
+  3.0 * a(a1, a2) * t * t + 2.0 * b(a1, a2) * t + c(a1);
 
-const calcBezier = (t: number, a1: number, a2: number) => ((a(a1, a2) * t + b(a1, a2)) * t + c(a1)) * t;
+const calcBezier = (t: number, a1: number, a2: number) =>
+  ((a(a1, a2) * t + b(a1, a2)) * t + c(a1)) * t;
 
 /*
   Create a cubic bezier resolver
 */
-export function cubicBezier(mX1: number, mY1: number, mX2: number, mY2: number) {
-  const sampleValues = FLOAT_32_SUPPORTED ? new Float32Array(K_SPLINE_TABLE_SIZE) : new Array(K_SPLINE_TABLE_SIZE);
-  let _precomputed = false;
+export function cubicBezier(
+  mX1: number,
+  mY1: number,
+  mX2: number,
+  mY2: number
+) {
+  const sampleValues = FLOAT_32_SUPPORTED
+    ? new Float32Array(K_SPLINE_TABLE_SIZE)
+    : new Array(K_SPLINE_TABLE_SIZE);
 
   const binarySubdivide = (aX: number, aA: number, aB: number) => {
     let i = 0;
@@ -83,7 +132,10 @@ export function cubicBezier(mX1: number, mY1: number, mX2: number, mY2: number) 
       } else {
         aA = currentT;
       }
-    } while (Math.abs(currentX) > SUBDIVISION_PRECISION && ++i < SUBDIVISION_MAX_ITERATIONS);
+    } while (
+      Math.abs(currentX) > SUBDIVISION_PRECISION &&
+      ++i < SUBDIVISION_MAX_ITERATIONS
+    );
 
     return currentT;
   };
@@ -116,18 +168,24 @@ export function cubicBezier(mX1: number, mY1: number, mX2: number, mY2: number) 
   const getTForX = (aX: number) => {
     let intervalStart = 0.0;
     let currentSample = 1;
-    let lastSample = K_SPLINE_TABLE_SIZE - 1;
+    const lastSample = K_SPLINE_TABLE_SIZE - 1;
     let dist = 0.0;
     let guessForT = 0.0;
     let initialSlope = 0.0;
 
-    for (; currentSample != lastSample && sampleValues[currentSample] <= aX; ++currentSample) {
+    for (
+      ;
+      currentSample !== lastSample && sampleValues[currentSample] <= aX;
+      ++currentSample
+    ) {
       intervalStart += K_SAMPLE_STEP_SIZE;
     }
 
     --currentSample;
 
-    dist = (aX - sampleValues[currentSample]) / (sampleValues[currentSample+1] - sampleValues[currentSample]);
+    dist =
+      (aX - sampleValues[currentSample]) /
+      (sampleValues[currentSample + 1] - sampleValues[currentSample]);
     guessForT = intervalStart + dist * K_SAMPLE_STEP_SIZE;
 
     initialSlope = getSlope(guessForT, mX1, mX2);
@@ -135,41 +193,35 @@ export function cubicBezier(mX1: number, mY1: number, mX2: number, mY2: number) 
     // If slope is greater than min
     if (initialSlope >= NEWTON_MIN_SLOPE) {
       return newtonRaphsonIterate(aX, guessForT);
-    // Slope is equal to min
+      // Slope is equal to min
     } else if (initialSlope === 0.0) {
       return guessForT;
-    // Slope is less than min
+      // Slope is less than min
     } else {
-      return binarySubdivide(aX, intervalStart, intervalStart + K_SAMPLE_STEP_SIZE);
+      return binarySubdivide(
+        aX,
+        intervalStart,
+        intervalStart + K_SAMPLE_STEP_SIZE
+      );
     }
   };
 
-  const precompute = () => {
-    _precomputed = true;
-    if (mX1 != mY1 || mX2 != mY2) {
-      calcSampleValues();
-    }
-  };
+  calcSampleValues();
 
   const resolver = (aX: number) => {
     let returnValue;
-
-    if (!_precomputed) {
-      precompute();
-    }
 
     // If linear gradient, return X as T
     if (mX1 === mY1 && mX2 === mY2) {
       returnValue = aX;
 
-    // If at start, return 0
+      // If at start, return 0
     } else if (aX === 0) {
       returnValue = 0;
 
-    // If at end, return 1
+      // If at end, return 1
     } else if (aX === 1) {
       returnValue = 1;
-
     } else {
       returnValue = calcBezier(getTForX(aX), mY1, mY2);
     }
@@ -178,4 +230,4 @@ export function cubicBezier(mX1: number, mY1: number, mX2: number, mY2: number) 
   };
 
   return resolver;
-};
+}
