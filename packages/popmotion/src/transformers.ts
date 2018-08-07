@@ -12,10 +12,10 @@ const noop = (v: any): any => v;
 
 /**
  * Append Unit
- * A function that will appendw
- * appendUnit('px', 20) -> '20px'
- * @param  {string} unit)
- * @return {number}
+ * A function that creates function that will append unit to a given string
+ * appendUnit('px')(20) -> '20px'
+ * @param  {string} unit
+ * @return {function(number): string}
  */
 export const appendUnit = (unit: string) => (v: number) => `${v}${unit}`;
 
