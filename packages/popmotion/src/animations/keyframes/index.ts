@@ -1,6 +1,6 @@
 import { Action } from '../../action';
 import { getProgressFromValue } from '../../calc';
-import { easeOut, Easing, linear } from '../../easing';
+import { easeOut, Easing, linear } from '@popmotion/easing';
 import { Update } from '../../observer/types';
 import { clamp } from '../../transformers';
 import tween from '../tween';

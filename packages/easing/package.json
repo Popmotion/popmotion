@@ -1,16 +1,16 @@
 {
-  "name": "popmotion",
-  "version": "8.3.3",
-  "description": "A functional, reactive motion library.",
+  "name": "@popmotion/easing",
+  "version": "0.0.0",
+  "description": "A set of modular easing equations.",
   "author": "Matt Perry",
   "homepage": "https://popmotion.io",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
-  "module": "dist/popmotion.es.js",
-  "jsnext:main": "dist/popmotion.es.js",
+  "module": "dist/easing.es.js",
+  "jsnext:main": "dist/easing.es.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Popmotion/popmotion/tree/master/packages/popmotion"
+    "url": "https://github.com/Popmotion/popmotion/tree/master/packages/easing"
   },
   "bugs": {
     "url": "https://github.com/Popmotion/popmotion/issues"
@@ -23,15 +23,9 @@
     "canvas animation",
     "dom animation",
     "dom",
-    "pointer tracking",
-    "mouse",
-    "mouse tracking",
-    "touch",
-    "touch tracking",
     "physics",
     "interaction",
-    "interface",
-    "svg"
+    "interface"
   ],
   "analyze": true,
   "license": "MIT",
@@ -46,20 +40,11 @@
     "publish-beta": "npm publish --tag beta",
     "clean": "git clean -fd -e node_modules/ -e lib/ src/ -x ."
   },
-  "dependencies": {
-    "@popmotion/easing": "^0.0.0",
-    "framesync": "^3.1.9",
-    "hey-listen": "^1.0.5",
-    "style-value-types": "^3.0.3",
-    "stylefire": "^2.0.6",
-    "tslib": "^1.9.1"
-  },
   "devDependencies": {
     "@types/jest": "^23.1.1",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-plugin-annotate-pure-calls": "^0.2.2",
-    "chalk": "^2.4.1",
     "jest": "^23.1.0",
     "jest-cli": "^23.1.0",
     "rollup": "^0.59.1",
@@ -85,7 +70,6 @@
     "testRegex": "/_tests/.*\\.(ts|js)$",
     "rootDir": "src"
   },
-  "unpkg": "./dist/popmotion.global.min.js",
   "prettier": {
     "parser": "typescript",
     "singleQuote": true

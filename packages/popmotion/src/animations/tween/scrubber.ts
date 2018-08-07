@@ -2,7 +2,7 @@ import { number } from 'style-value-types';
 import action, { Action } from '../../action';
 import vectorAction, { ActionFactory } from '../../action/vector';
 import { getValueFromProgress } from '../../calc';
-import { linear } from '../../easing';
+import { linear } from '@popmotion/easing';
 
 export type ScrubberSubscription = {
   seek: (progress: number) => any;

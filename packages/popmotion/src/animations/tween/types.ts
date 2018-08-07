@@ -1,5 +1,5 @@
 import { Value } from '../../reactions/value';
-import { Easing } from '../../easing';
+import { Easing } from '@popmotion/easing';
 
 export type TweenProps = {
   from?: Value,

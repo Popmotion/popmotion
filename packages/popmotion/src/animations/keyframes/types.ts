@@ -1,4 +1,4 @@
-import { Easing } from '../../easing';
+import { Easing } from '@popmotion/easing';
 
 export type ValueMap = {
   [key: string]: string | number

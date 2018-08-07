@@ -47,7 +47,7 @@ export {
 
 // Includes
 import * as calc from './calc';
-import * as easing from './easing';
+import * as easing from '@popmotion/easing';
 import * as transform from './transformers';
 
 export { calc, easing, transform };

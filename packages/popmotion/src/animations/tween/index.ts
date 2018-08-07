@@ -2,7 +2,7 @@ import { onFrameUpdate, timeSinceLastFrame } from 'framesync';
 import action, { Action } from '../../action';
 import { ColdSubscription } from '../../action/types';
 import { getProgressFromValue, getValueFromProgress } from '../../calc';
-import { easeOut } from '../../easing';
+import { easeOut } from '@popmotion/easing';
 import { IObserver } from '../../observer/types';
 import { clamp } from '../../transformers';
 import onFrame from '../every-frame';

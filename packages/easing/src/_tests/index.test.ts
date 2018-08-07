@@ -1,7 +1,7 @@
 import {
   cubicBezier,
   linear
-} from '../easing';
+} from '..';
 
 describe('', () => {
   it('should return a series of correct, functioning easing functions', () => {
