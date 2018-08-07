@@ -1,7 +1,7 @@
 {
   "name": "@popmotion/easing",
-  "version": "0.0.0",
-  "description": "A set of modular easing equations.",
+  "version": "1.0.1",
+  "description": "Easing functions, modifiers and generators compatible with most animation libraries.",
   "author": "Matt Perry",
   "homepage": "https://popmotion.io",
   "main": "./lib/index.js",
@@ -30,12 +30,11 @@
   "analyze": true,
   "license": "MIT",
   "scripts": {
-    "build": "rollup -c && npm run measure",
+    "build": "rollup -c",
     "postbuild": "babel $npm_package_module --out-file $npm_package_module --no-babelrc --plugins annotate-pure-calls",
     "watch": "rollup -c -w",
     "prepublishOnly": "npm run test && tsc --module commonjs && npm run build",
     "postpublish": "npm run clean",
-    "measure": "gzip -c $npm_package_unpkg | wc -c",
     "test": "jest",
     "publish-beta": "npm publish --tag beta",
     "clean": "git clean -fd -e node_modules/ -e lib/ src/ -x ."
@@ -61,14 +60,12 @@
       "ts",
       "js"
     ],
-    "moduleNameMapper": {
-      "style-value-types": "<rootDir>/../../style-value-types/lib"
-    },
     "transform": {
       "\\.(ts)$": "../../../node_modules/ts-jest/preprocessor.js"
     },
     "testRegex": "/_tests/.*\\.(ts|js)$",
-    "rootDir": "src"
+    "rootDir": "src",
+    "testURL": "http://localhost/"
   },
   "prettier": {
     "parser": "typescript",
