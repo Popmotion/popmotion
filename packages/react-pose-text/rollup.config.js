@@ -12,15 +12,7 @@ const noDeclarationConfig = Object.assign({}, typescriptConfig, {
 
 const common = commonjs({
   namedExports: {
-    'node_modules/react/index.js': [
-      'createContext',
-      'createElement',
-      'Fragment',
-      'Component',
-      'PureComponent',
-      'Children',
-      'cloneElement'
-    ]
+    'node_modules/react/index.js': ['Fragment', 'PureComponent']
   }
 });
 
@@ -42,13 +34,13 @@ const config = {
 
 const umd = Object.assign({}, config, {
   output: {
-    file: 'dist/react-pose-split-text.dev.js',
+    file: 'dist/react-pose-text.dev.js',
     format: 'umd',
     name: 'pose',
     exports: 'named',
     globals: { react: 'React' }
   },
-  external: ['react', 'react-dom'],
+  //external: ['react', 'react-dom'],
   plugins: [
     common,
     typescript(noDeclarationConfig),
@@ -60,9 +52,8 @@ const umd = Object.assign({}, config, {
 });
 
 const umdProd = Object.assign({}, umd, {
-  input: 'src/global.ts',
   output: Object.assign({}, umd.output, {
-    file: 'dist/react-pose-split-text.js'
+    file: pkg.unpkg
   }),
   plugins: [
     common,
@@ -77,7 +68,7 @@ const umdProd = Object.assign({}, umd, {
 
 const es = Object.assign({}, config, {
   output: {
-    file: 'dist/react-pose-split-text.es.js',
+    file: 'dist/react-pose-text.es.js',
     format: 'es',
     exports: 'named'
   },

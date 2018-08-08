@@ -84,6 +84,9 @@ import {
 // .add('increased stiffness', () => <SpringStiffer />)
 // .add('increased stiffness and damping', () => <SpringStifferDamping />);
 
+import { AnimateText } from "./plugins/text";
+storiesOf("SplitText", module).add("animate text", () => <AnimateText />);
+
 storiesOf("tween", module)
   .add("default props", () => <TweenBasic />)
   .add("loop", () => <TweenLoop />)
