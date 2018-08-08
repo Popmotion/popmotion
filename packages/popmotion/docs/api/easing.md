@@ -97,7 +97,7 @@ For instance, an `easeIn` would become an `easeInOut`.
 
 ```javascript
 const { anticipate, mirrored } = easing;
-const anticipateInut = mirrored(anticipate);
+const anticipateInOut = mirrored(anticipate);
 ```
 
 ### createExpoIn
