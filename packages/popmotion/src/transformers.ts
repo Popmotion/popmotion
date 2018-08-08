@@ -8,14 +8,14 @@ import {
 } from './calc';
 import { Easing } from '@popmotion/easing';
 
-const noop = (v: any): any => v;
+const identity = (v: any): any => v;
 
 /**
  * Append Unit
- * A function that will appendw
- * appendUnit('px', 20) -> '20px'
- * @param  {string} unit)
- * @return {number}
+ * A function that creates function that will append unit to a given string
+ * appendUnit('px')(20) -> '20px'
+ * @param  {string} unit
+ * @return {function(number): string}
  */
 export const appendUnit = (unit: string) => (v: number) => `${v}${unit}`;
 
@@ -194,7 +194,7 @@ export const interpolate = (
     : fastInterpolate(input[0], input[1], output[0], output[1]);
 };
 
-export const generateStaticSpring = (alterDisplacement: Function = noop) => (
+export const generateStaticSpring = (alterDisplacement: Function = identity) => (
   constant: number,
   origin: number
 ) => (v: number) => {
