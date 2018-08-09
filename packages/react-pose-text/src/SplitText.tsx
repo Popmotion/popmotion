@@ -15,7 +15,7 @@ const wordStyles = { display: 'inline-block' };
 
 class SplitText extends PureComponent<Props> {
   props: Props;
-  text: string[];
+  text: string[][];
   Word: (props: PoseProps) => ReactElement<any>;
   Char: (props: PoseProps) => ReactElement<any>;
 
@@ -35,7 +35,7 @@ class SplitText extends PureComponent<Props> {
 
     invariant(typeof children === 'string', 'children prop must be a string');
 
-    this.text = children.split(' ');
+    this.text = children.split(' ').map(word => word.split(''));
   }
 
   componentWillReceiveProps({ children }: Props) {
@@ -44,14 +44,30 @@ class SplitText extends PureComponent<Props> {
     }
   }
 
-  renderChars(text, index) {}
+  renderChars(text: string[], wordIndex: number, numWords: number) {
+    const Char = this.Char || 'div';
+    const numChars = text.length;
 
-  renderWords(text: string[]) {
+    return text.map((char, i) => (
+      <Char
+        style={wordStyles}
+        wordIndex={i}
+        numWords={numWords}
+        charInWordIndex={i}
+        numChars={numChars}
+      >
+        {char}
+      </Char>
+    ));
+  }
+
+  renderWords(text: string[][]) {
     const Word = this.Word || 'div';
+    const numWords = text.length;
 
-    return text.map((word, wordIndex) => (
-      <Word style={wordStyles}>
-        {this.renderChars(word, wordIndex) + `\u00A0`}
+    return text.map((word, i) => (
+      <Word style={wordStyles} wordIndex={i} numWords={numWords}>
+        {[...this.renderChars(word, i, numWords), '\u00A0']}
       </Word>
     ));
   }
