@@ -36,11 +36,10 @@ const umd = Object.assign({}, config, {
   output: {
     file: 'dist/react-pose-text.dev.js',
     format: 'umd',
-    name: 'pose',
+    name: 'splitText',
     exports: 'named',
     globals: { react: 'React' }
   },
-  //external: ['react', 'react-dom'],
   plugins: [
     common,
     typescript(noDeclarationConfig),
@@ -68,7 +67,7 @@ const umdProd = Object.assign({}, umd, {
 
 const es = Object.assign({}, config, {
   output: {
-    file: 'dist/react-pose-text.es.js',
+    file: pkg.module,
     format: 'es',
     exports: 'named'
   },
@@ -77,7 +76,7 @@ const es = Object.assign({}, config, {
 
 const cjs = Object.assign({}, config, {
   output: {
-    file: 'lib/index.js',
+    file: pkg.main,
     format: 'cjs',
     exports: 'named'
   },
