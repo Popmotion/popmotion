@@ -7,9 +7,9 @@
 [![Twitter Follow](https://img.shields.io/twitter/follow/popmotionjs.svg?style=social&label=Follow)](http://twitter.com/popmotionjs)
 [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/popmotion)
 
-React Pose Text brings the power of React Pose animations to text!
+React Pose Text brings the power of React Pose animations to text, for less than 1kb!
 
-Animate words and individual characters using poses.
+Animate individual words and characters using poses.
 
 ```javascript
 <SplitText letterPoses={poses}>
@@ -19,7 +19,7 @@ Animate words and individual characters using poses.
 
 ## License
 
-React Pose Text is free to use for **non-profit** use under a GPL-v3 license.
+React Pose Text is free for **non-profit** use under a GPL-v3 license.
 
 A permissive, commercial license is exclusive to backers of the [Popmotion Patreon](https://patreon.com/popmotion)!
 
@@ -33,7 +33,7 @@ npm install react-pose react-pose-text
 
 ### `SplitText`
 
-React Pose Split Text exposes a single component, `SplitText`.
+React Pose Text exposes a single component, `SplitText`.
 
 Words and characters wrapped by this component will be ready to animate using poses.
 

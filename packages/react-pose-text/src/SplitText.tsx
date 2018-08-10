@@ -1,4 +1,4 @@
-import React, { PureComponent, Fragment, ReactElement } from 'react';
+import React, { PureComponent, ReactElement } from 'react';
 import posed from 'react-pose/lib';
 import { invariant } from 'hey-listen';
 
@@ -6,12 +6,12 @@ export type PoseProps = { [key: string]: any };
 
 export type Props = {
   children: string;
-  words?: PoseProps;
-  chars?: PoseProps;
+  wordPoses?: PoseProps;
+  charPoses?: PoseProps;
   pose?: string | string[];
 };
 
-const wordStyles = { display: 'inline-block' };
+const splitStyles = { display: 'inline-block' };
 
 class SplitText extends PureComponent<Props> {
   props: Props;
@@ -22,58 +22,80 @@ class SplitText extends PureComponent<Props> {
   constructor(props: Props) {
     super(props);
 
-    const { words, chars, children } = props;
+    const { wordPoses, charPoses, children } = props;
 
     this.parseText(children);
 
-    if (words) this.Word = posed.div(words);
-    if (chars) this.Char = posed.div(chars);
+    if (wordPoses) this.Word = posed.div(wordPoses);
+    if (charPoses) this.Char = posed.div(charPoses);
   }
 
   parseText(text: string) {
-    const { children } = this.props;
+    invariant(typeof text === 'string', 'Child of SplitText must be a string');
 
-    invariant(typeof children === 'string', 'children prop must be a string');
-
-    this.text = children.split(' ').map(word => word.split(''));
+    this.text = text.split(' ').map(word => word.split(''));
   }
 
   componentWillReceiveProps({ children }: Props) {
-    if (this.props.children !== children) {
-      this.parseText(children);
-    }
+    if (this.props.children !== children) this.parseText(children);
   }
 
-  renderChars(text: string[], wordIndex: number, numWords: number) {
-    const Char = this.Char || 'div';
+  renderChars(
+    text: string[],
+    wordIndex: number,
+    numWords: number,
+    baseCharCount: number
+  ) {
     const numChars = text.length;
 
-    return text.map((char, i) => (
-      <Char
-        style={wordStyles}
-        wordIndex={i}
-        numWords={numWords}
-        charInWordIndex={i}
-        numChars={numChars}
-      >
-        {char}
-      </Char>
-    ));
+    return text.map((char, i) => {
+      return this.Char ? (
+        <this.Char
+          style={splitStyles}
+          wordIndex={wordIndex}
+          numWords={numWords}
+          charIndex={baseCharCount + i}
+          charInWordIndex={i}
+          numChars={numChars}
+          {...this.props}
+        >
+          {char}
+        </this.Char>
+      ) : (
+        <div style={splitStyles}>{char}</div>
+      );
+    });
   }
 
   renderWords(text: string[][]) {
-    const Word = this.Word || 'div';
     const numWords = text.length;
+    let charCount = 0;
 
-    return text.map((word, i) => (
-      <Word style={wordStyles} wordIndex={i} numWords={numWords}>
-        {[...this.renderChars(word, i, numWords), '\u00A0']}
-      </Word>
-    ));
+    return text.map((word, i) => {
+      const chars = [
+        ...this.renderChars(word, i, numWords, charCount),
+        i !== numWords - 1 ? '\u00A0' : null
+      ];
+
+      charCount += word.length;
+
+      return this.Word ? (
+        <this.Word
+          style={splitStyles}
+          wordIndex={i}
+          numWords={numWords}
+          {...this.props}
+        >
+          {chars}
+        </this.Word>
+      ) : (
+        <div style={splitStyles}>{chars}</div>
+      );
+    });
   }
 
   render() {
-    return <Fragment>{this.renderWords(this.text)}</Fragment>;
+    return this.renderWords(this.text);
   }
 }
 
