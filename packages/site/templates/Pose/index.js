@@ -8,7 +8,7 @@ import settings from '~/data/settings.json';
 
 export default () => (
   <GlobalTemplate
-    title={`Popmotion Pose - A declarative animation library for React, HTML, and SVG`}
+    title={`Pose - A declarative animation library for React, HTML, and SVG`}
     theme="pose"
   >
     <Masthead>

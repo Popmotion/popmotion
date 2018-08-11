@@ -49,7 +49,7 @@ const generateRouteDefinitions = data => {
 
       pageIds.forEach(pageId => {
         const route = `/${
-          siteId === 'popmotion' ? '' : siteId + '/'
+          siteId === 'pure' ? '' : siteId + '/'
         }${sectionId}/${pageId}`;
         routes += `
           '${route}': {

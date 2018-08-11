@@ -7,7 +7,7 @@ import BlogList from '~/templates/blog';
 export default () => (
   <GlobalTemplate
     title="Blog | Popmotion"
-    description="Popmotion is a functional, reactive JavaScript motion library."
+    description="Popmotion makes simple and powerful JavaScript animation libraries for HTML, SVG, React and React Native."
     theme="popmotion"
   >
     <ContentPage section="blog">

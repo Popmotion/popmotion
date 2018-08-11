@@ -38,7 +38,7 @@
     "lint": "eslint",
     "s3-upload": "aws s3 cp public s3://popmotion.io --recursive",
     "invalidate-cloudfront": "aws configure set preview.cloudfront true && aws cloudfront create-invalidation --distribution-id E31YV8NBB5M5N4 --paths /*",
-    "publish-site": "npm run build-site && npm run s3-upload && npm run invalidate-cloudfront"
+    "publish-site": "npm run build && npm run s3-upload && npm run invalidate-cloudfront"
   },
   "analyze": true,
   "license": "MIT",

@@ -31,6 +31,7 @@ function generateContent({
   if (!siteMetadata[siteName]) siteMetadata[siteName] = {};
 
   const readPath = path.join(__dirname, `../../${packageName}/docs/${subDir}`);
+
   const outputPath = path.join(
     __dirname,
     `../pages/${siteName === 'pure' ? '' : siteName}/${firstLevelDir}`

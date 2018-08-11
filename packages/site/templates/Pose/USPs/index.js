@@ -16,7 +16,7 @@ import AnimateAnythingExample from './AnimateAnything';
 
 export default () => (
   <Container>
-    <Blurb>JavaScript animation simpler than CSS</Blurb>
+    <Blurb>JavaScript power, CSS simplicity</Blurb>
     <ExampleSection>
       <Example
         title="Magic animations"
