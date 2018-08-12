@@ -35,7 +35,7 @@ const convertMarkdown = marksy({
 });
 
 const content = convertMarkdown(`
-[Moved to the Stylefire docs](/stylefire/api/styler/viewport).`);
+[Moved to the Stylefire docs](/stylefire/api/viewport).`);
 
 const Page = ({ section }) => (
   <ContentTemplate
