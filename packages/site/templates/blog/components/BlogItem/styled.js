@@ -12,6 +12,11 @@ export const Container = styled.li`
   `} a:visited {
     opacity: 0.75;
   }
+
+  a h2,
+  a h3 {
+    ${({ theme }) => `color: ${theme.color.action}`};
+  }
 `;
 
 export const Title = styled.h2`
