@@ -1,9 +1,9 @@
 {
   "name": "react-pose-text",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Easily animate characters and words with React Pose",
   "main": "./lib/index.js",
-  "module": "./dist/react-pose.es.js",
+  "module": "./dist/react-pose-text.es.js",
   "types": "./lib/index.d.ts",
   "scripts": {
     "build": "rollup -c && npm run measure",
