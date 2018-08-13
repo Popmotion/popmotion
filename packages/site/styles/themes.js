@@ -23,11 +23,12 @@ const themeSettings = {
     url: '/',
     tagline: 'Simple libraries for delightful interfaces',
     headerNavLinks: [
-      // {
-      //   href: 'https://patreon.com/popmotion',
-      //   label: 'Support us',
-      //   isExternal: true
-      // },
+      {
+        href: 'https://patreon.com/popmotion',
+        label: 'Support us',
+        isExternal: true,
+        id: 'support'
+      },
       {
         href: 'https://spectrum.chat/popmotion',
         label: 'Community',
@@ -75,18 +76,18 @@ const themeSettings = {
       'Declarative motion system for React, React Native, and vanilla JS',
     sections: ['api', 'learn', 'community'],
     headerNavLinks: [
-      // {
-      //   href: 'https://patreon.com/popmotion',
-      //   label: 'Support us',
-      //   isExternal: true
-      // },
       {
-        href: '/api',
+        href: 'https://patreon.com/popmotion',
+        label: 'Support us',
+        isExternal: true
+      },
+      {
+        href: '/pose/api',
         label: 'API',
         id: 'api'
       },
       {
-        href: '/learn/get-started',
+        href: '/pose/learn/get-started',
         label: 'Learn',
         id: 'learn'
       }
@@ -117,17 +118,17 @@ const themeSettings = {
     shareImage: 'https://popmotion.io/static/images/pose-twitter-card.png'
   },
   pure: {
-    id: 'popmotion',
-    name: 'Popmotion',
+    id: 'pure',
+    name: 'Popmotion Pure',
     url: '/pure',
     tagline: 'A functional, flexible JavaScript motion library',
     sections: ['api', 'learn', 'community'],
     headerNavLinks: [
-      // {
-      //   href: 'https://patreon.com/popmotion',
-      //   label: 'Support us',
-      //   isExternal: true
-      // },
+      {
+        href: 'https://patreon.com/popmotion',
+        label: 'Support us',
+        isExternal: true
+      },
       {
         href: '/api',
         label: 'API',
@@ -139,32 +140,19 @@ const themeSettings = {
         id: 'learn'
       }
     ],
-    Logo: PopmotionLogo,
+    Logo: PureLogo,
     homepageLogoSize: {
-      width: 180,
-      height: 40
+      width: 140,
+      height: 65
     },
     headerLogoSize: {
-      width: 124,
-      height: 29
+      width: 106,
+      height: 50
     },
     footerLogoSize: {
-      width: 215,
-      height: 43
+      width: 150,
+      height: 70
     },
-    // Logo: PureLogo,
-    // homepageLogoSize: {
-    //   width: 155,
-    //   height: 73
-    // },
-    // headerLogoSize: {
-    //   width: 106,
-    //   height: 50
-    // },
-    // footerLogoSize: {
-    //   width: 155,
-    //   height: 73
-    // },
     color: {
       base: '#FF1C68',
       baseShadow: '#810066',
@@ -185,13 +173,13 @@ const themeSettings = {
     tagline: 'Simple HTML & SVG styler, optimised for animation',
     sections: ['api'],
     headerNavLinks: [
-      // {
-      //   href: 'https://patreon.com/popmotion',
-      //   label: 'Support us',
-      //   isExternal: true
-      // },
       {
-        href: '/api',
+        href: 'https://patreon.com/popmotion',
+        label: 'Support us',
+        isExternal: true
+      },
+      {
+        href: '/stylefire/api',
         label: 'API',
         id: 'api'
       }

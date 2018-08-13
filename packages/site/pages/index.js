@@ -33,6 +33,11 @@ const HeaderContainer = styled.div`
   ${media.medium`height: 180px;`} ${media.small`height: 140px;`};
 `;
 
+const MoreLink = styled.a`
+  text-align: center;
+  margin: 0 auto;
+`;
+
 const dropEasing = easing.createReversedEasing(easing.createBackIn(3));
 const letterEasing = easing.cubicBezier(0, 0.25, 1, 0.75);
 const Char = styled(
@@ -232,6 +237,9 @@ export default () => (
     <Section>
       <SectionHeader>Latest blog posts</SectionHeader>
       <BlogList numItems={5} />
+      <Link href="/blog">
+        <MoreLink>See all posts</MoreLink>
+      </Link>
     </Section>
     <Footer />
   </Homepage>

@@ -1,6 +1,6 @@
 {
   "name": "style-value-types",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "Parsers, transformers and tests for special value types, eg: %, hex codes etc.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -55,7 +55,8 @@
       "\\.(ts)$": "../../../node_modules/ts-jest/preprocessor.js"
     },
     "testRegex": "/_tests/.*\\.(ts|tsx|js)$",
-    "rootDir": "src"
+    "rootDir": "src",
+    "testURL": "http://localhost/"
   },
   "unpkg": "./dist/style-value-types.min.js",
   "prettier": {

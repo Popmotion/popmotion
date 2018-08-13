@@ -2,6 +2,12 @@
 
 React Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+### Fixed
+
+- Replacing `React.Component` with `React.ComponentType`. [#416](https://github.com/Popmotion/popmotion/pull/416/commits/8415fb3cf71456511379d17ac6d2e36cd2542319)
+
 ## [2.2.0] 2018-07-14
 
 ### Upgraded

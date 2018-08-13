@@ -1,14 +1,13 @@
 import {
   appendUnit,
   applyOffset,
-  bezier,
   clamp,
   interpolate,
   pipe,
   snap,
   steps,
   wrap,
-  conditional,
+  conditional
 } from '../transformers';
 
 describe('appendUnit()', () => {
@@ -37,59 +36,50 @@ describe('clamp()', () => {
 });
 
 describe('pipe', () => {
-  it(
-    `should return a function that will pass all arguments to all functions in
+  it(`should return a function that will pass all arguments to all functions in
     order, with the first argument being replaced with the returned value
-    of the previous function`,
-    () => {
-      const double = (v) => v * 2;
-      const divideByTen = (v) => v / 10;
+    of the previous function`, () => {
+    const double = v => v * 2;
+    const divideByTen = v => v / 10;
 
-      const func = pipe(double, divideByTen);
+    const func = pipe(
+      double,
+      divideByTen
+    );
 
-      expect(func(10)).toBe(2);
-    }
-  );
+    expect(func(10)).toBe(2);
+  });
 });
 
 describe('interpolate()', () => {
-  it(
-    `should create a function that interpolates between one range
-    of numbers to another`,
-    () => {
-      const simpleInterpolator = interpolate([0, 1000], [500, 600]);
-      expect(simpleInterpolator(500)).toBe(550);
-      expect(simpleInterpolator(0)).toBe(500);
+  it(`should create a function that interpolates between one range
+    of numbers to another`, () => {
+    const simpleInterpolator = interpolate([0, 1000], [500, 600]);
+    expect(simpleInterpolator(500)).toBe(550);
+    expect(simpleInterpolator(0)).toBe(500);
 
-      const negativeInterpolator = interpolate([-500, 500], [0, 1]);
-      expect(negativeInterpolator(-250)).toBe(.25);
+    const negativeInterpolator = interpolate([-500, 500], [0, 1]);
+    expect(negativeInterpolator(-250)).toBe(0.25);
 
-      const outOfRangeInterpolator = interpolate([0, 100], [200, 100]);
-      expect(outOfRangeInterpolator(50)).toBe(150);
-      expect(outOfRangeInterpolator(150)).toBe(50);
-      expect(outOfRangeInterpolator(0)).toBe(200);
-      expect(outOfRangeInterpolator(-100)).toBe(300);
+    const outOfRangeInterpolator = interpolate([0, 100], [200, 100]);
+    expect(outOfRangeInterpolator(50)).toBe(150);
+    expect(outOfRangeInterpolator(150)).toBe(50);
+    expect(outOfRangeInterpolator(0)).toBe(200);
+    expect(outOfRangeInterpolator(-100)).toBe(300);
 
-      const complexInterpolator = interpolate(
-        [0, 100, 200],
-        [1000, 500, 1000]
-      );
-      expect(complexInterpolator(100)).toBe(500);
+    const complexInterpolator = interpolate([0, 100, 200], [1000, 500, 1000]);
+    expect(complexInterpolator(100)).toBe(500);
 
-      const simpleInterpolatorR = interpolate([1000, 0], [500, 600]);
-      expect(simpleInterpolatorR(500)).toBe(550);
-      expect(simpleInterpolatorR(1000)).toBe(500);
-      expect(simpleInterpolatorR(0)).toBe(600);
+    const simpleInterpolatorR = interpolate([1000, 0], [500, 600]);
+    expect(simpleInterpolatorR(500)).toBe(550);
+    expect(simpleInterpolatorR(1000)).toBe(500);
+    expect(simpleInterpolatorR(0)).toBe(600);
 
-      const complexInterpolatorR = interpolate(
-        [0, 100, 200],
-        [1000, 500, 1000]
-      );
-      expect(complexInterpolatorR(100)).toBe(500);
-      expect(complexInterpolatorR(0)).toBe(1000);
-      expect(complexInterpolatorR(200)).toBe(1000);
-    }
-  );
+    const complexInterpolatorR = interpolate([0, 100, 200], [1000, 500, 1000]);
+    expect(complexInterpolatorR(100)).toBe(500);
+    expect(complexInterpolatorR(0)).toBe(1000);
+    expect(complexInterpolatorR(200)).toBe(1000);
+  });
 });
 
 describe('steps()', () => {
@@ -145,9 +135,9 @@ describe('wrap()', () => {
 
 describe('conditional()', () => {
   it('should applies a transformer if check returns true', () => {
-    const check = v => v < 0
-    const double = (v) => v * 2;
-    expect(conditional(check, double)(1)).toBe(1)
-    expect(conditional(check, double)(-1)).toBe(-2)
-  })
-})
+    const check = v => v < 0;
+    const double = v => v * 2;
+    expect(conditional(check, double)(1)).toBe(1);
+    expect(conditional(check, double)(-1)).toBe(-2);
+  });
+});

@@ -4,4 +4,4 @@ description: SVG styler with simplified transformation model and line drawing su
 category: stylefire
 ---
 
-[Moved to the Stylefire docs](/stylefire/api/styler/svg).
+[Moved to the Stylefire docs](/stylefire/api/svg).
