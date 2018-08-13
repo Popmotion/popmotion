@@ -1,5 +1,5 @@
 import React, { PureComponent, ReactElement } from 'react';
-import posed from 'react-pose/lib';
+import posed from 'react-pose';
 import { invariant } from 'hey-listen';
 
 export type PoseProps = { [key: string]: any };

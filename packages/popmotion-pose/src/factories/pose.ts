@@ -57,6 +57,7 @@ const animationLookup: {
 };
 
 const {
+  linear,
   easeIn,
   easeOut,
   easeInOut,
@@ -70,6 +71,7 @@ const {
 } = easing;
 
 const easingLookup: { [key: string]: (num: number) => number } = {
+  linear,
   easeIn,
   easeOut,
   easeInOut,
