@@ -51,7 +51,7 @@
     "@popmotion/easing": "^1.0.1",
     "framesync": "^3.1.9",
     "hey-listen": "^1.0.5",
-    "style-value-types": "^3.0.3",
+    "style-value-types": "^3.0.4",
     "stylefire": "^2.0.6",
     "tslib": "^1.9.1"
   },

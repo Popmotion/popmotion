@@ -18,7 +18,7 @@ const complex: ValueType = {
     if (foundNumbers) numValues += foundNumbers.length;
     if (foundColors) numValues += foundColors.length;
 
-    return numValues > 1;
+    return numValues > 0;
   },
   parse: (v: any) => {
     let input = v;

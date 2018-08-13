@@ -2,6 +2,12 @@
 
 Style Value Types adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.0.4] 2018-08-13
+
+### Fixed
+
+- Fixed a bug in the complex value type where single function-like values, like `grayscale(0%)` aren't recognised as complex value types.
+
 ## [3.0.3] 2018-06-28
 
 ### Fixed

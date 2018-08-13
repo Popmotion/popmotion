@@ -12,21 +12,27 @@ import {
 } from '../';
 
 const PATH = 'M150 0 L75 200 L225 200 Z';
+const GREYSCALE = 'greyscale(100%)';
 const PATH_VALUES = [150, 0, 75, 200, 225, 200];
 
 describe('complex value type', () => {
   it('test returns correctly', () => {
+    expect(complex.test(GREYSCALE)).toBe(true);
     expect(complex.test(PATH)).toBe(true);
     expect(complex.test(3)).toBe(false);
   });
 
   it('parse converts string to array', () => {
     expect(complex.parse(PATH)).toEqual(PATH_VALUES);
+    expect(complex.parse(GREYSCALE)).toEqual([100]);
   });
 
   it('createTransformer returns a transformer function that correctly inserts values', () => {
     const transform = complex.createTransformer(PATH);
     expect(transform(PATH_VALUES)).toBe(PATH);
+
+    const transformSingleFunction = complex.createTransformer(GREYSCALE);
+    expect(transformSingleFunction([100])).toBe(GREYSCALE);
   });
 });
 
@@ -152,7 +158,6 @@ describe('unit transformers', () => {
 describe('combination values', () => {
   it('should test correctly', () => {
     expect(complex.test('20px 20px 10px inset #fff')).toEqual(true);
-    expect(complex.test('50px')).toEqual(false);
     expect(
       complex.test('20px 20px 10px inset rgba(255, 255, 255, 1), 20px')
     ).toEqual(true);
