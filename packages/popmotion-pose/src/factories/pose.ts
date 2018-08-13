@@ -57,6 +57,7 @@ const animationLookup: {
 };
 
 const {
+  linear,
   easeIn,
   easeOut,
   easeInOut,
@@ -70,6 +71,7 @@ const {
 } = easing;
 
 const easingLookup: { [key: string]: (num: number) => number } = {
+  linear,
   easeIn,
   easeOut,
   easeInOut,
@@ -117,13 +119,17 @@ const getAction = (
     }
   }
 
-  return animationLookup[type]({
-    from,
-    to,
-    velocity,
-    ease,
-    ...def
-  });
+  const baseProps =
+    type !== 'keyframes'
+      ? {
+          from,
+          to,
+          velocity,
+          ease
+        }
+      : { ease };
+
+  return animationLookup[type]({ ...baseProps, ...def });
 };
 
 const isAction = (action: any): action is Action =>
