@@ -521,3 +521,20 @@ export class UserPoseInPoseGroup extends React.Component {
     );
   }
 }
+
+const Img = posed.img({
+  dull: {
+    filter: "grayscale(100%)"
+  },
+  coloured: {
+    filter: "grayscale(0%)"
+  }
+});
+
+export const Filter = () => (
+  <Img
+    initialPose="dull"
+    pose="dull"
+    src="https://popmotion.io/static/images/dusk.jpg"
+  />
+);

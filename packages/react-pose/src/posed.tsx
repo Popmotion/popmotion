@@ -13,7 +13,7 @@ export type ComponentFactory = (
 ) => (props: PoseElementProps) => ReactElement<any>;
 
 export type Posed = {
-  (component: React.ComponentType): ComponentFactory;
+  (component: React.Component): ComponentFactory;
   [key: string]: ComponentFactory;
 };
 
