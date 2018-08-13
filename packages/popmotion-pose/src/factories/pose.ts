@@ -119,13 +119,17 @@ const getAction = (
     }
   }
 
-  return animationLookup[type]({
-    from,
-    to,
-    velocity,
-    ease,
-    ...def
-  });
+  const baseProps =
+    type !== 'keyframes'
+      ? {
+          from,
+          to,
+          velocity,
+          ease
+        }
+      : { ease };
+
+  return animationLookup[type]({ ...baseProps, ...def });
 };
 
 const isAction = (action: any): action is Action =>

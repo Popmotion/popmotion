@@ -7,6 +7,7 @@ Popmotion Pose adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 - Added missing `linear` easing.
+- Fixed `keyframes` animation type.
 
 ## [2.1.1] 2018-07-27
 
