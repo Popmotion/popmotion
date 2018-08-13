@@ -2,20 +2,20 @@
 
 ## React Pose animations for words and letters
 
-[![npm version](https://img.shields.io/npm/v/react-pose-split-text.svg?style=flat-square)](https://www.npmjs.com/package/react-pose)
-[![npm downloads](https://img.shields.io/npm/dm/react-pose-split-text.svg?style=flat-square)](https://www.npmjs.com/package/react-pose)
+[![npm version](https://img.shields.io/npm/v/react-pose-text.svg?style=flat-square)](https://www.npmjs.com/package/react-pose-text)
+[![npm downloads](https://img.shields.io/npm/dm/react-pose-split-text.svg?style=flat-square)](https://www.npmjs.com/package/react-pose-text)
 [![Twitter Follow](https://img.shields.io/twitter/follow/popmotionjs.svg?style=social&label=Follow)](http://twitter.com/popmotionjs)
 [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/popmotion)
 
-React Pose Text brings the power of React Pose animations to text, for less than 1kb!
+React Pose Text brings Pose animations to text, for just 1kb!
 
-Animate individual words and characters using poses.
+It automatically splits strings of text into individual words and/or characters. These can then be animated with the full power of Pose:
 
-```javascript
-<SplitText letterPoses={poses}>
-  Hello world!
-</SplitText>
-```
+- Magic animations
+- Stagger across words and characters
+- Animate any CSS property, including `color` and `text-shadow`
+- Make words and characters individually draggable, or respond to a parent's dragging.
+- `enter`/`exit` animations with `PoseGroup`
 
 ## License
 
