@@ -89,4 +89,3 @@ export default ({ isVisible }) => (
 ### Special pose props
 
 
-
