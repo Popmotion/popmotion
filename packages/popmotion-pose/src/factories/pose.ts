@@ -179,12 +179,23 @@ const pose = <P>({
       };
     },
 
-    getTransitionProps: ({ raw, type }, to) => ({
-      from: raw.get(),
-      velocity: raw.getVelocity(),
-      to,
-      type
-    }),
+    getTransitionProps: ({ raw, type }, to) => {
+      const toType = getValueType(to);
+      const from = raw.get();
+
+      // invariant(
+      //   type === toType,
+      //   `Trying to animate between two different value types or units: ${from} and ${to}.`
+      // );
+
+      return {
+        from,
+        velocity: raw.getVelocity(),
+        to,
+        type,
+        toType
+      };
+    },
 
     resolveTarget: (_, to) => to,
 

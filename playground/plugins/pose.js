@@ -426,6 +426,30 @@ export class PoseFullScreenFlip extends React.PureComponent {
   }
 }
 
+export class UnitTypeError extends React.Component {
+  setRef = ref => {
+    this.ref = ref;
+  };
+
+  componentDidMount() {
+    const poser = pose(this.ref, {
+      a: { height: 0 },
+      b: { height: "100" },
+      initialPose: "a"
+    });
+
+    try {
+      poser.set("b");
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  render() {
+    return <Box innerRef={this.setRef} />;
+  }
+}
+
 // pose(container, {
 //   label: 'container',
 //   hover: true,
