@@ -9,7 +9,8 @@ import {
   PoseDrag,
   PoserManualValues,
   PoseOpacity,
-  PoseFullScreenFlip
+  PoseFullScreenFlip,
+  UnitTypeError
 } from "./plugins/pose";
 import {
   ReactPose,
@@ -29,7 +30,8 @@ storiesOf("Plugin: Pose", module)
   .add("manual values", () => <PoserManualValues />)
   .add("drag", () => <PoseDrag />)
   .add("opacity", () => <PoseOpacity />)
-  .add("full screen flip", () => <PoseFullScreenFlip />);
+  .add("full screen flip", () => <PoseFullScreenFlip />)
+  .add("unit type error", () => <UnitTypeError />);
 
 storiesOf("Plugin: React Pose", module)
   .add("pose", () => <ReactPose />)

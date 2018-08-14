@@ -2,6 +2,12 @@
 
 Style Value Types adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.0.5] 2018-08-14
+
+### Fixed
+
+- Preventing `complex` from matching `number`.
+
 ## [3.0.4] 2018-08-13
 
 ### Fixed

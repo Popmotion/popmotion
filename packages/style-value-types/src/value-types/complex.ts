@@ -10,7 +10,7 @@ const NUMBER_TOKEN = '${n}';
 
 const complex: ValueType = {
   test: (v: any) => {
-    if (typeof v !== 'string') return false;
+    if (typeof v !== 'string' || !isNaN(v as any)) return false;
 
     let numValues = 0;
     const foundNumbers = v.match(floatRegex);

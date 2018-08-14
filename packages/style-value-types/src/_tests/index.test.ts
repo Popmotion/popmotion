@@ -20,6 +20,8 @@ describe('complex value type', () => {
     expect(complex.test(GREYSCALE)).toBe(true);
     expect(complex.test(PATH)).toBe(true);
     expect(complex.test(3)).toBe(false);
+    expect(complex.test('3')).toBe(false);
+    expect(complex.test('3px')).toBe(true);
   });
 
   it('parse converts string to array', () => {
