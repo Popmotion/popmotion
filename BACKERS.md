@@ -3,7 +3,7 @@
 In order joined, the following people make Popmotion possible:
 
 - Mum
-- Zachary Fleischmann
+- Zachary Fleischmann [Pro]
 - Hendrik Putzek
-- Oliver Turner
-- Stan Chang
+- Oliver Turner [Pro]
+- Stan Chang [Pro]
