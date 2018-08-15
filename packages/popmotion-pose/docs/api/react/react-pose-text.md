@@ -2,7 +2,6 @@
 title: React Pose Text
 description: Animate words and characters using the power of React Pose animations.
 category: plugins
-draft: true
 ---
 
 # React Pose Text
@@ -61,11 +60,7 @@ export default () => (
 );
 ```
 
-`SplitText` acts like a regular posed component, which means we can animate between poses using all the normal methods:
-
-#### "pose" property
-
-`SplitText` accepts a `pose` property:
+`SplitText` acts like a regular posed component, which means we can animate between poses using the `pose` property:
 
 ```javascript
 export default ({ isVisible }) => (
@@ -78,14 +73,70 @@ export default ({ isVisible }) => (
 );
 ```
 
-#### As a child
+It also responds to pose changes further up the tree:
 
-`SplitText` responds to changes in pose further up the tree too. For instance, you might want 
+```javascript
+const Sidebar = posed.div({
+  visible: {
+    x: '0%',
+    beforeChildren: true,
+    staggerChildren: 50
+  },
+  hidden: { x: '-100%' }
+});
 
-#### PoseGroup
+const charPoses = {
+  visible: { y: 0, opacity: 1 },
+  hidden: { y: 10, opacity: 0 }
+};
 
+export const ({ isVisible }) => (
+  <Sidebar pose={isVisible ? 'enter' : 'exit'}>
+    <SplitText charPoses={charPoses}>
+      Contents
+    </SplitText>
+  </Sidebar>
+);
+```
 
+#### Special pose props
 
-### Special pose props
+Like normal posed components, all props provided to `SplitText` are sent through to dynamic pose properties:
 
+```javascript
+const charPoses = {
+  enter: { y: 0 },
+  exit: { y: ({ initialOffset }) => initialOffset }
+};
 
+export default () => (
+  <SplitText initialOffset={5} charPoses={charPoses}>
+    Hello world!
+  </SplitText>
+);
+```
+
+But `SplitText` also provides a series of special props to word and character posed components.
+
+Words receive:
+- `wordIndex`
+- `numWords`
+
+Characters receive:
+- `wordIndex`
+- `numWords`
+- `charIndex`
+- `numChars`
+- `charInWordIndex`
+- `numCharsInWord`
+
+You can use this information to create a wide variety of staggering effects by dynamically generating `delay`:
+
+```javascript
+const charPoses = {
+  enter: {
+    y: 0,
+    delay: ({ charIndex }) => charIndex * 50 
+  }
+};
+```
