@@ -18,6 +18,7 @@ class SplitText extends PureComponent<Props> {
   props: Props;
   poseProps: Props;
   text: string[][];
+  numChars: number;
   Word: (props: PoseProps) => ReactElement<any>;
   Char: (props: PoseProps) => ReactElement<any>;
 
@@ -38,6 +39,7 @@ class SplitText extends PureComponent<Props> {
     const { children, wordPoses, charPoses, ...poseProps } = this.props;
     this.poseProps = poseProps;
 
+    this.numChars = text.length;
     this.text = text.split(' ').map(word => word.split(''));
   }
 
@@ -51,7 +53,7 @@ class SplitText extends PureComponent<Props> {
     numWords: number,
     baseCharCount: number
   ) {
-    const numChars = text.length;
+    const numCharsInWord = text.length;
     const { children } = this.props;
 
     return text.map((char, i) => {
@@ -63,7 +65,8 @@ class SplitText extends PureComponent<Props> {
           numWords={numWords}
           charIndex={baseCharCount + i}
           charInWordIndex={i}
-          numChars={numChars}
+          numChars={this.numChars}
+          numCharsInWord={numCharsInWord}
           {...this.poseProps}
         >
           {char}

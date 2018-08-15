@@ -2,6 +2,12 @@
 
 React Pose Text adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.1.3] 2018-08-14
+
+### Fixed
+
+- Fixing `numChars` and adding `numCharsInWord`.
+
 ## [0.1.2] 2018-08-13
 
 ### Fixed
