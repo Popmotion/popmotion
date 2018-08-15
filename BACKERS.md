@@ -1,6 +1,6 @@
 # Backers of the Popmotion Patreon
 
-In order joined, the following people make Popmotion possible:
+In order joined, the following people make Popmotion possible by [supporting our Patreon](https://patreon.com/popmotion):
 
 - Mum
 - Zachary Fleischmann [Pro]
