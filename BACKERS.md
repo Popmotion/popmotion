@@ -6,3 +6,5 @@ In order joined, the following people make Popmotion possible by [supporting our
 2. [Hendrik Putzek](https://twitter.com/hputzek)
 3. [Oliver Turner](https://twitter.com/oliverturner) [Pro]
 4. [Stan Chang](https://twitter.com/lxcid) [Pro]
+5. [Rafael Belvederese](https://twitter.com/blvz)
+6. [Chris Drackett](https://twitter.com/chrisdrackett) [Pro]
