@@ -223,7 +223,7 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
     this.poser.setProps(this.getSetProps());
 
     if (
-      poseKey !== prevProps.key ||
+      poseKey !== prevProps.poseKey ||
       hasChanged(prevProps.pose, pose) ||
       pose === 'flip'
     ) {
