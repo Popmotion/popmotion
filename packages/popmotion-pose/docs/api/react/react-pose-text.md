@@ -15,6 +15,8 @@ React Pose Text automatically splits strings of text into individual words and/o
 - `enter`/`exit` animations with `PoseGroup`
 - Only 1kb!
 
+<CodeSandbox id="4jzzvm1vz7" />
+
 <TOC />
 
 ## License
@@ -35,8 +37,6 @@ npm install react-pose react-pose-text
 
 React Pose Text exports a single component, `SplitText`.
 
-Strings wrapped with this component will be split into posed components for every word and character.
-
 ```javascript
 import SplitText from 'react-pose-text';
 
@@ -44,6 +44,8 @@ export default () => (
   <SplitText>Hello world!</SplitText>
 );
 ```
+
+Strings wrapped with this component will be split into posed components for every word and character.
 
 Poses can be defined for both words and characters by providing [Pose configs](https://popmotion.io/pose/api/react-config/) to the `wordPoses` and `charPoses` props, respectively:
 
@@ -73,31 +75,9 @@ export default ({ isVisible }) => (
 );
 ```
 
-It also responds to pose changes further up the tree:
+It also responds to pose changes further up the tree.
 
-```javascript
-const Sidebar = posed.div({
-  visible: {
-    x: '0%',
-    beforeChildren: true,
-    staggerChildren: 50
-  },
-  hidden: { x: '-100%' }
-});
-
-const charPoses = {
-  visible: { y: 0, opacity: 1 },
-  hidden: { y: 10, opacity: 0 }
-};
-
-export const ({ isVisible }) => (
-  <Sidebar pose={isVisible ? 'enter' : 'exit'}>
-    <SplitText charPoses={charPoses}>
-      Contents
-    </SplitText>
-  </Sidebar>
-);
-```
+<CodeSandbox id="100lwoo7wl" />
 
 #### Special pose props
 
@@ -116,7 +96,7 @@ export default () => (
 );
 ```
 
-But `SplitText` also provides a series of special props to word and character posed components.
+But `SplitText` also provides a series of special props.
 
 Words receive:
 - `wordIndex`
@@ -130,7 +110,7 @@ Characters receive:
 - `charInWordIndex`
 - `numCharsInWord`
 
-You can use this information to create a wide variety of staggering effects by dynamically generating `delay`:
+You can use these props in various ways, for instance to create a variety of staggering effects by dynamically generating `delay`:
 
 ```javascript
 const charPoses = {
@@ -140,3 +120,15 @@ const charPoses = {
   }
 };
 ```
+
+<CodeSandbox id="zzlr2p70mm" />
+
+#### Pointer events
+
+You can use Pose's pointer events as usual. For instance, you can make every word draggable by setting `draggable: true`:
+
+<CodeSandbox id="yqwwn1rmjv" />
+
+Those poses still cascade down, too. So by setting `dragging` and `dragEnd` poses to our characters, we can make our characters animate while dragging words:
+
+<CodeSandbox id="38047jqp7m" />

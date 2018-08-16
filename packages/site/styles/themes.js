@@ -24,9 +24,8 @@ const themeSettings = {
     tagline: 'Simple libraries for delightful interfaces',
     headerNavLinks: [
       {
-        href: 'https://patreon.com/popmotion',
+        href: '/support',
         label: 'Support us',
-        isExternal: true,
         id: 'support'
       },
       {
@@ -77,9 +76,9 @@ const themeSettings = {
     sections: ['api', 'learn', 'community'],
     headerNavLinks: [
       {
-        href: 'https://patreon.com/popmotion',
+        href: '/support',
         label: 'Support us',
-        isExternal: true
+        id: 'support'
       },
       {
         href: '/pose/api',
@@ -125,9 +124,9 @@ const themeSettings = {
     sections: ['api', 'learn', 'community'],
     headerNavLinks: [
       {
-        href: 'https://patreon.com/popmotion',
+        href: '/support',
         label: 'Support us',
-        isExternal: true
+        id: 'support'
       },
       {
         href: '/api',
@@ -174,9 +173,9 @@ const themeSettings = {
     sections: ['api'],
     headerNavLinks: [
       {
-        href: 'https://patreon.com/popmotion',
+        href: '/support',
         label: 'Support us',
-        isExternal: true
+        id: 'support'
       },
       {
         href: '/stylefire/api',

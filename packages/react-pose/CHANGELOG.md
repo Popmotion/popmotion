@@ -2,6 +2,12 @@
 
 React Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.2.3] 2018-08-16
+
+### Fixed
+
+- Correctly comparing previous `poseKey` when posed component updates [#424](https://github.com/Popmotion/popmotion/pull/424).
+
 ## [2.2.1] 2018-08-14
 
 ### Upgraded

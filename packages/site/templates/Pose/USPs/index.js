@@ -10,6 +10,7 @@ import { Strong } from '~/templates/global/styled';
 import CustomExample from './CustomExample';
 import ChildrenExample from './ChildrenExample';
 import FlipExample from './FlipExample';
+import PluginsExample from './PluginsExample';
 import Link from 'next/link';
 import { CTA } from '~/templates/Popmotion/Masthead/styled';
 import AnimateAnythingExample from './AnimateAnything';
@@ -72,6 +73,12 @@ export default () => (
       >
         <ReactExample />
       </Example>
+      {/* <Example
+        title="Popmotion Pro"
+        description="An amazing series of plugins, like React Pose Text, with exclusive commercial licenses for Popmotion supporters."
+      >
+        <PluginsExample />
+      </Example> */}
     </ExampleSection>
     <BlurbText style={{ marginBottom: 40, maxWidth: '600px' }}>
       Pose is a continuing project to simplify the creation of fluid and playful

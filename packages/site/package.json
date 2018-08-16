@@ -54,6 +54,7 @@
     "react-dom": "^16.3.0-rc.0",
     "react-live": "^1.7.0",
     "react-pose": "^2.2.0",
+    "react-pose-text": "^0.1.3",
     "react-scrollspy": "^3.3.5",
     "react-syntax-highlighter": "^5.8.0",
     "styled-components": "^2.2.3",
