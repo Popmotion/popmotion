@@ -8,4 +8,5 @@ In order joined, the following people make Popmotion possible by [supporting our
 4. [Stan Chang](https://twitter.com/lxcid) [Pro]
 5. [Rafael Belvederese](https://twitter.com/blvz)
 6. [Chris Drackett](https://twitter.com/chrisdrackett) [Pro]
-6. [Kraig Walker](https://twitter.com/Kraig_Walker) [Pro]
+7. [Kraig Walker](https://twitter.com/Kraig_Walker) [Pro]
+8. [Sindre Sorhus](https://www.patreon.com/sindresorhus)

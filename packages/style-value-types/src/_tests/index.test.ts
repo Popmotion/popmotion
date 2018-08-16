@@ -14,7 +14,7 @@ import {
 const PATH = 'M150 0 L75 200 L225 200 Z';
 const GREYSCALE = 'greyscale(100%)';
 const PATH_VALUES = [150, 0, 75, 200, 225, 200];
-const EXPONENT = 'test(3.199999909497819e-8) test(3)';
+const MIXED = '0px 0px 0px rgba(161, 0, 246, 0)';
 
 describe('complex value type', () => {
   it('test returns correctly', () => {
@@ -23,29 +23,43 @@ describe('complex value type', () => {
     expect(complex.test(3)).toBe(false);
     expect(complex.test('3')).toBe(false);
     expect(complex.test('3px')).toBe(true);
-    expect(complex.test(EXPONENT)).toBe(true);
+    expect(complex.test(MIXED)).toBe(true);
   });
 
   it('parse converts string to array', () => {
     expect(complex.parse(PATH)).toEqual(PATH_VALUES);
     expect(complex.parse(GREYSCALE)).toEqual([100]);
-    expect(complex.parse(EXPONENT)).toEqual([3.199999909497819e-8, 3]);
+    expect(complex.parse(MIXED)).toBe([
+      { red: 161, green: 0, blue: 246, alpha: 0 },
+      0,
+      0,
+      0
+    ]);
   });
 
   it('createTransformer returns a transformer function that correctly inserts values', () => {
     const transform = complex.createTransformer(PATH);
     expect(transform(PATH_VALUES)).toBe(PATH);
 
+    const transformMixedExpo = complex.createTransformer(
+      '0px 0px 0px rgba(161, 0, 246, 0)'
+    );
+    expect(
+      transformMixedExpo([
+        {
+          red: 161,
+          green: 0,
+          blue: 246,
+          alpha: 6.399999974426862e-10
+        },
+        0,
+        1.5999999547489097e-8,
+        3.199999909497819e-8
+      ])
+    ).toBe('0px 0px 0px rgba(161, 0, 246, 0)');
+
     const transformSingleFunction = complex.createTransformer(GREYSCALE);
     expect(transformSingleFunction([100])).toBe(GREYSCALE);
-
-    const transformExponent = complex.createTransformer(EXPONENT);
-    expect(transformExponent([100, 3.199999909497819e-8])).toBe(
-      'test(100) test(3.199999909497819e-8)'
-    );
-
-    const transformExponentB = complex.createTransformer(EXPONENT);
-    expect(transformExponent(100)).toEqual(transformExponentB(100));
   });
 });
 

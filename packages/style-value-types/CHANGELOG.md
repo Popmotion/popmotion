@@ -2,6 +2,12 @@
 
 Style Value Types adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.0.6] 2018-08-16
+
+### Fixed
+
+- Detecting exponential values in complex.createTransformer. [#423](https://github.com/Popmotion/popmotion/issues/423)
+
 ## [3.0.5] 2018-08-14
 
 ### Fixed

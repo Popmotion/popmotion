@@ -30,3 +30,7 @@ export const getValueFromFunctionString = (value: string) =>
 */
 export const splitCommaDelimited = (value: string) =>
   typeof value === 'string' ? value.split(/,\s*/) : [value];
+
+// If this number is a decimal, make it just five decimal places
+// to avoid exponents
+export const sanitize = (v: number) => (v % 1 ? Number(v.toFixed(5)) : v);

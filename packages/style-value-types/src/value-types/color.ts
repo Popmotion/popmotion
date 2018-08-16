@@ -7,6 +7,7 @@ import {
 import { number } from './numbers';
 import { percent } from './units';
 import { Color, RGBA, HSLA, NumberMap, ValueType } from '../types';
+import { sanitize } from '../utils';
 
 const clampRgbUnit = clamp(0, 255);
 
@@ -60,7 +61,7 @@ export const rgba: ValueType = {
       red: rgbUnit.transform(red),
       green: rgbUnit.transform(green),
       blue: rgbUnit.transform(blue),
-      alpha
+      alpha: sanitize(alpha)
     })
 };
 
@@ -71,9 +72,9 @@ export const hsla: ValueType = {
   transform: ({ hue, saturation, lightness, alpha }: HSLA) =>
     hslaTemplate({
       hue: Math.round(hue),
-      saturation: percent.transform(saturation),
-      lightness: percent.transform(lightness),
-      alpha
+      saturation: percent.transform(sanitize(saturation)),
+      lightness: percent.transform(sanitize(lightness)),
+      alpha: sanitize(alpha)
     })
 };
 

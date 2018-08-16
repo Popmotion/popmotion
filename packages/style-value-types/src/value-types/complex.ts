@@ -1,8 +1,9 @@
 import { ValueType, Color } from '../types';
 import { color } from './color';
 import { number } from './numbers';
+import { sanitize } from '../utils';
 
-const floatRegex = /(-)?(\d[\d\.]*)([eE][-+]?[0-9])?/g;
+const floatRegex = /(-)?(\d[\d\.]*)/g;
 const colorRegex = /(#[0-9a-f]{6}|#[0-9a-f]{3}|#(?:[0-9a-f]{2}){2,4}|(rgb|hsl)a?\((-?\d+%?[,\s]+){2,3}\s*[\d\.]+%?\))/gi;
 
 const COLOR_TOKEN = '${c}';
@@ -61,13 +62,13 @@ const complex: ValueType = {
       }
     }
 
-    return (v: Array<Color | string>) => {
+    return (v: Array<Color | number>) => {
       let output = template;
 
       for (let i = 0; i < token; i++) {
         output = output.replace(
           i < numColors ? COLOR_TOKEN : NUMBER_TOKEN,
-          i < numColors ? color.transform(v[i]) : v[i]
+          i < numColors ? color.transform(v[i]) : sanitize(v[i] as number)
         );
       }
 
