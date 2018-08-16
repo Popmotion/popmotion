@@ -14,7 +14,7 @@ import {
 const PATH = 'M150 0 L75 200 L225 200 Z';
 const GREYSCALE = 'greyscale(100%)';
 const PATH_VALUES = [150, 0, 75, 200, 225, 200];
-const EXPONENT = 'test(3.199999909497819e-8)';
+const EXPONENT = 'test(3.199999909497819e-8) test(3)';
 
 describe('complex value type', () => {
   it('test returns correctly', () => {
@@ -29,7 +29,7 @@ describe('complex value type', () => {
   it('parse converts string to array', () => {
     expect(complex.parse(PATH)).toEqual(PATH_VALUES);
     expect(complex.parse(GREYSCALE)).toEqual([100]);
-    expect(complex.parse(EXPONENT)).toEqual([3.199999909497819e-8]);
+    expect(complex.parse(EXPONENT)).toEqual([3.199999909497819e-8, 3]);
   });
 
   it('createTransformer returns a transformer function that correctly inserts values', () => {
@@ -40,7 +40,12 @@ describe('complex value type', () => {
     expect(transformSingleFunction([100])).toBe(GREYSCALE);
 
     const transformExponent = complex.createTransformer(EXPONENT);
-    expect(transformExponent([100])).toBe('test(100)');
+    expect(transformExponent([100, 3.199999909497819e-8])).toBe(
+      'test(100) test(3.199999909497819e-8)'
+    );
+
+    const transformExponentB = complex.createTransformer(EXPONENT);
+    expect(transformExponent(100)).toEqual(transformExponentB(100));
   });
 });
 
