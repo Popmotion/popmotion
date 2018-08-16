@@ -202,6 +202,18 @@ Callbacks that fire when dragging starts or ends. **Note:** These props are immu
 
 An optional function that will call with the posed DOM element when it mounts, and `null` when it unmounts.
 
+### values/parentValues
+
+`values?: { [key: string]: Value }`
+
+Normally, Pose generates [Popmotion `value`](/api/value) for each animating property. It then passes these down to any posed children so `passive` values can link to them.
+
+Novel hierarchies, where the posed tree and the React component tree diverge, can be achieved by creating your own values map, and passing that to a single posed component.
+
+This same map can then be passed to multiple other posed component's `parentValues` property in order to establish a parent-children relationship even between sibling components.
+
+<CodePen id="xWrbNm" />
+
 ### ...props
 
 `...props: { [key: string]: any }`

@@ -27,9 +27,6 @@ export const getValueFromFunctionString = (value: string) =>
   Split comma-delimited string
 
   "foo,bar" -> ["foo", "bar"]
-
-  @param [string]
-  @return [array]
 */
 export const splitCommaDelimited = (value: string) =>
   typeof value === 'string' ? value.split(/,\s*/) : [value];
