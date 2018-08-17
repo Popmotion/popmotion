@@ -74,10 +74,7 @@ const createVectorTests: VectorTestFactory = typeTests => {
 
   const testVectorProps = (props: Props) =>
     props &&
-    testNames.reduce(
-      (isVector, key) => isVector || isVectorProp(props[key], key),
-      false
-    );
+    testNames.some(key => isVectorProp(props[key], key));
 
   return { getVectorKeys, testVectorProps };
 };
