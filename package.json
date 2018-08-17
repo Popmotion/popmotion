@@ -4,9 +4,11 @@
   "author": "Matt Perry",
   "homepage": "https://popmotion.io",
   "scripts": {
+    "bootstrap": "lerna bootstrap",
     "playground": "start-storybook -p 6006",
     "build-playground": "build-storybook",
-    "clear": "rm -rf node_modules/ yarn.lock packages/*/node_modules"
+    "clean": "lerna clean --yes && rm -rf node_modules",
+    "clear": "yarn clean && rm yarn.lock"
   },
   "devDependencies": {
     "@storybook/react": "^3.2.13",
@@ -32,6 +34,7 @@
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.10.0",
     "estraverse-fb": "^1.3.1",
+    "lerna": "^3.0.6",
     "react": "^16.3.0",
     "react-dom": "^16.3.0",
     "string-replace-loader": "^1.3.0",
@@ -39,8 +42,12 @@
     "webpack": "^3.0.0"
   },
   "workspaces": {
-    "packages": ["packages/*"],
-    "nohoist": ["gatsby"]
+    "packages": [
+      "packages/*"
+    ],
+    "nohoist": [
+      "gatsby"
+    ]
   },
   "resolutions": {
     "jest": "^23.1.0",
