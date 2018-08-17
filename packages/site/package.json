@@ -46,6 +46,7 @@
     "babel-runtime": "^6.23.0",
     "front-matter": "^2.1.1",
     "live-on-stage": "^2.0.17",
+    "marksy": "^6.0.3",
     "nprogress": "^0.2.0",
     "popmotion": "^8.3.3",
     "popmotion-pose": "^2.1.0",

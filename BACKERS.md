@@ -1,4 +1,4 @@
-# Backers of the Popmotion Patreon
+# Backers of Popmotion
 
 In order joined, the following people make Popmotion possible by [supporting our Patreon](https://patreon.com/popmotion):
 
@@ -10,3 +10,5 @@ In order joined, the following people make Popmotion possible by [supporting our
 6. [Chris Drackett](https://twitter.com/chrisdrackett) [Pro]
 7. [Kraig Walker](https://twitter.com/Kraig_Walker) [Pro]
 8. [Sindre Sorhus](https://www.patreon.com/sindresorhus)
+9. [Jeffry Canty](https://twitter.com/cantyjeffrey) [Pro]
+10. [Jesse McLean](https://www.patreon.com/essejmclean) [Pro]

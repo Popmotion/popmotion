@@ -10,6 +10,8 @@ Options to configure [posed components](/pose/api/posed) in React Pose.
 
 <TOC />
 
+## Options
+
 ### draggable
 
 `draggable?: true | 'x' | 'y'`
@@ -79,7 +81,7 @@ Default properties to provide to entered pose `transition` methods and dynamic p
 
 Any other config props will be treated as poses (see [Pose config](#pose-config)).
 
-## Pose config
+## Poses
 
 You can call a pose anything, and animate to it by setting `<PosedComponent pose="poseName" />` (or multiple poses with an array).
 
