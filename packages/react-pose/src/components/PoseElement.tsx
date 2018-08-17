@@ -14,6 +14,7 @@ import {
 } from './PoseElement.types';
 import { invariant } from 'hey-listen';
 import { hasChanged } from '../utils/has-changed';
+import { validAttr } from '../utils/valid-attr';
 
 export const PoseParentContext = createContext({});
 
@@ -269,14 +270,16 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
 
   render() {
     const { elementType, children } = this.props;
+    const props: any = { ...this.getSetProps(), ...this.getRefs() };
+
+    // Delete invalid DOM-attributes
+    Object.keys(props).forEach(key =>
+      !validAttr(key) && delete props[key]
+    );
 
     return (
       <PoseParentContext.Provider value={this.childrenHandlers}>
-        {createElement(
-          elementType,
-          { ...this.getSetProps(), ...this.getRefs() },
-          children
-        )}
+        {createElement(elementType, props, children)}
       </PoseParentContext.Provider>
     );
   }
