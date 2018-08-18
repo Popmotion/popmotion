@@ -11,4 +11,5 @@ In order joined, the following people make Popmotion possible by [supporting our
 7. [Kraig Walker](https://twitter.com/Kraig_Walker) [Pro]
 8. [Sindre Sorhus](https://www.patreon.com/sindresorhus)
 9. [Jeffry Canty](https://twitter.com/cantyjeffrey) [Pro]
-10. [Jesse McLean](https://www.patreon.com/essejmclean) [Pro]
+10. [Jesse McLean](https://www.twitter.com/essejmclean) [Pro]
+11. [Mateusz Burzyński](https://www.twitter.com/AndaristRake) [Pro]

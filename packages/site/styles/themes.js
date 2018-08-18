@@ -90,6 +90,11 @@ const themeSettings = {
         label: 'Learn',
         id: 'learn'
       }
+      // {
+      //   href: '/pose/examples',
+      //   label: 'Examples',
+      //   id: 'examples'
+      // }
     ],
     Logo: PoseLogo,
     homepageLogoSize: {
