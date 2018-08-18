@@ -2,7 +2,7 @@
 title: Custom transitions
 description: How to use Popmotion to define custom transitions for posers
 category: basics
-next: dynamic-props
+next: pointer-events
 ---
 
 # Custom transitions

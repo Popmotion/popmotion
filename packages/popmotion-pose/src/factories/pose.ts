@@ -139,7 +139,8 @@ const pose = <P>({
   transformPose,
   addListenerToValue,
   extendAPI,
-  readValueFromSource
+  readValueFromSource,
+  posePriority
 }: PopmotionPoserFactoryConfig<P>) =>
   poseFactory<Value, Action, ColdSubscription, P>({
     bindOnChange: (values, onChange) => key => {
@@ -237,6 +238,7 @@ const pose = <P>({
     defaultTransitions,
     transformPose,
     readValueFromSource,
+    posePriority,
     extendAPI
   });
 

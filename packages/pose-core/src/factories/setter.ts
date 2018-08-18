@@ -31,6 +31,7 @@ type SetterFactoryProps<V, A, C, P> = {
   resolveTarget: ResolveTarget<V>;
   convertTransitionDefinition: ConvertTransitionDefinition<V, A>;
   transformPose?: TransformPose<V, A, C, P>;
+  posePriority?: string[];
 };
 
 export const resolveProp = (target: any, props: Props) =>

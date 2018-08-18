@@ -33,6 +33,9 @@ const createPoseConfig = (
     onDragStart,
     onDragEnd,
     draggable,
+    onHoverStart,
+    onHoverEnd,
+    hoverable,
     dragBounds,
     ...config
   }: DomPopmotionConfig
@@ -46,6 +49,9 @@ const createPoseConfig = (
       onDragStart,
       onDragEnd,
       dragBounds,
+      onHoverStart,
+      onHoverEnd,
+      hoverable,
       element,
       elementStyler: styler(element, { preparseOutput: false }),
       dimensions: createDimensions(element)
@@ -63,6 +69,8 @@ const createPoseConfig = (
 };
 
 const domPose = poseFactory<DomPopmotionPoser>({
+  posePriority: ['dragging', 'hovering'],
+
   transformPose: ({ flip, ...pose }, name, state) =>
     isFlipPose(flip, name, state) ? flipPose(state, pose) : pose,
 
@@ -88,6 +96,8 @@ const domPose = poseFactory<DomPopmotionPoser>({
     return isNaN(value) ? value : parseFloat(value);
   },
 
+  // This is shit and not inline with what I'm trying to accomplish
+  // by using a functional approach
   extendAPI: (api, { props, activeActions }, config) => {
     const measure = props.dimensions.measure;
     const poserApi = {

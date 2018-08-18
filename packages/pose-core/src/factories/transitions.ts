@@ -1,7 +1,10 @@
-import { PoseMap, Pose, TransitionFactory } from '../types';
+import { PoseMap, Pose, TransitionFactory, TransitionMap } from '../types';
 import { invariant } from 'hey-listen';
 
-type DefaultTransitions<A> = Map<string, TransitionFactory<A>>;
+type DefaultTransitions<A> = Map<
+  string,
+  TransitionFactory<A> | TransitionMap<A>
+>;
 
 const applyDefaultTransition = <A>(
   pose: Pose<A>,

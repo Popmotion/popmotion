@@ -6,7 +6,8 @@ import {
   ActivePoses,
   ChildPosers,
   PoseMap,
-  PoserState
+  PoserState,
+  TransitionMap
 } from './types';
 
 import createPoseSetter from './factories/setter';
@@ -32,6 +33,7 @@ const poseFactory = <V, A, C, P>({
   selectValueToRead,
   convertTransitionDefinition,
   transformPose,
+  posePriority,
   extendAPI
 }: PoseFactoryConfig<V, A, C, P>) => (
   config: PoserConfig<V>
@@ -54,7 +56,8 @@ const poseFactory = <V, A, C, P>({
   if (getDefaultProps) props = { ...props, ...getDefaultProps(config) };
 
   // Create values map
-  const { passive, values: userSetValues, initialPose } = config;
+  const { passive, values: userSetValues, initialPose = 'default' } = config;
+
   const values = createValueMap<V, A>({
     poses,
     passive,
@@ -91,7 +94,8 @@ const poseFactory = <V, A, C, P>({
     stopAction,
     resolveTarget,
     addActionDelay,
-    transformPose
+    transformPose,
+    posePriority
   });
 
   const api: Poser<V, A, C, P> = {
@@ -132,4 +136,4 @@ const poseFactory = <V, A, C, P>({
 };
 
 export default poseFactory;
-export { Poser, PoserConfig, PoseMap, eachValue, fromPose };
+export { Poser, PoserConfig, PoseMap, TransitionMap, eachValue, fromPose };

@@ -320,7 +320,9 @@ export class PoserFLIP extends React.Component {
   render() {
     return (
       <Modal innerRef={this.setContainerRef}>
-        {this.state.list.map(i => <div key={i} ref={this.setItemRef} />)}
+        {this.state.list.map(i => (
+          <div key={i} ref={this.setItemRef} />
+        ))}
       </Modal>
     );
   }
@@ -366,6 +368,26 @@ export class PoseDrag extends React.PureComponent {
         dragBounds: { left: 0, right: 200 },
         onDragStart: console.log,
         onDragEnd: console.log
+      });
+    } else {
+      this.poser.destroy();
+    }
+  };
+
+  render() {
+    return <Box innerRef={this.setRef} />;
+  }
+}
+
+export class PoseHover extends React.PureComponent {
+  setRef = ref => {
+    if (ref) {
+      this.poser = pose(ref, {
+        hoverable: true,
+        draggable: true,
+        default: { scale: 1 },
+        hovering: { scale: 1.1 },
+        dragging: { scale: 1.4 }
       });
     } else {
       this.poser.destroy();
