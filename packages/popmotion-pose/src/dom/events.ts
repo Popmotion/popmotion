@@ -1,6 +1,6 @@
 import { listen, ColdSubscription } from 'popmotion';
 import { ActiveActions } from 'pose-core/lib/types';
-import { DomPopmotionConfig } from '../types';
+import { DomPopmotionConfig, DomPopmotionPoser } from '../types';
 
 /**
  * TODO: Currently we add a new listener for every event,
@@ -8,13 +8,11 @@ import { DomPopmotionConfig } from '../types';
  * event delegation
  */
 
-type Setter = (next: string) => Promise<any>;
-
 type PointerEventsConfig = {
   startEvents: string;
   endEvents: string;
-  startPose: string | string[];
-  endPose: string | string[];
+  startPose: string;
+  endPose: string;
   startCallback: string;
   endCallback: string;
   startListener: string;
@@ -35,13 +33,14 @@ const makePointerEvent = ({
 }: PointerEventsConfig) => (
   element: Element,
   activeActions: ActiveActions<ColdSubscription>,
-  setPose: Setter,
+  poser: DomPopmotionPoser,
   config: DomPopmotionConfig
 ) => {
   const eventStartListener = listen(element, startEvents).start(
     (startEvent: MouseEvent | TouchEvent) => {
       startEvent.preventDefault();
-      Array.isArray(startPose) ? startPose.map(setPose) : setPose(startPose);
+
+      poser.set(startPose);
 
       if (config[startCallback]) config[startCallback](startEvent);
 
@@ -50,7 +49,8 @@ const makePointerEvent = ({
         endEvents
       ).start((endEvent: MouseEvent | TouchEvent) => {
         activeActions.get(endListener).stop();
-        Array.isArray(endPose) ? endPose.map(setPose) : setPose(endPose);
+        poser.unset(startPose);
+        poser.set(endPose);
         if (config[endCallback]) config[endCallback](endEvent);
       });
 
@@ -64,7 +64,7 @@ const makePointerEvent = ({
 const makeDraggable = makePointerEvent({
   startEvents: 'mousedown touchstart',
   endEvents: 'mouseup touchend',
-  startPose: 'dragging',
+  startPose: 'drag',
   endPose: 'dragEnd',
   startCallback: 'onDragStart',
   endCallback: 'onDragEnd',
@@ -76,8 +76,8 @@ const makeDraggable = makePointerEvent({
 const makeHoverable = makePointerEvent({
   startEvents: 'mouseenter',
   endEvents: 'mouseleave',
-  startPose: 'hovering',
-  endPose: ['default', 'hoverEnd'],
+  startPose: 'hover',
+  endPose: 'hoverEnd',
   startCallback: 'onHoverStart',
   endCallback: 'onHoverEnd',
   startListener: 'hoverStartListener',
@@ -87,9 +87,9 @@ const makeHoverable = makePointerEvent({
 export default (
   element: Element,
   activeActions: ActiveActions<ColdSubscription>,
-  setPose: Setter,
+  poser: DomPopmotionPoser,
   { props }: DomPopmotionConfig
 ) => {
-  if (props.draggable) makeDraggable(element, activeActions, setPose, props);
-  if (props.hoverable) makeHoverable(element, activeActions, setPose, props);
+  if (props.draggable) makeDraggable(element, activeActions, poser, props);
+  if (props.hoverable) makeHoverable(element, activeActions, poser, props);
 };

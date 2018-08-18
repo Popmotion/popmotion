@@ -1,14 +1,14 @@
 import {
   AncestorValueList,
   Props,
-  Pose,
   ValueMap,
   PoseMap,
   PassiveValueMap,
   ReadValue,
   ReadValueFromSource,
   CreateValue,
-  ConvertValue
+  ConvertValue,
+  ActivePoses
 } from '../types';
 import { getPoseValues } from '../inc/selectors';
 import { resolveProp } from './setter';
@@ -23,6 +23,7 @@ type ValueFactoryProps<V, A> = {
   userSetValues: { [key: string]: V };
   initialPose?: string | string[];
   readValueFromSource?: ReadValueFromSource;
+  activePoses: ActivePoses;
   props: Props;
 };
 
@@ -58,9 +59,9 @@ const createValues = <V, A>(
     readValueFromSource,
     initialPose,
     poses,
+    activePoses,
     props
-  }: ValueFactoryProps<V, A>,
-  pose: Pose<A>
+  }: ValueFactoryProps<V, A>
 ) => (key: string) => {
   if (values.has(key)) return;
 
@@ -80,6 +81,12 @@ const createValues = <V, A>(
       readValueFromSource
     );
 
+    // Prime active values array with initialPose as the first item(s)
+    activePoses.set(
+      key,
+      Array.isArray(initialPose) ? initialPose : [initialPose]
+    );
+
     value = createValue(initValue, key, props);
   }
 
@@ -92,7 +99,7 @@ const scrapeValuesFromPose = <V, A>(
 ) => (key: string) => {
   const pose = props.poses[key];
   Object.keys(getPoseValues<A>(pose)).forEach(
-    createValues<V, A>(values, props, pose)
+    createValues<V, A>(values, props)
   );
 };
 

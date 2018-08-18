@@ -48,7 +48,7 @@ export type OnChangeCallbacks = {
 
 export type ActiveActions<A> = Map<string, A>;
 
-export type ActivePoses = Map<string, string>;
+export type ActivePoses = Map<string, string[]>;
 
 export type ChildPosers<V, A, C, P> = Set<Poser<V, A, C, P>>;
 
@@ -62,6 +62,7 @@ export type PoserFactory<V, A, C, P> = (
 
 export interface Poser<V, A, C, P> {
   set: (next: string, props?: Props) => Promise<any>;
+  unset: (toUnset: string, props?: Props) => Promise<any>;
   get: (key?: string) => any;
   has: (key: string) => boolean;
   setProps: (props: Props) => void;

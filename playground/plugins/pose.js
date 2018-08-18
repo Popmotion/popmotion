@@ -385,9 +385,10 @@ export class PoseHover extends React.PureComponent {
       this.poser = pose(ref, {
         hoverable: true,
         draggable: true,
-        default: { scale: 1 },
-        hovering: { scale: 1.1 },
-        dragging: { scale: 1.4 }
+        init: { scale: 1 },
+        hover: { scale: 1.1 },
+        dragging: { scale: 1.4 },
+        dragEnd: { transition: { type: "spring" } }
       });
     } else {
       this.poser.destroy();

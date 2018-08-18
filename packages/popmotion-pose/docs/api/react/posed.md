@@ -192,9 +192,15 @@ A callback that fires whenever a pose has finished transitioning.
 
 ### onDragStart
 
-`onDragStart`/`onDragEnd: (e: Event) => void`
+`onDragStart/onDragEnd: (e: Event) => void`
 
 Callbacks that fire when dragging starts or ends. **Note:** These props are immutable and can't be changed after mounting.
+
+### onHoverStart/onHoverEnd
+
+`onHoverStart/onHoverEnd: (e: MouseEvent) => any`
+
+Lifecycle callbacks for hover events. **Note:** These props are immutable and can't be changed after mounting.
 
 ### innerRef
 

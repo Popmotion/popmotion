@@ -13,18 +13,19 @@ import {
   PoseMap,
   TransitionProps
 } from '../types';
+import { warning } from 'hey-listen';
 export { Action, Poser, ValueReaction, ColdSubscription };
 
 const dragPoses = (draggable: Draggable): PoseMap => {
-  const dragging: Pose = {
+  const drag: Pose = {
     preTransition: ({ dimensions }: TransitionProps) => dimensions.measure()
   };
   const dragEnd: Pose = {};
 
-  if (draggable === true || draggable === 'x') dragging.x = dragEnd.x = 0;
-  if (draggable === true || draggable === 'y') dragging.y = dragEnd.y = 0;
+  if (draggable === true || draggable === 'x') drag.x = dragEnd.x = 0;
+  if (draggable === true || draggable === 'y') drag.y = dragEnd.y = 0;
 
-  return { dragging, dragEnd };
+  return { drag, dragEnd };
 };
 
 const createPoseConfig = (
@@ -60,8 +61,16 @@ const createPoseConfig = (
 
   // Handle interaction poses
   if (draggable) {
-    const { dragging, dragEnd } = dragPoses(draggable);
-    poseConfig.dragging = { ...poseConfig.dragging, ...dragging };
+    const { drag, dragEnd } = dragPoses(draggable);
+    warning(
+      poseConfig.dragging !== undefined,
+      'The `dragging` pose is deprecated. Use `drag`.'
+    );
+    poseConfig.drag = {
+      ...poseConfig.drag,
+      ...poseConfig.dragging,
+      ...drag
+    };
     poseConfig.dragEnd = { ...poseConfig.dragEnd, ...dragEnd };
   }
 
@@ -69,7 +78,8 @@ const createPoseConfig = (
 };
 
 const domPose = poseFactory<DomPopmotionPoser>({
-  posePriority: ['dragging', 'hovering'],
+  // Drag always takes higher priority than hover
+  posePriority: ['drag', 'hover'],
 
   transformPose: ({ flip, ...pose }, name, state) =>
     isFlipPose(flip, name, state) ? flipPose(state, pose) : pose,
@@ -121,7 +131,7 @@ const domPose = poseFactory<DomPopmotionPoser>({
       }
     };
 
-    appendEventListeners(props.element, activeActions, api.set, config);
+    appendEventListeners(props.element, activeActions, poserApi, config);
 
     return poserApi;
   }

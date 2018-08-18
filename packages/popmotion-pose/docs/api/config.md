@@ -1,15 +1,22 @@
 ---
 title: Config
 description: Configure a poser
+category: vanilla
 ---
 
 # Config options
 
 <TOC />
 
+### init
+
+`init?: Pose`
+
+A [pose config](#config-options-pose-config) to default to if no `initialPose` is defined.
+
 ### initialPose
 
-`initialPose?: string | string[]`
+`initialPose?: string | string[] = 'init'`
 
 The name of the initial pose (or poses if provided as an array).
 
@@ -19,7 +26,19 @@ The name of the initial pose (or poses if provided as an array).
 
 If `true`, will make the element draggable on both axis. Setting to either `'x'` or `'y'` will restrict movement to that axis.
 
-If defined, will allow the use of a special `dragEnd` pose
+If defined, allows use of the special `drag` pose for styling the element while dragging is active.
+
+A `dragEnd` pose can be **optionally** set for animating on drag end.
+
+```javascript
+const config = {
+  draggable: 'x',
+  init: { scale: 1 },
+  drag: { scale: 1.2 }
+}
+```
+
+The `drag` and `dragEnd` poses will travel through any posed children.
 
 ### dragBounds
 
@@ -34,6 +53,30 @@ Currently, these boundaries are enforced by a hard clamp.
 `onDragStart/onDragEnd: (e: MouseEvent | TouchEvent) => any`
 
 Lifecycle callbacks for drag events.
+
+## hoverable
+
+`hoverable?: boolean`
+
+If `true`, this element will receive `hover` poses when a pointer hovers over it.
+
+There's also an **optional** `hoverEnd` pose, for providing a different pose when hovering ends.
+
+```javascript
+const config = {
+  hover: true,
+  init: { scale: 1 },
+  hover: { scale: 1.2 }
+}
+```
+
+The `hover` and `hoverEnd` poses will travel through any posed children.
+
+### onHoverStart/onHoverEnd
+
+`onHoverStart/onHoverEnd: (e: MouseEvent) => any`
+
+Lifecycle callbacks for hover events.
 
 ### passive
 

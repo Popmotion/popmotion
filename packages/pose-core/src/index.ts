@@ -16,6 +16,8 @@ import generateDefaultTransitions from './factories/transitions';
 import { eachValue, fromPose } from './inc/transition-composers';
 import { selectPoses, selectAllValues } from './inc/selectors';
 
+const DEFAULT_INITIAL_POSE = 'init';
+
 const poseFactory = <V, A, C, P>({
   getDefaultProps,
   defaultTransitions,
@@ -56,7 +58,11 @@ const poseFactory = <V, A, C, P>({
   if (getDefaultProps) props = { ...props, ...getDefaultProps(config) };
 
   // Create values map
-  const { passive, values: userSetValues, initialPose = 'default' } = config;
+  const {
+    passive,
+    values: userSetValues,
+    initialPose = DEFAULT_INITIAL_POSE
+  } = config;
 
   const values = createValueMap<V, A>({
     poses,
@@ -68,6 +74,7 @@ const poseFactory = <V, A, C, P>({
     readValueFromSource,
     userSetValues,
     initialPose,
+    activePoses,
     props
   });
 
@@ -98,13 +105,37 @@ const poseFactory = <V, A, C, P>({
     posePriority
   });
 
+  const has = (poseName: string) => !!poses[poseName];
+
   const api: Poser<V, A, C, P> = {
     set,
+    unset: (poseName, poseProps) => {
+      const posesToSet: string[] = [];
+
+      activePoses.forEach(valuePoses => {
+        const poseIndex = valuePoses.indexOf(poseName);
+        if (poseIndex === -1) return;
+        const currentPose = valuePoses[0];
+
+        // Remove pose from activePoses list
+        valuePoses.splice(poseIndex, 1);
+        const nextPose = valuePoses[0];
+
+        if (nextPose === currentPose) return;
+        if (posesToSet.indexOf(nextPose) === -1) {
+          posesToSet.push(nextPose);
+        }
+      });
+
+      return Promise.all(
+        posesToSet.map(poseToSet => set(poseToSet, poseProps))
+      );
+    },
     get: valueName =>
       valueName
         ? selectValueToRead(values.get(valueName))
         : selectAllValues(values, selectValueToRead),
-    has: poseName => !!poses[poseName],
+    has,
     setProps: newProps => (state.props = { ...state.props, ...newProps }),
 
     // Child methods

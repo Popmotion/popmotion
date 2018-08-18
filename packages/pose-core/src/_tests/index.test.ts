@@ -169,6 +169,28 @@ test('correctly sets and updates props', () => testPoser.set('testProps')
   })
 );
 
+test('propagates pose changes to children', () => {
+  const parent = testPose({
+    init: { x: 0 },
+    a: { x: 100 }
+  });
+
+  const child = parent._addChild({
+    init: { x: 10 },
+    a: { x: 50 }
+  }, testPose);
+
+  return parent.set('a').then(() => {
+    expect(parent.get('x')).toBe(-100)
+    expect(child.get('x')).toBe(-50)
+
+    return parent.unset('a')
+  }).then(() => {
+    expect(parent.get('x')).toBe(-0)
+    expect(child.get('x')).toBe(-10)
+  })
+};
+
 test('resolves custom transitions correctly', () =>
   testPoser.set('functionalTransition')
     .then(() => {
@@ -218,14 +240,14 @@ test('resolves custom transitions correctly', () =>
 
 test('applies correct initial values', () => {
   const testDefaultsPoser = testPose({
-    default: { x: 100 },
+    init: { x: 100 },
     a: { x: 50 }
   });
 
   expect(testDefaultsPoser.get('x')).toBe(100);
 
   const testDefaultsOverridePoser = testPose({
-    default: { x: 100 },
+    init: { x: 100 },
     a: { x: 50 },
     initialPose: 'a'
   });
@@ -235,22 +257,22 @@ test('applies correct initial values', () => {
 
 test('correctly falls back to previous pose', () => {
   const fallback = testPose({
-    default: { x: 0 },
+    init: { x: 0 },
     a: { x: 50 }
   });
   expect(fallback.get('x')).toBe(0);
   return fallback.set('a').then(() => {
     expect(fallback.get('x')).toBe(-50);
-    return fallback.set('a', false);
+    return fallback.unset('a');
   })
   .then(() => {
-    expect(fallback.get('x')).toBe(0);
+    expect(fallback.get('x')).toBe(-0);
   });
 });
 
 test('correctly applies poses in priority order', () => {
   const fallback = testPose({
-    default: { x: 0 },
+    init: { x: 0 },
     draggable: { x: 10 },
     hoverable: { x: 20 }
   });
@@ -261,13 +283,13 @@ test('correctly applies poses in priority order', () => {
   })
   .then(() => {
     expect(fallback.get('x')).toBe(-10);
-    return fallback.set('hoverable', false)
+    return fallback.unset('hoverable')
   }).then(() => {
     expect(fallback.get('x')).toBe(-10)
     return fallback.set('hoverable')
   }).then(() => {
     expect(fallback.get('x')).toBe(-10)
-    return fallback.set('draggable', false)
+    return fallback.unset('draggable')
   }).then(() => {
     expect(fallback.get('x')).toBe(-20)
   })

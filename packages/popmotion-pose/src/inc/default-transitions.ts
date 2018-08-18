@@ -119,6 +119,7 @@ const intelligentDragEnd: TransitionMap<Action> = {
 
 export default new Map<string, Transition | TransitionMap<Action>>([
   ['default', intelligentTransition],
-  ['dragging', dragAction],
+  ['dragging', dragAction], // Deprecated in 2.4.0
+  ['drag', dragAction],
   ['dragEnd', intelligentDragEnd]
 ]);
