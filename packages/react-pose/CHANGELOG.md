@@ -2,6 +2,12 @@
 
 React Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.3.0] 2018-08-18
+
+### Added
+
+- `hoverable` from `popmotion-pose@2.2.0`
+
 ## [2.2.3] 2018-08-16
 
 ### Fixed

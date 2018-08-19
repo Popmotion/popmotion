@@ -62,7 +62,8 @@ const testPose = poseFactory<Value, Action, Subscription, PoserAPI>({
   defaultTransitions: new Map([['default', ({ to }) => mockActionInverse(to)]]),
   transformPose: pose => pose,
   readValueFromSource: () => 0,
-  extendAPI: api => api
+  extendAPI: api => api,
+  posePriority: ['draggable', 'hoverable']
 });
 
 const testPoser = testPose({
@@ -168,6 +169,28 @@ test('correctly sets and updates props', () => testPoser.set('testProps')
   })
 );
 
+test('propagates pose changes to children', () => {
+  const parent = testPose({
+    init: { x: 0 },
+    a: { x: 100 }
+  });
+
+  const child = parent._addChild({
+    init: { x: 10 },
+    a: { x: 50 }
+  }, testPose);
+
+  return parent.set('a').then(() => {
+    expect(parent.get('x')).toBe(-100)
+    expect(child.get('x')).toBe(-50)
+
+    return parent.unset('a')
+  }).then(() => {
+    expect(parent.get('x')).toBe(-0)
+    expect(child.get('x')).toBe(-10)
+  })
+};
+
 test('resolves custom transitions correctly', () =>
   testPoser.set('functionalTransition')
     .then(() => {
@@ -214,3 +237,60 @@ test('resolves custom transitions correctly', () =>
       expect(testPoser.get().x).toBe(45)
     })
 );
+
+test('applies correct initial values', () => {
+  const testDefaultsPoser = testPose({
+    init: { x: 100 },
+    a: { x: 50 }
+  });
+
+  expect(testDefaultsPoser.get('x')).toBe(100);
+
+  const testDefaultsOverridePoser = testPose({
+    init: { x: 100 },
+    a: { x: 50 },
+    initialPose: 'a'
+  });
+
+  expect(testDefaultsOverridePoser.get('x')).toBe(50);
+});
+
+test('correctly falls back to previous pose', () => {
+  const fallback = testPose({
+    init: { x: 0 },
+    a: { x: 50 }
+  });
+  expect(fallback.get('x')).toBe(0);
+  return fallback.set('a').then(() => {
+    expect(fallback.get('x')).toBe(-50);
+    return fallback.unset('a');
+  })
+  .then(() => {
+    expect(fallback.get('x')).toBe(-0);
+  });
+});
+
+test('correctly applies poses in priority order', () => {
+  const fallback = testPose({
+    init: { x: 0 },
+    draggable: { x: 10 },
+    hoverable: { x: 20 }
+  });
+  expect(fallback.get('x')).toBe(0);
+  return fallback.set('hoverable').then(() => {
+    expect(fallback.get('x')).toBe(-20);
+    return fallback.set('draggable');
+  })
+  .then(() => {
+    expect(fallback.get('x')).toBe(-10);
+    return fallback.unset('hoverable')
+  }).then(() => {
+    expect(fallback.get('x')).toBe(-10)
+    return fallback.set('hoverable')
+  }).then(() => {
+    expect(fallback.get('x')).toBe(-10)
+    return fallback.unset('draggable')
+  }).then(() => {
+    expect(fallback.get('x')).toBe(-20)
+  })
+});

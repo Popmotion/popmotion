@@ -61,6 +61,13 @@ export class ReactPose extends React.PureComponent {
   }
 }
 
+export const Hover = posed(BoxStyled)({
+  hoverable: true,
+  default: { background: "#00f" },
+  hovering: { background: "#f00" },
+  initialPose: "default"
+});
+
 const SpringBox = posed(BoxStyled)({
   spring: {
     x: 0,

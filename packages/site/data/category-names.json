@@ -13,5 +13,6 @@
   "dom": "DOM",
   "react": "React",
   "react-native": "React Native",
-  "stylers": "Stylers"
+  "stylers": "Stylers",
+  "vanilla": "Vanilla"
 }

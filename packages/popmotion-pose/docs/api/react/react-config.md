@@ -18,7 +18,19 @@ Options to configure [posed components](/pose/api/posed) in React Pose.
 
 If `true`, will make the element draggable on both axis. Setting to either `'x'` or `'y'` will restrict movement to that axis.
 
-If defined, will allow the use of a special `dragEnd` pose
+If defined, allows use of the special `drag` pose for styling the element while dragging is active.
+
+A `dragEnd` pose can be **optionally** set for animating on drag end.
+
+```javascript
+const config = {
+  draggable: 'x',
+  init: { scale: 1 },
+  drag: { scale: 1.2 }
+}
+```
+
+The `drag` and `dragEnd` poses will travel through any posed children.
 
 ### dragBounds
 
@@ -27,6 +39,59 @@ If defined, will allow the use of a special `dragEnd` pose
 An object that defines `top`, `right`, `bottom` and/or `left` drag boundaries in pixels.
 
 Currently, these boundaries are enforced by a hard clamp.
+
+### hoverable
+
+`hoverable?: boolean`
+
+If `true`, this element will receive `hover` poses when a pointer hovers over it.
+
+There's also an **optional** `hoverEnd` pose, for providing a different pose when hovering ends.
+
+```javascript
+const config = {
+  hoverable: true,
+  init: { scale: 1 },
+  hover: { scale: 1.2 }
+}
+```
+
+The `hover` and `hoverEnd` poses will travel through any posed children.
+
+### focusable
+
+`focusable?: boolean`
+
+If `true`, this element will receive `focus` poses when the element receives focus, and `blur` poses when it loses focus.
+
+```javascript
+const config = {
+  focusable: true,
+  init: { scale: 1 },
+  focus: { scale: 1.2 },
+  blur: {
+    scale: 1,
+    transition: {
+      type: 'spring',
+      stiffness: 800
+    }
+  }
+};
+```
+
+### pressable
+
+`pressable?: boolean`
+
+If `true`, this element will receive `press` poses when the element is pressed, and **optionally** `pressEnd` when pressing stops.
+
+```javascript
+const config = {
+  pressable: true,
+  init: { scale: 1 },
+  press: { scale: 0.8 }
+};
+```
 
 ### passive
 

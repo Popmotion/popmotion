@@ -1,23 +1,21 @@
 ---
-title: Dragging
-description: Make elements draggable and impose drag limits with Pose
+title: UI events and interactions
+description: Trigger animations based on UI events like drag, press, hover and focus
 category: basics
 next: passive
 ---
 
-# Dragging
+# UI events and interactions
 
-Simplifying interactivity is a core aim of Pose. Currently, it supports dragging and hard drag boundaries, but in the future we'll have elasticated drag boundaries and more.
+Pose can be used to power and animate interactions. Currently, it supports the following events: drag, press, hover and focus.
 
-For now, let's implement dragging, boundaries and apply momentum when a user stops dragging.
-
-For this tutorial you can follow with [vanilla Pose](https://codepen.io/popmotion/pen/RMVKRM?editors=0010) or [React Pose](https://codepen.io/popmotion/pen/zWwNKK?editors=0010).
+In this tutorial, we'll take a look at each.
 
 <TOC />
 
-## dragging
+## Dragging
 
-Making an element draggable is as simple as setting `draggable: true` in the config:
+With Pose, making an element draggable is as simple as passing `draggable: true` to the config:
 
 ```javascript
 const config = {
@@ -25,30 +23,53 @@ const config = {
 }
 ```
 
-<CodePen id="OvmWZG" />
+<CodeSandbox id="8z7j041kyl" />
 
-`true` sets both axis to draggable, but we can select a single axis to drag on by setting it to `'x'` or `'y'`:
+`true` sets both axis to draggable, but we can select a single axis to drag by setting it to `'x'` or `'y'`.
 
-```javascript
-const config = {
-  draggable: 'x'
-}
-```
+<CodeSandbox id="x23pw14oop" />
 
-<CodePen id="BrRpPe" />
+### Boundaries
 
-## Drag boundaries
+We can add boundaries to the range of motion with the `dragBounds` property.
 
-We can add drag boundaries with the `dragBounds` property. It accepts `top`, `left`, `bottom` and/or `right`, measured in pixels or percentages:
+It accepts `top`, `left`, `bottom` and/or `right`, measured in pixels or percentages:
 
 ```javascript
 const config = {
   draggable: 'x',
-  dragBounds: { left: -100, right: 100 }
+  dragBounds: { left: '-100%', right: '100%' }
 }
 ```
 
-<CodePen id="RMVKYq" />
+<CodeSandbox id="j27p9l3v6y" />
+
+### Poses
+
+When a posed component is draggable, two new poses are fired.
+
+While dragging is active, the `drag` pose takes effect.
+
+```javascript
+const config = {
+  draggable: true,
+  init: { scale: 1 },
+  drag: { scale: 1.2 }
+};
+```
+
+When dragging finishes, by default all values revert to their previous pose. Optionally, a `dragEnd` pose can be defined:
+
+```javascript
+const config = {
+  draggable: true,
+  init: { scale: 1 },
+  drag: { scale: 1.2 },
+  dragEnd: { scale: 0.5 }
+};
+```
+
+
 
 ## dragEnd pose
 

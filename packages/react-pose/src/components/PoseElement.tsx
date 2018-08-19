@@ -82,9 +82,12 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
       const thisPose = Array.isArray(pose) ? pose : [pose];
       const thisInternalPose = Array.isArray(_pose) ? _pose : [_pose];
 
-      return Array.isArray(parentPose)
+      const initialPoses = Array.isArray(parentPose)
         ? [...parentPose, ...thisPose, ...thisInternalPose]
         : [parentPose, ...thisPose, ...thisInternalPose];
+
+      const filteredInitialPoses = initialPoses.filter(Boolean);
+      return filteredInitialPoses.length ? filteredInitialPoses : undefined;
     }
   }
 

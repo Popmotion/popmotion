@@ -7,8 +7,10 @@ import {
   PoserFLIP,
   PoserPassive,
   PoseDrag,
+  PoseHover,
   PoserManualValues,
   PoseOpacity,
+  PoseFocus,
   PoseFullScreenFlip,
   UnitTypeError
 } from "./plugins/pose";
@@ -20,6 +22,7 @@ import {
   UserPoseInPoseGroup,
   PoseKey,
   PoseKeyFail,
+  Hover,
   Filter
 } from "./plugins/react-pose";
 
@@ -29,6 +32,8 @@ storiesOf("Plugin: Pose", module)
   .add("passive values", () => <PoserPassive />)
   .add("manual values", () => <PoserManualValues />)
   .add("drag", () => <PoseDrag />)
+  .add("hover", () => <PoseHover />)
+  .add("focus", () => <PoseFocus />)
   .add("opacity", () => <PoseOpacity />)
   .add("full screen flip", () => <PoseFullScreenFlip />)
   .add("unit type error", () => <UnitTypeError />);
@@ -40,6 +45,7 @@ storiesOf("Plugin: React Pose", module)
   .add("email list", () => <EmailList />)
   .add("user-defined poses within PoseGroup", () => <UserPoseInPoseGroup />)
   .add("pose key test", () => <PoseKey />)
+  .add("hover", () => <Hover />)
   .add("image filter", () => <Filter />)
   .add("pose key fail test", () => <PoseKeyFail />);
 

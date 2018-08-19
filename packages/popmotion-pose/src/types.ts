@@ -31,14 +31,17 @@ export type Transformer = (v: any) => any;
 export interface DomPopmotionPoser
   extends Poser<Value, Action, ColdSubscription, DomPopmotionPoser> {
   addChild: (element: Element, config: PoserConfig<Value>) => DomPopmotionPoser;
-  flip: (pose: string, props: { [key: string]: any }) => Promise<any>;
+  flip: (op: Function) => Promise<any>;
   measure: () => BoundingBox;
 }
 
 export type DomPopmotionConfig = {
   onDragStart?: (e: MouseEvent | TouchEvent) => any;
   onDragEnd?: (e: MouseEvent | TouchEvent) => any;
+  onHoverStart?: (e: MouseEvent | TouchEvent) => any;
+  onHoverEnd?: (e: MouseEvent | TouchEvent) => any;
   draggable?: boolean;
+  hoverable?: boolean;
   dragBounds?: BoundingBox;
   props?: { [key: string]: any };
   [key: string]: any;
@@ -64,6 +67,7 @@ export type PopmotionPoserFactoryConfig<P> = {
   transformPose: TransformPose<Value, Action, ColdSubscription, P>;
   addListenerToValue: (key: string, styler: Styler) => (v: any) => void;
   readValueFromSource?: ReadValueFromSource;
+  posePriority?: string[];
 };
 
 export type Dimensions = {
