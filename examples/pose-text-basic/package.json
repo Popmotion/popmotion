@@ -1,0 +1,23 @@
+{
+  "name": "react-pose-text-basic",
+  "description": "",
+  "private": true,
+  "main": "src/index.js",
+  "homepage": "https://codesandbox.io/s/github/Popmotion/popmotion/tree/master/examples/pose-text-basic",
+  "keywords": [],
+  "dependencies": {
+    "react": "16.3.2",
+    "react-dom": "16.3.2",
+    "react-pose": "latest",
+    "react-pose-text": "latest"
+  },
+  "devDependencies": {
+    "react-scripts": "^1.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}

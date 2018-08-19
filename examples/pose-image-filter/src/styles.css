@@ -1,0 +1,24 @@
+body {
+  height: 100vh;
+  padding: 0;
+  justify-content: stretch;
+  align-items: center;
+  display: flex;
+}
+
+#root {
+  color: #fff;
+  font-size: 32px;
+  font-family: PT Sans, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 200;
+  text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  align-items: center;
+  display: flex;
+}
+
+img {
+  max-width: 80vw;
+  max-height: 80vh;
+  margin: 0 auto;
+}

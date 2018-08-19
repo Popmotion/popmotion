@@ -15,7 +15,7 @@ React Pose Text automatically splits strings of text into individual words and/o
 - `enter`/`exit` animations with `PoseGroup`
 - Only 1kb!
 
-<CodeSandbox id="4jzzvm1vz7" />
+<CodeSandbox example="pose-text-basic" />
 
 <TOC />
 
@@ -77,7 +77,7 @@ export default ({ isVisible }) => (
 
 It also responds to pose changes further up the tree.
 
-<CodeSandbox id="100lwoo7wl" />
+<CodeSandbox example="pose-text-sidebar" />
 
 #### Special pose props
 
@@ -116,19 +116,19 @@ You can use these props in various ways, for instance to create a variety of sta
 const charPoses = {
   enter: {
     y: 0,
-    delay: ({ charIndex }) => charIndex * 50 
+    delay: ({ charIndex }) => charIndex * 50
   }
 };
 ```
 
-<CodeSandbox id="zzlr2p70mm" />
+<CodeSandbox example="pose-text-special-props" />
 
 #### Pointer events
 
 You can use Pose's pointer events as usual. For instance, you can make every word draggable by setting `draggable: true`:
 
-<CodeSandbox id="yqwwn1rmjv" />
+<CodeSandbox example="pose-text-draggable" />
 
 Those poses still cascade down, too. So by setting `dragging` and `dragEnd` poses to our characters, we can make our characters animate while dragging words:
 
-<CodeSandbox id="38047jqp7m" />
+<CodeSandbox example="pose-text-draggable-animated" />

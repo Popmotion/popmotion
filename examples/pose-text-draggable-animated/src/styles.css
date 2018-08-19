@@ -1,0 +1,21 @@
+body {
+  background-image: radial-gradient(
+    120% 600px at 50% 200px,
+    #1c99ff,
+    #7006be 120%
+  );
+  height: 100vh;
+  padding: 0;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.container {
+  color: #fff;
+  font-size: 32px;
+  font-family: PT Sans, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 200;
+  text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
+  cursor: default;
+}

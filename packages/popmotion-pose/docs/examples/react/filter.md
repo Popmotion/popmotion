@@ -17,4 +17,4 @@ const config = {
 
 Hover over, or tap, the image in this example to see the effect in action.
 
-<CodeSandbox height="500" id="r7yq8m60op" />
+<CodeSandbox example="pose-image-filter" />

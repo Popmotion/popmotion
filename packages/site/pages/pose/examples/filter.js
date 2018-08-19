@@ -41,7 +41,7 @@ const convertMarkdown = marksy({
 const content = convertMarkdown(`
 # Image filters
 
-<CodeSandbox height="500" id="r7yq8m60op" />
+<CodeSandbox example="pose-image-filter" />
 `);
 
 const Page = ({ section }) => (
