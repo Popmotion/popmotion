@@ -45,10 +45,10 @@ const createPoseConfig = (
     ...config,
     props: {
       ...config.props,
-      draggable,
       onDragStart,
       onDragEnd,
       dragBounds,
+      draggable,
       hoverable,
       focusable,
       pressable,
