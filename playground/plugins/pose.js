@@ -400,6 +400,24 @@ export class PoseHover extends React.PureComponent {
   }
 }
 
+export class PoseFocus extends React.PureComponent {
+  setRef = ref => {
+    if (ref) {
+      this.poser = pose(ref, {
+        focusable: true,
+        init: { scale: 1 },
+        focus: { scale: 1.1 }
+      });
+    } else {
+      this.poser.destroy();
+    }
+  };
+
+  render() {
+    return <input type="text" ref={this.setRef} />;
+  }
+}
+
 const Container = styled.div`
   width: 100vw;
   height: 100vh;

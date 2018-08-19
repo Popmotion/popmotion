@@ -8,41 +8,47 @@ import { DomPopmotionConfig, DomPopmotionPoser } from '../types';
  * event delegation
  */
 
-type PointerEventsConfig = {
+type UIEventConfig = {
   startEvents: string;
   endEvents: string;
   startPose: string;
   endPose: string;
-  startCallback: string;
-  endCallback: string;
-  startListener: string;
-  endListener: string;
+  startCallback?: string;
+  endCallback?: string;
   useDocumentToEnd?: boolean;
 };
 
-const makePointerEvent = ({
+type UIEventApplicator = (
+  element: Element,
+  activeActions: ActiveActions<ColdSubscription>,
+  poser: DomPopmotionPoser,
+  config: DomPopmotionConfig
+) => void;
+
+const makeUIEventApplicator = ({
   startEvents,
   endEvents,
   startPose,
   endPose,
   startCallback,
   endCallback,
-  startListener,
-  endListener,
   useDocumentToEnd
-}: PointerEventsConfig) => (
-  element: Element,
-  activeActions: ActiveActions<ColdSubscription>,
-  poser: DomPopmotionPoser,
-  config: DomPopmotionConfig
+}: UIEventConfig): UIEventApplicator => (
+  element,
+  activeActions,
+  poser,
+  config
 ) => {
+  const startListener = startPose + 'Start';
+  const endListener = startPose + 'End';
   const eventStartListener = listen(element, startEvents).start(
     (startEvent: MouseEvent | TouchEvent) => {
       startEvent.preventDefault();
 
       poser.set(startPose);
 
-      if (config[startCallback]) config[startCallback](startEvent);
+      if (startCallback && config[startCallback])
+        config[startCallback](startEvent);
 
       const eventEndListener = listen(
         useDocumentToEnd ? document : element,
@@ -51,7 +57,7 @@ const makePointerEvent = ({
         activeActions.get(endListener).stop();
         poser.unset(startPose);
         poser.set(endPose);
-        if (config[endCallback]) config[endCallback](endEvent);
+        if (endCallback && config[endCallback]) config[endCallback](endEvent);
       });
 
       activeActions.set(endListener, eventEndListener);
@@ -61,35 +67,45 @@ const makePointerEvent = ({
   activeActions.set(startListener, eventStartListener);
 };
 
-const makeDraggable = makePointerEvent({
-  startEvents: 'mousedown touchstart',
-  endEvents: 'mouseup touchend',
-  startPose: 'drag',
-  endPose: 'dragEnd',
-  startCallback: 'onDragStart',
-  endCallback: 'onDragEnd',
-  startListener: 'dragStartListener',
-  endListener: 'dragEndListener',
-  useDocumentToEnd: true
-});
+const events: { [key: string]: UIEventApplicator } = {
+  draggable: makeUIEventApplicator({
+    startEvents: 'mousedown touchstart',
+    endEvents: 'mouseup touchend',
+    startPose: 'drag',
+    endPose: 'dragEnd',
+    startCallback: 'onDragStart',
+    endCallback: 'onDragEnd',
+    useDocumentToEnd: true
+  }),
+  hoverable: makeUIEventApplicator({
+    startEvents: 'mouseenter',
+    endEvents: 'mouseleave',
+    startPose: 'hover',
+    endPose: 'hoverEnd'
+  }),
+  focusable: makeUIEventApplicator({
+    startEvents: 'focus',
+    endEvents: 'blur',
+    startPose: 'focus',
+    endPose: 'blur'
+  }),
+  pressable: makeUIEventApplicator({
+    startEvents: 'mousedown touchstart',
+    endEvents: 'mouseup touchend',
+    startPose: 'press',
+    endPose: 'pressEnd',
+    useDocumentToEnd: true
+  })
+};
 
-const makeHoverable = makePointerEvent({
-  startEvents: 'mouseenter',
-  endEvents: 'mouseleave',
-  startPose: 'hover',
-  endPose: 'hoverEnd',
-  startCallback: 'onHoverStart',
-  endCallback: 'onHoverEnd',
-  startListener: 'hoverStartListener',
-  endListener: 'hoverEndListener'
-});
+const eventKeys = Object.keys(events);
 
 export default (
   element: Element,
   activeActions: ActiveActions<ColdSubscription>,
   poser: DomPopmotionPoser,
   { props }: DomPopmotionConfig
-) => {
-  if (props.draggable) makeDraggable(element, activeActions, poser, props);
-  if (props.hoverable) makeHoverable(element, activeActions, poser, props);
-};
+) =>
+  eventKeys.forEach(key => {
+    if (props[key]) events[key](element, activeActions, poser, props);
+  });

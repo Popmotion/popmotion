@@ -40,7 +40,7 @@ An object that defines `top`, `right`, `bottom` and/or `left` drag boundaries in
 
 Currently, these boundaries are enforced by a hard clamp.
 
-## hoverable
+### hoverable
 
 `hoverable?: boolean`
 
@@ -50,13 +50,48 @@ There's also an **optional** `hoverEnd` pose, for providing a different pose whe
 
 ```javascript
 const config = {
-  hover: true,
+  hoverable: true,
   init: { scale: 1 },
   hover: { scale: 1.2 }
 }
 ```
 
 The `hover` and `hoverEnd` poses will travel through any posed children.
+
+### focusable
+
+`focusable?: boolean`
+
+If `true`, this element will receive `focus` poses when the element receives focus, and `blur` poses when it loses focus.
+
+```javascript
+const config = {
+  focusable: true,
+  init: { scale: 1 },
+  focus: { scale: 1.2 },
+  blur: {
+    scale: 1,
+    transition: {
+      type: 'spring',
+      stiffness: 800
+    }
+  }
+};
+```
+
+### pressable
+
+`pressable?: boolean`
+
+If `true`, this element will receive `press` poses when the element is pressed, and **optionally** `pressEnd` when pressing stops.
+
+```javascript
+const config = {
+  pressable: true,
+  init: { scale: 1 },
+  press: { scale: 0.8 }
+};
+```
 
 ### passive
 

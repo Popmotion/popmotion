@@ -10,6 +10,7 @@ import {
   PoseHover,
   PoserManualValues,
   PoseOpacity,
+  PoseFocus,
   PoseFullScreenFlip,
   UnitTypeError
 } from "./plugins/pose";
@@ -32,6 +33,7 @@ storiesOf("Plugin: Pose", module)
   .add("manual values", () => <PoserManualValues />)
   .add("drag", () => <PoseDrag />)
   .add("hover", () => <PoseHover />)
+  .add("focus", () => <PoseFocus />)
   .add("opacity", () => <PoseOpacity />)
   .add("full screen flip", () => <PoseFullScreenFlip />)
   .add("unit type error", () => <UnitTypeError />);

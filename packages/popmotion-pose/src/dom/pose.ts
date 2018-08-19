@@ -13,7 +13,6 @@ import {
   PoseMap,
   TransitionProps
 } from '../types';
-import { warning } from 'hey-listen';
 export { Action, Poser, ValueReaction, ColdSubscription };
 
 const dragPoses = (draggable: Draggable): PoseMap => {
@@ -34,9 +33,8 @@ const createPoseConfig = (
     onDragStart,
     onDragEnd,
     draggable,
-    onHoverStart,
-    onHoverEnd,
     hoverable,
+    focusable,
     dragBounds,
     ...config
   }: DomPopmotionConfig
@@ -50,9 +48,8 @@ const createPoseConfig = (
       onDragStart,
       onDragEnd,
       dragBounds,
-      onHoverStart,
-      onHoverEnd,
       hoverable,
+      focusable,
       element,
       elementStyler: styler(element, { preparseOutput: false }),
       dimensions: createDimensions(element)
@@ -62,13 +59,9 @@ const createPoseConfig = (
   // Handle interaction poses
   if (draggable) {
     const { drag, dragEnd } = dragPoses(draggable);
-    warning(
-      poseConfig.dragging !== undefined,
-      'The `dragging` pose is deprecated. Use `drag`.'
-    );
+
     poseConfig.drag = {
       ...poseConfig.drag,
-      ...poseConfig.dragging,
       ...drag
     };
     poseConfig.dragEnd = { ...poseConfig.dragEnd, ...dragEnd };
@@ -78,8 +71,7 @@ const createPoseConfig = (
 };
 
 const domPose = poseFactory<DomPopmotionPoser>({
-  // Drag always takes higher priority than hover
-  posePriority: ['drag', 'hover'],
+  posePriority: ['drag', 'press', 'focus', 'hover'],
 
   transformPose: ({ flip, ...pose }, name, state) =>
     isFlipPose(flip, name, state) ? flipPose(state, pose) : pose,
