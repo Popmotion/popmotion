@@ -49,7 +49,7 @@
   },
   "dependencies": {
     "popmotion": "^8.3.3",
-    "pose-core": "^0.8.1",
+    "pose-core": "^1.0.0",
     "style-value-types": "^3.0.3",
     "tslib": "^1.9.1"
   },

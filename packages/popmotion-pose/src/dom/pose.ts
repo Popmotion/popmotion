@@ -35,6 +35,7 @@ const createPoseConfig = (
     draggable,
     hoverable,
     focusable,
+    pressable,
     dragBounds,
     ...config
   }: DomPopmotionConfig
@@ -50,6 +51,7 @@ const createPoseConfig = (
       dragBounds,
       hoverable,
       focusable,
+      pressable,
       element,
       elementStyler: styler(element, { preparseOutput: false }),
       dimensions: createDimensions(element)

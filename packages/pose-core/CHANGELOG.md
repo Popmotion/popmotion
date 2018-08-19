@@ -2,6 +2,12 @@
 
 Pose Core adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.0] 2018-08-19
+
+### Added
+
+- New pose resolution logic.
+
 ## [0.8.1] 2018-08-18
 
 ### Added
