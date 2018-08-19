@@ -10,11 +10,12 @@ CSS filters can be animated by settings `filter` as you [would in CSS](https://d
 
 ```javascript
 const config = {
-  blur: { filter: 'blur(20px) grayscale()' },
-  focus: { filter: 'blur(0px)' }
+  hoverable: true,
+  init: { filter: 'grayscale(80%) blur(2px)' },
+  hover: { filter: 'grayscale(0%) blur(0px)' }
 };
 ```
 
 Hover over, or tap, the image in this example to see the effect in action.
 
-<CodeSandbox height="500" id="r7yq8m60op" />
+<CodeSandbox height="500" id="31886n8vp1" />

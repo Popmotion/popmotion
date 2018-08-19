@@ -23,7 +23,8 @@ import {
   PoseKey,
   PoseKeyFail,
   Hover,
-  Filter
+  Filter,
+  DragChildren
 } from "./plugins/react-pose";
 
 storiesOf("Plugin: Pose", module)
@@ -47,7 +48,8 @@ storiesOf("Plugin: React Pose", module)
   .add("pose key test", () => <PoseKey />)
   .add("hover", () => <Hover />)
   .add("image filter", () => <Filter />)
-  .add("pose key fail test", () => <PoseKeyFail />);
+  .add("pose key fail test", () => <PoseKeyFail />)
+  .add("drag w/ children", () => <DragChildren />);
 
 // import { Decay, DecayModifyTarget, DecayPower, DecayTimeConstant } from './decay';
 // import { Keyframes, KeyframesDuration, KeyframesLoop, KeyframesLinear, KeyframesTimes } from './keyframes';

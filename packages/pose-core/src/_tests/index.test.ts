@@ -270,6 +270,37 @@ test('correctly falls back to previous pose', () => {
   });
 });
 
+test('children fall back correctly multiple times', () => {
+  const parent = testPose({
+    init: { scale: 1 },
+    dragging: { scale: 2 },
+    dragEnd: { scale: 3 }
+  });
+  const child = parent._addChild({
+    init: { scale: 10 },
+    dragging: { scale: 20 }
+  }, testPose);
+
+  return parent.set('dragging')
+    .then(() => {
+      expect(child.get('scale')).toBe(-20)
+      parent.set('dragEnd')
+      return parent.unset('dragging')
+    })
+    .then(() => {
+      expect(child.get('scale')).toBe(-10)
+      return parent.set('dragging')
+    })
+    .then(() => {
+      expect(child.get('scale')).toBe(-20)
+      parent.set('dragEnd')
+      return parent.unset('dragging')
+    })
+    .then(() => {
+      expect(child.get('scale')).toBe(-10)
+    })
+});
+
 test('correctly applies poses in priority order', () => {
   const fallback = testPose({
     init: { x: 0 },

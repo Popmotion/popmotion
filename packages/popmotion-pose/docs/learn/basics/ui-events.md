@@ -58,6 +58,8 @@ const config = {
 };
 ```
 
+**Note:** A current limitation with the `drag` pose is you must leave `transition` **undefined**.
+
 When dragging finishes, by default all values revert to their previous pose. Optionally, a `dragEnd` pose can be defined:
 
 ```javascript
@@ -68,6 +70,10 @@ const config = {
   dragEnd: { scale: 0.5 }
 };
 ```
+
+<CodeSandbox id="0xjn840k6p" />
+
+
 
 
 

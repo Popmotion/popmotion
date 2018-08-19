@@ -160,7 +160,7 @@ const createPoseSetter = <V, A, C, P>(
     convertTransitionDefinition
   } = setterProps;
 
-  return (next: string, nextProps: Props = {}) => {
+  return (next: string, nextProps: Props = {}, propagate: boolean = true) => {
     const { children, values, props, activeActions, activePoses } = state;
     const { delay = 0 } = nextProps;
     const hasChildren = children.size;
@@ -173,7 +173,7 @@ const createPoseSetter = <V, A, C, P>(
     let nextPose = poses[next];
 
     const getChildAnimations = (): AnimationsPromiseList =>
-      hasChildren
+      hasChildren && propagate
         ? startChildAnimations(children, next, nextPose, baseTransitionProps)
         : [];
 

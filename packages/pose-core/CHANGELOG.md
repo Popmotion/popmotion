@@ -2,6 +2,12 @@
 
 Pose Core adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.1] 2018-08-19
+
+### Fixed
+
+Updating `unset` logic.
+
 ## [1.0.0] 2018-08-19
 
 ### Added

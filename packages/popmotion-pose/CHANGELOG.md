@@ -6,7 +6,8 @@ Popmotion Pose adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
-- Pointer events: `drag`, `press`, `hover`, `focus`
+- Pointer events: `drag`, `press`, `hover`, `focus`.
+- Support for `init` pose.
 
 ### Changed
 

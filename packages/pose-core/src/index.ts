@@ -127,9 +127,15 @@ const poseFactory = <V, A, C, P>({
         }
       });
 
-      return Promise.all(
-        posesToSet.map(poseToSet => set(poseToSet, poseProps))
+      const animationsToResolve = posesToSet.map(poseToSet =>
+        set(poseToSet, poseProps, false)
       );
+
+      children.forEach(child =>
+        animationsToResolve.push(child.unset(poseName))
+      );
+
+      return Promise.all(animationsToResolve);
     },
     get: valueName =>
       valueName

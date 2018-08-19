@@ -9964,6 +9964,15 @@ pn@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/pn/-/pn-1.1.0.tgz#e2f4cef0e219f463c179ab37463e4e1ecdccbafb"
 
+popmotion-pose@^2.1.0, popmotion-pose@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/popmotion-pose/-/popmotion-pose-2.2.0.tgz#66673a2bf6647a0e9da550573d33681f8609cd00"
+  dependencies:
+    popmotion "^8.3.3"
+    pose-core "^0.7.4"
+    style-value-types "^3.0.3"
+    tslib "^1.9.1"
+
 pose-core@^0.1.7:
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/pose-core/-/pose-core-0.1.7.tgz#7c01a55164de620356cdda345725c38499efd1bb"
@@ -9972,7 +9981,7 @@ pose-core@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/pose-core/-/pose-core-0.3.0.tgz#63800caee0b67daa7eb52368438969a58ec97c42"
 
-pose-core@^0.7.3:
+pose-core@^0.7.3, pose-core@^0.7.4:
   version "0.7.4"
   resolved "https://registry.yarnpkg.com/pose-core/-/pose-core-0.7.4.tgz#21d64b6efe5eb7e0d1c2e7a111d0836ea00cdea5"
   dependencies:
@@ -10760,6 +10769,14 @@ react-pose-core@^0.1.0:
     "@types/react" "^16.3.12"
     "@types/react-native" "^0.55.4"
     animated-pose "^0.2.0"
+
+react-pose@^2.2.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/react-pose/-/react-pose-2.3.0.tgz#adf9790744ebd7a36d582c89ce316d1183198bff"
+  dependencies:
+    hey-listen "^1.0.5"
+    popmotion-pose "^2.2.0"
+    tslib "^1.9.1"
 
 react-proxy@^1.1.7:
   version "1.1.8"
