@@ -1,6 +1,6 @@
 {
   "name": "pose-core",
-  "version": "0.8.1",
+  "version": "1.0.0",
   "description": "Factory for Pose animation state machines",
   "main": "lib/index.js",
   "module": "dist/pose-core.es.js",
