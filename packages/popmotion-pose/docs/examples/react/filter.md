@@ -6,4 +6,4 @@ category: react
 
 # Image filters
 
-<CodeSandbox height="500" id="r7yq8m60op" />
+<CodeSandbox example="pose-image-filter" />
