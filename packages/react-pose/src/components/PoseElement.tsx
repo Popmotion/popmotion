@@ -287,10 +287,10 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
       <PoseParentContext.Provider value={this.childrenHandlers}>
         {createElement(
           elementType,
-          pickAssign(this.shouldForwardProp, {
-            ...this.getSetProps(),
-            ...this.getRefs()
-          })
+          pickAssign(this.shouldForwardProp, [
+            this.getSetProps(),
+            this.getRefs()
+          ])
         )}
       </PoseParentContext.Provider>
     );
