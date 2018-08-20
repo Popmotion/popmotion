@@ -22,9 +22,10 @@ if (typeof document !== 'undefined') {
     }
   };
 
-  listen(document, 'touchstart touchmove', { passive: true }).start(
-    updatePointsLocation
-  );
+  listen(document, 'touchstart touchmove', {
+    passive: true,
+    capture: true
+  }).start(updatePointsLocation);
 }
 
 const multitouch = ({
