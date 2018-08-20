@@ -62,7 +62,6 @@ import {
   TweenWithVelocity
 } from "./tween";
 // import { Spring, SpringVelocity, SpringHeavier, SpringStiffer, SpringStifferDamping } from './spring';
-// import { Drag, DragWithDeltaPointer, Multitouch } from './pointer';
 // import { TimelineTest } from './timeline';
 // import { Chain, Composite, Delay, Crossfade, Merge, Parallel, Stagger } from './compositors';
 //import { DraggableDOM, DraggableReact } from './plugins/draggable';
@@ -109,10 +108,11 @@ storiesOf("tween", module)
   .add("flip", () => <TweenFlip />)
   .add("track velocity", () => <TweenWithVelocity />);
 
-// storiesOf('pointer', module)
-// .add('drag', () => <Drag />)
-// .add('drag with delta pointer', () => <DragWithDeltaPointer />)
-// .add('multitouch', () => <Multitouch />);
+import { Drag, DragWithDeltaPointer, Multitouch } from "./pointer";
+storiesOf("pointer", module)
+  .add("drag", () => <Drag />)
+  .add("drag with delta pointer", () => <DragWithDeltaPointer />)
+  .add("multitouch", () => <Multitouch />);
 
 // storiesOf('compositors', module)
 // .add('chain', () => <Chain />)
