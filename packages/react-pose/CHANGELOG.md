@@ -2,6 +2,12 @@
 
 React Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.0.1] 2018-08-20
+
+### Fixed
+
+- Fixed `ComponentFactory` type. [#434](https://github.com/Popmotion/popmotion/pull/434)
+
 ## [3.0.0] 2018-08-19
 
 ### Added
