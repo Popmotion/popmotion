@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.3.3] 2018-08-20
+
+### Fixed
+
+- Forcing `multitouch` to use `passive: true`.
+
 ## [8.3.2] 2018-06-27
 
 ### Fixed
