@@ -35,7 +35,6 @@
     "prettier": "1.11.1",
     "react-native": "^0.55.4",
     "ts-jest": "^22.4.5",
-    "typescript": "^2.8.3",
     "webpack": "^3.11.0"
   },
   "prettier": {

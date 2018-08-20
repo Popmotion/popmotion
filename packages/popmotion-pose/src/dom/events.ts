@@ -16,6 +16,7 @@ type UIEventConfig = {
   startCallback?: string;
   endCallback?: string;
   useDocumentToEnd?: boolean;
+  preventDefault?: boolean;
 };
 
 type UIEventApplicator = (
@@ -32,7 +33,8 @@ const makeUIEventApplicator = ({
   endPose,
   startCallback,
   endCallback,
-  useDocumentToEnd
+  useDocumentToEnd,
+  preventDefault
 }: UIEventConfig): UIEventApplicator => (
   element,
   activeActions,
@@ -43,7 +45,7 @@ const makeUIEventApplicator = ({
   const endListener = startPose + 'End';
   const eventStartListener = listen(element, startEvents).start(
     (startEvent: MouseEvent | TouchEvent) => {
-      startEvent.preventDefault();
+      if (preventDefault) startEvent.preventDefault();
 
       poser.set(startPose);
 
@@ -54,6 +56,7 @@ const makeUIEventApplicator = ({
         useDocumentToEnd ? document : element,
         endEvents
       ).start((endEvent: MouseEvent | TouchEvent) => {
+        if (preventDefault) endEvent.preventDefault();
         activeActions.get(endListener).stop();
         poser.unset(startPose);
         poser.set(endPose);
@@ -75,7 +78,8 @@ const events: { [key: string]: UIEventApplicator } = {
     endPose: 'dragEnd',
     startCallback: 'onDragStart',
     endCallback: 'onDragEnd',
-    useDocumentToEnd: true
+    useDocumentToEnd: true,
+    preventDefault: true
   }),
   hoverable: makeUIEventApplicator({
     startEvents: 'mouseenter',

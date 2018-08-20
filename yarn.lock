@@ -1959,7 +1959,7 @@ aws4@^1.2.1, aws4@^1.8.0:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.8.0.tgz#f0e003d9ca9e7f59c7a508945d7b2ef9a04a542f"
 
-babel-cli@^6.16.0, babel-cli@^6.24.1, babel-cli@^6.26.0:
+babel-cli@^6.16.0, babel-cli@^6.26.0:
   version "6.26.0"
   resolved "https://registry.yarnpkg.com/babel-cli/-/babel-cli-6.26.0.tgz#502ab54874d7db88ad00b887a06383ce03d002f1"
   dependencies:
@@ -2046,16 +2046,6 @@ babel-eslint@^5.0.4:
     babylon "^6.0.18"
     lodash.assign "^3.2.0"
     lodash.pick "^3.1.0"
-
-babel-eslint@^6.0.2:
-  version "6.1.2"
-  resolved "https://registry.yarnpkg.com/babel-eslint/-/babel-eslint-6.1.2.tgz#5293419fe3672d66598d327da9694567ba6a5f2f"
-  dependencies:
-    babel-traverse "^6.0.20"
-    babel-types "^6.0.19"
-    babylon "^6.0.18"
-    lodash.assign "^4.0.0"
-    lodash.pickby "^4.0.0"
 
 babel-generator@6.26.0:
   version "6.26.0"
@@ -2814,7 +2804,7 @@ babel-plugin-transform-react-jsx-source@6.22.0, babel-plugin-transform-react-jsx
     babel-plugin-syntax-jsx "^6.8.0"
     babel-runtime "^6.22.0"
 
-babel-plugin-transform-react-jsx@^6.24.1, babel-plugin-transform-react-jsx@^6.5.0, babel-plugin-transform-react-jsx@^6.7.5, babel-plugin-transform-react-jsx@^6.8.0:
+babel-plugin-transform-react-jsx@^6.24.1, babel-plugin-transform-react-jsx@^6.5.0, babel-plugin-transform-react-jsx@^6.8.0:
   version "6.24.1"
   resolved "https://registry.yarnpkg.com/babel-plugin-transform-react-jsx/-/babel-plugin-transform-react-jsx-6.24.1.tgz#840a028e7df460dfc3a2d29f0c0d91f6376e66a3"
   dependencies:
@@ -3697,15 +3687,6 @@ chardet@^0.4.0:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/chardet/-/chardet-0.4.2.tgz#b5473b33dc97c424e5d98dc87d55d4d8a29c8bf2"
 
-cherry-pick@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/cherry-pick/-/cherry-pick-0.2.1.tgz#ce380972cc2a00f3e665331d5762f09bbb172045"
-  dependencies:
-    chalk "^2.4.1"
-    rimraf "^2.6.2"
-    tiny-glob "^0.2.0"
-    yargs "^11.0.0"
-
 chokidar@^1.6.0, chokidar@^1.6.1:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-1.7.0.tgz#798e689778151c8076b4b360e5edd28cda2bb468"
@@ -4300,13 +4281,6 @@ create-react-class@^15.6.2, create-react-class@^15.6.3:
     loose-envify "^1.3.1"
     object-assign "^4.1.1"
 
-cross-env@^5.1.5:
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/cross-env/-/cross-env-5.2.0.tgz#6ecd4c015d5773e614039ee529076669b9d126f2"
-  dependencies:
-    cross-spawn "^6.0.5"
-    is-windows "^1.0.0"
-
 cross-spawn@5.1.0, cross-spawn@^5.0.1, cross-spawn@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/cross-spawn/-/cross-spawn-5.1.0.tgz#e8bd0efee58fcff6f8f94510a0a554bbfa235449"
@@ -4315,7 +4289,7 @@ cross-spawn@5.1.0, cross-spawn@^5.0.1, cross-spawn@^5.1.0:
     shebang-command "^1.2.0"
     which "^1.2.9"
 
-cross-spawn@^6.0.0, cross-spawn@^6.0.5:
+cross-spawn@^6.0.0:
   version "6.0.5"
   resolved "https://registry.yarnpkg.com/cross-spawn/-/cross-spawn-6.0.5.tgz#4a5ec7c64dfae22c3a14124dbacdee846d80cbc4"
   dependencies:
@@ -6199,10 +6173,6 @@ globals@^9.14.0, globals@^9.18.0:
   version "9.18.0"
   resolved "https://registry.yarnpkg.com/globals/-/globals-9.18.0.tgz#aa3896b3e69b487f17e31ed2143d69a8e30c2d8a"
 
-globalyzer@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/globalyzer/-/globalyzer-0.1.0.tgz#cb76da79555669a1519d5a8edf093afaa0bf1465"
-
 globby@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/globby/-/globby-5.0.0.tgz#ebd84667ca0dbb330b99bcfc68eac2bc54370e0d"
@@ -6235,10 +6205,6 @@ globby@^8.0.1:
     ignore "^3.3.5"
     pify "^3.0.0"
     slash "^1.0.0"
-
-globrex@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/globrex/-/globrex-0.1.1.tgz#cfe565cfa910707d0ef98eb0b9d78c3c055ca2ef"
 
 good-listener@^1.2.2:
   version "1.2.2"
@@ -7127,7 +7093,7 @@ is-utf8@^0.2.0:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/is-utf8/-/is-utf8-0.2.1.tgz#4b0da1442104d1b336340e80797e865cf39f7d72"
 
-is-windows@^1.0.0, is-windows@^1.0.1, is-windows@^1.0.2:
+is-windows@^1.0.1, is-windows@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/is-windows/-/is-windows-1.0.2.tgz#d1850eb9791ecd18e6182ce12a30f396634bb19d"
 
@@ -8216,10 +8182,6 @@ lodash.assign@^3.0.0, lodash.assign@^3.2.0:
     lodash._createassigner "^3.0.0"
     lodash.keys "^3.0.0"
 
-lodash.assign@^4.0.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/lodash.assign/-/lodash.assign-4.2.0.tgz#0d99f3ccd7a6d261d19bdaeb9245005d285808e7"
-
 lodash.camelcase@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/lodash.camelcase/-/lodash.camelcase-4.3.0.tgz#b28aa6288a2b9fc651035c7711f65ab6190331a6"
@@ -8288,10 +8250,6 @@ lodash.pick@^3.1.0:
 lodash.pick@^4.4.0:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/lodash.pick/-/lodash.pick-4.4.0.tgz#52f05610fff9ded422611441ed1fc123a03001b3"
-
-lodash.pickby@^4.0.0:
-  version "4.6.0"
-  resolved "https://registry.yarnpkg.com/lodash.pickby/-/lodash.pickby-4.6.0.tgz#7dea21d8c18d7703a27c704c15d3b84a67e33aff"
 
 lodash.restparam@^3.0.0:
   version "3.6.1"
@@ -9950,15 +9908,6 @@ pn@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/pn/-/pn-1.1.0.tgz#e2f4cef0e219f463c179ab37463e4e1ecdccbafb"
 
-popmotion-pose@^2.1.0, popmotion-pose@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/popmotion-pose/-/popmotion-pose-2.2.0.tgz#66673a2bf6647a0e9da550573d33681f8609cd00"
-  dependencies:
-    popmotion "^8.3.3"
-    pose-core "^0.7.4"
-    style-value-types "^3.0.3"
-    tslib "^1.9.1"
-
 pose-core@^0.1.7:
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/pose-core/-/pose-core-0.1.7.tgz#7c01a55164de620356cdda345725c38499efd1bb"
@@ -9967,7 +9916,7 @@ pose-core@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/pose-core/-/pose-core-0.3.0.tgz#63800caee0b67daa7eb52368438969a58ec97c42"
 
-pose-core@^0.7.3, pose-core@^0.7.4:
+pose-core@^0.7.3:
   version "0.7.4"
   resolved "https://registry.yarnpkg.com/pose-core/-/pose-core-0.7.4.tgz#21d64b6efe5eb7e0d1c2e7a111d0836ea00cdea5"
   dependencies:
@@ -10775,20 +10724,6 @@ react-pose-core@^0.1.0:
     "@types/react" "^16.3.12"
     "@types/react-native" "^0.55.4"
     animated-pose "^0.2.0"
-
-react-pose-text@^0.1.3:
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/react-pose-text/-/react-pose-text-0.1.3.tgz#7a10aa55923b3c68cd210a91b1ddff3186f3139e"
-  dependencies:
-    hey-listen "^1.0.5"
-
-react-pose@^2.2.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/react-pose/-/react-pose-2.3.0.tgz#adf9790744ebd7a36d582c89ce316d1183198bff"
-  dependencies:
-    hey-listen "^1.0.5"
-    popmotion-pose "^2.2.0"
-    tslib "^1.9.1"
 
 react-proxy@^1.1.7:
   version "1.1.8"
@@ -12457,13 +12392,6 @@ tiny-emitter@^2.0.0:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/tiny-emitter/-/tiny-emitter-2.0.2.tgz#82d27468aca5ade8e5fd1e6d22b57dd43ebdfb7c"
 
-tiny-glob@^0.2.0:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/tiny-glob/-/tiny-glob-0.2.2.tgz#a4ddf2c343f85d80b4456f58ebc8b66f7553948a"
-  dependencies:
-    globalyzer "^0.1.0"
-    globrex "^0.1.1"
-
 tmp@^0.0.33:
   version "0.0.33"
   resolved "https://registry.yarnpkg.com/tmp/-/tmp-0.0.33.tgz#6d34335889768d21b2bcda0aa277ced3b1bfadf9"
@@ -12672,11 +12600,7 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-typescript@2.8.1:
-  version "2.8.1"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.8.1.tgz#6160e4f8f195d5ba81d4876f9c0cc1fbc0820624"
-
-typescript@^2.4.1, typescript@^2.7.2, typescript@^2.8.1, typescript@^2.8.3, typescript@^2.9.2:
+typescript@^2.4.1, typescript@^2.7.2, typescript@^2.9.2:
   version "2.9.2"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.9.2.tgz#1cbf61d05d6b96269244eb6a3bce4bd914e0f00c"
 

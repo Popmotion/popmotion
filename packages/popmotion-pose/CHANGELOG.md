@@ -2,6 +2,12 @@
 
 Popmotion Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.0.1] 2018-08-20
+
+### Fixed
+
+- Restricting `preventDefault` only to drag events. 
+
 ## [3.0.0] 2018-08-19
 
 ### Added

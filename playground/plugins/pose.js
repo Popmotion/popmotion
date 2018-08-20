@@ -399,6 +399,24 @@ export class PoseHover extends React.PureComponent {
   }
 }
 
+export class PoseClick extends React.PureComponent {
+  setRef = ref => {
+    if (ref) {
+      this.poser = pose(ref, {
+        pressable: true,
+        init: { scale: 1 },
+        press: { scale: 1.1 }
+      });
+    } else {
+      this.poser.destroy();
+    }
+  };
+
+  render() {
+    return <button onClick={() => console.log("test")} ref={this.setRef} />;
+  }
+}
+
 export class PoseFocus extends React.PureComponent {
   setRef = ref => {
     if (ref) {

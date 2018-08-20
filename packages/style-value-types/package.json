@@ -43,7 +43,6 @@
     "rollup-plugin-typescript2": "^0.14.0",
     "rollup-plugin-uglify": "^3.0.0",
     "ts-jest": "^22.4.6",
-    "typescript": "^2.9.2",
     "webpack": "^3.12.0"
   },
   "jest": {

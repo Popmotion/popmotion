@@ -12,6 +12,7 @@ import {
   PoseOpacity,
   PoseFocus,
   PoseFullScreenFlip,
+  PoseClick,
   UnitTypeError
 } from "./plugins/pose";
 import {
@@ -35,6 +36,7 @@ storiesOf("Plugin: Pose", module)
   .add("drag", () => <PoseDrag />)
   .add("hover", () => <PoseHover />)
   .add("focus", () => <PoseFocus />)
+  .add("click", () => <PoseClick />)
   .add("opacity", () => <PoseOpacity />)
   .add("full screen flip", () => <PoseFullScreenFlip />)
   .add("unit type error", () => <UnitTypeError />);
