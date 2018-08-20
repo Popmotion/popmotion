@@ -19,3 +19,7 @@ As of version 3.0:
 
 - Pose is **15.7kb**
 - React Pose is **18.8kb**
+
+## Server-side rendering?
+
+Currently React Pose doesn't apply any styles on the server, and you may need to apply initial styles via your CSS solution.
