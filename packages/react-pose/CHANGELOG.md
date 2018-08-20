@@ -2,6 +2,12 @@
 
 React Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.0.2] 2018-08-20
+
+### Fixed
+
+- Filtering invalid DOM props. [#431](https://github.com/Popmotion/popmotion/pull/431)
+
 ## [3.0.1] 2018-08-20
 
 ### Fixed
