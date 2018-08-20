@@ -83,7 +83,7 @@ function generateContent({
         date: published,
         published: published ? convertDateFormat(`${published}`) : '',
         section: firstLevelDir,
-        siteName,
+        siteName: firstLevelDir === 'blog' ? 'popmotion' : siteName,
         next
       };
 

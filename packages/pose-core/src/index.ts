@@ -6,7 +6,8 @@ import {
   ActivePoses,
   ChildPosers,
   PoseMap,
-  PoserState
+  PoserState,
+  TransitionMap
 } from './types';
 
 import createPoseSetter from './factories/setter';
@@ -14,6 +15,9 @@ import createValueMap from './factories/values';
 import generateDefaultTransitions from './factories/transitions';
 import { eachValue, fromPose } from './inc/transition-composers';
 import { selectPoses, selectAllValues } from './inc/selectors';
+import { sortByReversePriority } from './inc/utils';
+
+const DEFAULT_INITIAL_POSE = 'init';
 
 const poseFactory = <V, A, C, P>({
   getDefaultProps,
@@ -32,6 +36,7 @@ const poseFactory = <V, A, C, P>({
   selectValueToRead,
   convertTransitionDefinition,
   transformPose,
+  posePriority,
   extendAPI
 }: PoseFactoryConfig<V, A, C, P>) => (
   config: PoserConfig<V>
@@ -54,7 +59,12 @@ const poseFactory = <V, A, C, P>({
   if (getDefaultProps) props = { ...props, ...getDefaultProps(config) };
 
   // Create values map
-  const { passive, values: userSetValues, initialPose } = config;
+  const {
+    passive,
+    values: userSetValues,
+    initialPose = DEFAULT_INITIAL_POSE
+  } = config;
+
   const values = createValueMap<V, A>({
     poses,
     passive,
@@ -65,6 +75,7 @@ const poseFactory = <V, A, C, P>({
     readValueFromSource,
     userSetValues,
     initialPose,
+    activePoses,
     props
   });
 
@@ -91,16 +102,48 @@ const poseFactory = <V, A, C, P>({
     stopAction,
     resolveTarget,
     addActionDelay,
-    transformPose
+    transformPose,
+    posePriority
   });
+
+  const has = (poseName: string) => !!poses[poseName];
 
   const api: Poser<V, A, C, P> = {
     set,
+    unset: (poseName, poseProps) => {
+      const posesToSet: string[] = [];
+
+      activePoses.forEach(valuePoses => {
+        const poseIndex = valuePoses.indexOf(poseName);
+
+        if (poseIndex === -1) return;
+        const currentPose = valuePoses[0];
+
+        // Remove pose from activePoses list
+        valuePoses.splice(poseIndex, 1);
+        const nextPose = valuePoses[0];
+
+        if (nextPose === currentPose) return;
+        if (posesToSet.indexOf(nextPose) === -1) {
+          posesToSet.push(nextPose);
+        }
+      });
+
+      const animationsToResolve = posesToSet
+        .sort(sortByReversePriority(posePriority))
+        .map(poseToSet => set(poseToSet, poseProps, false));
+
+      children.forEach(child =>
+        animationsToResolve.push(child.unset(poseName))
+      );
+
+      return Promise.all(animationsToResolve);
+    },
     get: valueName =>
       valueName
         ? selectValueToRead(values.get(valueName))
         : selectAllValues(values, selectValueToRead),
-    has: poseName => !!poses[poseName],
+    has,
     setProps: newProps => (state.props = { ...state.props, ...newProps }),
 
     // Child methods
@@ -132,4 +175,4 @@ const poseFactory = <V, A, C, P>({
 };
 
 export default poseFactory;
-export { Poser, PoserConfig, PoseMap, eachValue, fromPose };
+export { Poser, PoserConfig, PoseMap, TransitionMap, eachValue, fromPose };

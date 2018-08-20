@@ -16,15 +16,15 @@ import {
 export { Action, Poser, ValueReaction, ColdSubscription };
 
 const dragPoses = (draggable: Draggable): PoseMap => {
-  const dragging: Pose = {
+  const drag: Pose = {
     preTransition: ({ dimensions }: TransitionProps) => dimensions.measure()
   };
   const dragEnd: Pose = {};
 
-  if (draggable === true || draggable === 'x') dragging.x = dragEnd.x = 0;
-  if (draggable === true || draggable === 'y') dragging.y = dragEnd.y = 0;
+  if (draggable === true || draggable === 'x') drag.x = dragEnd.x = 0;
+  if (draggable === true || draggable === 'y') drag.y = dragEnd.y = 0;
 
-  return { dragging, dragEnd };
+  return { drag, dragEnd };
 };
 
 const createPoseConfig = (
@@ -33,6 +33,9 @@ const createPoseConfig = (
     onDragStart,
     onDragEnd,
     draggable,
+    hoverable,
+    focusable,
+    pressable,
     dragBounds,
     ...config
   }: DomPopmotionConfig
@@ -42,10 +45,13 @@ const createPoseConfig = (
     ...config,
     props: {
       ...config.props,
-      draggable,
       onDragStart,
       onDragEnd,
       dragBounds,
+      draggable,
+      hoverable,
+      focusable,
+      pressable,
       element,
       elementStyler: styler(element, { preparseOutput: false }),
       dimensions: createDimensions(element)
@@ -54,8 +60,12 @@ const createPoseConfig = (
 
   // Handle interaction poses
   if (draggable) {
-    const { dragging, dragEnd } = dragPoses(draggable);
-    poseConfig.dragging = { ...poseConfig.dragging, ...dragging };
+    const { drag, dragEnd } = dragPoses(draggable);
+
+    poseConfig.drag = {
+      ...poseConfig.drag,
+      ...drag
+    };
     poseConfig.dragEnd = { ...poseConfig.dragEnd, ...dragEnd };
   }
 
@@ -63,6 +73,8 @@ const createPoseConfig = (
 };
 
 const domPose = poseFactory<DomPopmotionPoser>({
+  posePriority: ['drag', 'press', 'focus', 'hover'],
+
   transformPose: ({ flip, ...pose }, name, state) =>
     isFlipPose(flip, name, state) ? flipPose(state, pose) : pose,
 
@@ -88,6 +100,8 @@ const domPose = poseFactory<DomPopmotionPoser>({
     return isNaN(value) ? value : parseFloat(value);
   },
 
+  // This is shit and not inline with what I'm trying to accomplish
+  // by using a functional approach
   extendAPI: (api, { props, activeActions }, config) => {
     const measure = props.dimensions.measure;
     const poserApi = {
@@ -111,7 +125,7 @@ const domPose = poseFactory<DomPopmotionPoser>({
       }
     };
 
-    appendEventListeners(props.element, activeActions, api.set, config);
+    appendEventListeners(props.element, activeActions, poserApi, config);
 
     return poserApi;
   }

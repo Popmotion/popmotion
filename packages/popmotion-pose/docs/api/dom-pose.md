@@ -1,6 +1,7 @@
 ---
 title: Poser
 description: Animate and HTML or SVG element with a poser.
+category: vanilla
 ---
 
 # Poser

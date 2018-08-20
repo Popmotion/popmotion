@@ -2,6 +2,30 @@
 
 Pose Core adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.2] 2018-08-20
+
+### Fixed
+
+- Fixing bug in pose unsetting priority.
+
+## [1.0.1] 2018-08-19
+
+### Fixed
+
+- Updating `unset` logic.
+
+## [1.0.0] 2018-08-19
+
+### Added
+
+- New pose resolution logic.
+
+## [0.8.1] 2018-08-18
+
+### Added
+
+- Exporting `TransitionMap` type.
+
 ## [0.8.0] 2018-06-14
 
 ### Added

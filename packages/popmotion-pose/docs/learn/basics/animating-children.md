@@ -2,7 +2,7 @@
 title: Animating children
 description: How to orchestrate animations across multiple elements
 category: basics
-next: dragging
+next: ui-events
 ---
 
 # Animating children

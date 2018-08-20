@@ -30,11 +30,13 @@ const generateRouteDefinitions = data => {
   // TODO: Automatically generate api/blog etc
   let routes = `
     '/': { page: '/' },
+    '/support': { page: '/support' },
     '/api': { page: '/api' },
     '/blog': { page: '/blog' },
     '/pose': { page: '/pose' },
     '/pure': { page: '/pure' },
     '/pose/api': { page: '/pose/api' },
+    '/pose/examples': { page: '/pose/examples' },
     '/page-not-found': { page: '/_error' },
     '/stylefire': { page: '/stylefire' },
     '/stylefire/api': { page: '/stylefire/api' },

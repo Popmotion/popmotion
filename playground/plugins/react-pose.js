@@ -61,6 +61,12 @@ export class ReactPose extends React.PureComponent {
   }
 }
 
+export const Hover = posed(BoxStyled)({
+  hoverable: true,
+  init: { background: "#00f" },
+  hover: { background: "#f00" }
+});
+
 const SpringBox = posed(BoxStyled)({
   spring: {
     x: 0,
@@ -349,7 +355,7 @@ class Email extends React.Component {
         <Slidable
           className="slidable"
           values={valuesMap}
-          onChange={{
+          onValueChange={{
             x: v => {
               !!this.hasDeleted && v > 300 && removeEmail(id);
               this.hasDeleted = true;
@@ -384,7 +390,7 @@ export class EmailList extends React.Component {
 
   render() {
     const { emails } = this.state;
-
+    console.log(emails);
     return (
       <div className="container">
         <style>
@@ -537,4 +543,30 @@ export const Filter = () => (
     pose="coloured"
     src="https://popmotion.io/static/images/dusk.jpg"
   />
+);
+
+const DraggableBox = styled(
+  posed.div({
+    draggable: true,
+    init: { scale: 1 },
+    drag: { scale: 1.2 },
+    dragEnd: { scale: 0.5 }
+  })
+)`
+  width: 100px;
+  height: 100px;
+  background: red;
+`;
+
+const Label = styled(
+  posed.span({
+    init: { color: "#000" },
+    drag: { color: "#f00" }
+  })
+)``;
+
+export const DragChildren = () => (
+  <DraggableBox>
+    <Label>Drag me</Label>
+  </DraggableBox>
 );

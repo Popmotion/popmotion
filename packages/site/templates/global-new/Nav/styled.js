@@ -38,6 +38,8 @@ export const Links = styled.ul`
   li {
     margin-left: 30px;
 
+    ${media.medium`margin-left: 20px`};
+
     &:first-child {
       margin-left: 0;
     }

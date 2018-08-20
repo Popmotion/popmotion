@@ -62,7 +62,8 @@ const testPose = poseFactory<Value, Action, Subscription, PoserAPI>({
   defaultTransitions: new Map([['default', ({ to }) => mockActionInverse(to)]]),
   transformPose: pose => pose,
   readValueFromSource: () => 0,
-  extendAPI: api => api
+  extendAPI: api => api,
+  posePriority: ['drag', 'press', 'hover']
 });
 
 const testPoser = testPose({
@@ -168,6 +169,28 @@ test('correctly sets and updates props', () => testPoser.set('testProps')
   })
 );
 
+test('propagates pose changes to children', () => {
+  const parent = testPose({
+    init: { x: 0 },
+    a: { x: 100 }
+  });
+
+  const child = parent._addChild({
+    init: { x: 10 },
+    a: { x: 50 }
+  }, testPose);
+
+  return parent.set('a').then(() => {
+    expect(parent.get('x')).toBe(-100)
+    expect(child.get('x')).toBe(-50)
+
+    return parent.unset('a')
+  }).then(() => {
+    expect(parent.get('x')).toBe(-0)
+    expect(child.get('x')).toBe(-10)
+  })
+};
+
 test('resolves custom transitions correctly', () =>
   testPoser.set('functionalTransition')
     .then(() => {
@@ -214,3 +237,98 @@ test('resolves custom transitions correctly', () =>
       expect(testPoser.get().x).toBe(45)
     })
 );
+
+test('applies correct initial values', () => {
+  const testDefaultsPoser = testPose({
+    init: { x: 100 },
+    a: { x: 50 }
+  });
+
+  expect(testDefaultsPoser.get('x')).toBe(100);
+
+  const testDefaultsOverridePoser = testPose({
+    init: { x: 100 },
+    a: { x: 50 },
+    initialPose: 'a'
+  });
+
+  expect(testDefaultsOverridePoser.get('x')).toBe(50);
+});
+
+test('correctly falls back to previous pose', () => {
+  const fallback = testPose({
+    init: { x: 0, y: 1 },
+    hover: {x : 1 },
+    drag: {x : 2, y: 2}
+  });
+
+  expect(fallback.get('x')).toBe(0);
+  return fallback.set('hover')
+    .then(() => {
+      expect(fallback.get('x')).toBe(-1);
+      return fallback.set('drag')
+    })
+    .then(() => {
+      expect(fallback.get('x')).toBe(-2);
+      return fallback.unset('drag')
+    })
+    .then(() => {
+      expect(fallback.get('x')).toBe(-1);
+    })
+});
+
+test('children fall back correctly multiple times', () => {
+  const parent = testPose({
+    init: { scale: 1 },
+    drag: { scale: 2 },
+    dragEnd: { scale: 3 }
+  });
+  const child = parent._addChild({
+    init: { scale: 10 },
+    drag: { scale: 20 }
+  }, testPose);
+
+  return parent.set('drag')
+    .then(() => {
+      expect(child.get('scale')).toBe(-20)
+      parent.set('dragEnd')
+      return parent.unset('drag')
+    })
+    .then(() => {
+      expect(child.get('scale')).toBe(-10)
+      return parent.set('drag')
+    })
+    .then(() => {
+      expect(child.get('scale')).toBe(-20)
+      parent.set('dragEnd')
+      return parent.unset('drag')
+    })
+    .then(() => {
+      expect(child.get('scale')).toBe(-10)
+    })
+});
+
+test('correctly applies poses in priority order', () => {
+  const fallback = testPose({
+    init: { x: 0 },
+    drag: { x: 10 },
+    hover: { x: 20 }
+  });
+  expect(fallback.get('x')).toBe(0);
+  return fallback.set('hover').then(() => {
+    expect(fallback.get('x')).toBe(-20);
+    return fallback.set('drag');
+  })
+  .then(() => {
+    expect(fallback.get('x')).toBe(-10);
+    return fallback.unset('hover')
+  }).then(() => {
+    expect(fallback.get('x')).toBe(-10)
+    return fallback.set('hover')
+  }).then(() => {
+    expect(fallback.get('x')).toBe(-10)
+    return fallback.unset('drag')
+  }).then(() => {
+    expect(fallback.get('x')).toBe(-20)
+  })
+});

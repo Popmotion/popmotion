@@ -31,6 +31,7 @@ type SetterFactoryProps<V, A, C, P> = {
   resolveTarget: ResolveTarget<V>;
   convertTransitionDefinition: ConvertTransitionDefinition<V, A>;
   transformPose?: TransformPose<V, A, C, P>;
+  posePriority?: string[];
 };
 
 export const resolveProp = (target: any, props: Props) =>
@@ -124,9 +125,27 @@ const resolveTransition = <V, A>(
     : convertTransitionDefinition(value, resolvedTransition, props);
 };
 
+const findInsertionIndex = (
+  poseList: string[],
+  priorityList: string[],
+  priorityIndex: number
+) => {
+  let insertionIndex = 0;
+
+  for (let i = priorityIndex - 1; i >= 0; i--) {
+    const nextHighestPriorityIndex = poseList.indexOf(priorityList[i]);
+    if (nextHighestPriorityIndex !== -1) {
+      insertionIndex = nextHighestPriorityIndex + 1;
+      break;
+    }
+  }
+
+  return insertionIndex;
+};
+
 const createPoseSetter = <V, A, C, P>(
   setterProps: SetterFactoryProps<V, A, C, P>
-) => (next: string, nextProps: Props = {}) => {
+) => {
   const {
     state,
     poses,
@@ -137,100 +156,122 @@ const createPoseSetter = <V, A, C, P>(
     getTransitionProps,
     resolveTarget,
     transformPose,
+    posePriority,
     convertTransitionDefinition
   } = setterProps;
-  const { children, values, props, activeActions, activePoses } = state;
 
-  const { delay = 0 } = nextProps;
-  const hasChildren = children.size;
-  let nextPose = poses[next];
+  return (next: string, nextProps: Props = {}, propagate: boolean = true) => {
+    const { children, values, props, activeActions, activePoses } = state;
+    const { delay = 0 } = nextProps;
+    const hasChildren = children.size;
 
-  const baseTransitionProps = {
-    ...props,
-    ...nextProps
-  };
+    const baseTransitionProps = {
+      ...props,
+      ...nextProps
+    };
 
-  const getChildAnimations = (): AnimationsPromiseList =>
-    hasChildren
-      ? startChildAnimations(children, next, nextPose, baseTransitionProps)
-      : [];
+    let nextPose = poses[next];
 
-  const getParentAnimations = (): AnimationsPromiseList => {
-    if (!nextPose) return [];
+    const getChildAnimations = (): AnimationsPromiseList =>
+      hasChildren && propagate
+        ? startChildAnimations(children, next, nextPose, baseTransitionProps)
+        : [];
 
-    if (transformPose) nextPose = transformPose(nextPose, next, state);
+    const getParentAnimations = (): AnimationsPromiseList => {
+      if (!nextPose) return [];
 
-    const { preTransition, transition: getTransition } = nextPose;
+      if (transformPose) nextPose = transformPose(nextPose, next, state);
 
-    // Run pre-transition prep, if set
-    if (preTransition) preTransition(baseTransitionProps);
+      const { preTransition, transition: getTransition } = nextPose;
 
-    return Object.keys(getPoseValues(nextPose)).map(key => {
-      return new Promise(complete => {
-        const value = values.get(key);
+      // Run pre-transition prep, if set
+      if (preTransition) preTransition(baseTransitionProps);
 
-        const transitionProps = {
-          ...baseTransitionProps,
-          key,
-          value
-        };
+      return Object.keys(getPoseValues(nextPose)).map(key => {
+        // Add pose to the pose order
+        const valuePoses = activePoses.has(key)
+          ? activePoses.get(key)
+          : (activePoses.set(key, []), activePoses.get(key));
 
-        // Resolve target from pose
-        const target = resolveTarget(
-          value,
-          resolveProp(nextPose[key], transitionProps)
-        );
+        // Remove pose if it already exists
+        const existingIndex = valuePoses.indexOf(next);
+        if (existingIndex !== -1) valuePoses.splice(existingIndex, 1);
 
-        // Stop the current action
-        if (activeActions.has(key)) stopAction(activeActions.get(key));
+        // Insert pose in its priority order
+        const priority = posePriority ? posePriority.indexOf(next) : 0;
+        const insertionIndex =
+          priority <= 0
+            ? 0
+            : findInsertionIndex(valuePoses, posePriority, priority);
+        valuePoses.splice(insertionIndex, 0, next);
 
-        // Get the transition
-        const resolveTransitionProps = {
-          to: target,
-          ...transitionProps,
-          ...getTransitionProps(value, target, transitionProps)
-        };
+        return insertionIndex === 0
+          ? new Promise(complete => {
+              const value = values.get(key);
 
-        let transition = resolveTransition<V, A>(
-          getTransition,
-          key,
-          value,
-          resolveTransitionProps,
-          convertTransitionDefinition,
-          getInstantTransition
-        );
+              const transitionProps = {
+                ...baseTransitionProps,
+                key,
+                value
+              };
 
-        // Add delay if defined on pose
-        const poseDelay = resolveProp(nextPose.delay, transitionProps);
-        if (delay || poseDelay) {
-          transition = addActionDelay(delay || poseDelay, transition);
-        }
+              // Resolve target from pose
+              const target = resolveTarget(
+                value,
+                resolveProp(nextPose[key], transitionProps)
+              );
 
-        // Start transition
-        activeActions.set(key, startAction(value, transition, complete));
-        activePoses.set(key, next);
+              // Stop the current action
+              if (activeActions.has(key)) stopAction(activeActions.get(key));
+
+              // Get the transition
+              const resolveTransitionProps = {
+                to: target,
+                ...transitionProps,
+                ...getTransitionProps(value, target, transitionProps)
+              };
+
+              let transition = resolveTransition<V, A>(
+                getTransition,
+                key,
+                value,
+                resolveTransitionProps,
+                convertTransitionDefinition,
+                getInstantTransition
+              );
+
+              // Add delay if defined on pose
+              const poseDelay = resolveProp(nextPose.delay, transitionProps);
+              if (delay || poseDelay) {
+                transition = addActionDelay(delay || poseDelay, transition);
+              }
+
+              // Start transition
+              activeActions.set(key, startAction(value, transition, complete));
+            })
+          : Promise.resolve();
       });
-    });
-  };
+    };
 
-  // Check before and afterChildren props to check if we need to reorder these animations
-  if (nextPose && hasChildren) {
-    // parent before children§
-    if (resolveProp(nextPose.beforeChildren, baseTransitionProps)) {
-      return Promise.all(getParentAnimations()).then(() =>
-        Promise.all(getChildAnimations())
-      );
+    // Check before and afterChildren props to check if we need to reorder these animations
+    if (nextPose && hasChildren) {
+      // parent before children
+      if (resolveProp(nextPose.beforeChildren, baseTransitionProps)) {
+        return Promise.all(getParentAnimations()).then(() =>
+          Promise.all(getChildAnimations())
+        );
 
-      // children before parent
-    } else if (resolveProp(nextPose.afterChildren, baseTransitionProps)) {
-      return Promise.all(getChildAnimations()).then(() =>
-        Promise.all(getParentAnimations())
-      );
+        // children before parent
+      } else if (resolveProp(nextPose.afterChildren, baseTransitionProps)) {
+        return Promise.all(getChildAnimations()).then(() =>
+          Promise.all(getParentAnimations())
+        );
+      }
     }
-  }
 
-  // Otherwise, run all animations in parallel
-  return Promise.all([...getParentAnimations(), ...getChildAnimations()]);
+    // Otherwise, run all animations in parallel
+    return Promise.all([...getParentAnimations(), ...getChildAnimations()]);
+  };
 };
 
 export default createPoseSetter;
