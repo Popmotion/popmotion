@@ -189,7 +189,6 @@ const createPoseSetter = <V, A, C, P>(
 
       return Object.keys(getPoseValues(nextPose)).map(key => {
         // Add pose to the pose order
-
         const valuePoses = activePoses.has(key)
           ? activePoses.get(key)
           : (activePoses.set(key, []), activePoses.get(key));

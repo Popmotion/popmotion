@@ -17,7 +17,10 @@ export type Posed = {
   [key: string]: ComponentFactory<React.HTMLProps<any>>;
 };
 
-const componentCache = new Map<string | React.ComponentType, ComponentFactory<any>>();
+const componentCache = new Map<
+  string | React.ComponentType,
+  ComponentFactory<any>
+>();
 
 const createComponentFactory = (key: string | React.ComponentType) => {
   const componentFactory: ComponentFactory<any> = (poseConfig = {}) => ({

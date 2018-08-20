@@ -15,6 +15,7 @@ import createValueMap from './factories/values';
 import generateDefaultTransitions from './factories/transitions';
 import { eachValue, fromPose } from './inc/transition-composers';
 import { selectPoses, selectAllValues } from './inc/selectors';
+import { sortByReversePriority } from './inc/utils';
 
 const DEFAULT_INITIAL_POSE = 'init';
 
@@ -114,6 +115,7 @@ const poseFactory = <V, A, C, P>({
 
       activePoses.forEach(valuePoses => {
         const poseIndex = valuePoses.indexOf(poseName);
+
         if (poseIndex === -1) return;
         const currentPose = valuePoses[0];
 
@@ -127,9 +129,9 @@ const poseFactory = <V, A, C, P>({
         }
       });
 
-      const animationsToResolve = posesToSet.map(poseToSet =>
-        set(poseToSet, poseProps, false)
-      );
+      const animationsToResolve = posesToSet
+        .sort(sortByReversePriority(posePriority))
+        .map(poseToSet => set(poseToSet, poseProps, false));
 
       children.forEach(child =>
         animationsToResolve.push(child.unset(poseName))

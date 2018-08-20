@@ -63,7 +63,7 @@ const testPose = poseFactory<Value, Action, Subscription, PoserAPI>({
   transformPose: pose => pose,
   readValueFromSource: () => 0,
   extendAPI: api => api,
-  posePriority: ['draggable', 'hoverable']
+  posePriority: ['drag', 'press', 'hover']
 });
 
 const testPoser = testPose({
@@ -257,44 +257,51 @@ test('applies correct initial values', () => {
 
 test('correctly falls back to previous pose', () => {
   const fallback = testPose({
-    init: { x: 0 },
-    a: { x: 50 }
+    init: { x: 0, y: 1 },
+    hover: {x : 1 },
+    drag: {x : 2, y: 2}
   });
+
   expect(fallback.get('x')).toBe(0);
-  return fallback.set('a').then(() => {
-    expect(fallback.get('x')).toBe(-50);
-    return fallback.unset('a');
-  })
-  .then(() => {
-    expect(fallback.get('x')).toBe(-0);
-  });
+  return fallback.set('hover')
+    .then(() => {
+      expect(fallback.get('x')).toBe(-1);
+      return fallback.set('drag')
+    })
+    .then(() => {
+      expect(fallback.get('x')).toBe(-2);
+      return fallback.unset('drag')
+    })
+    .then(() => {
+      expect(fallback.get('x')).toBe(-1);
+    })
 });
 
 test('children fall back correctly multiple times', () => {
   const parent = testPose({
     init: { scale: 1 },
-    dragging: { scale: 2 },
+    drag: { scale: 2 },
     dragEnd: { scale: 3 }
   });
   const child = parent._addChild({
     init: { scale: 10 },
-    dragging: { scale: 20 }
+    drag: { scale: 20 }
   }, testPose);
 
-  return parent.set('dragging')
+  return parent.set('drag')
     .then(() => {
       expect(child.get('scale')).toBe(-20)
       parent.set('dragEnd')
-      return parent.unset('dragging')
+      return parent.unset('drag')
     })
     .then(() => {
       expect(child.get('scale')).toBe(-10)
-      return parent.set('dragging')
+      return parent.set('drag')
     })
     .then(() => {
       expect(child.get('scale')).toBe(-20)
       parent.set('dragEnd')
-      return parent.unset('dragging')
+      return parent.unset('drag')
     })
     .then(() => {
       expect(child.get('scale')).toBe(-10)
@@ -304,23 +311,23 @@ test('children fall back correctly multiple times', () => {
 test('correctly applies poses in priority order', () => {
   const fallback = testPose({
     init: { x: 0 },
-    draggable: { x: 10 },
-    hoverable: { x: 20 }
+    drag: { x: 10 },
+    hover: { x: 20 }
   });
   expect(fallback.get('x')).toBe(0);
-  return fallback.set('hoverable').then(() => {
+  return fallback.set('hover').then(() => {
     expect(fallback.get('x')).toBe(-20);
-    return fallback.set('draggable');
+    return fallback.set('drag');
   })
   .then(() => {
     expect(fallback.get('x')).toBe(-10);
-    return fallback.unset('hoverable')
+    return fallback.unset('hover')
   }).then(() => {
     expect(fallback.get('x')).toBe(-10)
-    return fallback.set('hoverable')
+    return fallback.set('hover')
   }).then(() => {
     expect(fallback.get('x')).toBe(-10)
-    return fallback.unset('draggable')
+    return fallback.unset('drag')
   }).then(() => {
     expect(fallback.get('x')).toBe(-20)
   })
