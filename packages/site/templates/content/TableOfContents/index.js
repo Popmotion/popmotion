@@ -3,13 +3,10 @@ import { Container, List, Item, Link, Header } from './styled';
 const generateSection = list => <List>{list.map(generateLink)}</List>;
 
 const generateLink = ({ title, id, children, level }) => (
-  console.log(title, level),
-  (
-    <Item key={id}>
-      <Link href={`#${id}`}>{title}</Link>
-      {children && generateSection(children)}
-    </Item>
-  )
+  <Item key={id}>
+    <Link href={`#${id}`}>{title}</Link>
+    {children && generateSection(children)}
+  </Item>
 );
 
 export default ({ toc }) => (

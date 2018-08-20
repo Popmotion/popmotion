@@ -89,12 +89,12 @@ const themeSettings = {
         href: '/pose/learn/get-started',
         label: 'Learn',
         id: 'learn'
+      },
+      {
+        href: '/pose/examples',
+        label: 'Examples',
+        id: 'examples'
       }
-      // {
-      //   href: '/pose/examples',
-      //   label: 'Examples',
-      //   id: 'examples'
-      // }
     ],
     Logo: PoseLogo,
     homepageLogoSize: {
