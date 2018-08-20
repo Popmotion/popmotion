@@ -8,19 +8,19 @@ import {
 } from './components/PoseElement.types';
 import { DomPopmotionConfig } from 'popmotion-pose/lib/types';
 
-export type ComponentFactory = (
+export type ComponentFactory<T> = (
   poseConfig?: DomPopmotionConfig
-) => (props: PoseElementProps) => ReactElement<any>;
+) => (props: PoseElementProps & T) => ReactElement<T>;
 
 export type Posed = {
-  (component: React.Component): ComponentFactory;
-  [key: string]: ComponentFactory;
+  <T>(component: React.ComponentType<T>): ComponentFactory<T>;
+  [key: string]: ComponentFactory<React.HTMLProps<any>>;
 };
 
-const componentCache = new Map<string | React.Component, ComponentFactory>();
+const componentCache = new Map<string | React.ComponentType, ComponentFactory<any>>();
 
-const createComponentFactory = (key: string | React.Component) => {
-  const componentFactory: ComponentFactory = (poseConfig = {}) => ({
+const createComponentFactory = (key: string | React.ComponentType) => {
+  const componentFactory: ComponentFactory<any> = (poseConfig = {}) => ({
     withParent = true,
     ...props
   }) =>
@@ -44,12 +44,12 @@ const createComponentFactory = (key: string | React.Component) => {
   return componentFactory;
 };
 
-const getComponentFactory = (key: string | React.Component) =>
+const getComponentFactory = (key: string | React.ComponentType) =>
   componentCache.has(key)
     ? componentCache.get(key)
     : createComponentFactory(key);
 
-const posed = ((component: React.Component | string) =>
+const posed = ((component: React.ComponentType | string) =>
   getComponentFactory(component)) as Posed;
 
 supportedElements.reduce((acc, key) => {
