@@ -1,6 +1,6 @@
 {
   "name": "react-pose",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "A declarative animation library for React",
   "main": "./lib/index.js",
   "module": "./dist/react-pose.es.js",
