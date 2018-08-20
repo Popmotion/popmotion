@@ -12,8 +12,10 @@ import {
   PoseElementInternalProps,
   PopStyle
 } from './PoseElement.types';
+import isPropValid from '@emotion/is-prop-valid'
 import { invariant } from 'hey-listen';
 import { hasChanged } from '../utils/has-changed';
+import { pickAssign } from '../utils/pick-assign';
 
 export const PoseParentContext = createContext({});
 
@@ -45,12 +47,15 @@ const objectToMap = (obj: { [key: string]: any }): Map<string, any> =>
     return map;
   }, new Map());
 
+const testAlwaysTrue = () => true;
+
 class PoseElement extends React.PureComponent<PoseElementInternalProps> {
   props: PoseElementInternalProps;
   poser: DomPopmotionPoser;
   ref: Element;
   styleProps: { [key: string]: any };
   children: Set<ChildRegistration> = new Set();
+  shouldForwardProp: typeof this.props.elementType === 'string' ? isValidProp : testAlwaysTrue;
   popStyle?: PopStyle;
 
   /**
@@ -104,7 +109,6 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
 
   getSetProps() {
     const {
-      children,
       elementType,
       poseConfig,
       onValueChange,
@@ -271,14 +275,13 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
   }
 
   render() {
-    const { elementType, children } = this.props;
+    const { elementType } = this.props;
 
     return (
       <PoseParentContext.Provider value={this.childrenHandlers}>
         {createElement(
           elementType,
-          { ...this.getSetProps(), ...this.getRefs() },
-          children
+          pickAssign(this.shouldForwardProp, this.getSetProps(), this.getRefs())
         )}
       </PoseParentContext.Provider>
     );
