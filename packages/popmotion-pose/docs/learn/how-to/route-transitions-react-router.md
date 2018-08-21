@@ -1,0 +1,150 @@
+---
+title: Route transitions with React Router
+description: How to make route transition animations with React Pose and React Router
+category: how-to
+draft: true
+---
+
+# Route transitions with React Router
+
+Route transitions in React are notoriously fiddly. With [Pose](/pose) and [React Router](https://reacttraining.com/react-router/), they're pretty simple.
+
+Many React Router route transition examples demonstrate simple full-screen fades, so first we're going to learn how to do that. Pose also has the ability to coordinate animations throughout the component tree, so in this tutorial we're going to show how to animate each route differently, with content staggering in and out.
+
+Here's what we'll be making:
+
+<CodeSandbox height="600" id="wq324qk687" />
+
+**Note:** This tutorial is for **React** Router. Users of **Reach** Router will want to use the [Reach Router tutorial](/learn/route-transitions-reach-router).
+
+<TOC />
+
+## Sandbox
+
+We've created a [CodeSandbox](https://codesandbox.io/s/m3z4pm0myx) example preloaded with React Pose and React Router, for you to fork and follow along.
+
+It's set up in a standard way according to the [React Router docs](https://reacttraining.com/react-router/web/guides/philosophy), so if you're not already familiar with React Router, it's worth reading the overview there.
+
+## Fade transition
+
+So, let's animate! The first animation we'll add is a simple fade transition. When a user clicks a link, we want to fade the existing content out, and the new content in.
+
+We'll start by importing React Pose. We're going to be using both `posed` and `PoseGroup`. So at the end of your imports, add:
+
+```javascript
+import posed, { PoseGroup } from 'react-pose';
+```
+
+Now, let's create a posed component with our two visual states, `enter` and `exit`. After the line above, add:
+
+```javascript
+const RoutesContainer = posed.div({
+  enter: { opacity: 1 },
+  exit: { opacity: 0 }
+});
+```
+
+We can now use this to wrap our `Switch` component:
+
+```javascript
+<RoutesContainer>
+  <Switch location={location}>
+    {/* ...routes */}
+  </Switch>
+</RoutesContainer>
+```
+
+To animate this component between the two `enter` and `exit` states, we can use the `PoseGroup` component.
+
+`PoseGroup` tracks the entering and exiting of child components (as well as reordering), and will animate them in an out. Any components exiting will only be physically removed from the tree once they've finished their `exit` animation.
+
+```javascript
+<PoseGroup>
+  <RoutesContainer>
+    <Switch location={location}>
+      {/* ...routes */}
+    </Switch>
+  </RoutesContainer>
+</PoseGroup>
+```
+
+Ah, but wait! If you try and click between pages, there's still no animation. What's up?
+
+Without passing `RoutesContainer` a `key`, `PoseGroup` doesn't know that it has a new child, so it can't animate anything. Let's use React Router's `location.key` prop as our key:
+
+```javascript
+<RoutesContainer key={location.key}>
+```
+
+Now, when you change routes, the content will fade in and out!
+
+The two pieces of content currently fade on top of each other. By adding a small delay to the `enter` state, we can optionally separate the animations:
+
+```javascript
+const RoutesContainer = posed.div({
+  enter: { opacity: 1, delay: 300 },
+  exit: { opacity: 0 }
+});
+```
+
+## Content transitions
+
+With that animation in place, we can go a step further and animate the entering and exiting content.
+
+First, add a `beforeChildren: true` property to the `RoutesContainer` `enter` pose. This will ensure that it finishes fading in before we animate any of its children:
+
+```javascript
+const RoutesContainer = posed.div({
+  enter: {
+    opacity: 1,
+    delay: 300,
+    beforeChildren: true
+  },
+  exit: { opacity: 0 }
+});
+```
+
+Let's animate our first page. Open `pages/about.js`. You'll see that we've pre-made two posed components, `Container` and `P`, and used those to markup the `About` component.
+
+In the markup, the `P` components are children of `Container`, and `Container` is a child of `RoutesContainer`. So when `RoutesContainer` changes to `enter` and `exit` poses, these will flow through each of the posed components in turn, allowing us to animate them.
+
+Add `enter` and `exit` poses to `P`:
+
+```javascript
+const P = posed.p({
+  enter: { x: 0, opacity: 1 },
+  exit: { x: 50, opacity: 0 }
+});
+```
+
+Now, when you enter and exit the `About` page, all the paragraphs will animate in and out. But they all animate in together. It'd be nice to stagger these animations instead.
+
+That's why we've made `Container` a posed component too. It's not going to do animation itself, it's just going to control the animation of its children with the `staggerChildren` property:
+
+```javascript
+const Container = posed.div({
+  enter: { staggerChildren: 50 }
+});
+```
+
+Try entering and exiting the `About` page again. The paragraphs stagger in.
+
+We can try the same trick on the `Home` page. Open `pages/home.js` and replace the `ListContainer` and `Item` posed components with this:
+
+```javascript
+const ListContainer = posed.ul({
+  enter: { staggerChildren: 50 },
+  exit: { staggerChildren: 20, staggerDirection: -1 }
+});
+
+const Item = posed.li({
+  enter: { y: 0, opacity: 1 },
+  exit: { y: 50, opacity: 0 }
+});
+```
+
+This time, `ListContainer`'s `exit` pose has a new property, `staggerDirection`. Setting this to `-1` reverses the stagger, so elements animate out from the bottom up.
+
+## Conclusion
+
+We've learned how to use `PoseGroup` do a quick and simple fade transition, as well as animating across children to provide unique effects for every page.
