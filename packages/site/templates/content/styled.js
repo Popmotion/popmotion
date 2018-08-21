@@ -1,13 +1,28 @@
 import styled from 'styled-components';
 import { fontSize, fontBold } from '~/styles/fonts';
-import { cols, BLACK, LIGHT_GREY, BRAND } from '~/styles/vars';
+import { cols, BLACK, LIGHT_GREY, BRAND, media } from '~/styles/vars';
 import { htmlUnencode } from '~/utils/string';
 import SiteLink from '~/components/layout/SiteLink';
 import { Centered } from '~/templates/global/grid';
+import posed from 'react-pose';
 
 export const Container = styled.div`
   position: relative;
   margin: 75px 0;
+  display: flex;
+  justify-content: space-between;
+`;
+
+export const ContentArea = styled(
+  posed.div({
+    flip: {
+      transition: { type: 'spring', stiffness: 1000, damping: 35 }
+    }
+  })
+)`
+  width: calc(100% - (100vw - ${cols(48)}) / 2);
+
+  ${media.large`width: 100%;`};
 `;
 
 const ImgFrame = styled.span`

@@ -6,7 +6,7 @@ published: 20180820
 
 # Introducing Pose 3.0
 
-Pose 3.0 is officially out, and with it, some new features! Let's take a look at what's new, what's changed, and what's next.
+[Pose 3.0](/pose) is officially out, and with it, some new features! Let's take a look at what's new, what's changed, and what's next.
 
 <TOC />
 

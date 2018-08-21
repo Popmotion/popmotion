@@ -1,7 +1,6 @@
 ---
-title: React Pose Text
+title: SplitText
 description: Animate words and characters using the power of React Pose animations.
-category: plugins
 ---
 
 # React Pose Text

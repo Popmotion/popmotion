@@ -69,18 +69,18 @@ function generateContent({
         draft
       } = attributes;
 
-      if (draft) return;
-
       const outputId = id === 'README' ? category : id;
 
       if (!siteMetadata[siteName][firstLevelDir])
         siteMetadata[siteName][firstLevelDir] = {};
-      siteMetadata[siteName][firstLevelDir][outputId] = {
+
+      const metadata = {
         id: outputId,
         title,
         description,
         category,
         date: published,
+        draft,
         published: published ? convertDateFormat(`${published}`) : '',
         section: firstLevelDir,
         siteName: firstLevelDir === 'blog' ? 'popmotion' : siteName,
@@ -89,11 +89,10 @@ function generateContent({
 
       fs.writeFile(
         `${outputPath}/${outputId}.js`,
-        generatePage(
-          body.replace(new RegExp('.md', 'g'), ''),
-          siteMetadata[siteName][firstLevelDir][outputId]
-        )
+        generatePage(body.replace(new RegExp('.md', 'g'), ''), metadata)
       );
+
+      siteMetadata[siteName][firstLevelDir][outputId] = metadata;
     }
   });
 }

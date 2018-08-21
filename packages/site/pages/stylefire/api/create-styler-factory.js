@@ -1,11 +1,13 @@
 
 import { createElement } from 'react';
 import marksy from 'marksy/components';
-import { A, H1, H2, H3, H4, P, Li, Ol, Ul, Hr, Code, Blockquote, ArticleHeader, Video } from '~/templates/global/styled';
+import { A, H1, H2, H3, H4, H5, P, Li, Ol, Ul, Hr, Code, Blockquote, ArticleHeader, Video } from '~/templates/global/styled';
 import { Img } from '~/templates/content/styled';
 import ContentTemplate from '~/templates/content/Template';
 import Example from '~/components/examples/Example';
 import CodePen from '~/components/examples/CodePen';
+import CodeSandbox from '~/components/examples/CodeSandbox';
+import TOC from '~/templates/content/TableOfContents';
 
 const removeEmpty = filename => filename !== '';
 
@@ -17,6 +19,7 @@ const convertMarkdown = marksy({
     h2: H2,
     h3: H3,
     h4: H4,
+    h5: H5,
     p: P,
     code: Code,
     li: Li,
@@ -29,7 +32,9 @@ const convertMarkdown = marksy({
   components: {
     Example,
     CodePen,
-    Video
+    Video,
+    TOC: () => <TOC toc={content.toc} />,
+    CodeSandbox
   }
 });
 

@@ -1,6 +1,6 @@
 ---
 title: PoseGroup
-description: Create a Poser
+description: Animate a group of posed components as they're added and removed.
 category: react
 ---
 

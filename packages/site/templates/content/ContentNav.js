@@ -7,9 +7,7 @@ import { fontSize, fontBold, lineHeight } from '~/styles/fonts';
 import { LINK, ENTITY, cols, media } from '~/styles/vars';
 import sectionNames from '~/data/section-names.json';
 
-export const ContentNavArea = Centered.extend`
-  position: absolute;
-  left: 0;
+export const ContentNavArea = styled.div`
   width: ${cols(14)};
   margin-top: ${cols(1)};
   z-index: 2;
@@ -98,11 +96,9 @@ const DropDownMenuIcon = styled(DropDownArrow)`
   ${media.large`display: block;`};
 `;
 
-const Item = ({ id, title, contentId, section }) => (
+const Item = ({ id, title, contentId, section, draft }) => (
   <MenuItem isSelected={id === contentId}>
-    <SiteLink href={`/${section}/${id}`}>
-      <a>{title}</a>
-    </SiteLink>
+    <SiteLink href={`/${section}/${id}`}>{title}</SiteLink>
   </MenuItem>
 );
 
@@ -110,23 +106,24 @@ const Category = ({ id, title, contentId, content, section, posts }) => (
   <CategoryContainer>
     <CategoryTitle isSelected={id === contentId}>
       {content[id] ? (
-        <SiteLink href={`/${section}/${id}`}>
-          <a>{title}</a>
-        </SiteLink>
+        <SiteLink href={`/${section}/${id}`}>{title}</SiteLink>
       ) : (
         title
       )}
     </CategoryTitle>
     {posts ? (
       <ul>
-        {posts.map(post => (
-          <Item
-            key={post.id}
-            {...post}
-            contentId={contentId}
-            section={section}
-          />
-        ))}
+        {posts.map(
+          post =>
+            !content[post.id].draft && (
+              <Item
+                key={post.id}
+                {...post}
+                contentId={contentId}
+                section={section}
+              />
+            )
+        )}
       </ul>
     ) : null}
   </CategoryContainer>

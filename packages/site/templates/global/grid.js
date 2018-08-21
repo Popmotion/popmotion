@@ -1,13 +1,10 @@
 import styled from 'styled-components';
 import { cols, media, LIGHT_GREY } from '~/styles/vars';
 
-export const Content = styled.article`
-  min-height: 700px;
-`;
+export const Content = styled.article``;
 
 export const Centered = styled.div`
   max-width: ${cols(42)};
-  margin: 0 auto;
 
   ${media.medium`
     margin-left: ${cols(1)};
@@ -20,8 +17,7 @@ export const Centered = styled.div`
 `;
 
 export const MajorCentered = styled(Centered)`
-  margin-left: calc((100vw - ${cols(48)}) / 2);
-  max-width: none;
+  width: 100%;
 
   ${media.medium`
     margin-left: ${cols(1)};

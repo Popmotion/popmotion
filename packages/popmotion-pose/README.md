@@ -9,4 +9,5 @@
 
 - [Homepage](https://popmotion.io/pose)
 - [API](https://popmotion.io/pose/api)
+- [Examples](https://popmotion.io/pose/examples)
 - [Get started](https://popmotion.io/pose/learn/get-started)

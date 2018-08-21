@@ -45,7 +45,7 @@
     "test": "jest",
     "publish-beta": "npm publish --tag beta",
     "clean": "git clean -fd -e node_modules/ -e lib/ src/ -x .",
-    "postinstall": "node ./scripts/postinstall.js || exit 0"
+    "prepare": "node ./scripts/postinstall.js || exit 0"
   },
   "dependencies": {
     "@popmotion/easing": "^1.0.1",
