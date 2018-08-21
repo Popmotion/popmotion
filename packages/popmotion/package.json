@@ -45,7 +45,7 @@
     "test": "jest",
     "publish-beta": "npm publish --tag beta",
     "clean": "git clean -fd -e node_modules/ -e lib/ src/ -x .",
-    "prepare": "node ./scripts/postinstall.js || exit 0"
+    "postinstall": "node ./scripts/postinstall.js || exit 0"
   },
   "dependencies": {
     "@popmotion/easing": "^1.0.1",
@@ -60,7 +60,6 @@
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-plugin-annotate-pure-calls": "^0.2.2",
-    "chalk": "^2.4.1",
     "jest": "^23.1.0",
     "jest-cli": "^23.1.0",
     "rollup": "^0.59.1",

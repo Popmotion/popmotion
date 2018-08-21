@@ -7,7 +7,7 @@ const spacing = '      ';
 const maxChars = 50;
 const log = (...str) => console.log(spacing + str.join(''));
 
-const pink = chalk.hex('#FF1C68');
+const pink = v => v; // Fix chalk integration for postinstall script
 const white = chalk.hex('#fff');
 const lightGrey = chalk.hex('#ECECEC');
 const blue = chalk.hex('#049CD4');
@@ -27,11 +27,11 @@ log(horizontalLine);
 log(paddingRow);
 log(content('Hey! Using Popmotion commercially?'));
 log(paddingRow);
-log(content('Popmotion is completely open source.', lightGrey));
-log(content(`Its continued development relies on`, lightGrey));
-log(content(`contributions and sponsorship.`, lightGrey));
+log(content('Popmotion is completely open source.'));
+log(content(`Its continued development relies on`));
+log(content(`contributions and sponsorship.`));
 log(paddingRow);
-log(content('Join us: patreon.com/popmotion', blue));
+log(content('Join us: patreon.com/popmotion'));
 log(paddingRow);
 log(horizontalLine);
 log('');
