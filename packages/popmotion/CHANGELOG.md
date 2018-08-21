@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.3.5] 2018-08-21
+
+### Fixed
+
+- Fixed `postinstall` script by removing Chalk.
+
 ## [8.3.4] 2018-08-20
 
 ### Fixed
