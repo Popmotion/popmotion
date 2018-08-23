@@ -184,11 +184,6 @@ const pose = <P>({
       const toType = getValueType(to);
       const from = raw.get();
 
-      // invariant(
-      //   type === toType,
-      //   `Trying to animate between two different value types or units: ${from} and ${to}.`
-      // );
-
       return {
         from,
         velocity: raw.getVelocity(),

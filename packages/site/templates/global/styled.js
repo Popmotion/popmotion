@@ -126,8 +126,8 @@ export const P = Centered.withComponent('p').extend`
 `;
 
 export const Blockquote = MajorCentered.withComponent('blockquote').extend`
-  border-left: 2px solid ${PURPLE};
-  background: ${color.lightGrey};
+  border-left: 1px solid ${color.lightGrey};
+  background: ${color.superLightGrey};
   padding: ${cols(1)};
   margin-bottom: ${cols(2)};
 

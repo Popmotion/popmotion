@@ -2,20 +2,21 @@
 title: Route transitions with React Router
 description: How to make route transition animations with React Pose and React Router
 category: how-to
-draft: true
 ---
 
 # Route transitions with React Router
 
-Route transitions in React are notoriously fiddly. With [Pose](/pose) and [React Router](https://reacttraining.com/react-router/), they're pretty simple.
+> **Note:** This tutorial is for **React** Router. Users of **Reach** Router will want to use the [Reach Router tutorial](/pose/learn/route-transitions-reach-router).
 
-Many React Router route transition examples demonstrate simple full-screen fades, so first we're going to learn how to do that. Pose also has the ability to coordinate animations throughout the component tree, so in this tutorial we're going to show how to animate each route differently, with content staggering in and out.
+Route transitions in React are notoriously fiddly. With [Pose](/pose) and [React Router](https://reacttraining.com/react-router/), they can be pretty simple.
+
+We're going first learn how to make a simple fade transition between two routes.
+
+Then, as Pose has the ability to coordinate animations throughout the component tree, we'll show how to animate each route differently, with content staggering in and out.
 
 Here's what we'll be making:
 
 <CodeSandbox height="600" id="wq324qk687" />
-
-**Note:** This tutorial is for **React** Router. Users of **Reach** Router will want to use the [Reach Router tutorial](/learn/route-transitions-reach-router).
 
 <TOC />
 
@@ -147,4 +148,6 @@ This time, `ListContainer`'s `exit` pose has a new property, `staggerDirection`.
 
 ## Conclusion
 
-We've learned how to use `PoseGroup` do a quick and simple fade transition, as well as animating across children to provide unique effects for every page.
+We've learned how to use Pose with React Router to do a quick and simple fade transition, as well as animating across children to provide unique effects for every page.
+
+We've also seen how posed components can be used not only to animate, but to sequence the animations of their children.

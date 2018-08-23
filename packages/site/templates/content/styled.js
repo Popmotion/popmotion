@@ -11,6 +11,8 @@ export const Container = styled.div`
   margin: 75px 0;
   display: flex;
   justify-content: space-between;
+
+  ${media.large`display: block;`};
 `;
 
 export const ContentArea = styled(

@@ -18,7 +18,7 @@ For IE11 support, a [polyfill](https://developer.mozilla.org/en-US/docs/Web/Java
 As of version 3.0:
 
 - Pose is **15.7kb**
-- React Pose is **18.8kb**
+- React Pose is **18.8kb**, or **17kb** for pre-existing users of Styled Components or Emotion due to shared modules.
 
 ## Server-side rendering?
 
