@@ -1,6 +1,6 @@
 {
   "name": "react-pose-core",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Factory for creating flavours of React Pose",
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
@@ -33,15 +33,14 @@
     "jest": "^23.1.0",
     "jest-cli": "^23.1.0",
     "prettier": "1.11.1",
-    "ts-jest": "^22.4.5",
-    "typescript": "^2.9.2"
+    "ts-jest": "^22.4.5"
   },
   "prettier": {
     "parser": "typescript",
     "singleQuote": true
   },
   "dependencies": {
-    "animated-pose": "^0.3.2-rc"
+    "animated-pose": "^1.0.0"
   },
   "jest": {
     "moduleFileExtensions": [
