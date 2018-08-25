@@ -8,6 +8,8 @@ Currently, flavours of Pose exist for React, React Native, and (unpublished) Rea
 
 ## The API
 
+Flavours of Pose **may** add platform-specific capabilities but should target this API as minimum.
+
 ```typescript
 type PoseConfig = {
   // UI events
@@ -46,6 +48,11 @@ type PoseConfig = {
   ...poses?: Pose
 };
 
+/**
+ * Pose
+ * All pose properties may also be defined as a function that resolves when a pose is entered.
+ * This function will be provided certain properties, either user-defined or set by the pose implementation. This allows the creation of dynamic, responsive poses.
+ */
 type Pose = {
   delay?: number,
   delayChildren?: number,
@@ -177,7 +184,7 @@ type TimelineSegment = {
 | `dragBounds`                | ✅     |              |           |
 | Serialised passive values   |       | ✅ *1         | ✅ *1      |
 | `init` pose                 | ✅     |              |           |
-| Serialised transition       | ✅     |              |           |
+| Serialised `transition`     | ✅     |              |           |
 | Timeline                    |       |              |           |
 
 ### Notes
