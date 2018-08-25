@@ -33,7 +33,7 @@
     "build": "rollup -c",
     "postbuild": "babel $npm_package_module --out-file $npm_package_module --no-babelrc --plugins annotate-pure-calls",
     "watch": "rollup -c -w",
-    "prepublishOnly": "npm run test && tsc --module commonjs && npm run build",
+    "prepublishOnly": "npm run test && npm run build",
     "postpublish": "npm run clean",
     "test": "jest",
     "publish-beta": "npm publish --tag beta",
