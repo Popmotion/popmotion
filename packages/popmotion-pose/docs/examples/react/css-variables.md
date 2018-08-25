@@ -8,7 +8,7 @@ category: react
 
 Pose can animate CSS variables like normal style props.
 
-In the following example, all the boxes have a class `.box` with these styles:
+In the following example, all the boxes have the class `.box` with these styles:
 
 ```css
 .box {
@@ -16,6 +16,8 @@ In the following example, all the boxes have a class `.box` with these styles:
 }
 ```
 
-So to animate their background color, we simply need to animate the `--color` property of one of their ancestors. In this example, that's the `Container` posed component.
+So to animate their background color, we can animate the `--color` property of one of their ancestors. In the following example, that's the `Container` posed component.
+
+[Read the full tutorial](/pose/learn/css-variables/)
 
 <CodeSandbox id="18vx11mr6q" />

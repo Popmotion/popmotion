@@ -6,4 +6,6 @@ category: react
 
 # Route transitions: React Router
 
+[Read the full tutorial](/pose/learn/route-transitions-react-router/)
+
 <CodeSandbox height="600" id="wq324qk687" />
