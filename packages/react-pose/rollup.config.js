@@ -3,7 +3,7 @@ import typescript from 'rollup-plugin-typescript2';
 import uglify from 'rollup-plugin-uglify';
 import resolve from 'rollup-plugin-node-resolve';
 import replace from 'rollup-plugin-replace';
-import { rollup as createLernaAliases } from 'lerna-alias';
+import { rollup as lernaAliases } from 'lerna-alias';
 import pkg from './package.json';
 
 const typescriptConfig = {
@@ -20,11 +20,11 @@ const makeExternalPredicate = externalArr => {
   return id => pattern.test(id);
 };
 
-const lernaAliases = Object.assign(
+const aliasConfig = Object.assign(
   {
     resolve: ['.tsx', '.ts','.jsx', '.js']
   },
-  createLernaAliases()
+  lernaAliases()
 );
 
 const deps = Object.keys(pkg.dependencies || {});
@@ -45,7 +45,7 @@ const umd = Object.assign({}, config, {
   },
   external: makeExternalPredicate(peerDeps),
   plugins: [
-    alias(lernaAliases),
+    alias(aliasConfig),
     resolve(),
     typescript(typescriptConfig),
     replace({
@@ -60,7 +60,7 @@ const umdProd = Object.assign({}, umd, {
     file: 'dist/react-pose.js'
   }),
   plugins: [
-    alias(lernaAliases),
+    alias(aliasConfig),
     resolve(),
     typescript(typescriptConfig),
     replace({

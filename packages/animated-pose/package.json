@@ -2,13 +2,12 @@
   "name": "animated-pose",
   "version": "1.0.0",
   "description": "Pose for the Animated animation library",
-  "main": "lib/index.js",
-  "types": "./lib/index.d.ts",
+  "main": "dist/animated-pose.cjs.js",
+  "types": "./src/index.ts",
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc -w",
+    "build": "rollup -c",
+    "watch": "npm run build -- --watch",
     "test": "jest",
-    "measure": "gzip -c dist/popmotion-pose.js | wc -c",
     "prettier": "prettier ./src/*",
     "prepublishOnly": "npm run prettier && npm run build"
   },
@@ -34,9 +33,9 @@
     "jest": "^22.4.3",
     "prettier": "1.11.1",
     "react-native": "^0.55.4",
-    "ts-jest": "^22.4.5",
-    "typescript": "^2.9.2",
-    "webpack": "^3.11.0"
+    "rollup": "^0.59.1",
+    "rollup-plugin-typescript2": "^0.14.0",
+    "ts-jest": "^22.4.5"
   },
   "prettier": {
     "parser": "typescript",
@@ -46,6 +45,8 @@
     "react-native": ">=0.54.0"
   },
   "dependencies": {
-    "pose-core": "^1.0.2"
+    "hey-listen": "^1.0.5",
+    "pose-core": "^1.0.2",
+    "tslib": "^1.9.1"
   }
 }
