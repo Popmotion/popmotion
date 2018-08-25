@@ -5,13 +5,25 @@ import replace from 'rollup-plugin-replace';
 import commonjs from 'rollup-plugin-commonjs';
 import pkg from './package.json';
 
+const makeExternalPredicate = externalArr => {
+  if (externalArr.length === 0) {
+    return () => false;
+  }
+  const pattern = new RegExp(`^(${externalArr.join('|')})($|/)`);
+  return id => pattern.test(id);
+};
+
+const deps = Object.keys(pkg.dependencies || {});
+const peerDeps = Object.keys(pkg.peerDependencies || {});
+
 const typescriptConfig = { cacheRoot: 'tmp/.rpt2_cache' };
 const noDeclarationConfig = Object.assign({}, typescriptConfig, {
   tsconfigOverride: { compilerOptions: { declaration: false } }
 });
 
 const config = {
-  input: 'src/index.ts'
+  input: 'src/index.ts',
+  external: makeExternalPredicate(deps.concat(peerDeps))
 };
 
 const umd = Object.assign({}, config, {

@@ -1,8 +1,5 @@
 import typescript from 'rollup-plugin-typescript2';
-import uglify from 'rollup-plugin-uglify';
-import resolve from 'rollup-plugin-node-resolve';
-import replace from 'rollup-plugin-replace';
-import pkg from './package.json'
+import pkg from './package.json';
 
 const typescriptConfig = { cacheRoot: 'tmp/.rpt2_cache' };
 const noDeclarationConfig = Object.assign({}, typescriptConfig, {
@@ -13,12 +10,12 @@ const makeExternalPredicate = externalArr => {
   if (externalArr.length === 0) {
     return () => false;
   }
-  const pattern = new RegExp(`^(${externalArr.join("|")})($|/)`);
+  const pattern = new RegExp(`^(${externalArr.join('|')})($|/)`);
   return id => pattern.test(id);
 };
 
-const deps = Object.keys(pkg.dependencies || {})
-const peerDeps = Object.keys(pkg.peerDependencies || {})
+const deps = Object.keys(pkg.dependencies || {});
+const peerDeps = Object.keys(pkg.peerDependencies || {});
 
 const config = {
   input: 'src/index.ts',
