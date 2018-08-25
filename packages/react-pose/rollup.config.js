@@ -1,28 +1,16 @@
+import alias from 'rollup-plugin-alias';
 import typescript from 'rollup-plugin-typescript2';
-import commonjs from 'rollup-plugin-commonjs';
 import uglify from 'rollup-plugin-uglify';
 import resolve from 'rollup-plugin-node-resolve';
 import replace from 'rollup-plugin-replace';
+import { rollup as createLernaAliases } from 'lerna-alias';
 import pkg from './package.json';
 
-const typescriptConfig = { cacheRoot: 'tmp/.rpt2_cache' };
-const noDeclarationConfig = Object.assign({}, typescriptConfig, {
-  tsconfigOverride: { compilerOptions: { declaration: false } }
-});
-
-const common = commonjs({
-  namedExports: {
-    'node_modules/react/index.js': [
-      'createContext',
-      'createElement',
-      'Fragment',
-      'Component',
-      'PureComponent',
-      'Children',
-      'cloneElement'
-    ]
-  }
-});
+const typescriptConfig = {
+  cacheRoot: 'tmp/.rpt2_cache',
+  include: /\.tsx?$/,
+  tsconfigOverride: { compilerOptions: { resolve: false } },
+};
 
 const makeExternalPredicate = externalArr => {
   if (externalArr.length === 0) {
@@ -31,6 +19,13 @@ const makeExternalPredicate = externalArr => {
   const pattern = new RegExp(`^(${externalArr.join('|')})($|/)`);
   return id => pattern.test(id);
 };
+
+const lernaAliases = Object.assign(
+  {
+    resolve: ['.tsx', '.ts','.jsx', '.js']
+  },
+  createLernaAliases()
+);
 
 const deps = Object.keys(pkg.dependencies || {});
 const peerDeps = Object.keys(pkg.peerDependencies || {});
@@ -48,10 +43,10 @@ const umd = Object.assign({}, config, {
     exports: 'named',
     globals: { react: 'React' }
   },
-  external: ['react', 'react-dom'],
+  external: makeExternalPredicate(peerDeps),
   plugins: [
-    common,
-    typescript(noDeclarationConfig),
+    alias(lernaAliases),
+    typescript(typescriptConfig),
     resolve(),
     replace({
       'process.env.NODE_ENV': JSON.stringify('development')
@@ -65,8 +60,8 @@ const umdProd = Object.assign({}, umd, {
     file: 'dist/react-pose.js'
   }),
   plugins: [
-    common,
-    typescript(noDeclarationConfig),
+    alias(lernaAliases),
+    typescript(typescriptConfig),
     resolve(),
     replace({
       'process.env.NODE_ENV': JSON.stringify('production')
@@ -81,7 +76,7 @@ const es = Object.assign({}, config, {
     format: 'es',
     exports: 'named'
   },
-  plugins: [common, typescript(noDeclarationConfig)]
+  plugins: [typescript(typescriptConfig)]
 });
 
 const cjs = Object.assign({}, config, {
@@ -90,7 +85,7 @@ const cjs = Object.assign({}, config, {
     format: 'cjs',
     exports: 'named'
   },
-  plugins: [common, typescript(typescriptConfig)]
+  plugins: [typescript(typescriptConfig)]
 });
 
 export default [umd, umdProd, es, cjs];

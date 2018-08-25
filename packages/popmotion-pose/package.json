@@ -3,7 +3,7 @@
   "version": "3.0.1",
   "description": "A declarative animation library for HTML and SVG",
   "main": "lib/index.js",
-  "types": "./lib/index.d.ts",
+  "types": "./src/index.d.ts",
   "module": "dist/popmotion-pose.es.js",
   "jsnext:main": "dist/popmotion-pose.es.js",
   "scripts": {

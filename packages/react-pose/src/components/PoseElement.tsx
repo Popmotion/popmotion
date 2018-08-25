@@ -4,7 +4,7 @@ import poseFactory from 'popmotion-pose';
 import {
   DomPopmotionPoser,
   DomPopmotionConfig
-} from 'popmotion-pose/lib/types';
+} from 'popmotion-pose';
 import {
   ChildRegistration,
   CurrentPose,
