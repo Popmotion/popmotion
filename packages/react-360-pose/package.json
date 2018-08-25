@@ -27,7 +27,7 @@
     "env"
   ],
   "devDependencies": {
-    "typescript": "^2.7.2",
+    "typescript": "^2.9.2",
     "prettier": "1.11.1",
     "webpack": "^3.11.0"
   },

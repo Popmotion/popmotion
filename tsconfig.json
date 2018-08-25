@@ -11,6 +11,7 @@
     "watch": false,
     "baseUrl": "./packages",
     "paths": {
+      "@popmotion/easing": ["./easing/lib"],
       "popmotion": ["./popmotion/lib"],
       "popmotion-pose": ["./popmotion-pose/lib"],
       "pose-core": ["./pose-core/lib"],
