@@ -38,10 +38,7 @@
     "jest-cli": "^23.1.0",
     "prettier": "1.11.1",
     "rollup": "^0.59.1",
-    "rollup-plugin-node-resolve": "^3.3.0",
-    "rollup-plugin-replace": "^2.0.0",
     "rollup-plugin-typescript2": "^0.14.0",
-    "rollup-plugin-uglify": "^3.0.0",
     "ts-jest": "^22.4.5",
     "typescript": "^2.7.2"
   },
