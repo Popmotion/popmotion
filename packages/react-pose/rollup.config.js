@@ -46,8 +46,8 @@ const umd = Object.assign({}, config, {
   external: makeExternalPredicate(peerDeps),
   plugins: [
     alias(lernaAliases),
-    typescript(typescriptConfig),
     resolve(),
+    typescript(typescriptConfig),
     replace({
       'process.env.NODE_ENV': JSON.stringify('development')
     })
@@ -61,8 +61,8 @@ const umdProd = Object.assign({}, umd, {
   }),
   plugins: [
     alias(lernaAliases),
-    typescript(typescriptConfig),
     resolve(),
+    typescript(typescriptConfig),
     replace({
       'process.env.NODE_ENV': JSON.stringify('production')
     }),

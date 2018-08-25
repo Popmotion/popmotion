@@ -3,7 +3,6 @@
   "compilerOptions": {
     "outDir": "lib",
     "lib": ["es6", "dom"],
-    "jsx": "react",
-    "typeRoots": ["./types", "../../node_modules/@types"]
+    "jsx": "react"
   }
 }

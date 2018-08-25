@@ -174,3 +174,4 @@ const poseFactory = <V, A, C, P>({
 
 export default poseFactory;
 export { Poser, PoserConfig, PoseMap, TransitionMap, eachValue, fromPose };
+export * from './types'

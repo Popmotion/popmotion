@@ -27,7 +27,8 @@
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
     "lib": ["es5", "es6", "dom"],
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "typeRoots": ["./types", "./node_modules/@types"]
   },
   "exclude": ["**/*.test.ts"]
 }
