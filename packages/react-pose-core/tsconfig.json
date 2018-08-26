@@ -1,11 +1,9 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "rootDir": "src",
     "outDir": "lib",
-    "jsx": "react-native",
+    "jsx": "react",
     "types": ["react", "react-native", "jest"],
     "lib": ["es5", "es6"]
-  },
-  "include": ["src/**/*"]
+  }
 }

@@ -2,11 +2,12 @@
   "name": "react-pose-core",
   "version": "0.3.4",
   "description": "Factory for creating flavours of React Pose",
-  "main": "lib/index.js",
-  "types": "./lib/index.d.ts",
+  "main": "./dist/react-pose-core.cjs.js",
+  "module": "./dist/react-pose-core.esm.js",
+  "types": "./src/index.ts",
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc -w",
+    "build": "rollup -c",
+    "watch": "npm run build -- --watch",
     "test": "jest",
     "prettier": "prettier ./src/* --write",
     "prepublishOnly": "npm run test && npm run prettier && npm run build"
@@ -33,6 +34,8 @@
     "jest": "^23.1.0",
     "jest-cli": "^23.1.0",
     "prettier": "1.11.1",
+    "rollup": "^0.59.1",
+    "rollup-plugin-typescript2": "^0.14.0",
     "ts-jest": "^22.4.5"
   },
   "prettier": {
@@ -41,6 +44,9 @@
   },
   "dependencies": {
     "animated-pose": "^1.0.0"
+  },
+  "peerDependencies": {
+    "react": "^16.3.0"
   },
   "jest": {
     "moduleFileExtensions": [
