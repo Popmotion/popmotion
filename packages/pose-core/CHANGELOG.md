@@ -2,6 +2,12 @@
 
 Pose Core adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.3] 2018-08-26
+
+### Fixed
+
+- Fixing bug with `init` pose when `initialPose` was set.
+
 ## [1.0.2] 2018-08-20
 
 ### Fixed

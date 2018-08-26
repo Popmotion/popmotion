@@ -11,13 +11,11 @@ import {
 } from './types';
 
 import createPoseSetter from './factories/setter';
-import createValueMap from './factories/values';
+import createValueMap, { DEFAULT_INITIAL_POSE } from './factories/values';
 import generateDefaultTransitions from './factories/transitions';
 import { eachValue, fromPose } from './inc/transition-composers';
 import { selectPoses, selectAllValues } from './inc/selectors';
 import { sortByReversePriority } from './inc/utils';
-
-const DEFAULT_INITIAL_POSE = 'init';
 
 const poseFactory = <V, A, C, P>({
   getDefaultProps,

@@ -277,6 +277,30 @@ test('correctly falls back to previous pose', () => {
     })
 });
 
+test('correctly falls back to previous pose with mismatched initialPose', () => {
+  const fallback = testPose({
+    init: { x: 30, y: 1 },
+    hover: {x : 1 },
+    visible: { opacity: 1 },
+    hidden: { opacity: 0 },
+    initialPose: 'visible'
+  });
+
+  expect(fallback.get('x')).toBe(30);
+  expect(fallback.get('opacity')).toBe(1);
+
+  return fallback.set('hover')
+    .then(() => {
+      expect(fallback.get('x')).toBe(-1);
+      expect(fallback.get('opacity')).toBe(1);
+      return fallback.unset('hover')
+    })
+    .then(() => {
+      expect(fallback.get('x')).toBe(-30);
+      expect(fallback.get('opacity')).toBe(1);
+    })
+});
+
 test('children fall back correctly multiple times', () => {
   const parent = testPose({
     init: { scale: 1 },

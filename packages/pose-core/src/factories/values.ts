@@ -27,6 +27,8 @@ type ValueFactoryProps<V, A> = {
   props: Props;
 };
 
+export const DEFAULT_INITIAL_POSE = 'init';
+
 const isScale = (key: string) => key.includes('scale');
 const defaultReadValueFromSource = (key: string) => (isScale(key) ? 1 : 0);
 
@@ -35,15 +37,23 @@ const getInitialValue = <A>(
   key: string,
   initialPose: string | string[],
   props: Props,
-  readValueFromSource: ReadValueFromSource = defaultReadValueFromSource
+  readValueFromSource: ReadValueFromSource = defaultReadValueFromSource,
+  activePoses: ActivePoses
 ) => {
   const posesToSearch = Array.isArray(initialPose)
     ? initialPose
     : [initialPose];
 
+  posesToSearch.push(DEFAULT_INITIAL_POSE);
+
   const pose = posesToSearch
     .filter(Boolean)
     .find(name => poses[name] && poses[name][key] !== undefined);
+
+  // Prime active values array with found pose as first item
+  // TODO: Instead of priming with 'init' if no pose found, create
+  // a unique pose with the readValueFromSource return value
+  activePoses.set(key, [pose || DEFAULT_INITIAL_POSE]);
 
   return pose
     ? resolveProp(poses[pose][key], props)
@@ -78,13 +88,8 @@ const createValues = <V, A>(
       key,
       initialPose,
       props,
-      readValueFromSource
-    );
-
-    // Prime active values array with initialPose as the first item(s)
-    activePoses.set(
-      key,
-      Array.isArray(initialPose) ? initialPose : [initialPose]
+      readValueFromSource,
+      activePoses
     );
 
     value = createValue(initValue, key, props);
