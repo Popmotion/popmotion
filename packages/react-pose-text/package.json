@@ -45,7 +45,8 @@
   },
   "dependencies": {
     "hey-listen": "^1.0.5",
-    "react-pose": "^3.0.0"
+    "react-pose": "^3.0.0",
+    "tslib": "^1.9.1"
   },
   "prettier": {
     "parser": "typescript",

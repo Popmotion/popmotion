@@ -2,12 +2,13 @@
   "name": "style-value-types",
   "version": "3.0.6",
   "description": "Parsers, transformers and tests for special value types, eg: %, hex codes etc.",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
-  "module": "dist/style-value-types.es.js",
-  "jsnext:main": "dist/style-value-types.es.js",
+  "main": "./dist/style-value-types.cjs.js",
+  "module": "./dist/style-value-types.esm.js",
+  "jsnext:main": "./dist/style-value-types.esm.js",
+  "unpkg": "./dist/style-value-types.min.js",
+  "types": "src/index.ts",
   "files": [
-    "lib",
+    "src",
     "dist"
   ],
   "scripts": {
@@ -15,7 +16,7 @@
     "watch": "rollup -c -w",
     "lint": "tslint -c tslint.json 'src/**/*.{ts}'",
     "test": "jest",
-    "measure": "gzip -c dist/style-value-types.min.js | wc -c",
+    "measure": "gzip -c $npm_package_unpkg | wc -c",
     "prepublishOnly": "npm run lint && npm run build"
   },
   "repository": {
@@ -42,8 +43,7 @@
     "rollup": "^0.60.7",
     "rollup-plugin-typescript2": "^0.14.0",
     "rollup-plugin-uglify": "^3.0.0",
-    "ts-jest": "^22.4.6",
-    "webpack": "^3.12.0"
+    "ts-jest": "^22.4.6"
   },
   "jest": {
     "moduleFileExtensions": [
@@ -57,7 +57,6 @@
     "rootDir": "src",
     "testURL": "http://localhost/"
   },
-  "unpkg": "./dist/style-value-types.min.js",
   "prettier": {
     "parser": "typescript",
     "singleQuote": true
