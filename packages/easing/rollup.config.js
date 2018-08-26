@@ -4,11 +4,9 @@ import pkg from './package.json';
 
 const typescriptConfig = {
   cacheRoot: 'tmp/.rpt2_cache',
-  typescript: require('typescript')
+  include: /\.tsx?$/,
+  tsconfigOverride: { compilerOptions: { resolve: false } },
 };
-const noDeclarationConfig = Object.assign({}, typescriptConfig, {
-  tsconfigOverride: { compilerOptions: { declaration: false } }
-});
 
 const makeExternalPredicate = externalArr => {
   if (externalArr.length === 0) {
@@ -21,27 +19,16 @@ const makeExternalPredicate = externalArr => {
 const deps = Object.keys(pkg.dependencies || {});
 const peerDeps = Object.keys(pkg.peerDependencies || {});
 
-const config = {
+export default {
   input: 'src/index.ts',
-  external: makeExternalPredicate(deps.concat(peerDeps))
-};
-
-const es = Object.assign({}, config, {
-  output: {
+  output: [{
     file: pkg.module,
     format: 'es',
-    exports: 'named'
-  },
-  plugins: [resolve(), typescript(noDeclarationConfig)]
-});
-
-const cjs = Object.assign({}, config, {
-  output: {
+  }, {
     file: pkg.main,
     format: 'cjs',
     exports: 'named'
-  },
+  }],
+  external: makeExternalPredicate(deps.concat(peerDeps)),
   plugins: [resolve(), typescript(typescriptConfig)]
-});
-
-export default [es, cjs];
+};

@@ -4,10 +4,11 @@
   "description": "A functional, reactive motion library.",
   "author": "Matt Perry",
   "homepage": "https://popmotion.io",
-  "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
-  "module": "dist/popmotion.es.js",
-  "jsnext:main": "dist/popmotion.es.js",
+  "main": "./dist/popmotion.cjs.js",
+  "module": "./dist/popmotion.esm.js",
+  "jsnext:main": "./dist/popmotion.esm.js",
+  "unpkg": "./dist/popmotion.global.min.js",
+  "types": "./src/index.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/Popmotion/popmotion/tree/master/packages/popmotion"
@@ -62,7 +63,9 @@
     "babel-plugin-annotate-pure-calls": "^0.2.2",
     "jest": "^23.1.0",
     "jest-cli": "^23.1.0",
+    "lerna-alias": "3.0.3-0",
     "rollup": "^0.59.1",
+    "rollup-plugin-alias": "^1.4.0",
     "rollup-plugin-node-resolve": "^3.3.0",
     "rollup-plugin-replace": "^2.0.0",
     "rollup-plugin-typescript2": "^0.14.0",
@@ -84,7 +87,6 @@
     "testRegex": "/_tests/.*\\.(ts|js)$",
     "rootDir": "src"
   },
-  "unpkg": "./dist/popmotion.global.min.js",
   "prettier": {
     "parser": "typescript",
     "singleQuote": true

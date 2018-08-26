@@ -4,10 +4,10 @@
   "description": "Easing functions, modifiers and generators compatible with most animation libraries.",
   "author": "Matt Perry",
   "homepage": "https://popmotion.io",
-  "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
-  "module": "dist/easing.es.js",
-  "jsnext:main": "dist/easing.es.js",
+  "main": "dist/easing.cjs.js",
+  "types": "./src/index.ts",
+  "module": "dist/easing.esm.js",
+  "jsnext:main": "dist/easing.esm.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/Popmotion/popmotion/tree/master/packages/easing"

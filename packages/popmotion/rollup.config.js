@@ -1,16 +1,12 @@
+import alias from 'rollup-plugin-alias';
 import typescript from 'rollup-plugin-typescript2';
 import uglify from 'rollup-plugin-uglify';
 import resolve from 'rollup-plugin-node-resolve';
 import replace from 'rollup-plugin-replace';
+import { rollup as lernaAliases } from 'lerna-alias';
 import pkg from './package.json';
 
-const typescriptConfig = {
-  cacheRoot: 'tmp/.rpt2_cache',
-  typescript: require('typescript')
-};
-const noDeclarationConfig = Object.assign({}, typescriptConfig, {
-  tsconfigOverride: { compilerOptions: { declaration: false } }
-});
+const ensureArray = maybeArr => Array.isArray(maybeArr) ? maybeArr : [maybeArr];
 
 const makeExternalPredicate = externalArr => {
   if (externalArr.length === 0) {
@@ -23,61 +19,67 @@ const makeExternalPredicate = externalArr => {
 const deps = Object.keys(pkg.dependencies || {});
 const peerDeps = Object.keys(pkg.peerDependencies || {});
 
-const config = {
+const createConfig = ({
+  output,
+  external = 'all',
+  min = false,
+  env,
+}) => ({
   input: 'src/index.ts',
-  external: makeExternalPredicate(deps.concat(peerDeps))
-};
-
-const umd = Object.assign({}, config, {
-  output: {
-    file: 'dist/popmotion.js',
-    format: 'umd',
+  output: ensureArray(output).map(format => Object.assign({
     name: 'popmotion',
     exports: 'named',
+    // TODO: is this needed? should this be external for umd bundles?
     globals: {
       'style-value-types': 'valueTypes'
-    }
-  },
-  external: makeExternalPredicate(peerDeps),
+    },
+  }, format)),
+  external: makeExternalPredicate(external === 'peers' ? peerDeps : deps.concat(peerDeps)),
   plugins: [
+    alias(
+      Object.assign(
+        { resolve: ['.tsx', '.ts','.jsx', '.js'] },
+        lernaAliases(),
+      )
+    ),
     resolve(),
-    typescript(noDeclarationConfig),
-    replace({
-      'process.env.NODE_ENV': JSON.stringify('production')
-    })
-  ]
-});
-
-const umdProd = Object.assign({}, umd, {
-  output: Object.assign({}, umd.output, {
-    file: pkg.unpkg
-  }),
-  plugins: [
-    resolve(),
-    typescript(noDeclarationConfig),
-    replace({
-      'process.env.NODE_ENV': JSON.stringify('development')
+    typescript({
+      cacheRoot: 'tmp/.rpt2_cache',
+      include: /\.tsx?$/,
+      tsconfigOverride: { compilerOptions: { resolve: false } },
     }),
-    uglify()
-  ]
+    env && replace({
+      'process.env.NODE_ENV': JSON.stringify(env)
+    }),
+    min && uglify(),
+  ].filter(Boolean)
 });
 
-const es = Object.assign({}, config, {
-  output: {
-    file: pkg.module,
-    format: 'es',
-    exports: 'named'
-  },
-  plugins: [resolve(), typescript(noDeclarationConfig)]
-});
-
-const cjs = Object.assign({}, config, {
-  output: {
-    file: pkg.main,
-    format: 'cjs',
-    exports: 'named'
-  },
-  plugins: [resolve(), typescript(typescriptConfig)]
-});
-
-export default [umd, umdProd, es, cjs];
+export default [
+  createConfig({
+    output: [{
+      file: pkg.module,
+      format: 'es',
+    }, {
+      file: pkg.main,
+      format: 'cjs',
+    }],
+  }),
+  createConfig({
+    output: {
+      file: pkg.unpkg,
+      format: 'umd',
+    },
+    external: 'peers',
+    env: 'production',
+    min: true,
+  }),
+  createConfig({
+    output: {
+      file: pkg.unpkg.replace(/\.min\.js$/, '.js'),
+      format: 'umd',
+    },
+    external: 'peers',
+    env: 'development',
+  })
+];

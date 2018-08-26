@@ -2,14 +2,15 @@
   "name": "react-pose",
   "version": "3.0.2",
   "description": "A declarative animation library for React",
-  "main": "./lib/index.js",
-  "module": "./dist/react-pose.es.js",
-  "types": "./lib/index.d.ts",
+  "main": "./dist/react-pose.cjs.js",
+  "module": "./dist/react-pose.esm.js",
+  "unpkg": "./dist/react-pose.min.js",
+  "types": "./src/index.ts",
   "scripts": {
     "build": "rollup -c && npm run measure",
     "watch": "rollup -c -w",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "measure": "gzip -c dist/react-pose.js | wc -c",
+    "measure": "gzip -c $npm_package_unpkg | wc -c",
     "prettier": "prettier ./src/* --write",
     "prepublishOnly": "npm run prettier && npm run build"
   },
@@ -53,7 +54,6 @@
     "popmotion-pose": "^3.0.0",
     "tslib": "^1.9.1"
   },
-  "unpkg": "./dist/react-pose.js",
   "prettier": {
     "parser": "typescript",
     "singleQuote": true
