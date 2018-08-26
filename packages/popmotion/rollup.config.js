@@ -29,10 +29,6 @@ const createConfig = ({
   output: ensureArray(output).map(format => Object.assign({
     name: 'popmotion',
     exports: 'named',
-    // TODO: is this needed? should this be external for umd bundles?
-    globals: {
-      'style-value-types': 'valueTypes'
-    },
   }, format)),
   external: makeExternalPredicate(external === 'peers' ? peerDeps : deps.concat(peerDeps)),
   plugins: [

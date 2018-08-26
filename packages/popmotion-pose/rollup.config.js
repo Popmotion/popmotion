@@ -1,9 +1,12 @@
+import alias from 'rollup-plugin-alias';
 import typescript from 'rollup-plugin-typescript2';
 import uglify from 'rollup-plugin-uglify';
 import resolve from 'rollup-plugin-node-resolve';
 import replace from 'rollup-plugin-replace';
-import commonjs from 'rollup-plugin-commonjs';
+import { rollup as lernaAliases } from 'lerna-alias';
 import pkg from './package.json';
+
+const ensureArray = maybeArr => Array.isArray(maybeArr) ? maybeArr : [maybeArr];
 
 const makeExternalPredicate = externalArr => {
   if (externalArr.length === 0) {
@@ -16,68 +19,67 @@ const makeExternalPredicate = externalArr => {
 const deps = Object.keys(pkg.dependencies || {});
 const peerDeps = Object.keys(pkg.peerDependencies || {});
 
-const typescriptConfig = { cacheRoot: 'tmp/.rpt2_cache' };
-const noDeclarationConfig = Object.assign({}, typescriptConfig, {
-  tsconfigOverride: { compilerOptions: { declaration: false } }
-});
-
-const config = {
-  input: 'src/index.ts',
-  external: makeExternalPredicate(deps.concat(peerDeps))
-};
-
-const umd = Object.assign({}, config, {
-  output: {
-    file: 'dist/popmotion-pose.dev.js',
-    format: 'umd',
+// TODO: umd & umdProd had different input files, was it deliberate?
+const createConfig = ({
+  input = 'src/index.ts',
+  output,
+  external = 'all',
+  min = false,
+  env,
+}) => ({
+  input,
+  output: ensureArray(output).map(format => Object.assign({
     name: 'pose',
     exports: 'named',
-    globals: {
-      'style-value-types': 'valueTypes'
-    }
-  },
+  }, format)),
+  external: makeExternalPredicate(external === 'peers' ? peerDeps : deps.concat(peerDeps)),
   plugins: [
-    typescript(noDeclarationConfig),
+    alias(
+      Object.assign(
+        { resolve: ['.tsx', '.ts','.jsx', '.js'] },
+        lernaAliases(),
+      )
+    ),
     resolve(),
-    replace({
-      'process.env.NODE_ENV': JSON.stringify('development')
+    typescript({
+      cacheRoot: 'tmp/.rpt2_cache',
+      include: /\.tsx?$/,
+      tsconfigOverride: { compilerOptions: { resolve: false } },
     }),
-    commonjs()
-  ]
+    env && replace({
+      'process.env.NODE_ENV': JSON.stringify(env)
+    }),
+    min && uglify(),
+  ].filter(Boolean)
 });
 
-const umdProd = Object.assign({}, umd, {
-  input: 'src/global.ts',
-  output: Object.assign({}, umd.output, {
-    file: 'dist/popmotion-pose.js'
+export default [
+  createConfig({
+    output: [{
+      file: pkg.module,
+      format: 'es',
+    }, {
+      file: pkg.main,
+      format: 'cjs',
+    }],
   }),
-  plugins: [
-    typescript(noDeclarationConfig),
-    resolve(),
-    replace({
-      'process.env.NODE_ENV': JSON.stringify('production')
-    }),
-    uglify(),
-    commonjs()
-  ]
-});
-
-const es = Object.assign({}, config, {
-  output: {
-    file: pkg.module,
-    format: 'es',
-    exports: 'named'
-  },
-  plugins: [typescript(noDeclarationConfig), commonjs()]
-});
-
-const cjs = Object.assign({}, config, {
-  output: {
-    file: pkg.main,
-    format: 'cjs',
-    exports: 'named'
-  },
-  plugins: [typescript(typescriptConfig), commonjs()]
-});
-
-export default [umd, umdProd, es, cjs];
+  createConfig({
+    input: 'src/global.ts',
+    output: {
+      file: pkg.unpkg,
+      format: 'umd',
+    },
+    external: 'peers',
+    env: 'production',
+    min: true,
+  }),
+  createConfig({
+    input: 'src/global.ts',
+    output: {
+      file: pkg.unpkg.replace(/\.min\.js$/, '.js'),
+      format: 'umd',
+    },
+    external: 'peers',
+    env: 'development',
+  })
+];
