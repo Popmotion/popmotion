@@ -66,6 +66,8 @@ In the components panel you'll see your new component. You can add this to the F
 
 Click the play icon in the top and hover over your new component. It'll react to your hovering as expected.
 
+![New Framer interactions!](/static/guides/framer-x-a.gif)
+
 ## Expose pose controls
 
 Go back to your editor and highlight your component. Notice in the right-hand inspector there's a section named after your component with a text input labelled "Text". If you replace "Hello world!", your component will update with the input text.
@@ -188,6 +190,8 @@ Finally, ensure we're passing the `fadeDuration` prop to `Container`:
 ```
 
 Now, you can change the duration of the transition with the new "Fade duration" number slider in the inspector panel. Play with the visibility toggle to check it out!
+
+![Close down that feedback loop!](/static/guides/framer-x-b.gif)
 
 ## Conclusion
 
