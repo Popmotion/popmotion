@@ -1,20 +1,12 @@
+import alias from 'rollup-plugin-alias';
 import typescript from 'rollup-plugin-typescript2';
-import commonjs from 'rollup-plugin-commonjs';
 import uglify from 'rollup-plugin-uglify';
 import resolve from 'rollup-plugin-node-resolve';
 import replace from 'rollup-plugin-replace';
+import { rollup as lernaAliases } from 'lerna-alias';
 import pkg from './package.json';
 
-const typescriptConfig = { cacheRoot: 'tmp/.rpt2_cache' };
-const noDeclarationConfig = Object.assign({}, typescriptConfig, {
-  tsconfigOverride: { compilerOptions: { declaration: false } }
-});
-
-const common = commonjs({
-  namedExports: {
-    'node_modules/react/index.js': ['Fragment', 'PureComponent']
-  }
-});
+const ensureArray = maybeArr => Array.isArray(maybeArr) ? maybeArr : [maybeArr];
 
 const makeExternalPredicate = externalArr => {
   if (externalArr.length === 0) {
@@ -27,60 +19,67 @@ const makeExternalPredicate = externalArr => {
 const deps = Object.keys(pkg.dependencies || {});
 const peerDeps = Object.keys(pkg.peerDependencies || {});
 
-const config = {
+const createConfig = ({
+  output,
+  external = 'all',
+  min = false,
+  env,
+}) => ({
   input: 'src/index.ts',
-  external: makeExternalPredicate(deps.concat(peerDeps))
-};
-
-const umd = Object.assign({}, config, {
-  output: {
-    file: 'dist/react-pose-text.dev.js',
-    format: 'umd',
+  output: ensureArray(output).map(format => Object.assign({
     name: 'splitText',
     exports: 'named',
-    globals: { react: 'React' }
-  },
+    globals: {
+      react: 'React',
+    },
+  }, format)),
+  external: makeExternalPredicate(external === 'peers' ? peerDeps : deps.concat(peerDeps)),
   plugins: [
-    common,
-    typescript(noDeclarationConfig),
+    alias(
+      Object.assign(
+        { resolve: ['.tsx', '.ts','.jsx', '.js'] },
+        lernaAliases(),
+      )
+    ),
     resolve(),
-    replace({
-      'process.env.NODE_ENV': JSON.stringify('development')
-    })
-  ]
-});
-
-const umdProd = Object.assign({}, umd, {
-  output: Object.assign({}, umd.output, {
-    file: pkg.unpkg
-  }),
-  plugins: [
-    common,
-    typescript(noDeclarationConfig),
-    resolve(),
-    replace({
-      'process.env.NODE_ENV': JSON.stringify('production')
+    typescript({
+      cacheRoot: 'tmp/.rpt2_cache',
+      include: /\.tsx?$/,
+      tsconfigOverride: { compilerOptions: { resolve: false } },
     }),
-    uglify()
-  ]
+    env && replace({
+      'process.env.NODE_ENV': JSON.stringify(env)
+    }),
+    min && uglify(),
+  ].filter(Boolean)
 });
 
-const es = Object.assign({}, config, {
-  output: {
-    file: pkg.module,
-    format: 'es',
-    exports: 'named'
-  },
-  plugins: [common, typescript(noDeclarationConfig)]
-});
+export default [
+  createConfig({
+    output: [{
+      file: pkg.module,
+      format: 'es',
+    }, {
+      file: pkg.main,
+      format: 'cjs',
+    }],
+  }),
+  createConfig({
+    output: {
+      file: pkg.unpkg,
+      format: 'umd',
+    },
+    external: 'peers',
+    env: 'production',
+    min: true,
+  }),
+  createConfig({
+    output: {
+      file: pkg.unpkg.replace(/\.min\.js$/, '.js'),
+      format: 'umd',
+    },
+    external: 'peers',
+    env: 'development',
+  })
+];
 
-const cjs = Object.assign({}, config, {
-  output: {
-    file: pkg.main,
-    format: 'cjs',
-    exports: 'named'
-  },
-  plugins: [common, typescript(typescriptConfig)]
-});
-
-export default [umd, umdProd, es, cjs];

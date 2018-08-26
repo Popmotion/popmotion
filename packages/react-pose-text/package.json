@@ -2,14 +2,15 @@
   "name": "react-pose-text",
   "version": "0.2.0",
   "description": "Easily animate characters and words with React Pose",
-  "main": "./lib/index.js",
-  "module": "./dist/react-pose-text.es.js",
-  "types": "./lib/index.d.ts",
+  "main": "./dist/react-pose-text.cjs.js",
+  "module": "./dist/react-pose-text.esm.js",
+  "unpkg": "./dist/react-pose-text.min.js",
+  "types": "./src/index.ts",
   "scripts": {
     "build": "rollup -c && npm run measure",
     "watch": "rollup -c -w",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "measure": "gzip -c dist/react-pose-text.js | wc -c",
+    "measure": "gzip -c $npm_package_unpkg | wc -c",
     "prettier": "prettier ./src/* --write",
     "prepublishOnly": "npm run prettier && npm run build"
   },
@@ -29,8 +30,7 @@
   ],
   "peerDependencies": {
     "react": "^16.4.2",
-    "react-dom": "^16.4.2",
-    "react-pose": "^2.2.0"
+    "react-dom": "^16.4.2"
   },
   "devDependencies": {
     "@types/react": "^16.3.16",
@@ -38,7 +38,6 @@
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "rollup": "^0.59.1",
-    "rollup-plugin-commonjs": "^9.1.3",
     "rollup-plugin-node-resolve": "^3.3.0",
     "rollup-plugin-replace": "^2.0.0",
     "rollup-plugin-typescript2": "^0.14.0",
@@ -48,7 +47,6 @@
     "hey-listen": "^1.0.5",
     "react-pose": "^3.0.0"
   },
-  "unpkg": "./dist/react-pose-text.js",
   "prettier": {
     "parser": "typescript",
     "singleQuote": true
