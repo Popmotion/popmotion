@@ -107,4 +107,92 @@ interface Props {
 
 Now, this control will be available to use in the inspector panel.
 
-But we still need to wire it up.
+But we still need to use this prop in our pose logic. Add two new poses, `visible` and `hidden`:
+
+```javascript
+const Container = posed.div({
+  hoverable: true,
+  init: { scale: 1 },
+  hover: { scale: 1.2 },
+  visible: { opacity: 1 },
+  hidden: { opacity: 0 }
+});
+```
+
+And set `Container`'s `pose` prop to either of these poses based the value of `isVisible`:
+
+```javascript
+<Container
+  style={style}
+  pose={this.props.isVisible ? "visible" : "hidden"}
+>
+  {this.props.text}
+</Container>
+```
+
+Now, back in our editor, the "Is visible" toggle control will make our component fade in and out.
+
+## Dynamic pose props
+
+We can use the Framer UI to affect the actual transition used, too.
+
+Repeating the steps above, add a new `fadeDuration` property to the right-hand inspector. This time, we want it to be a `Number`.
+
+By cmd-clicking `PropertyControls` again we can see that `NumberControl` has a `max` property available which, if we don't set, the range slider will max out at `100`. So lets change that to something higher like `10000`:
+
+```javascript
+fadeDuration: {
+  type: ControlType.Number,
+  max: 10000,
+  title: "Fade duration"
+}
+```
+
+Then make a new fade transition creator:
+
+```javascript
+const fadeTransition = ({ fadeDuration }) => ({
+  type: 'tween',
+  duration: fadeDuration
+});
+```
+
+And apply this to our `visible` and `hidden` poses:
+
+```javascript
+const Container = posed.div({
+  hoverable: true,
+  init: { scale: 1 },
+  hover: { scale: 1.2 },
+  visible: {
+    opacity: 1,
+    transition: fadeTransition
+  },
+  hidden: {
+    opacity: 0,
+    transition: fadeTransition
+  }
+});
+```
+
+Finally, ensure we're passing the `fadeDuration` prop to `Container`:
+
+```javascript
+<Container
+  style={style}
+  pose={this.props.isVisible ? "visible" : "hidden"}
+  fadeDuration={this.props.fadeDuration}
+>
+  {this.props.text}
+</Container>
+```
+
+Now, you can change the duration of the transition with the new "Fade duration" number slider in the inspector panel. Play with the visibility toggle to check it out!
+
+## Conclusion
+
+This level of integration is already possible, but in the near future it'd be great to figure out a way of triggering local state/prop changes from other components within the Framer prototype itself.
+
+I'd also like to be able to expose the entire pose API via the Framer UI, as well as figure out `PoseGroup` integration. Framer will be a great tool for closing down the feedback loop when playing around with interactions.
+
+Some of the above may already be possible, and just requires further exploration. [Hit me up](https://twitter.com/popmotionjs) if you have any ideas!
