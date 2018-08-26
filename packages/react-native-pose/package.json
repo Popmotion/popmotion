@@ -2,11 +2,11 @@
   "name": "react-native-pose",
   "version": "0.4.0-rc",
   "description": "Pose animation system for React Native",
-  "main": "lib/index.js",
-  "types": "./lib/index.d.ts",
+  "main": "./dist/react-native-pose.cjs.js",
+  "types": "./src/index.ts",
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc -w",
+    "build": "rollup -c",
+    "watch": "npm run build -- --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prettier": "prettier ./src/*",
     "prepublishOnly": "npm run prettier && npm run build"
@@ -30,8 +30,8 @@
     "@types/react": "^16.3.12",
     "@types/react-native": "^0.55.4",
     "prettier": "1.11.1",
-    "typescript": "^2.9.2",
-    "webpack": "^3.11.0"
+    "rollup": "^0.59.1",
+    "rollup-plugin-typescript2": "^0.14.0"
   },
   "prettier": {
     "parser": "typescript",
@@ -42,6 +42,8 @@
   },
   "dependencies": {
     "animated-pose": "^0.3.2-rc",
-    "react-pose-core": "^0.3.2-rc"
+    "hey-listen": "^1.0.5",
+    "react-pose-core": "^0.3.2-rc",
+    "tslib": "^1.9.1"
   }
 }
