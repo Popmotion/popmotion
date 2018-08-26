@@ -5,7 +5,7 @@
   "homepage": "https://popmotion.io",
   "scripts": {
     "bootstrap": "lerna bootstrap",
-    "build": "lerna run build",
+    "build": "lerna run build --ignore react-360-pose --ignore popmotion-website",
     "playground": "start-storybook -p 6006",
     "build-playground": "build-storybook",
     "clean": "lerna clean --yes && rm -rf node_modules",
