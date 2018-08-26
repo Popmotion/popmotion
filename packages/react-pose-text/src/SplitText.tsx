@@ -1,4 +1,5 @@
-import React, { PureComponent, ReactElement } from 'react';
+import * as React from 'react';
+import { ReactElement } from 'react';
 import posed from 'react-pose';
 import { invariant } from 'hey-listen';
 
@@ -14,7 +15,7 @@ export type Props = {
 
 const splitStyles = { display: 'inline-block' };
 
-class SplitText extends PureComponent<Props> {
+class SplitText extends React.PureComponent<Props> {
   props: Props;
   poseProps: Props;
   text: string[][];

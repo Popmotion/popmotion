@@ -31,6 +31,9 @@ const createConfig = ({
   output: ensureArray(output).map(format => Object.assign({
     name: 'pose',
     exports: 'named',
+    globals: {
+      react: 'React',
+    },
   }, format)),
   external: makeExternalPredicate(external === 'peers' ? peerDeps : deps.concat(peerDeps)),
   plugins: [
