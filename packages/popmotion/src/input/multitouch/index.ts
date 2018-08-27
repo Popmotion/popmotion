@@ -79,6 +79,7 @@ const multitouch = ({
       stop: () => {
         cancelOnFrameUpdate(updatePoint);
         updateOnMove.stop();
+        isTouchDevice = false;
       }
     };
   });
