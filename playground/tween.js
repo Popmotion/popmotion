@@ -1,7 +1,7 @@
 import React from "react";
 import { currentFrameTime } from "framesync";
 import { BaseAnimation } from "./inc";
-import { tween, value } from "../packages/popmotion/lib";
+import { tween, value } from "../packages/popmotion";
 
 export class TweenBasic extends BaseAnimation {
   getAnimation = styler =>

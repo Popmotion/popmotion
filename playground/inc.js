@@ -1,5 +1,5 @@
 import React from "react";
-import { styler } from "../packages/popmotion/lib";
+import { styler } from "../packages/popmotion";
 
 const style = { width: "100px", height: "100px", background: "red" };
 export const Box = ({ innerRef, ...props }) => (

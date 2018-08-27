@@ -1,7 +1,7 @@
 import React from 'react';
-import timeline from '../packages/popmotion/lib/animations/timeline';
-import { styler } from '../packages/popmotion/lib';
-import { linear } from '../packages/popmotion/lib/easing';
+import timeline from '../packages/popmotion';
+import { styler } from '../packages/popmotion';
+import { linear } from '../packages/easing';
 import { Box } from './inc';
 
 export class TimelineTest extends React.Component {

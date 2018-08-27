@@ -1,7 +1,7 @@
 import React from "react";
 import { Box } from "../inc";
 import styled from "styled-components";
-import pose from "../../packages/popmotion-pose/lib";
+import pose from "../../packages/popmotion-pose";
 import {
   decay,
   tween,
@@ -9,7 +9,7 @@ import {
   physics,
   transform,
   value
-} from "../../packages/popmotion/lib";
+} from "../../packages/popmotion";
 const { pipe, blendColor, conditional, clamp, interpolate } = transform;
 
 const SidePanel = styled.div`

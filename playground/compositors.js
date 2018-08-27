@@ -1,11 +1,11 @@
 import React from 'react';
 import { BaseAnimation } from './inc';
-import chain from '../packages/popmotion/lib/compositors/chain';
-import composite from '../packages/popmotion/lib/compositors/composite';
-import delay from '../packages/popmotion/lib/compositors/delay';
-import crossfade from '../packages/popmotion/lib/compositors/crossfade';
-import tween from '../packages/popmotion/lib/animations/tween';
-import physics from '../packages/popmotion/lib/animations/physics';
+import chain from '../packages/popmotion';
+import composite from '../packages/popmotion';
+import delay from '../packages/popmotion';
+import crossfade from '../packages/popmotion';
+import tween from '../packages/popmotion';
+import physics from '../packages/popmotion';
 
 //import { Chain, Composite, Delay, Crossfade, Merge, Parallel, Stagger } from './compositors';
 
@@ -48,9 +48,9 @@ export class Merge extends BaseAnimation {
 }
 
 export class Parallel extends BaseAnimation {
-  //getAnimation = (styler) => 
+  //getAnimation = (styler) =>
 }
 
 export class Stagger extends BaseAnimation {
-  //getAnimation = (styler) => 
+  //getAnimation = (styler) =>
 }

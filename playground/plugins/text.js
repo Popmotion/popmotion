@@ -1,6 +1,6 @@
 import React from "react";
-import posed, { PoseGroup } from "../../packages/react-pose/lib";
-import SplitText from "../../packages/react-pose-text/lib";
+import posed, { PoseGroup } from "../../packages/react-pose";
+import SplitText from "../../packages/react-pose-text";
 
 const delay = ({ charIndex }) => charIndex * 50;
 

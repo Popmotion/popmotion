@@ -7,7 +7,7 @@ import {
   spring,
   value,
   transform
-} from "../packages/popmotion/lib";
+} from "../packages/popmotion";
 const { applyOffset } = transform;
 
 export class Drag extends React.Component {

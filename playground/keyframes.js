@@ -1,7 +1,7 @@
 import React from 'react';
 import { BaseAnimation } from './inc';
-import keyframes from '../packages/popmotion/lib/animations/keyframes';
-import { linear } from '../packages/popmotion/lib/easing';
+import keyframes from '../packages/popmotion';
+import { linear } from '../packages/easing';
 
 export class Keyframes extends BaseAnimation {
   getAnimation = (styler) => keyframes({
