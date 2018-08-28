@@ -40,7 +40,11 @@ export const isFlipPose = (flip: boolean, key: string, state: PoserState) =>
 export const resolveProp = (target: any, props: { [key: string]: any }) =>
   typeof target === 'function' ? target(props) : target;
 
-const setValue = ({ values, props }: PoserState, key: string, to: any) => {
+export const setValue = (
+  { values, props }: PoserState,
+  key: string,
+  to: any
+) => {
   if (values.has(key)) {
     // Here, if we already have the value, we update it twice.
     // Because of stylefire's render batching, this isn't going

@@ -13,6 +13,7 @@ import {
   PoseMap,
   TransitionProps
 } from '../types';
+import { isPositional, convertPositionalUnits } from './unit-conversion';
 export { Action, Poser, ValueReaction, ColdSubscription };
 
 const dragPoses = (draggable: Draggable): PoseMap => {
@@ -75,8 +76,15 @@ const createPoseConfig = (
 const domPose = poseFactory<DomPopmotionPoser>({
   posePriority: ['drag', 'press', 'focus', 'hover'],
 
-  transformPose: ({ flip, ...pose }, name, state) =>
-    isFlipPose(flip, name, state) ? flipPose(state, pose) : pose,
+  transformPose: ({ flip, ...pose }, name, state) => {
+    if (isFlipPose(flip, name, state)) {
+      return flipPose(state, pose);
+    } else if (isPositional(pose)) {
+      return convertPositionalUnits(state, pose);
+    }
+
+    return pose;
+  },
 
   addListenerToValue: (key, elementStyler) => v => elementStyler.set(key, v),
 
