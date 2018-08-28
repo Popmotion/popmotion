@@ -24,7 +24,7 @@ Stylefire supports both`'stoke-dasharray'` and `stroke-dashorigin` properties, b
 * `pathSpacing`
 * `pathOffset`
 
-These are all set as a **progress of the total path length, from `0` to `1`**, which is automatically measured by Stylefire.
+These are all set as a **progress of the total path length, from `0` to `100`**, which is automatically measured by Stylefire.
 
 So you can define an animation from `0` to `100`:
 
