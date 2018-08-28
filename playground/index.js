@@ -13,7 +13,8 @@ import {
   PoseFocus,
   PoseFullScreenFlip,
   PoseClick,
-  UnitTypeError
+  UnitTypeError,
+  Auto
 } from "./plugins/pose";
 import {
   ReactPose,
@@ -38,6 +39,7 @@ storiesOf("Plugin: Pose", module)
   .add("focus", () => <PoseFocus />)
   .add("click", () => <PoseClick />)
   .add("opacity", () => <PoseOpacity />)
+  .add("width/height auto", () => <Auto />)
   .add("full screen flip", () => <PoseFullScreenFlip />)
   .add("unit type error", () => <UnitTypeError />);
 

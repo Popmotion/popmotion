@@ -180,27 +180,24 @@ const pose = <P>({
       };
     },
 
-    getTransitionProps: ({ raw, type }, to) => {
-      const toType = getValueType(to);
-      const from = raw.get();
-
-      return {
-        from,
-        velocity: raw.getVelocity(),
-        to,
-        type,
-        toType
-      };
-    },
+    getTransitionProps: ({ raw, type }, to) => ({
+      from: raw.get(),
+      velocity: raw.getVelocity(),
+      to,
+      type
+    }),
 
     resolveTarget: (_, to) => to,
 
     selectValueToRead: ({ raw }) => raw,
 
-    startAction: ({ raw }, action, complete) => {
+    startAction: ({ raw, setOnComplete }, action, complete) => {
       const reaction = {
         update: (v: any) => raw.update(v),
-        complete
+        complete: () => {
+          complete();
+          if (setOnComplete) raw.update(setOnComplete);
+        }
       };
 
       return action.start(reaction);

@@ -14,6 +14,7 @@ import { Styler } from 'stylefire';
 export type Value = {
   raw: ValueReaction;
   type?: ValueType;
+  setOnComplete?: false | number | string;
 };
 
 export type Pose = Pose<Action>;

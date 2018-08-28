@@ -360,6 +360,33 @@ export class PoseOpacity extends React.PureComponent {
   }
 }
 
+export class Auto extends React.PureComponent {
+  setRef = ref => {
+    if (ref) {
+      this.poser = pose(ref, {
+        init: {
+          x: 10
+        },
+        auto: {
+          x: 20
+        }
+      });
+      let isAuto = false;
+      this.interval = setInterval(() => {
+        this.poser.set(isAuto ? "init" : "auto");
+        isAuto = !isAuto;
+      }, 2000);
+    } else {
+      clearInterval(this.interval);
+      this.poser.destroy();
+    }
+  };
+
+  render() {
+    return <Box style={{ position: "relative" }} innerRef={this.setRef} />;
+  }
+}
+
 export class PoseDrag extends React.PureComponent {
   setRef = ref => {
     if (ref) {
