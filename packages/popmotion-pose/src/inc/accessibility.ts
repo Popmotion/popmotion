@@ -3,9 +3,8 @@ let prefersReducedMotion = false;
 if (typeof window !== 'undefined') {
   const motionMediaQuery = window.matchMedia('(prefers-reduced-motion)');
 
-  const setReducedMotionPreferences = () => {
+  const setReducedMotionPreferences = () =>
     prefersReducedMotion = motionMediaQuery.matches;
-  };
 
   motionMediaQuery.addListener(setReducedMotionPreferences);
   setReducedMotionPreferences();
