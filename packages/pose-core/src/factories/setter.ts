@@ -35,7 +35,7 @@ type SetterFactoryProps<V, A, C, P> = {
   isReducedMotion: () => boolean;
 };
 
-const isDev = process.env.NODE_ENV !== 'production';
+const isDev = process.env.NODE_ENV === 'development';
 
 export const resolveProp = (target: any, props: Props) =>
   typeof target === 'function' ? target(props) : target;
