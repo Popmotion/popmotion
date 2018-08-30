@@ -46,62 +46,60 @@ module.exports = function(siteMetadata) {
       });
 
       // Sort posts - adapted/butchered from https://blog.theodorejb.me/linked-list-sorting/
-      menu
-        .sort((a, b) => a.id < b.id ? -1 : 1))
-        .forEach(menuItem => {
-          if (menuItem.posts) {
-            const unsortedList = [];
-            const sortedList = [];
-            const map = new Map();
-            let currentPost = null;
+      menu.sort((a, b) => (a.id < b.id ? -1 : 1)).forEach(menuItem => {
+        if (menuItem.posts) {
+          const unsortedList = [];
+          const sortedList = [];
+          const map = new Map();
+          let currentPost = null;
 
-            menuItem.posts.forEach((post, i) => {
-              const { next } = sectionMetadata[post.id];
+          menuItem.posts.forEach((post, i) => {
+            const { next } = sectionMetadata[post.id];
 
-              if (!next || !sectionMetadata[next]) {
-                unsortedList.push(post);
-              } else {
-                const nextIndex = menuItem.posts.findIndex(
-                  ({ id }) => id === next
-                );
-                const isFirstPost =
-                  menuItem.posts.find(({ id }) => {
-                    const thisPost = sectionMetadata[id];
-                    return post.id === thisPost.next;
-                  }) === undefined;
-                if (isFirstPost) currentPost = post;
-
-                if (nextIndex > -1) {
-                  map.set(post.id, nextIndex);
-                } else {
-                  throw new Error(`${post.id} incorrectly linked to ${next}`);
-                }
-              }
-            });
-
-            const numPosts = menuItem.posts.length;
-            const numUnsorted = unsortedList.length;
-            const numToSort = numPosts - numUnsorted;
-
-            if (numToSort && currentPost) {
-              sortedList.push(currentPost);
-              const removeIndex = unsortedList.findIndex(
-                ({ id }) => id === currentPost.id
+            if (!next || !sectionMetadata[next]) {
+              unsortedList.push(post);
+            } else {
+              const nextIndex = menuItem.posts.findIndex(
+                ({ id }) => id === next
               );
-              if (removeIndex >= 0) {
-                unsortedList.splice(removeIndex, 1);
-              }
+              const isFirstPost =
+                menuItem.posts.find(({ id }) => {
+                  const thisPost = sectionMetadata[id];
+                  return post.id === thisPost.next;
+                }) === undefined;
+              if (isFirstPost) currentPost = post;
 
-              while (sortedList.length < numToSort) {
-                const nextPost = menuItem.posts[map.get(currentPost.id)];
-                sortedList.push(nextPost);
-                currentPost = nextPost;
+              if (nextIndex > -1) {
+                map.set(post.id, nextIndex);
+              } else {
+                throw new Error(`${post.id} incorrectly linked to ${next}`);
               }
-
-              menuItem.posts = [...sortedList, ...unsortedList];
             }
+          });
+
+          const numPosts = menuItem.posts.length;
+          const numUnsorted = unsortedList.length;
+          const numToSort = numPosts - numUnsorted;
+
+          if (numToSort && currentPost) {
+            sortedList.push(currentPost);
+            const removeIndex = unsortedList.findIndex(
+              ({ id }) => id === currentPost.id
+            );
+            if (removeIndex >= 0) {
+              unsortedList.splice(removeIndex, 1);
+            }
+
+            while (sortedList.length < numToSort) {
+              const nextPost = menuItem.posts[map.get(currentPost.id)];
+              sortedList.push(nextPost);
+              currentPost = nextPost;
+            }
+
+            menuItem.posts = [...sortedList, ...unsortedList];
           }
-        });
+        }
+      });
 
       siteMenu[sectionKey] = menu;
 
