@@ -2,6 +2,12 @@
 
 Pose Core adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.1.0] 2018-08-30
+
+### Added
+
+- Support for reduced motion.
+
 ## [1.0.3] 2018-08-26
 
 ### Fixed

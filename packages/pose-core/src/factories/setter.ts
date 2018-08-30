@@ -32,6 +32,7 @@ type SetterFactoryProps<V, A, C, P> = {
   convertTransitionDefinition: ConvertTransitionDefinition<V, A>;
   transformPose?: TransformPose<V, A, C, P>;
   posePriority?: string[];
+  isReducedMotion: () => boolean;
 };
 
 export const resolveProp = (target: any, props: Props) =>
@@ -157,7 +158,8 @@ const createPoseSetter = <V, A, C, P>(
     resolveTarget,
     transformPose,
     posePriority,
-    convertTransitionDefinition
+    convertTransitionDefinition,
+    isReducedMotion
   } = setterProps;
 
   return (next: string, nextProps: Props = {}, propagate: boolean = true) => {
@@ -231,18 +233,22 @@ const createPoseSetter = <V, A, C, P>(
                 ...getTransitionProps(value, target, transitionProps)
               };
 
-              let transition = resolveTransition<V, A>(
-                getTransition,
-                key,
-                value,
-                resolveTransitionProps,
-                convertTransitionDefinition,
-                getInstantTransition
-              );
+              const useTransition = !isReducedMotion();
+
+              let transition = useTransition
+                ? resolveTransition<V, A>(
+                    getTransition,
+                    key,
+                    value,
+                    resolveTransitionProps,
+                    convertTransitionDefinition,
+                    getInstantTransition
+                  )
+                : getInstantTransition(value, resolveTransitionProps);
 
               // Add delay if defined on pose
               const poseDelay = resolveProp(nextPose.delay, transitionProps);
-              if (delay || poseDelay) {
+              if (useTransition && (delay || poseDelay)) {
                 transition = addActionDelay(delay || poseDelay, transition);
               }
 

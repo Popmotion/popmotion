@@ -35,6 +35,7 @@ const poseFactory = <V, A, C, P>({
   convertTransitionDefinition,
   transformPose,
   posePriority,
+  isReducedMotion,
   extendAPI
 }: PoseFactoryConfig<V, A, C, P>) => (
   config: PoserConfig<V>
@@ -101,7 +102,8 @@ const poseFactory = <V, A, C, P>({
     resolveTarget,
     addActionDelay,
     transformPose,
-    posePriority
+    posePriority,
+    isReducedMotion
   });
 
   const has = (poseName: string) => !!poses[poseName];

@@ -172,4 +172,5 @@ export type PoseFactoryConfig<V, A, C, P> = {
   extendAPI: ExtendAPI<V, A, C, P>;
   transformPose?: TransformPose<V, A, C, P>;
   posePriority?: string[];
+  isReducedMotion: () => boolean;
 };

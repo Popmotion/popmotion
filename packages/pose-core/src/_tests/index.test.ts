@@ -35,6 +35,8 @@ const mockActionInverse = (to): Action => ({
   }
 });
 
+let reducedMotion = false;
+
 const testPose = poseFactory<Value, Action, Subscription, PoserAPI>({
   bindOnChange: (values, onChange) => key => undefined,
   readValue: ({ i }) => i,
@@ -63,7 +65,8 @@ const testPose = poseFactory<Value, Action, Subscription, PoserAPI>({
   transformPose: pose => pose,
   readValueFromSource: () => 0,
   extendAPI: api => api,
-  posePriority: ['drag', 'press', 'hover']
+  posePriority: ['drag', 'press', 'hover'],
+  isReducedMotion: () => reducedMotion
 });
 
 const testPoser = testPose({
@@ -190,6 +193,25 @@ test('propagates pose changes to children', () => {
     expect(child.get('x')).toBe(-10)
   })
 };
+
+test('reduced motion', () => {
+  const reducedMotionPoser = testPose({
+    init: { x: 0 },
+    a: { x: 100 },
+    b: { x: 100 }
+  });
+
+  return reducedMotionPoser.set('a')
+    .then(() => {
+      expect(reducedMotionPoser.get().x).toBe(-100);
+      reducedMotion = true;
+      return reducedMotionPoser.set('b');
+    })
+    .then(() => {
+      expect(reducedMotionPoser.get().x).toBe(100);
+      reducedMotion = false;
+    })
+});
 
 test('resolves custom transitions correctly', () =>
   testPoser.set('functionalTransition')
