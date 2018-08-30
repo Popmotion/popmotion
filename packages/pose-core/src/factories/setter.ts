@@ -17,7 +17,6 @@ import {
   TransitionMap
 } from '../types';
 import { getPoseValues } from '../inc/selectors';
-import { warning } from 'hey-listen';
 
 type AnimationsPromiseList = Array<Promise<any>>;
 
@@ -168,11 +167,6 @@ const createPoseSetter = <V, A, C, P>(
     const { delay = 0 } = nextProps;
     const hasChildren = children.size;
     const useTransition = !isReducedMotion();
-
-    warning(
-      useTransition,
-      'Animations not playing? Your device has reduced motion enabled.'
-    );
 
     const baseTransitionProps = {
       ...props,
