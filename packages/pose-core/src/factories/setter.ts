@@ -168,7 +168,7 @@ const createPoseSetter = <V, A, C, P>(
     const { children, values, props, activeActions, activePoses } = state;
     const { delay = 0 } = nextProps;
     const hasChildren = children.size;
-    const useTransition = !isReducedMotion();
+    const useTransition = !isReducedMotion() || isDev;
 
     const baseTransitionProps = {
       ...props,
@@ -236,17 +236,16 @@ const createPoseSetter = <V, A, C, P>(
                 ...getTransitionProps(value, target, transitionProps)
               };
 
-              let transition =
-                useTransition || isDev
-                  ? resolveTransition<V, A>(
-                      getTransition,
-                      key,
-                      value,
-                      resolveTransitionProps,
-                      convertTransitionDefinition,
-                      getInstantTransition
-                    )
-                  : getInstantTransition(value, resolveTransitionProps);
+              let transition = useTransition
+                ? resolveTransition<V, A>(
+                    getTransition,
+                    key,
+                    value,
+                    resolveTransitionProps,
+                    convertTransitionDefinition,
+                    getInstantTransition
+                  )
+                : getInstantTransition(value, resolveTransitionProps);
 
               // Add delay if defined on pose
               const poseDelay = resolveProp(nextPose.delay, transitionProps);
