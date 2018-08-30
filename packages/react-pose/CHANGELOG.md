@@ -2,6 +2,18 @@
 
 React Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.2.0] Unreleased
+
+### Added
+
+- Support for prefers reduced motion media query.
+
+## [3.1.0] 2018-08-28
+
+### Added
+
+- Animate between anything.
+
 ## [3.0.2] 2018-08-20
 
 ### Fixed

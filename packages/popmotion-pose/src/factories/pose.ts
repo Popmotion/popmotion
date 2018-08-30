@@ -22,6 +22,7 @@ import {
 import { Poser } from 'pose-core';
 import defaultTransitions, { just } from '../inc/default-transitions';
 import { getValueType } from '../inc/value-types';
+import { isReducedMotion } from '../inc/accessibility';
 import { invariant } from 'hey-listen';
 export { Poser };
 
@@ -226,6 +227,7 @@ const pose = <P>({
       return outputPipe.length ? action.pipe(...outputPipe) : action;
     },
 
+    isReducedMotion,
     addActionDelay,
     defaultTransitions,
     transformPose,

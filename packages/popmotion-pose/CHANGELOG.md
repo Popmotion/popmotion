@@ -2,6 +2,12 @@
 
 Popmotion Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.2.0] 2018-08-30
+
+### Added
+
+- Support for `prefers-reduced-motion`.
+
 ## [3.1.0] 2018-08-28
 
 ### Added
