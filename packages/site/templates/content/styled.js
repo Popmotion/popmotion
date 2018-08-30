@@ -82,3 +82,7 @@ export const NextLink = styled(SiteLink)`
 `;
 
 export const NextLinkSmall = styled.span``;
+
+export const EmptyCol = styled.div`
+  width: 150px;
+`;

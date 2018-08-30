@@ -162,6 +162,7 @@ const Page = ({ section }) => (
     title="HTML"
     description="Styler for HTML that supports CSS variables, individual transform props and prevents layout thrashing."
     published=""
+    author="undefined"
     theme="stylefire"
     undefined
   >

@@ -2,6 +2,12 @@
 
 Popmotion Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.1.0] 2018-08-28
+
+### Added
+
+- Animate Between Anything. Animate x/y/width/height/top/left/bottom/right between any two value types, even `calc` and `'auto'`!
+
 ## [3.0.1] 2018-08-20
 
 ### Fixed

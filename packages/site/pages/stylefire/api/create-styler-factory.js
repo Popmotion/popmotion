@@ -119,6 +119,7 @@ const Page = ({ section }) => (
     title="Create styler factory"
     description="Create a custom styler factory."
     published=""
+    author="undefined"
     theme="stylefire"
     undefined
   >

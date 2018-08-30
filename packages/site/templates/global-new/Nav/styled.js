@@ -1,10 +1,14 @@
 import styled from 'styled-components';
-import { color, font, media } from '~/styles/vars';
+import { color, font, media, cols } from '~/styles/vars';
 
 export const Container = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  ${media.large`
+    margin: 0 20px;
+  `}
 
   ${media.medium`
     flex-wrap: wrap;
@@ -16,8 +20,8 @@ export const Container = styled.nav`
       justify-content: center;
     }
   `} ${({ isWhite }) =>
-    isWhite &&
-    `
+  isWhite &&
+  `
     path {
       fill: ${color.white};
     }
@@ -28,6 +32,8 @@ export const Container = styled.nav`
       font-weight: bold;
     }
   `};
+
+  ${media.small`margin: 0;`}
 `;
 
 export const Links = styled.ul`

@@ -40,6 +40,7 @@ export const color = {
   orange: '#F30',
   orangeBurn: '#FF8213',
   yellow: '#FFE42B',
+  grey: '#5E606C',
   lightGrey: '#ECECEC',
   superLightGrey: '#fafafa'
 };

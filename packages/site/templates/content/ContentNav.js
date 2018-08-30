@@ -83,7 +83,7 @@ const MenuToggle = styled.div`
 const Menu = styled.ul`
   ${media.large`
     display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
-    padding-top: ${cols(1)};
+    padding: ${cols(1)};
   `};
 `;
 

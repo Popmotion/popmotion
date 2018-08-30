@@ -214,14 +214,6 @@ export const ActionButton = ({ children, onClick }) => (
   </Button>
 );
 
-export const DatePublished = Centered.withComponent('p').extend`
-  font-size: 14px;
-  margin-bottom: ${cols(1)};
-  opacity: 0.75;
-
-  ${media.medium`font-size: 12px`}
-`;
-
 export const ArticleHeader = ({ children }) => (
   <ArticleHeaderPrimitive>
     <H1>{children}</H1>

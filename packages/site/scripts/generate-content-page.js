@@ -2,7 +2,17 @@ const escapeBackticks = string => string.replace(/`/g, '\\`');
 
 module.exports = (
   body,
-  { category, id, title, description, published, siteName, section, next }
+  {
+    category,
+    id,
+    title,
+    description,
+    published,
+    siteName,
+    section,
+    next,
+    author
+  }
 ) => `
 import { createElement } from 'react';
 import marksy from 'marksy/components';
@@ -53,6 +63,7 @@ const Page = ({ section }) => (
     title="${title}"
     description="${description}"
     published="${published}"
+    author="${author}"
     theme="${siteName}"
     ${next && `next="${next}"`}
   >

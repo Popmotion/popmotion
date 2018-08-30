@@ -3,15 +3,17 @@ import {
   ContentArea,
   NextLink,
   NextLinkContainer,
-  NextLinkSmall
+  NextLinkSmall,
+  EmptyCol
 } from './styled';
 import { Content } from '~/templates/global/grid';
 import ContentNav from './ContentNav';
 import GlobalTemplate from '~/templates/global/Template';
 import ContentPage from '~/templates/global-new/ContentPage';
 import ContentCTA from './ContentCTA';
-import { DatePublished } from '~/templates/global/styled';
+import PostDetails from './PostDetails';
 import themes from '~/styles/themes';
+import authorData from '~/data/authors.json';
 
 export default class Template extends React.PureComponent {
   state = {
@@ -31,6 +33,7 @@ export default class Template extends React.PureComponent {
       description,
       section,
       published,
+      author,
       theme,
       next
     } = this.props;
@@ -51,10 +54,22 @@ export default class Template extends React.PureComponent {
                 section={section}
                 id={id}
               />
-            ) : null}
+            ) : (
+              <EmptyCol />
+            )}
             <ContentArea pose="flip">
               <Content>
-                {published && <DatePublished>{published}</DatePublished>}
+                {published || authorData[author] ? (
+                  <PostDetails
+                    published={published}
+                    name={
+                      author && authorData[author] && authorData[author].name
+                    }
+                    avatar={
+                      author && authorData[author] && authorData[author].avatar
+                    }
+                  />
+                ) : null}
                 {children}
                 {next && themes[theme].data.content[section][next] ? (
                   <NextLinkContainer>

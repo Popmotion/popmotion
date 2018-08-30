@@ -16,10 +16,10 @@ export const ContentContainer = styled.div`
   background: ${color.white};
   padding: ${({ noHeader }) => (noHeader ? '75px' : '30px')} 30px;
 
-  ${media.large`padding: ${({ noHeader }) =>
-    noHeader ? '30px' : '30px'} 20px;`};
   ${media.small`padding: ${({ noHeader }) =>
     noHeader ? '10px' : '30px'} 10px;`};
+  ${media.large`padding: ${({ noHeader }) =>
+    noHeader ? '30px' : '30px'} 10px;`};
 
   a {
     color: ${({ theme }) => theme.color.action};

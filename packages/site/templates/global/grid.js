@@ -6,21 +6,33 @@ export const Content = styled.article``;
 export const Centered = styled.div`
   max-width: ${cols(42)};
 
+  ${media.large`
+    margin-left: 20px;
+    margin-right: 20px;
+  `};
   ${media.medium`
     margin-left: ${cols(1)};
     margin-right: ${cols(1)};
   `};
   ${media.small`
-    margin-left: ${cols(1)};
-    margin-right: ${cols(1)};
+    margin-left: 5px;
+    margin-right: 5px;
   `};
 `;
 
 export const MajorCentered = styled(Centered)`
   width: 100%;
 
+  ${media.large`
+    width: auto;
+    margin-left: 20px;
+  `};
   ${media.medium`
     margin-left: ${cols(1)};
+  `};
+  ${media.small`
+    margin-left: 5px;
+    margin-right: 5px;
   `};
 `;
 

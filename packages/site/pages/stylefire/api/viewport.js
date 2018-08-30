@@ -59,6 +59,7 @@ const Page = ({ section }) => (
     title="Viewport"
     description="Styler for setting viewport scroll position."
     published=""
+    author="undefined"
     theme="stylefire"
     undefined
   >

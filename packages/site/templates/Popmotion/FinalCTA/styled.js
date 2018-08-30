@@ -11,4 +11,5 @@ export const Container = styled.section`
 export const ContentContainer = Centered.extend`
   display: flex;
   flex-direction: column;
+  margin: 0 auto;
 `;

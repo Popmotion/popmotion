@@ -59,7 +59,7 @@ Stylefire supports both\`'stoke-dasharray'\` and \`stroke-dashorigin\` propertie
 * \`pathSpacing\`
 * \`pathOffset\`
 
-These are all set as a **progress of the total path length, from \`0\` to \`1\`**, which is automatically measured by Stylefire.
+These are all set as a **progress of the total path length, from \`0\` to \`100\`**, which is automatically measured by Stylefire.
 
 So you can define an animation from \`0\` to \`100\`:
 
@@ -105,6 +105,7 @@ const Page = ({ section }) => (
     title="SVG"
     description="Styler for SVG that simplifies transforms and path drawing."
     published=""
+    author="undefined"
     theme="stylefire"
     undefined
   >

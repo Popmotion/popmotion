@@ -65,6 +65,7 @@ function generateContent({
         description,
         category,
         published,
+        author,
         next,
         draft
       } = attributes;
@@ -80,6 +81,7 @@ function generateContent({
         description,
         category,
         date: published,
+        author,
         draft,
         published: published ? convertDateFormat(`${published}`) : '',
         section: firstLevelDir,
