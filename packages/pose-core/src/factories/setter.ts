@@ -35,6 +35,8 @@ type SetterFactoryProps<V, A, C, P> = {
   isReducedMotion: () => boolean;
 };
 
+const isDev = process.env.NODE_ENV !== 'production';
+
 export const resolveProp = (target: any, props: Props) =>
   typeof target === 'function' ? target(props) : target;
 
@@ -234,16 +236,17 @@ const createPoseSetter = <V, A, C, P>(
                 ...getTransitionProps(value, target, transitionProps)
               };
 
-              let transition = useTransition
-                ? resolveTransition<V, A>(
-                    getTransition,
-                    key,
-                    value,
-                    resolveTransitionProps,
-                    convertTransitionDefinition,
-                    getInstantTransition
-                  )
-                : getInstantTransition(value, resolveTransitionProps);
+              let transition =
+                useTransition || isDev
+                  ? resolveTransition<V, A>(
+                      getTransition,
+                      key,
+                      value,
+                      resolveTransitionProps,
+                      convertTransitionDefinition,
+                      getInstantTransition
+                    )
+                  : getInstantTransition(value, resolveTransitionProps);
 
               // Add delay if defined on pose
               const poseDelay = resolveProp(nextPose.delay, transitionProps);
