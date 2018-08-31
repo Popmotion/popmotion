@@ -15,7 +15,7 @@ type UIEventConfig = {
   endPose: string;
   startCallback?: string;
   endCallback?: string;
-  useDocumentToEnd?: boolean;
+  useWindowToEnd?: boolean;
   preventDefault?: boolean;
 };
 
@@ -33,7 +33,7 @@ const makeUIEventApplicator = ({
   endPose,
   startCallback,
   endCallback,
-  useDocumentToEnd,
+  useWindowToEnd,
   preventDefault
 }: UIEventConfig): UIEventApplicator => (
   element,
@@ -53,9 +53,19 @@ const makeUIEventApplicator = ({
         config[startCallback](startEvent);
 
       const eventEndListener = listen(
-        useDocumentToEnd ? document : element,
-        endEvents
+        useWindowToEnd ? document.documentElement : element,
+        endEvents + (useWindowToEnd ? ' mouseenter' : '')
       ).start((endEvent: MouseEvent | TouchEvent) => {
+        // If this is a window event, detect mouse reentries without the left button
+        // pressed and detect them as an end event
+        if (
+          useWindowToEnd &&
+          endEvent.type === 'mouseenter' &&
+          (endEvent as MouseEvent).buttons === 1
+        ) {
+          return;
+        }
+
         if (preventDefault) endEvent.preventDefault();
         activeActions.get(endListener).stop();
         poser.unset(startPose);
@@ -78,7 +88,7 @@ const events: { [key: string]: UIEventApplicator } = {
     endPose: 'dragEnd',
     startCallback: 'onDragStart',
     endCallback: 'onDragEnd',
-    useDocumentToEnd: true,
+    useWindowToEnd: true,
     preventDefault: true
   }),
   hoverable: makeUIEventApplicator({
@@ -100,7 +110,7 @@ const events: { [key: string]: UIEventApplicator } = {
     endPose: 'pressEnd',
     startCallback: 'onPressStart',
     endCallback: 'onPressEnd',
-    useDocumentToEnd: true
+    useWindowToEnd: true
   })
 };
 
