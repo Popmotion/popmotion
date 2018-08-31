@@ -570,3 +570,9 @@ export const DragChildren = () => (
     <Label>Drag me</Label>
   </DraggableBox>
 );
+
+export const SingleFilter = posed.img({
+  hoverable: true,
+  init: { filter: "blur(2px)" },
+  hover: { filter: "blur(0px)" }
+});
