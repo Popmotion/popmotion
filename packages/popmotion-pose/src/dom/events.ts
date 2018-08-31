@@ -15,7 +15,7 @@ type UIEventConfig = {
   endPose: string;
   startCallback?: string;
   endCallback?: string;
-  useWindowToEnd?: boolean;
+  useDocumentToEnd?: boolean;
   preventDefault?: boolean;
 };
 
@@ -33,7 +33,7 @@ const makeUIEventApplicator = ({
   endPose,
   startCallback,
   endCallback,
-  useWindowToEnd,
+  useDocumentToEnd,
   preventDefault
 }: UIEventConfig): UIEventApplicator => (
   element,
@@ -53,13 +53,13 @@ const makeUIEventApplicator = ({
         config[startCallback](startEvent);
 
       const eventEndListener = listen(
-        useWindowToEnd ? document.documentElement : element,
-        endEvents + (useWindowToEnd ? ' mouseenter' : '')
+        useDocumentToEnd ? document.documentElement : element,
+        endEvents + (useDocumentToEnd ? ' mouseenter' : '')
       ).start((endEvent: MouseEvent | TouchEvent) => {
         // If this is a window event, detect mouse reentries without the left button
-        // pressed and detect them as an end event
+        // pressed and detect them as an end event. This might be a candidate to be moved within Popmotion.
         if (
-          useWindowToEnd &&
+          useDocumentToEnd &&
           endEvent.type === 'mouseenter' &&
           (endEvent as MouseEvent).buttons === 1
         ) {
@@ -88,7 +88,7 @@ const events: { [key: string]: UIEventApplicator } = {
     endPose: 'dragEnd',
     startCallback: 'onDragStart',
     endCallback: 'onDragEnd',
-    useWindowToEnd: true,
+    useDocumentToEnd: true,
     preventDefault: true
   }),
   hoverable: makeUIEventApplicator({
@@ -110,7 +110,7 @@ const events: { [key: string]: UIEventApplicator } = {
     endPose: 'pressEnd',
     startCallback: 'onPressStart',
     endCallback: 'onPressEnd',
-    useWindowToEnd: true
+    useDocumentToEnd: true
   })
 };
 
