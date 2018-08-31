@@ -27,27 +27,30 @@ const componentCache = new Map<
 >();
 
 const createComponentFactory = (key: string | React.ComponentType) => {
-  const componentFactory: ComponentFactory<any> = (poseConfig = {}) => ({
-    withParent = true,
-    ...props
-  }) => {
-    const config =
-      typeof poseConfig === 'function' ? poseConfig(props) : poseConfig;
-
-    return !withParent || props.parentValues ? (
-      <PoseElement poseConfig={config} elementType={key} {...props} />
-    ) : (
-      <PoseParentContext.Consumer>
-        {(parentCtx: PoseContextProps) => (
-          <PoseElement
-            poseConfig={config}
-            elementType={key}
-            {...props}
-            {...parentCtx}
-          />
-        )}
-      </PoseParentContext.Consumer>
-    );
+  const componentFactory: ComponentFactory<any> = (poseConfig = {}) => {
+    let config
+     
+    return ({
+      withParent = true,
+      ...props
+    }) => {
+      config = config || (typeof poseConfig === 'function' ? poseConfig(props) : poseConfig);
+      
+      return !withParent || props.parentValues ? (
+        <PoseElement poseConfig={config} elementType={key} {...props} />
+      ) : (
+        <PoseParentContext.Consumer>
+          {(parentCtx: PoseContextProps) => (
+            <PoseElement
+              poseConfig={config}
+              elementType={key}
+              {...props}
+              {...parentCtx}
+            />
+          )}
+        </PoseParentContext.Consumer>
+      );
+    };
   };
 
   componentCache.set(key, componentFactory);
