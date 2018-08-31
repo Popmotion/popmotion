@@ -18,8 +18,12 @@ import styled from 'styled-components';
 import { color } from '~/styles/vars';
 
 const props = {
+  hoverable: true,
   draggable: 'x',
-  dragBounds: { left: '-100%', right: '100%' }
+  dragBounds: { left: '-100%', right: '100%' },
+  init: { scale: 1 },
+  hover: { scale: 1.2 },
+  drag: { scale: 1.1 }
 };
 
 const Box = styled(posed.div(props))`
@@ -36,11 +40,13 @@ const Box = styled(posed.div(props))`
 `;
 
 const code = `const Box = posed.div({
+  hoverable: true,
   draggable: 'x',
-  dragBounds: { left: '-100%', right: '100%' }
-})
-
-// Note: 'dragBounds' not yet available for React Native`;
+  dragBounds: { left: '-100%', right: '100%' },
+  init: { scale: 1 },
+  hover: { scale: 1.2 },
+  drag: { scale: 1.1 }
+})`;
 
 class Example extends React.Component {
   render() {

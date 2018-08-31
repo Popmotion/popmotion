@@ -1,13 +1,13 @@
 ---
 title: Custom transitions
 description: How to use Popmotion to define custom transitions for posers
-category: basics
+category: react
 next: dynamic-props
 ---
 
 # Custom transitions
 
-With automatic animations, it's easy to create snappy and playful animations just by defining poses.
+With [automatic animations](/pose/learn/get-started), it's easy to create snappy and playful animations just by defining poses.
 
 But there's plenty of instances where we want full control over our animation. For this, we can use the `transition` property.
 
@@ -15,7 +15,7 @@ But there's plenty of instances where we want full control over our animation. F
 
 ## Basic usage
 
-Just like CSS, every pose can have a `transition` property. This property describes how each animating value should transition to its new pose:
+Just like CSS, every pose can have a `transition` property. This property describes how each value should transition to its new pose:
 
 ```javascript
 const config = {
@@ -41,11 +41,13 @@ const config = {
 };
 ```
 
-**By default**, `transition` will be defined as a `tween`. By providing a `type` property, we can select a different animation to use:
+**By default**, if we define a `transition`, it'll be a `tween`. This is an animation between two values over a specific duration of time.
 
-## Available animations
+By providing a `type` property, we can select a different animation to use:
 
-Pose ships with five built-in Popmotion animations.
+## Transitions
+
+Pose ships with five types of animation from [Popmotion Pure](/pure). Tween, spring, decay, keyframes, and physics.
 
 ### Tween
 
@@ -82,6 +84,12 @@ transition: {
 
 ### Spring
 
+Spring animations maintain velocity between animations to create visceral, engaging motion.
+
+It makes them perfect for animations that happen as a result of user interaction.
+
+By adjusting their `stiffness`, `mass` and `damping` properties, a wide-variety of spring feels can be created.
+
 ```javascript
 transition: { type: 'spring', stiffness: 100 }
 ```
@@ -90,24 +98,38 @@ transition: { type: 'spring', stiffness: 100 }
 
 ### Decay
 
+Decay reduces the velocity of an animation over a duration of time.
+
+It's a perfect match for the special `dragEnd` pose that fires when a user stops [dragging](/pose/learn/ui-events) something, as it can replicate the momentum-scrolling common on smart phones.
+
+The end value is automatically calculated by Pose at the start of the animation, but with the `modifyTarget` prop, you can adjust this, allowing you to do things like snap to a grid.
+
 ```javascript
-transition: { type: 'decay' }
+transition: {
+  type: 'decay',
+  modifyTarget: v => Math.ceil(v / 100) * 100 // Snap to nearest 100px
+}
 ```
 
 [Full `decay` documentation](/api/decay)
 
 ### Keyframes
 
+Keyframes allows you to schedule a series of values to tween between.
+
 ```javascript
-transition: {
+transition: ({ from, to }) => ({
   type: 'keyframes',
-  values: [0, 100, 50]
-}
+  values: [from, 100, to],
+  times: [0, 0.25, 1]
+})
 ```
 
 [Full `keyframes` documentation](/api/keyframes)
 
 ### Physics
+
+Physics allows you to simulate things like velocity, friction, and acceleration.
 
 ```javascript
 transition: {

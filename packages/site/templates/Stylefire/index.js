@@ -1,13 +1,9 @@
-import GlobalTemplate from '~/templates/global/Template';
-import Header from '~/templates/global/Header';
-import Footer from '~/templates/global/Footer';
-import Masthead from '~/templates/Popmotion/Masthead';
+import Homepage from '~/templates/homepage';
+import Footer from '~/templates/global-new/Footer';
 import { createElement } from 'react';
 import settings from '~/data/settings.json';
 import docs from '~/docs/stylefire/index.md';
 import marksy from 'marksy/components';
-import CodePen from '~/components/examples/CodePen';
-import ContentNav from '~/templates/content/ContentNav';
 import SiteLink from '~/components/layout/SiteLink';
 import styled from 'styled-components';
 import { CTA } from '../Popmotion/Masthead/styled';
@@ -50,22 +46,17 @@ const convertMarkdown = marksy({
     hr: Hr,
     img: Img,
     blockquote: Blockquote
-  },
-  components: {
-    CodePen
   }
 });
 
 const { tree, toc } = convertMarkdown(docs);
 
 export default () => (
-  <GlobalTemplate
-    title={`Stylefire - A style setter for HTML and SVG, optimised for animation`}
+  <Homepage
+    title="Stylefire | A style setter for HTML and SVG, optimised for animation"
     theme="stylefire"
+    Header={() => null}
   >
-    <Masthead getStarted={false}>
-      <Header isHomepage />
-    </Masthead>
     <Container>{tree}</Container>
     <CTA style={{ width: 220 }} brandFill>
       <SiteLink href="/api" prefetch>
@@ -73,5 +64,5 @@ export default () => (
       </SiteLink>
     </CTA>
     <Footer />
-  </GlobalTemplate>
+  </Homepage>
 );

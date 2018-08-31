@@ -21,13 +21,13 @@ const Box = styled(posed.div(props))`
   transform: translateX(-100%);
 `;
 
-const code = `// React Pose
-const Box = posed.div({
+const code = `const Box = posed.div({
   left: { x: 100 },
   right: { x: -100 }
 })
 
-({ position }) => <Box pose={position} />`;
+export default ({ position }) =>
+  <Box pose={position} />`;
 
 class Example extends React.Component {
   state = { isVisible: false };

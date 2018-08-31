@@ -222,6 +222,13 @@ pre span {
   tab-size: 2;
 }
 
+p code,
+li code {
+  background: ${color.superLightGrey};
+  padding: 3px 5px;
+  border: 1px solid ${color.lightGrey};
+}
+
 @media (max-width: ${cols(50)}) {
   pre, pre code, pre span, code span {
     ${fontSize(14)}

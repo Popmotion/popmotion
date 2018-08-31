@@ -23,11 +23,7 @@ const Box = styled(posed.div(props))`
   transform-origin: 50%;
 `;
 
-const code = `// Vanilla
-poser.set('open')
-
-// React
-({ isOpen }) =>
+const code = `({ isOpen }) =>
   <Component pose={isOpen ? 'open' : 'closed'} />`;
 
 class Example extends React.Component {

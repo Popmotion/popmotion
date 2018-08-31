@@ -1,20 +1,15 @@
-import GlobalTemplate from '~/templates/global/Template';
-import Header from '~/templates/global/Header';
-import Footer from '~/templates/global/Footer';
-import Masthead from '~/templates/Popmotion/Masthead';
-//import FinalCTA from './FinalCTA';
+import Homepage from '~/templates/homepage';
+import Header from './Header';
 import USPs from './USPs';
-import settings from '~/data/settings.json';
+import Footer from '~/templates/global-new/Footer';
 
 export default () => (
-  <GlobalTemplate
-    title={`Pose - A declarative animation library for React, HTML, and SVG`}
+  <Homepage
+    title="Pose | A declarative animation library for React and React Native"
     theme="pose"
+    Header={Header}
   >
-    <Masthead>
-      <Header isHomepage={true} />
-    </Masthead>
     <USPs />
     <Footer />
-  </GlobalTemplate>
+  </Homepage>
 );

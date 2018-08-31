@@ -1,3 +1,4 @@
+import styled from 'styled-components';
 import { Container, Blurb, BlurbText } from '~/templates/Popmotion/USPs/styled';
 import ExampleSection from '~/templates/Popmotion/USPs/ExampleSection';
 import Example from '~/templates/Popmotion/USPs/Example';
@@ -14,28 +15,26 @@ import PluginsExample from './PluginsExample';
 import Link from 'next/link';
 import { CTA } from '~/templates/Popmotion/Masthead/styled';
 import AnimateAnythingExample from './AnimateAnything';
+import { ActionLink } from '~/templates/global-new/styled';
+
+const MoreExamples = styled.div`
+  margin: 20px auto 50px;
+`;
 
 export default () => (
   <Container>
-    <Blurb>JavaScript power, CSS simplicity</Blurb>
     <ExampleSection>
       <Example
         title="Magic animations"
-        description="By default, Pose will figure out the animation based on the properties being animated."
+        description="Pose can create animations based on the properties being animated."
       >
         <ZeroConfigExample />
       </Example>
       <Example
         title="Animate anything"
-        description="Numbers, units, colors, box shadows, radial gradients, path definitions - Pose animates them all."
+        description="Numbers, units, colors, box shadows, radial gradients, SVG path definitions - Pose animates it all."
       >
         <AnimateAnythingExample />
-      </Example>
-      <Example
-        title="Declarative"
-        description="Pose's declarative API enforces the separation of business and animation logic."
-      >
-        <DeclarativeExample />
       </Example>
       <Example
         title="Custom animations"
@@ -44,14 +43,20 @@ export default () => (
         <CustomExample />
       </Example>
       <Example
+        title="Declarative"
+        description="Pose's declarative API leaves your code squeaky clean and free of messy, brittle code."
+      >
+        <DeclarativeExample />
+      </Example>
+      <Example
         title="Orchestrate"
-        description="Pose's component tree makes coordinating animations across multiple elements as easy as animating one."
+        description="With Pose, coordinating animations across multiple components is as easy as animating just one."
       >
         <ChildrenExample />
       </Example>
       <Example
         title="Interactivity"
-        description="Draggable elements are just a prop away, with more options coming soon."
+        description="Hovering, dragging, pressing, focusing. It's all just a prop away."
       >
         <DraggableExample />
       </Example>
@@ -60,12 +65,6 @@ export default () => (
         description="Link values to the status of other values on the same poser or their parent."
       >
         <PassiveExample />
-      </Example>
-      <Example
-        title="FLIPpin' great"
-        description="Slow flow-breaking animations can be easily converted to fast transforms. Plus, an imperative FLIP API allows the poser to respond to DOM operations."
-      >
-        <FlipExample />
       </Example>
       <Example
         title="Awesome with React DOM"
@@ -84,10 +83,14 @@ export default () => (
       Pose is a continuing project to simplify the creation of fluid and playful
       interfaces.
     </BlurbText>
-    <CTA brandFill>
-      <Link href="/pose/learn/get-started" prefetch>
-        <a>Get started</a>
+    <ActionLink cta href="/pose/learn/get-started">
+      Get started
+    </ActionLink>
+
+    <MoreExamples>
+      <Link href="/pose/examples">
+        <a>See all examples</a>
       </Link>
-    </CTA>
+    </MoreExamples>
   </Container>
 );

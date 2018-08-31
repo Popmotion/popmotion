@@ -60,15 +60,17 @@ All SVG attributes like `fill` and `stroke` can be animated, and Pose attempts t
 
 ### Path drawing
 
-Path drawing the process of using an SVG `path` element and its `stroke-dasharray` and `stoke-dashoffset` properties to emulate a pen drawing a line. [This blog post](https://css-tricks.com/svg-line-animation-works/) explains the effect in more detail.
+Path drawing is the process of animating `stroke-dasharray` and `stroke-dashoffset` to emulate a pen drawing a line. [This blog post](https://css-tricks.com/svg-line-animation-works/) explains the effect in more detail.
 
-Pose supports both`'stoke-dasharray'` and `stroke-dashorigin` properties, but also provides:
+Path drawing works with these properties works with `circle`, `ellipse`, `path`, `polygon`, `polyline`, `rect` and `text` SVG elements.
+
+But for `path`, there's three special properties:
 
 * `pathLength`
 * `pathSpacing`
 * `pathOffset`
 
-These are all set as a **progress of the total path length, from `0` to `100`**, which is automatically measured by Pose.
+These are all set as a **percentage of the total path length, from `0` to `100`**, which is automatically measured by Pose.
 
 So you can define an animation from `0` to `100`:
 

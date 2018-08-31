@@ -1,7 +1,7 @@
 ---
 title: Passive values
 description: Learn how to create passive values that only change when others do
-category: basics
+category: react
 next: flip
 ---
 
@@ -19,12 +19,12 @@ For this, we can use **passive values**. In this tutorial we'll see how to defin
 
 ## Defining a passive value
 
-Open the [previous example](https://codepen.io/popmotion/pen/dmWWdp?editors=0010) and replace the `config` object with this:
+Open the [this draggable example](https://codepen.io/popmotion/pen/dmWWdp?editors=0010) and replace the posed component config with this:
 
 ```javascript
-const config = {
+const Box = posed.div({
   draggable: 'x'
-}
+});
 ```
 
 The dragging motion of the element is locked to the `x` axis. We can actually lock movement to the diagonal by defining `y` as a `passive` value.
@@ -32,12 +32,12 @@ The dragging motion of the element is locked to the `x` axis. We can actually lo
 Passive values are defined a tuples, like this:
 
 ```javascript
-const config = {
+const Box = posed.div({
   draggable: 'x',
   passive: {
     y: ['x', v => v]
   }
-}
+});
 ```
 
 The first item in the tuple is the name of the value we want to link to. In this case, that's `'x'`.
@@ -111,14 +111,14 @@ transition: (props) => tween({  ...props, duration: 1000 })
 Now, replace `itemConfig` with this:
 
 ```javascript
-const itemConfig = {
+const Box = posed.li({
   passive: {
     opacity: ['x', pipe(
       parseFloat,
       interpolate([-100, 0], [0, 1])
     ), true]
   }
-};
+});
 ```
 
 As you can see, we're passing in a third parameter to the passive tuple, `true`. This says "listen to the `x` value, but do so on my immediate parent".
@@ -134,10 +134,10 @@ By explicitly naming our posers with a `label`, we can refer to any poser in the
 Add the label `'sidebar'` to our `sidebarConfig`:
 
 ```javascript
-const sidebarConfig = {
+const Sidebar = posed.ul({
   label: 'sidebar',
   /* other props */
-}
+});
 ```
 
 Now replace `true` in `itemConfig` with `'sidebar'`. It still works, and it will still work if you decide to put a poser between sidebar and items.

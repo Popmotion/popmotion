@@ -6,7 +6,7 @@ const FrameContainer = MajorCentered.withComponent('div').extend`
   margin-bottom: ${cols(2)};
 `;
 
-export default ({ id, height = 500 }) => (
+export default ({ id, height = 500, ...props }) => (
   <FrameContainer>
     <iframe
       height={height}
@@ -17,6 +17,7 @@ export default ({ id, height = 500 }) => (
       allowTransparency="true"
       allowFullScreen="true"
       style={{ width: '100%' }}
+      {...props}
     />
   </FrameContainer>
 );
