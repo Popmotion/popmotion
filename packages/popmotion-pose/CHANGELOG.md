@@ -2,6 +2,12 @@
 
 Popmotion Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.2.1] 2018-08-30
+
+### Fixed
+
+- Detecting `mouseup` outside window and stopping dragging/pressing accordingly.
+
 ## [3.2.0] 2018-08-30
 
 ### Added
