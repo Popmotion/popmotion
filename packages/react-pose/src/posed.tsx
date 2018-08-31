@@ -28,14 +28,13 @@ const componentCache = new Map<
 
 const createComponentFactory = (key: string | React.ComponentType) => {
   const componentFactory: ComponentFactory<any> = (poseConfig = {}) => {
-    let config
-     
-    return ({
-      withParent = true,
-      ...props
-    }) => {
-      config = config || (typeof poseConfig === 'function' ? poseConfig(props) : poseConfig);
-      
+    let config: DomPopmotionConfig;
+
+    return ({ withParent = true, ...props }) => {
+      config =
+        config ||
+        (typeof poseConfig === 'function' ? poseConfig(props) : poseConfig);
+
       return !withParent || props.parentValues ? (
         <PoseElement poseConfig={config} elementType={key} {...props} />
       ) : (
