@@ -126,6 +126,26 @@ const Box = posed.div({
 
 By default, when pressing ends, values will return to their previous pose. You can **optionally** set a `pressEnd` pose to override this.
 
+### Events
+
+We can respond to press start and end events with the `onPressStart` and `onPressEnd` callbacks:
+
+```javascript
+const Box = posed.div({
+  pressable: true,
+  init: { scale: 1 },
+  press: { scale: 0.8 }
+});
+
+export default ({ onStart, onEnd }) => (
+  <Box onPressStart={onStart} onPressEnd={onEnd} />
+);
+```
+
+You might prefer to use this over React's in-built `onMouseDown`/`onMouseUp` etc events because Pose's event handling method avoids the annoying situation where a user presses an element, and only stops pressing once they've moved their pointer outside the element.
+
+Those `onMouseUp`/`onTouchEnd` callbacks only fire if the pointer is still on the triggering element, whereas `onPressEnd` will fire anywhere in the page.
+
 ## Hover
 
 Components can respond to hovers by settings `hoverable` to `true`. This will enable use of the `hover` pose:

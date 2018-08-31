@@ -33,6 +33,8 @@ const createPoseConfig = (
   {
     onDragStart,
     onDragEnd,
+    onPressStart,
+    onPressEnd,
     draggable,
     hoverable,
     focusable,
@@ -48,6 +50,8 @@ const createPoseConfig = (
       ...config.props,
       onDragStart,
       onDragEnd,
+      onPressStart,
+      onPressEnd,
       dragBounds,
       draggable,
       hoverable,

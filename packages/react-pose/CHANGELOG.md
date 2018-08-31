@@ -2,6 +2,12 @@
 
 React Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.2.0] 2018-08-30
+
+### Added
+
+- `onPressStart`/`onPressEnd` callbacks.
+
 ## [3.1.1] 2018-08-30
 
 ### Added

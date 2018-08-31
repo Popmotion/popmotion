@@ -68,3 +68,11 @@ The name of the pose to use when a component leaves.
 `preEnterPose: string = 'exit'`
 
 The name of the pose to set before a component enters. This can be used to configure where a components animates in **from**.
+
+### flipMove
+
+`flipMove: boolean = true`
+
+When an element exits, Pose takes it out of the layout and applies `position: absolute` so it can detect the new position of surrounding elements and animate via FLIP.
+
+While it attempts to figure out the correct matching `transform-origin` there are times when this fails. Setting `flipMove={false}` will prevent these issues. 

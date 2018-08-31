@@ -107,6 +107,12 @@ const config = {
 };
 ```
 
+### onPressStart/onPressEnd
+
+`onPressStart/onPressEnd: (e: MouseEvent | TouchEvent) => any`
+
+Lifecycle callbacks for press events.
+
 ### passive
 
 `passive: { [key: string]: PassiveValue }`
