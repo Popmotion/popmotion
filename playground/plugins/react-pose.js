@@ -63,6 +63,7 @@ export class ReactPose extends React.PureComponent {
 
 export const Hover = posed(BoxStyled)({
   hoverable: true,
+  pressable: true,
   init: { background: "#00f" },
   hover: { background: "#f00" }
 });

@@ -51,7 +51,9 @@ storiesOf("Plugin: React Pose", module)
   .add("email list", () => <EmailList />)
   .add("user-defined poses within PoseGroup", () => <UserPoseInPoseGroup />)
   .add("pose key test", () => <PoseKey />)
-  .add("hover", () => <Hover />)
+  .add("hover", () => (
+    <Hover onPressStart={console.log} onPressEnd={console.log} />
+  ))
   .add("image filter", () => <Filter />)
   .add("pose key fail test", () => <PoseKeyFail />)
   .add("drag w/ children", () => <DragChildren />)

@@ -133,6 +133,8 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
       parentValues,
       onDragStart,
       onDragEnd,
+      onPressStart,
+      onPressEnd,
       ...props
     } = this.props;
 
@@ -201,7 +203,9 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
       values,
       parentValues,
       onDragStart,
-      onDragEnd
+      onDragEnd,
+      onPressStart,
+      onPressEnd
     } = this.props;
 
     const config: DomPopmotionConfig = {
@@ -212,6 +216,8 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
       props: this.getSetProps(),
       onDragStart,
       onDragEnd,
+      onPressStart,
+      onPressEnd,
       onChange: onValueChange
     };
 

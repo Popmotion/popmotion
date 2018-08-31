@@ -196,6 +196,12 @@ A callback that fires whenever a pose has finished transitioning.
 
 Callbacks that fire when dragging starts or ends. **Note:** These props are immutable and can't be changed after mounting.
 
+### onPressStart/onPressEnd
+
+`onPressStart/onPressEnd: (e: Event) => void`
+
+Callbacks that fire when pressing starts or ends. **Note:** These props are immutable and can't be changed after mounting.
+
 ### innerRef
 
 `innerRef?: (ref: Element) => void`

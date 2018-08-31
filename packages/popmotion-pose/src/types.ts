@@ -39,8 +39,8 @@ export interface DomPopmotionPoser
 export type DomPopmotionConfig = {
   onDragStart?: (e: MouseEvent | TouchEvent) => any;
   onDragEnd?: (e: MouseEvent | TouchEvent) => any;
-  onHoverStart?: (e: MouseEvent | TouchEvent) => any;
-  onHoverEnd?: (e: MouseEvent | TouchEvent) => any;
+  onPressStart?: (e: MouseEvent | TouchEvent) => any;
+  onPressEnd?: (e: MouseEvent | TouchEvent) => any;
   draggable?: boolean;
   hoverable?: boolean;
   dragBounds?: BoundingBox;

@@ -98,6 +98,8 @@ const events: { [key: string]: UIEventApplicator } = {
     endEvents: 'mouseup touchend',
     startPose: 'press',
     endPose: 'pressEnd',
+    startCallback: 'onPressStart',
+    endCallback: 'onPressEnd',
     useDocumentToEnd: true
   })
 };
