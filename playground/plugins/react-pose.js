@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import posed, { PoseGroup } from "../../packages/react-pose/lib";
+import posed, { PoseGroup } from "react-pose";
 import {
   easing,
   decay,
@@ -9,7 +9,7 @@ import {
   physics,
   transform,
   value
-} from "../../packages/popmotion/lib";
+} from "popmotion";
 const { pipe, blendColor, conditional, clamp, interpolate } = transform;
 
 const boxProps = {

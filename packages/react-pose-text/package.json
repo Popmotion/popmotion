@@ -30,7 +30,7 @@
   "peerDependencies": {
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
-    "react-pose": "^2.2.0"
+    "react-pose": "^3.1.0"
   },
   "devDependencies": {
     "@types/react": "^16.3.16",
@@ -45,8 +45,7 @@
     "rollup-plugin-uglify": "^3.0.0"
   },
   "dependencies": {
-    "hey-listen": "^1.0.5",
-    "react-pose": "^3.0.0"
+    "hey-listen": "^1.0.5"
   },
   "unpkg": "./dist/react-pose-text.js",
   "prettier": {

@@ -2,6 +2,12 @@
 
 React Pose Text adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.1.0] 2018-08-31
+
+### Fixed
+
+- Fixing changing pose. Closes [#453](https://github.com/Popmotion/popmotion/issues/453)
+
 ## [0.2.0] 2018-08-19
 
 ### Updated
