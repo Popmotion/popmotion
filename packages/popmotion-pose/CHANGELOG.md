@@ -2,6 +2,12 @@
 
 Popmotion Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.2.2] 2018-08-30
+
+### Fixed
+
+- Fixing `dragBounds` and `draggable` types. [#396](https://github.com/Popmotion/popmotion/issues/396)
+
 ## [3.2.1] 2018-08-30
 
 ### Fixed
