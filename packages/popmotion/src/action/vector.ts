@@ -73,8 +73,7 @@ const createVectorTests: VectorTestFactory = typeTests => {
     }, []);
 
   const testVectorProps = (props: Props) =>
-    props &&
-    testNames.some(key => isVectorProp(props[key], key));
+    props && testNames.some(key => isVectorProp(props[key], key));
 
   return { getVectorKeys, testVectorProps };
 };
@@ -82,6 +81,7 @@ const createVectorTests: VectorTestFactory = typeTests => {
 // Unit type utils
 const unitTypes = [px, percent, degrees, vh, vw];
 const findUnitType = (prop: any) => unitTypes.find(type => type.test(prop));
+
 const isUnitProp = (prop: any) => Boolean(findUnitType(prop));
 
 /**

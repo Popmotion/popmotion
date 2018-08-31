@@ -11,7 +11,10 @@ description: Pose frequently asked questions
 
 Pose and React Pose support all major browsers.
 
-For IE11 support, a [polyfill](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/from#Polyfill) for `Array.from` is necessary.
+For legacy IE11 support, the following polyfills are required:
+
+- [String.endsWith](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith#Polyfill)
+- [Array.from](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/from#Polyfill)
 
 ## Filesize?
 
