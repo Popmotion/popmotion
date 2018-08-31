@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.3.8] 2018-08-30
+
+### Fixed
+
+- Calling `tween.resume()` would speed the tween up by firing multiple timers. [#395](https://github.com/Popmotion/popmotion/issues/395)
+
 ## [8.3.7] 2018-08-30
 
 ### Fixed
