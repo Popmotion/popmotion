@@ -26,7 +26,8 @@ import {
   PoseKeyFail,
   Hover,
   Filter,
-  DragChildren
+  DragChildren,
+  SingleFilter
 } from "./plugins/react-pose";
 
 storiesOf("Plugin: Pose", module)
@@ -53,7 +54,13 @@ storiesOf("Plugin: React Pose", module)
   .add("hover", () => <Hover />)
   .add("image filter", () => <Filter />)
   .add("pose key fail test", () => <PoseKeyFail />)
-  .add("drag w/ children", () => <DragChildren />);
+  .add("drag w/ children", () => <DragChildren />)
+  .add("single filter", () => (
+    <SingleFilter
+      src="https://static1.squarespace.com/static/5b475b2c50a54f54f9b4e1dc/5b4a5c2d88251b376ea105c1/5b4ae647575d1fa91f1f2def/1531635336765/DSCF2959.jpg?format=1500w"
+      height="300"
+    />
+  ));
 
 // import { Decay, DecayModifyTarget, DecayPower, DecayTimeConstant } from './decay';
 // import { Keyframes, KeyframesDuration, KeyframesLoop, KeyframesLinear, KeyframesTimes } from './keyframes';

@@ -29,7 +29,7 @@ describe('complex value type', () => {
   it('parse converts string to array', () => {
     expect(complex.parse(PATH)).toEqual(PATH_VALUES);
     expect(complex.parse(GREYSCALE)).toEqual([100]);
-    expect(complex.parse(MIXED)).toBe([
+    expect(complex.parse(MIXED)).toEqual([
       { red: 161, green: 0, blue: 246, alpha: 0 },
       0,
       0,
@@ -142,6 +142,15 @@ describe('color()', () => {
 });
 
 describe('unit transformers', () => {
+  it('should correctly identify units', () => {
+    expect(px.test(10)).toBe(false);
+    expect(px.test('10px')).toBe(true);
+    expect(px.test('blur(10px)')).toBe(false);
+    expect(percent.test('10px')).toBe(false);
+    expect(percent.test('10%')).toBe(true);
+    expect(percent.test('blur(10%)')).toBe(false);
+  });
+
   it('should append the correct units', () => {
     expect(px.transform(10)).toBe('10px');
     expect(degrees.transform(360)).toBe('360deg');

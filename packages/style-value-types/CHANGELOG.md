@@ -2,6 +2,12 @@
 
 Style Value Types adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.0.7] 2018-08-30
+
+### Fixed
+
+- Preventing unit types from matching anything that contains that string ie px matching to `blur(20px)`.
+
 ## [3.0.6] 2018-08-16
 
 ### Fixed
