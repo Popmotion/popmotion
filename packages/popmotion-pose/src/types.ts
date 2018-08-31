@@ -41,14 +41,14 @@ export type DomPopmotionConfig = {
   onDragEnd?: (e: MouseEvent | TouchEvent) => any;
   onPressStart?: (e: MouseEvent | TouchEvent) => any;
   onPressEnd?: (e: MouseEvent | TouchEvent) => any;
-  draggable?: boolean;
+  draggable?: Draggable;
   hoverable?: boolean;
-  dragBounds?: BoundingBox;
+  dragBounds?: { [key in BoundingBoxDimension]?: number | string };
   props?: { [key: string]: any };
   [key: string]: any;
 };
 
-export type Draggable = true | 'x' | 'y';
+export type Draggable = boolean | 'x' | 'y';
 
 export type TransitionProps = {
   from: string | number;
