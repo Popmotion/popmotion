@@ -80,3 +80,55 @@ So you can define an animation from `0` to `100`:
   fill: { pathLength: 100 }
 }
 ```
+
+## Automatic animations
+
+Every value, if no `transition` prop is defined, will have an animation automatically generated for it.
+
+Currently, these are:
+
+### Movement
+
+Translation and rotational transforms use an overdamped spring that retain any existing velocity and incorporate that into the next animation.
+
+This gives the animation a playful, snappy and robust feel.
+
+```javascript
+{
+  type: 'spring',
+  stiffness: 500,
+  damping: 25,
+  restDelta: 0.5,
+  restSpeed: 10
+}
+```
+
+### Scale
+
+Scale transforms use an overdamped spring that ensure that scale isn't inverted.
+
+```javascript
+{
+  type: 'spring',
+  stiffness: 700,
+  damping: to === 0 ? 100 : 35
+}
+```
+
+### Opacity
+
+Opacity uses a linear easing tween. Opacity looks odd when eased, so we transition straight from one to the other.
+
+```javascript
+{
+  ease: 'linear'
+}
+```
+
+### Everything else
+
+All other properties use [Popmotion Pure's default tween](/api/tween) settings.
+
+In the future it'll be possible to define automatic animations by defining the type of interface you wish to have (ie 'confident', 'playfull' etc).
+
+In the nearer future we'll intelligently combine automatic animations to ensure they all finish at the same time.
