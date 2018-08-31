@@ -2,6 +2,18 @@
 
 React Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.1.1] 2018-08-30
+
+### Added
+
+- Adding ability to initialise posed component config as a function that receives the first props. [#451](https://github.com/Popmotion/popmotion/issues/451)
+
+## [3.1.0] 2018-08-28
+
+### Added
+
+- Animate Between Anything. Animate x/y/width/height/top/left/bottom/right between any two value types, even `calc` and `'auto'`!
+
 ## [3.0.2] 2018-08-20
 
 ### Fixed

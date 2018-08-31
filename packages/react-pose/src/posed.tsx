@@ -8,8 +8,12 @@ import {
 } from './components/PoseElement.types';
 import { DomPopmotionConfig } from 'popmotion-pose/lib/types';
 
+type DomPopmotionConfigFactory<T> = (
+  props: PoseElementProps & T
+) => DomPopmotionConfig;
+
 export type ComponentFactory<T> = (
-  poseConfig?: DomPopmotionConfig
+  poseConfig?: DomPopmotionConfig | DomPopmotionConfigFactory<T>
 ) => (props: PoseElementProps & T) => ReactElement<T>;
 
 export type Posed = {
@@ -26,14 +30,17 @@ const createComponentFactory = (key: string | React.ComponentType) => {
   const componentFactory: ComponentFactory<any> = (poseConfig = {}) => ({
     withParent = true,
     ...props
-  }) =>
-    !withParent || props.parentValues ? (
-      <PoseElement poseConfig={poseConfig} elementType={key} {...props} />
+  }) => {
+    const config =
+      typeof poseConfig === 'function' ? poseConfig(props) : poseConfig;
+
+    return !withParent || props.parentValues ? (
+      <PoseElement poseConfig={config} elementType={key} {...props} />
     ) : (
       <PoseParentContext.Consumer>
         {(parentCtx: PoseContextProps) => (
           <PoseElement
-            poseConfig={poseConfig}
+            poseConfig={config}
             elementType={key}
             {...props}
             {...parentCtx}
@@ -41,6 +48,7 @@ const createComponentFactory = (key: string | React.ComponentType) => {
         )}
       </PoseParentContext.Consumer>
     );
+  };
 
   componentCache.set(key, componentFactory);
 

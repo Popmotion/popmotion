@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { ReactElement } from 'react';
+import { ReactElement, Fragment } from 'react';
 import {
   handleIncomingChildren,
   makeChildList,
   removeFromChildren
 } from '../utils/children';
-const { Fragment } = React;
 
 export type Props = {
   children: React.ReactElement<any> | Array<React.ReactElement<any>>;
@@ -78,9 +77,7 @@ class PoseGroup extends React.Component<Props, State> {
   }
 
   render() {
-    const { children } = this.state;
-
-    return <Fragment>{children}</Fragment>;
+    return <Fragment>{this.state.children}</Fragment>;
   }
 }
 
