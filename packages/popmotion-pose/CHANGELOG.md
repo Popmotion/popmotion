@@ -2,6 +2,12 @@
 
 Popmotion Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.2.3] 2018-09-01
+
+### Fixed
+
+- Flash of content in Safari. [#459](https://github.com/Popmotion/popmotion/issues/459)
+
 ## [3.2.2] 2018-08-30
 
 ### Fixed
