@@ -1,5 +1,6 @@
 import { Pose, PoserState, BoundingBox } from '../types';
 import { setValue } from './flip';
+import { resolveProp } from './utils';
 import { getValueType } from '../inc/value-types';
 
 type GetActualMeasurementInPixels = (
@@ -56,7 +57,7 @@ export const convertPositionalUnits = (state: PoserState, pose: Pose) => {
   positionalPoseKeys.forEach(key => {
     const value = values.get(key);
     const fromValueType = getValueType(value.raw.get());
-    const toValueType = getValueType(pose[key]);
+    const toValueType = getValueType(resolveProp(pose[key], props));
 
     value.setOnComplete = false;
 
