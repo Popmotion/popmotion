@@ -1,6 +1,6 @@
 {
   "name": "vue-pose",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "A declarative animation library for Vue",
   "main": "./lib/index.js",
   "module": "./dist/vue-pose.es.js",
