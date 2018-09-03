@@ -577,3 +577,34 @@ export const SingleFilter = posed.img({
   init: { filter: "blur(2px)" },
   hover: { filter: "blur(0px)" }
 });
+
+const DynamicPositionedBox = styled(
+  posed.div({
+    move: {
+      x: () => Math.random() * 200,
+      y: () => Math.random() * 200,
+    }
+  })
+)`
+  width: 100px;
+  height: 100px;
+  background: hotpink;
+`;
+
+export class DynamicPositionedPose extends React.PureComponent {
+  state = { poseKey: Math.random() };
+
+  componentDidMount() {
+    this.intervalId = setInterval(() => this.setState({ poseKey: Math.random() }), 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.intervalId);
+  }
+
+  render() {
+    return (
+      <DynamicPositionedBox pose="move" poseKey={this.state.poseKey} />
+    );
+  }
+}
