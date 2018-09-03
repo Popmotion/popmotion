@@ -2,6 +2,12 @@
 
 Popmotion Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.2.4] 2018-09-03
+
+### Fixed
+
+- Dynamically set positional props. Thanks to [Klaasman](https://github.com/klaasman)
+
 ## [3.2.3] 2018-09-01
 
 ### Fixed
