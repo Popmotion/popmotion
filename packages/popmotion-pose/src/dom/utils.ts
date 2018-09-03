@@ -6,3 +6,6 @@ export const measureWithoutTransform = (element: HTMLElement) => {
 
   return bbox;
 };
+
+export const resolveProp = (target: any, props: { [key: string]: any }) =>
+  typeof target === 'function' ? target(props) : target;

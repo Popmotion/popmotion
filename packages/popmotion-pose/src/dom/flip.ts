@@ -7,6 +7,7 @@ import {
   PoserState,
   DomPopmotionPoser
 } from '../types';
+import { resolveProp } from './utils';
 import { Poser } from 'pose-core';
 
 const ORIGIN_START = 0;
@@ -36,9 +37,6 @@ const hasPositionalProps = (pose: Pose) =>
 export const isFlipPose = (flip: boolean, key: string, state: PoserState) =>
   state.props.element instanceof HTMLElement &&
   (flip === true || key === 'flip');
-
-export const resolveProp = (target: any, props: { [key: string]: any }) =>
-  typeof target === 'function' ? target(props) : target;
 
 export const setValue = (
   { values, props }: PoserState,
