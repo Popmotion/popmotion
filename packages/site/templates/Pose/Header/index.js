@@ -45,7 +45,7 @@ export default () => (
   <Container>
     <HeaderText>
       <SplitText charPoses={charPoses} initialPose="hidden" pose="visible">
-        A truly simple animation library for React and React Native
+        A truly simple animation library for React, React Native, and Vue
       </SplitText>
     </HeaderText>
     <ActionLink white cta href="/pose/learn/get-started">

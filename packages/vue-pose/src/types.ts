@@ -1,4 +1,7 @@
-import { DomPopmotionConfig } from 'popmotion-pose/lib/types';
+import {
+  DomPopmotionConfig,
+  DomPopmotionPoser
+} from 'popmotion-pose/lib/types';
 import Vue, { VueConstructor } from 'vue';
 
 export type PosedComponent = VueConstructor<{ [x: string]: any } & Vue>;
@@ -19,3 +22,9 @@ export type PosedComponentFactoryMap = { [key: string]: PosedComponentFactory };
 export type PosedComponentFactoryFactory = (
   el: string
 ) => PosedComponentFactory;
+
+export type ChildRegistration = {
+  element: HTMLElement | SVGElement;
+  config: DomPopmotionConfig;
+  onRegistered: (poser: DomPopmotionPoser) => void;
+};

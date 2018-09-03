@@ -1,13 +1,13 @@
 ---
 title: Custom transitions
-description: How to use Pose for React to define custom transitions
-category: react
-next: dynamic-props
+description: How to use Pose for Vue to define custom transitions.
+category: vue
+next: vue-dynamic-props
 ---
 
 # Custom transitions
 
-With [automatic animations](/pose/learn/get-started), it's easy to create snappy and playful animations just by defining poses.
+With [automatic animations](/pose/learn/vue-get-started), it's easy to create snappy and playful animations just by defining poses.
 
 But there's plenty of instances where we want full control over our animation. For this, we can use the `transition` property.
 
@@ -100,7 +100,7 @@ transition: { type: 'spring', stiffness: 100 }
 
 Decay reduces the velocity of an animation over a duration of time.
 
-It's a perfect match for the special `dragEnd` pose that fires when a user stops [dragging](/pose/learn/ui-events) something, as it can replicate the momentum-scrolling common on smart phones.
+It's a perfect match for the special `dragEnd` pose that fires when a user stops [dragging](/pose/learn/vue-ui-events) something, as it can replicate the momentum-scrolling common on smart phones.
 
 The end value is automatically calculated by Pose at the start of the animation, but with the `modifyTarget` prop, you can adjust this, allowing you to do things like snap to a grid.
 
