@@ -6,8 +6,6 @@ category: vue
 
 # Supported values
 
-It does, however, have enhanced support for some values, which we'll list here.
-
 <TOC />
 
 ## Overview
