@@ -12,7 +12,6 @@ export default class CodeSandbox extends React.Component {
   state = { isVisible: false };
 
   setVisibility = ({ isIntersecting }) => {
-    console.log(isIntersecting && !this.state.isVisible);
     isIntersecting &&
       !this.state.isVisible &&
       this.setState({ isVisible: true });
