@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib",
+    "lib": ["es6", "dom"],
+    "typeRoots": ["./types", "../../node_modules/@types"],
+    "module": "es2015"
+  },
+  "include": ["src/**/*"]
+}
