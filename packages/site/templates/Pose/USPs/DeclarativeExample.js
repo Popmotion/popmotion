@@ -23,8 +23,13 @@ const Box = styled(posed.div(props))`
   transform-origin: 50%;
 `;
 
-const code = `({ isOpen }) =>
-  <Component pose={isOpen ? 'open' : 'closed'} />`;
+const code = {
+  react: `({ isOpen }) =>
+  <Component pose={isOpen ? 'open' : 'closed'} />`,
+  vue: `<template>
+  <Component :pose="isOpen ? 'open' : 'closed'" />  
+</template>`
+};
 
 class Example extends React.Component {
   state = { isVisible: false };
@@ -44,8 +49,8 @@ class Example extends React.Component {
   }
 }
 
-export default () => (
-  <Template code={code}>
+export default props => (
+  <Template code={code} {...props}>
     <AlignCenter>
       <Example />
     </AlignCenter>

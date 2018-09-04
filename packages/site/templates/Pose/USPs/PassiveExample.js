@@ -30,7 +30,7 @@ const Box = styled(posed.div(props))`
   font-weight: bold;
 `;
 
-const code = `// Vanilla & React Pose uses Popmotion's functional pipelines
+const code = `// React, Vue & vanilla use Popmotion's functional pipelines
 passive: {
   opacity: ['x', interpolate(
     [-200, -100, 100, 200],
@@ -38,7 +38,7 @@ passive: {
   )]
 }
 
-// React Native Pose uses React Animated's interpolate function
+// React Native uses React Animated's interpolate function
 passive: {
   opacity: ['x', {
     inputRange: [-200, -100, 100, 200],

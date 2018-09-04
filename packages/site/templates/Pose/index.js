@@ -5,7 +5,7 @@ import Footer from '~/templates/global-new/Footer';
 
 export default () => (
   <Homepage
-    title="Pose | A declarative animation library for React and React Native"
+    title="Pose | A truly simple animation library for React, React Native, and Vue"
     theme="pose"
     Header={Header}
   >

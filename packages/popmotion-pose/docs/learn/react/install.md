@@ -37,7 +37,7 @@ So, when you see in the docs `import posed, { PoseGroup } from 'react-pose'`, yo
 
 You can download the latest version of Pose at https://unpkg.com/react-pose/dist/react-pose.js
 
-### `script` include
+### Script include
 
 You can include it in your HTML with this `script` tag:
 
