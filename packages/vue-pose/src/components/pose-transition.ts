@@ -3,31 +3,30 @@ import poserFactory from 'popmotion-pose';
 import PoserMap from '../utils/poser-map';
 import { PosedComponent } from '../types';
 
-const defaultConfig = {
-  enter: { opacity: 1, y: 0 },
-  exit: { opacity: 0 },
-  preEnter: { opacity: 0, y: 20 },
-  initialPose: 'exit'
-};
-
-const setPoserTo = (pose: string) => (
+type BeforeTransitionHandler = (el: HTMLElement | SVGElement) => void;
+type TransitionHandler = (
   el: HTMLElement | SVGElement,
   done: () => void
-) =>
+) => void;
+
+const setPoserTo = (pose: string): TransitionHandler => (el, done) =>
   PoserMap.get(el)
     .set(pose)
     .then(done);
 
-const initPoser = (initialPose: string) => (el: HTMLElement | SVGElement) =>
-  !PoserMap.has(el) &&
-  PoserMap.set(el, poserFactory(el, { ...defaultConfig, initialPose }));
+const initPoser = (
+  setPrePose: (pose: string) => void,
+  defaultConfig: Object,
+  initialPose: string
+): BeforeTransitionHandler => el => {
+  setPrePose(initialPose);
+  if (!PoserMap.has(el)) {
+    PoserMap.set(el, poserFactory(el, { ...defaultConfig, initialPose }));
+  }
+};
 
 const PoseTransition: PosedComponent = Vue.extend({
   props: {
-    group: {
-      type: Boolean,
-      default: false
-    },
     preEnterPose: {
       type: String,
       default: 'preEnter'
@@ -41,23 +40,43 @@ const PoseTransition: PosedComponent = Vue.extend({
       default: 'exit'
     }
   },
-  render(createElement) {
-    const { group, preEnterPose, enterPose, exitPose } = this.$props;
+  provide() {
+    return {
+      _poseGetInitialPoseFromParent() {
+        return this.prePose;
+      }
+    };
+  },
+  created() {
+    const { preEnterPose, enterPose, exitPose } = this.$props;
+    const { appear } = this.$attrs;
 
+    const defaultConfig = {
+      [enterPose]: { opacity: 1, y: 0 },
+      [exitPose]: { opacity: 0 },
+      [preEnterPose]: { opacity: 0, y: 20 }
+    };
+
+    const setPrePose = (pose: string) => (this.prePose = pose);
+
+    this.on = {
+      beforeEnter: initPoser(setPrePose, defaultConfig, exitPose),
+      beforeLeave: initPoser(setPrePose, defaultConfig, enterPose),
+      enter: setPoserTo(enterPose),
+      leave: setPoserTo(exitPose)
+    };
+
+    if (appear !== undefined) {
+      this.on.appear = setPoserTo(enterPose);
+      this.on.beforeAppear = initPoser(setPrePose, defaultConfig, preEnterPose);
+    }
+  },
+  render(createElement) {
     return createElement(
-      group ? 'transition-group' : 'transition',
+      'transition',
       {
         props: { css: false, ...this.$attrs },
-        on: {
-          beforeAppear: this.$attrs.appear
-            ? initPoser(preEnterPose)
-            : undefined,
-          beforeEnter: initPoser(exitPose),
-          beforeLeave: initPoser(enterPose),
-          appear: this.$attrs.appear ? setPoserTo(enterPose) : undefined,
-          enter: setPoserTo(enterPose),
-          leave: setPoserTo(exitPose)
-        }
+        on: this.on
       },
       [this.$slots.default]
     );

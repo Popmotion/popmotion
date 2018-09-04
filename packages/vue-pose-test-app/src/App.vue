@@ -1,7 +1,7 @@
 <template>
   <PoseTransition mode="out-in">
-    <li v-if="show" key="test">Test</li>
-    <li v-else key="a">Hello hi</li>
+    <Box v-if="show" key="a">Hello hi</Box>
+    <li v-else key="test">Test</li>
   </PoseTransition>
 </template>
 
@@ -17,7 +17,11 @@ export default {
     setInterval(() => (this.show = !this.show), 2000);
   },
   components: {
-    PoseTransition
+    PoseTransition,
+    Box: posed.li({
+      enter: { opacity: 1 },
+      exit: { opacity: 0 }
+    })
   }
 };
 </script>

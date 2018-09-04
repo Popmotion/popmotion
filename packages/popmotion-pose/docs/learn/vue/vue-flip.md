@@ -8,12 +8,7 @@ category: vue
 
 The FLIP technique, [fully explained here](https://aerotwist.com/blog/flip-your-animations/), is a way of animating expensive, layout-breaking animations like `width` and `top` by using quick transforms.
 
-Pose for Vue provides a couple of methods for performing FLIP:
-
-1. Animate `width`/`top`/etc and adding `flip: true` to a pose
-2. Via the `pose-transition` component. (coming soon)
-
-In this tutorial, we'll take a look at each of these.
+Pose for Vue makes animating using the FLIP technique as simple as `flip: true`. Let's take a look.
 
 <TOC />
 
@@ -43,7 +38,3 @@ Panel: posed.div({
 ```
 
 <CodeSandbox id="vvw57kww70" vue />
-
-## pose-transition
-
-Coming soon.
