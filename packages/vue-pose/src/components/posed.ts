@@ -50,12 +50,12 @@ const watch = {
   }
 };
 
-// function destroyed() {
-//   if (!this.poser) return;
-//   if (this._poseOnChildUnmount) this._poseOnChildUnmount(this.poser);
-//   PoserMap.delete(this.$el);
-//   this.poser.destroy();
-// }
+function destroyed() {
+  if (!this.poser || !this._poseDestroyOnUnmount) return;
+  if (this._poseOnChildUnmount) this._poseOnChildUnmount(this.poser);
+  PoserMap.delete(this.$el);
+  this.poser.destroy();
+}
 
 const methods = {
   getInitialPose() {
@@ -119,7 +119,8 @@ function provide() {
 const inject = {
   _poseRegisterChild: { default: false },
   _poseOnChildUnmount: { default: false },
-  _poseGetInitialPoseFromParent: { default: false }
+  _poseGetInitialPoseFromParent: { default: false },
+  _poseDestroyOnUnmount: { default: true }
 };
 
 const createPosedComponentFactory: PosedComponentFactoryFactory = el => (
@@ -164,7 +165,7 @@ const createPosedComponentFactory: PosedComponentFactoryFactory = el => (
     },
     watch,
     methods,
-    //destroyed,
+    destroyed,
     render(createElement) {
       return createElement(el, {}, [this.$slots.default]);
     }
