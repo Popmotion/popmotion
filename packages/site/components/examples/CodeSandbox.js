@@ -11,10 +11,11 @@ const FrameContainer = MajorCentered.withComponent('div').extend`
 export default class CodeSandbox extends React.Component {
   state = { isVisible: false };
 
-  setVisibility = ({ isIntersecting }) =>
+  setVisibility = ({ isIntersecting }) => {
     isIntersecting &&
-    !this.state.isVisible &&
-    this.setState({ isVisible: true });
+      !this.state.isVisible &&
+      this.setState({ isVisible: true });
+  };
 
   render() {
     const { id, height = 500, vue = false, ...props } = this.props;
@@ -22,7 +23,7 @@ export default class CodeSandbox extends React.Component {
 
     return (
       <IntersectionElement onChange={this.setVisibility}>
-        <FrameContainer style={{ height }}>
+        <FrameContainer style={{ height: height + 'px' }}>
           {this.state.isVisible && (
             <iframe
               height={height}
@@ -30,8 +31,8 @@ export default class CodeSandbox extends React.Component {
               title=""
               src={`https://codesandbox.io/embed/${id}${suffix}`}
               frameBorder="no"
-              allowTransparency="true"
-              allowFullScreen="true"
+              allowtransparency="true"
+              allowfullScreen="true"
               style={{ width: '100%' }}
               {...props}
             />

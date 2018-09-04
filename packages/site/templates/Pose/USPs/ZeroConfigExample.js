@@ -41,7 +41,7 @@ const Component = ({ position }) =>
 };
 
 class Example extends React.Component {
-  state = { isVisible: false };
+  state = { isVisible: true };
 
   componentDidMount() {
     this.interval = setInterval(this.toggleVisibility, 1000);
