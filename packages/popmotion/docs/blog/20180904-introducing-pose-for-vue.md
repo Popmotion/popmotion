@@ -7,13 +7,13 @@ author: mattperry
 
 # Introducing Pose for Vue
 
-Over the past couple weeks I've seen a few people mention Vue when talking about Pose integration.
+For as long as there's been a flavour of Pose for React, there's been requests for a Pose for Vue.
 
-So, over the last week I've been tinkering with Vue and figuring out the best way to bring Pose's declarative animations and interactions to this growing framework.
+Over the last week I've been tinkering with Vue and figuring out the best way to bring Pose's declarative animations and interactions to this fast-growing framework.
 
 Today, I'm pleased to announce the first release of [Pose for Vue](/pose)!
 
-Let's take a look at the new library.
+Let's take a look at this new library.
 
 <TOC />
 
@@ -25,7 +25,7 @@ As with Pose for React, the core of the library is the `posed` object.
 import posed from 'vue-pose';
 ```
 
-It's used for making posed components, components that will magically animate from a single prop change. No `transition` needed!
+It's used for making posed HTML and SVG components, components that will magically animate from a single prop change. No `transition` needed!
 
 ```javascript
 export default {
@@ -66,7 +66,7 @@ export default {
 
 One of Pose's most popular features is how simple it becomes to orchestrate animations throughout the DOM.
 
-In Pose for Vue, it's no different. Poses set on a parent component flow through the DOM automatically, so any children components with the same poses defined will animate too.
+Pose for Vue is no different. Poses set on a parent component flow through the DOM automatically, so any children components with the same poses defined will animate too.
 
 Properties like `delayChildren` and `staggerChildren` allow total control over when child animations get fired.
 
@@ -79,12 +79,7 @@ export default {
         beforeChildren: true,
         staggerChildren: 50
       },
-      hidden: {
-        x: '-100%',
-        afterChildren: true,
-        staggerChildren: 20,
-        staggerDirection: -1
-      }
+      hidden: { x: '-100%', afterChildren: true }
     }),
     Item: posed.li({
       visible: { opacity: 1, y: 0 },
@@ -120,11 +115,13 @@ export default {
 }
 ```
 
+These "enter" and "exit" poses flow through children as with other posed components, so you can use this to orchestrate some complex animations.
+
 <CodeSandbox id="3qvz9w2rp6" height="500" vue />
 
 ## And the rest
 
-That's to say nothing of the powerful [passive values](/pose/learn/vue-passive-values) or [FLIP](/pose/learn/vue-flip) features, that are both here as expected.
+That's to say nothing of the powerful [passive values](/pose/learn/vue-passive) or [FLIP](/pose/learn/vue-flip) features, that are both here as expected.
 
 ## What's missing
 

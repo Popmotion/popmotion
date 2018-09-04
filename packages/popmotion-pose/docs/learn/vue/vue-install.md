@@ -35,7 +35,7 @@ So, when you see in the docs `import posed from 'vue-pose'`, you can instead sim
 
 You can download the latest version of Pose for Vue at https://unpkg.com/vue-pose/dist/vue-pose.js
 
-### `script` include
+### Script include
 
 You can include it in your HTML with this `script` tag:
 

@@ -1,6 +1,6 @@
 # Changelog
 
-Vue Pose adheres to [Semantic Versioning](http://semver.org/).
+Pose for Vue adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.4.2] 2018-09-04
 

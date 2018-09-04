@@ -2,7 +2,7 @@
 title: UI events and interactions
 description: Trigger animations based on UI events like drag, press, hover and focus in Pose for Vue
 category: vue
-next: vue-passive
+next: vue-enter-exit-transitions
 ---
 
 # UI events and interactions
