@@ -1,5 +1,5 @@
 import { listen, ColdSubscription } from 'popmotion';
-import { ActiveActions } from 'pose-core/lib/types';
+import { ActiveActions } from 'pose-core';
 import { DomPopmotionConfig, DomPopmotionPoser } from '../types';
 
 /**

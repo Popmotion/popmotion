@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import poseFactory from 'popmotion-pose';
+import poseFactory, { DomPopmotionPoser } from 'popmotion-pose';
 import { invariant } from 'hey-listen';
 import supportedElements from '../utils/supported-elements';
 import {
@@ -9,7 +9,6 @@ import {
   ChildRegistration
 } from '../types';
 import PoserMap from '../utils/poser-map';
-import { DomPopmotionPoser } from 'popmotion-pose/lib/types';
 
 const props: PropsDefinition = {
   pose: {

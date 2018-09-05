@@ -6,7 +6,7 @@ import {
   PoseElementProps,
   PoseContextProps
 } from './components/PoseElement.types';
-import { DomPopmotionConfig } from 'popmotion-pose/lib/types';
+import { DomPopmotionConfig } from 'popmotion-pose';
 
 type DomPopmotionConfigFactory<T> = (
   props: PoseElementProps & T

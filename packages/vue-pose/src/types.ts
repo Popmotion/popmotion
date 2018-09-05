@@ -1,7 +1,4 @@
-import {
-  DomPopmotionConfig,
-  DomPopmotionPoser
-} from 'popmotion-pose/lib/types';
+import { DomPopmotionConfig, DomPopmotionPoser } from 'popmotion-pose';
 import Vue, { VueConstructor } from 'vue';
 
 export type PosedComponent = VueConstructor<{ [x: string]: any } & Vue>;

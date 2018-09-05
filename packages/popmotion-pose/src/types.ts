@@ -8,7 +8,7 @@ import {
   ExtendAPI,
   TransformPose,
   ReadValueFromSource
-} from 'pose-core/lib/types';
+} from 'pose-core';
 import { Styler } from 'stylefire';
 
 export type Value = {

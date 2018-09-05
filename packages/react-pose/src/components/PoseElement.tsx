@@ -1,10 +1,7 @@
 import * as React from 'react';
 import { createContext, createElement } from 'react';
 import poseFactory from 'popmotion-pose';
-import {
-  DomPopmotionPoser,
-  DomPopmotionConfig
-} from 'popmotion-pose/lib/types';
+import { DomPopmotionPoser, DomPopmotionConfig } from 'popmotion-pose';
 import {
   ChildRegistration,
   CurrentPose,

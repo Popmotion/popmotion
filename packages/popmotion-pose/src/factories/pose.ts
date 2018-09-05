@@ -11,7 +11,7 @@ import {
   Action,
   ColdSubscription
 } from 'popmotion';
-import poseFactory from 'pose-core';
+import poseFactory, { Poser } from 'pose-core';
 import {
   Value,
   TransitionProps,
@@ -19,7 +19,6 @@ import {
   PopmotionPoserFactoryConfig,
   AnimationDef
 } from '../types';
-import { Poser } from 'pose-core';
 import defaultTransitions, { just } from '../inc/default-transitions';
 import { getValueType } from '../inc/value-types';
 import { invariant } from 'hey-listen';
