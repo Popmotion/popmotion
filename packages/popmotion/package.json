@@ -75,6 +75,16 @@
       "ts",
       "js"
     ],
+    "moduleNameMapper": {
+      "@popmotion/easing": "<rootDir>/../../easing/src",
+      "animated-pose": "<rootDir>/../../animated-pose/src",
+      "pose-core": "<rootDir>/../../pose-core/src",
+      "popmotion": "<rootDir>/../../popmotion/src",
+      "popmotion-pose": "<rootDir>/../../popmotion-pose/src",
+      "react-pose": "<rootDir>/../../react-pose/src",
+      "react-pose-core": "<rootDir>/../../react-pose-core/src",
+      "style-value-types": "<rootDir>/../../style-value-types/src"
+    },
     "transform": {
       "\\.(ts)$": "../../../node_modules/ts-jest/preprocessor.js"
     },
