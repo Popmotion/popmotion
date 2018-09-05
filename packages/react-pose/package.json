@@ -8,6 +8,7 @@
   "scripts": {
     "build": "rollup -c && npm run measure",
     "watch": "rollup -c -w",
+    "test": "jest",
     "measure": "gzip -c dist/react-pose.js | wc -c",
     "prettier": "prettier ./src/* --write",
     "prepublishOnly": "npm run prettier && npm run build"
@@ -34,7 +35,12 @@
     "react-dom": "^16.3.2"
   },
   "devDependencies": {
+    "@types/enzyme": "^3.1.13",
+    "@types/enzyme-adapter-react-16": "^1.0.3",
     "@types/react": "^16.3.16",
+    "enzyme": "^3.6.0",
+    "enzyme-adapter-react-16": "^1.4.0",
+    "jest-enzyme": "^6.0.4",
     "prettier": "1.11.1",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
@@ -55,5 +61,25 @@
   "prettier": {
     "parser": "typescript",
     "singleQuote": true
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "transform": {
+      "\\.(ts|tsx)$": "../../../node_modules/ts-jest/preprocessor.js"
+    },
+    "moduleNameMapper": {
+      "popmotion-pose": "<rootDir>/../../popmotion-pose/src"
+    },
+    "testRegex": "/_tests/.*\\.(ts|tsx|js)$",
+    "rootDir": "src",
+    "globals": {
+      "ts-jest": {
+        "tsConfigFile": "../tsconfig.jest.json"
+      }
+    }
   }
 }
