@@ -47,6 +47,7 @@
     "ts-jest": "^22.4.5"
   },
   "dependencies": {
+    "@popmotion/easing": "^1.0.1",
     "hey-listen": "^1.0.5",
     "popmotion": "^8.3.7",
     "pose-core": "^1.0.0",
@@ -67,6 +68,7 @@
       "\\.(ts)$": "../../../node_modules/ts-jest/preprocessor.js"
     },
     "moduleNameMapper": {
+      "@popmotion/easing": "<rootDir>/../../easing/src",
       "popmotion": "<rootDir>/../../popmotion/src",
       "pose-core": "<rootDir>/../../pose-core/src",
       "style-value-types": "<rootDir>/../../style-value-types/src"
