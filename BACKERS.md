@@ -15,4 +15,5 @@ In order joined, the following people make Popmotion possible by [supporting our
 11. [Mateusz Burzyński](https://twitter.com/AndaristRake) [Pro]
 11. [Phil Keys](https://twitter.com/Philly_Keys) [Pro]
 12. Anthony Sapp [Pro]
-13. [Sebastian Software](https://twitter.com/sebastiansoft)
+13. [Sebastian Software](https://twitter.com/sebastiansoft) [Pro]
+14. [Travis Arnold](https://twitter.com/souporserious)
