@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import Link from 'next/link';
 import { color, font, media } from '~/styles/vars';
 
 export const Container = styled.div`
@@ -80,11 +81,37 @@ export const ActionButton = styled.button`
     }
   `};
   border-radius: 300px;
-  color: ${color.white};
+  color: ${color.white}!important;
   font-size: 18px;
   ${font.body};
   ${font.bold};
   letter-spacing: -0.2px;
   cursor: pointer;
   padding: 10px 30px;
+
+  ${({ white, theme }) =>
+    white &&
+    `
+    background-image: linear-gradient(-180deg, #fff 0%, #eee 100%);
+    color: ${color.black}!important;
+    text-shadow: none;
+  `};
+
+  ${({ cta }) =>
+    cta &&
+    `
+    font-size: 24px;
+    padding: 15px 30px;
+
+    ${media.medium`font-size: 18px;`}
+  `};
 `;
+
+const ButtonAsLink = ActionButton.withComponent('a')
+  .extend`display: inline-block;`;
+
+export const ActionLink = ({ href, ...props }) => (
+  <Link href={href}>
+    <ButtonAsLink {...props} />
+  </Link>
+);

@@ -8,7 +8,7 @@ import {
   ExtendAPI,
   TransformPose,
   ReadValueFromSource
-} from 'pose-core/lib/types';
+} from 'pose-core';
 import { Styler } from 'stylefire';
 
 export type Value = {
@@ -39,16 +39,16 @@ export interface DomPopmotionPoser
 export type DomPopmotionConfig = {
   onDragStart?: (e: MouseEvent | TouchEvent) => any;
   onDragEnd?: (e: MouseEvent | TouchEvent) => any;
-  onHoverStart?: (e: MouseEvent | TouchEvent) => any;
-  onHoverEnd?: (e: MouseEvent | TouchEvent) => any;
-  draggable?: boolean;
+  onPressStart?: (e: MouseEvent | TouchEvent) => any;
+  onPressEnd?: (e: MouseEvent | TouchEvent) => any;
+  draggable?: Draggable;
   hoverable?: boolean;
-  dragBounds?: BoundingBox;
+  dragBounds?: { [key in BoundingBoxDimension]?: number | string };
   props?: { [key: string]: any };
   [key: string]: any;
 };
 
-export type Draggable = true | 'x' | 'y';
+export type Draggable = boolean | 'x' | 'y';
 
 export type TransitionProps = {
   from: string | number;

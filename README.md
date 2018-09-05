@@ -9,7 +9,7 @@ Simple libraries for delightful interfaces.
 * [Popmotion](https://github.com/Popmotion/popmotion/tree/master/packages/popmotion)
 
 ### Pose
-* [Popmotion Pose](https://github.com/Popmotion/popmotion/tree/master/packages/popmotion-pose)
+* [Vanilla](https://github.com/Popmotion/popmotion/tree/master/packages/popmotion-pose)
 * [React](https://github.com/Popmotion/popmotion/tree/master/packages/react-pose)
 * [React Native](https://github.com/Popmotion/popmotion/tree/master/packages/react-native-pose)
-* [React 360](https://github.com/Popmotion/popmotion/tree/master/packages/react-360-pose)
+* [Vue](https://github.com/Popmotion/popmotion/tree/master/packages/vue-pose)

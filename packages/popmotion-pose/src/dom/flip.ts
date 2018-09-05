@@ -7,6 +7,7 @@ import {
   PoserState,
   DomPopmotionPoser
 } from '../types';
+import { resolveProp, measureWithoutTransform } from './utils';
 import { Poser } from 'pose-core';
 
 const ORIGIN_START = 0;
@@ -36,9 +37,6 @@ const hasPositionalProps = (pose: Pose) =>
 export const isFlipPose = (flip: boolean, key: string, state: PoserState) =>
   state.props.element instanceof HTMLElement &&
   (flip === true || key === 'flip');
-
-export const resolveProp = (target: any, props: { [key: string]: any }) =>
-  typeof target === 'function' ? target(props) : target;
 
 export const setValue = (
   { values, props }: PoserState,
@@ -73,22 +71,21 @@ const explicitlyFlipPose = (state: PoserState, nextPose: Pose) => {
     left,
     bottom,
     right,
+    position,
     ...remainingPose
   } = nextPose;
 
-  elementStyler
-    .set(
-      positionalProps.reduce(
-        (acc, key) => {
-          if (nextPose[key] !== undefined) {
-            acc[key] = resolveProp(nextPose[key], state.props);
-          }
-          return acc;
-        },
-        {} as StyleMap
-      )
-    )
-    .render();
+  const propsToSet = positionalProps.reduce(
+    (acc, key) => {
+      if (nextPose[key] !== undefined) {
+        acc[key] = resolveProp(nextPose[key], state.props);
+      }
+      return acc;
+    },
+    { position } as StyleMap
+  );
+
+  elementStyler.set(propsToSet).render();
 
   return implicitlyFlipPose(state, remainingPose);
 };
@@ -98,11 +95,7 @@ const implicitlyFlipPose = (state: PoserState, nextPose: Pose) => {
   if (!dimensions.has()) return {};
 
   const prev = dimensions.get() as BoundingBox;
-
-  const transform = (element as HTMLElement).style.transform;
-  (element as HTMLElement).style.transform = '';
-  const next = element.getBoundingClientRect();
-  (element as HTMLElement).style.transform = transform;
+  const next = measureWithoutTransform(element);
 
   // Find transform origin based on x/y delta
   const originX =

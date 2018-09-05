@@ -206,8 +206,8 @@ export default () => (
       <ThemeProvider theme={themes.pose}>
         <Product title={themes.pose} prefetch>
           <P>
-            Simple CSS-like animation system for <em>HTML</em>, <em>SVG</em>,{' '}
-            <em>React</em> and <em>React Native</em>
+            A simple, CSS-like animation library for <em>React</em>,<br />
+            <em>React Native</em> and <em>Vue</em>
           </P>
         </Product>
       </ThemeProvider>

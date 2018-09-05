@@ -59,16 +59,26 @@ const Item = styled(posed.li(itemProps))`
   }
 `;
 
-const code = `// React Native Pose
-const Parent = posed.View(config)
-const Child = posed.Image(childConfig)
+const code = {
+  react: `const Parent = posed.ul(config)
+const Child = posed.li(childConfig)
 
 ({ items }) => (
   <Parent pose="open">
     {items.map(item => <Child />)}
   </Parent>
 )
-`;
+`,
+  vue: `const Component = {
+  components: {
+    Parent: posed.ul(config),
+    Child: posed.li(childConfig)
+  },
+  template: \`<Parent :pose="isOpen ? 'open' : 'closed'">
+    <Child v-for="item in items" />
+  </Parent>\`
+}`
+};
 
 class Example extends React.Component {
   state = { isVisible: false };
@@ -97,8 +107,8 @@ class Example extends React.Component {
   }
 }
 
-export default () => (
-  <Template code={code}>
+export default props => (
+  <Template code={code} {...props}>
     <AlignCenter>
       <Example />
     </AlignCenter>

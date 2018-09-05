@@ -1,6 +1,6 @@
 {
   "name": "react-pose-text",
-  "version": "0.2.0",
+  "version": "3.1.0",
   "description": "Easily animate characters and words with React Pose",
   "main": "./lib/index.js",
   "module": "./dist/react-pose-text.es.js",
@@ -8,7 +8,6 @@
   "scripts": {
     "build": "rollup -c && npm run measure",
     "watch": "rollup -c -w",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "measure": "gzip -c dist/react-pose-text.js | wc -c",
     "prettier": "prettier ./src/* --write",
     "prepublishOnly": "npm run prettier && npm run build"
@@ -30,7 +29,7 @@
   "peerDependencies": {
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
-    "react-pose": "^2.2.0"
+    "react-pose": "^3.1.0"
   },
   "devDependencies": {
     "@types/react": "^16.3.16",
@@ -45,8 +44,7 @@
     "rollup-plugin-uglify": "^3.0.0"
   },
   "dependencies": {
-    "hey-listen": "^1.0.5",
-    "react-pose": "^3.0.0"
+    "hey-listen": "^1.0.5"
   },
   "unpkg": "./dist/react-pose-text.js",
   "prettier": {

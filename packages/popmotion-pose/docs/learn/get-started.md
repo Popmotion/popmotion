@@ -7,5 +7,6 @@ description: Get started with the Pose animation system for HTML, SVG, React and
 
 ## Choose your adventure:
 
-### [HTML, SVG or React DOM](/pose/learn/popmotion-get-started)
+### [React](/pose/learn/popmotion-get-started)
 ### [React Native](/pose/learn/native-get-started)
+### [Vue](/pose/learn/vue-get-started)

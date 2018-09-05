@@ -7,7 +7,6 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "test": "jest",
     "measure": "gzip -c dist/popmotion-pose.js | wc -c",
     "prettier": "prettier ./src/*",
     "prepublishOnly": "npm run prettier && npm run build"

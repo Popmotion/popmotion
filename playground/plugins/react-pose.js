@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import posed, { PoseGroup } from "../../packages/react-pose/lib";
+import posed, { PoseGroup } from "react-pose";
 import {
   easing,
   decay,
@@ -9,7 +9,7 @@ import {
   physics,
   transform,
   value
-} from "../../packages/popmotion/lib";
+} from "popmotion";
 const { pipe, blendColor, conditional, clamp, interpolate } = transform;
 
 const boxProps = {
@@ -63,6 +63,7 @@ export class ReactPose extends React.PureComponent {
 
 export const Hover = posed(BoxStyled)({
   hoverable: true,
+  pressable: true,
   init: { background: "#00f" },
   hover: { background: "#f00" }
 });
@@ -570,3 +571,40 @@ export const DragChildren = () => (
     <Label>Drag me</Label>
   </DraggableBox>
 );
+
+export const SingleFilter = posed.img({
+  hoverable: true,
+  init: { filter: "blur(2px)" },
+  hover: { filter: "blur(0px)" }
+});
+
+const DynamicPositionedBox = styled(
+  posed.div({
+    move: {
+      x: () => Math.random() * 200,
+      y: () => Math.random() * 200,
+    }
+  })
+)`
+  width: 100px;
+  height: 100px;
+  background: hotpink;
+`;
+
+export class DynamicPositionedPose extends React.PureComponent {
+  state = { poseKey: Math.random() };
+
+  componentDidMount() {
+    this.intervalId = setInterval(() => this.setState({ poseKey: Math.random() }), 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.intervalId);
+  }
+
+  render() {
+    return (
+      <DynamicPositionedBox pose="move" poseKey={this.state.poseKey} />
+    );
+  }
+}

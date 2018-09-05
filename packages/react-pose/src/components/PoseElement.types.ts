@@ -1,7 +1,4 @@
-import {
-  DomPopmotionPoser,
-  DomPopmotionConfig
-} from 'popmotion-pose/lib/types';
+import { DomPopmotionPoser, DomPopmotionConfig } from 'popmotion-pose';
 
 export type ChildRegistration = {
   element: Element;

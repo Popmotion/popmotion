@@ -19,7 +19,8 @@
       "animated-pose": ["./animated-pose/lib"],
       "react-pose-core": ["./react-pose-core/lib"],
       "react-pose": ["./react-pose/lib"],
-      "react-pose-text": ["./react-pose-text/lib"]
+      "react-pose-text": ["./react-pose-text/lib"],
+      "vue-pose": ["./vue-pose/lib"]
     },
     "alwaysStrict": true,
     "declaration": true,

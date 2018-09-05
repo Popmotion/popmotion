@@ -10,12 +10,6 @@ category: react
 
 <TOC />
 
-## Install
-
-```bash
-npm install react-pose --save
-```
-
 ## Import
 
 ```javascript
@@ -33,7 +27,7 @@ import posed from 'react-pose'
 
 #### HTML & SVG elements
 
-`pose` isn't called directly, instead we pass [posed props](/pose/api/props) to `posed.div`, `posed.button` etc. Every HTML and SVG element is supported:
+`pose` isn't called directly, instead we pass [a pose config object](/pose/api/react-config) to `posed.div`, `posed.button` etc. Every HTML and SVG element is supported:
 
 ```javascript
 const DraggableCircle = posed.circle({
@@ -195,6 +189,12 @@ A callback that fires whenever a pose has finished transitioning.
 `onDragStart/onDragEnd: (e: Event) => void`
 
 Callbacks that fire when dragging starts or ends. **Note:** These props are immutable and can't be changed after mounting.
+
+### onPressStart/onPressEnd
+
+`onPressStart/onPressEnd: (e: Event) => void`
+
+Callbacks that fire when pressing starts or ends. **Note:** These props are immutable and can't be changed after mounting.
 
 ### innerRef
 

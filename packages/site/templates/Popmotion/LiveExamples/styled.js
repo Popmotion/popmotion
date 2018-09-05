@@ -287,3 +287,21 @@ export const ModalHeader = styled.h2`
   ${fontBold}
   margin-bottom: 20px;
 `;
+
+export const TabsContainer = styled.div`
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  transform: translateY(100%);
+  display: flex;
+  align-items: flex-stretch;
+`;
+
+export const Tab = styled.button`
+  cursor: pointer;
+  padding: 10px 15px;
+
+  ${({ isActive, theme }) =>
+    `border-bottom: 1px solid ${isActive ? theme.color.base : color.white};
+    background: ${isActive ? color.lightGrey : color.superLightGrey};`};
+`;

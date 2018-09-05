@@ -12,62 +12,75 @@ export type Props = {
   initialPose?: string | string[];
 };
 
+type State = {
+  text?: string;
+  splitText?: string[][];
+  numChars?: number;
+};
+
 const splitStyles = { display: 'inline-block' };
 
-class SplitText extends PureComponent<Props> {
+// Memoize?
+const parseText = (text: string) => {
+  invariant(typeof text === 'string', 'Child of SplitText must be a string');
+
+  return {
+    text,
+    numChars: text.length,
+    splitText: text.split(' ').map(word => word.split(''))
+  };
+};
+
+// Memoize?
+const getPoseProps = (props: Props) => {
+  const { wordPoses, charPoses, children, ...poseProps } = props;
+  return poseProps;
+};
+
+class SplitText extends PureComponent<Props, State> {
+  static getDerivedStateFromProps({ children }: Props, state: State) {
+    return !state || children !== state.text ? parseText(children) : null;
+  }
+
   props: Props;
-  poseProps: Props;
-  text: string[][];
-  numChars: number;
   Word: (props: PoseProps) => ReactElement<any>;
   Char: (props: PoseProps) => ReactElement<any>;
 
   constructor(props: Props) {
     super(props);
 
+    this.state = {};
+
     const { wordPoses, charPoses, children } = props;
 
-    this.parseText(children);
+    parseText(children);
 
     if (wordPoses) this.Word = posed.div(wordPoses);
     if (charPoses) this.Char = posed.div(charPoses);
   }
 
-  parseText(text: string) {
-    invariant(typeof text === 'string', 'Child of SplitText must be a string');
-
-    const { children, wordPoses, charPoses, ...poseProps } = this.props;
-    this.poseProps = poseProps;
-
-    this.numChars = text.length;
-    this.text = text.split(' ').map(word => word.split(''));
-  }
-
-  componentWillReceiveProps({ children }: Props) {
-    if (this.props.children !== children) this.parseText(children);
-  }
-
   renderChars(
-    text: string[],
+    word: string[],
     wordIndex: number,
     numWords: number,
     baseCharCount: number
   ) {
-    const numCharsInWord = text.length;
-    const { children } = this.props;
+    const { numChars } = this.state;
+    const numCharsInWord = word.length;
+    const { text } = this.state;
 
-    return text.map((char, i) => {
+    return word.map((char, i) => {
       return this.Char ? (
         <this.Char
-          key={children + i}
+          key={text + i}
           style={splitStyles}
           wordIndex={wordIndex}
           numWords={numWords}
           charIndex={baseCharCount + i}
           charInWordIndex={i}
-          numChars={this.numChars}
+          numChars={numChars}
           numCharsInWord={numCharsInWord}
-          {...this.poseProps}
+          {...getPoseProps(this.props)}
         >
           {char}
         </this.Char>
@@ -77,12 +90,12 @@ class SplitText extends PureComponent<Props> {
     });
   }
 
-  renderWords(text: string[][]) {
-    const { children } = this.props;
-    const numWords = text.length;
+  renderWords() {
+    const { text, splitText } = this.state;
+    const numWords = splitText.length;
     let charCount = 0;
 
-    return text.map((word, i) => {
+    return splitText.map((word, i) => {
       const chars = [
         ...this.renderChars(word, i, numWords, charCount),
         i !== numWords - 1 ? '\u00A0' : null
@@ -92,16 +105,16 @@ class SplitText extends PureComponent<Props> {
 
       return this.Word ? (
         <this.Word
-          key={children + i}
+          key={text + i}
           style={splitStyles}
           wordIndex={i}
           numWords={numWords}
-          {...this.poseProps}
+          {...getPoseProps(this.props)}
         >
           {chars}
         </this.Word>
       ) : (
-        <div style={splitStyles} key={children + i}>
+        <div style={splitStyles} key={text + i}>
           {chars}
         </div>
       );
@@ -109,7 +122,7 @@ class SplitText extends PureComponent<Props> {
   }
 
   render() {
-    return this.renderWords(this.text);
+    return this.renderWords();
   }
 }
 

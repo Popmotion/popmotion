@@ -6,14 +6,9 @@ import { fontSize, lineHeight, fontBold } from '~/styles/fonts';
 const MAX_WIDTH = cols(60);
 
 export const Container = styled.section`
-  padding-top: ${cols(4)};
   display: flex;
   align-items: center;
   flex-direction: column;
-
-  ${media.medium`
-    padding-top: ${cols(2)};
-  `};
 `;
 
 const BlurbContainer = Centered.extend`
@@ -31,7 +26,8 @@ const BlurbContainer = Centered.extend`
 
   ${media.medium`
   margin-bottom: ${cols(2)};
-  `} ${media.small`
+  `};
+  ${media.small`
     display: block;
     span {
       display: none;
@@ -50,6 +46,8 @@ export const BlurbText = styled.p`
   ${media.medium`
     ${fontSize(18)}
     ${lineHeight(26)}
+    padding-left: ${cols(1)};
+    padding-right: ${cols(1)};
   `}
 `;
 
@@ -128,6 +126,6 @@ export const CenteredContent = styled.div`
   flex-direction: column;
 
   ${media.large`
-    margin: 0 ${cols(2)}
+    margin: 0 ${cols(1)}
   `};
 `;

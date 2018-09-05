@@ -10,8 +10,8 @@ import styled from 'styled-components';
 import { color } from '~/styles/vars';
 
 const props = {
-  left: { x: '100%' },
-  right: { x: '-100%' }
+  left: { x: '-100%' },
+  right: { x: '100%' }
 };
 
 const Box = styled(posed.div(props))`
@@ -21,16 +21,27 @@ const Box = styled(posed.div(props))`
   transform: translateX(-100%);
 `;
 
-const code = `// React Pose
-const Box = posed.div({
-  left: { x: 100 },
-  right: { x: -100 }
+const code = {
+  react: `const Box = posed.div({
+  left: { x: -100 },
+  right: { x: 100 }
 })
 
-({ position }) => <Box pose={position} />`;
+const Component = ({ position }) =>
+  <Box pose={position} />`,
+  vue: `const Component = {
+  components: {
+    Box: posed.div({
+      left: { x: -100 },
+      right: { x: 100 }
+    })
+  },
+  template: \`<Box :pose="position" />\`
+}`
+};
 
 class Example extends React.Component {
-  state = { isVisible: false };
+  state = { isVisible: true };
 
   componentDidMount() {
     this.interval = setInterval(this.toggleVisibility, 1000);
@@ -47,8 +58,8 @@ class Example extends React.Component {
   }
 }
 
-export default () => (
-  <Template code={code}>
+export default props => (
+  <Template code={code} {...props}>
     <AlignCenter>
       <Example />
     </AlignCenter>

@@ -1,6 +1,6 @@
 {
   "name": "popmotion-pose",
-  "version": "3.1.0",
+  "version": "3.2.5",
   "description": "A declarative animation library for HTML and SVG",
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
@@ -47,10 +47,11 @@
     "ts-jest": "^22.4.5"
   },
   "dependencies": {
+    "@popmotion/easing": "^1.0.1",
     "hey-listen": "^1.0.5",
-    "popmotion": "^8.3.3",
+    "popmotion": "^8.3.7",
     "pose-core": "^1.0.0",
-    "style-value-types": "^3.0.3",
+    "style-value-types": "^3.0.6",
     "tslib": "^1.9.1"
   },
   "unpkg": "./dist/popmotion-pose.js",
@@ -65,6 +66,12 @@
     ],
     "transform": {
       "\\.(ts)$": "../../../node_modules/ts-jest/preprocessor.js"
+    },
+    "moduleNameMapper": {
+      "@popmotion/easing": "<rootDir>/../../easing/src",
+      "popmotion": "<rootDir>/../../popmotion/src",
+      "pose-core": "<rootDir>/../../pose-core/src",
+      "style-value-types": "<rootDir>/../../style-value-types/src"
     },
     "testRegex": "/_tests/.*\\.(ts|js)$",
     "rootDir": "src"

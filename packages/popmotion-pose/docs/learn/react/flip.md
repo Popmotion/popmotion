@@ -1,18 +1,17 @@
 ---
 title: FLIP
 description: A look at Pose's powerful FLIP API
-category: basics
+category: react
 ---
 
 # FLIP
 
 The FLIP technique, [fully explained here](https://aerotwist.com/blog/flip-your-animations/), is a way of animating expensive, layout-breaking animations like `width` and `top` by using quick transforms.
 
-Pose provides a few methods for performing FLIP:
+Pose provides a couple of methods for performing FLIP:
 
-1. Animate `width`/`top` and adding `flip: true` to a pose
-2. Manually with the `measure` and `flip` methods
-3. Via the [`PoseGroup` React Pose component](/pose/api/posegroup)
+1. Animate `width`/`top`/etc and adding `flip: true` to a pose
+2. Via the [`PoseGroup` component](/pose/api/posegroup)
 
 In this tutorial, we'll take a look at each of these.
 
@@ -27,7 +26,7 @@ So, when you set a pose with `flip: true` and any of `width`, `height`, `top`, `
 For instance, we can switch a `div` to fullscreen and back using the following config:
 
 ```javascript
-const config = {
+const Panel = posed.div({
   fullscreen: {
     width: '100vw',
     height: '100vh',
@@ -40,32 +39,10 @@ const config = {
     transition: tween,
     flip: true
   }
-}
+});
 ```
 
 <CodePen id="BrmGmR" />
-
-## Manual FLIP
-
-Pose also exposes a manual FLIP API for more complicated operations that will affect layout, like swapping an element's child nodes.
-
-The process goes like this:
-
-1. Measure the element using `poser.measure()`.
-2. Perform your operation to change the DOM.
-3. Animate from the old position to the new with `poser.flip()`
-
-<CodePen id="paXyRE" />
-
-Using this method allows the use of a special Pose called `flip`, so you can change the animation:
-
-```javascript
-const tooltipConfig = {
-  flip: {
-    transition: (props) => tween({ ...props, ease: easing.backOut })
-  }
-};
-```
 
 ## PoseGroup
 

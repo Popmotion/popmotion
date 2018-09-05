@@ -1,6 +1,10 @@
 import {
   PoseFactoryConfig,
   PoserConfig,
+  Pose,
+  ExtendAPI,
+  TransformPose,
+  ReadValueFromSource,
   Poser,
   ActiveActions,
   ActivePoses,
@@ -13,7 +17,6 @@ import {
 import createPoseSetter from './factories/setter';
 import createValueMap, { DEFAULT_INITIAL_POSE } from './factories/values';
 import generateDefaultTransitions from './factories/transitions';
-import { eachValue, fromPose } from './inc/transition-composers';
 import { selectPoses, selectAllValues } from './inc/selectors';
 import { sortByReversePriority } from './inc/utils';
 import { warning } from 'hey-listen';
@@ -181,4 +184,15 @@ const poseFactory = <V, A, C, P>({
 };
 
 export default poseFactory;
-export { Poser, PoserConfig, PoseMap, TransitionMap, eachValue, fromPose };
+export {
+  Poser,
+  PoserConfig,
+  TransitionMap,
+  ActiveActions,
+  Pose,
+  PoseMap,
+  PoserState,
+  ExtendAPI,
+  TransformPose,
+  ReadValueFromSource
+};

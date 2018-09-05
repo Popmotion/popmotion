@@ -13,7 +13,7 @@ import physics from './animations/physics';
 import spring from './animations/spring';
 import timeline from './animations/timeline';
 import tween from './animations/tween';
-
+console.log('face');
 export { decay, keyframes, everyFrame, physics, spring, timeline, tween };
 
 // Input

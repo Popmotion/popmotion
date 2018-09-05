@@ -2,11 +2,41 @@
 
 Popmotion Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.2.5] 2018-08-05
+
+### Fixed
+
+- Added `position` support for FLIP transforms.
+
+## [3.2.4] 2018-09-03
+
+### Fixed
+
+- Dynamically set positional props. Thanks to [Klaasman](https://github.com/klaasman)
+
+## [3.2.3] 2018-09-01
+
+### Fixed
+
+- Flash of content in Safari. [#459](https://github.com/Popmotion/popmotion/issues/459)
+
+## [3.2.2] 2018-08-30
+
+### Fixed
+
+- Fixing `dragBounds` and `draggable` types. [#396](https://github.com/Popmotion/popmotion/issues/396)
+
+## [3.2.1] 2018-08-30
+
+### Fixed
+
+- Detecting `mouseup` outside window and stopping dragging/pressing accordingly.
+
 ## [3.2.0] 2018-08-30
 
 ### Added
 
-- Support for `prefers-reduced-motion`.
+- `onPressStart`/`onPressEnd` callbacks.
 
 ## [3.1.0] 2018-08-28
 

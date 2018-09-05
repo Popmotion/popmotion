@@ -1,5 +1,5 @@
 import { listen, ColdSubscription } from 'popmotion';
-import { ActiveActions } from 'pose-core/lib/types';
+import { ActiveActions } from 'pose-core';
 import { DomPopmotionConfig, DomPopmotionPoser } from '../types';
 
 /**
@@ -53,9 +53,19 @@ const makeUIEventApplicator = ({
         config[startCallback](startEvent);
 
       const eventEndListener = listen(
-        useDocumentToEnd ? document : element,
-        endEvents
+        useDocumentToEnd ? document.documentElement : element,
+        endEvents + (useDocumentToEnd ? ' mouseenter' : '')
       ).start((endEvent: MouseEvent | TouchEvent) => {
+        // If this is a window event, detect mouse reentries without the left button
+        // pressed and detect them as an end event. This might be a candidate to be moved within Popmotion.
+        if (
+          useDocumentToEnd &&
+          endEvent.type === 'mouseenter' &&
+          (endEvent as MouseEvent).buttons === 1
+        ) {
+          return;
+        }
+
         if (preventDefault) endEvent.preventDefault();
         activeActions.get(endListener).stop();
         poser.unset(startPose);
@@ -98,6 +108,8 @@ const events: { [key: string]: UIEventApplicator } = {
     endEvents: 'mouseup touchend',
     startPose: 'press',
     endPose: 'pressEnd',
+    startCallback: 'onPressStart',
+    endCallback: 'onPressEnd',
     useDocumentToEnd: true
   })
 };

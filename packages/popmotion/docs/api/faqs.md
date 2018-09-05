@@ -9,8 +9,12 @@ description: Popmotion frequently asked questions
 
 ## Browser support?
 
-Popmotion supports all major browsers, from IE11 onwards.
+Popmotion supports all major browsers.
+
+For legacy IE11 support, the following polyfills are required:
+
+- [String.endsWith](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith#Polyfill)
 
 ## Filesize?
 
-As of version 8.3.3, Popmotion is **11.7kb**.
+As of version 8.3.4, Popmotion is **12kb**.

@@ -31,7 +31,8 @@
     "ordered-imports": false,
     "object-literal-sort-keys": false,
     "imports-after-export": false,
-    "no-instanceof-operator": false
+    "no-instanceof-operator": false,
+    "initialize-statics-after-imports": false
   },
   "rulesDirectory": []
 }

@@ -26,7 +26,9 @@ import {
   PoseKeyFail,
   Hover,
   Filter,
-  DragChildren
+  DragChildren,
+  SingleFilter,
+  DynamicPositionedPose
 } from "./plugins/react-pose";
 
 storiesOf("Plugin: Pose", module)
@@ -50,10 +52,19 @@ storiesOf("Plugin: React Pose", module)
   .add("email list", () => <EmailList />)
   .add("user-defined poses within PoseGroup", () => <UserPoseInPoseGroup />)
   .add("pose key test", () => <PoseKey />)
-  .add("hover", () => <Hover />)
+  .add("hover", () => (
+    <Hover onPressStart={console.log} onPressEnd={console.log} />
+  ))
   .add("image filter", () => <Filter />)
   .add("pose key fail test", () => <PoseKeyFail />)
-  .add("drag w/ children", () => <DragChildren />);
+  .add("drag w/ children", () => <DragChildren />)
+  .add("single filter", () => (
+    <SingleFilter
+      src="https://static1.squarespace.com/static/5b475b2c50a54f54f9b4e1dc/5b4a5c2d88251b376ea105c1/5b4ae647575d1fa91f1f2def/1531635336765/DSCF2959.jpg?format=1500w"
+      height="300"
+    />
+  ))
+.add('dynamic positioned pose', () => <DynamicPositionedPose />);
 
 // import { Decay, DecayModifyTarget, DecayPower, DecayTimeConstant } from './decay';
 // import { Keyframes, KeyframesDuration, KeyframesLoop, KeyframesLinear, KeyframesTimes } from './keyframes';
@@ -99,11 +110,17 @@ import {
 // .add('increased stiffness', () => <SpringStiffer />)
 // .add('increased stiffness and damping', () => <SpringStifferDamping />);
 
-import { AnimateText, TextPoseGroup, ExternalPoser } from "./plugins/text";
+import {
+  AnimateText,
+  TextPoseGroup,
+  ExternalPoser,
+  ViaPoseProp
+} from "./plugins/text";
 storiesOf("SplitText", module)
   .add("animate text", () => <AnimateText />)
   .add("pose group", () => <TextPoseGroup />)
-  .add("external poser", () => <ExternalPoser />);
+  .add("external poser", () => <ExternalPoser />)
+  .add("via pose prop", () => <ViaPoseProp />);
 
 storiesOf("tween", module)
   .add("default props", () => <TweenBasic />)

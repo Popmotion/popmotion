@@ -14,5 +14,6 @@
   "react": "React",
   "react-native": "React Native",
   "stylers": "Stylers",
-  "vanilla": "Vanilla"
+  "vanilla": "Vanilla",
+  "vue": "Vue"
 }

@@ -33,6 +33,8 @@ const createPoseConfig = (
   {
     onDragStart,
     onDragEnd,
+    onPressStart,
+    onPressEnd,
     draggable,
     hoverable,
     focusable,
@@ -48,6 +50,8 @@ const createPoseConfig = (
       ...config.props,
       onDragStart,
       onDragEnd,
+      onPressStart,
+      onPressEnd,
       dragBounds,
       draggable,
       hoverable,
@@ -132,6 +136,11 @@ const domPose = poseFactory<DomPopmotionPoser>({
         return api.set('flip');
       }
     };
+
+    // Apply all calculated values immediately rather than waiting for
+    // framesync's next render step. This isn't ideal but it fixes
+    // Safari's shitty rAF implementation https://github.com/Popmotion/popmotion/issues/459
+    props.elementStyler.render();
 
     appendEventListeners(props.element, activeActions, poserApi, config);
 

@@ -1,6 +1,6 @@
 import React from "react";
-import posed, { PoseGroup } from "../../packages/react-pose/lib";
-import SplitText from "../../packages/react-pose-text/lib";
+import posed, { PoseGroup } from "react-pose";
+import SplitText from "react-pose-text";
 
 const delay = ({ charIndex }) => charIndex * 50;
 
@@ -59,5 +59,39 @@ export class ExternalPoser extends React.Component {
         <SplitText charPoses={charPosesGroup}>Hello world!</SplitText>
       </Container>
     );
+  }
+}
+
+const viaPoseCharProps = {
+  exit: { opacity: 0, y: 20 },
+  enter: {
+    opacity: 1,
+    y: 0,
+    delay: ({ charIndex }) => charIndex * 30
+  }
+};
+
+export class ViaPoseProp extends React.Component {
+  state = { hover: false };
+  render() {
+    return (
+      <SplitText
+        initialPose="exit"
+        charPoses={viaPoseCharProps}
+        pose={this.state.hover ? "exit" : "enter"}
+      >
+        React Pose Text
+      </SplitText>
+    );
+  }
+
+  componentDidMount() {
+    this.interval = setInterval(() => {
+      this.setState({ hover: !this.state.hover });
+    }, 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 }

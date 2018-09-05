@@ -1,21 +1,15 @@
-import GlobalTemplate from '~/templates/global/Template';
-import Header from '~/templates/global/Header';
-import Footer from '~/templates/global/Footer';
-import Masthead from './Masthead';
-import FinalCTA from './FinalCTA';
+import Homepage from '~/templates/homepage';
+import Header from './Header';
 import USPs from './USPs';
-import settings from '~/data/settings.json';
+import Footer from '~/templates/global-new/Footer';
 
 export default () => (
-  <GlobalTemplate
-    title={`${settings.siteName} - A functional JavaScript motion library`}
+  <Homepage
+    title="Popmotion Pure | A functional, flexible JavaScript animation library"
     theme="pure"
+    Header={Header}
   >
-    <Masthead>
-      <Header isHomepage={true} />
-    </Masthead>
     <USPs />
-    <FinalCTA />
     <Footer />
-  </GlobalTemplate>
+  </Homepage>
 );

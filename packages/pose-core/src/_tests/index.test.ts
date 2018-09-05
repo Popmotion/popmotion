@@ -299,6 +299,25 @@ test('correctly falls back to previous pose', () => {
     })
 });
 
+test('setting a pose that is already set actually does reset it', () => {
+  const reset = testPose({
+    init: { x: 0 },
+    test: { x: ({ a }) => a }
+  })
+
+  expect(reset.get('x')).toBe(0);
+  reset.setProps({ a: 10 });
+  return reset.set('test')
+    .then(() => {
+      expect(reset.get('x')).toBe(-10);
+      reset.setProps({ a: 20 });
+      return reset.set('test');
+    })
+    .then(() => {
+      expect(reset.get('x')).toBe(-20);
+    })
+})
+
 test('correctly falls back to previous pose with mismatched initialPose', () => {
   const fallback = testPose({
     init: { x: 30, y: 1 },

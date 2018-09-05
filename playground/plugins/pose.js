@@ -1,15 +1,8 @@
 import React from "react";
 import { Box } from "../inc";
 import styled from "styled-components";
-import pose from "../../packages/popmotion-pose/lib";
-import {
-  decay,
-  tween,
-  spring,
-  physics,
-  transform,
-  value
-} from "../../packages/popmotion/lib";
+import pose from "popmotion-pose";
+import { decay, tween, spring, physics, transform, value } from "popmotion";
 const { pipe, blendColor, conditional, clamp, interpolate } = transform;
 
 const SidePanel = styled.div`

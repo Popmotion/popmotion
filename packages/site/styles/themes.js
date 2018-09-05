@@ -71,8 +71,7 @@ const themeSettings = {
     id: 'pose',
     name: 'Pose',
     url: '/pose',
-    tagline:
-      'Declarative motion system for React, React Native, and vanilla JS',
+    tagline: 'Declarative motion system for React, React Native, and Vue',
     sections: ['api', 'learn', 'examples'],
     headerNavLinks: [
       {
