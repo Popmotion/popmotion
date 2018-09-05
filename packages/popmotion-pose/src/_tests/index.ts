@@ -1,78 +1,162 @@
 import pose from '../';
 
-const div = document.createElement('div');
-const poser = pose(div, {
-  foo: { backgroundColor: '#fff' },
-  bar: { backgroundColor: '#000' },
-  instantTransition: {
-    backgroundColor: '#0f0',
-    transition: false
-  },
-  customTransitionDef: {
-    backgroundColor: '#f00',
-    transition: { type: 'tween' }
-  },
-  customNamedTransitionDef: {
-    backgroundColor: '#00f',
-    transition: {
-      backgroundColor: { type: 'spring', to: '#000' }
-    }
-  },
-  failTransition: {
-    backgroundColor: true,
-    transition: {
-      backgroundColor: { type: 'face' }
-    }
-  },
-  initialPose: 'foo',
-  delayedTransition: {
-    backgroundColor: '#eee',
-    transition: {
-      delay: 100,
-      duration: 0
-    }
-  }
+const getDiv = () => document.createElement('div');
+
+test('initialPose via init', () => {
+  const poser = pose(getDiv(), {
+    init: { backgroundColor: '#f77' }
+  });
+
+  expect(poser.get('backgroundColor').get()).toBe('#f77');
 });
 
-test('initial pose', () => {
-  expect(poser.get('backgroundColor').get()).toBe('#fff');
+test('initialPose via prop', () => {
+  const poser = pose(getDiv(), {
+    foo: { x: 5 },
+    bar: { x: 10 },
+    initialPose: 'bar'
+  });
+
+  expect(poser.get('x').get()).toBe(10);
 });
 
-test('default animation', () =>
-  poser.set('bar').then(() => {
-    expect(poser.get('backgroundColor').get()).toBe('rgba(0, 0, 0, 1)');
-  }));
+test('uses default transition', () => {
+  const poser = pose(getDiv(), {
+    init: { x: 0 },
+    foo: { x: 50 }
+  });
 
-test('instant transition', () =>
-  poser.set('instantTransition').then(() => {
-    expect(poser.get('backgroundColor').get()).toBe('#0f0');
-  }));
+  return poser.set('foo').then(() => expect(poser.get('x').get()).toBe(50));
+});
 
-test('transition definition', () =>
-  poser.set('customTransitionDef').then(() => {
-    expect(poser.get('backgroundColor').get()).toBe('rgba(255, 0, 0, 1)');
-  }));
+test('correctly rounds values', () => {
+  let isRounded = true;
+  const poser = pose(getDiv(), {
+    init: {
+      x: 0,
+      transition: {
+        duration: 50,
+        round: false
+      }
+    },
+    foo: {
+      x: 50,
+      transition: {
+        duration: 50,
+        round: true
+      }
+    },
+    onChange: {
+      x: v => (isRounded === true ? (isRounded = !(v % 1)) : false)
+    }
+  });
 
-test('named transition definition with custom to', () =>
-  poser.set('customNamedTransitionDef').then(() => {
-    expect(poser.get('backgroundColor').get()).toBe('rgba(0, 0, 0, 1)');
-  }));
+  return poser
+    .set('foo')
+    .then(() => {
+      expect(isRounded).toBe(true);
+      return poser.set('init');
+    })
+    .then(() => {
+      expect(isRounded).toBe(false);
+    });
+});
 
-// test('fail transition', () => {
-//   try {
-//     poser.set('failTransition');
-//     expect(true).toBe(false);
-//   } catch (e) {
-//     expect(true).toBe(true);
-//   }
-// });
+test('correctly caps values', () => {
+  let isActive = false;
+  let largerThanTen = false;
+  let smallerThanThree = false;
 
-test('delay transition', done => {
+  const poser = pose(getDiv(), {
+    init: { x: 0 },
+    foo: {
+      x: 12,
+      transition: {
+        duration: 50,
+        min: 3,
+        max: 10
+      }
+    },
+    onChange: {
+      x: v => {
+        if (isActive) {
+          largerThanTen = largerThanTen || v > 10;
+          smallerThanThree = smallerThanThree || v < 3;
+        }
+      }
+    }
+  });
+
+  isActive = true;
+  return poser.set('foo').then(() => {
+    expect(largerThanTen).toBe(false);
+    expect(smallerThanThree).toBe(false);
+  });
+});
+
+test('correctly delays animations', () => {
+  let isDelayed = true;
+
+  const poser = pose(getDiv(), {
+    init: { x: 0 },
+    foo: {
+      x: 10,
+      delay: 50,
+      transition: { duration: 50 }
+    },
+    bar: {
+      x: 20,
+      transition: {
+        delay: 50,
+        duration: 50
+      }
+    }
+  });
+
   setTimeout(() => {
-    // Is animating to rgba(238, 238, 238, 1)
-    expect(poser.get('backgroundColor').get()).toBe('rgba(0, 0, 0, 1)');
-    done();
-  }, 50);
-
-  poser.set('delayedTransition');
+    if (poser.get('x').get() > 0) isDelayed = false;
+  }, 40);
+  return poser
+    .set('foo')
+    .then(() => {
+      expect(isDelayed).toBe(true);
+      setTimeout(() => {
+        if (poser.get('x').get() > 10) isDelayed = false;
+      }, 40);
+      return poser.set('bar');
+    })
+    .then(() => {
+      expect(isDelayed).toBe(true);
+    });
 });
+
+test('correctly animates children', () => {
+  const poser = pose(getDiv(), {});
+  const childPoser = poser.addChild(getDiv(), {
+    init: { x: 0 },
+    foo: { x: 100, transition: { duration: 50 } }
+  });
+
+  return poser.set('foo').then(() => {
+    expect(childPoser.get('x').get()).toBe(100);
+  });
+});
+
+test('passive values', () => {
+  const poser = pose(getDiv(), {
+    init: { x: 0 },
+    foo: { x: 100, transition: { duration: 50 } },
+    passive: {
+      y: ['x', v => -v]
+    }
+  });
+
+  return poser.set('foo').then(() => {
+    expect(poser.get('y').get()).toBe(-100);
+  });
+});
+
+// - transitions
+// - flip
+// - props
+// - ui events
