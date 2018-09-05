@@ -66,6 +66,11 @@
     "transform": {
       "\\.(ts)$": "../../../node_modules/ts-jest/preprocessor.js"
     },
+    "moduleNameMapper": {
+      "popmotion": "<rootDir>/../../popmotion/src",
+      "pose-core": "<rootDir>/../../pose-core/src",
+      "style-value-types": "<rootDir>/../../style-value-types/src"
+    },
     "testRegex": "/_tests/.*\\.(ts|js)$",
     "rootDir": "src"
   }
