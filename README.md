@@ -13,4 +13,3 @@ Simple libraries for delightful interfaces.
 * [React](https://github.com/Popmotion/popmotion/tree/master/packages/react-pose)
 * [React Native](https://github.com/Popmotion/popmotion/tree/master/packages/react-native-pose)
 * [Vue](https://github.com/Popmotion/popmotion/tree/master/packages/vue-pose)
-)
