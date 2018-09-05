@@ -1,6 +1,6 @@
 {
   "name": "popmotion-pose",
-  "version": "3.2.4",
+  "version": "3.2.5",
   "description": "A declarative animation library for HTML and SVG",
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
