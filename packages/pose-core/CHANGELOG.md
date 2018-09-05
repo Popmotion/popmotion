@@ -2,6 +2,12 @@
 
 Pose Core adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.4] 2018-09-06
+
+### Fixed
+
+- Exposing more types.
+
 ## [1.0.3] 2018-08-26
 
 ### Fixed
