@@ -75,14 +75,14 @@ const explicitlyFlipPose = (state: PoserState, nextPose: Pose) => {
     ...remainingPose
   } = nextPose;
 
-  const propsToSet = positionalProps.reduce(
+  const propsToSet = positionalProps.concat('position').reduce(
     (acc, key) => {
       if (nextPose[key] !== undefined) {
         acc[key] = resolveProp(nextPose[key], state.props);
       }
       return acc;
     },
-    { position } as StyleMap
+    {} as StyleMap
   );
 
   elementStyler.set(propsToSet).render();
