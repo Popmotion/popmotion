@@ -9,7 +9,8 @@
     "playground": "start-storybook -p 6006",
     "build-playground": "build-storybook",
     "clean": "lerna clean --yes && rm -rf node_modules",
-    "clear": "yarn clean && rm yarn.lock"
+    "clear": "yarn clean && rm yarn.lock",
+    "test": "lerna run test"
   },
   "devDependencies": {
     "@storybook/react": "^3.2.13",

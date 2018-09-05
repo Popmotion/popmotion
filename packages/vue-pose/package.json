@@ -8,7 +8,6 @@
   "scripts": {
     "build": "rollup -c && npm run measure",
     "watch": "rollup -c -w",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "measure": "gzip -c dist/vue-pose.js | wc -c",
     "prettier": "prettier ./src/* --write",
     "prepublishOnly": "npm run prettier && npm run build"
