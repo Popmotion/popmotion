@@ -2,6 +2,12 @@
 
 Popmotion Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.2.5] 2018-08-05
+
+### Fixed
+
+- Added `position` support for FLIP transforms.
+
 ## [3.2.4] 2018-09-03
 
 ### Fixed
