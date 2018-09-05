@@ -41,6 +41,8 @@ export default {
 
 <CodeSandbox id="3vov3orj71" height="500" vue />
 
+Pose will automatically figure out an animation based on the types of prop you're animating. But, for those of you who haven't used Pose before, it's worth mentioning that you can have full control over transitions, and Pose offers full access to [Popmotion Pure's](/pure) tween, spring, decay, physics and keyframes animations.
+
 ## Interactions
 
 Of course, all the normal Pose features are here. Making a component respond to pointer interactions is a matter of a couple of props:
