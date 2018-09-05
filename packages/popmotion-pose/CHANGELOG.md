@@ -2,6 +2,13 @@
 
 Popmotion Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.2.7] 2018-09-06
+
+### Fixed
+
+- Fixed `position` never being resolved [#470](https://github.com/Popmotion/popmotion/pull/470)
+- Fixed `passive` values `.get()` returning the value they were linked to, not the value itself.
+
 ## [3.2.6] 2018-09-06
 
 ### Fixed

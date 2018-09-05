@@ -156,7 +156,108 @@ test('passive values', () => {
   });
 });
 
-// - transitions
-// - flip
-// - props
-// - ui events
+test('props', () => {
+  const poser = pose(getDiv(), {
+    init: {},
+    foo: {
+      top: () => 0,
+      left: () => 500,
+      width: () => 100,
+      height: () => 100,
+      position: () => 'relative',
+      flip: true
+    }
+  });
+
+  return poser.set('foo').then(() => {
+    console.log(poser.get());
+  });
+});
+
+test('hover events', () => {
+  const div = getDiv();
+
+  const poser = pose(div, {
+    hoverable: true,
+    init: { scale: 1, transition: { duration: 50 } },
+    hover: { scale: 1.2, transition: { duration: 50 } }
+  });
+
+  div.dispatchEvent(new MouseEvent('mouseenter'));
+
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      poser.get('scale').get() === 1.2 ? resolve() : reject();
+    }, 75);
+  }).then(
+    () =>
+      new Promise((resolve, reject) => {
+        div.dispatchEvent(new MouseEvent('mouseleave'));
+        setTimeout(() => {
+          poser.get('scale').get() === 1 ? resolve() : reject();
+        }, 75);
+      })
+  );
+});
+
+test('focus events', () => {
+  const input = document.createElement('input');
+
+  const poser = pose(input, {
+    focusable: true,
+    init: { scale: 1, transition: { duration: 50 } },
+    focus: { scale: 1.2, transition: { duration: 50 } }
+  });
+
+  input.dispatchEvent(new FocusEvent('focus'));
+
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      poser.get('scale').get() === 1.2 ? resolve() : reject();
+    }, 75);
+  }).then(
+    () =>
+      new Promise((resolve, reject) => {
+        input.dispatchEvent(new FocusEvent('blur'));
+        setTimeout(() => {
+          poser.get('scale').get() === 1 ? resolve() : reject();
+        }, 75);
+      })
+  );
+});
+
+// TODO: Figure out how to successfully emulate `mousedown` events
+// test('pressable events: mouse', () => {
+//   const div = getDiv();
+
+//   const poser = pose(div, {
+//     pressable: true,
+//     init: { scale: 1, transition: { duration: 50 } },
+//     press: { scale: 1.2, transition: { duration: 50 } }
+//   });
+
+//   div.dispatchEvent(new MouseEvent('mousedown'));
+
+//   return new Promise((resolve, reject) => {
+//     setTimeout(() => {
+//       poser.get('scale').get() === 1.2
+//         ? resolve()
+//         : reject(poser.get('scale').get());
+//     }, 75);
+//   }).then(
+//     () =>
+//       new Promise((resolve, reject) => {
+//         document.dispatchEvent(new MouseEvent('mouseup'));
+//         setTimeout(() => {
+//           poser.get('scale').get() === 1
+//             ? resolve()
+//             : reject(poser.get('scale').get());
+//         }, 75);
+//       })
+//   );
+// });
+
+// JSDom doesn't have a layout engine, making it difficult to implement tests
+// for FLIP operations
+//test('flip', () => {});
+//test('animate between values', () => {});

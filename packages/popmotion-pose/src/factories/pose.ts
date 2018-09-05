@@ -30,7 +30,7 @@ const createPassiveValue = (
   transform: Transformer
 ) => {
   const raw = value(transform(init));
-  parent.raw.subscribe(v => raw.update(transform(v)));
+  parent.raw.subscribe((v: any) => raw.update(transform(v)));
 
   return { raw };
 };
