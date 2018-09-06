@@ -2,6 +2,12 @@
 
 Pose Core adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.0.1] 2018-09-06
+
+### Fixed
+
+- Ensuring any values set in `apply` props are set upon mount.
+
 ## [2.0.0] 2018-09-06
 
 ### Added

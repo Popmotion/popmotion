@@ -73,6 +73,7 @@ const poseFactory = <V, A, C, P>({
     passive,
     ancestorValues,
     readValue,
+    setValueNative,
     createValue,
     convertValue,
     readValueFromSource,

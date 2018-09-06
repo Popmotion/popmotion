@@ -8,10 +8,13 @@ import {
   ReadValueFromSource,
   CreateValue,
   ConvertValue,
-  ActivePoses
+  ActivePoses,
+  SetValueNative,
+  SetValue
 } from '../types';
 import { getPoseValues } from '../inc/selectors';
 import { resolveProp } from './setter';
+import { Pose } from '..';
 
 type ValueFactoryProps<V, A> = {
   poses: PoseMap<A>;
@@ -23,6 +26,7 @@ type ValueFactoryProps<V, A> = {
   userSetValues: { [key: string]: V };
   initialPose?: string | string[];
   readValueFromSource?: ReadValueFromSource;
+  setValueNative: SetValueNative;
   activePoses: ActivePoses;
   props: Props;
 };
@@ -32,6 +36,29 @@ export const DEFAULT_INITIAL_POSE = 'init';
 const isScale = (key: string) => key.includes('scale');
 const defaultReadValueFromSource = (key: string) => (isScale(key) ? 1 : 0);
 
+/**
+ * This is a prime candidate for refactoring, possibly in combination
+ * with the `posesToSearch.find()` function.
+ */
+const readValueFromPose = <A>(pose: Pose<A>, key: string, props: Props) => {
+  const valueToResolve =
+    pose.applyAtEnd && pose.applyAtEnd[key] !== undefined
+      ? pose.applyAtEnd[key]
+      : pose[key] !== undefined
+        ? pose[key]
+        : pose.applyAtStart && pose.applyAtStart[key] !== undefined
+          ? pose.applyAtStart[key]
+          : 0;
+
+  return resolveProp(valueToResolve, props);
+};
+
+const getPosesToSearch = (pose: string | string[]) => {
+  const posesToSearch = Array.isArray(pose) ? pose : [pose];
+  posesToSearch.push(DEFAULT_INITIAL_POSE);
+  return posesToSearch;
+};
+
 const getInitialValue = <A>(
   poses: PoseMap<A>,
   key: string,
@@ -40,15 +67,18 @@ const getInitialValue = <A>(
   readValueFromSource: ReadValueFromSource = defaultReadValueFromSource,
   activePoses: ActivePoses
 ) => {
-  const posesToSearch = Array.isArray(initialPose)
-    ? initialPose
-    : [initialPose];
+  const posesToSearch = getPosesToSearch(initialPose);
 
-  posesToSearch.push(DEFAULT_INITIAL_POSE);
+  const pose: string = posesToSearch.filter(Boolean).find((name: string) => {
+    const thisPose: Pose<A> = poses[name];
 
-  const pose = posesToSearch
-    .filter(Boolean)
-    .find(name => poses[name] && poses[name][key] !== undefined);
+    return (
+      thisPose &&
+      (thisPose[key] !== undefined ||
+        (thisPose.applyAtStart && thisPose.applyAtStart[key] !== undefined) ||
+        (thisPose.applyAtEnd && thisPose.applyAtEnd[key] !== undefined))
+    );
+  });
 
   // Prime active values array with found pose as first item
   // TODO: Instead of priming with 'init' if no pose found, create
@@ -56,7 +86,7 @@ const getInitialValue = <A>(
   activePoses.set(key, [pose || DEFAULT_INITIAL_POSE]);
 
   return pose
-    ? resolveProp(poses[pose][key], props)
+    ? readValueFromPose(poses[pose], key, props)
     : readValueFromSource(key, props);
 };
 
@@ -148,12 +178,45 @@ const bindPassiveValues = <V, A>(
   values.set(key, newValue);
 };
 
+const setNativeValues = <V, A>({
+  setValueNative,
+  initialPose,
+  props,
+  poses
+}: ValueFactoryProps<V, A>) => {
+  const valuesHaveSet = new Set();
+
+  const setValues = (pose: Pose<A>, propKey: string) => {
+    if (pose[propKey]) {
+      for (const key in pose[propKey]) {
+        if (!valuesHaveSet.has(key)) {
+          valuesHaveSet.add(key);
+          setValueNative(key, resolveProp(pose[propKey][key], props), props);
+        }
+      }
+    }
+  };
+
+  getPosesToSearch(initialPose).forEach(poseKey => {
+    const pose = poses[poseKey];
+    if (pose) {
+      setValues(pose, 'applyAtEnd');
+      setValues(pose, 'applyAtStart');
+    }
+  });
+};
+
 const createValueMap = <V, A>(props: ValueFactoryProps<V, A>): ValueMap<V> => {
   const { poses, passive } = props;
   const values: ValueMap<V> = new Map();
 
   // Scrape values from poses
   Object.keys(poses).forEach(scrapeValuesFromPose<V, A>(values, props));
+
+  // Set any remaining values that won't be animated but need to be set initially
+  // An optimisation here might be to have a mutative value in props or some other flag
+  // so we know if we've found `applyAtStart` or `applyAtEnd` during value scraping
+  setNativeValues(props);
 
   // Initiate passive values
   if (passive)

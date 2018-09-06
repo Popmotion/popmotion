@@ -65,7 +65,7 @@ const testPose = poseFactory<Value, Action, Subscription, PoserAPI>({
   extendAPI: api => api,
   posePriority: ['drag', 'press', 'hover'],
   setValue: (raw, valueToSet) => raw.i = valueToSet,
-  setValueNative: () => undefined
+  setValueNative: (key, valueToSet, { onNativeSet }) => onNativeSet && onNativeSet(key, valueToSet)
 });
 
 const testPoser = testPose({
@@ -426,4 +426,31 @@ test('correctly applies values at start and end', () => {
     .then(() => {
       expect(testPoser.get('x')).toBe(6000);
     })
+});
+
+test('correctly applies start/end values on initialisation', () => {
+  const native = {
+    foo: 0,
+    cat: 0
+  };
+
+  const applyPoser = testPose({
+    init: {
+      applyAtStart: {
+        foo: 1,
+        bar: 1,
+        cat: 1
+      },
+      bar: 2,
+      applyAtEnd: {
+        foo: 3,
+        bar: 3
+      }
+    },
+    props: { onNativeSet: (key, v) => native[key] = v }
+  });
+
+  expect(native.foo).toBe(3);
+  expect(native.cat).toBe(1);
+  expect(applyPoser.get('bar')).toBe(3);
 });
