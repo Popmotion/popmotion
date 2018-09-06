@@ -8,22 +8,22 @@ import 'jest-enzyme';
 Enzyme.configure({ adapter: new Adapter() });
 
 const Parent = posed.div({
-  init: { x: 10 },
-  foo: { x: 20 },
-  bar: { x: 30 },
-  fromProps: { x: ({ i }) => i },
-  preEnter: { x: 40 },
-  enter: { x: 50 },
-  exit: { x: 60 }
+  init: { x: 10, transition: { duration: 30 } },
+  foo: { x: 20, transition: { duration: 30 } },
+  bar: { x: 30, transition: { duration: 30 } },
+  fromProps: { x: ({ i }) => i, transition: { duration: 30 } },
+  preEnter: { x: 40, transition: { duration: 30 } },
+  enter: { x: 50, transition: { duration: 30 } },
+  exit: { x: 60, transition: { duration: 30 } }
 });
 const Child = posed.div({
-  init: { y: 15 },
-  foo: { y: 25 },
-  bar: { y: 35 },
-  fromProps: { y: ({ i }) => i },
-  preEnter: { y: 45 },
-  enter: { y: 55 },
-  exit: { y: 65 }
+  init: { y: 15, transition: { duration: 30 } },
+  foo: { y: 25, transition: { duration: 30 } },
+  bar: { y: 35, transition: { duration: 30 } },
+  fromProps: { y: ({ i }) => i, transition: { duration: 30 } },
+  preEnter: { y: 45, transition: { duration: 30 } },
+  enter: { y: 55, transition: { duration: 30 } },
+  exit: { y: 65, transition: { duration: 30 } }
 });
 
 test('posed: initial state', () => {
