@@ -3,6 +3,7 @@ export type Props = { [key: string]: any };
 export type NumberPropFactory = (props: Props) => number;
 export type BooleanPropFactory = (props: Props) => boolean;
 export type StaggerDirectionPropFactory = (props: Props) => 1 | -1;
+export type PropsFactory = (props: Props) => Props;
 export type TransitionFactory<A> = (
   props: Props
 ) => TransitionDefinition | A | false;
@@ -24,6 +25,8 @@ export type Pose<A> = {
   beforeChildren?: boolean | BooleanPropFactory;
   afterChildren?: boolean | BooleanPropFactory;
   preTransform?: () => any;
+  applyAtStart?: Props | PropsFactory;
+  applyAtEnd?: Props | PropsFactory;
   [key: string]: any;
 };
 
@@ -144,6 +147,9 @@ export type TransformPose<V, A, C, P> = (
 
 export type ReadValueFromSource = (key: string, props: Props) => any;
 
+export type SetValue<V> = (v: V, value: any) => void;
+export type SetValueNative = (key: string, value: any) => void;
+
 export type ConvertTransitionDefinition<V, A> = (
   value: V,
   transitionDef: TransitionDefinition,
@@ -159,6 +165,8 @@ export type PoseFactoryConfig<V, A, C, P> = {
   ) => (key: string) => any;
   readValue: ReadValue<V>;
   readValueFromSource?: ReadValueFromSource;
+  setValue: SetValue<V>;
+  setValueNative: SetValueNative;
   createValue: CreateValue<V>;
   convertValue: ConvertValue<V>;
   resolveTarget: ResolveTarget<V>;

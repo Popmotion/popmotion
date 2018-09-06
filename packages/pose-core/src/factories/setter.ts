@@ -14,9 +14,11 @@ import {
   ConvertTransitionDefinition,
   TransitionDefinition,
   TransitionFactory,
-  TransitionMap
+  TransitionMap,
+  SetValue,
+  SetValueNative
 } from '../types';
-import { getPoseValues } from '../inc/selectors';
+import { getPoseValues, selectAllValues } from '../inc/selectors';
 
 type AnimationsPromiseList = Array<Promise<any>>;
 
@@ -26,6 +28,8 @@ type SetterFactoryProps<V, A, C, P> = {
   getInstantTransition: GetInstantTransition<V, A>;
   startAction: StartAction<V, A, C>;
   stopAction: StopAction<C>;
+  setValue: SetValue<V>;
+  setValueNative: SetValueNative;
   addActionDelay: AddTransitionDelay<A>;
   getTransitionProps: GetTransitionProps<V>;
   resolveTarget: ResolveTarget<V>;
@@ -143,6 +147,22 @@ const findInsertionIndex = (
   return insertionIndex;
 };
 
+const applyValues = <V>(
+  toApply: Props,
+  values: Map<string, V>,
+  props: Props,
+  setValue: SetValue<V>,
+  setValueNative: SetValueNative
+) => {
+  const valuesToApply = resolveProp(toApply, props);
+  Object.keys(valuesToApply).forEach(
+    key =>
+      values.has(key)
+        ? setValue(values.get(key), valuesToApply[key])
+        : setValueNative(key, valuesToApply[key])
+  );
+};
+
 const createPoseSetter = <V, A, C, P>(
   setterProps: SetterFactoryProps<V, A, C, P>
 ) => {
@@ -157,7 +177,9 @@ const createPoseSetter = <V, A, C, P>(
     resolveTarget,
     transformPose,
     posePriority,
-    convertTransitionDefinition
+    convertTransitionDefinition,
+    setValue,
+    setValueNative
   } = setterProps;
 
   return (next: string, nextProps: Props = {}, propagate: boolean = true) => {
@@ -182,12 +204,28 @@ const createPoseSetter = <V, A, C, P>(
 
       if (transformPose) nextPose = transformPose(nextPose, next, state);
 
-      const { preTransition, transition: getTransition } = nextPose;
+      const {
+        preTransition,
+        transition: getTransition,
+        applyAtStart,
+        applyAtEnd
+      } = nextPose;
 
       // Run pre-transition prep, if set
       if (preTransition) preTransition(baseTransitionProps);
 
-      return Object.keys(getPoseValues(nextPose)).map(key => {
+      // Apply initial values, if set
+      if (applyAtStart) {
+        applyValues(
+          applyAtStart,
+          values,
+          baseTransitionProps,
+          setValue,
+          setValueNative
+        );
+      }
+
+      const animations = Object.keys(getPoseValues(nextPose)).map(key => {
         // Add pose to the pose order
         const valuePoses = activePoses.has(key)
           ? activePoses.get(key)
@@ -251,6 +289,20 @@ const createPoseSetter = <V, A, C, P>(
             })
           : Promise.resolve();
       });
+
+      return applyAtEnd
+        ? [
+            Promise.all(animations).then(() => {
+              applyValues(
+                applyAtEnd,
+                values,
+                baseTransitionProps,
+                setValue,
+                setValueNative
+              );
+            })
+          ]
+        : animations;
     };
 
     // Check before and afterChildren props to check if we need to reorder these animations

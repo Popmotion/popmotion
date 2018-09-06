@@ -39,7 +39,7 @@ const testPose = poseFactory<Value, Action, Subscription, PoserAPI>({
   bindOnChange: (values, onChange) => key => undefined,
   readValue: ({ i }) => i,
   createValue: (init, key, props, valueProps) => ({ i: init }),
-  getTransitionProps: (props, to) => ({ to }),
+  getTransitionProps: (value, to) => ({ to, from: value.i }),
   resolveTarget: (props, to) => to,
   selectValueToRead: ({ i }) => i,
   startAction: (value, action, complete) => {
@@ -63,7 +63,9 @@ const testPose = poseFactory<Value, Action, Subscription, PoserAPI>({
   transformPose: pose => pose,
   readValueFromSource: () => 0,
   extendAPI: api => api,
-  posePriority: ['drag', 'press', 'hover']
+  posePriority: ['drag', 'press', 'hover'],
+  setValue: (raw, valueToSet) => raw.i = valueToSet,
+  setValueNative: () => undefined
 });
 
 const testPoser = testPose({
@@ -131,7 +133,33 @@ const testPoser = testPose({
   props: {
     x: 50
   },
-  initialPose: ['open', 'left']
+  initialPose: ['open', 'left'],
+  withStart: {
+    applyAtStart: {
+      x: 1000
+    },
+    y: 200
+  },
+  withStartOverwrite: {
+    applyAtStart: {
+      x: 2000
+    },
+    x: 200
+  },
+  withStartAndEnd: {
+    applyAtStart: {
+      y: 2000
+    },
+    applyAtEnd: {
+      x: 3000
+    },
+    x: 300
+  },
+  withStartAsProp: {
+    applyAtStart: ({ xTo }) => ({ x: xTo }),
+    x: true,
+    transition: ({ from }) => mockMultiplyAction(from, 10)
+  }
 });
 
 test('sets initial poses', () => {
@@ -374,4 +402,26 @@ test('correctly applies poses in priority order', () => {
   }).then(() => {
     expect(fallback.get('x')).toBe(-20)
   })
+});
+
+test('correctly applies values at start and end', () => {
+  return testPoser.set('withStart')
+    .then(() => {
+      expect(testPoser.get('x')).toBe(1000);
+      expect(testPoser.get('y')).toBe(-200);
+      return testPoser.set('withStartOverwrite');
+    })
+    .then(() => {
+      expect(testPoser.get('x')).toBe(-200);
+      return testPoser.set('withStartAndEnd');
+    })
+    .then(() => {
+      expect(testPoser.get('y')).toBe(2000);
+      expect(testPoser.get('x')).toBe(3000);
+      testPoser.setProps({ xTo: 600 });
+      return testPoser.set('withStartAsProp');
+    })
+    .then(() => {
+      expect(testPoser.get('x')).toBe(6000);
+    })
 });
