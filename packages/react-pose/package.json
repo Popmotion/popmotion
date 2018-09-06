@@ -72,7 +72,11 @@
       "\\.(ts|tsx)$": "../../../node_modules/ts-jest/preprocessor.js"
     },
     "moduleNameMapper": {
-      "popmotion-pose": "<rootDir>/../../popmotion-pose/src"
+      "@popmotion/easing": "<rootDir>/../../easing/src",
+      "popmotion": "<rootDir>/../../popmotion/src",
+      "popmotion-pose": "<rootDir>/../../popmotion-pose/src",
+      "pose-core": "<rootDir>/../../pose-core/src",
+      "style-value-types": "<rootDir>/../../style-value-types/src"
     },
     "testRegex": "/_tests/.*\\.(ts|tsx|js)$",
     "rootDir": "src",

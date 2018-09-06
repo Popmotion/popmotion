@@ -156,24 +156,6 @@ test('passive values', () => {
   });
 });
 
-test('props', () => {
-  const poser = pose(getDiv(), {
-    init: {},
-    foo: {
-      top: () => 0,
-      left: () => 500,
-      width: () => 100,
-      height: () => 100,
-      position: () => 'relative',
-      flip: true
-    }
-  });
-
-  return poser.set('foo').then(() => {
-    console.log(poser.get());
-  });
-});
-
 test('hover events', () => {
   const div = getDiv();
 
