@@ -194,6 +194,27 @@ If `true`, will ensure this animation completes before firing any child animatio
 
 If `true`, will ensure this animation only fires after all child animations have completed.
 
+### applyAtStart/applyAtEnd
+
+`applyAtStart/applyAtEnd?: { [string]: any | (props: Props) => any }`
+
+`applyAtStart` and `applyAtEnd` accept style properties to apply either at the start or end of an animation.
+
+For instance, you might have an element that you want to flip between `display: block` before it fades in, and `display: none` after it fades out:
+
+```javascript
+const config = {
+  visible: {
+    applyAtStart: { display: 'block' },
+    opacity: 1
+  },
+  hidden: {
+    applyAtEnd: { display: 'none' },
+    opacity: 0
+  }
+};
+```
+
 ### transition
 
 `transition?`

@@ -2,6 +2,12 @@
 
 React Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.3.0] 2018-09-06
+
+### Added
+
+- Support for `applyAtStart` and `applyAtEnd` properties.
+
 ## [3.2.2] 2018-09-03
 
 ### Fixed
