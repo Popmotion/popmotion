@@ -16,9 +16,11 @@ import {
   TransitionFactory,
   TransitionMap,
   SetValue,
-  SetValueNative
+  SetValueNative,
+  ApplyMap
 } from '../types';
-import { getPoseValues, selectAllValues } from '../inc/selectors';
+import { getPoseValues } from '../inc/selectors';
+import { invariant } from 'hey-listen';
 
 type AnimationsPromiseList = Array<Promise<any>>;
 
@@ -148,19 +150,22 @@ const findInsertionIndex = (
 };
 
 const applyValues = <V>(
-  toApply: Props,
+  toApply: ApplyMap,
   values: Map<string, V>,
   props: Props,
   setValue: SetValue<V>,
   setValueNative: SetValueNative
 ) => {
-  const valuesToApply = resolveProp(toApply, props);
-  Object.keys(valuesToApply).forEach(
-    key =>
-      values.has(key)
-        ? setValue(values.get(key), valuesToApply[key])
-        : setValueNative(key, valuesToApply[key])
+  invariant(
+    typeof toApply === 'object',
+    'applyAtStart and applyAtEnd must be of type object'
   );
+  return Object.keys(toApply).forEach(key => {
+    const valueToSet = resolveProp(toApply[key], props);
+    values.has(key)
+      ? setValue(values.get(key), valueToSet)
+      : setValueNative(key, valueToSet, props);
+  });
 };
 
 const createPoseSetter = <V, A, C, P>(

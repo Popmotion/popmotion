@@ -50,7 +50,7 @@
     "@popmotion/easing": "^1.0.1",
     "hey-listen": "^1.0.5",
     "popmotion": "^8.3.7",
-    "pose-core": "^1.0.0",
+    "pose-core": "^2.0.1-rc",
     "style-value-types": "^3.0.6",
     "tslib": "^1.9.1"
   },

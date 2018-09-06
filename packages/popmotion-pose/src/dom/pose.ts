@@ -112,6 +112,8 @@ const domPose = poseFactory<DomPopmotionPoser>({
     return isNaN(value) ? value : parseFloat(value);
   },
 
+  setValueNative: (key, to, { elementStyler }) => elementStyler.set(key, to),
+
   // This is shit and not inline with what I'm trying to accomplish
   // by using a functional approach
   extendAPI: (api, { props, activeActions }, config) => {

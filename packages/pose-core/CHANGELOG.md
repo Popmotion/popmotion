@@ -2,6 +2,12 @@
 
 Pose Core adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.0.0] 2018-09-06
+
+### Added
+
+- Support for `applyAtStart` and `applyAtEnd` properties.
+
 ## [1.0.4] 2018-09-06
 
 ### Fixed

@@ -14,7 +14,6 @@ import { Styler } from 'stylefire';
 export type Value = {
   raw: ValueReaction;
   type?: ValueType;
-  setOnComplete?: false | number | string;
 };
 
 export type Pose = Pose<Action>;
@@ -69,6 +68,11 @@ export type PopmotionPoserFactoryConfig<P> = {
   addListenerToValue: (key: string, styler: Styler) => (v: any) => void;
   readValueFromSource?: ReadValueFromSource;
   posePriority?: string[];
+  setValueNative: (
+    key: string,
+    to: any,
+    props: { elementStyler: Styler }
+  ) => void;
 };
 
 export type Dimensions = {

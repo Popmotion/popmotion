@@ -139,7 +139,8 @@ const pose = <P>({
   addListenerToValue,
   extendAPI,
   readValueFromSource,
-  posePriority
+  posePriority,
+  setValueNative
 }: PopmotionPoserFactoryConfig<P>) =>
   poseFactory<Value, Action, ColdSubscription, P>({
     bindOnChange: (values, onChange) => key => {
@@ -150,6 +151,8 @@ const pose = <P>({
     },
 
     readValue: ({ raw }) => raw.get(),
+
+    setValue: ({ raw }, to) => raw.update(to),
 
     createValue: (
       init,
@@ -190,13 +193,10 @@ const pose = <P>({
 
     selectValueToRead: ({ raw }) => raw,
 
-    startAction: ({ raw, setOnComplete }, action, complete) => {
+    startAction: ({ raw }, action, complete) => {
       const reaction = {
         update: (v: any) => raw.update(v),
-        complete: () => {
-          complete();
-          if (setOnComplete) raw.update(setOnComplete);
-        }
+        complete
       };
 
       return action.start(reaction);
@@ -225,6 +225,7 @@ const pose = <P>({
       return outputPipe.length ? action.pipe(...outputPipe) : action;
     },
 
+    setValueNative,
     addActionDelay,
     defaultTransitions,
     transformPose,

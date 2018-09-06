@@ -156,7 +156,9 @@ const testPoser = testPose({
     x: 300
   },
   withStartAsProp: {
-    applyAtStart: ({ xTo }) => ({ x: xTo }),
+    applyAtStart: {
+      x: ({ xTo }) => xTo
+    },
     x: true,
     transition: ({ from }) => mockMultiplyAction(from, 10)
   }
