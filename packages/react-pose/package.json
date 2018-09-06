@@ -72,6 +72,7 @@
       "\\.(ts|tsx)$": "../../../node_modules/ts-jest/preprocessor.js"
     },
     "moduleNameMapper": {
+      "popmotion": "<rootDir>/../../popmotion/src",
       "popmotion-pose": "<rootDir>/../../popmotion-pose/src"
     },
     "testRegex": "/_tests/.*\\.(ts|tsx|js)$",
