@@ -1,4 +1,10 @@
-import { Pose, PoseMap, PoserConfig, ValueMap, SelectValueToRead } from '../types';
+import {
+  Pose,
+  PoseMap,
+  PoserConfig,
+  ValueMap,
+  SelectValueToRead
+} from '../types';
 
 export const getPoseValues = <A>({
   transition,
@@ -9,6 +15,8 @@ export const getPoseValues = <A>({
   afterChildren,
   beforeChildren,
   preTransition,
+  applyAtStart,
+  applyAtEnd,
   ...props
 }: Pose<A>): Pose<A> => props;
 
@@ -24,8 +32,13 @@ export const selectPoses = <V, A>({
   ...poses
 }: PoserConfig<V>): PoseMap<A> => poses;
 
-export const selectAllValues = <V>(values: ValueMap<V>, selectValue: SelectValueToRead<V>) => {
+export const selectAllValues = <V>(
+  values: ValueMap<V>,
+  selectValue: SelectValueToRead<V>
+) => {
   const allValues: { [key: string]: any } = {};
-  values.forEach((value: V, key: string) => allValues[key] = selectValue(value));
+  values.forEach(
+    (value: V, key: string) => (allValues[key] = selectValue(value))
+  );
   return allValues;
 };

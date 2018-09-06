@@ -7,6 +7,11 @@ export type TransitionFactory<A> = (
   props: Props
 ) => TransitionDefinition | A | false;
 
+export type ApplyResolve = (props: Props) => string | number;
+export type ApplyMap = {
+  [key: string]: ApplyResolve | string | number;
+};
+
 export type TransitionDefinition = {
   [key: string]: any;
 };
@@ -24,6 +29,8 @@ export type Pose<A> = {
   beforeChildren?: boolean | BooleanPropFactory;
   afterChildren?: boolean | BooleanPropFactory;
   preTransform?: () => any;
+  applyAtStart?: ApplyMap;
+  applyAtEnd?: ApplyMap;
   [key: string]: any;
 };
 
@@ -144,6 +151,9 @@ export type TransformPose<V, A, C, P> = (
 
 export type ReadValueFromSource = (key: string, props: Props) => any;
 
+export type SetValue<V> = (v: V, value: any) => void;
+export type SetValueNative = (key: string, value: any, props: Props) => void;
+
 export type ConvertTransitionDefinition<V, A> = (
   value: V,
   transitionDef: TransitionDefinition,
@@ -159,6 +169,8 @@ export type PoseFactoryConfig<V, A, C, P> = {
   ) => (key: string) => any;
   readValue: ReadValue<V>;
   readValueFromSource?: ReadValueFromSource;
+  setValue: SetValue<V>;
+  setValueNative: SetValueNative;
   createValue: CreateValue<V>;
   convertValue: ConvertValue<V>;
   resolveTarget: ResolveTarget<V>;

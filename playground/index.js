@@ -42,8 +42,7 @@ storiesOf("Plugin: Pose", module)
   .add("click", () => <PoseClick />)
   .add("opacity", () => <PoseOpacity />)
   .add("width/height auto", () => <Auto />)
-  .add("full screen flip", () => <PoseFullScreenFlip />)
-  .add("unit type error", () => <UnitTypeError />);
+  .add("full screen flip", () => <PoseFullScreenFlip />);
 
 storiesOf("Plugin: React Pose", module)
   .add("pose", () => <ReactPose />)
@@ -64,7 +63,7 @@ storiesOf("Plugin: React Pose", module)
       height="300"
     />
   ))
-.add('dynamic positioned pose', () => <DynamicPositionedPose />);
+  .add("dynamic positioned pose", () => <DynamicPositionedPose />);
 
 // import { Decay, DecayModifyTarget, DecayPower, DecayTimeConstant } from './decay';
 // import { Keyframes, KeyframesDuration, KeyframesLoop, KeyframesLinear, KeyframesTimes } from './keyframes';

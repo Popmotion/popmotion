@@ -358,10 +358,14 @@ export class Auto extends React.PureComponent {
     if (ref) {
       this.poser = pose(ref, {
         init: {
-          x: 10
+          x: 0,
+          width: 100,
+          height: "50vh"
         },
         auto: {
-          x: 20
+          x: "25vw",
+          width: () => "auto",
+          height: () => "100px"
         }
       });
       let isAuto = false;
@@ -501,30 +505,6 @@ export class PoseFullScreenFlip extends React.PureComponent {
         <Box innerRef={this.setRef} onClick={this.toggle} />
       </Container>
     );
-  }
-}
-
-export class UnitTypeError extends React.Component {
-  setRef = ref => {
-    this.ref = ref;
-  };
-
-  componentDidMount() {
-    const poser = pose(this.ref, {
-      a: { height: 0 },
-      b: { height: "100" },
-      initialPose: "a"
-    });
-
-    try {
-      poser.set("b");
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  render() {
-    return <Box innerRef={this.setRef} />;
   }
 }
 
