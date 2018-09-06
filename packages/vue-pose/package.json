@@ -1,6 +1,6 @@
 {
   "name": "vue-pose",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "description": "A declarative animation library for Vue",
   "main": "./lib/index.js",
   "module": "./dist/vue-pose.es.js",
@@ -44,7 +44,7 @@
   "dependencies": {
     "@emotion/is-prop-valid": "^0.6.5",
     "hey-listen": "^1.0.5",
-    "popmotion-pose": "^3.2.1",
+    "popmotion-pose": "^3.3.0",
     "tslib": "^1.9.1"
   },
   "unpkg": "./dist/vue-pose.js",
