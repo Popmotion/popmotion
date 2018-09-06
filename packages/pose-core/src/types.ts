@@ -31,6 +31,7 @@ export type Pose<A> = {
   preTransform?: () => any;
   applyAtStart?: ApplyMap;
   applyAtEnd?: ApplyMap;
+  [key: string]: any;
 };
 
 export type ValueMap<V> = Map<string, V>;

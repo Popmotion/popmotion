@@ -57,14 +57,15 @@ export const convertPositionalUnits = (state: PoserState, pose: Pose) => {
   positionalPoseKeys.forEach(key => {
     const value = values.get(key);
     const fromValueType = getValueType(value.raw.get());
-    const toValueType = getValueType(resolveProp(pose[key], props));
+    const to = resolveProp(pose[key], props);
+    const toValueType = getValueType(to);
 
     if (fromValueType !== toValueType) {
       changedPositionalKeys.push(key);
 
       pose.applyAtEnd = pose.applyAtEnd || {};
       pose.applyAtEnd[key] = pose[key];
-      setValue(state, key, pose[key]);
+      setValue(state, key, to);
     }
   });
 
