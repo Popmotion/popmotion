@@ -73,8 +73,8 @@
     },
     "moduleNameMapper": {
       "@popmotion/easing": "<rootDir>/../../easing/src",
-      "popmotion": "<rootDir>/../../popmotion/src",
       "popmotion-pose": "<rootDir>/../../popmotion-pose/src",
+      "popmotion": "<rootDir>/../../popmotion/src",
       "style-value-types": "<rootDir>/../../style-value-types/src"
     },
     "testRegex": "/_tests/.*\\.(ts|tsx|js)$",
