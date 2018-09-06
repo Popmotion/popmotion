@@ -73,7 +73,8 @@
     },
     "moduleNameMapper": {
       "popmotion": "<rootDir>/../../popmotion/src",
-      "popmotion-pose": "<rootDir>/../../popmotion-pose/src"
+      "popmotion-pose": "<rootDir>/../../popmotion-pose/src",
+      "style-value-types": "<rootDir>/../../style-value-types/src"
     },
     "testRegex": "/_tests/.*\\.(ts|tsx|js)$",
     "rootDir": "src",
