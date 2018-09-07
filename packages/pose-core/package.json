@@ -12,7 +12,8 @@
     "watch": "rollup -c -w",
     "test": "jest",
     "prettier": "prettier ./src/* --write",
-    "prepublishOnly": "npm run test && npm run prettier && npm run build"
+    "prepublishOnly": "npm run test && npm run prettier && npm run build",
+    "postinstall": "node ./scripts/postinstall.js || exit 0"
   },
   "repository": {
     "type": "git",
