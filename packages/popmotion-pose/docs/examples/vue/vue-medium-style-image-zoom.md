@@ -1,7 +1,7 @@
 ---
 title: Medium-style image zoom
-description: Pose for React makes it easy to write Medium-style image zoom.
-category: react
+description: Pose for Vue makes it easy to write Medium-style image zoom.
+category: vue
 ---
 
 # Medium-style image zoom
@@ -38,4 +38,4 @@ const Image = posed.img({
 });
 ```
 
-<CodeSandbox height="700" id="rrjx477w3n" />
+<CodeSandbox height="700" id="4w9vq9vkmw" />
