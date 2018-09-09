@@ -1,14 +1,14 @@
 ---
-title: Route transitions with Reach Router
-description: How to make route transition animations with React Pose and Reach Router
-category: how-to
+title: "Tutorial: React Router 4"
+description: How to make route transition animations with React Pose and React Router
+category: react
 ---
 
-# Route transitions with Reach Router
+# Route transitions with React Router
 
-> **Note:** This tutorial is for **Reach** Router. Users of **React** Router will want to use the [React Router tutorial](/pose/learn/route-transitions-react-router).
+> **Note:** This tutorial is for **React** Router. Users of **Reach** Router will want to use the [Reach Router tutorial](/pose/learn/route-transitions-reach-router).
 
-Route transitions in React are notoriously fiddly. With [Pose](/pose) and the accessibility-first [Reach Router](https://reach.tech/router), they can be pretty simple.
+Route transitions in React are notoriously fiddly. With [Pose](/pose) and [React Router](https://reacttraining.com/react-router/), they can be pretty simple.
 
 We're going first learn how to make a simple fade transition between two routes.
 
@@ -16,15 +16,15 @@ Then, as Pose has the ability to coordinate animations throughout the component 
 
 Here's what we'll be making:
 
-<CodeSandbox height="600" id="mzx1jz521p" />
+<CodeSandbox height="600" id="wq324qk687" />
 
 <TOC />
 
 ## Sandbox
 
-We've created a [CodeSandbox](https://codesandbox.io/s/mzx1jz521p) example preloaded with React Pose and Reach Router, for you to fork and follow along.
+We've created a [CodeSandbox](https://codesandbox.io/s/m3z4pm0myx) example preloaded with React Pose and React Router, for you to fork and follow along.
 
-It's set up in a standard way according to the [Reach Router docs](https://reach.tech/router), so if you're not already familiar with Reach Router, it's worth reading the overview there.
+It's set up in a standard way according to the [React Router docs](https://reacttraining.com/react-router/web/guides/philosophy), so if you're not already familiar with React Router, it's worth reading the overview there.
 
 ## Fade transition
 
@@ -45,16 +45,14 @@ const RoutesContainer = posed.div({
 });
 ```
 
-We can now use this to wrap our `Router` component:
+We can now use this to wrap our `Switch` component:
 
 ```javascript
-{({ location }) => (
-  <RoutesContainer>
-    <Router location={location}>
-      {children}
-    </Router>
-  </RoutesContainer>
-)}
+<RoutesContainer>
+  <Switch location={location}>
+    {/* ...routes */}
+  </Switch>
+</RoutesContainer>
 ```
 
 To animate this component between the two `enter` and `exit` states, we can use the `PoseGroup` component.
@@ -62,20 +60,18 @@ To animate this component between the two `enter` and `exit` states, we can use 
 `PoseGroup` tracks the entering and exiting of child components (as well as reordering), and will animate them in an out. Any components exiting will only be physically removed from the tree once they've finished their `exit` animation.
 
 ```javascript
-{({ location }) => (
-  <PoseGroup>
-    <RoutesContainer>
-      <Router location={location}>
-        {children}
-      </Router>
-    </RoutesContainer>
-  </PoseGroup>
-)}
+<PoseGroup>
+  <RoutesContainer>
+    <Switch location={location}>
+      {/* ...routes */}
+    </Switch>
+  </RoutesContainer>
+</PoseGroup>
 ```
 
 Ah, but wait! If you try and click between pages, there's still no animation. What's up?
 
-Without passing `RoutesContainer` a `key`, `PoseGroup` doesn't know that it has a new child, so it can't animate anything. Let's use Reach Router's `location.key` prop as our key:
+Without passing `RoutesContainer` a `key`, `PoseGroup` doesn't know that it has a new child, so it can't animate anything. Let's use React Router's `location.key` prop as our key:
 
 ```javascript
 <RoutesContainer key={location.key}>
@@ -152,6 +148,6 @@ This time, `ListContainer`'s `exit` pose has a new property, `staggerDirection`.
 
 ## Conclusion
 
-We've learned how to use Pose with Reach Router to do a quick and simple fade transition, as well as animating across children to provide unique effects for every page.
+We've learned how to use Pose with React Router to do a quick and simple fade transition, as well as animating across children to provide unique effects for every page.
 
 We've also seen how posed components can be used not only to animate, but to sequence the animations of their children.

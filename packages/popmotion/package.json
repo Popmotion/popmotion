@@ -44,8 +44,7 @@
     "measure": "gzip -c $npm_package_unpkg | wc -c",
     "test": "jest",
     "publish-beta": "npm publish --tag beta",
-    "clean": "git clean -fd -e node_modules/ -e lib/ src/ -x .",
-    "postinstall": "node ./scripts/postinstall.js || exit 0"
+    "clean": "git clean -fd -e node_modules/ -e lib/ src/ -x ."
   },
   "dependencies": {
     "@popmotion/easing": "^1.0.1",

@@ -48,7 +48,7 @@ export default () => (
         A truly simple animation library for React, React Native, and Vue
       </SplitText>
     </HeaderText>
-    <ActionLink white cta href="/pose/learn/get-started">
+    <ActionLink white cta href="/pose/learn/get-started" prefetch>
       Get started
     </ActionLink>
   </Container>

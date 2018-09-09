@@ -21,9 +21,9 @@ const content = (str, textColor = pink) => {
 log('');
 log(horizontalLine);
 log(paddingRow);
-log(content('Hey! Using Popmotion commercially?'));
+log(content('Hey! Using Pose commercially?'));
 log(paddingRow);
-log(content('Popmotion is completely open source.'));
+log(content('Pose is completely open source.'));
 log(content(`Its continued development relies on`));
 log(content(`contributions and sponsorship.`));
 log(paddingRow);

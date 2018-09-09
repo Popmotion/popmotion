@@ -73,7 +73,7 @@ export default class Template extends React.PureComponent {
                 {children}
                 {next && themes[theme].data.content[section][next] ? (
                   <NextLinkContainer>
-                    <NextLink href={`/${section}/${next}`}>
+                    <NextLink href={`/${section}/${next}`} prefetch>
                       <NextLinkSmall>Next</NextLinkSmall>
                       {themes[theme].data.content[section][next].title}
                     </NextLink>

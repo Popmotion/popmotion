@@ -105,7 +105,7 @@ export default class Examples extends React.Component {
           Pose is a continuing project to simplify the creation of fluid and
           playful interfaces.
         </BlurbText>
-        <ActionLink cta href="/pose/learn/get-started">
+        <ActionLink cta href="/pose/learn/get-started" prefetch>
           Get started
         </ActionLink>
 
