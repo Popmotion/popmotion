@@ -4,7 +4,7 @@ about: Create a report to help us improve
 
 ---
 
-## Ensuring you're using the latest version
+## Ensure you're using the latest version
 CodeSandbox examples might not always be using the latest version of Pose.
 
 ## Add the package name to bug title
