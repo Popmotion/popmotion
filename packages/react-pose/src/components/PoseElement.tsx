@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as ReactIs from 'react-is';
 import { createContext, createElement } from 'react';
 import poseFactory, {
   DomPopmotionPoser,
@@ -171,7 +172,7 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
     const refs: RefSetters = {};
     const { elementType } = this.props;
 
-    if (typeof elementType === 'string') {
+    if (typeof elementType === 'string' || ReactIs.isForwardRef(elementType)) {
       refs.ref = this.setRef;
     } else {
       refs.innerRef = this.setRef;
