@@ -1990,6 +1990,12 @@
     "@types/node" "*"
     "@types/react" "*"
 
+"@types/react-is@^16.3.1":
+  version "16.3.1"
+  resolved "https://registry.yarnpkg.com/@types/react-is/-/react-is-16.3.1.tgz#f3e1dee9d0eb58c049825540cb061b5588022a9e"
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-native@^0.55.4":
   version "0.55.28"
   resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.55.28.tgz#b57d796f6e5ee26ef6fab2328d84ae6f3e67abdf"

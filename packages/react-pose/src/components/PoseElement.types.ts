@@ -15,6 +15,8 @@ export type PoseContextProps = {
   getParentPoseConfig?: () => DomPopmotionConfig;
 };
 
+type RefFunc = (el: Element) => any;
+
 export type PoseElementProps = {
   children?: any;
   pose?: CurrentPose;
@@ -22,7 +24,7 @@ export type PoseElementProps = {
   initialPose?: CurrentPose;
   withParent?: boolean;
   onValueChange?: { [key: string]: (v: any) => any };
-  innerRef?: (el: Element) => any;
+  innerRef?: { current: any } | RefFunc;
   [key: string]: any;
 } & PoseContextProps;
 
