@@ -184,7 +184,13 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
   setRef = (ref: Element) => {
     if (ref instanceof Element || (this.ref && ref === null)) {
       const { innerRef } = this.props;
-      if (innerRef) innerRef(ref);
+      if (innerRef) {
+        if (typeof innerRef === 'function') {
+          innerRef(ref);
+        } else {
+          innerRef.current = ref;
+        }
+      }
       this.ref = ref;
     }
   };
