@@ -34,7 +34,7 @@ The `drag` and `dragEnd` poses will travel through any posed children.
 
 ### dragBounds
 
-`dragBounds?: { [key: string]: number }`
+`dragBounds?: { [key: string]: number } | (props: Props) => { [key: string]: number }`
 
 An object that defines `top`, `right`, `bottom` and/or `left` drag boundaries in pixels.
 
