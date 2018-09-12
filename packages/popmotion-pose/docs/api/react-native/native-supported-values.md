@@ -16,7 +16,8 @@ Pose for React Native supports the animation of all `transform` values.
 
 ```javascript
 posed.View({
-  init: { rotate: '0deg' }
+  init: { rotate: '0deg' },
+  flip: { rotate: '180deg' }
 })
 ```
 
