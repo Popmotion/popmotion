@@ -2,6 +2,12 @@
 
 Animated Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.0] 2018-09-12
+
+### Upgrade
+
+- `pose-core@2.0.0`.
+
 ## [0.3.4] 2018-06-15
 
 ### Adding

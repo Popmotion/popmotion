@@ -228,6 +228,10 @@ export default ({
      */
     defaultTransitions,
 
+    setValue: ({ raw }, val) => raw.setValue(val),
+
+    setValueNative: () => undefined,
+
     /**
      * Return the Poser API returned by the factory function, with extra methods
      * specific to Animated Pose

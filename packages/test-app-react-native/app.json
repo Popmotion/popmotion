@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "sdkVersion": "27.0.0",
+    "ignoreNodeModulesValidation": true,
+    "packagerOpts": {
+      "config": "rn-cli.config.js",
+      "projectRoots": ""
+    }
+  }
+}
