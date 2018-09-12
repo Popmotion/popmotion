@@ -48,7 +48,7 @@ export default () => (
         A functional, flexible JavaScript animation library
       </SplitText>
     </HeaderText>
-    <ActionLink white cta href="/pose/learn/get-started">
+    <ActionLink white cta href="/learn/get-started" preload>
       Get started
     </ActionLink>
   </Container>

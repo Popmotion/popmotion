@@ -2,7 +2,7 @@
 title: UI events and interactions
 description: Trigger animations based on UI events like drag, press, hover and focus
 category: react
-next: passive
+next: react-exit-enter-transitions
 ---
 
 # UI events and interactions
