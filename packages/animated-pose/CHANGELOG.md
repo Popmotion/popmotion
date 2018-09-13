@@ -2,6 +2,12 @@
 
 Animated Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.1.0] 2018-09-13
+
+### Added
+
+- Support for transition definitions.
+
 ## [1.0.0] 2018-09-12
 
 ### Upgrade
