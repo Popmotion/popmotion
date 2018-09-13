@@ -234,7 +234,7 @@ transition: (props) => spring({...props})
 transition: (props) => ({ type: 'spring' })
 ```
 
-Or finally, a named map where each prop is either a transition definition, or a function returning a transition definition/Popmotion animation:
+Or finally, a named map, where a separate `transition` is defined for each animating value. `default` can be used to define a transition for all remaining values. 
 
 ```javascript
 visible: {
@@ -249,7 +249,7 @@ visible: {
 
 #### Transition definitions
 
-A transition definition describes the type of animation Pose should use to move to the value defined in the Pose.
+A transition definition describes the type of animation Pose should use to transition to the value defined in the Pose.
 
 There are many types, and each has its own specific configuration props available.
 
@@ -259,7 +259,7 @@ Transitions between one value and another over a set duration of time.
 
 - `duration?: number = 300`: Total duration of animation, in milliseconds.
 - `elapsed?: number = 0`: Duration of animation already elapsed, in milliseconds.
-- `ease?: string | number[] | Function`: The name of an easing function, a cubic bezier definition, or an easing function. The following easings are included with Pose:
+- `ease?: string | number[] | Function`: The name of an easing function, a cubic bezier definition (as an array of numbers), or an easing function. The following easings are included with Pose:
   - 'linear'
   - 'easeIn', 'easeOut', 'easeInOut'
   - 'circIn', 'circOut', 'circInOut'
