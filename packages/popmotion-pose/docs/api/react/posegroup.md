@@ -41,6 +41,8 @@ As with any posed component, the `enter`/`exit` pose will propagate throughout a
 
 In the case of the `exit` pose, `PoseGroup` will only unmount the animating component once **all of its children** have also finished their `exit` animation.
 
+**Note:** Entering children is transitioning from `exit` (default [`preEnterPose`](#preenterpose)) to `enter` pose.
+
 ## Props
 
 ### animateOnMount
