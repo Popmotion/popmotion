@@ -15,7 +15,6 @@
     "eject": "react-native-scripts eject",
     "android": "react-native-scripts android",
     "ios": "react-native-scripts ios",
-    "test": "jest",
     "prestart": "node link-workspaces.js"
   },
   "jest": {

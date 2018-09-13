@@ -45,6 +45,8 @@
     "react-native": ">=0.54.0"
   },
   "dependencies": {
+    "@popmotion/easing": "^1.0.1",
+    "hey-listen": "^1.0.5",
     "pose-core": "^2.0.0"
   }
 }

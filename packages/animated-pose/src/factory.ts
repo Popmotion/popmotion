@@ -12,6 +12,7 @@ import {
   AnimatedFactoryConfig,
   AnimatedPoserFactory
 } from './types';
+import convertTransitionDefinition from './inc/convert-transition-definition';
 
 const nonLayoutValues = new Set([
   'x',
@@ -145,32 +146,14 @@ export default ({
      * If a transition has been defined as an object of props, convert this
      * into an Animated animation
      */
-    convertTransitionDefinition: (
-      { raw, useNativeDriver },
-      def,
-      { toValue }
-    ) => {
-      if (isAction(def)) return def;
-
-      const animationProps = {
-        ...def,
-        toValue,
-        useNativeDriver
-      };
-
-      switch (def.type) {
-        case 'spring':
-          return Animated.spring(
-            raw,
-            animationProps as Animated.SpringAnimationConfig
-          );
-        default:
-          return Animated.timing(
-            raw,
-            animationProps as Animated.TimingAnimationConfig
-          );
-      }
-    },
+    convertTransitionDefinition: ({ raw, useNativeDriver }, def, { toValue }) =>
+      isAction(def)
+        ? def
+        : convertTransitionDefinition(raw, {
+            ...def,
+            useNativeDriver,
+            toValue
+          }),
 
     /**
      * Resolve target as a number.
