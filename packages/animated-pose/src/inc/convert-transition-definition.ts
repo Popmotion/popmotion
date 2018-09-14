@@ -14,7 +14,7 @@ import {
   anticipate
 } from '@popmotion/easing';
 import { invariant } from 'hey-listen';
-const { spring, timing, loop: loopTransition } = Animated;
+const { spring, timing, loop: loopTransition, sequence } = Animated;
 
 export type EasingFunction = (v: number) => number;
 export type EasingDefinition =
@@ -47,8 +47,18 @@ export type SpringConfig = TransitionConfigBase & {
   restDelta?: number;
 };
 
-export type TransitionConfig = (TweenConfig | SpringConfig) & {
-  type?: 'tween' | 'spring';
+export type KeyframesConfig = TransitionConfigBase & {
+  values: number[];
+  duration?: number;
+  easings?: EasingDefinition[] | EasingDefinition;
+  times?: number[];
+};
+
+export type TransitionConfig = (
+  | TweenConfig
+  | SpringConfig
+  | KeyframesConfig) & {
+  type?: 'tween' | 'spring' | 'keyframes';
   loop?: number;
 };
 
@@ -94,21 +104,56 @@ const convertEasing = (easing: EasingDefinition = easeOut) => {
   return easing;
 };
 
+const defaultEasings = (num: number, defaultEasing: EasingDefinition) =>
+  Array.from(new Array(num), () => defaultEasing || 'easeOut');
+
+const defaultTimings = (num: number) =>
+  Array.from(new Array(num), (_, i) => (i !== 0 ? i / (num - 1) : 0));
+
 const createTransition: TransitionFactoryMap = {
-  spring: (
-    value: Animated.Value,
-    { restDelta, restSpeed, ...props }: SpringConfig
-  ) =>
+  spring: (value, { restDelta, restSpeed, ...props }: SpringConfig) =>
     spring(value, {
       restDisplacementThreshold: restDelta,
       restSpeedThreshold: restSpeed,
       ...props
     }),
-  tween: (value: Animated.Value, { ease, ...props }: TweenConfig) =>
+  tween: (value, { ease, ...props }: TweenConfig) =>
     timing(value, {
       easing: convertEasing(ease),
       ...props
-    })
+    }),
+  keyframes: (
+    value,
+    { values, easings, duration = 300, times, ...props }: KeyframesConfig
+  ) => {
+    const numValues = values.length;
+    const calculatedEasings = Array.isArray(easings)
+      ? easings
+      : defaultEasings(numValues, easings);
+    const calculatedTimings = times || defaultTimings(numValues);
+
+    return sequence(
+      values.reduce((animations, toValue, i) => {
+        if (toValue !== undefined) {
+          const iPrev = i - 1;
+          const animation = createTransition.tween(value, {
+            ...props,
+            duration:
+              i !== 0
+                ? (calculatedTimings[i] - calculatedTimings[iPrev]) * duration
+                : 0,
+            ease: calculatedEasings[iPrev],
+            delay: i === 1 ? calculatedTimings[0] * duration : 0,
+            toValue
+          });
+
+          animations.push(animation);
+        }
+
+        return animations;
+      }, [])
+    );
+  }
 };
 
 export default (

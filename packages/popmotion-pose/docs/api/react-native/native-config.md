@@ -139,6 +139,18 @@ A spring animation based on `stiffness`, `damping` and `mass`.
 - `restSpeed?: number = 0.01`: End animation if speed drops below this value **and** `restDelta` is `true`.
 - `overshootClamping?: boolean = false`: Clamps any overshoot beyond the target value.
 
+##### Keyframes
+
+Keyframes accepts an array of `values` and will animate to each, in sequence.
+
+Timing is defined with a combination of `duration`, `easings` and `times` properties.
+
+- `type: 'keyframes'`: Set transition to keyframes.
+- `values: number[]`: An array of numbers to animate between. To use the value defined in the Pose as the final target value, set `transition` as a function: `transition: ({ toValue }) => { type: 'keyframes', values: [0, toValue] }`. To use the current value as the current value as the initial value, skip definition that value: `values: [, 45, 90]`
+- `duration?: number = 300`: Total duration of animation, in milliseconds.
+- `easings?: Easing | Easing[]`: An array of easings (see tween for options) to provide to each generated tween, or a single easing applied to all tweens. This array should be `values.length - 1`. Defaults to `'easeOut'`.
+- `times?: number[]`: An array of numbers between `0` and `1`, representing `0` to `duration`, that represent at which point each number should be hit. Defaults to an array of evenly-spread durations will be calculated.
+
 ##### General transition props
 
 The following props can be set on any transition:
