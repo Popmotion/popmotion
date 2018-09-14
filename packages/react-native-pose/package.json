@@ -1,6 +1,6 @@
 {
   "name": "react-native-pose",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Pose animation system for React Native",
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
@@ -40,7 +40,7 @@
     "react-native": ">=0.54.0"
   },
   "dependencies": {
-    "animated-pose": "^1.1.0",
+    "animated-pose": "^1.2.0",
     "react-pose-core": "^0.3.5"
   }
 }
