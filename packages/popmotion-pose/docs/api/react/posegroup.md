@@ -4,7 +4,7 @@ description: Animate a group of posed components as they're added and removed.
 category: react
 ---
 
-# `PoseGroup`
+# PoseGroup
 
 The `PoseGroup` component manages `enter` and `exit` animations on its direct children as they enter and exit the component tree.
 
@@ -75,4 +75,4 @@ The name of the pose to set before a component enters. This can be used to confi
 
 When an element exits, Pose takes it out of the layout and applies `position: absolute` so it can detect the new position of surrounding elements and animate via FLIP.
 
-While it attempts to figure out the correct matching `transform-origin` there are times when this fails. Setting `flipMove={false}` will prevent these issues. 
+While it attempts to figure out the correct matching `transform-origin` there are times when this fails. Setting `flipMove={false}` will prevent these issues.

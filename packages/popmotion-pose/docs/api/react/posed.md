@@ -4,7 +4,7 @@ description: Create a posed component
 category: react
 ---
 
-# `posed`
+# posed
 
 `posed` is used to create animated and interactive components that you can reuse throughout your React site.
 
