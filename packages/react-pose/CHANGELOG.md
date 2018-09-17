@@ -6,6 +6,12 @@ React Pose adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
+- Filtering props from children that may have previously been set by `PoseGroup` itself.
+
+## [3.3.2] 2018-09-17
+
+### Fixed
+
 - Overriding `Transition` props with child props.
 
 ## [3.3.1] 2018-09-17

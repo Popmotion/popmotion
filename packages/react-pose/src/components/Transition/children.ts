@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { ReactElement } from 'react';
 import { CurrentPose } from '../PoseElement/types';
-import { MergeChildrenProps } from './types';
+import { MergeChildrenProps, Props } from './types';
 const { Children, cloneElement } = React;
 
 const getKey = (child: ReactElement<any>): string => child.key as string;
+
+const filterChildProps = ({ children, _pose, onPoseComplete, popFromFlow, ...props }: Props) => props;
 
 const animateChildrenList = (
   incomingChildren: Array<ReactElement<any>>,
@@ -62,7 +64,7 @@ const mergeChildren = ({
   incomingChildren.forEach(child => {
     const newChildProps = {
       ...propsForChild,
-      ...child.props
+      ...filterChildProps(child.props)
     };
 
     if (entering.has(child.key as string)) {
@@ -84,7 +86,7 @@ const mergeChildren = ({
       onPoseComplete: removeFromTree(key),
       popFromFlow: flipMove,
       ...propsForChild,
-      ...child.props
+      ...filterChildProps(child.props)
     });
 
     const insertionIndex = prevKeys.indexOf(key);
