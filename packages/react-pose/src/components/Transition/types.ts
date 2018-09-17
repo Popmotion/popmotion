@@ -7,6 +7,7 @@ export type Props = {
   enterPose?: string;
   exitPose?: string;
   animateOnMount?: boolean;
+  [key: string]: any;
 };
 
 export type State = {

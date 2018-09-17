@@ -61,10 +61,10 @@ const mergeChildren = ({
 
   incomingChildren.forEach(child => {
     const newChildProps = entering.has(child.key as string)
-      ? { initialPose: preEnterPose, _pose: enterPose, ...groupProps }
+      ? { initialPose: preEnterPose, _pose: enterPose, ...childProps }
       : moving.has(child.key as string) && flipMove
-        ? { _pose: [enterPose, 'flip'], ...groupProps }
-        : { _pose: enterPose, ...groupProps };
+        ? { _pose: [enterPose, 'flip'], ...childProps }
+        : { _pose: enterPose, ...childProps };
 
     children.push(cloneElement(child, newChildProps));
   });
@@ -75,7 +75,7 @@ const mergeChildren = ({
       _pose: exitPose,
       onPoseComplete: removeFromTree(key),
       popFromFlow: flipMove,
-      ...groupProps
+      ...childProps
     });
 
     const insertionIndex = prevKeys.indexOf(key);
