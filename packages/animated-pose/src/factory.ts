@@ -10,8 +10,12 @@ import {
   AnimatedPoser,
   AnimatedPoseConfig,
   AnimatedFactoryConfig,
-  AnimatedPoserFactory
+  AnimatedPoserFactory,
+  Layout
 } from './types';
+import convertTransitionDefinition from './inc/convert-transition-definition';
+
+const FLIP_TO_ORIGIN = 'flipToOrigin';
 
 const nonLayoutValues = new Set([
   'x',
@@ -145,32 +149,14 @@ export default ({
      * If a transition has been defined as an object of props, convert this
      * into an Animated animation
      */
-    convertTransitionDefinition: (
-      { raw, useNativeDriver },
-      def,
-      { toValue }
-    ) => {
-      if (isAction(def)) return def;
-
-      const animationProps = {
-        ...def,
-        toValue,
-        useNativeDriver
-      };
-
-      switch (def.type) {
-        case 'spring':
-          return Animated.spring(
-            raw,
-            animationProps as Animated.SpringAnimationConfig
-          );
-        default:
-          return Animated.timing(
-            raw,
-            animationProps as Animated.TimingAnimationConfig
-          );
-      }
-    },
+    convertTransitionDefinition: ({ raw, useNativeDriver }, def, { toValue }) =>
+      isAction(def)
+        ? def
+        : convertTransitionDefinition(raw, {
+            ...def,
+            useNativeDriver,
+            toValue
+          }),
 
     /**
      * Resolve target as a number.
@@ -228,17 +214,57 @@ export default ({
      */
     defaultTransitions,
 
+    setValue: ({ raw }, val) => raw.setValue(val),
+
+    // TODO: We could add a callback in props that fires setNativeProps
+    setValueNative: () => undefined,
+
+    transformPose: (enteringPose, name, { props }) => {
+      if (name === FLIP_TO_ORIGIN) {
+        const flipPose = { ...enteringPose };
+        if (props.xDelta) flipPose.x = 0;
+        if (props.yDelta) flipPose.y = 0;
+      }
+
+      return enteringPose;
+    },
+
     /**
      * Return the Poser API returned by the factory function, with extra methods
      * specific to Animated Pose
      */
-    extendAPI: api => ({
+    extendAPI: (api, { values }) => ({
       ...api,
-      addChild: (config: AnimatedPoseConfig) => api._addChild(config, pose)
+      addChild: (config: AnimatedPoseConfig) => api._addChild(config, pose),
+      flip: ({ x: fromX, y: fromY }: Layout, { x: toX, y: toY }: Layout) => {
+        const xDelta = fromX - toX;
+        const yDelta = fromY - toY;
+        const hasMoved = xDelta || yDelta;
+
+        values.get('x').raw.setValue(xDelta);
+        values.get('y').raw.setValue(yDelta);
+
+        if (hasMoved) {
+          api.setProps({ xDelta, yDelta });
+          api.set(FLIP_TO_ORIGIN);
+        }
+      }
     })
   });
 
-  return pose;
+  const parseConfig = ({ flipEnabled, ...config }: PoserConfig<Value>) => {
+    if (flipEnabled) {
+      config[FLIP_TO_ORIGIN] = {
+        ...config[FLIP_TO_ORIGIN],
+        x: 0,
+        y: 0
+      };
+    }
+
+    return config;
+  };
+
+  return config => pose(parseConfig(config));
 };
 
 export { Poser, PoserConfig };

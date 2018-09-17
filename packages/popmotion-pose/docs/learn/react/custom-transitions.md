@@ -15,21 +15,21 @@ But there's plenty of instances where we want full control over our animation. F
 
 ## Basic usage
 
-Just like CSS, every pose can have a `transition` property. This property describes how each value should transition to its new pose:
+Just like CSS, every pose can have a [`transition` property](/pose/api/react-config/#config-options-poses-transition). This property describes how each value should transition to its new pose:
 
 ```javascript
-const config = {
+posed.div({
   visible: {
     opacity: 1,
     transition: { duration: 300 }
   }
-}
+})
 ```
 
 If we're animating multiple properties, we can **optionally** provide different animations for each by providing a named map.
 
 ```javascript
-const config = {
+posed.div({
   visible: {
     opacity: 1,
     scaleY: 1,
@@ -38,7 +38,7 @@ const config = {
       default: { ease: 'linear', duration: 500 }
     }
   }
-};
+});
 ```
 
 **By default**, if we define a `transition`, it'll be a `tween`. This is an animation between two values over a specific duration of time.

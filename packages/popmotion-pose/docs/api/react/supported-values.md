@@ -1,6 +1,6 @@
 ---
 title: Supported values
-description: A list of supported values in Pose.
+description: A list of supported values in Pose for React.
 category: react
 ---
 

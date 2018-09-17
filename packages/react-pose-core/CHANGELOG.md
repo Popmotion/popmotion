@@ -2,6 +2,12 @@
 
 React Pose Core adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.4.0] 2018-09-14
+
+### Adding
+
+- `Transition` component.
+
 ## [0.3.4] 2018-08-14
 
 ### Fixed

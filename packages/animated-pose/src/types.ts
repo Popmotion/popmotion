@@ -17,6 +17,7 @@ export type Action = Animated.CompositeAnimation;
 export interface AnimatedPoser
   extends Poser<Value, Action, Action, AnimatedPoser> {
   addChild: (config: AnimatedPoseConfig) => AnimatedPoser;
+  flip: (prev: Layout, next: Layout) => void;
 }
 
 export type TransitionProps = {
@@ -54,3 +55,10 @@ export type DimensionConverterFactory = (
 ) => UnitConverter;
 
 export type UnitConverterMap = { [key: string]: UnitConverter };
+
+export type Layout = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};

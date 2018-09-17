@@ -9,8 +9,7 @@ import {
   CreateValue,
   ConvertValue,
   ActivePoses,
-  SetValueNative,
-  SetValue
+  SetValueNative
 } from '../types';
 import { getPoseValues } from '../inc/selectors';
 import { resolveProp } from './setter';
