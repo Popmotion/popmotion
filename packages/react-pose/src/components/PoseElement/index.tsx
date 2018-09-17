@@ -11,11 +11,11 @@ import {
   PoseContextProps,
   PoseElementInternalProps,
   PopStyle
-} from './PoseElement.types';
+} from './types';
 import isValidProp from '@emotion/is-prop-valid';
 import { invariant } from 'hey-listen';
-import { hasChanged } from '../utils/has-changed';
-import { pickAssign } from '../utils/pick-assign';
+import { hasChanged } from '../../utils/has-changed';
+import { pickAssign } from '../../utils/pick-assign';
 
 export const PoseParentContext = createContext({});
 

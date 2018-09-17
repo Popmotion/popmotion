@@ -1,35 +1,18 @@
 import * as React from 'react';
-import { ReactElement, Fragment } from 'react';
+import { Fragment } from 'react';
+import { Props, State } from './types';
 import {
   handleIncomingChildren,
   makeChildList,
   removeFromChildren
-} from '../utils/children';
+} from './children';
 
-export type Props = {
-  children: React.ReactElement<any> | Array<React.ReactElement<any>>;
-  flipMove?: boolean;
-  preEnterPose?: string;
-  enterPose?: string;
-  exitPose?: string;
-  animateOnMount?: boolean;
-  singleChildOnly?: boolean;
-};
-
-export type State = {
-  children?: Array<ReactElement<any>>;
-  incomingChildren?: Array<ReactElement<any>>;
-  isLeaving: Set<string>;
-  removeFromTree: (key: string) => void;
-};
-
-class PoseGroup extends React.Component<Props, State> {
+class Transition extends React.Component<Props, State> {
   static defaultProps = {
-    flipMove: true,
+    flipMove: false,
     preEnterPose: 'exit',
     enterPose: 'enter',
-    exitPose: 'exit',
-    singleChildOnly: false
+    exitPose: 'exit'
   };
 
   static getDerivedStateFromProps = (
@@ -45,11 +28,7 @@ class PoseGroup extends React.Component<Props, State> {
         displayedChildren: children,
         isLeaving,
         removeFromTree,
-        enterPose: props.enterPose,
-        exitPose: props.exitPose,
-        flipMove: props.flipMove,
-        animateOnMount: props.animateOnMount,
-        preEnterPose: props.preEnterPose
+        groupProps: props
       })
     };
   };
@@ -81,4 +60,4 @@ class PoseGroup extends React.Component<Props, State> {
   }
 }
 
-export { PoseGroup };
+export default Transition;
