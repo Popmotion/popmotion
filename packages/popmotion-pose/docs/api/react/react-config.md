@@ -294,10 +294,10 @@ Integrated simulation of velocity, acceleration, friction and springs.
 
 Keyframes accepts an array of `values` and will animate between each in sequence.
 
-Timing is defined with a combination of `duration`, `easings` and `times` properties (see [Methods](#methods))
+Timing is defined with a combination of `duration`, `easings` and `times` properties.
 
 - `type: 'keyframes'`: Set transition to keyframes.
-- `values: number[]`: An array of numbers to animate between. To use the value defined in the Pose as the final destination value, set `transition` as a function: `transition: ({ to }) => { type: 'keyframes', values: [0, to] }`
+- `values: number[]`: An array of numbers to animate between. To use the value defined in the Pose as the final target value, set `transition` as a function: `transition: ({ to }) => { type: 'keyframes', values: [0, to] }`
 - `duration?: number = 300`: Total duration of animation, in milliseconds.
 - `easings?: Easing | Easing[]`: An array of easing functions for each generated tween, or a single easing function applied to all tweens. This array should be `values.length - 1`. Defaults to `easeOut`. (This doesn't yet support named easings)
 - `times?: number[]`: An array of numbers between `0` and `1`, representing `0` to `duration`, that represent at which point each number should be hit. Defaults to an array of evenly-spread durations will be calculated.

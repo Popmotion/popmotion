@@ -13,6 +13,8 @@ export const filterProps = ({
   onDragEnd,
   factoryConfig,
   poseConfig,
+  flipMove,
+  popFromLayout,
   ...props
 }: PoseComponentProps): PoseComponentProps => props;
 

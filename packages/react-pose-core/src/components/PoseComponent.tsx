@@ -1,21 +1,23 @@
 import * as React from 'react';
-import { createContext } from 'react';
 import { AnimatedPoser } from 'animated-pose';
 import {
   PoseComponentProps,
   ValueMap,
   CurrentPose,
-  PoseContextProps
+  PoseContextProps,
+  Layout
 } from '../types';
 import { filterProps, hasChanged } from '../utils';
 
-export const PoseParentContext = createContext({});
+export const PoseParentContext = React.createContext({});
 
 class PoseComponent extends React.PureComponent<PoseComponentProps> {
   props: PoseComponentProps;
   poser: AnimatedPoser;
   values: ValueMap;
-  extraProps: PoseComponentProps;
+  platformSpecificProps: PoseComponentProps;
+  layout: Layout;
+  ref: any;
 
   private childrenHandlers: PoseContextProps = {
     registerAsChild: props => this.poser.addChild(props),
@@ -29,6 +31,7 @@ class PoseComponent extends React.PureComponent<PoseComponentProps> {
       poseConfig,
       factoryConfig,
       registerAsChild,
+      flipMove,
       pose,
       initialPose
     } = props;
@@ -41,6 +44,7 @@ class PoseComponent extends React.PureComponent<PoseComponentProps> {
 
     const config = {
       ...poseConfig,
+      flipEnabled: flipMove,
       props: filterProps(props)
     };
 
@@ -51,7 +55,13 @@ class PoseComponent extends React.PureComponent<PoseComponentProps> {
       ? registerAsChild(filterConfig(config))
       : poseFactory(filterConfig(config));
 
-    if (getProps) this.extraProps = getProps(this.poser, config, props);
+    if (getProps)
+      this.platformSpecificProps = getProps(
+        this.poser,
+        config,
+        props,
+        this.setLayout
+      );
   }
 
   componentDidUpdate(prevProps: PoseComponentProps) {
@@ -83,8 +93,50 @@ class PoseComponent extends React.PureComponent<PoseComponentProps> {
     );
   }
 
+  setLayout = (layout: Layout) => {
+    const prevLayout = this.layout;
+    const { factoryConfig, flipMove } = this.props;
+    this.layout = layout;
+
+    if (prevLayout && flipMove) {
+      this.ref.setNativeProps({
+        transform: factoryConfig
+          .getStylesFromPoser(this.poser)
+          .transform.map((rule: { [key: string]: any }) => {
+            if (rule.translateX) return { translateX: prevLayout.x - layout.x };
+            if (rule.translateY) return { translateY: prevLayout.y - layout.y };
+            return rule;
+          })
+      });
+      this.poser.flip(prevLayout, layout);
+    }
+  };
+
+  setRef = (ref: any) => (this.ref = ref);
+
+  popFromLayout() {
+    if (!this.props.popFromLayout || !this.layout) return;
+
+    const { x, y, width, height } = this.layout;
+
+    return {
+      position: 'absolute',
+      top: y,
+      left: x,
+      width,
+      height
+    };
+  }
+
   render() {
-    const { Component, children, style, factoryConfig, ...props } = this.props;
+    const {
+      Component,
+      children,
+      style,
+      factoryConfig,
+      flipMove,
+      ...props
+    } = this.props;
     const { getStylesFromPoser } = factoryConfig;
 
     return (
@@ -92,8 +144,13 @@ class PoseComponent extends React.PureComponent<PoseComponentProps> {
         {Component ? (
           <Component
             {...filterProps(props)}
-            style={[style, getStylesFromPoser(this.poser)]}
-            {...(this.extraProps ? this.extraProps : {})}
+            style={[
+              style,
+              getStylesFromPoser(this.poser),
+              this.popFromLayout()
+            ]}
+            ref={flipMove ? this.setRef : undefined}
+            {...(this.platformSpecificProps ? this.platformSpecificProps : {})}
           >
             {children}
           </Component>

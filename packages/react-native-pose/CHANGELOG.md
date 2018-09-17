@@ -2,6 +2,18 @@
 
 React Native Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.8.0] 2018-09-14
+
+### Upgraded
+
+- `react-pose-core@0.4.0`
+
+## [0.7.0] 2018-09-14
+
+### Upgraded
+
+- `animated-pose@1.2.0`
+
 ## [0.6.0] 2018-09-13
 
 ### Upgraded

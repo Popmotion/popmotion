@@ -2,6 +2,12 @@
 
 Animated Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.2.0] 2018-09-14
+
+### Added
+
+- `keyframes` animation.
+
 ## [1.1.0] 2018-09-13
 
 ### Added

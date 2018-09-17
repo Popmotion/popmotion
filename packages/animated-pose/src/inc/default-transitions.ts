@@ -14,10 +14,11 @@ const overDampedSpring = ({ toValue }: { toValue: number }) => ({
 });
 
 const underDampedSpring = {
+  type: 'spring',
   stiffness: 500,
   damping: 25,
-  restDisplacementThreshold: 0.5,
-  restSpeedThreshold: 10
+  restDelta: 0.5,
+  restSpeed: 10
 };
 
 const intelligentTransition = {
