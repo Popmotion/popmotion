@@ -2145,12 +2145,6 @@
     "@types/node" "*"
     "@types/react" "*"
 
-"@types/react-is@^16.3.1":
-  version "16.3.1"
-  resolved "https://registry.yarnpkg.com/@types/react-is/-/react-is-16.3.1.tgz#f3e1dee9d0eb58c049825540cb061b5588022a9e"
-  dependencies:
-    "@types/react" "*"
-
 "@types/react-native@^0.55.4":
   version "0.55.28"
   resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.55.28.tgz#b57d796f6e5ee26ef6fab2328d84ae6f3e67abdf"
@@ -13929,6 +13923,10 @@ react-is@^16.3.1, react-is@^16.4.2:
 react-is@^16.5.0:
   version "16.5.0"
   resolved "https://registry.npmjs.org/react-is/-/react-is-16.5.0.tgz#2ec7c192709698591efe13722fab3ef56144ba55"
+
+react-is@^16.5.1:
+  version "16.5.1"
+  resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.5.1.tgz#c6e8734fd548a22e1cef4fd0833afbeb433b85ee"
 
 react-lifecycles-compat@^3.0.0, react-lifecycles-compat@^3.0.4:
   version "3.0.4"

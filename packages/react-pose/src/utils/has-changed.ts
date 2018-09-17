@@ -1,4 +1,4 @@
-import { CurrentPose } from '../components/PoseElement.types';
+import { CurrentPose } from '../components/PoseElement/types';
 
 // Check if pose has changed. Pose can either be an array or string
 // This is duplicated from react-pose-core - that version has a unit test.

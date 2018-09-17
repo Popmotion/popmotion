@@ -1,6 +1,6 @@
 {
   "name": "react-pose",
-  "version": "3.3.0",
+  "version": "3.3.1",
   "description": "A declarative animation library for React",
   "main": "./lib/index.js",
   "module": "./dist/react-pose.es.js",
@@ -39,7 +39,6 @@
     "@types/enzyme-adapter-react-16": "^1.0.3",
     "@types/react": "^16.3.16",
     "@types/react-dom": "^16.0.7",
-    "@types/react-is": "^16.3.1",
     "enzyme": "^3.6.0",
     "enzyme-adapter-react-16": "^1.4.0",
     "jest-enzyme": "^6.0.4",
@@ -57,7 +56,7 @@
     "@emotion/is-prop-valid": "^0.6.5",
     "hey-listen": "^1.0.5",
     "popmotion-pose": "^3.3.0",
-    "react-is": "^16.5.0",
+    "react-is": "^16.5.1",
     "tslib": "^1.9.1"
   },
   "unpkg": "./dist/react-pose.js",

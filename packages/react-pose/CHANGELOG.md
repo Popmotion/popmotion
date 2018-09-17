@@ -2,7 +2,7 @@
 
 React Pose adheres to [Semantic Versioning](http://semver.org/).
 
-## [3.4.0] 2018-09-17
+## [3.3.1] 2018-09-17
 
 ### Added
 
