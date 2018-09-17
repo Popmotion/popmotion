@@ -7,10 +7,11 @@ import {
   transform,
   Action
 } from 'popmotion';
+import { linear } from '@popmotion/easing';
 import { TransitionMap } from 'pose-core';
 import { Transition, BoundingBoxDimension } from '../types';
 import { percent } from 'style-value-types';
-const { linear } = easing;
+import { resolveProp } from '../dom/utils';
 const { interpolate } = transform;
 
 const singleAxisPointer = (axis: string) => (from: number | string) =>
@@ -25,26 +26,30 @@ const createPointer = (
   min: string,
   max: string,
   measurement: BoundingBoxDimension
-): Transition => ({ from, type, dimensions, dragBounds }): Action => {
+): Transition => (transitionProps): Action => {
+  const { from, type, dimensions, dragBounds } = transitionProps;
+
   const axisPointer = axisPointerCreator(
     dimensions.measurementAsPixels(measurement, from, type)
   );
   const transformQueue: Array<(v: number) => number | string> = [];
 
   if (dragBounds) {
-    if (dragBounds[min] !== undefined) {
+    const resolvedDragBounds = resolveProp(dragBounds, transitionProps);
+
+    if (resolvedDragBounds[min] !== undefined) {
       transformQueue.push((v: number) =>
         Math.max(
           v,
-          dimensions.measurementAsPixels(measurement, dragBounds[min], type)
+          dimensions.measurementAsPixels(measurement, resolvedDragBounds[min], type)
         )
       );
     }
-    if (dragBounds[max] !== undefined) {
+    if (resolvedDragBounds[max] !== undefined) {
       transformQueue.push((v: number) =>
         Math.min(
           v,
-          dimensions.measurementAsPixels(measurement, dragBounds[max], type)
+          dimensions.measurementAsPixels(measurement, resolvedDragBounds[max], type)
         )
       );
     }
