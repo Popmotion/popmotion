@@ -1,6 +1,6 @@
 ---
 title: Accordion
-description: Easily make elements focusable with Popmotion Pose
+description: Make accordion animations in React by animating height between 0 and 'auto'
 category: react
 ---
 
