@@ -9,8 +9,7 @@
     "watch": "tsc -w",
     "measure": "gzip -c dist/popmotion-pose.js | wc -c",
     "prettier": "prettier ./src/*",
-    "prepublishOnly": "npm run prettier && npm run build",
-    "test": "jest"
+    "prepublishOnly": "npm run prettier && npm run build"
   },
   "repository": {
     "type": "git",
