@@ -2,6 +2,12 @@
 
 React Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.4.0] 2018-09-17
+
+### Added
+
+- `PoseGroup` now forwards children to props.
+
 ## [3.3.0] 2018-09-06
 
 ### Added
