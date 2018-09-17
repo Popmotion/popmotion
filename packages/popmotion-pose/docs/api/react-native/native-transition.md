@@ -57,6 +57,31 @@ export default ({ items }) => (
 )
 ```
 
+### Passing props to children
+
+A common problem with transition components is passing props to components that have been removed from the tree. They might be animating out, but as far as React is concerned, they've already left (so props don't get updated).
+
+With Pose for React Native, any props you provide to `Transition` will be forwarded to all children, even ones that are leaving the tree.
+
+This allows you to use the latest props in dynamic poses:
+
+```javascript
+const Item = posed.li({
+  enter: { opacity: 1, x: 0 },
+  exit: {
+    opacity: 0,
+    x: ({ selectedItemId, id }) =>
+      id === selectedItemId ? 100 : -100
+  }
+});
+
+export default ({ items, selectedItemId }) => (
+  <Transition selectedItemId={selectedItemId}>
+    {items.map(({ id }) => <Item id={id} />)}
+  </Transition>
+);
+```
+
 ### Notes
 
 - Posed components must be direct children of `Transition`.
