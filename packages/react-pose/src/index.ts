@@ -1,5 +1,6 @@
 import posed from './posed';
-import { PoseGroup } from './components/PoseGroup';
+import Transition from './components/Transition';
+import PoseGroup from './components/Transition/PoseGroup';
 
 export default posed;
-export { PoseGroup };
+export { Transition, PoseGroup };

@@ -1,6 +1,6 @@
 import React from 'react';
 import posed from '../posed';
-import { PoseGroup } from '../components/PoseGroup';
+import PoseGroup from '../components/Transition/PoseGroup';
 import Enzyme, { mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import 'jest-enzyme';
@@ -14,7 +14,12 @@ const Parent = posed.div({
   fromProps: { x: ({ i }) => i, transition: { duration: 30 } },
   preEnter: { x: 40, transition: { duration: 30 } },
   enter: { x: 50, transition: { duration: 30 } },
-  exit: { x: 60, transition: { duration: 30 } }
+  exit: { x: 60, transition: { duration: 30 } },
+  dynamicEnter: { x: ({ x }) => x * 2, transition: { duration: 30 } },
+  dynamicExit: {
+    x: ({ x }) => x,
+    transition: { duration: 30 }
+  }
 });
 const Child = posed.div({
   init: { y: 15, transition: { duration: 30 } },
@@ -23,7 +28,9 @@ const Child = posed.div({
   fromProps: { y: ({ i }) => i, transition: { duration: 30 } },
   preEnter: { y: 45, transition: { duration: 30 } },
   enter: { y: 55, transition: { duration: 30 } },
-  exit: { y: 65, transition: { duration: 30 } }
+  exit: { y: 65, transition: { duration: 30 } },
+  dynamicEnter: { y: 75, transition: { duration: 30 } },
+  dynamicExit: { y: 85, transition: { duration: 30 } }
 });
 
 test('posed: initial state', () => {
@@ -190,6 +197,46 @@ test('PoseGroup: Animate conditionally', () => {
     wrapper.setProps({ isVisible: true });
     expect(x).toBe(60);
     expect(y).toBe(65);
+  });
+});
+
+test('PoseGroup: Forward props from PoseGroup to direct child', () => {
+  let x = 0;
+  let y = 0;
+
+  return new Promise(resolve => {
+    const Group = ({ isVisible = false }) => (
+      <PoseGroup
+        animateOnMount
+        enterPose="dynamicEnter"
+        exitPose="dynamicExit"
+        preEnterPose="dynamicExit"
+        x={100}
+      >
+        {isVisible && (
+          <Parent
+            key="a"
+            onPoseComplete={() => {
+              expect(x).toBe(200);
+              expect(y).toBe(75);
+              resolve();
+            }}
+            onValueChange={{ x: v => (x = v) }}
+          >
+            <Child onValueChange={{ y: v => (y = v) }} />
+          </Parent>
+        )}
+      </PoseGroup>
+    );
+
+    const wrapper = mount(<Group />);
+
+    expect(x).toBe(0);
+    expect(y).toBe(0);
+
+    wrapper.setProps({ isVisible: true });
+    expect(x).toBe(100);
+    expect(y).toBe(85);
   });
 });
 

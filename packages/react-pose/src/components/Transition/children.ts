@@ -1,19 +1,8 @@
 import * as React from 'react';
 import { ReactElement } from 'react';
-import { CurrentPose } from '../components/PoseElement.types';
+import { CurrentPose } from '../PoseElement/types';
+import { MergeChildrenProps } from './types';
 const { Children, cloneElement } = React;
-
-export interface MergeChildrenProps {
-  incomingChildren: Array<React.ReactElement<any>>;
-  displayedChildren: Array<React.ReactElement<any>>;
-  isLeaving: Set<string>;
-  removeFromTree: (key: string) => void;
-  preEnterPose: string;
-  enterPose: string;
-  exitPose: string;
-  flipMove: boolean;
-  animateOnMount: boolean;
-}
 
 const getKey = (child: ReactElement<any>): string => child.key as string;
 
@@ -35,11 +24,17 @@ const mergeChildren = ({
   displayedChildren,
   isLeaving,
   removeFromTree,
-  preEnterPose,
-  enterPose,
-  exitPose,
-  flipMove
+  groupProps
 }: MergeChildrenProps) => {
+  const {
+    children: groupChildren,
+    preEnterPose,
+    enterPose,
+    exitPose,
+    flipMove,
+    animateOnMount,
+    ...childProps
+  } = groupProps;
   const children: Array<ReactElement<any>> = [];
 
   const prevKeys = displayedChildren.map(getKey);
@@ -66,10 +61,10 @@ const mergeChildren = ({
 
   incomingChildren.forEach(child => {
     const newChildProps = entering.has(child.key as string)
-      ? { initialPose: preEnterPose, _pose: enterPose }
+      ? { initialPose: preEnterPose, _pose: enterPose, ...childProps }
       : moving.has(child.key as string) && flipMove
-        ? { _pose: [enterPose, 'flip'] }
-        : { _pose: enterPose };
+        ? { _pose: [enterPose, 'flip'], ...childProps }
+        : { _pose: enterPose, ...childProps };
 
     children.push(cloneElement(child, newChildProps));
   });
@@ -79,17 +74,18 @@ const mergeChildren = ({
     const newChild = cloneElement(child, {
       _pose: exitPose,
       onPoseComplete: removeFromTree(key),
-      popFromFlow: flipMove
+      popFromFlow: flipMove,
+      ...childProps
     });
 
-    let insertionIndex = prevKeys.indexOf(key);
+    const insertionIndex = prevKeys.indexOf(key);
 
     // We might have had new items added before this item in the same
     // render. So here we find the correct item to anchor to. This is
     // a pretty shitty algo. But it is also the one we have
-    if (insertionIndex) {
-      // TODO: Write a shitty algo
-    }
+    // if (insertionIndex) {
+    // TODO: Write a shitty algo
+    // }
 
     children.splice(insertionIndex, 0, newChild);
   });
@@ -98,13 +94,8 @@ const mergeChildren = ({
 };
 
 export const handleIncomingChildren = (props: MergeChildrenProps) => {
-  const {
-    displayedChildren,
-    incomingChildren,
-    animateOnMount,
-    preEnterPose,
-    enterPose
-  } = props;
+  const { displayedChildren, incomingChildren, groupProps } = props;
+  const { animateOnMount, preEnterPose, enterPose } = groupProps;
 
   // If initial mount and we're animating
   if (!displayedChildren && animateOnMount) {
