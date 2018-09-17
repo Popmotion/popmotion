@@ -240,6 +240,46 @@ test('PoseGroup: Forward props from PoseGroup to direct child', () => {
   });
 });
 
+test('PoseGroup: Override props on child', () => {
+  let x = 0;
+  let y = 0;
+
+  return new Promise(resolve => {
+    const Group = ({ isVisible = false }) => (
+      <PoseGroup
+        animateOnMount
+        enterPose="dynamicEnter"
+        exitPose="dynamicExit"
+        preEnterPose="dynamicExit"
+        x={101}
+      >
+        {isVisible && (
+          <Parent
+            key="a"
+            onPoseComplete={() => {
+              expect(x).toBe(202);
+              expect(y).toBe(75);
+              resolve();
+            }}
+            onValueChange={{ x: v => (x = v) }}
+          >
+            <Child onValueChange={{ y: v => (y = v) }} />
+          </Parent>
+        )}
+      </PoseGroup>
+    );
+
+    const wrapper = mount(<Group />);
+
+    expect(x).toBe(0);
+    expect(y).toBe(0);
+
+    wrapper.setProps({ isVisible: true });
+    expect(x).toBe(101);
+    expect(y).toBe(85);
+  });
+});
+
 test('PoseGroup: special pre-enter pose', () => {
   let x = 0;
   let y = 0;

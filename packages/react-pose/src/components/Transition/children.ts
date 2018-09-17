@@ -33,7 +33,7 @@ const mergeChildren = ({
     exitPose,
     flipMove,
     animateOnMount,
-    ...childProps
+    ...propsForChild
   } = groupProps;
   const children: Array<ReactElement<any>> = [];
 
@@ -60,11 +60,19 @@ const mergeChildren = ({
   );
 
   incomingChildren.forEach(child => {
-    const newChildProps = entering.has(child.key as string)
-      ? { initialPose: preEnterPose, _pose: enterPose, ...childProps }
-      : moving.has(child.key as string) && flipMove
-        ? { _pose: [enterPose, 'flip'], ...childProps }
-        : { _pose: enterPose, ...childProps };
+    const newChildProps = {
+      ...propsForChild,
+      ...child.props
+    };
+
+    if (entering.has(child.key as string)) {
+      newChildProps.initialPose = preEnterPose;
+      newChildProps._pose = enterPose;
+    } else if (moving.has(child.key as string) && flipMove) {
+      newChildProps._pose = [enterPose, 'flip'];
+    } else {
+      newChildProps._pose = enterPose;
+    }
 
     children.push(cloneElement(child, newChildProps));
   });
@@ -75,7 +83,8 @@ const mergeChildren = ({
       _pose: exitPose,
       onPoseComplete: removeFromTree(key),
       popFromFlow: flipMove,
-      ...childProps
+      ...propsForChild,
+      ...child.props
     });
 
     const insertionIndex = prevKeys.indexOf(key);
