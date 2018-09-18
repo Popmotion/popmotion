@@ -2,15 +2,9 @@ import * as React from 'react';
 import { ReactElement } from 'react';
 import { CurrentPose } from '../PoseElement/types';
 import { MergeChildrenProps, Props } from './types';
-import { filterBy } from '../../utils/object-assign';
 const { Children, cloneElement } = React;
 
 const getKey = (child: ReactElement<any>): string => child.key as string;
-
-const filterChildProps = (
-  { children, _pose, onPoseComplete, popFromFlow, ...props }: Props,
-  filterKeys?: string[]
-) => (filterKeys ? filterBy(props, filterKeys) : props);
 
 const animateChildrenList = (
   incomingChildren: Array<ReactElement<any>>,
@@ -39,7 +33,6 @@ const mergeChildren = ({
     exitPose,
     flipMove,
     animateOnMount,
-    ...propsForChild
   } = groupProps;
   const children: Array<ReactElement<any>> = [];
 
@@ -66,10 +59,7 @@ const mergeChildren = ({
   );
 
   incomingChildren.forEach(child => {
-    const newChildProps = {
-      ...propsForChild,
-      ...filterChildProps(child.props)
-    };
+    const newChildProps = {};
 
     if (entering.has(child.key as string)) {
       // If child is entering
@@ -88,12 +78,17 @@ const mergeChildren = ({
 
   leaving.forEach(key => {
     const child = displayedChildren.find(c => c.key === key);
+    const removeChildFromTree = removeFromTree(key)
+
     const newChild = cloneElement(child, {
       _pose: exitPose,
-      onPoseComplete: removeFromTree(key),
+      onPoseComplete: pose => {
+        removeChildFromTree()
+        const { onPoseComplete } = child.props
+        // TODO: call original onPoseComplete prop also in react-pose-core, vue-pose
+        onPoseComplete && onPoseComplete(pose)
+      },
       popFromFlow: flipMove,
-      ...propsForChild,
-      ...filterChildProps(child.props, Object.keys(propsForChild))
     });
 
     const insertionIndex = prevKeys.indexOf(key);

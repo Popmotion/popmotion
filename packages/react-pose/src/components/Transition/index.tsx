@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Fragment } from 'react';
+import { warning } from 'hey-listen';
 import { Props, State } from './types';
 import {
   handleIncomingChildren,
@@ -17,19 +18,41 @@ class Transition extends React.Component<Props, State> {
 
   static getDerivedStateFromProps = (
     props: Props,
-    { isLeaving, removeFromTree, children }: State
+    { isLeaving, removeFromTree, displayedChildren }: State
   ) => {
     const incomingChildren = makeChildList(props.children);
 
-    return {
+    const {
+      children,
+      preEnterPose,
+      enterPose,
+      exitPose,
+      flipMove,
+      animateOnMount,
+      ...propsForChild,
+    } = props;
+
+    if (process.env.NODE_ENV !== 'production') {
+      warning(!propsForChild.onPoseComplete, '<Transition/> (or <PoseGroup/>) doesn\'t accept onPoseComplete prop.')
+    }
+
+    const displayedChildren = handleIncomingChildren({
       incomingChildren,
-      children: handleIncomingChildren({
-        incomingChildren,
-        displayedChildren: children,
-        isLeaving,
-        removeFromTree,
-        groupProps: props
-      })
+      displayedChildren,
+      isLeaving,
+      removeFromTree,
+      groupProps: props
+    })
+
+    return {
+      displayedChildren: displayedChildren,
+      displayedChildrenWithGroupProps: displayedChildren.map(child =>
+        // avoid extra copying in cloneElement
+        React.createElement(child.type, {
+          ...propsForChild,
+          ...child.props,
+        })
+      ),
     };
   };
 
@@ -44,10 +67,11 @@ class Transition extends React.Component<Props, State> {
   };
 
   removeFromChildren(key: string) {
-    const { children } = this.state;
+    const { displayedChildren, displayedChildrenWithGroupProps } = this.state;
 
     this.setState({
-      children: removeFromChildren(children, key)
+      displayedChildren: removeFromChildren(displayedChildren, key)
+      displayedChildrenWithGroupProps: removeFromChildren(displayedChildrenWithGroupProps, key)
     });
   }
 
@@ -56,7 +80,7 @@ class Transition extends React.Component<Props, State> {
   }
 
   render() {
-    return <Fragment>{this.state.children}</Fragment>;
+    return <Fragment>{this.state.displayedChildrenWithGroupProps}</Fragment>;
   }
 }
 
