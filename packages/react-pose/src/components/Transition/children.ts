@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { ReactElement } from 'react';
+import { warning } from 'hey-listen';
 import { CurrentPose } from '../PoseElement/types';
 import { MergeChildrenProps, Props } from './types';
 const { Children, cloneElement } = React;
@@ -122,13 +123,35 @@ export const handleIncomingChildren = (props: MergeChildrenProps) => {
   }
 };
 
+const VALID_KEY_WARN = '<Transition /> (or <PoseGroup/>) children have to have a valid `key` prop.';
+
 export const makeChildList = (
   children: Array<ReactElement<any>> | ReactElement<any>
 ) => {
   const list: Array<ReactElement<any>> = [];
   Children.forEach(
     children,
-    child => child && list.push(child as ReactElement<any>)
+    child => {
+      if (!child) {
+        return;
+      }
+
+      warning(
+        child.type !== 'string',
+        '<Transition /> (or <PoseGroup/>) children have to be composite components.\n'
+        'Instead it received: ${child.type}.'
+      );
+
+      if (process.env.NODE_ENV !== 'production') {
+        if (list.length === 1) {
+          warning(typeof list[0].key === 'string', VALID_KEY_WARN);
+        }
+
+        warning(typeof child.key === 'string', VALID_KEY_WARN);
+      }
+
+      list.push(child as ReactElement<any>)
+    }
   );
   return list;
 };
