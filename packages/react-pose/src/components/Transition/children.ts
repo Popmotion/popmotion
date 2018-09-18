@@ -2,11 +2,15 @@ import * as React from 'react';
 import { ReactElement } from 'react';
 import { CurrentPose } from '../PoseElement/types';
 import { MergeChildrenProps, Props } from './types';
+import { filterBy } from '../../utils/object-assign';
 const { Children, cloneElement } = React;
 
 const getKey = (child: ReactElement<any>): string => child.key as string;
 
-const filterChildProps = ({ children, _pose, onPoseComplete, popFromFlow, ...props }: Props) => props;
+const filterChildProps = (
+  { children, _pose, onPoseComplete, popFromFlow, ...props }: Props,
+  filterKeys?: string[]
+) => (filterKeys ? filterBy(props, filterKeys) : props);
 
 const animateChildrenList = (
   incomingChildren: Array<ReactElement<any>>,
@@ -68,11 +72,14 @@ const mergeChildren = ({
     };
 
     if (entering.has(child.key as string)) {
+      // If child is entering
       newChildProps.initialPose = preEnterPose;
-      newChildProps._pose = enterPose;
+      newChildProps._pose = enterPose; // TODO: Remove _pose and merge with child.props.pose
     } else if (moving.has(child.key as string) && flipMove) {
+      // If child is moving and we're using `flip`
       newChildProps._pose = [enterPose, 'flip'];
     } else {
+      // If child is moving
       newChildProps._pose = enterPose;
     }
 
@@ -86,7 +93,7 @@ const mergeChildren = ({
       onPoseComplete: removeFromTree(key),
       popFromFlow: flipMove,
       ...propsForChild,
-      ...filterChildProps(child.props)
+      ...filterChildProps(child.props, Object.keys(propsForChild))
     });
 
     const insertionIndex = prevKeys.indexOf(key);
