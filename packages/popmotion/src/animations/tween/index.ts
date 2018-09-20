@@ -1,11 +1,9 @@
-import { onFrameUpdate, timeSinceLastFrame } from 'framesync';
+import sync, { cancelSync } from 'framesync';
 import action, { Action } from '../../action';
-import { ColdSubscription } from '../../action/types';
 import { getProgressFromValue, getValueFromProgress } from '../../calc';
 import { easeOut } from '@popmotion/easing';
 import { IObserver } from '../../observer/types';
 import { clamp } from '../../transformers';
-import onFrame from '../every-frame';
 import scrubber from './scrubber';
 import { TweenInterface, TweenProps } from './types';
 
@@ -34,7 +32,7 @@ const tween = (props: TweenProps = {}): Action =>
       let playhead = scrubber({ from, to, ease }).start(update);
 
       let progress = 0;
-      let tweenTimer: ColdSubscription;
+      let process: Function;
       let isActive = false;
       const reverseTween = () => (playDirection *= -1);
 
@@ -76,22 +74,27 @@ const tween = (props: TweenProps = {}): Action =>
 
       const startTimer = () => {
         isActive = true;
-        tweenTimer = onFrame().start(() => {
-          elapsed += timeSinceLastFrame() * playDirection;
+        process = sync.update(({ delta }) => {
+          elapsed += delta * playDirection;
           updateTween();
           if (isTweenComplete() && complete) {
-            tweenTimer.stop();
-            onFrameUpdate(complete, true);
+            cancelSync.update(process);
+            sync.update(complete, false, true);
           }
-        });
+        }, true);
       };
 
       const stopTimer = () => {
         isActive = false;
-        if (tweenTimer) tweenTimer.stop();
+        if (process) cancelSync.update(process);
       };
 
       startTimer();
+
+      const updateTweenProcess = {
+        update: updateTween,
+        immediate: true
+      };
 
       return {
         isActive: () => isActive,
@@ -110,7 +113,7 @@ const tween = (props: TweenProps = {}): Action =>
         },
         seek(newProgress: number) {
           elapsed = getValueFromProgress(0, duration, newProgress);
-          onFrameUpdate(updateTween, true);
+          sync(updateTweenProcess);
           return this;
         },
         reverse() {

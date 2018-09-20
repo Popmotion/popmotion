@@ -1,5 +1,4 @@
 import tween from '../';
-import { currentFrameTime } from 'framesync';
 
 describe('tween', () => {
   it('should return a default tween', () => {
@@ -100,22 +99,6 @@ describe('tween', () => {
         complete: () => {
           clearTimeout(failTimeout);
           resolve();
-        }
-      });
-    });
-  });
-
-  it('shouldnt fire the same frame twice', () => {
-    return new Promise((resolve, reject) => {
-      let lastTimestamp = 0;
-
-      tween({
-        to: { x: 100, y: 100 }
-      }).start({
-        complete: () => resolve(),
-        update: () => {
-          if (currentFrameTime() === lastTimestamp) reject();
-          lastTimestamp = currentFrameTime();
         }
       });
     });

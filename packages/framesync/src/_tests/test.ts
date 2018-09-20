@@ -12,24 +12,21 @@ describe('sync', () => {
     return new Promise((resolve, reject) => {
       const order: number[] = [];
 
-      sync({
-        update: () => order.push(1),
-        preRender: () => order.push(2),
-        render: () => order.push(3),
-        postRender: () => {
-          order.push(4);
-          if (
-            order[0] === 1 &&
-            order[1] === 2 &&
-            order[2] === 3 &&
-            order[3] === 4
-          ) {
-            resolve();
-          } else {
-            reject(order);
-          }
-        },
-        keepAlive: false
+      sync.read(() => order.push(0));
+      sync.update(() => order.push(1));
+      sync.render(() => order.push(3));
+      sync.postRender(() => {
+        order.push(4);
+        if (
+          order[0] === 0 &&
+          order[1] === 1 &&
+          order[3] === 3 &&
+          order[4] === 4
+        ) {
+          resolve();
+        } else {
+          reject(order);
+        }
       });
     });
   });
@@ -38,17 +35,11 @@ describe('sync', () => {
     return new Promise((resolve, reject) => {
       let hasFired = false;
 
-      const process = sync({
-        render: () => (hasFired = true)
-      });
+      const process = sync.render(() => (hasFired = true));
 
-      sync({
-        update: () => cancelSync(process)
-      });
+      sync.update(() => cancelSync.render(process));
 
-      sync({
-        postRender: () => (hasFired ? reject(hasFired) : resolve())
-      });
+      sync.postRender(() => (hasFired ? reject(hasFired) : resolve()));
     });
   });
 
@@ -56,23 +47,21 @@ describe('sync', () => {
     return new Promise((resolve: Function, reject: Function) => {
       let v = 0;
 
-      sync({
-        update: ({ timestamp: prevTimestamp }) => {
-          v++;
-          sync({
-            update: ({ timestamp }) => {
-              v++;
-              if (timestamp !== prevTimestamp) {
-                reject(timestamp, prevTimestamp);
-              }
-            },
-            immediate: true
-          });
-        },
-        render: () => {
-          v === 2 ? resolve() : reject(v);
-        }
+      sync.update(({ timestamp: prevTimestamp }) => {
+        v++;
+        sync.update(
+          ({ timestamp }) => {
+            v++;
+            if (timestamp !== prevTimestamp) {
+              reject(timestamp, prevTimestamp);
+            }
+          },
+          false,
+          true
+        );
       });
+
+      sync.render(() => (v === 2 ? resolve() : reject(v)));
     });
   });
 
@@ -80,36 +69,25 @@ describe('sync', () => {
     return new Promise((resolve: Function, reject: Function) => {
       let v = 0;
 
-      sync({
-        update: () => v++
-      });
-
-      sync({
-        update: () => v++,
-        immediate: true
-      });
-
-      sync({
-        render: () => (v === 2 ? resolve() : reject())
-      });
+      sync.update(() => v++);
+      sync.update(() => v++, false, true);
+      sync.render(() => (v === 2 ? resolve() : reject()));
     });
   });
 
   it('uses default elapsed time if first fire', () => {
     return new Promise((resolve: Function, reject: Function) => {
-      sync({
-        update: ({ delta: defaultElapsed }) => {
-          setTimeout(
-            () =>
-              sync({
-                update: ({ delta }) =>
-                  delta === defaultElapsed
-                    ? resolve()
-                    : reject(defaultElapsed, delta)
-              }),
-            50
-          );
-        }
+      sync.update(({ delta: defaultElapsed }) => {
+        setTimeout(
+          () =>
+            sync.update(
+              ({ delta }) =>
+                delta === defaultElapsed
+                  ? resolve()
+                  : reject(defaultElapsed, delta)
+            ),
+          50
+        );
       });
     });
   });
@@ -117,11 +95,8 @@ describe('sync', () => {
   it('correctly keeps alive', () => {
     return new Promise((resolve, reject) => {
       let v = 0;
-      sync({
-        update: () => v++,
-        render: () => v === 2 && resolve(),
-        keepAlive: true
-      });
+      sync.update(() => v++, true);
+      sync.render(() => v === 2 && resolve(), true);
     });
   });
 });

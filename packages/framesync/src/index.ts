@@ -1,6 +1,8 @@
+// TODO: Fixed update loop
+
 import onNextFrame from './on-next-frame';
-import step from './create-render-step';
-import { Process, StepId, StepMap } from './types';
+import createStep from './create-render-step';
+import { Process, StepId, SyncApi } from './types';
 
 const maxElapsed = 40;
 let defaultElapsed = (1 / 60) * 1000;
@@ -14,20 +16,39 @@ const frame = {
 };
 
 const stepsOrder = [
+  StepId.Read,
   StepId.Update,
-  StepId.PreRender,
   StepId.Render,
   StepId.PostRender
 ];
 
 const setWillRunNextFrame = (willRun: boolean) => (willRunNextFrame = willRun);
 
-const steps: StepMap = stepsOrder.reduce(
-  (acc: StepMap, key: StepId) => {
-    acc[key] = step(key, setWillRunNextFrame);
+const { steps, sync, cancelSync } = stepsOrder.reduce(
+  (acc, key) => {
+    const step = createStep(setWillRunNextFrame);
+
+    acc.sync[key] = (
+      process: Process,
+      keepAlive = false,
+      immediate = false
+    ) => {
+      if (!willRunNextFrame) startLoop();
+      step.schedule(process, keepAlive, immediate);
+      return process;
+    };
+
+    acc.cancelSync[key] = (process: Process) => step.cancel(process);
+
+    acc.steps[key] = step;
+
     return acc;
   },
-  {} as StepMap
+  {
+    steps: {},
+    sync: {},
+    cancelSync: {}
+  } as SyncApi
 );
 
 const processStep = (stepId: StepId) => steps[stepId].process(frame);
@@ -62,19 +83,7 @@ const startLoop = () => {
   if (!isProcessing) onNextFrame(processFrame);
 };
 
-const sync = (process: Process) => {
-  if (!willRunNextFrame) startLoop();
-
-  for (const key in steps) {
-    if (process[key as StepId]) steps[key as StepId].schedule(process);
-  }
-
-  return process;
-};
-
-const cancelSync = (process: Process) => {
-  stepsOrder.forEach(stepId => steps[stepId].cancel(process));
-};
+export const getFrameData = () => frame;
 
 export default sync;
 export { cancelSync };

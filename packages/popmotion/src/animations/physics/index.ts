@@ -1,10 +1,9 @@
-import { timeSinceLastFrame } from 'framesync';
+import sync, { cancelSync } from 'framesync';
 import { number } from 'style-value-types';
 import action from '../../action';
 import { Action } from '../../action';
 import vectorAction, { ActionFactory } from '../../action/vector';
 import { speedPerFrame } from '../../calc';
-import onFrame from '../every-frame';
 import { PhysicsInterface, Props } from './types';
 
 const physics = (props: Props = {}): Action =>
@@ -20,9 +19,9 @@ const physics = (props: Props = {}): Action =>
       const { restSpeed = 0.001, from = 0 } = props;
       let current = from;
 
-      const timer = onFrame().start(() => {
+      const process = sync.update(({ delta }) => {
         // Integration doesn't work well with very low numbers
-        const elapsed = Math.max(timeSinceLastFrame(), 16);
+        const elapsed = Math.max(delta, 16);
 
         if (acceleration) velocity += speedPerFrame(acceleration, elapsed);
         if (friction) velocity *= (1 - friction) ** (elapsed / 100);
@@ -40,10 +39,10 @@ const physics = (props: Props = {}): Action =>
           restSpeed !== false && (!velocity || Math.abs(velocity) <= restSpeed);
 
         if (isComplete) {
-          timer.stop();
+          cancelSync.update(process);
           complete();
         }
-      });
+      }, true);
 
       return {
         set(v) {
@@ -70,7 +69,7 @@ const physics = (props: Props = {}): Action =>
           velocity = v;
           return this;
         },
-        stop: () => timer.stop()
+        stop: () => cancelSync.update(process)
       };
     }
   );

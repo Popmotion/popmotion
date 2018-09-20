@@ -1,8 +1,10 @@
-# <a href="https://popmotion.io/api/framesync"><img src="https://user-images.githubusercontent.com/7850794/38307669-5e7e3f88-380c-11e8-8c26-970c36801910.png" height="61" width="250" alt="Framesync" /></a>
+# Framesync
 
 A tiny frame scheduler for performantly batching reads and renders.
 
 Segregating actions that read and write to the DOM will avoid [layout thrashing](https://developers.google.com/web/fundamentals/performance/rendering/avoid-large-complex-layouts-and-layout-thrashing).
+
+Popmotion batches updates on the `update` step, and Stylefire batches renders on the `render` step.
 
 ## Install
 
@@ -12,44 +14,95 @@ npm install framesync --save
 
 ## Usage
 
-The Framesync render loop executes four sequential steps, once per frame.
+### Render steps
 
-- `frameStart`
-- `frameUpdate`
-- `frameRender`
-- `frameEnd`
+Once per frame, the functions scheduled with Framesync are executed in the following order:
 
-Developers can set any function to run at any of these steps using the `on` and `cancel` callbacks:
+- `read`
+- `update`
+- `render`
+- `postRender`
 
-- `onFrameStart`, `cancelOnFrameStart`
-- `onFrameUpdate`, `cancelOnFrameUpdate`
-- `onFrameRender`, `cancelOnFrameRender`
-- `onFrameEnd`, `cancelOnFrameEnd`
+### Scheduling functions
 
-Framesync also exports some time-measurement methods:
-- `currentTime`: The current time as measured by the host platform's most accurate `now` function.
-- `currentFrameTime`: The time the current `requestAnimationFrame` was initiated.
-- `timeSinceLastFrame`: The duration between the previous frame and the current `currentFrameTime`
-
-### Example
+Functions can be scheduled to different parts of the render loop with `sync`.
 
 ```javascript
-import {
-  timeSinceLastFrame,
-  onFrameStart,
-  cancelFrameStart
-} from 'framesync';
+import sync from 'framesync';
+```
 
-function logTimeSinceLastFrame() {
-  console.log(timeSinceLastFrame());
-  onFrameStart(logTimeSinceLastFrame);
-}
+It contains four functions, one to schedule on each of the above steps:
 
-onFrameStart(logTimeSinceLastFrame);
+```javascript
+sync[stepId](callback, keepAlive, immediate)
+```
 
-function stopLogging() {
-  cancelOnFrameStart(logTimeSinceLastFrame);
-}
+```javascript
+sync.update(() => console.log('update step'));
+```
 
-setTimeout(stopLogging, 5000);
+### Frame data
+
+Each function is provided data about the current frame:
+
+```javascript
+sync.update(({ delta, timestamp }) => {});
+```
+
+- `delta`: Time since last frame (in milliseconds)
+- `timestamp`: Timestamp of the current frame.
+
+This object is recycled across frames to reduce garbage collection, so values should be destructured if intended to be used asynchronously.
+
+### keepAlive
+
+We can run a function (or set of functions) as an ongoing process by passing `keepAlive: true`:
+
+```javascript
+let count = 0;
+
+sync(() => count++, true);
+```
+
+This will keep the process running until it's actively cancelled.
+
+### immediate
+
+The `immediate` option can be used to sync a function on the **current frame step**.
+
+By default, Framesync will schedule functions to run the next time that frame step is fired:
+
+```javascript
+sync.update(({ timestamp }) => {
+  sync.update((frame) => {
+    // frame.timestamp !== timestamp
+  ))
+});
+```
+
+By setting `immediate` to `true`, we can add this at the end of the current step:
+
+```javascript
+sync.update(({ timestamp }) => {
+  sync.update((frame) => {
+    // frame.timestamp === timestamp
+  }, false, true)
+});
+```
+
+### Cancelling
+
+Synced processes can be cancelled with `cancelSync`:
+
+```javascript
+import sync, { cancelSync } from 'framesync';
+
+let count = 0;
+
+const process = sync.render(() => {
+  count++;
+  if (count >= 10) {
+    cancelSync.render(process);
+  }
+}, true);
 ```

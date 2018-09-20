@@ -1,9 +1,7 @@
-import { FrameData, StepId, Step, Process } from './types';
+import { Step, Process } from './types';
+import { invariant } from 'hey-listen';
 
-export default (
-  stepId: StepId,
-  setRunNextFrame: (fillRun: boolean) => void
-): Step => {
+export default (setRunNextFrame: (fillRun: boolean) => void): Step => {
   /**
    * We use two arrays, one for this frame and one to queue for the
    * next frame, reusing each to avoid GC.
@@ -14,18 +12,20 @@ export default (
   let numThisFrame = 0;
   let isProcessing = false;
   let i = 0;
+  const cancelled: WeakSet<Process> = new WeakSet();
+  const toKeepAlive: WeakSet<Process> = new WeakSet();
 
   const renderStep: Step = {
-    cancel: (process: Process) => {
+    cancel: process => {
       const indexOfCallback = processToRunNextFrame.indexOf(process);
-      process.isCancelled = true;
+      cancelled.add(process);
 
       if (indexOfCallback !== -1) {
         processToRunNextFrame.splice(indexOfCallback, 1);
       }
     },
 
-    process: (frame: FrameData) => {
+    process: frame => {
       isProcessing = true;
 
       // Swap this frame and next frame arrays to avoid GC
@@ -44,9 +44,9 @@ export default (
         let process: Process;
         for (i = 0; i < numThisFrame; i++) {
           process = processToRun[i];
-          process[stepId](frame);
+          process(frame);
 
-          if (process.keepAlive === true && process.isCancelled !== true) {
+          if (toKeepAlive.has(process) === true && !cancelled.has(process)) {
             renderStep.schedule(process);
             setRunNextFrame(true);
           }
@@ -56,9 +56,12 @@ export default (
       isProcessing = false;
     },
 
-    schedule: (process: Process) => {
-      const addToCurrentBuffer = process.immediate && isProcessing;
+    schedule: (process, keepAlive, immediate) => {
+      invariant(typeof process === 'function', 'Argument must be a function');
+      const addToCurrentBuffer = immediate && isProcessing;
       const buffer = addToCurrentBuffer ? processToRun : processToRunNextFrame;
+
+      if (keepAlive) toKeepAlive.add(process);
 
       // If this callback isn't already scheduled to run next frame
       if (buffer.indexOf(process) === -1) {

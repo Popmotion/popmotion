@@ -1,10 +1,9 @@
-import { timeSinceLastFrame } from 'framesync';
+import sync, { cancelSync } from 'framesync';
 import { number } from 'style-value-types';
 import action from '../../action';
 import { Action } from '../../action';
 import vectorAction, { ActionFactory } from '../../action/vector';
 import { speedPerSecond } from '../../calc';
-import onFrame from '../every-frame';
 import { SpringInterface, SpringProps } from './types';
 
 const spring = (props: SpringProps = {}): Action =>
@@ -26,8 +25,7 @@ const spring = (props: SpringProps = {}): Action =>
       let position = from;
       let prevPosition = position;
 
-      const springTimer = onFrame().start(() => {
-        const timeDelta = timeSinceLastFrame();
+      const process = sync.update(({ delta: timeDelta }) => {
         t += timeDelta;
 
         const dampingRatio = damping / (2 * Math.sqrt(stiffness * mass));
@@ -67,15 +65,15 @@ const spring = (props: SpringProps = {}): Action =>
         if (isBelowVelocityThreshold && isBelowDisplacementThreshold) {
           position = to;
           update(position);
-          springTimer.stop();
+          cancelSync.update(process);
           complete();
         } else {
           update(position);
         }
-      });
+      }, true);
 
       return {
-        stop: () => springTimer.stop()
+        stop: () => cancelSync.update(process)
       };
     }
   );

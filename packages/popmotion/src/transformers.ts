@@ -1,4 +1,4 @@
-import { currentFrameTime } from 'framesync';
+import { getFrameData } from 'framesync';
 import { color, Color, hsla, HSLA, RGBA } from 'style-value-types';
 import {
   getProgressFromValue,
@@ -194,10 +194,9 @@ export const interpolate = (
     : fastInterpolate(input[0], input[1], output[0], output[1]);
 };
 
-export const generateStaticSpring = (alterDisplacement: Function = identity) => (
-  constant: number,
-  origin: number
-) => (v: number) => {
+export const generateStaticSpring = (
+  alterDisplacement: Function = identity
+) => (constant: number, origin: number) => (v: number) => {
   const displacement = origin - v;
   const springModifiedDisplacement =
     -constant * (0 - alterDisplacement(Math.abs(displacement)));
@@ -219,7 +218,7 @@ export const smooth = (strength: number = 50) => {
   let lastUpdated = 0;
 
   return (v: number) => {
-    const currentFramestamp = currentFrameTime();
+    const currentFramestamp = getFrameData().timestamp;
     const timeDelta =
       currentFramestamp !== lastUpdated ? currentFramestamp - lastUpdated : 0;
     const newValue = timeDelta
