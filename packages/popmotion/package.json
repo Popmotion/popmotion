@@ -76,6 +76,7 @@
     ],
     "moduleNameMapper": {
       "@popmotion/easing": "<rootDir>/../../easing/src",
+      "stylefire": "<rootDir>/../../stylefire/src",
       "style-value-types": "<rootDir>/../../style-value-types/src"
     },
     "transform": {

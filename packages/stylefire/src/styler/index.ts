@@ -22,13 +22,13 @@ const createStyler = ({
       }
       if (!hasChanged) {
         hasChanged = true;
-        sync.render(fireRender);
+        sync.render(render);
       }
     }
   };
 
-  function render(forceRender = false) {
-    if (forceRender || hasChanged) {
+  function render(forceRender: any = false) {
+    if (forceRender === true || hasChanged) {
       onRender(state, props, changedValues);
       hasChanged = false;
       changedValues.length = 0;
@@ -36,8 +36,6 @@ const createStyler = ({
 
     return this;
   }
-
-  const fireRender = () => render();
 
   return {
     get(unmappedKey: string) {

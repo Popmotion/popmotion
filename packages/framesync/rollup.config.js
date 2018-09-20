@@ -1,4 +1,5 @@
 import typescript from 'rollup-plugin-typescript2';
+import resolve from 'rollup-plugin-node-resolve';
 import uglify from 'rollup-plugin-uglify';
 
 const typescriptConfig = { cacheRoot: 'tmp/.rpt2_cache' };
@@ -17,14 +18,14 @@ const umd = Object.assign({}, config, {
     name: 'framesync',
     exports: 'named'
   },
-  plugins: [typescript(noDeclarationConfig)]
+  plugins: [resolve(), typescript(noDeclarationConfig)]
 });
 
 const umdProd = Object.assign({}, umd, {
   output: Object.assign({}, umd.output, {
     file: 'dist/framesync.min.js'
   }),
-  plugins: [typescript(noDeclarationConfig), uglify()]
+  plugins: [resolve(), typescript(noDeclarationConfig), uglify()]
 });
 
 const es = Object.assign({}, config, {
@@ -33,7 +34,8 @@ const es = Object.assign({}, config, {
     format: 'es',
     exports: 'named'
   },
-  plugins: [typescript(noDeclarationConfig)]
+  plugins: [typescript(noDeclarationConfig)],
+  external: ['hey-listen']
 });
 
 const cjs = Object.assign({}, config, {
@@ -42,7 +44,8 @@ const cjs = Object.assign({}, config, {
     format: 'cjs',
     exports: 'named'
   },
-  plugins: [typescript(typescriptConfig)]
+  plugins: [typescript(typescriptConfig)],
+  external: ['hey-listen']
 });
 
 export default [umd, umdProd, es, cjs];
