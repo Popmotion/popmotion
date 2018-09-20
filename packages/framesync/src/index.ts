@@ -1,5 +1,3 @@
-// TODO: Fixed update loop
-
 import onNextFrame from './on-next-frame';
 import createStep from './create-render-step';
 import { Process, StepId, SyncApi } from './types';
