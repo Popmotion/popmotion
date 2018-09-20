@@ -37,7 +37,5 @@ const intelligentTransition = {
   default: tween
 };
 
-const defaultTransitions = new Map();
-defaultTransitions.set('default', intelligentTransition);
-
-export default defaultTransitions;
+// IE11 doesn't support `new Map(iterable)`, Map.prototype.set returns the map itself
+export default new Map().set('default', intelligentTransition)
