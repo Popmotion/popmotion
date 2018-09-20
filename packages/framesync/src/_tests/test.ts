@@ -20,8 +20,8 @@ describe('sync', () => {
         if (
           order[0] === 0 &&
           order[1] === 1 &&
-          order[3] === 3 &&
-          order[4] === 4
+          order[2] === 3 &&
+          order[3] === 4
         ) {
           resolve();
         } else {
