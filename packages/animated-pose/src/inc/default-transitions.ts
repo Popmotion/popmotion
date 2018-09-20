@@ -37,4 +37,7 @@ const intelligentTransition = {
   default: tween
 };
 
-export default new Map([['default', intelligentTransition]]);
+const defaultTransitions = new Map();
+defaultTransitions.set('default', intelligentTransition);
+
+export default defaultTransitions;
