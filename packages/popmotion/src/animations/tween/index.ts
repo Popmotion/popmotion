@@ -6,6 +6,7 @@ import { IObserver } from '../../observer/types';
 import { clamp } from '../../transformers';
 import scrubber from './scrubber';
 import { TweenInterface, TweenProps } from './types';
+import { Process } from 'framesync';
 
 const clampProgress = clamp(0, 1);
 
@@ -32,7 +33,7 @@ const tween = (props: TweenProps = {}): Action =>
       let playhead = scrubber({ from, to, ease }).start(update);
 
       let progress = 0;
-      let process: Function;
+      let process: Process;
       let isActive = false;
       const reverseTween = () => (playDirection *= -1);
 
@@ -91,11 +92,6 @@ const tween = (props: TweenProps = {}): Action =>
 
       startTimer();
 
-      const updateTweenProcess = {
-        update: updateTween,
-        immediate: true
-      };
-
       return {
         isActive: () => isActive,
         getElapsed: () => clamp(0, duration)(elapsed),
@@ -113,7 +109,7 @@ const tween = (props: TweenProps = {}): Action =>
         },
         seek(newProgress: number) {
           elapsed = getValueFromProgress(0, duration, newProgress);
-          sync(updateTweenProcess);
+          sync.update(updateTween, false, true);
           return this;
         },
         reverse() {

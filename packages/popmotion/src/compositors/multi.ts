@@ -1,6 +1,6 @@
-import { onFrameUpdate } from "framesync";
-import action, { Action } from "../action";
-import { ColdSubscription } from "../action/types";
+import sync from 'framesync';
+import action, { Action } from '../action';
+import { ColdSubscription } from '../action/types';
 
 export type ActionStarter<I> = (action: Action, key: I) => ColdSubscription;
 
@@ -34,13 +34,13 @@ const multi = <A, T, V, I>({
           if (!hasCompleted) {
             hasCompleted = true;
             numCompletedActions++;
-            if (numCompletedActions === numActions) onFrameUpdate(complete);
+            if (numCompletedActions === numActions) sync.update(complete);
           }
         },
         error,
         update: (v: any) => {
           setProp(output, name, v);
-          onFrameUpdate(updateOutput, true);
+          sync.update(updateOutput, false, true);
         }
       });
     });

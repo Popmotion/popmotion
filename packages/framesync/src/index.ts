@@ -1,6 +1,6 @@
 import onNextFrame from './on-next-frame';
 import createStep from './create-render-step';
-import { Process, StepId, SyncApi } from './types';
+import { Process, StepId, SyncApi, FrameData } from './types';
 
 const maxElapsed = 40;
 let defaultElapsed = (1 / 60) * 1000;
@@ -81,7 +81,7 @@ const startLoop = () => {
   if (!isProcessing) onNextFrame(processFrame);
 };
 
-export const getFrameData = () => frame;
+const getFrameData = () => frame;
 
 export default sync;
-export { cancelSync };
+export { cancelSync, getFrameData, FrameData, Process };
