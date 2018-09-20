@@ -18,12 +18,10 @@ class Transition extends React.Component<Props, State> {
 
   static getDerivedStateFromProps = (
     props: Props,
-    { isLeaving, removeFromTree, displayedChildren }: State
+    { isLeaving, removeFromTree, children }: State
   ) => {
-    const incomingChildren = makeChildList(props.children);
-
     const {
-      children,
+      children: groupChildren,
       preEnterPose,
       enterPose,
       exitPose,
@@ -32,21 +30,23 @@ class Transition extends React.Component<Props, State> {
       ...propsForChild,
     } = props;
 
+    const incomingChildren = makeChildList(groupChildren);
+
     if (process.env.NODE_ENV !== 'production') {
       warning(!propsForChild.onPoseComplete, '<Transition/> (or <PoseGroup/>) doesn\'t accept onPoseComplete prop.')
     }
 
-    const displayedChildren = handleIncomingChildren({
+    const currentChildren = handleIncomingChildren({
       incomingChildren,
-      displayedChildren,
+      children,
       isLeaving,
       removeFromTree,
       groupProps: props
     })
 
     return {
-      displayedChildren: displayedChildren,
-      displayedChildrenWithGroupProps: displayedChildren.map(child =>
+      children: currentChildren,
+      displayedChildren: currentChildren.map(child =>
         // avoid extra copying in cloneElement
         React.createElement(child.type, {
           ...propsForChild,
@@ -67,11 +67,11 @@ class Transition extends React.Component<Props, State> {
   };
 
   removeFromChildren(key: string) {
-    const { displayedChildren, displayedChildrenWithGroupProps } = this.state;
+    const { children, displayedChildren } = this.state;
 
     this.setState({
+      children: removeFromChildren(children, key)
       displayedChildren: removeFromChildren(displayedChildren, key)
-      displayedChildrenWithGroupProps: removeFromChildren(displayedChildrenWithGroupProps, key)
     });
   }
 
@@ -80,7 +80,7 @@ class Transition extends React.Component<Props, State> {
   }
 
   render() {
-    return <Fragment>{this.state.displayedChildrenWithGroupProps}</Fragment>;
+    return <Fragment>{this.state.displayedChildren}</Fragment>;
   }
 }
 

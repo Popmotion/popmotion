@@ -11,16 +11,16 @@ export type Props = {
 };
 
 export type State = {
+  children?: Array<React.ReactElement<any>>;
   displayedChildren?: Array<React.ReactElement<any>>;
-  displayedChildrenWithGroupProps?: Array<React.ReactElement<any>>;
   incomingChildren?: Array<React.ReactElement<any>>;
   isLeaving: Set<string>;
   removeFromTree: (key: string) => void;
 };
 
 export interface MergeChildrenProps {
+  children: Array<React.ReactElement<any>>;
   incomingChildren: Array<React.ReactElement<any>>;
-  displayedChildren: Array<React.ReactElement<any>>;
   isLeaving: Set<string>;
   removeFromTree: (key: string) => void;
   groupProps: Props;

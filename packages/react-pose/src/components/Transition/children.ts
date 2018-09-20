@@ -21,22 +21,20 @@ const animateChildrenList = (
 
 const mergeChildren = ({
   incomingChildren,
-  displayedChildren,
+  children,
   isLeaving,
   removeFromTree,
   groupProps
 }: MergeChildrenProps) => {
   const {
-    children: groupChildren,
     preEnterPose,
     enterPose,
     exitPose,
     flipMove,
-    animateOnMount,
   } = groupProps;
-  const children: Array<ReactElement<any>> = [];
+  const mergedChildren: Array<ReactElement<any>> = [];
 
-  const prevKeys = displayedChildren.map(getKey);
+  const prevKeys = children.map(getKey);
   const nextKeys = incomingChildren.map(getKey);
 
   const entering = new Set(
@@ -73,11 +71,11 @@ const mergeChildren = ({
       newChildProps._pose = enterPose;
     }
 
-    children.push(cloneElement(child, newChildProps));
+    mergedChildren.push(cloneElement(child, newChildProps));
   });
 
   leaving.forEach(key => {
-    const child = displayedChildren.find(c => c.key === key);
+    const child = children.find(c => c.key === key);
     const removeChildFromTree = removeFromTree(key)
 
     const newChild = cloneElement(child, {
@@ -100,22 +98,22 @@ const mergeChildren = ({
     // TODO: Write a shitty algo
     // }
 
-    children.splice(insertionIndex, 0, newChild);
+    mergedChildren.splice(insertionIndex, 0, newChild);
   });
 
-  return children;
+  return mergedChildren;
 };
 
 export const handleIncomingChildren = (props: MergeChildrenProps) => {
-  const { displayedChildren, incomingChildren, groupProps } = props;
+  const { children, incomingChildren, groupProps } = props;
   const { animateOnMount, preEnterPose, enterPose } = groupProps;
 
   // If initial mount and we're animating
-  if (!displayedChildren && animateOnMount) {
+  if (!children && animateOnMount) {
     return animateChildrenList(incomingChildren, enterPose, preEnterPose);
 
     // If subsequent render
-  } else if (displayedChildren) {
+  } else if (children) {
     return mergeChildren(props);
 
     // If initial mount and we're not animating
