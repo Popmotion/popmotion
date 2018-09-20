@@ -1,0 +1,64 @@
+{
+  "name": "stylefire",
+  "version": "2.0.7",
+  "description": "Performant, simplified stylers for CSS, SVG, path and DOM scroll.",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "module": "dist/stylefire.es.js",
+  "jsnext:main": "dist/stylefire.es.js",
+  "files": [
+    "dist",
+    "lib"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "postbuild": "babel $npm_package_module --out-file $npm_package_module --no-babelrc --plugins annotate-pure-calls",
+    "watch": "rollup -c -w",
+    "lint": "tslint -c tslint.json 'src/**/*.{ts}'",
+    "measure": "gzip -c dist/stylefire.min.js | wc -c",
+    "prepublishOnly": "yarn build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Popmotion/stylefire.git"
+  },
+  "keywords": [
+    "css",
+    "svg",
+    "svg",
+    "path",
+    "scroll",
+    "animation"
+  ],
+  "author": "Matt Perry",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Popmotion/stylefire/issues"
+  },
+  "homepage": "https://github.com/Popmotion/stylefire#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-plugin-annotate-pure-calls": "^0.2.2",
+    "jest": "^20.0.4",
+    "rollup": "^0.59.1",
+    "rollup-plugin-node-resolve": "^3.3.0",
+    "rollup-plugin-typescript2": "^0.14.0",
+    "rollup-plugin-uglify": "^3.0.0",
+    "ts-jest": "^20.0.10",
+    "typescript": "^2.9.2",
+    "uglify-js": "^3.3.25",
+    "webpack": "^3.0.0"
+  },
+  "dependencies": {
+    "framesync": "^3.1.8",
+    "hey-listen": "^1.0.4",
+    "style-value-types": "^3.0.6",
+    "tslib": "^1.9.1"
+  },
+  "unpkg": "./dist/stylefire.min.js",
+  "prettier": {
+    "parser": "typescript",
+    "singleQuote": true
+  }
+}
