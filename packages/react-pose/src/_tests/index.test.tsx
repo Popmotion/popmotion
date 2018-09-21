@@ -166,7 +166,7 @@ test('PoseGroup: Animate on mount', () => {
   });
 });
 
-test('PoseGroup: onRest fireds', () => {
+test('PoseGroup: onRest fires', () => {
   let x = 0;
   let y = 0;
 
