@@ -34,6 +34,7 @@ const handleTransition = (
     animateOnMount,
     enterAfterExit,
     flipMove,
+    onRest,
     ...propsForChild
   }: Props,
   {

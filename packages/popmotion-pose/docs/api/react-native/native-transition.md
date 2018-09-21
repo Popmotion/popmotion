@@ -125,6 +125,16 @@ If `true`, `Transition` will finish animating exiting components out **before** 
 
 This can be useful when animating two or more components that affect each other's layout, which can lead to snapping when the exiting components are removed.
 
+### onRest
+
+`onRest: Function`
+
+When a component finishes exiting, it isn't removed immediately. Instead, it's kept in the DOM until **all** currently leaving components have finished animating out to prevent expensive layout thrashing.
+
+`onRest` will fire when all exit transitions are complete.
+
+If new exit transitions begin in the meantime, `onRest` won't be fired until these have also finished.
+
 ### ...props
 
 All remaining props passed to `Transition` will be forwarded to its immediate children, for use in dynamic props.

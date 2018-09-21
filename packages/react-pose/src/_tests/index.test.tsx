@@ -166,6 +166,36 @@ test('PoseGroup: Animate on mount', () => {
   });
 });
 
+test('PoseGroup: onRest fireds', () => {
+  let x = 0;
+  let y = 0;
+
+  return new Promise(resolve => {
+    const Group = ({ isVisible = true }) => (
+      <PoseGroup
+        onRest={() => {
+          expect(x).toBe(60);
+          expect(y).toBe(65);
+          resolve();
+        }}
+      >
+        {isVisible && (
+          <Parent key="a" onValueChange={{ x: v => (x = v) }}>
+            <Child onValueChange={{ y: v => (y = v) }} />
+          </Parent>
+        )}
+      </PoseGroup>
+    );
+
+    const wrapper = mount(<Group />);
+
+    wrapper.setProps({ isVisible: false });
+
+    expect(x).toBe(50);
+    expect(y).toBe(55);
+  });
+});
+
 test('PoseGroup: Animate conditionally', () => {
   let x = 0;
   let y = 0;
