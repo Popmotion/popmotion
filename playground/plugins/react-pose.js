@@ -1,6 +1,6 @@
-import React from "react";
-import styled from "styled-components";
-import posed, { PoseGroup } from "react-pose";
+import React from 'react';
+import styled from 'styled-components';
+import posed, { PoseGroup } from 'react-pose';
 import {
   easing,
   decay,
@@ -9,7 +9,7 @@ import {
   physics,
   transform,
   value
-} from "popmotion";
+} from 'popmotion';
 const { pipe, blendColor, conditional, clamp, interpolate } = transform;
 
 const boxProps = {
@@ -32,8 +32,8 @@ const BoxStyled = styled.div`
 `;
 
 const AnimatedBox = posed(BoxStyled)({
-  enter: { opacity: 1, y: "0%" },
-  exit: { opacity: 0, y: "30%" }
+  enter: { opacity: 1, y: '0%' },
+  exit: { opacity: 0, y: '30%' }
 });
 
 // const Box = styled(posed.div(boxProps))`
@@ -64,15 +64,15 @@ export class ReactPose extends React.PureComponent {
 export const Hover = posed(BoxStyled)({
   hoverable: true,
   pressable: true,
-  init: { background: "#00f" },
-  hover: { background: "#f00" }
+  init: { background: '#00f' },
+  hover: { background: '#f00' }
 });
 
 const SpringBox = posed(BoxStyled)({
   spring: {
     x: 0,
     transition: {
-      type: "spring",
+      type: 'spring',
       stiffness: 1000,
       velocity: 1000
     }
@@ -93,7 +93,7 @@ export class PoseKey extends React.Component {
   }
 
   render() {
-    return <SpringBox pose={["spring"]} poseKey={this.state.key} />;
+    return <SpringBox pose={['spring']} poseKey={this.state.key} />;
   }
 }
 
@@ -111,29 +111,29 @@ export class PoseKeyFail extends React.Component {
   }
 
   render() {
-    return <SpringBox pose={["spring"]} />;
+    return <SpringBox pose={['spring']} />;
   }
 }
 
 const sidebarProps = {
   dragBounds: { left: -100, right: 0 },
   open: {
-    x: "0%",
+    x: '0%',
     delayChildren: 200,
     staggerChildren: 50
   },
   closed: {
     delay: 500,
-    x: "-100%"
+    x: '-100%'
   },
   enter: {
-    x: "0%",
+    x: '0%',
     delayChildren: 200,
     staggerChildren: 50
   },
   exit: {
     delay: 500,
-    x: "-100%"
+    x: '-100%'
   }
 };
 
@@ -206,7 +206,7 @@ export class ReactPoseChildren extends React.PureComponent {
     const { isOpen } = this.state;
 
     return (
-      <SidePanel pose={isOpen ? "open" : "closed"}>
+      <SidePanel pose={isOpen ? 'open' : 'closed'}>
         <Item i={0} />
         <Item i={1} />
         <Item i={2} />
@@ -221,12 +221,12 @@ const SidePanelPlain = styled.div`
 `;
 
 const colorMap = {
-  a: "#F69A9A",
-  b: "#EF4566",
-  c: "#F9CDAE",
-  d: "#C8C8A9",
-  e: "#83AE9B",
-  f: "black"
+  a: '#F69A9A',
+  b: '#EF4566',
+  c: '#F9CDAE',
+  d: '#C8C8A9',
+  e: '#83AE9B',
+  f: 'black'
 };
 
 const ItemChild = styled(
@@ -243,18 +243,18 @@ const ItemChild = styled(
 export class Group extends React.PureComponent {
   state = {
     isOpen: true,
-    items: ["d", "c", "a"]
+    items: ['d', 'c', 'a']
   };
 
   componentDidMount() {
     setTimeout(() => {
-      this.setState({ items: ["d", "c", "b", "a"] });
+      this.setState({ items: ['d', 'c', 'b', 'a'] });
 
       setTimeout(() => {
-        this.setState({ items: ["b", "c", "d"] });
+        this.setState({ items: ['b', 'c', 'd'] });
 
         setTimeout(() => {
-          this.setState({ items: ["e", "c", "b", "a"] });
+          this.setState({ items: ['e', 'c', 'b', 'a'] });
         }, 3000);
       }, 3000);
     }, 3000);
@@ -262,7 +262,7 @@ export class Group extends React.PureComponent {
 
   render() {
     return (
-      <SidePanel pose={this.state.isOpen ? "enter" : "exit"}>
+      <SidePanel pose={this.state.isOpen ? 'enter' : 'exit'}>
         <PoseGroup>
           {this.state.items.map(key => (
             <Item key={key} style={{ backgroundColor: colorMap[key] }}>
@@ -276,7 +276,7 @@ export class Group extends React.PureComponent {
 }
 
 const Slidable = posed.div({
-  draggable: "x",
+  draggable: 'x',
   dragEnd: {
     transition: ({ from, to, velocity }) =>
       velocity === 0
@@ -293,7 +293,7 @@ const Slidable = posed.div({
 
 const Tick = posed.path({
   passive: {
-    pathLength: ["x", clamp(0, 100), true]
+    pathLength: ['x', clamp(0, 100), true]
   }
 });
 
@@ -304,8 +304,8 @@ const xToProgress = pipe(
 
 const IconContainer = posed.div({
   passive: {
-    opacity: ["x", xToProgress, true],
-    scale: ["x", xToProgress, true]
+    opacity: ['x', xToProgress, true],
+    scale: ['x', xToProgress, true]
   }
 });
 
@@ -319,7 +319,7 @@ const EmailContainer = posed.div({
 
 const EmailContainerInner = posed.div({
   passive: {
-    backgroundColor: ["x", v => (v >= 0 ? "#14D790" : "#fafafa"), true]
+    backgroundColor: ['x', v => (v >= 0 ? '#14D790' : '#fafafa'), true]
   }
 });
 
@@ -371,11 +371,11 @@ class Email extends React.Component {
 }
 
 const emailData = [
-  { subject: "Test" },
-  { subject: "Test" },
-  { subject: "Test" },
-  { subject: "Test" },
-  { subject: "Test" }
+  { subject: 'Test' },
+  { subject: 'Test' },
+  { subject: 'Test' },
+  { subject: 'Test' },
+  { subject: 'Test' }
 ];
 
 export class EmailList extends React.Component {
@@ -506,7 +506,7 @@ export class UserPoseInPoseGroup extends React.Component {
         <Square
           key={`s`}
           onClick={this.addMore}
-          style={{ background: "blue", width: 100, height: 100 }}
+          style={{ background: 'blue', width: 100, height: 100 }}
         />
         <PoseGroup>
           {this.state.items.map((i, index) => {
@@ -516,8 +516,8 @@ export class UserPoseInPoseGroup extends React.Component {
               <SquarePos
                 key={`s-${i.id}`}
                 text={i.id}
-                style={{ background: "red", width: 100, height: 100 }}
-                pose={should_flip ? "flipped" : "enter"}
+                style={{ background: 'red', width: 100, height: 100 }}
+                pose={should_flip ? 'flipped' : 'enter'}
                 onDel={() => this.remove(i)}
                 onFlip={() => this.flip(i)}
               />
@@ -531,10 +531,10 @@ export class UserPoseInPoseGroup extends React.Component {
 
 const Img = posed.img({
   dull: {
-    filter: "grayscale(100%) brightness(100%)"
+    filter: 'grayscale(100%) brightness(100%)'
   },
   coloured: {
-    filter: "grayscale(0%) brightness(100%)"
+    filter: 'grayscale(0%) brightness(100%)'
   }
 });
 
@@ -561,8 +561,8 @@ const DraggableBox = styled(
 
 const Label = styled(
   posed.span({
-    init: { color: "#000" },
-    drag: { color: "#f00" }
+    init: { color: '#000' },
+    drag: { color: '#f00' }
   })
 )``;
 
@@ -574,15 +574,15 @@ export const DragChildren = () => (
 
 export const SingleFilter = posed.img({
   hoverable: true,
-  init: { filter: "blur(2px)" },
-  hover: { filter: "blur(0px)" }
+  init: { filter: 'blur(2px)' },
+  hover: { filter: 'blur(0px)' }
 });
 
 const DynamicPositionedBox = styled(
   posed.div({
     move: {
       x: () => Math.random() * 200,
-      y: () => Math.random() * 200,
+      y: () => Math.random() * 200
     }
   })
 )`
@@ -595,7 +595,10 @@ export class DynamicPositionedPose extends React.PureComponent {
   state = { poseKey: Math.random() };
 
   componentDidMount() {
-    this.intervalId = setInterval(() => this.setState({ poseKey: Math.random() }), 1000);
+    this.intervalId = setInterval(
+      () => this.setState({ poseKey: Math.random() }),
+      1000
+    );
   }
 
   componentWillUnmount() {
@@ -603,8 +606,73 @@ export class DynamicPositionedPose extends React.PureComponent {
   }
 
   render() {
+    return <DynamicPositionedBox pose="move" poseKey={this.state.poseKey} />;
+  }
+}
+
+const StutterItem = styled(
+  posed.div({
+    preEnter: {
+      scale: 1,
+      opacity: 0,
+      x: 100
+    },
+    enter: {
+      delay: ({ i }) => 500 + i * 50,
+      scale: 1,
+      opacity: 1,
+      x: 0
+    },
+    exit: {
+      delay: ({ i }) => i * 25,
+      opacity: 0,
+      x: -100
+    }
+  })
+)`
+  width: 100%;
+  border-radius: 5px;
+  height: 35px;
+  margin-bottom: 10px;
+  background: gray;
+`;
+
+export class TransitionStutter extends React.Component {
+  state = { items: [0, 1, 2, 3], category: 0 };
+
+  componentDidMount() {
+    this.interval = setInterval(this.toggleVisibility, 2000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
+  toggleVisibility = () => {
+    const category = Math.round(Math.random() * 15) + 10;
+    const items = Array(category)
+      .fill()
+      .map((_, i) => i);
+    this.setState({ items, category });
+  };
+
+  render() {
+    const { category, items } = this.state;
+
     return (
-      <DynamicPositionedBox pose="move" poseKey={this.state.poseKey} />
+      <div className="sidepanel">
+        <h2>Category {category}</h2>
+        <PoseGroup animateOnMount preEnterPose="preEnter">
+          {items.map((item, i) => {
+            const key = `${category}-${item}`;
+            return (
+              <StutterItem className="item" key={key} i={i}>
+                StutterItem {item}
+              </StutterItem>
+            );
+          })}
+        </PoseGroup>
+      </div>
     );
   }
 }

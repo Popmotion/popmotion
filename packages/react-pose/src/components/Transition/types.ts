@@ -7,20 +7,15 @@ export type Props = {
   enterPose?: string;
   exitPose?: string;
   animateOnMount?: boolean;
+  enterAfterExit?: boolean;
+  onRest?: () => void;
   [key: string]: any;
 };
 
 export type State = {
+  hasMounted?: boolean;
   children?: Array<React.ReactElement<any>>;
   incomingChildren?: Array<React.ReactElement<any>>;
-  isLeaving: Set<string>;
-  removeFromTree: (key: string) => void;
+  finishedLeaving: { [key: string]: boolean };
+  scheduleChildRemoval: (key: string) => void;
 };
-
-export interface MergeChildrenProps {
-  incomingChildren: Array<React.ReactElement<any>>;
-  displayedChildren: Array<React.ReactElement<any>>;
-  isLeaving: Set<string>;
-  removeFromTree: (key: string) => void;
-  groupProps: Props;
-}

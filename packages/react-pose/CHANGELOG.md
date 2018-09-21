@@ -2,6 +2,16 @@
 
 React Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.3.4] 2018-09-21
+
+### Added
+
+- `onRest` to `PoseGroup`/`Transition` [#502](https://github.com/Popmotion/popmotion/issues/502)
+  
+### Fixed
+
+- Batching rerenders for leaving children to prevent animation stuttering. [#363](https://github.com/Popmotion/popmotion/issues/363)
+
 ## [3.3.3] 2018-09-17
 
 ### Fixed

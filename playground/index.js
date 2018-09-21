@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-import { storiesOf } from "@storybook/react";
+import { storiesOf } from '@storybook/react';
 
 import {
   PoseDOM,
@@ -15,7 +15,7 @@ import {
   PoseClick,
   UnitTypeError,
   Auto
-} from "./plugins/pose";
+} from './plugins/pose';
 import {
   ReactPose,
   ReactPoseChildren,
@@ -28,42 +28,44 @@ import {
   Filter,
   DragChildren,
   SingleFilter,
-  DynamicPositionedPose
-} from "./plugins/react-pose";
+  DynamicPositionedPose,
+  TransitionStutter
+} from './plugins/react-pose';
 
-storiesOf("Plugin: Pose", module)
-  .add("pose", () => <PoseDOM />)
-  .add("pose flip", () => <PoserFLIP />)
-  .add("passive values", () => <PoserPassive />)
-  .add("manual values", () => <PoserManualValues />)
-  .add("drag", () => <PoseDrag />)
-  .add("hover", () => <PoseHover />)
-  .add("focus", () => <PoseFocus />)
-  .add("click", () => <PoseClick />)
-  .add("opacity", () => <PoseOpacity />)
-  .add("width/height auto", () => <Auto />)
-  .add("full screen flip", () => <PoseFullScreenFlip />);
+storiesOf('Plugin: Pose', module)
+  .add('pose', () => <PoseDOM />)
+  .add('pose flip', () => <PoserFLIP />)
+  .add('passive values', () => <PoserPassive />)
+  .add('manual values', () => <PoserManualValues />)
+  .add('drag', () => <PoseDrag />)
+  .add('hover', () => <PoseHover />)
+  .add('focus', () => <PoseFocus />)
+  .add('click', () => <PoseClick />)
+  .add('opacity', () => <PoseOpacity />)
+  .add('width/height auto', () => <Auto />)
+  .add('full screen flip', () => <PoseFullScreenFlip />);
 
-storiesOf("Plugin: React Pose", module)
-  .add("pose", () => <ReactPose />)
-  .add("children", () => <ReactPoseChildren />)
-  .add("group", () => <Group />)
-  .add("email list", () => <EmailList />)
-  .add("user-defined poses within PoseGroup", () => <UserPoseInPoseGroup />)
-  .add("pose key test", () => <PoseKey />)
-  .add("hover", () => (
+storiesOf('Plugin: React Pose', module)
+  .add('pose', () => <ReactPose />)
+  .add('children', () => <ReactPoseChildren />)
+  .add('group', () => <Group />)
+  .add('email list', () => <EmailList />)
+  .add('user-defined poses within PoseGroup', () => <UserPoseInPoseGroup />)
+  .add('pose key test', () => <PoseKey />)
+  .add('hover', () => (
     <Hover onPressStart={console.log} onPressEnd={console.log} />
   ))
-  .add("image filter", () => <Filter />)
-  .add("pose key fail test", () => <PoseKeyFail />)
-  .add("drag w/ children", () => <DragChildren />)
-  .add("single filter", () => (
+  .add('image filter', () => <Filter />)
+  .add('pose key fail test', () => <PoseKeyFail />)
+  .add('drag w/ children', () => <DragChildren />)
+  .add('single filter', () => (
     <SingleFilter
       src="https://static1.squarespace.com/static/5b475b2c50a54f54f9b4e1dc/5b4a5c2d88251b376ea105c1/5b4ae647575d1fa91f1f2def/1531635336765/DSCF2959.jpg?format=1500w"
       height="300"
     />
   ))
-  .add("dynamic positioned pose", () => <DynamicPositionedPose />);
+  .add('dynamic positioned pose', () => <DynamicPositionedPose />)
+  .add('transition stuttering', () => <TransitionStutter />);
 
 // import { Decay, DecayModifyTarget, DecayPower, DecayTimeConstant } from './decay';
 // import { Keyframes, KeyframesDuration, KeyframesLoop, KeyframesLinear, KeyframesTimes } from './keyframes';
@@ -74,7 +76,7 @@ import {
   TweenYoyo,
   TweenFlip,
   TweenWithVelocity
-} from "./tween";
+} from './tween';
 // import { Spring, SpringVelocity, SpringHeavier, SpringStiffer, SpringStifferDamping } from './spring';
 // import { TimelineTest } from './timeline';
 // import { Chain, Composite, Delay, Crossfade, Merge, Parallel, Stagger } from './compositors';
@@ -114,25 +116,25 @@ import {
   TextPoseGroup,
   ExternalPoser,
   ViaPoseProp
-} from "./plugins/text";
-storiesOf("SplitText", module)
-  .add("animate text", () => <AnimateText />)
-  .add("pose group", () => <TextPoseGroup />)
-  .add("external poser", () => <ExternalPoser />)
-  .add("via pose prop", () => <ViaPoseProp />);
+} from './plugins/text';
+storiesOf('SplitText', module)
+  .add('animate text', () => <AnimateText />)
+  .add('pose group', () => <TextPoseGroup />)
+  .add('external poser', () => <ExternalPoser />)
+  .add('via pose prop', () => <ViaPoseProp />);
 
-storiesOf("tween", module)
-  .add("default props", () => <TweenBasic />)
-  .add("loop", () => <TweenLoop />)
-  .add("yoyo", () => <TweenYoyo />)
-  .add("flip", () => <TweenFlip />)
-  .add("track velocity", () => <TweenWithVelocity />);
+storiesOf('tween', module)
+  .add('default props', () => <TweenBasic />)
+  .add('loop', () => <TweenLoop />)
+  .add('yoyo', () => <TweenYoyo />)
+  .add('flip', () => <TweenFlip />)
+  .add('track velocity', () => <TweenWithVelocity />);
 
-import { Drag, DragWithDeltaPointer, Multitouch } from "./pointer";
-storiesOf("pointer", module)
-  .add("drag", () => <Drag />)
-  .add("drag with delta pointer", () => <DragWithDeltaPointer />)
-  .add("multitouch", () => <Multitouch />);
+import { Drag, DragWithDeltaPointer, Multitouch } from './pointer';
+storiesOf('pointer', module)
+  .add('drag', () => <Drag />)
+  .add('drag with delta pointer', () => <DragWithDeltaPointer />)
+  .add('multitouch', () => <Multitouch />);
 
 // storiesOf('compositors', module)
 // .add('chain', () => <Chain />)

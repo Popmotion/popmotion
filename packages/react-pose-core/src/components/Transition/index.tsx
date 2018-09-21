@@ -2,7 +2,7 @@ import * as React from 'react';
 import handleChildrenTransitions from './children';
 import { Props, State } from './types';
 
-class Transition extends React.PureComponent<Props> {
+class Transition extends React.Component<Props, State> {
   static defaultProps = {
     preEnterPose: 'exit',
     enterPose: 'enter',
@@ -23,12 +23,14 @@ class Transition extends React.PureComponent<Props> {
 
   removeChild(key: string) {
     const { children, leaving } = this.state;
-    const { enterAfterExit } = this.props;
+    const { enterAfterExit, onRest } = this.props;
     if (!leaving.hasOwnProperty(key)) return;
 
     leaving[key] = true;
 
-    if (!Object.keys(leaving).every(Boolean)) return;
+    if (!Object.keys(leaving).every(leavingKey => leaving[leavingKey])) {
+      return;
+    }
 
     const targetChildren = children.filter(
       child => !leaving.hasOwnProperty(child.key)
@@ -47,7 +49,7 @@ class Transition extends React.PureComponent<Props> {
           children: targetChildren
         };
 
-    this.setState(newState);
+    this.setState(newState, onRest);
   }
 
   render() {
