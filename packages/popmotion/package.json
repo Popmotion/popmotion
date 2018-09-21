@@ -77,7 +77,8 @@
     "moduleNameMapper": {
       "@popmotion/easing": "<rootDir>/../../easing/src",
       "stylefire": "<rootDir>/../../stylefire/src",
-      "style-value-types": "<rootDir>/../../style-value-types/src"
+      "style-value-types": "<rootDir>/../../style-value-types/src",
+      "framesync": "<rootDir>/../../framesync/src"
     },
     "transform": {
       "\\.(ts)$": "../../../node_modules/ts-jest/preprocessor.js"
