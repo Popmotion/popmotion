@@ -8,6 +8,7 @@ export type Props = {
   animateOnMount?: boolean;
   enterAfterExit?: boolean;
   popFromLayoutOnExit?: boolean;
+  onRest?: () => void;
   [key: string]: any;
 };
 

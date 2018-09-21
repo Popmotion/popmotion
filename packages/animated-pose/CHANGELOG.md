@@ -2,6 +2,12 @@
 
 Animated Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.2.1] 2018-09-21
+
+### Fixed
+
+- Added defaults for scale and rotate.
+
 ## [1.2.0] 2018-09-14
 
 ### Added

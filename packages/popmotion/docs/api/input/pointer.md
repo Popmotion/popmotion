@@ -29,19 +29,18 @@ pointer()
 
 Provide initial `x` and `y` properties to output pointer movement **applied to this initial point**.
 
+This is useful for dragging motion.
+
 ```javascript
 pointer({ x: 200, y: 175 })
   .start(({ x, y }) => console.log(x, y));
 ```
-
 
 Reactions are provided the following pointer data:
 
 - `x`, `y`: Alias of `clientX` / `clientY`, or 
 - `clientX`, `clientY`: Position relative to the viewport.
 - `pageX`, `pageY`: Position relative to the document.
-
-To apply the change in pointer movement to, for instance, a slider, you can use the [`deltaOffset`](/api/delta-pointer) action.
 
 ## Props
 

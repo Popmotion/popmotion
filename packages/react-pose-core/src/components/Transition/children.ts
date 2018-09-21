@@ -4,12 +4,22 @@ import { invariant } from 'hey-listen';
 
 const getKey = (child: ReactElement<any>): string => {
   invariant(
-    child.key !== null,
+    child && child.key !== null,
     'Every child of Transition must be given a unique key'
   );
 
-  return typeof child.key === 'number' ? child.key.toString() : child.key;
+  const childKey =
+    typeof child.key === 'number' ? child.key.toString() : child.key;
+
+  return childKey.replace('.$', '');
 };
+
+const getKeys = (
+  children: React.ReactElement<any> | Array<React.ReactElement<any>>
+): string[] =>
+  Children.toArray(children)
+    .filter(Boolean)
+    .map(getKey);
 
 const handleTransition = (
   {
@@ -30,8 +40,9 @@ const handleTransition = (
     hasMounted
   }: State
 ) => {
-  const displayedKeys = Children.map(displayedChildren, getKey);
-  const targetKeys = Children.map(targetChildren, getKey);
+  const displayedKeys = getKeys(displayedChildren);
+  const targetKeys = getKeys(targetChildren);
+
   const enteringKeys = new Set(
     targetKeys.filter(key => {
       const isEntering =
@@ -49,6 +60,7 @@ const handleTransition = (
   const children: Array<ReactElement<any>> = [];
 
   Children.forEach(targetChildren, (child: ReactElement<any>) => {
+    if (!child) return;
     const isEntering = enteringKeys.has(getKey(child));
     const baseProps = {
       flipMove,

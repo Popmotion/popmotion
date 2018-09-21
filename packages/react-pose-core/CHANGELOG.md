@@ -2,6 +2,18 @@
 
 React Pose Core adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.4.2] 2018-09-21
+
+### Added
+
+- `onRest` callback for when `Transition` sets state after transitioning children.
+
+## [0.4.1] 2018-09-21
+
+### Fixed
+
+- Filtering falsey children from `Transition`.
+
 ## [0.4.0] 2018-09-14
 
 ### Adding
