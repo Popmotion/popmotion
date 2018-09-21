@@ -1,58 +1,115 @@
 import * as React from 'react';
 import { ReactElement } from 'react';
-import { CurrentPose } from '../PoseElement/types';
-import { MergeChildrenProps, Props } from './types';
+//import { CurrentPose } from '../PoseElement/types';
+import { Props, State } from './types';
+import { invariant } from 'hey-listen';
 const { Children, cloneElement } = React;
 
-const getKey = (child: ReactElement<any>): string => child.key as string;
+const filterChildProps = ({
+  children,
+  _pose,
+  onPoseComplete,
+  popFromFlow,
+  ...props
+}: Props) => props;
 
-const filterChildProps = ({ children, _pose, onPoseComplete, popFromFlow, ...props }: Props) => props;
+// const animateChildrenList = (
+//   incomingChildren: Array<ReactElement<any>>,
+//   pose: CurrentPose,
+//   initialPose?: CurrentPose
+// ) => {
+//   const children: Array<ReactElement<any>> = [];
 
-const animateChildrenList = (
-  incomingChildren: Array<ReactElement<any>>,
-  pose: CurrentPose,
-  initialPose?: CurrentPose
-) => {
-  const children: Array<ReactElement<any>> = [];
+//   Children.forEach(incomingChildren, (child: ReactElement<any>) =>
+//     children.push(cloneElement(child, { pose, initialPose }))
+//   );
+//   return children;
+// };
 
-  Children.forEach(incomingChildren, (child: ReactElement<any>) =>
-    children.push(cloneElement(child, { pose, initialPose }))
+// const mergeChildren = ({
+//   incomingChildren,
+//   displayedChildren,
+//   finishedLeaving,
+//   scheduleChildRemoval,
+//   groupProps
+// }: MergeChildrenProps) =>
+
+// export const handleIncomingChildren = (props: MergeChildrenProps) => {
+//   const { displayedChildren, incomingChildren, groupProps } = props;
+//   const { animateOnMount, preEnterPose, enterPose } = groupProps;
+
+//   // If initial mount and we're animating
+//   if (!displayedChildren && animateOnMount) {
+//     return animateChildrenList(incomingChildren, enterPose, preEnterPose);
+
+//     // If subsequent render
+//   } else if (displayedChildren) {
+//     return mergeChildren(props);
+
+//     // If initial mount and we're not animating
+//   } else {
+//     return animateChildrenList(incomingChildren, enterPose);
+//   }
+// };
+
+const getKey = (child: ReactElement<any>): string => {
+  invariant(
+    child && child.key !== null,
+    'Every child of Transition must be given a unique key'
   );
-  return children;
+
+  const childKey =
+    typeof child.key === 'number' ? child.key.toString() : child.key;
+
+  return childKey.replace('.$', '');
 };
 
-const mergeChildren = ({
-  incomingChildren,
-  displayedChildren,
-  isLeaving,
-  removeFromTree,
-  groupProps
-}: MergeChildrenProps) => {
-  const {
-    children: groupChildren,
+// const getKeys = (
+//   children: React.ReactElement<any> | Array<React.ReactElement<any>>
+// ): string[] =>
+//   Children.toArray(children)
+//     .filter(Boolean)
+//     .map(getKey);
+
+const handleTransition = (
+  {
+    children: targetChildren,
     preEnterPose,
     enterPose,
     exitPose,
-    flipMove,
     animateOnMount,
+    enterAfterExit,
+    flipMove,
     ...propsForChild
-  } = groupProps;
+  }: Props,
+  {
+    children: displayedChildren,
+    finishedLeaving,
+    scheduleChildRemoval,
+    hasMounted
+  }: State
+) => {
+  targetChildren = makeChildList(targetChildren);
+
   const children: Array<ReactElement<any>> = [];
 
   const prevKeys = displayedChildren.map(getKey);
-  const nextKeys = incomingChildren.map(getKey);
+  const nextKeys = targetChildren.map(getKey);
 
   const entering = new Set(
-    nextKeys.filter(key => isLeaving.has(key) || prevKeys.indexOf(key) === -1)
+    nextKeys.filter(
+      key => finishedLeaving.hasOwnProperty(key) || prevKeys.indexOf(key) === -1
+    )
   );
-  entering.forEach(key => isLeaving.delete(key));
+  entering.forEach(key => delete finishedLeaving[key]);
 
   const leaving = prevKeys.filter(
     key =>
-      !entering.has(key) && (isLeaving.has(key) || nextKeys.indexOf(key) === -1)
+      !entering.has(key) &&
+      (finishedLeaving.hasOwnProperty(key) || nextKeys.indexOf(key) === -1)
   );
 
-  leaving.forEach(key => isLeaving.add(key));
+  leaving.forEach(key => (finishedLeaving[key] = false));
 
   const moving = new Set(
     prevKeys.filter((key, i) => {
@@ -61,7 +118,7 @@ const mergeChildren = ({
     })
   );
 
-  incomingChildren.forEach(child => {
+  targetChildren.forEach(child => {
     const newChildProps = {
       ...propsForChild,
       ...filterChildProps(child.props)
@@ -83,7 +140,7 @@ const mergeChildren = ({
     const child = displayedChildren.find(c => c.key === key);
     const newChild = cloneElement(child, {
       _pose: exitPose,
-      onPoseComplete: removeFromTree(key),
+      onPoseComplete: () => scheduleChildRemoval(key),
       popFromFlow: flipMove,
       ...propsForChild,
       ...filterChildProps(child.props)
@@ -101,28 +158,15 @@ const mergeChildren = ({
     children.splice(insertionIndex, 0, newChild);
   });
 
-  return children;
+  return { children };
 };
 
-export const handleIncomingChildren = (props: MergeChildrenProps) => {
-  const { displayedChildren, incomingChildren, groupProps } = props;
-  const { animateOnMount, preEnterPose, enterPose } = groupProps;
+export default (props: Props, state: State) => ({
+  hasMounted: true,
+  ...handleTransition(props, state)
+});
 
-  // If initial mount and we're animating
-  if (!displayedChildren && animateOnMount) {
-    return animateChildrenList(incomingChildren, enterPose, preEnterPose);
-
-    // If subsequent render
-  } else if (displayedChildren) {
-    return mergeChildren(props);
-
-    // If initial mount and we're not animating
-  } else {
-    return animateChildrenList(incomingChildren, enterPose);
-  }
-};
-
-export const makeChildList = (
+const makeChildList = (
   children: Array<ReactElement<any>> | ReactElement<any>
 ) => {
   const list: Array<ReactElement<any>> = [];
@@ -132,8 +176,3 @@ export const makeChildList = (
   );
   return list;
 };
-
-export const removeFromChildren = (
-  children: Array<ReactElement<any>>,
-  key: string
-) => children.filter(child => child.key !== key);
