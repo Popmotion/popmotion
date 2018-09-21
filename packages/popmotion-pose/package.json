@@ -71,7 +71,8 @@
       "@popmotion/easing": "<rootDir>/../../easing/src",
       "popmotion": "<rootDir>/../../popmotion/src",
       "pose-core": "<rootDir>/../../pose-core/src",
-      "style-value-types": "<rootDir>/../../style-value-types/src"
+      "style-value-types": "<rootDir>/../../style-value-types/src",
+      "framesync": "<rootDir>/../../framesync/src"
     },
     "testRegex": "/_tests/.*\\.(ts|js)$",
     "rootDir": "src"
