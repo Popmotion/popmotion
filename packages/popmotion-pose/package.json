@@ -72,6 +72,7 @@
       "popmotion": "<rootDir>/../../popmotion/src",
       "pose-core": "<rootDir>/../../pose-core/src",
       "style-value-types": "<rootDir>/../../style-value-types/src",
+      "stylefire": "<rootDir>/../../stylefire/src",
       "framesync": "<rootDir>/../../framesync/src"
     },
     "testRegex": "/_tests/.*\\.(ts|js)$",
