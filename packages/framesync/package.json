@@ -1,0 +1,64 @@
+{
+  "name": "framesync",
+  "version": "4.0.0",
+  "description": "A Unity-inspired render loop for JavaScript",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "module": "dist/framesync.es.js",
+  "jsnext:main": "dist/framesync.es.js",
+  "scripts": {
+    "build": "rollup -c",
+    "watch": "rollup -c -w",
+    "lint": "tslint -c tslint.json 'src/**/*.{ts}'",
+    "test": "jest",
+    "measure": "gzip -c dist/framesync.min.js | wc -c",
+    "prepublishOnly": "npm run test && npm run build"
+  },
+  "files": [
+    "lib",
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Popmotion/framesync.git"
+  },
+  "keywords": [
+    "animation",
+    "raf"
+  ],
+  "author": "Matt Perry",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Popmotion/framesync/issues"
+  },
+  "homepage": "https://github.com/Popmotion/framesync#readme",
+  "devDependencies": {
+    "@types/jest": "^23.1.1",
+    "jest": "^23.1.0",
+    "jest-cli": "^23.1.0",
+    "rollup-plugin-node-resolve": "^3.4.0",
+    "rollup-plugin-typescript2": "^0.14.0",
+    "rollup-plugin-uglify": "^3.0.0",
+    "ts-jest": "^21.2.4",
+    "typescript": "^2.4.2"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "transform": {
+      "\\.(ts)$": "../../../node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "/_tests/.*\\.(ts|js)$",
+    "rootDir": "src"
+  },
+  "unpkg": "./dist/framesync.min.js",
+  "prettier": {
+    "parser": "typescript",
+    "singleQuote": true
+  },
+  "dependencies": {
+    "hey-listen": "^1.0.5"
+  }
+}

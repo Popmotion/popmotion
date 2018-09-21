@@ -48,7 +48,7 @@
   },
   "dependencies": {
     "@popmotion/easing": "^1.0.1",
-    "framesync": "^3.1.9",
+    "framesync": "^4.0.0",
     "hey-listen": "^1.0.5",
     "style-value-types": "^3.0.6",
     "stylefire": "^2.0.7",
@@ -76,7 +76,9 @@
     ],
     "moduleNameMapper": {
       "@popmotion/easing": "<rootDir>/../../easing/src",
-      "style-value-types": "<rootDir>/../../style-value-types/src"
+      "stylefire": "<rootDir>/../../stylefire/src",
+      "style-value-types": "<rootDir>/../../style-value-types/src",
+      "framesync": "<rootDir>/../../framesync/src"
     },
     "transform": {
       "\\.(ts)$": "../../../node_modules/ts-jest/preprocessor.js"
