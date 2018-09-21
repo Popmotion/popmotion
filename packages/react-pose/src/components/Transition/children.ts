@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { ReactElement } from 'react';
-//import { CurrentPose } from '../PoseElement/types';
 import { Props, State } from './types';
 import { invariant } from 'hey-listen';
 const { Children, cloneElement } = React;
