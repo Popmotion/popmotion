@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Fragment } from 'react';
 import { Props, State } from './types';
 import {
   handleIncomingChildren,
@@ -56,7 +55,7 @@ class Transition extends React.Component<Props, State> {
   }
 
   render() {
-    return <Fragment>{this.state.children}</Fragment>;
+    return this.state.children;
   }
 }
 
