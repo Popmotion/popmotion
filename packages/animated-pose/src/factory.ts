@@ -66,6 +66,12 @@ export default ({
      */
     readValue: () => 0,
 
+    readValueFromSource: (key: string) => {
+      if (key.includes('rotate')) return '0deg';
+      if (key.includes('scale')) return 1;
+      return 0;
+    },
+
     /**
      * Convert value
      *

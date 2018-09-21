@@ -12,13 +12,13 @@ const Box = posed.View({
 });
 
 export default class App extends React.Component {
-  state = { current: 0, items: [1, 2, 3, 4] };
+  state = { show: false };
 
   componentDidMount() {
     setInterval(
       () =>
         this.setState({
-          items: shuffle(this.state.items)
+          show: !this.state.show
         }),
       2000
     );
@@ -27,10 +27,12 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Transition delta={-1} flipMove>
-          {this.state.items.map(id => (
-            <Box key={id} style={styles['box' + id]} />
-          ))}
+        <Transition delta={-1}>
+          {this.state.show ? (
+            <Box key="a" style={styles.box1} />
+          ) : (
+            <Box key="b" style={styles.box2} />
+          )}
         </Transition>
       </View>
     );
