@@ -15,7 +15,7 @@ import {
 import isValidProp from '@emotion/is-prop-valid';
 import { invariant } from 'hey-listen';
 import { hasChanged } from '../../utils/has-changed';
-import { pickAssign } from '../../utils/pick-assign';
+import { pickAssign } from '../../utils/object-assign';
 
 export const PoseParentContext = createContext({});
 
@@ -280,7 +280,7 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
     const poseList: string[] = Array.isArray(pose) ? pose : [pose];
 
     Promise.all(poseList.map(key => key && this.poser.set(key))).then(
-      () => onPoseComplete && onPoseComplete()
+      () => onPoseComplete && onPoseComplete(pose)
     );
   }
 

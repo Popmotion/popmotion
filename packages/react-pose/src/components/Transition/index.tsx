@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Fragment } from 'react';
+import { warning } from 'hey-listen';
 import { Props, State } from './types';
 import {
   handleIncomingChildren,
@@ -19,17 +20,39 @@ class Transition extends React.Component<Props, State> {
     props: Props,
     { isLeaving, removeFromTree, children }: State
   ) => {
-    const incomingChildren = makeChildList(props.children);
+    const {
+      children: groupChildren,
+      preEnterPose,
+      enterPose,
+      exitPose,
+      flipMove,
+      animateOnMount,
+      ...propsForChild,
+    } = props;
+
+    const incomingChildren = makeChildList(groupChildren);
+
+    if (process.env.NODE_ENV !== 'production') {
+      warning(!propsForChild.onPoseComplete, '<Transition/> (or <PoseGroup/>) doesn\'t accept onPoseComplete prop.')
+    }
+
+    const currentChildren = handleIncomingChildren({
+      incomingChildren,
+      children,
+      isLeaving,
+      removeFromTree,
+      groupProps: props
+    })
 
     return {
-      incomingChildren,
-      children: handleIncomingChildren({
-        incomingChildren,
-        displayedChildren: children,
-        isLeaving,
-        removeFromTree,
-        groupProps: props
-      })
+      children: currentChildren,
+      displayedChildren: currentChildren.map(child =>
+        // avoid extra copying in cloneElement
+        React.createElement(child.type, {
+          ...propsForChild,
+          ...child.props,
+        })
+      ),
     };
   };
 
@@ -44,10 +67,11 @@ class Transition extends React.Component<Props, State> {
   };
 
   removeFromChildren(key: string) {
-    const { children } = this.state;
+    const { children, displayedChildren } = this.state;
 
     this.setState({
       children: removeFromChildren(children, key)
+      displayedChildren: removeFromChildren(displayedChildren, key)
     });
   }
 
@@ -56,7 +80,7 @@ class Transition extends React.Component<Props, State> {
   }
 
   render() {
-    return <Fragment>{this.state.children}</Fragment>;
+    return <Fragment>{this.state.displayedChildren}</Fragment>;
   }
 }
 

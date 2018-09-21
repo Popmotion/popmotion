@@ -1,6 +1,12 @@
 # Changelog
 
-React Pose adheres to [Semantic Versioning](http://semver.org/).
+Pose for React adheres to [Semantic Versioning](http://semver.org/).
+
+## [3.3.4] 2018-09-18
+
+### Fixed
+
+- **Actively** filtering props from children that may have previously been set by `PoseGroup` itself.
 
 ## [3.3.3] 2018-09-17
 

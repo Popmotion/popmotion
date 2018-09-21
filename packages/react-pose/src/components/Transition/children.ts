@@ -6,8 +6,6 @@ const { Children, cloneElement } = React;
 
 const getKey = (child: ReactElement<any>): string => child.key as string;
 
-const filterChildProps = ({ children, _pose, onPoseComplete, popFromFlow, ...props }: Props) => props;
-
 const animateChildrenList = (
   incomingChildren: Array<ReactElement<any>>,
   pose: CurrentPose,
@@ -23,23 +21,20 @@ const animateChildrenList = (
 
 const mergeChildren = ({
   incomingChildren,
-  displayedChildren,
+  children,
   isLeaving,
   removeFromTree,
   groupProps
 }: MergeChildrenProps) => {
   const {
-    children: groupChildren,
     preEnterPose,
     enterPose,
     exitPose,
     flipMove,
-    animateOnMount,
-    ...propsForChild
   } = groupProps;
-  const children: Array<ReactElement<any>> = [];
+  const mergedChildren: Array<ReactElement<any>> = [];
 
-  const prevKeys = displayedChildren.map(getKey);
+  const prevKeys = children.map(getKey);
   const nextKeys = incomingChildren.map(getKey);
 
   const entering = new Set(
@@ -62,31 +57,36 @@ const mergeChildren = ({
   );
 
   incomingChildren.forEach(child => {
-    const newChildProps = {
-      ...propsForChild,
-      ...filterChildProps(child.props)
-    };
+    const newChildProps = {};
 
     if (entering.has(child.key as string)) {
+      // If child is entering
       newChildProps.initialPose = preEnterPose;
-      newChildProps._pose = enterPose;
+      newChildProps._pose = enterPose; // TODO: Remove _pose and merge with child.props.pose
     } else if (moving.has(child.key as string) && flipMove) {
+      // If child is moving and we're using `flip`
       newChildProps._pose = [enterPose, 'flip'];
     } else {
+      // If child is moving
       newChildProps._pose = enterPose;
     }
 
-    children.push(cloneElement(child, newChildProps));
+    mergedChildren.push(cloneElement(child, newChildProps));
   });
 
   leaving.forEach(key => {
-    const child = displayedChildren.find(c => c.key === key);
+    const child = children.find(c => c.key === key);
+    const removeChildFromTree = removeFromTree(key)
+
     const newChild = cloneElement(child, {
       _pose: exitPose,
-      onPoseComplete: removeFromTree(key),
+      onPoseComplete: pose => {
+        removeChildFromTree()
+        const { onPoseComplete } = child.props
+        // TODO: call original onPoseComplete prop also in react-pose-core, vue-pose
+        onPoseComplete && onPoseComplete(pose)
+      },
       popFromFlow: flipMove,
-      ...propsForChild,
-      ...filterChildProps(child.props)
     });
 
     const insertionIndex = prevKeys.indexOf(key);
@@ -98,22 +98,22 @@ const mergeChildren = ({
     // TODO: Write a shitty algo
     // }
 
-    children.splice(insertionIndex, 0, newChild);
+    mergedChildren.splice(insertionIndex, 0, newChild);
   });
 
-  return children;
+  return mergedChildren;
 };
 
 export const handleIncomingChildren = (props: MergeChildrenProps) => {
-  const { displayedChildren, incomingChildren, groupProps } = props;
+  const { children, incomingChildren, groupProps } = props;
   const { animateOnMount, preEnterPose, enterPose } = groupProps;
 
   // If initial mount and we're animating
-  if (!displayedChildren && animateOnMount) {
+  if (!children && animateOnMount) {
     return animateChildrenList(incomingChildren, enterPose, preEnterPose);
 
     // If subsequent render
-  } else if (displayedChildren) {
+  } else if (children) {
     return mergeChildren(props);
 
     // If initial mount and we're not animating
