@@ -15,7 +15,7 @@ import {
 import isValidProp from '@emotion/is-prop-valid';
 import { invariant } from 'hey-listen';
 import { hasChanged } from '../../utils/has-changed';
-import { pickAssign } from '../../utils/pick-assign';
+import { pickAssign } from '../../utils/object-assign';
 
 export const PoseParentContext = createContext({});
 

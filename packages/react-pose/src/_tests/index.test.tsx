@@ -251,18 +251,21 @@ test('PoseGroup: Override props on child', () => {
         enterPose="dynamicEnter"
         exitPose="dynamicExit"
         preEnterPose="dynamicExit"
-        x={101}
+        x={isVisible ? 101 : 333}
+        onPoseComplete={() => {
+          if (isVisible) {
+            expect(x).toBe(202);
+            expect(y).toBe(75);
+            wrapper.setProps({ isVisible: false });
+          } else {
+            expect(x).toBe(333);
+            expect(y).toBe(85);
+            resolve();
+          }
+        }}
       >
         {isVisible && (
-          <Parent
-            key="a"
-            onPoseComplete={() => {
-              expect(x).toBe(202);
-              expect(y).toBe(75);
-              resolve();
-            }}
-            onValueChange={{ x: v => (x = v) }}
-          >
+          <Parent key="a" onValueChange={{ x: v => (x = v) }}>
             <Child onValueChange={{ y: v => (y = v) }} />
           </Parent>
         )}
