@@ -13,45 +13,6 @@ const filterChildProps = ({
   ...props
 }: Props) => props;
 
-// const animateChildrenList = (
-//   incomingChildren: Array<ReactElement<any>>,
-//   pose: CurrentPose,
-//   initialPose?: CurrentPose
-// ) => {
-//   const children: Array<ReactElement<any>> = [];
-
-//   Children.forEach(incomingChildren, (child: ReactElement<any>) =>
-//     children.push(cloneElement(child, { pose, initialPose }))
-//   );
-//   return children;
-// };
-
-// const mergeChildren = ({
-//   incomingChildren,
-//   displayedChildren,
-//   finishedLeaving,
-//   scheduleChildRemoval,
-//   groupProps
-// }: MergeChildrenProps) =>
-
-// export const handleIncomingChildren = (props: MergeChildrenProps) => {
-//   const { displayedChildren, incomingChildren, groupProps } = props;
-//   const { animateOnMount, preEnterPose, enterPose } = groupProps;
-
-//   // If initial mount and we're animating
-//   if (!displayedChildren && animateOnMount) {
-//     return animateChildrenList(incomingChildren, enterPose, preEnterPose);
-
-//     // If subsequent render
-//   } else if (displayedChildren) {
-//     return mergeChildren(props);
-
-//     // If initial mount and we're not animating
-//   } else {
-//     return animateChildrenList(incomingChildren, enterPose);
-//   }
-// };
-
 const getKey = (child: ReactElement<any>): string => {
   invariant(
     child && child.key !== null,
@@ -63,13 +24,6 @@ const getKey = (child: ReactElement<any>): string => {
 
   return childKey.replace('.$', '');
 };
-
-// const getKeys = (
-//   children: React.ReactElement<any> | Array<React.ReactElement<any>>
-// ): string[] =>
-//   Children.toArray(children)
-//     .filter(Boolean)
-//     .map(getKey);
 
 const handleTransition = (
   {
@@ -125,7 +79,9 @@ const handleTransition = (
     };
 
     if (entering.has(child.key as string)) {
-      newChildProps.initialPose = preEnterPose;
+      if (hasMounted || animateOnMount) {
+        newChildProps.initialPose = preEnterPose;
+      }
       newChildProps._pose = enterPose;
     } else if (moving.has(child.key as string) && flipMove) {
       newChildProps._pose = [enterPose, 'flip'];
