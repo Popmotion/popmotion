@@ -81,7 +81,7 @@ Then replace the two `div`s with our new components:
 
 ## Animate!
 
-By default, `PoseGroup` will fire a component's `enter` pose when they enter (transitioning from `exit` pose), and `exit` when they exit.
+By default, `PoseGroup` will fire a component's `enter` pose when they enter (transitioning from its `exit` pose), and `exit` when they exit.
 
 So let's give our new `Shade` and `Modal` components `enter` and `exit` poses:
 

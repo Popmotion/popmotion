@@ -33,15 +33,15 @@ const ItemList = ({ items }) => (
 )
 ```
 
-**Note:** Every child must be provided a unique `key` property for `PoseGroup` to track entering and exiting children.
+**Notes:**
+- Every child must be provided a unique `key` property for `PoseGroup` to track entering and exiting children.
+- Entering children transition from their pre-enter pose to `'enter'`. The pre-enter pose is `'exit'` by default, and can be edited with the [`preEnterPose` prop](#posegroup-props-preenterpose).
 
 ### Animating children
 
 As with any posed component, the `enter`/`exit` pose will propagate throughout any of its posed component children.
 
 In the case of the `exit` pose, `PoseGroup` will only unmount the animating component once **all of its children** have also finished their `exit` animation.
-
-**Note:** Entering children is transitioning from `exit` (default [`preEnterPose`](#preenterpose)) to `enter` pose.
 
 ### Passing props to children
 
