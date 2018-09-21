@@ -1,6 +1,6 @@
 ---
 title: Get started
-description: Introduction to Popmotion Pose's declarative animation interface
+description: Introduction to Pose for React's declarative animation interface
 category: react
 next: custom-transitions
 ---
@@ -23,7 +23,7 @@ For local development, all installation options can be found on the [install](/p
 
 ## The "Hello World" animation
 
-In React Pose, we create animated components by importing `posed` from `react-pose`:
+In Pose for React, we create animated components by importing `posed` from `react-pose`:
 
 ```javascript
 import posed from 'react-pose';

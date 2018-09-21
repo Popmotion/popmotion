@@ -28,27 +28,6 @@ export type PoserState = PoserState<
 
 export type Transformer = (v: any) => any;
 
-export interface DomPopmotionPoser
-  extends Poser<Value, Action, ColdSubscription, DomPopmotionPoser> {
-  addChild: (element: Element, config: PoserConfig<Value>) => DomPopmotionPoser;
-  flip: (op: Function) => Promise<any>;
-  measure: () => BoundingBox;
-}
-
-export type DomPopmotionConfig = {
-  onDragStart?: (e: MouseEvent | TouchEvent) => any;
-  onDragEnd?: (e: MouseEvent | TouchEvent) => any;
-  onPressStart?: (e: MouseEvent | TouchEvent) => any;
-  onPressEnd?: (e: MouseEvent | TouchEvent) => any;
-  draggable?: Draggable;
-  hoverable?: boolean;
-  dragBounds?: { [key in BoundingBoxDimension]?: number | string };
-  props?: { [key: string]: any };
-  [key: string]: any;
-};
-
-export type Draggable = boolean | 'x' | 'y';
-
 export type TransitionProps = {
   from: string | number;
   velocity: number;
@@ -58,9 +37,32 @@ export type TransitionProps = {
   dimensions: Dimensions;
 };
 
-export type Transition = (
-  props: TransitionProps & { [key: string]: any }
-) => Action | false;
+export type ResolverProps = TransitionProps & { [key: string]: any };
+
+export type Transition = (props: ResolverProps) => Action | false;
+
+export interface DomPopmotionPoser
+  extends Poser<Value, Action, ColdSubscription, DomPopmotionPoser> {
+  addChild: (element: Element, config: PoserConfig<Value>) => DomPopmotionPoser;
+  flip: (op: Function) => Promise<any>;
+  measure: () => BoundingBox;
+}
+
+export type DragBounds = { [key in BoundingBoxDimension]?: number | string };
+
+export type DomPopmotionConfig = {
+  onDragStart?: (e: MouseEvent | TouchEvent) => any;
+  onDragEnd?: (e: MouseEvent | TouchEvent) => any;
+  onPressStart?: (e: MouseEvent | TouchEvent) => any;
+  onPressEnd?: (e: MouseEvent | TouchEvent) => any;
+  draggable?: Draggable;
+  hoverable?: boolean;
+  dragBounds?: DragBounds | ((props: ResolverProps) => DragBounds);
+  props?: { [key: string]: any };
+  [key: string]: any;
+};
+
+export type Draggable = boolean | 'x' | 'y';
 
 export type PopmotionPoserFactoryConfig<P> = {
   extendAPI: ExtendAPI<Value, Action, ColdSubscription, P>;

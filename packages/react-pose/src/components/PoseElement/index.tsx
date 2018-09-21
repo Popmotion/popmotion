@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as ReactIs from 'react-is';
+import { isForwardRef } from 'react-is';
 import { createContext, createElement } from 'react';
 import poseFactory, {
   DomPopmotionPoser,
@@ -11,11 +11,11 @@ import {
   PoseContextProps,
   PoseElementInternalProps,
   PopStyle
-} from './PoseElement.types';
+} from './types';
 import isValidProp from '@emotion/is-prop-valid';
 import { invariant } from 'hey-listen';
-import { hasChanged } from '../utils/has-changed';
-import { pickAssign } from '../utils/pick-assign';
+import { hasChanged } from '../../utils/has-changed';
+import { pickAssign } from '../../utils/pick-assign';
 
 export const PoseParentContext = createContext({});
 
@@ -172,7 +172,7 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
     const refs: RefSetters = {};
     const { elementType } = this.props;
 
-    if (typeof elementType === 'string' || ReactIs.isForwardRef(elementType)) {
+    if (typeof elementType === 'string' || isForwardRef(elementType)) {
       refs.ref = this.setRef;
     } else {
       refs.innerRef = this.setRef;

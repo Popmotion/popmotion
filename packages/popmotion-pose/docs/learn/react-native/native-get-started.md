@@ -1,25 +1,15 @@
 ---
 title: Get started
-description: Introduction to React Native Pose's declarative animation interface
+description: Introduction to Pose for React Native's declarative animation interface
 category: react-native
 next: native-custom-transitions
 ---
 
 # Get started
 
-React Native Pose is a declarative motion system for React Native's Animated library.
+Pose is a declarative motion system that combines the simplicity of CSS syntax with the power and flexibility of JavaScript animations and interactions.
 
-It aims to bring the simplicity of CSS transitions to React Native animations.
-
-Some key features:
-
-- **Automatic animations:** By default, animations are automatically generated based on the properties being changed.
-- **Children:** Pose changes are propagated throughout posed components via context. This allows simple animation orchestration across components without messy imperative logic or delicate prop chains.
-- **Units:** Handles unit animations without having to manually `interpolate`. Introduces CSS `vw` and `vh` units to React Native.
-- **Easy dragging:** Making a component draggable is as simple as `draggable: true`.
-- **`useNativeDriver`:** Automatically uses it with supported values, and disables it when used with `PanResponder` or when `interpolate`d to an unsupported value like `backgroundColor`.
-
-In the following tutorials we'll take a look at each of React Native Pose's features, starting with a very simple animation.
+In this series of tutorials, we'll learn how to use Pose for React Native. We'll gradually introduce each of its features, starting with this simple `opacity` animation:
 
 <Video src="/static/videos/native-get-started.mp4" height="320" />
 
@@ -27,7 +17,7 @@ In the following tutorials we'll take a look at each of React Native Pose's feat
 
 ## Setup
 
-Install React Native Pose in your React Native project:
+Install Pose for React Native in your React Native project:
 
 ### npm
 
@@ -41,26 +31,30 @@ npm install react-native-pose
 yarn add react-native-pose
 ```
 
-## "Hello World" animation
+## The "Hello World" animation
 
-React Native exports a single function, `posed`.
+In Pose for React Native, we create animated components by importing `posed` from `react-native-posed`:
 
 ```javascript
 import posed from 'react-native-pose';
 ```
 
-`posed` is a factory function that [creates posed components](/pose/api/native-posed). These are components that can be animated between different states defined by [a `config` object](/pose/api/native-config):
+`posed` can create [animated versions of any component](/pose/api/native-posed), but it has built-in support for `View`, `Text`, `Image`, and `ScrollView`:
 
 ```javascript
-const config = {
-  visible: { opacity: 1 },
-  hidden: { opacity: 0 }
-};
-
-const Box = posed.View(config);
+const Box = posed.View();
 ```
 
-Our new `Box` can now be animated between `'hidden'` and `'visible'` states by passing it a `pose` property on render:
+We can pass a [a configuration object](/pose/api/native-config) to the posed component that defines visual states, or "poses", that our component can be in:
+
+```javascript
+const Box = posed.View({
+  visible: { opacity: 1 },
+  hidden: { opacity: 0 }
+});
+```
+
+This `Box` component can be animated between `'hidden'` and `'visible'` poses by passing it a `pose` property on render:
 
 ```javascript
 export default ({ isVisible }) => (
@@ -76,14 +70,8 @@ Short answer: we didn't.
 
 More helpful answer: By default, Pose **doesn't require you to explicitly define the animations** used to transition between two states.
 
-Instead, it automatically selects a React Animated animation based on the property being animated:
+Instead, it automatically selects a React Animated animation based on the property being animated.
 
-- `translate` and `rotate` props use a slighty-bouncy `spring`.
-- `scale` props use a tight `spring`.
-- All other props use `timing`.
+These animations have been designed to create snappy and playful interfaces. Physical motion uses `spring` to maintain velocity between animations, whereas properties like `opacity` use a `tween`.
 
-These animations are configured identically to those in [Pose and React Pose](/pose). They've been tweaked to create snappy and playful interfaces. Physical motion uses `spring` to maintain velocity between animations.
-
-In the near future, it will be possible to affect these default animations by using properties to describe the **characteristics** of the interface.
-
-However, there will always be situations where we need greater control over our animations. For that, we can define [custom transitions](/pose/learn/learn-custom-transitions).
+However, there will always be situations where we need greater control over our animations. For that, we can define [custom transitions](/pose/learn/native-custom-transitions).

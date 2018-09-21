@@ -5,7 +5,7 @@ import supportedElements from './utils/supported-elements';
 import {
   PoseElementProps,
   PoseContextProps
-} from './components/PoseElement.types';
+} from './components/PoseElement/types';
 import { DomPopmotionConfig } from 'popmotion-pose';
 
 type DomPopmotionConfigFactory<T> = (

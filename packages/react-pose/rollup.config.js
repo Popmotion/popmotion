@@ -21,6 +21,9 @@ const common = commonjs({
       'Children',
       'cloneElement'
     ]
+  },
+  namedExports: {
+    'node_modules/react-is/index.js': ['isForwardRef']
   }
 });
 

@@ -21,6 +21,7 @@ export type PoseComponentProps = {
   initialPose?: CurrentPose;
   children?: React.ReactNode | ChildAsFunction;
   poseKey?: any;
+  popFromLayout?: boolean;
   [key: string]: any;
 };
 
@@ -31,6 +32,13 @@ export type ValueMap = {
 export type CurrentPose = string | string[];
 
 export type ChildAsFunction = (values: ValueMap) => ReactNode;
+
+export type Layout = {
+  x: number;
+  y: number;
+  height: number;
+  width: number;
+};
 
 export type PosedComponentFactoryConfig = {
   componentMap: { [key: string]: React.Component };
@@ -44,7 +52,8 @@ export type PosedComponentFactoryConfig = {
   getProps: (
     poser: AnimatedPoser,
     config: AnimatedPoseConfig,
-    props: PoseComponentProps
+    props: PoseComponentProps,
+    setLayout: (layout: Layout) => void
   ) => Props;
   getStylesFromPoser: (poser: AnimatedPoser) => { [key: string]: any };
 };

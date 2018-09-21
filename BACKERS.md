@@ -17,3 +17,4 @@ In order joined, the following people make Popmotion possible by [supporting our
 12. Anthony Sapp [Pro]
 13. [Sebastian Software](https://twitter.com/sebastiansoft) [Pro]
 14. [Travis Arnold](https://twitter.com/souporserious)
+15. [Martin Pitt](https://twitter.com/nexii) [Sponsor]

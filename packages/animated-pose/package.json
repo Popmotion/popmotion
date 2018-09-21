@@ -1,6 +1,6 @@
 {
   "name": "animated-pose",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Pose for the Animated animation library",
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
@@ -29,7 +29,6 @@
   "devDependencies": {
     "@types/jest": "^22.2.3",
     "@types/react-native": "^0.55.4",
-    "babel-jest": "^23.0.1",
     "jest": "^22.4.3",
     "prettier": "1.11.1",
     "react-native": "^0.55.4",
@@ -45,6 +44,8 @@
     "react-native": ">=0.54.0"
   },
   "dependencies": {
-    "pose-core": "^1.0.2"
+    "@popmotion/easing": "^1.0.1",
+    "hey-listen": "^1.0.5",
+    "pose-core": "^2.0.0"
   }
 }
