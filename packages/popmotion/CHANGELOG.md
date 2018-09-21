@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.4.0] 2018-09-21
+
+### Updated
+
+- Moved to `framesync@4.0.0`
+
 ## [8.3.8] 2018-08-30
 
 ### Fixed

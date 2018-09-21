@@ -2,6 +2,12 @@
 
 Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.1.0] 2018-09-21
+
+### Updated
+
+- Moving to `framesync@4.0.0`
+
 ## [2.0.7] 2018-08-10
 
 ### Fixed

@@ -80,7 +80,11 @@ By setting `immediate` to `true`, we can add this at the end of the current step
 ```javascript
 sync.update(({ timestamp }) => {
   // The following function will run on the **current** frame:
-  sync.update((frame) => frame.timestamp === timestamp, false, true);
+  sync.update(
+    (frame) => frame.timestamp === timestamp,
+    false,
+    true
+  );
 });
 ```
 

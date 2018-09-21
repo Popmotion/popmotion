@@ -1,12 +1,4 @@
-import {
-  spring,
-  tween,
-  action,
-  easing,
-  pointer,
-  transform,
-  Action
-} from 'popmotion';
+import { spring, tween, action, pointer, transform, Action } from 'popmotion';
 import { linear } from '@popmotion/easing';
 import { TransitionMap } from 'pose-core';
 import { Transition, BoundingBoxDimension } from '../types';
@@ -41,7 +33,11 @@ const createPointer = (
       transformQueue.push((v: number) =>
         Math.max(
           v,
-          dimensions.measurementAsPixels(measurement, resolvedDragBounds[min], type)
+          dimensions.measurementAsPixels(
+            measurement,
+            resolvedDragBounds[min],
+            type
+          )
         )
       );
     }
@@ -49,7 +45,11 @@ const createPointer = (
       transformQueue.push((v: number) =>
         Math.min(
           v,
-          dimensions.measurementAsPixels(measurement, resolvedDragBounds[max], type)
+          dimensions.measurementAsPixels(
+            measurement,
+            resolvedDragBounds[max],
+            type
+          )
         )
       );
     }
