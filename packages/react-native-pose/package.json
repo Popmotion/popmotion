@@ -41,6 +41,6 @@
   },
   "dependencies": {
     "animated-pose": "^1.2.0",
-    "react-pose-core": "^0.4.0"
+    "react-pose-core": "^0.4.1"
   }
 }
