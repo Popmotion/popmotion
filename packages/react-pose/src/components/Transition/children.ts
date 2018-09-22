@@ -39,8 +39,8 @@ const handleTransition = (
   {
     children: displayedChildren,
     finishedLeaving,
+    hasInitialized,
     scheduleChildRemoval,
-    hasMounted
   }: State
 ) => {
   targetChildren = makeChildList(targetChildren);
@@ -79,7 +79,7 @@ const handleTransition = (
     };
 
     if (entering.has(child.key as string)) {
-      if (hasMounted || animateOnMount) {
+      if (hasInitialized || animateOnMount) {
         newChildProps.initialPose = preEnterPose;
       }
       newChildProps._pose = enterPose;
@@ -118,7 +118,7 @@ const handleTransition = (
 };
 
 export default (props: Props, state: State) => ({
-  hasMounted: true,
+  hasInitialized: true,
   ...handleTransition(props, state)
 });
 
