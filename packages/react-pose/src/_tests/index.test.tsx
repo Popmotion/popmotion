@@ -96,6 +96,24 @@ test('posed: passes through props', () => {
   expect(y).toBe(2);
 });
 
+test('posed: `onPoseComplete` gets called with pose as argument', () => {
+  let x = 0;
+  let y = 0;
+
+  return new Promise(resolve => {
+    mount(
+      <Parent
+        initialPose="bar"
+        pose="foo"
+        onPoseComplete={pose => {
+          expect(pose).toBe('foo');
+          resolve();
+        }}
+      />
+    );
+  });
+});
+
 test('PoseGroup: Initial visibility (visible)', () => {
   let x = 0;
   let y = 0;
@@ -281,15 +299,22 @@ test('PoseGroup: Override props on child', () => {
         enterPose="dynamicEnter"
         exitPose="dynamicExit"
         preEnterPose="dynamicExit"
-        x={101}
+        x={isVisible ? 101 : 333}
       >
         {isVisible && (
           <Parent
             key="a"
-            onPoseComplete={() => {
-              expect(x).toBe(202);
-              expect(y).toBe(75);
-              resolve();
+            onPoseComplete={pose => {
+              if (pose === 'dynamicExit') {
+                expect(x).toBe(333);
+                expect(y).toBe(85);
+
+                resolve();
+              } else {
+                expect(x).toBe(202);
+                expect(y).toBe(75);
+                wrapper.setProps({ isVisible: false });
+              }
             }}
             onValueChange={{ x: v => (x = v) }}
           >
@@ -307,6 +332,60 @@ test('PoseGroup: Override props on child', () => {
     wrapper.setProps({ isVisible: true });
     expect(x).toBe(101);
     expect(y).toBe(85);
+  });
+});
+
+test('PoseGroup: Provides group props to children on mount', () => {
+  let x = 0;
+  let y = 0;
+
+  return new Promise(resolve => {
+    const Group = ({ isVisible = false }) => (
+      <PoseGroup
+        animateOnMount
+        someProp="value"
+      >
+        <Parent
+          key="a"
+          onPoseComplete={pose => {
+            const child = wrapper.children().first()
+            expect(child.prop('someProp')).toBe('value')
+            resolve();
+          }}
+        >
+          <Child test={2}/>
+        </Parent>
+      </PoseGroup>
+    );
+
+    const wrapper = mount(<Group />);
+  });
+});
+
+test('PoseGroup: `onPoseComplete` gets called for leaving child', () => {
+  return new Promise(resolve => {
+    const Group = ({ isVisible = true }) => (
+      <PoseGroup animateOnMount>
+        {isVisible && (
+          <Parent
+            key="a"
+            onPoseComplete={pose => {
+              if (pose === 'enter') {
+                wrapper.setProps({ isVisible: false });
+                return
+              }
+
+              expect(pose).toBe('exit');
+              resolve();
+            }}
+          >
+            <Child />
+          </Parent>
+        )}
+      </PoseGroup>
+    );
+
+    const wrapper = mount(<Group />);
   });
 });
 

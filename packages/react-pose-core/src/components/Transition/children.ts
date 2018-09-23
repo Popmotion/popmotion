@@ -94,7 +94,12 @@ const handleTransition = (
 
     const newChild = cloneElement(child as ReactElement<any>, {
       pose: exitPose,
-      onPoseComplete: () => scheduleChildRemoval(key),
+      onPoseComplete: pose => {
+        scheduleChildRemoval(key)
+
+        const { onPoseComplete } = child.props
+        onPoseComplete && onPoseComplete(pose)
+      },
       popFromLayout: popFromLayoutOnExit || flipMove,
       ...props
     });

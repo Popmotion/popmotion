@@ -89,7 +89,7 @@ class PoseComponent extends React.PureComponent<PoseComponentProps> {
     const poseList: string[] = Array.isArray(pose) ? pose : [pose];
 
     Promise.all(poseList.map(key => key && this.poser.set(key))).then(
-      () => onPoseComplete && onPoseComplete()
+      () => onPoseComplete && onPoseComplete(pose)
     );
   }
 

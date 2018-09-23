@@ -1,16 +1,6 @@
-import * as React from 'react';
-import { ReactElement } from 'react';
+import { Children, cloneElement, createElement, ReactElement } from 'react';
 import { Props, State } from './types';
-import { invariant } from 'hey-listen';
-const { Children, cloneElement } = React;
-
-const filterChildProps = ({
-  children,
-  _pose,
-  onPoseComplete,
-  popFromFlow,
-  ...props
-}: Props) => props;
+import { invariant, warning } from 'hey-listen';
 
 const getKey = (child: ReactElement<any>): string => {
   invariant(
@@ -24,6 +14,18 @@ const getKey = (child: ReactElement<any>): string => {
   return childKey.replace('.$', '');
 };
 
+const prependProps = (
+  element: ReactElement<any>,
+  props: { [key: string]: any; }
+) =>
+  // avoid extra copying in cloneElement
+  createElement(element.type, {
+    key: element.key,
+    ref: element.ref,
+    ...props,
+    ...element.props,
+  })
+
 const handleTransition = (
   {
     children: targetChildren,
@@ -34,21 +36,34 @@ const handleTransition = (
     enterAfterExit,
     flipMove,
     onRest,
-    ...propsForChild
+    ...propsForChilds
   }: Props,
   {
-    children: displayedChildren,
+    displayedChildren,
     finishedLeaving,
     hasInitialized,
+    indexedChildren: prevChildren,
     scheduleChildRemoval,
   }: State
 ) => {
   targetChildren = makeChildList(targetChildren);
 
-  const children: Array<ReactElement<any>> = [];
+  const nextState: Partial<State> = {
+    displayedChildren: []
+    indexedChildren: {},
+  }
+
+  if (process.env.NODE_ENV !== 'production') {
+    warning(
+      !propsForChilds.onPoseComplete,
+      `<Transition/> (or <PoseGroup/>) doesn't accept onPoseComplete prop.`,
+    );
+  }
 
   const prevKeys = displayedChildren.map(getKey);
   const nextKeys = targetChildren.map(getKey);
+
+  const hasPropsForChilds = Object.keys(propsForChilds).length !== 0;
 
   const entering = new Set(
     nextKeys.filter(
@@ -67,21 +82,23 @@ const handleTransition = (
 
   const moving = new Set(
     prevKeys.filter((key, i) => {
+      if (!entering.has(key)) {
+        return false;
+      }
+
       const nextIndex = nextKeys.indexOf(key);
-      return !entering.has(key) && nextIndex !== -1 && i !== nextIndex;
+      return nextIndex !== -1 && i !== nextIndex;
     })
   );
 
   targetChildren.forEach(child => {
-    const newChildProps = {
-      ...propsForChild,
-      ...filterChildProps(child.props)
-    };
+    const newChildProps = {};
 
     if (entering.has(child.key as string)) {
       if (hasInitialized || animateOnMount) {
         newChildProps.initialPose = preEnterPose;
       }
+      // TODO: Remove _pose and merge with child.props.pose
       newChildProps._pose = enterPose;
     } else if (moving.has(child.key as string) && flipMove) {
       newChildProps._pose = [enterPose, 'flip'];
@@ -89,17 +106,26 @@ const handleTransition = (
       newChildProps._pose = enterPose;
     }
 
-    children.push(cloneElement(child, newChildProps));
+    const newChild = cloneElement(child, newChildProps);
+    nextState.indexedChildren[child.key] = newChild;
+    nextState.displayedChildren.push(
+      hasPropsForChilds
+        ? prependProps(newChild, propsForChilds)
+        : newChild
+    );
   });
 
   leaving.forEach(key => {
-    const child = displayedChildren.find(c => c.key === key);
+    const child = prevChildren[key]
     const newChild = cloneElement(child, {
       _pose: exitPose,
-      onPoseComplete: () => scheduleChildRemoval(key),
+      onPoseComplete: pose => {
+        scheduleChildRemoval(key)
+
+        const { onPoseComplete } = child.props
+        onPoseComplete && onPoseComplete(pose)
+      },
       popFromFlow: flipMove,
-      ...propsForChild,
-      ...filterChildProps(child.props)
     });
 
     const insertionIndex = prevKeys.indexOf(key);
@@ -111,10 +137,17 @@ const handleTransition = (
     // TODO: Write a shitty algo
     // }
 
-    children.splice(insertionIndex, 0, newChild);
+    nextState.indexedChildren[child.key] = newChild;
+    nextState.displayedChildren.splice(
+      insertionIndex,
+      0,
+      hasPropsForChilds
+        ? prependProps(newChild, propsForChilds)
+        : newChild
+    );
   });
 
-  return { children };
+  return nextState;
 };
 
 export default (props: Props, state: State) => ({

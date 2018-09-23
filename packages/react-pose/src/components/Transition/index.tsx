@@ -14,15 +14,15 @@ class Transition extends React.Component<Props, State> {
   static getDerivedStateFromProps = handleChildrenTransitions;
 
   state: State = {
-    children: [],
-    incomingChildren: [],
+    displayedChildren: [],
     finishedLeaving: {},
     hasInitialized: false,
+    indexedChildren: {},
     scheduleChildRemoval: key => this.removeChild(key)
   };
 
   removeChild(key: string) {
-    const { children, finishedLeaving } = this.state;
+    const { displayedChildren, finishedLeaving } = this.state;
     const { enterAfterExit, onRest } = this.props;
     if (!finishedLeaving.hasOwnProperty(key)) return;
 
@@ -36,7 +36,7 @@ class Transition extends React.Component<Props, State> {
       return;
     }
 
-    const targetChildren = children.filter(
+    const targetChildren = displayedChildren.filter(
       child => !finishedLeaving.hasOwnProperty(child.key)
     );
 
@@ -45,12 +45,12 @@ class Transition extends React.Component<Props, State> {
           finishedLeaving: {},
           ...handleChildrenTransitions(
             { ...this.props, enterAfterExit: false },
-            { ...this.state, children: targetChildren }
+            { ...this.state, displayedChildren: targetChildren }
           )
         }
       : {
           finishedLeaving: {},
-          children: targetChildren
+          displayedChildren: targetChildren
         };
 
     this.setState(newState as State, onRest);
@@ -61,7 +61,7 @@ class Transition extends React.Component<Props, State> {
   }
 
   render() {
-    return this.state.children;
+    return this.state.displayedChildren;
   }
 }
 
