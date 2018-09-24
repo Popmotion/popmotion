@@ -1,27 +1,20 @@
 # Framesync
 
-A tiny frame scheduler for performantly batching reads and renders.
+A tiny frame scheduler for performantly batching reads, updates and renders.
 
 Segregating actions that read and write to the DOM will avoid [layout thrashing](https://developers.google.com/web/fundamentals/performance/rendering/avoid-large-complex-layouts-and-layout-thrashing).
 
-Popmotion batches updates on the `update` step, and Stylefire batches renders on the `render` step.
+It's also a way of ensuring order of execution across a frame. For instance, Popmotion batches updates on the `update` step, and Stylefire batches renders on the `render` step, allowing independent animation of `transform` properties.
 
 ## Install
 
 ```bash
-npm install framesync --save
+npm install framesync
 ```
 
 ## Usage
 
-### Render steps
-
-Once per frame, the functions scheduled with Framesync are executed in the following order:
-
-- `read`
-- `update`
-- `render`
-- `postRender`
+Framesync splits a frame into discrete `read`, `update`, `render` and `postRender` steps.
 
 ### Scheduling functions
 
@@ -31,14 +24,10 @@ Functions can be scheduled to different parts of the render loop with `sync`.
 import sync from 'framesync';
 ```
 
-It contains four functions, one to schedule on each of the above steps:
+It provides four functions, one for scheduling a function to run on each part of the frame:
 
 ```javascript
-sync[stepId](callback, keepAlive, immediate)
-```
-
-```javascript
-sync.update(() => console.log('update step'));
+sync.update(() => {});
 ```
 
 ### Frame data
@@ -46,37 +35,36 @@ sync.update(() => console.log('update step'));
 Each function is provided data about the current frame:
 
 ```javascript
-sync.update(({ delta, timestamp }) => {});
+sync.update({ delta, timestamp }) => {});
 ```
 
 - `delta`: Time since last frame (in milliseconds)
 - `timestamp`: Timestamp of the current frame.
 
-This object is recycled across frames to reduce garbage collection, so values should be destructured if intended to be used asynchronously.
+This object is recycled across frames, so values should be destructured if intended to be used asynchronously.
 
-### keepAlive
+### Keep alive
 
-We can run a function (or set of functions) as an ongoing process by passing `keepAlive: true`:
+We can run a function as an ongoing process by passing `true` as the second parameter:
 
 ```javascript
 let count = 0;
 
-sync(() => count++, true);
+sync.update(() => count++, true);
 ```
 
 This will keep the process running until it's actively cancelled.
 
-### immediate
+### Run immediately
 
-The `immediate` option can be used to sync a function on the **current frame step**.
+The third parameter, `immediate`, can be used to sync a function on the **current frame step**.
 
 By default, Framesync will schedule functions to run the next time that frame step is fired:
 
 ```javascript
 sync.update(({ timestamp }) => {
-  sync.update((frame) => {
-    // frame.timestamp !== timestamp
-  ))
+  // The following function will run on the subsequent frame:
+  sync.update((frame) => frame.timestamp !== timestamp);
 });
 ```
 
@@ -84,15 +72,18 @@ By setting `immediate` to `true`, we can add this at the end of the current step
 
 ```javascript
 sync.update(({ timestamp }) => {
-  sync.update((frame) => {
-    // frame.timestamp === timestamp
-  }, false, true)
+  // The following function will run on the **current** frame:
+  sync.update(
+    (frame) => frame.timestamp === timestamp,
+    false,
+    true
+  );
 });
 ```
 
 ### Cancelling
 
-Synced processes can be cancelled with `cancelSync`:
+Synced processes can be cancelled with the `cancelSync` function:
 
 ```javascript
 import sync, { cancelSync } from 'framesync';
@@ -101,8 +92,6 @@ let count = 0;
 
 const process = sync.render(() => {
   count++;
-  if (count >= 10) {
-    cancelSync.render(process);
-  }
+  if (count >= 10) cancelSync(process);
 }, true);
 ```

@@ -21,7 +21,7 @@ npm install framesync
 
 ## Usage
 
-Framesync splits a frame into descrete `read`, `update`, `render` and `postRender` steps.
+Framesync splits a frame into discrete `read`, `update`, `render` and `postRender` steps.
 
 ### Scheduling functions
 
