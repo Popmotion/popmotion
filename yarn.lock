@@ -14027,7 +14027,7 @@ react-docgen@^3.0.0-beta11:
     node-dir "^0.1.10"
     recast "^0.15.0"
 
-react-dom@^16.3.0-rc.0, react-dom@^16.3.2, react-dom@^16.4.2:
+react-dom@^16.3.2, react-dom@^16.4.2, react-dom@^16.5.2:
   version "16.5.2"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.5.2.tgz#b69ee47aa20bab5327b2b9d7c1fe2a30f2cfa9d7"
   dependencies:
@@ -14276,13 +14276,6 @@ react-pose-core@^0.1.0:
     "@types/react-native" "^0.55.4"
     animated-pose "^0.2.0"
 
-react-pose-text@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/react-pose-text/-/react-pose-text-0.2.0.tgz#d7a45155fb65713e213df59883984678f3bf5c44"
-  dependencies:
-    hey-listen "^1.0.5"
-    react-pose "^3.0.0"
-
 react-prop-types-element-of-type@2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/react-prop-types-element-of-type/-/react-prop-types-element-of-type-2.2.0.tgz#bcc332d3903c2259cf68c28a81c4a663faba59ac"
@@ -14400,7 +14393,7 @@ react@16.3.1:
     object-assign "^4.1.1"
     prop-types "^15.6.0"
 
-react@^16.0.0, react@^16.3.0-rc.0, react@^16.3.2, react@^16.4.2:
+react@^16.0.0, react@^16.3.2, react@^16.4.2, react@^16.5.2:
   version "16.5.2"
   resolved "https://registry.yarnpkg.com/react/-/react-16.5.2.tgz#19f6b444ed139baa45609eee6dc3d318b3895d42"
   dependencies:

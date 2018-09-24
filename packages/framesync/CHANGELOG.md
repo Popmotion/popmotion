@@ -2,6 +2,18 @@
 
 Framesync adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.0.0] 2018-09-24
+
+### Changed
+
+- New API.
+  - `onFrameUpdate(callback, immediate)` -> `sync.update(callback, keepAlive, immediate)`
+  - `cancelOnFrameUpdate(callback)` -> `cancelSync.update(callback)`
+  
+### Added
+
+- `keepAlive` parameter.
+
 ## [3.1.9] 2018-05-16
 
 ### Fixed
