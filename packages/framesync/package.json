@@ -1,6 +1,6 @@
 {
   "name": "framesync",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "A Unity-inspired render loop for JavaScript",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
