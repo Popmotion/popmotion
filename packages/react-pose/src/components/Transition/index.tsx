@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Fragment } from 'react';
 import { Props, State } from './types';
 import handleChildrenTransitions from './children';
 
@@ -18,6 +17,7 @@ class Transition extends React.Component<Props, State> {
     children: [],
     incomingChildren: [],
     finishedLeaving: {},
+    hasInitialized: false,
     scheduleChildRemoval: key => this.removeChild(key)
   };
 
@@ -61,7 +61,7 @@ class Transition extends React.Component<Props, State> {
   }
 
   render() {
-    return <Fragment>{this.state.children}</Fragment>;
+    return this.state.children;
   }
 }
 

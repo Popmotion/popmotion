@@ -132,10 +132,9 @@ export default function buildStylePropertyString(
       transformString += `${TRANSLATE_Z}(0)`;
     }
 
-    propertyString += styleRule(
-      TRANSFORM,
-      transformIsDefault ? TRANSFORM_NONE : transformString
-    );
+    propertyString += transformIsDefault
+      ? TRANSFORM_NONE
+      : styleRule(TRANSFORM, transformString);
   }
 
   return propertyString;

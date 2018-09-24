@@ -13,9 +13,9 @@ export type Props = {
 };
 
 export type State = {
-  hasMounted?: boolean;
-  children?: Array<React.ReactElement<any>>;
-  incomingChildren?: Array<React.ReactElement<any>>;
+  children: Array<React.ReactElement<any>>;
+  incomingChildren: Array<React.ReactElement<any>>;
   finishedLeaving: { [key: string]: boolean };
+  hasInitialized: boolean;
   scheduleChildRemoval: (key: string) => void;
 };
