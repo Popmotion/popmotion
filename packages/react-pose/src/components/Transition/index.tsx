@@ -18,6 +18,7 @@ class Transition extends React.Component<Props, State> {
     children: [],
     incomingChildren: [],
     finishedLeaving: {},
+    hasInitialized: false,
     scheduleChildRemoval: key => this.removeChild(key)
   };
 
