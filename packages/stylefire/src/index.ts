@@ -15,7 +15,7 @@ const createDOMStyler = (node: Element | Window, props: Props) => {
     styler = css(node, props);
   } else if (node instanceof SVGElement) {
     styler = svg(node);
-  } else if (typeof window !== 'undefined' && node === window) {
+  } else if (node === window) {
     styler = viewport(node);
   }
 
