@@ -36,7 +36,7 @@ const handleTransition = (
     enterAfterExit,
     flipMove,
     onRest,
-    ...propsForChilds
+    ...propsForChildren
   }: Props,
   {
     displayedChildren,
@@ -55,7 +55,7 @@ const handleTransition = (
 
   if (process.env.NODE_ENV !== 'production') {
     warning(
-      !propsForChilds.onPoseComplete,
+      !propsForChildren.onPoseComplete,
       `<Transition/> (or <PoseGroup/>) doesn't accept onPoseComplete prop.`,
     );
   }
@@ -63,7 +63,7 @@ const handleTransition = (
   const prevKeys = displayedChildren.map(getKey);
   const nextKeys = targetChildren.map(getKey);
 
-  const hasPropsForChilds = Object.keys(propsForChilds).length !== 0;
+  const hasPropsForChildren = Object.keys(propsForChildren).length !== 0;
 
   const entering = new Set(
     nextKeys.filter(
@@ -109,8 +109,8 @@ const handleTransition = (
     const newChild = cloneElement(child, newChildProps);
     nextState.indexedChildren[child.key] = newChild;
     nextState.displayedChildren.push(
-      hasPropsForChilds
-        ? prependProps(newChild, propsForChilds)
+      hasPropsForChildren
+        ? prependProps(newChild, propsForChildren)
         : newChild
     );
   });
@@ -141,8 +141,8 @@ const handleTransition = (
     nextState.displayedChildren.splice(
       insertionIndex,
       0,
-      hasPropsForChilds
-        ? prependProps(newChild, propsForChilds)
+      hasPropsForChildren
+        ? prependProps(newChild, propsForChildren)
         : newChild
     );
   });
