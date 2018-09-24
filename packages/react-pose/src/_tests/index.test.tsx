@@ -19,7 +19,7 @@ const Parent = posed.div({
   dynamicExit: {
     x: ({ x }) => x,
     transition: { duration: 30 }
-  }
+  },
 });
 const Child = posed.div({
   init: { y: 15, transition: { duration: 30 } },
@@ -30,7 +30,11 @@ const Child = posed.div({
   enter: { y: 55, transition: { duration: 30 } },
   exit: { y: 65, transition: { duration: 30 } },
   dynamicEnter: { y: 75, transition: { duration: 30 } },
-  dynamicExit: { y: 85, transition: { duration: 30 } }
+  dynamicExit: { y: 85, transition: { duration: 30 } },
+  dynamicExitDuration: {
+    y: 85,
+    transition: ({ i }) => ({ duration: (i + 1) * 30 })
+  }
 });
 
 test('posed: initial state', () => {
@@ -211,6 +215,50 @@ test('PoseGroup: onRest fires', () => {
 
     expect(x).toBe(50);
     expect(y).toBe(55);
+  });
+});
+
+test('PoseGroup: onRest fires when exit pose starts during exit pose', () => {
+  const range = n => Array.from({ length: n }, (_, i) => i);
+
+  return new Promise(resolve => {
+    class Group extends React.Component {
+      state = {
+        list: range(6),
+      }
+
+      componentDidMount() {
+        this.pop2();
+      }
+
+      pop2 = () => {
+        const { list } = this.state
+
+        if (!list.length) {
+          return;
+        }
+
+        this.setState({ list: list.slice(0, -2) });
+      }
+
+      render() {
+        return (
+          <PoseGroup
+            exitPose="dynamicExitDuration"
+            onRest={resolve}
+          >
+            {this.state.list.map(i =>
+              <Child
+                i={i}
+                key={i}
+                onPoseComplete={this.pop2}
+              />)}
+          </PoseGroup>
+        )
+      }
+    }
+
+    const wrapper = mount(<Group />);
   });
 });
 

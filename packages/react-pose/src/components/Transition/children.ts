@@ -72,13 +72,26 @@ const handleTransition = (
   );
   entering.forEach(key => delete finishedLeaving[key]);
 
-  const leaving = prevKeys.filter(
-    key =>
-      !entering.has(key) &&
-      (finishedLeaving.hasOwnProperty(key) || nextKeys.indexOf(key) === -1)
-  );
+  const leaving = [];
+  const newlyLeaving = {};
+  prevKeys.forEach(key => {
+    if (entering.has(key)) {
+      return;
+    }
 
-  leaving.forEach(key => (finishedLeaving[key] = false));
+    const isLeaving = finishedLeaving.hasOwnProperty(key);
+
+    if (!isLeaving && nextKeys.indexOf(key) !== -1) {
+      return;
+    }
+
+    leaving.push(key);
+
+    if (!isLeaving) {
+      finishedLeaving[key] = false;
+      newlyLeaving[key] = true;
+    }
+  })
 
   const moving = new Set(
     prevKeys.filter((key, i) => {
@@ -116,17 +129,20 @@ const handleTransition = (
   });
 
   leaving.forEach(key => {
-    const child = prevChildren[key]
-    const newChild = cloneElement(child, {
-      _pose: exitPose,
-      onPoseComplete: pose => {
-        scheduleChildRemoval(key)
+    const child = prevChildren[key];
 
-        const { onPoseComplete } = child.props
-        onPoseComplete && onPoseComplete(pose)
-      },
-      popFromFlow: flipMove,
-    });
+    const newChild = newlyLeaving[key]
+      ? cloneElement(child, {
+          _pose: exitPose,
+          onPoseComplete: pose => {
+            scheduleChildRemoval(key)
+
+            const { onPoseComplete } = child.props
+            onPoseComplete && onPoseComplete(pose)
+          },
+          popFromFlow: flipMove,
+        })
+      : child;
 
     const insertionIndex = prevKeys.indexOf(key);
 
