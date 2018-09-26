@@ -95,7 +95,7 @@ const handleTransition = (
 
   const moving = new Set(
     prevKeys.filter((key, i) => {
-      if (!entering.has(key)) {
+      if (entering.has(key)) {
         return false;
       }
 
