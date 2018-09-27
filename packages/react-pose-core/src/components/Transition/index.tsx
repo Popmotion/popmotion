@@ -49,7 +49,7 @@ class Transition extends React.Component<Props, State> {
           children: targetChildren
         };
 
-    this.setState(newState, onRest);
+    this.setState(newState as State, onRest);
   }
 
   render() {
