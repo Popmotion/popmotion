@@ -63,11 +63,11 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
    * =============================================
    */
   private childrenHandlers: PoseContextProps = {
-    registerChild: props => {
+    registerChild: (props: ChildRegistration) => {
       this.children.add(props);
       if (this.poser) this.flushChildren();
     },
-    onUnmount: child => this.poser.removeChild(child),
+    onUnmount: (child: DomPopmotionPoser) => this.poser.removeChild(child),
     getParentPoseConfig: () => this.props.poseConfig,
     getInitialPoseFromParent: () => this.getInitialPose()
   };
@@ -231,7 +231,7 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
       registerChild({
         element: this.ref,
         poseConfig: config,
-        onRegistered: poser => this.initPoser(poser)
+        onRegistered: (poser: DomPopmotionPoser) => this.initPoser(poser)
       });
     }
   }

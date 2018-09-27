@@ -8,7 +8,7 @@ export type ChildRegistration = {
 
 export type CurrentPose = string | string[];
 
-export type PoseContextProps = {
+export interface PoseContextProps = {
   registerChild?: (props: ChildRegistration) => void;
   onUnmount?: (child: DomPopmotionPoser) => any;
   getInitialPoseFromParent?: () => CurrentPose;

@@ -1,5 +1,6 @@
 import { Children, cloneElement, createElement, ReactElement } from 'react';
 import { Props, State } from './types';
+import { CurrentPose } from '../PoseElement/types';
 import { invariant, warning } from 'hey-listen';
 
 const getKey = (child: ReactElement<any>): string => {
@@ -21,7 +22,7 @@ const prependProps = (
   // avoid extra copying in cloneElement
   createElement(element.type, {
     key: element.key,
-    ref: element.ref,
+    ref: (element as any).ref,
     ...props,
     ...element.props,
   })
@@ -49,9 +50,9 @@ const handleTransition = (
   targetChildren = makeChildList(targetChildren);
 
   const nextState: Partial<State> = {
-    displayedChildren: []
+    displayedChildren: [],
     indexedChildren: {},
-  }
+  };
 
   if (process.env.NODE_ENV !== 'production') {
     warning(
@@ -72,8 +73,8 @@ const handleTransition = (
   );
   entering.forEach(key => delete finishedLeaving[key]);
 
-  const leaving = [];
-  const newlyLeaving = {};
+  const leaving: Array<string> = [];
+  const newlyLeaving: { [key: string]: boolean } = {};
   prevKeys.forEach(key => {
     if (entering.has(key)) {
       return;
@@ -105,7 +106,7 @@ const handleTransition = (
   );
 
   targetChildren.forEach(child => {
-    const newChildProps = {};
+    const newChildProps: { [key: string]: any; } = {};
 
     if (entering.has(child.key as string)) {
       if (hasInitialized || animateOnMount) {
@@ -134,7 +135,7 @@ const handleTransition = (
     const newChild = newlyLeaving[key]
       ? cloneElement(child, {
           _pose: exitPose,
-          onPoseComplete: pose => {
+          onPoseComplete: (pose: CurrentPose) => {
             scheduleChildRemoval(key)
 
             const { onPoseComplete } = child.props
