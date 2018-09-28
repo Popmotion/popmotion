@@ -63,11 +63,11 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
    * =============================================
    */
   private childrenHandlers: PoseContextProps = {
-    registerChild: props => {
+    registerChild: (props: ChildRegistration) => {
       this.children.add(props);
       if (this.poser) this.flushChildren();
     },
-    onUnmount: child => this.poser.removeChild(child),
+    onUnmount: (child: DomPopmotionPoser) => this.poser.removeChild(child),
     getParentPoseConfig: () => this.props.poseConfig,
     getInitialPoseFromParent: () => this.getInitialPose()
   };
@@ -82,23 +82,18 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
       typeof this.props.elementType === 'string' ? isValidProp : testAlwaysTrue;
   }
 
-  getInitialPose(): CurrentPose {
+  getInitialPose(): CurrentPose | void {
     const { getInitialPoseFromParent, pose, _pose, initialPose } = this.props;
 
     if (initialPose) {
       return initialPose;
     } else {
-      // Feels like this could probably be simpler
       const parentPose = getInitialPoseFromParent && getInitialPoseFromParent();
-      const thisPose = Array.isArray(pose) ? pose : [pose];
-      const thisInternalPose = Array.isArray(_pose) ? _pose : [_pose];
+      const initialPoses = (Array.isArray(parentPose) ? parentPose : [parentPose])
+        .concat(pose, _pose)
+        .filter(Boolean);
 
-      const initialPoses = Array.isArray(parentPose)
-        ? [...parentPose, ...thisPose, ...thisInternalPose]
-        : [parentPose, ...thisPose, ...thisInternalPose];
-
-      const filteredInitialPoses = initialPoses.filter(Boolean);
-      return filteredInitialPoses.length ? filteredInitialPoses : undefined;
+      return initialPoses.length > 0 ? initialPoses : undefined;
     }
   }
 
@@ -107,10 +102,11 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
     // If don't have an initial pose explicitly defined, return early
     if (!initialPose) return;
 
-    const thisPose = Array.isArray(pose) ? pose : [pose];
-    const thisInternalPose = Array.isArray(_pose) ? _pose : [_pose];
+    const firstPose = (Array.isArray(pose) ? pose : [pose])
+      .concat(_pose)
+      .filter(Boolean)
 
-    return [...thisPose, ...thisInternalPose];
+    return firstPose.length === 1 ? firstPose[0] : firstPose;
   }
 
   getSetProps() {
@@ -235,7 +231,7 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
       registerChild({
         element: this.ref,
         poseConfig: config,
-        onRegistered: poser => this.initPoser(poser)
+        onRegistered: (poser: DomPopmotionPoser) => this.initPoser(poser)
       });
     }
   }
@@ -281,7 +277,7 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
     const poseList: string[] = Array.isArray(pose) ? pose : [pose];
 
     Promise.all(poseList.map(key => key && this.poser.set(key))).then(
-      () => onPoseComplete && onPoseComplete()
+      () => onPoseComplete && onPoseComplete(pose)
     );
   }
 

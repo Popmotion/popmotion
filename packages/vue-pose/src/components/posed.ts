@@ -79,7 +79,7 @@ const methods = {
   },
   setPose(pose: string) {
     const { onPoseComplete } = this.$props;
-    this.poser.set(pose).then(() => onPoseComplete && onPoseComplete());
+    this.poser.set(pose).then(() => onPoseComplete && onPoseComplete(pose));
   },
   flushChildren() {
     if (!this.children) return;

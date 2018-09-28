@@ -20,6 +20,7 @@ export type PoseComponentProps = {
   pose?: CurrentPose;
   initialPose?: CurrentPose;
   children?: React.ReactNode | ChildAsFunction;
+  onPoseComplete?: (pose: CurrentPose) => any;
   poseKey?: any;
   popFromLayout?: boolean;
   [key: string]: any;

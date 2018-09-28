@@ -1,5 +1,6 @@
 import { Children, ReactElement, cloneElement } from 'react';
 import { Props, State } from './types';
+import { CurrentPose } from '../../types';
 import { invariant } from 'hey-listen';
 
 const getKey = (child: ReactElement<any>): string => {
@@ -94,7 +95,12 @@ const handleTransition = (
 
     const newChild = cloneElement(child as ReactElement<any>, {
       pose: exitPose,
-      onPoseComplete: () => scheduleChildRemoval(key),
+      onPoseComplete: (pose: CurrentPose) => {
+        scheduleChildRemoval(key)
+
+        const { onPoseComplete } = child.props
+        onPoseComplete && onPoseComplete(pose)
+      },
       popFromLayout: popFromLayoutOnExit || flipMove,
       ...props
     });
