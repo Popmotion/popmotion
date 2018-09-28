@@ -181,7 +181,7 @@ const itemProps = {
   },
   flip: {
     transition: ({ from, to }) =>
-      tween({ from, to, ease: easing.backOut, duration: 400 })
+      tween({ from, to, ease: easing.backOut, duration: 800 })
   },
   closed: {
     opacity: 0,

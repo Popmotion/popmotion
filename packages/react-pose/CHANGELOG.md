@@ -2,6 +2,12 @@
 
 React Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.3.5] 2018-09-28
+
+### Fixed
+
+- Ensure children of `Transition` receive latest props. [#494](https://github.com/Popmotion/popmotion/issues/494)
+
 ## [3.3.4] 2018-09-21
 
 ### Added
