@@ -16,6 +16,6 @@ export type State = {
   displayedChildren: Array<React.ReactElement<any>>;
   finishedLeaving: { [key: string]: boolean };
   hasInitialized: boolean;
-  indexedChildren: { [key: string]: ReactElement<any> };
+  indexedChildren: { [key: string]: React.ReactElement<any> };
   scheduleChildRemoval: (key: string) => void;
 };
