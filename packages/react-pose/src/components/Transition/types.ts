@@ -1,7 +1,10 @@
 import * as React from 'react';
 
+type TransitionChild<T> = React.ReactElement<T> | false | void;
+type TransitionChildren<T> = TransitionChild<T> | Array<TransitionChild<T>>;
+
 export type Props = {
-  children: React.ReactElement<any> | Array<React.ReactElement<any>>;
+  children: TransitionChildren<any>;
   flipMove?: boolean;
   preEnterPose?: string;
   enterPose?: string;
