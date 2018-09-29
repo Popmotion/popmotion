@@ -1,17 +1,17 @@
 {
-  "name": "framesync",
-  "version": "4.0.1",
-  "description": "A Unity-inspired render loop for JavaScript",
+  "name": "@popmotion/utils",
+  "version": "1.0.0",
+  "description": "Utilities for common animation use-cases.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "module": "dist/framesync.es.js",
-  "jsnext:main": "dist/framesync.es.js",
+  "module": "dist/utils.es.js",
+  "jsnext:main": "dist/utils.es.js",
   "scripts": {
     "build": "rollup -c",
     "watch": "rollup -c -w",
     "lint": "tslint -c tslint.json 'src/**/*.{ts}'",
     "test": "jest",
-    "measure": "gzip -c dist/framesync.min.js | wc -c",
+    "measure": "gzip -c dist/utils.min.js | wc -c",
     "prepublishOnly": "npm run test && npm run build"
   },
   "files": [
@@ -31,7 +31,7 @@
   "bugs": {
     "url": "https://github.com/Popmotion/popmotion/issues"
   },
-  "homepage": "https://github.com/Popmotion/popmotion",
+  "homepage": "https://github.com/Popmotion/popmotion#readme",
   "devDependencies": {
     "@types/jest": "^23.1.1",
     "jest": "^23.1.0",
@@ -53,12 +53,13 @@
     "testRegex": "/_tests/.*\\.(ts|js)$",
     "rootDir": "src"
   },
-  "unpkg": "./dist/framesync.min.js",
   "prettier": {
     "parser": "typescript",
     "singleQuote": true
   },
   "dependencies": {
-    "hey-listen": "^1.0.5"
+    "@popmotion/easing": "^1.0.1",
+    "framesync": "^4.0.1",
+    "style-value-types": "^3.0.7"
   }
 }

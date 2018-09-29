@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Popmotion/stylefire.git"
+    "url": "git+https://github.com/Popmotion/popmotion.git"
   },
   "keywords": [
     "css",
@@ -33,9 +33,9 @@
   "author": "Matt Perry",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Popmotion/stylefire/issues"
+    "url": "https://github.com/Popmotion/popmotion/issues"
   },
-  "homepage": "https://github.com/Popmotion/stylefire#readme",
+  "homepage": "https://github.com/Popmotion/popmotion#readme",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
