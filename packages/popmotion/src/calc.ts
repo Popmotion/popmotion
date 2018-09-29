@@ -191,8 +191,10 @@ export const speedPerSecond = (velocity: number, frameDuration: number) =>
 */
 export const stepProgress = (steps: number, progress: number) => {
   const segment = 1 / (steps - 1);
-  const target = 1 - (1 / steps);
-  const progressOfTarget = Math.min(progress / target, 1);
+  const subsegment = 1 / (2 * (steps - 1)); 
+  const percentProgressOfTarget = Math.min(progress, 1);
+  const subsegmentProgressOfTarget = percentProgressOfTarget / subsegment;
+  const segmentProgressOfTarget = Math.floor((subsegmentProgressOfTarget + 1) / 2);
 
-  return Math.floor(progressOfTarget / segment) * segment;
+  return segmentProgressOfTarget * segment;
 };
