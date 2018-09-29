@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.3.8] 2018-08-30
+
+### Fixed
+
+- Calling `transform.steps()` should round properly to each step. [#528](https://github.com/Popmotion/popmotion/issues/528)
+
 ## [8.4.0] 2018-09-21
 
 ### Updated
