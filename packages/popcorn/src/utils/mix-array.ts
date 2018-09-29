@@ -1,9 +1,9 @@
 import { RGBA, HSLA } from 'style-value-types';
-import blendColor from './blend-color';
+import mix from './mix';
+import mixColor from './mix-color';
 import { isNum } from '../inc';
-import valueFromProgress from './value-from-progress';
 
-type BlendableArray = Array<number | RGBA | HSLA>;
+type BlendableArray = Array<number | RGBA | HSLA | string>;
 
 export default (from: BlendableArray, to: BlendableArray) => {
   const output = [...from];
@@ -12,8 +12,8 @@ export default (from: BlendableArray, to: BlendableArray) => {
   const blendValue = from.map((fromThis, i) => {
     const toThis = to[i];
     return isNum(fromThis)
-      ? (v: number) => valueFromProgress(fromThis, toThis as number, v)
-      : blendColor(fromThis, toThis as HSLA | RGBA);
+      ? (v: number) => mix(fromThis, toThis as number, v)
+      : mixColor(fromThis, toThis as HSLA | RGBA | string);
   });
 
   return (v: number) => {

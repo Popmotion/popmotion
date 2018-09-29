@@ -14,6 +14,7 @@ import Link from 'next/link';
 const openSource = [
   themes.pose,
   themes.pure,
+  themes.popcorn,
   themes.stylefire,
   themes.framesync
 ];

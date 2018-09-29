@@ -13,9 +13,9 @@ const config = {
 
 const umd = Object.assign({}, config, {
   output: {
-    file: 'dist/utils.js',
+    file: 'dist/popcorn.js',
     format: 'umd',
-    name: 'utils',
+    name: 'popcorn',
     exports: 'named'
   },
   plugins: [resolve(), typescript(noDeclarationConfig)]
@@ -23,14 +23,14 @@ const umd = Object.assign({}, config, {
 
 const umdProd = Object.assign({}, umd, {
   output: Object.assign({}, umd.output, {
-    file: 'dist/utils.min.js'
+    file: 'dist/popcorn.min.js'
   }),
   plugins: [resolve(), typescript(noDeclarationConfig), uglify()]
 });
 
 const es = Object.assign({}, config, {
   output: {
-    file: 'dist/utils.es.js',
+    file: 'dist/popcorn.es.js',
     format: 'es',
     exports: 'named'
   },

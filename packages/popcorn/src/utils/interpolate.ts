@@ -1,6 +1,6 @@
 import { Easing } from '@popmotion/easing';
-import progressFromValue from './progress-from-value';
-import valueFromProgress from './value-from-progress';
+import progressFromValue from './progress';
+import valueFromProgress from './mix';
 
 /**
  * Interpolate from set of values to another
@@ -54,11 +54,7 @@ const fastInterpolate = (
   maxB: number
 ) => (v: number) => ((v - minA) * (maxB - minB)) / (maxA - minA) + minB;
 
-export const interpolate = (
-  input: number[],
-  output: number[],
-  rangeEasing?: Easing[]
-) => {
+export default (input: number[], output: number[], rangeEasing?: Easing[]) => {
   const rangeLength = input.length;
   return rangeLength !== 2
     ? slowInterpolate(input, output, rangeLength, rangeEasing)

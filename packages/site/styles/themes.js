@@ -6,6 +6,7 @@ import PureLogo from '~/components/icons/PopmotionPure';
 import StylefireLogo from '~/components/icons/StylefireLogo';
 import FramesyncLogo from '~/components/icons/FramesyncLogo';
 import { color } from './vars';
+import PopcornLogo from '../components/icons/PopcornLogo';
 
 const generateTheme = (name, props) => ({
   data: {
@@ -210,6 +211,45 @@ const themeSettings = {
     // Deprecated colors
     actionColor: color.orangeBurn,
     brandColor: color.orange,
+    shareImage: 'https://popmotion.io/static/images/pose-twitter-card.png'
+  },
+  popcorn: {
+    id: 'popcorn',
+    name: 'Popcorn',
+    url: '/popcorn',
+    tagline: 'Utility functions for animation and interaction designers.',
+    sections: ['api'],
+    headerNavLinks: [
+      {
+        href: '/support',
+        label: 'Support us',
+        id: 'support'
+      },
+      {
+        href: '/popcorn/api',
+        label: 'API',
+        id: 'api'
+      }
+    ],
+    Logo: PopcornLogo,
+    homepageLogoSize: {
+      width: 190,
+      height: 36
+    },
+    headerLogoSize: {
+      width: 140,
+      height: 27
+    },
+    footerLogoSize: {
+      width: 210,
+      height: 40
+    },
+    color: {
+      base: '#A5FF36',
+      baseShadow: '#09CA92',
+      twist: '#09CA92',
+      action: '#06A69D'
+    },
     shareImage: 'https://popmotion.io/static/images/pose-twitter-card.png'
   },
   framesync: {
