@@ -16,4 +16,4 @@ const config = {
 }
 ```
 
-<CodeSandbox id="31n86p0jw6" />
+<CodeSandbox id="rlly2kryrn" />
