@@ -10,7 +10,7 @@ To animate an element on focus, set `focusable: true` and a `focus` prop.
 
 ```javascript
 const config = {
-  pressable: true,
+  focusable: true,
   init: { scale: 1 },
   press: { scale: 0.8 }
 }
