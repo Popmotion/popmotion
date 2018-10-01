@@ -32,6 +32,8 @@ import wrap from './utils/wrap';
 
 export {
   angle,
+  applyOffset,
+  clamp,
   degreesToRadians,
   dilate,
   distance,

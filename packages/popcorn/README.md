@@ -1,3 +1,3 @@
 # Popcorn
 
-A collection of utility functions for common animation use cases.
+Popcorn is a collection of utility functions for UI developers and animators.
