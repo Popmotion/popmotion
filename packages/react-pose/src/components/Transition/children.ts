@@ -1,9 +1,9 @@
-import { Children, cloneElement, createElement, ReactElement } from 'react';
+import * as React from 'react';
 import { Props, State } from './types';
 import { CurrentPose } from '../PoseElement/types';
 import { invariant, warning } from 'hey-listen';
 
-const getKey = (child: ReactElement<any>): string => {
+const getKey = (child: React.ReactElement<any>): string => {
   invariant(
     child && child.key !== null,
     'Every child of Transition must be given a unique key'
@@ -16,11 +16,11 @@ const getKey = (child: ReactElement<any>): string => {
 };
 
 const prependProps = (
-  element: ReactElement<any>,
+  element: React.ReactElement<any>,
   props: { [key: string]: any; }
 ) =>
   // avoid extra copying in cloneElement
-  createElement(element.type, {
+  React.createElement(element.type, {
     key: element.key,
     ref: (element as any).ref,
     ...props,
@@ -29,7 +29,7 @@ const prependProps = (
 
 const handleTransition = (
   {
-    children: targetChildren,
+    children: incomingChildren,
     preEnterPose,
     enterPose,
     exitPose,
@@ -47,7 +47,7 @@ const handleTransition = (
     scheduleChildRemoval,
   }: State
 ) => {
-  targetChildren = makeChildList(targetChildren);
+  const targetChildren = makeChildList(incomingChildren as React.ReactNode);
 
   const nextState: Partial<State> = {
     displayedChildren: [],
@@ -120,7 +120,7 @@ const handleTransition = (
       newChildProps._pose = enterPose;
     }
 
-    const newChild = cloneElement(child, newChildProps);
+    const newChild = React.cloneElement(child, newChildProps);
     nextState.indexedChildren[child.key] = newChild;
     nextState.displayedChildren.push(
       hasPropsForChildren
@@ -133,7 +133,7 @@ const handleTransition = (
     const child = prevChildren[key];
 
     const newChild = newlyLeaving[key]
-      ? cloneElement(child, {
+      ? React.cloneElement(child, {
           _pose: exitPose,
           onPoseComplete: (pose: CurrentPose) => {
             scheduleChildRemoval(key)
@@ -172,13 +172,11 @@ export default (props: Props, state: State) => ({
   ...handleTransition(props, state)
 });
 
-const makeChildList = (
-  children: Array<ReactElement<any>> | ReactElement<any>
-) => {
-  const list: Array<ReactElement<any>> = [];
-  Children.forEach(
+const makeChildList = (children: React.ReactNode) => {
+  const list: Array<React.ReactElement<any>> = [];
+  React.Children.forEach(
     children,
-    child => child && list.push(child as ReactElement<any>)
+    child => child && list.push(child as React.ReactElement<any>)
   );
   return list;
 };
