@@ -2,6 +2,12 @@
 
 React Pose Core adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.4.3] 2018-10-03
+
+### Fixed
+
+- No longer passing `flipEnabled`.
+
 ## [0.4.2] 2018-09-21
 
 ### Added

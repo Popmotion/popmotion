@@ -31,7 +31,6 @@ class PoseComponent extends React.PureComponent<PoseComponentProps> {
       poseConfig,
       factoryConfig,
       registerAsChild,
-      flipMove,
       pose,
       initialPose
     } = props;
@@ -44,7 +43,7 @@ class PoseComponent extends React.PureComponent<PoseComponentProps> {
 
     const config = {
       ...poseConfig,
-      flipEnabled: flipMove,
+      //flipEnabled: flipMove,
       props: filterProps(props)
     };
 
