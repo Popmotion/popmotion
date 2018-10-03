@@ -14,10 +14,11 @@
   },
   "devDependencies": {
     "@storybook/react": "^3.2.13",
-    "babel-cli": "^6.16.0",
-    "babel-core": "^6.0.20",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
     "babel-eslint": "^5.0.4",
     "babel-loader": "^6.0.1",
+    "babel-plugin-annotate-pure-calls": "^0.2.2",
     "babel-plugin-root-import": "^5.1.0",
     "babel-plugin-transform-export-extensions": "^6.4.0",
     "babel-plugin-transform-react-constant-elements": "^6.9.1",
