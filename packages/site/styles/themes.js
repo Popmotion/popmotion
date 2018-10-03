@@ -250,7 +250,7 @@ const themeSettings = {
       twist: '#00CF93',
       action: '#06A69D'
     },
-    shareImage: 'https://popmotion.io/static/images/pose-twitter-card.png'
+    shareImage: 'https://popmotion.io/static/images/twitter-card-popcorn.png'
   },
   framesync: {
     id: 'framesync',

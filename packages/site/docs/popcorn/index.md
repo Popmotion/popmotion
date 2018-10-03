@@ -8,7 +8,7 @@ It contains utility functions to help animation and UI developers manipulate val
 
 - **Powerful interpolation:** [The powerful `interpolate`](/api/interpolate) function can map a range of numbers onto another range of numbers, colors and complex strings.
 - **Linear RGB mixing:** Hex and RGB values are mixed as linear RGB, which avoids the usual brightness dips in many animation libraries. [Learn more](https://www.youtube.com/watch?v=LKnqECcg6Gw)
-- **Tiny:** Import exactly what you need with ES6 imports.
+- **Tiny:** Import only what you need with ES6 imports.
 
 ## Install
 
