@@ -10,8 +10,9 @@
     "build": "rollup -c",
     "watch": "rollup -c -w",
     "lint": "tslint -c tslint.json 'src/**/*.{ts}'",
+    "tempTest": "jest",
     "measure": "gzip -c dist/popcorn.min.js | wc -c",
-    "prepublishOnly": "npm run test && npm run build"
+    "prepublishOnly": "npm run tempTest && npm run build"
   },
   "files": [
     "lib",
