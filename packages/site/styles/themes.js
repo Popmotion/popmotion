@@ -226,7 +226,7 @@ const themeSettings = {
         id: 'support'
       },
       {
-        href: '/popcorn/api',
+        href: '/popcorn',
         label: 'API',
         id: 'api'
       }
@@ -234,20 +234,20 @@ const themeSettings = {
     Logo: PopcornLogo,
     homepageLogoSize: {
       width: 190,
-      height: 36
+      height: 45
     },
     headerLogoSize: {
       width: 140,
-      height: 27
+      height: 33
     },
     footerLogoSize: {
       width: 210,
-      height: 40
+      height: 50
     },
     color: {
-      base: '#A5FF36',
-      baseShadow: '#09CA92',
-      twist: '#09CA92',
+      base: '#95FF13',
+      baseShadow: '#00CF93',
+      twist: '#00CF93',
       action: '#06A69D'
     },
     shareImage: 'https://popmotion.io/static/images/pose-twitter-card.png'

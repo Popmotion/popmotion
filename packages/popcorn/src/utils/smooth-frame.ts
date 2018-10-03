@@ -9,12 +9,12 @@ import toDecimal from './to-decimal';
   @param [number] (optional): Smoothing (0 is none)
 */
 export default (
-  newValue: number,
-  oldValue: number,
+  prevValue: number,
+  nextValue: number,
   duration: number,
   smoothing: number = 0
 ) =>
   toDecimal(
-    oldValue +
-      (duration * (newValue - oldValue)) / Math.max(smoothing, duration)
+    prevValue +
+      (duration * (nextValue - prevValue)) / Math.max(smoothing, duration)
   );

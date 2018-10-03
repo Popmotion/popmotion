@@ -10,7 +10,7 @@ export default (strength: number = 50) => {
     const timeDelta =
       currentFramestamp !== lastUpdated ? currentFramestamp - lastUpdated : 0;
     const newValue = timeDelta
-      ? smoothFrame(v, previousValue, timeDelta, strength)
+      ? smoothFrame(previousValue, v, timeDelta, strength)
       : previousValue;
     lastUpdated = currentFramestamp;
     previousValue = newValue;

@@ -1,8 +1,11 @@
-import progressFromValue from './progress';
+import progress from './progress';
 import mix from './mix';
-import stepProgress from './step-progress';
+import stepProgress, { Direction } from './step-progress';
 
-export default (st: number, min = 0, max = 1) => (v: number) => {
-  const progress = progressFromValue(min, max, v);
-  return mix(min, max, stepProgress(st, progress));
-};
+export default (
+  steps: number,
+  min = 0,
+  max = 1,
+  direction: Direction = 'end'
+) => (v: number) =>
+  mix(min, max, stepProgress(steps, progress(min, max, v), direction));

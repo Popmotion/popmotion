@@ -5,7 +5,11 @@
   @param [number]: Current value
   @return [number]: Stepped value
 */
-export default (steps: number, progress: number) => {
+export type Direction = 'start' | 'end';
+
+export default (steps: number, direction: Direction = 'end') => (
+  progress: number
+) => {
   const segment = 1 / (steps - 1);
   const subsegment = 1 / (2 * (steps - 1));
   const percentProgressOfTarget = Math.min(progress, 1);

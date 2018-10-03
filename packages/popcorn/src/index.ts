@@ -1,3 +1,4 @@
+// Utils
 import angle from './utils/angle';
 import applyOffset from './utils/apply-offset';
 import clamp from './utils/clamp';
@@ -9,8 +10,8 @@ import interpolate from './utils/interpolate';
 import isPoint from './utils/is-point';
 import isPoint3D from './utils/is-point-3d';
 import mix from './utils/mix';
-import mixArray from './utils/mix-array';
 import mixColor from './utils/mix-color';
+import { mixComplex, mixArray } from './utils/mix-complex';
 import pipe from './utils/pipe';
 import pointFromVector from './utils/point-from-vector';
 import progress from './utils/progress';
@@ -18,19 +19,36 @@ import radiansToDegrees from './utils/radians-to-degrees';
 import smooth from './utils/smooth';
 import smoothFrame from './utils/smooth-frame';
 import snap from './utils/snap';
-import speedPerFrame from './utils/speed-per-frame';
-import speedPerSecond from './utils/speed-per-second';
-import {
-  generateSpringForce,
-  springForceLinear,
-  springForceExpo
-} from './utils/spring-force';
-import steps from './utils/steps';
-import stepProgress from './utils/step-progress';
+import velocityPerFrame from './utils/velocity-per-frame';
+import velocityPerSecond from './utils/velocity-per-second';
 import toDecimal from './utils/to-decimal';
 import wrap from './utils/wrap';
 
+// Easing
+import steps from './utils/steps';
+// TODO: Move easing to Popcorn? Or move steps to easing.
+import {
+  createAnticipateEasing,
+  createBackIn,
+  createExpoIn,
+  cubicBezier,
+  linear,
+  easeIn,
+  easeOut,
+  easeInOut,
+  circIn,
+  circOut,
+  circInOut,
+  backIn,
+  backOut,
+  backInOut,
+  anticipate,
+  reversed,
+  mirrored
+} from '@popmotion/easing';
+
 export {
+  // Utils
   angle,
   applyOffset,
   clamp,
@@ -43,13 +61,9 @@ export {
   progress,
   radiansToDegrees,
   smooth,
-  speedPerFrame,
-  speedPerSecond,
-  stepProgress,
+  velocityPerFrame,
+  velocityPerSecond,
   toDecimal,
-  generateSpringForce,
-  springForceLinear,
-  springForceExpo,
   wrap,
   steps,
   snap,
@@ -59,5 +73,24 @@ export {
   mixColor,
   interpolate,
   conditional,
-  mix
+  mix,
+  mixComplex,
+  // Easing
+  createAnticipateEasing,
+  createBackIn,
+  createExpoIn,
+  cubicBezier,
+  linear,
+  easeIn,
+  easeOut,
+  easeInOut,
+  circIn,
+  circOut,
+  circInOut,
+  backIn,
+  backOut,
+  backInOut,
+  anticipate,
+  reversed,
+  mirrored
 };

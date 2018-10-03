@@ -29,10 +29,10 @@ test('interpolate complex strings', () => {
   );
 
   expect(a(0)).toBe('20px, rgba(0, 0, 0, 0)');
-  expect(a(1.5)).toBe('');
+  expect(a(1.5)).toBe('25px, rgba(194, 194, 194, 0.75)');
 });
 
 test('interpolate colors', () => {
   const a = interpolate([0, 1], ['#000', '#fff']);
-  expect(a(0.5)).toBe('rgba(128, 128, 128, 1)');
+  expect(a(0.5)).toBe('rgba(180, 180, 180, 1)');
 });

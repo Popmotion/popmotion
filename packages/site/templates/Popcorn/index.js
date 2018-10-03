@@ -2,7 +2,7 @@ import ContentTemplate from '~/templates/content/Template';
 import Footer from '~/templates/global-new/Footer';
 import { createElement } from 'react';
 import settings from '~/data/settings.json';
-import docs from '~/docs/stylefire/index.md';
+import docs from '~/docs/popcorn/index.md';
 import marksy from 'marksy/components';
 import SiteLink from '~/components/layout/SiteLink';
 import styled from 'styled-components';
@@ -55,8 +55,8 @@ export default () => (
   <ContentTemplate
     id="popcorn"
     section="api"
-    title="Popcorn"
-    description="Popcorn is the Lodash of animation"
+    title="Popcorn is a collection of utility functions for JavaScript animation"
+    description="Popcorn is the Lodash of animation. It contains functions for easing, geometry, time and interpolation, "
     theme="popcorn"
   >
     {tree}

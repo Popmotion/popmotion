@@ -35,5 +35,5 @@ mixer(0.5) // 'rgba(128, 128, 0, 1)'
 ## Types
 
 ```typescript
-mixColor(from: string, to: string): string
+mixColor(from: string, to: string) => (v: number) => string
 ```
