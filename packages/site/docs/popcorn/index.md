@@ -26,4 +26,4 @@ yarn add @popmotion/popcorn
 
 ### File download
 
-Download or link to the [latest version of Popcorn](https://unpkg.com/popcorn/dist/popcorn.min.js). All functions will be available on the `popcorn` global variable (e.g. `popcorn.velocityPerSecond`).
+Download or link to the [latest version of Popcorn](https://unpkg.com/@popmotion/popcorn/dist/popcorn.min.js). All functions will be available on the `popcorn` global variable (e.g. `popcorn.velocityPerSecond`).

@@ -35,6 +35,7 @@ const generateRouteDefinitions = data => {
     '/blog': { page: '/blog' },
     '/pose': { page: '/pose' },
     '/pure': { page: '/pure' },
+    '/popcorn': { page: '/popcorn' },
     '/pose/api': { page: '/pose/api' },
     '/pose/examples': { page: '/pose/examples' },
     '/page-not-found': { page: '/_error' },
