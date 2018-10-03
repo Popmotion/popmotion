@@ -13,7 +13,7 @@ Wraps a number when it breaches the defined range.
 ## Import
 
 ```javascript
-import { wrap } from 'popcorn';
+import { wrap } from '@popmotion/popcorn';
 ```
 
 ## Usage

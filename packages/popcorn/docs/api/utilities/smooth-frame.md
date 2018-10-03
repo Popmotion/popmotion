@@ -17,7 +17,7 @@ This can be used, for example, to implement input smoothing.
 ## Import
 
 ```javascript
-import { smoothFrame } from 'popcorn';
+import { smoothFrame } from '@popmotion/popcorn';
 ```
 
 ## Usage

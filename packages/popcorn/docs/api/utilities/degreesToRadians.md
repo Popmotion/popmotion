@@ -13,7 +13,7 @@ category: functions
 ## Import
 
 ```javascript
-import { degreesToRadians } from 'popcorn';
+import { degreesToRadians } from '@popmotion/popcorn';
 ```
 
 ## Usage

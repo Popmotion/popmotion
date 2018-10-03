@@ -13,7 +13,7 @@ category: functions
 ## Import
 
 ```javascript
-import { applyOffset } from 'popcorn';
+import { applyOffset } from '@popmotion/popcorn';
 ```
 
 ## Usage

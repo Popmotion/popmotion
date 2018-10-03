@@ -15,7 +15,7 @@ Values can be any number, color, or a string containing multiple numbers or colo
 ## Import
 
 ```javascript
-import { mixArray } from 'popcorn';
+import { mixArray } from '@popmotion/popcorn';
 ```
 
 ## Usage

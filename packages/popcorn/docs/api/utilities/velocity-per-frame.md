@@ -13,7 +13,7 @@ category: functions
 ## Import
 
 ```javascript
-import { velocityPerFrame } from 'popcorn';
+import { velocityPerFrame } from '@popmotion/popcorn';
 ```
 
 ## Usage

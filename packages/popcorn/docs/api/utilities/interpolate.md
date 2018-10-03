@@ -13,7 +13,7 @@ Using an `input` range of sequential numbers, and an `output` range of numbers o
 ## Import
 
 ```javascript
-import { interpolate } from 'popcorn';
+import { interpolate } from '@popmotion/popcorn';
 ```
 
 ## Usage

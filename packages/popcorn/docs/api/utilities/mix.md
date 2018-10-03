@@ -13,7 +13,7 @@ category: functions
 ## Import
 
 ```javascript
-import { mix } from 'popcorn';
+import { mix } from '@popmotion/popcorn';
 ```
 
 ## Usage

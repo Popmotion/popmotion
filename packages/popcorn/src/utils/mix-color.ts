@@ -1,5 +1,5 @@
 import mix from './mix';
-import { color, hsla, rgba, hex, Color } from 'style-value-types';
+import { hsla, rgba, hex, Color } from 'style-value-types';
 import { invariant } from 'hey-listen';
 
 // Linear color space blending

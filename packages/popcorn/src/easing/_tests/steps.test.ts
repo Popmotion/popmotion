@@ -22,4 +22,5 @@ test('steps', () => {
   expect(stepStart(0.51)).toBe(0.75);
   expect(stepStart(0.99)).toBe(1);
   expect(stepStart(1)).toBe(1);
+  expect(stepStart(2)).toBe(1);
 });

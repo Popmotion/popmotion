@@ -13,7 +13,7 @@ category: functions
 ## Import
 
 ```javascript
-import { angle } from 'popcorn';
+import { angle } from '@popmotion/popcorn';
 ```
 
 ## Usage

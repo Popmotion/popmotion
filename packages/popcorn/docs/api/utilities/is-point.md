@@ -13,7 +13,7 @@ Returns `true` if the provided value has an `x` and `y` property.
 ## Import
 
 ```javascript
-import { isPoint } from 'popcorn';
+import { isPoint } from '@popmotion/popcorn';
 ```
 
 ## Usage

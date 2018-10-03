@@ -13,7 +13,7 @@ category: functions
 ## Import
 
 ```javascript
-import { smooth } from 'popcorn';
+import { smooth } from '@popmotion/popcorn';
 ```
 
 ## Usage
@@ -21,7 +21,7 @@ import { smooth } from 'popcorn';
 ### With Framesync
 
 ```javascript
-import { smooth } from 'popcorn';
+import { smooth } from '@popmotion/popcorn';
 import sync from 'framesync';
 
 let counter = 0;
@@ -40,7 +40,7 @@ As Popmotion Pure runs on Framesync, we can use it to smooth animations.
 For instance, here's an example of input smoothing:
 
 ```javascript
-import { smooth } from 'popcorn';
+import { smooth } from '@popmotion/popcorn';
 import { pointer } from 'popmotion';
 
 pointer({ x: 100 })

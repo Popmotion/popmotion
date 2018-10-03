@@ -13,7 +13,7 @@ category: functions
 ## Import
 
 ```javascript
-import { distance } from 'popcorn';
+import { distance } from '@popmotion/popcorn';
 ```
 
 ## Usage

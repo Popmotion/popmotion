@@ -17,7 +17,7 @@ This provides a way of composing logic from simpler, reusable functions.
 ## Import
 
 ```javascript
-import { pipe } from 'popcorn';
+import { pipe } from '@popmotion/popcorn';
 ```
 
 ## Usage

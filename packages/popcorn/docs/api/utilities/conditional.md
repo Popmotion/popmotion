@@ -13,7 +13,7 @@ category: functions
 ## Import
 
 ```javascript
-import { conditional } from 'popcorn';
+import { conditional } from '@popmotion/popcorn';
 ```
 
 ## Usage

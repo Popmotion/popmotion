@@ -13,7 +13,7 @@ category: functions
 ## Import
 
 ```javascript
-import { toDecimal } from 'popcorn';
+import { toDecimal } from '@popmotion/popcorn';
 ```
 
 ## Usage

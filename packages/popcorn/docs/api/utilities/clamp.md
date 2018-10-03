@@ -13,7 +13,7 @@ category: functions
 ## Import
 
 ```javascript
-import { clamp } from 'popcorn';
+import { clamp } from '@popmotion/popcorn';
 ```
 
 ## Usage

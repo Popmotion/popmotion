@@ -13,7 +13,7 @@ category: functions
 ## Import
 
 ```javascript
-import { snap } from 'popcorn';
+import { snap } from '@popmotion/popcorn';
 ```
 
 ## Usage

@@ -13,7 +13,7 @@ category: functions
 ## Import
 
 ```javascript
-import { pointFromVector } from 'popcorn';
+import { pointFromVector } from '@popmotion/popcorn';
 ```
 
 ## Usage

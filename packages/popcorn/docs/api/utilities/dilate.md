@@ -13,7 +13,7 @@ category: functions
 ## Import
 
 ```javascript
-import { dilate } from 'popcorn';
+import { dilate } from '@popmotion/popcorn';
 ```
 
 ## Usage

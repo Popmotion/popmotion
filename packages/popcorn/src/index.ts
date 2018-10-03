@@ -25,7 +25,7 @@ import toDecimal from './utils/to-decimal';
 import wrap from './utils/wrap';
 
 // Easing
-import steps from './utils/steps';
+import steps from './easing/steps';
 // TODO: Move easing to Popcorn? Or move steps to easing.
 import {
   createAnticipateEasing,

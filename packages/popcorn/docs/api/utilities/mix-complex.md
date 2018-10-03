@@ -15,7 +15,7 @@ Hex and RGBA colors are mixed using linear color space blending which avoids bri
 ## Import
 
 ```javascript
-import { mixComplex } from 'popcorn';
+import { mixComplex } from '@popmotion/popcorn';
 ```
 
 ## Usage

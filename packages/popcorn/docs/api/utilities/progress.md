@@ -15,7 +15,7 @@ Progress is represented as a number between `0` and `1`, but is unclamped.
 ## Import
 
 ```javascript
-import { progress } from 'popcorn';
+import { progress } from '@popmotion/popcorn';
 ```
 
 ## Usage
