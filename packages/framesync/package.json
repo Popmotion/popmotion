@@ -20,7 +20,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Popmotion/framesync.git"
+    "url": "git+https://github.com/Popmotion/popmotion.git"
   },
   "keywords": [
     "animation",
@@ -29,9 +29,9 @@
   "author": "Matt Perry",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Popmotion/framesync/issues"
+    "url": "https://github.com/Popmotion/popmotion/issues"
   },
-  "homepage": "https://github.com/Popmotion/framesync#readme",
+  "homepage": "https://github.com/Popmotion/popmotion",
   "devDependencies": {
     "@types/jest": "^23.1.1",
     "jest": "^23.1.0",

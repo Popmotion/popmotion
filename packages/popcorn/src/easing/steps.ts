@@ -1,0 +1,23 @@
+import clamp from '../utils/clamp';
+/*
+  Create stepped version of 0-1 progress
+
+  @param [int]: Number of steps
+  @param [number]: Current value
+  @return [number]: Stepped value
+*/
+export type Direction = 'start' | 'end';
+
+const clampProgress = clamp(0, 1);
+
+export default (steps: number, direction: Direction = 'end') => (
+  progress: number
+) => {
+  progress =
+    direction === 'end' ? Math.min(progress, 0.999) : Math.max(progress, 0.001);
+  const expanded = progress * steps;
+  const rounded =
+    direction === 'end' ? Math.floor(expanded) : Math.ceil(expanded);
+
+  return clampProgress(rounded / steps);
+};

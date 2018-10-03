@@ -9,6 +9,7 @@ packages/site/pages/blog
 packages/site/pages/pose/api
 packages/site/pages/pose/examples
 packages/site/pages/pose/learn
+packages/site/pages/popcorn/api
 packages/site/data/content.json
 packages/site/data/menus.json
 packages/site/next.config.js

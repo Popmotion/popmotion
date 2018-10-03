@@ -1,0 +1,74 @@
+{
+  "name": "@popmotion/popcorn",
+  "version": "0.0.1",
+  "description": "Utility functions for animation and interactions.",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "module": "dist/popcorn.es.js",
+  "jsnext:main": "dist/popcorn.es.js",
+  "scripts": {
+    "build": "rollup -c",
+    "watch": "rollup -c -w",
+    "lint": "tslint -c tslint.json 'src/**/*.{ts}'",
+    "testsThatHangCircleCi": "jest",
+    "measure": "gzip -c dist/popcorn.min.js | wc -c",
+    "prepublishOnly": "npm run testsThatHangCircleCi && npm run build"
+  },
+  "files": [
+    "lib",
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Popmotion/popmotion.git"
+  },
+  "keywords": [
+    "animation",
+    "raf"
+  ],
+  "author": "Matt Perry",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Popmotion/popmotion/issues"
+  },
+  "homepage": "https://github.com/Popmotion/popmotion#readme",
+  "devDependencies": {
+    "@types/jest": "^23.1.1",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-plugin-annotate-pure-calls": "^0.4.0",
+    "jest": "^23.1.0",
+    "jest-cli": "^23.1.0",
+    "rollup-plugin-node-resolve": "^3.4.0",
+    "rollup-plugin-typescript2": "^0.14.0",
+    "rollup-plugin-uglify": "^3.0.0",
+    "ts-jest": "^21.2.4",
+    "typescript": "^2.4.2"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "moduleNameMapper": {
+      "@popmotion/easing": "<rootDir>/../../easing/src",
+      "style-value-types": "<rootDir>/../../style-value-types/src",
+      "framesync": "<rootDir>/../../framesync/src"
+    },
+    "transform": {
+      "\\.(ts)$": "../../../node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "/_tests/.*\\.(ts|js)$",
+    "rootDir": "src"
+  },
+  "prettier": {
+    "parser": "typescript",
+    "singleQuote": true
+  },
+  "dependencies": {
+    "@popmotion/easing": "^1.0.1",
+    "framesync": "^4.0.1",
+    "hey-listen": "^1.0.5",
+    "style-value-types": "^3.0.7"
+  }
+}
