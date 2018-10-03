@@ -42,7 +42,6 @@
     "prepublishOnly": "npm run test && npm run build",
     "postpublish": "npm run clean",
     "measure": "gzip -c $npm_package_unpkg | wc -c",
-    "test": "jest",
     "publish-beta": "npm publish --tag beta",
     "clean": "git clean -fd -e node_modules/ -e lib/ src/ -x ."
   },
