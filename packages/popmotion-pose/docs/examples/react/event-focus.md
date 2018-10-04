@@ -11,8 +11,19 @@ To animate an element on focus, set `focusable: true` and a `focus` prop.
 ```javascript
 const config = {
   focusable: true,
-  init: { scale: 1 },
-  press: { scale: 0.8 }
+  init: {
+    color: '#aaa',
+    outlineWidth: '0px',
+    outlineOffset: '0px',
+    scale: 1
+  },
+  focus: {
+    color: '#000',
+    outlineWidth: '12px',
+    outlineOffset: '5px',
+    outlineColor: '#AB36FF',
+    scale: 1.2
+  }
 }
 ```
 
