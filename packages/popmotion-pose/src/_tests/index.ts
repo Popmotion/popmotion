@@ -243,3 +243,22 @@ test('focus events', () => {
 // for FLIP operations
 //test('flip', () => {});
 //test('animate between values', () => {});
+
+test('applyAtEnd for positional key when transitioning it from one unit type to another', () => {
+  const poser = pose(getDiv(), {
+    closed: { width: '0%' },
+    opened: {
+      width: '300px',
+      applyAtEnd: {
+        width: '400px',
+      },
+    },
+  });
+
+  return poser
+    .set('closed')
+    .then(() => poser.set('opened'))
+    .then(() => {
+      expect(poser.get('width').get()).toBe('400px')
+    })
+});

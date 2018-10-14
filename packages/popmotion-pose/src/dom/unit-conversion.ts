@@ -64,7 +64,7 @@ export const convertPositionalUnits = (state: PoserState, pose: Pose) => {
       changedPositionalKeys.push(key);
 
       pose.applyAtEnd = pose.applyAtEnd || {};
-      pose.applyAtEnd[key] = pose[key];
+      pose.applyAtEnd[key] = pose.applyAtEnd[key] || pose[key];
       setValue(state, key, to);
     }
   });
