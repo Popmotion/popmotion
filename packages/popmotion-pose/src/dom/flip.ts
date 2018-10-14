@@ -28,7 +28,10 @@ const findCenter = ({ top, right, bottom, left }: BoundingBox) => ({
   y: (top + bottom) / 2
 });
 
-const positionalProps = ['width', 'height', 'top', 'left', 'bottom', 'right'];
+const dimensionProps = ['width', 'height'];
+const dimensionPropsDict = new Set(dimensionProps);
+
+const positionalProps = dimensionProps.concat('top', 'left', 'bottom', 'right');
 const positionalPropsDict = new Set(positionalProps);
 const checkPositionalProp = (key: string) => positionalPropsDict.has(key);
 const hasPositionalProps = (pose: Pose) =>
@@ -37,6 +40,10 @@ const hasPositionalProps = (pose: Pose) =>
 export const isFlipPose = (flip: boolean, key: string, state: PoserState) =>
   state.props.element instanceof HTMLElement &&
   (flip === true || key === 'flip');
+
+const zeroRegexp = /^0[a-z]+$/i
+const isZero = (value: number | string): boolean =>
+  typeof value === 'number' ? value === 0 : zeroRegexp.test(value)
 
 export const setValue = (
   { values, props }: PoserState,
@@ -79,6 +86,12 @@ const explicitlyFlipPose = (state: PoserState, nextPose: Pose) => {
     (acc, key) => {
       if (nextPose[key] !== undefined) {
         acc[key] = resolveProp(nextPose[key], state.props);
+
+        if (dimensionPropsDict.has(key) && isZero(acc[key])) {
+          remainingPose.applyAtEnd = remainingPose.applyAtEnd || {};
+          remainingPose.applyAtEnd[key] = remainingPose.applyAtEnd[key] || acc[key];
+          acc[key] = 1;
+        }
       }
       return acc;
     },
