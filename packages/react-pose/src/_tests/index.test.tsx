@@ -118,6 +118,43 @@ test('posed: `onPoseComplete` gets called with pose as argument', () => {
   });
 });
 
+test('posed: `onPoseComplete` gets called for children', () => {
+  return new Promise(resolve => {
+    const Group = ({ pose = 'exit' }) => (
+      <PoseGroup>
+        <Parent key='a' pose={pose}>
+          <Child
+            onPoseComplete={pose => {
+              expect(pose).toBe('enter');
+              resolve();
+            }}
+          />
+        </Parent>
+      </PoseGroup>
+    )
+    const wrapper = mount(<Group />)
+    wrapper.setProps({ pose: 'enter' })
+  })
+});
+
+test('posed: `onPoseComplete` gets called for mounting children', () => {
+  return new Promise(resolve => {
+    const Group = () => (
+      <PoseGroup animateOnMount>
+        <Parent key='a'>
+          <Child
+            onPoseComplete={pose => {
+              expect(pose).toBe('enter');
+              resolve();
+            }}
+          />
+        </Parent>
+      </PoseGroup>
+    )
+    mount(<Group />)
+  })
+});
+
 test('PoseGroup: Initial visibility (visible)', () => {
   let x = 0;
   let y = 0;

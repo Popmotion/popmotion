@@ -57,6 +57,7 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
   shouldForwardProp: (key: string) => boolean;
   children: Set<ChildRegistration> = new Set();
   popStyle?: PopStyle;
+  completeCallbacks: any[];
 
   /**
    * Children handlers
@@ -80,6 +81,7 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
     super(props);
     this.shouldForwardProp =
       typeof this.props.elementType === 'string' ? isValidProp : testAlwaysTrue;
+    this.completeCallbacks = []
   }
 
   getInitialPose(): CurrentPose | void {
@@ -208,7 +210,8 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
       onDragStart,
       onDragEnd,
       onPressStart,
-      onPressEnd
+      onPressEnd,
+      onPoseComplete,
     } = this.props;
 
     const config: DomPopmotionConfig = {
@@ -221,7 +224,8 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
       onDragEnd,
       onPressStart,
       onPressEnd,
-      onChange: onValueChange
+      onChange: onValueChange,
+      onPoseComplete,
     };
 
     // If first in tree
@@ -273,18 +277,29 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
   }
 
   setPose(pose: CurrentPose) {
-    const { onPoseComplete } = this.props;
     const poseList: string[] = Array.isArray(pose) ? pose : [pose];
 
     Promise.all(poseList.map(key => key && this.poser.set(key))).then(
-      () => onPoseComplete && onPoseComplete(pose)
+      () => this.callCompleteCallbacks(pose)
     );
   }
 
+  callCompleteCallbacks(pose: CurrentPose) {
+    const { onPoseComplete } = this.props;
+    onPoseComplete && onPoseComplete(pose)
+
+    this.completeCallbacks.forEach(callback => {
+      callback(pose)
+    })
+  }
+
   flushChildren() {
-    this.children.forEach(({ element, poseConfig, onRegistered }) =>
+    this.children.forEach(({ element, poseConfig, onRegistered }) => {
+      if (poseConfig.onPoseComplete) {
+        this.completeCallbacks.push(poseConfig.onPoseComplete)
+      }
       onRegistered(this.poser.addChild(element, poseConfig))
-    );
+    });
 
     this.children.clear();
   }
