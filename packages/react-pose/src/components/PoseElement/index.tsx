@@ -49,9 +49,34 @@ const objectToMap = (obj: { [key: string]: any }): Map<string, any> =>
 
 const testAlwaysTrue = () => true;
 
+const filterProps = ({
+  elementType,
+  poseConfig,
+  onValueChange,
+  innerRef,
+  _pose,
+  pose,
+  initialPose,
+  poseKey,
+  onPoseComplete,
+  getParentPoseConfig,
+  registerChild,
+  onUnmount,
+  getInitialPoseFromParent,
+  popFromFlow,
+  values,
+  parentValues,
+  onDragStart,
+  onDragEnd,
+  onPressStart,
+  onPressEnd,
+  ...props
+}: PoseElementInternalProps) => props
+
 class PoseElement extends React.PureComponent<PoseElementInternalProps> {
   props: PoseElementInternalProps;
   poser: DomPopmotionPoser;
+  poseConfig: DomPopmotionConfig;
   ref: Element;
   styleProps: { [key: string]: any };
   shouldForwardProp: (key: string) => boolean;
@@ -68,7 +93,7 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
       if (this.poser) this.flushChildren();
     },
     onUnmount: (child: DomPopmotionPoser) => this.poser.removeChild(child),
-    getParentPoseConfig: () => this.props.poseConfig,
+    getParentPoseConfig: () => this.poseConfig,
     getInitialPoseFromParent: () => this.getInitialPose()
   };
 
@@ -80,6 +105,12 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
     super(props);
     this.shouldForwardProp =
       typeof this.props.elementType === 'string' ? isValidProp : testAlwaysTrue;
+
+    const { poseConfig } = this.props
+
+    this.poseConfig = typeof poseConfig === 'function'
+      ? poseConfig(filterProps(props))
+      : poseConfig;
   }
 
   getInitialPose(): CurrentPose | void {
@@ -110,34 +141,12 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
   }
 
   getSetProps() {
-    const {
-      elementType,
-      poseConfig,
-      onValueChange,
-      innerRef,
-      _pose,
-      pose,
-      initialPose,
-      poseKey,
-      onPoseComplete,
-      getParentPoseConfig,
-      registerChild,
-      onUnmount,
-      getInitialPoseFromParent,
-      popFromFlow,
-      values,
-      parentValues,
-      onDragStart,
-      onDragEnd,
-      onPressStart,
-      onPressEnd,
-      ...props
-    } = this.props;
+    const props = filterProps(this.props);
 
     // If we're popping this element out from the DOM flow, build
     // and apply position: absolute styles that visually match the previous
     // location in the DOM
-    if (popFromFlow && this.ref && this.ref instanceof HTMLElement) {
+    if (this.props.popFromFlow && this.ref && this.ref instanceof HTMLElement) {
       if (!this.popStyle) {
         props.style = {
           ...props.style,
@@ -200,7 +209,6 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
     );
 
     const {
-      poseConfig,
       onValueChange,
       registerChild,
       values,
@@ -212,9 +220,9 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
     } = this.props;
 
     const config: DomPopmotionConfig = {
-      ...poseConfig,
+      ...this.poseConfig,
       initialPose: this.getInitialPose(),
-      values: values || poseConfig.values,
+      values: values || this.poseConfig.values,
       parentValues: parentValues ? objectToMap(parentValues) : undefined,
       props: this.getSetProps(),
       onDragStart,
