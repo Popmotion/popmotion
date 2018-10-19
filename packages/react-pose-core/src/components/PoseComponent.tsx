@@ -41,7 +41,7 @@ class PoseComponent extends React.PureComponent<PoseComponentProps> {
       filterConfig
     } = factoryConfig;
 
-    const filteredProps = filterProps(props)
+    const filteredProps = filterProps(props);
 
     const config = {
       ...(typeof poseConfig === 'function' ? poseConfig(filteredProps) : poseConfig),

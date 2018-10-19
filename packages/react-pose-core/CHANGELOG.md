@@ -2,6 +2,12 @@
 
 React Pose Core adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.5.0] 2018-10-19
+
+### Added
+
+- Set initial pose config as function.
+
 ## [0.4.3] 2018-10-03
 
 ### Fixed
