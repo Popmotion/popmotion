@@ -31,7 +31,7 @@ export type PoseElementProps = {
 
 export type PoseElementInternalProps = PoseElementProps & {
   elementType: any;
-  poseConfig: DomPopmotionConfig;
+  poseConfig: DomPopmotionConfig | (props: PoseElementProps) => DomPopmotionConfig;
 };
 
 export type PopStyle = {
