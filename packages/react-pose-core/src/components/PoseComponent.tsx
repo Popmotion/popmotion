@@ -41,10 +41,12 @@ class PoseComponent extends React.PureComponent<PoseComponentProps> {
       filterConfig
     } = factoryConfig;
 
+    const filteredProps = filterProps(props)
+
     const config = {
-      ...poseConfig,
+      ...(typeof poseConfig === 'function' ? poseConfig(filteredProps) : poseConfig),
       //flipEnabled: flipMove,
-      props: filterProps(props)
+      props: filteredProps
     };
 
     if (initialPose || pose) config.initialPose = initialPose || pose;
