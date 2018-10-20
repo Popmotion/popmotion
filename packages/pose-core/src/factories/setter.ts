@@ -284,9 +284,9 @@ const createPoseSetter = <V, A, C, P>(
               );
 
               // Add delay if defined on pose
-              const poseDelay = resolveProp(nextPose.delay, transitionProps);
-              if (delay || poseDelay) {
-                transition = addActionDelay(delay || poseDelay, transition);
+              const poseDelay = delay || resolveProp(nextPose.delay, transitionProps);
+              if (poseDelay) {
+                transition = addActionDelay(poseDelay, transition);
               }
 
               // Start transition
