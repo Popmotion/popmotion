@@ -67,6 +67,10 @@ storiesOf('Plugin: React Pose', module)
   .add('dynamic positioned pose', () => <DynamicPositionedPose />)
   .add('transition stuttering', () => <TransitionStutter />);
 
+import { SVG } from './stylefire';
+
+storiesOf('stylefire', module).add('svg transform', () => <SVG />);
+
 // import { Decay, DecayModifyTarget, DecayPower, DecayTimeConstant } from './decay';
 // import { Keyframes, KeyframesDuration, KeyframesLoop, KeyframesLinear, KeyframesTimes } from './keyframes';
 // import { PhysicsVelocity, PhysicsAcceleration, PhysicsFriction, PhysicsSpring, PhysicsChangeSpringTarget } from './physics';

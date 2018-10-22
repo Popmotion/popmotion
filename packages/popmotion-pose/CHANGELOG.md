@@ -2,6 +2,12 @@
 
 Popmotion Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.3.2] 2018-10-19
+
+### Fixed
+
+- Ensuring `applyAtEnd` is correctly set if we're animating an element **and** it's defined in `applyAtEnd`.
+
 ## [3.3.1] 2018-09-21
 
 ### Updated

@@ -25,11 +25,6 @@ const themeSettings = {
     tagline: 'Simple libraries for delightful interfaces',
     headerNavLinks: [
       {
-        href: '/support',
-        label: 'Support us',
-        id: 'support'
-      },
-      {
         href: 'https://spectrum.chat/popmotion',
         label: 'Community',
         isExternal: true,
@@ -75,11 +70,6 @@ const themeSettings = {
     tagline: 'Declarative motion system for React, React Native, and Vue',
     sections: ['api', 'learn', 'examples'],
     headerNavLinks: [
-      {
-        href: '/support',
-        label: 'Support us',
-        id: 'support'
-      },
       {
         href: '/pose/api',
         label: 'API',
@@ -129,11 +119,6 @@ const themeSettings = {
     sections: ['api', 'learn', 'community'],
     headerNavLinks: [
       {
-        href: '/support',
-        label: 'Support us',
-        id: 'support'
-      },
-      {
         href: '/api',
         label: 'API',
         id: 'api'
@@ -178,11 +163,6 @@ const themeSettings = {
     sections: ['api'],
     headerNavLinks: [
       {
-        href: '/support',
-        label: 'Support us',
-        id: 'support'
-      },
-      {
         href: '/stylefire/api',
         label: 'API',
         id: 'api'
@@ -220,11 +200,6 @@ const themeSettings = {
     tagline: 'Utility functions for animation and interaction designers.',
     sections: ['api'],
     headerNavLinks: [
-      {
-        href: '/support',
-        label: 'Support us',
-        id: 'support'
-      },
       {
         href: '/popcorn',
         label: 'API',

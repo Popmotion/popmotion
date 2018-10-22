@@ -2,6 +2,12 @@
 
 React Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.3.7] 2018-10-19
+
+### Fixed
+
+- Fixing caching bug with dynamically generated pose configs.
+
 ## [3.3.6] 2018-09-28
 
 ### Fixed

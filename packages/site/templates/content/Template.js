@@ -10,7 +10,6 @@ import { Content } from '~/templates/global/grid';
 import ContentNav from './ContentNav';
 import GlobalTemplate from '~/templates/global/Template';
 import ContentPage from '~/templates/global-new/ContentPage';
-import ContentCTA from './ContentCTA';
 import PostDetails from './PostDetails';
 import themes from '~/styles/themes';
 import authorData from '~/data/authors.json';
@@ -80,7 +79,6 @@ export default class Template extends React.PureComponent {
                   </NextLinkContainer>
                 ) : null}
               </Content>
-              <ContentCTA />
             </ContentArea>
           </Container>
         </ContentPage>
