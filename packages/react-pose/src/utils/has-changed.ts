@@ -25,7 +25,7 @@ export const hasChanged = (prev: CurrentPose, next: CurrentPose): boolean => {
 
     if (numPrev !== numNext) return true;
 
-    for (let i = numPrev; i < numPrev; i++) {
+    for (let i = 0; i < numPrev; i++) {
       if (prev[i] !== next[i]) return true;
     }
   }
