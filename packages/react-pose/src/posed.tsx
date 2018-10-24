@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ReactElement } from 'react';
-import { PoseElement, PoseParentContext } from './components/PoseElement';
+import { PoseElement, PoseParentConsumer } from './components/PoseElement';
 import supportedElements from './utils/supported-elements';
 import {
   PoseElementProps,
@@ -32,7 +32,7 @@ const createComponentFactory = (key: string | React.ComponentType) => {
       return !withParent || props.parentValues ? (
         <PoseElement poseConfig={poseConfig} elementType={key} {...props} />
       ) : (
-        <PoseParentContext.Consumer>
+        <PoseParentConsumer>
           {(parentCtx: PoseContextProps) => (
             <PoseElement
               poseConfig={poseConfig}
@@ -41,7 +41,7 @@ const createComponentFactory = (key: string | React.ComponentType) => {
               {...parentCtx}
             />
           )}
-        </PoseParentContext.Consumer>
+        </PoseParentConsumer>
       );
     };
   };

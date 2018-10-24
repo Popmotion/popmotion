@@ -17,7 +17,11 @@ import { invariant } from 'hey-listen';
 import { hasChanged } from '../../utils/has-changed';
 import { pickAssign } from '../../utils/pick-assign';
 
-export const PoseParentContext = createContext({});
+const {
+  Consumer: PoseParentConsumer,
+  Provider: PoseParentProvider
+} = createContext({});
+export { PoseParentConsumer };
 
 type Ref = (ref: Element) => any;
 type RefSetters = {
@@ -301,7 +305,7 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
     const { elementType } = this.props;
 
     return (
-      <PoseParentContext.Provider value={this.childrenHandlers}>
+      <PoseParentProvider value={this.childrenHandlers}>
         {createElement(
           elementType,
           pickAssign(this.shouldForwardProp, [
@@ -309,7 +313,7 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
             this.getRefs()
           ])
         )}
-      </PoseParentContext.Provider>
+      </PoseParentProvider>
     );
   }
 }
