@@ -4,6 +4,7 @@ import uglify from 'rollup-plugin-uglify';
 import resolve from 'rollup-plugin-node-resolve';
 import replace from 'rollup-plugin-replace';
 import pkg from './package.json';
+import * as ReactIs from 'react-is';
 
 const typescriptConfig = { cacheRoot: 'tmp/.rpt2_cache' };
 const noDeclarationConfig = Object.assign({}, typescriptConfig, {
@@ -12,19 +13,8 @@ const noDeclarationConfig = Object.assign({}, typescriptConfig, {
 
 const common = commonjs({
   namedExports: {
-    'node_modules/react/index.js': [
-      'createContext',
-      'createElement',
-      'Fragment',
-      'Component',
-      'PureComponent',
-      'Children',
-      'cloneElement'
-    ]
+    'react-is': Object.keys(ReactIs),
   },
-  namedExports: {
-    'node_modules/react-is/index.js': ['isForwardRef']
-  }
 });
 
 const makeExternalPredicate = externalArr => {
