@@ -1,3 +1,4 @@
+import babel from 'rollup-plugin-babel';
 import typescript from 'rollup-plugin-typescript2';
 import commonjs from 'rollup-plugin-commonjs';
 import uglify from 'rollup-plugin-uglify';
@@ -9,6 +10,10 @@ const typescriptConfig = { cacheRoot: 'tmp/.rpt2_cache' };
 const noDeclarationConfig = Object.assign({}, typescriptConfig, {
   tsconfigOverride: { compilerOptions: { declaration: false } }
 });
+const babelConfig = {
+  babelrc: false,
+  plugins: ['dev-expression']
+};
 
 const common = commonjs({});
 
@@ -40,6 +45,7 @@ const umd = Object.assign({}, config, {
   plugins: [
     common,
     typescript(noDeclarationConfig),
+    babel(babelConfig),
     resolve(),
     replace({
       'process.env.NODE_ENV': JSON.stringify('development')
@@ -55,6 +61,7 @@ const umdProd = Object.assign({}, umd, {
   plugins: [
     common,
     typescript(noDeclarationConfig),
+    babel(babelConfig),
     resolve(),
     replace({
       'process.env.NODE_ENV': JSON.stringify('production')
@@ -69,7 +76,7 @@ const es = Object.assign({}, config, {
     format: 'es',
     exports: 'named'
   },
-  plugins: [common, typescript(noDeclarationConfig)]
+  plugins: [common, typescript(noDeclarationConfig), babel(babelConfig)]
 });
 
 const cjs = Object.assign({}, config, {
@@ -78,7 +85,7 @@ const cjs = Object.assign({}, config, {
     format: 'cjs',
     exports: 'named'
   },
-  plugins: [common, typescript(typescriptConfig)]
+  plugins: [common, typescript(typescriptConfig), babel(babelConfig)]
 });
 
 export default [umd, umdProd, es, cjs];

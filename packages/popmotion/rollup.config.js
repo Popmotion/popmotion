@@ -1,3 +1,4 @@
+import babel from 'rollup-plugin-babel';
 import typescript from 'rollup-plugin-typescript2';
 import uglify from 'rollup-plugin-uglify';
 import resolve from 'rollup-plugin-node-resolve';
@@ -11,6 +12,10 @@ const typescriptConfig = {
 const noDeclarationConfig = Object.assign({}, typescriptConfig, {
   tsconfigOverride: { compilerOptions: { declaration: false } }
 });
+const babelConfig = {
+  babelrc: false,
+  plugins: ['annotate-pure-calls', 'dev-expression']
+};
 
 const makeExternalPredicate = externalArr => {
   if (externalArr.length === 0) {
@@ -42,6 +47,7 @@ const umd = Object.assign({}, config, {
   plugins: [
     resolve(),
     typescript(noDeclarationConfig),
+    babel(babelConfig),
     replace({
       'process.env.NODE_ENV': JSON.stringify('production')
     })
@@ -55,6 +61,7 @@ const umdProd = Object.assign({}, umd, {
   plugins: [
     resolve(),
     typescript(noDeclarationConfig),
+    babel(babelConfig),
     replace({
       'process.env.NODE_ENV': JSON.stringify('development')
     }),
@@ -68,7 +75,7 @@ const es = Object.assign({}, config, {
     format: 'es',
     exports: 'named'
   },
-  plugins: [resolve(), typescript(noDeclarationConfig)]
+  plugins: [resolve(), typescript(noDeclarationConfig), babel(babelConfig)]
 });
 
 const cjs = Object.assign({}, config, {
@@ -77,7 +84,7 @@ const cjs = Object.assign({}, config, {
     format: 'cjs',
     exports: 'named'
   },
-  plugins: [resolve(), typescript(typescriptConfig)]
+  plugins: [resolve(), typescript(typescriptConfig), babel(babelConfig)]
 });
 
 export default [umd, umdProd, es, cjs];

@@ -1,3 +1,4 @@
+import babel from 'rollup-plugin-babel';
 import typescript from 'rollup-plugin-typescript2';
 import resolve from 'rollup-plugin-node-resolve';
 import uglify from 'rollup-plugin-uglify';
@@ -6,6 +7,11 @@ const typescriptConfig = { cacheRoot: 'tmp/.rpt2_cache' };
 const noDeclarationConfig = Object.assign({}, typescriptConfig, {
   tsconfigOverride: { compilerOptions: { declaration: false } }
 });
+
+const babelConfig = {
+  babelrc: false,
+  plugins: ['annotate-pure-calls', 'dev-expression']
+};
 
 const config = {
   input: 'src/index.ts'
@@ -18,14 +24,14 @@ const umd = Object.assign({}, config, {
     name: 'framesync',
     exports: 'named'
   },
-  plugins: [resolve(), typescript(noDeclarationConfig)]
+  plugins: [resolve(), typescript(noDeclarationConfig), babel(babelConfig)]
 });
 
 const umdProd = Object.assign({}, umd, {
   output: Object.assign({}, umd.output, {
     file: 'dist/framesync.min.js'
   }),
-  plugins: [resolve(), typescript(noDeclarationConfig), uglify()]
+  plugins: [resolve(), typescript(noDeclarationConfig), babel(babelConfig), uglify()]
 });
 
 const es = Object.assign({}, config, {
@@ -34,7 +40,7 @@ const es = Object.assign({}, config, {
     format: 'es',
     exports: 'named'
   },
-  plugins: [typescript(noDeclarationConfig)],
+  plugins: [typescript(noDeclarationConfig), babel(babelConfig)],
   external: ['hey-listen']
 });
 
@@ -44,7 +50,7 @@ const cjs = Object.assign({}, config, {
     format: 'cjs',
     exports: 'named'
   },
-  plugins: [typescript(typescriptConfig)],
+  plugins: [typescript(typescriptConfig), babel(babelConfig)],
   external: ['hey-listen']
 });
 

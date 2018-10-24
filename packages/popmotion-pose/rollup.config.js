@@ -1,3 +1,4 @@
+import babel from 'rollup-plugin-babel';
 import typescript from 'rollup-plugin-typescript2';
 import uglify from 'rollup-plugin-uglify';
 import resolve from 'rollup-plugin-node-resolve';
@@ -9,9 +10,25 @@ const typescriptConfig = { cacheRoot: 'tmp/.rpt2_cache' };
 const noDeclarationConfig = Object.assign({}, typescriptConfig, {
   tsconfigOverride: { compilerOptions: { declaration: false } }
 });
+const babelConfig = {
+  babelrc: false,
+  plugins: ['annotate-pure-calls', 'dev-expression']
+};
+
+const makeExternalPredicate = externalArr => {
+  if (externalArr.length === 0) {
+    return () => false;
+  }
+  const pattern = new RegExp(`^(${externalArr.join('|')})($|/)`);
+  return id => pattern.test(id);
+};
+
+const deps = Object.keys(pkg.dependencies || {});
+const peerDeps = Object.keys(pkg.peerDependencies || {});
 
 const config = {
-  input: 'src/index.ts'
+  input: 'src/index.ts',
+  external: makeExternalPredicate(deps.concat(peerDeps))
 };
 
 const umd = Object.assign({}, config, {
@@ -26,12 +43,14 @@ const umd = Object.assign({}, config, {
   },
   plugins: [
     typescript(noDeclarationConfig),
+    babel(babelConfig),
     resolve(),
     replace({
       'process.env.NODE_ENV': JSON.stringify('development')
     }),
     commonjs()
-  ]
+  ],
+  external: makeExternalPredicate(peerDeps),
 });
 
 const umdProd = Object.assign({}, umd, {
@@ -41,6 +60,7 @@ const umdProd = Object.assign({}, umd, {
   }),
   plugins: [
     typescript(noDeclarationConfig),
+    babel(babelConfig),
     resolve(),
     replace({
       'process.env.NODE_ENV': JSON.stringify('production')
@@ -56,7 +76,7 @@ const es = Object.assign({}, config, {
     format: 'es',
     exports: 'named'
   },
-  plugins: [typescript(noDeclarationConfig), commonjs()]
+  plugins: [typescript(noDeclarationConfig), babel(babelConfig), commonjs()]
 });
 
 const cjs = Object.assign({}, config, {
@@ -65,7 +85,7 @@ const cjs = Object.assign({}, config, {
     format: 'cjs',
     exports: 'named'
   },
-  plugins: [typescript(typescriptConfig), commonjs()]
+  plugins: [typescript(typescriptConfig), babel(babelConfig), commonjs()]
 });
 
 export default [umd, umdProd, es, cjs];

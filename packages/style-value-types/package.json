@@ -35,8 +35,15 @@
     "url": "https://github.com/Popmotion/popmotion/issues"
   },
   "homepage": "https://popmotion.io",
+  "dependencies": {
+    "tslib": "^1.9.1"
+  },
   "devDependencies": {
-    "rollup": "^0.60.7",
+    "babel-core": "^6.26.3",
+    "babel-plugin-annotate-pure-calls": "^0.3.0",
+    "babel-plugin-dev-expression": "^0.2.1",
+    "rollup": "^0.66.6",
+    "rollup-plugin-babel": "^3.0.7",
     "rollup-plugin-typescript2": "^0.14.0",
     "rollup-plugin-uglify": "^3.0.0",
     "webpack": "^3.12.0"
