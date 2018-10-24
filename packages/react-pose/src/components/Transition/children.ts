@@ -167,10 +167,11 @@ const handleTransition = (
   return nextState;
 };
 
-export default (props: Props, state: State) => ({
-  hasInitialized: true,
-  ...handleTransition(props, state)
-});
+export default (props: Props, state: State) => {
+  const newState = handleTransition(props, state);
+  newState.hasInitialized = true;
+  return newState;
+};
 
 const makeChildList = (children: React.ReactNode) => {
   const list: Array<React.ReactElement<any>> = [];
