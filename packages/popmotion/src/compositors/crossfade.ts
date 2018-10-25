@@ -1,5 +1,5 @@
+import { mix } from '@popmotion/popcorn';
 import action, { Action } from '../action';
-import { getValueFromProgress } from '../calc';
 import parallel from './parallel';
 
 const crossfade = (a: Action, b: Action) => action((observer) => {
@@ -7,7 +7,7 @@ const crossfade = (a: Action, b: Action) => action((observer) => {
   const fadable = parallel(a, b).start({
     ...observer,
     update: ([va, vb]: [number, number]) => {
-      observer.update(getValueFromProgress(va, vb, balance));
+      observer.update(mix(va, vb, balance));
     }
   });
 

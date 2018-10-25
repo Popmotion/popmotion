@@ -1,6 +1,6 @@
 import sync, { cancelSync } from 'framesync';
+import { angle, distance } from '@popmotion/popcorn';
 import action, { Action } from '../../action';
-import { angle, distance } from '../../calc';
 import listen from '../listen';
 import { PointerPoint, PointerProps } from '../pointer/types';
 import { defaultPointerPos, eventToPoint } from '../pointer/utils';

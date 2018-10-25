@@ -1,8 +1,7 @@
 import { Action } from '../../action';
-import { getProgressFromValue } from '../../calc';
 import { easeOut, Easing, linear } from '@popmotion/easing';
+import { clamp, progress } from '@popmotion/popcorn';
 import { Update } from '../../observer/types';
-import { clamp } from '../../transformers';
 import tween from '../tween';
 import scrubber from '../tween/scrubber';
 import { KeyframeProps } from './types';
@@ -53,7 +52,7 @@ const interpolateScrubbers = (
       if (input[i] > v || i === finalInputIndex) break;
     }
 
-    const progressInRange = getProgressFromValue(input[i - 1], input[i], v);
+    const progressInRange = progress(input[i - 1], input[i], v);
 
     subs[i - 1].seek(clampProgress(progressInRange));
   };

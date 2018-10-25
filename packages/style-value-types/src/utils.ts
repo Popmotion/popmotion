@@ -1,3 +1,4 @@
+// TODO: dedupe with popcorn, atm it causes a dependency cycle though
 export const clamp = (min: number, max: number) => (v: number) =>
   Math.max(Math.min(v, max), min);
 
