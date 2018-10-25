@@ -120,7 +120,7 @@ export default function buildStylePropertyString(
   // If we have transform origin, set
   if (hasTransformOrigin) {
     propertyString += styleRule(
-      TRANSFORM_ORIGIN,
+        prefixer(TRANSFORM_ORIGIN, true),
       `${state.transformOriginX || 0} ${state.transformOriginY ||
         0} ${state.transformOriginZ || 0}`
     );
@@ -134,7 +134,7 @@ export default function buildStylePropertyString(
 
     propertyString += transformIsDefault
       ? TRANSFORM_NONE
-      : styleRule(TRANSFORM, transformString);
+      : styleRule(prefixer(TRANSFORM, true), transformString);
   }
 
   return propertyString;
