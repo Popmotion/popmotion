@@ -70,7 +70,7 @@ const startChildAnimations = <V, A, C, P>(
       ? (i: number) => i * stagger
       : (i: number) => maxStaggerDuration - i * stagger;
 
-  Array.from(children).forEach((child, i) => {
+  Array.from(children.values()).forEach((child, i) => {
     animations.push(
       child.set(next, {
         ...props,
