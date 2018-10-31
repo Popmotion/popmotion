@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "@types/react": "^16.3.16",
+    "@types/react-is": "^16.5.0",
     "@types/react-dom": "^16.0.7",
     "jest": "^23.1.0",
     "prettier": "1.11.1",

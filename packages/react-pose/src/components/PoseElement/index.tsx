@@ -1,5 +1,5 @@
 import * as React from 'react';
-//import { isForwardRef } from 'react-is';
+import { isForwardRef } from 'react-is';
 import { createContext, createElement } from 'react';
 import poseFactory, {
   DomPopmotionPoser,
@@ -177,8 +177,10 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
     const refs: RefSetters = {};
     const { elementType } = this.props;
 
-    if (typeof elementType === 'string') {
-      //  || isForwardRef(elementType) TODO: Fix types for isForwardRef
+    if (
+      typeof elementType === 'string' ||
+      isForwardRef(elementType)
+    ) {
       refs.ref = this.setRef;
     } else {
       refs.innerRef = this.setRef;
