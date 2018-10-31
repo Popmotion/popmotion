@@ -69,6 +69,7 @@
     },
     "moduleNameMapper": {
       "@popmotion/easing": "<rootDir>/../../easing/src",
+      "@popmotion/popcorn": "<rootDir>/../../popcorn/src",
       "popmotion": "<rootDir>/../../popmotion/src",
       "pose-core": "<rootDir>/../../pose-core/src",
       "style-value-types": "<rootDir>/../../style-value-types/src",

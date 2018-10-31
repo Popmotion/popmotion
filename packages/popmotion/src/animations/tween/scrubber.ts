@@ -1,7 +1,7 @@
 import { number } from 'style-value-types';
 import action, { Action } from '../../action';
 import vectorAction, { ActionFactory } from '../../action/vector';
-import { getValueFromProgress } from '../../calc';
+import { mix } from '@popmotion/popcorn';
 import { linear } from '@popmotion/easing';
 
 export type ScrubberSubscription = {
@@ -15,7 +15,7 @@ const scrubber = ({ from = 0, to = 1, ease = linear }): Action =>
     })
   ).pipe(
     ease,
-    (v: number) => getValueFromProgress(from, to, v)
+    (v: number) => mix(from, to, v)
   );
 
 const vectorScrubber: ActionFactory = vectorAction(scrubber, {

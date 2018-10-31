@@ -60,7 +60,7 @@ const posed = ((component: React.ComponentType | string) =>
   getComponentFactory(component)) as Posed;
 
 supportedElements.reduce((acc, key) => {
-  acc[key] = getComponentFactory(key);
+  acc[key] = createComponentFactory(key);
   return acc;
 }, posed);
 
