@@ -1,11 +1,9 @@
 import React from 'react';
 import posed from '../posed';
 import PoseGroup from '../components/Transition/PoseGroup';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-import 'jest-enzyme';
+import { render, cleanup } from 'react-testing-library'
 
-Enzyme.configure({ adapter: new Adapter() });
+afterEach(cleanup)
 
 const Parent = posed.div({
   init: { x: 10, transition: { duration: 30 } },
@@ -21,6 +19,7 @@ const Parent = posed.div({
     transition: { duration: 30 }
   },
 });
+
 const Child = posed.div({
   init: { y: 15, transition: { duration: 30 } },
   foo: { y: 25, transition: { duration: 30 } },
@@ -34,24 +33,28 @@ const Child = posed.div({
   dynamicExitDuration: {
     y: 85,
     transition: ({ i }) => ({ duration: (i + 1) * 30 })
-  }
+  },
 });
 
-test('posed: initial state', () => {
+test('posed: initial state - named initial pose', () => {
   let x = 0;
   let y = 0;
 
-  const namedInit = mount(
+  render(
     <Parent pose="foo" onValueChange={{ x: v => (x = v) }}>
       <Child onValueChange={{ y: v => (y = v) }} />
     </Parent>
   );
 
-  expect(namedInit.props().pose).toBe('foo');
   expect(x).toBe(20);
   expect(y).toBe(25);
+});
 
-  mount(
+test('posed: initial state - auto `init` pose', () => {
+  let x = 0;
+  let y = 0;
+
+  render(
     <Parent onValueChange={{ x: v => (x = v) }}>
       <Child onValueChange={{ y: v => (y = v) }} />
     </Parent>
@@ -66,7 +69,7 @@ test('posed: mount animation with `initialPose`', () => {
   let y = 0;
 
   return new Promise(resolve => {
-    mount(
+    render(
       <Parent
         initialPose="bar"
         pose="foo"
@@ -90,7 +93,7 @@ test('posed: passes through props', () => {
   let x = 0;
   let y = 0;
 
-  mount(
+  render(
     <Parent pose="fromProps" i={1} onValueChange={{ x: v => (x = v) }}>
       <Child i={2} onValueChange={{ y: v => (y = v) }} />
     </Parent>
@@ -105,7 +108,7 @@ test('posed: `onPoseComplete` gets called with pose as argument', () => {
   let y = 0;
 
   return new Promise(resolve => {
-    mount(
+    render(
       <Parent
         initialPose="bar"
         pose="foo"
@@ -132,7 +135,7 @@ test('PoseGroup: Initial visibility (visible)', () => {
     </PoseGroup>
   );
 
-  mount(<Group />);
+  render(<Group />);
 
   expect(x).toBe(50);
   expect(y).toBe(55);
@@ -152,7 +155,7 @@ test('PoseGroup: Initial visibility (hidden)', () => {
     </PoseGroup>
   );
 
-  mount(<Group />);
+  render(<Group />);
 
   expect(x).toBe(0);
   expect(y).toBe(0);
@@ -181,7 +184,7 @@ test('PoseGroup: Animate on mount', () => {
       </PoseGroup>
     );
 
-    mount(<Group />);
+    render(<Group />);
 
     expect(x).toBe(60);
     expect(y).toBe(65);
@@ -209,9 +212,9 @@ test('PoseGroup: onRest fires', () => {
       </PoseGroup>
     );
 
-    const wrapper = mount(<Group />);
+    const { rerender } = render(<Group />);
 
-    wrapper.setProps({ isVisible: false });
+    rerender(<Group isVisible={false} />);
 
     expect(x).toBe(50);
     expect(y).toBe(55);
@@ -258,7 +261,7 @@ test('PoseGroup: onRest fires when exit pose starts during exit pose', () => {
       }
     }
 
-    const wrapper = mount(<Group />);
+    const wrapper = render(<Group />);
   });
 });
 
@@ -285,12 +288,12 @@ test('PoseGroup: Animate conditionally', () => {
       </PoseGroup>
     );
 
-    const wrapper = mount(<Group />);
+    const { rerender } = render(<Group />);
 
     expect(x).toBe(0);
     expect(y).toBe(0);
 
-    wrapper.setProps({ isVisible: true });
+    rerender(<Group isVisible />);
     expect(x).toBe(60);
     expect(y).toBe(65);
   });
@@ -325,12 +328,12 @@ test('PoseGroup: Forward props from PoseGroup to direct child', () => {
       </PoseGroup>
     );
 
-    const wrapper = mount(<Group />);
+    const { rerender } = render(<Group />);
 
     expect(x).toBe(0);
     expect(y).toBe(0);
 
-    wrapper.setProps({ isVisible: true });
+    rerender(<Group isVisible />);
     expect(x).toBe(100);
     expect(y).toBe(85);
   });
@@ -361,7 +364,7 @@ test('PoseGroup: Override props on child', () => {
               } else {
                 expect(x).toBe(202);
                 expect(y).toBe(75);
-                wrapper.setProps({ isVisible: false });
+                rerender(<Group isVisible={false} />);
               }
             }}
             onValueChange={{ x: v => (x = v) }}
@@ -372,12 +375,12 @@ test('PoseGroup: Override props on child', () => {
       </PoseGroup>
     );
 
-    const wrapper = mount(<Group />);
+    const { rerender } = render(<Group />);
 
     expect(x).toBe(0);
     expect(y).toBe(0);
 
-    wrapper.setProps({ isVisible: true });
+    rerender(<Group isVisible />);
     expect(x).toBe(101);
     expect(y).toBe(85);
   });
@@ -387,27 +390,25 @@ test('PoseGroup: Provides group props to children on mount', () => {
   let x = 0;
   let y = 0;
 
-  return new Promise(resolve => {
-    const Group = ({ isVisible = false }) => (
-      <PoseGroup
-        animateOnMount
-        someProp="value"
-      >
-        <Parent
-          key="a"
-          onPoseComplete={pose => {
-            const child = wrapper.children().first()
-            expect(child.prop('someProp')).toBe('value')
-            resolve();
-          }}
-        >
-          <Child test={2}/>
-        </Parent>
-      </PoseGroup>
-    );
+  const ChildWithGroupProps = posed(({ innerRef, hostRef, text, ...props }) => (
+    <div ref={innerRef} {...props}>{`text: ${text}`}</div>
+  ))({});
 
-    const wrapper = mount(<Group />);
-  });
+  const Group = () => (
+    <PoseGroup
+      animateOnMount
+      text="foo bar"
+    >
+      <ChildWithGroupProps
+        data-testid="child"
+        key="a"
+      />
+    </PoseGroup>
+  );
+
+  const { getByTestId, debug } = render(<Group />);
+  const child = getByTestId('child')
+  expect(child.textContent).toBe('text: foo bar')
 });
 
 test('PoseGroup: `onPoseComplete` gets called for leaving child', () => {
@@ -419,7 +420,7 @@ test('PoseGroup: `onPoseComplete` gets called for leaving child', () => {
             key="a"
             onPoseComplete={pose => {
               if (pose === 'enter') {
-                wrapper.setProps({ isVisible: false });
+                rerender(<Group isVisible={false} />);
                 return
               }
 
@@ -433,7 +434,7 @@ test('PoseGroup: `onPoseComplete` gets called for leaving child', () => {
       </PoseGroup>
     );
 
-    const wrapper = mount(<Group />);
+    const { rerender } = render(<Group />);
   });
 });
 
@@ -460,12 +461,12 @@ test('PoseGroup: special pre-enter pose', () => {
       </PoseGroup>
     );
 
-    const wrapper = mount(<Group />);
+    const { rerender } = render(<Group />);
 
     expect(x).toBe(0);
     expect(y).toBe(0);
 
-    wrapper.setProps({ isVisible: true });
+    rerender(<Group isVisible />);
     expect(x).toBe(20);
     expect(y).toBe(25);
   });
