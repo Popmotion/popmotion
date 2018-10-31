@@ -262,3 +262,38 @@ test('applyAtEnd for positional key when transitioning it from one unit type to 
       expect(poser.get('width').get()).toBe('400px')
     })
 });
+
+test("correct final values are applied when transitioning between unit types for posers with shared applyAtEnd", () => {
+  // if this test fails with actual result of 300px it means that `transformPose` mutates shared `applyAtEnd`
+  const applyAtEnd = {
+    backgroundColor: 'blue',
+  };
+
+  const poserA = pose(getDiv(), {
+    initialPose: 'closed',
+    closed: {
+      width: '0%',
+    },
+    opened: {
+      width: '300px',
+      applyAtEnd,
+    },
+  });
+
+  const poserB = pose(getDiv(), {
+    initialPose: 'closed',
+    closed: {
+      width: '0%',
+    },
+    opened: {
+      width: '40vw',
+      applyAtEnd,
+    },
+  });
+
+  return poserA.set('opened')
+    .then(() => poserB.set('opened'))
+    .then(() => {
+      expect(poserB.get('width').get()).toBe('40vw')
+    })
+});

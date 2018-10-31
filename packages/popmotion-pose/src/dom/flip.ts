@@ -14,13 +14,6 @@ const ORIGIN_START = 0;
 const ORIGIN_CENTER = '50%';
 const ORIGIN_END = '100%';
 
-type FlipPose = {
-  scaleX?: number;
-  scaleY?: number;
-  x?: number;
-  y?: number;
-};
-
 type StyleMap = { [key: string]: any };
 
 const findCenter = ({ top, right, bottom, left }: BoundingBox) => ({
@@ -111,18 +104,15 @@ const implicitlyFlipPose = (state: PoserState, nextPose: Pose) => {
   // Set transform origins
   elementStyler.set({ originX, originY });
 
-  // Create target values
-  const flipPoseProps: FlipPose = {};
-
   // Set initial offsets to replicate previous position with transforms
   if (prev.width !== next.width) {
     setValue(state, 'scaleX', prev.width / next.width);
-    flipPoseProps.scaleX = 1;
+    nextPose.scaleX = 1;
   }
 
   if (prev.height !== next.height) {
     setValue(state, 'scaleY', prev.height / next.height);
-    flipPoseProps.scaleY = 1;
+    nextPose.scaleY = 1;
   }
 
   const prevCenter = findCenter(prev);
@@ -130,21 +120,18 @@ const implicitlyFlipPose = (state: PoserState, nextPose: Pose) => {
 
   if (originX === ORIGIN_CENTER) {
     setValue(state, 'x', prevCenter.x - nextCenter.x);
-    flipPoseProps.x = 0;
+    nextPose.x = 0;
   }
 
   if (originY === ORIGIN_CENTER) {
     setValue(state, 'y', prevCenter.y - nextCenter.y);
-    flipPoseProps.y = 0;
+    nextPose.y = 0;
   }
 
   // Render the set values
   elementStyler.render();
 
-  return {
-    ...nextPose,
-    ...flipPoseProps
-  };
+  return nextPose;
 };
 
 export const flipPose = (props: PoserState, nextPose: Pose) =>

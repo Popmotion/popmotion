@@ -80,6 +80,8 @@ const createPoseConfig = (
 const domPose = poseFactory<DomPopmotionPoser>({
   posePriority: ['drag', 'press', 'focus', 'hover'],
 
+  // This unpacks the flip property and thus creating a copy of `pose`.
+  // It allows `flipPose` & `convertPositionalUnits` to mutate it *shallowly*.
   transformPose: ({ flip, ...pose }, name, state) => {
     if (isFlipPose(flip, name, state)) {
       return flipPose(state, pose);

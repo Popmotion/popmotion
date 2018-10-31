@@ -47,29 +47,36 @@ const isPositionalKey = (v: string) => positionalValues[v] !== undefined;
 export const isPositional = (pose: Pose) =>
   Object.keys(pose).some(isPositionalKey);
 
-export const convertPositionalUnits = (state: PoserState, pose: Pose) => {
+export const convertPositionalUnits = (state: PoserState, nextPose: Pose) => {
   const { values, props } = state;
   const { element, elementStyler } = props;
-  const positionalPoseKeys = Object.keys(pose).filter(isPositionalKey);
+  const positionalPoseKeys = Object.keys(nextPose).filter(isPositionalKey);
   const changedPositionalKeys: string[] = [];
   const elementComputedStyle = getComputedStyle(element);
+
+  let applyAtEndHasBeenCopied = false;
 
   positionalPoseKeys.forEach(key => {
     const value = values.get(key);
     const fromValueType = getValueType(value.raw.get());
-    const to = resolveProp(pose[key], props);
+    const to = resolveProp(nextPose[key], props);
     const toValueType = getValueType(to);
 
     if (fromValueType !== toValueType) {
       changedPositionalKeys.push(key);
 
-      pose.applyAtEnd = pose.applyAtEnd || {};
-      pose.applyAtEnd[key] = pose.applyAtEnd[key] || pose[key];
+      if (!applyAtEndHasBeenCopied) {
+        applyAtEndHasBeenCopied = true;
+        nextPose.applyAtEnd = nextPose.applyAtEnd
+          ? { ...nextPose.applyAtEnd }
+          : {};
+      }
+      nextPose.applyAtEnd[key] = nextPose.applyAtEnd[key] || nextPose[key];
       setValue(state, key, to);
     }
   });
 
-  if (!changedPositionalKeys.length) return pose;
+  if (!changedPositionalKeys.length) return nextPose;
 
   const originBbox = element.getBoundingClientRect();
   const { top, left, bottom, right, transform } = elementComputedStyle;
@@ -78,7 +85,6 @@ export const convertPositionalUnits = (state: PoserState, pose: Pose) => {
   elementStyler.render();
 
   const targetBbox = element.getBoundingClientRect();
-  const newPose = { ...pose };
 
   changedPositionalKeys.forEach(key => {
     // Restore styles to their **calculated computed style**, not their actual
@@ -88,7 +94,7 @@ export const convertPositionalUnits = (state: PoserState, pose: Pose) => {
       key,
       positionalValues[key](element, originBbox, originComputedStyle)
     );
-    newPose[key] = positionalValues[key](
+    nextPose[key] = positionalValues[key](
       element,
       targetBbox,
       elementComputedStyle
@@ -97,5 +103,5 @@ export const convertPositionalUnits = (state: PoserState, pose: Pose) => {
 
   elementStyler.render();
 
-  return newPose;
+  return nextPose;
 };
