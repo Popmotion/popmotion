@@ -246,7 +246,7 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
     }
   }
 
-  UNSAFE_componentWillUpdate({ pose, _pose }: PoseElementInternalProps) {
+  getSnapshotBeforeUpdate({ pose, _pose }: PoseElementInternalProps) {
     if (hasPose(pose, 'flip') || hasPose(_pose, 'flip')) this.poser.measure();
   }
 
