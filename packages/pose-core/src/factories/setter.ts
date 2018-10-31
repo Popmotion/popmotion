@@ -73,7 +73,6 @@ const startChildAnimations = <V, A, C, P>(
   Array.from(children).forEach((child, i) => {
     animations.push(
       child.set(next, {
-        ...props,
         delay: delay + generateStaggerDuration(i)
       })
     );
