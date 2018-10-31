@@ -2,6 +2,12 @@
 
 Pose Core adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.0.2] Unreleased
+
+### Fixed
+
+- Don't override child props with parent props. [#594](https://github.com/Popmotion/popmotion/pull/594)
+
 ## [2.0.1] 2018-09-06
 
 ### Fixed

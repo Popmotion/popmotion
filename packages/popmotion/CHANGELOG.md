@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.4.2] Unreleased
+
+### Fixed
+
+- Migrating functions to Popcorn.
+
 ## [8.4.1] 2018-09-29
 
 ### Fixed

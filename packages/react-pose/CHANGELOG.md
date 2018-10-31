@@ -2,6 +2,15 @@
 
 React Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.3.8] Unreleased
+
+### Fixed
+
+- Keeping context private to local file.
+- Fixing `forwardRef` support.
+- Moving from `UNSAFE_componentWillUpdate` to `getSnapshotBeforeUpdate` [#579](https://github.com/Popmotion/popmotion/pull/579)
+- Fixing `hasChanged` check for array poses. [#575](https://github.com/Popmotion/popmotion/pull/575/)
+
 ## [3.3.7] 2018-10-19
 
 ### Fixed
