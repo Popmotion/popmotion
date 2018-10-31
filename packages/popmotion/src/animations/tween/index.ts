@@ -1,9 +1,9 @@
 import sync, { cancelSync } from 'framesync';
+import { clamp, progress } from '@popmotion/popcorn';
 import action, { Action } from '../../action';
-import { getProgressFromValue, getValueFromProgress } from '../../calc';
+import { mix } from '@popmotion/popcorn';
 import { easeOut } from '@popmotion/easing';
 import { IObserver } from '../../observer/types';
-import { clamp } from '../../transformers';
 import scrubber from './scrubber';
 import { TweenInterface, TweenProps } from './types';
 import { Process } from 'framesync';
@@ -32,7 +32,7 @@ const tween = (props: TweenProps = {}): Action =>
 
       let playhead = scrubber({ from, to, ease }).start(update);
 
-      let progress = 0;
+      let currentProgress = 0;
       let process: Process;
       let isActive = false;
       const reverseTween = () => (playDirection *= -1);
@@ -69,8 +69,8 @@ const tween = (props: TweenProps = {}): Action =>
       };
 
       const updateTween = () => {
-        progress = clampProgress(getProgressFromValue(0, duration, elapsed));
-        playhead.seek(progress);
+        currentProgress = clampProgress(progress(0, duration, elapsed));
+        playhead.seek(currentProgress);
       };
 
       const startTimer = () => {
@@ -94,8 +94,8 @@ const tween = (props: TweenProps = {}): Action =>
 
       return {
         isActive: () => isActive,
-        getElapsed: () => clamp(0, duration)(elapsed),
-        getProgress: () => progress,
+        getElapsed: () => clamp(0, duration, elapsed),
+        getProgress: () => currentProgress,
         stop() {
           stopTimer();
         },
@@ -108,7 +108,7 @@ const tween = (props: TweenProps = {}): Action =>
           return this;
         },
         seek(newProgress: number) {
-          elapsed = getValueFromProgress(0, duration, newProgress);
+          elapsed = mix(0, duration, newProgress);
           sync.update(updateTween, false, true);
           return this;
         },

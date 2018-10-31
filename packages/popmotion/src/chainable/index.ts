@@ -1,5 +1,5 @@
+import { pipe } from '@popmotion/popcorn';
 import { Middleware, Update } from '../observer/types';
-import { pipe } from '../transformers';
 import { Predicate, Props } from './types';
 
 export default abstract class Chainable<T> {

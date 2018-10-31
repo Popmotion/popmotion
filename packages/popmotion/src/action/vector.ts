@@ -9,7 +9,7 @@ import {
 } from 'style-value-types';
 import composite from '../compositors/composite';
 import parallel from '../compositors/parallel';
-import { blendArray, blendColor } from '../transformers';
+import { mixArray, mixColor } from '@popmotion/popcorn';
 import { Action } from './';
 import { invariant } from 'hey-listen';
 
@@ -192,7 +192,7 @@ const createColorAction: CreateVectorAction = (
     from: 0,
     to: 1
   }).pipe(
-    blendColor(from, to),
+    mixColor(from, to),
     color.transform
   );
 
@@ -220,7 +220,7 @@ const createComplexAction: CreateVectorAction = (
   );
 
   return action({ ...props, from: 0, to: 1 }).pipe(
-    blendArray(complex.parse(from), complex.parse(to)),
+    mixArray(complex.parse(from), complex.parse(to)),
     valueTemplate
   );
 };

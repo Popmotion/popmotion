@@ -18,6 +18,38 @@ test('interpolate numbers', () => {
   expect(aInverted(0)).toBe(-50);
 });
 
+test('interpolate - negative', () => {
+  const a = interpolate([-500, 500], [0, 1]);
+  expect(a(-250)).toBe(0.25);
+});
+
+test('interpolate - out of range', () => {
+  const a = interpolate([0, 100], [200, 100]);
+  expect(a(50)).toBe(150);
+  expect(a(150)).toBe(50);
+  expect(a(0)).toBe(200);
+  expect(a(-100)).toBe(300);
+});
+
+test('interpolate - complex', () => {
+  const a = interpolate([0, 100, 200], [1000, 500, 1000]);
+  expect(a(100)).toBe(500);
+});
+
+test('interpolate - reverse', () => {
+  const a = interpolate([1000, 0], [500, 600]);
+  expect(a(500)).toBe(550);
+  expect(a(1000)).toBe(500);
+  expect(a(0)).toBe(600);
+});
+
+test('interpolate - reverse complex', () => {
+  const a = interpolate([0, 100, 200], [1000, 500, 1000]);
+  expect(a(100)).toBe(500);
+  expect(a(0)).toBe(1000);
+  expect(a(200)).toBe(1000);
+});
+
 test('interpolate complex strings', () => {
   const a = interpolate(
     [0, 1, 2],

@@ -19,6 +19,7 @@ import radiansToDegrees from './utils/radians-to-degrees';
 import smooth from './utils/smooth';
 import smoothFrame from './utils/smooth-frame';
 import snap from './utils/snap';
+import { springForce, springForceLinear, springForceExpo } from './utils/spring-force';
 import velocityPerFrame from './utils/velocity-per-frame';
 import velocityPerSecond from './utils/velocity-per-second';
 import toDecimal from './utils/to-decimal';
@@ -52,29 +53,32 @@ export {
   angle,
   applyOffset,
   clamp,
+  conditional,
   degreesToRadians,
   dilate,
   distance,
+  interpolate,
   isPoint,
   isPoint3D,
+  mix,
+  mixArray,
+  mixColor,
+  mixComplex,
+  pipe,
   pointFromVector,
   progress,
   radiansToDegrees,
   smooth,
+  smoothFrame,
+  snap,
+  springForce,
+  springForceExpo,
+  springForceLinear,
+  steps,
+  toDecimal,
   velocityPerFrame,
   velocityPerSecond,
-  toDecimal,
   wrap,
-  steps,
-  snap,
-  smoothFrame,
-  pipe,
-  mixArray,
-  mixColor,
-  interpolate,
-  conditional,
-  mix,
-  mixComplex,
   // Easing
   createAnticipateEasing,
   createBackIn,
@@ -94,3 +98,6 @@ export {
   reversed,
   mirrored
 };
+
+// Types
+export * from './types'
