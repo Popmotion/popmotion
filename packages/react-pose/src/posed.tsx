@@ -7,6 +7,7 @@ import {
   PoseContextProps
 } from './components/PoseElement/types';
 import { DomPopmotionConfig } from 'popmotion-pose';
+import { warning } from 'hey-listen';
 
 type DomPopmotionConfigFactory<T> = (
   props: PoseElementProps & T
@@ -30,6 +31,11 @@ const createComponentFactory = (key: string | React.ComponentType) => {
   const componentFactory: ComponentFactory<any> = (poseConfig = {}) => {
     // TODO: Replace functional context with new class property API
     return forwardRef(({ withParent = true, ...props }, ref) => {
+      warning(
+        props.innerRef === undefined,
+        'innerRef is deprecated. Please use ref instead.'
+      );
+
       return !withParent || props.parentValues ? (
         <PoseElement
           poseConfig={poseConfig}

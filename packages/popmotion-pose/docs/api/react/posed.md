@@ -202,9 +202,9 @@ Callbacks that fire when dragging starts or ends. **Note:** These props are immu
 
 Callbacks that fire when pressing starts or ends. **Note:** These props are immutable and can't be changed after mounting.
 
-### innerRef
+### ref
 
-`innerRef?: (ref: Element) => void`
+`ref?: (ref: Element) => void`
 
 An optional function that will call with the posed DOM element when it mounts, and `null` when it unmounts.
 
