@@ -48,7 +48,7 @@
   },
   "dependencies": {
     "@popmotion/easing": "^1.0.1",
-    "@popmotion/popcorn": "^0.0.1",
+    "@popmotion/popcorn": "^0.1.0",
     "framesync": "^4.0.0",
     "hey-listen": "^1.0.5",
     "style-value-types": "^3.0.6",
