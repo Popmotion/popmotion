@@ -46,22 +46,28 @@ Existing components can be converted to posed components by calling `posed` dire
 const PosedComponent = posed(MyComponent)(poseProps)
 ```
 
-For performance and layout calculations, React Pose requires a reference to the underlying DOM element. So, the component to be posed **must pass hostRef to the host element's ref prop**.
+For performance and layout calculations, React Pose requires a reference to the underlying DOM element. So, the component to be animated **must pass forward a ref using the `React.forwardRef` function**:
 
 ```javascript
-const MyComponent = ({ hostRef }) => <div ref={hostRef} />
+const MyComponent = forwardRef((props, ref) => (
+  <div ref={ref} {...props} />
+));
 
 const PosedComponent = posed(MyComponent)({
   draggable: true
-})
+});
 
 export default () => <PosedComponent pose={isOpen ? 'open' : 'closed'} />
 ```
 
-For FLIP support in a `PoseGroup`, it **optionally** needs to pass on the `style` prop:
+Many CSS-in-JS libraries like Styled Components will automatically do this for you.
+
+For FLIP support in a `PoseGroup` component, it **optionally** needs to pass on the `style` prop:
 
 ```javascript
-const MyComponent = ({ hostRef, style }) => <div ref={hostRef} style={style} />
+const MyComponent = forwardRef(({ style }, ref) => (
+  <div ref={ref} style={style} />
+));
 ```
 
 ### Set a pose

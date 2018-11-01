@@ -29,7 +29,8 @@ import {
   DragChildren,
   SingleFilter,
   DynamicPositionedPose,
-  TransitionStutter
+  TransitionStutter,
+  Refs
 } from './plugins/react-pose';
 
 storiesOf('Plugin: Pose', module)
@@ -51,6 +52,7 @@ storiesOf('Plugin: React Pose', module)
   .add('group', () => <Group />)
   .add('email list', () => <EmailList />)
   .add('user-defined poses within PoseGroup', () => <UserPoseInPoseGroup />)
+  .add('refs', () => <Refs />)
   .add('pose key test', () => <PoseKey />)
   .add('hover', () => (
     <Hover onPressStart={console.log} onPressEnd={console.log} />

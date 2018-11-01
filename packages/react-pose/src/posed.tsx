@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ReactElement } from 'react';
+import { forwardRef } from 'react';
 import { PoseElement, PoseParentConsumer } from './components/PoseElement';
 import supportedElements from './utils/supported-elements';
 import {
@@ -14,7 +14,7 @@ type DomPopmotionConfigFactory<T> = (
 
 export type ComponentFactory<T> = (
   poseConfig?: DomPopmotionConfig | DomPopmotionConfigFactory<T>
-) => (props: PoseElementProps & T) => ReactElement<T>;
+) => React.ComponentType<any>;
 
 export type Posed = {
   <T>(component: React.ComponentType<T>): ComponentFactory<T>;
@@ -28,22 +28,29 @@ const componentCache = new Map<
 
 const createComponentFactory = (key: string | React.ComponentType) => {
   const componentFactory: ComponentFactory<any> = (poseConfig = {}) => {
-    return ({ withParent = true, ...props }) => {
+    // TODO: Replace functional context with new class property API
+    return forwardRef(({ withParent = true, ...props }, ref) => {
       return !withParent || props.parentValues ? (
-        <PoseElement poseConfig={poseConfig} elementType={key} {...props} />
+        <PoseElement
+          poseConfig={poseConfig}
+          innerRef={ref}
+          elementType={key}
+          {...props}
+        />
       ) : (
         <PoseParentConsumer>
           {(parentCtx: PoseContextProps) => (
             <PoseElement
               poseConfig={poseConfig}
               elementType={key}
+              innerRef={ref}
               {...props}
               {...parentCtx}
             />
           )}
         </PoseParentConsumer>
       );
-    };
+    });
   };
 
   componentCache.set(key, componentFactory);

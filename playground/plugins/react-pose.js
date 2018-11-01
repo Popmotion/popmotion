@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment, forwardRef } from 'react';
 import styled from 'styled-components';
 import posed, { PoseGroup } from 'react-pose';
 import {
@@ -18,11 +18,11 @@ const boxProps = {
   open: { scaleX: 1 }
 };
 
-const Box = ({ className, children, hostRef }) => (
-  <div className={className} ref={hostRef}>
+const Box = forwardRef(({ className, children }, ref) => (
+  <div className={className} ref={ref}>
     {children}
   </div>
-);
+));
 
 const BoxStyled = styled.div`
   background-color: red;
@@ -297,10 +297,7 @@ const Tick = posed.path({
   }
 });
 
-const xToProgress = pipe(
-  interpolate([110, 20], [1, 0]),
-  clamp(0, 1)
-);
+const xToProgress = pipe(interpolate([110, 20], [1, 0]), clamp(0, 1));
 
 const IconContainer = posed.div({
   passive: {
@@ -458,8 +455,8 @@ const UserPoseContainer = styled.div`
   justify-content: flex-start;
 `;
 
-const Square = props => {
-  const { onDel, onFlip, hostRef, text, ...others } = props;
+const Square = forwardRef((props, hostRef) => {
+  const { onDel, onFlip, text, ...others } = props;
   return (
     <div ref={hostRef} {...others}>
       {text}
@@ -467,7 +464,7 @@ const Square = props => {
       {onDel && <button onClick={onDel}>Del</button>}
     </div>
   );
-};
+});
 
 const SquarePos = posed(Square)({
   enter: { scale: 1, rotateY: 0 },
@@ -676,3 +673,28 @@ export class TransitionStutter extends React.Component {
     );
   }
 }
+
+const refConfig = {
+  hoverable: true,
+  init: { scale: 1 },
+  hover: { scale: 1.2 }
+};
+
+const SP = styled(posed.div(refConfig))`
+  width: 100px;
+  height: 100px;
+  background: pink;
+`;
+
+const PS = posed(styled.div`
+  width: 100px;
+  height: 100px;
+  background: blue;
+`)(refConfig);
+
+export const Refs = () => (
+  <Fragment>
+    <SP ref={ref => console.log(`styled wraps posed:`, ref)} />
+    <PS ref={ref => console.log(`posed wraps styled:`, ref)} />
+  </Fragment>
+);

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { isForwardRef } from 'react-is';
 import { createContext, createElement } from 'react';
 import poseFactory, {
   DomPopmotionPoser,
@@ -22,13 +21,6 @@ const {
   Provider: PoseParentProvider
 } = createContext({});
 export { PoseParentConsumer };
-
-type Ref = (ref: Element) => any;
-type RefSetters = {
-  ref?: Ref;
-  innerRef?: Ref;
-  hostRef?: Ref;
-};
 
 const calcPopFromFlowStyle = (el: HTMLElement): PopStyle => {
   const { offsetTop, offsetLeft, offsetWidth, offsetHeight } = el;
@@ -75,7 +67,7 @@ const filterProps = ({
   onPressStart,
   onPressEnd,
   ...props
-}: PoseElementInternalProps) => props
+}: PoseElementInternalProps) => props;
 
 class PoseElement extends React.PureComponent<PoseElementInternalProps> {
   props: PoseElementInternalProps;
@@ -110,11 +102,12 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
     this.shouldForwardProp =
       typeof this.props.elementType === 'string' ? isValidProp : testAlwaysTrue;
 
-    const { poseConfig } = this.props
+    const { poseConfig } = this.props;
 
-    this.poseConfig = typeof poseConfig === 'function'
-      ? poseConfig(filterProps(props))
-      : poseConfig;
+    this.poseConfig =
+      typeof poseConfig === 'function'
+        ? poseConfig(filterProps(props))
+        : poseConfig;
   }
 
   getInitialPose(): CurrentPose | void {
@@ -124,7 +117,10 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
       return initialPose;
     } else {
       const parentPose = getInitialPoseFromParent && getInitialPoseFromParent();
-      const initialPoses = (Array.isArray(parentPose) ? parentPose : [parentPose])
+      const initialPoses = (Array.isArray(parentPose)
+        ? parentPose
+        : [parentPose]
+      )
         .concat(pose, _pose)
         .filter(Boolean);
 
@@ -139,7 +135,7 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
 
     const firstPose = (Array.isArray(pose) ? pose : [pose])
       .concat(_pose)
-      .filter(Boolean)
+      .filter(Boolean);
 
     return firstPose.length === 1 ? firstPose[0] : firstPose;
   }
@@ -167,33 +163,6 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
     return props;
   }
 
-  /**
-   * We need to get a ref to the underlying DOM element. Styled Components and
-   * other libraries use `innerRef`, though this will be swallowed if the
-   * styled component is not a primitive (ie styled(Component)).
-   *
-   * Instead we pass another function, `hostRef`, as recommended by Facebook
-   * https://github.com/facebook/react/issues/11401
-   *
-   * We also only pass `ref` to DOM primitive components.
-   */
-  getRefs = (): RefSetters => {
-    const refs: RefSetters = {};
-    const { elementType } = this.props;
-
-    if (
-      typeof elementType === 'string' ||
-      isForwardRef(elementType)
-    ) {
-      refs.ref = this.setRef;
-    } else {
-      refs.innerRef = this.setRef;
-      refs.hostRef = this.setRef;
-    }
-
-    return refs;
-  };
-
   setRef = (ref: Element) => {
     if (ref instanceof Element || (this.ref && ref === null)) {
       const { innerRef } = this.props;
@@ -211,7 +180,7 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
   componentDidMount() {
     invariant(
       typeof this.ref !== 'undefined',
-      `No DOM ref found. If you're converting an existing component via posed(Component), you must ensure you're passing the hostRef prop to your underlying DOM element.`
+      `No DOM ref found. If you're converting an existing component via posed(Component), you must ensure you're passing the ref to the host DOM node via the React.forwardRef function.`
     );
 
     const {
@@ -313,7 +282,7 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
           elementType,
           pickAssign(this.shouldForwardProp, [
             this.getSetProps(),
-            this.getRefs()
+            { ref: this.setRef }
           ])
         )}
       </PoseParentProvider>
