@@ -58,8 +58,8 @@ const poseFactory = <V, A, C, P>({
   );
 
   // Initialise props
-  let props = config.props || {};
-  if (getDefaultProps) props = { ...props, ...getDefaultProps(config) };
+  let { props = {} } = config;
+  if (getDefaultProps) props = { ...getDefaultProps(config), ...props };
 
   // Create values map
   const {
