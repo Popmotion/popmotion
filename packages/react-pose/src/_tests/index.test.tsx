@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import posed from '../posed';
 import PoseGroup from '../components/Transition/PoseGroup';
 import { render, cleanup } from 'react-testing-library';
@@ -384,9 +384,11 @@ test('PoseGroup: Provides group props to children on mount', () => {
   let x = 0;
   let y = 0;
 
-  const ChildWithGroupProps = posed(({ innerRef, hostRef, text, ...props }) => (
-    <div ref={innerRef} {...props}>{`text: ${text}`}</div>
-  ))({});
+  const ChildWithGroupProps = posed(
+    forwardRef(({ text, ...props }, innerRef) => (
+      <div ref={innerRef} {...props}>{`text: ${text}`}</div>
+    ))
+  )({});
 
   const Group = () => (
     <PoseGroup animateOnMount text="foo bar">
