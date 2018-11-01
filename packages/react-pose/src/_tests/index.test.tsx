@@ -471,3 +471,33 @@ test('PoseGroup: special pre-enter pose', () => {
     expect(y).toBe(25);
   });
 });
+
+test('StrictMode: PoseGroup removes children correctly', () => {
+  return new Promise(resolve => {
+    const First = posed.div({
+      enter: { opacity: 1 },
+      exit: { opacity: 0 }
+    });
+
+    const Second = posed.div({
+      enter: { opacity: 1 },
+      exit: { opacity: 0 }
+    });
+
+    const Group = props => (<React.StrictMode><PoseGroup {...props} /></React.StrictMode>);
+
+    const { rerender } = render(
+      <Group>
+        <First
+          key="first"
+          onPoseComplete={pose => {
+            expect(pose).toBe('exit')
+            resolve()
+          }
+        />
+      </Group>
+    );
+
+    rerender(<Group><Second key="second"/></Group>);
+  });
+});

@@ -43,7 +43,7 @@ const handleTransition = (
     displayedChildren,
     finishedLeaving,
     hasInitialized,
-    indexedChildren: prevChildren,
+    indexedChildren,
     scheduleChildRemoval,
   }: State
 ) => {
@@ -51,7 +51,6 @@ const handleTransition = (
 
   const nextState: Partial<State> = {
     displayedChildren: [],
-    indexedChildren: {},
   };
 
   if (process.env.NODE_ENV !== 'production') {
@@ -121,7 +120,7 @@ const handleTransition = (
     }
 
     const newChild = React.cloneElement(child, newChildProps);
-    nextState.indexedChildren[child.key] = newChild;
+    indexedChildren[child.key] = newChild;
     nextState.displayedChildren.push(
       hasPropsForChildren
         ? prependProps(newChild, propsForChildren)
@@ -130,8 +129,7 @@ const handleTransition = (
   });
 
   leaving.forEach(key => {
-    const child = prevChildren[key];
-
+    const child = indexedChildren[key];
     const newChild = newlyLeaving[key]
       ? React.cloneElement(child, {
           _pose: exitPose,
@@ -154,7 +152,7 @@ const handleTransition = (
     // TODO: Write a shitty algo
     // }
 
-    nextState.indexedChildren[child.key] = newChild;
+    indexedChildren[child.key] = newChild;
     nextState.displayedChildren.splice(
       insertionIndex,
       0,
