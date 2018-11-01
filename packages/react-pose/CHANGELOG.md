@@ -10,6 +10,7 @@ React Pose adheres to [Semantic Versioning](http://semver.org/).
 - Fixing `forwardRef` support.
 - Moving from `UNSAFE_componentWillUpdate` to `getSnapshotBeforeUpdate` [#579](https://github.com/Popmotion/popmotion/pull/579)
 - Fixing `hasChanged` check for array poses. [#575](https://github.com/Popmotion/popmotion/pull/575/)
+- Stop reusing stale children [#604](https://github.com/Popmotion/popmotion/pull/604)
 
 ## [3.3.7] 2018-10-19
 
