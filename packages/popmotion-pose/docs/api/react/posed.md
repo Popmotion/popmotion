@@ -204,9 +204,11 @@ Callbacks that fire when pressing starts or ends. **Note:** These props are immu
 
 ### ref
 
-`ref?: (ref: Element) => void`
+`ref?: RefObject | (ref: Element) => void`
 
-An optional function that will call with the posed DOM element when it mounts, and `null` when it unmounts.
+An optional ref property. If a function, will call with the posed DOM element when it mounts, and `null` when it unmounts.
+
+Alternatively, it can be passed a ref object (created from `React.createRef`).
 
 ### values/parentValues
 

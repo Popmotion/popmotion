@@ -179,8 +179,8 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
 
   componentDidMount() {
     invariant(
-      typeof this.ref !== 'undefined',
-      `No DOM ref found. If you're converting an existing component via posed(Component), you must ensure you're passing the ref to the host DOM node via the React.forwardRef function.`
+      this.ref instanceof Element,
+      `No valid DOM ref found. If you're converting an existing component via posed(Component), you must ensure you're passing the ref to the host DOM node via the React.forwardRef function.`
     );
 
     const {
