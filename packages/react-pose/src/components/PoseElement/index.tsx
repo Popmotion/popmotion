@@ -250,8 +250,9 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
     }
   }
 
-  getSnapshotBeforeUpdate({ pose, _pose }: PoseElementInternalProps) {
+  getSnapshotBeforeUpdate({ pose, _pose }: PoseElementInternalProps): null {
     if (hasPose(pose, 'flip') || hasPose(_pose, 'flip')) this.poser.measure();
+    return null;
   }
 
   componentDidUpdate(prevProps: PoseElementInternalProps) {
