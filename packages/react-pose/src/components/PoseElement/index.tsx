@@ -12,7 +12,7 @@ import {
   PopStyle
 } from './types';
 import isValidProp from '@emotion/is-prop-valid';
-import { invariant } from 'hey-listen';
+import { invariant, warning } from 'hey-listen';
 import { hasChanged } from '../../utils/has-changed';
 import { pickAssign } from '../../utils/pick-assign';
 
@@ -163,17 +163,22 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
     return props;
   }
 
-  setRef = (ref: Element) => {
-    if (ref instanceof Element || (this.ref && ref === null)) {
-      const { innerRef } = this.props;
-      if (innerRef) {
-        if (typeof innerRef === 'function') {
-          innerRef(ref);
-        } else {
-          innerRef.current = ref;
-        }
-      }
-      this.ref = ref;
+  setRef = (ref: Element | null) => {
+    warning(
+      ref === null || (ref instanceof Element && this.ref === undefined),
+      'ref must be provided to the same DOM component for the entire lifecycle of a posed component.'
+    );
+
+    this.ref = ref;
+
+    // Update user-provided `innerRef` property. (Externalised as `ref`)
+    const { innerRef } = this.props;
+    if (!innerRef) return;
+
+    if (typeof innerRef === 'function') {
+      innerRef(ref);
+    } else {
+      innerRef.current = ref;
     }
   };
 
