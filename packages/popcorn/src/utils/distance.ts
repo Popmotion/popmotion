@@ -14,7 +14,11 @@ const distance1D = (a: number, b: number) => Math.abs(a - b);
   @param [object/number]: (optional): x and y or just x of point B
   @return [number]: The distance between the two points
 */
-export default (a: Point | number, b: Point | number = zeroPoint): number => {
+
+// couldn't inline this below, because TS emitted declarations with wrong path references
+type _Point = Point | number;
+
+export default (a: _Point, b: _Point = zeroPoint): number => {
   // 1D dimensions
   if (isNum(a) && isNum(b)) {
     return distance1D(a, b);
