@@ -2,6 +2,12 @@
 
 Popcorn adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.1.2] 2018-11-05
+
+### Fixed
+
+- Fixed Typescript import paths [#607](https://github.com/Popmotion/popmotion/issues/607)
+
 ## [0.1.1] 2018-11-01
 
 ### Republish
