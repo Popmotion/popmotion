@@ -8,12 +8,12 @@ export type ChildRegistration = {
 
 export type CurrentPose = string | string[];
 
-export interface PoseContextProps = {
+export interface PoseContextProps {
   registerChild?: (props: ChildRegistration) => void;
   onUnmount?: (child: DomPopmotionPoser) => any;
   getInitialPoseFromParent?: () => CurrentPose;
   getParentPoseConfig?: () => DomPopmotionConfig;
-};
+}
 
 type RefFunc = (el: Element) => any;
 
@@ -29,9 +29,11 @@ export type PoseElementProps = {
   [key: string]: any;
 } & PoseContextProps;
 
+export type ConfigFactory = (props: PoseElementProps) => DomPopmotionConfig;
+
 export type PoseElementInternalProps = PoseElementProps & {
   elementType: any;
-  poseConfig: DomPopmotionConfig | (props: PoseElementProps) => DomPopmotionConfig;
+  poseConfig: DomPopmotionConfig | ConfigFactory;
 };
 
 export type PopStyle = {
