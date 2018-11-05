@@ -51,7 +51,6 @@
     "@emotion/is-prop-valid": "^0.6.5",
     "hey-listen": "^1.0.5",
     "popmotion-pose": "^3.4.0",
-    "react-is": "^16.5.1",
     "tslib": "^1.9.1"
   },
   "unpkg": "./dist/react-pose.js",

@@ -2,6 +2,12 @@
 
 React Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.0.0] 2018-11-01
+
+### Removed
+
+- Removed support for `hostRef` and `innerRef` properties.
+
 ## [3.4.0] 2018-11-01
 
 ### Upgraded

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ReactElement } from 'react';
+import { forwardRef } from 'react';
 import { PoseElement, PoseParentConsumer } from './components/PoseElement';
 import supportedElements from './utils/supported-elements';
 import {
@@ -7,6 +7,7 @@ import {
   PoseContextProps
 } from './components/PoseElement/types';
 import { DomPopmotionConfig } from 'popmotion-pose';
+import { warning } from 'hey-listen';
 
 type DomPopmotionConfigFactory<T> = (
   props: PoseElementProps & T
@@ -14,7 +15,7 @@ type DomPopmotionConfigFactory<T> = (
 
 export type ComponentFactory<T> = (
   poseConfig?: DomPopmotionConfig | DomPopmotionConfigFactory<T>
-) => (props: PoseElementProps & T) => ReactElement<T>;
+) => React.ComponentType<any>;
 
 export type Posed = {
   <T>(component: React.ComponentType<T>): ComponentFactory<T>;
@@ -28,22 +29,34 @@ const componentCache = new Map<
 
 const createComponentFactory = (key: string | React.ComponentType) => {
   const componentFactory: ComponentFactory<any> = (poseConfig = {}) => {
-    return ({ withParent = true, ...props }) => {
+    // TODO: Replace functional context with new class property API
+    return forwardRef(({ withParent = true, ...props }, ref) => {
+      warning(
+        props.innerRef === undefined,
+        'innerRef is deprecated. Please use ref instead.'
+      );
+
       return !withParent || props.parentValues ? (
-        <PoseElement poseConfig={poseConfig} elementType={key} {...props} />
+        <PoseElement
+          poseConfig={poseConfig}
+          innerRef={ref}
+          elementType={key}
+          {...props}
+        />
       ) : (
         <PoseParentConsumer>
           {(parentCtx: PoseContextProps) => (
             <PoseElement
               poseConfig={poseConfig}
               elementType={key}
+              innerRef={ref}
               {...props}
               {...parentCtx}
             />
           )}
         </PoseParentConsumer>
       );
-    };
+    });
   };
 
   componentCache.set(key, componentFactory);

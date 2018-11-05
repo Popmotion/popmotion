@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import posed from '../posed';
 import PoseGroup from '../components/Transition/PoseGroup';
-import { render, cleanup } from 'react-testing-library'
+import { render, cleanup } from 'react-testing-library';
 
-afterEach(cleanup)
+afterEach(cleanup);
 
 const Parent = posed.div({
   init: { x: 10, transition: { duration: 30 } },
@@ -17,7 +17,7 @@ const Parent = posed.div({
   dynamicExit: {
     x: ({ x }) => x,
     transition: { duration: 30 }
-  },
+  }
 });
 
 const Child = posed.div({
@@ -33,7 +33,7 @@ const Child = posed.div({
   dynamicExitDuration: {
     y: 85,
     transition: ({ i }) => ({ duration: (i + 1) * 30 })
-  },
+  }
 });
 
 test('posed: initial state - named initial pose', () => {
@@ -227,37 +227,31 @@ test('PoseGroup: onRest fires when exit pose starts during exit pose', () => {
   return new Promise(resolve => {
     class Group extends React.Component {
       state = {
-        list: range(6),
-      }
+        list: range(6)
+      };
 
       componentDidMount() {
         this.pop2();
       }
 
       pop2 = () => {
-        const { list } = this.state
+        const { list } = this.state;
 
         if (!list.length) {
           return;
         }
 
         this.setState({ list: list.slice(0, -2) });
-      }
+      };
 
       render() {
         return (
-          <PoseGroup
-            exitPose="dynamicExitDuration"
-            onRest={resolve}
-          >
-            {this.state.list.map(i =>
-              <Child
-                i={i}
-                key={i}
-                onPoseComplete={this.pop2}
-              />)}
+          <PoseGroup exitPose="dynamicExitDuration" onRest={resolve}>
+            {this.state.list.map(i => (
+              <Child i={i} key={i} onPoseComplete={this.pop2} />
+            ))}
           </PoseGroup>
-        )
+        );
       }
     }
 
@@ -390,25 +384,21 @@ test('PoseGroup: Provides group props to children on mount', () => {
   let x = 0;
   let y = 0;
 
-  const ChildWithGroupProps = posed(({ innerRef, hostRef, text, ...props }) => (
-    <div ref={innerRef} {...props}>{`text: ${text}`}</div>
-  ))({});
+  const ChildWithGroupProps = posed(
+    forwardRef(({ text, ...props }, innerRef) => (
+      <div ref={innerRef} {...props}>{`text: ${text}`}</div>
+    ))
+  )({});
 
   const Group = () => (
-    <PoseGroup
-      animateOnMount
-      text="foo bar"
-    >
-      <ChildWithGroupProps
-        data-testid="child"
-        key="a"
-      />
+    <PoseGroup animateOnMount text="foo bar">
+      <ChildWithGroupProps data-testid="child" key="a" />
     </PoseGroup>
   );
 
   const { getByTestId, debug } = render(<Group />);
-  const child = getByTestId('child')
-  expect(child.textContent).toBe('text: foo bar')
+  const child = getByTestId('child');
+  expect(child.textContent).toBe('text: foo bar');
 });
 
 test('PoseGroup: `onPoseComplete` gets called for leaving child', () => {
@@ -421,7 +411,7 @@ test('PoseGroup: `onPoseComplete` gets called for leaving child', () => {
             onPoseComplete={pose => {
               if (pose === 'enter') {
                 rerender(<Group isVisible={false} />);
-                return
+                return;
               }
 
               expect(pose).toBe('exit');
@@ -484,20 +474,28 @@ test('StrictMode: PoseGroup removes children correctly', () => {
       exit: { opacity: 0 }
     });
 
-    const Group = props => (<React.StrictMode><PoseGroup {...props} /></React.StrictMode>);
+    const Group = props => (
+      <React.StrictMode>
+        <PoseGroup {...props} />
+      </React.StrictMode>
+    );
 
     const { rerender } = render(
       <Group>
         <First
           key="first"
           onPoseComplete={pose => {
-            expect(pose).toBe('exit')
-            resolve()
-          }
+            expect(pose).toBe('exit');
+            resolve();
+          }}
         />
       </Group>
     );
 
-    rerender(<Group><Second key="second"/></Group>);
+    rerender(
+      <Group>
+        <Second key="second" />
+      </Group>
+    );
   });
 });
