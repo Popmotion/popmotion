@@ -169,6 +169,8 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
       'ref must be provided to the same DOM component for the entire lifecycle of a posed component.'
     );
 
+    console.log(ref);
+
     this.ref = ref;
 
     // Update user-provided `innerRef` property. (Externalised as `ref`)
@@ -183,6 +185,7 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
   };
 
   componentDidMount() {
+    console.log(this.ref);
     invariant(
       this.ref instanceof Element,
       `No valid DOM ref found. If you're converting an existing component via posed(Component), you must ensure you're passing the ref to the host DOM node via the React.forwardRef function.`

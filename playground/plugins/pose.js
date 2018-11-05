@@ -1,8 +1,8 @@
-import React from "react";
-import { Box } from "../inc";
-import styled from "styled-components";
-import pose from "popmotion-pose";
-import { decay, tween, spring, physics, transform, value } from "popmotion";
+import React from 'react';
+import { Box } from '../inc';
+import styled from 'styled-components';
+import pose from 'popmotion-pose';
+import { decay, tween, spring, physics, transform, value } from 'popmotion';
 const { pipe, blendColor, conditional, clamp, interpolate } = transform;
 
 const SidePanel = styled.div`
@@ -24,19 +24,19 @@ const SidePanel = styled.div`
 `;
 
 const sidebarProps = {
-  label: "sidebar",
-  initialPose: "close",
-  draggable: "x",
+  label: 'sidebar',
+  initialPose: 'close',
+  draggable: 'x',
   dragBounds: { left: -100, right: 0 },
   open: {
-    x: "0%",
+    x: '0%',
     beforeChildren: true,
     staggerChildren: 50,
-    transition: { duration: 3000, ease: "easeIn" }
+    transition: { duration: 3000, ease: 'easeIn' }
   },
   close: {
     afterChildren: true,
-    x: "-100%"
+    x: '-100%'
   }
   // passive: {
   //   backgroundColor: [
@@ -51,7 +51,7 @@ const sidebarProps = {
 };
 
 const itemProps = {
-  initialPose: "close",
+  initialPose: 'close',
   open: {
     opacity: 1,
     x: 0
@@ -76,7 +76,7 @@ export class PoseDOM extends React.Component {
     });
 
     setTimeout(
-      () => this.sidebarPoser.set("open").then(() => console.log("finished")),
+      () => this.sidebarPoser.set('open').then(() => console.log('finished')),
       1000
     );
   }
@@ -95,11 +95,11 @@ export class PoseDOM extends React.Component {
     if (ref) this.items.push(ref);
   };
 
-  close = () => this.sidebarPoser.set("close");
+  close = () => this.sidebarPoser.set('close');
 
   render() {
     return (
-      <SidePanel innerRef={this.setSidePanel} onClick={this.close}>
+      <SidePanel ref={this.setSidePanel} onClick={this.close}>
         <div ref={this.setItem} />
         <div ref={this.setItem} />
         <div ref={this.setItem} />
@@ -120,12 +120,12 @@ export class PoseDOM extends React.Component {
 const passiveModalItemProps = {
   passive: {
     opacity: [
-      "x",
+      'x',
       transform.pipe(
         parseFloat,
         transform.interpolate([-100, 0], [0, 1])
       ),
-      "sidebar"
+      'sidebar'
     ]
   }
 };
@@ -137,7 +137,7 @@ export class PoserPassive extends React.Component {
       this.sidebarPoser.addChild(item, passiveModalItemProps)
     );
 
-    setTimeout(() => this.sidebarPoser.set("open"), 1000);
+    setTimeout(() => this.sidebarPoser.set('open'), 1000);
   }
 
   componentWillUnmount() {
@@ -154,11 +154,11 @@ export class PoserPassive extends React.Component {
     if (ref) this.items.push(ref);
   };
 
-  close = () => this.sidebarPoser.set("close");
+  close = () => this.sidebarPoser.set('close');
 
   render() {
     return (
-      <SidePanel innerRef={this.setSidePanel} onClick={this.close}>
+      <SidePanel ref={this.setSidePanel} onClick={this.close}>
         <div ref={this.setItem} />
         <div ref={this.setItem} />
         <div ref={this.setItem} />
@@ -170,7 +170,7 @@ export class PoserPassive extends React.Component {
 
 export class PoserManualValues extends React.Component {
   componentDidMount() {
-    const x = value("-100%");
+    const x = value('-100%');
 
     this.sidebarPoser = pose(this.sidebar, {
       ...sidebarProps,
@@ -179,13 +179,13 @@ export class PoserManualValues extends React.Component {
       }
     });
 
-    setTimeout(() => x.update("50%"), 3000);
+    setTimeout(() => x.update('50%'), 3000);
 
     this.items.forEach(item =>
       this.sidebarPoser.addChild(item, passiveModalItemProps)
     );
 
-    setTimeout(() => this.sidebarPoser.set("open"), 1000);
+    setTimeout(() => this.sidebarPoser.set('open'), 1000);
   }
 
   componentWillUnmount() {
@@ -202,11 +202,11 @@ export class PoserManualValues extends React.Component {
     if (ref) this.items.push(ref);
   };
 
-  close = () => this.sidebarPoser.set("close");
+  close = () => this.sidebarPoser.set('close');
 
   render() {
     return (
-      <SidePanel innerRef={this.setSidePanel} onClick={this.close}>
+      <SidePanel ref={this.setSidePanel} onClick={this.close}>
         <div ref={this.setItem} />
         <div ref={this.setItem} />
         <div ref={this.setItem} />
@@ -238,12 +238,12 @@ const modalProps = {
     staggerChildren: 50
   },
   flip: {
-    transition: { type: "tween" }
+    transition: { type: 'tween' }
     //transition: props => tween({ ...props, duration: 3000 })
   }
 };
 const modalItemProps = {
-  initialPose: "itemsOut",
+  initialPose: 'itemsOut',
   itemsOut: {
     x: -50,
     opacity: 0
@@ -286,7 +286,7 @@ export class PoserFLIP extends React.Component {
     this.listRefs.clear();
 
     this.interval = setInterval(() => {
-      this.modalPoser.set("itemsOut").then(() => {
+      this.modalPoser.set('itemsOut').then(() => {
         this.modalPoser.clearChildren();
         this.modalPoser.measure();
         this.setState({
@@ -307,12 +307,12 @@ export class PoserFLIP extends React.Component {
   componentDidUpdate() {
     this.listRefs.forEach(el => this.modalPoser.addChild(el, modalItemProps));
     this.listRefs.clear();
-    this.modalPoser.flip().then(() => this.modalPoser.set("itemsIn"));
+    this.modalPoser.flip().then(() => this.modalPoser.set('itemsIn'));
   }
 
   render() {
     return (
-      <Modal innerRef={this.setContainerRef}>
+      <Modal ref={this.setContainerRef}>
         {this.state.list.map(i => (
           <div key={i} ref={this.setItemRef} />
         ))}
@@ -327,15 +327,15 @@ export class PoseOpacity extends React.PureComponent {
       this.poser = pose(ref, {
         visible: {
           backgroundImage:
-            "radial-gradient(circle at 50%, #333, #333 50%, #eee 75%, #333 75%)"
+            'radial-gradient(circle at 50%, #333, #333 50%, #eee 75%, #333 75%)'
         },
         hidden: {
           backgroundImage:
-            "radial-gradient(circle at 100%, #333, #333 50%, #eee 75%, #333 75%)"
+            'radial-gradient(circle at 100%, #333, #333 50%, #eee 75%, #333 75%)'
         },
-        initialPose: "hidden"
+        initialPose: 'hidden'
       });
-      this.poser.set("visible");
+      this.poser.set('visible');
     } else {
       this.poser.destroy();
     }
@@ -346,8 +346,8 @@ export class PoseOpacity extends React.PureComponent {
   render() {
     return (
       <Box
-        style={{ opacity: 0.4, backgroundColor: "#00f" }}
-        innerRef={this.setRef}
+        style={{ opacity: 0.4, backgroundColor: '#00f' }}
+        ref={this.setRef}
       />
     );
   }
@@ -360,17 +360,17 @@ export class Auto extends React.PureComponent {
         init: {
           x: 0,
           width: 100,
-          height: "50vh"
+          height: '50vh'
         },
         auto: {
-          x: "25vw",
-          width: () => "auto",
-          height: () => "100px"
+          x: '25vw',
+          width: () => 'auto',
+          height: () => '100px'
         }
       });
       let isAuto = false;
       this.interval = setInterval(() => {
-        this.poser.set(isAuto ? "init" : "auto");
+        this.poser.set(isAuto ? 'init' : 'auto');
         isAuto = !isAuto;
       }, 2000);
     } else {
@@ -380,7 +380,7 @@ export class Auto extends React.PureComponent {
   };
 
   render() {
-    return <Box style={{ position: "relative" }} innerRef={this.setRef} />;
+    return <Box style={{ position: 'relative' }} ref={this.setRef} />;
   }
 }
 
@@ -388,7 +388,7 @@ export class PoseDrag extends React.PureComponent {
   setRef = ref => {
     if (ref) {
       this.poser = pose(ref, {
-        draggable: "x",
+        draggable: 'x',
         dragBounds: { left: 0, right: 200 },
         onDragStart: console.log,
         onDragEnd: console.log
@@ -399,7 +399,7 @@ export class PoseDrag extends React.PureComponent {
   };
 
   render() {
-    return <Box innerRef={this.setRef} />;
+    return <Box ref={this.setRef} />;
   }
 }
 
@@ -419,7 +419,7 @@ export class PoseHover extends React.PureComponent {
   };
 
   render() {
-    return <Box innerRef={this.setRef} />;
+    return <Box ref={this.setRef} />;
   }
 }
 
@@ -437,7 +437,7 @@ export class PoseClick extends React.PureComponent {
   };
 
   render() {
-    return <button onClick={() => console.log("test")} ref={this.setRef} />;
+    return <button onClick={() => console.log('test')} ref={this.setRef} />;
   }
 }
 
@@ -474,8 +474,8 @@ export class PoseFullScreenFlip extends React.PureComponent {
     if (ref) {
       this.poser = pose(ref, {
         fullscreen: {
-          width: () => "100%",
-          height: () => "100%",
+          width: () => '100%',
+          height: () => '100%',
           flip: true,
           transition: tween
         },
@@ -485,7 +485,7 @@ export class PoseFullScreenFlip extends React.PureComponent {
           flip: true,
           transition: tween
         },
-        initialPose: "fullscreen"
+        initialPose: 'fullscreen'
       });
       this.poser.setProps({ bar: false });
       this.poser.setProps({ foo: true });
@@ -495,14 +495,14 @@ export class PoseFullScreenFlip extends React.PureComponent {
   };
 
   toggle = () => {
-    this.poser.set(this.isOpen ? "thumbnail" : "fullscreen");
+    this.poser.set(this.isOpen ? 'thumbnail' : 'fullscreen');
     this.isOpen = !this.isOpen;
   };
 
   render() {
     return (
       <Container>
-        <Box innerRef={this.setRef} onClick={this.toggle} />
+        <Box ref={this.setRef} onClick={this.toggle} />
       </Container>
     );
   }
