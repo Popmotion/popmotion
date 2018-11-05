@@ -1,6 +1,6 @@
 {
   "name": "popmotion-pose",
-  "version": "3.3.2",
+  "version": "3.4.0",
   "description": "A declarative animation library for HTML and SVG",
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
@@ -49,7 +49,7 @@
   "dependencies": {
     "@popmotion/easing": "^1.0.1",
     "hey-listen": "^1.0.5",
-    "popmotion": "^8.4.0",
+    "popmotion": "^8.5.0",
     "pose-core": "^2.0.0",
     "style-value-types": "^3.0.6",
     "tslib": "^1.9.1"

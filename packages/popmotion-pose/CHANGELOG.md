@@ -2,11 +2,12 @@
 
 Popmotion Pose adheres to [Semantic Versioning](http://semver.org/).
 
-## [3.3.3] Unreleased
+## [3.4.0] 2018-11-01
 
 ### Fixed
 
 - Prevent mutation of `applyOnEnd`. [#571](https://github.com/Popmotion/popmotion/pull/571)
+- Upgrading `popmotion@8.5.0`.
 
 ## [3.3.2] 2018-10-19
 

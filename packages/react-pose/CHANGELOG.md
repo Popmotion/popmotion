@@ -8,6 +8,12 @@ React Pose adheres to [Semantic Versioning](http://semver.org/).
 
 - Removed support for `hostRef` and `innerRef` properties.
 
+## [3.4.0] 2018-11-01
+
+### Upgraded
+
+- `popmotion-pose@3.4.0`
+
 ## [3.3.8] 2018-11-01
 
 ### Fixed
