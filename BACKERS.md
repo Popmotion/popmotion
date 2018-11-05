@@ -1,6 +1,6 @@
 # Backers of Popmotion
 
-In order joined, the following people make Popmotion possible by [supporting our Patreon](https://patreon.com/popmotion):
+These are the people who sponsored, when active, our Patreon.
 
 1. [Zachary Fleischmann](https://twitter.com/ZFleischmann) [Pro]
 2. [Hendrik Putzek](https://twitter.com/hputzek)
