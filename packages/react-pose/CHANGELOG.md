@@ -1,12 +1,22 @@
 # Changelog
 
-React Pose adheres to [Semantic Versioning](http://semver.org/).
+Pose for React adheres to [Semantic Versioning](http://semver.org/).
 
-## [4.0.0] 2018-11-01
+## [4.0.1] 2018-11-06
+
+### Fixed
+
+- Removed errant `console.log`. [#611](https://github.com/Popmotion/popmotion/pull/611)
+
+## [4.0.0] 2018-11-05
 
 ### Removed
 
 - Removed support for `hostRef` and `innerRef` properties.
+
+### Fixed
+
+- Fixed some Typescript errors. [#610](https://github.com/Popmotion/popmotion/issues/610)
 
 ## [3.4.0] 2018-11-01
 

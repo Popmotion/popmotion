@@ -89,7 +89,7 @@ function generateContent({
         next
       };
 
-      fs.writeFile(
+      fs.writeFileSync(
         `${outputPath}/${outputId}.js`,
         generatePage(body.replace(new RegExp('.md', 'g'), ''), metadata)
       );
