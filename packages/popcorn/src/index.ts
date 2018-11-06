@@ -4,7 +4,6 @@ import applyOffset from './utils/apply-offset';
 import clamp from './utils/clamp';
 import conditional from './utils/conditional';
 import degreesToRadians from './utils/degrees-to-radians';
-import dilate from './utils/dilate';
 import distance from './utils/distance';
 import interpolate from './utils/interpolate';
 import isPoint from './utils/is-point';
@@ -59,7 +58,6 @@ export {
   clamp,
   conditional,
   degreesToRadians,
-  dilate,
   distance,
   interpolate,
   isPoint,
