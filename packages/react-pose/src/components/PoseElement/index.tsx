@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { createContext, createElement } from 'react';
+import React, { PureComponent, createContext, createElement } from 'react';
 import poseFactory, {
   DomPopmotionPoser,
   DomPopmotionConfig
@@ -69,7 +68,7 @@ const filterProps = ({
   ...props
 }: PoseElementInternalProps) => props;
 
-class PoseElement extends React.PureComponent<PoseElementInternalProps> {
+class PoseElement extends PureComponent<PoseElementInternalProps> {
   props: PoseElementInternalProps;
   poser: DomPopmotionPoser;
   poseConfig: DomPopmotionConfig;
@@ -185,7 +184,7 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
   componentDidMount() {
     invariant(
       this.ref instanceof Element,
-      `No valid DOM ref found. If you're converting an existing component via posed(Component), you must ensure you're passing the ref to the host DOM node via the React.forwardRef function.`
+      "No valid DOM ref found. If you're converting an existing component via posed(Component), you must ensure you're passing the ref to the host DOM node via the React.forwardRef function."
     );
 
     const {

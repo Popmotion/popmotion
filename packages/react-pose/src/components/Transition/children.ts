@@ -56,7 +56,7 @@ const handleTransition = (
   if (process.env.NODE_ENV !== 'production') {
     warning(
       !propsForChildren.onPoseComplete,
-      `<Transition/> (or <PoseGroup/>) doesn't accept onPoseComplete prop.`
+      "<Transition/> (or <PoseGroup/>) doesn't accept onPoseComplete prop."
     );
   }
 
@@ -72,7 +72,7 @@ const handleTransition = (
   );
   entering.forEach(key => delete finishedLeaving[key]);
 
-  const leaving: Array<string> = [];
+  const leaving: string[] = [];
   const newlyLeaving: { [key: string]: boolean } = {};
   prevKeys.forEach(key => {
     if (entering.has(key)) {
@@ -135,7 +135,7 @@ const handleTransition = (
             scheduleChildRemoval(key);
 
             const { onPoseComplete } = child.props;
-            onPoseComplete && onPoseComplete(pose);
+            if (onPoseComplete) onPoseComplete(pose);
           },
           popFromFlow: flipMove
         })

@@ -1,17 +1,18 @@
 {
   "name": "react-pose",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "A declarative animation library for React",
   "main": "./lib/index.js",
   "module": "./dist/react-pose.es.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "build": "rollup -c && npm run measure",
+    "build": "rollup -c && yarn measure",
     "watch": "rollup -c -w",
     "test": "jest",
+    "lint": "tslint 'src/**/*.{ts,tsx}' -e \"**/_tests/**\"",
     "measure": "gzip -c dist/react-pose.js | wc -c",
     "prettier": "prettier ./src/* --write",
-    "prepublishOnly": "npm run prettier && npm run build"
+    "prepublishOnly": "yarn prettier && yarn lint && yarn build"
   },
   "repository": {
     "type": "git",

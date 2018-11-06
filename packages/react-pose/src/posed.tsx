@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { forwardRef } from 'react';
+import React, { forwardRef, ComponentType, HTMLProps } from 'react';
 import { PoseElement, PoseParentConsumer } from './components/PoseElement';
 import supportedElements from './utils/supported-elements';
 import {
@@ -15,19 +14,16 @@ type DomPopmotionConfigFactory<T> = (
 
 export type ComponentFactory<T> = (
   poseConfig?: DomPopmotionConfig | DomPopmotionConfigFactory<T>
-) => React.ComponentType<any>;
+) => ComponentType<any>;
 
 export type Posed = {
-  <T>(component: React.ComponentType<T>): ComponentFactory<T>;
-  [key: string]: ComponentFactory<React.HTMLProps<any>>;
+  <T>(component: ComponentType<T>): ComponentFactory<T>;
+  [key: string]: ComponentFactory<HTMLProps<any>>;
 };
 
-const componentCache = new Map<
-  string | React.ComponentType,
-  ComponentFactory<any>
->();
+const componentCache = new Map<string | ComponentType, ComponentFactory<any>>();
 
-const createComponentFactory = (key: string | React.ComponentType) => {
+const createComponentFactory = (key: string | ComponentType) => {
   const componentFactory: ComponentFactory<any> = (poseConfig = {}) => {
     // TODO: Replace functional context with new class property API
     return forwardRef(({ withParent = true, ...props }, ref) => {
@@ -64,12 +60,12 @@ const createComponentFactory = (key: string | React.ComponentType) => {
   return componentFactory;
 };
 
-const getComponentFactory = (key: string | React.ComponentType) =>
+const getComponentFactory = (key: string | ComponentType) =>
   componentCache.has(key)
     ? componentCache.get(key)
     : createComponentFactory(key);
 
-const posed = ((component: React.ComponentType | string) =>
+const posed = ((component: ComponentType | string) =>
   getComponentFactory(component)) as Posed;
 
 supportedElements.reduce((acc, key) => {

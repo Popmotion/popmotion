@@ -1,8 +1,9 @@
 {
   "defaultSeverity": "error",
   "extends": [
-    "tslint:recommended",
-    "tslint-circular-dependencies"
+    "tslint:latest",
+    "tslint-react",
+    "tslint-config-prettier"
   ],
   "jsRules": {},
   "rules": {
@@ -21,7 +22,6 @@
     "trailing-comma": [
       false
     ],
-    "no-unused-variable": true,
     "interface-name": false,
     "interface-over-type-literal": false,
     "max-line-length": false,
