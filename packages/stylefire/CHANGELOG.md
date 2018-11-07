@@ -2,6 +2,12 @@
 
 Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.2.0] 2018-11-07
+
+### Added
+
+- Adding value types for `padding`, `margin`, and `border`.
+
 ## [2.1.0] 2018-09-21
 
 ### Updated
