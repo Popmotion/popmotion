@@ -14,9 +14,9 @@
     "build": "rollup -c",
     "postbuild": "babel $npm_package_module --out-file $npm_package_module --no-babelrc --plugins annotate-pure-calls",
     "watch": "rollup -c -w",
-    "lint": "tslint -c tslint.json 'src/**/*.{ts}'",
+    "lint": "tslint 'src/**/*.{ts,tsx}' -e '**/_tests/**'",
     "measure": "gzip -c dist/stylefire.min.js | wc -c",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "yarn lint && yarn build"
   },
   "repository": {
     "type": "git",

@@ -10,7 +10,7 @@ import {
 
 const valueTypes: { [key: string]: ValueType } = {
   // Color props
-  color: color,
+  color,
   backgroundColor: color,
   outlineColor: color,
   fill: color,
@@ -60,7 +60,7 @@ const valueTypes: { [key: string]: ValueType } = {
   rotateX: degrees,
   rotateY: degrees,
   rotateZ: degrees,
-  scale: scale,
+  scale,
   scaleX: scale,
   scaleY: scale,
   scaleZ: scale,

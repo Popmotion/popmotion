@@ -9,7 +9,7 @@
     "build": "rollup -c && yarn measure",
     "watch": "rollup -c -w",
     "test": "jest",
-    "lint": "tslint 'src/**/*.{ts,tsx}' -e \"**/_tests/**\"",
+    "lint": "tslint 'src/**/*.{ts,tsx}' -e '**/_tests/**'",
     "measure": "gzip -c dist/react-pose.js | wc -c",
     "prettier": "prettier ./src/* --write",
     "prepublishOnly": "yarn prettier && yarn lint && yarn build"
