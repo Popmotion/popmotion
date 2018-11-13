@@ -36,6 +36,8 @@ const createPoseConfig = (
     onPressStart,
     onPressEnd,
     draggable,
+    directionLock,
+    scrollUntilDragDirection,
     hoverable,
     focusable,
     pressable,
@@ -54,6 +56,8 @@ const createPoseConfig = (
       onPressEnd,
       dragBounds,
       draggable,
+      directionLock,
+      scrollUntilDragDirection,
       hoverable,
       focusable,
       pressable,
@@ -71,6 +75,7 @@ const createPoseConfig = (
       ...poseConfig.drag,
       ...drag
     };
+
     poseConfig.dragEnd = { ...poseConfig.dragEnd, ...dragEnd };
   }
 

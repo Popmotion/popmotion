@@ -56,6 +56,8 @@ export type DomPopmotionConfig = {
   onPressStart?: (e: MouseEvent | TouchEvent) => any;
   onPressEnd?: (e: MouseEvent | TouchEvent) => any;
   draggable?: Draggable;
+  directionLock?: boolean; // Lock in initial direction
+  scrollUntilDragDirection?: boolean; // Allow scrolling until drag direction determined
   hoverable?: boolean;
   dragBounds?: DragBounds | ((props: ResolverProps) => DragBounds);
   props?: { [key: string]: any };

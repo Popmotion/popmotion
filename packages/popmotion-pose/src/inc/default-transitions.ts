@@ -1,4 +1,12 @@
-import { spring, tween, action, pointer, transform, Action } from 'popmotion';
+import {
+  action,
+  spring,
+  tween,
+  pointer,
+  transform,
+  Action,
+  ColdSubscription
+} from 'popmotion';
 import { linear } from '@popmotion/easing';
 import { TransitionMap } from 'pose-core';
 import { Transition, BoundingBoxDimension } from '../types';
@@ -6,10 +14,49 @@ import { percent } from 'style-value-types';
 import { resolveProp } from '../dom/utils';
 const { interpolate } = transform;
 
-const singleAxisPointer = (axis: string) => (from: number | string) =>
-  pointer({
-    [axis]: typeof from === 'string' ? parseFloat(from) : from
+type PointerData = { x: number; y: number };
+
+const singleAxisPointer = (axis: 'x' | 'y') => (
+  from: number | string,
+  directionLock: boolean,
+  scrollUntilDragDirection: boolean
+) => {
+  const initialPos = typeof from === 'string' ? parseFloat(from) : from;
+
+  return action(({ update }) => {
+    const prev = { x: 0, y: 0 };
+    let axisLock: 'x' | 'y' | false;
+    let activePointerTracking: ColdSubscription;
+
+    const stopPointerTracking = () =>
+      activePointerTracking && activePointerTracking.stop();
+
+    const getPointer = (preventDefault = true) =>
+      pointer({ preventDefault, [axis]: prev[axis] });
+
+    const startPointerTracking = (pointerTracking: Action) => {
+      stopPointerTracking();
+      pointerTracking.start(update);
+    };
+
+    const startNormalPointerTracking = () => startPointerTracking(getPointer());
+
+    const startTrackPointerDirection = () =>
+      startPointerTracking(
+        getPointer(false).pipe((v: PointerData) => {
+          prev.x = v.x;
+          prev.y = v.y;
+
+          return {};
+        })
+      );
+
+    return {
+      stop: stopPointerTracking
+    };
   }).pipe((v: any) => v[axis]);
+};
+
 const pointerX = singleAxisPointer('x');
 const pointerY = singleAxisPointer('y');
 
@@ -19,10 +66,19 @@ const createPointer = (
   max: string,
   measurement: BoundingBoxDimension
 ): Transition => (transitionProps): Action => {
-  const { from, type, dimensions, dragBounds } = transitionProps;
+  const {
+    from,
+    type,
+    dimensions,
+    dragBounds,
+    directionLock,
+    scrollUntilDragDirection
+  } = transitionProps;
 
   const axisPointer = axisPointerCreator(
-    dimensions.measurementAsPixels(measurement, from, type)
+    dimensions.measurementAsPixels(measurement, from, type),
+    directionLock,
+    scrollUntilDragDirection
   );
   const transformQueue: Array<(v: number) => number | string> = [];
 
