@@ -38,12 +38,11 @@ const singleAxisPointer: AxisPointerFactory = axis => (
       active = pointer(props).start(toUpdate);
     };
 
-    // If we're not tracking direction, just scroll normally
     if (!directionLock && !scrollUntilDragDirection) {
+      // If we're not tracking direction, just scroll normally
       start({ [axis]: initialAxisPos }, update);
-
-      // Or detect direction before we do stuff
     } else {
+      // Or detect direction before we do stuff
       const otherAxis = axis === 'x' ? 'y' : 'x';
 
       start(
@@ -52,7 +51,8 @@ const singleAxisPointer: AxisPointerFactory = axis => (
           const absAxis = Math.abs(v[axis]);
           const absOtherAxis = Math.abs(v[otherAxis]);
 
-          // Maybe use a couple frames to make this fuzzier?
+          // Maybe we could see whether the user is tracking just one axis and
+          // Increase the angle of tolerance in that direction
           if (absAxis > absOtherAxis) {
             start({ [axis]: initialAxisPos + v[axis] }, update);
           } else if (absOtherAxis > absAxis) {
