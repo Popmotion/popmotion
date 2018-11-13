@@ -65,41 +65,6 @@ const singleAxisPointer: AxisPointerFactory = axis => (
     return { stop };
   }).pipe((v: any) => v[axis]);
 
-// const initialPos = typeof from === 'string' ? parseFloat(from) : from;
-
-// return action(({ update }) => {
-//   const prev = { x: 0, y: 0 };
-//   let axisLock: 'x' | 'y' | false;
-//   let activePointerTracking: ColdSubscription;
-
-//   const stopPointerTracking = () =>
-//     activePointerTracking && activePointerTracking.stop();
-
-//   const getPointer = (preventDefault = true) =>
-//     pointer({ preventDefault, [axis]: prev[axis] });
-
-//   const startPointerTracking = (pointerTracking: Action) => {
-//     stopPointerTracking();
-//     pointerTracking.start(update);
-//   };
-
-//   const startNormalPointerTracking = () => startPointerTracking(getPointer());
-
-//   const startTrackPointerDirection = () =>
-//     startPointerTracking(
-//       getPointer(false).pipe((v: PointerData) => {
-//         prev.x = v.x;
-//         prev.y = v.y;
-
-//         return {};
-//       })
-//     );
-
-//   return {
-//     stop: stopPointerTracking
-//   };
-// }).pipe((v: any) => v[axis]);
-
 const pointerX = singleAxisPointer('x');
 const pointerY = singleAxisPointer('y');
 
