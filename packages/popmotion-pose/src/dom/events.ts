@@ -8,6 +8,8 @@ import { DomPopmotionConfig, DomPopmotionPoser } from '../types';
  * event delegation
  */
 
+type CheckPreventDefault = (config: DomPopmotionConfig) => boolean;
+
 type UIEventConfig = {
   startEvents: string;
   endEvents: string;
@@ -16,7 +18,7 @@ type UIEventConfig = {
   startCallback?: string;
   endCallback?: string;
   useDocumentToEnd?: boolean;
-  preventDefault?: boolean;
+  preventDefault?: boolean | CheckPreventDefault;
 };
 
 type UIEventApplicator = (
@@ -45,7 +47,12 @@ const makeUIEventApplicator = ({
   const endListener = startPose + 'End';
   const eventStartListener = listen(element, startEvents).start(
     (startEvent: MouseEvent | TouchEvent) => {
-      if (preventDefault) startEvent.preventDefault();
+      const shouldPreventDefault =
+        typeof preventDefault === 'function'
+          ? preventDefault(config)
+          : preventDefault === true;
+
+      if (shouldPreventDefault) startEvent.preventDefault();
 
       poser.set(startPose);
 
@@ -89,7 +96,7 @@ const events: { [key: string]: UIEventApplicator } = {
     startCallback: 'onDragStart',
     endCallback: 'onDragEnd',
     useDocumentToEnd: true,
-    preventDefault: true
+    preventDefault: ({ scrollUntilDragDirection }) => !scrollUntilDragDirection
   }),
   hoverable: makeUIEventApplicator({
     startEvents: 'mouseenter',

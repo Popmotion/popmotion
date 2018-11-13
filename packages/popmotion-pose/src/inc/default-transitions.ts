@@ -16,52 +16,95 @@ const { interpolate } = transform;
 
 type PointerData = { x: number; y: number };
 
-const singleAxisPointer = (axis: 'x' | 'y') => (
+type AxisPointer = (
   from: number | string,
   directionLock: boolean,
   scrollUntilDragDirection: boolean
-) => {
-  const initialPos = typeof from === 'string' ? parseFloat(from) : from;
+) => Action;
+type AxisPointerFactory = (axis: 'x' | 'y') => AxisPointer;
 
-  return action(({ update }) => {
-    const prev = { x: 0, y: 0 };
-    let axisLock: 'x' | 'y' | false;
-    let activePointerTracking: ColdSubscription;
+const singleAxisPointer: AxisPointerFactory = axis => (
+  from,
+  directionLock,
+  scrollUntilDragDirection
+) =>
+  action(({ update }) => {
+    const initialAxisPos = typeof from === 'string' ? parseFloat(from) : from;
+    let active: ColdSubscription;
+    const stop = () => active && active.stop();
 
-    const stopPointerTracking = () =>
-      activePointerTracking && activePointerTracking.stop();
-
-    const getPointer = (preventDefault = true) =>
-      pointer({ preventDefault, [axis]: prev[axis] });
-
-    const startPointerTracking = (pointerTracking: Action) => {
-      stopPointerTracking();
-      pointerTracking.start(update);
+    const start = (props: { [key: string]: any }, toUpdate: Function) => {
+      stop();
+      active = pointer(props).start(toUpdate);
     };
 
-    const startNormalPointerTracking = () => startPointerTracking(getPointer());
+    // If we're not tracking direction, just scroll normally
+    if (!directionLock && !scrollUntilDragDirection) {
+      start({ [axis]: initialAxisPos }, update);
 
-    const startTrackPointerDirection = () =>
-      startPointerTracking(
-        getPointer(false).pipe((v: PointerData) => {
-          prev.x = v.x;
-          prev.y = v.y;
+      // Or detect direction before we do stuff
+    } else {
+      const otherAxis = axis === 'x' ? 'y' : 'x';
 
-          return {};
-        })
+      start(
+        { x: 0, y: 0, preventDefault: !scrollUntilDragDirection },
+        (v: PointerData) => {
+          const absAxis = Math.abs(v[axis]);
+          const absOtherAxis = Math.abs(v[otherAxis]);
+
+          // Maybe use a couple frames to make this fuzzier?
+          if (absAxis > absOtherAxis) {
+            start({ [axis]: initialAxisPos + v[axis] }, update);
+          } else if (absOtherAxis > absAxis) {
+            stop();
+          }
+        }
       );
+    }
 
-    return {
-      stop: stopPointerTracking
-    };
+    return { stop };
   }).pipe((v: any) => v[axis]);
-};
+
+// const initialPos = typeof from === 'string' ? parseFloat(from) : from;
+
+// return action(({ update }) => {
+//   const prev = { x: 0, y: 0 };
+//   let axisLock: 'x' | 'y' | false;
+//   let activePointerTracking: ColdSubscription;
+
+//   const stopPointerTracking = () =>
+//     activePointerTracking && activePointerTracking.stop();
+
+//   const getPointer = (preventDefault = true) =>
+//     pointer({ preventDefault, [axis]: prev[axis] });
+
+//   const startPointerTracking = (pointerTracking: Action) => {
+//     stopPointerTracking();
+//     pointerTracking.start(update);
+//   };
+
+//   const startNormalPointerTracking = () => startPointerTracking(getPointer());
+
+//   const startTrackPointerDirection = () =>
+//     startPointerTracking(
+//       getPointer(false).pipe((v: PointerData) => {
+//         prev.x = v.x;
+//         prev.y = v.y;
+
+//         return {};
+//       })
+//     );
+
+//   return {
+//     stop: stopPointerTracking
+//   };
+// }).pipe((v: any) => v[axis]);
 
 const pointerX = singleAxisPointer('x');
 const pointerY = singleAxisPointer('y');
 
 const createPointer = (
-  axisPointerCreator: (from: number | string) => Action,
+  axisPointerCreator: AxisPointer,
   min: string,
   max: string,
   measurement: BoundingBoxDimension

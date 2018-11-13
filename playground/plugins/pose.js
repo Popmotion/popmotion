@@ -389,9 +389,10 @@ export class PoseDrag extends React.PureComponent {
     if (ref) {
       this.poser = pose(ref, {
         draggable: 'x',
-        dragBounds: { left: 0, right: 200 },
+        //dragBounds: { left: 0, right: 200 },
         onDragStart: console.log,
-        onDragEnd: console.log
+        onDragEnd: console.log,
+        scrollUntilDragDirection: true
       });
     } else {
       this.poser.destroy();
@@ -399,7 +400,24 @@ export class PoseDrag extends React.PureComponent {
   };
 
   render() {
-    return <Box ref={this.setRef} />;
+    return (
+      <React.Fragment>
+        <Box ref={this.setRef} />
+        <Box ref={this.setRef} />
+        <Box ref={this.setRef} />
+        <Box ref={this.setRef} />
+        <Box ref={this.setRef} />
+        <Box ref={this.setRef} />
+        <Box ref={this.setRef} />
+        <Box ref={this.setRef} />
+        <Box ref={this.setRef} />
+        <Box ref={this.setRef} />
+        <Box ref={this.setRef} />
+        <Box ref={this.setRef} />
+        <Box ref={this.setRef} />
+        <Box ref={this.setRef} />
+      </React.Fragment>
+    );
   }
 }
 
