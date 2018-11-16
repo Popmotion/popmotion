@@ -73,7 +73,7 @@ const makeUIEventApplicator = ({
           return;
         }
 
-        if (preventDefault) endEvent.preventDefault();
+        if (preventDefault && endEvent.cancelable) endEvent.preventDefault();
         activeActions.get(endListener).stop();
         poser.unset(startPose);
         poser.set(endPose);
