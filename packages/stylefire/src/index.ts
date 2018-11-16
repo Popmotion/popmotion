@@ -2,7 +2,7 @@ import css from './css';
 import svg from './svg';
 import viewport from './viewport';
 import createStylerFactory from './styler';
-import buildStyleProperty from './css/build-styles';
+import { buildStyleProperty } from './css/build-styles';
 import { invariant } from 'hey-listen';
 import { Styler, Props } from './styler/types';
 

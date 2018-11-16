@@ -6,7 +6,17 @@ import {
   isTransformOriginProp
 } from './transform-props';
 import prefixer from './prefixer';
-import { aliasMap } from './render';
+
+export type AliasMap = { [key: string]: string };
+
+export const aliasMap: AliasMap = {
+  x: 'translateX',
+  y: 'translateY',
+  z: 'translateZ',
+  originX: 'transformOriginX',
+  originY: 'transformOriginY',
+  originZ: 'transformOriginZ'
+};
 
 const blacklist = new Set(['scrollLeft', 'scrollTop']);
 
@@ -85,6 +95,8 @@ const buildStyleProperty = (
     }
 
     styles.transform = transformString;
+  } else {
+    styles.transform = 'none';
   }
 
   if (hasTransformOrigin) {

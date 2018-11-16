@@ -4,8 +4,12 @@ const camelCache = new Map();
 const dashCache = new Map();
 const prefixes: string[] = ['Webkit', 'Moz', 'O', 'ms', ''];
 const numPrefixes = prefixes.length;
+const isBrowser = typeof window !== 'undefined';
 
 let testElement: HTMLElement;
+
+const setDashPrefix = (key: string, prefixed: string) =>
+  dashCache.set(key, camelToDash(prefixed));
 
 /*
   Test style property for prefixed version
@@ -14,8 +18,6 @@ let testElement: HTMLElement;
   @return [string]: Cached property name
 */
 const testPrefix = (key: string) => {
-  if (typeof document === 'undefined') return;
-
   testElement = testElement || document.createElement('div');
 
   for (let i = 0; i < numPrefixes; i++) {
@@ -27,7 +29,7 @@ const testPrefix = (key: string) => {
 
     if (prefixedPropertyName in testElement.style) {
       camelCache.set(key, prefixedPropertyName);
-      dashCache.set(
+      setDashPrefix(
         key,
         `${noPrefix ? '' : '-'}${camelToDash(prefixedPropertyName)}`
       );
@@ -35,16 +37,14 @@ const testPrefix = (key: string) => {
   }
 };
 
-const rulePrefixer = (key: string, asDashCase: boolean = false) => {
+const setDashProperty = (key: string) => setDashPrefix(key, key);
+
+const prefixer = (key: string, asDashCase: boolean = false) => {
   const cache = asDashCase ? dashCache : camelCache;
 
-  if (!cache.has(key)) testPrefix(key);
+  if (!cache.has(key)) isBrowser ? testPrefix(key) : setDashProperty(key);
 
   return cache.get(key) || key;
 };
-
-const noop = (key: string) => key;
-
-const prefixer = typeof window !== 'undefined' ? rulePrefixer : noop;
 
 export default prefixer;
