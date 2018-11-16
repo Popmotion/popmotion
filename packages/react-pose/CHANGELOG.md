@@ -2,6 +2,12 @@
 
 Pose for React adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.0.2] 2018-11-16
+
+### Fixed
+
+- Fixed issue with `getDerivedStateFromProps` [#629](https://github.com/Popmotion/popmotion/pull/629)
+
 ## [4.0.1] 2018-11-06
 
 ### Fixed

@@ -223,7 +223,8 @@ class PoseElement extends PureComponent<PoseElementInternalProps> {
     }
   }
 
-  getSnapshotBeforeUpdate({ pose, _pose }: PoseElementInternalProps): null {
+  getSnapshotBeforeUpdate(): null {
+    const { pose, _pose } = this.props;
     if (hasPose(pose, 'flip') || hasPose(_pose, 'flip')) this.poser.measure();
     return null;
   }
