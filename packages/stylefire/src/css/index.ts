@@ -27,6 +27,7 @@ const cssStyler = createStyler({
         window
           .getComputedStyle(element, null)
           .getPropertyValue(prefixer(key, true)) || 0;
+
       return preparseOutput && valueType && valueType.parse
         ? valueType.parse(domValue)
         : domValue;
