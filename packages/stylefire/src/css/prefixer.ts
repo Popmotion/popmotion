@@ -20,20 +20,31 @@ const testPrefix = (key: string) => {
 
   for (let i = 0; i < numPrefixes; i++) {
     const prefix = prefixes[i];
-    const noPrefix = (prefix === '');
-    const prefixedPropertyName = noPrefix ? key : prefix + key.charAt(0).toUpperCase() + key.slice(1);
+    const noPrefix = prefix === '';
+    const prefixedPropertyName = noPrefix
+      ? key
+      : prefix + key.charAt(0).toUpperCase() + key.slice(1);
 
     if (prefixedPropertyName in testElement.style) {
       camelCache.set(key, prefixedPropertyName);
-      dashCache.set(key, `${(noPrefix ? '' : '-')}${camelToDash(prefixedPropertyName)}`);
+      dashCache.set(
+        key,
+        `${noPrefix ? '' : '-'}${camelToDash(prefixedPropertyName)}`
+      );
     }
   }
 };
 
-export default (key: string, asDashCase: boolean = false) => {
+const rulePrefixer = (key: string, asDashCase: boolean = false) => {
   const cache = asDashCase ? dashCache : camelCache;
 
   if (!cache.has(key)) testPrefix(key);
 
   return cache.get(key) || key;
 };
+
+const noop = (key: string) => key;
+
+const prefixer = typeof window !== 'undefined' ? rulePrefixer : noop;
+
+export default prefixer;

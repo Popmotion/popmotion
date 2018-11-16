@@ -1,7 +1,17 @@
 import { State } from '../styler/types';
 import getValueType from './value-types';
-import { sortTransformProps, isTransformProp } from './transform-props';
+import {
+  sortTransformProps,
+  isTransformProp,
+  isTransformOriginProp
+} from './transform-props';
+import prefixer from './prefixer';
 import { aliasMap } from './render';
+
+const blacklist = new Set(['scrollLeft', 'scrollTop']);
+
+const styleRule = (key: string, value: string | number) =>
+  `;${prefixer(key, true)}:${value}`;
 
 /**
  * Build style property
@@ -14,19 +24,19 @@ import { aliasMap } from './render';
  * Into an object with default value types applied and default
  * transform order set:
  *
- * { transform: 'translateX(100px)`, width: '100px' }
- *
- * TODO: Reconcile with buildStylePropertyString
+ * { transform: 'translateX(100px) translateZ(0)`, width: '100px' }
  */
 
 const buildStyleProperty = (
   state: State,
-  enableHardwareAcceleration: boolean = true
+  enableHardwareAcceleration: boolean = true,
+  styles: State = {},
+  transform: State = {},
+  transformOrigin: State = {},
+  transformKeys: string[] = []
 ) => {
-  const styles: State = {};
-  const transform: State = {};
-  const transformKeys: string[] = [];
   let transformIsDefault = true;
+  let hasTransformOrigin = false;
 
   for (const k in state) {
     const key = aliasMap[k] ? aliasMap[k] : k;
@@ -49,7 +59,10 @@ const buildStyleProperty = (
           transformIsDefault = false;
         }
       }
-    } else {
+    } else if (isTransformOriginProp(key)) {
+      transformOrigin[key] = valueAsType;
+      hasTransformOrigin = true;
+    } else if (!blacklist.has(key)) {
       styles[key] = valueAsType;
     }
   }
@@ -74,7 +87,56 @@ const buildStyleProperty = (
     styles.transform = transformString;
   }
 
+  if (hasTransformOrigin) {
+    styles.transformOrigin = `${transformOrigin.transformOriginX ||
+      0} ${transformOrigin.transformOriginY ||
+      0} ${transformOrigin.transformOriginZ || 0}`;
+  }
+
   return styles;
 };
 
-export default buildStyleProperty;
+const buildStyleString = (enableHardwareAcceleration: boolean = true) => {
+  /**
+   * We create our states as ping-pong data structures, rather than creating
+   * new ones every frame.
+   */
+  let next: State = {};
+  let prev: State = {};
+
+  /**
+   * Because we expect this function to run multiple times a frame
+   * we create and hold these data structures as mutative states.
+   */
+  const transform: State = {};
+  const transformOrigin: State = {};
+  const transformKeys: string[] = [];
+
+  return (state: State) => {
+    let style = '';
+
+    transformKeys.length = 0;
+    next = buildStyleProperty(
+      state,
+      enableHardwareAcceleration,
+      next,
+      transform,
+      transformOrigin,
+      transformKeys
+    );
+
+    for (const key in next) {
+      const value = next[key];
+
+      if (value !== prev[key]) {
+        style += styleRule(key, value);
+      }
+    }
+
+    [next, prev] = [prev, next];
+
+    return style;
+  };
+};
+
+export { buildStyleProperty, buildStyleString };
