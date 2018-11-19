@@ -1,6 +1,6 @@
 {
   "name": "stylefire",
-  "version": "2.2.1",
+  "version": "2.3.0",
   "description": "Performant, simplified stylers for CSS, SVG, path and DOM scroll.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -16,8 +16,9 @@
     "watch": "rollup -c -w",
     "lint": "tslint 'src/**/*.{ts,tsx}' -e '**/_tests/**'",
     "measure": "gzip -c dist/stylefire.min.js | wc -c",
+    "prettier": "prettier ./src/* --write",
     "test": "jest",
-    "prepublishOnly": "yarn lint && yarn build"
+    "prepublishOnly": "yarn prettier && yarn lint && yarn build"
   },
   "repository": {
     "type": "git",
@@ -38,17 +39,17 @@
   },
   "homepage": "https://github.com/Popmotion/popmotion#readme",
   "devDependencies": {
+    "@types/jest": "^23.1.1",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-plugin-annotate-pure-calls": "^0.2.2",
-    "@types/jest": "^23.1.1",
     "jest": "^23.1.0",
     "jest-cli": "^23.1.0",
-    "ts-jest": "^21.2.4",
     "rollup": "^0.59.1",
     "rollup-plugin-node-resolve": "^3.3.0",
     "rollup-plugin-typescript2": "^0.14.0",
     "rollup-plugin-uglify": "^3.0.0",
+    "ts-jest": "^21.2.4",
     "typescript": "^2.9.2",
     "uglify-js": "^3.3.25",
     "webpack": "^3.0.0"

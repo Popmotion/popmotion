@@ -22,6 +22,7 @@
     "trailing-comma": [
       false
     ],
+    "forin": false,
     "interface-name": false,
     "interface-over-type-literal": false,
     "max-line-length": false,
