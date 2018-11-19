@@ -4,8 +4,12 @@ const camelCache = new Map();
 const dashCache = new Map();
 const prefixes: string[] = ['Webkit', 'Moz', 'O', 'ms', ''];
 const numPrefixes = prefixes.length;
+const isBrowser = typeof document !== 'undefined';
 
 let testElement: HTMLElement;
+
+const setDashPrefix = (key: string, prefixed: string) =>
+  dashCache.set(key, camelToDash(prefixed));
 
 /*
   Test style property for prefixed version
@@ -14,26 +18,33 @@ let testElement: HTMLElement;
   @return [string]: Cached property name
 */
 const testPrefix = (key: string) => {
-  if (typeof document === 'undefined') return;
-
   testElement = testElement || document.createElement('div');
 
   for (let i = 0; i < numPrefixes; i++) {
     const prefix = prefixes[i];
-    const noPrefix = (prefix === '');
-    const prefixedPropertyName = noPrefix ? key : prefix + key.charAt(0).toUpperCase() + key.slice(1);
+    const noPrefix = prefix === '';
+    const prefixedPropertyName = noPrefix
+      ? key
+      : prefix + key.charAt(0).toUpperCase() + key.slice(1);
 
-    if (prefixedPropertyName in testElement.style) {
+    if (prefixedPropertyName in testElement.style || noPrefix) {
       camelCache.set(key, prefixedPropertyName);
-      dashCache.set(key, `${(noPrefix ? '' : '-')}${camelToDash(prefixedPropertyName)}`);
+      setDashPrefix(
+        key,
+        `${noPrefix ? '' : '-'}${camelToDash(prefixedPropertyName)}`
+      );
     }
   }
 };
 
-export default (key: string, asDashCase: boolean = false) => {
+const setServerProperty = (key: string) => setDashPrefix(key, key);
+
+const prefixer = (key: string, asDashCase: boolean = false) => {
   const cache = asDashCase ? dashCache : camelCache;
 
-  if (!cache.has(key)) testPrefix(key);
+  if (!cache.has(key)) isBrowser ? testPrefix(key) : setServerProperty(key);
 
   return cache.get(key) || key;
 };
+
+export default prefixer;

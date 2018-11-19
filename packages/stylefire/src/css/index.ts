@@ -1,9 +1,9 @@
 import createStyler from '../styler';
 import { Styler } from '../styler/types';
 import prefixer from './prefixer';
-import buildStyles, { aliasMap } from './render';
 import { isTransformProp } from './transform-props';
 import getValueType from './value-types';
+import { buildStyleString, aliasMap } from './build-styles';
 
 type Props = {
   enableHardwareAcceleration?: boolean;
@@ -27,19 +27,15 @@ const cssStyler = createStyler({
         window
           .getComputedStyle(element, null)
           .getPropertyValue(prefixer(key, true)) || 0;
+
       return preparseOutput && valueType && valueType.parse
         ? valueType.parse(domValue)
         : domValue;
     }
   },
-  onRender: (state, { element, enableHardwareAcceleration }, changedValues) => {
+  onRender: (state, { element, buildStyles }, changedValues) => {
     // Style values
-    element.style.cssText += buildStyles(
-      state,
-      changedValues,
-      enableHardwareAcceleration,
-      scrollValues
-    );
+    element.style.cssText += buildStyles(state);
 
     // Scroll values
     if (changedValues.indexOf(SCROLL_LEFT) !== -1)
@@ -54,7 +50,7 @@ const cssStyler = createStyler({
 export default (element: HTMLElement, props?: Props): Styler =>
   cssStyler({
     element,
-    enableHardwareAcceleration: true,
+    buildStyles: buildStyleString(),
     preparseOutput: true,
     ...props
   });

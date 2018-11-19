@@ -2,6 +2,12 @@
 
 Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.3.0] 2018-11-19
+
+### Added
+
+- New `buildStyleProperty` pure function to transform Stylefire props into React-style `style` objects to aid with SSR.
+
 ## [2.2.0] 2018-11-16
 
 ### Added

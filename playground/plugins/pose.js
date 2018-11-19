@@ -3,7 +3,6 @@ import { Box } from '../inc';
 import styled from 'styled-components';
 import pose from 'popmotion-pose';
 import { decay, tween, spring, physics, transform, value } from 'popmotion';
-const { pipe, blendColor, conditional, clamp, interpolate } = transform;
 
 const SidePanel = styled.div`
   width: 300px;
@@ -121,10 +120,7 @@ const passiveModalItemProps = {
   passive: {
     opacity: [
       'x',
-      transform.pipe(
-        parseFloat,
-        transform.interpolate([-100, 0], [0, 1])
-      ),
+      transform.pipe(parseFloat, transform.interpolate([-100, 0], [0, 1])),
       'sidebar'
     ]
   }
@@ -313,9 +309,7 @@ export class PoserFLIP extends React.Component {
   render() {
     return (
       <Modal ref={this.setContainerRef}>
-        {this.state.list.map(i => (
-          <div key={i} ref={this.setItemRef} />
-        ))}
+        {this.state.list.map(i => <div key={i} ref={this.setItemRef} />)}
       </Modal>
     );
   }
