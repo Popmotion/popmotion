@@ -4,7 +4,7 @@ const camelCache = new Map();
 const dashCache = new Map();
 const prefixes: string[] = ['Webkit', 'Moz', 'O', 'ms', ''];
 const numPrefixes = prefixes.length;
-const isBrowser = typeof window !== 'undefined';
+const isBrowser = typeof document !== 'undefined';
 
 let testElement: HTMLElement;
 
@@ -27,7 +27,7 @@ const testPrefix = (key: string) => {
       ? key
       : prefix + key.charAt(0).toUpperCase() + key.slice(1);
 
-    if (prefixedPropertyName in testElement.style) {
+    if (prefixedPropertyName in testElement.style || noPrefix) {
       camelCache.set(key, prefixedPropertyName);
       setDashPrefix(
         key,
@@ -37,12 +37,12 @@ const testPrefix = (key: string) => {
   }
 };
 
-const setDashProperty = (key: string) => setDashPrefix(key, key);
+const setServerProperty = (key: string) => setDashPrefix(key, key);
 
 const prefixer = (key: string, asDashCase: boolean = false) => {
   const cache = asDashCase ? dashCache : camelCache;
 
-  if (!cache.has(key)) isBrowser ? testPrefix(key) : setDashProperty(key);
+  if (!cache.has(key)) isBrowser ? testPrefix(key) : setServerProperty(key);
 
   return cache.get(key) || key;
 };

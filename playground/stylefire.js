@@ -80,3 +80,19 @@ export class SVG extends React.Component {
     );
   }
 }
+
+export class CSS extends React.Component {
+  setStyles = ref =>
+    ref &&
+    styler(ref).set({
+      x: 100,
+      width: 100,
+      height: 100,
+      rotate: 45,
+      backgroundColor: 'red'
+    });
+
+  render() {
+    return <div ref={this.setStyles} />;
+  }
+}

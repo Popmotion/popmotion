@@ -66,7 +66,7 @@ describe('buildStyleString', () => {
       ';transform:translateX(100px) scale(1) translateZ(0);opacity:0.5;transform-origin:100% 50% 0'
     );
     expect(styleString({ opacity: 1, backgroundColor: '#fff' })).toEqual(
-      ';opacity:1'
+      ';transform:none;opacity:1;background-color:#fff'
     );
   });
 });
