@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.5.3] 2018-11-20
+
+### Fixed
+
+- Ensuring `.stop()` is part of `ColdSubscription` definition.
+
 ## [8.5.2] 2018-11-16
 
 ### Upgrade
