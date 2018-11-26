@@ -97,6 +97,19 @@ const resolveTransition = <V, A>(
   if (typeof transition === 'function') {
     resolvedTransition = transition(props);
 
+    /**
+     * transition: () => { d: () => tweenFn }
+     */
+    if (typeof resolvedTransition === 'object') {
+      resolvedTransition = resolveTransition(
+        resolvedTransition as TransitionMap<A>,
+        key,
+        value,
+        props,
+        convertTransitionDefinition,
+        getInstantTransition);
+    }
+
     // Or if it's a keyed object
   } else if (transition[key] || transition.default) {
     const keyTransition = transition[key] || transition.default;
