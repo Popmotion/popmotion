@@ -1,4 +1,4 @@
-import { linear, Easing } from '@popmotion/easing';
+import { Easing } from '@popmotion/easing';
 import progress from './progress';
 import curryRange from './curry-range';
 import mix from './mix';

@@ -2,6 +2,12 @@
 
 Popcorn adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.3.0] 2018-11-27
+
+### Adding
+
+- Support for `clamp` and `ease` options in `interpolate`.
+
 ## [0.2.0] 2018-11-16
 
 ### Removed
