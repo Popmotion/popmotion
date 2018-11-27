@@ -6,7 +6,11 @@ import {
   isTransformOriginProp
 } from './transform-props';
 import prefixer from './prefixer';
-import { scrollKeys as blacklist } from './scroll-keys';
+import {
+  SCROLL_LEFT,
+  SCROLL_TOP,
+  scrollKeys as blacklist
+} from './scroll-keys';
 
 export type AliasMap = { [key: string]: string };
 
@@ -17,8 +21,8 @@ export const aliasMap: AliasMap = {
   originX: 'transformOriginX',
   originY: 'transformOriginY',
   originZ: 'transformOriginZ',
-  scrollX: 'scrollLeft',
-  scrollY: 'scrollTop'
+  scrollX: SCROLL_LEFT,
+  scrollY: SCROLL_TOP
 };
 
 const styleRule = (key: string, value: string | number) =>
