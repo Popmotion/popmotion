@@ -9,10 +9,10 @@
   "scripts": {
     "build": "rollup -c",
     "watch": "rollup -c -w",
-    "lint": "tslint -c tslint.json 'src/**/*.{ts}'",
+    "lint": "tslint 'src/**/*.{ts,tsx}' -e '**/_tests/**'",
     "testsThatHangCircleCi": "jest",
     "measure": "gzip -c dist/popcorn.min.js | wc -c",
-    "prepublishOnly": "npm run testsThatHangCircleCi && npm run build"
+    "prepublishOnly": "yarn lint && yarn testsThatHangCircleCi && yarn build"
   },
   "files": [
     "lib",

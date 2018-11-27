@@ -3,32 +3,48 @@ import interpolate from '../interpolate';
 const invert = (v: number) => -v;
 
 test('interpolate numbers', () => {
-  const a = interpolate([-100, 100, 200], [0, 100, 0]);
+  const f = interpolate([0, 100], [0, 1]);
+  expect(f(50)).toBe(0.5);
 
-  expect(a(-200)).toBe(0);
-  expect(a(0)).toBe(50);
-  expect(a(201)).toBe(0);
+  const s = interpolate([-100, 100, 200], [0, 100, 0]);
+  expect(s(-200)).toBe(0);
+  expect(s(0)).toBe(50);
+  expect(s(201)).toBe(0);
+});
 
-  const aInverted = interpolate(
-    [-100, 100, 200],
-    [0, 100, 0],
-    [invert, invert]
-  );
-
-  expect(aInverted(0)).toBe(-50);
+test('interpolate - ease', () => {
+  const f = interpolate([0, 100], [0, 100], { ease: invert });
+  expect(f(50)).toBe(-50);
 });
 
 test('interpolate - negative', () => {
-  const a = interpolate([-500, 500], [0, 1]);
-  expect(a(-250)).toBe(0.25);
+  const f = interpolate([-500, 500], [0, 1]);
+  expect(f(-250)).toBe(0.25);
+  const s = interpolate([-500, 500, 600], [0, 1, 2]);
+  expect(s(-250)).toBe(0.25);
 });
 
 test('interpolate - out of range', () => {
-  const a = interpolate([0, 100], [200, 100]);
-  expect(a(50)).toBe(150);
-  expect(a(150)).toBe(50);
-  expect(a(0)).toBe(200);
-  expect(a(-100)).toBe(300);
+  const f = interpolate([0, 100], [200, 100]);
+  expect(f(50)).toBe(150);
+  expect(f(150)).toBe(100);
+  expect(f(0)).toBe(200);
+  expect(f(-100)).toBe(200);
+
+  const s = interpolate([0, 100, 200], [100, 200, 100]);
+  expect(s(-50)).toBe(100);
+  expect(s(250)).toBe(100);
+});
+
+test('interpolate - unclamped', () => {
+  const f = interpolate([0, 100], [200, 100], { clamp: false });
+  expect(f(50)).toBe(150);
+  expect(f(150)).toBe(50);
+  expect(f(0)).toBe(200);
+  expect(f(-100)).toBe(300);
+
+  const s = interpolate([0, 100, 200], [1, 2, 3], { clamp: false });
+  expect(s(-100)).toBe(0);
 });
 
 test('interpolate - complex', () => {
