@@ -15,6 +15,7 @@ For legacy IE11 support, the following polyfills are required:
 
 - [String.endsWith](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith#Polyfill)
 - [Array.from](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/from#Polyfill)
+- [WeakSet](https://github.com/dy/weakset)
 
 ## Filesize?
 

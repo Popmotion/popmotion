@@ -13,8 +13,8 @@ const noDeclarationConfig = Object.assign({}, typescriptConfig, {
 
 const common = commonjs({
   namedExports: {
-    'react-is': Object.keys(ReactIs),
-  },
+    'react-is': Object.keys(ReactIs)
+  }
 });
 
 const makeExternalPredicate = externalArr => {
