@@ -5,6 +5,7 @@ const createStyler = ({
   onRead,
   onRender,
   aliasMap = {},
+  uncachedValues = new Set(),
   useCache = true
 }: Config) => (props?: Props): Styler => {
   const state: State = {};
@@ -42,7 +43,7 @@ const createStyler = ({
       const key = aliasMap[unmappedKey] || unmappedKey;
 
       return key
-        ? useCache && state[key] !== undefined
+        ? useCache && !uncachedValues.has(key) && state[key] !== undefined
           ? state[key]
           : onRead(key, props)
         : state;

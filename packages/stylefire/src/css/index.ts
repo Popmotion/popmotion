@@ -4,15 +4,12 @@ import prefixer from './prefixer';
 import { isTransformProp } from './transform-props';
 import getValueType from './value-types';
 import { buildStyleString, aliasMap } from './build-styles';
+import { SCROLL_LEFT, SCROLL_TOP, scrollKeys } from './scroll-keys';
 
 type Props = {
   enableHardwareAcceleration?: boolean;
   preparseOutput?: boolean;
 };
-
-const SCROLL_LEFT = 'scrollLeft';
-const SCROLL_TOP = 'scrollTop';
-const scrollValues = new Set([SCROLL_LEFT, SCROLL_TOP]);
 
 const cssStyler = createStyler({
   onRead: (key, { element, preparseOutput }) => {
@@ -20,7 +17,7 @@ const cssStyler = createStyler({
 
     if (isTransformProp(key)) {
       return valueType ? valueType.default || 0 : 0;
-    } else if (scrollValues.has(key)) {
+    } else if (scrollKeys.has(key)) {
       return element[key];
     } else {
       const domValue =
@@ -44,7 +41,7 @@ const cssStyler = createStyler({
       element.scrollTop = state.scrollTop;
   },
   aliasMap,
-  uncachedValues: scrollValues
+  uncachedValues: scrollKeys
 });
 
 export default (element: HTMLElement, props?: Props): Styler =>

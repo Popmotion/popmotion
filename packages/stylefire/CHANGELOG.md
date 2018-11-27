@@ -2,6 +2,13 @@
 
 Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.3.2] 2018-11-27
+
+### Fixed
+
+- Removing `scrollLeft` and `scrollTop` from cache.
+- Adding `scrollX` and `scrollY` alias.
+
 ## [2.3.1] 2018-11-19
 
 ### Fixed
