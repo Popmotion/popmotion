@@ -60,7 +60,7 @@ const createPointer = (
   if (type === percent) {
     transformQueue.push(
       interpolate([0, dimensions.get(measurement) as number], [0, 100]),
-      v => v + '%'
+      (v: number) => v + '%'
     );
   }
 
