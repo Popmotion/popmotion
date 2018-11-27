@@ -24,7 +24,7 @@ const createPointer = (
   const axisPointer = axisPointerCreator(
     dimensions.measurementAsPixels(measurement, from, type)
   );
-  const transformQueue: Array<(v: number) => number | string> = [];
+  const transformQueue: Array<Function> = [];
 
   if (dragBounds) {
     const resolvedDragBounds = resolveProp(dragBounds, transitionProps);

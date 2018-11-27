@@ -95,8 +95,15 @@ export default (
     'Both input and output ranges must be the same length'
   );
 
+  invariant(
+    !ease || !Array.isArray(ease) || ease.length === input.length - 1,
+    'Array of easing functions must be of length `input.length - 1`, as it applies to the transitions **between** the defined values.'
+  );
+
   // If input runs highest -> lowest, reverse both arrays
   if (input[0] > input[inputLength - 1]) {
+    input = [...input];
+    output = [...output] as string[] | number[];
     input.reverse();
     output.reverse();
   }
