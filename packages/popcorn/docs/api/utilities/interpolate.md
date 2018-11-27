@@ -77,8 +77,50 @@ const mapper = interpolate(
 mapper(0.5); // '15px, rgba(128, 128, 128, 0.5)'
 ```
 
+## Options
+
+`interpolate` takes an optional third argument, options. This is an object that may contain the following configurations:
+
+### Clamp
+
+Clamp values to within the provided ranges.
+
+Default: `true`.
+
+```javascript
+interpolate([0, 1], [0, 100])(2) // 100
+interpolate([0, 1], [0, 100], { clamp: false })(2) // 200
+```
+
+### Ease
+
+Default: `linear`
+
+An easing function, or list of easing functions, to apply to every transition.
+
+If defined as an array, it must be the `input.length - 1`, as it applies to the transitions **between** the defined values.
+
+```javascript
+interpolate(
+  [0, 100, 200],
+  ['#fff', '#500', '#000'],
+  { ease: [linear, easeOut] }
+)
+```
+
 ## Types
 
 ```typescript
-interpolate(input: number[], output: string[] | number[]): string | number;
+interpolate(
+  input: number[],
+  output: string[] | number[],
+  options: InterpolateOptions
+): string | number;
+
+type InterpolateOptions = {
+  clamp?: boolean = true,
+  ease?: Easing | Easing[]
+};
+
+type Easing = v => v;
 ```

@@ -1,10 +1,13 @@
-import { Easing } from '@popmotion/easing';
+import { linear, Easing } from '@popmotion/easing';
 import progress from './progress';
 import curryRange from './curry-range';
 import mix from './mix';
 import mixColor from './mix-color';
 import { mixComplex } from './mix-complex';
 import { color } from 'style-value-types';
+import makeInputClamp from './clamp';
+import pipe from './pipe';
+import { invariant } from 'hey-listen';
 
 type StringMixerFactory = (from: string, to: string) => (v: number) => string;
 type NumberMixerFactory = (from: number, to: number) => (v: number) => number;
@@ -18,78 +21,97 @@ const getMixer = (v: number | string) =>
       ? (mixColor as StringMixerFactory)
       : (mixComplex as StringMixerFactory);
 
-/**
- * Interpolate from set of values to another
- */
-const slowInterpolate = (
-  input: number[],
-  output: number[] | string[],
-  rangeLength: number,
-  rangeEasing: Easing[]
-) => {
-  const finalIndex = rangeLength - 1;
+type Mixer = (v: number) => number | string;
 
-  // If input runs highest -> lowest, reverse both arrays
-  if (input[0] > input[finalIndex]) {
-    input.reverse();
-    output.reverse();
-  }
-
-  const mixerFactories = Array(finalIndex).fill(getMixer(output[0]));
-  const mixers = mixerFactories.map((factory, i) =>
-    factory(output[i], output[i + 1])
-  );
-
-  return (v: number) => {
-    // If value outside minimum range, quickly return
-    if (v <= input[0]) {
-      return output[0];
-    }
-
-    // If value outside maximum range, quickly return
-    if (v >= input[finalIndex]) {
-      return output[finalIndex];
-    }
-
-    let i = 1;
-
-    // Find index of range start
-    for (; i < rangeLength; i++) {
-      if (input[i] > v || i === finalIndex) {
-        break;
-      }
-    }
-
-    const progressInRange = progress(input[i - 1], input[i], v);
-    const easedProgress = rangeEasing
-      ? rangeEasing[i - 1](progressInRange)
-      : progressInRange;
-
-    return mixers[i - 1](easedProgress);
-  };
+type InterpolateOptions = {
+  clamp?: boolean;
+  ease?: Easing | Easing[];
 };
 
-// TODO: Probably possible to update this to work with various mixers
-const fastInterpolate = (
-  minA: number,
-  maxA: number,
-  minB: number,
-  maxB: number
-) => (v: number) => ((v - minA) * (maxB - minB)) / (maxA - minA) + minB;
+const createMixers = (output: number[] | string[], ease?: Easing | Easing[]) =>
+  Array(output.length - 1)
+    .fill(getMixer(output[0]))
+    .map((factory, i) => {
+      const mixer = factory(output[i], output[i + 1]);
+
+      if (ease) {
+        const easingFunction = Array.isArray(ease) ? ease[i] : ease;
+        return pipe(
+          easingFunction,
+          mixer
+        );
+      } else {
+        return mixer;
+      }
+    });
+
+const fastInterpolate = ([from, to]: number[], [mixer]: Mixer[]) => {
+  return (v: number) => mixer(progress(from, to, v));
+};
+
+const slowInterpolate = (input: number[], mixers: Mixer[]) => {
+  const inputLength = input.length;
+  const lastInputIndex = inputLength - 1;
+
+  return (v: number) => {
+    let mixerIndex = 0;
+    let foundMixerIndex = false;
+
+    if (v <= input[0]) {
+      foundMixerIndex = true;
+    } else if (v >= input[lastInputIndex]) {
+      mixerIndex = lastInputIndex - 1;
+      foundMixerIndex = true;
+    }
+
+    if (!foundMixerIndex) {
+      let i = 1;
+      for (; i < inputLength; i++) {
+        if (input[i] > v || i === lastInputIndex) {
+          break;
+        }
+      }
+      mixerIndex = i - 1;
+    }
+
+    const progressInRange = progress(
+      input[mixerIndex],
+      input[mixerIndex + 1],
+      v
+    );
+    return mixers[mixerIndex](progressInRange);
+  };
+};
 
 export default (
   input: number[],
   output: number[] | string[],
-  rangeEasing?: Easing[]
+  { clamp = true, ease }: InterpolateOptions = {}
 ) => {
-  const rangeLength = input.length;
+  const inputLength = input.length;
 
-  return rangeLength === 2 && typeof output[0] === 'number'
-    ? fastInterpolate(
-        input[0],
-        input[1],
-        output[0] as number,
-        output[1] as number
+  invariant(
+    inputLength === output.length,
+    'Both input and output ranges must be the same length'
+  );
+
+  // If input runs highest -> lowest, reverse both arrays
+  if (input[0] > input[inputLength - 1]) {
+    input.reverse();
+    output.reverse();
+  }
+
+  const mixers = createMixers(output, ease);
+
+  const interpolate =
+    inputLength === 2
+      ? fastInterpolate(input, mixers)
+      : slowInterpolate(input, mixers);
+
+  return clamp
+    ? pipe(
+        makeInputClamp(input[0], input[inputLength - 1]),
+        interpolate
       )
-    : slowInterpolate(input, output, rangeLength, rangeEasing);
+    : interpolate;
 };
