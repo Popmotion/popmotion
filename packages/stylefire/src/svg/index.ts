@@ -7,14 +7,14 @@ import getValueType from './value-types';
 
 type SVGProps = {
   dimensions: {
-    x: number,
-    y: number,
-    width: number,
-    height: number
-  },
-  element: SVGElement,
-  isPath: boolean,
-  pathLength?: number
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  };
+  element: SVGElement;
+  isPath: boolean;
+  pathLength?: number;
 };
 
 const svgStyler = createStyler({
@@ -26,7 +26,11 @@ const svgStyler = createStyler({
       return valueType ? valueType.default : 0;
     }
   },
-  onRender: (state, { dimensions, element, isPath, pathLength }, changedValues) => {
+  onRender: (
+    state,
+    { dimensions, element, isPath, pathLength },
+    changedValues
+  ) => {
     setDomAttrs(element, buildAttrs(state, dimensions, isPath, pathLength));
   },
   aliasMap: {
@@ -37,7 +41,10 @@ const svgStyler = createStyler({
 });
 
 export default (element: SVGElement | SVGPathElement): Styler => {
-  const { x, y, width, height } = (element as SVGGraphicsElement).getBBox();
+  const { x, y, width, height } =
+    typeof (element as SVGGraphicsElement).getBBox === 'function'
+      ? (element as SVGGraphicsElement).getBBox()
+      : (element.getBoundingClientRect() as DOMRect);
   const props: SVGProps = {
     element,
     dimensions: { x, y, width, height },
