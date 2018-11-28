@@ -14,21 +14,21 @@ type NumberMixerFactory = (from: number, to: number) => (v: number) => number;
 
 const mixNumber = curryRange(mix);
 
-const getMixer = (v: number | string) =>
+const getMixer = v =>
   typeof v === 'number'
     ? (mixNumber as NumberMixerFactory)
     : color.test(v)
       ? (mixColor as StringMixerFactory)
       : (mixComplex as StringMixerFactory);
 
-type Mixer = (v: number) => number | string;
+type Interpolate<T> = (v: number) => T;
 
 type InterpolateOptions = {
   clamp?: boolean;
   ease?: Easing | Easing[];
 };
 
-const createMixers = (output: number[] | string[], ease?: Easing | Easing[]) =>
+const createMixers = <T>(output: T[], ease?: Easing | Easing[]) =>
   Array(output.length - 1)
     .fill(getMixer(output[0]))
     .map((factory, i) => {
@@ -45,11 +45,17 @@ const createMixers = (output: number[] | string[], ease?: Easing | Easing[]) =>
       }
     });
 
-const fastInterpolate = ([from, to]: number[], [mixer]: Mixer[]) => {
+const fastInterpolate = <T>(
+  [from, to]: number[],
+  [mixer]: Interpolate<T>[]
+): Interpolate<T> => {
   return (v: number) => mixer(progress(from, to, v));
 };
 
-const slowInterpolate = (input: number[], mixers: Mixer[]) => {
+const slowInterpolate = <T>(
+  input: number[],
+  mixers: Interpolate<T>[]
+): Interpolate<T> => {
   const inputLength = input.length;
   const lastInputIndex = inputLength - 1;
 
@@ -83,11 +89,11 @@ const slowInterpolate = (input: number[], mixers: Mixer[]) => {
   };
 };
 
-export default (
+export default <T>(
   input: number[],
-  output: number[] | string[],
+  output: T[],
   { clamp = true, ease }: InterpolateOptions = {}
-): Mixer => {
+): Interpolate<T> => {
   const inputLength = input.length;
 
   invariant(
@@ -103,7 +109,7 @@ export default (
   // If input runs highest -> lowest, reverse both arrays
   if (input[0] > input[inputLength - 1]) {
     input = [...input];
-    output = [...output] as string[] | number[];
+    output = [...output];
     input.reverse();
     output.reverse();
   }
@@ -112,13 +118,13 @@ export default (
 
   const interpolate =
     inputLength === 2
-      ? fastInterpolate(input, mixers)
-      : slowInterpolate(input, mixers);
+      ? fastInterpolate<T>(input, mixers)
+      : slowInterpolate<T>(input, mixers);
 
   return clamp
     ? (pipe(
         makeInputClamp(input[0], input[inputLength - 1]),
         interpolate
-      ) as Mixer)
+      ) as Interpolate<T>)
     : interpolate;
 };
