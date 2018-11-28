@@ -2,6 +2,12 @@
 
 Popcorn adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.3.1] 2018-11-28
+
+### Fixing
+
+- Explicit types for `interpolate`.
+
 ## [0.3.0] 2018-11-27
 
 ### Adding

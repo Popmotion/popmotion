@@ -87,7 +87,7 @@ export default (
   input: number[],
   output: number[] | string[],
   { clamp = true, ease }: InterpolateOptions = {}
-) => {
+): Mixer => {
   const inputLength = input.length;
 
   invariant(
@@ -116,9 +116,9 @@ export default (
       : slowInterpolate(input, mixers);
 
   return clamp
-    ? pipe(
+    ? (pipe(
         makeInputClamp(input[0], input[inputLength - 1]),
         interpolate
-      )
+      ) as Mixer)
     : interpolate;
 };
