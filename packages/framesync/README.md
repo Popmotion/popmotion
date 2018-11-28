@@ -92,6 +92,6 @@ let count = 0;
 
 const process = sync.render(() => {
   count++;
-  if (count >= 10) cancelSync(process);
+  if (count >= 10) cancelSync.render(process);
 }, true);
 ```
