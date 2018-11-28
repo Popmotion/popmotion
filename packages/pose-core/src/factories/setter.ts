@@ -100,16 +100,14 @@ const resolveTransition = <V, A>(
     /**
      * transition: () => { d: () => tweenFn }
      */
-    if (typeof resolvedTransition === 'object') {
-      resolvedTransition = resolveTransition(
-        resolvedTransition as TransitionMap<A>,
-        key,
-        value,
-        props,
-        convertTransitionDefinition,
-        getInstantTransition);
-    }
-
+    resolvedTransition = resolveTransition(
+      resolvedTransition as TransitionMap<A>,
+      key,
+      value,
+      props,
+      convertTransitionDefinition,
+      getInstantTransition
+    );
     // Or if it's a keyed object
   } else if (transition[key] || transition.default) {
     const keyTransition = transition[key] || transition.default;
@@ -296,7 +294,8 @@ const createPoseSetter = <V, A, C, P>(
               );
 
               // Add delay if defined on pose
-              const poseDelay = delay || resolveProp(nextPose.delay, transitionProps);
+              const poseDelay =
+                delay || resolveProp(nextPose.delay, transitionProps);
               if (poseDelay) {
                 transition = addActionDelay(poseDelay, transition);
               }
