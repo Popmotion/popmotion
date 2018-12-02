@@ -9,26 +9,31 @@ import makeInputClamp from './clamp';
 import pipe from './pipe';
 import { invariant } from 'hey-listen';
 
-type StringMixerFactory = (from: string, to: string) => (v: number) => string;
-type NumberMixerFactory = (from: number, to: number) => (v: number) => number;
+type Ease = Easing | Easing[];
+
+type Interpolate<T> = (v: number) => T;
+
+type InterpolateOptions = {
+  clamp?: boolean;
+  ease?: Ease;
+};
+
+type StringMixerFactory = (from: string, to: string) => Interpolate<string>;
+type NumberMixerFactory = (from: number, to: number) => Interpolate<number>;
 
 const mixNumber = curryRange(mix);
 
-const getMixer = v =>
+const getMixer = (v: number | string) =>
   typeof v === 'number'
     ? (mixNumber as NumberMixerFactory)
     : color.test(v)
       ? (mixColor as StringMixerFactory)
       : (mixComplex as StringMixerFactory);
 
-type Interpolate<T> = (v: number) => T;
-
-type InterpolateOptions = {
-  clamp?: boolean;
-  ease?: Easing | Easing[];
-};
-
-const createMixers = <T>(output: T[], ease?: Easing | Easing[]) =>
+const createMixers = (
+  output: number[] | string[],
+  ease?: Ease
+): Interpolate<number>[] | Interpolate<string>[] =>
   Array(output.length - 1)
     .fill(getMixer(output[0]))
     .map((factory, i) => {
@@ -45,17 +50,17 @@ const createMixers = <T>(output: T[], ease?: Easing | Easing[]) =>
       }
     });
 
-const fastInterpolate = <T>(
+const fastInterpolate = (
   [from, to]: number[],
-  [mixer]: Interpolate<T>[]
-): Interpolate<T> => {
+  [mixer]: Interpolate<number>[] | Interpolate<string>[]
+) => {
   return (v: number) => mixer(progress(from, to, v));
 };
 
-const slowInterpolate = <T>(
+const slowInterpolate = (
   input: number[],
-  mixers: Interpolate<T>[]
-): Interpolate<T> => {
+  mixers: Interpolate<number>[] | Interpolate<string>[]
+) => {
   const inputLength = input.length;
   const lastInputIndex = inputLength - 1;
 
@@ -89,11 +94,21 @@ const slowInterpolate = <T>(
   };
 };
 
-export default <T>(
+function interpolate(
   input: number[],
-  output: T[],
+  output: number[],
+  options?: InterpolateOptions
+): Interpolate<number>;
+function interpolate(
+  input: number[],
+  output: string[],
+  options?: InterpolateOptions
+): Interpolate<string>;
+function interpolate(
+  input: number[],
+  output: number[] | string[],
   { clamp = true, ease }: InterpolateOptions = {}
-): Interpolate<T> => {
+): Interpolate<number | string> {
   const inputLength = input.length;
 
   invariant(
@@ -102,14 +117,14 @@ export default <T>(
   );
 
   invariant(
-    !ease || !Array.isArray(ease) || ease.length === input.length - 1,
+    !ease || !Array.isArray(ease) || ease.length === inputLength - 1,
     'Array of easing functions must be of length `input.length - 1`, as it applies to the transitions **between** the defined values.'
   );
 
   // If input runs highest -> lowest, reverse both arrays
   if (input[0] > input[inputLength - 1]) {
-    input = [...input];
-    output = [...output];
+    input = [].concat(input);
+    output = [].concat(output);
     input.reverse();
     output.reverse();
   }
@@ -118,13 +133,15 @@ export default <T>(
 
   const interpolate =
     inputLength === 2
-      ? fastInterpolate<T>(input, mixers)
-      : slowInterpolate<T>(input, mixers);
+      ? fastInterpolate(input, mixers)
+      : slowInterpolate(input, mixers);
 
   return clamp
     ? (pipe(
         makeInputClamp(input[0], input[inputLength - 1]),
         interpolate
-      ) as Interpolate<T>)
+      ) as Interpolate<number | string>)
     : interpolate;
-};
+}
+
+export default interpolate;
