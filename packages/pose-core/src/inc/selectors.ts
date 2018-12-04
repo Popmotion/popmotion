@@ -8,6 +8,7 @@ import {
 
 export const getPoseValues = <A>({
   transition,
+  flip,
   delay,
   delayChildren,
   staggerChildren,
