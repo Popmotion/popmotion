@@ -2,7 +2,7 @@
 
 Pose Core adheres to [Semantic Versioning](http://semver.org/).
 
-## [2.0.2] Unreleased
+## [2.0.2] 2018-12-03
 
 ### Fixed
 
