@@ -49,7 +49,7 @@
     "rollup-plugin-uglify": "^3.0.0"
   },
   "dependencies": {
-    "@emotion/is-prop-valid": "^0.6.5",
+    "@emotion/is-prop-valid": "^0.7.3",
     "hey-listen": "^1.0.5",
     "popmotion-pose": "^3.4.0",
     "tslib": "^1.9.1"
