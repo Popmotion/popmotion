@@ -64,6 +64,34 @@ test('posed: initial state - auto `init` pose', () => {
   expect(y).toBe(15);
 });
 
+test('posed: nested poses get merged together', () => {
+  let parentX = 0;
+  let childX = 0;
+  let childY = 0;
+
+  const Parent = posed.div({
+    foo: { x: 20, transition: { duration: 30 } }
+  });
+
+  const Child = posed.div({
+    foo: { x: 10, transition: { duration: 30 } },
+    bar: { y: 30, transition: { duration: 30 } }
+  });
+
+  render(
+    <Parent pose="foo" onValueChange={{ x: v => (parentX = v) }}>
+      <Child
+        pose="bar"
+        onValueChange={{ x: v => (childX = v), y: v => (childY = v) }}
+      />
+    </Parent>
+  );
+
+  expect(parentX).toBe(20);
+  expect(childX).toBe(10);
+  expect(childY).toBe(30);
+});
+
 test('posed: mount animation with `initialPose`', () => {
   let x = 0;
   let y = 0;
