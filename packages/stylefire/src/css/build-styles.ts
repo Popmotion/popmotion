@@ -5,7 +5,6 @@ import {
   isTransformProp,
   isTransformOriginProp
 } from './transform-props';
-import prefixer from './prefixer';
 import {
   SCROLL_LEFT,
   SCROLL_TOP,
@@ -24,9 +23,6 @@ export const aliasMap: AliasMap = {
   scrollX: SCROLL_LEFT,
   scrollY: SCROLL_TOP
 };
-
-const styleRule = (key: string, value: string | number) =>
-  `;${prefixer(key, true)}:${value}`;
 
 /**
  * Build style property
