@@ -113,47 +113,29 @@ const buildStyleProperty = (
   return styles;
 };
 
-const buildStyleString = (enableHardwareAcceleration: boolean = true) => {
-  /**
-   * We create our states as ping-pong data structures, rather than creating
-   * new ones every frame.
-   */
-  let next: State = {};
-  let prev: State = {};
-
+const createStyleBuilder = (enableHardwareAcceleration: boolean = true) => {
   /**
    * Because we expect this function to run multiple times a frame
    * we create and hold these data structures as mutative states.
    */
+  const styles: State = {};
   const transform: State = {};
   const transformOrigin: State = {};
   const transformKeys: string[] = [];
 
   return (state: State) => {
-    let style = '';
-
     transformKeys.length = 0;
-    next = buildStyleProperty(
+    buildStyleProperty(
       state,
       enableHardwareAcceleration,
-      next,
+      styles,
       transform,
       transformOrigin,
       transformKeys
     );
 
-    for (const key in next) {
-      const value = next[key];
-
-      if (value !== prev[key]) {
-        style += styleRule(key, value);
-      }
-    }
-
-    [next, prev] = [prev, next];
-
-    return style;
+    return styles;
   };
 };
 
-export { buildStyleProperty, buildStyleString };
+export { buildStyleProperty, createStyleBuilder };
