@@ -456,6 +456,57 @@ test('correctly applies start/end values on initialisation', () => {
   expect(applyPoser.get('bar')).toBe(3);
 });
 
+test('applyAtStart/applyAtEnd defined on child gets applied to correct element', () => {
+  const parentNative = {}
+  const childNative = {}
+
+  const parent = testPose({
+    initialPose: 'closed',
+    closed: { x: 0 },
+    opened: { x: 100 }
+    props: { onNativeSet: (key, v) => parentNative[key] = v }
+  });
+
+  const child = parent._addChild({
+    closed: {
+      applyAtEnd: { display: 'none' }
+    },
+    opened: {
+      applyAtStart: { display: 'block' }
+    },
+    props: { onNativeSet: (key, v) => childNative[key] = v }
+  }, testPose);
+
+  return parent.set('opened').then(() => {
+    expect(parentNative.display).toBe(undefined)
+    expect(childNative.display).toBe('block')
+
+    return parent.set('closed')
+  }).then(() => {
+    expect(parentNative.display).toBe(undefined)
+    expect(childNative.display).toBe('none')
+  })
+})
+
+test('parent & child uses their own props correctly', () => {
+  const parent = testPose({
+    init: { x: 0 },
+    a: { x: ({ x }) => x },
+    props: { x: 100 },
+  });
+
+  const child = parent._addChild({
+    init: { x: 10 },
+    a: { x: ({ x }) => x },
+    props: { x: 50 }
+  }, testPose);
+
+  return parent.set('a').then(() => {
+    expect(parent.get('x')).toBe(-100)
+    expect(child.get('x')).toBe(-50)
+  })
+})
+
 test('getDefaultProps adds default props', () => {
   const poser = testPose({
     init: {
