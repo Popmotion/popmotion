@@ -1,6 +1,4 @@
-import * as React from 'react';
-import { isForwardRef } from 'react-is';
-import { createContext, createElement } from 'react';
+import React, { PureComponent, createContext, createElement } from 'react';
 import poseFactory, {
   DomPopmotionPoser,
   DomPopmotionConfig
@@ -13,22 +11,17 @@ import {
   PopStyle
 } from './types';
 import isValidProp from '@emotion/is-prop-valid';
-import { invariant } from 'hey-listen';
+import { invariant, warning } from 'hey-listen';
 import { hasChanged } from '../../utils/has-changed';
 import { pickAssign } from '../../utils/pick-assign';
+
+type ExcludesVoid = <T>(x: T | void) => x is T;
 
 const {
   Consumer: PoseParentConsumer,
   Provider: PoseParentProvider
 } = createContext({});
 export { PoseParentConsumer };
-
-type Ref = (ref: Element) => any;
-type RefSetters = {
-  ref?: Ref;
-  innerRef?: Ref;
-  hostRef?: Ref;
-};
 
 const calcPopFromFlowStyle = (el: HTMLElement): PopStyle => {
   const { offsetTop, offsetLeft, offsetWidth, offsetHeight } = el;
@@ -75,9 +68,9 @@ const filterProps = ({
   onPressStart,
   onPressEnd,
   ...props
-}: PoseElementInternalProps) => props
+}: PoseElementInternalProps) => props;
 
-class PoseElement extends React.PureComponent<PoseElementInternalProps> {
+class PoseElement extends PureComponent<PoseElementInternalProps> {
   props: PoseElementInternalProps;
   poser: DomPopmotionPoser;
   poseConfig: DomPopmotionConfig;
@@ -110,11 +103,12 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
     this.shouldForwardProp =
       typeof this.props.elementType === 'string' ? isValidProp : testAlwaysTrue;
 
-    const { poseConfig } = this.props
+    const { poseConfig } = this.props;
 
-    this.poseConfig = typeof poseConfig === 'function'
-      ? poseConfig(filterProps(props))
-      : poseConfig;
+    this.poseConfig =
+      typeof poseConfig === 'function'
+        ? poseConfig(filterProps(props))
+        : poseConfig;
   }
 
   getInitialPose(): CurrentPose | void {
@@ -124,9 +118,12 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
       return initialPose;
     } else {
       const parentPose = getInitialPoseFromParent && getInitialPoseFromParent();
-      const initialPoses = (Array.isArray(parentPose) ? parentPose : [parentPose])
+      const initialPoses = (Array.isArray(parentPose)
+        ? parentPose
+        : [parentPose]
+      )
         .concat(pose, _pose)
-        .filter(Boolean);
+        .filter((Boolean as any) as ExcludesVoid);
 
       return initialPoses.length > 0 ? initialPoses : undefined;
     }
@@ -139,7 +136,7 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
 
     const firstPose = (Array.isArray(pose) ? pose : [pose])
       .concat(_pose)
-      .filter(Boolean)
+      .filter(Boolean);
 
     return firstPose.length === 1 ? firstPose[0] : firstPose;
   }
@@ -167,51 +164,29 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
     return props;
   }
 
-  /**
-   * We need to get a ref to the underlying DOM element. Styled Components and
-   * other libraries use `innerRef`, though this will be swallowed if the
-   * styled component is not a primitive (ie styled(Component)).
-   *
-   * Instead we pass another function, `hostRef`, as recommended by Facebook
-   * https://github.com/facebook/react/issues/11401
-   *
-   * We also only pass `ref` to DOM primitive components.
-   */
-  getRefs = (): RefSetters => {
-    const refs: RefSetters = {};
-    const { elementType } = this.props;
+  setRef = (ref: Element | null) => {
+    warning(
+      ref === null || (ref instanceof Element && this.ref === undefined),
+      'ref must be provided to the same DOM component for the entire lifecycle of a posed component.'
+    );
 
-    if (
-      typeof elementType === 'string' ||
-      isForwardRef(elementType)
-    ) {
-      refs.ref = this.setRef;
+    this.ref = ref;
+
+    // Update user-provided `innerRef` property. (Externalised as `ref`)
+    const { innerRef } = this.props;
+    if (!innerRef) return;
+
+    if (typeof innerRef === 'function') {
+      innerRef(ref);
     } else {
-      refs.innerRef = this.setRef;
-      refs.hostRef = this.setRef;
-    }
-
-    return refs;
-  };
-
-  setRef = (ref: Element) => {
-    if (ref instanceof Element || (this.ref && ref === null)) {
-      const { innerRef } = this.props;
-      if (innerRef) {
-        if (typeof innerRef === 'function') {
-          innerRef(ref);
-        } else {
-          innerRef.current = ref;
-        }
-      }
-      this.ref = ref;
+      innerRef.current = ref;
     }
   };
 
   componentDidMount() {
     invariant(
-      typeof this.ref !== 'undefined',
-      `No DOM ref found. If you're converting an existing component via posed(Component), you must ensure you're passing the hostRef prop to your underlying DOM element.`
+      this.ref instanceof Element,
+      "No valid DOM ref found. If you're converting an existing component via posed(Component), you must ensure you're passing the ref to the host DOM node via the React.forwardRef function."
     );
 
     const {
@@ -250,8 +225,10 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
     }
   }
 
-  getSnapshotBeforeUpdate({ pose, _pose }: PoseElementInternalProps) {
+  getSnapshotBeforeUpdate(): null {
+    const { pose, _pose } = this.props;
     if (hasPose(pose, 'flip') || hasPose(_pose, 'flip')) this.poser.measure();
+    return null;
   }
 
   componentDidUpdate(prevProps: PoseElementInternalProps) {
@@ -312,7 +289,7 @@ class PoseElement extends React.PureComponent<PoseElementInternalProps> {
           elementType,
           pickAssign(this.shouldForwardProp, [
             this.getSetProps(),
-            this.getRefs()
+            { ref: this.setRef }
           ])
         )}
       </PoseParentProvider>

@@ -68,5 +68,5 @@ const generateRouteDefinitions = data => {
 
 module.exports = function(data) {
   const routes = generateRouteDefinitions(data);
-  fs.writeFile(outputPath, fileTemplate(routes));
+  fs.writeFileSync(outputPath, fileTemplate(routes));
 };

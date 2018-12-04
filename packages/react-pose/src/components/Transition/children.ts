@@ -17,15 +17,15 @@ const getKey = (child: React.ReactElement<any>): string => {
 
 const prependProps = (
   element: React.ReactElement<any>,
-  props: { [key: string]: any; }
+  props: { [key: string]: any }
 ) =>
   // avoid extra copying in cloneElement
   React.createElement(element.type, {
     key: element.key,
     ref: (element as any).ref,
     ...props,
-    ...element.props,
-  })
+    ...element.props
+  });
 
 const handleTransition = (
   {
@@ -43,21 +43,20 @@ const handleTransition = (
     displayedChildren,
     finishedLeaving,
     hasInitialized,
-    indexedChildren: prevChildren,
-    scheduleChildRemoval,
+    indexedChildren,
+    scheduleChildRemoval
   }: State
 ) => {
   const targetChildren = makeChildList(incomingChildren as React.ReactNode);
 
   const nextState: Partial<State> = {
-    displayedChildren: [],
-    indexedChildren: {},
+    displayedChildren: []
   };
 
   if (process.env.NODE_ENV !== 'production') {
     warning(
       !propsForChildren.onPoseComplete,
-      `<Transition/> (or <PoseGroup/>) doesn't accept onPoseComplete prop.`,
+      "<Transition/> (or <PoseGroup/>) doesn't accept onPoseComplete prop."
     );
   }
 
@@ -73,7 +72,7 @@ const handleTransition = (
   );
   entering.forEach(key => delete finishedLeaving[key]);
 
-  const leaving: Array<string> = [];
+  const leaving: string[] = [];
   const newlyLeaving: { [key: string]: boolean } = {};
   prevKeys.forEach(key => {
     if (entering.has(key)) {
@@ -92,7 +91,7 @@ const handleTransition = (
       finishedLeaving[key] = false;
       newlyLeaving[key] = true;
     }
-  })
+  });
 
   const moving = new Set(
     prevKeys.filter((key, i) => {
@@ -106,7 +105,7 @@ const handleTransition = (
   );
 
   targetChildren.forEach(child => {
-    const newChildProps: { [key: string]: any; } = {};
+    const newChildProps: { [key: string]: any } = {};
 
     if (entering.has(child.key as string)) {
       if (hasInitialized || animateOnMount) {
@@ -121,27 +120,24 @@ const handleTransition = (
     }
 
     const newChild = React.cloneElement(child, newChildProps);
-    nextState.indexedChildren[child.key] = newChild;
+    indexedChildren[child.key] = newChild;
     nextState.displayedChildren.push(
-      hasPropsForChildren
-        ? prependProps(newChild, propsForChildren)
-        : newChild
+      hasPropsForChildren ? prependProps(newChild, propsForChildren) : newChild
     );
   });
 
   leaving.forEach(key => {
-    const child = prevChildren[key];
-
+    const child = indexedChildren[key];
     const newChild = newlyLeaving[key]
       ? React.cloneElement(child, {
           _pose: exitPose,
           onPoseComplete: (pose: CurrentPose) => {
-            scheduleChildRemoval(key)
+            scheduleChildRemoval(key);
 
-            const { onPoseComplete } = child.props
-            onPoseComplete && onPoseComplete(pose)
+            const { onPoseComplete } = child.props;
+            if (onPoseComplete) onPoseComplete(pose);
           },
-          popFromFlow: flipMove,
+          popFromFlow: flipMove
         })
       : child;
 
@@ -154,13 +150,11 @@ const handleTransition = (
     // TODO: Write a shitty algo
     // }
 
-    nextState.indexedChildren[child.key] = newChild;
+    indexedChildren[child.key] = newChild;
     nextState.displayedChildren.splice(
       insertionIndex,
       0,
-      hasPropsForChildren
-        ? prependProps(newChild, propsForChildren)
-        : newChild
+      hasPropsForChildren ? prependProps(newChild, propsForChildren) : newChild
     );
   });
 

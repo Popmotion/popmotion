@@ -65,7 +65,8 @@ const testPose = poseFactory<Value, Action, Subscription, PoserAPI>({
   extendAPI: api => api,
   posePriority: ['drag', 'press', 'hover'],
   setValue: (raw, valueToSet) => raw.i = valueToSet,
-  setValueNative: (key, valueToSet, { onNativeSet }) => onNativeSet && onNativeSet(key, valueToSet)
+  setValueNative: (key, valueToSet, { onNativeSet }) => onNativeSet && onNativeSet(key, valueToSet),
+  getDefaultProps: ({ props: { forGetDefault } = {} }) => ({ fromConfig: forGetDefault, defaultProp: 110 }),
 });
 
 const testPoser = testPose({
@@ -505,3 +506,55 @@ test('parent & child uses their own props correctly', () => {
     expect(child.get('x')).toBe(-50)
   })
 })
+
+test('getDefaultProps adds default props', () => {
+  const poser = testPose({
+    init: {
+      x: 0,
+    },
+    opened: {
+      x: ({ defaultProp }) => defaultProp,
+    },
+  });
+
+  return poser.set('opened').then(() => {
+    expect(poser.get('x')).toBe(-110);
+  })
+});
+
+test('getDefaultProps is able to read from config', () => {
+  const poser = testPose({
+    init: {
+      x: 0,
+    },
+    opened: {
+      x: ({ fromConfig }) => fromConfig,
+    },
+    props: {
+      forGetDefault: 10,
+    }
+  });
+
+  return poser.set('opened').then(() => {
+    expect(poser.get('x')).toBe(-10);
+  })
+});
+
+test("getDefaultProps doesn't override own props", () => {
+  const poser = testPose({
+    init: {
+      x: 0,
+    },
+    opened: {
+      x: ({ fromConfig }) => fromConfig,
+    },
+    props: {
+      forGetDefault: 10,
+      fromConfig: 200
+    }
+  });
+
+  return poser.set('opened').then(() => {
+    expect(poser.get('x')).toBe(-200);
+  })
+});

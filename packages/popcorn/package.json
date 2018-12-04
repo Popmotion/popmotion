@@ -1,6 +1,6 @@
 {
   "name": "@popmotion/popcorn",
-  "version": "0.0.1",
+  "version": "0.3.1",
   "description": "Utility functions for animation and interactions.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -9,10 +9,10 @@
   "scripts": {
     "build": "rollup -c",
     "watch": "rollup -c -w",
-    "lint": "tslint -c tslint.json 'src/**/*.{ts}'",
+    "lint": "tslint 'src/**/*.{ts,tsx}' -e '**/_tests/**'",
     "testsThatHangCircleCi": "jest",
     "measure": "gzip -c dist/popcorn.min.js | wc -c",
-    "prepublishOnly": "npm run testsThatHangCircleCi && npm run build"
+    "prepublishOnly": "yarn lint && yarn testsThatHangCircleCi && yarn build"
   },
   "files": [
     "lib",
@@ -36,11 +36,12 @@
     "@types/jest": "^23.1.1",
     "jest": "^23.1.0",
     "jest-cli": "^23.1.0",
+    "rollup": "^0.59.1",
     "rollup-plugin-node-resolve": "^3.4.0",
     "rollup-plugin-typescript2": "^0.14.0",
     "rollup-plugin-uglify": "^3.0.0",
     "ts-jest": "^21.2.4",
-    "typescript": "^2.4.2"
+    "typescript": "^2.9.2"
   },
   "jest": {
     "moduleFileExtensions": [

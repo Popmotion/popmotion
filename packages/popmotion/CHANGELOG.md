@@ -2,7 +2,25 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
-## [8.4.2] Unreleased
+## [8.5.3] 2018-11-20
+
+### Fixed
+
+- Ensuring `.stop()` is part of `ColdSubscription` definition.
+
+## [8.5.2] 2018-11-16
+
+### Upgrade
+
+- Moving to `popcorn@0.2.0`
+
+## [8.5.0] 2018-11-01
+
+### Fixed
+
+- Enforcing minor upgrade to Popcorn.
+
+## [8.4.2] 2018-11-01
 
 ### Fixed
 

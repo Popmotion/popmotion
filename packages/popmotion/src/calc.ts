@@ -1,7 +1,6 @@
 import {
   angle,
   degreesToRadians,
-  dilate,
   distance,
   isPoint3D,
   isPoint,
@@ -11,22 +10,22 @@ import {
   radiansToDegrees,
   smoothFrame,
   velocityPerFrame,
-  velocityPerSecond,
+  velocityPerSecond
 } from '@popmotion/popcorn';
 export {
   angle,
   degreesToRadians,
-  dilate,
   distance,
   isPoint3D,
   isPoint,
+  mix as dilate,
   mix as getValueFromProgress,
   pointFromVector as pointFromAngleAndDistance,
   progress as getProgressFromValue,
   radiansToDegrees,
   smoothFrame as smooth,
   velocityPerFrame as speedPerFrame,
-  velocityPerSecond as speedPerSecond,
+  velocityPerSecond as speedPerSecond
 };
 
 /*
@@ -41,7 +40,9 @@ export const stepProgress = (steps: number, progress: number) => {
   const subsegment = 1 / (2 * (steps - 1));
   const percentProgressOfTarget = Math.min(progress, 1);
   const subsegmentProgressOfTarget = percentProgressOfTarget / subsegment;
-  const segmentProgressOfTarget = Math.floor((subsegmentProgressOfTarget + 1) / 2);
+  const segmentProgressOfTarget = Math.floor(
+    (subsegmentProgressOfTarget + 1) / 2
+  );
 
   return segmentProgressOfTarget * segment;
 };

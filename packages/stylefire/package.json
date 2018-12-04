@@ -1,6 +1,6 @@
 {
   "name": "stylefire",
-  "version": "2.1.0",
+  "version": "2.3.2",
   "description": "Performant, simplified stylers for CSS, SVG, path and DOM scroll.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -14,9 +14,11 @@
     "build": "rollup -c",
     "postbuild": "babel $npm_package_module --out-file $npm_package_module --no-babelrc --plugins annotate-pure-calls",
     "watch": "rollup -c -w",
-    "lint": "tslint -c tslint.json 'src/**/*.{ts}'",
+    "lint": "tslint 'src/**/*.{ts,tsx}' -e '**/_tests/**'",
     "measure": "gzip -c dist/stylefire.min.js | wc -c",
-    "prepublishOnly": "yarn build"
+    "prettier": "prettier ./src/* --write",
+    "test": "jest",
+    "prepublishOnly": "yarn prettier && yarn lint && yarn build"
   },
   "repository": {
     "type": "git",
@@ -37,15 +39,17 @@
   },
   "homepage": "https://github.com/Popmotion/popmotion#readme",
   "devDependencies": {
+    "@types/jest": "^23.1.1",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-plugin-annotate-pure-calls": "^0.2.2",
-    "jest": "^20.0.4",
+    "jest": "^23.1.0",
+    "jest-cli": "^23.1.0",
     "rollup": "^0.59.1",
     "rollup-plugin-node-resolve": "^3.3.0",
     "rollup-plugin-typescript2": "^0.14.0",
     "rollup-plugin-uglify": "^3.0.0",
-    "ts-jest": "^20.0.10",
+    "ts-jest": "^21.2.4",
     "typescript": "^2.9.2",
     "uglify-js": "^3.3.25",
     "webpack": "^3.0.0"
@@ -53,12 +57,22 @@
   "dependencies": {
     "framesync": "^4.0.0",
     "hey-listen": "^1.0.4",
-    "style-value-types": "^3.0.6",
-    "tslib": "^1.9.1"
+    "style-value-types": "^3.0.6"
   },
   "unpkg": "./dist/stylefire.min.js",
-  "prettier": {
-    "parser": "typescript",
-    "singleQuote": true
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "moduleNameMapper": {
+      "style-value-types": "<rootDir>/../../style-value-types/src",
+      "framesync": "<rootDir>/../../framesync/src"
+    },
+    "transform": {
+      "\\.(ts)$": "../../../node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "/_tests/.*\\.(ts|js)$",
+    "rootDir": "src"
   }
 }

@@ -20,6 +20,8 @@ import { mix } from '@popmotion/popcorn';
 
 ```javascript
 mix(0, 100, 0.5); // 50
+mix(0, 100, 1); // 100
+mix(0, 100, 2); // 200
 ```
 
 ## Types

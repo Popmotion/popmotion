@@ -13,7 +13,7 @@ import {
   springForce,
   springForceExpo,
   springForceLinear,
-  wrap,
+  wrap
 } from '@popmotion/popcorn';
 export {
   applyOffset,
@@ -28,7 +28,7 @@ export {
   springForce as generateStaticSpring,
   springForceExpo as nonlinearSpring,
   springForceLinear as linearSpring,
-  wrap,
+  wrap
 };
 import { stepProgress } from './calc';
 

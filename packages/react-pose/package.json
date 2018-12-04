@@ -1,17 +1,18 @@
 {
   "name": "react-pose",
-  "version": "3.3.7",
+  "version": "4.0.3",
   "description": "A declarative animation library for React",
   "main": "./lib/index.js",
   "module": "./dist/react-pose.es.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "build": "rollup -c && npm run measure",
+    "build": "rollup -c && yarn measure",
     "watch": "rollup -c -w",
     "test": "jest",
+    "lint": "tslint 'src/**/*.{ts,tsx}' -e '**/_tests/**'",
     "measure": "gzip -c dist/react-pose.js | wc -c",
     "prettier": "prettier ./src/* --write",
-    "prepublishOnly": "npm run prettier && npm run build"
+    "prepublishOnly": "yarn prettier && yarn lint && yarn build"
   },
   "repository": {
     "type": "git",
@@ -33,8 +34,8 @@
   },
   "devDependencies": {
     "@types/react": "^16.3.16",
-    "@types/react-is": "^16.5.0",
     "@types/react-dom": "^16.0.7",
+    "@types/react-is": "^16.5.0",
     "jest": "^23.1.0",
     "prettier": "1.11.1",
     "react": "^16.3.2",
@@ -48,10 +49,9 @@
     "rollup-plugin-uglify": "^3.0.0"
   },
   "dependencies": {
-    "@emotion/is-prop-valid": "^0.6.5",
+    "@emotion/is-prop-valid": "^0.7.3",
     "hey-listen": "^1.0.5",
-    "popmotion-pose": "^3.3.2",
-    "react-is": "^16.5.1",
+    "popmotion-pose": "^3.4.0",
     "tslib": "^1.9.1"
   },
   "unpkg": "./dist/react-pose.js",

@@ -1,8 +1,46 @@
 # Changelog
 
-React Pose adheres to [Semantic Versioning](http://semver.org/).
+Pose for React adheres to [Semantic Versioning](http://semver.org/).
 
-## [3.3.8] Unreleased
+## [4.0.3] 2018-11-16
+
+### Fixed
+
+- Fixed issue with propagating children. [#657](https://github.com/Popmotion/popmotion/pull/657)
+
+### Changed
+
+- Upgraded `@emotion/is-prop-valid` 
+
+## [4.0.2] 2018-11-16
+
+### Fixed
+
+- Fixed issue with `getDerivedStateFromProps` [#629](https://github.com/Popmotion/popmotion/pull/629)
+
+## [4.0.1] 2018-11-06
+
+### Fixed
+
+- Removed errant `console.log`. [#611](https://github.com/Popmotion/popmotion/pull/611)
+
+## [4.0.0] 2018-11-05
+
+### Removed
+
+- Removed support for `hostRef` and `innerRef` properties.
+
+### Fixed
+
+- Fixed some Typescript errors. [#610](https://github.com/Popmotion/popmotion/issues/610)
+
+## [3.4.0] 2018-11-01
+
+### Upgraded
+
+- `popmotion-pose@3.4.0`
+
+## [3.3.8] 2018-11-01
 
 ### Fixed
 
@@ -10,6 +48,7 @@ React Pose adheres to [Semantic Versioning](http://semver.org/).
 - Fixing `forwardRef` support.
 - Moving from `UNSAFE_componentWillUpdate` to `getSnapshotBeforeUpdate` [#579](https://github.com/Popmotion/popmotion/pull/579)
 - Fixing `hasChanged` check for array poses. [#575](https://github.com/Popmotion/popmotion/pull/575/)
+- Stop reusing stale children [#604](https://github.com/Popmotion/popmotion/pull/604)
 
 ## [3.3.7] 2018-10-19
 

@@ -4,7 +4,6 @@ import applyOffset from './utils/apply-offset';
 import clamp from './utils/clamp';
 import conditional from './utils/conditional';
 import degreesToRadians from './utils/degrees-to-radians';
-import dilate from './utils/dilate';
 import distance from './utils/distance';
 import interpolate from './utils/interpolate';
 import isPoint from './utils/is-point';
@@ -19,7 +18,11 @@ import radiansToDegrees from './utils/radians-to-degrees';
 import smooth from './utils/smooth';
 import smoothFrame from './utils/smooth-frame';
 import snap from './utils/snap';
-import { springForce, springForceLinear, springForceExpo } from './utils/spring-force';
+import {
+  springForce,
+  springForceLinear,
+  springForceExpo
+} from './utils/spring-force';
 import velocityPerFrame from './utils/velocity-per-frame';
 import velocityPerSecond from './utils/velocity-per-second';
 import toDecimal from './utils/to-decimal';
@@ -55,7 +58,6 @@ export {
   clamp,
   conditional,
   degreesToRadians,
-  dilate,
   distance,
   interpolate,
   isPoint,
@@ -100,4 +102,4 @@ export {
 };
 
 // Types
-export * from './types'
+export * from './types';

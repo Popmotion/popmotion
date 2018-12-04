@@ -3,7 +3,7 @@ import { alpha, color, scale, ValueType } from 'style-value-types';
 const valueTypes: { [key: string]: ValueType } = {
   fill: color,
   stroke: color,
-  scale: scale,
+  scale,
   scaleX: scale,
   scaleY: scale,
   opacity: alpha,
@@ -12,4 +12,3 @@ const valueTypes: { [key: string]: ValueType } = {
 };
 
 export default (key: string) => valueTypes[key];
-

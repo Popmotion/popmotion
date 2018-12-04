@@ -24,7 +24,7 @@ const createPointer = (
   const axisPointer = axisPointerCreator(
     dimensions.measurementAsPixels(measurement, from, type)
   );
-  const transformQueue: Array<(v: number) => number | string> = [];
+  const transformQueue: Array<Function> = [];
 
   if (dragBounds) {
     const resolvedDragBounds = resolveProp(dragBounds, transitionProps);
@@ -60,7 +60,7 @@ const createPointer = (
   if (type === percent) {
     transformQueue.push(
       interpolate([0, dimensions.get(measurement) as number], [0, 100]),
-      v => v + '%'
+      (v: number) => v + '%'
     );
   }
 

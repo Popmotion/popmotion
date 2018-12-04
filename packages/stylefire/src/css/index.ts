@@ -1,18 +1,15 @@
 import createStyler from '../styler';
 import { Styler } from '../styler/types';
 import prefixer from './prefixer';
-import buildStyles, { aliasMap } from './render';
 import { isTransformProp } from './transform-props';
 import getValueType from './value-types';
+import { buildStyleString, aliasMap } from './build-styles';
+import { SCROLL_LEFT, SCROLL_TOP, scrollKeys } from './scroll-keys';
 
 type Props = {
   enableHardwareAcceleration?: boolean;
   preparseOutput?: boolean;
 };
-
-const SCROLL_LEFT = 'scrollLeft';
-const SCROLL_TOP = 'scrollTop';
-const scrollValues = new Set([SCROLL_LEFT, SCROLL_TOP]);
 
 const cssStyler = createStyler({
   onRead: (key, { element, preparseOutput }) => {
@@ -20,26 +17,22 @@ const cssStyler = createStyler({
 
     if (isTransformProp(key)) {
       return valueType ? valueType.default || 0 : 0;
-    } else if (scrollValues.has(key)) {
+    } else if (scrollKeys.has(key)) {
       return element[key];
     } else {
       const domValue =
         window
           .getComputedStyle(element, null)
           .getPropertyValue(prefixer(key, true)) || 0;
+
       return preparseOutput && valueType && valueType.parse
         ? valueType.parse(domValue)
         : domValue;
     }
   },
-  onRender: (state, { element, enableHardwareAcceleration }, changedValues) => {
+  onRender: (state, { element, buildStyles }, changedValues) => {
     // Style values
-    element.style.cssText += buildStyles(
-      state,
-      changedValues,
-      enableHardwareAcceleration,
-      scrollValues
-    );
+    element.style.cssText += buildStyles(state);
 
     // Scroll values
     if (changedValues.indexOf(SCROLL_LEFT) !== -1)
@@ -48,13 +41,13 @@ const cssStyler = createStyler({
       element.scrollTop = state.scrollTop;
   },
   aliasMap,
-  uncachedValues: scrollValues
+  uncachedValues: scrollKeys
 });
 
 export default (element: HTMLElement, props?: Props): Styler =>
   cssStyler({
     element,
-    enableHardwareAcceleration: true,
+    buildStyles: buildStyleString(),
     preparseOutput: true,
     ...props
   });

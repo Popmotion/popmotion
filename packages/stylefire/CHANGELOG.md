@@ -2,6 +2,32 @@
 
 Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.3.2] 2018-11-27
+
+### Fixed
+
+- Removing `scrollLeft` and `scrollTop` from cache.
+- Adding `scrollX` and `scrollY` alias.
+
+## [2.3.1] 2018-11-19
+
+### Fixed
+
+- Removing options requirement in `styler`.
+
+## [2.3.0] 2018-11-19
+
+### Added
+
+- New `buildStyleProperty` pure function to transform Stylefire props into React-style `style` objects to aid with SSR.
+
+## [2.2.0] 2018-11-16
+
+### Added
+
+- Adding value types for `padding`, `margin`, and `border`.
+- Added support for `transform` and `transform-origin` prefixing.
+
 ## [2.1.0] 2018-09-21
 
 ### Updated

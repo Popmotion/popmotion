@@ -1,14 +1,14 @@
 import css from './css';
-import buildStyles from './css/render';
 import svg from './svg';
 import viewport from './viewport';
 import createStylerFactory from './styler';
+import { buildStyleProperty } from './css/build-styles';
 import { invariant } from 'hey-listen';
 import { Styler, Props } from './styler/types';
 
 const cache = new WeakMap<Element | Window, Styler>();
 
-const createDOMStyler = (node: Element | Window, props: Props) => {
+const createDOMStyler = (node: Element | Window, props?: Props) => {
   let styler: Styler;
 
   if (node instanceof HTMLElement) {
@@ -28,12 +28,12 @@ const createDOMStyler = (node: Element | Window, props: Props) => {
   return styler;
 };
 
-const getStyler = (node: Element | Window, props: Props) =>
+const getStyler = (node: Element | Window, props?: Props) =>
   cache.has(node) ? cache.get(node) : createDOMStyler(node, props);
 
 export default function(
   nodeOrSelector: Element | string | Window,
-  props: Props
+  props?: Props
 ): Styler {
   const node: Element | Window =
     typeof nodeOrSelector === 'string'
@@ -43,4 +43,4 @@ export default function(
   return getStyler(node, props);
 }
 
-export { createStylerFactory, Styler, buildStyles };
+export { createStylerFactory, Styler, buildStyleProperty };
