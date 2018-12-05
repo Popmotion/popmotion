@@ -1,5 +1,6 @@
 import { State } from '../styler/types';
 import getValueType from './value-types';
+import prefixer from './prefixer';
 import {
   sortTransformProps,
   isTransformProp,
@@ -74,7 +75,7 @@ const buildStyleProperty = (
       transformOrigin[key] = valueAsType;
       hasTransformOrigin = true;
     } else if (!blacklist.has(key)) {
-      styles[key] = valueAsType;
+      styles[prefixer(key, true)] = valueAsType;
     }
   }
 
