@@ -3,7 +3,7 @@ import { Styler } from '../styler/types';
 import prefixer from './prefixer';
 import { isTransformProp } from './transform-props';
 import getValueType from './value-types';
-import { buildStyleString, aliasMap } from './build-styles';
+import { createStyleBuilder, aliasMap } from './build-styles';
 import { SCROLL_LEFT, SCROLL_TOP, scrollKeys } from './scroll-keys';
 
 type Props = {
@@ -32,7 +32,7 @@ const cssStyler = createStyler({
   },
   onRender: (state, { element, buildStyles }, changedValues) => {
     // Style values
-    element.style.cssText += buildStyles(state);
+    Object.assign(element.style, buildStyles(state));
 
     // Scroll values
     if (changedValues.indexOf(SCROLL_LEFT) !== -1)
@@ -47,7 +47,7 @@ const cssStyler = createStyler({
 export default (element: HTMLElement, props?: Props): Styler =>
   cssStyler({
     element,
-    buildStyles: buildStyleString(),
+    buildStyles: createStyleBuilder(),
     preparseOutput: true,
     ...props
   });
