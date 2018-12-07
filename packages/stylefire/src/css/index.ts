@@ -3,7 +3,7 @@ import { Styler } from '../styler/types';
 import prefixer from './prefixer';
 import { isTransformProp } from './transform-props';
 import getValueType from './value-types';
-import { createStyleBuilder, aliasMap } from './build-styles';
+import { createStyleBuilder } from './build-styles';
 import { SCROLL_LEFT, SCROLL_TOP, scrollKeys } from './scroll-keys';
 
 type Props = {
@@ -40,7 +40,6 @@ const cssStyler = createStyler({
     if (changedValues.indexOf(SCROLL_TOP) !== -1)
       element.scrollTop = state.scrollTop;
   },
-  aliasMap,
   uncachedValues: scrollKeys
 });
 

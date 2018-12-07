@@ -4,7 +4,6 @@ import { ChangedValues, Config, Props, State, Styler } from './types';
 const createStyler = ({
   onRead,
   onRender,
-  aliasMap = {},
   uncachedValues = new Set(),
   useCache = true
 }: Config) => (props?: Props): Styler => {
@@ -12,8 +11,7 @@ const createStyler = ({
   const changedValues: ChangedValues = [];
   let hasChanged: boolean = false;
 
-  const setValue = (unmappedKey: string, value: any) => {
-    const key = aliasMap[unmappedKey] || unmappedKey;
+  const setValue = (key: string, value: any) => {
     const currentValue = state[key];
     state[key] = value;
 
@@ -39,9 +37,7 @@ const createStyler = ({
   }
 
   return {
-    get(unmappedKey: string) {
-      const key = aliasMap[unmappedKey] || unmappedKey;
-
+    get(key: string) {
       return key
         ? useCache && !uncachedValues.has(key) && state[key] !== undefined
           ? state[key]

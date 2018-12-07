@@ -43,7 +43,7 @@ const build = (
   const scaleReplaceX = transformOriginX / scale;
   const scaleReplaceY = transformOriginY / scaleY;
   const transform: TransformState = {
-    translate: `translate(${state.translateX}, ${state.translateY}) `,
+    translate: `translate(${state.x}, ${state.y}) `,
     scale: `translate(${scaleTransformX}, ${scaleTransformY}) scale(${scale}, ${scaleY}) translate(${scaleReplaceX}, ${scaleReplaceY}) `,
     rotate: `rotate(${
       state.rotate

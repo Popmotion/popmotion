@@ -68,14 +68,14 @@ const valueTypes: { [key: string]: ValueType } = {
   skewX: degrees,
   skewY: degrees,
   distance: px,
-  translateX: px,
-  translateY: px,
-  translateZ: px,
+  x: px,
+  y: px,
+  z: px,
   perspective: px,
   opacity: alpha,
-  transformOriginX: percent,
-  transformOriginY: percent,
-  transformOriginZ: px
+  originX: percent,
+  originY: percent,
+  originZ: px
 };
 
 export default (key: string) => valueTypes[key];

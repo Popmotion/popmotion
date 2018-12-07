@@ -4,6 +4,7 @@ import { Styler } from '../styler/types';
 import { setDomAttrs } from '../styler/utils';
 import buildAttrs from './build';
 import getValueType from './value-types';
+import { SVGState } from './types';
 
 type SVGProps = {
   dimensions: {
@@ -26,17 +27,11 @@ const svgStyler = createStyler({
       return valueType ? valueType.default : 0;
     }
   },
-  onRender: (
-    state,
-    { dimensions, element, isPath, pathLength },
-    changedValues
-  ) => {
-    setDomAttrs(element, buildAttrs(state, dimensions, isPath, pathLength));
-  },
-  aliasMap: {
-    x: 'translateX',
-    y: 'translateY',
-    background: 'fill'
+  onRender: (state, { dimensions, element, isPath, pathLength }) => {
+    setDomAttrs(
+      element,
+      buildAttrs(state as SVGState, dimensions, isPath, pathLength)
+    );
   }
 });
 
@@ -45,6 +40,7 @@ export default (element: SVGElement | SVGPathElement): Styler => {
     typeof (element as SVGGraphicsElement).getBBox === 'function'
       ? (element as SVGGraphicsElement).getBBox()
       : (element.getBoundingClientRect() as DOMRect);
+
   const props: SVGProps = {
     element,
     dimensions: { x, y, width, height },

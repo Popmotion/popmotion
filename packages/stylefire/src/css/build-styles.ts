@@ -1,4 +1,4 @@
-import { State } from '../styler/types';
+import { CustomTemplate, State, ResolvedState } from '../styler/types';
 import getValueType from './value-types';
 import prefixer from './prefixer';
 import {
@@ -6,24 +6,18 @@ import {
   isTransformProp,
   isTransformOriginProp
 } from './transform-props';
-import {
-  SCROLL_LEFT,
-  SCROLL_TOP,
-  scrollKeys as blacklist
-} from './scroll-keys';
+import { SCROLL_LEFT, SCROLL_TOP } from './scroll-keys';
 
-export type AliasMap = { [key: string]: string };
+const blacklist = new Set([SCROLL_LEFT, SCROLL_TOP, 'transform']);
 
-export const aliasMap: AliasMap = {
+const aliasMap: { [key: string]: string } = {
   x: 'translateX',
   y: 'translateY',
-  z: 'translateZ',
-  originX: 'transformOriginX',
-  originY: 'transformOriginY',
-  originZ: 'transformOriginZ',
-  scrollX: SCROLL_LEFT,
-  scrollY: SCROLL_TOP
+  z: 'translateZ'
 };
+
+const isCustomTemplate = (v: any): v is CustomTemplate =>
+  typeof v === 'function';
 
 /**
  * Build style property
@@ -42,17 +36,17 @@ export const aliasMap: AliasMap = {
 const buildStyleProperty = (
   state: State,
   enableHardwareAcceleration: boolean = true,
-  styles: State = {},
+  styles: ResolvedState = {},
   transform: State = {},
   transformOrigin: State = {},
   transformKeys: string[] = []
 ) => {
   let transformIsDefault = true;
+  let hasTransform = false;
   let hasTransformOrigin = false;
 
-  for (const k in state) {
-    const key = aliasMap[k] ? aliasMap[k] : k;
-    const value = state[k];
+  for (const key in state) {
+    const value = state[key];
     const valueType = getValueType(key);
     const valueAsType =
       typeof value === 'number' && valueType
@@ -60,6 +54,7 @@ const buildStyleProperty = (
         : value;
 
     if (isTransformProp(key)) {
+      hasTransform = true;
       transform[key] = valueAsType;
       transformKeys.push(key);
 
@@ -74,7 +69,7 @@ const buildStyleProperty = (
     } else if (isTransformOriginProp(key)) {
       transformOrigin[key] = valueAsType;
       hasTransformOrigin = true;
-    } else if (!blacklist.has(key)) {
+    } else if (!blacklist.has(key) || !isCustomTemplate(valueAsType)) {
       styles[prefixer(key, true)] = valueAsType;
     }
   }
@@ -82,29 +77,35 @@ const buildStyleProperty = (
   // Only process and set transform prop if values aren't defaults
   if (!transformIsDefault) {
     let transformString = '';
-    let transformHasZ = false;
-    transformKeys.sort(sortTransformProps);
 
-    const numTransformKeys = transformKeys.length;
-    for (let i = 0; i < numTransformKeys; i++) {
-      const key = transformKeys[i];
-      transformString += `${key}(${transform[key]}) `;
-      transformHasZ = key === 'z' ? true : transformHasZ;
-    }
+    // TODO: This whole idea of meta values could be far more generic for instance filter
+    if (isCustomTemplate(state.transform)) {
+      transformString = state.transform(transform);
+    } else {
+      let transformHasZ = false;
+      transformKeys.sort(sortTransformProps);
 
-    if (!transformHasZ && enableHardwareAcceleration) {
-      transformString += 'translateZ(0)';
+      const numTransformKeys = transformKeys.length;
+
+      for (let i = 0; i < numTransformKeys; i++) {
+        const key = transformKeys[i];
+        transformString += `${aliasMap[key] || key}(${transform[key]}) `;
+        transformHasZ = key === 'z' ? true : transformHasZ;
+      }
+
+      if (!transformHasZ && enableHardwareAcceleration) {
+        transformString += 'translateZ(0)';
+      }
     }
 
     styles.transform = transformString;
-  } else {
+  } else if (hasTransform) {
     styles.transform = 'none';
   }
 
   if (hasTransformOrigin) {
-    styles.transformOrigin = `${transformOrigin.transformOriginX ||
-      0} ${transformOrigin.transformOriginY ||
-      0} ${transformOrigin.transformOriginZ || 0}`;
+    styles.transformOrigin = `${transformOrigin.originX ||
+      0} ${transformOrigin.originY || 0} ${transformOrigin.originZ || 0}`;
   }
 
   return styles;
@@ -115,7 +116,7 @@ const createStyleBuilder = (enableHardwareAcceleration: boolean = true) => {
    * Because we expect this function to run multiple times a frame
    * we create and hold these data structures as mutative states.
    */
-  const styles: State = {};
+  const styles: ResolvedState = {};
   const transform: State = {};
   const transformOrigin: State = {};
   const transformKeys: string[] = [];
