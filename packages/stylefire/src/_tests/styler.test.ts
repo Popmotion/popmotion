@@ -1,6 +1,5 @@
 import '../../jest.setup';
 import styler from '../';
-import { SSL_OP_MSIE_SSLV2_RSA_PADDING } from 'constants';
 
 describe('styler', () => {
   test('css', () => {
