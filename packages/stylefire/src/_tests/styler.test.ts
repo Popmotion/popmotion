@@ -1,5 +1,6 @@
 import '../../jest.setup';
 import styler from '../';
+import { SSL_OP_MSIE_SSLV2_RSA_PADDING } from 'constants';
 
 describe('styler', () => {
   test('css', () => {
@@ -53,5 +54,19 @@ describe('styler', () => {
     divStyler.render();
 
     expect(div).toHaveStyle('transform-origin: 0 100%');
+  });
+
+  test('transform as string', () => {
+    const div = document.createElement('div');
+
+    const divStyler = styler(div);
+
+    divStyler.set({
+      transform: 'rotateX(90deg)'
+    });
+
+    divStyler.render();
+
+    expect(div).toHaveStyle('transform: rotateX(90deg)');
   });
 });

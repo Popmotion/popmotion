@@ -2,6 +2,13 @@
 
 Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.3.3] 2018-12-07
+
+### Added
+
+- Moving from `cssText` to `Object.assign(element.style)` - around 2x faster.
+- `transform` can now be set as a function to return a custom transform order. This is currently undocumented behaviour.
+
 ## [2.3.2] 2018-11-27
 
 ### Fixed
