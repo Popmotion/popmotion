@@ -16,7 +16,7 @@ type UIEventConfig = {
   startCallback?: string;
   endCallback?: string;
   useDocumentToEnd?: boolean;
-  preventDefault?: boolean;
+  preventScroll?: boolean;
 };
 
 type UIEventApplicator = (
@@ -34,7 +34,7 @@ const makeUIEventApplicator = ({
   startCallback,
   endCallback,
   useDocumentToEnd,
-  preventDefault
+  preventScroll
 }: UIEventConfig): UIEventApplicator => (
   element,
   activeActions,
@@ -43,9 +43,18 @@ const makeUIEventApplicator = ({
 ) => {
   const startListener = startPose + 'Start';
   const endListener = startPose + 'End';
+  const moveListener = startPose + 'Move';
+
   const eventStartListener = listen(element, startEvents).start(
     (startEvent: MouseEvent | TouchEvent) => {
-      if (preventDefault) startEvent.preventDefault();
+      if (preventScroll) {
+        const touchMoveListener = listen(element, 'touchmove', {
+          passive: false
+        }).start((e: TouchEvent) => {
+          e.preventDefault();
+        });
+        activeActions.set(moveListener, touchMoveListener);
+      }
 
       poser.set(startPose);
 
@@ -66,8 +75,10 @@ const makeUIEventApplicator = ({
           return;
         }
 
-        if (preventDefault) endEvent.preventDefault();
+        if (preventScroll) activeActions.get(moveListener).stop();
+
         activeActions.get(endListener).stop();
+
         poser.unset(startPose);
         poser.set(endPose);
         if (endCallback && config[endCallback]) config[endCallback](endEvent);
@@ -89,7 +100,7 @@ const events: { [key: string]: UIEventApplicator } = {
     startCallback: 'onDragStart',
     endCallback: 'onDragEnd',
     useDocumentToEnd: true,
-    preventDefault: true
+    preventScroll: true
   }),
   hoverable: makeUIEventApplicator({
     startEvents: 'mouseenter',
