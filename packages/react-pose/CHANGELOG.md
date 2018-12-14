@@ -2,6 +2,22 @@
 
 Pose for React adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.0.4] 2018-12-06
+
+### Fixed
+
+- Removing old files from `lib`. [#662](https://github.com/Popmotion/popmotion/issues/662)
+
+## [4.0.3] 2018-12-03
+
+### Fixed
+
+- Fixed issue with propagating children. [#657](https://github.com/Popmotion/popmotion/pull/657)
+
+### Changed
+
+- Upgraded `@emotion/is-prop-valid` 
+
 ## [4.0.2] 2018-11-16
 
 ### Fixed

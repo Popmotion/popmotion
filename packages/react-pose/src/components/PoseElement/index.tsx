@@ -15,6 +15,8 @@ import { invariant, warning } from 'hey-listen';
 import { hasChanged } from '../../utils/has-changed';
 import { pickAssign } from '../../utils/pick-assign';
 
+type ExcludesVoid = <T>(x: T | void) => x is T;
+
 const {
   Consumer: PoseParentConsumer,
   Provider: PoseParentProvider
@@ -116,12 +118,12 @@ class PoseElement extends PureComponent<PoseElementInternalProps> {
       return initialPose;
     } else {
       const parentPose = getInitialPoseFromParent && getInitialPoseFromParent();
-      const initialPoses =
-        parentPose !== undefined
-          ? Array.isArray(parentPose)
-            ? parentPose
-            : [parentPose]
-          : [].concat(pose, _pose).filter(Boolean);
+      const initialPoses = (Array.isArray(parentPose)
+        ? parentPose
+        : [parentPose]
+      )
+        .concat(pose, _pose)
+        .filter((Boolean as any) as ExcludesVoid);
 
       return initialPoses.length > 0 ? initialPoses : undefined;
     }

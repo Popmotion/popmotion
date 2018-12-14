@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.5.4] 2018-12-10
+
+### Fixed
+
+- When a subscriber is added, only that subscriber is fired with the latest value.
+
 ## [8.5.3] 2018-11-20
 
 ### Fixed

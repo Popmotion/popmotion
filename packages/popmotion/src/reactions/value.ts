@@ -89,7 +89,7 @@ export class ValueReaction extends BaseMulticast<ValueReaction> {
 
   subscribe(observerCandidate: ObserverCandidate): HotSubscription {
     const sub = super.subscribe(observerCandidate);
-    this.update(this.current);
+    this.subscribers[this.subscribers.length - 1].update(this.current);
 
     return sub;
   }

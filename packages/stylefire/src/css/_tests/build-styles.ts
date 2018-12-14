@@ -1,4 +1,4 @@
-import { buildStyleProperty, buildStyleString } from '../build-styles';
+import { buildStyleProperty, createStyleBuilder } from '../build-styles';
 
 describe('buildStyleProperty', () => {
   it('Should correctly parse Stylefire style objects into React-style objects', () => {
@@ -49,24 +49,17 @@ describe('buildStyleProperty', () => {
   });
 });
 
-describe('buildStyleString', () => {
-  it('Should take style objects and convert changed values into style strings', () => {
-    const styleString = buildStyleString();
+describe('createStyleBuilder', () => {
+  it('Should return styles using reusable data structures', () => {
+    const buildStyles = createStyleBuilder();
 
-    expect(styleString({ x: 100 })).toEqual(
-      ';transform:translateX(100px) translateZ(0)'
-    );
-    expect(styleString({ x: 100 })).toEqual('');
-    expect(styleString({ x: 100 })).toEqual('');
-    expect(styleString({ x: 0 })).toEqual(';transform:none');
-    expect(styleString({ x: 0 })).toEqual('');
-    expect(
-      styleString({ scale: 1, x: 100, opacity: 0.5, originX: 100, originY: 50 })
-    ).toEqual(
-      ';transform:translateX(100px) scale(1) translateZ(0);opacity:0.5;transform-origin:100% 50% 0'
-    );
-    expect(styleString({ opacity: 1, backgroundColor: '#fff' })).toEqual(
-      ';transform:none;opacity:1;background-color:#fff'
-    );
+    expect(buildStyles({ x: 100 })).toEqual({
+      transform: 'translateX(100px) translateZ(0)'
+    });
+
+    const a = buildStyles({ x: 200 });
+    const b = buildStyles({ x: 300 });
+
+    expect(a).toBe(b);
   });
 });

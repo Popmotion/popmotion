@@ -4,16 +4,17 @@ import createObserver from '../observer';
 import { IObserver, ObserverCandidate } from '../observer/types';
 import { HotSubscription } from './types';
 
-export abstract class BaseMulticast<T> extends Chainable<T> implements IObserver {
+export abstract class BaseMulticast<T> extends Chainable<T>
+  implements IObserver {
   private parent: ColdSubscription;
-  private subscribers: IObserver[] = [];
+  public subscribers: IObserver[] = [];
 
   complete(): void {
-    this.subscribers.forEach((subscriber) => subscriber.complete());
+    this.subscribers.forEach(subscriber => subscriber.complete());
   }
 
   error(err: any): void {
-    this.subscribers.forEach((subscriber) => subscriber.error(err));
+    this.subscribers.forEach(subscriber => subscriber.error(err));
   }
 
   update(v: any): void {

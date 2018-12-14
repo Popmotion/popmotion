@@ -42,14 +42,6 @@ This method is fired on the render step, or if the styler's `render` method is c
 
 Set to `false` if you always want `onRead` to fire when a user calls `get`.
 
-#### aliasMap
-
-A key-value map of aliased properties where you can map user-facing properties to internal props. For example, `styler` maps the `x` prop to CSS `translateX`.
-
-```typescript
-{ [key: string]: string }
-```
-
 ### Using the styler factory
 
 `createStylerFactory` returns a styler factory:
