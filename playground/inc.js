@@ -1,10 +1,10 @@
-import React from "react";
-import { styler } from "../packages/popmotion/lib";
+import React, { forwardRef } from 'react';
+import { styler } from '../packages/popmotion/lib';
 
-const style = { width: "100px", height: "100px", background: "red" };
-export const Box = ({ innerRef, ...props }) => (
+const style = { width: '100px', height: '100px', background: 'red' };
+export const Box = forwardRef((props, innerRef) => (
   <div ref={innerRef} {...props} style={{ ...style, ...props.style }} />
-);
+));
 
 export class BaseAnimation extends React.Component {
   setRef = dom => {

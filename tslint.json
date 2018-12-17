@@ -3,7 +3,8 @@
   "extends": [
     "tslint:latest",
     "tslint-react",
-    "tslint-config-prettier"
+    "tslint-config-prettier",
+    "tslint-circular-dependencies"
   ],
   "jsRules": {},
   "rules": {

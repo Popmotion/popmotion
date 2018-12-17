@@ -2,6 +2,12 @@
 
 Popmotion Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.4.1] 2018-12-17
+
+### Fixed
+
+- Allow click within draggable. [#541](https://github.com/Popmotion/popmotion/issues/541)
+
 ## [3.4.0] 2018-11-01
 
 ### Fixed
