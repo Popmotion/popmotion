@@ -5,7 +5,7 @@ import { setDomAttrs } from '../styler/utils';
 import buildAttrs from './build';
 import getValueType from './value-types';
 import { SVGState } from './types';
-import { getSVGElementDimensionsSafely } from './utils';
+import { getSVGElementDimensions } from './utils';
 
 type SVGProps = {
   dimensions: {
@@ -37,7 +37,7 @@ const svgStyler = createStyler({
 });
 
 export default (element: SVGElement | SVGPathElement): Styler => {
-  const dimensions = getSVGElementDimensionsSafely(element);
+  const dimensions = getSVGElementDimensions(element);
 
   const props: SVGProps = {
     element,

@@ -21,7 +21,7 @@ export const getDimensions = (
     ? (element as SVGGraphicsElement).getBBox()
     : (element.getBoundingClientRect() as DOMRect);
 
-export const getSVGElementDimensionsSafely = (
+export const getSVGElementDimensions = (
   element: SVGElement | SVGPathElement
 ): Dimensions => {
   if (CAN_MEASURE_NOT_RENDERED_SVG_ELEMENTS) {
