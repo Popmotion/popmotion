@@ -8,6 +8,8 @@ import {
 
 export const getPoseValues = <A>({
   transition,
+  // `flip` is DOM-specific so technically it shouldn't be filtered out here in a DOM-agnostic layer.
+  // However because of the simplicity of this it's handled here at the moment.
   flip,
   delay,
   delayChildren,
