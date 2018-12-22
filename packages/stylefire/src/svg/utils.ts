@@ -1,19 +1,5 @@
 import { Dimensions } from './types';
 
-/**
- * Feature detection for getBBox call on an unrendered SVG Element.
- * Firefox will throw "NS_ERROR_FAILURE" error.
- * We want to detect this upfront so we do not crash in any future measurement.
- */
-export const CAN_MEASURE_NOT_RENDERED_SVG_ELEMENTS = (() => {
-  try {
-    document.createElementNS('http://www.w3.org/2000/svg', 'rect').getBBox();
-  } catch (e) {
-    return false;
-  }
-  return true;
-})();
-
 export const getDimensions = (
   element: SVGElement | SVGPathElement
 ): Dimensions =>
@@ -21,12 +7,14 @@ export const getDimensions = (
     ? (element as SVGGraphicsElement).getBBox()
     : (element.getBoundingClientRect() as DOMRect);
 
+/**
+ * The getBBox call on an unrendered SVG Element crashes Firefox.
+ * It throws an "NS_ERROR_FAILURE" error. We want to catch this upfront.
+ * Animating Rotation and Scale of these SVG Elements might be broken in such cases.
+ */
 export const getSVGElementDimensions = (
   element: SVGElement | SVGPathElement
 ): Dimensions => {
-  if (CAN_MEASURE_NOT_RENDERED_SVG_ELEMENTS) {
-    return getDimensions(element);
-  }
   try {
     return getDimensions(element);
   } catch (e) {
