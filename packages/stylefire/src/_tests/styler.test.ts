@@ -26,6 +26,17 @@ describe('styler', () => {
     );
   });
 
+  test('css - disable hardware acceleration', () => {
+    const div = document.createElement('div');
+
+    const divStyler = styler(div, { enableHardwareAcceleration: false });
+
+    divStyler.set({ x: 100 });
+    divStyler.render();
+
+    expect(div).toHaveStyle('transform: translateX(100px)');
+  });
+
   test('css - custom transform', () => {
     const div = document.createElement('div');
 

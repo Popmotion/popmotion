@@ -43,10 +43,13 @@ const cssStyler = createStyler({
   uncachedValues: scrollKeys
 });
 
-export default (element: HTMLElement, props?: Props): Styler =>
+export default (
+  element: HTMLElement,
+  { enableHardwareAcceleration, ...props }: Props = {}
+): Styler =>
   cssStyler({
     element,
-    buildStyles: createStyleBuilder(),
+    buildStyles: createStyleBuilder(enableHardwareAcceleration),
     preparseOutput: true,
     ...props
   });

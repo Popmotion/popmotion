@@ -11,7 +11,7 @@ describe('buildStyleProperty', () => {
     });
 
     expect(buildStyleProperty({ x: 1 }, false)).toEqual({
-      transform: 'translateX(1px) '
+      transform: 'translateX(1px)'
     });
 
     expect(buildStyleProperty({ scale: 1 })).toEqual({
