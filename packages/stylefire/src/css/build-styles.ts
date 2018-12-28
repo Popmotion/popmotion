@@ -95,6 +95,8 @@ const buildStyleProperty = (
 
       if (!transformHasZ && enableHardwareAcceleration) {
         transformString += 'translateZ(0)';
+      } else {
+        transformString = transformString.trim();
       }
     }
 
