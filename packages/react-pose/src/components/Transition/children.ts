@@ -141,14 +141,16 @@ const handleTransition = (
         })
       : child;
 
-    const insertionIndex = prevKeys.indexOf(key);
+    const prevIndex = prevKeys.indexOf(key);
 
     // We might have had new items added before this item in the same
     // render. So here we find the correct item to anchor to. This is
-    // a pretty shitty algo. But it is also the one we have
-    // if (insertionIndex) {
-    // TODO: Write a shitty algo
-    // }
+    // a pretty shitty algo. But it is also the one we have.
+    const insertionIndex =
+      prevIndex +
+      Array.from(entering).filter(
+        enteringKey => nextKeys.indexOf(enteringKey) < prevIndex
+      ).length;
 
     indexedChildren[child.key] = newChild;
     nextState.displayedChildren.splice(
