@@ -2,6 +2,12 @@
 
 Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.3.5] 2018-01-07
+
+### Fixed
+
+- Add graceful degradation for NS_ERROR_FAILURE errors in Firefox [#670](https://github.com/Popmotion/popmotion/pull/670)
+
 ## [2.3.3] 2018-12-07
 
 ### Added
