@@ -5,6 +5,7 @@ import { setDomAttrs } from '../styler/utils';
 import buildAttrs from './build';
 import getValueType from './value-types';
 import { SVGState } from './types';
+import { getSVGElementDimensions } from './utils';
 
 type SVGProps = {
   dimensions: {
@@ -36,14 +37,11 @@ const svgStyler = createStyler({
 });
 
 export default (element: SVGElement | SVGPathElement): Styler => {
-  const { x, y, width, height } =
-    typeof (element as SVGGraphicsElement).getBBox === 'function'
-      ? (element as SVGGraphicsElement).getBBox()
-      : (element.getBoundingClientRect() as DOMRect);
+  const dimensions = getSVGElementDimensions(element);
 
   const props: SVGProps = {
     element,
-    dimensions: { x, y, width, height },
+    dimensions,
     isPath: false
   };
 
