@@ -2,6 +2,12 @@
 
 Pose for React adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.0.5] 2018-01-08
+
+### Fixed
+
+- Animating all other children when items are moving. [#682](https://github.com/Popmotion/popmotion/issues/682)
+
 ## [4.0.4] 2018-12-06
 
 ### Fixed
