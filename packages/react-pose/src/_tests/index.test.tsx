@@ -321,6 +321,44 @@ test('PoseGroup: Animate conditionally', () => {
   });
 });
 
+test('PoseGroup: All remaining children have a flip transition when one is removed', () => {
+  const items = [1, 2, 3, 4, 5, 6];
+  let nbEnterPoseCompleted = 0;
+  let flipTransitions = [];
+  return new Promise(resolve => {
+    const Group = ({ items }) => (
+      <PoseGroup>
+        {items.map((item, i) => (
+          <Parent
+            key={item}
+            onPoseComplete={poses => {
+              if (poses.includes('enter')) {
+                flipTransitions[i] = poses.includes('flip');
+                nbEnterPoseCompleted += 1;
+                if (nbEnterPoseCompleted === items.length) {
+                  expect(flipTransitions).toEqual([
+                    true,
+                    true,
+                    true,
+                    true,
+                    true
+                  ]);
+                  resolve();
+                }
+              }
+            }}
+          />
+        ))}
+      </PoseGroup>
+    );
+
+    const { rerender } = render(<Group items={items} />);
+    expect(flipTransitions).toEqual([]);
+
+    rerender(<Group items={[...items.slice(0, 2), ...items.slice(3)]} />);
+  });
+});
+
 test('PoseGroup: Forward props from PoseGroup to direct child', () => {
   let x = 0;
   let y = 0;
