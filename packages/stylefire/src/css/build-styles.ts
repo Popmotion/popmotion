@@ -100,13 +100,13 @@ const buildStyleProperty = (
       }
     }
 
-    styles.transform = transformString;
+    styles[prefixer('transform', true)] = transformString;
   } else if (hasTransform) {
-    styles.transform = 'none';
+    styles[prefixer('transform', true)] = 'none';
   }
 
   if (hasTransformOrigin) {
-    styles.transformOrigin = `${transformOrigin.originX ||
+    styles[prefixer('transformOrigin', true)] = `${transformOrigin.originX ||
       0} ${transformOrigin.originY || 0} ${transformOrigin.originZ || 0}`;
   }
 

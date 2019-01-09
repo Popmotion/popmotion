@@ -2,7 +2,7 @@ import { camelToDash } from '../styler/utils';
 
 const camelCache = new Map();
 const dashCache = new Map();
-const prefixes: string[] = ['Webkit', 'Moz', 'O', 'ms', ''];
+const prefixes: string[] = ['webkit', 'moz', 'o', 'ms', ''];
 const numPrefixes = prefixes.length;
 const isBrowser = typeof document !== 'undefined';
 
@@ -27,7 +27,10 @@ const testPrefix = (key: string) => {
       ? key
       : prefix + key.charAt(0).toUpperCase() + key.slice(1);
 
-    if (prefixedPropertyName in testElement.style || noPrefix) {
+    if (
+      !camelCache.has(key) &&
+      (prefixedPropertyName in testElement.style || noPrefix)
+    ) {
       camelCache.set(key, prefixedPropertyName);
       setDashPrefix(
         key,
