@@ -5,20 +5,7 @@ import value from '../../reactions/value';
 import spring from '../spring';
 import decay from '../decay';
 import { ColdSubscription } from '../../';
-
-type Props = {
-  from: number;
-  velocity: number;
-  min?: number;
-  max?: number;
-  stiffness: number;
-  damping: number;
-};
-
-type SpringProps = {
-  from: number;
-  velocity: number;
-};
+import { Props, SpringProps } from './types';
 
 const inertia = ({
   from,
@@ -29,6 +16,8 @@ const inertia = ({
   stiffness = 500
 }: Props) =>
   action(({ update, complete }) => {
+    const current = value(from);
+    let activeAnimation: ColdSubscription;
     let isSpring = false;
 
     const isLessThanMin = (v: number) => min !== undefined && v <= min;
@@ -41,9 +30,6 @@ const inertia = ({
       );
     };
 
-    const current = value(from);
-
-    let activeAnimation: ColdSubscription;
     const startAnimation = (animation: Action, onComplete?: Function) => {
       activeAnimation && activeAnimation.stop();
 
@@ -73,6 +59,8 @@ const inertia = ({
 
       const currentVelocity = current.getVelocity();
 
+      // Snap to the nearest boundary if we're not already in a spring state and
+      // our value is moving away from the bounded area.
       if (
         activeAnimation &&
         !isSpring &&
@@ -82,12 +70,15 @@ const inertia = ({
       }
     });
 
-    const startAsSpring =
+    // We want to start the animation already as a spring if we're moving away from the bounded area
+    // or not moving at all.
+    if (
       (isOutOfBounds(from) && velocity === 0) ||
-      isTravellingAwayFromBounds(from, velocity);
-
-    if (startAsSpring) {
+      isTravellingAwayFromBounds(from, velocity)
+    ) {
       startSpring({ from, velocity });
+
+      // Otherwise we want to simulate inertial movement with decay
     } else {
       const animation = decay({
         from,
