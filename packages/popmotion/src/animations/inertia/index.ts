@@ -8,12 +8,13 @@ import { ColdSubscription } from '../../';
 import { Props, SpringProps } from './types';
 
 const inertia = ({
-  from,
-  velocity,
+  from = 0,
+  velocity = 0,
   min,
   max,
   damping = 10,
-  stiffness = 500
+  stiffness = 500,
+  modifyTarget
 }: Props) =>
   action(({ update, complete }) => {
     const current = value(from);
@@ -83,8 +84,11 @@ const inertia = ({
       const animation = decay({
         from,
         velocity,
+        // TODO: I'd like to figure out a `friction` prop that can be used to calculate timeConstant
+        // and power, plus spring's damping, but I feel this will require some fine-tuning
         timeConstant: 700,
-        restDelta: isOutOfBounds(from) ? 20 : 1
+        restDelta: isOutOfBounds(from) ? 20 : 1,
+        modifyTarget
       });
 
       startAnimation(animation, () => {
@@ -106,5 +110,6 @@ export default vectorAction(inertia, {
   min: number.test,
   max: number.test,
   damping: number.test,
-  stiffness: number.test
+  stiffness: number.test,
+  modifyTarget: (func: any) => typeof func === 'function'
 });

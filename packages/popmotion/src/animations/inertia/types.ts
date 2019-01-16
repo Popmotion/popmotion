@@ -5,6 +5,7 @@ export type Props = {
   max?: number;
   stiffness: number;
   damping: number;
+  modifyTarget: (v: number) => number;
 };
 
 export type SpringProps = {

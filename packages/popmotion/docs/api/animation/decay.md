@@ -10,7 +10,7 @@ An animation that decelerates to an automatically generated target value, based 
 
 This target can be modified.
 
-Decay is particularly useful for implementing momentum scrolling.
+**Note:** This animation is deprecated in favour of [`inertia`](/api/inertia).
 
 <TOC />
 
