@@ -55,7 +55,7 @@ export {
   stagger
 };
 
-// Includes
+// Includes - Deprecated for 9.0
 import * as calc from './calc';
 import * as easing from '@popmotion/easing';
 import * as transform from './transformers';
