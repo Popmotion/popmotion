@@ -2,7 +2,13 @@
 
 Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
-## [2.3.5] 2018-01-07
+## [2.3.6] 2019-01-16
+
+### Added
+
+- Exporting `isTransformProp`
+
+## [2.3.5] 2019-01-07
 
 ### Fixed
 

@@ -3,6 +3,7 @@ import svg from './svg';
 import viewport from './viewport';
 import createStylerFactory from './styler';
 import { buildStyleProperty } from './css/build-styles';
+import { isTransformProp } from './css/transform-props';
 import { invariant } from 'hey-listen';
 import { Styler, Props } from './styler/types';
 
@@ -43,4 +44,4 @@ export default function(
   return getStyler(node, props);
 }
 
-export { createStylerFactory, Styler, buildStyleProperty };
+export { createStylerFactory, Styler, buildStyleProperty, isTransformProp };
