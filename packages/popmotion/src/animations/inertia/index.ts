@@ -1,10 +1,10 @@
 import { number } from 'style-value-types';
 import action, { Action } from '../../action';
-import vectorAction from '../../action/vector';
+import vectorAction, { ActionFactory } from '../../action/vector';
 import value from '../../reactions/value';
 import spring from '../spring';
 import decay from '../decay';
-import { ColdSubscription } from '../../';
+import { ColdSubscription } from '../../action/types';
 import { Props, SpringProps } from './types';
 
 const inertia = ({
@@ -112,4 +112,4 @@ export default vectorAction(inertia, {
   damping: number.test,
   stiffness: number.test,
   modifyTarget: (func: any) => typeof func === 'function'
-});
+}) as ActionFactory;
