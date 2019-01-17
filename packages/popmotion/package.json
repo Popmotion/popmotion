@@ -40,11 +40,9 @@
     "postbuild": "babel $npm_package_module --out-file $npm_package_module --no-babelrc --plugins annotate-pure-calls",
     "watch": "rollup -c -w",
     "prepublishOnly": "npm run test && npm run build",
-    "postpublish": "npm run clean",
     "measure": "gzip -c $npm_package_unpkg | wc -c",
     "test": "jest",
     "publish-beta": "npm publish --tag beta",
-    "clean": "git clean -fd -e node_modules/ -e lib/ src/ -x ."
   },
   "dependencies": {
     "@popmotion/easing": "^1.0.1",
