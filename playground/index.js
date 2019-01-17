@@ -138,11 +138,12 @@ storiesOf('tween', module)
   .add('flip', () => <TweenFlip />)
   .add('track velocity', () => <TweenWithVelocity />);
 
-import { Drag, DragWithDeltaPointer, Multitouch } from './pointer';
+import { Drag, DragWithDeltaPointer, Multitouch, Inertia } from './pointer';
 storiesOf('pointer', module)
   .add('drag', () => <Drag />)
   .add('drag with delta pointer', () => <DragWithDeltaPointer />)
-  .add('multitouch', () => <Multitouch />);
+  .add('multitouch', () => <Multitouch />)
+  .add('pointer inertia', () => <Inertia />);
 
 // storiesOf('compositors', module)
 // .add('chain', () => <Chain />)

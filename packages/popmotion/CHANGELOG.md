@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.6.0] 2019-01-16
+
+### Added
+
+- `inertia` animation.
+
 ## [8.5.5] 2018-12-28
 
 ### Update

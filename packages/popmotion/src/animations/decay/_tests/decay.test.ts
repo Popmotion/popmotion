@@ -1,16 +1,16 @@
-import inertia from '../';
+import decay from '../';
 
-describe('inertia', () => {
+describe('decay', () => {
   it('should progress to calculated target', () => {
     return new Promise((resolve, reject) => {
       let i = 0;
       let target = 0;
-      inertia({
+      decay({
         velocity: 100,
-        modifyTarget: (v) => target = v
+        modifyTarget: v => (target = v)
       }).start({
-        complete: () => (i === target) ? resolve() : reject(),
-        update: (v) => i = v
+        complete: () => (i === target ? resolve() : reject()),
+        update: v => (i = v)
       });
     });
   });
@@ -19,12 +19,12 @@ describe('inertia', () => {
     return new Promise((resolve, reject) => {
       let i = 0;
       let target = 0;
-      inertia({
+      decay({
         velocity: 100,
-        modifyTarget: (v) => target = 100
+        modifyTarget: v => (target = 100)
       }).start({
-        complete: () => (i === 100) ? resolve() : reject(),
-        update: (v) => i = v
+        complete: () => (i === 100 ? resolve() : reject()),
+        update: v => (i = v)
       });
     });
   });
