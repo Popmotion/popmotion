@@ -2,8 +2,6 @@
 
 Simple libraries for delightful interfaces.
 
-[Support us](https://popmotion.io/support)
-
 ## Packages
 
 * [Popmotion](https://github.com/Popmotion/popmotion/tree/master/packages/popmotion)

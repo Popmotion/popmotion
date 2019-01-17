@@ -52,7 +52,7 @@ export default () => (
         </a>
       </Link>
       <MadeIn>{`Made in London with 🌯`}</MadeIn>
-      <Copyright>{`© 2014-2018 Inventing With Monster Ltd`}</Copyright>
+      <Copyright>{`© 2014-2019 Inventing With Monster Ltd`}</Copyright>
       <SocialLinks />
     </Section>
   </Container>
