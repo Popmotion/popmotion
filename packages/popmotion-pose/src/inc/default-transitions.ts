@@ -59,7 +59,7 @@ const createPointer = (
   // Currently we're only handling % types but should look at vw/vh etc
   if (type === percent) {
     transformQueue.push(
-      interpolate([0, dimensions.get(measurement) as number], [0, 100]),
+      interpolate([0, dimensions.get(measurement) as number], [0, 100], { clamp: false }),
       (v: number) => v + '%'
     );
   }
