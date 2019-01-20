@@ -42,7 +42,7 @@
     "prepublishOnly": "npm run test && npm run build",
     "measure": "gzip -c $npm_package_unpkg | wc -c",
     "test": "jest",
-    "publish-beta": "npm publish --tag beta",
+    "publish-beta": "npm publish --tag beta"
   },
   "dependencies": {
     "@popmotion/easing": "^1.0.1",
