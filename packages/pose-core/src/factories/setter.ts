@@ -206,17 +206,7 @@ const createPoseSetter = <V, A, C, P>(
     const getParentAnimations = (): AnimationsPromiseList => {
       if (!nextPose) return [];
 
-      if (transformPose) nextPose = transformPose(nextPose, next, state);
-
-      const {
-        preTransition,
-        transition: getTransition,
-        applyAtStart,
-        applyAtEnd
-      } = nextPose;
-
-      // Run pre-transition prep, if set
-      if (preTransition) preTransition(baseTransitionProps);
+      const { applyAtStart } = nextPose;
 
       // Apply initial values, if set
       if (applyAtStart) {
@@ -227,7 +217,15 @@ const createPoseSetter = <V, A, C, P>(
           setValue,
           setValueNative
         );
+        baseTransitionProps.elementStyler.render();
       }
+
+      if (transformPose) nextPose = transformPose(nextPose, next, state);
+
+      const { preTransition, transition: getTransition, applyAtEnd } = nextPose;
+
+      // Run pre-transition prep, if set
+      if (preTransition) preTransition(baseTransitionProps);
 
       const animations = Object.keys(getPoseValues(nextPose)).map(key => {
         // Add pose to the pose order
@@ -283,7 +281,8 @@ const createPoseSetter = <V, A, C, P>(
               );
 
               // Add delay if defined on pose
-              const poseDelay = delay || resolveProp(nextPose.delay, transitionProps);
+              const poseDelay =
+                delay || resolveProp(nextPose.delay, transitionProps);
               if (poseDelay) {
                 transition = addActionDelay(poseDelay, transition);
               }
