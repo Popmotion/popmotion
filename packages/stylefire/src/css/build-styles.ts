@@ -39,7 +39,8 @@ const buildStyleProperty = (
   styles: ResolvedState = {},
   transform: State = {},
   transformOrigin: State = {},
-  transformKeys: string[] = []
+  transformKeys: string[] = [],
+  isDashCase: boolean = false
 ) => {
   let transformIsDefault = true;
   let hasTransform = false;
@@ -70,7 +71,7 @@ const buildStyleProperty = (
       transformOrigin[key] = valueAsType;
       hasTransformOrigin = true;
     } else if (!blacklist.has(key) || !isCustomTemplate(valueAsType)) {
-      styles[prefixer(key, true)] = valueAsType;
+      styles[prefixer(key, isDashCase)] = valueAsType;
     }
   }
 
@@ -131,7 +132,8 @@ const createStyleBuilder = (enableHardwareAcceleration: boolean = true) => {
       styles,
       transform,
       transformOrigin,
-      transformKeys
+      transformKeys,
+      true
     );
 
     return styles;

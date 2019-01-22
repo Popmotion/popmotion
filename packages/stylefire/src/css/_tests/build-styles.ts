@@ -22,6 +22,10 @@ describe('buildStyleProperty', () => {
       transform: 'translateX(100px) scale(1) translateZ(0)'
     });
 
+    expect(buildStyleProperty({ backgroundColor: '#fff' })).toEqual({
+      backgroundColor: '#fff'
+    });
+
     expect(
       buildStyleProperty({ scale: 1, y: 0, x: 100, width: 100, opacity: 0 })
     ).toEqual({
@@ -61,5 +65,13 @@ describe('createStyleBuilder', () => {
     const b = buildStyles({ x: 300 });
 
     expect(a).toBe(b);
+  });
+
+  it('Return valid CSS', () => {
+    const buildStyles = createStyleBuilder();
+
+    expect(buildStyles({ backgroundColor: '#fff' })).toEqual({
+      'background-color': '#fff'
+    });
   });
 });

@@ -2,6 +2,12 @@
 
 Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.3.7] 2019-01-17
+
+### Fixed
+
+- `isDashCase` is now optional when using `buildStyleProperty`
+
 ## [2.3.6] 2019-01-16
 
 ### Added
