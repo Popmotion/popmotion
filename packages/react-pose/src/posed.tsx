@@ -14,7 +14,7 @@ type DomPopmotionConfigFactory<T> = (
 
 export type ComponentFactory<T> = (
   poseConfig?: DomPopmotionConfig | DomPopmotionConfigFactory<T>
-) => ComponentType<any>;
+) => ComponentType<PoseElementProps & T>;
 
 export type Posed = {
   <T>(component: ComponentType<T>): ComponentFactory<T>;
