@@ -2,6 +2,12 @@
 
 Pose for React adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.0.6] 2018-01-08
+
+### Fixed
+
+- Return ComponentType<PoseElementProps & T> from Component factory [#688](https://github.com/Popmotion/popmotion/issues/688)
+
 ## [4.0.5] 2018-01-08
 
 ### Fixed
