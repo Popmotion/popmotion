@@ -2,6 +2,12 @@
 
 Popmotion Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.4.2] 2019-01-23
+
+### Fixed
+
+- Fix drag bounds with negative values [#701](https://github.com/Popmotion/popmotion/pull/701)
+
 ## [3.4.1] 2018-12-17
 
 ### Fixed
