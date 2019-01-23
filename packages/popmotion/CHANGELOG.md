@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.6.1] 2019-01-23
+
+### Added
+
+- Adding `bounceStiffness`, `bounceDamping`, `restDelta`, `timeConstant` and `power` options to `inertia`.
+
 ## [8.6.0] 2019-01-16
 
 ### Added
