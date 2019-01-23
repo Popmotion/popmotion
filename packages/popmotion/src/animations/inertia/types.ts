@@ -6,6 +6,7 @@ export type Props = {
   bounceStiffness: number;
   bounceDamping: number;
   power: number;
+  timeConstant: number;
   restDelta: number;
   modifyTarget: (v: number) => number;
 };
