@@ -3,8 +3,10 @@ export type Props = {
   velocity: number;
   min?: number;
   max?: number;
-  stiffness: number;
-  damping: number;
+  bounceStiffness: number;
+  bounceDamping: number;
+  power: number;
+  restDelta: number;
   modifyTarget: (v: number) => number;
 };
 

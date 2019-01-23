@@ -75,17 +75,29 @@ A function that receives the calculated target and returns a new one. Useful for
 
 **Default:** `v => v`
 
-### stiffness
+### bounceStiffness
 
-Stiffness of the spring animations. Higher values will create more sudden movement.
+Stiffness of the bounce animations. Higher values will create more sudden movement.
 
-**Default:** `100`
+**Default:** `500`
 
-### damping
+### bounceDamping
 
-Strength of opposing force for the spring animations. If set to `0`, spring will oscillate indefinitely.
+Strength of opposing force for the bounce animations. If set to `0`, spring will oscillate indefinitely.
 
 **Default:** `10`
+
+### power
+
+Higher power = further target.
+
+**Default:** `0.8`
+
+### timeConstant
+
+Adjusting the time constant will change the duration of the deceleration, thereby affecting its feel.
+
+**Default:** `700`
 
 ## Methods
 

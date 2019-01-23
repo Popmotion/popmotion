@@ -12,8 +12,11 @@ const inertia = ({
   velocity = 0,
   min,
   max,
-  damping = 10,
-  stiffness = 500,
+  power = 0.8,
+  timeConstant = 700,
+  bounceStiffness = 500,
+  bounceDamping = 10,
+  restDelta = 1,
   modifyTarget
 }: Props) =>
   action(({ update, complete }) => {
@@ -49,8 +52,9 @@ const inertia = ({
         spring({
           ...props,
           to: isLessThanMin(props.from) ? min : max,
-          stiffness,
-          damping
+          stiffness: bounceStiffness,
+          damping: bounceDamping,
+          restDelta
         })
       );
     };
@@ -84,10 +88,9 @@ const inertia = ({
       const animation = decay({
         from,
         velocity,
-        // TODO: I'd like to figure out a `friction` prop that can be used to calculate timeConstant
-        // and power, plus spring's damping, but I feel this will require some fine-tuning
-        timeConstant: 700,
-        restDelta: isOutOfBounds(from) ? 20 : 1,
+        timeConstant,
+        power,
+        restDelta: isOutOfBounds(from) ? 20 : restDelta,
         modifyTarget
       });
 
