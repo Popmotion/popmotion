@@ -117,17 +117,28 @@ For convenience and safety, many props are mapped to [value types](https://githu
 
 #### Border props
 
-* \`borderColor\`: \`color\`
-* \`borderTopColor\`: \`color\`
-* \`borderRightColor\`: \`color\`
-* \`borderBottomColor\`: \`color\`
-* \`borderLeftColor\`: \`color\`
-* \`borderRadius\`: \`px\`
+- \`borderColor\`: \`color\`
+- \`borderTopColor\`: \`color\`
+- \`borderRightColor\`: \`color\`
+- \`borderBottomColor\`: \`color\`
+- \`borderLeftColor\`: \`color\`
+- \`borderWidth\`: \`px\`
+- \`borderTopWidth\`: \`px\`
+- \`borderRightWidth\`: \`px\`
+- \`borderBottomWidth\`: \`px\`
+- \`borderLeftWidth\`: \`px\`
+- \`borderRadius\`: \`px\`
+- \`borderTopLeftRadius\`: \`px\`
+- \`borderTopRightRadius\`: \`px\`
+- \`borderBottomRightRadius\`: \`px\`
+- \`borderBottomLeftRadius\`: \`px\`
 
 #### Positioning
 
 * \`width\`: \`px\`
+- \`maxWidth\`: \`px\`
 * \`height\`: \`px\`
+- \`maxHeight\`: \`px\`
 * \`top\`: \`px\`
 * \`left\`: \`px\`
 * \`bottom\`: \`px\`
@@ -152,6 +163,18 @@ For convenience and safety, many props are mapped to [value types](https://githu
 * \`perspective\`: \`px\`
 * \`opacity\`: \`alpha\`
 
+#### Spacing
+
+- \`padding\`: \`px\`
+- \`paddingTop\`: \`px\`
+- \`paddingRight\`: \`px\`
+- \`paddingBottom\`: \`px\`
+- \`paddingLeft\`: \`px\`
+- \`margin\`: \`px\`
+- \`marginTop\`: \`px\`
+- \`marginRight\`: \`px\`
+- \`marginBottom\`: \`px\`
+- \`marginLeft\`: \`px\`
 `);
 
 const Page = ({ section }) => (

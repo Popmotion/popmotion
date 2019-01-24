@@ -165,4 +165,4 @@ Stops the animation.
 
 ## Example
 
-<CodePen id="Kyewbv" />
+<CodePen id="BMNvqj" />
