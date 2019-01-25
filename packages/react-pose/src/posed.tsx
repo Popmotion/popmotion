@@ -1,4 +1,4 @@
-import React, { forwardRef, ComponentType, HTMLProps } from 'react';
+import React, { forwardRef, ComponentType, HTMLProps, Ref } from 'react';
 import { PoseElement, PoseParentConsumer } from './components/PoseElement';
 import supportedElements from './utils/supported-elements';
 import {
@@ -24,9 +24,9 @@ export type Posed = {
 const componentCache = new Map<string | ComponentType, ComponentFactory<any>>();
 
 type Props = { withParent: boolean; [key: string]: any };
-const createComponentFactory = (key: string | ComponentType) => {
+const createComponentFactory = <T extends string | ComponentType>(key: T) => {
   const componentFactory: ComponentFactory<any> = (poseConfig = {}) => {
-    return forwardRef(({ withParent = true, ...props }: Props, ref) => {
+    return forwardRef(({ withParent = true, ...props }: Props, ref: Ref<T>) => {
       warning(
         props.innerRef === undefined,
         'innerRef is deprecated. Please use ref instead.'
@@ -35,7 +35,7 @@ const createComponentFactory = (key: string | ComponentType) => {
       return !withParent || props.parentValues ? (
         <PoseElement
           poseConfig={poseConfig}
-          innerRef={ref}
+          innerRef={ref as PoseElementProps['innerRef']}
           elementType={key}
           {...props}
         />
@@ -45,7 +45,7 @@ const createComponentFactory = (key: string | ComponentType) => {
             <PoseElement
               poseConfig={poseConfig}
               elementType={key}
-              innerRef={ref}
+              innerRef={ref as PoseElementProps['innerRef']}
               {...props}
               {...parentCtx}
             />
