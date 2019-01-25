@@ -92,6 +92,10 @@ const domPose = poseFactory<DomPopmotionPoser>({
     return pose;
   },
 
+  forceRender({ elementStyler }) {
+    elementStyler.render();
+  },
+
   addListenerToValue: (key, elementStyler) => v => elementStyler.set(key, v),
 
   readValueFromSource: (key, { elementStyler, dragBounds }) => {

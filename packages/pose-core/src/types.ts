@@ -29,6 +29,7 @@ export type Pose<A> = {
   beforeChildren?: boolean | BooleanPropFactory;
   afterChildren?: boolean | BooleanPropFactory;
   preTransform?: () => any;
+  preTransition?: (props: Props) => any;
   applyAtStart?: ApplyMap;
   applyAtEnd?: ApplyMap;
   [key: string]: any;
@@ -184,4 +185,5 @@ export type PoseFactoryConfig<V, A, C, P> = {
   extendAPI: ExtendAPI<V, A, C, P>;
   transformPose?: TransformPose<V, A, C, P>;
   posePriority?: string[];
+  forceRender?: (props: Props) => any;
 };

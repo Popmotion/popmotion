@@ -38,6 +38,7 @@ type SetterFactoryProps<V, A, C, P> = {
   convertTransitionDefinition: ConvertTransitionDefinition<V, A>;
   transformPose?: TransformPose<V, A, C, P>;
   posePriority?: string[];
+  forceRender?: (props: Props) => any;
 };
 
 export const resolveProp = (target: any, props: Props) =>
@@ -183,7 +184,8 @@ const createPoseSetter = <V, A, C, P>(
     posePriority,
     convertTransitionDefinition,
     setValue,
-    setValueNative
+    setValueNative,
+    forceRender
   } = setterProps;
 
   return (next: string, nextProps: Props = {}, propagate: boolean = true) => {
@@ -217,7 +219,7 @@ const createPoseSetter = <V, A, C, P>(
           setValue,
           setValueNative
         );
-        baseTransitionProps.elementStyler.render();
+        if (forceRender) forceRender(baseTransitionProps);
       }
 
       if (transformPose) nextPose = transformPose(nextPose, next, state);
