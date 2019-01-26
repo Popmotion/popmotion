@@ -70,7 +70,11 @@ import * as valueTypes from 'style-value-types';
 export { valueTypes };
 
 // Types
-import { Action } from './action';
-import { ColdSubscription } from './action/types';
-import { ValueReaction } from './reactions/value';
-export { Action, ColdSubscription, ValueReaction };
+export { Action } from './action';
+export { ColdSubscription } from './action/types';
+export { DecayProps } from './animations/decay/types';
+export { KeyframesProps } from './animations/keyframes/types';
+export { PhysicsProps } from './animations/physics/types';
+export { SpringProps } from './animations/spring/types';
+export { TweenProps } from './animations/tween/types';
+export { ValueReaction } from './reactions/value';

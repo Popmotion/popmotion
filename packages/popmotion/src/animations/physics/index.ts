@@ -4,9 +4,9 @@ import action from '../../action';
 import { Action } from '../../action';
 import vectorAction, { ActionFactory } from '../../action/vector';
 import { speedPerFrame } from '../../calc';
-import { PhysicsInterface, Props } from './types';
+import { PhysicsInterface, PhysicsProps } from './types';
 
-const physics = (props: Props = {}): Action =>
+const physics = (props: PhysicsProps = {}): Action =>
   action(
     ({ complete, update }): PhysicsInterface => {
       let {

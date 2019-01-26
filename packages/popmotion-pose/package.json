@@ -52,6 +52,7 @@
     "popmotion": "^8.5.0",
     "pose-core": "^2.0.0",
     "style-value-types": "^3.0.6",
+    "ts-essentials": "^1.0.3",
     "tslib": "^1.9.1"
   },
   "unpkg": "./dist/popmotion-pose.js",
