@@ -164,17 +164,13 @@ const pose = <P>({
         ? createPassiveValue(init, passiveParent, passiveProps)
         : createValue(init);
 
-      if (addListenerToValue) {
-        val.raw.subscribe(addListenerToValue(key, elementStyler));
-      }
+      val.raw.subscribe(addListenerToValue(key, elementStyler));
 
       return val;
     },
 
     convertValue: (raw, key, { elementStyler }) => {
-      if (addListenerToValue) {
-        raw.subscribe(addListenerToValue(key, elementStyler));
-      }
+      raw.subscribe(addListenerToValue(key, elementStyler));
 
       return {
         raw,
