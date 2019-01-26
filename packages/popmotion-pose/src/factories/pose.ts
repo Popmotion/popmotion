@@ -1,7 +1,6 @@
 import {
   value,
   chain,
-  easing,
   delay as delayAction,
   Action,
   ColdSubscription
@@ -19,6 +18,7 @@ import defaultTransitions, { just } from '../inc/default-transitions';
 import { animationLookup, easingLookup } from '../inc/lookups';
 import { getValueType } from '../inc/value-types';
 import { invariant } from 'hey-listen';
+import * as easing from '@popmotion/easing';
 import { Easing } from '@popmotion/easing';
 export { Poser };
 
@@ -90,11 +90,11 @@ const getAction = (
   const baseProps =
     type !== 'keyframes'
       ? {
-          from,
-          to,
-          velocity,
-          ease
-        }
+        from,
+        to,
+        velocity,
+        ease
+      }
       : { ease };
 
   return animationLookup[type]({ ...baseProps, ...def });

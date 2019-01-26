@@ -4,9 +4,9 @@ import {
   decay,
   keyframes,
   physics,
-  easing,
   Action
 } from 'popmotion';
+import * as easing from '@popmotion/easing';
 
 export const animationLookup: {
   [key: string]: (props: { [key: string]: any }) => Action;
@@ -18,30 +18,16 @@ export const animationLookup: {
   physics
 };
 
-const {
-  linear,
-  easeIn,
-  easeOut,
-  easeInOut,
-  circIn,
-  circOut,
-  circInOut,
-  backIn,
-  backOut,
-  backInOut,
-  anticipate
-} = easing;
-
 export const easingLookup = {
-  linear,
-  easeIn,
-  easeOut,
-  easeInOut,
-  circIn,
-  circOut,
-  circInOut,
-  backIn,
-  backOut,
-  backInOut,
-  anticipate
+  linear: easing.linear,
+  easeIn: easing.easeIn,
+  easeOut: easing.easeOut,
+  easeInOut: easing.easeInOut,
+  circIn: easing.circIn,
+  circOut: easing.circOut,
+  circInOut: easing.circInOut,
+  backIn: easing.backIn,
+  backOut: easing.backOut,
+  backInOut: easing.backInOut,
+  anticipate: easing.anticipate,
 };
