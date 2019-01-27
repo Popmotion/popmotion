@@ -110,7 +110,7 @@ const pose = <P>({
   readValueFromSource,
   posePriority,
   setValueNative
-}: PopmotionPoserFactoryConfig<P>) =>
+}: PopmotionPoserFactoryConfig<P, TransitionDefinition>) =>
   poseFactory<Value, Action, ColdSubscription, P, TransitionDefinition>({
     bindOnChange: (values, onChange) => key => {
       if (!values.has(key)) return;

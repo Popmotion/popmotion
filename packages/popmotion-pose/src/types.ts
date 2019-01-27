@@ -27,8 +27,8 @@ export type Value = {
   type?: ValueType;
 };
 
-export type Pose = Pose<Action>;
-export type PoseMap = PoseMap<Action>;
+export type Pose = Pose<Action, TransitionDefinition>;
+export type PoseMap = PoseMap<Action, TransitionDefinition>;
 
 export type PoserState = PoserState<
   Value,
@@ -75,9 +75,9 @@ export type DomPopmotionConfig = {
 
 export type Draggable = boolean | 'x' | 'y';
 
-export type PopmotionPoserFactoryConfig<P> = {
+export type PopmotionPoserFactoryConfig<P, TD> = {
   extendAPI: ExtendAPI<Value, Action, ColdSubscription, P>;
-  transformPose: TransformPose<Value, Action, ColdSubscription, P>;
+  transformPose: TransformPose<Value, Action, ColdSubscription, P, TD>;
   addListenerToValue: (key: string, styler: Styler) => (v: any) => void;
   readValueFromSource?: ReadValueFromSource;
   posePriority?: string[];

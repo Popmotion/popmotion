@@ -160,10 +160,7 @@ export type ConvertTransitionDefinition<V, A, TD> = (
 
 export type PoseFactoryConfig<V, A, C, P, TD> = {
   getDefaultProps?: (config: PoserConfig<V>) => Props;
-  defaultTransitions?: Map<
-    string,
-    TransitionMap<A, TD> | TransitionMapFactory<A, TD>
-  >;
+  defaultTransitions?: Map<string, TransitionMap<A, TD>>;
   bindOnChange: (
     values: ValueMap<V>,
     onChange: OnChangeCallbacks
