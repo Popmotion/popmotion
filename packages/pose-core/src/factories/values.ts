@@ -15,8 +15,8 @@ import { getPoseValues } from '../inc/selectors';
 import { resolveProp } from './setter';
 import { Pose } from '..';
 
-type ValueFactoryProps<V, A> = {
-  poses: PoseMap<A>;
+type ValueFactoryProps<V, A, TD> = {
+  poses: PoseMap<A, TD>;
   passive?: PassiveValueMap;
   ancestorValues: AncestorValueList<V>;
   readValue: ReadValue<V>;
@@ -39,7 +39,11 @@ const defaultReadValueFromSource = (key: string) => (isScale(key) ? 1 : 0);
  * This is a prime candidate for refactoring, possibly in combination
  * with the `posesToSearch.find()` function.
  */
-const readValueFromPose = <A>(pose: Pose<A>, key: string, props: Props) => {
+const readValueFromPose = <A, TD>(
+  pose: Pose<A, TD>,
+  key: string,
+  props: Props
+) => {
   const valueToResolve =
     pose.applyAtEnd && pose.applyAtEnd[key] !== undefined
       ? pose.applyAtEnd[key]
@@ -58,8 +62,8 @@ const getPosesToSearch = (pose: string | string[]) => {
   return posesToSearch;
 };
 
-const getInitialValue = <A>(
-  poses: PoseMap<A>,
+const getInitialValue = <A, TD>(
+  poses: PoseMap<A, TD>,
   key: string,
   initialPose: string | string[],
   props: Props,
@@ -69,7 +73,7 @@ const getInitialValue = <A>(
   const posesToSearch = getPosesToSearch(initialPose);
 
   const pose: string = posesToSearch.filter(Boolean).find((name: string) => {
-    const thisPose: Pose<A> = poses[name];
+    const thisPose: Pose<A, TD> = poses[name];
 
     return (
       thisPose &&
@@ -89,7 +93,7 @@ const getInitialValue = <A>(
     : readValueFromSource(key, props);
 };
 
-const createValues = <V, A>(
+const createValues = <V, A, TD>(
   values: ValueMap<V>,
   {
     userSetValues,
@@ -100,7 +104,7 @@ const createValues = <V, A>(
     poses,
     activePoses,
     props
-  }: ValueFactoryProps<V, A>
+  }: ValueFactoryProps<V, A, TD>
 ) => (key: string) => {
   if (values.has(key)) return;
 
@@ -127,13 +131,13 @@ const createValues = <V, A>(
   values.set(key, value);
 };
 
-const scrapeValuesFromPose = <V, A>(
+const scrapeValuesFromPose = <V, A, TD>(
   values: ValueMap<V>,
-  props: ValueFactoryProps<V, A>
+  props: ValueFactoryProps<V, A, TD>
 ) => (key: string) => {
   const pose = props.poses[key];
-  Object.keys(getPoseValues<A>(pose)).forEach(
-    createValues<V, A>(values, props)
+  Object.keys(getPoseValues<A, TD>(pose)).forEach(
+    createValues<V, A, TD>(values, props)
   );
 };
 
@@ -150,7 +154,7 @@ const getAncestorValue = <V>(
   }
 };
 
-const bindPassiveValues = <V, A>(
+const bindPassiveValues = <V, A, TD>(
   values: ValueMap<V>,
   {
     passive,
@@ -158,13 +162,15 @@ const bindPassiveValues = <V, A>(
     createValue,
     readValue,
     props
-  }: ValueFactoryProps<V, A>
+  }: ValueFactoryProps<V, A, TD>
 ) => (key: string) => {
   const [valueKey, passiveProps, fromParent] = passive[key];
   const valueToBind =
     fromParent && ancestorValues.length
       ? getAncestorValue<V>(valueKey, fromParent, ancestorValues)
-      : values.has(valueKey) ? values.get(valueKey) : false;
+      : values.has(valueKey)
+        ? values.get(valueKey)
+        : false;
 
   if (!valueToBind) return;
 
@@ -177,15 +183,15 @@ const bindPassiveValues = <V, A>(
   values.set(key, newValue);
 };
 
-const setNativeValues = <V, A>({
+const setNativeValues = <V, A, TD>({
   setValueNative,
   initialPose,
   props,
   poses
-}: ValueFactoryProps<V, A>) => {
+}: ValueFactoryProps<V, A, TD>) => {
   const valuesHaveSet = new Set();
 
-  const setValues = (pose: Pose<A>, propKey: string) => {
+  const setValues = (pose: Pose<A, TD>, propKey: string) => {
     if (pose[propKey]) {
       for (const key in pose[propKey]) {
         if (!valuesHaveSet.has(key)) {
@@ -205,12 +211,14 @@ const setNativeValues = <V, A>({
   });
 };
 
-const createValueMap = <V, A>(props: ValueFactoryProps<V, A>): ValueMap<V> => {
+const createValueMap = <V, A, TD>(
+  props: ValueFactoryProps<V, A, TD>
+): ValueMap<V> => {
   const { poses, passive } = props;
   const values: ValueMap<V> = new Map();
 
   // Scrape values from poses
-  Object.keys(poses).forEach(scrapeValuesFromPose<V, A>(values, props));
+  Object.keys(poses).forEach(scrapeValuesFromPose<V, A, TD>(values, props));
 
   // Set any remaining values that won't be animated but need to be set initially
   // An optimisation here might be to have a mutative value in props or some other flag
@@ -219,7 +227,7 @@ const createValueMap = <V, A>(props: ValueFactoryProps<V, A>): ValueMap<V> => {
 
   // Initiate passive values
   if (passive)
-    Object.keys(passive).forEach(bindPassiveValues<V, A>(values, props));
+    Object.keys(passive).forEach(bindPassiveValues<V, A, TD>(values, props));
 
   return values;
 };

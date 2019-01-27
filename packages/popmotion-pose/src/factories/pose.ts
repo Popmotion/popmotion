@@ -111,7 +111,7 @@ const pose = <P>({
   posePriority,
   setValueNative
 }: PopmotionPoserFactoryConfig<P>) =>
-  poseFactory<Value, Action, ColdSubscription, P>({
+  poseFactory<Value, Action, ColdSubscription, P, TransitionDefinition>({
     bindOnChange: (values, onChange) => key => {
       if (!values.has(key)) return;
 
@@ -176,7 +176,7 @@ const pose = <P>({
     getInstantTransition: (_, { to }) => just(to),
 
     convertTransitionDefinition: (
-      val,
+      val: Value,
       def: TransitionDefinition | Action,
       props: TransitionProps
     ): Action => {

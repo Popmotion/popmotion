@@ -20,7 +20,7 @@ import generateDefaultTransitions from './factories/transitions';
 import { selectPoses, selectAllValues } from './inc/selectors';
 import { sortByReversePriority } from './inc/utils';
 
-const poseFactory = <V, A, C, P>({
+const poseFactory = <V, A, C, P, TD>({
   getDefaultProps,
   defaultTransitions,
   bindOnChange,
@@ -41,7 +41,7 @@ const poseFactory = <V, A, C, P>({
   transformPose,
   posePriority,
   extendAPI
-}: PoseFactoryConfig<V, A, C, P>) => (
+}: PoseFactoryConfig<V, A, C, P, TD>) => (
   config: PoserConfig<V>
 ): Poser<V, A, C, P> => {
   // If set, add parent values to ancestor chain
@@ -52,7 +52,7 @@ const poseFactory = <V, A, C, P>({
   const activePoses: ActivePoses = new Map();
   const children: ChildPosers<V, A, C, P> = new Set();
 
-  const poses = generateDefaultTransitions<A>(
+  const poses = generateDefaultTransitions<A, TD>(
     selectPoses(config),
     defaultTransitions
   );
@@ -68,7 +68,7 @@ const poseFactory = <V, A, C, P>({
     initialPose = DEFAULT_INITIAL_POSE
   } = config;
 
-  const values = createValueMap<V, A>({
+  const values = createValueMap<V, A, TD>({
     poses,
     passive,
     ancestorValues,

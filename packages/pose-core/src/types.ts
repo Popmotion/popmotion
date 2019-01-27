@@ -3,25 +3,23 @@ export type Props = { [key: string]: any };
 export type NumberPropFactory = (props: Props) => number;
 export type BooleanPropFactory = (props: Props) => boolean;
 export type StaggerDirectionPropFactory = (props: Props) => 1 | -1;
-export type TransitionFactory<A> = (
-  props: Props
-) => TransitionDefinition | A | false;
+export type TransitionFactory<A, TD> = (props: Props) => TD | A | false;
 
 export type ApplyResolve = (props: Props) => string | number;
 export type ApplyMap = {
   [key: string]: ApplyResolve | string | number;
 };
 
-export type TransitionDefinition = {
-  [key: string]: any;
+export type TransitionMap<A, TD> = {
+  [key: string]: TD | A | false | TransitionFactory<A, TD>;
 };
 
-export type TransitionMap<A> = {
-  [key: string]: TransitionDefinition | TransitionFactory<A>;
-};
+export type TransitionMapFactory<A, TD> = (
+  props: Props
+) => TransitionMap<A, TD>;
 
-export type Pose<A> = {
-  transition?: TransitionMap<A> | TransitionFactory<A>;
+export type Pose<A, TD> = {
+  transition?: TransitionMap<A, TD> | TransitionMapFactory<A, TD>;
   delay?: number | NumberPropFactory;
   delayChildren?: number | NumberPropFactory;
   staggerChildren?: number | NumberPropFactory;
@@ -59,8 +57,8 @@ export type ActivePoses = Map<string, string[]>;
 
 export type ChildPosers<V, A, C, P> = Set<Poser<V, A, C, P>>;
 
-export type PoseMap<A> = {
-  [key: string]: Pose<A>;
+export type PoseMap<A, TD> = {
+  [key: string]: Pose<A, TD>;
 };
 
 export type PoserFactory<V, A, C, P> = (
@@ -143,26 +141,29 @@ export type GetTransitionProps<V> = (
 
 export type SelectValueToRead<V> = (value: V) => any;
 
-export type TransformPose<V, A, C, P> = (
-  pose: Pose<A>,
+export type TransformPose<V, A, C, P, TD> = (
+  pose: Pose<A, TD>,
   key: string,
   state: PoserState<V, A, C, P>
-) => Pose<A>;
+) => Pose<A, TD>;
 
 export type ReadValueFromSource = (key: string, props: Props) => any;
 
 export type SetValue<V> = (v: V, value: any) => void;
 export type SetValueNative = (key: string, value: any, props: Props) => void;
 
-export type ConvertTransitionDefinition<V, A> = (
+export type ConvertTransitionDefinition<V, A, TD> = (
   value: V,
-  transitionDef: TransitionDefinition,
+  transitionDef: TD | A,
   props: Props
 ) => A;
 
-export type PoseFactoryConfig<V, A, C, P> = {
+export type PoseFactoryConfig<V, A, C, P, TD> = {
   getDefaultProps?: (config: PoserConfig<V>) => Props;
-  defaultTransitions?: Map<string, TransitionMap<A> | TransitionFactory<A>>;
+  defaultTransitions?: Map<
+    string,
+    TransitionMap<A, TD> | TransitionMapFactory<A, TD>
+  >;
   bindOnChange: (
     values: ValueMap<V>,
     onChange: OnChangeCallbacks
@@ -175,13 +176,13 @@ export type PoseFactoryConfig<V, A, C, P> = {
   convertValue: ConvertValue<V>;
   resolveTarget: ResolveTarget<V>;
   getTransitionProps: GetTransitionProps<V>;
-  convertTransitionDefinition: ConvertTransitionDefinition<V, A>;
+  convertTransitionDefinition: ConvertTransitionDefinition<V, A, TD>;
   startAction: StartAction<V, A, C>;
   stopAction: StopAction<C>;
   getInstantTransition: GetInstantTransition<V, A>;
   addActionDelay: AddTransitionDelay<A>;
   selectValueToRead: SelectValueToRead<V>;
   extendAPI: ExtendAPI<V, A, C, P>;
-  transformPose?: TransformPose<V, A, C, P>;
+  transformPose?: TransformPose<V, A, C, P, TD>;
   posePriority?: string[];
 };

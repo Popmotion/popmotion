@@ -6,7 +6,7 @@ import {
   SelectValueToRead
 } from '../types';
 
-export const getPoseValues = <A>({
+export const getPoseValues = <A, TD>({
   transition,
   delay,
   delayChildren,
@@ -18,9 +18,9 @@ export const getPoseValues = <A>({
   applyAtStart,
   applyAtEnd,
   ...props
-}: Pose<A>): Pose<A> => props;
+}: Pose<A, TD>): Pose<A, TD> => props;
 
-export const selectPoses = <V, A>({
+export const selectPoses = <V, A, TD>({
   label,
   props,
   values,
@@ -30,7 +30,7 @@ export const selectPoses = <V, A>({
   passive,
   initialPose,
   ...poses
-}: PoserConfig<V>): PoseMap<A> => poses;
+}: PoserConfig<V>): PoseMap<A, TD> => poses;
 
 export const selectAllValues = <V>(
   values: ValueMap<V>,
