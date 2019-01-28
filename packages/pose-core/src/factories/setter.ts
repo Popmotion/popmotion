@@ -12,8 +12,8 @@ import {
   TransformPose,
   AddTransitionDelay,
   ConvertTransitionDefinition,
-  TransitionDefinition,
   TransitionFactory,
+  TransitionMapFactory,
   TransitionMap,
   SetValue,
   SetValueNative,
@@ -24,9 +24,9 @@ import { invariant } from 'hey-listen';
 
 type AnimationsPromiseList = Array<Promise<any>>;
 
-type SetterFactoryProps<V, A, C, P> = {
+type SetterFactoryProps<V, A, C, P, TD> = {
   state: PoserState<V, A, C, P>;
-  poses: PoseMap<A>;
+  poses: PoseMap<A, TD>;
   getInstantTransition: GetInstantTransition<V, A>;
   startAction: StartAction<V, A, C>;
   stopAction: StopAction<C>;
@@ -35,16 +35,16 @@ type SetterFactoryProps<V, A, C, P> = {
   addActionDelay: AddTransitionDelay<A>;
   getTransitionProps: GetTransitionProps<V>;
   resolveTarget: ResolveTarget<V>;
-  convertTransitionDefinition: ConvertTransitionDefinition<V, A>;
-  transformPose?: TransformPose<V, A, C, P>;
+  convertTransitionDefinition: ConvertTransitionDefinition<V, A, TD>;
+  transformPose?: TransformPose<V, A, C, P, TD>;
   posePriority?: string[];
 };
 
 export const resolveProp = (target: any, props: Props) =>
   typeof target === 'function' ? target(props) : target;
 
-const poseDefault = <A>(
-  pose: Pose<A>,
+const poseDefault = <A, TD>(
+  pose: Pose<A, TD>,
   prop: string,
   defaultValue: any,
   resolveProps: Props
@@ -53,16 +53,21 @@ const poseDefault = <A>(
     ? resolveProp(pose[prop], resolveProps)
     : defaultValue;
 
-const startChildAnimations = <V, A, C, P>(
+const startChildAnimations = <V, A, C, P, TD>(
   children: ChildPosers<V, A, C, P>,
   next: string,
-  pose: Pose<A>,
+  pose: Pose<A, TD>,
   props: Props
 ) => {
   const animations: Array<Promise<any>> = [];
-  const delay = poseDefault<A>(pose, 'delayChildren', 0, props);
-  const stagger = poseDefault<A>(pose, 'staggerChildren', 0, props);
-  const staggerDirection = poseDefault<A>(pose, 'staggerDirection', 1, props);
+  const delay = poseDefault<A, TD>(pose, 'delayChildren', 0, props);
+  const stagger = poseDefault<A, TD>(pose, 'staggerChildren', 0, props);
+  const staggerDirection = poseDefault<A, TD>(
+    pose,
+    'staggerDirection',
+    1,
+    props
+  );
 
   const maxStaggerDuration = (children.size - 1) * stagger;
   const generateStaggerDuration =
@@ -81,22 +86,33 @@ const startChildAnimations = <V, A, C, P>(
   return animations;
 };
 
-const resolveTransition = <V, A>(
-  transition: TransitionMap<A> | TransitionFactory<A>,
+const resolveTransition = <V, A, TD>(
+  transition: TransitionMap<A, TD> | TransitionMapFactory<A, TD>,
   key: string,
   value: V,
   props: Props,
-  convertTransitionDefinition: ConvertTransitionDefinition<V, A>,
+  convertTransitionDefinition: ConvertTransitionDefinition<V, A, TD>,
   getInstantTransition: GetInstantTransition<V, A>
 ): A => {
-  let resolvedTransition: A | false | TransitionDefinition;
+  let resolvedTransition: ReturnType<TransitionFactory<A, TD>>;
 
   /**
    * transition: () => {}
    */
   if (typeof transition === 'function') {
-    resolvedTransition = transition(props);
+    const resolvedTransitionMap = transition(props);
 
+    /**
+     * transition: () => { d: () => tweenFn }
+     */
+    resolvedTransition = resolveTransition(
+      resolvedTransitionMap,
+      key,
+      value,
+      props,
+      convertTransitionDefinition,
+      getInstantTransition
+    );
     // Or if it's a keyed object
   } else if (transition[key] || transition.default) {
     const keyTransition = transition[key] || transition.default;
@@ -107,7 +123,7 @@ const resolveTransition = <V, A>(
      * }
      */
     if (typeof keyTransition === 'function') {
-      resolvedTransition = (keyTransition as TransitionFactory<A>)(props);
+      resolvedTransition = (keyTransition as TransitionFactory<A, TD>)(props);
 
       /**
        * transition: {
@@ -122,7 +138,7 @@ const resolveTransition = <V, A>(
      * transition: { type: 'tween' } || false
      */
   } else {
-    resolvedTransition = transition;
+    resolvedTransition = (transition as any) as typeof resolvedTransition;
   }
 
   return resolvedTransition === false
@@ -167,8 +183,8 @@ const applyValues = <V>(
   });
 };
 
-const createPoseSetter = <V, A, C, P>(
-  setterProps: SetterFactoryProps<V, A, C, P>
+const createPoseSetter = <V, A, C, P, TD>(
+  setterProps: SetterFactoryProps<V, A, C, P, TD>
 ) => {
   const {
     state,
@@ -273,7 +289,7 @@ const createPoseSetter = <V, A, C, P>(
                 ...getTransitionProps(value, target, transitionProps)
               };
 
-              let transition = resolveTransition<V, A>(
+              let transition = resolveTransition<V, A, TD>(
                 getTransition,
                 key,
                 value,
@@ -283,7 +299,8 @@ const createPoseSetter = <V, A, C, P>(
               );
 
               // Add delay if defined on pose
-              const poseDelay = delay || resolveProp(nextPose.delay, transitionProps);
+              const poseDelay =
+                delay || resolveProp(nextPose.delay, transitionProps);
               if (poseDelay) {
                 transition = addActionDelay(poseDelay, transition);
               }

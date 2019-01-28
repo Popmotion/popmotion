@@ -13,7 +13,9 @@ import {
   AnimatedPoserFactory,
   Layout
 } from './types';
-import convertTransitionDefinition from './inc/convert-transition-definition';
+import convertTransitionDefinition, {
+  TransitionConfig
+} from './inc/convert-transition-definition';
 
 const FLIP_TO_ORIGIN = 'flipToOrigin';
 
@@ -46,7 +48,8 @@ export default ({
     Value,
     Action,
     Action,
-    AnimatedPoser
+    AnimatedPoser,
+    TransitionConfig
   >({
     /**
      * Bind onChange callbacks
@@ -104,7 +107,9 @@ export default ({
             `useNativeDriver is invalidated on value "${passiveParentKey}", because interpolated value "${key}" can't be animated by the native driver.`
           );
         }
-        return { interpolation: passiveParent.raw.interpolate(passiveProps) };
+        return {
+          interpolation: passiveParent.raw.interpolate(passiveProps)
+        };
       } else {
         let needsInterpolation = false;
         let unit = '';

@@ -6,7 +6,7 @@ import {
   SelectValueToRead
 } from '../types';
 
-export const getPoseValues = <A>({
+export const getPoseValues = <A, TD>({
   transition,
   // `flip` is DOM-specific so technically it shouldn't be filtered out here in a DOM-agnostic layer.
   // However because of the simplicity of this it's handled here at the moment.
@@ -21,9 +21,9 @@ export const getPoseValues = <A>({
   applyAtStart,
   applyAtEnd,
   ...props
-}: Pose<A>): Pose<A> => props;
+}: Pose<A, TD>): Pose<A, TD> => props;
 
-export const selectPoses = <V, A>({
+export const selectPoses = <V, A, TD>({
   label,
   props,
   values,
@@ -33,7 +33,7 @@ export const selectPoses = <V, A>({
   passive,
   initialPose,
   ...poses
-}: PoserConfig<V>): PoseMap<A> => poses;
+}: PoserConfig<V>): PoseMap<A, TD> => poses;
 
 export const selectAllValues = <V>(
   values: ValueMap<V>,

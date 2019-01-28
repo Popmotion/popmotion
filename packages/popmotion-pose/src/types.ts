@@ -1,5 +1,14 @@
 import { ValueType } from 'style-value-types';
-import { Action, ValueReaction, ColdSubscription } from 'popmotion';
+import {
+  Action,
+  ValueReaction,
+  ColdSubscription,
+  TweenProps,
+  PhysicsProps,
+  SpringProps,
+  DecayProps,
+  KeyframesProps
+} from 'popmotion';
 import { Poser, PoserConfig } from 'pose-core';
 import {
   Pose,
@@ -10,14 +19,16 @@ import {
   ReadValueFromSource
 } from 'pose-core';
 import { Styler } from 'stylefire';
+import { Merge } from 'ts-essentials';
+import { easingLookup } from './inc/lookups';
 
 export type Value = {
   raw: ValueReaction;
   type?: ValueType;
 };
 
-export type Pose = Pose<Action>;
-export type PoseMap = PoseMap<Action>;
+export type Pose = Pose<Action, TransitionDefinition>;
+export type PoseMap = PoseMap<Action, TransitionDefinition>;
 
 export type PoserState = PoserState<
   Value,
@@ -64,9 +75,9 @@ export type DomPopmotionConfig = {
 
 export type Draggable = boolean | 'x' | 'y';
 
-export type PopmotionPoserFactoryConfig<P> = {
+export type PopmotionPoserFactoryConfig<P, TD> = {
   extendAPI: ExtendAPI<Value, Action, ColdSubscription, P>;
-  transformPose: TransformPose<Value, Action, ColdSubscription, P>;
+  transformPose: TransformPose<Value, Action, ColdSubscription, P, TD>;
   addListenerToValue: (key: string, styler: Styler) => (v: any) => void;
   readValueFromSource?: ReadValueFromSource;
   posePriority?: string[];
@@ -99,11 +110,52 @@ export enum BoundingBoxDimension {
   bottom = 'bottom'
 }
 
-export type AnimationDef = {
-  type: 'tween' | 'physics' | 'spring' | 'decay' | 'keyframes';
+// it's needed in order to destructure `ease` property in `getAction`
+type NoEase = { ease?: undefined };
+
+export type CubicBezierArgs = [number, number, number, number];
+
+type TransitionDefinitionCommonProps = {
+  delay?: number;
   min?: number;
   max?: number;
-  delay?: number;
   round?: boolean;
-  [key: string]: any;
 };
+
+export type DecayDefinition = {
+  type: 'decay';
+} & TransitionDefinitionCommonProps &
+  DecayProps &
+  NoEase;
+export type KeyframesDefinition = {
+  type: 'keyframes';
+} & TransitionDefinitionCommonProps &
+  KeyframesProps;
+export type PhysicsDefinition = {
+  type: 'physics';
+} & TransitionDefinitionCommonProps &
+  PhysicsProps &
+  NoEase;
+export type SpringDefinition = {
+  type: 'spring';
+} & TransitionDefinitionCommonProps &
+  SpringProps &
+  NoEase;
+export type TweenDefinition = Merge<
+  { type: 'tween' } & TransitionDefinitionCommonProps & TweenProps,
+  {
+    ease: TweenProps['ease'] | keyof typeof easingLookup | CubicBezierArgs;
+  }
+>;
+
+export type TransitionDefinition =
+  | TweenDefinition
+  | PhysicsDefinition
+  | SpringDefinition
+  | DecayDefinition
+  | KeyframesDefinition;
+
+/**
+ * @deprecated Use TransitionDefinition
+ */
+export type AnimationDef = TransitionDefinition;

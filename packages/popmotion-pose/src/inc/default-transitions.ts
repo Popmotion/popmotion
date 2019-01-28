@@ -1,7 +1,11 @@
 import { spring, tween, action, pointer, transform, Action } from 'popmotion';
 import { linear } from '@popmotion/easing';
 import { TransitionMap } from 'pose-core';
-import { Transition, BoundingBoxDimension } from '../types';
+import {
+  Transition,
+  BoundingBoxDimension,
+  TransitionDefinition
+} from '../types';
 import { percent } from 'style-value-types';
 import { resolveProp } from '../dom/utils';
 const { interpolate } = transform;
@@ -93,7 +97,7 @@ const linearTween: Transition = ({ from, to }) =>
   tween({ from, to, ease: linear });
 
 // TODO: Adjust transitions based on behavioural props
-const intelligentTransition: TransitionMap<Action> = {
+const intelligentTransition: TransitionMap<Action, TransitionDefinition> = {
   x: underDampedSpring,
   y: underDampedSpring,
   z: underDampedSpring,
@@ -108,7 +112,7 @@ const intelligentTransition: TransitionMap<Action> = {
   default: tween
 };
 
-const dragAction: TransitionMap<Action> = {
+const dragAction: TransitionMap<Action, TransitionDefinition> = {
   ...intelligentTransition,
   x: createPointer(pointerX, 'left', 'right', BoundingBoxDimension.width),
   y: createPointer(pointerY, 'top', 'bottom', BoundingBoxDimension.height)
@@ -116,13 +120,13 @@ const dragAction: TransitionMap<Action> = {
 
 // TODO: Return `decay` based on behavioural props
 const justAxis: Transition = ({ from }) => just(from);
-const intelligentDragEnd: TransitionMap<Action> = {
+const intelligentDragEnd: TransitionMap<Action, TransitionDefinition> = {
   ...intelligentTransition,
   x: justAxis,
   y: justAxis
 };
 
-export default new Map<string, Transition | TransitionMap<Action>>([
+export default new Map<string, TransitionMap<Action, TransitionDefinition>>([
   ['default', intelligentTransition],
   ['drag', dragAction],
   ['dragEnd', intelligentDragEnd]

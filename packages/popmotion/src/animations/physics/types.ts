@@ -1,11 +1,11 @@
-export type Props = {
-  from?: number,
-  acceleration?: number,
-  friction?: number,
-  velocity?: number,
-  restSpeed?: number | false,
-  springStrength?: number,
-  to?: number
+export type PhysicsProps = {
+  from?: number;
+  to?: number;
+  acceleration?: number;
+  friction?: number;
+  velocity?: number;
+  restSpeed?: number | false;
+  springStrength?: number;
 };
 
 export type PhysicsInterface = {

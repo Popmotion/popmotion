@@ -4,9 +4,9 @@ import { number } from 'style-value-types';
 import action from '../../action';
 import { Action } from '../../action';
 import vectorAction, { ActionFactory } from '../../action/vector';
-import { Props } from './types';
+import { DecayProps } from './types';
 
-const decay = (props: Props = {}): Action =>
+const decay = (props: DecayProps = {}): Action =>
   action(({ complete, update }) => {
     const {
       velocity = 0,

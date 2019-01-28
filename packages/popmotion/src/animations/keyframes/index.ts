@@ -4,7 +4,7 @@ import { clamp, progress } from '@popmotion/popcorn';
 import { Update } from '../../observer/types';
 import tween from '../tween';
 import scrubber from '../tween/scrubber';
-import { KeyframeProps } from './types';
+import { KeyframesProps } from './types';
 
 const clampProgress = clamp(0, 1);
 
@@ -64,7 +64,7 @@ const keyframes = ({
   times,
   values,
   ...tweenProps
-}: KeyframeProps): Action => {
+}: KeyframesProps): Action => {
   easings = Array.isArray(easings)
     ? easings
     : defaultEasings(values as number[], easings);

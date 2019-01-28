@@ -1,9 +1,4 @@
 import {
-  spring,
-  tween,
-  decay,
-  keyframes,
-  physics,
   value,
   chain,
   easing,
@@ -17,11 +12,14 @@ import {
   TransitionProps,
   Transformer,
   PopmotionPoserFactoryConfig,
-  AnimationDef
+  TransitionDefinition,
+  CubicBezierArgs
 } from '../types';
 import defaultTransitions, { just } from '../inc/default-transitions';
+import { animationLookup, easingLookup } from '../inc/lookups';
 import { getValueType } from '../inc/value-types';
 import { invariant } from 'hey-listen';
+import { Easing } from '@popmotion/easing';
 export { Poser };
 
 const createPassiveValue = (
@@ -45,49 +43,15 @@ const createValue = (init: any) => {
 const addActionDelay = (delay = 0, transition: Action) =>
   chain(delayAction(delay), transition);
 
-const animationLookup: {
-  [key: string]: (props: { [key: string]: any }) => Action;
-} = {
-  tween,
-  spring,
-  decay,
-  keyframes,
-  physics
-};
-
-const {
-  linear,
-  easeIn,
-  easeOut,
-  easeInOut,
-  circIn,
-  circOut,
-  circInOut,
-  backIn,
-  backOut,
-  backInOut,
-  anticipate
-} = easing;
-
-const easingLookup: { [key: string]: (num: number) => number } = {
-  linear,
-  easeIn,
-  easeOut,
-  easeInOut,
-  circIn,
-  circOut,
-  circInOut,
-  backIn,
-  backOut,
-  backInOut,
-  anticipate
-};
+const isCubicBezierArgs = (
+  args: Easing[] | CubicBezierArgs
+): args is CubicBezierArgs => typeof args[0] === 'number';
 
 // At the moment this function just uses `type` as a key - in the future
 // we could infer the animation type based on the properties being provided
 const getAction = (
   v: Value,
-  { type = 'tween', ease, ...def }: AnimationDef,
+  { type = 'tween', ease: definedEase, ...def }: TransitionDefinition,
   { from, to, velocity }: TransitionProps
 ) => {
   invariant(
@@ -95,28 +59,33 @@ const getAction = (
     `Invalid transition type '${type}'. Valid transition types are: tween, spring, decay, physics and keyframes.`
   );
 
+  let ease: Exclude<
+    typeof definedEase,
+    keyof typeof easingLookup | CubicBezierArgs
+  >;
+
   // Convert ease definition into easing function
   if (type === 'tween') {
-    const typeOfEase = typeof ease;
-    if (typeOfEase !== 'function') {
-      if (typeOfEase === 'string') {
+    if (typeof definedEase !== 'function') {
+      if (typeof definedEase === 'string') {
         invariant(
-          easingLookup[ease] !== undefined,
-          `Invalid easing type '${ease}'. popmotion.io/pose/api/config`
+          easingLookup[definedEase] !== undefined,
+          `Invalid easing type '${definedEase}'. popmotion.io/pose/api/config`
         );
 
-        ease = easingLookup[ease];
-      } else if (Array.isArray(ease)) {
+        ease = easingLookup[definedEase];
+      } else if (Array.isArray(definedEase) && isCubicBezierArgs(definedEase)) {
         invariant(
-          ease.length === 4,
+          definedEase.length === 4,
           `Cubic bezier arrays must contain four numerical values.`
         );
-
-        const [x1, y1, x2, y2] = ease;
+        const [x1, y1, x2, y2] = definedEase;
         ease = easing.cubicBezier(x1, y1, x2, y2);
       }
     }
   }
+
+  ease = ease || (definedEase as typeof ease);
 
   const baseProps =
     type !== 'keyframes'
@@ -141,8 +110,8 @@ const pose = <P>({
   readValueFromSource,
   posePriority,
   setValueNative
-}: PopmotionPoserFactoryConfig<P>) =>
-  poseFactory<Value, Action, ColdSubscription, P>({
+}: PopmotionPoserFactoryConfig<P, TransitionDefinition>) =>
+  poseFactory<Value, Action, ColdSubscription, P, TransitionDefinition>({
     bindOnChange: (values, onChange) => key => {
       if (!values.has(key)) return;
 
@@ -207,10 +176,10 @@ const pose = <P>({
     getInstantTransition: (_, { to }) => just(to),
 
     convertTransitionDefinition: (
-      val,
-      def: AnimationDef | Action,
+      val: Value,
+      def: TransitionDefinition | Action,
       props: TransitionProps
-    ) => {
+    ): Action => {
       if (isAction(def)) return def;
 
       const { delay, min, max, round, ...remainingDef } = def;
