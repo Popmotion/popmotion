@@ -1,6 +1,6 @@
 {
   "name": "animated-pose",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Pose for the Animated animation library",
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
@@ -46,6 +46,6 @@
   "dependencies": {
     "@popmotion/easing": "^1.0.1",
     "hey-listen": "^1.0.5",
-    "pose-core": "^2.0.0"
+    "pose-core": "^2.0.3"
   }
 }
