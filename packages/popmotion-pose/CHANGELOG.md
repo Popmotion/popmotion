@@ -2,6 +2,12 @@
 
 Popmotion Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.4.3] 2019-01-28
+
+### Updated
+
+- Tightened type definitions for TransitionMapFactory [#714](https://github.com/Popmotion/popmotion/pull/714)
+
 ## [3.4.2] 2019-01-23
 
 ### Fixed

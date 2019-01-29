@@ -1,7 +1,5 @@
 # How to Contribute
 
-Although Popmotion is run by a single individual, contributions are gladly welcomed!
-
 This guide will run through the types of contributions you can make and how to set the Popmotion repo up, ready for local development.
 
 - [Types of Contribution](#types-of-contribution)

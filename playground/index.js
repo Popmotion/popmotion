@@ -119,17 +119,17 @@ import {
 // .add('increased stiffness', () => <SpringStiffer />)
 // .add('increased stiffness and damping', () => <SpringStifferDamping />);
 
-import {
-  AnimateText,
-  TextPoseGroup,
-  ExternalPoser,
-  ViaPoseProp
-} from './plugins/text';
-storiesOf('SplitText', module)
-  .add('animate text', () => <AnimateText />)
-  .add('pose group', () => <TextPoseGroup />)
-  .add('external poser', () => <ExternalPoser />)
-  .add('via pose prop', () => <ViaPoseProp />);
+// import {
+//   AnimateText,
+//   TextPoseGroup,
+//   ExternalPoser,
+//   ViaPoseProp
+// } from './plugins/text';
+// storiesOf('SplitText', module)
+//   .add('animate text', () => <AnimateText />)
+//   .add('pose group', () => <TextPoseGroup />)
+//   .add('external poser', () => <ExternalPoser />)
+//   .add('via pose prop', () => <ViaPoseProp />);
 
 storiesOf('tween', module)
   .add('default props', () => <TweenBasic />)

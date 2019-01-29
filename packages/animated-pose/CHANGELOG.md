@@ -2,6 +2,12 @@
 
 Animated Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.2.3] 2019-01-28
+
+### Updated
+
+- Tightened type definitions for TransitionMapFactory [#714](https://github.com/Popmotion/popmotion/pull/714)
+
 ## [1.2.1] 2018-09-21
 
 ### Fixed
