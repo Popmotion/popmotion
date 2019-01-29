@@ -84,7 +84,7 @@ const inertia = ({
       startSpring({ from, velocity });
 
       // Otherwise we want to simulate inertial movement with decay
-    } else {
+    } else if (velocity !== 0) {
       const animation = decay({
         from,
         velocity,
@@ -96,10 +96,13 @@ const inertia = ({
 
       startAnimation(animation, () => {
         const v = current.get() as number;
+
         if (isOutOfBounds(v)) {
           startSpring({ from: v, velocity: current.getVelocity() });
         }
       });
+    } else {
+      complete();
     }
 
     return {
