@@ -2,6 +2,12 @@
 
 Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.4.0] 2019-01-30
+
+### Added
+
+- Support for SVG camel-case attributes.
+
 ## [2.3.7] 2019-01-17
 
 ### Fixed
