@@ -1,6 +1,7 @@
 import { camelToDash } from '../styler/utils';
 import { isTransformProp } from '../css/transform-props';
 import { Dimensions, SVGState, TransformState } from './types';
+import { camelCaseAttributes } from './attr-formatting';
 
 // Little hack to avoid division by zero
 const ZERO_NOT_ZERO = 0.0000001;
@@ -70,7 +71,8 @@ const build = (
       } else if (isPath && key === 'pathOffset') {
         props['stroke-dashoffset'] = percentToPixels(-value, pathLength);
       } else {
-        props[camelToDash(key)] = value;
+        const attrKey = !camelCaseAttributes.has(key) ? camelToDash(key) : key;
+        props[attrKey] = value;
       }
     }
   }

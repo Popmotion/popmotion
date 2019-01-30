@@ -1,0 +1,19 @@
+export const camelCaseAttributes = new Set([
+  'baseFrequency',
+  'diffuseConstant',
+  'kernelMatrix',
+  'kernelUnitLength',
+  'keySplines',
+  'keyTimes',
+  'limitingConeAngle',
+  'markerHeight',
+  'markerWidth',
+  'numOctaves',
+  'targetX',
+  'targetY',
+  'surfaceScale',
+  'specularConstant',
+  'specularExponent',
+  'stdDeviation',
+  'tableValues'
+]);

@@ -1,4 +1,6 @@
-import { alpha, color, scale, ValueType } from 'style-value-types';
+import { alpha, color, scale, number, ValueType } from 'style-value-types';
+
+const int = { ...number, transform: Math.round };
 
 const valueTypes: { [key: string]: ValueType } = {
   fill: color,
@@ -8,7 +10,8 @@ const valueTypes: { [key: string]: ValueType } = {
   scaleY: scale,
   opacity: alpha,
   fillOpacity: alpha,
-  strokeOpacity: alpha
+  strokeOpacity: alpha,
+  numOctaves: int
 };
 
 export default (key: string) => valueTypes[key];
