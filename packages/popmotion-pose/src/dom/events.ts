@@ -45,17 +45,17 @@ const makeUIEventApplicator = ({
   const endListener = startPose + 'End';
   const moveListener = startPose + 'Move';
 
+  if (preventScroll) {
+    const touchMoveListener = listen(element, 'touchmove', {
+      passive: false
+    }).start((e: TouchEvent) => {
+      e.preventDefault();
+    });
+    activeActions.set(moveListener, touchMoveListener);
+  }
+
   const eventStartListener = listen(element, startEvents).start(
     (startEvent: MouseEvent | TouchEvent) => {
-      if (preventScroll) {
-        const touchMoveListener = listen(element, 'touchmove', {
-          passive: false
-        }).start((e: TouchEvent) => {
-          e.preventDefault();
-        });
-        activeActions.set(moveListener, touchMoveListener);
-      }
-
       poser.set(startPose);
 
       if (startCallback && config[startCallback])
@@ -74,8 +74,6 @@ const makeUIEventApplicator = ({
         ) {
           return;
         }
-
-        if (preventScroll) activeActions.get(moveListener).stop();
 
         activeActions.get(endListener).stop();
 
