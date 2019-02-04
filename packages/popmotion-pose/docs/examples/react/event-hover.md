@@ -6,7 +6,7 @@ category: react
 
 # Events: Hover
 
-To animate an element on press, set `hoverable: true` and a `pose` prop.
+To animate an element on hover, set `hoverable: true` and a `pose` prop.
 
 ```javascript
 const config = {
