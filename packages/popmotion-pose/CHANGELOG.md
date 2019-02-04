@@ -2,6 +2,12 @@
 
 Popmotion Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.4.6] 2019-01-02
+
+### Fixed
+
+- Fixed drag and applyOnEnd conflict [#708](https://github.com/Popmotion/popmotion/pull/708)
+
 ## [3.4.5] 2019-01-02
 
 ### Fixed
