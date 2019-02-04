@@ -5,6 +5,7 @@ import { flipPose, isFlipPose } from './flip';
 import { getValueType } from '../inc/value-types';
 import { styler, Action, ValueReaction, ColdSubscription } from 'popmotion';
 import { Poser } from 'pose-core';
+import { Styler } from 'stylefire';
 import {
   DomPopmotionPoser,
   DomPopmotionConfig,
@@ -16,14 +17,26 @@ import {
 import { isPositional, convertPositionalUnits } from './unit-conversion';
 export { Action, Poser, ValueReaction, ColdSubscription };
 
+const getCurrent = (prop: string) => ({
+  elementStyler
+}: {
+  elementStyler: Styler;
+}) => elementStyler.get(prop);
+
 const dragPoses = (draggable: Draggable): PoseMap => {
   const drag: Pose = {
     preTransition: ({ dimensions }: TransitionProps) => dimensions.measure()
   };
   const dragEnd: Pose = {};
 
-  if (draggable === true || draggable === 'x') drag.x = dragEnd.x = 0;
-  if (draggable === true || draggable === 'y') drag.y = dragEnd.y = 0;
+  // .x/.y gets set on both poses in order to track relation between those 2 poses
+  // especially for activeActions purposes (when setting dragEnd has to result in stopAction call)
+  if (draggable === true || draggable === 'x') {
+    drag.x = dragEnd.x = getCurrent('x');
+  }
+  if (draggable === true || draggable === 'y') {
+    drag.y = dragEnd.y = getCurrent('y');
+  }
 
   return { drag, dragEnd };
 };
