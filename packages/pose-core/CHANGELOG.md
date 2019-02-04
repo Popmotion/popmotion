@@ -2,6 +2,12 @@
 
 Pose Core adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.1.0] 2019-02-04
+
+### Added
+
+- `forceRender` option [#703](https://github.com/Popmotion/popmotion/pull/703)
+
 ## [2.0.3] 2019-01-28
 
 ### Updated
