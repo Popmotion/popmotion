@@ -2,6 +2,12 @@
 
 Popmotion Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.4.4] 2019-01-02
+
+### Fixed
+
+- Fixed `applyOnStart` [#703](https://github.com/Popmotion/popmotion/pull/703)
+
 ## [3.4.3] 2019-01-28
 
 ### Updated
