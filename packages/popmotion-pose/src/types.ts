@@ -86,6 +86,7 @@ export type PopmotionPoserFactoryConfig<P, TD> = {
     to: any,
     props: { elementStyler: Styler }
   ) => void;
+  forceRender: (props: { elementStyler: Styler }) => void;
 };
 
 export type Dimensions = {

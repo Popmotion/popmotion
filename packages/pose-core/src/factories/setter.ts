@@ -38,6 +38,7 @@ type SetterFactoryProps<V, A, C, P, TD> = {
   convertTransitionDefinition: ConvertTransitionDefinition<V, A, TD>;
   transformPose?: TransformPose<V, A, C, P, TD>;
   posePriority?: string[];
+  forceRender?: (props: Props) => any;
 };
 
 export const resolveProp = (target: any, props: Props) =>
@@ -199,7 +200,8 @@ const createPoseSetter = <V, A, C, P, TD>(
     posePriority,
     convertTransitionDefinition,
     setValue,
-    setValueNative
+    setValueNative,
+    forceRender
   } = setterProps;
 
   return (next: string, nextProps: Props = {}, propagate: boolean = true) => {
@@ -222,17 +224,7 @@ const createPoseSetter = <V, A, C, P, TD>(
     const getParentAnimations = (): AnimationsPromiseList => {
       if (!nextPose) return [];
 
-      if (transformPose) nextPose = transformPose(nextPose, next, state);
-
-      const {
-        preTransition,
-        transition: getTransition,
-        applyAtStart,
-        applyAtEnd
-      } = nextPose;
-
-      // Run pre-transition prep, if set
-      if (preTransition) preTransition(baseTransitionProps);
+      const { applyAtStart } = nextPose;
 
       // Apply initial values, if set
       if (applyAtStart) {
@@ -243,7 +235,15 @@ const createPoseSetter = <V, A, C, P, TD>(
           setValue,
           setValueNative
         );
+        if (forceRender) forceRender(baseTransitionProps);
       }
+
+      if (transformPose) nextPose = transformPose(nextPose, next, state);
+
+      const { preTransition, transition: getTransition, applyAtEnd } = nextPose;
+
+      // Run pre-transition prep, if set
+      if (preTransition) preTransition(baseTransitionProps);
 
       const animations = Object.keys(getPoseValues(nextPose)).map(key => {
         // Add pose to the pose order

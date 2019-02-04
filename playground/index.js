@@ -30,7 +30,8 @@ import {
   SingleFilter,
   DynamicPositionedPose,
   TransitionStutter,
-  Refs
+  Refs,
+  Accordion
 } from './plugins/react-pose';
 
 storiesOf('Plugin: Pose', module)
@@ -67,7 +68,8 @@ storiesOf('Plugin: React Pose', module)
     />
   ))
   .add('dynamic positioned pose', () => <DynamicPositionedPose />)
-  .add('transition stuttering', () => <TransitionStutter />);
+  .add('transition stuttering', () => <TransitionStutter />)
+  .add('accordion', () => <Accordion/>);
 
 import { SVG, CSS } from './stylefire';
 

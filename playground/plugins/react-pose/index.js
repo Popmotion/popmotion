@@ -10,6 +10,8 @@ import {
   transform,
   value
 } from 'popmotion';
+export { default as Accordion } from './Accordion'
+
 const { pipe, blendColor, conditional, clamp, interpolate } = transform;
 
 const boxProps = {
