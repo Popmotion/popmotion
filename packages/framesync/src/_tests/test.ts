@@ -99,4 +99,33 @@ describe('sync', () => {
       sync.render(() => v === 2 && resolve(), true);
     });
   });
+
+  it('correctly keeps alive after cancel', () => {
+    return new Promise((resolve, reject) => {
+      let v = 0;
+      let hasCancelled = false;
+
+      const update = () => {
+        v = v + 1;
+      };
+
+      sync.update(update, true);
+
+      sync.render(() => {
+        if (v === 2) {
+          if (!hasCancelled) {
+            cancelSync.update(update);
+            hasCancelled = true;
+          } else {
+            v = 3;
+          }
+        } else if (v === 3) {
+          sync.update(update, true);
+        } else if (v === 6) {
+          cancelSync.update(update);
+          resolve();
+        }
+      }, true);
+    });
+  });
 });

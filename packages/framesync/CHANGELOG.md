@@ -2,6 +2,12 @@
 
 Framesync adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.0.2] 2019-02-05
+
+### Fixed
+
+- Fixing rescheduling keepAlive method.
+
 ## [4.0.1] 2018-09-24
 
 ### Changed

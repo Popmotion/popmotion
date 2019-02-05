@@ -56,11 +56,13 @@ export default (setRunNextFrame: (fillRun: boolean) => void): Step => {
       isProcessing = false;
     },
 
-    schedule: (process, keepAlive, immediate) => {
+    schedule: (process, keepAlive = false, immediate = false) => {
       invariant(typeof process === 'function', 'Argument must be a function');
+
       const addToCurrentBuffer = immediate && isProcessing;
       const buffer = addToCurrentBuffer ? processToRun : processToRunNextFrame;
 
+      cancelled.delete(process);
       if (keepAlive) toKeepAlive.add(process);
 
       // If this callback isn't already scheduled to run next frame
