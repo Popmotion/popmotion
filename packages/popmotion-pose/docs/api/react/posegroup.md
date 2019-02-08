@@ -18,7 +18,7 @@ import posed, { PoseGroup } from 'react-pose'
 
 ## Usage
 
-By adding a [posed component](/api/posed) as a direct child of `PoseGroup`, it will gain two new poses: `enter` and `exit`.
+By adding a [posed component](/pose/api/posed) as a direct child of `PoseGroup`, it will gain two new poses: `enter` and `exit`.
 
 ```javascript
 const Item = posed.div({
