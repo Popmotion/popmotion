@@ -80,11 +80,8 @@ const createPoseConfig = (
   if (draggable) {
     const { drag, dragEnd } = dragPoses(draggable);
 
-    poseConfig.drag = {
-      ...poseConfig.drag,
-      ...drag
-    };
-    poseConfig.dragEnd = { ...poseConfig.dragEnd, ...dragEnd };
+    poseConfig.drag = { ...drag, ...poseConfig.drag };
+    poseConfig.dragEnd = { ...dragEnd, ...poseConfig.dragEnd };
   }
 
   return poseConfig;
