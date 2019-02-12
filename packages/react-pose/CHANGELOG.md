@@ -2,6 +2,12 @@
 
 Pose for React adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.0.7] 2018-02-12
+
+### Fixed
+
+- Allowing user to override `dragEnd` [#730](https://github.com/Popmotion/popmotion/issues/730)
+
 ## [4.0.6] 2018-01-08
 
 ### Fixed
