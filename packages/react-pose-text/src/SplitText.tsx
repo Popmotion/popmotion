@@ -1,4 +1,4 @@
-import React, { PureComponent, ReactElement } from 'react';
+import * as React from 'react';
 import posed from 'react-pose';
 import { invariant } from 'hey-listen';
 
@@ -37,27 +37,14 @@ const getPoseProps = (props: Props) => {
   return poseProps;
 };
 
-class SplitText extends PureComponent<Props, State> {
+class SplitText extends React.PureComponent<Props, State> {
   static getDerivedStateFromProps({ children }: Props, state: State) {
     return !state || children !== state.text ? parseText(children) : null;
   }
 
   props: Props;
-  Word: (props: PoseProps) => ReactElement<any>;
-  Char: (props: PoseProps) => ReactElement<any>;
-
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {};
-
-    const { wordPoses, charPoses, children } = props;
-
-    parseText(children);
-
-    if (wordPoses) this.Word = posed.div(wordPoses);
-    if (charPoses) this.Char = posed.div(charPoses);
-  }
+  Word = posed.div(this.props.wordPoses);
+  Char = posed.div(this.props.charPoses);
 
   renderChars(
     word: string[],
