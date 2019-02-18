@@ -3,12 +3,14 @@ import createObserver from '../observer';
 import { ObserverCandidate, PartialObserver } from '../observer/types';
 import { ActionInit, ActionProps, ColdSubscription } from './types';
 
-export class Action extends Chainable<Action> {
+export class Action<
+  Sub extends ColdSubscription = ColdSubscription
+> extends Chainable<Action> {
   create(props: ActionProps) {
     return new Action(props);
   }
 
-  start(observerCandidate: ObserverCandidate = {}): ColdSubscription {
+  start(observerCandidate: ObserverCandidate = {}): Sub {
     let isComplete = false;
     let subscription: ColdSubscription = {
       stop: () => undefined
@@ -22,9 +24,7 @@ export class Action extends Chainable<Action> {
 
     const api = init(observer);
 
-    subscription = api
-      ? { ...subscription, ...api }
-      : subscription;
+    subscription = api ? { ...subscription, ...api } : subscription;
 
     if ((observerCandidate as PartialObserver).registerParent) {
       (observerCandidate as PartialObserver).registerParent(subscription);
@@ -32,8 +32,10 @@ export class Action extends Chainable<Action> {
 
     if (isComplete) subscription.stop();
 
-    return subscription;
+    return subscription as any;
   }
 }
 
-export default (init: ActionInit) => new Action({ init });
+export default <Sub extends ColdSubscription = ColdSubscription>(
+  init: ActionInit
+) => new Action<Sub>({ init });

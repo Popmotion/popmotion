@@ -10,8 +10,8 @@ import { Process } from 'framesync';
 
 const clampProgress = clamp(0, 1);
 
-const tween = (props: TweenProps = {}): Action =>
-  action(
+const tween = (props: TweenProps = {}): Action<TweenInterface> =>
+  action<TweenInterface>(
     ({ update, complete }: IObserver): TweenInterface => {
       const {
         duration = 300,
