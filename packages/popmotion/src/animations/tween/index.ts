@@ -35,7 +35,16 @@ const tween = (props: TweenProps = {}): Action =>
       let currentProgress = 0;
       let process: Process;
       let isActive = false;
-      const reverseTween = () => (playDirection *= -1);
+      const reverseTween = () => {
+        if (elapsed > duration) {
+          const remainder = elapsed - duration;
+          elapsed = elapsed - remainder * 2;
+        } else if (elapsed < 0) {
+          const remainder = -1 * elapsed;
+          elapsed = elapsed + remainder * 2;
+        }
+        playDirection *= -1;
+      };
 
       const isTweenComplete = (): boolean => {
         const isComplete =
@@ -48,7 +57,7 @@ const tween = (props: TweenProps = {}): Action =>
 
         let isStepTaken = false;
         if (loop && loopCount < loop) {
-          elapsed = 0;
+          elapsed = duration - elapsed;
           loopCount++;
           isStepTaken = true;
         } else if (flip && flipCount < flip) {
@@ -76,6 +85,7 @@ const tween = (props: TweenProps = {}): Action =>
       const startTimer = () => {
         isActive = true;
         process = sync.update(({ delta }) => {
+          // TODO Maybe try something different to eat the variations in framerate
           elapsed += delta * playDirection;
           updateTween();
           if (isTweenComplete() && complete) {
