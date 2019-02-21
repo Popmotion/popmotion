@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.6.3] 2019-02-21
+
+### Fixed
+
+- Correctly integrating remainder of `elapsed` in yoyo tweens to ensure multiple concurrent tweens stay in sync.
+
 ## [8.6.2] 2019-01-28
 
 ### Updated
