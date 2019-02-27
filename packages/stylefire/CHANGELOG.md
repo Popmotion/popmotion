@@ -2,6 +2,12 @@
 
 Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.4.1] 2019-02-27
+
+### Added
+
+- Support for `transform` template function to accept the Stylefire-built transform string.
+
 ## [2.4.0] 2019-01-30
 
 ### Added
