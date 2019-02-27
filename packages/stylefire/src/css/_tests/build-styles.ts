@@ -51,6 +51,17 @@ describe('buildStyleProperty', () => {
       transform: 'translateX(100px) scale(1) translateZ(0)'
     });
   });
+
+  it('Should correctly apply `transform` if provided as a template function', () => {
+    expect(
+      buildStyleProperty({
+        x: 100,
+        transform: ({ x }, built) => `translateY(${x}) ${built}`
+      })
+    ).toEqual({
+      transform: 'translateY(100px) translateX(100px) translateZ(0)'
+    });
+  });
 });
 
 describe('createStyleBuilder', () => {

@@ -16,8 +16,41 @@ const aliasMap: { [key: string]: string } = {
   z: 'translateZ'
 };
 
-const isCustomTemplate = (v: any): v is CustomTemplate =>
-  typeof v === 'function';
+const isCustomTemplate = (v: any): v is CustomTemplate => {
+  return typeof v === 'function';
+};
+
+const buildTransform = (
+  state: State,
+  transform: State,
+  transformKeys: string[],
+  enableHardwareAcceleration: boolean
+) => {
+  let transformString = '';
+  let transformHasZ = false;
+  transformKeys.sort(sortTransformProps);
+
+  const numTransformKeys = transformKeys.length;
+
+  for (let i = 0; i < numTransformKeys; i++) {
+    const key = transformKeys[i];
+    transformString += `${aliasMap[key] || key}(${transform[key]}) `;
+    transformHasZ = key === 'z' ? true : transformHasZ;
+  }
+
+  if (!transformHasZ && enableHardwareAcceleration) {
+    transformString += 'translateZ(0)';
+  } else {
+    transformString = transformString.trim();
+  }
+
+  // If we have a custom `transform` template
+  if (isCustomTemplate(state.transform)) {
+    transformString = state.transform(transform, transformString);
+  }
+
+  return transformString;
+};
 
 /**
  * Build style property
@@ -76,34 +109,15 @@ const buildStyleProperty = (
   }
 
   // Only process and set transform prop if values aren't defaults
-  if (!transformIsDefault) {
-    let transformString = '';
-
-    // TODO: This whole idea of meta values could be far more generic for instance filter
-    if (isCustomTemplate(state.transform)) {
-      transformString = state.transform(transform);
-    } else {
-      let transformHasZ = false;
-      transformKeys.sort(sortTransformProps);
-
-      const numTransformKeys = transformKeys.length;
-
-      for (let i = 0; i < numTransformKeys; i++) {
-        const key = transformKeys[i];
-        transformString += `${aliasMap[key] || key}(${transform[key]}) `;
-        transformHasZ = key === 'z' ? true : transformHasZ;
-      }
-
-      if (!transformHasZ && enableHardwareAcceleration) {
-        transformString += 'translateZ(0)';
-      } else {
-        transformString = transformString.trim();
-      }
-    }
-
-    styles.transform = transformString;
-  } else if (hasTransform) {
-    styles.transform = 'none';
+  if (hasTransform) {
+    styles.transform = transformIsDefault
+      ? 'none'
+      : buildTransform(
+          state,
+          transform,
+          transformKeys,
+          enableHardwareAcceleration
+        );
   }
 
   if (hasTransformOrigin) {
