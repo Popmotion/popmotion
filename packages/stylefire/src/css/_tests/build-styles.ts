@@ -85,4 +85,26 @@ describe('createStyleBuilder', () => {
       'background-color': '#fff'
     });
   });
+
+  it('Can unset transform template', () => {
+    const buildStyles = createStyleBuilder();
+
+    expect(
+      buildStyles({
+        x: 100,
+        transform: ({ x }, built) => `translateY(${x}) ${built}`
+      })
+    ).toEqual({
+      transform: 'translateY(100px) translateX(100px) translateZ(0)'
+    });
+
+    expect(
+      buildStyles({
+        x: 100,
+        transform: undefined
+      })
+    ).toEqual({
+      transform: 'translateX(100px) translateZ(0)'
+    });
+  });
 });
