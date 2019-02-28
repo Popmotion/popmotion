@@ -62,6 +62,27 @@ describe('buildStyleProperty', () => {
       transform: 'translateY(100px) translateX(100px) translateZ(0)'
     });
   });
+
+  it(`If there's no transform values but a transform template, it still runs`, () => {
+    expect(
+      buildStyleProperty({
+        transform: () => `scale(1)`
+      })
+    ).toEqual({
+      transform: `scale(1)`
+    });
+  });
+
+  it(`If there are transform values, but they're default, the transform template doesn't receive none`, () => {
+    expect(
+      buildStyleProperty({
+        scale: 1,
+        transform: (_, generated) => generated
+      })
+    ).toEqual({
+      transform: `scale(1) translateZ(0)`
+    });
+  });
 });
 
 describe('createStyleBuilder', () => {

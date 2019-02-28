@@ -24,6 +24,7 @@ const buildTransform = (
   state: State,
   transform: ResolvedState,
   transformKeys: string[],
+  transformIsDefault: boolean,
   enableHardwareAcceleration: boolean
 ) => {
   let transformString = '';
@@ -47,6 +48,8 @@ const buildTransform = (
   // If we have a custom `transform` template
   if (isCustomTemplate(state.transform)) {
     transformString = state.transform(transform, transformString);
+  } else if (transformIsDefault) {
+    transformString = 'none';
   }
 
   return transformString;
@@ -109,15 +112,14 @@ const buildStyleProperty = (
   }
 
   // Only process and set transform prop if values aren't defaults
-  if (hasTransform) {
-    styles.transform = transformIsDefault
-      ? 'none'
-      : buildTransform(
-          state,
-          transform,
-          transformKeys,
-          enableHardwareAcceleration
-        );
+  if (hasTransform || typeof state.transform === 'function') {
+    styles.transform = buildTransform(
+      state,
+      transform,
+      transformKeys,
+      transformIsDefault,
+      enableHardwareAcceleration
+    );
   }
 
   if (hasTransformOrigin) {
