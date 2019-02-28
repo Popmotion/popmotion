@@ -2,6 +2,12 @@
 
 Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.4.2] 2019-02-28
+
+### Added
+
+- Adding type support for setting values to `undefined`.
+
 ## [2.4.1] 2019-02-27
 
 ### Added

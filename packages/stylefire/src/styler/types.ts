@@ -1,9 +1,11 @@
-export type State = { [key: string]: string | number | CustomTemplate };
+export type State = {
+  [key: string]: string | number | CustomTemplate | undefined;
+};
 export type ResolvedState = { [key: string]: string | number };
 export type Props = { [key: string]: any };
 export type ChangedValues = string[];
 
-export type CustomTemplate = (state: State, prebuilt: string) => string;
+export type CustomTemplate = (state: ResolvedState, prebuilt: string) => string;
 
 export type Config = {
   onRead: (key: string, props: Props) => any;

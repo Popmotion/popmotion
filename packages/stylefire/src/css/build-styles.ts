@@ -22,7 +22,7 @@ const isCustomTemplate = (v: any): v is CustomTemplate => {
 
 const buildTransform = (
   state: State,
-  transform: State,
+  transform: ResolvedState,
   transformKeys: string[],
   enableHardwareAcceleration: boolean
 ) => {
@@ -70,8 +70,8 @@ const buildStyleProperty = (
   state: State,
   enableHardwareAcceleration: boolean = true,
   styles: ResolvedState = {},
-  transform: State = {},
-  transformOrigin: State = {},
+  transform: ResolvedState = {},
+  transformOrigin: ResolvedState = {},
   transformKeys: string[] = [],
   isDashCase: boolean = false
 ) => {
@@ -134,8 +134,8 @@ const createStyleBuilder = (enableHardwareAcceleration: boolean = true) => {
    * we create and hold these data structures as mutative states.
    */
   const styles: ResolvedState = {};
-  const transform: State = {};
-  const transformOrigin: State = {};
+  const transform: ResolvedState = {};
+  const transformOrigin: ResolvedState = {};
   const transformKeys: string[] = [];
 
   return (state: State) => {
