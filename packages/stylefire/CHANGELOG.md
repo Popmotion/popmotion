@@ -2,6 +2,12 @@
 
 Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.4.3] 2019-02-29
+
+### Fixed
+
+- Running `transform` template even if transforms are default or none set.
+
 ## [2.4.2] 2019-02-28
 
 ### Added
