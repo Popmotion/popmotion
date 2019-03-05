@@ -1,6 +1,6 @@
 {
   "name": "@popmotion/easing",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Easing functions, modifiers and generators compatible with most animation libraries.",
   "author": "Matt Perry",
   "homepage": "https://popmotion.io",
