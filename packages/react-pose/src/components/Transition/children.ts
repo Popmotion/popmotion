@@ -128,7 +128,7 @@ const handleTransition = (
       ? React.cloneElement(child, {
           _pose: exitPose,
           onPoseComplete: (pose: CurrentPose) => {
-            scheduleChildRemoval(key);
+            if (pose === exitPose) scheduleChildRemoval(key);
 
             const { onPoseComplete } = child.props;
             if (onPoseComplete) onPoseComplete(pose);
