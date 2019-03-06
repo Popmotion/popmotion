@@ -12,12 +12,14 @@ const cache = new WeakMap<Element | Window, Styler>();
 const createDOMStyler = (node: Element | Window, props?: Props) => {
   let styler: Styler;
 
-  if (node instanceof HTMLElement) {
-    styler = css(node, props);
-  } else if (node instanceof SVGElement) {
-    styler = svg(node);
-  } else if (node === window) {
+  if (node === window) {
     styler = viewport(node);
+  } else if (typeof (node as HTMLElement).click === 'function') {
+    // acting as cross origin `instanceof HTMLElement`, apparently SVGs have no click method
+    styler = css(node as HTMLElement, props);
+  } else if ('ownerSVGElement' in node) {
+    // acting as cross origin `instanceof SVGElement`
+    styler = svg(node);
   }
 
   invariant(
