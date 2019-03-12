@@ -6,7 +6,7 @@ Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
-- `originX` and `originY` now `progress` `ValueType`.
+- `originX`, `originY`, `pathLength` and `pathOffset` now `progress` `ValueType`.
 
 ## [2.4.3] 2019-02-29
 

@@ -6,8 +6,8 @@ import { camelCaseAttributes } from './attr-formatting';
 // Little hack to avoid division by zero
 const ZERO_NOT_ZERO = 0.0000001;
 
-const percentToPixels = (percent: number, length: number) =>
-  (percent / 100) * length + 'px';
+const progressToPixels = (progress: number, length: number) =>
+  progress * length + 'px';
 
 const build = (
   state: SVGState,
@@ -67,9 +67,9 @@ const build = (
         typeof value === 'number'
       ) {
         hasDashArray = true;
-        dashArrayStyles[key] = percentToPixels(value, pathLength);
+        dashArrayStyles[key] = progressToPixels(value, pathLength);
       } else if (isPath && key === 'pathOffset') {
-        props['stroke-dashoffset'] = percentToPixels(-value, pathLength);
+        props['stroke-dashoffset'] = progressToPixels(-value, pathLength);
       } else {
         const attrKey = !camelCaseAttributes.has(key) ? camelToDash(key) : key;
         props[attrKey] = value;
