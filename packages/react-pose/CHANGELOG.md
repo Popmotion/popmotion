@@ -2,6 +2,12 @@
 
 Pose for React adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.0.8] 2018-03-05
+
+### Fixed
+
+- [#746](https://github.com/Popmotion/popmotion/pull/746)
+
 ## [4.0.7] 2018-02-12
 
 ### Fixed
