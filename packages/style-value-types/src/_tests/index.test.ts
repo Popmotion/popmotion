@@ -8,6 +8,7 @@ import {
   px,
   degrees,
   percent,
+  progressPercentage,
   complex
 } from '../';
 
@@ -299,5 +300,21 @@ describe('combination values', () => {
     expect(gradientTransformer(gradient)).toBe(
       'linear-gradient(217deg, rgba(255, 0, 0, 0.8), rgba(255, 0, 0, 0) 70.71%)'
     );
+  });
+});
+
+describe('progress value type', () => {
+  it('should test correctly', () => {
+    expect(progressPercentage.test('100%')).toBe(true);
+    expect(progressPercentage.test('100px')).toBe(false);
+  });
+  it('should parse correctly', () => {
+    expect(progressPercentage.parse('50%')).toBe(0.5);
+    expect(progressPercentage.parse('0%')).toBe(0);
+    expect(progressPercentage.parse('-200%')).toBe(-2);
+  });
+  it('should transform correctly', () => {
+    expect(progressPercentage.transform(0.1)).toBe('10%');
+    expect(progressPercentage.transform(1.5)).toBe('150%');
   });
 });

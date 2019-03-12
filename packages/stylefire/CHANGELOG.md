@@ -2,6 +2,12 @@
 
 Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.0.0] 2019-03-12
+
+### Changed
+
+- `originX` and `originY` now `progress` `ValueType`.
+
 ## [2.4.3] 2019-02-29
 
 ### Fixed
