@@ -34,21 +34,27 @@ describe('buildStyleProperty', () => {
       transform: 'translateX(100px) translateY(0px) scale(1) translateZ(0)'
     });
 
-    expect(buildStyleProperty({ scale: 1, x: 100, originX: 100 })).toEqual({
+    expect(buildStyleProperty({ scale: 1, x: 100, originX: 1 })).toEqual({
       transformOrigin: '100% 0 0',
       transform: 'translateX(100px) scale(1) translateZ(0)'
     });
 
-    expect(buildStyleProperty({ scale: 1, x: 100, originX: 100 })).toEqual({
+    expect(buildStyleProperty({ scale: 1, x: 100, originX: 1 })).toEqual({
       transformOrigin: '100% 0 0',
       transform: 'translateX(100px) scale(1) translateZ(0)'
     });
 
     expect(
-      buildStyleProperty({ scale: 1, x: 100, originX: 100, originY: 50 })
+      buildStyleProperty({ scale: 1, x: 100, originX: 1, originY: 0.5 })
     ).toEqual({
       transformOrigin: '100% 50% 0',
       transform: 'translateX(100px) scale(1) translateZ(0)'
+    });
+  });
+
+  it('Should correctly interpret progress values as percentages', () => {
+    expect(buildStyleProperty({ originX: 0.5, originY: 0.5 })).toEqual({
+      transformOrigin: '50% 50% 0'
     });
   });
 

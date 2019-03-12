@@ -2,6 +2,12 @@
 
 Style Value Types adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.1.0] 2019-03-12
+
+### Added
+
+- `progressPercentage` value type.
+
 ## [3.0.7] 2018-08-30
 
 ### Fixed

@@ -6,8 +6,8 @@ import { camelCaseAttributes } from './attr-formatting';
 // Little hack to avoid division by zero
 const ZERO_NOT_ZERO = 0.0000001;
 
-const percentToPixels = (percent: number, length: number) =>
-  (percent / 100) * length + 'px';
+const progressToPixels = (progress: number, length: number) =>
+  progress * length + 'px';
 
 const build = (
   state: SVGState,
@@ -36,9 +36,9 @@ const build = (
   const scaleY =
     state.scaleY !== undefined ? state.scaleY || ZERO_NOT_ZERO : scale || 1;
   const transformOriginX =
-    dimensions.width * ((state.originX || 50) / 100) + dimensions.x;
+    dimensions.width * (state.originX || 50) + dimensions.x;
   const transformOriginY =
-    dimensions.height * ((state.originY || 50) / 100) + dimensions.y;
+    dimensions.height * (state.originY || 50) + dimensions.y;
   const scaleTransformX = -transformOriginX * (scale * 1);
   const scaleTransformY = -transformOriginY * (scaleY * 1);
   const scaleReplaceX = transformOriginX / scale;
@@ -67,9 +67,9 @@ const build = (
         typeof value === 'number'
       ) {
         hasDashArray = true;
-        dashArrayStyles[key] = percentToPixels(value, pathLength);
+        dashArrayStyles[key] = progressToPixels(value, pathLength);
       } else if (isPath && key === 'pathOffset') {
-        props['stroke-dashoffset'] = percentToPixels(-value, pathLength);
+        props['stroke-dashoffset'] = progressToPixels(-value, pathLength);
       } else {
         const attrKey = !camelCaseAttributes.has(key) ? camelToDash(key) : key;
         props[attrKey] = value;

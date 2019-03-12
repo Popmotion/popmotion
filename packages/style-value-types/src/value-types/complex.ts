@@ -9,7 +9,7 @@ const colorRegex = /(#[0-9a-f]{6}|#[0-9a-f]{3}|#(?:[0-9a-f]{2}){2,4}|(rgb|hsl)a?
 const COLOR_TOKEN = '${c}';
 const NUMBER_TOKEN = '${n}';
 
-const complex: ValueType = {
+export const complex: ValueType = {
   test: (v: any) => {
     if (typeof v !== 'string' || !isNaN(v as any)) return false;
 
@@ -76,5 +76,3 @@ const complex: ValueType = {
     };
   }
 };
-
-export default complex;

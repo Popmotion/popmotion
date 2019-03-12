@@ -58,7 +58,7 @@
   "dependencies": {
     "framesync": "^4.0.0",
     "hey-listen": "^1.0.4",
-    "style-value-types": "^3.0.6"
+    "style-value-types": "3.1.0"
   },
   "unpkg": "./dist/stylefire.min.js",
   "jest": {
