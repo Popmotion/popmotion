@@ -33,7 +33,7 @@ const getMixer = (v: number | string) =>
 const createMixers = (
   output: number[] | string[],
   ease?: Ease
-): Interpolate<number>[] | Interpolate<string>[] =>
+): Array<Interpolate<number>> | Array<Interpolate<string>> =>
   Array(output.length - 1)
     .fill(getMixer(output[0]))
     .map((factory, i) => {
@@ -52,14 +52,14 @@ const createMixers = (
 
 const fastInterpolate = (
   [from, to]: number[],
-  [mixer]: Interpolate<number>[] | Interpolate<string>[]
+  [mixer]: Array<Interpolate<number>> | Array<Interpolate<string>>
 ) => {
   return (v: number) => mixer(progress(from, to, v));
 };
 
 const slowInterpolate = (
   input: number[],
-  mixers: Interpolate<number>[] | Interpolate<string>[]
+  mixers: Array<Interpolate<number>> | Array<Interpolate<string>>
 ) => {
   const inputLength = input.length;
   const lastInputIndex = inputLength - 1;
@@ -131,7 +131,7 @@ function interpolate(
 
   const mixers = createMixers(output, ease);
 
-  const interpolate =
+  const interpolator =
     inputLength === 2
       ? fastInterpolate(input, mixers)
       : slowInterpolate(input, mixers);
@@ -139,9 +139,9 @@ function interpolate(
   return clamp
     ? (pipe(
         makeInputClamp(input[0], input[inputLength - 1]),
-        interpolate
+        interpolator
       ) as Interpolate<number | string>)
-    : interpolate;
+    : interpolator;
 }
 
 export default interpolate;

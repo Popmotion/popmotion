@@ -2,11 +2,15 @@
 
 Popcorn adheres to [Semantic Versioning](http://semver.org/).
 
-## [0.3.2] 2018-11-28
+## [0.3.2] 2019-03-12
 
 ### Fixing
 
 - Converting `interpolate` to generic types.
+
+### Upgrading
+
+- Upgrading `style-value-types@3.1.0`.
 
 ## [0.3.1] 2018-11-28
 
