@@ -4,7 +4,7 @@ import {
   degrees,
   scale,
   px,
-  progress,
+  progressPercentage,
   ValueType
 } from 'style-value-types';
 
@@ -73,8 +73,8 @@ const valueTypes: { [key: string]: ValueType } = {
   z: px,
   perspective: px,
   opacity: alpha,
-  originX: progress,
-  originY: progress,
+  originX: progressPercentage,
+  originY: progressPercentage,
   originZ: px
 };
 

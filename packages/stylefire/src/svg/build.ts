@@ -36,9 +36,9 @@ const build = (
   const scaleY =
     state.scaleY !== undefined ? state.scaleY || ZERO_NOT_ZERO : scale || 1;
   const transformOriginX =
-    dimensions.width * ((state.originX || 50) / 100) + dimensions.x;
+    dimensions.width * (state.originX || 50) + dimensions.x;
   const transformOriginY =
-    dimensions.height * ((state.originY || 50) / 100) + dimensions.y;
+    dimensions.height * (state.originY || 50) + dimensions.y;
   const scaleTransformX = -transformOriginX * (scale * 1);
   const scaleTransformY = -transformOriginY * (scaleY * 1);
   const scaleReplaceX = transformOriginX / scale;
