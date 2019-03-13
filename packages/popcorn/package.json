@@ -33,14 +33,10 @@
   },
   "homepage": "https://github.com/Popmotion/popmotion#readme",
   "devDependencies": {
-    "@types/jest": "^23.1.1",
-    "jest": "^23.1.0",
-    "jest-cli": "^23.1.0",
     "rollup": "^0.59.1",
     "rollup-plugin-node-resolve": "^3.4.0",
     "rollup-plugin-typescript2": "^0.14.0",
     "rollup-plugin-uglify": "^3.0.0",
-    "ts-jest": "^21.2.4",
     "typescript": "^2.9.2"
   },
   "jest": {
@@ -67,6 +63,7 @@
     "@popmotion/easing": "^1.0.1",
     "framesync": "^4.0.1",
     "hey-listen": "^1.0.5",
+    "jest": "24.2.0-alpha.0",
     "style-value-types": "^3.1.0"
   }
 }

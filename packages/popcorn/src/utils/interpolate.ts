@@ -1,6 +1,5 @@
 import { Easing } from '@popmotion/easing';
 import progress from './progress';
-import curryRange from './curry-range';
 import mix from './mix';
 import mixColor from './mix-color';
 import { mixComplex } from './mix-complex';
@@ -9,58 +8,63 @@ import makeInputClamp from './clamp';
 import pipe from './pipe';
 import { invariant } from 'hey-listen';
 
-type Ease = Easing | Easing[];
+type MixEasing = Easing | Easing[];
 
-type Interpolate<T> = (v: number) => T;
-
-type InterpolateOptions = {
+type InterpolateOptions<T> = {
   clamp?: boolean;
-  ease?: Ease;
+  ease?: MixEasing;
+  mixer?: MixerFactory<T>;
 };
 
-type StringMixerFactory = (from: string, to: string) => Interpolate<string>;
-type NumberMixerFactory = (from: number, to: number) => Interpolate<number>;
+type Mix<T> = (v: number) => T;
+export type MixerFactory<T> = (from: T, to: T) => Mix<T>;
 
-const mixNumber = curryRange(mix);
+const mixNumber = (from: number, to: number) => (p: number) => mix(from, to, p);
 
-const getMixer = (v: number | string) =>
-  typeof v === 'number'
-    ? (mixNumber as NumberMixerFactory)
-    : color.test(v)
-      ? (mixColor as StringMixerFactory)
-      : (mixComplex as StringMixerFactory);
+function detectMixerFactory<T>(v: T): MixerFactory<any> {
+  if (typeof v === 'number') {
+    return mixNumber;
+  }
 
-const createMixers = (
-  output: number[] | string[],
-  ease?: Ease
-): Array<Interpolate<number>> | Array<Interpolate<string>> =>
-  Array(output.length - 1)
-    .fill(getMixer(output[0]))
-    .map((factory, i) => {
-      const mixer = factory(output[i], output[i + 1]);
+  if (color.test(v)) {
+    return mixColor;
+  } else {
+    return mixComplex;
+  }
+}
 
-      if (ease) {
-        const easingFunction = Array.isArray(ease) ? ease[i] : ease;
-        return pipe(
-          easingFunction,
-          mixer
-        );
-      } else {
-        return mixer;
-      }
-    });
+function createMixers<T>(
+  output: T[],
+  ease?: MixEasing,
+  customMixer?: MixerFactory<T>
+) {
+  const mixers: Mix<T>[] = [];
+  const mixerFactory: MixerFactory<T> =
+    customMixer || detectMixerFactory(output[0]);
+  const numMixers = output.length - 1;
 
-const fastInterpolate = (
-  [from, to]: number[],
-  [mixer]: Array<Interpolate<number>> | Array<Interpolate<string>>
-) => {
+  for (let i = 0; i < numMixers; i++) {
+    let mixer = mixerFactory(output[i], output[i + 1]);
+
+    if (ease) {
+      const easingFunction = Array.isArray(ease) ? ease[i] : ease;
+      mixer = pipe(
+        easingFunction,
+        mixer
+      ) as Mix<T>;
+    }
+
+    mixers.push(mixer);
+  }
+
+  return mixers;
+}
+
+function fastInterpolate<T>([from, to]: number[], [mixer]: Mix<T>[]) {
   return (v: number) => mixer(progress(from, to, v));
-};
+}
 
-const slowInterpolate = (
-  input: number[],
-  mixers: Array<Interpolate<number>> | Array<Interpolate<string>>
-) => {
+function slowInterpolate<T>(input: number[], mixers: Mix<T>[]) {
   const inputLength = input.length;
   const lastInputIndex = inputLength - 1;
 
@@ -92,23 +96,29 @@ const slowInterpolate = (
     );
     return mixers[mixerIndex](progressInRange);
   };
-};
+}
 
-function interpolate(
+/**
+ * Create a function that maps from a numerical input array to a generic output array.
+ *
+ * Accepts:
+ *   - Numbers
+ *   - Colors (hex, hsl, hsla, rgb, rgba)
+ *   - Complex (combinations of one or more numbers or strings)
+ *
+ * ```jsx
+ * const mixColor = interpolate([0, 1], ['#fff', '#000'])
+ *
+ * mixColor(0.5) // 'rgba(128, 128, 128, 1)'
+ * ```
+ *
+ * @public
+ */
+function interpolate<T>(
   input: number[],
-  output: number[],
-  options?: InterpolateOptions
-): Interpolate<number>;
-function interpolate(
-  input: number[],
-  output: string[],
-  options?: InterpolateOptions
-): Interpolate<string>;
-function interpolate(
-  input: number[],
-  output: number[] | string[],
-  { clamp = true, ease }: InterpolateOptions = {}
-): Interpolate<number | string> {
+  output: T[],
+  { clamp = true, ease, mixer }: InterpolateOptions<T> = {}
+): Mix<T | string | number> {
   const inputLength = input.length;
 
   invariant(
@@ -129,7 +139,7 @@ function interpolate(
     output.reverse();
   }
 
-  const mixers = createMixers(output, ease);
+  const mixers = createMixers(output, ease, mixer);
 
   const interpolator =
     inputLength === 2
@@ -140,7 +150,7 @@ function interpolate(
     ? (pipe(
         makeInputClamp(input[0], input[inputLength - 1]),
         interpolator
-      ) as Interpolate<number | string>)
+      ) as Mix<number | string | T>)
     : interpolator;
 }
 

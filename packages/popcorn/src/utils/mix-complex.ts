@@ -5,6 +5,8 @@ import { isNum } from '../inc';
 import pipe from './pipe';
 import { invariant } from 'hey-listen';
 
+type MixComplex = (p: number) => string;
+
 type BlendableArray = Array<number | RGBA | HSLA | string>;
 
 export const mixArray = (from: BlendableArray, to: BlendableArray) => {
@@ -32,7 +34,7 @@ export const mixArray = (from: BlendableArray, to: BlendableArray) => {
   };
 };
 
-export const mixComplex = (from: string, to: string) => {
+export const mixComplex = (from: string, to: string): MixComplex => {
   const valueTemplate = complex.createTransformer(from);
 
   invariant(
@@ -43,5 +45,5 @@ export const mixComplex = (from: string, to: string) => {
   return pipe(
     mixArray(complex.parse(from), complex.parse(to)),
     valueTemplate
-  );
+  ) as MixComplex;
 };

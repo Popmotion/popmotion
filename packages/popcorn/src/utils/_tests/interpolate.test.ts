@@ -84,3 +84,10 @@ test('interpolate colors', () => {
   const a = interpolate([0, 1], ['#000', '#fff']);
   expect(a(0.5)).toBe('rgba(180, 180, 180, 1)');
 });
+
+test('custom mixer', () => {
+  const a = interpolate([0, 1], [0, 1], {
+    mixer: (from: number, to: number) => (p: number) => 42
+  });
+  expect(a(0.5)).toBe(42);
+});
