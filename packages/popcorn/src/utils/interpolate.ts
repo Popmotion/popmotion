@@ -38,7 +38,7 @@ function createMixers<T>(
   ease?: MixEasing,
   customMixer?: MixerFactory<T>
 ) {
-  const mixers: Mix<T>[] = [];
+  const mixers: Array<Mix<T>> = [];
   const mixerFactory: MixerFactory<T> =
     customMixer || detectMixerFactory(output[0]);
   const numMixers = output.length - 1;
@@ -60,11 +60,11 @@ function createMixers<T>(
   return mixers;
 }
 
-function fastInterpolate<T>([from, to]: number[], [mixer]: Mix<T>[]) {
+function fastInterpolate<T>([from, to]: number[], [mixer]: Array<Mix<T>>) {
   return (v: number) => mixer(progress(from, to, v));
 }
 
-function slowInterpolate<T>(input: number[], mixers: Mix<T>[]) {
+function slowInterpolate<T>(input: number[], mixers: Array<Mix<T>>) {
   const inputLength = input.length;
   const lastInputIndex = inputLength - 1;
 
