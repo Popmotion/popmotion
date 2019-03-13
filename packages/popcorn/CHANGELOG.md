@@ -2,6 +2,12 @@
 
 Popcorn adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.3.3] 2019-03-13
+
+### Adding
+
+- Adding custom `mixer` property to `interpolate`.
+
 ## [0.3.2] 2019-03-12
 
 ### Fixing
