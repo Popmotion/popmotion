@@ -36,7 +36,6 @@
     "@types/react": "^16.3.16",
     "@types/react-dom": "^16.0.7",
     "@types/react-is": "^16.5.0",
-    "jest": "^23.1.0",
     "prettier": "1.11.1",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",

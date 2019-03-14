@@ -27,9 +27,7 @@
     "env"
   ],
   "devDependencies": {
-    "@types/jest": "^22.2.3",
     "@types/react-native": "^0.55.4",
-    "jest": "^22.4.3",
     "prettier": "1.11.1",
     "react-native": "^0.55.4",
     "ts-jest": "^22.4.5",
