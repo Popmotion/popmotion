@@ -12,7 +12,7 @@ export type KeyframesProps = {
   values: Values;
   times?: number[];
   ease?: Easing | Easing[] | { [key: string]: Easing };
-  easings?: Easing[];
+  easings?: Easing | Easing[];
   elapsed?: number;
   duration?: number;
   loop?: number;
