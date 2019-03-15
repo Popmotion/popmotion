@@ -2,6 +2,12 @@
 
 Popcorn adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.3.4] 2019-03-15
+
+### Fixing
+
+- Ensuring `jest` is just a `devDependency`.
+
 ## [0.3.3] 2019-03-13
 
 ### Adding
