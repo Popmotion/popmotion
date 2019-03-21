@@ -8,6 +8,7 @@
   "jsnext:main": "dist/framesync.es.js",
   "scripts": {
     "build": "rollup -c",
+    "postbuild": "babel $npm_package_module --out-file $npm_package_module --no-babelrc --plugins annotate-pure-calls",
     "watch": "rollup -c -w",
     "lint": "tslint -c tslint.json 'src/**/*.{ts}'",
     "test": "jest --maxWorkers=2",
@@ -33,9 +34,13 @@
   },
   "homepage": "https://github.com/Popmotion/popmotion",
   "devDependencies": {
-    "@types/jest": "^23.1.1",	
-    "jest": "^23.1.0",	
+    "@types/jest": "^23.1.1",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-plugin-annotate-pure-calls": "^0.2.2",
+    "jest": "^23.1.0",
     "jest-cli": "^23.1.0",
+    "rollup": "^0.59.1",
     "rollup-plugin-node-resolve": "^3.4.0",
     "rollup-plugin-typescript2": "^0.14.0",
     "rollup-plugin-uglify": "^3.0.0",

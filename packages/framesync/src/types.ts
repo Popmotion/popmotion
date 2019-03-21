@@ -15,13 +15,7 @@ export interface Step {
   process: (frame: FrameData) => void;
 }
 
-export enum StepId {
-  Read = 'read',
-  Update = 'update',
-  Render = 'render',
-  PostRender = 'postRender',
-  FixedUpdate = 'fixedUpdate'
-}
+export type StepId = 'read' | 'update' | 'render' | 'postRender';
 
 export type SyncApi = {
   steps: { [key in StepId]: Step };
