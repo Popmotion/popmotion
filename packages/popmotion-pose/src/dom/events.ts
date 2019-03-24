@@ -56,6 +56,7 @@ const makeUIEventApplicator = ({
 
   const eventStartListener = listen(element, startEvents).start(
     (startEvent: MouseEvent | TouchEvent) => {
+      poser.unset(endPose);
       poser.set(startPose);
 
       if (startCallback && config[startCallback])
