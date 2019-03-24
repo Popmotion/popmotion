@@ -34,14 +34,17 @@ const inertia = ({
       );
     };
 
-    const startAnimation = (animation: Action, onComplete?: Function) => {
+    const startAnimation = (animation: Action, next?: Function) => {
       activeAnimation && activeAnimation.stop();
 
       activeAnimation = animation.start({
         update: (v: number) => current.update(v),
         complete: () => {
+          if (next) {
+            next();
+            return;
+          }
           complete();
-          onComplete && onComplete();
         }
       });
     };
@@ -99,6 +102,8 @@ const inertia = ({
 
         if (isOutOfBounds(v)) {
           startSpring({ from: v, velocity: current.getVelocity() });
+        } else {
+          complete();
         }
       });
     } else {
