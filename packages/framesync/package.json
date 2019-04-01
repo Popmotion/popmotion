@@ -33,6 +33,9 @@
   },
   "homepage": "https://github.com/Popmotion/popmotion",
   "devDependencies": {
+    "@types/jest": "^23.1.1",	
+    "jest": "^23.1.0",	
+    "jest-cli": "^23.1.0",
     "rollup-plugin-node-resolve": "^3.4.0",
     "rollup-plugin-typescript2": "^0.14.0",
     "rollup-plugin-uglify": "^3.0.0",
