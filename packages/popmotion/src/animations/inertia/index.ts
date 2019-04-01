@@ -77,10 +77,7 @@ const inertia = ({
 
     // We want to start the animation already as a spring if we're moving away from the bounded area
     // or not moving at all.
-    if (
-      (isOutOfBounds(from) && velocity === 0) ||
-      isTravellingAwayFromBounds(from, velocity)
-    ) {
+    if (isOutOfBounds(from)) {
       startSpring({ from, velocity });
 
       // Otherwise we want to simulate inertial movement with decay
