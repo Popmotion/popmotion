@@ -63,7 +63,7 @@ describe('styler', () => {
 
     divStyler.render();
 
-    expect(div).toHaveStyle('transform-origin: 0 100%');
+    expect(div).toHaveStyle('transform-origin: 0 100% 0');
   });
 
   test('transform as string', () => {

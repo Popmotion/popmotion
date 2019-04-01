@@ -1,6 +1,6 @@
 {
   "name": "popmotion",
-  "version": "8.6.6",
+  "version": "8.6.7",
   "description": "A functional, reactive motion library.",
   "author": "Matt Perry",
   "homepage": "https://popmotion.io",
@@ -54,8 +54,8 @@
     "tslib": "^1.9.1"
   },
   "devDependencies": {
-    "@types/jest": "^23.1.1",	
-    "jest": "^23.1.0",	
+    "@types/jest": "^23.1.1",
+    "jest": "^23.1.0",
     "jest-cli": "^23.1.0",
     "rollup": "^0.59.1",
     "rollup-plugin-node-resolve": "^3.3.0",
