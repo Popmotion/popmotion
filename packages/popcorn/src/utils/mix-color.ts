@@ -27,7 +27,7 @@ export default (from: Color | string, to: Color | string) => {
   invariant(!!toColorType, notAnimatable(to));
   invariant(
     fromColorType.transform === toColorType.transform,
-    `Both colors must be hex/RGBA, OR both must be HSLA.`
+    'Both colors must be hex/RGBA, OR both must be HSLA.'
   );
 
   const fromColor = fromColorType.parse(from);

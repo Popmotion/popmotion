@@ -2,6 +2,12 @@
 
 Popcorn adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.3.6] 2019-04-01
+
+### Fixed
+
+- Improving error messaging when people attempt to animate named colors ie `'red'`.
+
 ## [0.3.5] 2019-NaN-01
 
 ### Fixing
