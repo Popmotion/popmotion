@@ -8,6 +8,10 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
 - Changing the behaviour of `inertia` to always spring back if the initial value is out of bounds. On multi-axis `inertia` animations it used to be possible that both values are out of bounds and only one was travelling towards its bound - this led to a situation where one animation used a spring and the other used decay.
 
+### Fixed
+
+- Making `inertia.complete` call conditional on there not being a subsequent animation. (https://github.com/Popmotion/popmotion/pull/763)[#763]
+
 ## [8.6.4] 2019-03-12
 
 ### Upgrade
