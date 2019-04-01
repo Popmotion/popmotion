@@ -75,8 +75,7 @@ const inertia = ({
       }
     });
 
-    // We want to start the animation already as a spring if we're moving away from the bounded area
-    // or not moving at all.
+    // We want to start the animation already as a spring if we're outside the defined boundaries
     if (isOutOfBounds(from)) {
       startSpring({ from, velocity });
 
