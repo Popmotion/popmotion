@@ -16,13 +16,18 @@ const colorTypes = [hex, rgba, hsla];
 const getColorType = (v: Color | string) =>
   colorTypes.find(type => type.test(v));
 
+const notAnimatable = (color: Color | string) =>
+  `'${color}' is not an animatable color. Use the equivalent color code instead.`;
+
 export default (from: Color | string, to: Color | string) => {
   const fromColorType = getColorType(from);
   const toColorType = getColorType(to);
 
+  invariant(!!fromColorType, notAnimatable(from));
+  invariant(!!toColorType, notAnimatable(to));
   invariant(
     fromColorType.transform === toColorType.transform,
-    'Both colors must be Hex and/or RGBA, or both must be HSLA'
+    `Both colors must be a hex code/RGBA, OR both must be HSLA.`
   );
 
   const fromColor = fromColorType.parse(from);
