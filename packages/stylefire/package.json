@@ -1,6 +1,6 @@
 {
   "name": "stylefire",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Performant, simplified stylers for CSS, SVG, path and DOM scroll.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -39,13 +39,13 @@
   },
   "homepage": "https://github.com/Popmotion/popmotion#readme",
   "devDependencies": {
+    "@types/jest": "^23.1.1",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-plugin-annotate-pure-calls": "^0.2.2",
-    "jest-dom": "^3.0.0",	
-    "@types/jest": "^23.1.1",	
-    "jest": "^23.1.0",	
+    "jest": "^23.1.0",
     "jest-cli": "^23.1.0",
+    "jest-dom": "^3.0.0",
     "rollup": "^0.59.1",
     "rollup-plugin-node-resolve": "^3.3.0",
     "rollup-plugin-typescript2": "^0.14.0",
@@ -55,7 +55,7 @@
     "webpack": "^3.0.0"
   },
   "dependencies": {
-    "@popmotion/popcorn": "^0.3.5",
+    "@popmotion/popcorn": "^0.3.6",
     "framesync": "^4.0.0",
     "hey-listen": "^1.0.4",
     "style-value-types": "3.1.0"
