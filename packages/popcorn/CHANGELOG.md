@@ -2,6 +2,12 @@
 
 Popcorn adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.3.5] 2019-NaN-01
+
+### Fixing
+
+- Ensuring `mixColor` with progress of `>1` or `<0` can never square root a negative.
+
 ## [0.3.4] 2019-03-15
 
 ### Fixing

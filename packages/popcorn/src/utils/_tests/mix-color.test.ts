@@ -1,4 +1,4 @@
-import mixColor from '../mix-color';
+import mixColor, { mixLinearColor } from '../mix-color';
 
 test('mixColor hex', () => {
   expect(mixColor('#fff', '#000')(0.5)).toBe('rgba(180, 180, 180, 1)');
@@ -32,4 +32,8 @@ test('mixColor rgb to hex', () => {
   expect(mixColor('rgb(255, 255, 255)', '#000')(0.5)).toBe(
     'rgba(180, 180, 180, 1)'
   );
+});
+
+test("doesn't return NaN", () => {
+  expect(mixLinearColor(255, 0, 2)).not.toBeNaN();
 });

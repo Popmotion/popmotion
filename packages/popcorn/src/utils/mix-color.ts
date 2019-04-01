@@ -6,10 +6,10 @@ import { invariant } from 'hey-listen';
 // Explained https://www.youtube.com/watch?v=LKnqECcg6Gw
 // Demonstrated http://codepen.io/osublake/pen/xGVVaN
 
-const mixLinearColor = (from: number, to: number, v: number) => {
+export const mixLinearColor = (from: number, to: number, v: number) => {
   const fromExpo = from * from;
   const toExpo = to * to;
-  return Math.sqrt(v * (toExpo - fromExpo) + fromExpo);
+  return Math.sqrt(Math.max(0, v * (toExpo - fromExpo) + fromExpo));
 };
 
 const colorTypes = [hex, rgba, hsla];
