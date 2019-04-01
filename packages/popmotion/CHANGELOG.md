@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.6.8] 2019-04-01
+
+### Update
+
+- `@popmotion/popcorn@0.3.6`
+
 ## [8.6.7] 2019-04-01
 
 ### Fixed
@@ -12,7 +18,7 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
 ### Update
 
-- Popcorn
+- `@popmotion/popcorn@0.3.5`
 
 ## [8.6.5] 2019-04-01
 
