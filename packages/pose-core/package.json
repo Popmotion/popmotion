@@ -10,7 +10,7 @@
     "build": "rollup -c",
     "postbuild": "babel $npm_package_module --out-file $npm_package_module --no-babelrc --plugins annotate-pure-calls",
     "watch": "rollup -c -w",
-    "test": "jest",
+    "test": "jest --maxWorkers=2",
     "prettier": "prettier ./src/* --write",
     "prepublishOnly": "npm run test && npm run prettier && npm run build",
     "postinstall": "node ./scripts/postinstall.js || exit 0"
