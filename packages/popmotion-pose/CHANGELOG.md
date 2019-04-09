@@ -2,6 +2,12 @@
 
 Popmotion Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.4.7] 2019-04-09
+
+### Fixed
+
+- Unset event end pose when setting event start pose [#762](https://github.com/Popmotion/popmotion/pull/762)
+
 ## [3.4.6] 2019-01-02
 
 ### Fixed
