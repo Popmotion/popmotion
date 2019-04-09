@@ -7,6 +7,7 @@ Stylefire adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 - `styler.get()` now has an optional `forceRead` argument.
+- Support for `size` and `radius` special CSS properties.
 
 ### Removed
 
