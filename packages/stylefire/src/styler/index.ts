@@ -11,58 +11,55 @@ const createStyler = ({
   const changedValues: ChangedValues = [];
   let hasChanged: boolean = false;
 
-  const setValue = (key: string, value: any) => {
+  function setValue(key: string, value: any) {
     const currentValue = state[key];
     state[key] = value;
 
-    if (state[key] !== currentValue) {
-      if (changedValues.indexOf(key) === -1) {
-        changedValues.push(key);
-      }
-      if (!hasChanged) {
-        hasChanged = true;
-        sync.render(render);
-      }
-    }
-  };
+    if (state[key] === currentValue) return;
 
-  function render(forceRender: any = false) {
-    if (forceRender === true || hasChanged) {
-      onRender(state, props, changedValues);
-      hasChanged = false;
-      changedValues.length = 0;
+    if (changedValues.indexOf(key) === -1) {
+      changedValues.push(key);
     }
 
-    return this;
+    if (!hasChanged) {
+      hasChanged = true;
+      sync.render(styler.render);
+    }
   }
 
-  return {
-    get(key: string) {
-      return key
-        ? useCache && !uncachedValues.has(key) && state[key] !== undefined
-          ? state[key]
-          : onRead(key, props)
-        : state;
+  const styler = {
+    get(key: string, forceRead: boolean = false) {
+      const useCached =
+        !forceRead &&
+        useCache &&
+        !uncachedValues.has(key) &&
+        state[key] !== undefined;
+
+      return useCached ? state[key] : onRead(key, props);
     },
     set(values: string | State, value?: any) {
       if (typeof values === 'string') {
-        if (value !== undefined) {
-          setValue(values, value);
-        } else {
-          return (v: any) => setValue(values, v);
-        }
+        setValue(values, value);
       } else {
         for (const key in values) {
-          if (values.hasOwnProperty(key)) {
-            setValue(key, values[key]);
-          }
+          setValue(key, values[key]);
         }
       }
 
       return this;
     },
-    render
+    render(forceRender: any = false) {
+      if (hasChanged || forceRender === true) {
+        onRender(state, props, changedValues);
+        hasChanged = false;
+        changedValues.length = 0;
+      }
+
+      return this;
+    }
   };
+
+  return styler;
 };
 
 export default createStyler;

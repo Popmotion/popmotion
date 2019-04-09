@@ -4,7 +4,6 @@ import styler from '../';
 describe('styler', () => {
   test('css', () => {
     const div = document.createElement('div');
-
     const divStyler = styler(div);
 
     divStyler.set({ x: 0 });
@@ -64,6 +63,45 @@ describe('styler', () => {
     divStyler.render();
 
     expect(div).toHaveStyle('transform-origin: 0 100% 0');
+  });
+
+  test('css - only preparse default value types', () => {
+    const div = document.createElement('div');
+    div.style.width = '100px';
+    div.style.height = '100%';
+
+    const divStyler = styler(div);
+
+    divStyler.render();
+
+    expect(divStyler.get('width')).toBe(100);
+    expect(divStyler.get('height')).toBe('100%');
+  });
+
+  test('css - set special props', () => {
+    const div = document.createElement('div');
+
+    const divStyler = styler(div);
+
+    divStyler.set({
+      size: '100px',
+      radius: '20px'
+    });
+
+    divStyler.render();
+
+    expect(div).toHaveStyle('width: 100px; height: 100px; border-radius: 20px');
+  });
+
+  test('css - get special props', () => {
+    const div = document.createElement('div');
+    div.style.width = '200px';
+    div.style.borderRadius = '5px';
+
+    const divStyler = styler(div);
+
+    expect(divStyler.get('size')).toBe(200);
+    expect(divStyler.get('radius')).toBe(5);
   });
 
   test('transform as string', () => {
