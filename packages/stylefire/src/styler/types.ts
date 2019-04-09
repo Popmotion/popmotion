@@ -15,10 +15,34 @@ export type Config = {
   uncachedValues?: Set<string>;
 };
 
-export type Setter = (value: any) => any;
-
+/**
+ * @public
+ */
 export interface Styler {
-  get: (key: string) => any;
-  set: (key: string | State, value?: any) => Styler | Setter;
+  /**
+   * Get the latest value of a given key.
+   *
+   * @param key - The name of the property to read.
+   * @param forceRead - If `true`, will force a potentially expensive read. Defaults to `false`.
+   */
+  get: (key: string, forceRead?: boolean) => any;
+
+  /**
+   * Set a value or many values.
+   *
+   * This will trigger the scheduling of a render on the next available frame.
+   *
+   * @param key/state - Either the name of the prop to set, or an object map of values.
+   * @param value - If `key` is a string, the value to set to that string.
+   */
+  set: (key: string | State, value?: any) => Styler;
+
+  /**
+   * Will immediately trigger render if any values have changed.
+   *
+   * Useful for synchronous write/measure operations.
+   *
+   * @param forceRender - If `true`, will force a render even if no values have changed.
+   */
   render: (forceRender?: boolean) => Styler;
 }

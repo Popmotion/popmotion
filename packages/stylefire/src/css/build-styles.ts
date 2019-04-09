@@ -7,26 +7,41 @@ import {
   isTransformOriginProp
 } from './transform-props';
 import { SCROLL_LEFT, SCROLL_TOP } from './scroll-keys';
+import { customStyleHandlers } from './custom-style-handlers';
 
 const blacklist = new Set([SCROLL_LEFT, SCROLL_TOP, 'transform']);
 
-const aliasMap: { [key: string]: string } = {
+const translateAlias: { [key: string]: string } = {
   x: 'translateX',
   y: 'translateY',
   z: 'translateZ'
 };
 
-const isCustomTemplate = (v: any): v is CustomTemplate => {
+function isCustomTemplate(v: any): v is CustomTemplate {
   return typeof v === 'function';
-};
+}
 
-const buildTransform = (
+function setStyle(
+  styles: ResolvedState,
+  key: string,
+  value: any,
+  isDashCase: boolean
+) {
+  const styleHandler = customStyleHandlers[key];
+  if (styleHandler) {
+    styleHandler.set(styles, value);
+  } else {
+    styles[prefixer(key, isDashCase)] = value;
+  }
+}
+
+function buildTransform(
   state: State,
   transform: ResolvedState,
   transformKeys: string[],
   transformIsDefault: boolean,
   enableHardwareAcceleration: boolean
-) => {
+) {
   let transformString = '';
   let transformHasZ = false;
   transformKeys.sort(sortTransformProps);
@@ -35,7 +50,7 @@ const buildTransform = (
 
   for (let i = 0; i < numTransformKeys; i++) {
     const key = transformKeys[i];
-    transformString += `${aliasMap[key] || key}(${transform[key]}) `;
+    transformString += `${translateAlias[key] || key}(${transform[key]}) `;
     transformHasZ = key === 'z' ? true : transformHasZ;
   }
 
@@ -53,7 +68,7 @@ const buildTransform = (
   }
 
   return transformString;
-};
+}
 
 /**
  * Build style property
@@ -68,8 +83,7 @@ const buildTransform = (
  *
  * { transform: 'translateX(100px) translateZ(0)`, width: '100px' }
  */
-
-const buildStyleProperty = (
+function buildStyleProperty(
   state: State,
   enableHardwareAcceleration: boolean = true,
   styles: ResolvedState = {},
@@ -77,7 +91,7 @@ const buildStyleProperty = (
   transformOrigin: ResolvedState = {},
   transformKeys: string[] = [],
   isDashCase: boolean = false
-) => {
+) {
   let transformIsDefault = true;
   let hasTransform = false;
   let hasTransformOrigin = false;
@@ -107,7 +121,7 @@ const buildStyleProperty = (
       transformOrigin[key] = valueAsType;
       hasTransformOrigin = true;
     } else if (!blacklist.has(key) || !isCustomTemplate(valueAsType)) {
-      styles[prefixer(key, isDashCase)] = valueAsType;
+      setStyle(styles, key, valueAsType, isDashCase);
     }
   }
 
@@ -128,9 +142,9 @@ const buildStyleProperty = (
   }
 
   return styles;
-};
+}
 
-const createStyleBuilder = (enableHardwareAcceleration: boolean = true) => {
+function createStyleBuilder(enableHardwareAcceleration: boolean = true) {
   /**
    * Because we expect this function to run multiple times a frame
    * we create and hold these data structures as mutative states.
@@ -154,6 +168,6 @@ const createStyleBuilder = (enableHardwareAcceleration: boolean = true) => {
 
     return styles;
   };
-};
+}
 
 export { buildStyleProperty, createStyleBuilder };

@@ -21,10 +21,14 @@ const transformPropDictionary: Dictionary = transformProps.reduce(
   {}
 );
 
-export const isTransformProp = (key: string) =>
-  transformPropDictionary[key] === true;
-export const sortTransformProps = (a: string, b: string) =>
-  transformProps.indexOf(a) - transformProps.indexOf(b);
+export function isTransformProp(key: string) {
+  return transformPropDictionary[key] === true;
+}
 
-export const isTransformOriginProp = (key: string) =>
-  key === 'originX' || key === 'originY';
+export function sortTransformProps(a: string, b: string) {
+  return transformProps.indexOf(a) - transformProps.indexOf(b);
+}
+
+export function isTransformOriginProp(key: string) {
+  return key === 'originX' || key === 'originY';
+}

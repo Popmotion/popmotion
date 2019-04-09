@@ -4,7 +4,6 @@ import styler from '../';
 describe('styler', () => {
   test('css', () => {
     const div = document.createElement('div');
-
     const divStyler = styler(div);
 
     divStyler.set({ x: 0 });
