@@ -35,7 +35,7 @@
     "watch": "rollup -c -w",
     "prepublishOnly": "npm run test && npm run build",
     "postpublish": "npm run clean",
-    "test": "jest",
+    "test": "jest --maxWorkers=2",
     "publish-beta": "npm publish --tag beta",
     "clean": "git clean -fd -e node_modules/ -e lib/ src/ -x ."
   },

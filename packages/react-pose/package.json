@@ -8,7 +8,7 @@
   "scripts": {
     "build": "rollup -c && yarn measure",
     "watch": "rollup -c -w",
-    "test": "jest",
+    "test": "jest --maxWorkers=2",
     "lint": "tslint 'src/**/*.{ts,tsx}' -e '**/_tests/**'",
     "measure": "gzip -c dist/react-pose.js | wc -c",
     "prettier": "prettier ./src/* --write",

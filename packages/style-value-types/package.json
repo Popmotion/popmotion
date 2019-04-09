@@ -14,7 +14,7 @@
     "build": "rollup -c",
     "watch": "rollup -c -w",
     "lint": "tslint -c tslint.json 'src/**/*.{ts}'",
-    "test": "jest",
+    "test": "jest --maxWorkers=2",
     "measure": "gzip -c dist/style-value-types.min.js | wc -c",
     "prepublishOnly": "npm run lint && npm run build"
   },

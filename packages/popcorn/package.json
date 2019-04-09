@@ -10,7 +10,7 @@
     "build": "rollup -c",
     "watch": "rollup -c -w",
     "lint": "tslint 'src/**/*.{ts,tsx}' -e '**/_tests/**'",
-    "testsThatHangCircleCi": "jest",
+    "test": "jest --maxWorkers=2",
     "measure": "gzip -c dist/popcorn.min.js | wc -c",
     "prepublishOnly": "yarn lint && yarn testsThatHangCircleCi && yarn build"
   },

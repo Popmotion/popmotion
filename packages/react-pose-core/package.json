@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "test": "jest",
+    "test": "jest --maxWorkers=2",
     "prettier": "prettier ./src/* --write",
     "prepublishOnly": "npm run test && npm run prettier && npm run build"
   },

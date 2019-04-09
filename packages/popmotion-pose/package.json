@@ -10,7 +10,7 @@
     "build": "rollup -c && npm run measure",
     "postbuild": "babel $npm_package_module --out-file $npm_package_module --no-babelrc --plugins annotate-pure-calls",
     "watch": "rollup -c -w",
-    "test": "jest",
+    "test": "jest --maxWorkers=2",
     "measure": "gzip -c dist/popmotion-pose.js | wc -c",
     "prettier": "prettier ./src/* --write",
     "prepublishOnly": "npm run test && npm run prettier && npm run build"

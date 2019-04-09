@@ -41,7 +41,7 @@
     "watch": "rollup -c -w",
     "prepublishOnly": "npm run test && npm run build",
     "measure": "gzip -c $npm_package_unpkg | wc -c",
-    "test": "jest",
+    "test": "jest --maxWorkers=2",
     "publish-beta": "npm publish --tag beta"
   },
   "dependencies": {
