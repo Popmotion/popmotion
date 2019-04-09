@@ -25,10 +25,10 @@ function onRead(key: string, options: CssStylerOptions): string | number {
   }
 
   const { element, preparseOutput } = options;
-  const valueType = getValueType(key);
+  const defaultValueType = getValueType(key);
 
   if (isTransformProp(key)) {
-    return valueType ? valueType.default || 0 : 0;
+    return defaultValueType ? defaultValueType.default || 0 : 0;
   } else if (scrollKeys.has(key)) {
     return (element as any)[key];
   } else {
@@ -37,8 +37,11 @@ function onRead(key: string, options: CssStylerOptions): string | number {
         .getComputedStyle(element, null)
         .getPropertyValue(prefixer(key, true)) || 0;
 
-    return preparseOutput && valueType && valueType.parse
-      ? valueType.parse(domValue)
+    return preparseOutput &&
+      defaultValueType &&
+      defaultValueType.test(domValue) &&
+      defaultValueType.parse
+      ? defaultValueType.parse(domValue)
       : domValue;
   }
 }

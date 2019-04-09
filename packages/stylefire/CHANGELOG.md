@@ -14,6 +14,10 @@ Stylefire adheres to [Semantic Versioning](http://semver.org/).
 - `styler.set('propKey')` syntax no longer returns setter.
 - `styler.get()` requires a provided key.
 
+### Fixed
+
+- Only parsing read values if they're of the default value type.
+
 ## [3.0.2] 2019-04-01
 
 ### Update
