@@ -28,6 +28,7 @@ const valueTypes: { [key: string]: ValueType } = {
   borderBottomWidth: px,
   borderLeftWidth: px,
   borderRadius: px,
+  radius: px,
   borderTopLeftRadius: px,
   borderTopRightRadius: px,
   borderBottomRightRadius: px,
@@ -38,6 +39,7 @@ const valueTypes: { [key: string]: ValueType } = {
   maxWidth: px,
   height: px,
   maxHeight: px,
+  size: px,
   top: px,
   right: px,
   bottom: px,
@@ -78,4 +80,8 @@ const valueTypes: { [key: string]: ValueType } = {
   originZ: px
 };
 
-export default (key: string) => valueTypes[key];
+export const getValueType = (key: string) => valueTypes[key];
+
+export const getValueAsType = (value: any, type?: ValueType) => {
+  return type && typeof value === 'number' ? type.transform(value) : value;
+};

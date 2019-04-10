@@ -2,6 +2,12 @@
 
 Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.0.1] 2019-04-10
+
+### Fixed
+
+- Fixing value types for `size` and `radius`.
+
 ## [4.0.0] 2019-04-08
 
 ### Added

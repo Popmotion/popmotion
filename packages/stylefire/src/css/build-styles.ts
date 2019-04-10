@@ -1,5 +1,5 @@
 import { CustomTemplate, State, ResolvedState } from '../styler/types';
-import getValueType from './value-types';
+import { getValueType, getValueAsType } from './value-types';
 import prefixer from './prefixer';
 import {
   sortTransformProps,
@@ -19,20 +19,6 @@ const translateAlias: { [key: string]: string } = {
 
 function isCustomTemplate(v: any): v is CustomTemplate {
   return typeof v === 'function';
-}
-
-function setStyle(
-  styles: ResolvedState,
-  key: string,
-  value: any,
-  isDashCase: boolean
-) {
-  const styleHandler = customStyleHandlers[key];
-  if (styleHandler) {
-    styleHandler.set(styles, value);
-  } else {
-    styles[prefixer(key, isDashCase)] = value;
-  }
 }
 
 function buildTransform(
@@ -99,10 +85,7 @@ function buildStyleProperty(
   for (const key in state) {
     const value = state[key];
     const valueType = getValueType(key);
-    const valueAsType =
-      typeof value === 'number' && valueType
-        ? valueType.transform(value)
-        : value;
+    const valueAsType = getValueAsType(value, valueType);
 
     if (isTransformProp(key)) {
       hasTransform = true;
@@ -121,7 +104,12 @@ function buildStyleProperty(
       transformOrigin[key] = valueAsType;
       hasTransformOrigin = true;
     } else if (!blacklist.has(key) || !isCustomTemplate(valueAsType)) {
-      setStyle(styles, key, valueAsType, isDashCase);
+      const styleHandler = customStyleHandlers[key];
+      if (styleHandler) {
+        styleHandler.set(styles, valueAsType);
+      } else {
+        styles[prefixer(key, isDashCase)] = valueAsType;
+      }
     }
   }
 

@@ -1,18 +1,17 @@
-import { ResolvedState, Config } from '../styler/types';
-import { CssStylerOptions } from './';
+import { ResolvedState } from '../styler/types';
 
 interface CustomStyleHandler {
-  get: (read: Config['onRead'], options: CssStylerOptions) => any;
-  set: (styles: ResolvedState, value: any) => void;
+  get?: string;
+  set: (output: ResolvedState, value: any) => void;
 }
 
 export const customStyleHandlers: { [key: string]: CustomStyleHandler } = {
   radius: {
-    get: (read, options) => read('borderRadius', options),
-    set: (styles, value) => (styles.borderRadius = value)
+    get: 'borderRadius',
+    set: (output, value) => (output.borderRadius = value)
   },
   size: {
-    get: (read, options) => read('width', options),
-    set: (styles, value) => (styles.width = styles.height = value)
+    get: 'width',
+    set: (output, value) => (output.width = output.height = value)
   }
 };

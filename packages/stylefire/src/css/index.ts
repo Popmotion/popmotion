@@ -2,7 +2,7 @@ import createStyler from '../styler';
 import { Styler, ResolvedState, State, ChangedValues } from '../styler/types';
 import prefixer from './prefixer';
 import { isTransformProp } from './transform-props';
-import getValueType from './value-types';
+import { getValueType } from './value-types';
 import { createStyleBuilder } from './build-styles';
 import { SCROLL_LEFT, SCROLL_TOP, scrollKeys } from './scroll-keys';
 import { customStyleHandlers } from './custom-style-handlers';
@@ -20,8 +20,8 @@ export type CssStylerOptions = {
 
 function onRead(key: string, options: CssStylerOptions): string | number {
   const styleHandler = customStyleHandlers[key];
-  if (styleHandler) {
-    return styleHandler.get(onRead, options);
+  if (styleHandler && styleHandler.get) {
+    return onRead(styleHandler.get, options);
   }
 
   const { element, preparseOutput } = options;

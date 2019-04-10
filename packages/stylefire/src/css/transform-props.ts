@@ -29,6 +29,8 @@ export function sortTransformProps(a: string, b: string) {
   return transformProps.indexOf(a) - transformProps.indexOf(b);
 }
 
+const transformOriginProps = new Set(['originX', 'originY', 'originZ']);
+
 export function isTransformOriginProp(key: string) {
-  return key === 'originX' || key === 'originY';
+  return transformOriginProps.has(key);
 }
