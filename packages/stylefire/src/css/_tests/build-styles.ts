@@ -89,14 +89,6 @@ describe('buildStyleProperty', () => {
       transform: `scale(1) translateZ(0)`
     });
   });
-
-  it('should handle special value types', () => {
-    expect(buildStyleProperty({ radius: 50, size: 100 })).toEqual({
-      borderRadius: '50px',
-      width: '100px',
-      height: '100px'
-    });
-  });
 });
 
 describe('createStyleBuilder', () => {

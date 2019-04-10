@@ -7,7 +7,6 @@ import {
   isTransformOriginProp
 } from './transform-props';
 import { SCROLL_LEFT, SCROLL_TOP } from './scroll-keys';
-import { customStyleHandlers } from './custom-style-handlers';
 
 const blacklist = new Set([SCROLL_LEFT, SCROLL_TOP, 'transform']);
 
@@ -104,12 +103,7 @@ function buildStyleProperty(
       transformOrigin[key] = valueAsType;
       hasTransformOrigin = true;
     } else if (!blacklist.has(key) || !isCustomTemplate(valueAsType)) {
-      const styleHandler = customStyleHandlers[key];
-      if (styleHandler) {
-        styleHandler.set(styles, valueAsType);
-      } else {
-        styles[prefixer(key, isDashCase)] = valueAsType;
-      }
+      styles[prefixer(key, isDashCase)] = valueAsType;
     }
   }
 

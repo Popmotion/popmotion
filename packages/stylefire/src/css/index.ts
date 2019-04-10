@@ -5,7 +5,6 @@ import { isTransformProp } from './transform-props';
 import { getValueType } from './value-types';
 import { createStyleBuilder } from './build-styles';
 import { SCROLL_LEFT, SCROLL_TOP, scrollKeys } from './scroll-keys';
-import { customStyleHandlers } from './custom-style-handlers';
 
 type Props = {
   enableHardwareAcceleration?: boolean;
@@ -19,11 +18,6 @@ export type CssStylerOptions = {
 };
 
 function onRead(key: string, options: CssStylerOptions): string | number {
-  const styleHandler = customStyleHandlers[key];
-  if (styleHandler && styleHandler.get) {
-    return onRead(styleHandler.get, options);
-  }
-
   const { element, preparseOutput } = options;
   const defaultValueType = getValueType(key);
 
