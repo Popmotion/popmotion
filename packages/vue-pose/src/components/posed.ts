@@ -42,10 +42,10 @@ const watch = {
     this.poser.setProps(newAttrs);
   },
   pose(newPose: string, oldPose: string) {
-    if (newPose !== oldPose) this.poser.set(newPose);
+    if (newPose !== oldPose) this.setPose(newPose);
   },
   poseKey(newPoseKey: string | number, oldPoseKey: string | number) {
-    if (newPoseKey !== oldPoseKey) this.poser.set(this.pose);
+    if (newPoseKey !== oldPoseKey) this.setPose(this.pose);
   }
 };
 
@@ -78,8 +78,7 @@ const methods = {
     if (firstPose) this.setPose(firstPose);
   },
   setPose(pose: string) {
-    const { onPoseComplete } = this.$props;
-    this.poser.set(pose).then(() => onPoseComplete && onPoseComplete(pose));
+    this.poser.set(pose).then(() => this.$emit('poseComplete', pose));
   },
   flushChildren() {
     if (!this.children) return;
