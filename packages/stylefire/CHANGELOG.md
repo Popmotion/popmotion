@@ -6,7 +6,7 @@ Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
-- Supprot for `size` and `radius` properties. (Undocumented so no major bump).
+- Support for `size` and `radius` properties. (Undocumented so no major bump).
 
 ## [4.0.1] 2019-04-10
 
