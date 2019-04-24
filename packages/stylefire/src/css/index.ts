@@ -15,6 +15,7 @@ export type CssStylerOptions = {
   element: HTMLElement;
   preparseOutput: boolean;
   buildStyles: (state: State) => ResolvedState;
+  hasCSSVariable?: boolean;
 };
 
 function onRead(key: string, options: CssStylerOptions): string | number {
@@ -42,11 +43,22 @@ function onRead(key: string, options: CssStylerOptions): string | number {
 
 function onRender(
   state: State,
-  { element, buildStyles }: CssStylerOptions,
+  { element, buildStyles, hasCSSVariable }: CssStylerOptions,
   changedValues: ChangedValues
 ) {
   // Style values
   Object.assign(element.style, buildStyles(state));
+
+  // CSS variables have to be handled with setProperty
+  if (hasCSSVariable) {
+    const numChangedValues = changedValues.length;
+    for (let i = 0; i < numChangedValues; i++) {
+      const key = changedValues[i];
+      if (key.startsWith('--')) {
+        element.style.setProperty(key, state[key] as string);
+      }
+    }
+  }
 
   // Scroll values
   if (changedValues.indexOf(SCROLL_LEFT) !== -1) {
