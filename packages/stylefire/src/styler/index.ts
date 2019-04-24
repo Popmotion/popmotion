@@ -6,12 +6,15 @@ const createStyler = ({
   onRender,
   uncachedValues = new Set(),
   useCache = true
-}: Config) => (props?: Props): Styler => {
+}: Config) => ({ ...props }: Props = {}): Styler => {
   const state: State = {};
   const changedValues: ChangedValues = [];
   let hasChanged: boolean = false;
 
   function setValue(key: string, value: any) {
+    if (key.startsWith('--')) {
+      props.hasCSSVariable = true;
+    }
     const currentValue = state[key];
     state[key] = value;
 

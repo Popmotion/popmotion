@@ -2,6 +2,12 @@
 
 Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.1.1] 2019-04-24
+
+### Fixed
+
+- Support for setting CSS variables.
+
 ## [4.1.0] 2019-04-10
 
 ### Removed
