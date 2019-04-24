@@ -2,6 +2,12 @@
 
 Popmotion Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.4.8] 2019-04-24
+
+### Fixed
+
+- Fatal error in Chrome < 36 as a result of undefined `transform` [#775](https://github.com/Popmotion/popmotion/pull/775)
+
 ## [3.4.7] 2019-04-09
 
 ### Fixed
