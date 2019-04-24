@@ -11,7 +11,8 @@ type TransitionHandler = (
 const setPoserTo = (
   fromPose: string,
   toPose: string,
-  defaultConfig: Object
+  defaultConfig: Object,
+  that: Vue
 ): TransitionHandler => (el, done) => {
   if (!PoserMap.has(el)) {
     PoserMap.set(
@@ -22,7 +23,10 @@ const setPoserTo = (
 
   PoserMap.get(el)
     .set(toPose)
-    .then(done);
+    .then(function(){
+      that.$emit('poseComplete', toPose);
+      done();
+    });
 };
 
 const initPoser = (
@@ -65,12 +69,12 @@ const PoseTransition: PosedComponent = Vue.extend({
     this.on = {
       beforeEnter: initPoser(setPrePose, exitPose),
       beforeLeave: initPoser(setPrePose, enterPose),
-      enter: setPoserTo(exitPose, enterPose, defaultConfig),
-      leave: setPoserTo(enterPose, exitPose, defaultConfig)
+      enter: setPoserTo(exitPose, enterPose, defaultConfig, this),
+      leave: setPoserTo(enterPose, exitPose, defaultConfig, this)
     };
 
     if (appear !== undefined) {
-      this.on.appear = setPoserTo(exitPose, enterPose, defaultConfig);
+      this.on.appear = setPoserTo(exitPose, enterPose, defaultConfig, this);
       this.on.beforeAppear = initPoser(setPrePose, exitPose);
     }
   },
