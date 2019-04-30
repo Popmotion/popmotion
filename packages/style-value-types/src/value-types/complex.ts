@@ -13,8 +13,8 @@ const convertNumbersToZero = (v: number | Color) => {
   return typeof v === 'number' ? 0 : v;
 };
 
-export const complex: ValueType<string, Array<Color | number>> = {
-  test: v => {
+export const complex: ValueType = {
+  test: (v: any) => {
     if (typeof v !== 'string' || !isNaN(v as any)) return false;
 
     let numValues = 0;
@@ -25,7 +25,7 @@ export const complex: ValueType<string, Array<Color | number>> = {
 
     return numValues > 0;
   },
-  parse: v => {
+  parse: (v: any) => {
     let input = v;
     const parsed = [];
 
@@ -44,7 +44,7 @@ export const complex: ValueType<string, Array<Color | number>> = {
 
     return parsed;
   },
-  createTransformer: prop => {
+  createTransformer: (prop: string) => {
     let template = prop;
     let token = 0;
 
@@ -66,7 +66,7 @@ export const complex: ValueType<string, Array<Color | number>> = {
       }
     }
 
-    return v => {
+    return (v: Array<Color | number>) => {
       let output = template;
 
       for (let i = 0; i < token; i++) {
@@ -80,7 +80,7 @@ export const complex: ValueType<string, Array<Color | number>> = {
     };
   },
   // Strategy here is to keep colors the same as the target but make all numbers `0`
-  getAnimatableNone: target => {
+  getAnimatableNone: (target: string) => {
     const parsedTarget = complex.parse(target);
     const targetTransformer = complex.createTransformer(target);
     return targetTransformer(parsedTarget.map(convertNumbersToZero));
