@@ -2,6 +2,12 @@
 
 Style Value Types adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.1.1] 2019-04-29
+
+### Added
+
+- `getAnimatableNone` to `complex` value type.
+
 ## [3.1.0] 2019-03-12
 
 ### Added
