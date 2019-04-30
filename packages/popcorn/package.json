@@ -1,6 +1,6 @@
 {
   "name": "@popmotion/popcorn",
-  "version": "0.3.6",
+  "version": "0.3.9",
   "description": "Utility functions for animation and interactions.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -12,7 +12,7 @@
     "lint": "tslint 'src/**/*.{ts,tsx}' -e '**/_tests/**'",
     "test": "jest --maxWorkers=2",
     "measure": "gzip -c dist/popcorn.min.js | wc -c",
-    "prepublishOnly": "yarn lint && yarn testsThatHangCircleCi && yarn build"
+    "prepublishOnly": "yarn lint && yarn test && yarn build"
   },
   "files": [
     "lib",
@@ -55,8 +55,8 @@
   "dependencies": {
     "@popmotion/easing": "^1.0.1",
     "framesync": "^4.0.1",
-    "hey-listen": "^1.0.5",
-    "style-value-types": "^3.1.0"
+    "hey-listen": "^1.0.8",
+    "style-value-types": "^3.1.3"
   },
   "devDependencies": {
     "@types/jest": "^24.0.11",

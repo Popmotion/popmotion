@@ -35,15 +35,17 @@ export const mixArray = (from: BlendableArray, to: BlendableArray) => {
 };
 
 export const mixComplex = (from: string, to: string): MixComplex => {
-  const valueTemplate = complex.createTransformer(from);
+  const template = complex.createTransformer(from);
+  const parsedFrom = complex.parse(from);
 
+  // Test if we can recreate the `from` value with a template generated from  `to`
   invariant(
-    valueTemplate(from) === complex.createTransformer(to)(from),
-    `Values '${from}' and '${to}' are of different format, or a value might have changed value type.`
+    from === complex.createTransformer(to)(parsedFrom),
+    `Complex values '${from}' and '${to}' are of different format.`
   );
 
   return pipe(
-    mixArray(complex.parse(from), complex.parse(to)),
-    valueTemplate
+    mixArray(parsedFrom, complex.parse(to)),
+    template
   ) as MixComplex;
 };

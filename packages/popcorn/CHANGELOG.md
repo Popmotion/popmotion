@@ -2,6 +2,18 @@
 
 Popcorn adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.3.9] 2019-04-30
+
+### Fixed
+
+- Improving value compatibility checks in `mixComplex`.
+
+## [0.3.8] 2019-04-30
+
+### Upgrade
+
+- Dependencies.
+
 ## [0.3.6] 2019-04-01
 
 ### Fixed
