@@ -1,4 +1,4 @@
-import { ValueType, Color } from '../types';
+import { Color } from '../types';
 import { color } from './color';
 import { number } from './numbers';
 import { sanitize } from '../utils';
@@ -13,7 +13,7 @@ const convertNumbersToZero = (v: number | Color) => {
   return typeof v === 'number' ? 0 : v;
 };
 
-export const complex: ValueType = {
+export const complex = {
   test: (v: any) => {
     if (typeof v !== 'string' || !isNaN(v as any)) return false;
 
@@ -79,7 +79,8 @@ export const complex: ValueType = {
       return output;
     };
   },
-  // Strategy here is to keep colors the same as the target but make all numbers `0`
+  // Strategy here is to keep colors the same as the target to prevent
+  // weird color transitions but make all numbers `0`
   getAnimatableNone: (target: string) => {
     const parsedTarget = complex.parse(target);
     const targetTransformer = complex.createTransformer(target);
