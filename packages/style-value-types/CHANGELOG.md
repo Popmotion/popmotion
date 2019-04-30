@@ -2,6 +2,12 @@
 
 Style Value Types adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.1.3] 2019-04-29
+
+### Fixed
+
+- Dynamic type imports.
+
 ## [3.1.2] 2019-04-29
 
 ### Removed
