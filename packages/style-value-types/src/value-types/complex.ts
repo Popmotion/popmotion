@@ -9,8 +9,12 @@ const colorRegex = /(#[0-9a-f]{6}|#[0-9a-f]{3}|#(?:[0-9a-f]{2}){2,4}|(rgb|hsl)a?
 const COLOR_TOKEN = '${c}';
 const NUMBER_TOKEN = '${n}';
 
-export const complex: ValueType = {
-  test: (v: any) => {
+const convertNumbersToZero = (v: number | Color) => {
+  return typeof v === 'number' ? 0 : v;
+};
+
+export const complex: ValueType<string, Array<Color | number>> = {
+  test: v => {
     if (typeof v !== 'string' || !isNaN(v as any)) return false;
 
     let numValues = 0;
@@ -21,7 +25,7 @@ export const complex: ValueType = {
 
     return numValues > 0;
   },
-  parse: (v: any) => {
+  parse: v => {
     let input = v;
     const parsed = [];
 
@@ -40,7 +44,7 @@ export const complex: ValueType = {
 
     return parsed;
   },
-  createTransformer: (prop: string) => {
+  createTransformer: prop => {
     let template = prop;
     let token = 0;
 
@@ -62,7 +66,7 @@ export const complex: ValueType = {
       }
     }
 
-    return (v: Array<Color | number>) => {
+    return v => {
       let output = template;
 
       for (let i = 0; i < token; i++) {
@@ -74,5 +78,11 @@ export const complex: ValueType = {
 
       return output;
     };
+  },
+  // Strategy here is to keep colors the same as the target but make all numbers `0`
+  getAnimatableNone: target => {
+    const parsedTarget = complex.parse(target);
+    const targetTransformer = complex.createTransformer(target);
+    return targetTransformer(parsedTarget.map(convertNumbersToZero));
   }
 };

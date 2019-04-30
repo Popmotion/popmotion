@@ -62,6 +62,12 @@ describe('complex value type', () => {
     const transformSingleFunction = complex.createTransformer(GREYSCALE);
     expect(transformSingleFunction([100])).toBe(GREYSCALE);
   });
+
+  it('can create an animatable "none"', () => {
+    expect(complex.getAnimatableNone('100% 0px #fff')).toBe(
+      '0% 0px rgba(255, 255, 255, 1)'
+    );
+  });
 });
 
 const red = {
