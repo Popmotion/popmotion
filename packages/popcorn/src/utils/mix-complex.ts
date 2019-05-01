@@ -68,7 +68,7 @@ function analyse(value: string) {
     if (numNumbers || typeof parsed[i] === 'number') {
       numNumbers++;
     } else {
-      if (parsed[i].hue !== undefined) {
+      if ((parsed[i] as HSLA).hue !== undefined) {
         numHSL++;
       } else {
         numRGB++;
