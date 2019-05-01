@@ -2,6 +2,13 @@
 
 Popcorn adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.4.0] 2019-05-01
+
+### Added
+
+- Added `mixObject` to interpolate objects, added capability to `interpolate`.
+- Made handling of complex value types more permissive.
+
 ## [0.3.9] 2019-04-30
 
 ### Fixed

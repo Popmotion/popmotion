@@ -11,11 +11,21 @@ import {
   progressPercentage,
   complex
 } from '../';
+import { singleColorRegex, colorRegex } from '../utils';
 
 const PATH = 'M150 0 L75 200 L225 200 Z';
 const GREYSCALE = 'greyscale(100%)';
 const PATH_VALUES = [150, 0, 75, 200, 225, 200];
 const MIXED = '0px 0px 0px rgba(161, 0, 246, 0)';
+
+describe('regex', () => {
+  it('should correctly identify values', () => {
+    expect(singleColorRegex.test('#fff000')).toBe(true);
+    expect(singleColorRegex.test('rgba(161, 0, 246, 0)')).toBe(true);
+    expect(singleColorRegex.test('#fff000 #fff000')).toBe(false);
+    expect(colorRegex.test('#fff000 #fff000')).toBe(true);
+  });
+});
 
 describe('complex value type', () => {
   it('test returns correctly', () => {

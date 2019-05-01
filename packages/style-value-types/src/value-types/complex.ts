@@ -25,7 +25,7 @@ export const complex = {
   },
   parse: (v: any) => {
     let input = v;
-    const parsed = [];
+    const parsed: Array<Color | number> = [];
 
     const foundColors = input.match(colorRegex);
     if (foundColors) {
