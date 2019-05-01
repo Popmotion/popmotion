@@ -28,3 +28,6 @@ export const splitCommaDelimited = (value: string) =>
 // If this number is a decimal, make it just five decimal places
 // to avoid exponents
 export const sanitize = (v: number) => (v % 1 ? Number(v.toFixed(5)) : v);
+
+export const floatRegex = /(-)?(\d[\d\.]*)/g;
+export const colorRegex = /(#[0-9a-f]{6}|#[0-9a-f]{3}|#(?:[0-9a-f]{2}){2,4}|(rgb|hsl)a?\((-?\d+%?[,\s]+){2,3}\s*[\d\.]+%?\))/gi;

@@ -7,7 +7,7 @@ import {
 import { number } from './numbers';
 import { percent } from './units';
 import { Color, RGBA, HSLA, NumberMap, ValueType } from '../types';
-import { sanitize } from '../utils';
+import { sanitize, floatRegex, colorRegex } from '../utils';
 
 const clampRgbUnit = clamp(0, 255);
 
@@ -52,9 +52,14 @@ export const rgbUnit: ValueType = {
   transform: (v: number) => Math.round(clampRgbUnit(v))
 };
 
+function isSingleColor(v: string) {
+  return v.replace(colorRegex, '${c}') === '${c}';
+}
+
 const testRgbaString = isFirstChars('rgb');
 export const rgba: ValueType = {
-  test: v => (typeof v === 'string' ? testRgbaString(v) : isRgba(v)),
+  test: v =>
+    typeof v === 'string' ? testRgbaString(v) && isSingleColor(v) : isRgba(v),
   parse: splitColorValues(['red', 'green', 'blue', 'alpha']),
   transform: ({ red, green, blue, alpha }: RGBA) =>
     rgbaTemplate({
@@ -67,7 +72,8 @@ export const rgba: ValueType = {
 
 const testHslaString = isFirstChars('hsl');
 export const hsla: ValueType = {
-  test: v => (typeof v === 'string' ? testHslaString(v) : isHsla(v)),
+  test: v =>
+    typeof v === 'string' ? testHslaString(v) && isSingleColor(v) : isHsla(v),
   parse: splitColorValues(['hue', 'saturation', 'lightness', 'alpha']),
   transform: ({ hue, saturation, lightness, alpha }: HSLA) =>
     hslaTemplate({
@@ -78,9 +84,10 @@ export const hsla: ValueType = {
     })
 };
 
+const testHexString = isFirstChars('#');
 export const hex: ValueType = {
   ...rgba,
-  test: isFirstChars('#'),
+  test: v => testHexString(v) && isSingleColor(v),
   parse: (v: string): RGBA => {
     let r = '';
     let g = '';

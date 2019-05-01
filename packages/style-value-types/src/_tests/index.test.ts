@@ -85,6 +85,11 @@ const hslaTestColor = {
 };
 
 describe('hex()', () => {
+  it('should correctly test for colors', () => {
+    expect(hex.test('#f00')).toEqual(true);
+    expect(hex.test('#f00 0px')).toEqual(false);
+  });
+
   it('should split a hex value into the correct params', () => {
     expect(hex.parse('#f00')).toEqual(red);
   });
@@ -95,6 +100,11 @@ describe('hex()', () => {
 });
 
 describe('rgba()', () => {
+  it('should correctly test for colors', () => {
+    expect(rgba.test('rgba(255, 0, 0, 0.5)')).toEqual(true);
+    expect(rgba.test('rgba(255, 0, 0, 0.5) 0px')).toEqual(false);
+  });
+
   it('should split an rgba value into the correct params', () => {
     expect(rgba.parse('rgba(255, 0, 0, 0.5)')).toEqual({ ...red, alpha: 0.5 });
     expect(rgba.parse('rgb(255,0,0)')).toEqual(red);
@@ -107,6 +117,11 @@ describe('rgba()', () => {
 });
 
 describe('hsla()', () => {
+  it('should correctly test for colors', () => {
+    expect(hsla.test('hsla(170, 50%, 45%, 1)')).toEqual(true);
+    expect(hsla.test('hsla(170, 50%, 45%, 1) 0px')).toEqual(false);
+  });
+
   it('should split an hsl value into the correct params', () => {
     expect(hsla.parse('hsla(170, 50%, 45%, 1)')).toEqual(hslaTestColor);
     expect(hsla.parse('hsl(170, 50%, 45%)')).toEqual(hslaTestColor);
@@ -135,14 +150,17 @@ describe('color()', () => {
   it('should correctly identify color', () => {
     expect(color.test('#e66465')).toBe(true);
     expect(color.test('#fff')).toBe(true);
+    expect(color.test('#fff 0px')).toBe(false);
     expect(color.test('#f0f0f0')).toBe(true);
     expect(color.test('rgb(233, 233, 1)')).toBe(true);
+    expect(color.test('rgb(0, 0, 0) 5px 5px 50px 0px')).toBe(false);
     expect(color.test('rgba(255, 255, 0, 1)')).toBe(true);
     expect(color.test('rgba(255,255,0,1)')).toBe(true);
     expect(color.test('rgba(255,255, 0,1)')).toBe(true);
     expect(color.test('hsl(0, 0%, 0%)')).toBe(true);
     expect(color.test('hsl(0, 0%,0%)')).toBe(true);
     expect(color.test('hsla(180, 360%, 360%, 0.5)')).toBe(true);
+    expect(color.test('hsla(180, 360%, 360%, 0.5) 0px')).toBe(false);
     expect(color.test('greensock')).toBe(false);
     expect(color.test('filter(190deg)')).toBe(false);
   });
