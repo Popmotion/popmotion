@@ -2,6 +2,12 @@
 
 Style Value Types adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.1.4] 2019-05-01
+
+### Fixed
+
+- Rejecting `complex` values in `color` tests.
+
 ## [3.1.3] 2019-04-29
 
 ### Fixed

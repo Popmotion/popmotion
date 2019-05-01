@@ -1,6 +1,6 @@
 {
   "name": "@popmotion/popcorn",
-  "version": "0.3.9",
+  "version": "0.4.0",
   "description": "Utility functions for animation and interactions.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -56,7 +56,7 @@
     "@popmotion/easing": "^1.0.1",
     "framesync": "^4.0.1",
     "hey-listen": "^1.0.8",
-    "style-value-types": "^3.1.3"
+    "style-value-types": "^3.1.4"
   },
   "devDependencies": {
     "@types/jest": "^24.0.11",

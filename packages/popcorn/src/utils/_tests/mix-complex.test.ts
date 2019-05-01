@@ -8,12 +8,23 @@ test('mixComplex', () => {
 });
 
 test('mixComplex errors', () => {
-  expect(() => mixComplex('20%', '10px')).toThrowError();
   expect(() => mixComplex('hsla(100%, 100, 100, 1)', '#fff')).toThrowError();
 });
 
-// TODO: Probably best to implement cross-fills in `complex.createTemplate`
-// test('mixComplex cross-fills unit types when either has zeros', () => {
-//   expect(mixComplex('20px', '0')(0.5)).toBe('10px');
-//   expect(mixComplex('0', '20px')(0.5)).toBe('10px');
-// });
+test('mixComplex can interpolate out-of-order values', () => {
+  expect(mixComplex('#fff 0px 0px', '20px 0px #000')(0.5)).toBe(
+    '10px 0px rgba(180, 180, 180, 1)'
+  );
+});
+
+test('mixComplex can animate from a value-less prop', () => {
+  expect(mixComplex('#fff 0 0px', '20px 0px #000')(0.5)).toBe(
+    '10px 0px rgba(180, 180, 180, 1)'
+  );
+});
+
+test('mixComplex can animate from a value with extra zeros', () => {
+  expect(mixComplex('#fff 0 0px 0px', '20px 0px #000')(0.5)).toBe(
+    '10px 0px rgba(180, 180, 180, 1)'
+  );
+});

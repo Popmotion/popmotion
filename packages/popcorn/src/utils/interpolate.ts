@@ -7,6 +7,7 @@ import { color } from 'style-value-types';
 import makeInputClamp from './clamp';
 import pipe from './pipe';
 import { invariant } from 'hey-listen';
+import { mixArray, mixObject } from '..';
 
 type MixEasing = Easing | Easing[];
 
@@ -24,12 +25,16 @@ const mixNumber = (from: number, to: number) => (p: number) => mix(from, to, p);
 function detectMixerFactory<T>(v: T): MixerFactory<any> {
   if (typeof v === 'number') {
     return mixNumber;
-  }
-
-  if (color.test(v)) {
-    return mixColor;
-  } else {
-    return mixComplex;
+  } else if (typeof v === 'string') {
+    if (color.test(v)) {
+      return mixColor;
+    } else {
+      return mixComplex;
+    }
+  } else if (Array.isArray(v)) {
+    return mixArray;
+  } else if (typeof v === 'object') {
+    return mixObject;
   }
 }
 

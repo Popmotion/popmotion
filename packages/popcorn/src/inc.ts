@@ -6,4 +6,4 @@ export const zeroPoint: Point = {
   z: 0
 };
 
-export const isNum = (v: any): v is Number => typeof v === 'number';
+export const isNum = (v: any): v is number => typeof v === 'number';

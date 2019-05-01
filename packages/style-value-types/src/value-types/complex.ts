@@ -2,10 +2,7 @@ import { Color } from '../types';
 export { RGBA, HSLA } from '../types'; // prevent dynamic type imports
 import { color } from './color';
 import { number } from './numbers';
-import { sanitize } from '../utils';
-
-const floatRegex = /(-)?(\d[\d\.]*)/g;
-const colorRegex = /(#[0-9a-f]{6}|#[0-9a-f]{3}|#(?:[0-9a-f]{2}){2,4}|(rgb|hsl)a?\((-?\d+%?[,\s]+){2,3}\s*[\d\.]+%?\))/gi;
+import { sanitize, floatRegex, colorRegex } from '../utils';
 
 const COLOR_TOKEN = '${c}';
 const NUMBER_TOKEN = '${n}';
@@ -28,7 +25,7 @@ export const complex = {
   },
   parse: (v: any) => {
     let input = v;
-    const parsed = [];
+    const parsed: Array<Color | number> = [];
 
     const foundColors = input.match(colorRegex);
     if (foundColors) {

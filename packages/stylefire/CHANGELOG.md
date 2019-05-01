@@ -2,6 +2,12 @@
 
 Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.1.3] 2019-05-01
+
+### Upgrade
+
+- Dependencies.
+
 ## [4.1.2] 2019-04-30
 
 ### Upgrade
