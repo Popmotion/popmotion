@@ -9,9 +9,8 @@ import {
 } from 'style-value-types';
 import composite from '../compositors/composite';
 import parallel from '../compositors/parallel';
-import { mixArray, mixColor } from '@popmotion/popcorn';
+import { mixColor, mixComplex } from '@popmotion/popcorn';
 import { Action } from './';
-import { invariant } from 'hey-listen';
 
 /**
  * # Types
@@ -158,7 +157,8 @@ const createObjectAction: CreateVectorAction = (action, props, vectorKeys) => {
  * ## Create unit action
  *
  * Creates an action that animates between two unit values of the same type,
- * ie `0px` and `10px`
+ * ie `0px` and `10px`. Could probably use `complex` for this use-case to reduce
+ * file-size but it isn't as performant.
  */
 const createUnitAction: CreateVectorAction = (
   action,
@@ -175,6 +175,21 @@ const createUnitAction: CreateVectorAction = (
 };
 
 /**
+ * Takes mixers that interpolate from `0` to `1` and output values like shadow etc
+ */
+type Mixer<T> = (a: T, b: T) => (v: number) => T;
+const createMixerAction = <T>(mixer: Mixer<T>): CreateVectorAction => (
+  action,
+  { from, to, ...props }
+) => {
+  return action({
+    ...props,
+    from: 0,
+    to: 1
+  }).pipe(mixer(from, to));
+};
+
+/**
  * ## Create color action
  *
  * Accepts hex, rgb, rgba, hsl and hsla color types.
@@ -183,18 +198,7 @@ const createUnitAction: CreateVectorAction = (
  * the output value to blend between both colors based on the included
  * linear RGB blending algo
  */
-const createColorAction: CreateVectorAction = (
-  action,
-  { from, to, ...props }
-) =>
-  action({
-    ...props,
-    from: 0,
-    to: 1
-  }).pipe(
-    mixColor(from, to),
-    color.transform
-  );
+const createColorAction = createMixerAction(mixColor);
 
 /**
  * ## Create complex action
@@ -208,22 +212,7 @@ const createColorAction: CreateVectorAction = (
  * Using a `from` and `to` of `0`-`1` we use the output to transition between the two
  * arrays.
  */
-const createComplexAction: CreateVectorAction = (
-  action,
-  { from, to, ...props }
-) => {
-  const valueTemplate = complex.createTransformer(from);
-
-  invariant(
-    valueTemplate(from) === complex.createTransformer(to)(from),
-    `Values '${from}' and '${to}' are of different format, or a value might have changed value type.`
-  );
-
-  return action({ ...props, from: 0, to: 1 }).pipe(
-    mixArray(complex.parse(from), complex.parse(to)),
-    valueTemplate
-  );
-};
+const createComplexAction = createMixerAction(mixComplex);
 
 /**
  * ## Create vector action
@@ -296,24 +285,20 @@ const createVectorAction: VectorActionFactory = (action, typeTests) => {
 
 // Accepts a test prop, and returns a function with which to create an action
 const getActionCreator = (prop: any) => {
-  let actionCreator = createAction;
-
   // Pattern matching would be quite lovely here
   if (typeof prop === 'number') {
-    actionCreator = createAction;
+    return createAction;
   } else if (Array.isArray(prop)) {
-    actionCreator = createArrayAction;
+    return createArrayAction;
   } else if (isUnitProp(prop)) {
-    actionCreator = createUnitAction;
+    return createUnitAction;
   } else if (color.test(prop)) {
-    actionCreator = createColorAction;
+    return createColorAction;
   } else if (complex.test(prop)) {
-    actionCreator = createComplexAction;
+    return createComplexAction;
   } else if (typeof prop === 'object') {
-    actionCreator = createObjectAction;
+    return createObjectAction;
   }
-
-  return actionCreator;
 };
 
 export default createVectorAction;
