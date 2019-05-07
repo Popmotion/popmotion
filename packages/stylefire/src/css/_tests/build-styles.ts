@@ -89,6 +89,12 @@ describe('buildStyleProperty', () => {
       transform: `scale(1) translateZ(0)`
     });
   });
+
+  it('should correctly round zIndex', () => {
+    expect(buildStyleProperty({ zIndex: 0.5 })).toEqual({
+      zIndex: 1
+    });
+  });
 });
 
 describe('createStyleBuilder', () => {

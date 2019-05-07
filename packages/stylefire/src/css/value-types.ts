@@ -5,8 +5,14 @@ import {
   scale,
   px,
   progressPercentage,
+  number,
   ValueType
 } from 'style-value-types';
+
+const rounded = {
+  ...number,
+  transform: Math.round
+};
 
 const valueTypes: { [key: string]: ValueType } = {
   // Color props
@@ -77,7 +83,10 @@ const valueTypes: { [key: string]: ValueType } = {
   opacity: alpha,
   originX: progressPercentage,
   originY: progressPercentage,
-  originZ: px
+  originZ: px,
+
+  // Misc
+  zIndex: rounded
 };
 
 export const getValueType = (key: string) => valueTypes[key];

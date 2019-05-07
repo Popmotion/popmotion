@@ -2,6 +2,12 @@
 
 Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.1.4] 2019-05-07
+
+### Fix
+
+- Adding rounding to `zIndex`.
+
 ## [4.1.3] 2019-05-01
 
 ### Upgrade
