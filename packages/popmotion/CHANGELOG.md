@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.6.10] 2019-05-09
+
+### Fixed
+
+- Fixing undefined action creator. (https://github.com/Popmotion/popmotion/issues/794)[#794]
+
 ## [8.6.9] 2019-05-01
 
 ### Update

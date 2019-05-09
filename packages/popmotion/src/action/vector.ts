@@ -298,6 +298,8 @@ const getActionCreator = (prop: any) => {
     return createComplexAction;
   } else if (typeof prop === 'object') {
     return createObjectAction;
+  } else {
+    return createAction;
   }
 };
 
