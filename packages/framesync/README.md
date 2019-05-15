@@ -35,7 +35,7 @@ sync.update(() => {});
 Each function is provided data about the current frame:
 
 ```javascript
-sync.update({ delta, timestamp }) => {});
+sync.update(({ delta, timestamp }) => {});
 ```
 
 - `delta`: Time since last frame (in milliseconds)
