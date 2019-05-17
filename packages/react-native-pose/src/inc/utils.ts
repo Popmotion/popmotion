@@ -74,7 +74,7 @@ export const getStylesFromPoser = (poser: AnimatedPoser) => {
         }
         return acc;
       },
-      [{ perspective: 1000 }] as TransformList
+      [] as TransformList
     );
   }
 
