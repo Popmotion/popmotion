@@ -2,12 +2,11 @@ import { Easing } from '@popmotion/easing';
 import progress from './progress';
 import mix from './mix';
 import mixColor from './mix-color';
-import { mixComplex } from './mix-complex';
+import { mixComplex, mixArray, mixObject } from './mix-complex';
 import { color } from 'style-value-types';
 import makeInputClamp from './clamp';
 import pipe from './pipe';
 import { invariant } from 'hey-listen';
-import { mixArray, mixObject } from '..';
 
 type MixEasing = Easing | Easing[];
 
