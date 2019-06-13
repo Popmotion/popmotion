@@ -57,12 +57,12 @@ describe('styler', () => {
     const divStyler = styler(div);
 
     divStyler.set({
-      originY: '100%'
+      originY: 0
     });
 
     divStyler.render();
 
-    expect(div).toHaveStyle('transform-origin: 50% 100% 0');
+    expect(div).toHaveStyle('transform-origin: 50% 0% 0');
 
     divStyler.set({
       originX: '40%'
@@ -70,7 +70,7 @@ describe('styler', () => {
 
     divStyler.render();
 
-    expect(div).toHaveStyle('transform-origin: 40% 100% 0');
+    expect(div).toHaveStyle('transform-origin: 40% 0% 0');
 
     divStyler.set({
       originZ: '20px'
@@ -78,7 +78,17 @@ describe('styler', () => {
 
     divStyler.render();
 
-    expect(div).toHaveStyle('transform-origin: 40% 100% 20px');
+    expect(div).toHaveStyle('transform-origin: 40% 0% 20px');
+
+    const divZ = document.createElement('div');
+    const divZStyler = styler(divZ);
+
+    divZStyler.set({
+      originZ: 20
+    });
+
+    divZStyler.render();
+    expect(divZ).toHaveStyle('transform-origin: 50% 50% 20px');
   });
 
   test('css - only preparse default value types', () => {

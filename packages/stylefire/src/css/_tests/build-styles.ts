@@ -53,8 +53,11 @@ describe('buildStyleProperty', () => {
   });
 
   it('Should correctly interpret progress values as percentages', () => {
-    expect(buildStyleProperty({ originX: 0.5, originY: 0.5 })).toEqual({
-      transformOrigin: '50% 50% 0'
+    expect(buildStyleProperty({ originX: 0.4, originY: 0.4 })).toEqual({
+      transformOrigin: '40% 40% 0'
+    });
+    expect(buildStyleProperty({ originZ: 1 })).toEqual({
+      transformOrigin: '50% 50% 1px'
     });
   });
 
