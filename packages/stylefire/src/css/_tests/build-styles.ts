@@ -35,12 +35,12 @@ describe('buildStyleProperty', () => {
     });
 
     expect(buildStyleProperty({ scale: 1, x: 100, originX: 1 })).toEqual({
-      transformOrigin: '100% 0 0',
+      transformOrigin: '100% 50% 0',
       transform: 'translateX(100px) scale(1) translateZ(0)'
     });
 
     expect(buildStyleProperty({ scale: 1, x: 100, originX: 1 })).toEqual({
-      transformOrigin: '100% 0 0',
+      transformOrigin: '100% 50% 0',
       transform: 'translateX(100px) scale(1) translateZ(0)'
     });
 

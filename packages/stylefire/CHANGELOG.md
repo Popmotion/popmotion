@@ -2,6 +2,12 @@
 
 Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.0.0] 2019-06-13
+
+### Fix
+
+- Changed default `originX` and `originY` to `"50%"`.
+
 ## [4.1.4] 2019-05-07
 
 ### Fix

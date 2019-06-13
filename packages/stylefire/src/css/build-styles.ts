@@ -120,7 +120,8 @@ function buildStyleProperty(
 
   if (hasTransformOrigin) {
     styles.transformOrigin = `${transformOrigin.originX ||
-      0} ${transformOrigin.originY || 0} ${transformOrigin.originZ || 0}`;
+      '50%'} ${transformOrigin.originY || '50%'} ${transformOrigin.originZ ||
+      0}`;
   }
 
   return styles;
