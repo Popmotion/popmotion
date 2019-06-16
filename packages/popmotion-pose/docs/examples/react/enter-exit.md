@@ -16,7 +16,7 @@ const Modal = posed.div({
 
 export default ({ isVisible }) => (
   <PoseGroup>
-    {isVisible ? <Menu /> : null}
+    {isVisible ? <Modal /> : null}
   </PoseGroup>
 )
 ```
