@@ -18,13 +18,13 @@ const tween = (props: TweenProps = {}): Action =>
         ease = easeOut,
         flip = 0,
         loop = 0,
-        yoyo = 0
+        yoyo = 0,
+        repeatDelay = 0
       } = props;
       let {
         from = 0,
         to = 1,
         elapsed = 0,
-        playDirection = 1,
         flipCount = 0,
         yoyoCount = 0,
         loopCount = 0
@@ -35,46 +35,38 @@ const tween = (props: TweenProps = {}): Action =>
       let currentProgress = 0;
       let process: Process;
       let isActive = false;
-      const reverseTween = () => {
-        if (elapsed > duration) {
-          const remainder = elapsed - duration;
-          elapsed = elapsed - remainder * 2;
-        } else if (elapsed < 0) {
-          const remainder = -1 * elapsed;
-          elapsed = elapsed + remainder * 2;
-        }
-        playDirection *= -1;
+
+      const reverseAnimation = (reverseEase: boolean = false) => {
+        [from, to] = [to, from];
+        playhead = scrubber({ from, to, ease, reverseEase }).start(update);
       };
 
-      const isTweenComplete = (): boolean => {
-        const isComplete =
-          playDirection === 1
-            ? isActive && elapsed >= duration
-            : isActive && elapsed <= 0;
+      const isTweenComplete = () => {
+        let isComplete = isActive && elapsed > duration + repeatDelay;
 
+        // If we still have time on the clock, return false early
         if (!isComplete) return false;
+
+        // If we're complete and not repeating, return true early
         if (isComplete && !loop && !flip && !yoyo) return true;
 
-        let isStepTaken = false;
+        elapsed = duration - (elapsed - repeatDelay);
+
+        // Otherwise we have to figure out how to repeat the animation
         if (loop && loopCount < loop) {
-          elapsed = duration - elapsed;
           loopCount++;
-          isStepTaken = true;
+          return false;
         } else if (flip && flipCount < flip) {
-          elapsed = duration - elapsed;
-
-          [from, to] = [to, from];
-          playhead = scrubber({ from, to, ease }).start(update);
-
           flipCount++;
-          isStepTaken = true;
+          reverseAnimation();
+          return false;
         } else if (yoyo && yoyoCount < yoyo) {
-          reverseTween();
           yoyoCount++;
-          isStepTaken = true;
+          reverseAnimation(yoyoCount % 2 !== 0);
+          return false;
         }
 
-        return !isStepTaken;
+        return true;
       };
 
       const updateTween = () => {
@@ -85,12 +77,12 @@ const tween = (props: TweenProps = {}): Action =>
       const startTimer = () => {
         isActive = true;
         process = sync.update(({ delta }) => {
-          // TODO Maybe try something different to eat the variations in framerate
-          elapsed += delta * playDirection;
+          elapsed += delta;
           updateTween();
-          if (isTweenComplete() && complete) {
+
+          if (isTweenComplete()) {
             cancelSync.update(process);
-            sync.update(complete, false, true);
+            complete && sync.update(complete, false, true);
           }
         }, true);
       };
@@ -123,7 +115,7 @@ const tween = (props: TweenProps = {}): Action =>
           return this;
         },
         reverse() {
-          reverseTween();
+          reverseAnimation();
           return this;
         }
       };
