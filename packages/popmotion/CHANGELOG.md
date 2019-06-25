@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.7.0] 2019-06-25
+
+### Added
+
+- `repeatDelay` prop to `tween`.
+
 ## [8.6.10] 2019-05-09
 
 ### Fixed
