@@ -127,7 +127,10 @@ function buildStyleProperty(
   return styles;
 }
 
-function createStyleBuilder(enableHardwareAcceleration: boolean = true) {
+function createStyleBuilder(
+  enableHardwareAcceleration = true,
+  isDashCase = true
+) {
   /**
    * Because we expect this function to run multiple times a frame
    * we create and hold these data structures as mutative states.
@@ -146,7 +149,7 @@ function createStyleBuilder(enableHardwareAcceleration: boolean = true) {
       transform,
       transformOrigin,
       transformKeys,
-      true
+      isDashCase
     );
 
     return styles;

@@ -9,10 +9,7 @@ import {
   ValueType
 } from 'style-value-types';
 
-const rounded = {
-  ...number,
-  transform: Math.round
-};
+const int = { ...number, transform: Math.round };
 
 const valueTypes: { [key: string]: ValueType } = {
   // Color props
@@ -76,6 +73,9 @@ const valueTypes: { [key: string]: ValueType } = {
   skewX: degrees,
   skewY: degrees,
   distance: px,
+  translateX: px,
+  translateY: px,
+  translateZ: px,
   x: px,
   y: px,
   z: px,
@@ -86,7 +86,12 @@ const valueTypes: { [key: string]: ValueType } = {
   originZ: px,
 
   // Misc
-  zIndex: rounded
+  zIndex: int,
+
+  // SVG
+  fillOpacity: alpha,
+  strokeOpacity: alpha,
+  numOctaves: int
 };
 
 export const getValueType = (key: string) => valueTypes[key];

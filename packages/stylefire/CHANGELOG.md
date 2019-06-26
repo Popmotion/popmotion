@@ -2,11 +2,18 @@
 
 Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.0.0] 2019-06-25
+
+### Changed
+
+- Using CSS parser to create SVG transforms.
+- SVG `x` and `y` now refer to the prop, `translateX` and `translateY` to the transform.
+
 ## [5.0.0] 2019-06-13
 
 ### Fix
 
-- Changed default `originX` and `originY` to `"50%"`.
+- Changed default `originX` and `originY` to `0.5`.
 
 ## [4.1.4] 2019-05-07
 
