@@ -1,99 +1,115 @@
 import { camelToDash } from '../styler/utils';
-import { isTransformProp } from '../css/transform-props';
-import { Dimensions, SVGState, TransformState } from './types';
+import { px } from 'style-value-types';
+import { Dimensions, SVGState } from './types';
 import { camelCaseAttributes } from './attr-formatting';
+import { createStyleBuilder } from '../css/build-styles';
+import { State, ResolvedState } from '../styler/types';
 
-// Little hack to avoid division by zero
-const ZERO_NOT_ZERO = 0.0000001;
-
-const progressToPixels = (progress: number, length: number) =>
-  progress * length + 'px';
-
-const build = (
-  state: SVGState,
-  dimensions: Dimensions,
-  isPath: boolean,
-  pathLength?: number
-) => {
-  let hasTransform = false;
-  let hasDashArray = false;
-
-  const props: SVGState = {};
-  const dashArrayStyles = isPath
-    ? {
-        pathLength: '0',
-        pathSpacing: `${pathLength}`
-      }
-    : undefined;
-
-  // Standardise transform to saner CSS model. Currently, we're applying actual
-  // transforms to the SVG element - a massive performance win here would be
-  // to do this "offline" and then apply only the minimal transform to the element
-  const scale =
-    state.scale !== undefined
-      ? state.scale || ZERO_NOT_ZERO
-      : state.scaleX || 1;
-  const scaleY =
-    state.scaleY !== undefined ? state.scaleY || ZERO_NOT_ZERO : scale || 1;
-  const transformOriginX =
-    dimensions.width * (state.originX || 50) + dimensions.x;
-  const transformOriginY =
-    dimensions.height * (state.originY || 50) + dimensions.y;
-  const scaleTransformX = -transformOriginX * (scale * 1);
-  const scaleTransformY = -transformOriginY * (scaleY * 1);
-  const scaleReplaceX = transformOriginX / scale;
-  const scaleReplaceY = transformOriginY / scaleY;
-  const transform: TransformState = {
-    translate: `translate(${state.x}, ${state.y}) `,
-    scale: `translate(${scaleTransformX}, ${scaleTransformY}) scale(${scale}, ${scaleY}) translate(${scaleReplaceX}, ${scaleReplaceY}) `,
-    rotate: `rotate(${
-      state.rotate
-    }, ${transformOriginX}, ${transformOriginY}) `,
-    skewX: `skewX(${state.skewX}) `,
-    skewY: `skewY(${state.skewY}) `
+export type SVGAttrs = {
+  [key: string]: any;
+  style?: {
+    transform?: string;
+    transformOrigin?: string;
   };
-
-  for (const key in state) {
-    if (state.hasOwnProperty(key)) {
-      const value = state[key];
-
-      if (isTransformProp(key)) {
-        hasTransform = true;
-
-        // If this is a dash-array
-      } else if (
-        isPath &&
-        (key === 'pathLength' || key === 'pathSpacing') &&
-        typeof value === 'number'
-      ) {
-        hasDashArray = true;
-        dashArrayStyles[key] = progressToPixels(value, pathLength);
-      } else if (isPath && key === 'pathOffset') {
-        props['stroke-dashoffset'] = progressToPixels(-value, pathLength);
-      } else {
-        const attrKey = !camelCaseAttributes.has(key) ? camelToDash(key) : key;
-        props[attrKey] = value;
-      }
-    }
-  }
-
-  if (hasDashArray) {
-    props['stroke-dasharray'] =
-      dashArrayStyles.pathLength + ' ' + dashArrayStyles.pathSpacing;
-  }
-
-  if (hasTransform) {
-    props.transform = '';
-
-    for (const key in transform) {
-      if (transform.hasOwnProperty(key)) {
-        const defaultValue = key === 'scale' ? '1' : '0';
-        props.transform += transform[key].replace(/undefined/g, defaultValue);
-      }
-    }
-  }
-
-  return props;
 };
 
-export default build;
+const svgAttrsTemplate = (): SVGAttrs => ({
+  style: {}
+});
+
+const progressToPixels = (progress: number, length: number) =>
+  px.transform(progress * length);
+
+export type Dimensions = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};
+
+const unmeasured = { x: 0, y: 0, width: 0, height: 0 };
+
+function calcOrigin(origin: number | string, offset: number, size: number) {
+  return typeof origin === 'string'
+    ? origin
+    : px.transform(offset + size * origin);
+}
+
+function calculateSVGTransformOrigin(
+  dimensions: Dimensions,
+  originX: number | string,
+  originY: number | string
+) {
+  return `${calcOrigin(originX, dimensions.x, dimensions.width)} ${calcOrigin(
+    originY,
+    dimensions.y,
+    dimensions.height
+  )}`;
+}
+
+export function buildSVGAttrs(
+  {
+    x,
+    y,
+    z,
+    originX = 0.5,
+    originY = 0.5,
+    pathLength,
+    pathSpacing = 1,
+    pathOffset = 0,
+    ...state
+  }: State & SVGState,
+  dimensions: Dimensions = unmeasured,
+  totalPathLength?: number | undefined,
+  cssBuilder: (state: State) => ResolvedState = createStyleBuilder(
+    false,
+    false
+  ),
+  attrs: SVGAttrs = svgAttrsTemplate()
+) {
+  const style = cssBuilder(state);
+
+  for (const key in style) {
+    if (key === 'transform') {
+      attrs.style.transform = style[key] as string;
+    } else {
+      let attrKey = !camelCaseAttributes.has(key) ? camelToDash(key) : key;
+      attrs[attrKey] = style[key];
+    }
+  }
+
+  // Parse transformOrigin
+  if (originX !== undefined || originY !== undefined) {
+    attrs.style.transformOrigin = calculateSVGTransformOrigin(
+      dimensions,
+      originX as number,
+      originY as number
+    );
+  }
+
+  // Treat x/y not as shortcuts but as actual attributes
+  if (x !== undefined) attrs.x = x;
+  if (y !== undefined) attrs.y = y;
+
+  // Handle special path length attributes
+  if (totalPathLength !== undefined && pathLength !== undefined) {
+    attrs['stroke-dashoffset'] = progressToPixels(-pathOffset, totalPathLength);
+    attrs['stroke-dasharray'] = `${progressToPixels(
+      pathLength,
+      totalPathLength
+    )} ${progressToPixels(pathSpacing, totalPathLength)}`;
+  }
+
+  return attrs;
+}
+
+export function createAttrBuilder(
+  dimensions: Dimensions,
+  totalPathLength?: number
+) {
+  const attrs: SVGAttrs = svgAttrsTemplate();
+  const cssBuilder = createStyleBuilder(false, false);
+
+  return (state: State & SVGState) =>
+    buildSVGAttrs(state, dimensions, totalPathLength, cssBuilder, attrs);
+}

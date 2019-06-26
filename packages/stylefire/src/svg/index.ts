@@ -1,23 +1,17 @@
 import { isTransformProp } from '../css/transform-props';
 import createStyler from '../styler';
-import { Styler } from '../styler/types';
-import { setDomAttrs } from '../styler/utils';
-import buildAttrs from './build';
-import getValueType from './value-types';
-import { SVGState } from './types';
+import { Styler, State } from '../styler/types';
+import { createAttrBuilder, SVGAttrs } from './build';
+import { getValueType } from '../css/value-types';
 import { getSVGElementDimensions } from './utils';
 
 type SVGProps = {
-  dimensions: {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-  };
   element: SVGElement;
-  isPath: boolean;
-  pathLength?: number;
+  buildAttrs: (state: State) => SVGAttrs;
 };
+
+const isPath = (element: SVGElement): element is SVGPathElement =>
+  element.tagName === 'path';
 
 const svgStyler = createStyler({
   onRead: (key, { element }) => {
@@ -28,27 +22,24 @@ const svgStyler = createStyler({
       return valueType ? valueType.default : 0;
     }
   },
-  onRender: (state, { dimensions, element, isPath, pathLength }) => {
-    setDomAttrs(
-      element,
-      buildAttrs(state as SVGState, dimensions, isPath, pathLength)
-    );
+  onRender: (state, { element, buildAttrs }: SVGProps) => {
+    const attrs = buildAttrs(state);
+    for (const key in attrs) {
+      if (key === 'style') {
+        Object.assign(element.style, attrs.style);
+      } else {
+        element.setAttribute(key, attrs[key]);
+      }
+    }
   }
 });
 
 export default (element: SVGElement | SVGPathElement): Styler => {
   const dimensions = getSVGElementDimensions(element);
+  const pathLength = isPath(element) ? element.getTotalLength() : undefined;
 
-  const props: SVGProps = {
+  return svgStyler({
     element,
-    dimensions,
-    isPath: false
-  };
-
-  if (element.tagName === 'path') {
-    props.isPath = true;
-    props.pathLength = (element as SVGPathElement).getTotalLength();
-  }
-
-  return svgStyler(props);
+    buildAttrs: createAttrBuilder(dimensions, pathLength)
+  });
 };
