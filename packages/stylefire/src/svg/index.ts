@@ -10,6 +10,9 @@ type SVGProps = {
   buildAttrs: (state: State) => SVGAttrs;
 };
 
+const isPath = (element: SVGElement): element is SVGPathElement =>
+  element.tagName === 'path';
+
 const svgStyler = createStyler({
   onRead: (key, { element }) => {
     if (!isTransformProp(key)) {
@@ -33,12 +36,10 @@ const svgStyler = createStyler({
 
 export default (element: SVGElement | SVGPathElement): Styler => {
   const dimensions = getSVGElementDimensions(element);
+  const pathLength = isPath(element) ? element.getTotalLength() : undefined;
 
   return svgStyler({
     element,
-    buildAttrs: createAttrBuilder(
-      dimensions,
-      (element as SVGPathElement).getTotalLength()
-    )
+    buildAttrs: createAttrBuilder(dimensions, pathLength)
   });
 };

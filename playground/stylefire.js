@@ -52,6 +52,30 @@ const Icon = ({ id, pos, style }) => (
   </svg>
 );
 
+const Path = ({ pos }) => (
+  <svg
+    width="100px"
+    height="100px"
+    viewBox="0 0 100 100"
+    version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    style={{ display: 'block', border: '1px solid red' }}
+  >
+    <path
+      id="lineAB"
+      d="M0,0 Q50,100 100,100"
+      stroke="red"
+      stroke-width="3"
+      fill="none"
+      ref={element => {
+        if (!element) return;
+
+        styler(element).set(pos);
+      }}
+    />
+  </svg>
+);
+
 export class SVG extends React.Component {
   render() {
     return (
@@ -62,6 +86,11 @@ export class SVG extends React.Component {
         <Icon pos={{ scale: 0.5 }} />
         <Icon pos={{ translateX: 100, rotate: 45, scale: 0.5 }} />
         <Icon pos={{ rotate: 45, originX: 0, originY: 0 }} />
+        <Path pos={{ pathLength: 0.5, pathOffset: 0.5 }} />
+        <Path pos={{ pathLength: 0.2 }} />
+        <Path pos={{ pathLength: 0.2, pathOffset: 0.6 }} />
+        <Path pos={{ pathLength: 0.2, pathSpacing: 0.2 }} />
+        <Path pos={{ pathLength: 0.2, pathSpacing: 0.2, pathOffset: 0.5 }} />
       </Fragment>
     );
   }
