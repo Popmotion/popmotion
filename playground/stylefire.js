@@ -54,9 +54,9 @@ const Icon = ({ id, pos, style }) => (
 
 const Path = ({ pos }) => (
   <svg
-    width="100px"
+    width="500px"
     height="100px"
-    viewBox="0 0 100 100"
+    viewBox="0 0 500 100"
     version="1.1"
     xmlns="http://www.w3.org/2000/svg"
     style={{ display: 'block', border: '1px solid red' }}
@@ -73,6 +73,9 @@ const Path = ({ pos }) => (
         styler(element).set(pos);
       }}
     />
+    <text x="20" y="20" fill="black">
+      {JSON.stringify(pos)}
+    </text>
   </svg>
 );
 
