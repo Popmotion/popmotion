@@ -27,6 +27,8 @@ export type Dimensions = {
   height: number;
 };
 
+const unmeasured = { x: 0, y: 0, width: 0, height: 0 };
+
 function calcOrigin(origin: number | string, offset: number, size: number) {
   return typeof origin === 'string'
     ? origin
@@ -57,7 +59,7 @@ export function buildSVGAttrs(
     pathOffset = 0,
     ...state
   }: State & SVGState,
-  dimensions: Dimensions,
+  dimensions: Dimensions = unmeasured,
   totalPathLength?: number | undefined,
   cssBuilder: (state: State) => ResolvedState = createStyleBuilder(
     false,

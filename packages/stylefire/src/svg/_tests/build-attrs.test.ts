@@ -47,8 +47,7 @@ test('should correctly create SVG attrs', () => {
 
   expect(pathAttrs).toEqual({
     'stroke-dasharray': '100px 200px',
-    'stroke-dashoffset': '300',
-    transformOrigin: '125px 125px',
-    style: {}
+    'stroke-dashoffset': '-300px',
+    style: { transformOrigin: '125px 125px' }
   });
 });
