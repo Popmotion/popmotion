@@ -73,7 +73,7 @@ export function buildSVGAttrs(
     if (key === 'transform') {
       attrs.style.transform = style[key] as string;
     } else {
-      let attrKey = !camelCaseAttributes.has(key) ? camelToDash(key) : key;
+      const attrKey = !camelCaseAttributes.has(key) ? camelToDash(key) : key;
       attrs[attrKey] = style[key];
     }
   }
