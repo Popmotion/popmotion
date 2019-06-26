@@ -2,6 +2,12 @@
 
 Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.0.2] 2019-06-25
+
+### Fixed
+
+- Loosening `SVGState` type.
+
 ## [6.0.1] 2019-06-25
 
 ### Fixed
