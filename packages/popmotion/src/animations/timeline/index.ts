@@ -30,8 +30,7 @@ const flattenTimings = (instructions: Instruction[]) => {
     if (i !== numSegments - 1) {
       const duration =
         (item as AnimationDefinition).duration || DEFAULT_DURATION;
-      offset += staggerDelay as number;
-      flatInstructions.push(`-${duration - offset}`);
+      flatInstructions.push(`${staggerDelay - duration}`);
     }
   });
 
