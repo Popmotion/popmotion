@@ -1,5 +1,5 @@
 import typescript from 'rollup-plugin-typescript2';
-import uglify from 'rollup-plugin-uglify';
+import { uglify } from 'rollup-plugin-uglify';
 import resolve from 'rollup-plugin-node-resolve';
 import replace from 'rollup-plugin-replace';
 import pkg from './package.json';

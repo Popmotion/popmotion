@@ -3,7 +3,7 @@ import { number } from 'style-value-types';
 import action from '../../action';
 import { Action } from '../../action';
 import vectorAction, { ActionFactory } from '../../action/vector';
-import { speedPerFrame } from '../../calc';
+import { velocityPerFrame } from '@popmotion/popcorn';
 import { PhysicsInterface, PhysicsProps } from './types';
 
 const physics = (props: PhysicsProps = {}): Action =>
@@ -23,15 +23,16 @@ const physics = (props: PhysicsProps = {}): Action =>
         // Integration doesn't work well with very low numbers
         const elapsed = Math.max(delta, 16);
 
-        if (acceleration) velocity += speedPerFrame(acceleration, elapsed);
+        if (acceleration) velocity += velocityPerFrame(acceleration, elapsed);
         if (friction) velocity *= (1 - friction) ** (elapsed / 100);
 
         if (springStrength !== undefined && to !== undefined) {
           const distanceToTarget = to - current;
-          velocity += distanceToTarget * speedPerFrame(springStrength, elapsed);
+          velocity +=
+            distanceToTarget * velocityPerFrame(springStrength, elapsed);
         }
 
-        current += speedPerFrame(velocity, elapsed);
+        current += velocityPerFrame(velocity, elapsed);
 
         update(current);
 
