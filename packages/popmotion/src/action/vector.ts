@@ -137,7 +137,7 @@ const reduceObjectValue = (key: string) => (props: Props, propKey: string) => {
 const createObjectAction: CreateVectorAction = (action, props, vectorKeys) => {
   const [firstVectorKey] = vectorKeys;
   const actionMap = Object.keys(props[firstVectorKey]).reduce(
-    (map, key) => {
+    (map: { [key: string]: Action }, key) => {
       const childActionProps = vectorKeys.reduce(reduceObjectValue(key), {
         ...props
       });
@@ -147,7 +147,7 @@ const createObjectAction: CreateVectorAction = (action, props, vectorKeys) => {
       );
       return map;
     },
-    {} as { [key: string]: Action }
+    {}
   );
 
   return composite(actionMap);
@@ -212,7 +212,7 @@ const createColorAction = createMixerAction(mixColor);
  * Using a `from` and `to` of `0`-`1` we use the output to transition between the two
  * arrays.
  */
-const createComplexAction = createMixerAction(mixComplex);
+const createComplexAction = createMixerAction(mixComplex as Mixer<any>);
 
 /**
  * ## Create vector action
