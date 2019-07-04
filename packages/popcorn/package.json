@@ -56,7 +56,8 @@
     "@popmotion/easing": "^1.0.1",
     "framesync": "^4.0.4",
     "hey-listen": "^1.0.8",
-    "style-value-types": "^3.1.5"
+    "style-value-types": "^3.1.5",
+    "tslib": "^1.10.0"
   },
   "devDependencies": {
     "@types/jest": "^24.0.11",

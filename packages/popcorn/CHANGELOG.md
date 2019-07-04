@@ -2,6 +2,10 @@
 
 Popcorn adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.4.1] 2019-07-04
+
+- Updating dependencies.
+
 ## [0.4.0] 2019-05-01
 
 ### Added

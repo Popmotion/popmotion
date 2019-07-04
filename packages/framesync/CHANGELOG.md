@@ -2,6 +2,18 @@
 
 Framesync adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.0.4] 2019-07-04
+
+### Fixed
+
+- Removing `rollup` from `dependencies`.
+
+## [4.0.3] 2019-07-04
+
+### Updated
+
+- Updating `hey-listen`.
+
 ## [4.0.2] 2019-02-05
 
 ### Fixed
