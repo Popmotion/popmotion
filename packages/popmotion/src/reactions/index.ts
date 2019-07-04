@@ -40,9 +40,4 @@ export abstract class BaseMulticast<T> extends Chainable<T>
   stop(): void {
     if (this.parent) this.parent.stop();
   }
-
-  registerParent(subscription: ColdSubscription): void {
-    this.stop();
-    this.parent = subscription;
-  }
 }
