@@ -24,9 +24,9 @@ Stylefire supports both`'stoke-dasharray'` and `stroke-dashorigin` properties, b
 * `pathSpacing`
 * `pathOffset`
 
-These are all set as a **progress of the total path length, from `0` to `100`**, which is automatically measured by Stylefire.
+These are all set as a **progress of the total path length, from `0` to `1`**, which is automatically measured by Stylefire.
 
-So you can define an animation from `0` to `100`:
+So you can define an animation from `0` to `1`:
 
 ```javascript
 import { tween } from 'popmotion';
@@ -35,7 +35,7 @@ import styler from 'stylefire';
 const path = document.querySelector('path');
 const pathStyler = styler(polygon);
 
-tween({ to: 100 }).start(
+tween({ to: 1 }).start(
   v => pathStyler.set('pathLength', v)
 );
 ```
