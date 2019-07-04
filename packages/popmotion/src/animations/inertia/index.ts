@@ -1,11 +1,12 @@
 import { number } from 'style-value-types';
 import action, { Action } from '../../action';
 import vectorAction, { ActionFactory } from '../../action/vector';
-import value from '../../reactions/value';
 import spring from '../spring';
 import decay from '../decay';
 import { ColdSubscription } from '../../action/types';
 import { Props, SpringProps } from './types';
+import { velocityPerFrame, velocityPerSecond } from '@popmotion/popcorn';
+import { getFrameData } from 'framesync';
 
 const inertia = ({
   from = 0,
@@ -20,7 +21,9 @@ const inertia = ({
   modifyTarget
 }: Props) =>
   action(({ update, complete }) => {
-    const current = value(from);
+    let prev = from;
+    let current = from;
+    let velocity = 0;
     let activeAnimation: ColdSubscription;
     let isSpring = false;
 
@@ -34,11 +37,29 @@ const inertia = ({
       );
     };
 
+    const onUpdate = (v: number) => {
+      update(v);
+
+      prev = current;
+      current = v;
+      velocity = velocityPerSecond(current - prev, getFrameData().delta);
+
+      // Snap to the nearest boundary if we're not already in a spring state and
+      // our value is moving away from the bounded area.
+      if (
+        activeAnimation &&
+        !isSpring &&
+        isTravellingAwayFromBounds(v, velocity)
+      ) {
+        startSpring({ from: v, velocity });
+      }
+    };
+
     const startAnimation = (animation: Action, next?: Function) => {
       activeAnimation && activeAnimation.stop();
 
       activeAnimation = animation.start({
-        update: (v: number) => current.update(v),
+        update: onUpdate,
         complete: () => {
           if (next) {
             next();
@@ -62,22 +83,6 @@ const inertia = ({
       );
     };
 
-    current.subscribe((v: number) => {
-      update(v);
-
-      const currentVelocity = current.getVelocity();
-
-      // Snap to the nearest boundary if we're not already in a spring state and
-      // our value is moving away from the bounded area.
-      if (
-        activeAnimation &&
-        !isSpring &&
-        isTravellingAwayFromBounds(v, currentVelocity)
-      ) {
-        startSpring({ from: v, velocity: currentVelocity });
-      }
-    });
-
     // We want to start the animation already as a spring if we're outside the defined boundaries
     if (isOutOfBounds(from)) {
       startSpring({ from, velocity });
@@ -94,10 +99,8 @@ const inertia = ({
       });
 
       startAnimation(animation, () => {
-        const v = current.get() as number;
-
-        if (isOutOfBounds(v)) {
-          startSpring({ from: v, velocity: current.getVelocity() });
+        if (isOutOfBounds(current)) {
+          startSpring({ from: current, velocity });
         } else {
           complete();
         }
