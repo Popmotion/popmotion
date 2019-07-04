@@ -23,7 +23,6 @@ const inertia = ({
   action(({ update, complete }) => {
     let prev = from;
     let current = from;
-    let velocity = 0;
     let activeAnimation: ColdSubscription;
     let isSpring = false;
 
