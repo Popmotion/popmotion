@@ -225,6 +225,7 @@ const createVectorAction: VectorActionFactory = (action, typeTests) => {
 // Accepts a test prop, and returns a function with which to create an action
 const getActionCreator = (prop: any) => {
   // Pattern matching would be quite lovely here
+
   if (typeof prop === 'number') {
     return createAction;
   } else if (isUnitProp(prop)) {
