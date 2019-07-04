@@ -55,29 +55,12 @@ export {
   stagger
 };
 
-// Includes - Deprecated for 9.0
-import * as calc from './calc';
-import * as easing from '@popmotion/easing';
-import * as transform from './transformers';
-
-export { calc, easing, transform };
-
-// Stylefire
-import styler, { Styler } from 'stylefire';
-import { warning } from 'hey-listen';
-const css = (element: HTMLElement, props: Object): Styler => {
-  warning(false, 'css() is deprecated, use styler instead');
-  return styler(element, props);
-};
-const svg = (element: HTMLElement, props: Object): Styler => {
-  warning(false, 'svg() is deprecated, use styler instead');
-  return styler(element, props);
-};
-export { styler, css, svg };
-
-// Value types
-import * as valueTypes from 'style-value-types';
-export { valueTypes };
+import { invariant } from 'hey-listen';
+export const styler = () =>
+  invariant(
+    false,
+    'styler has been removed from Popmotion in 9.0. Downgrade to 8.x or npm install stylefire'
+  );
 
 // Types
 export { Action } from './action';
