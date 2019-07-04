@@ -1,6 +1,6 @@
 {
   "name": "stylefire",
-  "version": "6.0.3",
+  "version": "6.0.4",
   "description": "Performant, simplified stylers for CSS, SVG, path and DOM scroll.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -46,19 +46,20 @@
     "jest": "^23.1.0",
     "jest-cli": "^23.1.0",
     "jest-dom": "^3.0.0",
-    "rollup": "^0.59.1",
-    "rollup-plugin-node-resolve": "^3.3.0",
-    "rollup-plugin-typescript2": "^0.14.0",
-    "rollup-plugin-uglify": "^3.0.0",
-    "typescript": "^2.9.2",
+    "rollup": "^1.16.5",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-typescript2": "^0.21.2",
+    "rollup-plugin-uglify": "^6.0.2",
+    "typescript": "^3.5.2",
     "uglify-js": "^3.3.25",
     "webpack": "^3.0.0"
   },
   "dependencies": {
-    "@popmotion/popcorn": "^0.4.0",
-    "framesync": "^4.0.0",
+    "@popmotion/popcorn": "^0.4.1",
+    "framesync": "^4.0.4",
     "hey-listen": "^1.0.8",
-    "style-value-types": "^3.1.4"
+    "style-value-types": "^3.1.5",
+    "tslib": "^1.10.0"
   },
   "unpkg": "./dist/stylefire.min.js",
   "jest": {
