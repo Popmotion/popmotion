@@ -1,5 +1,5 @@
 import sync, { getFrameData, FrameData } from 'framesync';
-import { speedPerSecond } from '../calc';
+import { velocityPerSecond } from '@popmotion/popcorn';
 import { ObserverCandidate, ObserverProps, Update } from '../observer/types';
 import { BaseMulticast } from './';
 import { HotSubscription } from './types';
@@ -99,8 +99,8 @@ export class ValueReaction extends BaseMulticast<ValueReaction> {
     prev: number | string
   ): number {
     return typeof current === 'number' && typeof prev === 'number'
-      ? speedPerSecond(current - prev, this.timeDelta)
-      : speedPerSecond(
+      ? velocityPerSecond(current - prev, this.timeDelta)
+      : velocityPerSecond(
           parseFloat(current as string) - parseFloat(prev as string),
           this.timeDelta
         ) || 0;

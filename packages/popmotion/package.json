@@ -1,6 +1,6 @@
 {
   "name": "popmotion",
-  "version": "8.7.2",
+  "version": "9.0.0-beta-8",
   "description": "A functional, reactive motion library.",
   "author": "Matt Perry",
   "homepage": "https://popmotion.io",
@@ -47,8 +47,8 @@
   "dependencies": {
     "@popmotion/easing": "^1.0.1",
     "@popmotion/popcorn": "^0.4.4",
-    "framesync": "^4.0.0",
-    "hey-listen": "^1.0.5",
+    "framesync": "^4.0.4",
+    "hey-listen": "^1.0.8",
     "style-value-types": "^3.1.7",
     "stylefire": "^7.0.1",
     "tslib": "^1.10.0"
@@ -58,7 +58,8 @@
     "jest": "^23.1.0",
     "jest-cli": "^23.1.0",
     "ts-jest": "^21.2.4",
-    "tslint-circular-dependencies": "^0.1.0"
+    "tslint-circular-dependencies": "^0.1.0",
+    "typescript": "^3.5.2"
   },
   "jest": {
     "moduleFileExtensions": [
@@ -68,7 +69,6 @@
     "moduleNameMapper": {
       "@popmotion/easing": "<rootDir>/../../easing/src",
       "@popmotion/popcorn": "<rootDir>/../../popcorn/src",
-      "stylefire": "<rootDir>/../../stylefire/src",
       "style-value-types": "<rootDir>/../../style-value-types/src",
       "framesync": "<rootDir>/../../framesync/src"
     },
