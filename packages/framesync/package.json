@@ -1,6 +1,6 @@
 {
   "name": "framesync",
-  "version": "4.0.3",
+  "version": "4.0.4",
   "description": "A Unity-inspired render loop for JavaScript",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -36,11 +36,12 @@
     "@types/jest": "^23.1.1",
     "jest": "^23.1.0",
     "jest-cli": "^23.1.0",
+    "rollup": "^1.16.5",
     "rollup-plugin-node-resolve": "^3.4.0",
-    "rollup-plugin-typescript2": "^0.14.0",
-    "rollup-plugin-uglify": "^3.0.0",
+    "rollup-plugin-typescript2": "^0.21.2",
+    "rollup-plugin-uglify": "^6.0.2",
     "ts-jest": "^21.2.4",
-    "typescript": "^2.4.2"
+    "typescript": "^3.5.2"
   },
   "jest": {
     "moduleFileExtensions": [
