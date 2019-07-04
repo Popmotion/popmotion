@@ -1,6 +1,10 @@
 {
   "name": "popmotion",
+<<<<<<< HEAD
   "version": "9.0.0-beta-8",
+=======
+  "version": "9.0.0-beta.0",
+>>>>>>> Removing calc and transformers
   "description": "A functional, reactive motion library.",
   "author": "Matt Perry",
   "homepage": "https://popmotion.io",
