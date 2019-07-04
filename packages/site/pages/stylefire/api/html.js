@@ -75,6 +75,8 @@ The following alias' can be optionally used for setting CSS props:
 * \`originY\`: \`transformOriginY\`
 * \`originZ\`: \`transformOriginZ\`
 
+If set as a number, \`originX\` and \`originY\` are set as a progress value between \`0\` and \`1\`. \`originZ\` is set in pixels.
+
 ### Transform property order
 
 The \`transform\` property can be set directly, but in most cases it's simpler to animate \`rotate\`, \`translate\` and \`scale\` as individual props.
@@ -82,6 +84,14 @@ The \`transform\` property can be set directly, but in most cases it's simpler t
 In accordance with the [CSS Transforms Level 2 spec](https://drafts.csswg.org/css-transforms-2/#individual-transforms), if set individually these properties will be set in the following order:
 
 \`translate\`, \`scale\`, \`rotate\`
+
+A different order can be specified by setting \`transform\` to a function. It'll be provided two values, the individually-set props and the Stylefire-generated. \`transform\`.
+
+\`\`\`javascript
+styler.set({
+  transform: ({ x, y }, generated) => 'translateX' + x * y + 'px)'
+})
+\`\`\`
 
 ### CSS variables
 
