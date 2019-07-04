@@ -2,6 +2,12 @@
 
 Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.0.3] 2019-06-25
+
+### Fixed
+
+- Ensuring camel-cased SVG attributes are converted to dash case before we attempt to read them from the DOM.
+
 ## [6.0.2] 2019-06-25
 
 ### Fixed

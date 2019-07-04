@@ -4,6 +4,8 @@ import { Styler, State } from '../styler/types';
 import { createAttrBuilder, SVGAttrs } from './build';
 import { getValueType } from '../css/value-types';
 import { getSVGElementDimensions } from './utils';
+import { camelToDash } from '../styler/utils';
+import { camelCaseAttributes } from './attr-formatting';
 
 type SVGProps = {
   element: SVGElement;
@@ -15,6 +17,7 @@ const isPath = (element: SVGElement): element is SVGPathElement =>
 
 const svgStyler = createStyler({
   onRead: (key, { element }) => {
+    key = !camelCaseAttributes.has(key) ? camelToDash(key) : key;
     if (!isTransformProp(key)) {
       return element.getAttribute(key);
     } else {

@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import styler from 'stylefire';
+import styler, { buildStyleProperty } from 'stylefire';
 
 const position = pos => ref => ref && styler(ref).set(pos);
 
@@ -69,7 +69,7 @@ const Path = ({ pos }) => (
       fill="none"
       ref={element => {
         if (!element) return;
-
+        console.log('Should be 3: ', styler(element).get('strokeWidth'));
         styler(element).set(pos);
       }}
     />
