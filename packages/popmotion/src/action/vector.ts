@@ -7,8 +7,6 @@ import {
   vw,
   px
 } from 'style-value-types';
-import composite from '../compositors/composite';
-import parallel from '../compositors/parallel';
 import { mixColor, mixComplex } from '@popmotion/popcorn';
 import { Action } from './';
 
@@ -93,65 +91,6 @@ const isUnitProp = (prop: any) => Boolean(findUnitType(prop));
  * Simply takes a normal action, props, and returns.
  */
 const createAction: CreateVectorAction = (action, props) => action(props);
-
-/**
- * ## Create array action
- *
- * Creates a parallel-wrapped version of the provided action if
- * any vector prop has been provided as an array.
- *
- * Children values can be of type unit, color, number or complex
- */
-const reduceArrayValue = (i: number) => (props: Props, key: string) => {
-  // Note: Type coercion makes this inefficient
-  props[key] = props[key][i];
-  return props;
-};
-
-const createArrayAction: CreateVectorAction = (action, props, vectorKeys) => {
-  const [firstVectorKey] = vectorKeys;
-
-  // Use any vector prop to iterate over to create our actions
-  const actionList = props[firstVectorKey].map((v: any, i: number) => {
-    const childActionProps = vectorKeys.reduce(reduceArrayValue(i), {
-      ...props
-    });
-
-    return getActionCreator(v)(action, childActionProps);
-  });
-
-  return parallel(...actionList);
-};
-
-/**
- * Create object action
- *
- * Creates an action that can animate between two maps of properties
- */
-const reduceObjectValue = (key: string) => (props: Props, propKey: string) => {
-  // Note: Type coercion makes this inefficient
-  props[propKey] = props[propKey][key];
-  return props;
-};
-
-const createObjectAction: CreateVectorAction = (action, props, vectorKeys) => {
-  const [firstVectorKey] = vectorKeys;
-  const actionMap = Object.keys(props[firstVectorKey]).reduce(
-    (map: { [key: string]: Action }, key) => {
-      const childActionProps = vectorKeys.reduce(reduceObjectValue(key), {
-        ...props
-      });
-      map[key] = getActionCreator(props[firstVectorKey][key])(
-        action,
-        childActionProps
-      );
-      return map;
-    },
-    {}
-  );
-
-  return composite(actionMap);
-};
 
 /**
  * ## Create unit action
@@ -288,16 +227,12 @@ const getActionCreator = (prop: any) => {
   // Pattern matching would be quite lovely here
   if (typeof prop === 'number') {
     return createAction;
-  } else if (Array.isArray(prop)) {
-    return createArrayAction;
   } else if (isUnitProp(prop)) {
     return createUnitAction;
   } else if (color.test(prop)) {
     return createColorAction;
   } else if (complex.test(prop)) {
     return createComplexAction;
-  } else if (typeof prop === 'object') {
-    return createObjectAction;
   } else {
     return createAction;
   }
