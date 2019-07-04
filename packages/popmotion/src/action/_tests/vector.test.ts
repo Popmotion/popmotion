@@ -174,7 +174,6 @@ describe('vector', () => {
   });
 
   it('should handle composite complex units with color', () => {
-    console.log('composite color test');
     return new Promise((resolve, reject) => {
       let output = '';
       tween({
