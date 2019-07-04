@@ -64,47 +64,4 @@ describe('keyframes', () => {
       });
     });
   });
-
-  it('should animate objects', () => {
-    return new Promise((resolve, reject) => {
-      const i = {
-        x: 100,
-        background: '#fff'
-      };
-      keyframes({
-        values: [
-          {
-            x: 100,
-            background: '#fff'
-          },
-          {
-            x: 0,
-            background: '#000'
-          }
-        ]
-      }).start({
-        complete: () =>
-          i.x === 0 && i.background === 'rgba(0, 0, 0, 1)'
-            ? resolve()
-            : reject(`${i.x}, ${i.background}`),
-        update: v => {
-          if (v === undefined) reject('undefined detected');
-          i = v;
-        }
-      });
-    });
-  });
-
-  it('should animate arrays', () => {
-    return new Promise((resolve, reject) => {
-      let i = [];
-      keyframes({
-        values: [[0, 1, 2], [1, 2, 3], [2, 3, 4]]
-      }).start({
-        complete: () =>
-          i[0] === 2 && i[1] === 3 && i[2] === 4 ? resolve() : reject(i),
-        update: v => (i = v)
-      });
-    });
-  });
 });

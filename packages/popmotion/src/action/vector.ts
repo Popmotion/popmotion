@@ -7,8 +7,6 @@ import {
   vw,
   px
 } from 'style-value-types';
-import composite from '../compositors/composite';
-import parallel from '../compositors/parallel';
 import { mixColor, mixComplex } from '@popmotion/popcorn';
 import { Action } from './';
 
@@ -95,65 +93,6 @@ const isUnitProp = (prop: any) => Boolean(findUnitType(prop));
 const createAction: CreateVectorAction = (action, props) => action(props);
 
 /**
- * ## Create array action
- *
- * Creates a parallel-wrapped version of the provided action if
- * any vector prop has been provided as an array.
- *
- * Children values can be of type unit, color, number or complex
- */
-const reduceArrayValue = (i: number) => (props: Props, key: string) => {
-  // Note: Type coercion makes this inefficient
-  props[key] = props[key][i];
-  return props;
-};
-
-const createArrayAction: CreateVectorAction = (action, props, vectorKeys) => {
-  const [firstVectorKey] = vectorKeys;
-
-  // Use any vector prop to iterate over to create our actions
-  const actionList = props[firstVectorKey].map((v: any, i: number) => {
-    const childActionProps = vectorKeys.reduce(reduceArrayValue(i), {
-      ...props
-    });
-
-    return getActionCreator(v)(action, childActionProps);
-  });
-
-  return parallel(...actionList);
-};
-
-/**
- * Create object action
- *
- * Creates an action that can animate between two maps of properties
- */
-const reduceObjectValue = (key: string) => (props: Props, propKey: string) => {
-  // Note: Type coercion makes this inefficient
-  props[propKey] = props[propKey][key];
-  return props;
-};
-
-const createObjectAction: CreateVectorAction = (action, props, vectorKeys) => {
-  const [firstVectorKey] = vectorKeys;
-  const actionMap = Object.keys(props[firstVectorKey]).reduce(
-    (map, key) => {
-      const childActionProps = vectorKeys.reduce(reduceObjectValue(key), {
-        ...props
-      });
-      map[key] = getActionCreator(props[firstVectorKey][key])(
-        action,
-        childActionProps
-      );
-      return map;
-    },
-    {} as { [key: string]: Action }
-  );
-
-  return composite(actionMap);
-};
-
-/**
  * ## Create unit action
  *
  * Creates an action that animates between two unit values of the same type,
@@ -212,7 +151,7 @@ const createColorAction = createMixerAction(mixColor);
  * Using a `from` and `to` of `0`-`1` we use the output to transition between the two
  * arrays.
  */
-const createComplexAction = createMixerAction(mixComplex);
+const createComplexAction = createMixerAction(mixComplex as Mixer<any>);
 
 /**
  * ## Create vector action
@@ -286,18 +225,15 @@ const createVectorAction: VectorActionFactory = (action, typeTests) => {
 // Accepts a test prop, and returns a function with which to create an action
 const getActionCreator = (prop: any) => {
   // Pattern matching would be quite lovely here
+
   if (typeof prop === 'number') {
     return createAction;
-  } else if (Array.isArray(prop)) {
-    return createArrayAction;
   } else if (isUnitProp(prop)) {
     return createUnitAction;
   } else if (color.test(prop)) {
     return createColorAction;
   } else if (complex.test(prop)) {
     return createComplexAction;
-  } else if (typeof prop === 'object') {
-    return createObjectAction;
   } else {
     return createAction;
   }

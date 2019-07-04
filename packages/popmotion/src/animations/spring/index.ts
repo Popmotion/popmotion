@@ -3,7 +3,7 @@ import { number } from 'style-value-types';
 import action from '../../action';
 import { Action } from '../../action';
 import vectorAction, { ActionFactory } from '../../action/vector';
-import { speedPerSecond } from '../../calc';
+import { velocityPerSecond } from '@popmotion/popcorn';
 import { SpringInterface, SpringProps } from './types';
 
 const spring = (props: SpringProps = {}): Action =>
@@ -53,7 +53,7 @@ const spring = (props: SpringProps = {}): Action =>
             envelope * (delta + (initialVelocity + angularFreq * delta) * t);
         }
 
-        velocity = speedPerSecond(position - prevPosition, timeDelta);
+        velocity = velocityPerSecond(position - prevPosition, timeDelta);
 
         // Check if simulation is complete
         // We do this here instead of `isActionComplete` as it allows us

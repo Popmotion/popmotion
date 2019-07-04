@@ -1,5 +1,5 @@
 import sync, { getFrameData, FrameData } from 'framesync';
-import { speedPerSecond } from '../calc';
+import { velocityPerSecond } from '@popmotion/popcorn';
 import { ObserverCandidate, ObserverProps, Update } from '../observer/types';
 import { BaseMulticast } from './';
 import { HotSubscription } from './types';
@@ -11,12 +11,6 @@ export type Value = number | string | ValueMap | ValueList;
 export type ValueProps = ObserverProps & {
   value: Value;
   initialSubscription?: Update;
-};
-
-const isValueList = (v: any): v is ValueList => Array.isArray(v);
-const isSingleValue = (v: any): v is string | number => {
-  const typeOfV = typeof v;
-  return typeOfV === 'string' || typeOfV === 'number';
 };
 
 export class ValueReaction extends BaseMulticast<ValueReaction> {
@@ -32,27 +26,12 @@ export class ValueReaction extends BaseMulticast<ValueReaction> {
     super(props);
     this.prev = this.current = props.value || 0;
 
-    if (isSingleValue(this.current)) {
-      this.updateCurrent = (v: number | string) => (this.current = v);
-      this.getVelocityOfCurrent = () =>
-        this.getSingleVelocity(
-          this.current as string | number,
-          this.prev as string | number
-        );
-    } else if (isValueList(this.current)) {
-      this.updateCurrent = (v: ValueList) => (this.current = [...v]);
-      this.getVelocityOfCurrent = () => this.getListVelocity();
-    } else {
-      this.updateCurrent = (v: ValueMap) => {
-        this.current = {};
-        for (const key in v) {
-          if (v.hasOwnProperty(key)) {
-            this.current[key] = v[key];
-          }
-        }
-      };
-      this.getVelocityOfCurrent = () => this.getMapVelocity();
-    }
+    this.updateCurrent = (v: number | string) => (this.current = v);
+    this.getVelocityOfCurrent = () =>
+      this.getSingleVelocity(
+        this.current as string | number,
+        this.prev as string | number
+      );
 
     if (props.initialSubscription) this.subscribe(props.initialSubscription);
   }
@@ -99,30 +78,11 @@ export class ValueReaction extends BaseMulticast<ValueReaction> {
     prev: number | string
   ): number {
     return typeof current === 'number' && typeof prev === 'number'
-      ? speedPerSecond(current - prev, this.timeDelta)
-      : speedPerSecond(
+      ? velocityPerSecond(current - prev, this.timeDelta)
+      : velocityPerSecond(
           parseFloat(current as string) - parseFloat(prev as string),
           this.timeDelta
         ) || 0;
-  }
-
-  private getListVelocity() {
-    return (this.current as ValueList).map((c: number | string, i: number) =>
-      this.getSingleVelocity(c, (this.prev as ValueList)[i])
-    );
-  }
-
-  private getMapVelocity() {
-    const velocity: ValueMap = {};
-    for (const key in this.current as ValueMap) {
-      if (this.current.hasOwnProperty(key)) {
-        velocity[key] = this.getSingleVelocity(
-          (this.current as ValueMap)[key],
-          (this.prev as ValueMap)[key]
-        );
-      }
-    }
-    return velocity;
   }
 }
 
