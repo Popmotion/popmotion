@@ -5,7 +5,7 @@ import spring from '../spring';
 import decay from '../decay';
 import { ColdSubscription } from '../../action/types';
 import { Props, SpringProps } from './types';
-import { velocityPerFrame, velocityPerSecond } from '@popmotion/popcorn';
+import { velocityPerSecond } from '@popmotion/popcorn';
 import { getFrameData } from 'framesync';
 
 const inertia = ({
