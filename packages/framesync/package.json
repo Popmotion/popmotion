@@ -1,6 +1,6 @@
 {
   "name": "framesync",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "description": "A Unity-inspired render loop for JavaScript",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -33,8 +33,8 @@
   },
   "homepage": "https://github.com/Popmotion/popmotion",
   "devDependencies": {
-    "@types/jest": "^23.1.1",	
-    "jest": "^23.1.0",	
+    "@types/jest": "^23.1.1",
+    "jest": "^23.1.0",
     "jest-cli": "^23.1.0",
     "rollup-plugin-node-resolve": "^3.4.0",
     "rollup-plugin-typescript2": "^0.14.0",
@@ -59,6 +59,7 @@
     "singleQuote": true
   },
   "dependencies": {
-    "hey-listen": "^1.0.5"
+    "hey-listen": "^1.0.8",
+    "tslib": "^1.10.0"
   }
 }
