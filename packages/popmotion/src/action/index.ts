@@ -1,10 +1,5 @@
 import createObserver from '../observer';
-import {
-  Middleware,
-  ObserverCandidate,
-  PartialObserver,
-  Update
-} from '../observer/types';
+import { Middleware, ObserverCandidate, Update } from '../observer/types';
 import { ActionInit, ActionProps, ColdSubscription } from './types';
 import { Props } from '../chainable/types';
 import { pipe } from '@popmotion/popcorn';
@@ -38,10 +33,6 @@ export class Action<
     const api = init(observer);
 
     subscription = api ? { ...subscription, ...api } : subscription;
-
-    if ((observerCandidate as PartialObserver).registerParent) {
-      (observerCandidate as PartialObserver).registerParent(subscription);
-    }
 
     if (isComplete) subscription.stop();
 
