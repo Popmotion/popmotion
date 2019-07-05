@@ -2,74 +2,74 @@ import React from 'react';
 
 import { storiesOf } from '@storybook/react';
 
-import {
-  PoseDOM,
-  PoserFLIP,
-  PoserPassive,
-  PoseDrag,
-  PoseHover,
-  PoserManualValues,
-  PoseOpacity,
-  PoseFocus,
-  PoseFullScreenFlip,
-  PoseClick,
-  UnitTypeError,
-  Auto
-} from './plugins/pose';
-import {
-  ReactPose,
-  ReactPoseChildren,
-  Group,
-  EmailList,
-  UserPoseInPoseGroup,
-  PoseKey,
-  PoseKeyFail,
-  Hover,
-  Filter,
-  DragChildren,
-  SingleFilter,
-  DynamicPositionedPose,
-  TransitionStutter,
-  Refs,
-  Accordion
-} from './plugins/react-pose';
+// import {
+//   PoseDOM,
+//   PoserFLIP,
+//   PoserPassive,
+//   PoseDrag,
+//   PoseHover,
+//   PoserManualValues,
+//   PoseOpacity,
+//   PoseFocus,
+//   PoseFullScreenFlip,
+//   PoseClick,
+//   UnitTypeError,
+//   Auto
+// } from './plugins/pose';
+// import {
+//   ReactPose,
+//   ReactPoseChildren,
+//   Group,
+//   EmailList,
+//   UserPoseInPoseGroup,
+//   PoseKey,
+//   PoseKeyFail,
+//   Hover,
+//   Filter,
+//   DragChildren,
+//   SingleFilter,
+//   DynamicPositionedPose,
+//   TransitionStutter,
+//   Refs,
+//   Accordion
+// } from './plugins/react-pose';
 
-storiesOf('Plugin: Pose', module)
-  .add('pose', () => <PoseDOM />)
-  .add('pose flip', () => <PoserFLIP />)
-  .add('passive values', () => <PoserPassive />)
-  .add('manual values', () => <PoserManualValues />)
-  .add('drag', () => <PoseDrag />)
-  .add('hover', () => <PoseHover />)
-  .add('focus', () => <PoseFocus />)
-  .add('click', () => <PoseClick />)
-  .add('opacity', () => <PoseOpacity />)
-  .add('width/height auto', () => <Auto />)
-  .add('full screen flip', () => <PoseFullScreenFlip />);
+// storiesOf('Plugin: Pose', module)
+//   .add('pose', () => <PoseDOM />)
+//   .add('pose flip', () => <PoserFLIP />)
+//   .add('passive values', () => <PoserPassive />)
+//   .add('manual values', () => <PoserManualValues />)
+//   .add('drag', () => <PoseDrag />)
+//   .add('hover', () => <PoseHover />)
+//   .add('focus', () => <PoseFocus />)
+//   .add('click', () => <PoseClick />)
+//   .add('opacity', () => <PoseOpacity />)
+//   .add('width/height auto', () => <Auto />)
+//   .add('full screen flip', () => <PoseFullScreenFlip />);
 
-storiesOf('Plugin: React Pose', module)
-  .add('pose', () => <ReactPose />)
-  .add('children', () => <ReactPoseChildren />)
-  .add('group', () => <Group />)
-  .add('email list', () => <EmailList />)
-  .add('user-defined poses within PoseGroup', () => <UserPoseInPoseGroup />)
-  .add('refs', () => <Refs />)
-  .add('pose key test', () => <PoseKey />)
-  .add('hover', () => (
-    <Hover onPressStart={console.log} onPressEnd={console.log} />
-  ))
-  .add('image filter', () => <Filter />)
-  .add('pose key fail test', () => <PoseKeyFail />)
-  .add('drag w/ children', () => <DragChildren />)
-  .add('single filter', () => (
-    <SingleFilter
-      src="https://static1.squarespace.com/static/5b475b2c50a54f54f9b4e1dc/5b4a5c2d88251b376ea105c1/5b4ae647575d1fa91f1f2def/1531635336765/DSCF2959.jpg?format=1500w"
-      height="300"
-    />
-  ))
-  .add('dynamic positioned pose', () => <DynamicPositionedPose />)
-  .add('transition stuttering', () => <TransitionStutter />)
-  .add('accordion', () => <Accordion/>);
+// storiesOf('Plugin: React Pose', module)
+//   .add('pose', () => <ReactPose />)
+//   .add('children', () => <ReactPoseChildren />)
+//   .add('group', () => <Group />)
+//   .add('email list', () => <EmailList />)
+//   .add('user-defined poses within PoseGroup', () => <UserPoseInPoseGroup />)
+//   .add('refs', () => <Refs />)
+//   .add('pose key test', () => <PoseKey />)
+//   .add('hover', () => (
+//     <Hover onPressStart={console.log} onPressEnd={console.log} />
+//   ))
+//   .add('image filter', () => <Filter />)
+//   .add('pose key fail test', () => <PoseKeyFail />)
+//   .add('drag w/ children', () => <DragChildren />)
+//   .add('single filter', () => (
+//     <SingleFilter
+//       src="https://static1.squarespace.com/static/5b475b2c50a54f54f9b4e1dc/5b4a5c2d88251b376ea105c1/5b4ae647575d1fa91f1f2def/1531635336765/DSCF2959.jpg?format=1500w"
+//       height="300"
+//     />
+//   ))
+//   .add('dynamic positioned pose', () => <DynamicPositionedPose />)
+//   .add('transition stuttering', () => <TransitionStutter />)
+//   .add('accordion', () => <Accordion/>);
 
 import { SVG, CSS } from './stylefire';
 
@@ -85,7 +85,8 @@ import {
   TweenLoop,
   TweenYoyo,
   TweenFlip,
-  TweenWithVelocity
+  TweenWithVelocity,
+  TweenRepeat
 } from './tween';
 // import { Spring, SpringVelocity, SpringHeavier, SpringStiffer, SpringStifferDamping } from './spring';
 // import { TimelineTest } from './timeline';
@@ -138,14 +139,15 @@ storiesOf('tween', module)
   .add('loop', () => <TweenLoop />)
   .add('yoyo', () => <TweenYoyo />)
   .add('flip', () => <TweenFlip />)
-  .add('track velocity', () => <TweenWithVelocity />);
+  .add('track velocity', () => <TweenWithVelocity />)
+  .add('repeat', () => <TweenRepeat />);
 
-import { Drag, DragWithDeltaPointer, Multitouch, Inertia } from './pointer';
-storiesOf('pointer', module)
-  .add('drag', () => <Drag />)
-  .add('drag with delta pointer', () => <DragWithDeltaPointer />)
-  .add('multitouch', () => <Multitouch />)
-  .add('pointer inertia', () => <Inertia />);
+// import { Drag, DragWithDeltaPointer, Multitouch, Inertia } from './pointer';
+// storiesOf('pointer', module)
+//   .add('drag', () => <Drag />)
+//   .add('drag with delta pointer', () => <DragWithDeltaPointer />)
+//   .add('multitouch', () => <Multitouch />)
+//   .add('pointer inertia', () => <Inertia />);
 
 // storiesOf('compositors', module)
 // .add('chain', () => <Chain />)
