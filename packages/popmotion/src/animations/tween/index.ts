@@ -50,7 +50,8 @@ const tween = (props: TweenProps = {}): Action<TweenInterface> =>
         // If we're complete and not repeating, return true early
         if (isComplete && !loop && !flip && !yoyo) return true;
 
-        elapsed = duration - (elapsed - repeatDelay);
+        const overtime = elapsed - duration;
+        elapsed = overtime - repeatDelay;
 
         // Otherwise we have to figure out how to repeat the animation
         if (loop && loopCount < loop) {
