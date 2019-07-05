@@ -4,16 +4,15 @@ import { ActionInit, ActionProps, ColdSubscription } from './types';
 import { Props } from '../chainable/types';
 import { pipe } from '@popmotion/popcorn';
 
-export class Action {
+export class Action<
+  Sub extends ColdSubscription = ColdSubscription
+> extends Chainable<Action> {
   props: Props;
 
   constructor(props: Props = {}) {
     this.props = props;
   }
 
-export class Action<
-  Sub extends ColdSubscription = ColdSubscription
-> extends Chainable<Action> {
   create(props: ActionProps) {
     return new Action(props);
   }
