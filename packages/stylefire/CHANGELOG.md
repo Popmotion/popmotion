@@ -2,7 +2,13 @@
 
 Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
-## [6.0.4] 2019-07-18
+## [6.0.6] 2019-07-18
+
+### Fixed
+
+- Duck-typing `getTotalLength` so it doesn't fail in test environments.
+
+## [6.0.5] 2019-07-18
 
 ### Added
 

@@ -39,7 +39,10 @@ const svgStyler = createStyler({
 
 export default (element: SVGElement | SVGPathElement): Styler => {
   const dimensions = getSVGElementDimensions(element);
-  const pathLength = isPath(element) ? element.getTotalLength() : undefined;
+  const pathLength =
+    isPath(element) && element.getTotalLength
+      ? element.getTotalLength()
+      : undefined;
 
   return svgStyler({
     element,
