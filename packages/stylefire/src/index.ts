@@ -4,7 +4,7 @@ import viewport from './viewport';
 import createStylerFactory from './styler';
 import { buildStyleProperty } from './css/build-styles';
 import { buildSVGAttrs } from './svg/build';
-import { isTransformProp } from './css/transform-props';
+import { transformProps, isTransformProp } from './css/transform-props';
 import { invariant } from 'hey-listen';
 import { Styler, Props } from './styler/types';
 
@@ -50,5 +50,6 @@ export {
   Styler,
   buildStyleProperty,
   buildSVGAttrs,
+  transformProps,
   isTransformProp
 };
