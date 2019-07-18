@@ -95,9 +95,9 @@ export function buildSVGAttrs(
   if (totalPathLength !== undefined && pathLength !== undefined) {
     attrs['stroke-dashoffset'] = progressToPixels(-pathOffset, totalPathLength);
     attrs['stroke-dasharray'] = `${progressToPixels(
-      pathLength,
+      pathLength as number,
       totalPathLength
-    )} ${progressToPixels(pathSpacing, totalPathLength)}`;
+    )} ${progressToPixels(pathSpacing as number, totalPathLength)}`;
   }
 
   return attrs;
