@@ -2,6 +2,12 @@
 
 Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.0.7] 2019-07-22
+
+### Fixed
+
+- Adding `0` fallback for default value for SVG transforms.
+
 ## [6.0.6] 2019-07-18
 
 ### Fixed
