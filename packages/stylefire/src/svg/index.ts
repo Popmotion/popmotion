@@ -22,7 +22,7 @@ const svgStyler = createStyler({
       return element.getAttribute(key);
     } else {
       const valueType = getValueType(key);
-      return valueType ? valueType.default : 0;
+      return valueType ? valueType.default || 0 : 0;
     }
   },
   onRender: (state, { element, buildAttrs }: SVGProps) => {
