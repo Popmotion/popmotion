@@ -1,6 +1,6 @@
 {
   "name": "stylefire",
-  "version": "6.0.7",
+  "version": "6.0.8",
   "description": "Performant, simplified stylers for CSS, SVG, path and DOM scroll.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -55,10 +55,10 @@
     "webpack": "^3.0.0"
   },
   "dependencies": {
-    "@popmotion/popcorn": "^0.4.0",
+    "@popmotion/popcorn": "^0.4.2",
     "framesync": "^4.0.0",
     "hey-listen": "^1.0.8",
-    "style-value-types": "^3.1.4"
+    "style-value-types": "^3.1.6"
   },
   "unpkg": "./dist/stylefire.min.js",
   "jest": {
