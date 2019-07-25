@@ -2,7 +2,7 @@
 
 Popcorn adheres to [Semantic Versioning](http://semver.org/).
 
-## [0.4.1] 2019-07-25
+## [0.4.2] 2019-07-25
 
 ### Fixed
 
