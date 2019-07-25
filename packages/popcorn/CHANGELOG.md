@@ -2,6 +2,12 @@
 
 Popcorn adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.4.1] 2019-07-25
+
+### Fixed
+
+- Upgrading `style-value-types` to correctly clamp color alpha.
+
 ## [0.4.0] 2019-05-01
 
 ### Added

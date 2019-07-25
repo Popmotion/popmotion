@@ -87,11 +87,25 @@ const red = {
   alpha: 1
 };
 
+const redOutOfRange = {
+  red: 300,
+  green: 0,
+  blue: 0,
+  alpha: 2
+};
+
 const hslaTestColor = {
   hue: 170,
   saturation: 50,
   lightness: 45,
   alpha: 1
+};
+
+const hslaOutOfRange = {
+  hue: 170,
+  saturation: 50,
+  lightness: 45,
+  alpha: 2
 };
 
 describe('hex()', () => {
@@ -123,6 +137,7 @@ describe('rgba()', () => {
 
   it('should correctly combine rgba value', () => {
     expect(rgba.transform(red)).toEqual('rgba(255, 0, 0, 1)');
+    expect(rgba.transform(redOutOfRange)).toEqual('rgba(255, 0, 0, 1)');
   });
 });
 
@@ -140,6 +155,7 @@ describe('hsla()', () => {
 
   it('should correctly combine hsla value', () => {
     expect(hsla.transform(hslaTestColor)).toEqual('hsla(170, 50%, 45%, 1)');
+    expect(hsla.transform(hslaOutOfRange)).toEqual('hsla(170, 50%, 45%, 1)');
   });
 });
 

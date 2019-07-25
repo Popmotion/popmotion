@@ -1,5 +1,5 @@
 import { clamp } from '../utils';
-import { number } from './numbers';
+import { alpha as alphaType, number } from './numbers';
 import { percent } from './units';
 import { Color, RGBA, HSLA, NumberMap, ValueType } from '../types';
 import { sanitize, singleColorRegex } from '../utils';
@@ -59,24 +59,24 @@ export const rgba: ValueType = {
   test: v => (typeof v === 'string' ? isColorString(v, 'rgb') : isRgba(v)),
   parse: splitColorValues(['red', 'green', 'blue', 'alpha']),
   // TODO: Look into perhaps a mutative approach that doesn't create new objects
-  transform: ({ red, green, blue, alpha }: RGBA) =>
+  transform: ({ red, green, blue, alpha = 1 }: RGBA) =>
     rgbaTemplate({
       red: rgbUnit.transform(red),
       green: rgbUnit.transform(green),
       blue: rgbUnit.transform(blue),
-      alpha: sanitize(alpha)
+      alpha: sanitize(alphaType.transform(alpha))
     })
 };
 
 export const hsla: ValueType = {
   test: v => (typeof v === 'string' ? isColorString(v, 'hsl') : isHsla(v)),
   parse: splitColorValues(['hue', 'saturation', 'lightness', 'alpha']),
-  transform: ({ hue, saturation, lightness, alpha }: HSLA) =>
+  transform: ({ hue, saturation, lightness, alpha = 1 }: HSLA) =>
     hslaTemplate({
       hue: Math.round(hue),
       saturation: percent.transform(sanitize(saturation)),
       lightness: percent.transform(sanitize(lightness)),
-      alpha: sanitize(alpha)
+      alpha: sanitize(alphaType.transform(alpha))
     })
 };
 
