@@ -42,10 +42,10 @@ test('mixColor hsla', () => {
 
 test('mixColor hsla out of bounds', () => {
   expect(mixColor('hsla(120, 0%, 0%, 0)', 'hsla(360, 100%, 50%, 1)')(2)).toBe(
-    'hsla(360, 100%, 50%, 1)'
+    'hsla(600, 200%, 100%, 1)'
   );
   expect(mixColor('hsla(120, 0%, 0%, 0)', 'hsla(360, 100%, 50%, 1)')(-1)).toBe(
-    'hsla(120, 0%, 0%, 0)'
+    'hsla(-120, -100%, -50%, 0)'
   );
 });
 
@@ -60,7 +60,7 @@ test('mixColor hsl out of bounds', () => {
     'hsla(600, 200%, 100%, 1)'
   );
   expect(mixColor('hsl(120, 0%, 0%)', 'hsl(360, 100%, 50%)')(-1)).toBe(
-    'hsla(600, 200%, 100%, 1)'
+    'hsla(-120, -100%, -50%, 1)'
   );
 });
 
