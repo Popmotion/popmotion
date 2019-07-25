@@ -2,6 +2,12 @@
 
 Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.0.8] 2019-07-25
+
+### Upgraded
+
+- `popcorn` and `style-value-types`.
+
 ## [6.0.7] 2019-07-22
 
 ### Fixed
