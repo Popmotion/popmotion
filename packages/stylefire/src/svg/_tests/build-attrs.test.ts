@@ -50,4 +50,23 @@ test('should correctly create SVG attrs', () => {
     'stroke-dashoffset': '-300px',
     style: { transformOrigin: '125px 125px' }
   });
+
+  const buildProps = createAttrBuilder(dimensions, 400, false);
+
+  const props = buildProps({
+    strokeWidth: 1,
+    alignmentBaseline: 'bottom',
+    pathLength: 0.25,
+    pathSpacing: 0.5,
+    pathOffset: 0.75
+  });
+
+  expect(props).toEqual({
+    strokeWidth: 1,
+    alignmentBaseline: 'bottom',
+    strokeDasharray: '100px 200px',
+    strokeDashoffset: '-300px',
+    // TODO: Remove this in a future fix
+    style: { transformOrigin: '125px 125px' }
+  });
 });

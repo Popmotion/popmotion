@@ -65,7 +65,8 @@ export function buildSVGAttrs(
     false,
     false
   ),
-  attrs: SVGAttrs = svgAttrsTemplate()
+  attrs: SVGAttrs = svgAttrsTemplate(),
+  isDashCase = true
 ) {
   const style = cssBuilder(state);
 
@@ -73,7 +74,8 @@ export function buildSVGAttrs(
     if (key === 'transform') {
       attrs.style.transform = style[key] as string;
     } else {
-      const attrKey = !camelCaseAttributes.has(key) ? camelToDash(key) : key;
+      const attrKey =
+        isDashCase && !camelCaseAttributes.has(key) ? camelToDash(key) : key;
       attrs[attrKey] = style[key];
     }
   }
@@ -93,8 +95,12 @@ export function buildSVGAttrs(
 
   // Handle special path length attributes
   if (totalPathLength !== undefined && pathLength !== undefined) {
-    attrs['stroke-dashoffset'] = progressToPixels(-pathOffset, totalPathLength);
-    attrs['stroke-dasharray'] = `${progressToPixels(
+    attrs[
+      isDashCase ? 'stroke-dashoffset' : 'strokeDashoffset'
+    ] = progressToPixels(-pathOffset, totalPathLength);
+    attrs[
+      isDashCase ? 'stroke-dasharray' : 'strokeDasharray'
+    ] = `${progressToPixels(
       pathLength as number,
       totalPathLength
     )} ${progressToPixels(pathSpacing as number, totalPathLength)}`;
@@ -105,11 +111,19 @@ export function buildSVGAttrs(
 
 export function createAttrBuilder(
   dimensions: Dimensions,
-  totalPathLength?: number
+  totalPathLength?: number,
+  isDashCase: boolean = true
 ) {
   const attrs: SVGAttrs = svgAttrsTemplate();
   const cssBuilder = createStyleBuilder(false, false);
 
   return (state: State & SVGState) =>
-    buildSVGAttrs(state, dimensions, totalPathLength, cssBuilder, attrs);
+    buildSVGAttrs(
+      state,
+      dimensions,
+      totalPathLength,
+      cssBuilder,
+      attrs,
+      isDashCase
+    );
 }
