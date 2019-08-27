@@ -7,9 +7,8 @@ const dimensions = {
   height: 50
 };
 
-test('should correctly create SVG attrs', () => {
+test('should correctly create SVG attrs with correct casing', () => {
   const build = createAttrBuilder(dimensions);
-
   const { style, ...attrs } = build({
     x: 1,
     y: 2,
@@ -36,13 +35,26 @@ test('should correctly create SVG attrs', () => {
     limitingConeAngle: 100,
     'alignment-baseline': 'bottom'
   });
+});
 
-  const { style: rotateStyle } = build({ rotate: 90 });
-  expect(rotateStyle).toEqual({
+test('should add origin when transform detected', () => {
+  const build = createAttrBuilder(dimensions);
+  const { style } = build({ rotate: 90 });
+  expect(style).toEqual({
     transform: 'rotate(90deg)',
     transformOrigin: '125px 125px'
   });
+});
 
+test('should add origin when specified', () => {
+  const build = createAttrBuilder(dimensions);
+  const { style } = build({ originX: 0 });
+  expect(style).toEqual({
+    transformOrigin: '100px 125px'
+  });
+});
+
+test('should handle special path props', () => {
   const buildPath = createAttrBuilder(dimensions, 400);
   const pathAttrs = buildPath({
     pathLength: 0.25,
