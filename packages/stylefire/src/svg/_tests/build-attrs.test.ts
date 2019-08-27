@@ -38,7 +38,7 @@ test('should correctly create SVG attrs', () => {
   });
 
   const { style: rotateStyle } = build({ rotate: 90 });
-  expect(style).toEqual({
+  expect(rotateStyle).toEqual({
     transform: 'rotate(90deg)',
     transformOrigin: '125px 125px'
   });
