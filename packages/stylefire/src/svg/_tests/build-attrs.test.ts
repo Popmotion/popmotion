@@ -38,7 +38,6 @@ test('should correctly create SVG attrs', () => {
   });
 
   const buildPath = createAttrBuilder(dimensions, 400);
-
   const pathAttrs = buildPath({
     pathLength: 0.25,
     pathSpacing: 0.5,
@@ -48,7 +47,7 @@ test('should correctly create SVG attrs', () => {
   expect(pathAttrs).toEqual({
     'stroke-dasharray': '100px 200px',
     'stroke-dashoffset': '-300px',
-    style: { transformOrigin: '125px 125px' }
+    style: {}
   });
 
   const buildProps = createAttrBuilder(dimensions, 400, false);
@@ -66,7 +65,6 @@ test('should correctly create SVG attrs', () => {
     alignmentBaseline: 'bottom',
     strokeDasharray: '100px 200px',
     strokeDashoffset: '-300px',
-    // TODO: Remove this in a future fix
-    style: { transformOrigin: '125px 125px' }
+    style: {}
   });
 });

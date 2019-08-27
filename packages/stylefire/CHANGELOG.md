@@ -2,6 +2,12 @@
 
 Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.0.10] 2019-08-27
+
+### Fixing
+
+- Only generating `transform-origin` if we detect transform props.
+
 ## [6.0.9] 2019-08-14
 
 ### Adding
