@@ -37,6 +37,12 @@ test('should correctly create SVG attrs', () => {
     'alignment-baseline': 'bottom'
   });
 
+  const { style: rotateStyle } = build({ rotate: 90 });
+  expect(style).toEqual({
+    transform: 'rotate(90deg)',
+    transformOrigin: '125px 125px'
+  });
+
   const buildPath = createAttrBuilder(dimensions, 400);
   const pathAttrs = buildPath({
     pathLength: 0.25,

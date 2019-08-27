@@ -13,6 +13,8 @@ export type SVGAttrs = {
   };
 };
 
+const defaultOrigin = 0.5;
+
 const svgAttrsTemplate = (): SVGAttrs => ({
   style: {}
 });
@@ -81,11 +83,11 @@ export function buildSVGAttrs(
   }
 
   // Parse transformOrigin
-  if (originX !== undefined || originY !== undefined) {
+  if (originX !== undefined || originY !== undefined || style.transform) {
     attrs.style.transformOrigin = calculateSVGTransformOrigin(
       dimensions,
-      originX as number,
-      originY as number
+      originX !== undefined ? originX : defaultOrigin,
+      originY !== undefined ? originY : defaultOrigin
     );
   }
 

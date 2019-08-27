@@ -6,7 +6,7 @@ Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixing
 
-- Only generating `transform-origin` if we detect transform props.
+- Only generating `transform-origin` if we detect transform props or `originX`/`originY`.
 
 ## [6.0.9] 2019-08-14
 
