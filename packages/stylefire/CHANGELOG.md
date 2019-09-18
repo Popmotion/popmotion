@@ -2,9 +2,15 @@
 
 Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.0.11] 2019-09-18
+
+### Fixed
+
+- Prevent overwriting a prefixed property with a non-prefixed version. This was breaking `clipPath` in Safari, which contains the property name in `element.style` but doesn't properly support it (whereas `WebkitClipPath` does).
+
 ## [6.0.10] 2019-08-27
 
-### Fixing
+### Fixed
 
 - Only generating `transform-origin` if we detect transform props or `originX`/`originY`.
 
