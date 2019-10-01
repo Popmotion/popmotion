@@ -2,6 +2,12 @@
 
 Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.0.12] 2019-10-01
+
+### Fixed
+
+- Build will now correctly remove `process.env.NODE_ENV` from umd builds
+
 ## [6.0.11] 2019-09-18
 
 ### Fixed

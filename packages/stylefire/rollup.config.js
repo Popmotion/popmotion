@@ -1,6 +1,7 @@
 import typescript from 'rollup-plugin-typescript2';
 import uglify from 'rollup-plugin-uglify';
 import resolve from 'rollup-plugin-node-resolve';
+import replace from 'rollup-plugin-replace';
 import pkg from './package.json';
 
 const typescriptConfig = { cacheRoot: 'tmp/.rpt2_cache' };
@@ -35,14 +36,27 @@ const umd = Object.assign({}, config, {
     }
   },
   external: makeExternalPredicate(peerDeps),
-  plugins: [typescript(noDeclarationConfig), resolve()]
+  plugins: [
+    typescript(noDeclarationConfig), 
+    resolve(),
+    replace({
+      'process.env.NODE_ENV': JSON.stringify('development')
+    })
+  ]
 });
 
 const umdProd = Object.assign({}, umd, {
   output: Object.assign({}, umd.output, {
     file: 'dist/stylefire.min.js'
   }),
-  plugins: [typescript(noDeclarationConfig), resolve(), uglify()]
+  plugins: [
+    typescript(noDeclarationConfig), 
+    resolve(), 
+    replace({
+      'process.env.NODE_ENV': JSON.stringify('production')
+    }),
+    uglify()
+  ]
 });
 
 const es = Object.assign({}, config, {
