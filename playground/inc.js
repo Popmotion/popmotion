@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react';
-import { styler } from '../packages/popmotion/lib';
+import styler from '../packages/stylefire/lib';
 
 const style = { width: '100px', height: '100px', background: 'red' };
 export const Box = forwardRef((props, innerRef) => (

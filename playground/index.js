@@ -88,7 +88,14 @@ import {
   TweenWithVelocity,
   TweenRepeat
 } from './tween';
-// import { Spring, SpringVelocity, SpringHeavier, SpringStiffer, SpringStifferDamping } from './spring';
+import {
+  Spring,
+  SpringVelocity,
+  SpringHeavier,
+  SpringStiffer,
+  SpringStifferDamping,
+  SpringDuration
+} from './spring';
 // import { TimelineTest } from './timeline';
 // import { Chain, Composite, Delay, Crossfade, Merge, Parallel, Stagger } from './compositors';
 //import { DraggableDOM, DraggableReact } from './plugins/draggable';
@@ -115,12 +122,13 @@ import {
 // .add('spring to', () => <PhysicsSpring />)
 // .add('change spring target', () => <PhysicsChangeSpringTarget />);
 
-// storiesOf('spring', module)
-// .add('basic spring', () => <Spring />)
-// .add('increased velocity', () => <SpringVelocity />)
-// .add('increased mass', () => <SpringHeavier />)
-// .add('increased stiffness', () => <SpringStiffer />)
-// .add('increased stiffness and damping', () => <SpringStifferDamping />);
+storiesOf('spring', module)
+  .add('basic spring', () => <Spring />)
+  .add('increased velocity', () => <SpringVelocity />)
+  .add('increased mass', () => <SpringHeavier />)
+  .add('increased stiffness', () => <SpringStiffer />)
+  .add('increased stiffness and damping', () => <SpringStifferDamping />)
+  .add('duration', () => <SpringDuration />);
 
 // import {
 //   AnimateText,
@@ -134,13 +142,13 @@ import {
 //   .add('external poser', () => <ExternalPoser />)
 //   .add('via pose prop', () => <ViaPoseProp />);
 
-storiesOf('tween', module)
-  .add('default props', () => <TweenBasic />)
-  .add('loop', () => <TweenLoop />)
-  .add('yoyo', () => <TweenYoyo />)
-  .add('flip', () => <TweenFlip />)
-  .add('track velocity', () => <TweenWithVelocity />)
-  .add('repeat', () => <TweenRepeat />);
+// storiesOf('tween', module)
+//   .add('default props', () => <TweenBasic />)
+//   .add('loop', () => <TweenLoop />)
+//   .add('yoyo', () => <TweenYoyo />)
+//   .add('flip', () => <TweenFlip />)
+//   .add('track velocity', () => <TweenWithVelocity />)
+//   .add('repeat', () => <TweenRepeat />);
 
 // import { Drag, DragWithDeltaPointer, Multitouch, Inertia } from './pointer';
 // storiesOf('pointer', module)
