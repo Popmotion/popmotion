@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.8.0] 2019-10-01
+
+### Added
+
+- `pause` and `resume` Subscription methods to `chain` and `delay`
+
 ## [8.7.0] 2019-06-25
 
 ### Added
