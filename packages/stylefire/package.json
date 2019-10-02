@@ -1,6 +1,6 @@
 {
   "name": "stylefire",
-  "version": "6.0.10",
+  "version": "6.0.12",
   "description": "Performant, simplified stylers for CSS, SVG, path and DOM scroll.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -48,6 +48,7 @@
     "jest-dom": "^3.0.0",
     "rollup": "^0.59.1",
     "rollup-plugin-node-resolve": "^3.3.0",
+    "rollup-plugin-replace": "^2.2.0",
     "rollup-plugin-typescript2": "^0.14.0",
     "rollup-plugin-uglify": "^3.0.0",
     "typescript": "^2.9.2",
