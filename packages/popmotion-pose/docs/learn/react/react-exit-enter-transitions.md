@@ -5,6 +5,8 @@ category: react
 next: passive
 ---
 
+> React Pose has been **deprecated** in favour of [Framer Motion](https://framer.com/motion). [Read the upgrade guide](https://www.framer.com/api/motion/migrate-from-pose/)
+
 # Enter/exit transitions
 
 Animating components when they unmount has been historically tricky with React.

@@ -121,7 +121,6 @@ For convenience and safety, many props are mapped to [value types](https://githu
 * `scaleZ`: `scale`
 * `skewX`: `degrees`
 * `skewY`: `degrees`
-* `distance`: `px`
 * `translateX`: `px`
 * `translateY`: `px`
 * `translateZ`: `px`

@@ -1,6 +1,6 @@
 {
   "name": "react-pose",
-  "version": "4.0.8",
+  "version": "4.0.9",
   "description": "A declarative animation library for React",
   "main": "./lib/index.js",
   "module": "./dist/react-pose.es.js",
@@ -36,8 +36,8 @@
     "@types/react": "^16.3.16",
     "@types/react-dom": "^16.0.7",
     "@types/react-is": "^16.5.0",
-    "@types/jest": "^23.1.1",	
-    "jest": "^23.1.0",	
+    "@types/jest": "^23.1.1",
+    "jest": "^23.1.0",
     "jest-cli": "^23.1.0",
     "prettier": "1.11.1",
     "react": "^16.3.2",

@@ -10,11 +10,11 @@ const dimensions = {
 test('should correctly create SVG attrs with correct casing', () => {
   const build = createAttrBuilder(dimensions);
   const { style, ...attrs } = build({
-    x: 1,
-    y: 2,
+    attrX: 1,
+    attrY: 2,
     cx: 0,
-    translateX: 3,
-    translateY: 4,
+    x: 3,
+    y: 4,
     scale: 2,
     rotate: 90,
     originX: 1,

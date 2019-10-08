@@ -4,6 +4,8 @@ description: How to make Medium-style image zooming with Pose for React
 category: react
 ---
 
+> React Pose has been **deprecated** in favour of [Framer Motion](https://framer.com/motion). [Read the upgrade guide](https://www.framer.com/api/motion/migrate-from-pose/)
+
 # Tutorial: Medium-style image zoom
 
 [Medium](https://medium.com) have an beautiful zoom effect on their images. When clicked, they pop out of the page as a white background fades in behind them. Then, if clicked again, or if a user scrolls away, they pop back into place.

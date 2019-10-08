@@ -51,9 +51,8 @@ function calculateSVGTransformOrigin(
 
 export function buildSVGAttrs(
   {
-    x,
-    y,
-    z,
+    attrX,
+    attrY,
     originX,
     originY,
     pathLength,
@@ -92,8 +91,8 @@ export function buildSVGAttrs(
   }
 
   // Treat x/y not as shortcuts but as actual attributes
-  if (x !== undefined) attrs.x = x;
-  if (y !== undefined) attrs.y = y;
+  if (attrX !== undefined) attrs.x = attrX;
+  if (attrY !== undefined) attrs.y = attrY;
 
   // Handle special path length attributes
   if (totalPathLength !== undefined && pathLength !== undefined) {
