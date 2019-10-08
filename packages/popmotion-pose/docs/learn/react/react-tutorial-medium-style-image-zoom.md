@@ -4,7 +4,7 @@ description: How to make Medium-style image zooming with Pose for React
 category: react
 ---
 
-> React Pose has been **deprecated** in favour of [Framer Motion](https://framer.com/motion).
+> React Pose has been **deprecated** in favour of [Framer Motion](https://framer.com/motion). [Read the upgrade guide](https://www.framer.com/api/motion/migrate-from-pose/)
 
 # Tutorial: Medium-style image zoom
 

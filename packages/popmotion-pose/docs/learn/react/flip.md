@@ -4,7 +4,7 @@ description: A look at Pose's powerful FLIP API
 category: react
 ---
 
-> React Pose has been **deprecated** in favour of [Framer Motion](https://framer.com/motion).
+> React Pose has been **deprecated** in favour of [Framer Motion](https://framer.com/motion). [Read the upgrade guide](https://www.framer.com/api/motion/migrate-from-pose/)
 
 # FLIP
 

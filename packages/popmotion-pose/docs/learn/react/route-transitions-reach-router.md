@@ -4,7 +4,7 @@ description: How to make route transition animations with React Pose and Reach R
 category: react
 ---
 
-> React Pose has been **deprecated** in favour of [Framer Motion](https://framer.com/motion).
+> React Pose has been **deprecated** in favour of [Framer Motion](https://framer.com/motion). [Read the upgrade guide](https://www.framer.com/api/motion/migrate-from-pose/)
 
 # Route transitions with Reach Router
 

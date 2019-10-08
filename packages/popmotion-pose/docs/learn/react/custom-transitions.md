@@ -5,7 +5,7 @@ category: react
 next: dynamic-props
 ---
 
-> React Pose has been **deprecated** in favour of [Framer Motion](https://framer.com/motion).
+> React Pose has been **deprecated** in favour of [Framer Motion](https://framer.com/motion). [Read the upgrade guide](https://www.framer.com/api/motion/migrate-from-pose/)
 
 # Custom transitions
 
