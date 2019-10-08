@@ -5,6 +5,8 @@ category: react
 next: dynamic-props
 ---
 
+> React Pose has been **deprecated** in favour of [Framer Motion](https://framer.com/motion).
+
 # Custom transitions
 
 With [automatic animations](/pose/learn/get-started), it's easy to create snappy and playful animations just by defining poses.

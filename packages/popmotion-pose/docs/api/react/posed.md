@@ -4,6 +4,8 @@ description: Create a posed component
 category: react
 ---
 
+> React Pose has been **deprecated** in favour of [Framer Motion](https://framer.com/motion).
+
 # posed
 
 `posed` is used to create animated and interactive components that you can reuse throughout your React site.

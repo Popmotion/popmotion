@@ -5,6 +5,8 @@ category: react
 next: animating-children
 ---
 
+> React Pose has been **deprecated** in favour of [Framer Motion](https://framer.com/motion).
+
 # Dynamic pose props
 
 Each pose property can be set as a function that resolves when the pose is entered:

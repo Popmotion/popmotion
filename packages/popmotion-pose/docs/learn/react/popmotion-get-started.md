@@ -5,6 +5,8 @@ category: react
 next: custom-transitions
 ---
 
+> React Pose has been **deprecated** in favour of [Framer Motion](https://framer.com/motion).
+
 # Get started
 
 Pose is a declarative motion system that combines the simplicity of CSS transitions with the power and flexibility of JavaScript.

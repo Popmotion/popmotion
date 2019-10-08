@@ -5,6 +5,8 @@ category: react
 next: react-exit-enter-transitions
 ---
 
+> React Pose has been **deprecated** in favour of [Framer Motion](https://framer.com/motion).
+
 # UI events and interactions
 
 Pose can be used to power and animate interactions. Currently, it supports the following events: drag, press, hover and focus.

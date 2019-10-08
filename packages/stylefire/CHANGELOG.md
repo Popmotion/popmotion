@@ -2,6 +2,12 @@
 
 Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.0.0] 2019-10-08
+
+### Changed
+
+- `x` and `y` now work consistently between CSS and SVG and map to the `translateX()` and `translateY()` styles. SVG `x`/`y` attributes can be accessed via `attrX` and `attrY`.
+
 ## [6.0.12] 2019-10-01
 
 ### Fixed

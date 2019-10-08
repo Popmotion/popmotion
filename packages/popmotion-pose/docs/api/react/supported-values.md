@@ -4,6 +4,8 @@ description: A list of supported values in Pose for React.
 category: react
 ---
 
+> React Pose has been **deprecated** in favour of [Framer Motion](https://framer.com/motion).
+
 # Supported values
 
 <TOC />
