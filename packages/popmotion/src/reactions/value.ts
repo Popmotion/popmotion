@@ -1,4 +1,4 @@
-import sync, { getFrameData, FrameData } from 'framesync';
+import sync, { getFrameData, Process, FrameData } from 'framesync';
 import { speedPerSecond } from '../calc';
 import { ObserverCandidate, ObserverProps, Update } from '../observer/types';
 import { BaseMulticast } from './';
@@ -79,7 +79,7 @@ export class ValueReaction extends BaseMulticast<ValueReaction> {
     sync.postRender(this.scheduleVelocityCheck);
   }
 
-  scheduleVelocityCheck = () => sync.postRender(this.velocityCheck);
+  scheduleVelocityCheck = (): Process => sync.postRender(this.velocityCheck);
 
   velocityCheck = ({ timestamp }: FrameData) => {
     if (timestamp !== this.lastUpdated) {

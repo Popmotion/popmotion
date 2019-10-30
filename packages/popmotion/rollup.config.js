@@ -2,6 +2,7 @@ import typescript from 'rollup-plugin-typescript2';
 import uglify from 'rollup-plugin-uglify';
 import resolve from 'rollup-plugin-node-resolve';
 import replace from 'rollup-plugin-replace';
+import dts from 'rollup-plugin-dts';
 import pkg from './package.json';
 
 const typescriptConfig = {
@@ -77,7 +78,19 @@ const cjs = Object.assign({}, config, {
     format: 'cjs',
     exports: 'named'
   },
-  plugins: [resolve(), typescript(typescriptConfig)]
+  plugins: [resolve(), typescript(noDeclarationConfig)]
 });
 
-export default [umd, umdProd, es, cjs];
+const dtsConfig = {
+  input: "./lib/index.d.ts",
+  external: makeExternalPredicate(deps.concat(peerDeps)),
+  output: [
+    {
+      file: pkg.types,
+      format: 'es',
+    }
+  ],
+  plugins: [dts()]
+}
+
+export default [umd, umdProd, dtsConfig, es, cjs];
