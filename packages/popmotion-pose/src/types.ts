@@ -27,10 +27,10 @@ export type Value = {
   type?: ValueType;
 };
 
-export type Pose = Pose<Action, TransitionDefinition>;
-export type PoseMap = PoseMap<Action, TransitionDefinition>;
+export type Pose = PoseCore<Action, TransitionDefinition>;
+export type PoseMap = PoseMapCore<Action, TransitionDefinition>;
 
-export type PoserState = PoserState<
+export type PoserState = PoserStateCore<
   Value,
   Action,
   ColdSubscription,
