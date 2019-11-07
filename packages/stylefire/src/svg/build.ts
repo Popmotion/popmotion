@@ -1,9 +1,11 @@
 import { camelToDash } from '../styler/utils';
 import { px } from 'style-value-types';
-import { Dimensions, SVGState } from './types';
+import { SVGState } from './types';
 import { camelCaseAttributes } from './attr-formatting';
 import { createStyleBuilder } from '../css/build-styles';
 import { State, ResolvedState } from '../styler/types';
+
+
 
 export type SVGAttrs = {
   [key: string]: any;
@@ -21,13 +23,6 @@ const svgAttrsTemplate = (): SVGAttrs => ({
 
 const progressToPixels = (progress: number, length: number) =>
   px.transform(progress * length);
-
-export type Dimensions = {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-};
 
 const unmeasured = { x: 0, y: 0, width: 0, height: 0 };
 
