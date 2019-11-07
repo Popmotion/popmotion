@@ -5,8 +5,6 @@ import { camelCaseAttributes } from './attr-formatting';
 import { createStyleBuilder } from '../css/build-styles';
 import { State, ResolvedState } from '../styler/types';
 
-
-
 export type SVGAttrs = {
   [key: string]: any;
   style?: {
