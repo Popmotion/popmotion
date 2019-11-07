@@ -11,9 +11,9 @@ import {
 } from 'popmotion';
 import { Poser, PoserConfig } from 'pose-core';
 import {
-  Pose,
-  PoseMap,
-  PoserState,
+  Pose as PoseCore,
+  PoseMap as PoseMapCore,
+  PoserState as PoserStateCore,
   ExtendAPI,
   TransformPose,
   ReadValueFromSource
