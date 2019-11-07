@@ -1,6 +1,6 @@
 import { camelToDash } from '../styler/utils';
 import { px } from 'style-value-types';
-import { SVGState } from './types';
+import { Dimensions, SVGState } from './types';
 import { camelCaseAttributes } from './attr-formatting';
 import { createStyleBuilder } from '../css/build-styles';
 import { State, ResolvedState } from '../styler/types';
