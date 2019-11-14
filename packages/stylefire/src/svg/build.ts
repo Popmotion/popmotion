@@ -22,13 +22,6 @@ const svgAttrsTemplate = (): SVGAttrs => ({
 const progressToPixels = (progress: number, length: number) =>
   px.transform(progress * length);
 
-export type Dimensions = {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-};
-
 const unmeasured = { x: 0, y: 0, width: 0, height: 0 };
 
 function calcOrigin(origin: number | string, offset: number, size: number) {

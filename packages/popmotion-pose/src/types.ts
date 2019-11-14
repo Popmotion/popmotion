@@ -11,9 +11,9 @@ import {
 } from 'popmotion';
 import { Poser, PoserConfig } from 'pose-core';
 import {
-  Pose,
-  PoseMap,
-  PoserState,
+  Pose as PoseCore,
+  PoseMap as PoseMapCore,
+  PoserState as PoserStateCore,
   ExtendAPI,
   TransformPose,
   ReadValueFromSource
@@ -27,10 +27,10 @@ export type Value = {
   type?: ValueType;
 };
 
-export type Pose = Pose<Action, TransitionDefinition>;
-export type PoseMap = PoseMap<Action, TransitionDefinition>;
+export type Pose = PoseCore<Action, TransitionDefinition>;
+export type PoseMap = PoseMapCore<Action, TransitionDefinition>;
 
-export type PoserState = PoserState<
+export type PoserState = PoserStateCore<
   Value,
   Action,
   ColdSubscription,
