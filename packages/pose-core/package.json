@@ -1,6 +1,6 @@
 {
   "name": "pose-core",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Factory for Pose animation state machines",
   "main": "lib/index.js",
   "module": "dist/pose-core.es.js",
@@ -12,8 +12,7 @@
     "watch": "rollup -c -w",
     "test": "jest --maxWorkers=2",
     "prettier": "prettier ./src/* --write",
-    "prepublishOnly": "npm run test && npm run prettier && npm run build",
-    "postinstall": "node ./scripts/postinstall.js || exit 0"
+    "prepublishOnly": "npm run test && npm run prettier && npm run build"
   },
   "repository": {
     "type": "git",
@@ -31,11 +30,11 @@
     "env"
   ],
   "devDependencies": {
+    "@types/jest": "^23.1.1",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-plugin-annotate-pure-calls": "^0.2.2",
-    "@types/jest": "^23.1.1",	
-    "jest": "^23.1.0",	
+    "jest": "^23.1.0",
     "jest-cli": "^23.1.0",
     "prettier": "1.11.1",
     "rollup": "^0.59.1",
@@ -50,7 +49,9 @@
     "@types/invariant": "^2.2.29",
     "@types/node": "^10.0.5",
     "hey-listen": "^1.0.5",
-    "tslib": "^1.9.1"
+    "rollup-plugin-typescript2": "^0.25.2",
+    "tslib": "^1.10.0",
+    "typescript": "^3.7.2"
   },
   "jest": {
     "moduleFileExtensions": [

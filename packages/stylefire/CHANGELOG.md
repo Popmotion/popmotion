@@ -2,6 +2,12 @@
 
 Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.0.1] 2019-11-14
+
+### Fixed
+
+- Upgraded to Typescript 3.7.
+
 ## [7.0.0] 2019-10-08
 
 ### Changed

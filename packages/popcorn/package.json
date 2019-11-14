@@ -1,6 +1,6 @@
 {
   "name": "@popmotion/popcorn",
-  "version": "0.4.2",
+  "version": "0.4.4",
   "description": "Utility functions for animation and interactions.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -56,10 +56,14 @@
     "@popmotion/easing": "^1.0.1",
     "framesync": "^4.0.1",
     "hey-listen": "^1.0.8",
-    "style-value-types": "^3.1.6"
+    "style-value-types": "^3.1.7",
+    "tslib": "^1.10.0"
   },
   "devDependencies": {
     "@types/jest": "^24.0.11",
-    "jest": "24.2.0-alpha.0"
+    "jest": "24.2.0-alpha.0",
+    "rollup-plugin-typescript2": "^0.25.2",
+    "tslib": "^1.10.0",
+    "tslint-react": "^4.1.0"
   }
 }
