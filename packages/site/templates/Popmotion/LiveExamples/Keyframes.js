@@ -18,7 +18,7 @@ const code = `keyframes({
 })`;
 
 class Example extends React.Component {
-  setRef = (ref) => {
+  setRef = ref => {
     if (!ref) return;
     this.boxStyler = styler(ref);
     if (this.props.isVisible) this.startAnimation();
@@ -44,7 +44,12 @@ class Example extends React.Component {
         { x: 0, y: 0, rotateY: 0, rotateX: 0, backgroundColor: ENTITY }
       ],
       duration: 3000,
-      easings: [easing.easeInOut, easing.easeInOut, easing.easeInOut, easing.easeInOut],
+      easings: [
+        easing.easeInOut,
+        easing.easeInOut,
+        easing.easeInOut,
+        easing.easeInOut
+      ],
       loop: Infinity
     }).start(this.boxStyler.set);
   }
@@ -54,14 +59,15 @@ class Example extends React.Component {
   }
 
   render() {
-    return (
-      <Box innerRef={this.setRef} />
-    );
+    return <Box ref={this.setRef} />;
   }
 }
 
 export default trackVisibility(({ isVisible }) => (
-  <Template code={code} codepen="https://codepen.io/popmotion/pen/JOZGdp?editors=0010">
+  <Template
+    code={code}
+    codepen="https://codepen.io/popmotion/pen/JOZGdp?editors=0010"
+  >
     <TopLeft>
       <Example isVisible={isVisible} />
     </TopLeft>

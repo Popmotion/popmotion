@@ -8,7 +8,7 @@ export const Container = styled.section`
   border-bottom: none;
 `;
 
-export const ContentContainer = Centered.extend`
+export const ContentContainer = styled(Centered)`
   display: flex;
   flex-direction: column;
   margin: 0 auto;

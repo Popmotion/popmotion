@@ -36,7 +36,7 @@ export const MajorCentered = styled(Centered)`
   `};
 `;
 
-export const ArticleHeader = MajorCentered.withComponent('header').extend`
+export const ArticleHeader = styled(MajorCentered.withComponent('header'))`
   padding-bottom: 10px;
   border-bottom: 1px solid ${LIGHT_GREY};
   margin-bottom: ${cols(2)};
@@ -44,7 +44,7 @@ export const ArticleHeader = MajorCentered.withComponent('header').extend`
 
 export const SectionContainer = styled.li``;
 
-export const ItemContainer = Centered.withComponent('li').extend`
+export const ItemContainer = styled(Centered.withComponent('li'))`
   border-left: 1px solid ${LIGHT_GREY};
   padding: ${cols(1)} ${cols(2)};
   margin-bottom: ${cols(1)};

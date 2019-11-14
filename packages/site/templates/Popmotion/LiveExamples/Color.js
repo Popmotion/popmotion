@@ -12,12 +12,12 @@ const code = `keyframes({
 })`;
 
 class Example extends React.Component {
-  setRef = (ref) => {
+  setRef = ref => {
     if (!ref) return;
     this.boxStyler = styler(ref);
     if (this.props.isVisible) this.startAnimation();
   };
-  
+
   componentWillReceiveProps({ isVisible: willBeVisible }) {
     const { isVisible } = this.props;
     if (!isVisible && willBeVisible) this.startAnimation();
@@ -30,7 +30,7 @@ class Example extends React.Component {
       duration: 10000,
       ease: easing.linear,
       loop: Infinity
-    }).start(this.boxStyler.set('background'));
+    }).start(v => this.boxStyler.set('background', v));
   };
 
   componentWillUnmount() {
@@ -42,14 +42,15 @@ class Example extends React.Component {
   }
 
   render() {
-    return (
-      <ColorPanel innerRef={this.setRef} />
-    );
+    return <ColorPanel ref={this.setRef} />;
   }
 }
 
-export default trackVisibility(({isVisible}) => (
-  <Template code={code} codepen="https://codepen.io/popmotion/pen/WXybaR?editors=0010">
+export default trackVisibility(({ isVisible }) => (
+  <Template
+    code={code}
+    codepen="https://codepen.io/popmotion/pen/WXybaR?editors=0010"
+  >
     <AlignCenter>
       <Example isVisible={isVisible} />
     </AlignCenter>

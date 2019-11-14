@@ -1,81 +1,28 @@
 {
-  "name": "popmotion-website",
-  "description": "The JavaScript motion engine. Create animations and interactions with tweens, physics and input tracking.",
-  "author": "Matt Perry <sirhound@popmotion.io>",
-  "homepage": "http://popmotion.io",
+  "name": "popmotion-site",
+  "version": "0.1.0",
   "private": true,
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Popmotion/popmotion"
-  },
-  "bugs": {
-    "url": "https://github.com/Popmotion/popmotion/issues"
-  },
-  "keywords": [
-    "animation",
-    "ux",
-    "ui",
-    "popmotion",
-    "canvas animation",
-    "jquery animation",
-    "dom animation",
-    "dom",
-    "pointer tracking",
-    "mouse",
-    "mouse tracking",
-    "touch",
-    "touch tracking",
-    "physics",
-    "interaction",
-    "interface",
-    "svg"
-  ],
   "scripts": {
-    "build-content": "node scripts/generate-content.js",
-    "build": "npm run build-content && next build && next export -o public",
-    "watch": "npm run build-content && next",
+    "dev": "npm run build-content && next dev",
+    "build": "npm run build-content && next build",
     "start": "next start",
-    "lint": "eslint",
+    "build-content": "node scripts/generate-content.js",
     "s3-upload": "aws s3 cp public s3://popmotion.io --recursive",
     "invalidate-cloudfront": "aws configure set preview.cloudfront true && aws cloudfront create-invalidation --distribution-id E31YV8NBB5M5N4 --paths /*",
     "publish-site": "npm run build && npm run s3-upload && npm run invalidate-cloudfront"
   },
-  "analyze": true,
-  "license": "MIT",
   "dependencies": {
-    "babel-runtime": "^6.23.0",
-    "front-matter": "^2.1.1",
-    "live-on-stage": "^2.0.17",
-    "marksy": "^5.0.0",
-    "nprogress": "^0.2.0",
-    "popmotion": "^8.4.0",
-    "prismjs": "^1.6.0",
-    "react": "^16.5.2",
-    "react-dom": "^16.5.2",
+    "next": "9.1.3",
+    "react": "16.11.0",
+    "react-dom": "16.11.0",
     "react-intersection": "^1.0.5",
-    "react-live": "^1.7.0",
-    "react-pose": "^3.3.4",
+    "react-pose": "^4.0.10",
     "react-pose-text": "^3.1.0",
-    "react-scrollspy": "^3.3.5",
-    "react-syntax-highlighter": "^5.8.0",
-    "styled-components": "^2.2.3",
-    "three": "^0.88.0",
-    "uglifyjs-webpack-plugin": "^2.0.1"
+    "styled-components": "^4.4.1",
+    "three": "^0.110.0"
   },
   "devDependencies": {
-    "babel-plugin-root-import": "^5.1.0",
-    "babel-plugin-styled-components": "^1.1.4",
-    "babel-plugin-transform-export-extensions": "^6.22.0",
-    "babel-plugin-transform-react-constant-elements": "^6.23.0",
-    "babel-preset-stage-0": "^6.24.1",
-    "file-loader": "^1.1.11",
-    "next": "^4.2.1",
-    "raw-loader": "^0.5.1",
-    "s3": "^4.4.0",
-    "webpack": "^4.6.0"
-  },
-  "version": "7.0.0",
-  "prettier": {
-    "singleQuote": true
+    "babel-plugin-root-import": "^6.4.1",
+    "babel-plugin-styled-components": "^1.10.6"
   }
 }

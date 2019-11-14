@@ -4,12 +4,9 @@ import { fontBold } from '~/styles/fonts';
 import { GREEN, media, cols } from '~/styles/vars';
 import {
   action,
-  reaction,
-  style,
   value,
   decay,
   keyframes,
-  onFrame,
   physics,
   spring,
   listen,
@@ -33,11 +30,11 @@ import {
   CodeContainer as CodeContainerPrimitive
 } from '~/templates/Popmotion/LiveExamples/styled';
 
-const StyledLiveContainer = Container.withComponent(LiveProvider).extend`
+const StyledLiveContainer = styled(Container.withComponent(LiveProvider))`
   justify-content: flex-end;
 `;
 
-const CodeContainer = CodeContainerPrimitive.extend`
+const CodeContainer = styled(CodeContainerPrimitive)`
   border-color: ${GREEN};
   padding: ${cols(2)};
 
@@ -59,8 +56,9 @@ const LiveEditorWrapper = styled.div`
   }
 `;
 
-const StyledLivePreview = LiveExampleContainer.withComponent(LivePreview)
-  .extend`
+const StyledLivePreview = styled(
+  LiveExampleContainer.withComponent(LivePreview)
+)`
   flex: 0 1 450px;
   justify-content: center;
 `;
@@ -104,12 +102,9 @@ export default ({
       code={stripFirstReturn(children)}
       scope={{
         action,
-        reaction,
-        style,
         value,
         decay,
         keyframes,
-        onFrame,
         physics,
         spring,
         tween,

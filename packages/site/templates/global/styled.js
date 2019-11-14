@@ -1,8 +1,6 @@
 import styled from 'styled-components';
 import { fontSize, fontBold, lineHeight } from '~/styles/fonts';
 import {
-  LINK,
-  LINK_BURN,
   LIGHT_GREY,
   WHITE,
   cols,
@@ -30,11 +28,11 @@ export const Strong = styled.strong`
 `;
 
 export const A = styled.a`
-  color: ${LINK};
+  color: #0866c2;
   text-decoration: none;
 
   &:hover {
-    color: ${LINK_BURN};
+    color: #064fb5;
   }
 `;
 
@@ -54,7 +52,7 @@ export const H1 = styled.h1`
   `}
 `;
 
-export const H2 = Centered.withComponent('h2').extend`
+export const H2 = styled(Centered.withComponent('h2'))`
   ${fontSize(36)}
   ${fontBold}
   margin-top: ${cols(4)};
@@ -77,7 +75,7 @@ export const H2 = Centered.withComponent('h2').extend`
   }
 `;
 
-export const H3 = Centered.withComponent('h3').extend`
+export const H3 = styled(Centered.withComponent('h3'))`
   ${fontSize(24)}
   ${lineHeight(32)}
   ${fontBold}
@@ -97,7 +95,7 @@ export const H3 = Centered.withComponent('h3').extend`
   }
 `;
 
-export const H4 = Centered.withComponent('h4').extend`
+export const H4 = styled(Centered.withComponent('h4'))`
   ${fontSize(20)}
   margin-top: 2.2rem;
   margin-bottom: 1.1rem;
@@ -105,7 +103,7 @@ export const H4 = Centered.withComponent('h4').extend`
   ${media.medium`${fontSize(16)}`}
 `;
 
-export const H5 = Centered.withComponent('h5').extend`
+export const H5 = styled(Centered.withComponent('h5'))`
   ${fontSize(18)}
   margin-top: 2.2rem;
   margin-bottom: 1.1rem;
@@ -113,7 +111,7 @@ export const H5 = Centered.withComponent('h5').extend`
   ${media.medium`${fontSize(14)}`}
 `;
 
-export const P = Centered.withComponent('p').extend`
+export const P = styled(Centered.withComponent('p'))`
   ${fontSize(18)}
   ${lineHeight(26)}
   line-height: 1.5;
@@ -125,7 +123,7 @@ export const P = Centered.withComponent('p').extend`
   `}
 `;
 
-export const Blockquote = MajorCentered.withComponent('blockquote').extend`
+export const Blockquote = styled(MajorCentered.withComponent('blockquote'))`
   border-left: 1px solid ${color.lightGrey};
   background: ${color.superLightGrey};
   padding: ${cols(1)};
@@ -141,7 +139,7 @@ export const CodeTag = styled.code`
   padding: 2px 5px;
 `;
 
-export const CodeBlock = MajorCentered.extend`
+export const CodeBlock = styled(MajorCentered)`
   background: ${color.superLightGrey};
   border-left: 1px solid ${ENTITY};
   margin-bottom: ${cols(3)};
@@ -168,14 +166,14 @@ export const Code = ({ language, children, code }) =>
     </CodeBlock>
   );
 
-export const Ol = Centered.withComponent('ol').extend`
+export const Ol = styled(Centered.withComponent('ol'))`
   list-style-type: decimal;
   padding-left: ${cols(2)};
   max-width: ${cols(43)};
   margin-bottom: 1.1rem;
 `;
 
-export const Ul = Centered.withComponent('ul').extend`
+export const Ul = styled(Centered.withComponent('ul'))`
   list-style-type: disc;
   padding-left: ${cols(2)};
   max-width: ${cols(43)};

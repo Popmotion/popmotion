@@ -4,7 +4,7 @@ import styled, { css, withTheme } from 'styled-components';
 import { Centered } from '~/templates/global/grid';
 import DropDownArrow from '~/components/icons/DropDownArrow';
 import { fontSize, fontBold, lineHeight } from '~/styles/fonts';
-import { LINK, ENTITY, cols, media } from '~/styles/vars';
+import { ENTITY, cols, media } from '~/styles/vars';
 import sectionNames from '~/data/section-names.json';
 
 export const ContentNavArea = styled.div`
@@ -43,7 +43,7 @@ const CategoryTitle = styled.h2`
     text-decoration: none;
 
     &:hover {
-      color: ${LINK};
+      color: #0866C2;
     }
   }
 `;
@@ -56,7 +56,7 @@ const MenuItem = styled.li`
     text-decoration: none;
 
     &:hover {
-      color: ${LINK};
+      color: #0866c2;
     }
   }
 `;

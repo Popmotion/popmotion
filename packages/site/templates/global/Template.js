@@ -1,5 +1,5 @@
 import { Fragment } from 'react';
-import { injectGlobal, ThemeProvider } from 'styled-components';
+import { createGlobalStyle, ThemeProvider } from 'styled-components';
 import NProgress from 'nprogress';
 import Head from 'next/head';
 import Router from 'next/router';
@@ -26,13 +26,14 @@ Router.onRouteChangeComplete = () => {
 };
 Router.onRouteChangeError = () => NProgress.done();
 
-injectGlobal`
+const Global = createGlobalStyle`
   ${reset}
   ${nprogressStyles}
 `;
 
 export default ({ children, title, theme, description, image }) => (
   <Fragment>
+    <Global />
     <Head>
       <meta name="theme-color" content={BRAND} />
       <meta name="msapplication-navbutton-color" content={BRAND} />

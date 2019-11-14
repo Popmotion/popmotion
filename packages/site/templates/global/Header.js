@@ -39,7 +39,7 @@ const NavArea = styled.nav`
   transform: translateY(-50%);
 `;
 
-const LogoArea = NavArea.extend`
+const LogoArea = styled(NavArea)`
   left: ${cols(2)};
   ${media.large`
     position: static;
@@ -55,7 +55,7 @@ const LogoArea = NavArea.extend`
   `};
 `;
 
-const SectionNavArea = Centered.extend`
+const SectionNavArea = styled(Centered)`
   width: 100%;
   ${media.large`margin-left: ${cols(1)};`} ${props =>
     props.isHomepage &&
@@ -70,7 +70,7 @@ const SectionNavArea = Centered.extend`
   `};
 `;
 
-const SocialArea = NavArea.extend`
+const SocialArea = styled(NavArea)`
   right: ${cols(2)};
 
   ${media.medium`

@@ -9,7 +9,7 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: space-around;
   align-content: space-around;
-  padding: ${cols(1)}
+  padding: ${cols(1)};
 `;
 
 const Box = styled.span`
@@ -20,10 +20,8 @@ const Box = styled.span`
 `;
 
 export default ({ autostart, start, id }) => (
-  <Container id={id} innerRef={autostart ? start : null}>
+  <Container id={id} ref={autostart ? start : null}>
     <Box className="ball" />
-    {!autostart ? (
-      <ActionButton onClick={start}>Start</ActionButton>
-    ) : null}
+    {!autostart ? <ActionButton onClick={start}>Start</ActionButton> : null}
   </Container>
 );
