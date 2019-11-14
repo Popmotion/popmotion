@@ -1,6 +1,6 @@
 {
   "name": "style-value-types",
-  "version": "3.1.6",
+  "version": "3.1.7",
   "description": "Parsers, transformers and tests for special value types, eg: %, hex codes etc.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -62,6 +62,7 @@
     "singleQuote": true
   },
   "dependencies": {
-    "hey-listen": "^1.0.8"
+    "hey-listen": "^1.0.8",
+    "tslib": "^1.10.0"
   }
 }
