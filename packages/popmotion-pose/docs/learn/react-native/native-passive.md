@@ -30,7 +30,7 @@ const config = {
 }
 ```
 
-<Video src="/static/videos/native-passive-opacity.mp4" height="320" />
+<Video src="/videos/native-passive-opacity.mp4" height="320" />
 
 The first property in the tuple is the name of the value to bind to.
 
@@ -53,7 +53,7 @@ const config = {
 };
 ```
 
-<Video src="/static/videos/native-passive-color.mp4" height="320" />
+<Video src="/videos/native-passive-color.mp4" height="320" />
 
 ## Binding to ancestors
 
@@ -89,7 +89,7 @@ export default ({ isOpen }) => (
 )
 ```
 
-<Video src="/static/videos/native-passive-children.mp4" height="320" />
+<Video src="/videos/native-passive-children.mp4" height="320" />
 
 ### Further ancestors
 

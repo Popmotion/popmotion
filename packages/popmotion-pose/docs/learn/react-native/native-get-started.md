@@ -11,7 +11,7 @@ Pose is a declarative motion system that combines the simplicity of CSS syntax w
 
 In this series of tutorials, we'll learn how to use Pose for React Native. We'll gradually introduce each of its features, starting with this simple `opacity` animation:
 
-<Video src="/static/videos/native-get-started.mp4" height="320" />
+<Video src="/videos/native-get-started.mp4" height="320" />
 
 <TOC />
 

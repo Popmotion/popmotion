@@ -22,7 +22,7 @@ First we need to add Pose to our Framer project.
 
 With our project open in Framer X, go to File > Show Project Folder.
 
-![Framer X Show Project](/static/guides/framer-x-show-project.png)
+![Framer X Show Project](/guides/framer-x-show-project.png)
 
 You should have the `container` folder highlighted. Open this folder in your terminal of choice.
 
@@ -36,7 +36,7 @@ The current limitation with this process is you have to repeat it for every proj
 
 At the bottom of the Framer X Component panel, there's a button labelled "New Component". Click that, give your component a name, choose "from code" and press "Create and edit".
 
-![Create a new component](/static/guides/framer-x-create-component.png)
+![Create a new component](/guides/framer-x-create-component.png)
 
 You'll be greeted with a TypeScript file containing some simple React code.
 
@@ -66,7 +66,7 @@ In the components panel you'll see your new component. You can add this to the F
 
 Click the play icon in the top and hover over your new component. It'll react to your hovering as expected.
 
-![New Framer interactions!](/static/guides/framer-x-a.gif)
+![New Framer interactions!](/guides/framer-x-a.gif)
 
 ## Expose pose controls
 
@@ -191,7 +191,7 @@ Finally, ensure we're passing the `fadeDuration` prop to `Container`:
 
 Now, you can change the duration of the transition with the new "Fade duration" number slider in the inspector panel. Play with the visibility toggle to check it out!
 
-![Close down that feedback loop!](/static/guides/framer-x-b.gif)
+![Close down that feedback loop!](/guides/framer-x-b.gif)
 
 ## Conclusion
 

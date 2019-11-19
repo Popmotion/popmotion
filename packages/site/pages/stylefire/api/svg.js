@@ -38,8 +38,7 @@ const convertMarkdown = marksy({
   }
 });
 
-const content = convertMarkdown(`
-# SVG styler
+const content = convertMarkdown(`# SVG styler
 
 The SVG styler replaces the confusing SVG transformation model with the CSS model and provides a simple API for \`path\` drawing.
 

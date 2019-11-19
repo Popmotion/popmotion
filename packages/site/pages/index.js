@@ -204,11 +204,12 @@ export default () => (
   >
     <SectionHeader>Open source</SectionHeader>
     <Container>
-      <ThemeProvider theme={themes.pose}>
-        <Product title={themes.pose} prefetch>
+      <ThemeProvider theme={themes.framerMotion}>
+        <Product title={themes.framerMotion}>
           <P>
-            A simple, CSS-like animation library for <em>React</em>,<br />
-            <em>React Native</em> and <em>Vue</em>
+            A truly simple <em>React</em>
+            <br />
+            animation library
           </P>
         </Product>
       </ThemeProvider>
@@ -235,7 +236,17 @@ export default () => (
       <ThemeProvider theme={themes.framesync}>
         <Product title={themes.framesync}>
           <P>
-            Unity-inspired <em>render loop</em> for browsers
+            Unity-inspired <em>render loop</em>
+            <br />
+            for browsers
+          </P>
+        </Product>
+      </ThemeProvider>
+      <ThemeProvider theme={themes.pose}>
+        <Product title={themes.pose}>
+          <P>
+            A simple, CSS-like animation library for <br />
+            <em>React Native</em> and <em>Vue</em>
           </P>
         </Product>
       </ThemeProvider>

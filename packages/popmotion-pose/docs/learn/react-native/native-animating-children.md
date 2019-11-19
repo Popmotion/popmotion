@@ -21,7 +21,7 @@ export default ({items}) => (
 )
 ```
 
-<Video src="/static/videos/native-children.mp4" height="320" />
+<Video src="/videos/native-children.mp4" height="320" />
 
 Here's how it's done.
 

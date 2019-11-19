@@ -99,7 +99,7 @@ I stared at my phone, dumbfounded. Maybe I needed to reset my phone. Maybe it wa
 
 Luckily, I saw it, and I knew I'd found the culprit. The nausea lifted. Relief settled:
 
-![Take me from this earth](/static/images/low-power-mode.png)
+![Take me from this earth](/images/low-power-mode.png)
 
 Low power mode. Though part of me wouldn't believe it until I toggled it on and off and saw the difference with my own eyes, it made sense.
 

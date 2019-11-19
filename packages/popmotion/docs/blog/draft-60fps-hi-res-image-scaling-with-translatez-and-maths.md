@@ -12,7 +12,7 @@ About a year ago I received a design to implement: a full-screen image slideshow
 
 I thought it'd be cool to have a transition where, rather than lay the sidebar **over** the image, the image itself would scale down to accommodate the sidebar. A little like this:
 
-![Sidebar animation](/static/images/sidebar-effect.gif)
+![Sidebar animation](/images/sidebar-effect.gif)
 
 The function to achieve this effect is pretty simple. We first have to figure out, in pixels, how much of the sidebar to show at any given time. Then, figure out what percentage of the viewport that leaves us and use **that** for the image scale:
 
@@ -28,11 +28,11 @@ The function to achieve this effect is pretty simple. We first have to figure ou
 
 Initially, I thought this approach was working well. It looked 60fps by eye, and a quick look at the Chrome Performance panel output graphs like this:
 
-![Low paint times = happy users](/static/images/scale-dev-small-screen.gif)
+![Low paint times = happy users](/images/scale-dev-small-screen.gif)
 
 However, when I added high resolution images and increased the viewport to full screen on a 4K monitor, the framerate was so bad that I didn't need to see the graphs to know they'd probably look like this:
 
-![High paint times = MY EYES](/static/images/scale-dev-small-screen.gif)
+![High paint times = MY EYES](/images/scale-dev-small-screen.gif)
 
 ## Performance graphs explained
 

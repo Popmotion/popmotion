@@ -20,7 +20,7 @@ As the userbase of Popmotion is relatively small, I've always felt comfortable s
 Luckily, over the years of wildly oscillating GitHub activity graphs,
 there has been one (one) decision that I felt like I got right at the start: Making the `tween` default easing property `easeOut`.
 
-![An example of a sweet easeOut, generated with Ceaser @ matthewlein.com/ceaser](/static/guides/ease-out-example.png)
+![An example of a sweet easeOut, generated with Ceaser @ matthewlein.com/ceaser](/guides/ease-out-example.png)
 
 ## A brief history of timing
 
@@ -28,13 +28,13 @@ Like many greying front end devs, my first exposure to UI animation was [Greenso
 
 And that's largely what we used it for: showy animations. The Flash days were as over-the-top and as divorced from the user's interests as the Amiga demoscene. All you wanted to do was play your cracked version of Worms but first you had to sit through the seizure-inducing cock-prancing of some git in Norwich. At least Flash intros occasionally had a skip button.
 
-![This, but flashing, and scrolling, and waving. Forever](/static/guides/amiga-demoscene.png)
+![This, but flashing, and scrolling, and waving. Forever](/guides/amiga-demoscene.png)
 
 Greensock, in its sunrise years, had the right intentions. It did, and still to this day, has an `easeOut` as default. That's because the author understands, despite our hedonism and heathenism, that animation in UI design **should** be as a result of a user's action. `easeOut` is snappy, and as we'll see later, "snappy" is how we should respond to user actions.
 
 Flash died, and the community collectively denied any involvement.
 
-!["Honestly never heard of it. Like Gordon?"](/static/guides/flash-gordon.jpg)
+!["Honestly never heard of it. Like Gordon?"](/guides/flash-gordon.jpg)
 
 Then it was all about jQuery. jQuery was incredible for literally **everything**, which in the new world of composable asynchronous micropackages is probably why we again collectively deny any involvement, and why I'm talking about it in the past tense even while it's standing **right there**, watching us.
 
@@ -42,7 +42,7 @@ For me, and maybe for you, the coolest thing about jQuery was `animate`. It was 
 
 That easing was coupled with a default duration of `400`ms. Then that was folded into our neanderthal, performance-ignorant tweening of the CPU-choking, layout-breaking `width` and `height` properties. Lethargic animation ruled the internet.
 
-![Feels like a good idea at the time](/static/guides/ease-in-out-example.png)
+![Feels like a good idea at the time](/guides/ease-in-out-example.png)
 
 ## The problem with `easeInOut`
 
@@ -90,7 +90,7 @@ This is why Greensock comes with `easeOut` by default. It's why [Anime.js](http:
 
 Whereas, CSS transitions default to the `swing`-alike `ease`, which is exactly as bland as it sounds. Worse, the native Web Animations API uses `linear` easing, which is, frankly, a fucking crime.
 
-![Blood at crime scene. Yawn.](/static/guides/ease-linear-example.png)
+![Blood at crime scene. Yawn.](/guides/ease-linear-example.png)
 
 ## Feel it for yourself
 

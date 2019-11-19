@@ -541,7 +541,7 @@ export const Filter = () => (
   <Img
     initialPose="dull"
     pose="coloured"
-    src="https://popmotion.io/static/images/dusk.jpg"
+    src="https://popmotion.io/images/dusk.jpg"
   />
 );
 

@@ -20,7 +20,7 @@ node.scrollTop = node.scrollHeight - prevScrollTop;
 
 Works great in every browser, except of course the modern-day IE:
 
-![Knew this wouldn't be so simple](/static/images/chat-without-hack.gif)
+![Knew this wouldn't be so simple](/images/chat-without-hack.gif)
 
 As you can see, the scroll position stays at the top, almost as if we never manually reset the scroll position at all.
 
@@ -38,7 +38,7 @@ node.style['-webkit-overflow-scrolling'] = 'touch';
 
 Here's how that looks:
 
-![Better](/static/images/chat-with-hack.gif)
+![Better](/images/chat-with-hack.gif)
 
 Not as graceful as I'd prefer, but looking at the timestamps the user is still left on the correct message. It also avoids funny residual momentum effects, so I presume this technique can also be used to kill scroll momentum when a pointer moves from one overflowing node to another.
 
