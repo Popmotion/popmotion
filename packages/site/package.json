@@ -12,12 +12,14 @@
     "publish-site": "npm run build && npm run s3-upload && npm run invalidate-cloudfront"
   },
   "dependencies": {
+    "file-loader": "^1.1.11",
     "front-matter": "^3.0.2",
     "live-on-stage": "^2.0.19",
     "marksy": "^8.0.0",
     "next": "9.1.3",
     "nprogress": "^0.2.0",
     "prismjs": "^1.6.0",
+    "raw-loader": "^0.5.1",
     "react": "16.11.0",
     "react-dom": "16.11.0",
     "react-intersection": "^1.0.5",
