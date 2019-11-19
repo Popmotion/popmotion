@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "babel-plugin-root-import": "^6.4.1",
-    "babel-plugin-styled-components": "^1.10.6"
+    "babel-plugin-styled-components": "^1.10.6",
+    "s3": "^4.4.0"
   }
 }
