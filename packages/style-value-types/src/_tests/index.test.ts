@@ -127,7 +127,7 @@ describe('rgba()', () => {
   it('should correctly test for colors', () => {
     expect(rgba.test('rgba(255, 0, 0, 0.5)')).toEqual(true);
     expect(rgba.test('rgba(255, 0, 0, 0.5) 0px')).toEqual(false);
-    expect(rgba.test('45%').toEqual(false);
+    expect(rgba.test('45%')).toEqual(false);
   });
 
   it('should split an rgba value into the correct params', () => {
