@@ -127,6 +127,9 @@ describe('rgba()', () => {
   it('should correctly test for colors', () => {
     expect(rgba.test('rgba(255, 0, 0, 0.5)')).toEqual(true);
     expect(rgba.test('rgba(255, 0, 0, 0.5) 0px')).toEqual(false);
+    expect(rgba.test(red)).toEqual(true);
+    expect(rgba.test({ red: '' })).toEqual(false);
+    expect(rgba.test({ red: undefined })).toEqual(false);
   });
 
   it('should split an rgba value into the correct params', () => {
@@ -138,6 +141,9 @@ describe('rgba()', () => {
   it('should correctly combine rgba value', () => {
     expect(rgba.transform(red)).toEqual('rgba(255, 0, 0, 1)');
     expect(rgba.transform(redOutOfRange)).toEqual('rgba(255, 0, 0, 1)');
+    expect(rgba.transform({ green: 0, blue: 0, alpha: 2 })).toEqual(
+      'rgba(0, 0, 0, 1)'
+    );
   });
 });
 
@@ -145,6 +151,9 @@ describe('hsla()', () => {
   it('should correctly test for colors', () => {
     expect(hsla.test('hsla(170, 50%, 45%, 1)')).toEqual(true);
     expect(hsla.test('hsla(170, 50%, 45%, 1) 0px')).toEqual(false);
+    expect(hsla.test(hslaTestColor)).toEqual(true);
+    expect(hsla.test({ hue: '' })).toEqual(false);
+    expect(hsla.test({ hue: undefined })).toEqual(false);
   });
 
   it('should split an hsl value into the correct params', () => {
@@ -156,6 +165,9 @@ describe('hsla()', () => {
   it('should correctly combine hsla value', () => {
     expect(hsla.transform(hslaTestColor)).toEqual('hsla(170, 50%, 45%, 1)');
     expect(hsla.transform(hslaOutOfRange)).toEqual('hsla(170, 50%, 45%, 1)');
+    expect(hsla.transform({ lightness: 45, alpha: 1 })).toEqual(
+      'hsla(0, 0%, 45%, 1)'
+    );
   });
 });
 
@@ -189,6 +201,12 @@ describe('color()', () => {
     expect(color.test('hsla(180, 360%, 360%, 0.5) 0px')).toBe(false);
     expect(color.test('greensock')).toBe(false);
     expect(color.test('filter(190deg)')).toBe(false);
+    expect(color.test(red)).toEqual(true);
+    expect(color.test({ red: '' })).toEqual(false);
+    expect(color.test({ red: undefined })).toEqual(false);
+    expect(color.test(hslaTestColor)).toEqual(true);
+    expect(color.test({ hue: '' })).toEqual(false);
+    expect(color.test({ hue: undefined })).toEqual(false);
   });
 });
 

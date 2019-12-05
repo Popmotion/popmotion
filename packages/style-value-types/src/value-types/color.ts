@@ -13,8 +13,14 @@ export const getValueFromFunctionString = (value: string) =>
 
 const clampRgbUnit = clamp(0, 255);
 
-const isRgba = (v: Color): v is RGBA => (v as RGBA).red !== undefined;
-const isHsla = (v: Color): v is HSLA => (v as HSLA).hue !== undefined;
+const isColorObj = (keys: string[], obj: any) =>
+  keys.reduce(
+    (acc, key) => acc && obj.hasOwnProperty(key) && obj[key] !== undefined,
+    true
+  );
+const isRgba = (v: Color): v is RGBA => isColorObj(['red', 'green', 'blue'], v);
+const isHsla = (v: Color): v is HSLA =>
+  isColorObj(['hue', 'saturation', 'lightness'], v);
 
 /**
  * Creates a function that will split color
@@ -48,7 +54,7 @@ const hslaTemplate = ({ hue, saturation, lightness, alpha = 1 }: HSLA) =>
 // Value types
 export const rgbUnit: ValueType = {
   ...number,
-  transform: (v: number) => Math.round(clampRgbUnit(v))
+  transform: (v: number) => Math.round(clampRgbUnit(v || 0))
 };
 
 function isColorString(color: string, colorType: '#' | 'hsl' | 'rgb') {
@@ -71,7 +77,7 @@ export const rgba: ValueType = {
 export const hsla: ValueType = {
   test: v => (typeof v === 'string' ? isColorString(v, 'hsl') : isHsla(v)),
   parse: splitColorValues(['hue', 'saturation', 'lightness', 'alpha']),
-  transform: ({ hue, saturation, lightness, alpha = 1 }: HSLA) =>
+  transform: ({ hue = 0, saturation = 0, lightness = 0, alpha = 1 }: HSLA) =>
     hslaTemplate({
       hue: Math.round(hue),
       saturation: percent.transform(sanitize(saturation)),
