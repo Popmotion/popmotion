@@ -39,7 +39,7 @@
     "prettier": "1.11.1",
     "rollup": "^0.59.1",
     "rollup-plugin-typescript2": "^0.25.2",
-    "typescript": "^2.7.2"
+    "typescript": "^3.7.2"
   },
   "prettier": {
     "parser": "typescript",
@@ -49,8 +49,7 @@
     "@types/invariant": "^2.2.29",
     "@types/node": "^10.0.5",
     "hey-listen": "^1.0.5",
-    "tslib": "^1.10.0",
-    "typescript": "^3.7.2"
+    "tslib": "^1.10.0"
   },
   "jest": {
     "moduleFileExtensions": [
