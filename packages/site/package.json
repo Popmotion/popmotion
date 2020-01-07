@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "npm run build-content && next dev",
-    "build": "npm run build-content && next build",
+    "build": "npm run build-content && next build && next export",
     "start": "next start",
     "build-content": "node scripts/generate-content.js",
     "s3-upload": "aws s3 cp public s3://popmotion.io --recursive",
