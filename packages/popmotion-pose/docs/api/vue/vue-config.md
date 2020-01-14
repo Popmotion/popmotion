@@ -4,8 +4,6 @@ description: Configure a posed component
 category: vue
 ---
 
-> Vue Pose has been **deprecated**.
-
 # Config options
 
 Options to configure [posed components](/pose/api/vue-posed) in Pose for Vue.

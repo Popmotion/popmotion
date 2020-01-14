@@ -4,8 +4,6 @@ description: Control enter/exit animations with Pose for React Native's Transiti
 category: react-native
 ---
 
-> React Native Pose has been **deprecated**. If you are interested in a version of [Framer Motion](https://framer.com/motion) for React Native, let us know on the [GitHub ticket](https://github.com/framer/motion/issues/180).
-
 # `Transition`
 
 The `Transition` component is used to animate components as they enter and exit the component tree.

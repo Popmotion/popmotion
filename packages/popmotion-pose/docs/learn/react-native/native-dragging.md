@@ -5,8 +5,6 @@ category: react-native
 next: native-passive
 ---
 
-> React Native Pose has been **deprecated**. If you are interested in a version of [Framer Motion](https://framer.com/motion) for React Native, let us know on the [GitHub ticket](https://github.com/framer/motion/issues/180).
-
 # Dragging (experimental)
 
 Simplifying interactivity is a core aim for Pose on the web, and the same is true for React Native Pose.
