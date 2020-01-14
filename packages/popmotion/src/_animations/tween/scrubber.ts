@@ -21,10 +21,7 @@ const scrubber = ({
     ({ update }): ScrubberSubscription => ({
       seek: progress => update(progress)
     })
-  ).pipe(
-    ease,
-    (v: number) => mix(from, to, v)
-  );
+  ).pipe(ease, (v: number) => mix(from, to, v));
 };
 
 const vectorScrubber: ActionFactory = vectorAction(scrubber, {

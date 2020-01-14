@@ -1,5 +1,5 @@
 import action from '../../action';
-import onFrame from '../../animations/every-frame';
+import onFrame from '../../_animations/every-frame';
 import chain from '../chain';
 import composite from '../composite';
 import crossFade from '../crossfade';
@@ -78,7 +78,12 @@ describe('parallel', () => {
         update: ([x, y]) => output.push([x, y])
       });
     }).then(() => {
-      expect(output).toEqual([[0, 1], [1, 2], [2, 3], [3, 4]]);
+      expect(output).toEqual([
+        [0, 1],
+        [1, 2],
+        [2, 3],
+        [3, 4]
+      ]);
     });
   });
 

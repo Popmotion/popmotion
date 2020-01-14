@@ -14,8 +14,8 @@ const defaultEasings = (values: number[], easing?: Easing): Easing[] =>
 const defaultTimings = (values: number[]): number[] => {
   const numValues = values.length;
 
-  return values.map(
-    (value: number, i: number): number => (i !== 0 ? i / (numValues - 1) : 0)
+  return values.map((value: number, i: number): number =>
+    i !== 0 ? i / (numValues - 1) : 0
   );
 };
 
