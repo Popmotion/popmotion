@@ -1,4 +1,4 @@
-import physics from '../../animations/physics';
+import physics from '../../_animations/physics';
 import value from '../value';
 
 describe('value', () => {

@@ -1,6 +1,6 @@
 import { number } from 'style-value-types';
 import action from '../';
-import tween from '../../animations/tween';
+import tween from '../../_animations/tween';
 import vector from '../vector';
 
 describe('vector', () => {
