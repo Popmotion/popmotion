@@ -215,15 +215,7 @@ export default () => (
       </ThemeProvider>
       <ThemeProvider theme={themes.pure}>
         <Product title={themes.pure}>
-          <P>
-            Advanced functional animation library for <em>any</em> JavaScript
-            environment
-          </P>
-        </Product>
-      </ThemeProvider>
-      <ThemeProvider theme={themes.popcorn}>
-        <Product title={themes.popcorn}>
-          <P>Utility functions for user interface developers</P>
+          <P>A low-level, flexible animation toolset.</P>
         </Product>
       </ThemeProvider>
       <ThemeProvider theme={themes.stylefire}>

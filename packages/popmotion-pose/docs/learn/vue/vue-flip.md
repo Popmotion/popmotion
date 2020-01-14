@@ -4,8 +4,6 @@ description: A look at Pose for Vue's powerful FLIP API
 category: vue
 ---
 
-> Vue Pose has been **deprecated**.
-
 # FLIP
 
 The FLIP technique, [fully explained here](https://aerotwist.com/blog/flip-your-animations/), is a way of animating expensive, layout-breaking animations like `width` and `top` by using quick transforms.

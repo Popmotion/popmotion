@@ -5,8 +5,6 @@ category: vue
 next: vue-passive
 ---
 
-> Vue Pose has been **deprecated**.
-
 # Enter/exit transitions
 
 Pose for Vue includes a spin on the [Vue `transition` component](https://vuejs.org/v2/guide/transitions.html), `PoseTransition`.

@@ -4,8 +4,6 @@ description: Create a posed component with Pose for Vue
 category: vue
 ---
 
-> Vue Pose has been **deprecated**.
-
 # `posed`
 
 `posed` is used to create animated and interactive components that you can reuse throughout your Vue site.

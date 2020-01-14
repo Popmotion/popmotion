@@ -4,8 +4,6 @@ description: How to make Medium-style image zooming with Pose for Vue
 category: vue
 ---
 
-> Vue Pose has been **deprecated**.
-
 # Tutorial: Medium-style image zoom
 
 [Medium](https://medium.com) have an beautiful zoom effect on their images. When clicked, they pop out of the page as a white background fades in behind them. Then, if clicked again, or if a user scrolls away, they pop back into place.

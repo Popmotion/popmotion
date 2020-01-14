@@ -4,8 +4,6 @@ description: Animate and HTML or SVG element with a poser.
 category: vanilla
 ---
 
-> Pose has been **deprecated**. React users for web can upgrade to [Framer Motion](https://framer.com/motion). [Read the upgrade guide](https://www.framer.com/api/motion/migrate-from-pose/)
-
 # Poser
 
 A poser is used to animate an element and its poser children.

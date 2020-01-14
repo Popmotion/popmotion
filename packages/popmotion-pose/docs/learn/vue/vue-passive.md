@@ -5,8 +5,6 @@ category: vue
 next: vue-flip
 ---
 
-> Vue Pose has been **deprecated**.
-
 # Passive values
 
 Sometimes we don't want to explicitly define a state for a value, we might just want it to change whenever another value does.

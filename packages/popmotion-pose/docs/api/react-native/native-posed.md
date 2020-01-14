@@ -4,8 +4,6 @@ description: Create posed components
 category: react-native
 ---
 
-> React Native Pose has been **deprecated**. If you are interested in a version of [Framer Motion](https://framer.com/motion) for React Native, let us know on the [GitHub ticket](https://github.com/framer/motion/issues/180).
-
 # `posed`
 
 React Native Pose exports a single function, `posed`.

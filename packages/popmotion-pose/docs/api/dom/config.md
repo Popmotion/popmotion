@@ -4,8 +4,6 @@ description: Configure a poser
 category: vanilla
 ---
 
-> Pose has been **deprecated**. React users for web can upgrade to [Framer Motion](https://framer.com/motion). [Read the upgrade guide](https://www.framer.com/api/motion/migrate-from-pose/)
-
 # Config options
 
 <TOC />
