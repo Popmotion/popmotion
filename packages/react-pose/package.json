@@ -6,7 +6,7 @@
   "module": "./dist/react-pose.es.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "build": "rollup -c && yarn measure",
+    "build": "rollup -c && tsc --emitDeclarationOnly && yarn measure",
     "watch": "rollup -c -w",
     "test": "jest --maxWorkers=2",
     "lint": "tslint 'src/**/*.{ts,tsx}' -e '**/_tests/**'",
