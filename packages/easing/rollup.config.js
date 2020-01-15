@@ -1,14 +1,5 @@
-import typescript from 'rollup-plugin-typescript2';
-import resolve from 'rollup-plugin-node-resolve';
+import typescript from '@rollup/plugin-typescript';
 import pkg from './package.json';
-
-const typescriptConfig = {
-  cacheRoot: 'tmp/.rpt2_cache',
-  typescript: require('typescript')
-};
-const noDeclarationConfig = Object.assign({}, typescriptConfig, {
-  tsconfigOverride: { compilerOptions: { declaration: false } }
-});
 
 const makeExternalPredicate = externalArr => {
   if (externalArr.length === 0) {
@@ -26,14 +17,16 @@ const config = {
   external: makeExternalPredicate(deps.concat(peerDeps))
 };
 
-const es = Object.assign({}, config, {
+const es = {
+  ...config,
+  input: 'src/index.ts',
   output: {
     file: pkg.module,
-    format: 'es',
-    exports: 'named'
+    dir: 'dist',
+    format: 'es'
   },
-  plugins: [resolve(), typescript(noDeclarationConfig)]
-});
+  plugins: [typescript()]
+};
 
 const cjs = Object.assign({}, config, {
   output: {
@@ -41,7 +34,7 @@ const cjs = Object.assign({}, config, {
     format: 'cjs',
     exports: 'named'
   },
-  plugins: [resolve(), typescript(typescriptConfig)]
+  plugins: [typescript()]
 });
 
 export default [es, cjs];

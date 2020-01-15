@@ -1,5 +1,5 @@
 // Types
-export { Transformer, ValueType, NumberMap, RGBA, HSLA, Color } from './types';
+export * from './types';
 
 // Value types
 export { number, scale, alpha } from './value-types/numbers';

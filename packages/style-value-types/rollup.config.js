@@ -1,45 +1,66 @@
-import typescript from 'rollup-plugin-typescript2';
+import typescript from '@rollup/plugin-typescript';
+import pkg from './package.json';
 import uglify from 'rollup-plugin-uglify';
 
-const typescriptConfig = { cacheRoot: 'tmp/.rpt2_cache' };
-
-const config = {
-  input: 'src/index.ts'
+const noDeclarationConfig = {
+  declaration: false
 };
 
-const umd = Object.assign({}, config, {
+const makeExternalPredicate = externalArr => {
+  if (externalArr.length === 0) {
+    return () => false;
+  }
+  const pattern = new RegExp(`^(${externalArr.join('|')})($|/)`);
+  return id => pattern.test(id);
+};
+
+const deps = Object.keys(pkg.dependencies || {});
+const peerDeps = Object.keys(pkg.peerDependencies || {});
+
+const config = {
+  input: 'src/index.ts',
+  external: makeExternalPredicate(deps.concat(peerDeps))
+};
+
+const umd = {
+  ...config,
   output: {
     file: 'dist/style-value-types.js',
     format: 'umd',
     name: 'valueTypes',
-    exports: 'named'
+    exports: 'named',
+    globals: ['tslib']
   },
-  plugins: [typescript(typescriptConfig)]
-});
+  plugins: [typescript()]
+};
 
-const umdProd = Object.assign({}, umd, {
-  output: Object.assign({}, umd.output, {
-    file: 'dist/style-value-types.min.js'
-  }),
-  plugins: [typescript(typescriptConfig), uglify()]
-});
-
-const es = Object.assign({}, config, {
+const umdProd = {
+  ...config,
   output: {
-    file: 'dist/style-value-types.es.js',
-    format: 'es',
-    exports: 'named'
+    ...umd.output,
+    file: 'dist/style-value-types.min.js'
   },
-  plugins: [typescript(typescriptConfig)]
-});
+  plugins: [typescript(), uglify()]
+};
+
+const es = {
+  ...config,
+  input: 'src/index.ts',
+  output: {
+    file: pkg.module,
+    dir: 'dist',
+    format: 'es'
+  },
+  plugins: [typescript()]
+};
 
 const cjs = Object.assign({}, config, {
   output: {
-    file: 'lib/index.js',
+    file: pkg.main,
     format: 'cjs',
     exports: 'named'
   },
-  plugins: [typescript(typescriptConfig)]
+  plugins: [typescript()]
 });
 
 export default [umd, umdProd, es, cjs];

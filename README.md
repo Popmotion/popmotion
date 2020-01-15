@@ -5,9 +5,5 @@ Simple libraries for delightful interfaces.
 ## Packages
 
 * [Popmotion](https://github.com/Popmotion/popmotion/tree/master/packages/popmotion)
-
-### Pose
-* [Vanilla](https://github.com/Popmotion/popmotion/tree/master/packages/popmotion-pose)
-* [React](https://github.com/Popmotion/popmotion/tree/master/packages/react-pose)
-* [React Native](https://github.com/Popmotion/popmotion/tree/master/packages/react-native-pose)
-* [Vue](https://github.com/Popmotion/popmotion/tree/master/packages/vue-pose)
+* [Framesync](https://github.com/Popmotion/popmotion/tree/master/packages/framesync)
+* [Stylefire](https://github.com/Popmotion/popmotion/tree/master/packages/stylefire)

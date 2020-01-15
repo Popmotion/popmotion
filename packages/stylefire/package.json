@@ -46,11 +46,6 @@
     "jest": "^23.1.0",
     "jest-cli": "^23.1.0",
     "jest-dom": "^3.0.0",
-    "rollup": "^0.59.1",
-    "rollup-plugin-node-resolve": "^3.3.0",
-    "rollup-plugin-replace": "^2.2.0",
-    "rollup-plugin-typescript2": "^0.14.0",
-    "rollup-plugin-uglify": "^3.0.0",
     "typescript": "^2.9.2",
     "uglify-js": "^3.3.25",
     "webpack": "^3.0.0"

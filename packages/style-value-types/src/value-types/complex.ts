@@ -1,5 +1,4 @@
 import { Color } from '../types';
-export { RGBA, HSLA } from '../types'; // prevent dynamic type imports
 import { color } from './color';
 import { number } from './numbers';
 import { sanitize, floatRegex, colorRegex } from '../utils';

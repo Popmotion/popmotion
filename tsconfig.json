@@ -53,7 +53,6 @@
     },
     "alwaysStrict": true,
     "declaration": true,
-    "declarationDir": "lib",
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
     "lib": [

@@ -62,7 +62,6 @@
   "devDependencies": {
     "@types/jest": "^24.0.11",
     "jest": "24.2.0-alpha.0",
-    "rollup-plugin-typescript2": "^0.25.2",
     "tslib": "^1.10.0",
     "tslint-react": "^4.1.0"
   }

@@ -2,9 +2,11 @@ import typescript from 'rollup-plugin-typescript2';
 import resolve from 'rollup-plugin-node-resolve';
 import uglify from 'rollup-plugin-uglify';
 
-const typescriptConfig = { cacheRoot: 'tmp/.rpt2_cache' };
+const typescriptConfig = {
+  cacheRoot: 'tmp/.rpt2_cache'
+};
 const noDeclarationConfig = Object.assign({}, typescriptConfig, {
-  tsconfigOverride: { compilerOptions: { declaration: false } }
+  // tsconfigOverride: { compilerOptions: { declaration: false } }
 });
 
 const config = {
@@ -35,7 +37,12 @@ const es = Object.assign({}, config, {
     exports: 'named'
   },
   plugins: [typescript(noDeclarationConfig)],
-  external: ['hey-listen']
+  external: [
+    'hey-listen',
+    '@popmotion/easing',
+    'style-value-types',
+    'framesync'
+  ]
 });
 
 const cjs = Object.assign({}, config, {
@@ -45,7 +52,12 @@ const cjs = Object.assign({}, config, {
     exports: 'named'
   },
   plugins: [typescript(typescriptConfig)],
-  external: ['hey-listen']
+  external: [
+    'hey-listen',
+    '@popmotion/easing',
+    'style-value-types',
+    'framesync'
+  ]
 });
 
 export default [umd, umdProd, es, cjs];
