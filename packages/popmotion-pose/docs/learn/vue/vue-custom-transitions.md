@@ -5,6 +5,8 @@ category: vue
 next: vue-dynamic-props
 ---
 
+> Vue Pose has been **deprecated**.
+
 # Custom transitions
 
 With [automatic animations](/pose/learn/vue-get-started), it's easy to create snappy and playful animations just by defining poses.

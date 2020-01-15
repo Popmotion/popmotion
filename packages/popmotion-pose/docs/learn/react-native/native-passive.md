@@ -4,6 +4,8 @@ description: Learn how to create passive values that only change when others do
 category: react-native
 ---
 
+> React Native Pose has been **deprecated**. If you are interested in a version of [Framer Motion](https://framer.com/motion) for React Native, let us know on the [GitHub ticket](https://github.com/framer/motion/issues/180).
+
 # Passive values
 
 Passive values bind to a value defined in your poses, and change when they change using `Animated.Value.interpolate`.

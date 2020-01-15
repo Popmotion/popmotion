@@ -5,6 +5,8 @@ category: vue
 next: vue-animating-children
 ---
 
+> Vue Pose has been **deprecated**.
+
 # Dynamic pose props
 
 Each pose property can be set as a function that resolves when the pose is entered:

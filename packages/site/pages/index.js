@@ -242,14 +242,6 @@ export default () => (
           </P>
         </Product>
       </ThemeProvider>
-      <ThemeProvider theme={themes.pose}>
-        <Product title={themes.pose}>
-          <P>
-            A simple, CSS-like animation library for <br />
-            <em>React Native</em> and <em>Vue</em>
-          </P>
-        </Product>
-      </ThemeProvider>
     </Container>
     <Section>
       <SectionHeader>Latest blog posts</SectionHeader>

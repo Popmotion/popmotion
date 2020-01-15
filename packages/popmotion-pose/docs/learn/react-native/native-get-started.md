@@ -5,6 +5,8 @@ category: react-native
 next: native-custom-transitions
 ---
 
+> React Native Pose has been **deprecated**. If you are interested in a version of [Framer Motion](https://framer.com/motion) for React Native, let us know on the [GitHub ticket](https://github.com/framer/motion/issues/180).
+
 # Get started
 
 Pose is a declarative motion system that combines the simplicity of CSS syntax with the power and flexibility of JavaScript animations and interactions.
