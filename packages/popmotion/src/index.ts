@@ -1,5 +1,5 @@
 // Animations
-export { time } from './animations/time';
+export { tween } from './animations/tween';
 export { spring } from './animations/spring';
 
 // Utilities

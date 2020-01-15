@@ -8,18 +8,18 @@ import { ForT } from '../types';
  * - Add tests for above
  */
 
-export interface TimeConfig {
+export interface TweenConfig {
   from?: number;
   to?: number;
   duration?: number;
   ease?: (t: number) => number;
 }
 
-export const time = ({
+export const tween = ({
   from = 0,
   to = 1,
   duration = 300,
   ease = easeOut
-}: TimeConfig = {}): ForT => {
+}: TweenConfig = {}): ForT => {
   return interpolate([0, duration], [from, to], { ease });
 };
