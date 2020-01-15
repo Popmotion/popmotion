@@ -36,7 +36,7 @@
   "analyze": true,
   "license": "MIT",
   "scripts": {
-    "build": "rollup -c && npm run measure",
+    "build": "rollup -c && tsc --emitDeclarationOnly && npm run measure",
     "postbuild": "babel $npm_package_module --out-file $npm_package_module --no-babelrc --plugins annotate-pure-calls",
     "watch": "rollup -c -w",
     "prepublishOnly": "npm run test && npm run build",

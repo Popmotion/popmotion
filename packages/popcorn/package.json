@@ -7,7 +7,7 @@
   "module": "dist/popcorn.es.js",
   "jsnext:main": "dist/popcorn.es.js",
   "scripts": {
-    "build": "rollup -c",
+    "build": "rollup -c && tsc --emitDeclarationOnly",
     "watch": "rollup -c -w",
     "lint": "tslint 'src/**/*.{ts,tsx}' -e '**/_tests/**'",
     "test": "jest --maxWorkers=2",

@@ -11,7 +11,7 @@
     "lib"
   ],
   "scripts": {
-    "build": "rollup -c",
+    "build": "rollup -c && tsc --emitDeclarationOnly",
     "postbuild": "babel $npm_package_module --out-file $npm_package_module --no-babelrc --plugins annotate-pure-calls",
     "watch": "rollup -c -w",
     "lint": "tslint 'src/**/*.{ts,tsx}' -e '**/_tests/**'",
