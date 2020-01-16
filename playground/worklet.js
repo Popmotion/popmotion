@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { animate } from 'popmotion';
+import { animate, workletReady } from 'popmotion';
+
+CSS.animationWorklet.addModule('popmotion-worklet.js').then(workletReady);
 
 const Box = styled.div`
   width: 100px;
@@ -13,7 +15,9 @@ const Box = styled.div`
 export function Tween() {
   const ref = useRef();
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    animate(ref.current, { x: 100 }, { duration: 3000 });
+  }, []);
 
   return <Box ref={ref} />;
 }

@@ -11,44 +11,17 @@
     "watch": false,
     "baseUrl": "./packages",
     "paths": {
-      "@popmotion/easing": [
-        "./easing/lib"
-      ],
-      "@popmotion/popcorn": [
-        "./popcorn/lib"
-      ],
-      "animated-pose": [
-        "./animated-pose/lib"
-      ],
       "framesync": [
         "./framesync/lib"
       ],
       "popmotion": [
         "./popmotion/lib"
       ],
-      "popmotion-pose": [
-        "./popmotion-pose/lib"
-      ],
-      "pose-core": [
-        "./pose-core/lib"
-      ],
       "style-value-types": [
         "./style-value-types/lib"
       ],
       "stylefire": [
         "./stylefire/lib"
-      ],
-      "react-pose-core": [
-        "./react-pose-core/lib"
-      ],
-      "react-pose": [
-        "./react-pose/lib"
-      ],
-      "react-pose-text": [
-        "./react-pose-text/lib"
-      ],
-      "vue-pose": [
-        "./vue-pose/lib"
       ]
     },
     "alwaysStrict": true,

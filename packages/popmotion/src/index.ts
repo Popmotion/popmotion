@@ -56,3 +56,4 @@ export {
 
 // Worklet
 export { animate } from './worklet/animate';
+export { workletReady } from './worklet/load-worklet';
