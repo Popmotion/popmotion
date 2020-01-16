@@ -5,7 +5,7 @@
   "homepage": "https://popmotion.io",
   "scripts": {
     "bootstrap": "lerna bootstrap",
-    "build": "cd packages/easing && yarn build && cd ../style-value-types && yarn build && cd ../framesync && yarn build && cd ../popcorn && yarn build && cd ../stylefire && yarn build && cd ../popmotion && yarn build && cd ../pose-core && yarn build && cd ../animated-pose && yarn build && cd ../react-pose-core && yarn build && cd ../react-native-pose && yarn build && cd ../popmotion-pose && yarn build && cd ../react-pose && yarn build && cd ../react-pose-text && yarn build",
+    "build": "cd ../style-value-types && yarn build && cd ../framesync && yarn build && cd ../stylefire && yarn build && cd ../popmotion",
     "playground": "start-storybook -p 6006",
     "build-playground": "build-storybook",
     "clean": "lerna clean --yes && rm -rf node_modules",
