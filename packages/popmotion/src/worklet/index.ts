@@ -5,15 +5,16 @@ interface WorkletAnimationEffect {
   localTime: number;
 }
 
-class StatelessPopmotionAnimator extends StatelessAnimator {
+// extends StatelessAnimator when browsers implement the spec
+class StatelessPopmotionAnimator {
   animation: ForT;
 
   constructor(animation: ForT) {
-    super();
     this.animation = animation;
   }
 
   animate(currentTime: number, effect: WorkletAnimationEffect) {
+    // TODO: Why does this snap back once the duration is reached?
     effect.localTime = this.animation(currentTime);
   }
 }
@@ -22,8 +23,9 @@ export interface TweenOptions {}
 
 class Tween extends StatelessPopmotionAnimator {
   constructor(options: TweenOptions) {
-    super(tween(options));
+    super(tween({ from: 0, to: 3000, duration: 3000 }));
   }
 }
 
-(window as any).registerAnimator('tween', Tween);
+// @ts-ignore
+registerAnimator('tween', Tween);
