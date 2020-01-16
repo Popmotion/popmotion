@@ -1,9 +1,9 @@
 import {
   createExpoIn,
-  reversed,
-  mirrored,
+  reverseEasing,
+  mirrorEasing,
   createBackIn,
-  createAnticipateEasing
+  createAnticipate
 } from './utils';
 import { Easing } from './types';
 
@@ -15,18 +15,18 @@ const BOUNCE_THIRD_THRESHOLD = 9.0 / 10.0;
 export const linear: Easing = p => p;
 
 export const easeIn = createExpoIn(2);
-export const easeOut = reversed(easeIn);
-export const easeInOut = mirrored(easeIn);
+export const easeOut = reverseEasing(easeIn);
+export const easeInOut = mirrorEasing(easeIn);
 
 export const circIn: Easing = p => 1 - Math.sin(Math.acos(p));
-export const circOut = reversed(circIn);
-export const circInOut = mirrored(circOut);
+export const circOut = reverseEasing(circIn);
+export const circInOut = mirrorEasing(circOut);
 
 export const backIn = createBackIn(DEFAULT_OVERSHOOT_STRENGTH);
-export const backOut = reversed(backIn);
-export const backInOut = mirrored(backIn);
+export const backOut = reverseEasing(backIn);
+export const backInOut = mirrorEasing(backIn);
 
-export const anticipate = createAnticipateEasing(DEFAULT_OVERSHOOT_STRENGTH);
+export const anticipate = createAnticipate(DEFAULT_OVERSHOOT_STRENGTH);
 
 // helper constants
 const ca = 4356.0 / 361.0;

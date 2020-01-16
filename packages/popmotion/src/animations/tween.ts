@@ -1,5 +1,5 @@
-import { easeOut } from '@popmotion/easing';
-import { interpolate } from '@popmotion/popcorn';
+import { easeOut } from '../easing';
+import { interpolate } from '../utils/interpolate';
 import { ForT } from '../types';
 
 /**
@@ -21,5 +21,6 @@ export const tween = ({
   duration = 300,
   ease = easeOut
 }: TweenConfig = {}): ForT => {
-  return interpolate([0, duration], [from, to], { ease });
+  // TODO: Fix this type
+  return interpolate([0, duration], [from, to], { ease }) as ForT;
 };

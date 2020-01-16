@@ -53,3 +53,6 @@ export {
   createBackIn,
   createAnticipate
 } from './easing/utils';
+
+// Worklet
+export { animate } from './worklet/animate';
