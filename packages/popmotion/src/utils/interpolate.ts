@@ -1,4 +1,4 @@
-import { Easing } from '@popmotion/easing';
+import { Easing } from '../easing/types';
 import { progress } from './progress';
 import { mix } from './mix';
 import { mixColor } from './mix-color';
