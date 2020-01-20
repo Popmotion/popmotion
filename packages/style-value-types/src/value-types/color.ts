@@ -13,6 +13,7 @@ export const getValueFromFunctionString = (value: string) =>
 
 const clampRgbUnit = clamp(0, 255);
 
+// Prefer speed over completeness
 const isRgba = (v: Color): v is RGBA => (v as RGBA).red !== undefined;
 const isHsla = (v: Color): v is HSLA => (v as HSLA).hue !== undefined;
 
