@@ -1,4 +1,4 @@
-import progress from '../progress';
+import { progress } from '../progress';
 
 test('progress', () => {
   expect(progress(0, 100, 50)).toBe(0.5);

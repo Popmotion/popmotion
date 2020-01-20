@@ -1,4 +1,4 @@
-import smooth from '../smooth';
+import { smooth } from '../smooth';
 import sync from 'framesync';
 
 test('smooth', () => {

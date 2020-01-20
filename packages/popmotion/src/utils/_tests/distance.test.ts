@@ -1,4 +1,4 @@
-import distance from '../distance';
+import { distance } from '../distance';
 
 test('distance', () => {
   expect(distance(-100, 100)).toBe(200);

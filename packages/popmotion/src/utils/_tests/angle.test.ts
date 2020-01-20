@@ -1,4 +1,4 @@
-import angle from '../angle';
+import { angle } from '../angle';
 
 const a = { x: 0, y: 0 };
 const b = { x: 1, y: 0 };

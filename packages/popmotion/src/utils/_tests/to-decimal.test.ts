@@ -1,4 +1,4 @@
-import toDecimal from '../to-decimal';
+import { toDecimal } from '../to-decimal';
 
 test('toDecimal', () => {
   expect(toDecimal(3.33333)).toBe(3.33);

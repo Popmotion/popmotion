@@ -1,4 +1,4 @@
-import isPoint from '../is-point';
+import { isPoint } from '../is-point';
 
 test('isPoint', () => {
   expect(isPoint(9)).toBe(false);
