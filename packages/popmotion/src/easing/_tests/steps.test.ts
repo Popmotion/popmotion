@@ -1,4 +1,4 @@
-import steps from '../steps';
+import { steps } from '../steps';
 
 test('steps', () => {
   const stepEnd = steps(4);
