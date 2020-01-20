@@ -34,6 +34,27 @@ export async function animate(
   // TODO Replace ts ignore
   // @ts-ignore
   const animation = new WorkletAnimation('tween', effect, document.timeline);
+  console.log(animation);
+  return animation.play();
+}
 
-  animation.play();
+export async function parallax(
+  element: HTMLElement | SVGElement,
+  values: Target,
+  source: HTMLElement,
+  options: AnimationOptions
+) {
+  await whenWorkletReady();
+  const keyframes: any = [];
+  const effect = new KeyframeEffect(element, keyframes, options);
+  // @ts-ignore
+  const timeline = new ScrollTimeline({
+    scrollSource: source,
+    timeRange: 1000,
+    orientation: 'vertical'
+  });
+  // @ts-ignore
+  const animation = new WorkletAnimation('parallax', effect, timeline);
+
+  return animation.play();
 }
