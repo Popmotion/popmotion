@@ -1,4 +1,4 @@
-import snap from '../snap';
+import { snap } from '../snap';
 
 it('should snap a number to the nearest in the provided array', () => {
   const snapTo = snap([-100, -50, 100, 200]);

@@ -1,4 +1,4 @@
-import interpolate from '../interpolate';
+import { interpolate } from '../interpolate';
 
 const invert = (v: number) => -v;
 
@@ -78,6 +78,9 @@ test('interpolate complex strings', () => {
 
   expect(a(0)).toBe('20px, rgba(0, 0, 0, 0)');
   expect(a(1.5)).toBe('25px, rgba(194, 194, 194, 0.75)');
+
+  const b = interpolate([0, 1], ['invert(0)', 'invert(1)']);
+  expect(b(0.5)).toBe('invert(0.5)');
 });
 
 test('interpolate colors', () => {

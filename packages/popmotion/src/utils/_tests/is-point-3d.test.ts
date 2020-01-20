@@ -1,4 +1,4 @@
-import isPoint3D from '../is-point-3d';
+import { isPoint3D } from '../is-point-3d';
 
 test('isPoint3D', () => {
   expect(isPoint3D(9)).toBe(false);

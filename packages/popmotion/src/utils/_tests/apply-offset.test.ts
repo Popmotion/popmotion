@@ -1,4 +1,4 @@
-import applyOffset from '../apply-offset';
+import { applyOffset } from '../apply-offset';
 
 test('applyOffset', () => {
   const withInitialOffset = applyOffset(10, 20);
