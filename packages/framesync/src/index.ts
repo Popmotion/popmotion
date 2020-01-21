@@ -13,40 +13,37 @@ const frame = {
   timestamp: 0
 };
 
-const stepsOrder = [
-  StepId.Read,
-  StepId.Update,
-  StepId.Render,
-  StepId.PostRender
-];
+const stepsOrder: StepId[] = ['read', 'update', 'render', 'postRender'];
 
 const setWillRunNextFrame = (willRun: boolean) => (willRunNextFrame = willRun);
 
-const { steps, sync, cancelSync } = stepsOrder.reduce(
+const steps = stepsOrder.reduce(
   (acc, key) => {
-    const step = createStep(setWillRunNextFrame);
+    acc[key] = createStep(setWillRunNextFrame);
+    return acc;
+  },
+  {} as SyncApi['steps']
+);
 
-    acc.sync[key] = (
-      process: Process,
-      keepAlive = false,
-      immediate = false
-    ) => {
+const sync = stepsOrder.reduce(
+  (acc, key) => {
+    const step = steps[key];
+    acc[key] = (process: Process, keepAlive = false, immediate = false) => {
       if (!willRunNextFrame) startLoop();
       step.schedule(process, keepAlive, immediate);
       return process;
     };
-
-    acc.cancelSync[key] = (process: Process) => step.cancel(process);
-
-    acc.steps[key] = step;
-
     return acc;
   },
-  {
-    steps: {},
-    sync: {},
-    cancelSync: {}
-  } as SyncApi
+  {} as SyncApi['sync']
+);
+
+const cancelSync = stepsOrder.reduce(
+  (acc, key) => {
+    acc[key] = steps[key].cancel;
+    return acc;
+  },
+  {} as SyncApi['cancelSync']
 );
 
 const processStep = (stepId: StepId) => steps[stepId].process(frame);
