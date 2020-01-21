@@ -1,5 +1,5 @@
 import { tween } from '../tween';
-import { linear } from '@popmotion/easing';
+import { linear } from '../../easing';
 
 describe('tween', () => {
   it('should by default animate between 0 and 1 over 300 milliseconds with easeOut easing', () => {

@@ -68,8 +68,6 @@
       "js"
     ],
     "moduleNameMapper": {
-      "@popmotion/easing": "<rootDir>/../../easing/src",
-      "@popmotion/popcorn": "<rootDir>/../../popcorn/src",
       "style-value-types": "<rootDir>/../../style-value-types/src",
       "framesync": "<rootDir>/../../framesync/src"
     },
