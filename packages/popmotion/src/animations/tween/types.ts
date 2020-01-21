@@ -17,13 +17,13 @@ export type TweenProps = {
   repeatDelay?: number;
 };
 
-export type TweenInterface = {
+export type TweenInterface<V = number> = {
   isActive: () => boolean;
   stop: () => void;
-  getProgress: () => number;
-  getElapsed: () => number;
-  pause: () => TweenInterface;
-  resume: () => TweenInterface;
-  seek: (progress: number) => TweenInterface;
-  reverse: () => TweenInterface;
+  getProgress: () => V;
+  getElapsed: () => V;
+  pause: () => TweenInterface<V>;
+  resume: () => TweenInterface<V>;
+  seek: (progress: number) => TweenInterface<V>;
+  reverse: () => TweenInterface<V>;
 };
