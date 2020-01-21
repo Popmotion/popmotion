@@ -10,15 +10,15 @@ import { Styler, Props } from './styler/types';
 
 const cache = new WeakMap<Element | Window, Styler>();
 
-const isHTMLElement = (element: Element): element is HTMLElement => {
+const isHTMLElement = (node: Element): node is HTMLElement => {
   return (
-    element instanceof HTMLElement ||
+    node instanceof HTMLElement ||
     // Cross-origin safe check
     typeof (node as HTMLElement).click === 'function'
   );
 };
-const isSVGElement = (element: Element): element is SVGElement => {
-  return element instanceof SVGElement || 'ownerSVGElement' in element;
+const isSVGElement = (node: Element): node is SVGElement => {
+  return node instanceof SVGElement || 'ownerSVGElement' in node;
 };
 
 const createDOMStyler = (node: Element | Window, props?: Props) => {
