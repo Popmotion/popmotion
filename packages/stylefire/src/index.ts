@@ -26,10 +26,10 @@ const createDOMStyler = (node: Element | Window, props?: Props) => {
 
   if (node === window) {
     styler = viewport(node);
-  } else if (isHTMLElement(node)) {
-    styler = css(node, props);
-  } else if (isSVGElement(node)) {
-    styler = svg(node);
+  } else if (isHTMLElement(node as Element)) {
+    styler = css(node as HTMLElement, props);
+  } else if (isSVGElement(node as Element)) {
+    styler = svg(node as SVGElement);
   }
 
   invariant(
