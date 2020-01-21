@@ -27,10 +27,12 @@ const checkPositionalProp = (key: string) => positionalPropsDict.has(key);
 const hasPositionalProps = (pose: Pose) =>
   Object.keys(pose).some(checkPositionalProp);
 
-export const isFlipPose = (flip: boolean, key: string, state: PoserState) =>
-  // acting as cross origin `instanceof HTMLElement`, apparently SVGs have no click method
-  typeof state.props.element.click === 'function' &&
-  (flip === true || key === 'flip');
+export const isFlipPose = (flip: boolean, key: string, state: PoserState) => {
+  return (
+    state.props.element instanceof HTMLElement &&
+    (flip === true || key === 'flip')
+  );
+};
 
 export const setValue = (
   { values, props }: PoserState,
@@ -69,15 +71,12 @@ const explicitlyFlipPose = (state: PoserState, nextPose: Pose) => {
     ...remainingPose
   } = nextPose;
 
-  const propsToSet = positionalProps.concat('position').reduce(
-    (acc, key) => {
-      if (nextPose[key] !== undefined) {
-        acc[key] = resolveProp(nextPose[key], state.props);
-      }
-      return acc;
-    },
-    {} as StyleMap
-  );
+  const propsToSet = positionalProps.concat('position').reduce((acc, key) => {
+    if (nextPose[key] !== undefined) {
+      acc[key] = resolveProp(nextPose[key], state.props);
+    }
+    return acc;
+  }, {} as StyleMap);
 
   elementStyler.set(propsToSet).render();
 

@@ -10,16 +10,25 @@ import { Styler, Props } from './styler/types';
 
 const cache = new WeakMap<Element | Window, Styler>();
 
+const isHTMLElement = (element: Element): element is HTMLElement => {
+  return (
+    element instanceof HTMLElement ||
+    // Cross-origin safe check
+    typeof (node as HTMLElement).click === 'function'
+  );
+};
+const isSVGElement = (element: Element): element is SVGElement => {
+  return element instanceof SVGElement || 'ownerSVGElement' in element;
+};
+
 const createDOMStyler = (node: Element | Window, props?: Props) => {
   let styler: Styler;
 
   if (node === window) {
     styler = viewport(node);
-  } else if (typeof (node as HTMLElement).click === 'function') {
-    // acting as cross origin `instanceof HTMLElement`, apparently SVGs have no click method
-    styler = css(node as HTMLElement, props);
-  } else if ('ownerSVGElement' in node) {
-    // acting as cross origin `instanceof SVGElement`
+  } else if (isHTMLElement(node)) {
+    styler = css(node, props);
+  } else if (isSVGElement(node)) {
     styler = svg(node);
   }
 
