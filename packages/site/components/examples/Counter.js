@@ -16,10 +16,8 @@ const Counter = styled.span`
 `;
 
 export default ({ code, autostart, start, id }) => (
-  <CounterContainer id={id} innerRef={autostart ? start : null}>
+  <CounterContainer id={id} ref={autostart ? start : null}>
     <Counter className="counter">0</Counter>
-    {!autostart ? (
-      <ActionButton onClick={start}>Start</ActionButton>
-    ) : null}
+    {!autostart ? <ActionButton onClick={start}>Start</ActionButton> : null}
   </CounterContainer>
 );

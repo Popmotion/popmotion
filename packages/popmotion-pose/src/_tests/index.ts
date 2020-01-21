@@ -47,7 +47,7 @@ test('correctly rounds values', () => {
       }
     },
     onChange: {
-      x: v => (isRounded === true ? (isRounded = !(v % 1)) : false)
+      x: (v: number) => (isRounded === true ? (isRounded = !(v % 1)) : false)
     }
   });
 
@@ -78,7 +78,7 @@ test('correctly caps values', () => {
       }
     },
     onChange: {
-      x: v => {
+      x: (v: number) => {
         if (isActive) {
           largerThanTen = largerThanTen || v > 10;
           smallerThanThree = smallerThanThree || v < 3;
@@ -147,7 +147,7 @@ test('passive values', () => {
     init: { x: 0 },
     foo: { x: 100, transition: { duration: 50 } },
     passive: {
-      y: ['x', v => -v]
+      y: ['x', (v: number) => -v]
     }
   });
 
@@ -250,50 +250,51 @@ test('applyAtEnd for positional key when transitioning it from one unit type to 
     opened: {
       width: '300px',
       applyAtEnd: {
-        width: '400px',
-      },
-    },
+        width: '400px'
+      }
+    }
   });
 
   return poser
     .set('closed')
     .then(() => poser.set('opened'))
     .then(() => {
-      expect(poser.get('width').get()).toBe('400px')
-    })
+      expect(poser.get('width').get()).toBe('400px');
+    });
 });
 
-test("correct final values are applied when transitioning between unit types for posers with shared applyAtEnd", () => {
+test('correct final values are applied when transitioning between unit types for posers with shared applyAtEnd', () => {
   // if this test fails with actual result of 300px it means that `transformPose` mutates shared `applyAtEnd`
   const applyAtEnd = {
-    backgroundColor: 'blue',
+    backgroundColor: 'blue'
   };
 
   const poserA = pose(getDiv(), {
     initialPose: 'closed',
     closed: {
-      width: '0%',
+      width: '0%'
     },
     opened: {
       width: '300px',
-      applyAtEnd,
-    },
+      applyAtEnd
+    }
   });
 
   const poserB = pose(getDiv(), {
     initialPose: 'closed',
     closed: {
-      width: '0%',
+      width: '0%'
     },
     opened: {
       width: '40vw',
-      applyAtEnd,
-    },
+      applyAtEnd
+    }
   });
 
-  return poserA.set('opened')
+  return poserA
+    .set('opened')
     .then(() => poserB.set('opened'))
     .then(() => {
-      expect(poserB.get('width').get()).toBe('40vw')
-    })
+      expect(poserB.get('width').get()).toBe('40vw');
+    });
 });

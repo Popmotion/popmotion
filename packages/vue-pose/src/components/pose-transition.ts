@@ -23,7 +23,7 @@ const setPoserTo = (
 
   PoserMap.get(el)
     .set(toPose)
-    .then(function(){
+    .then(function() {
       that.$emit('poseComplete', toPose);
       done();
     });

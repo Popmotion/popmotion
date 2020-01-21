@@ -1,6 +1,6 @@
 {
   "name": "style-value-types",
-  "version": "3.1.6",
+  "version": "3.1.7",
   "description": "Parsers, transformers and tests for special value types, eg: %, hex codes etc.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -11,7 +11,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "rollup -c",
+    "build": "rollup -c && tsc --emitDeclarationOnly",
     "watch": "rollup -c -w",
     "lint": "tslint -c tslint.json 'src/**/*.{ts}'",
     "test": "jest --maxWorkers=2",
@@ -39,9 +39,6 @@
     "@types/jest": "^23.1.1",
     "jest": "^23.1.0",
     "jest-cli": "^23.1.0",
-    "rollup": "^0.60.7",
-    "rollup-plugin-typescript2": "^0.14.0",
-    "rollup-plugin-uglify": "^3.0.0",
     "webpack": "^3.12.0"
   },
   "jest": {
@@ -62,6 +59,7 @@
     "singleQuote": true
   },
   "dependencies": {
-    "hey-listen": "^1.0.8"
+    "hey-listen": "^1.0.8",
+    "tslib": "^1.10.0"
   }
 }

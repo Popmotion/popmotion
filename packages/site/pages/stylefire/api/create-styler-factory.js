@@ -38,8 +38,7 @@ const convertMarkdown = marksy({
   }
 });
 
-const content = convertMarkdown(`
-# createStylerFactory
+const content = convertMarkdown(`# createStylerFactory
 
 By default, \`styler\` outputs stylers for HTML and SVG elements. It's possible to create a \`styler\` for any JavaScript API that might benefit from render batching or cached state.
 

@@ -2,6 +2,18 @@
 
 Popcorn adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.4.4] 2019-11-14
+
+### Upgrade
+
+- Upgrading `style-value-types`.
+
+## [0.4.3] 2019-11-14
+
+### Upgrade
+
+- Updating to Typescript 3.7.
+
 ## [0.4.2] 2019-07-25
 
 ### Fixed

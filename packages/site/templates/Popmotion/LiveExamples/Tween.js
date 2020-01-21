@@ -12,7 +12,7 @@ const code = `tween({
 })`;
 
 class Tween extends React.Component {
-  setRef = (ref) => {
+  setRef = ref => {
     if (!ref) return;
     this.boxStyler = styler(ref);
     if (this.props.isVisible) this.startAnimation();
@@ -34,7 +34,7 @@ class Tween extends React.Component {
       duration: 1200,
       ease: easing.backOut,
       flip: Infinity
-    }).start(this.boxStyler.set);
+    }).start(v => this.boxStyler.set(v));
   }
 
   stopAnimation() {
@@ -42,12 +42,15 @@ class Tween extends React.Component {
   }
 
   render() {
-    return <Box innerRef={this.setRef} />;
+    return <Box ref={this.setRef} />;
   }
 }
 
 export default trackVisibility(({ isVisible }) => (
-  <Template code={code} codepen="https://codepen.io/popmotion/pen/WXOPWX?editors=0010">
+  <Template
+    code={code}
+    codepen="https://codepen.io/popmotion/pen/WXOPWX?editors=0010"
+  >
     <VerticalCenter>
       <Tween isVisible={isVisible} />
     </VerticalCenter>

@@ -18,6 +18,44 @@ const generateTheme = (name, props) => ({
 });
 
 const themeSettings = {
+  framerMotion: {
+    id: 'framer-motion',
+    name: 'Framer Motion',
+    tagline: 'A truly simple React animation and gesture library.',
+    url: 'https://framer.com/motion',
+    color: {
+      base: '#f08',
+      baseShadow: '#c0c',
+      twist: '#d0e',
+      action: '#09f',
+      actionHighlight: '#05f'
+    },
+    Logo: () => (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="80px"
+        viewBox="0 0 100 100"
+      >
+        <defs>
+          <linearGradient id="pink" gradientTransform="rotate(90 .5 .5)">
+            <stop offset="0" stopColor="#f08"></stop>
+            <stop offset="1" stopColor="#d0e"></stop>
+          </linearGradient>
+          <linearGradient id="purple" gradientTransform="rotate(90 .5 .5)">
+            <stop offset="0" stopColor="#05f"></stop>
+            <stop offset="1" stopColor="#40f"></stop>
+          </linearGradient>
+          <linearGradient id="blue" gradientTransform="rotate(90 .5 .5)">
+            <stop offset="0" stopColor="#09f"></stop>
+            <stop offset="1" stopColor="#05f"></stop>
+          </linearGradient>
+        </defs>
+        <path d="M0 100V0l50 50z" fill="url(#pink)"></path>
+        <path d="M100 0v50l-50 50-25-25z" fill="url(#purple)"></path>
+        <path d="M100 50v50L75 75z" fill="url(#blue)"></path>
+      </svg>
+    )
+  },
   popmotion: {
     id: 'popmotion',
     name: 'Popmotion',
@@ -61,7 +99,7 @@ const themeSettings = {
     brandColor: color.brand,
 
     mastheadBackground: `linear-gradient(${color.brand}, ${color.brandBurn})`,
-    shareImage: 'https://popmotion.io/static/images/twitter-card.png'
+    shareImage: 'https://popmotion.io/images/twitter-card.png'
   },
   pose: {
     id: 'pose',
@@ -109,7 +147,7 @@ const themeSettings = {
     // Deprecated colors
     actionColor: color.blue,
     brandColor: color.purple,
-    shareImage: 'https://popmotion.io/static/images/pose-twitter-card.png'
+    shareImage: 'https://popmotion.io/images/pose-twitter-card.png'
   },
   pure: {
     id: 'pure',
@@ -153,7 +191,7 @@ const themeSettings = {
     brandColor: color.brand,
 
     mastheadBackground: `linear-gradient(${color.brand}, ${color.brandBurn})`,
-    shareImage: 'https://popmotion.io/static/images/twitter-card.png'
+    shareImage: 'https://popmotion.io/images/twitter-card.png'
   },
   stylefire: {
     id: 'stylefire',
@@ -191,7 +229,7 @@ const themeSettings = {
     // Deprecated colors
     actionColor: color.orangeBurn,
     brandColor: color.orange,
-    shareImage: 'https://popmotion.io/static/images/pose-twitter-card.png'
+    shareImage: 'https://popmotion.io/images/pose-twitter-card.png'
   },
   popcorn: {
     id: 'popcorn',
@@ -225,7 +263,7 @@ const themeSettings = {
       twist: '#00CF93',
       action: '#06A69D'
     },
-    shareImage: 'https://popmotion.io/static/images/twitter-card-popcorn.png'
+    shareImage: 'https://popmotion.io/images/twitter-card-popcorn.png'
   },
   framesync: {
     id: 'framesync',
@@ -256,7 +294,7 @@ const themeSettings = {
     // Deprecated colors
     actionColor: color.blue,
     brandColor: color.purple,
-    shareImage: 'https://popmotion.io/static/images/pose-twitter-card.png'
+    shareImage: 'https://popmotion.io/images/pose-twitter-card.png'
   }
 };
 

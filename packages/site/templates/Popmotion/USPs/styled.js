@@ -11,7 +11,7 @@ export const Container = styled.section`
   flex-direction: column;
 `;
 
-const BlurbContainer = Centered.extend`
+const BlurbContainer = styled(Centered)`
   display: flex;
   align-items: center;
   padding: ${cols(1)};

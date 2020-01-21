@@ -13,19 +13,14 @@ export type SVGAttrs = {
   };
 };
 
+const defaultOrigin = 0.5;
+
 const svgAttrsTemplate = (): SVGAttrs => ({
   style: {}
 });
 
 const progressToPixels = (progress: number, length: number) =>
   px.transform(progress * length);
-
-export type Dimensions = {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-};
 
 const unmeasured = { x: 0, y: 0, width: 0, height: 0 };
 
@@ -49,11 +44,10 @@ function calculateSVGTransformOrigin(
 
 export function buildSVGAttrs(
   {
-    x,
-    y,
-    z,
-    originX = 0.5,
-    originY = 0.5,
+    attrX,
+    attrY,
+    originX,
+    originY,
     pathLength,
     pathSpacing = 1,
     pathOffset = 0,
@@ -65,7 +59,8 @@ export function buildSVGAttrs(
     false,
     false
   ),
-  attrs: SVGAttrs = svgAttrsTemplate()
+  attrs: SVGAttrs = svgAttrsTemplate(),
+  isDashCase = true
 ) {
   const style = cssBuilder(state);
 
@@ -73,28 +68,33 @@ export function buildSVGAttrs(
     if (key === 'transform') {
       attrs.style.transform = style[key] as string;
     } else {
-      const attrKey = !camelCaseAttributes.has(key) ? camelToDash(key) : key;
+      const attrKey =
+        isDashCase && !camelCaseAttributes.has(key) ? camelToDash(key) : key;
       attrs[attrKey] = style[key];
     }
   }
 
   // Parse transformOrigin
-  if (originX !== undefined || originY !== undefined) {
+  if (originX !== undefined || originY !== undefined || style.transform) {
     attrs.style.transformOrigin = calculateSVGTransformOrigin(
       dimensions,
-      originX as number,
-      originY as number
+      originX !== undefined ? originX : defaultOrigin,
+      originY !== undefined ? originY : defaultOrigin
     );
   }
 
   // Treat x/y not as shortcuts but as actual attributes
-  if (x !== undefined) attrs.x = x;
-  if (y !== undefined) attrs.y = y;
+  if (attrX !== undefined) attrs.x = attrX;
+  if (attrY !== undefined) attrs.y = attrY;
 
   // Handle special path length attributes
   if (totalPathLength !== undefined && pathLength !== undefined) {
-    attrs['stroke-dashoffset'] = progressToPixels(-pathOffset, totalPathLength);
-    attrs['stroke-dasharray'] = `${progressToPixels(
+    attrs[
+      isDashCase ? 'stroke-dashoffset' : 'strokeDashoffset'
+    ] = progressToPixels(-pathOffset, totalPathLength);
+    attrs[
+      isDashCase ? 'stroke-dasharray' : 'strokeDasharray'
+    ] = `${progressToPixels(
       pathLength as number,
       totalPathLength
     )} ${progressToPixels(pathSpacing as number, totalPathLength)}`;
@@ -105,11 +105,19 @@ export function buildSVGAttrs(
 
 export function createAttrBuilder(
   dimensions: Dimensions,
-  totalPathLength?: number
+  totalPathLength?: number,
+  isDashCase: boolean = true
 ) {
   const attrs: SVGAttrs = svgAttrsTemplate();
   const cssBuilder = createStyleBuilder(false, false);
 
   return (state: State & SVGState) =>
-    buildSVGAttrs(state, dimensions, totalPathLength, cssBuilder, attrs);
+    buildSVGAttrs(
+      state,
+      dimensions,
+      totalPathLength,
+      cssBuilder,
+      attrs,
+      isDashCase
+    );
 }

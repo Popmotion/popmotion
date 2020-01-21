@@ -5,9 +5,7 @@ import { color, font, media } from '~/styles/vars';
 export const Container = styled.div`
   ${({ theme }) => `
     background-color: ${theme.color.base};
-    background-image: radial-gradient(120% 600px at 50% 200px, ${
-      theme.color.base
-    }, ${theme.color.twist} 120%);
+    background-image: radial-gradient(120% 600px at 50% 200px, ${theme.color.base}, ${theme.color.twist} 120%);
     min-height: 100vh;
   `};
   padding: 10px;
@@ -67,12 +65,8 @@ export const P = styled.p`
 
 export const ActionButton = styled.button`
   ${({ theme }) => `
-    background-image: linear-gradient(-180deg, ${theme.color.base} 0%, ${
-    theme.color.twist
-  } 100%);
-    box-shadow: 0 1px 0 0 ${
-      theme.color.baseShadow
-    }, 0 2px 3px 0 rgba(0,0,0,0.22);
+    background-image: linear-gradient(-180deg, ${theme.color.base} 0%, ${theme.color.twist} 100%);
+    box-shadow: 0 1px 0 0 ${theme.color.baseShadow}, 0 2px 3px 0 rgba(0,0,0,0.22);
     text-shadow: 0 -1px 0 ${theme.color.baseShadow};
 
     &:active {
@@ -107,8 +101,9 @@ export const ActionButton = styled.button`
   `};
 `;
 
-const ButtonAsLink = ActionButton.withComponent('a')
-  .extend`display: inline-block;`;
+const ButtonAsLink = styled(ActionButton.withComponent('a'))`
+  display: inline-block;
+`;
 
 export const ActionLink = ({ href, ...props }) => (
   <Link href={href}>

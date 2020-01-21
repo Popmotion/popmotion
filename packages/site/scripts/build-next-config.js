@@ -5,6 +5,8 @@ const outputPath = path.join(__dirname, '../next.config.js');
 
 const fileTemplate = routes => `
 module.exports = {
+  distDir: 'build',
+  exportTrailingSlash: true,
   exportPathMap: function () {
     return ${routes};
   },

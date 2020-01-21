@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import styler, { buildStyleProperty } from 'stylefire';
+import styler, { buildStyleProperty } from '../packages/stylefire/lib';
 
 const position = pos => ref => ref && styler(ref).set(pos);
 
@@ -107,7 +107,8 @@ export class CSS extends React.Component {
       width: 100,
       height: 100,
       rotate: 45,
-      backgroundColor: 'red'
+      backgroundColor: 'red',
+      clipPath: 'circle(50px at 0 100px)'
     });
 
   render() {

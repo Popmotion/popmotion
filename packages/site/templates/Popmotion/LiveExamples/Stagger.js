@@ -14,16 +14,14 @@ stagger(animations, 100)
   .start((v) => v.forEach((x, i) => stylers[i].set('x', x)));`;
 
 class Example extends React.Component {
-  setContainer = (ref) => {
+  setContainer = ref => {
     if (!ref) return;
     this.container = ref;
-    this.ballStylers = Array
-      .from(this.container.children)
-      .map(styler);
+    this.ballStylers = Array.from(this.container.children).map(styler);
 
     if (this.props.isVisible) this.startAnimation();
   };
-  
+
   componentWillReceiveProps({ isVisible: willBeVisible }) {
     const { isVisible } = this.props;
     if (!isVisible && willBeVisible) this.startAnimation();
@@ -38,14 +36,13 @@ class Example extends React.Component {
     const animation = spring({ to: 300 });
     const animations = Array(this.ballStylers.length).fill(animation);
 
-    stagger(animations, 100)
-      .start((v) => {
-        v.forEach((x, i) => {
-          this.ballStylers[i].set('x', x);
-        })
+    stagger(animations, 100).start(v => {
+      v.forEach((x, i) => {
+        this.ballStylers[i].set('x', x);
       });
+    });
   };
-  
+
   startAnimation() {
     this.fireAnimation();
     this.timer = setInterval(this.fireAnimation, 1200);
@@ -58,7 +55,7 @@ class Example extends React.Component {
 
   render() {
     return (
-      <StackedLeft innerRef={this.setContainer}>
+      <StackedLeft ref={this.setContainer}>
         <SmallBall />
         <SmallBall />
         <SmallBall />

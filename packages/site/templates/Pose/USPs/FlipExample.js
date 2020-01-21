@@ -122,8 +122,10 @@ class Example extends React.Component {
 
   render() {
     return (
-      <Modal innerRef={this.setContainerRef}>
-        {this.state.list.map(i => <div key={i} ref={this.setItemRef} />)}
+      <Modal ref={this.setContainerRef}>
+        {this.state.list.map(i => (
+          <div key={i} ref={this.setItemRef} />
+        ))}
       </Modal>
     );
   }

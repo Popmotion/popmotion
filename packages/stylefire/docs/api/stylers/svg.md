@@ -46,7 +46,22 @@ In this example you can change the real `path` shape and length without having t
 
 ### Supported props
 
-All SVG attributes are supported.
+All SVG attributes are supported. `x` and `y` attributes can be accessed via `attrX` and `attrY`.
+
+The following transform props are supported:
+
+* `rotate`: `degrees`
+* `rotateX`: `degrees`
+* `rotateY`: `degrees`
+* `scale`: `scale`
+* `scaleX`: `scale`
+* `scaleY`: `scale`
+* `skewX`: `degrees`
+* `skewY`: `degrees`
+* `translateX`: `px`
+* `translateY`: `px`
+* `translateZ`: `px`
+* `perspective`: `px`
 
 ## Prop types
 
@@ -54,6 +69,7 @@ For convenience and safety, many props are mapped to [value types](https://githu
 
 * `fill`: `color`
 * `stroke`: `color`
+* `x`/`y`: `px`
 * `scale`: `scale`
 * `scaleX`: `scale`
 * `scaleY`: `scale`

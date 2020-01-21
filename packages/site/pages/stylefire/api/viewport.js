@@ -38,8 +38,7 @@ const convertMarkdown = marksy({
   }
 });
 
-const content = convertMarkdown(`
-# Viewport styler
+const content = convertMarkdown(`# Viewport styler
 
 When \`styler\` is provided \`window\`, it returns a styler capable of scrolling the viewport.
 

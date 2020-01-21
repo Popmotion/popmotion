@@ -2,6 +2,42 @@
 
 Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.0.1] 2019-11-14
+
+### Fixed
+
+- Upgraded to Typescript 3.7.
+
+## [7.0.0] 2019-10-08
+
+### Changed
+
+- `x` and `y` now work consistently between CSS and SVG and map to the `translateX()` and `translateY()` styles. SVG `x`/`y` attributes can be accessed via `attrX` and `attrY`.
+
+## [6.0.12] 2019-10-01
+
+### Fixed
+
+- Build will now correctly remove `process.env.NODE_ENV` from umd builds
+
+## [6.0.11] 2019-09-18
+
+### Fixed
+
+- Prevent overwriting a prefixed property with a non-prefixed version. This was breaking `clipPath` in Safari, which contains the property name in `element.style` but doesn't properly support it (whereas `WebkitClipPath` does).
+
+## [6.0.10] 2019-08-27
+
+### Fixed
+
+- Only generating `transform-origin` if we detect transform props or `originX`/`originY`.
+
+## [6.0.9] 2019-08-14
+
+### Adding
+
+- `isDashCase` option for `buildSVGAttrs`.
+
 ## [6.0.8] 2019-07-25
 
 ### Upgraded

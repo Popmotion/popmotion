@@ -9,13 +9,16 @@ const Parent = posed.div({
   init: { x: 10, transition: { duration: 30 } },
   foo: { x: 20, transition: { duration: 30 } },
   bar: { x: 30, transition: { duration: 30 } },
-  fromProps: { x: ({ i }) => i, transition: { duration: 30 } },
+  fromProps: { x: ({ i }: { i: number }) => i, transition: { duration: 30 } },
   preEnter: { x: 40, transition: { duration: 30 } },
   enter: { x: 50, transition: { duration: 30 } },
   exit: { x: 60, transition: { duration: 30 } },
-  dynamicEnter: { x: ({ x }) => x * 2, transition: { duration: 30 } },
+  dynamicEnter: {
+    x: ({ x }: { x: number }) => x * 2,
+    transition: { duration: 30 }
+  },
   dynamicExit: {
-    x: ({ x }) => x,
+    x: ({ x }: { x: number }) => x,
     transition: { duration: 30 }
   }
 });
@@ -24,7 +27,7 @@ const Child = posed.div({
   init: { y: 15, transition: { duration: 30 } },
   foo: { y: 25, transition: { duration: 30 } },
   bar: { y: 35, transition: { duration: 30 } },
-  fromProps: { y: ({ i }) => i, transition: { duration: 30 } },
+  fromProps: { y: ({ i }: { i: number }) => i, transition: { duration: 30 } },
   preEnter: { y: 45, transition: { duration: 30 } },
   enter: { y: 55, transition: { duration: 30 } },
   exit: { y: 65, transition: { duration: 30 } },
@@ -32,7 +35,7 @@ const Child = posed.div({
   dynamicExit: { y: 85, transition: { duration: 30 } },
   dynamicExitDuration: {
     y: 85,
-    transition: ({ i }) => ({ duration: (i + 1) * 30 })
+    transition: ({ i }: { i: number }) => ({ duration: (i + 1) * 30 })
   }
 });
 
@@ -132,9 +135,6 @@ test('posed: passes through props', () => {
 });
 
 test('posed: `onPoseComplete` gets called with pose as argument', () => {
-  let x = 0;
-  let y = 0;
-
   return new Promise(resolve => {
     render(
       <Parent
@@ -250,7 +250,7 @@ test('PoseGroup: onRest fires', () => {
 });
 
 test('PoseGroup: onRest fires when exit pose starts during exit pose', () => {
-  const range = n => Array.from({ length: n }, (_, i) => i);
+  const range = (n: number) => Array.from({ length: n }, (_, i) => i);
 
   return new Promise(resolve => {
     class Group extends React.Component {
@@ -283,7 +283,7 @@ test('PoseGroup: onRest fires when exit pose starts during exit pose', () => {
       }
     }
 
-    const wrapper = render(<Group />);
+    render(<Group />);
   });
 });
 
@@ -324,11 +324,11 @@ test('PoseGroup: Animate conditionally', () => {
 test('PoseGroup: All remaining children have a flip transition when one is removed', () => {
   const items = [1, 2, 3, 4, 5, 6];
   let nbEnterPoseCompleted = 0;
-  let flipTransitions = [];
+  let flipTransitions: boolean[] = [];
   return new Promise(resolve => {
-    const Group = ({ items }) => (
+    const Group = ({ items }: any) => (
       <PoseGroup>
-        {items.map((item, i) => (
+        {items.map((item: any, i: number) => (
           <Parent
             key={item}
             onPoseComplete={poses => {
@@ -447,14 +447,11 @@ test('PoseGroup: Override props on child', () => {
 });
 
 test('PoseGroup: Provides group props to children on mount', () => {
-  let x = 0;
-  let y = 0;
-
   const ChildWithGroupProps = posed(
-    forwardRef(({ text, ...props }, innerRef) => (
+    forwardRef(({ text, ...props }: any, innerRef) => (
       <div ref={innerRef} {...props}>{`text: ${text}`}</div>
     ))
-  )({});
+  )({}) as any;
 
   const Group = () => (
     <PoseGroup animateOnMount text="foo bar">
@@ -462,7 +459,7 @@ test('PoseGroup: Provides group props to children on mount', () => {
     </PoseGroup>
   );
 
-  const { getByTestId, debug } = render(<Group />);
+  const { getByTestId } = render(<Group />);
   const child = getByTestId('child');
   expect(child.textContent).toBe('text: foo bar');
 });
@@ -540,7 +537,7 @@ test('StrictMode: PoseGroup removes children correctly', () => {
       exit: { opacity: 0 }
     });
 
-    const Group = props => (
+    const Group = (props: any) => (
       <React.StrictMode>
         <PoseGroup {...props} />
       </React.StrictMode>

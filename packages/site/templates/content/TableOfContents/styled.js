@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Centered } from '~/templates/global/grid';
 import { color, cols, font } from '~/styles/vars';
 
-export const Container = Centered.withComponent('nav').extend`
+export const Container = styled(Centered.withComponent('nav'))`
   margin-top: 40px;
   margin-bottom: 20px;
   padding: 20px;

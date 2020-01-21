@@ -4,6 +4,8 @@ description: A component for managing entering and exiting Vue components
 category: vue
 ---
 
+> Vue Pose has been **deprecated**.
+
 # `PoseTransition`
 
 `PoseTransition` is a component that can animate a single element as its added to, and removed from, the DOM.

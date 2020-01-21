@@ -5,6 +5,8 @@ category: react-native
 next: native-dragging
 ---
 
+> React Native Pose has been **deprecated**. If you are interested in a version of [Framer Motion](https://framer.com/motion) for React Native, let us know on the [GitHub ticket](https://github.com/framer/motion/issues/180).
+
 # Animating children
 
 Traditionally, coordinating animations across multiple children has been a delicate, involved process.
@@ -21,7 +23,7 @@ export default ({items}) => (
 )
 ```
 
-<Video src="/static/videos/native-children.mp4" height="320" />
+<Video src="/videos/native-children.mp4" height="320" />
 
 Here's how it's done.
 

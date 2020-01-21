@@ -5,6 +5,8 @@ category: react-native
 next: native-animating-children
 ---
 
+> React Native Pose has been **deprecated**. If you are interested in a version of [Framer Motion](https://framer.com/motion) for React Native, let us know on the [GitHub ticket](https://github.com/framer/motion/issues/180).
+
 # Custom transitions
 
 With [automatic animations](/pose/learn/native-get-started), it's easy to create snappy and playful animations just by defining poses.

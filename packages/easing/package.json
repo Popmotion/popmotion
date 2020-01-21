@@ -30,7 +30,7 @@
   "analyze": true,
   "license": "MIT",
   "scripts": {
-    "build": "rollup -c",
+    "build": "rollup -c && tsc --emitDeclarationOnly",
     "postbuild": "babel $npm_package_module --out-file $npm_package_module --no-babelrc --plugins annotate-pure-calls",
     "watch": "rollup -c -w",
     "prepublishOnly": "npm run test && npm run build",
@@ -46,11 +46,6 @@
     "@types/jest": "^23.1.1",	
     "jest": "^23.1.0",	
     "jest-cli": "^23.1.0",
-    "rollup": "^0.59.1",
-    "rollup-plugin-node-resolve": "^3.3.0",
-    "rollup-plugin-replace": "^2.0.0",
-    "rollup-plugin-typescript2": "^0.14.0",
-    "rollup-plugin-uglify": "^3.0.0",
     "ts-jest": "^21.2.4",
     "tslint-circular-dependencies": "^0.1.0"
   },

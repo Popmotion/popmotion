@@ -1,19 +1,18 @@
 {
   "name": "pose-core",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Factory for Pose animation state machines",
   "main": "lib/index.js",
   "module": "dist/pose-core.es.js",
   "jsnext:main": "dist/pose-core.es.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "build": "rollup -c",
+    "build": "rollup -c && tsc --emitDeclarationOnly",
     "postbuild": "babel $npm_package_module --out-file $npm_package_module --no-babelrc --plugins annotate-pure-calls",
     "watch": "rollup -c -w",
     "test": "jest --maxWorkers=2",
     "prettier": "prettier ./src/* --write",
-    "prepublishOnly": "npm run test && npm run prettier && npm run build",
-    "postinstall": "node ./scripts/postinstall.js || exit 0"
+    "prepublishOnly": "npm run test && npm run prettier && npm run build"
   },
   "repository": {
     "type": "git",
@@ -31,26 +30,23 @@
     "env"
   ],
   "devDependencies": {
+    "@types/invariant": "^2.2.29",
+    "@types/node": "^10.0.5",
+    "@types/jest": "^23.1.1",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-plugin-annotate-pure-calls": "^0.2.2",
-    "@types/jest": "^23.1.1",	
-    "jest": "^23.1.0",	
+    "jest": "^23.1.0",
     "jest-cli": "^23.1.0",
-    "prettier": "1.11.1",
-    "rollup": "^0.59.1",
-    "rollup-plugin-typescript2": "^0.14.0",
-    "typescript": "^2.7.2"
+    "prettier": "1.11.1"
   },
   "prettier": {
     "parser": "typescript",
     "singleQuote": true
   },
   "dependencies": {
-    "@types/invariant": "^2.2.29",
-    "@types/node": "^10.0.5",
     "hey-listen": "^1.0.5",
-    "tslib": "^1.9.1"
+    "tslib": "^1.10.0"
   },
   "jest": {
     "moduleFileExtensions": [

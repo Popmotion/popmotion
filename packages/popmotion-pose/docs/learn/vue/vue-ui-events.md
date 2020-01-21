@@ -5,6 +5,8 @@ category: vue
 next: vue-enter-exit-transitions
 ---
 
+> Vue Pose has been **deprecated**.
+
 # UI events and interactions
 
 Pose for Vue can be used to power and animate interactions. Currently, it supports the following events: drag, press, hover and focus.

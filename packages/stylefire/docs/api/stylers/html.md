@@ -63,8 +63,8 @@ htmlRenderer.set('--bg-color', '#000');
 
 **All CSS properties are supported**, in addition to these scroll properties:
 
-* `scrollX`
-* `scrollY`
+* `scrollTop`
+* `scrollLeft`
 
 If `window` is passed to styler, these are the **only** two supported props.
 
@@ -121,7 +121,6 @@ For convenience and safety, many props are mapped to [value types](https://githu
 * `scaleZ`: `scale`
 * `skewX`: `degrees`
 * `skewY`: `degrees`
-* `distance`: `px`
 * `translateX`: `px`
 * `translateY`: `px`
 * `translateZ`: `px`

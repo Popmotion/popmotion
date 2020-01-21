@@ -1,27 +1,33 @@
+// {
+//   "presets": [
+//     "next/babel",
+//     "react",
+//     "stage-0"
+//   ],
+//   "plugins": [
+//     "transform-react-remove-prop-types",
+//     "transform-export-extensions",
+//     "transform-react-jsx",
+//     "transform-react-constant-elements",
+//     "transform-strict-mode",
+//     ["babel-plugin-root-import"],
+//     ["transform-runtime", {
+//       "helpers": false,
+//       "polyfill": false
+//     }],
+//   ],
+//   "env": {
+//     "development": {
+//       "sourceMaps": "inline"
+//     }
+//   }
+// }
 {
-  "presets": [
-    "next/babel",
-    "react",
-    "stage-0"
-  ],
+  "presets": ["next/babel"],
   "plugins": [
-    "transform-react-remove-prop-types",
-    "transform-export-extensions",
-    "transform-react-jsx",
-    "transform-react-constant-elements",
-    "transform-strict-mode",
     ["babel-plugin-root-import"],
-    ["transform-runtime", {
-      "helpers": false,
-      "polyfill": false
-    }],
     ["styled-components", {
       "ssr": true
     }]
-  ],
-  "env": {
-    "development": {
-      "sourceMaps": "inline"
-    }
-  }
+  ]
 }

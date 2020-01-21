@@ -38,8 +38,7 @@ const convertMarkdown = marksy({
   }
 });
 
-const content = convertMarkdown(`
-# HTML styler
+const content = convertMarkdown(`# HTML styler
 
 When [\`styler\`](/stylefire/stylefire) is provided a \`HTMLElement\`, it returns a styler capable of setting CSS and scroll props.
 
@@ -156,7 +155,6 @@ For convenience and safety, many props are mapped to [value types](https://githu
 * \`scaleZ\`: \`scale\`
 * \`skewX\`: \`degrees\`
 * \`skewY\`: \`degrees\`
-* \`distance\`: \`px\`
 * \`translateX\`: \`px\`
 * \`translateY\`: \`px\`
 * \`translateZ\`: \`px\`

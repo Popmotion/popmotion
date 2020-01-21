@@ -21,10 +21,7 @@ export class Drag extends React.Component {
     document.addEventListener('mouseup', this.stopDrag);
     document.addEventListener('touchend', this.stopDrag);
     this.drag = pointer()
-      .pipe(
-        ({ x }) => x,
-        applyOffset(this.box.get('x'))
-      )
+      .pipe(({ x }) => x, applyOffset(this.box.get('x')))
       .start(v => this.box.set('x', v));
   };
 
@@ -39,7 +36,7 @@ export class Drag extends React.Component {
       <Box
         onMouseDown={this.startDrag}
         onTouchStart={this.startDrag}
-        innerRef={this.setRef}
+        ref={this.setRef}
       />
     );
   }
@@ -76,7 +73,7 @@ export class DragWithDeltaPointer extends React.Component {
       <Box
         onMouseDown={this.startDrag}
         onTouchStart={this.startDrag}
-        innerRef={this.setRef}
+        ref={this.setRef}
       />
     );
   }
@@ -108,7 +105,7 @@ export class Multitouch extends React.Component {
   }
 
   render() {
-    return <Box innerRef={this.setRef} />;
+    return <Box ref={this.setRef} />;
   }
 }
 

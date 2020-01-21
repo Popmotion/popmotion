@@ -28,6 +28,15 @@ const testPrefix = (key: string) => {
       : prefix + key.charAt(0).toUpperCase() + key.slice(1);
 
     if (prefixedPropertyName in testElement.style || noPrefix) {
+      /**
+       * This is a hack to not overwrite a prefixed value with a non-prefixed one
+       * as Safari incorrectly reports that it supports `clipPath`. But in most cases we
+       * want to use the non-prefixed version.
+       */
+      if (noPrefix && key === 'clipPath' && dashCache.has(key)) {
+        return;
+      }
+
       camelCache.set(key, prefixedPropertyName);
       setDashPrefix(
         key,
@@ -42,7 +51,9 @@ const setServerProperty = (key: string) => setDashPrefix(key, key);
 const prefixer = (key: string, asDashCase: boolean = false) => {
   const cache = asDashCase ? dashCache : camelCache;
 
-  if (!cache.has(key)) isBrowser ? testPrefix(key) : setServerProperty(key);
+  if (!cache.has(key)) {
+    isBrowser ? testPrefix(key) : setServerProperty(key);
+  }
 
   return cache.get(key) || key;
 };

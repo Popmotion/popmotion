@@ -1,6 +1,13 @@
 import Template from './Template';
 import { MediumBall, VerticalCenter } from './styled';
-import { tween, styler, easing, crossfade, transform, valueTypes } from 'popmotion';
+import {
+  tween,
+  styler,
+  easing,
+  crossfade,
+  transform,
+  valueTypes
+} from 'popmotion';
 import trackVisibility from './track-visibility';
 
 const code = `const blendedBall = styled(document.querySelector('.blended'));
@@ -12,12 +19,10 @@ crossfade(animateUp, animateDown)
   .start(blendedBall.set('y'));`;
 
 class Example extends React.Component {
-  setContainer = (ref) => {
+  setContainer = ref => {
     if (!ref) return;
     this.container = ref;
-    this.ballStylers = Array
-      .from(this.container.childNodes)
-      .map(styler);
+    this.ballStylers = Array.from(this.container.childNodes).map(styler);
   };
 
   componentDidMount() {
@@ -48,7 +53,7 @@ class Example extends React.Component {
       flip: Infinity,
       duration: 1000
     });
-    
+
     const animateRight = tween({
       from: -100,
       to: 100,
@@ -56,18 +61,19 @@ class Example extends React.Component {
       flip: Infinity,
       duration: 1000
     });
-    
-    this.leftAnimation = animateLeft.start(left.set('y'));
-    this.rightAnimation = animateRight.start(right.set('y'));
-    
-    const blendedMotion = crossfade(animateLeft, animateRight)
-      .start(blended.set('y'));
-    
+
+    this.leftAnimation = animateLeft.start(v => left.set('y', v));
+    this.rightAnimation = animateRight.start(v => right.set('y', v));
+
+    const blendedMotion = crossfade(animateLeft, animateRight).start(v =>
+      blended.set('y', v)
+    );
+
     this.blendAnimation = tween({
       duration: 3333,
       flip: Infinity,
       ease: easing.easeInOut
-    }).start((v) => {
+    }).start(v => {
       blended.set('background', valueTypes.color.transform(blendRedBlue(v)));
       blendedMotion.setBalance(v);
     });
@@ -81,7 +87,7 @@ class Example extends React.Component {
 
   render() {
     return (
-      <VerticalCenter innerRef={this.setContainer}>
+      <VerticalCenter ref={this.setContainer}>
         <MediumBall />
         <MediumBall />
         <MediumBall />
@@ -91,7 +97,10 @@ class Example extends React.Component {
 }
 
 export default trackVisibility(({ isVisible }) => (
-  <Template code={code} codepen="https://codepen.io/popmotion/pen/ooPjxj?editors=0010">
+  <Template
+    code={code}
+    codepen="https://codepen.io/popmotion/pen/ooPjxj?editors=0010"
+  >
     <Example isVisible={isVisible} />
   </Template>
 ));

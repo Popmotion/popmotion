@@ -103,4 +103,4 @@ export {
 };
 
 // Types
-export * from './types';
+export { Point, Point2D, Point3D } from './types';

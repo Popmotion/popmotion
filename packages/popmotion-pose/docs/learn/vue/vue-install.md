@@ -5,6 +5,8 @@ category: vue
 next: vue-get-started
 ---
 
+> Vue Pose has been **deprecated**.
+
 # Install
 
 <TOC />

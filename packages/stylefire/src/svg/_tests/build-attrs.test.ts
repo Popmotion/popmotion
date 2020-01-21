@@ -7,15 +7,14 @@ const dimensions = {
   height: 50
 };
 
-test('should correctly create SVG attrs', () => {
+test('should correctly create SVG attrs with correct casing', () => {
   const build = createAttrBuilder(dimensions);
-
   const { style, ...attrs } = build({
-    x: 1,
-    y: 2,
+    attrX: 1,
+    attrY: 2,
     cx: 0,
-    translateX: 3,
-    translateY: 4,
+    x: 3,
+    y: 4,
     scale: 2,
     rotate: 90,
     originX: 1,
@@ -36,9 +35,27 @@ test('should correctly create SVG attrs', () => {
     limitingConeAngle: 100,
     'alignment-baseline': 'bottom'
   });
+});
 
+test('should add origin when transform detected', () => {
+  const build = createAttrBuilder(dimensions);
+  const { style } = build({ rotate: 90 });
+  expect(style).toEqual({
+    transform: 'rotate(90deg)',
+    transformOrigin: '125px 125px'
+  });
+});
+
+test('should add origin when specified', () => {
+  const build = createAttrBuilder(dimensions);
+  const { style } = build({ originX: 0 });
+  expect(style).toEqual({
+    transformOrigin: '100px 125px'
+  });
+});
+
+test('should handle special path props', () => {
   const buildPath = createAttrBuilder(dimensions, 400);
-
   const pathAttrs = buildPath({
     pathLength: 0.25,
     pathSpacing: 0.5,
@@ -48,6 +65,24 @@ test('should correctly create SVG attrs', () => {
   expect(pathAttrs).toEqual({
     'stroke-dasharray': '100px 200px',
     'stroke-dashoffset': '-300px',
-    style: { transformOrigin: '125px 125px' }
+    style: {}
+  });
+
+  const buildProps = createAttrBuilder(dimensions, 400, false);
+
+  const props = buildProps({
+    strokeWidth: 1,
+    alignmentBaseline: 'bottom',
+    pathLength: 0.25,
+    pathSpacing: 0.5,
+    pathOffset: 0.75
+  });
+
+  expect(props).toEqual({
+    strokeWidth: 1,
+    alignmentBaseline: 'bottom',
+    strokeDasharray: '100px 200px',
+    strokeDashoffset: '-300px',
+    style: {}
   });
 });

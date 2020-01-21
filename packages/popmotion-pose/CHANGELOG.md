@@ -2,6 +2,18 @@
 
 Popmotion Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.4.11] 2019-11-15
+
+### Fixed
+
+- Fixed type definition output.
+
+## [3.4.9] 2019-11-14
+
+### Fixed
+
+- Fixed in Typescript 3.7.
+
 ## [3.4.8] 2019-04-24
 
 ### Fixed

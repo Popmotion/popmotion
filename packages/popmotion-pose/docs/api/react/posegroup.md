@@ -4,6 +4,8 @@ description: Animate a group of posed components as they're added and removed.
 category: react
 ---
 
+> React Pose has been **deprecated** in favour of [Framer Motion](https://framer.com/motion). [Read the upgrade guide](https://www.framer.com/api/motion/migrate-from-pose/)
+
 # PoseGroup
 
 The `PoseGroup` component manages `enter` and `exit` animations on its direct children as they enter and exit the component tree.

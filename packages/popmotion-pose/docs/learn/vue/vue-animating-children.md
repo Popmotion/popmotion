@@ -5,6 +5,8 @@ category: vue
 next: vue-ui-events
 ---
 
+> Vue Pose has been **deprecated**.
+
 # Animating children
 
 Traditionally, coordinating animation across multiple children has been an involved process.
