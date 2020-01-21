@@ -147,7 +147,12 @@ class PoseElement extends PureComponent<PoseElementInternalProps> {
     // If we're popping this element out from the DOM flow, build
     // and apply position: absolute styles that visually match the previous
     // location in the DOM
-    if (this.props.popFromFlow && this.ref && this.ref instanceof HTMLElement) {
+    if (
+      this.props.popFromFlow &&
+      this.ref &&
+      // acting as cross origin `instanceof HTMLElement`, apparently SVGs have no click method
+      typeof (this.ref as HTMLElement).click === 'function'
+    ) {
       if (!this.popStyle) {
         props.style = {
           ...props.style,
@@ -166,7 +171,10 @@ class PoseElement extends PureComponent<PoseElementInternalProps> {
 
   setRef = (ref: Element | null) => {
     warning(
-      ref === null || (ref instanceof Element && this.ref === undefined),
+      ref === null ||
+        // acting as cross origin `instanceof Element`
+        (typeof ref.getBoundingClientRect === 'function' &&
+          this.ref === undefined),
       'ref must be provided to the same DOM component for the entire lifecycle of a posed component.'
     );
 

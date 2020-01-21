@@ -28,7 +28,8 @@ const hasPositionalProps = (pose: Pose) =>
   Object.keys(pose).some(checkPositionalProp);
 
 export const isFlipPose = (flip: boolean, key: string, state: PoserState) =>
-  state.props.element instanceof HTMLElement &&
+  // acting as cross origin `instanceof HTMLElement`, apparently SVGs have no click method
+  typeof state.props.element.click === 'function' &&
   (flip === true || key === 'flip');
 
 export const setValue = (
@@ -94,12 +95,16 @@ const implicitlyFlipPose = (state: PoserState, nextPose: Pose) => {
   const originX =
     prev.left === next.left
       ? ORIGIN_START
-      : prev.right === next.right ? ORIGIN_END : ORIGIN_CENTER;
+      : prev.right === next.right
+      ? ORIGIN_END
+      : ORIGIN_CENTER;
 
   const originY =
     prev.top === next.top
       ? ORIGIN_START
-      : prev.bottom === next.bottom ? ORIGIN_END : ORIGIN_CENTER;
+      : prev.bottom === next.bottom
+      ? ORIGIN_END
+      : ORIGIN_CENTER;
 
   // Set transform origins
   elementStyler.set({ originX, originY });
