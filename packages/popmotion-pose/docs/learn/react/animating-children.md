@@ -5,6 +5,8 @@ category: react
 next: ui-events
 ---
 
+> React Pose has been **deprecated** in favour of [Framer Motion](https://framer.com/motion). [Read the upgrade guide](https://www.framer.com/api/motion/migrate-from-pose/)
+
 # Animating children
 
 Traditionally, coordinating animation across multiple children has been an involved process. Especially with React.

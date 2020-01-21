@@ -5,6 +5,8 @@ category: react
 next: flip
 ---
 
+> React Pose has been **deprecated** in favour of [Framer Motion](https://framer.com/motion). [Read the upgrade guide](https://www.framer.com/api/motion/migrate-from-pose/)
+
 # Passive values
 
 Sometimes we don't want to explicitly define a state for a value, we might just want it to change whenever another value does.

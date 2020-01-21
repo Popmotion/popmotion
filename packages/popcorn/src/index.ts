@@ -10,7 +10,7 @@ import isPoint from './utils/is-point';
 import isPoint3D from './utils/is-point-3d';
 import mix from './utils/mix';
 import mixColor from './utils/mix-color';
-import { mixComplex, mixArray } from './utils/mix-complex';
+import { mixComplex, mixArray, mixObject } from './utils/mix-complex';
 import pipe from './utils/pipe';
 import pointFromVector from './utils/point-from-vector';
 import progress from './utils/progress';
@@ -66,6 +66,7 @@ export {
   mixArray,
   mixColor,
   mixComplex,
+  mixObject,
   pipe,
   pointFromVector,
   progress,
@@ -102,4 +103,4 @@ export {
 };
 
 // Types
-export * from './types';
+export { Point, Point2D, Point3D } from './types';

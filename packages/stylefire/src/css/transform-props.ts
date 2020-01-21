@@ -1,7 +1,7 @@
 type Dictionary = { [key: string]: boolean };
 
 const axes = ['', 'X', 'Y', 'Z'];
-const order = ['scale', 'rotate', 'skew', 'transformPerspective'];
+const order = ['translate', 'scale', 'rotate', 'skew', 'transformPerspective'];
 
 export const transformProps = order.reduce(
   (acc, key) => {
@@ -21,10 +21,16 @@ const transformPropDictionary: Dictionary = transformProps.reduce(
   {}
 );
 
-export const isTransformProp = (key: string) =>
-  transformPropDictionary[key] === true;
-export const sortTransformProps = (a: string, b: string) =>
-  transformProps.indexOf(a) - transformProps.indexOf(b);
+export function isTransformProp(key: string) {
+  return transformPropDictionary[key] === true;
+}
 
-export const isTransformOriginProp = (key: string) =>
-  key === 'originX' || key === 'originY';
+export function sortTransformProps(a: string, b: string) {
+  return transformProps.indexOf(a) - transformProps.indexOf(b);
+}
+
+const transformOriginProps = new Set(['originX', 'originY', 'originZ']);
+
+export function isTransformOriginProp(key: string) {
+  return transformOriginProps.has(key);
+}

@@ -1,19 +1,19 @@
-import {
-  clamp,
-  isFirstChars,
-  splitCommaDelimited,
-  getValueFromFunctionString
-} from '../utils';
-import { number } from './numbers';
+import { clamp } from '../utils';
+import { alpha as alphaType, number } from './numbers';
 import { percent } from './units';
 import { Color, RGBA, HSLA, NumberMap, ValueType } from '../types';
-import { sanitize } from '../utils';
+import { sanitize, singleColorRegex } from '../utils';
+
+/*
+  Get value from function string
+  "translateX(20px)" -> "20px"
+*/
+export const getValueFromFunctionString = (value: string) =>
+  value.substring(value.indexOf('(') + 1, value.lastIndexOf(')'));
 
 const clampRgbUnit = clamp(0, 255);
 
-// Regex taken from https://gist.github.com/olmokramer/82ccce673f86db7cda5e
-const onlyColorRegex = /^(#[0-9a-f]{3}|#(?:[0-9a-f]{2}){2,4}|(rgb|hsl)a?\((-?\d+%?[,\s]+){2,3}\s*[\d\.]+%?\))$/i;
-
+// Prefer speed over completeness
 const isRgba = (v: Color): v is RGBA => (v as RGBA).red !== undefined;
 const isHsla = (v: Color): v is HSLA => (v as HSLA).hue !== undefined;
 
@@ -23,14 +23,14 @@ const isHsla = (v: Color): v is HSLA => (v as HSLA).hue !== undefined;
  * `mapArrayToObject(['red', 'green', 'blue'])('rgba(0,0,0)')`
  */
 const splitColorValues = (terms: string[]) => {
-  const numTerms = terms.length;
-
   return (v: string | RGBA | HSLA) => {
     if (typeof v !== 'string') return v;
     const values: NumberMap = {};
-    const valuesArray = splitCommaDelimited(getValueFromFunctionString(v));
+    const valuesArray = getValueFromFunctionString(v).split(/,\s*/); // Split '0,0' into ['0','0']
 
-    for (let i = 0; i < numTerms; i++) {
+    // 4 because there are four props in each color type
+    for (let i = 0; i < 4; i++) {
+      // If this value is undefined return 1 - this is usually undefined alpha
       values[terms[i]] =
         valuesArray[i] !== undefined ? parseFloat(valuesArray[i]) : 1;
     }
@@ -52,35 +52,38 @@ export const rgbUnit: ValueType = {
   transform: (v: number) => Math.round(clampRgbUnit(v))
 };
 
-const testRgbaString = isFirstChars('rgb');
+function isColorString(color: string, colorType: '#' | 'hsl' | 'rgb') {
+  return color.startsWith(colorType) && singleColorRegex.test(color);
+}
+
 export const rgba: ValueType = {
-  test: v => (typeof v === 'string' ? testRgbaString(v) : isRgba(v)),
+  test: v => (typeof v === 'string' ? isColorString(v, 'rgb') : isRgba(v)),
   parse: splitColorValues(['red', 'green', 'blue', 'alpha']),
-  transform: ({ red, green, blue, alpha }: RGBA) =>
+  // TODO: Look into perhaps a mutative approach that doesn't create new objects
+  transform: ({ red, green, blue, alpha = 1 }: RGBA) =>
     rgbaTemplate({
       red: rgbUnit.transform(red),
       green: rgbUnit.transform(green),
       blue: rgbUnit.transform(blue),
-      alpha: sanitize(alpha)
+      alpha: sanitize(alphaType.transform(alpha))
     })
 };
 
-const testHslaString = isFirstChars('hsl');
 export const hsla: ValueType = {
-  test: v => (typeof v === 'string' ? testHslaString(v) : isHsla(v)),
+  test: v => (typeof v === 'string' ? isColorString(v, 'hsl') : isHsla(v)),
   parse: splitColorValues(['hue', 'saturation', 'lightness', 'alpha']),
-  transform: ({ hue, saturation, lightness, alpha }: HSLA) =>
+  transform: ({ hue, saturation, lightness, alpha = 1 }: HSLA) =>
     hslaTemplate({
       hue: Math.round(hue),
       saturation: percent.transform(sanitize(saturation)),
       lightness: percent.transform(sanitize(lightness)),
-      alpha: sanitize(alpha)
+      alpha: sanitize(alphaType.transform(alpha))
     })
 };
 
 export const hex: ValueType = {
   ...rgba,
-  test: isFirstChars('#'),
+  test: v => typeof v === 'string' && isColorString(v, '#'),
   parse: (v: string): RGBA => {
     let r = '';
     let g = '';
@@ -113,10 +116,9 @@ export const hex: ValueType = {
 
 export const color: ValueType = {
   test: (v: any) =>
-    (typeof v === 'string' && onlyColorRegex.test(v)) ||
-    rgba.test(v) ||
-    hsla.test(v) ||
-    hex.test(v),
+    (typeof v === 'string' && singleColorRegex.test(v)) ||
+    isRgba(v) ||
+    isHsla(v),
   parse: (v: any) => {
     if (rgba.test(v)) {
       return rgba.parse(v);

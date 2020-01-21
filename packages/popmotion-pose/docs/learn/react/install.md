@@ -5,6 +5,8 @@ category: react
 next: popmotion-get-started
 ---
 
+> React Pose has been **deprecated** in favour of [Framer Motion](https://framer.com/motion). [Read the upgrade guide](https://www.framer.com/api/motion/migrate-from-pose/)
+
 # Install
 
 **React Pose requires React 16.3.0.**

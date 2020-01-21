@@ -2,6 +2,66 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.7.1] 2019-11-14
+
+### Upgrade
+
+- Upgraded to Typescript 3.7.
+
+## [8.7.0] 2019-06-25
+
+### Added
+
+- `repeatDelay` prop to `tween`.
+
+## [8.6.10] 2019-05-09
+
+### Fixed
+
+- Fixing undefined action creator. (https://github.com/Popmotion/popmotion/issues/794)[#794]
+
+## [8.6.9] 2019-05-01
+
+### Update
+
+- Dependencies.
+
+## [8.6.8] 2019-04-01
+
+### Update
+
+- `@popmotion/popcorn@0.3.6`
+
+## [8.6.7] 2019-04-01
+
+### Fixed
+
+- Making `inertia.complete` call conditional on there not being a subsequent animation. (https://github.com/Popmotion/popmotion/pull/763)[#763]
+
+## [8.6.6] 2019-04-01
+
+### Update
+
+- `@popmotion/popcorn@0.3.5`
+
+## [8.6.5] 2019-04-01
+
+### Update
+
+- Changing the behaviour of `inertia` to always spring back if the initial value is out of bounds. On multi-axis `inertia` animations it used to be possible that both values are out of bounds and only one was travelling towards its bound - this led to a situation where one animation used a spring and the other used decay.
+
+## [8.6.4] 2019-03-12
+
+### Upgrade
+
+- Upgrading `style-value-types@3.1.0`.
+
+## [8.6.3] 2019-02-21
+
+### Fixed
+
+- Correctly integrating remainder of `elapsed` in yoyo tweens to ensure multiple concurrent tweens stay in sync.
+
 ## [8.6.2] 2019-01-28
 
 ### Updated

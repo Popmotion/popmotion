@@ -2,6 +2,16 @@
 
 Pose Core adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.1.1] 2019-11-14
+
+### Upgrade
+
+- Upgraded to Typescript 3.7.
+
+### Removed
+
+- Patreon notice.
+
 ## [2.1.0] 2019-02-04
 
 ### Added

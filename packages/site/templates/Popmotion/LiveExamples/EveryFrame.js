@@ -18,16 +18,14 @@ everyFrame()
   }));`;
 
 class Example extends React.Component {
-  setContainer = (ref) => {
+  setContainer = ref => {
     if (!ref) return;
     this.container = ref;
-    this.ballStylers = Array
-      .from(this.container.children)
-      .map(styler);
+    this.ballStylers = Array.from(this.container.children).map(styler);
 
     this.distance = 100;
   };
-  
+
   componentWillReceiveProps({ isVisible: willBeVisible }) {
     const { isVisible } = this.props;
     if (!isVisible && willBeVisible) this.startAnimation();
@@ -39,10 +37,11 @@ class Example extends React.Component {
   }
 
   startAnimation() {
-    this.animation = everyFrame()
-      .start((timestamp) => this.ballStylers.forEach((styler, i) => {
-        styler.set('y', this.distance * Math.sin(0.004 * timestamp + (i * 0.5)));
-      }));
+    this.animation = everyFrame().start(timestamp =>
+      this.ballStylers.forEach((styler, i) => {
+        styler.set('y', this.distance * Math.sin(0.004 * timestamp + i * 0.5));
+      })
+    );
   }
 
   stopAnimation() {
@@ -51,7 +50,7 @@ class Example extends React.Component {
 
   render() {
     return (
-      <VerticalCenter innerRef={this.setContainer}>
+      <VerticalCenter ref={this.setContainer}>
         <MediumBall />
         <MediumBall />
         <MediumBall />
@@ -62,7 +61,10 @@ class Example extends React.Component {
 }
 
 export default trackVisibility(({ isVisible }) => (
-  <Template code={code} codepen="https://codepen.io/popmotion/pen/XzYJvP?editors=0010">
+  <Template
+    code={code}
+    codepen="https://codepen.io/popmotion/pen/XzYJvP?editors=0010"
+  >
     <Example isVisible={isVisible} />
   </Template>
 ));

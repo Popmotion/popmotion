@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "test": "jest",
+    "test": "jest --maxWorkers=2",
     "prettier": "prettier ./src/* --write",
     "prepublishOnly": "npm run test && npm run prettier && npm run build"
   },
@@ -27,13 +27,12 @@
     "env"
   ],
   "devDependencies": {
-    "@types/jest": "^22.2.3",
+    "@types/jest": "^23.1.1",	
+    "jest": "^23.1.0",	
+    "jest-cli": "^23.1.0",
     "@types/react": "^16.3.12",
     "@types/react-native": "^0.55.4",
-    "jest": "^23.1.0",
-    "jest-cli": "^23.1.0",
-    "prettier": "1.11.1",
-    "ts-jest": "^22.4.5"
+    "prettier": "1.11.1"
   },
   "prettier": {
     "parser": "typescript",

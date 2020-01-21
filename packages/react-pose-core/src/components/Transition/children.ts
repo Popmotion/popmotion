@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { Children, ReactElement, cloneElement } from 'react';
 import { Props, State } from './types';
 import { CurrentPose } from '../../types';

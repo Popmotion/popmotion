@@ -135,7 +135,7 @@ For example. I have installed two Reddit apps - Alien Blue and the official app.
 
 My point is, as a user, **I'm engaged**. So why is it that I'm occasionally given the ol' mobile fuck you:
 
-![What on earth](/static/images/reddit-popover.png)
+![What on earth](/images/reddit-popover.png)
 
 The USPs are mind-bending.
 
@@ -153,7 +153,7 @@ Sniff.
 
 **Sniff.**
 
-![What on earth](/static/images/facebook-messenger.jpg)
+![What on earth](/images/facebook-messenger.jpg)
 
 Now, when we click the "new messages" icon, we're treated to a splash screen telling us to download Messenger (or we were, there's presently a bug so it does literally nothing). This is purposeful degradation of a perfectly capable website and it is totally anti-user.
 

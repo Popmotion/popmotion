@@ -2,6 +2,12 @@
 
 Pose for Vue adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.5.1] 2019-04-24
+
+### Fixed
+
+- `onPoseComplete` [#784](https://github.com/Popmotion/popmotion/pull/784)
+
 ## [0.5.0] 2018-09-06
 
 ### Added

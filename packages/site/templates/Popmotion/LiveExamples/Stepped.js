@@ -1,6 +1,14 @@
 import Template from './Template';
 import { Ball, AlignCenter } from './styled';
-import { schedule, styler, value, listen, pointer, transform, everyFrame } from 'popmotion';
+import {
+  schedule,
+  styler,
+  value,
+  listen,
+  pointer,
+  transform,
+  everyFrame
+} from 'popmotion';
 
 const { smooth } = transform;
 
@@ -18,7 +26,7 @@ listen(ball, 'mousedown touchstart').start(() =>
 );`;
 
 class Example extends React.Component {
-  startAnimation = (ref) => {
+  startAnimation = ref => {
     if (!ref) return;
     this.boxStyler = styler(ref);
     this.ballXY = value({ x: 0, y: 0 }, this.boxStyler.set);
@@ -28,11 +36,11 @@ class Example extends React.Component {
       y: smooth(200)
     });
 
-    listen(ref, 'mousedown touchstart').start((e) => {
+    listen(ref, 'mousedown touchstart').start(e => {
       e.preventDefault();
       schedule(everyFrame(), pointer(this.ballXY.get()))
         .pipe(smoothXY)
-        .start(this.ballXY)
+        .start(this.ballXY);
     });
 
     listen(document, 'mouseup touchend').start(() => this.ballXY.stop());
@@ -45,9 +53,7 @@ class Example extends React.Component {
   render() {
     return (
       <AlignCenter>
-        <Ball innerRef={this.startAnimation}>
-          Drag
-        </Ball>
+        <Ball ref={this.startAnimation}>Drag</Ball>
       </AlignCenter>
     );
   }

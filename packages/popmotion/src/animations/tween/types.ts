@@ -14,6 +14,7 @@ export type TweenProps = {
   loopCount?: number;
   yoyo?: number;
   yoyoCount?: number;
+  repeatDelay?: number;
 };
 
 export type TweenInterface<V = number> = {

@@ -4,7 +4,6 @@ import styler from '../';
 describe('styler', () => {
   test('css', () => {
     const div = document.createElement('div');
-
     const divStyler = styler(div);
 
     divStyler.set({ x: 0 });
@@ -58,12 +57,51 @@ describe('styler', () => {
     const divStyler = styler(div);
 
     divStyler.set({
-      originY: '100%'
+      originY: 0
     });
 
     divStyler.render();
 
-    expect(div).toHaveStyle('transform-origin: 0 100%');
+    expect(div).toHaveStyle('transform-origin: 50% 0% 0');
+
+    divStyler.set({
+      originX: '40%'
+    });
+
+    divStyler.render();
+
+    expect(div).toHaveStyle('transform-origin: 40% 0% 0');
+
+    divStyler.set({
+      originZ: '20px'
+    });
+
+    divStyler.render();
+
+    expect(div).toHaveStyle('transform-origin: 40% 0% 20px');
+
+    const divZ = document.createElement('div');
+    const divZStyler = styler(divZ);
+
+    divZStyler.set({
+      originZ: 20
+    });
+
+    divZStyler.render();
+    expect(divZ).toHaveStyle('transform-origin: 50% 50% 20px');
+  });
+
+  test('css - only preparse default value types', () => {
+    const div = document.createElement('div');
+    div.style.width = '100px';
+    div.style.height = '100%';
+
+    const divStyler = styler(div);
+
+    divStyler.render();
+
+    expect(divStyler.get('width')).toBe(100);
+    expect(divStyler.get('height')).toBe('100%');
   });
 
   test('transform as string', () => {

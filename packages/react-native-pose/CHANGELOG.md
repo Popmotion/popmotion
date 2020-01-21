@@ -2,6 +2,12 @@
 
 React Native Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.9.1] 2019-05-17
+
+### Fixed
+
+- Blurry nested components.
+
 ## [0.9.0] 2018-09-16
 
 ### Upgraded

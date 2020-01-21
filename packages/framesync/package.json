@@ -7,10 +7,10 @@
   "module": "dist/framesync.es.js",
   "jsnext:main": "dist/framesync.es.js",
   "scripts": {
-    "build": "rollup -c",
+    "build": "rollup -c && tsc --emitDeclarationOnly",
     "watch": "rollup -c -w",
     "lint": "tslint -c tslint.json 'src/**/*.{ts}'",
-    "test": "jest",
+    "test": "jest --maxWorkers=2",
     "measure": "gzip -c dist/framesync.min.js | wc -c",
     "prepublishOnly": "npm run test && npm run build"
   },
@@ -33,14 +33,10 @@
   },
   "homepage": "https://github.com/Popmotion/popmotion",
   "devDependencies": {
-    "@types/jest": "^23.1.1",
-    "jest": "^23.1.0",
+    "@types/jest": "^23.1.1",	
+    "jest": "^23.1.0",	
     "jest-cli": "^23.1.0",
-    "rollup-plugin-node-resolve": "^3.4.0",
-    "rollup-plugin-typescript2": "^0.14.0",
-    "rollup-plugin-uglify": "^3.0.0",
-    "ts-jest": "^21.2.4",
-    "typescript": "^2.4.2"
+    "ts-jest": "^21.2.4"
   },
   "jest": {
     "moduleFileExtensions": [

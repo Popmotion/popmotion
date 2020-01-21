@@ -1,9 +1,10 @@
 import React from 'react';
+import styled from 'styled-components';
 import { MajorCentered } from '~/templates/global/grid';
-import { cols, LIGHT_GREY } from '~/styles/vars';
+import { cols } from '~/styles/vars';
 import { IntersectionElement } from 'react-intersection';
 
-const FrameContainer = MajorCentered.withComponent('div').extend`
+const FrameContainer = styled(MajorCentered.withComponent('div'))`
   margin-top: ${cols(2)};
   margin-bottom: ${cols(2)};
 `;

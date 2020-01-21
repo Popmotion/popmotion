@@ -45,11 +45,11 @@ export const NavItem = styled.li`
   margin-bottom: 7px;
 `;
 
-export const MadeIn = P.extend`
+export const MadeIn = styled(P)`
   margin-top: 7px;
 `;
 
-export const Copyright = P.extend`
+export const Copyright = styled(P)`
   font-size: 14px;
   margin-bottom: 10px;
 `;

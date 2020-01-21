@@ -12,3 +12,9 @@ export const percent = createUnitType('%');
 export const px = createUnitType('px');
 export const vh = createUnitType('vh');
 export const vw = createUnitType('vw');
+
+export const progressPercentage: ValueType = {
+  ...percent,
+  parse: (v: string) => percent.parse(v) / 100,
+  transform: (v: number) => percent.transform(v * 100)
+};

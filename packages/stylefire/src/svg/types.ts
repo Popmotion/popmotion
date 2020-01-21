@@ -6,20 +6,6 @@ export type Dimensions = {
 };
 
 export type SVGState = {
-  scale?: number;
-  scaleX?: number;
-  scaleY?: number;
-  originX?: number;
-  originY?: number;
-  translateX?: number;
-  translateY?: number;
-  skewX?: number;
-  skewY?: number;
-  rotate?: number;
-  pathLength?: number;
-  pathOffset?: number;
-  pathSpacing?: number;
-  numOctaves?: number;
   [key: string]: string | number;
 };
 

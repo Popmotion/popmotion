@@ -1,5 +1,5 @@
 import { CustomTemplate, State, ResolvedState } from '../styler/types';
-import getValueType from './value-types';
+import { getValueType, getValueAsType } from './value-types';
 import prefixer from './prefixer';
 import {
   sortTransformProps,
@@ -10,14 +10,50 @@ import { SCROLL_LEFT, SCROLL_TOP } from './scroll-keys';
 
 const blacklist = new Set([SCROLL_LEFT, SCROLL_TOP, 'transform']);
 
-const aliasMap: { [key: string]: string } = {
+const translateAlias: { [key: string]: string } = {
   x: 'translateX',
   y: 'translateY',
   z: 'translateZ'
 };
 
-const isCustomTemplate = (v: any): v is CustomTemplate =>
-  typeof v === 'function';
+function isCustomTemplate(v: any): v is CustomTemplate {
+  return typeof v === 'function';
+}
+
+function buildTransform(
+  state: State,
+  transform: ResolvedState,
+  transformKeys: string[],
+  transformIsDefault: boolean,
+  enableHardwareAcceleration: boolean
+) {
+  let transformString = '';
+  let transformHasZ = false;
+  transformKeys.sort(sortTransformProps);
+
+  const numTransformKeys = transformKeys.length;
+
+  for (let i = 0; i < numTransformKeys; i++) {
+    const key = transformKeys[i];
+    transformString += `${translateAlias[key] || key}(${transform[key]}) `;
+    transformHasZ = key === 'z' ? true : transformHasZ;
+  }
+
+  if (!transformHasZ && enableHardwareAcceleration) {
+    transformString += 'translateZ(0)';
+  } else {
+    transformString = transformString.trim();
+  }
+
+  // If we have a custom `transform` template
+  if (isCustomTemplate(state.transform)) {
+    transformString = state.transform(transform, transformString);
+  } else if (transformIsDefault) {
+    transformString = 'none';
+  }
+
+  return transformString;
+}
 
 /**
  * Build style property
@@ -32,16 +68,15 @@ const isCustomTemplate = (v: any): v is CustomTemplate =>
  *
  * { transform: 'translateX(100px) translateZ(0)`, width: '100px' }
  */
-
-const buildStyleProperty = (
+function buildStyleProperty(
   state: State,
   enableHardwareAcceleration: boolean = true,
   styles: ResolvedState = {},
-  transform: State = {},
-  transformOrigin: State = {},
+  transform: ResolvedState = {},
+  transformOrigin: ResolvedState = {},
   transformKeys: string[] = [],
   isDashCase: boolean = false
-) => {
+) {
   let transformIsDefault = true;
   let hasTransform = false;
   let hasTransformOrigin = false;
@@ -49,10 +84,7 @@ const buildStyleProperty = (
   for (const key in state) {
     const value = state[key];
     const valueType = getValueType(key);
-    const valueAsType =
-      typeof value === 'number' && valueType
-        ? valueType.transform(value)
-        : value;
+    const valueAsType = getValueAsType(value, valueType);
 
     if (isTransformProp(key)) {
       hasTransform = true;
@@ -76,52 +108,36 @@ const buildStyleProperty = (
   }
 
   // Only process and set transform prop if values aren't defaults
-  if (!transformIsDefault) {
-    let transformString = '';
-
-    // TODO: This whole idea of meta values could be far more generic for instance filter
-    if (isCustomTemplate(state.transform)) {
-      transformString = state.transform(transform);
-    } else {
-      let transformHasZ = false;
-      transformKeys.sort(sortTransformProps);
-
-      const numTransformKeys = transformKeys.length;
-
-      for (let i = 0; i < numTransformKeys; i++) {
-        const key = transformKeys[i];
-        transformString += `${aliasMap[key] || key}(${transform[key]}) `;
-        transformHasZ = key === 'z' ? true : transformHasZ;
-      }
-
-      if (!transformHasZ && enableHardwareAcceleration) {
-        transformString += 'translateZ(0)';
-      } else {
-        transformString = transformString.trim();
-      }
-    }
-
-    styles.transform = transformString;
-  } else if (hasTransform) {
-    styles.transform = 'none';
+  if (hasTransform || typeof state.transform === 'function') {
+    styles.transform = buildTransform(
+      state,
+      transform,
+      transformKeys,
+      transformIsDefault,
+      enableHardwareAcceleration
+    );
   }
 
   if (hasTransformOrigin) {
     styles.transformOrigin = `${transformOrigin.originX ||
-      0} ${transformOrigin.originY || 0} ${transformOrigin.originZ || 0}`;
+      '50%'} ${transformOrigin.originY || '50%'} ${transformOrigin.originZ ||
+      0}`;
   }
 
   return styles;
-};
+}
 
-const createStyleBuilder = (enableHardwareAcceleration: boolean = true) => {
+function createStyleBuilder(
+  enableHardwareAcceleration = true,
+  isDashCase = true
+) {
   /**
    * Because we expect this function to run multiple times a frame
    * we create and hold these data structures as mutative states.
    */
   const styles: ResolvedState = {};
-  const transform: State = {};
-  const transformOrigin: State = {};
+  const transform: ResolvedState = {};
+  const transformOrigin: ResolvedState = {};
   const transformKeys: string[] = [];
 
   return (state: State) => {
@@ -133,11 +149,11 @@ const createStyleBuilder = (enableHardwareAcceleration: boolean = true) => {
       transform,
       transformOrigin,
       transformKeys,
-      true
+      isDashCase
     );
 
     return styles;
   };
-};
+}
 
 export { buildStyleProperty, createStyleBuilder };

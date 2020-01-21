@@ -1,6 +1,6 @@
 {
   "name": "react-native-pose",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "Pose animation system for React Native",
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",

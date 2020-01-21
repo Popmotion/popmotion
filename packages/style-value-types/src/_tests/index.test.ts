@@ -8,13 +8,24 @@ import {
   px,
   degrees,
   percent,
+  progressPercentage,
   complex
 } from '../';
+import { singleColorRegex, colorRegex } from '../utils';
 
 const PATH = 'M150 0 L75 200 L225 200 Z';
 const GREYSCALE = 'greyscale(100%)';
 const PATH_VALUES = [150, 0, 75, 200, 225, 200];
 const MIXED = '0px 0px 0px rgba(161, 0, 246, 0)';
+
+describe('regex', () => {
+  it('should correctly identify values', () => {
+    expect(singleColorRegex.test('#fff000')).toBe(true);
+    expect(singleColorRegex.test('rgba(161, 0, 246, 0)')).toBe(true);
+    expect(singleColorRegex.test('#fff000 #fff000')).toBe(false);
+    expect(colorRegex.test('#fff000 #fff000')).toBe(true);
+  });
+});
 
 describe('complex value type', () => {
   it('test returns correctly', () => {
@@ -61,6 +72,12 @@ describe('complex value type', () => {
     const transformSingleFunction = complex.createTransformer(GREYSCALE);
     expect(transformSingleFunction([100])).toBe(GREYSCALE);
   });
+
+  it('can create an animatable "none"', () => {
+    expect(complex.getAnimatableNone('100% 0px #fff')).toBe(
+      '0% 0px rgba(255, 255, 255, 1)'
+    );
+  });
 });
 
 const red = {
@@ -70,6 +87,13 @@ const red = {
   alpha: 1
 };
 
+const redOutOfRange = {
+  red: 300,
+  green: 0,
+  blue: 0,
+  alpha: 2
+};
+
 const hslaTestColor = {
   hue: 170,
   saturation: 50,
@@ -77,7 +101,19 @@ const hslaTestColor = {
   alpha: 1
 };
 
+const hslaOutOfRange = {
+  hue: 170,
+  saturation: 50,
+  lightness: 45,
+  alpha: 2
+};
+
 describe('hex()', () => {
+  it('should correctly test for colors', () => {
+    expect(hex.test('#f00')).toEqual(true);
+    expect(hex.test('#f00 0px')).toEqual(false);
+  });
+
   it('should split a hex value into the correct params', () => {
     expect(hex.parse('#f00')).toEqual(red);
   });
@@ -88,6 +124,11 @@ describe('hex()', () => {
 });
 
 describe('rgba()', () => {
+  it('should correctly test for colors', () => {
+    expect(rgba.test('rgba(255, 0, 0, 0.5)')).toEqual(true);
+    expect(rgba.test('rgba(255, 0, 0, 0.5) 0px')).toEqual(false);
+  });
+
   it('should split an rgba value into the correct params', () => {
     expect(rgba.parse('rgba(255, 0, 0, 0.5)')).toEqual({ ...red, alpha: 0.5 });
     expect(rgba.parse('rgb(255,0,0)')).toEqual(red);
@@ -96,10 +137,16 @@ describe('rgba()', () => {
 
   it('should correctly combine rgba value', () => {
     expect(rgba.transform(red)).toEqual('rgba(255, 0, 0, 1)');
+    expect(rgba.transform(redOutOfRange)).toEqual('rgba(255, 0, 0, 1)');
   });
 });
 
 describe('hsla()', () => {
+  it('should correctly test for colors', () => {
+    expect(hsla.test('hsla(170, 50%, 45%, 1)')).toEqual(true);
+    expect(hsla.test('hsla(170, 50%, 45%, 1) 0px')).toEqual(false);
+  });
+
   it('should split an hsl value into the correct params', () => {
     expect(hsla.parse('hsla(170, 50%, 45%, 1)')).toEqual(hslaTestColor);
     expect(hsla.parse('hsl(170, 50%, 45%)')).toEqual(hslaTestColor);
@@ -108,6 +155,7 @@ describe('hsla()', () => {
 
   it('should correctly combine hsla value', () => {
     expect(hsla.transform(hslaTestColor)).toEqual('hsla(170, 50%, 45%, 1)');
+    expect(hsla.transform(hslaOutOfRange)).toEqual('hsla(170, 50%, 45%, 1)');
   });
 });
 
@@ -128,14 +176,17 @@ describe('color()', () => {
   it('should correctly identify color', () => {
     expect(color.test('#e66465')).toBe(true);
     expect(color.test('#fff')).toBe(true);
+    expect(color.test('#fff 0px')).toBe(false);
     expect(color.test('#f0f0f0')).toBe(true);
     expect(color.test('rgb(233, 233, 1)')).toBe(true);
+    expect(color.test('rgb(0, 0, 0) 5px 5px 50px 0px')).toBe(false);
     expect(color.test('rgba(255, 255, 0, 1)')).toBe(true);
     expect(color.test('rgba(255,255,0,1)')).toBe(true);
     expect(color.test('rgba(255,255, 0,1)')).toBe(true);
     expect(color.test('hsl(0, 0%, 0%)')).toBe(true);
     expect(color.test('hsl(0, 0%,0%)')).toBe(true);
     expect(color.test('hsla(180, 360%, 360%, 0.5)')).toBe(true);
+    expect(color.test('hsla(180, 360%, 360%, 0.5) 0px')).toBe(false);
     expect(color.test('greensock')).toBe(false);
     expect(color.test('filter(190deg)')).toBe(false);
   });
@@ -299,5 +350,21 @@ describe('combination values', () => {
     expect(gradientTransformer(gradient)).toBe(
       'linear-gradient(217deg, rgba(255, 0, 0, 0.8), rgba(255, 0, 0, 0) 70.71%)'
     );
+  });
+});
+
+describe('progress value type', () => {
+  it('should test correctly', () => {
+    expect(progressPercentage.test('100%')).toBe(true);
+    expect(progressPercentage.test('100px')).toBe(false);
+  });
+  it('should parse correctly', () => {
+    expect(progressPercentage.parse('50%')).toBe(0.5);
+    expect(progressPercentage.parse('0%')).toBe(0);
+    expect(progressPercentage.parse('-200%')).toBe(-2);
+  });
+  it('should transform correctly', () => {
+    expect(progressPercentage.transform(0.1)).toBe('10%');
+    expect(progressPercentage.transform(1.5)).toBe('150%');
   });
 });

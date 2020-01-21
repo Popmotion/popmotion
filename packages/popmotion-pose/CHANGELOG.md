@@ -2,6 +2,30 @@
 
 Popmotion Pose adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.4.11] 2019-11-15
+
+### Fixed
+
+- Fixed type definition output.
+
+## [3.4.9] 2019-11-14
+
+### Fixed
+
+- Fixed in Typescript 3.7.
+
+## [3.4.8] 2019-04-24
+
+### Fixed
+
+- Fatal error in Chrome < 36 as a result of undefined `transform` [#775](https://github.com/Popmotion/popmotion/pull/775)
+
+## [3.4.7] 2019-04-09
+
+### Fixed
+
+- Unset event end pose when setting event start pose [#762](https://github.com/Popmotion/popmotion/pull/762)
+
 ## [3.4.6] 2019-01-02
 
 ### Fixed

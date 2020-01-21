@@ -30,43 +30,44 @@ const generateItems = () => {
 const items = generateItems();
 
 class Example extends React.Component {
-  startAnimation = (ref) => {
+  startAnimation = ref => {
     if (!ref) return;
 
     const sliderStyler = styler(ref);
-    this.sliderX = value(0, sliderStyler.set('x'));
+    this.sliderX = value(0, v => sliderStyler.set('x', v));
     const sliderWidth = ref.lastChild.offsetLeft + ref.lastChild.offsetWidth;
-    const clampMovement = transform.clamp(- (sliderWidth - ref.offsetWidth), 0);
-    
-    listen(ref, 'mousedown touchstart')
-      .start(() => pointer({ x: this.sliderX.get() })
+    const clampMovement = transform.clamp(-(sliderWidth - ref.offsetWidth), 0);
+
+    listen(ref, 'mousedown touchstart').start(() =>
+      pointer({ x: this.sliderX.get() })
         .pipe(({ x }) => x, clampMovement)
         .start(this.sliderX)
-      );
+    );
 
-    listen(document, 'mouseup touchend')
-      .start(() => decay({
+    listen(document, 'mouseup touchend').start(() =>
+      decay({
         from: this.sliderX.get(),
         velocity: this.sliderX.getVelocity()
-      }).pipe(clampMovement).start(this.sliderX)
+      })
+        .pipe(clampMovement)
+        .start(this.sliderX)
     );
-  }
+  };
 
   componentWillUnmount() {
     this.sliderX && this.sliderX.stop();
   }
 
   render() {
-    return (
-      <Carousel innerRef={this.startAnimation}>
-        {items}
-      </Carousel>
-    );
+    return <Carousel ref={this.startAnimation}>{items}</Carousel>;
   }
 }
 
 export default () => (
-  <Template code={code} codepen="https://codepen.io/popmotion/pen/Kyewbv?editors=0010">
+  <Template
+    code={code}
+    codepen="https://codepen.io/popmotion/pen/Kyewbv?editors=0010"
+  >
     <VerticalCenter>
       <Example />
     </VerticalCenter>

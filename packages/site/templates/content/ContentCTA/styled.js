@@ -3,7 +3,7 @@ import { color } from '~/styles/vars';
 import { Centered } from '~/templates/global/grid';
 import { P as Paragraph } from '~/templates/global/styled';
 
-export const Container = Centered.extend`
+export const Container = styled(Centered)`
   background-image: linear-gradient(-180deg, #fff51c 0%, #e88003 100%);
   padding: 5px;
   margin-top: 80px;
@@ -14,7 +14,7 @@ export const Content = styled.div`
   padding: 20px;
 `;
 
-export const P = Paragraph.extend`
+export const P = styled(Paragraph)`
   margin: 0;
 `;
 

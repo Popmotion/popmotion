@@ -2,6 +2,48 @@
 
 Style Value Types adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.1.7] 2019-11-14
+
+### Fixed
+
+- Updating to Typescript 3.7.
+
+## [3.1.6] 2019-07-25
+
+### Fixed
+
+- Clamping color alpha to 0-1.
+
+## [3.1.4] 2019-05-01
+
+### Fixed
+
+- Rejecting `complex` values in `color` tests.
+
+## [3.1.3] 2019-04-29
+
+### Fixed
+
+- Dynamic type imports.
+
+## [3.1.2] 2019-04-29
+
+### Removed
+
+- Hard `ValueType` typing from `complex`.
+
+## [3.1.1] 2019-04-29
+
+### Added
+
+- `getAnimatableNone` to `complex` value type.
+
+## [3.1.0] 2019-03-12
+
+### Added
+
+- `progressPercentage` value type.
+
 ## [3.0.7] 2018-08-30
 
 ### Fixed

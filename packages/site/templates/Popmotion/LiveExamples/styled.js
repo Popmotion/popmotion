@@ -55,26 +55,26 @@ export const ExamplePositioning = styled.div`
   `};
 `;
 
-export const AlignCenter = ExamplePositioning.extend`
+export const AlignCenter = styled(ExamplePositioning)`
   align-items: center;
   justify-content: center;
 `;
 
-export const VerticalCenter = ExamplePositioning.extend`
+export const VerticalCenter = styled(ExamplePositioning)`
   align-items: center;
 `;
 
-export const TopLeft = ExamplePositioning.extend`
+export const TopLeft = styled(ExamplePositioning)`
   justify-content: flex-start;
   padding-top: ${cols(1)};
 `;
 
-export const BottomCenter = ExamplePositioning.extend`
+export const BottomCenter = styled(ExamplePositioning)`
   align-items: flex-end;
   justify-content: center;
 `;
 
-export const StackedLeft = ExamplePositioning.extend`
+export const StackedLeft = styled(ExamplePositioning)`
   align-items: flex-start;
   justify-content: space-around;
   flex-direction: column;
@@ -134,12 +134,12 @@ export const ExampleItem = styled.div`
   text-align: center;
 `;
 
-export const Box = ExampleItem.extend`
+export const Box = styled(ExampleItem)`
   width: 100px;
   height: 100px;
 `;
 
-export const Ball = ExampleItem.extend`
+export const Ball = styled(ExampleItem)`
   width: 100px;
   height: 100px;
   border-radius: 50%;
@@ -179,7 +179,7 @@ export const Item = styled.div`
   }
 `;
 
-export const SmallBall = Ball.extend`
+export const SmallBall = styled(Ball)`
   width: 50px;
   height: 50px;
   margin: 0;
@@ -190,7 +190,7 @@ export const SmallBall = Ball.extend`
   `};
 `;
 
-export const MediumBall = Ball.extend`
+export const MediumBall = styled(Ball)`
   width: 75px;
   height: 75px;
   margin-right: 15px;
@@ -215,7 +215,7 @@ export const ColorPanel = styled.div`
   border-radius: 5px;
 `;
 
-export const ThreeContainer = ExamplePositioning.extend`
+export const ThreeContainer = styled(ExamplePositioning)`
   height: 100%;
   min-height: 300px;
 `;
@@ -272,12 +272,12 @@ const ModalButton = styled.button`
   padding: 20px 25px;
 `;
 
-export const ModalCancel = ModalButton.extend`
+export const ModalCancel = styled(ModalButton)`
   background-color: white;
   color: ${BRAND};
 `;
 
-export const ModalOk = ModalButton.extend`
+export const ModalOk = styled(ModalButton)`
   background-color: ${GREEN};
 `;
 

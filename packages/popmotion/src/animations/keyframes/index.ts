@@ -84,4 +84,25 @@ const keyframes = ({
   }).applyMiddleware(update => interpolateScrubbers(times, scrubbers, update));
 };
 
+/**
+ * This would be a tighter implementation if we can either make interpolate support
+ * arrays and objects or remove that support from keyframes
+function keyframes({
+  easings,
+  ease = linear,
+  times,
+  values,
+  ...tweenProps
+}: KeyframesProps): Action {
+  easings = Array.isArray(easings)
+    ? easings
+    : defaultEasings(values as number[], easings);
+  times = times || defaultTimings(values as number[]);
+
+  return tween({ ...tweenProps, ease }).pipe(
+    interpolate(times, values, { clamp: false })
+  );
+}
+ */
+
 export default keyframes;

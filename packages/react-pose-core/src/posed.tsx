@@ -14,7 +14,7 @@ const posedFactory = ({
 }: PosedComponentFactoryConfig) => {
   const posedComponentFactory: PosedComponentFactory = (Component: any) => (
     poseConfig = {}
-  ) => ({ withParent = true, ...props }) => {
+  ) => ({ withParent = true, ...props }: any) => {
     return !withParent || props.parentValues ? (
       <PoseComponent
         poseConfig={poseConfig}

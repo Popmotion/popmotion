@@ -34,21 +34,68 @@ describe('buildStyleProperty', () => {
       transform: 'translateX(100px) translateY(0px) scale(1) translateZ(0)'
     });
 
-    expect(buildStyleProperty({ scale: 1, x: 100, originX: 100 })).toEqual({
-      transformOrigin: '100% 0 0',
+    expect(buildStyleProperty({ scale: 1, x: 100, originX: 1 })).toEqual({
+      transformOrigin: '100% 50% 0',
       transform: 'translateX(100px) scale(1) translateZ(0)'
     });
 
-    expect(buildStyleProperty({ scale: 1, x: 100, originX: 100 })).toEqual({
-      transformOrigin: '100% 0 0',
+    expect(buildStyleProperty({ scale: 1, x: 100, originX: 1 })).toEqual({
+      transformOrigin: '100% 50% 0',
       transform: 'translateX(100px) scale(1) translateZ(0)'
     });
 
     expect(
-      buildStyleProperty({ scale: 1, x: 100, originX: 100, originY: 50 })
+      buildStyleProperty({ scale: 1, x: 100, originX: 1, originY: 0.5 })
     ).toEqual({
       transformOrigin: '100% 50% 0',
       transform: 'translateX(100px) scale(1) translateZ(0)'
+    });
+  });
+
+  it('Should correctly interpret progress values as percentages', () => {
+    expect(buildStyleProperty({ originX: 0.4, originY: 0.4 })).toEqual({
+      transformOrigin: '40% 40% 0'
+    });
+    expect(buildStyleProperty({ originZ: 1 })).toEqual({
+      transformOrigin: '50% 50% 1px'
+    });
+  });
+
+  it('Should correctly apply `transform` if provided as a template function', () => {
+    expect(
+      buildStyleProperty({
+        x: 100,
+        transform: ({ x }, built) => `translateY(${x}) ${built}`
+      })
+    ).toEqual({
+      transform: 'translateY(100px) translateX(100px) translateZ(0)'
+    });
+  });
+
+  it(`If there's no transform values but a transform template, it still runs`, () => {
+    expect(
+      buildStyleProperty({
+        transform: () => `scale(1)`
+      })
+    ).toEqual({
+      transform: `scale(1)`
+    });
+  });
+
+  it(`If there are transform values, but they're default, the transform template doesn't receive none`, () => {
+    expect(
+      buildStyleProperty({
+        scale: 1,
+        transform: (_, generated) => generated
+      })
+    ).toEqual({
+      transform: `scale(1) translateZ(0)`
+    });
+  });
+
+  it('should correctly round zIndex', () => {
+    expect(buildStyleProperty({ zIndex: 0.5 })).toEqual({
+      zIndex: 1
     });
   });
 });
@@ -72,6 +119,28 @@ describe('createStyleBuilder', () => {
 
     expect(buildStyles({ backgroundColor: '#fff' })).toEqual({
       'background-color': '#fff'
+    });
+  });
+
+  it('Can unset transform template', () => {
+    const buildStyles = createStyleBuilder();
+
+    expect(
+      buildStyles({
+        x: 100,
+        transform: ({ x }, built) => `translateY(${x}) ${built}`
+      })
+    ).toEqual({
+      transform: 'translateY(100px) translateX(100px) translateZ(0)'
+    });
+
+    expect(
+      buildStyles({
+        x: 100,
+        transform: undefined
+      })
+    ).toEqual({
+      transform: 'translateX(100px) translateZ(0)'
     });
   });
 });

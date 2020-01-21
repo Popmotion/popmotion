@@ -13,7 +13,7 @@ listen(box, 'touchstart')
   });`;
 
 class Example extends React.Component {
-  startAnimation = (ref) => {
+  startAnimation = ref => {
     if (!ref) return;
 
     const ballStyler = styler(ref);
@@ -21,30 +21,29 @@ class Example extends React.Component {
 
     listen(ref, 'touchstart')
       .filter(({ touches }) => touches.length >= 2)
-      .start((e) => {
+      .start(e => {
         e.preventDefault();
-        multitouch(this.box.get()).start(this.box)
+        multitouch(this.box.get()).start(this.box);
       });
 
-    listen(document, 'mouseup touchend')
-      .start(() => this.box.stop());
-  }
+    listen(document, 'mouseup touchend').start(() => this.box.stop());
+  };
 
   componentWillUnmount() {
     this.box && this.box.stop();
   }
 
   render() {
-    return (
-      <Box innerRef={this.startAnimation}>
-        {`Pinch & zoom`}
-      </Box>
-    );
+    return <Box ref={this.startAnimation}>{`Pinch & zoom`}</Box>;
   }
 }
 
 export default () => (
-  <Template code={code} hideOverflow codepen="https://codepen.io/popmotion/pen/LOBjxQ?editors=0010">
+  <Template
+    code={code}
+    hideOverflow
+    codepen="https://codepen.io/popmotion/pen/LOBjxQ?editors=0010"
+  >
     <AlignCenter>
       <Example />
     </AlignCenter>

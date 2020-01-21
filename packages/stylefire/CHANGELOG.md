@@ -2,6 +2,185 @@
 
 Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.0.1] 2019-11-14
+
+### Fixed
+
+- Upgraded to Typescript 3.7.
+
+## [7.0.0] 2019-10-08
+
+### Changed
+
+- `x` and `y` now work consistently between CSS and SVG and map to the `translateX()` and `translateY()` styles. SVG `x`/`y` attributes can be accessed via `attrX` and `attrY`.
+
+## [6.0.12] 2019-10-01
+
+### Fixed
+
+- Build will now correctly remove `process.env.NODE_ENV` from umd builds
+
+## [6.0.11] 2019-09-18
+
+### Fixed
+
+- Prevent overwriting a prefixed property with a non-prefixed version. This was breaking `clipPath` in Safari, which contains the property name in `element.style` but doesn't properly support it (whereas `WebkitClipPath` does).
+
+## [6.0.10] 2019-08-27
+
+### Fixed
+
+- Only generating `transform-origin` if we detect transform props or `originX`/`originY`.
+
+## [6.0.9] 2019-08-14
+
+### Adding
+
+- `isDashCase` option for `buildSVGAttrs`.
+
+## [6.0.8] 2019-07-25
+
+### Upgraded
+
+- `popcorn` and `style-value-types`.
+
+## [6.0.7] 2019-07-22
+
+### Fixed
+
+- Adding `0` fallback for default value for SVG transforms.
+
+## [6.0.6] 2019-07-18
+
+### Fixed
+
+- Duck-typing `getTotalLength` so it doesn't fail in test environments.
+
+## [6.0.5] 2019-07-18
+
+### Added
+
+- Exporting `transformProps` array.
+
+## [6.0.3] 2019-06-25
+
+### Fixed
+
+- Ensuring camel-cased SVG attributes are converted to dash case before we attempt to read them from the DOM.
+
+## [6.0.2] 2019-06-25
+
+### Fixed
+
+- Loosening `SVGState` type.
+
+## [6.0.1] 2019-06-25
+
+### Fixed
+
+- Loosening `SVGState` type.
+
+## [6.0.0] 2019-06-25
+
+### Changed
+
+- Using CSS parser to create SVG transforms.
+- SVG `x` and `y` now refer to the prop, `translateX` and `translateY` to the transform.
+
+## [5.0.0] 2019-06-13
+
+### Fix
+
+- Changed default `originX` and `originY` to `0.5`.
+
+## [4.1.4] 2019-05-07
+
+### Fix
+
+- Adding rounding to `zIndex`.
+
+## [4.1.3] 2019-05-01
+
+### Upgrade
+
+- Dependencies.
+
+## [4.1.2] 2019-04-30
+
+### Upgrade
+
+- Dependencies.
+
+## [4.1.1] 2019-04-24
+
+### Fixed
+
+- Support for setting CSS variables.
+
+## [4.1.0] 2019-04-10
+
+### Removed
+
+- Support for `size` and `radius` properties. (Undocumented so no major bump).
+
+## [4.0.1] 2019-04-10
+
+### Fixed
+
+- Fixing value types for `size` and `radius`.
+
+## [4.0.0] 2019-04-08
+
+### Added
+
+- `styler.get()` now has an optional `forceRead` argument.
+- Support for `size` and `radius` special CSS properties.
+
+### Removed
+
+- `styler.set('propKey')` syntax no longer returns setter.
+- `styler.get()` requires a provided key.
+
+### Fixed
+
+- Only parsing read values if they're of the default value type.
+
+## [3.0.2] 2019-04-01
+
+### Update
+
+- `@popmotion/popcorn@0.3.6`
+
+## [3.0.1] 2019-04-01
+
+### Update
+
+- `@popmotion/popcorn@0.3.5`
+
+## [3.0.0] 2019-03-12
+
+### Changed
+
+- `originX`, `originY`, `pathLength` and `pathOffset` now `progress` `ValueType`.
+
+## [2.4.3] 2019-02-29
+
+### Fixed
+
+- Running `transform` template even if transforms are default or none set.
+
+## [2.4.2] 2019-02-28
+
+### Added
+
+- Adding type support for setting values to `undefined`.
+
+## [2.4.1] 2019-02-27
+
+### Added
+
+- Support for `transform` template function to accept the Stylefire-built transform string.
+
 ## [2.4.0] 2019-01-30
 
 ### Added

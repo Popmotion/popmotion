@@ -1,15 +1,16 @@
-import { ValueType, Color } from '../types';
+import { Color } from '../types';
 import { color } from './color';
 import { number } from './numbers';
-import { sanitize } from '../utils';
-
-const floatRegex = /(-)?(\d[\d\.]*)/g;
-const colorRegex = /(#[0-9a-f]{6}|#[0-9a-f]{3}|#(?:[0-9a-f]{2}){2,4}|(rgb|hsl)a?\((-?\d+%?[,\s]+){2,3}\s*[\d\.]+%?\))/gi;
+import { sanitize, floatRegex, colorRegex } from '../utils';
 
 const COLOR_TOKEN = '${c}';
 const NUMBER_TOKEN = '${n}';
 
-const complex: ValueType = {
+const convertNumbersToZero = (v: number | Color) => {
+  return typeof v === 'number' ? 0 : v;
+};
+
+export const complex = {
   test: (v: any) => {
     if (typeof v !== 'string' || !isNaN(v as any)) return false;
 
@@ -23,7 +24,7 @@ const complex: ValueType = {
   },
   parse: (v: any) => {
     let input = v;
-    const parsed = [];
+    const parsed: Array<Color | number> = [];
 
     const foundColors = input.match(colorRegex);
     if (foundColors) {
@@ -74,7 +75,12 @@ const complex: ValueType = {
 
       return output;
     };
+  },
+  // Strategy here is to keep colors the same as the target to prevent
+  // weird color transitions but make all numbers `0`
+  getAnimatableNone: (target: string) => {
+    const parsedTarget = complex.parse(target);
+    const targetTransformer = complex.createTransformer(target);
+    return targetTransformer(parsedTarget.map(convertNumbersToZero));
   }
 };
-
-export default complex;

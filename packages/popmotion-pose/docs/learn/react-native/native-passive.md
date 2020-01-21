@@ -4,6 +4,8 @@ description: Learn how to create passive values that only change when others do
 category: react-native
 ---
 
+> React Native Pose has been **deprecated**. If you are interested in a version of [Framer Motion](https://framer.com/motion) for React Native, let us know on the [GitHub ticket](https://github.com/framer/motion/issues/180).
+
 # Passive values
 
 Passive values bind to a value defined in your poses, and change when they change using `Animated.Value.interpolate`.
@@ -30,7 +32,7 @@ const config = {
 }
 ```
 
-<Video src="/static/videos/native-passive-opacity.mp4" height="320" />
+<Video src="/videos/native-passive-opacity.mp4" height="320" />
 
 The first property in the tuple is the name of the value to bind to.
 
@@ -53,7 +55,7 @@ const config = {
 };
 ```
 
-<Video src="/static/videos/native-passive-color.mp4" height="320" />
+<Video src="/videos/native-passive-color.mp4" height="320" />
 
 ## Binding to ancestors
 
@@ -89,7 +91,7 @@ export default ({ isOpen }) => (
 )
 ```
 
-<Video src="/static/videos/native-passive-children.mp4" height="320" />
+<Video src="/videos/native-passive-children.mp4" height="320" />
 
 ### Further ancestors
 

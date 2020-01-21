@@ -33,7 +33,7 @@ describe('keyframes', () => {
     return new Promise((resolve, reject) => {
       let i = '';
       keyframes({
-        values: ['rgba(0,0,0,0)', 'rgba(1, 1, 1, 1)']
+        values: ['rgba(0,0,0,0)', 'rgba(5, 5, 1, 1)', 'rgba(1, 1, 1, 1)']
       }).start({
         complete: () => (i === 'rgba(1, 1, 1, 1)' ? resolve() : reject(i)),
         update: v => (i = v)

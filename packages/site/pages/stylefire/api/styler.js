@@ -38,8 +38,7 @@ const convertMarkdown = marksy({
   }
 });
 
-const content = convertMarkdown(`
-# Styler
+const content = convertMarkdown(`# Styler
 
 Stylers are performant style setters for HTML and SVG elements, optimised to work with animation libraries.
 

@@ -38,7 +38,7 @@ export const Title = styled.h2`
   }
 `;
 
-export const Subtitle = Title.withComponent('h3').extend`
+export const Subtitle = styled(Title.withComponent('h3'))`
   font-size: 18px;
 
   ${media.medium`
@@ -59,7 +59,7 @@ export const Date = styled.span`
   `};
 `;
 
-export const Description = P.extend`
+export const Description = styled(P)`
   margin-top: 5px;
 `;
 

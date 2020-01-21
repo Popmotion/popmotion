@@ -1,9 +1,8 @@
 import ContentTemplate from '~/templates/content/Template';
 import { Centered } from '~/templates/global/grid';
 import styled from 'styled-components';
-import { color } from '~/styles/vars';
 
-const Choose = Centered.withComponent('h2').extend`
+const Choose = styled(Centered.withComponent('h2'))`
   color: #333;
   margin: 0 auto;
   display: block;

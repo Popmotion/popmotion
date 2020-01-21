@@ -4,6 +4,8 @@ description: Configure a posed component
 category: react
 ---
 
+> React Pose has been **deprecated** in favour of [Framer Motion](https://framer.com/motion). [Read the upgrade guide](https://www.framer.com/api/motion/migrate-from-pose/)
+
 # Config options
 
 Options to configure [posed components](/pose/api/posed) in React Pose.

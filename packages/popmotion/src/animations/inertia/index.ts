@@ -34,14 +34,17 @@ const inertia = ({
       );
     };
 
-    const startAnimation = (animation: Action, onComplete?: Function) => {
+    const startAnimation = (animation: Action, next?: Function) => {
       activeAnimation && activeAnimation.stop();
 
       activeAnimation = animation.start({
         update: (v: number) => current.update(v),
         complete: () => {
+          if (next) {
+            next();
+            return;
+          }
           complete();
-          onComplete && onComplete();
         }
       });
     };
@@ -75,12 +78,8 @@ const inertia = ({
       }
     });
 
-    // We want to start the animation already as a spring if we're moving away from the bounded area
-    // or not moving at all.
-    if (
-      (isOutOfBounds(from) && velocity === 0) ||
-      isTravellingAwayFromBounds(from, velocity)
-    ) {
+    // We want to start the animation already as a spring if we're outside the defined boundaries
+    if (isOutOfBounds(from)) {
       startSpring({ from, velocity });
 
       // Otherwise we want to simulate inertial movement with decay
@@ -99,6 +98,8 @@ const inertia = ({
 
         if (isOutOfBounds(v)) {
           startSpring({ from: v, velocity: current.getVelocity() });
+        } else {
+          complete();
         }
       });
     } else {

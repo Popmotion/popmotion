@@ -6,6 +6,7 @@ export type ValueType = {
   transform?: Transformer;
   createTransformer?: (template: string) => Transformer;
   default?: any;
+  getAnimatableNone?: (v: any) => any;
 };
 
 export type NumberMap = {

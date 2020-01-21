@@ -4,6 +4,8 @@ description: A list of supported values in Pose for Vue
 category: vue
 ---
 
+> Vue Pose has been **deprecated**.
+
 # Supported values
 
 <TOC />

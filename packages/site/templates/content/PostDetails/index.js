@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { color, media } from '~/styles/vars';
 import { Centered } from '~/templates/global/grid';
 
-const Container = Centered.extend`
+const Container = styled(Centered)`
   display: flex;
   align-items: center;
   margin-bottom: 15px;
