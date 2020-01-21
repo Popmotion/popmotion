@@ -10,15 +10,26 @@ import { Styler, Props } from './styler/types';
 
 const cache = new WeakMap<Element | Window, Styler>();
 
+const isHTMLElement = (node: Element): node is HTMLElement => {
+  return (
+    node instanceof HTMLElement ||
+    // Cross-origin safe check
+    typeof (node as HTMLElement).click === 'function'
+  );
+};
+const isSVGElement = (node: Element): node is SVGElement => {
+  return node instanceof SVGElement || 'ownerSVGElement' in node;
+};
+
 const createDOMStyler = (node: Element | Window, props?: Props) => {
   let styler: Styler;
 
-  if (node instanceof HTMLElement) {
-    styler = css(node, props);
-  } else if (node instanceof SVGElement) {
-    styler = svg(node);
-  } else if (node === window) {
+  if (node === window) {
     styler = viewport(node);
+  } else if (isHTMLElement(node as Element)) {
+    styler = css(node as HTMLElement, props);
+  } else if (isSVGElement(node as Element)) {
+    styler = svg(node as SVGElement);
   }
 
   invariant(
