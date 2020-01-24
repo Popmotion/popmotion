@@ -82,14 +82,14 @@ describe('buildStyleProperty', () => {
     });
   });
 
-  it(`If there are transform values, but they're default, the transform template doesn't receive none`, () => {
+  it(`If there are transform values, but they're default, the transform template receives an empty string`, () => {
     expect(
       buildStyleProperty({
         scale: 1,
         transform: (_, generated) => generated
       })
     ).toEqual({
-      transform: `scale(1) translateZ(0)`
+      transform: ``
     });
   });
 
