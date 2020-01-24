@@ -2,6 +2,12 @@
 
 Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.0.2] 2020-01-24
+
+### Fixed
+
+- Stylefire now passes an empty string to `transform` if it's set to a template and all transform values are default. This removes `translateZ(0)` but allows for appending.
+
 ## [7.0.1] 2019-11-14
 
 ### Fixed
