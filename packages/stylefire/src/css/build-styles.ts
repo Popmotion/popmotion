@@ -47,7 +47,10 @@ function buildTransform(
 
   // If we have a custom `transform` template
   if (isCustomTemplate(state.transform)) {
-    transformString = state.transform(transform, transformString);
+    transformString = state.transform(
+      transform,
+      transformIsDefault ? '' : transformString
+    );
   } else if (transformIsDefault) {
     transformString = 'none';
   }
