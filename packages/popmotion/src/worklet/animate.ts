@@ -33,8 +33,10 @@ export async function animate(
   const effect = new KeyframeEffect(element, keyframes, options);
   // TODO Replace ts ignore
   // @ts-ignore
-  const animation = new WorkletAnimation('tween', effect, document.timeline);
-  console.log(animation);
+  const animation = new WorkletAnimation('tween', effect, document.timeline, {
+    documentTimeline: new DocumentTimeline()
+  });
+
   return animation.play();
 }
 
