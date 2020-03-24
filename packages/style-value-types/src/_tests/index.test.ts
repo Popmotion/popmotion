@@ -20,6 +20,7 @@ const MIXED = '0px 0px 0px rgba(161, 0, 246, 0)';
 
 describe('regex', () => {
   it('should correctly identify values', () => {
+    expect(singleColorRegex.test('#fff00080')).toBe(true);
     expect(singleColorRegex.test('#fff000')).toBe(true);
     expect(singleColorRegex.test('rgba(161, 0, 246, 0)')).toBe(true);
     expect(singleColorRegex.test('#fff000 #fff000')).toBe(false);
@@ -85,6 +86,13 @@ const red = {
   green: 0,
   blue: 0,
   alpha: 1
+};
+
+const transparendRed = {
+  red: 255,
+  green: 0,
+  blue: 0,
+  alpha: 0
 };
 
 const redOutOfRange = {
@@ -168,6 +176,13 @@ describe('color()', () => {
     expect(color.parse(hslaTestColor)).toEqual(hslaTestColor);
   });
 
+  it('should support the alpha channel', () => {
+    expect(color.parse('rgba(255, 0, 0, 0)')).toEqual(transparendRed);
+    expect(color.parse('#ff000000')).toEqual(transparendRed);
+    expect(color.parse('rgba(255, 0, 0, 1)')).toEqual(red);
+    expect(color.parse('#ff0000FF')).toEqual(red);
+  });
+
   it('should correctly combine color value', () => {
     expect(color.transform(red)).toEqual('rgba(255, 0, 0, 1)');
     expect(color.transform(hslaTestColor)).toEqual('hsla(170, 50%, 45%, 1)');
@@ -178,6 +193,7 @@ describe('color()', () => {
     expect(color.test('#fff')).toBe(true);
     expect(color.test('#fff 0px')).toBe(false);
     expect(color.test('#f0f0f0')).toBe(true);
+    expect(color.test('#f0f0f080')).toBe(true);
     expect(color.test('rgb(233, 233, 1)')).toBe(true);
     expect(color.test('rgb(0, 0, 0) 5px 5px 50px 0px')).toBe(false);
     expect(color.test('rgba(255, 255, 0, 1)')).toBe(true);

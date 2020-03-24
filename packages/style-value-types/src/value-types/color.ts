@@ -88,12 +88,31 @@ export const hex: ValueType = {
     let r = '';
     let g = '';
     let b = '';
+    let a = 'FF';
 
-    // If we have 6 characters, ie #FF0000
-    if (v.length > 4) {
+    // If we have 8 characters, ie #FF0000FF
+    if (v.length > 8) {
       r = v.substr(1, 2);
       g = v.substr(3, 2);
       b = v.substr(5, 2);
+      a = v.substr(7, 2);
+
+      // Or we have 6 characters, ie #FF0000
+    } else if (v.length > 6) {
+      r = v.substr(1, 2);
+      g = v.substr(3, 2);
+      b = v.substr(5, 2);
+
+      // Or we have 4 characters, ie #F00F
+    } else if (v.length > 4) {
+      r = v.substr(1, 1);
+      g = v.substr(2, 1);
+      b = v.substr(3, 1);
+      a = v.substr(4, 1);
+      r += r;
+      g += g;
+      b += b;
+      a += a;
 
       // Or we have 3 characters, ie #F00
     } else {
@@ -109,7 +128,7 @@ export const hex: ValueType = {
       red: parseInt(r, 16),
       green: parseInt(g, 16),
       blue: parseInt(b, 16),
-      alpha: 1
+      alpha: parseInt(a, 16) / 255
     };
   }
 };
