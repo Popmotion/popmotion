@@ -126,7 +126,7 @@ describe('createStyleBuilder', () => {
     const buildStyles = createStyleBuilder({ allowTransformNone: false });
 
     expect(buildStyles({ x: 0 })).toEqual({
-      transform: 'translateX(0) translateZ(0)'
+      transform: 'translateX(0px) translateZ(0)'
     });
   });
 
