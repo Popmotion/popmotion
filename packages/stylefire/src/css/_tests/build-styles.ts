@@ -122,6 +122,14 @@ describe('createStyleBuilder', () => {
     });
   });
 
+  it(`Can be configured not to return transform: none`, () => {
+    const buildStyles = createStyleBuilder({ allowTransformNone: false });
+
+    expect(buildStyles({ x: 0 })).toEqual({
+      transform: 'translateX(0) translateZ(0)'
+    });
+  });
+
   it('Can unset transform template', () => {
     const buildStyles = createStyleBuilder();
 

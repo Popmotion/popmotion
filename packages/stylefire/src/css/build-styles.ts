@@ -25,7 +25,8 @@ function buildTransform(
   transform: ResolvedState,
   transformKeys: string[],
   transformIsDefault: boolean,
-  enableHardwareAcceleration: boolean
+  enableHardwareAcceleration: boolean,
+  allowTransformNone = true
 ) {
   let transformString = '';
   let transformHasZ = false;
@@ -51,7 +52,7 @@ function buildTransform(
       transform,
       transformIsDefault ? '' : transformString
     );
-  } else if (transformIsDefault) {
+  } else if (allowTransformNone && transformIsDefault) {
     transformString = 'none';
   }
 
@@ -78,7 +79,8 @@ function buildStyleProperty(
   transform: ResolvedState = {},
   transformOrigin: ResolvedState = {},
   transformKeys: string[] = [],
-  isDashCase: boolean = false
+  isDashCase: boolean = false,
+  allowTransformNone: boolean = true
 ) {
   let transformIsDefault = true;
   let hasTransform = false;
@@ -117,7 +119,8 @@ function buildStyleProperty(
       transform,
       transformKeys,
       transformIsDefault,
-      enableHardwareAcceleration
+      enableHardwareAcceleration,
+      allowTransformNone
     );
   }
 
@@ -130,10 +133,11 @@ function buildStyleProperty(
   return styles;
 }
 
-function createStyleBuilder(
+function createStyleBuilder({
   enableHardwareAcceleration = true,
-  isDashCase = true
-) {
+  isDashCase = true,
+  allowTransformNone = true
+} = {}) {
   /**
    * Because we expect this function to run multiple times a frame
    * we create and hold these data structures as mutative states.
@@ -152,7 +156,8 @@ function createStyleBuilder(
       transform,
       transformOrigin,
       transformKeys,
-      isDashCase
+      isDashCase,
+      allowTransformNone
     );
 
     return styles;

@@ -2,6 +2,12 @@
 
 Stylefire adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.0.3] 2020-03-31
+
+### Added
+
+- Can now configure CSS style builder to never return `transform: none` with `allowTransformNone` config.
+
 ## [7.0.2] 2020-01-24
 
 ### Fixed

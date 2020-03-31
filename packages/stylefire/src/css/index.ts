@@ -9,6 +9,7 @@ import { SCROLL_LEFT, SCROLL_TOP, scrollKeys } from './scroll-keys';
 type Props = {
   enableHardwareAcceleration?: boolean;
   preparseOutput?: boolean;
+  allowTransformNone?: boolean;
 };
 
 export type CssStylerOptions = {
@@ -77,11 +78,14 @@ const cssStyler = createStyler({
 
 export default function createCssStyler(
   element: HTMLElement,
-  { enableHardwareAcceleration, ...props }: Props = {}
+  { enableHardwareAcceleration, allowTransformNone, ...props }: Props = {}
 ): Styler {
   return cssStyler({
     element,
-    buildStyles: createStyleBuilder(enableHardwareAcceleration),
+    buildStyles: createStyleBuilder({
+      enableHardwareAcceleration,
+      allowTransformNone
+    }),
     preparseOutput: true,
     ...props
   });

@@ -42,6 +42,11 @@ function calculateSVGTransformOrigin(
   )}`;
 }
 
+const svgStyleConfig = {
+  enableHardwareAcceleration: false,
+  isDashCase: false
+};
+
 export function buildSVGAttrs(
   {
     attrX,
@@ -56,8 +61,7 @@ export function buildSVGAttrs(
   dimensions: Dimensions = unmeasured,
   totalPathLength?: number | undefined,
   cssBuilder: (state: State) => ResolvedState = createStyleBuilder(
-    false,
-    false
+    svgStyleConfig
   ),
   attrs: SVGAttrs = svgAttrsTemplate(),
   isDashCase = true
@@ -109,7 +113,7 @@ export function createAttrBuilder(
   isDashCase: boolean = true
 ) {
   const attrs: SVGAttrs = svgAttrsTemplate();
-  const cssBuilder = createStyleBuilder(false, false);
+  const cssBuilder = createStyleBuilder(svgStyleConfig);
 
   return (state: State & SVGState) =>
     buildSVGAttrs(
