@@ -30,4 +30,4 @@ const worklet = {
   ]
 };
 
-export default [...generateConfig(pkg), worklet];
+export default [...generateConfig(pkg)]; //, worklet];
