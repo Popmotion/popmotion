@@ -38,6 +38,12 @@ export const spring = ({
             initialDelta * Math.cos(expoDecay * t))
       );
     };
+  } else if (dampingRatio === 1) {
+    // Critically damped spring
+    return (t: number) => {
+      const envelope = Math.exp(-angularFreq * t);
+      return to - envelope * (1 + angularFreq * t);
+    };
   } else {
     // Overdamped spring
     const dampedAngularFreq =

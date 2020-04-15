@@ -1,5 +1,7 @@
+export { animate } from './animations';
+
 // Animations
-export { tween } from './animations/tween';
+export { decay } from './animations/decay';
 export { spring } from './animations/spring';
 
 // Utilities
@@ -54,6 +56,6 @@ export {
   createAnticipate
 } from './easing/utils';
 
-// Worklet
-export { animate } from './worklet/animate';
-export { workletReady } from './worklet/load-worklet';
+// // Worklet
+// export { animate } from './worklet/animate';
+// export { workletReady } from './worklet/load-worklet';
