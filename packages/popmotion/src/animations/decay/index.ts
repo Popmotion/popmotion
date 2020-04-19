@@ -17,12 +17,13 @@ const decay = (props: DecayProps = {}): Action =>
       modifyTarget
     } = props;
     let elapsed = 0;
-    const amplitude = power * velocity;
+    let amplitude = power * velocity;
     const idealTarget = Math.round(from + amplitude);
     const target =
       typeof modifyTarget === 'undefined'
         ? idealTarget
         : modifyTarget(idealTarget);
+    if (target !== idealTarget) amplitude = target - from;
 
     const process = sync.update(({ delta: frameDelta }) => {
       elapsed += frameDelta;
