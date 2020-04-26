@@ -51,3 +51,4 @@ const vectorDecay: ActionFactory = vectorAction(decay, {
 });
 
 export default vectorDecay;
+export { decay as decaySole };

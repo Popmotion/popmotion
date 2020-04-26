@@ -88,3 +88,4 @@ const vectorSpring: ActionFactory = vectorAction(spring, {
 });
 
 export default vectorSpring;
+export { spring as springSole };

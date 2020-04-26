@@ -2,8 +2,8 @@ import { number } from 'style-value-types';
 import action, { Action } from '../../action';
 import vectorAction, { ActionFactory } from '../../action/vector';
 import value from '../../reactions/value';
-import spring from '../spring';
-import decay from '../decay';
+import { springSole } from '../spring';
+import { decaySole } from '../decay';
 import { ColdSubscription } from '../../action/types';
 import { Props, SpringProps } from './types';
 
@@ -52,7 +52,7 @@ const inertia = ({
     const startSpring = (props: SpringProps) => {
       isSpring = true;
       startAnimation(
-        spring({
+        springSole({
           ...props,
           to: isLessThanMin(props.from) ? min : max,
           stiffness: bounceStiffness,
@@ -84,7 +84,7 @@ const inertia = ({
 
       // Otherwise we want to simulate inertial movement with decay
     } else {
-      const animation = decay({
+      const animation = decaySole({
         from,
         velocity,
         timeConstant,
