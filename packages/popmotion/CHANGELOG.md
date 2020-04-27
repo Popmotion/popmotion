@@ -2,6 +2,18 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.7.2] 2020-04-28
+
+### Fixed
+
+- Decay and inertia correctly start motion at from prop when using modifyTarget
+- Decay and inertia no longer round target calculation
+- Inertia calls modifyTarget even with zero-velocity
+
+### Changed
+
+- Inertia implementation refinements
+
 ## [8.7.1] 2019-11-14
 
 ### Upgrade
