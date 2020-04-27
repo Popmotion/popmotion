@@ -1,11 +1,12 @@
 import { number } from 'style-value-types';
 import action, { Action } from '../../action';
 import vectorAction, { ActionFactory } from '../../action/vector';
-import value from '../../reactions/value';
 import { springSole } from '../spring';
 import { decaySole } from '../decay';
 import { ColdSubscription } from '../../action/types';
 import { Props, SpringProps } from './types';
+import { velocityPerSecond } from '@popmotion/popcorn';
+import { getFrameData } from 'framesync';
 
 const inertia = ({
   from = 0,
@@ -20,7 +21,8 @@ const inertia = ({
   modifyTarget
 }: Props) =>
   action(({ update, complete }) => {
-    const current = value(from);
+    let prev = from;
+    let current = from;
     let activeAnimation: ColdSubscription;
 
     const isOutOfBounds = (v: number) => {
@@ -34,10 +36,7 @@ const inertia = ({
       activeAnimation && activeAnimation.stop();
 
       activeAnimation = animation.start({
-        update: (v: number) => {
-          current.update(v);
-          update(v);
-        },
+        update,
         complete: () => {
           if (next) {
             next();
@@ -86,13 +85,13 @@ const inertia = ({
       if (isOutOfBounds(to)) {
         const boundary = boundaryNearest(to);
         const heading = boundary == min ? -1 : 1;
-        animation = animation.while(v => boundary - v * heading > 0);
-        next = () =>
-          startSpring({
-            from: current.get() as number,
-            to: boundary,
-            velocity: current.getVelocity()
-          });
+        animation = animation.while(v => {
+          prev = current;
+          velocity = velocityPerSecond(v - prev, getFrameData().delta);
+          current = v;
+          return boundary - v * heading > 0;
+        });
+        next = () => startSpring({ from: current, to: boundary, velocity });
       }
       startAnimation(animation, next);
     }
