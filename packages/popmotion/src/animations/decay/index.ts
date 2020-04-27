@@ -18,7 +18,7 @@ const decay = (props: DecayProps = {}): Action =>
     } = props;
     let elapsed = 0;
     let amplitude = power * velocity;
-    const idealTarget = Math.round(from + amplitude);
+    const idealTarget = from + amplitude;
     const target =
       typeof modifyTarget === 'undefined'
         ? idealTarget
