@@ -12,6 +12,7 @@ export type Props = {
 };
 
 export type SpringProps = {
+  to: number;
   from: number;
   velocity: number;
 };
