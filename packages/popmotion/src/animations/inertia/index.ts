@@ -65,7 +65,7 @@ const inertia = ({
       // Otherwise simulate inertial movement with decay. If target is beyond
       // bounds switch from decay to spring upon boundary encounter
     } else {
-      let to = Math.round(power * velocity + from);
+      let to = power * velocity + from;
       if (typeof modifyTarget !== 'undefined') {
         // get the modified target, prevent decay doing so a second time and
         // resolve velocity so decay will produce the modified target
