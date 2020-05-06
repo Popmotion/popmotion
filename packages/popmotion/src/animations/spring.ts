@@ -9,6 +9,17 @@ export interface SpringConfig {
   mass?: number;
 }
 
+export function hasSpringFinished(
+  delta: number, // target - current
+  velocity: number,
+  restSpeed: number,
+  restDelta: number
+) {
+  const isBelowVelocityThreshold = Math.abs(velocity) <= restSpeed;
+  const isBelowDisplacementThreshold = Math.abs(delta) <= restDelta;
+  return isBelowVelocityThreshold && isBelowDisplacementThreshold;
+}
+
 export const spring = ({
   from = 0.0,
   to = 0.0,
