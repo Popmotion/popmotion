@@ -1,8 +1,13 @@
 import typescript from 'rollup-plugin-typescript2';
+import resolve from '@rollup/plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
 import { uglify } from 'rollup-plugin-uglify';
 
 const typescriptConfig = { cacheRoot: 'tmp/.rpt2_cache' };
+const noDeclarationConfig = {
+  ...typescriptConfig,
+  tsconfigOverride: { compilerOptions: { declaration: false } }
+};
 
 const makeExternalPredicate = externalArr => {
   if (externalArr.length === 0) {
@@ -40,8 +45,10 @@ export default function(pkg, name = pkg.name) {
         '@popmotion/popcorn': 'popcorn'
       }
     },
+    external: makeExternalPredicate(peerDeps),
     plugins: [
-      typescript(typescriptConfig),
+      resolve(),
+      typescript(noDeclarationConfig),
       replace({
         'process.env.NODE_ENV': JSON.stringify('development')
       })
@@ -49,13 +56,14 @@ export default function(pkg, name = pkg.name) {
   };
 
   const umdProd = {
-    ...config,
+    ...umd,
     output: {
       ...umd.output,
-      file: `dist/${name}.min.js`
+      file: pkg.unpkg || `dist/${name}.min.js`
     },
     plugins: [
-      typescript(typescriptConfig),
+      resolve(),
+      typescript(noDeclarationConfig),
       replace({
         'process.env.NODE_ENV': JSON.stringify('production')
       }),
@@ -70,7 +78,7 @@ export default function(pkg, name = pkg.name) {
       file: pkg.module,
       format: 'es'
     },
-    plugins: [typescript(typescriptConfig)]
+    plugins: [typescript(noDeclarationConfig)]
   };
 
   const cjs = {
