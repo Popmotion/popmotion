@@ -17,12 +17,13 @@ const decay = (props: DecayProps = {}): Action =>
       modifyTarget
     } = props;
     let elapsed = 0;
-    const amplitude = power * velocity;
-    const idealTarget = Math.round(from + amplitude);
+    let amplitude = power * velocity;
+    const idealTarget = from + amplitude;
     const target =
       typeof modifyTarget === 'undefined'
         ? idealTarget
         : modifyTarget(idealTarget);
+    if (target !== idealTarget) amplitude = target - from;
 
     const process = sync.update(({ delta: frameDelta }) => {
       elapsed += frameDelta;
@@ -50,3 +51,4 @@ const vectorDecay: ActionFactory = vectorAction(decay, {
 });
 
 export default vectorDecay;
+export { decay as decaySole };

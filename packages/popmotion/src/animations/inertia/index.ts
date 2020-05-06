@@ -1,11 +1,12 @@
 import { number } from 'style-value-types';
 import action, { Action } from '../../action';
 import vectorAction, { ActionFactory } from '../../action/vector';
-import value from '../../reactions/value';
-import spring from '../spring';
-import decay from '../decay';
+import { springSole } from '../spring';
+import { decaySole } from '../decay';
 import { ColdSubscription } from '../../action/types';
 import { Props, SpringProps } from './types';
+import { velocityPerSecond } from '@popmotion/popcorn';
+import { getFrameData } from 'framesync';
 
 const inertia = ({
   from = 0,
@@ -20,25 +21,22 @@ const inertia = ({
   modifyTarget
 }: Props) =>
   action(({ update, complete }) => {
-    const current = value(from);
+    let prev = from;
+    let current = from;
     let activeAnimation: ColdSubscription;
-    let isSpring = false;
 
-    const isLessThanMin = (v: number) => min !== undefined && v <= min;
-    const isMoreThanMax = (v: number) => max !== undefined && v >= max;
-    const isOutOfBounds = (v: number) => isLessThanMin(v) || isMoreThanMax(v);
-    const isTravellingAwayFromBounds = (v: number, currentVelocity: number) => {
-      return (
-        (isLessThanMin(v) && currentVelocity < 0) ||
-        (isMoreThanMax(v) && currentVelocity > 0)
-      );
+    const isOutOfBounds = (v: number) => {
+      return (min !== undefined && v < min) || (max !== undefined && v > max);
+    };
+    const boundaryNearest = (v: number) => {
+      return Math.abs(min - v) < Math.abs(max - v) ? min : max;
     };
 
     const startAnimation = (animation: Action, next?: Function) => {
       activeAnimation && activeAnimation.stop();
 
       activeAnimation = animation.start({
-        update: (v: number) => current.update(v),
+        update,
         complete: () => {
           if (next) {
             next();
@@ -50,11 +48,9 @@ const inertia = ({
     };
 
     const startSpring = (props: SpringProps) => {
-      isSpring = true;
       startAnimation(
-        spring({
+        springSole({
           ...props,
-          to: isLessThanMin(props.from) ? min : max,
           stiffness: bounceStiffness,
           damping: bounceDamping,
           restDelta
@@ -62,48 +58,42 @@ const inertia = ({
       );
     };
 
-    current.subscribe((v: number) => {
-      update(v);
-
-      const currentVelocity = current.getVelocity();
-
-      // Snap to the nearest boundary if we're not already in a spring state and
-      // our value is moving away from the bounded area.
-      if (
-        activeAnimation &&
-        !isSpring &&
-        isTravellingAwayFromBounds(v, currentVelocity)
-      ) {
-        startSpring({ from: v, velocity: currentVelocity });
-      }
-    });
-
-    // We want to start the animation already as a spring if we're outside the defined boundaries
+    // Start the animation with spring if outside the defined boundaries
     if (isOutOfBounds(from)) {
-      startSpring({ from, velocity });
+      startSpring({ from, velocity, to: boundaryNearest(from) });
 
-      // Otherwise we want to simulate inertial movement with decay
-    } else if (velocity !== 0) {
-      const animation = decay({
+      // Otherwise simulate inertial movement with decay. If target is beyond
+      // bounds switch from decay to spring upon boundary encounter
+    } else {
+      let to = power * velocity + from;
+      if (typeof modifyTarget !== 'undefined') {
+        // get the modified target, prevent decay doing so a second time and
+        // resolve velocity so decay will produce the modified target
+        to = modifyTarget(to);
+        modifyTarget = void 0;
+        velocity = (to - from) / power;
+      }
+      let animation = decaySole({
         from,
         velocity,
         timeConstant,
         power,
-        restDelta: isOutOfBounds(from) ? 20 : restDelta,
+        restDelta,
         modifyTarget
       });
-
-      startAnimation(animation, () => {
-        const v = current.get() as number;
-
-        if (isOutOfBounds(v)) {
-          startSpring({ from: v, velocity: current.getVelocity() });
-        } else {
-          complete();
-        }
-      });
-    } else {
-      complete();
+      let next;
+      if (isOutOfBounds(to)) {
+        const boundary = boundaryNearest(to);
+        const heading = boundary == min ? -1 : 1;
+        animation = animation.while(v => {
+          prev = current;
+          velocity = velocityPerSecond(v - prev, getFrameData().delta);
+          current = v;
+          return boundary - v * heading > 0;
+        });
+        next = () => startSpring({ from: current, to: boundary, velocity });
+      }
+      startAnimation(animation, next);
     }
 
     return {
