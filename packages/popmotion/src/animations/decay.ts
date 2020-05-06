@@ -15,12 +15,13 @@ export const decay = ({
   timeConstant = 350,
   modifyTarget
 }: DecayConfig): ForT => {
-  const amplitude = power * velocity;
-  const idealTarget = Math.round(from + amplitude);
+  let amplitude = power * velocity;
+  const idealTarget = from + amplitude;
   const target =
     typeof modifyTarget === 'undefined'
       ? idealTarget
       : modifyTarget(idealTarget);
+  if (target !== idealTarget) amplitude = target - from;
 
   return t => target + -amplitude * Math.exp(-t / timeConstant);
 };
