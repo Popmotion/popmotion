@@ -1,4 +1,5 @@
 import { ForT } from '../types';
+import { Effect, SpringOptions } from './types';
 
 export interface SpringConfig {
   from?: number;
@@ -7,17 +8,8 @@ export interface SpringConfig {
   stiffness?: number;
   damping?: number;
   mass?: number;
-}
-
-export function hasSpringFinished(
-  delta: number, // target - current
-  velocity: number,
-  restSpeed: number,
-  restDelta: number
-) {
-  const isBelowVelocityThreshold = Math.abs(velocity) <= restSpeed;
-  const isBelowDisplacementThreshold = Math.abs(delta) <= restDelta;
-  return isBelowVelocityThreshold && isBelowDisplacementThreshold;
+  restSpeed?: number;
+  restDelta?: number;
 }
 
 export const spring = ({
@@ -76,4 +68,24 @@ export const spring = ({
       );
     };
   }
+};
+
+export const springEffect: Effect<SpringOptions> = {
+  factory: spring,
+  hasFinished: (
+    delta: number, // target - current
+    velocity: number,
+    { restSpeed, restDelta }: SpringOptions
+  ) => {
+    const isBelowVelocityThreshold = Math.abs(velocity) <= restSpeed;
+    const isBelowDisplacementThreshold = Math.abs(delta) <= restDelta;
+    return isBelowVelocityThreshold && isBelowDisplacementThreshold;
+  },
+  uniqueOptionKeys: new Set([
+    'stiffness',
+    'damping',
+    'mass',
+    'restSpeed',
+    'restDelta'
+  ])
 };
