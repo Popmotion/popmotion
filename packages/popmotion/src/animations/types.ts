@@ -1,39 +1,62 @@
 import { Easing } from '../easing/types';
+import { FrameData } from 'framesync';
 
-export interface PlaybackOptions {
+export interface Animator<O, V> {
+  options: O;
+  update(t: number): V;
+  updateOptions(options: O): void;
+  isComplete: boolean;
+}
+
+export interface PlaybackOptions<V> {
   delay?: number;
-  driver?: () => void;
+  driver?: Driver;
   effect?: AnimationEffect;
+  elapsed?: number;
   repeat?: number;
   repeatType?: 'loop' | 'reverse';
   repeatDelay?: number;
-  onUpdate?: () => void;
+  onUpdate?: (latest: V) => void;
   onPlay?: () => void;
   onPause?: () => void;
   onRepeat?: () => void;
 }
 
-export type SingleValueKeyframes = number[] | string[];
+export type SingleValueKeyframes<V> = V[];
 
-export type Keyframe = {
-  [key: string]: string | number;
+export type Keyframe<V> = {
+  [key: string]: V;
 };
 
-export type KeyframeMap = {
-  [key: string]: SingleValueKeyframes;
+export type KeyframeMap<V> = {
+  [key: string]: SingleValueKeyframes<V>;
 };
 
 export interface KeyframeListOptions {
   duration?: number;
 }
 
-export interface KeyframeOptions {
+export interface KeyframeOptions<V = any> {
+  from?: V;
+  to: V | SingleValueKeyframes<V>;
   duration?: number;
   ease?: Easing | Easing[];
   offset?: number[];
 }
 
+export interface DecayOptions {
+  from?: number;
+  to?: number;
+  velocity?: number;
+  power?: number;
+  timeConstant?: number;
+  modifyTarget?: (target: number) => number;
+  restDelta?: number;
+}
+
 export interface SpringOptions {
+  from?: number;
+  to?: number;
   velocity?: number;
   stiffness?: number;
   damping?: number;
@@ -42,19 +65,13 @@ export interface SpringOptions {
   restDelta?: number;
 }
 
-export type AnimationOptions = PlaybackOptions &
-  (KeyframeOptions | SpringOptions);
-
-export interface Effect<T> {
-  create: (options: T) => (t: number) => number;
-  hasFinished: (current: number, velocity: number, options: T) => boolean;
-  uniqueOptionKeys: Set<keyof T>;
-}
+export type AnimationOptions<V> = PlaybackOptions<V> &
+  (DecayOptions | KeyframeOptions<V> | SpringOptions);
 
 /**
  * TODO: Implement
  */
-export interface SpringDurationOptions extends PlaybackOptions {
+export interface SpringDurationOptions<V> extends PlaybackOptions<V> {
   ratio?: number;
   duration?: number;
 }
@@ -67,3 +84,7 @@ export interface PlaybackControls {
   seek: () => void;
   stop: () => void;
 }
+
+type Update = (timestamp: number) => void;
+
+export type Driver = (update: Update) => () => void;

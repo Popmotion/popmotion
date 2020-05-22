@@ -1,93 +1,112 @@
 import {
   AnimationOptions,
-  SingleValueKeyframes,
-  PlaybackControls
+  Driver,
+  PlaybackControls,
+  KeyframeOptions
 } from './types';
-import { getEffectFromConfig } from './utils/get-effect-from-config';
-import invariant from 'invariant';
+import { detectAnimationFromOptions } from './utils/detect-animation-from-options';
 import sync, { cancelSync, FrameData } from 'framesync';
+import { interpolate } from '../utils/interpolate';
 
-export function animate(
-  keyframes: SingleValueKeyframes,
-  {
-    delay,
-    repeat,
-    repeatType,
-    repeatDelay,
-    onPlay,
-    onRepeat,
-    onPause,
-    ...config
-  }: AnimationOptions
-): PlaybackControls {
-  invariant(keyframes.length > 1, 'More than one keyframe must be defined');
+const framesync: Driver = update => {
+  const passTimestamp = ({ delta }: FrameData) => update(delta);
+  sync.update(passTimestamp, true, true);
+  return () => cancelSync.update(passTimestamp);
+};
 
-  let playbackResolve: () => void;
-  let playbackReject: () => void;
-  const playbackPromise = new Promise((resolve, reject) => {
-    playbackResolve = resolve;
-    playbackReject = reject;
-  });
+export function animate<V>({
+  from,
+  to,
+  delay,
+  driver = framesync,
+  elapsed = 0,
+  repeat: repeatMax = 0,
+  repeatType = 'loop',
+  repeatDelay = 0,
+  onPlay,
+  onRepeat,
+  onUpdate,
+  onPause,
+  ...options
+}: AnimationOptions<V>): PlaybackControls {
+  let repeatCount = 0;
+  let computedDuration = (options as KeyframeOptions).duration;
+  let isForwardPlayback = true;
 
-  const effect = getEffectFromConfig(config);
+  let cancelDriver: () => void;
+  let interpolateFromNumber: (t: number) => V;
 
-  invariant(
-    effect,
-    'No animation effect could be decided by the provided options'
-  );
+  const Animator = detectAnimationFromOptions(options);
 
-  const animation = effect.create(config);
-
-  function stop() {
-    cancelSync.update(update);
-    playbackReject && playbackReject();
+  if (Animator.needsInterpolation) {
+    interpolateFromNumber = interpolate([0, 100], [from, to], {
+      clamp: false
+    }) as (t: number) => V;
+    from = 0;
+    to = 100;
   }
 
-  let initialTime: number;
-  const update = ({ timestamp }: FrameData) => {
-    if (!initialTime) initialTime = timestamp;
+  const animation = new Animator({ ...options, from, to } as any);
 
-    const latest = animation(timestamp - initialTime);
-    onUpdate && onUpdate(latest);
-
-    if (effect.hasFinished(latest, 0, config)) {
-      cancelSync.update(update);
-      playbackResolve && playbackResolve();
+  function repeat() {
+    if (repeatCount === 0 && computedDuration === undefined) {
+      computedDuration = elapsed;
     }
-  };
+
+    repeatCount++;
+
+    const remainder = elapsed - computedDuration;
+
+    if (repeatType === 'loop') {
+      elapsed = remainder;
+    } else {
+      elapsed = computedDuration - remainder;
+      isForwardPlayback = repeatCount % 2 === 0;
+    }
+  }
+
+  function complete() {
+    cancelDriver();
+  }
+
+  function update(delta: number) {
+    if (!isForwardPlayback) delta = -delta;
+
+    elapsed += delta;
+
+    let latest = animation.update(elapsed);
+
+    if (interpolateFromNumber) {
+      latest = interpolateFromNumber(latest);
+    }
+
+    onUpdate(latest);
+
+    const isComplete = isForwardPlayback ? animation.isComplete : elapsed <= 0;
+
+    if (isComplete) {
+      repeatCount < repeatMax ? repeat() : complete();
+    }
+  }
+
+  function play() {
+    onPlay && onPlay();
+    cancelDriver = driver(update);
+  }
+
+  // TODO anime-style autoplay?
+  play();
 
   return {
-    play: () => {
-      onPlay && onPlay();
-      sync.update(update, true, true);
-
-      return playbackPromise;
-    },
+    play,
     pause: () => {
       onPause && onPause();
     },
     resume: () => {},
     reverse: () => {},
     seek: () => {},
-    stop
+    stop: () => {
+      cancelDriver();
+    }
   };
 }
-
-// export function animate(
-//   keyframes: Keyframe[],
-//   options?: KeyframeListOptions
-// ): PlaybackControls;
-// export function animate(
-//   keyframes: KeyframeMap,
-//   options?: KeyframeMapOptions
-// ): PlaybackControls;
-// export function animate(
-//   keyframes: KeyframeMap,
-//   options?: SpringOptions
-// ): PlaybackControls;
-// export function animate(
-//   values: Keyframe[] | KeyframeMap,
-//   options: AnimationOptions = {}
-// ): PlaybackControls {
-
-// }

@@ -1,8 +1,9 @@
 export { animate } from './animations';
 
 // Animations
-export { decay } from './animations/decay';
-export { spring } from './animations/spring';
+export { DecayAnimator } from './animations/decay';
+export { SpringAnimator } from './animations/spring';
+export { KeyframesAnimator } from './animations/keyframes';
 
 // Utilities
 export { angle } from './utils/angle';

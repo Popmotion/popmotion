@@ -1,5 +1,3 @@
-export type ForT = (t: number) => number;
-
 export type Point2D = {
   x: number;
   y: number;
