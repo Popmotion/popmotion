@@ -1,5 +1,4 @@
 import { Easing } from '../easing/types';
-import { FrameData } from 'framesync';
 
 export interface Animator<O, V> {
   options: O;
@@ -9,16 +8,14 @@ export interface Animator<O, V> {
 }
 
 export interface PlaybackOptions<V> {
-  delay?: number;
   driver?: Driver;
-  effect?: AnimationEffect;
   elapsed?: number;
   repeat?: number;
   repeatType?: 'loop' | 'reverse';
   repeatDelay?: number;
   onUpdate?: (latest: V) => void;
   onPlay?: () => void;
-  onPause?: () => void;
+  onComplete?: () => void;
   onRepeat?: () => void;
 }
 
@@ -41,7 +38,7 @@ export interface KeyframeOptions<V = any> {
   to: V | SingleValueKeyframes<V>;
   duration?: number;
   ease?: Easing | Easing[];
-  offset?: number[];
+  offsets?: number[];
 }
 
 export interface DecayOptions {
