@@ -33,13 +33,23 @@ export interface KeyframeListOptions {
   duration?: number;
 }
 
-export interface KeyframeOptions<V = any> {
+export interface KeyframeArrayOptions<V = any> {
+  to: SingleValueKeyframes<V>;
+}
+
+export interface KeyframeFromToOptions<V = any> {
   from?: V;
-  to: V | SingleValueKeyframes<V>;
+  to: V;
+}
+
+export type KeyframeOptions<V = any> = (
+  | KeyframeArrayOptions<V>
+  | KeyframeFromToOptions<V>
+) & {
   duration?: number;
   ease?: Easing | Easing[];
-  offsets?: number[];
-}
+  offset?: number[];
+};
 
 export interface DecayOptions {
   from?: number;
