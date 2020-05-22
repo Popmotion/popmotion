@@ -119,7 +119,7 @@ export function interpolate<T>(
   input: number[],
   output: T[],
   { clamp: isClamp = true, ease, mixer }: InterpolateOptions<T> = {}
-): Mix<T | string | number> {
+) {
   const inputLength = input.length;
 
   invariant(
@@ -148,6 +148,6 @@ export function interpolate<T>(
       : slowInterpolate(input, mixers);
 
   return isClamp
-    ? v => interpolator(clamp(input[0], input[inputLength - 1], v))
+    ? (v: number) => interpolator(clamp(input[0], input[inputLength - 1], v))
     : interpolator;
 }

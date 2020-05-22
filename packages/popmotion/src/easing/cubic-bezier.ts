@@ -28,6 +28,7 @@ const getSlope = (t: number, a1: number, a2: number) =>
 
 const subdivisionPrecision = 0.0000001;
 const subdivisionMaxIterations = 10;
+
 function binarySubdivide(
   aX: number,
   aA: number,

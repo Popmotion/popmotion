@@ -1,37 +1,57 @@
-import { ForT } from '../types';
-import { Effect } from './types';
+import { Animator, DecayOptions } from './types';
 
-interface DecayConfig {
-  from?: number;
-  velocity?: number;
-  power?: number;
-  timeConstant?: number;
-  modifyTarget?: (target: number) => number;
-  restDelta?: number;
+export class DecayAnimator implements Animator<DecayOptions, number> {
+  options: DecayOptions;
+  amplitude: number;
+  target: number;
+  static needsInterpolation = true;
+  isComplete = false;
+
+  constructor(options: DecayOptions) {
+    this.updateOptions(options);
+
+    const { power, velocity, modifyTarget, from } = this.options;
+    let amplitude = power * velocity;
+    const idealTarget = from + amplitude;
+    const target =
+      typeof modifyTarget === 'undefined'
+        ? idealTarget
+        : modifyTarget(idealTarget);
+    if (target !== idealTarget) amplitude = target - from;
+
+    this.target = target;
+    this.amplitude = amplitude;
+  }
+
+  update(t: number) {
+    const { timeConstant, restDelta } = this.options;
+    const delta = -this.amplitude * Math.exp(-t / timeConstant);
+
+    this.isComplete = !(delta > restDelta || delta < -restDelta);
+    return this.isComplete ? this.target : this.target + delta;
+  }
+
+  updateOptions({
+    velocity = 0,
+    from = 0,
+    power = 0.8,
+    timeConstant = 350,
+    restDelta = 0.5,
+    modifyTarget
+  }: DecayOptions = {}) {
+    this.options = {
+      velocity,
+      from,
+      power,
+      timeConstant,
+      restDelta,
+      modifyTarget
+    };
+  }
+
+  static uniqueOptionKeys = new Set<keyof DecayOptions>([
+    'power',
+    'timeConstant',
+    'modifyTarget'
+  ]);
 }
-
-export const decay = ({
-  velocity = 0,
-  from = 0,
-  power = 0.8,
-  timeConstant = 350,
-  modifyTarget
-}: DecayConfig): ForT => {
-  let amplitude = power * velocity;
-  const idealTarget = from + amplitude;
-  const target =
-    typeof modifyTarget === 'undefined'
-      ? idealTarget
-      : modifyTarget(idealTarget);
-  if (target !== idealTarget) amplitude = target - from;
-
-  return t => target + -amplitude * Math.exp(-t / timeConstant);
-};
-
-export const decayEffect: Effect<any> = {
-  create: decay,
-  hasFinished: (delta, _velocity, { restDelta }) => {
-    return !(delta > restDelta || delta < -restDelta);
-  },
-  uniqueOptionKeys: new Set(['power', 'timeConstant', 'modifyTarget'])
-};
