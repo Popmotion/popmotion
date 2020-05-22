@@ -24,9 +24,9 @@ export function animate<V>({
   repeatType = 'loop',
   repeatDelay = 0,
   onPlay,
+  onComplete,
   onRepeat,
   onUpdate,
-  onPause,
   ...options
 }: AnimationOptions<V>): PlaybackControls {
   let repeatCount = 0;
@@ -63,10 +63,13 @@ export function animate<V>({
       elapsed = computedDuration - remainder;
       isForwardPlayback = repeatCount % 2 === 0;
     }
+
+    onRepeat && onRepeat();
   }
 
   function complete() {
     cancelDriver();
+    onComplete && onComplete();
   }
 
   function update(delta: number) {
@@ -99,9 +102,7 @@ export function animate<V>({
 
   return {
     play,
-    pause: () => {
-      onPause && onPause();
-    },
+    pause: () => {},
     resume: () => {},
     reverse: () => {},
     seek: () => {},
