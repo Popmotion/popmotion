@@ -9,8 +9,6 @@
 
 This is the **beta** branch of Popmotion 9. The focus on this release is small, flexible functions for advanced animators.
 
-# Contents
-
 - [Install](#Install)
 - [API](#API)
   - [Animation](#Animation)
@@ -24,34 +22,7 @@ This is the **beta** branch of Popmotion 9. The focus on this release is small, 
   - [Easing](#Easing)
     - [Functions](#Functions)
     - [Create](#Create)
-      - [cubicBezier](#Create)
-      - [steps](#Create)
-      - [mirrorEasing](#Create)
-      - [reverseEasing](#Create)
-      - [createExpoIn](#Create)
-      - [createBackIn](#Create)
-      - [createAnticipate](#Create)
   - [Utils](#Utils)
-    - [angle](#Easing)
-    - [attractLinear](#Easing)
-    - [attractExpo](#Easing)
-    - [clamp](#Easing)
-    - [degreesToRadians](#Easing)
-    - [distance](#Easing)
-    - [interpolate](#Easing)
-    - [isPoint](#Easing)
-    - [isPoint3D](#Easing)
-    - [mix](#Easing)
-    - [mixColor](#Easing)
-    - [mixComplex](#Easing)
-    - [pointFromVector](#Easing)
-    - [progress](#Easing)
-    - [radiansToDegrees](#Easing)
-    - [snap](#Easing)
-    - [toDecimal](#Easing)
-    - [velocityPerFrame](#Easing)
-    - [velocityPerSecond](#Easing)
-    - [wrap](#Easing)
 
 # Install
 
