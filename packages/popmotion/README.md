@@ -1,6 +1,6 @@
 # <a href="https://popmotion.io"><img src="https://cloud.githubusercontent.com/assets/7850794/21642571/1910a15e-d27b-11e6-84c7-19e88e207c14.png" height="52" width="243" alt="Popmotion" /></a>
 
-### The animators toolbox
+### The animator's toolbox
 
 [![npm version](https://img.shields.io/npm/v/popmotion.svg?style=flat-square)](https://www.npmjs.com/package/popmotion)
 [![npm downloads](https://img.shields.io/npm/dm/popmotion.svg?style=flat-square)](https://www.npmjs.com/package/popmotion)
@@ -14,8 +14,44 @@ This is the **beta** branch of Popmotion 9. The focus on this release is small, 
 - [Install](#Install)
 - [API](#API)
   - [Animation](#Animation)
+    - [`animate`](#animate)
+    - [Options](#options)
+    - [Callbacks](#callbacks)
+    - [Keyframes Options](#callbacks)
+    - [Spring Options](#callbacks)
+    - [Decay Options](#callbacks)
+    - [Controls](#callbacks)
   - [Easing](#Easing)
+    - [Functions](#Functions)
+    - [Create](#Create)
+      - [cubicBezier](#Create)
+      - [steps](#Create)
+      - [mirrorEasing](#Create)
+      - [reverseEasing](#Create)
+      - [createExpoIn](#Create)
+      - [createBackIn](#Create)
+      - [createAnticipate](#Create)
   - [Utils](#Utils)
+    - [angle](#Easing)
+    - [attractLinear](#Easing)
+    - [attractExpo](#Easing)
+    - [clamp](#Easing)
+    - [degreesToRadians](#Easing)
+    - [distance](#Easing)
+    - [interpolate](#Easing)
+    - [isPoint](#Easing)
+    - [isPoint3D](#Easing)
+    - [mix](#Easing)
+    - [mixColor](#Easing)
+    - [mixComplex](#Easing)
+    - [pointFromVector](#Easing)
+    - [progress](#Easing)
+    - [radiansToDegrees](#Easing)
+    - [snap](#Easing)
+    - [toDecimal](#Easing)
+    - [velocityPerFrame](#Easing)
+    - [velocityPerSecond](#Easing)
+    - [wrap](#Easing)
 
 # Install
 
@@ -74,7 +110,7 @@ animate({
 
 The type of animation performed will be automatically detected from the provided options.
 
-### `AnimationOptions`
+### Options
 
 These options can be set for **all animations**:
 
@@ -158,7 +194,7 @@ animate({
 })
 ```
 
-### `AnimationCallbacks`
+### Callbacks
 
 These callbacks can be set for **all animations**:
 
@@ -207,7 +243,7 @@ animate({
 })
 ```
 
-### `KeyframeOptions`
+### Keyframes Options
 
 A keyframes animation is the default animation and it can be defined either with a `from` and `to` option:
 
@@ -345,7 +381,7 @@ animate({
 
 TODO
 
-### `PlaybackControls`
+### Controls
 
 `animate` returns `PlaybackControls`, which can be used to control the playback of the animation.
 
@@ -392,7 +428,7 @@ const easedProgress = easeInOut(progress)
  - `bounceInOut`
  - `bounceOut`
 
-### Factories
+### Create
 
 #### `cubicBezier`
 
