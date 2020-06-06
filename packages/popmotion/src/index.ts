@@ -26,13 +26,7 @@ export {
   tween
 };
 
-// Input
-import listen from './input/listen';
-import multitouch from './input/multitouch';
-import pointer from './input/pointer';
-import mouse from './input/pointer/mouse';
-
-export { listen, pointer, mouse, multitouch };
+// Input removed (listen, pointer, mouse, multitouch)
 
 // Compositors
 import chain from './compositors/chain';
