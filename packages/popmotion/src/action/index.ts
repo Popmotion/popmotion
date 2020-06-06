@@ -1,7 +1,7 @@
 import createObserver from '../observer';
 import { Middleware, ObserverCandidate, Update } from '../observer/types';
 import { ActionInit, ActionProps, ColdSubscription } from './types';
-import { Props } from '../chainable/types';
+import { Props, Predicate } from '../chainable/types';
 import { pipe } from '@popmotion/popcorn';
 
 export class Action {
@@ -49,6 +49,12 @@ export class Action {
     const pipedUpdate = funcs.length === 1 ? funcs[0] : pipe(...funcs);
 
     return this.applyMiddleware(update => v => update(pipedUpdate(v)));
+  }
+
+  while(predicate: Predicate): Action {
+    return this.applyMiddleware((update, complete) => v =>
+      predicate(v) ? update(v) : complete()
+    );
   }
 }
 
