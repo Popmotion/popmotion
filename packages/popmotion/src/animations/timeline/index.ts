@@ -9,7 +9,7 @@ import keyframes from '../keyframes';
 import { KeyframesProps } from '../keyframes/types';
 import { easeInOut, linear } from '@popmotion/easing';
 import composite from '../../compositors/composite';
-import { TweenProps, TweenInterface } from '../tween/types';
+import { TweenProps } from '../tween/types';
 import { Value } from '../../reactions/value';
 
 const DEFAULT_DURATION = 300;
@@ -30,8 +30,8 @@ const flattenTimings = (instructions: Instruction[]) => {
     if (i !== numSegments - 1) {
       const duration =
         (item as AnimationDefinition).duration || DEFAULT_DURATION;
-      offset = staggerDelay as number;
-      flatInstructions.push(`${offset - duration}`);
+      offset += staggerDelay as number;
+      flatInstructions.push(`-${duration - offset}`);
     }
   });
 
@@ -93,10 +93,10 @@ const convertDefToProps = (
 };
 
 // TODO replace most of these steps with reduce when TS bug is fixed
-const timeline = <V = any>(
+const timeline = (
   instructions: Instruction[],
   { duration, elapsed, ease, loop, flip, yoyo }: TweenProps = {}
-): Action<TweenInterface<V>> => {
+): Action => {
   let playhead = 0;
   let calculatedDuration = 0;
 
@@ -168,7 +168,7 @@ const timeline = <V = any>(
     }
   }
 
-  return composite(trackKeyframes) as any;
+  return composite(trackKeyframes);
 };
 
 export default timeline;

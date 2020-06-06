@@ -4,9 +4,7 @@ import { ActionInit, ActionProps, ColdSubscription } from './types';
 import { Props } from '../chainable/types';
 import { pipe } from '@popmotion/popcorn';
 
-export class Action<
-  Sub extends ColdSubscription = ColdSubscription
-> extends Chainable<Action> {
+export class Action {
   props: Props;
 
   constructor(props: Props = {}) {
@@ -17,7 +15,7 @@ export class Action<
     return new Action(props);
   }
 
-  start(observerCandidate: ObserverCandidate = {}): Sub {
+  start(observerCandidate: ObserverCandidate = {}): ColdSubscription {
     let isComplete = false;
     let subscription: ColdSubscription = {
       stop: () => undefined
@@ -35,7 +33,7 @@ export class Action<
 
     if (isComplete) subscription.stop();
 
-    return subscription as any;
+    return subscription;
   }
 
   applyMiddleware(middleware: Middleware): Action {
@@ -54,6 +52,4 @@ export class Action<
   }
 }
 
-export default <Sub extends ColdSubscription = ColdSubscription>(
-  init: ActionInit
-) => new Action<Sub>({ init });
+export default (init: ActionInit) => new Action({ init });
