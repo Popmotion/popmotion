@@ -39,7 +39,8 @@
     "build": "rollup -c && tsc --emitDeclarationOnly && npm run measure",
     "postbuild": "yarn babel $npm_package_module --out-file $npm_package_module --no-babelrc --plugins annotate-pure-calls",
     "watch": "rollup -c -w",
-    "prepublishOnly": "npm run test && npm run build",
+    "raze": "rm -rf lib dist",
+    "prepublishOnly": "npm run raze && npm run test && npm run build",
     "measure": "gzip -c $npm_package_unpkg | wc -c",
     "test": "jest --maxWorkers=2",
     "publish-beta": "npm publish --tag beta"
