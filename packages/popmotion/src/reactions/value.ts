@@ -79,7 +79,9 @@ export class ValueReaction extends BaseMulticast<ValueReaction> {
     sync.postRender(this.scheduleVelocityCheck);
   }
 
-  scheduleVelocityCheck = () => sync.postRender(this.velocityCheck);
+  scheduleVelocityCheck = () => {
+    sync.postRender(this.velocityCheck);
+  };
 
   velocityCheck = ({ timestamp }: FrameData) => {
     if (timestamp !== this.lastUpdated) {
