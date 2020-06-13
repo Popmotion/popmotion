@@ -2,6 +2,18 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+
+### Fixed
+
+- Revised ValueReaction so its declaration is static [#580](https://github.com/framer/motion/issues/580)
+
+## [8.7.3] 2020-05-08
+
+### Fixed
+
+- Cleaned release [#878](https://github.com/Popmotion/popmotion/issues/878)
+
 ## [8.7.2] 2020-04-28
 
 ### Fixed
@@ -30,7 +42,7 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- Fixing undefined action creator. (https://github.com/Popmotion/popmotion/issues/794)[#794]
+- Fixing undefined action creator. [#794](https://github.com/Popmotion/popmotion/issues/794)
 
 ## [8.6.9] 2019-05-01
 
@@ -48,7 +60,7 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- Making `inertia.complete` call conditional on there not being a subsequent animation. (https://github.com/Popmotion/popmotion/pull/763)[#763]
+- Making `inertia.complete` call conditional on there not being a subsequent animation. [#763](https://github.com/Popmotion/popmotion/pull/763)
 
 ## [8.6.6] 2019-04-01
 
