@@ -19,7 +19,7 @@ const isHsla = (v: Color): v is HSLA => (v as HSLA).hue !== undefined;
 
 function getValuesAsArray(value: string): string[] {
   return getValueFromFunctionString(value)
-    .replace(/,/g, ' ') // Convert '0, 0' to '0  0'
+    .replace(/(,|\/)/g, ' ') // Convert '0, 0' to '0  0'
     .split(/ \s*/); // Split '0 0' into ['0','0']
 }
 
