@@ -22,8 +22,14 @@ describe('regex', () => {
   it('should correctly identify values', () => {
     expect(singleColorRegex.test('#fff000')).toBe(true);
     expect(singleColorRegex.test('rgba(161, 0, 246, 0)')).toBe(true);
+    expect(
+      singleColorRegex.test('rgba(161 0 246 / 0) rgba(161 0 246 / 0)')
+    ).toBe(false);
     expect(singleColorRegex.test('#fff000 #fff000')).toBe(false);
     expect(colorRegex.test('#fff000 #fff000')).toBe(true);
+    expect(colorRegex.test('rgba(161 0 246 / 0) rgba(161 0 246 / 0)')).toBe(
+      true
+    );
   });
 });
 
@@ -46,8 +52,8 @@ describe('complex value type', () => {
       0,
       0
     ]);
-    expect(complex.parse('0px 0px 0px rgba(161 0 246 0)')).toEqual([
-      { red: 161, green: 0, blue: 246, alpha: 0 },
+    expect(complex.parse('0px 0px 0px rgba(161 0 246 / 0.5)')).toEqual([
+      { red: 161, green: 0, blue: 246, alpha: 0.5 },
       0,
       0,
       0
@@ -132,7 +138,7 @@ describe('hex()', () => {
 describe('rgba()', () => {
   it('should correctly test for colors', () => {
     expect(rgba.test('rgba(255, 0, 0, 0.5)')).toEqual(true);
-    expect(rgba.test('rgba(255 0 0 0.5)')).toEqual(true);
+    expect(rgba.test('rgba(255 0 0 / 0.5)')).toEqual(true);
     expect(rgba.test('rgba(255, 0, 0, 0.5) 0px')).toEqual(false);
   });
 
@@ -140,7 +146,7 @@ describe('rgba()', () => {
     expect(rgba.parse('rgba(255, 0, 0, 0.5)')).toEqual({ ...red, alpha: 0.5 });
     expect(rgba.parse('rgb(255,0,0)')).toEqual(red);
     expect(rgba.parse('rgb(255 0 0)')).toEqual(red);
-    expect(rgba.parse('rgba(161 0 246 0)')).toEqual({
+    expect(rgba.parse('rgba(161 0 246 / 0)')).toEqual({
       red: 161,
       green: 0,
       blue: 246,
@@ -159,8 +165,8 @@ describe('hsla()', () => {
   it('should correctly test for colors', () => {
     expect(hsla.test('hsla(170, 50%, 45%, 1)')).toEqual(true);
     expect(hsla.test('hsla(177, 37.4978%, 76.66804%, 1)')).toEqual(true);
-    expect(hsla.test('hsla(170 50% 45% 1)')).toEqual(true);
-    expect(hsla.test('hsla(177 37.4978% 76.66804% 1)')).toEqual(true);
+    expect(hsla.test('hsla(170 50% 45% / 1)')).toEqual(true);
+    expect(hsla.test('hsla(177 37.4978% 76.66804% / 1)')).toEqual(true);
     expect(hsla.test('hsla(170, 50%, 45%, 1) 0px')).toEqual(false);
   });
 
@@ -175,11 +181,17 @@ describe('hsla()', () => {
       lightness: 76.66804,
       alpha: 1
     });
-    expect(hsla.parse('hsla(177 37.4978% 76.66804% 1)')).toEqual({
+    expect(hsla.parse('hsla(177 37.4978% 76.66804% / 1)')).toEqual({
       hue: 177,
       saturation: 37.4978,
       lightness: 76.66804,
       alpha: 1
+    });
+    expect(hsla.parse('hsla(177 37.4978% 76.66804% / 0.5)')).toEqual({
+      hue: 177,
+      saturation: 37.4978,
+      lightness: 76.66804,
+      alpha: 0.5
     });
     expect(hsla.parse(hslaTestColor)).toEqual(hslaTestColor);
   });
