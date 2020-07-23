@@ -46,6 +46,12 @@ describe('complex value type', () => {
       0,
       0
     ]);
+    expect(complex.parse('0px 0px 0px rgba(161 0 246 0)')).toEqual([
+      { red: 161, green: 0, blue: 246, alpha: 0 },
+      0,
+      0,
+      0
+    ]);
   });
 
   it('createTransformer returns a transformer function that correctly inserts values', () => {
@@ -126,12 +132,20 @@ describe('hex()', () => {
 describe('rgba()', () => {
   it('should correctly test for colors', () => {
     expect(rgba.test('rgba(255, 0, 0, 0.5)')).toEqual(true);
+    expect(rgba.test('rgba(255 0 0 0.5)')).toEqual(true);
     expect(rgba.test('rgba(255, 0, 0, 0.5) 0px')).toEqual(false);
   });
 
   it('should split an rgba value into the correct params', () => {
     expect(rgba.parse('rgba(255, 0, 0, 0.5)')).toEqual({ ...red, alpha: 0.5 });
     expect(rgba.parse('rgb(255,0,0)')).toEqual(red);
+    expect(rgba.parse('rgb(255 0 0)')).toEqual(red);
+    expect(rgba.parse('rgba(161 0 246 0)')).toEqual({
+      red: 161,
+      green: 0,
+      blue: 246,
+      alpha: 0
+    });
     expect(rgba.parse(red)).toEqual(red);
   });
 
@@ -144,18 +158,43 @@ describe('rgba()', () => {
 describe('hsla()', () => {
   it('should correctly test for colors', () => {
     expect(hsla.test('hsla(170, 50%, 45%, 1)')).toEqual(true);
+    expect(hsla.test('hsla(177, 37.4978%, 76.66804%, 1)')).toEqual(true);
+    expect(hsla.test('hsla(170 50% 45% 1)')).toEqual(true);
+    expect(hsla.test('hsla(177 37.4978% 76.66804% 1)')).toEqual(true);
     expect(hsla.test('hsla(170, 50%, 45%, 1) 0px')).toEqual(false);
   });
 
   it('should split an hsl value into the correct params', () => {
     expect(hsla.parse('hsla(170, 50%, 45%, 1)')).toEqual(hslaTestColor);
     expect(hsla.parse('hsl(170, 50%, 45%)')).toEqual(hslaTestColor);
+    expect(hsla.parse('hsla(170 50% 45% 1)')).toEqual(hslaTestColor);
+    expect(hsla.parse('hsl(170 50% 45%)')).toEqual(hslaTestColor);
+    expect(hsla.parse('hsla(177, 37.4978%, 76.66804%, 1)')).toEqual({
+      hue: 177,
+      saturation: 37.4978,
+      lightness: 76.66804,
+      alpha: 1
+    });
+    expect(hsla.parse('hsla(177 37.4978% 76.66804% 1)')).toEqual({
+      hue: 177,
+      saturation: 37.4978,
+      lightness: 76.66804,
+      alpha: 1
+    });
     expect(hsla.parse(hslaTestColor)).toEqual(hslaTestColor);
   });
 
   it('should correctly combine hsla value', () => {
     expect(hsla.transform(hslaTestColor)).toEqual('hsla(170, 50%, 45%, 1)');
     expect(hsla.transform(hslaOutOfRange)).toEqual('hsla(170, 50%, 45%, 1)');
+    expect(
+      hsla.transform({
+        hue: 177,
+        saturation: 37.4978,
+        lightness: 76.66804,
+        alpha: 1
+      })
+    ).toEqual('hsla(177, 37.4978%, 76.66804%, 1)');
   });
 });
 

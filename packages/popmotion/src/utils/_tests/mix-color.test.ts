@@ -38,6 +38,10 @@ test('mixColor hsla', () => {
   expect(mixColor('hsla(120, 0%, 0%, 0)', 'hsla(360, 100%, 50%, 1)')(0.5)).toBe(
     'hsla(240, 50%, 25%, 0.5)'
   );
+
+  expect(
+    mixColor('hsla(177, 37.4978%, 76.66804%, 1)', 'hsla(0, 0%, 100%, 1)')(0.5)
+  ).toBe('');
 });
 
 test('mixColor hsla out of bounds', () => {

@@ -13,12 +13,15 @@ export const getValueFromFunctionString = (value: string) =>
 
 const clampRgbUnit = clamp(0, 255);
 
-<<<<<<< HEAD
 // Prefer speed over completeness
-=======
->>>>>>> Replacing missing style-value-types
 const isRgba = (v: Color): v is RGBA => (v as RGBA).red !== undefined;
 const isHsla = (v: Color): v is HSLA => (v as HSLA).hue !== undefined;
+
+function getValuesAsArray(value: string): string[] {
+  return getValueFromFunctionString(value)
+    .replace(/,/g, ' ') // Convert '0, 0' to '0  0'
+    .split(/ \s*/); // Split '0 0' into ['0','0']
+}
 
 /**
  * Creates a function that will split color
@@ -29,7 +32,7 @@ const splitColorValues = (terms: string[]) => {
   return (v: string | RGBA | HSLA) => {
     if (typeof v !== 'string') return v;
     const values: NumberMap = {};
-    const valuesArray = getValueFromFunctionString(v).split(/,\s*/); // Split '0,0' into ['0','0']
+    const valuesArray = getValuesAsArray(v);
 
     // 4 because there are four props in each color type
     for (let i = 0; i < 4; i++) {
