@@ -145,6 +145,12 @@ describe('rgba()', () => {
   it('should split an rgba value into the correct params', () => {
     expect(rgba.parse('rgba(255, 0, 0, 0.5)')).toEqual({ ...red, alpha: 0.5 });
     expect(rgba.parse('rgb(255,0,0)')).toEqual(red);
+    expect(rgba.parse('rgb(255,250,1)')).toEqual({
+      red: 255,
+      green: 250,
+      blue: 1,
+      alpha: 1
+    });
     expect(rgba.parse('rgb(255 0 0)')).toEqual(red);
     expect(rgba.parse('rgba(161 0 246 / 0)')).toEqual({
       red: 161,
