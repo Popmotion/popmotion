@@ -43,7 +43,7 @@ export function animate<V extends Animatable>({
 
     const Animator = detectAnimationFromOptions(options)
 
-    if (Animator.needsInterpolation) {
+    if (Animator.needsInterpolation(from, to as Animatable)) {
         interpolateFromNumber = interpolate([0, 100], [from, to], {
             clamp: false,
         }) as (t: number) => V
