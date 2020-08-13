@@ -93,6 +93,17 @@ test("interpolate objects", () => {
     expect(a(50)).toEqual({ opacity: 0.5 })
 })
 
+test("interpolate arrays", () => {
+    const a = interpolate(
+        [0, 100],
+        [
+            [100, 300],
+            [0, 600],
+        ]
+    )
+    expect(a(50)).toEqual([50, 450])
+})
+
 test("custom mixer", () => {
     const a = interpolate([0, 1], [0, 1], {
         mixer: (from: number, to: number) => (p: number) => 42,

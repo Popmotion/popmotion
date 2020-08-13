@@ -1,17 +1,21 @@
-const identity = (v: any): any => v;
+const identity = (v: any): any => v
 
-export const attract = (alterDisplacement: Function = identity) => (
-  constant: number,
-  origin: number,
-  v: number
+/**
+ * Creates an attractor that, given a strength constant, origin and value,
+ * will calculate value as attracted to origin.
+ */
+export const createAttractor = (alterDisplacement: Function = identity) => (
+    constant: number,
+    origin: number,
+    v: number
 ) => {
-  const displacement = origin - v;
-  const springModifiedDisplacement =
-    -(0 - constant + 1) * (0 - alterDisplacement(Math.abs(displacement)));
-  return displacement <= 0
-    ? origin + springModifiedDisplacement
-    : origin - springModifiedDisplacement;
-};
+    const displacement = origin - v
+    const springModifiedDisplacement =
+        -(0 - constant + 1) * (0 - alterDisplacement(Math.abs(displacement)))
+    return displacement <= 0
+        ? origin + springModifiedDisplacement
+        : origin - springModifiedDisplacement
+}
 
-export const attractLinear = attract();
-export const attractExpo = attract(Math.sqrt);
+export const attract = createAttractor()
+export const attractExpo = createAttractor(Math.sqrt)

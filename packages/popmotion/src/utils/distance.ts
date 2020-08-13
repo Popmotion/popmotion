@@ -1,9 +1,9 @@
-import { Point } from '../types';
-import { isPoint } from './is-point';
-import { isPoint3D } from './is-point-3d';
-import { zeroPoint, isNum } from './inc';
+import { Point } from "../types"
+import { isPoint } from "./is-point"
+import { isPoint3D } from "./is-point-3d"
+import { isNum } from "./inc"
 
-const distance1D = (a: number, b: number) => Math.abs(a - b);
+const distance1D = (a: number, b: number) => Math.abs(a - b)
 
 /*
   Distance
@@ -15,22 +15,16 @@ const distance1D = (a: number, b: number) => Math.abs(a - b);
   @return [number]: The distance between the two points
 */
 
-// couldn't inline this below, because TS emitted declarations with wrong path references
-type _Point = Point | number;
+export function distance<P extends Point | number>(a: P, b: P): number {
+    if (isNum(a) && isNum(b)) {
+        // 1D dimensions
+        return distance1D(a, b)
+    } else if (isPoint(a) && isPoint(b)) {
+        // Multi-dimensional
+        const xDelta = distance1D(a.x, b.x)
+        const yDelta = distance1D(a.y, b.y)
+        const zDelta = isPoint3D(a) && isPoint3D(b) ? distance1D(a.z, b.z) : 0
 
-export const distance = (a: _Point, b: _Point = zeroPoint): number => {
-  // 1D dimensions
-  if (isNum(a) && isNum(b)) {
-    return distance1D(a, b);
-
-    // Multi-dimensional
-  } else if (isPoint(a) && isPoint(b)) {
-    const xDelta = distance1D(a.x, b.x);
-    const yDelta = distance1D(a.y, b.y);
-    const zDelta = isPoint3D(a) && isPoint3D(b) ? distance1D(a.z, b.z) : 0;
-
-    return Math.sqrt(xDelta ** 2 + yDelta ** 2 + zDelta ** 2);
-  }
-
-  return 0;
-};
+        return Math.sqrt(xDelta ** 2 + yDelta ** 2 + zDelta ** 2)
+    }
+}
