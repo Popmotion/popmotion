@@ -1,4 +1,5 @@
 import {
+  Animatable,
   AnimationOptions,
   Driver,
   PlaybackControls,
@@ -14,10 +15,10 @@ const framesync: Driver = update => {
   return () => cancelSync.update(passTimestamp);
 };
 
-export function animate<V>({
+export function animate<V extends Animatable>({
   from,
   to,
-  delay,
+  autoplay = true,
   driver = framesync,
   elapsed = 0,
   repeat: repeatMax = 0,
@@ -30,7 +31,7 @@ export function animate<V>({
   ...options
 }: AnimationOptions<V>): PlaybackControls {
   let repeatCount = 0;
-  let computedDuration = (options as KeyframeOptions).duration;
+  let computedDuration = (options as KeyframeOptions<V>).duration;
   let isForwardPlayback = true;
 
   let cancelDriver: () => void;
@@ -42,8 +43,8 @@ export function animate<V>({
     interpolateFromNumber = interpolate([0, 100], [from, to], {
       clamp: false
     }) as (t: number) => V;
-    from = 0;
-    to = 100;
+    from = 0 as V;
+    to = 100 as V;
   }
 
   const animation = new Animator({ ...options, from, to } as any);
@@ -97,8 +98,7 @@ export function animate<V>({
     cancelDriver = driver(update);
   }
 
-  // TODO anime-style autoplay?
-  play();
+  autoplay && play();
 
   return {
     play,
@@ -106,8 +106,6 @@ export function animate<V>({
     resume: () => {},
     reverse: () => {},
     seek: () => {},
-    stop: () => {
-      cancelDriver();
-    }
+    stop: cancelDriver
   };
 }

@@ -1,11 +1,7 @@
 export { animate } from './animations';
-
-// Animators
 export { DecayAnimator } from './animations/decay';
 export { SpringAnimator } from './animations/spring';
 export { KeyframesAnimator } from './animations/keyframes';
-
-// Utilities
 export { angle } from './utils/angle';
 export { applyOffset } from './utils/apply-offset';
 export { attract, attractLinear, attractExpo } from './utils/attract';
@@ -29,8 +25,6 @@ export { toDecimal } from './utils/to-decimal';
 export { velocityPerFrame } from './utils/velocity-per-frame';
 export { velocityPerSecond } from './utils/velocity-per-second';
 export { wrap } from './utils/wrap';
-
-// Easing
 export {
   linear,
   easeIn,
@@ -56,7 +50,3 @@ export {
   createBackIn,
   createAnticipate
 } from './easing/utils';
-
-// // Worklet
-// export { animate } from './worklet/animate';
-// export { workletReady } from './worklet/load-worklet';
