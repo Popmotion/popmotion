@@ -22,7 +22,7 @@ export class KeyframesAnimator implements Animator<KeyframeOptions, any> {
     options: KeyframeOptions
 
     isComplete = false
-    static needsInterpolation = false
+    static needsInterpolation = () => false
 
     interpolator: (t: number) => any
 
