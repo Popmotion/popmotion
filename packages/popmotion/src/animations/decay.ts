@@ -21,8 +21,6 @@ export class DecayAnimator implements Animator<DecayOptions, number> {
 
         this.target = target
         this.amplitude = amplitude
-
-        console.log(this.target, this.amplitude)
     }
 
     update(t: number) {

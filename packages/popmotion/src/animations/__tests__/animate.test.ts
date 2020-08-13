@@ -329,6 +329,33 @@ describe("animate", () => {
         })
     })
 
+    test("Runs animations as a decay with modifyTarget", () => {
+        const output = []
+        const expected = [
+            100,
+            213,
+            277,
+            313,
+            334,
+            345,
+            352,
+            355,
+            357,
+            358,
+            359,
+            360,
+        ]
+        animate({
+            from: 100,
+            velocity: 100,
+            power: 0.8,
+            modifyTarget: v => v * 2,
+            driver: syncDriver(200),
+            onUpdate: v => output.push(Math.round(v)),
+            onComplete: () => expect(output).toEqual(expected),
+        })
+    })
+
     test("Repeats decay", () => {
         const output = []
         const expected = [135, 154, 166, 172, 175, 177, 179, 179, 180]
