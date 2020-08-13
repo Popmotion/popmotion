@@ -70,9 +70,9 @@ export interface KeyframeOptions<V extends Animatable = number> {
     offset?: number[]
 }
 
-export interface DecayOptions<T extends Animatable = number> {
-    from?: T
-    to?: T
+export interface DecayOptions {
+    from?: number
+    to?: number
     velocity?: number
     power?: number
     timeConstant?: number
@@ -92,7 +92,7 @@ export interface SpringOptions<T extends Animatable = number> {
 }
 
 export type AnimationOptions<V extends Animatable> = PlaybackOptions<V> &
-    (DecayOptions<V> | KeyframeOptions<V> | SpringOptions<V>)
+    (DecayOptions | KeyframeOptions<V> | SpringOptions<V>)
 
 // /**
 //  * TODO: Implement
