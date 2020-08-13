@@ -54,13 +54,14 @@ It can animate numbers:
 animate({ from: 0, to: 100 })
 ```
 
-Strings of the same type:
+Or strings of the same type:
 
 ```javascript
 animate({ from: "0px", to: "100px" })
 animate({ from: "#fff", to: "#000" })
 ```
 
+<!--
 Arrays of the above:
 
 ```javascript
@@ -78,6 +79,7 @@ animate({
   to: { x: 100, backgroundColor: "#000" }
 })
 ```
+-->
 
 The type of animation performed will be automatically detected from the provided options.
 

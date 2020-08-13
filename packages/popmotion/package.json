@@ -37,7 +37,7 @@
   "analyze": true,
   "license": "MIT",
   "scripts": {
-    "build": "rollup -c && tsc --emitDeclarationOnly && npm run measure",
+    "build": "tsc -p . && rollup -c && yarn measure",
     "postbuild": "yarn babel $npm_package_module --out-file $npm_package_module --no-babelrc --plugins annotate-pure-calls",
     "dev": "rollup -c -w",
     "prepublishOnly": "npm run test && npm run build",
@@ -48,7 +48,7 @@
   "dependencies": {
     "framesync": "^4.0.4",
     "hey-listen": "^1.0.8",
-    "style-value-types": "^3.1.7",
+    "style-value-types": "^3.1.9",
     "tslib": "^1.10.0"
   },
   "devDependencies": {
