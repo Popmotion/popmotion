@@ -23,6 +23,8 @@ export class DecayAnimator implements Animator<DecayOptions, number> {
         this.amplitude = amplitude
     }
 
+    flipTarget() {}
+
     update(t: number) {
         const { timeConstant, restDelta } = this.options
         const delta = -this.amplitude * Math.exp(-t / timeConstant)

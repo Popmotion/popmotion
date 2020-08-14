@@ -26,18 +26,22 @@ export class KeyframesAnimator implements Animator<KeyframeOptions, any> {
 
     interpolator: (t: number) => any
 
+    values: any[]
+
     constructor(options: KeyframeOptions) {
         this.updateOptions(options)
 
-        const { from, to, duration } = this.options
-        let { ease, offset } = this.options
+        const { from, to } = this.options
+        this.values = Array.isArray(to) ? to : [from, to]
+        this.createInterpolator()
+    }
 
-        const values = Array.isArray(to) ? to : [from, to]
-        ease = Array.isArray(ease) ? ease : defaultEasing(values, ease)
-        offset = offset || defaultOffset(values)
+    private createInterpolator() {
+        let { duration, ease, offset } = this.options
+        ease = Array.isArray(ease) ? ease : defaultEasing(this.values, ease)
+        offset = offset || defaultOffset(this.values)
         const times = convertOffsetToTimes(offset, duration)
-
-        this.interpolator = interpolate(times, values, { ease })
+        this.interpolator = interpolate(times, this.values, { ease })
     }
 
     update(t: number) {
@@ -54,6 +58,11 @@ export class KeyframesAnimator implements Animator<KeyframeOptions, any> {
         duration = 300,
     }: KeyframeOptions) {
         this.options = { from, to, ease, offset, duration }
+    }
+
+    flipTarget() {
+        this.values.reverse()
+        this.createInterpolator()
     }
 
     static uniqueOptionKeys = new Set<keyof KeyframeOptions<number | string>>([
