@@ -15,20 +15,22 @@ Popmotion is:
 - **Stable**: It's written in TypeScript and enjoys over 95% test coverage.
 - **Tiny**: `animate` is just ~4.5kb, and every function is individually importable.
 
+# Contents
+
 - [Install](#Install)
 - [API](#API)
   - [Animation](#Animation)
     - [`animate`](#animate)
     - [Options](#options)
     - [Callbacks](#callbacks)
-    - [Keyframes Options](#callbacks)
-    - [Spring Options](#callbacks)
-    - [Decay Options](#callbacks)
-    - [Controls](#callbacks)
-  - [Easing](#Easing)
-    - [Functions](#Functions)
-    - [Create](#Create)
-  - [Utils](#Utils)
+    - [Keyframes options](#keyframes-options)
+    - [Spring options](#spring-options)
+    - [Decay options](#decay-options)
+    - [Controls](#controls)
+  - [Easing](#easing)
+    - [Functions](#functions)
+    - [Create](#create)
+  - [Utils](#utils)
 
 # Install
 
@@ -484,6 +486,8 @@ animate({
 ### Controls
 
 `animate` returns `PlaybackControls`, which can be used to control the playback of the animation.
+
+Currently this only includes a `stop` method, but will expand with more.
 
 #### `stop()`
 
