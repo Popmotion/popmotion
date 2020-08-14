@@ -40,7 +40,7 @@
         "build": "rollup -c && tsc --emitDeclarationOnly && yarn measure",
         "postbuild": "yarn babel $npm_package_module --out-file $npm_package_module --no-babelrc --plugins annotate-pure-calls",
         "dev": "rollup -c -w",
-        "prepublishOnly": "npm run test && npm run build",
+        "prepublishOnly": "yarn test && yarn build",
         "measure": "gzip -c $npm_package_unpkg | wc -c",
         "test": "jest --coverage --maxWorkers=2",
         "publish-beta": "npm publish --tag beta"
