@@ -2,3 +2,4 @@
 docs
 webpack.config.js
 tmp
+/coverage
