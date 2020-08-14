@@ -1,4 +1,4 @@
-# <a href="https://popmotion.io"><img src="https://cloud.githubusercontent.com/assets/7850794/21642571/1910a15e-d27b-11e6-84c7-19e88e207c14.png" height="52" width="243" alt="Popmotion" /></a>
+# <a href="https://popmotion.io"><img src="https://user-images.githubusercontent.com/7850794/90245722-80926e80-de33-11ea-9c39-ea6c5b344217.png" height="52" width="243" alt="Popmotion" /></a>
 
 ### The animator's toolbox
 
@@ -878,4 +878,3 @@ import { wrap } from "popmotion"
 wrap(0, 1, 0.5); // 0.5
 wrap(0, 1, 1.5); // 0.5
 ```
-
