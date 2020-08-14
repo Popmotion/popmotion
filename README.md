@@ -7,7 +7,7 @@
 [![Twitter Follow](https://img.shields.io/twitter/follow/popmotionjs.svg?style=social&label=Follow)](http://twitter.com/popmotionjs)
 [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/popmotion)
 
-This is the **beta** branch of Popmotion 9. The focus on this release is small, flexible functions for advanced animators.
+This is the **Release candidate** for Popmotion 9. The focus on this release is small, flexible functions for advanced animators.
 
 Popmotion is:
 - **Powerful**: It supports keyframe, spring and decay animations for numbers, colors and complex strings.
@@ -35,7 +35,7 @@ Popmotion is:
 # Install
 
 ```bash
-npm install popmotion@beta
+npm install popmotion@rc
 ```
 
 # API
