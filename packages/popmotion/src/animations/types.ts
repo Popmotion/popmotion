@@ -57,6 +57,7 @@ export interface PlaybackOptions<V extends Animatable> {
     repeat?: number
     repeatType?: "loop" | "reverse" | "mirror"
     repeatDelay?: number
+    type?: "spring" | "decay" | "keyframes"
     onUpdate?: (latest: V) => void
     onPlay?: () => void
     onComplete?: () => void

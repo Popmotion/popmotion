@@ -87,7 +87,7 @@ animate({
 ```
 -->
 
-The type of animation performed will be automatically detected from the provided options.
+The type of animation performed will be automatically detected from the provided options, or can be chosen manually by defining `type` as `"keyframes"`, `"spring"` or `"decay"`.
 
 ### Options
 
@@ -173,9 +173,18 @@ animate({
 })
 ```
 
-### Callbacks
+### `type`
 
-These callbacks can be set for **all animations**:
+`animate` will automatically detect the type of animation to use based on the options provided. But a specific type can be chosen manually by defining `type` as `"keyframes"`, `"spring"` or `"decay"`.
+
+```jsx
+animate({
+  to: 100,
+  type: "spring"
+})
+```
+
+### Callbacks
 
 #### `onUpdate`
 
@@ -222,7 +231,7 @@ animate({
 })
 ```
 
-### Keyframes Options
+### Keyframes options
 
 A keyframes animation is the default animation and it can be defined either with a `from` and `to` option:
 

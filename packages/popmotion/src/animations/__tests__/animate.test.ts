@@ -33,6 +33,19 @@ describe("animate", () => {
         testAnimate({ to: 100 }, [0, 20, 40, 60, 80, 100])
     })
 
+    test("Correctly uses a spring if type is defined explicitly", () => {
+        const output = []
+        animate({
+            driver: syncDriver(20),
+            duration: 100,
+            ease: linear,
+            onUpdate: v => output.push(v),
+            onComplete: () =>
+                expect(output).not.toEqual([0, 20, 40, 60, 80, 100]),
+            type: "spring",
+        })
+    })
+
     test("Performs a keyframes animations when to is an array", () => {
         testAnimate({ to: [0, 50, -20], duration: 200 }, [
             0,
