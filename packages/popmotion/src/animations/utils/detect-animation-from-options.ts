@@ -16,10 +16,13 @@ interface Options {
 
 export function detectAnimationFromOptions<T extends Options>(config: T) {
     if (types[config.type]) return types[config.type]
+
     for (const key in config) {
         for (let i = 0; i < numAnimators; i++) {
             const animator = animators[i]
             if ((animator.uniqueOptionKeys as any).has(key)) return animator
         }
     }
+
+    return KeyframesAnimator
 }
