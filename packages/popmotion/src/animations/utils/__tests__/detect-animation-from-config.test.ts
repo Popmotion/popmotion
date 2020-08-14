@@ -12,7 +12,7 @@ describe("detectAnimationFromOptions", () => {
             KeyframesAnimator
         )
         expect(detectAnimationFromOptions({ power: 2 })).toBe(DecayAnimator)
-        expect(detectAnimationFromOptions({ a: 2 })).toBe(undefined)
+        expect(detectAnimationFromOptions({ a: 2 })).toBe(KeyframesAnimator)
         expect(detectAnimationFromOptions({ type: "keyframes" })).toBe(
             KeyframesAnimator
         )
