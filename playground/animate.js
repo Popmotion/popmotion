@@ -16,11 +16,11 @@ export function Keyframes() {
   useEffect(() => {
     animate({
       from: 0,
-      to: 100,
-      duration: 3000,
-      repeat: 1,
-      repeatType: 'reverse',
-      onUpdate: v => console.log(v)
+      velocity: 100,
+      power: 0.8,
+      type: 'decay',
+      modifyTarget: v => (console.log('taget', v * 2), v * 2),
+      onUpdate: v => console.log('latest', v)
     });
   }, []);
 

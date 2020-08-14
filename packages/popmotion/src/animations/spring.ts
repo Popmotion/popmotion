@@ -114,6 +114,7 @@ export class SpringAnimator implements Animator<SpringOptions, number> {
     }
 
     static uniqueOptionKeys = new Set<keyof SpringOptions>([
+        "velocity",
         "stiffness",
         "damping",
         "mass",

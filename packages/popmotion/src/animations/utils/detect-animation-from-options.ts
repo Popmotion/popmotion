@@ -2,7 +2,7 @@ import { SpringAnimator } from "../spring"
 import { KeyframesAnimator } from "../keyframes"
 import { DecayAnimator } from "../decay"
 
-const animators = [KeyframesAnimator, SpringAnimator, DecayAnimator]
+const animators = [KeyframesAnimator, DecayAnimator, SpringAnimator]
 const types = {
     keyframes: KeyframesAnimator,
     spring: SpringAnimator,

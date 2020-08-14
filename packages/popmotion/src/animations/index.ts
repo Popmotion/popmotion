@@ -34,6 +34,7 @@ export function animate<V extends Animatable>({
     repeatType = "loop",
     repeatDelay = 0,
     onPlay,
+    onStop,
     onComplete,
     onRepeat,
     onUpdate,
@@ -119,7 +120,7 @@ export function animate<V extends Animatable>({
     }
 
     function play() {
-        onPlay && onPlay()
+        onPlay?.()
         driverControls = driver(update)
         driverControls.start()
     }
@@ -132,6 +133,9 @@ export function animate<V extends Animatable>({
         resume: () => {},
         reverse: () => {},
         seek: () => {},
-        stop: () => driverControls.stop(),
+        stop: () => {
+            onStop?.()
+            driverControls.stop()
+        },
     }
 }

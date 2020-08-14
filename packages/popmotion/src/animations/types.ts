@@ -62,6 +62,7 @@ export interface PlaybackOptions<V extends Animatable> {
     onPlay?: () => void
     onComplete?: () => void
     onRepeat?: () => void
+    onStop?: () => void
 }
 
 export interface KeyframeOptions<V extends Animatable = number> {

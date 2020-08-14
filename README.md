@@ -247,6 +247,19 @@ animate({
 })
 ```
 
+#### `onStop`
+
+This is called when the animation is stopped by the `stop` control.
+
+```javascript
+const animation = animate({
+  to: 100,
+  onStop: () => {}
+})
+
+animation.stop()
+```
+
 ### Keyframes options
 
 A keyframes animation is the default animation and it can be defined either with a `from` and `to` option:
