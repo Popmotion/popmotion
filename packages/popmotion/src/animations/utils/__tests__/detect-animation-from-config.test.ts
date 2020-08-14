@@ -13,5 +13,14 @@ describe("detectAnimationFromOptions", () => {
         )
         expect(detectAnimationFromOptions({ power: 2 })).toBe(DecayAnimator)
         expect(detectAnimationFromOptions({ a: 2 })).toBe(undefined)
+        expect(detectAnimationFromOptions({ type: "keyframes" })).toBe(
+            KeyframesAnimator
+        )
+        expect(detectAnimationFromOptions({ type: "spring" })).toBe(
+            SpringAnimator
+        )
+        expect(detectAnimationFromOptions({ type: "decay" })).toBe(
+            DecayAnimator
+        )
     })
 })
