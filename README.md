@@ -638,14 +638,14 @@ angle(
 )
 ```
 
-#### `attractLinear`
+#### `attract`
 
 TODO
 
 ```javascript
-import { attractLinear } from "popmotion"
+import { attract } from "popmotion"
 
-attractLinear(5, 10, 12)
+attract(5, 10, 12)
 ```
 
 #### `attractExpo`
