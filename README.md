@@ -93,6 +93,19 @@ The type of animation performed will be automatically detected from the provided
 
 These options can be set for **all animations**:
 
+#### `from`
+
+An initial value to start the animation from.
+
+Defaults to `0`
+
+```javascript
+animate({
+  from: "linear-gradient(#e66465, #9198e5)",
+  to: "linear-gradient(#9198e5, #e66465)"
+})
+```
+
 #### `elapsed`
 
 Sets an initial elapsed time, in milliseconds. Set to a negative value for a delay.
@@ -245,6 +258,18 @@ Or as a series of keyframes provided to the `to` option:
 animate({ to: [0, 100, 200] })
 ```
 
+#### `to`
+
+A single value to animate to, or an array of values to animate through.
+
+```javascript
+animate({
+  to: ["#0ff", "#f00", "#0f0"]
+})
+```
+
+If `to` is an array, any defined `from` will be ignored.
+
 #### `duration`
 
 This defines the duration of the animation, in milliseconds.
@@ -274,6 +299,8 @@ animate({
 })
 ```
 
+If set as any array, the length of this array must be one shorter than the number of values being animated between.
+
 #### `offset`
 
 This is an array of values between `0` and `1` that defines at which point throughout the animation each keyframe should be reached.
@@ -287,11 +314,26 @@ animate({
 })
 ```
 
-### `SpringOptions`
+### Spring options
+
+Springs are great for creating natural-feeling interfaces and dynamic interruptable animations.
 
 A spring animation will be used if any of the `stiffness`, `damping` or `mass` options are detected.
 
-A spring simulation is inherently numerical so if it's given a color, array or object, it runs the animation from `0` to `100` and interpolates that to the given values. This strategy is likely to be tweaked before the official release so animations made this way may change in feel.
+**Note:** A spring simulation is inherently numerical so if it's given a color, array or object, it runs the animation from `0` to `100` and interpolates that to the given values. This strategy is likely to be tweaked before the official release so animations made this way may change in feel.
+
+#### `to`
+
+A single value to animate to.
+
+```javascript
+animate({
+  to: 100,
+  type: "spring"
+})
+```
+
+If `to` is an array, any defined `from` will be ignored.
 
 #### `stiffness`
 
@@ -365,9 +407,78 @@ animate({
 })
 ```
 
-### `InertiaOptions`
+### Decay options
 
-TODO
+Decay animation
+
+#### `velocity`
+
+The initial velocity, in units per second, of the animation.
+
+```javascript
+animate({
+  type: "decay",
+  from: 0,
+  velocity: 100,
+  restDelta: 0.5
+})
+```
+
+#### `power`
+
+A constant with which to calculate a target value. Higher power = further target.
+
+Defaults to `0.8`.
+
+```javascript
+animate({
+  type: "decay",
+  from: 0,
+  power: 0.3
+})
+```
+
+#### `timeConstant`
+
+Adjusting the time constant will change the duration of the deceleration, thereby affecting its feel.
+
+Defaults to `350`.
+
+```javascript
+animate({
+  from: 0,
+  velocity: 100,
+  timeConstant: 400
+})
+```
+
+#### `modifyTarget`
+
+A function that receives the calculated target and returns a new one. Useful for snapping the target to a grid.
+
+```javascript
+const roundToNearest = target => v => Math.ceil(v / target) * target
+
+animate({
+  type: "decay",
+  from: 0,
+  velocity: 100,
+  modifyTarget: roundToNearest(100)
+})
+```
+
+#### `restDelta`
+
+The distance from the animation target at which the animation can be considered complete.
+
+```javascript
+animate({
+  type: "decay",
+  from: 0,
+  velocity: 100,
+  restDelta: 0.5
+})
+```
 
 ### Controls
 
