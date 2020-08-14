@@ -142,10 +142,11 @@ animate({
 
 #### `repeatType`
 
-Either `"loop"` or `"reverse"`. Defaults to `"loop"`.
+Either `"loop"`, `"mirror"` or `"reverse"`. Defaults to `"loop"`.
 
 - `"loop"`: Repeats the animation from `0`.
-- `"reverse":` Reverses the animation alternatively.
+- `"mirror":` Swaps the `from`/`to` values alternately.
+- `"reverse":` Reverses the animation alternately.
 
 ```javascript
 animate({
