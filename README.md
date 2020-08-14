@@ -11,9 +11,9 @@ This is the **beta** branch of Popmotion 9. The focus on this release is small, 
 
 Popmotion is:
 - **Powerful**: It supports keyframe, spring and decay animations for numbers, colors and complex strings.
-- **Low level**: It's designed to be composable and portable into any JavaScript environment.
+- **Low level**: It's designed to be composable and portable into any JavaScript environment, with an eye on worklets in the future.
 - **Stable**: It's written in TypeScript and enjoys over 95% test coverage.
-- **Tiny**: The `animate` function alone is just ~4.5kb.
+- **Tiny**: `animate` is just ~4.5kb, and every function is individually importable.
 
 - [Install](#Install)
 - [API](#API)
