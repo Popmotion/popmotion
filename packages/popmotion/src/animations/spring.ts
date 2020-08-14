@@ -13,7 +13,10 @@ export class SpringAnimator implements Animator<SpringOptions, number> {
 
     constructor(options: SpringOptions) {
         this.updateOptions(options)
+        this.createSpring()
+    }
 
+    createSpring() {
         const { velocity, from, to, damping, stiffness, mass } = this.options
 
         const initialVelocity = velocity ? -(velocity / 1000) : 0.0
@@ -100,6 +103,14 @@ export class SpringAnimator implements Animator<SpringOptions, number> {
             restSpeed,
             restDelta,
         }
+    }
+
+    flipTarget() {
+        const { from, to, velocity } = this.options
+        this.options.velocity = -velocity
+        this.options.from = to
+        this.options.to = from
+        this.createSpring()
     }
 
     static uniqueOptionKeys = new Set<keyof SpringOptions>([

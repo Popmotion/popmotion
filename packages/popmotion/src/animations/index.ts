@@ -9,6 +9,11 @@ import {
 import { detectAnimationFromOptions } from "./utils/detect-animation-from-options"
 import sync, { cancelSync, FrameData } from "framesync"
 import { interpolate } from "../utils/interpolate"
+import {
+    loopElapsed,
+    reverseElapsed,
+    hasRepeatDelayElapsed,
+} from "./utils/elapsed"
 
 const framesync: Driver = update => {
     const passTimestamp = ({ delta }: FrameData) => update(delta)
@@ -54,21 +59,22 @@ export function animate<V extends Animatable>({
     const animation = new Animator({ ...options, from, to } as any)
 
     function repeat() {
-        if (repeatCount === 0 && computedDuration === undefined) {
-            computedDuration = elapsed
-        }
-
         repeatCount++
 
-        const remainder = elapsed - computedDuration
-
-        if (repeatType === "loop") {
-            elapsed = remainder
-        } else {
-            elapsed = computedDuration - remainder
+        if (repeatType === "reverse") {
             isForwardPlayback = repeatCount % 2 === 0
+            elapsed = reverseElapsed(
+                elapsed,
+                computedDuration,
+                repeatDelay,
+                isForwardPlayback
+            )
+        } else {
+            elapsed = loopElapsed(elapsed, computedDuration, repeatDelay)
+            if (repeatType === "mirror") animation.flipTarget()
         }
 
+        animation.isComplete = false
         onRepeat && onRepeat()
     }
 
@@ -82,7 +88,7 @@ export function animate<V extends Animatable>({
 
         elapsed += delta
 
-        let latest = animation.update(elapsed)
+        let latest = animation.update(Math.max(0, elapsed))
 
         if (interpolateFromNumber) {
             latest = interpolateFromNumber(latest)
@@ -95,7 +101,20 @@ export function animate<V extends Animatable>({
             : elapsed <= 0
 
         if (isComplete) {
-            repeatCount < repeatMax ? repeat() : complete()
+            if (repeatCount === 0 && computedDuration === undefined) {
+                computedDuration = elapsed
+            }
+
+            if (repeatCount < repeatMax) {
+                hasRepeatDelayElapsed(
+                    elapsed,
+                    computedDuration,
+                    repeatDelay,
+                    isForwardPlayback
+                ) && repeat()
+            } else {
+                complete()
+            }
         }
     }
 

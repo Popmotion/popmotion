@@ -12,6 +12,7 @@ export interface Animator<O, V> {
     options: O
     update(t: number): V
     updateOptions(options: O): void
+    flipTarget: () => void
     isComplete: boolean
 }
 
@@ -54,7 +55,7 @@ export interface PlaybackOptions<V extends Animatable> {
     elapsed?: number
     from?: V
     repeat?: number
-    repeatType?: "loop" | "reverse"
+    repeatType?: "loop" | "reverse" | "mirror"
     repeatDelay?: number
     onUpdate?: (latest: V) => void
     onPlay?: () => void
