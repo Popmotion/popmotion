@@ -11,7 +11,7 @@ const types = {
 const numAnimators = animators.length
 
 interface Options {
-    type: "decay" | "keyframes" | "spring"
+    type?: "decay" | "keyframes" | "spring"
 }
 
 export function detectAnimationFromOptions<T extends Options>(config: T) {
