@@ -10,7 +10,7 @@
 This is the **Release candidate** for Popmotion 9. The focus on this release is small, flexible functions for advanced animators.
 
 Popmotion is:
-- **Powerful**: It supports keyframe, spring and decay animations for numbers, colors and complex strings.
+- **Powerful**: It supports keyframe and spring animations for numbers, colors and complex strings.
 - **Low level**: It's designed to be composable and portable into any JavaScript environment, with an eye on worklets in the future.
 - **Stable**: It's written in TypeScript and enjoys over 95% test coverage.
 - **Tiny**: `animate` is just ~4.5kb, and every function is individually importable.
@@ -27,6 +27,7 @@ Popmotion is:
     - [Spring options](#spring-options)
     - [Decay options](#decay-options)
     - [Controls](#controls)
+    - [`inertia`](#inertia)
   - [Easing](#easing)
     - [Functions](#functions)
     - [Create](#create)
@@ -423,79 +424,6 @@ animate({
 })
 ```
 
-### Decay options
-
-Decay animation
-
-#### `velocity`
-
-The initial velocity, in units per second, of the animation.
-
-```javascript
-animate({
-  type: "decay",
-  from: 0,
-  velocity: 100,
-  restDelta: 0.5
-})
-```
-
-#### `power`
-
-A constant with which to calculate a target value. Higher power = further target.
-
-Defaults to `0.8`.
-
-```javascript
-animate({
-  type: "decay",
-  from: 0,
-  power: 0.3
-})
-```
-
-#### `timeConstant`
-
-Adjusting the time constant will change the duration of the deceleration, thereby affecting its feel.
-
-Defaults to `350`.
-
-```javascript
-animate({
-  from: 0,
-  velocity: 100,
-  timeConstant: 400
-})
-```
-
-#### `modifyTarget`
-
-A function that receives the calculated target and returns a new one. Useful for snapping the target to a grid.
-
-```javascript
-const roundToNearest = target => v => Math.ceil(v / target) * target
-
-animate({
-  type: "decay",
-  from: 0,
-  velocity: 100,
-  modifyTarget: roundToNearest(100)
-})
-```
-
-#### `restDelta`
-
-The distance from the animation target at which the animation can be considered complete.
-
-```javascript
-animate({
-  type: "decay",
-  from: 0,
-  velocity: 100,
-  restDelta: 0.5
-})
-```
-
 ### Controls
 
 `animate` returns `PlaybackControls`, which can be used to control the playback of the animation.
@@ -509,6 +437,134 @@ Stops the animation.
 ```javascript
 const playback = animate({ from: 0, to: 100 })
 playback.stop()
+```
+
+### `inertia`
+
+The `inertia` animation is used to gradually decelerate a number. Think smartphone scroll momentum.
+
+
+
+#### Options
+
+In addition to `animate`'s `from`, `onUpdate` and `onComplete` options, `inertia` also supports the following:
+
+#### `velocity`
+
+The initial velocity, in units per second, of the animation.
+
+```javascript
+inertia({
+  from: 0,
+  velocity: 100
+})
+```
+
+#### `power`
+
+A constant with which to calculate a target value. Higher power = further target.
+
+Defaults to `0.8`.
+
+```javascript
+inertia({
+  from: 0,
+  power: 0.3
+})
+```
+
+#### `timeConstant`
+
+Adjusting the time constant will change the duration of the deceleration, thereby affecting its feel.
+
+Defaults to `350`.
+
+```javascript
+inertia({
+  from: 0,
+  velocity: 100,
+  timeConstant: 400
+})
+```
+
+#### `modifyTarget`
+
+A function that receives the calculated target and returns a new one. Useful for snapping the target to a grid.
+
+```javascript
+const roundToNearest = target => v => Math.ceil(v / target) * target
+
+inertia({
+  from: 0,
+  velocity: 100,
+  modifyTarget: roundToNearest(100)
+})
+```
+
+#### `min`
+
+The minimum value at which the animation will switch from gradual deceleration and use a spring animation to snap to this point.
+
+```javascript
+inertia({
+  from: 50,
+  velocity: -100,
+  min: 0
+})
+```
+
+#### `max`
+
+The maximum value at which the animation will switch from gradual deceleration and use a spring animation to snap to this point.
+
+```javascript
+inertia({
+  from: 50,
+  velocity: 100,
+  max: 100
+})
+```
+
+#### `bounceStiffness`
+
+This defines the stiffness of the spring when the animation hits either `min` or `max`. A higher stiffness will result in a snappier animation.
+
+Defaults to `500`
+
+```javascript
+inertia({
+  from: 0,
+  velocity: 100,
+  max: 50,
+  bounceStiffness: 1000
+})
+```
+
+#### `bounceDamping`
+
+This is the opposing force to `bounceStiffness`. As you reduce this value, relative to `bounceStiffness`, the spring will become bouncier and the animation will last longer. Likewise, higher relative values will have less bounciness and result in shorter animations.
+
+Defaults to `10`
+
+```javascript
+inertia({
+  from: 0,
+  velocity: 100,
+  max: 50,
+  bounceDamping: 300
+})
+```
+
+#### `restDelta`
+
+The distance from the animation target at which the animation can be considered complete.
+
+```javascript
+inertia({
+  from: 0,
+  velocity: 100,
+  restDelta: 0.5
+})
 ```
 
 ## Easing
