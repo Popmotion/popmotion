@@ -1,4 +1,5 @@
 export { animate } from "./animations"
+export { inertia } from "./animations/inertia"
 
 // Animators
 export { DecayAnimator } from "./animations/decay"

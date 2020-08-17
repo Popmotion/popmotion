@@ -95,7 +95,7 @@ export function animate<V extends Animatable>({
             latest = interpolateFromNumber(latest)
         }
 
-        onUpdate(latest)
+        onUpdate?.(latest)
 
         const isComplete = isForwardPlayback
             ? animation.isComplete

@@ -94,6 +94,18 @@ export interface SpringOptions<T extends Animatable = number> {
     restDelta?: number
 }
 
+export interface InertiaOptions extends DecayOptions {
+    bounceStiffness?: number
+    bounceDamping?: number
+    min?: number
+    max?: number
+    restSpeed?: number
+    restDelta?: number
+    driver?: Driver
+    onUpdate?: (v: number) => void
+    onComplete?: () => void
+}
+
 export type AnimationOptions<V extends Animatable> = PlaybackOptions<V> &
     (DecayOptions | KeyframeOptions<V> | SpringOptions<V>)
 

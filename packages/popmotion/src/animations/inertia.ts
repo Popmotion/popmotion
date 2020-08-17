@@ -1,112 +1,105 @@
-// import { number } from 'style-value-types';
-// import action, { Action } from '../../action';
-// import vectorAction, { ActionFactory } from '../../action/vector';
-// import { springSole } from '../spring';
-// import { decaySole } from '../decay';
-// import { ColdSubscription } from '../../action/types';
-// import { Props, SpringProps } from './types';
-// import { velocityPerSecond } from '@popmotion/popcorn';
-// import { getFrameData } from 'framesync';
+import {
+    InertiaOptions,
+    PlaybackControls,
+    AnimationOptions,
+    SpringOptions,
+} from "./types"
+import { animate } from "."
+import { velocityPerSecond } from "../utils/velocity-per-second"
+import { getFrameData } from "framesync"
 
-// const inertia = ({
-//   from = 0,
-//   velocity = 0,
-//   min,
-//   max,
-//   power = 0.8,
-//   timeConstant = 700,
-//   bounceStiffness = 500,
-//   bounceDamping = 10,
-//   restDelta = 1,
-//   modifyTarget
-// }: Props) =>
-//   action(({ update, complete }) => {
-//     let prev = from;
-//     let current = from;
-//     let activeAnimation: ColdSubscription;
+export function inertia({
+    from = 0,
+    velocity = 0,
+    min,
+    max,
+    power = 0.8,
+    timeConstant = 750,
+    bounceStiffness = 500,
+    bounceDamping = 10,
+    restDelta = 1,
+    modifyTarget,
+    driver,
+    onUpdate,
+    onComplete,
+}: InertiaOptions) {
+    let currentAnimation: PlaybackControls
 
-//     const isOutOfBounds = (v: number) => {
-//       return (min !== undefined && v < min) || (max !== undefined && v > max);
-//     };
-//     const boundaryNearest = (v: number) => {
-//       return Math.abs(min - v) < Math.abs(max - v) ? min : max;
-//     };
+    function isOutOfBounds(v: number) {
+        return (min !== undefined && v < min) || (max !== undefined && v > max)
+    }
 
-//     const startAnimation = (animation: Action, next?: Function) => {
-//       activeAnimation && activeAnimation.stop();
+    function boundaryNearest(v: number) {
+        if (min === undefined) return max
+        if (max === undefined) return min
 
-//       activeAnimation = animation.start({
-//         update,
-//         complete: () => {
-//           if (next) {
-//             next();
-//             return;
-//           }
-//           complete();
-//         }
-//       });
-//     };
+        return Math.abs(min - v) < Math.abs(max - v) ? min : max
+    }
 
-//     const startSpring = (props: SpringProps) => {
-//       startAnimation(
-//         springSole({
-//           ...props,
-//           stiffness: bounceStiffness,
-//           damping: bounceDamping,
-//           restDelta
-//         })
-//       );
-//     };
+    function startAnimation(options: AnimationOptions<number>) {
+        currentAnimation?.stop()
+        currentAnimation = animate({
+            ...options,
+            driver,
+            onUpdate: (v: number) => {
+                onUpdate?.(v)
+                options.onUpdate?.(v)
+            },
+            onComplete,
+        })
+    }
 
-//     // Start the animation with spring if outside the defined boundaries
-//     if (isOutOfBounds(from)) {
-//       startSpring({ from, velocity, to: boundaryNearest(from) });
+    function startSpring(options: SpringOptions) {
+        startAnimation({
+            type: "spring",
+            stiffness: bounceStiffness,
+            damping: bounceDamping,
+            restDelta,
+            ...options,
+        })
+    }
 
-//       // Otherwise simulate inertial movement with decay. If target is beyond
-//       // bounds switch from decay to spring upon boundary encounter
-//     } else {
-//       let to = power * velocity + from;
-//       if (typeof modifyTarget !== 'undefined') {
-//         // get the modified target, prevent decay doing so a second time and
-//         // resolve velocity so decay will produce the modified target
-//         to = modifyTarget(to);
-//         modifyTarget = void 0;
-//         velocity = (to - from) / power;
-//       }
-//       let animation = decaySole({
-//         from,
-//         velocity,
-//         timeConstant,
-//         power,
-//         restDelta,
-//         modifyTarget
-//       });
-//       let next;
-//       if (isOutOfBounds(to)) {
-//         const boundary = boundaryNearest(to);
-//         const heading = boundary == min ? -1 : 1;
-//         animation = animation.while(v => {
-//           prev = current;
-//           velocity = velocityPerSecond(v - prev, getFrameData().delta);
-//           current = v;
-//           return boundary - v * heading > 0;
-//         });
-//         next = () => startSpring({ from: current, to: boundary, velocity });
-//       }
-//       startAnimation(animation, next);
-//     }
+    if (isOutOfBounds(from)) {
+        // Start the animation with spring if outside the defined boundaries
+        startSpring({ from, velocity, to: boundaryNearest(from) })
+    } else {
+        /**
+         * Or if the value is out of bounds, simulate the inertia movement
+         * with the decay animation.
+         *
+         * Pre-calculate the target so we can detect if it's out-of-bounds.
+         * If it is, we want to check per frame when to switch to a spring
+         * animation
+         */
+        let target = power * velocity + from
+        if (typeof modifyTarget !== "undefined") target = modifyTarget(target)
+        const boundary = boundaryNearest(target)
+        const heading = boundary === min ? -1 : 1
+        let prev: number
+        let current: number
 
-//     return {
-//       stop: () => activeAnimation && activeAnimation.stop()
-//     };
-//   });
+        const checkBoundary = (v: number) => {
+            prev = current
+            velocity = velocityPerSecond(v - prev, getFrameData().delta)
+            current = v
+            if (!(boundary - v * heading > 0)) {
+                startSpring({ from: current, to: boundary, velocity })
+            }
+        }
 
-// export default vectorAction(inertia, {
-//   from: number.test,
-//   velocity: number.test,
-//   min: number.test,
-//   max: number.test,
-//   damping: number.test,
-//   stiffness: number.test,
-//   modifyTarget: (func: any) => typeof func === 'function'
-// }) as ActionFactory;
+        startAnimation({
+            type: "decay",
+            from,
+            velocity,
+            timeConstant,
+            power,
+            restDelta,
+            modifyTarget,
+            onUpdate: isOutOfBounds(target) ? checkBoundary : undefined,
+        })
+    }
+
+    return {
+        stop: () => currentAnimation?.stop(),
+    }
+}

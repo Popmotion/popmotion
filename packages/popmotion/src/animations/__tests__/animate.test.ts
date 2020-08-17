@@ -1,19 +1,7 @@
 import { animate } from ".."
 import { linear, easeOut } from "../.."
 import { Animatable, AnimationOptions } from "../types"
-
-const syncDriver = (interval = 10) => update => {
-    let isRunning = true
-    return {
-        start: () => {
-            setTimeout(() => {
-                update(0)
-                while (isRunning) update(interval)
-            }, 0)
-        },
-        stop: () => (isRunning = false),
-    }
-}
+import { syncDriver } from "./utils"
 
 function testAnimate<V extends Animatable>(
     options: AnimationOptions<V>,
@@ -840,6 +828,24 @@ describe("animate", () => {
             repeat: 2,
             repeatType: "mirror",
             repeatDelay: 300,
+            onUpdate: v => output.push(Math.round(v)),
+            onComplete: () => {
+                expect(output).toEqual(expected)
+                resolve()
+            },
+        })
+    })
+
+    test("Decay stays still with no velocity", async resolve => {
+        const output = []
+        const expected = [100]
+        animate({
+            from: 100,
+            velocity: 0,
+            power: 0.8,
+            timeConstant: 750,
+            type: "decay",
+            driver: syncDriver(200),
             onUpdate: v => output.push(Math.round(v)),
             onComplete: () => {
                 expect(output).toEqual(expected)
