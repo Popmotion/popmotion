@@ -58,6 +58,10 @@ export {
     createAnticipate,
 } from "./easing/utils"
 
+// Types
+export * from "./animations/types"
+export * from "./easing/types"
+
 // // Worklet
 // export { animate } from './worklet/animate';
 // export { workletReady } from './worklet/load-worklet';
