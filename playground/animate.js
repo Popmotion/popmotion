@@ -16,13 +16,15 @@ export function Keyframes() {
   useEffect(() => {
     animate({
       from: 0,
-      velocity: 100,
-      power: 0.8,
-      type: 'decay',
-      modifyTarget: v => (console.log('taget', v * 2), v * 2),
-      onUpdate: v => console.log('latest', v)
+      to: 300,
+      type: 'spring',
+      repeat: Infinity,
+      repeatType: 'mirror',
+      onUpdate: v => {
+        ref.current.style.transform = `translateX(${v}px)`;
+      }
     });
-  }, []);
+  });
 
   return <Box ref={ref} />;
 }

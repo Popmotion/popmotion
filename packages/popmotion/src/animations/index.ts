@@ -43,6 +43,8 @@ export function animate<V extends Animatable>({
     let driverControls: DriverControls
     let repeatCount = 0
     let computedDuration = (options as KeyframeOptions<V>).duration
+    let latest: V
+    let isComplete = false
     let isForwardPlayback = true
 
     let interpolateFromNumber: (t: number) => V
@@ -75,6 +77,7 @@ export function animate<V extends Animatable>({
             if (repeatType === "mirror") animation.flipTarget()
         }
 
+        isComplete = false
         animation.isComplete = false
         onRepeat && onRepeat()
     }
@@ -89,17 +92,16 @@ export function animate<V extends Animatable>({
 
         elapsed += delta
 
-        let latest = animation.update(Math.max(0, elapsed))
+        if (!isComplete) {
+            latest = animation.update(Math.max(0, elapsed))
 
-        if (interpolateFromNumber) {
-            latest = interpolateFromNumber(latest)
+            if (interpolateFromNumber)
+                latest = interpolateFromNumber(latest as number)
+
+            isComplete = isForwardPlayback ? animation.isComplete : elapsed <= 0
         }
 
         onUpdate?.(latest)
-
-        const isComplete = isForwardPlayback
-            ? animation.isComplete
-            : elapsed <= 0
 
         if (isComplete) {
             if (repeatCount === 0 && computedDuration === undefined) {
