@@ -91,8 +91,16 @@ export class SpringAnimator implements Animator<SpringOptions, number> {
         damping = 10,
         mass = 1.0,
         restSpeed = 0.005,
-        restDelta = 0.5,
+        restDelta,
     }: SpringOptions) {
+        /**
+         * If we're working within what looks like a 0-1 range, change the default restDelta
+         * to 0.01
+         */
+        if (restDelta === undefined) {
+            restDelta = Math.abs(to - from) < 1 ? 0.01 : 0.5
+        }
+
         this.options = {
             from,
             to,
