@@ -82,7 +82,7 @@ describe("inertia", () => {
     test("Springs towards min if encountered", async resolve => {
         await testInertia(
             { from: 50, min: 0, velocity: -100 },
-            [50, 31, 17, 6, -2, -2, 0],
+            [50, 31, 17, 6, -2, -2, 1, 0],
             resolve
         )
     })
@@ -90,7 +90,7 @@ describe("inertia", () => {
     test("Springs towards max if encountered", async resolve => {
         await testInertia(
             { from: 50, max: 100, velocity: 100 },
-            [50, 69, 83, 94, 102, 102, 100],
+            [50, 69, 83, 94, 102, 102, 99, 100],
             resolve
         )
     })

@@ -6,6 +6,7 @@ export class SpringAnimator implements Animator<SpringOptions, number> {
     isComplete = false
 
     resolveSpring: (t: number) => number
+    resolveVelocity: (t: number) => number
 
     static needsInterpolation = (from: Animatable, to: Animatable) => {
         return typeof from === "string" || typeof to === "string"
@@ -41,12 +42,38 @@ export class SpringAnimator implements Animator<SpringOptions, number> {
                             initialDelta * Math.cos(expoDecay * t))
                 )
             }
+
+            this.resolveVelocity = (t: number) => {
+                // TODO Resolve these calculations with the above
+                const envelope = Math.exp(-dampingRatio * angularFreq * t)
+                const expoDecay =
+                    angularFreq * Math.sqrt(1.0 - dampingRatio * dampingRatio)
+                return (
+                    dampingRatio *
+                        angularFreq *
+                        envelope *
+                        ((Math.sin(expoDecay * t) *
+                            (initialVelocity +
+                                dampingRatio * angularFreq * initialDelta)) /
+                            expoDecay +
+                            initialDelta * Math.cos(expoDecay * t)) -
+                    envelope *
+                        (Math.cos(expoDecay * t) *
+                            (initialVelocity +
+                                dampingRatio * angularFreq * initialDelta) -
+                            expoDecay * initialDelta * Math.sin(expoDecay * t))
+                )
+            }
         } else if (dampingRatio === 1) {
             // Critically damped spring
             this.resolveSpring = (t: number) => {
                 const envelope = Math.exp(-angularFreq * t)
                 return to - envelope * (1 + angularFreq * t)
             }
+
+            // We only rely on velocity to calculate when the animation has finished
+            // and critically/overdamped springs can rely on distance alone
+            this.resolveVelocity = () => 0
         } else {
             // Overdamped spring
             const dampedAngularFreq =
@@ -68,15 +95,19 @@ export class SpringAnimator implements Animator<SpringOptions, number> {
                         dampedAngularFreq
                 )
             }
+
+            this.resolveVelocity = () => 0
         }
     }
 
     update(t: number) {
-        const latest = this.resolveSpring(t)
+        const { restSpeed, restDelta, to } = this.options
 
-        const { velocity, restSpeed, restDelta, to } = this.options
+        const latest = this.resolveSpring(t)
+        const velocity = this.resolveVelocity(t) * 1000
         const isBelowVelocityThreshold = Math.abs(velocity) <= restSpeed
         const isBelowDisplacementThreshold = Math.abs(to - latest) <= restDelta
+
         this.isComplete =
             isBelowVelocityThreshold && isBelowDisplacementThreshold
 
@@ -90,7 +121,7 @@ export class SpringAnimator implements Animator<SpringOptions, number> {
         stiffness = 100,
         damping = 10,
         mass = 1.0,
-        restSpeed = 0.005,
+        restSpeed = 10,
         restDelta,
     }: SpringOptions) {
         /**

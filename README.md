@@ -415,7 +415,7 @@ animate({
 
 #### `restSpeed`
 
-The absolute velocity, in units per second, below which the animation can be considered complete. When both `restDelta` and `restSpeed` are met, the animation completes.
+The absolute velocity, in units per second, below which the animation can be considered complete. When both `restDelta` and `restSpeed` are met, the animation completes. Defaults to `10`.
 
 ```javascript
 animate({

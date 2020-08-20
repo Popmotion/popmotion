@@ -38,6 +38,7 @@ export function inertia({
 
     function startAnimation(options: AnimationOptions<number>) {
         currentAnimation?.stop()
+
         currentAnimation = animate({
             ...options,
             driver,

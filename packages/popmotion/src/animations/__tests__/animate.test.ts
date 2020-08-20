@@ -47,6 +47,91 @@ describe("animate", () => {
         })
     })
 
+    test("Correctly interpolates a string-based keyframes", async resolve => {
+        const numeric = []
+        const string = []
+        animate({
+            driver: syncDriver(20),
+            duration: 100,
+            ease: linear,
+            from: 0,
+            to: 200,
+            onUpdate: v => numeric.push(v),
+            onComplete: () => {
+                expect(numeric).toEqual([0, 40, 80, 120, 160, 200])
+
+                animate({
+                    driver: syncDriver(20),
+                    duration: 100,
+                    ease: linear,
+                    from: "0%",
+                    to: "200%",
+                    onUpdate: v => numeric.push(parseFloat(v)),
+                    onComplete: () => {
+                        expect(string).not.toEqual(numeric)
+                        resolve()
+                    },
+                })
+            },
+        })
+    })
+
+    test("Correctly interpolates a string-based spring", async resolve => {
+        const numeric = []
+        const string = []
+        animate({
+            type: "spring",
+            driver: syncDriver(50),
+            from: 0,
+            to: 200,
+            onUpdate: v => numeric.push(Math.round(v)),
+            onComplete: () => {
+                expect(numeric).toEqual([
+                    0,
+                    21,
+                    68,
+                    122,
+                    170,
+                    205,
+                    225,
+                    232,
+                    231,
+                    224,
+                    215,
+                    207,
+                    200,
+                    197,
+                    195,
+                    195,
+                    196,
+                    197,
+                    199,
+                    200,
+                    200,
+                    201,
+                    201,
+                    201,
+                    201,
+                    200,
+                ])
+
+                animate({
+                    driver: syncDriver(50),
+                    duration: 100,
+                    ease: linear,
+                    from: "0%",
+                    to: "200%",
+                    type: "spring",
+                    onUpdate: v => numeric.push(Math.round(parseFloat(v))),
+                    onComplete: () => {
+                        expect(string).not.toEqual(numeric)
+                        resolve()
+                    },
+                })
+            },
+        })
+    })
+
     test("Correctly uses a spring if type is defined explicitly", async resolve => {
         const output = []
         animate({
@@ -288,6 +373,11 @@ describe("animate", () => {
             997,
             998,
             1000,
+            1001,
+            1001,
+            1001,
+            1000,
+            1000,
         ]
         animate({
             from: 100,
@@ -387,6 +477,10 @@ describe("animate", () => {
             "rgba(25, 0, 254, 1)",
             "rgba(38, 0, 252, 1)",
             "rgba(34, 0, 253, 1)",
+            "rgba(18, 0, 254, 1)",
+            "rgba(0, 0, 255, 1)",
+            "rgba(0, 0, 255, 1)",
+            "rgba(0, 0, 255, 1)",
             "rgba(0, 0, 255, 1)",
         ]
         animate({
@@ -405,6 +499,7 @@ describe("animate", () => {
     test("Repeats springs", async resolve => {
         const output = []
         const expected = [
+            100,
             371,
             884,
             1259,
@@ -430,6 +525,41 @@ describe("animate", () => {
             997,
             998,
             1000,
+            1001,
+            1001,
+            1001,
+            1000,
+            1000,
+            371,
+            884,
+            1259,
+            1343,
+            1204,
+            1006,
+            883,
+            873,
+            937,
+            1011,
+            1050,
+            1046,
+            1018,
+            991,
+            980,
+            984,
+            996,
+            1005,
+            1008,
+            1005,
+            1001,
+            998,
+            997,
+            998,
+            1000,
+            1001,
+            1001,
+            1001,
+            1000,
+            1000,
         ]
         animate({
             from: 100,
@@ -439,7 +569,7 @@ describe("animate", () => {
             repeat: 1,
             onUpdate: v => output.push(Math.round(v)),
             onComplete: () => {
-                expect(output).toEqual([100, ...expected, ...expected])
+                expect(output).toEqual(expected)
                 resolve()
             },
         })
@@ -474,6 +604,11 @@ describe("animate", () => {
             997,
             998,
             1000,
+            1001,
+            1001,
+            1001,
+            1000,
+            1000,
             1000,
             1000,
             1000,
@@ -505,6 +640,11 @@ describe("animate", () => {
             997,
             998,
             1000,
+            1001,
+            1001,
+            1001,
+            1000,
+            1000,
             1000,
             1000,
             1000,
@@ -535,6 +675,11 @@ describe("animate", () => {
             998,
             997,
             998,
+            1000,
+            1001,
+            1001,
+            1001,
+            1000,
             1000,
         ]
         animate({
@@ -580,6 +725,16 @@ describe("animate", () => {
             998,
             997,
             998,
+            1000,
+            1001,
+            1001,
+            1001,
+            1000,
+            1000,
+            1000,
+            1001,
+            1001,
+            1001,
             1000,
             998,
             997,
@@ -723,6 +878,11 @@ describe("animate", () => {
             997,
             998,
             1000,
+            1001,
+            1001,
+            1001,
+            1000,
+            1000,
             729,
             216,
             -159,
@@ -747,6 +907,11 @@ describe("animate", () => {
             102,
             103,
             102,
+            100,
+            99,
+            99,
+            99,
+            100,
             100,
         ]
         animate({
@@ -831,6 +996,23 @@ describe("animate", () => {
             onUpdate: v => output.push(Math.round(v)),
             onComplete: () => {
                 expect(output).toEqual(expected)
+                resolve()
+            },
+        })
+    })
+
+    test("Finishes springs with explicit velocity", async resolve => {
+        animate({
+            from: 100,
+            to: 1000,
+            stiffness: 300,
+            velocity: 200,
+            driver: syncDriver(100),
+            repeat: 2,
+            repeatType: "mirror",
+            repeatDelay: 300,
+            onComplete: () => {
+                expect(true).toEqual(true)
                 resolve()
             },
         })
