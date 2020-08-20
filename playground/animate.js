@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { animate, inertia } from 'popmotion';
 
@@ -12,20 +12,18 @@ const Box = styled.div`
 
 export function Keyframes() {
   const ref = useRef();
+  const [opacity, setOpacity] = useState(0);
 
   useEffect(() => {
-    const controls = inertia({
-      // bounceDamping: 10,
-      // bounceStiffness: 200,
-      // max: 240.5,
-      // min: 240.5,
-      // restDelta: 1,
-      // restSpeed: 10,
-      timeConstant: 750,
-      velocity: 200,
+    const controls = animate({
+      type: 'spring',
+      damping: 25,
+      stiffness: 120,
+      from: opacity ? 0 : 1,
+      to: opacity,
       onUpdate: v => {
         console.log(v);
-        ref.current.style.transform = `translateX(${v}px)`;
+        ref.current.style.opacity = v;
         if (v > 20) controls.stop();
       }
     });
@@ -39,7 +37,7 @@ export function Keyframes() {
     //     ref.current.style.transform = `translateX(${v}px)`;
     //   }
     // });
-  });
+  }, [opacity]);
 
-  return <Box ref={ref} />;
+  return <Box ref={ref} onClick={() => setOpacity(opacity ? 0 : 1)} />;
 }
