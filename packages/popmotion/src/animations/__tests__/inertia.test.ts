@@ -126,4 +126,43 @@ describe("inertia", () => {
             resolve
         )
     })
+
+    test("Can be stopped as spring", async resolve => {
+        const output = []
+
+        const controls = inertia({
+            driver: syncDriver(200),
+            from: 200,
+            bounceStiffness: 200,
+            max: 100,
+            onUpdate: v => {
+                output.push(Math.round(v))
+                controls.stop()
+            },
+        })
+
+        setTimeout(() => {
+            expect(output.length).toEqual(1)
+            resolve()
+        }, 20)
+    })
+
+    test("Can be stopped as decay", async resolve => {
+        const output = []
+
+        const controls = inertia({
+            driver: syncDriver(200),
+            from: 200,
+            bounceStiffness: 200,
+            onUpdate: v => {
+                output.push(Math.round(v))
+                controls.stop()
+            },
+        })
+
+        setTimeout(() => {
+            expect(output.length).toEqual(1)
+            resolve()
+        }, 20)
+    })
 })

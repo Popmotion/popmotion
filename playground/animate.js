@@ -14,18 +14,19 @@ export function Keyframes() {
   const ref = useRef();
 
   useEffect(() => {
-    inertia({
+    const controls = inertia({
       // bounceDamping: 10,
       // bounceStiffness: 200,
-      max: 240.5,
-      min: 240.5,
+      // max: 240.5,
+      // min: 240.5,
       // restDelta: 1,
       // restSpeed: 10,
       timeConstant: 750,
-      velocity: -200,
+      velocity: 200,
       onUpdate: v => {
         console.log(v);
         ref.current.style.transform = `translateX(${v}px)`;
+        if (v > 20) controls.stop();
       }
     });
     // animate({
