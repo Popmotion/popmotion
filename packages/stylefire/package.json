@@ -43,8 +43,6 @@
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-plugin-annotate-pure-calls": "^0.2.2",
-    "jest": "24.2.0-alpha.0",
-    "jest-cli": "24.2.0-alpha.0",
     "jest-dom": "^3.0.0",
     "typescript": "^2.9.2",
     "uglify-js": "^3.3.25",

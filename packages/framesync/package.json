@@ -1,63 +1,62 @@
 {
-  "name": "framesync",
-  "version": "4.0.2",
-  "description": "A Unity-inspired render loop for JavaScript",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
-  "module": "dist/framesync.es.js",
-  "jsnext:main": "dist/framesync.es.js",
-  "scripts": {
-    "build": "rollup -c && tsc --emitDeclarationOnly",
-    "postbuild": "babel $npm_package_module --out-file $npm_package_module --no-babelrc --plugins annotate-pure-calls",
-    "watch": "rollup -c -w",
-    "lint": "tslint -c tslint.json 'src/**/*.{ts}'",
-    "test": "jest --maxWorkers=2",
-    "measure": "gzip -c dist/framesync.min.js | wc -c",
-    "prepublishOnly": "npm run test && npm run build"
-  },
-  "files": [
-    "lib",
-    "dist"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Popmotion/popmotion.git"
-  },
-  "keywords": [
-    "animation",
-    "raf"
-  ],
-  "author": "Matt Perry",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Popmotion/popmotion/issues"
-  },
-  "homepage": "https://github.com/Popmotion/popmotion",
-  "devDependencies": {
-    "@types/jest": "^23.1.1",
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.3",
-    "babel-plugin-annotate-pure-calls": "^0.2.2",
-    "jest": "24.2.0-alpha.0",
-    "jest-cli": "24.2.0-alpha.0"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "ts",
-      "js"
-    ],
-    "transform": {
-      "\\.(ts)$": "../../../node_modules/ts-jest/preprocessor.js"
+    "name": "framesync",
+    "version": "4.0.2",
+    "description": "A Unity-inspired render loop for JavaScript",
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts",
+    "module": "dist/framesync.es.js",
+    "jsnext:main": "dist/framesync.es.js",
+    "unpkg": "./dist/framesync.min.js",
+    "scripts": {
+        "build": "rollup -c && tsc --emitDeclarationOnly",
+        "postbuild": "babel $npm_package_module --out-file $npm_package_module --no-babelrc --plugins annotate-pure-calls",
+        "watch": "rollup -c -w",
+        "lint": "tslint -c tslint.json 'src/**/*.{ts}'",
+        "test": "jest --maxWorkers=2",
+        "measure": "gzip -c dist/framesync.min.js | wc -c",
+        "prepublishOnly": "npm run test && npm run build"
     },
-    "testRegex": "/_tests/.*\\.(ts|js)$",
-    "rootDir": "src"
-  },
-  "unpkg": "./dist/framesync.min.js",
-  "prettier": {
-    "parser": "typescript",
-    "singleQuote": true
-  },
-  "dependencies": {
-    "hey-listen": "^1.0.5"
-  }
+    "files": [
+        "lib",
+        "dist"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Popmotion/popmotion.git"
+    },
+    "keywords": [
+        "animation",
+        "raf"
+    ],
+    "author": "Matt Perry",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/Popmotion/popmotion/issues"
+    },
+    "homepage": "https://github.com/Popmotion/popmotion",
+    "devDependencies": {
+        "babel-cli": "^6.26.0",
+        "babel-core": "^6.26.3",
+        "babel-plugin-annotate-pure-calls": "^0.2.2"
+    },
+    "dependencies": {
+        "hey-listen": "^1.0.5"
+    },
+    "jest": {
+        "moduleFileExtensions": [
+            "ts",
+            "js"
+        ],
+        "transform": {
+            "\\.(ts)$": "../../../node_modules/ts-jest/preprocessor.js"
+        },
+        "testRegex": "/_tests/.*\\.(ts|js)$",
+        "rootDir": "src"
+    },
+    "prettier": {
+        "printWidth": 80,
+        "tabWidth": 4,
+        "semi": false,
+        "trailingComma": "es5"
+    }
 }

@@ -53,9 +53,6 @@
     },
     "devDependencies": {
         "@rollup/plugin-commonjs": "^11.0.1",
-        "@types/jest": "^23.1.1",
-        "jest": "24.2.0-alpha.0",
-        "jest-cli": "24.2.0-alpha.0",
         "ts-jest": "^21.2.4",
         "tslint-circular-dependencies": "^0.1.0",
         "typescript": "^4.0.2"
