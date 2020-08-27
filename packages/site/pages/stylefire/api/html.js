@@ -107,8 +107,8 @@ htmlRenderer.set('--bg-color', '#000');
 
 **All CSS properties are supported**, in addition to these scroll properties:
 
-* \`scrollX\`
-* \`scrollY\`
+* \`scrollLeft\`
+* \`scrollTop\`
 
 If \`window\` is passed to styler, these are the **only** two supported props.
 
