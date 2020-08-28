@@ -1,6 +1,7 @@
 import { SpringAnimator } from "../spring"
 import { KeyframesAnimator } from "../keyframes"
 import { DecayAnimator } from "../decay"
+import { AnimationOptions } from "../types"
 
 const animators = [KeyframesAnimator, DecayAnimator, SpringAnimator]
 const types = {
@@ -10,12 +11,9 @@ const types = {
 }
 const numAnimators = animators.length
 
-interface Options {
-    to?: string | number | string[] | number[]
-    type?: "decay" | "keyframes" | "spring"
-}
-
-export function detectAnimationFromOptions<T extends Options>(config: T) {
+export function detectAnimationFromOptions<V extends Animatable>(
+    config: AnimationOptions<V>
+) {
     if (Array.isArray(config.to)) {
         /**
          * If to is defined as a keyframes array we want to force this to be a keyframes
