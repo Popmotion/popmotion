@@ -11,11 +11,23 @@ const types = {
 const numAnimators = animators.length
 
 interface Options {
+    to?: string | number | string[] | number[]
     type?: "decay" | "keyframes" | "spring"
 }
 
 export function detectAnimationFromOptions<T extends Options>(config: T) {
-    if (types[config.type]) return types[config.type]
+    if (Array.isArray(config.to)) {
+        /**
+         * If to is defined as a keyframes array we want to force this to be a keyframes
+         * animation. In the future it might be possible to allow spring keyframes.
+         */
+        return KeyframesAnimator
+    } else if (types[config.type]) {
+        /**
+         * Or if the user has explicity defined their own animation type, return that.
+         */
+        return types[config.type]
+    }
 
     for (const key in config) {
         for (let i = 0; i < numAnimators; i++) {
