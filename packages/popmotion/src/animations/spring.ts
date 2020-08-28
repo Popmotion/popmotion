@@ -1,5 +1,9 @@
 import { SpringOptions, Animator, Animatable } from "./types"
 
+/**
+ * This is based on the spring implementation of Wobble https://github.com/skevy/wobble
+ */
+
 export class SpringAnimator implements Animator<SpringOptions, number> {
     options: SpringOptions
 
