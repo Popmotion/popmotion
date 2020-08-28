@@ -49,9 +49,9 @@ export function animate<V extends Animatable>({
 
     let interpolateFromNumber: (t: number) => V
 
-    const Animator = detectAnimationFromOptions(options)
+    const animator = detectAnimationFromOptions(options)
 
-    if (Animator.needsInterpolation(from, to as Animatable)) {
+    if (animator.needsInterpolation(from, to as Animatable)) {
         interpolateFromNumber = interpolate([0, 100], [from, to], {
             clamp: false,
         }) as (t: number) => V
@@ -59,7 +59,7 @@ export function animate<V extends Animatable>({
         to = 100 as V
     }
 
-    const animation = new Animator({ ...options, from, to } as any)
+    const animation = animator({ ...options, from, to } as any)
 
     function repeat() {
         repeatCount++
@@ -93,7 +93,8 @@ export function animate<V extends Animatable>({
         elapsed += delta
 
         if (!isComplete) {
-            latest = animation.update(Math.max(0, elapsed))
+            animation.update(Math.max(0, elapsed))
+            latest = animation.current as any
 
             if (interpolateFromNumber)
                 latest = interpolateFromNumber(latest as number)
@@ -104,9 +105,7 @@ export function animate<V extends Animatable>({
         onUpdate?.(latest)
 
         if (isComplete) {
-            if (repeatCount === 0 && computedDuration === undefined) {
-                computedDuration = elapsed
-            }
+            if (repeatCount === 0) computedDuration ??= elapsed
 
             if (repeatCount < repeatMax) {
                 hasRepeatDelayElapsed(
@@ -130,11 +129,6 @@ export function animate<V extends Animatable>({
     autoplay && play()
 
     return {
-        play,
-        pause: () => {},
-        resume: () => {},
-        reverse: () => {},
-        seek: () => {},
         stop: () => {
             onStop?.()
             driverControls.stop()

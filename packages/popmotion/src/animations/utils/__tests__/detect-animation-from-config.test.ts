@@ -1,34 +1,21 @@
 import { detectAnimationFromOptions } from "../detect-animation-from-options"
-import { SpringAnimator } from "../../spring"
-import { KeyframesAnimator } from "../../keyframes"
-import { DecayAnimator } from "../../decay"
+import { spring } from "../../spring"
+import { keyframes } from "../../keyframes"
 
 describe("detectAnimationFromOptions", () => {
     test("it selects the correct animation effect from any given config", () => {
-        expect(detectAnimationFromOptions({ stiffness: 300 })).toBe(
-            SpringAnimator
-        )
-        expect(detectAnimationFromOptions({ duration: 2 })).toBe(
-            KeyframesAnimator
-        )
-        expect(detectAnimationFromOptions({ power: 2 })).toBe(DecayAnimator)
-        expect(detectAnimationFromOptions({ a: 2 })).toBe(KeyframesAnimator)
+        expect(detectAnimationFromOptions({ stiffness: 300 })).toBe(spring)
+        expect(detectAnimationFromOptions({ duration: 2 })).toBe(keyframes)
+        expect(detectAnimationFromOptions({ a: 2 })).toBe(keyframes)
         expect(detectAnimationFromOptions({ type: "keyframes" })).toBe(
-            KeyframesAnimator
+            keyframes
         )
-        expect(detectAnimationFromOptions({ type: "spring" })).toBe(
-            SpringAnimator
-        )
-        expect(detectAnimationFromOptions({ type: "decay" })).toBe(
-            DecayAnimator
-        )
+        expect(detectAnimationFromOptions({ type: "spring" })).toBe(spring)
 
-        expect(detectAnimationFromOptions({ to: [0, 1] })).toBe(
-            KeyframesAnimator
-        )
+        expect(detectAnimationFromOptions({ to: [0, 1] })).toBe(keyframes)
 
         expect(detectAnimationFromOptions({ type: "spring", to: [0, 1] })).toBe(
-            KeyframesAnimator
+            keyframes
         )
     })
 })

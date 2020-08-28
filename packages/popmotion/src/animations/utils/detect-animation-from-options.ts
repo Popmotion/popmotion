@@ -1,14 +1,12 @@
-import { SpringAnimator } from "../spring"
-import { KeyframesAnimator } from "../keyframes"
-import { DecayAnimator } from "../decay"
+import { spring } from "../spring"
+import { keyframes } from "../keyframes"
+import { decay } from "../decay"
 
-const animators = [KeyframesAnimator, DecayAnimator, SpringAnimator]
-const types = {
-    keyframes: KeyframesAnimator,
-    spring: SpringAnimator,
-    decay: DecayAnimator,
-}
-const numAnimators = animators.length
+/**
+ * These are the default types of animation included with animate.
+ * TODO: Consider removing decay
+ */
+const types = { keyframes, spring, decay }
 
 interface Options {
     to?: any
@@ -21,7 +19,7 @@ export function detectAnimationFromOptions<T extends Options>(config: T) {
          * If to is defined as a keyframes array we want to force this to be a keyframes
          * animation. In the future it might be possible to allow spring keyframes.
          */
-        return KeyframesAnimator
+        return keyframes
     } else if (types[config.type]) {
         /**
          * Or if the user has explicity defined their own animation type, return that.
@@ -29,12 +27,21 @@ export function detectAnimationFromOptions<T extends Options>(config: T) {
         return types[config.type]
     }
 
-    for (const key in config) {
-        for (let i = 0; i < numAnimators; i++) {
-            const animator = animators[i]
-            if ((animator.uniqueOptionKeys as any).has(key)) return animator
-        }
+    /**
+     * Attempt to detect which animation to use based on the options provided
+     */
+    const keys = new Set(Object.keys(config))
+    if (keys.has("ease") || keys.has("duration")) {
+        return keyframes
+    } else if (
+        keys.has("stiffness") ||
+        keys.has("mass") ||
+        keys.has("damping") ||
+        keys.has("restSpeed") ||
+        keys.has("restDelta")
+    ) {
+        return spring
     }
 
-    return KeyframesAnimator
+    return keyframes
 }

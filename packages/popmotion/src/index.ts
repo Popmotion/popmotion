@@ -2,9 +2,9 @@ export { animate } from "./animations"
 export { inertia } from "./animations/inertia"
 
 // Animators
-export { DecayAnimator } from "./animations/decay"
-export { SpringAnimator } from "./animations/spring"
-export { KeyframesAnimator } from "./animations/keyframes"
+export { decay } from "./animations/decay"
+export { spring } from "./animations/spring"
+export { keyframes } from "./animations/keyframes"
 
 // Utilities
 export { angle } from "./utils/angle"

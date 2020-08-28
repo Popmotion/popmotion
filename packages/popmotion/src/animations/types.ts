@@ -5,23 +5,14 @@ import { Easing } from "../easing/types"
  */
 export type Animatable = string | number
 
-/**
- * Animators that can be resolved for time
- */
-export interface Animator<O, V> {
-    options: O
-    update(t: number): V
-    updateOptions(options: O): void
-    flipTarget: () => void
+export interface Animation<V extends Animatable> {
+    current: V
     isComplete: boolean
+    update: (t: number) => void
+    flipTarget: () => void
 }
 
 export interface PlaybackControls {
-    play: () => void
-    pause: () => void
-    resume: () => void
-    reverse: () => void
-    seek: () => void
     stop: () => void
 }
 
