@@ -15,7 +15,7 @@ import {
     hasRepeatDelayElapsed,
 } from "./utils/elapsed"
 
-const framesync: Driver = update => {
+const framesync: Driver = (update) => {
     const passTimestamp = ({ delta }: FrameData) => update(delta)
 
     return {
@@ -26,7 +26,6 @@ const framesync: Driver = update => {
 
 export function animate<V extends Animatable>({
     from,
-    to,
     autoplay = true,
     driver = framesync,
     elapsed = 0,
@@ -40,6 +39,7 @@ export function animate<V extends Animatable>({
     onUpdate,
     ...options
 }: AnimationOptions<V>): PlaybackControls {
+    let { to } = options
     let driverControls: DriverControls
     let repeatCount = 0
     let computedDuration = (options as KeyframeOptions<V>).duration

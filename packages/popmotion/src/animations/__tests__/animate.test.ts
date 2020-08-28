@@ -13,7 +13,7 @@ function testAnimate<V extends Animatable>(
         driver: syncDriver(20),
         duration: 100,
         ease: linear,
-        onUpdate: v => output.push(v),
+        onUpdate: (v) => output.push(v),
         onComplete: () => {
             expect(output).toEqual(expected)
             resolve()
@@ -23,18 +23,25 @@ function testAnimate<V extends Animatable>(
 }
 
 describe("animate", () => {
-    test("Correctly performs an animation with default settings", async resolve => {
+    test("Correctly performs an animation with default settings", async (resolve) => {
         await testAnimate({ to: 100 }, [0, 20, 40, 60, 80, 100], resolve)
     })
+    test("Correctly uses a keyframes animation if to is an array", async (resolve) => {
+        await testAnimate(
+            { to: [0, 100], type: "spring" },
+            [0, 20, 40, 60, 80, 100],
+            resolve
+        )
+    })
 
-    test("Correctly stops an animation", async resolve => {
+    test("Correctly stops an animation", async (resolve) => {
         const output = []
         const animation = animate({
             to: 100,
             driver: syncDriver(20),
             duration: 100,
             ease: linear,
-            onUpdate: v => {
+            onUpdate: (v) => {
                 output.push(v)
                 if (v === 40) {
                     animation.stop()
@@ -47,7 +54,7 @@ describe("animate", () => {
         })
     })
 
-    test("Correctly interpolates a string-based keyframes", async resolve => {
+    test("Correctly interpolates a string-based keyframes", async (resolve) => {
         const numeric = []
         const string = []
         animate({
@@ -56,7 +63,7 @@ describe("animate", () => {
             ease: linear,
             from: 0,
             to: 200,
-            onUpdate: v => numeric.push(v),
+            onUpdate: (v) => numeric.push(v),
             onComplete: () => {
                 expect(numeric).toEqual([0, 40, 80, 120, 160, 200])
 
@@ -66,7 +73,7 @@ describe("animate", () => {
                     ease: linear,
                     from: "0%",
                     to: "200%",
-                    onUpdate: v => numeric.push(parseFloat(v)),
+                    onUpdate: (v) => numeric.push(parseFloat(v)),
                     onComplete: () => {
                         expect(string).not.toEqual(numeric)
                         resolve()
@@ -76,7 +83,7 @@ describe("animate", () => {
         })
     })
 
-    test("Correctly interpolates a string-based spring", async resolve => {
+    test("Correctly interpolates a string-based spring", async (resolve) => {
         const numeric = []
         const string = []
         animate({
@@ -84,7 +91,7 @@ describe("animate", () => {
             driver: syncDriver(50),
             from: 0,
             to: 200,
-            onUpdate: v => numeric.push(Math.round(v)),
+            onUpdate: (v) => numeric.push(Math.round(v)),
             onComplete: () => {
                 expect(numeric).toEqual([
                     0,
@@ -122,7 +129,7 @@ describe("animate", () => {
                     from: "0%",
                     to: "200%",
                     type: "spring",
-                    onUpdate: v => numeric.push(Math.round(parseFloat(v))),
+                    onUpdate: (v) => numeric.push(Math.round(parseFloat(v))),
                     onComplete: () => {
                         expect(string).not.toEqual(numeric)
                         resolve()
@@ -132,13 +139,13 @@ describe("animate", () => {
         })
     })
 
-    test("Correctly uses a spring if type is defined explicitly", async resolve => {
+    test("Correctly uses a spring if type is defined explicitly", async (resolve) => {
         const output = []
         animate({
             driver: syncDriver(20),
             duration: 100,
             ease: linear,
-            onUpdate: v => output.push(v),
+            onUpdate: (v) => output.push(v),
             onComplete: () => {
                 expect(output).not.toEqual([0, 20, 40, 60, 80, 100])
                 resolve()
@@ -147,7 +154,7 @@ describe("animate", () => {
         })
     })
 
-    test("Performs a keyframes animations when to is an array", async resolve => {
+    test("Performs a keyframes animations when to is an array", async (resolve) => {
         testAnimate(
             { to: [0, 50, -20], duration: 200 },
             [0, 10, 20, 30, 40, 50, 36, 22, 8, -6, -20],
@@ -155,7 +162,7 @@ describe("animate", () => {
         )
     })
 
-    test("Performs a keyframes animations when to is an array of strings", async resolve => {
+    test("Performs a keyframes animations when to is an array of strings", async (resolve) => {
         testAnimate(
             { to: ["#f00", "#0f0", "#00f"] },
             [
@@ -170,11 +177,11 @@ describe("animate", () => {
         )
     })
 
-    test("Correctly animates from/to with a keyframes animation by default", async resolve => {
+    test("Correctly animates from/to with a keyframes animation by default", async (resolve) => {
         testAnimate({ from: 50, to: 150 }, [50, 70, 90, 110, 130, 150], resolve)
     })
 
-    test("Correctly animates from/to strings with a keyframes animation by default", async resolve => {
+    test("Correctly animates from/to strings with a keyframes animation by default", async (resolve) => {
         testAnimate(
             { from: "#f00", to: "#00f" },
             [
@@ -189,7 +196,7 @@ describe("animate", () => {
         )
     })
 
-    test("Accepts a negative elapsed as delay", async resolve => {
+    test("Accepts a negative elapsed as delay", async (resolve) => {
         testAnimate(
             { to: 100, elapsed: -100 },
             [0, 0, 0, 0, 0, 0, 20, 40, 60, 80, 100],
@@ -197,7 +204,7 @@ describe("animate", () => {
         )
     })
 
-    test("Correctly repeats", async resolve => {
+    test("Correctly repeats", async (resolve) => {
         testAnimate(
             { to: 100, repeat: 1 },
             [0, 20, 40, 60, 80, 100, 20, 40, 60, 80, 100],
@@ -205,7 +212,7 @@ describe("animate", () => {
         )
     })
 
-    test("Correctly applies repeat type 'reverse'", async resolve => {
+    test("Correctly applies repeat type 'reverse'", async (resolve) => {
         testAnimate(
             { to: 100, repeat: 1, repeatType: "reverse" },
             [0, 20, 40, 60, 80, 100, 80, 60, 40, 20, 0],
@@ -213,7 +220,7 @@ describe("animate", () => {
         )
     })
 
-    test("Correctly applies repeat type 'mirror'", async resolve => {
+    test("Correctly applies repeat type 'mirror'", async (resolve) => {
         testAnimate(
             { to: 100, repeat: 1, ease: easeOut, repeatType: "mirror" },
             [
@@ -233,7 +240,7 @@ describe("animate", () => {
         )
     })
 
-    test("Correctly applies repeatDelay", async resolve => {
+    test("Correctly applies repeatDelay", async (resolve) => {
         testAnimate(
             { to: 100, repeat: 2, repeatDelay: 100 },
             [
@@ -268,7 +275,7 @@ describe("animate", () => {
         )
     })
 
-    test("Correctly applies repeatDelay to reverse", async resolve => {
+    test("Correctly applies repeatDelay to reverse", async (resolve) => {
         testAnimate(
             { to: 100, repeat: 2, repeatDelay: 100, repeatType: "reverse" },
             [
@@ -303,7 +310,7 @@ describe("animate", () => {
         )
     })
 
-    test("Correctly applies repeatDelay to mirror", async resolve => {
+    test("Correctly applies repeatDelay to mirror", async (resolve) => {
         testAnimate(
             {
                 to: 100,
@@ -344,7 +351,7 @@ describe("animate", () => {
         )
     })
 
-    test("Runs animations as an underdamped spring", async resolve => {
+    test("Runs animations as an underdamped spring", async (resolve) => {
         const output = []
         const expected = [
             100,
@@ -384,7 +391,7 @@ describe("animate", () => {
             to: 1000,
             stiffness: 300,
             driver: syncDriver(50),
-            onUpdate: v => output.push(Math.round(v)),
+            onUpdate: (v) => output.push(Math.round(v)),
             onComplete: () => {
                 expect(output).toEqual(expected)
                 resolve()
@@ -392,7 +399,7 @@ describe("animate", () => {
         })
     })
 
-    test("Runs animations as an overdamped spring", async resolve => {
+    test("Runs animations as an overdamped spring", async (resolve) => {
         const output = []
         const expected = [
             100,
@@ -413,7 +420,7 @@ describe("animate", () => {
             stiffness: 300,
             damping: 100,
             driver: syncDriver(250),
-            onUpdate: v => output.push(Math.round(v)),
+            onUpdate: (v) => output.push(Math.round(v)),
             onComplete: () => {
                 expect(output).toEqual(expected)
                 resolve()
@@ -421,7 +428,7 @@ describe("animate", () => {
         })
     })
 
-    test("Runs animations as a critically damped spring", async resolve => {
+    test("Runs animations as a critically damped spring", async (resolve) => {
         const output = []
         const expected = [
             999,
@@ -449,7 +456,7 @@ describe("animate", () => {
             stiffness: 100,
             damping: 20,
             driver: syncDriver(10),
-            onUpdate: v => output.push(Math.round(v)),
+            onUpdate: (v) => output.push(Math.round(v)),
             onComplete: () => {
                 expect(output).toEqual(expected)
                 resolve()
@@ -457,7 +464,7 @@ describe("animate", () => {
         })
     })
 
-    test("Runs spring animations on strings", async resolve => {
+    test("Runs spring animations on strings", async (resolve) => {
         const output = []
         const expected = [
             "rgba(255, 0, 0, 1)",
@@ -488,7 +495,7 @@ describe("animate", () => {
             to: "#00f",
             stiffness: 300,
             driver: syncDriver(50),
-            onUpdate: v => output.push(v),
+            onUpdate: (v) => output.push(v),
             onComplete: () => {
                 expect(output).toEqual(expected)
                 resolve()
@@ -496,7 +503,7 @@ describe("animate", () => {
         })
     })
 
-    test("Repeats springs", async resolve => {
+    test("Repeats springs", async (resolve) => {
         const output = []
         const expected = [
             100,
@@ -567,7 +574,7 @@ describe("animate", () => {
             stiffness: 300,
             driver: syncDriver(50),
             repeat: 1,
-            onUpdate: v => output.push(Math.round(v)),
+            onUpdate: (v) => output.push(Math.round(v)),
             onComplete: () => {
                 expect(output).toEqual(expected)
                 resolve()
@@ -575,7 +582,7 @@ describe("animate", () => {
         })
     })
 
-    test("Repeats springs with repeat delay", async resolve => {
+    test("Repeats springs with repeat delay", async (resolve) => {
         const output = []
         const expected = [
             100,
@@ -689,7 +696,7 @@ describe("animate", () => {
             driver: syncDriver(50),
             repeat: 2,
             repeatDelay: 300,
-            onUpdate: v => output.push(Math.round(v)),
+            onUpdate: (v) => output.push(Math.round(v)),
             onComplete: () => {
                 expect(output).toEqual(expected)
                 resolve()
@@ -697,7 +704,7 @@ describe("animate", () => {
         })
     })
 
-    test("Repeats springs as 'reverse'", async resolve => {
+    test("Repeats springs as 'reverse'", async (resolve) => {
         const output = []
         const expected = [
             100,
@@ -769,7 +776,7 @@ describe("animate", () => {
             driver: syncDriver(50),
             repeat: 1,
             repeatType: "reverse",
-            onUpdate: v => output.push(Math.round(v)),
+            onUpdate: (v) => output.push(Math.round(v)),
             onComplete: () => {
                 expect(output).toEqual(expected)
                 resolve()
@@ -777,7 +784,7 @@ describe("animate", () => {
         })
     })
 
-    test("Repeats springs as 'reverse' with repeatDelay", async resolve => {
+    test("Repeats springs as 'reverse' with repeatDelay", async (resolve) => {
         const output = []
         const expected = [
             100,
@@ -841,7 +848,7 @@ describe("animate", () => {
             repeat: 2,
             repeatType: "reverse",
             repeatDelay: 300,
-            onUpdate: v => output.push(Math.round(v)),
+            onUpdate: (v) => output.push(Math.round(v)),
             onComplete: () => {
                 expect(output).toEqual(expected)
                 resolve()
@@ -849,7 +856,7 @@ describe("animate", () => {
         })
     })
 
-    test("Repeats springs as 'mirror'", async resolve => {
+    test("Repeats springs as 'mirror'", async (resolve) => {
         const output = []
         const expected = [
             100,
@@ -921,7 +928,7 @@ describe("animate", () => {
             driver: syncDriver(50),
             repeat: 1,
             repeatType: "mirror",
-            onUpdate: v => output.push(Math.round(v)),
+            onUpdate: (v) => output.push(Math.round(v)),
             onComplete: () => {
                 expect(output).toEqual(expected)
                 resolve()
@@ -929,7 +936,7 @@ describe("animate", () => {
         })
     })
 
-    test("Repeats springs as 'mirror' with repeatDelay", async resolve => {
+    test("Repeats springs as 'mirror' with repeatDelay", async (resolve) => {
         const output = []
         const expected = [
             100,
@@ -993,7 +1000,7 @@ describe("animate", () => {
             repeat: 2,
             repeatType: "mirror",
             repeatDelay: 300,
-            onUpdate: v => output.push(Math.round(v)),
+            onUpdate: (v) => output.push(Math.round(v)),
             onComplete: () => {
                 expect(output).toEqual(expected)
                 resolve()
@@ -1001,7 +1008,7 @@ describe("animate", () => {
         })
     })
 
-    test("Finishes springs with explicit velocity", async resolve => {
+    test("Finishes springs with explicit velocity", async (resolve) => {
         animate({
             from: 100,
             to: 1000,
@@ -1018,7 +1025,7 @@ describe("animate", () => {
         })
     })
 
-    test("Decay stays still with no velocity", async resolve => {
+    test("Decay stays still with no velocity", async (resolve) => {
         const output = []
         const expected = [100]
         animate({
@@ -1028,7 +1035,7 @@ describe("animate", () => {
             timeConstant: 750,
             type: "decay",
             driver: syncDriver(200),
-            onUpdate: v => output.push(Math.round(v)),
+            onUpdate: (v) => output.push(Math.round(v)),
             onComplete: () => {
                 expect(output).toEqual(expected)
                 resolve()
@@ -1036,7 +1043,7 @@ describe("animate", () => {
         })
     })
 
-    test("Runs animations as a decay", async resolve => {
+    test("Runs animations as a decay", async (resolve) => {
         const output = []
         const expected = [100, 135, 154, 166, 172, 175, 177, 179, 179, 180]
         animate({
@@ -1045,7 +1052,7 @@ describe("animate", () => {
             power: 0.8,
             type: "decay",
             driver: syncDriver(200),
-            onUpdate: v => output.push(Math.round(v)),
+            onUpdate: (v) => output.push(Math.round(v)),
             onComplete: () => {
                 expect(output).toEqual(expected)
                 resolve()
@@ -1053,7 +1060,7 @@ describe("animate", () => {
         })
     })
 
-    test("Runs animations as a decay with modifyTarget", async resolve => {
+    test("Runs animations as a decay with modifyTarget", async (resolve) => {
         const output = []
         const expected = [
             100,
@@ -1074,10 +1081,10 @@ describe("animate", () => {
             from: 100,
             velocity: 100,
             power: 0.8,
-            modifyTarget: v => v * 2,
+            modifyTarget: (v) => v * 2,
             driver: syncDriver(200),
             type: "decay",
-            onUpdate: v => output.push(Math.round(v)),
+            onUpdate: (v) => output.push(Math.round(v)),
             onComplete: () => {
                 expect(output).toEqual(expected)
                 resolve()
@@ -1085,7 +1092,7 @@ describe("animate", () => {
         })
     })
 
-    test("Repeats decay", async resolve => {
+    test("Repeats decay", async (resolve) => {
         const output = []
         const expected = [135, 154, 166, 172, 175, 177, 179, 179, 180]
         animate({
@@ -1095,7 +1102,7 @@ describe("animate", () => {
             repeat: 1,
             type: "decay",
             driver: syncDriver(200),
-            onUpdate: v => output.push(Math.round(v)),
+            onUpdate: (v) => output.push(Math.round(v)),
             onComplete: () => {
                 expect(output).toEqual([100, ...expected, ...expected])
                 resolve()
