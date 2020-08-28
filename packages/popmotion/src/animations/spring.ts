@@ -68,7 +68,12 @@ export class SpringAnimator implements Animator<SpringOptions, number> {
             // Critically damped spring
             this.resolveSpring = (t: number) => {
                 const envelope = Math.exp(-angularFreq * t)
-                return to - envelope * (1 + angularFreq * t)
+                return (
+                    to -
+                    envelope *
+                        (initialDelta +
+                            (initialVelocity + angularFreq * initialDelta) * t)
+                )
             }
 
             // We only rely on velocity to calculate when the animation has finished
