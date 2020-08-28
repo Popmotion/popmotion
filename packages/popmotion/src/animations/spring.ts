@@ -121,7 +121,7 @@ export class SpringAnimator implements Animator<SpringOptions, number> {
         stiffness = 100,
         damping = 10,
         mass = 1.0,
-        restSpeed = 10,
+        restSpeed = 2,
         restDelta,
     }: SpringOptions) {
         /**
@@ -129,7 +129,7 @@ export class SpringAnimator implements Animator<SpringOptions, number> {
          * to 0.01
          */
         if (restDelta === undefined) {
-            restDelta = Math.abs(to - from) <= 1 ? 0.01 : 0.5
+            restDelta = Math.abs(to - from) <= 1 ? 0.01 : 0.4
         }
 
         this.options = {

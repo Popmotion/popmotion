@@ -91,6 +91,8 @@ describe("animate", () => {
             driver: syncDriver(50),
             from: 0,
             to: 200,
+            restSpeed: 10,
+            restDelta: 0.5,
             onUpdate: (v) => numeric.push(Math.round(v)),
             onComplete: () => {
                 expect(numeric).toEqual([
@@ -391,6 +393,8 @@ describe("animate", () => {
             to: 1000,
             stiffness: 300,
             driver: syncDriver(50),
+            restSpeed: 10,
+            restDelta: 0.5,
             onUpdate: (v) => output.push(Math.round(v)),
             onComplete: () => {
                 expect(output).toEqual(expected)
@@ -419,6 +423,8 @@ describe("animate", () => {
             to: 1000,
             stiffness: 300,
             damping: 100,
+            restSpeed: 10,
+            restDelta: 0.5,
             driver: syncDriver(250),
             onUpdate: (v) => output.push(Math.round(v)),
             onComplete: () => {
@@ -455,6 +461,8 @@ describe("animate", () => {
             to: 1000,
             stiffness: 100,
             damping: 20,
+            restSpeed: 10,
+            restDelta: 0.5,
             driver: syncDriver(10),
             onUpdate: (v) => output.push(Math.round(v)),
             onComplete: () => {
@@ -495,6 +503,8 @@ describe("animate", () => {
             to: "#00f",
             stiffness: 300,
             driver: syncDriver(50),
+            restSpeed: 10,
+            restDelta: 0.5,
             onUpdate: (v) => output.push(v),
             onComplete: () => {
                 expect(output).toEqual(expected)
@@ -574,6 +584,8 @@ describe("animate", () => {
             stiffness: 300,
             driver: syncDriver(50),
             repeat: 1,
+            restSpeed: 10,
+            restDelta: 0.5,
             onUpdate: (v) => output.push(Math.round(v)),
             onComplete: () => {
                 expect(output).toEqual(expected)
@@ -696,6 +708,8 @@ describe("animate", () => {
             driver: syncDriver(50),
             repeat: 2,
             repeatDelay: 300,
+            restSpeed: 10,
+            restDelta: 0.5,
             onUpdate: (v) => output.push(Math.round(v)),
             onComplete: () => {
                 expect(output).toEqual(expected)
@@ -776,6 +790,8 @@ describe("animate", () => {
             driver: syncDriver(50),
             repeat: 1,
             repeatType: "reverse",
+            restSpeed: 10,
+            restDelta: 0.5,
             onUpdate: (v) => output.push(Math.round(v)),
             onComplete: () => {
                 expect(output).toEqual(expected)
@@ -848,6 +864,8 @@ describe("animate", () => {
             repeat: 2,
             repeatType: "reverse",
             repeatDelay: 300,
+            restSpeed: 10,
+            restDelta: 0.5,
             onUpdate: (v) => output.push(Math.round(v)),
             onComplete: () => {
                 expect(output).toEqual(expected)
@@ -927,6 +945,8 @@ describe("animate", () => {
             stiffness: 300,
             driver: syncDriver(50),
             repeat: 1,
+            restSpeed: 10,
+            restDelta: 0.5,
             repeatType: "mirror",
             onUpdate: (v) => output.push(Math.round(v)),
             onComplete: () => {
@@ -1000,6 +1020,8 @@ describe("animate", () => {
             repeat: 2,
             repeatType: "mirror",
             repeatDelay: 300,
+            restSpeed: 10,
+            restDelta: 0.5,
             onUpdate: (v) => output.push(Math.round(v)),
             onComplete: () => {
                 expect(output).toEqual(expected)
