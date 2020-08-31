@@ -1,9 +1,8 @@
-import { SpringOptions, Animation } from "./types"
+import { SpringOptions, Animation, AnimationState } from "../types"
 
 /**
  * This is based on the spring implementation of Wobble https://github.com/skevy/wobble
  */
-
 export function spring({
     from = 0.0,
     to = 0.0,
@@ -14,6 +13,12 @@ export function spring({
     restSpeed = 2,
     restDelta,
 }: SpringOptions): Animation<number> {
+    /**
+     * This is the Iterator-spec return value. We ensure it's mutable rather than using a generator
+     * to reduce GC during animation.
+     */
+    const state: AnimationState<number> = { done: false, value: from }
+
     let resolveSpring = zero
     let resolveVelocity = zero
 
@@ -105,32 +110,20 @@ export function spring({
 
     createSpring()
 
-    const animation: Animation<number> = {
-        current: from,
-        isComplete: false,
-        update: (t: number) => {
+    return {
+        next: (t: number) => {
             const current = resolveSpring(t)
             const velocity = resolveVelocity(t) * 1000
             const isBelowVelocityThreshold = Math.abs(velocity) <= restSpeed
             const isBelowDisplacementThreshold =
                 Math.abs(to - current) <= restDelta
-            animation.isComplete =
+            state.done =
                 isBelowVelocityThreshold && isBelowDisplacementThreshold
 
-            animation.current = animation.isComplete ? to : current
-            return animation.current
-        },
-        flipTarget: () => {
-            velocity = -velocity
-            ;[from, to] = [to, from]
-            createSpring()
+            state.value = state.done ? to : current
+            return state
         },
     }
-
-    return animation
 }
-
-spring.needsInterpolation = (from: any, to: any) =>
-    typeof from === "string" || typeof to === "string"
 
 const zero = (_t: number) => 0

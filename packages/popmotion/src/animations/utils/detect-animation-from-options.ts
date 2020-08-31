@@ -1,6 +1,6 @@
-import { spring } from "../spring"
-import { keyframes } from "../keyframes"
-import { decay } from "../decay"
+import { spring } from "../generators/spring"
+import { keyframes } from "../generators/keyframes"
+import { decay } from "../generators/decay"
 
 /**
  * These are the default types of animation included with animate.

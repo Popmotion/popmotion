@@ -6,10 +6,17 @@ import { Easing } from "../easing/types"
 export type Animatable = string | number
 
 export interface Animation<V extends Animatable> {
-    current: V
-    isComplete: boolean
-    update: (t: number) => void
-    flipTarget: () => void
+    next: (
+        t: number
+    ) => {
+        value: V
+        done: boolean
+    }
+}
+
+export interface AnimationState<V extends Animatable> {
+    value: V
+    done: boolean
 }
 
 export interface PlaybackControls {
@@ -56,9 +63,9 @@ export interface PlaybackOptions<V extends Animatable> {
     onStop?: () => void
 }
 
-export interface KeyframeOptions<V extends Animatable = number> {
-    to: V | V[]
-    from?: V
+export interface KeyframeOptions {
+    to: string | number | string[] | number[]
+    from?: string | number
     duration?: number
     ease?: Easing | Easing[]
     offset?: number[]

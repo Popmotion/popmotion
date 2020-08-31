@@ -392,9 +392,9 @@ describe("animate", () => {
             from: 100,
             to: 1000,
             stiffness: 300,
-            driver: syncDriver(50),
             restSpeed: 10,
             restDelta: 0.5,
+            driver: syncDriver(50),
             onUpdate: (v) => output.push(Math.round(v)),
             onComplete: () => {
                 expect(output).toEqual(expected)
