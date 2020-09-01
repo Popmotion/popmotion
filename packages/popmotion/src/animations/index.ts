@@ -24,7 +24,7 @@ const framesync: Driver = (update) => {
     }
 }
 
-export function animate<V extends Animatable>({
+export function animate<V>({
     from,
     autoplay = true,
     driver = framesync,
@@ -38,7 +38,7 @@ export function animate<V extends Animatable>({
     onRepeat,
     onUpdate,
     ...options
-}: AnimationOptions<V>): PlaybackControls {
+}: AnimationOptions<V>) {
     let { to } = options
     let driverControls: DriverControls
     let repeatCount = 0

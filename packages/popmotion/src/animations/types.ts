@@ -1,11 +1,6 @@
 import { Easing } from "../easing/types"
 
-/**
- * The kinds of values that can currently be animated.
- */
-export type Animatable = string | number
-
-export interface Animation<V extends Animatable> {
+export interface Animation<V> {
     next: (
         t: number
     ) => {
@@ -16,7 +11,7 @@ export interface Animation<V extends Animatable> {
     flipTarget: () => void
 }
 
-export interface AnimationState<V extends Animatable> {
+export interface AnimationState<V> {
     value: V
     done: boolean
 }
@@ -43,7 +38,7 @@ export type Driver = (update: Update) => DriverControls
 /**
  * Playback options common to all animations.
  */
-export interface PlaybackOptions<V extends Animatable> {
+export interface PlaybackOptions<V> {
     /**
      * Whether to autoplay the animation when animate is called. If
      * set to false, the animation must be started manually via the returned
@@ -83,9 +78,9 @@ export interface DecayOptions {
     restDelta?: number
 }
 
-export interface SpringOptions<T extends Animatable = number> {
-    from?: T
-    to?: T
+export interface SpringOptions {
+    from?: number
+    to?: number
     velocity?: number
     stiffness?: number
     damping?: number
@@ -106,8 +101,8 @@ export interface InertiaOptions extends DecayOptions {
     onComplete?: () => void
 }
 
-export type AnimationOptions<V extends Animatable> = PlaybackOptions<V> &
-    (DecayOptions | KeyframeOptions | SpringOptions<V>)
+export type AnimationOptions<V> = PlaybackOptions<V> &
+    (DecayOptions | KeyframeOptions | SpringOptions)
 
 // /**
 //  * TODO: Implement
