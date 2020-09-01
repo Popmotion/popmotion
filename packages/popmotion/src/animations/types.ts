@@ -107,7 +107,7 @@ export interface InertiaOptions extends DecayOptions {
 }
 
 export type AnimationOptions<V extends Animatable> = PlaybackOptions<V> &
-    (DecayOptions | KeyframeOptions<V> | SpringOptions<V>)
+    (DecayOptions | KeyframeOptions | SpringOptions<V>)
 
 // /**
 //  * TODO: Implement
