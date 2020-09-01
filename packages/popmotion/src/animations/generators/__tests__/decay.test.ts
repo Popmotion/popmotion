@@ -34,4 +34,19 @@ describe("decay", () => {
             )
         ).toEqual([100, 213, 277, 313, 334, 345, 352, 355, 357, 358, 359, 360])
     })
+
+    test("Output of animations with negative velocity is inverse of absolute velocity", () => {
+        const absolute = animateSync(
+            decay({ from: 0, velocity: 100 }),
+            20,
+            false
+        )
+        const negative = animateSync(
+            decay({ from: 0, velocity: -100 }),
+            20,
+            false
+        )
+
+        expect(negative.map(Math.abs)).toEqual(absolute)
+    })
 })
