@@ -84,8 +84,11 @@ export function inertia({
             current = v
             velocity = velocityPerSecond(v - prev, getFrameData().delta)
 
-            if (Math.abs(boundary - v * heading) <= 0) {
-                startSpring({ from: current, to: boundary, velocity })
+            if (
+                (heading === 1 && v > boundary) ||
+                (heading === -1 && v < boundary)
+            ) {
+                startSpring({ from: v, to: boundary, velocity })
             }
         }
 
