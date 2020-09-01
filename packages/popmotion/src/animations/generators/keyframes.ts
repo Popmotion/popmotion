@@ -1,9 +1,4 @@
-import {
-    Animation,
-    AnimationState,
-    KeyframeOptions,
-    Animatable,
-} from "../types"
+import { Animation, AnimationState, KeyframeOptions } from "../types"
 import { interpolate } from "../../utils/interpolate"
 import { Easing } from "../../easing/types"
 import { easeInOut } from "../../easing"
@@ -23,7 +18,7 @@ export function convertOffsetToTimes(offset: number[], duration: number) {
     return offset.map((o) => o * duration)
 }
 
-export function keyframes<V extends Animatable>({
+export function keyframes<V>({
     from = 0,
     to = 1,
     ease,
@@ -59,7 +54,7 @@ export function keyframes<V extends Animatable>({
 
     return {
         next: (t: number) => {
-            state.value = interpolator(t) as V
+            state.value = interpolator(t)
             state.done = t >= duration
             return state
         },

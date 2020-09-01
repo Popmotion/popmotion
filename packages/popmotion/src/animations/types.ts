@@ -60,9 +60,9 @@ export interface PlaybackOptions<V> {
     onStop?: () => void
 }
 
-export interface KeyframeOptions {
-    to: string | number | string[] | number[]
-    from?: string | number
+export interface KeyframeOptions<V = number> {
+    to: V | V[]
+    from?: V
     duration?: number
     ease?: Easing | Easing[]
     offset?: number[]
@@ -102,7 +102,7 @@ export interface InertiaOptions extends DecayOptions {
 }
 
 export type AnimationOptions<V> = PlaybackOptions<V> &
-    (DecayOptions | KeyframeOptions | SpringOptions)
+    (DecayOptions | KeyframeOptions<V> | SpringOptions)
 
 // /**
 //  * TODO: Implement

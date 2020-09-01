@@ -1,9 +1,7 @@
 import {
-    Animatable,
     AnimationOptions,
     Driver,
     DriverControls,
-    PlaybackControls,
     KeyframeOptions,
 } from "./types"
 import { detectAnimationFromOptions } from "./utils/detect-animation-from-options"
@@ -24,7 +22,7 @@ const framesync: Driver = (update) => {
     }
 }
 
-export function animate<V>({
+export function animate<V = number>({
     from,
     autoplay = true,
     driver = framesync,
@@ -42,7 +40,7 @@ export function animate<V>({
     let { to } = options
     let driverControls: DriverControls
     let repeatCount = 0
-    let computedDuration = (options as KeyframeOptions).duration
+    let computedDuration = (options as KeyframeOptions<V>).duration
     let latest: V
     let isComplete = false
     let isForwardPlayback = true
@@ -51,12 +49,12 @@ export function animate<V>({
 
     const animator = detectAnimationFromOptions(options)
 
-    if ((animator as any).needsInterpolation?.(from, to as Animatable)) {
+    if ((animator as any).needsInterpolation?.(from, to)) {
         interpolateFromNumber = interpolate([0, 100], [from, to], {
             clamp: false,
         }) as (t: number) => V
-        from = 0 as V
-        to = 100 as V
+        from = 0 as any
+        to = 100 as any
     }
 
     const animation = animator({ ...options, from, to } as any)
@@ -93,10 +91,10 @@ export function animate<V>({
 
         if (!isComplete) {
             const state = animation.next(Math.max(0, elapsed))
-            latest = state.value as V
+            latest = state.value as any
 
             if (interpolateFromNumber)
-                latest = interpolateFromNumber(latest as number)
+                latest = interpolateFromNumber(latest as any)
 
             isComplete = isForwardPlayback ? state.done : elapsed <= 0
         }

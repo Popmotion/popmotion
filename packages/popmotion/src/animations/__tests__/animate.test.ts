@@ -1,14 +1,14 @@
 import { animate } from ".."
 import { linear, easeOut } from "../.."
-import { Animatable, AnimationOptions } from "../types"
+import { AnimationOptions } from "../types"
 import { syncDriver } from "./utils"
 
-function testAnimate<V extends Animatable>(
+function testAnimate<V>(
     options: AnimationOptions<V>,
     expected: V[],
     resolve: () => void
 ) {
-    const output = []
+    const output: V[] = []
     animate({
         driver: syncDriver(20),
         duration: 100,
@@ -35,7 +35,7 @@ describe("animate", () => {
     })
 
     test("Correctly stops an animation", async (resolve) => {
-        const output = []
+        const output: number[] = []
         const animation = animate({
             to: 100,
             driver: syncDriver(20),
@@ -55,8 +55,8 @@ describe("animate", () => {
     })
 
     test("Correctly interpolates a string-based keyframes", async (resolve) => {
-        const numeric = []
-        const string = []
+        const numeric: number[] = []
+        const string: number[] = []
         animate({
             driver: syncDriver(20),
             duration: 100,
@@ -84,8 +84,8 @@ describe("animate", () => {
     })
 
     test("Correctly interpolates a string-based spring", async (resolve) => {
-        const numeric = []
-        const string = []
+        const numeric: number[] = []
+        const string: number[] = []
         animate({
             type: "spring",
             driver: syncDriver(50),
@@ -142,7 +142,7 @@ describe("animate", () => {
     })
 
     test("Correctly uses a spring if type is defined explicitly", async (resolve) => {
-        const output = []
+        const output: unknown[] = []
         animate({
             driver: syncDriver(20),
             duration: 100,
@@ -354,7 +354,7 @@ describe("animate", () => {
     })
 
     test("Runs animations as an underdamped spring", async (resolve) => {
-        const output = []
+        const output: number[] = []
         const expected = [
             100,
             371,
@@ -404,7 +404,7 @@ describe("animate", () => {
     })
 
     test("Runs animations as an overdamped spring", async (resolve) => {
-        const output = []
+        const output: number[] = []
         const expected = [
             100,
             571,
@@ -435,7 +435,7 @@ describe("animate", () => {
     })
 
     test("Runs animations as a critically damped spring", async (resolve) => {
-        const output = []
+        const output: number[] = []
         const expected = [
             100,
             181,
@@ -476,7 +476,7 @@ describe("animate", () => {
     })
 
     test("Runs spring animations on strings", async (resolve) => {
-        const output = []
+        const output: string[] = []
         const expected = [
             "rgba(255, 0, 0, 1)",
             "rgba(213, 0, 140, 1)",
@@ -517,7 +517,7 @@ describe("animate", () => {
     })
 
     test("Repeats springs", async (resolve) => {
-        const output = []
+        const output: number[] = []
         const expected = [
             100,
             371,
@@ -598,7 +598,7 @@ describe("animate", () => {
     })
 
     test("Repeats springs with repeat delay", async (resolve) => {
-        const output = []
+        const output: number[] = []
         const expected = [
             100,
             371,
@@ -722,7 +722,7 @@ describe("animate", () => {
     })
 
     test("Repeats springs as 'reverse'", async (resolve) => {
-        const output = []
+        const output: number[] = []
         const expected = [
             100,
             371,
@@ -804,7 +804,7 @@ describe("animate", () => {
     })
 
     test("Repeats springs as 'reverse' with repeatDelay", async (resolve) => {
-        const output = []
+        const output: number[] = []
         const expected = [
             100,
             884,
@@ -878,7 +878,7 @@ describe("animate", () => {
     })
 
     test("Repeats springs as 'mirror'", async (resolve) => {
-        const output = []
+        const output: number[] = []
         const expected = [
             100,
             371,
@@ -960,7 +960,7 @@ describe("animate", () => {
     })
 
     test("Repeats springs as 'mirror' with repeatDelay", async (resolve) => {
-        const output = []
+        const output: number[] = []
         const expected = [
             100,
             884,
@@ -1051,7 +1051,7 @@ describe("animate", () => {
     })
 
     test("Decay stays still with no velocity", async (resolve) => {
-        const output = []
+        const output: number[] = []
         const expected = [100]
         animate({
             from: 100,
@@ -1069,7 +1069,7 @@ describe("animate", () => {
     })
 
     test("Runs animations as a decay", async (resolve) => {
-        const output = []
+        const output: number[] = []
         const expected = [100, 135, 154, 166, 172, 175, 177, 179, 179, 180]
         animate({
             from: 100,
@@ -1086,7 +1086,7 @@ describe("animate", () => {
     })
 
     test("Runs animations as a decay with modifyTarget", async (resolve) => {
-        const output = []
+        const output: number[] = []
         const expected = [
             100,
             213,
@@ -1118,7 +1118,7 @@ describe("animate", () => {
     })
 
     test("Repeats decay", async (resolve) => {
-        const output = []
+        const output: number[] = []
         const expected = [135, 154, 166, 172, 175, 177, 179, 179, 180]
         animate({
             from: 100,

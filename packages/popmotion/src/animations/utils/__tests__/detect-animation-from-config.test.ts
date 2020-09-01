@@ -5,9 +5,13 @@ import { keyframes } from "../../generators/keyframes"
 
 describe("detectAnimationFromOptions", () => {
     test("it selects the correct animation effect from any given config", () => {
-        expect(detectAnimationFromOptions({ stiffness: 300 })).toBe(spring)
-        expect(detectAnimationFromOptions({ duration: 2 })).toBe(keyframes)
-        expect(detectAnimationFromOptions({ a: 2 })).toBe(keyframes)
+        expect(detectAnimationFromOptions({ stiffness: 300 } as any)).toBe(
+            spring
+        )
+        expect(detectAnimationFromOptions({ duration: 2 } as any)).toBe(
+            keyframes
+        )
+        expect(detectAnimationFromOptions({ a: 2 } as any)).toBe(keyframes)
         expect(detectAnimationFromOptions({ type: "keyframes" })).toBe(
             keyframes
         )
