@@ -123,7 +123,15 @@ export function spring({
             state.value = state.done ? to : current
             return state
         },
+        flipTarget: () => {
+            velocity = -velocity
+            ;[from, to] = [to, from]
+            createSpring()
+        },
     }
 }
+
+spring.needsInterpolation = (a: any, b: any) =>
+    typeof a === "string" || typeof b === "string"
 
 const zero = (_t: number) => 0

@@ -81,9 +81,10 @@ export function inertia({
 
         const checkBoundary = (v: number) => {
             prev = current
-            velocity = velocityPerSecond(v - prev, getFrameData().delta)
             current = v
-            if (!(boundary - v * heading > 0)) {
+            velocity = velocityPerSecond(v - prev, getFrameData().delta)
+
+            if (Math.abs(boundary - v * heading) <= 0) {
                 startSpring({ from: current, to: boundary, velocity })
             }
         }

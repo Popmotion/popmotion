@@ -42,7 +42,7 @@ export function animate<V extends Animatable>({
     let { to } = options
     let driverControls: DriverControls
     let repeatCount = 0
-    let computedDuration = (options as KeyframeOptions<V>).duration
+    let computedDuration = (options as KeyframeOptions).duration
     let latest: V
     let isComplete = false
     let isForwardPlayback = true
@@ -51,7 +51,7 @@ export function animate<V extends Animatable>({
 
     const animator = detectAnimationFromOptions(options)
 
-    if (animator.needsInterpolation(from, to as Animatable)) {
+    if ((animator as any).needsInterpolation?.(from, to as Animatable)) {
         interpolateFromNumber = interpolate([0, 100], [from, to], {
             clamp: false,
         }) as (t: number) => V
@@ -78,7 +78,6 @@ export function animate<V extends Animatable>({
         }
 
         isComplete = false
-        animation.isComplete = false
         onRepeat && onRepeat()
     }
 
@@ -93,13 +92,13 @@ export function animate<V extends Animatable>({
         elapsed += delta
 
         if (!isComplete) {
-            animation.update(Math.max(0, elapsed))
-            latest = animation.current as any
+            const state = animation.next(Math.max(0, elapsed))
+            latest = state.value as V
 
             if (interpolateFromNumber)
                 latest = interpolateFromNumber(latest as number)
 
-            isComplete = isForwardPlayback ? animation.isComplete : elapsed <= 0
+            isComplete = isForwardPlayback ? state.done : elapsed <= 0
         }
 
         onUpdate?.(latest)

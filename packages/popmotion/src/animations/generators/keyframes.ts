@@ -63,5 +63,9 @@ export function keyframes<V extends Animatable>({
             state.done = t >= duration
             return state
         },
+        flipTarget: () => {
+            values.reverse()
+            interpolator = createInterpolator()
+        },
     }
 }

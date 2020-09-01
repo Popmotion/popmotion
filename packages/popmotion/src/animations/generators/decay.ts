@@ -32,5 +32,6 @@ export function decay({
             state.value = state.done ? target : target + delta
             return state
         },
+        flipTarget: () => {},
     }
 }

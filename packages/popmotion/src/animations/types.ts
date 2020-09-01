@@ -12,6 +12,8 @@ export interface Animation<V extends Animatable> {
         value: V
         done: boolean
     }
+    // TODO Change this mutative approach for a factory
+    flipTarget: () => void
 }
 
 export interface AnimationState<V extends Animatable> {
