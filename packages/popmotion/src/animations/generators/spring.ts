@@ -91,7 +91,10 @@ export function spring({
 
             resolveSpring = (t: number) => {
                 const envelope = Math.exp(-dampingRatio * angularFreq * t)
+
+                // When performing sinh or cosh values can hit Infinity so we cap them here
                 const freqForT = Math.min(dampedAngularFreq * t, 300)
+
                 return (
                     to -
                     (envelope *
