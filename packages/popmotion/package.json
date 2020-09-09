@@ -53,15 +53,34 @@
     },
     "devDependencies": {
         "@rollup/plugin-commonjs": "^11.0.1",
-        "@types/jest": "^26.0.12",
-        "ts-jest": "^26.3.0",
-        "tslint-circular-dependencies": "^0.1.0",
-        "typescript": "^4.0.2"
+        "tslint-circular-dependencies": "^0.1.0"
     },
     "prettier": {
         "printWidth": 80,
         "tabWidth": 4,
         "semi": false,
         "trailingComma": "es5"
+    },
+    "jest": {
+        "moduleFileExtensions": [
+            "ts",
+            "js"
+        ],
+        "moduleNameMapper": {
+            "style-value-types": "<rootDir>/../../style-value-types/src",
+            "framesync": "<rootDir>/../../framesync/src"
+        },
+        "transform": {
+            "\\.(ts)$": "../../../node_modules/ts-jest/preprocessor.js"
+        },
+        "testRegex": "/__tests__/.*\\.test.(ts|js)$",
+        "rootDir": "src",
+        "collectCoverageFrom": [
+            "**/*.{js,jsx,ts,tsx}",
+            "!**/node_modules/**",
+            "!**/__tests__/**",
+            "!**/worklet/**"
+        ],
+        "coverageDirectory": "<rootDir>/../coverage"
     }
 }

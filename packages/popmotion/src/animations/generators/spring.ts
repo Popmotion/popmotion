@@ -95,7 +95,6 @@ export function spring({
                 return (
                     to -
                     (envelope *
-                        // TODO: Also test this (initialDelta + (initialVelocity + angularFreq * initialDelta) * t)
                         ((initialVelocity +
                             dampingRatio * angularFreq * initialDelta) *
                             Math.sinh(dampedAngularFreq * t) +
