@@ -64,4 +64,19 @@ describe("decay", () => {
             1000,
         ])
     })
+    test("Overdamped spring with very high stiffness/damping", () => {
+        expect(
+            animateSync(
+                spring({
+                    from: 100,
+                    to: 1000,
+                    stiffness: 1000000,
+                    damping: 10000000,
+                    restDelta: 1,
+                    restSpeed: 10,
+                }),
+                200
+            )
+        ).toEqual([100, 1000])
+    })
 })

@@ -91,16 +91,16 @@ export function spring({
 
             resolveSpring = (t: number) => {
                 const envelope = Math.exp(-dampingRatio * angularFreq * t)
-
+                const freqForT = Math.min(dampedAngularFreq * t, 300)
                 return (
                     to -
                     (envelope *
                         ((initialVelocity +
                             dampingRatio * angularFreq * initialDelta) *
-                            Math.sinh(dampedAngularFreq * t) +
+                            Math.sinh(freqForT) +
                             dampedAngularFreq *
                                 initialDelta *
-                                Math.cosh(dampedAngularFreq * t))) /
+                                Math.cosh(freqForT))) /
                         dampedAngularFreq
                 )
             }
