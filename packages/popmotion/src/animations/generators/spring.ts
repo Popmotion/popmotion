@@ -1,23 +1,36 @@
 import { SpringOptions, Animation, AnimationState } from "../types"
+import { findSpring } from "../utils/find-spring"
 
 /**
  * This is based on the spring implementation of Wobble https://github.com/skevy/wobble
  */
 export function spring({
     from = 0.0,
-    to = 0.0,
+    to = 1.0,
     velocity = 0.0,
     stiffness = 100,
     damping = 10,
     mass = 1.0,
     restSpeed = 2,
     restDelta,
+    duration,
+    bounce,
 }: SpringOptions): Animation<number> {
     /**
      * This is the Iterator-spec return value. We ensure it's mutable rather than using a generator
      * to reduce GC during animation.
      */
     const state: AnimationState<number> = { done: false, value: from }
+
+    if (duration !== undefined && bounce !== undefined) {
+        const derived = findSpring({ from, to, duration, bounce })
+
+        console.log(derived)
+        stiffness = derived.stiffness
+        damping = derived.damping
+        velocity = 0.0
+        mass = 1.0
+    }
 
     let resolveSpring = zero
     let resolveVelocity = zero
@@ -115,12 +128,18 @@ export function spring({
     return {
         next: (t: number) => {
             const current = resolveSpring(t)
-            const velocity = resolveVelocity(t) * 1000
-            const isBelowVelocityThreshold = Math.abs(velocity) <= restSpeed
-            const isBelowDisplacementThreshold =
-                Math.abs(to - current) <= restDelta
-            state.done =
-                isBelowVelocityThreshold && isBelowDisplacementThreshold
+
+            if (duration === undefined) {
+                const currentVelocity = resolveVelocity(t) * 1000
+                const isBelowVelocityThreshold =
+                    Math.abs(currentVelocity) <= restSpeed
+                const isBelowDisplacementThreshold =
+                    Math.abs(to - current) <= restDelta
+                state.done =
+                    isBelowVelocityThreshold && isBelowDisplacementThreshold
+            } else {
+                state.done = t >= duration
+            }
 
             state.value = state.done ? to : current
             return state

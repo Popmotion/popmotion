@@ -17,16 +17,17 @@ export function Keyframes() {
   useEffect(() => {
     const controls = animate({
       type: 'spring',
-      damping: 25,
-      stiffness: 120,
-      from: opacity ? 0 : 1,
-      to: opacity,
-      onUpdate: v => {
-        console.log(v);
-        ref.current.style.opacity = v;
-        if (v > 20) controls.stop();
-      }
+      from: 0,
+      to: 400,
+      duration: 400,
+      bounce: 0.3,
+      onUpdate: (v) => {
+        ref.current.style.transform = `translateX(${v}px) translateZ(0)`;
+        // if (v > 20) controls.stop();
+      },
     });
+
+    return () => controls.stop();
     // animate({
     //   from: 0,
     //   to: 300,
