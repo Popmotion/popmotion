@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { animate, inertia } from 'popmotion';
+import { animate } from 'popmotion';
 
 const Box = styled.div`
   width: 100px;
@@ -20,7 +20,9 @@ export function Keyframes() {
       from: 0,
       to: 400,
       duration: 300,
-      dampingRatio: 0.5,
+      mass: 1,
+      velocity: 20,
+      dampingRatio: 1,
       onUpdate: (v) => {
         ref.current.style.transform = `translateX(${v}px) translateZ(0)`;
         // if (v > 20) controls.stop();

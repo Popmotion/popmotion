@@ -2,6 +2,10 @@ import { warning } from "hey-listen"
 import { clamp } from "../../utils/clamp"
 import { SpringOptions } from "../types"
 
+/**
+ * This is ported from the Framer implementation of duration-based spring resolution.
+ */
+
 type Resolver = (num: number) => number
 
 const safeMin = 0.001

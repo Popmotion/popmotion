@@ -1,9 +1,9 @@
 import { spring } from "../spring"
 import { animateSync } from "./utils"
 
-describe("decay", () => {
+describe("spring", () => {
     test("Runs animations with default values ", () => {
-        expect(animateSync(spring({}), 200)).toEqual([0])
+        expect(animateSync(spring({}), 200)).toEqual([0, 1, 1, 1])
     })
     test("Underdamped spring", () => {
         expect(
