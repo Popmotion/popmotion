@@ -18,7 +18,7 @@ test("findSpring", () => {
 
             const settings = findSpring({
                 duration: minDuration + durationIndex * durationResolution,
-                dampingRatio: minDamping + ratioIndex * ratioResolution,
+                bounce: 1 - minDamping + ratioIndex * ratioResolution,
             })
             expect(settings.stiffness).not.toBe(100)
             expect(settings.damping).not.toBe(10)

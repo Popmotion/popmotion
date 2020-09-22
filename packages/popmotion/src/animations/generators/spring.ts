@@ -14,16 +14,19 @@ export function spring({
     restSpeed = 2,
     restDelta,
     duration,
-    dampingRatio,
+    bounce,
 }: SpringOptions): Animation<number> {
+    let isResolvedFromDuration = false
+
     /**
      * This is the Iterator-spec return value. We ensure it's mutable rather than using a generator
      * to reduce GC during animation.
      */
     const state: AnimationState<number> = { done: false, value: from }
 
-    if (duration !== undefined && dampingRatio !== undefined) {
-        const derived = findSpring({ duration, dampingRatio })
+    if (duration !== undefined || bounce !== undefined) {
+        isResolvedFromDuration = true
+        const derived = findSpring({ duration, bounce })
         stiffness = derived.stiffness
         damping = derived.damping
         velocity = 0.0
@@ -36,7 +39,7 @@ export function spring({
     function createSpring() {
         const initialVelocity = velocity ? -(velocity / 1000) : 0.0
         const initialDelta = to - from
-        dampingRatio = damping / (2 * Math.sqrt(stiffness * mass))
+        const dampingRatio = damping / (2 * Math.sqrt(stiffness * mass))
         const undampedAngularFreq = Math.sqrt(stiffness / mass) / 1000
 
         /**
@@ -138,7 +141,7 @@ export function spring({
         next: (t: number) => {
             const current = resolveSpring(t)
 
-            if (duration === undefined) {
+            if (!isResolvedFromDuration) {
                 const currentVelocity = resolveVelocity(t) * 1000
                 const isBelowVelocityThreshold =
                     Math.abs(currentVelocity) <= restSpeed

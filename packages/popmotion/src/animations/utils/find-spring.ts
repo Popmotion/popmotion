@@ -15,8 +15,8 @@ export const minDamping = 0.05
 export const maxDamping = 1
 
 export function findSpring({
-    dampingRatio,
-    duration,
+    duration = 0.8,
+    bounce = 0.25,
     velocity = 0,
     mass = 1,
 }: SpringOptions) {
@@ -27,6 +27,8 @@ export function findSpring({
         duration <= maxDuration * 1000,
         "Spring duration must be 10 seconds or less"
     )
+
+    let dampingRatio = 1 - bounce
 
     /**
      * Restrict dampingRatio and duration to within acceptable ranges.
