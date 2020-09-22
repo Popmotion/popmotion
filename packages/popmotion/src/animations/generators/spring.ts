@@ -1,5 +1,5 @@
 import { SpringOptions, Animation, AnimationState } from "../types"
-import { findSpring } from "../utils/find-spring"
+import { calcAngularFreq, findSpring } from "../utils/find-spring"
 
 /**
  * This is based on the spring implementation of Wobble https://github.com/skevy/wobble
@@ -14,7 +14,7 @@ export function spring({
     restSpeed = 2,
     restDelta,
     duration,
-    bounce,
+    dampingRatio,
 }: SpringOptions): Animation<number> {
     /**
      * This is the Iterator-spec return value. We ensure it's mutable rather than using a generator
@@ -22,10 +22,8 @@ export function spring({
      */
     const state: AnimationState<number> = { done: false, value: from }
 
-    if (duration !== undefined && bounce !== undefined) {
-        const derived = findSpring({ from, to, duration, bounce })
-
-        console.log(derived)
+    if (duration !== undefined && dampingRatio !== undefined) {
+        const derived = findSpring({ duration, dampingRatio })
         stiffness = derived.stiffness
         damping = derived.damping
         velocity = 0.0
@@ -38,8 +36,8 @@ export function spring({
     function createSpring() {
         const initialVelocity = velocity ? -(velocity / 1000) : 0.0
         const initialDelta = to - from
-        const dampingRatio = damping / (2 * Math.sqrt(stiffness * mass))
-        const angularFreq = Math.sqrt(stiffness / mass) / 1000
+        dampingRatio = damping / (2 * Math.sqrt(stiffness * mass))
+        const undampedAngularFreq = Math.sqrt(stiffness / mass) / 1000
 
         /**
          * If we're working within what looks like a 0-1 range, change the default restDelta
@@ -48,62 +46,73 @@ export function spring({
         restDelta ??= Math.abs(to - from) <= 1 ? 0.01 : 0.4
 
         if (dampingRatio < 1) {
+            const angularFreq = calcAngularFreq(
+                undampedAngularFreq,
+                dampingRatio
+            )
+
             // Underdamped spring
             resolveSpring = (t: number) => {
-                const envelope = Math.exp(-dampingRatio * angularFreq * t)
-                const expoDecay =
-                    angularFreq * Math.sqrt(1.0 - dampingRatio * dampingRatio)
+                const envelope = Math.exp(
+                    -dampingRatio * undampedAngularFreq * t
+                )
 
                 return (
                     to -
                     envelope *
                         (((initialVelocity +
-                            dampingRatio * angularFreq * initialDelta) /
-                            expoDecay) *
-                            Math.sin(expoDecay * t) +
-                            initialDelta * Math.cos(expoDecay * t))
+                            dampingRatio * undampedAngularFreq * initialDelta) /
+                            angularFreq) *
+                            Math.sin(angularFreq * t) +
+                            initialDelta * Math.cos(angularFreq * t))
                 )
             }
 
             resolveVelocity = (t: number) => {
                 // TODO Resolve these calculations with the above
-                const envelope = Math.exp(-dampingRatio * angularFreq * t)
-                const expoDecay =
-                    angularFreq * Math.sqrt(1.0 - dampingRatio * dampingRatio)
+                const envelope = Math.exp(
+                    -dampingRatio * undampedAngularFreq * t
+                )
+
                 return (
                     dampingRatio *
-                        angularFreq *
+                        undampedAngularFreq *
                         envelope *
-                        ((Math.sin(expoDecay * t) *
+                        ((Math.sin(angularFreq * t) *
                             (initialVelocity +
-                                dampingRatio * angularFreq * initialDelta)) /
-                            expoDecay +
-                            initialDelta * Math.cos(expoDecay * t)) -
+                                dampingRatio *
+                                    undampedAngularFreq *
+                                    initialDelta)) /
+                            angularFreq +
+                            initialDelta * Math.cos(angularFreq * t)) -
                     envelope *
-                        (Math.cos(expoDecay * t) *
+                        (Math.cos(angularFreq * t) *
                             (initialVelocity +
-                                dampingRatio * angularFreq * initialDelta) -
-                            expoDecay * initialDelta * Math.sin(expoDecay * t))
+                                dampingRatio *
+                                    undampedAngularFreq *
+                                    initialDelta) -
+                            angularFreq *
+                                initialDelta *
+                                Math.sin(angularFreq * t))
                 )
             }
         } else if (dampingRatio === 1) {
             // Critically damped spring
-            resolveSpring = (t: number) => {
-                const envelope = Math.exp(-angularFreq * t)
-                return (
-                    to -
-                    envelope *
-                        (initialDelta +
-                            (initialVelocity + angularFreq * initialDelta) * t)
-                )
-            }
+            resolveSpring = (t: number) =>
+                to -
+                Math.exp(-undampedAngularFreq * t) *
+                    (initialDelta +
+                        (initialVelocity + undampedAngularFreq * initialDelta) *
+                            t)
         } else {
             // Overdamped spring
             const dampedAngularFreq =
-                angularFreq * Math.sqrt(dampingRatio * dampingRatio - 1)
+                undampedAngularFreq * Math.sqrt(dampingRatio * dampingRatio - 1)
 
             resolveSpring = (t: number) => {
-                const envelope = Math.exp(-dampingRatio * angularFreq * t)
+                const envelope = Math.exp(
+                    -dampingRatio * undampedAngularFreq * t
+                )
 
                 // When performing sinh or cosh values can hit Infinity so we cap them here
                 const freqForT = Math.min(dampedAngularFreq * t, 300)
@@ -112,7 +121,7 @@ export function spring({
                     to -
                     (envelope *
                         ((initialVelocity +
-                            dampingRatio * angularFreq * initialDelta) *
+                            dampingRatio * undampedAngularFreq * initialDelta) *
                             Math.sinh(freqForT) +
                             dampedAngularFreq *
                                 initialDelta *

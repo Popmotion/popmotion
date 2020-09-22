@@ -1,4 +1,4 @@
-import { findSpring, minDampingRatio, minDuration } from "../find-spring"
+import { findSpring, minDamping, minDuration } from "../find-spring"
 
 test("findSpring", () => {
     let time = performance.now()
@@ -15,9 +15,10 @@ test("findSpring", () => {
             durationIndex++
         ) {
             searchedSprings += 1
+            // console.log(minDuration, durationIndex, durationResolution)
             const settings = findSpring({
                 duration: minDuration + durationIndex * durationResolution,
-                bounce: minDampingRatio + ratioIndex * ratioResolution,
+                dampingRatio: minDamping + ratioIndex * ratioResolution,
             })
             if (!settings.hasFoundSettings) console.log(settings)
 

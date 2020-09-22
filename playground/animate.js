@@ -19,8 +19,8 @@ export function Keyframes() {
       type: 'spring',
       from: 0,
       to: 400,
-      duration: 400,
-      bounce: 0.3,
+      duration: 300,
+      dampingRatio: 0.5,
       onUpdate: (v) => {
         ref.current.style.transform = `translateX(${v}px) translateZ(0)`;
         // if (v > 20) controls.stop();

@@ -1,90 +1,106 @@
-import { invariant } from "hey-listen"
+import { warning } from "hey-listen"
 import { clamp } from "../../utils/clamp"
-import { mix } from "../../utils/mix"
-import { spring } from "../generators/spring"
 import { SpringOptions } from "../types"
 
-export const minDampingRatio = Number.MIN_VALUE
-export const maxDampingRatio = 1.0
+type Resolver = (num: number) => number
+
+const safeMin = 0.001
 export const minDuration = 0.01
-export const maxDuration = 10000.0
+export const maxDuration = 10.0
+export const minDamping = 0.05
+export const maxDamping = 1
 
-const initialStiffness = 1000
-const timeResolution = 50
-const maxIterations = 100
-
-/**
- * TODO: Memoize this
- * - Accept to/from/velocity/mass
- */
 export function findSpring({
+    dampingRatio,
     duration,
-    bounce = 0.9,
-    from,
-    to,
-    velocity,
+    velocity = 0,
+    mass = 1,
 }: SpringOptions) {
-    invariant(
-        bounce >= minDampingRatio && bounce <= maxDampingRatio,
-        `bounce set as ${bounce}: Must be a value between ${minDampingRatio} and ${maxDampingRatio}`
+    let envelope: Resolver
+    let derivative: Resolver
+
+    warning(
+        duration <= maxDuration * 1000,
+        "Spring duration must be 10 seconds or less"
     )
 
-    let dampingRatio = 1 - bounce
+    /**
+     * Restrict dampingRatio and duration to within acceptable ranges.
+     */
+    dampingRatio = clamp(minDamping, maxDamping, dampingRatio)
+    duration = clamp(minDuration, maxDuration, duration / 1000)
 
-    dampingRatio = clamp(minDampingRatio, maxDampingRatio, dampingRatio)
-
-    const calcDamping = createDampingCalc(dampingRatio)
-
-    let stiffness = 0
-    let damping = 0
-    let hasFoundSettings: boolean
-    let minStiffness = 0
-    let maxStiffness = initialStiffness * 2
-    let i = 0
-
-    while (hasFoundSettings === undefined) {
-        stiffness = mix(minStiffness, maxStiffness, 0.5)
-        damping = calcDamping(stiffness)
-
-        const animation = spring({
-            from,
-            to,
-            stiffness: stiffness,
-            damping: damping,
-        })
-
-        const doneAtPrevFrame = animation.next(duration - timeResolution).done
-        const doneAtDurationFrame = animation.next(duration).done
-
-        i++
-
-        if (i > maxIterations) {
-            hasFoundSettings = false
+    if (dampingRatio < 1) {
+        /**
+         * Underdamped spring
+         */
+        envelope = (undampedFreq) => {
+            const exponentialDecay = undampedFreq * dampingRatio
+            const delta = exponentialDecay * duration
+            const a = exponentialDecay - velocity
+            const b = calcAngularFreq(undampedFreq, dampingRatio)
+            const c = Math.exp(-delta)
+            return safeMin - (a / b) * c
         }
 
-        if (doneAtPrevFrame === doneAtDurationFrame) {
-            const rangeSize = maxStiffness - minStiffness
+        derivative = (undampedFreq) => {
+            const exponentialDecay = undampedFreq * dampingRatio
+            const delta = exponentialDecay * duration
+            const d = delta * velocity + velocity
+            const e =
+                Math.pow(dampingRatio, 2) * Math.pow(undampedFreq, 2) * duration
+            const f = Math.exp(-delta)
+            const g = calcAngularFreq(Math.pow(undampedFreq, 2), dampingRatio)
+            const factor = -envelope(undampedFreq) + safeMin > 0 ? -1 : 1
+            return (factor * ((d - e) * f)) / g
+        }
+    } else {
+        /**
+         * Critically-damped spring
+         */
+        envelope = (undampedFreq) => {
+            const a = Math.exp(-undampedFreq * duration)
+            const b = (undampedFreq - velocity) * duration + 1
+            return -safeMin + a * b
+        }
 
-            if (doneAtDurationFrame) {
-                // If we need to decrease stiffness
-                maxStiffness = stiffness
-                minStiffness = stiffness - rangeSize / 2
-            } else {
-                // If we need to increase stiffness
-                minStiffness = stiffness
-                maxStiffness = stiffness + rangeSize * 2
-            }
-        } else {
-            hasFoundSettings = true
+        derivative = (undampedFreq) => {
+            const a = Math.exp(-undampedFreq * duration)
+            const b = (velocity - undampedFreq) * (duration * duration)
+            return a * b
         }
     }
 
-    return {
-        hasFoundSettings,
-        damping,
-        stiffness,
+    const initialGuess = 5 / duration
+    const undampedFreq = approximateRoot(envelope, derivative, initialGuess)
+
+    if (isNaN(undampedFreq)) {
+        return {
+            stiffness: 100,
+            damping: 10,
+        }
+    } else {
+        const stiffness = Math.pow(undampedFreq, 2) * mass
+        return {
+            stiffness,
+            damping: dampingRatio * 2 * Math.sqrt(mass * stiffness),
+        }
     }
 }
 
-const createDampingCalc = (dampingRatio: number) => (stiffness: number) =>
-    dampingRatio * (2 * Math.sqrt(stiffness))
+const rootIterations = 12
+function approximateRoot(
+    envelope: Resolver,
+    derivative: Resolver,
+    initialGuess: number
+): number {
+    let result = initialGuess
+    for (let i = 1; i < rootIterations; i++) {
+        result = result - envelope(result) / derivative(result)
+    }
+    return result
+}
+
+export function calcAngularFreq(undampedFreq: number, dampingRatio: number) {
+    return undampedFreq * Math.sqrt(1 - dampingRatio * dampingRatio)
+}

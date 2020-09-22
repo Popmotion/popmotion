@@ -85,7 +85,7 @@ export interface SpringOptions {
     stiffness?: number
     damping?: number
     duration?: number
-    bounce?: number
+    dampingRatio?: number
     mass?: number
     restSpeed?: number
     restDelta?: number
