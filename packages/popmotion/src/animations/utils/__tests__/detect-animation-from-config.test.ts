@@ -11,6 +11,9 @@ describe("detectAnimationFromOptions", () => {
         expect(detectAnimationFromOptions({ duration: 2 } as any)).toBe(
             keyframes
         )
+        expect(
+            detectAnimationFromOptions({ duration: 2, dampingRatio: 1 } as any)
+        ).toBe(spring)
         expect(detectAnimationFromOptions({ a: 2 } as any)).toBe(keyframes)
         expect(detectAnimationFromOptions({ type: "keyframes" })).toBe(
             keyframes

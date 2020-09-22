@@ -31,9 +31,13 @@ export function detectAnimationFromOptions<T extends Options>(config: T) {
      * Attempt to detect which animation to use based on the options provided
      */
     const keys = new Set(Object.keys(config))
-    if (keys.has("ease") || keys.has("duration")) {
+    if (
+        keys.has("ease") ||
+        (keys.has("duration") && !keys.has("dampingRatio"))
+    ) {
         return keyframes
     } else if (
+        keys.has("dampingRatio") ||
         keys.has("stiffness") ||
         keys.has("mass") ||
         keys.has("damping") ||
