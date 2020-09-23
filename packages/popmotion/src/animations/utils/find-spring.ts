@@ -15,7 +15,7 @@ export const minDamping = 0.05
 export const maxDamping = 1
 
 export function findSpring({
-    duration = 0.8,
+    duration = 800,
     bounce = 0.25,
     velocity = 0,
     mass = 1,

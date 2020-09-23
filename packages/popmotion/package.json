@@ -9,6 +9,7 @@
     "module": "dist/popmotion.es.js",
     "jsnext:main": "dist/popmotion.es.js",
     "unpkg": "./dist/popmotion.min.js",
+    "sideEffects": false,
     "repository": {
         "type": "git",
         "url": "https://github.com/Popmotion/popmotion/tree/master/packages/popmotion"
