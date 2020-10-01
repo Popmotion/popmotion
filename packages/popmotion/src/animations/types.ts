@@ -78,15 +78,18 @@ export interface DecayOptions {
     restDelta?: number
 }
 
-export interface SpringOptions {
-    from?: number
-    to?: number
+export interface PhysicsSpringOptions {
     velocity?: number
     stiffness?: number
     damping?: number
+    mass?: number
+}
+
+export interface SpringOptions extends PhysicsSpringOptions {
+    from?: number
+    to?: number
     duration?: number
     bounce?: number
-    mass?: number
     restSpeed?: number
     restDelta?: number
 }

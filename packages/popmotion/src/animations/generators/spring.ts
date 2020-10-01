@@ -1,5 +1,49 @@
-import { SpringOptions, Animation, AnimationState } from "../types"
+import {
+    SpringOptions,
+    PhysicsSpringOptions,
+    Animation,
+    AnimationState,
+} from "../types"
 import { calcAngularFreq, findSpring } from "../utils/find-spring"
+
+const durationKeys = ["duration", "bounce"]
+const physicsKeys = ["stiffness", "damping", "mass"]
+
+function isSpringType(options: SpringOptions, keys: string[]) {
+    return keys.some((key) => (options as any)[key] !== undefined)
+}
+
+function getSpringOptions(
+    options: SpringOptions
+): PhysicsSpringOptions & { isResolvedFromDuration: boolean } {
+    let springOptions = {
+        velocity: 0.0,
+        stiffness: 100,
+        damping: 10,
+        mass: 1.0,
+        isResolvedFromDuration: false,
+        ...options,
+    }
+
+    // stiffness/damping/mass overrides duration/bounce
+    if (
+        !isSpringType(options, physicsKeys) &&
+        isSpringType(options, durationKeys)
+    ) {
+        const derived = findSpring(options)
+
+        springOptions = {
+            ...springOptions,
+            ...derived,
+            velocity: 0.0,
+            mass: 1.0,
+        }
+
+        springOptions.isResolvedFromDuration = true
+    }
+
+    return springOptions
+}
 
 /**
  * This is based on the spring implementation of Wobble https://github.com/skevy/wobble
@@ -7,31 +51,23 @@ import { calcAngularFreq, findSpring } from "../utils/find-spring"
 export function spring({
     from = 0.0,
     to = 1.0,
-    velocity = 0.0,
-    stiffness = 100,
-    damping = 10,
-    mass = 1.0,
     restSpeed = 2,
     restDelta,
-    duration,
-    bounce,
+    ...options
 }: SpringOptions): Animation<number> {
-    let isResolvedFromDuration = false
-
     /**
      * This is the Iterator-spec return value. We ensure it's mutable rather than using a generator
      * to reduce GC during animation.
      */
     const state: AnimationState<number> = { done: false, value: from }
 
-    if (duration !== undefined || bounce !== undefined) {
-        isResolvedFromDuration = true
-        const derived = findSpring({ duration, bounce })
-        stiffness = derived.stiffness
-        damping = derived.damping
-        velocity = 0.0
-        mass = 1.0
-    }
+    let {
+        stiffness,
+        damping,
+        mass,
+        velocity,
+        isResolvedFromDuration,
+    } = getSpringOptions(options)
 
     let resolveSpring = zero
     let resolveVelocity = zero
@@ -150,7 +186,7 @@ export function spring({
                 state.done =
                     isBelowVelocityThreshold && isBelowDisplacementThreshold
             } else {
-                state.done = t >= duration
+                state.done = t >= options.duration
             }
 
             state.value = state.done ? to : current
