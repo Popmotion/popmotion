@@ -8,6 +8,7 @@
   "types": "./lib/index.d.ts",
   "module": "dist/popmotion.es.js",
   "jsnext:main": "dist/popmotion.es.js",
+  "sideEffects": false,
   "repository": {
     "type": "git",
     "url": "https://github.com/Popmotion/popmotion/tree/master/packages/popmotion"
