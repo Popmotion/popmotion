@@ -5,9 +5,6 @@
 [![npm version](https://img.shields.io/npm/v/popmotion.svg?style=flat-square)](https://www.npmjs.com/package/popmotion)
 [![npm downloads](https://img.shields.io/npm/dm/popmotion.svg?style=flat-square)](https://www.npmjs.com/package/popmotion)
 [![Twitter Follow](https://img.shields.io/twitter/follow/popmotionjs.svg?style=social&label=Follow)](http://twitter.com/popmotionjs)
-[![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/popmotion)
-
-This is the **Release candidate** for Popmotion 9. The focus on this release is small, flexible functions for advanced animators.
 
 Popmotion is:
 - **Powerful**: It supports keyframe and spring animations for numbers, colors and complex strings.
@@ -17,29 +14,38 @@ Popmotion is:
 
 # Contents
 
-- [Install](#Install)
-- [API](#API)
-  - [Animation](#Animation)
-    - [`animate`](#animate)
-    - [Options](#options)
-    - [Callbacks](#callbacks)
-    - [Keyframes options](#keyframes-options)
-    - [Spring options](#spring-options)
-    - [Decay options](#decay-options)
-    - [Controls](#controls)
-    - [`inertia`](#inertia)
-  - [Easing](#easing)
-    - [Functions](#functions)
-    - [Create](#create)
-  - [Utils](#utils)
+- [Quick start](#Quick-start)
+- [Animation](#Animation)
+  - [`animate`](#animate)
+  - [Options](#options)
+  - [Callbacks](#callbacks)
+  - [Keyframes options](#keyframes-options)
+  - [Spring options](#spring-options)
+  - [Decay options](#decay-options)
+  - [Controls](#controls)
+  - [`inertia`](#inertia)
+- [Easing](#easing)
+  - [Functions](#functions)
+  - [Create](#create)
+- [Utils](#utils)
 
-# Install
+<!-- Documentation -->
+
+## Quick start
 
 ```bash
-npm install popmotion@rc
+npm install popmotion
 ```
 
-# API
+```javascript
+import { animate } from "popmotion"
+
+animate({
+  from: 0,
+  to: 100,
+  onUpdate: latest => console.log(latest)
+})
+```
 
 ## Animation
 
@@ -190,7 +196,7 @@ animate({
 })
 ```
 
-### `type`
+#### `type`
 
 `animate` will automatically detect the type of animation to use based on the options provided. But a specific type can be chosen manually by defining `type` as `"keyframes"`, `"spring"` or `"decay"`.
 
@@ -947,3 +953,4 @@ import { wrap } from "popmotion"
 wrap(0, 1, 0.5); // 0.5
 wrap(0, 1, 1.5); // 0.5
 ```
+

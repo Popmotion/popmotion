@@ -1,6 +1,6 @@
 
 import { createElement } from 'react';
-import marksy from 'marksy/components';
+import marksy from 'marksy/jsx';
 import { A, H1, H2, H3, H4, H5, P, Li, Ol, Ul, Hr, Code, Blockquote, ArticleHeader, Video } from '~/templates/global/styled';
 import { Img } from '~/templates/content/styled';
 import ContentTemplate from '~/templates/content/Template';

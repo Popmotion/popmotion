@@ -54,4 +54,4 @@ This flowchart illustrates the Popmotion package dependency tree.
 
 ## Get in Touch
 
-If you need help, you can reach out to the [official Popmotion Twitter](https://twitter.com/popmotionjs) account or post a discussion in our [Spectrum community](https://spectrum.chat/popmotion).
+If you need help, you can reach out to the [official Popmotion Twitter](https://twitter.com/popmotionjs) account.
