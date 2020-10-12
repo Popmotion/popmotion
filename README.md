@@ -408,6 +408,32 @@ animate({
 })
 ```
 
+#### `duration`
+
+The duration of the spring, in milliseconds.
+
+Will be overridden by `stiffness`, `mass` or `damping`.
+
+```javascript
+animate({
+  to: 100,
+  duration: 1000
+})
+```
+
+#### `bounce`
+
+The bounciness of the spring, as a value between `0` and `1`, where `0` is no bounce.
+
+Will be overridden by `stiffness`, `mass` or `damping`.
+
+```javascript
+animate({
+  to: 100,
+  bounce: 0.2
+})
+```
+
 #### `restDelta`
 
 The distance from the animation target at which the animation can be considered complete. When both `restDelta` and `restSpeed` are met, the animation completes.
@@ -715,7 +741,6 @@ angle(
 
 #### `attract`
 
-TODO
 
 ```javascript
 import { attract } from "popmotion"
@@ -724,8 +749,6 @@ attract(5, 10, 12)
 ```
 
 #### `attractExpo`
-
-TODO
 
 ```javascript
 import { attractExpo } from "popmotion"

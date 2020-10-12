@@ -2,12 +2,44 @@ import PopmotionLogo from '~/components/icons/Logo';
 import Link from 'next/link';
 import Head from 'next/head';
 import reset from '~/styles/reset';
-import { Fragment } from 'react';
+import { Fragment, useRef, useEffect } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
+import { animate } from 'popmotion';
 
 const Global = createGlobalStyle`
   ${reset}
 `;
+
+const tagline = 'The animator’s JavaScript toolbox.'.split('');
+
+function TaglineCharacter({ character, index }) {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    animate({
+      from: 0,
+      to: 0,
+      velocity: -500,
+      stiffness: 120,
+      elapsed: -index * 20,
+      onUpdate: (y) =>
+        (ref.current.style.transform = `translateY(${y}px) translateZ(0)`),
+    });
+  }, []);
+
+  return (
+    <span
+      ref={ref}
+      className="hl"
+      style={{
+        display: 'inline-block',
+        width: character === ' ' ? 8 : 'auto',
+      }}
+    >
+      {character}
+    </span>
+  );
+}
 
 export default function ({ children }) {
   return (
@@ -44,7 +76,11 @@ export default function ({ children }) {
           </a>
         </header>
         <main className="cg">
-          <h2 className="tagline">{'The animator’s JavaScript toolbox.'}</h2>
+          <h2 className="tagline">
+            {tagline.map((character, i) => (
+              <TaglineCharacter index={i} key={i} character={character} />
+            ))}
+          </h2>
           <article>{children}</article>
         </main>
         <footer>

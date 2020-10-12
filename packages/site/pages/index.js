@@ -184,7 +184,7 @@ animate({
 })
 \`\`\`
 
-### \`type\`
+#### \`type\`
 
 \`animate\` will automatically detect the type of animation to use based on the options provided. But a specific type can be chosen manually by defining \`type\` as \`"keyframes"\`, \`"spring"\` or \`"decay"\`.
 
@@ -393,6 +393,32 @@ The initial velocity, in units per second, of the animation.
 animate({
   to: 100,
   velocity: 1000
+})
+\`\`\`
+
+#### \`duration\`
+
+The duration of the spring, in milliseconds.
+
+Will be overridden by \`stiffness\`, \`mass\` or \`damping\`.
+
+\`\`\`javascript
+animate({
+  to: 100,
+  duration: 1000
+})
+\`\`\`
+
+#### \`bounce\`
+
+The bounciness of the spring, as a value between \`0\` and \`1\`, where \`0\` is no bounce.
+
+Will be overridden by \`stiffness\`, \`mass\` or \`damping\`.
+
+\`\`\`javascript
+animate({
+  to: 100,
+  bounce: 0.2
 })
 \`\`\`
 
@@ -703,7 +729,6 @@ angle(
 
 #### \`attract\`
 
-TODO
 
 \`\`\`javascript
 import { attract } from "popmotion"
@@ -712,8 +737,6 @@ attract(5, 10, 12)
 \`\`\`
 
 #### \`attractExpo\`
-
-TODO
 
 \`\`\`javascript
 import { attractExpo } from "popmotion"
