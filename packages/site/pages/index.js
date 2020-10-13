@@ -33,6 +33,10 @@ const content = convertMarkdown(`
 
 ## Quick start
 
+\`\`\`bash
+npm install popmotion
+\`\`\`
+
 \`\`\`javascript
 import { animate } from "popmotion"
 
@@ -602,6 +606,33 @@ inertia({
   velocity: 100,
   restDelta: 0.5
 })
+\`\`\`
+
+### Iterators
+
+Powering \`animate\` and \`inertia\` are the \`keyframes\`, \`spring\`, and \`decay\` [iterators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol).
+
+\`\`\`javascript
+import { keyframes, spring, decay } from "popmotion";
+\`\`\`
+
+Iterators give you the ability to run an animation with a high degree of control. For example, [Framer](https://framer.com) uses the \`spring\` iterator to draw its animation editor visualiser by running it synchronously.
+
+Each can be initialised with the matching options above (\`decay\` with a subset of \`inertia\`'s options, excluding the \`bounce-\` options):
+
+\`\`\`javascript
+const animation = spring({
+  from: 0,
+  to: 100,
+  stiffness: 200
+})
+\`\`\`
+
+With the returned iterator, you can resolve the animation at a specific timestamp with its \`next\` method.
+
+\`\`\`javascript
+// Resolve the animation at 200ms
+const { value, done } = animation.next(200)
 \`\`\`
 
 ## Easing
