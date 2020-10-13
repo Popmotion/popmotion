@@ -12,30 +12,9 @@ Popmotion is:
 - **Stable**: It's written in TypeScript and enjoys over 95% test coverage.
 - **Tiny**: `animate` is just ~4.5kb, and every function is individually importable.
 
-# Contents
-
-- [Quick start](#Quick-start)
-- [Animation](#Animation)
-  - [`animate`](#animate)
-  - [Options](#options)
-  - [Callbacks](#callbacks)
-  - [Keyframes options](#keyframes-options)
-  - [Spring options](#spring-options)
-  - [Decay options](#decay-options)
-  - [Controls](#controls)
-  - [`inertia`](#inertia)
-- [Easing](#easing)
-  - [Functions](#functions)
-  - [Create](#create)
-- [Utils](#utils)
-
 <!-- Documentation -->
 
 ## Quick start
-
-```bash
-npm install popmotion
-```
 
 ```javascript
 import { animate } from "popmotion"
@@ -49,9 +28,9 @@ animate({
 
 ## Animation
 
-### `animate`
+### animate
 
-`animate` performs a keyframes, spring, or decay animation.
+`animate` performs a keyframes or spring animation.
 
 ```javascript
 import { animate } from "popmotion"
@@ -76,6 +55,15 @@ animate({ from: "0px", to: "100px" })
 animate({ from: "#fff", to: "#000" })
 ```
 
+The strings can be pretty complex, for instance box shadows or SVG path definitions. The only limitation is that the numbers and colors contained within must be in the same order:
+
+```javascript
+animate({
+  from: "0px 0px 0px rgba(0, 0, 0, 0)",
+  to: "10px 10px 0px rgba(0, 0, 0, 0.2)"
+})
+```
+
 <!--
 Arrays of the above:
 
@@ -98,11 +86,11 @@ animate({
 
 The type of animation performed will be automatically detected from the provided options, or can be chosen manually by defining `type` as `"keyframes"`, `"spring"` or `"decay"`.
 
-### Options
+#### Options
 
 These options can be set for **all animations**:
 
-#### `from`
+##### from
 
 An initial value to start the animation from.
 
@@ -115,7 +103,7 @@ animate({
 })
 ```
 
-#### `elapsed`
+##### elapsed
 
 Sets an initial elapsed time, in milliseconds. Set to a negative value for a delay.
 
@@ -126,7 +114,7 @@ animate({
 })
 ```
 
-#### `repeat`
+##### repeat
 
 The number of times to repeat the animation. Set to `Infinity` to repeat forever.
 
@@ -137,7 +125,7 @@ animate({
 })
 ```
 
-#### `repeatDelay`
+##### repeatDelay
 
 The duration, in milliseconds, to wait before repeating the animation.
 
@@ -149,7 +137,7 @@ animate({
 })
 ```
 
-#### `repeatType`
+##### repeatType
 
 Either `"loop"`, `"mirror"` or `"reverse"`. Defaults to `"loop"`.
 
@@ -165,7 +153,7 @@ animate({
 })
 ```
 
-#### `driver`
+##### driver
 
 By default, the animation will be driven by a `requestAnimationFrame` loop. `driver` can specify a different source.
 
@@ -196,7 +184,7 @@ animate({
 })
 ```
 
-#### `type`
+##### type
 
 `animate` will automatically detect the type of animation to use based on the options provided. But a specific type can be chosen manually by defining `type` as `"keyframes"`, `"spring"` or `"decay"`.
 
@@ -207,9 +195,11 @@ animate({
 })
 ```
 
-### Callbacks
+#### Lifecycle events
 
-#### `onUpdate`
+The following lifecycle events are available for **all animations**:
+
+##### onUpdate
 
 This is called every frame the animation fires with the latest computed value.
 
@@ -220,7 +210,7 @@ animate({
 })
 ```
 
-#### `onPlay`
+##### onPlay
 
 This is called when the animation starts. Currently this automatically when `animate` is called.
 
@@ -231,7 +221,7 @@ animate({
 })
 ```
 
-#### `onComplete`
+##### onComplete
 
 This is called when the animation successfully completes.
 
@@ -242,7 +232,7 @@ animate({
 })
 ```
 
-#### `onRepeat`
+##### onRepeat
 
 This is called when an animation repeats.
 
@@ -254,7 +244,7 @@ animate({
 })
 ```
 
-#### `onStop`
+##### onStop
 
 This is called when the animation is stopped by the `stop` control.
 
@@ -267,9 +257,9 @@ const animation = animate({
 animation.stop()
 ```
 
-### Keyframes options
+#### Keyframes options
 
-A keyframes animation is the default animation and it can be defined either with a `from` and `to` option:
+A keyframes animation is the default animation type and it can be defined either with a `from` and `to` option:
 
 ```javascript
 animate({ from: 0, to: 100 })
@@ -281,7 +271,7 @@ Or as a series of keyframes provided to the `to` option:
 animate({ to: [0, 100, 200] })
 ```
 
-#### `to`
+##### to
 
 A single value to animate to, or an array of values to animate through.
 
@@ -293,7 +283,7 @@ animate({
 
 If `to` is an array, any defined `from` will be ignored.
 
-#### `duration`
+##### duration
 
 This defines the duration of the animation, in milliseconds.
 
@@ -304,7 +294,7 @@ animate({
 })
 ```
 
-#### `ease`
+##### ease
 
 This is an easing function, or array of functions, to use when easing between each keyframe.
 
@@ -324,7 +314,7 @@ animate({
 
 If set as any array, the length of this array must be one shorter than the number of values being animated between.
 
-#### `offset`
+##### offset
 
 This is an array of values between `0` and `1` that defines at which point throughout the animation each keyframe should be reached.
 
@@ -337,7 +327,7 @@ animate({
 })
 ```
 
-### Spring options
+#### Spring options
 
 Springs are great for creating natural-feeling interfaces and dynamic interruptable animations.
 
@@ -345,7 +335,7 @@ A spring animation will be used if any of the `stiffness`, `damping` or `mass` o
 
 **Note:** A spring simulation is inherently numerical so if it's given a color, array or object, it runs the animation from `0` to `100` and interpolates that to the given values. This strategy is likely to be tweaked before the official release so animations made this way may change in feel.
 
-#### `to`
+##### to
 
 A single value to animate to.
 
@@ -358,7 +348,7 @@ animate({
 
 If `to` is an array, any defined `from` will be ignored.
 
-#### `stiffness`
+##### stiffness
 
 This defines the stiffness of the spring. A higher stiffness will result in a snappier animation.
 
@@ -371,7 +361,7 @@ animate({
 })
 ```
 
-#### `damping`
+##### damping
 
 This is the opposing force to `stiffness`. As you reduce this value, relative to `stiffness`, the spring will become bouncier and the animation will last longer. Likewise, higher relative values will have less bounciness and result in shorter animations.
 
@@ -384,7 +374,7 @@ animate({
 })
 ```
 
-#### `mass`
+##### mass
 
 This is the mass of the animating object. Heavier objects will take longer to speed up and slow down.
 
@@ -397,7 +387,7 @@ animate({
 })
 ```
 
-#### `velocity`
+##### velocity
 
 The initial velocity, in units per second, of the animation.
 
@@ -408,7 +398,7 @@ animate({
 })
 ```
 
-#### `duration`
+##### duration
 
 The duration of the spring, in milliseconds.
 
@@ -421,7 +411,7 @@ animate({
 })
 ```
 
-#### `bounce`
+##### bounce
 
 The bounciness of the spring, as a value between `0` and `1`, where `0` is no bounce.
 
@@ -434,7 +424,7 @@ animate({
 })
 ```
 
-#### `restDelta`
+##### restDelta
 
 The distance from the animation target at which the animation can be considered complete. When both `restDelta` and `restSpeed` are met, the animation completes.
 
@@ -445,7 +435,7 @@ animate({
 })
 ```
 
-#### `restSpeed`
+##### restSpeed
 
 The absolute velocity, in units per second, below which the animation can be considered complete. When both `restDelta` and `restSpeed` are met, the animation completes. Defaults to `10`.
 
@@ -456,13 +446,13 @@ animate({
 })
 ```
 
-### Controls
+#### Playback controls
 
 `animate` returns `PlaybackControls`, which can be used to control the playback of the animation.
 
-Currently this only includes a `stop` method, but will expand with more.
+Currently this only includes a `stop` method, but may expand with more.
 
-#### `stop()`
+##### stop
 
 Stops the animation.
 
@@ -471,17 +461,15 @@ const playback = animate({ from: 0, to: 100 })
 playback.stop()
 ```
 
-### `inertia`
+### inertia
 
 The `inertia` animation is used to gradually decelerate a number. Think smartphone scroll momentum.
-
-
 
 #### Options
 
 In addition to `animate`'s `from`, `onUpdate` and `onComplete` options, `inertia` also supports the following:
 
-#### `velocity`
+##### velocity
 
 The initial velocity, in units per second, of the animation.
 
@@ -492,7 +480,7 @@ inertia({
 })
 ```
 
-#### `power`
+##### power
 
 A constant with which to calculate a target value. Higher power = further target.
 
@@ -505,7 +493,7 @@ inertia({
 })
 ```
 
-#### `timeConstant`
+##### timeConstant
 
 Adjusting the time constant will change the duration of the deceleration, thereby affecting its feel.
 
@@ -519,7 +507,7 @@ inertia({
 })
 ```
 
-#### `modifyTarget`
+##### modifyTarget
 
 A function that receives the calculated target and returns a new one. Useful for snapping the target to a grid.
 
@@ -533,7 +521,7 @@ inertia({
 })
 ```
 
-#### `min`
+##### min
 
 The minimum value at which the animation will switch from gradual deceleration and use a spring animation to snap to this point.
 
@@ -545,7 +533,7 @@ inertia({
 })
 ```
 
-#### `max`
+##### max
 
 The maximum value at which the animation will switch from gradual deceleration and use a spring animation to snap to this point.
 
@@ -557,7 +545,7 @@ inertia({
 })
 ```
 
-#### `bounceStiffness`
+##### bounceStiffness
 
 This defines the stiffness of the spring when the animation hits either `min` or `max`. A higher stiffness will result in a snappier animation.
 
@@ -572,7 +560,7 @@ inertia({
 })
 ```
 
-#### `bounceDamping`
+##### bounceDamping
 
 This is the opposing force to `bounceStiffness`. As you reduce this value, relative to `bounceStiffness`, the spring will become bouncier and the animation will last longer. Likewise, higher relative values will have less bounciness and result in shorter animations.
 
@@ -587,7 +575,7 @@ inertia({
 })
 ```
 
-#### `restDelta`
+##### restDelta
 
 The distance from the animation target at which the animation can be considered complete.
 
@@ -633,9 +621,9 @@ const easedProgress = easeInOut(progress)
  - `bounceInOut`
  - `bounceOut`
 
-### Create
+### Factories
 
-#### `cubicBezier`
+#### cubicBezier
 
 ```javascript
 import { cubicBezier } from "popmotion"
@@ -645,7 +633,7 @@ const easing = cubicBezier(0, .42, 0, 1)
 
 New cubic bezier definitions can be created in the [Framer](https://framer.com) animation editor and copy/pasted directly into this function.
 
-#### `steps`
+#### steps
 
 `steps` returns an easing function that will convert the animation into a discrete series of steps.
 
@@ -661,11 +649,11 @@ It optionally accepts a second parameter, either `"start"` or `"end"` (default)t
 steps(5, "start")
 ```
 
-#### `mirrorEasing`
+#### mirrorEasing
 
 Mirrors an existing easing function. 
 
-#### `reverseEasing`
+#### reverseEasing
 
 Reverses an existing easing function. For instance, providing it `easeIn` would return an `easeOut`.
 
@@ -678,7 +666,7 @@ reversed(0.5) // 0.5
 reversed(0) // 1
 ```
 
-#### `createExpoIn`
+#### createExpoIn
 
 Creates an easing function based on the exponent of the provided `power`. The higher the `power`, the stronger the easing.
 
@@ -696,7 +684,7 @@ const expoOut = mirrorEasing(easeIn)
 const expoInOut = reverseEasing(easeIn)
 ```
 
-#### `createBackIn`
+#### createBackIn
 
 Creates an easing function with an overshoot. It accepts a `power` value, the higher the `power` the stronger the overshoot.
 
@@ -714,7 +702,7 @@ const backOut = mirrorEasing(easeIn)
 const backInOut = reverseEasing(easeIn)
 ```
 
-#### `createAnticipate`
+#### createAnticipate
 
 Creates an easing that pulls back a little before animating out with an overshoot. The stronger the `power` the bigger the overshoot.
 
@@ -726,7 +714,7 @@ const anticipate = createAnticipate(4)
 
 ## Utils
 
-#### `angle`
+#### angle
 
 Returns an angle between two points, in degrees.
 
@@ -739,7 +727,7 @@ angle(
 )
 ```
 
-#### `attract`
+#### attract
 
 
 ```javascript
@@ -748,7 +736,7 @@ import { attract } from "popmotion"
 attract(5, 10, 12)
 ```
 
-#### `attractExpo`
+#### attractExpo
 
 ```javascript
 import { attractExpo } from "popmotion"
@@ -756,7 +744,7 @@ import { attractExpo } from "popmotion"
 attractExpo(5, 10, 12)
 ```
 
-#### `clamp`
+#### clamp
 
 Clamp a value to within the given range.
 
@@ -768,7 +756,7 @@ const max = 100
 clamp(min, max, 150) // 100
 ```
 
-#### `degreesToRadians`
+#### degreesToRadians
 
 Converts degrees to radians.
 
@@ -778,7 +766,7 @@ import { degreesToRadians } from "popmotion"
 degreesToRadians(45) // 0.785...
 ```
 
-#### `distance`
+#### distance
 
 Returns the distance between two numbers, two 2D points, or two 3D points.
 
@@ -790,7 +778,7 @@ distance({ x: 0, y: 0 }, { x: 45, y: 100 })
 distance({ x: 0, y: 0, z: 100 }, { x: 45, y: 100, z: 0 })
 ```
 
-#### `interpolate`
+#### interpolate
 
 Creates a function that will interpolate from an linear series of numbers, to a non-linear series of numbers, strings of the same numerical format, colours, or arrays/objects of those.
 
@@ -820,7 +808,7 @@ const rescale = interpolate(
 rescale(2) // 300
 ```
 
-##### Options
+#### Options
 
 `interpolate` accepts an optional third argument, an object of options.
 
@@ -828,7 +816,7 @@ rescale(2) // 300
 - `ease`: An `Easing` function, or array of easing functions, to ease the interpolation of each segment.
 - `mixer`: A function that, when provided a `from` and `to` value, will return a new function that accepts a progress value between `0` and `1` to mix between those two values. For integration with libraries like Flubber.
 
-#### `isPoint`
+#### isPoint
 
 Returns `true` if the provided argument is a 2D point.
 
@@ -839,7 +827,7 @@ isPoint({ x: 0 }) // false
 isPoint({ x: 0, y: 0 }) // true
 ```
 
-#### `isPoint3D`
+#### isPoint3D
 
 Returns `true` if the provided argument is a 3D point.
 
@@ -851,7 +839,7 @@ isPoint3D({ x: 0, y: 0 }) // false
 isPoint3D({ x: 0, y: 0, z: 0 }) // true
 ```
 
-#### `mix`
+#### mix
 
 Will mix between two values, given `progress` as a third argument.
 
@@ -862,7 +850,7 @@ mix(0, 100, 0.5) // 50
 mix(0, 100, 2) // 200
 ```
 
-#### `mixColor`
+#### mixColor
 
 Returns a function that, when provided a `progress` value, will mix between two colors. Accepts hex, rgba and hsla colors.
 
@@ -872,7 +860,7 @@ import { mixColor } from "popmotion"
 mixColor("#000", "#fff")(0.5) // "rgba(125, 125, 125, 1)"
 ```
 
-#### `mixComplex`
+#### mixComplex
 
 Returns a function that, when provided a `progress` value, will mix between two strings with the same order of numbers and colors.
 
@@ -882,7 +870,7 @@ import { mixComplex } from "popmotion"
 mixComplex("100px #fff", "0px #000")(0.5) // "50px rgba(125, 125, 125, 1)"
 ```
 
-#### `pointFromVector`
+#### pointFromVector
 
 Given a point, angle in degrees, and distance, will return a new point.
 
@@ -896,7 +884,7 @@ const distance = 100
 pointFromVector(point, angle, distance)
 ```
 
-#### `progress`
+#### progress
 
 Given a min and a max range, and a value, will return the `progress` of the value within the range as normalised to a `0`-`1` range.
 
@@ -908,7 +896,7 @@ const max = 200
 progress(min, max, 150) // 0.5
 ```
 
-#### `radiansToDegrees`
+#### radiansToDegrees
 
 Converts radians to degrees.
 
@@ -918,7 +906,7 @@ import { radiansToDegrees } from "popmotion"
 radiansToDegrees(0.785) // 45
 ```
 
-#### `snap`
+#### snap
 
 Creates a function that will snap numbers to the nearest in a provided array or to a regular interval.
 
@@ -941,7 +929,7 @@ snapTo(-76); // -100
 snapTo(-74); // -50
 ```
 
-#### `toDecimal`
+#### toDecimal
 
 Rounds a number to a specific decimal place.
 
@@ -952,7 +940,7 @@ toDecimal(3.3333); // 3.33
 toDecimal(6.6666, 1); // 6.67
 ```
 
-#### `velocityPerFrame`
+#### velocityPerFrame
 
 ```javascript
 import { velocityPerFrame } from "popmotion"
@@ -960,7 +948,7 @@ import { velocityPerFrame } from "popmotion"
 velocityPerFrame(50, 16.7); // 0.835
 ```
 
-#### `velocityPerSecond`
+#### velocityPerSecond
 
 ```javascript
 import { velocityPerSecond } from "popmotion"
@@ -968,7 +956,7 @@ import { velocityPerSecond } from "popmotion"
 velocityPerSecond(1, 16.7); // 59.880...
 ```
 
-#### `wrap`
+#### wrap
 
 ```javascript
 import { wrap } from "popmotion"

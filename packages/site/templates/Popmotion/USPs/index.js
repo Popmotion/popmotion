@@ -1,5 +1,4 @@
 import { Container, Blurb } from './styled';
-import { Strong } from '~/templates/global/styled';
 
 export default () => (
   <Container>

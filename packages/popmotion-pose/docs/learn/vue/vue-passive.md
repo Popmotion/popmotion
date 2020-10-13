@@ -85,7 +85,7 @@ Which means our function will look like this:
 backgroundColor: ['x', pipe(
   interpolate([-200, 200], [0, 1]),
   clamp(0, 1),
-  blendColor('#FF1C68', '#198FE3')
+  blendColor('#FF1C68', '#09f')
 )]
 ```
 

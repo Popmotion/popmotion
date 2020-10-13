@@ -28,7 +28,7 @@ const themeSettings = {
       baseShadow: '#c0c',
       twist: '#d0e',
       action: '#09f',
-      actionHighlight: '#05f',
+      actionHighlight: '#09f',
     },
     Logo: () => (
       <svg
@@ -42,12 +42,12 @@ const themeSettings = {
             <stop offset="1" stopColor="#d0e"></stop>
           </linearGradient>
           <linearGradient id="purple" gradientTransform="rotate(90 .5 .5)">
-            <stop offset="0" stopColor="#05f"></stop>
+            <stop offset="0" stopColor="#09f"></stop>
             <stop offset="1" stopColor="#40f"></stop>
           </linearGradient>
           <linearGradient id="blue" gradientTransform="rotate(90 .5 .5)">
             <stop offset="0" stopColor="#09f"></stop>
-            <stop offset="1" stopColor="#05f"></stop>
+            <stop offset="1" stopColor="#09f"></stop>
           </linearGradient>
         </defs>
         <path d="M0 100V0l50 50z" fill="url(#pink)"></path>

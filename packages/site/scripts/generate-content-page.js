@@ -17,20 +17,32 @@ module.exports = (
 ) =>
   isHomepage
     ? `
-import marksy from 'marksy/jsx';
+import marksy from 'marksy';
 import Homepage from '~/components/template';
-import { Code } from '~/templates/global/styled';
+import { A, H1, H2, H3, H4, H5, P, Li, Ol, Ul, Hr, Code, Blockquote, ArticleHeader, Video } from '~/templates/global/styled';
 import { createElement } from 'react';
 
 const convertMarkdown = marksy({
   createElement,
   elements: {
-    code: Code
+    a: A,
+    h1: ArticleHeader,
+    h2: H2,
+    h3: H3,
+    h4: H4,
+    h5: H5,
+    p: P,
+    code: Code,
+    li: Li,
+    ol: Ol,
+    ul: Ul,
+    hr: Hr,
+    blockquote: Blockquote,
   }
 });
 
 const Page = ({ section }) => (
-  <Homepage>
+  <Homepage tableOfContents={content.toc}>
     {content.tree}
   </Homepage>
 );
@@ -41,7 +53,7 @@ export default Page;
 `
     : `
 import { createElement } from 'react';
-import marksy from 'marksy/jsx';
+import marksy from 'marksy';
 import { A, H1, H2, H3, H4, H5, P, Li, Ol, Ul, Hr, Code, Blockquote, ArticleHeader, Video } from '~/templates/global/styled';
 import { Img } from '~/templates/content/styled';
 import ContentTemplate from '~/templates/content/Template';

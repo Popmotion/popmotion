@@ -140,7 +140,7 @@ a {
   text-decoration: none;
 
   &:hover {
-    color: #05f;
+    color: #09f;
   }
 }
 

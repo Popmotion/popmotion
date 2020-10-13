@@ -4,7 +4,7 @@ import Footer from '~/templates/global-new/Footer';
 
 export default () => (
   <Homepage
-    title="Popmotion Pure | A functional, flexible JavaScript animation library"
+    title="Popmotion 8 | A functional, flexible JavaScript animation library"
     theme="pure"
     Header={Header}
   >

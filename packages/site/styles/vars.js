@@ -12,7 +12,7 @@ export const LIGHT_GREY = '#f2f2f2';
 export const PINK = '#FF1C68';
 export const PINK_BURN = '#DB0068';
 
-export const BLUE = '#198FE3';
+export const BLUE = '#09f';
 export const BLUE_BURN = '#064FB5';
 
 export const GREEN = '#14D790';
@@ -30,7 +30,7 @@ export const ENTITY = PURPLE;
 
 export const color = {
   black: '#252942',
-  blue: '#198FE3',
+  blue: '#09f',
   green: '#14D790',
   white: '#fff',
   pink: '#FF00C8',
@@ -42,7 +42,7 @@ export const color = {
   yellow: '#FFE42B',
   grey: '#5E606C',
   lightGrey: '#ECECEC',
-  superLightGrey: '#fafafa'
+  superLightGrey: '#fafafa',
 };
 
 export const font = {
@@ -54,7 +54,7 @@ export const font = {
     font-family: 'Inconsolata', monospace;
     font-weight: 400;
   `,
-  bold: `font-weight: 700;`
+  bold: `font-weight: 700;`,
 };
 
 export const SKEW = '-5.7deg';
@@ -62,12 +62,12 @@ export const UNSKEW = '5.7deg';
 
 const COL_WIDTH = 15;
 
-export const cols = num => `${num * COL_WIDTH}px`;
+export const cols = (num) => `${num * COL_WIDTH}px`;
 
 const breakpoints = {
   large: cols(72),
   medium: cols(50),
-  small: cols(26)
+  small: cols(26),
 };
 
 export const media = Object.keys(breakpoints).reduce((acc, label) => {
