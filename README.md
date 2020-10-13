@@ -16,6 +16,10 @@ Popmotion is:
 
 ## Quick start
 
+```bash
+npm install popmotion
+```
+
 ```javascript
 import { animate } from "popmotion"
 
