@@ -1,90 +1,67 @@
-// Core
-import action from './action';
-import multicast from './reactions/multicast';
-import value from './reactions/value';
+export { animate } from "./animations"
+export { inertia } from "./animations/inertia"
 
-export { action, multicast, value };
+// Animators
+export { decay } from "./animations/generators/decay"
+export { spring } from "./animations/generators/spring"
+export { keyframes } from "./animations/generators/keyframes"
 
-// Animations
-import decay from './animations/decay';
-import inertia from './animations/inertia';
-import everyFrame from './animations/every-frame';
-import keyframes from './animations/keyframes';
-import physics from './animations/physics';
-import spring from './animations/spring';
-import timeline from './animations/timeline';
-import tween from './animations/tween';
+// Utilities
+export { angle } from "./utils/angle"
+export { applyOffset } from "./utils/apply-offset"
+export { createAttractor, attract, attractExpo } from "./utils/attract"
+export { clamp } from "./utils/clamp"
+export { degreesToRadians } from "./utils/degrees-to-radians"
+export { distance } from "./utils/distance"
+export { interpolate } from "./utils/interpolate"
+export { isPoint3D } from "./utils/is-point-3d"
+export { isPoint } from "./utils/is-point"
+export { mixColor } from "./utils/mix-color"
+export { mixComplex } from "./utils/mix-complex"
+export { mix } from "./utils/mix"
+export { pipe } from "./utils/pipe"
+export { pointFromVector } from "./utils/point-from-vector"
+export { progress } from "./utils/progress"
+export { radiansToDegrees } from "./utils/radians-to-degrees"
+export { smoothFrame } from "./utils/smooth-frame"
+export { smooth } from "./utils/smooth"
+export { snap } from "./utils/snap"
+export { toDecimal } from "./utils/to-decimal"
+export { velocityPerFrame } from "./utils/velocity-per-frame"
+export { velocityPerSecond } from "./utils/velocity-per-second"
+export { wrap } from "./utils/wrap"
 
+// Easing
 export {
-  decay,
-  inertia,
-  keyframes,
-  everyFrame,
-  physics,
-  spring,
-  timeline,
-  tween
-};
-
-// Input
-import listen from './input/listen';
-import multitouch from './input/multitouch';
-import pointer from './input/pointer';
-import mouse from './input/pointer/mouse';
-
-export { listen, pointer, mouse, multitouch };
-
-// Compositors
-import chain from './compositors/chain';
-import composite from './compositors/composite';
-import crossfade from './compositors/crossfade';
-import delay from './compositors/delay';
-import merge from './compositors/merge';
-import parallel from './compositors/parallel';
-import schedule from './compositors/schedule';
-import stagger from './compositors/stagger';
-
+    linear,
+    easeIn,
+    easeInOut,
+    easeOut,
+    circIn,
+    circInOut,
+    circOut,
+    backIn,
+    backInOut,
+    backOut,
+    anticipate,
+    bounceIn,
+    bounceInOut,
+    bounceOut,
+} from "./easing"
+export { cubicBezier } from "./easing/cubic-bezier"
+export { steps } from "./easing/steps"
 export {
-  chain,
-  composite,
-  crossfade,
-  delay,
-  merge,
-  parallel,
-  schedule,
-  stagger
-};
-
-// Includes - Deprecated for 9.0
-import * as calc from './calc';
-import * as easing from '@popmotion/easing';
-import * as transform from './transformers';
-
-export { calc, easing, transform };
-
-// Stylefire
-import styler, { Styler } from 'stylefire';
-import { warning } from 'hey-listen';
-const css = (element: HTMLElement, props: Object): Styler => {
-  warning(false, 'css() is deprecated, use styler instead');
-  return styler(element, props);
-};
-const svg = (element: HTMLElement, props: Object): Styler => {
-  warning(false, 'svg() is deprecated, use styler instead');
-  return styler(element, props);
-};
-export { styler, css, svg };
-
-// Value types
-import * as valueTypes from 'style-value-types';
-export { valueTypes };
+    mirrorEasing,
+    reverseEasing,
+    createExpoIn,
+    createBackIn,
+    createAnticipate,
+} from "./easing/utils"
 
 // Types
-export { Action } from './action';
-export { ColdSubscription } from './action/types';
-export { DecayProps } from './animations/decay/types';
-export { KeyframesProps } from './animations/keyframes/types';
-export { PhysicsProps } from './animations/physics/types';
-export { SpringProps } from './animations/spring/types';
-export { TweenProps } from './animations/tween/types';
-export { ValueReaction } from './reactions/value';
+export * from "./animations/types"
+export * from "./easing/types"
+
+// // Worklet
+// export { animate } from './worklet/animate';
+// export { workletReady } from './worklet/load-worklet';

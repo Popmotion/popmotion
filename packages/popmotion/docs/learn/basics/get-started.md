@@ -11,9 +11,9 @@ Popmotion is a low-level, functional JavaScript motion library.
 
 It allows developers to animate in any JavaScript environment (browser, Node), to any render target (CSS, SVG, Three.js, canvas, etc).
 
-If you want super-simple DOM or React animation, you're probably after the high-level [Pose](/pose) library. For absolute animation freedom, carry on reading!
+**Note:** If you're looking for React animation, you're probably after the [Motion](https://framer.com/motion) library. For absolute animation freedom, carry on reading!
 
-In this simple introductory guide we're going to install Popmotion and use it to animate a DOM element using the `tween` animation and the DOM `styler` function.
+In this simple introductory guide we're going to install Popmotion and use it to animate a DOM element using the `tween` animation.
 
 ## Installation
 
@@ -62,10 +62,26 @@ As web developers, the DOM is our most common render target for animations.
 
 So, let's use the exact same animation from before to output to an element's `translateX` property.
 
-For this, we can use the `styler` function:
+We can do this by setting the element's `style` property.
 
 ```javascript
-import { tween, styler } from 'popmotion';
+const element = document.querySelector('.ball');
+
+tween({ to: 300, duration: 500 })
+  .start((v) => element.style += 'translateX(' + v + 'px)');
+```
+
+Alternatively there's a Popmotion library called [Stylefire](/stylefire) that provides a simple API for setting HTML and SVG styles. It also aggregates all style changes and renders them just once per frame, making it performant to run multiple different animations on a single DOM element.
+
+```
+npm install stylefire
+```
+
+Import `styler`:
+
+```javascript
+import { tween } from 'popmotion';
+import styler from 'stylefire';
 ```
 
 `styler` accepts a single HTML or SVG element. It returns a simple get/set interface for styling the element that unifies the transformation model of CSS and SVG and batches all styling to a single moment, once per frame.

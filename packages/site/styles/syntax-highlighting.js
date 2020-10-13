@@ -1,39 +1,39 @@
 import { BLACK, BRAND, ENTITY, ACTION, cols } from './vars';
 
-const createTheme = ({ fontSize = 14, lineHeight = 20, width = '100%'}) => ({
-  'hljs': {
+const createTheme = ({ fontSize = 14, lineHeight = 20, width = '100%' }) => ({
+  hljs: {
     display: 'block',
     overflowX: 'auto',
     padding: cols(1),
     color: BLACK,
     fontSize: `${fontSize}px`,
     lineHeight: `${lineHeight}px`,
-    width
+    width,
   },
   'hljs-comment': {
-    opacity: 0.5
+    opacity: 0.5,
   },
   'hljs-keyword': {
-    color: ENTITY
+    color: ENTITY,
   },
   'hljs-name': {
-    color: ACTION
+    color: ACTION,
   },
   'hljs-number': {
-    color: BRAND
+    color: BRAND,
   },
   'hljs-params': {
-    color: ACTION
+    color: ACTION,
   },
   'hljs-string': {
-    color: BRAND
+    color: BRAND,
   },
   'hljs-attribute': {
-    color: BRAND
+    color: BRAND,
   },
   'hljs-function': {
-    color: ACTION
-  }
+    color: ACTION,
+  },
 });
 
 export const prismTheme = `
@@ -59,7 +59,7 @@ export const prismTheme = `
 
 export const codeTheme = createTheme({});
 export const codeThemeLarge = createTheme({
-  fontSize: 18,
-  lineHeight: 26,
-  width: '85%'
+  fontSize: 14,
+  lineHeight: 20,
+  width: '85%',
 });

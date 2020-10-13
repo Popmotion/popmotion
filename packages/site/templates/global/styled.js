@@ -8,15 +8,15 @@ import {
   media,
   GREEN,
   PURPLE,
-  ENTITY
+  ENTITY,
 } from '~/styles/vars';
 import {
   Centered,
   MajorCentered,
-  ArticleHeader as ArticleHeaderPrimitive
+  ArticleHeader as ArticleHeaderPrimitive,
 } from './grid';
 import SyntaxHighlighter, {
-  registerLanguage
+  registerLanguage,
 } from 'react-syntax-highlighter/dist/light';
 import js from 'react-syntax-highlighter/dist/languages/javascript';
 import { codeThemeLarge } from '~/styles/syntax-highlighting';
@@ -135,14 +135,17 @@ export const Blockquote = styled(MajorCentered.withComponent('blockquote'))`
 `;
 
 export const CodeTag = styled.code`
-  background: #f9f9f9;
+  background: var(--color-shade);
   padding: 2px 5px;
+  font-size: 18px;
+  border: none;
 `;
 
 export const CodeBlock = styled(MajorCentered)`
-  background: ${color.superLightGrey};
-  border-left: 1px solid ${ENTITY};
+  background: var(--color-shade);
+  border-left: 2px solid var(--color-popmotion);
   margin-bottom: ${cols(3)};
+  font-size: 14px;
 
   ${media.medium`
     margin-left: 0;

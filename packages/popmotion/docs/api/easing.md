@@ -9,17 +9,11 @@ Easing functions make tweened motion look more natural by emulating the changes 
 
 They work by accepting a progress value from `0` to `1`, and returning a new one.
 
-Popmotion comes with a number of preset easing functions, and provides methods to create new easing functions.
+There's a seperate Popmotion package for easing:
 
 <TOC />
 
 ## Import
-
-```javascript
-import { easing } from 'popmotion';
-```
-
-To use Popmotion's easing functions with a different animation library, they're available from the `@popmotion/easing` package:
 
 ```
 npm install @popmotion/easing
@@ -33,9 +27,10 @@ import { linear } from '@popmotion/easing';
 
 ```javascript
 import { tween, easing } from 'popmotion';
+import { easeOut } from '@popmotion/easing';
 
 tween({
-  ease: easing.easeOut
+  ease: easeOut
 }).start();
 ```
 
@@ -60,7 +55,7 @@ const ballStyler = styler(ball);
 tween({
   to: 300,
   duration: 300,
-  ease: easing.linear
+  ease: linear
 }).start(ballStyler.set('x'));
 `}</Example>
 ```

@@ -2,7 +2,6 @@ node_modules
 .DS_Store
 lib
 packages/site/.next
-packages/site/public
 packages/site/pages/api
 packages/site/pages/learn
 packages/site/pages/blog
@@ -13,6 +12,7 @@ packages/site/pages/popcorn/api
 packages/site/data/content.json
 packages/site/data/menus.json
 packages/site/next.config.js
+playground/public
 storybook-static
 .vscode
 tmp

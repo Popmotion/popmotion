@@ -10,10 +10,7 @@ export const Container = styled(Centered.withComponent('nav'))`
 `;
 
 export const Header = styled.h2`
-  ${({ theme }) => `
-    border-bottom: 1px solid ${theme.color.base};
-  `};
-
+  border-bottom: 1px solid var(--color-popmotion);
   padding: 0 0 10px;
   margin-bottom: 20px;
   ${font.bold};

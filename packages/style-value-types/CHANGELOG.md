@@ -2,6 +2,19 @@
 
 Style Value Types adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.1.9] 2020-07-23
+
+### Fixed
+
+- Fixed opacity with whitespace syntax colors.
+
+## [3.1.8] 2020-07-23
+
+### Fixed
+
+- Fixed whitespace syntax colors.
+- Fixed HSL(A) colors containing decimals.
+
 ## [3.1.7] 2019-11-14
 
 ### Fixed

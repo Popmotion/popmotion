@@ -3,6 +3,28 @@ import { ACTION, color, cols, ACTION_BURN } from './vars';
 import { prismTheme } from '~/styles/syntax-highlighting';
 
 export default `
+body {
+  --color-popmotion: #FA196C;
+  --color-black: #2D2D2F;
+  --color-shade: #F7F7F7;
+}
+
+@font-face {
+  font-family: "GT Walsheim";
+  src: url("/fonts/GT-Walsheim-Regular.woff2")
+      format("woff2"),
+    url("/fonts/GT-Walsheim-Regular.woff")
+      format("woff");
+}
+
+@font-face {
+  font-family: "GT Walsheim Bold";
+  src: url("/fonts/GT-Walsheim-Bold.woff2")
+      format("woff2"),
+    url("/fonts/GT-Walsheim-Bold.woff")
+      format("woff");
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -10,7 +32,6 @@ export default `
   border: 0;
   outline: 0;
   font-style: inherit;
-  font-size: 100%;
   color: ${color.black};
   ${bodyFont}
   line-height: 1;
@@ -115,11 +136,11 @@ audio:not([controls]) {
 a {
   background-color: transparent; /* 1 */
   -webkit-text-decoration-skip: objects; /* 2 */
-  color: ${ACTION};
+  color: #09f;
   text-decoration: none;
 
   &:hover {
-    color: ${ACTION_BURN};
+    color: #09f;
   }
 }
 

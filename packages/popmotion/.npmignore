@@ -1,4 +1,7 @@
 *.md
+*.map
 docs
 webpack.config.js
 tmp
+coverage
+src

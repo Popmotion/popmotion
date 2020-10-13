@@ -1,255 +1,987 @@
-import { Fragment } from 'react';
-import Homepage from '~/templates/homepage';
-import BlogList from '~/templates/blog';
-import Footer from '~/templates/global-new/Footer';
-import Link from 'next/link';
-import themes from '~/styles/themes';
-import { color, font, media } from '~/styles/vars';
-import { ActionButton, P } from '~/templates/global-new/styled';
-import styled, {
-  ThemeProvider,
-  withTheme,
-  createGlobalStyle
-} from 'styled-components';
-import posed, { PoseGroup } from 'react-pose';
-import { keyframes, tween, easing, calc } from 'popmotion';
 
-const Global = createGlobalStyle`
-@font-face {
-  font-family: 'Popmotion Headline';
-  src: url(data:application/font-woff2;charset=utf-8;base64,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) format('woff2');
-  font-weight: normal;
-  font-style: normal;
-}
-`;
+import marksy from 'marksy';
+import Homepage from '~/components/template';
+import { A, H1, H2, H3, H4, H5, P, Li, Ol, Ul, Hr, Code, Blockquote, ArticleHeader, Video } from '~/templates/global/styled';
+import { createElement } from 'react';
 
-const HeaderContainer = styled.div`
-  height: 320px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-
-  ${media.medium`height: 180px;`} ${media.small`height: 140px;`};
-`;
-
-const MoreLink = styled.a`
-  text-align: center;
-  margin: 0 auto;
-`;
-
-const dropEasing = easing.createReversedEasing(easing.createBackIn(3));
-const letterEasing = easing.cubicBezier(0, 0.25, 1, 0.75);
-const Char = styled(
-  posed.span({
-    exit: { opacity: 0, scaleY: 0.5, y: 25 },
-    enter: {
-      y: 0,
-      opacity: 1,
-      scaleY: 1,
-      delay: ({ i, total }) =>
-        letterEasing(calc.getProgressFromValue(0, total - 1, i)) * 500,
-      transition: {
-        y: ({ from, to }) =>
-          keyframes({
-            values: [from, -8, to],
-            easings: [easing.easeOut, dropEasing],
-            times: [0, 0.3, 1],
-            duration: 500
-          }),
-        scaleY: ({ from, to }) =>
-          keyframes({
-            values: [from, 1.2, to],
-            easings: [easing.easeOut, dropEasing],
-            times: [0, 0.3, 1],
-            duration: 500
-          }),
-        opacity: props => tween({ ...props, duration: 500 * 0.6 })
-      }
-    }
-  })
-)`
-  color: ${color.white};
-  font-size: 36px;
-  font-family: Popmotion Headline;
-  letter-spacing: -2px;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.12);
-  opacity: 0;
-  display: inline-block;
-  transform-origin: 0% 100%;
-
-  ${media.medium`
-  font-size: 28px;
-  letter-spacing: -1.5px;`} ${media.small`
-  font-size: 24px;
-  letter-spacing: -1px;`};
-`;
-
-const Word = styled(posed.span({}))`
-  display: inline-block;
-`;
-
-// TODO make a new npm module for this
-class AnimatedText extends React.Component {
-  constructor(props) {
-    super(props);
-    this.words = props.text.split(' ');
-    this.chars = this.words.map(word => word.split(''));
-    this.numChars = this.words.reduce((count, word) => count + word.length, 0);
+const convertMarkdown = marksy({
+  createElement,
+  elements: {
+    a: A,
+    h1: ArticleHeader,
+    h2: H2,
+    h3: H3,
+    h4: H4,
+    h5: H5,
+    p: P,
+    code: Code,
+    li: Li,
+    ol: Ol,
+    ul: Ul,
+    hr: Hr,
+    blockquote: Blockquote,
   }
+});
 
-  render() {
-    let i = -1;
-    return (
-      <h2>
-        <Global />
-        <PoseGroup animateOnMount>
-          {this.words.map((word, wordIndex) => (
-            <Word key={wordIndex}>
-              {this.chars[wordIndex].map(char => {
-                i++;
-                return (
-                  <Char i={i} key={i} total={this.numChars}>
-                    {char}
-                  </Char>
-                );
-              })}
-              {`\u00A0`}
-            </Word>
-          ))}
-        </PoseGroup>
-      </h2>
-    );
-  }
-}
-
-const Header = () => (
-  <HeaderContainer>
-    <AnimatedText text="Simple libraries for delightful interfaces" />
-  </HeaderContainer>
-);
-
-const Container = styled.ul`
-  max-width: 850px;
-  margin: 0 auto;
-  display: flex;
-  flex-wrap: wrap;
-`;
-
-const ProductContainer = styled.li`
-  flex: 0 0 50%;
-  padding: 20px;
-  text-align: center;
-
-  ${media.medium`flex: 0 0 100%;`};
-`;
-
-const LogoContainer = styled.div`
-  height: 100px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const LearnMore = styled(ActionButton)`
-  display: block;
-  margin: 20px auto 0;
-`;
-
-const Product = withTheme(({ title, children, theme, prefetch }) => (
-  <ProductContainer>
-    <Link prefetch={prefetch} href={title.url}>
-      <a>
-        <LogoContainer>
-          <title.Logo {...theme.homepageLogoSize} />
-        </LogoContainer>
-        {children}
-        <LearnMore>Learn more</LearnMore>
-      </a>
-    </Link>
-  </ProductContainer>
-));
-
-const Section = styled.section`
-  padding-top: 75px;
-  max-width: 650px;
-  border-top: 1px solid ${color.lightGrey};
-  margin: 75px auto;
-
-  ${media.small`
-    margin: 40px auto;
-  `};
-`;
-
-const SectionHeader = styled.h2`
-  font-size: 36px;
-  color: ${color.black};
-  ${font.bold};
-  letter-spacing: -1.1px;
-  text-align: center;
-  margin-bottom: 40px;
-
-  ${media.small`
-    font-size: 24px;
-    letter-spacing: -0.5px;
-  `};
-`;
-
-export default () => (
-  <Homepage
-    title="Popmotion | JavaScript animation libraries for delightful interfaces"
-    description="Popmotion makes simple and powerful JavaScript animation libraries for HTML, SVG, React and React Native."
-    theme="popmotion"
-    Header={Header}
-  >
-    <SectionHeader>Open source</SectionHeader>
-    <Container>
-      <ThemeProvider theme={themes.framerMotion}>
-        <Product title={themes.framerMotion}>
-          <P>
-            A truly simple <em>React</em>
-            <br />
-            animation library
-          </P>
-        </Product>
-      </ThemeProvider>
-      <ThemeProvider theme={themes.pure}>
-        <Product title={themes.pure}>
-          <P>
-            Advanced functional animation library for <em>any</em> JavaScript
-            environment
-          </P>
-        </Product>
-      </ThemeProvider>
-      <ThemeProvider theme={themes.popcorn}>
-        <Product title={themes.popcorn}>
-          <P>Utility functions for user interface developers</P>
-        </Product>
-      </ThemeProvider>
-      <ThemeProvider theme={themes.stylefire}>
-        <Product title={themes.stylefire}>
-          <P>
-            <em>CSS</em> and <em>SVG</em> styler optimised for animation
-          </P>
-        </Product>
-      </ThemeProvider>
-      <ThemeProvider theme={themes.framesync}>
-        <Product title={themes.framesync}>
-          <P>
-            Unity-inspired <em>render loop</em>
-            <br />
-            for browsers
-          </P>
-        </Product>
-      </ThemeProvider>
-    </Container>
-    <Section>
-      <SectionHeader>Latest blog posts</SectionHeader>
-      <BlogList numItems={5} />
-      <Link href="/blog">
-        <MoreLink>See all posts</MoreLink>
-      </Link>
-    </Section>
-    <Footer />
+const Page = ({ section }) => (
+  <Homepage tableOfContents={content.toc}>
+    {content.tree}
   </Homepage>
 );
+
+const content = convertMarkdown(`
+
+## Quick start
+
+\`\`\`javascript
+import { animate } from "popmotion"
+
+animate({
+  from: 0,
+  to: 100,
+  onUpdate: latest => console.log(latest)
+})
+\`\`\`
+
+## Animation
+
+### animate
+
+\`animate\` performs a keyframes or spring animation.
+
+\`\`\`javascript
+import { animate } from "popmotion"
+
+animate({
+  from: 0, 
+  to: 100,
+  onUpdate: latest => console.log(latest)
+})
+\`\`\`
+
+It can animate numbers:
+
+\`\`\`javascript
+animate({ from: 0, to: 100 })
+\`\`\`
+
+Or strings of the same type:
+
+\`\`\`javascript
+animate({ from: "0px", to: "100px" })
+animate({ from: "#fff", to: "#000" })
+\`\`\`
+
+The strings can be pretty complex, for instance box shadows or SVG path definitions. The only limitation is that the numbers and colors contained within must be in the same order:
+
+\`\`\`javascript
+animate({
+  from: "0px 0px 0px rgba(0, 0, 0, 0)",
+  to: "10px 10px 0px rgba(0, 0, 0, 0.2)"
+})
+\`\`\`
+
+<!--
+Arrays of the above:
+
+\`\`\`javascript
+animate({
+  from: [0, "#fff"],
+  to: [100, "#000"]
+})
+\`\`\`
+
+And objects of the above:
+
+\`\`\`javascript
+animate({
+  from: { x: 0, backgroundColor: "#fff" },
+  to: { x: 100, backgroundColor: "#000" }
+})
+\`\`\`
+-->
+
+The type of animation performed will be automatically detected from the provided options, or can be chosen manually by defining \`type\` as \`"keyframes"\`, \`"spring"\` or \`"decay"\`.
+
+#### Options
+
+These options can be set for **all animations**:
+
+##### from
+
+An initial value to start the animation from.
+
+Defaults to \`0\`
+
+\`\`\`javascript
+animate({
+  from: "linear-gradient(#e66465, #9198e5)",
+  to: "linear-gradient(#9198e5, #e66465)"
+})
+\`\`\`
+
+##### elapsed
+
+Sets an initial elapsed time, in milliseconds. Set to a negative value for a delay.
+
+\`\`\`javascript
+animate({
+  to: 100,
+  elapsed: -300
+})
+\`\`\`
+
+##### repeat
+
+The number of times to repeat the animation. Set to \`Infinity\` to repeat forever.
+
+\`\`\`javascript
+animate({
+  to: 100,
+  repeat: 2
+})
+\`\`\`
+
+##### repeatDelay
+
+The duration, in milliseconds, to wait before repeating the animation.
+
+\`\`\`javascript
+animate({
+  to: 100,
+  repeat: 2,
+  repeatDelay: 200
+})
+\`\`\`
+
+##### repeatType
+
+Either \`"loop"\`, \`"mirror"\` or \`"reverse"\`. Defaults to \`"loop"\`.
+
+- \`"loop"\`: Repeats the animation from \`0\`.
+- \`"mirror":\` Swaps the \`from\`/\`to\` values alternately.
+- \`"reverse":\` Reverses the animation alternately.
+
+\`\`\`javascript
+animate({
+  to: 100,
+  repeat: 2,
+  repeatType: "reverse"
+})
+\`\`\`
+
+##### driver
+
+By default, the animation will be driven by a \`requestAnimationFrame\` loop. \`driver\` can specify a different source.
+
+A \`Driver\` is a function that accepts the animations \`update\` function. This is a function that can be called with a time delta from the previous frame. The \`Driver\` must return a function that will be called when the animation is stopped.
+
+\`\`\`javascript
+const xrDriver = session => update => {
+  let latestRequestId = 0
+  let prevTimestamp = performance.now()
+  
+  const step = timestamp => {
+    const delta = timestamp - prevTimestamp
+    prevTimestamp = timestamp
+
+    update(delta)
+
+    latestRequestId = session.requestAnimationFrame(step)
+  }
+
+  let latestRequestId = session.requestAnimationFrame(step)
+
+  return () => session.cancelRequestAnimationFrame(latestRequestId)
+}
+
+animate({
+  to: 100,
+  driver: xrDriver(xrSession)
+})
+\`\`\`
+
+##### type
+
+\`animate\` will automatically detect the type of animation to use based on the options provided. But a specific type can be chosen manually by defining \`type\` as \`"keyframes"\`, \`"spring"\` or \`"decay"\`.
+
+\`\`\`jsx
+animate({
+  to: 100,
+  type: "spring"
+})
+\`\`\`
+
+#### Lifecycle events
+
+The following lifecycle events are available for **all animations**:
+
+##### onUpdate
+
+This is called every frame the animation fires with the latest computed value.
+
+\`\`\`javascript
+animate({
+  to: 100,
+  onUpdate: latest => console.log(latest)
+})
+\`\`\`
+
+##### onPlay
+
+This is called when the animation starts. Currently this automatically when \`animate\` is called.
+
+\`\`\`javascript
+animate({
+  to: 100,
+  onPlay: () => {}
+})
+\`\`\`
+
+##### onComplete
+
+This is called when the animation successfully completes.
+
+\`\`\`javascript
+animate({
+  to: 100,
+  onComplete:() => {}
+})
+\`\`\`
+
+##### onRepeat
+
+This is called when an animation repeats.
+
+\`\`\`javascript
+animate({
+  to: 100,
+  repeat: 2,
+  onRepeat: () => {}
+})
+\`\`\`
+
+##### onStop
+
+This is called when the animation is stopped by the \`stop\` control.
+
+\`\`\`javascript
+const animation = animate({
+  to: 100,
+  onStop: () => {}
+})
+
+animation.stop()
+\`\`\`
+
+#### Keyframes options
+
+A keyframes animation is the default animation type and it can be defined either with a \`from\` and \`to\` option:
+
+\`\`\`javascript
+animate({ from: 0, to: 100 })
+\`\`\`
+
+Or as a series of keyframes provided to the \`to\` option:
+
+\`\`\`javascript
+animate({ to: [0, 100, 200] })
+\`\`\`
+
+##### to
+
+A single value to animate to, or an array of values to animate through.
+
+\`\`\`javascript
+animate({
+  to: ["#0ff", "#f00", "#0f0"]
+})
+\`\`\`
+
+If \`to\` is an array, any defined \`from\` will be ignored.
+
+##### duration
+
+This defines the duration of the animation, in milliseconds.
+
+\`\`\`javascript
+animate({
+  to: 100,
+  duration: 300
+})
+\`\`\`
+
+##### ease
+
+This is an easing function, or array of functions, to use when easing between each keyframe.
+
+\`\`\`javascript
+import { animate, linear, easeInOut } from "popmotion"
+
+animate({
+  to: 100,
+  ease: linear
+})
+
+animate({
+  to: ["#fff", "#000", "#f00"],
+  ease: [linear, easeInOut]
+})
+\`\`\`
+
+If set as any array, the length of this array must be one shorter than the number of values being animated between.
+
+##### offset
+
+This is an array of values between \`0\` and \`1\` that defines at which point throughout the animation each keyframe should be reached.
+
+This array should be the same length as the number of defined keyframes.
+
+\`\`\`javascript
+animate({
+  to: ["#fff", "#000", "#f00"],
+  offset: [0, 0.2, 1]
+})
+\`\`\`
+
+#### Spring options
+
+Springs are great for creating natural-feeling interfaces and dynamic interruptable animations.
+
+A spring animation will be used if any of the \`stiffness\`, \`damping\` or \`mass\` options are detected.
+
+**Note:** A spring simulation is inherently numerical so if it's given a color, array or object, it runs the animation from \`0\` to \`100\` and interpolates that to the given values. This strategy is likely to be tweaked before the official release so animations made this way may change in feel.
+
+##### to
+
+A single value to animate to.
+
+\`\`\`javascript
+animate({
+  to: 100,
+  type: "spring"
+})
+\`\`\`
+
+If \`to\` is an array, any defined \`from\` will be ignored.
+
+##### stiffness
+
+This defines the stiffness of the spring. A higher stiffness will result in a snappier animation.
+
+Defaults to \`100\`
+
+\`\`\`javascript
+animate({
+  to: 100,
+  stiffness: 1000
+})
+\`\`\`
+
+##### damping
+
+This is the opposing force to \`stiffness\`. As you reduce this value, relative to \`stiffness\`, the spring will become bouncier and the animation will last longer. Likewise, higher relative values will have less bounciness and result in shorter animations.
+
+Defaults to \`10\`
+
+\`\`\`javascript
+animate({
+  to: 100,
+  damping: 50
+})
+\`\`\`
+
+##### mass
+
+This is the mass of the animating object. Heavier objects will take longer to speed up and slow down.
+
+Defaults to \`1\`.
+
+\`\`\`javascript
+animate({
+  to: 100,
+  mass: 2
+})
+\`\`\`
+
+##### velocity
+
+The initial velocity, in units per second, of the animation.
+
+\`\`\`javascript
+animate({
+  to: 100,
+  velocity: 1000
+})
+\`\`\`
+
+##### duration
+
+The duration of the spring, in milliseconds.
+
+Will be overridden by \`stiffness\`, \`mass\` or \`damping\`.
+
+\`\`\`javascript
+animate({
+  to: 100,
+  duration: 1000
+})
+\`\`\`
+
+##### bounce
+
+The bounciness of the spring, as a value between \`0\` and \`1\`, where \`0\` is no bounce.
+
+Will be overridden by \`stiffness\`, \`mass\` or \`damping\`.
+
+\`\`\`javascript
+animate({
+  to: 100,
+  bounce: 0.2
+})
+\`\`\`
+
+##### restDelta
+
+The distance from the animation target at which the animation can be considered complete. When both \`restDelta\` and \`restSpeed\` are met, the animation completes.
+
+\`\`\`javascript
+animate({
+  to: 100,
+  restDelta: 0.5
+})
+\`\`\`
+
+##### restSpeed
+
+The absolute velocity, in units per second, below which the animation can be considered complete. When both \`restDelta\` and \`restSpeed\` are met, the animation completes. Defaults to \`10\`.
+
+\`\`\`javascript
+animate({
+  to: 100,
+  restSpeed: 5
+})
+\`\`\`
+
+#### Playback controls
+
+\`animate\` returns \`PlaybackControls\`, which can be used to control the playback of the animation.
+
+Currently this only includes a \`stop\` method, but may expand with more.
+
+##### stop
+
+Stops the animation.
+
+\`\`\`javascript
+const playback = animate({ from: 0, to: 100 })
+playback.stop()
+\`\`\`
+
+### inertia
+
+The \`inertia\` animation is used to gradually decelerate a number. Think smartphone scroll momentum.
+
+#### Options
+
+In addition to \`animate\`'s \`from\`, \`onUpdate\` and \`onComplete\` options, \`inertia\` also supports the following:
+
+##### velocity
+
+The initial velocity, in units per second, of the animation.
+
+\`\`\`javascript
+inertia({
+  from: 0,
+  velocity: 100
+})
+\`\`\`
+
+##### power
+
+A constant with which to calculate a target value. Higher power = further target.
+
+Defaults to \`0.8\`.
+
+\`\`\`javascript
+inertia({
+  from: 0,
+  power: 0.3
+})
+\`\`\`
+
+##### timeConstant
+
+Adjusting the time constant will change the duration of the deceleration, thereby affecting its feel.
+
+Defaults to \`350\`.
+
+\`\`\`javascript
+inertia({
+  from: 0,
+  velocity: 100,
+  timeConstant: 400
+})
+\`\`\`
+
+##### modifyTarget
+
+A function that receives the calculated target and returns a new one. Useful for snapping the target to a grid.
+
+\`\`\`javascript
+const roundToNearest = target => v => Math.ceil(v / target) * target
+
+inertia({
+  from: 0,
+  velocity: 100,
+  modifyTarget: roundToNearest(100)
+})
+\`\`\`
+
+##### min
+
+The minimum value at which the animation will switch from gradual deceleration and use a spring animation to snap to this point.
+
+\`\`\`javascript
+inertia({
+  from: 50,
+  velocity: -100,
+  min: 0
+})
+\`\`\`
+
+##### max
+
+The maximum value at which the animation will switch from gradual deceleration and use a spring animation to snap to this point.
+
+\`\`\`javascript
+inertia({
+  from: 50,
+  velocity: 100,
+  max: 100
+})
+\`\`\`
+
+##### bounceStiffness
+
+This defines the stiffness of the spring when the animation hits either \`min\` or \`max\`. A higher stiffness will result in a snappier animation.
+
+Defaults to \`500\`
+
+\`\`\`javascript
+inertia({
+  from: 0,
+  velocity: 100,
+  max: 50,
+  bounceStiffness: 1000
+})
+\`\`\`
+
+##### bounceDamping
+
+This is the opposing force to \`bounceStiffness\`. As you reduce this value, relative to \`bounceStiffness\`, the spring will become bouncier and the animation will last longer. Likewise, higher relative values will have less bounciness and result in shorter animations.
+
+Defaults to \`10\`
+
+\`\`\`javascript
+inertia({
+  from: 0,
+  velocity: 100,
+  max: 50,
+  bounceDamping: 300
+})
+\`\`\`
+
+##### restDelta
+
+The distance from the animation target at which the animation can be considered complete.
+
+\`\`\`javascript
+inertia({
+  from: 0,
+  velocity: 100,
+  restDelta: 0.5
+})
+\`\`\`
+
+## Easing
+
+Popmotion includes a number of in-built easing functions, as well as factory functions to make entirely new ones.
+
+### Functions
+
+Each easing function can be imported like so:
+
+\`\`\`javascript
+import { linear } from "popmotion"
+\`\`\`
+
+Each function accepts a progress value between \`0\` and \`1\`, and returns a new one:
+
+\`\`\`javascript
+const progress = 0.5
+const easedProgress = easeInOut(progress)
+\`\`\`
+
+ - \`linear\`
+ - \`easeIn\`
+ - \`easeInOut\`
+ - \`easeOut\`
+ - \`circIn\`
+ - \`circInOut\`
+ - \`circOut\`
+ - \`backIn\`
+ - \`backInOut\`
+ - \`backOut\`
+ - \`anticipate\`
+ - \`bounceIn\`
+ - \`bounceInOut\`
+ - \`bounceOut\`
+
+### Factories
+
+#### cubicBezier
+
+\`\`\`javascript
+import { cubicBezier } from "popmotion"
+
+const easing = cubicBezier(0, .42, 0, 1)
+\`\`\`
+
+New cubic bezier definitions can be created in the [Framer](https://framer.com) animation editor and copy/pasted directly into this function.
+
+#### steps
+
+\`steps\` returns an easing function that will convert the animation into a discrete series of steps.
+
+\`\`\`javascript
+import { steps } from "popmotion"
+
+const easing = steps(5)
+\`\`\`
+
+It optionally accepts a second parameter, either \`"start"\` or \`"end"\` (default)that decides whether the steps are aligned with the start or end of the animation.
+
+\`\`\`javascript
+steps(5, "start")
+\`\`\`
+
+#### mirrorEasing
+
+Mirrors an existing easing function. 
+
+#### reverseEasing
+
+Reverses an existing easing function. For instance, providing it \`easeIn\` would return an \`easeOut\`.
+
+\`\`\`javascript
+import { reverseEasing, linear } from "popmotion"
+
+const reversed = reverseEasing(linear)
+reversed(1) // 0
+reversed(0.5) // 0.5
+reversed(0) // 1
+\`\`\`
+
+#### createExpoIn
+
+Creates an easing function based on the exponent of the provided \`power\`. The higher the \`power\`, the stronger the easing.
+
+\`\`\`javascript
+import { createExpoIn } from "popmotion"
+
+const expoIn = createExpoIn(4)
+\`\`\`
+
+The returned easing function is an ease in, which means it starts slow and finished fast. \`mirrorEasing\` and \`reverseEasing\` can be used to create ease in out, and ease out variations:
+
+\`\`\`javascript
+const expoIn = createExpoIn(4)
+const expoOut = mirrorEasing(easeIn)
+const expoInOut = reverseEasing(easeIn)
+\`\`\`
+
+#### createBackIn
+
+Creates an easing function with an overshoot. It accepts a \`power\` value, the higher the \`power\` the stronger the overshoot.
+
+\`\`\`javascript
+import { createBackIn } from "popmotion"
+
+const backIn = createBackIn(4)
+\`\`\`
+
+The returned easing function is an ease in, which means the overshoot happens at the start of the animation. \`mirrorEasing\` and \`reverseEasing\` can be used to create ease in out, and ease out variations:
+
+\`\`\`javascript
+const backIn = createBackIn(4)
+const backOut = mirrorEasing(easeIn)
+const backInOut = reverseEasing(easeIn)
+\`\`\`
+
+#### createAnticipate
+
+Creates an easing that pulls back a little before animating out with an overshoot. The stronger the \`power\` the bigger the overshoot.
+
+\`\`\`javascript
+import { createAnticipate } from "popmotion"
+
+const anticipate = createAnticipate(4)
+\`\`\`
+
+## Utils
+
+#### angle
+
+Returns an angle between two points, in degrees.
+
+\`\`\`javascript
+import { angle } from "popmotion"
+
+angle(
+  { x: 0, y: 0 },
+  { x: 45, y: 100 }
+)
+\`\`\`
+
+#### attract
+
+
+\`\`\`javascript
+import { attract } from "popmotion"
+
+attract(5, 10, 12)
+\`\`\`
+
+#### attractExpo
+
+\`\`\`javascript
+import { attractExpo } from "popmotion"
+
+attractExpo(5, 10, 12)
+\`\`\`
+
+#### clamp
+
+Clamp a value to within the given range.
+
+\`\`\`javascript
+import { clamp } from "popmotion"
+
+const min = 50
+const max = 100
+clamp(min, max, 150) // 100
+\`\`\`
+
+#### degreesToRadians
+
+Converts degrees to radians.
+
+\`\`\`javascript
+import { degreesToRadians } from "popmotion"
+
+degreesToRadians(45) // 0.785...
+\`\`\`
+
+#### distance
+
+Returns the distance between two numbers, two 2D points, or two 3D points.
+
+\`\`\`javascript
+import { distance } from "popmotion"
+
+distance(10, 50)
+distance({ x: 0, y: 0 }, { x: 45, y: 100 })
+distance({ x: 0, y: 0, z: 100 }, { x: 45, y: 100, z: 0 })
+\`\`\`
+
+#### interpolate
+
+Creates a function that will interpolate from an linear series of numbers, to a non-linear series of numbers, strings of the same numerical format, colours, or arrays/objects of those.
+
+\`\`\`javascript
+import { interpolate } from "popmotion"
+
+const mapXToOpacity = interpolate(
+  [-100, 0, 100],
+  [0, 1, 0]
+)
+mapXToOpacity(-50) // 0.5
+
+const mapProgressToValues = interpolate(
+  [0, 1],
+  [
+    { x: 0, color: "#fff" },
+    { x: 100, color: "#000" }
+  ]
+)
+mapProgressToValues(0.5) // { x: 50, color: "#888" }
+
+const rescale = interpolate(
+  [0, 1],
+  [100, 200],
+  { clamp: false }
+)
+rescale(2) // 300
+\`\`\`
+
+#### Options
+
+\`interpolate\` accepts an optional third argument, an object of options.
+
+- \`clamp\`: Clamps values to within given range. Defaults to \`true\`.
+- \`ease\`: An \`Easing\` function, or array of easing functions, to ease the interpolation of each segment.
+- \`mixer\`: A function that, when provided a \`from\` and \`to\` value, will return a new function that accepts a progress value between \`0\` and \`1\` to mix between those two values. For integration with libraries like Flubber.
+
+#### isPoint
+
+Returns \`true\` if the provided argument is a 2D point.
+
+\`\`\`javascript
+import { isPoint } from "popmotion"
+
+isPoint({ x: 0 }) // false
+isPoint({ x: 0, y: 0 }) // true
+\`\`\`
+
+#### isPoint3D
+
+Returns \`true\` if the provided argument is a 3D point.
+
+\`\`\`javascript
+import { isPoint3D } from "popmotion"
+
+isPoint3D({ x: 0 }) // false
+isPoint3D({ x: 0, y: 0 }) // false
+isPoint3D({ x: 0, y: 0, z: 0 }) // true
+\`\`\`
+
+#### mix
+
+Will mix between two values, given \`progress\` as a third argument.
+
+\`\`\`javascript
+import { mix } from "popmotion"
+
+mix(0, 100, 0.5) // 50
+mix(0, 100, 2) // 200
+\`\`\`
+
+#### mixColor
+
+Returns a function that, when provided a \`progress\` value, will mix between two colors. Accepts hex, rgba and hsla colors.
+
+\`\`\`javascript
+import { mixColor } from "popmotion"
+
+mixColor("#000", "#fff")(0.5) // "rgba(125, 125, 125, 1)"
+\`\`\`
+
+#### mixComplex
+
+Returns a function that, when provided a \`progress\` value, will mix between two strings with the same order of numbers and colors.
+
+\`\`\`javascript
+import { mixComplex } from "popmotion"
+
+mixComplex("100px #fff", "0px #000")(0.5) // "50px rgba(125, 125, 125, 1)"
+\`\`\`
+
+#### pointFromVector
+
+Given a point, angle in degrees, and distance, will return a new point.
+
+\`\`\`javascript
+import { pointFromVector } from "popmotion"
+
+const point = { x: 0, y: 0 }
+const angle = 45
+const distance = 100
+
+pointFromVector(point, angle, distance)
+\`\`\`
+
+#### progress
+
+Given a min and a max range, and a value, will return the \`progress\` of the value within the range as normalised to a \`0\`-\`1\` range.
+
+\`\`\`javascript
+import { progress } from "popmotion"
+
+const min = 100
+const max = 200
+progress(min, max, 150) // 0.5
+\`\`\`
+
+#### radiansToDegrees
+
+Converts radians to degrees.
+
+\`\`\`javascript
+import { radiansToDegrees } from "popmotion"
+
+radiansToDegrees(0.785) // 45
+\`\`\`
+
+#### snap
+
+Creates a function that will snap numbers to the nearest in a provided array or to a regular interval.
+
+\`\`\`javascript
+import { snap } from "popmotion"
+
+// Snap to regular intervals
+const snapTo = snap(45);
+
+snapTo(1); // 0
+snapTo(40); // 45
+snapTo(50); // 45
+snapTo(80); // 90
+
+// Snap to values in an array
+const snapTo = snap([-100, -50, 100, 200]);
+
+snapTo(-200); // -100
+snapTo(-76); // -100
+snapTo(-74); // -50
+\`\`\`
+
+#### toDecimal
+
+Rounds a number to a specific decimal place.
+
+\`\`\`javascript
+import { toDecimal } from "popmotion"
+
+toDecimal(3.3333); // 3.33
+toDecimal(6.6666, 1); // 6.67
+\`\`\`
+
+#### velocityPerFrame
+
+\`\`\`javascript
+import { velocityPerFrame } from "popmotion"
+
+velocityPerFrame(50, 16.7); // 0.835
+\`\`\`
+
+#### velocityPerSecond
+
+\`\`\`javascript
+import { velocityPerSecond } from "popmotion"
+
+velocityPerSecond(1, 16.7); // 59.880...
+\`\`\`
+
+#### wrap
+
+\`\`\`javascript
+import { wrap } from "popmotion"
+
+wrap(0, 1, 0.5); // 0.5
+wrap(0, 1, 1.5); // 0.5
+\`\`\`
+
+`);
+
+export default Page;

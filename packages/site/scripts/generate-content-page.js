@@ -1,4 +1,4 @@
-const escapeBackticks = string => string.replace(/`/g, '\\`');
+const escapeBackticks = (string) => string.replace(/`/g, '\\`');
 
 module.exports = (
   body,
@@ -11,11 +11,49 @@ module.exports = (
     siteName,
     section,
     next,
-    author
-  }
-) => `
+    author,
+  },
+  isHomepage = false
+) =>
+  isHomepage
+    ? `
+import marksy from 'marksy';
+import Homepage from '~/components/template';
+import { A, H1, H2, H3, H4, H5, P, Li, Ol, Ul, Hr, Code, Blockquote, ArticleHeader, Video } from '~/templates/global/styled';
 import { createElement } from 'react';
-import marksy from 'marksy/components';
+
+const convertMarkdown = marksy({
+  createElement,
+  elements: {
+    a: A,
+    h1: ArticleHeader,
+    h2: H2,
+    h3: H3,
+    h4: H4,
+    h5: H5,
+    p: P,
+    code: Code,
+    li: Li,
+    ol: Ol,
+    ul: Ul,
+    hr: Hr,
+    blockquote: Blockquote,
+  }
+});
+
+const Page = ({ section }) => (
+  <Homepage tableOfContents={content.toc}>
+    {content.tree}
+  </Homepage>
+);
+
+const content = convertMarkdown(\`${escapeBackticks(body)}\`);
+
+export default Page;
+`
+    : `
+import { createElement } from 'react';
+import marksy from 'marksy/jsx';
 import { A, H1, H2, H3, H4, H5, P, Li, Ol, Ul, Hr, Code, Blockquote, ArticleHeader, Video } from '~/templates/global/styled';
 import { Img } from '~/templates/content/styled';
 import ContentTemplate from '~/templates/content/Template';

@@ -11,7 +11,7 @@ const packagesPath = path.join(__dirname, '../../');
 const contentMetadataOutputPath = path.join(__dirname, '../data/content.json');
 const siteNameMap = JSON.parse(
   fs.readFileSync(path.join(__dirname, '../data/site-names.json'), {
-    encoding: 'utf-8'
+    encoding: 'utf-8',
   })
 );
 
@@ -22,7 +22,7 @@ function generateContent({
   subDir = '',
   firstLevelDir = '',
   siteName,
-  packageName
+  packageName,
 }) {
   packageName = packageName || rootDir;
   siteName = siteName || siteNameMap[rootDir];
@@ -42,7 +42,7 @@ function generateContent({
 
   const dirList = fs.readdirSync(readPath).filter(filterSystemFiles);
 
-  dirList.forEach(filename => {
+  dirList.forEach((filename) => {
     // If directory, generate content for that directory
     if (filename.indexOf('.') === -1) {
       generateContent({
@@ -50,14 +50,14 @@ function generateContent({
         subDir: `${subDir}/${filename}/`,
         firstLevelDir: firstLevelDir === '' ? filename : firstLevelDir,
         siteName,
-        packageName
+        packageName,
       });
 
       // If file, generate content
     } else {
       const [id] = filename.split('.');
       const file = fs.readFileSync(`${readPath}/${filename}`, {
-        encoding: 'utf-8'
+        encoding: 'utf-8',
       });
       const { attributes, body } = frontMatter(file);
       const {
@@ -67,7 +67,7 @@ function generateContent({
         published,
         author,
         next,
-        draft
+        draft,
       } = attributes;
 
       const outputId = id === 'README' ? category : id;
@@ -86,7 +86,7 @@ function generateContent({
         published: published ? convertDateFormat(`${published}`) : '',
         section: firstLevelDir,
         siteName: firstLevelDir === 'blog' ? 'popmotion' : siteName,
-        next
+        next,
       };
 
       fs.writeFileSync(
@@ -100,9 +100,29 @@ function generateContent({
 }
 
 const topLevel = fs.readdirSync(packagesPath).filter(filterFiles);
-topLevel.forEach(rootDir => generateContent({ rootDir }));
+topLevel.forEach((rootDir) => generateContent({ rootDir }));
 
-fs.writeFile(contentMetadataOutputPath, JSON.stringify(siteMetadata), err => {
+// Convert readme to homepage
+const readme = fs
+  .readFileSync(path.join(__dirname, '../../../README.md'))
+  .toString('utf8')
+  .split('<!-- Documentation -->')[1];
+
+fs.writeFileSync(
+  path.join(__dirname, '../pages/index.js'),
+  generatePage(
+    readme,
+    {
+      id: 'index',
+      title: 'Popmotion: The JavaScript animation toolbox',
+      description: '',
+      siteName: 'popmotion',
+    },
+    true
+  )
+);
+
+fs.writeFile(contentMetadataOutputPath, JSON.stringify(siteMetadata), (err) => {
   const msg = !err ? 'Site content created' : err;
   console.log(msg);
 });

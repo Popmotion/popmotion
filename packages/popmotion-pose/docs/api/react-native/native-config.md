@@ -4,8 +4,6 @@ description: Options to create a posed component
 category: react-native
 ---
 
-> React Native Pose has been **deprecated**. If you are interested in a version of [Framer Motion](https://framer.com/motion) for React Native, let us know on the [GitHub ticket](https://github.com/framer/motion/issues/180).
-
 # Config
 
 Every posed component is created via a config object:

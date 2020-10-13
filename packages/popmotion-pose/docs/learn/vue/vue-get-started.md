@@ -5,8 +5,6 @@ category: vue
 next: vue-custom-transitions
 ---
 
-> Vue Pose has been **deprecated**.
-
 # Get started
 
 Pose for Vue is a declarative motion system that combines the simplicity of CSS transitions with the power and flexibility of JavaScript.

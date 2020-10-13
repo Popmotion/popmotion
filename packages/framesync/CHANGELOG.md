@@ -2,6 +2,12 @@
 
 Framesync adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.1.0] 2020-8-24
+
+### Added
+
+- `preRender` step.
+
 ## [4.0.2] 2019-02-05
 
 ### Fixed

@@ -1,6 +1,6 @@
 
 import { createElement } from 'react';
-import marksy from 'marksy/components';
+import marksy from 'marksy/jsx';
 import { A, H1, H2, H3, H4, H5, P, Li, Ol, Ul, Hr, Code, Blockquote, ArticleHeader, Video } from '~/templates/global/styled';
 import { Img } from '~/templates/content/styled';
 import ContentTemplate from '~/templates/content/Template';
@@ -58,9 +58,9 @@ Stylefire supports both\`'stoke-dasharray'\` and \`stroke-dashorigin\` propertie
 * \`pathSpacing\`
 * \`pathOffset\`
 
-These are all set as a **progress of the total path length, from \`0\` to \`100\`**, which is automatically measured by Stylefire.
+These are all set as a **progress of the total path length, from \`0\` to \`1\`**, which is automatically measured by Stylefire.
 
-So you can define an animation from \`0\` to \`100\`:
+So you can define an animation from \`0\` to \`1\`:
 
 \`\`\`javascript
 import { tween } from 'popmotion';
@@ -69,7 +69,7 @@ import styler from 'stylefire';
 const path = document.querySelector('path');
 const pathStyler = styler(polygon);
 
-tween({ to: 100 }).start(
+tween({ to: 1 }).start(
   v => pathStyler.set('pathLength', v)
 );
 \`\`\`

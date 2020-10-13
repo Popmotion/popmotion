@@ -5,8 +5,6 @@ category: vue
 next: vue-flip
 ---
 
-> Vue Pose has been **deprecated**.
-
 # Passive values
 
 Sometimes we don't want to explicitly define a state for a value, we might just want it to change whenever another value does.
@@ -87,7 +85,7 @@ Which means our function will look like this:
 backgroundColor: ['x', pipe(
   interpolate([-200, 200], [0, 1]),
   clamp(0, 1),
-  blendColor('#FF1C68', '#198FE3')
+  blendColor('#FF1C68', '#09f')
 )]
 ```
 

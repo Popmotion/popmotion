@@ -1,86 +1,87 @@
 {
-  "name": "popmotion",
-  "version": "8.7.6",
-  "description": "A functional, reactive motion library.",
-  "author": "Matt Perry",
-  "homepage": "https://popmotion.io",
-  "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
-  "module": "dist/popmotion.es.js",
-  "jsnext:main": "dist/popmotion.es.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Popmotion/popmotion/tree/master/packages/popmotion"
-  },
-  "bugs": {
-    "url": "https://github.com/Popmotion/popmotion/issues"
-  },
-  "keywords": [
-    "animation",
-    "ux",
-    "ui",
-    "popmotion",
-    "canvas animation",
-    "dom animation",
-    "dom",
-    "pointer tracking",
-    "mouse",
-    "mouse tracking",
-    "touch",
-    "touch tracking",
-    "physics",
-    "interaction",
-    "interface",
-    "svg"
-  ],
-  "analyze": true,
-  "license": "MIT",
-  "scripts": {
-    "build": "rollup -c && tsc --emitDeclarationOnly && npm run measure",
-    "postbuild": "babel $npm_package_module --out-file $npm_package_module --no-babelrc --plugins annotate-pure-calls",
-    "watch": "rollup -c -w",
-    "prepublishOnly": "npm run test && npm run build",
-    "measure": "gzip -c $npm_package_unpkg | wc -c",
-    "test": "jest --maxWorkers=2",
-    "publish-beta": "npm publish --tag beta"
-  },
-  "dependencies": {
-    "@popmotion/easing": "^1.0.1",
-    "@popmotion/popcorn": "^0.4.4",
-    "framesync": "^4.0.0",
-    "hey-listen": "^1.0.5",
-    "style-value-types": "^3.1.7",
-    "stylefire": "^7.0.1",
-    "tslib": "^1.10.0"
-  },
-  "devDependencies": {
-    "@types/jest": "^23.1.1",
-    "jest": "^23.1.0",
-    "jest-cli": "^23.1.0",
-    "ts-jest": "^21.2.4",
-    "tslint-circular-dependencies": "^0.1.0"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "ts",
-      "js"
+    "name": "popmotion",
+    "version": "9.0.0-rc.20",
+    "description": "The animator's toolbox",
+    "author": "Matt Perry",
+    "homepage": "https://popmotion.io",
+    "main": "./lib/index.js",
+    "types": "./lib/index.d.ts",
+    "module": "dist/popmotion.es.js",
+    "jsnext:main": "dist/popmotion.es.js",
+    "unpkg": "./dist/popmotion.min.js",
+    "sideEffects": false,
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Popmotion/popmotion/tree/master/packages/popmotion"
+    },
+    "bugs": {
+        "url": "https://github.com/Popmotion/popmotion/issues"
+    },
+    "keywords": [
+        "animation",
+        "ux",
+        "ui",
+        "popmotion",
+        "canvas animation",
+        "dom animation",
+        "dom",
+        "pointer tracking",
+        "mouse",
+        "mouse tracking",
+        "touch",
+        "touch tracking",
+        "physics",
+        "interaction",
+        "interface",
+        "svg"
     ],
-    "moduleNameMapper": {
-      "@popmotion/easing": "<rootDir>/../../easing/src",
-      "@popmotion/popcorn": "<rootDir>/../../popcorn/src",
-      "stylefire": "<rootDir>/../../stylefire/src",
-      "style-value-types": "<rootDir>/../../style-value-types/src",
-      "framesync": "<rootDir>/../../framesync/src"
+    "analyze": true,
+    "license": "MIT",
+    "scripts": {
+        "build": "rollup -c && tsc --emitDeclarationOnly && yarn measure",
+        "postbuild": "yarn babel $npm_package_module --out-file $npm_package_module --no-babelrc --plugins annotate-pure-calls",
+        "dev": "rollup -c -w",
+        "prepublishOnly": "yarn test && yarn build",
+        "measure": "gzip -c $npm_package_unpkg | wc -c",
+        "test": "jest --coverage --maxWorkers=2",
+        "publish-beta": "npm publish --tag beta"
     },
-    "transform": {
-      "\\.(ts)$": "../../../node_modules/ts-jest/preprocessor.js"
+    "dependencies": {
+        "framesync": "^4.1.0",
+        "hey-listen": "^1.0.8",
+        "style-value-types": "^3.1.9",
+        "tslib": "^1.10.0"
     },
-    "testRegex": "/_tests/.*\\.(ts|js)$",
-    "rootDir": "src"
-  },
-  "unpkg": "./dist/popmotion.global.min.js",
-  "prettier": {
-    "parser": "typescript",
-    "singleQuote": true
-  }
+    "devDependencies": {
+        "@rollup/plugin-commonjs": "^11.0.1",
+        "tslint-circular-dependencies": "^0.1.0"
+    },
+    "prettier": {
+        "printWidth": 80,
+        "tabWidth": 4,
+        "semi": false,
+        "trailingComma": "es5"
+    },
+    "jest": {
+        "moduleFileExtensions": [
+            "ts",
+            "js"
+        ],
+        "moduleNameMapper": {
+            "style-value-types": "<rootDir>/../../style-value-types/src",
+            "framesync": "<rootDir>/../../framesync/src"
+        },
+        "transform": {
+            "\\.(ts)$": "../../../node_modules/ts-jest/preprocessor.js"
+        },
+        "testRegex": "/__tests__/.*\\.test.(ts|js)$",
+        "rootDir": "src",
+        "collectCoverageFrom": [
+            "**/*.{js,jsx,ts,tsx}",
+            "!**/node_modules/**",
+            "!**/__tests__/**",
+            "!**/worklet/**"
+        ],
+        "coverageDirectory": "<rootDir>/../coverage"
+    }
 }

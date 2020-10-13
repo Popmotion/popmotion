@@ -1,8 +1,6 @@
 import Homepage from '~/templates/homepage';
 import Header from './Header';
-import USPs from './USPs';
 import Footer from '~/templates/global-new/Footer';
-import ExampleSection from '~/templates/Popmotion/USPs/ExampleSection';
 
 import styled from 'styled-components';
 
@@ -34,7 +32,6 @@ export default () => (
         <a href="https://framer.com/motion">Framer Motion</a>.
       </p>
     </Notice>
-    <USPs />
     <Footer />
   </Homepage>
 );
