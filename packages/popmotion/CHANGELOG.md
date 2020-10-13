@@ -10,6 +10,12 @@ Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
+## [8.7.5] 2020-09-03
+
+### Fixed
+
+- Refreshing published bundle.
+
 ## [8.7.2] 2020-04-28
 
 ### Fixed
