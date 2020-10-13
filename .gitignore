@@ -2,7 +2,6 @@ node_modules
 .DS_Store
 lib
 packages/site/.next
-packages/site/public
 packages/site/pages/api
 packages/site/pages/learn
 packages/site/pages/blog
