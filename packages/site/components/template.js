@@ -49,7 +49,7 @@ export default function ({ children, tableOfContents }) {
       <Global />
       <Head>
         <title>Popmotion: The animator's JavaScript toolbox</title>
-        <link rel="icon" href="/layout/favicon.png"></link>
+        <link rel="icon" href="https://popmotion.io/layout/favicon.png"></link>
         <meta name="twitter:card" content="summary_large_image"></meta>
         <meta name="twitter:site" content="@mattgperry"></meta>
         <meta name="twitter:creator" content="@mattgperry"></meta>
@@ -60,7 +60,7 @@ export default function ({ children, tableOfContents }) {
         ></meta>
         <meta
           name="twitter:image"
-          content={`/images/twitter-share-2020.png`}
+          content={`https://popmotion.io/images/twitter-share-2020.png`}
         ></meta>
         <link
           href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap"
