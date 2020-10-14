@@ -384,6 +384,14 @@ const Container = styled.div`
         box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
       }
     }
+
+    .cg {
+      display: block;
+      width: 100%;
+      max-width: 650px;
+      margin-left: auto;
+      margin-right: auto;
+    }
   }
 
   @media screen and (max-width: 740px) {
