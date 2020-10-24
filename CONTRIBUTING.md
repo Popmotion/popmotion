@@ -38,6 +38,12 @@ Follow these steps to get your code PR-ready:
 6. Update `CHANGELOG.md`.
 7. Ensure your changes build by running `yarn build` in the appropriate package directory(s).
 
+## Online one-click setup
+
+You can use Gitpod(an online IDE which is free for Open Source) for working on issues and making PRs online. With a single click it will launch a workspace and automatically: clone the `popmoton` repo and run `yarn install` && `yarn bootstrap` so that anyone interested can start straight away.
+
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/from-referrer/)
+
 ## Codebase Overview
 
 Other than [Stylefire](https://github.com/popmotion/stylefire) and [Framesync](https://github.com/popmotion/framesync), Popmotion is a monorepo. All Popmotion and Pose packages are contained in the [`packages` directory](https://github.com/Popmotion/popmotion/tree/master/packages).
