@@ -40,7 +40,11 @@ export function keyframes<V>({
      * Create a times array based on the provided 0-1 offsets
      */
     const times = convertOffsetToTimes(
-        offset ?? defaultOffset(values),
+        // Only use the provided offsets if they're the correct length
+        // TODO Maybe we should warn here if there's a length mismatch
+        offset && offset.length === values.length
+            ? offset
+            : defaultOffset(values),
         duration
     )
 
