@@ -2,6 +2,12 @@
 
 Framesync adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.0.0] Unreleased
+
+### Changed
+
+- Using `performance.now` to measure polyfilled elapsed time.
+
 ## [4.1.0] 2020-8-24
 
 ### Added

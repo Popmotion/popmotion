@@ -1,87 +1,91 @@
 import { Step, Process } from "./types"
-import { invariant } from "hey-listen"
 
-export default (setRunNextFrame: (fillRun: boolean) => void): Step => {
+export function createRenderStep(runNextFrame: () => void): Step {
     /**
-     * We use two arrays, one for this frame and one to queue for the
-     * next frame, reusing each to avoid GC.
-     * @type {Array}
+     * We create and reuse two arrays, one to queue jobs for the current frame
+     * and one for the next. We reuse to avoid triggering GC after x frames.
      */
-    let processToRun: Process[] = []
-    let processToRunNextFrame: Process[] = []
-    let numThisFrame = 0
+    let toRun: Process[] = []
+    let toRunNextFrame: Process[] = []
+
+    /**
+     *
+     */
+    let numToRun = 0
+
+    /**
+     * Track whether we're currently processing jobs in this step. This way
+     * we can decide whether to schedule new jobs for this frame or next.
+     */
     let isProcessing = false
-    let i = 0
-    const cancelled: WeakSet<Process> = new WeakSet()
-    const toKeepAlive: WeakSet<Process> = new WeakSet()
 
-    const renderStep: Step = {
-        cancel: (process) => {
-            const indexOfCallback = processToRunNextFrame.indexOf(process)
-            cancelled.add(process)
+    /**
+     * A set of processes which were marked keepAlive when scheduled.
+     */
+    const toKeepAlive = new WeakSet<Process>()
 
-            if (indexOfCallback !== -1) {
-                processToRunNextFrame.splice(indexOfCallback, 1)
+    const step: Step = {
+        /**
+         * Schedule a process to run on the next frame.
+         */
+        schedule: (callback, keepAlive = false, immediate = false) => {
+            const addToCurrentFrame = immediate && isProcessing
+            const buffer = addToCurrentFrame ? toRun : toRunNextFrame
+
+            if (keepAlive) toKeepAlive.add(callback)
+
+            // If the buffer doesn't already contain this callback, add it
+            if (buffer.indexOf(callback) === -1) {
+                buffer.push(callback)
+
+                // If we're adding it to the currently running buffer, update its measured size
+                if (addToCurrentFrame && isProcessing) numToRun = toRun.length
             }
+
+            return callback
         },
 
-        process: (frame) => {
+        /**
+         * Cancel the provided callback from running on the next frame.
+         */
+        cancel: (callback) => {
+            const index = toRunNextFrame.indexOf(callback)
+            if (index !== -1) toRunNextFrame.splice(index, 1)
+
+            toKeepAlive.delete(callback)
+        },
+
+        /**
+         * Execute all schedule callbacks.
+         */
+        process: (frameData) => {
             isProcessing = true
 
-            // Swap this frame and next frame arrays to avoid GC
-            ;[processToRun, processToRunNextFrame] = [
-                processToRunNextFrame,
-                processToRun,
-            ]
+            // Swap this frame and the next to avoid GC
+            ;[toRun, toRunNextFrame] = [toRunNextFrame, toRun]
 
-            // Clear next frame list
-            processToRunNextFrame.length = 0
+            // Clear the next frame list
+            toRunNextFrame.length = 0
 
-            // Execute all of this frame's functions
-            numThisFrame = processToRun.length
+            // Execute this frame
+            numToRun = toRun.length
 
-            if (numThisFrame) {
-                let process: Process
-                for (i = 0; i < numThisFrame; i++) {
-                    process = processToRun[i]
-                    process(frame)
+            if (numToRun) {
+                for (let i = 0; i < numToRun; i++) {
+                    const callback = toRun[i]
 
-                    if (
-                        toKeepAlive.has(process) === true &&
-                        !cancelled.has(process)
-                    ) {
-                        renderStep.schedule(process)
-                        setRunNextFrame(true)
+                    callback(frameData)
+
+                    if (toKeepAlive.has(callback)) {
+                        step.schedule(callback)
+                        runNextFrame()
                     }
                 }
             }
 
             isProcessing = false
         },
-
-        schedule: (process, keepAlive = false, immediate = false) => {
-            invariant(
-                typeof process === "function",
-                "Argument must be a function"
-            )
-
-            const addToCurrentBuffer = immediate && isProcessing
-            const buffer = addToCurrentBuffer
-                ? processToRun
-                : processToRunNextFrame
-
-            cancelled.delete(process)
-            if (keepAlive) toKeepAlive.add(process)
-
-            // If this callback isn't already scheduled to run next frame
-            if (buffer.indexOf(process) === -1) {
-                buffer.push(process)
-
-                // If we're adding to the current buffer, update its size
-                if (addToCurrentBuffer) numThisFrame = processToRun.length
-            }
-        },
     }
 
-    return renderStep
+    return step
 }

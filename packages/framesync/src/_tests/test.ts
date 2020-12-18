@@ -1,15 +1,15 @@
 import sync, { cancelSync } from "../"
-import onNextFrame from "../on-next-frame"
+import { onNextFrame } from "../on-next-frame"
 
 describe("onNextFrame", () => {
     it("fires callback on following frame", () => {
-        return new Promise((resolve: Function) => onNextFrame(resolve))
+        return new Promise((resolve) => onNextFrame(resolve))
     })
 })
 
 describe("sync", () => {
     it("fires callbacks in the correct order", () => {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             const order: number[] = []
 
             sync.read(() => order.push(0))
@@ -34,7 +34,7 @@ describe("sync", () => {
     })
 
     it("cancels callbacks", () => {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             let hasFired = false
 
             const process = sync.render(() => (hasFired = true))
@@ -46,7 +46,7 @@ describe("sync", () => {
     })
 
     it("fires callback on current frame if scheduled with `true` within the same step", () => {
-        return new Promise((resolve: Function, reject: Function) => {
+        return new Promise<number | string | void>((resolve, reject) => {
             let v = 0
 
             sync.update(({ timestamp: prevTimestamp }) => {
@@ -55,7 +55,7 @@ describe("sync", () => {
                     ({ timestamp }) => {
                         v++
                         if (timestamp !== prevTimestamp) {
-                            reject(timestamp, prevTimestamp)
+                            reject(`${timestamp} ${prevTimestamp}`)
                         }
                     },
                     false,
@@ -93,38 +93,44 @@ describe("sync", () => {
         })
     })
 
+    it("correctly cancels", () => {
+        return new Promise<void>((resolve, reject) => {
+            const callback = () => reject()
+
+            sync.read(() => cancelSync.update(callback))
+            sync.update(callback)
+            sync.render(() => resolve())
+        })
+    })
+
     it("correctly keeps alive", () => {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve) => {
             let v = 0
             sync.update(() => v++, true)
             sync.render(() => v === 2 && resolve(), true)
         })
     })
 
-    it("correctly keeps alive after cancel", () => {
-        return new Promise((resolve, reject) => {
-            let v = 0
-            let hasCancelled = false
+    it("correctly cancels a keepAlive process", () => {
+        return new Promise<number[] | void>((resolve, reject) => {
+            let updateCount = 0
+            let renderCount = 0
 
-            const update = () => {
-                v = v + 1
-            }
+            const update = sync.update(() => {
+                updateCount++
 
-            sync.update(update, true)
+                if (updateCount === 4) cancelSync.update(update)
+            }, true)
 
             sync.render(() => {
-                if (v === 2) {
-                    if (!hasCancelled) {
-                        cancelSync.update(update)
-                        hasCancelled = true
+                renderCount++
+
+                if (renderCount === 6) {
+                    if (renderCount !== updateCount) {
+                        resolve()
                     } else {
-                        v = 3
+                        reject([renderCount, updateCount])
                     }
-                } else if (v === 3) {
-                    sync.update(update, true)
-                } else if (v === 6) {
-                    cancelSync.update(update)
-                    resolve()
                 }
             }, true)
         })

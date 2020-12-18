@@ -4,7 +4,7 @@ A tiny frame scheduler for performantly batching reads, updates and renders.
 
 Segregating actions that read and write to the DOM will avoid [layout thrashing](https://developers.google.com/web/fundamentals/performance/rendering/avoid-large-complex-layouts-and-layout-thrashing).
 
-It's also a way of ensuring order of execution across a frame. For instance, Popmotion batches updates on the `update` step, and Stylefire batches renders on the `render` step, allowing independent animation of `transform` properties.
+It's also a way of ensuring order of execution across a frame. For instance, [Framer Motion](https://github.com/framer/motion) batches animations on the `update` step, and renders on the `render` step, allowing independent animation of `transform` properties.
 
 ## Install
 
@@ -14,7 +14,7 @@ npm install framesync
 
 ## Usage
 
-Framesync splits a frame into discrete `read`, `update`, `render` and `postRender` steps.
+Framesync splits a frame into discrete `read`, `update`, `preRender`, `render` and `postRender` steps.
 
 ### Scheduling functions
 
