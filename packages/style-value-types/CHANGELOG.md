@@ -2,6 +2,12 @@
 
 Style Value Types adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.2.0] 2020-12-18
+
+### Fixed
+
+- Including `tslib` as a separate dependency.
+
 ## [3.1.9] 2020-07-23
 
 ### Fixed
