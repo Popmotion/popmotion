@@ -1,22 +1,22 @@
-type Resolve = () => void;
+type Resolve = () => void
 
-let isReady = false;
+let isReady = false
 
-const awaitingReady: Resolve[] = [];
+const awaitingReady: Resolve[] = []
 
 export async function whenWorkletReady() {
-  if (!isReady) {
-    return new Promise(resolve => {
-      awaitingReady.push(resolve);
-    });
-  }
+    if (!isReady) {
+        return new Promise<void>((resolve) => {
+            awaitingReady.push(resolve)
+        })
+    }
 }
 
 function flushAwaiting() {
-  awaitingReady.forEach(resolve => resolve());
+    awaitingReady.forEach((resolve) => resolve())
 }
 
 export function workletReady() {
-  isReady = true;
-  flushAwaiting();
+    isReady = true
+    flushAwaiting()
 }

@@ -2,11 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
-## [9.0.1] 2020-12-01
+## [9.0.2] 2020-12-18
 
-### Fixed
+### Changed
 
--   If `offsets` is a different length to `values`, rather than throw an error we now just generate default offsets.
+-   Dependency updates.
 
 ## [9.0.0] 2020-10-24
 
