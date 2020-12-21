@@ -1,0 +1,76 @@
+{
+    "name": "projection",
+    "version": "2.0.0-beta.0",
+    "description": "The animator's toolbox",
+    "author": "Matt Perry",
+    "homepage": "https://popmotion.io",
+    "main": "./lib/index.js",
+    "types": "./lib/index.d.ts",
+    "module": "dist/projection.es.js",
+    "jsnext:main": "dist/projection.es.js",
+    "unpkg": "./dist/projection.min.js",
+    "sideEffects": false,
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Popmotion/popmotion/tree/master/packages/projection"
+    },
+    "bugs": {
+        "url": "https://github.com/Popmotion/popmotion/issues"
+    },
+    "keywords": [
+        "animation",
+        "ux",
+        "ui",
+        "flip",
+        "layout animation"
+    ],
+    "analyze": true,
+    "license": "MIT",
+    "scripts": {
+        "build": "rollup -c && tsc --emitDeclarationOnly && yarn measure",
+        "postbuild": "yarn babel $npm_package_module --out-file $npm_package_module --no-babelrc --plugins annotate-pure-calls",
+        "dev": "rollup -c -w",
+        "prepublishOnly": "yarn test && yarn build",
+        "measure": "gzip -c $npm_package_unpkg | wc -c",
+        "test": "jest --coverage --maxWorkers=2",
+        "publish-beta": "npm publish --tag beta"
+    },
+    "dependencies": {
+        "framesync": "5.0.0",
+        "hey-listen": "^1.0.8",
+        "popmotion": "9.0.1",
+        "tslib": "^1.10.0"
+    },
+    "devDependencies": {
+        "@rollup/plugin-commonjs": "^11.0.1",
+        "tslint-circular-dependencies": "^0.1.0"
+    },
+    "prettier": {
+        "printWidth": 80,
+        "tabWidth": 4,
+        "semi": false,
+        "trailingComma": "es5"
+    },
+    "jest": {
+        "moduleFileExtensions": [
+            "ts",
+            "js"
+        ],
+        "moduleNameMapper": {
+            "style-value-types": "<rootDir>/../../style-value-types/src",
+            "framesync": "<rootDir>/../../framesync/src"
+        },
+        "transform": {
+            "\\.(ts)$": "../../../node_modules/ts-jest/preprocessor.js"
+        },
+        "testRegex": "/__tests__/.*\\.test.(ts|js)$",
+        "rootDir": "src",
+        "collectCoverageFrom": [
+            "**/*.{js,jsx,ts,tsx}",
+            "!**/node_modules/**",
+            "!**/__tests__/**",
+            "!**/worklet/**"
+        ],
+        "coverageDirectory": "<rootDir>/../coverage"
+    }
+}

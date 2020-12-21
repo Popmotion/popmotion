@@ -10,6 +10,7 @@
     "lib",
     "dist"
   ],
+  "sideEffects": false,
   "scripts": {
     "build": "rollup -c && tsc --emitDeclarationOnly && yarn measure",
     "watch": "rollup -c -w",
