@@ -14,6 +14,7 @@ packages/site/data/menus.json
 packages/site/next.config.js
 playground/public
 storybook-static
+coverage
 .vscode
 tmp
 dist

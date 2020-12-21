@@ -85,7 +85,7 @@ export function applyTreeProjection(
     if (!pathLength) return
 
     // Reset the treeScale
-    treeScale.x = treeScale.y
+    treeScale.x = treeScale.y = 1
 
     /**
      * TODO: We already traverse the tree from top-down. Look into whether it's possible to do this

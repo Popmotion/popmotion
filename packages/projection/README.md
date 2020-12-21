@@ -1,13 +1,13 @@
 # Projection
 
-## What is layout projection?
+### A lightweight layout projection library
 
 ## API
 
 ```javascript
 import { layoutNode } from "projection"
 
-const node = layoutNode(parentNode)
+const node = layoutNode(options, parentNode)
 ```
 
 ```javascript

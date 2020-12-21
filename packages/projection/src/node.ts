@@ -27,6 +27,11 @@ export function layoutNode(
     /**
      *
      */
+    let projectionString = ""
+
+    /**
+     *
+     */
     const treeScale = {
         x: 1,
         y: 1,
@@ -69,6 +74,7 @@ export function layoutNode(
         updateProjection() {
             resetBox(layoutCorrected, layout)
 
+            const prevProjectionString = projectionString
             const { x: prevTreeScaleX, y: prevTreeScaleY } = treeScale
 
             /**
@@ -88,13 +94,15 @@ export function layoutNode(
              */
             updateBoxProjection(node.projection, layoutCorrected, target, 0.5)
 
+            projectionString = JSON.stringify(node.projection)
+
             if (
-                // projection !== prevProjection
+                prevProjectionString !== projectionString ||
                 // Also compare calculated treeScale, for values that rely on only this for scale correction.
                 prevTreeScaleX !== treeScale.x ||
                 prevTreeScaleY !== treeScale.y
             ) {
-                onProjectionUpdate()
+                onProjectionUpdate?.()
             }
 
             /**
