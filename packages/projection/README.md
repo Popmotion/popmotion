@@ -98,10 +98,10 @@ animate({
 
 ## TODO
 
-- [] Add helper functions for scale correcting box shadow, border etc.
-- [] Make more DOM-specific API.
-- [] Add parent-relative targets.
-- [] Add support for `rotate`.
+- [ ] Add helper functions for scale correcting box shadow, border etc.
+- [ ] Make more DOM-specific API.
+- [ ] Add parent-relative targets.
+- [ ] Add support for `rotate`.
 
 ---
 
