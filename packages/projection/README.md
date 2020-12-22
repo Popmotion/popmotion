@@ -107,6 +107,8 @@ animate({
 - [ ] Make more DOM-specific API.
 - [ ] Add parent-relative targets.
 - [ ] Add support for `rotate`.
+- [ ] Add support for custom origins. 
+- [ ] Add support for additional transforms. 
 
 ---
 
