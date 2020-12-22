@@ -44,7 +44,6 @@
     "devDependencies": {
         "@rollup/plugin-commonjs": "^11.0.1",
         "cypress": "^6.1.0",
-        "start-server-and-test": "^1.11.6",
         "tslint-circular-dependencies": "^0.1.0"
     },
     "prettier": {
