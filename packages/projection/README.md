@@ -12,6 +12,8 @@ In essence, it's the ability to project any element from its browser-computed la
 
 **Projection** is an experimental, lightweight layout projection library. It currently clocks in at 1.8kb, and I expect it to land somewhere in the 2.5kb range.
 
+[Demo](https://codesandbox.io/s/floral-frog-hv1k7?file=/src/index.js)
+
 ## Install
 
 **Projection** is currently in alpha. Expect bugs, and breaking changes as the scope of the library is better defined.
