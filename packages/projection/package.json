@@ -1,6 +1,6 @@
 {
     "name": "projection",
-    "version": "2.0.0-beta.0",
+    "version": "2.0.0-alpha.1",
     "description": "The animator's toolbox",
     "author": "Matt Perry",
     "homepage": "https://popmotion.io",
@@ -32,7 +32,7 @@
         "dev": "rollup -c -w",
         "prepublishOnly": "yarn test && yarn build",
         "measure": "gzip -c $npm_package_unpkg | wc -c",
-        "test": "jest --coverage --maxWorkers=2",
+        "test": "jest --coverage --maxWorkers=2 && cypress run",
         "publish-beta": "npm publish --tag beta"
     },
     "dependencies": {
@@ -43,6 +43,8 @@
     },
     "devDependencies": {
         "@rollup/plugin-commonjs": "^11.0.1",
+        "cypress": "^6.1.0",
+        "start-server-and-test": "^1.11.6",
         "tslint-circular-dependencies": "^0.1.0"
     },
     "prettier": {

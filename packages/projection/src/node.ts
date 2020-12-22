@@ -2,8 +2,8 @@ import { LayoutNode, NodeOptions } from "./types"
 import sync, { cancelSync } from "framesync"
 import { applyTreeProjection, resetBox } from "./geometry/apply"
 import { updateBoxProjection } from "./geometry/calc"
-import { Box } from "./geometry/types"
-import { box, projection } from "./geometry"
+import { BoundingBox, Box } from "./geometry/types"
+import { box, convertBoundingBox, projection } from "./geometry"
 
 export function layoutNode(
     { onProjectionUpdate }: NodeOptions = {},
@@ -32,14 +32,6 @@ export function layoutNode(
     /**
      *
      */
-    const treeScale = {
-        x: 1,
-        y: 1,
-    }
-
-    /**
-     *
-     */
     let removeFromParent: () => void
 
     /**
@@ -55,6 +47,8 @@ export function layoutNode(
         depth: parent ? parent.depth + 1 : 0,
 
         projection: projection(),
+
+        treeScale: { x: 1, y: 1 },
 
         addChild(node: LayoutNode) {
             children.add(node)
@@ -75,13 +69,13 @@ export function layoutNode(
             resetBox(layoutCorrected, layout)
 
             const prevProjectionString = projectionString
-            const { x: prevTreeScaleX, y: prevTreeScaleY } = treeScale
+            const { x: prevTreeScaleX, y: prevTreeScaleY } = node.treeScale
 
             /**
              * Apply all the parent deltas to this box to produce the corrected box. This
              * is the layout box, as it will appear on screen as a result of the transforms of its parents.
              */
-            applyTreeProjection(layoutCorrected, treeScale, node.path)
+            applyTreeProjection(layoutCorrected, node.treeScale, node.path)
 
             /**
              * Update the delta between the corrected box and the target box before user-set transforms were applied.
@@ -99,8 +93,8 @@ export function layoutNode(
             if (
                 prevProjectionString !== projectionString ||
                 // Also compare calculated treeScale, for values that rely on only this for scale correction.
-                prevTreeScaleX !== treeScale.x ||
-                prevTreeScaleY !== treeScale.y
+                prevTreeScaleX !== node.treeScale.x ||
+                prevTreeScaleY !== node.treeScale.y
             ) {
                 onProjectionUpdate?.()
             }
@@ -115,8 +109,9 @@ export function layoutNode(
         /**
          *
          */
-        setLayout(newLayout: Box) {
-            layout = newLayout
+        setLayout(newLayout: BoundingBox) {
+            console.log("layout", newLayout)
+            layout = convertBoundingBox(newLayout)
             layoutCorrected = box()
 
             if (!target) target = box()
@@ -125,9 +120,12 @@ export function layoutNode(
         /**
          *
          */
-        setTarget(newTarget: Box) {
-            resetBox(target, newTarget)
-
+        setTarget({ top, left, right, bottom }: BoundingBox) {
+            target.x.min = left
+            target.x.max = right
+            target.y.min = top
+            target.y.max = bottom
+            console.log("target", top, left, right, bottom)
             node.scheduleUpdateProjection()
         },
 

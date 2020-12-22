@@ -8,6 +8,13 @@ export interface Box {
     y: Axis
 }
 
+export interface BoundingBox {
+    top: number
+    right: number
+    bottom: number
+    left: number
+}
+
 export interface Point {
     x: number
     y: number

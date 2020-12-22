@@ -25,22 +25,30 @@ describe("layoutNode", () => {
             )
 
             parent.setLayout({
-                x: { min: 100, max: 200 },
-                y: { min: 100, max: 300 },
+                left: 100,
+                right: 200,
+                top: 100,
+                bottom: 300,
             })
 
             grandChild.setLayout({
-                x: { min: 110, max: 210 },
-                y: { min: 110, max: 210 },
+                left: 110,
+                right: 210,
+                top: 110,
+                bottom: 210,
             })
 
             parent.setTarget({
-                x: { min: 300, max: 350 },
-                y: { min: 300, max: 700 },
+                left: 300,
+                right: 350,
+                top: 300,
+                bottom: 700,
             })
             grandChild.setTarget({
-                x: { min: 300, max: 400 },
-                y: { min: 300, max: 400 },
+                left: 300,
+                right: 400,
+                top: 300,
+                bottom: 400,
             })
         })
 
@@ -62,15 +70,15 @@ describe("layoutNode", () => {
             {
                 x: {
                     origin: 0.5,
-                    originPoint: 350,
-                    scale: 1,
-                    translate: 0,
+                    originPoint: 330,
+                    scale: 2,
+                    translate: 20,
                 },
                 y: {
                     origin: 0.5,
-                    originPoint: 350,
-                    scale: 1,
-                    translate: 0,
+                    originPoint: 420,
+                    scale: 0.5,
+                    translate: -70,
                 },
             },
         ])
@@ -78,10 +86,12 @@ describe("layoutNode", () => {
 
     test("Only fires onProjectionUpdate when projection has updated", () => {
         const target = {
-            x: { min: 300, max: 400 },
-            y: { min: 300, max: 400 },
+            left: 300,
+            right: 400,
+            top: 300,
+            bottom: 400,
         }
-        console.log("fires onProjectionUpdate")
+
         const promise = new Promise<number>((resolve) => {
             let updateCount = 0
 
@@ -96,18 +106,24 @@ describe("layoutNode", () => {
             )
 
             parent.setLayout({
-                x: { min: 100, max: 200 },
-                y: { min: 100, max: 300 },
+                left: 100,
+                right: 200,
+                top: 100,
+                bottom: 300,
             })
 
             grandChild.setLayout({
-                x: { min: 110, max: 210 },
-                y: { min: 110, max: 210 },
+                left: 110,
+                right: 210,
+                top: 110,
+                bottom: 210,
             })
 
             parent.setTarget({
-                x: { min: 300, max: 350 },
-                y: { min: 300, max: 700 },
+                left: 300,
+                right: 350,
+                top: 300,
+                bottom: 700,
             })
 
             grandChild.setTarget(target)

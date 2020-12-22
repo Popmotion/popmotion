@@ -1,0 +1,54 @@
+<html>
+    <head></head>
+    <body>
+        <script src="../../dist/projection.js"></script>
+
+        <div id="test"></div>
+
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            #test {
+                width: 100px;
+                height: 100px;
+                background: red;
+            }
+        </style>
+
+        <script>
+            const root = document.getElementById("test")
+            const { layoutNode } = projection
+
+            function buildLayoutProjectionTransform(
+                element,
+                { projection, treeScale }
+            ) {
+                const { x, y } = projection
+                const xTranslate = x.translate / treeScale.x
+                const yTranslate = y.translate / treeScale.y
+                element.style.transformOrigin = `${x.origin * 100}% ${
+                    y.origin * 100
+                }% 0`
+                element.style.transform = `translate3d(${xTranslate}px, ${yTranslate}px, 0) scale(${x.scale}, ${y.scale})`
+            }
+
+            const rootNode = layoutNode({
+                onProjectionUpdate: () => {
+                    buildLayoutProjectionTransform(root, rootNode)
+                },
+            })
+
+            rootNode.setLayout(root.getBoundingClientRect())
+
+            rootNode.setTarget({
+                top: 200,
+                left: 200,
+                right: 400,
+                bottom: 500,
+            })
+        </script>
+    </body>
+</html>

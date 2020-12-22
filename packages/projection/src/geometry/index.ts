@@ -1,4 +1,4 @@
-import { Box, Projection } from "./types"
+import { BoundingBox, Box, Projection } from "./types"
 
 const identityProjection = () => ({
     translate: 0,
@@ -15,4 +15,14 @@ export const projection = (): Projection => ({
 export const box = (): Box => ({
     x: { min: 0, max: 0 },
     y: { min: 0, max: 0 },
+})
+
+export const convertBoundingBox = ({
+    top,
+    left,
+    right,
+    bottom,
+}: BoundingBox): Box => ({
+    x: { min: left, max: right },
+    y: { min: top, max: bottom },
 })
