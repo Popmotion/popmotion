@@ -10,11 +10,11 @@ In essence, it's the ability to project any element from its browser-computed la
 
 [Learn more about layout projection's capabilities.](https://mattperry.is/writing-code/layout-projection-animate-browser-layout-60fps-3)
 
-Projection is an experimental, lightweight layout projection library. It currently clocks in at 1.8kb, and I expect it to land somewhere in the 2.5kb range.
+**Projection** is an experimental, lightweight layout projection library. It currently clocks in at 1.8kb, and I expect it to land somewhere in the 2.5kb range.
 
 ## Install
 
-Projection is currently in alpha. Expect bugs, and breaking changes as the scope of the library is better defined.
+**Projection** is currently in alpha. Expect bugs, and breaking changes as the scope of the library is better defined.
 
 ```bash
 npm install projection@alpha
@@ -60,9 +60,11 @@ node.setTarget({
 
 ### Projecting trees
 
-A major difficulty of layout animations is that once you've applied a transform to a parent, and to the parent's parent, it becomes increasingly difficult to calculate the transform required to project a child.
+A major difficulty of layout animations is once you apply a transform to a parent, you distort children elements that you might wish to be of a particular size or position throughout the animation.
 
-Projection removes this complexity by allowing `layoutNode` to accept another `layoutNode` as a parent. In this way, a tree can be formed. Projection will ensure all child transforms are calculated to compensate for parent transforms.
+The calculations involved in correcting this distortion become increasingly complex for deeper layout animation trees.
+
+**Projection** removes this complexity by allowing `layoutNode` to accept another `layoutNode` as a parent. In this way, a tree can be formed. Projection will ensure all child transforms are calculated to compensate for parent transforms.
 
 ```javascript
 const childNode = layoutNode(options, parentNode)
