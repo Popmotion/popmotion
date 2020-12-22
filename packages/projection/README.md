@@ -75,9 +75,10 @@ By using a low-level animation library like [Popmotion](https://popmotion.io), l
 ```javascript
 import { animate, mix } from "popmotion"
 
+// Just before layout change:
 const prev = element.getBoundingClientRect()
 
-// After layout change:
+// Immediately after layout change:
 element.style.transform = ""
 const next = element.getBoundingClientRect()
 node.setLayout(next)
