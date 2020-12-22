@@ -110,7 +110,6 @@ export function layoutNode(
          *
          */
         setLayout(newLayout: BoundingBox) {
-            console.log("layout", newLayout)
             layout = convertBoundingBox(newLayout)
             layoutCorrected = box()
 
@@ -125,7 +124,6 @@ export function layoutNode(
             target.x.max = right
             target.y.min = top
             target.y.max = bottom
-            console.log("target", top, left, right, bottom)
             node.scheduleUpdateProjection()
         },
 
