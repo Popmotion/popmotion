@@ -20,6 +20,10 @@ describe("Layout projection", () => {
                 expect(right).to.equal(400)
                 expect(bottom).to.equal(500)
             })
+    })
+    it("Correctly projects absolute children", () => {
+        cy.visit("cypress/tests/index.html")
+            .wait(50)
             .get("#absolute-child")
             .should(($test) => {
                 const element = $test[0]
@@ -30,11 +34,15 @@ describe("Layout projection", () => {
                     right,
                 } = element.getBoundingClientRect()
 
-                expect(left).to.equal(200)
+                expect(left).to.equal(250)
                 expect(top).to.equal(300)
                 expect(right).to.equal(800)
                 expect(bottom).to.equal(330)
             })
+    })
+    it("Correctly projects relative children", () => {
+        cy.visit("cypress/tests/index.html")
+            .wait(50)
             .get("#relative-child")
             .should(($test) => {
                 const element = $test[0]

@@ -49,15 +49,21 @@
                 onProjectionUpdate: () => updateProjectionStyle(root, rootNode),
             })
 
-            const absoluteNode = layoutNode({
-                onProjectionUpdate: () =>
-                    updateProjectionStyle(absolute, absoluteNode),
-            })
+            const absoluteNode = layoutNode(
+                {
+                    onProjectionUpdate: () =>
+                        updateProjectionStyle(absolute, absoluteNode),
+                },
+                rootNode
+            )
 
-            const relativeNode = layoutNode({
-                onProjectionUpdate: () =>
-                    updateProjectionStyle(relative, relativeNode),
-            })
+            const relativeNode = layoutNode(
+                {
+                    onProjectionUpdate: () =>
+                        updateProjectionStyle(relative, relativeNode),
+                },
+                rootNode
+            )
 
             rootNode.setLayout(root.getBoundingClientRect())
             absoluteNode.setLayout(absolute.getBoundingClientRect())
@@ -72,7 +78,7 @@
 
             absoluteNode.setTarget({
                 top: 300,
-                left: 200,
+                left: 250,
                 right: 800,
                 bottom: 330,
             })
