@@ -3,7 +3,10 @@
     <body>
         <script src="../../dist/projection.js"></script>
 
-        <div id="test"></div>
+        <div id="test">
+            <div id="absolute-child"></div>
+            <div id="relative-child"></div>
+        </div>
 
         <style>
             body {
@@ -12,42 +15,71 @@
             }
 
             #test {
+                width: 200px;
+                height: 200px;
+                background: red;
+            }
+
+            #absolute-child {
                 width: 100px;
                 height: 100px;
-                background: red;
+                position: absolute;
+                top: 50px;
+                left: 50px;
+                background: green;
+            }
+
+            #relative-child {
+                width: 100px;
+                height: 100px;
+                position: absolute;
+                top: 50px;
+                left: 50px;
+                background: blue;
             }
         </style>
 
         <script>
             const root = document.getElementById("test")
-            const { layoutNode } = projection
-
-            function buildLayoutProjectionTransform(
-                element,
-                { projection, treeScale }
-            ) {
-                const { x, y } = projection
-                const xTranslate = x.translate / treeScale.x
-                const yTranslate = y.translate / treeScale.y
-                element.style.transformOrigin = `${x.origin * 100}% ${
-                    y.origin * 100
-                }% 0`
-                element.style.transform = `translate3d(${xTranslate}px, ${yTranslate}px, 0) scale(${x.scale}, ${y.scale})`
-            }
+            const absolute = document.getElementById("absolute-child")
+            const relative = document.getElementById("relative-child")
+            const { layoutNode, updateProjectionStyle } = projection
 
             const rootNode = layoutNode({
-                onProjectionUpdate: () => {
-                    buildLayoutProjectionTransform(root, rootNode)
-                },
+                onProjectionUpdate: () => updateProjectionStyle(root, rootNode),
+            })
+
+            const absoluteNode = layoutNode({
+                onProjectionUpdate: () =>
+                    updateProjectionStyle(absolute, absoluteNode),
+            })
+
+            const relativeNode = layoutNode({
+                onProjectionUpdate: () =>
+                    updateProjectionStyle(relative, relativeNode),
             })
 
             rootNode.setLayout(root.getBoundingClientRect())
+            absoluteNode.setLayout(absolute.getBoundingClientRect())
+            relativeNode.setLayout(relative.getBoundingClientRect())
 
             rootNode.setTarget({
                 top: 200,
                 left: 200,
                 right: 400,
                 bottom: 500,
+            })
+
+            absoluteNode.setTarget({
+                top: 300,
+                left: 200,
+                right: 800,
+                bottom: 330,
+            })
+
+            relativeNode.setRelativeTarget({
+                top: 10,
+                left: 10,
             })
         </script>
     </body>
