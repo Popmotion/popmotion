@@ -1,4 +1,4 @@
-import { Axis, AxisProjection, Box, Projection } from "./types"
+import { Axis, AxisProjection, Box, Projection, RelativeBox } from "./types"
 import { clamp, distance, mix, progress } from "popmotion"
 
 /**
@@ -68,4 +68,24 @@ export function updateBoxProjection(
 ): void {
     updateAxisProjection(projection.x, source.x, target.x, origin)
     updateAxisProjection(projection.y, source.y, target.y, origin)
+}
+
+export function calcRelativeAxis(
+    target: Axis,
+    parent: Axis,
+    relative: Partial<Axis>,
+    layout: Axis
+) {
+    target.min = parent.min + relative.min
+    target.max = target.min + (layout.max - layout.min)
+}
+
+export function calcRelativeBox(
+    target: Box,
+    parent: Box,
+    relative: RelativeBox,
+    layout: Box
+) {
+    calcRelativeAxis(target.x, parent.x, relative.x, layout.x)
+    calcRelativeAxis(target.y, parent.y, relative.y, layout.y)
 }

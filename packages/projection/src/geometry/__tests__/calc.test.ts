@@ -1,4 +1,10 @@
-import { isNear, calcOrigin, updateAxisProjection } from "../calc"
+import { box } from ".."
+import {
+    isNear,
+    calcOrigin,
+    updateAxisProjection,
+    calcRelativeAxis,
+} from "../calc"
 
 describe("isNear", () => {
     test("Correctly indicate when the provided value is within maxDistance of the provided target", () => {
@@ -54,5 +60,19 @@ describe("updateAxisProjection", () => {
             scale: 2,
             translate: 300,
         })
+    })
+})
+
+describe("calcRelativeAxis", () => {
+    test("Correctly calculates an axis relative to the parent target", () => {
+        const target = box()
+        calcRelativeAxis(
+            target.x,
+            { min: 100, max: 200 },
+            { min: 10 },
+            { min: 600, max: 800 }
+        )
+
+        expect(target.x).toEqual({ min: 110, max: 310 })
     })
 })

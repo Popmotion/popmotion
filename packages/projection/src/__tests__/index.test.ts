@@ -84,6 +84,77 @@ describe("layoutNode", () => {
         ])
     })
 
+    test("Correctly projects tree with relative nodes", async () => {
+        const promise = new Promise<Projection[]>((resolve) => {
+            const parent = layoutNode()
+            const childA = layoutNode(
+                {
+                    onProjectionUpdate: () => {
+                        resolve([parent.projection, childA.projection])
+                    },
+                },
+                parent
+            )
+
+            parent.setLayout({
+                left: 100,
+                right: 200,
+                top: 100,
+                bottom: 300,
+            })
+
+            childA.setLayout({
+                left: 110,
+                right: 210,
+                top: 110,
+                bottom: 210,
+            })
+
+            parent.setTarget({
+                left: 300,
+                right: 350,
+                top: 300,
+                bottom: 700,
+            })
+
+            childA.setRelativeTarget({
+                top: 10,
+                left: 10,
+            })
+        })
+
+        return expect(promise).resolves.toEqual([
+            {
+                x: {
+                    origin: 0.5,
+                    originPoint: 150,
+                    scale: 0.5,
+                    translate: 175,
+                },
+                y: {
+                    origin: 0.5,
+                    originPoint: 200,
+                    scale: 2,
+                    translate: 300,
+                },
+            },
+            {
+                x: {
+                    origin: 0.5,
+                    originPoint: 330,
+                    scale: 2,
+                    translate: 30,
+                },
+                y: {
+                    origin: 0.5,
+                    originPoint: 420,
+                    scale: 0.5,
+                    translate: -60,
+                },
+            },
+        ])
+    })
+
     test("Only fires onProjectionUpdate when projection has updated", () => {
         const target = {
             left: 300,

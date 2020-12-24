@@ -8,6 +8,11 @@ export interface Box {
     y: Axis
 }
 
+export interface RelativeBox {
+    x: Partial<Axis>
+    y: Partial<Axis>
+}
+
 export interface BoundingBox {
     top: number
     right: number

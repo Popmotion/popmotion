@@ -1,4 +1,4 @@
-import { BoundingBox, Point, Projection } from "./geometry/types"
+import { BoundingBox, Box, Point, Projection } from "./geometry/types"
 
 export interface LayoutNode {
     parent?: LayoutNode
@@ -18,6 +18,10 @@ export interface LayoutNode {
     setLayout(box: BoundingBox): void
 
     setTarget(box: BoundingBox): void
+
+    getTarget(): Box
+
+    setRelativeTarget(box: Partial<BoundingBox>): void
 
     addChild(node: LayoutNode): () => void
 

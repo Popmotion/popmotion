@@ -1,8 +1,8 @@
 import { LayoutNode, NodeOptions } from "./types"
 import sync, { cancelSync } from "framesync"
 import { applyTreeProjection, resetBox } from "./geometry/apply"
-import { updateBoxProjection } from "./geometry/calc"
-import { BoundingBox, Box } from "./geometry/types"
+import { calcRelativeBox, updateBoxProjection } from "./geometry/calc"
+import { BoundingBox, Box, RelativeBox } from "./geometry/types"
 import { box, convertBoundingBox, projection } from "./geometry"
 
 export function layoutNode(
@@ -27,6 +27,11 @@ export function layoutNode(
     /**
      *
      */
+    let relativeTarget: RelativeBox
+
+    /**
+     *
+     */
     let projectionString = ""
 
     /**
@@ -37,7 +42,26 @@ export function layoutNode(
     /**
      *
      */
+    let resolveRelativeToParent = false
+
+    /**
+     *
+     */
     const children = new Set<LayoutNode>()
+
+    /**
+     *
+     */
+    function setBoundingBoxToTarget(
+        target: Box | RelativeBox,
+        { left, right, top, bottom }: Partial<BoundingBox>
+    ) {
+        target.x.min = left
+        target.x.max = right
+        target.y.min = top
+        target.y.max = bottom
+        node.scheduleUpdateProjection()
+    }
 
     const node: LayoutNode = {
         parent,
@@ -50,7 +74,7 @@ export function layoutNode(
 
         treeScale: { x: 1, y: 1 },
 
-        addChild(node: LayoutNode) {
+        addChild(node) {
             children.add(node)
             return () => children.delete(node)
         },
@@ -76,6 +100,18 @@ export function layoutNode(
              * is the layout box, as it will appear on screen as a result of the transforms of its parents.
              */
             applyTreeProjection(layoutCorrected, node.treeScale, node.path)
+
+            /**
+             *
+             */
+            if (resolveRelativeToParent) {
+                calcRelativeBox(
+                    target,
+                    parent.getTarget(),
+                    relativeTarget,
+                    layout
+                )
+            }
 
             /**
              * Update the delta between the corrected box and the target box before user-set transforms were applied.
@@ -109,22 +145,37 @@ export function layoutNode(
         /**
          *
          */
-        setLayout(newLayout: BoundingBox) {
+        setLayout(newLayout) {
             layout = convertBoundingBox(newLayout)
             layoutCorrected = box()
 
-            if (!target) target = box()
+            if (!target) {
+                target = box()
+                relativeTarget = box()
+            }
         },
 
         /**
          *
          */
-        setTarget({ top, left, right, bottom }: BoundingBox) {
-            target.x.min = left
-            target.x.max = right
-            target.y.min = top
-            target.y.max = bottom
-            node.scheduleUpdateProjection()
+        setTarget(newTarget) {
+            resolveRelativeToParent = false
+            setBoundingBoxToTarget(target, newTarget)
+        },
+
+        /**
+         *
+         */
+        getTarget() {
+            return target
+        },
+
+        /**
+         *
+         */
+        setRelativeTarget(newTarget) {
+            resolveRelativeToParent = true
+            setBoundingBoxToTarget(relativeTarget, newTarget)
         },
 
         /**
