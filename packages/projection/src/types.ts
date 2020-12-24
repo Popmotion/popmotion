@@ -23,6 +23,8 @@ export interface LayoutNode {
 
     setRelativeTarget(box: Partial<BoundingBox>): void
 
+    setRelativeParent(parent: LayoutNode): void
+
     addChild(node: LayoutNode): () => void
 
     destroy(): void

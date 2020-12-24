@@ -47,6 +47,11 @@ export function layoutNode(
     /**
      *
      */
+    let relativeParent = parent
+
+    /**
+     *
+     */
     const children = new Set<LayoutNode>()
 
     /**
@@ -107,7 +112,7 @@ export function layoutNode(
             if (resolveRelativeToParent) {
                 calcRelativeBox(
                     target,
-                    parent.getTarget(),
+                    relativeParent.getTarget(),
                     relativeTarget,
                     layout
                 )
@@ -176,6 +181,11 @@ export function layoutNode(
         setRelativeTarget(newTarget) {
             resolveRelativeToParent = true
             setBoundingBoxToTarget(relativeTarget, newTarget)
+        },
+
+        setRelativeParent(newRelativeParent: LayoutNode) {
+            // TODO: Check that this is in the path
+            relativeParent = newRelativeParent
         },
 
         /**

@@ -72,6 +72,20 @@ The calculations involved in correcting this distortion become increasingly comp
 const childNode = layoutNode(options, parentNode)
 ```
 
+#### Relative projection
+
+Set relative to parent:
+
+```javascript
+childNode.setRelativeTarget({ top: 10, left: 10 })
+```
+
+Change relative parent:
+
+```javascript
+childNode.setRelativeParent(node)
+```
+
 ### Animations
 
 By using a low-level animation library like [Popmotion](https://popmotion.io), layout animations are a matter of calling `setTarget` once per frame.
@@ -105,7 +119,7 @@ animate({
 
 - [ ] Add helper functions for scale correcting box shadow, border etc.
 - [ ] Make more DOM-specific API.
-- [ ] Add parent-relative targets.
+- [ ] Develop relative target support to include pinned width/height animations.
 - [ ] Add support for `rotate`.
 - [ ] Add support for custom origins. 
 - [ ] Add support for additional transforms. 
