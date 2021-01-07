@@ -18,7 +18,7 @@ function applyDefaultFilter(v: string) {
   let defaultValue = maxDefaults.has(name) ? 1 : 0;
   if (number !== value) defaultValue *= 100;
 
-  return `${name}(${defaultValue}${unit})`;
+  return name + '(' + defaultValue + unit + ')';
 }
 
 const functionRegex = /([a-z-]*)\(.*?\)/g;
