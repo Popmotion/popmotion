@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [9.1.0] 2020-01-08
+
+### Update
+
+-   Support for hex alpha in `mixColor`.
+
 ## [9.0.2] 2020-12-18
 
 ### Update

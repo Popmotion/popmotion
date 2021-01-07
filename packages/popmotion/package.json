@@ -1,6 +1,6 @@
 {
     "name": "popmotion",
-    "version": "9.0.2",
+    "version": "9.1.0",
     "description": "The animator's toolbox",
     "author": "Matt Perry",
     "homepage": "https://popmotion.io",
@@ -49,7 +49,7 @@
     "dependencies": {
         "framesync": "5.0.0",
         "hey-listen": "^1.0.8",
-        "style-value-types": "3.2.0",
+        "style-value-types": "^4.0.0",
         "tslib": "^1.10.0"
     },
     "devDependencies": {
