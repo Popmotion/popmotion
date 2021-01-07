@@ -1,11 +1,11 @@
 import { Axis, AxisProjection, Box, Projection, RelativeBox } from "./types"
-import { clamp, distance, mix, progress } from "popmotion"
+import { clamp, mix, progress } from "popmotion"
 
 /**
  * Returns true if the provided value is within maxDistance of the provided target
  */
 export function isNear(value: number, target = 0, maxDistance = 0.01): boolean {
-    return distance(value, target) < maxDistance
+    return Math.abs(value - target) < maxDistance
 }
 
 function calcLength(axis: Axis) {

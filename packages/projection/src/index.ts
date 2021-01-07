@@ -1,3 +1,5 @@
 export { LayoutNode } from "./types"
 export { layoutNode } from "./node"
 export { updateProjectionStyle } from "./dom/style"
+export { correctBorderRadius } from "./dom/correct-border-radius"
+export { correctBoxShadow } from "./dom/correct-box-shadow"

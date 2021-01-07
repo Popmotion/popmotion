@@ -6,7 +6,7 @@ import { BoundingBox, Box, RelativeBox } from "./geometry/types"
 import { box, convertBoundingBox, projection } from "./geometry"
 
 export function layoutNode(
-    { onProjectionUpdate }: NodeOptions = {},
+    { onLayoutMeasure, onProjectionUpdate }: NodeOptions = {},
     parent?: LayoutNode
 ): LayoutNode {
     /**
@@ -37,22 +37,12 @@ export function layoutNode(
     /**
      *
      */
-    let removeFromParent: () => void
-
-    /**
-     *
-     */
     let resolveRelativeToParent = false
 
     /**
      *
      */
     let relativeParent = parent
-
-    /**
-     *
-     */
-    const children = new Set<LayoutNode>()
 
     /**
      *
@@ -68,8 +58,14 @@ export function layoutNode(
         node.scheduleUpdateProjection()
     }
 
+    function updateTreeProjection() {
+        node.treeNodes.forEach(fireUpdateProjection)
+    }
+
     const node: LayoutNode = {
         parent,
+
+        treeNodes: parent ? parent.treeNodes : new Set<LayoutNode>(),
 
         path: parent ? [...parent.path, parent] : [],
 
@@ -79,17 +75,12 @@ export function layoutNode(
 
         treeScale: { x: 1, y: 1 },
 
-        addChild(node) {
-            children.add(node)
-            return () => children.delete(node)
-        },
-
         /**
          *
          */
         scheduleUpdateProjection: parent
             ? parent.scheduleUpdateProjection
-            : () => sync.preRender(node.updateProjection, false, true),
+            : () => sync.preRender(updateTreeProjection, false, true),
 
         /**
          *
@@ -139,12 +130,6 @@ export function layoutNode(
             ) {
                 onProjectionUpdate?.()
             }
-
-            /**
-             * This uses a pre-bound function executor rather than a lamda to avoid creating a new function
-             * multiple times per frame (source of mid-animation GC)
-             */
-            children.forEach(fireUpdateProjection)
         },
 
         /**
@@ -152,12 +137,25 @@ export function layoutNode(
          */
         setLayout(newLayout) {
             layout = convertBoundingBox(newLayout)
-            layoutCorrected = box()
 
             if (!target) {
+                layoutCorrected = box()
                 target = box()
                 relativeTarget = box()
             }
+
+            // TODO: Might need to rebase target box here if not animating
+        },
+
+        invalidateLayout() {},
+
+        /**
+         * This will only provide accurate measurements if projection transform
+         * and all parent transforms have been temporarily disabled.
+         */
+        measureLayout() {
+            node.setLayout(element.getBoundingClientRect())
+            onLayoutMeasure?.(layout)
         },
 
         /**
@@ -192,14 +190,12 @@ export function layoutNode(
          *
          */
         destroy() {
-            removeFromParent?.()
+            node.treeNodes.delete(node)
             cancelSync.preRender(node.updateProjection)
         },
     }
 
-    if (parent) {
-        removeFromParent = parent.addChild(node)
-    }
+    node.treeNodes.add(node)
 
     return node
 }

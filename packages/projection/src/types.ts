@@ -5,6 +5,8 @@ export interface LayoutNode {
 
     path: LayoutNode[]
 
+    treeNodes: Set<LayoutNode>
+
     depth: number
 
     projection: Projection
@@ -25,11 +27,10 @@ export interface LayoutNode {
 
     setRelativeParent(parent: LayoutNode): void
 
-    addChild(node: LayoutNode): () => void
-
     destroy(): void
 }
 
 export interface NodeOptions {
+    onLayoutMeasure?: (layout: Box) => void
     onProjectionUpdate?: () => void
 }

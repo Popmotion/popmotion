@@ -1,6 +1,6 @@
 {
     "name": "projection",
-    "version": "2.0.0-alpha.2",
+    "version": "2.0.0-alpha.3",
     "description": "The animator's toolbox",
     "author": "Matt Perry",
     "homepage": "https://popmotion.io",
@@ -39,6 +39,7 @@
         "framesync": "5.0.0",
         "hey-listen": "^1.0.8",
         "popmotion": "9.0.1",
+        "style-value-types": "^3.2.0",
         "tslib": "^1.10.0"
     },
     "devDependencies": {

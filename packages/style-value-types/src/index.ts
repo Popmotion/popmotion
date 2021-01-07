@@ -1,15 +1,16 @@
-// Types
 export * from './types';
-
-// Value types
-export { number, scale, alpha } from './value-types/numbers';
+export { number, scale, alpha } from './numbers';
 export {
   degrees,
   percent,
   progressPercentage,
   px,
   vw,
-  vh
-} from './value-types/units';
-export { rgba, rgbUnit, hsla, hex, color } from './value-types/color';
-export { complex } from './value-types/complex';
+  vh,
+} from './numbers/units';
+export { hsla } from './color/hsla';
+export { rgba, rgbUnit } from './color/rgba';
+export { hex } from './color/hex';
+export { color } from './color';
+export { complex } from './complex';
+export { filter } from './complex/filter';

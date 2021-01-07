@@ -1,6 +1,7 @@
 export interface Axis {
     min: number
     max: number
+    length?: number
 }
 
 export interface Box {

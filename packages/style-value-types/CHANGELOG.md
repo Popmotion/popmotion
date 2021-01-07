@@ -2,6 +2,18 @@
 
 Style Value Types adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.0.0] Unreleased
+
+### Added
+
+- Support for hex alpha.
+- `filter` type.
+- Improved handling of decimals with no preceding digit.
+
+### Removed
+
+- Support for RGBA/HSLA objects in rgba.parse/hsla.parse.
+
 ## [3.2.0] 2020-12-18
 
 ### Fixed
