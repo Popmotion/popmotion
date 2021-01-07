@@ -2,7 +2,7 @@
 
 Style Value Types adheres to [Semantic Versioning](http://semver.org/).
 
-## [4.0.0] Unreleased
+## [4.0.0] 2020-01-08
 
 ### Added
 
