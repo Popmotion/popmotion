@@ -13,7 +13,6 @@ type BlendableObject = {
 }
 
 function getMixer(origin: any, target: any) {
-    console.log("detecting mixer for", origin, "to", target)
     if (isNum(origin)) {
         return (v: number) => mix(origin, target as number, v)
     } else if (color.test(origin)) {
@@ -24,7 +23,6 @@ function getMixer(origin: any, target: any) {
 }
 
 export const mixArray = (from: BlendableArray, to: BlendableArray) => {
-    console.log("mixing", from, to)
     const output = [...from]
     const numValues = output.length
 
@@ -32,10 +30,8 @@ export const mixArray = (from: BlendableArray, to: BlendableArray) => {
 
     return (v: number) => {
         for (let i = 0; i < numValues; i++) {
-            console.log(v, blendValue[i](v))
             output[i] = blendValue[i](v)
         }
-        console.log(output)
         return output
     }
 }
@@ -86,7 +82,7 @@ export const mixComplex = (origin: string, target: string): MixComplex => {
     const template = complex.createTransformer(target)
     const originStats = analyse(origin)
     const targetStats = analyse(target)
-    console.log(origin, target)
+
     // Test if both values have the same number of each value type (number/rgb/hsla), or that the origin
     // has the same or more numbers as the target, and throw if not.
     invariant(
