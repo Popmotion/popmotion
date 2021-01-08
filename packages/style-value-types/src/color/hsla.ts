@@ -5,7 +5,7 @@ import { sanitize } from '../utils';
 import { isColorString, splitColor } from './utils';
 
 export const hsla: ValueType = {
-  test: isColorString('hsl'),
+  test: isColorString('hsl', 'hue'),
   parse: splitColor('hue', 'saturation', 'lightness'),
   transform: ({ hue, saturation, lightness, alpha = 1 }: HSLA) => {
     return (

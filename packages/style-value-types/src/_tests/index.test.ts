@@ -149,6 +149,7 @@ describe('hex()', () => {
     expect(hex.test('#f000aa')).toEqual(true);
     expect(hex.test('#f000aa00')).toEqual(true);
     expect(hex.test('#f00 0px')).toEqual(false);
+    expect(hex.test(red)).toEqual(false);
   });
 
   it('should split a hex value into the correct params', () => {
@@ -171,6 +172,8 @@ describe('rgba()', () => {
     expect(rgba.test('rgba(255, 0, 0, 0.5)')).toEqual(true);
     expect(rgba.test('rgba(255 0 0 / 0.5)')).toEqual(true);
     expect(rgba.test('rgba(255, 0, 0, 0.5) 0px')).toEqual(false);
+    expect(rgba.test({ red: 255 })).toEqual(true);
+    expect(rgba.test({ hue: 255 })).toEqual(false);
   });
 
   it('should split an rgba value into the correct params', () => {
@@ -189,6 +192,7 @@ describe('rgba()', () => {
       blue: 246,
       alpha: 0,
     });
+    expect(rgba.parse(red)).toEqual(red);
   });
 
   it('should correctly combine rgba value', () => {
@@ -229,6 +233,7 @@ describe('hsla()', () => {
       lightness: 76.66804,
       alpha: 0.5,
     });
+    expect(hsla.parse(hslaTestColor)).toEqual(hslaTestColor);
   });
 
   it('should correctly combine hsla value', () => {
@@ -258,6 +263,7 @@ describe('color()', () => {
 
   it('should correctly combine color value', () => {
     expect(color.transform(red)).toEqual('rgba(255, 0, 0, 1)');
+    expect(color.transform('rgba(255, 0, 0, 1)')).toEqual('rgba(255, 0, 0, 1)');
     expect(color.transform(hslaTestColor)).toEqual('hsla(170, 50%, 45%, 1)');
   });
 
@@ -344,6 +350,11 @@ describe('combination values', () => {
   });
 
   it('should parse into an array', () => {
+    expect(complex.parse('0px 10px #fff')).toEqual([
+      { red: 255, green: 255, blue: 255, alpha: 1 },
+      0,
+      10,
+    ]);
     expect(complex.parse('20px 20px 10px inset #fff')).toEqual([
       { red: 255, green: 255, blue: 255, alpha: 1 },
       20,

@@ -10,7 +10,7 @@ export const rgbUnit: ValueType = {
 };
 
 export const rgba: ValueType = {
-  test: isColorString('rgb'),
+  test: isColorString('rgb', 'red'),
   parse: splitColor('red', 'green', 'blue'),
   transform: ({ red, green, blue, alpha = 1 }: RGBA) =>
     'rgba(' +

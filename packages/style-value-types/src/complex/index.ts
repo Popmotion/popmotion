@@ -15,6 +15,7 @@ function test(v: any) {
 }
 
 function analyse(v: string) {
+  console.log(v);
   const values: Array<Color | number> = [];
   let numColors = 0;
 
@@ -41,10 +42,12 @@ function parse(v: string) {
 }
 
 function createTransformer(v: string) {
+  console.log('creating transformer for', v);
   const { values, numColors, tokenised } = analyse(v);
   const numValues = values.length;
 
-  return (v: Array<Color | number>) => {
+  return (v: Array<Color | number | string>) => {
+    console.log('to transform', v);
     let output = tokenised;
 
     for (let i = 0; i < numValues; i++) {

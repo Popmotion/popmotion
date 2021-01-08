@@ -2,6 +2,12 @@
 
 Style Value Types adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.0.1] 2020-01-08
+
+### Added
+
+- Restoring support for RGBA/HSLA objects in rgba.parse/hsla.parse.
+
 ## [4.0.0] 2020-01-08
 
 ### Added

@@ -1,4 +1,5 @@
 import { HSLA, RGBA, ValueType } from '../types';
+import { isString } from '../utils';
 import { hex } from './hex';
 import { hsla } from './hsla';
 import { rgba } from './rgba';
@@ -14,6 +15,11 @@ export const color: ValueType = {
       return hex.parse(v);
     }
   },
-  transform: (v: HSLA | RGBA) =>
-    v.hasOwnProperty('red') ? rgba.transform(v) : hsla.transform(v),
+  transform: (v: HSLA | RGBA | string) => {
+    return isString(v)
+      ? v
+      : v.hasOwnProperty('red')
+      ? rgba.transform(v)
+      : hsla.transform(v);
+  },
 };
