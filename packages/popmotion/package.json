@@ -47,7 +47,7 @@
         "publish-beta": "npm publish --tag beta"
     },
     "dependencies": {
-        "framesync": "5.0.0",
+        "framesync": "5.1.0",
         "hey-listen": "^1.0.8",
         "style-value-types": "^4.0.1",
         "tslib": "^1.10.0"

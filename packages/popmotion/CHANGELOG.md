@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [9.2.0] 2020-02-22
+
+### Update
+
+-   Upgrading to `framesync@5.1.0` for better Node compatibility.
+
 ## [9.1.0] 2020-01-08
 
 ### Update
