@@ -2,7 +2,13 @@
 
 Framesync adheres to [Semantic Versioning](http://semver.org/).
 
-## [5.0.0] Unreleased
+## [5.1.0] 2021-02-22
+
+### Fixed
+
+- Adding polyfill for `performance.now` for better compatibility with Node environments.
+
+## [5.0.0] 2021-01-01
 
 ### Changed
 

@@ -6,24 +6,24 @@ import { uglify } from 'rollup-plugin-uglify';
 const typescriptConfig = { cacheRoot: 'tmp/.rpt2_cache' };
 const noDeclarationConfig = {
   ...typescriptConfig,
-  tsconfigOverride: { compilerOptions: { declaration: false } }
+  tsconfigOverride: { compilerOptions: { declaration: false } },
 };
 
-const makeExternalPredicate = externalArr => {
+const makeExternalPredicate = (externalArr) => {
   if (externalArr.length === 0) {
     return () => false;
   }
   const pattern = new RegExp(`^(${externalArr.join('|')})($|/)`);
-  return id => pattern.test(id);
+  return (id) => pattern.test(id);
 };
 
-export default function(pkg, name = pkg.name) {
+export default function (pkg, name = pkg.name) {
   const deps = Object.keys(pkg.dependencies || {});
   const peerDeps = Object.keys(pkg.peerDependencies || {});
 
   const config = {
     input: 'src/index.ts',
-    external: makeExternalPredicate(deps.concat(peerDeps))
+    external: makeExternalPredicate(deps.concat(peerDeps)),
   };
 
   const umd = {
@@ -42,33 +42,33 @@ export default function(pkg, name = pkg.name) {
         popmotion: 'popmotion',
         'pose-core': 'poseCore',
         '@popmotion/easing': 'easing',
-        '@popmotion/popcorn': 'popcorn'
-      }
+        '@popmotion/popcorn': 'popcorn',
+      },
     },
     external: makeExternalPredicate(peerDeps),
     plugins: [
       resolve(),
       typescript(noDeclarationConfig),
       replace({
-        'process.env.NODE_ENV': JSON.stringify('development')
-      })
-    ]
+        'process.env.NODE_ENV': JSON.stringify('development'),
+      }),
+    ],
   };
 
   const umdProd = {
     ...umd,
     output: {
       ...umd.output,
-      file: pkg.unpkg || `dist/${name}.min.js`
+      file: pkg.unpkg || `dist/${name}.min.js`,
     },
     plugins: [
       resolve(),
       typescript(noDeclarationConfig),
       replace({
-        'process.env.NODE_ENV': JSON.stringify('production')
+        'process.env.NODE_ENV': JSON.stringify('production'),
       }),
-      uglify()
-    ]
+      uglify(),
+    ],
   };
 
   const es = {
@@ -76,9 +76,9 @@ export default function(pkg, name = pkg.name) {
     input: 'src/index.ts',
     output: {
       file: pkg.module,
-      format: 'es'
+      format: 'es',
     },
-    plugins: [typescript(noDeclarationConfig)]
+    plugins: [typescript(noDeclarationConfig)],
   };
 
   const cjs = {
@@ -86,9 +86,9 @@ export default function(pkg, name = pkg.name) {
     output: {
       file: pkg.main,
       format: 'cjs',
-      exports: 'named'
+      exports: 'named',
     },
-    plugins: [typescript(typescriptConfig)]
+    plugins: [typescript(typescriptConfig)],
   };
 
   return [umd, umdProd, es, cjs];

@@ -1,6 +1,6 @@
 {
     "name": "framesync",
-    "version": "5.0.0",
+    "version": "5.1.0",
     "description": "A frame-synced render loop for JavaScript",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
