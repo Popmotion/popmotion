@@ -8,7 +8,7 @@ import { floatRegex, isString, singleColorRegex } from '../utils';
 export const isColorString = (type: string, testProp?: string) => (v: any) => {
   return (
     (isString(v) && singleColorRegex.test(v) && v.startsWith(type)) ||
-    (testProp && v.hasOwnProperty(testProp))
+    (testProp && Object.prototype.hasOwnProperty.call(v, testProp))
   );
 };
 

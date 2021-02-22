@@ -2,6 +2,12 @@
 
 Style Value Types adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.0.2] 2020-02-22
+
+### Fixed
+
+- Fixing `hasOwnProperty` call on `null` for color test.
+
 ## [4.0.1] 2020-01-08
 
 ### Added
