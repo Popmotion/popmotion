@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+### [9.3.0] 2021-03-01
+
+### Fixed
+
+- Unbundling ES code to facilitate code-splitting in Webpack.
+
 ## [9.2.1] 2020-02-22
 
 ### Update

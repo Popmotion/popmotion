@@ -4,15 +4,15 @@
   "description": "Parsers, transformers and tests for special value types, eg: %, hex codes etc.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "module": "dist/style-value-types.es.js",
-  "jsnext:main": "dist/style-value-types.es.js",
+  "module": "dist/es/index.js",
+  "jsnext:main": "dist/es/index.js",
   "files": [
     "lib",
     "dist"
   ],
   "sideEffects": false,
   "scripts": {
-    "build": "rollup -c && tsc --emitDeclarationOnly && yarn measure",
+    "build": "tsc -p . && rollup -c && yarn measure",
     "watch": "rollup -c -w",
     "lint": "tslint -c tslint.json 'src/**/*.{ts}'",
     "test": "jest --maxWorkers=2",

@@ -2,6 +2,12 @@
 
 Style Value Types adheres to [Semantic Versioning](http://semver.org/).
 
+### [4.1.0] 2021-03-01
+
+### Fixed
+
+- Unbundling ES code to facilitate code-splitting in Webpack.
+
 ## [4.0.3] 2020-02-22
 
 ### Fixed

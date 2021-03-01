@@ -1,13 +1,6 @@
-import typescript from 'rollup-plugin-typescript2';
 import resolve from '@rollup/plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
-import { uglify } from 'rollup-plugin-uglify';
-
-const typescriptConfig = { cacheRoot: 'tmp/.rpt2_cache' };
-const noDeclarationConfig = {
-  ...typescriptConfig,
-  tsconfigOverride: { compilerOptions: { declaration: false } },
-};
+import { terser } from 'rollup-plugin-terser';
 
 const makeExternalPredicate = (externalArr) => {
   if (externalArr.length === 0) {
@@ -18,12 +11,12 @@ const makeExternalPredicate = (externalArr) => {
 };
 
 export default function (pkg, name = pkg.name) {
-  const deps = Object.keys(pkg.dependencies || {});
+  // const deps = Object.keys(pkg.dependencies || {});
   const peerDeps = Object.keys(pkg.peerDependencies || {});
 
   const config = {
-    input: 'src/index.ts',
-    external: makeExternalPredicate(deps.concat(peerDeps)),
+    input: 'lib/index.js',
+    // external: makeExternalPredicate(deps.concat(peerDeps)),
   };
 
   const umd = {
@@ -45,10 +38,9 @@ export default function (pkg, name = pkg.name) {
         '@popmotion/popcorn': 'popcorn',
       },
     },
-    external: makeExternalPredicate(peerDeps),
+    // external: makeExternalPredicate(peerDeps),
     plugins: [
       resolve(),
-      typescript(noDeclarationConfig),
       replace({
         'process.env.NODE_ENV': JSON.stringify('development'),
       }),
@@ -63,22 +55,21 @@ export default function (pkg, name = pkg.name) {
     },
     plugins: [
       resolve(),
-      typescript(noDeclarationConfig),
       replace({
         'process.env.NODE_ENV': JSON.stringify('production'),
       }),
-      uglify(),
+      terser({ output: { comments: false } }),
     ],
   };
 
   const es = {
     ...config,
-    input: 'src/index.ts',
     output: {
-      file: pkg.module,
       format: 'es',
+      preserveModules: true,
+      dir: 'dist/es',
     },
-    plugins: [typescript(noDeclarationConfig)],
+    plugins: [resolve()],
   };
 
   const cjs = {
@@ -88,7 +79,7 @@ export default function (pkg, name = pkg.name) {
       format: 'cjs',
       exports: 'named',
     },
-    plugins: [typescript(typescriptConfig)],
+    plugins: [resolve()],
   };
 
   return [umd, umdProd, es, cjs];

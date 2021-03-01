@@ -6,8 +6,8 @@
     "homepage": "https://popmotion.io",
     "main": "./lib/index.js",
     "types": "./lib/index.d.ts",
-    "module": "dist/popmotion.es.js",
-    "jsnext:main": "dist/popmotion.es.js",
+    "module": "dist/es/index.js",
+    "jsnext:main": "dist/es/index.js",
     "unpkg": "./dist/popmotion.min.js",
     "sideEffects": false,
     "repository": {
@@ -38,7 +38,7 @@
     "analyze": true,
     "license": "MIT",
     "scripts": {
-        "build": "rollup -c && tsc --emitDeclarationOnly && yarn measure",
+        "build": "tsc -p . && rollup -c && yarn measure",
         "postbuild": "yarn babel $npm_package_module --out-file $npm_package_module --no-babelrc --plugins annotate-pure-calls",
         "dev": "rollup -c -w",
         "prepublishOnly": "yarn test && yarn build",

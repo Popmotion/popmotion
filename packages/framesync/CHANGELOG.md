@@ -2,6 +2,12 @@
 
 Framesync adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.2.0] 2021-03-01
+
+### Fixed
+
+- Unbundling ES code to facilitate code-splitting in Webpack.
+
 ## [5.1.0] 2021-02-22
 
 ### Fixed

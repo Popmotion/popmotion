@@ -6,8 +6,8 @@
     "homepage": "https://popmotion.io",
     "main": "./lib/index.js",
     "types": "./lib/index.d.ts",
-    "module": "dist/projection.es.js",
-    "jsnext:main": "dist/projection.es.js",
+    "module": "dist/es/index.js",
+    "jsnext:main": "dist/es/index.js",
     "unpkg": "./dist/projection.min.js",
     "sideEffects": false,
     "repository": {
