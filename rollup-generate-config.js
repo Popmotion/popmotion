@@ -11,12 +11,12 @@ const makeExternalPredicate = (externalArr) => {
 };
 
 export default function (pkg, name = pkg.name) {
-  // const deps = Object.keys(pkg.dependencies || {});
+  const deps = Object.keys(pkg.dependencies || {});
   const peerDeps = Object.keys(pkg.peerDependencies || {});
 
   const config = {
     input: 'lib/index.js',
-    // external: makeExternalPredicate(deps.concat(peerDeps)),
+    external: makeExternalPredicate(deps.concat(peerDeps)),
   };
 
   const umd = {
@@ -38,7 +38,7 @@ export default function (pkg, name = pkg.name) {
         '@popmotion/popcorn': 'popcorn',
       },
     },
-    // external: makeExternalPredicate(peerDeps),
+    external: makeExternalPredicate(peerDeps),
     plugins: [
       resolve(),
       replace({

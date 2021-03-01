@@ -85,5 +85,8 @@
       "prettier --write",
       "git add"
     ]
+  },
+  "dependencies": {
+    "rollup-plugin-typescript2": "^0.30.0"
   }
 }

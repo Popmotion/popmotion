@@ -2,6 +2,12 @@
 
 Style Value Types adheres to [Semantic Versioning](http://semver.org/).
 
+### [4.1.1] 2021-03-01
+
+### Fixed
+
+- Fixing es entry point.
+
 ### [4.1.0] 2021-03-01
 
 ### Fixed

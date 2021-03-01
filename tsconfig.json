@@ -20,9 +20,6 @@
       ],
       "style-value-types": [
         "./style-value-types/lib"
-      ],
-      "stylefire": [
-        "./stylefire/lib"
       ]
     },
     "alwaysStrict": true,
