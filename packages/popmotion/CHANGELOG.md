@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+### [9.3.1] 2021-03-02
+
+### Fixed
+
+- Scheduling of first animation frame was previously set to `immediate`, leading to double animations for animations stopped/started within the same frame.
+
 ### [9.3.0] 2021-03-01
 
 ### Fixed

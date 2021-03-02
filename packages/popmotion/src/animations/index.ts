@@ -17,7 +17,7 @@ const framesync: Driver = (update) => {
     const passTimestamp = ({ delta }: FrameData) => update(delta)
 
     return {
-        start: () => sync.update(passTimestamp, true, true),
+        start: () => sync.update(passTimestamp, true),
         stop: () => cancelSync.update(passTimestamp),
     }
 }
