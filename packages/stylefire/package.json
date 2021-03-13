@@ -6,6 +6,7 @@
   "types": "lib/index.d.ts",
   "module": "dist/stylefire.es.js",
   "jsnext:main": "dist/stylefire.es.js",
+  "exports": "./dist/stylefire.es.js",
   "files": [
     "dist",
     "lib"

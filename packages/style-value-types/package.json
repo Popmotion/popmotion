@@ -6,6 +6,7 @@
   "types": "lib/index.d.ts",
   "module": "dist/es/index.js",
   "jsnext:main": "dist/es/index.js",
+  "exports": "./dist/es/index.js",
   "files": [
     "lib",
     "dist"
