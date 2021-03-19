@@ -1,11 +1,11 @@
 {
     "name": "framesync",
     "license": "MIT",
-    "version": "5.2.2",
+    "version": "5.2.3",
     "description": "A frame-synced render loop for JavaScript",
     "author": "Matt Perry",
     "homepage": "https://popmotion.io",
-    "main": "./dist/framesync.cjs.js",
+    "main": "dist/framesync.cjs.js",
     "types": "lib/index.d.ts",
     "module": "dist/es/index.js",
     "jsnext:main": "dist/es/index.js",
