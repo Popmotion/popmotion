@@ -2,6 +2,18 @@
 
 Framesync adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.2.3] 2021-03-19
+
+### Fixed
+
+- Fixing `main` entry point.
+
+## [5.2.2] 2021-03-19
+
+### Fixed
+
+- Fixing `main` entry point.
+
 ## [5.2.1] 2021-03-19
 
 ### Added

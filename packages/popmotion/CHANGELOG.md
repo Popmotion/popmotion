@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+### [9.3.3] 2021-03-19
+
+### Fixed
+
+- Fixing `main` entry point.
+
 ### [9.3.2] 2021-03-19
 
 ### Added

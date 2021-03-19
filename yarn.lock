@@ -15438,14 +15438,6 @@ style-loader@^0.20.3:
     loader-utils "^1.1.0"
     schema-utils "^0.4.5"
 
-style-value-types@4.1.2:
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/style-value-types/-/style-value-types-4.1.2.tgz#ee17a3ddd62fe97a4da77b73c0df1cf674f0c566"
-  integrity sha512-CikSU3+NXMXer0KH6aimOYgOhjq5EA3meJ47PVKp/FUjr5vU5EFZc4Mh/5hTQfBgzUjvhCVV5bYlslpCbodVIA==
-  dependencies:
-    hey-listen "^1.0.8"
-    tslib "^2.1.0"
-
 style-value-types@^3.0.6, style-value-types@^3.1.7, style-value-types@^3.1.9, style-value-types@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/style-value-types/-/style-value-types-3.2.0.tgz#eb89cab1340823fa7876f3e289d29d99c92111bb"
