@@ -7750,11 +7750,6 @@ framesync@5.0.0:
   resolved "https://registry.yarnpkg.com/framesync/-/framesync-5.0.0.tgz#7de8caedf53ac441118e79680f1beb7391c328b6"
   integrity sha512-wd8t+JsQGisluSv1twiEeDv0aNGpavGb9q7xgIk9fGbcIWkNXF/KVtrjnOrCwBWJuiXxlJfNkcvGudsI32FxYA==
 
-framesync@5.2.0:
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/framesync/-/framesync-5.2.0.tgz#f14480654cd05a6af4c72c9890cad93556841643"
-  integrity sha512-dcl92w5SHc0o6pRK3//VBVNvu6WkYkiXmHG6ZIXrVzmgh0aDYMDAaoA3p3LH71JIdN5qmhDcfONFA4Lmq22tNA==
-
 framesync@^4.0.0, framesync@^4.0.1, framesync@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/framesync/-/framesync-4.1.0.tgz#69a8db3ca432dc70d6a76ba882684a1497ef068a"
@@ -15442,6 +15437,14 @@ style-loader@^0.20.3:
   dependencies:
     loader-utils "^1.1.0"
     schema-utils "^0.4.5"
+
+style-value-types@4.1.2:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/style-value-types/-/style-value-types-4.1.2.tgz#ee17a3ddd62fe97a4da77b73c0df1cf674f0c566"
+  integrity sha512-CikSU3+NXMXer0KH6aimOYgOhjq5EA3meJ47PVKp/FUjr5vU5EFZc4Mh/5hTQfBgzUjvhCVV5bYlslpCbodVIA==
+  dependencies:
+    hey-listen "^1.0.8"
+    tslib "^2.1.0"
 
 style-value-types@^3.0.6, style-value-types@^3.1.7, style-value-types@^3.1.9, style-value-types@^3.2.0:
   version "3.2.0"
