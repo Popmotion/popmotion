@@ -2,7 +2,7 @@
   "name": "style-value-types",
   "version": "4.1.2",
   "description": "Parsers, transformers and tests for special value types, eg: %, hex codes etc.",
-  "main": "lib/index.js",
+  "main": "./dist/framesync.cjs.js",
   "types": "lib/index.d.ts",
   "module": "dist/es/index.js",
   "jsnext:main": "dist/es/index.js",
