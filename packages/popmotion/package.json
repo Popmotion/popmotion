@@ -1,10 +1,10 @@
 {
     "name": "popmotion",
-    "version": "9.3.2",
+    "version": "9.3.3",
     "description": "The animator's toolbox",
     "author": "Matt Perry",
     "homepage": "https://popmotion.io",
-    "main": "./dist/framesync.cjs.js",
+    "main": "dist/popmotion.cjs.js",
     "types": "lib/index.d.ts",
     "module": "dist/es/index.js",
     "jsnext:main": "dist/es/index.js",
@@ -52,9 +52,9 @@
         "publish-beta": "npm publish --tag beta"
     },
     "dependencies": {
-        "framesync": "5.2.1",
+        "framesync": "5.2.3",
         "hey-listen": "^1.0.8",
-        "style-value-types": "4.1.2",
+        "style-value-types": "4.1.3",
         "tslib": "^2.1.0"
     },
     "devDependencies": {
