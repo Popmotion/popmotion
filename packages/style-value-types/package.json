@@ -6,6 +6,11 @@
   "types": "lib/index.d.ts",
   "module": "dist/es/index.js",
   "jsnext:main": "dist/es/index.js",
+  "exports": {
+      "import": "./dist/es/index.js",
+      "require": "./dist/style-value-types.cjs.js",
+      "default": "./dist/es/index.js"
+  },
   "files": [
     "lib",
     "dist"

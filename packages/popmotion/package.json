@@ -4,11 +4,16 @@
     "description": "The animator's toolbox",
     "author": "Matt Perry",
     "homepage": "https://popmotion.io",
-    "main": "./lib/index.js",
-    "types": "./lib/index.d.ts",
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts",
     "module": "dist/es/index.js",
     "jsnext:main": "dist/es/index.js",
     "unpkg": "./dist/popmotion.min.js",
+    "exports": {
+        "import": "./dist/es/index.js",
+        "require": "./dist/popmotion.cjs.js",
+        "default": "./dist/es/index.js"
+    },
     "sideEffects": false,
     "repository": {
         "type": "git",
