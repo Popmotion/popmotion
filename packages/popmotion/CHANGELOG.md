@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+### [9.3.4] 2021-03-19
+
+### Fixed
+
+- Updating `style-value-types`.
+
 ### [9.3.3] 2021-03-19
 
 ### Fixed
