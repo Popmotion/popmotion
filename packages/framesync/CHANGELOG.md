@@ -2,6 +2,16 @@
 
 Framesync adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.2.1] 2021-03-19
+
+### Added
+
+- Adding `exports` to `package.json`.
+
+### Updated
+
+- `tslib` to latest.
+
 ## [5.2.0] 2021-03-01
 
 ### Fixed

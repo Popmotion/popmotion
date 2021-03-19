@@ -1,12 +1,20 @@
 {
     "name": "framesync",
-    "version": "5.2.0",
+    "license": "MIT",
+    "version": "5.2.1",
     "description": "A frame-synced render loop for JavaScript",
+    "author": "Matt Perry",
+    "homepage": "https://popmotion.io",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "module": "dist/es/index.js",
     "jsnext:main": "dist/es/index.js",
     "unpkg": "./dist/framesync.min.js",
+    "exports": {
+        "import": "./dist/es/index.js",
+        "require": "./dist/framesync.cjs.js",
+        "default": "./dist/es/index.js"
+    },
     "scripts": {
         "build": "tsc -p . && rollup -c && yarn measure",
         "postbuild": "babel $npm_package_module --out-file $npm_package_module --no-babelrc --plugins annotate-pure-calls",
@@ -28,12 +36,9 @@
         "animation",
         "raf"
     ],
-    "author": "Matt Perry",
-    "license": "MIT",
     "bugs": {
         "url": "https://github.com/Popmotion/popmotion/issues"
     },
-    "homepage": "https://github.com/Popmotion/popmotion",
     "devDependencies": {
         "babel-cli": "^6.26.0",
         "babel-core": "^6.26.3",
@@ -55,5 +60,8 @@
         "tabWidth": 4,
         "semi": false,
         "trailingComma": "es5"
+    },
+    "dependencies": {
+        "tslib": "^2.1.0"
     }
 }

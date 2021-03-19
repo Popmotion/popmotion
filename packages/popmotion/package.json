@@ -1,14 +1,19 @@
 {
     "name": "popmotion",
-    "version": "9.3.1",
+    "version": "9.3.2",
     "description": "The animator's toolbox",
     "author": "Matt Perry",
     "homepage": "https://popmotion.io",
-    "main": "./lib/index.js",
-    "types": "./lib/index.d.ts",
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts",
     "module": "dist/es/index.js",
     "jsnext:main": "dist/es/index.js",
     "unpkg": "./dist/popmotion.min.js",
+    "exports": {
+        "import": "./dist/es/index.js",
+        "require": "./dist/popmotion.cjs.js",
+        "default": "./dist/es/index.js"
+    },
     "sideEffects": false,
     "repository": {
         "type": "git",
@@ -47,14 +52,15 @@
         "publish-beta": "npm publish --tag beta"
     },
     "dependencies": {
-        "framesync": "5.2.0",
+        "framesync": "5.2.1",
         "hey-listen": "^1.0.8",
-        "style-value-types": "4.1.1",
-        "tslib": "^1.10.0"
+        "style-value-types": "4.1.2",
+        "tslib": "^2.1.0"
     },
     "devDependencies": {
         "@rollup/plugin-commonjs": "^11.0.1",
-        "tslint-circular-dependencies": "^0.1.0"
+        "tslint-circular-dependencies": "^0.1.0",
+        "typescript": "^4.2.3"
     },
     "prettier": {
         "printWidth": 80,

@@ -4,11 +4,16 @@
     "description": "The animator's toolbox",
     "author": "Matt Perry",
     "homepage": "https://popmotion.io",
-    "main": "./lib/index.js",
-    "types": "./lib/index.d.ts",
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts",
     "module": "dist/es/index.js",
     "jsnext:main": "dist/es/index.js",
     "unpkg": "./dist/projection.min.js",
+    "exports": {
+        "import": "./dist/es/index.js",
+        "require": "./dist/projection.cjs.js",
+        "default": "./dist/es/index.js"
+    },
     "sideEffects": false,
     "repository": {
         "type": "git",
@@ -40,7 +45,7 @@
         "hey-listen": "^1.0.8",
         "popmotion": "9.0.1",
         "style-value-types": "^3.2.0",
-        "tslib": "^1.10.0"
+        "tslib": "^2.1.0"
     },
     "devDependencies": {
         "@rollup/plugin-commonjs": "^11.0.1",

@@ -75,7 +75,7 @@ export default function (pkg, name = pkg.name) {
   const cjs = {
     ...config,
     output: {
-      file: pkg.main,
+      file: `dist/${name}.cjs.js`,
       format: 'cjs',
       exports: 'named',
     },

@@ -2,6 +2,16 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+### [9.3.2] 2021-03-19
+
+### Added
+
+- Adding `exports` to `package.json`.
+
+### Updated
+
+- `tslib` to latest.
+
 ### [9.3.1] 2021-03-02
 
 ### Fixed

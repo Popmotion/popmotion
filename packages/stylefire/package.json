@@ -17,7 +17,6 @@
     "lint": "tslint 'src/**/*.{ts,tsx}' -e '**/_tests/**'",
     "measure": "gzip -c dist/stylefire.min.js | wc -c",
     "prettier": "prettier ./src/* --write",
-    "test": "jest --maxWorkers=2",
     "prepublishOnly": "yarn prettier && yarn lint && yarn build"
   },
   "repository": {

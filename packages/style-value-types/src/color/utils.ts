@@ -6,9 +6,9 @@ import { floatRegex, isString, singleColorRegex } from '../utils';
  * but false if a number or multiple colors
  */
 export const isColorString = (type: string, testProp?: string) => (v: any) => {
-  return (
+  return Boolean(
     (isString(v) && singleColorRegex.test(v) && v.startsWith(type)) ||
-    (testProp && Object.prototype.hasOwnProperty.call(v, testProp))
+      (testProp && Object.prototype.hasOwnProperty.call(v, testProp))
   );
 };
 
