@@ -7,9 +7,9 @@
   "module": "dist/es/index.js",
   "jsnext:main": "dist/es/index.js",
   "exports": {
-      "import": "./dist/es/index.js",
-      "require": "./dist/style-value-types.cjs.js",
-      "default": "./dist/es/index.js"
+    "import": "./dist/es/index.js",
+    "require": "./dist/style-value-types.cjs.js",
+    "default": "./dist/es/index.js"
   },
   "files": [
     "lib",
@@ -64,6 +64,6 @@
   },
   "dependencies": {
     "hey-listen": "^1.0.8",
-    "tslib": "^1.10.0"
+    "tslib": "^2.1.0"
   }
 }

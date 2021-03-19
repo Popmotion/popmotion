@@ -2,6 +2,16 @@
 
 Style Value Types adheres to [Semantic Versioning](http://semver.org/).
 
+### [4.1.2] 2021-03-19
+
+### Added
+
+- Adding `exports` to `package.json`.
+
+### Updated
+
+- `tslib` to latest.
+
 ### [4.1.1] 2021-03-01
 
 ### Fixed
