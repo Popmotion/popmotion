@@ -1,6 +1,14 @@
 import { onNextFrame, defaultTimestep } from "./on-next-frame"
 import { createRenderStep } from "./create-render-step"
-import { Process, StepId, FrameData, CancelSync, Sync, Steps } from "./types"
+import {
+    Process,
+    StepId,
+    FrameData,
+    CancelSync,
+    FlushSync,
+    Sync,
+    Steps,
+} from "./types"
 
 const maxElapsed = 40
 let useDefaultElapsed = true
@@ -39,6 +47,11 @@ const cancelSync = stepsOrder.reduce((acc, key) => {
     return acc
 }, {} as CancelSync)
 
+const flushSync = stepsOrder.reduce((acc, key) => {
+    acc[key] = () => steps[key].process(frame)
+    return acc
+}, {} as FlushSync)
+
 const processStep = (stepId: StepId) => steps[stepId].process(frame)
 
 const processFrame = (timestamp: number) => {
@@ -70,4 +83,4 @@ const startLoop = () => {
 const getFrameData = () => frame
 
 export default sync
-export { cancelSync, getFrameData, FrameData, Process }
+export { cancelSync, flushSync, getFrameData, FrameData, Process }

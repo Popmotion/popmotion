@@ -36,3 +36,7 @@ export type Steps = {
 export type CancelSync = {
     [key in StepId]: (process: Process) => void
 }
+
+export type FlushSync = {
+    [key in StepId]: () => void
+}
