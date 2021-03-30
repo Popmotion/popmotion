@@ -2,39 +2,45 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+### [9.3.5] 2021-03-30
+
+### Update
+
+-   Updating `framesync`.
+
 ### [9.3.4] 2021-03-19
 
 ### Fixed
 
-- Updating `style-value-types`.
+-   Updating `style-value-types`.
 
 ### [9.3.3] 2021-03-19
 
 ### Fixed
 
-- Fixing `main` entry point.
+-   Fixing `main` entry point.
 
 ### [9.3.2] 2021-03-19
 
 ### Added
 
-- Adding `exports` to `package.json`.
+-   Adding `exports` to `package.json`.
 
 ### Updated
 
-- `tslib` to latest.
+-   `tslib` to latest.
 
 ### [9.3.1] 2021-03-02
 
 ### Fixed
 
-- Scheduling of first animation frame was previously set to `immediate`, leading to double animations for animations stopped/started within the same frame.
+-   Scheduling of first animation frame was previously set to `immediate`, leading to double animations for animations stopped/started within the same frame.
 
 ### [9.3.0] 2021-03-01
 
 ### Fixed
 
-- Unbundling ES code to facilitate code-splitting in Webpack.
+-   Unbundling ES code to facilitate code-splitting in Webpack.
 
 ## [9.2.1] 2020-02-22
 
