@@ -16,7 +16,7 @@ function isSpringType(options: SpringOptions, keys: string[]) {
 function getSpringOptions(
     options: SpringOptions
 ): PhysicsSpringOptions & {
-    duration: number
+    duration?: number
     isResolvedFromDuration: boolean
 } {
     let springOptions = {
