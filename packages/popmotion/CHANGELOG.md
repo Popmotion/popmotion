@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+### [9.3.6] 2021-05-11
+
+### Fix
+
+-   Correctly end spring animation if provided `bounce` without `duration`.
+
 ### [9.3.5] 2021-03-30
 
 ### Update

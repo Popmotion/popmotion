@@ -15,7 +15,10 @@ function isSpringType(options: SpringOptions, keys: string[]) {
 
 function getSpringOptions(
     options: SpringOptions
-): PhysicsSpringOptions & { isResolvedFromDuration: boolean } {
+): PhysicsSpringOptions & {
+    duration: number
+    isResolvedFromDuration: boolean
+} {
     let springOptions = {
         velocity: 0.0,
         stiffness: 100,
@@ -38,7 +41,6 @@ function getSpringOptions(
             velocity: 0.0,
             mass: 1.0,
         }
-
         springOptions.isResolvedFromDuration = true
     }
 
@@ -66,6 +68,7 @@ export function spring({
         damping,
         mass,
         velocity,
+        duration,
         isResolvedFromDuration,
     } = getSpringOptions(options)
 
@@ -186,7 +189,7 @@ export function spring({
                 state.done =
                     isBelowVelocityThreshold && isBelowDisplacementThreshold
             } else {
-                state.done = t >= options.duration
+                state.done = t >= duration
             }
 
             state.value = state.done ? to : current

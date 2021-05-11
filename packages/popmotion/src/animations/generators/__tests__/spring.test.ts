@@ -137,4 +137,22 @@ describe("spring", () => {
 
         expect(noVelocity).not.toEqual(velocity)
     })
+
+    test("Spring defined with bounce and duration is same as just bounce", () => {
+        const settings = {
+            from: 100,
+            to: 1000,
+            bounce: 0.1,
+        }
+
+        const withoutDuration = animateSync(spring(settings), 200)
+        const withDuration = animateSync(
+            spring({ ...settings, duration: 800 }),
+            200
+        )
+
+        expect(withoutDuration).toEqual(withDuration)
+        // Check duration order of magnitude is correct
+        expect(withoutDuration.length).toBeGreaterThan(4)
+    })
 })
