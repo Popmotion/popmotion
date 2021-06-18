@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+### [9.4.0] 2021-06-18
+
+### Added
+
+-   `onStop` to `inertia`.
+
 ### [9.3.6] 2021-05-11
 
 ### Fix

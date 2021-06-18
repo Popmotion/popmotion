@@ -22,6 +22,7 @@ export function inertia({
     driver,
     onUpdate,
     onComplete,
+    onStop,
 }: InertiaOptions) {
     let currentAnimation: PlaybackControls
 
@@ -47,6 +48,7 @@ export function inertia({
                 options.onUpdate?.(v)
             },
             onComplete,
+            onStop,
         })
     }
 

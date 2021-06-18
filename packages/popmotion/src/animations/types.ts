@@ -104,6 +104,7 @@ export interface InertiaOptions extends DecayOptions {
     driver?: Driver
     onUpdate?: (v: number) => void
     onComplete?: () => void
+    onStop?: () => void
 }
 
 export type AnimationOptions<V> = PlaybackOptions<V> &
