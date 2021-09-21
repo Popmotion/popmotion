@@ -37,7 +37,7 @@ export const mixColor = (from: Color | string, to: Color | string) => {
     if (
         !fromColorType ||
         !toColorType ||
-        fromColorType.transform === toColorType.transform
+        fromColorType.transform !== toColorType.transform
     ) {
         return (p: number) => `${p > 0 ? to : from}`
     }
