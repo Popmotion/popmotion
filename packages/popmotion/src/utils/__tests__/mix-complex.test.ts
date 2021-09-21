@@ -11,7 +11,12 @@ test("mixComplex", () => {
 })
 
 test("mixComplex errors", () => {
-    expect(() => mixComplex("hsla(100%, 100, 100, 1)", "#fff")).toThrowError()
+    expect(() => mixComplex("hsla(100%, 100, 100, 1)", "#fff")(0)).toBe(
+        "hsla(100%, 100, 100, 1)"
+    )
+    expect(() => mixComplex("hsla(100%, 100, 100, 1)", "#fff")(0.1)).toBe(
+        "#fff"
+    )
 })
 
 test("mixComplex can interpolate out-of-order values", () => {

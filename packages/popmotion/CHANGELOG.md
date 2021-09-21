@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+### [9.4.1] 2021-09-21
+
+### Changed
+
+-   Change `mixComplex` "too complex" error to warning, and allowing instant interpolation when `p > 0`.
+
 ### [9.4.0] 2021-06-18
 
 ### Added

@@ -3,7 +3,7 @@ import { mix } from "./mix"
 import { mixColor } from "./mix-color"
 import { isNum } from "./inc"
 import { pipe } from "./pipe"
-import { invariant } from "hey-listen"
+import { warning } from "hey-listen"
 
 type MixComplex = (p: number) => string
 
@@ -83,14 +83,17 @@ export const mixComplex = (origin: string, target: string): MixComplex => {
     const originStats = analyse(origin)
     const targetStats = analyse(target)
 
-    // Test if both values have the same number of each value type (number/rgb/hsla), or that the origin
-    // has the same or more numbers as the target, and throw if not.
-    invariant(
+    const canInterpolate =
         originStats.numHSL === targetStats.numHSL &&
-            originStats.numRGB === targetStats.numRGB &&
-            originStats.numNumbers >= targetStats.numNumbers,
-        `Complex values '${origin}' and '${target}' too different to mix. Ensure all colors are of the same type.`
+        originStats.numRGB === targetStats.numRGB &&
+        originStats.numNumbers >= targetStats.numNumbers
+
+    warning(
+        canInterpolate,
+        `Complex values '${origin}' and '${target}' too different to mix. Ensure all colors are of the same type, and that each contains the same quantity of number and color values. Falling back to instant transition.`
     )
+
+    if (canInterpolate) return (p: number) => (p > 0 ? target : origin)
 
     return pipe(
         mixArray(originStats.parsed, targetStats.parsed),
