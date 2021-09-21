@@ -88,15 +88,16 @@ export const mixComplex = (origin: string, target: string): MixComplex => {
         originStats.numRGB === targetStats.numRGB &&
         originStats.numNumbers >= targetStats.numNumbers
 
-    warning(
-        canInterpolate,
-        `Complex values '${origin}' and '${target}' too different to mix. Ensure all colors are of the same type, and that each contains the same quantity of number and color values. Falling back to instant transition.`
-    )
-
-    if (canInterpolate) return (p: number) => (p > 0 ? target : origin)
-
-    return pipe(
-        mixArray(originStats.parsed, targetStats.parsed),
-        template
-    ) as MixComplex
+    if (canInterpolate) {
+        return pipe(
+            mixArray(originStats.parsed, targetStats.parsed),
+            template
+        ) as MixComplex
+    } else {
+        warning(
+            true,
+            `Complex values '${origin}' and '${target}' too different to mix. Ensure all colors are of the same type, and that each contains the same quantity of number and color values. Falling back to instant transition.`
+        )
+        return (p: number) => (p > 0 ? target : origin)
+    }
 }
