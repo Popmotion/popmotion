@@ -10,6 +10,10 @@ test("mixComplex", () => {
     ).toBe("15px, rgba(180, 180, 180, 0.5)")
 })
 
+test("mixComplex gracefully handles numbers", () => {
+    expect(mixComplex(20, "10")(0.5)).toBe("15")
+})
+
 test("mixComplex errors", () => {
     expect(mixComplex("hsla(100%, 100, 100, 1)", "#fff")(0)).toBe(
         "hsla(100%, 100, 100, 1)"

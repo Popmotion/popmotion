@@ -30,6 +30,18 @@ export const mixColor = (from: Color | string, to: Color | string) => {
         "Both colors must be hex/RGBA, OR both must be HSLA."
     )
 
+    /**
+     * In production, if we can't mix these value types return an instant transition
+     * rather than throw an error.
+     */
+    if (
+        !fromColorType ||
+        !toColorType ||
+        fromColorType.transform === toColorType.transform
+    ) {
+        return (p: number) => `${p > 0 ? to : from}`
+    }
+
     const fromColor = fromColorType.parse(from)
     const toColor = toColorType.parse(to)
     const blended = { ...fromColor }

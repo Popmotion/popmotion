@@ -54,7 +54,7 @@ export const mixObject = (origin: BlendableObject, target: BlendableObject) => {
     }
 }
 
-function analyse(value: string) {
+function analyse(value: string | number) {
     const parsed = complex.parse(value)
     const numValues = parsed.length
     let numNumbers = 0
@@ -101,6 +101,7 @@ export const mixComplex = (
             true,
             `Complex values '${origin}' and '${target}' too different to mix. Ensure all colors are of the same type, and that each contains the same quantity of number and color values. Falling back to instant transition.`
         )
-        return (p: number) => (p > 0 ? target : origin)
+
+        return (p: number) => `${p > 0 ? target : origin}`
     }
 }
