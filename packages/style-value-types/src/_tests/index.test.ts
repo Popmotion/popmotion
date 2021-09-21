@@ -105,6 +105,9 @@ describe('complex value type', () => {
 
     const transformSingleFunction = complex.createTransformer(GREYSCALE);
     expect(transformSingleFunction([100])).toBe(GREYSCALE);
+
+    const transformSingleNumber = complex.createTransformer(2);
+    expect(transformSingleNumber([100])).toBe('100');
   });
 
   it('can create an animatable "none"', () => {

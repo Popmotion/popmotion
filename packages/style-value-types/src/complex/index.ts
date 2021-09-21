@@ -14,7 +14,9 @@ function test(v: any) {
   );
 }
 
-function analyse(v: string) {
+function analyse(v: string | number) {
+  if (typeof v === 'number') v = `${v}`;
+
   const values: Array<Color | number> = [];
   let numColors = 0;
 
@@ -36,11 +38,11 @@ function analyse(v: string) {
   return { values, numColors, tokenised: v };
 }
 
-function parse(v: string) {
+function parse(v: string | number) {
   return analyse(v).values;
 }
 
-function createTransformer(v: string) {
+function createTransformer(v: string | number) {
   const { values, numColors, tokenised } = analyse(v);
   const numValues = values.length;
 
@@ -61,7 +63,7 @@ function createTransformer(v: string) {
 const convertNumbersToZero = (v: number | Color) =>
   typeof v === 'number' ? 0 : v;
 
-function getAnimatableNone(v: string) {
+function getAnimatableNone(v: string | number) {
   const parsed = parse(v);
   const transformer = createTransformer(v);
   return transformer(parsed.map(convertNumbersToZero));

@@ -78,7 +78,10 @@ function analyse(value: string) {
     return { parsed, numNumbers, numRGB, numHSL }
 }
 
-export const mixComplex = (origin: string, target: string): MixComplex => {
+export const mixComplex = (
+    origin: string | number,
+    target: string | number
+): MixComplex => {
     const template = complex.createTransformer(target)
     const originStats = analyse(origin)
     const targetStats = analyse(target)

@@ -2,6 +2,12 @@
 
 Style Value Types adheres to [Semantic Versioning](http://semver.org/).
 
+### [4.1.5] 2021-09-21
+
+### Fixed
+
+- Making complex value type gracefully accept numbers.
+
 ### [4.1.4] 2021-03-19
 
 ### Fixed
