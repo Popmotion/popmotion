@@ -5,8 +5,8 @@
   "homepage": "https://popmotion.io",
   "scripts": {
     "bootstrap": "lerna bootstrap",
-    "build": "cd packages/style-value-types && yarn build && cd ../framesync && yarn build && cd ../stylefire && yarn build && cd ../popmotion",
-    "playground": "start-storybook -s ./playground/public -p 6006",
+    "build": "cd packages/style-value-types && yarn build && cd ../framesync && yarn build && cd ../popmotion",
+    "playground": "start-storybook -s ./storybook-static -p 6006",
     "build-playground": "build-storybook",
     "clean": "lerna clean --yes && rm -rf node_modules",
     "clear": "yarn clean && rm yarn.lock",

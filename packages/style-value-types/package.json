@@ -1,15 +1,18 @@
 {
   "name": "style-value-types",
-  "version": "4.1.5",
+  "version": "5.0.0",
   "description": "Parsers, transformers and tests for special value types, eg: %, hex codes etc.",
   "main": "dist/valueTypes.cjs.js",
   "types": "lib/index.d.ts",
-  "module": "dist/es/index.js",
-  "jsnext:main": "dist/es/index.js",
+  "module": "dist/es/index.mjs",
+  "jsnext:main": "dist/es/index.mjs",
   "exports": {
-    "import": "./dist/es/index.js",
-    "require": "./dist/valueTypes.cjs.js",
-    "default": "./dist/es/index.js"
+    ".": {
+      "import": "./dist/es/index.mjs",
+      "require": "./dist/valueTypes.cjs.js",
+      "default": "./dist/valueTypes.cjs.js"
+    },
+    "./package.json": "./package.json"
   },
   "files": [
     "lib",
