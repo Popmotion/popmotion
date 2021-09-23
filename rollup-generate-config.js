@@ -31,7 +31,6 @@ export default function (pkg, name = pkg.name) {
         'hey-listen': 'heyListen',
         'style-value-types': 'valueTypes',
         framesync: 'framesync',
-        stylefire: 'stylefire',
         popmotion: 'popmotion',
         'pose-core': 'poseCore',
         '@popmotion/easing': 'easing',
@@ -65,6 +64,7 @@ export default function (pkg, name = pkg.name) {
   const es = {
     ...config,
     output: {
+      entryFileNames: '[name].mjs',
       format: 'es',
       preserveModules: true,
       dir: 'dist/es',

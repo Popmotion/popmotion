@@ -32,7 +32,7 @@ Follow these steps to get your code PR-ready:
 
 1. [Fork the Popmotion repo](https://github.com/Popmotion/popmotion).
 2. Clone your fork locally.
-3. Run `yarn` and `yarn bootstrap` in the repo root ([install Yarn](https://yarnpkg.com/lang/en/docs/install/#mac-stable) if necessary).
+3. Run `yarn`, `yarn bootstrap`, and `yarn build` in the repo root ([install Yarn](https://yarnpkg.com/lang/en/docs/install/#mac-stable) if necessary).
 4. Add your code and supporting tests.
 5. If this is a feature that requires doc changes, make as necessary.
 6. Update `CHANGELOG.md`.

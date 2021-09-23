@@ -1,18 +1,21 @@
 {
     "name": "projection",
-    "version": "2.0.0-alpha.3",
+    "version": "2.0.0-alpha.4",
     "description": "The animator's toolbox",
     "author": "Matt Perry",
     "homepage": "https://popmotion.io",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
-    "module": "dist/es/index.js",
-    "jsnext:main": "dist/es/index.js",
+    "module": "dist/es/index.mjs",
+    "jsnext:main": "dist/es/index.mjs",
     "unpkg": "./dist/projection.min.js",
     "exports": {
-        "import": "./dist/es/index.js",
-        "require": "./dist/projection.cjs.js",
-        "default": "./dist/es/index.js"
+        ".": {
+            "import": "./dist/es/index.mjs",
+            "require": "./dist/projection.cjs.js",
+            "default": "./dist/projection.cjs.js"
+        },
+        "./package.json": "./package.json"
     },
     "sideEffects": false,
     "repository": {

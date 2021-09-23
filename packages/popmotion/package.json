@@ -1,18 +1,21 @@
 {
     "name": "popmotion",
-    "version": "9.4.2",
+    "version": "10.0.0",
     "description": "The animator's toolbox",
     "author": "Matt Perry",
     "homepage": "https://popmotion.io",
     "main": "dist/popmotion.cjs.js",
     "types": "lib/index.d.ts",
-    "module": "dist/es/index.js",
-    "jsnext:main": "dist/es/index.js",
+    "module": "dist/es/index.mjs",
+    "jsnext:main": "dist/es/index.mjs",
     "unpkg": "./dist/popmotion.min.js",
     "exports": {
-        "import": "./dist/es/index.js",
-        "require": "./dist/popmotion.cjs.js",
-        "default": "./dist/es/index.js"
+        ".": {
+            "import": "./dist/es/index.mjs",
+            "require": "./dist/popmotion.cjs.js",
+            "default": "./dist/popmotion.cjs.js"
+        },
+        "./package.json": "./package.json"
     },
     "sideEffects": false,
     "repository": {
