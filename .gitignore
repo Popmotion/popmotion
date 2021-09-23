@@ -12,6 +12,7 @@ packages/site/pages/popcorn/api
 packages/site/data/content.json
 packages/site/data/menus.json
 packages/site/next.config.js
+packages/projection/cypress/screenshots/*
 playground/public
 storybook-static
 coverage
