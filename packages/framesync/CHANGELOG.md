@@ -2,6 +2,12 @@
 
 Framesync adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.0.0] 2021-09-23
+
+### Fixed
+
+-   Fixing `exports` and `module` in `package.json`. This will break (unsupported) direct file imports.
+
 ## [5.3.0] 2021-03-30
 
 ### Added

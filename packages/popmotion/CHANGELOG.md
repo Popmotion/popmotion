@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [10.0.0] 2021-09-23
+
+### Fixed
+
+-   Fixing `exports` and `module` in `package.json`. This will break (unsupported) direct file imports.
+
 ### [9.4.1] 2021-09-21
 
 ### Changed

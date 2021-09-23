@@ -2,6 +2,12 @@
 
 Style Value Types adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.0.0] 2021-09-23
+
+### Fixed
+
+-   Fixing `exports` and `module` in `package.json`. This will break (unsupported) direct file imports.
+
 ### [4.1.5] 2021-09-21
 
 ### Fixed
