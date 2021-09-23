@@ -7,7 +7,7 @@
     "preserveConstEnums": true,
     "sourceMap": true,
     "noUnusedLocals": true,
-    "target": "es5",
+    "target": "ES6",
     "watch": false,
     "baseUrl": "./packages",
     "importHelpers": true,
