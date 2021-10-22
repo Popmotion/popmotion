@@ -61,6 +61,11 @@ export function createRenderStep(runNextFrame: () => void): Step {
          * Execute all schedule callbacks.
          */
         process: (frameData) => {
+            /**
+             * If we're already processing we've probably been triggered by a flushSync
+             * inside an existing process. Instead of executing, mark flushNextFrame
+             * as true and ensure we flush the following frame at the end of this one.
+             */
             if (isProcessing) {
                 flushNextFrame = true
                 return

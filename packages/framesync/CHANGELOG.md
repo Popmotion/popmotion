@@ -2,6 +2,12 @@
 
 Framesync adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.0.1] 2021-10-22
+
+### Fixed
+
+-   Fixing bug where `flushSync` being called from an existing process would boot keep-alive processes off the thread.
+
 ## [6.0.0] 2021-09-23
 
 ### Fixed
