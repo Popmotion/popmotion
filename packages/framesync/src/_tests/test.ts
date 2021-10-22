@@ -1,4 +1,4 @@
-import sync, { cancelSync } from "../"
+import sync, { cancelSync, flushSync } from "../"
 import { onNextFrame } from "../on-next-frame"
 
 describe("onNextFrame", () => {
@@ -134,5 +134,22 @@ describe("sync", () => {
                 }
             }, true)
         })
+    })
+
+    it("correctly keeps alive after a flush", async () => {
+        const promise = new Promise<boolean>((resolve) => {
+            let v = 0
+
+            sync.update(() => {
+                if (v === 2) flushSync.update()
+            }, true)
+
+            sync.update(() => {
+                v++
+                if (v > 6) resolve(true)
+            }, true)
+        })
+        flushSync.update()
+        return expect(promise).resolves.toBe(true)
     })
 })

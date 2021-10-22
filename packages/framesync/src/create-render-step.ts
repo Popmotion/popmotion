@@ -19,6 +19,8 @@ export function createRenderStep(runNextFrame: () => void): Step {
      */
     let isProcessing = false
 
+    let flushNextFrame = false
+
     /**
      * A set of processes which were marked keepAlive when scheduled.
      */
@@ -59,6 +61,11 @@ export function createRenderStep(runNextFrame: () => void): Step {
          * Execute all schedule callbacks.
          */
         process: (frameData) => {
+            if (isProcessing) {
+                flushNextFrame = true
+                return
+            }
+
             isProcessing = true
 
             // Swap this frame and the next to avoid GC
@@ -84,6 +91,11 @@ export function createRenderStep(runNextFrame: () => void): Step {
             }
 
             isProcessing = false
+
+            if (flushNextFrame) {
+                flushNextFrame = false
+                step.process(frameData)
+            }
         },
     }
 
