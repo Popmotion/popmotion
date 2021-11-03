@@ -2,6 +2,13 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [10.1.0] 2021-11-03
+
+### Added
+
+-   Animate HSLA with linear color mix.
+-   Animate between HSLA, RGBA and Hex with `mixColor`.
+
 ## [10.0.2] 2021-10-22
 
 ### Fixed

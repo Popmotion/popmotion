@@ -37,43 +37,67 @@ test("mixColor rgb out of bounds", () => {
 test("mixColor hsla", () => {
     expect(
         mixColor("hsla(120, 0%, 0%, 0)", "hsla(360, 100%, 50%, 1)")(0.5)
-    ).toBe("hsla(240, 50%, 25%, 0.5)")
+    ).toBe("rgba(240, 50%, 25%, 0.5)")
 
     expect(
         mixColor(
             "hsla(177, 37.4978%, 76.66804%, 1)",
             "hsla(0, 0%, 100%, 1)"
         )(0.5)
-    ).toBe("hsla(89, 18.7489%, 88.33402%, 1)")
+    ).toBe("rgba(89, 18.7489%, 88.33402%, 1)")
 })
 
 test("mixColor hsla out of bounds", () => {
     expect(mixColor("hsla(120, 0%, 0%, 0)", "hsla(360, 100%, 50%, 1)")(2)).toBe(
-        "hsla(600, 200%, 100%, 1)"
+        "rgba(600, 200%, 100%, 1)"
     )
     expect(
         mixColor("hsla(120, 0%, 0%, 0)", "hsla(360, 100%, 50%, 1)")(-1)
-    ).toBe("hsla(-120, -100%, -50%, 0)")
+    ).toBe("rgba(-120, -100%, -50%, 0)")
 })
 
 test("mixColor hsl", () => {
     expect(mixColor("hsl(120, 0%, 0%)", "hsl(360, 100%, 50%)")(0.5)).toBe(
-        "hsla(240, 50%, 25%, 1)"
+        "rgba(240, 50%, 25%, 1)"
     )
 })
 
 test("mixColor hsl out of bounds", () => {
     expect(mixColor("hsl(120, 0%, 0%)", "hsl(360, 100%, 50%)")(2)).toBe(
-        "hsla(600, 200%, 100%, 1)"
+        "rgba(600, 200%, 100%, 1)"
     )
     expect(mixColor("hsl(120, 0%, 0%)", "hsl(360, 100%, 50%)")(-1)).toBe(
-        "hsla(-120, -100%, -50%, 1)"
+        "rgba(-120, -100%, -50%, 1)"
     )
 })
 
 test("mixColor rgb to hex", () => {
     expect(mixColor("rgb(255, 255, 255)", "#000")(0.5)).toBe(
         "rgba(180, 180, 180, 1)"
+    )
+})
+
+test("mixColor hsla to rgba", () => {
+    expect(mixColor("hsla(0, 0, 0, 0)", "rgba(255, 255, 255, 1)")(2)).toBe(
+        "rgba(255, 255, 255, 1)"
+    )
+})
+
+test("mixColor hsla to hex", () => {
+    expect(mixColor("hsla(0, 0, 0, 0)", "#fff")(2)).toBe(
+        "rgba(255, 255, 255, 1)"
+    )
+})
+
+test("mixColor hex to hsla", () => {
+    expect(mixColor("#fff", "hsla(0, 0, 0, 0)")(2)).toBe(
+        "rgba(255, 255, 255, 1)"
+    )
+})
+
+test("mixColor rgba to hsla", () => {
+    expect(mixColor("rgba(255, 255, 255, 1)", "hsla(0, 0, 0, 0)")(2)).toBe(
+        "rgba(255, 255, 255, 1)"
     )
 })
 

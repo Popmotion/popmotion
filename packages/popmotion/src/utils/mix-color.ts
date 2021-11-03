@@ -1,11 +1,11 @@
 import { mix } from "./mix"
 import { hsla, rgba, hex, Color } from "style-value-types"
 import { invariant } from "hey-listen"
+import { hslaToRgba } from "./hsla-to-rgba"
 
 // Linear color space blending
 // Explained https://www.youtube.com/watch?v=LKnqECcg6Gw
 // Demonstrated http://codepen.io/osublake/pen/xGVVaN
-
 export const mixLinearColor = (from: number, to: number, v: number) => {
     const fromExpo = from * from
     const toExpo = to * to
@@ -20,39 +20,31 @@ const notAnimatable = (color: Color | string) =>
     `'${color}' is not an animatable color. Use the equivalent color code instead.`
 
 export const mixColor = (from: Color | string, to: Color | string) => {
-    const fromColorType = getColorType(from)
-    const toColorType = getColorType(to)
+    let fromColorType = getColorType(from)
+    let toColorType = getColorType(to)
 
     invariant(!!fromColorType, notAnimatable(from))
     invariant(!!toColorType, notAnimatable(to))
-    invariant(
-        fromColorType.transform === toColorType.transform,
-        "Both colors must be hex/RGBA, OR both must be HSLA."
-    )
 
-    /**
-     * In production, if we can't mix these value types return an instant transition
-     * rather than throw an error.
-     */
-    if (
-        !fromColorType ||
-        !toColorType ||
-        fromColorType.transform !== toColorType.transform
-    ) {
-        return (p: number) => `${p > 0 ? to : from}`
+    let fromColor = fromColorType.parse(from)
+    let toColor = toColorType.parse(to)
+
+    if (fromColorType === hsla) {
+        fromColor = hslaToRgba(fromColor)
+        fromColorType = rgba
     }
 
-    const fromColor = fromColorType.parse(from)
-    const toColor = toColorType.parse(to)
-    const blended = { ...fromColor }
+    if (toColorType === hsla) {
+        toColor = hslaToRgba(toColor)
+        toColorType = rgba
+    }
 
-    // Only use the linear blending function for rgba and hex
-    const mixFunc = fromColorType === hsla ? mix : mixLinearColor
+    const blended = { ...fromColor }
 
     return (v: number) => {
         for (const key in blended) {
             if (key !== "alpha") {
-                blended[key] = mixFunc(fromColor[key], toColor[key], v)
+                blended[key] = mixLinearColor(fromColor[key], toColor[key], v)
             }
         }
 
