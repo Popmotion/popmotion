@@ -87,5 +87,6 @@
       "prettier --write",
       "git add"
     ]
-  }
+  },
+  "version": "10.1.0"
 }
