@@ -2,7 +2,11 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
-## [10.1.0] 2021-11-03
+## [11.0.0] 2021-11-03
+
+### Changed
+
+-   `mixColor` always outputs RGB, even when mixing HSLA.
 
 ### Added
 
