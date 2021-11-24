@@ -67,6 +67,6 @@
   },
   "dependencies": {
     "hey-listen": "^1.0.8",
-    "tslib": "^2.1.0"
+    "tslib": "^2.3.1"
   }
 }
