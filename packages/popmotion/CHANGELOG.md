@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [11.1.0] 2021-11-24
+
+### Update
+
+-   Updating `tslib`.
+
 ## [11.0.0] 2021-11-03
 
 ### Changed
