@@ -2,6 +2,18 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [11.0.3] 2021-12-03
+
+### Update
+
+-   Dynamic `restDelta` for smoother springs at low values.
+
+## [11.0.2] 2021-12-02
+
+### Update
+
+-   Locking dependencies.
+
 ## [11.0.1] 2021-12-02
 
 ### Update

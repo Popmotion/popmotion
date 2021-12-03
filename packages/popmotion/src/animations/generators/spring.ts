@@ -85,7 +85,9 @@ export function spring({
          * If we're working within what looks like a 0-1 range, change the default restDelta
          * to 0.01
          */
-        restDelta ??= Math.abs(to - from) <= 1 ? 0.01 : 0.4
+        if (restDelta === undefined) {
+            restDelta = Math.min(Math.abs(to - from) / 100, 0.4)
+        }
 
         if (dampingRatio < 1) {
             const angularFreq = calcAngularFreq(
