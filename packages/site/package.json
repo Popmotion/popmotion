@@ -30,7 +30,7 @@
     "react-pose-text": "^3.1.0",
     "react-syntax-highlighter": "^5.8.0",
     "styled-components": "^4.4.1",
-    "three": "^0.110.0"
+    "three": "^0.137.0"
   },
   "devDependencies": {
     "babel-plugin-root-import": "^6.4.1",
