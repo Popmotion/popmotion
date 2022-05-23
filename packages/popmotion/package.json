@@ -11,6 +11,7 @@
     "unpkg": "./dist/popmotion.min.js",
     "exports": {
         ".": {
+            "types": "./lib/index.d.ts",
             "import": "./dist/es/index.mjs",
             "require": "./dist/popmotion.cjs.js",
             "default": "./dist/popmotion.cjs.js"
