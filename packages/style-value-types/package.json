@@ -8,6 +8,7 @@
   "jsnext:main": "dist/es/index.mjs",
   "exports": {
     ".": {
+      "types": "./lib/index.d.ts",
       "import": "./dist/es/index.mjs",
       "require": "./dist/valueTypes.cjs.js",
       "default": "./dist/valueTypes.cjs.js"
