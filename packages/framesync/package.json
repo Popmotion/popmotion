@@ -12,6 +12,7 @@
     "unpkg": "./dist/framesync.min.js",
     "exports": {
         ".": {
+            "types": "./lib/index.d.ts",
             "import": "./dist/es/index.mjs",
             "require": "./dist/framesync.cjs.js",
             "default": "./dist/framesync.cjs.js"
