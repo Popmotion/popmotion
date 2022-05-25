@@ -1,7 +1,7 @@
 postMerge :
   preRun: 
     command:
-      - npm install
+      - yarn
       
   
   subModules:          #Not to be changed
