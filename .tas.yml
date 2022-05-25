@@ -28,50 +28,20 @@ preMerge :
   
   subModules:          #Not to be changed
      
-    - name: react-base16-styling     
-      path : "./packages/react-base16-styling"
+    - name:  framesync
+      path : "./packages/framesync"
       pattern: 
-        - "./test/index.test.ts"
+        - "./packages/framesync/src/_tests/*.ts"
 
       framework : jest
       preRun:
         command:
+          - npm i
           - npm run build
 
       postRun:
           command:
-            - node --version 
-      configFile : "./jest.config.js"
-
-    - name: redux-devtools-cli     
-      path : "./packages/redux-devtools-cli"
-      pattern: 
-        - "./test/integration.spec.ts"
-
-      framework : jest
-      preRun:
-        command:
-          - npm run build
-
-      postRun:
-          command:
-            - node --version 
-      configFile : "./jest.config.js"
-
-    - name: map2tree     
-      path : "./packages/map2tree"
-      pattern: 
-        - "./test/*.spec.ts"
-
-      framework : jest
-      preRun:
-        command:
-          - npm run build
-
-      postRun:
-          command:
-            - node --version 
-      configFile : "./jest.config.js"
-
+            - node --version
+            
 parallelism: 2 # this will be depricated in future
 version : 2.0
