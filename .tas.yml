@@ -15,8 +15,8 @@ postMerge :
         framework : jest
         preRun:
           command:
-            - npm i
-            - npm run build
+            - yarn
+            - yarn run build
           
         postRun:
             command:
