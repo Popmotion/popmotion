@@ -1,7 +1,7 @@
 postMerge :
   preRun: 
     command:
-      - yarn
+      - yarn install
       
   
   subModules:          #Not to be changed
@@ -15,8 +15,7 @@ postMerge :
         framework : jest
         preRun:
           command:
-            - yarn
-            - yarn run build
+            - node --version
           
         postRun:
             command:
