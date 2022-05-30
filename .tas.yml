@@ -10,7 +10,7 @@ postMerge :
       - name:  framesync
         path : "./packages/framesync"
         pattern: 
-          - "./packages/framesync/src/_tests/*.ts"
+          - "./src/_tests/test.ts"
         
         framework : jest
         preRun:
@@ -20,8 +20,20 @@ postMerge :
         postRun:
             command:
               - node --version 
-        nodeVersion : 17.3.1
         
+      - name:  style-value-types
+        path : "./packages/style-value-types"
+        pattern: 
+          - "./src/_tests/*.ts"
+        
+        framework : jest
+        preRun:
+          command:
+            - node --version
+          
+        postRun:
+            command:
+              - node --version 
       
         
 preMerge : 
@@ -43,5 +55,5 @@ preMerge :
           command:
             - node --version
             
-parallelism: 2 # this will be depricated in future
-version : 2.0
+version : 2.0.2
+nodeVersion : 17.3.1
