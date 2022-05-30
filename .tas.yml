@@ -21,6 +21,22 @@ postMerge :
             command:
               - node --version 
         
+      - name:  projection
+        path : "./packages/projection"
+        pattern: 
+          - "./src/__tests__/*test.ts"
+        
+        framework : jest
+        preRun:
+          command:
+            - node --version
+      
+          
+        postRun:
+            command:
+              - node --version 
+      
+      
       - name:  style-value-types
         path : "./packages/style-value-types"
         pattern: 
@@ -30,11 +46,6 @@ postMerge :
         preRun:
           command:
             - node --version
-          
-        postRun:
-            command:
-              - node --version 
-      
         
 preMerge : 
   
