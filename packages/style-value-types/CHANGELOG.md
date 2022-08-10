@@ -2,6 +2,16 @@
 
 Style Value Types adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.1.1] 2022-08-10
+
+### Fixed
+
+-   Supporting `rgba` and `hsla` values without spaces around the alpha slash.
+
+### Update
+
+-   Adding `types` to `exports` field.
+
 ## [5.1.0] 2021-11-24
 
 ### Update

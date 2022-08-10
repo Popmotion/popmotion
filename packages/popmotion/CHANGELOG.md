@@ -2,6 +2,12 @@
 
 Popmotion adheres to [Semantic Versioning](http://semver.org/).
 
+## [11.0.4] 2022-08-10
+
+### Update
+
+-   Adding `types` to `exports` field.
+
 ## [11.0.3] 2021-12-03
 
 ### Update

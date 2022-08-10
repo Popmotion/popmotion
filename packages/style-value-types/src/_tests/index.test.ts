@@ -24,6 +24,8 @@ describe('regex', () => {
     expect(singleColorRegex.test('#fff000')).toBe(true);
     expect(singleColorRegex.test('#fff000aa')).toBe(true);
     expect(singleColorRegex.test('rgba(161, 0, 246, 0)')).toBe(true);
+    expect(singleColorRegex.test('rgba(161 0 246 / 0)')).toBe(true);
+    expect(singleColorRegex.test('rgba(161 0 246/0)')).toBe(true);
     expect(
       singleColorRegex.test('rgba(161 0 246 / 0) rgba(161 0 246 / 0)')
     ).toBe(false);
@@ -32,6 +34,17 @@ describe('regex', () => {
     expect(colorRegex.test('rgba(161 0 246 / 0) rgba(161 0 246 / 0)')).toBe(
       true
     );
+
+    expect(
+      'rgba(161 0 246 / 0) rgba(161 0 246 / 0)'.match(colorRegex)?.length
+    ).toEqual(2);
+
+    expect(colorRegex.test('rgba(161 0 246/0) rgba(161 0 246/0)')).toBe(true);
+
+    expect(
+      'rgba(161 0 246/0) rgba(161 0 246/0)'.match(colorRegex)?.length
+    ).toEqual(2);
+
     expect(
       'a0.9b 1 2 -3 -4.0 -.5 -0.6 a.7b 800 10.0009'.match(floatRegex)
     ).toEqual([
@@ -209,6 +222,7 @@ describe('hsla()', () => {
     expect(hsla.test('hsla(170, 50%, 45%, 1)')).toEqual(true);
     expect(hsla.test('hsla(177, 37.4978%, 76.66804%, 1)')).toEqual(true);
     expect(hsla.test('hsla(170 50% 45% / 1)')).toEqual(true);
+    expect(hsla.test('hsla(170 50% 45%/1)')).toEqual(true);
     expect(hsla.test('hsla(177 37.4978% 76.66804% / 1)')).toEqual(true);
     expect(hsla.test('hsla(170, 50%, 45%, 1) 0px')).toEqual(false);
   });
@@ -231,6 +245,12 @@ describe('hsla()', () => {
       alpha: 1,
     });
     expect(hsla.parse('hsla(177 37.4978% 76.66804% / 0.5)')).toEqual({
+      hue: 177,
+      saturation: 37.4978,
+      lightness: 76.66804,
+      alpha: 0.5,
+    });
+    expect(hsla.parse('hsla(177 37.4978% 76.66804%/0.5)')).toEqual({
       hue: 177,
       saturation: 37.4978,
       lightness: 76.66804,

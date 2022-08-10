@@ -2,6 +2,12 @@
 
 Framesync adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.1.1] 2022-08-10
+
+### Update
+
+-   Adding `types` to `exports` field.
+
 ## [6.1.0] 2021-11-24
 
 ### Update
