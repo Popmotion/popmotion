@@ -1,6 +1,6 @@
 {
   "name": "style-value-types",
-  "version": "5.1.0",
+  "version": "5.1.1",
   "description": "Parsers, transformers and tests for special value types, eg: %, hex codes etc.",
   "main": "dist/valueTypes.cjs.js",
   "types": "lib/index.d.ts",
