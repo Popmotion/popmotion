@@ -11,6 +11,7 @@
     "unpkg": "./dist/projection.min.js",
     "exports": {
         ".": {
+            "types": "./lib/index.d.ts",
             "import": "./dist/es/index.mjs",
             "require": "./dist/projection.cjs.js",
             "default": "./dist/projection.cjs.js"
