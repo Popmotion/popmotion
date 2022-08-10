@@ -1,7 +1,7 @@
 {
     "name": "framesync",
     "license": "MIT",
-    "version": "6.1.0",
+    "version": "6.1.1",
     "description": "A frame-synced render loop for JavaScript",
     "author": "Matt Perry",
     "homepage": "https://popmotion.io",
