@@ -71,7 +71,7 @@
   "resolutions": {
     "jest": "24.2.0-alpha.0",
     "babel-jest": "^22.4.3",
-    "tslib": "2.2.0"
+    "tslib": "2.4.0"
   },
   "prettier": {
     "parser": "typescript",
