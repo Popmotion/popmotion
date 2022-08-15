@@ -101,6 +101,18 @@ test("mixColor rgba to hsla", () => {
     )
 })
 
+test("mixColor rgba with slash to rgba without", () => {
+    expect(mixColor("rgb(255, 255, 255 / 1)", "rgba(0, 0, 0, 0)")(0.5)).toBe(
+        "rgba(180, 180, 180, 0.5)"
+    )
+})
+
+test("mixColor rgba with slash (without slash spaces) to rgba without", () => {
+    expect(mixColor("rgb(255 255 255/1)", "rgba(0, 0, 0, 0)")(0.5)).toBe(
+        "rgba(180, 180, 180, 0.5)"
+    )
+})
+
 test("doesn't return NaN", () => {
     expect(mixLinearColor(255, 0, 2)).not.toBeNaN()
 })
