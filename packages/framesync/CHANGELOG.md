@@ -2,6 +2,12 @@
 
 Framesync adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.1.2] 2022-08-15
+
+### Update
+
+-   `tslib` and `typescript`.
+
 ## [6.1.1] 2022-08-10
 
 ### Update
