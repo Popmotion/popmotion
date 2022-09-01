@@ -94,7 +94,7 @@ export function applyTreeProjection(
     for (let i = 0; i < pathLength; i++) {
         const { projection } = path[i]
 
-        // Incoporate each ancestor's scale into a culmulative treeScale for this component
+        // Incoporate each ancestor's scale into a cumulative treeScale for this component
         treeScale.x *= projection.x.scale
         treeScale.y *= projection.y.scale
 
