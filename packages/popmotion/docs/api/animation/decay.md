@@ -10,7 +10,7 @@ An animation that decelerates to an automatically generated target value, based 
 
 This target can be modified.
 
-**Note:** This animation is deprecated in favour of [`inertia`](/api/inertia).
+**Note:** This animation is deprecated in favour of [`inertia`](../inertia).
 
 <TOC />
 
