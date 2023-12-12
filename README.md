@@ -216,7 +216,7 @@ animate({
 
 ##### onPlay
 
-This is called when the animation starts. Currently this automatically when `animate` is called.
+This is called when the animation starts. Currently this runs automatically when `animate` is called.
 
 ```javascript
 animate({
