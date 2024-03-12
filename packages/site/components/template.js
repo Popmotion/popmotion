@@ -126,7 +126,7 @@ export default function ({ children, tableOfContents }) {
                 <a href="/pose">Pose</a>
               </li>
               <li>
-                <a href="/pure">Popmotion 8</a>
+                <a href="/pure">Popmotion Pure</a>
               </li>
             </ul>
             <div>
